@@ -56,9 +56,7 @@ namespace Win32xx
 	public:
 		CStatusbar() {}
 		virtual ~CStatusbar() {}
-		virtual void OnCreate();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetText(LPCTSTR szText = TEXT("Ready"));
 	};
 
 
@@ -182,6 +180,7 @@ namespace Win32xx
 		virtual HMENU GetFrameMenu() {return m_hMenu;}
 		virtual CMenubar& GetMenubar() {return m_Menubar;}
 		virtual CStatusbar& GetStatusbar() {return m_Statusbar;}
+		virtual CRebar& GetRebar() {return m_Rebar;}
 		virtual CToolbar& GetToolbar() {return m_Toolbar;}
 		virtual CWnd* GetView() {return m_pView;}
 		virtual BOOL IsMDIFrame() {return m_bIsMDIFrame;}
@@ -193,7 +192,7 @@ namespace Win32xx
 		virtual	void SetButtons(int iNumButtons, BYTE bButtonArray[][2]);
 		virtual void SetView(CWnd& pView);
 		virtual void SetToolbarData(int nButtons, BYTE ToolbarData[][2]);
-		virtual void SetStatusText(LPCTSTR str);
+		virtual void SetStatusText(LPCTSTR szText = TEXT("Ready"));
 
 	protected:
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
@@ -212,10 +211,6 @@ namespace Win32xx
 		virtual void SetBackground(HBITMAP);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		CMenubar m_Menubar;			// CMenubar object
-		CRebar m_Rebar;				// CRebar object
-		CStatusbar m_Statusbar;		// CStatusbar object
-		CToolbar m_Toolbar;			// CToolbar object
 		int m_ToolbarButtons;		// number of toolbar buttons
 		BYTE (* m_ToolbarData)[2];  // pointer to 2 dimensional int array
 		BOOL m_bUseMenubar;			// set to TRUE if a Menubar is to be used
@@ -229,6 +224,10 @@ namespace Win32xx
 		};
 
 	private:
+		CMenubar m_Menubar;			// CMenubar object
+		CRebar m_Rebar;				// CRebar object
+		CStatusbar m_Statusbar;		// CStatusbar object
+		CToolbar m_Toolbar;			// CToolbar object
 		BOOL m_bIsMDIFrame;			// TRUE if this is a MDI frame
 		BOOL m_bSupportRebars;		// TRUE if rebars are supported by the OS
 		HMENU m_hMenu;				// handle to the frame menu

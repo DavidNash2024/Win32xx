@@ -61,49 +61,6 @@ namespace Win32xx
 		cs.lpszClass = STATUSCLASSNAME;
 	}
 
-	void CStatusbar::OnCreate()
-	{
-		SetText();
-	}
-
-	void CStatusbar::SetText(LPCTSTR szText)
-	{
-		try
-		{
-			if (IsWindow(m_hWnd))
-			{
-				// Get the coordinates of the parent window's client area.
-				RECT rcClient;
-				::GetClientRect(m_hWndParent, &rcClient);
-
-				// width = max(300, rcClient.right)
-				int width = (300 > rcClient.right) ? 300 : rcClient.right;
-
-				// Allocate an array for holding the right edge coordinates.
-				int iStatusWidths[] = { width-110, width-80, width-50, width-20};
-
-				// Tell the status bar to create the window with 4 panes.
-				if (!::SendMessage(m_hWnd, SB_SETPARTS, 4, (LPARAM)iStatusWidths))
-					throw (CWinException(TEXT("CStatusbar::SetText failed")));
-
-				//Send text to the window panes
-				::SendMessage(m_hWnd, SB_SETTEXT, 0 | SBT_NOBORDERS, (LPARAM)(LPCTSTR)szText);
-				::SendMessage(m_hWnd, SB_SETTEXT, 1, (::GetKeyState(VK_CAPITAL) & 0x0001)? (LPARAM)TEXT("\tCAP") : (LPARAM)TEXT(""));
-				::SendMessage(m_hWnd, SB_SETTEXT, 2, (::GetKeyState(VK_NUMLOCK) & 0x0001)? (LPARAM)TEXT("\tNUM") : (LPARAM)TEXT(""));
-				::SendMessage(m_hWnd, SB_SETTEXT, 3, (::GetKeyState(VK_SCROLL)  & 0x0001)? (LPARAM)TEXT("\tSCRL"): (LPARAM)TEXT(""));
-			}
-		}
-
-		catch(const CWinException &e)
-		{
-			e.MessageBox();
-		}
-		catch(...)
-		{
-			DebugErrMsg(TEXT("Exception in CStatusbar::SetText"));
-		}
-	}
-
 
 	////////////////////////////////////
 	// Definitions for the CToolbar class
@@ -1255,9 +1212,9 @@ namespace Win32xx
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;// | RBBS_NOGRIPPER;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
-		rbbi.hwndChild  = m_Menubar.GetHwnd();
+		rbbi.hwndChild  = GetMenubar().GetHwnd();
 
-		m_Rebar.InsertBand(-1, &rbbi);
+		GetRebar().InsertBand(-1, &rbbi);
 	}
 
 	void CFrame::AddToolbarBand(int Toolbar_Height /*= TOOLBAR_HEIGHT*/)
@@ -1271,9 +1228,9 @@ namespace Win32xx
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
-		rbbi.hwndChild  = m_Toolbar.GetHwnd();
+		rbbi.hwndChild  = GetToolbar().GetHwnd();
 
-		m_Rebar.InsertBand(-1, &rbbi);
+		GetRebar().InsertBand(-1, &rbbi);
 	}
 
 	RECT CFrame::GetClientSize()
@@ -1287,15 +1244,15 @@ namespace Win32xx
 		::GetClientRect(m_hWnd, &rFrame);
 
 		// Get size of status bar window
-		if (::IsWindowVisible(m_Statusbar.GetHwnd()))
-			::GetWindowRect(m_Statusbar.GetHwnd(), &rStatus);
+		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
+			::GetWindowRect(GetStatusbar().GetHwnd(), &rStatus);
 
 		// Get size of top rebar or toolbar
 		if (m_bSupportRebars && m_bUseRebar)
-			::GetWindowRect(m_Rebar.GetHwnd(), &rTop);
+			::GetWindowRect(GetRebar().GetHwnd(), &rTop);
 		else
-			if (IsWindowVisible(m_Toolbar.GetHwnd()))
-				::GetWindowRect(m_Toolbar.GetHwnd(), &rTop);
+			if (IsWindowVisible(GetToolbar().GetHwnd()))
+				::GetWindowRect(GetToolbar().GetHwnd(), &rTop);
 
 		// Return client size less the rebar and status windows
 		int nHeight = rTop.bottom - rTop.top;
@@ -1383,28 +1340,28 @@ namespace Win32xx
 		if (m_bSupportRebars && m_bUseRebar)
 		{
 			// Create the rebar
-			m_Rebar.Create(m_hWnd);
+			GetRebar().Create(m_hWnd);
 
 			// Create the menu
 			if (m_bUseMenubar)
 			{
-				m_Menubar.Create(m_Rebar.GetHwnd());
-				m_Menubar.SetMenu(m_hMenu);
+				GetMenubar().Create(GetRebar().GetHwnd());
+				GetMenubar().SetMenu(m_hMenu);
 				AddMenubarBand();
 			}
 
 			// Create tool bar
-			m_Toolbar.Create(m_Rebar.GetHwnd());
+			GetToolbar().Create(GetRebar().GetHwnd());
 			AddToolbarBand();
 		}
 		else
-			m_Toolbar.Create(m_hWnd);
+			GetToolbar().Create(m_hWnd);
 
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
 
 		// Create the status bar
-		m_Statusbar.Create(m_hWnd);
+		GetStatusbar().Create(m_hWnd);
 
 		// Load the toolbar buttons
 		SetButtons(m_ToolbarButtons, m_ToolbarData);
@@ -1433,7 +1390,7 @@ namespace Win32xx
 	{
 		// Check CAPs lock, NUM lock and SCRL lock keys
 		if((wParam == VK_CAPITAL) || (wParam == VK_NUMLOCK) ||(wParam == VK_SCROLL))
-			m_Statusbar.SetText();
+			SetStatusText();
 	}
 
 	void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
@@ -1444,9 +1401,9 @@ namespace Win32xx
 		int nID = LOWORD (wParam);
 		HMENU hMenu = (HMENU) lParam;
 		if ((!(hMenu == ::GetMenu(m_hWnd))) && (nID != 0))
-			m_Statusbar.SetText(LoadString(nID));
+			SetStatusText(LoadString(nID));
 		else
-			m_Statusbar.SetText();
+			SetStatusText();
 	}
 
 	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -1479,14 +1436,14 @@ namespace Win32xx
 
 		// Quick method for updating status bar text from tool bar buttons (requires IE 4 or higher)
 		case TBN_HOTITEMCHANGE:
-			if (((LPNMHDR)lParam)->hwndFrom == m_Toolbar.GetHwnd())
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
 			{
 				LPNMTBHOTITEM pHotItem = (LPNMTBHOTITEM)lParam;
 
 				if (!(pHotItem->dwFlags & HICF_LEAVING))
-					m_Statusbar.SetText(LoadString(pHotItem->idNew));
+					SetStatusText(LoadString(pHotItem->idNew));
 				else
-					m_Statusbar.SetText(TEXT("Ready"));
+					SetStatusText(TEXT("Ready"));
 			}
 			break;
 
@@ -1500,14 +1457,14 @@ namespace Win32xx
 				// Slower method of updating the Status Bar text, waiting for tooltip
 				// (works with IE version 3 and higher)
 				if (!IsMenubarUsed())
-					m_Statusbar.SetText(LoadString(idButton));
+					SetStatusText(LoadString(idButton));
 			}
 			break;
 
 		case TTN_POP:
-			if (((LPNMHDR)lParam)->hwndFrom != m_Toolbar.GetHwnd()) break;
+			if (((LPNMHDR)lParam)->hwndFrom != GetToolbar().GetHwnd()) break;
 				// Sets the "slower method" status bar text back to default
-				m_Statusbar.SetText(TEXT("Ready"));
+				SetStatusText(TEXT("Ready"));
 			break;
 
 		} // switch LPNMHDR
@@ -1517,15 +1474,15 @@ namespace Win32xx
 
 	void CFrame::OnSetFocus()
 	{
-		m_Statusbar.SetText();
+		SetStatusText();
 	}
 
 	void CFrame::OnSysColorChange()
 	{
 		// Honor theme color changes
-		for (int nBand = 0; nBand <= m_Rebar.GetBandCount(); nBand++)
+		for (int nBand = 0; nBand <= GetRebar().GetBandCount(); nBand++)
 		{
-			m_Rebar.SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
+			GetRebar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
 		}
 
 		//Reposition and redraw everything
@@ -1535,10 +1492,10 @@ namespace Win32xx
 
 	void CFrame::OnViewStatusbar()
 	{
-		if (::IsWindowVisible(m_Statusbar.GetHwnd()))
+		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
 		{
 			if (IsMenubarUsed())
-				::CheckMenuItem(m_Menubar.GetMenu(), IDM_VIEW_STATUSBAR, MF_UNCHECKED);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_STATUSBAR, MF_UNCHECKED);
 			else
 			{
 				::CheckMenuItem (m_hMenu, IDM_VIEW_STATUSBAR, MF_UNCHECKED);
@@ -1546,12 +1503,12 @@ namespace Win32xx
 					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_STATUSBAR, MF_UNCHECKED);
 			}
 
-			::ShowWindow(m_Statusbar.GetHwnd(), SW_HIDE);
+			::ShowWindow(GetStatusbar().GetHwnd(), SW_HIDE);
 		}
 		else
 		{
 			if (IsMenubarUsed())
-				::CheckMenuItem(m_Menubar.GetMenu(), IDM_VIEW_STATUSBAR, MF_CHECKED);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_STATUSBAR, MF_CHECKED);
 			else
 			{
 				::CheckMenuItem (m_hMenu, IDM_VIEW_STATUSBAR, MF_CHECKED);
@@ -1559,7 +1516,7 @@ namespace Win32xx
 					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_STATUSBAR, MF_CHECKED);
 			}
 
-			::ShowWindow(m_Statusbar.GetHwnd(), SW_SHOW);
+			::ShowWindow(GetStatusbar().GetHwnd(), SW_SHOW);
 		}
 
 		// Reposition the Windows
@@ -1569,12 +1526,12 @@ namespace Win32xx
 
 	void CFrame::OnViewToolbar()
 	{
-		if (::IsWindowVisible(m_Toolbar.GetHwnd()))
+		if (::IsWindowVisible(GetToolbar().GetHwnd()))
 		{
 			if (IsMenubarUsed())
 			{
-				::CheckMenuItem(m_Menubar.GetMenu(), IDM_VIEW_TOOLBAR, MF_UNCHECKED);
-				::SendMessage(m_Rebar.GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(m_Toolbar.GetHwnd()), FALSE);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_TOOLBAR, MF_UNCHECKED);
+				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), FALSE);
 			}
 			else
 			{
@@ -1582,17 +1539,17 @@ namespace Win32xx
 				if (::GetMenu(m_hWnd) != m_hMenu)
 					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_TOOLBAR, MF_UNCHECKED);
 				if (IsRebarUsed())
-					::SendMessage(m_Rebar.GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(m_Toolbar.GetHwnd()), FALSE);
+					::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), FALSE);
 				else
-					::ShowWindow(m_Toolbar.GetHwnd(), SW_HIDE);
+					::ShowWindow(GetToolbar().GetHwnd(), SW_HIDE);
 			}
 		}
 		else
 		{
 			if (IsMenubarUsed())
 			{
-				::CheckMenuItem(m_Menubar.GetMenu(), IDM_VIEW_TOOLBAR, MF_CHECKED);
-				::SendMessage(m_Rebar.GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(m_Toolbar.GetHwnd()), TRUE);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_TOOLBAR, MF_CHECKED);
+				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), TRUE);
 			}
 			else
 			{
@@ -1600,9 +1557,9 @@ namespace Win32xx
 				if (::GetMenu(m_hWnd) != m_hMenu)
 					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_TOOLBAR, MF_CHECKED);
 				if (IsRebarUsed())
-					::SendMessage(m_Rebar.GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(m_Toolbar.GetHwnd()), TRUE);
+					::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), TRUE);
 				else
-					::ShowWindow(m_Toolbar.GetHwnd(), SW_SHOW);
+					::ShowWindow(GetToolbar().GetHwnd(), SW_SHOW);
 			}
 		}
 
@@ -1641,16 +1598,16 @@ namespace Win32xx
 	void CFrame::RecalcLayout()
 	{
 		// Resize the status bar
-		::SendMessage(m_Statusbar.GetHwnd(), WM_SIZE, 0, 0);
+		::SendMessage(GetStatusbar().GetHwnd(), WM_SIZE, 0, 0);
 
 		// Reposition the text
-		m_Statusbar.SetText();
+		SetStatusText();
 
 		// Resize the rebar or toolbar
 		if (IsRebarUsed())
-			::SendMessage(m_Rebar.GetHwnd(), WM_SIZE, 0, 0);
+			::SendMessage(GetRebar().GetHwnd(), WM_SIZE, 0, 0);
 		else
-			::SendMessage(m_Toolbar.GetHwnd(), TB_AUTOSIZE, 0, 0);
+			::SendMessage(GetToolbar().GetHwnd(), TB_AUTOSIZE, 0, 0);
 
 		// Resize the View window
 		RECT rClient = GetClientSize();
@@ -1670,8 +1627,8 @@ namespace Win32xx
 
 	void CFrame::SetBackground(HBITMAP hBackground)
 	{
-		for (int nBands = 0; nBands < m_Rebar.GetBandCount(); nBands++)
-			m_Rebar.SetBandBitmap(nBands, hBackground);
+		for (int nBands = 0; nBands < GetRebar().GetBandCount(); nBands++)
+			GetRebar().SetBandBitmap(nBands, hBackground);
 	}
 
 	void CFrame::SetButtons(int iNumButtons, BYTE bButtonArray[][2])
@@ -1695,12 +1652,12 @@ namespace Win32xx
 			}
 
 			// Send the TB_BUTTONSTRUCTSIZE message, which is required for backward compatibility.
-			::SendMessage(m_Toolbar.GetHwnd(), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+			::SendMessage(GetToolbar().GetHwnd(), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
 			// Remove any existing buttons
-			while (::SendMessage(m_Toolbar.GetHwnd(), TB_BUTTONCOUNT,  0, 0) > 0)
+			while (::SendMessage(GetToolbar().GetHwnd(), TB_BUTTONCOUNT,  0, 0) > 0)
 			{
-				if(!::SendMessage(m_Toolbar.GetHwnd(), TB_DELETEBUTTON, 0, 0))
+				if(!::SendMessage(GetToolbar().GetHwnd(), TB_DELETEBUTTON, 0, 0))
 					break;
 			}
 
@@ -1709,7 +1666,7 @@ namespace Win32xx
 			tbab.hInst = GetApp()->GetInstanceHandle();
 			tbab.nID   = ID_MAIN;
 
-			if (::SendMessage(m_Toolbar.GetHwnd(), TB_ADDBITMAP, iNumButtons, (LPARAM) &tbab) == -1)
+			if (::SendMessage(GetToolbar().GetHwnd(), TB_ADDBITMAP, iNumButtons, (LPARAM) &tbab) == -1)
 				throw (CWinException(TEXT("CFrame::SetButtons  .. TB_ADDBITMAP failed ")));
 
 			// Load the TBBUTTON structure for each button in the toolbar
@@ -1733,7 +1690,7 @@ namespace Win32xx
 				}
 			}
 			// Add the buttons to the toolbar
-			if (!::SendMessage(m_Toolbar.GetHwnd(), TB_ADDBUTTONS, (WPARAM)iNumButtons, (LPARAM)tbb))
+			if (!::SendMessage(GetToolbar().GetHwnd(), TB_ADDBUTTONS, (WPARAM)iNumButtons, (LPARAM)tbb))
 				throw (CWinException(TEXT("CFrame::SetButtons  .. TB_ADDBUTTONS failed ")));
 
 			delete []tbb;
@@ -1748,10 +1705,45 @@ namespace Win32xx
 		}
 	} 
 
-	void CFrame::SetStatusText(LPCTSTR str)
+	void CFrame::SetStatusText(LPCTSTR szText /*= "Ready"*/)
 	{
-		m_Statusbar.SetText(str);
+		try
+		{
+			HWND hStatus = GetStatusbar().GetHwnd();
+			if (IsWindow(hStatus))
+			{
+				// Get the coordinates of the parent window's client area.
+				RECT rcClient;
+				::GetClientRect(m_hWnd, &rcClient);
+
+				// width = max(300, rcClient.right)
+				int width = (300 > rcClient.right) ? 300 : rcClient.right;
+
+				// Allocate an array for holding the right edge coordinates.
+				int iStatusWidths[] = { width-110, width-80, width-50, width-20};
+
+				// Tell the status bar to create the window with 4 panes.
+				if (!::SendMessage(hStatus, SB_SETPARTS, 4, (LPARAM)iStatusWidths))
+					throw (CWinException(TEXT("CStatusbar::SetText failed")));
+
+				//Send text to the window panes
+				::SendMessage(hStatus, SB_SETTEXT, 0 | SBT_NOBORDERS, (LPARAM)(LPCTSTR)szText);
+				::SendMessage(hStatus, SB_SETTEXT, 1, (::GetKeyState(VK_CAPITAL) & 0x0001)? (LPARAM)TEXT("\tCAP") : (LPARAM)TEXT(""));
+				::SendMessage(hStatus, SB_SETTEXT, 2, (::GetKeyState(VK_NUMLOCK) & 0x0001)? (LPARAM)TEXT("\tNUM") : (LPARAM)TEXT(""));
+				::SendMessage(hStatus, SB_SETTEXT, 3, (::GetKeyState(VK_SCROLL)  & 0x0001)? (LPARAM)TEXT("\tSCRL"): (LPARAM)TEXT(""));
+			}
+		}
+
+		catch(const CWinException &e)
+		{
+			e.MessageBox();
+		}
+		catch(...)
+		{
+			DebugErrMsg(TEXT("Exception in CStatusbar::SetText"));
+		}
 	}
+
 
 	void CFrame::SetToolbarData(int nButtons, BYTE ToolbarData[][2])
 	{
@@ -1810,7 +1802,7 @@ namespace Win32xx
 				if (IsMenubarUsed())
 				{
 					if (LOWORD(wParam)!= VK_SPACE)
-						::SendMessage(m_Menubar.GetHwnd(), WM_MENUCHAR, wParam, lParam);
+						::SendMessage(GetMenubar().GetHwnd(), WM_MENUCHAR, wParam, lParam);
 					return -1;
 				}
 				break;
@@ -1830,7 +1822,7 @@ namespace Win32xx
 			case WM_SYSCOMMAND:
 				if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
 				{
-					::SendMessage(m_Menubar.GetHwnd(), WM_SYSCOMMAND, wParam, lParam);
+					::SendMessage(GetMenubar().GetHwnd(), WM_SYSCOMMAND, wParam, lParam);
 					return 0L;
 				}
 				break;

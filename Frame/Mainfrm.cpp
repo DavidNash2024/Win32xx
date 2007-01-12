@@ -23,9 +23,9 @@ void CMainFrame::OnInitialUpdate()
 	//Place any additional startup code here.
 
 	//Disable some of the toolbar buttons
-	m_Toolbar.DisableButton(IDM_EDIT_CUT);
-	m_Toolbar.DisableButton(IDM_EDIT_COPY);
-	m_Toolbar.DisableButton(IDM_EDIT_PASTE);
+	GetToolbar().DisableButton(IDM_EDIT_CUT);
+	GetToolbar().DisableButton(IDM_EDIT_COPY);
+	GetToolbar().DisableButton(IDM_EDIT_PASTE);
 
 	TRACE("Frame created");
 }
