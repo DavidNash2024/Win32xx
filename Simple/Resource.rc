@@ -1,0 +1,28 @@
+// Resource Script.
+//
+
+#include "resource.h"
+#include "windows.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+ID_MAIN                 ICON                    "res\\star.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    ID_MAIN                 "Simple Window"
+END
+
+

@@ -1,0 +1,189 @@
+Version 5.1
+-----------
+Major Changes:
+* Notification Reflection.  WM_NOTIFY messages from child windows now call 
+  OnNotifyReflect in the CWnd that generated them.
+* Existing windows (including dialog items) can now be attached to a CWnd.
+  The window is automatically subclassed when attached to a CWnd.
+
+
+Removed CFrame::OnFrameCreated.  Use CFrame::OnInitialUpdate instead.
+CWnd::OnNotify returns a LRESULT
+Added CWnd::OnNotifyReflect
+Added CWnd::Attach
+Added CWnd::AttachDlgItem
+Added CWnd::Detach
+Moved CToolbar::SetButtons to CFrame::SetButtons
+CFrame::AddMenubarBand modified to CFrame::AddMenubarBand(int nHeight)
+CFrame::AddToolbarBand modified to CFrame::AddToolbarBand(int nHeight)
+
+Bug Fixes
+* CFrame::OnHelp now returns the focus back to the window that had it before OnHelp 
+  was called.
+
+Version 5.0
+-----------
+This version provides for MDI frames and adds a rebar control and menubar to
+frames. A CSplitter class is also included to allow a horizontal or vertical
+splitter bar to a CWnd object.
+
+Summary of changes
+------------------
+1) Moved the Win32++ files from ./Windows to ../Win32++. This allows any 
+    number of Win32++ projects to share the same copy of Win32++ files.
+2) Integrated the Basic and Enhanced frameworks into a single Win32++ framework.
+    If you were using the basic framework you will see the following changes:
+   * Added rebars to the frame window
+   * Added a menubar to the frame window
+   * Added MDI frame support
+   * Added splitter window support
+3) The menubar (previously available in the enhanced version) now fully
+    suports MDI applications.
+4) Changed CSplitter. The splitter bar is now an additional child window rather
+    than the CSplitter CWnd object itself.
+5) CFrame::Recalclayout no longer invalidates the view window. Programmers can
+    now choose whether or not to invalidate the view window when the frame window
+    is resized. This has the potential to eliminate unnecessary flicker.
+6) The namespace used by the framework has been renamed to Win32xx.
+7) Superclassing is now used instead of subclassing for common controls.
+
+Changed the following classes
+* Added   CCriticalSection         Used for thread synchronisation
+* Added   CMDIApp                  Required for MDI applications
+* Added   CMDIChild                Required for MDI applications
+* Added   CMDIClient               Required for MDI applications
+* Added   CMDIFrame                Required for MDI applications
+* Added   CMenubar                 Provides a menubar for the frame
+* Added   CRebar                   Provides a rebar for the frame
+* Added   CSplitter                Provides a splitter bar for a CWnd
+* Removed CWinClass                Use CWnd::RegisterClassEx instead
+
+Changed the following functions
+* Added   CFrame::IsMDIFrame       True if the frame is MDI
+* Added   CFrame::IsMenubarUsed    True if the frame has a menubar
+* Added   CFrame::IsRebarUsed      True of the frame has a rebar
+* Added   CFrame::m_bUseMenubar    Set to TRUE if a Menubar is to be used
+* Added   CFrame::m_bUseRebars     Set to TRUE if a Rebar is to be used
+* Removed CWnd::Subclass           Use Superclass instead
+* Added   CWnd::Superclass         Create a new window class from an existing one.
+* Added   CWnd::RegisterClassEx    Optionally register a window class
+* Removed CWnd::MoveWindow         Not required, use ::MoveWindow instead.
+
+Bug fixes: 
+* Resolved thread safty problems.
+* Resolved view window positioning issue in frames. 
+
+Version 4
+---------
+1) Renamed the framework to Win32++
+
+2) Changed the method of associating the Window's handle (HWND) and 
+    the CWin pointer.  Previously SetWindowLong was used to store the 
+    CWin pointer in the windows data area. Now std::map is used to 
+    associate a CWin pointer with the HWND (i.e. the window's handle).
+    
+3) Added the lpParam parameter to both versions of the CWin::CreateEx
+    function.  Users are now free to use lpParam for their own 
+    purposes. This parameter defaults to NULL for backwards 
+    compatibility.
+    
+Changed the following:
+* Removed CResString               Use CWnd::LoadString instead
+* Removed CTrace                   Use the TRACE command as before
+* Renamed CWin to CWnd
+* Added   CApp::GetFrame
+* Added   CApp::SetFrame   
+* Added   CFrame::GetFrameMenu        
+* Added   CFrame::GetView            
+* Added   CFrame::OnFrameCreated 
+* Added   CFrame::OnHelp
+* Added   CFrame::SetStatusText
+* Added   CFrame::SetToolbarData
+* Changed CFrame::SetView.          Takes a reference to a CWnd object, not a pointer
+* Removed CFrame::CreateEx          Removed both functions
+* Removed CFrame::LoadToolbarData
+* Added   CWin::GetHwnd	
+* Added   CWnd::LoadString 
+* Added   CWnd::OnInitialUpdate
+* Added   CWin::PreCreate
+* Added   CWnd::SubClass 
+* Changed CWin::CreateEX            Added the lpParam paramater
+* Changed CWnd::OnCreate            Now called when a WM_CREATE message is received.
+* Removed CWnd::Show
+* Removed CWnd::OnFocus
+* Removed CWnd::OnClose
+* Removed CWnd::operator const HWND().  Not required, use CWnd::GetHwnd instead.
+* Added   DebugErrMsg
+     
+Version 3
+---------
+1) Added the CTrace class to provide tracing (in Debug 
+    mode only). To use tracing, enure that you are in Debug mode, 
+    i.e. the variable _DEBUG is defined, and use the TRACE("xxxxx")
+    function to send trace messages.  The first TRACE(...) creates 
+    the CTrace object and the Trace Output Window.
+    
+2) Removed the reference counting of CWin objects from the CWin 
+    constructor and destructor.
+    
+3) Added the following functions:    
+    CApp::Lock            Enter a critical section
+    CApp::Release         Leave a critical section
+    CWin::DestroyWindow   Destroy the window associated with the CWin Object
+    CWin::GetCWinObject   Gets the pointer for a CWin object (given its HWND)
+    CWin::GetAncestor     Gets the root ancestor 
+    CWin::OnCommand       For command messages
+    CWin::OnNotify        For Notify messages
+
+4) Enhanced the error reporting in the event of an exception. The 
+    GetLastError information is now decoded and displayed if it 
+    provides any additional information.
+    
+Version 2
+---------
+Key Changes:
+
+1) Now uses TLS to store our "this" pointer during window creation,
+    instead of a global variable. The code is now thread safe.
+
+2) The code is now Unicode compliant.
+    
+3) Added debug mode. Exceptions produce a warning in a messagebox
+    if _DEBUG is defined. 
+
+4) Added CApp class to start Win32++.
+
+5) Added CDialog class to support modal and modeless dialogs as well
+    as indirect dialogs(dialogs created from a dialog template in
+    memory).
+
+6) The instance handle of the application is stored as a member variable
+    of CApp. You can access this via the GetApp global function
+    e.g. GetApp()->GetInstanceHandle()
+    
+7) Simplified window creation:
+    The CWin::Create function has been added to provide a simple 
+    method of creating a window with sensible defualts. Override this
+    in your derrived class to customise it further.
+    Also, if the Window Class name is not provided, one is provided for
+    you. The window class name provided is "Win32++ Window"
+    
+8) Changed the following functions:
+* Added   CApp::GetInstanceHandle
+* Added   CApp::MessageLoop
+* Added   CFrame::Create
+* Added   CFrame::SetView
+* Added   CFrame::RecalcLayout
+* Added   CStatusBar::Create
+* Added   CToolBar::Create
+* Added   CWin::Create	
+* Added   CWin::MoveWindow	
+* Added   CWin::GetCwinObject	
+* Changed CWin::CreateEx		removed hInstance parameter
+* Added   CWinClass::GetWndClassEx
+* Added   CWinClass::SetWndClassEx
+* Added   GetApp 			Added global function
+
+Version 1.0
+-----------
+Initial Release
