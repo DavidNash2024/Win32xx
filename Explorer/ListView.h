@@ -59,7 +59,6 @@ private:
 	virtual BOOL GetLastWriteTime(HANDLE hFile, LPTSTR lpszString);
 	virtual HIMAGELIST GetImageList(BOOL bLarge);
 	virtual void SetImageLists();
-	virtual void SetMenuCheck(UINT ID);
 
 	Cpidl		  m_cpidlCurFull;  //Fully Qualified pidl
 	CShellFolder  m_csfCurFolder;  //Current Folder

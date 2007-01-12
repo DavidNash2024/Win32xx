@@ -83,12 +83,15 @@ namespace Win32xx
 	void CSplitter::OnCancelMode()
 	{
 		// Handle unexpected loss of capture (application losing focus)
-		::ReleaseCapture();
-		m_bCapture = false;
+		if (m_bCapture)
+		{
+			::ReleaseCapture();
+			m_bCapture = false;
 
-		DrawBar(m_nBarPos);
-		m_nBarPos = m_nBarpreMove;
-		m_nOldBarPos = m_nBarpreMove;
+			DrawBar(m_nBarPos);
+			m_nBarPos = m_nBarpreMove;
+			m_nOldBarPos = m_nBarpreMove;
+		}
 	}
 
 	void CSplitter::OnCreate()

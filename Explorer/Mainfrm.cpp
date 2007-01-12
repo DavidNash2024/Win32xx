@@ -46,25 +46,34 @@ void CMainFrame::OnInitialUpdate()
 	
 	// Uncheck the hidden menu item
 	::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, MF_UNCHECKED);
+
+	// Place Radio button in view menu
+	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1);
+	::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 }
 
 BOOL CMainFrame::OnCommand(UINT nID)
 {
-	CFrame::OnCommand(nID);
+	// Handle the the View submenu
+	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1); 
 
 	switch (nID)
 	{
 	case IDM_VIEW_LARGEICON:
 		GetListView().ViewLargeIcons();
+		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
 		break;
 	case IDM_VIEW_SMALLICON:
 		GetListView().ViewSmallIcons();
+		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
 		break;
 	case IDM_VIEW_LIST:
 		GetListView().ViewList();
+		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
 		break;
 	case IDM_VIEW_REPORT:
 		GetListView().ViewReport();
+		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 		break;
 	case IDM_SHOW_HIDDEN:
 		m_bShowHidden = !m_bShowHidden;
@@ -75,7 +84,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		break;
 	} // switch cmd
 
-	return 0;
+	return CFrame::OnCommand(nID);
 
 } // CMainFrame::OnCommand(...)
 

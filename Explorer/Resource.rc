@@ -35,10 +35,10 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDM_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDM_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
-        MENUITEM "Large Icons",                 IDM_VIEW_LARGEICON, CHECKED
-        MENUITEM "Small Icons",                 IDM_VIEW_SMALLICON, CHECKED
-        MENUITEM "List",                        IDM_VIEW_LIST, CHECKED
-        MENUITEM "Details",                     IDM_VIEW_REPORT, CHECKED
+        MENUITEM "Large Icons",                 IDM_VIEW_LARGEICON
+        MENUITEM "Small Icons",                 IDM_VIEW_SMALLICON
+        MENUITEM "List",                        IDM_VIEW_LIST
+        MENUITEM "Details",                     IDM_VIEW_REPORT
         MENUITEM SEPARATOR
         MENUITEM "Show Hidden",                 IDM_SHOW_HIDDEN, CHECKED
     END

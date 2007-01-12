@@ -614,43 +614,28 @@ void CListView::SetImageLists()
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 
-
-void CListView::SetMenuCheck(UINT ID)
-{
-	CFrame* pFrame = GetApp()->GetFrame();
-	HMENU hMenu = pFrame->GetFrameMenu();
-	::CheckMenuItem (hMenu, IDM_VIEW_LARGEICON, (ID==IDM_VIEW_LARGEICON)? MF_CHECKED : MF_UNCHECKED);
-	::CheckMenuItem (hMenu, IDM_VIEW_SMALLICON, (ID==IDM_VIEW_SMALLICON)? MF_CHECKED : MF_UNCHECKED);
-	::CheckMenuItem (hMenu, IDM_VIEW_LIST,      (ID==IDM_VIEW_LIST)     ? MF_CHECKED : MF_UNCHECKED);
-	::CheckMenuItem (hMenu, IDM_VIEW_REPORT,    (ID==IDM_VIEW_REPORT)   ? MF_CHECKED : MF_UNCHECKED);
-}
-
 void CListView::ViewLargeIcons()
 {
 	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
 	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
-	SetMenuCheck(IDM_VIEW_LARGEICON);
 }
 
 void CListView::ViewSmallIcons()
 {
 	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
 	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
-	SetMenuCheck(IDM_VIEW_SMALLICON);
 }
 
 void CListView::ViewList()
 {
 	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
 	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
-	SetMenuCheck(IDM_VIEW_LIST);
 }
 
 void CListView::ViewReport()
 {
 	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
 	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
-	SetMenuCheck(IDM_VIEW_REPORT);
 }
 
 LRESULT CListView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

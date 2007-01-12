@@ -250,6 +250,7 @@ namespace Win32xx
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		CCriticalSection m_TraceLock;	// thread synchronisation for Trace
+		HACCEL m_hAccelTable;		// handle to the accelerator table
 		HFONT m_hFont;				// handle to the font in the Trace window
 		HINSTANCE m_hInstance;		// handle to the applications instance
 		HMODULE m_hRichEdit;		// handle to the module for the RichEdit dll

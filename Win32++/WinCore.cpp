@@ -40,6 +40,8 @@
 //  CWinApp, CWnd, and CWinException
 
 #include "WinCore.h"
+#include "Frame.h"
+#include "Default_Resource.h"
 
 
 namespace Win32xx
@@ -93,6 +95,7 @@ namespace Win32xx
  				throw CWinException(TEXT("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
 
+			m_hAccelTable = ::LoadAccelerators(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ID_MAIN));
 		}
 
 		catch (const CWinException &e)
@@ -141,18 +144,24 @@ namespace Win32xx
 	}
 
 	int CWinApp::MessageLoop()
+{
+	// This gets any messages queued for the application, and dispatches them.
+	MSG uMsg;
+	int status;
+	while ((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 	{
-		// This gets any messages queued for the application, and dispatches them.
-		MSG uMsg;
-		int status;
-		while ((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
+		if (status == -1) return -1;
+		if (GetFrame())
 		{
-			if (status == -1) return -1;
-			::TranslateMessage(&uMsg);
-			::DispatchMessage(&uMsg);
+			if (!::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg))
+			{
+				::TranslateMessage(&uMsg);
+				::DispatchMessage(&uMsg);
+			}
 		}
-		return LOWORD(uMsg.wParam);
 	}
+	return LOWORD(uMsg.wParam);
+}
 
 	TLSData* CWinApp::SetTlsIndex()
 	{
