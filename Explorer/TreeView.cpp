@@ -23,7 +23,7 @@ CTreeView::CTreeView()
 		SetImageLists();
 
 		// Superclass the Treeview
-		m_OldWindowProc = Superclass(WC_TREEVIEW, TEXT("SuperTreeView"));
+		Superclass(WC_TREEVIEW, TEXT("SuperTreeView"));
 	}
 
 	catch (CWinException &e)
@@ -466,7 +466,7 @@ LRESULT CTreeView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Now hand all messages to the original Window procedure
-	return ::CallWindowProc(m_OldWindowProc, hWnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 ///////////////////////////////////

@@ -188,6 +188,7 @@ namespace Win32xx
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
+		virtual LRESULT CallPrevWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
@@ -198,7 +199,7 @@ namespace Win32xx
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 		virtual void Subclass();
-		virtual WNDPROC Superclass(LPCTSTR OldClass, LPCTSTR NewClass);
+		virtual void /*WNDPROC*/ Superclass(LPCTSTR OldClass, LPCTSTR NewClass);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create

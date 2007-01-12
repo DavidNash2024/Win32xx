@@ -284,8 +284,9 @@ namespace Win32xx
 	//////////////////////////////////////
 	// Definitions for the CMDIClient class
 	//
-	CMDIClient::CMDIClient() : m_OldWindowProc(NULL)
+	CMDIClient::CMDIClient() //: m_OldWindowProc(NULL)
 	{
+		Superclass(TEXT("MDICLIENT"), TEXT("SuperMDIClient"));
 	}
 
 	CMDIClient::~CMDIClient()
@@ -297,10 +298,9 @@ namespace Win32xx
 		try
 		{
 			CLIENTCREATESTRUCT clientcreate ;
-			clientcreate.hWindowMenu  = m_hWnd ;
+			clientcreate.hWindowMenu  = m_hWnd;
 			clientcreate.idFirstChild = IDM_FIRSTCHILD ;
 			DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-			m_OldWindowProc = Superclass(TEXT("MDICLIENT"), TEXT("SuperMDIClient"));
 
 			// Create the view window
 			if (!CreateEx(WS_EX_CLIENTEDGE, TEXT("SuperMDIClient"), TEXT(""),
@@ -336,7 +336,7 @@ namespace Win32xx
 		case WM_MDIDESTROY:
 			{
 				// Do default processing first
-				::CallWindowProc(m_OldWindowProc, hWnd, uMsg, wParam, lParam);
+				CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
 
 				// Now remove MDI child
 				CMDIFrame* pFrame = (CMDIFrame*)GetApp()->GetFrame();
@@ -355,7 +355,7 @@ namespace Win32xx
 			}
 			break;
 		}
-		return ::CallWindowProc(m_OldWindowProc, hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -514,8 +514,7 @@ namespace Win32xx
 		{
 		case WM_COMMAND:
 			OnCommand(LOWORD(wParam));
-			break;	// Continue with default processing
-
+			break;
 		case WM_MDIACTIVATE:
 			{
 				CFrame* pFrame = GetApp()->GetFrame();

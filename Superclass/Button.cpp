@@ -7,7 +7,7 @@
 CButton::CButton()
 {
 	// This is where we superclass the button control
-	m_PrevWindowProc = Superclass(TEXT("BUTTON"), TEXT("SuperButton"));
+	Superclass(TEXT("BUTTON"), TEXT("SuperButton"));
 }
 
 CButton::~CButton()
@@ -59,5 +59,5 @@ LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	// Now hand all messages to the original Window procedure
-	return ::CallWindowProc(m_PrevWindowProc, hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 }

@@ -250,13 +250,12 @@ namespace Win32xx
 		m_bKeyMode		= FALSE;
 		m_nMaxedFlag	= 0;
 		m_hPrevFocus	= NULL;
-		m_OldWindowProc = NULL;
 		m_nMDIButton    = 0;
 
 		ZeroMemory(&m_MDIRect, 3*sizeof(RECT));
 
 		m_pTLSData->pMenubar = this;
-		m_OldWindowProc = Superclass(TOOLBARCLASSNAME, TEXT("Menubar"));
+		Superclass(TOOLBARCLASSNAME, TEXT("Menubar"));
 	}
 
 	CMenubar::~CMenubar()
@@ -1158,7 +1157,7 @@ namespace Win32xx
 			return 0L;
 		case WM_LBUTTONDOWN:
 			// Do default processing first
-			::CallWindowProc(m_OldWindowProc, hwnd, uMsg, wParam, lParam);
+			CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
 
 			OnLButtonDown(wParam, lParam);
 			return 0L;
@@ -1197,7 +1196,7 @@ namespace Win32xx
 			break;
 		} // switch (uMsg)
 
-		return ::CallWindowProc(m_OldWindowProc, hwnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
 

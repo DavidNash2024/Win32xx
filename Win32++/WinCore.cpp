@@ -349,6 +349,11 @@ namespace Win32xx
 		return Attach(hWnd);
 	}
 
+	LRESULT CWnd::CallPrevWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return ::CallWindowProc(m_PrevWindowProc, hwnd, uMsg, wParam, lParam);
+	}
+
 	HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
 	{
@@ -832,7 +837,7 @@ namespace Win32xx
 	#endif
 	}
 
-	WNDPROC CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
+	/*WNDPROC*/ void CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
 	// Superclassing occurs before window creation. It allows
 	// common controls to pass messages via CWnd::WndProc.
 	// Superclassing also allows additional messages to be processed
@@ -840,7 +845,8 @@ namespace Win32xx
 		// Step 1:  Extract the old class's window procedure
 		WNDCLASSEX wcx = {0};
 		::GetClassInfoEx(NULL, OldClass, &wcx);
-		WNDPROC OldWindowProc = wcx.lpfnWndProc;
+	//	WNDPROC OldWindowProc = wcx.lpfnWndProc;
+		m_PrevWindowProc = wcx.lpfnWndProc;
 
 		// Step 2: Register the new window class
 		wcx.hInstance = GetApp()->GetInstanceHandle();
@@ -848,7 +854,7 @@ namespace Win32xx
 		wcx.lpfnWndProc = CWnd::StaticWindowProc;
 		RegisterClassEx(wcx);
 
-		return OldWindowProc;
+//		return OldWindowProc;
 	}
 
 	LRESULT CWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

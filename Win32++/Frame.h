@@ -166,7 +166,6 @@ namespace Win32xx
 		int m_nMaxedFlag;			// 1 if Maxed MDI Child, 0 otherwise
 		int m_nMDIButton;           // the MDI button pressed
 		POINT m_OldMousePos;        // old Mouse position
-		WNDPROC m_OldWindowProc;    // old Window Procedure
 
 	};  // class CMenubar
 

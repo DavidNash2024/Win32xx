@@ -33,7 +33,7 @@ CListView::CListView()
 		SetImageLists();
 
 		// Superclass the Listview
-		m_OldWindowProc = Superclass(WC_LISTVIEW, TEXT("SuperListView"));
+		Superclass(WC_LISTVIEW, TEXT("SuperListView"));
 	}
 
 	catch (CWinException &e)
@@ -668,8 +668,8 @@ LRESULT CListView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	// Now hand all messages to the original Window procedure
-	return ::CallWindowProc(m_OldWindowProc, hWnd, uMsg, wParam, lParam);
+	// Now hand all messages to the default Window procedure
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 ///////////////////////////////////

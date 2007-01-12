@@ -17,7 +17,6 @@ public:
 
 protected:
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	WNDPROC m_PrevWindowProc;
 
 };
 

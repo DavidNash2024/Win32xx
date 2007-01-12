@@ -58,7 +58,6 @@ private:
 	HIMAGELIST m_hSmallImageList;
 	CContextMenu2 m_ccm2;
 	std::vector <TreeItemData*> m_pItems;
-	WNDPROC       m_OldWindowProc;	// Old Window Procedure
 };
 
 #endif  //TREEVIEW_H

@@ -99,11 +99,8 @@ namespace Win32xx
 	public:
 		CMDIClient();
 		virtual ~CMDIClient();
-		virtual HWND Create(HWND hWndParent = 0) ;
+		virtual HWND Create(HWND hWndParent /* = NULL*/);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-	protected:
-        WNDPROC m_OldWindowProc;
 
 	};
 

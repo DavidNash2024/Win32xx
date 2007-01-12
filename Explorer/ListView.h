@@ -64,7 +64,6 @@ private:
 	Cpidl		  m_cpidlCurFull;  //Fully Qualified pidl
 	CShellFolder  m_csfCurFolder;  //Current Folder
 	CContextMenu2 m_ccm2;
-	WNDPROC       m_OldWindowProc; // Old Window Procedure
 	std::vector <ListItemData*> m_pItems;
 	HIMAGELIST m_hLargeImageList;
 	HIMAGELIST m_hSmallImageList;
