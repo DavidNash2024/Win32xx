@@ -175,6 +175,7 @@ namespace Win32xx
 	//
 	class CFrame : public CWnd
 	{
+		friend class CMDIFrame;
 	public:
 		CFrame();
 		virtual ~CFrame();

@@ -197,6 +197,7 @@ namespace Win32xx
 		virtual void SetHook();
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
+		virtual void Subclass();
 		virtual WNDPROC Superclass(LPCTSTR OldClass, LPCTSTR NewClass);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

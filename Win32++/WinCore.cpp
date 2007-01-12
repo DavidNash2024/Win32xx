@@ -306,14 +306,8 @@ namespace Win32xx
 				if (m_hWnd)
 					throw CWinException(TEXT("Window already attached to this CWnd object"));
 
-				// Subclass the window to pass messages to WndProc
-			#if defined (_MSC_VER) && _MSC_VER <= 1200
-				// use non 64 bit compliant code for Visual C++ 6 and below
-				m_PrevWindowProc = (WNDPROC)::SetWindowLong(hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
-			#else
-				// use 64 bit compliant code otherwise
-				m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
-			#endif
+				m_hWnd = hWnd;
+				Subclass();
 
 				if (m_PrevWindowProc)
 				{
@@ -327,7 +321,10 @@ namespace Win32xx
 					return TRUE;
 				}
 				else
+				{
+					m_hWnd = NULL;
 					throw CWinException(TEXT("CWnd::Attach .. Subclass failed"));
+				}
 			}
 		}
 
@@ -822,6 +819,18 @@ namespace Win32xx
 		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);;
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
+
+	void CWnd::Subclass()
+	{
+		// Subclass the window to pass messages to WndProc
+	#if defined (_MSC_VER) && _MSC_VER <= 1200
+		// use non 64 bit compliant code for Visual C++ 6 and below
+		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
+	#else
+		// use 64 bit compliant code otherwise
+		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+	#endif
+	}
 
 	WNDPROC CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
 	// Superclassing occurs before window creation. It allows
