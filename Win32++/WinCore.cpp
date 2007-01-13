@@ -859,7 +859,6 @@ namespace Win32xx
 		// Step 1:  Extract the old class's window procedure
 		WNDCLASSEX wcx = {0};
 		::GetClassInfoEx(NULL, OldClass, &wcx);
-	//	WNDPROC OldWindowProc = wcx.lpfnWndProc;
 		m_PrevWindowProc = wcx.lpfnWndProc;
 
 		// Step 2: Register the new window class
@@ -867,8 +866,6 @@ namespace Win32xx
 		wcx.lpszClassName = NewClass;
 		wcx.lpfnWndProc = CWnd::StaticWindowProc;
 		RegisterClassEx(wcx);
-
-//		return OldWindowProc;
 	}
 
 	LRESULT CWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

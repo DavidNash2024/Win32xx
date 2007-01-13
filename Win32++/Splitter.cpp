@@ -57,22 +57,25 @@ namespace Win32xx
 
 	void CSplitter::DrawBar(int Pos)
 	{
-		HDC hDC = ::GetDC(m_hWnd);
-		HBRUSH hOldBrush = (HBRUSH)::SelectObject(hDC, (HBRUSH)m_hbrDithered);
+		if (m_bCapture)
+		{
+			HDC hDC = ::GetDC(m_hWnd);
+			HBRUSH hOldBrush = (HBRUSH)::SelectObject(hDC, (HBRUSH)m_hbrDithered);
 
-		RECT rc = {0};
-		GetClientRect(m_hWnd, &rc);
-		int cx = rc.right - rc.left;
-		int cy = rc.bottom - rc.top;
+			RECT rc = {0};
+			GetClientRect(m_hWnd, &rc);
+			int cx = rc.right - rc.left;
+			int cy = rc.bottom - rc.top;
 
-		if (m_bVertical)
-			::PatBlt (hDC, Pos - m_nWidth/2, 0, m_nWidth, cy, PATINVERT);
-		else
-			::PatBlt (hDC, 0, Pos - m_nWidth/2, cx, m_nWidth, PATINVERT);
+			if (m_bVertical)
+				::PatBlt (hDC, Pos - m_nWidth/2, 0, m_nWidth, cy, PATINVERT);
+			else
+				::PatBlt (hDC, 0, Pos - m_nWidth/2, cx, m_nWidth, PATINVERT);
 
-		// Clean up
-		::SelectObject(hDC, hOldBrush);
-		::ReleaseDC(m_hWndParent, hDC);
+			// Clean up
+			::SelectObject(hDC, hOldBrush);
+			::ReleaseDC(m_hWndParent, hDC);
+		}
 	}
 
 	int CSplitter::GetBarPos()
@@ -198,6 +201,11 @@ namespace Win32xx
 
 			m_nOldBarPos = m_nBarPos;
 		}
+	}
+
+	LRESULT CSplitter::OnNotify(WPARAM wParam, LPARAM lParam)
+	{
+		return ::SendMessage(m_hWndParent, WM_NOTIFY, wParam, lParam);
 	}
 
 	void CSplitter::OnSize()

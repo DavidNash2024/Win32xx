@@ -1783,7 +1783,7 @@ namespace Win32xx
 			StatusPaneSizes.push_back(width - 50);
 			StatusPaneSizes.push_back(width - 20);
 			
-			// Set the pane sizes
+			// Set the statusbar pane sizes
 			GetStatusbar().SetPaneSizes(StatusPaneSizes);
 
 			// Fill the vector with text

@@ -199,7 +199,7 @@ namespace Win32xx
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 		virtual void Subclass();
-		virtual void /*WNDPROC*/ Superclass(LPCTSTR OldClass, LPCTSTR NewClass);
+		virtual void Superclass(LPCTSTR OldClass, LPCTSTR NewClass);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
