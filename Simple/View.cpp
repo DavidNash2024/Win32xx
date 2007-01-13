@@ -84,7 +84,7 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;		// Refer to the Platform SDK for correct return value
 
 	case WM_SIZE:
-	//	OnSize();
+		OnSize();
 		return TRUE;	// Refer to the Platform SDK for correct return value
 	}
 

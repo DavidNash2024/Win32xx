@@ -159,6 +159,11 @@ namespace Win32xx
 				::DispatchMessage(&uMsg);
 			}
 		}
+		else
+		{
+			::TranslateMessage(&uMsg);
+			::DispatchMessage(&uMsg);
+		}
 	}
 	return LOWORD(uMsg.wParam);
 }
