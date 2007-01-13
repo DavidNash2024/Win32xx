@@ -1,5 +1,5 @@
 // Win32++  Version 5.0.2 Beta 
-// Modified: 10th January, 2007 by:
+// Modified: 13th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -59,6 +59,64 @@ namespace Win32xx
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 		cs.lpszClass = STATUSCLASSNAME;
+	}
+
+	void CStatusbar::SetPaneSizes(std::vector<int> StatusPaneSizes)
+	{
+		try
+		{
+			int nPanes = StatusPaneSizes.size();		
+
+			// Create the int array from StatusPaneSizes vector
+			int* PaneWidths = new int[nPanes];
+			for (int i = 0 ; i < nPanes ; i++)
+			{
+				PaneWidths[i] = StatusPaneSizes[i];
+			}
+
+			// Create the statusbar panes
+			if (!::SendMessage(m_hWnd, SB_SETPARTS, nPanes, (LPARAM)PaneWidths))
+				throw (CWinException(TEXT("CStatusbar::SetPaneSize failed")));
+
+			delete []PaneWidths;
+		}
+		
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CStatusbar::SetPaneSizes"));
+		}
+	}
+
+	void CStatusbar::SetText(std::vector<LPCTSTR> StatusText )
+	{
+		try
+		{
+			int nParts = ::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
+			int nText = StatusText.size();
+			
+			// int iMin = min(nParts, nText)
+			int iMin = (nParts < nText) ? nParts : nText;
+
+			for (int i = 0 ; i < iMin; i++)
+			{
+				::SendMessage(m_hWnd, SB_SETTEXT, i, (LPARAM)StatusText[i]);
+			}
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CStatusbar::SetText"));
+		}
 	}
 
 
@@ -1707,40 +1765,36 @@ namespace Win32xx
 
 	void CFrame::SetStatusText(LPCTSTR szText /*= "Ready"*/)
 	{
-		try
+		HWND hStatus = GetStatusbar().GetHwnd();
+	
+		if (IsWindow(hStatus))
 		{
-			HWND hStatus = GetStatusbar().GetHwnd();
-			if (IsWindow(hStatus))
-			{
-				// Get the coordinates of the parent window's client area.
-				RECT rcClient;
-				::GetClientRect(m_hWnd, &rcClient);
+			// Get the coordinates of the parent window's client area.
+			RECT rcClient;
+			::GetClientRect(m_hWnd, &rcClient);
 
-				// width = max(300, rcClient.right)
-				int width = (300 > rcClient.right) ? 300 : rcClient.right;
+			// width = max(300, rcClient.right)
+			int width = (300 > rcClient.right) ? 300 : rcClient.right;
 
-				// Allocate an array for holding the right edge coordinates.
-				int iStatusWidths[] = { width-110, width-80, width-50, width-20};
+			// Fill the vector with the pane sizes
+			std::vector<int> StatusPaneSizes;
+			StatusPaneSizes.push_back(width - 110);
+			StatusPaneSizes.push_back(width - 80);
+			StatusPaneSizes.push_back(width - 50);
+			StatusPaneSizes.push_back(width - 20);
+			
+			// Set the pane sizes
+			GetStatusbar().SetPaneSizes(StatusPaneSizes);
 
-				// Tell the status bar to create the window with 4 panes.
-				if (!::SendMessage(hStatus, SB_SETPARTS, 4, (LPARAM)iStatusWidths))
-					throw (CWinException(TEXT("CStatusbar::SetText failed")));
+			// Fill the vector with text
+			std::vector<LPCTSTR> StatusText;
+			StatusText.push_back(szText);
+			StatusText.push_back((::GetKeyState(VK_CAPITAL) & 0x0001)? TEXT("\tCAP") : TEXT(""));
+			StatusText.push_back((::GetKeyState(VK_NUMLOCK) & 0x0001)? TEXT("\tNUM") : TEXT(""));
+			StatusText.push_back((::GetKeyState(VK_SCROLL)  & 0x0001)? TEXT("\tSCRL"): TEXT(""));
 
-				//Send text to the window panes
-				::SendMessage(hStatus, SB_SETTEXT, 0 | SBT_NOBORDERS, (LPARAM)(LPCTSTR)szText);
-				::SendMessage(hStatus, SB_SETTEXT, 1, (::GetKeyState(VK_CAPITAL) & 0x0001)? (LPARAM)TEXT("\tCAP") : (LPARAM)TEXT(""));
-				::SendMessage(hStatus, SB_SETTEXT, 2, (::GetKeyState(VK_NUMLOCK) & 0x0001)? (LPARAM)TEXT("\tNUM") : (LPARAM)TEXT(""));
-				::SendMessage(hStatus, SB_SETTEXT, 3, (::GetKeyState(VK_SCROLL)  & 0x0001)? (LPARAM)TEXT("\tSCRL"): (LPARAM)TEXT(""));
-			}
-		}
-
-		catch(const CWinException &e)
-		{
-			e.MessageBox();
-		}
-		catch(...)
-		{
-			DebugErrMsg(TEXT("Exception in CStatusbar::SetText"));
+			//Send text to the statusbar	
+			GetStatusbar().SetText(StatusText);
 		}
 	}
 

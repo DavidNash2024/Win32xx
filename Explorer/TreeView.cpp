@@ -465,7 +465,7 @@ LRESULT CTreeView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	// Now hand all messages to the original Window procedure
+	// Now hand all messages to the default Window procedure
 	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

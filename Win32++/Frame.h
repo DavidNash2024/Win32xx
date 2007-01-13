@@ -1,5 +1,5 @@
 // Win32++  Version 5.0.2 Beta
-// Modified: 10th January, 2007 by:
+// Modified: 13th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -57,6 +57,8 @@ namespace Win32xx
 		CStatusbar() {}
 		virtual ~CStatusbar() {}
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void SetPaneSizes(std::vector<int> StatusPaneSizes);
+		virtual void SetText(std::vector<LPCTSTR> StatusText );
 	};
 
 

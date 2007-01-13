@@ -1,5 +1,5 @@
 // Win32++  Version 5.0.2 Beta
-// Modified: 10th January, 2007 by:
+// Modified: 13th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
