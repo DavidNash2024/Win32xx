@@ -55,7 +55,7 @@ namespace Win32xx
 	{
 	public:
 		CSplitter(int nBarpos, BOOL bVertical);
-		virtual ~CSplitter(){}
+		virtual ~CSplitter();
 		virtual	int GetBarPos();
 		virtual void SetBarPos(int nBarPos);
 		virtual void SetWidth(int nWidth);

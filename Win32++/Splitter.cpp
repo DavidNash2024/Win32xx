@@ -55,6 +55,12 @@ namespace Win32xx
 		m_nBarpreMove = m_nBarPos;
 	}
 
+	CSplitter::~CSplitter()
+	{
+		::DeleteObject(m_hbrDithered);
+		::DeleteObject(m_hbm);
+	}
+
 	void CSplitter::DrawBar(int Pos)
 	{
 		if (m_bCapture)

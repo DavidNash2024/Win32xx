@@ -1769,6 +1769,7 @@ namespace Win32xx
 				throw (CWinException(TEXT("CFrame::SetButtons  .. TB_ADDBUTTONS failed ")));
 
 			delete []tbb;
+			delete []Buttons;
 		}
 		catch(const CWinException &e)
 		{
