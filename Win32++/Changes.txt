@@ -5,6 +5,13 @@ Major Changes:
   OnNotifyReflect in the CWnd that generated them.
 * Existing windows (including dialog items) can now be attached to a CWnd.
   The window is automatically subclassed when attached to a CWnd.
+* Integrated subclassing and superclassing into the framwork. Superclassing and
+  subclassing is much simpler now.  Win32++ now keeps track of the previous window 
+  procedure, and calls it automatically at the end of CWnd::WndProc
+* Toolbar notifies frame via ToolbarNotify when the mouse is over a toolbar 
+  button.
+* Setting statusbar text is simplified. CStatusbar::SetText takes a vector of
+  LPCTSTR to set the text in the various panes.
 
 
 Removed CFrame::OnFrameCreated.  Use CFrame::OnInitialUpdate instead.
@@ -12,9 +19,12 @@ CWnd::OnNotify returns a LRESULT
 Added CWnd::OnNotifyReflect
 Added CWnd::Attach
 Added CWnd::AttachDlgItem
+Added CWnd::CallPrevWindow
 Added CWnd::Detach
 Added CStatusbar::SetText
-Added CStatusbar::SetOaneSizes
+Added CStatusbar::SetPaneSizes
+Added CToolbar::HitTest
+Added CFrame::ToolbarNotify
 Moved CToolbar::SetButtons to CFrame::SetButtons
 CFrame::AddMenubarBand modified to CFrame::AddMenubarBand(int nHeight)
 CFrame::AddToolbarBand modified to CFrame::AddToolbarBand(int nHeight)
@@ -22,6 +32,7 @@ CFrame::AddToolbarBand modified to CFrame::AddToolbarBand(int nHeight)
 Bug Fixes
 * CFrame::OnHelp now returns the focus back to the window that had it before OnHelp 
   was called.
+* CSplitter:: Fixed drawing of splitter bar  
 
 Version 5.0
 -----------
