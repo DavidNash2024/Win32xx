@@ -1,4 +1,4 @@
-// Win32++  Version 5.0.2 Beta 
+// Win32++  Version 5.0.2 Beta
 // Modified: 13th January, 2007 by:
 //
 //      David Nash
@@ -65,7 +65,7 @@ namespace Win32xx
 	{
 		try
 		{
-			int nPanes = StatusPaneSizes.size();		
+			int nPanes = StatusPaneSizes.size();
 
 			// Create the int array from StatusPaneSizes vector
 			int* PaneWidths = new int[nPanes];
@@ -80,7 +80,7 @@ namespace Win32xx
 
 			delete []PaneWidths;
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
@@ -98,7 +98,7 @@ namespace Win32xx
 		{
 			int nParts = ::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
 			int nText = StatusText.size();
-			
+
 			// int iMin = min(nParts, nText)
 			int iMin = (nParts < nText) ? nParts : nText;
 
@@ -156,7 +156,7 @@ namespace Win32xx
 
 	int CToolbar::HitTest()
 	{
-		// We do our own hit test since TB_HITTEST is a bit buggy, 
+		// We do our own hit test since TB_HITTEST is a bit buggy,
 		// and doesn't work at all on earliest versions of Win95
 
 		POINT pt = {0};
@@ -190,8 +190,8 @@ namespace Win32xx
 		case WM_MOUSELEAVE:
 			pFrame->ToolbarNotify(-1);
 			break;
-		}  
-		return CWnd::WndProc(hwnd, uMsg, wParam, lParam); 
+		}
+		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 	}
 
 	///////////////////////////////////
@@ -1259,8 +1259,8 @@ namespace Win32xx
 	//////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	CFrame::CFrame() : m_bIsMDIFrame(FALSE), m_bUseMenubar(FALSE), m_bUseRebar(FALSE), m_bSupportRebars(FALSE),
-		                  m_pView(NULL), m_ToolbarButtons(0), m_ToolbarData(NULL)
+	CFrame::CFrame() : m_ToolbarButtons(0), m_ToolbarData(NULL), m_bUseMenubar(FALSE), m_bUseRebar(FALSE),
+		                  m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE), m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
 		INITCOMMONCONTROLSEX InitStruct;
@@ -1506,7 +1506,7 @@ namespace Win32xx
 	}
 
 	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
-	{	
+	{
 		switch (((LPNMHDR)lParam)->code)
 		{
 		case EN_MSGFILTER:  // Keydown event for RichEdit control
@@ -1778,12 +1778,12 @@ namespace Win32xx
 		{
 			DebugErrMsg(TEXT("Exception in CFrame::SetButtons"));
 		}
-	} 
+	}
 
 	void CFrame::SetStatusText(LPCTSTR szText /*= "Ready"*/)
 	{
 		HWND hStatus = GetStatusbar().GetHwnd();
-	
+
 		if (IsWindow(hStatus))
 		{
 			// Get the coordinates of the parent window's client area.
@@ -1799,7 +1799,7 @@ namespace Win32xx
 			StatusPaneSizes.push_back(width - 80);
 			StatusPaneSizes.push_back(width - 50);
 			StatusPaneSizes.push_back(width - 20);
-			
+
 			// Set the statusbar pane sizes
 			GetStatusbar().SetPaneSizes(StatusPaneSizes);
 
@@ -1810,7 +1810,7 @@ namespace Win32xx
 			StatusText.push_back((::GetKeyState(VK_NUMLOCK) & 0x0001)? TEXT("\tNUM") : TEXT(""));
 			StatusText.push_back((::GetKeyState(VK_SCROLL)  & 0x0001)? TEXT("\tSCRL"): TEXT(""));
 
-			//Send text to the statusbar	
+			//Send text to the statusbar
 			GetStatusbar().SetText(StatusText);
 		}
 	}

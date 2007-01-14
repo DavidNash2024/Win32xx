@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<!DOCTYPE CodeBlocks_project_file>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="DlgSubclass"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>
+		<Option default_target="5"/>
+		<Option compiler="1"/>
+		<Build>
+			<Target title="Debug Borland">
+				<Option output="borland\debug\DlsSubclass.exe"/>
+				<Option working_dir="Borland\Debug"/>
+				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\Win32++\DlgSubclass\Borland\Debug"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="2"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
+				<Compiler>
+					<Add option="-w-par"/>
+					<Add option="-D_DEBUG"/>
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Borland\BCC55\Include"/>
+				</ResourceCompiler>
+				<Linker>
+					<Add library="C:\Borland\BCC55\Lib\cw32mt.lib"/>
+					<Add library="C:\Borland\BCC55\Lib\PSDK\comctl32.lib"/>
+					<Add library="C:\Borland\BCC55\Lib\import32.lib"/>
+				</Linker>
+			</Target>
+			<Target title="Release Borland">
+				<Option output="Borland\Release\DlgSubclass.exe"/>
+				<Option working_dir="Borland\Release"/>
+				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\Win32++\DlgSubclass\Borland\Release"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="2"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
+				<Compiler>
+					<Add option="-w-par"/>
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Borland\BCC55\Include"/>
+				</ResourceCompiler>
+				<Linker>
+					<Add library="C:\Borland\BCC55\Lib\PSDK\comctl32.lib"/>
+					<Add library="C:\Borland\BCC55\Lib\import32.lib"/>
+					<Add library="C:\Borland\BCC55\Lib\cw32mt.lib"/>
+				</Linker>
+			</Target>
+			<Target title="Debug Microsoft Visual C++">
+				<Option output="Microsoft\Debug\DlgSubclass.exe"/>
+				<Option working_dir="Microsoft\Debug"/>
+				<Option object_output="Microsoft\Debug"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="1"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
+				<Compiler>
+					<Add option="/MLd"/>
+					<Add option="/GA"/>
+					<Add option="/GX"/>
+					<Add option="/W3"/>
+					<Add option="/Zi"/>
+					<Add option="/DWIN32"/>
+					<Add option="/D_DEBUG"/>
+					<Add option="/D_WINDOWS"/>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+				</ResourceCompiler>
+				<Linker>
+					<Add option="/DEBUG"/>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\ComCtl32.Lib"/>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\Gdi32.Lib"/>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\User32.Lib"/>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\Kernel32.Lib"/>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib"/>
+				</Linker>
+			</Target>
+			<Target title="Release Microsoft Visual C++">
+				<Option output="Microsoft\Release\DlgSubclass.exe"/>
+				<Option working_dir="Microsoft\Release"/>
+				<Option object_output="Microsoft\Release"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="1"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
+				<Compiler>
+					<Add option="/MT"/>
+					<Add option="/GX"/>
+					<Add option="/Ox"/>
+					<Add option="/W3"/>
+					<Add option="/DWIN32"/>
+					<Add option="/DNDEBUG"/>
+					<Add option="/D_WINDOWS"/>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+				</ResourceCompiler>
+				<Linker>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\ComCtl32.Lib"/>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\Gdi32.Lib"/>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\Kernel32.Lib"/>
+					<Add library="C:\Program Files\Microsoft Platform SDK\Lib\User32.Lib"/>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib"/>
+				</Linker>
+			</Target>
+			<Target title="Debug MinGW GNU compiler">
+				<Option output="GNU\Debug\DlgSubclass.exe"/>
+				<Option working_dir="GNU\Debug"/>
+				<Option object_output="GNU\Debug"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="0"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
+				<Compiler>
+					<Add option="-g"/>
+					<Add option="-g3"/>
+					<Add option="-D__DEBUG__"/>
+					<Add option="-D_DEBUG"/>
+				</Compiler>
+				<Linker>
+					<Add library="C:\Dev-Cpp\lib\libcomctl32.a"/>
+				</Linker>
+			</Target>
+			<Target title="Release MinGW GNU compiler">
+				<Option output="GNU\Release\DlgSubclass.exe"/>
+				<Option working_dir="GNU\Release"/>
+				<Option object_output="GNU\Release"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="0"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
+				<Linker>
+					<Add library="C:\Dev-Cpp\lib\libcomctl32.a"/>
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="Button.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="Button.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="DlgSubclassApp.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="DlgSubclassApp.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="MyDialog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="MyDialog.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="Resource.rc">
+			<Option compilerVar="WINDRES"/>
+			<Option objectName="DlgSubclass\Resource.res"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="main.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="resource.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="resrc1.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="..\Win32++\Dialog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="..\Win32++\Dialog.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="..\Win32++\WinCore.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="..\Win32++\WinCore.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

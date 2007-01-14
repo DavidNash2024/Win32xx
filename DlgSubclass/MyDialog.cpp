@@ -36,7 +36,7 @@ BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	//Use the dialogframe default message handling for remaining messages
 	return CDialog::DialogProc(hwnd, uMsg, wParam, lParam);
-} 
+}
 
 BOOL CMyDialog::OnCommand(UINT nID)
 {
@@ -64,7 +64,7 @@ BOOL CMyDialog::OnCommand(UINT nID)
 		OnCheck3();
 		return TRUE;
     } //switch (nID)
-	
+
 	return TRUE;
 }
 
@@ -95,44 +95,44 @@ void CMyDialog::OnOK()
 	CDialog::OnOK();
 }
 
-void CMyDialog::OnButton() 
+void CMyDialog::OnButton()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Button Pressed"));
 	TRACE(TEXT("Button Pressed"));
 }
 
-void CMyDialog::OnCheck1() 
+void CMyDialog::OnCheck1()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 1"));
 	TRACE(TEXT("Check Box 1"));
 }
 
-void CMyDialog::OnCheck2() 
+void CMyDialog::OnCheck2()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 2"));
 	TRACE(TEXT("Check Box 2"));
 }
 
-void CMyDialog::OnCheck3() 
+void CMyDialog::OnCheck3()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 3"));
 	TRACE(TEXT("Check Box 3"));
 }
 
-void CMyDialog::OnRadio1() 
+void CMyDialog::OnRadio1()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 1"));
 	TRACE(TEXT("Radio 1"));
 }
 
-void CMyDialog::OnRadio2() 
+void CMyDialog::OnRadio2()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 2"));
-	
+
 	TRACE(TEXT("Radio 2"));
 }
 
-void CMyDialog::OnRadio3() 
+void CMyDialog::OnRadio3()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 3"));
 	TRACE(TEXT("Radio 3"));
