@@ -125,6 +125,7 @@ namespace Win32xx
 	//
 	CToolbar::CToolbar()
 	{
+		Superclass(TOOLBARCLASSNAME, TEXT("Toolbar"));
 	}
 
 	CToolbar::~CToolbar()
@@ -134,7 +135,7 @@ namespace Win32xx
 	void CToolbar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
-		cs.lpszClass = TOOLBARCLASSNAME;
+		cs.lpszClass = TEXT("Toolbar");
 
 		// Add extra styles for toolbars inside a rebar
 		CFrame* pFrame = GetApp()->GetFrame();
@@ -144,13 +145,53 @@ namespace Win32xx
 
 	void CToolbar::DisableButton(const int iButtonID)
 	{
-		// An example of iButtonID would be ID_FILE_OPEN
+		// An example of iButtonID would be IDM_FILE_OPEN
 		::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0));
 	}
 
 	void CToolbar::EnableButton(const int iButtonID)
 	{
 		::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 ));
+	}
+
+	int CToolbar::HitTest()
+	{
+		// We do our own hit test since TB_HITTEST is a bit buggy, 
+		// and doesn't work at all on earliest versions of Win95
+
+		POINT pt = {0};
+		::GetCursorPos(&pt);
+		::ScreenToClient(m_hWnd, &pt);
+		RECT r;
+
+		int nButtons = ::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
+		int iButton = -1;
+
+		for (int i = 0 ; i < nButtons; i++)
+		{
+			::SendMessage(m_hWnd, TB_GETITEMRECT, i, (LPARAM) &r);
+			if (::PtInRect(&r, pt))
+				iButton = i;
+		}
+
+		return iButton;
+	}
+
+	LRESULT CToolbar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		CFrame* pFrame = GetApp()->GetFrame();
+
+		switch (uMsg)
+		{
+		case WM_MOUSEMOVE:
+			pFrame->ToolbarNotify(HitTest());
+			break;
+
+		case WM_MOUSELEAVE:
+			pFrame->ToolbarNotify(-1);
+			break;
+		}  
+		return CWnd::WndProc(hwnd, uMsg, wParam, lParam); 
 	}
 
 	///////////////////////////////////
@@ -1465,7 +1506,7 @@ namespace Win32xx
 	}
 
 	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
-	{
+	{	
 		switch (((LPNMHDR)lParam)->code)
 		{
 		case EN_MSGFILTER:  // Keydown event for RichEdit control
@@ -1492,37 +1533,13 @@ namespace Win32xx
 			::InvalidateRect(m_hWnd, NULL, TRUE);
 			break;
 
-		// Quick method for updating status bar text from tool bar buttons (requires IE 4 or higher)
-		case TBN_HOTITEMCHANGE:
-			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
-			{
-				LPNMTBHOTITEM pHotItem = (LPNMTBHOTITEM)lParam;
-
-				if (!(pHotItem->dwFlags & HICF_LEAVING))
-					SetStatusText(LoadString(pHotItem->idNew));
-				else
-					SetStatusText(TEXT("Ready"));
-			}
-			break;
-
 		// Display ToolTip
 		case TTN_GETDISPINFO:
 			{
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
 				INT idButton = (INT)lpDispInfo->hdr.idFrom;
 				lpDispInfo->lpszText = (LPTSTR)LoadString(idButton);
-
-				// Slower method of updating the Status Bar text, waiting for tooltip
-				// (works with IE version 3 and higher)
-				if (!IsMenubarUsed())
-					SetStatusText(LoadString(idButton));
 			}
-			break;
-
-		case TTN_POP:
-			if (((LPNMHDR)lParam)->hwndFrom != GetToolbar().GetHwnd()) break;
-				// Sets the "slower method" status bar text back to default
-				SetStatusText(TEXT("Ready"));
 			break;
 
 		} // switch LPNMHDR
@@ -1832,6 +1849,28 @@ namespace Win32xx
 	{
 		// You call this function to assign the View window object to the frame
 		m_pView = &View;
+	}
+
+	void CFrame::ToolbarNotify(int nButton)
+	{
+		// Updates the statusbar when the mouse hovers over a toolbar buttton
+		TBBUTTON TBbutton = {0};
+		static int nOldID = -1;
+
+		if (nButton >= 0)
+		{
+			::SendMessage(GetToolbar().GetHwnd(), TB_GETBUTTON, (WPARAM) nButton, (LPARAM) &TBbutton);
+			int nID = TBbutton.idCommand;
+			if (nID != nOldID)
+				SetStatusText(LoadString(TBbutton.idCommand));
+			nOldID = nID;
+		}
+		else
+		{
+			if (nOldID != -1)
+				SetStatusText(TEXT("Ready"));
+			nOldID = -1;
+		}
 	}
 
 	LRESULT CFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

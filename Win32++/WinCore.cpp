@@ -858,6 +858,7 @@ namespace Win32xx
 	{
 		// Step 1:  Extract the old class's window procedure
 		WNDCLASSEX wcx = {0};
+		wcx.cbSize = sizeof(WNDCLASSEX);
 		::GetClassInfoEx(NULL, OldClass, &wcx);
 		m_PrevWindowProc = wcx.lpfnWndProc;
 
@@ -887,6 +888,7 @@ namespace Win32xx
 	//		::PostQuitMessage(0);
 	//		return 0L;
 		case WM_NOTIFY:
+			if (m_PrevWindowProc) break;
 			return OnNotify(wParam, lParam);
 		case WM_PAINT:
 			{

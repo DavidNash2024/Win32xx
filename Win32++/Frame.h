@@ -72,9 +72,11 @@ namespace Win32xx
 		virtual ~CToolbar();
 		virtual void DisableButton(const int iButtonID);
 		virtual void EnableButton(const int iButtonID);
+		virtual int HitTest();
 
 	protected:
 		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	};  // class CToolbar
 
@@ -175,6 +177,7 @@ namespace Win32xx
 	class CFrame : public CWnd
 	{
 		friend class CMDIFrame;
+		friend class CToolbar;
 	public:
 		CFrame();
 		virtual ~CFrame();
@@ -211,6 +214,7 @@ namespace Win32xx
 		virtual void OnViewToolbar();
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
+		virtual void ToolbarNotify(int nButton);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		int m_ToolbarButtons;		// number of toolbar buttons
