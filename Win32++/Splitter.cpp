@@ -209,11 +209,6 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CSplitter::OnNotify(WPARAM wParam, LPARAM lParam)
-	{
-		return ::SendMessage(m_hWndParent, WM_NOTIFY, wParam, lParam);
-	}
-
 	void CSplitter::OnSize()
 	{
 		RecalcLayout();

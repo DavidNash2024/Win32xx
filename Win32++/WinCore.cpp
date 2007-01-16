@@ -144,29 +144,33 @@ namespace Win32xx
 	}
 
 	int CWinApp::MessageLoop()
-{
-	// This gets any messages queued for the application, and dispatches them.
-	MSG uMsg;
-	int status;
-	while ((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 	{
-		if (status == -1) return -1;
-		if (GetFrame())
+		// This gets any messages queued for the application, and dispatches them.
+		
+		MSG uMsg;
+		int status;
+
+		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
-			if (!::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg))
+			if (status == -1) return -1;
+
+			if (GetFrame())
+			{
+				if (!::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg))
+				{
+					::TranslateMessage(&uMsg);
+					::DispatchMessage(&uMsg);
+				}
+			}
+			else
 			{
 				::TranslateMessage(&uMsg);
 				::DispatchMessage(&uMsg);
-			}
+			}	
+
 		}
-		else
-		{
-			::TranslateMessage(&uMsg);
-			::DispatchMessage(&uMsg);
-		}
+		return LOWORD(uMsg.wParam);
 	}
-	return LOWORD(uMsg.wParam);
-}
 
 	TLSData* CWinApp::SetTlsIndex()
 	{

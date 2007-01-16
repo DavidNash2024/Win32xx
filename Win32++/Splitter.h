@@ -67,7 +67,6 @@ namespace Win32xx
 		virtual void OnLButtonDown();
 		virtual void OnLButtonUp();
 		virtual void OnMouseMove();
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnSize();
 		virtual void RecalcLayout();
 		virtual void SetPanes(CWnd& Pane0, CWnd& Pane1);

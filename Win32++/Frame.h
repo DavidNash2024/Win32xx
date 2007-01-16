@@ -57,8 +57,9 @@ namespace Win32xx
 		CStatusbar() {}
 		virtual ~CStatusbar() {}
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetPaneSizes(std::vector<int> StatusPaneSizes);
-		virtual void SetText(std::vector<LPCTSTR> StatusText );
+		virtual void CreatePanes(int iPanes, int iPaneWidths[]);
+		virtual void SetPaneText(int iPane, LPCTSTR szText);
+		virtual void SetPaneWidth(int iPane, int iWidth);
 	};
 
 
@@ -178,6 +179,7 @@ namespace Win32xx
 	{
 		friend class CMDIFrame;
 		friend class CToolbar;
+		friend class CWinApp;
 	public:
 		CFrame();
 		virtual ~CFrame();
@@ -197,6 +199,7 @@ namespace Win32xx
 		virtual	void SetButtons(int iNumButtons, BYTE bButtonArray[][2]);
 		virtual void SetView(CWnd& pView);
 		virtual void SetToolbarData(int nButtons, BYTE ToolbarData[][2]);
+		virtual void SetStatusIndicators();
 		virtual void SetStatusText(LPCTSTR szText = TEXT("Ready"));
 
 	protected:
@@ -206,7 +209,6 @@ namespace Win32xx
 		virtual BOOL OnCommand(UINT nID);
 		virtual void OnCreate();
 		virtual void OnHelp();
-		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
@@ -240,6 +242,7 @@ namespace Win32xx
 		CWnd* m_pView;				// pointer to the View CWnd object
 		enum Constants
 		{
+			ID_STATUS_TIMER = 1,
 			MENUBAR_HEIGHT  = 22,
 			TOOLBAR_HEIGHT  = 24,
 		};

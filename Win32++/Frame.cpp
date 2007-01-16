@@ -61,24 +61,19 @@ namespace Win32xx
 		cs.lpszClass = STATUSCLASSNAME;
 	}
 
-	void CStatusbar::SetPaneSizes(std::vector<int> StatusPaneSizes)
+	void CStatusbar::CreatePanes(int iPanes, int iPaneWidths[])
 	{
 		try
 		{
-			int nPanes = StatusPaneSizes.size();
+			if (iPanes > 256)
+				throw CWinException (TEXT("CStatusbar::CreatePanes ... Too many panes"));
 
-			// Create the int array from StatusPaneSizes vector
-			int* PaneWidths = new int[nPanes];
-			for (int i = 0 ; i < nPanes ; i++)
-			{
-				PaneWidths[i] = StatusPaneSizes[i];
-			}
-
+			if (iPanes < 0)
+				iPanes = 1;
+			
 			// Create the statusbar panes
-			if (!::SendMessage(m_hWnd, SB_SETPARTS, nPanes, (LPARAM)PaneWidths))
-				throw (CWinException(TEXT("CStatusbar::SetPaneSize failed")));
-
-			delete []PaneWidths;
+			if (!::SendMessage(m_hWnd, SB_SETPARTS, iPanes, (LPARAM)iPaneWidths))
+				throw CWinException(TEXT("CStatusbar::CreatePanes failed"));
 		}
 
 		catch (const CWinException &e)
@@ -88,24 +83,17 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CStatusbar::SetPaneSizes"));
+			DebugErrMsg(TEXT("Exception in CStatusbar::CreatePanes"));
 		}
 	}
 
-	void CStatusbar::SetText(std::vector<LPCTSTR> StatusText )
+	void CStatusbar::SetPaneText(int iPane, LPCTSTR szText )
 	{
 		try
 		{
-			int nParts = ::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
-			int nText = StatusText.size();
-
-			// int iMin = min(nParts, nText)
-			int iMin = (nParts < nText) ? nParts : nText;
-
-			for (int i = 0 ; i < iMin; i++)
-			{
-				::SendMessage(m_hWnd, SB_SETTEXT, i, (LPARAM)StatusText[i]);
-			}
+			if (::SendMessage(m_hWnd, SB_GETPARTS, 0, 0) >= iPane)
+				if (!::SendMessage(m_hWnd, SB_SETTEXT, iPane, (LPARAM)szText))
+					throw CWinException("Failed to set status bar text");
 		}
 
 		catch (const CWinException &e)
@@ -115,8 +103,54 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CStatusbar::SetText"));
+			DebugErrMsg(TEXT("Exception in CStatusbar::SetPaneText"));
 		}
+	}
+
+	void CStatusbar::SetPaneWidth(int iPane, int iWidth)
+	{
+		// This changes the width of an existing pane, or creates a new pane
+		// with the specified width
+		try
+		{
+			if ((iPane > 256) || (iWidth < 0))
+				throw CWinException (TEXT("CStatusbar::SetPaneWidth ... Invalid parameters"));
+
+			if (iPane < 0) iPane = 0;
+
+			int iParts = ::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
+			int* iPaneWidths = new int[iParts];
+			::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);
+
+			int iNewParts = max(iPane+1, iParts);
+			int* iNewPaneWidths = new int[iNewParts];
+			ZeroMemory(iNewPaneWidths, iNewParts*sizeof(int));
+
+			for (int i = 0; i < iParts; i++)
+				iNewPaneWidths[i] = iPaneWidths[i];
+
+			if (iPane == 0)
+				iNewPaneWidths[iPane] = iWidth;
+			else
+				iNewPaneWidths[iPane] = iNewPaneWidths[iPane -1] + iWidth;
+
+			if (!::SendMessage(m_hWnd, SB_SETPARTS, iNewParts, (LPARAM)iNewPaneWidths))
+				throw CWinException(TEXT("CStatusbar::SetPaneWidth failed"));
+			
+			delete []iNewPaneWidths;
+			delete []iPaneWidths;
+		}
+		
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CStatusbar::SetPaneWidth"));
+		}
+
 	}
 
 
@@ -1432,6 +1466,9 @@ namespace Win32xx
 
 	void CFrame::OnCreate()
 	{
+		// Start timer for Status Indicator updates
+		::SetTimer(m_hWnd, ID_STATUS_TIMER, 500, NULL);
+
 		// Set the icon
 		SetIconLarge(ID_MAIN);
 		SetIconSmall(ID_MAIN);
@@ -1485,13 +1522,6 @@ namespace Win32xx
 		}
 	}
 
-	void CFrame::OnKeyDown(WPARAM wParam, LPARAM /*lParam*/)
-	{
-		// Check CAPs lock, NUM lock and SCRL lock keys
-		if((wParam == VK_CAPITAL) || (wParam == VK_NUMLOCK) ||(wParam == VK_SCROLL))
-			SetStatusText();
-	}
-
 	void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
 	{
 		// Set the Statusbar text when we hover over a menu
@@ -1509,25 +1539,6 @@ namespace Win32xx
 	{
 		switch (((LPNMHDR)lParam)->code)
 		{
-		case EN_MSGFILTER:  // Keydown event for RichEdit control
-			{
-				MSGFILTER* pmsgfilter = (MSGFILTER*) lParam;
-				UINT uMsg = pmsgfilter->msg;
-				if (uMsg == WM_KEYDOWN)
-					OnKeyDown((WORD)pmsgfilter->wParam, (WORD)pmsgfilter->lParam);
-			}
-			break;
-
-		case LVN_KEYDOWN:	// Keydown event for List control
-		case TCN_KEYDOWN:	// Keydown event for Tab control
-		case TVN_KEYDOWN:	// Keydown event for Tree control
-			{
-				LPNMLVKEYDOWN pnkd = (LPNMLVKEYDOWN) lParam;
-				WORD wKey = pnkd->wVKey;
-				OnKeyDown(wKey, 0);
-			}
-			break;
-
 		case RBN_HEIGHTCHANGE:
 			RecalcLayout();
 			::InvalidateRect(m_hWnd, NULL, TRUE);
@@ -1541,7 +1552,6 @@ namespace Win32xx
 				lpDispInfo->lpszText = (LPTSTR)LoadString(idButton);
 			}
 			break;
-
 		} // switch LPNMHDR
 		return CWnd::OnNotify(wParam, lParam);
 
@@ -1781,11 +1791,32 @@ namespace Win32xx
 		}
 	}
 
+	void CFrame::SetStatusIndicators()
+	{
+		if (::IsWindow(GetStatusbar().GetHwnd()))
+		{
+			static LPCTSTR OldStatus1 = NULL;
+			static LPCTSTR OldStatus2 = NULL;
+			static LPCTSTR OldStatus3 = NULL;
+
+			LPCTSTR Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? TEXT("\tCAP") : TEXT("");
+			LPCTSTR Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? TEXT("\tNUM") : TEXT("");
+			LPCTSTR Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? TEXT("\tSCRL"): TEXT("");
+			
+			// Only update indictors if the text has changed
+			if (Status1 != OldStatus1) 	GetStatusbar().SetPaneText(1, (Status1));
+			if (Status2 != OldStatus2)  GetStatusbar().SetPaneText(2, (Status2));
+			if (Status3 != OldStatus3)  GetStatusbar().SetPaneText(3, (Status3));
+
+			OldStatus1 = Status1;
+			OldStatus2 = Status2;
+			OldStatus3 = Status3;
+		}
+	}
+
 	void CFrame::SetStatusText(LPCTSTR szText /*= "Ready"*/)
 	{
-		HWND hStatus = GetStatusbar().GetHwnd();
-
-		if (IsWindow(hStatus))
+		if (::IsWindow(GetStatusbar().GetHwnd()))
 		{
 			// Get the coordinates of the parent window's client area.
 			RECT rcClient;
@@ -1793,26 +1824,22 @@ namespace Win32xx
 
 			// width = max(300, rcClient.right)
 			int width = (300 > rcClient.right) ? 300 : rcClient.right;
+			int iPaneWidths[] = {width - 110, width - 80, width - 50, width - 20};
+			
+			// Create 4 panes
+			GetStatusbar().CreatePanes(4, iPaneWidths);
 
-			// Fill the vector with the pane sizes
-			std::vector<int> StatusPaneSizes;
-			StatusPaneSizes.push_back(width - 110);
-			StatusPaneSizes.push_back(width - 80);
-			StatusPaneSizes.push_back(width - 50);
-			StatusPaneSizes.push_back(width - 20);
-
-			// Set the statusbar pane sizes
-			GetStatusbar().SetPaneSizes(StatusPaneSizes);
+			// Or you could create the 4 panes this way
+			//	GetStatusbar().SetPaneWidth(0, width - 110);
+			//	GetStatusbar().SetPaneWidth(1, 30);
+			//	GetStatusbar().SetPaneWidth(2, 30);
+			//	GetStatusbar().SetPaneWidth(3, 30);
 
 			// Fill the vector with text
-			std::vector<LPCTSTR> StatusText;
-			StatusText.push_back(szText);
-			StatusText.push_back((::GetKeyState(VK_CAPITAL) & 0x0001)? TEXT("\tCAP") : TEXT(""));
-			StatusText.push_back((::GetKeyState(VK_NUMLOCK) & 0x0001)? TEXT("\tNUM") : TEXT(""));
-			StatusText.push_back((::GetKeyState(VK_SCROLL)  & 0x0001)? TEXT("\tSCRL"): TEXT(""));
-
-			//Send text to the statusbar
-			GetStatusbar().SetText(StatusText);
+			GetStatusbar().SetPaneText(0, szText);
+			GetStatusbar().SetPaneText(1, (::GetKeyState(VK_CAPITAL) & 0x0001)? TEXT("\tCAP") : TEXT(""));
+			GetStatusbar().SetPaneText(2, (::GetKeyState(VK_NUMLOCK) & 0x0001)? TEXT("\tNUM") : TEXT(""));
+			GetStatusbar().SetPaneText(3, (::GetKeyState(VK_SCROLL)  & 0x0001)? TEXT("\tSCRL"): TEXT(""));
 		}
 	}
 
@@ -1882,15 +1909,13 @@ namespace Win32xx
 			{
 			case WM_DESTROY:
 				::SetMenu(m_hWnd, NULL);
+				::KillTimer(m_hWnd, ID_STATUS_TIMER);
 				::PostQuitMessage(0);	// Terminates the application
 				return 0L;
 			case WM_ERASEBKGND:
 				return 0L;
 			case WM_HELP:
 				OnHelp();
-				return 0L;
-			case WM_KEYDOWN:
-				OnKeyDown(wParam, lParam);
 				return 0L;
 			case WM_MENUCHAR:
 				if (IsMenubarUsed())
@@ -1920,6 +1945,10 @@ namespace Win32xx
 					return 0L;
 				}
 				break;
+			case WM_TIMER:
+				if (wParam == ID_STATUS_TIMER)
+					SetStatusIndicators();
+				return 0L;
 			} // switch uMsg
 			return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 		} // try
