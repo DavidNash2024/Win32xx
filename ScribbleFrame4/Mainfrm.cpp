@@ -14,25 +14,27 @@ CMainFrame::CMainFrame()
 	SetView(m_View);
 
 	// Define our toolbar
-	BYTE ToolbarData[][2] =
-		{BUTTON,    IDM_FILE_NEW,
-		 BUTTON,    IDM_FILE_OPEN,
-		 BUTTON,    IDM_FILE_SAVE,
-		 SEPARATOR, 0,
-		 BUTTON,    IDM_EDIT_CUT,
-		 BUTTON,    IDM_EDIT_COPY,
-		 BUTTON,    IDM_EDIT_PASTE,
-		 BUTTON,    IDM_FILE_PRINT,
-		 SEPARATOR, 0,
-		 BUTTON,    IDM_PEN_RED,
-		 BUTTON,    IDM_PEN_BLUE,
-		 BUTTON,    IDM_PEN_GREEN,
-		 BUTTON,    IDM_PEN_BLACK,
-		 SEPARATOR, 0,
-		 BUTTON,    IDM_HELP_ABOUT};
+	BYTE ToolbarData[] =
+		{
+		 IDM_FILE_NEW,
+		 IDM_FILE_OPEN,
+		 IDM_FILE_SAVE,
+		 0,					// Separator
+		 IDM_EDIT_CUT,
+		 IDM_EDIT_COPY,
+		 IDM_EDIT_PASTE,
+		 IDM_FILE_PRINT,
+		 0,					// Separator
+		 IDM_PEN_RED,
+		 IDM_PEN_BLUE,
+		 IDM_PEN_GREEN,
+		 IDM_PEN_BLACK,
+		 0,					// Separator
+		 IDM_HELP_ABOUT
+		};
 
 	// Calculate the number of button entries
-	int nButtons = sizeof(ToolbarData)/(2*sizeof(BYTE));
+	int nButtons = sizeof(ToolbarData)/(sizeof(BYTE));
 
 	SetToolbarData(nButtons, ToolbarData);
 }

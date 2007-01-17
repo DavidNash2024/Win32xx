@@ -12,26 +12,26 @@ CMainFrame::CMainFrame()  : m_MainView(200, true), m_bShowHidden(FALSE)
 	SetView(m_MainView);
 
 	// Define our toolbar data
-	BYTE ToolbarData[][2] =
+	BYTE ToolbarData[] =
 	{
-		{BUTTON,    IDM_FILE_NEW},
-		{BUTTON,    IDM_FILE_OPEN},
-		{BUTTON,    IDM_FILE_SAVE},
-		{SEPARATOR, 0},
-		{BUTTON,    IDM_EDIT_CUT},
-		{BUTTON,    IDM_EDIT_COPY},
-		{BUTTON,    IDM_EDIT_PASTE},
-		{BUTTON,    IDM_FILE_PRINT},
-		{SEPARATOR, 0},
-		{BUTTON,    IDM_VIEW_LARGEICON},
-		{BUTTON,    IDM_VIEW_SMALLICON},
-		{BUTTON,    IDM_VIEW_LIST},
-        {BUTTON,    IDM_VIEW_REPORT},
-		{SEPARATOR, 0},
-		{BUTTON,    IDM_HELP_ABOUT}
+		IDM_FILE_NEW,
+		IDM_FILE_OPEN,
+		IDM_FILE_SAVE,
+		0,					// Separator
+		IDM_EDIT_CUT,
+		IDM_EDIT_COPY,
+		IDM_EDIT_PASTE,
+		IDM_FILE_PRINT,
+		0,					// Separator
+		IDM_VIEW_LARGEICON,
+		IDM_VIEW_SMALLICON,
+		IDM_VIEW_LIST,
+        IDM_VIEW_REPORT,
+		0,					// Separator
+		IDM_HELP_ABOUT
 	};
 
-	int nButtons = sizeof(ToolbarData)/(2*sizeof(BYTE));
+	int nButtons = sizeof(ToolbarData)/(sizeof(BYTE));
 	SetToolbarData(nButtons, ToolbarData);
 }
 

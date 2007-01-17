@@ -56,10 +56,14 @@ namespace Win32xx
 	public:
 		CStatusbar() {}
 		virtual ~CStatusbar() {}
+		virtual LPCTSTR GetPaneText(INT iPane);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void CreatePanes(int iPanes, int iPaneWidths[]);
-		virtual void SetPaneText(int iPane, LPCTSTR szText);
-		virtual void SetPaneWidth(int iPane, int iWidth);
+		virtual void CreatePanes(INT iPanes, int iPaneWidths[]);
+		virtual void SetPaneText(INT iPane, LPCTSTR szText, UINT Style = 0);
+		virtual void SetPaneWidth(INT iPane, INT iWidth);
+
+	private:
+		TCHAR m_szText[80];
 	};
 
 
@@ -73,9 +77,17 @@ namespace Win32xx
 		virtual ~CToolbar();
 		virtual void DisableButton(const int iButtonID);
 		virtual void EnableButton(const int iButtonID);
+		virtual UINT GetButtonState(int iButtonID);
+		virtual BYTE GetButtonStyle(int iButtonID);
 		virtual int HitTest();
+		virtual void SetButtons(BYTE bButtonArray[], int iNumButtons);
+		virtual void SetButtonState(int iButtonID, UINT State);
+		virtual void SetButtonStyle(int iButtonID, BYTE Style);
+		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
+		virtual void SetSizes(SIZE sizeButton, SIZE sizeImage);
 
 	protected:
+		virtual void OnCreate();
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -115,13 +127,13 @@ namespace Win32xx
 		virtual ~CMenubar();
 		virtual HMENU GetMenu() {return m_hTopMenu;}
 		virtual void SetMenu(HMENU hMenu);
-
+		
 	protected:
 		virtual void DoAltKey(WORD KeyCode);
 		virtual void DoPopupMenu();
 		virtual void DrawMDIButtons(HDC hDC);
-		virtual	void GrabFocus();
 		virtual void ExitMenu();
+		virtual	void GrabFocus();
 		virtual int HitTest();
 		virtual void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
@@ -193,12 +205,8 @@ namespace Win32xx
 		virtual BOOL IsMDIFrame() {return m_bIsMDIFrame;}
 		virtual BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
 		virtual BOOL IsRebarSupported() {return m_bSupportRebars;}
-		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
-		virtual	LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual	void SetButtons(int iNumButtons, BYTE bButtonArray[][2]);
-		virtual void SetView(CWnd& pView);
-		virtual void SetToolbarData(int nButtons, BYTE ToolbarData[][2]);
+		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}		
+		virtual void SetView(CWnd& pView);	
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText(LPCTSTR szText = TEXT("Ready"));
 
@@ -210,26 +218,23 @@ namespace Win32xx
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
+		virtual	LRESULT OnNotify(WPARAM wParam, LPARAM lParam);	
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
+		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
+		virtual	void SetButtons(BYTE bButtonArray[], int iNumButtons);
+		virtual void SetToolbarData(int nButtons, BYTE ToolbarData[]);
 		virtual void ToolbarNotify(int nButton);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		int m_ToolbarButtons;		// number of toolbar buttons
-		BYTE (* m_ToolbarData)[2];  // pointer to 2 dimensional int array
+		BYTE (* m_ToolbarData);		// pointer to BYTE array
 		BOOL m_bUseMenubar;			// set to TRUE if a Menubar is to be used
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
-
-		struct Button
-		{
-			BYTE bStyle;
-			BYTE bState;
-			int Message;
-		};
 
 	private:
 		CMenubar m_Menubar;			// CMenubar object

@@ -99,28 +99,6 @@ namespace Win32xx
 		USER_MDIDESTROYED = WM_APP + 3  // a MDI child has been destroyed
 	};
 
-	// Toolbar button states
-	enum States
-	{
-		CHECKED = TBSTATE_CHECKED,		// button has TBSTYLE_CHECKED style and is being pressed.
-		PRESSED = TBSTATE_PRESSED,		// button is being pressed.
-		ENABLED = TBSTATE_ENABLED,		// the button accepts user input (otherwise it is greyed).
-		HIDDEN  = TBSTATE_HIDDEN,		// the button is not visible and cannot receive user input.
-		GRAYED  = TBSTATE_INDETERMINATE,// the button is grayed.
-		WRAP    = TBSTATE_WRAP			// a line break follows the button. .
-	};
-
-	//Toolbar button styles
-	enum Styles
-    {
-        BUTTON     = TBSTYLE_BUTTON,    //Standard push button
-        DROPBTN    = TBSTYLE_DROPDOWN,  //Dropdown button
-        SEPARATOR  = TBSTYLE_SEP,       //Separator between buttons
-        CHECK      = TBSTYLE_CHECK,     //Toggle push button with background changes
-        GROUP      = TBSTYLE_GROUP,     //Toggle push button within group (no background change)
-        CHECKGROUP = TBSTYLE_CHECKGROUP //Toggle push button within group with background change
-    };
-
 
 	/////////////////////////////////////////////////
 	// Global Structures

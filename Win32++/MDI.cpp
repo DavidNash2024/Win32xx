@@ -225,6 +225,7 @@ namespace Win32xx
 			break;  // Continue default processing
 		case WM_DESTROY:
 			::SetMenu(m_hWnd, NULL);
+			::KillTimer(m_hWnd, ID_STATUS_TIMER);
 			// Post the WM_QUIT message to terminate the application.
 			::PostQuitMessage(0);
 			return 0;
@@ -233,9 +234,6 @@ namespace Win32xx
 			return 0;
 		case WM_HELP:
 			OnHelp();
-			return 0;
-		case WM_KEYDOWN:
-			OnKeyDown(wParam, lParam);
 			return 0;
 		case WM_MENUCHAR:
 			if (IsMenubarUsed())
@@ -270,7 +268,10 @@ namespace Win32xx
 				return 0;
 			}
 			break;
-
+		case WM_TIMER:
+			if (wParam == ID_STATUS_TIMER)
+				SetStatusIndicators();
+			return 0L;
 		case WM_WINDOWPOSCHANGED:
 			// MDI Child or MDI frame has been resized
 			OnWindowPosChanged();
