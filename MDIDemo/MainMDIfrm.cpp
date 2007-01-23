@@ -43,14 +43,15 @@ BOOL CMainMDIFrame::OnCommand(UINT nID)
 	case IDM_FILE_NEWVIEW:
 		AddMDIChild(new CMDIChildView);
 		return 0;
-
 	case IDM_FILE_NEWRECT:
 		AddMDIChild(new CMDIChildRect);
 		return 0;
-
 	case IDM_FILE_NEWMAX:
 		AddMDIChild(new CMDIChildMax);
 		return 0;
+	case IDM_FILE_CLOSE:          // Close the active MDI window
+		::SendMessage(GetActiveChild(), WM_CLOSE, 0, 0);
+		break;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		break;
