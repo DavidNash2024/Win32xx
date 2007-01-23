@@ -18,7 +18,7 @@
 //
 
 
-ID_MAIN MENU
+IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -38,8 +38,8 @@ BEGIN
     END
     POPUP "&View"
 	BEGIN
-	    MENUITEM "&Tool Bar",                   IDM_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDM_VIEW_STATUSBAR, CHECKED
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
 	END
 	POPUP "&Help"
 	BEGIN
@@ -68,8 +68,8 @@ BEGIN
     END
     POPUP "&View"
 	BEGIN
-	    MENUITEM "&Tool Bar",                   IDM_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDM_VIEW_STATUSBAR, CHECKED
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
 	END
     POPUP "&Color"
     BEGIN
@@ -81,10 +81,10 @@ BEGIN
     END
     POPUP "&Window"
     BEGIN
-        MENUITEM "&Cascade\tShift+F5",          IDM_WINDOW_CASCADE
-        MENUITEM "&Tile\tShift+F4",             IDM_WINDOW_TILE
-        MENUITEM "Arrange &Icons",              IDM_WINDOW_ARRANGE
-        MENUITEM "Close &All",                  IDM_WINDOW_CLOSEALL
+        MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
+        MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
+        MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
     END
 	POPUP "&Help"
 	BEGIN
@@ -99,7 +99,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-ID_MAIN                 ICON                    "res\\mdi.ico"
+IDW_MAIN                 ICON                    "res\\mdi.ico"
 IDI_VIEW                ICON                    "res\\view.ico"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -107,22 +107,22 @@ IDI_VIEW                ICON                    "res\\view.ico"
 // Bitmap
 //
 
-ID_MAIN                 BITMAP                  "res\\toolbar.bmp"
+IDW_MAIN                 BITMAP                  "res\\toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_ABOUT_DIALOG DIALOGEX 0, 0, 186, 90
+IDW_ABOUT DIALOGEX 0, 0, 186, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "MDI Frame",IDC_ABOUT_STATIC,60,22,64,11
-    ICON            ID_MAIN,0,4,4,20,20
+    CTEXT           "MDI Frame",IDW_STATIC,60,22,64,11
+    ICON            IDW_MAIN,0,4,4,20,20
 END
 
 
@@ -131,7 +131,7 @@ END
 // Accelerator
 //
 
-ID_MAIN ACCELERATORS
+IDW_MAIN ACCELERATORS
 BEGIN
     "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
     VK_INSERT,      IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
@@ -157,7 +157,7 @@ END
 
 STRINGTABLE
 BEGIN
-    ID_MAIN                 "MDI Frame"
+    IDW_MAIN                 "MDI Frame"
 END
 
 STRINGTABLE
@@ -178,8 +178,8 @@ BEGIN
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
-    IDM_VIEW_TOOLBAR        "Show or hide the tool bar"
-    IDM_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
 END
 
 STRINGTABLE
@@ -189,15 +189,15 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_FIRSTCHILD          "Activate this window"
-    IDM_CHILD2              "Activate this window"
-    IDM_CHILD3              "Activate this window"
-    IDM_CHILD4              "Activate this window"
-    IDM_CHILD5              "Activate this window"
-    IDM_CHILD6              "Activate this window"
-    IDM_CHILD7              "Activate this window"
-    IDM_CHILD8              "Activate this window"
-    IDM_CHILD9              "Activate this window"
+    IDW_FIRSTCHILD          "Activate this window"
+    IDW_CHILD2              "Activate this window"
+    IDW_CHILD3              "Activate this window"
+    IDW_CHILD4              "Activate this window"
+    IDW_CHILD5              "Activate this window"
+    IDW_CHILD6              "Activate this window"
+    IDW_CHILD7              "Activate this window"
+    IDW_CHILD8              "Activate this window"
+    IDW_CHILD9              "Activate this window"
 END
 
 STRINGTABLE
@@ -209,10 +209,10 @@ BEGIN
     IDM_COLOR_GREEN         "Use Green Printing"
     IDM_COLOR_BLUE          "Use Blue Printing"
     IDM_COLOR_WHITE         "Use White Printing"
-    IDM_WINDOW_CASCADE      "Cascade MDI Windows"
-    IDM_WINDOW_TILE         "Tile MDI Windows"
-    IDM_WINDOW_ARRANGE      "Arrange Icons"
-    IDM_WINDOW_CLOSEALL     "Close All MDI Windows"
+    IDW_WINDOW_CASCADE      "Cascade MDI Windows"
+    IDW_WINDOW_TILE         "Tile MDI Windows"
+    IDW_WINDOW_ARRANGE      "Arrange Icons"
+    IDW_WINDOW_CLOSEALL     "Close All MDI Windows"
 END
 
 STRINGTABLE

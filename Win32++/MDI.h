@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.2 Beta
-// Modified: 13th January, 2007 by:
+// Win32++  Version 5.0.3 Beta
+// Modified: 24th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -101,7 +101,6 @@ namespace Win32xx
 		virtual ~CMDIClient();
 		virtual HWND Create(HWND hWndParent /* = NULL*/);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 	};
 
 
@@ -115,6 +114,8 @@ namespace Win32xx
 	public:
 		CMDIFrame();
 		virtual ~CMDIFrame();
+		virtual CMDIClient& GetMDIClient() {return m_MDIClient;}
+		virtual HWND GetActiveChild(BOOL* pIsMaxed = NULL );
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 
 	protected:

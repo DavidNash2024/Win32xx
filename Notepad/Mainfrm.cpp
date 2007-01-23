@@ -19,6 +19,20 @@ CMainFrame::CMainFrame()
 {
 	m_strPathName = TEXT("");
 	SetView(m_RichView);
+
+	// Define the resource IDs for the toolbar
+	m_ToolbarData.clear();
+	m_ToolbarData.push_back ( IDM_FILE_NEW   );
+	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
+	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
+	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
+	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_FILE_PRINT );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 }
 
 CMainFrame::~CMainFrame()
@@ -85,6 +99,12 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		break;
 	case IDM_EDIT_UNDO:
 		OnEditUndo();
+		break;
+	case IDM_FILE_EXIT:
+		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		break;
+	case IDM_HELP_ABOUT:
+		OnHelp();
 		break;
 	} // switch cmd
 	return CFrame::OnCommand(nID);

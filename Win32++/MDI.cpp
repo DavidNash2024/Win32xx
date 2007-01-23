@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.2 Beta
-// Modified: 13th January, 2007 by:
+// Win32++  Version 5.0.3 Beta
+// Modified: 24th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -53,7 +53,7 @@ namespace Win32xx
 	//
 	CMDIApp::CMDIApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	{
-		m_hAccel = LoadAccelerators (hInstance, MAKEINTRESOURCE(ID_MAIN)) ;
+		m_hAccel = LoadAccelerators (hInstance, MAKEINTRESOURCE(IDW_MAIN)) ;
 	}
 
 	int CMDIApp::MessageLoop()
@@ -104,50 +104,39 @@ namespace Win32xx
 		pMDIChild->Create(GetView()->GetHwnd());
 	}
 
+	HWND CMDIFrame::GetActiveChild(BOOL* pIsMaxed /* = NULL */)
+	{
+		return (HWND)::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)pIsMaxed);
+	}
+
 	BOOL CMDIFrame::OnCommand(UINT nID)
 	{
 		switch (nID)
 		{
-		case IDM_FILE_CLOSE:          // Close the active window
-			{
-				HWND hwndChild = (HWND) ::SendMessage (GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, 0);
-				::SendMessage(hwndChild, WM_CLOSE, 0, 0);
-			}
-			break;
-		case IDM_FILE_EXIT:
-			::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-			break;
-		case IDM_HELP_ABOUT:
-			{
-				CDialog AboutDialog(IDD_ABOUT_DIALOG, m_hWnd);
-				AboutDialog.DoModal();
-			}
-			break;
-		case IDM_VIEW_STATUSBAR:
+		case IDW_VIEW_STATUSBAR:
 			OnViewStatusbar();
 			::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 			break;
-		case IDM_VIEW_TOOLBAR:
+		case IDW_VIEW_TOOLBAR:
 			OnViewToolbar();
 			::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 			break;
-		case IDM_WINDOW_ARRANGE:
+		case IDW_WINDOW_ARRANGE:
 			::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0, 0) ;
 			break;
-		case IDM_WINDOW_CASCADE:
+		case IDW_WINDOW_CASCADE:
 			::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0, 0) ;
 			break;
-		case IDM_WINDOW_CLOSEALL:
+		case IDW_WINDOW_CLOSEALL:
 			RemoveAllMDIChildren();
 			break;
-		case IDM_WINDOW_TILE:
+		case IDW_WINDOW_TILE:
 			::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0, 0) ;
 			break;
 		default:    // Pass to active child...
 			{
-				HWND hwndChild = (HWND) ::SendMessage (GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, 0) ;
-				if (IsWindow (hwndChild))
-					::SendMessage (hwndChild, WM_COMMAND, nID, 0) ;
+				if (IsWindow (GetActiveChild()))
+					::SendMessage (GetActiveChild(), WM_COMMAND, nID, 0) ;
 			}
 			break ;
 		}
@@ -300,7 +289,7 @@ namespace Win32xx
 		{
 			CLIENTCREATESTRUCT clientcreate ;
 			clientcreate.hWindowMenu  = m_hWnd;
-			clientcreate.idFirstChild = IDM_FIRSTCHILD ;
+			clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 			DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
 			// Create the view window

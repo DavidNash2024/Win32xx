@@ -1,6 +1,7 @@
 Version 5.1
 -----------
 Major Changes:
+* Major updates to the CToolbar and CStatubar classes.
 * Notification Reflection.  WM_NOTIFY messages from child windows now call 
   OnNotifyReflect in the CWnd that generated them.
 * Existing windows (including dialog items) can now be attached to a CWnd.
@@ -10,24 +11,55 @@ Major Changes:
   procedure, and calls it automatically at the end of CWnd::WndProc
 * Toolbar notifies frame via ToolbarNotify when the mouse is over a toolbar 
   button.
-* Setting statusbar text is simplified. CStatusbar::SetText takes a vector of
-  LPCTSTR to set the text in the various panes.
+* The keyboard indicators in the status bar are updated on a timer, rather than
+  attempting catch keydown messages and notifications.
+* Applications can now set a hot toolbar bitmap, and a disabled toolbar bitmap in
+  addition to the standard toolbar bitmap for toolbar buttons.
+* Non standard toolbar button sizes are now suported.
+* Text on toolbar buttons is now supported.
+* Simplified the setting of Toolbar resource IDs. The are now set in the (derrived)
+  frame's constructor by adding to a vector.
+* There is now a clear seperation between the Resource IDs defined by Win32++ and those
+  defined in the user's application. Resource IDs defined by Win32++ are defined as
+  IDW_XXXXXX, and begin from 0xE800. This should avoid any clashes with user defined
+  resource IDs.
 
-
-Removed CFrame::OnFrameCreated.  Use CFrame::OnInitialUpdate instead.
-CWnd::OnNotify returns a LRESULT
+The following changes have been made to the Win32++ code:
 Added CWnd::OnNotifyReflect
 Added CWnd::Attach
 Added CWnd::AttachDlgItem
 Added CWnd::CallPrevWindow
 Added CWnd::Detach
-Added CStatusbar::SetText
-Added CStatusbar::SetPaneSizes
+Added CRebar::ResizeBand
+Added CStatusbar::CreatePanes
+Added CStatusbar::GetPaneText
+Added CStatusbar::SetPaneText
+Added CStatusbar::SetPaneWidth
+Added CToolbar::GetButtonState
+Added CToolbar::GetButtonStyle
+Added CToolbar::GetItemRect
 Added CToolbar::HitTest
+Added CToolbar::SetButtons
+Added CToolbar::SetButtonState
+Added CToolbar::SetButtonStyle
+Added CToolbar::SetButtonText
+Added CToolbar::SetImageList
+Added CToolbar::SetSizes
+Added CFrame::GetRebar
+Added CFrame::GetStatusbar
+Added CFrame::GetToolbar
+Added CFrame::SetStatusIndicators
 Added CFrame::ToolbarNotify
-Moved CToolbar::SetButtons to CFrame::SetButtons
+Added CFrame:: UseStatusIndicators
+Added CMDIFrame::GetMDIClient
+Added CMDIFrame::GetActiveChild
+Removed CFrame::SetToolbarData
+Removed CFrame::OnFrameCreated.  Use CFrame::OnInitialUpdate instead.
+Removed CSplitter::OnNotify
 CFrame::AddMenubarBand modified to CFrame::AddMenubarBand(int nHeight)
 CFrame::AddToolbarBand modified to CFrame::AddToolbarBand(int nHeight)
+CToolbar::SetButtons modified to CToolbar::SetButtons(vector<UINT> ToolbarData)
+CWnd::OnNotify modified, it now returns a LRESULT
 
 Bug Fixes
 * CFrame::OnHelp now returns the focus back to the window that had it before OnHelp 

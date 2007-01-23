@@ -21,8 +21,8 @@ CView::~CView()
 
 void CView::OnCreate()
 {
-	SetIconLarge(ID_MAIN);
-	SetIconSmall(ID_MAIN);
+	SetIconLarge(IDW_MAIN);
+	SetIconSmall(IDW_MAIN);
 
 	// Initialize Direct3D
 	if( SUCCEEDED( InitD3D( m_hWnd ) ) )
@@ -43,7 +43,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.y = 50;
 	cs.cx = 400;
 	cs.cy = 400;
-	cs.lpszName = LoadString(ID_MAIN);
+	cs.lpszName = LoadString(IDW_MAIN);
 }
 
 //-----------------------------------------------------------------------------

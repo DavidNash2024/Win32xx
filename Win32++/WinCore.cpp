@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.2 Beta
-// Modified: 13th January, 2007 by:
+// Win32++  Version 5.0.3 Beta
+// Modified: 24th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -58,6 +58,15 @@ namespace Win32xx
 	#endif  //_DEBUG
 	}
 
+	void DebugWarnMsg(LPCTSTR WarnMsg)
+	{
+	#ifdef _DEBUG
+		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
+	#else
+		UNREFERENCED_PARAMETER(WarnMsg);
+	#endif  //_DEBUG
+	}
+
 	// Function which returns a pointer to the CWinApp object
 	CWinApp* GetApp(){ return CWinApp::GetApp(); }
 
@@ -95,7 +104,7 @@ namespace Win32xx
  				throw CWinException(TEXT("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
 
-			m_hAccelTable = ::LoadAccelerators(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ID_MAIN));
+			m_hAccelTable = ::LoadAccelerators(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 		}
 
 		catch (const CWinException &e)
@@ -146,7 +155,7 @@ namespace Win32xx
 	int CWinApp::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.
-		
+
 		MSG uMsg;
 		int status;
 
@@ -166,7 +175,7 @@ namespace Win32xx
 			{
 				::TranslateMessage(&uMsg);
 				::DispatchMessage(&uMsg);
-			}	
+			}
 
 		}
 		return LOWORD(uMsg.wParam);
@@ -213,6 +222,12 @@ namespace Win32xx
 		//Create the Trace CWnd object and window
 		if (m_pTrace == NULL)
 		{
+			// Get Current keyboard focus
+			HWND hPrevFocus = ::GetFocus();
+			if (m_pFrame)
+				if (hPrevFocus == m_pFrame->GetMenubar().GetHwnd())
+					hPrevFocus = m_pFrame->GetHwnd();
+
 			m_hRichEdit = ::LoadLibrary(TEXT("RICHED32.DLL"));
 			if (!m_hRichEdit)
 				DebugErrMsg(TEXT("Failed to load the RichEdit dll"));
@@ -238,6 +253,9 @@ namespace Win32xx
 			m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 				CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, TEXT("Courier New"));
 			::SendMessage(TraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
+
+			// Return previous keyboard focus
+			::SetFocus(hPrevFocus);
 		}
 
 		// Add CR LF to the end

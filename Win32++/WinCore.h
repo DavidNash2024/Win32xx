@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.2 Beta
-// Modified: 13th January, 2007 by:
+// Win32++  Version 5.0.3 Beta
+// Modified: 24th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -77,6 +77,7 @@ namespace Win32xx
 
 	// Global functions and macros
 	void DebugErrMsg(LPCTSTR ErrorMsg);
+	void DebugWarnMsg(LPCTSTR WarnMsg);
 	CWinApp* GetApp();  // Returns a pointer to the CWinApp object
 
 	#ifdef _DEBUG
@@ -104,6 +105,13 @@ namespace Win32xx
 	// Global Structures
 	//
 
+	// The comparison function object used by CWinApp::m_HWNDmap
+	struct CompareHWND
+	{
+		bool operator()(HWND const a, const HWND b) const
+			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
+	};
+
 	// Used for Thread Local Storage (TLS)
 	struct TLSData
 	{
@@ -111,13 +119,6 @@ namespace Win32xx
 		HHOOK  hCBTHook;	// CBT hook for Window creation
 		CMenubar* pMenubar;	// pointer to CMenubar object
 		HHOOK  hMenuHook;	// MSG hook for CMenubar
-	};
-
-	// The comparison function object used by CWinApp::m_HWNDmap
-	struct CompareHWND
-	{
-		bool operator()(HWND const a, const HWND b) const
-			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
 	class CWnd;
@@ -220,6 +221,7 @@ namespace Win32xx
 
 	private:
 		virtual TLSData* SetTlsIndex();
+
 		enum Constants
 		{
 			TRACE_HEIGHT = 200,

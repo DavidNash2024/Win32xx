@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.2 Beta
-// Modified: 13th January, 2007 by:
+// Win32++  Version 5.0.3 Beta
+// Modified: 24th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -43,6 +43,8 @@
 
 #include "WinCore.h"
 #include "dialog.h"
+#include <map>
+#include <string>
 
 
 namespace Win32xx
@@ -75,21 +77,30 @@ namespace Win32xx
 	public:
 		CToolbar();
 		virtual ~CToolbar();
+		virtual int CommandToIndex(int iButtonID);
 		virtual void DisableButton(const int iButtonID);
 		virtual void EnableButton(const int iButtonID);
 		virtual UINT GetButtonState(int iButtonID);
 		virtual BYTE GetButtonStyle(int iButtonID);
+		virtual void GetItemRect(int iIndex, RECT* lpRect);
 		virtual int HitTest();
-		virtual void SetButtons(BYTE bButtonArray[], int iNumButtons);
+		virtual int SetButtons(std::vector<UINT> ToolbarData);
 		virtual void SetButtonState(int iButtonID, UINT State);
 		virtual void SetButtonStyle(int iButtonID, BYTE Style);
-		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
+		virtual void SetButtonText(int iIndex, LPCTSTR szText);
+		virtual void SetImageList(int iNumButtons, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 		virtual void SetSizes(SIZE sizeButton, SIZE sizeImage);
 
 	protected:
 		virtual void OnCreate();
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	private:
+		HIMAGELIST m_hImageList;
+		HIMAGELIST m_hImageListHot;
+		HIMAGELIST m_hImageListDisabled;
+		std::map<std::basic_string<TCHAR>, int> m_StringMap;
 
 	};  // class CToolbar
 
@@ -109,6 +120,7 @@ namespace Win32xx
 		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
 		virtual BOOL InsertBand(int nBand, LPREBARBANDINFO prbbi);
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void ResizeBand(int nBand, int nSize);
 		virtual void SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack);
 		virtual	void SetBandBitmap(int nBand, HBITMAP hBackground);
 		virtual BOOL SetBandInfo(int nBand, LPREBARBANDINFO prbbi);
@@ -127,7 +139,7 @@ namespace Win32xx
 		virtual ~CMenubar();
 		virtual HMENU GetMenu() {return m_hTopMenu;}
 		virtual void SetMenu(HMENU hMenu);
-		
+
 	protected:
 		virtual void DoAltKey(WORD KeyCode);
 		virtual void DoPopupMenu();
@@ -205,8 +217,8 @@ namespace Win32xx
 		virtual BOOL IsMDIFrame() {return m_bIsMDIFrame;}
 		virtual BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
 		virtual BOOL IsRebarSupported() {return m_bSupportRebars;}
-		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}		
-		virtual void SetView(CWnd& pView);	
+		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
+		virtual void SetView(CWnd& pView);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText(LPCTSTR szText = TEXT("Ready"));
 
@@ -218,7 +230,7 @@ namespace Win32xx
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
-		virtual	LRESULT OnNotify(WPARAM wParam, LPARAM lParam);	
+		virtual	LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
 		virtual void OnViewStatusbar();
@@ -226,15 +238,14 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
-		virtual	void SetButtons(BYTE bButtonArray[], int iNumButtons);
-		virtual void SetToolbarData(int nButtons, BYTE ToolbarData[]);
+		virtual void SetButtons(std::vector<UINT> ToolbarData);
 		virtual void ToolbarNotify(int nButton);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		int m_ToolbarButtons;		// number of toolbar buttons
-		BYTE (* m_ToolbarData);		// pointer to BYTE array
+		std::vector<UINT> m_ToolbarData;
 		BOOL m_bUseMenubar;			// set to TRUE if a Menubar is to be used
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
+		BOOL m_bUseStatusIndicators;	// set to TRUE if StatusIndicators are to be used
 
 	private:
 		CMenubar m_Menubar;			// CMenubar object

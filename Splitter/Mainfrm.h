@@ -19,6 +19,7 @@ public:
 	virtual ~CMainFrame();
 
 protected:
+	virtual BOOL OnCommand(UINT nID);
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

@@ -17,8 +17,8 @@ void CView::OnCreate()
 	// with creating windows are normally performed here.
 
 	// Set the window's icon
-	SetIconSmall(ID_MAIN);
-	SetIconLarge(ID_MAIN);
+	SetIconSmall(IDW_MAIN);
+	SetIconLarge(IDW_MAIN);
 
 	TRACE("OnCreate");
 }
@@ -45,7 +45,7 @@ void CView::OnPaint(HDC hDC)
 	// Centre some text in our view window
 	RECT r;
 	::GetClientRect(m_hWnd, &r);
-	::DrawText(hDC, LoadString(ID_MAIN), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	::DrawText(hDC, LoadString(IDW_MAIN), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -62,7 +62,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.y = 50;								// top y
 	cs.cx = 400;							// width
 	cs.cy = 300;							// height
-	cs.lpszName = LoadString(ID_MAIN);		// Window title
+	cs.lpszName = LoadString(IDW_MAIN);		// Window title
 }
 
 void CView::OnSize()

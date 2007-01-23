@@ -71,8 +71,8 @@ BOOL CMyDialog::OnCommand(UINT nID)
 BOOL CMyDialog::OnInitDialog()
 {
 	// Set the Icon
-	SetIconLarge(ID_MAIN);
-	SetIconSmall(ID_MAIN);
+	SetIconLarge(IDW_MAIN);
+	SetIconSmall(IDW_MAIN);
 
 	// Put some text in the edit boxes
 	::SetDlgItemText(GetHwnd(), IDC_EDIT1, TEXT("Edit Control"));

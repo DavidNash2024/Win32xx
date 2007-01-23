@@ -18,7 +18,7 @@ void CView::OnInitialUpdate()
 void CView::PreCreate(CREATESTRUCT &cs)
 {
 	// Here we set the defaults used by the create function for the view window
-	// Preforming this is optional, but doing so allows us to 
+	// Preforming this is optional, but doing so allows us to
 	// take more precise control over the window we create.
 
 	// Set the Window Class name
@@ -34,8 +34,8 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_SIZE:
 		::InvalidateRect(m_hWnd, NULL, TRUE);
-		break;	
-	}  
+		break;
+	}
 
 	// Use the frame default message handling for remaining messages
 	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
@@ -45,7 +45,7 @@ void CView::OnPaint(HDC hDC)
 {
 	RECT r;
 	::GetClientRect(m_hWnd, &r);
-	
+
 	// Centre some text in our view window
 	::DrawText(hDC, TEXT("View Window"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }

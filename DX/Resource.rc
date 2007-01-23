@@ -12,7 +12,7 @@
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-ID_MAIN                 ICON                    "res\\directx.ico"
+IDW_MAIN                 ICON                    "res\\directx.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ ID_MAIN                 ICON                    "res\\directx.ico"
 
 STRINGTABLE
 BEGIN
-    ID_MAIN                 "DirectX Sample"
+    IDW_MAIN                 "DirectX Sample"
 END
 
 

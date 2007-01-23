@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.2 Beta
-// Modified: 13th January, 2007 by:
+// Win32++  Version 5.0.3 Beta
+// Modified: 24th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -44,9 +44,9 @@
 #include "Frame.h"
 #include <windowsx.h>
 #include <richedit.h>
-#include "Default_Resource.h"
 #include <vector>
 #include "MDI.h"
+#include "Default_Resource.h"
 
 
 namespace Win32xx
@@ -63,13 +63,13 @@ namespace Win32xx
 
 	void CStatusbar::CreatePanes(INT iPanes, INT iPaneWidths[])
 	{
-		// If an element of iPaneWidths is -1, the right edge of the corresponding part extends 
+		// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
 		//  to the border of the window
 		try
 		{
 			if (iPanes > 256)
 				throw CWinException (TEXT("CStatusbar::CreatePanes ... Too many panes"));
-		
+
 			// Create the statusbar panes
 			if (!::SendMessage(m_hWnd, SB_SETPARTS, iPanes, (LPARAM)iPaneWidths))
 				throw CWinException(TEXT("CStatusbar::CreatePanes failed"));
@@ -87,18 +87,18 @@ namespace Win32xx
 	}
 
 	LPCTSTR CStatusbar::GetPaneText(INT iPane)
-	{	
+	{
 		// Get size of Text array
 		int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPane, 0));
-		
+
 		// Get the Text
-		TCHAR* szText = new TCHAR[iChars +1 ];	
+		TCHAR* szText = new TCHAR[iChars +1 ];
 		::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
-		
+
 		//Store the text in the member variable
 		lstrcpyn(m_szText, szText, 80);
 		delete []szText;
-		
+
 		return m_szText;
 	}
 
@@ -114,9 +114,9 @@ namespace Win32xx
 		{
 			if (::SendMessage(m_hWnd, SB_GETPARTS, 0, 0) >= iPane)
 			{
-				
+
 				if (!::SendMessage(m_hWnd, SB_SETTEXT, iPane | Style, (LPARAM)szText))
-					throw CWinException("Failed to set status bar text");
+					throw CWinException(TEXT("Failed to set status bar text"));
 			}
 		}
 
@@ -144,11 +144,11 @@ namespace Win32xx
 
 			int iParts = ::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
 			int* iPaneWidths = new int[iParts];
-			::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);		
-			
+			::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);
+
 			//int iNewParts = max(iPane+1, iParts);
 			int iNewParts = (iPane+1 > iParts) ? iPane+1 : iParts;
-     
+
 			int* iNewPaneWidths = new int[iNewParts];
 			ZeroMemory(iNewPaneWidths, iNewParts*sizeof(int));
 
@@ -162,11 +162,11 @@ namespace Win32xx
 
 			if (!::SendMessage(m_hWnd, SB_SETPARTS, iNewParts, (LPARAM)iNewPaneWidths))
 				throw CWinException(TEXT("CStatusbar::SetPaneWidth failed"));
-			
+
 			delete []iNewPaneWidths;
 			delete []iPaneWidths;
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
@@ -182,13 +182,20 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	CToolbar::CToolbar()
+	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDisabled(NULL)
 	{
 		Superclass(TOOLBARCLASSNAME, TEXT("Toolbar"));
 	}
 
 	CToolbar::~CToolbar()
 	{
+		if (m_hImageList)
+			::DeleteObject(m_hImageList);
+	}
+
+	int CToolbar::CommandToIndex(int iButtonID)
+	{
+		return ::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
 	}
 
 	void CToolbar::DisableButton(const int iButtonID)
@@ -209,7 +216,7 @@ namespace Win32xx
 			LRESULT lResult= ::SendMessage(m_hWnd, TB_GETSTATE, (WPARAM) iButtonID, 0);
 			if (lResult == -1)
 				throw CWinException(TEXT("CToolbar::GetButtonState failed"));
-			
+
 			return (UINT) lResult;
 		}
 
@@ -225,7 +232,6 @@ namespace Win32xx
 		return 0;
 	}
 
-	
 	BYTE CToolbar::GetButtonStyle(int iButtonID)
 	{
 		try
@@ -233,14 +239,14 @@ namespace Win32xx
 			TBBUTTONINFO tbbi = {0};
 			tbbi.cbSize  = sizeof(TBBUTTONINFO);
 			tbbi.dwMask  = TBIF_STYLE;
-			
+
 			LRESULT lResult = ::SendMessage(m_hWnd, TB_GETBUTTONINFO, iButtonID, (LPARAM) &tbbi);
 			if (lResult == -1)
 				throw CWinException(TEXT("CToolbar::GetButtonStyle failed"));
 
 		return tbbi.fsStyle;
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
@@ -250,8 +256,17 @@ namespace Win32xx
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::GetButtonStyle"));
 		}
-		
+
 		return 0;
+	}
+
+	void CToolbar::GetItemRect(int iIndex, RECT* lpRect)
+	{
+		ZeroMemory(lpRect, sizeof(RECT));
+		int iCount = ::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
+
+		if (iCount >= iIndex)
+			::SendMessage(m_hWnd, TB_GETITEMRECT, (WPARAM)iIndex, (LPARAM)lpRect);
 	}
 
 	int CToolbar::HitTest()
@@ -279,11 +294,12 @@ namespace Win32xx
 
 	void CToolbar::OnCreate()
 	{
-		// allows buttons to have a separate dropdown arrow
-		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
+		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
+		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
-		// Note:
-		// TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
+		// allows buttons to have a separate dropdown arrow
+		// Note: TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
+		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 	}
 
 	void CToolbar::SetButtonState(int iButtonID, UINT State)
@@ -294,9 +310,9 @@ namespace Win32xx
 	//	TBSTATE_ENABLED		The button accepts user input. A button that doesn't have this state is grayed.
 	//	TBSTATE_HIDDEN		The button is not visible and cannot receive user input.
 	//	TBSTATE_INDETERMINATE	The button is grayed.
-	//	TBSTATE_MARKED		The button is marked. The interpretation of a marked item is dependent upon the application. 
+	//	TBSTATE_MARKED		The button is marked. The interpretation of a marked item is dependent upon the application.
 	//	TBSTATE_PRESSED		The button is being clicked.
-	//	TBSTATE_WRAP		The button is followed by a line break. 
+	//	TBSTATE_WRAP		The button is followed by a line break.
 		try
 		{
 			if (!::SendMessage(m_hWnd, TB_SETSTATE, (WPARAM) iButtonID, (LPARAM)MAKELONG (State, 0)))
@@ -325,52 +341,76 @@ namespace Win32xx
 			cs.style |= CCS_NODIVIDER | CCS_NORESIZE;
 	}
 
-	void CToolbar::SetButtons(BYTE bButtonArray[], int iNumButtons)
+	int CToolbar::SetButtons(std::vector<UINT> ToolbarData)
 	{
-		// Remove any existing buttons
-		while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0, 0) > 0)
+		try
 		{
-			if(!::SendMessage(m_hWnd, TB_DELETEBUTTON, 0, 0))
-				break;
-		}
+			int iImages = 0;
+			int iNumButtons = ToolbarData.size();
 
-		// Load the TBBUTTON structure for each button in the toolbar
-		TBBUTTON* tbb = new TBBUTTON [iNumButtons];
-
-		int iBitMap = 0;
-		for (int j = 0 ; j < iNumButtons; j++)
-		{
-			::ZeroMemory(&tbb[j], sizeof(TBBUTTON));
-
-			if (bButtonArray[j] == 0)
+			// Remove any existing buttons
+			while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0, 0) > 0)
 			{
-				tbb[j].fsStyle = TBSTYLE_SEP;
+				if(!::SendMessage(m_hWnd, TB_DELETEBUTTON, 0, 0))
+					break;
+			}
+
+			if (iNumButtons > 0)
+			{
+				// Load the TBBUTTON structure for each button in the toolbar
+				TBBUTTON* tbb = new TBBUTTON [iNumButtons];
+
+				for (int j = 0 ; j < iNumButtons; j++)
+				{
+					::ZeroMemory(&tbb[j], sizeof(TBBUTTON));
+
+					if (ToolbarData[j] == 0)
+					{
+						tbb[j].fsStyle = TBSTYLE_SEP;
+					}
+					else
+					{
+						tbb[j].iBitmap = iImages++;
+						tbb[j].idCommand = ToolbarData[j];
+						tbb[j].fsState = TBSTATE_ENABLED;
+						tbb[j].fsStyle = TBSTYLE_BUTTON;
+					}
+				}
+				// Add the buttons to the toolbar
+				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, (WPARAM)iNumButtons, (LPARAM)tbb))
+					throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
+
+				delete []tbb;
 			}
 			else
-			{
-				tbb[j].iBitmap = iBitMap++;
-				tbb[j].idCommand = bButtonArray[j];
-				tbb[j].fsState = TBSTATE_ENABLED;
-				tbb[j].fsStyle = TBSTYLE_BUTTON;
-			}
-		}
-		// Add the buttons to the toolbar
-		if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, (WPARAM)iNumButtons, (LPARAM)tbb))
-			throw (CWinException(TEXT("CFrame::SetButtons  .. TB_ADDBUTTONS failed ")));
+				DebugWarnMsg(TEXT("No Resource IDs for Toolbar"));
 
-		delete []tbb;  
+			return iImages;
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CToolbar::SetButtons"));
+		}
+
+		return 0;
 	}
 
 	void CToolbar::SetButtonStyle(int iButtonID, BYTE Style)
-	//	The the style of the toolbar control. The following button styles are supported: 
-	//	TBSTYLE_BUTTON		Standard pushbutton (default) 
-	//	TBSTYLE_SEP			Separator 
-	//	TBSTYLE_CHECK		Auto check-box button 
-	//	TBSTYLE_GROUP		Marks the start of a group of buttons 
-	//	TBSTYLE_CHECKGROUP	Marks the start of a group of check-box buttons 
-	//	TBSTYLE_DROPDOWN	Creates a drop-down list button 
-	//	TBSTYLE_AUTOSIZE	The button's width will be calculated based on the text of the button, not on the size of the image 
-	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it 
+	//	The the style of the toolbar control. The following button styles are supported:
+	//	TBSTYLE_BUTTON		Standard pushbutton (default)
+	//	TBSTYLE_SEP			Separator
+	//	TBSTYLE_CHECK		Auto check-box button
+	//	TBSTYLE_GROUP		Marks the start of a group of buttons
+	//	TBSTYLE_CHECKGROUP	Marks the start of a group of check-box buttons
+	//	TBSTYLE_DROPDOWN	Creates a drop-down list button
+	//	TBSTYLE_AUTOSIZE	The button's width will be calculated based on the text of the button, not on the size of the image
+	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it
 	{
 		try
 		{
@@ -382,7 +422,7 @@ namespace Win32xx
 			if (!::SendMessage(m_hWnd, TB_SETBUTTONINFO, iButtonID, (LPARAM) &tbbi))
 				throw CWinException(TEXT("CToolbar::SetButtonStyle  failed"));
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
@@ -394,19 +434,63 @@ namespace Win32xx
 		}
 	}
 
-	void CToolbar::SetButtonText(int iButtonID, LPCTSTR szText)
+	void CToolbar::SetButtonText(int iIndex, LPCTSTR szText)
 	{
 		try
 		{
-			TBBUTTONINFO tbbi = {0};
-			tbbi.cbSize  = sizeof(TBBUTTONINFO);
-			tbbi.dwMask  = TBIF_TEXT;
-			tbbi.pszText = (LPTSTR)szText;
+			if (iIndex >= 0)
+			{
+				// A typedef simply makes the code more readable
+				typedef std::basic_string<TCHAR> tstring;
 
-			if (!::SendMessage(m_hWnd, TB_SETBUTTONINFO, iButtonID, (LPARAM) &tbbi))
-				throw CWinException(TEXT("CToolbar::SetButtonText  failed"));
+				tstring sString = szText;
+				std::map<tstring, int>::iterator m;
+				int iString;
+
+				// Check to see if the string is already added
+				m = m_StringMap.find(sString);
+				if (m == m_StringMap.end())
+				{
+					if (m_StringMap.size() == 0)
+					{
+						// Place a blank string first in the string table
+						TCHAR szString[2] = TEXT("");
+						szString[1] = TEXT('\0');
+						::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szString);
+					}
+
+					// No index for this string exists, so create it now
+					TCHAR szBuf[80];
+					lstrcpyn(szBuf, szText, 78);
+					szBuf[lstrlen(szBuf)+1] = TEXT('\0');		// Double-null terminate
+
+					iString = ::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szBuf);
+					if (iString == -1)
+						throw CWinException(TEXT("CToolbar::SetButtonText  TB_ADDSTRING failed"));
+
+					// Save the string its index in our map
+					m_StringMap.insert(std::make_pair(sString, iString));
+				}
+				else
+				{
+					// String found, use the index from our map
+					iString = m->second;
+				}
+
+				TBBUTTON tb = {0};
+				if (!::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (LPARAM)&tb))
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_GETBUTTON failed"));
+
+				tb.iString = iString;
+
+				if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0))
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
+
+				if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tb))
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
+			}
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
@@ -416,18 +500,82 @@ namespace Win32xx
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::SetButtonText"));
 		}
+	}
 
+	void CToolbar::SetImageList(int iNumButtons, UINT ToolbarID, UINT ToolbarHotID /* = 0 */, UINT ToolbarDisabledID /* = 0 */)
+	{
+		try
+		{
+			if (iNumButtons > 0)
+			{
+				// Set the button images
+				HBITMAP hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarID));
+				BITMAP bm = {0};
+
+				int iSize = ::GetObject(hbm, 0, NULL);
+				::GetObject(hbm, iSize, &bm);
+				int iImageWidth  = bm.bmWidth / iNumButtons;
+				int iImageHeight = bm.bmHeight;
+
+				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
+				ImageList_AddMasked(m_hImageList, hbm, RGB(192, 192, 192));
+				::DeleteObject(hbm);
+
+				if(SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
+					throw CWinException(TEXT("CToolbar::SetImageList ... TB_SETIMAGELIST failed "));
+
+				if (ToolbarHotID)
+				{
+					hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarHotID));
+					m_hImageListHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
+					ImageList_AddMasked(m_hImageList, hbm, RGB(192, 192, 192));
+					::DeleteObject(hbm);
+					if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
+						throw CWinException(TEXT("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
+				}
+
+				if (ToolbarDisabledID)
+				{
+					hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarDisabledID));
+					m_hImageListDisabled = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
+					ImageList_AddMasked(m_hImageList, hbm, RGB(192, 192, 192));
+					::DeleteObject(hbm);
+					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
+						throw CWinException(TEXT("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
+				}
+			}
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CToolbar::SetImageList"));
+		}
 	}
 
 	void CToolbar::SetSizes(SIZE sizeButton, SIZE sizeImage)
 	{
-		if ((sizeButton.cx < sizeImage.cx + 7) || (sizeButton.cy >= sizeImage.cy + 6))
-			DebugErrMsg(TEXT("Button too small to hold image"));
+		if ((sizeButton.cx < sizeImage.cx + 7) || (sizeButton.cy < sizeImage.cy + 6))
+			DebugWarnMsg(TEXT("CToolbar::SetSizes \nButton too small to hold image"));
 
 		::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELONG(sizeImage.cx, sizeImage.cy));
 		::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0, MAKELONG(sizeButton.cx, sizeButton.cy));
 
+		// Resize the rebar band containing the toolbar
+		if (GetApp()->GetFrame()->IsRebarUsed())
+		{
+			CRebar* rb = (CRebar*) GetCWndObject(m_hWndParent);
+			rb->ResizeBand(rb->GetBand(GetHwnd()), sizeButton.cy);
+		}
+
 		::InvalidateRect(m_hWnd, NULL, TRUE);
+
+		//	Notes:	The default image size is 16 x 15
+		//			Make buttons larger than minimum if they also contain text
 	}
 
 	LRESULT CToolbar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -437,6 +585,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_MOUSEMOVE:
+			// Tell the frame which button the mouse is over
 			pFrame->ToolbarNotify(HitTest());
 			break;
 
@@ -508,14 +657,31 @@ namespace Win32xx
 		cs.lpszClass = REBARCLASSNAME;
 	}
 
+	void CRebar::ResizeBand(int nBand, int nSize)
+	{
+		REBARBANDINFO rbbi = {0};
+		rbbi.cbSize = sizeof(rbbi);
+		rbbi.fMask = RBBIM_CHILDSIZE;
+
+		// Alter the maximum size of the band
+		GetBandInfo(nBand, &rbbi);
+		rbbi.cyMinChild = nSize;
+		rbbi.cyMaxChild = nSize;
+		SetBandInfo(nBand, &rbbi );
+
+		// Resize the band to the new maximum size
+		::SendMessage(m_hWnd, RB_MAXIMIZEBAND, nBand, 0);
+	}
+
 	void CRebar::SetBandBitmap(int nBand, HBITMAP hBackground)
 	{
 		REBARBANDINFO rbbi = {0};
+		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, &rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
 		rbbi.hbmBack = hBackground;
-		SetBandInfo(nBand, &rbbi);
+		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
 	void CRebar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack)
@@ -523,10 +689,11 @@ namespace Win32xx
 		// Won't work with XP themes enabled
 		// Won't work if a bitmap has been set
 		REBARBANDINFO rbbi = {0};
+		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_COLORS;
 		rbbi.clrFore = clrFore;
 		rbbi.clrBack = clrBack;
-		SetBandInfo(nBand, &rbbi);
+		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
 	BOOL CRebar::SetBandInfo(int nBand, LPREBARBANDINFO prbbi)
@@ -649,14 +816,13 @@ namespace Win32xx
 
 	void CMenubar::DrawMDIButtons(HDC hDC)
 	{
-		CFrame* pFrame = GetApp()->GetFrame();
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 		BOOL bMaxed = FALSE;
 
-		if (!pFrame->IsMDIFrame())
+		if (!pMDIFrame->IsMDIFrame())
 			return;
 
-		HWND MDIClient = pFrame->GetView()->GetHwnd();
-		::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+		pMDIFrame->GetActiveChild(&bMaxed);
 
 		if (bMaxed)
 		{
@@ -816,10 +982,8 @@ namespace Win32xx
 				}
 				else if ((nState & CDIS_DISABLED) && (dwItem == 0))
 				{
-					CFrame* pFrame = GetApp()->GetFrame();
-					HWND hMDIClient = pFrame->GetView()->GetHwnd();
-					HWND hMDIChild = (HWND)::SendMessage(hMDIClient, WM_MDIGETACTIVE, 0, 0);
-					HICON hIcon = (HICON)::SendMessage(hMDIChild, WM_GETICON, ICON_SMALL, 0);
+					CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+					HICON hIcon = (HICON)::SendMessage(pMDIFrame->GetActiveChild(), WM_GETICON, ICON_SMALL, 0);
 					if (hIcon == NULL)
 						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 
@@ -905,12 +1069,11 @@ namespace Win32xx
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
-		CFrame* pFrame = GetApp()->GetFrame();
-		if (pFrame->IsMDIFrame())
+		CMDIFrame* pMDIFrame = (CMDIFrame *)GetApp()->GetFrame();
+		if (pMDIFrame->IsMDIFrame())
 		{
 			BOOL bMaxed;
-			HWND MDIClient = pFrame->GetView()->GetHwnd();
-			HWND MDIChild = (HWND)::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+			HWND MDIChild = pMDIFrame->GetActiveChild(&bMaxed);
 
 			if (bMaxed)
 			{
@@ -983,12 +1146,12 @@ namespace Win32xx
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
-		CFrame* pFrame = GetApp()->GetFrame();
-		if (pFrame->IsMDIFrame())
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+		if (pMDIFrame->IsMDIFrame())
 		{
 			BOOL bMaxed;
-			HWND MDIClient = pFrame->GetView()->GetHwnd();
-			HWND MDIChild = (HWND)::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+			HWND MDIClient = pMDIFrame->GetMDIClient().GetHwnd();
+			HWND MDIChild = pMDIFrame->GetActiveChild(&bMaxed);
 
 			if (bMaxed)
 			{
@@ -1006,7 +1169,7 @@ namespace Win32xx
 				if (PtInRect(&m_MDIRect[1], pt))
 				{
 					if (m_nMDIButton == MDI_RESTORE)
-						::PostMessage(MDIClient, WM_MDIRESTORE, (WPARAM)MDIChild, 0);
+					::PostMessage(MDIClient, WM_MDIRESTORE, (WPARAM)MDIChild, 0);
 				}
 
 				if (PtInRect(&m_MDIRect[2], pt))
@@ -1028,12 +1191,11 @@ namespace Win32xx
 
 		if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
 		{
-			CFrame* pFrame = GetApp()->GetFrame();
-			if (pFrame->IsMDIFrame())
+			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+			if (pMDIFrame->IsMDIFrame())
 			{
 				BOOL bMaxed;
-				HWND MDIClient = pFrame->GetView()->GetHwnd();
-				::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+				pMDIFrame->GetActiveChild(&bMaxed);
 
 				if (bMaxed)
 				{
@@ -1110,9 +1272,9 @@ namespace Win32xx
 		// Delete previously appended items
 		int nItems = ::GetMenuItemCount(hMenuWindow);
 		UINT uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
-		if ((uLastID >= IDM_FIRSTCHILD) && (uLastID < IDM_FIRSTCHILD + 10))
+		if ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
 		{
-			while ((uLastID >= IDM_FIRSTCHILD) && (uLastID < IDM_FIRSTCHILD + 10))
+			while ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
 			{
 				::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
 				uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
@@ -1122,8 +1284,7 @@ namespace Win32xx
 		}
 
 		// Append MDI Child windows
-		CMDIFrame* pFrame = (CMDIFrame*)GetApp()->GetFrame();
-		HWND hWndMDIClient = pFrame->GetView()->GetHwnd();
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 		TCHAR szTitle[25];
 		TCHAR szString[30];
 		int nWindow = 0;
@@ -1131,7 +1292,7 @@ namespace Win32xx
 		// Allocate an iterator for our MDIChild vector
 		std::vector <CMDIChild*>::iterator v;
 
-		for (v = pFrame->GetMDIChildVect().begin(); v < pFrame->GetMDIChildVect().end(); v++)
+		for (v = pMDIFrame->GetMDIChildVect().begin(); v < pMDIFrame->GetMDIChildVect().end(); v++)
 		{
 			HWND hWndMDIChild = (*v)->GetHwnd();
 			if (::IsWindowVisible(hWndMDIChild))
@@ -1145,17 +1306,17 @@ namespace Win32xx
 				{
 					::GetWindowText(hWndMDIChild, szTitle, 25);
 					::wsprintf(szString, TEXT("&%d %s"), nWindow+1, szTitle);
-					::AppendMenu(hMenuWindow, MF_STRING, IDM_FIRSTCHILD + nWindow, szString );
+					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szString );
 
-					if ((HWND)::SendMessage(hWndMDIClient, WM_MDIGETACTIVE, 0, 0) == hWndMDIChild)
-						::CheckMenuItem(hMenuWindow, IDM_FIRSTCHILD+nWindow, MF_CHECKED);
+					if (pMDIFrame->GetActiveChild() == hWndMDIChild)
+						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					nWindow++;
 				}
 				else if (nWindow == 9)
 				// For the 10th MDI child, add this menu item and return
 				{
-					::AppendMenu(hMenuWindow, MF_STRING, IDM_FIRSTCHILD + nWindow, TEXT("&Windows..."));
+					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, TEXT("&Windows..."));
 					return;
 				}
 			}
@@ -1334,10 +1495,11 @@ namespace Win32xx
 
 		try
 		{
-			CFrame* pFrame = GetApp()->GetFrame();
-			HWND MDIClient = pFrame->GetView()->GetHwnd();
+			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 			BOOL bMaxed = FALSE;
-			::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+			if (pMDIFrame->IsMDIFrame())
+				pMDIFrame->GetActiveChild(&bMaxed);
+			
 			m_nMaxedFlag = bMaxed? 1: 0;
 			m_nButtonCount = ::GetMenuItemCount(hMenu);
 
@@ -1411,9 +1573,8 @@ namespace Win32xx
 			{
 				case WM_LBUTTONDBLCLK:
 				{
-					CFrame* pFrame = GetApp()->GetFrame();
-					HWND MDIClient = pFrame->GetView()->GetHwnd();
-					HWND MDIChild = (HWND)::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, 0);
+					CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+					HWND MDIChild = pMDIFrame->GetActiveChild();
 					HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
 
 					UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
@@ -1512,8 +1673,8 @@ namespace Win32xx
 	//////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	CFrame::CFrame() : m_ToolbarButtons(0), m_ToolbarData(NULL), m_bUseMenubar(FALSE), m_bUseRebar(FALSE),
-		                  m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE), m_pView(NULL)
+	CFrame::CFrame() : m_bUseMenubar(FALSE), m_bUseRebar(FALSE), m_bUseStatusIndicators(TRUE),
+		                m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE), m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
 		INITCOMMONCONTROLSEX InitStruct;
@@ -1523,32 +1684,28 @@ namespace Win32xx
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
 
-		m_hMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ID_MAIN));
+		m_hMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 
-		// Set up the default Toolbar data. To change this, create your own ToolbarData array
-		// and call SetToolbarData in your frame's constructor
-		BYTE ToolbarData[] =
-		{
-			IDM_FILE_NEW,
-			IDM_FILE_OPEN,
-			IDM_FILE_SAVE,
-			0,				// Separator
-			IDM_EDIT_CUT,
-			IDM_EDIT_COPY,
-			IDM_EDIT_PASTE,
-			0,				// Separator
-			IDM_FILE_PRINT,
-			0,				// Separator
-			IDM_HELP_ABOUT
-		};
-
-		int nButtons = sizeof(ToolbarData)/(sizeof(BYTE));
-		SetToolbarData(nButtons, ToolbarData);
+		// Place this code in CMainFrame's constructor
+/*
+		// Define the resource IDs for the toolbar
+		m_ToolbarData.clear();
+		m_ToolbarData.push_back ( IDM_FILE_NEW   );
+		m_ToolbarData.push_back ( IDM_FILE_OPEN  );
+		m_ToolbarData.push_back ( IDM_FILE_SAVE  );
+		m_ToolbarData.push_back ( 0 );				// Separator
+		m_ToolbarData.push_back ( IDM_EDIT_CUT   );
+		m_ToolbarData.push_back ( IDM_EDIT_COPY  );
+		m_ToolbarData.push_back ( IDM_EDIT_PASTE );
+		m_ToolbarData.push_back ( 0 );				// Separator
+		m_ToolbarData.push_back ( IDM_FILE_PRINT );
+		m_ToolbarData.push_back ( 0 );				// Separator
+		m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+*/
 	}
 
 	CFrame::~CFrame()
 	{
-		delete []m_ToolbarData;
 		::DestroyMenu(m_hMenu);
 	}
 
@@ -1665,16 +1822,10 @@ namespace Win32xx
 	{
 		switch (nID)
 		{
-		case IDM_FILE_EXIT:
-			::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-			break;
-		case IDM_HELP_ABOUT:
-			OnHelp();
-			break;
-		case IDM_VIEW_STATUSBAR:
+		case IDW_VIEW_STATUSBAR:
 			OnViewStatusbar();
 			break;
-		case IDM_VIEW_TOOLBAR:
+		case IDW_VIEW_TOOLBAR:
 			OnViewToolbar();
 			break;
 		} // switch cmd
@@ -1684,12 +1835,9 @@ namespace Win32xx
 
 	void CFrame::OnCreate()
 	{
-		// Start timer for Status Indicator updates
-		::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
-
 		// Set the icon
-		SetIconLarge(ID_MAIN);
-		SetIconSmall(ID_MAIN);
+		SetIconLarge(IDW_MAIN);
+		SetIconSmall(IDW_MAIN);
 
 		if (m_bSupportRebars && m_bUseRebar)
 		{
@@ -1714,14 +1862,18 @@ namespace Win32xx
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
 
+		// Load the toolbar buttons
+		SetButtons(m_ToolbarData);
+
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
 
-		// Load the toolbar buttons
-		SetButtons(m_ToolbarData, m_ToolbarButtons);
-
 		// Create the view window
 		m_pView->Create(m_hWnd);
+
+		// Start timer for Status Indicator updates
+		if (m_bUseStatusIndicators)
+			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
 	void CFrame::OnHelp()
@@ -1735,7 +1887,7 @@ namespace Win32xx
 				hPrevFocus = m_hWnd;
 
 			IsHelpOpen = TRUE;
-			CDialog AboutDialog(IDD_ABOUT_DIALOG, m_hWnd);
+			CDialog AboutDialog(IDW_ABOUT, m_hWnd);
 			AboutDialog.DoModal();
 
 			// Return the keyboard focus back to the window that had it
@@ -1802,12 +1954,12 @@ namespace Win32xx
 		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
 		{
 			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_STATUSBAR, MF_UNCHECKED);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 			else
 			{
-				::CheckMenuItem (m_hMenu, IDM_VIEW_STATUSBAR, MF_UNCHECKED);
+				::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_STATUSBAR, MF_UNCHECKED);
+					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 			}
 
 			::ShowWindow(GetStatusbar().GetHwnd(), SW_HIDE);
@@ -1815,12 +1967,12 @@ namespace Win32xx
 		else
 		{
 			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_STATUSBAR, MF_CHECKED);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_CHECKED);
 			else
 			{
-				::CheckMenuItem (m_hMenu, IDM_VIEW_STATUSBAR, MF_CHECKED);
+				::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
 				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_STATUSBAR, MF_CHECKED);
+					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_STATUSBAR, MF_CHECKED);
 			}
 
 			::ShowWindow(GetStatusbar().GetHwnd(), SW_SHOW);
@@ -1837,14 +1989,14 @@ namespace Win32xx
 		{
 			if (IsMenubarUsed())
 			{
-				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_TOOLBAR, MF_UNCHECKED);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), FALSE);
 			}
 			else
 			{
-				::CheckMenuItem (m_hMenu, IDM_VIEW_TOOLBAR, MF_UNCHECKED);
+				::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_TOOLBAR, MF_UNCHECKED);
+					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 				if (IsRebarUsed())
 					::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), FALSE);
 				else
@@ -1855,14 +2007,14 @@ namespace Win32xx
 		{
 			if (IsMenubarUsed())
 			{
-				::CheckMenuItem(GetMenubar().GetMenu(), IDM_VIEW_TOOLBAR, MF_CHECKED);
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_CHECKED);
 				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), TRUE);
 			}
 			else
 			{
-				::CheckMenuItem (m_hMenu, IDM_VIEW_TOOLBAR, MF_CHECKED);
+				::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
 				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDM_VIEW_TOOLBAR, MF_CHECKED);
+					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_TOOLBAR, MF_CHECKED);
 				if (IsRebarUsed())
 					::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), TRUE);
 				else
@@ -1885,7 +2037,7 @@ namespace Win32xx
 			cs.lpszClass = TEXT("Win32++ Frame");
 
 			// Set the caption from the string resource
-			cs.lpszName = LoadString(ID_MAIN);
+			cs.lpszName = LoadString(IDW_MAIN);
 
 			// Set the frame window styles
 			cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
@@ -1939,41 +2091,17 @@ namespace Win32xx
 			GetRebar().SetBandBitmap(nBands, hBackground);
 	}
 
-	void CFrame::SetButtons(BYTE bButtonArray[], int iNumButtons)
-	// Function arguements:
-	// iNumButtons:-  The number of buttons
-	// iButtonArray:- A BYTE array which looks like ...
-	//  IDM_FILE_OPEN,
-	//  IDM_FILE_SAVE,
-	//  0,
-	//  IDM_EDIT_COPY,
-    //  IDM_EDIT_PASTE,
+	void CFrame::SetButtons(std::vector<UINT> ToolbarData)
+	// Define the resource IDs for the toolbar like this in the Frame's constructor
+	// m_ToolbarData.clear();
+	// m_ToolbarData.push_back ( IDM_FILE_NEW   );
+	// m_ToolbarData.push_back ( IDM_FILE_OPEN  );
+	// m_ToolbarData.push_back ( IDM_FILE_SAVE  );
+	// m_ToolbarData.push_back ( 0 );				// Separator
+	// m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 	{
-		try
-		{
-			// Send the TB_BUTTONSTRUCTSIZE message, which is required for backward compatibility.
-			::SendMessage(GetToolbar().GetHwnd(), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-
-			// Add bitmap that contains button images to the toolbar
-			TBADDBITMAP tbab;
-			tbab.hInst = GetApp()->GetInstanceHandle();
-			tbab.nID   = ID_MAIN;
-
-			
-			if (::SendMessage(GetToolbar().GetHwnd(), TB_ADDBITMAP, iNumButtons, (LPARAM) &tbab) == -1)
-				throw (CWinException(TEXT("CFrame::SetButtons  .. TB_ADDBITMAP failed ")));
-
-			GetToolbar().SetButtons(bButtonArray, iNumButtons);
-
-		}
-		catch(const CWinException &e)
-		{
-			e.MessageBox();
-		}
-		catch(...)
-		{
-			DebugErrMsg(TEXT("Exception in CFrame::SetButtons"));
-		}
+		int iButtons = GetToolbar().SetButtons(ToolbarData);
+		GetToolbar().SetImageList(iButtons, IDW_MAIN);
 	}
 
 	void CFrame::SetStatusIndicators()
@@ -1987,7 +2115,7 @@ namespace Win32xx
 			LPCTSTR Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? TEXT("\tCAP") : TEXT("");
 			LPCTSTR Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? TEXT("\tNUM") : TEXT("");
 			LPCTSTR Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? TEXT("\tSCRL"): TEXT("");
-			
+
 			// Only update indictors if the text has changed
 			if (Status1 != OldStatus1) 	GetStatusbar().SetPaneText(1, (Status1));
 			if (Status2 != OldStatus2)  GetStatusbar().SetPaneText(2, (Status2));
@@ -2010,48 +2138,23 @@ namespace Win32xx
 			// width = max(300, rcClient.right)
 			int width = (300 > rcClient.right) ? 300 : rcClient.right;
 			int iPaneWidths[] = {width - 110, width - 80, width - 50, width - 20};
-			
-			// Create 4 panes
-			GetStatusbar().CreatePanes(4, iPaneWidths);
 
-			// Or you could create the 4 panes this way
-			//	GetStatusbar().SetPaneWidth(0, width - 110);
-			//	GetStatusbar().SetPaneWidth(1, 30);
-			//	GetStatusbar().SetPaneWidth(2, 30);
-			//	GetStatusbar().SetPaneWidth(3, 30);
-
-			// Fill the panes with text
-			GetStatusbar().SetPaneText(0, szText);
-			SetStatusIndicators();
-		}
-	}
-
-
-	void CFrame::SetToolbarData(int nButtons, BYTE ToolbarData[])
-	{
-		try
-		{
-			if (nButtons <= 0)
-				throw CWinException(TEXT("CFrame::SetToolbarData  Must have at least one toolbar button"));
-
-			delete []m_ToolbarData;
-			m_ToolbarButtons = nButtons;
-
-			m_ToolbarData = new BYTE[nButtons];
-			for ( int i = 0; i < nButtons; i++)
+			if (m_bUseStatusIndicators)
 			{
-				m_ToolbarData[i] = ToolbarData[i];
+				// Create 4 panes
+				GetStatusbar().CreatePanes(4, iPaneWidths);
+
+				// Or you could create the 4 panes this way
+				//	GetStatusbar().SetPaneWidth(0, width - 110);
+				//	GetStatusbar().SetPaneWidth(1, 30);
+				//	GetStatusbar().SetPaneWidth(2, 30);
+				//	GetStatusbar().SetPaneWidth(3, 30);
+
+				SetStatusIndicators();
 			}
-		}
 
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(TEXT("Exception in CFrame::SetToolbarData"));
+			// Place text in the 1st pane
+			GetStatusbar().SetPaneText(0, szText);
 		}
 	}
 

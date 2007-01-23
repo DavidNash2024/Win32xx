@@ -14,29 +14,22 @@ CMainFrame::CMainFrame()
 	SetView(m_View);
 
 	// Define our toolbar
-	BYTE ToolbarData[] =
-		{
-		 IDM_FILE_NEW,
-		 IDM_FILE_OPEN,
-		 IDM_FILE_SAVE,
-		 0,					// Separator
-		 IDM_EDIT_CUT,
-		 IDM_EDIT_COPY,
-		 IDM_EDIT_PASTE,
-		 IDM_FILE_PRINT,
-		 0,					// Separator
-		 IDM_PEN_RED,
-		 IDM_PEN_BLUE,
-		 IDM_PEN_GREEN,
-		 IDM_PEN_BLACK,
-		 0,					// Separator
-		 IDM_HELP_ABOUT
-		};
-
-	// Calculate the number of button entries
-	int nButtons = sizeof(ToolbarData)/(sizeof(BYTE));
-
-	SetToolbarData(nButtons, ToolbarData);
+	m_ToolbarData.clear();
+	m_ToolbarData.push_back ( IDM_FILE_NEW   );
+	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
+	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
+	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
+	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
+	m_ToolbarData.push_back ( IDM_FILE_PRINT );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_PEN_RED    );
+	m_ToolbarData.push_back ( IDM_PEN_BLUE   );
+	m_ToolbarData.push_back ( IDM_PEN_GREEN  );
+	m_ToolbarData.push_back ( IDM_PEN_BLACK  );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 }
 
 CMainFrame::~CMainFrame()
@@ -96,6 +89,12 @@ BOOL CMainFrame::OnCommand(UINT nID)
 	case IDM_PEN_BLACK:
 		TRACE("Black pen selected");
 		m_View.SetPen(RGB(0,0,0));
+		break;
+	case IDM_HELP_ABOUT:
+		OnHelp();
+		break;
+	case IDM_FILE_EXIT:
+		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		break;
 	}
 

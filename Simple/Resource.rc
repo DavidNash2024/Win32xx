@@ -12,7 +12,7 @@
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-ID_MAIN                 ICON                    "res\\star.ico"
+IDW_MAIN                 ICON                    "res\\star.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ ID_MAIN                 ICON                    "res\\star.ico"
 
 STRINGTABLE
 BEGIN
-    ID_MAIN                 "Simple Window"
+    IDW_MAIN                 "Simple Window"
 END
 
 

@@ -4,7 +4,7 @@
 
 
 //The resource ID for ICON and Window Caption
-#define ID_MAIN                         101
+#define IDW_MAIN                         101
 
 
 
