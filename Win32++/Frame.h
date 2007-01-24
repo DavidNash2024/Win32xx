@@ -138,6 +138,8 @@ namespace Win32xx
 		CMenubar();
 		virtual ~CMenubar();
 		virtual HMENU GetMenu() {return m_hTopMenu;}
+		virtual void OnMenuChar(WPARAM wParam, LPARAM lParam);
+		virtual void OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual void SetMenu(HMENU hMenu);
 
 	protected:
@@ -153,10 +155,8 @@ namespace Win32xx
 		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual void OnMDISetMenu(WPARAM wParam, LPARAM lParam);
-		virtual void OnMenuChar(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnWindowPosChanged();
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void ReleaseFocus();

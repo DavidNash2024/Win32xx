@@ -22,7 +22,7 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
 	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
 	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT ); 
 }
@@ -48,7 +48,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 void CMainFrame::OnCreate()
 {
 	// OnCreate controls the way the frame is created
-	// Overriding this function is optional
+	// This function is optional
 
 	// m_bUseMenubar = FALSE;
 	// m_bUseRebar = FALSE;
@@ -82,7 +82,7 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_OPEN), "OPEN");
 	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_SAVE), "SAVE");
 	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_CUT),  "CUT");
-	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT),"CUT");
+	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT),"PRINT");
 
 	// Adjust the toolbar button sizes
 	RECT r;

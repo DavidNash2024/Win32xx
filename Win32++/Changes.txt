@@ -17,8 +17,8 @@ Major Changes:
   addition to the standard toolbar bitmap for toolbar buttons.
 * Non standard toolbar button sizes are now suported.
 * Text on toolbar buttons is now supported.
-* Simplified the setting of Toolbar resource IDs. The are now set in the (derrived)
-  frame's constructor by adding to a vector.
+* Simplified the setting of Toolbar resource IDs. The are now set in the Mainframe's 
+  constructor by adding to a vector.
 * There is now a clear seperation between the Resource IDs defined by Win32++ and those
   defined in the user's application. Resource IDs defined by Win32++ are defined as
   IDW_XXXXXX, and begin from 0xE800. This should avoid any clashes with user defined
@@ -64,7 +64,11 @@ CWnd::OnNotify modified, it now returns a LRESULT
 Bug Fixes
 * CFrame::OnHelp now returns the focus back to the window that had it before OnHelp 
   was called.
-* CSplitter:: Fixed drawing of splitter bar  
+* CSplitter:: Fixed drawing of splitter bar
+
+Incompatibilites with previous version
+* Resource IDs have changed, mandating changes to resource.h and resource.rc
+* OnFrameCreated is removed, replace it with OnInitialUpdate
 
 Version 5.0
 -----------

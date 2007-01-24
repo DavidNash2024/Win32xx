@@ -342,6 +342,7 @@ namespace Win32xx
 	}
 
 	int CToolbar::SetButtons(std::vector<UINT> ToolbarData)
+	// Assigns a resource ID to each toolbar button
 	{
 		try
 		{
@@ -503,6 +504,8 @@ namespace Win32xx
 	}
 
 	void CToolbar::SetImageList(int iNumButtons, UINT ToolbarID, UINT ToolbarHotID /* = 0 */, UINT ToolbarDisabledID /* = 0 */)
+	// This function assumes the width of the button image = bitmap_size / buttons
+	// This function assumes the mask color is gray RGB(192,192,192)
 	{
 		try
 		{
@@ -558,7 +561,11 @@ namespace Win32xx
 	}
 
 	void CToolbar::SetSizes(SIZE sizeButton, SIZE sizeImage)
+	// This function sets the size of the button, and the size of the image
+	// Call this function if the image size is not the default 16 x 15
 	{
+		// Generate a warning if the buttin is too small
+		//	Note:	Make buttons larger than minimum if they also contain text
 		if ((sizeButton.cx < sizeImage.cx + 7) || (sizeButton.cy < sizeImage.cy + 6))
 			DebugWarnMsg(TEXT("CToolbar::SetSizes \nButton too small to hold image"));
 
@@ -573,9 +580,6 @@ namespace Win32xx
 		}
 
 		::InvalidateRect(m_hWnd, NULL, TRUE);
-
-		//	Notes:	The default image size is 16 x 15
-		//			Make buttons larger than minimum if they also contain text
 	}
 
 	LRESULT CToolbar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1325,7 +1329,8 @@ namespace Win32xx
 
 	void CMenubar::OnMenuChar(WPARAM wParam, LPARAM /* lParam */)
 	{
-		DoAltKey(LOWORD(wParam));
+		if (!m_bMenuActive)
+			DoAltKey(LOWORD(wParam));
 	}
 
 	BOOL CMenubar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1640,15 +1645,6 @@ namespace Win32xx
 		case WM_MDISETMENU:
 			OnMDISetMenu(wParam, lParam);
 			return 0L;
-		case WM_MENUCHAR:
-			// A key press with the Alt key held down
-			if (!m_bMenuActive)
-				OnMenuChar(wParam, lParam);
-			return 0L;
-		case WM_SYSCOMMAND:
-			// F10 or Alt key press and release
-			OnSysCommand(wParam, lParam);
-			return 0L;
 		case WM_SYSKEYDOWN:
 			if ((wParam == VK_MENU) || (wParam == VK_F10))
 				return 0L;
@@ -1660,7 +1656,6 @@ namespace Win32xx
 				return 0L;
 			}
 			break;
-
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged();
 			break;
@@ -2203,10 +2198,10 @@ namespace Win32xx
 				OnHelp();
 				return 0L;
 			case WM_MENUCHAR:
-				if (IsMenubarUsed())
+				if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 				{
-					if (LOWORD(wParam)!= VK_SPACE)
-						::SendMessage(GetMenubar().GetHwnd(), WM_MENUCHAR, wParam, lParam);
+					// Activate Menubar for key pressed with Alt key held down
+					GetMenubar().OnMenuChar(wParam, lParam);
 					return -1;
 				}
 				break;
@@ -2226,7 +2221,7 @@ namespace Win32xx
 			case WM_SYSCOMMAND:
 				if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
 				{
-					::SendMessage(GetMenubar().GetHwnd(), WM_SYSCOMMAND, wParam, lParam);
+					GetMenubar().OnSysCommand(wParam, lParam);
 					return 0L;
 				}
 				break;

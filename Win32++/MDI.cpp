@@ -225,11 +225,10 @@ namespace Win32xx
 			OnHelp();
 			return 0;
 		case WM_MENUCHAR:
-			if (IsMenubarUsed())
+			if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 			{
-				if (LOWORD(wParam)!= VK_SPACE)
-					// Activate Menubar for key pressed with Alt key held down
-					::SendMessage(m_Menubar.GetHwnd(), WM_MENUCHAR, wParam, lParam);
+				// Activate Menubar for key pressed with Alt key held down
+				GetMenubar().OnMenuChar(wParam, lParam);
 				return -1;
 			}
 			break;
@@ -252,9 +251,8 @@ namespace Win32xx
 		case WM_SYSCOMMAND:
 			if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
 			{
-				// Activate Menubar for F10 and Alt keys
-				::SendMessage(m_Menubar.GetHwnd(), WM_SYSCOMMAND, wParam, lParam);
-				return 0;
+				GetMenubar().OnSysCommand(wParam, lParam);
+				return 0L;
 			}
 			break;
 		case WM_TIMER:
