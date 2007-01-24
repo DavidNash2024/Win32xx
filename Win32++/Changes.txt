@@ -7,22 +7,22 @@ Major Changes:
 * Existing windows (including dialog items) can now be attached to a CWnd.
   The window is automatically subclassed when attached to a CWnd.
 * Integrated subclassing and superclassing into the framwork. Superclassing and
-  subclassing is much simpler now.  Win32++ now keeps track of the previous window 
-  procedure, and calls it automatically at the end of CWnd::WndProc
+  subclassing is much simpler now.  Win32++ now keeps track of the previous
+  window procedure, and calls it automatically at the end of CWnd::WndProc
 * Toolbar notifies frame via ToolbarNotify when the mouse is over a toolbar 
   button.
 * The keyboard indicators in the status bar are updated on a timer, rather than
   attempting catch keydown messages and notifications.
-* Applications can now set a hot toolbar bitmap, and a disabled toolbar bitmap in
-  addition to the standard toolbar bitmap for toolbar buttons.
+* Applications can now set a hot toolbar bitmap, and a disabled toolbar bitmap
+  in addition to the standard toolbar bitmap for toolbar buttons.
 * Non standard toolbar button sizes are now suported.
 * Text on toolbar buttons is now supported.
-* Simplified the setting of Toolbar resource IDs. The are now set in the Mainframe's 
-  constructor by adding to a vector.
-* There is now a clear seperation between the Resource IDs defined by Win32++ and those
-  defined in the user's application. Resource IDs defined by Win32++ are defined as
-  IDW_XXXXXX, and begin from 0xE800. This should avoid any clashes with user defined
-  resource IDs.
+* Simplified the setting of Toolbar resource IDs. The are now set in the 
+  Mainframe's constructor by adding to a vector.
+* There is now a clear seperation between the Resource IDs defined by Win32++
+  and those defined in the user's application. Resource IDs defined by Win32++
+  are defined as IDW_XXXXXX, and begin from 0xE800. This is intended to avoid 
+  clashes with user defined resource IDs.
 
 The following changes have been made to the Win32++ code:
 Added CWnd::OnNotifyReflect
@@ -62,13 +62,15 @@ CToolbar::SetButtons modified to CToolbar::SetButtons(vector<UINT> ToolbarData)
 CWnd::OnNotify modified, it now returns a LRESULT
 
 Bug Fixes
-* CFrame::OnHelp now returns the focus back to the window that had it before OnHelp 
-  was called.
+* CFrame::OnHelp now returns the focus back to the window that had it before 
+  OnHelp was called.
 * CSplitter:: Fixed drawing of splitter bar
 
 Incompatibilites with previous version
 * Resource IDs have changed, mandating changes to resource.h and resource.rc
-* OnFrameCreated is removed, replace it with OnInitialUpdate
+* Toolbar resource IDs are defined differently, mandating a change to 
+  CMainframe's constructor. 
+* OnFrameCreated is removed, use OnInitialUpdate instead.
 
 Version 5.0
 -----------
@@ -80,7 +82,7 @@ Summary of changes
 ------------------
 1) Moved the Win32++ files from ./Windows to ../Win32++. This allows any 
     number of Win32++ projects to share the same copy of Win32++ files.
-2) Integrated the Basic and Enhanced frameworks into a single Win32++ framework.
+2) Integrated the Basic and Enhanced frameworks into a single Win32++ framework
     If you were using the basic framework you will see the following changes:
    * Added rebars to the frame window
    * Added a menubar to the frame window
@@ -91,8 +93,8 @@ Summary of changes
 4) Changed CSplitter. The splitter bar is now an additional child window rather
     than the CSplitter CWnd object itself.
 5) CFrame::Recalclayout no longer invalidates the view window. Programmers can
-    now choose whether or not to invalidate the view window when the frame window
-    is resized. This has the potential to eliminate unnecessary flicker.
+    now choose whether or not to invalidate the view window when the frame
+    window is resized. This has the potential to eliminate unnecessary flicker.
 6) The namespace used by the framework has been renamed to Win32xx.
 7) Superclassing is now used instead of subclassing for common controls.
 
@@ -148,20 +150,20 @@ Changed the following:
 * Added   CFrame::OnHelp
 * Added   CFrame::SetStatusText
 * Added   CFrame::SetToolbarData
-* Changed CFrame::SetView.          Takes a reference to a CWnd object, not a pointer
-* Removed CFrame::CreateEx          Removed both functions
+* Changed CFrame::SetView.        Now takes a reference to a CWnd object
+* Removed CFrame::CreateEx        Removed both functions
 * Removed CFrame::LoadToolbarData
 * Added   CWin::GetHwnd	
 * Added   CWnd::LoadString 
 * Added   CWnd::OnInitialUpdate
 * Added   CWin::PreCreate
 * Added   CWnd::SubClass 
-* Changed CWin::CreateEX            Added the lpParam paramater
-* Changed CWnd::OnCreate            Now called when a WM_CREATE message is received.
+* Changed CWin::CreateEX       Added the lpParam paramater
+* Changed CWnd::OnCreate       Now called when a WM_CREATE message is received.
 * Removed CWnd::Show
 * Removed CWnd::OnFocus
 * Removed CWnd::OnClose
-* Removed CWnd::operator const HWND().  Not required, use CWnd::GetHwnd instead.
+* Removed CWnd::operator const HWND().  Use CWnd::GetHwnd instead
 * Added   DebugErrMsg
      
 Version 3

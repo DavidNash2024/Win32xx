@@ -45,7 +45,11 @@
 #include "dialog.h"
 #include <map>
 #include <string>
+#include <vector>
 
+
+// A typedef simply makes the code more readable
+typedef std::basic_string<TCHAR> tstring;
 
 namespace Win32xx
 {
@@ -220,7 +224,7 @@ namespace Win32xx
 		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
 		virtual void SetView(CWnd& pView);
 		virtual void SetStatusIndicators();
-		virtual void SetStatusText(LPCTSTR szText = TEXT("Ready"));
+		virtual void SetStatusText();
 
 	protected:
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
@@ -246,6 +250,7 @@ namespace Win32xx
 		BOOL m_bUseMenubar;			// set to TRUE if a Menubar is to be used
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
 		BOOL m_bUseStatusIndicators;	// set to TRUE if StatusIndicators are to be used
+		tstring m_StatusText;		// a TCHAR std::string for status text 
 
 	private:
 		CMenubar m_Menubar;			// CMenubar object

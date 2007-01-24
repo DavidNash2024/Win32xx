@@ -44,7 +44,6 @@
 #include "Frame.h"
 #include <windowsx.h>
 #include <richedit.h>
-#include <vector>
 #include "MDI.h"
 #include "Default_Resource.h"
 
@@ -441,9 +440,6 @@ namespace Win32xx
 		{
 			if (iIndex >= 0)
 			{
-				// A typedef simply makes the code more readable
-				typedef std::basic_string<TCHAR> tstring;
-
 				tstring sString = szText;
 				std::map<tstring, int>::iterator m;
 				int iString;
@@ -1668,8 +1664,9 @@ namespace Win32xx
 	//////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	CFrame::CFrame() : m_bUseMenubar(FALSE), m_bUseRebar(FALSE), m_bUseStatusIndicators(TRUE),
-		                m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE), m_pView(NULL)
+	CFrame::CFrame() : m_bUseMenubar(FALSE), m_bUseRebar(FALSE), m_bUseStatusIndicators(TRUE), 
+		                m_StatusText(TEXT("Ready")), m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE), 
+						m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
 		INITCOMMONCONTROLSEX InitStruct;
@@ -1899,9 +1896,10 @@ namespace Win32xx
 		int nID = LOWORD (wParam);
 		HMENU hMenu = (HMENU) lParam;
 		if ((!(hMenu == ::GetMenu(m_hWnd))) && (nID != 0))
-			SetStatusText(LoadString(nID));
+			m_StatusText = LoadString(nID);
 		else
-			SetStatusText();
+			m_StatusText = TEXT("Ready");
+		SetStatusText();
 	}
 
 	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -2122,7 +2120,7 @@ namespace Win32xx
 		}
 	}
 
-	void CFrame::SetStatusText(LPCTSTR szText /*= "Ready"*/)
+	void CFrame::SetStatusText()
 	{
 		if (::IsWindow(GetStatusbar().GetHwnd()))
 		{
@@ -2149,7 +2147,7 @@ namespace Win32xx
 			}
 
 			// Place text in the 1st pane
-			GetStatusbar().SetPaneText(0, szText);
+			GetStatusbar().SetPaneText(0, m_StatusText.c_str());
 		}
 	}
 
@@ -2170,15 +2168,16 @@ namespace Win32xx
 			::SendMessage(GetToolbar().GetHwnd(), TB_GETBUTTON, (WPARAM) nButton, (LPARAM) &TBbutton);
 			int nID = TBbutton.idCommand;
 			if (nID != nOldID)
-				SetStatusText(LoadString(TBbutton.idCommand));
+				m_StatusText = LoadString(TBbutton.idCommand);
 			nOldID = nID;
 		}
 		else
 		{
 			if (nOldID != -1)
-				SetStatusText(TEXT("Ready"));
+				m_StatusText = TEXT("Ready");
 			nOldID = -1;
 		}
+		SetStatusText();
 	}
 
 	LRESULT CFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
