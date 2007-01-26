@@ -17,7 +17,7 @@ Major Changes:
   in addition to the standard toolbar bitmap for toolbar buttons.
 * Non standard toolbar button sizes are now suported.
 * Text on toolbar buttons is now supported.
-* Simplified the setting of Toolbar resource IDs. The are now set in the 
+* Simplified the setting of Toolbar resource IDs. They are now set in the 
   Mainframe's constructor by adding to a vector.
 * There is now a clear seperation between the Resource IDs defined by Win32++
   and those defined in the user's application. Resource IDs defined by Win32++

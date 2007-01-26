@@ -81,6 +81,7 @@ namespace Win32xx
 	public:
 		CToolbar();
 		virtual ~CToolbar();
+		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
 		virtual int CommandToIndex(int iButtonID);
 		virtual void DisableButton(const int iButtonID);
 		virtual void EnableButton(const int iButtonID);
@@ -92,7 +93,7 @@ namespace Win32xx
 		virtual void SetButtonState(int iButtonID, UINT State);
 		virtual void SetButtonStyle(int iButtonID, BYTE Style);
 		virtual void SetButtonText(int iIndex, LPCTSTR szText);
-		virtual void SetImageList(int iNumButtons, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
+		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void SetSizes(SIZE sizeButton, SIZE sizeImage);
 
 	protected:
@@ -103,7 +104,7 @@ namespace Win32xx
 	private:
 		HIMAGELIST m_hImageList;
 		HIMAGELIST m_hImageListHot;
-		HIMAGELIST m_hImageListDisabled;
+		HIMAGELIST m_hImageListDis;
 		std::map<std::basic_string<TCHAR>, int> m_StringMap;
 
 	};  // class CToolbar

@@ -181,20 +181,45 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDisabled(NULL)
+	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL)
 	{
 		Superclass(TOOLBARCLASSNAME, TEXT("Toolbar"));
 	}
 
 	CToolbar::~CToolbar()
 	{
-		if (m_hImageList)
-			::DeleteObject(m_hImageList);
+		if (m_hImageList)     ::DeleteObject(m_hImageList);
+		if (m_hImageListHot)  ::DeleteObject(m_hImageListHot);
+		if (m_hImageListDis)  ::DeleteObject(m_hImageListDis);
 	}
 
 	int CToolbar::CommandToIndex(int iButtonID)
 	{
 		return ::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
+	}
+
+	void CToolbar::AddBitmap(int iNumButtons, UINT ToolbarID)
+	// Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
+	//       For more colours, use SetImageList instead
+	{
+		try
+		{
+			TBADDBITMAP tbab = {0};
+			tbab.hInst = GetApp()->GetInstanceHandle();
+			tbab.nID   = ToolbarID;
+			if (::SendMessage(m_hWnd, TB_ADDBITMAP, iNumButtons, (LPARAM)&tbab) == -1)
+				throw CWinException(TEXT("CToolbar::AddBitmap  TB_ADDBITMAP failed"));
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CToolbar::AddBitmap"));
+		}
 	}
 
 	void CToolbar::DisableButton(const int iButtonID)
@@ -326,7 +351,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::SetButtonState"));
-		}
+		} 
 	}
 
 	void CToolbar::PreCreate(CREATESTRUCT &cs)
@@ -342,7 +367,7 @@ namespace Win32xx
 
 	int CToolbar::SetButtons(std::vector<UINT> ToolbarData)
 	// Assigns a resource ID to each toolbar button
-	{
+	{ 
 		try
 		{
 			int iImages = 0;
@@ -374,12 +399,17 @@ namespace Win32xx
 						tbb[j].idCommand = ToolbarData[j];
 						tbb[j].fsState = TBSTATE_ENABLED;
 						tbb[j].fsStyle = TBSTYLE_BUTTON;
+
+						//  work around a bug in some versions of comctl
+						tbb[j].iString = (INT_PTR)TEXT(" ");
 					}
 				}
 				// Add the buttons to the toolbar
 				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, (WPARAM)iNumButtons, (LPARAM)tbb))
 					throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
 
+				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
+				
 				delete []tbb;
 			}
 			else
@@ -396,7 +426,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::SetButtons"));
-		}
+		} 
 
 		return 0;
 	}
@@ -435,6 +465,8 @@ namespace Win32xx
 	}
 
 	void CToolbar::SetButtonText(int iIndex, LPCTSTR szText)
+	// This rather convoluted approach to setting toolbar button text supports
+	// all versions of Windows, including Win95 with COMCTL32.DLL version 4.0
 	{
 		try
 		{
@@ -450,7 +482,8 @@ namespace Win32xx
 				{
 					if (m_StringMap.size() == 0)
 					{
-						// Place a blank string first in the string table
+						// Place a blank string first in the string table, in case some
+						// buttons don't have text
 						TCHAR szString[2] = TEXT("");
 						szString[1] = TEXT('\0');
 						::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szString);
@@ -483,8 +516,16 @@ namespace Win32xx
 				if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0))
 					throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
 
+				// (From MFC) Force a recalc of the toolbar's layout to work around a comctl bug
+				int iTextRows = (int)::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0);
+				if (iTextRows == 0) iTextRows =1;
+				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, iTextRows+1, 0);
+				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, iTextRows, 0);
+				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+
 				if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tb))
-					throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));			
 			}
 		}
 
@@ -496,28 +537,37 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::SetButtonText"));
-		}
+		} 
 	}
 
-	void CToolbar::SetImageList(int iNumButtons, UINT ToolbarID, UINT ToolbarHotID /* = 0 */, UINT ToolbarDisabledID /* = 0 */)
+	void CToolbar::SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	// This function assumes the width of the button image = bitmap_size / buttons
-	// This function assumes the mask color is gray RGB(192,192,192)
-	{
+	// This colour mask is often gray RGB(192,192,192) or magenta (255,0,255);
+	// ToolbarHotID and ToolbarDisabledID can be 0
+	{ 
 		try
 		{
 			if (iNumButtons > 0)
 			{
+				// Toolbar ImageLists require Comctl32.dll version 4.7 or later
+				if (!GetApp()->GetFrame()->m_bSupportRebars)
+				{
+					// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist. 
+					// Instead we simply add the bitmap.
+					AddBitmap(iNumButtons, ToolbarID);
+					return;
+				}
+
 				// Set the button images
 				HBITMAP hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarID));
 				BITMAP bm = {0};
 
-				int iSize = ::GetObject(hbm, 0, NULL);
-				::GetObject(hbm, iSize, &bm);
+				::GetObject(hbm, sizeof(BITMAP), &bm);
 				int iImageWidth  = bm.bmWidth / iNumButtons;
 				int iImageHeight = bm.bmHeight;
 
 				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
-				ImageList_AddMasked(m_hImageList, hbm, RGB(192, 192, 192));
+				ImageList_AddMasked(m_hImageList, hbm, crMask);
 				::DeleteObject(hbm);
 
 				if(SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
@@ -527,21 +577,21 @@ namespace Win32xx
 				{
 					hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarHotID));
 					m_hImageListHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
-					ImageList_AddMasked(m_hImageList, hbm, RGB(192, 192, 192));
+					ImageList_AddMasked(m_hImageListHot, hbm, crMask);
 					::DeleteObject(hbm);
-					if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
+					if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) == -1)
 						throw CWinException(TEXT("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
 				}
 
 				if (ToolbarDisabledID)
 				{
 					hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarDisabledID));
-					m_hImageListDisabled = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
-					ImageList_AddMasked(m_hImageList, hbm, RGB(192, 192, 192));
+					m_hImageListDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
+					ImageList_AddMasked(m_hImageListDis, hbm, crMask);
 					::DeleteObject(hbm);
-					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
+					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
 						throw CWinException(TEXT("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
-				}
+				} 
 			}
 		}
 
@@ -553,13 +603,13 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::SetImageList"));
-		}
+		} 
 	}
 
 	void CToolbar::SetSizes(SIZE sizeButton, SIZE sizeImage)
 	// This function sets the size of the button, and the size of the image
 	// Call this function if the image size is not the default 16 x 15
-	{
+	{ 
 		// Generate a warning if the buttin is too small
 		//	Note:	Make buttons larger than minimum if they also contain text
 		if ((sizeButton.cx < sizeImage.cx + 7) || (sizeButton.cy < sizeImage.cy + 6))
@@ -575,7 +625,7 @@ namespace Win32xx
 			rb->ResizeBand(rb->GetBand(GetHwnd()), sizeButton.cy);
 		}
 
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		::InvalidateRect(m_hWnd, NULL, TRUE); 
 	}
 
 	LRESULT CToolbar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1785,9 +1835,11 @@ namespace Win32xx
 
 			if (!pfnInit)
 				// Can't call InitCommonControlsEx, so call InitCommonControls instead
+				// We are using COMCTL32.dll version 4.0
 				::InitCommonControls();
 			else
 			{
+				// We are using COMCTL32.dll version 4.7 or later
 				// Call InitCommonControlsEx
 				if(!((*pfnInit)(&InitStruct)))
 					throw CWinException(TEXT("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));
@@ -2094,7 +2146,7 @@ namespace Win32xx
 	// m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 	{
 		int iButtons = GetToolbar().SetButtons(ToolbarData);
-		GetToolbar().SetImageList(iButtons, IDW_MAIN);
+		GetToolbar().SetImageList(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 	}
 
 	void CFrame::SetStatusIndicators()
@@ -2148,7 +2200,7 @@ namespace Win32xx
 
 			// Place text in the 1st pane
 			GetStatusbar().SetPaneText(0, m_StatusText.c_str());
-		}
+		} 
 	}
 
 	void CFrame::SetView(CWnd& View)

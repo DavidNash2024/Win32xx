@@ -47,8 +47,8 @@ BOOL CMainFrame::OnCommand(UINT nID)
 
 void CMainFrame::OnCreate()
 {
-	// OnCreate controls the way the frame is created
-	// This function is optional
+	// OnCreate controls the way the frame is created	
+	// The default for the following variables is TRUE
 
 	// m_bUseMenubar = FALSE;
 	// m_bUseRebar = FALSE;
@@ -72,23 +72,31 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 {
+	// We can override CFrame::Setbuttons to customise the Toolbar
+
 	CToolbar& TB = GetToolbar();
-	
-	// Call base class SetButtons function
-	CFrame::SetButtons(ToolbarData);
+
+	// Set the resource IDs for the toolbar buttons
+	TB.SetButtons(ToolbarData);
+
+	// Set the image lists for normal, hot and disabled buttons
+	TB.SetImageList(8, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Add some text to the buttons
-	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_NEW),  "NEW");
-	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_OPEN), "OPEN");
-	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_SAVE), "SAVE");
-	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_CUT),  "CUT");
-	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT),"PRINT");
-
+	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_NEW),   "New");
+	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_OPEN),  "Open");
+	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_SAVE),  "Save");
+	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_CUT),   "Cut");
+	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_COPY),  "Copy");
+	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_PASTE), "Paste");
+	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT), "Print");
+	TB.SetButtonText(TB.CommandToIndex(IDM_HELP_ABOUT), "About");
+	
 	// Adjust the toolbar button sizes
 	RECT r;
 	TB.GetItemRect(0, &r);
-	SIZE sizeButton = {r.right - r.left, r.bottom - r.top}; 
-	SIZE sizeImage = {16, 15};
+	SIZE sizeButton = {r.right - r.left, r.bottom - r.top};
+	SIZE sizeImage = {24, 24};			// Toolbar Images are 24x24 pixels
 	TB.SetSizes(sizeButton, sizeImage); 
 }
 
