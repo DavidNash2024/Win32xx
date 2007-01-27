@@ -248,9 +248,9 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;
-		BOOL m_bUseMenubar;			// set to TRUE if a Menubar is to be used
+		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
+		BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
-		BOOL m_bUseStatusIndicators;	// set to TRUE if StatusIndicators are to be used
 		tstring m_StatusText;		// a TCHAR std::string for status text 
 
 	private:

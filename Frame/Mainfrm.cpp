@@ -50,10 +50,10 @@ void CMainFrame::OnCreate()
 	// OnCreate controls the way the frame is created	
 	// The default for the following variables is TRUE
 
-	// m_bUseMenubar = FALSE;
-	// m_bUseRebar = FALSE;
-	// m_bUseStatusIndicators = FALSE;
-	
+	// m_bShowIndicatorStatus = FALSE;	// Statusbar shows indicators
+	// m_bShowMenuStatus = FALSE;		// Statusbar shows Toolbar and menu mouse position
+	// m_bUseRebar = FALSE;				// Rebars are used to house toolbar and menubar
+
 	CFrame::OnCreate();
 }
 
@@ -72,15 +72,15 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 {
-	// We can override CFrame::Setbuttons to customise the Toolbar
+	// Here we override CFrame::Setbuttons to customise the Toolbar
 
 	CToolbar& TB = GetToolbar();
 
-	// Set the resource IDs for the toolbar buttons
-	TB.SetButtons(ToolbarData);
-
 	// Set the image lists for normal, hot and disabled buttons
 	TB.SetImageList(8, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	// Set the resource IDs for the toolbar buttons
+	TB.SetButtons(ToolbarData);
 
 	// Add some text to the buttons
 	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_NEW),   "New");
@@ -89,15 +89,15 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_CUT),   "Cut");
 	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_COPY),  "Copy");
 	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_PASTE), "Paste");
-	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT), "Print");
+	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT), "Print"); 
 	TB.SetButtonText(TB.CommandToIndex(IDM_HELP_ABOUT), "About");
-	
+
 	// Adjust the toolbar button sizes
 	RECT r;
-	TB.GetItemRect(0, &r);
+	TB.GetItemRect(1, &r);
 	SIZE sizeButton = {r.right - r.left, r.bottom - r.top};
 	SIZE sizeImage = {24, 24};			// Toolbar Images are 24x24 pixels
-	TB.SetSizes(sizeButton, sizeImage); 
+	TB.SetSizes(sizeButton, sizeImage);
 }
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

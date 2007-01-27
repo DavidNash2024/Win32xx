@@ -408,7 +408,7 @@ namespace Win32xx
 				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, (WPARAM)iNumButtons, (LPARAM)tbb))
 					throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
 
-				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
+			 	::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
 				
 				delete []tbb;
 			}
@@ -513,19 +513,23 @@ namespace Win32xx
 
 				tb.iString = iString;
 
-				if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0))
-					throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
-
+				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+				
 				// (From MFC) Force a recalc of the toolbar's layout to work around a comctl bug
 				int iTextRows = (int)::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0);
-				if (iTextRows == 0) iTextRows =1;
-				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+				if (iTextRows <= 0) iTextRows =1;
 				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, iTextRows+1, 0);
 				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, iTextRows, 0);
-				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+				
 
+				// Insert and then delete the button
+				// A bug in some versions of comctl require that we insert, then delete
 				if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tb))
-					throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));			
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));	
+				if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex+1, 0))
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
+				
+				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
 			}
 		}
 
@@ -636,11 +640,13 @@ namespace Win32xx
 		{
 		case WM_MOUSEMOVE:
 			// Tell the frame which button the mouse is over
-			pFrame->ToolbarNotify(HitTest());
+			if (pFrame->m_bShowMenuStatus)
+				pFrame->ToolbarNotify(HitTest());
 			break;
 
 		case WM_MOUSELEAVE:
-			pFrame->ToolbarNotify(-1);
+			if (pFrame->m_bShowMenuStatus)
+				pFrame->ToolbarNotify(-1);
 			break;
 		}
 		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
@@ -1714,7 +1720,7 @@ namespace Win32xx
 	//////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	CFrame::CFrame() : m_bUseMenubar(FALSE), m_bUseRebar(FALSE), m_bUseStatusIndicators(TRUE), 
+	CFrame::CFrame() :  m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseRebar(FALSE),
 		                m_StatusText(TEXT("Ready")), m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE), 
 						m_pView(NULL)
 	{
@@ -1845,7 +1851,6 @@ namespace Win32xx
 					throw CWinException(TEXT("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));
 				m_bSupportRebars = TRUE;
 				m_bUseRebar     = TRUE;
-				m_bUseMenubar    = TRUE;
 			}
 
 			::FreeLibrary(hComCtl);
@@ -1889,12 +1894,9 @@ namespace Win32xx
 			GetRebar().Create(m_hWnd);
 
 			// Create the menu
-			if (m_bUseMenubar)
-			{
-				GetMenubar().Create(GetRebar().GetHwnd());
-				GetMenubar().SetMenu(m_hMenu);
-				AddMenubarBand();
-			}
+			GetMenubar().Create(GetRebar().GetHwnd());
+			GetMenubar().SetMenu(m_hMenu);
+			AddMenubarBand();
 
 			// Create tool bar
 			GetToolbar().Create(GetRebar().GetHwnd());
@@ -1916,7 +1918,7 @@ namespace Win32xx
 		m_pView->Create(m_hWnd);
 
 		// Start timer for Status Indicator updates
-		if (m_bUseStatusIndicators)
+		if (m_bShowIndicatorStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
@@ -1944,14 +1946,17 @@ namespace Win32xx
 	{
 		// Set the Statusbar text when we hover over a menu
 		// Only popup submenus have status strings
-
-		int nID = LOWORD (wParam);
-		HMENU hMenu = (HMENU) lParam;
-		if ((!(hMenu == ::GetMenu(m_hWnd))) && (nID != 0))
-			m_StatusText = LoadString(nID);
-		else
-			m_StatusText = TEXT("Ready");
-		SetStatusText();
+		
+		if (m_bShowMenuStatus)
+		{
+			int nID = LOWORD (wParam);
+			HMENU hMenu = (HMENU) lParam;
+			if ((!(hMenu == ::GetMenu(m_hWnd))) && (nID != 0))
+				m_StatusText = LoadString(nID);
+			else
+				m_StatusText = TEXT("Ready");
+			SetStatusText();
+		}
 	}
 
 	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -2184,7 +2189,7 @@ namespace Win32xx
 			int width = (300 > rcClient.right) ? 300 : rcClient.right;
 			int iPaneWidths[] = {width - 110, width - 80, width - 50, width - 20};
 
-			if (m_bUseStatusIndicators)
+			if (m_bShowIndicatorStatus)
 			{
 				// Create 4 panes
 				GetStatusbar().CreatePanes(4, iPaneWidths);
@@ -2210,6 +2215,7 @@ namespace Win32xx
 	}
 
 	void CFrame::ToolbarNotify(int nButton)
+	// Called in CToolbar::WndProc
 	{
 		// Updates the statusbar when the mouse hovers over a toolbar buttton
 		TBBUTTON TBbutton = {0};
@@ -2220,16 +2226,21 @@ namespace Win32xx
 			::SendMessage(GetToolbar().GetHwnd(), TB_GETBUTTON, (WPARAM) nButton, (LPARAM) &TBbutton);
 			int nID = TBbutton.idCommand;
 			if (nID != nOldID)
+			{
 				m_StatusText = LoadString(TBbutton.idCommand);
+				SetStatusText();
+			}
 			nOldID = nID;
 		}
 		else
 		{
 			if (nOldID != -1)
+			{
 				m_StatusText = TEXT("Ready");
+				SetStatusText();
+			}
 			nOldID = -1;
 		}
-		SetStatusText();
 	}
 
 	LRESULT CFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
