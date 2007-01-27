@@ -458,18 +458,6 @@ namespace Win32xx
 		return WindowItem;
 	}
 
-	void CMDIChild::OnMenuSelect(int nID, HMENU hMenu)
-	{
-		CFrame* pFrame = GetApp()->GetFrame();
-
-		// Set the Statusbar text when we hover over a menu
-		// Only popup submenus have status strings
-		if ((!(hMenu == ::GetMenu(m_hWnd))) && (nID != 0))
-			pFrame->SetStatusText(LoadString(nID));
-		else
-			pFrame->SetStatusText(TEXT("Ready"));
-	}
-
 	BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)
 	{
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
@@ -520,13 +508,6 @@ namespace Win32xx
 				::DrawMenuBar(pFrame->GetHwnd());
 			}
 			return 0 ;
-		case WM_MENUSELECT:
-			OnMenuSelect(LOWORD (wParam), (HMENU) lParam);
-			return 0;
-		case WM_KEYDOWN:
-			if((wParam == VK_CAPITAL) || (wParam == VK_NUMLOCK) ||(wParam == VK_SCROLL))
-				::SendMessage(GetAncestor(hwnd), WM_KEYDOWN, wParam, lParam);
-			return 0;
 		case WM_NOTIFY:
 			return OnNotify(wParam, lParam);
 		case WM_PAINT:

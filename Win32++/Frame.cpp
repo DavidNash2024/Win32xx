@@ -43,7 +43,6 @@
 
 #include "Frame.h"
 #include <windowsx.h>
-#include <richedit.h>
 #include "MDI.h"
 #include "Default_Resource.h"
 
@@ -225,12 +224,14 @@ namespace Win32xx
 	void CToolbar::DisableButton(const int iButtonID)
 	{
 		// An example of iButtonID would be IDM_FILE_OPEN
-		::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0));
+		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0)))
+			DebugWarnMsg(TEXT("Disable button failed"));
 	}
 
 	void CToolbar::EnableButton(const int iButtonID)
 	{
-		::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 ));
+		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 )))
+			DebugWarnMsg(TEXT("Enable button failed"));
 	}
 
 	UINT CToolbar::GetButtonState(int iButtonID)
@@ -296,7 +297,7 @@ namespace Win32xx
 	int CToolbar::HitTest()
 	{
 		// We do our own hit test since TB_HITTEST is a bit buggy,
-		// and doesn't work at all on earliest versions of Win95
+		// and also doesn't work at all on earliest versions of Win95
 
 		POINT pt = {0};
 		::GetCursorPos(&pt);
@@ -326,34 +327,6 @@ namespace Win32xx
 		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 	}
 
-	void CToolbar::SetButtonState(int iButtonID, UINT State)
-	{
-	// Set the state of an individual button
-	//	TBSTATE_CHECKED		The button has the TBSTYLE_CHECK style and is being clicked.
-	//	TBSTATE_ELLIPSES	The button's text is cut off and an ellipsis is displayed.
-	//	TBSTATE_ENABLED		The button accepts user input. A button that doesn't have this state is grayed.
-	//	TBSTATE_HIDDEN		The button is not visible and cannot receive user input.
-	//	TBSTATE_INDETERMINATE	The button is grayed.
-	//	TBSTATE_MARKED		The button is marked. The interpretation of a marked item is dependent upon the application.
-	//	TBSTATE_PRESSED		The button is being clicked.
-	//	TBSTATE_WRAP		The button is followed by a line break.
-		try
-		{
-			if (!::SendMessage(m_hWnd, TB_SETSTATE, (WPARAM) iButtonID, (LPARAM)MAKELONG (State, 0)))
-				throw CWinException(TEXT("CToolbar::SetButtonState failed"));
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(TEXT("Exception in CToolbar::SetButtonState"));
-		} 
-	}
-
 	void CToolbar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
@@ -363,6 +336,14 @@ namespace Win32xx
 		CFrame* pFrame = GetApp()->GetFrame();
 		if (pFrame->IsRebarUsed())
 			cs.style |= CCS_NODIVIDER | CCS_NORESIZE;
+	}
+
+	void CToolbar::SetBitmapSize(int cx, int cy)
+	// Call this function when the image size is not the default 16 x 15
+	// Call this function before adding a bitmap
+	{
+		if (!::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELONG(cx, cy)))
+			DebugWarnMsg(TEXT("CToolbar::SetBitmapSize  failed"));	
 	}
 
 	int CToolbar::SetButtons(std::vector<UINT> ToolbarData)
@@ -383,34 +364,27 @@ namespace Win32xx
 			if (iNumButtons > 0)
 			{
 				// Load the TBBUTTON structure for each button in the toolbar
-				TBBUTTON* tbb = new TBBUTTON [iNumButtons];
+				TBBUTTON tbb = {0};
+				tbb.iString = -1;  // Undocumented:  No text for button 
 
 				for (int j = 0 ; j < iNumButtons; j++)
 				{
-					::ZeroMemory(&tbb[j], sizeof(TBBUTTON));
-
 					if (ToolbarData[j] == 0)
 					{
-						tbb[j].fsStyle = TBSTYLE_SEP;
+						tbb.fsStyle = TBSTYLE_SEP;
 					}
 					else
 					{
-						tbb[j].iBitmap = iImages++;
-						tbb[j].idCommand = ToolbarData[j];
-						tbb[j].fsState = TBSTATE_ENABLED;
-						tbb[j].fsStyle = TBSTYLE_BUTTON;
+						tbb.iBitmap = iImages++;
+						tbb.idCommand = ToolbarData[j];
+						tbb.fsState = TBSTATE_ENABLED;
+						tbb.fsStyle = TBSTYLE_BUTTON;
 
-						//  work around a bug in some versions of comctl
-						tbb[j].iString = (INT_PTR)TEXT(" ");
+						// Add the button to the toolbar
+						if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (LPARAM)&tbb))
+							throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
 					}
 				}
-				// Add the buttons to the toolbar
-				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, (WPARAM)iNumButtons, (LPARAM)tbb))
-					throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
-
-			 	::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
-				
-				delete []tbb;
 			}
 			else
 				DebugWarnMsg(TEXT("No Resource IDs for Toolbar"));
@@ -431,6 +405,38 @@ namespace Win32xx
 		return 0;
 	}
 
+	void CToolbar::SetButtonSize(int cx, int cy)
+	{ 
+
+		if (!::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy)))
+			DebugWarnMsg(TEXT("CToolbar::SetButtonSize failed"));
+
+		// Resize the rebar band containing the toolbar
+		if (GetApp()->GetFrame()->IsRebarUsed())
+		{
+			CRebar* rb = (CRebar*) GetCWndObject(m_hWndParent);
+			rb->ResizeBand(rb->GetBand(GetHwnd()), cy);
+		}
+
+		::InvalidateRect(m_hWnd, NULL, TRUE);			
+	}
+
+	void CToolbar::SetButtonState(int iButtonID, UINT State)
+	{
+	// Set the state of an individual button
+	//	TBSTATE_CHECKED		The button has the TBSTYLE_CHECK style and is being clicked.
+	//	TBSTATE_ELLIPSES	The button's text is cut off and an ellipsis is displayed.
+	//	TBSTATE_ENABLED		The button accepts user input. A button that doesn't have this state is grayed.
+	//	TBSTATE_HIDDEN		The button is not visible and cannot receive user input.
+	//	TBSTATE_INDETERMINATE	The button is grayed.
+	//	TBSTATE_MARKED		The button is marked. The interpretation of a marked item is dependent upon the application.
+	//	TBSTATE_PRESSED		The button is being clicked.
+	//	TBSTATE_WRAP		The button is followed by a line break.
+		
+		if (!::SendMessage(m_hWnd, TB_SETSTATE, (WPARAM) iButtonID, (LPARAM)MAKELONG (State, 0)))
+			DebugWarnMsg(TEXT("CToolbar::SetButtonState failed"));
+ 	}
+
 	void CToolbar::SetButtonStyle(int iButtonID, BYTE Style)
 	//	The the style of the toolbar control. The following button styles are supported:
 	//	TBSTYLE_BUTTON		Standard pushbutton (default)
@@ -442,26 +448,14 @@ namespace Win32xx
 	//	TBSTYLE_AUTOSIZE	The button's width will be calculated based on the text of the button, not on the size of the image
 	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it
 	{
-		try
-		{
-			TBBUTTONINFO tbbi = {0};
-			tbbi.cbSize  = sizeof(TBBUTTONINFO);
-			tbbi.dwMask  = TBIF_STYLE;
-			tbbi.fsStyle = Style;
 
-			if (!::SendMessage(m_hWnd, TB_SETBUTTONINFO, iButtonID, (LPARAM) &tbbi))
-				throw CWinException(TEXT("CToolbar::SetButtonStyle  failed"));
-		}
+		TBBUTTONINFO tbbi = {0};
+		tbbi.cbSize  = sizeof(TBBUTTONINFO);
+		tbbi.dwMask  = TBIF_STYLE;
+		tbbi.fsStyle = Style;
 
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(TEXT("Exception in CToolbar::SetButtonStyle"));
-		}
+		if (!::SendMessage(m_hWnd, TB_SETBUTTONINFO, iButtonID, (LPARAM) &tbbi))
+			DebugWarnMsg(TEXT("CToolbar::SetButtonStyle  failed"));
 	}
 
 	void CToolbar::SetButtonText(int iIndex, LPCTSTR szText)
@@ -487,7 +481,7 @@ namespace Win32xx
 						TCHAR szString[2] = TEXT("");
 						szString[1] = TEXT('\0');
 						::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szString);
-					}
+					} 
 
 					// No index for this string exists, so create it now
 					TCHAR szBuf[80];
@@ -513,23 +507,22 @@ namespace Win32xx
 
 				tb.iString = iString;
 
+				// Turn off Toolbar drawing
 				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
-				
-				// (From MFC) Force a recalc of the toolbar's layout to work around a comctl bug
-				int iTextRows = (int)::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0);
-				if (iTextRows <= 0) iTextRows =1;
-				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, iTextRows+1, 0);
-				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, iTextRows, 0);
-				
+					
+				if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0))
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
 
-				// Insert and then delete the button
-				// A bug in some versions of comctl require that we insert, then delete
 				if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tb))
 					throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));	
-				if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex+1, 0))
-					throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
-				
+
+				// Turn on Toolbar drawing
 				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+				
+				// Redraw button
+				RECT r;
+				if (::SendMessage(m_hWnd, TB_GETITEMRECT, iIndex, (LPARAM)&r))
+					::InvalidateRect(m_hWnd, &r, TRUE);
 			}
 		}
 
@@ -546,7 +539,7 @@ namespace Win32xx
 
 	void CToolbar::SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	// This function assumes the width of the button image = bitmap_size / buttons
-	// This colour mask is often gray RGB(192,192,192) or magenta (255,0,255);
+	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	// ToolbarHotID and ToolbarDisabledID can be 0
 	{ 
 		try
@@ -608,28 +601,6 @@ namespace Win32xx
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::SetImageList"));
 		} 
-	}
-
-	void CToolbar::SetSizes(SIZE sizeButton, SIZE sizeImage)
-	// This function sets the size of the button, and the size of the image
-	// Call this function if the image size is not the default 16 x 15
-	{ 
-		// Generate a warning if the buttin is too small
-		//	Note:	Make buttons larger than minimum if they also contain text
-		if ((sizeButton.cx < sizeImage.cx + 7) || (sizeButton.cy < sizeImage.cy + 6))
-			DebugWarnMsg(TEXT("CToolbar::SetSizes \nButton too small to hold image"));
-
-		::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELONG(sizeImage.cx, sizeImage.cy));
-		::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0, MAKELONG(sizeButton.cx, sizeButton.cy));
-
-		// Resize the rebar band containing the toolbar
-		if (GetApp()->GetFrame()->IsRebarUsed())
-		{
-			CRebar* rb = (CRebar*) GetCWndObject(m_hWndParent);
-			rb->ResizeBand(rb->GetBand(GetHwnd()), sizeButton.cy);
-		}
-
-		::InvalidateRect(m_hWnd, NULL, TRUE); 
 	}
 
 	LRESULT CToolbar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

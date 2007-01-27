@@ -35,6 +35,7 @@ Added CStatusbar::CreatePanes
 Added CStatusbar::GetPaneText
 Added CStatusbar::SetPaneText
 Added CStatusbar::SetPaneWidth
+Added CToolbar::AddBitmap
 Added CToolbar::GetButtonState
 Added CToolbar::GetButtonStyle
 Added CToolbar::GetItemRect

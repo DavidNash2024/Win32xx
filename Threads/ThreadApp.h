@@ -3,7 +3,7 @@
 //  Declaration of the CThreadApp class
 
 
-#define MAX_THREADS 600
+#define MAX_THREADS 100
 
 #ifndef THREADAPP_H
 #define THREADAPP_H

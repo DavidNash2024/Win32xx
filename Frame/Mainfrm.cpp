@@ -74,7 +74,11 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 {
 	// Here we override CFrame::Setbuttons to customise the Toolbar
 
+	// A reference to the CToolbar object
 	CToolbar& TB = GetToolbar();
+
+	// Set the button size to 24x24 before adding the bitmap
+	TB.SetBitmapSize(24, 24);	
 
 	// Set the image lists for normal, hot and disabled buttons
 	TB.SetImageList(8, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
@@ -92,12 +96,10 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT), "Print"); 
 	TB.SetButtonText(TB.CommandToIndex(IDM_HELP_ABOUT), "About");
 
-	// Adjust the toolbar button sizes
+	// Adjust the toolbar button sizes to take account of the new text
 	RECT r;
-	TB.GetItemRect(1, &r);
-	SIZE sizeButton = {r.right - r.left, r.bottom - r.top};
-	SIZE sizeImage = {24, 24};			// Toolbar Images are 24x24 pixels
-	TB.SetSizes(sizeButton, sizeImage);
+	TB.GetItemRect(0, &r);
+	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
 }
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

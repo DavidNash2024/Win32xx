@@ -89,12 +89,14 @@ namespace Win32xx
 		virtual BYTE GetButtonStyle(int iButtonID);
 		virtual void GetItemRect(int iIndex, RECT* lpRect);
 		virtual int HitTest();
+		virtual void SetBitmapSize(int cx, int cy);
 		virtual int SetButtons(std::vector<UINT> ToolbarData);
+		virtual void SetButtonSize(int cx, int cy);
 		virtual void SetButtonState(int iButtonID, UINT State);
 		virtual void SetButtonStyle(int iButtonID, BYTE Style);
 		virtual void SetButtonText(int iIndex, LPCTSTR szText);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
-		virtual void SetSizes(SIZE sizeButton, SIZE sizeImage);
+//		virtual void SetSizes(SIZE sizeButton, SIZE sizeImage);
 
 	protected:
 		virtual void OnCreate();

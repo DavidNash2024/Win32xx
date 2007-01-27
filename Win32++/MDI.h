@@ -83,7 +83,6 @@ namespace Win32xx
 		};
 
 		virtual int GetMenuWindowPos(HMENU hMenu);
-		virtual	void OnMenuSelect(int nID, HMENU hMenu);
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
