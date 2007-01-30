@@ -49,11 +49,10 @@
 #include <vector>
 
 
-// A typedef simply makes the code more readable
-typedef std::basic_string<TCHAR> tstring;
-
 namespace Win32xx
 {
+	// A typedef simply makes the code more readable
+	typedef std::basic_string<TCHAR> tstring;
 
 	//////////////////////////////////////
 	// Declaration of the CStatusbar class
@@ -83,19 +82,21 @@ namespace Win32xx
 		CToolbar();
 		virtual ~CToolbar();
 		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
-		virtual int CommandToIndex(int iButtonID);
+		virtual int  CommandToIndex(int iButtonID);
 		virtual void DisableButton(const int iButtonID);
 		virtual void EnableButton(const int iButtonID);
 		virtual UINT GetButtonState(int iButtonID);
 		virtual BYTE GetButtonStyle(int iButtonID);
+		virtual int  GetCommandID(int iIndex);
 		virtual void GetItemRect(int iIndex, RECT* lpRect);
-		virtual int HitTest();
+		virtual int  HitTest();
 		virtual void SetBitmapSize(int cx, int cy);
-		virtual int SetButtons(std::vector<UINT> ToolbarData);
+		virtual int  SetButtons(std::vector<UINT> ToolbarData);
 		virtual void SetButtonSize(int cx, int cy);
 		virtual void SetButtonState(int iButtonID, UINT State);
 		virtual void SetButtonStyle(int iButtonID, BYTE Style);
-		virtual void SetButtonText(int iIndex, LPCTSTR szText);
+		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
+		virtual void SetCommandID(int iIndex, int iButtonID);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 
 	protected:
