@@ -1,8 +1,9 @@
-// Win32++  Version 5.0.3 Beta
-// Modified: 24th January, 2007 by:
+// Win32++  Version 5.0.4 Beta
+// Modified: 30th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
+//      url: http://users.bigpond.net.au/programming/
 //
 //
 // Copyright (c) 2005-2007  David Nash
@@ -580,7 +581,8 @@ namespace Win32xx
 				throw CWinException(TEXT("Win32++ has not been initialised successfully."));
 
 			::lstrcpy(m_szString, TEXT(""));
-			::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE -1);
+			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE -1))
+				DebugWarnMsg(TEXT("No string resource for this resource ID"));
 		}
 
 		catch (const CWinException &e)
@@ -873,7 +875,7 @@ namespace Win32xx
 	#endif
 	}
 
-	/*WNDPROC*/ void CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
+	void CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
 	// Superclassing occurs before window creation. It allows
 	// common controls to pass messages via CWnd::WndProc.
 	// Superclassing also allows additional messages to be processed

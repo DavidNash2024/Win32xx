@@ -1,4 +1,4 @@
-// This file contains the resource ID definitions.
+// This file contains the resource ID definitions for Win32++.
 
 
 // The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,

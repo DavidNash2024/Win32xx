@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////
-// Mainfrm.cpp  
+// Mainfrm.cpp
 
 
 #include "resource.h"
@@ -24,7 +24,7 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_HELP_ABOUT ); 
+	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 }
 
 CMainFrame::~CMainFrame()
@@ -36,30 +36,35 @@ BOOL CMainFrame::OnCommand(UINT nID)
 	switch(nID)
 	{
 	case IDM_FILE_EXIT:
+		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		break;
 	case IDM_HELP_ABOUT:
+		// Display the help dialog
 		OnHelp();
 		break;
 	}
+
+	// call the base class function
 	return CFrame::OnCommand(nID);
 }
 
 void CMainFrame::OnCreate()
 {
-	// OnCreate controls the way the frame is created	
+	// OnCreate controls the way the frame is created
 	// The default for the following variables is TRUE
 
-	// m_bShowIndicatorStatus = FALSE;	// Statusbar shows indicators
-	// m_bShowMenuStatus = FALSE;		// Statusbar shows Toolbar and menu mouse position
-	// m_bUseRebar = FALSE;				// Rebars are used to house toolbar and menubar
+	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
+	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
+	// m_bUseRebar = FALSE;				// Don't use rebars
 
+	// call the base class function
 	CFrame::OnCreate();
 }
 
 void CMainFrame::OnInitialUpdate()
 {
-	// The frame is now created. 
+	// The frame is now created.
 	// Place any additional startup code here.
 
 	// Disable some of the toolbar buttons
@@ -78,10 +83,10 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	CToolbar& TB = GetToolbar();
 
 	// Set the button size to 24x24 before adding the bitmap
-	TB.SetBitmapSize(24, 24);	
+	TB.SetBitmapSize(24, 24);
 
 	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(8, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Set the resource IDs for the toolbar buttons
 	TB.SetButtons(ToolbarData);
@@ -93,10 +98,10 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_CUT),   "Cut");
 	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_COPY),  "Copy");
 	TB.SetButtonText(TB.CommandToIndex(IDM_EDIT_PASTE), "Paste");
-	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT), "Print"); 
+	TB.SetButtonText(TB.CommandToIndex(IDM_FILE_PRINT), "Print");
 	TB.SetButtonText(TB.CommandToIndex(IDM_HELP_ABOUT), "About");
 
-	// Adjust the toolbar button sizes to take account of the new text
+	// Adjust the toolbar and rebar size to take account of the new text
 	RECT r;
 	TB.GetItemRect(0, &r);
 	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
@@ -106,8 +111,8 @@ LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-		//Additional messages to be handled go here	
-//	} 
+		//Additional messages to be handled go here
+//	}
 
 	//Use the frame default message handling for remaining messages
 	return CFrame::WndProc(hwnd, uMsg, wParam, lParam);

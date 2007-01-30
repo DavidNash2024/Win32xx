@@ -1,8 +1,9 @@
-// Win32++  Version 5.0.3 Beta
-// Modified: 24th January, 2007 by:
+// Win32++  Version 5.0.4 Beta
+// Modified: 30th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
+//      url: http://users.bigpond.net.au/programming/
 //
 //
 // Copyright (c) 2005-2007  David Nash
@@ -293,3 +294,4 @@ namespace Win32xx
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
 
 } // namespace Win32xx
+

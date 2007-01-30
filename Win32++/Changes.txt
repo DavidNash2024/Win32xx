@@ -21,7 +21,7 @@ Major Changes:
   Mainframe's constructor by adding to a vector.
 * There is now a clear seperation between the Resource IDs defined by Win32++
   and those defined in the user's application. Resource IDs defined by Win32++
-  are defined as IDW_XXXXXX, and begin from 0xE800. This is intended to avoid 
+  are defined as IDW_XXXXXX, and begin from 0x7800. This is intended to avoid 
   clashes with user defined resource IDs.
 
 The following changes have been made to the Win32++ code:
@@ -30,6 +30,7 @@ Added CWnd::Attach
 Added CWnd::AttachDlgItem
 Added CWnd::CallPrevWindow
 Added CWnd::Detach
+Added CWnd::Subclass
 Added CRebar::ResizeBand
 Added CStatusbar::CreatePanes
 Added CStatusbar::GetPaneText
@@ -54,6 +55,7 @@ Added CFrame::ToolbarNotify
 Added CFrame:: UseStatusIndicators
 Added CMDIFrame::GetMDIClient
 Added CMDIFrame::GetActiveChild
+Added DebugWarnMesg
 Removed CFrame::SetToolbarData
 Removed CFrame::OnFrameCreated.  Use CFrame::OnInitialUpdate instead.
 Removed CSplitter::OnNotify
@@ -61,6 +63,7 @@ CFrame::AddMenubarBand modified to CFrame::AddMenubarBand(int nHeight)
 CFrame::AddToolbarBand modified to CFrame::AddToolbarBand(int nHeight)
 CToolbar::SetButtons modified to CToolbar::SetButtons(vector<UINT> ToolbarData)
 CWnd::OnNotify modified, it now returns a LRESULT
+CWnd::Superclass modified, now returns void
 
 Bug Fixes
 * CFrame::OnHelp now returns the focus back to the window that had it before 
@@ -72,6 +75,7 @@ Incompatibilites with previous version
 * Toolbar resource IDs are defined differently, mandating a change to 
   CMainframe's constructor. 
 * OnFrameCreated is removed, use OnInitialUpdate instead.
+* CWnd::OnNotify now returns a LRESULT. 
 
 Version 5.0
 -----------

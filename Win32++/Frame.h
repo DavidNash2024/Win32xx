@@ -1,8 +1,9 @@
-// Win32++  Version 5.0.3 Beta
-// Modified: 24th January, 2007 by:
+// Win32++  Version 5.0.4 Beta
+// Modified: 30th January, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
+//      url: http://users.bigpond.net.au/programming/
 //
 //
 // Copyright (c) 2005-2007  David Nash
@@ -96,7 +97,6 @@ namespace Win32xx
 		virtual void SetButtonStyle(int iButtonID, BYTE Style);
 		virtual void SetButtonText(int iIndex, LPCTSTR szText);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
-//		virtual void SetSizes(SIZE sizeButton, SIZE sizeImage);
 
 	protected:
 		virtual void OnCreate();
@@ -250,10 +250,10 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;
+        BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
-		BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
-		tstring m_StatusText;		// a TCHAR std::string for status text 
+		tstring m_StatusText;		// a TCHAR std::string for status text
 
 	private:
 		CMenubar m_Menubar;			// CMenubar object
