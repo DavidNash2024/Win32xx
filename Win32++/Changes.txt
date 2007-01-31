@@ -21,8 +21,8 @@ Major Changes:
   Mainframe's constructor by adding to a vector.
 * There is now a clear seperation between the Resource IDs defined by Win32++
   and those defined in the user's application. Resource IDs defined by Win32++
-  are defined as IDW_XXXXXX, and begin from 0x7800. This is intended to avoid 
-  clashes with user defined resource IDs.
+  are defined as IDW_XXXXXX, and range from 1 to 99. Users of Win32++ should
+  begin their resource IDs from 100.
 
 The following changes have been made to the Win32++ code:
 Added CWnd::OnNotifyReflect
@@ -39,14 +39,17 @@ Added CStatusbar::SetPaneWidth
 Added CToolbar::AddBitmap
 Added CToolbar::GetButtonState
 Added CToolbar::GetButtonStyle
+Added CToolbar::GetCommandID
 Added CToolbar::GetItemRect
 Added CToolbar::HitTest
+Added CToolbar::SetBitmapSize
 Added CToolbar::SetButtons
+Added CToolbar::SetButtonSize
 Added CToolbar::SetButtonState
 Added CToolbar::SetButtonStyle
 Added CToolbar::SetButtonText
+Added CToolbar::SetCommandID
 Added CToolbar::SetImageList
-Added CToolbar::SetSizes
 Added CFrame::GetRebar
 Added CFrame::GetStatusbar
 Added CFrame::GetToolbar

@@ -51,8 +51,6 @@
 
 namespace Win32xx
 {
-	// A typedef simply makes the code more readable
-	typedef std::basic_string<TCHAR> tstring;
 
 	//////////////////////////////////////
 	// Declaration of the CStatusbar class
@@ -85,6 +83,7 @@ namespace Win32xx
 		virtual int  CommandToIndex(int iButtonID);
 		virtual void DisableButton(const int iButtonID);
 		virtual void EnableButton(const int iButtonID);
+		virtual int  GetButtonCount();
 		virtual UINT GetButtonState(int iButtonID);
 		virtual BYTE GetButtonStyle(int iButtonID);
 		virtual int  GetCommandID(int iIndex);
@@ -254,7 +253,7 @@ namespace Win32xx
         BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
-		tstring m_StatusText;		// a TCHAR std::string for status text
+		std::basic_string<TCHAR> m_StatusText;		// a TCHAR std::string for status text
 
 	private:
 		CMenubar m_Menubar;			// CMenubar object

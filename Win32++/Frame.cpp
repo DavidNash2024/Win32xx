@@ -248,6 +248,11 @@ namespace Win32xx
 			DebugWarnMsg(TEXT("Enable button failed"));
 	}
 
+	int CToolbar::GetButtonCount()
+	{
+		return (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
+	}
+
 	UINT CToolbar::GetButtonState(int iButtonID)
 	{
 		try
@@ -278,7 +283,7 @@ namespace Win32xx
 			int iIndex = CommandToIndex(iButtonID);
 			if (iIndex == -1)
 				throw CWinException(TEXT("CToolbar::GetButtonStyle failed to get command ID"));
-			
+
 			TBBUTTON tbb = {0};
 
 			LRESULT lResult = ::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (LPARAM) &tbb);
@@ -305,7 +310,7 @@ namespace Win32xx
 	{
 		TBBUTTON tbb = {0};
 		::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (WPARAM) &tbb);
-		
+
 		// returns zero if failed
 		return tbb.idCommand;
 	}
@@ -388,12 +393,14 @@ namespace Win32xx
 
 			if (iNumButtons > 0)
 			{
-				// Load the TBBUTTON structure for each button in the toolbar
-				TBBUTTON tbb = {0};
-				tbb.iString = -1;  // Undocumented feature:  No text for button
+				// TBBUTTON structure for each button in the toolbar
+				TBBUTTON tbb;
 
 				for (int j = 0 ; j < iNumButtons; j++)
 				{
+					ZeroMemory(&tbb, sizeof(TBBUTTON));
+					tbb.iString = -1;  // Undocumented feature:  No text for button
+
 					if (ToolbarData[j] == 0)
 					{
 						tbb.fsStyle = TBSTYLE_SEP;
@@ -404,11 +411,11 @@ namespace Win32xx
 						tbb.idCommand = ToolbarData[j];
 						tbb.fsState = TBSTATE_ENABLED;
 						tbb.fsStyle = TBSTYLE_BUTTON;
-
-						// Add the button to the toolbar
-						if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (LPARAM)&tbb))
-							throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
 					}
+
+					// Add the button to the toolbar
+					if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (LPARAM)&tbb))
+						throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
 				}
 			}
 			else
@@ -475,20 +482,15 @@ namespace Win32xx
 	{
 		try
 		{
-			int iIndex = CommandToIndex(iButtonID);
-			if (iIndex == -1)
-				throw CWinException(TEXT("CToolbar::SetButtonStyle .. failed to get command ID"));
+			TBBUTTONINFO tbbi = {0};
+			tbbi.cbSize = sizeof(TBBUTTONINFO);
+			tbbi.dwMask = TBIF_STYLE;
+			tbbi.fsStyle = Style;
 
-			TBBUTTON tbb = {0};
-			if (!::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (WPARAM) &tbb))
-				throw CWinException(TEXT("CToolbar::SetButtonStyle  failed to get button style")); 
-
-			tbb.fsStyle = Style;
-
-			if (!::SendMessage(m_hWnd, TB_SETBUTTONINFO, iIndex, (LPARAM) &tbb))
+			if (!::SendMessage(m_hWnd, TB_SETBUTTONINFO, iButtonID, (LPARAM) &tbbi))
 				throw CWinException(TEXT("CToolbar::SetButtonStyle  failed"));
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
@@ -509,9 +511,9 @@ namespace Win32xx
 			int iIndex = CommandToIndex(iButtonID);
 			if (iIndex == -1)
 				throw CWinException(TEXT("CToolbar::SetButtonText  failed to get Command ID"));
-			
-			tstring sString = szText;
-			std::map<tstring, int>::iterator m;
+
+			std::basic_string<TCHAR> sString = szText;
+			std::map<std::basic_string<TCHAR>, int>::iterator m;
 			int iString;
 
 			// Check to see if the string is already added
@@ -567,7 +569,7 @@ namespace Win32xx
 			RECT r;
 			if (::SendMessage(m_hWnd, TB_GETITEMRECT, iIndex, (LPARAM)&r))
 				::InvalidateRect(m_hWnd, &r, TRUE);
-			
+
 		}
 
 		catch (const CWinException &e)
