@@ -139,7 +139,7 @@ namespace Win32xx
 	////////////////////////////////////
 	// Declaration of the CMenubar class
 	//
-	class CMenubar : public CWnd
+	class CMenubar : public CToolbar
 	{
 	public:
 		CMenubar();
@@ -155,7 +155,7 @@ namespace Win32xx
 		virtual void DrawMDIButtons(HDC hDC);
 		virtual void ExitMenu();
 		virtual	void GrabFocus();
-		virtual int HitTest();
+		virtual void OnCreate();
 		virtual void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);

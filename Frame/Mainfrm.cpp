@@ -104,7 +104,7 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	// Adjust the toolbar and rebar size to take account of the new text
 	RECT r;
 	TB.GetItemRect(0, &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
+	TB.SetButtonSize(r.right - r.left, r.bottom - r.top); 
 }
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

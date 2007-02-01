@@ -959,16 +959,6 @@ namespace Win32xx
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
 
-	int CMenubar::HitTest()
-	{
-		POINT pt = {0};
-		::GetCursorPos(&pt);
-		::ScreenToClient(m_hWnd, &pt);
-
-		//Returns button hit, or a value <0 if no button hit
-		return (int) ::SendMessage(m_hWnd, TB_HITTEST, 0, (LPARAM)&pt);
-	}
-
 	//LRESULT CMenubar::OnNotify(WPARAM /* wParam */, LPARAM lParam)
 	LRESULT CMenubar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
 	{
@@ -1029,6 +1019,12 @@ namespace Win32xx
 		} // switch(((LPNMHDR)lParam)->code)
 		return 0L;
 	} // CMenubar::OnNotify(...)
+
+	void CMenubar::OnCreate()
+	{
+		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
+		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+	}
 
 	void CMenubar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 	{
@@ -1588,16 +1584,12 @@ namespace Win32xx
 
 		try
 		{
-			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+			CFrame* pFrame = GetApp()->GetFrame();
+			HWND MDIClient = pFrame->GetView()->GetHwnd();
 			BOOL bMaxed = FALSE;
-			if (pMDIFrame->IsMDIFrame())
-				pMDIFrame->GetActiveChild(&bMaxed);
-
+			::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
 			m_nMaxedFlag = bMaxed? 1: 0;
 			m_nButtonCount = ::GetMenuItemCount(hMenu);
-
-			// Send the TB_BUTTONSTRUCTSIZE message, which is required for backward compatibility.
-			::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
 			// Remove any existing buttons
 			while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0, 0) > 0)
@@ -1616,30 +1608,28 @@ namespace Win32xx
 				TBBUTTON tbb = {0};
 				tbb.idCommand = 0;
 				tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
-				tbb.iString = (INT_PTR)"    ";
-				LRESULT lr = ::SendMessage(m_hWnd, TB_INSERTBUTTON, (LPARAM)0, (WPARAM)&tbb);
-				if (!lr)
-					throw CWinException(TEXT("Menubar::SetMenu  TB_INSERTBUTTON failed"));
+				if(!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
+					throw CWinException(TEXT("Menubar::SetMenu  TB_ADDBUTTONS failed"));
+				
+				SetButtonText(0, TEXT("    "));
 			}
 
 			for (int i = 0 ; i < m_nButtonCount; i++)
 			{
-				// Add the menu title to the string table
-				TCHAR szMenuName[MAX_MENU_STRING +1];
-				int Result = ::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
-				if (Result == 0)
-					throw CWinException(TEXT("Menubar::SetMenu  GetMenuString failed"));
-				int iIndex = (int)::SendMessage(m_hWnd, TB_ADDSTRING, 0,(LPARAM)szMenuName);
-
 				// Assign the Toolbar Button struct
 				TBBUTTON tbb = {0};
 				tbb.idCommand = i  + m_nMaxedFlag;
 				tbb.fsState = TBSTATE_ENABLED;
 				tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
-				tbb.iString = iIndex;
-				LRESULT lr = ::SendMessage(m_hWnd, TB_INSERTBUTTON, (LPARAM)i+1, (WPARAM)&tbb);
-				if (!lr)
-					throw CWinException(TEXT("Menubar::SetMenu  TB_INSERTBUTTON failed"));
+				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
+					throw CWinException(TEXT("Menubar::SetMenu  TB_ADDBUTTONS failed"));
+
+				// Add the menu title to the string table
+				TCHAR szMenuName[MAX_MENU_STRING +1];
+				if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
+					throw CWinException(TEXT("Menubar::SetMenu  GetMenuString failed"));
+				
+				SetButtonText(i  + m_nMaxedFlag, szMenuName);
 			}
 		}
 
@@ -2266,7 +2256,10 @@ namespace Win32xx
 			int nID = TBbutton.idCommand;
 			if (nID != nOldID)
 			{
-				m_StatusText = LoadString(TBbutton.idCommand);
+				if (nID == 0) 
+					m_StatusText = TEXT("Ready");
+				else
+					m_StatusText = LoadString(TBbutton.idCommand);
 				SetStatusText();
 			}
 			nOldID = nID;
