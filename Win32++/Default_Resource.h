@@ -3,29 +3,29 @@
 
 // The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,
 //  and Window Caption
-#define IDW_MAIN                        1
+#define IDW_MAIN                        51
 
 // Resource ID for the About dialog
-#define IDW_ABOUT                       2
+#define IDW_ABOUT                       52
 
 // Resource IDs for menu items
-#define IDW_VIEW_TOOLBAR                3
-#define IDW_VIEW_STATUSBAR              4
+#define IDW_VIEW_TOOLBAR                53
+#define IDW_VIEW_STATUSBAR              54
 
 // Resource IDs for MDI menu items
-#define IDW_WINDOW_CASCADE              5
-#define IDW_WINDOW_TILE                 6
-#define IDW_WINDOW_ARRANGE              7
-#define IDW_WINDOW_CLOSEALL             8
-#define IDW_FIRSTCHILD                  9
-#define IDW_CHILD2                      10
-#define IDW_CHILD3                      11
-#define IDW_CHILD4                      12
-#define IDW_CHILD5                      13
-#define IDW_CHILD6                      14
-#define IDW_CHILD7                      15
-#define IDW_CHILD8                      16
-#define IDW_CHILD9                      17
+#define IDW_WINDOW_CASCADE              55
+#define IDW_WINDOW_TILE                 56
+#define IDW_WINDOW_ARRANGE              57
+#define IDW_WINDOW_CLOSEALL             58
+#define IDW_FIRSTCHILD                  59
+#define IDW_CHILD2                      60
+#define IDW_CHILD3                      61
+#define IDW_CHILD4                      62
+#define IDW_CHILD5                      63
+#define IDW_CHILD6                      64
+#define IDW_CHILD7                      65
+#define IDW_CHILD8                      66
+#define IDW_CHILD9                      67
 
 // A generic ID for any static control
 #define IDW_STATIC                      -1
@@ -35,8 +35,12 @@
 // * In general, resource IDs can have values from 1 to 65535. Programs with
 //   resource IDs higher than 65535 aren't supported on Windows 95
 //
-// * Windows uses the icon with the lowest resource ID as the applications icon
-//   That is why the resource ID of 1 is used for IDW_MAIN
+// * CMenubar uses resource IDs beginning from 0 for the top level menu items.
+//   Win32++ leaves resource IDs below 51 unallocated for top level menu items.
+//
+// * Windows uses the icon with the lowest resource ID as the application's
+//   icon. The application's icon is IDW_MAIN, which is the first resource ID
+//   defined by Win32++.
 //
 // * When more than one static control is used in a dialog, the controls should
 //   have a unique ID, unless a resource ID of -1 is used.
