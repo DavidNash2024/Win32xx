@@ -27,10 +27,13 @@
 #define IDM_VIEW_LIST                   132
 #define IDM_VIEW_REPORT                 133
 #define IDM_SHOW_HIDDEN                 134
+#define IDM_VIEWMENU                    135
 
 #define IDS_COLUMN1                     140
 #define IDS_COLUMN2                     141
 #define IDS_COLUMN3                     142
 #define IDS_COLUMN4                     143
 
-
+#define IDB_TOOLBAR_NORM                150
+#define IDB_TOOLBAR_HOT                 151
+#define IDB_TOOLBAR_DIS                 152

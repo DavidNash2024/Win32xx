@@ -22,10 +22,7 @@ CMainFrame::CMainFrame()  : m_MainView(200, true), m_bShowHidden(FALSE)
 	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_VIEW_LARGEICON);
-	m_ToolbarData.push_back ( IDM_VIEW_SMALLICON);
-	m_ToolbarData.push_back ( IDM_VIEW_LIST  );
-	m_ToolbarData.push_back ( IDM_VIEW_REPORT);
+	m_ToolbarData.push_back ( IDM_VIEWMENU);
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 }
@@ -83,17 +80,94 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		// Refresh the Listview display
 		GetListView().DoDisplay();
 		break;
+	case IDM_VIEWMENU:
+		// This Command is recieved if Comctl32.dll version is below 5.80
+		ViewPopup();
+		break;
 	} // switch cmd
 
 	return CFrame::OnCommand(nID);
 
 } // CMainFrame::OnCommand(...)
 
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+{
+	// Notification from our dropdown button is recieved if Comctl32.dll version
+	// is 5.80 or later (IE v5 required).
+    switch(((LPNMHDR)lParam)->code)
+	{	
+ 		//Menu for dropdown toolbar button
+		case TBN_DROPDOWN:
+		{
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
+				ViewPopup();
+		}
+		break;
+
+	} //switch LPNMHDR  
+
+	//Use the default message handling for remaining messages
+	return CFrame::OnNotify(wParam, lParam);
+}
+
 void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 {
-	CFrame::SetButtons(ToolbarData);
+	// A reference to the CToolbar object
+	CToolbar& TB = GetToolbar();
 
-	GetToolbar().SetButtonStyle(IDM_VIEW_LARGEICON, BTNS_WHOLEDROPDOWN);
+	// Set the button size to 24x24 before adding the bitmap
+	TB.SetBitmapSize(24, 24);
+
+	// Set the image lists for normal, hot and disabled buttons
+	TB.SetImageList(9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	// Set the resource IDs for the toolbar buttons
+	TB.SetButtons(ToolbarData);
+
+	// Adjust the toolbar and rebar size to take account of the larger buttons
+	RECT r;
+	TB.GetItemRect(0, &r);
+	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
+
+	// Diable the unused buttons
+	TB.DisableButton(IDM_FILE_NEW);   
+	TB.DisableButton(IDM_FILE_OPEN); 
+	TB.DisableButton(IDM_FILE_SAVE);			
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY); 
+	TB.DisableButton(IDM_EDIT_PASTE);
+	TB.DisableButton(IDM_FILE_PRINT);
+
+	GetToolbar().SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+}
+
+void CMainFrame::ViewPopup()
+{
+	RECT rc;
+	::SendMessage(GetToolbar().GetHwnd(), TB_GETRECT, IDM_VIEWMENU, (LPARAM) &rc); 
+	::MapWindowPoints(GetToolbar().GetHwnd(), HWND_DESKTOP, (LPPOINT)&rc, 2);
+
+	TPMPARAMS tpm;
+	tpm.cbSize = sizeof(TPMPARAMS);
+	tpm.rcExclude = rc;
+
+	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_VIEWMENU));
+	HMENU hPopupMenu = GetSubMenu(hTopMenu, 0);
+
+	// Put a radio check in the currently checked item
+	MENUITEMINFO mii = {0};
+	for (int i = 3 ; i < 7 ; i++)
+	{
+		ZeroMemory(&mii, sizeof(MENUITEMINFO));
+		mii.cbSize = sizeof(MENUITEMINFO);
+		mii.fMask  = MIIM_STATE | MIIM_ID;
+		GetMenuItemInfo(GetSubMenu(GetFrameMenu(), 1), i, TRUE,  &mii );
+		if (mii.fState & MFS_CHECKED) 
+			::CheckMenuRadioItem(hTopMenu, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
+	}
+	
+	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
+	::DestroyMenu(hTopMenu);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

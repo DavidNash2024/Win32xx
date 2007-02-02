@@ -10,6 +10,9 @@
 #include "TreeView.h"
 #include "ListView.h"
 
+#ifndef BTNS_WHOLEDROPDOWN
+  #define BTNS_WHOLEDROPDOWN  0x0080
+#endif
 
 class CMainView : public CSplitter
 {

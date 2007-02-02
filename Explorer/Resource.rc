@@ -48,6 +48,18 @@ BEGIN
     END
 END
 
+IDM_VIEWMENU MENU
+BEGIN
+    POPUP "View"
+	BEGIN
+		MENUITEM "Large Icons",                 IDM_VIEW_LARGEICON
+		MENUITEM "Small Icons",                 IDM_VIEW_SMALLICON
+		MENUITEM "List",                        IDM_VIEW_LIST
+		MENUITEM "Details",                     IDM_VIEW_REPORT
+	END
+END
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -64,6 +76,9 @@ IDW_MAIN                 ICON                    "res\\Explorer.ico"
 //
 
 IDW_MAIN                 BITMAP                  "res\\toolbar.bmp"
+IDB_TOOLBAR_NORM         BITMAP                  "res\\toolbar24.bmp"
+IDB_TOOLBAR_HOT          BITMAP                  "res\\toolbar24_h.bmp"
+IDB_TOOLBAR_DIS          BITMAP                  "res\\toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -143,6 +158,8 @@ BEGIN
     IDM_VIEW_LARGEICON       "Display items by using large icons"
     IDM_VIEW_LIST            "Displays items in a list"
     IDM_VIEW_REPORT          "Displays detailed information about each item in the window"
+    IDM_SHOW_HIDDEN          "Display hidden files"
+    IDM_VIEWMENU             "Select display mode"
     IDM_HELP_ABOUT           "Display Information about this program"
 END
 

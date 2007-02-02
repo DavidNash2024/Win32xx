@@ -6,9 +6,7 @@
 #ifndef THREADWIN_H
 #define THREADWIN_H
 
-//Include WinCore.h first
 #include "..\Win32++\WinCore.h"
-
 
 class CThreadWnd : public CWnd
 {

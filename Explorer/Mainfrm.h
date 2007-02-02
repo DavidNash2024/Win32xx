@@ -23,7 +23,9 @@ public:
 protected:
 	virtual void OnInitialUpdate();
 	virtual BOOL OnCommand(UINT nID);
+	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetButtons(std::vector<UINT> ToolbarData);
+	virtual void ViewPopup();
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
