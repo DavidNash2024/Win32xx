@@ -19,7 +19,7 @@ public:
 protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual OnCommand(UINT nID);
+	virtual BOOL OnCommand(UINT nID);
 	virtual void OnOK();
 
 private:

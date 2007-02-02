@@ -11,7 +11,7 @@ PrivateResource=MDIFrame_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D_DEBUG_@@_
+CppCompiler=-D_DEBUG_@@_-D _WIN32_IE=0x0400_@@_-D STRICT_@@__@@_
 Linker=-lComctl32_@@__@@_
 IsCpp=1
 Icon=

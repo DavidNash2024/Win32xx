@@ -55,10 +55,6 @@
 #pragma warning (disable : 4512) // assignment operator could not be generated
 #endif // _MSC_VER
 
-// Must define these constants before including windows.h
-#define _WIN32_IE 0x0400
-#define STRICT
-
 #include <windows.h>
 #include <commctrl.h>
 #include <map>

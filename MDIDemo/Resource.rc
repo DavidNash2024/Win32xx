@@ -171,6 +171,9 @@ IDI_MAX                 ICON                    "res\\max.ico"
 //
 
 IDW_MAIN                 BITMAP                  "res\\toolbar.bmp"
+IDB_TOOLBAR_NORM         BITMAP                  "res\\toolbar24.bmp"
+IDB_TOOLBAR_HOT          BITMAP                  "res\\toolbar24_h.bmp"
+IDB_TOOLBAR_DIS          BITMAP                  "res\\toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

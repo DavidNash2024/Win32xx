@@ -38,4 +38,9 @@
 #define IDM_COLOR_BLUE                  136
 #define IDM_COLOR_WHITE                 137
 
+// Toolbar bitmaps
+#define IDB_TOOLBAR_NORM                140
+#define IDB_TOOLBAR_HOT                 141
+#define IDB_TOOLBAR_DIS                 142
+
 

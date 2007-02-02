@@ -89,6 +89,13 @@ BOOL CMainFrame::OnCommand(UINT nID)
 
 } // CMainFrame::OnCommand(...)
 
+void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
+{
+	CFrame::SetButtons(ToolbarData);
+
+	GetToolbar().SetButtonStyle(IDM_VIEW_LARGEICON, BTNS_WHOLEDROPDOWN);
+}
+
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)

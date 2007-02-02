@@ -23,6 +23,8 @@ Major Changes:
   and those defined in the user's application. Resource IDs defined by Win32++
   are defined as IDW_XXXXXX, and range from 1 to 99. Users of Win32++ should
   begin their resource IDs from 100.
+* The _WIN32_IE macro is now longer defined by Win32++. Users of Dev-C++ will need
+  to define this macro as a compiler option eg:  -D _WIN32_IE=0x0400  (or higher).
 
 The following changes have been made to the Win32++ code:
 Added CWnd::OnNotifyReflect

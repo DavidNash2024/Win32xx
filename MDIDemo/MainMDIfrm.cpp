@@ -62,6 +62,34 @@ BOOL CMainMDIFrame::OnCommand(UINT nID)
 	return CMDIFrame::OnCommand(nID);
 }
 
+void CMainMDIFrame::SetButtons(std::vector<UINT> ToolbarData)
+{
+	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
+	// with seperate imagelists for normal, hot and disabled buttons.
+
+	// A reference to the CToolbar object
+	CToolbar& TB = GetToolbar();
+
+	// Set the button size to 24x24 before adding the bitmap
+	TB.SetBitmapSize(24, 24);
+
+	// Set the image lists for normal, hot and disabled buttons
+	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	// Set the resource IDs for the toolbar buttons
+	TB.SetButtons(ToolbarData);
+
+	// Adjust the toolbar and rebar size to take account of the larger buttons
+	RECT r;
+	TB.GetItemRect(0, &r);
+	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
+
+	// Disable some of the toolbar buttons
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE);
+}
+
 LRESULT CMainMDIFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)

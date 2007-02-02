@@ -1608,6 +1608,7 @@ namespace Win32xx
 				TBBUTTON tbb = {0};
 				tbb.idCommand = 0;
 				tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
+				tbb.iString = (INT_PTR)TEXT(" ");
 				if(!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
 					throw CWinException(TEXT("Menubar::SetMenu  TB_ADDBUTTONS failed"));
 				
@@ -1621,6 +1622,7 @@ namespace Win32xx
 				tbb.idCommand = i  + m_nMaxedFlag;
 				tbb.fsState = TBSTATE_ENABLED;
 				tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
+				tbb.iString = (INT_PTR)TEXT(" ");
 				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
 					throw CWinException(TEXT("Menubar::SetMenu  TB_ADDBUTTONS failed"));
 
