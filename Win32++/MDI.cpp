@@ -137,7 +137,7 @@ namespace Win32xx
 		default:    // Pass to active child...
 			{
 				if (IsWindow (GetActiveChild()))
-					::SendMessage (GetActiveChild(), WM_COMMAND, nID, 0) ;
+					((CMDIChild*)GetCWndObject(GetActiveChild()))->OnCommand(nID);
 			}
 			break ;
 		}
@@ -229,7 +229,7 @@ namespace Win32xx
 			if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 			{
 				// Activate Menubar for key pressed with Alt key held down
-				GetMenubar().OnMenuChar(wParam, lParam);
+				GetMenubar().MenuChar(wParam, lParam);
 				return -1;
 			}
 			break;
@@ -252,7 +252,7 @@ namespace Win32xx
 		case WM_SYSCOMMAND:
 			if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
 			{
-				GetMenubar().OnSysCommand(wParam, lParam);
+				GetMenubar().SysCommand(wParam, lParam);
 				return 0L;
 			}
 			break;
@@ -457,6 +457,22 @@ namespace Win32xx
 		}
 
 		return WindowItem;
+	}
+
+	BOOL CMDIChild::OnCommand(UINT /*nID*/)
+	{
+		// Override this to handle WM_COMMAND messages, for example
+
+		//	switch (nID)
+		//	{
+		//	case IDM_FILE_NEW:
+		//		OnFileNew();
+		//		break;
+		//	}
+
+		// return 0;
+
+		return 0;
 	}
 
 	BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)

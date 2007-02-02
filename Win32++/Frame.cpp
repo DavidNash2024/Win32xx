@@ -1411,7 +1411,7 @@ namespace Win32xx
 		}
 	}
 
-	void CMenubar::OnMenuChar(WPARAM wParam, LPARAM /* lParam */)
+	void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
 	{
 		if (!m_bMenuActive)
 			DoAltKey(LOWORD(wParam));
@@ -1530,7 +1530,7 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	void CMenubar::OnSysCommand(WPARAM wParam, LPARAM lParam)
+	void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
 	{
 		if (wParam == SC_KEYMENU)
 		{
@@ -1717,12 +1717,12 @@ namespace Win32xx
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);
 			break;
-		case WM_MOUSEMOVE:
-			OnMouseMove(wParam, lParam);
-			break;
 		case WM_MDISETMENU:
 			OnMDISetMenu(wParam, lParam);
 			return 0L;
+		case WM_MOUSEMOVE:
+			OnMouseMove(wParam, lParam);
+			break;
 		case WM_SYSKEYDOWN:
 			if ((wParam == VK_MENU) || (wParam == VK_F10))
 				return 0L;
@@ -1739,6 +1739,7 @@ namespace Win32xx
 			break;
 		} // switch (uMsg)
 
+		// Don't call CToolbar::WndProc. Call CWnd::Wndproc instead
 		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
@@ -1791,7 +1792,7 @@ namespace Win32xx
 		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD;
 		rbbi.cyMinChild = Menubar_Height;
 		rbbi.cyMaxChild = Menubar_Height;
-		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;// | RBBS_NOGRIPPER;
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
@@ -2256,10 +2257,11 @@ namespace Win32xx
 			int nID = TBbutton.idCommand;
 			if (nID != nOldID)
 			{
-				if (nID == 0) 
-					m_StatusText = TEXT("Ready");
-				else
+				if (nID != 0) 
 					m_StatusText = LoadString(TBbutton.idCommand);
+				else
+					m_StatusText = TEXT("Ready");
+					
 				SetStatusText();
 			}
 			nOldID = nID;
@@ -2295,7 +2297,7 @@ namespace Win32xx
 				if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 				{
 					// Activate Menubar for key pressed with Alt key held down
-					GetMenubar().OnMenuChar(wParam, lParam);
+					GetMenubar().MenuChar(wParam, lParam);
 					return -1;
 				}
 				break;
@@ -2315,7 +2317,7 @@ namespace Win32xx
 			case WM_SYSCOMMAND:
 				if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
 				{
-					GetMenubar().OnSysCommand(wParam, lParam);
+					GetMenubar().SysCommand(wParam, lParam);
 					return 0L;
 				}
 				break;

@@ -9,6 +9,8 @@
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame()
 {
+	// Constructor for CMainFrame. Its called after CFrame's constructor
+
 	//Set m_View as the view window of the frame
 	SetView(m_View);
 
@@ -29,10 +31,13 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+	// Destructor for CMainFrame.
 }
 
 BOOL CMainFrame::OnCommand(UINT nID)
 {
+	// OnCommand responds to menu and and toolbar input
+	
 	switch(nID)
 	{
 	case IDM_FILE_EXIT:
@@ -51,7 +56,8 @@ BOOL CMainFrame::OnCommand(UINT nID)
 
 void CMainFrame::OnCreate()
 {
-	// OnCreate controls the way the frame is created
+	// OnCreate controls the way the frame is created. 
+	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
 	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
@@ -67,17 +73,13 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	// Disable some of the toolbar buttons
-	GetToolbar().SetButtonState(IDM_EDIT_CUT, 0);
-	GetToolbar().SetButtonState(IDM_EDIT_COPY, 0);
-	GetToolbar().SetButtonState(IDM_EDIT_PASTE, 0);
-
 	TRACE("Frame created");
 }
 
 void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 {
-	// Here we override CFrame::Setbuttons to customise the Toolbar
+	// Overriding CFrame::Setbuttons is optional. We do it here to
+	//  use fancier larger buttons with text
 
 	// A reference to the CToolbar object
 	CToolbar& TB = GetToolbar();
@@ -101,10 +103,15 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	TB.SetButtonText(IDM_FILE_PRINT, "Print");
 	TB.SetButtonText(IDM_HELP_ABOUT, "About");
 
-	// Adjust the toolbar and rebar size to take account of the new text
+	// Adjust the toolbar and rebar size to take account of the larger buttons
 	RECT r;
 	TB.GetItemRect(0, &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top); 
+	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
+
+	// Disable some of the toolbar buttons
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE);
 }
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -287,10 +287,9 @@ namespace Win32xx
 			::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
 			m_szString[0] = TEXT('\0');
 
-			// Test if Win32++ has been started properly
+			// Test if Win32++ has been started
 			if (GetApp() == 0)
-				throw CWinException(TEXT("Win32++ has not been successfully initialised."));
-
+				throw CWinException(TEXT("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 			GetApp()->m_MapLock.Lock();
 			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
 

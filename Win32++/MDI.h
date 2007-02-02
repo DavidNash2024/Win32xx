@@ -74,6 +74,7 @@ namespace Win32xx
 		CMDIChild();
 		virtual ~CMDIChild();
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual BOOL OnCommand(UINT nID);
 		virtual BOOL SetChildMenu(LPCTSTR MenuName);
 		virtual void UpdateFrameMenu(HMENU hMenu);
 
