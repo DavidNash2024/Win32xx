@@ -81,7 +81,10 @@ Incompatibilites with previous version
 * Toolbar resource IDs are defined differently, mandating a change to 
   CMainframe's constructor. 
 * OnFrameCreated is removed, use OnInitialUpdate instead.
-* CWnd::OnNotify now returns a LRESULT. 
+* CWnd::OnNotify now returns a LRESULT.
+* The _WIN32_IE macro is now longer defined by Win32++. Users of Dev-C++ will 
+  need to define this macro as a compiler option eg:  -D _WIN32_IE=0x0400 
+  (or higher).
 
 Version 5.0
 -----------

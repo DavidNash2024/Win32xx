@@ -90,6 +90,13 @@ BOOL CMainFrame::OnCommand(UINT nID)
 
 } // CMainFrame::OnCommand(...)
 
+void CMainFrame::OnCreate()
+{
+	m_bUseRebar = FALSE;
+
+	CFrame::OnCreate();
+}
+
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Notification from our dropdown button is recieved if Comctl32.dll version
@@ -143,14 +150,23 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 
 void CMainFrame::ViewPopup()
 {
-	RECT rc;
-	::SendMessage(GetToolbar().GetHwnd(), TB_GETRECT, IDM_VIEWMENU, (LPARAM) &rc); 
-	::MapWindowPoints(GetToolbar().GetHwnd(), HWND_DESKTOP, (LPPOINT)&rc, 2);
+	// Position the popup menu
+	RECT rc= {0};
+	::SendMessage(GetToolbar().GetHwnd(), TB_GETRECT, IDM_VIEWMENU, (LPARAM) &rc);
+	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
 
+	if (!IsRebarSupported())
+	{
+		// For Win95 systems without IE 4, we need to calculate rc differently
+		GetWindowRect(GetToolbar().GetHwnd(), &rc);
+		rc.left = rc.left + 232;
+	}
+		
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
 	tpm.rcExclude = rc;
 
+	// Load the popup menu
 	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_VIEWMENU));
 	HMENU hPopupMenu = GetSubMenu(hTopMenu, 0);
 
@@ -166,7 +182,10 @@ void CMainFrame::ViewPopup()
 			::CheckMenuRadioItem(hTopMenu, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
 	}
 	
+	// Start the popup menu
 	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
+	
+	// Release the menu resource
 	::DestroyMenu(hTopMenu);
 }
 
