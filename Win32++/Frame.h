@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.4 Beta
-// Modified: 30th January, 2007 by:
+// Win32++  Version 5.1 Beta
+// Modified: 6th February, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -176,6 +176,7 @@ namespace Win32xx
 		enum Constants
 		{
 			MAX_MENU_STRING = 32,
+			USER_POPUPMENU  = WM_APP + 2,	// creates the popup menu
 		};
 
 		enum MDIButtonType
@@ -269,6 +270,7 @@ namespace Win32xx
 			ID_STATUS_TIMER = 1,
 			MENUBAR_HEIGHT  = 22,
 			TOOLBAR_HEIGHT  = 24,
+			USER_REARRANGED = WM_APP + 1	// frame window rearranged message
 		};
 	};  // class CFrame
 

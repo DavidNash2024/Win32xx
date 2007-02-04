@@ -1,5 +1,5 @@
 Win32++  Version 5.1
-Released: 28th February, 2007 by:
+Released: 15th February, 2007 by:
 
      David Nash
      email: dnash@bigpond.net.au

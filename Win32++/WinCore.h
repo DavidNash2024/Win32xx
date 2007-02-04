@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.4 Beta
-// Modified: 30th January, 2007 by:
+// Win32++  Version 5.1 Beta
+// Modified: 6th February, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -91,10 +91,7 @@ namespace Win32xx
 	//
 	enum Constants
 	{
-		MAX_STRING_SIZE = 255,			// maximum string size
-		USER_REARRANGED = WM_APP + 1,	// frame window rearranged message
-		USER_POPUPMENU  = WM_APP + 2,	// creates the popup menu
-		USER_MDIDESTROYED = WM_APP + 3  // a MDI child has been destroyed
+		MAX_STRING_SIZE = 255			// maximum string size
 	};
 
 

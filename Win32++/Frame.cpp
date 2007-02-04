@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.4 Beta
-// Modified: 30th January, 2007 by:
+// Win32++  Version 5.1 Beta
+// Modified: 6th February, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -416,7 +416,7 @@ namespace Win32xx
 					if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (LPARAM)&tbb))
 						throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
 				}
-				
+
 				// Set rows of text to zero
 				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
 			}
@@ -567,14 +567,14 @@ namespace Win32xx
 			// Ensure the button now includes some text rows (5 rows should be plenty)
 			if (::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0) == 0)
 				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 5, 0);
-			
+
 			// Turn on Toolbar drawing
 			::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
 
 			// Redraw button
 			RECT r;
 			if (::SendMessage(m_hWnd, TB_GETITEMRECT, iIndex, (LPARAM)&r))
-				::InvalidateRect(m_hWnd, &r, TRUE);			
+				::InvalidateRect(m_hWnd, &r, TRUE);
 		}
 
 		catch (const CWinException &e)
@@ -964,66 +964,11 @@ namespace Win32xx
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
 
-	//LRESULT CMenubar::OnNotify(WPARAM /* wParam */, LPARAM lParam)
-	LRESULT CMenubar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
+	void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
 	{
-		switch (((LPNMHDR)lParam)->code)
-		{
-		case NM_CUSTOMDRAW:
-			{
-				LRESULT lResult = 0;
-				OnCustomDraw((LPNMHDR) lParam, &lResult);
-				return (BOOL)lResult;
-			}
-
-		case TBN_DROPDOWN:
-			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
-			break;
-
-		case TBN_HOTITEMCHANGE:
-			// This is the notification that a hot item change is about to occur
-			// This is used to bring up a new popup menu when required
-			{
-				DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
-				if ((flag & (HICF_ENTERING | HICF_MOUSE )) && !(flag & HICF_LEAVING))
-				{
-					int nButton = ((LPNMTBHOTITEM)lParam)->idNew;
-
-					if (nButton >= m_nMaxedFlag)
-					{
-						if ((m_bMenuActive) && (nButton != m_nHotItem))
-						{
-							::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
-							m_nHotItem = nButton;
-							::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
-
-							//Always use PostMessage for USER_POPUPMENU (not SendMessage)
-							::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
-						}
-						m_nHotItem = nButton;
-					}
-				}
-
-				if ((flag & HICF_LEAVING) && m_bKeyMode)
-				{
-					m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
-					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
-					return -1; // Discard this HotItemChange now
-				}
-
-				if(flag == HICF_MOUSE)
-				{
-					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
-					return -1; // Discard this HotItemChange now
-				}
-
-				break;
-			} //case TBN_HOTITEMCHANGE:
-
-		} // switch(((LPNMHDR)lParam)->code)
-		return 0L;
-	} // CMenubar::OnNotify(...)
+		if (!m_bMenuActive)
+			DoAltKey(LOWORD(wParam));
+	}
 
 	void CMenubar::OnCreate()
 	{
@@ -1276,83 +1221,6 @@ namespace Win32xx
 		ExitMenu();
 	}
 
-	void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
-	{
-		POINT pt;
-		pt.x = GET_X_LPARAM(lParam);
-		pt.y = GET_Y_LPARAM(lParam);
-
-		if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
-		{
-			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-			if (pMDIFrame->IsMDIFrame())
-			{
-				BOOL bMaxed;
-				pMDIFrame->GetActiveChild(&bMaxed);
-
-				if (bMaxed)
-				{
-					HDC hDC = ::GetDC(m_hWnd);
-					static BOOL bButtonPushed = TRUE;
-
-					// toggle the MDI button image pressed/unpressed as required
-					if (PtInRect(&m_MDIRect[0], pt))
-					{
-						if (m_nMDIButton == MDI_MIN)
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
-							bButtonPushed = TRUE;
-						}
-						else
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-							bButtonPushed = FALSE;
-						}
-					}
-
-					else if (PtInRect(&m_MDIRect[1], pt))
-					{
-						if (m_nMDIButton == MDI_RESTORE)
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
-							bButtonPushed = TRUE;
-						}
-						else
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-							bButtonPushed = FALSE;
-						}
-					}
-
-					else if (PtInRect(&m_MDIRect[2], pt))
-					{
-						if (m_nMDIButton == MDI_CLOSE)
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
-							bButtonPushed = TRUE;
-						}
-						else
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-							bButtonPushed = FALSE;
-						}
-					}
-
-					else if (bButtonPushed)
-					{
-						::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-						::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-						::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-						bButtonPushed = FALSE;
-					}
-				}
-			}
-		}
-	}
-
 	void CMenubar::OnMDISetMenu(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		// Adds the additional menu items the the "Window" submenu when
@@ -1414,12 +1282,6 @@ namespace Win32xx
 				}
 			}
 		}
-	}
-
-	void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
-	{
-		if (!m_bMenuActive)
-			DoAltKey(LOWORD(wParam));
 	}
 
 	BOOL CMenubar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1535,20 +1397,142 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
+	void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
-		if (wParam == SC_KEYMENU)
+		POINT pt;
+		pt.x = GET_X_LPARAM(lParam);
+		pt.y = GET_Y_LPARAM(lParam);
+
+		if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
 		{
-			if (lParam == 0)
+			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+			if (pMDIFrame->IsMDIFrame())
 			{
-				GrabFocus();
-				m_bKeyMode = TRUE;
-				SetHotItem(m_nMaxedFlag);
+				BOOL bMaxed;
+				pMDIFrame->GetActiveChild(&bMaxed);
+
+				if (bMaxed)
+				{
+					HDC hDC = ::GetDC(m_hWnd);
+					static BOOL bButtonPushed = TRUE;
+
+					// toggle the MDI button image pressed/unpressed as required
+					if (PtInRect(&m_MDIRect[0], pt))
+					{
+						if (m_nMDIButton == MDI_MIN)
+						{
+							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
+							bButtonPushed = TRUE;
+						}
+						else
+						{
+							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
+							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
+							bButtonPushed = FALSE;
+						}
+					}
+
+					else if (PtInRect(&m_MDIRect[1], pt))
+					{
+						if (m_nMDIButton == MDI_RESTORE)
+						{
+							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
+							bButtonPushed = TRUE;
+						}
+						else
+						{
+							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
+							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
+							bButtonPushed = FALSE;
+						}
+					}
+
+					else if (PtInRect(&m_MDIRect[2], pt))
+					{
+						if (m_nMDIButton == MDI_CLOSE)
+						{
+							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
+							bButtonPushed = TRUE;
+						}
+						else
+						{
+							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
+							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
+							bButtonPushed = FALSE;
+						}
+					}
+
+					else if (bButtonPushed)
+					{
+						::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
+						::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
+						::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
+						bButtonPushed = FALSE;
+					}
+				}
 			}
-			else
-				DoAltKey((WORD)lParam);
 		}
 	}
+
+	LRESULT CMenubar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
+	{
+		switch (((LPNMHDR)lParam)->code)
+		{
+		case NM_CUSTOMDRAW:
+			{
+				LRESULT lResult = 0;
+				OnCustomDraw((LPNMHDR) lParam, &lResult);
+				return (BOOL)lResult;
+			}
+
+		case TBN_DROPDOWN:
+			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
+			::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+			break;
+
+		case TBN_HOTITEMCHANGE:
+			// This is the notification that a hot item change is about to occur
+			// This is used to bring up a new popup menu when required
+			{
+				DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
+				if ((flag & (HICF_ENTERING | HICF_MOUSE )) && !(flag & HICF_LEAVING))
+				{
+					int nButton = ((LPNMTBHOTITEM)lParam)->idNew;
+
+					if (nButton >= m_nMaxedFlag)
+					{
+						if ((m_bMenuActive) && (nButton != m_nHotItem))
+						{
+							::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+							m_nHotItem = nButton;
+							::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
+
+							//Always use PostMessage for USER_POPUPMENU (not SendMessage)
+							::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+						}
+						m_nHotItem = nButton;
+					}
+				}
+
+				if ((flag & HICF_LEAVING) && m_bKeyMode)
+				{
+					m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
+					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
+					return -1; // Discard this HotItemChange now
+				}
+
+				if(flag == HICF_MOUSE)
+				{
+					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
+					return -1; // Discard this HotItemChange now
+				}
+
+				break;
+			} //case TBN_HOTITEMCHANGE:
+
+		} // switch(((LPNMHDR)lParam)->code)
+		return 0L;
+	} // CMenubar::OnNotify(...)
 
 	void CMenubar::OnWindowPosChanged()
 	{
@@ -1616,7 +1600,7 @@ namespace Win32xx
 				tbb.iString = (INT_PTR)TEXT(" ");
 				if(!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
 					throw CWinException(TEXT("Menubar::SetMenu  TB_ADDBUTTONS failed"));
-				
+
 				SetButtonText(0, TEXT("    "));
 			}
 
@@ -1635,7 +1619,7 @@ namespace Win32xx
 				TCHAR szMenuName[MAX_MENU_STRING +1];
 				if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
 					throw CWinException(TEXT("Menubar::SetMenu  GetMenuString failed"));
-				
+
 				SetButtonText(i  + m_nMaxedFlag, szMenuName);
 			}
 		}
@@ -1694,6 +1678,21 @@ namespace Win32xx
 		}
 
 		return CallNextHookEx(pTLSData->hMenuHook, nCode, wParam, lParam);
+	}
+
+	void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
+	{
+		if (wParam == SC_KEYMENU)
+		{
+			if (lParam == 0)
+			{
+				GrabFocus();
+				m_bKeyMode = TRUE;
+				SetHotItem(m_nMaxedFlag);
+			}
+			else
+				DoAltKey((WORD)lParam);
+		}
 	}
 
 	LRESULT CMenubar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2264,11 +2263,11 @@ namespace Win32xx
 			int nID = TBbutton.idCommand;
 			if (nID != nOldID)
 			{
-				if (nID != 0) 
+				if (nID != 0)
 					m_StatusText = LoadString(TBbutton.idCommand);
 				else
 					m_StatusText = TEXT("Ready");
-					
+
 				SetStatusText();
 			}
 			nOldID = nID;

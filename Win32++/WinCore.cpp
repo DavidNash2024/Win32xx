@@ -1,5 +1,5 @@
-// Win32++  Version 5.0.4 Beta
-// Modified: 30th January, 2007 by:
+// Win32++  Version 5.1 Beta
+// Modified: 6th February, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -100,7 +100,7 @@ namespace Win32xx
 			}
 			else
 			{
-				// We get here if Win32++ is used incorrectly, as more than one instance
+				// We get here if Win32++ is used incorrectly, i.e. more than one instance
 				// of a CWinApp derived class is started.
  				throw CWinException(TEXT("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}

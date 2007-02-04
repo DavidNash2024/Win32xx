@@ -1,12 +1,21 @@
 Version 5.1
 -----------
+New Features:
+* The toolbar uses image lists which supports using separate bitmaps for normal, 
+  hot and disabled buttons.
+* Subclassing is now integrated into the framework.
+* Existing windows can be attached to CWnd objects. This allows dialog items 
+  to be subclassed.
+* Notifications from common controls are reflected back to the CWnd object that
+  generated them.
+  
 Major Changes:
 * Major updates to the CToolbar and CStatubar classes.
 * Notification Reflection.  WM_NOTIFY messages from child windows now call 
   OnNotifyReflect in the CWnd that generated them.
 * Existing windows (including dialog items) can now be attached to a CWnd.
   The window is automatically subclassed when attached to a CWnd.
-* Integrated subclassing and superclassing into the framwork. Superclassing and
+* Integrated subclassing and superclassing into the framework. Superclassing and
   subclassing is much simpler now.  Win32++ now keeps track of the previous
   window procedure, and calls it automatically at the end of CWnd::WndProc
 * Toolbar notifies frame via ToolbarNotify when the mouse is over a toolbar 
@@ -15,11 +24,11 @@ Major Changes:
   attempting catch keydown messages and notifications.
 * Applications can now set a hot toolbar bitmap, and a disabled toolbar bitmap
   in addition to the standard toolbar bitmap for toolbar buttons.
-* Non standard toolbar button sizes are now suported.
+* Non standard toolbar button sizes are now supported.
 * Text on toolbar buttons is now supported.
 * Simplified the setting of Toolbar resource IDs. They are now set in the 
   Mainframe's constructor by adding to a vector.
-* There is now a clear seperation between the Resource IDs defined by Win32++
+* There is now a clear separation between the Resource IDs defined by Win32++
   and those defined in the user's application. Resource IDs defined by Win32++
   are defined as IDW_XXXXXX, and range from 1 to 99. Users of Win32++ should
   begin their resource IDs from 100.
@@ -76,7 +85,7 @@ Bug Fixes
   OnHelp was called.
 * CSplitter:: Fixed drawing of splitter bar
 
-Incompatibilites with previous version
+Incompatibilities with previous version
 * Resource IDs have changed, mandating changes to resource.h and resource.rc
 * Toolbar resource IDs are defined differently, mandating a change to 
   CMainframe's constructor. 
@@ -103,7 +112,7 @@ Summary of changes
    * Added MDI frame support
    * Added splitter window support
 3) The menubar (previously available in the enhanced version) now fully
-    suports MDI applications.
+    supports MDI applications.
 4) Changed CSplitter. The splitter bar is now an additional child window rather
     than the CSplitter CWnd object itself.
 5) CFrame::Recalclayout no longer invalidates the view window. Programmers can
@@ -135,7 +144,7 @@ Changed the following functions
 * Removed CWnd::MoveWindow         Not required, use ::MoveWindow instead.
 
 Bug fixes: 
-* Resolved thread safty problems.
+* Resolved thread safety problems.
 * Resolved view window positioning issue in frames. 
 
 Version 4
@@ -172,7 +181,7 @@ Changed the following:
 * Added   CWnd::OnInitialUpdate
 * Added   CWin::PreCreate
 * Added   CWnd::SubClass 
-* Changed CWin::CreateEX       Added the lpParam paramater
+* Changed CWin::CreateEX       Added the lpParam parameter
 * Changed CWnd::OnCreate       Now called when a WM_CREATE message is received.
 * Removed CWnd::Show
 * Removed CWnd::OnFocus
@@ -183,7 +192,7 @@ Changed the following:
 Version 3
 ---------
 1) Added the CTrace class to provide tracing (in Debug 
-    mode only). To use tracing, enure that you are in Debug mode, 
+    mode only). To use tracing, ensure that you are in Debug mode, 
     i.e. the variable _DEBUG is defined, and use the TRACE("xxxxx")
     function to send trace messages.  The first TRACE(...) creates 
     the CTrace object and the Trace Output Window.
@@ -219,7 +228,7 @@ Key Changes:
 4) Added CApp class to start Win32++.
 
 5) Added CDialog class to support modal and modeless dialogs as well
-    as indirect dialogs(dialogs created from a dialog template in
+    as indirect dialogs (dialogs created from a dialog template in
     memory).
 
 6) The instance handle of the application is stored as a member variable
@@ -228,8 +237,8 @@ Key Changes:
     
 7) Simplified window creation:
     The CWin::Create function has been added to provide a simple 
-    method of creating a window with sensible defualts. Override this
-    in your derrived class to customise it further.
+    method of creating a window with sensible defaults. Override this
+    in your derived class to customise it further.
     Also, if the Window Class name is not provided, one is provided for
     you. The window class name provided is "Win32++ Window"
     

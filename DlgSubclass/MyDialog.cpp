@@ -97,43 +97,48 @@ void CMyDialog::OnOK()
 
 void CMyDialog::OnButton()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Button Pressed"));
+	SetStatic(TEXT("Button Pressed"));
 	TRACE(TEXT("Button Pressed"));
 }
 
 void CMyDialog::OnCheck1()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 1"));
+	SetStatic(TEXT("Check Box 1"));
 	TRACE(TEXT("Check Box 1"));
 }
 
 void CMyDialog::OnCheck2()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 2"));
+	SetStatic(TEXT("Check Box 2"));
 	TRACE(TEXT("Check Box 2"));
 }
 
 void CMyDialog::OnCheck3()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 3"));
+	SetStatic(TEXT("Check Box 3"));
 	TRACE(TEXT("Check Box 3"));
 }
 
 void CMyDialog::OnRadio1()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 1"));
+	SetStatic(TEXT("Radio 1"));
 	TRACE(TEXT("Radio 1"));
 }
 
 void CMyDialog::OnRadio2()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 2"));
-
+	SetStatic(TEXT("Radio 2"));
 	TRACE(TEXT("Radio 2"));
 }
 
 void CMyDialog::OnRadio3()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 3"));
+	SetStatic(TEXT("Radio 3"));
 	TRACE(TEXT("Radio 3"));
 }
+
+void CMyDialog::SetStatic(LPCTSTR szString)
+{
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, szString);
+}
+
