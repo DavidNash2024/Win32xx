@@ -581,7 +581,11 @@ namespace Win32xx
 
 			::lstrcpy(m_szString, TEXT(""));
 			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE -1))
-				DebugWarnMsg(TEXT("No string resource for this resource ID"));
+			{
+				TCHAR str[80];
+				::wsprintf(str, TEXT("LoadString - No string resource for %d"), nID);
+				DebugWarnMsg(str);
+			}
 		}
 
 		catch (const CWinException &e)
@@ -870,7 +874,10 @@ namespace Win32xx
 		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 	#else
 		// use 64 bit compliant code otherwise
+		#pragma warning(push)
+		#pragma warning(disable: 4244 4312)
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+		#pragma warning(pop)
 	#endif
 	}
 

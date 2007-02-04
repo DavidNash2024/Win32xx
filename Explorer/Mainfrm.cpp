@@ -92,7 +92,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 
 void CMainFrame::OnCreate()
 {
-	m_bUseRebar = FALSE;
+//	m_bUseRebar = FALSE;
 
 	CFrame::OnCreate();
 }
@@ -145,6 +145,7 @@ void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
 	TB.DisableButton(IDM_EDIT_PASTE);
 	TB.DisableButton(IDM_FILE_PRINT);
 
+	// This style requires comctl32.dll version 5.80 or later
 	GetToolbar().SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 }
 
@@ -171,6 +172,7 @@ void CMainFrame::ViewPopup()
 	HMENU hPopupMenu = GetSubMenu(hTopMenu, 0);
 
 	// Put a radio check in the currently checked item
+	// Doesn't work in Win95 without IE 4 (GetMenuItemInfo isn't supported)
 	MENUITEMINFO mii = {0};
 	for (int i = 3 ; i < 7 ; i++)
 	{

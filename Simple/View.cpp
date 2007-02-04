@@ -8,13 +8,11 @@
 // Definitions for the CView class
 void CView::OnCreate()
 {
-	// OnCreate is called automatically during window creation when (and if) a
+	// OnCreate is called automatically during window creation when a
 	// WM_CREATE message received.
-	// Note: We don't recieve the WM_CREATE message from predefined window classes
-	// such as common controls.
 
-	// Tasks such as setting the icon, creating child windows, or other tasks associated
-	// with creating windows are normally performed here.
+	// Tasks such as setting the icon, creating child windows, or other tasks 
+	// associated with creating windows are normally performed here.
 
 	// Set the window's icon
 	SetIconSmall(IDW_MAIN);
@@ -81,11 +79,11 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		OnDestroy();
-		return 0;		// Refer to the Platform SDK for correct return value
+		return 0;	
 
 	case WM_SIZE:
 		OnSize();
-		return TRUE;	// Refer to the Platform SDK for correct return value
+		return 0;	
 	}
 
 	// Pass unprocessed messages to CWin::WndProc

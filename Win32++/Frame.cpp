@@ -399,7 +399,6 @@ namespace Win32xx
 				for (int j = 0 ; j < iNumButtons; j++)
 				{
 					ZeroMemory(&tbb, sizeof(TBBUTTON));
-					tbb.iString = -1;  // Undocumented feature:  No text for button
 
 					if (ToolbarData[j] == 0)
 					{
@@ -417,6 +416,9 @@ namespace Win32xx
 					if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (LPARAM)&tbb))
 						throw (CWinException(TEXT("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
 				}
+				
+				// Set rows of text to zero
+				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
 			}
 			else
 				DebugWarnMsg(TEXT("No Resource IDs for Toolbar"));
@@ -447,7 +449,7 @@ namespace Win32xx
 		if (GetApp()->GetFrame()->IsRebarUsed())
 		{
 			CRebar* rb = (CRebar*) GetCWndObject(m_hWndParent);
-			rb->ResizeBand(rb->GetBand(GetHwnd()), cy);
+			rb->ResizeBand(rb->GetBand(GetHwnd()), cy+2);
 		}
 
 		::InvalidateRect(m_hWnd, NULL, TRUE);
@@ -562,14 +564,17 @@ namespace Win32xx
 			if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tbb))
 				throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
 
+			// Ensure the button now includes some text rows (5 rows should be plenty)
+			if (::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0) == 0)
+				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 5, 0);
+			
 			// Turn on Toolbar drawing
 			::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
 
 			// Redraw button
 			RECT r;
 			if (::SendMessage(m_hWnd, TB_GETITEMRECT, iIndex, (LPARAM)&r))
-				::InvalidateRect(m_hWnd, &r, TRUE);
-
+				::InvalidateRect(m_hWnd, &r, TRUE);			
 		}
 
 		catch (const CWinException &e)
