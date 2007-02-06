@@ -62,7 +62,7 @@ BOOL CMainMDIFrame::OnCommand(UINT nID)
 	return CMDIFrame::OnCommand(nID);
 }
 
-void CMainMDIFrame::SetButtons(std::vector<UINT> ToolbarData)
+void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
 	// with seperate imagelists for normal, hot and disabled buttons.

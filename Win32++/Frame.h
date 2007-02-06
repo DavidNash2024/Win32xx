@@ -60,11 +60,11 @@ namespace Win32xx
 	public:
 		CStatusbar() {}
 		virtual ~CStatusbar() {}
-		virtual LPCTSTR GetPaneText(INT iPane);
+		virtual LPCTSTR GetPaneText(int iPane);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void CreatePanes(INT iPanes, int iPaneWidths[]);
-		virtual void SetPaneText(INT iPane, LPCTSTR szText, UINT Style = 0);
-		virtual void SetPaneWidth(INT iPane, INT iWidth);
+		virtual void CreatePanes(int iPanes, const int iPaneWidths[]);
+		virtual void SetPaneText(int iPane, LPCTSTR szText, UINT Style = 0);
+		virtual void SetPaneWidth(int iPane, int iWidth);
 
 	private:
 		TCHAR m_szText[80];
@@ -81,8 +81,8 @@ namespace Win32xx
 		virtual ~CToolbar();
 		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
 		virtual int  CommandToIndex(int iButtonID);
-		virtual void DisableButton(const int iButtonID);
-		virtual void EnableButton(const int iButtonID);
+		virtual void DisableButton(int iButtonID);
+		virtual void EnableButton(int iButtonID);
 		virtual int  GetButtonCount();
 		virtual UINT GetButtonState(int iButtonID);
 		virtual BYTE GetButtonStyle(int iButtonID);
@@ -90,7 +90,7 @@ namespace Win32xx
 		virtual void GetItemRect(int iIndex, RECT* lpRect);
 		virtual int  HitTest();
 		virtual void SetBitmapSize(int cx, int cy);
-		virtual int  SetButtons(std::vector<UINT> ToolbarData);
+		virtual int  SetButtons(const std::vector<UINT> ToolbarData);
 		virtual void SetButtonSize(int cx, int cy);
 		virtual void SetButtonState(int iButtonID, UINT State);
 		virtual void SetButtonStyle(int iButtonID, BYTE Style);
@@ -120,17 +120,17 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar(){}
-		virtual BOOL DeleteBand(int nBand);
-		virtual int GetBand(HWND hWnd) const;
+		virtual BOOL DeleteBand(const int nBand);
+		virtual int GetBand(const HWND hWnd) const;
 		virtual int GetBandCount() const;
-		virtual BOOL GetBandInfo(int nBand, LPREBARBANDINFO prbbi) const;
+		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
 		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
-		virtual BOOL InsertBand(int nBand, LPREBARBANDINFO prbbi);
+		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void ResizeBand(int nBand, int nSize);
-		virtual void SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack);
-		virtual	void SetBandBitmap(int nBand, HBITMAP hBackground);
-		virtual BOOL SetBandInfo(int nBand, LPREBARBANDINFO prbbi);
+		virtual void ResizeBand(const int nBand, const int nSize);
+		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
+		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
+		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL SetBarInfo(LPREBARINFO prbi);
 
 	};
@@ -246,7 +246,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
-		virtual void SetButtons(std::vector<UINT> ToolbarData);
+		virtual void SetButtons(const std::vector<UINT> ToolbarData);
 		virtual void ToolbarNotify(int nButton);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

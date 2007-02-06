@@ -76,7 +76,7 @@ void CMainFrame::OnInitialUpdate()
 	TRACE("Frame created");
 }
 
-void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
+void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
 	// with seperate imagelists for normal, hot and disabled buttons.

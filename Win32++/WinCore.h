@@ -152,7 +152,7 @@ namespace Win32xx
 		virtual void DestroyWindow();
 		virtual HWND GetAncestor(HWND hwnd);
 		virtual CWnd* GetCWndObject(HWND hWnd);
-		virtual HWND GetHwnd(){return m_hWnd;}
+		virtual HWND GetHwnd() {return m_hWnd;}
 		virtual LPCTSTR LoadString(int nID);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);

@@ -16,7 +16,7 @@ public:
 	virtual ~CMainMDIFrame();
 
 protected:
-	virtual void SetButtons(std::vector<UINT> ToolbarData);
+	virtual void SetButtons(const std::vector<UINT> ToolbarData);
 	virtual BOOL OnCommand(UINT nID);
 	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

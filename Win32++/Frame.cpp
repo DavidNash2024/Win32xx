@@ -60,7 +60,7 @@ namespace Win32xx
 		cs.lpszClass = STATUSCLASSNAME;
 	}
 
-	void CStatusbar::CreatePanes(INT iPanes, INT iPaneWidths[])
+	void CStatusbar::CreatePanes(int iPanes, const int iPaneWidths[])
 	{
 		// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
 		//  to the border of the window
@@ -88,7 +88,7 @@ namespace Win32xx
 		}
 	}
 
-	LPCTSTR CStatusbar::GetPaneText(INT iPane)
+	LPCTSTR CStatusbar::GetPaneText(int iPane)
 	{
 		if (::IsWindow(m_hWnd))
 		{
@@ -107,7 +107,7 @@ namespace Win32xx
 		return m_szText;
 	}
 
-	void CStatusbar::SetPaneText(INT iPane, LPCTSTR szText, UINT Style)
+	void CStatusbar::SetPaneText(int iPane, LPCTSTR szText, UINT Style)
 	// Available Styles: Combinations of ...
 	//0					The text is drawn with a border to appear lower than the plane of the window.
 	//SBT_NOBORDERS		The text is drawn without borders.
@@ -139,7 +139,7 @@ namespace Win32xx
 		}
 	}
 
-	void CStatusbar::SetPaneWidth(INT iPane, INT iWidth)
+	void CStatusbar::SetPaneWidth(int iPane, int iWidth)
 	{
 		// This changes the width of an existing pane, or creates a new pane
 		// with the specified width
@@ -235,14 +235,14 @@ namespace Win32xx
 		}
 	}
 
-	void CToolbar::DisableButton(const int iButtonID)
+	void CToolbar::DisableButton(int iButtonID)
 	{
 		// An example of iButtonID would be IDM_FILE_OPEN
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0)))
 			DebugWarnMsg(TEXT("Disable button failed"));
 	}
 
-	void CToolbar::EnableButton(const int iButtonID)
+	void CToolbar::EnableButton(int iButtonID)
 	{
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 )))
 			DebugWarnMsg(TEXT("Enable button failed"));
@@ -376,7 +376,7 @@ namespace Win32xx
 			DebugWarnMsg(TEXT("CToolbar::SetBitmapSize  failed"));
 	}
 
-	int CToolbar::SetButtons(std::vector<UINT> ToolbarData)
+	int CToolbar::SetButtons(const std::vector<UINT> ToolbarData)
 	// Assigns a resource ID to each toolbar button
 	{
 		try
@@ -700,12 +700,12 @@ namespace Win32xx
 	{
 	}
 
-	BOOL CRebar::DeleteBand(int nBand)
+	BOOL CRebar::DeleteBand(const int nBand)
 	{
 		return (BOOL)::SendMessage(m_hWnd, RB_DELETEBAND, nBand, 0);
 	}
 
-	int CRebar::GetBand(HWND hWnd) const
+	int CRebar::GetBand(const HWND hWnd) const
 	// Returns the zero based band number for this window handle
 	{
 		int nResult = -1;
@@ -727,7 +727,7 @@ namespace Win32xx
 		return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0, 0);
 	}
 
-	BOOL CRebar::GetBandInfo(int nBand, LPREBARBANDINFO prbbi) const
+	BOOL CRebar::GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const
 	{
 		// REBARBANDINFO describes individual BAND characteristics
 		prbbi->cbSize = sizeof(REBARBANDINFO);
@@ -741,7 +741,7 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_GETBARINFO, 0, (LPARAM)prbi);
 	}
 
-	BOOL CRebar::InsertBand(int nBand, LPREBARBANDINFO prbbi)
+	BOOL CRebar::InsertBand(const int nBand, LPREBARBANDINFO prbbi)
 	{
 		return (BOOL)::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)(LPREBARBANDINFO)prbbi);
 	}
@@ -754,7 +754,7 @@ namespace Win32xx
 		cs.lpszClass = REBARCLASSNAME;
 	}
 
-	void CRebar::ResizeBand(int nBand, int nSize)
+	void CRebar::ResizeBand(const int nBand, const int nSize)
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(rbbi);
@@ -770,7 +770,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, RB_MAXIMIZEBAND, nBand, 0);
 	}
 
-	void CRebar::SetBandBitmap(int nBand, HBITMAP hBackground)
+	void CRebar::SetBandBitmap(const int nBand, const HBITMAP hBackground)
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(REBARBANDINFO);
@@ -781,7 +781,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	void CRebar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack)
+	void CRebar::SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack)
 	{
 		// Won't work with XP themes enabled
 		// Won't work if a bitmap has been set
@@ -793,7 +793,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	BOOL CRebar::SetBandInfo(int nBand, LPREBARBANDINFO prbbi)
+	BOOL CRebar::SetBandInfo(const int nBand, LPREBARBANDINFO prbbi)
 	{
 		// REBARBANDINFO describes individual BAND characteristics
 		prbbi->cbSize = sizeof(REBARBANDINFO);
@@ -2004,12 +2004,10 @@ namespace Win32xx
 		// Display toolips for the toolbar
 		case TTN_GETDISPINFO:
 			{
+				int iIndex =  GetToolbar().HitTest();
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
-				if (GetToolbar().HitTest() >= 0)
-				{
-					INT idButton = (INT)lpDispInfo->hdr.idFrom;
-					lpDispInfo->lpszText = (LPTSTR)LoadString(idButton);
-				}
+				if (iIndex >= 0)
+					lpDispInfo->lpszText = (LPTSTR)LoadString(GetToolbar().GetCommandID(iIndex));
 			}
 			break;
 		} // switch LPNMHDR
@@ -2177,7 +2175,7 @@ namespace Win32xx
 			GetRebar().SetBandBitmap(nBands, hBackground);
 	}
 
-	void CFrame::SetButtons(std::vector<UINT> ToolbarData)
+	void CFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	// Define the resource IDs for the toolbar like this in the Frame's constructor
 	// m_ToolbarData.clear();
 	// m_ToolbarData.push_back ( IDM_FILE_NEW   );

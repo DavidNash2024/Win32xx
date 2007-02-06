@@ -874,11 +874,15 @@ namespace Win32xx
 		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 	#else
 		// use 64 bit compliant code otherwise
+		#if defined(_MSC_VER)
 		#pragma warning(push)
-		#pragma warning(disable: 4244 4312)
+		#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
+		#endif //defined(_MSC_VER)
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
-		#pragma warning(pop)
-	#endif
+		#if defined(_MSC_VER)
+		#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
+		#endif //defined(_MSC_VER)
+	#endif // defined (_MSC_VER) && _MSC_VER <= 1200
 	}
 
 	void CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
