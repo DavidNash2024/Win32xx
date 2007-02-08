@@ -2,6 +2,7 @@
 // MyDialog.cpp
 
 #include "MyDialog.h"
+#include "Hyperlink.h"
 #include "resource.h"
 
 
@@ -81,10 +82,13 @@ BOOL CMyDialog::OnInitDialog()
 	// Put some text in the list box
 	HWND hListBox = ::GetDlgItem(GetHwnd(), IDC_LIST1);
 	for (int i = 0 ; i < 8 ; i++)
-		::SendMessage( hListBox, LB_ADDSTRING, 0, (LPARAM) TEXT("List Box"));
+		::SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM) TEXT("List Box"));
 
 	// Turn our button into a MyButton object
-	MyButton.AttachDlgItem(IDC_BUTTON2, this);
+	m_Button.AttachDlgItem(IDC_BUTTON2, this);
+
+	// Turn our static control into a hyperlink
+	m_Hyperlink.AttachDlgItem(IDC_STATIC_ITEM, this);
 
 	return true;
 }

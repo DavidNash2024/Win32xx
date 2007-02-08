@@ -117,7 +117,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-void CMainFrame::SetButtons(std::vector<UINT> ToolbarData)
+void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// A reference to the CToolbar object
 	CToolbar& TB = GetToolbar();

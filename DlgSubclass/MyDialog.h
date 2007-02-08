@@ -7,6 +7,7 @@
 #include "..\Win32++\dialog.h"
 #include "resource.h"
 #include "button.h"
+#include "Hyperlink.h"
 
 
 // Declaration of the CMyDialog class
@@ -34,7 +35,8 @@ private:
 	void OnCheck3();
 
 	HMODULE m_hInstRichEdit;
-	CButton MyButton;
+	CButton m_Button;
+	CHyperlink m_Hyperlink;
 };
 
 #endif //MYDIALOG_H

@@ -5,7 +5,7 @@
 
 //The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,
 //  and Window Caption
-#define IDW_MAIN                        100
+#define IDW_MAIN                         100
 
 
 //Resource IDs for the dialog
@@ -24,6 +24,7 @@
 #define IDC_STATIC1                     130
 #define IDC_STATIC2                     131
 #define IDC_STATIC3                     132
+#define IDC_STATIC_ITEM					133
 #define IDC_HOTKEY1                     140
 #define IDB_BITMAP1                     150
 

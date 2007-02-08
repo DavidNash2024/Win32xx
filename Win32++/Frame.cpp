@@ -1759,8 +1759,8 @@ namespace Win32xx
 	{
 		GetApp()->SetFrame(this);
 		INITCOMMONCONTROLSEX InitStruct;
-		InitStruct.dwSize=sizeof(INITCOMMONCONTROLSEX);
-		InitStruct.dwICC=ICC_WIN95_CLASSES| ICC_COOL_CLASSES;
+		InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+		InitStruct.dwICC = ICC_WIN95_CLASSES| ICC_COOL_CLASSES;
 
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
@@ -1979,12 +1979,11 @@ namespace Win32xx
 	{
 		// Set the Statusbar text when we hover over a menu
 		// Only popup submenus have status strings
-
 		if (m_bShowMenuStatus)
 		{
 			int nID = LOWORD (wParam);
 			HMENU hMenu = (HMENU) lParam;
-			if ((!(hMenu == ::GetMenu(m_hWnd))) && (nID != 0))
+			if ((hMenu != ::GetMenu(m_hWnd)) && (nID != 0))
 				m_StatusText = LoadString(nID);
 			else
 				m_StatusText = TEXT("Ready");
@@ -2007,7 +2006,11 @@ namespace Win32xx
 				int iIndex =  GetToolbar().HitTest();
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
 				if (iIndex >= 0)
-					lpDispInfo->lpszText = (LPTSTR)LoadString(GetToolbar().GetCommandID(iIndex));
+				{
+					int nID = GetToolbar().GetCommandID(iIndex);
+					if (nID > 0)
+						lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
+				}
 			}
 			break;
 		} // switch LPNMHDR
@@ -2252,17 +2255,14 @@ namespace Win32xx
 	// Called in CToolbar::WndProc
 	{
 		// Updates the statusbar when the mouse hovers over a toolbar buttton
-		TBBUTTON TBbutton = {0};
 		static int nOldID = -1;
-
 		if (nButton >= 0)
 		{
-			::SendMessage(GetToolbar().GetHwnd(), TB_GETBUTTON, (WPARAM) nButton, (LPARAM) &TBbutton);
-			int nID = TBbutton.idCommand;
+			int nID = GetToolbar().GetCommandID(nButton);
 			if (nID != nOldID)
 			{
 				if (nID != 0)
-					m_StatusText = LoadString(TBbutton.idCommand);
+					m_StatusText = LoadString(nID);
 				else
 					m_StatusText = TEXT("Ready");
 

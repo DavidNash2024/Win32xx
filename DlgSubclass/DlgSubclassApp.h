@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-// DlgSubclassApp.h 
+// DlgSubclassApp.h
 
 #ifndef DLGSUBCLASSAPP_H
 #define DLGSUBCLASSAPP_H
@@ -11,12 +11,12 @@
 class CDlgSubclassApp : public CWinApp
 {
 public:
-	CDlgSubclassApp(HINSTANCE hInstance); 
+	CDlgSubclassApp(HINSTANCE hInstance);
 	virtual ~CDlgSubclassApp();
-	CMyDialog& GetDialog(){return MyDialog;}
+	CMyDialog& GetDialog(){return m_MyDialog;}
 
 private:
-	CMyDialog MyDialog;
+	CMyDialog m_MyDialog;
 };
 
 

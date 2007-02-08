@@ -631,6 +631,61 @@ namespace Win32xx
 		// after window creation.
 	}
 
+	LRESULT CWnd::OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		// A private function used to call OnMessageReflect.
+
+		HWND hwnd = NULL;
+		switch (uMsg)
+		{
+		case WM_CTLCOLORBTN:
+		case WM_CTLCOLOREDIT:
+		case WM_CTLCOLORDLG:
+		case WM_CTLCOLORLISTBOX:
+		case WM_CTLCOLORSCROLLBAR:
+		case WM_CTLCOLORSTATIC:
+		case WM_CHARTOITEM:
+		case WM_VKEYTOITEM:
+		case WM_HSCROLL:
+		case WM_VSCROLL:
+			hwnd = (HWND)lParam;
+			break;
+
+		case WM_DRAWITEM:
+		case WM_MEASUREITEM:
+		case WM_DELETEITEM:
+		case WM_COMPAREITEM:
+			hwnd = ::GetDlgItem(hwndParent, (int)wParam);
+			break;
+
+		case WM_PARENTNOTIFY:
+			switch(LOWORD(wParam))
+			{
+			case WM_CREATE:
+			case WM_DESTROY:
+				hwnd = (HWND)lParam;
+				break;
+			}
+		}
+		
+		CWnd* Wnd = GetCWndObject(hwnd);
+
+		if (Wnd != NULL)
+			return Wnd->OnMessageReflect(uMsg, wParam, lParam);
+		
+		return 0L;
+	}
+
+	LRESULT CWnd::OnMessageReflect(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		// This function to processes those special messages (see above) sent 
+		// by some older controls, and reflects them back to the originating CWnd object.
+
+		// Override this function in your derrived class to handle these special messages.
+
+		return 0L;
+	}
+
 	LRESULT CWnd::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
 		// By default, Win32++ calls OnNotifyReflect to pass the notification
@@ -650,7 +705,7 @@ namespace Win32xx
 	LRESULT CWnd::OnNotifyReflect(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		// Override this function to process the WM_NOTIFY notifications reflected back
-		// originating CWnd object
+		// to the originating CWnd object
 
 		return 0L;
 	}
@@ -937,7 +992,27 @@ namespace Win32xx
 				}
 			}
 			break;
-		}
+		
+		// A set of messages to be reflected back to the control that generated them
+		case WM_CTLCOLORBTN:
+		case WM_CTLCOLOREDIT:
+		case WM_CTLCOLORDLG:
+		case WM_CTLCOLORLISTBOX:
+		case WM_CTLCOLORSCROLLBAR:
+		case WM_CTLCOLORSTATIC:							
+		case WM_DRAWITEM:
+		case WM_MEASUREITEM:
+		case WM_DELETEITEM:
+		case WM_COMPAREITEM:
+		case WM_CHARTOITEM:
+		case WM_VKEYTOITEM:
+		case WM_HSCROLL:
+		case WM_VSCROLL:
+		case WM_PARENTNOTIFY:
+			OnMessageReflect(uMsg, wParam, lParam);
+			break;
+		
+		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure
 		if (m_PrevWindowProc)

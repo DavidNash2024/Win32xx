@@ -154,6 +154,7 @@ namespace Win32xx
 		virtual CWnd* GetCWndObject(HWND hWnd);
 		virtual HWND GetHwnd() {return m_hWnd;}
 		virtual LPCTSTR LoadString(int nID);
+		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
@@ -183,6 +184,7 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
+		LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
 
 		HICON m_hIconLarge;			// handle to the window's large icon
