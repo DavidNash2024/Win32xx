@@ -163,7 +163,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			OnMessage(hwnd, uMsg, wParam, lParam);
+			return (BOOL)OnMessage(hwnd, uMsg, wParam, lParam);
 			break;
 	    } // switch(uMsg)
 	    return FALSE;
