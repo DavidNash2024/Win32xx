@@ -35,6 +35,7 @@ BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//Additional messages to be handled go here
 //	}
 
+
 	//Use the dialogframe default message handling for remaining messages
 	return CDialog::DialogProc(hwnd, uMsg, wParam, lParam);
 }

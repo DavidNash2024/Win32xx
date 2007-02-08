@@ -16,17 +16,17 @@ public:
 	void OnLButtonUp(LPARAM lParam);
 
 protected:
-	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void DrawUrl(HDC hDC);
 	virtual void OpenUrl();
+	virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-
 	BOOL	m_bUrlVisited;
-	COLORREF m_crVisited, m_crNotVisited;
-	HFONT	m_hUrlFont;		// underlined font
-	BOOL	m_bClicked;		// true when the url link is clicked
-	HCURSOR m_hCursor;		// Show special cursor when using the URL
+	BOOL	m_bClicked;		
+	COLORREF m_crVisited;
+	COLORREF m_crNotVisited;
+	HCURSOR m_hCursor;	
+	HFONT	m_hUrlFont;		
 };
 
 #endif // HYPERLINK_H
