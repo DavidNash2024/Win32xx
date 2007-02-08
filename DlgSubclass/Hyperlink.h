@@ -6,6 +6,10 @@
 
 #include "..\Win32++\WinCore.h"
 
+#ifndef IDC_HAND
+#define IDC_HAND  MAKEINTRESOURCE(32649)
+#endif
+
 class CHyperlink :	public CWnd
 {
 public:

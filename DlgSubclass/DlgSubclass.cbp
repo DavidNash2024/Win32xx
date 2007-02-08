@@ -10,7 +10,7 @@
 		<Option compiler="1"/>
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="borland\debug\DlsSubclass.exe"/>
+				<Option output="borland\debug\frame.exe"/>
 				<Option working_dir="Borland\Debug"/>
 				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\Win32++\DlgSubclass\Borland\Debug"/>
 				<Option deps_output=".deps"/>
@@ -31,7 +31,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\DlgSubclass.exe"/>
+				<Option output="Borland\Release\frame.exe"/>
 				<Option working_dir="Borland\Release"/>
 				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\Win32++\DlgSubclass\Borland\Release"/>
 				<Option deps_output=".deps"/>
@@ -51,7 +51,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\DlgSubclass.exe"/>
+				<Option output="Microsoft\Debug\frame.exe"/>
 				<Option working_dir="Microsoft\Debug"/>
 				<Option object_output="Microsoft\Debug"/>
 				<Option deps_output=".deps"/>
@@ -83,7 +83,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\DlgSubclass.exe"/>
+				<Option output="Microsoft\Release\frame.exe"/>
 				<Option working_dir="Microsoft\Release"/>
 				<Option object_output="Microsoft\Release"/>
 				<Option deps_output=".deps"/>
@@ -113,7 +113,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\DlgSubclass.exe"/>
+				<Option output="GNU\Debug\frame.exe"/>
 				<Option working_dir="GNU\Debug"/>
 				<Option object_output="GNU\Debug"/>
 				<Option deps_output=".deps"/>
@@ -126,14 +126,13 @@
 					<Add option="-D__DEBUG__"/>
 					<Add option="-D_DEBUG"/>
 					<Add option="-D_WIN32_IE=0x0400"/>
-					<Add option="-DSTRICT"/>
 				</Compiler>
 				<Linker>
 					<Add library="C:\Dev-Cpp\lib\libcomctl32.a"/>
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\DlgSubclass.exe"/>
+				<Option output="GNU\Release\frame.exe"/>
 				<Option working_dir="GNU\Release"/>
 				<Option object_output="GNU\Release"/>
 				<Option deps_output=".deps"/>
@@ -142,7 +141,6 @@
 				<Option projectResourceIncludeDirsRelation="0"/>
 				<Compiler>
 					<Add option="-D_WIN32_IE=0x0400"/>
-					<Add option="-DSTRICT"/>
 				</Compiler>
 				<Linker>
 					<Add library="C:\Dev-Cpp\lib\libcomctl32.a"/>

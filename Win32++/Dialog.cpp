@@ -153,7 +153,7 @@ namespace Win32xx
 		case WM_CTLCOLORDLG:
 		case WM_CTLCOLORLISTBOX:
 		case WM_CTLCOLORSCROLLBAR:
-		case WM_CTLCOLORSTATIC:							
+		case WM_CTLCOLORSTATIC:
 		case WM_DRAWITEM:
 		case WM_MEASUREITEM:
 		case WM_DELETEITEM:
@@ -164,7 +164,6 @@ namespace Win32xx
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
 			return (BOOL)OnMessage(hwnd, uMsg, wParam, lParam);
-			break;
 	    } // switch(uMsg)
 	    return FALSE;
 
