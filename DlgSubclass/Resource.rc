@@ -62,7 +62,7 @@ BEGIN
     LTEXT           "Actions are displayed here",IDC_STATIC3,229,91,71,35
     PUSHBUTTON      "Subclassed Button",IDC_BUTTON2,220,15,81,45
     LTEXT           "http://users.bigpond.net.au/programming/",
-                    IDC_STATIC_ITEM,25,160,149,11
+                    IDC_STATIC4,25,160,149,11
 END
 
 

@@ -633,7 +633,8 @@ namespace Win32xx
 
 	LRESULT CWnd::OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// A private function used to call OnMessageReflect.
+		// A function used to call OnMessageReflect. You shouldn't need to call or
+		//  override this function.
 
 		HWND hwnd = NULL;
 		switch (uMsg)
@@ -678,7 +679,7 @@ namespace Win32xx
 
 	LRESULT CWnd::OnMessageReflect(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
-		// This function to processes those special messages (see above) sent 
+		// This function processes those special messages (see above) sent 
 		// by some older controls, and reflects them back to the originating CWnd object.
 
 		// Override this function in your derrived class to handle these special messages.
@@ -692,6 +693,7 @@ namespace Win32xx
 		//  from WM_NOTIFY back to the child that generated it.
 
 		// Override this function to handle notifications in the parent CWnd class.
+		// When overriding, also call this base class function to provide for notification reflection.
 
 		HWND hwnd = ((LPNMHDR)lParam)->hwndFrom;
 		CWnd* Wnd = GetCWndObject(hwnd);
@@ -1009,7 +1011,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			OnMessageReflect(uMsg, wParam, lParam);
+			OnMessage(hwnd, uMsg, wParam, lParam);
 			break;
 		
 		} // switch (uMsg)

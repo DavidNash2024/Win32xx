@@ -117,7 +117,7 @@ LRESULT CHyperlink::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		EndPaint(hwnd, &ps);
 		return 0L;
-	}
+	} 
 	case WM_LBUTTONDOWN:
 		OnLButtonDown();
 		break;
@@ -136,9 +136,5 @@ LRESULT CHyperlink::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Now hand all messages to the original Window procedure
 	return CWnd::WndProc( hwnd, uMsg, wParam, lParam );
 }
-
-
-
-
 
 

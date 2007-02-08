@@ -146,6 +146,25 @@ namespace Win32xx
 	        break;
 		case WM_NOTIFY:
 			return (OnNotify(wParam, lParam) == TRUE);
+
+		// A set of messages to be reflected back to the control that generated them
+		case WM_CTLCOLORBTN:
+		case WM_CTLCOLOREDIT:
+		case WM_CTLCOLORDLG:
+		case WM_CTLCOLORLISTBOX:
+		case WM_CTLCOLORSCROLLBAR:
+		case WM_CTLCOLORSTATIC:							
+		case WM_DRAWITEM:
+		case WM_MEASUREITEM:
+		case WM_DELETEITEM:
+		case WM_COMPAREITEM:
+		case WM_CHARTOITEM:
+		case WM_VKEYTOITEM:
+		case WM_HSCROLL:
+		case WM_VSCROLL:
+		case WM_PARENTNOTIFY:
+			OnMessage(hwnd, uMsg, wParam, lParam);
+			break;
 	    } // switch(uMsg)
 	    return FALSE;
 

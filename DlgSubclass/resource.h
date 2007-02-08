@@ -24,7 +24,7 @@
 #define IDC_STATIC1                     130
 #define IDC_STATIC2                     131
 #define IDC_STATIC3                     132
-#define IDC_STATIC_ITEM					133
+#define IDC_STATIC4  					133
 #define IDC_HOTKEY1                     140
 #define IDB_BITMAP1                     150
 

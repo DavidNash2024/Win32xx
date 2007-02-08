@@ -88,7 +88,7 @@ BOOL CMyDialog::OnInitDialog()
 	m_Button.AttachDlgItem(IDC_BUTTON2, this);
 
 	// Turn our static control into a hyperlink
-	m_Hyperlink.AttachDlgItem(IDC_STATIC_ITEM, this);
+	m_Hyperlink.AttachDlgItem(IDC_STATIC4, this);
 
 	return true;
 }
