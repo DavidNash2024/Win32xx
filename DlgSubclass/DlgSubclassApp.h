@@ -13,7 +13,7 @@ class CDlgSubclassApp : public CWinApp
 public:
 	CDlgSubclassApp(HINSTANCE hInstance);
 	virtual ~CDlgSubclassApp();
-	CMyDialog& GetDialog(){return m_MyDialog;}
+	CMyDialog& GetDialog() {return m_MyDialog;}
 
 private:
 	CMyDialog m_MyDialog;

@@ -75,12 +75,13 @@ void CHyperlink::OpenUrl()
 
 LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	// Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
 	if (uMsg ==  WM_CTLCOLORSTATIC)
 	{ 
 		HDC hDC = (HDC)wParam; 
 	
 		::SetTextColor(hDC, m_bUrlVisited? m_crVisited : m_crNotVisited);
-		::SetBkColor(hDC, GetSysColor(COLOR_BTNFACE));
+		::SetBkMode(hDC, TRANSPARENT);
 		::SelectObject(hDC, m_hUrlFont);
 		return (LRESULT)::GetSysColorBrush(COLOR_BTNFACE);
 	}

@@ -37,7 +37,7 @@ IDD_DIALOG1 DIALOGEX 0, 0, 310, 178
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Dialog with Hyperlink and Subclassed Button"
+CAPTION "DlgSubclass sample  with Hyperlink and Subclassed Button"
 FONT 8, "MS Shell Dlg", 0, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,241,153,50,16

@@ -8,12 +8,17 @@ New Features:
   to toolbar buttons, and the style can be set.
 * Improvements to CStatusbar.  
 * Notifications from common controls are reflected back to the CWnd object that
-  generated them.
+  generated them. 
+* Messages from old style common controls are reflected back to the CWnd object
+  that generated them.
   
 Major Changes:
 * Major updates to the CToolbar and CStatubar classes.
-* Notification Reflection.  WM_NOTIFY messages from child windows now call 
+* Notification reflection.  WM_NOTIFY messages from child windows now call 
   OnNotifyReflect in the CWnd that generated them.
+* Message reflection. Some controls send notifications to the parent window
+  via specific messages such as WM_CTLCOLORSTATIC. These messages are reflected
+  back to the CWnd object that generated them via OnMessageReflect.
 * Existing windows (including dialog items) can now be attached to a CWnd.
   The window is automatically subclassed when attached to a CWnd.
 * Integrated subclassing and superclassing into the framework. Superclassing and
@@ -43,6 +48,8 @@ Added CWnd::Attach
 Added CWnd::AttachDlgItem
 Added CWnd::CallPrevWindow
 Added CWnd::Detach
+Added CWnd::OnMessageReflect
+Added CWnd::OnNotifyReflect
 Added CWnd::Subclass
 Added CRebar::ResizeBand
 Added CStatusbar::CreatePanes

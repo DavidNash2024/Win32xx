@@ -965,6 +965,7 @@ namespace Win32xx
 	// When you override this in your derived class to handle other messages,
 	//  you will probably want to call this base class as well.
 	{
+		LRESULT lr;
     	switch (uMsg)
 		{
 		case WM_COMMAND:
@@ -979,21 +980,19 @@ namespace Win32xx
 	//		::PostQuitMessage(0);
 	//		return 0L;
 		case WM_NOTIFY:
-			if (m_PrevWindowProc) break;
 			return OnNotify(wParam, lParam);
 		case WM_PAINT:
 			{
-				// Just do default painting if subclassed
-				if (!m_PrevWindowProc)
-				{
-					::PAINTSTRUCT ps;
-					HDC hDC = ::BeginPaint(hwnd, &ps);
-					OnPaint(hDC);
-					::EndPaint(hwnd, &ps);
-					return 0L;
-				}
+				// Do default processing first if subclassed 
+				if (m_PrevWindowProc)
+					CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
+				
+				::PAINTSTRUCT ps;
+				HDC hDC = ::BeginPaint(hwnd, &ps);		
+				OnPaint(hDC);
+				::EndPaint(hwnd, &ps);
 			}
-			break;
+			return 0L;
 		
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -1011,8 +1010,10 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			OnMessage(hwnd, uMsg, wParam, lParam);
-			break;
+			lr = OnMessage(hwnd, uMsg, wParam, lParam);
+			if (lr) 
+				return lr;	// Message processed so return
+			break;			// Do default processing when message not already processed
 		
 		} // switch (uMsg)
 
