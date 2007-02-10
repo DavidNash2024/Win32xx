@@ -1,5 +1,5 @@
 // Win32++  Version 5.1 Beta
-// Modified: 6th February, 2007 by:
+// Modified: 11th February, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -668,18 +668,18 @@ namespace Win32xx
 				break;
 			}
 		}
-		
+
 		CWnd* Wnd = GetCWndObject(hwnd);
 
 		if (Wnd != NULL)
 			return Wnd->OnMessageReflect(uMsg, wParam, lParam);
-		
+
 		return 0L;
 	}
 
 	LRESULT CWnd::OnMessageReflect(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
-		// This function processes those special messages (see above) sent 
+		// This function processes those special messages (see above) sent
 		// by some older controls, and reflects them back to the originating CWnd object.
 
 		// Override this function in your derrived class to handle these special messages.
@@ -983,24 +983,24 @@ namespace Win32xx
 			return OnNotify(wParam, lParam);
 		case WM_PAINT:
 			{
-				// Do default processing first if subclassed 
+				// Do default processing first if subclassed
 				if (m_PrevWindowProc)
 					CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
-				
+
 				::PAINTSTRUCT ps;
-				HDC hDC = ::BeginPaint(hwnd, &ps);		
+				HDC hDC = ::BeginPaint(hwnd, &ps);
 				OnPaint(hDC);
 				::EndPaint(hwnd, &ps);
 			}
 			return 0L;
-		
+
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
 		case WM_CTLCOLOREDIT:
 		case WM_CTLCOLORDLG:
 		case WM_CTLCOLORLISTBOX:
 		case WM_CTLCOLORSCROLLBAR:
-		case WM_CTLCOLORSTATIC:							
+		case WM_CTLCOLORSTATIC:
 		case WM_DRAWITEM:
 		case WM_MEASUREITEM:
 		case WM_DELETEITEM:
@@ -1011,10 +1011,10 @@ namespace Win32xx
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
 			lr = OnMessage(hwnd, uMsg, wParam, lParam);
-			if (lr) 
+			if (lr)
 				return lr;	// Message processed so return
 			break;			// Do default processing when message not already processed
-		
+
 		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure
