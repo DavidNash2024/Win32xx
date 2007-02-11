@@ -1,8 +1,8 @@
 Version 5.1
 -----------
 New Features:
-* Dialog items can be sublcassed and converted to CWnd objects, using AttachDlgItem
 * Existing windows can be subclassed and converted to CWnd objects using Attach.
+* Dialog items can be sublcassed and converted to CWnd objects, using AttachDlgItem.
 * Improvements to CToolbar. The toolbar uses image lists which support using 
   separate bitmaps for normal, hot and disabled buttons. Text can be added
   to toolbar buttons, and the style can be set.
@@ -43,7 +43,6 @@ Major Changes:
   to define this macro as a compiler option eg:  -D _WIN32_IE=0x0400  (or higher).
 
 The following changes have been made to the Win32++ code:
-Added CWnd::OnNotifyReflect
 Added CWnd::Attach
 Added CWnd::AttachDlgItem
 Added CWnd::CallPrevWindow
