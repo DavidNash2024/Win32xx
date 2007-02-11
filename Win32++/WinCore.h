@@ -45,9 +45,10 @@
 #ifndef WINCORE_H
 #define WINCORE_H
 
-// Correct for bug in Visual Studio 6
 #if defined (_MSC_VER) && _MSC_VER <= 1200
+// Correct for bug in Visual Studio 6
 #pragma warning (disable : 4786)
+#define DWORD_PTR DWORD
 #endif // (_MSC_VER) && _MSC_VER <= 1200
 
 #ifdef _MSC_VER
@@ -59,6 +60,7 @@
 #include <commctrl.h>
 #include <map>
 #include <vector>
+
 
 namespace Win32xx
 {
