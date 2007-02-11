@@ -980,7 +980,9 @@ namespace Win32xx
 	//		::PostQuitMessage(0);
 	//		return 0L;
 		case WM_NOTIFY:
-			return OnNotify(wParam, lParam);
+			lr = OnNotify(wParam, lParam);
+			if (lr) return lr;
+			break;
 		case WM_PAINT:
 			{
 				// Do default processing first if subclassed
@@ -1011,9 +1013,8 @@ namespace Win32xx
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
 			lr = OnMessage(hwnd, uMsg, wParam, lParam);
-			if (lr)
-				return lr;	// Message processed so return
-			break;			// Do default processing when message not already processed
+			if (lr) return lr;	// Message processed so return
+			break;				// Do default processing when message not already processed
 
 		} // switch (uMsg)
 
