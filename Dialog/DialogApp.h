@@ -13,9 +13,10 @@ class CDialogApp : public CWinApp
 public:
 	CDialogApp(HINSTANCE hInstance); 
 	virtual ~CDialogApp();
+	CMyDialog& GetDialog() {return m_MyDialog;}
 
 private:
-	CMyDialog MyDialog;
+	CMyDialog m_MyDialog;
 };
 
 

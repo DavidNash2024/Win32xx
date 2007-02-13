@@ -6,13 +6,13 @@
 
 
 // Definitions for the CDialogApp class
-CDialogApp::CDialogApp(HINSTANCE hInstance) : CWinApp(hInstance), MyDialog(IDD_DIALOG1)
+CDialogApp::CDialogApp(HINSTANCE hInstance) : CWinApp(hInstance), m_MyDialog(IDD_DIALOG1)
 {
     //Start Trace
     TRACE("Start Tracing");
 
 	//Display the Modal Dialog
-	MyDialog.DoModal();
+	m_MyDialog.DoModal();
 
 	//End the program
 	::PostQuitMessage(0);

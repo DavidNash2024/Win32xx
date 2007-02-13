@@ -1,5 +1,5 @@
-// Win32++  Version 5.1 Beta
-// Modified: 11th February, 2007 by:
+// Win32++  Version 5.1
+// Released: 14th February, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
