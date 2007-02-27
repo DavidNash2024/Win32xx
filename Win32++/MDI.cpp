@@ -316,12 +316,6 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_KEYDOWN:
-			if((wParam == VK_CAPITAL) || (wParam == VK_NUMLOCK) ||(wParam == VK_SCROLL))
-				// Send these keys to the frame window
-				::PostMessage(m_hWndParent, WM_KEYDOWN, wParam, lParam);
-			return 0;
-
 		case WM_MDIDESTROY:
 			{
 				// Do default processing first
@@ -343,6 +337,15 @@ namespace Win32xx
 				}
 			}
 			break;
+		case WM_MDIACTIVATE:
+			{
+				// Suppress redraw to avoid flicker when activating maximised MDI children
+				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+				LRESULT lr = CallPrevWindowProc(m_hWnd, WM_MDIACTIVATE, wParam, lParam);
+				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+				::RedrawWindow(m_hWnd, 0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+				return lr;
+			}
 		}
 		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	}

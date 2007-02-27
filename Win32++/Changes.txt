@@ -45,7 +45,7 @@ Major Changes:
 The following changes have been made to the Win32++ code:
 Added CWnd::Attach
 Added CWnd::AttachDlgItem
-Added CWnd::CallPrevWindow
+Added CWnd::CallPrevWindowProc
 Added CWnd::Detach
 Added CWnd::OnMessageReflect
 Added CWnd::OnNotifyReflect

@@ -83,7 +83,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp(HINSTANCE hInstance) : m_hFont(NULL), m_hInstance(hInstance), m_hRichEdit(NULL),
+	CWinApp::CWinApp(HINSTANCE hInstance) : m_hFont(NULL), m_hInstance(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL),
 											m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
 	{
 		try
@@ -106,6 +106,11 @@ namespace Win32xx
 			}
 
 			m_hAccelTable = ::LoadAccelerators(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+			m_pTrace = new CWnd;
+
+	#ifdef _DEBUG
+			CreateTrace();
+	#endif
 		}
 
 		catch (const CWinException &e)
@@ -116,6 +121,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWinApp::CWinApp"));
+			throw;	// Rethrow unknown exception
 		}
 	}
 
@@ -151,6 +157,41 @@ namespace Win32xx
 		{
 			delete *(iter);
 		}
+	}
+
+	void CWinApp::CreateTrace()
+	// Called automatically in CWinApp's constructor if _Debug is defined.
+	// You may called this function in release mode if you want to see the trace window.
+	{
+		if (m_pTrace->GetHwnd() != 0)
+		{
+			DebugErrMsg(TEXT("Error, CreateTrace should only be called once"));			
+			return;
+		}
+
+		m_hRichEdit = ::LoadLibrary(TEXT("RICHED32.DLL"));
+		if (!m_hRichEdit)
+			DebugErrMsg(TEXT("Failed to load the RichEdit dll"));
+
+		// Position window at the botton right of the desktop area
+		RECT r = {0};
+		::SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
+		r.top = r.bottom - TRACE_HEIGHT;
+		r.left = r.right - TRACE_WIDTH;
+		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_VISIBLE;
+
+		m_pTrace->CreateEx(WS_EX_TOPMOST, TEXT("TRACE"), TEXT("Trace Window"), dwStyle, r, NULL, NULL);
+
+		::GetClientRect(m_pTrace->GetHwnd(), &r);
+		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
+
+		m_hTraceEdit = ::CreateWindowEx(0L, TEXT("RichEdit"), TEXT(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
+					m_pTrace->GetHwnd(), NULL, GetApp()->GetInstanceHandle(), NULL);
+
+		// Set a default font
+		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, TEXT("Courier New"));
+		::SendMessage(m_hTraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
 	}
 
 	int CWinApp::MessageLoop()
@@ -207,72 +248,31 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd construction"));
+			throw;	// Rethrow unknown exception
 		}
 		return 0;
 	}
 
-	void CWinApp::Trace(LPCTSTR szstring)
+	void CWinApp::Trace(LPCTSTR szString)
+	// Used by the TRACE macro to output text to the trace window
+	// Note: The TRACE macro is only active in debug mode (i.e when _DEBUG is defined)
+	// Call this function directly instead of TRACE to see trace output in release mode.
 	{
-		// Used by the TRACE macro to output text to the trace window
-		// Note: The TRACE macro is only active in debug mode (i.e when _DEBUG is defined)
+		// CreateTrace must be called once before using this function
+		if (m_hTraceEdit == 0) return;
 
-		m_TraceLock.Lock();
-
-		static HWND TraceEdit;
-
-		//Create the Trace CWnd object and window
-		if (m_pTrace == NULL)
-		{
-			// Get Current keyboard focus
-			HWND hPrevFocus = ::GetFocus();
-			if (m_pFrame)
-				if (hPrevFocus == m_pFrame->GetMenubar().GetHwnd())
-					hPrevFocus = m_pFrame->GetHwnd();
-
-			m_hRichEdit = ::LoadLibrary(TEXT("RICHED32.DLL"));
-			if (!m_hRichEdit)
-				DebugErrMsg(TEXT("Failed to load the RichEdit dll"));
-
-			m_pTrace = new CWnd;
-
-			// Position window at the botton right of the desktop area
-			RECT r = {0};
-			::SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
-			r.top = r.bottom - TRACE_HEIGHT;
-			r.left = r.right - TRACE_WIDTH;
-			DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_VISIBLE;
-
-			m_pTrace->CreateEx(WS_EX_TOPMOST, TEXT("TRACE"), TEXT("Trace Window"), dwStyle, r, NULL, NULL);
-
-			::GetClientRect(m_pTrace->GetHwnd(), &r);
-			dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
-
-			TraceEdit = ::CreateWindowEx(0L, TEXT(/*"Edit"*/"RichEdit"), TEXT(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-						m_pTrace->GetHwnd(), NULL, GetApp()->GetInstanceHandle(), NULL);
-
-			// Set a default font
-			m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-				CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, TEXT("Courier New"));
-			::SendMessage(TraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
-
-			// Return previous keyboard focus
-			::SetFocus(hPrevFocus);
-		}
+		HWND PreFocus = ::GetFocus();
 
 		// Add CR LF to the end
-		int nLength = ::GetWindowTextLength(TraceEdit);
-		::SendMessage(TraceEdit, EM_SETSEL, (WPARAM)nLength, (LPARAM)nLength);
-		::SendMessage(TraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)TEXT("\r\n\0"));
+		TCHAR str[80];
+		lstrcpyn(str, szString, 77);
+		lstrcat(str, TEXT("\r\n"));
 
-		// Append text to the end of the (rich)edit control
-		nLength = ::GetWindowTextLength(TraceEdit);
-		::SendMessage(TraceEdit, EM_SETSEL, (WPARAM)nLength, (LPARAM)nLength);
-		::SendMessage(TraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)szstring);
+	//	::SendMessage(m_hTraceEdit, EM_SETSEL, (WPARAM)nLength, (LPARAM)nLength);
+		::SendMessage(m_hTraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)str);
+		::SendMessage(m_hTraceEdit, EM_SCROLLCARET, (WPARAM)0, (LPARAM)0);
 
-		// Scroll to bottom
-		::SendMessage(TraceEdit, EM_SCROLLCARET, (WPARAM)0, (LPARAM)0);
-
-		m_TraceLock.Release();
+		SetFocus(PreFocus);
 	}
 
 
@@ -307,6 +307,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd construction"));
+			throw;	// Rethrow unknown exception
 		}
 	}
 
@@ -372,6 +373,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd::Attach"));
+			throw;	// Rethrow unknown exception
 		}
 
 		return FALSE;
@@ -434,6 +436,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd::Create"));
+			throw;	// Rethrow unknown exception
 		}
 		return m_hWnd;
 	}
@@ -497,6 +500,7 @@ namespace Win32xx
 		{
 			m_hWndParent = NULL;
 			DebugErrMsg(TEXT("Exception in CWnd::CreateEx"));
+			throw;	// Rethrow unknown exception
 		}
 
 		return m_hWnd;
@@ -522,24 +526,60 @@ namespace Win32xx
 
 	HWND CWnd::Detach()
 	{
-		HWND hWnd = m_hWnd;
-		m_hWnd = NULL;
-		m_hWndParent = NULL;
-		m_PrevWindowProc = NULL;
-
-		// Remove the map entry
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-		m = GetApp()->GetHWNDMap().begin();
-		while (m != GetApp()->GetHWNDMap().end())
+		try
 		{
-			if (m->second == this)
-				GetApp()->GetHWNDMap().erase(m++);
+			//Only a subclassed window can be detached
+			if (m_PrevWindowProc == 0)
+				throw CWinException(TEXT("Unable to detach this window"));
+
+			// Remove the subclassing
+		#if defined (_MSC_VER) && _MSC_VER <= 1200
+			// use non 64 bit compliant code for Visual C++ 6 and below
+			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
+		#else
+			// use 64 bit compliant code otherwise
+			#if defined(_MSC_VER)
+			#pragma warning(push)
+			#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
+			#endif //defined(_MSC_VER)
+			m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
+			#if defined(_MSC_VER)
+			#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
+			#endif //defined(_MSC_VER)
+		#endif // defined (_MSC_VER) && _MSC_VER <= 1200
+
+			// Remove the map entry
+			std::map<HWND, CWnd*, CompareHWND>::iterator m;
+			GetApp()->m_MapLock.Lock();
+			m = GetApp()->GetHWNDMap().find(m_hWnd);
+			if (m != GetApp()->GetHWNDMap().end())
+				GetApp()->GetHWNDMap().erase(m);
 			else
-				m++;
+			{
+				GetApp()->m_MapLock.Release();
+				throw CWinException(TEXT("Unable to find window to detach"));
+			}
+			GetApp()->m_MapLock.Release();
+
+			// Clear member variables
+			HWND hWnd = m_hWnd;
+			m_hWnd = NULL;
+			m_hWndParent = NULL;
+			m_PrevWindowProc = NULL;
+			return hWnd;
 		}
 
-		return hWnd;
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CWnd::Detach"));
+			throw;	// Rethrow unknown exception
+		}
+		return 0;
 	}
 
 	HWND CWnd::GetAncestor(HWND hwnd)
@@ -596,6 +636,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd::LoadString"));
+			throw;	// Rethrow unknown exception
 		}
 
 		return (LPCTSTR) m_szString;
@@ -775,6 +816,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd::RegisterClassEx"));
+			throw;	// Rethrow unknown exception
 		}
 
 		return FALSE;
@@ -841,6 +883,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd::SetParent"));
+			throw;	// Rethrow unknown exception
 		}
 	}
 
@@ -886,6 +929,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd::StaticCBTProc"));
+			throw;	// Rethrow unknown exception
 		}
 
 		return 0L;
@@ -895,7 +939,7 @@ namespace Win32xx
 	{
 		try
 		{
-			{
+			
 			// Allocate an iterator for our HWND map
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
@@ -904,8 +948,7 @@ namespace Win32xx
 			GetApp()->m_MapLock.Release();
 			if (m != GetApp()->GetHWNDMap().end())
 				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
-
-			}
+			
 			throw CWinException(TEXT("CWnd::StaticWindowProc .. Failed to route message"));
 		}
 
@@ -917,6 +960,7 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(TEXT("Exception in CWnd::StaticWindowProc"));
+			throw;	// Rethrow unknown exception
 		}
 
 		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);;
@@ -924,6 +968,9 @@ namespace Win32xx
 	} // LRESULT CALLBACK StaticWindowProc(...)
 
 	void CWnd::Subclass()
+	// Subclassing occurs after window creation, hence the WM_CREATE is not
+	//  handled in a subclassed procedure, and OnCreate is never called.
+	// Subclassing allows common controls to pass messages via CWnd::WndProc.
 	{
 		// Subclass the window to pass messages to WndProc
 	#if defined (_MSC_VER) && _MSC_VER <= 1200
@@ -943,9 +990,9 @@ namespace Win32xx
 	}
 
 	void CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
-	// Superclassing occurs before window creation. It allows
-	// common controls to pass messages via CWnd::WndProc.
-	// Superclassing also allows additional messages to be processed
+	// Superclassing occurs before window creation, hence the window creation messages
+	//  are handled in the superclassed procedure, and OnCreate gets called.
+	// Superclassing allows common controls to pass messages via CWnd::WndProc.
 	{
 		// Step 1:  Extract the old class's window procedure
 		WNDCLASSEX wcx = {0};

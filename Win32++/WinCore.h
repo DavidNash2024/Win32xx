@@ -79,6 +79,7 @@ namespace Win32xx
 	void DebugWarnMsg(LPCTSTR WarnMsg);
 	CWinApp* GetApp();  // Returns a pointer to the CWinApp object
 
+
 	#ifdef _DEBUG
 		// Define global static TRACE macro for Debug mode only
 		#define TRACE(str) (GetApp()->Trace(str))
@@ -208,6 +209,7 @@ namespace Win32xx
 	public:
 		CWinApp(HINSTANCE hInstance);
 		virtual ~CWinApp();
+		virtual void CreateTrace();
 		virtual CFrame* GetFrame() {return m_pFrame;}
 		virtual HINSTANCE  GetInstanceHandle() {return m_hInstance;}
 		static CWinApp* GetApp() {return st_pTheApp;}
@@ -215,7 +217,7 @@ namespace Win32xx
 		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();
 		virtual void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
-		virtual void Trace(LPCTSTR szstring);
+		virtual void Trace(LPCTSTR szString);
 
 	private:
 		virtual TLSData* SetTlsIndex();
@@ -227,11 +229,11 @@ namespace Win32xx
 		};
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
-		CCriticalSection m_TraceLock;	// thread synchronisation for Trace
 		HACCEL m_hAccelTable;		// handle to the accelerator table
 		HFONT m_hFont;				// handle to the font in the Trace window
 		HINSTANCE m_hInstance;		// handle to the applications instance
 		HMODULE m_hRichEdit;		// handle to the module for the RichEdit dll
+		HWND m_hTraceEdit;			// handle to the Trace edit window
 		BOOL m_IsTlsAllocatedHere;	// a flag set for the Thread Local Storage
 		CFrame* m_pFrame;			// pointer to the CFrame object
 		CWnd* m_pTrace;				// pointer the Trace CWnd object

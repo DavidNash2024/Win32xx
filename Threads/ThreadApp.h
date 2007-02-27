@@ -3,7 +3,7 @@
 //  Declaration of the CThreadApp class
 
 
-#define MAX_THREADS 60
+#define MAX_THREADS 100
 
 #ifndef THREADAPP_H
 #define THREADAPP_H
@@ -17,9 +17,10 @@ class CThreadApp : public CWinApp
 public:
 	CThreadApp(HINSTANCE hInstance);
 	virtual ~CThreadApp();
+	CMainWnd& GetMainWnd() {return m_MainWnd;}
 
 private:
-	CWnd m_MainWin;
+	CMainWnd m_MainWnd;	
 };
 
 
