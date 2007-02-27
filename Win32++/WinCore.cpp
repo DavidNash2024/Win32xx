@@ -1,5 +1,5 @@
-// Win32++  Version 5.1
-// Released: 14th February, 2007 by:
+// Win32++  Version 5.11 beta
+// Released: 27th February, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -165,7 +165,7 @@ namespace Win32xx
 	{
 		if (m_pTrace->GetHwnd() != 0)
 		{
-			DebugErrMsg(TEXT("Error, CreateTrace should only be called once"));			
+			DebugErrMsg(TEXT("Error, CreateTrace should only be called once"));
 			return;
 		}
 
@@ -939,7 +939,7 @@ namespace Win32xx
 	{
 		try
 		{
-			
+
 			// Allocate an iterator for our HWND map
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
@@ -948,7 +948,7 @@ namespace Win32xx
 			GetApp()->m_MapLock.Release();
 			if (m != GetApp()->GetHWNDMap().end())
 				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
-			
+
 			throw CWinException(TEXT("CWnd::StaticWindowProc .. Failed to route message"));
 		}
 

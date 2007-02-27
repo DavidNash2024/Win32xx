@@ -1,3 +1,10 @@
+Version 5.11
+------------
+Bug Fixes
+* Fixed CWnd::Detach
+* Eliminated possible deadlock in CWinApp::Trace
+* Removed flicker when switching maximised MDI child windows.
+
 Version 5.1
 -----------
 New Features:
