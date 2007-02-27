@@ -128,6 +128,7 @@ namespace Win32xx
 	CWinApp::~CWinApp()
 	{
 		delete m_pTrace;
+		
 		if (m_hRichEdit)
 			::FreeLibrary(m_hRichEdit);
 		if (m_hFont)
@@ -530,19 +531,19 @@ namespace Win32xx
 		{
 			//Only a subclassed window can be detached
 			if (m_PrevWindowProc == 0)
-				throw CWinException(TEXT("Unable to detach this window"));
+				throw CWinException(TEXT("CWnd::Detach  Unable to detach this window"));
 
 			// Remove the subclassing
 		#if defined (_MSC_VER) && _MSC_VER <= 1200
 			// use non 64 bit compliant code for Visual C++ 6 and below
-			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
+			::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
 		#else
 			// use 64 bit compliant code otherwise
 			#if defined(_MSC_VER)
 			#pragma warning(push)
 			#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
 			#endif //defined(_MSC_VER)
-			m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
+			::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 			#if defined(_MSC_VER)
 			#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
 			#endif //defined(_MSC_VER)
@@ -557,7 +558,7 @@ namespace Win32xx
 			else
 			{
 				GetApp()->m_MapLock.Release();
-				throw CWinException(TEXT("Unable to find window to detach"));
+				throw CWinException(TEXT("CWnd::Detach  Unable to find window to detach"));
 			}
 			GetApp()->m_MapLock.Release();
 
@@ -576,7 +577,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::Detach"));
+			DebugErrMsg(TEXT("Unknown exception in CWnd::Detach"));
 			throw;	// Rethrow unknown exception
 		}
 		return 0;
