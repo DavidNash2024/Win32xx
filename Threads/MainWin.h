@@ -20,6 +20,7 @@ public:
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();
 	virtual void SendText(LPCTSTR str);
+	static DWORD WINAPI ThreadCallback(LPVOID pInt);
 
 protected:
 	virtual void OnCreate();
@@ -33,6 +34,9 @@ private:
 		WM_WINDOWCREATED = WM_USER+1,
 		WM_TESTMESSAGE   = WM_USER+2
 	};
+
+	static HANDLE m_ThreadHandles[MAX_THREADS];
+	static CThreadWnd* m_ThreadCWnds[MAX_THREADS];
 
 	int   m_IntArray[MAX_THREADS];
 	DWORD m_ThreadID[MAX_THREADS];
