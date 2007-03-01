@@ -31,8 +31,7 @@ private:
 	enum Constants
 	{
 		WM_WINDOWCREATED     = WM_USER+1,
-		WM_ALLWINDOWSCREATED = WM_USER+2,
-		WM_TESTMESSAGE       = WM_USER+3
+		WM_TESTMESSAGE       = WM_USER+2
 	};
 
 	int   m_IntArray[MAX_THREADS];

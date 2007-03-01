@@ -140,10 +140,7 @@ LRESULT CMainWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_WINDOWCREATED:
 		if (++nWindowsCreated == MAX_THREADS)
-			::PostMessage(m_hWnd, WM_ALLWINDOWSCREATED, 0, 0);
-		return 0L;
-	case WM_ALLWINDOWSCREATED:
-		OnAllWindowsCreated();
+			OnAllWindowsCreated();
 		return 0L;
 	}
 

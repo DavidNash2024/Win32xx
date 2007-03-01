@@ -3,6 +3,7 @@
 //  Declaration of the CThreadApp class
 
 
+// Adjust this to change the number of threads created
 #define MAX_THREADS 100
 
 #ifndef THREADAPP_H

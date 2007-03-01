@@ -22,9 +22,9 @@ void CThreadWnd::CreateWin(int i)
 
 void CThreadWnd::OnInitialUpdate()
 {
-	// Send a message to MainWnd when the window is created
+	// Post a message to MainWnd when the window is created
 	CMainWnd& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();
-	::SendMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
+	::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
 }
 
 LRESULT CThreadWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
