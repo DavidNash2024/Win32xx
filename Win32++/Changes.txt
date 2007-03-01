@@ -2,8 +2,13 @@ Version 5.11
 ------------
 Bug Fixes
 * Fixed CWnd::Detach
-* Eliminated possible deadlock in CWinApp::Trace
+* Removed possible deadlock in CWinApp::Trace
 * Removed flicker when switching maximised MDI child windows.
+
+Changes:
+* Enhanced the Threads sample. This program now also conducts a simple 
+   performance test to measure the efficiency of the message handling 
+   for multi-threaded applications.
 
 Version 5.1
 -----------
@@ -114,7 +119,7 @@ Version 5.0
 -----------
 This version provides for MDI frames and adds a rebar control and menubar to
 frames. A CSplitter class is also included to allow a horizontal or vertical
-splitter bar to a CWnd object.
+splitter bar to divide a CWnd window.
 
 Summary of changes
 ------------------

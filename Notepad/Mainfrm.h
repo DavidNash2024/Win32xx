@@ -43,6 +43,8 @@ protected:
 	virtual void SetWindowTitle();
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void WriteFile(LPCTSTR szFileName);
+	static DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
+	static DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 
 private:
 	CRichView m_RichView;

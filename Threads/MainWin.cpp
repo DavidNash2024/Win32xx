@@ -7,20 +7,20 @@
 #include "MainWin.h"
 
 
-// Declaration of static member variables
-HANDLE CMainWnd::m_ThreadHandles[MAX_THREADS];
-CThreadWnd* CMainWnd::m_ThreadCWnds[MAX_THREADS];
+extern HANDLE g_ThreadHandles[MAX_THREADS];
+extern CThreadWnd* g_ThreadCWnds[MAX_THREADS];
 
+//HWND CMainWnd::m_hEdit = 0;
 
-DWORD WINAPI CMainWnd::ThreadCallback(LPVOID pInt)
+DWORD WINAPI ThreadCallback(LPVOID pInt)
 {
 	int i = *((int*)pInt);
 	TCHAR str[80];
-	::wsprintf(str, TEXT("Thread #%d started"), i + 1);
+	wsprintf(str, TEXT("Thread #%d started"), i + 1);
 	TRACE(str);
 
-	m_ThreadCWnds[i] = new CThreadWnd;
-	m_ThreadCWnds[i]->CreateWin(i);
+	g_ThreadCWnds[i] = new CThreadWnd;
+	g_ThreadCWnds[i]->CreateWin(i);
 
 	//Each thread with a window has its own message loop
 	return GetApp()->MessageLoop();
@@ -28,23 +28,16 @@ DWORD WINAPI CMainWnd::ThreadCallback(LPVOID pInt)
 
 CMainWnd::CMainWnd() 
 {
-	ZeroMemory(m_ThreadHandles, MAX_THREADS*sizeof(HANDLE));
-	ZeroMemory(m_ThreadCWnds, MAX_THREADS*sizeof(CThreadWnd*));
 }
 
 CMainWnd::~CMainWnd()
 {
-	for (int i = 0 ; i < MAX_THREADS ; i++)
-	{
-		delete m_ThreadCWnds[i];
-		::CloseHandle(m_ThreadHandles[i]);
-	}
 }
 
 void CMainWnd::Create()
 {
 	TCHAR str[80];
-	::wsprintf(str, TEXT("Main Thread Window"));
+	wsprintf(str, TEXT("Main Thread Window"));
 	CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		20 , 50, 300, 300, NULL, NULL);
 
@@ -52,7 +45,6 @@ void CMainWnd::Create()
 
 void CMainWnd::OnCreate()
 {
-	// Create an Edit window over the client area of our Main window
 	RECT r;
 	::GetClientRect(m_hWnd, &r);
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
@@ -62,11 +54,10 @@ void CMainWnd::OnCreate()
 
 void CMainWnd::OnInitialUpdate()
 {
-	// Create the threads
 	for (int i = 0 ; i < MAX_THREADS ; i++)
 	{
 		m_IntArray[i] = i;
-		m_ThreadHandles[i] = ::CreateThread(NULL, 0, ThreadCallback, (LPVOID) &m_IntArray[i], 0, &m_ThreadID[i]);
+		g_ThreadHandles[i] = CreateThread(NULL, 0, ThreadCallback, (LPVOID) &m_IntArray[i], 0, &m_ThreadID[i]);
 	}
 }
 
@@ -85,7 +76,7 @@ void CMainWnd::OnAllWindowsCreated()
 	int nRet = IDOK;
 	while(nRet == IDOK)
 	{
-		nRet = ::MessageBox(m_hWnd, TEXT("Click OK to begin"), TEXT("Performance Test"), MB_ICONINFORMATION|MB_OKCANCEL);
+		nRet = MessageBox(m_hWnd, TEXT("Click OK to begin"), TEXT("Performance Test"), MB_ICONINFORMATION|MB_OKCANCEL);
 		if (nRet == IDOK)
 			PerformanceTest();
 	}
@@ -93,10 +84,6 @@ void CMainWnd::OnAllWindowsCreated()
 
 void CMainWnd::PerformanceTest()
 {
-	// The performance test simply send 100,000 messages to a thread window.
-	// For a repeatable result, its a good idea to have taskmgr running, and kick this 
-	//  test off when the CPU utilisation is low.
-	
 	TCHAR str[80];
 	LRESULT lr = 0;	
 
@@ -105,16 +92,16 @@ void CMainWnd::PerformanceTest()
 	int nMessages = 0;
 	DWORD tStart = ::GetTickCount();
 	while(nMessages++ < 100000) 
-		lr = ::SendMessage(m_ThreadCWnds[(MAX_THREADS-1)/2]->GetHwnd(), WM_TESTMESSAGE, 0, 0);
+		lr = ::SendMessage(g_ThreadCWnds[(MAX_THREADS-1)/2]->GetHwnd(), WM_TESTMESSAGE, 0, 0);
 	
 	DWORD tEnd = ::GetTickCount();
 	DWORD mSeconds = tEnd - tStart;
 
-	::wsprintf(str, "%d  milliseconds to process 100 thousand messages", mSeconds);
+	wsprintf(str, "%d  milliseconds to process 100 thousand messages", mSeconds);
 	SendText(str);
-	::MessageBox(NULL, str, TEXT("Info"), MB_OK);
+	MessageBox(NULL, str, TEXT("Info"), MB_OK);
 
-	::wsprintf(str, "%d total messages sent ", lr);
+	wsprintf(str, "%d total messages sent ", lr);
 	TRACE(str);
 }
 
@@ -141,7 +128,7 @@ LRESULT CMainWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			//Close the thread windows
 			for (int i = 0 ; i < MAX_THREADS ; i++)
-				::SendMessage(m_ThreadCWnds[i]->GetHwnd(), WM_CLOSE, 0, 0);
+				::SendMessage(g_ThreadCWnds[i]->GetHwnd(), WM_CLOSE, 0, 0);
 		}
 		break;
 	case WM_DESTROY:
@@ -150,11 +137,13 @@ LRESULT CMainWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0L;
 	case WM_SIZE:
 		OnSize();
-		return 0L;
+		return 0;
 	case WM_WINDOWCREATED:
-		// Each Thread Window sends the WM_WINDOWCREATED message when created.
 		if (++nWindowsCreated == MAX_THREADS)
-			OnAllWindowsCreated();
+			::PostMessage(m_hWnd, WM_ALLWINDOWSCREATED, 0, 0);
+		return 0L;
+	case WM_ALLWINDOWSCREATED:
+		OnAllWindowsCreated();
 		return 0L;
 	}
 

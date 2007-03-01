@@ -15,7 +15,7 @@ void CThreadWnd::CreateWin(int i)
 	TCHAR str[80];
 
 	m_iNum = i + 1;
-	::wsprintf(str, TEXT("Thread #%d"), m_iNum);
+	wsprintf(str, TEXT("Thread #%d"), m_iNum);
 	CreateEx(0L, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 
 		320, 50 + i, 300, 200, NULL, NULL);
 }
@@ -35,7 +35,7 @@ LRESULT CThreadWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		{
 			TCHAR str[80];
-			::wsprintf(str, TEXT("Closing thread #%d"), m_iNum);
+			wsprintf(str, TEXT("Closing thread #%d"), m_iNum);
 			TRACE(str);
 		}
 		break;

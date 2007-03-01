@@ -20,8 +20,9 @@ public:
 private:
 	enum Constants
 	{
-		WM_WINDOWCREATED = WM_USER+1,
-		WM_TESTMESSAGE   = WM_USER+2
+		WM_WINDOWCREATED     = WM_USER+1,
+		WM_ALLWINDOWSCREATED = WM_USER+2,
+		WM_TESTMESSAGE       = WM_USER+3
 	};
 
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
