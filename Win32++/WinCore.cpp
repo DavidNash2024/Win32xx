@@ -50,7 +50,9 @@ namespace Win32xx
 	/////////////////////////////////
 	// Global functions and variables
 	//
+	
 	void DebugErrMsg(LPCTSTR ErrorMsg)
+	// Displays a warning message in a message box
 	{
 	#ifdef _DEBUG
 		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
@@ -60,6 +62,7 @@ namespace Win32xx
 	}
 
 	void DebugWarnMsg(LPCTSTR WarnMsg)
+	// Displays an error message in a message box
 	{
 	#ifdef _DEBUG
 		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
@@ -266,10 +269,9 @@ namespace Win32xx
 
 		// Add CR LF to the end
 		TCHAR str[80];
-		lstrcpyn(str, szString, 77);
-		lstrcat(str, TEXT("\r\n"));
+		::lstrcpyn(str, szString, 77);  
+		::lstrcat(str, TEXT("\r\n"));
 
-	//	::SendMessage(m_hTraceEdit, EM_SETSEL, (WPARAM)nLength, (LPARAM)nLength);
 		::SendMessage(m_hTraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)str);
 		::SendMessage(m_hTraceEdit, EM_SCROLLCARET, (WPARAM)0, (LPARAM)0);
 

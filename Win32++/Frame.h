@@ -255,6 +255,13 @@ namespace Win32xx
 		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
 		std::basic_string<TCHAR> m_StatusText;		// a TCHAR std::string for status text
+		enum Constants
+		{
+			ID_STATUS_TIMER = 1,
+			MENUBAR_HEIGHT  = 22,
+			TOOLBAR_HEIGHT  = 24,
+			USER_REARRANGED = WM_APP + 1	// frame window rearranged message
+		};
 
 	private:
 		CMenubar m_Menubar;			// CMenubar object
@@ -265,13 +272,7 @@ namespace Win32xx
 		BOOL m_bSupportRebars;		// TRUE if rebars are supported by the OS
 		HMENU m_hMenu;				// handle to the frame menu
 		CWnd* m_pView;				// pointer to the View CWnd object
-		enum Constants
-		{
-			ID_STATUS_TIMER = 1,
-			MENUBAR_HEIGHT  = 22,
-			TOOLBAR_HEIGHT  = 24,
-			USER_REARRANGED = WM_APP + 1	// frame window rearranged message
-		};
+
 	};  // class CFrame
 
 } //namespace Win32xx
