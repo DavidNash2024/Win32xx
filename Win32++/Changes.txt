@@ -4,6 +4,7 @@ Bug Fixes
 * Fixed CWnd::Detach
 * Removed possible deadlock in CWinApp::Trace
 * Removed flicker when switching maximised MDI child windows.
+* MDIChild windows now handle OnCreate and message reflection
 
 Changes:
 * Enhanced the Threads sample. This program now also conducts a simple 

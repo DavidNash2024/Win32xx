@@ -71,6 +71,7 @@ namespace Win32xx
 	// Forward declarations. These classes are defined later or elsewhere.
 	class CFrame;
 	class CMenubar;
+	class CMDIChild;
 	class CWinApp;
 	class CWnd;
 
@@ -118,8 +119,6 @@ namespace Win32xx
 		HHOOK  hMenuHook;	// MSG hook for CMenubar
 	};
 
-	class CWnd;
-
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
 	//
@@ -143,6 +142,7 @@ namespace Win32xx
 	//
 	class CWnd
 	{
+		friend class CMDIChild;
 	public:
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
