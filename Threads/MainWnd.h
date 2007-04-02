@@ -1,14 +1,14 @@
 //////////////////////////////////////////////////////
-// MainWin.h
+// MainWnd.h
 //  Declaration of the CThreadWnd class
 
 
-#ifndef MAINWIN_H
-#define MAINWIN_H
+#ifndef MAINWND_H
+#define MAINWND_H
 
 
 #include "ThreadApp.h"
-#include "ThreadWin.h"
+#include "ThreadWnd.h"
 
 
 class CMainWnd : public CWnd
@@ -20,6 +20,7 @@ public:
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();
 	virtual void SendText(LPCTSTR str);
+	static DWORD WINAPI ThreadCallback(LPVOID pInt);
 
 protected:
 	virtual void OnCreate();
@@ -37,7 +38,9 @@ private:
 	int   m_IntArray[MAX_THREADS];
 	DWORD m_ThreadID[MAX_THREADS];
 	HWND m_hEdit;
+	HANDLE m_ThreadHandles[MAX_THREADS];
+	static CThreadWnd* m_ThreadCWnds[MAX_THREADS];	// Array of CThreadWnd pointers
 };
 
 
-#endif  //MAINWIN_H
+#endif  //MAINWND_H

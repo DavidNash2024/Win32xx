@@ -164,7 +164,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MainWin.cpp">
+				RelativePath=".\MainWnd.cpp">
+			</File>
+			<File
+				RelativePath=".\Thread.cpp">
 			</File>
 			<File
 				RelativePath="ThreadApp.cpp">
@@ -185,20 +188,23 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\ThreadWin.cpp">
+				RelativePath=".\ThreadWnd.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\MainWin.h">
+				RelativePath=".\MainWnd.h">
+			</File>
+			<File
+				RelativePath=".\Thread.h">
 			</File>
 			<File
 				RelativePath="ThreadApp.h">
 			</File>
 			<File
-				RelativePath=".\ThreadWin.h">
+				RelativePath=".\ThreadWnd.h">
 			</File>
 		</Filter>
 		<Filter

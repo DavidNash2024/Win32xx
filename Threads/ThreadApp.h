@@ -10,7 +10,7 @@
 #define THREADAPP_H
 
 
-#include "MainWin.h"
+#include "MainWnd.h"
 
 
 class CThreadApp : public CWinApp

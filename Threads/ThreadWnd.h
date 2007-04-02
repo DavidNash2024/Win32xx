@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////
-// ThreadWin.h
+// ThreadWnd.h
 //  Declaration of the CThreadWnd class
 
 
-#ifndef THREADWIN_H
-#define THREADWIN_H
+#ifndef THREADWND_H
+#define THREADWND_H
 
 #include "..\Win32++\WinCore.h"
 

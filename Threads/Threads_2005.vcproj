@@ -235,7 +235,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MainWin.cpp"
+				RelativePath=".\MainWnd.cpp"
 				>
 			</File>
 			<File
@@ -262,7 +262,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\ThreadWin.cpp"
+				RelativePath=".\ThreadWnd.cpp"
 				>
 			</File>
 		</Filter>
@@ -271,7 +271,7 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\MainWin.h"
+				RelativePath=".\MainWnd.h"
 				>
 			</File>
 			<File
@@ -279,7 +279,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ThreadWin.h"
+				RelativePath=".\ThreadWnd.h"
 				>
 			</File>
 		</Filter>

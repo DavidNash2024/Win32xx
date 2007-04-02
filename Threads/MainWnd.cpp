@@ -1,37 +1,42 @@
 //////////////////////////////////////////////
-// MainWin.cpp
+// MainWnd.cpp
 //  Definitions for the CThreadWnd class
 
 
 #include "ThreadApp.h"
-#include "MainWin.h"
+#include "MainWnd.h"
 
 
-extern HANDLE g_ThreadHandles[MAX_THREADS];
-extern CThreadWnd* g_ThreadCWnds[MAX_THREADS];
+CThreadWnd* CMainWnd::m_ThreadCWnds[MAX_THREADS];
 
-//HWND CMainWnd::m_hEdit = 0;
 
-DWORD WINAPI ThreadCallback(LPVOID pInt)
+DWORD WINAPI CMainWnd::ThreadCallback(LPVOID pInt)
 {
 	int i = *((int*)pInt);
 	TCHAR str[80];
 	wsprintf(str, TEXT("Thread #%d started"), i + 1);
 	TRACE(str);
 
-	g_ThreadCWnds[i] = new CThreadWnd;
-	g_ThreadCWnds[i]->CreateWin(i);
+	m_ThreadCWnds[i] = new CThreadWnd;
+	m_ThreadCWnds[i]->CreateWin(i);
 
 	//Each thread with a window has its own message loop
 	return GetApp()->MessageLoop();
 }
 
-CMainWnd::CMainWnd() 
+CMainWnd::CMainWnd()
 {
+	ZeroMemory(m_ThreadHandles, MAX_THREADS*sizeof(HANDLE));
+	ZeroMemory(m_ThreadCWnds, MAX_THREADS*sizeof(CThreadWnd*));
 }
 
 CMainWnd::~CMainWnd()
 {
+	for (int i = 0 ; i < MAX_THREADS ; i++)
+	{
+		delete m_ThreadCWnds[i];
+		::CloseHandle(m_ThreadHandles[i]);
+	}
 }
 
 void CMainWnd::Create()
@@ -57,7 +62,7 @@ void CMainWnd::OnInitialUpdate()
 	for (int i = 0 ; i < MAX_THREADS ; i++)
 	{
 		m_IntArray[i] = i;
-		g_ThreadHandles[i] = CreateThread(NULL, 0, ThreadCallback, (LPVOID) &m_IntArray[i], 0, &m_ThreadID[i]);
+		m_ThreadHandles[i] = CreateThread(NULL, 0, ThreadCallback, (LPVOID) &m_IntArray[i], 0, &m_ThreadID[i]);
 	}
 }
 
@@ -85,15 +90,15 @@ void CMainWnd::OnAllWindowsCreated()
 void CMainWnd::PerformanceTest()
 {
 	TCHAR str[80];
-	LRESULT lr = 0;	
+	LRESULT lr = 0;
 
 	SendText(TEXT("Sending 100,000 Messages"));
 
 	int nMessages = 0;
 	DWORD tStart = ::GetTickCount();
-	while(nMessages++ < 100000) 
-		lr = ::SendMessage(g_ThreadCWnds[(MAX_THREADS-1)/2]->GetHwnd(), WM_TESTMESSAGE, 0, 0);
-	
+	while(nMessages++ < 100000)
+		lr = ::SendMessage(m_ThreadCWnds[(MAX_THREADS-1)/2]->GetHwnd(), WM_TESTMESSAGE, 0, 0);
+
 	DWORD tEnd = ::GetTickCount();
 	DWORD mSeconds = tEnd - tStart;
 
@@ -128,7 +133,7 @@ LRESULT CMainWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			//Close the thread windows
 			for (int i = 0 ; i < MAX_THREADS ; i++)
-				::SendMessage(g_ThreadCWnds[i]->GetHwnd(), WM_CLOSE, 0, 0);
+				::SendMessage(m_ThreadCWnds[i]->GetHwnd(), WM_CLOSE, 0, 0);
 		}
 		break;
 	case WM_DESTROY:

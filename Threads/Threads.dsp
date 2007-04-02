@@ -96,7 +96,7 @@ SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainWin.cpp
+SOURCE=.\MainWnd.cpp
 # End Source File
 # Begin Source File
 
@@ -104,7 +104,7 @@ SOURCE=.\ThreadApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadWin.cpp
+SOURCE=.\ThreadWnd.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -112,7 +112,7 @@ SOURCE=.\ThreadWin.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\MainWin.h
+SOURCE=.\MainWnd.h
 # End Source File
 # Begin Source File
 
@@ -120,7 +120,7 @@ SOURCE=.\ThreadApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadWin.h
+SOURCE=.\ThreadWnd.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
