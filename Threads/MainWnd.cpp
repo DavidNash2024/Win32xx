@@ -6,9 +6,10 @@
 #include "ThreadApp.h"
 #include "MainWnd.h"
 #include "Thread.h"
+#include "resource.h"
 
 
-CMainWindow::CMainWindow()
+CMainWindow::CMainWindow() : m_Dialog1(IDD_DIALOG1), m_Dialog2(IDD_DIALOG2)
 {
 }
 
@@ -37,6 +38,8 @@ void CMainWindow::OnCreate()
 
 void CMainWindow::OnInitialUpdate()
 {
+	m_Dialog1.DoModal();
+
 	for (int i = 0 ; i < MAX_THREADS ; i++)
 	{
 		m_iNums[i] = i;
@@ -59,7 +62,7 @@ void CMainWindow::OnAllWindowsCreated()
 	int nRet = IDOK;
 	while(nRet == IDOK)
 	{
-		nRet = MessageBox(m_hWnd, TEXT("Click OK to begin"), TEXT("Performance Test"), MB_ICONINFORMATION|MB_OKCANCEL);
+		nRet = m_Dialog2.DoModal();
 		if (nRet == IDOK)
 			PerformanceTest();
 	}
@@ -84,6 +87,7 @@ void CMainWindow::PerformanceTest()
 
 	wsprintf(str, "%d  milliseconds to process 100 thousand messages", mSeconds);
 	SendText(str);
+
 	MessageBox(NULL, str, TEXT("Info"), MB_OK);
 
 	wsprintf(str, "%d total messages sent ", lr);
@@ -92,9 +96,9 @@ void CMainWindow::PerformanceTest()
 
 void CMainWindow::SendText(LPCTSTR str)
 {
-	::SendMessage(m_hEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)str);
-	::SendMessage(m_hEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)TEXT("\r\n"));
-	::SendMessage(m_hEdit, EM_SCROLLCARET, (WPARAM)0, (LPARAM)0);
+	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)str);
+	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)TEXT("\r\n"));
+	::SendMessage(m_hEdit, EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
 
 	TRACE(str);
 }

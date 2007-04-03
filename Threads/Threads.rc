@@ -1,0 +1,38 @@
+// Microsoft Visual C++ generated resource script.
+//
+
+#include "resource.h"
+#include "windows.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 232, 134
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE| 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Multi-threaded performance test",IDC_STATIC,7,7,218,120
+    EDITTEXT        IDC_EDIT1,115,22,77,17,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT2,115,55,78,18,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Number of threads",IDC_STATIC,22,25,73,10
+    LTEXT           "Number of test messages",IDC_STATIC,21,60,85,11
+    DEFPUSHBUTTON   "OK",IDOK,43,93,41,15
+    PUSHBUTTON      "Cancel",IDCANCEL,135,92,44,16
+END
+
+IDD_DIALOG2 DIALOGEX 0, 0, 186, 73
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,32,40,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,101,40,50,14
+    CTEXT           "Run Performance test again?",IDC_STATIC,30,20,124,14
+END
+
+

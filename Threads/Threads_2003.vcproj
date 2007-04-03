@@ -190,12 +190,21 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Threads.rc">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
 				RelativePath=".\MainWnd.h">
+			</File>
+			<File
+				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\resrc1.h">
 			</File>
 			<File
 				RelativePath=".\TestWnd.h">
@@ -214,6 +223,12 @@
 		<Filter
 			Name="Win32++"
 			Filter="">
+			<File
+				RelativePath="..\Win32++\Dialog.cpp">
+			</File>
+			<File
+				RelativePath="..\Win32++\Dialog.h">
+			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.cpp">
 			</File>

@@ -9,6 +9,8 @@
 
 #include "ThreadApp.h"
 #include "TestWnd.h"
+#include "..\Win32++\Dialog.h"
+
 
 class CThread;
 
@@ -38,6 +40,8 @@ private:
 	int   m_iNums[MAX_THREADS];			// An array of int:  0 to MAX_THREADS-1
 	HWND  m_hEdit;						// Handle to the edit window
 	CThread* m_pCThreads[MAX_THREADS];	// An array of CThread pointers
+	CDialog m_Dialog1;
+	CDialog m_Dialog2;
 };
 
 
