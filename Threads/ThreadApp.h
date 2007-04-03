@@ -18,10 +18,10 @@ class CThreadApp : public CWinApp
 public:
 	CThreadApp(HINSTANCE hInstance);
 	virtual ~CThreadApp();
-	CMainWnd& GetMainWnd() {return m_MainWnd;}
+	CMainWindow& GetMainWnd() {return m_MainWnd;}
 
 private:
-	CMainWnd m_MainWnd;	
+	CMainWindow m_MainWnd;	
 };
 
 

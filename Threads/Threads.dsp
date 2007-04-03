@@ -100,11 +100,15 @@ SOURCE=.\MainWnd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadApp.cpp
+SOURCE=.\TestWnd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadWnd.cpp
+SOURCE=.\Thread.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ThreadApp.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -116,11 +120,15 @@ SOURCE=.\MainWnd.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadApp.h
+SOURCE=.\TestWnd.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadWnd.h
+SOURCE=.\Thread.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ThreadApp.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

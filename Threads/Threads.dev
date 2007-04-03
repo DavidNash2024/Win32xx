@@ -1,7 +1,7 @@
 [Project]
 FileName=Threads.dev
 Name=Threads
-UnitCount=9
+UnitCount=11
 Type=0
 Ver=1
 ObjFiles=
@@ -100,7 +100,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=ThreadWnd.cpp
+FileName=TestWnd.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -110,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=ThreadWnd.h
+FileName=TestWnd.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -120,9 +120,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=Windows\WinCore.cpp
+FileName=Thread.cpp
 CompileCpp=1
-Folder=Threads
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -130,9 +130,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=Windows\WinCore.h
+FileName=Thread.h
 CompileCpp=1
-Folder=Threads
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

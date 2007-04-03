@@ -1,19 +1,19 @@
 //////////////////////////////////////////////////////
-// ThreadWnd.h
-//  Declaration of the CThreadWnd class
+// TestWnd.h
+//  Declaration of the CTestWindow class
 
 
-#ifndef THREADWND_H
-#define THREADWND_H
+#ifndef TESTWND_H
+#define TESTWND_H
 
 #include "..\Win32++\WinCore.h"
 
 
-class CThreadWnd : public CWnd
+class CTestWindow : public CWnd
 {
 public:
-	CThreadWnd();
-	virtual ~CThreadWnd(){}
+	CTestWindow();
+	virtual ~CTestWindow(){}
 	virtual void CreateWin(int i);
 	virtual void OnInitialUpdate();
 
@@ -25,9 +25,9 @@ private:
 	};
 
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	int m_iNum;
+	int m_iThread;
 
 };
 
 
-#endif  //THREADWIN_H
+#endif  //TESTWIN_H

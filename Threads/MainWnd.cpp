@@ -5,50 +5,28 @@
 
 #include "ThreadApp.h"
 #include "MainWnd.h"
+#include "Thread.h"
 
 
-CThreadWnd* CMainWnd::m_ThreadCWnds[MAX_THREADS];
-
-
-DWORD WINAPI CMainWnd::ThreadCallback(LPVOID pInt)
+CMainWindow::CMainWindow()
 {
-	int i = *((int*)pInt);
-	TCHAR str[80];
-	wsprintf(str, TEXT("Thread #%d started"), i + 1);
-	TRACE(str);
-
-	m_ThreadCWnds[i] = new CThreadWnd;
-	m_ThreadCWnds[i]->CreateWin(i);
-
-	//Each thread with a window has its own message loop
-	return GetApp()->MessageLoop();
 }
 
-CMainWnd::CMainWnd()
+CMainWindow::~CMainWindow()
 {
-	ZeroMemory(m_ThreadHandles, MAX_THREADS*sizeof(HANDLE));
-	ZeroMemory(m_ThreadCWnds, MAX_THREADS*sizeof(CThreadWnd*));
+	for (int i = 0 ; i < MAX_THREADS; i++)
+		delete m_pCThreads[i];
 }
 
-CMainWnd::~CMainWnd()
-{
-	for (int i = 0 ; i < MAX_THREADS ; i++)
-	{
-		delete m_ThreadCWnds[i];
-		::CloseHandle(m_ThreadHandles[i]);
-	}
-}
-
-void CMainWnd::Create()
+void CMainWindow::Create()
 {
 	TCHAR str[80];
 	wsprintf(str, TEXT("Main Thread Window"));
 	CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		20 , 50, 300, 300, NULL, NULL);
-
 }
 
-void CMainWnd::OnCreate()
+void CMainWindow::OnCreate()
 {
 	RECT r;
 	::GetClientRect(m_hWnd, &r);
@@ -57,23 +35,23 @@ void CMainWnd::OnCreate()
 						m_hWnd, NULL, GetApp()->GetInstanceHandle(), NULL);
 }
 
-void CMainWnd::OnInitialUpdate()
+void CMainWindow::OnInitialUpdate()
 {
 	for (int i = 0 ; i < MAX_THREADS ; i++)
 	{
-		m_IntArray[i] = i;
-		m_ThreadHandles[i] = CreateThread(NULL, 0, ThreadCallback, (LPVOID) &m_IntArray[i], 0, &m_ThreadID[i]);
+		m_iNums[i] = i;
+		m_pCThreads[i] = new CThread(&m_iNums[i]);
 	}
 }
 
-void CMainWnd::OnSize()
+void CMainWindow::OnSize()
 {
 	RECT r;
 	::GetClientRect(m_hWnd, &r);
 	::MoveWindow(m_hEdit, 0, 0, r.right - r.left, r.bottom - r.top, TRUE);
 }
 
-void CMainWnd::OnAllWindowsCreated()
+void CMainWindow::OnAllWindowsCreated()
 {
 	SendText(TEXT("All Windows Created"));
 	SendText(TEXT("Ready to run performance test"));
@@ -87,7 +65,7 @@ void CMainWnd::OnAllWindowsCreated()
 	}
 }
 
-void CMainWnd::PerformanceTest()
+void CMainWindow::PerformanceTest()
 {
 	TCHAR str[80];
 	LRESULT lr = 0;
@@ -95,9 +73,11 @@ void CMainWnd::PerformanceTest()
 	SendText(TEXT("Sending 100,000 Messages"));
 
 	int nMessages = 0;
+	HWND hWnd = m_pCThreads[(MAX_THREADS-1)/2]->m_pTestWindow->GetHwnd();
 	DWORD tStart = ::GetTickCount();
+
 	while(nMessages++ < 100000)
-		lr = ::SendMessage(m_ThreadCWnds[(MAX_THREADS-1)/2]->GetHwnd(), WM_TESTMESSAGE, 0, 0);
+        lr = ::SendMessage(hWnd, WM_TESTMESSAGE, 0, 0);
 
 	DWORD tEnd = ::GetTickCount();
 	DWORD mSeconds = tEnd - tStart;
@@ -107,10 +87,10 @@ void CMainWnd::PerformanceTest()
 	MessageBox(NULL, str, TEXT("Info"), MB_OK);
 
 	wsprintf(str, "%d total messages sent ", lr);
-	TRACE(str);
+	TRACE(str);  
 }
 
-void CMainWnd::SendText(LPCTSTR str)
+void CMainWindow::SendText(LPCTSTR str)
 {
 	::SendMessage(m_hEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)str);
 	::SendMessage(m_hEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)TEXT("\r\n"));
@@ -119,7 +99,7 @@ void CMainWnd::SendText(LPCTSTR str)
 	TRACE(str);
 }
 
-LRESULT CMainWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static int nWindowsCreated = 0;
 
@@ -133,11 +113,11 @@ LRESULT CMainWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			//Close the thread windows
 			for (int i = 0 ; i < MAX_THREADS ; i++)
-				::SendMessage(m_ThreadCWnds[i]->GetHwnd(), WM_CLOSE, 0, 0);
+				::SendMessage(m_pCThreads[i]->m_pTestWindow->GetHwnd(), WM_CLOSE, 0, 0);
 		}
 		break;
-	case WM_DESTROY:
-		// Post the WM_QUIT message to terminate the thread.
+	case WM_DESTROY:	
+		// Post the WM_QUIT message to terminate the primary thread.
 		::PostQuitMessage(0);
 		return 0L;
 	case WM_SIZE:

@@ -8,19 +8,19 @@
 
 
 #include "ThreadApp.h"
-#include "ThreadWnd.h"
+#include "TestWnd.h"
 
+class CThread;
 
-class CMainWnd : public CWnd
+class CMainWindow : public CWnd
 {
 public:
-	CMainWnd();
-	virtual ~CMainWnd();
+	CMainWindow();
+	virtual ~CMainWindow();
 	virtual void Create();
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();
 	virtual void SendText(LPCTSTR str);
-	static DWORD WINAPI ThreadCallback(LPVOID pInt);
 
 protected:
 	virtual void OnCreate();
@@ -31,15 +31,13 @@ protected:
 private:
 	enum Constants
 	{
-		WM_WINDOWCREATED     = WM_USER+1,
-		WM_TESTMESSAGE       = WM_USER+2
+		WM_WINDOWCREATED     = WM_USER+1,	// the message sent when window is created
+		WM_TESTMESSAGE       = WM_USER+2    // the test message 
 	};
 
-	int   m_IntArray[MAX_THREADS];
-	DWORD m_ThreadID[MAX_THREADS];
-	HWND m_hEdit;
-	HANDLE m_ThreadHandles[MAX_THREADS];
-	static CThreadWnd* m_ThreadCWnds[MAX_THREADS];	// Array of CThreadWnd pointers
+	int   m_iNums[MAX_THREADS];			// An array of int:  0 to MAX_THREADS-1
+	HWND  m_hEdit;						// Handle to the edit window
+	CThread* m_pCThreads[MAX_THREADS];	// An array of CThread pointers
 };
 
 

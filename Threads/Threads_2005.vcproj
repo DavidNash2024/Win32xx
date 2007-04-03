@@ -239,6 +239,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Thread.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ThreadApp.cpp"
 				>
 				<FileConfiguration
@@ -261,10 +269,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\ThreadWnd.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -275,11 +279,15 @@
 				>
 			</File>
 			<File
-				RelativePath="ThreadApp.h"
+				RelativePath=".\TestWnd.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ThreadWnd.h"
+				RelativePath=".\Thread.h"
+				>
+			</File>
+			<File
+				RelativePath="ThreadApp.h"
 				>
 			</File>
 		</Filter>

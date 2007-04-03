@@ -1,29 +1,29 @@
 //////////////////////////////////////////////
-// ThreadWnd.cpp
-//  Definitions for the CThreadWnd class
+// TestWnd.cpp
+//  Definitions for the CTestWindow class
 
 #include "ThreadApp.h"
-#include "ThreadWnd.h"
+#include "TestWnd.h"
 
 
-CThreadWnd::CThreadWnd()
+CTestWindow::CTestWindow()
 {
 }
 
-void CThreadWnd::CreateWin(int i)
+void CTestWindow::CreateWin(int i)
 {
 	TCHAR str[80];
 
-	m_iNum = i + 1;
-	::wsprintf(str, TEXT("Thread #%d"), m_iNum);
+	m_iThread = i + 1;
+	::wsprintf(str, TEXT("Thread #%d"), m_iThread);
 	CreateEx(0L, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		320, 50 + i, 300, 200, NULL, NULL);
 }
 
-void CThreadWnd::OnInitialUpdate()
+void CTestWindow::OnInitialUpdate()
 {
 	// Get a reference to the CMainWnd object
-	CMainWnd& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();
+	CMainWindow& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();
 
 	// Post a message to MainWnd when the window is created. The MainWnd window
 	//  is in a different thread, so PostMessage is preferred over SendMessage.
@@ -31,7 +31,7 @@ void CThreadWnd::OnInitialUpdate()
 	::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
 }
 
-LRESULT CThreadWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CTestWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static LRESULT nMessages = 0;
 	switch (uMsg)
@@ -39,14 +39,14 @@ LRESULT CThreadWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		{
 			TCHAR str[80];
-			::wsprintf(str, TEXT("Closing thread #%d"), m_iNum);
+			::wsprintf(str, TEXT("Closing test Window #%d"), m_iThread);
 			TRACE(str);
 		}
 		break;
 
 	case WM_DESTROY:
 		// Post the WM_QUIT message to terminate the thread.
-		::PostQuitMessage(0);
+		::PostQuitMessage(m_iThread);
 		return 0L;
 
 	case WM_TESTMESSAGE:
