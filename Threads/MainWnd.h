@@ -9,7 +9,7 @@
 
 #include "ThreadApp.h"
 #include "TestWnd.h"
-#include "..\Win32++\Dialog.h"
+#include "MyDialog.h"
 
 
 class CThread;
@@ -20,6 +20,7 @@ public:
 	CMainWindow();
 	virtual ~CMainWindow();
 	virtual void Create();
+	virtual void CreateThreads(int nThreads);
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();
 	virtual void SendText(LPCTSTR str);
@@ -37,10 +38,11 @@ private:
 		WM_TESTMESSAGE       = WM_USER+2    // the test message 
 	};
 
-	int   m_iNums[MAX_THREADS];			// An array of int:  0 to MAX_THREADS-1
-	HWND  m_hEdit;						// Handle to the edit window
-	CThread* m_pCThreads[MAX_THREADS];	// An array of CThread pointers
-	CDialog m_Dialog1;
+	int*  m_iNums;			// An array of int:  0 to MAX_THREADS-1
+	HWND  m_hEdit;			// Handle to the edit window
+	CThread** m_pCThreads;	// An array of CThread pointers
+	int m_MaxThreads;
+	CMyDialog m_Dialog1;
 	CDialog m_Dialog2;
 };
 

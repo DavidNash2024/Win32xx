@@ -11,12 +11,19 @@
 
 CMainWindow::CMainWindow() : m_Dialog1(IDD_DIALOG1), m_Dialog2(IDD_DIALOG2)
 {
+	m_hEdit = 0;
+	m_MaxThreads = 0;
+	m_iNums = 0;
+	m_pCThreads = 0;
 }
 
 CMainWindow::~CMainWindow()
 {
-	for (int i = 0 ; i < MAX_THREADS; i++)
+	for (int i = 0 ; i < m_MaxThreads; i++)
 		delete m_pCThreads[i];
+
+	delete []m_pCThreads;
+	delete []m_iNums;
 }
 
 void CMainWindow::Create()
@@ -25,6 +32,20 @@ void CMainWindow::Create()
 	wsprintf(str, TEXT("Main Thread Window"));
 	CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		20 , 50, 300, 300, NULL, NULL);
+}
+
+void CMainWindow::CreateThreads(int nThreads)
+{
+	m_MaxThreads = nThreads;
+
+	m_iNums = new int[m_MaxThreads];
+	m_pCThreads = new CThread*[m_MaxThreads];
+
+	for (int i = 0 ; i < m_MaxThreads ; i++)
+	{
+		m_iNums[i] = i;
+		m_pCThreads[i] = new CThread(&m_iNums[i]);
+	}
 }
 
 void CMainWindow::OnCreate()
@@ -40,11 +61,7 @@ void CMainWindow::OnInitialUpdate()
 {
 	m_Dialog1.DoModal();
 
-	for (int i = 0 ; i < MAX_THREADS ; i++)
-	{
-		m_iNums[i] = i;
-		m_pCThreads[i] = new CThread(&m_iNums[i]);
-	}
+	CreateThreads(100);
 }
 
 void CMainWindow::OnSize()
@@ -59,6 +76,7 @@ void CMainWindow::OnAllWindowsCreated()
 	SendText(TEXT("All Windows Created"));
 	SendText(TEXT("Ready to run performance test"));
 
+	PerformanceTest();
 	int nRet = IDOK;
 	while(nRet == IDOK)
 	{
@@ -76,7 +94,7 @@ void CMainWindow::PerformanceTest()
 	SendText(TEXT("Sending 100,000 Messages"));
 
 	int nMessages = 0;
-	HWND hWnd = m_pCThreads[(MAX_THREADS-1)/2]->m_pTestWindow->GetHwnd();
+	HWND hWnd = m_pCThreads[(m_MaxThreads-1)/2]->m_pTestWindow->GetHwnd();
 	DWORD tStart = ::GetTickCount();
 
 	while(nMessages++ < 100000)
@@ -116,7 +134,7 @@ LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		{
 			//Close the thread windows
-			for (int i = 0 ; i < MAX_THREADS ; i++)
+			for (int i = 0 ; i < m_MaxThreads ; i++)
 				::SendMessage(m_pCThreads[i]->m_pTestWindow->GetHwnd(), WM_CLOSE, 0, 0);
 		}
 		break;
@@ -128,7 +146,7 @@ LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		OnSize();
 		return 0;
 	case WM_WINDOWCREATED:
-		if (++nWindowsCreated == MAX_THREADS)
+		if (++nWindowsCreated == m_MaxThreads)
 			OnAllWindowsCreated();
 		return 0L;
 	}

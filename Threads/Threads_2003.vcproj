@@ -167,6 +167,9 @@
 				RelativePath=".\MainWnd.cpp">
 			</File>
 			<File
+				RelativePath=".\MyDialog.cpp">
+			</File>
+			<File
 				RelativePath=".\TestWnd.cpp">
 			</File>
 			<File
@@ -199,6 +202,9 @@
 			Filter="h;hpp;hxx;hm;inl">
 			<File
 				RelativePath=".\MainWnd.h">
+			</File>
+			<File
+				RelativePath=".\MyDialog.h">
 			</File>
 			<File
 				RelativePath=".\resource.h">

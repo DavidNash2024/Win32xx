@@ -4,7 +4,7 @@
 
 
 // Adjust this to change the number of threads created
-#define MAX_THREADS 100
+//#define MAX_THREADS 100
 
 #ifndef THREADAPP_H
 #define THREADAPP_H
