@@ -14,10 +14,10 @@ void CTestWindow::CreateWin(int i)
 {
 	TCHAR str[80];
 
-	m_iThread = i + 1;
-	::wsprintf(str, TEXT("Thread #%d"), m_iThread);
+	m_nThread = i + 1;
+	::wsprintf(str, TEXT("Thread #%d"), m_nThread);
 	CreateEx(0L, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		320, 50 + i, 300, 200, NULL, NULL);
+		420, 50 + i, 300, 200, NULL, NULL);
 }
 
 void CTestWindow::OnInitialUpdate()
@@ -39,14 +39,14 @@ LRESULT CTestWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		{
 			TCHAR str[80];
-			::wsprintf(str, TEXT("Closing test Window #%d"), m_iThread);
+			::wsprintf(str, TEXT("Closing test Window #%d"), m_nThread);
 			TRACE(str);
 		}
 		break;
 
 	case WM_DESTROY:
 		// Post the WM_QUIT message to terminate the thread.
-		::PostQuitMessage(m_iThread);
+		::PostQuitMessage(0);
 		return 0L;
 
 	case WM_TESTMESSAGE:

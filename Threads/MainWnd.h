@@ -7,11 +7,9 @@
 #define MAINWND_H
 
 
-#include "ThreadApp.h"
-#include "TestWnd.h"
 #include "MyDialog.h"
 
-
+// Forward declaration of the CThread class
 class CThread;
 
 class CMainWindow : public CWnd
@@ -24,6 +22,7 @@ public:
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();
 	virtual void SendText(LPCTSTR str);
+	virtual void SetTestMessages(int nTestMessages) {m_nTestMessages = nTestMessages;}
 
 protected:
 	virtual void OnCreate();
@@ -38,12 +37,11 @@ private:
 		WM_TESTMESSAGE       = WM_USER+2    // the test message 
 	};
 
-	int*  m_iNums;			// An array of int:  0 to MAX_THREADS-1
 	HWND  m_hEdit;			// Handle to the edit window
+	HFONT m_hFont;			// A font for the edit window
 	CThread** m_pCThreads;	// An array of CThread pointers
-	int m_MaxThreads;
-	CMyDialog m_Dialog1;
-	CDialog m_Dialog2;
+	int m_nTestMessages;	// Number of test messages to be sent
+	int m_nThreads;			// Number of additional threads to be created
 };
 
 

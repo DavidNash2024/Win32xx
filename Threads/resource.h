@@ -4,9 +4,8 @@
 //
 #define IDC_STATIC                      -1
 #define IDD_DIALOG1                     101
-#define IDD_DIALOG2                     102
-#define IDC_EDIT1                       1001
-#define IDC_EDIT2                       1002
+#define IDC_THREADS                     1001
+#define IDC_MESSAGES                    1002
 #define IDC_BUTTON1                     1004
 #define IDC_BUTTON2                     1005
 

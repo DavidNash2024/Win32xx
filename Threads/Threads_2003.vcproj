@@ -193,9 +193,6 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\Threads.rc">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -210,9 +207,6 @@
 				RelativePath=".\resource.h">
 			</File>
 			<File
-				RelativePath=".\resrc1.h">
-			</File>
-			<File
 				RelativePath=".\TestWnd.h">
 			</File>
 			<File
@@ -225,6 +219,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath=".\Threads.rc">
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"

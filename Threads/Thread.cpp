@@ -2,17 +2,16 @@
 // Thread.cpp
 //  Definitions for the CThread class
 
+
 #include "Thread.h"
 
 
-CThread::CThread(int* p_iThread)
+CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0), m_pTestWindow(NULL)
 {
 	try
-	{
-		m_dwThreadID = 0;
-		m_pTestWindow = NULL;
-		m_iThread = *p_iThread;
-		
+	{		
+		m_nValue = nValue;
+
 		// Create the thread.
 		m_hThread = ::CreateThread(NULL, 0, CThread::ThreadCallback, (LPVOID) this, 0, &m_dwThreadID);
 		if (!m_hThread)
@@ -40,20 +39,20 @@ CThread::~CThread()
 	::CloseHandle(m_hThread);
 }
 
-DWORD WINAPI CThread::ThreadCallback(LPVOID pThread)
-// This function is called automatically when the thread is created
+DWORD WINAPI CThread::ThreadCallback(LPVOID pCThread)
+// This function is called automatically when the thread is started
 {
 	// Get the pointer for this CThread object 
-	CThread* pCThread = (CThread*)pThread;
+	CThread* pThread = (CThread*)pCThread;
 	
-	int i = pCThread->m_iThread;
+	int i = pThread->m_nValue;
 	TCHAR str[80];
 	wsprintf(str, TEXT("Thread #%d started"), i + 1);
 	TRACE(str);
 
 	// Create a test window for this thread
-	pCThread->m_pTestWindow = new CTestWindow;
-	pCThread->m_pTestWindow->CreateWin(i);
+	pThread->m_pTestWindow = new CTestWindow;
+	pThread->m_pTestWindow->CreateWin(i);
 
 	// Each thread with a window has its own message loop
 	// The message loop runs until the thread's window is destroyed

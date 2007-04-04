@@ -25,8 +25,8 @@ private:
 	};
 
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	int m_iThread;
-
+	
+	int m_nThread; 
 };
 
 
