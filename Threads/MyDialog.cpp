@@ -1,6 +1,7 @@
 ///////////////////////////////////////
 // MyDialog.cpp
 
+#include "tchar.h"
 #include "ThreadApp.h"
 #include "MyDialog.h"
 #include "resource.h"
@@ -43,11 +44,11 @@ void CMyDialog::OnOK()
 	
 	// Get the number of threads to create 
 	::GetDlgItemText(GetHwnd(), IDC_THREADS, szText, 80);
-	int nThreads = atoi(szText);
+	int nThreads = _tstoi(szText);
 	
 	// Get the number of test messages to send
 	::GetDlgItemText(GetHwnd(), IDC_MESSAGES, szText, 80);
-	int nTestMessages = atoi(szText);
+	int nTestMessages = _tstoi(szText);
 
 	// Get a reference to the CMainWindow object
 	CMainWindow& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();

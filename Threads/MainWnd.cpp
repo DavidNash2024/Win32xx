@@ -126,11 +126,11 @@ void CMainWindow::PerformanceTest()
 	DWORD mSeconds = tEnd - tStart;
 
 	// Display the results
-	wsprintf(str, "%d  milliseconds to process %d messages", mSeconds, m_nTestMessages);
+	wsprintf(str, TEXT("%d  milliseconds to process %d messages"), mSeconds, m_nTestMessages);
 	SendText(str);
 
 	MessageBox(m_hWnd, str, TEXT("Info"), MB_OK);
-	wsprintf(str, "%d total messages sent ", lr);
+	wsprintf(str, TEXT("%d total messages sent "), lr);
 	TRACE(str);
 }
 
