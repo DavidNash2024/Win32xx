@@ -110,10 +110,6 @@ SOURCE=.\Thread.cpp
 
 SOURCE=.\ThreadApp.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=.\Threads.rc
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -142,18 +138,14 @@ SOURCE=.\ThreadApp.h
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\Threads.rc
+# End Source File
 # End Group
 # Begin Group "Win32++"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\Win32++\Dialog.cpp"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\Dialog.h"
-# End Source File
 # Begin Source File
 
 SOURCE="..\Win32++\WinCore.cpp"

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////
-// ThreadApp.h
-//  Declaration of the CThreadApp class
+// PerfApp.h
+//  Declaration of the CPerformanceApp class
 
 
 // Adjust this to change the number of threads created
@@ -13,11 +13,11 @@
 #include "MainWnd.h"
 
 
-class CThreadApp : public CWinApp
+class CPerformanceApp : public CWinApp
 {
 public:
-	CThreadApp(HINSTANCE hInstance);
-	virtual ~CThreadApp();
+	CPerformanceApp(HINSTANCE hInstance);
+	virtual ~CPerformanceApp();
 	CMainWindow& GetMainWnd() {return m_MainWnd;}
 
 private:
@@ -25,5 +25,5 @@ private:
 };
 
 
-#endif  //THREADAPP_H
+#endif  //PERFAPP_H
 

@@ -104,19 +104,15 @@ SOURCE=.\MyDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PerfApp.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Performance.rc
 # End Source File
 # Begin Source File
 
 SOURCE=.\TestWnd.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Thread.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\ThreadApp.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -132,19 +128,15 @@ SOURCE=.\MyDialog.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\PerfApp.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\TestWnd.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Thread.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ThreadApp.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

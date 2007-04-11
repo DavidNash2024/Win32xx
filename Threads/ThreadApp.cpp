@@ -1,5 +1,5 @@
-///////////////////////////////////////////////
-//ThreadApp.cpp -  Definitions for the CTestApp class
+///////////////////////////////////////////////////////
+//ThreadApp.cpp -  Definitions for the CThreadApp class
 
 #include "ThreadApp.h"
 

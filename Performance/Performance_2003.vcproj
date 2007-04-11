@@ -170,25 +170,10 @@
 				RelativePath=".\MyDialog.cpp">
 			</File>
 			<File
-				RelativePath=".\TestWnd.cpp">
+				RelativePath=".\PerfApp.cpp">
 			</File>
 			<File
-				RelativePath="ThreadApp.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath=".\TestWnd.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -201,13 +186,13 @@
 				RelativePath=".\MyDialog.h">
 			</File>
 			<File
+				RelativePath=".\PerfApp.h">
+			</File>
+			<File
 				RelativePath=".\resource.h">
 			</File>
 			<File
 				RelativePath=".\TestWnd.h">
-			</File>
-			<File
-				RelativePath="ThreadApp.h">
 			</File>
 		</Filter>
 		<Filter

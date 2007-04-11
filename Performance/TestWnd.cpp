@@ -2,7 +2,7 @@
 // TestWnd.cpp
 //  Definitions for the CTestWindow class
 
-#include "ThreadApp.h"
+#include "PerfApp.h"
 #include "TestWnd.h"
 
 
@@ -23,7 +23,7 @@ void CTestWindow::CreateWin(int i)
 void CTestWindow::OnInitialUpdate()
 {
 	// Get a reference to the CMainWnd object
-	CMainWindow& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();
+	CMainWindow& MainWnd = ((CPerformanceApp*)GetApp())->GetMainWnd();
 
 	// Post a message to MainWnd when the window is created. The MainWnd window
 	//  is in a different thread, so PostMessage is preferred over SendMessage.

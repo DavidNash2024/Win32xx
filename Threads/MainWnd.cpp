@@ -1,6 +1,6 @@
 //////////////////////////////////////////////
 // MainWnd.cpp
-//  Definitions for the CThreadWnd class
+//  Definitions for the CMainWindow class
 
 
 #include "ThreadApp.h"

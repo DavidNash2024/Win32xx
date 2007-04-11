@@ -1,10 +1,18 @@
 ///////////////////////////////////////
 // MyDialog.cpp
 
-#include "tchar.h"
-#include "ThreadApp.h"
+//#include "tchar.h"
+#include "PerfApp.h"
 #include "MyDialog.h"
 #include "resource.h"
+
+
+// Define _tstoi  -  TCHAR to int
+#ifdef  _UNICODE
+#define _tstoi      _wtoi
+#else
+#define _tstoi      atoi
+#endif
 
 
 // Definitions for the CMyDialog class
@@ -30,9 +38,9 @@ BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 BOOL CMyDialog::OnInitDialog()
 {
-	// Put some text in the edit boxes
+	// Put the initial values in the edit boxes
 	::SetDlgItemText(GetHwnd(), IDC_THREADS,  TEXT("100"));
-	::SetDlgItemText(GetHwnd(), IDC_MESSAGES, TEXT("100000"));
+	::SetDlgItemText(GetHwnd(), IDC_MESSAGES, TEXT("1000000"));
 
 	return true;
 }
@@ -51,7 +59,7 @@ void CMyDialog::OnOK()
 	int nTestMessages = _tstoi(szText);
 
 	// Get a reference to the CMainWindow object
-	CMainWindow& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();
+	CMainWindow& MainWnd = ((CPerformanceApp*)GetApp())->GetMainWnd();
 	
 	MainWnd.SetTestMessages(nTestMessages);
 	MainWnd.CreateTestWindows(nWindows);

@@ -21,7 +21,7 @@
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -116,7 +116,7 @@
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -243,39 +243,16 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PerfApp.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Performance.rc"
 				>
 			</File>
 			<File
 				RelativePath=".\TestWnd.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\Thread.cpp"
-				>
-			</File>
-			<File
-				RelativePath="ThreadApp.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -291,19 +268,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PerfApp.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
 				RelativePath=".\TestWnd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Thread.h"
-				>
-			</File>
-			<File
-				RelativePath="ThreadApp.h"
 				>
 			</File>
 		</Filter>

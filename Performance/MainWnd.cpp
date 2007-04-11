@@ -3,7 +3,7 @@
 //  Definitions for the CMainWindow class
 
 
-#include "ThreadApp.h"
+#include "PerfApp.h"
 #include "MainWnd.h"
 #include "resource.h"
 
