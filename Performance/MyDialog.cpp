@@ -44,7 +44,7 @@ void CMyDialog::OnOK()
 	
 	// Get the number of threads to create 
 	::GetDlgItemText(GetHwnd(), IDC_THREADS, szText, 80);
-	int nThreads = _tstoi(szText);
+	int nWindows = _tstoi(szText);
 	
 	// Get the number of test messages to send
 	::GetDlgItemText(GetHwnd(), IDC_MESSAGES, szText, 80);
@@ -54,7 +54,7 @@ void CMyDialog::OnOK()
 	CMainWindow& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();
 	
 	MainWnd.SetTestMessages(nTestMessages);
-	MainWnd.CreateThreads(nThreads);
+	MainWnd.CreateTestWindows(nWindows);
 
 	// End the dialog
 	EndDialog(IDOK);

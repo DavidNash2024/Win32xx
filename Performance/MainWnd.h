@@ -6,10 +6,9 @@
 #ifndef MAINWND_H
 #define MAINWND_H
 
-#include "..\Win32++\WinCore.h"
+#include "TestWnd.h"
+#include "MyDialog.h"
 
-// Forward declaration of the CThread class
-class CThread;
 
 class CMainWindow : public CWnd
 {
@@ -17,11 +16,16 @@ public:
 	CMainWindow();
 	virtual ~CMainWindow();
 	virtual void Create();
-	virtual void CreateThreads();
+	virtual void CreateTestWindows(int nWindows);
 	virtual void OnAllWindowsCreated();
+	virtual void PerformanceTest();
+	virtual void SendText(LPCTSTR str);
+	virtual void SetTestMessages(int nTestMessages) {m_nTestMessages = nTestMessages;}
 
 protected:
 	virtual void OnCreate();
+	virtual void OnInitialUpdate();
+	virtual void OnSize();
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
@@ -31,8 +35,11 @@ private:
 		WM_TESTMESSAGE       = WM_USER+2    // the test message 
 	};
 
-	CThread** m_pCThreads;	// An array of CThread pointers
-	int m_nThreads;			// Number of additional threads to be created
+	CTestWindow** m_pCTestWindows;	// An array of CTestWindow pointers
+	HWND  m_hEdit;			// Handle to the edit window
+	HFONT m_hFont;			// A font for the edit window
+	int m_nTestMessages;	// Number of test messages to be sent
+	int m_nTestWindows;		// Number of test windows
 };
 
 

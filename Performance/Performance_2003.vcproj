@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Threads"
+	Name="Performance"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -26,7 +26,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/Threads.pch"
+				PrecompiledHeaderFile=".\Debug/Performance.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -38,11 +38,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Debug/Threads.exe"
+				OutputFile=".\Debug/Performance.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Threads.pdb"
+				ProgramDatabaseFile=".\Debug/Performance.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -51,7 +51,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Threads.tlb"
+				TypeLibraryName=".\Debug/Performance.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -92,7 +92,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/Threads.pch"
+				PrecompiledHeaderFile=".\Release/Performance.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -103,10 +103,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Release/Threads.exe"
+				OutputFile=".\Release/Performance.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/Threads.pdb"
+				ProgramDatabaseFile=".\Release/Performance.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -115,7 +115,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Threads.tlb"
+				TypeLibraryName=".\Release/Performance.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -167,10 +167,10 @@
 				RelativePath=".\MainWnd.cpp">
 			</File>
 			<File
-				RelativePath=".\TestWnd.cpp">
+				RelativePath=".\MyDialog.cpp">
 			</File>
 			<File
-				RelativePath=".\Thread.cpp">
+				RelativePath=".\TestWnd.cpp">
 			</File>
 			<File
 				RelativePath="ThreadApp.cpp">
@@ -198,13 +198,13 @@
 				RelativePath=".\MainWnd.h">
 			</File>
 			<File
+				RelativePath=".\MyDialog.h">
+			</File>
+			<File
 				RelativePath=".\resource.h">
 			</File>
 			<File
 				RelativePath=".\TestWnd.h">
-			</File>
-			<File
-				RelativePath=".\Thread.h">
 			</File>
 			<File
 				RelativePath="ThreadApp.h">
@@ -214,12 +214,18 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
-				RelativePath=".\Threads.rc">
+				RelativePath=".\Performance.rc">
 			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			Filter="">
+			<File
+				RelativePath="..\Win32++\Dialog.cpp">
+			</File>
+			<File
+				RelativePath="..\Win32++\Dialog.h">
+			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.cpp">
 			</File>
