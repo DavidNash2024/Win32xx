@@ -1,10 +1,10 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Threads.rc
+// Used by Performance.rc
 //
 #define IDC_STATIC                      -1
 #define IDD_DIALOG1                     101
-#define IDC_THREADS                     1001
+#define IDC_WINDOWS                     1001
 #define IDC_MESSAGES                    1002
 #define IDC_BUTTON1                     1004
 #define IDC_BUTTON2                     1005

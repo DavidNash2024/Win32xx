@@ -39,7 +39,7 @@ BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 BOOL CMyDialog::OnInitDialog()
 {
 	// Put the initial values in the edit boxes
-	::SetDlgItemText(GetHwnd(), IDC_THREADS,  TEXT("100"));
+	::SetDlgItemText(GetHwnd(), IDC_WINDOWS,  TEXT("100"));
 	::SetDlgItemText(GetHwnd(), IDC_MESSAGES, TEXT("1000000"));
 
 	return true;
@@ -50,8 +50,8 @@ void CMyDialog::OnOK()
 {
 	TCHAR szText[80];
 	
-	// Get the number of threads to create 
-	::GetDlgItemText(GetHwnd(), IDC_THREADS, szText, 80);
+	// Get the number of test windows to create 
+	::GetDlgItemText(GetHwnd(), IDC_WINDOWS, szText, 80);
 	int nWindows = _tstoi(szText);
 	
 	// Get the number of test messages to send

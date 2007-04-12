@@ -27,7 +27,7 @@ CMainWindow::~CMainWindow()
 void CMainWindow::Create()
 {
 	TCHAR str[80];
-	wsprintf(str, TEXT("Main Thread Window"));
+	wsprintf(str, TEXT("Main Window"));
 	
 	// Create the main window
 	CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
@@ -158,14 +158,14 @@ LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	
 	case WM_CLOSE:
 		{
-			//Close the thread windows
+			//Close the test windows
 			for (int i = 0 ; i < m_nTestWindows ; i++)
 				::SendMessage(m_pCTestWindows[i]->GetHwnd(), WM_CLOSE, 0, 0);
 		}
 		break;
 	
 	case WM_DESTROY:	
-		// Post the WM_QUIT message to terminate the primary thread.
+		// Post the WM_QUIT message to terminate the program.
 		::PostQuitMessage(0);
 		return 0L;
 	

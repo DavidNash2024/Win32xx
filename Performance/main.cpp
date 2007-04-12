@@ -11,7 +11,7 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 	// Start Win32++
 	CPerformanceApp theApp(hInstance);
 
-	// Process the window messages for the main thread
+	// Process the window messages
 	return theApp.MessageLoop();
 }
 

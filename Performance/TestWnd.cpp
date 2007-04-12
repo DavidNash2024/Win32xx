@@ -25,9 +25,7 @@ void CTestWindow::OnInitialUpdate()
 	// Get a reference to the CMainWnd object
 	CMainWindow& MainWnd = ((CPerformanceApp*)GetApp())->GetMainWnd();
 
-	// Post a message to MainWnd when the window is created. The MainWnd window
-	//  is in a different thread, so PostMessage is preferred over SendMessage.
-	//  SendMessage would wait for the MainWnd thread to respond.
+	// Post a message to MainWnd when the window is created. 
 	::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
 }
 
@@ -45,7 +43,7 @@ LRESULT CTestWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_TESTMESSAGE:
-		// return the number of WM_TESTMESSAGE messages processsed by this thread so far
+		// return the number of WM_TESTMESSAGE messages processsed so far
 		return ++nMessages;
 	}
 

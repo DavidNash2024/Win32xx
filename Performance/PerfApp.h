@@ -3,11 +3,9 @@
 //  Declaration of the CPerformanceApp class
 
 
-// Adjust this to change the number of threads created
-//#define MAX_THREADS 100
 
-#ifndef THREADAPP_H
-#define THREADAPP_H
+#ifndef PERFAPP_H
+#define PERFAPP_H
 
 
 #include "MainWnd.h"
