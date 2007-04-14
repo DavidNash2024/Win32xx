@@ -347,7 +347,7 @@ namespace Win32xx
 		return iButton;
 	}
 
-	void CToolbar::OnCreate()
+	void CToolbar::OnInitialUpdate()
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
@@ -970,7 +970,7 @@ namespace Win32xx
 			DoAltKey(LOWORD(wParam));
 	}
 
-	void CMenubar::OnCreate()
+	void CMenubar::OnInitialUpdate()
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);

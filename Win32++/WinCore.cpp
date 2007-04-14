@@ -473,7 +473,8 @@ namespace Win32xx
 			WNDCLASSEX wcx = {0};
 			wcx.cbSize = sizeof(WNDCLASSEX);
 			wcx.lpszClassName = ClassName;
-			RegisterClassEx(wcx);
+			if (!RegisterClassEx(wcx))
+				throw CWinException(TEXT("CWnd::CreateEx  Failed to register window class"));
 
 			// Create and store the CBT hook
 			SetHook();
@@ -997,17 +998,35 @@ namespace Win32xx
 	//  are handled in the superclassed procedure, and OnCreate gets called.
 	// Superclassing allows common controls to pass messages via CWnd::WndProc.
 	{
-		// Step 1:  Extract the old class's window procedure
-		WNDCLASSEX wcx = {0};
-		wcx.cbSize = sizeof(WNDCLASSEX);
-		::GetClassInfoEx(NULL, OldClass, &wcx);
-		m_PrevWindowProc = wcx.lpfnWndProc;
+		try
+		{
+			// Step 1:  Extract the old class's window procedure
+			WNDCLASSEX wcx = {0};
+			wcx.cbSize = sizeof(WNDCLASSEX);
+			if (!::GetClassInfoEx(NULL, OldClass, &wcx))
+				throw CWinException(TEXT("CWnd::Superclass  GetClassInfo failed"));
 
-		// Step 2: Register the new window class
-		wcx.hInstance = GetApp()->GetInstanceHandle();
-		wcx.lpszClassName = NewClass;
-		wcx.lpfnWndProc = CWnd::StaticWindowProc;
-		RegisterClassEx(wcx);
+			m_PrevWindowProc = wcx.lpfnWndProc;
+
+			// Step 2: Register the new window class
+			wcx.hInstance = GetApp()->GetInstanceHandle();
+			wcx.lpszClassName = NewClass;
+			wcx.lpfnWndProc = CWnd::StaticWindowProc;
+			if (!RegisterClassEx(wcx))
+				throw CWinException(TEXT("CWnd::Superclass  RegisterClassEx failed"));
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CWnd::Superclass"));
+			throw;	// Rethrow unknown exception
+		}
+
 	}
 
 	LRESULT CWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

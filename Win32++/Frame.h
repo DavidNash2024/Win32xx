@@ -99,7 +99,7 @@ namespace Win32xx
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 
 	protected:
-		virtual void OnCreate();
+		virtual void OnInitialUpdate();
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -155,7 +155,7 @@ namespace Win32xx
 		virtual void DrawMDIButtons(HDC hDC);
 		virtual void ExitMenu();
 		virtual	void GrabFocus();
-		virtual void OnCreate();
+		virtual void OnInitialUpdate();
 		virtual void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
