@@ -17,7 +17,6 @@ public:
 	CMainWindow();
 	virtual ~CMainWindow();
 	virtual void Create();
-	virtual void CreateThreads();
 	virtual void OnAllWindowsCreated();
 
 protected:

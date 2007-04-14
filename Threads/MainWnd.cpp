@@ -17,9 +17,12 @@ CMainWindow::CMainWindow() : m_pCThreads(NULL)
 
 CMainWindow::~CMainWindow()
 {
+	// m_pCThreads is an array of CThread pointers
+	// Delete each CThread object
 	for (int i = 0 ; i < m_nThreads; i++)
 		delete m_pCThreads[i];
 
+	// Delete the array itself
 	delete []m_pCThreads;
 }
 
@@ -33,10 +36,12 @@ void CMainWindow::Create()
 		20 , 50, 400, 300, NULL, NULL);
 }
 
-void CMainWindow::CreateThreads()
+void CMainWindow::OnCreate()
 {
+	// Create the array of CThread pointers
 	m_pCThreads = new CThread*[m_nThreads];
 
+	// Create each CThread object
 	for (int i = 0 ; i < m_nThreads ; i++)
 	{
 		// Create the thread and store the CThread pointer
@@ -44,15 +49,10 @@ void CMainWindow::CreateThreads()
 	}
 }
 
-void CMainWindow::OnCreate()
-{
-	CreateThreads();
-}
-
 void CMainWindow::OnAllWindowsCreated()
 {
 	TCHAR str[80];
-	wsprintf(str, TEXT("%d  Windows Created"), m_nThreads);	
+	wsprintf(str, TEXT("%d Threads with windows created"), m_nThreads);	
 	TRACE(str);
 }
 
