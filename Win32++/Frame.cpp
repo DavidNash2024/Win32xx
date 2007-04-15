@@ -195,7 +195,6 @@ namespace Win32xx
 	//
 	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL)
 	{
-		Superclass(TOOLBARCLASSNAME, TEXT("Toolbar"));
 	}
 
 	CToolbar::~CToolbar()
@@ -349,6 +348,8 @@ namespace Win32xx
 
 	void CToolbar::OnInitialUpdate()
 	{
+		Subclass();
+
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
@@ -360,7 +361,7 @@ namespace Win32xx
 	void CToolbar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
-		cs.lpszClass = TEXT("Toolbar");
+		cs.lpszClass = TOOLBARCLASSNAME;
 
 		// Add extra styles for toolbars inside a rebar
 		CFrame* pFrame = GetApp()->GetFrame();
@@ -448,8 +449,8 @@ namespace Win32xx
 		// Resize the rebar band containing the toolbar
 		if (GetApp()->GetFrame()->IsRebarUsed())
 		{
-			CRebar* rb = (CRebar*) GetCWndObject(m_hWndParent);
-			rb->ResizeBand(rb->GetBand(GetHwnd()), cy+2);
+			CRebar& rb = GetApp()->GetFrame()->GetRebar();
+			rb.ResizeBand(rb.GetBand(GetHwnd()), cy+2);
 		}
 
 		::InvalidateRect(m_hWnd, NULL, TRUE);
@@ -809,8 +810,8 @@ namespace Win32xx
 	}
 
 
-	//////////////////////////////////
-	// Definitions for the CFrame class
+	/////////////////////////////////////
+	// Definitions for the CMenubar class
 	//
 	CMenubar::CMenubar()
 	{
@@ -828,7 +829,6 @@ namespace Win32xx
 		ZeroMemory(&m_MDIRect, 3*sizeof(RECT));
 
 		m_pTLSData->pMenubar = this;
-		Superclass(TOOLBARCLASSNAME, TEXT("Menubar"));
 	}
 
 	CMenubar::~CMenubar()
@@ -972,6 +972,8 @@ namespace Win32xx
 
 	void CMenubar::OnInitialUpdate()
 	{
+		Subclass();
+
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	}
@@ -1549,7 +1551,7 @@ namespace Win32xx
 	void CMenubar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;;
-		cs.lpszClass = TEXT("Menubar");
+		cs.lpszClass = TOOLBARCLASSNAME;
 	}
 
 	void CMenubar::ReleaseFocus()
