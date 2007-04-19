@@ -348,8 +348,6 @@ namespace Win32xx
 
 	void CToolbar::OnInitialUpdate()
 	{
-		Subclass();
-
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
@@ -672,26 +670,6 @@ namespace Win32xx
 		{
 			DebugErrMsg(TEXT("Exception in CToolbar::SetImageList"));
 		}
-	}
-
-	LRESULT CToolbar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		CFrame* pFrame = GetApp()->GetFrame();
-
-		switch (uMsg)
-		{
-		case WM_MOUSEMOVE:
-			// Tell the frame which button the mouse is over
-			if (pFrame->m_bShowMenuStatus)
-				pFrame->ToolbarNotify(HitTest());
-			break;
-
-		case WM_MOUSELEAVE:
-			if (pFrame->m_bShowMenuStatus)
-				pFrame->ToolbarNotify(-1);
-			break;
-		}
-		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 	}
 
 	///////////////////////////////////
@@ -1859,6 +1837,44 @@ namespace Win32xx
 		return rClientSize;
 	} // RECT CFrame::GetClientSize()
 
+	int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
+	// Returns the position of the menu item, given it's name
+	{
+		int nMenuItemCount = GetMenuItemCount(hMenu);
+		int nPos = -1;
+		const int MAX_MENU_STRING = 256;
+		MENUITEMINFO mii = {0};
+		mii.cbSize = sizeof(MENUITEMINFO);
+
+		for (int nItem = 0 ; nItem < nMenuItemCount; nItem++)
+		{
+			TCHAR szStr[MAX_MENU_STRING +1];
+			TCHAR szStripped[MAX_MENU_STRING +1];
+
+			mii.fMask      = MIIM_TYPE;  
+			mii.fType      = MFT_STRING; 
+			mii.dwTypeData = szStr;
+			mii.cch        = MAX_MENU_STRING;
+			
+			// Fill the contents of szStr from the menu item
+			::GetMenuItemInfo(hMenu, nItem, TRUE, &mii);
+
+			// Strip out any & characters
+			int j = 0;
+			for (int i = 0; i <= lstrlen(szStr); i++)
+			{
+				if (szStr[i] != TEXT('&'))
+					szStripped[j++] = szStr[i];
+			}
+				
+			// Compare the strings
+			if (lstrcmp(szStripped, szItem) == 0)
+				nPos = nItem;
+		}
+
+		return nPos;		
+	}
+
 	void CFrame::LoadCommonControls(INITCOMMONCONTROLSEX InitStruct)
 	{
 		try
@@ -2036,6 +2052,40 @@ namespace Win32xx
 		//Reposition and redraw everything
 		RecalcLayout();
 		::RedrawWindow(m_hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+	}
+
+	void CFrame::OnTimer(WPARAM wParam)
+	{
+		if (wParam == ID_STATUS_TIMER)
+			SetStatusIndicators();
+
+		static int nOldID = -1;
+		CToolbar& tb = GetToolbar();
+
+		int nButton = tb.HitTest();
+		if (nButton >= 0)
+		{
+			int nID = GetToolbar().GetCommandID(nButton);
+			if (nID != nOldID)
+			{
+				if (nID != 0)
+					m_StatusText = LoadString(nID);
+				else
+					m_StatusText = TEXT("Ready");
+
+				SetStatusText();
+			}
+			nOldID = nID;
+		}
+		else
+		{
+			if (nOldID != -1)
+			{
+				m_StatusText = TEXT("Ready");
+				SetStatusText();
+			}
+			nOldID = -1;
+		}
 	}
 
 	void CFrame::OnViewStatusbar()
@@ -2253,36 +2303,6 @@ namespace Win32xx
 		m_pView = &View;
 	}
 
-	void CFrame::ToolbarNotify(int nButton)
-	// Called in CToolbar::WndProc
-	{
-		// Updates the statusbar when the mouse hovers over a toolbar buttton
-		static int nOldID = -1;
-		if (nButton >= 0)
-		{
-			int nID = GetToolbar().GetCommandID(nButton);
-			if (nID != nOldID)
-			{
-				if (nID != 0)
-					m_StatusText = LoadString(nID);
-				else
-					m_StatusText = TEXT("Ready");
-
-				SetStatusText();
-			}
-			nOldID = nID;
-		}
-		else
-		{
-			if (nOldID != -1)
-			{
-				m_StatusText = TEXT("Ready");
-				SetStatusText();
-			}
-			nOldID = -1;
-		}
-	}
-
 	LRESULT CFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
@@ -2328,8 +2348,7 @@ namespace Win32xx
 				}
 				break;
 			case WM_TIMER:
-				if (wParam == ID_STATUS_TIMER)
-					SetStatusIndicators();
+				OnTimer(wParam);
 				return 0L;
 			} // switch uMsg
 			return CWnd::WndProc(hwnd, uMsg, wParam, lParam);

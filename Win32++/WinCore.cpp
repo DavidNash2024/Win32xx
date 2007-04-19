@@ -536,21 +536,25 @@ namespace Win32xx
 			if (m_PrevWindowProc == 0)
 				throw CWinException(TEXT("CWnd::Detach  Unable to detach this window"));
 
-			// Remove the subclassing
-		#if defined (_MSC_VER) && _MSC_VER <= 1200
+#if defined (_MSC_VER) && _MSC_VER <= 1200
+
 			// use non 64 bit compliant code for Visual C++ 6 and below
 			::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
-		#else
+
+#else
+			
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
+#endif //defined(_MSC_VER)
+
 			// use 64 bit compliant code otherwise
-			#if defined(_MSC_VER)
-			#pragma warning(push)
-			#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
-			#endif //defined(_MSC_VER)
 			::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
-			#if defined(_MSC_VER)
-			#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
-			#endif //defined(_MSC_VER)
-		#endif // defined (_MSC_VER) && _MSC_VER <= 1200
+
+#if defined(_MSC_VER)
+#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
+#endif //defined(_MSC_VER)
+#endif // defined (_MSC_VER) && _MSC_VER <= 1200
 
 			// Remove the map entry
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
@@ -976,21 +980,50 @@ namespace Win32xx
 	//  handled in a subclassed procedure, and OnCreate is never called.
 	// Subclassing allows common controls to pass messages via CWnd::WndProc.
 	{
-		// Subclass the window to pass messages to WndProc
-	#if defined (_MSC_VER) && _MSC_VER <= 1200
-		// use non 64 bit compliant code for Visual C++ 6 and below
-		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
-	#else
-		// use 64 bit compliant code otherwise
-		#if defined(_MSC_VER)
-		#pragma warning(push)
-		#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
-		#endif //defined(_MSC_VER)
-		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
-		#if defined(_MSC_VER)
-		#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
-		#endif //defined(_MSC_VER)
-	#endif // defined (_MSC_VER) && _MSC_VER <= 1200
+		try
+		{
+			if (m_PrevWindowProc)
+				throw CWinException(TEXT("Subclass failed.  Already Subclassed or Superclassed"));
+			
+			// Subclass the window to pass messages to WndProc
+	
+#if defined (_MSC_VER) && _MSC_VER <= 1200
+	
+			// use non 64 bit compliant code for Visual C++ 6 and below
+			WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
+			if (WndProc == CWnd::StaticWindowProc)
+				throw CWinException(TEXT("Subclass failed.  Already sending messages to StaticWindowProc"));
+			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
+#else
+			
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
+#endif //defined(_MSC_VER)
+			
+			// use 64 bit compliant code otherwise
+			WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
+			if (WndProc == CWnd::StaticWindowProc)
+				throw CWinException(TEXT("Subclass failed.  Already sending messages to StaticWindowProc"));
+			m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+
+#if defined(_MSC_VER)
+#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
+#endif //defined(_MSC_VER)
+#endif // defined (_MSC_VER) && _MSC_VER <= 1200
+
+		}
+		
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CWnd::Superclass"));
+			throw;	// Rethrow unknown exception
+		}
 	}
 
 	void CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
@@ -1000,6 +1033,9 @@ namespace Win32xx
 	{
 		try
 		{
+			if (m_PrevWindowProc)
+				throw CWinException(TEXT("Superclass failed.  Already Subclassed or Superclassed"));
+
 			// Step 1:  Extract the old class's window procedure
 			WNDCLASSEX wcx = {0};
 			wcx.cbSize = sizeof(WNDCLASSEX);

@@ -10,6 +10,12 @@ Changes:
 * Enhanced the Threads sample. This program now also conducts a simple 
    performance test to measure the efficiency of the message handling 
    for multi-threaded applications.
+* Simplified updates to the statusbar. These are now done on a timer,
+   instead of tracking mouse messages for the toolbar.
+   
+The following changes have been made to the Win32++ code:
+Added CFrame::OnTimer
+Removed CFrame::ToolbarNotify
 
 Version 5.1
 -----------

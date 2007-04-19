@@ -84,7 +84,6 @@ namespace Win32xx
 			MAX_MENU_STRING = 32,
 		};
 
-		virtual int GetMenuWindowPos(HMENU hMenu);
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:

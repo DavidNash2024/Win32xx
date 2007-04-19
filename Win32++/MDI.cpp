@@ -257,8 +257,7 @@ namespace Win32xx
 			}
 			break;
 		case WM_TIMER:
-			if (wParam == ID_STATUS_TIMER)
-				SetStatusIndicators();
+			OnTimer(wParam);
 			return 0L;
 		case WM_WINDOWPOSCHANGED:
 			// MDI Child or MDI frame has been resized
@@ -442,26 +441,6 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	int CMDIChild::GetMenuWindowPos(HMENU hMenu)
-	// Finds the menu item called "Window" and returns its position
-	{
-		int nMenuItemCount = ::GetMenuItemCount(hMenu);
-		int WindowItem = -1;
-
-		for (int i = 0 ; i < nMenuItemCount; i++)
-		{
-			TCHAR szMenuName[MAX_MENU_STRING +1];
-			::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
-
-			if (lstrcmp(szMenuName, TEXT("Window")) == 0)
-				WindowItem = i;
-			if (lstrcmp(szMenuName, TEXT("&Window")) == 0)
-				WindowItem = i;
-		}
-
-		return WindowItem;
-	}
-
 	BOOL CMDIChild::OnCommand(UINT /*nID*/)
 	{
 		// Override this to handle WM_COMMAND messages, for example
@@ -493,7 +472,7 @@ namespace Win32xx
 	void CMDIChild::UpdateFrameMenu(HMENU hMenu)
 	{
 		CFrame* pFrame = GetApp()->GetFrame();
-		int nWindowItem = GetMenuWindowPos(hMenu);
+		int nWindowItem = pFrame->GetMenuItemPos(hMenu, TEXT("Window"));
 		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
 
 		::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);

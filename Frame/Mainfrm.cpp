@@ -111,7 +111,8 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	// Disable some of the toolbar buttons
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
+	TB.DisableButton(IDM_EDIT_PASTE); 
+
 }
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

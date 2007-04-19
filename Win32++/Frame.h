@@ -101,7 +101,6 @@ namespace Win32xx
 	protected:
 		virtual void OnInitialUpdate();
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		HIMAGELIST m_hImageList;
@@ -218,6 +217,7 @@ namespace Win32xx
 		virtual RECT GetClientSize();
 		virtual HMENU GetFrameMenu() {return m_hMenu;}
 		virtual CMenubar& GetMenubar() {return m_Menubar;}
+		virtual GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CStatusbar& GetStatusbar() {return m_Statusbar;}
 		virtual CRebar& GetRebar() {return m_Rebar;}
 		virtual CToolbar& GetToolbar() {return m_Toolbar;}
@@ -241,13 +241,14 @@ namespace Win32xx
 		virtual	LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
+		virtual	void OnTimer(WPARAM wParam);
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
-		virtual void ToolbarNotify(int nButton);
+	//	virtual void ToolbarNotify(int nButton);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;
