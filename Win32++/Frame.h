@@ -125,13 +125,14 @@ namespace Win32xx
 		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
 		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
 		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
+		virtual BOOL IsBandVisible(int nBand);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void ResizeBand(const int nBand, const int nSize);
 		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
 		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
 		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL SetBarInfo(LPREBARINFO prbi);
-
+		virtual BOOL ShowBand(int nBand, BOOL fShow);
 	};
 
 
@@ -217,7 +218,7 @@ namespace Win32xx
 		virtual RECT GetClientSize();
 		virtual HMENU GetFrameMenu() {return m_hMenu;}
 		virtual CMenubar& GetMenubar() {return m_Menubar;}
-		virtual GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
+		virtual int GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CStatusbar& GetStatusbar() {return m_Statusbar;}
 		virtual CRebar& GetRebar() {return m_Rebar;}
 		virtual CToolbar& GetToolbar() {return m_Toolbar;}

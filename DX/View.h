@@ -4,9 +4,11 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+// NOTE: for MS compilers you will need the DirectX SDK v9
+//       for Dev-C++ you will need the DirecX v9.0c DevPak
 
 #include "..\Win32++\Wincore.h"
-#include <d3d9.h>
+#include <d3d9.h>  // See the note above
 
 
 // A structure for our custom vertex type

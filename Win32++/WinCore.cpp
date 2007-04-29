@@ -86,8 +86,8 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp(HINSTANCE hInstance) : m_hFont(NULL), m_hInstance(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL),
-											m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
+	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hFont(NULL), m_hInstance(hInstance), m_hRichEdit(NULL), 
+		                                        m_hTraceEdit(NULL), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
 	{
 		try
 		{
@@ -209,9 +209,9 @@ namespace Win32xx
 		{
 			if (status == -1) return -1;
 
-			if (GetFrame())
+			if (m_hAccelTable)
 			{
-				if (!::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg))
+				if (!::TranslateAccelerator(uMsg.hwnd, m_hAccelTable, &uMsg))
 				{
 					::TranslateMessage(&uMsg);
 					::DispatchMessage(&uMsg);
@@ -996,10 +996,10 @@ namespace Win32xx
 			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 #else
 			
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
-#endif //defined(_MSC_VER)
+	#if defined(_MSC_VER)
+		#pragma warning(push)
+		#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
+	#endif //defined(_MSC_VER)
 			
 			// use 64 bit compliant code otherwise
 			WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
@@ -1007,9 +1007,9 @@ namespace Win32xx
 				throw CWinException(TEXT("Subclass failed.  Already sending messages to StaticWindowProc"));
 			m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 
-#if defined(_MSC_VER)
-#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
-#endif //defined(_MSC_VER)
+	#if defined(_MSC_VER)
+		#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
+	#endif //defined(_MSC_VER)
 #endif // defined (_MSC_VER) && _MSC_VER <= 1200
 
 		}

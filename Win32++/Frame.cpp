@@ -725,6 +725,16 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)(LPREBARBANDINFO)prbbi);
 	}
 
+	BOOL CRebar::IsBandVisible(int nBand)
+	{
+		REBARBANDINFO rbbi = {0};
+		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.fMask = RBBIM_STYLE;
+		GetBandInfo(nBand, &rbbi);
+
+		return !(rbbi.fStyle & RBBS_HIDDEN);
+	}
+
 	void CRebar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
@@ -787,6 +797,25 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_SETBARINFO, 0, (LPARAM)prbi);
 	}
 
+	BOOL CRebar::ShowBand(int nBand, BOOL fShow)
+	// Show or hide a band
+	{
+		REBARBANDINFO rbbi = {0};
+		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.fMask = RBBIM_STYLE;
+		GetBandInfo(nBand, &rbbi);
+		if (fShow)
+		{
+			rbbi.fStyle &=  ~RBBS_HIDDEN;
+			SetBandInfo(nBand, &rbbi);
+		}
+		else
+		{
+			rbbi.fStyle |= RBBS_HIDDEN;
+			SetBandInfo(nBand, &rbbi);
+		}
+		return fShow;
+	}
 
 	/////////////////////////////////////
 	// Definitions for the CMenubar class
@@ -1944,16 +1973,17 @@ namespace Win32xx
 			// Create the rebar
 			GetRebar().Create(m_hWnd);
 
-			// Create the menu
+			// Create the menu inside rebar
 			GetMenubar().Create(GetRebar().GetHwnd());
 			GetMenubar().SetMenu(m_hMenu);
 			AddMenubarBand();
 
-			// Create tool bar
+			// Create the toolbar inside rebar
 			GetToolbar().Create(GetRebar().GetHwnd());
 			AddToolbarBand();
 		}
 		else
+			// Create the toolbar
 			GetToolbar().Create(m_hWnd);
 
 		if (!IsMenubarUsed())
@@ -1968,8 +1998,8 @@ namespace Win32xx
 		// Create the view window
 		m_pView->Create(m_hWnd);
 
-		// Start timer for Status Indicator updates
-		if (m_bShowIndicatorStatus)
+		// Start timer for Status updates
+		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
@@ -2057,34 +2087,40 @@ namespace Win32xx
 	void CFrame::OnTimer(WPARAM wParam)
 	{
 		if (wParam == ID_STATUS_TIMER)
-			SetStatusIndicators();
-
-		static int nOldID = -1;
-		CToolbar& tb = GetToolbar();
-
-		int nButton = tb.HitTest();
-		if (nButton >= 0)
 		{
-			int nID = GetToolbar().GetCommandID(nButton);
-			if (nID != nOldID)
+			if (m_bShowMenuStatus)
 			{
-				if (nID != 0)
-					m_StatusText = LoadString(nID);
+				static int nOldID = -1;
+				CToolbar& tb = GetToolbar();
+
+				int nButton = tb.HitTest();
+				if (nButton >= 0)
+				{
+					int nID = GetToolbar().GetCommandID(nButton);
+					if (nID != nOldID)
+					{
+						if (nID != 0)
+							m_StatusText = LoadString(nID);
+						else
+							m_StatusText = TEXT("Ready");
+
+						SetStatusText();
+					}
+					nOldID = nID;
+				}
 				else
-					m_StatusText = TEXT("Ready");
+				{
+					if (nOldID != -1)
+					{
+						m_StatusText = TEXT("Ready");
+						SetStatusText();
+					}
+					nOldID = -1;
+				}
+			}
 
-				SetStatusText();
-			}
-			nOldID = nID;
-		}
-		else
-		{
-			if (nOldID != -1)
-			{
-				m_StatusText = TEXT("Ready");
-				SetStatusText();
-			}
-			nOldID = -1;
+			if (m_bShowIndicatorStatus)
+				SetStatusIndicators();
 		}
 	}
 
