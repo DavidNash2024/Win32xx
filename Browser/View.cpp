@@ -9,18 +9,16 @@
 //  comsupp.lib (for ConvertStringToBSTR support)
 //  atl.lib		(assuming you want to link ATL staticly)
 //
-// For Visual Studio 2005
-//  It seems compiling with ALT staticly is not possible 
-//  (or at least more trouble than its worth) so you may need to also
-//  ship the ATL80.dll.   Sigh... 
 
+
+// Global CAtlDummyMoldule object
+//CView::CAtlDummyModule g_MyModule;
 
 // Definitions for the CView class
-
 CView::CView() : m_pInetExplorer(NULL)
 {
-	AtlAxWinInit();
-	OleInitialize(NULL);
+	AtlAxWinInit();			// Initialise ATL
+	OleInitialize(NULL);	// Initialise OLE
 }
 
 CView::~CView()

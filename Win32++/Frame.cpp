@@ -1774,7 +1774,7 @@ namespace Win32xx
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
 
-		m_hMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 
 		// Place this code in CMainFrame's constructor
 /*
@@ -2278,6 +2278,17 @@ namespace Win32xx
 		int iButtons = GetToolbar().SetButtons(ToolbarData);
 		GetToolbar().SetImageList(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 	}
+
+	void CFrame::SetFrameMenu(INT ID_MENU)
+	{
+		if (m_hMenu) 
+			::DestroyMenu(m_hMenu);
+		
+		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
+		
+		if(!m_hMenu) 
+			DebugWarnMsg(TEXT("Load Menu failed"));
+ 	}
 
 	void CFrame::SetStatusIndicators()
 	{

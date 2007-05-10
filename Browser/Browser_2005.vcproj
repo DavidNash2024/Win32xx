@@ -20,7 +20,7 @@
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfATL="2"
+			UseOfATL="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -102,7 +102,7 @@
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfATL="2"
+			UseOfATL="1"
 			CharacterSet="2"
 			>
 			<Tool

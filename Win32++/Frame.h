@@ -227,9 +227,10 @@ namespace Win32xx
 		virtual BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
 		virtual BOOL IsRebarSupported() {return m_bSupportRebars;}
 		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
-		virtual void SetView(CWnd& pView);
+		virtual void SetFrameMenu(INT ID_MENU);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
+		virtual void SetView(CWnd& pView);
 
 	protected:
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
@@ -249,7 +250,7 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
-	//	virtual void ToolbarNotify(int nButton);
+
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;

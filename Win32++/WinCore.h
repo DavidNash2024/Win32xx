@@ -211,12 +211,15 @@ namespace Win32xx
 		virtual ~CWinApp();
 		virtual void CreateTrace();
 		virtual CFrame* GetFrame() {return m_pFrame;}
-		virtual HINSTANCE  GetInstanceHandle() {return m_hInstance;}
 		static CWinApp* GetApp() {return st_pTheApp;}
+		virtual HINSTANCE GetInstanceHandle() {return m_hInstance;}
+		virtual HINSTANCE GetResourceHandle() {return m_hResource;}
 		virtual std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();
+		virtual void SetAcceleratorTable(INT ID_ACCEL);
 		virtual void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
+		virtual void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;} 
 		virtual void Trace(LPCTSTR szString);
 
 	private:
@@ -232,6 +235,7 @@ namespace Win32xx
 		HACCEL m_hAccelTable;		// handle to the accelerator table
 		HFONT m_hFont;				// handle to the font in the Trace window
 		HINSTANCE m_hInstance;		// handle to the applications instance
+		HINSTANCE m_hResource;		// handle to the applications resources 
 		HMODULE m_hRichEdit;		// handle to the module for the RichEdit dll
 		HWND m_hTraceEdit;			// handle to the Trace edit window
 		BOOL m_IsTlsAllocatedHere;	// a flag set for the Thread Local Storage

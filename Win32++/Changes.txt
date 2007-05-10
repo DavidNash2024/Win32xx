@@ -5,18 +5,28 @@ Bug Fixes
 * Removed possible deadlock in CWinApp::Trace
 * Removed flicker when switching maximised MDI child windows.
 * MDIChild windows now handle OnCreate and message reflection
+* Fixed a repainting bug in subclassed windows
 
 Changes:
+* Added the Browser Sample. It demonstrates how to host an ActiveX
+   control in a Win32++ window.
 * Added the Performance sample. This program now also conducts a simple 
    performance test to measure the efficiency of the message handling. 
 * Simplified updates to the statusbar. These are now done on a timer,
    instead of tracking mouse messages for the toolbar.
+* Added a seperate HINSTANCE for resources. This provides multilingual
+   support, by allowing string resources to be loaded via a DLL. 
+
    
 The following changes have been made to the Win32++ code:
 Added CFrame::OnTimer
 Added CFrame::GetMenuItemPos
+Added CFrame::SetFrameMenu
 Added CRebar::IsBandVisible
 Added CRebar::ShowBand
+Added CWinApp::GetResourceHandle
+Added CWinApp::SetAcceleratorTable
+Added CWinApp::SetResourceHandle
 Removed CFrame::ToolbarNotify
 
 Version 5.1

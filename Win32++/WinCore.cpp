@@ -86,8 +86,9 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hFont(NULL), m_hInstance(hInstance), m_hRichEdit(NULL), 
-		                                        m_hTraceEdit(NULL), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
+	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hFont(NULL), m_hInstance(hInstance), 
+							m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL), 
+							m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
 	{
 		try
 		{
@@ -108,7 +109,7 @@ namespace Win32xx
  				throw CWinException(TEXT("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
 
-			m_hAccelTable = ::LoadAccelerators(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+			m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 			m_pTrace = new CWnd;
 
 	#ifdef _DEBUG
@@ -225,6 +226,16 @@ namespace Win32xx
 
 		}
 		return LOWORD(uMsg.wParam);
+	}
+
+	void CWinApp::SetAcceleratorTable(INT ID_ACCEL)
+	{
+		if (m_hResource)
+			::DestroyAcceleratorTable(m_hAccelTable);
+
+		m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
+		if (!m_hAccelTable)
+			DebugWarnMsg(TEXT("Load Accelerators failed"));
 	}
 
 	TLSData* CWinApp::SetTlsIndex()
@@ -481,7 +492,8 @@ namespace Win32xx
 
 			// Create window
 			m_hWndParent = hParent;
-			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight, hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight, 
+				                      hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
 
 			// Tidy up
 			RemoveHook();
@@ -628,7 +640,7 @@ namespace Win32xx
 				throw CWinException(TEXT("Win32++ has not been initialised successfully."));
 
 			::lstrcpy(m_szString, TEXT(""));
-			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE -1))
+			if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_szString, MAX_STRING_SIZE -1))
 			{
 				TCHAR str[80];
 				::wsprintf(str, TEXT("LoadString - No string resource for %d"), nID);
@@ -763,8 +775,8 @@ namespace Win32xx
 
 	void CWnd::OnPaint(HDC)
 	{
-		// Override this function in your derived class to perform
-		// drawing tasks.
+		// Override this function in your derived class to perform drawing tasks.
+		// This function is not called automatically for subclassed windows.
 	}
 
 	void CWnd::PreCreate(CREATESTRUCT& cs)
@@ -1090,16 +1102,16 @@ namespace Win32xx
 			break;
 		case WM_PAINT:
 			{
-				// Do default processing first if subclassed
+				// Do default processing if subclassed
 				if (m_PrevWindowProc)
-					CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
+					return CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
 
 				::PAINTSTRUCT ps;
 				HDC hDC = ::BeginPaint(hwnd, &ps);
 				OnPaint(hDC);
 				::EndPaint(hwnd, &ps);
 			}
-			return 0L;
+			return 0L;  
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
