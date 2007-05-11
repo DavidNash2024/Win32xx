@@ -29,6 +29,7 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
+	virtual void Navigate(LPCTSTR str);
 	
 	// ATL expects a module class to be used, especially when it is 
 	// linked as a static library. This satisfies that requirement.

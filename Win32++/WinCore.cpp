@@ -431,10 +431,10 @@ namespace Win32xx
 				dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : WS_OVERLAPPEDWINDOW);
 
 			// Set window size and position
-			int x  = (m_cs.cx && m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
-			int cx = (m_cs.cx && m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
-			int y  = (m_cs.cx && m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
-			int cy = (m_cs.cx && m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
+			int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
+			int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
+			int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
+			int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
 
 			// Create the window
 			if (!CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
@@ -776,7 +776,6 @@ namespace Win32xx
 	void CWnd::OnPaint(HDC)
 	{
 		// Override this function in your derived class to perform drawing tasks.
-		// This function is not called automatically for subclassed windows.
 	}
 
 	void CWnd::PreCreate(CREATESTRUCT& cs)
@@ -1102,16 +1101,32 @@ namespace Win32xx
 			break;
 		case WM_PAINT:
 			{
-				// Do default processing if subclassed
-				if (m_PrevWindowProc)
-					return CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
+				if (::GetUpdateRect(hwnd, NULL, FALSE))
+				{
+					::PAINTSTRUCT ps;
+					HDC hDC = ::BeginPaint(hwnd, &ps);
+				
+					// this trick works with most common controls
+					if (m_PrevWindowProc)
+						 CallPrevWindowProc(hwnd, uMsg, (WPARAM)hDC, lParam);
+				
+					OnPaint(hDC);
+					::EndPaint(hwnd, &ps);
+				}
+				else
+				// RedrawWindow can require repainting without an update rect
+				{
+					HDC hDC = GetDC(hwnd);
 
-				::PAINTSTRUCT ps;
-				HDC hDC = ::BeginPaint(hwnd, &ps);
-				OnPaint(hDC);
-				::EndPaint(hwnd, &ps);
+					// this trick works with most common controls
+					if (m_PrevWindowProc)
+						 CallPrevWindowProc(hwnd, uMsg, (WPARAM)hDC, lParam);
+
+					OnPaint(hDC);
+					::ReleaseDC(hwnd, hDC);
+				}
 			}
-			return 0L;  
+			return 0L;   
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:

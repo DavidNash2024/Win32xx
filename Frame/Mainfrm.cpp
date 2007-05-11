@@ -76,6 +76,19 @@ void CMainFrame::OnInitialUpdate()
 	TRACE("Frame created");
 }
 
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+{
+	// Process notification messages sent by child windows
+
+//	switch(((LPNMHDR)lParam)->code)
+//	{	
+ 		//Add case statments for each notification message here
+//	}  
+
+	// pass unhandled notifications to CFrame
+	return CFrame::OnNotify(wParam, lParam);
+}
+
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 

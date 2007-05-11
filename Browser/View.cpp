@@ -29,6 +29,16 @@ CView::~CView()
 	OleUninitialize();
 }
 
+void CView::Navigate(LPCTSTR str)
+{
+	// Navigate to the web page
+	VARIANT vars[4];
+	memset(vars,0,sizeof(vars));
+	BSTR BStrURL = _com_util::ConvertStringToBSTR(str);
+	HRESULT hrie = m_pInetExplorer->Navigate(BStrURL,vars,vars+1,vars+2,vars+3);
+	SysFreeString(BStrURL); 
+}
+
 void CView::OnCreate()
 {
 	// Set the window's icon
@@ -46,13 +56,6 @@ void CView::OnCreate()
 		// Set the IWebBrowser2 pointer
 		spUnk->QueryInterface (IID_IWebBrowser2, (LPVOID *) &m_pInetExplorer);
 		spUnk->Release();
-
-		// Navigate to the web page
-		VARIANT vars[4];
-		memset(vars,0,sizeof(vars));
-		BSTR BStrURL = _com_util::ConvertStringToBSTR(TEXT("http://www.google.com.au"));
-		HRESULT hrie = m_pInetExplorer->Navigate(BStrURL,vars,vars+1,vars+2,vars+3);
-		SysFreeString(BStrURL); 
 	} 
 	else 
 		DebugErrMsg(TEXT("Failed to create browser control"));
@@ -71,7 +74,7 @@ void CView::OnInitialUpdate()
 	// OnInitial is called after the window is created.
 	// Tasks which are to done after the window is created go here.
 
-	TRACE("OnInitialUpdate");
+	TRACE("CView::OnInitialUpdate");
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
