@@ -304,15 +304,20 @@ namespace ShellWrapper
 	HRESULT CEnumIDList::Next(ULONG Elements, Cpidl& cpidl, ULONG& ulFetched)
 	{
 		LPITEMIDLIST pidl;
-		HRESULT hr = m_pEnumIDList->Next(Elements, &pidl, &ulFetched);
-		if (hr == NOERROR)
-			cpidl.Attach(pidl);
-
-		if ((hr != NOERROR) && (hr != S_FALSE))
+		if (m_pEnumIDList)
 		{
-			TRACE(TEXT("CEnumIDList::Next failed"));
+			HRESULT hr = m_pEnumIDList->Next(Elements, &pidl, &ulFetched);
+			if (hr == NOERROR)
+				cpidl.Attach(pidl);
+
+			if ((hr != NOERROR) && (hr != S_FALSE))
+			{
+				TRACE(TEXT("CEnumIDList::Next failed"));
+			}
+			return hr;
 		}
-		return hr;
+		else
+			return S_FALSE;
 	}
 
 	//Cpidl function definitions

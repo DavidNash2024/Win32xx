@@ -183,7 +183,7 @@ namespace Win32xx
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
 		r.top = r.bottom - TRACE_HEIGHT;
 		r.left = r.right - TRACE_WIDTH;
-		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_VISIBLE;
+		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION /*| WS_VISIBLE*/;
 
 		m_pTrace->CreateEx(WS_EX_TOPMOST, TEXT("TRACE"), TEXT("Trace Window"), dwStyle, r, NULL, NULL);
 
@@ -275,6 +275,10 @@ namespace Win32xx
 	{
 		// CreateTrace must be called once before using this function
 		if (m_hTraceEdit == 0) return;
+
+		// The Trace window is initially invisible. Make it visible now.
+		if (!::IsWindowVisible(m_pTrace->GetHwnd()))
+			::ShowWindow(m_pTrace->GetHwnd(), SW_SHOWNA);
 
 		HWND PreFocus = ::GetFocus();
 

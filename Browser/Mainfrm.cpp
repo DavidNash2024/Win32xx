@@ -25,15 +25,16 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.clear();
 	m_ToolbarData.push_back ( IDM_FILE_NEW   );
 	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
+	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
-	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
+	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
-	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_FILE_PRINT );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+//	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
+//	m_ToolbarData.push_back ( 0 );				// Separator
+//	m_ToolbarData.push_back ( IDM_FILE_PRINT );
+//	m_ToolbarData.push_back ( 0 );				// Separator
+//	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 }
 
 CMainFrame::~CMainFrame()
@@ -106,7 +107,7 @@ void CMainFrame::OnInitialUpdate()
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	HWND hwnd = m_Combobox.GetHwnd();
-	TRACE("OnNotify");
+
 	switch (((LPNMHDR)lParam)->code)
 	{
 	case CBEN_ENDEDIT:
@@ -161,30 +162,15 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.SetBitmapSize(24, 24);
 
 	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	TB.SetImageList(5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Set the resource IDs for the toolbar buttons
 	TB.SetButtons(ToolbarData);
 
-	// Add some text to the buttons
-// 	TB.SetButtonText(IDM_FILE_NEW,   "New");
-//	TB.SetButtonText(IDM_FILE_OPEN,  "Open");
-//	TB.SetButtonText(IDM_FILE_SAVE,  "Save");
-//	TB.SetButtonText(IDM_EDIT_CUT,   "Cut");
-//	TB.SetButtonText(IDM_EDIT_COPY,  "Copy");
-//	TB.SetButtonText(IDM_EDIT_PASTE, "Paste");
-//	TB.SetButtonText(IDM_FILE_PRINT, "Print");
-//	TB.SetButtonText(IDM_HELP_ABOUT, "About");
-
 	// Adjust the toolbar and rebar size to take account of the larger buttons
 	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
+	TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW), &r);
 	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE); 
 
 }
 
