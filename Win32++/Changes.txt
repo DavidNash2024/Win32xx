@@ -8,6 +8,7 @@ Bug Fixes
 * Fixed a repainting bug in subclassed windows
 
 Changes:
+* The Trace window is not displayed until a TRACE statement is encountered.
 * Added the Browser Sample. It demonstrates how to host an ActiveX
    control in a Win32++ window.
 * Added the Performance sample. This program now also conducts a simple 
