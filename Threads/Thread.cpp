@@ -6,7 +6,7 @@
 #include "Thread.h"
 
 
-CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0), m_pTestWindow(NULL)
+CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0)//, m_pTestWindow(NULL)
 {
 	try
 	{		
@@ -32,9 +32,6 @@ CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0), m_pTestWindow(NULL
 
 CThread::~CThread()
 {
-	// delete the Test Window CWnd object
-	delete m_pTestWindow;
-	
 	// close the thread's handle
 	::CloseHandle(m_hThread);
 }
@@ -51,8 +48,7 @@ DWORD WINAPI CThread::ThreadCallback(LPVOID pCThread)
 	TRACE(str);
 
 	// Create a test window for this thread
-	pThread->m_pTestWindow = new CTestWindow;
-	pThread->m_pTestWindow->CreateWin(i);
+	pThread->m_TestWindow.CreateWin(i);
 
 	// Each thread with a window has its own message loop
 	// The message loop runs until the thread's window is destroyed

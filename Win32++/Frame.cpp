@@ -1774,7 +1774,8 @@ namespace Win32xx
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
 
-		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		SetFrameMenu(IDW_MAIN);
+		GetApp()->SetAcceleratorTable(IDW_MAIN);
 
 		// Place this code in CMainFrame's constructor
 /*
@@ -1880,11 +1881,11 @@ namespace Win32xx
 			TCHAR szStr[MAX_MENU_STRING +1];
 			TCHAR szStripped[MAX_MENU_STRING +1];
 
-			mii.fMask      = MIIM_TYPE;  
-			mii.fType      = MFT_STRING; 
+			mii.fMask      = MIIM_TYPE;
+			mii.fType      = MFT_STRING;
 			mii.dwTypeData = szStr;
 			mii.cch        = MAX_MENU_STRING;
-			
+
 			// Fill the contents of szStr from the menu item
 			::GetMenuItemInfo(hMenu, nItem, TRUE, &mii);
 
@@ -1895,13 +1896,13 @@ namespace Win32xx
 				if (szStr[i] != TEXT('&'))
 					szStripped[j++] = szStr[i];
 			}
-				
+
 			// Compare the strings
 			if (lstrcmp(szStripped, szItem) == 0)
 				nPos = nItem;
 		}
 
-		return nPos;		
+		return nPos;
 	}
 
 	void CFrame::LoadCommonControls(INITCOMMONCONTROLSEX InitStruct)
@@ -2281,12 +2282,12 @@ namespace Win32xx
 
 	void CFrame::SetFrameMenu(INT ID_MENU)
 	{
-		if (m_hMenu) 
+		if (m_hMenu)
 			::DestroyMenu(m_hMenu);
-		
+
 		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
-		
-		if(!m_hMenu) 
+
+		if(!m_hMenu)
 			DebugWarnMsg(TEXT("Load Menu failed"));
  	}
 

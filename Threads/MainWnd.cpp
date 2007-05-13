@@ -9,7 +9,7 @@
 #include "resource.h"
 
 
-CMainWindow::CMainWindow() : m_pCThreads(NULL)
+CMainWindow::CMainWindow()
 {
 	// Set the number of threads
 	m_nThreads = 20;
@@ -17,13 +17,10 @@ CMainWindow::CMainWindow() : m_pCThreads(NULL)
 
 CMainWindow::~CMainWindow()
 {
-	// m_pCThreads is an array of CThread pointers
+	// m_pCThreads is a vector of CThread pointers
 	// Delete each CThread object
 	for (int i = 0 ; i < m_nThreads; i++)
 		delete m_pCThreads[i];
-
-	// Delete the array itself
-	delete []m_pCThreads;
 }
 
 void CMainWindow::Create()
@@ -38,14 +35,11 @@ void CMainWindow::Create()
 
 void CMainWindow::OnCreate()
 {
-	// Create the array of CThread pointers
-	m_pCThreads = new CThread*[m_nThreads];
-
 	// Create each CThread object
 	for (int i = 0 ; i < m_nThreads ; i++)
 	{
 		// Create the thread and store the CThread pointer
-		m_pCThreads[i] = new CThread(i);
+		m_pCThreads.push_back(new CThread(i));
 	}
 }
 
@@ -71,7 +65,7 @@ LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			//Close the thread windows
 			for (int i = 0 ; i < m_nThreads ; i++)
-				::SendMessage(m_pCThreads[i]->GetTestWindow()->GetHwnd(), WM_CLOSE, 0, 0);
+				::SendMessage(m_pCThreads[i]->GetTestWindow().GetHwnd(), WM_CLOSE, 0, 0);
 		}
 		break;
 	

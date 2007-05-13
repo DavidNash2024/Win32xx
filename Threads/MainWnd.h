@@ -6,6 +6,7 @@
 #ifndef MAINWND_H
 #define MAINWND_H
 
+#include <vector>
 #include "..\Win32++\WinCore.h"
 
 // Forward declaration of the CThread class
@@ -26,12 +27,12 @@ protected:
 private:
 	enum Constants
 	{
-		WM_WINDOWCREATED     = WM_USER+1,	// the message sent when window is created
-		WM_TESTMESSAGE       = WM_USER+2    // the test message 
+		WM_WINDOWCREATED = WM_USER+1,	// the message sent when window is created
+		WM_TESTMESSAGE   = WM_USER+2	// the test message 
 	};
 
-	CThread** m_pCThreads;	// An array of CThread pointers
-	int m_nThreads;			// Number of additional threads to be created
+	std::vector<CThread*> m_pCThreads;	// A vector of CThread pointers
+	int m_nThreads;						// Number of additional threads to be created
 };
 
 

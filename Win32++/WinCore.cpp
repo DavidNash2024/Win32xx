@@ -109,7 +109,6 @@ namespace Win32xx
  				throw CWinException(TEXT("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
 
-			m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 			m_pTrace = new CWnd;
 
 	#ifdef _DEBUG
@@ -308,13 +307,6 @@ namespace Win32xx
 			// Test if Win32++ has been started
 			if (GetApp() == 0)
 				throw CWinException(TEXT("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
-			GetApp()->m_MapLock.Lock();
-			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
-
-			// Ensure each thread has the TLS index set
-			if (m_pTLSData == NULL)
-				m_pTLSData = GetApp()->SetTlsIndex();
-			GetApp()->m_MapLock.Release();
 		}
 
 		catch (const CWinException &e)
@@ -491,6 +483,14 @@ namespace Win32xx
 			if (!RegisterClassEx(wcx))
 				throw CWinException(TEXT("CWnd::CreateEx  Failed to register window class"));
 
+			// Ensure this thread has the TLS index set
+			GetApp()->m_MapLock.Lock();
+			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
+
+			if (m_pTLSData == NULL)
+				m_pTLSData = GetApp()->SetTlsIndex();
+			GetApp()->m_MapLock.Release();
+			
 			// Create and store the CBT hook
 			SetHook();
 
