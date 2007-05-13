@@ -1,5 +1,5 @@
-// Win32++  Version 5.11 beta
-// Released: 27th February, 2007 by:
+// Win32++  Version 5.2
+// Released: 20th May, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -515,7 +515,7 @@ namespace Win32xx
 		case WM_NOTIFY:
 			lr = OnNotify(wParam, lParam);
 			if (lr) return lr;
-			break;	
+			break;
 		case WM_PAINT:
 			{
 				// Do default processing first if subclassed
@@ -550,7 +550,7 @@ namespace Win32xx
 			break;				// Do default processing when message not already processed
 
 		}
-		
+
 		// Now hand all messages to the default procedure
 		if (m_PrevWindowProc)
 			return ::CallWindowProc(m_PrevWindowProc, hwnd, uMsg, wParam, lParam);

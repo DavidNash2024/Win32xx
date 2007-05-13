@@ -1,5 +1,5 @@
-// Win32++  Version 5.11 beta
-// Released: 27th February, 2007 by:
+// Win32++  Version 5.2
+// Released: 20th May, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -219,7 +219,7 @@ namespace Win32xx
 		virtual int MessageLoop();
 		virtual void SetAcceleratorTable(INT ID_ACCEL);
 		virtual void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
-		virtual void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;} 
+		virtual void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		virtual void Trace(LPCTSTR szString);
 
 	private:
@@ -235,7 +235,7 @@ namespace Win32xx
 		HACCEL m_hAccelTable;		// handle to the accelerator table
 		HFONT m_hFont;				// handle to the font in the Trace window
 		HINSTANCE m_hInstance;		// handle to the applications instance
-		HINSTANCE m_hResource;		// handle to the applications resources 
+		HINSTANCE m_hResource;		// handle to the applications resources
 		HMODULE m_hRichEdit;		// handle to the module for the RichEdit dll
 		HWND m_hTraceEdit;			// handle to the Trace edit window
 		BOOL m_IsTlsAllocatedHere;	// a flag set for the Thread Local Storage

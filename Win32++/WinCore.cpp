@@ -1,5 +1,5 @@
-// Win32++  Version 5.11 beta
-// Released: 27th February, 2007 by:
+// Win32++  Version 5.2
+// Released: 20th May, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -50,7 +50,7 @@ namespace Win32xx
 	/////////////////////////////////
 	// Global functions and variables
 	//
-	
+
 	void DebugErrMsg(LPCTSTR ErrorMsg)
 	// Displays a warning message in a message box
 	{
@@ -86,8 +86,8 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hFont(NULL), m_hInstance(hInstance), 
-							m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL), 
+	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hFont(NULL), m_hInstance(hInstance),
+							m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL),
 							m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
 	{
 		try
@@ -131,7 +131,7 @@ namespace Win32xx
 	CWinApp::~CWinApp()
 	{
 		delete m_pTrace;
-		
+
 		if (m_hRichEdit)
 			::FreeLibrary(m_hRichEdit);
 		if (m_hFont)
@@ -285,7 +285,7 @@ namespace Win32xx
 
 		// Add CR LF to the end
 		TCHAR str[80];
-		::lstrcpyn(str, szString, 77);  
+		::lstrcpyn(str, szString, 77);
 		::lstrcat(str, TEXT("\r\n"));
 
 		::SendMessage(m_hTraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)str);
@@ -492,13 +492,13 @@ namespace Win32xx
 			if (m_pTLSData == NULL)
 				m_pTLSData = GetApp()->SetTlsIndex();
 			GetApp()->m_MapLock.Release();
-			
+
 			// Create and store the CBT hook
 			SetHook();
 
 			// Create window
 			m_hWndParent = hParent;
-			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight, 
+			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 				                      hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
 
 			// Tidy up
@@ -560,7 +560,7 @@ namespace Win32xx
 			::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
 
 #else
-			
+
 #if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
@@ -1001,23 +1001,23 @@ namespace Win32xx
 		{
 			if (m_PrevWindowProc)
 				throw CWinException(TEXT("Subclass failed.  Already Subclassed or Superclassed"));
-			
+
 			// Subclass the window to pass messages to WndProc
-	
+
 #if defined (_MSC_VER) && _MSC_VER <= 1200
-	
+
 			// use non 64 bit compliant code for Visual C++ 6 and below
 			WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
 			if (WndProc == CWnd::StaticWindowProc)
 				throw CWinException(TEXT("Subclass failed.  Already sending messages to StaticWindowProc"));
 			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 #else
-			
+
 	#if defined(_MSC_VER)
 		#pragma warning(push)
 		#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
 	#endif //defined(_MSC_VER)
-			
+
 			// use 64 bit compliant code otherwise
 			WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
 			if (WndProc == CWnd::StaticWindowProc)
@@ -1030,7 +1030,7 @@ namespace Win32xx
 #endif // defined (_MSC_VER) && _MSC_VER <= 1200
 
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
@@ -1111,11 +1111,11 @@ namespace Win32xx
 				{
 					::PAINTSTRUCT ps;
 					HDC hDC = ::BeginPaint(hwnd, &ps);
-				
+
 					// this trick works with most common controls
 					if (m_PrevWindowProc)
 						 CallPrevWindowProc(hwnd, uMsg, (WPARAM)hDC, lParam);
-				
+
 					OnPaint(hDC);
 					::EndPaint(hwnd, &ps);
 				}
@@ -1132,7 +1132,7 @@ namespace Win32xx
 					::ReleaseDC(hwnd, hDC);
 				}
 			}
-			return 0L;   
+			return 0L;
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:

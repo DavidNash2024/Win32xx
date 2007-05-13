@@ -1,4 +1,4 @@
-Version 5.11
+Version 5.2
 ------------
 Bug Fixes
 * Fixed CWnd::Detach
