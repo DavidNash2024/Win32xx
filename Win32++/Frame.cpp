@@ -834,8 +834,6 @@ namespace Win32xx
 		m_nMDIButton    = 0;
 
 		ZeroMemory(&m_MDIRect, 3*sizeof(RECT));
-
-		m_pTLSData->pMenubar = this;
 	}
 
 	CMenubar::~CMenubar()
@@ -979,6 +977,7 @@ namespace Win32xx
 
 	void CMenubar::OnInitialUpdate()
 	{
+		m_pTLSData->pMenubar = this;
 		Subclass();
 
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message

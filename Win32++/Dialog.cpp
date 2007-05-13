@@ -181,6 +181,14 @@ namespace Win32xx
 
 			IsModal=TRUE;
 
+			// Ensure this thread has the TLS index set
+			GetApp()->m_MapLock.Lock();
+			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
+
+			if (m_pTLSData == NULL)
+				m_pTLSData = GetApp()->SetTlsIndex();
+			GetApp()->m_MapLock.Release();
+
 			// Create and store the CBT hook
 			SetHook();
 
@@ -220,6 +228,14 @@ namespace Win32xx
 				throw CWinException(TEXT("CDialog::DoModeless ... Window already exists"));
 
 			IsModal=FALSE;
+
+			// Ensure this thread has the TLS index set
+			GetApp()->m_MapLock.Lock();
+			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
+
+			if (m_pTLSData == NULL)
+				m_pTLSData = GetApp()->SetTlsIndex();
+			GetApp()->m_MapLock.Release();
 
 			// Create and store the CBT hook
 			SetHook();
