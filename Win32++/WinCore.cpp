@@ -136,6 +136,8 @@ namespace Win32xx
 			::FreeLibrary(m_hRichEdit);
 		if (m_hFont)
 			::DeleteObject(m_hFont);
+		if (m_hAccelTable)
+			::DestroyAcceleratorTable(m_hAccelTable);
 
 		if (m_IsTlsAllocatedHere)
 		{

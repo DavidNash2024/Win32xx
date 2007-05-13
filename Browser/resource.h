@@ -23,6 +23,12 @@
 #define IDM_EDIT_DELETE                 115
 #define IDM_HELP_ABOUT                  120
 
+#define IDM_BACK                        121
+#define IDM_FORWARD                     122
+#define IDM_REFRESH                     123
+#define IDM_STOP                        124
+#define IDM_HOME                        125
+
 #define IDB_TOOLBAR_NORM                130
 #define IDB_TOOLBAR_HOT                 131
 #define IDB_TOOLBAR_DIS                 132

@@ -194,41 +194,22 @@ END
 
 STRINGTABLE
 BEGIN
+    IDM_BACK                "Go back one page"
+    IDM_FORWARD             "Go forward one page"
+    IDM_REFRESH             "Reload current page"
+    IDM_STOP                "Stop loading this page"
+    IDM_HOME                "Load home page"
+END
+
+STRINGTABLE
+BEGIN
     61536                   "Close the Window"
-END
-
-STRINGTABLE
-BEGIN
     61488                   "Maximize the Window"
-END
-
-STRINGTABLE
-BEGIN
     61472                   "Minimize the WIndow"
-END
-
-STRINGTABLE
-BEGIN
     61456                   "Move the Window"
-END
-
-STRINGTABLE
-BEGIN
     61504                   "Select Next Window"
-END
-
-STRINGTABLE
-BEGIN
     61520                   "Select Previous Window"
-END
-
-STRINGTABLE
-BEGIN
     61728                   "Restore the Window"
-END
-
-STRINGTABLE
-BEGIN
     61440                   "Resize the Window"
 END
 

@@ -1796,7 +1796,8 @@ namespace Win32xx
 
 	CFrame::~CFrame()
 	{
-		::DestroyMenu(m_hMenu);
+		if (m_hMenu)
+			::DestroyMenu(m_hMenu);
 	}
 
 	void CFrame::AddMenubarBand(int Menubar_Height /* = MENUBAR_HEIGHT*/)

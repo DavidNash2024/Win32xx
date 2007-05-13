@@ -23,18 +23,13 @@ CMainFrame::CMainFrame()
 
 	// Set the Resource IDs for the toolbar buttons
 	m_ToolbarData.clear();
-	m_ToolbarData.push_back ( IDM_FILE_NEW   );
-	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
+	m_ToolbarData.push_back ( IDM_BACK   );
+	m_ToolbarData.push_back ( IDM_FORWARD );
 	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
-	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
+	m_ToolbarData.push_back ( IDM_REFRESH );
+	m_ToolbarData.push_back ( IDM_STOP );
 	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
-//	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
-//	m_ToolbarData.push_back ( 0 );				// Separator
-//	m_ToolbarData.push_back ( IDM_FILE_PRINT );
-//	m_ToolbarData.push_back ( 0 );				// Separator
-//	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+	m_ToolbarData.push_back ( IDM_HOME );
 }
 
 CMainFrame::~CMainFrame()
@@ -81,8 +76,20 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		// Display the help dialog
 		OnHelp();
 		break;
-	case CBN_SELENDOK:
-		TRACE("Selection from Combo list");
+	case IDM_BACK:
+		TRACE("Back");
+		break;
+	case IDM_FORWARD:
+		TRACE("FORWARD");
+		break;
+	case IDM_REFRESH:
+		TRACE("REFRESH");
+		break;
+	case IDM_STOP:
+		TRACE("STOP");
+		break;
+	case IDM_HOME:
+		TRACE("HOME");
 		break;
 	}
 
@@ -169,7 +176,7 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 
 	// Adjust the toolbar and rebar size to take account of the larger buttons
 	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW), &r);
+	TB.GetItemRect(TB.CommandToIndex(IDM_BACK), &r);
 	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
 
 }
