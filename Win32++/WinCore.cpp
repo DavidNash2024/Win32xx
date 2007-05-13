@@ -54,21 +54,21 @@ namespace Win32xx
 	void DebugErrMsg(LPCTSTR ErrorMsg)
 	// Displays a warning message in a message box
 	{
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
-	#else
+#else
 		UNREFERENCED_PARAMETER(ErrorMsg);
-	#endif  //_DEBUG
+#endif  //_DEBUG
 	}
 
 	void DebugWarnMsg(LPCTSTR WarnMsg)
 	// Displays an error message in a message box
 	{
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
-	#else
+#else
 		UNREFERENCED_PARAMETER(WarnMsg);
-	#endif  //_DEBUG
+#endif  //_DEBUG
 	}
 
 	// Function which returns a pointer to the CWinApp object
@@ -111,9 +111,9 @@ namespace Win32xx
 
 			m_pTrace = new CWnd;
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 			CreateTrace();
-	#endif
+#endif
 		}
 
 		catch (const CWinException &e)
@@ -560,18 +560,17 @@ namespace Win32xx
 			::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
 
 #else
-
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
-#endif //defined(_MSC_VER)
+  #if defined(_MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
+  #endif //defined(_MSC_VER)
 
 			// use 64 bit compliant code otherwise
 			::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 
-#if defined(_MSC_VER)
-#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
-#endif //defined(_MSC_VER)
+  #if defined(_MSC_VER)
+    #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
+  #endif //defined(_MSC_VER)
 #endif // defined (_MSC_VER) && _MSC_VER <= 1200
 
 			// Remove the map entry
@@ -1013,10 +1012,10 @@ namespace Win32xx
 			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 #else
 
-	#if defined(_MSC_VER)
-		#pragma warning(push)
-		#pragma warning(disable: 4244 4312) //Temporarily disable these warnings
-	#endif //defined(_MSC_VER)
+  #if defined(_MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
+  #endif //defined(_MSC_VER)
 
 			// use 64 bit compliant code otherwise
 			WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
@@ -1024,9 +1023,9 @@ namespace Win32xx
 				throw CWinException(TEXT("Subclass failed.  Already sending messages to StaticWindowProc"));
 			m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 
-	#if defined(_MSC_VER)
-		#pragma warning(pop)    // Re-enable 4244 + 4312 warnings
-	#endif //defined(_MSC_VER)
+  #if defined(_MSC_VER)
+    #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
+  #endif //defined(_MSC_VER)
 #endif // defined (_MSC_VER) && _MSC_VER <= 1200
 
 		}

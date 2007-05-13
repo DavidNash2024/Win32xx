@@ -46,14 +46,14 @@
 #define WINCORE_H
 
 #if defined (_MSC_VER) && _MSC_VER <= 1200
-// Correct for bug in Visual Studio 6
-#pragma warning (disable : 4786)
-#define DWORD_PTR DWORD
+  // Correct for bug in Visual Studio 6
+  #pragma warning (disable : 4786)
+  #define DWORD_PTR DWORD
 #endif // (_MSC_VER) && _MSC_VER <= 1200
 
 #ifdef _MSC_VER
-#pragma warning (disable : 4511) // copy operator could not be generated
-#pragma warning (disable : 4512) // assignment operator could not be generated
+  #pragma warning (disable : 4511) // copy operator could not be generated
+  #pragma warning (disable : 4512) // assignment operator could not be generated
 #endif // _MSC_VER
 
 #include <windows.h>
@@ -81,13 +81,13 @@ namespace Win32xx
 	CWinApp* GetApp();  // Returns a pointer to the CWinApp object
 
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		// Define global static TRACE macro for Debug mode only
-		#define TRACE(str) (GetApp()->Trace(str))
-	#else  // _DEBUG not defined
+  #define TRACE(str) (GetApp()->Trace(str))
+#else  // _DEBUG not defined
 		// Define a no-op static TRACE macro for Release mode
-		#define TRACE(str)
-	#endif  // _DEBUG
+  #define TRACE(str)
+#endif  // _DEBUG
 
 
 	///////////////////////////////////////////////////////
