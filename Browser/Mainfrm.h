@@ -17,7 +17,7 @@ public:
 
 protected:
 	void AddListboxBand(int Listbox_Height);
-	virtual BOOL OnCommand(UINT nID);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual void OnComboExNotify(UINT nID);

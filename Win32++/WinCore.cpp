@@ -667,11 +667,11 @@ namespace Win32xx
 		return (LPCTSTR) m_szString;
 	}
 
-	BOOL CWnd::OnCommand(UINT /*nID*/)
+	BOOL CWnd::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		// Override this to handle WM_COMMAND messages, for example
 
-		//	switch (nID)
+		//	switch (LOWORD(wParam))
 		//	{
 		//	case IDM_FILE_NEW:
 		//		OnFileNew();
@@ -1092,7 +1092,7 @@ namespace Win32xx
 		{
 		case WM_COMMAND:
 			{
-				OnCommand(LOWORD(wParam));
+				OnCommand(wParam, lParam);
 
 				// Refelect this message if it's from a control
 				CWnd* Wnd = GetCWndObject((HWND)lParam);

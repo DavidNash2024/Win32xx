@@ -44,12 +44,12 @@ void CMainFrame::OnInitialUpdate()
 	::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 }
 
-BOOL CMainFrame::OnCommand(UINT nID)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Handle the the View submenu
 	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1); 
 
-	switch (nID)
+	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
@@ -86,7 +86,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		break;
 	} // switch cmd
 
-	return CFrame::OnCommand(nID);
+	return CFrame::OnCommand(wParam, lParam);
 
 } // CMainFrame::OnCommand(...)
 

@@ -34,11 +34,11 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-BOOL CMainFrame::OnCommand(UINT nID)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// OnCommand responds to menu and and toolbar input
 	
-	switch(nID)
+	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
 		// End the application
@@ -51,7 +51,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 	}
 
 	// call the base class function
-	return CFrame::OnCommand(nID);
+	return CFrame::OnCommand(wParam, lParam);
 }
 
 void CMainFrame::OnCreate()

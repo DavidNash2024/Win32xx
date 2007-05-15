@@ -17,7 +17,7 @@ public:
 
 protected:
 	virtual void SetButtons(const std::vector<UINT> ToolbarData);
-	virtual BOOL OnCommand(UINT nID);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };

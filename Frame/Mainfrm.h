@@ -16,7 +16,7 @@ public:
 	virtual ~CMainFrame();
 
 protected:
-	virtual BOOL OnCommand(UINT nID);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);

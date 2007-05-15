@@ -36,10 +36,10 @@ CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(UINT nID)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Process the messages from the Menu and Tool Bar
-	switch (nID)
+	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
 		::MessageBox(NULL, TEXT("File New"), TEXT("Menu"), MB_OK);
@@ -98,7 +98,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		break;
 	}
 
-	return CFrame::OnCommand(nID);
+	return CFrame::OnCommand(wParam, lParam);
 }
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

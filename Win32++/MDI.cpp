@@ -110,9 +110,9 @@ namespace Win32xx
 		return (HWND)::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)pIsMaxed);
 	}
 
-	BOOL CMDIFrame::OnCommand(UINT nID)
+	BOOL CMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
-		switch (nID)
+		switch (LOWORD(wParam))
 		{
 		case IDW_VIEW_STATUSBAR:
 			OnViewStatusbar();
@@ -137,7 +137,7 @@ namespace Win32xx
 		default:    // Pass to active child...
 			{
 				if (IsWindow (GetActiveChild()))
-					((CMDIChild*)GetCWndObject(GetActiveChild()))->OnCommand(nID);
+					((CMDIChild*)GetCWndObject(GetActiveChild()))->OnCommand(wParam, lParam);
 			}
 			break ;
 		}
@@ -208,7 +208,7 @@ namespace Win32xx
 			OnClose();
 			return 0;
 		case WM_COMMAND:
-			OnCommand(LOWORD(wParam));
+			OnCommand(wParam, lParam);
 			break;	// Some commands require default processing
 		case WM_CREATE:
 			OnCreate();
@@ -441,11 +441,11 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	BOOL CMDIChild::OnCommand(UINT /*nID*/)
+	BOOL CMDIChild::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		// Override this to handle WM_COMMAND messages, for example
 
-		//	switch (nID)
+		//	switch (LOWORD(wParam)
 		//	{
 		//	case IDM_FILE_NEW:
 		//		OnFileNew();
@@ -490,7 +490,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_COMMAND:
-			OnCommand(LOWORD(wParam));
+			OnCommand(wParam, lParam);
 			break;
 		case WM_CREATE:
 			OnCreate();

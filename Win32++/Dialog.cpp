@@ -141,7 +141,7 @@ namespace Win32xx
 				return TRUE;
 			default:
 				{
-					OnCommand(LOWORD(wParam));
+					OnCommand(wParam, lParam);
 
 					// Refelect this message if it's from a control
 					CWnd* Wnd = GetCWndObject((HWND)lParam);

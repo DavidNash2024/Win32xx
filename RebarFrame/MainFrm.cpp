@@ -31,9 +31,9 @@ CMainFrame::~CMainFrame()
 		::DeleteObject(m_hBitmap);
 }
 
-BOOL CMainFrame::OnCommand(UINT nID)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	switch(nID)
+	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
@@ -42,7 +42,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		OnHelp();
 		break;
 	}
-	return CFrame::OnCommand(nID);
+	return CFrame::OnCommand(wParam, lParam);
 }
 
 void CMainFrame::OnInitialUpdate()

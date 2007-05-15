@@ -38,9 +38,9 @@ BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return CDialog::DialogProc(hwnd, uMsg, wParam, lParam);
 }
 
-BOOL CMyDialog::OnCommand(UINT nID)
+BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
-	switch (nID)
+	switch (LOWORD(wParam))
     {
 	case IDC_BUTTON1:
 		OnButton();

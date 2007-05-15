@@ -36,9 +36,9 @@ void CMainMDIFrame::OnInitialUpdate()
 	//Place any additional startup code here.
 }
 
-BOOL CMainMDIFrame::OnCommand(UINT nID)
+BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	switch (nID)
+	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEWVIEW:
 		AddMDIChild(new CMDIChildView);
@@ -59,7 +59,7 @@ BOOL CMainMDIFrame::OnCommand(UINT nID)
 		OnHelp();
 		break;
 	}
-	return CMDIFrame::OnCommand(nID);
+	return CMDIFrame::OnCommand(wParam, lParam);
 }
 
 void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)

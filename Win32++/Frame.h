@@ -236,7 +236,7 @@ namespace Win32xx
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
 		virtual void AddToolbarBand(int Toolbar_Height = TOOLBAR_HEIGHT);
 		virtual void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
-		virtual BOOL OnCommand(UINT nID);
+		virtual BOOL OnCommand(WPARAM wPAram, LPARAM lParam);
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);

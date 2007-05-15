@@ -56,12 +56,12 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	GetRebar().InsertBand(-1, &rbbi);
 }
 
-BOOL CMainFrame::OnCommand(UINT nID)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	std::basic_string<TCHAR> tString;
 
 	// OnCommand responds to menu and and toolbar input
-	switch(nID)
+	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
 		// End the application
@@ -89,7 +89,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 	}
 
 	// call the base class function
-	return CFrame::OnCommand(nID);
+	return CFrame::OnCommand(wParam, lParam);
 }
 
 void CMainFrame::OnCreate()

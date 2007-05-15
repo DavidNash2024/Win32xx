@@ -7,6 +7,18 @@ Bug Fixes
 * MDIChild windows now handle OnCreate and message reflection.
 * Fixed a repainting bug in subclassed windows.
 
+Incompatibilities with previous version
+* OnCommand now takes WPARAM and LPARAM as function arguements. Use this:
+  OnCommand(WPARAM wParam, LPARAM lParam)
+  {
+    switch (LOWORD(wParam))
+    {
+    case ID_xx:
+      ...
+      break;
+    }
+  }    
+
 Changes:
 * The Trace window is not displayed until a TRACE statement is encountered
    in debug mode.
@@ -32,6 +44,7 @@ Added CWinApp::GetResourceHandle
 Added CWinApp::SetAcceleratorTable
 Added CWinApp::SetResourceHandle
 Removed CFrame::ToolbarNotify
+Changed CWnd::OnCommand  Now takes WPARAM LPARAM arguement
 
 
 Version 5.1

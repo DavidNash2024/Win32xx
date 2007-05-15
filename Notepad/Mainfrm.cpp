@@ -63,9 +63,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-BOOL CMainFrame::OnCommand(UINT nID)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	switch (nID)
+	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
 		OnFileNew();
@@ -107,7 +107,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		OnHelp();
 		break;
 	} // switch cmd
-	return CFrame::OnCommand(nID);
+	return CFrame::OnCommand(wParam, lParam);
 } // CMainFrame::OnCommand(...)
 
 

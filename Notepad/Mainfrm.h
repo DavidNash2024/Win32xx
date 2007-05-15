@@ -23,7 +23,7 @@ public:
 
 protected:
 	virtual BOOL OnClose();
-	virtual BOOL OnCommand(UINT nID);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnDropFiles(HDROP hDropInfo);
 	virtual void OnEditCut();
 	virtual void OnEditCopy();

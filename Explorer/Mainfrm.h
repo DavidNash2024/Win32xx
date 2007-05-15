@@ -22,7 +22,7 @@ public:
 
 protected:
 	virtual void OnInitialUpdate();
-	virtual BOOL OnCommand(UINT nID);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetButtons(const std::vector<UINT> ToolbarData);

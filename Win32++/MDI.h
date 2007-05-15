@@ -74,7 +74,7 @@ namespace Win32xx
 		CMDIChild();
 		virtual ~CMDIChild();
 		virtual HWND Create(HWND hWndParent = NULL);
-		virtual BOOL OnCommand(UINT nID);
+		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual BOOL SetChildMenu(LPCTSTR MenuName);
 		virtual void UpdateFrameMenu(HMENU hMenu);
 
@@ -119,7 +119,7 @@ namespace Win32xx
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 
 	protected:
-		virtual BOOL OnCommand(UINT nID);
+		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual void OnWindowPosChanged();
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

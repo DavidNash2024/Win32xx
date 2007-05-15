@@ -29,9 +29,9 @@ CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(UINT nID)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	switch(nID)
+	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
@@ -40,7 +40,7 @@ BOOL CMainFrame::OnCommand(UINT nID)
 		OnHelp();
 		break;
 	}
-	return CFrame::OnCommand(nID);
+	return CFrame::OnCommand(wParam, lParam);
 }
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

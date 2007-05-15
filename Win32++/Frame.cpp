@@ -1948,9 +1948,9 @@ namespace Win32xx
 		}
 	}
 
-	BOOL CFrame::OnCommand(UINT nID)
+	BOOL CFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	{
-		switch (nID)
+		switch (LOWORD(wParam))
 		{
 		case IDW_VIEW_STATUSBAR:
 			OnViewStatusbar();
