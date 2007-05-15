@@ -20,13 +20,14 @@ protected:
 	virtual BOOL OnCommand(UINT nID);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
+	virtual void OnComboExNotify(UINT nID);
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetButtons(const std::vector<UINT> ToolbarData);
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CView m_View;
-	CWnd m_Combobox;
+	CWnd m_ComboboxEx;
 };
 
 #endif //MAINFRM_H

@@ -4,19 +4,22 @@ Bug Fixes
 * Fixed CWnd::Detach
 * Removed possible deadlock in CWinApp::Trace
 * Removed flicker when switching maximised MDI child windows.
-* MDIChild windows now handle OnCreate and message reflection
-* Fixed a repainting bug in subclassed windows
+* MDIChild windows now handle OnCreate and message reflection.
+* Fixed a repainting bug in subclassed windows.
 
 Changes:
-* The Trace window is not displayed until a TRACE statement is encountered.
-* Added the Browser Sample. It demonstrates how to host an ActiveX
-   control in a Win32++ window.
-* Added the Performance sample. This program now also conducts a simple 
-   performance test to measure the efficiency of the message handling. 
+* The Trace window is not displayed until a TRACE statement is encountered
+   in debug mode.
+* Added a seperate HINSTANCE for resources. This provides for multilingual
+   support, when resources are loaded via a DLL.
+* The thread a CWnd object runs in is now determined when its window is 
+   created, rather than when the CWnd object is instantiated.
 * Simplified updates to the statusbar. These are now done on a timer,
    instead of tracking mouse messages for the toolbar.
-* Added a seperate HINSTANCE for resources. This provides multilingual
-   support, by allowing string resources to be loaded via a DLL. 
+* Added the Internet Browser Sample. It demonstrates how to host an ActiveX
+   control in a Win32++ window. It requires ATL.
+* Added the Performance sample. This program now also conducts a simple 
+   performance test to measure the efficiency of the message handling. 
 
    
 The following changes have been made to the Win32++ code:
@@ -29,6 +32,7 @@ Added CWinApp::GetResourceHandle
 Added CWinApp::SetAcceleratorTable
 Added CWinApp::SetResourceHandle
 Removed CFrame::ToolbarNotify
+
 
 Version 5.1
 -----------

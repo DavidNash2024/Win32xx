@@ -33,6 +33,8 @@
 #define IDB_TOOLBAR_HOT                 131
 #define IDB_TOOLBAR_DIS                 132
 
+#define IDC_COMBOBOXEX                  140
+
 
 
 

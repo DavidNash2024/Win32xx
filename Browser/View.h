@@ -29,6 +29,7 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
+	virtual IWebBrowser2* GetIWebBrowser2() {return m_pInetExplorer;}
 	virtual void Navigate(LPCTSTR str);
 	
 	// ATL expects a module class to be used, especially when it is 

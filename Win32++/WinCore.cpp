@@ -705,6 +705,7 @@ namespace Win32xx
 		HWND hwnd = NULL;
 		switch (uMsg)
 		{
+		case WM_COMMAND:
 		case WM_CTLCOLORBTN:
 		case WM_CTLCOLOREDIT:
 		case WM_CTLCOLORDLG:
@@ -1090,7 +1091,14 @@ namespace Win32xx
     	switch (uMsg)
 		{
 		case WM_COMMAND:
-			OnCommand(LOWORD(wParam));
+			{
+				OnCommand(LOWORD(wParam));
+
+				// Refelect this message if it's from a control
+				CWnd* Wnd = GetCWndObject((HWND)lParam);
+				if (Wnd != NULL)
+					return Wnd->OnMessageReflect(uMsg, wParam, lParam);
+			}
 			break;  // Some commands require default processing
 		case WM_CREATE:
 			OnCreate();

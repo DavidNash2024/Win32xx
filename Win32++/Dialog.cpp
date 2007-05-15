@@ -140,7 +140,14 @@ namespace Win32xx
 				OnCancel();
 				return TRUE;
 			default:
-				OnCommand(LOWORD(wParam));
+				{
+					OnCommand(LOWORD(wParam));
+
+					// Refelect this message if it's from a control
+					CWnd* Wnd = GetCWndObject((HWND)lParam);
+					if (Wnd != NULL)
+						Wnd->OnMessageReflect(uMsg, wParam, lParam);
+				}
 				break;  // Some commands require default processing
 	        }
 	        break;

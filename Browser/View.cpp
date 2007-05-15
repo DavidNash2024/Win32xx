@@ -36,7 +36,7 @@ void CView::Navigate(LPCTSTR str)
 	memset(vars,0,sizeof(vars));
 	BSTR BStrURL = _com_util::ConvertStringToBSTR(str);
 	HRESULT hrie = m_pInetExplorer->Navigate(BStrURL,vars,vars+1,vars+2,vars+3);
-	SysFreeString(BStrURL); 
+	SysFreeString(BStrURL);
 }
 
 void CView::OnCreate()
