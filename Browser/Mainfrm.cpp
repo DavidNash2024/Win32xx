@@ -58,9 +58,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	std::basic_string<TCHAR> tString;
-
-	// OnCommand responds to menu and and toolbar input
+	// Respond to menu and and toolbar input
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
@@ -88,6 +86,31 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
+	// Handle notification WM_COMMAND from ComboboxEx
+	if((HWND)lParam == m_ComboboxEx.GetHwnd())
+	{
+		switch(HIWORD(wParam))
+		{
+		case CBN_SELCHANGE:
+			// User made selection from list
+			{
+				TCHAR szString[256];
+		
+				// Get text from edit box
+				::SendMessage(m_ComboboxEx.GetHwnd(), WM_GETTEXT, 256, (LPARAM)szString);
+			
+				// Navigate to web page
+				m_View.Navigate(szString);
+
+				// Set focus to web page
+				LONG_PTR hWeb;
+				m_View.GetIWebBrowser2()->get_HWND(&hWeb);
+				::SetFocus((HWND)hWeb);
+			}
+			break;
+		}
+	}
+
 	// call the base class function
 	return CFrame::OnCommand(wParam, lParam);
 }
@@ -104,30 +127,6 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 	m_View.GetIWebBrowser2()->GoHome();
-}
-
-void CMainFrame::OnComboExNotify(UINT nID)
-{
-	switch (nID)
-	{
-	case CBN_SELCHANGE:
-		// User made selection from list
-		{
-			TCHAR szString[256];
-		
-			// Get text from edit box
-			::SendMessage(m_ComboboxEx.GetHwnd(), WM_GETTEXT, 256, (LPARAM)szString);
-			
-			// Navigate to web page
-			m_View.Navigate(szString);
-
-			// Set focus to web page
-			LONG_PTR hWeb;
-			m_View.GetIWebBrowser2()->get_HWND(&hWeb);
-			::SetFocus((HWND)hWeb);
-		}
-		break;
-	}
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -187,20 +186,15 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	RECT r;
 	TB.GetItemRect(TB.CommandToIndex(IDM_BACK), &r);
 	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-
 }
 
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	// Handle old-style notifications from the Combobox control
-	case WM_COMMAND:
-		if((HWND)lParam == m_ComboboxEx.GetHwnd())
-			OnComboExNotify(HIWORD(wParam));
-		break;
-	}
+//	switch (uMsg)
+//	{
+
+//	}
 
 	//Use the frame default message handling for remaining messages
 	return CFrame::WndProc(hwnd, uMsg, wParam, lParam);
