@@ -64,64 +64,20 @@
 
 namespace Win32xx
 {
-	//
-	// Forward declarations. These classes are defined later or elsewhere.
-	//
+	////////////////////////////////////////////////
+	// Forward declarations. 
+	//  These classes are defined later or elsewhere
+	class CWinApp;
 	class CFrame;
 	class CMenubar;
 	class CMDIChild;
 	class CWnd;
-	
-	
-	//
-	// Global functions (within the Win32xx namespace)
-	//
-
-	// Displays a warning message in a message box
-	inline void DebugErrMsg(LPCTSTR ErrorMsg)
-	{
-	#ifdef _DEBUG
-		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
-	#else
-		UNREFERENCED_PARAMETER(ErrorMsg);
-	#endif  //_DEBUG
-	}
-
-	// Displays an error message in a message box
-	inline void DebugWarnMsg(LPCTSTR WarnMsg)
-	{
-	#ifdef _DEBUG
-		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
-	#else
-		UNREFERENCED_PARAMETER(WarnMsg);
-	#endif  //_DEBUG
-	}
-
-	
-	//
-	// Global macros
-	//
-	#ifdef _DEBUG
-			// Define global static TRACE macro for Debug mode only
-	  #define TRACE(str) (GetApp()->Trace(str))
-	#else  // _DEBUG not defined
-			// Define a no-op static TRACE macro for Release mode
-	  #define TRACE(str)
-	#endif  // _DEBUG
 
 
-	//
-	// Global enumerations
-	//
 	enum Constants
 	{
 		MAX_STRING_SIZE = 255			// maximum string size
 	};
-
-
-	//
-	// Global Structures
-	//
 
 	// The comparison function object used by CWinApp::m_HWNDmap
 	struct CompareHWND
@@ -234,7 +190,7 @@ namespace Win32xx
 		virtual CFrame* GetFrame() {return m_pFrame;}
 		static CWinApp* GetApp() {return st_pTheApp;}
 		virtual HINSTANCE GetInstanceHandle() {return m_hInstance;}
-		virtual HINSTANCE GetResourceHandle() {return m_hResource;}
+		virtual HINSTANCE GetResourceHandle() {return (m_hResource ? m_hResource : m_hInstance);}
 		virtual std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();
@@ -268,9 +224,6 @@ namespace Win32xx
 		static CWinApp* st_pTheApp;		// a pointer to this CWinApp object
 	};
 
-	// Global function which returns a pointer to the CWinApp object
-	inline CWinApp* GetApp(){ return CWinApp::GetApp(); }
-
 
 	////////////////////////////////////////
 	// Declaration of the CWinException class
@@ -288,6 +241,41 @@ namespace Win32xx
 		DWORD  m_err;
 		LPCTSTR m_msg;
 	};
+
+
+	//////////////////////////////////////////
+	// Global functions and macros
+	//  (within the Win32xx namespace)
+
+	// Returns a pointer to the CWinApp object
+	inline CWinApp* GetApp(){ return CWinApp::GetApp();} 
+
+	// Displays a warning message in a message box. Debug mode only.
+	inline void DebugErrMsg(LPCTSTR ErrorMsg)
+	{
+	#ifdef _DEBUG
+		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
+	#else
+		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
+	#endif  //_DEBUG
+	}
+
+	// Displays an error message in a message box. Debug mode only.
+	inline void DebugWarnMsg(LPCTSTR WarnMsg)
+	{
+	#ifdef _DEBUG
+		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
+	#else
+		UNREFERENCED_PARAMETER(WarnMsg); // no-op
+	#endif  //_DEBUG
+	}
+
+	// Define global static TRACE macro for Debug mode only
+	#ifdef _DEBUG
+	  #define TRACE(str) (GetApp()->Trace(str))
+	#else  
+	  #define TRACE(str) // no-op
+	#endif  // _DEBUG
 
 } // namespace Win32xx
 
