@@ -65,7 +65,7 @@
 namespace Win32xx
 {
 	////////////////////////////////////////////////
-	// Forward declarations.
+	// Forward declarations. 
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CFrame;
@@ -76,7 +76,7 @@ namespace Win32xx
 
 	enum Constants
 	{
-		MAX_STRING_SIZE = 255
+		MAX_STRING_SIZE = 255			// maximum string size
 	};
 
 	// The comparison function object used by CWinApp::m_HWNDmap
@@ -248,7 +248,7 @@ namespace Win32xx
 	//  (within the Win32xx namespace)
 
 	// Returns a pointer to the CWinApp object
-	inline CWinApp* GetApp(){ return CWinApp::GetApp();}
+	inline CWinApp* GetApp(){ return CWinApp::GetApp();} 
 
 	// Displays a warning message in a message box. Debug mode only.
 	inline void DebugErrMsg(LPCTSTR ErrorMsg)
@@ -270,10 +270,10 @@ namespace Win32xx
 	#endif  //_DEBUG
 	}
 
-	// A macro which displays Trace text. Debug mode only
+	// Define global static TRACE macro for Debug mode only
 	#ifdef _DEBUG
 	  #define TRACE(str) (GetApp()->Trace(str))
-	#else
+	#else  
 	  #define TRACE(str) // no-op
 	#endif  // _DEBUG
 

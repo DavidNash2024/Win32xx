@@ -208,7 +208,7 @@ namespace Win32xx
 
 	void CWinApp::SetAcceleratorTable(INT ID_ACCEL)
 	{
-		if (m_hResource)
+		if (m_hAccelTable)
 			::DestroyAcceleratorTable(m_hAccelTable);
 
 		m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
@@ -270,7 +270,6 @@ namespace Win32xx
 
 		SetFocus(PreFocus);
 	}
-
 
 
 	////////////////////////////////////////
@@ -848,7 +847,7 @@ namespace Win32xx
 
 	HICON CWnd::SetIconLarge(int nIcon)
 	{
-		m_hIconLarge = (HICON) (::LoadImage (GetApp()->GetInstanceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
+		m_hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), 0));
 
 		::SendMessage (m_hWnd, WM_SETICON, WPARAM (ICON_BIG), LPARAM (m_hIconLarge));
@@ -857,7 +856,7 @@ namespace Win32xx
 
 	HICON CWnd::SetIconSmall(int nIcon)
 	{
-		m_hIconSmall = (HICON) (::LoadImage (GetApp()->GetInstanceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
+		m_hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
 		::SendMessage (m_hWnd, WM_SETICON, WPARAM (ICON_SMALL), LPARAM (m_hIconSmall));
