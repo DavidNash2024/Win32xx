@@ -47,10 +47,9 @@
 
 namespace Win32xx
 {
-	/////////////////////////////////
-	// Global functions and variables
+	////////////////////////////////////////////////
+	// Global variables within the Win32xx namespace
 	//
-
 
 	// Static variable for Thread Local Storage Index
 	DWORD CWinApp::st_dwTlsIndex = TLS_OUT_OF_INDEXES;
@@ -271,6 +270,7 @@ namespace Win32xx
 
 		SetFocus(PreFocus);
 	}
+
 
 
 	////////////////////////////////////////

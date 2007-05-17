@@ -64,25 +64,21 @@
 
 namespace Win32xx
 {
-	///////////////////////////////////////////////////////
-	// Global functions (within the Win32xx namespace)
-	//
-
 	//
 	// Forward declarations. These classes are defined later or elsewhere.
 	//
 	class CFrame;
 	class CMenubar;
 	class CMDIChild;
-	class CWinApp;
 	class CWnd;
-
-	//
-	// Global functions and macros
-	//
 	
-	inline void DebugErrMsg(LPCTSTR ErrorMsg)
+	
+	//
+	// Global functions (within the Win32xx namespace)
+	//
+
 	// Displays a warning message in a message box
+	inline void DebugErrMsg(LPCTSTR ErrorMsg)
 	{
 	#ifdef _DEBUG
 		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
@@ -90,9 +86,9 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(ErrorMsg);
 	#endif  //_DEBUG
 	}
-	
-	inline void DebugWarnMsg(LPCTSTR WarnMsg)
+
 	// Displays an error message in a message box
+	inline void DebugWarnMsg(LPCTSTR WarnMsg)
 	{
 	#ifdef _DEBUG
 		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
@@ -100,17 +96,21 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(WarnMsg);
 	#endif  //_DEBUG
 	}
+
 	
-#ifdef _DEBUG
-		// Define global static TRACE macro for Debug mode only
-  #define TRACE(str) (GetApp()->Trace(str))
-#else  // _DEBUG not defined
-		// Define a no-op static TRACE macro for Release mode
-  #define TRACE(str)
-#endif  // _DEBUG
+	//
+	// Global macros
+	//
+	#ifdef _DEBUG
+			// Define global static TRACE macro for Debug mode only
+	  #define TRACE(str) (GetApp()->Trace(str))
+	#else  // _DEBUG not defined
+			// Define a no-op static TRACE macro for Release mode
+	  #define TRACE(str)
+	#endif  // _DEBUG
 
 
-	///////////////////////////////////////////////////////
+	//
 	// Global enumerations
 	//
 	enum Constants
@@ -119,7 +119,7 @@ namespace Win32xx
 	};
 
 
-	/////////////////////////////////////////////////
+	//
 	// Global Structures
 	//
 
@@ -138,6 +138,7 @@ namespace Win32xx
 		CMenubar* pMenubar;	// pointer to CMenubar object
 		HHOOK  hMenuHook;	// MSG hook for CMenubar
 	};
+
 
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
@@ -268,9 +269,9 @@ namespace Win32xx
 	};
 
 	// Global function which returns a pointer to the CWinApp object
-	inline CWinApp* GetApp(){ return CWinApp::GetApp(); }  
+	inline CWinApp* GetApp(){ return CWinApp::GetApp(); }
 
-	
+
 	////////////////////////////////////////
 	// Declaration of the CWinException class
 	//
