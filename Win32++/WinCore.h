@@ -68,19 +68,39 @@ namespace Win32xx
 	// Global functions (within the Win32xx namespace)
 	//
 
+	//
 	// Forward declarations. These classes are defined later or elsewhere.
+	//
 	class CFrame;
 	class CMenubar;
 	class CMDIChild;
 	class CWinApp;
 	class CWnd;
 
+	//
 	// Global functions and macros
-	void DebugErrMsg(LPCTSTR ErrorMsg);
-	void DebugWarnMsg(LPCTSTR WarnMsg);
-	CWinApp* GetApp();  // Returns a pointer to the CWinApp object
-
-
+	//
+	
+	inline void DebugErrMsg(LPCTSTR ErrorMsg)
+	// Displays a warning message in a message box
+	{
+	#ifdef _DEBUG
+		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
+	#else
+		UNREFERENCED_PARAMETER(ErrorMsg);
+	#endif  //_DEBUG
+	}
+	
+	inline void DebugWarnMsg(LPCTSTR WarnMsg)
+	// Displays an error message in a message box
+	{
+	#ifdef _DEBUG
+		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
+	#else
+		UNREFERENCED_PARAMETER(WarnMsg);
+	#endif  //_DEBUG
+	}
+	
 #ifdef _DEBUG
 		// Define global static TRACE macro for Debug mode only
   #define TRACE(str) (GetApp()->Trace(str))
@@ -247,7 +267,10 @@ namespace Win32xx
 		static CWinApp* st_pTheApp;		// a pointer to this CWinApp object
 	};
 
+	// Global function which returns a pointer to the CWinApp object
+	inline CWinApp* GetApp(){ return CWinApp::GetApp(); }  
 
+	
 	////////////////////////////////////////
 	// Declaration of the CWinException class
 	//

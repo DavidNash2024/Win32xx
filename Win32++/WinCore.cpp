@@ -51,28 +51,6 @@ namespace Win32xx
 	// Global functions and variables
 	//
 
-	void DebugErrMsg(LPCTSTR ErrorMsg)
-	// Displays a warning message in a message box
-	{
-#ifdef _DEBUG
-		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
-#else
-		UNREFERENCED_PARAMETER(ErrorMsg);
-#endif  //_DEBUG
-	}
-
-	void DebugWarnMsg(LPCTSTR WarnMsg)
-	// Displays an error message in a message box
-	{
-#ifdef _DEBUG
-		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
-#else
-		UNREFERENCED_PARAMETER(WarnMsg);
-#endif  //_DEBUG
-	}
-
-	// Function which returns a pointer to the CWinApp object
-	CWinApp* GetApp(){ return CWinApp::GetApp(); }
 
 	// Static variable for Thread Local Storage Index
 	DWORD CWinApp::st_dwTlsIndex = TLS_OUT_OF_INDEXES;
@@ -211,9 +189,9 @@ namespace Win32xx
 		{
 			if (status == -1) return -1;
 
-			if (m_hAccelTable)
+			if (GetFrame())
 			{
-				if (!::TranslateAccelerator(uMsg.hwnd, m_hAccelTable, &uMsg))
+				if (!::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg))
 				{
 					::TranslateMessage(&uMsg);
 					::DispatchMessage(&uMsg);
