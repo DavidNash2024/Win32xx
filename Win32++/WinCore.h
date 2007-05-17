@@ -243,7 +243,7 @@ namespace Win32xx
 	};
 
 
-	//////////////////////////////////////////
+	//////////////////////////////////
 	// Global functions and macros
 	//  (within the Win32xx namespace)
 
