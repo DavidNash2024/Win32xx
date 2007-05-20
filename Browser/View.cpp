@@ -174,13 +174,6 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
 
 	case DISPID_PROPERTYCHANGE:
 		pMainFrame->OnPropertyChange(pDispParams);
-
-	/*	     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		      strEventInfo << OLE2T(pDispParams->rgvarg[0].bstrVal);
-		   else
-		      strEventInfo << "NULL";
-
-		   strEventInfo << ends;   */
 	   break;
 
 	case DISPID_STATUSTEXTCHANGE:
@@ -194,14 +187,7 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
 
 	case DISPID_TITLECHANGE:
 		pMainFrame->OnTitleChange(pDispParams);
-	   TRACE("TitleChange: ");
-/*
-		     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		      strEventInfo << OLE2T(pDispParams->rgvarg[0].bstrVal);
-		   else
-		      strEventInfo << "NULL";
 
-		   strEventInfo << ends; */
 	   break;
    }
 

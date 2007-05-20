@@ -513,8 +513,8 @@ namespace Win32xx
 			if (iIndex == -1)
 				throw CWinException(TEXT("CToolbar::SetButtonText  failed to get Command ID"));
 
-			std::basic_string<TCHAR> sString = szText;
-			std::map<std::basic_string<TCHAR>, int>::iterator m;
+			tString sString = szText;
+			std::map<tString, int>::iterator m;
 			int iString;
 
 			// Check to see if the string is already added

@@ -4,10 +4,7 @@
 
 #include "resource.h"
 #include "mainfrm.h"
-#include <string>
-#include <sstream>
 
-using namespace std;
 
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame()
@@ -177,6 +174,14 @@ void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 	m_StatusText = TEXT("Done");
 }
 
+void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
+{
+}
+
+void CMainFrame::OnDownloadComplete(DISPPARAMS* pDispParams)
+{
+}
+
 void CMainFrame::OnInitialUpdate()
 {
 	// The frame is now created.
@@ -188,7 +193,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
 	USES_CONVERSION;
-	basic_string<TCHAR> szString = TEXT("NavigateComplete2: ");
+	tString szString = TEXT("NavigateComplete2: ");
 
 	if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
 	{
@@ -199,6 +204,12 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		TRACE(szString.c_str());
 	}
 }
+
+void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
+{
+	//TRACE(TEXT("NewWindow2"));
+}
+
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	HWND hwnd = m_ComboboxEx.GetHwnd();
@@ -237,7 +248,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 {
-	basic_stringstream<TCHAR> szString;
+	tStringStream szString;
 
 	if (pDispParams->cArgs != 0)
 	{
@@ -249,6 +260,16 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 
 		TRACE(szString.str().c_str());		
    }
+}
+
+void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
+{
+		/*	     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
+		      strEventInfo << OLE2T(pDispParams->rgvarg[0].bstrVal);
+		   else
+		      strEventInfo << "NULL";
+
+		   strEventInfo << ends;   */
 }
 
 void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
@@ -272,6 +293,20 @@ void CMainFrame::OnTimer(WPARAM wParam)
 {
 	CFrame::OnTimer(wParam);
 	m_StatusText = TEXT("Done");
+}
+
+void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
+{
+	TRACE("TitleChange: ");
+	USES_CONVERSION;
+
+	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
+	{
+		TRACE(OLE2T(pDispParams->rgvarg[0].bstrVal));
+		::SetWindowText(m_hWnd, OLE2T(pDispParams->rgvarg[0].bstrVal));
+	}
+	else
+		::SetWindowText(m_hWnd, LoadString(IDW_MAIN));
 }
 
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)

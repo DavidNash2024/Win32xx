@@ -60,6 +60,12 @@
 #include <commctrl.h>
 #include <map>
 #include <vector>
+#include <string>
+#include <sstream>
+
+// Some useful type declarations
+typedef std::basic_string<TCHAR> tString;
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 
 namespace Win32xx

@@ -44,9 +44,6 @@
 
 #include "WinCore.h"
 #include "dialog.h"
-#include <map>
-#include <string>
-#include <vector>
 
 
 namespace Win32xx
@@ -106,7 +103,7 @@ namespace Win32xx
 		HIMAGELIST m_hImageList;
 		HIMAGELIST m_hImageListHot;
 		HIMAGELIST m_hImageListDis;
-		std::map<std::basic_string<TCHAR>, int> m_StringMap;
+		std::map<tString, int> m_StringMap;
 
 	};  // class CToolbar
 
@@ -257,7 +254,7 @@ namespace Win32xx
         BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
-		std::basic_string<TCHAR> m_StatusText;		// a TCHAR std::string for status text
+		tString m_StatusText;		// a TCHAR std::string for status text
 		enum Constants
 		{
 			ID_STATUS_TIMER = 1,

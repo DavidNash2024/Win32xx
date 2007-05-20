@@ -31,9 +31,9 @@ void CMDIChildView::OnPaint(HDC hDC)
 	::DrawText(hDC, TEXT("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-BOOL CMDIChildView::OnCommand(UINT nID)
+BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	switch (nID)
+	switch (LOWORD(wParam))
 	{
 	case IDM_COLOR_BLACK:
 		m_Color = RGB(0,0,0);
