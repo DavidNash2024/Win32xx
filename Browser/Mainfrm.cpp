@@ -264,12 +264,12 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 {
-		/*	     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		      strEventInfo << OLE2T(pDispParams->rgvarg[0].bstrVal);
-		   else
-		      strEventInfo << "NULL";
+	USES_CONVERSION;
+	tStringStream str;
+	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
+		str << TEXT("Property Change:") << OLE2T(pDispParams->rgvarg[0].bstrVal);
 
-		   strEventInfo << ends;   */
+	TRACE(str.str().c_str());
 }
 
 void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
@@ -299,14 +299,17 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
 	TRACE("TitleChange: ");
 	USES_CONVERSION;
+	tStringStream str;
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
+		str << OLE2T(pDispParams->rgvarg[0].bstrVal) << TEXT(" - ") << LoadString(IDW_MAIN);
 		TRACE(OLE2T(pDispParams->rgvarg[0].bstrVal));
-		::SetWindowText(m_hWnd, OLE2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
-		::SetWindowText(m_hWnd, LoadString(IDW_MAIN));
+		str << LoadString(IDW_MAIN);
+
+	::SetWindowText(m_hWnd, str.str().c_str());
 }
 
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)

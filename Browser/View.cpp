@@ -59,15 +59,9 @@ void CView::OnCreate()
 	{
 		// Set the IWebBrowser2 pointer
 		m_pSourceUnk->QueryInterface (IID_IWebBrowser2, (LPVOID *) &m_pInetExplorer);
-
 	} 
 	else 
 		DebugErrMsg(TEXT("Failed to create browser control"));
-
-///////////////////////////////////////////
-// Added to sink events
-
-
 
 	// Create sink object.  CMySink is a CComObjectRootEx-derived class 
 	// that implements the event interface methods.
@@ -124,26 +118,14 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
                                DISPPARAMS* pDispParams, VARIANT* pvarResult,
                                EXCEPINFO*  pExcepInfo,  UINT* puArgErr)
 {
-	USES_CONVERSION;
-
 	if (!pDispParams)
-	return E_INVALIDARG;
+		return E_INVALIDARG;
 
 	CMainFrame* pMainFrame = (CMainFrame*)GetApp()->GetFrame();
 
 	switch (dispidMember)
 	{
-		//
-		// The parameters for this DISPID are as follows:
-		// [0]: Cancel flag  - VT_BYREF|VT_BOOL
-		// [1]: HTTP headers - VT_BYREF|VT_VARIANT
-		// [2]: Address of HTTP POST data  - VT_BYREF|VT_VARIANT 
-		// [3]: Target frame name - VT_BYREF|VT_VARIANT 
-		// [4]: Option flags - VT_BYREF|VT_VARIANT
-		// [5]: URL to navigate to - VT_BYREF|VT_VARIANT
-		// [6]: An object that evaluates to the top-level or frame
-		//      WebBrowser object corresponding to the event. 
-		//
+
 	case DISPID_BEFORENAVIGATE2:
 		pMainFrame->OnBeforeNavigate(pDispParams);
 		break;
@@ -182,12 +164,10 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
 			
 	case DISPID_NEWWINDOW2:
 		pMainFrame->OnNewWindow2(pDispParams);
-		TRACE("NewWindow2");
 		break;
 
 	case DISPID_TITLECHANGE:
 		pMainFrame->OnTitleChange(pDispParams);
-
 	   break;
    }
 
