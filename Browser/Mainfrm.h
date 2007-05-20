@@ -14,6 +14,19 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	virtual void OnBeforeNavigate(DISPPARAMS* pDispParams);
+	virtual void OnCommandStateChange(DISPPARAMS* pDispParams);
+	virtual void OnDocumentBegin(DISPPARAMS* pDispParams);
+	virtual void OnDocumentComplete(DISPPARAMS* pDispParams);
+	virtual void OnDownloadBegin(DISPPARAMS* pDispParams) {}
+	virtual void OnDownloadComplete(DISPPARAMS* pDispParams) {}
+	virtual void OnNavigateComplete2(DISPPARAMS* pDispParams);
+	virtual void OnProgressChange(DISPPARAMS* pDispParams);
+	virtual void OnPropertyChange(DISPPARAMS* pDispParams) {}
+	virtual void OnStatusTextChange(DISPPARAMS* pDispParams);
+	virtual void OnTimer(WPARAM wParam);
+	virtual void OnTitleChange(DISPPARAMS* pDispParams) {}
+	virtual void OnNewWindow2(DISPPARAMS* pDispParams) {}
 
 protected:
 	void AddListboxBand(int Listbox_Height);

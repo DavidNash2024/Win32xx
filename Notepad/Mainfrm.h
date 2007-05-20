@@ -7,8 +7,13 @@
 
 
 #include <string>
+#include <sstream>
 #include "..\Win32++\frame.h"
 #include "RichView.h"
+
+
+typedef std::basic_string<TCHAR> tString;
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
@@ -48,7 +53,7 @@ protected:
 
 private:
 	CRichView m_RichView;
-	std::basic_string<TCHAR> m_strPathName;
+	tString m_strPathName;
 };
 
 #endif //MAINFRM_H

@@ -6,7 +6,7 @@
 #include "Thread.h"
 
 
-CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0)//, m_pTestWindow(NULL)
+CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0)
 {
 	try
 	{		
@@ -43,9 +43,10 @@ DWORD WINAPI CThread::ThreadCallback(LPVOID pCThread)
 	CThread* pThread = (CThread*)pCThread;
 	
 	int i = pThread->m_nValue;
-	TCHAR str[80];
-	wsprintf(str, TEXT("Thread #%d started"), i + 1);
-	TRACE(str);
+	tStringStream str;
+
+	str << TEXT("Thread ") << i + 1 << TEXT(" started");
+	TRACE(str.str().c_str());
 
 	// Create a test window for this thread
 	pThread->m_TestWindow.CreateWin(i);

@@ -2,6 +2,7 @@
 // View.cpp
 
 #include "resource.h"
+#include "Mainfrm.h"
 #include "View.h"
 
 
@@ -10,9 +11,6 @@
 //  atl.lib		(assuming you want to link ATL staticly)
 //
 
-
-// Global CAtlDummyMoldule object
-//CView::CAtlDummyModule g_MyModule;
 
 // Definitions for the CView class
 CView::CView() : m_pInetExplorer(NULL)
@@ -23,6 +21,12 @@ CView::CView() : m_pInetExplorer(NULL)
 
 CView::~CView()
 {
+	if (m_pSourceUnk)
+		m_pSourceUnk->Release();
+
+	if (m_pSinkUnk)
+		m_pSinkUnk->Release();
+
 	if (m_pInetExplorer)
 		m_pInetExplorer->Release();
 	
@@ -45,22 +49,35 @@ void CView::OnCreate()
 	SetIconSmall(IDW_MAIN);
 	SetIconLarge(IDW_MAIN);
 
-    LPUNKNOWN spUnk=NULL;
+    m_pSourceUnk = NULL;
 	USES_CONVERSION;
 
 	// Use ATL to create the ActiveX control, initializes it, and hosts it in the specified window
-	LRESULT hr = AtlAxCreateControlEx(T2OLE("about:blank"), m_hWnd, NULL, NULL, &spUnk, IID_NULL);
+	LRESULT hr = AtlAxCreateControlEx(T2OLE("about:blank"), m_hWnd, NULL, NULL, &m_pSourceUnk, IID_NULL);
     
 	if (SUCCEEDED(hr))
 	{
 		// Set the IWebBrowser2 pointer
-		spUnk->QueryInterface (IID_IWebBrowser2, (LPVOID *) &m_pInetExplorer);
-		spUnk->Release();
+		m_pSourceUnk->QueryInterface (IID_IWebBrowser2, (LPVOID *) &m_pInetExplorer);
+
 	} 
 	else 
 		DebugErrMsg(TEXT("Failed to create browser control"));
 
-	TRACE("OnCreate");
+///////////////////////////////////////////
+// Added to sink events
+
+
+
+	// Create sink object.  CMySink is a CComObjectRootEx-derived class 
+	// that implements the event interface methods.
+	CComObject<CDispatchSink> *pSinkClass = NULL;
+	CComObject<CDispatchSink>::CreateInstance (&pSinkClass);
+	hr = pSinkClass->QueryInterface (IID_IUnknown, (LPVOID*)&m_pSinkUnk);
+	_ASSERT (SUCCEEDED (hr));
+
+	hr = AtlAdvise (m_pSourceUnk, m_pSinkUnk, DIID_DWebBrowserEvents2, &m_dwCustCookie);
+	_ASSERT (SUCCEEDED (hr)); 
 }
 
 void CView::OnDestroy()
@@ -101,3 +118,94 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass unprocessed messages to CWin::WndProc
 	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 }
+
+
+STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags,
+                               DISPPARAMS* pDispParams, VARIANT* pvarResult,
+                               EXCEPINFO*  pExcepInfo,  UINT* puArgErr)
+{
+	USES_CONVERSION;
+
+	if (!pDispParams)
+	return E_INVALIDARG;
+
+	CMainFrame* pMainFrame = (CMainFrame*)GetApp()->GetFrame();
+
+	switch (dispidMember)
+	{
+		//
+		// The parameters for this DISPID are as follows:
+		// [0]: Cancel flag  - VT_BYREF|VT_BOOL
+		// [1]: HTTP headers - VT_BYREF|VT_VARIANT
+		// [2]: Address of HTTP POST data  - VT_BYREF|VT_VARIANT 
+		// [3]: Target frame name - VT_BYREF|VT_VARIANT 
+		// [4]: Option flags - VT_BYREF|VT_VARIANT
+		// [5]: URL to navigate to - VT_BYREF|VT_VARIANT
+		// [6]: An object that evaluates to the top-level or frame
+		//      WebBrowser object corresponding to the event. 
+		//
+	case DISPID_BEFORENAVIGATE2:
+		pMainFrame->OnBeforeNavigate(pDispParams);
+		break;
+
+	case DISPID_COMMANDSTATECHANGE:
+		pMainFrame->OnCommandStateChange(pDispParams);
+		break;
+
+	case DISPID_DOCUMENTCOMPLETE:
+		pMainFrame->OnDocumentComplete(pDispParams);
+		break;
+
+	case DISPID_DOWNLOADBEGIN:
+		pMainFrame->OnDownloadBegin(pDispParams);
+		break;
+
+	case DISPID_DOWNLOADCOMPLETE:
+		pMainFrame->OnDownloadBegin(pDispParams);
+		break;
+
+	case DISPID_NAVIGATECOMPLETE2:
+		pMainFrame->OnNavigateComplete2(pDispParams);
+	   break;
+
+	case DISPID_PROGRESSCHANGE:
+		pMainFrame->OnProgressChange(pDispParams);
+	   break;
+
+	case DISPID_PROPERTYCHANGE:
+		pMainFrame->OnPropertyChange(pDispParams);
+
+	/*	     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
+		      strEventInfo << OLE2T(pDispParams->rgvarg[0].bstrVal);
+		   else
+		      strEventInfo << "NULL";
+
+		   strEventInfo << ends;   */
+	   break;
+
+	case DISPID_STATUSTEXTCHANGE:
+		pMainFrame->OnStatusTextChange(pDispParams);
+		break;
+			
+	case DISPID_NEWWINDOW2:
+		pMainFrame->OnNewWindow2(pDispParams);
+		TRACE("NewWindow2");
+		break;
+
+	case DISPID_TITLECHANGE:
+		pMainFrame->OnTitleChange(pDispParams);
+	   TRACE("TitleChange: ");
+/*
+		     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
+		      strEventInfo << OLE2T(pDispParams->rgvarg[0].bstrVal);
+		   else
+		      strEventInfo << "NULL";
+
+		   strEventInfo << ends; */
+	   break;
+   }
+
+   return S_OK;
+}
+
+

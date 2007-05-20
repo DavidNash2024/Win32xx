@@ -6,6 +6,7 @@
 #ifndef MAINWND_H
 #define MAINWND_H
 
+#include <vector>
 #include "TestWnd.h"
 #include "MyDialog.h"
 
@@ -35,11 +36,11 @@ private:
 		WM_TESTMESSAGE       = WM_USER+2    // the test message 
 	};
 
-	CTestWindow** m_pCTestWindows;	// An array of CTestWindow pointers
+	std::vector<CTestWindow*> m_pCTestWindows;	// A vector CTestWindow pointers
 	HWND  m_hEdit;			// Handle to the edit window
 	HFONT m_hFont;			// A font for the edit window
 	int m_nTestMessages;	// Number of test messages to be sent
-	int m_nTestWindows;		// Number of test windows
+	int m_nTestWindows;		// Number of test windows to create
 };
 
 

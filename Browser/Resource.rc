@@ -88,7 +88,7 @@ IDW_MAIN                ICON                    "res\\enhanced.ico"
 IDW_MAIN                BITMAP                  "res\\toolbar.bmp"
 IDB_TOOLBAR_NORM        BITMAP                  "res\\Internet24_n.bmp"
 IDB_TOOLBAR_HOT         BITMAP                  "res\\Internet24_h.bmp"
-IDB_TOOLBAR_DIS         BITMAP                  "res\\Internet24_h.bmp"
+IDB_TOOLBAR_DIS         BITMAP                  "res\\Internet24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

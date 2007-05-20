@@ -76,7 +76,7 @@ namespace Win32xx
 
 	enum Constants
 	{
-		MAX_STRING_SIZE = 255			// maximum string size
+		MAX_STRING_SIZE = 255	
 	};
 
 	// The comparison function object used by CWinApp::m_HWNDmap

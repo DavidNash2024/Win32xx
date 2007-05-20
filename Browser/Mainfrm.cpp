@@ -5,7 +5,9 @@
 #include "resource.h"
 #include "mainfrm.h"
 #include <string>
+#include <sstream>
 
+using namespace std;
 
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame()
@@ -54,6 +56,50 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.lpText     = TEXT("Address");
 
 	GetRebar().InsertBand(-1, &rbbi);
+}
+
+void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
+{
+	// Update the URL in the ComboboxEx edit box.
+	if (pDispParams->cArgs >= 5 && pDispParams->rgvarg[5].vt == (VT_BYREF|VT_VARIANT))
+	{
+		CComVariant vtURL(*pDispParams->rgvarg[5].pvarVal);
+		vtURL.ChangeType(VT_BSTR);
+
+		HWND hwnd = m_ComboboxEx.GetHwnd();
+
+		USES_CONVERSION;
+		::SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));		
+	}
+}
+
+void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
+{
+	CToolbar& TB = GetToolbar();
+
+	if ( pDispParams)
+	{
+		if (pDispParams->cArgs == 2)
+		{
+			if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
+			{
+				VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
+				int nCommand = pDispParams->rgvarg[1].intVal;
+				{
+					switch (nCommand)
+					{
+					case 1: // Navigate forward:
+						bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
+
+						break;
+					case 2: // Navigate back:
+						bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -115,10 +161,20 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnCommand(wParam, lParam);
 }
 
+void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
+{
+	TRACE(TEXT("OnDocumentBegin"));
+}
+
 void CMainFrame::OnCreate()
 {
 	CFrame::OnCreate();
 	AddListboxBand(22);
+}
+
+void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
+{
+	m_StatusText = TEXT("Done");
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -129,6 +185,20 @@ void CMainFrame::OnInitialUpdate()
 	m_View.GetIWebBrowser2()->GoHome();
 }
 
+void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
+{
+	USES_CONVERSION;
+	basic_string<TCHAR> szString = TEXT("NavigateComplete2: ");
+
+	if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
+	{
+		CComVariant vtURL(*pDispParams->rgvarg[0].pvarVal);
+		vtURL.ChangeType(VT_BSTR);
+	
+		szString += OLE2T(vtURL.bstrVal);
+		TRACE(szString.c_str());
+	}
+}
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	HWND hwnd = m_ComboboxEx.GetHwnd();
@@ -165,6 +235,45 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
+void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
+{
+	basic_stringstream<TCHAR> szString;
+
+	if (pDispParams->cArgs != 0)
+	{
+		if (pDispParams->cArgs > 1 && pDispParams->rgvarg[1].vt == VT_I4)
+			szString << TEXT("Progress = ") << pDispParams->rgvarg[1].lVal ;
+
+		if (pDispParams->rgvarg[0].vt == VT_I4)
+			szString << TEXT(", ProgressMax = ") << pDispParams->rgvarg[0].lVal;
+
+		TRACE(szString.str().c_str());		
+   }
+}
+
+void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
+{
+	USES_CONVERSION;
+	LPOLESTR lpStatusText = pDispParams->rgvarg->bstrVal;
+	
+
+	if (lpStatusText)
+	{
+		if (strcmp(OLE2T(lpStatusText), ""))
+		{
+			GetStatusbar().SetPaneText(0, OLE2T(lpStatusText));
+		}
+		else
+			GetStatusbar().SetPaneText(0, TEXT("Done"));
+	}
+}
+
+void CMainFrame::OnTimer(WPARAM wParam)
+{
+	CFrame::OnTimer(wParam);
+	m_StatusText = TEXT("Done");
+}
+
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
@@ -181,13 +290,13 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 
 	// Set the resource IDs for the toolbar buttons
 	TB.SetButtons(ToolbarData);
-
+	
 	// Adjust the toolbar and rebar size to take account of the larger buttons
 	RECT r;
 	TB.GetItemRect(TB.CommandToIndex(IDM_BACK), &r);
 	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-}
 
+}
 
 LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

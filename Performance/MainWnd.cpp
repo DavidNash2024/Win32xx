@@ -8,7 +8,7 @@
 #include "resource.h"
 
 
-CMainWindow::CMainWindow() : m_hEdit(NULL), m_hFont(NULL), m_nTestMessages(0), m_pCTestWindows(NULL)
+CMainWindow::CMainWindow() : m_hEdit(NULL), m_hFont(NULL), m_nTestMessages(0)
 {
 }
 
@@ -21,28 +21,25 @@ CMainWindow::~CMainWindow()
 	{
 		delete m_pCTestWindows[i];
 	}
-	delete []m_pCTestWindows;
 }
 
 void CMainWindow::Create()
 {
-	TCHAR str[80];
-	wsprintf(str, TEXT("Main Window"));
+	tString str = TEXT("Main Window");
 	
 	// Create the main window
-	CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+	CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		20 , 50, 400, 300, NULL, NULL);
 }
 
 void CMainWindow::CreateTestWindows(int nWindows)
 {
 	m_nTestWindows = nWindows;
-	m_pCTestWindows = new CTestWindow*[nWindows];
 
 	for (int i = 0 ; i < nWindows ; i++)
 	{
 		// Create the test windows 
-		m_pCTestWindows[i] = new CTestWindow();
+		m_pCTestWindows.push_back(new CTestWindow());
 		m_pCTestWindows[i]->CreateWin(i);
 	}
 }
@@ -80,9 +77,9 @@ void CMainWindow::OnSize()
 
 void CMainWindow::OnAllWindowsCreated()
 {
-	TCHAR str[80];
-	wsprintf(str, TEXT("%d  Windows Created"), m_nTestWindows);	
-	SendText(str);
+	tStringStream str;
+	str << m_nTestWindows << TEXT("  Windows Created"); 
+	SendText(str.str().c_str());
 	SendText(TEXT("Ready to run performance test"));
 
 	int nResult = ::MessageBox(m_hWnd, TEXT("Start the Performance Test?"), TEXT("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);	
@@ -104,13 +101,13 @@ void CMainWindow::OnAllWindowsCreated()
 
 void CMainWindow::PerformanceTest()
 {
-	TCHAR str[80];
 	LRESULT lr = 0;
 	int nMessages = 0;
 
 	SendText(TEXT(""));
-	wsprintf(str, TEXT("Sending %d Messages"), m_nTestMessages);
-	SendText(str);
+	tStringStream str1;
+	str1 << TEXT("Sending ") << m_nTestMessages <<  TEXT(" Messages");
+	SendText(str1.str().c_str());
 	
 	// Choose a Window handle(HWND) to send the messages to
 	HWND hWnd = m_pCTestWindows[(m_nTestWindows-1)/2]->GetHwnd();
@@ -127,12 +124,14 @@ void CMainWindow::PerformanceTest()
 	DWORD mSeconds = tEnd - tStart;
 
 	// Display the results
-	wsprintf(str, TEXT("%d  milliseconds to process %d messages"), mSeconds, m_nTestMessages);
-	SendText(str);
-
-	MessageBox(m_hWnd, str, TEXT("Info"), MB_OK);
-	wsprintf(str, TEXT("%d total messages sent "), lr);
-	TRACE(str); 
+	tStringStream str2;
+	str2 << mSeconds << TEXT("  milliseconds to process ") << m_nTestMessages << TEXT(" messages");
+	SendText(str2.str().c_str());
+	MessageBox(m_hWnd, str2.str().c_str(), TEXT("Info"), MB_OK);
+	
+	tStringStream str3;
+	str3 << lr << TEXT(" total messages sent");
+	TRACE(str3.str().c_str()); 
 }
 
 void CMainWindow::SendText(LPCTSTR str)

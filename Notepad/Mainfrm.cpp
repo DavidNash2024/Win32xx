@@ -2,8 +2,6 @@
 // Mainfrm.cpp
 
 #include "mainfrm.h"
-#include <string>
-#include <tchar.h>
 #include <richedit.h>
 #include "resource.h"
 
@@ -282,9 +280,9 @@ void CMainFrame::ReadFile(LPCTSTR szFileName)
 
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		char buf[_MAX_PATH];
-		::wsprintf((LPTSTR)buf, TEXT("Failed to load:   %s"),szFileName);
-		::MessageBox(NULL, (LPCTSTR)buf, TEXT("Warning"), MB_ICONWARNING);
+		tStringStream buf;
+		buf << TEXT("Failed to load:  ") << szFileName;
+		::MessageBox(NULL, buf.str().c_str(), TEXT("Warning"), MB_ICONWARNING);
 		return;
 	}
 
@@ -314,9 +312,9 @@ void CMainFrame::WriteFile(LPCTSTR szFileName)
 
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		char buf[_MAX_PATH];
-		::wsprintf((LPTSTR)buf, TEXT("Failed to load:   %s"),szFileName);
-		::MessageBox(NULL, (LPCTSTR)buf, TEXT("Warning"), MB_ICONWARNING);
+		tStringStream buf;
+		buf << TEXT("Failed to load:   ") << szFileName;
+		::MessageBox(NULL, buf.str().c_str(), TEXT("Warning"), MB_ICONWARNING);
 		return;
 	}
 
@@ -394,7 +392,7 @@ void CMainFrame::OnFileSaveAs()
 void CMainFrame::SetFileName(TCHAR* szFilePathName)
 {
 	//Truncate and save file name
-	int i = _tcslen(szFilePathName)+1;
+	int i = lstrlen(szFilePathName)+1;
 	while ((--i > 0) && (szFilePathName[i-1] != TEXT('\\')));
 
 	m_strPathName = szFilePathName+i;
@@ -402,7 +400,7 @@ void CMainFrame::SetFileName(TCHAR* szFilePathName)
 
 void CMainFrame::SetWindowTitle()
 {
-    std::basic_string<TCHAR> Title;
+    tString Title;
 
 	if (m_strPathName == TEXT("")) Title = TEXT("TextEdit - Untitled");
 

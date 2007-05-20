@@ -3,10 +3,13 @@
 //  Definitions for the CMainWindow class
 
 
+#include <string>
+#include <sstream>
 #include "ThreadApp.h"
 #include "MainWnd.h"
 #include "Thread.h"
 #include "resource.h"
+
 
 
 CMainWindow::CMainWindow()
@@ -25,11 +28,10 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::Create()
 {
-	TCHAR str[80];
-	wsprintf(str, TEXT("Main Thread Window"));
+	tString str = TEXT("Main Thread Window");
 	
 	// Create the main window
-	CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+	CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		20 , 50, 400, 300, NULL, NULL);
 }
 
@@ -45,9 +47,9 @@ void CMainWindow::OnCreate()
 
 void CMainWindow::OnAllWindowsCreated()
 {
-	TCHAR str[80];
-	wsprintf(str, TEXT("%d Threads with windows created"), m_nThreads);	
-	TRACE(str);
+	tStringStream str;
+	str << m_nThreads << TEXT(" Threads with windows created");
+	TRACE(str.str().c_str());
 }
 
 LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
