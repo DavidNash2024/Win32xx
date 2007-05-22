@@ -252,7 +252,11 @@ namespace Win32xx
 	// Call this function directly instead of TRACE to see trace output in release mode.
 	{
 		// CreateTrace must be called once before using this function
-		if (m_hTraceEdit == 0) return;
+		if (m_hTraceEdit == 0) 
+		{
+			::MessageBox(NULL, TEXT("Must call CreateTrace before Trace"), TEXT("Error"), MB_OK);	
+			return;
+		}
 
 		// The Trace window is initially invisible. Make it visible now.
 		if (!::IsWindowVisible(m_pTrace->GetHwnd()))
