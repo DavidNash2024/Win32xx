@@ -1,18 +1,11 @@
 ///////////////////////////////////////
 // MyDialog.cpp
 
-//#include "tchar.h"
+
 #include "PerfApp.h"
 #include "MyDialog.h"
 #include "resource.h"
 
-
-// Define _tstoi  -  TCHAR to int
-#ifdef  _UNICODE
-#define _tstoi      _wtoi
-#else
-#define _tstoi      atoi
-#endif
 
 
 // Definitions for the CMyDialog class
@@ -48,15 +41,11 @@ BOOL CMyDialog::OnInitDialog()
 void CMyDialog::OnOK()
 // This function is called when the OK button is hit
 {
-	TCHAR szText[80];
-	
 	// Get the number of test windows to create 
-	::GetDlgItemText(GetHwnd(), IDC_WINDOWS, szText, 80);
-	int nWindows = _tstoi(szText);
+	int nWindows = ::GetDlgItemInt(GetHwnd(), IDC_WINDOWS, NULL, FALSE);
 	
 	// Get the number of test messages to send
-	::GetDlgItemText(GetHwnd(), IDC_MESSAGES, szText, 80);
-	int nTestMessages = _tstoi(szText);
+	int nTestMessages = ::GetDlgItemInt(GetHwnd(), IDC_MESSAGES, NULL, FALSE);
 
 	// Get a reference to the CMainWindow object
 	CMainWindow& MainWnd = ((CPerformanceApp*)GetApp())->GetMainWnd();

@@ -44,7 +44,7 @@ Added CWinApp::GetResourceHandle
 Added CWinApp::SetAcceleratorTable
 Added CWinApp::SetResourceHandle
 Removed CFrame::ToolbarNotify
-Changed CWnd::OnCommand  Now takes WPARAM LPARAM arguement
+Changed CWnd::OnCommand  Now takes WPARAM LPARAM arguments
 
 
 Version 5.1

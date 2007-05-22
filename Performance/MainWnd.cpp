@@ -105,9 +105,9 @@ void CMainWindow::PerformanceTest()
 	int nMessages = 0;
 
 	SendText(TEXT(""));
-	tStringStream str1;
-	str1 << TEXT("Sending ") << m_nTestMessages <<  TEXT(" Messages");
-	SendText(str1.str().c_str());
+	tStringStream str;
+	str << TEXT("Sending ") << m_nTestMessages <<  TEXT(" Messages");
+	SendText(str.str().c_str());
 	
 	// Choose a Window handle(HWND) to send the messages to
 	HWND hWnd = m_pCTestWindows[(m_nTestWindows-1)/2]->GetHwnd();
@@ -124,14 +124,14 @@ void CMainWindow::PerformanceTest()
 	DWORD mSeconds = tEnd - tStart;
 
 	// Display the results
-	tStringStream str2;
-	str2 << mSeconds << TEXT("  milliseconds to process ") << m_nTestMessages << TEXT(" messages");
-	SendText(str2.str().c_str());
-	MessageBox(m_hWnd, str2.str().c_str(), TEXT("Info"), MB_OK);
+	str.str(tString()); // erase the stream
+	str << mSeconds << TEXT("  milliseconds to process ") << m_nTestMessages << TEXT(" messages");
+	SendText(str.str().c_str());
+	MessageBox(m_hWnd, str.str().c_str(), TEXT("Info"), MB_OK);
 	
-	tStringStream str3;
-	str3 << lr << TEXT(" total messages sent");
-	TRACE(str3.str().c_str()); 
+	str.str(tString()); // erase the stream
+	str << lr << TEXT(" total messages sent");
+	TRACE(str.str().c_str()); 
 }
 
 void CMainWindow::SendText(LPCTSTR str)
