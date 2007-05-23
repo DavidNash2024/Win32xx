@@ -12,9 +12,22 @@
 //
 
 
+#if defined (_MSC_VER) && _MSC_VER <= 1200
+  CComModule _Module; // For VS Studio 6 (ATL v3.0) and below
+#else
+  CAtlDummyModule _Module; //  for ATL v7 and above
+#endif
+
+
 // Definitions for the CView class
 CView::CView() : m_pInetExplorer(NULL)
 {
+
+// For VS Studio 6 (ATL v3.0) and below
+#if defined (_MSC_VER) && _MSC_VER <= 1200
+	_Module.Init(NULL, GetApp()->GetInstanceHandle());
+#endif
+
 	AtlAxWinInit();			// Initialise ATL
 	OleInitialize(NULL);	// Initialise OLE
 }
@@ -29,8 +42,12 @@ CView::~CView()
 
 	if (m_pInetExplorer)
 		m_pInetExplorer->Release();
-	
+
 	OleUninitialize();
+
+#if defined (_MSC_VER) && _MSC_VER <= 1200
+	_Module.Term();
+#endif
 }
 
 void CView::Navigate(LPCTSTR str)
@@ -54,16 +71,16 @@ void CView::OnCreate()
 
 	// Use ATL to create the ActiveX control, initializes it, and hosts it in the specified window
 	LRESULT hr = AtlAxCreateControlEx(T2OLE("about:blank"), m_hWnd, NULL, NULL, &m_pSourceUnk, IID_NULL);
-    
+
 	if (SUCCEEDED(hr))
 	{
 		// Set the IWebBrowser2 pointer
 		m_pSourceUnk->QueryInterface (IID_IWebBrowser2, (LPVOID *) &m_pInetExplorer);
-	} 
-	else 
+	}
+	else
 		DebugErrMsg(TEXT("Failed to create browser control"));
 
-	// Create sink object.  CMySink is a CComObjectRootEx-derived class 
+	// Create sink object.  CMySink is a CComObjectRootEx-derived class
 	// that implements the event interface methods.
 	CComObject<CDispatchSink> *pSinkClass = NULL;
 	CComObject<CDispatchSink>::CreateInstance (&pSinkClass);
@@ -71,7 +88,7 @@ void CView::OnCreate()
 	_ASSERT (SUCCEEDED (hr));
 
 	hr = AtlAdvise (m_pSourceUnk, m_pSinkUnk, DIID_DWebBrowserEvents2, &m_dwCustCookie);
-	_ASSERT (SUCCEEDED (hr)); 
+	_ASSERT (SUCCEEDED (hr));
 }
 
 void CView::OnDestroy()
@@ -106,7 +123,7 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		OnDestroy();
-		return 0;	
+		return 0;
 	}
 
 	// Pass unprocessed messages to CWin::WndProc
@@ -161,7 +178,7 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
 	case DISPID_STATUSTEXTCHANGE:
 		pMainFrame->OnStatusTextChange(pDispParams);
 		break;
-			
+
 	case DISPID_NEWWINDOW2:
 		pMainFrame->OnNewWindow2(pDispParams);
 		break;
