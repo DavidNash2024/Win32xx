@@ -1,8 +1,6 @@
 ///////////////////////////////////////
 // main.cpp
 
-
-#include "tchar.h"
 #include "MDIFrameApp.h"
 
 INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)

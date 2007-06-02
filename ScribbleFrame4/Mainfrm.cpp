@@ -2,8 +2,6 @@
 // Mainfrm.cpp  - definitions for the CMainFrame class
 
 
-#include "view.h"
-#include "..\Win32++\frame.h"
 #include "resource.h"
 #include "mainfrm.h"
 

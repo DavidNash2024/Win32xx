@@ -1,7 +1,6 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include <tchar.h>		// Support for _tWinMain
 #include "ShellApp.h"
 
 

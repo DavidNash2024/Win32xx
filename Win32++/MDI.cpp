@@ -274,7 +274,7 @@ namespace Win32xx
 	//
 	CMDIClient::CMDIClient() //: m_OldWindowProc(NULL)
 	{
-		Superclass(TEXT("MDICLIENT"), TEXT("SuperMDIClient"));
+		Superclass(_T("MDICLIENT"), _T("SuperMDIClient"));
 	}
 
 	CMDIClient::~CMDIClient()
@@ -291,9 +291,9 @@ namespace Win32xx
 			DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
 			// Create the view window
-			if (!CreateEx(WS_EX_CLIENTEDGE, TEXT("SuperMDIClient"), TEXT(""),
+			if (!CreateEx(WS_EX_CLIENTEDGE, _T("SuperMDIClient"), _T(""),
 					dword, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
-					throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
+					throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
 
 			return m_hWnd;
 		}
@@ -305,7 +305,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CMDIClient::Create"));
+			DebugErrMsg(_T("Exception in CMDIClient::Create"));
 		}
 
 		return m_hWnd;
@@ -383,7 +383,7 @@ namespace Win32xx
 			bMax = bMax | (m_cs.style & WS_MAXIMIZE);
 
 			// Set the Window Class Name
-			TCHAR szClassName[MAX_STRING_SIZE + 1] = TEXT("Win32++ MDI Child");
+			TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ MDI Child");
 			if (m_cs.lpszClass)
 				lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
@@ -417,7 +417,7 @@ namespace Win32xx
 			// Create the window
 			if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
 				cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams))
-				throw CWinException(TEXT("CMDIChild::Create ... CreateEx failed"));
+				throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 			if (bMax)
 				::ShowWindow(m_hWnd, SW_MAXIMIZE);
@@ -436,7 +436,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CMDIChild::Create"));
+			DebugErrMsg(_T("Exception in CMDIChild::Create"));
 		}
 		return m_hWnd;
 	}
@@ -472,7 +472,7 @@ namespace Win32xx
 	void CMDIChild::UpdateFrameMenu(HMENU hMenu)
 	{
 		CFrame* pFrame = GetApp()->GetFrame();
-		int nWindowItem = pFrame->GetMenuItemPos(hMenu, TEXT("Window"));
+		int nWindowItem = pFrame->GetMenuItemPos(hMenu, _T("Window"));
 		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
 
 		::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);

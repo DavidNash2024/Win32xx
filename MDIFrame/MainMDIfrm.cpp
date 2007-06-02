@@ -7,7 +7,6 @@
 #include "MDIChildView.h"
 
 
-
 CMainMDIFrame::CMainMDIFrame()
 {
 	// Define the resource IDs for the toolbar

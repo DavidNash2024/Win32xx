@@ -2,7 +2,6 @@
 // main.cpp
 
 
-#include "tchar.h"
 #include "MDIDemoApp.h"
 
 INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)

@@ -1,0 +1,161 @@
+////////////////////////////////////////////////////
+// Mainfrm.cpp
+
+
+#include "resource.h"
+#include "mainfrm.h"
+
+
+// Definitions for the CMainFrame class
+CMainFrame::CMainFrame()
+{
+	// Constructor for CMainFrame. Its called after CFrame's constructor
+
+	//Set m_View as the view window of the frame
+	SetView(m_View);
+
+	// Set the Resource IDs for the toolbar buttons
+	m_ToolbarData.clear();
+	m_ToolbarData.push_back ( IDM_FILE_NEW   );
+	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
+	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
+	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
+	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_FILE_PRINT );
+	m_ToolbarData.push_back ( 0 );				// Separator
+	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+}
+
+CMainFrame::~CMainFrame()
+{
+	// Destructor for CMainFrame.
+}
+
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	// OnCommand responds to menu and and toolbar input
+	
+	switch(LOWORD(wParam))
+	{
+	case IDM_FILE_OPEN:
+		OnFileOpen();
+		break;
+	case IDM_FILE_EXIT:
+		// End the application
+		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		break;
+	case IDM_HELP_ABOUT:
+		// Display the help dialog
+		OnHelp();
+		break;
+	}
+
+	// call the base class function
+	return CFrame::OnCommand(wParam, lParam);
+}
+
+void CMainFrame::OnCreate()
+{
+	// OnCreate controls the way the frame is created. 
+	// Overriding CFrame::Oncreate is optional.
+	// The default for the following variables is TRUE
+
+	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
+	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
+	// m_bUseRebar = FALSE;				// Don't use rebars
+
+	// call the base class function
+	CFrame::OnCreate();
+}
+
+void CMainFrame::OnFileOpen()
+{
+	// get file name to open
+	TCHAR szFile[MAX_PATH] = _T("");
+	OPENFILENAME ofn = {0};
+	ofn.lStructSize	= sizeof(OPENFILENAME);
+	ofn.Flags		= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+//	ofn.hwndOwner	= m_hWnd;
+	ofn.lpstrFilter	= TEXT("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
+	ofn.lpstrTitle	= TEXT("Open Picture File");
+	ofn.lpstrFile	= szFile;
+	ofn.nMaxFile	= MAX_PATH;
+
+	if (IDOK == GetOpenFileName(&ofn))
+		m_View.LoadPictureFile(szFile);
+}
+					
+
+void CMainFrame::OnInitialUpdate()
+{
+	// The frame is now created.
+	// Place any additional startup code here.
+
+}
+
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+{
+	// Process notification messages sent by child windows
+
+//	switch(((LPNMHDR)lParam)->code)
+//	{	
+ 		//Add case statments for each notification message here
+//	}  
+
+	// pass unhandled notifications to CFrame
+	return CFrame::OnNotify(wParam, lParam);
+}
+
+void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
+{
+	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
+	// with seperate imagelists for normal, hot and disabled buttons.
+
+	// A reference to the CToolbar object
+	CToolbar& TB = GetToolbar();
+
+	// Set the button size to 24x24 before adding the bitmap
+	TB.SetBitmapSize(24, 24);
+
+	// Set the image lists for normal, hot and disabled buttons
+	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	// Set the resource IDs for the toolbar buttons
+	TB.SetButtons(ToolbarData);
+
+	// Add some text to the buttons
+// 	TB.SetButtonText(IDM_FILE_NEW,   "New");
+//	TB.SetButtonText(IDM_FILE_OPEN,  "Open");
+//	TB.SetButtonText(IDM_FILE_SAVE,  "Save");
+//	TB.SetButtonText(IDM_EDIT_CUT,   "Cut");
+//	TB.SetButtonText(IDM_EDIT_COPY,  "Copy");
+//	TB.SetButtonText(IDM_EDIT_PASTE, "Paste");
+//	TB.SetButtonText(IDM_FILE_PRINT, "Print");
+//	TB.SetButtonText(IDM_HELP_ABOUT, "About");
+
+	// Adjust the toolbar and rebar size to take account of the larger buttons
+	RECT r;
+	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
+	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
+
+	// Disable some of the toolbar buttons
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE); 
+
+}
+
+LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+//	switch (uMsg)
+//	{
+		//Additional messages to be handled go here
+//	}
+
+	//Use the frame default message handling for remaining messages
+	return CFrame::WndProc(hwnd, uMsg, wParam, lParam);
+}
+

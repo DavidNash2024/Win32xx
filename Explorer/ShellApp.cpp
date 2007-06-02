@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////
 //ShellApp.cpp -  Definitions for the CShellApp class
 
-#include "..\Win32++\frame.h"
 #include "resource.h"
 #include "ShellApp.h"
 

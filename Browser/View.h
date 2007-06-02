@@ -31,7 +31,7 @@
 #include <atlhost.h>
 
 #include <comutil.h>			// For ConvertStringToBSTR support
-#include "..\Win32++\Wincore.h"
+#include "../Win32++/Wincore.h"
 
 
 

@@ -10,7 +10,7 @@
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res\\Win32++.manifest"
+1                       RT_MANIFEST             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -59,15 +59,15 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                 ICON                    "res\\enhanced.ico"
+IDW_MAIN                 ICON                    "res/enhanced.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "res\\toolbar.bmp"
-IDB_BACKGROUND          BITMAP                  "res\\backgrnd.bmp"
+IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
+IDB_BACKGROUND           BITMAP                  "res/backgrnd.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

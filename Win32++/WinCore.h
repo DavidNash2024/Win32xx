@@ -62,6 +62,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <tchar.h>
 
 // Some useful type declarations
 typedef std::basic_string<TCHAR> tString;
@@ -71,7 +72,7 @@ typedef std::basic_stringstream<TCHAR> tStringStream;
 namespace Win32xx
 {
 	////////////////////////////////////////////////
-	// Forward declarations. 
+	// Forward declarations.
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CFrame;
@@ -82,7 +83,7 @@ namespace Win32xx
 
 	enum Constants
 	{
-		MAX_STRING_SIZE = 255	
+		MAX_STRING_SIZE = 255
 	};
 
 	// The comparison function object used by CWinApp::m_HWNDmap
@@ -139,7 +140,7 @@ namespace Win32xx
 		virtual HWND GetAncestor(HWND hwnd);
 		virtual CWnd* GetCWndObject(HWND hWnd);
 		virtual HWND GetHwnd() {return m_hWnd;}
-		virtual LPCTSTR LoadString(int nID);
+		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -200,7 +201,7 @@ namespace Win32xx
 		virtual std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();
-		virtual void SetAcceleratorTable(INT ID_ACCEL);
+		virtual void SetAcceleratorTable(UINT ID_ACCEL);
 		virtual void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
 		virtual void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		virtual void Trace(LPCTSTR szString);
@@ -254,13 +255,13 @@ namespace Win32xx
 	//  (within the Win32xx namespace)
 
 	// Returns a pointer to the CWinApp object
-	inline CWinApp* GetApp(){ return CWinApp::GetApp();} 
+	inline CWinApp* GetApp(){ return CWinApp::GetApp();}
 
 	// Displays a warning message in a message box. Debug mode only.
 	inline void DebugErrMsg(LPCTSTR ErrorMsg)
 	{
 	#ifdef _DEBUG
-		::MessageBox (0, ErrorMsg, TEXT("Exception"), MB_ICONEXCLAMATION | MB_OK);
+		::MessageBox (0, ErrorMsg, _T("Exception"), MB_ICONEXCLAMATION | MB_OK);
 	#else
 		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
 	#endif  //_DEBUG
@@ -270,7 +271,7 @@ namespace Win32xx
 	inline void DebugWarnMsg(LPCTSTR WarnMsg)
 	{
 	#ifdef _DEBUG
-		::MessageBox (0, WarnMsg, TEXT("Warning"), MB_ICONINFORMATION | MB_OK);
+		::MessageBox (0, WarnMsg, _T("Warning"), MB_ICONINFORMATION | MB_OK);
 	#else
 		UNREFERENCED_PARAMETER(WarnMsg); // no-op
 	#endif  //_DEBUG
@@ -279,7 +280,7 @@ namespace Win32xx
 	// Define global static TRACE macro for Debug mode only
 	#ifdef _DEBUG
 	  #define TRACE(str) (GetApp()->Trace(str))
-	#else  
+	#else
 	  #define TRACE(str) // no-op
 	#endif  // _DEBUG
 

@@ -7,7 +7,7 @@
 #define LISTVIEW_H
 
 //Include WinCore.h first
-#include "..\Win32++\WinCore.h"
+#include "../Win32++/WinCore.h"
 #include <Windowsx.h>
 #include <vector>
 

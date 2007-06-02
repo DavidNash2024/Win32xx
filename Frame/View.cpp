@@ -22,7 +22,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	// take more precise control over the window we create.
 
 	// Set the Window Class name
-	cs.lpszClass = TEXT("View");
+	cs.lpszClass = _T("View");
 
 	// Set the extended style
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
@@ -47,6 +47,6 @@ void CView::OnPaint(HDC hDC)
 	::GetClientRect(m_hWnd, &r);
 
 	// Centre some text in our view window
-	::DrawText(hDC, TEXT("View Window"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

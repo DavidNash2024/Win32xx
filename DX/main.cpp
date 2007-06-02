@@ -1,7 +1,6 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "..\Win32++\Wincore.h"
 #include "DXApp.h"
 
 

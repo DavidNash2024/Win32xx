@@ -78,7 +78,7 @@ void CView::OnCreate()
 		m_pSourceUnk->QueryInterface (IID_IWebBrowser2, (LPVOID *) &m_pInetExplorer);
 	}
 	else
-		DebugErrMsg(TEXT("Failed to create browser control"));
+		DebugErrMsg(_T("Failed to create browser control"));
 
 	// Create sink object.  CMySink is a CComObjectRootEx-derived class
 	// that implements the event interface methods.
@@ -110,7 +110,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	// Set some optional parameters for the window
 	cs.style = WS_HSCROLL| WS_VSCROLL | WS_VISIBLE | WS_CHILD;
 	cs.dwExStyle = WS_EX_CLIENTEDGE;		// Extended style
-	cs.lpszClass = TEXT("Win32++ Window");	// Window class name
+	cs.lpszClass = _T("Win32++ Window");	// Window class name
 }
 
 LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

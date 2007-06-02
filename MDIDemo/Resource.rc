@@ -9,7 +9,7 @@
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res\\Win32++.manifest"
+1                       RT_MANIFEST             "res/Win32++.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -160,20 +160,20 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                 ICON                    "res\\mdi.ico"
-IDI_VIEW                ICON                    "res\\view.ico"
-IDI_RECT                ICON                    "res\\rect.ico"
-IDI_MAX                 ICON                    "res\\max.ico"
+IDW_MAIN                 ICON                   "res/mdi.ico"
+IDI_VIEW                ICON                    "res/view.ico"
+IDI_RECT                ICON                    "res/rect.ico"
+IDI_MAX                 ICON                    "res/max.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "res\\toolbar.bmp"
-IDB_TOOLBAR_NORM         BITMAP                  "res\\toolbar24.bmp"
-IDB_TOOLBAR_HOT          BITMAP                  "res\\toolbar24_h.bmp"
-IDB_TOOLBAR_DIS          BITMAP                  "res\\toolbar24_d.bmp"
+IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
+IDB_TOOLBAR_NORM         BITMAP                  "res/toolbar24.bmp"
+IDB_TOOLBAR_HOT          BITMAP                  "res/toolbar24_h.bmp"
+IDB_TOOLBAR_DIS          BITMAP                  "res/toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

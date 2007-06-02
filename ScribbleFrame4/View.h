@@ -7,7 +7,7 @@
 #define VIEW_H
 
 #include <vector>
-#include "..\Win32++\WinCore.h"
+#include "../Win32++/WinCore.h"
 
 using std::vector;
 

@@ -74,7 +74,7 @@ namespace Win32xx
 			{
 				st_dwTlsIndex = ::TlsAlloc();
 				if (st_dwTlsIndex == TLS_OUT_OF_INDEXES)
-					throw CWinException(TEXT("CWinApp::CWinApp  Failed to allocate TLS Index"));
+					throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 
 				st_pTheApp = this;
 				m_IsTlsAllocatedHere = TRUE; //TLS allocated in this CWinApp object
@@ -83,7 +83,7 @@ namespace Win32xx
 			{
 				// We get here if Win32++ is used incorrectly, i.e. more than one instance
 				// of a CWinApp derived class is started.
- 				throw CWinException(TEXT("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
+ 				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
 
 			m_pTrace = new CWnd;
@@ -100,7 +100,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWinApp::CWinApp"));
+			DebugErrMsg(_T("Exception in CWinApp::CWinApp"));
 			throw;	// Rethrow unknown exception
 		}
 	}
@@ -123,7 +123,7 @@ namespace Win32xx
 
 			//Check that all CWnd objects are destroyed
 			if (GetApp()->m_HWNDmap.begin() != GetApp()->m_HWNDmap.end())
-				DebugErrMsg(TEXT("Warning: Shutting down CWinApp before all CWnd objects destroyed"));
+				DebugErrMsg(_T("Warning: Shutting down CWinApp before all CWnd objects destroyed"));
 
 			// Do remaining tidy up
 			if (st_dwTlsIndex != TLS_OUT_OF_INDEXES)
@@ -148,13 +148,13 @@ namespace Win32xx
 	{
 		if (m_pTrace->GetHwnd() != 0)
 		{
-			DebugErrMsg(TEXT("Error, CreateTrace should only be called once"));
+			DebugErrMsg(_T("Error, CreateTrace should only be called once"));
 			return;
 		}
 
-		m_hRichEdit = ::LoadLibrary(TEXT("RICHED32.DLL"));
+		m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
 		if (!m_hRichEdit)
-			DebugErrMsg(TEXT("Failed to load the RichEdit dll"));
+			DebugErrMsg(_T("Failed to load the RichEdit dll"));
 
 		// Position window at the botton right of the desktop area
 		RECT r = {0};
@@ -163,17 +163,17 @@ namespace Win32xx
 		r.left = r.right - TRACE_WIDTH;
 		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION /*| WS_VISIBLE*/;
 
-		m_pTrace->CreateEx(WS_EX_TOPMOST, TEXT("TRACE"), TEXT("Trace Window"), dwStyle, r, NULL, NULL);
+		m_pTrace->CreateEx(WS_EX_TOPMOST, _T("TRACE"), _T("Trace Window"), dwStyle, r, NULL, NULL);
 
 		::GetClientRect(m_pTrace->GetHwnd(), &r);
 		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
 
-		m_hTraceEdit = ::CreateWindowEx(0L, TEXT("RichEdit"), TEXT(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
+		m_hTraceEdit = ::CreateWindowEx(0L, _T("RichEdit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
 					m_pTrace->GetHwnd(), NULL, GetApp()->GetInstanceHandle(), NULL);
 
 		// Set a default font
 		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, TEXT("Courier New"));
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 		::SendMessage(m_hTraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
 	}
 
@@ -206,14 +206,14 @@ namespace Win32xx
 		return LOWORD(uMsg.wParam);
 	}
 
-	void CWinApp::SetAcceleratorTable(INT ID_ACCEL)
+	void CWinApp::SetAcceleratorTable(UINT ID_ACCEL)
 	{
 		if (m_hAccelTable)
 			::DestroyAcceleratorTable(m_hAccelTable);
 
 		m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
 		if (!m_hAccelTable)
-			DebugWarnMsg(TEXT("Load Accelerators failed"));
+			DebugWarnMsg(_T("Load Accelerators failed"));
 	}
 
 	TLSData* CWinApp::SetTlsIndex()
@@ -222,7 +222,7 @@ namespace Win32xx
 		{
 			// Called once for any thread that has a CWnd object
 			if ((TLSData*)::TlsGetValue(GetTlsIndex()) != NULL)
-				throw CWinException(TEXT("CWinApp::SetTlsIndex    Error, attempted to set TLS more than once"));
+				throw CWinException(_T("CWinApp::SetTlsIndex    Error, attempted to set TLS more than once"));
 
 			TLSData* pTLSData = new TLSData;
 			ZeroMemory(pTLSData, sizeof(TLSData));
@@ -240,7 +240,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd construction"));
+			DebugErrMsg(_T("Exception in CWnd construction"));
 			throw;	// Rethrow unknown exception
 		}
 		return 0;
@@ -252,9 +252,9 @@ namespace Win32xx
 	// Call this function directly instead of TRACE to see trace output in release mode.
 	{
 		// CreateTrace must be called once before using this function
-		if (m_hTraceEdit == 0) 
+		if (m_hTraceEdit == 0)
 		{
-			::MessageBox(NULL, TEXT("Must call CreateTrace before Trace"), TEXT("Error"), MB_OK);	
+			::MessageBox(NULL, _T("Must call CreateTrace before Trace"), _T("Error"), MB_OK);
 			return;
 		}
 
@@ -267,7 +267,7 @@ namespace Win32xx
 		// Add CR LF to the end
 		TCHAR str[80];
 		::lstrcpyn(str, szString, 77);
-		::lstrcat(str, TEXT("\r\n"));
+		::lstrcat(str, _T("\r\n"));
 
 		::SendMessage(m_hTraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)str);
 		::SendMessage(m_hTraceEdit, EM_SCROLLCARET, (WPARAM)0, (LPARAM)0);
@@ -285,11 +285,11 @@ namespace Win32xx
 		try
 		{
 			::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
-			m_szString[0] = TEXT('\0');
+			m_szString[0] = _T('\0');
 
 			// Test if Win32++ has been started
 			if (GetApp() == 0)
-				throw CWinException(TEXT("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 		}
 
 		catch (const CWinException &e)
@@ -299,7 +299,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd construction"));
+			DebugErrMsg(_T("Exception in CWnd construction"));
 			throw;	// Rethrow unknown exception
 		}
 	}
@@ -334,7 +334,7 @@ namespace Win32xx
 			if (IsWindow(hWnd))
 			{
 				if (m_hWnd)
-					throw CWinException(TEXT("Window already attached to this CWnd object"));
+					throw CWinException(_T("Window already attached to this CWnd object"));
 
 				m_hWnd = hWnd;
 				Subclass();
@@ -353,7 +353,7 @@ namespace Win32xx
 				else
 				{
 					m_hWnd = NULL;
-					throw CWinException(TEXT("CWnd::Attach .. Subclass failed"));
+					throw CWinException(_T("CWnd::Attach .. Subclass failed"));
 				}
 			}
 		}
@@ -365,7 +365,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::Attach"));
+			DebugErrMsg(_T("Exception in CWnd::Attach"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -394,7 +394,7 @@ namespace Win32xx
 			PreCreate(m_cs);
 
 			// Set the Window Class Name
-			TCHAR szClassName[MAX_STRING_SIZE + 1] = TEXT("Win32++ Window");
+			TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
 			if (m_cs.lpszClass)
 				::lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
@@ -418,7 +418,7 @@ namespace Win32xx
 			// Create the window
 			if (!CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
 				cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams))
-				throw CWinException(TEXT("CWnd::Create ... CreateEx failed"));
+				throw CWinException(_T("CWnd::Create ... CreateEx failed"));
 		}
 
 		catch (const CWinException &e)
@@ -428,7 +428,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::Create"));
+			DebugErrMsg(_T("Exception in CWnd::Create"));
 			throw;	// Rethrow unknown exception
 		}
 		return m_hWnd;
@@ -449,12 +449,12 @@ namespace Win32xx
 		{
 			// Only one window per CWnd instance
 			if (::IsWindow(m_hWnd))
-				throw CWinException(TEXT("CWnd::CreateEx ... Window already exists"));
+				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE];
 			if (lstrlen(lpszClassName) == 0)
-				::lstrcpyn (ClassName, TEXT("Win32++ Window"), MAX_STRING_SIZE);
+				::lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
 				// Create our own local copy of szClassName.
 				::lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
@@ -464,7 +464,7 @@ namespace Win32xx
 			wcx.cbSize = sizeof(WNDCLASSEX);
 			wcx.lpszClassName = ClassName;
 			if (!RegisterClassEx(wcx))
-				throw CWinException(TEXT("CWnd::CreateEx  Failed to register window class"));
+				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
 			// Ensure this thread has the TLS index set
 			GetApp()->m_MapLock.Lock();
@@ -487,7 +487,7 @@ namespace Win32xx
 
 			// Now handle window creation failure
 			if (!m_hWnd)
-				throw CWinException(TEXT("CWnd::CreateEx ... Failed to Create Window"));
+				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
 
 			// Window creation is complete. Now call OnInitialUpdate
 			OnInitialUpdate();
@@ -502,7 +502,7 @@ namespace Win32xx
 		catch (...)
 		{
 			m_hWndParent = NULL;
-			DebugErrMsg(TEXT("Exception in CWnd::CreateEx"));
+			DebugErrMsg(_T("Exception in CWnd::CreateEx"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -533,7 +533,7 @@ namespace Win32xx
 		{
 			//Only a subclassed window can be detached
 			if (m_PrevWindowProc == 0)
-				throw CWinException(TEXT("CWnd::Detach  Unable to detach this window"));
+				throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
 
 #if defined (_MSC_VER) && _MSC_VER <= 1200
 
@@ -563,7 +563,7 @@ namespace Win32xx
 			else
 			{
 				GetApp()->m_MapLock.Release();
-				throw CWinException(TEXT("CWnd::Detach  Unable to find window to detach"));
+				throw CWinException(_T("CWnd::Detach  Unable to find window to detach"));
 			}
 			GetApp()->m_MapLock.Release();
 
@@ -582,7 +582,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Unknown exception in CWnd::Detach"));
+			DebugErrMsg(_T("Unknown exception in CWnd::Detach"));
 			throw;	// Rethrow unknown exception
 		}
 		return 0;
@@ -617,19 +617,19 @@ namespace Win32xx
 		return NULL;
 	}
 
-	LPCTSTR CWnd::LoadString(int nID)
+	LPCTSTR CWnd::LoadString(UINT nID)
 	{
 		// Returns the string associated with a Resource ID
 		try
 		{
 			if (GetApp() == 0)
-				throw CWinException(TEXT("Win32++ has not been initialised successfully."));
+				throw CWinException(_T("Win32++ has not been initialised successfully."));
 
-			::lstrcpy(m_szString, TEXT(""));
+			::lstrcpy(m_szString, _T(""));
 			if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_szString, MAX_STRING_SIZE -1))
 			{
 				TCHAR str[80];
-				::wsprintf(str, TEXT("LoadString - No string resource for %d"), nID);
+				::wsprintf(str, _T("LoadString - No string resource for %d"), nID);
 				DebugWarnMsg(str);
 			}
 		}
@@ -641,7 +641,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::LoadString"));
+			DebugErrMsg(_T("Exception in CWnd::LoadString"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -789,7 +789,7 @@ namespace Win32xx
 		try
 		{
 			if ((lstrlen(wcx.lpszClassName) == 0) || (lstrlen(wcx.lpszClassName) >  MAX_STRING_SIZE))
-				throw CWinException(TEXT("Wnd::RegisterClassEx   Invalid class name"));
+				throw CWinException(_T("Wnd::RegisterClassEx   Invalid class name"));
 
 			// Check to see if this classname is already registered
 			WNDCLASSEX wcxTest = {0};
@@ -809,7 +809,7 @@ namespace Win32xx
 
 			// Register the WNDCLASSEX structure
 			if (!::RegisterClassEx(&wcx))
-				throw CWinException(TEXT("Failed to register Window Class"));
+				throw CWinException(_T("Failed to register Window Class"));
 
 			return TRUE;
 		}
@@ -821,7 +821,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::RegisterClassEx"));
+			DebugErrMsg(_T("Exception in CWnd::RegisterClassEx"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -842,7 +842,7 @@ namespace Win32xx
 		// Create the CBT Hook
 		HHOOK hHook = ::SetWindowsHookEx(WH_CBT, (HOOKPROC)CWnd::StaticCBTProc, 0, ::GetCurrentThreadId());
 		if (!hHook)
-			throw CWinException(TEXT("CWnd::SetHook ... SetWindowsHookEx Failed"));
+			throw CWinException(_T("CWnd::SetHook ... SetWindowsHookEx Failed"));
 
 		// Store the hook and 'this' pointer in Thread Local Storage
 		m_pTLSData->hCBTHook = hHook;
@@ -878,7 +878,7 @@ namespace Win32xx
 					::SetParent(m_hWnd, hParent);
 			}
 			else
-				throw CWinException(TEXT("CWnd::SetParent ... Failed to set parent"));
+				throw CWinException(_T("CWnd::SetParent ... Failed to set parent"));
 		}
 
 		catch (const CWinException &e)
@@ -888,7 +888,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::SetParent"));
+			DebugErrMsg(_T("Exception in CWnd::SetParent"));
 			throw;	// Rethrow unknown exception
 		}
 	}
@@ -903,7 +903,7 @@ namespace Win32xx
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 			if (pTLSData == NULL)
-				throw (CWinException(TEXT("CWnd::StaticCBTProc ... Unable to get TLS")));
+				throw (CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS")));
 
 			CWnd* w = pTLSData->pCWnd;
 
@@ -934,7 +934,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::StaticCBTProc"));
+			DebugErrMsg(_T("Exception in CWnd::StaticCBTProc"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -955,7 +955,7 @@ namespace Win32xx
 			if (m != GetApp()->GetHWNDMap().end())
 				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
 
-			throw CWinException(TEXT("CWnd::StaticWindowProc .. Failed to route message"));
+			throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 		}
 
 		catch (const CWinException &e)
@@ -965,7 +965,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::StaticWindowProc"));
+			DebugErrMsg(_T("Exception in CWnd::StaticWindowProc"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -981,7 +981,7 @@ namespace Win32xx
 		try
 		{
 			if (m_PrevWindowProc)
-				throw CWinException(TEXT("Subclass failed.  Already Subclassed or Superclassed"));
+				throw CWinException(_T("Subclass failed.  Already Subclassed or Superclassed"));
 
 			// Subclass the window to pass messages to WndProc
 
@@ -990,7 +990,7 @@ namespace Win32xx
 			// use non 64 bit compliant code for Visual C++ 6 and below
 			WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
 			if (WndProc == CWnd::StaticWindowProc)
-				throw CWinException(TEXT("Subclass failed.  Already sending messages to StaticWindowProc"));
+				throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 #else
 
@@ -1002,7 +1002,7 @@ namespace Win32xx
 			// use 64 bit compliant code otherwise
 			WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
 			if (WndProc == CWnd::StaticWindowProc)
-				throw CWinException(TEXT("Subclass failed.  Already sending messages to StaticWindowProc"));
+				throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 			m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 
   #if defined(_MSC_VER)
@@ -1019,7 +1019,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::Superclass"));
+			DebugErrMsg(_T("Exception in CWnd::Superclass"));
 			throw;	// Rethrow unknown exception
 		}
 	}
@@ -1032,13 +1032,13 @@ namespace Win32xx
 		try
 		{
 			if (m_PrevWindowProc)
-				throw CWinException(TEXT("Superclass failed.  Already Subclassed or Superclassed"));
+				throw CWinException(_T("Superclass failed.  Already Subclassed or Superclassed"));
 
 			// Step 1:  Extract the old class's window procedure
 			WNDCLASSEX wcx = {0};
 			wcx.cbSize = sizeof(WNDCLASSEX);
 			if (!::GetClassInfoEx(NULL, OldClass, &wcx))
-				throw CWinException(TEXT("CWnd::Superclass  GetClassInfo failed"));
+				throw CWinException(_T("CWnd::Superclass  GetClassInfo failed"));
 
 			m_PrevWindowProc = wcx.lpfnWndProc;
 
@@ -1047,7 +1047,7 @@ namespace Win32xx
 			wcx.lpszClassName = NewClass;
 			wcx.lpfnWndProc = CWnd::StaticWindowProc;
 			if (!RegisterClassEx(wcx))
-				throw CWinException(TEXT("CWnd::Superclass  RegisterClassEx failed"));
+				throw CWinException(_T("CWnd::Superclass  RegisterClassEx failed"));
 		}
 
 		catch (const CWinException &e)
@@ -1057,7 +1057,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CWnd::Superclass"));
+			DebugErrMsg(_T("Exception in CWnd::Superclass"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -1175,11 +1175,11 @@ namespace Win32xx
 
 			::lstrcpyn(buf2, (LPTSTR)lpMsgBuf, MAX_STRING_SIZE/2 -10);
 
-			::wsprintf(buf3, TEXT("%s\n\n     %s\n\n"), buf1, buf2);
+			::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);
 			::LocalFree(lpMsgBuf);
 		}
 		else
-			::wsprintf(buf3, TEXT("%s"), buf1);
+			::wsprintf(buf3, _T("%s"), buf1);
 
 		DebugErrMsg(buf3);
 

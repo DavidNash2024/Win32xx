@@ -32,7 +32,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 {
 	// Create the ComboboxEx window
 	CREATESTRUCT cs = {0};
-	cs.lpszClass = TEXT("COMBOBOXEX32");
+	cs.lpszClass = _T("COMBOBOXEX32");
 	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
 	cs.cy = 100;	// required to display list
 	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
@@ -50,7 +50,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 	rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
-	rbbi.lpText     = TEXT("Address");
+	rbbi.lpText     = _T("Address");
 
 	GetRebar().InsertBand(-1, &rbbi);
 }
@@ -160,7 +160,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 {
-	TRACE(TEXT("OnDocumentBegin"));
+	TRACE(_T("OnDocumentBegin"));
 }
 
 void CMainFrame::OnCreate()
@@ -171,7 +171,7 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
-	m_StatusText = TEXT("Done");
+	m_StatusText = _T("Done");
 }
 
 void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
@@ -193,7 +193,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
 	USES_CONVERSION;
-	tString szString = TEXT("NavigateComplete2: ");
+	tString szString = _T("NavigateComplete2: ");
 
 	if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
 	{
@@ -207,7 +207,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
-	//TRACE(TEXT("NewWindow2"));
+	//TRACE(_T("NewWindow2"));
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -253,10 +253,10 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 	if (pDispParams->cArgs != 0)
 	{
 		if (pDispParams->cArgs > 1 && pDispParams->rgvarg[1].vt == VT_I4)
-			szString << TEXT("Progress = ") << pDispParams->rgvarg[1].lVal ;
+			szString << _T("Progress = ") << pDispParams->rgvarg[1].lVal ;
 
 		if (pDispParams->rgvarg[0].vt == VT_I4)
-			szString << TEXT(", ProgressMax = ") << pDispParams->rgvarg[0].lVal;
+			szString << _T(", ProgressMax = ") << pDispParams->rgvarg[0].lVal;
 
 		TRACE(szString.str().c_str());		
    }
@@ -267,7 +267,7 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 	USES_CONVERSION;
 	tStringStream str;
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		str << TEXT("Property Change:") << OLE2T(pDispParams->rgvarg[0].bstrVal);
+		str << _T("Property Change:") << OLE2T(pDispParams->rgvarg[0].bstrVal);
 
 	TRACE(str.str().c_str());
 }
@@ -280,19 +280,19 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 	if (lpStatusText)
 	{
-		if (strcmp(OLE2T(lpStatusText), ""))
+		if (strcmp(OLE2T(lpStatusText), _T("")))
 		{
 			GetStatusbar().SetPaneText(0, OLE2T(lpStatusText));
 		}
 		else
-			GetStatusbar().SetPaneText(0, TEXT("Done"));
+			GetStatusbar().SetPaneText(0, _T("Done"));
 	}
 }
 
 void CMainFrame::OnTimer(WPARAM wParam)
 {
 	CFrame::OnTimer(wParam);
-	m_StatusText = TEXT("Done");
+	m_StatusText = _T("Done");
 }
 
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
@@ -303,7 +303,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-		str << OLE2T(pDispParams->rgvarg[0].bstrVal) << TEXT(" - ") << LoadString(IDW_MAIN);
+		str << OLE2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << LoadString(IDW_MAIN);
 		TRACE(OLE2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else

@@ -3,7 +3,6 @@
 //  Definitions for the CMainView class
 
 #include "MainView.h"
-#include "..\Win32++\frame.h"
 
 
 CMainView::CMainView(int nBarpos, bool bVertical) :

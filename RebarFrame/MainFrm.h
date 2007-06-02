@@ -7,7 +7,7 @@
 #define MAINFRM_H
 
 #include "view.h"
-#include "..\Win32++\frame.h"
+#include "../Win32++/frame.h"
 
 
 class CMainFrame : public CFrame

@@ -4,7 +4,7 @@
 // NOTE: for MS compilers you will need the DirectX SDK v9
 //       for Dev-C++ you will need the DirecX v9.0c DevPak
 
-#include "..\Win32++\WinCore.h"
+#include "../Win32++/WinCore.h"
 #include <d3dx9.h>	// see the note above
 #include <mmsystem.h>
 #include "View.h"

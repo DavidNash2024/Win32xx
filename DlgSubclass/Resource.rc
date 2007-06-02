@@ -9,7 +9,7 @@
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res\\Win32++.manifest"
+1                       RT_MANIFEST             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -18,15 +18,15 @@
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-ID_MAIN                 ICON                    "res\\Dialog.ico"
+ID_MAIN                 ICON                    "res/Dialog.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-ID_MAIN                 BITMAP                  "res\\toolbar.bmp"
-IDB_BITMAP1             BITMAP                  "res\\Zapotec.bmp"
+ID_MAIN                 BITMAP                  "res/toolbar.bmp"
+IDB_BITMAP1             BITMAP                  "res/Zapotec.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

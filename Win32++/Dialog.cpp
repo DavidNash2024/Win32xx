@@ -184,7 +184,7 @@ namespace Win32xx
 		try
 		{
 			if (IsWindow(m_hWnd))
-				throw CWinException(TEXT("CDialog::DoModal ... Window already exists"));
+				throw CWinException(_T("CDialog::DoModal ... Window already exists"));
 
 			IsModal=TRUE;
 
@@ -220,7 +220,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CDialog::DoModal"));
+			DebugErrMsg(_T("Exception in CDialog::DoModal"));
 		}
 
 		return 0;
@@ -232,7 +232,7 @@ namespace Win32xx
 		try
 		{
 			if (IsWindow(m_hWnd))
-				throw CWinException(TEXT("CDialog::DoModeless ... Window already exists"));
+				throw CWinException(_T("CDialog::DoModeless ... Window already exists"));
 
 			IsModal=FALSE;
 
@@ -258,7 +258,7 @@ namespace Win32xx
 
 			// Now handle dialog creation failure
 			if (!m_hWnd)
-				throw CWinException(TEXT("CDialog::DoModeless ... Failed to create dialog"));
+				throw CWinException(_T("CDialog::DoModeless ... Failed to create dialog"));
 		}
 
 		catch (const CWinException &e )
@@ -268,7 +268,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CDialog::DoModeless"));
+			DebugErrMsg(_T("Exception in CDialog::DoModeless"));
 		}
 
 		return m_hWnd;
@@ -319,7 +319,7 @@ namespace Win32xx
 			if (m != GetApp()->GetHWNDMap().end())
 				return ((CDialog*)m->second)->DialogProc(hWnd, uMsg, wParam, lParam);
 
-			throw (CWinException(TEXT("CDialog::StaticDialogProc ... Failed to route message")));
+			throw (CWinException(_T("CDialog::StaticDialogProc ... Failed to route message")));
 		}
 
 		catch (const CWinException &e )
@@ -329,7 +329,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CDialog::StaticDialogProc"));
+			DebugErrMsg(_T("Exception in CDialog::StaticDialogProc"));
 		}
 
 		return 0;

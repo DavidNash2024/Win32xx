@@ -8,7 +8,7 @@
 
 CMDIChildView::CMDIChildView() : m_Color(RGB(0,0,255))
 {
-	SetChildMenu(TEXT ("MdiMenuView"));
+	SetChildMenu(_T("MdiMenuView"));
 }
 
 CMDIChildView::~CMDIChildView()
@@ -17,7 +17,7 @@ CMDIChildView::~CMDIChildView()
 
 void CMDIChildView::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, TEXT("View Window"));
+	::SetWindowText(m_hWnd, _T("View Window"));
 	SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
 }
@@ -28,10 +28,10 @@ void CMDIChildView::OnPaint(HDC hDC)
 	RECT r;
 	::GetClientRect(m_hWnd, &r);
 	::SetTextColor(hDC, m_Color);
-	::DrawText(hDC, TEXT("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
