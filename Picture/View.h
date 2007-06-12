@@ -15,18 +15,22 @@ public:
 	CView();
 	virtual ~CView();
 	virtual void LoadPictureFile(LPCTSTR szFile);
+	virtual void SavePicture(LPCTSTR szFile);
+
+	LPPICTURE m_pPicture;
 
 protected:
 	virtual void OnInitialUpdate();
 	virtual void OnPaint(HDC hDC);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LPOLESTR T2OLE(LPCTSTR szString);
+	virtual BSTR T2BSTR(LPCTSTR szString);
 	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HBRUSH m_hBrush;
-	LPPICTURE m_pPicture;
-	LPOLESTR m_OleString[MAX_STRING_SIZE];
+	OLECHAR m_OleString[MAX_STRING_SIZE];
+	BSTR    m_BStrString;
 };
 
 

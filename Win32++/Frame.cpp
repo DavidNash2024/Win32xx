@@ -511,7 +511,7 @@ namespace Win32xx
 		{
 			int iIndex = CommandToIndex(iButtonID);
 			if (iIndex == -1)
-				throw CWinException(_T("CToolbar::SetButtonText  failed to get Command ID"));
+				throw CWinException(TEXT("CToolbar::SetButtonText  failed to get Command ID"));
 
 			tString sString = szText;
 			std::map<tString, int>::iterator m;
@@ -525,19 +525,19 @@ namespace Win32xx
 				{
 					// Place a blank string first in the string table, in case some
 					// buttons don't have text
-					TCHAR szString[2] = _T("");
-					szString[1] = _T('\0');
+					TCHAR szString[2] = TEXT("");
+					szString[1] = TEXT('\0');
 					::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szString);
 				}
 
 				// No index for this string exists, so create it now
 				TCHAR szBuf[80];
 				lstrcpyn(szBuf, szText, 79);
-				szBuf[lstrlen(szBuf)+1] = _T('\0');		// Double-null terminate
+				szBuf[lstrlen(szBuf)+1] = TEXT('\0');		// Double-null terminate
 
 				iString = (int)::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szBuf);
 				if (iString == -1)
-					throw CWinException(_T("CToolbar::SetButtonText  TB_ADDSTRING failed"));
+					throw CWinException(TEXT("CToolbar::SetButtonText  TB_ADDSTRING failed"));
 
 				// Save the string its index in our map
 				m_StringMap.insert(std::make_pair(sString, iString));
@@ -550,7 +550,7 @@ namespace Win32xx
 
 			TBBUTTON tbb = {0};
 			if (!::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (LPARAM)&tbb))
-				throw CWinException(_T("CToolbar::SetButtonText  TB_GETBUTTON failed"));
+				throw CWinException(TEXT("CToolbar::SetButtonText  TB_GETBUTTON failed"));
 
 			tbb.iString = iString;
 
@@ -558,10 +558,10 @@ namespace Win32xx
 			::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
 
 			if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0))
-				throw CWinException(_T("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
+				throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
 
 			if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tbb))
-				throw CWinException(_T("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
+				throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
 
 			// Ensure the button now includes some text rows (5 rows should be plenty)
 			if (::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0) == 0)
@@ -583,7 +583,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CToolbar::SetButtonText"));
+			DebugErrMsg(TEXT("Exception in CToolbar::SetButtonText"));
 		}
 	}
 
@@ -602,7 +602,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CToolbar::SetButtonText"));
+			DebugErrMsg(_T("Exception in CToolbar::SetCommandID"));
 		}
 	}
 
@@ -829,7 +829,6 @@ namespace Win32xx
 		m_hSelMenu		= NULL;
 		m_bMenuActive	= FALSE;
 		m_bKeyMode		= FALSE;
-		m_nMaxedFlag	= 0;
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
 
@@ -867,7 +866,16 @@ namespace Win32xx
 		m_bExitAfter = FALSE;
 		::GetCursorPos(&m_OldMousePos);
 
-		// Retrieve the bounding rectangle for the toolbar button
+		CMDIFrame* pMDIFrame = (CMDIFrame *)GetApp()->GetFrame();
+		HWND MDIChild = pMDIFrame->GetActiveChild();
+
+		// Load the submenu
+		int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
+		m_hPopupMenu = ::GetSubMenu(m_hTopMenu, m_nHotItem - nMaxedOffset);
+		if (IsMDIChildMaxed() && (m_nHotItem == 0))
+			m_hPopupMenu = ::GetSystemMenu(MDIChild, FALSE);
+
+        // Retrieve the bounding rectangle for the toolbar button
 		RECT rc = {0};
 		::SendMessage(m_hWnd, TB_GETITEMRECT, m_nHotItem, (LPARAM) &rc);
 
@@ -878,9 +886,6 @@ namespace Win32xx
 		TPMPARAMS tpm;
 		tpm.cbSize = sizeof(TPMPARAMS);
 		tpm.rcExclude = rc;
-
-		// Load the submenu
-		m_hPopupMenu = ::GetSubMenu(m_hTopMenu, m_nHotItem - m_nMaxedFlag);
 
 		// Set the hot button
 		::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
@@ -901,7 +906,7 @@ namespace Win32xx
 		m_pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());;
 
 		// Display the shortcut menu
-		::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
 			rc.left, rc.bottom, m_hWnd, &tpm);
 
 		// We get here once the TrackPopupMenuEx has ended
@@ -911,6 +916,13 @@ namespace Win32xx
 		::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
 		m_pTLSData->hMenuHook = NULL;
 
+		// Process MDI Child system menu
+		if (m_hPopupMenu == ::GetSystemMenu(MDIChild, FALSE))
+		{
+			if (nID)
+				::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0);
+		}
+
 		// Resestablish Focus
 		if (m_bKeyMode)
 			GrabFocus();
@@ -919,14 +931,11 @@ namespace Win32xx
 	void CMenubar::DrawMDIButtons(HDC hDC)
 	{
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-		BOOL bMaxed = FALSE;
 
 		if (!pMDIFrame->IsMDIFrame())
 			return;
 
-		pMDIFrame->GetActiveChild(&bMaxed);
-
-		if (bMaxed)
+		if (pMDIFrame->IsMDIChildMaxed())
 		{
 			int cx = GetSystemMetrics(SM_CXSMICON);
 			int cy = GetSystemMetrics(SM_CYSMICON);
@@ -969,6 +978,19 @@ namespace Win32xx
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
 
+	BOOL CMenubar::IsMDIChildMaxed()
+	{
+		BOOL bMaxed = FALSE;
+		CFrame* pFrame = GetApp()->GetFrame();
+
+		if (pFrame->IsMDIFrame())
+		{
+			bMaxed = ((CMDIFrame*)pFrame)->IsMDIChildMaxed();
+		}
+
+		return bMaxed;
+	}
+
 	void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
 	{
 		if (!m_bMenuActive)
@@ -1007,7 +1029,24 @@ namespace Win32xx
 				// Leave a 1 pixel gap above the drawn rectangle
 				rcRect.top = 1;
 
-				if (nState & (CDIS_HOT | CDIS_SELECTED))
+				if (IsMDIChildMaxed() && (dwItem == 0))
+				// Draw over MDI Max button
+				{
+					CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+					HICON hIcon = (HICON)::SendMessage(pMDIFrame->GetActiveChild(), WM_GETICON, ICON_SMALL, 0);
+					if (hIcon == NULL)
+						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+
+					int cx = ::GetSystemMetrics (SM_CXSMICON);
+					int cy = ::GetSystemMetrics (SM_CYSMICON);
+					int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
+					int x = 0;
+					::DrawIconEx(hDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+
+					*pResult = CDRF_SKIPDEFAULT;  // No further drawing
+				}
+
+				else if (nState & (CDIS_HOT | CDIS_SELECTED))
 				{
 					// Draw highlight rectangle
 					HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
@@ -1025,23 +1064,8 @@ namespace Win32xx
 					::DrawText(hDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
 					*pResult = CDRF_SKIPDEFAULT;  // No further drawing
-				}
-				else if ((nState & CDIS_DISABLED) && (dwItem == 0))
-				{
-					CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-					HICON hIcon = (HICON)::SendMessage(pMDIFrame->GetActiveChild(), WM_GETICON, ICON_SMALL, 0);
-					if (hIcon == NULL)
-						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+				} 
 
-					int cx = ::GetSystemMetrics (SM_CXSMICON);
-					int cy = ::GetSystemMetrics (SM_CYSMICON);
-					int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
-					int x = 0;
-					::DrawIconEx(hDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
-					::SetRect(&m_IconRect, x, y, x + cx, y + cy);
-
-					*pResult = CDRF_SKIPDEFAULT;  // No further drawing
-				}
 				else
 					*pResult = CDRF_DODEFAULT ;   // Do default drawing
 			}
@@ -1069,7 +1093,7 @@ namespace Win32xx
 		case VK_SPACE:
 			ExitMenu();
 			// Bring up the system menu
-			::SendMessage(GetAncestor(m_hWnd), WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
+			::PostMessage(GetAncestor(m_hWnd), WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
 			break;
 
 		// Handle VK_DOWN,VK_UP and VK_RETURN together
@@ -1082,12 +1106,12 @@ namespace Win32xx
 
 		case VK_LEFT:
 			// Move left to next topmenu item
-			(m_nHotItem > m_nMaxedFlag)? SetHotItem(m_nHotItem -1) : SetHotItem(m_nButtonCount-1+m_nMaxedFlag);
+			(m_nHotItem > 0)? SetHotItem(m_nHotItem -1) : SetHotItem(GetButtonCount()-1);
 			break;
 
 		case VK_RIGHT:
 			// Move right to next topmenu item
-			(m_nHotItem < m_nButtonCount -1 + m_nMaxedFlag)? SetHotItem(m_nHotItem +1) : SetHotItem(m_nMaxedFlag);
+			(m_nHotItem < GetButtonCount() -1)? SetHotItem(m_nHotItem +1) : SetHotItem(0);
 			break;
 
 		default:
@@ -1118,10 +1142,7 @@ namespace Win32xx
 		CMDIFrame* pMDIFrame = (CMDIFrame *)GetApp()->GetFrame();
 		if (pMDIFrame->IsMDIFrame())
 		{
-			BOOL bMaxed;
-			HWND MDIChild = pMDIFrame->GetActiveChild(&bMaxed);
-
-			if (bMaxed)
+			if (pMDIFrame->IsMDIChildMaxed())
 			{
 				HDC hDC = ::GetDC(m_hWnd);
 
@@ -1144,44 +1165,14 @@ namespace Win32xx
 					m_nMDIButton = MDI_CLOSE;
 				}
 
-				// Bring up the MDI Child window's system menu when the icon is pressed
-				if (PtInRect(&m_IconRect, pt))
-				{
-					// Retrieve the MDI child system menu
-					HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
-
-					// Retrieve the bounding rectangle for the toolbar button
-					RECT rc = {0};
-					GetWindowRect(m_hWnd, &rc);
-
-					// Position popup above toolbar if it won't fit below
-					TPMPARAMS tpm;
-					tpm.cbSize = sizeof(TPMPARAMS);
-					tpm.rcExclude = rc;
-
-					// We hook mouse input to capture a double mouse button click
-					// Its required for processing the default menu entry.
-					// Messages are sent to StaticIconHook.
-
-					// Remove any remaining hook first
-					if (m_pTLSData->hMenuHook != NULL)
-						::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
-
-					// Hook messages about to be processed by the shortcut menu
-					m_pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticIconHook, NULL, ::GetCurrentThreadId());;
-
-					// Display the popup
-					UINT nID = ::TrackPopupMenuEx(hChildMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL | TPM_RETURNCMD,
-						rc.left, rc.bottom, m_hWnd, &tpm);
-
-					// Remove the message hook
-					::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
-					m_pTLSData->hMenuHook = NULL;
-
-					if (nID)
-						::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0);
-				}
 				::ReleaseDC(m_hWnd, hDC);
+
+				// Bring up the MDI Child window's system menu when the icon is pressed
+				if (HitTest() == 0)
+				{
+					m_nHotItem = 0;
+					::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+				}
 			}
 		}
 	}
@@ -1195,11 +1186,10 @@ namespace Win32xx
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 		if (pMDIFrame->IsMDIFrame())
 		{
-			BOOL bMaxed;
 			HWND MDIClient = pMDIFrame->GetMDIClient().GetHwnd();
-			HWND MDIChild = pMDIFrame->GetActiveChild(&bMaxed);
+			HWND MDIChild = pMDIFrame->GetActiveChild();
 
-			if (bMaxed)
+			if (IsMDIChildMaxed())
 			{
 				POINT pt = {0};
 				::GetCursorPos(&pt);
@@ -1321,7 +1311,7 @@ namespace Win32xx
 					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 
 					// Move left to next topmenu item
-					(m_nHotItem > m_nMaxedFlag)? m_nHotItem-- : m_nHotItem = m_nButtonCount-1 + m_nMaxedFlag;
+					(m_nHotItem > 0)? m_nHotItem-- : m_nHotItem = GetButtonCount()-1;
 					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
@@ -1337,7 +1327,7 @@ namespace Win32xx
 					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 
 					// Move right to next topmenu item
-					(m_nHotItem < m_nButtonCount -1 + m_nMaxedFlag)? m_nHotItem++ : m_nHotItem = m_nMaxedFlag;
+					(m_nHotItem < GetButtonCount()-1)? m_nHotItem++ : m_nHotItem = 0;
 					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
@@ -1370,6 +1360,22 @@ namespace Win32xx
 				}
 			}
 			return FALSE;
+
+		case WM_LBUTTONDBLCLK:
+			// Perform default action for DblClick on MDI Maxed icon
+			if (IsMDIChildMaxed() && (HitTest() == 0))
+			{
+				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+				HWND MDIChild = pMDIFrame->GetActiveChild();
+				HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
+
+				UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
+				if (nID)
+					::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0);
+				m_bExitAfter = TRUE;
+				return FALSE;
+			}
+			return TRUE;
 
 		case WM_MENUSELECT:
 			{
@@ -1416,10 +1422,7 @@ namespace Win32xx
 			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 			if (pMDIFrame->IsMDIFrame())
 			{
-				BOOL bMaxed;
-				pMDIFrame->GetActiveChild(&bMaxed);
-
-				if (bMaxed)
+				if (pMDIFrame->IsMDIChildMaxed())
 				{
 					HDC hDC = ::GetDC(m_hWnd);
 					static BOOL bButtonPushed = TRUE;
@@ -1503,36 +1506,27 @@ namespace Win32xx
 			// This is used to bring up a new popup menu when required
 			{
 				DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
-				if ((flag & (HICF_ENTERING | HICF_MOUSE )) && !(flag & HICF_LEAVING))
+				if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
 				{
-					int nButton = ((LPNMTBHOTITEM)lParam)->idNew;
-
-					if (nButton >= m_nMaxedFlag)
+					int nButton = HitTest();
+					if ((m_bMenuActive) && (nButton != m_nHotItem))
 					{
-						if ((m_bMenuActive) && (nButton != m_nHotItem))
-						{
-							::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
-							m_nHotItem = nButton;
-							::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
-
-							//Always use PostMessage for USER_POPUPMENU (not SendMessage)
-							::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
-						}
+						::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 						m_nHotItem = nButton;
+						::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
+
+						//Always use PostMessage for USER_POPUPMENU (not SendMessage)
+						::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
 					}
+					m_nHotItem = nButton;
 				}
 
+				// Handle escape from popup menu
 				if ((flag & HICF_LEAVING) && m_bKeyMode)
 				{
 					m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
 					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
-					return -1; // Discard this HotItemChange now
-				}
-
-				if(flag == HICF_MOUSE)
-				{
-					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
-					return -1; // Discard this HotItemChange now
+		//			return -1; // Discard this HotItemChange now
 				}
 
 				break;
@@ -1581,11 +1575,7 @@ namespace Win32xx
 
 		try
 		{
-			CFrame* pFrame = GetApp()->GetFrame();
-			HWND MDIClient = pFrame->GetView()->GetHwnd();
-			BOOL bMaxed = FALSE;
-			::SendMessage(MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
-			m_nMaxedFlag = bMaxed? 1: 0;
+			int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
 			m_nButtonCount = ::GetMenuItemCount(hMenu);
 
 			// Remove any existing buttons
@@ -1598,12 +1588,12 @@ namespace Win32xx
 			// Set the Bitmap size to zero
 			::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELPARAM(0, 0));
 
-			if (m_nMaxedFlag == 1)
+			if (IsMDIChildMaxed())
 			{
-				// Create a hidden disabled button for the MDI child system menu
+				// Create an extra button for the MDI child system menu
 				// Later we will custom draw the window icon over this button
 				TBBUTTON tbb = {0};
-				tbb.idCommand = 0;
+				tbb.fsState = TBSTATE_ENABLED;
 				tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
 				tbb.iString = (INT_PTR)_T(" ");
 				if(!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
@@ -1616,7 +1606,7 @@ namespace Win32xx
 			{
 				// Assign the Toolbar Button struct
 				TBBUTTON tbb = {0};
-				tbb.idCommand = i  + m_nMaxedFlag;
+				tbb.idCommand = i  + nMaxedOffset;	// Each button needs a unique ID
 				tbb.fsState = TBSTATE_ENABLED;
 				tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
 				tbb.iString = (INT_PTR)_T(" ");
@@ -1628,7 +1618,7 @@ namespace Win32xx
 				if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
 					throw CWinException(_T("Menubar::SetMenu  GetMenuString failed"));
 
-				SetButtonText(i  + m_nMaxedFlag, szMenuName);
+				SetButtonText(i  + nMaxedOffset, szMenuName);
 			}
 		}
 
@@ -1641,33 +1631,6 @@ namespace Win32xx
 		{
 			DebugErrMsg(_T("Exception in CMenubar::SetMenu"));
 		}
-	}
-
-	LRESULT CALLBACK CMenubar::StaticIconHook(int nCode, WPARAM wParam, LPARAM lParam)
-	{
-		MSG* pMsg = (MSG*)lParam;
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-		CMenubar* pMenubar = (CMenubar*)pTLSData->pMenubar;
-
-		if (pMenubar && nCode == MSGF_MENU)
-		{
-			switch (pMsg->message)
-			{
-				case WM_LBUTTONDBLCLK:
-				{
-					CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-					HWND MDIChild = pMDIFrame->GetActiveChild();
-					HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
-
-					UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
-					if (nID)
-						::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0);
-				}
-				break;
-			}
-		}
-
-		return CallNextHookEx(pTLSData->hMenuHook, nCode, wParam, lParam);
 	}
 
 	LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
@@ -1694,11 +1657,14 @@ namespace Win32xx
 		{
 			if (lParam == 0)
 			{
+				// Alt/F10 key toggled
 				GrabFocus();
 				m_bKeyMode = TRUE;
-				SetHotItem(m_nMaxedFlag);
+				int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
+				SetHotItem(nMaxedOffset);
 			}
 			else
+				// Handle key pressed with Alt held down
 				DoAltKey((WORD)lParam);
 		}
 	}
@@ -1731,6 +1697,8 @@ namespace Win32xx
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);
 			break;
+		case WM_LBUTTONDBLCLK:
+			return 0L;	// Discard these messages
 		case WM_MDISETMENU:
 			OnMDISetMenu(wParam, lParam);
 			return 0L;

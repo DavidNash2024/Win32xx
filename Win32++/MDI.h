@@ -116,6 +116,7 @@ namespace Win32xx
 		virtual ~CMDIFrame();
 		virtual CMDIClient& GetMDIClient() {return m_MDIClient;}
 		virtual HWND GetActiveChild(BOOL* pIsMaxed = NULL );
+		virtual BOOL IsMDIChildMaxed();
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 
 	protected:

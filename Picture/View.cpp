@@ -6,7 +6,7 @@
 
 #define HIMETRIC_INCH	2540
 
-CView::CView() : m_hBrush(NULL), m_pPicture(NULL)
+CView::CView() : m_hBrush(NULL), m_pPicture(NULL), m_BStrString(NULL)
 {
 	::CoInitialize(NULL);
 }
@@ -15,6 +15,7 @@ CView::~CView()
 {
 	if (m_hBrush)
 		::DeleteObject(m_hBrush);
+	
 	if (m_pPicture)
 		m_pPicture->Release();
 
@@ -23,10 +24,15 @@ CView::~CView()
 
 void CView::LoadPictureFile(LPCTSTR szFile)
 {
-	// Create IPicture from image file
 	if (m_pPicture)
+	{
 		m_pPicture->Release();
+		m_pPicture = NULL;
+	}
 
+	TRACE(szFile);
+
+	// Create IPicture from image file
 	if (S_OK != ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,
 						IID_IPicture, (LPVOID *)&m_pPicture))
 	{
@@ -41,6 +47,13 @@ void CView::OnInitialUpdate()
 	// Set the window background to black
 	m_hBrush = ::CreateSolidBrush(RGB(0,0,0));
 	::SetClassLong(m_hWnd, GCL_HBRBACKGROUND, (LONG)m_hBrush);
+
+	// Load picture at startup
+	TCHAR szPath[MAX_STRING_SIZE];
+	TCHAR szFile[] = _T("/PongaFern.jpg");
+	GetCurrentDirectory(MAX_STRING_SIZE - lstrlen(szFile) , szPath);
+	lstrcat(szPath, _T("/PongaFern.jpg"));
+	LoadPictureFile(szPath);
 }
 
 void CView::OnPaint(HDC hDC)
@@ -74,16 +87,36 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+void CView::SavePicture(LPCTSTR szFile)
+{
+	// get a IPictureDisp interface from your IPicture pointer  	  
+	IPictureDisp *pDisp = NULL; 
+
+	if (SUCCEEDED(m_pPicture->QueryInterface(IID_IPictureDisp,  (void**) &pDisp)))  
+	{  
+		// Save the IPicture image as a bitmap  	  
+		OleSavePictureFile(pDisp,  T2BSTR(szFile));  
+		pDisp->Release();  
+	}
+}
+
+BSTR CView::T2BSTR(LPCTSTR szString)
+{
+	::SysFreeString(m_BStrString);   
+	m_BStrString = ::SysAllocString(T2OLE(szString));
+	return m_BStrString;
+}
+
 LPOLESTR CView::T2OLE(LPCTSTR szString)
 {
 
 #ifdef UNICODE
-	lstrcpyn((LPOLESTR)m_OleString, szString, MAX_STRING_SIZE);
+	lstrcpyn(m_OleString, szString, MAX_STRING_SIZE);
 #else
-	mbstowcs((LPOLESTR)m_OleString, szString, MAX_STRING_SIZE);
+	mbstowcs(m_OleString, szString, MAX_STRING_SIZE);
 #endif
 
-	return (LPOLESTR)m_OleString;
+	return m_OleString;
 }
 
 LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

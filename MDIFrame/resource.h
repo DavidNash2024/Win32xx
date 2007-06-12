@@ -25,8 +25,6 @@
 #define IDI_VIEW                        141
 
 // Menu Resource
-#define IDM_FILE_NEWVIEW                150
-
 #define IDM_COLOR_BLACK                 163
 #define IDM_COLOR_RED                   164
 #define IDM_COLOR_GREEN                 165

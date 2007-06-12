@@ -110,6 +110,13 @@ namespace Win32xx
 		return (HWND)::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)pIsMaxed);
 	}
 
+	BOOL CMDIFrame::IsMDIChildMaxed()
+	{
+		BOOL bMaxed = FALSE;
+		GetActiveChild(&bMaxed);
+		return bMaxed;
+	}
+
 	BOOL CMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
@@ -250,6 +257,7 @@ namespace Win32xx
 			OnSysColorChange();
 			return 0;
 		case WM_SYSCOMMAND:
+			// Handle Accelerator key strokes
 			if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
 			{
 				GetMenubar().SysCommand(wParam, lParam);

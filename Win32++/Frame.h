@@ -152,6 +152,7 @@ namespace Win32xx
 		virtual void DrawMDIButtons(HDC hDC);
 		virtual void ExitMenu();
 		virtual	void GrabFocus();
+		virtual BOOL IsMDIChildMaxed();
 		virtual void OnInitialUpdate();
 		virtual void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
@@ -165,7 +166,6 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void ReleaseFocus();
 		virtual void SetHotItem(int nHot);
-		static LRESULT CALLBACK StaticIconHook(int nCode, WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -191,11 +191,9 @@ namespace Win32xx
 		HMENU m_hSelMenu;			// handle to the casceded popup menu
 		HMENU m_hTopMenu;			// handle to the top level menu
 		HWND m_hPrevFocus;			// handle to window which had focus
-		RECT m_IconRect;			// Dimensions of the icon in the menubar
 		RECT m_MDIRect[3];			// array of RECT for MDI buttons
 		int m_nHotItem;				// hot item
 		int m_nButtonCount;			// number of top level menu items
-		int m_nMaxedFlag;			// 1 if Maxed MDI Child, 0 otherwise
 		int m_nMDIButton;           // the MDI button pressed
 		POINT m_OldMousePos;        // old Mouse position
 

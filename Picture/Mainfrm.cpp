@@ -40,8 +40,14 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	
 	switch(LOWORD(wParam))
 	{
+	case IDM_FILE_NEW:
+		OnFileNew();
+		break;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
+		break;
+	case IDM_FILE_SAVE:
+		OnFileSave();
 		break;
 	case IDM_FILE_EXIT:
 		// End the application
@@ -57,18 +63,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnCommand(wParam, lParam);
 }
 
-void CMainFrame::OnCreate()
+void CMainFrame::OnInitialUpdate()
 {
-	// OnCreate controls the way the frame is created. 
-	// Overriding CFrame::Oncreate is optional.
-	// The default for the following variables is TRUE
+}
 
-	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
-	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
-	// m_bUseRebar = FALSE;				// Don't use rebars
-
-	// call the base class function
-	CFrame::OnCreate();
+void CMainFrame::OnFileNew()
+{
+	if (m_View.m_pPicture)
+		m_View.m_pPicture->Release();
+	m_View.m_pPicture = NULL;
+	::InvalidateRect(m_View.GetHwnd(), NULL, TRUE);
 }
 
 void CMainFrame::OnFileOpen()
@@ -78,37 +82,37 @@ void CMainFrame::OnFileOpen()
 	OPENFILENAME ofn = {0};
 	ofn.lStructSize	= sizeof(OPENFILENAME);
 	ofn.Flags		= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-//	ofn.hwndOwner	= m_hWnd;
 	ofn.lpstrFilter	= TEXT("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
 	ofn.lpstrTitle	= TEXT("Open Picture File");
 	ofn.lpstrFile	= szFile;
 	ofn.nMaxFile	= MAX_PATH;
 
-	if (IDOK == GetOpenFileName(&ofn))
+	if (IDOK == ::GetOpenFileName(&ofn))
 		m_View.LoadPictureFile(szFile);
+	else
+		TRACE(_T("Failed to open file name"));
+}
+
+void CMainFrame::OnFileSave()
+{
+	TCHAR szFile[MAX_STRING_SIZE];
+	szFile[0] = '\0'; 
+
+	OPENFILENAME Ofn = {0};
+	::GetSaveFileName(&Ofn); 
+	Ofn.lStructSize = sizeof(OPENFILENAME); 
+	Ofn.lpstrFilter = _T("*.bmp\0"); 
+	Ofn.lpstrFile= szFile; 
+	Ofn.nMaxFile = MAX_STRING_SIZE; 
+	Ofn.lpstrDefExt = _T("bmp");
+	Ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT; 
+
+	if (GetSaveFileName(&Ofn))
+	{
+		m_View.SavePicture(szFile);
+	}
 }
 					
-
-void CMainFrame::OnInitialUpdate()
-{
-	// The frame is now created.
-	// Place any additional startup code here.
-
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
-{
-	// Process notification messages sent by child windows
-
-//	switch(((LPNMHDR)lParam)->code)
-//	{	
- 		//Add case statments for each notification message here
-//	}  
-
-	// pass unhandled notifications to CFrame
-	return CFrame::OnNotify(wParam, lParam);
-}
-
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
@@ -145,6 +149,7 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
 	TB.DisableButton(IDM_EDIT_PASTE); 
+	TB.DisableButton(IDM_FILE_PRINT);
 
 }
 

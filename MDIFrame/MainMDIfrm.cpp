@@ -38,7 +38,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEWVIEW:
+	case IDM_FILE_NEW:
 		AddMDIChild(new CMDIChildView);
 		return 0;
 	case IDM_FILE_CLOSE:          // Close the active MDI window

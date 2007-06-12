@@ -22,7 +22,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View",                   IDM_FILE_NEWVIEW
+        MENUITEM "New &View",                   IDM_FILE_NEW
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -51,7 +51,7 @@ MDIMENUVIEW MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View",                   IDM_FILE_NEWVIEW
+        MENUITEM "New &View",                   IDM_FILE_NEW
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -205,7 +205,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_FILE_NEWVIEW        "Create View MDI Child"
     IDM_FILE_CLOSE          "Close MDI Window"
     IDM_COLOR_BLACK         "Use Black Printing"
     IDM_COLOR_RED           "Use Red Printing"
