@@ -105,7 +105,7 @@ namespace Win32xx
 		pMDIChild->Create(GetView()->GetHwnd());
 	}
 
-	HWND CMDIFrame::GetActiveChild(BOOL* pIsMaxed /* = NULL */)
+	HWND CMDIFrame::GetActiveMDIChild(BOOL* pIsMaxed /* = NULL */)
 	{
 		return (HWND)::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)pIsMaxed);
 	}
@@ -113,7 +113,7 @@ namespace Win32xx
 	BOOL CMDIFrame::IsMDIChildMaxed()
 	{
 		BOOL bMaxed = FALSE;
-		GetActiveChild(&bMaxed);
+		GetActiveMDIChild(&bMaxed);
 		return bMaxed;
 	}
 
@@ -143,8 +143,8 @@ namespace Win32xx
 			break;
 		default:    // Pass to active child...
 			{
-				if (IsWindow (GetActiveChild()))
-					((CMDIChild*)GetCWndObject(GetActiveChild()))->OnCommand(wParam, lParam);
+				if (IsWindow (GetActiveMDIChild()))
+					((CMDIChild*)GetCWndObject(GetActiveMDIChild()))->OnCommand(wParam, lParam);
 			}
 			break ;
 		}

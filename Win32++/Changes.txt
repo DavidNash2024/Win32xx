@@ -1,3 +1,11 @@
+Version 5.3
+-----------
+Changes:
+Modified CMenubar
+
+The following changes have been made to the Win32++ code:
+Renamed CMDIFrame::GetActiveChild to CMDIFrame::GetActiveMDIChild
+
 Version 5.2
 ------------
 Bug Fixes

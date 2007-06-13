@@ -49,8 +49,8 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_NEWMAX:
 		AddMDIChild(new CMDIChildMax);
 		return 0;
-	case IDM_FILE_CLOSE:          // Close the active MDI window
-		::SendMessage(GetActiveChild(), WM_CLOSE, 0, 0);
+	case IDM_FILE_CLOSE:	// Close the active MDI window
+		::SendMessage(GetActiveMDIChild(), WM_CLOSE, 0, 0);
 		break;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);

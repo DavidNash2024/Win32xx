@@ -865,15 +865,16 @@ namespace Win32xx
 		m_bKeyMode = FALSE;
 		m_bExitAfter = FALSE;
 		::GetCursorPos(&m_OldMousePos);
-
-		CMDIFrame* pMDIFrame = (CMDIFrame *)GetApp()->GetFrame();
-		HWND MDIChild = pMDIFrame->GetActiveChild();
+		
+		HWND hMaxMDIChild = NULL;
+		if (IsMDIChildMaxed())
+			hMaxMDIChild = ((CMDIFrame*)GetApp()->GetFrame())->GetActiveMDIChild();
 
 		// Load the submenu
-		int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
+		int nMaxedOffset = IsMDIChildMaxed()? 1:0;
 		m_hPopupMenu = ::GetSubMenu(m_hTopMenu, m_nHotItem - nMaxedOffset);
 		if (IsMDIChildMaxed() && (m_nHotItem == 0))
-			m_hPopupMenu = ::GetSystemMenu(MDIChild, FALSE);
+			m_hPopupMenu = ::GetSystemMenu(hMaxMDIChild, FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button
 		RECT rc = {0};
@@ -917,10 +918,13 @@ namespace Win32xx
 		m_pTLSData->hMenuHook = NULL;
 
 		// Process MDI Child system menu
-		if (m_hPopupMenu == ::GetSystemMenu(MDIChild, FALSE))
+		if (IsMDIChildMaxed())
 		{
-			if (nID)
-				::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0);
+			if (m_hPopupMenu == ::GetSystemMenu(hMaxMDIChild, FALSE))
+			{
+				if (nID) 
+					::PostMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0);
+			}
 		}
 
 		// Resestablish Focus
@@ -967,7 +971,6 @@ namespace Win32xx
 
 		// Update mouse mouse position for hot tracking
 		::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, MAKELONG(pt.x, pt.y));
-
 	}
 
 	void CMenubar::GrabFocus()
@@ -1033,7 +1036,7 @@ namespace Win32xx
 				// Draw over MDI Max button
 				{
 					CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-					HICON hIcon = (HICON)::SendMessage(pMDIFrame->GetActiveChild(), WM_GETICON, ICON_SMALL, 0);
+					HICON hIcon = (HICON)::SendMessage(pMDIFrame->GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0);
 					if (hIcon == NULL)
 						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 
@@ -1187,7 +1190,7 @@ namespace Win32xx
 		if (pMDIFrame->IsMDIFrame())
 		{
 			HWND MDIClient = pMDIFrame->GetMDIClient().GetHwnd();
-			HWND MDIChild = pMDIFrame->GetActiveChild();
+			HWND MDIChild = pMDIFrame->GetActiveMDIChild();
 
 			if (IsMDIChildMaxed())
 			{
@@ -1267,7 +1270,7 @@ namespace Win32xx
 					::wsprintf(szString, _T("&%d %s"), nWindow+1, szTitle);
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szString );
 
-					if (pMDIFrame->GetActiveChild() == hWndMDIChild)
+					if (pMDIFrame->GetActiveMDIChild() == hWndMDIChild)
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					nWindow++;
@@ -1366,7 +1369,7 @@ namespace Win32xx
 			if (IsMDIChildMaxed() && (HitTest() == 0))
 			{
 				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-				HWND MDIChild = pMDIFrame->GetActiveChild();
+				HWND MDIChild = pMDIFrame->GetActiveMDIChild();
 				HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
 
 				UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
@@ -1698,6 +1701,8 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_LBUTTONDBLCLK:
+			// Convert double left click to single left click
+			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 			return 0L;	// Discard these messages
 		case WM_MDISETMENU:
 			OnMDISetMenu(wParam, lParam);
