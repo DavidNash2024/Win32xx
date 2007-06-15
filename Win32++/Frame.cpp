@@ -858,6 +858,7 @@ namespace Win32xx
 
 	void CMenubar::DoPopupMenu()
 	{
+		TRACE("Doing a PopupMenu");
 		if (m_bKeyMode)
 			// Simulate a down arrow key press
 			::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0);
@@ -923,13 +924,14 @@ namespace Win32xx
 			if (m_hPopupMenu == ::GetSystemMenu(hMaxMDIChild, FALSE))
 			{
 				if (nID) 
-					::PostMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0);
+					::SendMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0);
 			}
 		}
 
 		// Resestablish Focus
 		if (m_bKeyMode)
 			GrabFocus();
+		TRACE("Ending Popup");
 	}
 
 	void CMenubar::DrawMDIButtons(HDC hDC)
@@ -955,6 +957,27 @@ namespace Win32xx
 			::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION ,DFCS_CAPTIONRESTORE);
 			::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION ,DFCS_CAPTIONCLOSE);
 		}
+	}
+
+	void CMenubar::DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
+	{
+		// find the position of tab character
+		int nTab = -1;
+		for(int i = 0; i < lstrlen(ItemText); i++)
+		{
+			if(ItemText[i] == _T('\t'))
+			{
+				nTab = i;
+				break;
+			}
+		}
+	
+		::SetTextColor(hDC, colorText);
+		::DrawText(hDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+
+		// Draw text after tab right aligned
+		if(nTab != -1)
+			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER); 	
 	}
 
 	void CMenubar::ExitMenu()
@@ -998,15 +1021,6 @@ namespace Win32xx
 	{
 		if (!m_bMenuActive)
 			DoAltKey(LOWORD(wParam));
-	}
-
-	void CMenubar::OnInitialUpdate()
-	{
-		m_pTLSData->pMenubar = this;
-		Subclass();
-
-		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	}
 
 	void CMenubar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
@@ -1082,6 +1096,79 @@ namespace Win32xx
 				DrawMDIButtons(hDC);
 			}
 			break;
+		}
+	}
+
+	BOOL CMenubar::OnDrawItem(WPARAM wParam, LPARAM lParam)
+	{
+		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
+
+		RECT& rc = pdis->rcItem;
+		Mitem* pmd = (Mitem*)pdis->itemData;
+		HDC hDC = pdis->hDC;
+
+		if (pmd->fType & MFT_SEPARATOR) 
+		{
+			// draw separator
+			rc.top += (rc.bottom - rc.top)/2;
+			::DrawEdge(hDC, &rc,  EDGE_ETCHED, BF_TOP);	
+		}
+		else
+		{
+			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
+			BOOL bSelected = pdis->itemState & ODS_SELECTED;
+			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
+			BOOL bHaveButn=FALSE;
+
+			// Draw background
+			COLORREF colorBG = GetSysColor(bSelected ? COLOR_HIGHLIGHT : COLOR_MENU);
+			HBRUSH hBrush = ::CreateSolidBrush(colorBG);
+			HBRUSH OldBrush = (HBRUSH)::SelectObject(hDC, hBrush);
+			::FillRect(hDC, &rc, hBrush);
+			::SelectObject(hDC, OldBrush);
+			::DeleteObject(hBrush);
+
+			// Draw Text
+			rc.left  = rc.left + 16;
+			::SetBkMode(hDC, TRANSPARENT);
+			COLORREF colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
+			DrawMenuText(hDC, pmd->szItemText, rc, colorText);
+		}
+
+		return TRUE;
+	}
+
+	void CMenubar::OnInitialUpdate()
+	{
+		m_pTLSData->pMenubar = this;
+		Subclass();
+
+		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
+		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+	}
+
+	void CMenubar::OnInitMenuPopup(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		HMENU hMenu = (HMENU)wParam;
+		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
+		{
+			MENUITEMINFO mii = {0};
+			mii.cbSize = sizeof(MENUITEMINFO);
+			TCHAR szMenuItem[MAX_MENU_STRING];
+			mii.fMask  = MIIM_STRING | MIIM_FTYPE | MIIM_DATA;
+			mii.dwTypeData = szMenuItem;
+			mii.cch = MAX_MENU_STRING -1;
+			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
+			{
+				mii.fType |= MFT_OWNERDRAW;
+				Mitem* pMyItem = new Mitem;
+				lstrcpyn(pMyItem->szItemText, szMenuItem, MAX_MENU_STRING);
+				pMyItem->cchItemText = mii.cch;
+				pMyItem->fType = mii.fType;
+				mii.dwItemData = (ULONG_PTR)pMyItem;
+			
+				::SetMenuItemInfo(hMenu, i, TRUE, &mii);
+			}
 		}
 	}
 
@@ -1283,6 +1370,36 @@ namespace Win32xx
 				}
 			}
 		}
+	}
+
+	BOOL CMenubar::OnMeasureItem(WPARAM wParam, LPARAM lParam)
+	{
+		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
+
+		Mitem* pmd = (Mitem *) pmis->itemData; 
+	
+		if (pmd->fType & MFT_SEPARATOR) 
+		{
+			pmis->itemHeight = 7;
+			pmis->itemWidth  = 0;
+		}
+
+		else
+		{
+			HDC hDC = GetDC(m_hWnd);  
+			HFONT hfntOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+			SIZE size;
+           
+			GetTextExtentPoint32(hDC, pmd->szItemText, pmd->cchItemText, &size); 
+
+			pmis->itemWidth = size.cx + 16; 
+			pmis->itemHeight = max (size.cy, GetSystemMetrics(SM_CYMENU)-2); 
+
+			::SelectObject(hDC, hfntOld);
+			::ReleaseDC(m_hWnd, hDC); 
+		} 
+
+		return TRUE;
 	}
 
 	BOOL CMenubar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1534,7 +1651,7 @@ namespace Win32xx
 
 				break;
 			} //case TBN_HOTITEMCHANGE:
-
+			
 		} // switch(((LPNMHDR)lParam)->code)
 		return 0L;
 	} // CMenubar::OnNotify(...)
@@ -1676,21 +1793,29 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
+		case WM_CHAR:
+			return 0L;  // Discard these messages
+		case WM_DRAWITEM:
+			if (OnDrawItem(wParam, lParam))
+				return TRUE; // handled
+			break;
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
 			break;
-		case USER_POPUPMENU:
-			DoPopupMenu();
-			return 0L;
+		case WM_INITMENUPOPUP:
+			OnInitMenuPopup(wParam, lParam);
+			break;
 		case WM_KEYDOWN:
 			OnKeyDown(wParam, lParam);
-			return 0L;
-		case WM_CHAR:
-			return 0L;  // Discard these messages
+			return 0L;	// Discard these messages
 		case WM_KILLFOCUS:
 			ExitMenu();
-			return 0L;
+			return 0L;	
+		case WM_LBUTTONDBLCLK:
+			// Convert double left click to single left click
+			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+			return 0L;	// Discard these messages
 		case WM_LBUTTONDOWN:
 			// Do default processing first
 			CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
@@ -1700,16 +1825,19 @@ namespace Win32xx
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);
 			break;
-		case WM_LBUTTONDBLCLK:
-			// Convert double left click to single left click
-			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-			return 0L;	// Discard these messages
 		case WM_MDISETMENU:
 			OnMDISetMenu(wParam, lParam);
 			return 0L;
+		case WM_MEASUREITEM:
+			if (OnMeasureItem(wParam, lParam))
+				return TRUE; // handled
+			break;
 		case WM_MOUSEMOVE:
 			OnMouseMove(wParam, lParam);
 			break;
+		case USER_POPUPMENU:
+			DoPopupMenu();
+			return 0L;
 		case WM_SYSKEYDOWN:
 			if ((wParam == VK_MENU) || (wParam == VK_F10))
 				return 0L;
@@ -2010,7 +2138,7 @@ namespace Win32xx
 			else
 				m_StatusText = _T("Ready");
 			SetStatusText();
-		}
+		} 
 	}
 
 	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -2066,30 +2194,36 @@ namespace Win32xx
 			{
 				static int nOldID = -1;
 				CToolbar& tb = GetToolbar();
-
-				int nButton = tb.HitTest();
-				if (nButton >= 0)
+				POINT pt = {0};
+				::GetCursorPos(&pt);
+				
+				if (WindowFromPoint(pt) == tb.GetHwnd())
+				// Proceed if the toolbar window topmost (sometimes a menu is on top).
 				{
-					int nID = GetToolbar().GetCommandID(nButton);
-					if (nID != nOldID)
+					int nButton = tb.HitTest();
+					if (nButton >= 0)
 					{
-						if (nID != 0)
-							m_StatusText = LoadString(nID);
-						else
+						int nID = GetToolbar().GetCommandID(nButton);
+						if (nID != nOldID)
+						{
+							if (nID != 0)
+								m_StatusText = LoadString(nID);
+							else
+								m_StatusText = _T("Ready");
+
+							SetStatusText();
+						}
+						nOldID = nID;
+					}
+					else
+					{
+						if (nOldID != -1)
+						{
 							m_StatusText = _T("Ready");
-
-						SetStatusText();
+							SetStatusText();
+						}
+						nOldID = -1;
 					}
-					nOldID = nID;
-				}
-				else
-				{
-					if (nOldID != -1)
-					{
-						m_StatusText = _T("Ready");
-						SetStatusText();
-					}
-					nOldID = -1;
 				}
 			}
 

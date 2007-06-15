@@ -493,16 +493,8 @@ namespace Win32xx
 
 	LRESULT CMDIChild::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		LRESULT lr;
-
 		switch (uMsg)
 		{
-		case WM_COMMAND:
-			OnCommand(wParam, lParam);
-			break;
-		case WM_CREATE:
-			OnCreate();
-			break;
 		case WM_MDIACTIVATE:
 			{
 				CFrame* pFrame = GetApp()->GetFrame();
@@ -520,50 +512,8 @@ namespace Win32xx
 				::DrawMenuBar(pFrame->GetHwnd());
 			}
 			return 0L ;
-		case WM_NOTIFY:
-			lr = OnNotify(wParam, lParam);
-			if (lr) return lr;
-			break;
-		case WM_PAINT:
-			{
-				// Do default processing first if subclassed
-				if (m_PrevWindowProc)
-					CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
-
-				::PAINTSTRUCT ps;
-				HDC hDC = ::BeginPaint(hwnd, &ps);
-				OnPaint(hDC);
-				::EndPaint(hwnd, &ps);
-			}
-			return 0L;
-
-		// A set of messages to be reflected back to the control that generated them
-		case WM_CTLCOLORBTN:
-		case WM_CTLCOLOREDIT:
-		case WM_CTLCOLORDLG:
-		case WM_CTLCOLORLISTBOX:
-		case WM_CTLCOLORSCROLLBAR:
-		case WM_CTLCOLORSTATIC:
-		case WM_DRAWITEM:
-		case WM_MEASUREITEM:
-		case WM_DELETEITEM:
-		case WM_COMPAREITEM:
-		case WM_CHARTOITEM:
-		case WM_VKEYTOITEM:
-		case WM_HSCROLL:
-		case WM_VSCROLL:
-		case WM_PARENTNOTIFY:
-			lr = OnMessage(hwnd, uMsg, wParam, lParam);
-			if (lr) return lr;	// Message processed so return
-			break;				// Do default processing when message not already processed
-
 		}
-
-		// Now hand all messages to the default procedure
-		if (m_PrevWindowProc)
-			return ::CallWindowProc(m_PrevWindowProc, hwnd, uMsg, wParam, lParam);
-		else
-			return ::DefMDIChildProc(hwnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

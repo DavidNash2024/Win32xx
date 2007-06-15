@@ -150,15 +150,19 @@ namespace Win32xx
 		virtual void DoAltKey(WORD KeyCode);
 		virtual void DoPopupMenu();
 		virtual void DrawMDIButtons(HDC hDC);
+		virtual void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		virtual void ExitMenu();
 		virtual	void GrabFocus();
 		virtual BOOL IsMDIChildMaxed();
-		virtual void OnInitialUpdate();
 		virtual void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
+		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnInitialUpdate();
+		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void OnMDISetMenu(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -181,6 +185,13 @@ namespace Win32xx
 			MDI_MIN = 1,
 			MDI_RESTORE = 2,
 			MDI_CLOSE = 3,
+		};
+
+		struct Mitem 
+		{ 
+			UINT  fType;
+			int   cchItemText; 
+			TCHAR szItemText[MAX_MENU_STRING]; 
 		};
 
 		BOOL m_bExitAfter;			// Exit after Popup menu ends
@@ -206,7 +217,6 @@ namespace Win32xx
 	{
 		friend class CMDIFrame;
 		friend class CToolbar;
-		friend class CWinApp;
 	public:
 		CFrame();
 		virtual ~CFrame();
@@ -249,6 +259,7 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;
+		BOOL m_bIsMDIFrame;			// TRUE if this is a MDI frame
         BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
@@ -266,7 +277,6 @@ namespace Win32xx
 		CRebar m_Rebar;				// CRebar object
 		CStatusbar m_Statusbar;		// CStatusbar object
 		CToolbar m_Toolbar;			// CToolbar object
-		BOOL m_bIsMDIFrame;			// TRUE if this is a MDI frame
 		BOOL m_bSupportRebars;		// TRUE if rebars are supported by the OS
 		HMENU m_hMenu;				// handle to the frame menu
 		CWnd* m_pView;				// pointer to the View CWnd object

@@ -1148,7 +1148,12 @@ namespace Win32xx
 		if (m_PrevWindowProc)
 			return ::CallWindowProc(m_PrevWindowProc, hwnd, uMsg, wParam, lParam);
 		else
-			return ::DefWindowProc(hwnd, uMsg, wParam, lParam);
+		{
+			if (IsMDIChild())
+				return ::DefMDIChildProc(hwnd, uMsg, wParam, lParam);
+			else
+				return ::DefWindowProc(hwnd, uMsg, wParam, lParam);
+		}
 
 	} // LRESULT CWnd::WindowProc(...)
 
