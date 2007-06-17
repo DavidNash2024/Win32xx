@@ -169,6 +169,7 @@ namespace Win32xx
 		virtual void OnWindowPosChanged();
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void ReleaseFocus();
+		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -176,7 +177,6 @@ namespace Win32xx
 	private:
 		enum Constants
 		{
-			MAX_MENU_STRING = 32,
 			USER_POPUPMENU  = WM_APP + 2,	// creates the popup menu
 		};
 
@@ -187,11 +187,12 @@ namespace Win32xx
 			MDI_CLOSE = 3,
 		};
 
-		struct Mitem 
-		{ 
+		struct ItemData 
+		{
+			HMENU hMenu;
+			UINT  nPos;
 			UINT  fType;
-			int   cchItemText; 
-			TCHAR szItemText[MAX_MENU_STRING]; 
+			TCHAR Text[MAX_MENU_STRING]; 
 		};
 
 		BOOL m_bExitAfter;			// Exit after Popup menu ends
@@ -207,6 +208,7 @@ namespace Win32xx
 		int m_nButtonCount;			// number of top level menu items
 		int m_nMDIButton;           // the MDI button pressed
 		POINT m_OldMousePos;        // old Mouse position
+		std::vector<ItemData*> m_vpItemData;	// vector or ItemData pointers
 
 	};  // class CMenubar
 

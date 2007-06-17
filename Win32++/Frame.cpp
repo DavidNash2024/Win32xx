@@ -156,9 +156,7 @@ namespace Win32xx
 				int* iPaneWidths = new int[iParts];
 				::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);
 
-				//int iNewParts = max(iPane+1, iParts);
-				int iNewParts = (iPane+1 > iParts) ? iPane+1 : iParts;
-
+				int iNewParts = max(iPane+1, iParts);
 				int* iNewPaneWidths = new int[iNewParts];
 				ZeroMemory(iNewPaneWidths, iNewParts*sizeof(int));
 
@@ -833,6 +831,15 @@ namespace Win32xx
 		m_nMDIButton    = 0;
 
 		ZeroMemory(&m_MDIRect, 3*sizeof(RECT));
+		TCHAR Text[80];
+		wsprintf(Text, "SM_CXMENUCHECK = %d", GetSystemMetrics(SM_CXMENUCHECK));
+		TRACE(Text);
+		wsprintf(Text, "SM_CXMENUSIZE = %d", GetSystemMetrics(SM_CXMENUSIZE));
+		TRACE(Text);
+		wsprintf(Text, "SM_CYMENU = %d", GetSystemMetrics(SM_CYMENU));
+		TRACE(Text);
+		wsprintf(Text, "SM_CXSMICON = %d", GetSystemMetrics(SM_CXSMICON));
+		TRACE(Text);
 	}
 
 	CMenubar::~CMenubar()
@@ -858,7 +865,6 @@ namespace Win32xx
 
 	void CMenubar::DoPopupMenu()
 	{
-		TRACE("Doing a PopupMenu");
 		if (m_bKeyMode)
 			// Simulate a down arrow key press
 			::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0);
@@ -866,7 +872,7 @@ namespace Win32xx
 		m_bKeyMode = FALSE;
 		m_bExitAfter = FALSE;
 		::GetCursorPos(&m_OldMousePos);
-		
+
 		HWND hMaxMDIChild = NULL;
 		if (IsMDIChildMaxed())
 			hMaxMDIChild = ((CMDIFrame*)GetApp()->GetFrame())->GetActiveMDIChild();
@@ -918,12 +924,14 @@ namespace Win32xx
 		::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
 		m_pTLSData->hMenuHook = NULL;
 
+		RevertPopupMenu(0);
+
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
 		{
 			if (m_hPopupMenu == ::GetSystemMenu(hMaxMDIChild, FALSE))
 			{
-				if (nID) 
+				if (nID)
 					::SendMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0);
 			}
 		}
@@ -931,7 +939,6 @@ namespace Win32xx
 		// Resestablish Focus
 		if (m_bKeyMode)
 			GrabFocus();
-		TRACE("Ending Popup");
 	}
 
 	void CMenubar::DrawMDIButtons(HDC hDC)
@@ -971,13 +978,13 @@ namespace Win32xx
 				break;
 			}
 		}
-	
+
 		::SetTextColor(hDC, colorText);
 		::DrawText(hDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
 		// Draw text after tab right aligned
 		if(nTab != -1)
-			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER); 	
+			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
 	void CMenubar::ExitMenu()
@@ -1081,7 +1088,7 @@ namespace Win32xx
 					::DrawText(hDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
 					*pResult = CDRF_SKIPDEFAULT;  // No further drawing
-				} 
+				}
 
 				else
 					*pResult = CDRF_DODEFAULT ;   // Do default drawing
@@ -1099,19 +1106,20 @@ namespace Win32xx
 		}
 	}
 
-	BOOL CMenubar::OnDrawItem(WPARAM wParam, LPARAM lParam)
+	BOOL CMenubar::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
+	// Draw each popup menu item
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
 
 		RECT& rc = pdis->rcItem;
-		Mitem* pmd = (Mitem*)pdis->itemData;
+		ItemData* pmd = (ItemData*)pdis->itemData;
 		HDC hDC = pdis->hDC;
 
-		if (pmd->fType & MFT_SEPARATOR) 
+		if (pmd->fType & MFT_SEPARATOR)
 		{
 			// draw separator
 			rc.top += (rc.bottom - rc.top)/2;
-			::DrawEdge(hDC, &rc,  EDGE_ETCHED, BF_TOP);	
+			::DrawEdge(hDC, &rc,  EDGE_ETCHED, BF_TOP);
 		}
 		else
 		{
@@ -1132,7 +1140,7 @@ namespace Win32xx
 			rc.left  = rc.left + 16;
 			::SetBkMode(hDC, TRANSPARENT);
 			COLORREF colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
-			DrawMenuText(hDC, pmd->szItemText, rc, colorText);
+			DrawMenuText(hDC, pmd->Text, rc, colorText);
 		}
 
 		return TRUE;
@@ -1150,23 +1158,32 @@ namespace Win32xx
 	void CMenubar::OnInitMenuPopup(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		HMENU hMenu = (HMENU)wParam;
+		
+		// Reverse any previous OwnerDraw for this menu (required for submenus)
+		RevertPopupMenu(hMenu);
+
 		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
 		{
 			MENUITEMINFO mii = {0};
 			mii.cbSize = sizeof(MENUITEMINFO);
 			TCHAR szMenuItem[MAX_MENU_STRING];
-			mii.fMask  = MIIM_STRING | MIIM_FTYPE | MIIM_DATA;
+			
+			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for Win95 compatibility
+			mii.fMask  = MIIM_TYPE | MIIM_DATA;
 			mii.dwTypeData = szMenuItem;
 			mii.cch = MAX_MENU_STRING -1;
+
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
+				ItemData* pItem = new ItemData;		// deleted in DoPopupMenu
+				pItem->hMenu = hMenu;
+				pItem->nPos = i;
+				pItem->fType = mii.fType;
 				mii.fType |= MFT_OWNERDRAW;
-				Mitem* pMyItem = new Mitem;
-				lstrcpyn(pMyItem->szItemText, szMenuItem, MAX_MENU_STRING);
-				pMyItem->cchItemText = mii.cch;
-				pMyItem->fType = mii.fType;
-				mii.dwItemData = (ULONG_PTR)pMyItem;
-			
+				lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
+				mii.dwItemData = (DWORD_PTR)pItem;
+
+				m_vpItemData.push_back(pItem);
 				::SetMenuItemInfo(hMenu, i, TRUE, &mii);
 			}
 		}
@@ -1372,13 +1389,15 @@ namespace Win32xx
 		}
 	}
 
-	BOOL CMenubar::OnMeasureItem(WPARAM wParam, LPARAM lParam)
+	BOOL CMenubar::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
+	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
+	//  values can be assigned with the menu item's dimensions.
 	{
 		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
 
-		Mitem* pmd = (Mitem *) pmis->itemData; 
-	
-		if (pmd->fType & MFT_SEPARATOR) 
+		ItemData* pmd = (ItemData *) pmis->itemData;
+
+		if (pmd->fType & MFT_SEPARATOR)
 		{
 			pmis->itemHeight = 7;
 			pmis->itemWidth  = 0;
@@ -1386,23 +1405,24 @@ namespace Win32xx
 
 		else
 		{
-			HDC hDC = GetDC(m_hWnd);  
+			HDC hDC = GetDC(m_hWnd);
 			HFONT hfntOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
 			SIZE size;
-           
-			GetTextExtentPoint32(hDC, pmd->szItemText, pmd->cchItemText, &size); 
 
-			pmis->itemWidth = size.cx + 16; 
-			pmis->itemHeight = max (size.cy, GetSystemMetrics(SM_CYMENU)-2); 
+			GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
+
+			pmis->itemWidth = size.cx + ::GetSystemMetrics(SM_CXMENUSIZE);
+			pmis->itemHeight = max(size.cy, GetSystemMetrics(SM_CYMENU)-2);
 
 			::SelectObject(hDC, hfntOld);
-			::ReleaseDC(m_hWnd, hDC); 
-		} 
+			::ReleaseDC(m_hWnd, hDC);
+		}
 
 		return TRUE;
 	}
 
 	BOOL CMenubar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// When a popup menu is active, StaticMsgHook directs all menu messages here
 	{
 		switch(uMsg)
 		{
@@ -1646,15 +1666,39 @@ namespace Win32xx
 				{
 					m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
 					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
-		//			return -1; // Discard this HotItemChange now
 				}
 
 				break;
 			} //case TBN_HOTITEMCHANGE:
-			
+
 		} // switch(((LPNMHDR)lParam)->code)
 		return 0L;
 	} // CMenubar::OnNotify(...)
+
+	void CMenubar::RevertPopupMenu(HMENU hMenu)
+	{
+		int nItem = m_vpItemData.size() -1;
+
+		while (nItem >= 0)
+		{
+			if ((m_vpItemData[nItem]->hMenu == hMenu) || (hMenu == NULL))
+			{
+				// Undo OwnerDraw and put the text back
+				MENUITEMINFO mii = {0};
+				mii.cbSize = sizeof(MENUITEMINFO);
+				mii.fMask = MIIM_TYPE;
+				mii.fType = m_vpItemData[nItem]->fType;
+				mii.dwTypeData = m_vpItemData[nItem]->Text;
+				mii.cch = lstrlen(m_vpItemData[nItem]->Text);
+				::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
+
+				// Delete the ItemData object, then erase the vector item
+				delete m_vpItemData[nItem];
+				m_vpItemData.erase(m_vpItemData.begin() + nItem);
+			}
+			nItem--;
+		}
+	}
 
 	void CMenubar::OnWindowPosChanged()
 	{
@@ -1811,7 +1855,7 @@ namespace Win32xx
 			return 0L;	// Discard these messages
 		case WM_KILLFOCUS:
 			ExitMenu();
-			return 0L;	
+			return 0L;
 		case WM_LBUTTONDBLCLK:
 			// Convert double left click to single left click
 			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
@@ -1849,6 +1893,9 @@ namespace Win32xx
 				return 0L;
 			}
 			break;
+	//	case WM_UNINITMENUPOPUP:
+	//		OnUnInitMenuPopup(wParam, lParam);
+	//		break;
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged();
 			break;
@@ -2133,12 +2180,12 @@ namespace Win32xx
 		{
 			int nID = LOWORD (wParam);
 			HMENU hMenu = (HMENU) lParam;
-			if ((hMenu != ::GetMenu(m_hWnd)) && (nID != 0))
+			if ((hMenu != ::GetMenu(m_hWnd)) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				m_StatusText = LoadString(nID);
 			else
 				m_StatusText = _T("Ready");
 			SetStatusText();
-		} 
+		}
 	}
 
 	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -2196,7 +2243,7 @@ namespace Win32xx
 				CToolbar& tb = GetToolbar();
 				POINT pt = {0};
 				::GetCursorPos(&pt);
-				
+
 				if (WindowFromPoint(pt) == tb.GetHwnd())
 				// Proceed if the toolbar window topmost (sometimes a menu is on top).
 				{

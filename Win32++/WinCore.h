@@ -83,7 +83,8 @@ namespace Win32xx
 
 	enum Constants
 	{
-		MAX_STRING_SIZE = 255
+		MAX_STRING_SIZE = 255,
+		MAX_MENU_STRING = 80,
 	};
 
 	// The comparison function object used by CWinApp::m_HWNDmap
@@ -284,6 +285,12 @@ namespace Win32xx
 	#else
 	  #define TRACE(str) // no-op
 	#endif  // _DEBUG
+
+	// Define min and max functions (int only) for Dev-C++ compatibility
+	#undef max
+	#undef min
+	inline int max(int a, int b) {return a>b? a:b;}
+	inline int min(int a, int b) {return a<b? a:b;}
 
 } // namespace Win32xx
 
