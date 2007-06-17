@@ -52,7 +52,7 @@ void CView::OnInitialUpdate()
 	TCHAR szPath[MAX_STRING_SIZE];
 	TCHAR szFile[] = _T("/PongaFern.jpg");
 	GetCurrentDirectory(MAX_STRING_SIZE - lstrlen(szFile) , szPath);
-	lstrcat(szPath, _T("/PongaFern.jpg"));
+	lstrcat(szPath, _T("./PongaFern.jpg"));
 	LoadPictureFile(szPath);
 }
 
