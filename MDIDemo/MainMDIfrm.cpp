@@ -90,7 +90,7 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.DisableButton(IDM_EDIT_PASTE);
 }
 
-LRESULT CMainMDIFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -98,6 +98,6 @@ LRESULT CMainMDIFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 //	}
 
 	//Use the frame default message handling for remaining messages
-	return CMDIFrame::WndProc(hwnd, uMsg, wParam, lParam);
+	return CMDIFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

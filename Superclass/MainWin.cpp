@@ -14,7 +14,7 @@ void CMainWin::OnCreate()
 	m_Button.Create(m_hWnd);
 }
 
-LRESULT CMainWin::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWin::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -24,5 +24,5 @@ LRESULT CMainWin::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 	}
 	// Now hand all messages to the default CWnd WndProc
-	return (CWnd::WndProc(hwnd, uMsg, wParam, lParam));
+	return (CWnd::WndProc(hWnd, uMsg, wParam, lParam));
 }

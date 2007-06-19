@@ -380,9 +380,9 @@ namespace Win32xx
 		return Attach(hWnd);
 	}
 
-	LRESULT CWnd::CallPrevWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CWnd::CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::CallWindowProc(m_PrevWindowProc, hwnd, uMsg, wParam, lParam);
+		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
 	}
 
 	HWND CWnd::Create(HWND hWndParent /* = NULL */)
@@ -510,6 +510,16 @@ namespace Win32xx
 
 	} // void CWnd::CreateEx()
 
+	LRESULT CWnd::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Pass messages on to the appropriate default window procedure
+	// CMDIChild and CMDIFrame override this function
+	{
+		if (m_PrevWindowProc)
+			return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
+		else
+			return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+
 	void CWnd::DestroyWindow()
 	{
 		if (m_hIconLarge != NULL)
@@ -588,17 +598,17 @@ namespace Win32xx
 		return 0;
 	}
 
-	HWND CWnd::GetAncestor(HWND hwnd)
+	HWND CWnd::GetAncestor(HWND hWnd)
 	{
 		// Returns the root parent.  Supports Win95
-		HWND hwndParent = ::GetParent(hwnd);
-		while (::IsChild(hwndParent, hwnd))
+		HWND hWndParent = ::GetParent(hWnd);
+		while (::IsChild(hWndParent, hWnd))
 		{
-			hwnd = hwndParent;
-			hwndParent = ::GetParent(hwnd);
+			hWnd = hWndParent;
+			hWndParent = ::GetParent(hWnd);
 		}
 
-		return hwnd;
+		return hWnd;
 	}
 
 	CWnd* CWnd::GetCWndObject(HWND hWnd)
@@ -678,12 +688,12 @@ namespace Win32xx
 		// after window creation.
 	}
 
-	LRESULT CWnd::OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CWnd::OnMessage(HWND hWndParent, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// A function used to call OnMessageReflect. You shouldn't need to call or
 		//  override this function.
 
-		HWND hwnd = NULL;
+		HWND hWnd = NULL;
 		switch (uMsg)
 		{
 		case WM_COMMAND:
@@ -697,14 +707,14 @@ namespace Win32xx
 		case WM_VKEYTOITEM:
 		case WM_HSCROLL:
 		case WM_VSCROLL:
-			hwnd = (HWND)lParam;
+			hWnd = (HWND)lParam;
 			break;
 
 		case WM_DRAWITEM:
 		case WM_MEASUREITEM:
 		case WM_DELETEITEM:
 		case WM_COMPAREITEM:
-			hwnd = ::GetDlgItem(hwndParent, (int)wParam);
+			hWnd = ::GetDlgItem(hWndParent, (int)wParam);
 			break;
 
 		case WM_PARENTNOTIFY:
@@ -712,12 +722,12 @@ namespace Win32xx
 			{
 			case WM_CREATE:
 			case WM_DESTROY:
-				hwnd = (HWND)lParam;
+				hWnd = (HWND)lParam;
 				break;
 			}
 		}
 
-		CWnd* Wnd = GetCWndObject(hwnd);
+		CWnd* Wnd = GetCWndObject(hWnd);
 
 		if (Wnd != NULL)
 			return Wnd->OnMessageReflect(uMsg, wParam, lParam);
@@ -743,8 +753,8 @@ namespace Win32xx
 		// Override this function to handle notifications in the parent CWnd class.
 		// When overriding, also call this base class function to provide for notification reflection.
 
-		HWND hwnd = ((LPNMHDR)lParam)->hwndFrom;
-		CWnd* Wnd = GetCWndObject(hwnd);
+		HWND hWnd = ((LPNMHDR)lParam)->hwndFrom;
+		CWnd* Wnd = GetCWndObject(hWnd);
 
 		if (Wnd != NULL)
 			return Wnd->OnNotifyReflect(wParam, lParam);
@@ -1063,7 +1073,7 @@ namespace Win32xx
 
 	}
 
-	LRESULT CWnd::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// The window procedure for handling messages
 	// When you override this in your derived class to handle other messages,
 	//  you will probably want to call this base class as well.
@@ -1095,29 +1105,29 @@ namespace Win32xx
 			break;
 		case WM_PAINT:
 			{
-				if (::GetUpdateRect(hwnd, NULL, FALSE))
+				if (::GetUpdateRect(hWnd, NULL, FALSE))
 				{
 					::PAINTSTRUCT ps;
-					HDC hDC = ::BeginPaint(hwnd, &ps);
+					HDC hDC = ::BeginPaint(hWnd, &ps);
 
 					// this trick works with most common controls
 					if (m_PrevWindowProc)
-						 CallPrevWindowProc(hwnd, uMsg, (WPARAM)hDC, lParam);
+						 CallPrevWindowProc(hWnd, uMsg, (WPARAM)hDC, lParam);
 
 					OnPaint(hDC);
-					::EndPaint(hwnd, &ps);
+					::EndPaint(hWnd, &ps);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					HDC hDC = GetDC(hwnd);
+					HDC hDC = GetDC(hWnd);
 
 					// this trick works with most common controls
 					if (m_PrevWindowProc)
-						 CallPrevWindowProc(hwnd, uMsg, (WPARAM)hDC, lParam);
+						 CallPrevWindowProc(hWnd, uMsg, (WPARAM)hDC, lParam);
 
 					OnPaint(hDC);
-					::ReleaseDC(hwnd, hDC);
+					::ReleaseDC(hWnd, hDC);
 				}
 			}
 			return 0L;
@@ -1138,22 +1148,14 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			lr = OnMessage(hwnd, uMsg, wParam, lParam);
+			lr = OnMessage(hWnd, uMsg, wParam, lParam);
 			if (lr) return lr;	// Message processed so return
 			break;				// Do default processing when message not already processed
 
 		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure
-		if (m_PrevWindowProc)
-			return ::CallWindowProc(m_PrevWindowProc, hwnd, uMsg, wParam, lParam);
-		else
-		{
-			if (IsMDIChild())
-				return ::DefMDIChildProc(hwnd, uMsg, wParam, lParam);
-			else
-				return ::DefWindowProc(hwnd, uMsg, wParam, lParam);
-		}
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
 

@@ -1136,6 +1136,16 @@ namespace Win32xx
 			::SelectObject(hDC, OldBrush);
 			::DeleteObject(hBrush);
 
+			RECT rButton;
+			int Height = rc.bottom - rc.top;
+			SetRect(&rButton, rc.left, rc.top, rc.left+15, rc.top+15);
+			HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+
+			if (bChecked)
+				DrawFrameControl(hDC, &rButton, DFC_MENU, DFCS_MENUCHECK);
+			else
+				DrawIcon(hDC, rc.left, rc.top, hIcon);
+
 			// Draw Text
 			rc.left  = rc.left + 16;
 			::SetBkMode(hDC, TRANSPARENT);
@@ -1168,7 +1178,7 @@ namespace Win32xx
 			mii.cbSize = sizeof(MENUITEMINFO);
 			TCHAR szMenuItem[MAX_MENU_STRING];
 			
-			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for Win95 compatibility
+			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
 			mii.fMask  = MIIM_TYPE | MIIM_DATA;
 			mii.dwTypeData = szMenuItem;
 			mii.cch = MAX_MENU_STRING -1;
@@ -1677,7 +1687,7 @@ namespace Win32xx
 
 	void CMenubar::RevertPopupMenu(HMENU hMenu)
 	{
-		int nItem = m_vpItemData.size() -1;
+		int nItem = (int)m_vpItemData.size() -1;
 
 		while (nItem >= 0)
 		{
@@ -1833,7 +1843,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMenubar::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMenubar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -1862,7 +1872,7 @@ namespace Win32xx
 			return 0L;	// Discard these messages
 		case WM_LBUTTONDOWN:
 			// Do default processing first
-			CallPrevWindowProc(hwnd, uMsg, wParam, lParam);
+			CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
 
 			OnLButtonDown(wParam, lParam);
 			return 0L;
@@ -1902,7 +1912,7 @@ namespace Win32xx
 		} // switch (uMsg)
 
 		// Don't call CToolbar::WndProc. Call CWnd::Wndproc instead
-		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
 
@@ -2244,33 +2254,29 @@ namespace Win32xx
 				POINT pt = {0};
 				::GetCursorPos(&pt);
 
-				if (WindowFromPoint(pt) == tb.GetHwnd())
-				// Proceed if the toolbar window topmost (sometimes a menu is on top).
+				int nButton = tb.HitTest();
+				if ((nButton >= 0) && (WindowFromPoint(pt) == tb.GetHwnd()))
 				{
-					int nButton = tb.HitTest();
-					if (nButton >= 0)
+					int nID = GetToolbar().GetCommandID(nButton);
+					if (nID != nOldID)
 					{
-						int nID = GetToolbar().GetCommandID(nButton);
-						if (nID != nOldID)
-						{
-							if (nID != 0)
-								m_StatusText = LoadString(nID);
-							else
-								m_StatusText = _T("Ready");
-
-							SetStatusText();
-						}
-						nOldID = nID;
-					}
-					else
-					{
-						if (nOldID != -1)
-						{
+						if (nID != 0)
+							m_StatusText = LoadString(nID);
+						else
 							m_StatusText = _T("Ready");
-							SetStatusText();
-						}
-						nOldID = -1;
+
+						SetStatusText();
 					}
+					nOldID = nID;
+				}
+				else
+				{
+					if (nOldID != -1)
+					{
+						m_StatusText = _T("Ready");
+						SetStatusText();
+					}
+					nOldID = -1;
 				}
 			}
 
@@ -2505,7 +2511,7 @@ namespace Win32xx
 		m_pView = &View;
 	}
 
-	LRESULT CFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
@@ -2553,7 +2559,8 @@ namespace Win32xx
 				OnTimer(wParam);
 				return 0L;
 			} // switch uMsg
-			return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+
+			return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 		} // try
 
 		catch (const CWinException &e)

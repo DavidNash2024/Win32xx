@@ -35,7 +35,7 @@ void CMDIChildMax::PreCreate(CREATESTRUCT &cs)
 	cs.style = WS_MAXIMIZE;
 }
 
-LRESULT CMDIChildMax::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildMax::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -44,5 +44,5 @@ LRESULT CMDIChildMax::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 			break;  // Continue with default processing 
 
 	}
-	return CMDIChild::WndProc(hwnd, uMsg, wParam, lParam);
+	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);
 }

@@ -136,9 +136,10 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual HWND Detach();
 		virtual void DestroyWindow();
-		virtual HWND GetAncestor(HWND hwnd);
+		virtual HWND GetAncestor(HWND hWnd);
 		virtual CWnd* GetCWndObject(HWND hWnd);
 		virtual HWND GetHwnd() {return m_hWnd;}
 		virtual LPCTSTR LoadString(UINT nID);
@@ -151,7 +152,7 @@ namespace Win32xx
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
-		virtual LRESULT CallPrevWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL IsMDIChild() {return FALSE;}
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);

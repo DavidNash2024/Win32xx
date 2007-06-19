@@ -11,7 +11,7 @@ CMainView::CMainView(int nBarpos, bool bVertical) :
 	SetPanes(GetTreeView(), GetListView());
 }
 
-LRESULT CMainView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -19,6 +19,6 @@ LRESULT CMainView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	} 
 
 	//Use the CSpliter default message handling for remaining messages
-	return CSplitter::WndProc(hwnd, uMsg, wParam, lParam);
+	return CSplitter::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

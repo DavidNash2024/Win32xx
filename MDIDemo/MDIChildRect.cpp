@@ -22,15 +22,15 @@ void CMDIChildRect::OnInitialUpdate()
 	SetIconSmall(IDI_RECT);
 }
 
-LRESULT CMDIChildRect::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_CREATE:
-		SetTimer (hwnd, 1, 250, NULL) ;
+		SetTimer (hWnd, 1, 250, NULL) ;
 		break;
 	case WM_CLOSE:
-		KillTimer(hwnd, 1);
+		KillTimer(hWnd, 1);
 		break;
 
 	case WM_TIMER:            // Display a random rectangle
@@ -73,5 +73,5 @@ LRESULT CMDIChildRect::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
           break ;        // WM_SIZE must be processed by DefMDIChildProc
 	}
 
-	return CMDIChild::WndProc(hwnd, uMsg, wParam, lParam);
+	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);
 }

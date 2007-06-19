@@ -33,7 +33,7 @@ void CView::SetString(TCHAR* str)
 	::lstrcpyn(m_str, str, 40);
 }
 
-LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -42,7 +42,7 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return 0L;
 	}
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 ////////////////////////////////
@@ -92,7 +92,7 @@ void CMainView::Reposition()
 	m_Bottom.SetBarPos(pos);
 }
 
-LRESULT CMainView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -100,6 +100,6 @@ LRESULT CMainView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	//Use the CSpliter default message handling for remaining messages
-	return CSplitter::WndProc(hwnd, uMsg, wParam, lParam);
+	return CSplitter::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

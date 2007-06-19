@@ -26,7 +26,7 @@ void CButton::OnInitialUpdate()
 	Subclass();
 }
 
-LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -57,5 +57,5 @@ LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	// Now hand all messages to the original Window procedure
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }

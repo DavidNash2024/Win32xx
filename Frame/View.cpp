@@ -28,7 +28,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -38,7 +38,7 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Use the frame default message handling for remaining messages
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 void CView::OnPaint(HDC hDC)

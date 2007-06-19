@@ -71,7 +71,7 @@ namespace Win32xx
 		virtual void OnSize();
 		virtual void RecalcLayout();
 		virtual void SetPanes(CWnd& Pane0, CWnd& Pane1);
-		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CWnd m_Bar;			// Splitter bar
 		CWnd* m_pPane0;		// Left or top CWnd object

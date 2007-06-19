@@ -408,7 +408,7 @@ void CMainFrame::SetWindowTitle()
 	::SetWindowText(m_hWnd, Title.c_str());
 }
 
-LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -419,7 +419,7 @@ LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		::InvalidateRect(m_RichView.GetHwnd(), NULL, TRUE);
 		break;
 	}
-	return CFrame::WndProc(hwnd, uMsg, wParam, lParam);
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)

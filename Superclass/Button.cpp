@@ -25,7 +25,7 @@ void CButton::PreCreate(CREATESTRUCT &cs)
 	cs.lpszName = TEXT("Push me");
 }
 
-LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Display window creation messages, and left mouse button clicks
 	switch (uMsg)
@@ -59,5 +59,5 @@ LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	// Now hand all messages to the original Window procedure
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }

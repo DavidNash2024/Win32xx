@@ -84,13 +84,13 @@ void CView::StorePoint(int x, int y, bool PenDown)
 	m_points.push_back(P1); //Add the point to the vector
 }
 
-LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_LBUTTONDOWN:
  		// Capture mouse input.
- 		::SetCapture(hwnd);
+ 		::SetCapture(hWnd);
 
 		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 		return 0;
@@ -125,6 +125,6 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	//Use the CWnd default message handling for remaining messages
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

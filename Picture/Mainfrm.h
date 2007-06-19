@@ -22,7 +22,7 @@ protected:
 	virtual void OnFileSave();
 	virtual void OnInitialUpdate();
 	virtual void SetButtons(const std::vector<UINT> ToolbarData);
-	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CView m_View;

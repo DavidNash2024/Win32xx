@@ -61,7 +61,7 @@ namespace Win32xx
 
 	protected:
 		virtual POINT Center(HWND hWnd);
-		virtual BOOL DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();

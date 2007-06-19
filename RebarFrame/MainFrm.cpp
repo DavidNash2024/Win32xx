@@ -53,14 +53,14 @@ void CMainFrame::OnInitialUpdate()
 }
 
 
-LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
 //	}
 
 	//Use the frame default message handling for remaining messages
-	return CFrame::WndProc(hwnd, uMsg, wParam, lParam);
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 

@@ -17,7 +17,7 @@ CMyDialog::~CMyDialog()
 {
 }
 
-BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -25,7 +25,7 @@ BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	//Use the dialogframe default message handling for remaining messages
-	return CDialog::DialogProc(hwnd, uMsg, wParam, lParam);
+	return CDialog::DialogProc(hWnd, uMsg, wParam, lParam);
 }
 
 

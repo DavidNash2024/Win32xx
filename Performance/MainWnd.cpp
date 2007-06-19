@@ -144,7 +144,7 @@ void CMainWindow::SendText(LPCTSTR str)
 	TRACE(str);
 }
 
-LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static int nWindowsCreated = 0;
 
@@ -180,6 +180,6 @@ LRESULT CMainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	//Use the CWnd default message handling for remaining messages
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

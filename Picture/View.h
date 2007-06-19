@@ -25,7 +25,7 @@ protected:
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LPOLESTR T2OLE(LPCTSTR szString);
 	virtual BSTR T2BSTR(LPCTSTR szString);
-	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HBRUSH m_hBrush;

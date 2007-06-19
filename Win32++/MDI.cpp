@@ -105,6 +105,11 @@ namespace Win32xx
 		pMDIChild->Create(GetView()->GetHwnd());
 	}
 
+	LRESULT CMDIFrame::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return ::DefFrameProc(hWnd, m_MDIClient.GetHwnd(), uMsg, wParam, lParam);
+	}
+
 	HWND CMDIFrame::GetActiveMDIChild(BOOL* pIsMaxed /* = NULL */)
 	{
 		return (HWND)::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)pIsMaxed);
@@ -181,24 +186,24 @@ namespace Win32xx
 		while(m_MDIChildVect.size() > 0)
 		{
 			v = m_MDIChildVect.begin();
-			HWND hwnd = (*v)->GetHwnd();
-			::SendMessage(hwnd, WM_CLOSE, 0, 0);
-			if (::IsWindow(hwnd))
+			HWND hWnd = (*v)->GetHwnd();
+			::SendMessage(hWnd, WM_CLOSE, 0, 0);
+			if (::IsWindow(hWnd))
 				return FALSE;
 
-			RemoveMDIChild(hwnd);
+			RemoveMDIChild(hWnd);
 		}
 		return TRUE;
 	}
 
-	void CMDIFrame::RemoveMDIChild(HWND hwnd)
+	void CMDIFrame::RemoveMDIChild(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
 		std::vector <CMDIChild*>::iterator v;
 
 		for (v = m_MDIChildVect.begin(); v!= m_MDIChildVect.end(); v++)
 		{
-			if ((*v)->GetHwnd() == hwnd)
+			if ((*v)->GetHwnd() == hWnd)
 			{
 				delete *v;
 				m_MDIChildVect.erase(v);
@@ -207,73 +212,21 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMDIFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
 		case WM_CLOSE:
 			OnClose();
 			return 0;
-		case WM_COMMAND:
-			OnCommand(wParam, lParam);
-			break;	// Some commands require default processing
-		case WM_CREATE:
-			OnCreate();
-			break;  // Continue default processing
-		case WM_DESTROY:
-			::SetMenu(m_hWnd, NULL);
-			::KillTimer(m_hWnd, ID_STATUS_TIMER);
-			// Post the WM_QUIT message to terminate the application.
-			::PostQuitMessage(0);
-			return 0;
-		case WM_ERASEBKGND:
-			// Avoids unnecessary flicker
-			return 0;
-		case WM_HELP:
-			OnHelp();
-			return 0;
-		case WM_MENUCHAR:
-			if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
-			{
-				// Activate Menubar for key pressed with Alt key held down
-				GetMenubar().MenuChar(wParam, lParam);
-				return -1;
-			}
-			break;
-		case WM_MENUSELECT:
-			OnMenuSelect(wParam, lParam);
-			return 0;
-		case WM_NOTIFY:
-			return OnNotify(wParam, lParam);
-		case WM_SETFOCUS:
-			OnSetFocus();
-			return 0;
-		case WM_SIZE:
-			RecalcLayout();
-			::RedrawWindow(m_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
-			return 0;
-		case WM_SYSCOLORCHANGE:
-			// Changing themes trigger this
-			OnSysColorChange();
-			return 0;
-		case WM_SYSCOMMAND:
-			// Handle Accelerator key strokes
-			if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
-			{
-				GetMenubar().SysCommand(wParam, lParam);
-				return 0L;
-			}
-			break;
-		case WM_TIMER:
-			OnTimer(wParam);
-			return 0L;
+
 		case WM_WINDOWPOSCHANGED:
 			// MDI Child or MDI frame has been resized
 			OnWindowPosChanged();
 			break; // Continue with default processing
 
 		} // switch uMsg
-		return ::DefFrameProc(hwnd, GetView()->GetHwnd(), uMsg, wParam, lParam);
+		return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -449,6 +402,11 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
+	LRESULT CMDIChild::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return ::DefMDIChildProc(hWnd, uMsg, wParam, lParam);
+	}
+
 	BOOL CMDIChild::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		// Override this to handle WM_COMMAND messages, for example
@@ -470,8 +428,8 @@ namespace Win32xx
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 		m_hChildMenu = ::LoadMenu (hInstance, MenuName);
 
-		HWND hwnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
-		if ((m_hWnd != NULL) &&(hwnd == m_hWnd) && (m_hChildMenu != NULL))
+		HWND hWnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
+		if ((m_hWnd != NULL) &&(hWnd == m_hWnd) && (m_hChildMenu != NULL))
 			UpdateFrameMenu(m_hChildMenu);
 
 		return (m_hChildMenu != NULL);
@@ -491,7 +449,7 @@ namespace Win32xx
 			::DrawMenuBar(pFrame->GetHwnd());
 	}
 
-	LRESULT CMDIChild::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -513,7 +471,7 @@ namespace Win32xx
 			}
 			return 0L ;
 		}
-		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

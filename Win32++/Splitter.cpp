@@ -271,7 +271,7 @@ namespace Win32xx
 			::MessageBox(NULL, TEXT("Invalid Splitter bar width"), TEXT("Error"), MB_OK);
 	}
 
-	LRESULT CSplitter::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CSplitter::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		// Child windows are positioned over this window, so we don't see any
@@ -305,7 +305,7 @@ namespace Win32xx
 		}
 
 		// Use the frame default message handling for remaining messages
-		return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 }  // namespace Win32xx
 

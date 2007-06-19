@@ -85,7 +85,8 @@ namespace Win32xx
 			MAX_MENU_STRING = 32,
 		};
 
-		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
 		HMENU m_hChildMenu;
@@ -121,12 +122,13 @@ namespace Win32xx
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 
 	protected:
+		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual void OnWindowPosChanged();
-		virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void AddMDIChild(CMDIChild* pMDIChild);
-		virtual void RemoveMDIChild(HWND hwnd);
+		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual void RecalcLayout();
 

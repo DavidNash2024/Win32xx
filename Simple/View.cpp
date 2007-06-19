@@ -69,7 +69,7 @@ void CView::OnSize()
 	::InvalidateRect(m_hWnd, NULL, TRUE);
 }
 
-LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// This function is our message procedure. We process the messages for
 	// the view window here, and pass the unprocessed messages to
@@ -87,5 +87,5 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unprocessed messages to CWin::WndProc
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }

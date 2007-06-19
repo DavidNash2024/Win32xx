@@ -43,7 +43,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnCommand(wParam, lParam);
 }
 
-LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -56,5 +56,5 @@ LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			m_MainView.Reposition();
 		break;
 	}
-	return CFrame::WndProc(hwnd, uMsg, wParam, lParam);
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }

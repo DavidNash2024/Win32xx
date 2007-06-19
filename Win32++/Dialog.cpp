@@ -118,13 +118,13 @@ namespace Win32xx
 		return CenterPos;
 	} // POINT CDialog::Center(HWND hWnd)
 
-	BOOL CDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	    switch (uMsg)
 	    {
 	    case WM_INITDIALOG:
 			{
-				m_hWnd = hwnd;
+				m_hWnd = hWnd;
 				// Center the dialog
 				POINT CenterPt = Center(m_hWnd);
 				::SetWindowPos(m_hWnd, HWND_TOP, CenterPt.x, CenterPt.y, 0, 0,  SWP_NOSIZE);
@@ -170,7 +170,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			return (BOOL) OnMessage(hwnd, uMsg, wParam, lParam);
+			return (BOOL) OnMessage(hWnd, uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
 	    return FALSE;

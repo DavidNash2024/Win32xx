@@ -56,7 +56,7 @@ BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return 0;
 }
 
-LRESULT CMDIChildView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -65,5 +65,5 @@ LRESULT CMDIChildView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		break;  // Continue with default processing
 	}
 
-	return CMDIChild::WndProc(hwnd, uMsg, wParam, lParam);
+	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);
 }
