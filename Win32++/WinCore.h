@@ -56,6 +56,7 @@
   #pragma warning (disable : 4512) // assignment operator could not be generated
 #endif // _MSC_VER
 
+
 #include <windows.h>
 #include <commctrl.h>
 #include <map>
@@ -127,7 +128,6 @@ namespace Win32xx
 	//
 	class CWnd
 	{
-		friend class CMDIChild;
 	public:
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
@@ -201,6 +201,7 @@ namespace Win32xx
 		static CWinApp* GetApp() {return st_pTheApp;}
 		virtual HINSTANCE GetInstanceHandle() {return m_hInstance;}
 		virtual HINSTANCE GetResourceHandle() {return (m_hResource ? m_hResource : m_hInstance);}
+		virtual int GetOSVer();
 		virtual std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();

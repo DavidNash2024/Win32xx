@@ -143,12 +143,16 @@ namespace Win32xx
 		virtual ~CMenubar();
 		virtual HMENU GetMenu() {return m_hTopMenu;}
 		virtual void MenuChar(WPARAM wParam, LPARAM lParam);
+		virtual void SetIcons(const std::vector<UINT> ToolbarData, UINT nID_Image, COLORREF crMask);
 		virtual void SysCommand(WPARAM wParam, LPARAM lParam);
 		virtual void SetMenu(HMENU hMenu);
 
 	protected:
 		virtual void DoAltKey(WORD KeyCode);
 		virtual void DoPopupMenu();
+		virtual void DrawBackground(HDC hDC, RECT rc);
+		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
+		virtual void DrawIcon(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMDIButtons(HDC hDC);
 		virtual void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		virtual void ExitMenu();
@@ -209,6 +213,9 @@ namespace Win32xx
 		int m_nMDIButton;           // the MDI button pressed
 		POINT m_OldMousePos;        // old Mouse position
 		std::vector<ItemData*> m_vpItemData;	// vector or ItemData pointers
+		HIMAGELIST m_hImageList;	// Images for popup menu icons
+		std::vector<UINT> m_ImageData;
+
 
 	};  // class CMenubar
 
@@ -217,8 +224,6 @@ namespace Win32xx
 	//
 	class CFrame : public CWnd
 	{
-		friend class CMDIFrame;
-		friend class CToolbar;
 	public:
 		CFrame();
 		virtual ~CFrame();

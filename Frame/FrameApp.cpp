@@ -1,7 +1,7 @@
 //////////////////////////////////////////////
 //FrameApp.cpp
 
-
+#define WINVER 0x0400
 #include "FrameApp.h"
 
 

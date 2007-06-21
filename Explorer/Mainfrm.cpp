@@ -147,6 +147,8 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 
 	// This style requires comctl32.dll version 5.80 or later
 	GetToolbar().SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+
+	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM);
 }
 
 void CMainFrame::ViewPopup()

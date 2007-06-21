@@ -40,6 +40,7 @@
 //  Definitions for the following classes:
 //  CWinApp, CWnd, and CWinException
 
+#define WINVER 0x0400
 #include "WinCore.h"
 #include "Frame.h"
 #include "Default_Resource.h"
@@ -177,6 +178,28 @@ namespace Win32xx
 		::SendMessage(m_hTraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
 	}
 
+	int CWinApp::GetOSVer()
+	{
+		DWORD dwVersion = GetVersion();
+		int Platform = (dwVersion < 0x80000000)? 2:1;
+		int MajorVer = LOBYTE(LOWORD(dwVersion));
+		int MinorVer = HIBYTE(LOWORD(dwVersion));
+
+		int nVer =  1000*Platform + 100*MajorVer + MinorVer;
+
+		// Return values and window version:
+		//  1400     Windows 95
+		//  1410     Windows 98
+		//  1490     Windows ME
+		//  2400     Windows NT
+		//  2500     Windows 2000
+		//  2501     Windows XP
+		//  2502     Windows Server 2003
+		//  2600     Windows Vista
+
+		return nVer;
+	}
+
 	int CWinApp::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.
@@ -279,7 +302,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL), m_PrevWindowProc(NULL)
+	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL), m_PrevWindowProc(NULL), m_pTLSData(NULL)
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
 		try
@@ -628,7 +651,7 @@ namespace Win32xx
 	}
 
 	LPCTSTR CWnd::LoadString(UINT nID)
-	{
+	{		
 		// Returns the string associated with a Resource ID
 		try
 		{
@@ -636,12 +659,16 @@ namespace Win32xx
 				throw CWinException(_T("Win32++ has not been initialised successfully."));
 
 			::lstrcpy(m_szString, _T(""));
-			if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_szString, MAX_STRING_SIZE -1))
-			{
-				TCHAR str[80];
-				::wsprintf(str, _T("LoadString - No string resource for %d"), nID);
-				DebugWarnMsg(str);
-			}
+			if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_szString, MAX_STRING_SIZE)) 
+			{ 
+				// The string resource might be in the application's resources instead 	        
+				if (::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE))
+					return (LPCTSTR) m_szString;
+ 
+				TCHAR msg[80]; 
+				::wsprintf(msg, TEXT("LoadString - No string resource for %d"), nID); 
+				DebugWarnMsg(msg); 
+			} 
 		}
 
 		catch (const CWinException &e)

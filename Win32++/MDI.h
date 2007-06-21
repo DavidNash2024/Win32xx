@@ -111,7 +111,7 @@ namespace Win32xx
 	//
 	class CMDIFrame : public CFrame
 	{
-		friend class CMDIClient;
+		friend class CMDIClient;	// CMDIClient uses RemoveMDIChild
 
 	public:
 		CMDIFrame();

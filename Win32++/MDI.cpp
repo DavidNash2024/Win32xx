@@ -167,8 +167,8 @@ namespace Win32xx
 		if (IsMenubarUsed())
 		{
 			// Refresh Menubar Window
-			HMENU hMenu= m_Menubar.GetMenu();
-			m_Menubar.SetMenu(hMenu);
+			HMENU hMenu= GetMenubar().GetMenu();
+			GetMenubar().SetMenu(hMenu);
 		}
 	}
 

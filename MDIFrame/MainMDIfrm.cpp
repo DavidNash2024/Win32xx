@@ -94,6 +94,9 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
 	TB.DisableButton(IDM_EDIT_PASTE);
+		
+	// Set the icons for popup menu items
+	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));
 }
 
 LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
