@@ -59,11 +59,11 @@
 
 #include <windows.h>
 #include <commctrl.h>
-#include <map>
 #include <vector>
 #include <string>
 #include <sstream>
 #include <tchar.h>
+#include <map>
 
 // Some useful type declarations
 typedef std::basic_string<TCHAR> tString;
@@ -201,7 +201,6 @@ namespace Win32xx
 		static CWinApp* GetApp() {return st_pTheApp;}
 		virtual HINSTANCE GetInstanceHandle() {return m_hInstance;}
 		virtual HINSTANCE GetResourceHandle() {return (m_hResource ? m_hResource : m_hInstance);}
-		virtual int GetOSVer();
 		virtual std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();
@@ -293,6 +292,28 @@ namespace Win32xx
 	#undef min
 	inline int max(int a, int b) {return a>b? a:b;}
 	inline int min(int a, int b) {return a<b? a:b;}
+
+	inline int GetWinVersion()
+	{
+		DWORD dwVersion = GetVersion();
+		int Platform = (dwVersion < 0x80000000)? 2:1;
+		int MajorVer = LOBYTE(LOWORD(dwVersion));
+		int MinorVer = HIBYTE(LOWORD(dwVersion));
+
+		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
+
+		// Return values and window version:
+		//  1400     Windows 95
+		//  1410     Windows 98
+		//  1490     Windows ME
+		//  2400     Windows NT
+		//  2500     Windows 2000
+		//  2501     Windows XP
+		//  2502     Windows Server 2003
+		//  2600     Windows Vista
+
+		return nVersion;
+	}
 
 } // namespace Win32xx
 

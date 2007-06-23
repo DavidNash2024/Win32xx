@@ -178,28 +178,6 @@ namespace Win32xx
 		::SendMessage(m_hTraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
 	}
 
-	int CWinApp::GetOSVer()
-	{
-		DWORD dwVersion = GetVersion();
-		int Platform = (dwVersion < 0x80000000)? 2:1;
-		int MajorVer = LOBYTE(LOWORD(dwVersion));
-		int MinorVer = HIBYTE(LOWORD(dwVersion));
-
-		int nVer =  1000*Platform + 100*MajorVer + MinorVer;
-
-		// Return values and window version:
-		//  1400     Windows 95
-		//  1410     Windows 98
-		//  1490     Windows ME
-		//  2400     Windows NT
-		//  2500     Windows 2000
-		//  2501     Windows XP
-		//  2502     Windows Server 2003
-		//  2600     Windows Vista
-
-		return nVer;
-	}
-
 	int CWinApp::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.

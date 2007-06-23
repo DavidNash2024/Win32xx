@@ -148,8 +148,9 @@ namespace Win32xx
 			break;
 		default:    // Pass to active child...
 			{
+				TRACE("Pass OnCommand to Active MDI child");
 				if (IsWindow (GetActiveMDIChild()))
-					((CMDIChild*)GetCWndObject(GetActiveMDIChild()))->OnCommand(wParam, lParam);
+					::SendMessage(GetActiveMDIChild(), WM_COMMAND, wParam, lParam);
 			}
 			break ;
 		}
@@ -387,6 +388,9 @@ namespace Win32xx
 			::SendMessage(hWndParent, WM_SETREDRAW, TRUE, 0);
 			::RedrawWindow(hWndParent, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 
+			// Ensure bits revealed by round corners (XP themes) are redrawn
+			::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
+
 			return m_hWnd;
 		}
 
@@ -405,22 +409,6 @@ namespace Win32xx
 	LRESULT CMDIChild::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefMDIChildProc(hWnd, uMsg, wParam, lParam);
-	}
-
-	BOOL CMDIChild::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)
-	{
-		// Override this to handle WM_COMMAND messages, for example
-
-		//	switch (LOWORD(wParam)
-		//	{
-		//	case IDM_FILE_NEW:
-		//		OnFileNew();
-		//		break;
-		//	}
-
-		// return 0;
-
-		return 0;
 	}
 
 	BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)
@@ -467,7 +455,7 @@ namespace Win32xx
 					// Set the menu to frame default menu if losing focus
 					UpdateFrameMenu(pFrame->GetFrameMenu());
 
-				::DrawMenuBar(pFrame->GetHwnd());
+				::DrawMenuBar(pFrame->GetHwnd()); 
 			}
 			return 0L ;
 		}

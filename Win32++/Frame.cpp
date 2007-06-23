@@ -834,8 +834,6 @@ namespace Win32xx
 
 	CMenubar::~CMenubar()
 	{
-		if (m_pTLSData)
-			m_pTLSData->pMenubar = NULL;
 	}
 
 	void CMenubar::DoAltKey(WORD KeyCode)
@@ -1238,13 +1236,9 @@ namespace Win32xx
 		{
 			MENUITEMINFO mii = {0};
 			// For Win95, cbSize needs to be 44
-			mii.cbSize = (GetApp()->GetOSVer() == 1400)? 44 : sizeof(MENUITEMINFO);
+			mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
 			TCHAR szMenuItem[MAX_MENU_STRING];
-
-			TCHAR Text[80];
-			wsprintf(Text, "OS Ver = %d", GetApp()->GetOSVer());
-			TRACE(Text);
-			
+		
 			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
 			mii.fMask  = MIIM_TYPE | MIIM_DATA;
 			mii.dwTypeData = szMenuItem;
@@ -1770,7 +1764,7 @@ namespace Win32xx
 				// Undo OwnerDraw and put the text back
 				MENUITEMINFO mii = {0};
 				// For Win95, cbSize needs to be 44
-				mii.cbSize = (GetApp()->GetOSVer() == 1400)? 44 : sizeof(MENUITEMINFO);
+				mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
 				mii.fMask = MIIM_TYPE;
 				mii.fType = m_vpItemData[nItem]->fType;
 				mii.dwTypeData = m_vpItemData[nItem]->Text;
@@ -2144,7 +2138,7 @@ namespace Win32xx
 		int nPos = -1;
 		MENUITEMINFO mii = {0};
 		// For Win95, cbSize needs to be 44
-		mii.cbSize = (GetApp()->GetOSVer() == 1400)? 44 : sizeof(MENUITEMINFO);
+		mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
 
 		for (int nItem = 0 ; nItem < nMenuItemCount; nItem++)
 		{
@@ -2157,7 +2151,8 @@ namespace Win32xx
 			mii.cch        = MAX_MENU_STRING;
 
 			// Fill the contents of szStr from the menu item
-			::GetMenuItemInfo(hMenu, nItem, TRUE, &mii);
+			if (!::GetMenuItemInfo(hMenu, nItem, TRUE, &mii))
+				TRACE("GetMenuItemInfo   Failed");
 
 			// Strip out any & characters
 			int j = 0;
@@ -2171,6 +2166,10 @@ namespace Win32xx
 			if (lstrcmp(szStripped, szItem) == 0)
 				nPos = nItem;
 		}
+
+		TCHAR Text[80];
+		wsprintf(Text, " Window Pos = %d", nPos);
+		TRACE(Text);
 
 		return nPos;
 	}

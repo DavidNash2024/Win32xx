@@ -39,7 +39,7 @@ void CMDIChildView::OnPaint(HDC hDC)
 	::DrawText(hDC, TEXT("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
@@ -61,7 +61,9 @@ BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	}
 
 	::InvalidateRect(m_hWnd, NULL, TRUE);
-	return 0;
+	
+	// pass WM_COMMAND messages on to CMDIChild
+	return CMDIChild::OnCommand(wParam, lParam);
 }
 
 LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

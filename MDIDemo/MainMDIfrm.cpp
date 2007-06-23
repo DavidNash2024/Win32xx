@@ -62,6 +62,20 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return CMDIFrame::OnCommand(wParam, lParam);
 }
 
+void CMainMDIFrame::OnCreate()
+{
+	// OnCreate controls the way the frame is created. 
+	// Overriding CFrame::Oncreate is optional.
+	// The default for the following variables is TRUE
+
+	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
+	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
+	m_bUseRebar = FALSE;				// Don't use rebars
+
+	// call the base class function
+	CFrame::OnCreate();
+}
+
 void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
