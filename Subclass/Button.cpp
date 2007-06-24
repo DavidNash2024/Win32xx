@@ -11,7 +11,12 @@ CButton::~CButton()
 
 void CButton::PreCreate(CREATESTRUCT &cs)
 {
+	// Choose "BUTTON as the window class. This is a predefined window class
+	//  which creates a button window. Since its a predefined window class, Win32++ 
+	//  automatically subclasses it, so the window messages are passed via WndProc
 	cs.lpszClass = TEXT("BUTTON");
+
+	// Choose other reasonable creation parameters
 	cs.style = WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON;
 	cs.x = 10;
 	cs.y = 10;
@@ -22,12 +27,12 @@ void CButton::PreCreate(CREATESTRUCT &cs)
 
 void CButton::OnInitialUpdate()
 {
-	//Subclass the window to handle additional messages
-	Subclass();
 }
 
 LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	// Run this application in Debug mode so you can see the text displayed 
+	//  in the Trace window when the mouse is over the button.
 	switch (uMsg)
 	{
 	case WM_MOUSEMOVE:

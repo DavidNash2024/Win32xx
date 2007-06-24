@@ -209,7 +209,6 @@ namespace Win32xx
 		HWND m_hPrevFocus;			// handle to window which had focus
 		RECT m_MDIRect[3];			// array of RECT for MDI buttons
 		int m_nHotItem;				// hot item
-		int m_nButtonCount;			// number of top level menu items
 		int m_nMDIButton;           // the MDI button pressed
 		POINT m_OldMousePos;        // old Mouse position
 		std::vector<ItemData*> m_vpItemData;	// vector or ItemData pointers
@@ -243,6 +242,7 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetView(CWnd& pView);
+		virtual void UpdateCheckMarks();
 
 	protected:
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);

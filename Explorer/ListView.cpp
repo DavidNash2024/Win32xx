@@ -31,9 +31,6 @@ CListView::CListView()
 			throw CWinException(TEXT("Problem Initializing COM"));;
 
 		SetImageLists();
-
-		// Superclass the Listview
-		Superclass(WC_LISTVIEW, TEXT("SuperListView"));
 	}
 
 	catch (CWinException &e)
@@ -598,7 +595,7 @@ void CListView::PreCreate(CREATESTRUCT &cs)
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | LVS_AUTOARRANGE |
             LVS_ICON | LVS_SHAREIMAGELISTS | LVS_SHOWSELALWAYS;
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
-	cs.lpszClass = TEXT("SuperListView");
+	cs.lpszClass = WC_LISTVIEW;
 }
 
 

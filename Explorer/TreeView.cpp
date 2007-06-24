@@ -21,9 +21,6 @@ CTreeView::CTreeView()
 			throw CWinException(TEXT("Problem Initializing COM"));;
 
 		SetImageLists();
-
-		// Superclass the Treeview
-		Superclass(WC_TREEVIEW, TEXT("SuperTreeView"));
 	}
 
 	catch (CWinException &e)
@@ -214,6 +211,7 @@ LRESULT CTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	} // switch(lpnmh->code)
 	return 0;
 }
+
 void CTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent)
 {
 	CEnumIDList cEnum;
@@ -391,7 +389,7 @@ void CTreeView::PreCreate(CREATESTRUCT &cs)
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |
 					TVS_HASBUTTONS | TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS ;
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
-	cs.lpszClass = TEXT("SuperTreeView");
+	cs.lpszClass = WC_TREEVIEW;
 }
 
 BOOL CTreeView::SelectFromListView(Cpidl& cpidlFull)
@@ -476,7 +474,6 @@ CTreeView::TreeItemData::TreeItemData(Cpidl& cpidl)
 	m_cpidlRel  = cpidl;
 	m_cpidlFull = cpidl;
 }
-
 
 CTreeView::TreeItemData::TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
 {

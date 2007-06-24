@@ -334,7 +334,13 @@ namespace Win32xx
 		{
 			if (IsWindow(hWnd))
 			{
-				if (m_hWnd)
+				// Allocate an iterator for our HWND map
+				std::map<HWND, CWnd*, CompareHWND>::iterator m;
+
+				GetApp()->m_MapLock.Lock();
+				m = GetApp()->GetHWNDMap().find(hWnd);
+				GetApp()->m_MapLock.Release();
+				if (m != GetApp()->GetHWNDMap().end())
 					throw CWinException(_T("Window already attached to this CWnd object"));
 
 				m_hWnd = hWnd;
@@ -490,6 +496,17 @@ namespace Win32xx
 			if (!m_hWnd)
 				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
 
+			
+			if (!::GetClassInfoEx(GetApp()->GetInstanceHandle(), ClassName, &wcx))
+				::GetClassInfoEx(NULL, ClassName, &wcx);
+			
+			// Automatically subclass predefined window class types
+			if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
+			{
+				Subclass();
+				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
+			}
+
 			// Window creation is complete. Now call OnInitialUpdate
 			OnInitialUpdate();
 		}
@@ -515,10 +532,7 @@ namespace Win32xx
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
-		if (m_PrevWindowProc)
-			return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
-		else
-			return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 
 	void CWnd::DestroyWindow()
@@ -809,6 +823,7 @@ namespace Win32xx
 			// Check to see if this classname is already registered
 			WNDCLASSEX wcxTest = {0};
 			wcxTest.cbSize = sizeof(WNDCLASSEX);
+			
 			if (::GetClassInfoEx(GetApp()->GetInstanceHandle(), wcx.lpszClassName, &wcxTest))
 				return TRUE;
 
@@ -816,7 +831,7 @@ namespace Win32xx
 			wcx.cbSize		= sizeof(WNDCLASSEX);
 			wcx.hInstance	= GetApp()->GetInstanceHandle();
 			wcx.lpfnWndProc	= CWnd::StaticWindowProc;
-
+			
 			if (wcx.hbrBackground == 0)	wcx.hbrBackground	= (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			if (wcx.hCursor == 0)		wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
 			if (wcx.hIcon == 0) 		wcx.hIcon			= ::LoadIcon(NULL, IDI_APPLICATION);
@@ -989,9 +1004,7 @@ namespace Win32xx
 	} // LRESULT CALLBACK StaticWindowProc(...)
 
 	void CWnd::Subclass()
-	// Subclassing occurs after window creation, hence the WM_CREATE is not
-	//  handled in a subclassed procedure, and OnCreate is never called.
-	// Subclassing allows common controls to pass messages via CWnd::WndProc.
+	// A private function used by CreateEx, Attach and AttachDlgItem
 	{
 		try
 		{
@@ -1039,50 +1052,14 @@ namespace Win32xx
 		}
 	}
 
-	void CWnd::Superclass(LPCTSTR OldClass, LPCTSTR NewClass)
-	// Superclassing occurs before window creation, hence the window creation messages
-	//  are handled in the superclassed procedure, and OnCreate gets called.
-	// Superclassing allows common controls to pass messages via CWnd::WndProc.
-	{
-		try
-		{
-			if (m_PrevWindowProc)
-				throw CWinException(_T("Superclass failed.  Already Subclassed or Superclassed"));
-
-			// Step 1:  Extract the old class's window procedure
-			WNDCLASSEX wcx = {0};
-			wcx.cbSize = sizeof(WNDCLASSEX);
-			if (!::GetClassInfoEx(NULL, OldClass, &wcx))
-				throw CWinException(_T("CWnd::Superclass  GetClassInfo failed"));
-
-			m_PrevWindowProc = wcx.lpfnWndProc;
-
-			// Step 2: Register the new window class
-			wcx.hInstance = GetApp()->GetInstanceHandle();
-			wcx.lpszClassName = NewClass;
-			wcx.lpfnWndProc = CWnd::StaticWindowProc;
-			if (!RegisterClassEx(wcx))
-				throw CWinException(_T("CWnd::Superclass  RegisterClassEx failed"));
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd::Superclass"));
-			throw;	// Rethrow unknown exception
-		}
-
-	}
-
 	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// The window procedure for handling messages
 	// When you override this in your derived class to handle other messages,
 	//  you will probably want to call this base class as well.
 	{
+		if (m_PrevWindowProc)
+			return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
+
 		LRESULT lr;
     	switch (uMsg)
 		{
@@ -1115,10 +1092,6 @@ namespace Win32xx
 					::PAINTSTRUCT ps;
 					HDC hDC = ::BeginPaint(hWnd, &ps);
 
-					// this trick works with most common controls
-					if (m_PrevWindowProc)
-						 CallPrevWindowProc(hWnd, uMsg, (WPARAM)hDC, lParam);
-
 					OnPaint(hDC);
 					::EndPaint(hWnd, &ps);
 				}
@@ -1127,15 +1100,11 @@ namespace Win32xx
 				{
 					HDC hDC = GetDC(hWnd);
 
-					// this trick works with most common controls
-					if (m_PrevWindowProc)
-						 CallPrevWindowProc(hWnd, uMsg, (WPARAM)hDC, lParam);
-
 					OnPaint(hDC);
 					::ReleaseDC(hWnd, hDC);
 				}
 			}
-			return 0L;
+			return 0L; 
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:

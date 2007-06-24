@@ -1,9 +1,17 @@
 Version 5.3
 -----------
 Changes:
-Modified CMenubar
+* Automatic subclassing for all predefined window class types
+* Enhanced CMenubar - Added icons to dropdown menus
+
+Bug Fixes
+* Corrected menu selection of MDI child windows
+* Corrected painting of MDI child windows
+* Corrected menu check marks for MDI frames
 
 The following changes have been made to the Win32++ code:
+Added CFrame::UpdateCheckMarks
+Removed CWnd::Superclass
 Renamed CMDIFrame::GetActiveChild to CMDIFrame::GetActiveMDIChild
 
 Version 5.2

@@ -815,6 +815,7 @@ namespace Win32xx
 		return fShow;
 	}
 
+
 	/////////////////////////////////////
 	// Definitions for the CMenubar class
 	//
@@ -1213,7 +1214,6 @@ namespace Win32xx
 	void CMenubar::OnInitialUpdate()
 	{
 		m_pTLSData->pMenubar = this;
-		Subclass();
 
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
@@ -1257,10 +1257,7 @@ namespace Win32xx
 				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData	
 				::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 			}
-			else
-			{	
-				TRACE(_T("CMenubar::OnInitMenuPopup  Failed to get MenuItemInfo"));
-			}
+
 		}
 	}
 
@@ -1819,7 +1816,6 @@ namespace Win32xx
 		try
 		{
 			int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
-			m_nButtonCount = ::GetMenuItemCount(hMenu);
 
 			// Remove any existing buttons
 			while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0, 0) > 0)
@@ -1845,7 +1841,7 @@ namespace Win32xx
 				SetButtonText(0, _T("    "));
 			}
 
-			for (int i = 0 ; i < m_nButtonCount; i++)
+			for (int i = 0 ; i < ::GetMenuItemCount(hMenu); i++)
 			{
 				// Assign the Toolbar Button struct
 				TBBUTTON tbb = {0};
@@ -1858,11 +1854,11 @@ namespace Win32xx
 
 				// Add the menu title to the string table
 				TCHAR szMenuName[MAX_MENU_STRING +1];
-				if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
-					throw CWinException(_T("Menubar::SetMenu  GetMenuString failed"));
-
+				if (!::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION))
+					return;
+					
 				SetButtonText(i  + nMaxedOffset, szMenuName);
-			}
+			}		
 		}
 
 		catch(const CWinException &e)
@@ -2017,7 +2013,7 @@ namespace Win32xx
 		} // switch (uMsg)
 
 		// Don't call CToolbar::WndProc. Call CWnd::Wndproc instead
-		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+		return CToolbar::WndProc(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
 
@@ -2151,8 +2147,7 @@ namespace Win32xx
 			mii.cch        = MAX_MENU_STRING;
 
 			// Fill the contents of szStr from the menu item
-			if (!::GetMenuItemInfo(hMenu, nItem, TRUE, &mii))
-				TRACE("GetMenuItemInfo   Failed");
+			::GetMenuItemInfo(hMenu, nItem, TRUE, &mii);
 
 			// Strip out any & characters
 			int j = 0;
@@ -2166,10 +2161,6 @@ namespace Win32xx
 			if (lstrcmp(szStripped, szItem) == 0)
 				nPos = nItem;
 		}
-
-		TCHAR Text[80];
-		wsprintf(Text, " Window Pos = %d", nPos);
-		TRACE(Text);
 
 		return nPos;
 	}
@@ -2400,30 +2391,14 @@ namespace Win32xx
 	{
 		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
 		{
-			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-			else
-			{
-				::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-			}
-
 			::ShowWindow(GetStatusbar().GetHwnd(), SW_HIDE);
 		}
 		else
 		{
-			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_CHECKED);
-			else
-			{
-				::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
-				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_STATUSBAR, MF_CHECKED);
-			}
-
 			::ShowWindow(GetStatusbar().GetHwnd(), SW_SHOW);
 		}
+
+		UpdateCheckMarks();
 
 		// Reposition the Windows
 		RecalcLayout();
@@ -2435,40 +2410,21 @@ namespace Win32xx
 		if (::IsWindowVisible(GetToolbar().GetHwnd()))
 		{
 			if (IsMenubarUsed())
-			{
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), FALSE);
-			}
 			else
-			{
-				::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-				if (IsRebarUsed())
-					::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), FALSE);
-				else
-					::ShowWindow(GetToolbar().GetHwnd(), SW_HIDE);
-			}
+				::ShowWindow(GetToolbar().GetHwnd(), SW_HIDE);
 		}
 		else
 		{
 			if (IsMenubarUsed())
-			{
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_CHECKED);
 				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), TRUE);
-			}
 			else
-			{
-				::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
-				if (::GetMenu(m_hWnd) != m_hMenu)
-					::CheckMenuItem (::GetMenu(m_hWnd), IDW_VIEW_TOOLBAR, MF_CHECKED);
-				if (IsRebarUsed())
-					::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), TRUE);
-				else
-					::ShowWindow(GetToolbar().GetHwnd(), SW_SHOW);
-			}
+				::ShowWindow(GetToolbar().GetHwnd(), SW_SHOW);
 		}
-
+	
+		UpdateCheckMarks();
+		
+		// Reposition the Windows
 		RecalcLayout();
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
@@ -2624,6 +2580,39 @@ namespace Win32xx
 	{
 		// You call this function to assign the View window object to the frame
 		m_pView = &View;
+	}
+
+	void CFrame::UpdateCheckMarks()
+	{
+		if (::IsWindowVisible(GetToolbar().GetHwnd()))
+		// Show toolbar check mark
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
+			if (IsMenubarUsed())
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_CHECKED);
+		}
+		else
+		// Hide toolbar check mark
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			if (IsMenubarUsed())
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+		}
+
+		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
+		// Show status bar check mark
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
+			if (IsMenubarUsed())
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_CHECKED);
+		}
+		else
+		// Hide status bar check mark
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
+			if (IsMenubarUsed())
+				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_UNCHECKED);
+		} 
 	}
 
 	LRESULT CFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

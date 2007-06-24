@@ -148,7 +148,6 @@ namespace Win32xx
 			break;
 		default:    // Pass to active child...
 			{
-				TRACE("Pass OnCommand to Active MDI child");
 				if (IsWindow (GetActiveMDIChild()))
 					::SendMessage(GetActiveMDIChild(), WM_COMMAND, wParam, lParam);
 			}
@@ -170,6 +169,9 @@ namespace Win32xx
 			// Refresh Menubar Window
 			HMENU hMenu= GetMenubar().GetMenu();
 			GetMenubar().SetMenu(hMenu);
+
+			CFrame* pFrame = GetApp()->GetFrame();
+			pFrame->UpdateCheckMarks();
 		}
 	}
 
@@ -234,29 +236,45 @@ namespace Win32xx
 	//////////////////////////////////////
 	// Definitions for the CMDIClient class
 	//
-	CMDIClient::CMDIClient() //: m_OldWindowProc(NULL)
+	CMDIClient::CMDIClient()
 	{
-		Superclass(_T("MDICLIENT"), _T("SuperMDIClient"));
 	}
 
 	CMDIClient::~CMDIClient()
 	{
 	}
 
-	HWND CMDIClient::Create(HWND hWndParent /* = NULL*/)
+	void CMDIClient::PreCreate(CREATESTRUCT &cs)
 	{
+		static CLIENTCREATESTRUCT clientcreate;
+		clientcreate.hWindowMenu  = GetApp()->GetFrame()->GetFrameMenu();
+		clientcreate.idFirstChild = IDW_FIRSTCHILD;
+
+		cs.lpCreateParams = &clientcreate;
+		cs.lpszClass = _T("MDICLient");
+		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+		cs.dwExStyle = WS_EX_CLIENTEDGE;
+	}
+
+//	HWND CMDIClient::Create(HWND hWndParent /* = NULL*/)
+/*	{
 		try
 		{
 			CLIENTCREATESTRUCT clientcreate ;
-			clientcreate.hWindowMenu  = m_hWnd;
+			clientcreate.hWindowMenu  = GetApp()->GetFrame()->GetFrameMenu();
+		//	clientcreate.hWindowMenu  = m_hWnd;
 			clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 			DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
 			// Create the view window
-			if (!CreateEx(WS_EX_CLIENTEDGE, _T("SuperMDIClient"), _T(""),
-					dword, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
-					throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
+		//	if (!CreateEx(WS_EX_CLIENTEDGE, _T("SuperMDIClient"), _T(""),
+		//			dword, 0, 0, 0, 0, hWndParent, (HMENU) 1, (PSTR) &clientcreate))
+		//			throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
 
+			HWND hwnd = CreateWindowEx (WS_EX_CLIENTEDGE, TEXT ("MDIClient"), NULL, dword,
+                         0, 0, 0, 0, hWndParent, (HMENU) 1, GetApp()->GetInstanceHandle(), (PSTR) &clientcreate) ;
+
+			Attach(hwnd);
 			return m_hWnd;
 		}
 
@@ -271,7 +289,7 @@ namespace Win32xx
 		}
 
 		return m_hWnd;
-	}
+	} */
 
 	LRESULT CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
@@ -435,6 +453,8 @@ namespace Win32xx
 			pFrame->GetMenubar().SetMenu(hMenu);
 		else
 			::DrawMenuBar(pFrame->GetHwnd());
+
+		pFrame->UpdateCheckMarks();
 	}
 
 	LRESULT CMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

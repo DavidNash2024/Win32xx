@@ -163,8 +163,6 @@ namespace Win32xx
 		virtual void SetHook();
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
-		virtual void Subclass();
-		virtual void Superclass(LPCTSTR OldClass, LPCTSTR NewClass);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
@@ -176,6 +174,7 @@ namespace Win32xx
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
 		static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
+		virtual	void Subclass();
 
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
