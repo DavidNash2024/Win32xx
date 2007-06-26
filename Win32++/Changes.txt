@@ -1,16 +1,40 @@
 Version 5.3
 -----------
 Changes:
-* Automatic subclassing for all predefined window class types
+* Added automatic subclassing for all predefined window class types
+* Removed superclassing. Its redundant now.
 * Enhanced CMenubar - Added icons to dropdown menus
+* In WndProc, removed the requirement to return the Parent WndProc function.
+   A typical WndProc function now looks like this ....
+   MyClass::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+   {
+     switch (uMsg)
+     {
+     case WM_SIZE:
+       ::InvalidateRect(m_hWnd, NULL, TRUE);
+       break;
+     }
+
+     return 0L;  // <-- this can be zero now.
+  }
+ * In OnNotify, removed the requirement to return the parent OnNotify 
+    function.
+ * In OnCommand, removed the requirement to return the parent OnCommand 
+    function.
+
+Incompatibilities with previous versions
+* No need to use the subclass function. Subclassing is automatic if required.
+* Superclass function is no longer available. Use automatic subclassing instead.
 
 Bug Fixes
 * Corrected menu selection of MDI child windows
 * Corrected painting of MDI child windows
 * Corrected menu check marks for MDI frames
+* Corrected exception on exit for Win95
 
 The following changes have been made to the Win32++ code:
 Added CFrame::UpdateCheckMarks
+Added CMenubar::SetIcons
 Removed CWnd::Superclass
 Renamed CMDIFrame::GetActiveChild to CMDIFrame::GetActiveMDIChild
 

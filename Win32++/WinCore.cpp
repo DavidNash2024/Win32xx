@@ -495,10 +495,10 @@ namespace Win32xx
 			// Now handle window creation failure
 			if (!m_hWnd)
 				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
-
 			
 			if (!::GetClassInfoEx(GetApp()->GetInstanceHandle(), ClassName, &wcx))
-				::GetClassInfoEx(NULL, ClassName, &wcx);
+				if (::GetClassInfoEx(NULL, ClassName, &wcx))
+					throw CWinException(_T("CWnd::CreateEx  Failed to get class info"));
 			
 			// Automatically subclass predefined window class types
 			if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
@@ -688,9 +688,13 @@ namespace Win32xx
 		//		break;
 		//	}
 
-		// return CFrame::OnCommand(nID);
+		return FALSE;
+	}
 
-		return 0;
+	BOOL CWnd::OnCommandStd(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	// A private function used for internal Win32++ commands
+	{
+		return FALSE;
 	}
 
 	void CWnd::OnCreate()
@@ -764,20 +768,19 @@ namespace Win32xx
 		return 0L;
 	}
 
-	LRESULT CWnd::OnNotify(WPARAM wParam, LPARAM lParam)
+	LRESULT CWnd::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
-		// By default, Win32++ calls OnNotifyReflect to pass the notification
+		// Win32++ also calls OnNotifyReflect to pass the notification
 		//  from WM_NOTIFY back to the child that generated it.
-
+		// Handle your notificiations by overriding OnNotify or OnNotifyReflect
 		// Override this function to handle notifications in the parent CWnd class.
-		// When overriding, also call this base class function to provide for notification reflection.
 
-		HWND hWnd = ((LPNMHDR)lParam)->hwndFrom;
-		CWnd* Wnd = GetCWndObject(hWnd);
+		return 0L;
+	}
 
-		if (Wnd != NULL)
-			return Wnd->OnNotifyReflect(wParam, lParam);
-
+	LRESULT CWnd::OnNotifyStd(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	// A private fuction which handles the internal Win32++ notifications 
+	{
 		return 0L;
 	}
 
@@ -975,7 +978,6 @@ namespace Win32xx
 	{
 		try
 		{
-
 			// Allocate an iterator for our HWND map
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
@@ -983,7 +985,9 @@ namespace Win32xx
 			m = GetApp()->GetHWNDMap().find(hWnd);
 			GetApp()->m_MapLock.Release();
 			if (m != GetApp()->GetHWNDMap().end())
-				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
+			{
+				return m->second->WndProcStd(hWnd, uMsg, wParam, lParam);
+			}
 
 			throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 		}
@@ -1009,7 +1013,7 @@ namespace Win32xx
 		try
 		{
 			if (m_PrevWindowProc)
-				throw CWinException(_T("Subclass failed.  Already Subclassed or Superclassed"));
+				throw CWinException(_T("Subclass failed.  Already Subclassed"));
 
 			// Subclass the window to pass messages to WndProc
 
@@ -1047,24 +1051,44 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CWnd::Superclass"));
+			DebugErrMsg(_T("Exception in CWnd::Subclass"));
 			throw;	// Rethrow unknown exception
 		}
 	}
 
-	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// The window procedure for handling messages
-	// When you override this in your derived class to handle other messages,
-	//  you will probably want to call this base class as well.
+	LRESULT CWnd::WndProc(HWND /*hWnd*/, UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
+	// The window procedure for handling messages. Override this function to handle messages
+	// Return non-zero to prevent default processing of the message, otherwise return zero.
 	{
+		// switch(uMsg)
+		// {
+		//	case WM_ERASEBKGND:
+		//		return TRUE;  // Non-zero. Don't do default processing for this message			
+		// }
+		return 0L; // Do default processing for remaining messages
+	}
+
+	LRESULT CWnd::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// A private function to handle messages. It calls Wndproc.
+	{
+		LRESULT lr;
+		
+		// Call the user WndProc first
+		lr = WndProc(hWnd, uMsg, wParam, lParam);
+		if (lr) return lr;
+
+		// Use CallWindowProc for subclassed windows
 		if (m_PrevWindowProc)
 			return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
 
-		LRESULT lr;
     	switch (uMsg)
 		{
 		case WM_COMMAND:
 			{
+				// Process the internal Win32++ commands
+				OnCommandStd(wParam, lParam);
+				
+				// Process other commands
 				OnCommand(wParam, lParam);
 
 				// Refelect this message if it's from a control
@@ -1082,8 +1106,24 @@ namespace Win32xx
 	//		::PostQuitMessage(0);
 	//		return 0L;
 		case WM_NOTIFY:
-			lr = OnNotify(wParam, lParam);
-			if (lr) return lr;
+			{
+				HWND hWnd = ((LPNMHDR)lParam)->hwndFrom;
+				CWnd* Wnd = GetCWndObject(hWnd);
+				if (Wnd != NULL)
+				{
+					// Process reflected notifications
+					lr = Wnd->OnNotifyReflect(wParam, lParam);
+					if (lr) return lr; // Some notifications return a value
+				}
+
+				// Process the internal Win32++ notifications
+				lr = OnNotifyStd(wParam, lParam);
+				if (lr) return lr; // Some notifications return a value
+				
+				// Process the other notifications
+				lr = OnNotify(wParam, lParam);
+				if (lr) return lr; // Some notifications return a value
+			}
 			break;
 		case WM_PAINT:
 			{

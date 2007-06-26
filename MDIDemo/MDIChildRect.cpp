@@ -58,8 +58,8 @@ LRESULT CMDIChildRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 			::SelectObject (hdc, hOldBrush);
 			::DeleteObject (hBrush);
 			::ReleaseDC (m_hWnd, hdc);
-			return 0;
 		}
+		break;
 
 	case WM_SIZE:             // If not minimized, save the window size
           if (wParam != SIZE_MINIMIZED)
@@ -69,9 +69,8 @@ LRESULT CMDIChildRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                m_cyClientMax = HIWORD (lParam) ;
 			   if (m_cyClientMax < 1) m_cyClientMax = 1;
           }
-
           break ;        // WM_SIZE must be processed by DefMDIChildProc
 	}
 
-	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }

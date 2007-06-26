@@ -42,25 +42,24 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_NEW:
 		OnFileNew();
-		break;
+		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
-		break;
+		return TRUE;
 	case IDM_FILE_SAVE:
 		OnFileSave();
-		break;
+		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
 		OnHelp();
-		break;
+		return TRUE;
 	}
 
-	// call the base class function
-	return CFrame::OnCommand(wParam, lParam);
+	return FALSE;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -152,7 +151,7 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.DisableButton(IDM_FILE_PRINT);
 
 	// Set the icons for popup menu items
-	GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN);
+	GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192,192,192));
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -162,7 +161,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//Additional messages to be handled go here
 //	}
 
-	//Use the frame default message handling for remaining messages
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

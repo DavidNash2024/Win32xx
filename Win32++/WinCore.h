@@ -79,6 +79,9 @@ namespace Win32xx
 	class CFrame;
 	class CMenubar;
 	class CMDIChild;
+	class CMDIClient;
+	class CMDIFrame;
+	class CSplitter;
 	class CWnd;
 
 
@@ -128,6 +131,12 @@ namespace Win32xx
 	//
 	class CWnd
 	{
+		friend CFrame;
+		friend CMDIChild;
+		friend CMDIClient;
+		friend CMDIFrame;
+		friend CMenubar;
+		friend CSplitter;
 	public:
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
@@ -164,7 +173,7 @@ namespace Win32xx
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
+		
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
 		HWND m_hWndParent;		// handle to this object's window parent
@@ -173,8 +182,11 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
+		virtual BOOL OnCommandStd(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotifyStd(WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
 		virtual	void Subclass();
+		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon

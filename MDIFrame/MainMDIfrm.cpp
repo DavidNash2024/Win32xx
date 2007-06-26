@@ -40,18 +40,18 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_NEW:
 		AddMDIChild(new CMDIChildView);
-		return 0;
+		return TRUE;
 	case IDM_FILE_CLOSE:          // Close the active MDI window
 		::SendMessage(GetActiveMDIChild(), WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
-		break;
+		return TRUE;
 	}
-	return CMDIFrame::OnCommand(wParam, lParam);
+	return FALSE;
 }
 
 void CMainMDIFrame::OnCreate()
@@ -99,14 +99,13 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));
 }
 
-LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainMDIFrame::WndProc(HWND /*hWnd*/, UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 //	switch (uMsg)
 //	{
 
 //	}
 
-	//Use the frame default message handling for remaining messages
-	return CMDIFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;	// Return zero to pass unhandled on for default processing
 }
 

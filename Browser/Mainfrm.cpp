@@ -107,26 +107,26 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
 		OnHelp();
-		break;
+		return TRUE;
 	case IDM_BACK:
 		m_View.GetIWebBrowser2()->GoBack();
-		break;
+		return TRUE;
 	case IDM_FORWARD:
 		m_View.GetIWebBrowser2()->GoForward();
-		break;
+		return TRUE;
 	case IDM_REFRESH:
 		m_View.GetIWebBrowser2()->Refresh();
-		break;
+		return TRUE;
 	case IDM_STOP:
 		m_View.GetIWebBrowser2()->Stop();
-		break;
+		return TRUE;
 	case IDM_HOME:
 		m_View.GetIWebBrowser2()->GoHome();
-		break;
+		return TRUE;
 	}
 
 	// Handle notification WM_COMMAND from ComboboxEx
@@ -150,12 +150,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 				m_View.GetIWebBrowser2()->get_HWND(&hWeb);
 				::SetFocus((HWND)hWeb);
 			}
-			break;
+			return TRUE;
 		}
 	}
 
-	// call the base class function
-	return CFrame::OnCommand(wParam, lParam);
+	return FALSE;
 }
 
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
@@ -336,14 +335,5 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-//	switch (uMsg)
-//	{
 
-//	}
-
-	//Use the frame default message handling for remaining messages
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
-}
 

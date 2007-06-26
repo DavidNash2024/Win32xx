@@ -118,8 +118,17 @@ namespace Win32xx
 		return CenterPos;
 	} // POINT CDialog::Center(HWND hWnd)
 
-	BOOL CDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CDialog::DialogProc(HWND /*hWnd*/, UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
+		return FALSE;
+	}
+
+	BOOL CDialog::DialogProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		// Call the user DialogProcStd first
+		BOOL Result = DialogProc(hWnd, uMsg, wParam, lParam);
+		if (Result) return Result;
+
 	    switch (uMsg)
 	    {
 	    case WM_INITDIALOG:
@@ -317,7 +326,7 @@ namespace Win32xx
 			m = GetApp()->GetHWNDMap().find(hWnd);
 			GetApp()->m_MapLock.Release();
 			if (m != GetApp()->GetHWNDMap().end())
-				return ((CDialog*)m->second)->DialogProc(hWnd, uMsg, wParam, lParam);
+				return ((CDialog*)m->second)->DialogProcStd(hWnd, uMsg, wParam, lParam);
 
 			throw (CWinException(_T("CDialog::StaticDialogProc ... Failed to route message")));
 		}

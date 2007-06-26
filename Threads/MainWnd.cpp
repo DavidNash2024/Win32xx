@@ -74,16 +74,15 @@ LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:	
 		// Post the WM_QUIT message to terminate the primary thread.
 		::PostQuitMessage(0);
-		return 0L;
+		break;
 	
 	case WM_WINDOWCREATED:
 		// Message recieved when a test window is created
 		if (++nWindowsCreated == m_nThreads)
 			OnAllWindowsCreated();
-		return 0L;
+		break;
 	}
 
-	//Use the CWnd default message handling for remaining messages
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

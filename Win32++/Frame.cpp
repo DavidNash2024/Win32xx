@@ -488,6 +488,9 @@ namespace Win32xx
 
 			if (!::SendMessage(m_hWnd, TB_SETBUTTONINFO, iButtonID, (LPARAM) &tbbi))
 				throw CWinException(_T("CToolbar::SetButtonStyle  failed"));
+
+			// Note:  TB_SETBUTTONINFO requires comctl32.dll version 4.71 or later
+			//        i.e. Win95 with IE4 / NT with IE4   or later
 		}
 
 		catch (const CWinException &e)
@@ -1944,7 +1947,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMenubar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMenubar::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -2012,8 +2015,7 @@ namespace Win32xx
 			break;
 		} // switch (uMsg)
 
-		// Don't call CToolbar::WndProc. Call CWnd::Wndproc instead
-		return CToolbar::WndProc(hWnd, uMsg, wParam, lParam);
+		return CToolbar::WndProcStd(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
 
@@ -2208,7 +2210,7 @@ namespace Win32xx
 		}
 	}
 
-	BOOL CFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+	BOOL CFrame::OnCommandStd(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		switch (LOWORD(wParam))
 		{
@@ -2221,7 +2223,7 @@ namespace Win32xx
 		} // switch cmd
 
 		return 0;
-	} // CFrame::OnCommand(...)
+	} 
 
 	void CFrame::OnCreate()
 	{
@@ -2300,7 +2302,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::OnNotifyStd(WPARAM wParam, LPARAM lParam)
 	{
 		switch (((LPNMHDR)lParam)->code)
 		{
@@ -2323,7 +2325,7 @@ namespace Win32xx
 			}
 			break;
 		} // switch LPNMHDR
-		return CWnd::OnNotify(wParam, lParam);
+		return CWnd::OnNotifyStd(wParam, lParam);
 
 	} // CFrame::OnNotify(...)
 
@@ -2615,7 +2617,7 @@ namespace Win32xx
 		} 
 	}
 
-	LRESULT CFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
@@ -2664,7 +2666,7 @@ namespace Win32xx
 				return 0L;
 			} // switch uMsg
 
-			return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+			return CWnd::WndProcStd(hWnd, uMsg, wParam, lParam);
 		} // try
 
 		catch (const CWinException &e)

@@ -49,14 +49,13 @@ LRESULT CTestWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		// Post the WM_QUIT message to terminate the thread.
 		::PostQuitMessage(0);
-		return 0L;
+		break;
 
 	case WM_TESTMESSAGE:
 		// return the number of WM_TESTMESSAGE messages processsed by this thread so far
 		return ++nMessages;
 	}
 
-	//Use the CWnd default message handling for remaining messages
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

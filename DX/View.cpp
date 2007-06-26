@@ -196,23 +196,19 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		::PostQuitMessage( 0 );
-		return 0;
+		break;
 
 	case WM_SIZING:
 		Render();
-		return 0;
+		break;
 
 	case WM_PAINT:
 		Render();
 		::ValidateRect( m_hWnd, NULL );
-		return 0;
-
-	default:
-		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+		break;
 	}
 
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
-
+	return 0L;
 }
 
 

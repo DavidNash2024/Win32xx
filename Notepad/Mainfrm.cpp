@@ -58,7 +58,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
-	return CFrame::OnNotify(wParam, lParam);
+
+	return 0L;
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -67,45 +68,46 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_NEW:
 		OnFileNew();
-		break;
+		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
-		break;
+		return TRUE;
 	case IDM_FILE_SAVE:
 		OnFileSave();
-		break;
+		return TRUE;
 	case IDM_FILE_SAVEAS:
 		OnFileSaveAs();
-		break;
+		return TRUE;
 	case IDM_FILE_PRINT:
 		OnFilePrint();
-		break;
+		return TRUE;
 	case IDM_EDIT_COPY:
 		OnEditCopy();
-		break;
+		return TRUE;
 	case IDM_EDIT_PASTE:
 		OnEditPaste();
-		break;
+		return TRUE;
 	case IDM_EDIT_CUT:
 		OnEditCut();
-		break;
+		return TRUE;
 	case IDM_EDIT_DELETE:
 		OnEditDelete();
-		break;
+		return TRUE;
 	case IDM_EDIT_REDO:
 		OnEditRedo();
-		break;
+		return TRUE;
 	case IDM_EDIT_UNDO:
 		OnEditUndo();
-		break;
+		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
-		break;
+		return TRUE;
 	} // switch cmd
-	return CFrame::OnCommand(wParam, lParam);
+	
+	return FALSE;
 } // CMainFrame::OnCommand(...)
 
 
@@ -419,7 +421,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		::InvalidateRect(m_RichView.GetHwnd(), NULL, TRUE);
 		break;
 	}
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)

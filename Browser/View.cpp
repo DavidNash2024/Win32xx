@@ -91,12 +91,6 @@ void CView::OnCreate()
 	_ASSERT (SUCCEEDED (hr));
 }
 
-void CView::OnDestroy()
-{
-	// Post a message to end the application
-	::PostQuitMessage(0);
-}
-
 void CView::OnInitialUpdate()
 {
 	// OnInitial is called after the window is created.
@@ -111,23 +105,6 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.style = WS_HSCROLL| WS_VSCROLL | WS_VISIBLE | WS_CHILD;
 	cs.dwExStyle = WS_EX_CLIENTEDGE;		// Extended style
 	cs.lpszClass = _T("Win32++ Window");	// Window class name
-}
-
-LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	// This function is our message procedure. We process the messages for
-	// the view window here, and pass the unprocessed messages to
-	// CWnd::WndProc for default processing.
-
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		OnDestroy();
-		return 0;
-	}
-
-	// Pass unprocessed messages to CWin::WndProc
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 

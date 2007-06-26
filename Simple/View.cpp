@@ -79,13 +79,12 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		OnDestroy();
-		return 0;	
+		break;	// and also do default processing for this message
 
 	case WM_SIZE:
 		OnSize();
-		return 0;	
+		break;	// and also do default processing for this message
 	}
 
-	// Pass unprocessed messages to CWin::WndProc
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;	// Return zero to pass unhandled on for default processing
 }

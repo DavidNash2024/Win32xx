@@ -85,7 +85,7 @@ namespace Win32xx
 		};
 
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
 		HMENU m_hChildMenu;
@@ -100,9 +100,8 @@ namespace Win32xx
 	public:
 		CMDIClient();
 		virtual ~CMDIClient();
-	//	virtual HWND Create(HWND hWndParent /* = NULL*/);
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	};
 
 
@@ -116,23 +115,25 @@ namespace Win32xx
 	public:
 		CMDIFrame();
 		virtual ~CMDIFrame();
+		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 		virtual CMDIClient& GetMDIClient() {return m_MDIClient;}
 		virtual HWND GetActiveMDIChild(BOOL* pIsMaxed = NULL );
 		virtual BOOL IsMDIChildMaxed();
-		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
+
 
 	protected:
+		virtual void AddMDIChild(CMDIChild* pMDIChild);
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual void OnWindowPosChanged();
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void AddMDIChild(CMDIChild* pMDIChild);
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual void RecalcLayout();
 
 	private:
+		virtual BOOL OnCommandStd(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		
 		CMDIClient m_MDIClient;
 		std::vector <CMDIChild*> m_MDIChildVect;
 	};

@@ -69,6 +69,8 @@ namespace Win32xx
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		virtual BOOL DialogProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	
+
 		BOOL IsIndirect;				// a flag for Indirect dialogs
 		BOOL IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog

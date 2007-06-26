@@ -18,7 +18,6 @@ LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //	} 
 
-	//Use the CSpliter default message handling for remaining messages
-	return CSplitter::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

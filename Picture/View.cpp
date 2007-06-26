@@ -127,8 +127,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //	}
 
-	// Use the frame default message handling for remaining messages
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 
 

@@ -21,8 +21,7 @@ LRESULT CMainWin::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_DESTROY:
 	 		// Post the WM_QUIT message to terminate the application.
 			::PostQuitMessage(0);
-			return 0L;
+			break;
 	}
-	// Now hand all messages to the default CWnd WndProc
-	return (CWnd::WndProc(hWnd, uMsg, wParam, lParam));
+	return 0L;
 }

@@ -32,12 +32,10 @@ BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-		//Additional messages to be handled go here
+//		//Additional messages to be handled go here
 //	}
 
-
-	//Use the dialogframe default message handling for remaining messages
-	return CDialog::DialogProc(hWnd, uMsg, wParam, lParam);
+	return FALSE; // Return FALSE for any unhandled messages
 }
 
 BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -67,7 +65,7 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
     } //switch (nID)
 
-	return TRUE;
+	return FALSE;
 }
 
 BOOL CMyDialog::OnInitDialog()

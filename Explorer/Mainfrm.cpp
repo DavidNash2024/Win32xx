@@ -53,40 +53,40 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
-		break;
+		return TRUE;
 	case IDM_VIEW_LARGEICON:
 		GetListView().ViewLargeIcons();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
-		break;
+		return TRUE;
 	case IDM_VIEW_SMALLICON:
 		GetListView().ViewSmallIcons();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
-		break;
+		return TRUE;
 	case IDM_VIEW_LIST:
 		GetListView().ViewList();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
-		break;
+		return TRUE;
 	case IDM_VIEW_REPORT:
 		GetListView().ViewReport();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
-		break;
+		return TRUE;
 	case IDM_SHOW_HIDDEN:
 		m_bShowHidden = !m_bShowHidden;
 		::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, (m_bShowHidden == TRUE)? MF_CHECKED : MF_UNCHECKED);
 
 		// Refresh the Listview display
 		GetListView().DoDisplay();
-		break;
+		return TRUE;
 	case IDM_VIEWMENU:
 		// This Command is recieved if Comctl32.dll version is below 5.80
 		ViewPopup();
-		break;
+		return TRUE;
 	} // switch cmd
 
-	return CFrame::OnCommand(wParam, lParam);
+	return FALSE;
 
 } // CMainFrame::OnCommand(...)
 
@@ -113,8 +113,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 	} //switch LPNMHDR  
 
-	//Use the default message handling for remaining messages
-	return CFrame::OnNotify(wParam, lParam);
+	return 0L;
 }
 
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
@@ -199,8 +198,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	{
 
 //	}
-
-	// Use the frame default message handling for remaining messages
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	
+	return 0L;
 }
 

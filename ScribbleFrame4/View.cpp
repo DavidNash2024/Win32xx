@@ -93,7 +93,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
  		::SetCapture(hWnd);
 
 		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
-		return 0;
+		break;
 
 	case WM_MOUSEMOVE:
          // hold down the left mouse button and move mouse to draw lines.
@@ -106,7 +106,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
         }
-        return 0;
+        break;
 
     case WM_LBUTTONUP:
 		{
@@ -114,17 +114,16 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			::ReleaseCapture();
 
 			StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
-			return 0;
 		}
+		break;
 
 	//Not Required within a CFrame
 	/*case WM_DESTROY:
 		//End the program when window is destroyed
 		::PostQuitMessage(0);
-		return 0; */
+		break; */
 	}
 
-	//Use the CWnd default message handling for remaining messages
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

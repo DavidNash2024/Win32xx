@@ -127,11 +127,12 @@ void CMainWindow::PerformanceTest()
 	str.str(tString()); // erase the stream
 	str << mSeconds << TEXT("  milliseconds to process ") << m_nTestMessages << TEXT(" messages");
 	SendText(str.str().c_str());
-	MessageBox(m_hWnd, str.str().c_str(), TEXT("Info"), MB_OK);
 	
 	str.str(tString()); // erase the stream
 	str << lr << TEXT(" total messages sent");
 	TRACE(str.str().c_str()); 
+
+	MessageBox(m_hWnd, str.str().c_str(), TEXT("Info"), MB_OK);
 }
 
 void CMainWindow::SendText(LPCTSTR str)
@@ -166,20 +167,19 @@ LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:	
 		// Post the WM_QUIT message to terminate the program.
 		::PostQuitMessage(0);
-		return 0L;
+		break;
 	
 	case WM_SIZE:
 		OnSize();
-		return 0;
+		break;
 	
 	case WM_WINDOWCREATED:
 		// Message recieved when a test window is created
 		if (++nWindowsCreated == m_nTestWindows)
 			OnAllWindowsCreated();
-		return 0L;
+		break;
 	}
 
-	//Use the CWnd default message handling for remaining messages
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

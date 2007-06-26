@@ -176,7 +176,7 @@ namespace Win32xx
 		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		enum Constants
@@ -223,6 +223,7 @@ namespace Win32xx
 	//
 	class CFrame : public CWnd
 	{
+		friend CMDIFrame;
 	public:
 		CFrame();
 		virtual ~CFrame();
@@ -248,11 +249,10 @@ namespace Win32xx
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
 		virtual void AddToolbarBand(int Toolbar_Height = TOOLBAR_HEIGHT);
 		virtual void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
-		virtual BOOL OnCommand(WPARAM wPAram, LPARAM lParam);
+
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
-		virtual	LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
 		virtual	void OnTimer(WPARAM wParam);
@@ -262,7 +262,6 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;
 		BOOL m_bIsMDIFrame;			// TRUE if this is a MDI frame
@@ -279,6 +278,10 @@ namespace Win32xx
 		};
 
 	private:
+		virtual BOOL OnCommandStd(WPARAM wPAram, LPARAM lParam);
+		virtual	LRESULT OnNotifyStd(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 		CMenubar m_Menubar;			// CMenubar object
 		CRebar m_Rebar;				// CRebar object
 		CStatusbar m_Statusbar;		// CStatusbar object

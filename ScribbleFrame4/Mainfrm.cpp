@@ -41,62 +41,62 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_NEW:
 		::MessageBox(NULL, TEXT("File New"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_FILE_OPEN:
 		::MessageBox(NULL, TEXT("File Open"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_FILE_SAVE:
 		::MessageBox(NULL, TEXT("File Save"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_FILE_SAVEAS:
 		::MessageBox(NULL, TEXT("File SaveAs"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_FILE_PRINT:
 		::MessageBox(NULL, TEXT("File Print"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_EDIT_COPY:
 		::MessageBox(NULL, TEXT("Edit Copy"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_EDIT_PASTE:
 		::MessageBox(NULL, TEXT("Edit Paste"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_EDIT_CUT:
 		::MessageBox(NULL, TEXT("Edit Cut"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_EDIT_DELETE:
 		::MessageBox(NULL, TEXT("Edit Delete"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_EDIT_REDO:
 		::MessageBox(NULL, TEXT("Edit Redo"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_EDIT_UNDO:
 		::MessageBox(NULL, TEXT("Edit Undo"), TEXT("Menu"), MB_OK);
-		break;
+		return TRUE;
 	case IDM_PEN_RED:
 		TRACE("Red pen selected");
 		m_View.SetPen(RGB(255,0,0));
-		break;
+		return TRUE;
 	case IDM_PEN_BLUE:
 		TRACE("Blue pen selected");
 		m_View.SetPen(RGB(0,0,255));
-		break;
+		return TRUE;
 	case IDM_PEN_GREEN:
 		TRACE("Green pen selected");
 		m_View.SetPen(RGB(0,196,0));
-		break;
+		return TRUE;
 	case IDM_PEN_BLACK:
 		TRACE("Black pen selected");
 		m_View.SetPen(RGB(0,0,0));
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
-		break;
+		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	}
 
-	return CFrame::OnCommand(wParam, lParam);
+	return FALSE;
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -106,7 +106,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //	} // switch (uMsg)
 
-	//Use the frame default message handling for remaining messages
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 } // LRESULT CMainFrame::WndProc(...)
 

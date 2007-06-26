@@ -43,15 +43,14 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
 		OnHelp();
-		break;
+		return TRUE;
 	}
 
-	// call the base class function
-	return CFrame::OnCommand(wParam, lParam);
+	return FALSE;
 }
 
 void CMainFrame::OnCreate()
@@ -76,7 +75,7 @@ void CMainFrame::OnInitialUpdate()
 	TRACE("Frame created");
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+/*LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Process notification messages sent by child windows
 
@@ -87,7 +86,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 	// pass unhandled notifications to CFrame
 	return CFrame::OnNotify(wParam, lParam);
-}
+}*/
 
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
@@ -130,14 +129,13 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(HWND /*hWnd*/, UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 //	switch (uMsg)
 //	{
 		//Additional messages to be handled go here
 //	}
 
-	//Use the frame default message handling for remaining messages
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;	// pass any unhandled messages on to default processing
 }
 

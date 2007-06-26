@@ -61,6 +61,5 @@ LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		TRACE("CButton::WndProc - Unspecified Message");
 		break;
 	}
-	// Now hand all messages to the original Window procedure
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }

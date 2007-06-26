@@ -46,7 +46,6 @@ LRESULT CTestWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return ++nMessages;
 	}
 
-	//Use the CWnd default message handling for remaining messages
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

@@ -45,25 +45,24 @@ BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_COLOR_BLACK:
 		m_Color = RGB(0,0,0);
-		break;
+		return TRUE;
 	case IDM_COLOR_RED:
 		m_Color = RGB(255, 0, 0);
-		break;
+		return TRUE;
 	case IDM_COLOR_GREEN:
 		m_Color = RGB(0, 255, 0);
-		break;
+		return TRUE;
 	case IDM_COLOR_BLUE:
 		m_Color = RGB(0, 0, 255);
-		break;
+		return TRUE;
 	case IDM_COLOR_WHITE:
 		m_Color = RGB(255, 255, 255);
-		break;
+		return TRUE;
 	}
 
 	::InvalidateRect(m_hWnd, NULL, TRUE);
 	
-	// pass WM_COMMAND messages on to CMDIChild
-	return CMDIChild::OnCommand(wParam, lParam);
+	return FALSE;
 }
 
 LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -72,12 +71,12 @@ LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	{
 	case WM_CLOSE:
 		OnClose();
-		return 0;
+		return TRUE;	// Don't do default processing
 
 	case WM_SIZE:
 		::InvalidateRect(m_hWnd, NULL, TRUE);
-		break;  // Continue with default processing
+		break;			// Also do default processing
 	}
-
-	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);
+	
+	return 0L;	// Do default processing for other messages
 }

@@ -122,7 +122,7 @@ namespace Win32xx
 		return bMaxed;
 	}
 
-	BOOL CMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+	BOOL CMDIFrame::OnCommandStd(WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
 		{
@@ -215,7 +215,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIFrame::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -229,7 +229,7 @@ namespace Win32xx
 			break; // Continue with default processing
 
 		} // switch uMsg
-		return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+		return CFrame::WndProcStd(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -256,42 +256,7 @@ namespace Win32xx
 		cs.dwExStyle = WS_EX_CLIENTEDGE;
 	}
 
-//	HWND CMDIClient::Create(HWND hWndParent /* = NULL*/)
-/*	{
-		try
-		{
-			CLIENTCREATESTRUCT clientcreate ;
-			clientcreate.hWindowMenu  = GetApp()->GetFrame()->GetFrameMenu();
-		//	clientcreate.hWindowMenu  = m_hWnd;
-			clientcreate.idFirstChild = IDW_FIRSTCHILD ;
-			DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-
-			// Create the view window
-		//	if (!CreateEx(WS_EX_CLIENTEDGE, _T("SuperMDIClient"), _T(""),
-		//			dword, 0, 0, 0, 0, hWndParent, (HMENU) 1, (PSTR) &clientcreate))
-		//			throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
-
-			HWND hwnd = CreateWindowEx (WS_EX_CLIENTEDGE, TEXT ("MDIClient"), NULL, dword,
-                         0, 0, 0, 0, hWndParent, (HMENU) 1, GetApp()->GetInstanceHandle(), (PSTR) &clientcreate) ;
-
-			Attach(hwnd);
-			return m_hWnd;
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CMDIClient::Create"));
-		}
-
-		return m_hWnd;
-	} */
-
-	LRESULT CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIClient::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -326,7 +291,7 @@ namespace Win32xx
 				return lr;
 			}
 		}
-		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcStd(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -457,7 +422,7 @@ namespace Win32xx
 		pFrame->UpdateCheckMarks();
 	}
 
-	LRESULT CMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIChild::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -475,11 +440,11 @@ namespace Win32xx
 					// Set the menu to frame default menu if losing focus
 					UpdateFrameMenu(pFrame->GetFrameMenu());
 
-				::DrawMenuBar(pFrame->GetHwnd()); 
+				::DrawMenuBar(pFrame->GetHwnd());
 			}
 			return 0L ;
 		}
-		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcStd(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

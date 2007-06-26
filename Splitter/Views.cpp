@@ -40,9 +40,9 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		//Repaint the window when it's resized
 		::InvalidateRect(m_hWnd, NULL, TRUE);
-		return 0L;
+		break;
 	}
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 
 ////////////////////////////////
@@ -99,7 +99,6 @@ LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //		Additional messages to be handled go here
 //	}
 
-	//Use the CSpliter default message handling for remaining messages
-	return CSplitter::WndProc(hWnd, uMsg, wParam, lParam);
+	return 0L;
 }
 

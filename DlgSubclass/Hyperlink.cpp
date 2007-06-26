@@ -102,13 +102,13 @@ LRESULT CHyperlink::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_SETCURSOR:
 		::SetCursor(m_hCursor);
-		return 1L;
+		return 1L;	// Non-zero return prevents default processing
 
 	case WM_NCHITTEST:
 		return HTCLIENT;  // Claim that the mouse is in a client area
 	}
-	// Now hand all messages to the original Window procedure
-	return CWnd::WndProc( hWnd, uMsg, wParam, lParam );
+	
+	return 0L;
 }
 
 
