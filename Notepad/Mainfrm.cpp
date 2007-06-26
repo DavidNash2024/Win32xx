@@ -15,7 +15,7 @@
 // definitions for the CMainFrame class
 CMainFrame::CMainFrame()
 {
-	m_strPathName = TEXT("");
+	m_strPathName = _T("");
 	SetView(m_RichView);
 
 	// Define the resource IDs for the toolbar
@@ -113,8 +113,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFileNew()
 {
-	::SetWindowText(m_RichView.GetHwnd(), TEXT(""));
-	m_strPathName = TEXT("");
+	::SetWindowText(m_RichView.GetHwnd(), _T(""));
+	m_strPathName = _T("");
 	SetWindowTitle();
 	m_RichView.SetFontDefaults();
 	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
@@ -258,7 +258,7 @@ BOOL CMainFrame::OnClose()
 	//Check for unsaved text
 	BOOL bChanged = (BOOL)::SendMessage(m_RichView.GetHwnd(), EM_GETMODIFY, 0, 0);
 	if (bChanged)
-		if (::MessageBox(NULL, TEXT("Save changes to this document"), TEXT("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
+		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
 			OnFileSave();
 
 	return FALSE;
@@ -283,8 +283,8 @@ void CMainFrame::ReadFile(LPCTSTR szFileName)
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		tStringStream buf;
-		buf << TEXT("Failed to load:  ") << szFileName;
-		::MessageBox(NULL, buf.str().c_str(), TEXT("Warning"), MB_ICONWARNING);
+		buf << _T("Failed to load:  ") << szFileName;
+		::MessageBox(NULL, buf.str().c_str(), _T("Warning"), MB_ICONWARNING);
 		return;
 	}
 
@@ -315,8 +315,8 @@ void CMainFrame::WriteFile(LPCTSTR szFileName)
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		tStringStream buf;
-		buf << TEXT("Failed to load:   ") << szFileName;
-		::MessageBox(NULL, buf.str().c_str(), TEXT("Warning"), MB_ICONWARNING);
+		buf << _T("Failed to load:   ") << szFileName;
+		::MessageBox(NULL, buf.str().c_str(), _T("Warning"), MB_ICONWARNING);
 		return;
 	}
 
@@ -338,8 +338,8 @@ void CMainFrame::OnFileOpen()
 {
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	TCHAR szFilters[] = TEXT("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = TEXT("");
+	TCHAR szFilters[] = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
 	OPENFILENAME ofn;
 	ZeroMemory(&ofn, sizeof(OPENFILENAME));
 	ofn.lStructSize = sizeof(OPENFILENAME);
@@ -347,7 +347,7 @@ void CMainFrame::OnFileOpen()
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
 	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = TEXT("Open File");
+	ofn.lpstrTitle = _T("Open File");
 	ofn.Flags = OFN_FILEMUSTEXIST;
 
 	if (!::GetOpenFileName(&ofn))
@@ -360,7 +360,7 @@ void CMainFrame::OnFileOpen()
 
 void CMainFrame::OnFileSave()
 {
-	if (m_strPathName == TEXT(""))
+	if (m_strPathName == _T(""))
 		OnFileSaveAs();
 	else
 		WriteFile(m_strPathName.c_str());
@@ -370,17 +370,17 @@ void CMainFrame::OnFileSaveAs()
 {
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	TCHAR szFilters[] = TEXT("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = TEXT("");
+	TCHAR szFilters[] = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
 	OPENFILENAME ofn;
 	ZeroMemory(&ofn, sizeof(OPENFILENAME));
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
-	ofn.lpstrDefExt = TEXT("txt");
+	ofn.lpstrDefExt = _T("txt");
 	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = TEXT("Save File");
+	ofn.lpstrTitle = _T("Save File");
 	ofn.Flags = OFN_OVERWRITEPROMPT;
 
 	if (!::GetSaveFileName(&ofn))
@@ -395,7 +395,7 @@ void CMainFrame::SetFileName(TCHAR* szFilePathName)
 {
 	//Truncate and save file name
 	int i = lstrlen(szFilePathName)+1;
-	while ((--i > 0) && (szFilePathName[i-1] != TEXT('\\')));
+	while ((--i > 0) && (szFilePathName[i-1] != _T('\\')));
 
 	m_strPathName = szFilePathName+i;
 }
@@ -404,9 +404,9 @@ void CMainFrame::SetWindowTitle()
 {
     tString Title;
 
-	if (m_strPathName == TEXT("")) Title = TEXT("TextEdit - Untitled");
+	if (m_strPathName == _T("")) Title = _T("TextEdit - Untitled");
 
-	else Title = TEXT("TextEdit - ") + m_strPathName;
+	else Title = _T("TextEdit - ") + m_strPathName;
 	::SetWindowText(m_hWnd, Title.c_str());
 }
 
@@ -432,7 +432,7 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LON
 
 	*pcb = 0;
 	if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
-		::MessageBox(NULL, TEXT("ReadFile Failed"), TEXT(""), MB_OK);
+		::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
 
 	return 0;
 }
@@ -445,7 +445,7 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LO
 
 	*pcb = 0;
 	if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
-		::MessageBox(NULL, TEXT("WriteFile Failed"), TEXT(""), MB_OK);
+		::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
 	return 0;
 }
 

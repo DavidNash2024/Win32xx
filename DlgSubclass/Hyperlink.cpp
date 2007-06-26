@@ -3,14 +3,14 @@
 
 #include "Hyperlink.h"
 
-CHyperlink::CHyperlink() : m_bUrlVisited(FALSE), m_bClicked(FALSE), m_crVisited(RGB(128, 0, 128)), 
+CHyperlink::CHyperlink() : m_bUrlVisited(FALSE), m_bClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
                             m_crNotVisited(RGB(0,0,255)), m_hUrlFont(NULL)
 {
 	// Create the cursor
-	m_hCursor = ::LoadCursor(NULL, IDC_HAND); 
-	
+	m_hCursor = ::LoadCursor(NULL, IDC_HAND);
+
 	// IDC_HAND is not available on Win95, so load a reasonable alternative
-	if( !m_hCursor )    
+	if( !m_hCursor )
 		m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
 }
 
@@ -26,8 +26,8 @@ BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd* pParent)
 	LOGFONT lf;
 	m_hUrlFont = (HFONT)::SendMessage( m_hWnd, WM_GETFONT, 0, 0);
 	::GetObject(m_hUrlFont, sizeof(LOGFONT), &lf);
-	lf.lfUnderline = TRUE;	
-	m_hUrlFont = ::CreateFontIndirect(&lf); 
+	lf.lfUnderline = TRUE;
+	m_hUrlFont = ::CreateFontIndirect(&lf);
 
 	return bSuccess;
 }
@@ -42,7 +42,7 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 {
 	::ReleaseCapture();
 	if(m_bClicked)
-	{	
+	{
 		m_bClicked = FALSE;
 		POINT pt;
 		RECT rc;
@@ -50,8 +50,8 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 		pt.y = (short)HIWORD(lParam);
 		::ClientToScreen(m_hWnd, &pt);
 		::GetWindowRect(m_hWnd, &rc);
-		
-		if(PtInRect(&rc, pt)) 
+
+		if(PtInRect(&rc, pt))
 			OpenUrl();
 	}
 }
@@ -62,24 +62,24 @@ void CHyperlink::OpenUrl()
 	// Get the url link text
 	::GetWindowText(GetHwnd(), szUrl, MAX_PATH);
 
-	if( (int)(LRESULT)::ShellExecute(NULL, "open", szUrl, NULL, NULL, SW_SHOWNORMAL ) > 32)
+	if( (int)(LRESULT)::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL ) > 32)
 	{
 		m_bUrlVisited = TRUE;
-		
+
 		// redraw the window to update the color
 		::InvalidateRect(GetHwnd(), NULL, FALSE);
 	}
 	else
-		DebugWarnMsg(TEXT("ShellExecute Failed"));
+		DebugWarnMsg(_T("ShellExecute Failed"));
 }
 
 LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
 	if (uMsg ==  WM_CTLCOLORSTATIC)
-	{ 
-		HDC hDC = (HDC)wParam; 
-	
+	{
+		HDC hDC = (HDC)wParam;
+
 		::SetTextColor(hDC, m_bUrlVisited? m_crVisited : m_crNotVisited);
 		::SetBkMode(hDC, TRANSPARENT);
 		::SelectObject(hDC, m_hUrlFont);
@@ -107,7 +107,7 @@ LRESULT CHyperlink::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_NCHITTEST:
 		return HTCLIENT;  // Claim that the mouse is in a client area
 	}
-	
+
 	return 0L;
 }
 

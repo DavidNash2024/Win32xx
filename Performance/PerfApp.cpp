@@ -8,7 +8,7 @@
 CPerformanceApp::CPerformanceApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
 	//Start Tracing
-	TRACE(TEXT("Tracing Started"));
+	TRACE(_T("Tracing Started"));
 
 	m_MainWnd.Create();
 }

@@ -40,37 +40,37 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		::MessageBox(NULL, TEXT("File New"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("File New"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_FILE_OPEN:
-		::MessageBox(NULL, TEXT("File Open"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("File Open"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_FILE_SAVE:
-		::MessageBox(NULL, TEXT("File Save"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("File Save"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_FILE_SAVEAS:
-		::MessageBox(NULL, TEXT("File SaveAs"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("File SaveAs"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_FILE_PRINT:
-		::MessageBox(NULL, TEXT("File Print"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("File Print"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_EDIT_COPY:
-		::MessageBox(NULL, TEXT("Edit Copy"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("Edit Copy"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_EDIT_PASTE:
-		::MessageBox(NULL, TEXT("Edit Paste"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("Edit Paste"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_EDIT_CUT:
-		::MessageBox(NULL, TEXT("Edit Cut"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("Edit Cut"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_EDIT_DELETE:
-		::MessageBox(NULL, TEXT("Edit Delete"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("Edit Delete"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_EDIT_REDO:
-		::MessageBox(NULL, TEXT("Edit Redo"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("Edit Redo"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_EDIT_UNDO:
-		::MessageBox(NULL, TEXT("Edit Undo"), TEXT("Menu"), MB_OK);
+		::MessageBox(NULL, _T("Edit Undo"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_PEN_RED:
 		TRACE("Red pen selected");

@@ -7,10 +7,10 @@
 
 CRichView::CRichView(void) : m_hFont(NULL), m_hInstRichEdit(NULL)
 {    
-	m_hInstRichEdit = ::LoadLibrary(TEXT("RICHED32.DLL"));
+	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hInstRichEdit)
     {
-		::MessageBox(NULL,TEXT("CRichView::CRichView  Failed to load RICHED32.DLL"), TEXT(""), MB_ICONWARNING);
+		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
     }
 }
 
@@ -28,7 +28,7 @@ void CRichView::PreCreate(CREATESTRUCT &cs)
 				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
-	cs.lpszClass = TEXT("RichEdit");
+	cs.lpszClass = _T("RichEdit");
 }
 
 void CRichView::OnInitialUpdate(void)
@@ -49,7 +49,8 @@ void CRichView::SetFontDefaults()
 {
 	//Set font
 	if (!m_hFont)
-		m_hFont = ::CreateFont(16,0,0,0,FW_DONTCARE,0,0,0,ANSI_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,FF_MODERN,TEXT("Courier New"));
+		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 	::SendMessage(m_hWnd, WM_SETFONT, (WPARAM)(HFONT)m_hFont,0);
 }
 

@@ -14,7 +14,7 @@ void CButton::PreCreate(CREATESTRUCT &cs)
 	// Choose "BUTTON as the window class. This is a predefined window class
 	//  which creates a button window. Since its a predefined window class, Win32++ 
 	//  automatically subclasses it, so the window messages are passed via WndProc
-	cs.lpszClass = TEXT("BUTTON");
+	cs.lpszClass = _T("BUTTON");
 
 	// Choose other reasonable creation parameters
 	cs.style = WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON;
@@ -22,7 +22,7 @@ void CButton::PreCreate(CREATESTRUCT &cs)
 	cs.y = 10;
 	cs.cx = 100;
 	cs.cy = 100;
-	cs.lpszName = TEXT("OK");
+	cs.lpszName = _T("OK");
 }
 
 void CButton::OnInitialUpdate()

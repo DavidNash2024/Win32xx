@@ -12,7 +12,7 @@ namespace ShellWrapper
 	{
 		if (!::SHGetPathFromIDList(pidlFull, pszPathName))
 		{
-			pszPathName[0] = TEXT('\0');
+			pszPathName[0] = _T('\0');
 			return FALSE;
 		}
 
@@ -26,7 +26,7 @@ namespace ShellWrapper
 		// Get the display name of the item
 		if(!::SHGetFileInfo((LPCTSTR)pidlFull, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
 		{
-			pszDisplayName[0] = TEXT('\0');
+			pszDisplayName[0] = _T('\0');
 			return FALSE;
 		}
 
@@ -60,7 +60,7 @@ namespace ShellWrapper
 
 		if (hr != NOERROR)
 		{
-			TRACE(TEXT("CContextMenu::InvokeCommand failed"));
+			TRACE(_T("CContextMenu::InvokeCommand failed"));
 		}
 		return hr;
 	}
@@ -76,11 +76,11 @@ namespace ShellWrapper
 				ccm2.Attach(pIContextMenu2);
 			else
 			{
-				TRACE(TEXT("CContextMenu::QueryInterface failed"));
+				TRACE(_T("CContextMenu::QueryInterface failed"));
 			}
 		}
 		else
-			TRACE(TEXT("Not Implemented!"));
+			TRACE(_T("Not Implemented!"));
 
 		return hr;
 	}
@@ -90,7 +90,7 @@ namespace ShellWrapper
 		HRESULT hr = m_pIContextMenu->QueryContextMenu(hmenu, indexMenu, idCmdFirst, idCmdLast, uFlags) ;
 		if(hr & 0x80000000)
 		{
-			TRACE(TEXT("CContextMenu::QueryContextMenu failed"));
+			TRACE(_T("CContextMenu::QueryContextMenu failed"));
 		}
 		return hr;
 	}
@@ -120,7 +120,7 @@ namespace ShellWrapper
 
 		if((hr != S_OK) && (hr !=E_NOTIMPL))
 		{
-			TRACE(TEXT("CContextMenu2::HandleMenuMsg failed"));
+			TRACE(_T("CContextMenu2::HandleMenuMsg failed"));
 		}
 
 		return hr;
@@ -167,7 +167,7 @@ namespace ShellWrapper
 			NewFolder.Attach(FolderTemp);
 		else
 		{
-			TRACE(TEXT("CShellFolder::BindToObject failed"));
+			TRACE(_T("CShellFolder::BindToObject failed"));
 		}
 
 		return hr;
@@ -205,7 +205,7 @@ namespace ShellWrapper
 			ccm.Attach(pcm);
 		else
 		{
-			TRACE(TEXT("CShellFolder::CreateViewObject failed"));
+			TRACE(_T("CShellFolder::CreateViewObject failed"));
 		}
 		return hr;
 	}
@@ -219,7 +219,7 @@ namespace ShellWrapper
 			cenumIDList.Attach(pEnum);
 		else
 		{
-			TRACE(TEXT("CShellFolder::EnumObjects failed"));
+			TRACE(_T("CShellFolder::EnumObjects failed"));
 		}
 		return hr;
 	}
@@ -231,7 +231,7 @@ namespace ShellWrapper
 
 		if (hr != S_OK)
 		{
-			TRACE(TEXT("CShellFolder::GetAttributesOf failed"));
+			TRACE(_T("CShellFolder::GetAttributesOf failed"));
 		}
 		return hr;
 	}
@@ -242,7 +242,7 @@ namespace ShellWrapper
 
 		if (hr != NOERROR)
 		{
-			TRACE(TEXT("CShellFolder::SHGetDesktopFolder failed"));
+			TRACE(_T("CShellFolder::SHGetDesktopFolder failed"));
 		}
 		return hr;
 	}
@@ -264,7 +264,7 @@ namespace ShellWrapper
 			cm.Attach(ppv);
 		else
 		{
-			TRACE(TEXT("CShellFolder::GetUIObjectOf failed"));
+			TRACE(_T("CShellFolder::GetUIObjectOf failed"));
 		}
 
 		CoTaskMemFree(pPidlArray);
@@ -311,7 +311,7 @@ namespace ShellWrapper
 
 			if ((hr != NOERROR) && (hr != S_FALSE))
 			{
-				TRACE(TEXT("CEnumIDList::Next failed"));
+				TRACE(_T("CEnumIDList::Next failed"));
 			}
 			return hr;
 		}
@@ -385,7 +385,7 @@ namespace ShellWrapper
 		HRESULT hr = ::SHGetSpecialFolderLocation(hwnd, csidl, &m_pidl);
 		if (hr != S_OK)
 		{
-			TRACE(TEXT("Cpidl::SHGetSpecialFolderLocation failed"));
+			TRACE(_T("Cpidl::SHGetSpecialFolderLocation failed"));
 		}
 		return hr;
 	}

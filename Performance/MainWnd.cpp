@@ -25,7 +25,7 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::Create()
 {
-	tString str = TEXT("Main Window");
+	tString str = _T("Main Window");
 	
 	// Create the main window
 	CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
@@ -51,12 +51,12 @@ void CMainWindow::OnCreate()
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
 
 	// Create an Edit window over the client area of the main window
-	m_hEdit = ::CreateWindowEx(0L, TEXT("Edit"), TEXT(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
+	m_hEdit = ::CreateWindowEx(0L, _T("Edit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
 						m_hWnd, NULL, GetApp()->GetInstanceHandle(), NULL);
 
 	// Set a default font
 	m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, TEXT("Courier New"));
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 	::SendMessage(m_hEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
 }
 
@@ -78,11 +78,11 @@ void CMainWindow::OnSize()
 void CMainWindow::OnAllWindowsCreated()
 {
 	tStringStream str;
-	str << m_nTestWindows << TEXT("  Windows Created"); 
+	str << m_nTestWindows << _T("  Windows Created"); 
 	SendText(str.str().c_str());
-	SendText(TEXT("Ready to run performance test"));
+	SendText(_T("Ready to run performance test"));
 
-	int nResult = ::MessageBox(m_hWnd, TEXT("Start the Performance Test?"), TEXT("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);	
+	int nResult = ::MessageBox(m_hWnd, _T("Start the Performance Test?"), _T("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);	
 	if (nResult != IDOK) return;
 
 	PerformanceTest();
@@ -91,12 +91,12 @@ void CMainWindow::OnAllWindowsCreated()
 	nResult = IDYES;
 	while(nResult == IDYES)
 	{
-		nResult = ::MessageBox(m_hWnd, TEXT("Run Test Again?"), TEXT("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
+		nResult = ::MessageBox(m_hWnd, _T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
 		if (nResult != IDYES) break;
 			
 		PerformanceTest();
 	}
-	SendText(TEXT("Testing complete")); 
+	SendText(_T("Testing complete")); 
 }
 
 void CMainWindow::PerformanceTest()
@@ -104,9 +104,9 @@ void CMainWindow::PerformanceTest()
 	LRESULT lr = 0;
 	int nMessages = 0;
 
-	SendText(TEXT(""));
+	SendText(_T(""));
 	tStringStream str;
-	str << TEXT("Sending ") << m_nTestMessages <<  TEXT(" Messages");
+	str << _T("Sending ") << m_nTestMessages <<  _T(" Messages");
 	SendText(str.str().c_str());
 	
 	// Choose a Window handle(HWND) to send the messages to
@@ -125,21 +125,21 @@ void CMainWindow::PerformanceTest()
 
 	// Display the results
 	str.str(tString()); // erase the stream
-	str << mSeconds << TEXT("  milliseconds to process ") << m_nTestMessages << TEXT(" messages");
+	str << mSeconds << _T("  milliseconds to process ") << m_nTestMessages << _T(" messages");
 	SendText(str.str().c_str());
 	
 	str.str(tString()); // erase the stream
-	str << lr << TEXT(" total messages sent");
+	str << lr << _T(" total messages sent");
 	TRACE(str.str().c_str()); 
 
-	MessageBox(m_hWnd, str.str().c_str(), TEXT("Info"), MB_OK);
+	MessageBox(m_hWnd, str.str().c_str(), _T("Info"), MB_OK);
 }
 
 void CMainWindow::SendText(LPCTSTR str)
 {
 	// Send text to the Edit window
 	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)str);
-	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)TEXT("\r\n"));
+	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)_T("\r\n"));
 	::SendMessage(m_hEdit, EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
 
 	TRACE(str);

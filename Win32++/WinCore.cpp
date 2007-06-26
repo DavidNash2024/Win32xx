@@ -658,7 +658,7 @@ namespace Win32xx
 					return (LPCTSTR) m_szString;
  
 				TCHAR msg[80]; 
-				::wsprintf(msg, TEXT("LoadString - No string resource for %d"), nID); 
+				::wsprintf(msg, _T("LoadString - No string resource for %d"), nID); 
 				DebugWarnMsg(msg); 
 			} 
 		}

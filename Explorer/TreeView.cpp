@@ -18,7 +18,7 @@ CTreeView::CTreeView()
 	{
 		HRESULT hr = ::CoInitialize(NULL);
 		if (!((hr == S_OK) || (hr == S_FALSE)))
-			throw CWinException(TEXT("Problem Initializing COM"));;
+			throw CWinException(_T("Problem Initializing COM"));;
 
 		SetImageLists();
 	}
@@ -30,7 +30,7 @@ CTreeView::CTreeView()
 
 	catch (...)
 	{
-		DebugErrMsg(TEXT("Exception in CShellWin construction"));
+		DebugErrMsg(_T("Exception in CShellWin construction"));
 	}
 }
 
@@ -431,7 +431,7 @@ BOOL CTreeView::SelectFromListView(Cpidl& cpidlFull)
 		//Next Sibling
 		hChild = TreeView_GetNextSibling(m_hWnd, hChild);
 	}
-	TRACE(TEXT("Item NOT found"));
+	TRACE(_T("Item NOT found"));
 
 	return FALSE;
 }
@@ -441,10 +441,10 @@ void CTreeView::SetImageLists()
 	SHFILEINFO  sfi;
 
 	// Get the system image list
-	m_hLargeImageList = (HIMAGELIST)::SHGetFileInfo(TEXT("C:\\"), 0, &sfi,
+	m_hLargeImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX);
 
-	m_hSmallImageList = (HIMAGELIST)::SHGetFileInfo(TEXT("C:\\"), 0, &sfi,
+	m_hSmallImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 

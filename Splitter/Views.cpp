@@ -49,8 +49,8 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CTopView function definitions
 CTopView::CTopView() : CSplitter(100, true)
 {
-	m_TopLeft.SetString(TEXT("Top Left"));
-	m_TopRight.SetString(TEXT("Top Right"));
+	m_TopLeft.SetString(_T("Top Left"));
+	m_TopRight.SetString(_T("Top Right"));
 
 	//Set the two client windows panes of top splitter window
 	SetPanes(m_TopLeft, m_TopRight);
@@ -60,8 +60,8 @@ CTopView::CTopView() : CSplitter(100, true)
 // CBottomView function definitions
 CBottomView::CBottomView() : CSplitter(100, true)
 {
-	m_BottomLeft.SetString(TEXT("Bottom Left"));
-	m_BottomRight.SetString(TEXT("Bottom Right"));
+	m_BottomLeft.SetString(_T("Bottom Left"));
+	m_BottomRight.SetString(_T("Bottom Right"));
 
 	//Set the two client windows panes of the bottom splitter window
 	SetPanes(m_BottomLeft, m_BottomRight);

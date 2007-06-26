@@ -512,7 +512,7 @@ namespace Win32xx
 		{
 			int iIndex = CommandToIndex(iButtonID);
 			if (iIndex == -1)
-				throw CWinException(TEXT("CToolbar::SetButtonText  failed to get Command ID"));
+				throw CWinException(_T("CToolbar::SetButtonText  failed to get Command ID"));
 
 			tString sString = szText;
 			std::map<tString, int>::iterator m;
@@ -526,19 +526,19 @@ namespace Win32xx
 				{
 					// Place a blank string first in the string table, in case some
 					// buttons don't have text
-					TCHAR szString[2] = TEXT("");
-					szString[1] = TEXT('\0');
+					TCHAR szString[2] = _T("");
+					szString[1] = _T('\0');
 					::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szString);
 				}
 
 				// No index for this string exists, so create it now
 				TCHAR szBuf[80];
 				lstrcpyn(szBuf, szText, 79);
-				szBuf[lstrlen(szBuf)+1] = TEXT('\0');		// Double-null terminate
+				szBuf[lstrlen(szBuf)+1] = _T('\0');		// Double-null terminate
 
 				iString = (int)::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szBuf);
 				if (iString == -1)
-					throw CWinException(TEXT("CToolbar::SetButtonText  TB_ADDSTRING failed"));
+					throw CWinException(_T("CToolbar::SetButtonText  TB_ADDSTRING failed"));
 
 				// Save the string its index in our map
 				m_StringMap.insert(std::make_pair(sString, iString));
@@ -551,7 +551,7 @@ namespace Win32xx
 
 			TBBUTTON tbb = {0};
 			if (!::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (LPARAM)&tbb))
-				throw CWinException(TEXT("CToolbar::SetButtonText  TB_GETBUTTON failed"));
+				throw CWinException(_T("CToolbar::SetButtonText  TB_GETBUTTON failed"));
 
 			tbb.iString = iString;
 
@@ -559,10 +559,10 @@ namespace Win32xx
 			::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
 
 			if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0))
-				throw CWinException(TEXT("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
+				throw CWinException(_T("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
 
 			if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tbb))
-				throw CWinException(TEXT("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
+				throw CWinException(_T("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
 
 			// Ensure the button now includes some text rows (5 rows should be plenty)
 			if (::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0) == 0)
@@ -584,7 +584,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CToolbar::SetButtonText"));
+			DebugErrMsg(_T("Exception in CToolbar::SetButtonText"));
 		}
 	}
 

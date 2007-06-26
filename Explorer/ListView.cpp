@@ -28,7 +28,7 @@ CListView::CListView()
 	{
 		HRESULT hr = ::CoInitialize(NULL);
 		if (!((hr == S_OK) || (hr == S_FALSE)))
-			throw CWinException(TEXT("Problem Initializing COM"));;
+			throw CWinException(_T("Problem Initializing COM"));;
 
 		SetImageLists();
 	}
@@ -40,7 +40,7 @@ CListView::CListView()
 
 	catch (...)
 	{
-		DebugErrMsg(TEXT("Exception in CShellWin construction"));
+		DebugErrMsg(_T("Exception in CShellWin construction"));
 	}
 }
 
@@ -122,7 +122,7 @@ void CListView::DoBackgroundMenu(LPPOINT pptScreen)
 							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
 							cmi.nShow = SW_SHOWNORMAL;
 							ccm.InvokeCommand(cmi);
-						
+
 							//The operation performed by the context menu may have
 							// changed the contents of the folder, so do a refresh.
 							DoDisplay();
@@ -380,7 +380,7 @@ LRESULT CListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 							::lstrcpyn(pdi->item.pszText, szSize, nMaxLength -1);
 						}
 						else
-							::lstrcpy(pdi->item.pszText, TEXT(""));
+							::lstrcpy(pdi->item.pszText, _T(""));
 					}
 					break;
 				case 2: //Type
@@ -398,7 +398,7 @@ LRESULT CListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 							::lstrcpyn(pdi->item.pszText, szText, nMaxLength -1);
 						}
 						else
-							::lstrcpy(pdi->item.pszText, TEXT(""));
+							::lstrcpy(pdi->item.pszText, _T(""));
 					}
 					break;
 				}
@@ -503,7 +503,7 @@ BOOL CListView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
 
 	dwFileSizeLo = ::GetFileSize (hFile, &dwFileSizeHi);
 	ldwSize = ((DWORDLONG) dwFileSizeHi)<<32 | dwFileSizeLo;
-	::wsprintf(szTemp, TEXT("%d"), ((1023 + ldwSize)>>10));
+	::wsprintf(szTemp, _T("%d"), ((1023 + ldwSize)>>10));
 
 	//Convert our number string using Locale information
 	::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, szTemp, NULL, lpszSize, 31);
@@ -517,8 +517,8 @@ BOOL CListView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
 	while ((lpszSize[i] != Decimal) && (i < ::lstrlen(lpszSize)))
 		i++;
 
-	lpszSize[i] = TEXT('\0');
-	::lstrcat(lpszSize, TEXT(" KB"));
+	lpszSize[i] = _T('\0');
+	::lstrcat(lpszSize, _T(" KB"));
 
 	return TRUE;
 }
@@ -544,7 +544,7 @@ BOOL CListView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
 	::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &stLocal, NULL, szTime, 15);
 
 	::lstrcpy(lpszString, szDate);
-	::lstrcat(lpszString, TEXT(" "));
+	::lstrcat(lpszString, _T(" "));
 	::lstrcat(lpszString, szTime);
 
 	return TRUE;
@@ -604,10 +604,10 @@ void CListView::SetImageLists()
 	SHFILEINFO  sfi;
 
 	// Get the system image list
-	m_hLargeImageList = (HIMAGELIST)::SHGetFileInfo(TEXT("C:\\"), 0, &sfi,
+	m_hLargeImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX);
 
-	m_hSmallImageList = (HIMAGELIST)::SHGetFileInfo(TEXT("C:\\"), 0, &sfi,
+	m_hSmallImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 

@@ -11,7 +11,7 @@ CView::CView()
 
 void CView::PreCreate(CREATESTRUCT &cs)
 {
-	cs.lpszClass = TEXT("View");
+	cs.lpszClass = _T("View");
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 	cs.style = WS_CHILD | WS_VISIBLE;
 }
@@ -33,6 +33,6 @@ void CView::OnPaint(HDC hDC)
 {
 	RECT r;
 	::GetClientRect(m_hWnd, &r);
-	::DrawText(hDC, TEXT("Client Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	::DrawText(hDC, _T("Client Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 

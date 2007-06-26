@@ -28,7 +28,7 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::Create()
 {
-	tString str = TEXT("Main Thread Window");
+	tString str = _T("Main Thread Window");
 	
 	// Create the main window
 	CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
@@ -48,7 +48,7 @@ void CMainWindow::OnCreate()
 void CMainWindow::OnAllWindowsCreated()
 {
 	tStringStream str;
-	str << m_nThreads << TEXT(" Threads with windows created");
+	str << m_nThreads << _T(" Threads with windows created");
 	TRACE(str.str().c_str());
 }
 

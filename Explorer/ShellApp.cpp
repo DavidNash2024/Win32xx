@@ -8,7 +8,7 @@
 CShellApp::CShellApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
 	//Start Tracing
-	TRACE(TEXT("Tracing Started"));
+	TRACE(_T("Tracing Started"));
 
 	//Create the Frame Window
 	m_Frame.Create();
@@ -16,7 +16,7 @@ CShellApp::CShellApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	//End the program if the frame window creation fails
 	if (!m_Frame.GetHwnd())
 	{
-		::MessageBox(NULL, TEXT("Failed to create Frame window"), TEXT("ERROR"), MB_ICONERROR);
+		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
 		::PostQuitMessage(0);
 	}
 }

@@ -33,7 +33,7 @@ HWND CView::Create(HWND hWndParent = 0)
 	int cx = CW_USEDEFAULT;
 	int cy = CW_USEDEFAULT;
 
-	return CreateEx(dwExStyle, wcx.lpszClassName, TEXT(""), dwStyle, x, y, cx, cy, hWndParent, NULL, NULL); 
+	return CreateEx(dwExStyle, wcx.lpszClassName, _T(""), dwStyle, x, y, cx, cy, hWndParent, NULL, NULL); 
 }
 
 void CView::DrawLine(int x, int y)

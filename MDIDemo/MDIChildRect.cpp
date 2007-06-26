@@ -8,7 +8,7 @@
 
 CMDIChildRect::CMDIChildRect()
 {
-	SetChildMenu(TEXT ("MdiMenuRect"));
+	SetChildMenu(_T ("MdiMenuRect"));
 }
 
 CMDIChildRect::~CMDIChildRect()
@@ -17,7 +17,7 @@ CMDIChildRect::~CMDIChildRect()
 
 void CMDIChildRect::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, TEXT("Rectangle Window"));
+	::SetWindowText(m_hWnd, _T("Rectangle Window"));
 	SetIconLarge(IDI_RECT);
 	SetIconSmall(IDI_RECT);
 }

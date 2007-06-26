@@ -37,7 +37,7 @@ CMainFrame::~CMainFrame()
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// OnCommand responds to menu and and toolbar input
-	
+
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
@@ -55,7 +55,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnCreate()
 {
-	// OnCreate controls the way the frame is created. 
+	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
@@ -75,22 +75,22 @@ void CMainFrame::OnInitialUpdate()
 	TRACE("Frame created");
 }
 
-/*LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Process notification messages sent by child windows
 
 //	switch(((LPNMHDR)lParam)->code)
-//	{	
+//	{
  		//Add case statments for each notification message here
-//	}  
+//	}
 
 	// pass unhandled notifications to CFrame
-	return CFrame::OnNotify(wParam, lParam);
-}*/
+	return 0L;
+}
 
 void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
-	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
+	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons
 	// with seperate imagelists for normal, hot and disabled buttons.
 
 	// A reference to the CToolbar object
@@ -123,7 +123,7 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	// Disable some of the toolbar buttons
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE); 
+	TB.DisableButton(IDM_EDIT_PASTE);
 
 	// Set the icons for popup menu items
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));

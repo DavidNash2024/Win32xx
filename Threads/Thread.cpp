@@ -15,7 +15,7 @@ CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0)
 		// Create the thread.
 		m_hThread = ::CreateThread(NULL, 0, CThread::ThreadCallback, (LPVOID) this, 0, &m_dwThreadID);
 		if (!m_hThread)
-			throw CWinException(TEXT("Failed to create thread"));
+			throw CWinException(_T("Failed to create thread"));
 	}
 
 	catch (const CWinException &e)
@@ -25,7 +25,7 @@ CThread::CThread(int nValue) : m_dwThreadID(0), m_hThread(0)
 
 	catch (...)
 	{
-		DebugErrMsg(TEXT("Exception in CThread::CThread"));
+		DebugErrMsg(_T("Exception in CThread::CThread"));
 		throw;	// Rethrow unknown exception
 	}
 }
@@ -45,7 +45,7 @@ DWORD WINAPI CThread::ThreadCallback(LPVOID pCThread)
 	int i = pThread->m_nValue;
 	tStringStream str;
 
-	str << TEXT("Thread ") << i + 1 << TEXT(" started");
+	str << _T("Thread ") << i + 1 << _T(" started");
 	TRACE(str.str().c_str());
 
 	// Create a test window for this thread

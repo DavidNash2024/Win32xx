@@ -115,14 +115,14 @@ namespace Win32xx
 
 			if (m_bVertical)
 			{
-				wcx.lpszClassName = TEXT("Win32++ V Splitter");
+				wcx.lpszClassName = _T("Win32++ V Splitter");
 				wcx.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
 				m_Bar.RegisterClassEx(wcx);
 				m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
 			}
 			else
 			{
-				wcx.lpszClassName = TEXT("Win32++ H Splitter");
+				wcx.lpszClassName = _T("Win32++ H Splitter");
 				wcx.hCursor = ::LoadCursor (NULL, IDC_SIZENS);
 				m_Bar.RegisterClassEx(wcx);
 				m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
@@ -130,7 +130,7 @@ namespace Win32xx
 
 			// Create the two window panes
 			if ((m_pPane0 == 0) || (m_pPane1 == 0))
-				throw CWinException(TEXT("CSplitter::OnCreate ... m_pPane0 or m_pPane1 is NULL\n Use SetPanes to set m_pPane0 & m_pPane1"));
+				throw CWinException(_T("CSplitter::OnCreate ... m_pPane0 or m_pPane1 is NULL\n Use SetPanes to set m_pPane0 & m_pPane1"));
 
 			m_pPane0->Create(m_hWnd);
 			m_pPane1->Create(m_hWnd);
@@ -143,7 +143,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(TEXT("Exception in CSplitter::OnCreate"));
+			DebugErrMsg(_T("Exception in CSplitter::OnCreate"));
 		}
 	}
 
@@ -268,7 +268,7 @@ namespace Win32xx
 		if (nWidth > 0)
 			m_nWidth = nWidth;
 		else
-			::MessageBox(NULL, TEXT("Invalid Splitter bar width"), TEXT("Error"), MB_OK);
+			::MessageBox(NULL, _T("Invalid Splitter bar width"), _T("Error"), MB_OK);
 	}
 
 	LRESULT CSplitter::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

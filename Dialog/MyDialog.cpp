@@ -9,17 +9,17 @@
 CMyDialog::CMyDialog(UINT nResID, HWND hWndParent)
 	: CDialog(nResID, hWndParent)
 {
-	m_hInstRichEdit = ::LoadLibrary(TEXT("RICHED32.DLL"));
+	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hInstRichEdit)
- 		::MessageBox(NULL,TEXT("CMyDialog::CRichView  Failed to load RICHED32.DLL"), TEXT(""), MB_ICONWARNING);
+ 		::MessageBox(NULL, _T("CMyDialog::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
 }
 
 CMyDialog::CMyDialog(LPCTSTR lpszResName, HWND hWndParent)
 	: CDialog(lpszResName, hWndParent)
 {
-	m_hInstRichEdit = ::LoadLibrary(TEXT("RICHED32.DLL"));
+	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
 	if (!m_hInstRichEdit)
-		::MessageBox(NULL, TEXT("CMyDialog::CMyDialog  Failed to load RICHED32.DLL"), TEXT("Error"), MB_ICONWARNING);
+		::MessageBox(NULL, _T("CMyDialog::CMyDialog  Failed to load RICHED32.DLL"), _T("Error"), MB_ICONWARNING);
 }
 
 CMyDialog::~CMyDialog()
@@ -74,63 +74,62 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 
 	// Put some text in the edit boxes
-	::SetDlgItemText(GetHwnd(), IDC_EDIT1, TEXT("Edit Control"));
-	::SetDlgItemText(GetHwnd(), IDC_RICHEDIT1, TEXT("Rich Edit Window"));
+	::SetDlgItemText(GetHwnd(), IDC_EDIT1, _T("Edit Control"));
+	::SetDlgItemText(GetHwnd(), IDC_RICHEDIT1, _T("Rich Edit Window"));
 
 	// Put some text in the list box
 	HWND hListBox = ::GetDlgItem(GetHwnd(), IDC_LIST1);
 	for (int i = 0 ; i < 8 ; i++)
-		::SendMessage( hListBox, LB_ADDSTRING, 0, (LPARAM) TEXT("List Box"));
+		::SendMessage( hListBox, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
 
 	return true;
 }
 
 void CMyDialog::OnOK()
 {
-	::MessageBox(NULL, TEXT("OK Button Pressed.  Program will exit now."), TEXT("Button"), MB_OK);
+	::MessageBox(NULL, _T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
 	CDialog::OnOK();
 }
 
 void CMyDialog::OnButton()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Button Pressed"));
-	TRACE(TEXT("Button Pressed"));
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Button Pressed"));
+	TRACE(_T("Button Pressed"));
 }
 
 void CMyDialog::OnCheck1()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 1"));
-	TRACE(TEXT("Check Box 1"));
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 1"));
+	TRACE(_T("Check Box 1"));
 }
 
 void CMyDialog::OnCheck2()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 2"));
-	TRACE(TEXT("Check Box 2"));
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 2"));
+	TRACE(_T("Check Box 2"));
 }
 
 void CMyDialog::OnCheck3()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Check Box 3"));
-	TRACE(TEXT("Check Box 3"));
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 3"));
+	TRACE(_T("Check Box 3"));
 }
 
 void CMyDialog::OnRadio1()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 1"));
-	TRACE(TEXT("Radio 1"));
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 1"));
+	TRACE(_T("Radio 1"));
 }
 
 void CMyDialog::OnRadio2()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 2"));
-
-	TRACE(TEXT("Radio 2"));
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 2"));
+	TRACE(_T("Radio 2"));
 }
 
 void CMyDialog::OnRadio3()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, TEXT("Radio 3"));
-	TRACE(TEXT("Radio 3"));
+	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 3"));
+	TRACE(_T("Radio 3"));
 }
 
