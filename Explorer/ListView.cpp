@@ -635,7 +635,7 @@ void CListView::ViewReport()
 	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 }
 
-LRESULT CListView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CListView::WndProc(HWND /*hWnd*/, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

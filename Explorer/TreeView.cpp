@@ -448,7 +448,7 @@ void CTreeView::SetImageLists()
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 
-LRESULT CTreeView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CTreeView::WndProc(HWND /*hWnd*/, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

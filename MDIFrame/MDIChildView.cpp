@@ -37,22 +37,25 @@ BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_COLOR_BLACK:
 		m_Color = RGB(0,0,0);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_RED:
 		m_Color = RGB(255, 0, 0);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_GREEN:
 		m_Color = RGB(0, 255, 0);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_BLUE:
 		m_Color = RGB(0, 0, 255);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_WHITE:
 		m_Color = RGB(255, 255, 255);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	}
-
-	::InvalidateRect(m_hWnd, NULL, TRUE);
 	
 	return FALSE;
 }

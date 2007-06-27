@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -85,7 +85,7 @@ namespace Win32xx
 		};
 
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
 		HMENU m_hChildMenu;
@@ -101,7 +101,7 @@ namespace Win32xx
 		CMDIClient();
 		virtual ~CMDIClient();
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	};
 
 
@@ -131,8 +131,8 @@ namespace Win32xx
 		virtual void RecalcLayout();
 
 	private:
-		virtual BOOL OnCommandStd(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnCommandInternal(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
 		CMDIClient m_MDIClient;
 		std::vector <CMDIChild*> m_MDIChildVect;

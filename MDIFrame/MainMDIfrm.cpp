@@ -62,7 +62,7 @@ void CMainMDIFrame::OnCreate()
 
 	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
-	//m_bUseRebar = FALSE;				// Don't use rebars
+	// m_bUseRebar = FALSE;				// Don't use rebars
 
 	// call the base class function
 	CFrame::OnCreate();

@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1238,8 +1238,13 @@ namespace Win32xx
 		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
 		{
 			MENUITEMINFO mii = {0};
-			// For Win95, cbSize needs to be 44
-			mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
+
+			// For Win95 and NT, cbSize needs to be 44
+			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+				mii.cbSize = 44;
+			else
+				mii.cbSize = sizeof(MENUITEMINFO);
+			
 			TCHAR szMenuItem[MAX_MENU_STRING];
 		
 			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
@@ -1947,7 +1952,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMenubar::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMenubar::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -2015,7 +2020,7 @@ namespace Win32xx
 			break;
 		} // switch (uMsg)
 
-		return CToolbar::WndProcStd(hWnd, uMsg, wParam, lParam);
+		return CToolbar::WndProcInternal(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
 
@@ -2135,8 +2140,12 @@ namespace Win32xx
 		int nMenuItemCount = GetMenuItemCount(hMenu);
 		int nPos = -1;
 		MENUITEMINFO mii = {0};
-		// For Win95, cbSize needs to be 44
-		mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
+		
+		// For Win95 and NT, cbSize needs to be 44
+		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+			mii.cbSize = 44;
+		else
+			mii.cbSize = sizeof(MENUITEMINFO);
 
 		for (int nItem = 0 ; nItem < nMenuItemCount; nItem++)
 		{
@@ -2210,7 +2219,7 @@ namespace Win32xx
 		}
 	}
 
-	BOOL CFrame::OnCommandStd(WPARAM wParam, LPARAM /*lParam*/)
+	BOOL CFrame::OnCommandInternal(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		switch (LOWORD(wParam))
 		{
@@ -2302,7 +2311,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CFrame::OnNotifyStd(WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::OnNotifyInternal(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		switch (((LPNMHDR)lParam)->code)
 		{
@@ -2620,7 +2629,7 @@ namespace Win32xx
 		} 
 	}
 
-	LRESULT CFrame::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
@@ -2669,7 +2678,7 @@ namespace Win32xx
 				return 0L;
 			} // switch uMsg
 
-			return CWnd::WndProcStd(hWnd, uMsg, wParam, lParam);
+			return CWnd::WndProcInternal(hWnd, uMsg, wParam, lParam);
 		} // try
 
 		catch (const CWinException &e)

@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -271,7 +271,7 @@ namespace Win32xx
 			::MessageBox(NULL, _T("Invalid Splitter bar width"), _T("Error"), MB_OK);
 	}
 
-	LRESULT CSplitter::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CSplitter::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		// Child windows are positioned over this window, so we don't see any
@@ -305,7 +305,7 @@ namespace Win32xx
 		}
 
 		// Use the frame default message handling for remaining messages
-		return CWnd::WndProcStd(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcInternal(hWnd, uMsg, wParam, lParam);
 	}
 }  // namespace Win32xx
 

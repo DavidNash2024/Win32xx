@@ -44,7 +44,7 @@ void CMainFrame::OnInitialUpdate()
 	::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	// Handle the the View submenu
 	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1); 
@@ -97,7 +97,7 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 {
 	// Notification from our dropdown button is recieved if Comctl32.dll version
 	// is 5.80 or later (IE v5 required).
@@ -192,13 +192,5 @@ void CMainFrame::ViewPopup()
 	::DestroyMenu(hTopMenu);
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-//	switch (uMsg)
-//	{
 
-//	}
-	
-	return 0L;
-}
 

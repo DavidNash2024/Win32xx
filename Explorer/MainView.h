@@ -22,9 +22,6 @@ public:
 	virtual CListView& GetListView() {return m_ListView;}
 	virtual CTreeView& GetTreeView() {return m_TreeView;}
 
-protected:
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 private:
 	CTreeView m_TreeView;
 	CListView m_ListView;

@@ -39,33 +39,36 @@ void CMDIChildView::OnPaint(HDC hDC)
 	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
 	case IDM_COLOR_BLACK:
 		m_Color = RGB(0,0,0);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_RED:
 		m_Color = RGB(255, 0, 0);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_GREEN:
 		m_Color = RGB(0, 255, 0);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_BLUE:
 		m_Color = RGB(0, 0, 255);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	case IDM_COLOR_WHITE:
 		m_Color = RGB(255, 255, 255);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		return TRUE;
 	}
 
-	::InvalidateRect(m_hWnd, NULL, TRUE);
-	
 	return FALSE;
 }
 
-LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	switch (uMsg)
 	{
@@ -74,7 +77,7 @@ LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		return TRUE;	// Don't do default processing
 
 	case WM_SIZE:
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		::InvalidateRect(hWnd, NULL, TRUE);
 		break;			// Also do default processing
 	}
 	

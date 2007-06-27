@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -176,7 +176,7 @@ namespace Win32xx
 		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		enum Constants
@@ -278,9 +278,9 @@ namespace Win32xx
 		};
 
 	private:
-		virtual BOOL OnCommandStd(WPARAM wPAram, LPARAM lParam);
-		virtual	LRESULT OnNotifyStd(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnCommandInternal(WPARAM wPAram, LPARAM lParam);
+		virtual	LRESULT OnNotifyInternal(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CMenubar m_Menubar;			// CMenubar object
 		CRebar m_Rebar;				// CRebar object

@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -122,7 +122,7 @@ namespace Win32xx
 		return bMaxed;
 	}
 
-	BOOL CMDIFrame::OnCommandStd(WPARAM wParam, LPARAM lParam)
+	BOOL CMDIFrame::OnCommandInternal(WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
 		{
@@ -215,7 +215,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMDIFrame::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIFrame::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -229,7 +229,7 @@ namespace Win32xx
 			break; // Continue with default processing
 
 		} // switch uMsg
-		return CFrame::WndProcStd(hWnd, uMsg, wParam, lParam);
+		return CFrame::WndProcInternal(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -256,7 +256,7 @@ namespace Win32xx
 		cs.dwExStyle = WS_EX_CLIENTEDGE;
 	}
 
-	LRESULT CMDIClient::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIClient::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -279,7 +279,7 @@ namespace Win32xx
 					::PostMessage(pFrame->GetMenubar().GetHwnd(), WM_MDISETMENU, wParam, lParam);
 					return 0;
 				}
-			}
+			} 
 			break;
 		case WM_MDIACTIVATE:
 			{
@@ -291,7 +291,7 @@ namespace Win32xx
 				return lr;
 			}
 		}
-		return CWnd::WndProcStd(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcInternal(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -411,7 +411,7 @@ namespace Win32xx
 		CFrame* pFrame = GetApp()->GetFrame();
 		int nWindowItem = pFrame->GetMenuItemPos(hMenu, _T("Window"));
 		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
-
+		
 		::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
 
 		if (pFrame->IsMenubarUsed())
@@ -422,7 +422,7 @@ namespace Win32xx
 		pFrame->UpdateCheckMarks();
 	}
 
-	LRESULT CMDIChild::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIChild::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -444,7 +444,7 @@ namespace Win32xx
 			}
 			return 0L ;
 		}
-		return CWnd::WndProcStd(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcInternal(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

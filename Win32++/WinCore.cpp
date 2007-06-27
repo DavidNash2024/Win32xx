@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -691,7 +691,7 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	BOOL CWnd::OnCommandStd(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	BOOL CWnd::OnCommandInternal(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	// A private function used for internal Win32++ commands
 	{
 		return FALSE;
@@ -778,7 +778,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	LRESULT CWnd::OnNotifyStd(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	LRESULT CWnd::OnNotifyInternal(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	// A private fuction which handles the internal Win32++ notifications 
 	{
 		return 0L;
@@ -986,7 +986,7 @@ namespace Win32xx
 			GetApp()->m_MapLock.Release();
 			if (m != GetApp()->GetHWNDMap().end())
 			{
-				return m->second->WndProcStd(hWnd, uMsg, wParam, lParam);
+				return m->second->WndProcInternal(hWnd, uMsg, wParam, lParam);
 			}
 
 			throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
@@ -1065,11 +1065,11 @@ namespace Win32xx
 		//	case WM_ERASEBKGND:
 		//		return TRUE;  // Non-zero. Don't do default processing for this message			
 		// }
-		return 0L; // Do default processing for remaining messages
+		return 0L; // Do default processing for unhandled messages
 	}
 
-	LRESULT CWnd::WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// A private function to handle messages. It calls Wndproc.
+	LRESULT CWnd::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// A private function to handle internal Win32++ messages. It calls Wndproc.
 	{
 		LRESULT lr;
 		
@@ -1086,7 +1086,7 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Process the internal Win32++ commands
-				OnCommandStd(wParam, lParam);
+				OnCommandInternal(wParam, lParam);
 				
 				// Process other commands
 				OnCommand(wParam, lParam);
@@ -1117,7 +1117,7 @@ namespace Win32xx
 				}
 
 				// Process the internal Win32++ notifications
-				lr = OnNotifyStd(wParam, lParam);
+				lr = OnNotifyInternal(wParam, lParam);
 				if (lr) return lr; // Some notifications return a value
 				
 				// Process the other notifications

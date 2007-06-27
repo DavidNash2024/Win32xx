@@ -83,7 +83,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
  		//Add case statments for each notification message here
 //	}
 
-	// pass unhandled notifications to CFrame
+	// Pass any unhandled messages on for default processing
 	return 0L;
 }
 
@@ -126,7 +126,6 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 
 	// Set the icons for popup menu items
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));
-
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

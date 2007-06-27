@@ -35,12 +35,12 @@ void CMDIChildMax::PreCreate(CREATESTRUCT &cs)
 	cs.style = WS_MAXIMIZE;
 }
 
-LRESULT CMDIChildMax::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildMax::WndProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	switch (uMsg)
 	{
 		case WM_SIZE:
-			::InvalidateRect(m_hWnd, NULL, TRUE);
+			::InvalidateRect(hWnd, NULL, TRUE);
 			break;  // Continue with default processing
 
 	}

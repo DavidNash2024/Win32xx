@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -182,11 +182,11 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
-		virtual BOOL OnCommandStd(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotifyStd(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnCommandInternal(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotifyInternal(WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
 		virtual	void Subclass();
-		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon

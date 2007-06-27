@@ -1,5 +1,5 @@
-// Win32++  Version 5.2
-// Released: 20th May, 2007 by:
+// Win32++  Version 5.3
+// Released: 20th June, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -77,7 +77,7 @@ namespace Win32xx
 		CWnd* m_pPane1;		// Right or botton CWnd Object
 
 	private:
-		virtual LRESULT WndProcStd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HBRUSH m_hbrDithered; // Brush for the splitter bar
 		HBITMAP	m_hbm;		// Used to create m_hbrDithered
