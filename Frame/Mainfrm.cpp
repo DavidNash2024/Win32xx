@@ -78,7 +78,6 @@ void CMainFrame::OnInitialUpdate()
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Process notification messages sent by child windows
-
 //	switch(((LPNMHDR)lParam)->code)
 //	{
  		//Add case statments for each notification message here
@@ -106,14 +105,14 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.SetButtons(ToolbarData);
 
 	// Add some text to the buttons
-// 	TB.SetButtonText(IDM_FILE_NEW,   "New");
-//	TB.SetButtonText(IDM_FILE_OPEN,  "Open");
-//	TB.SetButtonText(IDM_FILE_SAVE,  "Save");
-//	TB.SetButtonText(IDM_EDIT_CUT,   "Cut");
-//	TB.SetButtonText(IDM_EDIT_COPY,  "Copy");
-//	TB.SetButtonText(IDM_EDIT_PASTE, "Paste");
-//	TB.SetButtonText(IDM_FILE_PRINT, "Print");
-//	TB.SetButtonText(IDM_HELP_ABOUT, "About");
+// 	TB.SetButtonText(IDM_FILE_NEW,   _T("New"));
+//	TB.SetButtonText(IDM_FILE_OPEN,  _T("Open"));
+//	TB.SetButtonText(IDM_FILE_SAVE,  _T("Save"));
+//	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
+//	TB.SetButtonText(IDM_EDIT_COPY,  _T("Copy"));
+//	TB.SetButtonText(IDM_EDIT_PASTE, _T("Paste"));
+//	TB.SetButtonText(IDM_FILE_PRINT, _T("Print"));
+//	TB.SetButtonText(IDM_HELP_ABOUT, _T("About"));
 
 	// Adjust the toolbar and rebar size to take account of the larger buttons
 	RECT r;
@@ -127,9 +126,10 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 
 	// Set the icons for popup menu items
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));
+
 }
 
-LRESULT CMainFrame::WndProc(HWND /*hWnd*/, UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{

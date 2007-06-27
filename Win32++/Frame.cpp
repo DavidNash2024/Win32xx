@@ -2216,13 +2216,13 @@ namespace Win32xx
 		{
 		case IDW_VIEW_STATUSBAR:
 			OnViewStatusbar();
-			break;
+			return TRUE;
 		case IDW_VIEW_TOOLBAR:
 			OnViewToolbar();
-			break;
+			return TRUE;
 		} // switch cmd
 
-		return 0;
+		return FALSE;
 	} 
 
 	void CFrame::OnCreate()
@@ -2325,7 +2325,7 @@ namespace Win32xx
 			}
 			break;
 		} // switch LPNMHDR
-		return CWnd::OnNotifyStd(wParam, lParam);
+		return 0L;
 
 	} // CFrame::OnNotify(...)
 
@@ -2461,6 +2461,9 @@ namespace Win32xx
 
 	void CFrame::RecalcLayout()
 	{
+		if ((!m_pView) || (!m_pView->GetHwnd()))
+			return;
+
 		// Resize the status bar
 		::SendMessage(GetStatusbar().GetHwnd(), WM_SIZE, 0, 0);
 		::InvalidateRect(GetStatusbar().GetHwnd(), NULL, TRUE);
