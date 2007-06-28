@@ -685,7 +685,7 @@ namespace Win32xx
 		//	{
 		//	case IDM_FILE_NEW:
 		//		OnFileNew();
-		//		break;
+		//		TRUE;	// return TRUE for handled commands
 		//	}
 
 		return FALSE;
@@ -756,8 +756,14 @@ namespace Win32xx
 	{
 		// This function processes those special messages (see above) sent
 		// by some older controls, and reflects them back to the originating CWnd object.
-
 		// Override this function in your derrived class to handle these special messages.
+
+		// Your overriding function should look like this ...
+
+		// switch (uMsg)
+		// {
+		//		Handle your reflected messages here
+		// }
 
 		return 0L;
 	}
@@ -766,9 +772,16 @@ namespace Win32xx
 	{
 		// You can use either OnNotifyReflect or OnNotify to handle notifications
 		// Override OnNotifyReflect to handle notifications in the CWnd class that
-		//   generated the notification
+		//   generated the notification.
 		// Override OnNotify to handle notifications in the PARENT of the CWnd class
-		//   that generated the notification
+		//   that generated the notification.
+		
+		// Your overriding function should look like this ...
+
+		// switch (((LPNMHDR)lParam)->code)
+		// {
+		//		Handle your notifications from the CHILD window here
+		// }
 
 		return 0L;
 	}
@@ -777,6 +790,13 @@ namespace Win32xx
 	{
 		// Override OnNotifyReflect to handle notifications in the CWnd class that
 		//   generated the notification.
+
+		// Your overriding function should look like this ...
+
+		// switch (((LPNMHDR)lParam)->code)
+		// {
+		//		Handle your notifications from this window here
+		// }
 
 		return 0L;
 	}
@@ -1047,6 +1067,11 @@ namespace Win32xx
 
 	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
+	LRESULT CWnd::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
 		LRESULT lr;
 
 		// Use CallWindowProc for subclassed windows
@@ -1067,7 +1092,7 @@ namespace Win32xx
 				if (OnCommand(wParam, lParam))
 					return TRUE;
 
-				// Handle win32++ frame commands
+				// Handle Win32++ frame commands
 				if (OnCommandFrame(wParam, lParam))
 					return TRUE;
 			}

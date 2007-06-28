@@ -57,5 +57,5 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }

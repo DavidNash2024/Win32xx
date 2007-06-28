@@ -135,7 +135,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//Additional messages to be handled go here
 //	}
 
-	// pass unhandled messages on to parent WndProc for default processing
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);	
+	// pass unhandled messages on for default processing
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
 }
 

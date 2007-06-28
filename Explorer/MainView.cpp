@@ -19,6 +19,6 @@ LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// pass any unhandled messages on for default processing
-	return CSplitter::WndProc(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
 }
 

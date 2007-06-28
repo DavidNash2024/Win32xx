@@ -120,6 +120,11 @@ namespace Win32xx
 
 	BOOL CDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+	
+	BOOL CDialog::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
 	    switch (uMsg)
 	    {
 	    case WM_INITDIALOG:

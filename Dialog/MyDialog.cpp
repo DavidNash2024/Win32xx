@@ -35,7 +35,7 @@ BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// Pass unhandled messages on to parent DialogProc
-	return CDialog::DialogProc(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
 BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)

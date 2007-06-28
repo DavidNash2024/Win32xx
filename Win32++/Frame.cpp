@@ -2020,7 +2020,7 @@ namespace Win32xx
 			break;
 		} // switch (uMsg)
 
-		return CToolbar::WndProc(hWnd, uMsg, wParam, lParam);
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
 
@@ -2337,7 +2337,7 @@ namespace Win32xx
 		
 		return 0;
 
-	} // CFrame::OnNotify(...)
+	} // CFrame::OnNotifyFrame(...)
 
 	void CFrame::OnSetFocus()
 	{
@@ -2630,7 +2630,7 @@ namespace Win32xx
 		} 
 	}
 
-	LRESULT CFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
@@ -2691,8 +2691,8 @@ namespace Win32xx
 			DebugErrMsg(_T("Exception in CFrame::WndProc"));
 		}
 
-		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
-	} // LRESULT CFrame::WndProc(...)
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+	} // LRESULT CFrame::WndProcDefault(...)
 
 } // namespace Win32xx
 

@@ -44,5 +44,5 @@ LRESULT CMDIChildMax::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 			break;  // Continue with default processing
 
 	}
-	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }

@@ -27,7 +27,7 @@ void CRichView::PreCreate(CREATESTRUCT &cs)
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
 				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 
-	cs.dwExStyle = WS_EX_CLIENTEDGE;
+	cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
 	cs.lpszClass = _T("RichEdit");
 }
 

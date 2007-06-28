@@ -42,7 +42,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 		break;
 	}
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
 ////////////////////////////////
@@ -99,6 +99,6 @@ LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //		Additional messages to be handled go here
 //	}
 
-	return CSplitter::WndProc(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

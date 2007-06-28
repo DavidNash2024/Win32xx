@@ -82,5 +82,5 @@ LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 	
 	// Do default processing for other messages
-	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
 }

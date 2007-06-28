@@ -242,7 +242,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 			}
 		}
 	}
-	return CFrame::OnNotify(wParam, lParam);
+	
+	return 0L;
 }
 
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
@@ -343,6 +344,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// pass unhandled messages on to parent WndProc for default processing
-	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
 }
 

@@ -215,7 +215,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -229,7 +229,7 @@ namespace Win32xx
 			break; // Continue with default processing
 
 		} // switch uMsg
-		return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
+		return CFrame::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -291,7 +291,7 @@ namespace Win32xx
 				return lr;
 			}
 		}
-		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -422,7 +422,7 @@ namespace Win32xx
 		pFrame->UpdateCheckMarks();
 	}
 
-	LRESULT CMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIChild::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -444,7 +444,7 @@ namespace Win32xx
 			}
 			return 0L ;
 		}
-		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

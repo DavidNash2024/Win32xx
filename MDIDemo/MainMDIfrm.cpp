@@ -110,6 +110,6 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 
 LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return CMDIFrame::WndProc(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

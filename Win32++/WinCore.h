@@ -175,6 +175,7 @@ namespace Win32xx
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window

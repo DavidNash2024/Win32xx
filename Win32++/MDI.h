@@ -85,7 +85,7 @@ namespace Win32xx
 		};
 
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
 		HMENU m_hChildMenu;
@@ -129,7 +129,7 @@ namespace Win32xx
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual void RecalcLayout();
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:	
 		CMDIClient m_MDIClient;

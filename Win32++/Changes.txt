@@ -12,12 +12,16 @@ Changes:
 Incompatibilities with previous versions
 * No need to use the subclass function. Subclassing is automatic if required.
 * Superclass function is no longer available. Use automatic subclassing instead.
+* OnNotfy should now return 0L for unhandled notifications.
+* OnCommand should now return FALSE for unhandled commands
 
 Bug Fixes
 * Corrected menu selection of MDI child windows
 * Corrected painting of MDI child windows
 * Corrected menu check marks for MDI frames
 * Corrected exception on exit for Win95
+* Corrected desktop icon flicker when starting a frame application
+* Drag and Drop now works in the Notepad sample
 
 The following changes have been made to the Win32++ code:
 Added CFrame::UpdateCheckMarks

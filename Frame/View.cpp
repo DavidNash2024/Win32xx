@@ -37,7 +37,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);	// pass any unhandled messages on to default processing
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);	// pass any unhandled messages on to default processing
 }
 
 void CView::OnPaint(HDC hDC)

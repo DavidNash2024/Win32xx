@@ -24,7 +24,7 @@ BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//Additional messages to be handled go here
 //	}
 
-	return CDialog::DialogProc(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
 

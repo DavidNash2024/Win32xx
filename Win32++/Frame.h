@@ -263,7 +263,7 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;
 		BOOL m_bIsMDIFrame;			// TRUE if this is a MDI frame
