@@ -59,6 +59,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnHelp();
 		return TRUE;
 	}
+	
 	return FALSE;
 }
 
@@ -105,5 +106,10 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 		
 	// Set the icons for popup menu items
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));
+}
+
+LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	return CMDIFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

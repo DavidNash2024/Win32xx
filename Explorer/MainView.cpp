@@ -11,5 +11,14 @@ CMainView::CMainView(int nBarpos, bool bVertical) :
 	SetPanes(GetTreeView(), GetListView());
 }
 
+LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+//	switch (uMsg)
+//	{
+		//Additional messages to be handled go here
+//	}
 
+	// pass any unhandled messages on for default processing
+	return CSplitter::WndProc(hWnd, uMsg, wParam, lParam);	
+}
 

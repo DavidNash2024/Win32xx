@@ -34,7 +34,7 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	// OnCommand responds to menu and and toolbar input
 
@@ -135,6 +135,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//Additional messages to be handled go here
 //	}
 
-	return 0L;	// pass any unhandled messages on to default processing
+	// pass unhandled messages on to parent WndProc for default processing
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);	
 }
 

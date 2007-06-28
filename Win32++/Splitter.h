@@ -71,13 +71,13 @@ namespace Win32xx
 		virtual void OnSize();
 		virtual void RecalcLayout();
 		virtual void SetPanes(CWnd& Pane0, CWnd& Pane1);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CWnd m_Bar;			// Splitter bar
 		CWnd* m_pPane0;		// Left or top CWnd object
 		CWnd* m_pPane1;		// Right or botton CWnd Object
 
 	private:
-		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HBRUSH m_hbrDithered; // Brush for the splitter bar
 		HBITMAP	m_hbm;		// Used to create m_hbrDithered

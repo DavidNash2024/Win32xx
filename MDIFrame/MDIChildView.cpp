@@ -31,7 +31,7 @@ void CMDIChildView::OnPaint(HDC hDC)
 	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
@@ -69,5 +69,5 @@ LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		break;  // and also do default processing for this message
 	}
 
-	return 0L;	// Return zero to pass unhandled on for default processing
+	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);	
 }

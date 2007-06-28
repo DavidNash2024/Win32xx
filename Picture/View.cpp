@@ -127,7 +127,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //	}
 
-	return 0L;
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 

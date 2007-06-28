@@ -34,5 +34,6 @@ LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //		TRACE("CButton::WndProc - Unspecified Message");
 		break;
 	}
-	return 0L;
+	
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }

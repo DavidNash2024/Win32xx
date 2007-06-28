@@ -68,18 +68,19 @@ BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
-LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_CLOSE:
 		OnClose();
-		return TRUE;	// Don't do default processing
+		return 0L;	// Don't do default processing
 
 	case WM_SIZE:
 		::InvalidateRect(hWnd, NULL, TRUE);
-		break;			// Also do default processing
+		break;		// Also do default processing
 	}
 	
-	return 0L;	// Do default processing for other messages
+	// Do default processing for other messages
+	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);	
 }

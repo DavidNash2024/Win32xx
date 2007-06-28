@@ -86,5 +86,6 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;	// and also do default processing for this message
 	}
 
-	return 0L;	// Return zero to pass unhandled on for default processing
+	// Pass unhandled messages on to parent WndProc
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);	
 }

@@ -192,5 +192,14 @@ void CMainFrame::ViewPopup()
 	::DestroyMenu(hTopMenu);
 }
 
+LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+//	switch (uMsg)
+//	{
+		//Additional messages to be handled go here
+//	}
 
+	// pass any unhandled messages on for default processing
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);	
+}
 

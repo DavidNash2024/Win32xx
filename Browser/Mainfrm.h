@@ -35,6 +35,7 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetButtons(const std::vector<UINT> ToolbarData);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CView m_View;

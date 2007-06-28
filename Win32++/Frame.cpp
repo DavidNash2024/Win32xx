@@ -1716,7 +1716,7 @@ namespace Win32xx
 			{
 				LRESULT lResult = 0;
 				OnCustomDraw((LPNMHDR) lParam, &lResult);
-				return (BOOL)lResult;
+				return lResult;
 			}
 
 		case TBN_DROPDOWN:
@@ -1952,7 +1952,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMenubar::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMenubar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -2020,7 +2020,7 @@ namespace Win32xx
 			break;
 		} // switch (uMsg)
 
-		return CToolbar::WndProcInternal(hWnd, uMsg, wParam, lParam);
+		return CToolbar::WndProc(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
 
 
@@ -2219,7 +2219,7 @@ namespace Win32xx
 		}
 	}
 
-	BOOL CFrame::OnCommandInternal(WPARAM wParam, LPARAM /*lParam*/)
+	BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		switch (LOWORD(wParam))
 		{
@@ -2311,7 +2311,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CFrame::OnNotifyInternal(WPARAM /*wParam*/, LPARAM lParam)
+	LRESULT CFrame::OnNotifyFrame(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		switch (((LPNMHDR)lParam)->code)
 		{
@@ -2334,7 +2334,8 @@ namespace Win32xx
 			}
 			break;
 		} // switch LPNMHDR
-		return 0L;
+		
+		return 0;
 
 	} // CFrame::OnNotify(...)
 
@@ -2629,7 +2630,7 @@ namespace Win32xx
 		} 
 	}
 
-	LRESULT CFrame::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
@@ -2678,7 +2679,6 @@ namespace Win32xx
 				return 0L;
 			} // switch uMsg
 
-			return CWnd::WndProcInternal(hWnd, uMsg, wParam, lParam);
 		} // try
 
 		catch (const CWinException &e)
@@ -2691,7 +2691,7 @@ namespace Win32xx
 			DebugErrMsg(_T("Exception in CFrame::WndProc"));
 		}
 
-		return 0L;
+		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CFrame::WndProc(...)
 
 } // namespace Win32xx

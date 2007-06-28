@@ -106,6 +106,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //	} // switch (uMsg)
 
-	return 0L;
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 } // LRESULT CMainFrame::WndProc(...)
 

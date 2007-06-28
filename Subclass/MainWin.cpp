@@ -23,5 +23,6 @@ LRESULT CMainWin::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			::PostQuitMessage(0);
 			break;
 	}
-	return 0L;
+	
+	return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 }

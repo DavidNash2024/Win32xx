@@ -72,5 +72,5 @@ LRESULT CMDIChildRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
           break ;        // WM_SIZE must be processed by DefMDIChildProc
 	}
 
-	return 0L;
+	return CMDIChild::WndProc(hWnd, uMsg, wParam, lParam);
 }

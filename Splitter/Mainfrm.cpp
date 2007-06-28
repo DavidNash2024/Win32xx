@@ -56,5 +56,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			m_MainView.Reposition();
 		break;
 	}
-	return 0L;
+
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }

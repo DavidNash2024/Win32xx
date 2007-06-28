@@ -3,24 +3,11 @@ Version 5.3
 Changes:
 * Added automatic subclassing for all predefined window class types
 * Removed superclassing. Its redundant now.
-* Enhanced CMenubar - Added icons to dropdown menus
-* In WndProc, removed the requirement to return the Parent WndProc function.
-   A typical WndProc function now looks like this ....
-   MyClass::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-   {
-     switch (uMsg)
-     {
-     case WM_SIZE:
-       ::InvalidateRect(m_hWnd, NULL, TRUE);
-       break;
-     }
-
-     return 0L;  // <-- this can be zero now.
-  }
- * In OnNotify, removed the requirement to return the parent OnNotify 
-    function.
- * In OnCommand, removed the requirement to return the parent OnCommand 
-    function.
+* Enhanced CMenubar - Added icons to dropdown menus.
+* In OnNotify, removed the requirement to return the parent OnNotify 
+    function. Return 0L for any unhandled notifications.
+* In OnCommand, removed the requirement to return the parent OnCommand 
+    function. Return FALSE for any unhandled commands.
 
 Incompatibilities with previous versions
 * No need to use the subclass function. Subclassing is automatic if required.
@@ -35,8 +22,12 @@ Bug Fixes
 The following changes have been made to the Win32++ code:
 Added CFrame::UpdateCheckMarks
 Added CMenubar::SetIcons
+Added CWnd::OnCommandFrame
+Added CWnd::OnNotifyFrame
 Removed CWnd::Superclass
 Renamed CMDIFrame::GetActiveChild to CMDIFrame::GetActiveMDIChild
+Renamed CFrame::OnCommand to CFrame::OnCommandFrame
+Renamed CFrame::OnNotify to CFrame::OnNotifyFrame
 
 Version 5.2
 ------------

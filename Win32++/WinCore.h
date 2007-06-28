@@ -164,8 +164,10 @@ namespace Win32xx
 		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL IsMDIChild() {return FALSE;}
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnCreate();
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual	LRESULT OnNotifyFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnInitialUpdate();
 		virtual void OnPaint(HDC hDC);
 		virtual void RemoveHook();
@@ -182,11 +184,8 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
-		virtual BOOL OnCommandInternal(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotifyInternal(WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
 		virtual	void Subclass();
-		virtual LRESULT WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon

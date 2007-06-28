@@ -122,7 +122,7 @@ namespace Win32xx
 		return bMaxed;
 	}
 
-	BOOL CMDIFrame::OnCommandInternal(WPARAM wParam, LPARAM lParam)
+	BOOL CMDIFrame::OnCommandFrame(WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
 		{
@@ -215,7 +215,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CMDIFrame::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -229,7 +229,7 @@ namespace Win32xx
 			break; // Continue with default processing
 
 		} // switch uMsg
-		return CFrame::WndProcInternal(hWnd, uMsg, wParam, lParam);
+		return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -256,7 +256,7 @@ namespace Win32xx
 		cs.dwExStyle = WS_EX_CLIENTEDGE;
 	}
 
-	LRESULT CMDIClient::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -291,7 +291,7 @@ namespace Win32xx
 				return lr;
 			}
 		}
-		return CWnd::WndProcInternal(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -422,7 +422,7 @@ namespace Win32xx
 		pFrame->UpdateCheckMarks();
 	}
 
-	LRESULT CMDIChild::WndProcInternal(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -444,7 +444,7 @@ namespace Win32xx
 			}
 			return 0L ;
 		}
-		return CWnd::WndProcInternal(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

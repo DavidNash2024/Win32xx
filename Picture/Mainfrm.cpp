@@ -161,6 +161,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//Additional messages to be handled go here
 //	}
 
-	return 0L;
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 

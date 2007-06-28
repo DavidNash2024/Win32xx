@@ -44,7 +44,7 @@ void CMainFrame::OnInitialUpdate()
 	::SetFocus(m_RichView.GetHwnd());
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 {
 	NMHDR* pNMH;
 	pNMH = (LPNMHDR) lParam;
@@ -56,13 +56,13 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 			HDROP hDropInfo = (HDROP) ENDrop->hDrop;
 			OnDropFiles(hDropInfo);
 		}
-		break;
+		return TRUE;
 	}
 
-	return 0L;
+	return FALSE;
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
@@ -421,7 +421,8 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		::InvalidateRect(m_RichView.GetHwnd(), NULL, TRUE);
 		break;
 	}
-	return 0L;
+	
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)

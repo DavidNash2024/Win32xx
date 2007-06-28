@@ -31,7 +31,7 @@ CMainFrame::~CMainFrame()
 		::DeleteObject(m_hBitmap);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch(LOWORD(wParam))
 	{
@@ -59,7 +59,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	{
 //	}
 
-	return 0L;
+	return CFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
 

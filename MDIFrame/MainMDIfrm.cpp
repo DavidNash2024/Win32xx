@@ -34,7 +34,7 @@ void CMainMDIFrame::OnInitialUpdate()
 	//Place any additional startup code here.
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
@@ -99,13 +99,13 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192, 192, 192));
 }
 
-LRESULT CMainMDIFrame::WndProc(HWND /*hWnd*/, UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
 
 //	}
 
-	return 0L;	// Return zero to pass unhandled on for default processing
+	return CMDIFrame::WndProc(hWnd, uMsg, wParam, lParam);
 }
 
