@@ -688,6 +688,7 @@ namespace Win32xx
 		//		TRUE;	// return TRUE for handled commands
 		//	}
 
+		// return FALSE for unhandled commands
 		return FALSE;
 	}
 
@@ -765,6 +766,7 @@ namespace Win32xx
 		//		Handle your reflected messages here
 		// }
 
+		// return 0L for unhandled messages
 		return 0L;
 	}
 
@@ -772,17 +774,20 @@ namespace Win32xx
 	{
 		// You can use either OnNotifyReflect or OnNotify to handle notifications
 		// Override OnNotifyReflect to handle notifications in the CWnd class that
-		//   generated the notification.
+		//   generated the notification.   OR
 		// Override OnNotify to handle notifications in the PARENT of the CWnd class
 		//   that generated the notification.
-		
+
 		// Your overriding function should look like this ...
 
 		// switch (((LPNMHDR)lParam)->code)
 		// {
 		//		Handle your notifications from the CHILD window here
+		//      Return the value recommended by the Win32 API documentation.
+		//      For many notifications, the return value doesn't matter, but for some it does.
 		// }
 
+		// return 0L for unhandled notifications
 		return 0L;
 	}
 
@@ -796,8 +801,10 @@ namespace Win32xx
 		// switch (((LPNMHDR)lParam)->code)
 		// {
 		//		Handle your notifications from this window here
+		//      Return the value recommended by the Win32 API documentation.
 		// }
 
+		// return 0L for unhandled notifications
 		return 0L;
 	}
 
@@ -1067,11 +1074,28 @@ namespace Win32xx
 
 	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		// Override this function in your class derrived from CWnd if you wish to handle messages
+		// A typical function might look like this:
+
+		//	switch (uMsg)
+		//	{
+		//	case MESSAGE1:		// Some Win32 API message
+		//		OnMessage1();	// A user defined function
+		//		break;			// Also do default processing
+		//	case MESSAGE2:
+		//		OnMessage2();
+		//		return x;		// Don't do default processing, but instead return
+		//						//  a value recommended by the Win32 API documentation
+		//	}
+
+		// Always pass unhandled messages on to WndProcDefault
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 	LRESULT CWnd::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		// All unhandled window messages (excluding dialogs) end up here
+
 		LRESULT lr;
 
 		// Use CallWindowProc for subclassed windows

@@ -29,7 +29,7 @@ void CView::OnDestroy()
 
 void CView::OnInitialUpdate()
 {
-	// OnInitial is called after the window is created.
+	// OnInitialUpdate is called after the window is created.
 	// Tasks which are to done after the window is created go here.
 
 	TRACE("OnInitialUpdate");
@@ -72,20 +72,20 @@ void CView::OnSize()
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// This function is our message procedure. We process the messages for
-	// the view window here, and pass the unprocessed messages to
-	// CWnd::WndProc for default processing.
+	// the view window here.  Unprocessed messages are passed on for 
+	//  default processing.
 
 	switch(uMsg)
 	{
 	case WM_DESTROY:
 		OnDestroy();
-		break;	// and also do default processing for this message
+		return 0;	// return a value. No default processing
 
 	case WM_SIZE:
 		OnSize();
 		break;	// and also do default processing for this message
 	}
 
-	// Pass unhandled messages on to parent WndProc
+	// pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
 }

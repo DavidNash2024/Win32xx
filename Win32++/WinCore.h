@@ -131,12 +131,6 @@ namespace Win32xx
 	//
 	class CWnd
 	{
-		friend CFrame;
-		friend CMDIChild;
-		friend CMDIClient;
-		friend CMDIFrame;
-		friend CMenubar;
-		friend CSplitter;
 	public:
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor

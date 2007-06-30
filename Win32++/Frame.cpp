@@ -1171,6 +1171,8 @@ namespace Win32xx
 				if (hbmPrev) 
 				{
 					RECT rCheck = { 0, 0, cxCheck, cyCheck };
+					
+					// Copy the check mark bitmap to hdcMem
 					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
 						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
 					else
@@ -1179,7 +1181,33 @@ namespace Win32xx
 					RECT rc = pdis->rcItem;
 					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 
-					::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);					
+					if (pdis->itemState & ODS_SELECTED)
+					// Draw a white check mark for a selected item
+					{
+						HDC hdcMem1 = ::CreateCompatibleDC(pdis->hDC);
+						if (hdcMem1)
+						{
+							HBITMAP hbmMono1 = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+							if (hbmMono1)
+							{
+								HBITMAP hbmPrev1 = (HBITMAP)::SelectObject(hdcMem1, hbmMono1);
+								if (hbmPrev1)
+								{
+									::BitBlt(hdcMem1, 0, 0, cxCheck, cyCheck, pdis->hDC, rc.left, rc.top, WHITENESS);
+									::BitBlt(hdcMem1, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCINVERT);
+									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem1, 0, 0, SRCPAINT);
+								
+									::SelectObject(hdcMem1, hbmPrev1);
+								}
+							}
+							::DeleteObject(hbmMono1);
+						}
+						::DeleteObject(hdcMem1);
+					}
+					else
+						// Draw a black check markfor an unselected item
+						::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);					
+	
 					::SelectObject(hdcMem, hbmPrev);
 				}
 				::DeleteObject(hbmMono);

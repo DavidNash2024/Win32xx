@@ -120,12 +120,29 @@ namespace Win32xx
 
 	BOOL CDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		// Override this function in your class derrived from CDialog if you wish to handle messages
+		// A typical function might look like this:
+		
+		//	switch (uMsg)
+		//	{
+		//	case MESSAGE1:		// Some Win32 API message
+		//		OnMessage1();	// A user defined function
+		//		break;			// Also do default processing
+		//	case MESSAGE2:
+		//		OnMessage2();
+		//		return x;		// Don't do default processing, but instead return
+		//						//  a value recommended by the Win32 API documentation
+		//	}
+
+		// Always pass unhandled messages on to DialogProcDefault
 		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 	
 	BOOL CDialog::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-	    switch (uMsg)
+		// All unhandled dialog messages end up here
+	    
+		switch (uMsg)
 	    {
 	    case WM_INITDIALOG:
 			{

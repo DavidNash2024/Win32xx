@@ -34,10 +34,11 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_SIZE:
 		::InvalidateRect(hWnd, NULL, TRUE);
-		break;
+		break;	// Also do default processing
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	// pass any unhandled messages on to default processing
+	// pass unhandled messages on for default processing
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
 }
 
 void CView::OnPaint(HDC hDC)

@@ -191,12 +191,12 @@ namespace Win32xx
 			MDI_CLOSE = 3,
 		};
 
-		struct ItemData 
+		struct ItemData
 		{
 			HMENU hMenu;
 			UINT  nPos;
 			UINT  fType;
-			TCHAR Text[MAX_MENU_STRING]; 
+			TCHAR Text[MAX_MENU_STRING];
 		};
 
 		BOOL m_bExitAfter;			// Exit after Popup menu ends
@@ -223,7 +223,6 @@ namespace Win32xx
 	//
 	class CFrame : public CWnd
 	{
-		friend CMDIFrame;
 	public:
 		CFrame();
 		virtual ~CFrame();
