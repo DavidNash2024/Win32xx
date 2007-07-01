@@ -1186,27 +1186,35 @@ namespace Win32xx
 					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 
 					if (pdis->itemState & ODS_SELECTED)
-					// Draw a white check mark for a selected item
+					// Draw a white check mark for a selected item.
+					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
 					{
-						HDC hdcMem1 = ::CreateCompatibleDC(pdis->hDC);
-						if (hdcMem1)
+						HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
+						if (hdcMask)
 						{
-							HBITMAP hbmMono1 = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-							if (hbmMono1)
+							HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
+							if (hbmMask)
 							{
-								HBITMAP hbmPrev1 = (HBITMAP)::SelectObject(hdcMem1, hbmMono1);
-								if (hbmPrev1)
+								HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
+								if (hbmPrevMask)
 								{
-									::BitBlt(hdcMem1, 0, 0, cxCheck, cyCheck, pdis->hDC, rc.left, rc.top, WHITENESS);
-									::BitBlt(hdcMem1, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCINVERT);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem1, 0, 0, SRCPAINT);
+									// Set the colour of the check mark to white
+									SetBkColor(hdcMask, RGB(255, 255, 255));
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, PATCOPY);
+									
+									// Invert the check mark bitmap
+									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
+																
+									// Use the mask to copy the check mark to Menu's device context 
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
 
-									::SelectObject(hdcMem1, hbmPrev1);
+									::SelectObject(hdcMask, hbmPrevMask);
 								}
 							}
-							::DeleteObject(hbmMono1);
+							::DeleteObject(hbmMask);
 						}
-						::DeleteObject(hdcMem1);
+						::DeleteObject(hdcMask);
 					}
 					else
 						// Draw a black check markfor an unselected item
