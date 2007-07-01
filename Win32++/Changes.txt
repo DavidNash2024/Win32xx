@@ -2,15 +2,15 @@ Version 5.3
 -----------
 New Features:
 * Owner drawn dropdown menu items with icons
-* Automatic subclassing.
+* Automatic subclassing for windows using WinAPI defined window classes.
 
 Changes:
 * The WndProc function used to route window messages has been simplified. 
    WndProcDefault should now used to pass messages on for further
-   processing, rather than Cxxx::WndProc. (The old method will still work).
+   processing, rather than Cxxx::WndProc. (The old method will still work)
 * The DialogProc function used to route dialog messages has been simplified.
    DialogProcDefault should now be used to pass messages on for further
-   processing, rather than Cxxx::DialogProc. (The old method will still work.)
+   processing, rather than Cxxx::DialogProc. (The old method will still work)
 * Added automatic subclassing for all windows created from predefined 
    window class types. This includes, for example, windows created from
    common controls like toolbars and edit controls.
@@ -22,12 +22,15 @@ Changes:
     function. Return 0L for any unhandled notifications.
 * In OnCommand, removed the requirement to return the parent OnCommand 
     function. Return FALSE for any unhandled commands.
+* Added picture sample. This demonstrates how to display image files using 
+   IPicture.    
 
 Incompatibilities with previous versions
 * The subclass function will generate a compile error if called directly. 
    Subclassing is automatic if required, so simply remove any call to the 
    Subclass function from user code.
-* Superclass function is no longer available. Use automatic subclassing instead.
+* Superclass function is no longer available. Use automatic subclassing 
+   instead.
 
 Bug Fixes
 * Fixed menu selection of MDI child windows
@@ -103,8 +106,9 @@ Changed CWnd::OnCommand  Now takes WPARAM LPARAM arguments
 Version 5.1
 -----------
 New Features:
-* Existing windows can be subclassed and converted to CWnd objects using Attach.
-* Dialog items can be sublcassed and converted to CWnd objects, using AttachDlgItem.
+* Existing windows can be subclassed and converted to CWnd objects using Attach
+* Dialog items can be sublcassed and converted to CWnd objects, using 
+   AttachDlgItem.
 * Improvements to CToolbar. The toolbar uses image lists which support using 
   separate bitmaps for normal, hot and disabled buttons. Text can be added
   to toolbar buttons, and the style can be set.
@@ -123,9 +127,10 @@ Major Changes:
   back to the CWnd object that generated them via OnMessageReflect.
 * Existing windows (including dialog items) can now be attached to a CWnd.
   The window is automatically subclassed when attached to a CWnd.
-* Integrated subclassing and superclassing into the framework. Superclassing and
-  subclassing is much simpler now.  Win32++ now keeps track of the previous
-  window procedure, and calls it automatically at the end of CWnd::WndProc
+* Integrated subclassing and superclassing into the framework. Superclassing 
+  and subclassing is much simpler now.  Win32++ now keeps track of the 
+  previous window procedure, and calls it automatically at the end of 
+  CWnd::WndProc
 * Toolbar notifies frame via ToolbarNotify when the mouse is over a toolbar 
   button.
 * The keyboard indicators in the status bar are updated on a timer, rather than
@@ -141,8 +146,9 @@ Major Changes:
   and those defined in the user's application. Resource IDs defined by Win32++
   are defined as IDW_XXXXXX, and range from 51 to 99. Users of Win32++ should
   begin their resource IDs from 100.
-* The _WIN32_IE macro is now longer defined by Win32++. Users of Dev-C++ will need
-  to define this macro as a compiler option eg:  -D _WIN32_IE=0x0400  (or higher).
+* The _WIN32_IE macro is now longer defined by Win32++. Users of Dev-C++ will 
+  need to define this macro as a compiler option eg:  -D _WIN32_IE=0x0400  
+  (or higher).
 
 The following changes have been made to the Win32++ code:
 Added CWnd::Attach
@@ -249,7 +255,7 @@ Changed the following functions
 * Added   CFrame::m_bUseMenubar    Set to TRUE if a Menubar is to be used
 * Added   CFrame::m_bUseRebars     Set to TRUE if a Rebar is to be used
 * Removed CWnd::Subclass           Use Superclass instead
-* Added   CWnd::Superclass         Create a new window class from an existing one.
+* Added   CWnd::Superclass         Create a window class from an existing one.
 * Added   CWnd::RegisterClassEx    Optionally register a window class
 * Removed CWnd::MoveWindow         Not required, use ::MoveWindow instead.
 

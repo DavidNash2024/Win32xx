@@ -1,5 +1,5 @@
 // Win32++  Version 5.3
-// Released: 20th June, 2007 by:
+// Released: 4th July, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -279,7 +279,7 @@ namespace Win32xx
 					::PostMessage(pFrame->GetMenubar().GetHwnd(), WM_MDISETMENU, wParam, lParam);
 					return 0;
 				}
-			} 
+			}
 			break;
 		case WM_MDIACTIVATE:
 			{
@@ -411,7 +411,7 @@ namespace Win32xx
 		CFrame* pFrame = GetApp()->GetFrame();
 		int nWindowItem = pFrame->GetMenuItemPos(hMenu, _T("Window"));
 		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
-		
+
 		::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
 
 		if (pFrame->IsMenubarUsed())

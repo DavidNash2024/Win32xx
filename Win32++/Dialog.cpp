@@ -1,5 +1,5 @@
 // Win32++  Version 5.3
-// Released: 20th June, 2007 by:
+// Released: 4th July, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -122,7 +122,7 @@ namespace Win32xx
 	{
 		// Override this function in your class derrived from CDialog if you wish to handle messages
 		// A typical function might look like this:
-		
+
 		//	switch (uMsg)
 		//	{
 		//	case MESSAGE1:		// Some Win32 API message
@@ -137,11 +137,11 @@ namespace Win32xx
 		// Always pass unhandled messages on to DialogProcDefault
 		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 	}
-	
+
 	BOOL CDialog::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// All unhandled dialog messages end up here
-	    
+
 		switch (uMsg)
 	    {
 	    case WM_INITDIALOG:

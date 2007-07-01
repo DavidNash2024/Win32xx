@@ -182,6 +182,7 @@ namespace Win32xx
 		enum Constants
 		{
 			USER_POPUPMENU  = WM_APP + 2,	// creates the popup menu
+			POST_TEXT_GAP   = 16,			// for owner draw menu item
 		};
 
 		enum MDIButtonType

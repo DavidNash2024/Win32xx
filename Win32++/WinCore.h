@@ -1,5 +1,5 @@
 // Win32++  Version 5.3
-// Released: 20th June, 2007 by:
+// Released: 4th July, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -170,7 +170,7 @@ namespace Win32xx
 		virtual HICON SetIconSmall(int nIcon);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
 		HWND m_hWndParent;		// handle to this object's window parent

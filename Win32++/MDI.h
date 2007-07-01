@@ -1,5 +1,5 @@
 // Win32++  Version 5.3
-// Released: 20th June, 2007 by:
+// Released: 4th July, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -131,7 +131,7 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	private:	
+	private:
 		CMDIClient m_MDIClient;
 		std::vector <CMDIChild*> m_MDIChildVect;
 	};

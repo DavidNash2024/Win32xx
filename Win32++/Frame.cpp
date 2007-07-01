@@ -1,5 +1,5 @@
 // Win32++  Version 5.3
-// Released: 20th June, 2007 by:
+// Released: 4th July, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1131,8 +1131,12 @@ namespace Win32xx
 			else
 				DrawIcon(pdis);
 
-			// Draw Text
+			// Calculate the text rect size
 			rc.left  = rc.bottom - rc.top + 2;
+			if (_tcschr(pmd->Text, _T('\t')))
+				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
+
+			// Draw the text
 			::SetBkMode(hDC, TRANSPARENT);
 			COLORREF colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 			DrawMenuText(hDC, pmd->Text, rc, colorText);
@@ -1149,7 +1153,7 @@ namespace Win32xx
 
 		HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
 		::FillRect(hDC, &rc, hbHighlight);
-		
+
 
 	//	::FillRect(hDC, &rc, hBrush);
 	//	::SelectObject(hDC, OldBrush);
@@ -1160,18 +1164,18 @@ namespace Win32xx
 	// Copy the checkmark or radiocheck transparently
 	{
 		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
-		if (hdcMem) 
+		if (hdcMem)
 		{
 			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 			HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-			if (hbmMono) 
+			if (hbmMono)
 			{
 				HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
-				if (hbmPrev) 
+				if (hbmPrev)
 				{
 					RECT rCheck = { 0, 0, cxCheck, cyCheck };
-					
+
 					// Copy the check mark bitmap to hdcMem
 					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
 						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
@@ -1196,7 +1200,7 @@ namespace Win32xx
 									::BitBlt(hdcMem1, 0, 0, cxCheck, cyCheck, pdis->hDC, rc.left, rc.top, WHITENESS);
 									::BitBlt(hdcMem1, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCINVERT);
 									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem1, 0, 0, SRCPAINT);
-								
+
 									::SelectObject(hdcMem1, hbmPrev1);
 								}
 							}
@@ -1206,8 +1210,8 @@ namespace Win32xx
 					}
 					else
 						// Draw a black check markfor an unselected item
-						::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);					
-	
+						::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+
 					::SelectObject(hdcMem, hbmPrev);
 				}
 				::DeleteObject(hbmMono);
@@ -1272,9 +1276,9 @@ namespace Win32xx
 				mii.cbSize = 44;
 			else
 				mii.cbSize = sizeof(MENUITEMINFO);
-			
+
 			TCHAR szMenuItem[MAX_MENU_STRING];
-		
+
 			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
 			mii.fMask  = MIIM_TYPE | MIIM_DATA;
 			mii.dwTypeData = szMenuItem;
@@ -1290,7 +1294,7 @@ namespace Win32xx
 				lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
 				mii.dwItemData = (DWORD_PTR)pItem;
 
-				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData	
+				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
 				::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 			}
 
@@ -1360,26 +1364,27 @@ namespace Win32xx
 			if (pMDIFrame->IsMDIChildMaxed())
 			{
 				HDC hDC = ::GetDC(m_hWnd);
-
-				// Draw the MDI button pressed down
-				if (PtInRect(&m_MDIRect[0], pt))
+				if (hDC)
 				{
-					::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
-					m_nMDIButton = MDI_MIN;
-				}
+					// Draw the MDI button pressed down
+					if (PtInRect(&m_MDIRect[0], pt))
+					{
+						::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
+						m_nMDIButton = MDI_MIN;
+					}
 
-				if (PtInRect(&m_MDIRect[1], pt))
-				{
-					::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
-					m_nMDIButton = MDI_RESTORE;
-				}
+					if (PtInRect(&m_MDIRect[1], pt))
+					{
+						::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
+						m_nMDIButton = MDI_RESTORE;
+					}
 
-				if (PtInRect(&m_MDIRect[2], pt))
-				{
-					::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
-					m_nMDIButton = MDI_CLOSE;
+					if (PtInRect(&m_MDIRect[2], pt))
+					{
+						::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
+						m_nMDIButton = MDI_CLOSE;
+					}
 				}
-
 				::ReleaseDC(m_hWnd, hDC);
 
 				// Bring up the MDI Child window's system menu when the icon is pressed
@@ -1514,18 +1519,25 @@ namespace Win32xx
 		else
 		{
 			HDC hDC = GetDC(m_hWnd);
-			HFONT hfntOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
-			SIZE size;
-			int Iconx = 0;
-			int Icony = 0;
+			if (hDC)
+			{
+				HFONT hfntOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+				SIZE size;
+				int Iconx = 0;
+				int Icony = 0;
 
-			ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-			GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
+				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+				GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
 
-			pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
-			pmis->itemHeight = max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
+				pmis->itemHeight = max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
+				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
 
-			::SelectObject(hDC, hfntOld);
+				// Allow extra width if the text includes a tab
+				if (_tcschr(pmd->Text, _T('\t')))
+					pmis->itemWidth += POST_TEXT_GAP;
+
+				::SelectObject(hDC, hfntOld);
+			}
 			::ReleaseDC(m_hWnd, hDC);
 		}
 
@@ -1676,60 +1688,63 @@ namespace Win32xx
 				if (pMDIFrame->IsMDIChildMaxed())
 				{
 					HDC hDC = ::GetDC(m_hWnd);
-					static BOOL bButtonPushed = TRUE;
-
-					// toggle the MDI button image pressed/unpressed as required
-					if (PtInRect(&m_MDIRect[0], pt))
+					if (hDC)
 					{
-						if (m_nMDIButton == MDI_MIN)
+						static BOOL bButtonPushed = TRUE;
+
+						// toggle the MDI button image pressed/unpressed as required
+						if (PtInRect(&m_MDIRect[0], pt))
 						{
-							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
-							bButtonPushed = TRUE;
+							if (m_nMDIButton == MDI_MIN)
+							{
+								::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
+								bButtonPushed = TRUE;
+							}
+							else
+							{
+								::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
+								::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
+								bButtonPushed = FALSE;
+							}
 						}
-						else
+
+						else if (PtInRect(&m_MDIRect[1], pt))
 						{
+							if (m_nMDIButton == MDI_RESTORE)
+							{
+								::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
+								bButtonPushed = TRUE;
+							}
+							else
+							{
+								::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
+								::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
+								bButtonPushed = FALSE;
+							}
+						}
+
+						else if (PtInRect(&m_MDIRect[2], pt))
+						{
+							if (m_nMDIButton == MDI_CLOSE)
+							{
+								::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
+								bButtonPushed = TRUE;
+							}
+							else
+							{
+								::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
+								::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
+								bButtonPushed = FALSE;
+							}
+						}
+
+						else if (bButtonPushed)
+						{
+							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
 							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
 							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
 							bButtonPushed = FALSE;
 						}
-					}
-
-					else if (PtInRect(&m_MDIRect[1], pt))
-					{
-						if (m_nMDIButton == MDI_RESTORE)
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
-							bButtonPushed = TRUE;
-						}
-						else
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-							bButtonPushed = FALSE;
-						}
-					}
-
-					else if (PtInRect(&m_MDIRect[2], pt))
-					{
-						if (m_nMDIButton == MDI_CLOSE)
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
-							bButtonPushed = TRUE;
-						}
-						else
-						{
-							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-							bButtonPushed = FALSE;
-						}
-					}
-
-					else if (bButtonPushed)
-					{
-						::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-						::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-						::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-						bButtonPushed = FALSE;
 					}
 				}
 			}
@@ -1819,7 +1834,8 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, &m_MDIRect[2], TRUE);
 		{
 			HDC hDC = ::GetDC(m_hWnd);
-			DrawMDIButtons(hDC);
+			if (hDC)
+				DrawMDIButtons(hDC);
 			::ReleaseDC(m_hWnd, hDC);
 		}
 	}
@@ -1892,9 +1908,9 @@ namespace Win32xx
 				TCHAR szMenuName[MAX_MENU_STRING +1];
 				if (!::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION))
 					return;
-					
+
 				SetButtonText(i  + nMaxedOffset, szMenuName);
-			}		
+			}
 		}
 
 		catch(const CWinException &e)
@@ -1920,7 +1936,7 @@ namespace Win32xx
 
 		if (ImageData.size() == 0)
 			return;
-		
+
 		int iImages = 0;
 		for (unsigned int i = 0 ; i < ImageData.size(); i++)
 		{
@@ -1934,7 +1950,7 @@ namespace Win32xx
 		// Set the button images
 		HBITMAP hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(nID_Image));
 		BITMAP bm = {0};
-		
+
 		::GetObject(hbm, sizeof(BITMAP), &bm);
 		int iImageWidth  = bm.bmWidth / (int)m_ImageData.size();
 		int iImageHeight = bm.bmHeight;
@@ -2168,7 +2184,7 @@ namespace Win32xx
 		int nMenuItemCount = GetMenuItemCount(hMenu);
 		int nPos = -1;
 		MENUITEMINFO mii = {0};
-		
+
 		// For Win95 and NT, cbSize needs to be 44
 		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
 			mii.cbSize = 44;
@@ -2260,7 +2276,7 @@ namespace Win32xx
 		} // switch cmd
 
 		return FALSE;
-	} 
+	}
 
 	void CFrame::OnCreate()
 	{
@@ -2280,7 +2296,7 @@ namespace Win32xx
 
 			// Create the toolbar inside rebar
 			GetToolbar().Create(GetRebar().GetHwnd());
-			AddToolbarBand(); 
+			AddToolbarBand();
 		}
 		else
 			// Create the toolbar
@@ -2362,7 +2378,7 @@ namespace Win32xx
 			}
 			break;
 		} // switch LPNMHDR
-		
+
 		return 0;
 
 	} // CFrame::OnNotifyFrame(...)
@@ -2461,9 +2477,9 @@ namespace Win32xx
 			else
 				::ShowWindow(GetToolbar().GetHwnd(), SW_SHOW);
 		}
-	
+
 		UpdateCheckMarks();
-		
+
 		// Reposition the Windows
 		RecalcLayout();
 		::InvalidateRect(m_hWnd, NULL, TRUE);
@@ -2655,7 +2671,7 @@ namespace Win32xx
 			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 			if (IsMenubarUsed())
 				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-		} 
+		}
 	}
 
 	LRESULT CFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
