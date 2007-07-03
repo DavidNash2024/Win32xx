@@ -1214,7 +1214,7 @@ namespace Win32xx
 							}
 							::DeleteObject(hbmMask);
 						}
-						::DeleteObject(hdcMask);
+						::DeleteDC(hdcMask);
 					}
 					else
 						// Draw a black check markfor an unselected item
@@ -2081,7 +2081,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseRebar(FALSE),
 		                m_StatusText(_T("Ready")), m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE),
-						m_pView(NULL)
+						m_hMenu(NULL), m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
 		INITCOMMONCONTROLSEX InitStruct;
@@ -2190,7 +2190,6 @@ namespace Win32xx
 	// Returns the position of the menu item, given it's name
 	{
 		int nMenuItemCount = GetMenuItemCount(hMenu);
-		int nPos = -1;
 		MENUITEMINFO mii = {0};
 
 		// For Win95 and NT, cbSize needs to be 44
@@ -2210,22 +2209,24 @@ namespace Win32xx
 			mii.cch        = MAX_MENU_STRING;
 
 			// Fill the contents of szStr from the menu item
-			::GetMenuItemInfo(hMenu, nItem, TRUE, &mii);
-
-			// Strip out any & characters
-			int j = 0;
-			for (int i = 0; i <= lstrlen(szStr); i++)
+			if (::GetMenuItemInfo(hMenu, nItem, TRUE, &mii) && (lstrlen(szStr) <= MAX_MENU_STRING))
 			{
-				if (szStr[i] != _T('&'))
-					szStripped[j++] = szStr[i];
+				// Strip out any & characters
+				int j = 0;
+				for (int i = 0; i < lstrlen(szStr); i++)
+				{
+					if (szStr[i] != _T('&'))
+						szStripped[j++] = szStr[i];
+				}
+				szStripped[j] = _T('\0');	// Append null tchar
+				
+				// Compare the strings
+				if (lstrcmp(szStripped, szItem) == 0)
+					return nItem;
 			}
-
-			// Compare the strings
-			if (lstrcmp(szStripped, szItem) == 0)
-				nPos = nItem;
 		}
 
-		return nPos;
+		return -1;
 	}
 
 	void CFrame::LoadCommonControls(INITCOMMONCONTROLSEX InitStruct)

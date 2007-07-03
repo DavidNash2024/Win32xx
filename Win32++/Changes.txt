@@ -1,8 +1,15 @@
 Version 5.3
 -----------
 New Features:
-* Owner drawn dropdown menu items with icons
+* Owner drawn drop down menu items with icons.  CMenubar::SetIcons is
+   used to determine which menu items display an icon. By default, the
+   framework uses the toolbar's bitmap and resource IDs for displaying 
+   icons. Override CFrame::SetButtons to change this behavior.
 * Automatic subclassing for windows using WinAPI defined window classes.
+   Now when a window is based on predefined window classes, like the 
+   common controls (e.g. list-view, tree-view, richedit), the window is
+   automatically subclassed. There is now no need to call the subclass
+   function in use code.
 
 Changes:
 * The WndProc function used to route window messages has been simplified. 
@@ -15,8 +22,8 @@ Changes:
    window class types. This includes, for example, windows created from
    common controls like toolbars and edit controls.
 * Removed superclassing. Its redundant now.
-* Enhanced CMenubar - Added icons to dropdown menus. CMenubar::SetIcons
-   determines which menu items dispay an icon. By default, this is called
+* Enhanced CMenubar - Added icons to drop down menus. CMenubar::SetIcons
+   determines which menu items display an icon. By default, this is called
    from CFrame::SetButtons.
 * In OnNotify, removed the requirement to return the parent OnNotify 
     function. Return 0L for any unhandled notifications.
