@@ -2064,9 +2064,6 @@ namespace Win32xx
 				return 0L;
 			}
 			break;
-	//	case WM_UNINITMENUPOPUP:
-	//		OnUnInitMenuPopup(wParam, lParam);
-	//		break;
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged();
 			break;
@@ -2583,7 +2580,7 @@ namespace Win32xx
 	{
 		if (m_hMenu)
 			::DestroyMenu(m_hMenu);
-
+		
 		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
 
 		if(!m_hMenu)

@@ -190,19 +190,10 @@ namespace Win32xx
 			if (status == -1) return -1;
 
 			if (GetFrame())
-			{
-				if (!::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg))
-				{
-					::TranslateMessage(&uMsg);
-					::DispatchMessage(&uMsg);
-				}
-			}
-			else
-			{
-				::TranslateMessage(&uMsg);
-				::DispatchMessage(&uMsg);
-			}
+				::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg);
 
+			::TranslateMessage(&uMsg);
+			::DispatchMessage(&uMsg);
 		}
 		return LOWORD(uMsg.wParam);
 	}
