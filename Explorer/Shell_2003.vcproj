@@ -17,7 +17,7 @@
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"

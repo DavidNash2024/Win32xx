@@ -43,11 +43,6 @@ BEGIN
         MENUITEM "New &View",                   IDM_FILE_NEW
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
-        POPUP "Submenu"
-        BEGIN
-            MENUITEM "Sub1",                    IDM_SUBMENU_SUB1
-            MENUITEM "Sub2",                    IDM_SUBMENU_SUB2
-        END
     END
     POPUP "&Edit"
     BEGIN
@@ -250,12 +245,6 @@ END
 STRINGTABLE
 BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
-END
-
-STRINGTABLE
-BEGIN
-    IDM_SUBMENU_SUB1        "SubMenu 1"
-	IDM_SUBMENU_SUB2        "SubMenu 2"
 END
 
 STRINGTABLE
