@@ -189,8 +189,8 @@ namespace Win32xx
 		{
 			if (status == -1) return -1;
 
-			if (GetFrame())
-				::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg);
+			if ((GetFrame()) && (::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg)))
+				continue;
 
 			::TranslateMessage(&uMsg);
 			::DispatchMessage(&uMsg);
