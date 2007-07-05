@@ -209,10 +209,14 @@ namespace Win32xx
 		virtual std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();
-		virtual void SetAcceleratorTable(UINT ID_ACCEL);
+		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
 		virtual void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
 		virtual void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		virtual void Trace(LPCTSTR szString);
+
+	protected:
+		HACCEL m_hAccelTable;		// handle to the accelerator table
+		HWND m_hWndAccel;			// handle to the window for accelerator keys
 
 	private:
 		virtual TLSData* SetTlsIndex();
@@ -224,7 +228,6 @@ namespace Win32xx
 		};
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
-		HACCEL m_hAccelTable;		// handle to the accelerator table
 		HFONT m_hFont;				// handle to the font in the Trace window
 		HINSTANCE m_hInstance;		// handle to the applications instance
 		HINSTANCE m_hResource;		// handle to the applications resources
