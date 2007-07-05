@@ -1201,11 +1201,11 @@ namespace Win32xx
 									// Set the colour of the check mark to white
 									SetBkColor(hdcMask, RGB(255, 255, 255));
 									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, PATCOPY);
-									
+
 									// Invert the check mark bitmap
 									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
-																
-									// Use the mask to copy the check mark to Menu's device context 
+
+									// Use the mask to copy the check mark to Menu's device context
 									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
 									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
 
@@ -2089,7 +2089,6 @@ namespace Win32xx
 		LoadCommonControls(InitStruct);
 
 		SetFrameMenu(IDW_MAIN);
-		GetApp()->SetAcceleratorTable(IDW_MAIN);
 
 		// Place this code in CMainFrame's constructor
 /*
@@ -2216,7 +2215,7 @@ namespace Win32xx
 						szStripped[j++] = szStr[i];
 				}
 				szStripped[j] = _T('\0');	// Append null tchar
-				
+
 				// Compare the strings
 				if (lstrcmp(szStripped, szItem) == 0)
 					return nItem;
@@ -2290,6 +2289,9 @@ namespace Win32xx
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
 
+		// Set the accelerator table and HWND for translated messages
+		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
+
 		if (m_bSupportRebars && m_bUseRebar)
 		{
 			// Create the rebar
@@ -2324,6 +2326,7 @@ namespace Win32xx
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
+
 
 	void CFrame::OnHelp()
 	{
@@ -2418,20 +2421,24 @@ namespace Win32xx
 				POINT pt = {0};
 				::GetCursorPos(&pt);
 
-				int nButton = tb.HitTest();
-				if ((nButton >= 0) && (WindowFromPoint(pt) == tb.GetHwnd()))
+				int nButton = -1;
+				if (WindowFromPoint(pt) == tb.GetHwnd())
 				{
-					int nID = GetToolbar().GetCommandID(nButton);
-					if (nID != nOldID)
+					nButton = tb.HitTest();
+					if (nButton >= 0)
 					{
-						if (nID != 0)
-							m_StatusText = LoadString(nID);
-						else
-							m_StatusText = _T("Ready");
+						int nID = GetToolbar().GetCommandID(nButton);
+						if (nID != nOldID)
+						{
+							if (nID != 0)
+								m_StatusText = LoadString(nID);
+							else
+								m_StatusText = _T("Ready");
 
-						SetStatusText();
+							SetStatusText();
+						}
+						nOldID = nID;
 					}
-					nOldID = nID;
 				}
 				else
 				{
@@ -2580,7 +2587,7 @@ namespace Win32xx
 	{
 		if (m_hMenu)
 			::DestroyMenu(m_hMenu);
-		
+
 		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
 
 		if(!m_hMenu)
