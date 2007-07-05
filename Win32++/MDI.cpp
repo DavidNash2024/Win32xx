@@ -61,13 +61,12 @@ namespace Win32xx
 	{
 		MSG uMsg;
 		int status;
-		CFrame* pFrame = GetFrame();
 
 		while ((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
 			if (status == -1) return -1;
-			if (!TranslateMDISysAccel(pFrame->GetView()->GetHwnd(), &uMsg) &&
-				!TranslateAccelerator(pFrame->GetHwnd(), m_hAccel, &uMsg))
+			if (!TranslateMDISysAccel(m_hWndAccel, &uMsg) &&
+				!TranslateAccelerator(m_hWndAccel, m_hAccel, &uMsg))
 			{
 				::TranslateMessage(&uMsg);
 				::DispatchMessage(&uMsg);
