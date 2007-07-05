@@ -40,9 +40,7 @@
 //  Definitions for the following classes:
 //  CWinApp, CWnd, and CWinException
 
-#define WINVER 0x0400
 #include "WinCore.h"
-#include "Frame.h"
 #include "Default_Resource.h"
 
 
@@ -65,7 +63,7 @@ namespace Win32xx
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
 	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hFont(NULL), m_hInstance(hInstance),
-							m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL),
+							m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL), m_hWndAccel(NULL),
 							m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
 	{
 		try
@@ -189,19 +187,24 @@ namespace Win32xx
 		{
 			if (status == -1) return -1;
 
-			if ((GetFrame()) && (::TranslateAccelerator(GetFrame()->GetHwnd(), m_hAccelTable, &uMsg)))
-				continue;
-
-			::TranslateMessage(&uMsg);
-			::DispatchMessage(&uMsg);
+			if (!::TranslateAccelerator(m_hWndAccel, m_hAccelTable, &uMsg))
+			{
+				::TranslateMessage(&uMsg);
+				::DispatchMessage(&uMsg);
+			}
 		}
 		return LOWORD(uMsg.wParam);
 	}
 
-	void CWinApp::SetAcceleratorTable(UINT ID_ACCEL)
+	void CWinApp::SetAccelerators(UINT ID_ACCEL, HWND hWndAccel)
+	// ID_ACCEL is the resource ID of the accelerator table
+	// hWndAccel is the window handle for translated messages
 	{
+		
 		if (m_hAccelTable)
 			::DestroyAcceleratorTable(m_hAccelTable);
+
+		m_hWndAccel = hWndAccel;
 
 		m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
 		if (!m_hAccelTable)
