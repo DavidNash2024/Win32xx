@@ -144,6 +144,7 @@ namespace Win32xx
 		virtual HMENU GetMenu() {return m_hTopMenu;}
 		virtual void MenuChar(WPARAM wParam, LPARAM lParam);
 		virtual void SetIcons(const std::vector<UINT> ToolbarData, UINT nID_Image, COLORREF crMask);
+		virtual void SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
 		virtual void SysCommand(WPARAM wParam, LPARAM lParam);
 		virtual void SetMenu(HMENU hMenu);
 
@@ -158,7 +159,7 @@ namespace Win32xx
 		virtual void ExitMenu();
 		virtual	void GrabFocus();
 		virtual BOOL IsMDIChildMaxed();
-		virtual void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
+		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnInitialUpdate();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);

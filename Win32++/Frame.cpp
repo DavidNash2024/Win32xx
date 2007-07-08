@@ -1023,17 +1023,17 @@ namespace Win32xx
 			DoAltKey(LOWORD(wParam));
 	}
 
-	void CMenubar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
+	LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
 	{
 		// Use custom draw to draw a rectangle over the hot button
 		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+
 		switch (lpNMCustomDraw->nmcd.dwDrawStage)
 		{
 		// Begin paint cycle
 		case CDDS_PREPAINT:
 			// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
-			*pResult = CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
-			break;
+			return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
 
 		// An item is about to be drawn
 		case CDDS_ITEMPREPAINT:
@@ -1060,7 +1060,7 @@ namespace Win32xx
 					int x = 0;
 					::DrawIconEx(hDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
-					*pResult = CDRF_SKIPDEFAULT;  // No further drawing
+					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 
 				else if (nState & (CDIS_HOT | CDIS_SELECTED))
@@ -1080,11 +1080,11 @@ namespace Win32xx
 					::SetBkMode(hDC, TRANSPARENT);
 					::DrawText(hDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-					*pResult = CDRF_SKIPDEFAULT;  // No further drawing
+					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 
 				else
-					*pResult = CDRF_DODEFAULT ;   // Do default drawing
+					return CDRF_DODEFAULT ;   // Do default drawing
 			}
 			break;
 
@@ -1097,6 +1097,7 @@ namespace Win32xx
 			}
 			break;
 		}
+		return 0L;
 	}
 
 	BOOL CMenubar::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
@@ -1765,9 +1766,7 @@ namespace Win32xx
 		{
 		case NM_CUSTOMDRAW:
 			{
-				LRESULT lResult = 0;
-				OnCustomDraw((LPNMHDR) lParam, &lResult);
-				return lResult;
+				return OnCustomDraw((LPNMHDR) lParam);
 			}
 
 		case TBN_DROPDOWN:
@@ -1933,6 +1932,7 @@ namespace Win32xx
 	}
 
 	void CMenubar::SetIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask)
+	// Set the drop-down icons using a bitmap resource
 	{
 		// Remove any existing imagelist
 		if (m_hImageList)
@@ -1967,6 +1967,34 @@ namespace Win32xx
 		ImageList_AddMasked(m_hImageList, hbm, crMask);
 		::DeleteObject(hbm);
 	}
+
+    void CMenubar::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
+	// Set the drop-down icons from an existing image list
+    { 
+        // Remove any existing imagelist 
+        if (m_hImageList) 
+        { 
+            ImageList_Destroy(m_hImageList); 
+            m_hImageList = NULL; 
+        } 
+        m_ImageData.clear(); 
+        if (ImageData.size() == 0) 
+            return; 
+        
+		int iImages = 0; 
+        for (unsigned int i = 0 ; i < ImageData.size(); i++) 
+        { 
+            if (ImageData[i] != 0) 
+            { 
+                m_ImageData.push_back(ImageData[i]); 
+                iImages++; 
+            } 
+        } 
+        
+		// Set the button images 
+        if (ImageList_GetImageCount(hImageList) == iImages) 
+            m_hImageList = hImageList; 
+    } 
 
 	LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
