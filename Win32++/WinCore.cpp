@@ -636,6 +636,20 @@ namespace Win32xx
 		return NULL;
 	}
 
+	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
+	{
+		HBITMAP hBitmap;
+		
+		// Try to load the bitmap from the resource handle first
+		hBitmap = ::LoadBitmap(GetApp()->GetResourceHandle(), lpBitmapName);
+		
+		// The bitmap resource might be in the application's resources instead
+		if (!hBitmap)
+			hBitmap = ::LoadBitmap(GetApp()->GetInstanceHandle(), lpBitmapName);
+
+		return hBitmap;
+	}
+
 	LPCTSTR CWnd::LoadString(UINT nID)
 	{
 		// Returns the string associated with a Resource ID

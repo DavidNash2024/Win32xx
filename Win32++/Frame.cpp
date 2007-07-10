@@ -626,7 +626,7 @@ namespace Win32xx
 				}
 
 				// Set the button images
-				HBITMAP hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarID));
+				HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 				BITMAP bm = {0};
 
 				::GetObject(hbm, sizeof(BITMAP), &bm);
@@ -642,7 +642,7 @@ namespace Win32xx
 
 				if (ToolbarHotID)
 				{
-					hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarHotID));
+					hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
 					m_hImageListHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
 					ImageList_AddMasked(m_hImageListHot, hbm, crMask);
 					::DeleteObject(hbm);
@@ -652,7 +652,7 @@ namespace Win32xx
 
 				if (ToolbarDisabledID)
 				{
-					hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(ToolbarDisabledID));
+					hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
 					m_hImageListDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
 					ImageList_AddMasked(m_hImageListDis, hbm, crMask);
 					::DeleteObject(hbm);
@@ -712,6 +712,11 @@ namespace Win32xx
 		// REBARBANDINFO describes individual BAND characteristics
 		prbbi->cbSize = sizeof(REBARBANDINFO);
 		return (BOOL)::SendMessage(m_hWnd, RB_GETBANDINFO, nBand, (LPARAM)prbbi);
+	}
+
+	BOOL CRebar::GetBandRect(int i, LPRECT pRect)
+	{
+		return (BOOL)::SendMessage(m_hWnd, RB_GETRECT, i, (LPARAM)pRect);
 	}
 
 	BOOL CRebar::GetBarInfo(LPREBARINFO prbi) const
@@ -1956,7 +1961,7 @@ namespace Win32xx
 		}
 
 		// Set the button images
-		HBITMAP hbm = ::LoadBitmap(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(nID_Image));
+		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID_Image));
 		BITMAP bm = {0};
 
 		::GetObject(hbm, sizeof(BITMAP), &bm);

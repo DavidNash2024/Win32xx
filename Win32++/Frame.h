@@ -120,6 +120,7 @@ namespace Win32xx
 		virtual int GetBand(const HWND hWnd) const;
 		virtual int GetBandCount() const;
 		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
+		virtual BOOL GetBandRect(int i, LPRECT pRect);
 		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
 		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL IsBandVisible(int nBand);

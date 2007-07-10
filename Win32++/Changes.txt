@@ -1,3 +1,7 @@
+Version 5.4
+-----------
+Added CWnd::LoadBitmap
+
 Version 5.3
 -----------
 New Features:

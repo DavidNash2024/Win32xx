@@ -221,13 +221,18 @@ namespace Win32xx
 			// Create and store the CBT hook
 			SetHook();
 
+			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+
 			// Create a modal dialog
 			INT_PTR nResult;
 			if (IsIndirect)
-				nResult = ::DialogBoxIndirect(GetApp()->GetInstanceHandle(), m_lpTemplate, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
-				nResult = ::DialogBox(GetApp()->GetInstanceHandle(), m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
-
+			{
+				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
+					hInstance = GetApp()->GetResourceHandle();
+				nResult = ::DialogBox(hInstance, m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+			}
 			// Tidy up
 			RemoveHook();
 			m_hWnd = NULL;
@@ -269,11 +274,17 @@ namespace Win32xx
 			// Create and store the CBT hook
 			SetHook();
 
+			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+
 			// Create a modeless dialog
 			if (IsIndirect)
-				m_hWnd = ::CreateDialogIndirect(GetApp()->GetInstanceHandle(), m_lpTemplate, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
-				m_hWnd = ::CreateDialog(GetApp()->GetInstanceHandle(), m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+			{
+				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
+					hInstance = GetApp()->GetResourceHandle();
+				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+			}
 
 			// Tidy up
 			RemoveHook();
