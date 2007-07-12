@@ -2196,7 +2196,7 @@ namespace Win32xx
 		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD;
 		rbbi.cyMinChild = Menubar_Height;
 		rbbi.cyMaxChild = Menubar_Height;
-		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_NOGRIPPER ;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
