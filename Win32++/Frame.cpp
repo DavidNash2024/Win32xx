@@ -726,6 +726,11 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_GETBARINFO, 0, (LPARAM)prbi);
 	}
 
+	int CRebar::GetRowHeight(int nRow) const
+	{
+		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0);
+	}
+
 	BOOL CRebar::InsertBand(const int nBand, LPREBARBANDINFO prbbi)
 	{
 		return (BOOL)::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)(LPREBARBANDINFO)prbbi);
@@ -821,6 +826,45 @@ namespace Win32xx
 			SetBandInfo(nBand, &rbbi);
 		}
 		return fShow;
+	}
+
+	LRESULT CRebar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_MOUSEMOVE:
+			{
+				// Use move messages to limit the resizing of bands
+				int y = GET_Y_LPARAM(lParam);
+
+				if (y <= GetRowHeight(0))
+					return 0L;
+			}
+			break;
+		case WM_ERASEBKGND:
+			{
+				RECT rcRect;
+				HDC hDC = (HDC)wParam;
+
+				for (int i = 0; i < GetBandCount() ; i++)
+				{
+					GetBandRect(i, &rcRect);
+					rcRect.left = max(0, rcRect.left - 4);
+					rcRect.bottom +=2;
+					::DrawEdge(hDC, &rcRect, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+					HBRUSH hbr = ::CreateSolidBrush(RGB(150,220,255));
+					::FillRect(hDC, &rcRect, hbr);
+					::DeleteBrush(hbr);
+				}
+			//	::GetWindowRect(m_hWnd, &rcRect);
+			//	::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcRect, 2);
+			//	::DrawEdge(hDC, &rcRect, EDGE_RAISED, BF_BOTTOM);
+			}
+			return TRUE;
+		}
+
+		// pass unhandled messages on for default processing
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -1087,11 +1131,8 @@ namespace Win32xx
 
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
-
-				else
-					return CDRF_DODEFAULT ;   // Do default drawing
 			}
-			break;
+			return CDRF_DODEFAULT ;   // Do default drawing
 
 		// Painting cycle has completed
 		case CDDS_POSTPAINT:
@@ -1975,31 +2016,31 @@ namespace Win32xx
 
     void CMenubar::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
 	// Set the drop-down icons from an existing image list
-    { 
-        // Remove any existing imagelist 
-        if (m_hImageList) 
-        { 
-            ImageList_Destroy(m_hImageList); 
-            m_hImageList = NULL; 
-        } 
-        m_ImageData.clear(); 
-        if (ImageData.size() == 0) 
-            return; 
-        
-		int iImages = 0; 
-        for (unsigned int i = 0 ; i < ImageData.size(); i++) 
-        { 
-            if (ImageData[i] != 0) 
-            { 
-                m_ImageData.push_back(ImageData[i]); 
-                iImages++; 
-            } 
-        } 
-        
-		// Set the button images 
-        if (ImageList_GetImageCount(hImageList) == iImages) 
-            m_hImageList = hImageList; 
-    } 
+    {
+        // Remove any existing imagelist
+        if (m_hImageList)
+        {
+            ImageList_Destroy(m_hImageList);
+            m_hImageList = NULL;
+        }
+        m_ImageData.clear();
+        if (ImageData.size() == 0)
+            return;
+
+		int iImages = 0;
+        for (unsigned int i = 0 ; i < ImageData.size(); i++)
+        {
+            if (ImageData[i] != 0)
+            {
+                m_ImageData.push_back(ImageData[i]);
+                iImages++;
+            }
+        }
+
+		// Set the button images
+        if (ImageList_GetImageCount(hImageList) == iImages)
+            m_hImageList = hImageList;
+    }
 
 	LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
@@ -2109,8 +2150,8 @@ namespace Win32xx
 	//////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	CFrame::CFrame() :  m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseRebar(FALSE),
-		                m_StatusText(_T("Ready")), m_bIsMDIFrame(FALSE), m_bSupportRebars(FALSE),
+	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
+		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_bSupportRebars(FALSE),
 						m_hMenu(NULL), m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
@@ -2454,7 +2495,7 @@ namespace Win32xx
 				POINT pt = {0};
 				::GetCursorPos(&pt);
 
-				int nButton = -1;
+				int nButton;
 				if (WindowFromPoint(pt) == tb.GetHwnd())
 				{
 					nButton = tb.HitTest();

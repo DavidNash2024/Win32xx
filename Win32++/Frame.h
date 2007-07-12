@@ -122,6 +122,7 @@ namespace Win32xx
 		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
 		virtual BOOL GetBandRect(int i, LPRECT pRect);
 		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
+		virtual int GetRowHeight(int nRow) const;
 		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL IsBandVisible(int nBand);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -131,6 +132,7 @@ namespace Win32xx
 		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL SetBarInfo(LPREBARINFO prbi);
 		virtual BOOL ShowBand(int nBand, BOOL fShow);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	};
 
 

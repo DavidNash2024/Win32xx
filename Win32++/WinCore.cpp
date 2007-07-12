@@ -62,9 +62,9 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hFont(NULL), m_hInstance(hInstance),
-							m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL), m_hWndAccel(NULL),
-							m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
+	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hWndAccel(NULL), m_hFont(NULL),
+						m_hInstance(hInstance), m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL),
+						m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
 	{
 		try
 		{
@@ -200,7 +200,7 @@ namespace Win32xx
 	// ID_ACCEL is the resource ID of the accelerator table
 	// hWndAccel is the window handle for translated messages
 	{
-		
+
 		if (m_hAccelTable)
 			::DestroyAcceleratorTable(m_hAccelTable);
 
@@ -274,7 +274,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL), m_PrevWindowProc(NULL), m_pTLSData(NULL)
+	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL), m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
 		try
@@ -639,10 +639,10 @@ namespace Win32xx
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
 	{
 		HBITMAP hBitmap;
-		
+
 		// Try to load the bitmap from the resource handle first
 		hBitmap = ::LoadBitmap(GetApp()->GetResourceHandle(), lpBitmapName);
-		
+
 		// The bitmap resource might be in the application's resources instead
 		if (!hBitmap)
 			hBitmap = ::LoadBitmap(GetApp()->GetInstanceHandle(), lpBitmapName);
