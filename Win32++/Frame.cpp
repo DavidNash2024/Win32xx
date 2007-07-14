@@ -830,15 +830,32 @@ namespace Win32xx
 
 	LRESULT CRebar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		static LPARAM Orig_lParam;
 		switch (uMsg)
 		{
 		case WM_MOUSEMOVE:
+			{
+				// We want to lock the first row in place, but allow other bands to move!
+				// Use move messages to limit the resizing of bands
+				int y = GET_Y_LPARAM(lParam);
+
+				if (y <= GetRowHeight(0))
+					return 0L;	// throw this message away
+			}
+			break;
+		case WM_LBUTTONDOWN:
+			Orig_lParam = lParam;	// Store the x,y position
+			break;
+		case WM_LBUTTONUP:
 			{
 				// Use move messages to limit the resizing of bands
 				int y = GET_Y_LPARAM(lParam);
 
 				if (y <= GetRowHeight(0))
-					return 0L;
+				{
+					// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position 
+					lParam = Orig_lParam; 
+				}
 			}
 			break;
 		case WM_ERASEBKGND:
@@ -2015,7 +2032,8 @@ namespace Win32xx
 	}
 
     void CMenubar::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
-	// Set the drop-down icons from an existing image list
+	// Set the drop-down icons from an existing image list. 
+	// The image list could be a collection of icons 
     {
         // Remove any existing imagelist
         if (m_hImageList)
@@ -2202,7 +2220,6 @@ namespace Win32xx
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
 
 		GetRebar().InsertBand(-1, &rbbi);
-
 	}
 
 	void CFrame::AddToolbarBand(int Toolbar_Height /*= TOOLBAR_HEIGHT*/)

@@ -66,10 +66,13 @@ IDW_MAIN                 ICON                    "res/enhanced.ico"
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
-IDB_TOOLBAR_NORM         BITMAP                  "res/toolbar24.bmp"
+IDW_MAIN                 BITMAP                  "res/toolbar24.bmp"
+IDB_TOOLBAR_NORM         BITMAP                  "res/toolbar24_n.bmp"
 IDB_TOOLBAR_HOT          BITMAP                  "res/toolbar24_h.bmp"
 IDB_TOOLBAR_DIS          BITMAP                  "res/toolbar24_d.bmp"
+IDB_TOOLBAR_SML          BITMAP                  "res/toolbar16_n.bmp"
+IDB_ARROWS               BITMAP                  "res/Arrows.bmp"
+IDB_CARDS                BITMAP                  "res/Cards.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -148,6 +151,20 @@ END
 STRINGTABLE
 BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_ARROW_LEFT          "Left"
+    IDM_ARROW_RIGHT         "Right"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_CARD_CLUB           "Clubs"
+    IDM_CARD_DIAMOND        "Diamonds"
+    IDM_CARD_HEART          "Hearts"
+    IDM_CARD_SPADE          "Spades"
 END
 
 STRINGTABLE

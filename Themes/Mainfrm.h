@@ -16,6 +16,7 @@ public:
 	virtual ~CMainFrame();
 
 protected:
+	virtual void AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Normal);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
@@ -25,6 +26,8 @@ protected:
 
 private:
 	CView m_View;
+	CToolbar Arrows;
+	CToolbar Cards;
 };
 
 #endif //MAINFRM_H
