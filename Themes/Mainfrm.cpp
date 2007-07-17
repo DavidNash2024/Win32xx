@@ -36,17 +36,29 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Normal)
 {
-	// Create the Toolbar Window
-	TB.Create(GetRebar().GetHwnd());
+	if (TBData.size() == 0)
+	{
+		DebugErrMsg(_T("Toolbar must have some data"));
+		return;
+	}
+
+	HBITMAP hBitmap = LoadBitmap(MAKEINTRESOURCE(ID_Normal));
+	if (hBitmap == 0)
+	{
+		DebugErrMsg(_T("Failed to load bitmap"));
+		return;
+	}
 
 	// Get the size of our bitmap
-	HBITMAP hBitmap = LoadBitmap(MAKEINTRESOURCE(ID_Normal));
 	BITMAP bm;
 	::GetObject (hBitmap, sizeof (BITMAP), &bm);
 	SIZE s;
 	s.cx = bm.bmWidth;
 	s.cy = bm.bmHeight;
 	::DeleteObject((HBITMAP) hBitmap);
+
+	// Create the Toolbar Window
+	TB.Create(GetRebar().GetHwnd());
 
 	// Fill the REBARBAND structure
 	REBARBANDINFO rbbi = {0};
@@ -55,15 +67,15 @@ void CMainFrame::AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Norm
 	rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 	rbbi.cyMinChild = s.cy;
 	rbbi.cyMaxChild = s.cy;
-	rbbi.cx         = s.cx * 1.25;
-	rbbi.cxMinChild = s.cx * 1.25;
+	rbbi.cx         = (UINT)(s.cx * 1.25);
+	rbbi.cxMinChild = (UINT)(s.cx * 1.25);
 
 	rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.hwndChild  = TB.GetHwnd();
 
 	GetRebar().InsertBand(-1, &rbbi);
 
-	TB.SetImageList(TBData.size(), RGB(255,0,255), ID_Normal, 0, 0);
+	TB.SetImageList((int)TBData.size(), RGB(255,0,255), ID_Normal, 0, 0);
 	TB.SetButtons(TBData);
 
 	// Adjust the toolbar and rebar size to take account of the larger buttons
@@ -104,19 +116,22 @@ void CMainFrame::OnCreate()
 	// call the base class function
 	CFrame::OnCreate();
 
-	// Add the Arrows toolbar
-	std::vector<UINT> ArrowsData;
-	ArrowsData.push_back(IDM_ARROW_LEFT);
-	ArrowsData.push_back(IDM_ARROW_RIGHT);
-	AddToolbar(Arrows, ArrowsData, IDB_ARROWS);
+	if (IsRebarUsed())
+	{
+		// Add the Arrows toolbar
+		std::vector<UINT> ArrowsData;
+		ArrowsData.push_back(IDM_ARROW_LEFT);
+		ArrowsData.push_back(IDM_ARROW_RIGHT);
+		AddToolbar(Arrows, ArrowsData, IDB_ARROWS);
 
-	// Add the Cards toolbar
-	std::vector<UINT> CardsData;
-	CardsData.push_back(IDM_CARD_CLUB);
-	CardsData.push_back(IDM_CARD_DIAMOND);
-	CardsData.push_back(IDM_CARD_HEART);
-	CardsData.push_back(IDM_CARD_SPADE);
-	AddToolbar(Cards, CardsData, IDB_CARDS);
+		// Add the Cards toolbar
+		std::vector<UINT> CardsData;
+		CardsData.push_back(IDM_CARD_CLUB);
+		CardsData.push_back(IDM_CARD_DIAMOND);
+		CardsData.push_back(IDM_CARD_HEART);
+		CardsData.push_back(IDM_CARD_SPADE);
+		AddToolbar(Cards, CardsData, IDB_CARDS);
+	}
 }
 
 void CMainFrame::OnInitialUpdate()

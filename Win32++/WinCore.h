@@ -145,6 +145,7 @@ namespace Win32xx
 		virtual HWND GetAncestor(HWND hWnd);
 		virtual CWnd* GetCWndObject(HWND hWnd);
 		virtual HWND GetHwnd() {return m_hWnd;}
+		virtual void GradientFill(HDC hDC, COLORREF Colour1, COLORREF Colour2, LPRECT pRc, BOOL bVertical);
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);

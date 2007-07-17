@@ -636,6 +636,51 @@ namespace Win32xx
 		return NULL;
 	}
 
+	void CWnd::GradientFill(HDC hDC, COLORREF Colour1, COLORREF Colour2, LPRECT pRc, BOOL bVertical)
+	// A simple but efficient Gradient Filler compatible with all Windows operating systems
+	{
+		int Width = pRc->right - pRc->left;
+		int Height = pRc->bottom - pRc->top;
+
+		int r1 = GetRValue(Colour1);
+		int g1 = GetGValue(Colour1);
+		int b1 = GetBValue(Colour1);
+
+		int r2 = GetRValue(Colour2);
+		int g2 = GetGValue(Colour2);
+		int b2 = GetBValue(Colour2);
+
+    
+		if (bVertical)
+		{
+			for(int i=0; i < Width; i++)
+			{
+				int r = r1 + (i * (r2-r1) / Width);
+				int g = g1 + (i * (g2-g1) / Width);
+				int b = b1 + (i * (b2-b1) / Width);
+				SetBkColor(hDC, RGB(r, g, b));
+				RECT line;
+
+				::SetRect(&line, i, 0, i+1, Height);
+				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
+			}
+		}
+		else
+		{
+			for(int i=0; i < Height; i++)
+			{
+				int r = r1 + (i * (r2-r1) / Height);
+				int g = g1 + (i * (g2-g1) / Height);
+				int b = b1 + (i * (b2-b1) / Height);
+				SetBkColor(hDC, RGB(r, g, b));
+				RECT line;
+
+				::SetRect(&line, 0, i, Width, i+1);
+				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
+			}
+		}  
+	}
+
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
 	{
 		HBITMAP hBitmap;

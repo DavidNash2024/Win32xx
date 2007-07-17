@@ -1,6 +1,10 @@
 Version 5.4
 -----------
+Added CMenubar::SetIcons (for imagelists)
+Added CRebar::GetBandRect
+Added CWnd::GradientFill
 Added CWnd::LoadBitmap
+
 
 Version 5.3
 -----------

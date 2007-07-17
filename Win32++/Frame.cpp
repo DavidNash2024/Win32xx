@@ -120,8 +120,7 @@ namespace Win32xx
 			if (::IsWindow(m_hWnd))
 			{
 				if (::SendMessage(m_hWnd, SB_GETPARTS, 0, 0) >= iPane)
-				{
-
+				{	
 					if (!::SendMessage(m_hWnd, SB_SETTEXT, iPane | Style, (LPARAM)szText))
 						throw CWinException(_T("Failed to set status bar text"));
 				}
@@ -857,7 +856,7 @@ namespace Win32xx
 					lParam = Orig_lParam; 
 				}
 			}
-			break;
+			break; 
 		case WM_ERASEBKGND:
 			{
 				RECT rcRect;
@@ -877,8 +876,8 @@ namespace Win32xx
 			//	::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcRect, 2);
 			//	::DrawEdge(hDC, &rcRect, EDGE_RAISED, BF_BOTTOM);
 			}
-			return TRUE;
-		}
+			return TRUE; 
+		} 
 
 		// pass unhandled messages on for default processing
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -2211,13 +2210,16 @@ namespace Win32xx
    		REBARBANDINFO rbbi = {0};
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
-		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD;
+		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cyMinChild = Menubar_Height;
 		rbbi.cyMaxChild = Menubar_Height;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_NOGRIPPER ;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
+		rbbi.cx         = 200;
+		rbbi.cxMinChild = 200;
+
 
 		GetRebar().InsertBand(-1, &rbbi);
 	}
@@ -2227,13 +2229,15 @@ namespace Win32xx
    		REBARBANDINFO rbbi = {0};
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
-		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD;
+		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cyMinChild = Toolbar_Height;
-		rbbi.cyMaxChild = Toolbar_Height;
-		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+		rbbi.cyMaxChild = Toolbar_Height;;
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 		rbbi.hwndChild  = GetToolbar().GetHwnd();
+		rbbi.cx         = 200;
+		rbbi.cxMinChild = 200;
 
 		GetRebar().InsertBand(-1, &rbbi);
 	}
@@ -2398,7 +2402,7 @@ namespace Win32xx
 			AddToolbarBand();
 		}
 		else
-			// Create the toolbar
+			// Create the toolbar without a rebar
 			GetToolbar().Create(m_hWnd);
 
 		if (!IsMenubarUsed())
@@ -2413,6 +2417,9 @@ namespace Win32xx
 		// Create the view window
 		m_pView->Create(m_hWnd);
 
+		// Reposition the child windows
+		RecalcLayout();
+	
 		// Start timer for Status updates
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
