@@ -661,7 +661,7 @@ namespace Win32xx
 				SetBkColor(hDC, RGB(r, g, b));
 				RECT line;
 
-				::SetRect(&line, i, 0, i+1, Height);
+				::SetRect(&line, i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
 				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
 			}
 		}
@@ -675,7 +675,7 @@ namespace Win32xx
 				SetBkColor(hDC, RGB(r, g, b));
 				RECT line;
 
-				::SetRect(&line, 0, i, Width, i+1);
+				::SetRect(&line, pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
 				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
 			}
 		}  

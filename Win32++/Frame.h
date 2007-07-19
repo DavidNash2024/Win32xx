@@ -98,6 +98,7 @@ namespace Win32xx
 	protected:
 		virtual void OnInitialUpdate();
 		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		HIMAGELIST m_hImageList;
@@ -115,7 +116,7 @@ namespace Win32xx
 	{
 	public:
 		CRebar();
-		virtual ~CRebar(){}
+		virtual ~CRebar();
 		virtual BOOL DeleteBand(const int nBand);
 		virtual int GetBand(const HWND hWnd) const;
 		virtual int GetBandCount() const;
@@ -125,14 +126,21 @@ namespace Win32xx
 		virtual int GetRowHeight(int nRow) const;
 		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL IsBandVisible(int nBand);
+		virtual void OnCreate();
+		virtual void OnEraseBkGnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void ResizeBand(const int nBand, const int nSize);
 		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
 		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
 		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL SetBarInfo(LPREBARINFO prbi);
+		virtual void SetBkgrndColors(COLORREF colour1, COLORREF colour2);
 		virtual BOOL ShowBand(int nBand, BOOL fShow);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	private:
+		COLORREF m_bkColor1;
+		COLORREF m_bkColor2;
 	};
 
 

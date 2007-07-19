@@ -672,10 +672,33 @@ namespace Win32xx
 		}
 	}
 
+	LRESULT CToolbar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_WINDOWPOSCHANGING:
+			{
+				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+				if (pWinPos->cx > 200)
+					pWinPos->cx = 200;
+			}
+			break;
+		}
+
+		// pass unhandled messages on for default processing
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
 	///////////////////////////////////
 	// Definitions for the CRebar class
 	//
 	CRebar::CRebar()
+	{
+		m_bkColor1 = ::GetSysColor(COLOR_BTNFACE);
+		m_bkColor2 = ::GetSysColor(COLOR_BTNFACE);
+	}
+
+	CRebar::~CRebar()
 	{
 	}
 
@@ -745,6 +768,70 @@ namespace Win32xx
 		return !(rbbi.fStyle & RBBS_HIDDEN);
 	}
 
+	void CRebar::OnCreate()
+	{
+		SetBkgrndColors(RGB(150,190,245), RGB(176,205,246));
+	}
+
+	void CRebar::OnEraseBkGnd(HDC hDC)
+	{
+		RECT rc;
+		GetClientRect(m_hWnd, &rc);
+		int Width = rc.right - rc.left;
+		int Height = rc.bottom - rc.top;
+		
+		// Create and set up our memory DC
+		HDC hMemDC = ::CreateCompatibleDC(hDC);
+		HBITMAP hBitmap = ::CreateCompatibleBitmap(hDC, Width, Height);
+		HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hMemDC, (HBITMAP)hBitmap);
+			
+		// Draw to the Memory DC
+		rc.right = 700;
+		GradientFill(hMemDC, m_bkColor1, m_bkColor2, &rc, TRUE);
+		if (Width >= 700)
+		{
+			rc.left = 700;
+			rc.right = Width;
+			// Background color already set to color2
+			::ExtTextOut(hMemDC, 0, 0, ETO_OPAQUE, &rc, NULL, 0, NULL);
+		}
+
+		// Draw band background
+		COLORREF BandColor1 = RGB(220,230,250);
+		COLORREF BandColor2 = RGB( 70,130,220);
+		for (int i = 1 ; i < GetBandCount(); i++)
+		{
+			GetBandRect(i, &rc);
+			int Height = rc.bottom - rc.top;
+			rc.left = max(0, rc.left -2);
+			rc.right = rc.left + 214;
+			rc.bottom = rc.top + Height/2;
+			::SetBkColor(hMemDC, BandColor1);
+			::ExtTextOut(hMemDC, 0, 0, ETO_OPAQUE, &rc, NULL, 0, NULL);
+			rc.bottom = rc.top + Height;
+			rc.top = rc.top + Height/2;
+			GradientFill(hMemDC, BandColor1, BandColor2, &rc, FALSE);
+		}
+	
+
+/*		// Draw lines between bands
+		for (int j = 0; j < GetBandCount()-1; j++)
+		{
+			GetBandRect(j, &rc);
+			rc.left = max(0, rc.left - 4);
+			rc.bottom +=2;
+			::DrawEdge(hMemDC, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+		}
+*/
+		// Copy the Memory DC to the window's DC
+		::BitBlt(hDC, 0, 0, Width, Height, hMemDC, 0, 0, SRCCOPY);
+
+		// Cleanup
+		::SelectObject(hMemDC, hOldBitmap);
+		::DeleteObject(hBitmap);
+		::DeleteDC(hMemDC);
+	}
+
 	void CRebar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
@@ -807,6 +894,12 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_SETBARINFO, 0, (LPARAM)prbi);
 	}
 
+	void CRebar::SetBkgrndColors(COLORREF color1, COLORREF color2)
+	{
+		m_bkColor1 = color1;
+		m_bkColor2 = color2;
+	}
+
 	BOOL CRebar::ShowBand(int nBand, BOOL fShow)
 	// Show or hide a band
 	{
@@ -858,24 +951,7 @@ namespace Win32xx
 			}
 			break; 
 		case WM_ERASEBKGND:
-			{
-				RECT rcRect;
-				HDC hDC = (HDC)wParam;
-
-				for (int i = 0; i < GetBandCount() ; i++)
-				{
-					GetBandRect(i, &rcRect);
-					rcRect.left = max(0, rcRect.left - 4);
-					rcRect.bottom +=2;
-					::DrawEdge(hDC, &rcRect, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
-					HBRUSH hbr = ::CreateSolidBrush(RGB(150,220,255));
-					::FillRect(hDC, &rcRect, hbr);
-					::DeleteBrush(hbr);
-				}
-			//	::GetWindowRect(m_hWnd, &rcRect);
-			//	::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcRect, 2);
-			//	::DrawEdge(hDC, &rcRect, EDGE_RAISED, BF_BOTTOM);
-			}
+			OnEraseBkGnd((HDC)wParam);
 			return TRUE; 
 		} 
 
@@ -2424,7 +2500,6 @@ namespace Win32xx
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
-
 
 	void CFrame::OnHelp()
 	{

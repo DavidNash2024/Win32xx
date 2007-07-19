@@ -67,8 +67,8 @@ void CMainFrame::AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Norm
 	rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 	rbbi.cyMinChild = s.cy;
 	rbbi.cyMaxChild = s.cy;
-	rbbi.cx         = (UINT)(s.cx * 1.25);
-	rbbi.cxMinChild = (UINT)(s.cx * 1.25);
+	rbbi.cx         = 200;
+	rbbi.cxMinChild = 200;
 
 	rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.hwndChild  = TB.GetHwnd();
