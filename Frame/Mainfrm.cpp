@@ -4,6 +4,8 @@
 
 #include "resource.h"
 #include "mainfrm.h"
+#include "math.h"
+#include "float.h"
 
 
 // Definitions for the CMainFrame class
@@ -108,7 +110,7 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 // 	TB.SetButtonText(IDM_FILE_NEW,   _T("New"));
 //	TB.SetButtonText(IDM_FILE_OPEN,  _T("Open"));
 //	TB.SetButtonText(IDM_FILE_SAVE,  _T("Save"));
-//	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
+	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
 //	TB.SetButtonText(IDM_EDIT_COPY,  _T("Copy"));
 //	TB.SetButtonText(IDM_EDIT_PASTE, _T("Paste"));
 //	TB.SetButtonText(IDM_FILE_PRINT, _T("Print"));

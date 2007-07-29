@@ -42,46 +42,27 @@ void CMainFrame::AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Norm
 		return;
 	}
 
-	HBITMAP hBitmap = LoadBitmap(MAKEINTRESOURCE(ID_Normal));
-	if (hBitmap == 0)
-	{
-		DebugErrMsg(_T("Failed to load bitmap"));
-		return;
-	}
-
-	// Get the size of our bitmap
-	BITMAP bm;
-	::GetObject (hBitmap, sizeof (BITMAP), &bm);
-	SIZE s;
-	s.cx = bm.bmWidth;
-	s.cy = bm.bmHeight;
-	::DeleteObject((HBITMAP) hBitmap);
-
 	// Create the Toolbar Window
 	TB.Create(GetRebar().GetHwnd());
 
+	TB.SetImageList((int)TBData.size(), RGB(255,0,255), ID_Normal, 0, 0);
+	TB.SetButtons(TBData);
+	
 	// Fill the REBARBAND structure
 	REBARBANDINFO rbbi = {0};
+	SIZE sz = TB.GetMaxSize();
 
 	rbbi.cbSize     = sizeof(REBARBANDINFO);
 	rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
-	rbbi.cyMinChild = s.cy;
-	rbbi.cyMaxChild = s.cy;
-	rbbi.cx         = 200;
-	rbbi.cxMinChild = 200;
+	rbbi.cyMinChild = sz.cy;
+	rbbi.cyMaxChild = sz.cy;
+	rbbi.cx         = sz.cx;
+	rbbi.cxMinChild = sz.cx;
 
 	rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.hwndChild  = TB.GetHwnd();
 
 	GetRebar().InsertBand(-1, &rbbi);
-
-	TB.SetImageList((int)TBData.size(), RGB(255,0,255), ID_Normal, 0, 0);
-	TB.SetButtons(TBData);
-
-	// Adjust the toolbar and rebar size to take account of the larger buttons
-	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(TBData[0]), &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -188,6 +169,8 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
 	TB.DisableButton(IDM_EDIT_PASTE);
+
+	TB.SetButtonText(IDM_FILE_OPEN, _T("Open"));
 
 	// Use smaller icons for popup menu items
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));

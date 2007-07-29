@@ -44,6 +44,7 @@
 
 #include "Frame.h"
 #include <windowsx.h>
+#include <shlwapi.h>
 #include "MDI.h"
 #include "Default_Resource.h"
 
@@ -202,6 +203,7 @@ namespace Win32xx
 	}
 
 	int CToolbar::CommandToIndex(int iButtonID)
+	// Retrieves the zero-based index for the button associated with the specified command identifier
 	{
 		// returns -1 on fail
 		return (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
@@ -232,6 +234,7 @@ namespace Win32xx
 	}
 
 	void CToolbar::DisableButton(int iButtonID)
+	// Disables the specified button in a toolbar
 	{
 		// An example of iButtonID would be IDM_FILE_OPEN
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0)))
@@ -239,17 +242,28 @@ namespace Win32xx
 	}
 
 	void CToolbar::EnableButton(int iButtonID)
+	// Enables the specified button in a toolbar
 	{
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 )))
 			DebugWarnMsg(_T("Enable button failed"));
 	}
 
 	int CToolbar::GetButtonCount()
+	// Retrieves a count of the buttons currently in the toolbar
 	{
 		return (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
 	}
 
 	UINT CToolbar::GetButtonState(int iButtonID)
+	// Get the state of an individual button
+	//	TBSTATE_CHECKED		The button has the TBSTYLE_CHECK style and is being clicked.
+	//	TBSTATE_ELLIPSES	The button's text is cut off and an ellipsis is displayed.
+	//	TBSTATE_ENABLED		The button accepts user input. A button that doesn't have this state is grayed.
+	//	TBSTATE_HIDDEN		The button is not visible and cannot receive user input.
+	//	TBSTATE_INDETERMINATE	The button is grayed.
+	//	TBSTATE_MARKED		The button is marked. The interpretation of a marked item is dependent upon the application.
+	//	TBSTATE_PRESSED		The button is being clicked.
+	//	TBSTATE_WRAP		The button is followed by a line break.
 	{
 		try
 		{
@@ -273,6 +287,15 @@ namespace Win32xx
 	}
 
 	BYTE CToolbar::GetButtonStyle(int iButtonID)
+	//	Get the the style of the toolbar control. The following button styles are supported:
+	//	TBSTYLE_BUTTON		Standard pushbutton (default)
+	//	TBSTYLE_SEP			Separator
+	//	TBSTYLE_CHECK		Auto check-box button
+	//	TBSTYLE_GROUP		Marks the start of a group of buttons
+	//	TBSTYLE_CHECKGROUP	Marks the start of a group of check-box buttons
+	//	TBSTYLE_DROPDOWN	Creates a drop-down list button
+	//	TBSTYLE_AUTOSIZE	The button's width will be calculated based on the text of the button, not on the size of the image
+	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it
 	{
 		try
 		{
@@ -303,6 +326,7 @@ namespace Win32xx
 	}
 
 	int CToolbar::GetCommandID(int iIndex)
+	// Retrieves information about the specified button in a toolbar
 	{
 		TBBUTTON tbb = {0};
 		::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (WPARAM) &tbb);
@@ -312,12 +336,21 @@ namespace Win32xx
 	}
 
 	void CToolbar::GetItemRect(int iIndex, RECT* lpRect)
+	// Retrieves the bounding rectangle of a button in a toolbar
 	{
 		ZeroMemory(lpRect, sizeof(RECT));
 		int iCount = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
 
 		if (iCount >= iIndex)
 			::SendMessage(m_hWnd, TB_GETITEMRECT, (WPARAM)iIndex, (LPARAM)lpRect);
+	}
+
+	SIZE CToolbar::GetMaxSize()
+	// Retrieves the total size of all of the visible buttons and separators in the toolbar
+	{
+		SIZE sz = {0};
+		::SendMessage(m_hWnd, TB_GETMAXSIZE, 0, (LPARAM)&sz);
+		return sz;
 	}
 
 	int CToolbar::HitTest()
@@ -436,6 +469,8 @@ namespace Win32xx
 	}
 
 	void CToolbar::SetButtonSize(int cx, int cy)
+	// Sets the size of the buttons to be added to a toolbar
+	// The size can be set only before adding any buttons to the toolbar
 	{
 
 		if (!::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy)))
@@ -525,8 +560,8 @@ namespace Win32xx
 				{
 					// Place a blank string first in the string table, in case some
 					// buttons don't have text
-					TCHAR szString[2] = _T("");
-					szString[1] = _T('\0');
+					TCHAR szString[3] = _T(" ");
+					szString[2] = _T('\0');		// Double-null terminate
 					::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szString);
 				}
 
@@ -588,6 +623,7 @@ namespace Win32xx
 	}
 
 	void CToolbar::SetCommandID(int iIndex, int iButtonID)
+	// Sets the command identifier of a toolbar button
 	{
 		try
 		{
@@ -678,9 +714,9 @@ namespace Win32xx
 		{
 		case WM_WINDOWPOSCHANGING:
 			{
+				SIZE sz = GetMaxSize();
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-				if (pWinPos->cx > 200)
-					pWinPos->cx = 200;
+				pWinPos->cx = sz.cx;
 			}
 			break;
 		}
@@ -804,12 +840,24 @@ namespace Win32xx
 			GetBandRect(i, &rc);
 			int Height = rc.bottom - rc.top;
 			rc.left = max(0, rc.left -2);
-			rc.right = rc.left + 214;
 			rc.bottom = rc.top + Height/2;
+
+			REBARBANDINFO rbbi = {0};
+			rbbi.cbSize = sizeof(REBARBANDINFO);
+			rbbi.fMask = RBBIM_CHILD;
+			GetBandInfo(i, &rbbi);
+			
+			RECT rcChild;
+			GetWindowRect(rbbi.hwndChild, &rcChild);
+			int ChildWidth = rcChild.right - rcChild.left;
+
+			int xGap = GetApp()->GetFrame()->IsXPThemed()? 16 : 14;
+			rc.right = rc.left + ChildWidth + xGap;
 			::SetBkColor(hMemDC, BandColor1);
 			::ExtTextOut(hMemDC, 0, 0, ETO_OPAQUE, &rc, NULL, 0, NULL);
 			rc.bottom = rc.top + Height;
 			rc.top = rc.top + Height/2;
+			
 			GradientFill(hMemDC, BandColor1, BandColor2, &rc, FALSE);
 		}
 	
@@ -2244,8 +2292,8 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_bSupportRebars(FALSE),
-						m_hMenu(NULL), m_pView(NULL)
+		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_hMenu(NULL), m_pView(NULL), 
+						m_ComCtlVer(0)
 	{
 		GetApp()->SetFrame(this);
 		INITCOMMONCONTROLSEX InitStruct;
@@ -2254,6 +2302,9 @@ namespace Win32xx
 
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
+
+		if (m_ComCtlVer >= 4.7)
+			m_bUseRebar = TRUE;
 
 		SetFrameMenu(IDW_MAIN);
 
@@ -2293,27 +2344,31 @@ namespace Win32xx
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
-		rbbi.cx         = 200;
-		rbbi.cxMinChild = 200;
-
-
+		
+		// A window can span more than one monitor, so choose a safe max x size
+		rbbi.cx         = 4* ::GetSystemMetrics(SM_CXFULLSCREEN);
+		rbbi.cxMinChild = 4* ::GetSystemMetrics(SM_CXFULLSCREEN);
+		
 		GetRebar().InsertBand(-1, &rbbi);
 	}
 
 	void CFrame::AddToolbarBand(int Toolbar_Height /*= TOOLBAR_HEIGHT*/)
 	{
    		REBARBANDINFO rbbi = {0};
+		SIZE sz = GetToolbar().GetMaxSize();
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
 		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
-		rbbi.cyMinChild = Toolbar_Height;
-		rbbi.cyMaxChild = Toolbar_Height;;
+	//	rbbi.cyMinChild = Toolbar_Height;
+	//	rbbi.cyMaxChild = Toolbar_Height;;
+		rbbi.cyMinChild = sz.cy;
+		rbbi.cyMaxChild = sz.cy;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 		rbbi.hwndChild  = GetToolbar().GetHwnd();
-		rbbi.cx         = 200;
-		rbbi.cxMinChild = 200;
+		rbbi.cx         = sz.cx;
+		rbbi.cxMinChild = sz.cx;
 
 		GetRebar().InsertBand(-1, &rbbi);
 	}
@@ -2333,7 +2388,7 @@ namespace Win32xx
 			::GetWindowRect(GetStatusbar().GetHwnd(), &rStatus);
 
 		// Get size of top rebar or toolbar
-		if (m_bSupportRebars && m_bUseRebar)
+		if (IsRebarSupported() && m_bUseRebar)
 			::GetWindowRect(GetRebar().GetHwnd(), &rTop);
 		else
 			if (IsWindowVisible(GetToolbar().GetHwnd()))
@@ -2405,24 +2460,44 @@ namespace Win32xx
 			if (!hComCtl)
 				throw CWinException(_T("CFrame::LoadCommonControls ... Failed to load COMCTL32.DLL"));
 
-			// Declare a pointer to function
+			// Declare pointer to functions
 			BOOL (STDAPICALLTYPE* pfnInit)(LPINITCOMMONCONTROLSEX InitStruct);
+			HRESULT (CALLBACK* pfnDLLGetVersion)(DLLVERSIONINFO* pdvi);
 
 			// Store the address of the InitCommonControlEx function
-			(FARPROC&)pfnInit = ::GetProcAddress(hComCtl, "InitCommonControlsEx");
+			(FARPROC&) pfnInit = ::GetProcAddress(hComCtl, "InitCommonControlsEx");
 
 			if (!pfnInit)
+			{
 				// Can't call InitCommonControlsEx, so call InitCommonControls instead
 				// We are using COMCTL32.dll version 4.0
 				::InitCommonControls();
+				m_ComCtlVer = 4;
+			}
 			else
 			{
 				// We are using COMCTL32.dll version 4.7 or later
 				// Call InitCommonControlsEx
 				if(!((*pfnInit)(&InitStruct)))
 					throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));
-				m_bSupportRebars = TRUE;
-				m_bUseRebar     = TRUE;
+				
+				m_ComCtlVer      = 4.7;
+
+				(FARPROC&) pfnDLLGetVersion = ::GetProcAddress(hComCtl, "DllGetVersion");
+				if(pfnDLLGetVersion)
+				{
+					DLLVERSIONINFO dvi = {0};
+                    dvi.cbSize = sizeof dvi;
+                    if(pfnDLLGetVersion(&dvi) == NOERROR)
+                    {
+						DWORD dwVer = dvi.dwMajorVersion;
+						double VerMinor = dvi.dwMinorVersion;
+						while (VerMinor >= 1)
+							VerMinor = VerMinor/10;
+						
+						m_ComCtlVer = dwVer + VerMinor;
+                    }
+				}
 			}
 
 			::FreeLibrary(hComCtl);
@@ -2463,7 +2538,7 @@ namespace Win32xx
 		// Set the accelerator table and HWND for translated messages
 		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
 
-		if (m_bSupportRebars && m_bUseRebar)
+		if (IsRebarSupported() && m_bUseRebar)
 		{
 			// Create the rebar
 			GetRebar().Create(m_hWnd);
@@ -2475,17 +2550,23 @@ namespace Win32xx
 
 			// Create the toolbar inside rebar
 			GetToolbar().Create(GetRebar().GetHwnd());
+
+			// Load the toolbar buttons
+			SetButtons(m_ToolbarData);
+			
 			AddToolbarBand();
 		}
 		else
+		{
 			// Create the toolbar without a rebar
 			GetToolbar().Create(m_hWnd);
 
+			// Load the toolbar buttons
+			SetButtons(m_ToolbarData);
+		}
+
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
-
-		// Load the toolbar buttons
-		SetButtons(m_ToolbarData);
 
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
