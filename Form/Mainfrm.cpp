@@ -55,56 +55,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 
 void CMainFrame::OnCreate()
 {
-	// Set the icon
-	SetIconLarge(IDW_MAIN);
-	SetIconSmall(IDW_MAIN);
+	// Override OnCreate to customise the frame creation
 
-	// Set the accelerator table and HWND for translated messages
-	GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
-
-	if (IsRebarSupported() && m_bUseRebar)
-	{
-		// Create the rebar
-		GetRebar().Create(m_hWnd);
-
-		// Create the menu inside rebar
-		GetMenubar().Create(GetRebar().GetHwnd());
-		GetMenubar().SetMenu(GetFrameMenu());
-		AddMenubarBand();
-
-		// Create the toolbar inside rebar
-		GetToolbar().Create(GetRebar().GetHwnd());
-
-		// Load the toolbar buttons
-		SetButtons(m_ToolbarData);
-		
-		AddToolbarBand();
-	}
-	else
-	{
-		// Create the toolbar without a rebar
-		GetToolbar().Create(m_hWnd);
-
-		// Load the toolbar buttons
-		SetButtons(m_ToolbarData);
-	}
-
-	if (!IsMenubarUsed())
-		::SetMenu(m_hWnd, GetFrameMenu());
-
-	// Create the status bar
-	GetStatusbar().Create(m_hWnd);
-
-	// Create the view window
-	m_MyDialog.SetParent(m_hWnd);
-	m_MyDialog.DoModeless();
-
-	// Reposition the child windows
-	RecalcLayout();
-
-	// Start timer for Status updates
-	if (m_bShowIndicatorStatus || m_bShowMenuStatus)
-		::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
+	// Use the default frame creation
+	CFrame::OnCreate();
 }
 
 void CMainFrame::OnInitialUpdate()

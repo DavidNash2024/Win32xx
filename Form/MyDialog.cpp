@@ -27,6 +27,12 @@ CMyDialog::~CMyDialog()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
+HWND CMyDialog::Create(HWND hWndParent = 0)
+{
+	SetParent(hWndParent);
+	return DoModeless();
+}
+
 BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)

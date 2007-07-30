@@ -15,6 +15,7 @@ public:
 	CMyDialog(UINT nResID, HWND hWndParent = NULL);
 	CMyDialog(LPCTSTR lpszResName, HWND hWndParent = NULL);
 	virtual ~CMyDialog();
+	virtual HWND Create(HWND hWndParent);
 
 protected:
 	virtual BOOL OnInitDialog();
