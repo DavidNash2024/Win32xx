@@ -2786,8 +2786,12 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		::SendMessage(GetStatusbar().GetHwnd(), WM_SIZE, 0, 0);
-		::InvalidateRect(GetStatusbar().GetHwnd(), NULL, TRUE);
+		HWND hStatusbar = GetStatusbar().GetHwnd();
+		if (hStatusbar)
+		{
+			::SendMessage(hStatusbar, WM_SIZE, 0, 0);
+			::InvalidateRect(hStatusbar, NULL, TRUE);
+		}
 
 		// Reposition the text
 		SetStatusText();

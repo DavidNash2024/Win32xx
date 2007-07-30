@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "FrameApp.h"
+#include "FormApp.h"
 
 
 INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)

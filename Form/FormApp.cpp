@@ -1,7 +1,7 @@
 //////////////////////////////////////////////
 //FrameApp.cpp
 
-#include "FrameApp.h"
+#include "FormApp.h"
 
 
 // Definitions for the CFrameApp class
