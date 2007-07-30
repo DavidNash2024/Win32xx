@@ -26,7 +26,6 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-//	CView m_View;
 	CMyDialog m_MyDialog;
 };
 

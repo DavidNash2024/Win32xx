@@ -108,10 +108,6 @@ SOURCE=.\Mainfrm.cpp
 
 SOURCE=.\MyDialog.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=.\View.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -135,10 +131,6 @@ SOURCE=.\MyDialog.h
 # Begin Source File
 
 SOURCE=.\resource.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\View.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
