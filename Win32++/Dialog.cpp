@@ -118,6 +118,12 @@ namespace Win32xx
 		return CenterPos;
 	} // POINT CDialog::Center(HWND hWnd)
 
+	HWND CDialog::Create(HWND hWndParent = 0)
+	{
+		SetParent(hWndParent);
+		return DoModeless();
+	}
+
 	BOOL CDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CDialog if you wish to handle messages

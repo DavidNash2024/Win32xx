@@ -56,6 +56,7 @@ namespace Win32xx
 		CDialog(LPCTSTR lpszResName, HWND hWndParent = NULL);
 		CDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent = NULL);
 		virtual ~CDialog();
+		virtual HWND Create(HWND hWndParent);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
 
