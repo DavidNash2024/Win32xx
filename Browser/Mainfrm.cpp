@@ -51,7 +51,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 	rbbi.clrBack    = RGB(220,230,250);//GetSysColor(COLOR_BTNFACE);
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
-//	rbbi.lpText     = _T("Address");
+	rbbi.lpText     = _T("Address");
 
 	GetRebar().InsertBand(-1, &rbbi);
 }

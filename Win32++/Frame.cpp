@@ -719,7 +719,7 @@ namespace Win32xx
 				pWinPos->cx = sz.cx;
 			}
 			break;
-		}
+		} 
 
 		// pass unhandled messages on for default processing
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -856,12 +856,12 @@ namespace Win32xx
 				int ChildWidth = rcChild.right - rcChild.left;
 
 				// Add padding to take account for gripper size and borders
-				int xPad = IsXPThemed()? 14 : 10;
+				int xPad = IsXPThemed()? 14 : 12;
 				
 				// Add the size of the rebar text (if any)
 				SIZE TextSize = {0};
 				::GetTextExtentPoint32(hDC, Text, lstrlen(Text), &TextSize);
-
+				
 				rc.right = rc.left + ChildWidth + xPad + TextSize.cx;
 				SolidFill(hMemDC, BandColor1, &rc);
 				rc.bottom = rc.top + Height;
