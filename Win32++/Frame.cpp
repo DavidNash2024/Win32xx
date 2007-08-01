@@ -840,7 +840,7 @@ namespace Win32xx
 			{
 				GetBandRect(i, &rc);
 				int Height = rc.bottom - rc.top;
-				rc.left = max(0, rc.left -2);
+				rc.left = max(0, rc.left);
 				rc.bottom = rc.top + Height/2;
 				TCHAR Text[MAX_STRING_SIZE] = _T("");
 
@@ -856,7 +856,7 @@ namespace Win32xx
 				int ChildWidth = rcChild.right - rcChild.left;
 
 				// Add padding to take account for gripper size and borders
-				int xPad = IsXPThemed()? 16 : 14;
+				int xPad = IsXPThemed()? 14 : 10;
 				
 				// Add the size of the rebar text (if any)
 				SIZE TextSize = {0};

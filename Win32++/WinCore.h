@@ -385,7 +385,7 @@ namespace Win32xx
 		BOOL bIsXPThemed = FALSE;
 
 		// Test if Windows version is XP or greater
-		if (GetWinVersion() > 2501)
+		if (GetWinVersion() >= 2501)
 		{		
 			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 			if(hMod)
