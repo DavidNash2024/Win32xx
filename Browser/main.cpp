@@ -4,7 +4,7 @@
 #include "FrameApp.h"
 
 
-INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {
     // Start Win32++
     CFrameApp MyApp(hInstance);

@@ -46,9 +46,10 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
 	rbbi.cyMinChild = Listbox_Height;
 	rbbi.cyMaxChild = Listbox_Height;
+	rbbi.cxMinChild = 200;
 	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-	rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
+	rbbi.clrBack    = RGB(220,230,250);//GetSysColor(COLOR_BTNFACE);
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
 	rbbi.lpText     = _T("Address");
 
@@ -280,7 +281,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 	if (lpStatusText)
 	{
-		if (strcmp(OLE2T(lpStatusText), _T("")))
+		if (lstrcmp(OLE2T(lpStatusText), _T("")))
 		{
 			GetStatusbar().SetPaneText(0, OLE2T(lpStatusText));
 		}
@@ -297,7 +298,7 @@ void CMainFrame::OnTimer(WPARAM wParam)
 
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
-	TRACE("TitleChange: ");
+	TRACE(_T("TitleChange: "));
 	USES_CONVERSION;
 	tStringStream str;
 

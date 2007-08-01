@@ -17,7 +17,7 @@
 			ConfigurationType="1"
 			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="0">
+			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib comsupp.lib atl.lib"
+				AdditionalDependencies="comctl32.lib atl.lib"
 				OutputFile="$(OutDir)/Browser.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -80,7 +80,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib comsupp.lib atl.lib"
+				AdditionalDependencies="comctl32.lib atl.lib"
 				OutputFile="$(OutDir)/Browser.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"

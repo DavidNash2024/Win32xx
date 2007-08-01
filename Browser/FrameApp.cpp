@@ -9,7 +9,7 @@
 CFrameApp::CFrameApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
 	//Start Tracing
-	TRACE("Tracing Started");
+	TRACE(_T("Tracing Started"));
 
 	//Create the Frame Window
 	m_Frame.Create();

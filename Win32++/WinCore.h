@@ -64,6 +64,7 @@
 #include <sstream>
 #include <tchar.h>
 #include <map>
+#include <shlwapi.h>
 
 // Some useful type declarations
 typedef std::basic_string<TCHAR> tString;
@@ -145,7 +146,7 @@ namespace Win32xx
 		virtual HWND GetAncestor(HWND hWnd);
 		virtual CWnd* GetCWndObject(HWND hWnd);
 		virtual HWND GetHwnd() {return m_hWnd;}
-		virtual void GradientFill(HDC hDC, COLORREF Colour1, COLORREF Colour2, LPRECT pRc, BOOL bVertical);
+		virtual void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -154,6 +155,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
 		virtual void SetParent(HWND hParent);
+		virtual void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
@@ -312,7 +314,7 @@ namespace Win32xx
 
 		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
 
-		// Return values and window version:
+		// Return values and window versions:
 		//  1400     Windows 95
 		//  1410     Windows 98
 		//  1490     Windows ME
@@ -323,6 +325,88 @@ namespace Win32xx
 		//  2600     Windows Vista
 
 		return nVersion;
+	}
+
+	inline int GetComCtlVersion()
+	{
+		// Load the Common Controls DLL
+		HMODULE hComCtl = ::LoadLibraryA("COMCTL32.DLL");
+		if (!hComCtl)
+			return 0;
+
+		int ComCtlVer = 400;
+
+		if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
+		{
+			// InitCommonControlsEx is unique to 4.7 and later		
+			ComCtlVer = 470;
+			
+			if (::GetProcAddress(hComCtl, "DllInstall"))
+			{
+				// DllInstall is unique to 4.71 and later
+				ComCtlVer = 471;
+
+				typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
+				DLLGETVERSION* pfnDLLGetVersion = NULL;
+
+				pfnDLLGetVersion = (DLLGETVERSION*)::GetProcAddress(hComCtl, "DllGetVersion");
+				if(pfnDLLGetVersion)
+				{
+					DLLVERSIONINFO dvi = {0};
+					dvi.cbSize = sizeof dvi;
+					if(pfnDLLGetVersion(&dvi) == NOERROR)
+					{
+						DWORD dwVerMajor = dvi.dwMajorVersion;
+						DWORD dwVerMinor = dvi.dwMinorVersion;				
+						ComCtlVer = 100 * dwVerMajor + dwVerMinor;
+					}
+				}
+			}
+		}
+
+		::FreeLibrary(hComCtl);
+
+		// return values and DLL versions
+		// 400  dll ver 4.00	Windows 95/Windows NT 4.0
+		// 470  dll ver 4.70	Internet Explorer 3.x
+		// 471  dll ver 4.71	Internet Explorer 4.0
+		// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
+		// 580  dll ver 5.80	Internet Explorer 5
+		// 581  dll ver 5.81	Windows 2000 and Windows ME
+		// 582  dll ver 5.82	Windows XP or Vista without XP themes
+		// 600  dll ver 6.00	Windows XP with XP themes
+		// 610  dll ver 6.10	Windows Vista with XP themes
+		
+		return ComCtlVer;
+	}
+
+	inline BOOL IsXPThemed()
+	{
+		BOOL bIsXPThemed = FALSE;
+
+		// Test if Windows version is XP or greater
+		if (GetWinVersion() > 2501)
+		{		
+			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+			if(hMod)
+			{
+				// Declare pointers to functions
+				FARPROC pIsAppThemed   = ::GetProcAddress(hMod, "IsAppThemed");
+				FARPROC pIsThemeActive = ::GetProcAddress(hMod, "IsThemeActive");
+				
+				if(pIsAppThemed && pIsThemeActive)
+				{
+					if(pIsAppThemed() && pIsThemeActive())								
+					{
+						// Test if ComCtl32 dll used is version 6 or later
+						bIsXPThemed = (GetComCtlVersion() >= 600);
+					}
+				}
+				::FreeLibrary(hMod);
+			}
+		}
+		
+		return bIsXPThemed;
 	}
 
 } // namespace Win32xx

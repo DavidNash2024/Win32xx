@@ -828,8 +828,7 @@ namespace Win32xx
 		{
 			rc.left = 700;
 			rc.right = Width;
-			// Background color already set to color2
-			::ExtTextOut(hMemDC, 0, 0, ETO_OPAQUE, &rc, NULL, 0, NULL);
+			SolidFill(hMemDC, m_bkColor2, &rc);
 		}
 
 		// Draw band background
@@ -837,28 +836,39 @@ namespace Win32xx
 		COLORREF BandColor2 = RGB( 70,130,220);
 		for (int i = 1 ; i < GetBandCount(); i++)
 		{
-			GetBandRect(i, &rc);
-			int Height = rc.bottom - rc.top;
-			rc.left = max(0, rc.left -2);
-			rc.bottom = rc.top + Height/2;
+			if (IsBandVisible(i))
+			{
+				GetBandRect(i, &rc);
+				int Height = rc.bottom - rc.top;
+				rc.left = max(0, rc.left -2);
+				rc.bottom = rc.top + Height/2;
+				TCHAR Text[MAX_STRING_SIZE] = _T("");
 
-			REBARBANDINFO rbbi = {0};
-			rbbi.cbSize = sizeof(REBARBANDINFO);
-			rbbi.fMask = RBBIM_CHILD;
-			GetBandInfo(i, &rbbi);
-			
-			RECT rcChild;
-			GetWindowRect(rbbi.hwndChild, &rcChild);
-			int ChildWidth = rcChild.right - rcChild.left;
+				REBARBANDINFO rbbi = {0};
+				rbbi.cbSize = sizeof(REBARBANDINFO);
+				rbbi.fMask = RBBIM_CHILD | RBBIM_TEXT | RBBIM_COLORS;
+				rbbi.cch   = (MAX_STRING_SIZE-1)*sizeof(TCHAR);
+				rbbi.lpText = Text;
+				GetBandInfo(i, &rbbi);
+				
+				RECT rcChild;
+				GetWindowRect(rbbi.hwndChild, &rcChild);
+				int ChildWidth = rcChild.right - rcChild.left;
 
-			int xGap = GetApp()->GetFrame()->IsXPThemed()? 16 : 14;
-			rc.right = rc.left + ChildWidth + xGap;
-			::SetBkColor(hMemDC, BandColor1);
-			::ExtTextOut(hMemDC, 0, 0, ETO_OPAQUE, &rc, NULL, 0, NULL);
-			rc.bottom = rc.top + Height;
-			rc.top = rc.top + Height/2;
-			
-			GradientFill(hMemDC, BandColor1, BandColor2, &rc, FALSE);
+				// Add padding to take account for gripper size and borders
+				int xPad = IsXPThemed()? 16 : 14;
+				
+				// Add the size of the rebar text (if any)
+				SIZE TextSize = {0};
+				::GetTextExtentPoint32(hDC, Text, lstrlen(Text), &TextSize);
+
+				rc.right = rc.left + ChildWidth + xPad + TextSize.cx;
+				SolidFill(hMemDC, BandColor1, &rc);
+				rc.bottom = rc.top + Height;
+				rc.top = rc.top + Height/2;
+				
+				GradientFill(hMemDC, BandColor1, BandColor2, &rc, FALSE);
+			}
 		}
 	
 
@@ -886,6 +896,22 @@ namespace Win32xx
                          CCS_NODIVIDER | RBS_VARHEIGHT | RBS_BANDBORDERS;
 
 		cs.lpszClass = REBARCLASSNAME;
+	}
+
+	void CRebar::RepositionBands()
+	{
+		int OldrcTop = -1;
+		for (int nBand = GetBandCount() -1; nBand >= 0; nBand--)
+		{
+			RECT rc;
+			GetBandRect(nBand, &rc);
+			if (rc.top != OldrcTop)
+			{
+				// Maximize the last band on each row
+				::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0);
+				OldrcTop = rc.top;
+			}
+		}
 	}
 
 	void CRebar::ResizeBand(const int nBand, const int nSize)
@@ -2292,10 +2318,11 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_hMenu(NULL), m_pView(NULL), 
-						m_ComCtlVer(0)
+		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_hMenu(NULL), m_pView(NULL)//, 
+					//	m_ComCtlVer(0)
 	{
 		GetApp()->SetFrame(this);
+		
 		INITCOMMONCONTROLSEX InitStruct;
 		InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 		InitStruct.dwICC = ICC_WIN95_CLASSES| ICC_COOL_CLASSES;
@@ -2303,7 +2330,7 @@ namespace Win32xx
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
 
-		if (m_ComCtlVer >= 4.7)
+		if (GetComCtlVersion() >= 4.7)
 			m_bUseRebar = TRUE;
 
 		SetFrameMenu(IDW_MAIN);
@@ -2456,49 +2483,24 @@ namespace Win32xx
 		try
 		{
 			// Load the Common Controls DLL
-			HMODULE hComCtl = ::LoadLibraryA("COMCTL32.DLL");
+			HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
 			if (!hComCtl)
 				throw CWinException(_T("CFrame::LoadCommonControls ... Failed to load COMCTL32.DLL"));
 
-			// Declare pointer to functions
-			BOOL (STDAPICALLTYPE* pfnInit)(LPINITCOMMONCONTROLSEX InitStruct);
-			HRESULT (CALLBACK* pfnDLLGetVersion)(DLLVERSIONINFO* pdvi);
-
-			// Store the address of the InitCommonControlEx function
-			(FARPROC&) pfnInit = ::GetProcAddress(hComCtl, "InitCommonControlsEx");
-
-			if (!pfnInit)
+			if (GetComCtlVersion() > 470)
 			{
-				// Can't call InitCommonControlsEx, so call InitCommonControls instead
-				// We are using COMCTL32.dll version 4.0
-				::InitCommonControls();
-				m_ComCtlVer = 4;
+				// Declare a pointer to the InItCommonControlsEx function
+				typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
+				INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+				
+				// Call InitCommonControlsEx
+				if(!((*pfnInit)(&InitStruct)))
+					throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));			
 			}
 			else
 			{
-				// We are using COMCTL32.dll version 4.7 or later
-				// Call InitCommonControlsEx
-				if(!((*pfnInit)(&InitStruct)))
-					throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));
-				
-				m_ComCtlVer      = 4.7;
-
-				(FARPROC&) pfnDLLGetVersion = ::GetProcAddress(hComCtl, "DllGetVersion");
-				if(pfnDLLGetVersion)
-				{
-					DLLVERSIONINFO dvi = {0};
-                    dvi.cbSize = sizeof dvi;
-                    if(pfnDLLGetVersion(&dvi) == NOERROR)
-                    {
-						DWORD dwVer = dvi.dwMajorVersion;
-						double VerMinor = dvi.dwMinorVersion;
-						while (VerMinor >= 1)
-							VerMinor = VerMinor/10;
-						
-						m_ComCtlVer = dwVer + VerMinor;
-                    }
-				}
-			}
+				::InitCommonControls();
+			} 
 
 			::FreeLibrary(hComCtl);
 		}
@@ -2625,6 +2627,10 @@ namespace Win32xx
 		case RBN_HEIGHTCHANGE:
 			RecalcLayout();
 			::InvalidateRect(m_hWnd, NULL, TRUE);
+			break;
+
+		case RBN_LAYOUTCHANGED:
+			GetRebar().RepositionBands();
 			break;
 
 		// Display toolips for the toolbar
@@ -2815,6 +2821,7 @@ namespace Win32xx
 			::SetWindowPos(m_pView->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
+		GetRebar().RepositionBands();
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}
 

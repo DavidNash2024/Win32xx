@@ -55,7 +55,8 @@ void CView::Navigate(LPCTSTR str)
 	// Navigate to the web page
 	VARIANT vars[4];
 	memset(vars,0,sizeof(vars));
-	BSTR BStrURL = _com_util::ConvertStringToBSTR(str);
+//	BSTR BStrURL = _com_util::ConvertStringToBSTR(str);
+	CComBSTR BStrURL(str);
 	HRESULT hrie = m_pInetExplorer->Navigate(BStrURL,vars,vars+1,vars+2,vars+3);
 	SysFreeString(BStrURL);
 }
@@ -70,7 +71,7 @@ void CView::OnCreate()
 	USES_CONVERSION;
 
 	// Use ATL to create the ActiveX control, initializes it, and hosts it in the specified window
-	LRESULT hr = AtlAxCreateControlEx(T2OLE("about:blank"), m_hWnd, NULL, NULL, &m_pSourceUnk, IID_NULL);
+	LRESULT hr = AtlAxCreateControlEx(T2OLE(_T("about:blank")), m_hWnd, NULL, NULL, &m_pSourceUnk, IID_NULL);
 
 	if (SUCCEEDED(hr))
 	{
@@ -96,7 +97,7 @@ void CView::OnInitialUpdate()
 	// OnInitial is called after the window is created.
 	// Tasks which are to done after the window is created go here.
 
-	TRACE("CView::OnInitialUpdate");
+	TRACE(_T("CView::OnInitialUpdate"));
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)

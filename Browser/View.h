@@ -5,14 +5,12 @@
 #define VIEW_H
 
 // Note: This code requires the following libraries to be linked:
-//  comsupp.lib (for ConvertStringToBSTR support)
 //  atl.lib		(assuming you want to link ATL staticly)
 //
 
 
 #include <exdisp.h>				// WebBrowser2 support
 #include <exdispid.h>
-
 #include <atlbase.h>			// ATL support
 
 // For VS Studio 6 (ATL v3.0) and below
@@ -29,10 +27,7 @@
 
 #include <atlcom.h>
 #include <atlhost.h>
-
-#include <comutil.h>			// For ConvertStringToBSTR support
 #include "../Win32++/Wincore.h"
-
 
 
 class CView : public CWnd

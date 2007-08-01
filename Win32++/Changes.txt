@@ -1,9 +1,18 @@
 Version 5.4
 -----------
+New Features
+* Rebar themes
+
 Added CMenubar::SetIcons (for imagelists)
 Added CRebar::GetBandRect
+Added CRebar::OnEraseBkGnd
+Added CRebar::RepositionBands
+Added CRebar::SetBkgrndColors
 Added CWnd::GradientFill
 Added CWnd::LoadBitmap
+Added CWnd::SolidFill
+Added GetComCtlVersion
+Added IsXPThemed
 
 
 Version 5.3

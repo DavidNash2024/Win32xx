@@ -636,19 +636,19 @@ namespace Win32xx
 		return NULL;
 	}
 
-	void CWnd::GradientFill(HDC hDC, COLORREF Colour1, COLORREF Colour2, LPRECT pRc, BOOL bVertical)
+	void CWnd::GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
 	// A simple but efficient Gradient Filler compatible with all Windows operating systems
 	{
 		int Width = pRc->right - pRc->left;
 		int Height = pRc->bottom - pRc->top;
 
-		int r1 = GetRValue(Colour1);
-		int g1 = GetGValue(Colour1);
-		int b1 = GetBValue(Colour1);
+		int r1 = GetRValue(Color1);
+		int g1 = GetGValue(Color1);
+		int b1 = GetBValue(Color1);
 
-		int r2 = GetRValue(Colour2);
-		int g2 = GetGValue(Colour2);
-		int b2 = GetBValue(Colour2);
+		int r2 = GetRValue(Color2);
+		int g2 = GetGValue(Color2);
+		int b2 = GetBValue(Color2);
 
     
 		if (bVertical)
@@ -993,6 +993,12 @@ namespace Win32xx
 			DebugErrMsg(_T("Exception in CWnd::SetParent"));
 			throw;	// Rethrow unknown exception
 		}
+	}
+
+	void CWnd::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
+	{
+		::SetBkColor(hDC, Color);	
+		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
 	}
 
 	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)

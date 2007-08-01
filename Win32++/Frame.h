@@ -130,6 +130,7 @@ namespace Win32xx
 		virtual void OnCreate();
 		virtual void OnEraseBkGnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void RepositionBands();
 		virtual void ResizeBand(const int nBand, const int nSize);
 		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
 		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
@@ -250,9 +251,8 @@ namespace Win32xx
 		virtual CWnd* GetView() {return m_pView;}
 		virtual BOOL IsMDIFrame() {return m_bIsMDIFrame;}
 		virtual BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
-		virtual BOOL IsRebarSupported() {return (m_ComCtlVer >= 4.7);}
+		virtual BOOL IsRebarSupported() {return (GetComCtlVersion() >= 4.7);}
 		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
-		virtual BOOL IsXPThemed() {return (m_ComCtlVer >= 6.0);}
 		virtual void SetFrameMenu(INT ID_MENU);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
@@ -298,10 +298,8 @@ namespace Win32xx
 		CRebar m_Rebar;				// CRebar object
 		CStatusbar m_Statusbar;		// CStatusbar object
 		CToolbar m_Toolbar;			// CToolbar object
-	//	BOOL m_bSupportRebars;		// TRUE if rebars are supported by the OS
 		HMENU m_hMenu;				// handle to the frame menu
 		CWnd* m_pView;				// pointer to the View CWnd object
-		double m_ComCtlVer;			// Version number of the ComCtl32 DLL
 
 	};  // class CFrame
 

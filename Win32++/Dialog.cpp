@@ -120,6 +120,7 @@ namespace Win32xx
 
 	HWND CDialog::Create(HWND hWndParent = 0)
 	{
+		// Allow a dialog to be used as a child window
 		SetParent(hWndParent);
 		return DoModeless();
 	}
