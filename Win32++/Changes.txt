@@ -3,6 +3,7 @@ Version 5.4
 New Features
 * Rebar themes
 
+Added CDialog::Create
 Added CMenubar::SetIcons (for imagelists)
 Added CRebar::GetBandRect
 Added CRebar::OnEraseBkGnd
