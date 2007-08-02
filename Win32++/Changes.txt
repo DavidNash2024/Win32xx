@@ -9,11 +9,14 @@ Added CRebar::GetBandRect
 Added CRebar::OnEraseBkGnd
 Added CRebar::RepositionBands
 Added CRebar::SetBkgrndColors
+Added CToolbar::GetMaxSize
+Added CWinApp::SetAccelerators
 Added CWnd::GradientFill
 Added CWnd::LoadBitmap
 Added CWnd::SolidFill
 Added GetComCtlVersion
 Added IsXPThemed
+Removed CWinApp::SetAcceleratorTable
 
 
 Version 5.3

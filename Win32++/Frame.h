@@ -120,6 +120,7 @@ namespace Win32xx
 		virtual ~CRebar();
 		virtual BOOL DeleteBand(const int nBand);
 		virtual int GetBand(const HWND hWnd) const;
+		virtual RECT GetBandBorders(int nBand);
 		virtual int GetBandCount() const;
 		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
 		virtual BOOL GetBandRect(int i, LPRECT pRect);
@@ -277,6 +278,7 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
+		virtual void SetMenubarBandSize();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;

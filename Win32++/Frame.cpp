@@ -760,6 +760,13 @@ namespace Win32xx
 		return nResult;
 	}
 
+	RECT CRebar::GetBandBorders(int nBand)
+	{
+		RECT rc = {0};
+		::SendMessage(m_hWnd, RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
+		return rc;
+	}
+
 	int CRebar::GetBandCount() const
 	{
 		return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0, 0);
@@ -831,38 +838,28 @@ namespace Win32xx
 			SolidFill(hMemDC, m_bkColor2, &rc);
 		}
 
-		// Draw band background
+		// Draw band backgrounds
 		COLORREF BandColor1 = RGB(220,230,250);
 		COLORREF BandColor2 = RGB( 70,130,220);
-		for (int i = 1 ; i < GetBandCount(); i++)
+		for (int nBand = 1 ; nBand < GetBandCount(); nBand++)
 		{
-			if (IsBandVisible(i))
+			if (IsBandVisible(nBand))
 			{
-				GetBandRect(i, &rc);
+				GetBandRect(nBand, &rc);
 				int Height = rc.bottom - rc.top;
-				rc.left = max(0, rc.left);
 				rc.bottom = rc.top + Height/2;
-				TCHAR Text[MAX_STRING_SIZE] = _T("");
 
 				REBARBANDINFO rbbi = {0};
 				rbbi.cbSize = sizeof(REBARBANDINFO);
-				rbbi.fMask = RBBIM_CHILD | RBBIM_TEXT | RBBIM_COLORS;
-				rbbi.cch   = (MAX_STRING_SIZE-1)*sizeof(TCHAR);
-				rbbi.lpText = Text;
-				GetBandInfo(i, &rbbi);
+				rbbi.fMask = RBBIM_CHILD ;
+				GetBandInfo(nBand, &rbbi);
 				
 				RECT rcChild;
 				GetWindowRect(rbbi.hwndChild, &rcChild);
 				int ChildWidth = rcChild.right - rcChild.left;
 
-				// Add padding to take account for gripper size and borders
-				int xPad = IsXPThemed()? 14 : 12;
-				
-				// Add the size of the rebar text (if any)
-				SIZE TextSize = {0};
-				::GetTextExtentPoint32(hDC, Text, lstrlen(Text), &TextSize);
-				
-				rc.right = rc.left + ChildWidth + xPad + TextSize.cx;
+				RECT rcBorder = GetBandBorders(nBand);
+				rc.right = rc.left + ChildWidth + rcBorder.left;
 				SolidFill(hMemDC, BandColor1, &rc);
 				rc.bottom = rc.top + Height;
 				rc.top = rc.top + Height/2;
@@ -887,7 +884,7 @@ namespace Win32xx
 		// Cleanup
 		::SelectObject(hMemDC, hOldBitmap);
 		::DeleteObject(hBitmap);
-		::DeleteDC(hMemDC);
+		::DeleteDC(hMemDC); 
 	}
 
 	void CRebar::PreCreate(CREATESTRUCT &cs)
@@ -927,7 +924,7 @@ namespace Win32xx
 		SetBandInfo(nBand, &rbbi );
 
 		// Resize the band to the new maximum size
-		::SendMessage(m_hWnd, RB_MAXIMIZEBAND, nBand, 0);
+	//	::SendMessage(m_hWnd, RB_MAXIMIZEBAND, nBand, 0);
 	}
 
 	void CRebar::SetBandBitmap(const int nBand, const HBITMAP hBackground)
@@ -1026,7 +1023,7 @@ namespace Win32xx
 			break; 
 		case WM_ERASEBKGND:
 			OnEraseBkGnd((HDC)wParam);
-			return TRUE; 
+			return TRUE;
 		} 
 
 		// pass unhandled messages on for default processing
@@ -2369,13 +2366,12 @@ namespace Win32xx
 		rbbi.cyMaxChild = Menubar_Height;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_NOGRIPPER ;
 		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
+	//	rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
+		rbbi.clrBack    = RGB( 70,130,220);
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
-		
-		// A window can span more than one monitor, so choose a safe max x size
-		rbbi.cx         = 4* ::GetSystemMetrics(SM_CXFULLSCREEN);
-		rbbi.cxMinChild = 4* ::GetSystemMetrics(SM_CXFULLSCREEN);
-		
+		rbbi.cx         = 2000;
+		rbbi.cxMinChild = 2000;
+			
 		GetRebar().InsertBand(-1, &rbbi);
 	}
 
@@ -2804,7 +2800,10 @@ namespace Win32xx
 
 		// Resize the rebar or toolbar
 		if (IsRebarUsed())
+		{
 			::SendMessage(GetRebar().GetHwnd(), WM_SIZE, 0, 0);
+			SetMenubarBandSize();
+		}
 		else
 			::SendMessage(GetToolbar().GetHwnd(), TB_AUTOSIZE, 0, 0);
 
@@ -2858,6 +2857,28 @@ namespace Win32xx
 		if(!m_hMenu)
 			DebugWarnMsg(_T("Load Menu failed"));
  	}
+
+	void CFrame::SetMenubarBandSize()
+	{
+		// Sets the minimum width of the Menubar band to the width of the rebar
+		// This prevents other bands from moving to this Menubar's row.
+		
+		RECT rc = {0};
+		GetClientRect(GetRebar().GetHwnd(), &rc);
+		int Width = rc.right - rc.left;
+		CRebar& RB = GetRebar();
+		int nBand = RB.GetBand(GetMenubar().GetHwnd());
+		::SendMessage(GetRebar().GetHwnd(), RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
+		Width = Width - rc.left - rc.right - 2;
+		
+		REBARBANDINFO rbbi = {0};
+		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
+		RB.GetBandInfo(nBand, &rbbi);
+		rbbi.cxMinChild = Width;
+		rbbi.cx         = Width;
+		RB.SetBandInfo(nBand, &rbbi);
+	}
 
 	void CFrame::SetStatusIndicators()
 	{
