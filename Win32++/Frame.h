@@ -48,6 +48,17 @@
 
 namespace Win32xx
 {
+	struct REBARTHEME
+	{
+		BOOL UseThemes;
+		COLORREF BkGndColor1;
+		COLORREF BkGndColor2;
+		COLORREF BandColor1;
+		COLORREF BandColor2;
+		BOOL LockBandZero;
+		BOOL ShortBands;
+		BOOL UseLines;
+	};
 
 	//////////////////////////////////////
 	// Declaration of the CStatusbar class
@@ -126,10 +137,11 @@ namespace Win32xx
 		virtual BOOL GetBandRect(int i, LPRECT pRect);
 		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
 		virtual int GetRowHeight(int nRow) const;
+		virtual REBARTHEME& GetTheme() {return m_Theme;}
 		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL IsBandVisible(int nBand);
 		virtual void OnCreate();
-		virtual void OnEraseBkGnd(HDC hDC);
+		virtual BOOL OnEraseBkGnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void RepositionBands();
 		virtual void ResizeBand(const int nBand, const int nSize);
@@ -137,13 +149,12 @@ namespace Win32xx
 		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
 		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL SetBarInfo(LPREBARINFO prbi);
-		virtual void SetBkgrndColors(COLORREF colour1, COLORREF colour2);
+		virtual void SetTheme(REBARTHEME& Theme);
 		virtual BOOL ShowBand(int nBand, BOOL fShow);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		COLORREF m_bkColor1;
-		COLORREF m_bkColor2;
+		REBARTHEME m_Theme;
 	};
 
 
@@ -279,6 +290,7 @@ namespace Win32xx
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
 		virtual void SetMenubarBandSize();
+		virtual void SetTheme(UINT nStyle);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;

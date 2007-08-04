@@ -1,19 +1,28 @@
 Version 5.4
 -----------
+Bug Fixes:
+* Text for toolbar buttons wasn't always displayed on Win2000
+
 New Features
 * Rebar themes
+* Forms Sample
 
 Added CDialog::Create
+Added CFrame::SetMenubarBandSize
 Added CMenubar::SetIcons (for imagelists)
+Added CRebar::GetBandBorders
 Added CRebar::GetBandRect
+Added CRebar::GetRowHeight
+Added CRebar::GetTheme
 Added CRebar::OnEraseBkGnd
 Added CRebar::RepositionBands
-Added CRebar::SetBkgrndColors
+Added CRebar::SetTheme
 Added CToolbar::GetMaxSize
 Added CWinApp::SetAccelerators
 Added CWnd::GradientFill
 Added CWnd::LoadBitmap
 Added CWnd::SolidFill
+Added REBARTHEME structure
 Added GetComCtlVersion
 Added IsXPThemed
 Removed CWinApp::SetAcceleratorTable
@@ -263,7 +272,6 @@ Summary of changes
     now choose whether or not to invalidate the view window when the frame
     window is resized. This has the potential to eliminate unnecessary flicker.
 6) The namespace used by the framework has been renamed to Win32xx.
-7) Superclassing is now used instead of subclassing for common controls.
 
 Changed the following classes
 * Added   CCriticalSection         Used for thread synchronisation

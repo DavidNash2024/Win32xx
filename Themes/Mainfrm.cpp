@@ -47,13 +47,13 @@ void CMainFrame::AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Norm
 
 	TB.SetImageList((int)TBData.size(), RGB(255,0,255), ID_Normal, 0, 0);
 	TB.SetButtons(TBData);
-	
+
 	// Fill the REBARBAND structure
 	REBARBANDINFO rbbi = {0};
 	SIZE sz = TB.GetMaxSize();
 
 	rbbi.cbSize     = sizeof(REBARBANDINFO);
-	rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
+	rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 	rbbi.cyMinChild = sz.cy;
 	rbbi.cyMaxChild = sz.cy;
 	rbbi.cx         = sz.cx;
@@ -93,6 +93,8 @@ void CMainFrame::OnCreate()
 	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
+
+	SetTheme(1);
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -184,6 +186,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

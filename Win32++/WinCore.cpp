@@ -1191,7 +1191,8 @@ namespace Win32xx
 		case WM_NOTIFY:
 			{
 				// Handle the Win32++ frame notifications
-				OnNotifyFrame(wParam, lParam);
+				lr = OnNotifyFrame(wParam, lParam);
+				if (lr) return lr;
 
 				// Do Notification reflection if it came from a CWnd object
 				CWnd* WndFrom = GetCWndObject(((LPNMHDR)lParam)->hwndFrom);

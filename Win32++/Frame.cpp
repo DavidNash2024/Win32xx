@@ -716,7 +716,14 @@ namespace Win32xx
 			{
 				SIZE sz = GetMaxSize();
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-				pWinPos->cx = sz.cx;
+				if (GetApp()->GetFrame()->IsRebarUsed())
+				{
+					REBARTHEME& rb = GetApp()->GetFrame()->GetRebar().GetTheme();
+					if (rb.UseThemes && rb.ShortBands)
+					{
+						pWinPos->cx = sz.cx;
+					}
+				}
 			}
 			break;
 		} 
@@ -730,8 +737,7 @@ namespace Win32xx
 	//
 	CRebar::CRebar()
 	{
-		m_bkColor1 = ::GetSysColor(COLOR_BTNFACE);
-		m_bkColor2 = ::GetSysColor(COLOR_BTNFACE);
+		ZeroMemory(&m_Theme, sizeof(REBARTHEME));
 	}
 
 	CRebar::~CRebar()
@@ -813,11 +819,27 @@ namespace Win32xx
 
 	void CRebar::OnCreate()
 	{
-		SetBkgrndColors(RGB(150,190,245), RGB(176,205,246));
+/*	//	SetBkgndColors(RGB(150,190,245), RGB(176,205,246), RGB(220,230,250), RGB( 70,130,220));
+	//	SetTheme(RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220));
+		REBARTHEME rt = {0};
+		
+		rt.UseThemes   = TRUE;
+		rt.BkGndColor1 = RGB(150,190,245);
+		rt.BkGndColor2 = RGB(196,215,250);
+		rt.BandColor1  = RGB(220,230,250);
+		rt.BandColor2  = RGB( 70,130,220);
+		rt.LockBandZero= TRUE;
+		rt.ShortBands  = TRUE;
+	//	rt.UseLines    = TRUE;
+			
+		SetTheme(rt); */
 	}
 
-	void CRebar::OnEraseBkGnd(HDC hDC)
+	BOOL CRebar::OnEraseBkGnd(HDC hDC)
 	{
+		if (!m_Theme.UseThemes)
+			return FALSE;
+
 		RECT rc;
 		GetClientRect(m_hWnd, &rc);
 		int Width = rc.right - rc.left;
@@ -830,61 +852,66 @@ namespace Win32xx
 			
 		// Draw to the Memory DC
 		rc.right = 700;
-		GradientFill(hMemDC, m_bkColor1, m_bkColor2, &rc, TRUE);
+		GradientFill(hMemDC, m_Theme.BkGndColor1, m_Theme.BkGndColor2, &rc, TRUE);
 		if (Width >= 700)
 		{
 			rc.left = 700;
 			rc.right = Width;
-			SolidFill(hMemDC, m_bkColor2, &rc);
+			SolidFill(hMemDC, m_Theme.BkGndColor2, &rc);
 		}
 
-		// Draw band backgrounds
-		COLORREF BandColor1 = RGB(220,230,250);
-		COLORREF BandColor2 = RGB( 70,130,220);
-		for (int nBand = 1 ; nBand < GetBandCount(); nBand++)
+		if (m_Theme.BandColor1 || m_Theme.BandColor2)
 		{
-			if (IsBandVisible(nBand))
+			// Draw band backgrounds
+			for (int nBand = 1 ; nBand < GetBandCount(); nBand++)
 			{
-				GetBandRect(nBand, &rc);
-				int Height = rc.bottom - rc.top;
-				rc.bottom = rc.top + Height/2;
+				if (IsBandVisible(nBand))
+				{
+					GetBandRect(nBand, &rc);
+					int Height = rc.bottom - rc.top;
+					rc.bottom = rc.top + Height/2;
 
-				REBARBANDINFO rbbi = {0};
-				rbbi.cbSize = sizeof(REBARBANDINFO);
-				rbbi.fMask = RBBIM_CHILD ;
-				GetBandInfo(nBand, &rbbi);
-				
-				RECT rcChild;
-				GetWindowRect(rbbi.hwndChild, &rcChild);
-				int ChildWidth = rcChild.right - rcChild.left;
+					REBARBANDINFO rbbi = {0};
+					rbbi.cbSize = sizeof(REBARBANDINFO);
+					rbbi.fMask = RBBIM_CHILD ;
+					GetBandInfo(nBand, &rbbi);
+					
+					RECT rcChild;
+					GetWindowRect(rbbi.hwndChild, &rcChild);
+					int ChildWidth = rcChild.right - rcChild.left;
 
-				RECT rcBorder = GetBandBorders(nBand);
-				rc.right = rc.left + ChildWidth + rcBorder.left;
-				SolidFill(hMemDC, BandColor1, &rc);
-				rc.bottom = rc.top + Height;
-				rc.top = rc.top + Height/2;
-				
-				GradientFill(hMemDC, BandColor1, BandColor2, &rc, FALSE);
+					RECT rcBorder = GetBandBorders(nBand);
+					rc.right = rc.left + ChildWidth + rcBorder.left;
+					SolidFill(hMemDC, m_Theme.BandColor1, &rc);
+					rc.bottom = rc.top + Height;
+					rc.top = rc.top + Height/2;
+					
+					GradientFill(hMemDC, m_Theme.BandColor1, m_Theme.BandColor2, &rc, FALSE);
+				}
 			}
 		}
 	
-
-/*		// Draw lines between bands
-		for (int j = 0; j < GetBandCount()-1; j++)
+		if (m_Theme.UseLines)
 		{
-			GetBandRect(j, &rc);
-			rc.left = max(0, rc.left - 4);
-			rc.bottom +=2;
-			::DrawEdge(hMemDC, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+			// Draw lines between bands
+			for (int j = 0; j < GetBandCount()-1; j++)
+			{
+				GetBandRect(j, &rc);
+				rc.left = max(0, rc.left - 4);
+				rc.bottom +=2;
+				::DrawEdge(hMemDC, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+			}
 		}
-*/
+
 		// Copy the Memory DC to the window's DC
 		::BitBlt(hDC, 0, 0, Width, Height, hMemDC, 0, 0, SRCCOPY);
 
 		// Cleanup
 		::SelectObject(hMemDC, hOldBitmap);
 		::DeleteObject(hBitmap);
-		::DeleteDC(hMemDC); 
+		::DeleteDC(hMemDC);
+		
+		return TRUE;
 	}
 
 	void CRebar::PreCreate(CREATESTRUCT &cs)
@@ -908,7 +935,7 @@ namespace Win32xx
 				::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0);
 				OldrcTop = rc.top;
 			}
-		}
+		}  
 	}
 
 	void CRebar::ResizeBand(const int nBand, const int nSize)
@@ -922,9 +949,6 @@ namespace Win32xx
 		rbbi.cyMinChild = nSize;
 		rbbi.cyMaxChild = nSize;
 		SetBandInfo(nBand, &rbbi );
-
-		// Resize the band to the new maximum size
-	//	::SendMessage(m_hWnd, RB_MAXIMIZEBAND, nBand, 0);
 	}
 
 	void CRebar::SetBandBitmap(const int nBand, const HBITMAP hBackground)
@@ -965,10 +989,16 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_SETBARINFO, 0, (LPARAM)prbi);
 	}
 
-	void CRebar::SetBkgrndColors(COLORREF color1, COLORREF color2)
+	void CRebar::SetTheme(REBARTHEME& Theme)
 	{
-		m_bkColor1 = color1;
-		m_bkColor2 = color2;
+		m_Theme.UseThemes   = Theme.UseThemes;
+		m_Theme.BkGndColor1 = Theme.BkGndColor1;
+		m_Theme.BkGndColor2 = Theme.BkGndColor2;
+		m_Theme.BandColor1  = Theme.BandColor1;
+		m_Theme.BandColor2  = Theme.BandColor2;
+		m_Theme.LockBandZero= Theme.LockBandZero;
+		m_Theme.ShortBands  = Theme.ShortBands;
+		m_Theme.UseLines    = Theme.UseLines;
 	}
 
 	BOOL CRebar::ShowBand(int nBand, BOOL fShow)
@@ -997,6 +1027,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_MOUSEMOVE:
+			if (m_Theme.UseThemes && m_Theme.LockBandZero)
 			{
 				// We want to lock the first row in place, but allow other bands to move!
 				// Use move messages to limit the resizing of bands
@@ -1010,6 +1041,7 @@ namespace Win32xx
 			Orig_lParam = lParam;	// Store the x,y position
 			break;
 		case WM_LBUTTONUP:
+			if (m_Theme.UseThemes && m_Theme.LockBandZero)
 			{
 				// Use move messages to limit the resizing of bands
 				int y = GET_Y_LPARAM(lParam);
@@ -1020,10 +1052,11 @@ namespace Win32xx
 					lParam = Orig_lParam; 
 				}
 			}
-			break; 
+			break;  
 		case WM_ERASEBKGND:
-			OnEraseBkGnd((HDC)wParam);
-			return TRUE;
+			if (OnEraseBkGnd((HDC)wParam))
+				return TRUE;
+			break;
 		} 
 
 		// pass unhandled messages on for default processing
@@ -2361,18 +2394,15 @@ namespace Win32xx
    		REBARBANDINFO rbbi = {0};
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
-		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cyMinChild = Menubar_Height;
 		rbbi.cyMaxChild = Menubar_Height;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_NOGRIPPER ;
-		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-	//	rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
-		rbbi.clrBack    = RGB( 70,130,220);
+	//	rbbi.clrBack    = RGB( 70,130,220);
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
-		rbbi.cx         = 2000;
-		rbbi.cxMinChild = 2000;
 			
 		GetRebar().InsertBand(-1, &rbbi);
+		SetMenubarBandSize();
 	}
 
 	void CFrame::AddToolbarBand(int Toolbar_Height /*= TOOLBAR_HEIGHT*/)
@@ -2381,14 +2411,12 @@ namespace Win32xx
 		SIZE sz = GetToolbar().GetMaxSize();
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
-		rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 	//	rbbi.cyMinChild = Toolbar_Height;
 	//	rbbi.cyMaxChild = Toolbar_Height;;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
-		rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-		rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 		rbbi.hwndChild  = GetToolbar().GetHwnd();
 		rbbi.cx         = sz.cx;
 		rbbi.cxMinChild = sz.cx;
@@ -2624,9 +2652,16 @@ namespace Win32xx
 			RecalcLayout();
 			::InvalidateRect(m_hWnd, NULL, TRUE);
 			break;
-
-		case RBN_LAYOUTCHANGED:
-			GetRebar().RepositionBands();
+	//	case RBN_LAYOUTCHANGED:
+	//		GetRebar().RepositionBands();
+	//		break;
+		case RBN_MINMAX:	
+			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().ShortBands)
+				return 1L;	// Supress maximise or minimise rebar band
+			break;
+		case RBN_CHILDSIZE :
+			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().ShortBands)
+				GetRebar().RepositionBands();
 			break;
 
 		// Display toolips for the toolbar
@@ -2875,9 +2910,54 @@ namespace Win32xx
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, &rbbi);
-		rbbi.cxMinChild = Width;
-		rbbi.cx         = Width;
+		if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().LockBandZero)
+		{
+			rbbi.cxMinChild = Width;
+			rbbi.cx         = Width;
+		}
+		else 
+		{
+			rbbi.cxMinChild = GetMenubar().GetMaxSize().cx;
+			rbbi.cx = GetMenubar().GetMaxSize().cx;
+		}
+
 		RB.SetBandInfo(nBand, &rbbi);
+	}
+
+	void CFrame::SetTheme(UINT nStyle)
+	{
+		REBARTHEME rt = {0};
+
+		switch (nStyle)
+		{
+		case 0:
+			break;
+		
+		case 1:
+			// ICY_BLUE Theme
+			rt.UseThemes   = TRUE;
+			rt.BkGndColor1 = RGB(150,190,245);
+			rt.BkGndColor2 = RGB(196,215,250);
+			rt.BandColor1  = RGB(220,230,250);
+			rt.BandColor2  = RGB( 70,130,220);
+			rt.LockBandZero= TRUE;
+			rt.ShortBands  = TRUE;
+			break;
+
+		case 2:
+			// ICY_BLUE background only
+			rt.UseThemes   = TRUE;
+			rt.BkGndColor1 = RGB(150,190,245);
+			rt.BkGndColor2 = RGB(196,215,250);
+		//	rt.BandColor1  = RGB(220,230,250);
+		//	rt.BandColor2  = RGB( 70,130,220);
+			rt.LockBandZero= TRUE;
+		//	rt.ShortBands  = TRUE;
+			rt.UseLines    = TRUE;
+			break;		
+		}
+			
+		GetRebar().SetTheme(rt);
 	}
 
 	void CFrame::SetStatusIndicators()
