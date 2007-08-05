@@ -151,6 +151,7 @@ namespace Win32xx
 		virtual BOOL SetBarInfo(LPREBARINFO prbi);
 		virtual void SetTheme(REBARTHEME& Theme);
 		virtual BOOL ShowBand(int nBand, BOOL fShow);
+		virtual void ShowGripper(int nBand, BOOL fShow);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

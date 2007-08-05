@@ -94,10 +94,13 @@ void CMainFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
 
-	SetTheme(1);
+	
 
 	// call the base class function
 	CFrame::OnCreate();
+	SetTheme(1);
+//	SetTheme(2);
+//	SetTheme(0);
 
 	if (IsRebarUsed())
 	{
