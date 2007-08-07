@@ -17,6 +17,7 @@ Added CRebar::GetTheme
 Added CRebar::OnEraseBkGnd
 Added CRebar::RepositionBands
 Added CRebar::SetTheme
+Added CRebar::ShowGripper
 Added CToolbar::GetMaxSize
 Added CWinApp::SetAccelerators
 Added CWnd::GradientFill

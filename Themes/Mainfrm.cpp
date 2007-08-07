@@ -59,7 +59,7 @@ void CMainFrame::AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Norm
 	rbbi.cx         = sz.cx;
 	rbbi.cxMinChild = sz.cx;
 
-	rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.hwndChild  = TB.GetHwnd();
 
 	GetRebar().InsertBand(-1, &rbbi);
@@ -94,13 +94,14 @@ void CMainFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
 
-	
-
 	// call the base class function
 	CFrame::OnCreate();
+	
+	//Set our theme
 	SetTheme(1);
 //	SetTheme(2);
 //	SetTheme(0);
+//	SetTheme(3);
 
 	if (IsRebarUsed())
 	{
@@ -166,9 +167,9 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.SetButtons(ToolbarData);
 
 	// Adjust the toolbar and rebar size to take account of the larger buttons
-	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
+//	RECT r;
+//	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
+//	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
 
 	// Disable some of the toolbar buttons
 	TB.DisableButton(IDM_EDIT_CUT);

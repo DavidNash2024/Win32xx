@@ -55,7 +55,10 @@ namespace Win32xx
 		COLORREF BkGndColor2;
 		COLORREF BandColor1;
 		COLORREF BandColor2;
+		BOOL FlatStyle;
+		BOOL KeepBandsLeft;
 		BOOL LockBandZero;
+		BOOL RoundBorders;
 		BOOL ShortBands;
 		BOOL UseLines;
 	};
@@ -108,9 +111,11 @@ namespace Win32xx
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 
 	protected:
+		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual void OnInitialUpdate();
+		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		HIMAGELIST m_hImageList;
@@ -140,10 +145,9 @@ namespace Win32xx
 		virtual REBARTHEME& GetTheme() {return m_Theme;}
 		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL IsBandVisible(int nBand);
-		virtual void OnCreate();
 		virtual BOOL OnEraseBkGnd(HDC hDC);
+		virtual void MoveBandsLeft();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void RepositionBands();
 		virtual void ResizeBand(const int nBand, const int nSize);
 		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
 		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
@@ -203,7 +207,7 @@ namespace Win32xx
 		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		enum Constants
@@ -274,7 +278,7 @@ namespace Win32xx
 
 	protected:
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
-		virtual void AddToolbarBand(int Toolbar_Height = TOOLBAR_HEIGHT);
+		virtual void AddToolbarBand();
 		virtual void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
 		virtual BOOL OnCommandFrame(WPARAM wPAram, LPARAM lParam);
 		virtual void OnCreate();
@@ -304,7 +308,6 @@ namespace Win32xx
 		{
 			ID_STATUS_TIMER = 1,
 			MENUBAR_HEIGHT  = 22,
-			TOOLBAR_HEIGHT  = 24,
 			USER_REARRANGED = WM_APP + 1	// frame window rearranged message
 		};
 

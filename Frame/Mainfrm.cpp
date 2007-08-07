@@ -110,16 +110,11 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 // 	TB.SetButtonText(IDM_FILE_NEW,   _T("New"));
 //	TB.SetButtonText(IDM_FILE_OPEN,  _T("Open"));
 //	TB.SetButtonText(IDM_FILE_SAVE,  _T("Save"));
-	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
+//	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
 //	TB.SetButtonText(IDM_EDIT_COPY,  _T("Copy"));
 //	TB.SetButtonText(IDM_EDIT_PASTE, _T("Paste"));
 //	TB.SetButtonText(IDM_FILE_PRINT, _T("Print"));
 //	TB.SetButtonText(IDM_HELP_ABOUT, _T("About"));
-
-	// Adjust the toolbar and rebar size to take account of the larger buttons
-	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
 
 	// Disable some of the toolbar buttons
 	TB.DisableButton(IDM_EDIT_CUT);
