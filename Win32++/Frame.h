@@ -55,10 +55,10 @@ namespace Win32xx
 		COLORREF BkGndColor2;
 		COLORREF BandColor1;
 		COLORREF BandColor2;
-		BOOL FlatStyle;
+		BOOL FlatStyle;			// XP and above required
 		BOOL KeepBandsLeft;
-		BOOL LockBandZero;
-		BOOL RoundBorders;
+		BOOL LockMenuBand;
+		BOOL RoundBorders;		// XP and above required
 		BOOL ShortBands;
 		BOOL UseLines;
 	};

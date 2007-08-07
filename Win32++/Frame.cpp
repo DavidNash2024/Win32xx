@@ -734,7 +734,7 @@ namespace Win32xx
 			if (iNumButtons > 0)
 			{
 				// Toolbar ImageLists require Comctl32.dll version 4.7 or later
-				if (!GetApp()->GetFrame()->IsRebarSupported())
+				if (GetComCtlVersion() == 400)
 				{
 					// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
 					// Instead we simply add the bitmap.
@@ -749,6 +749,10 @@ namespace Win32xx
 				::GetObject(hbm, sizeof(BITMAP), &bm);
 				int iImageWidth  = bm.bmWidth / iNumButtons;
 				int iImageHeight = bm.bmHeight;
+
+				if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
+				if (m_hImageListDis) ::ImageList_Destroy(m_hImageListDis);
+				if (m_hImageListHot) ::ImageList_Destroy(m_hImageListHot);
 
 				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
 				ImageList_AddMasked(m_hImageList, hbm, crMask);
@@ -931,7 +935,7 @@ namespace Win32xx
 				if (IsBandVisible(nBand))
 				{
 					HWND hWndMB = GetApp()->GetFrame()->GetMenubar().GetHwnd();
-					if (!((m_Theme.LockBandZero) && (nBand == GetBand(hWndMB))))
+					if (!((m_Theme.LockMenuBand) && (nBand == GetBand(hWndMB))))
 					{
 						// Determine the size of this band
 						RECT rcBand = {0};
@@ -1116,12 +1120,17 @@ namespace Win32xx
 		m_Theme.BkGndColor2  = Theme.BkGndColor2;
 		m_Theme.BandColor1   = Theme.BandColor1;
 		m_Theme.BandColor2   = Theme.BandColor2;
-		m_Theme.FlatStyle    = Theme.FlatStyle;
 		m_Theme.KeepBandsLeft= Theme.KeepBandsLeft;
-		m_Theme.LockBandZero = Theme.LockBandZero;
-		m_Theme.RoundBorders = Theme.RoundBorders;
+		m_Theme.LockMenuBand = Theme.LockMenuBand;	
 		m_Theme.ShortBands   = Theme.ShortBands;
 		m_Theme.UseLines     = Theme.UseLines;
+
+		// For Win XP and above
+		if (GetWinVersion() >= 2501)
+		{
+			m_Theme.FlatStyle    = Theme.FlatStyle;
+			m_Theme.RoundBorders = Theme.RoundBorders;
+		}
 	}
 
 	BOOL CRebar::ShowBand(int nBand, BOOL fShow)
@@ -1170,7 +1179,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_MOUSEMOVE:
-			if (m_Theme.UseThemes && m_Theme.LockBandZero)
+			if (m_Theme.UseThemes && m_Theme.LockMenuBand)
 			{
 				// We want to lock the first row in place, but allow other bands to move!
 				// Use move messages to limit the resizing of bands
@@ -1184,7 +1193,7 @@ namespace Win32xx
 			Orig_lParam = lParam;	// Store the x,y position
 			break;
 		case WM_LBUTTONUP:
-			if (m_Theme.UseThemes && m_Theme.LockBandZero)
+			if (m_Theme.UseThemes && m_Theme.LockMenuBand)
 			{
 				// Use move messages to limit the resizing of bands
 				int y = GET_Y_LPARAM(lParam);
@@ -2789,6 +2798,11 @@ namespace Win32xx
 
 	LRESULT CFrame::OnNotifyFrame(WPARAM /*wParam*/, LPARAM lParam)
 	{
+
+#ifndef RBN_MINMAX
+  #define RBN_MINMAX RBN_FIRST - 21
+#endif
+
 		switch (((LPNMHDR)lParam)->code)
 		{
 		case RBN_HEIGHTCHANGE:
@@ -2799,7 +2813,7 @@ namespace Win32xx
 			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().KeepBandsLeft)
 				GetRebar().MoveBandsLeft();
 			break;
-		case RBN_FIRST - 21://RBN_MINMAX:	
+		case RBN_MINMAX:	
 			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().ShortBands)
 				return 1L;	// Supress maximise or minimise rebar band
 			break;
@@ -3057,7 +3071,7 @@ namespace Win32xx
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, &rbbi);
-		if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().LockBandZero)
+		if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().LockMenuBand)
 		{
 			rbbi.cxMinChild = Width;
 			rbbi.cx         = Width;
@@ -3091,7 +3105,7 @@ namespace Win32xx
 			rt.BandColor1   = RGB(220,230,250);
 			rt.BandColor2   = RGB( 70,130,220);
 			rt.KeepBandsLeft= TRUE;
-			rt.LockBandZero = TRUE;
+			rt.LockMenuBand = TRUE;
 			rt.ShortBands   = TRUE;
 			rt.RoundBorders = TRUE;
 
@@ -3105,7 +3119,7 @@ namespace Win32xx
 			rt.BkGndColor2  = RGB(196,215,250);
 		//	rt.BandColor1   = RGB(220,230,250);
 		//	rt.BandColor2   = RGB( 70,130,220);
-		//	rt.LockBandZero = TRUE;
+		//	rt.LockMenuBand = TRUE;
 		//	rt.ShortBands   = TRUE;
 			rt.UseLines     = TRUE;
 
@@ -3119,7 +3133,7 @@ namespace Win32xx
 			rt.BkGndColor2  = RGB(196,215,250);
 			rt.BandColor1   = RGB(220,230,250);
 			rt.BandColor2   = RGB( 70,130,220);
-			rt.LockBandZero = TRUE;
+			rt.LockMenuBand = TRUE;
 			rt.ShortBands   = TRUE;
 			rt.RoundBorders = TRUE;
 			rt.FlatStyle    = TRUE; 

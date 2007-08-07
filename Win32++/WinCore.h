@@ -338,9 +338,9 @@ namespace Win32xx
 
 		if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
 		{
-			// InitCommonControlsEx is unique to 4.7 and later		
+			// InitCommonControlsEx is unique to 4.7 and later
 			ComCtlVer = 470;
-			
+
 			if (::GetProcAddress(hComCtl, "DllInstall"))
 			{
 				// DllInstall is unique to 4.71 and later
@@ -352,12 +352,12 @@ namespace Win32xx
 				pfnDLLGetVersion = (DLLGETVERSION*)::GetProcAddress(hComCtl, "DllGetVersion");
 				if(pfnDLLGetVersion)
 				{
-					DLLVERSIONINFO dvi = {0};
+					DLLVERSIONINFO dvi;
 					dvi.cbSize = sizeof dvi;
 					if(pfnDLLGetVersion(&dvi) == NOERROR)
 					{
 						DWORD dwVerMajor = dvi.dwMajorVersion;
-						DWORD dwVerMinor = dvi.dwMinorVersion;				
+						DWORD dwVerMinor = dvi.dwMinorVersion;
 						ComCtlVer = 100 * dwVerMajor + dwVerMinor;
 					}
 				}
@@ -376,7 +376,7 @@ namespace Win32xx
 		// 582  dll ver 5.82	Windows XP or Vista without XP themes
 		// 600  dll ver 6.00	Windows XP with XP themes
 		// 610  dll ver 6.10	Windows Vista with XP themes
-		
+
 		return ComCtlVer;
 	}
 
@@ -386,17 +386,17 @@ namespace Win32xx
 
 		// Test if Windows version is XP or greater
 		if (GetWinVersion() >= 2501)
-		{		
+		{
 			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 			if(hMod)
 			{
 				// Declare pointers to functions
 				FARPROC pIsAppThemed   = ::GetProcAddress(hMod, "IsAppThemed");
 				FARPROC pIsThemeActive = ::GetProcAddress(hMod, "IsThemeActive");
-				
+
 				if(pIsAppThemed && pIsThemeActive)
 				{
-					if(pIsAppThemed() && pIsThemeActive())								
+					if(pIsAppThemed() && pIsThemeActive())
 					{
 						// Test if ComCtl32 dll used is version 6 or later
 						bIsXPThemed = (GetComCtlVersion() >= 600);
@@ -405,7 +405,7 @@ namespace Win32xx
 				::FreeLibrary(hMod);
 			}
 		}
-		
+
 		return bIsXPThemed;
 	}
 
