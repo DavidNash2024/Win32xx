@@ -79,6 +79,18 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		// Display the help dialog
 		OnHelp();
 		return TRUE;
+	case IDM_DEFAULT_THEME:
+		SetTheme(IDM_DEFAULT_THEME);
+		return TRUE;
+	case IDM_BLUE:
+		SetTheme(IDM_BLUE);
+		return TRUE;
+	case IDM_BLUE_BKGND:
+		SetTheme(IDM_BLUE_BKGND);
+		return TRUE;
+	case IDM_BLUE_FLAT:
+		SetTheme(IDM_BLUE_FLAT);
+		return TRUE;
 	}
 
 	return FALSE;
@@ -98,10 +110,7 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 	
 	//Set our theme
-	SetTheme(1);
-//	SetTheme(2);
-//	SetTheme(0);
-//	SetTheme(3);
+	SetTheme(IDM_BLUE);
 
 	if (IsRebarUsed())
 	{
@@ -176,10 +185,90 @@ void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.DisableButton(IDM_EDIT_COPY);
 	TB.DisableButton(IDM_EDIT_PASTE);
 
-	TB.SetButtonText(IDM_FILE_OPEN, _T("Open"));
+//	TB.SetButtonText(IDM_FILE_OPEN, _T("Open"));
 
 	// Use smaller icons for popup menu items
 	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
+}
+
+void CMainFrame::SetTheme(UINT nStyle)
+{
+	CRebar& RB = GetRebar();
+	CToolbar& TB = GetToolbar();
+	HWND hWndMB = GetMenubar().GetHwnd();
+	BOOL T = TRUE;
+	BOOL F = FALSE;
+	HMENU hTheme = ::GetSubMenu(GetFrameMenu(), 3);
+
+	switch (nStyle)
+	{
+	case IDM_DEFAULT_THEME:	// Disable themes
+		{
+			REBARTHEME rt = {0};
+			RB.SetTheme(rt);
+			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
+
+			TOOLBARTHEME tt = {0};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_DEFAULT_THEME, 0);
+		}
+		break;
+	
+	case IDM_BLUE:	// ICY_BLUE Theme
+		{			
+			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+			RB.SetTheme(rt);
+			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
+
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 180, 80), RGB(255, 140, 40), RGB(64, 64, 255)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_BLUE, 0);
+		}
+		break;
+
+	case IDM_BLUE_BKGND:	// ICY_BLUE background only
+		{
+			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), NULL, NULL, F, F, F, F, F, T };
+			RB.SetTheme(rt);
+			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
+
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 180, 80), RGB(255, 140, 40), RGB(64, 64, 255)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_BLUE_BKGND, 0);
+		}
+		break;
+
+	case IDM_BLUE_FLAT:	// ICY_BLUE Flat Theme
+		{
+			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), T, T, T, T, T, F};
+			RB.SetTheme(rt);
+			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
+
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 180, 80), RGB(255, 140, 40), RGB(64, 64, 255)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_BLUE_FLAT, 0);
+		}
+		break;
+	} 
+		
+	::InvalidateRect(RB.GetHwnd(), NULL, TRUE);
+	::InvalidateRect(TB.GetHwnd(), NULL, TRUE);
+	::InvalidateRect(Arrows.GetHwnd(), NULL, TRUE);
+	::InvalidateRect(Cards.GetHwnd(), NULL, TRUE);
+	::InvalidateRect(GetMenubar().GetHwnd(), NULL, TRUE);
+	RecalcLayout();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

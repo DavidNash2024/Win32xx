@@ -45,6 +45,13 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
+	POPUP "&Theme"
+    BEGIN
+        MENUITEM "Default",                     IDM_DEFAULT_THEME
+        MENUITEM "Blue",                        IDM_BLUE
+        MENUITEM "Blue Background",             IDM_BLUE_BKGND
+        MENUITEM "Blue Flat",                   IDM_BLUE_FLAT
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -179,4 +186,10 @@ BEGIN
     SC_SIZE                 "Resize the Window"
 END
 
-
+STRINGTABLE
+BEGIN
+    IDM_DEFAULT_THEME       "Default theme"
+	IDM_BLUE                "Blue theme"
+	IDM_BLUE_BKGND          "Bllue theme, background only"
+	IDM_BLUE_FLAT           "Blue flat theme"
+END

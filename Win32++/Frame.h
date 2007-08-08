@@ -51,16 +51,26 @@ namespace Win32xx
 	struct REBARTHEME
 	{
 		BOOL UseThemes;
-		COLORREF BkGndColor1;
-		COLORREF BkGndColor2;
-		COLORREF BandColor1;
-		COLORREF BandColor2;
-		BOOL FlatStyle;			// XP and above required
+		COLORREF clrBkGnd1;
+		COLORREF clrBkGnd2;
+		COLORREF clrBand1;
+		COLORREF clrBand2;
+		BOOL FlatStyle;			// Win2000 and above required
 		BOOL KeepBandsLeft;
 		BOOL LockMenuBand;
-		BOOL RoundBorders;		// XP and above required
+		BOOL RoundBorders;		// Win2000 and above required
 		BOOL ShortBands;
 		BOOL UseLines;
+	};
+
+	struct TOOLBARTHEME
+	{
+		BOOL UseThemes;
+		COLORREF clrHot1;
+		COLORREF clrHot2;
+		COLORREF clrPressed1;
+		COLORREF clrPressed2;
+		COLORREF clrOutline;
 	};
 
 	//////////////////////////////////////
@@ -109,6 +119,7 @@ namespace Win32xx
 		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
 		virtual void SetCommandID(int iIndex, int iButtonID);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
+		virtual void SetTheme(TOOLBARTHEME& Theme);
 
 	protected:
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
@@ -122,6 +133,7 @@ namespace Win32xx
 		HIMAGELIST m_hImageListHot;
 		HIMAGELIST m_hImageListDis;
 		std::map<tString, int> m_StringMap;
+		TOOLBARTHEME m_Theme;
 
 	};  // class CToolbar
 
@@ -295,7 +307,6 @@ namespace Win32xx
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
 		virtual void SetMenubarBandSize();
-		virtual void SetTheme(UINT nStyle);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		std::vector<UINT> m_ToolbarData;

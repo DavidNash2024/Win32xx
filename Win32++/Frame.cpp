@@ -193,6 +193,7 @@ namespace Win32xx
 	//
 	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL)
 	{
+		ZeroMemory(&m_Theme, sizeof(TOOLBARTHEME));
 	}
 
 	CToolbar::~CToolbar()
@@ -403,16 +404,23 @@ namespace Win32xx
 
 				if (nState & (CDIS_HOT | CDIS_SELECTED))
 				{
-					// Draw highlight rectangle
-					HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-					HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(64, 64, 255));
+					// Draw outline rectangle
+					HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
 					HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-					::FillRect(hDC, &rcRect, hbHighlight);
 					Rectangle(hDC, rcRect.left, rcRect.top, rcRect.right, rcRect.bottom);
 					::SelectObject(hDC, hOldPen);
 					::DeleteObject(hPen);
-					::InflateRect(&rcRect, -1, -1);
-					GradientFill(hDC, RGB(255, 214, 148), RGB(255, 186, 76), &rcRect, FALSE);
+					
+					// Draw filled gradient rectange
+					::InflateRect(&rcRect, -1, -1);				
+					if (nState & CDIS_SELECTED)
+					{
+						GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
+					}
+					else
+					{
+						GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
+					}
 
 					// Draw the button image
 					HIMAGELIST hImageList = m_hImageListHot? m_hImageListHot: m_hImageList;
@@ -461,7 +469,8 @@ namespace Win32xx
 		{
 			case NM_CUSTOMDRAW:
 			{
-				return OnCustomDraw((LPNMHDR) lParam);
+				if (m_Theme.UseThemes)
+					return OnCustomDraw((LPNMHDR) lParam);
 			}
 		}
 		return 0L;
@@ -794,6 +803,16 @@ namespace Win32xx
 		}
 	}
 
+	void CToolbar::SetTheme(TOOLBARTHEME& Theme)
+	{
+		m_Theme.UseThemes   = Theme.UseThemes;
+		m_Theme.clrHot1     = Theme.clrHot1;
+		m_Theme.clrHot2     = Theme.clrHot2;
+		m_Theme.clrPressed1 = Theme.clrPressed1;
+		m_Theme.clrPressed2 = Theme.clrPressed2;
+		m_Theme.clrOutline  = Theme.clrOutline;
+	}
+
 	LRESULT CToolbar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -919,15 +938,15 @@ namespace Win32xx
 			
 		// Draw to Rebar background to the memory DC
 		rc.right = 600;
-		GradientFill(hDCMem, m_Theme.BkGndColor1, m_Theme.BkGndColor2, &rc, TRUE);
+		GradientFill(hDCMem, m_Theme.clrBkGnd1, m_Theme.clrBkGnd2, &rc, TRUE);
 		if (BarWidth >= 600)
 		{
 			rc.left = 600;
 			rc.right = BarWidth;
-			SolidFill(hDCMem, m_Theme.BkGndColor2, &rc);
+			SolidFill(hDCMem, m_Theme.clrBkGnd2, &rc);
 		}
 
-		if (m_Theme.BandColor1 || m_Theme.BandColor2)
+		if (m_Theme.clrBand1 || m_Theme.clrBand2)
 		{
 			// Draw the individual band backgrounds
 			for (int nBand = 0 ; nBand < GetBandCount(); nBand++)
@@ -954,7 +973,7 @@ namespace Win32xx
 						RECT rcDraw = {0};
 						CopyRect(&rcDraw, &rcBand);
 						rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
-						int xPad = 2;
+						int xPad = IsXPThemed()? 2: 0;
 						rcDraw.left  -= xPad;
 
 						// Fill the Source HDC with the band's background
@@ -963,10 +982,10 @@ namespace Win32xx
 						HBITMAP hOldSource = (HBITMAP)::SelectObject(hDCSource, (HBITMAP)hBitmapSource);
 						RECT rcBorder = GetBandBorders(nBand);
 						rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
-						SolidFill(hDCSource, m_Theme.BandColor1, &rcDraw);
+						SolidFill(hDCSource, m_Theme.clrBand1, &rcDraw);
 						rcDraw.top = rcDraw.bottom;
 						rcDraw.bottom = rcBand.bottom;
-						GradientFill(hDCSource, m_Theme.BandColor1, m_Theme.BandColor2, &rcDraw, FALSE);
+						GradientFill(hDCSource, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
 						
 						// Set Curve amount for rounded edges
 						int Curve = m_Theme.RoundBorders? 16 : 0;	
@@ -1116,17 +1135,17 @@ namespace Win32xx
 	void CRebar::SetTheme(REBARTHEME& Theme)
 	{
 		m_Theme.UseThemes    = Theme.UseThemes;
-		m_Theme.BkGndColor1  = Theme.BkGndColor1;
-		m_Theme.BkGndColor2  = Theme.BkGndColor2;
-		m_Theme.BandColor1   = Theme.BandColor1;
-		m_Theme.BandColor2   = Theme.BandColor2;
+		m_Theme.clrBkGnd1    = Theme.clrBkGnd1;
+		m_Theme.clrBkGnd2    = Theme.clrBkGnd2;
+		m_Theme.clrBand1     = Theme.clrBand1;
+		m_Theme.clrBand2     = Theme.clrBand2;
 		m_Theme.KeepBandsLeft= Theme.KeepBandsLeft;
 		m_Theme.LockMenuBand = Theme.LockMenuBand;	
 		m_Theme.ShortBands   = Theme.ShortBands;
 		m_Theme.UseLines     = Theme.UseLines;
 
-		// For Win XP and above
-		if (GetWinVersion() >= 2501)
+		// For Win 2000 and above
+		if (GetWinVersion() >= 2500)
 		{
 			m_Theme.FlatStyle    = Theme.FlatStyle;
 			m_Theme.RoundBorders = Theme.RoundBorders;
@@ -3083,68 +3102,6 @@ namespace Win32xx
 		}
 
 		RB.SetBandInfo(nBand, &rbbi); 
-	}
-
-	void CFrame::SetTheme(UINT nStyle)
-	{
-		REBARTHEME rt = {0};
-		CRebar& RB = GetRebar();
-		HWND hWndMB = GetMenubar().GetHwnd();
-
-		switch (nStyle)
-		{
-		case 0:
-			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
-			break;
-		
-		case 1:
-			// ICY_BLUE Theme
-			rt.UseThemes    = TRUE;
-			rt.BkGndColor1  = RGB(150,190,245);
-			rt.BkGndColor2  = RGB(196,215,250);
-			rt.BandColor1   = RGB(220,230,250);
-			rt.BandColor2   = RGB( 70,130,220);
-			rt.KeepBandsLeft= TRUE;
-			rt.LockMenuBand = TRUE;
-			rt.ShortBands   = TRUE;
-			rt.RoundBorders = TRUE;
-
-			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
-			break;
-
-		case 2:
-			// ICY_BLUE background only
-			rt.UseThemes    = TRUE;
-			rt.BkGndColor1  = RGB(150,190,245);
-			rt.BkGndColor2  = RGB(196,215,250);
-		//	rt.BandColor1   = RGB(220,230,250);
-		//	rt.BandColor2   = RGB( 70,130,220);
-		//	rt.LockMenuBand = TRUE;
-		//	rt.ShortBands   = TRUE;
-			rt.UseLines     = TRUE;
-
-			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
-			break;
-
-		case 3:
-			// ICY_BLUE Flat Theme
-			rt.UseThemes    = TRUE;
-			rt.BkGndColor1  = RGB(150,190,245);
-			rt.BkGndColor2  = RGB(196,215,250);
-			rt.BandColor1   = RGB(220,230,250);
-			rt.BandColor2   = RGB( 70,130,220);
-			rt.LockMenuBand = TRUE;
-			rt.ShortBands   = TRUE;
-			rt.RoundBorders = TRUE;
-			rt.FlatStyle    = TRUE; 
-
-			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
-			break;
-
-		}
-			
-		RB.SetTheme(rt);
-		RecalcLayout();
 	}
 
 	void CFrame::SetStatusIndicators()

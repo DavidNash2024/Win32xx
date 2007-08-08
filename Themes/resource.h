@@ -39,6 +39,11 @@
 #define IDM_CARD_HEART                  152
 #define IDM_CARD_SPADE                  153
 
+#define IDM_DEFAULT_THEME               160
+#define IDM_BLUE                        161
+#define IDM_BLUE_BKGND                  162
+#define IDM_BLUE_FLAT                   163
+
 
 
 
