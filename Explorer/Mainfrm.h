@@ -25,7 +25,6 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SetButtons(const std::vector<UINT> ToolbarData);
 	virtual void ViewPopup();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

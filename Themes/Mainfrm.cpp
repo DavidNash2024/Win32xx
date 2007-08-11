@@ -34,37 +34,6 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-void CMainFrame::AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Normal)
-{
-	if (TBData.size() == 0)
-	{
-		DebugErrMsg(_T("Toolbar must have some data"));
-		return;
-	}
-
-	// Create the Toolbar Window
-	TB.Create(GetRebar().GetHwnd());
-
-	TB.SetImageList((int)TBData.size(), RGB(255,0,255), ID_Normal, 0, 0);
-	TB.SetButtons(TBData);
-
-	// Fill the REBARBAND structure
-	REBARBANDINFO rbbi = {0};
-	SIZE sz = TB.GetMaxSize();
-
-	rbbi.cbSize     = sizeof(REBARBANDINFO);
-	rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
-	rbbi.cyMinChild = sz.cy;
-	rbbi.cyMaxChild = sz.cy;
-	rbbi.cx         = sz.cx;
-	rbbi.cxMinChild = sz.cx;
-
-	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
-	rbbi.hwndChild  = TB.GetHwnd();
-
-	GetRebar().InsertBand(-1, &rbbi);
-}
-
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	// OnCommand responds to menu and and toolbar input
@@ -109,16 +78,20 @@ void CMainFrame::OnCreate()
 	// call the base class function
 	CFrame::OnCreate();
 	
+	// Set the icons for popup menu items
+	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
+	
 	//Set our theme
 	SetTheme(IDM_BLUE);
 
+	// Add two additional toolbars
 	if (IsRebarUsed())
 	{
 		// Add the Arrows toolbar
 		std::vector<UINT> ArrowsData;
 		ArrowsData.push_back(IDM_ARROW_LEFT);
 		ArrowsData.push_back(IDM_ARROW_RIGHT);
-		AddToolbar(Arrows, ArrowsData, IDB_ARROWS);
+		AddToolbarBand(Arrows, ArrowsData, RGB(255,0,255), IDB_ARROWS);
 
 		// Add the Cards toolbar
 		std::vector<UINT> CardsData;
@@ -126,7 +99,7 @@ void CMainFrame::OnCreate()
 		CardsData.push_back(IDM_CARD_DIAMOND);
 		CardsData.push_back(IDM_CARD_HEART);
 		CardsData.push_back(IDM_CARD_SPADE);
-		AddToolbar(Cards, CardsData, IDB_CARDS);
+		AddToolbarBand(Cards, CardsData, RGB(255,0,255), IDB_CARDS);
 	}
 }
 
@@ -150,47 +123,6 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	return 0L;
 }
 
-void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
-{
-	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons
-	// with seperate imagelists for normal, hot and disabled buttons.
-
-	// A reference to the CToolbar object
-	CToolbar& TB = GetToolbar();
-
-	// Set the button size to 24x24 before adding the bitmap
-	TB.SetBitmapSize(24, 24);
-
-	if (IsRebarUsed())
-	{
-		// Set the image lists for normal, hot and disabled buttons from full colour bitmaps
-		TB.SetImageList(8, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-	}
-	else
-	{
-		// Use a 256 colour bitmap
-		TB.AddBitmap(8, IDW_MAIN);
-	}
-
-	// Set the resource IDs for the toolbar buttons
-	TB.SetButtons(ToolbarData);
-
-	// Adjust the toolbar and rebar size to take account of the larger buttons
-//	RECT r;
-//	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
-//	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-
-//	TB.SetButtonText(IDM_FILE_OPEN, _T("Open"));
-
-	// Use smaller icons for popup menu items
-	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
-}
-
 void CMainFrame::SetTheme(UINT nStyle)
 {
 	CRebar& RB = GetRebar();
@@ -207,7 +139,7 @@ void CMainFrame::SetTheme(UINT nStyle)
 			REBARTHEME rt = {0};
 			RB.SetTheme(rt);
 			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
-
+			
 			TOOLBARTHEME tt = {0};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
@@ -223,7 +155,7 @@ void CMainFrame::SetTheme(UINT nStyle)
 			RB.SetTheme(rt);
 			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 180, 80), RGB(255, 140, 40), RGB(64, 64, 255)};
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -238,11 +170,11 @@ void CMainFrame::SetTheme(UINT nStyle)
 			RB.SetTheme(rt);
 			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 180, 80), RGB(255, 140, 40), RGB(64, 64, 255)};
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
-
+			
 			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_BLUE_BKGND, 0);
 		}
 		break;
@@ -253,7 +185,7 @@ void CMainFrame::SetTheme(UINT nStyle)
 			RB.SetTheme(rt);
 			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 180, 80), RGB(255, 140, 40), RGB(64, 64, 255)};
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -263,10 +195,6 @@ void CMainFrame::SetTheme(UINT nStyle)
 		break;
 	} 
 		
-	::InvalidateRect(RB.GetHwnd(), NULL, TRUE);
-	::InvalidateRect(TB.GetHwnd(), NULL, TRUE);
-	::InvalidateRect(Arrows.GetHwnd(), NULL, TRUE);
-	::InvalidateRect(Cards.GetHwnd(), NULL, TRUE);
 	::InvalidateRect(GetMenubar().GetHwnd(), NULL, TRUE);
 	RecalcLayout();
 }

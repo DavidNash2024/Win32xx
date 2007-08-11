@@ -92,9 +92,25 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 
 void CMainFrame::OnCreate()
 {
-//	m_bUseRebar = FALSE;
-
+	// call the base OnCreate function
 	CFrame::OnCreate();
+
+	// Use larger buttons
+	CToolbar& TB = GetToolbar();
+	TB.SetImageList(9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	
+	if (IsRebarUsed())
+	{
+		// Resize the Rebar band
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+
+		// Set the icons for dropdown menu items
+		GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192,192,192));
+	}
+
+	// This style requires comctl32.dll version 5.80 or later
+	TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -116,54 +132,13 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	return 0L;
 }
 
-void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
-{
-	// A reference to the CToolbar object
-	CToolbar& TB = GetToolbar();
-
-	// Set the button size to 24x24 before adding the bitmap
-	TB.SetBitmapSize(24, 24);
-
-	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Set the resource IDs for the toolbar buttons
-	TB.SetButtons(ToolbarData);
-
-	// Adjust the toolbar and rebar size to take account of the larger buttons
-	RECT r;
-	TB.GetItemRect(0, &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-
-	// Diable the unused buttons
-	TB.DisableButton(IDM_FILE_NEW);   
-	TB.DisableButton(IDM_FILE_OPEN); 
-	TB.DisableButton(IDM_FILE_SAVE);			
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY); 
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
-
-	// This style requires comctl32.dll version 5.80 or later
-	GetToolbar().SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
-
-	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192,192,192));
-}
-
 void CMainFrame::ViewPopup()
 {
 	// Position the popup menu
-	RECT rc= {0};
-	::SendMessage(GetToolbar().GetHwnd(), TB_GETRECT, IDM_VIEWMENU, (LPARAM) &rc);
+	CToolbar& TB = GetToolbar();
+	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
 	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
-
-	if (!IsRebarSupported())
-	{
-		// For Win95 systems without IE 4, we need to calculate rc differently
-		GetWindowRect(GetToolbar().GetHwnd(), &rc);
-		rc.left = rc.left + 232;
-	}
-		
+	
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
 	tpm.rcExclude = rc;
@@ -173,12 +148,18 @@ void CMainFrame::ViewPopup()
 	HMENU hPopupMenu = GetSubMenu(hTopMenu, 0);
 
 	// Put a radio check in the currently checked item
-	// Doesn't work in Win95 without IE 4 (GetMenuItemInfo isn't supported)
 	MENUITEMINFO mii = {0};
 	for (int i = 3 ; i < 7 ; i++)
 	{
 		ZeroMemory(&mii, sizeof(MENUITEMINFO));
-		mii.cbSize = sizeof(MENUITEMINFO);
+		
+		// Fix for an undocumented bug in the Win32 API
+		// For Win95 and NT, cbSize needs to be 44
+		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+			mii.cbSize = 44;
+		else
+			mii.cbSize = sizeof(MENUITEMINFO);
+		
 		mii.fMask  = MIIM_STATE | MIIM_ID;
 		GetMenuItemInfo(GetSubMenu(GetFrameMenu(), 1), i, TRUE,  &mii );
 		if (mii.fState & MFS_CHECKED) 

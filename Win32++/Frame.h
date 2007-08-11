@@ -108,9 +108,11 @@ namespace Win32xx
 		virtual UINT GetButtonState(int iButtonID);
 		virtual BYTE GetButtonStyle(int iButtonID);
 		virtual int  GetCommandID(int iIndex);
-		virtual void GetItemRect(int iIndex, RECT* lpRect);
+		virtual RECT GetItemRect(int iIndex);
 		virtual SIZE GetMaxSize();
+		virtual TOOLBARTHEME& GetTheme() {return m_Theme;}
 		virtual int  HitTest();
+		virtual void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
 		virtual void SetBitmapSize(int cx, int cy);
 		virtual int  SetButtons(const std::vector<UINT> ToolbarData);
 		virtual void SetButtonSize(int cx, int cy);
@@ -118,12 +120,12 @@ namespace Win32xx
 		virtual void SetButtonStyle(int iButtonID, BYTE Style);
 		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
 		virtual void SetCommandID(int iIndex, int iButtonID);
-		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
+		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 		virtual void SetTheme(TOOLBARTHEME& Theme);
 
 	protected:
+		virtual void OnCreate();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
-		virtual void OnInitialUpdate();
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -133,6 +135,7 @@ namespace Win32xx
 		HIMAGELIST m_hImageListHot;
 		HIMAGELIST m_hImageListDis;
 		std::map<tString, int> m_StringMap;
+		UINT m_OldToolbarID;
 		TOOLBARTHEME m_Theme;
 
 	};  // class CToolbar
@@ -160,7 +163,7 @@ namespace Win32xx
 		virtual BOOL OnEraseBkGnd(HDC hDC);
 		virtual void MoveBandsLeft();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void ResizeBand(const int nBand, const int nSize);
+		virtual void ResizeBand(const int nBand, SIZE sz);
 		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
 		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
 		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
@@ -201,9 +204,9 @@ namespace Win32xx
 		virtual void ExitMenu();
 		virtual	void GrabFocus();
 		virtual BOOL IsMDIChildMaxed();
+		virtual void OnCreate();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
-		virtual void OnInitialUpdate();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -280,8 +283,9 @@ namespace Win32xx
 		virtual CWnd* GetView() {return m_pView;}
 		virtual BOOL IsMDIFrame() {return m_bIsMDIFrame;}
 		virtual BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
-		virtual BOOL IsRebarSupported() {return (GetComCtlVersion() >= 4.7);}
+		virtual BOOL IsRebarSupported() {return (GetComCtlVersion() >= 470);}
 		virtual BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
+		virtual void RecalcLayout();
 		virtual void SetFrameMenu(INT ID_MENU);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
@@ -290,7 +294,7 @@ namespace Win32xx
 
 	protected:
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
-		virtual void AddToolbarBand();
+		virtual void AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
 		virtual void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
 		virtual BOOL OnCommandFrame(WPARAM wPAram, LPARAM lParam);
 		virtual void OnCreate();
@@ -303,7 +307,6 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void RecalcLayout();
 		virtual void SetBackground(HBITMAP);
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
 		virtual void SetMenubarBandSize();

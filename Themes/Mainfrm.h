@@ -16,12 +16,10 @@ public:
 	virtual ~CMainFrame();
 
 protected:
-	virtual void AddToolbar(CToolbar& TB, std::vector<UINT> TBData, UINT ID_Normal);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SetButtons(const std::vector<UINT> ToolbarData);
 	virtual void SetTheme(UINT nStyle);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

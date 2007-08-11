@@ -191,7 +191,7 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL)
+	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL), m_OldToolbarID(0)
 	{
 		ZeroMemory(&m_Theme, sizeof(TOOLBARTHEME));
 	}
@@ -221,6 +221,8 @@ namespace Win32xx
 			tbab.nID   = ToolbarID;
 			if (::SendMessage(m_hWnd, TB_ADDBITMAP, iNumButtons, (LPARAM)&tbab) == -1)
 				throw CWinException(_T("CToolbar::AddBitmap  TB_ADDBITMAP failed"));
+			
+			m_OldToolbarID = ToolbarID;
 		}
 
 		catch (const CWinException &e)
@@ -231,6 +233,35 @@ namespace Win32xx
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::AddBitmap"));
+		}
+	}
+
+	void CToolbar::ReplaceBitmap(int iNumButtons, UINT NewToolbarID)
+	// Note: ReplaceBitmap supports a maximum colour depth of 8 bits (256 colours)
+	//       For more colours, use SetImageList instead
+	{
+		try
+		{
+			TBREPLACEBITMAP tbrb = {0};
+			tbrb.hInstNew = GetApp()->GetInstanceHandle();
+			tbrb.hInstOld = GetApp()->GetInstanceHandle();
+			tbrb.nIDNew = NewToolbarID;
+			tbrb.nIDOld = m_OldToolbarID;
+			tbrb.nButtons  = iNumButtons;
+			if (::SendMessage(m_hWnd, TB_REPLACEBITMAP, iNumButtons, (LPARAM)&tbrb) == 0)
+				throw CWinException(_T("CToolbar::AddBitmap  TB_REPLACEBITMAP failed"));
+
+			m_OldToolbarID = NewToolbarID;
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(_T("Exception in CToolbar::ReplaceBitmap"));
 		}
 	}
 
@@ -336,14 +367,16 @@ namespace Win32xx
 		return tbb.idCommand;
 	}
 
-	void CToolbar::GetItemRect(int iIndex, RECT* lpRect)
+	RECT CToolbar::GetItemRect(int iIndex)
 	// Retrieves the bounding rectangle of a button in a toolbar
 	{
-		ZeroMemory(lpRect, sizeof(RECT));
+		RECT rc = {0};
 		int iCount = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
 
 		if (iCount >= iIndex)
-			::SendMessage(m_hWnd, TB_GETITEMRECT, (WPARAM)iIndex, (LPARAM)lpRect);
+			::SendMessage(m_hWnd, TB_GETITEMRECT, (WPARAM)iIndex, (LPARAM)&rc);
+
+		return rc;
 	}
 
 	SIZE CToolbar::GetMaxSize()
@@ -362,19 +395,28 @@ namespace Win32xx
 		POINT pt = {0};
 		::GetCursorPos(&pt);
 		::ScreenToClient(m_hWnd, &pt);
-		RECT r;
 
 		int nButtons = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
 		int iButton = -1;
 
 		for (int i = 0 ; i < nButtons; i++)
 		{
-			::SendMessage(m_hWnd, TB_GETITEMRECT, i, (LPARAM) &r);
+			RECT r = GetItemRect(i);
 			if (::PtInRect(&r, pt))
 				iButton = i;
 		}
 
 		return iButton;
+	}
+
+	void CToolbar::OnCreate()
+	{
+		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
+		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+
+		// allows buttons to have a separate dropdown arrow
+		// Note: TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
+		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 	}
 
 	LRESULT CToolbar::OnCustomDraw(NMHDR* pNMHDR)
@@ -451,16 +493,6 @@ namespace Win32xx
 			return CDRF_DODEFAULT ;   // Do default drawing
 		}
 		return 0L;
-	}
-
-	void CToolbar::OnInitialUpdate()
-	{
-		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-
-		// allows buttons to have a separate dropdown arrow
-		// Note: TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
-		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 	}
 
 	LRESULT CToolbar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
@@ -566,15 +598,6 @@ namespace Win32xx
 
 		if (!::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy)))
 			DebugWarnMsg(_T("CToolbar::SetButtonSize failed"));
-
-		// Resize the rebar band containing the toolbar
-		if (GetApp()->GetFrame()->IsRebarUsed())
-		{
-			CRebar& rb = GetApp()->GetFrame()->GetRebar();
-			rb.ResizeBand(rb.GetBand(GetHwnd()), cy+2);
-		}
-
-		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
 	void CToolbar::SetButtonState(int iButtonID, UINT State)
@@ -697,9 +720,8 @@ namespace Win32xx
 			::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
 
 			// Redraw button
-			RECT r;
-			if (::SendMessage(m_hWnd, TB_GETITEMRECT, iIndex, (LPARAM)&r))
-				::InvalidateRect(m_hWnd, &r, TRUE);
+			RECT r = GetItemRect(iIndex);
+			::InvalidateRect(m_hWnd, &r, TRUE);
 		}
 
 		catch (const CWinException &e)
@@ -733,24 +755,15 @@ namespace Win32xx
 		}
 	}
 
-	void CToolbar::SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
-	// This function assumes the width of the button image = bitmap_size / buttons
+	void CToolbar::SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID /*= 0*/, UINT ToolbarDisabledID /*= 0*/)
+	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version 
+	// Assumes the width of the button image = bitmap_size / buttons
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
-	// ToolbarHotID and ToolbarDisabledID can be 0
 	{
 		try
 		{
 			if (iNumButtons > 0)
 			{
-				// Toolbar ImageLists require Comctl32.dll version 4.7 or later
-				if (GetComCtlVersion() == 400)
-				{
-					// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
-					// Instead we simply add the bitmap.
-					AddBitmap(iNumButtons, ToolbarID);
-					return;
-				}
-
 				// Set the button images
 				HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 				BITMAP bm = {0};
@@ -758,6 +771,22 @@ namespace Win32xx
 				::GetObject(hbm, sizeof(BITMAP), &bm);
 				int iImageWidth  = bm.bmWidth / iNumButtons;
 				int iImageHeight = bm.bmHeight;
+
+				// Toolbar ImageLists require Comctl32.dll version 4.7 or later
+				if (GetComCtlVersion() == 400)
+				{
+					// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
+					// Instead we simply add the bitmap.
+
+					// Set the bitmap size first
+					SetBitmapSize(iImageWidth, iImageHeight);
+
+					if (m_OldToolbarID)
+						ReplaceBitmap(iNumButtons, ToolbarID);
+					else
+						AddBitmap(iNumButtons, ToolbarID);
+					return;
+				}
 
 				if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
 				if (m_hImageListDis) ::ImageList_Destroy(m_hImageListDis);
@@ -811,6 +840,8 @@ namespace Win32xx
 		m_Theme.clrPressed1 = Theme.clrPressed1;
 		m_Theme.clrPressed2 = Theme.clrPressed2;
 		m_Theme.clrOutline  = Theme.clrOutline;
+
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
 	LRESULT CToolbar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -825,7 +856,7 @@ namespace Win32xx
 					REBARTHEME& rb = GetApp()->GetFrame()->GetRebar().GetTheme();
 					if (rb.UseThemes && rb.ShortBands)
 					{
-						pWinPos->cx = GetMaxSize().cx;
+						pWinPos->cx = GetMaxSize().cx+2;
 					}
 				}
 			}
@@ -974,7 +1005,7 @@ namespace Win32xx
 						CopyRect(&rcDraw, &rcBand);
 						rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
 						int xPad = IsXPThemed()? 2: 0;
-						rcDraw.left  -= xPad;
+						rcDraw.left -= xPad;
 
 						// Fill the Source HDC with the band's background
 						HBITMAP hBitmapSource = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
@@ -1081,16 +1112,17 @@ namespace Win32xx
 		}   
 	}
 
-	void CRebar::ResizeBand(const int nBand, const int nSize)
+	void CRebar::ResizeBand(const int nBand, SIZE sz)
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(rbbi);
-		rbbi.fMask = RBBIM_CHILDSIZE;
+		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 
-		// Alter the maximum size of the band
 		GetBandInfo(nBand, &rbbi);
-		rbbi.cyMinChild = nSize;
-		rbbi.cyMaxChild = nSize;
+		rbbi.cx         = sz.cx;
+		rbbi.cxMinChild = sz.cx;
+		rbbi.cyMinChild = sz.cy;
+		rbbi.cyMaxChild = sz.cy;
 		SetBandInfo(nBand, &rbbi );
 	}
 
@@ -1150,6 +1182,8 @@ namespace Win32xx
 			m_Theme.FlatStyle    = Theme.FlatStyle;
 			m_Theme.RoundBorders = Theme.RoundBorders;
 		}
+		
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
 	BOOL CRebar::ShowBand(int nBand, BOOL fShow)
@@ -1296,8 +1330,7 @@ namespace Win32xx
 			m_hPopupMenu = ::GetSystemMenu(hMaxMDIChild, FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button
-		RECT rc = {0};
-		::SendMessage(m_hWnd, TB_GETITEMRECT, m_nHotItem, (LPARAM) &rc);
+		RECT rc = GetItemRect(m_nHotItem);
 
 		// convert rectangle to desktop coordinates
 		::MapWindowPoints(m_hWnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
@@ -1442,6 +1475,123 @@ namespace Win32xx
 			DoAltKey(LOWORD(wParam));
 	}
 
+	void CMenubar::DrawBackground(HDC hDC, RECT rc)
+	{
+	//	COLORREF colorBG = GetSysColor(bSelected ? COLOR_HIGHLIGHT : COLOR_MENU);
+	//	HBRUSH hBrush = ::CreateSolidBrush(colorBG);
+	//	HBRUSH OldBrush = (HBRUSH)::SelectObject(hDC, hBrush);
+
+		HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
+		::FillRect(hDC, &rc, hbHighlight);
+
+
+	//	::FillRect(hDC, &rc, hBrush);
+	//	::SelectObject(hDC, OldBrush);
+	//	::DeleteObject(hBrush);
+	}
+
+	void CMenubar::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
+	// Copy the checkmark or radiocheck transparently
+	{
+		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
+		if (hdcMem)
+		{
+			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
+			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
+			HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+			if (hbmMono)
+			{
+				HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
+				if (hbmPrev)
+				{
+					RECT rCheck = { 0, 0, cxCheck, cyCheck };
+
+					// Copy the check mark bitmap to hdcMem
+					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
+						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
+					else
+						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
+
+					RECT rc = pdis->rcItem;
+					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
+
+					if (pdis->itemState & ODS_SELECTED)
+					// Draw a white check mark for a selected item.
+					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
+					{
+						HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
+						if (hdcMask)
+						{
+							HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
+							if (hbmMask)
+							{
+								HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
+								if (hbmPrevMask)
+								{
+									// Set the colour of the check mark to white
+									SetBkColor(hdcMask, RGB(255, 255, 255));
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, PATCOPY);
+
+									// Invert the check mark bitmap
+									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
+
+									// Use the mask to copy the check mark to Menu's device context
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
+
+									::SelectObject(hdcMask, hbmPrevMask);
+								}
+							}
+							::DeleteObject(hbmMask);
+						}
+						::DeleteDC(hdcMask);
+					}
+					else
+						// Draw a black check markfor an unselected item
+						::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+
+					::SelectObject(hdcMem, hbmPrev);
+				}
+				::DeleteObject(hbmMono);
+			}
+			::DeleteDC(hdcMem);
+		}
+	}
+
+	void CMenubar::DrawIcon(LPDRAWITEMSTRUCT pdis)
+	{
+		if (!m_hImageList)
+			return;
+
+		int Iconx;
+		int Icony;
+		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+		HDC hDC = pdis->hDC;
+		RECT rc = pdis->rcItem;
+		int offset = (rc.bottom - rc.top - Icony)/2;
+		int height = rc.bottom - rc.top;
+		::SetRect(&rc, rc.left, rc.top, rc.left + height, rc.bottom);
+		::InflateRect(&rc, -offset, -offset);
+
+		int iImage = -1;
+		for (int i = 0 ; i < (int)m_ImageData.size(); i++)
+		{
+			if (m_ImageData[i] == pdis->itemID)
+				iImage = i;
+		}
+
+		if (iImage >= 0 )
+			ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+	}
+
+	void CMenubar::OnCreate()
+	{
+		m_pTLSData->pMenubar = this;
+
+		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
+		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+	}
+
 	LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
 	{
 		// Use custom draw to draw a rectangle over the hot button
@@ -1560,123 +1710,6 @@ namespace Win32xx
 		}
 
 		return TRUE;
-	}
-
-	void CMenubar::DrawBackground(HDC hDC, RECT rc)
-	{
-	//	COLORREF colorBG = GetSysColor(bSelected ? COLOR_HIGHLIGHT : COLOR_MENU);
-	//	HBRUSH hBrush = ::CreateSolidBrush(colorBG);
-	//	HBRUSH OldBrush = (HBRUSH)::SelectObject(hDC, hBrush);
-
-		HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-		::FillRect(hDC, &rc, hbHighlight);
-
-
-	//	::FillRect(hDC, &rc, hBrush);
-	//	::SelectObject(hDC, OldBrush);
-	//	::DeleteObject(hBrush);
-	}
-
-	void CMenubar::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
-	// Copy the checkmark or radiocheck transparently
-	{
-		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
-		if (hdcMem)
-		{
-			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
-			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-			HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-			if (hbmMono)
-			{
-				HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
-				if (hbmPrev)
-				{
-					RECT rCheck = { 0, 0, cxCheck, cyCheck };
-
-					// Copy the check mark bitmap to hdcMem
-					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
-					else
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
-
-					RECT rc = pdis->rcItem;
-					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
-
-					if (pdis->itemState & ODS_SELECTED)
-					// Draw a white check mark for a selected item.
-					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-					{
-						HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
-						if (hdcMask)
-						{
-							HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
-							if (hbmMask)
-							{
-								HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
-								if (hbmPrevMask)
-								{
-									// Set the colour of the check mark to white
-									SetBkColor(hdcMask, RGB(255, 255, 255));
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, PATCOPY);
-
-									// Invert the check mark bitmap
-									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
-
-									// Use the mask to copy the check mark to Menu's device context
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
-
-									::SelectObject(hdcMask, hbmPrevMask);
-								}
-							}
-							::DeleteObject(hbmMask);
-						}
-						::DeleteDC(hdcMask);
-					}
-					else
-						// Draw a black check markfor an unselected item
-						::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-
-					::SelectObject(hdcMem, hbmPrev);
-				}
-				::DeleteObject(hbmMono);
-			}
-			::DeleteDC(hdcMem);
-		}
-	}
-
-	void CMenubar::DrawIcon(LPDRAWITEMSTRUCT pdis)
-	{
-		if (!m_hImageList)
-			return;
-
-		int Iconx;
-		int Icony;
-		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-		HDC hDC = pdis->hDC;
-		RECT rc = pdis->rcItem;
-		int offset = (rc.bottom - rc.top - Icony)/2;
-		int height = rc.bottom - rc.top;
-		::SetRect(&rc, rc.left, rc.top, rc.left + height, rc.bottom);
-		::InflateRect(&rc, -offset, -offset);
-
-		int iImage = -1;
-		for (int i = 0 ; i < (int)m_ImageData.size(); i++)
-		{
-			if (m_ImageData[i] == pdis->itemID)
-				iImage = i;
-		}
-
-		if (iImage >= 0 )
-			ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
-	}
-
-	void CMenubar::OnInitialUpdate()
-	{
-		m_pTLSData->pMenubar = this;
-
-		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	}
 
 	void CMenubar::OnInitMenuPopup(WPARAM wParam, LPARAM /*lParam*/)
@@ -2523,7 +2556,6 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_hMenu(NULL), m_pView(NULL)//, 
-					//	m_ComCtlVer(0)
 	{
 		GetApp()->SetFrame(this);
 		
@@ -2534,7 +2566,7 @@ namespace Win32xx
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
 
-		if (GetComCtlVersion() >= 4.7)
+		if (GetComCtlVersion() >= 470)
 			m_bUseRebar = TRUE;
 
 		SetFrameMenu(IDW_MAIN);
@@ -2566,9 +2598,12 @@ namespace Win32xx
 	void CFrame::AddMenubarBand(int Menubar_Height /* = MENUBAR_HEIGHT*/)
 	{
    		REBARBANDINFO rbbi = {0};
+		SIZE sz = GetMenubar().GetMaxSize();
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.cxMinChild = sz.cx;
+		rbbi.cx         = sz.cx;
 		rbbi.cyMinChild = Menubar_Height;
 		rbbi.cyMaxChild = Menubar_Height;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
@@ -2578,7 +2613,7 @@ namespace Win32xx
 		SetMenubarBandSize();
 	}
 
-	void CFrame::AddToolbarBand()
+/*	void CFrame::AddToolbarBand()
 	{
    		REBARBANDINFO rbbi = {0};
 		SIZE sz = GetToolbar().GetMaxSize();
@@ -2591,6 +2626,36 @@ namespace Win32xx
 		rbbi.hwndChild  = GetToolbar().GetHwnd();
 		rbbi.cx         = sz.cx;
 		rbbi.cxMinChild = sz.cx;
+
+		GetRebar().InsertBand(-1, &rbbi);
+	} */
+
+	void CFrame::AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT, UINT ID_Disabled)
+	{
+		if (TBData.size() == 0)
+		{
+			DebugErrMsg(_T("Toolbar must have some data"));
+			return;
+		}
+
+		// Create the Toolbar Window
+		TB.Create(GetRebar().GetHwnd());
+		int nButtons = TB.SetButtons(TBData);		
+		TB.SetImageList(nButtons, clrMask, ID_Normal, ID_HOT, ID_Disabled);	
+
+		// Fill the REBARBAND structure
+		REBARBANDINFO rbbi = {0};
+		SIZE sz = TB.GetMaxSize();
+
+		rbbi.cbSize     = sizeof(REBARBANDINFO);
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.cyMinChild = sz.cy;
+		rbbi.cyMaxChild = sz.cy;
+		rbbi.cx         = sz.cx+2;
+		rbbi.cxMinChild = sz.cx+2;
+
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+		rbbi.hwndChild  = TB.GetHwnd();
 
 		GetRebar().InsertBand(-1, &rbbi);
 	}
@@ -2746,12 +2811,11 @@ namespace Win32xx
 			AddMenubarBand();
 
 			// Create the toolbar inside rebar
-			GetToolbar().Create(GetRebar().GetHwnd());
+			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
+			AddToolbarBand(GetToolbar(), m_ToolbarData, RGB(192, 192, 192), IDW_MAIN);
 
-			// Load the toolbar buttons
-			SetButtons(m_ToolbarData);
-			
-			AddToolbarBand();
+			// Set the icons for popup menu items
+			GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
 		}
 		else
 		{
@@ -3094,11 +3158,6 @@ namespace Win32xx
 		{
 			rbbi.cxMinChild = Width;
 			rbbi.cx         = Width;
-		}
-		else 
-		{
-			rbbi.cxMinChild = GetMenubar().GetMaxSize().cx;
-			rbbi.cx = GetMenubar().GetMaxSize().cx;
 		}
 
 		RB.SetBandInfo(nBand, &rbbi); 

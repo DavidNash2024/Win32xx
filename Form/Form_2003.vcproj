@@ -200,10 +200,16 @@
 			<File
 				RelativePath="resource.h">
 			</File>
+			<File
+				RelativePath=".\resrc2.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath=".\res\Dialog.ico">
+			</File>
 			<File
 				RelativePath=".\res\Enhanced.ico">
 			</File>

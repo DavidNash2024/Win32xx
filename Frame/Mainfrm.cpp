@@ -4,8 +4,6 @@
 
 #include "resource.h"
 #include "mainfrm.h"
-#include "math.h"
-#include "float.h"
 
 
 // Definitions for the CMainFrame class
@@ -67,6 +65,15 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+
+	// Use the larger toolbar buttons
+	CToolbar& TB = GetToolbar();
+	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	if (IsRebarUsed())
+	{	
+		CRebar& RB = GetRebar();	
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+	}
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -87,42 +94,6 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 
 	// Pass any unhandled messages on for default processing
 	return 0L;
-}
-
-void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
-{
-	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons
-	// with seperate imagelists for normal, hot and disabled buttons.
-
-	// A reference to the CToolbar object
-	CToolbar& TB = GetToolbar();
-
-	// Set the button size to 24x24 before adding the bitmap
-	TB.SetBitmapSize(24, 24);
-
-	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Set the resource IDs for the toolbar buttons
-	TB.SetButtons(ToolbarData);
-
-	// Add some text to the buttons
-// 	TB.SetButtonText(IDM_FILE_NEW,   _T("New"));
-//	TB.SetButtonText(IDM_FILE_OPEN,  _T("Open"));
-//	TB.SetButtonText(IDM_FILE_SAVE,  _T("Save"));
-//	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
-//	TB.SetButtonText(IDM_EDIT_COPY,  _T("Copy"));
-//	TB.SetButtonText(IDM_EDIT_PASTE, _T("Paste"));
-//	TB.SetButtonText(IDM_FILE_PRINT, _T("Print"));
-//	TB.SetButtonText(IDM_HELP_ABOUT, _T("About"));
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-
-	// Set the icons for popup menu items
-	GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

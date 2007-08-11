@@ -19,13 +19,19 @@ Added CRebar::RepositionBands
 Added CRebar::SetTheme
 Added CRebar::ShowGripper
 Added CToolbar::GetMaxSize
+Added CToolbar::GetTheme
+Added CToolbar::ReplaceBitmap
+Added CToolbar::SetTheme
 Added CWinApp::SetAccelerators
 Added CWnd::GradientFill
 Added CWnd::LoadBitmap
 Added CWnd::SolidFill
-Added REBARTHEME structure
+Added REBARTHEME struct
+Added TOOLBARTHEME struct
 Added GetComCtlVersion
 Added IsXPThemed
+Changed CFrame::AddToolbarBand
+Changed Toolbar::GetItemRect
 Removed CWinApp::SetAcceleratorTable
 
 
