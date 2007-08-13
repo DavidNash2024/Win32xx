@@ -62,8 +62,29 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
-void CMainFrame::OnInitialUpdate()
+void CMainFrame::OnCreate()
 {
+	CFrame::OnCreate();
+
+	// A reference to the CToolbar object
+	CToolbar& TB = GetToolbar();
+
+	// Set the image lists for normal, hot and disabled buttons
+	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	// Disable some of the toolbar buttons
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE); 
+	TB.DisableButton(IDM_FILE_PRINT);
+
+	if (IsRebarUsed())
+	{
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+	}
+
+	SetTheme();
 }
 
 void CMainFrame::OnFileNew()
@@ -111,47 +132,55 @@ void CMainFrame::OnFileSave()
 		m_View.SavePicture(szFile);
 	}
 }
-					
-void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
-{
-	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
-	// with seperate imagelists for normal, hot and disabled buttons.
 
-	// A reference to the CToolbar object
+void CMainFrame::PreCreate(CREATESTRUCT &cs)
+{
+	cs.x = CW_USEDEFAULT;
+	cs.y = CW_USEDEFAULT;
+	cs.cx = 652;
+	cs.cy = 595;
+}
+					
+void CMainFrame::SetTheme()
+{
+	// Set the rebar theme
+	CRebar& RB = GetRebar();
+	BOOL T = TRUE;
+	BOOL F = FALSE;
+
+	REBARTHEME rt = {0};
+	rt.UseThemes= TRUE;
+	rt.clrBkGnd1 = RGB(150,190,245);
+	rt.clrBkGnd2 = RGB(196,215,250);
+	rt.clrBand1  = RGB(220,230,250);
+	rt.clrBand2  = RGB( 70,130,220);
+	rt.KeepBandsLeft = TRUE;
+	rt.LockMenuBand  = TRUE;
+	rt.ShortBands    = TRUE;
+	rt.RoundBorders  = TRUE; 
+
+//	or you could use the following 
+//	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+	RB.SetTheme(rt);
+	HWND hWndMB = GetMenubar().GetHwnd();
+	RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
+			
+	// Set the toolbar theme
 	CToolbar& TB = GetToolbar();
 
-	// Set the button size to 24x24 before adding the bitmap
-	TB.SetBitmapSize(24, 24);
+	TOOLBARTHEME tt = {0};
+	tt.UseThemes   = TRUE;
+	tt.clrHot1     = RGB(255, 230, 190);
+	tt.clrHot2     = RGB(255, 190, 100);
+	tt.clrPressed1 = RGB(255, 140, 40);
+	tt.clrPressed2 = RGB(255, 180, 80);
+	tt.clrOutline  = RGB(192, 128, 255);
 
-	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+//	or you could use the following
+//	TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+	TB.SetTheme(tt);
 
-	// Set the resource IDs for the toolbar buttons
-	TB.SetButtons(ToolbarData);
-
-	// Add some text to the buttons
-// 	TB.SetButtonText(IDM_FILE_NEW,   "New");
-//	TB.SetButtonText(IDM_FILE_OPEN,  "Open");
-//	TB.SetButtonText(IDM_FILE_SAVE,  "Save");
-//	TB.SetButtonText(IDM_EDIT_CUT,   "Cut");
-//	TB.SetButtonText(IDM_EDIT_COPY,  "Copy");
-//	TB.SetButtonText(IDM_EDIT_PASTE, "Paste");
-//	TB.SetButtonText(IDM_FILE_PRINT, "Print");
-//	TB.SetButtonText(IDM_HELP_ABOUT, "About");
-
-	// Adjust the toolbar and rebar size to take account of the larger buttons
-	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE); 
-	TB.DisableButton(IDM_FILE_PRINT);
-
-	// Set the icons for popup menu items
-	GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192,192,192));
+	RecalcLayout();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

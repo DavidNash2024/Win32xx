@@ -45,6 +45,7 @@ protected:
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void ReadFile(LPCTSTR szFileName);
 	virtual void SetFileName(TCHAR* szFullFileName);
+	virtual void SetTheme();
 	virtual void SetWindowTitle();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void WriteFile(LPCTSTR szFileName);

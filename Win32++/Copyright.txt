@@ -1,5 +1,5 @@
-Win32++  Version 5.3
-Released: 4th July, 2007 by:
+Win32++  Version 5.4
+Released: 24th August, 2007 by:
 
      David Nash
      email: dnash@bigpond.net.au

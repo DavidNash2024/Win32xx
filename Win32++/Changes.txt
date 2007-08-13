@@ -2,6 +2,7 @@ Version 5.4
 -----------
 Bug Fixes:
 * Text for toolbar buttons wasn't always displayed on Win2000
+* It is now safe to call CToolbar::SetImageist multiple times
 
 New Features
 * Added Rebar themes, including:
@@ -43,6 +44,7 @@ Added TOOLBARTHEME struct
 Added GetComCtlVersion
 Added IsXPThemed
 Changed CFrame::AddToolbarBand
+Changed CRebar::ResizeBand
 Changed Toolbar::GetItemRect
 Removed CFrame::SetButtons
 Removed CWinApp::SetAcceleratorTable

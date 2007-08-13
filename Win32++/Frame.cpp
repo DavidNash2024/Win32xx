@@ -1,5 +1,5 @@
-// Win32++  Version 5.3
-// Released: 4th July, 2007 by:
+// Win32++  Version 5.4
+// Released: 24th August, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -121,7 +121,7 @@ namespace Win32xx
 			if (::IsWindow(m_hWnd))
 			{
 				if (::SendMessage(m_hWnd, SB_GETPARTS, 0, 0) >= iPane)
-				{	
+				{
 					if (!::SendMessage(m_hWnd, SB_SETTEXT, iPane | Style, (LPARAM)szText))
 						throw CWinException(_T("Failed to set status bar text"));
 				}
@@ -221,7 +221,7 @@ namespace Win32xx
 			tbab.nID   = ToolbarID;
 			if (::SendMessage(m_hWnd, TB_ADDBITMAP, iNumButtons, (LPARAM)&tbab) == -1)
 				throw CWinException(_T("CToolbar::AddBitmap  TB_ADDBITMAP failed"));
-			
+
 			m_OldToolbarID = ToolbarID;
 		}
 
@@ -452,9 +452,9 @@ namespace Win32xx
 					Rectangle(hDC, rcRect.left, rcRect.top, rcRect.right, rcRect.bottom);
 					::SelectObject(hDC, hOldPen);
 					::DeleteObject(hPen);
-					
+
 					// Draw filled gradient rectange
-					::InflateRect(&rcRect, -1, -1);				
+					::InflateRect(&rcRect, -1, -1);
 					if (nState & CDIS_SELECTED)
 					{
 						GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
@@ -463,15 +463,15 @@ namespace Win32xx
 					{
 						GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
 					}
-	
+
 					// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
 					int nStyle = GetButtonStyle(dwItem);
 					LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
-					if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & BTNS_WHOLEDROPDOWN ))
-					{					
+					if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & 0x0080))
+					{
 						int xAPos;
 						int yAPos;
-						
+
 						if (nStyle & TBSTYLE_DROPDOWN)
 						{
 							rcRect.right = rcRect.right - 12;
@@ -487,14 +487,14 @@ namespace Win32xx
 
 						HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(0,0,0));
 						HPEN hOldPen = (HPEN)::SelectObject(hDC, (HPEN)hPen);
-						
+
 						// Manually draw the dropdown arrow
 						for (int i = 2; i >= 0; i--)
 						{
 							::MoveToEx(hDC, xAPos -i-1, yAPos - i+1, NULL);
 							::LineTo  (hDC, xAPos +i,   yAPos - i+1);
 						}
-						
+
 						::SelectObject(hDC, hOldPen);
 						::DeleteObject((HPEN)hPen);
 
@@ -532,10 +532,10 @@ namespace Win32xx
 						::DrawTextEx(hDC, szText, lstrlen(szText)*sizeof(TCHAR), &rcRect, DT_CENTER, NULL);
 						::SelectObject(hDC, hOldFont);
 					}
-					
+
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
-			} 
+			}
 			return CDRF_DODEFAULT ;   // Do default drawing
 		}
 		return 0L;
@@ -802,7 +802,7 @@ namespace Win32xx
 	}
 
 	void CToolbar::SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID /*= 0*/, UINT ToolbarDisabledID /*= 0*/)
-	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version 
+	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = bitmap_size / buttons
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	{
@@ -822,7 +822,7 @@ namespace Win32xx
 				if (GetComCtlVersion() == 400)
 				{
 					// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
-					// Instead we simply add the bitmap.
+					// Instead we simply add/replace the bitmap.
 
 					// Set the bitmap size first
 					SetBitmapSize(iImageWidth, iImageHeight);
@@ -910,7 +910,7 @@ namespace Win32xx
 				}
 			}
 			break;
-		} 
+		}
 
 		// pass unhandled messages on for default processing
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -1010,12 +1010,12 @@ namespace Win32xx
 		GetClientRect(m_hWnd, &rc);
 		int BarWidth = rc.right - rc.left;
 		int BarHeight = rc.bottom - rc.top;
-		
+
 		// Create and set up our memory DC
 		HDC hDCMem = ::CreateCompatibleDC(hDC);
 		HBITMAP hBitmap = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 		HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hDCMem, (HBITMAP)hBitmap);
-			
+
 		// Draw to Rebar background to the memory DC
 		rc.right = 600;
 		GradientFill(hDCMem, m_Theme.clrBkGnd1, m_Theme.clrBkGnd2, &rc, TRUE);
@@ -1044,7 +1044,7 @@ namespace Win32xx
 						REBARBANDINFO rbbi = {0};
 						rbbi.cbSize = sizeof(REBARBANDINFO);
 						rbbi.fMask = RBBIM_CHILD ;
-						GetBandInfo(nBand, &rbbi);			
+						GetBandInfo(nBand, &rbbi);
 						RECT rcChild;
 						::GetWindowRect(rbbi.hwndChild, &rcChild);
 						int ChildWidth = rcChild.right - rcChild.left;
@@ -1066,9 +1066,9 @@ namespace Win32xx
 						rcDraw.top = rcDraw.bottom;
 						rcDraw.bottom = rcBand.bottom;
 						GradientFill(hDCSource, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
-						
+
 						// Set Curve amount for rounded edges
-						int Curve = m_Theme.RoundBorders? 16 : 0;	
+						int Curve = m_Theme.RoundBorders? 16 : 0;
 
 						// Create our mask for rounded edges using RoundRect
 						HBITMAP hBitmapMask   = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
@@ -1077,7 +1077,7 @@ namespace Win32xx
 						rcDraw.top = rcBand.top;
 						if (!m_Theme.FlatStyle)
 							::InflateRect(&rcDraw, 1, 1);
-						
+
 						int left = rcDraw.left;
 						int right = rcDraw.right;
 						int top = rcDraw.top;
@@ -1094,16 +1094,16 @@ namespace Win32xx
 						{
 							::RoundRect(hDCMask, left, top, right, bottom, Curve, Curve);
 							::BitBlt(hDCMask, left, top, cx, cy, hDCMask, left, top, PATINVERT);
-						}							
-						
+						}
+
 						// Copy Source DC to Memory DC using the RoundRect mask
-						::BitBlt(hDCMem, left, top, cx, cy, hDCSource, left, top, SRCINVERT);					
+						::BitBlt(hDCMem, left, top, cx, cy, hDCSource, left, top, SRCINVERT);
 						::BitBlt(hDCMem, left, top, cx, cy, hDCMask,   left, top, SRCAND);
 						::BitBlt(hDCMem, left, top, cx, cy, hDCSource, left, top, SRCINVERT);
 
 						::SelectObject(hDCMask, hOldMask);
 						::DeleteObject(hBitmapMask);
-						::DeleteDC(hDCMask); 
+						::DeleteDC(hDCMask);
 						::SelectObject(hDCSource, hOldSource);
 						::DeleteObject(hBitmapSource);
 						::DeleteDC(hDCSource);
@@ -1111,7 +1111,7 @@ namespace Win32xx
 				}
 			}
 		}
-	
+
 		if (m_Theme.UseLines)
 		{
 			// Draw lines between bands
@@ -1131,7 +1131,7 @@ namespace Win32xx
 		::SelectObject(hDCMem, hOldBitmap);
 		::DeleteObject(hBitmap);
 		::DeleteDC(hDCMem);
-		
+
 		return TRUE;
 	}
 
@@ -1158,7 +1158,7 @@ namespace Win32xx
 				::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0);
 				OldrcTop = rc.top;
 			}
-		}   
+		}
 	}
 
 	void CRebar::ResizeBand(const int nBand, SIZE sz)
@@ -1168,8 +1168,8 @@ namespace Win32xx
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 
 		GetBandInfo(nBand, &rbbi);
-		rbbi.cx         = sz.cx;
-		rbbi.cxMinChild = sz.cx;
+		rbbi.cx         = sz.cx + 2;
+		rbbi.cxMinChild = sz.cx + 2;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
 		SetBandInfo(nBand, &rbbi );
@@ -1221,7 +1221,7 @@ namespace Win32xx
 		m_Theme.clrBand1     = Theme.clrBand1;
 		m_Theme.clrBand2     = Theme.clrBand2;
 		m_Theme.KeepBandsLeft= Theme.KeepBandsLeft;
-		m_Theme.LockMenuBand = Theme.LockMenuBand;	
+		m_Theme.LockMenuBand = Theme.LockMenuBand;
 		m_Theme.ShortBands   = Theme.ShortBands;
 		m_Theme.UseLines     = Theme.UseLines;
 
@@ -1231,7 +1231,7 @@ namespace Win32xx
 			m_Theme.FlatStyle    = Theme.FlatStyle;
 			m_Theme.RoundBorders = Theme.RoundBorders;
 		}
-		
+
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
@@ -1302,11 +1302,11 @@ namespace Win32xx
 
 				if (y <= GetRowHeight(0))
 				{
-					// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position 
-					lParam = Orig_lParam; 
+					// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
+					lParam = Orig_lParam;
 				}
 			}
-			break;  
+			break;
 		case WM_ERASEBKGND:
 			if (OnEraseBkGnd((HDC)wParam))
 				return TRUE;
@@ -1314,7 +1314,7 @@ namespace Win32xx
 		case RB_MOVEBAND:
 			TRACE("RB_MOVEBAND");
 			break;
-		} 
+		}
 
 		// pass unhandled messages on for default processing
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -2467,8 +2467,8 @@ namespace Win32xx
 	}
 
     void CMenubar::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
-	// Set the drop-down icons from an existing image list. 
-	// The image list could be a collection of icons 
+	// Set the drop-down icons from an existing image list.
+	// The image list could be a collection of icons
     {
         // Remove any existing imagelist
         if (m_hImageList)
@@ -2604,10 +2604,10 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_hMenu(NULL), m_pView(NULL)//, 
+		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_hMenu(NULL), m_pView(NULL)//,
 	{
 		GetApp()->SetFrame(this);
-		
+
 		INITCOMMONCONTROLSEX InitStruct;
 		InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 		InitStruct.dwICC = ICC_WIN95_CLASSES| ICC_COOL_CLASSES;
@@ -2657,7 +2657,7 @@ namespace Win32xx
 		rbbi.cyMaxChild = Menubar_Height;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.hwndChild  = GetMenubar().GetHwnd();
-			
+
 		GetRebar().InsertBand(-1, &rbbi);
 		SetMenubarBandSize();
 	}
@@ -2672,8 +2672,8 @@ namespace Win32xx
 
 		// Create the Toolbar Window
 		TB.Create(GetRebar().GetHwnd());
-		int nButtons = TB.SetButtons(TBData);		
-		TB.SetImageList(nButtons, clrMask, ID_Normal, ID_HOT, ID_Disabled);	
+		int nButtons = TB.SetButtons(TBData);
+		TB.SetImageList(nButtons, clrMask, ID_Normal, ID_HOT, ID_Disabled);
 
 		// Fill the REBARBAND structure
 		REBARBANDINFO rbbi = {0};
@@ -2784,15 +2784,15 @@ namespace Win32xx
 				// Declare a pointer to the InItCommonControlsEx function
 				typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 				INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
-				
+
 				// Call InitCommonControlsEx
 				if(!((*pfnInit)(&InitStruct)))
-					throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));			
+					throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));
 			}
 			else
 			{
 				::InitCommonControls();
-			} 
+			}
 
 			::FreeLibrary(hComCtl);
 		}
@@ -2855,7 +2855,7 @@ namespace Win32xx
 
 			// Set the ImageList for the toolbar
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			int iButtons = GetToolbar().SetButtons(m_ToolbarData);		
+			int iButtons = GetToolbar().SetButtons(m_ToolbarData);
 			GetToolbar().SetImageList(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 		}
 
@@ -2870,7 +2870,7 @@ namespace Win32xx
 
 		// Reposition the child windows
 		RecalcLayout();
-	
+
 		// Start timer for Status updates
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
@@ -2929,7 +2929,7 @@ namespace Win32xx
 			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().KeepBandsLeft)
 				GetRebar().MoveBandsLeft();
 			break;
-		case RBN_MINMAX:	
+		case RBN_MINMAX:
 			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().ShortBands)
 				return 1L;	// Supress maximise or minimise rebar band
 			break;
@@ -3095,7 +3095,7 @@ namespace Win32xx
 	{
 		if ((!m_pView) || (!m_pView->GetHwnd()))
 			return;
-	
+
 		// Resize the status bar
 		HWND hStatusbar = GetStatusbar().GetHwnd();
 		if (hStatusbar)
@@ -3132,7 +3132,7 @@ namespace Win32xx
 
 		if (RB.GetTheme().UseThemes && RB.GetTheme().KeepBandsLeft)
 			RB.MoveBandsLeft();
-		
+
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}
 
@@ -3157,7 +3157,7 @@ namespace Win32xx
 	{
 		// Sets the minimum width of the Menubar band to the width of the rebar
 		// This prevents other bands from moving to this Menubar's row.
-		
+
 		RECT rc = {0};
 		GetClientRect(GetRebar().GetHwnd(), &rc);
 		int Width = rc.right - rc.left;
@@ -3165,7 +3165,7 @@ namespace Win32xx
 		int nBand = RB.GetBand(GetMenubar().GetHwnd());
 		::SendMessage(GetRebar().GetHwnd(), RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
 		Width = Width - rc.left - rc.right - 2;
-		
+
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
@@ -3176,7 +3176,7 @@ namespace Win32xx
 			rbbi.cx         = Width;
 		}
 
-		RB.SetBandInfo(nBand, &rbbi); 
+		RB.SetBandInfo(nBand, &rbbi);
 	}
 
 	void CFrame::SetStatusIndicators()

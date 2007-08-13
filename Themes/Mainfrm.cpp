@@ -78,15 +78,22 @@ void CMainFrame::OnCreate()
 	// call the base class function
 	CFrame::OnCreate();
 	
-	// Set the icons for popup menu items
-	GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
-	
-	//Set our theme
-	SetTheme(IDM_BLUE);
+	CToolbar& TB = GetToolbar();
+	TB.SetImageList(8, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
-	// Add two additional toolbars
+	// Resize the Rebar band
 	if (IsRebarUsed())
-	{
+	{	
+		// Set the icons for popup menu items
+		GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
+		
+		// Resize the rebar for the larger toolbar buttons
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+	
+		//Set our theme
+		SetTheme(IDM_BLUE);
+
 		// Add the Arrows toolbar
 		std::vector<UINT> ArrowsData;
 		ArrowsData.push_back(IDM_ARROW_LEFT);

@@ -65,6 +65,7 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+	
 	SetTheme();
 }
 
@@ -126,6 +127,8 @@ void CMainFrame::SetTheme()
 //	or you could use the following
 //	TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 	TB.SetTheme(tt);
+
+	RecalcLayout();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

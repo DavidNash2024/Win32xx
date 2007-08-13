@@ -17,11 +17,12 @@ public:
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void OnCreate();
 	virtual void OnFileNew();
 	virtual void OnFileOpen();
 	virtual void OnFileSave();
-	virtual void OnInitialUpdate();
-	virtual void SetButtons(const std::vector<UINT> ToolbarData);
+	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void SetTheme();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

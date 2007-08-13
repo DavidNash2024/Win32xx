@@ -1,5 +1,5 @@
-// Win32++  Version 5.3
-// Released: 4th July, 2007 by:
+// Win32++  Version 5.4
+// Released: 24th August, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -650,7 +650,7 @@ namespace Win32xx
 		int g2 = GetGValue(Color2);
 		int b2 = GetBValue(Color2);
 
-    
+
 		if (bVertical)
 		{
 			for(int i=0; i < Width; i++)
@@ -678,7 +678,7 @@ namespace Win32xx
 				::SetRect(&line, pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
 				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
 			}
-		}  
+		}
 	}
 
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
@@ -997,7 +997,7 @@ namespace Win32xx
 
 	void CWnd::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
 	{
-		::SetBkColor(hDC, Color);	
+		::SetBkColor(hDC, Color);
 		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
 	}
 

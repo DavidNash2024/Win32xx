@@ -42,6 +42,8 @@ void CMainFrame::OnInitialUpdate()
 	::DragAcceptFiles(m_hWnd, TRUE);
 	SetWindowTitle();
 	::SetFocus(m_RichView.GetHwnd());
+
+	SetTheme();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -302,6 +304,48 @@ void CMainFrame::ReadFile(LPCTSTR szFileName)
 
 	//Clear the modified text flag
 	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
+}
+
+void CMainFrame::SetTheme()
+{
+	// Set the rebar theme
+	CRebar& RB = GetRebar();
+	BOOL T = TRUE;
+	BOOL F = FALSE;
+
+	REBARTHEME rt = {0};
+	rt.UseThemes= TRUE;
+	rt.clrBkGnd1 = RGB(150,190,245);
+	rt.clrBkGnd2 = RGB(196,215,250);
+	rt.clrBand1  = RGB(220,230,250);
+	rt.clrBand2  = RGB( 70,130,220);
+	rt.KeepBandsLeft = TRUE;
+	rt.LockMenuBand  = TRUE;
+	rt.ShortBands    = TRUE;
+	rt.RoundBorders  = TRUE; 
+
+//	or you could use the following 
+//	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+	RB.SetTheme(rt);
+	HWND hWndMB = GetMenubar().GetHwnd();
+	RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
+			
+	// Set the toolbar theme
+	CToolbar& TB = GetToolbar();
+
+	TOOLBARTHEME tt = {0};
+	tt.UseThemes   = TRUE;
+	tt.clrHot1     = RGB(255, 230, 190);
+	tt.clrHot2     = RGB(255, 190, 100);
+	tt.clrPressed1 = RGB(255, 140, 40);
+	tt.clrPressed2 = RGB(255, 180, 80);
+	tt.clrOutline  = RGB(192, 128, 255);
+
+//	or you could use the following
+//	TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+	TB.SetTheme(tt);
+
+	RecalcLayout();
 }
 
 void CMainFrame::WriteFile(LPCTSTR szFileName)

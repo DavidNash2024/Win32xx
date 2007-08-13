@@ -35,7 +35,7 @@ void CMainFrame::OnInitialUpdate()
 {
 	// All windows are now created, so populate the treeview
 	GetTreeView().GetRootItems();
-	
+
 	// Uncheck the hidden menu item
 	::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, MF_UNCHECKED);
 
@@ -47,7 +47,7 @@ void CMainFrame::OnInitialUpdate()
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	// Handle the the View submenu
-	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1); 
+	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1);
 
 	switch (LOWORD(wParam))
 	{
@@ -98,18 +98,15 @@ void CMainFrame::OnCreate()
 	// Use larger buttons
 	CToolbar& TB = GetToolbar();
 	TB.SetImageList(9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-	
+
 	if (IsRebarUsed())
 	{
 		// Resize the Rebar band
 		CRebar& RB = GetRebar();
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-
-		// Set the icons for dropdown menu items
-		GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192,192,192));
 	}
 
-	// This style requires comctl32.dll version 4.72 or later
+	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{
 		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
@@ -123,7 +120,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	// Notification from our dropdown button is recieved if Comctl32.dll version
 	// is 4.70 or later (IE v3 required).
     switch(((LPNMHDR)lParam)->code)
-	{	
+	{
  		//Menu for dropdown toolbar button
 		case TBN_DROPDOWN:
 		{
@@ -132,7 +129,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 		}
 		break;
 
-	} //switch LPNMHDR  
+	} //switch LPNMHDR
 
 	return 0L;
 }
@@ -153,14 +150,14 @@ void CMainFrame::SetTheme()
 	rt.KeepBandsLeft = TRUE;
 	rt.LockMenuBand  = TRUE;
 	rt.ShortBands    = TRUE;
-	rt.RoundBorders  = TRUE; 
+	rt.RoundBorders  = TRUE;
 
-	// or you could use the following 
+	// or you could use the following
 //	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 	RB.SetTheme(rt);
 	HWND hWndMB = GetMenubar().GetHwnd();
 	RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
-			
+
 	// Set the toolbar theme
 	CToolbar& TB = GetToolbar();
 
@@ -175,6 +172,8 @@ void CMainFrame::SetTheme()
 	// or you could use the following
 	// TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 	TB.SetTheme(tt);
+
+	RecalcLayout();
 }
 
 void CMainFrame::ViewPopup()
@@ -186,7 +185,7 @@ void CMainFrame::ViewPopup()
 	CToolbar& TB = GetToolbar();
 	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
 	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
-	
+
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
 	tpm.rcExclude = rc;
@@ -200,23 +199,23 @@ void CMainFrame::ViewPopup()
 	for (int i = 3 ; i < 7 ; i++)
 	{
 		ZeroMemory(&mii, sizeof(MENUITEMINFO));
-		
+
 		// Fix for an undocumented bug in the Win32 API
 		// For Win95 and NT, cbSize needs to be 44
 		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
 			mii.cbSize = 44;
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
-		
+
 		mii.fMask  = MIIM_STATE | MIIM_ID;
 		GetMenuItemInfo(GetSubMenu(GetFrameMenu(), 1), i, TRUE,  &mii );
-		if (mii.fState & MFS_CHECKED) 
+		if (mii.fState & MFS_CHECKED)
 			::CheckMenuRadioItem(hTopMenu, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
 	}
-	
+
 	// Start the popup menu
 	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
-	
+
 	// Release the menu resource
 	::DestroyMenu(hTopMenu);
 }
@@ -229,6 +228,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// pass any unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
