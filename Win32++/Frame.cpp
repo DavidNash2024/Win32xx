@@ -463,6 +463,52 @@ namespace Win32xx
 					{
 						GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
 					}
+	
+					// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
+					int nStyle = GetButtonStyle(dwItem);
+					LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
+					if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & BTNS_WHOLEDROPDOWN ))
+					{					
+						int xAPos;
+						int yAPos;
+						
+						if (nStyle & TBSTYLE_DROPDOWN)
+						{
+							rcRect.right = rcRect.right - 12;
+							xAPos = rcRect.right + 6;
+							yAPos = (rcRect.bottom - rcRect.top)/2;
+						}
+						else
+						{
+							rcRect.right = rcRect.right - 8;
+							xAPos = rcRect.right + 3;
+							yAPos = (rcRect.bottom - rcRect.top)/2 +1;
+						}
+
+						HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(0,0,0));
+						HPEN hOldPen = (HPEN)::SelectObject(hDC, (HPEN)hPen);
+						
+						// Manually draw the dropdown arrow
+						for (int i = 2; i >= 0; i--)
+						{
+							::MoveToEx(hDC, xAPos -i-1, yAPos - i+1, NULL);
+							::LineTo  (hDC, xAPos +i,   yAPos - i+1);
+						}
+						
+						::SelectObject(hDC, hOldPen);
+						::DeleteObject((HPEN)hPen);
+
+						// Draw line between icon and dropdown arrow
+						if (nStyle & TBSTYLE_DROPDOWN)
+						{
+							hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+							hOldPen = (HPEN)::SelectObject(hDC, hPen);
+							::MoveToEx(hDC, rcRect.right, rcRect.top, NULL);
+							::LineTo(hDC, rcRect.right, rcRect.bottom);
+							::SelectObject(hDC, hOldPen);
+							::DeleteObject((HPEN)hPen);
+						}
+					}
 
 					// Draw the button image
 					HIMAGELIST hImageList = m_hImageListHot? m_hImageListHot: m_hImageList;
@@ -791,6 +837,9 @@ namespace Win32xx
 				if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
 				if (m_hImageListDis) ::ImageList_Destroy(m_hImageListDis);
 				if (m_hImageListHot) ::ImageList_Destroy(m_hImageListHot);
+				m_hImageList = 0;
+				m_hImageListDis = 0;
+				m_hImageListHot = 0;
 
 				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
 				ImageList_AddMasked(m_hImageList, hbm, crMask);
@@ -1547,7 +1596,7 @@ namespace Win32xx
 						::DeleteDC(hdcMask);
 					}
 					else
-						// Draw a black check markfor an unselected item
+						// Draw a black check mark for an unselected item
 						::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
 
 					::SelectObject(hdcMem, hbmPrev);
@@ -2613,23 +2662,6 @@ namespace Win32xx
 		SetMenubarBandSize();
 	}
 
-/*	void CFrame::AddToolbarBand()
-	{
-   		REBARBANDINFO rbbi = {0};
-		SIZE sz = GetToolbar().GetMaxSize();
-
-		rbbi.cbSize     = sizeof(REBARBANDINFO);
-		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
-		rbbi.cyMinChild = sz.cy;
-		rbbi.cyMaxChild = sz.cy;
-		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
-		rbbi.hwndChild  = GetToolbar().GetHwnd();
-		rbbi.cx         = sz.cx;
-		rbbi.cxMinChild = sz.cx;
-
-		GetRebar().InsertBand(-1, &rbbi);
-	} */
-
 	void CFrame::AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT, UINT ID_Disabled)
 	{
 		if (TBData.size() == 0)
@@ -2811,7 +2843,6 @@ namespace Win32xx
 			AddMenubarBand();
 
 			// Create the toolbar inside rebar
-			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			AddToolbarBand(GetToolbar(), m_ToolbarData, RGB(192, 192, 192), IDW_MAIN);
 
 			// Set the icons for popup menu items
@@ -2822,8 +2853,10 @@ namespace Win32xx
 			// Create the toolbar without a rebar
 			GetToolbar().Create(m_hWnd);
 
-			// Load the toolbar buttons
-			SetButtons(m_ToolbarData);
+			// Set the ImageList for the toolbar
+			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
+			int iButtons = GetToolbar().SetButtons(m_ToolbarData);		
+			GetToolbar().SetImageList(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 		}
 
 		if (!IsMenubarUsed())
@@ -3107,23 +3140,6 @@ namespace Win32xx
 	{
 		for (int nBands = 0; nBands < GetRebar().GetBandCount(); nBands++)
 			GetRebar().SetBandBitmap(nBands, hBackground);
-	}
-
-	void CFrame::SetButtons(const std::vector<UINT> ToolbarData)
-	// Define the resource IDs for the toolbar like this in the Frame's constructor
-	// m_ToolbarData.clear();
-	// m_ToolbarData.push_back ( IDM_FILE_NEW   );
-	// m_ToolbarData.push_back ( IDM_FILE_OPEN  );
-	// m_ToolbarData.push_back ( IDM_FILE_SAVE  );
-	// m_ToolbarData.push_back ( 0 );				// Separator
-	// m_ToolbarData.push_back ( IDM_HELP_ABOUT );
-	{
-		// Set the buttons for the toolbar
-		int iButtons = GetToolbar().SetButtons(ToolbarData);
-		GetToolbar().SetImageList(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
-
-		// Set the icons for popup menu items
-		GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
 	}
 
 	void CFrame::SetFrameMenu(INT ID_MENU)

@@ -4,8 +4,20 @@ Bug Fixes:
 * Text for toolbar buttons wasn't always displayed on Win2000
 
 New Features
-* Rebar themes
-* Forms Sample
+* Added Rebar themes, including:
+  - Gradient background for the rebar control (any colors)
+  - Gradient background for the rebar bands (any colors)
+  - The Menubar can be locked in place.
+  - The bands can be kept left.
+  - Short bands
+  - Bands can have rounded borders
+  - Bands with rounded borders can have a flat style
+* Added Toolbar themes, including:
+  - Gradient background for hot buttons (any colors)
+  - Gradient background for pressed buttons (any colors)
+  - Colored outline for hot and pressed buttons (any color)
+* Built in support for multiple toolbars (in rebars) with AddToolbarBand
+* Added Forms Sample
 
 Added CDialog::Create
 Added CFrame::SetMenubarBandSize
@@ -32,6 +44,7 @@ Added GetComCtlVersion
 Added IsXPThemed
 Changed CFrame::AddToolbarBand
 Changed Toolbar::GetItemRect
+Removed CFrame::SetButtons
 Removed CWinApp::SetAcceleratorTable
 
 

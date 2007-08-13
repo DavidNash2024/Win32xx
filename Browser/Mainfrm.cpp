@@ -36,7 +36,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
 	cs.cy = 100;	// required to display list
 	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
-	m_ComboboxEx.PreCreate(cs);
+	m_ComboboxEx.PreCreate(cs); 
 	m_ComboboxEx.Create(GetRebar().GetHwnd());
 
 	// Put the window in a new rebar band
@@ -49,7 +49,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.cxMinChild = 200;
 	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-	rbbi.clrBack    = RGB(220,230,250);//GetSysColor(COLOR_BTNFACE);
+	rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
 	rbbi.lpText     = _T("Address");
 
@@ -75,28 +75,25 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 {
 	CToolbar& TB = GetToolbar();
 
-	if ( pDispParams)
+	if ((pDispParams) && (pDispParams->cArgs == 2))
 	{
-		if (pDispParams->cArgs == 2)
+		if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
 		{
-			if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
+			VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
+			int nCommand = pDispParams->rgvarg[1].intVal;
 			{
-				VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
-				int nCommand = pDispParams->rgvarg[1].intVal;
+				switch (nCommand)
 				{
-					switch (nCommand)
-					{
-					case 1: // Navigate forward:
-						bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
+				case 1: // Navigate forward:
+					bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
 
-						break;
-					case 2: // Navigate back:
-						bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
-						break;
-					}
+					break;
+				case 2: // Navigate back:
+					bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
+					break;
 				}
 			}
-		}
+		}		
 	}
 }
 
@@ -167,6 +164,22 @@ void CMainFrame::OnCreate()
 {
 	CFrame::OnCreate();
 	AddListboxBand(22);
+	
+	// References to the CToolbar and CRebar objects
+	CToolbar& TB = GetToolbar();
+
+	// Set the image lists for normal, hot and disabled buttons
+	TB.SetImageList(5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	if (IsRebarUsed())
+	{
+		// Resize the Rebar band
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+
+		// Set the icons for dropdown menu items
+		GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192,192,192));
+	}
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
@@ -207,7 +220,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
-	//TRACE(_T("NewWindow2"));
+	TRACE(_T("NewWindow2"));
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -311,30 +324,6 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 		str << LoadString(IDW_MAIN);
 
 	::SetWindowText(m_hWnd, str.str().c_str());
-}
-
-void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
-{
-	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons 
-	// with seperate imagelists for normal, hot and disabled buttons.
-
-	// A reference to the CToolbar object
-	CToolbar& TB = GetToolbar();
-
-	// Set the button size to 24x24 before adding the bitmap
-	TB.SetBitmapSize(24, 24);
-
-	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Set the resource IDs for the toolbar buttons
-	TB.SetButtons(ToolbarData);
-	
-	// Adjust the toolbar and rebar size to take account of the larger buttons
-	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(IDM_BACK), &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -1,7 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
 
-#include "resrc1.h"
 #include "resource.h"
 #include "windows.h"
 
@@ -68,9 +67,6 @@ IDW_MAIN                ICON                    "res/Dialog.ico"
 //
 
 IDW_MAIN                BITMAP                  "res/toolbar.bmp"
-IDB_TOOLBAR_NORM        BITMAP                  "res/toolbar24.bmp"
-IDB_TOOLBAR_HOT         BITMAP                  "res/toolbar24_h.bmp"
-IDB_TOOLBAR_DIS         BITMAP                  "res/toolbar24_d.bmp"
 IDB_BITMAP1             BITMAP                  "res/Zapotec.bmp"
 
 /////////////////////////////////////////////////////////////////////////////

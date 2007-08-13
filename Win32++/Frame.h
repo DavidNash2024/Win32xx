@@ -135,7 +135,7 @@ namespace Win32xx
 		HIMAGELIST m_hImageListHot;
 		HIMAGELIST m_hImageListDis;
 		std::map<tString, int> m_StringMap;
-		UINT m_OldToolbarID;
+		UINT m_OldToolbarID;		// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		TOOLBARTHEME m_Theme;
 
 	};  // class CToolbar
@@ -308,7 +308,6 @@ namespace Win32xx
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void SetBackground(HBITMAP);
-		virtual void SetButtons(const std::vector<UINT> ToolbarData);
 		virtual void SetMenubarBandSize();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

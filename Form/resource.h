@@ -23,10 +23,6 @@
 #define IDM_EDIT_DELETE                 115
 #define IDM_HELP_ABOUT                  120
 
-#define IDB_TOOLBAR_NORM                130
-#define IDB_TOOLBAR_HOT                 131
-#define IDB_TOOLBAR_DIS                 132
-
 //Resource IDs for the dialog
 #define IDD_DIALOG1                     201
 #define IDC_RADIO1						210

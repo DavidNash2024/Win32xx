@@ -37,7 +37,6 @@ BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-		//Additional messages to be handled go here
 //	}
 
 	// Pass unhandled messages on to parent DialogProc

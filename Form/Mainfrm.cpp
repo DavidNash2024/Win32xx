@@ -59,6 +59,7 @@ void CMainFrame::OnCreate()
 
 	// Use the default frame creation
 	CFrame::OnCreate();
+	SetTheme();
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -71,70 +72,67 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
+	// Set the initial window size
+	cs.x = CW_USEDEFAULT;
+	cs.y = CW_USEDEFAULT;
 	cs.cx = 500;
 	cs.cy = 420;
 	CFrame::PreCreate(cs);
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+void CMainFrame::SetTheme()
 {
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
+	// Set the rebar theme
+	CRebar& RB = GetRebar();
+	BOOL T = TRUE;
+	BOOL F = FALSE;
 
-	// Pass any unhandled messages on for default processing
-	return 0L;
-}
+	REBARTHEME rt = {0};
+	rt.UseThemes= TRUE;
+	rt.clrBkGnd1 = RGB(150,190,245);
+	rt.clrBkGnd2 = RGB(196,215,250);
+	rt.clrBand1  = RGB(220,230,250);
+	rt.clrBand2  = RGB( 70,130,220);
+	rt.KeepBandsLeft = TRUE;
+	rt.LockMenuBand  = TRUE;
+	rt.ShortBands    = TRUE;
+	rt.RoundBorders  = TRUE; 
 
-void CMainFrame::SetButtons(const std::vector<UINT> ToolbarData)
-{
-	// Overriding CFrame::Setbuttons is optional. We do it here to use larger buttons
-	// with seperate imagelists for normal, hot and disabled buttons.
-
-	// A reference to the CToolbar object
+	// or you could use the following 
+//	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+	RB.SetTheme(rt);
+	HWND hWndMB = GetMenubar().GetHwnd();
+	RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
+			
+	// Set the toolbar theme
 	CToolbar& TB = GetToolbar();
 
-	// Set the button size to 24x24 before adding the bitmap
-	TB.SetBitmapSize(24, 24);
+	TOOLBARTHEME tt = {0};
+	tt.UseThemes   = TRUE;
+	tt.clrHot1     = RGB(255, 230, 190);
+	tt.clrHot2     = RGB(255, 190, 100);
+	tt.clrPressed1 = RGB(255, 140, 40);
+	tt.clrPressed2 = RGB(255, 180, 80);
+	tt.clrOutline  = RGB(192, 128, 255);
 
-	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Set the resource IDs for the toolbar buttons
-	TB.SetButtons(ToolbarData);
-
-	// Add some text to the buttons
-// 	TB.SetButtonText(IDM_FILE_NEW,   _T("New"));
-//	TB.SetButtonText(IDM_FILE_OPEN,  _T("Open"));
-//	TB.SetButtonText(IDM_FILE_SAVE,  _T("Save"));
-//	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
-//	TB.SetButtonText(IDM_EDIT_COPY,  _T("Copy"));
-//	TB.SetButtonText(IDM_EDIT_PASTE, _T("Paste"));
-//	TB.SetButtonText(IDM_FILE_PRINT, _T("Print"));
-//	TB.SetButtonText(IDM_HELP_ABOUT, _T("About"));
-
-	// Adjust the toolbar and rebar size to take account of the larger buttons
-	RECT r;
-	TB.GetItemRect(TB.CommandToIndex(IDM_HELP_ABOUT), &r);
-	TB.SetButtonSize(r.right - r.left, r.bottom - r.top);
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-
-	// Set the icons for popup menu items
-	GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
+	// or you could use the following
+	// TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+	TB.SetTheme(tt);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-		//Additional messages to be handled go here
-//	}
+	switch (uMsg)
+	{
+	// Suppress resizing
+	case WM_SIZING:
+		{
+			LPRECT pRect = (LPRECT)lParam;
+			pRect->right = pRect->left + 500;
+			pRect->bottom = pRect->top + 420;
+		}
+		return TRUE;
+	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);	

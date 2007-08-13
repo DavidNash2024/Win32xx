@@ -13,7 +13,6 @@ void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
 	TRACE("View window created");
-
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)
@@ -33,13 +32,6 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_ERASEBKGND:
-		{
-			RECT rc;
-			GetClientRect(m_hWnd, &rc);
-			GradientFill((HDC)wParam, RGB(255,0,0), RGB(255,255,255), &rc, TRUE);
-		}
-		return TRUE;
 	case WM_SIZE:
 		::InvalidateRect(hWnd, NULL, TRUE);
 		break;	// Also do default processing

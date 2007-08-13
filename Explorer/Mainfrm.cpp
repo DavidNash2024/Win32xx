@@ -109,14 +109,19 @@ void CMainFrame::OnCreate()
 		GetMenubar().SetIcons(m_ToolbarData, IDB_TOOLBAR_NORM, RGB(192,192,192));
 	}
 
-	// This style requires comctl32.dll version 5.80 or later
-	TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+	// This style requires comctl32.dll version 4.72 or later
+	if (GetComCtlVersion() >= 472)
+	{
+		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+	}
+
+	SetTheme();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 {
 	// Notification from our dropdown button is recieved if Comctl32.dll version
-	// is 5.80 or later (IE v5 required).
+	// is 4.70 or later (IE v3 required).
     switch(((LPNMHDR)lParam)->code)
 	{	
  		//Menu for dropdown toolbar button
@@ -132,8 +137,51 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	return 0L;
 }
 
+void CMainFrame::SetTheme()
+{
+	// Set the rebar theme
+	CRebar& RB = GetRebar();
+	BOOL T = TRUE;
+	BOOL F = FALSE;
+
+	REBARTHEME rt = {0};
+	rt.UseThemes= TRUE;
+	rt.clrBkGnd1 = RGB(150,190,245);
+	rt.clrBkGnd2 = RGB(196,215,250);
+	rt.clrBand1  = RGB(220,230,250);
+	rt.clrBand2  = RGB( 70,130,220);
+	rt.KeepBandsLeft = TRUE;
+	rt.LockMenuBand  = TRUE;
+	rt.ShortBands    = TRUE;
+	rt.RoundBorders  = TRUE; 
+
+	// or you could use the following 
+//	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+	RB.SetTheme(rt);
+	HWND hWndMB = GetMenubar().GetHwnd();
+	RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
+			
+	// Set the toolbar theme
+	CToolbar& TB = GetToolbar();
+
+	TOOLBARTHEME tt = {0};
+	tt.UseThemes   = TRUE;
+	tt.clrHot1     = RGB(255, 230, 190);
+	tt.clrHot2     = RGB(255, 190, 100);
+	tt.clrPressed1 = RGB(255, 140, 40);
+	tt.clrPressed2 = RGB(255, 180, 80);
+	tt.clrOutline  = RGB(192, 128, 255);
+
+	// or you could use the following
+	// TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+	TB.SetTheme(tt);
+}
+
 void CMainFrame::ViewPopup()
 {
+	// One of the toolbar buttons brings up a menu to choose the view mode
+	// This function creates the popup menu
+
 	// Position the popup menu
 	CToolbar& TB = GetToolbar();
 	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
