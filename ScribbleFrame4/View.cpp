@@ -17,6 +17,12 @@ CView::~CView()
 	::DeleteObject(m_hBrush);
 }
 
+void CView::ClearPoints()
+{
+	m_points.clear();
+	::InvalidateRect(GetHwnd(), NULL, TRUE);
+}
+
 HWND CView::Create(HWND hWndParent = 0)
 {
 	WNDCLASSEX wcx = {0};

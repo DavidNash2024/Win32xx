@@ -154,7 +154,7 @@ namespace Win32xx
 		virtual RECT GetBandBorders(int nBand);
 		virtual int GetBandCount() const;
 		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
-		virtual BOOL GetBandRect(int i, LPRECT pRect);
+		virtual RECT GetBandRect(int i);
 		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
 		virtual int GetRowHeight(int nRow) const;
 		virtual REBARTHEME& GetTheme() {return m_Theme;}

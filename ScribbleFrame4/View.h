@@ -17,6 +17,7 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
+	virtual void ClearPoints();
 	virtual HWND Create(HWND hWndParent /*= 0*/);
 	virtual void SetPen(COLORREF Color);
 

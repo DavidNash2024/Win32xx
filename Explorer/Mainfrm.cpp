@@ -106,6 +106,16 @@ void CMainFrame::OnCreate()
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 	}
 
+	// Disable some buttons
+	TB.DisableButton(IDM_FILE_NEW);
+	TB.DisableButton(IDM_FILE_OPEN);
+	TB.DisableButton(IDM_FILE_SAVE);
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE);
+	TB.DisableButton(IDM_FILE_PRINT);
+
+	// Configure the ViewMenu button to bring up a menu
 	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{

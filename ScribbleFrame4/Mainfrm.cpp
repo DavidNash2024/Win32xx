@@ -41,6 +41,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_NEW:
 		::MessageBox(NULL, _T("File New"), _T("Menu"), MB_OK);
+		m_View.ClearPoints();
 		return TRUE;
 	case IDM_FILE_OPEN:
 		::MessageBox(NULL, _T("File Open"), _T("Menu"), MB_OK);

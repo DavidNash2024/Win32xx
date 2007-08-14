@@ -969,9 +969,11 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_GETBANDINFO, nBand, (LPARAM)prbbi);
 	}
 
-	BOOL CRebar::GetBandRect(int i, LPRECT pRect)
+	RECT CRebar::GetBandRect(int i)
 	{
-		return (BOOL)::SendMessage(m_hWnd, RB_GETRECT, i, (LPARAM)pRect);
+		RECT rc = {0};
+		::SendMessage(m_hWnd, RB_GETRECT, i, (LPARAM)&rc);
+		return rc;
 	}
 
 	BOOL CRebar::GetBarInfo(LPREBARINFO prbi) const
@@ -1037,8 +1039,7 @@ namespace Win32xx
 					if (!((m_Theme.LockMenuBand) && (nBand == GetBand(hWndMB))))
 					{
 						// Determine the size of this band
-						RECT rcBand = {0};
-						GetBandRect(nBand, &rcBand);
+						RECT rcBand = GetBandRect(nBand);
 
 						// Determine the size of the child window
 						REBARBANDINFO rbbi = {0};
@@ -1117,7 +1118,7 @@ namespace Win32xx
 			// Draw lines between bands
 			for (int j = 0; j < GetBandCount()-1; j++)
 			{
-				GetBandRect(j, &rc);
+				rc = GetBandRect(j);
 				rc.left = max(0, rc.left - 4);
 				rc.bottom +=2;
 				::DrawEdge(hDCMem, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
@@ -1150,8 +1151,7 @@ namespace Win32xx
 		int OldrcTop = -1;
 		for (int nBand = GetBandCount() -1; nBand >= 0; nBand--)
 		{
-			RECT rc;
-			GetBandRect(nBand, &rc);
+			RECT rc = GetBandRect(nBand);
 			if (rc.top != OldrcTop)
 			{
 				// Maximize the last band on each row
@@ -1453,10 +1453,43 @@ namespace Win32xx
 			for (int i = 0 ; i < 3 ; i++)
 				::SetRect(&m_MDIRect[2 - i], rc.right - (i+1)*cx, rc.bottom/2 - cy/2 , rc.right - i*cx, rc.bottom/2 + cy/2);
 
+			// Manually Draw Minimise button
+			::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
+			::LineTo(hDC, m_MDIRect[0].right - 5, m_MDIRect[0].bottom - 4);
+			::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
+			::LineTo(hDC, m_MDIRect[0].right - 5, m_MDIRect[0].bottom - 5);
+
+			// Manually Draw Restore Button
+			::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
+			::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
+			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
+			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
+			::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+			::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
+			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);		
+			::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
+			::LineTo(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
+			::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
+			::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
+			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
+			::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
+			::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
+			
+			// Manually Draw Close Button
+			HPEN hPen = ::CreatePen(PS_SOLID, 2, RGB(0,0,0));
+			HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+			::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +4, NULL);
+			::LineTo(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
+			::MoveToEx(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].top +4, NULL);
+			::LineTo(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -4);
+
+			::SelectObject(hDC, hOldPen);
+			::DeleteObject(hPen);
+
 			// Draw the MDI Min, Restore and Close buttons
-			::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION ,DFCS_CAPTIONMIN);
-			::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION ,DFCS_CAPTIONRESTORE);
-			::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION ,DFCS_CAPTIONCLOSE);
+	//		::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION ,DFCS_CAPTIONMIN);
+	//		::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION ,DFCS_CAPTIONRESTORE);
+	//		::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION ,DFCS_CAPTIONCLOSE);
 		}
 	}
 
@@ -2594,6 +2627,10 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged();
 			break;
+		case WM_WINDOWPOSCHANGING:
+			// Bypass CToolbar::WndProcDefault for this message
+			return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		
 		} // switch (uMsg)
 
 		return CToolbar::WndProcDefault(hWnd, uMsg, wParam, lParam);
