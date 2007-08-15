@@ -200,6 +200,7 @@ namespace Win32xx
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawIcon(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMDIButtons(HDC hDC);
+		virtual void DrawMDIButton(HDC hDC, int iButton, UINT uState);
 		virtual void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		virtual void ExitMenu();
 		virtual	void GrabFocus();
@@ -213,6 +214,7 @@ namespace Win32xx
 		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void OnMDISetMenu(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnMouseLeave();
 		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -233,9 +235,9 @@ namespace Win32xx
 
 		enum MDIButtonType
 		{
-			MDI_MIN = 1,
-			MDI_RESTORE = 2,
-			MDI_CLOSE = 3,
+			MDI_MIN = 0,
+			MDI_RESTORE = 1,
+			MDI_CLOSE = 2,
 		};
 
 		struct ItemData

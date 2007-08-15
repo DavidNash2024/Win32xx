@@ -1036,7 +1036,7 @@ namespace Win32xx
 				if (IsBandVisible(nBand))
 				{
 					HWND hWndMB = GetApp()->GetFrame()->GetMenubar().GetHwnd();
-					if (!((m_Theme.LockMenuBand) && (nBand == GetBand(hWndMB))))
+					if (nBand != GetBand(hWndMB))
 					{
 						// Determine the size of this band
 						RECT rcBand = GetBandRect(nBand);
@@ -1231,6 +1231,12 @@ namespace Win32xx
 			m_Theme.FlatStyle    = Theme.FlatStyle;
 			m_Theme.RoundBorders = Theme.RoundBorders;
 		}
+
+		CMenubar& MB = GetApp()->GetFrame()->GetMenubar();
+		if (m_Theme.LockMenuBand)
+			ShowGripper(GetBand(MB.GetHwnd()), FALSE);
+		else
+			ShowGripper(GetBand(MB.GetHwnd()), TRUE);
 
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
@@ -1451,14 +1457,86 @@ namespace Win32xx
 
 			// Assign values to each element of the RECT array
 			for (int i = 0 ; i < 3 ; i++)
-				::SetRect(&m_MDIRect[2 - i], rc.right - (i+1)*cx, rc.bottom/2 - cy/2 , rc.right - i*cx, rc.bottom/2 + cy/2);
+				::SetRect(&m_MDIRect[2 - i], rc.right - (i+1)*cx - 4*(i+1), rc.bottom/2 - cy/2 , rc.right - i*cx - 4*(i+1), rc.bottom/2 + cy/2);
 
+			DrawMDIButton(hDC, MDI_MIN, 0);
+			DrawMDIButton(hDC, MDI_RESTORE, 0);
+			DrawMDIButton(hDC, MDI_CLOSE, 0);
+			
+			// Draw the MDI Min, Restore and Close buttons
+	//		::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION ,DFCS_CAPTIONMIN);
+	//		::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION ,DFCS_CAPTIONRESTORE);
+	//		::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION ,DFCS_CAPTIONCLOSE);
+		}
+	}
+
+	void CMenubar::DrawMDIButton(HDC hDC, int iButton, UINT uState)
+	{
+		// uState: Normal = 0, Hot = 1, Pressed = 2
+
+		switch (uState)
+		{
+		case 0:
+			{
+				// Draw a grey outline
+				HPEN hPen = ::CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
+				HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+				::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+				SelectObject(hDC, hOldPen);
+				DeleteObject(hPen);
+			}
+			break;
+		case 1:
+			{
+				// Draw outline, white at top, black on bottom
+				HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+				HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+				HPEN hOldPen = (HPEN)::SelectObject(hDC, hBlackPen);
+				::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+				::SelectObject(hDC, hWhitePen);
+				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+				SelectObject(hDC, hOldPen);
+				DeleteObject(hWhitePen);
+				DeleteObject(hBlackPen);
+			}
+			
+			break;
+		case 2:
+			{
+				// Draw outline, black on top, white on bottom
+				HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+				HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+				HPEN hOldPen = (HPEN)::SelectObject(hDC, hWhitePen);
+				::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+				::SelectObject(hDC, hBlackPen);
+				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+				SelectObject(hDC, hOldPen);
+				DeleteObject(hWhitePen);
+				DeleteObject(hBlackPen);
+			}			
+			break;
+		}
+		
+		switch (iButton)
+		{
+		case MDI_MIN:
 			// Manually Draw Minimise button
 			::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
-			::LineTo(hDC, m_MDIRect[0].right - 5, m_MDIRect[0].bottom - 4);
+			::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
 			::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
-			::LineTo(hDC, m_MDIRect[0].right - 5, m_MDIRect[0].bottom - 5);
-
+			::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
+			break;
+		case MDI_RESTORE:
 			// Manually Draw Restore Button
 			::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
 			::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
@@ -1474,22 +1552,20 @@ namespace Win32xx
 			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
 			::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
 			::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
-			
+			break;
+		case MDI_CLOSE:
 			// Manually Draw Close Button
-			HPEN hPen = ::CreatePen(PS_SOLID, 2, RGB(0,0,0));
-			HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-			::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +4, NULL);
-			::LineTo(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
-			::MoveToEx(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].top +4, NULL);
-			::LineTo(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -4);
-
-			::SelectObject(hDC, hOldPen);
-			::DeleteObject(hPen);
-
-			// Draw the MDI Min, Restore and Close buttons
-	//		::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION ,DFCS_CAPTIONMIN);
-	//		::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION ,DFCS_CAPTIONRESTORE);
-	//		::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION ,DFCS_CAPTIONCLOSE);
+			{
+				HPEN hPen = ::CreatePen(PS_SOLID, 2, RGB(0,0,0));
+				HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+				::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +4, NULL);
+				::LineTo(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
+				::MoveToEx(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].top +4, NULL);
+				::LineTo(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -4);
+				SelectObject(hDC, hOldPen);
+				DeleteObject(hPen);
+			}
+			break;
 		}
 	}
 
@@ -1906,24 +1982,17 @@ namespace Win32xx
 				HDC hDC = ::GetDC(m_hWnd);
 				if (hDC)
 				{
-					// Draw the MDI button pressed down
-					if (PtInRect(&m_MDIRect[0], pt))
-					{
-						::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
-						m_nMDIButton = MDI_MIN;
-					}
+					m_nMDIButton = -1;
+					if (PtInRect(&m_MDIRect[0], pt)) m_nMDIButton = 0;
+					if (PtInRect(&m_MDIRect[1], pt)) m_nMDIButton = 1;
+					if (PtInRect(&m_MDIRect[2], pt)) m_nMDIButton = 2;
 
-					if (PtInRect(&m_MDIRect[1], pt))
+					if (m_nMDIButton >= 0)
 					{
-						::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
-						m_nMDIButton = MDI_RESTORE;
-					}
-
-					if (PtInRect(&m_MDIRect[2], pt))
-					{
-						::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
-						m_nMDIButton = MDI_CLOSE;
-					}
+						DrawMDIButton(hDC, MDI_MIN,     (m_nMDIButton == 0)? 2 : 0);
+						DrawMDIButton(hDC, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
+						DrawMDIButton(hDC, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
+					}				
 				}
 				::ReleaseDC(m_hWnd, hDC);
 
@@ -2214,79 +2283,77 @@ namespace Win32xx
 		return FALSE;
 	}
 
+	void CMenubar::OnMouseLeave()
+	{
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+		if (pMDIFrame->IsMDIFrame())
+		{
+			if (pMDIFrame->IsMDIChildMaxed())
+			{
+				HDC hDC = ::GetDC(m_hWnd);
+				if (hDC)
+				{
+					DrawMDIButton(hDC, MDI_MIN,     0);
+					DrawMDIButton(hDC, MDI_RESTORE, 0);
+					DrawMDIButton(hDC, MDI_CLOSE,   0);
+				}
+				::DeleteDC(hDC);
+			}
+		}
+	}
+
 	void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		POINT pt;
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
-		if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+		if (pMDIFrame->IsMDIFrame())
 		{
-			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-			if (pMDIFrame->IsMDIFrame())
+			if (pMDIFrame->IsMDIChildMaxed())
 			{
-				if (pMDIFrame->IsMDIChildMaxed())
+				HDC hDC = ::GetDC(m_hWnd);
+				if (hDC)
 				{
-					HDC hDC = ::GetDC(m_hWnd);
-					if (hDC)
+					int MDIButton = -1;
+					if (PtInRect(&m_MDIRect[0], pt)) MDIButton = 0;
+					if (PtInRect(&m_MDIRect[1], pt)) MDIButton = 1;
+					if (PtInRect(&m_MDIRect[2], pt)) MDIButton = 2;
+					
+					if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
 					{
-						static BOOL bButtonPushed = TRUE;
-
-						// toggle the MDI button image pressed/unpressed as required
-						if (PtInRect(&m_MDIRect[0], pt))
+						// toggle the MDI button image pressed/unpressed as required					
+						if (MDIButton >= 0)
 						{
-							if (m_nMDIButton == MDI_MIN)
-							{
-								::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN | DFCS_PUSHED);
-								bButtonPushed = TRUE;
-							}
-							else
-							{
-								::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-								::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-								bButtonPushed = FALSE;
-							}
+							DrawMDIButton(hDC, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0))? 2 : 0);
+							DrawMDIButton(hDC, MDI_RESTORE, ((MDIButton == 1) && (m_nMDIButton == 1))? 2 : 0);
+							DrawMDIButton(hDC, MDI_CLOSE,   ((MDIButton == 2) && (m_nMDIButton == 2))? 2 : 0);
 						}
-
-						else if (PtInRect(&m_MDIRect[1], pt))
+						else
 						{
-							if (m_nMDIButton == MDI_RESTORE)
-							{
-								::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE | DFCS_PUSHED);
-								bButtonPushed = TRUE;
-							}
-							else
-							{
-								::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-								::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-								bButtonPushed = FALSE;
-							}
-						}
-
-						else if (PtInRect(&m_MDIRect[2], pt))
+							DrawMDIButton(hDC, MDI_MIN,     0);
+							DrawMDIButton(hDC, MDI_RESTORE, 0);
+							DrawMDIButton(hDC, MDI_CLOSE,   0);
+						} 
+					}
+					else	// mouse moved without left mouse button held down
+					{
+						if (MDIButton >= 0)
 						{
-							if (m_nMDIButton == MDI_CLOSE)
-							{
-								::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_PUSHED);
-								bButtonPushed = TRUE;
-							}
-							else
-							{
-								::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-								::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-								bButtonPushed = FALSE;
-							}
+							DrawMDIButton(hDC, MDI_MIN,     (MDIButton == 0)? 1 : 0);
+							DrawMDIButton(hDC, MDI_RESTORE, (MDIButton == 1)? 1 : 0);
+							DrawMDIButton(hDC, MDI_CLOSE,   (MDIButton == 2)? 1 : 0);
 						}
-
-						else if (bButtonPushed)
+						else
 						{
-							::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION, DFCS_CAPTIONMIN);
-							::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION, DFCS_CAPTIONRESTORE);
-							::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION, DFCS_CAPTIONCLOSE);
-							bButtonPushed = FALSE;
-						}
+							DrawMDIButton(hDC, MDI_MIN,     0);
+							DrawMDIButton(hDC, MDI_RESTORE, 0);
+							DrawMDIButton(hDC, MDI_CLOSE,   0);
+						} 
 					}
 				}
+				::DeleteDC(hDC);
 			}
 		}
 	}
@@ -2380,7 +2447,7 @@ namespace Win32xx
 
 	void CMenubar::PreCreate(CREATESTRUCT &cs)
 	{
-		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;;
+		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;
 		cs.lpszClass = TOOLBARCLASSNAME;
 	}
 
@@ -2606,6 +2673,9 @@ namespace Win32xx
 		case WM_MEASUREITEM:
 			if (OnMeasureItem(wParam, lParam))
 				return TRUE; // handled
+			break;
+		case WM_MOUSELEAVE:
+			OnMouseLeave();
 			break;
 		case WM_MOUSEMOVE:
 			OnMouseMove(wParam, lParam);
@@ -3149,7 +3219,7 @@ namespace Win32xx
 		if (IsRebarUsed())
 		{
 			::SendMessage(RB.GetHwnd(), WM_SIZE, 0, 0);
-			SetMenubarBandSize();
+		//	SetMenubarBandSize();
 		}
 		else
 			::SendMessage(GetToolbar().GetHwnd(), TB_AUTOSIZE, 0, 0);
@@ -3169,6 +3239,8 @@ namespace Win32xx
 
 		if (RB.GetTheme().UseThemes && RB.GetTheme().KeepBandsLeft)
 			RB.MoveBandsLeft();
+
+		SetMenubarBandSize();
 
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}
@@ -3200,14 +3272,14 @@ namespace Win32xx
 		int Width = rc.right - rc.left;
 		CRebar& RB = GetRebar();
 		int nBand = RB.GetBand(GetMenubar().GetHwnd());
-		::SendMessage(GetRebar().GetHwnd(), RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
+		rc = RB.GetBandBorders(nBand);
 		Width = Width - rc.left - rc.right - 2;
 
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, &rbbi);
-		if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().LockMenuBand)
+		if (GetRebar().GetTheme().UseThemes)
 		{
 			rbbi.cxMinChild = Width;
 			rbbi.cx         = Width;
