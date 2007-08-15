@@ -91,8 +91,6 @@ void CMainMDIFrame::SetTheme()
 //	or you could use the following
 //	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 	RB.SetTheme(rt);
-	HWND hWndMB = GetMenubar().GetHwnd();
-	RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
 
 	// Set the toolbar theme
 	CToolbar& TB = GetToolbar();

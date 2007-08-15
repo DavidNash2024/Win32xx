@@ -145,7 +145,6 @@ void CMainFrame::SetTheme(UINT nStyle)
 		{
 			REBARTHEME rt = {0};
 			RB.SetTheme(rt);
-			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
 			
 			TOOLBARTHEME tt = {0};
 			TB.SetTheme(tt);
@@ -160,7 +159,6 @@ void CMainFrame::SetTheme(UINT nStyle)
 		{			
 			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 			RB.SetTheme(rt);
-			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
 
 			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
@@ -175,7 +173,6 @@ void CMainFrame::SetTheme(UINT nStyle)
 		{
 			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), NULL, NULL, F, F, F, F, F, T };
 			RB.SetTheme(rt);
-			RB.ShowGripper(RB.GetBand(hWndMB), TRUE);
 
 			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
@@ -190,7 +187,6 @@ void CMainFrame::SetTheme(UINT nStyle)
 		{
 			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), T, T, T, T, T, F};
 			RB.SetTheme(rt);
-			RB.ShowGripper(RB.GetBand(hWndMB), FALSE);
 
 			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
