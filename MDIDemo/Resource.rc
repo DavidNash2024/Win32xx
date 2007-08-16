@@ -49,6 +49,17 @@ BEGIN
     END
 END
 
+IDM_NEWMENU MENU
+BEGIN
+    POPUP "New"
+    BEGIN
+        MENUITEM "New &View",                   IDM_FILE_NEWVIEW
+        MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
+        MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+    END
+END
+
+
 MDIMENUVIEW MENU
 BEGIN
     POPUP "&File"

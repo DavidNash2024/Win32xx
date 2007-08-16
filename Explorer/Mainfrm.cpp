@@ -31,6 +31,49 @@ CMainFrame::~CMainFrame()
 {
 }
 
+void CMainFrame::DoPopupMenu()
+{
+	// Creates the popup menu for the "View Menu" toolbar button
+
+	// Position the popup menu
+	CToolbar& TB = GetToolbar();
+	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
+	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
+
+	TPMPARAMS tpm;
+	tpm.cbSize = sizeof(TPMPARAMS);
+	tpm.rcExclude = rc;
+
+	// Load the popup menu
+	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_VIEWMENU));
+	HMENU hPopupMenu = GetSubMenu(hTopMenu, 0);
+
+	// Put a radio check in the currently checked item
+	MENUITEMINFO mii = {0};
+	for (int i = 3 ; i < 7 ; i++)
+	{
+		ZeroMemory(&mii, sizeof(MENUITEMINFO));
+
+		// Fix for an undocumented bug in the Win32 API
+		// For Win95 and NT, cbSize needs to be 44
+		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+			mii.cbSize = 44;
+		else
+			mii.cbSize = sizeof(MENUITEMINFO);
+
+		mii.fMask  = MIIM_STATE | MIIM_ID;
+		GetMenuItemInfo(GetSubMenu(GetFrameMenu(), 1), i, TRUE,  &mii );
+		if (mii.fState & MFS_CHECKED)
+			::CheckMenuRadioItem(hTopMenu, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
+	}
+
+	// Start the popup menu
+	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
+
+	// Release the menu resource
+	::DestroyMenu(hTopMenu);
+}
+
 void CMainFrame::OnInitialUpdate()
 {
 	// All windows are now created, so populate the treeview
@@ -81,8 +124,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		GetListView().DoDisplay();
 		return TRUE;
 	case IDM_VIEWMENU:
-		// This Command is recieved if Comctl32.dll version is below 5.80
-		ViewPopup();
+		// This Command is recieved if Comctl32.dll version is below 4.7
+		DoPopupMenu();
 		return TRUE;
 	} // switch cmd
 
@@ -135,7 +178,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 		case TBN_DROPDOWN:
 		{
 			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
-				ViewPopup();
+				DoPopupMenu();
 		}
 		break;
 
@@ -148,8 +191,6 @@ void CMainFrame::SetTheme()
 {
 	// Set the rebar theme
 	CRebar& RB = GetRebar();
-	BOOL T = TRUE;
-	BOOL F = FALSE;
 
 	REBARTHEME rt = {0};
 	rt.UseThemes= TRUE;
@@ -162,7 +203,9 @@ void CMainFrame::SetTheme()
 	rt.ShortBands    = TRUE;
 	rt.RoundBorders  = TRUE;
 
-	// or you could use the following
+//	or you could use the following
+//	BOOL T = TRUE;
+//	BOOL F = FALSE;
 //	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 	RB.SetTheme(rt);
 
@@ -177,55 +220,11 @@ void CMainFrame::SetTheme()
 	tt.clrPressed2 = RGB(255, 180, 80);
 	tt.clrOutline  = RGB(192, 128, 255);
 
-	// or you could use the following
-	// TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+//	or you could use the following
+//	TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 	TB.SetTheme(tt);
 
 	RecalcLayout();
-}
-
-void CMainFrame::ViewPopup()
-{
-	// One of the toolbar buttons brings up a menu to choose the view mode
-	// This function creates the popup menu
-
-	// Position the popup menu
-	CToolbar& TB = GetToolbar();
-	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
-	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
-
-	TPMPARAMS tpm;
-	tpm.cbSize = sizeof(TPMPARAMS);
-	tpm.rcExclude = rc;
-
-	// Load the popup menu
-	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_VIEWMENU));
-	HMENU hPopupMenu = GetSubMenu(hTopMenu, 0);
-
-	// Put a radio check in the currently checked item
-	MENUITEMINFO mii = {0};
-	for (int i = 3 ; i < 7 ; i++)
-	{
-		ZeroMemory(&mii, sizeof(MENUITEMINFO));
-
-		// Fix for an undocumented bug in the Win32 API
-		// For Win95 and NT, cbSize needs to be 44
-		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
-			mii.cbSize = 44;
-		else
-			mii.cbSize = sizeof(MENUITEMINFO);
-
-		mii.fMask  = MIIM_STATE | MIIM_ID;
-		GetMenuItemInfo(GetSubMenu(GetFrameMenu(), 1), i, TRUE,  &mii );
-		if (mii.fState & MFS_CHECKED)
-			::CheckMenuRadioItem(hTopMenu, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
-	}
-
-	// Start the popup menu
-	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
-
-	// Release the menu resource
-	::DestroyMenu(hTopMenu);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

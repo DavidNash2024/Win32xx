@@ -28,15 +28,16 @@
 #define IDI_MAX                         123
 
 // Menu Resources
-#define IDM_FILE_NEWVIEW                130
-#define IDM_FILE_NEWRECT                131
-#define IDM_FILE_NEWMAX                 132
+#define IDM_NEWMENU                     130
+#define IDM_FILE_NEWVIEW                131
+#define IDM_FILE_NEWRECT                132
+#define IDM_FILE_NEWMAX                 133
 
-#define IDM_COLOR_BLACK                 133
-#define IDM_COLOR_RED                   134
-#define IDM_COLOR_GREEN                 135
-#define IDM_COLOR_BLUE                  136
-#define IDM_COLOR_WHITE                 137
+#define IDM_COLOR_BLACK                 135
+#define IDM_COLOR_RED                   136
+#define IDM_COLOR_GREEN                 137
+#define IDM_COLOR_BLUE                  138
+#define IDM_COLOR_WHITE                 139
 
 // Toolbar bitmaps
 #define IDB_TOOLBAR_NORM                140

@@ -21,12 +21,12 @@ public:
 	virtual BOOL GetShowHidden() {return m_bShowHidden;}
 
 protected:
+	virtual void DoPopupMenu();
 	virtual void OnInitialUpdate();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetTheme();
-	virtual void ViewPopup();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

@@ -36,10 +36,38 @@ void CMainMDIFrame::OnInitialUpdate()
 	//Place any additional startup code here.
 }
 
+void CMainMDIFrame::DoPopupMenu()
+{
+	// Creates the popup menu when the "New" toolbar button is pressed
+
+	// Position the popup menu
+	CToolbar& TB = GetToolbar();
+	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
+	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
+
+	TPMPARAMS tpm;
+	tpm.cbSize = sizeof(TPMPARAMS);
+	tpm.rcExclude = rc;
+
+	// Load the popup menu
+	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_NEWMENU));
+	HMENU hPopupMenu = ::GetSubMenu(hTopMenu, 0);
+
+	// Start the popup menu
+	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
+
+	// Release the menu resource
+	::DestroyMenu(hTopMenu);
+}
+
 BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
+	case IDM_FILE_NEW:
+		// For ComCtl versions 4.71 and older
+		DoPopupMenu();
+		return TRUE;
 	case IDM_FILE_NEWVIEW:
 		AddMDIChild(new CMDIChildView);
 		return TRUE;
@@ -77,7 +105,34 @@ void CMainMDIFrame::OnCreate()
 	CMDIFrame::OnCreate();
 
 	SetButtons(m_ToolbarData);
+
+	// Configure the "New" toolbar button to bring up a menu
+	// Setting this style requires comctl32.dll version 4.72 or later
+	if (GetComCtlVersion() >= 472)
+	{
+		GetToolbar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
+	}
+	
 	SetTheme();
+}
+
+LRESULT CMainMDIFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+{
+	// Notification from our dropdown button is recieved if Comctl32.dll version
+	// is 4.70 or later (IE v3 required).
+    switch(((LPNMHDR)lParam)->code)
+	{
+ 		//Menu for dropdown toolbar button
+		case TBN_DROPDOWN:
+		{
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
+				DoPopupMenu();
+		}
+		break;
+
+	} //switch LPNMHDR
+
+	return 0L;
 }
 
 void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
@@ -94,17 +149,18 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	}
 
 	// Disable some of the toolbar buttons
+	TB.DisableButton(IDM_FILE_OPEN);
+	TB.DisableButton(IDM_FILE_SAVE);
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
 	TB.DisableButton(IDM_EDIT_PASTE);
+	TB.DisableButton(IDM_FILE_PRINT);
 }
 
 void CMainMDIFrame::SetTheme()
 {
 	// Set the rebar theme
 	CRebar& RB = GetRebar();
-	BOOL T = TRUE;
-	BOOL F = FALSE;
 
 	REBARTHEME rt = {0};
 	rt.UseThemes= TRUE;
@@ -118,6 +174,8 @@ void CMainMDIFrame::SetTheme()
 	rt.RoundBorders  = TRUE;
 
 //	or you could use the following
+//	BOOL T = TRUE;
+//	BOOL F = FALSE;
 //	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 	RB.SetTheme(rt);
 

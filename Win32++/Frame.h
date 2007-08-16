@@ -199,7 +199,7 @@ namespace Win32xx
 		virtual void DrawBackground(HDC hDC, RECT rc);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawIcon(LPDRAWITEMSTRUCT pdis);
-		virtual void DrawMDIButtons(HDC hDC);
+		virtual void DrawAllMDIButtons(HDC hDC);
 		virtual void DrawMDIButton(HDC hDC, int iButton, UINT uState);
 		virtual void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		virtual void ExitMenu();

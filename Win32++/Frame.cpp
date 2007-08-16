@@ -1441,7 +1441,7 @@ namespace Win32xx
 			GrabFocus();
 	}
 
-	void CMenubar::DrawMDIButtons(HDC hDC)
+	void CMenubar::DrawAllMDIButtons(HDC hDC)
 	{
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 
@@ -1457,115 +1457,147 @@ namespace Win32xx
 
 			// Assign values to each element of the RECT array
 			for (int i = 0 ; i < 3 ; i++)
-				::SetRect(&m_MDIRect[2 - i], rc.right - (i+1)*cx - 4*(i+1), rc.bottom/2 - cy/2 , rc.right - i*cx - 4*(i+1), rc.bottom/2 + cy/2);
+			{
+				int left = rc.right - (i+1)*cx - 4*(i+1);
+				int top = rc.bottom/2 - cy/2;
+				int right = rc.right - i*cx - 4*(i+1);
+				int bottom = rc.bottom/2 + cy/2;
+				::SetRect(&m_MDIRect[2 - i], left, top, right, bottom);
+			}
+				
+			int xMaxSize = 0;
+			for (int j= 0 ; j < GetButtonCount(); j++)
+			{
+				xMaxSize += GetItemRect(j).right - GetItemRect(j).left;
+			}		
+						
+			// Hide the MDI button if it won't fit
+			for (int k = 0 ; k <= 2 ; k++)
+			{
+				
+				if (m_MDIRect[k].left < xMaxSize)
+				{
+					::SetRectEmpty(&m_MDIRect[k]);
+				}
+			} 
 
 			DrawMDIButton(hDC, MDI_MIN, 0);
 			DrawMDIButton(hDC, MDI_RESTORE, 0);
-			DrawMDIButton(hDC, MDI_CLOSE, 0);
-			
-			// Draw the MDI Min, Restore and Close buttons
-	//		::DrawFrameControl(hDC, &m_MDIRect[0], DFC_CAPTION ,DFCS_CAPTIONMIN);
-	//		::DrawFrameControl(hDC, &m_MDIRect[1], DFC_CAPTION ,DFCS_CAPTIONRESTORE);
-	//		::DrawFrameControl(hDC, &m_MDIRect[2], DFC_CAPTION ,DFCS_CAPTIONCLOSE);
-		}
+			DrawMDIButton(hDC, MDI_CLOSE, 0); 
+		} 
 	}
 
 	void CMenubar::DrawMDIButton(HDC hDC, int iButton, UINT uState)
 	{
 		// uState: Normal = 0, Hot = 1, Pressed = 2
+		// iButton: MDI_MIN = 0, MDI_RESTORE = 1, MDI_CLOSE = 2
 
-		switch (uState)
+		if (!IsRectEmpty(&m_MDIRect[iButton]))
 		{
-		case 0:
+			switch (uState)
 			{
-				// Draw a grey outline
-				HPEN hPen = ::CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
-				HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-				::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-				SelectObject(hDC, hOldPen);
-				DeleteObject(hPen);
-			}
-			break;
-		case 1:
-			{
-				// Draw outline, white at top, black on bottom
-				HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-				HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-				HPEN hOldPen = (HPEN)::SelectObject(hDC, hBlackPen);
-				::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-				::SelectObject(hDC, hWhitePen);
-				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-				SelectObject(hDC, hOldPen);
-				DeleteObject(hWhitePen);
-				DeleteObject(hBlackPen);
+			case 0:
+				{
+					// Draw a grey outline
+					HPEN hPen = ::CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
+					HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+					::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					SelectObject(hDC, hOldPen);
+					DeleteObject(hPen);
+				}
+				break;
+			case 1:
+				{
+					// Draw outline, white at top, black on bottom
+					HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					HPEN hOldPen = (HPEN)::SelectObject(hDC, hBlackPen);
+					::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					::SelectObject(hDC, hWhitePen);
+					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					SelectObject(hDC, hOldPen);
+					DeleteObject(hWhitePen);
+					DeleteObject(hBlackPen);
+				}
+				
+				break;
+			case 2:
+				{
+					// Draw outline, black on top, white on bottom
+					HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					HPEN hOldPen = (HPEN)::SelectObject(hDC, hWhitePen);
+					::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					::SelectObject(hDC, hBlackPen);
+					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					SelectObject(hDC, hOldPen);
+					DeleteObject(hWhitePen);
+					DeleteObject(hBlackPen);
+				}			
+				break;
 			}
 			
-			break;
-		case 2:
+			switch (iButton)
 			{
-				// Draw outline, black on top, white on bottom
-				HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-				HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-				HPEN hOldPen = (HPEN)::SelectObject(hDC, hWhitePen);
-				::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-				::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-				::SelectObject(hDC, hBlackPen);
-				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-				::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-				SelectObject(hDC, hOldPen);
-				DeleteObject(hWhitePen);
-				DeleteObject(hBlackPen);
-			}			
-			break;
-		}
-		
-		switch (iButton)
-		{
-		case MDI_MIN:
-			// Manually Draw Minimise button
-			::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
-			::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
-			::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
-			::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
-			break;
-		case MDI_RESTORE:
-			// Manually Draw Restore Button
-			::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
-			::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
-			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
-			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
-			::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
-			::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
-			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);		
-			::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
-			::LineTo(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
-			::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
-			::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
-			::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
-			::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
-			::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
-			break;
-		case MDI_CLOSE:
-			// Manually Draw Close Button
-			{
-				HPEN hPen = ::CreatePen(PS_SOLID, 2, RGB(0,0,0));
-				HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-				::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +4, NULL);
+			case MDI_MIN:
+				// Manually Draw Minimise button
+				::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
+				::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
+				
+				::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
+				::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
+				break;
+			case MDI_RESTORE:
+				// Manually Draw Restore Button
+				::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
+				::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
+				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
+				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
+				::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				
+				::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
+				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);		
+				
+				::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
+				::LineTo(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
+				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
+				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
+				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
+				
+				::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
+				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
+				break;
+			case MDI_CLOSE:
+				// Manually Draw Close Button
+				::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +5, NULL);
+				::LineTo(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
+
+				::MoveToEx(hDC, m_MDIRect[2].left + 5, m_MDIRect[2].top +5, NULL);
 				::LineTo(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
-				::MoveToEx(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].top +4, NULL);
-				::LineTo(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -4);
-				SelectObject(hDC, hOldPen);
-				DeleteObject(hPen);
+
+				::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +6, NULL);
+				::LineTo(hDC, m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
+
+				::MoveToEx(hDC, m_MDIRect[2].right -5, m_MDIRect[2].top +5, NULL);
+				::LineTo(hDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
+
+				::MoveToEx(hDC, m_MDIRect[2].right -5, m_MDIRect[2].top +6, NULL);
+				::LineTo(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
+
+				::MoveToEx(hDC, m_MDIRect[2].right -6, m_MDIRect[2].top +5, NULL);
+				::LineTo(hDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
+				break;
 			}
-			break;
 		}
 	}
 
@@ -1817,7 +1849,7 @@ namespace Win32xx
 			// Draw MDI Minimise, Restore and Close buttons
 			{
 				HDC hDC = lpNMCustomDraw->nmcd.hdc;
-				DrawMDIButtons(hDC);
+				DrawAllMDIButtons(hDC);
 			}
 			break;
 		}
@@ -2440,7 +2472,7 @@ namespace Win32xx
 		{
 			HDC hDC = ::GetDC(m_hWnd);
 			if (hDC)
-				DrawMDIButtons(hDC);
+				DrawAllMDIButtons(hDC);
 			::ReleaseDC(m_hWnd, hDC);
 		}
 	}

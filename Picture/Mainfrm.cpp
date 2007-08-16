@@ -145,8 +145,6 @@ void CMainFrame::SetTheme()
 {
 	// Set the rebar theme
 	CRebar& RB = GetRebar();
-	BOOL T = TRUE;
-	BOOL F = FALSE;
 
 	REBARTHEME rt = {0};
 	rt.UseThemes= TRUE;
@@ -157,12 +155,14 @@ void CMainFrame::SetTheme()
 	rt.KeepBandsLeft = TRUE;
 	rt.LockMenuBand  = TRUE;
 	rt.ShortBands    = TRUE;
-	rt.RoundBorders  = TRUE; 
+	rt.RoundBorders  = TRUE;
 
-//	or you could use the following 
+//	or you could use the following
+//	BOOL T = TRUE;
+//	BOOL F = FALSE;
 //	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 	RB.SetTheme(rt);
-			
+
 	// Set the toolbar theme
 	CToolbar& TB = GetToolbar();
 
