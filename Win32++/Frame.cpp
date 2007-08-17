@@ -529,7 +529,7 @@ namespace Win32xx
 						SIZE sz = {0};
 						::GetTextExtentPoint32(hDC, szText, lstrlen(szText)*sizeof(TCHAR), &sz);
 						rcRect.top = rcRect.bottom - sz.cy - yOffset;
-						::DrawTextEx(hDC, szText, lstrlen(szText)*sizeof(TCHAR), &rcRect, DT_CENTER, NULL);
+						::DrawTextEx(hDC, szText, lstrlen(szText), &rcRect, DT_CENTER, NULL);
 						::SelectObject(hDC, hOldFont);
 					}
 
@@ -1316,9 +1316,6 @@ namespace Win32xx
 		case WM_ERASEBKGND:
 			if (OnEraseBkGnd((HDC)wParam))
 				return TRUE;
-			break;
-		case RB_MOVEBAND:
-			TRACE("RB_MOVEBAND");
 			break;
 		}
 

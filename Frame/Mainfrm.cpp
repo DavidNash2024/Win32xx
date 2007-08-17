@@ -65,6 +65,13 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+
+	CToolbar& TB = GetToolbar();
+	TB.SetButtonText(IDM_FILE_NEW, _T("AABB"));
+	TB.SetButtonText(IDM_FILE_OPEN, _T("dd d"));
+
+	CRebar& RB = GetRebar();
+	RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 	
 	SetTheme();
 }
@@ -74,7 +81,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	TRACE("Frame created");
+	TRACE(_T("Frame created"));
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
