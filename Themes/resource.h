@@ -27,7 +27,7 @@
 #define IDB_TOOLBAR_HOT                 131
 #define IDB_TOOLBAR_DIS                 132
 #define IDB_TOOLBAR_SML                 133
-#define IDB_ARROWS                      134 
+#define IDB_ARROWS                      134
 #define IDB_CARDS                       135
 
 
@@ -41,8 +41,15 @@
 
 #define IDM_DEFAULT_THEME               160
 #define IDM_BLUE                        161
-#define IDM_BLUE_BKGND                  162
-#define IDM_BLUE_FLAT                   163
+#define IDM_BLUE_LOCKED                 162
+#define IDM_BLUE_BKGND                  163
+#define IDM_BLUE_FLAT                   164
+#define IDM_GREY                        165
+#define IDM_OLIVE                       166
+#define IDM_OCHRE                       167
+#define IDM_MAUVE                       168
+#define IDM_PINK                        169
+#define IDM_YELLOW                      170
 
 
 

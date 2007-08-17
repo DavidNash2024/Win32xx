@@ -49,8 +49,15 @@ BEGIN
     BEGIN
         MENUITEM "Default",                     IDM_DEFAULT_THEME
         MENUITEM "Blue",                        IDM_BLUE
-        MENUITEM "Blue Background",             IDM_BLUE_BKGND
-        MENUITEM "Blue Flat",                   IDM_BLUE_FLAT
+        MENUITEM "Blue, Locked Menu",           IDM_BLUE_LOCKED
+        MENUITEM "Blue Background Only",        IDM_BLUE_BKGND
+        MENUITEM "Blue Flat Look",              IDM_BLUE_FLAT
+		MENUITEM "Grey"                         IDM_GREY
+		MENUITEM "Olive"                        IDM_OLIVE
+        MENUITEM "Ochre"                        IDM_OCHRE
+        MENUITEM "Mauve"                        IDM_MAUVE
+	    MENUITEM "Pink"                         IDM_PINK
+        MENUITEM "Yellow"                       IDM_YELLOW
     END
     POPUP "&Help"
     BEGIN
@@ -190,6 +197,13 @@ STRINGTABLE
 BEGIN
     IDM_DEFAULT_THEME       "Default theme"
 	IDM_BLUE                "Blue theme"
+	IDM_BLUE_LOCKED         "Blue theme with locked menu"
 	IDM_BLUE_BKGND          "Bllue theme, background only"
 	IDM_BLUE_FLAT           "Blue flat theme"
+	IDM_GREY                "Grey theme"
+    IDM_OLIVE               "Olive theme"
+    IDM_OCHRE               "Ochre theme"
+    IDM_MAUVE               "Mauve theme"
+	IDM_PINK                "Pink theme"
+    IDM_YELLOW              "Yellow theme"
 END

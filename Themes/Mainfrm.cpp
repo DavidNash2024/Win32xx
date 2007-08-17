@@ -54,11 +54,32 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_BLUE:
 		SetTheme(IDM_BLUE);
 		return TRUE;
+	case IDM_BLUE_LOCKED:
+		SetTheme(IDM_BLUE_LOCKED);
+		return TRUE;
 	case IDM_BLUE_BKGND:
 		SetTheme(IDM_BLUE_BKGND);
 		return TRUE;
 	case IDM_BLUE_FLAT:
 		SetTheme(IDM_BLUE_FLAT);
+		return TRUE;
+	case IDM_GREY:
+		SetTheme(IDM_GREY);
+		return TRUE;
+	case IDM_OLIVE:
+		SetTheme(IDM_OLIVE);
+		return TRUE;
+	case IDM_OCHRE:
+		SetTheme(IDM_OCHRE);
+		return TRUE;
+	case IDM_MAUVE:
+		SetTheme(IDM_MAUVE);
+		return TRUE;
+	case IDM_PINK:
+		SetTheme(IDM_PINK);
+		return TRUE;
+	case IDM_YELLOW:
+		SetTheme(IDM_YELLOW);
 		return TRUE;
 	}
 
@@ -151,11 +172,25 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
 
-			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_DEFAULT_THEME, 0);
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_DEFAULT_THEME, 0);
 		}
 		break;
 	
 	case IDM_BLUE:	// ICY_BLUE Theme
+		{			
+			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, T, F};
+			RB.SetTheme(rt);
+
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_BLUE, 0);
+		}
+		break;
+
+	case IDM_BLUE_LOCKED:	// ICY_BLUE Theme
 		{			
 			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 			RB.SetTheme(rt);
@@ -165,7 +200,7 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
 
-			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_BLUE, 0);
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_BLUE_LOCKED, 0);
 		}
 		break;
 
@@ -179,13 +214,13 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
 			
-			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_BLUE_BKGND, 0);
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_BLUE_BKGND, 0);
 		}
 		break;
 
 	case IDM_BLUE_FLAT:	// ICY_BLUE Flat Theme
 		{
-			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), T, T, T, T, T, F};
+			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), T, T, F, T, T, F};
 			RB.SetTheme(rt);
 
 			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
@@ -193,11 +228,94 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
 
-			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_BLUE_FLAT, IDM_BLUE_FLAT, 0);
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_BLUE_FLAT, 0);
 		}
 		break;
-	} 
-		
+
+	case IDM_GREY:	// Grey Theme
+		{			
+			REBARTHEME rt = {T, RGB(230, 230, 215), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172), F, T, T, T, T, F};
+			RB.SetTheme(rt);
+
+			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_GREY, 0);
+		}
+		break;
+
+	case IDM_OLIVE:
+		{			
+			REBARTHEME rt = {T, RGB(50, 150, 50), RGB(4, 204, 78), RGB(0, 120, 0), RGB(27, 159, 78), F, T, T, T, T, F};
+			RB.SetTheme(rt);
+
+			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_OLIVE, 0);
+		}
+		break;
+
+	case IDM_YELLOW:
+		{			
+			REBARTHEME rt = {T, RGB(160, 160, 94), RGB(216, 216, 40), RGB(255, 255, 255), RGB(183, 183, 46), F, T, T, T, T, F};
+			RB.SetTheme(rt);
+
+			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_YELLOW, 0);
+		}
+		break;
+
+	case IDM_OCHRE:
+		{			
+			REBARTHEME rt = {T, RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 217, 78), RGB(248, 141, 6), F, T, T, T, T, F};
+			RB.SetTheme(rt);
+
+			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_OCHRE, 0);
+		}
+		break;
+	case IDM_PINK:
+		{			
+			REBARTHEME rt = {T, RGB(248, 107, 243), RGB(248, 153, 179), RGB(248, 153, 179), RGB(195, 195, 172), F, T, T, T, T, F};
+			RB.SetTheme(rt);
+
+			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_PINK, 0);
+		}
+		break;
+	case IDM_MAUVE:
+		{			
+			REBARTHEME rt = {T, RGB(190, 100, 125), RGB(210, 128, 155), RGB(219, 138, 188), RGB(90, 100, 125), F, T, T, T, T, F};
+			RB.SetTheme(rt);
+
+			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			TB.SetTheme(tt);
+			Arrows.SetTheme(tt);
+			Cards.SetTheme(tt);
+
+			::CheckMenuRadioItem(hTheme, IDM_DEFAULT_THEME, IDM_YELLOW, IDM_MAUVE, 0);
+		}
+		break;
+
+	}
+
 	::InvalidateRect(GetMenubar().GetHwnd(), NULL, TRUE);
 	RecalcLayout();
 }

@@ -47,6 +47,6 @@ void CView::OnPaint(HDC hDC)
 	::GetClientRect(m_hWnd, &r);
 
 	// Centre some text in our view window
-	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	::DrawText(hDC, _T("Choose a theme from the menu"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

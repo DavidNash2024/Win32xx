@@ -1069,7 +1069,7 @@ namespace Win32xx
 						GradientFill(hDCSource, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
 
 						// Set Curve amount for rounded edges
-						int Curve = m_Theme.RoundBorders? 16 : 0;
+						int Curve = m_Theme.RoundBorders? 12 : 0;
 
 						// Create our mask for rounded edges using RoundRect
 						HBITMAP hBitmapMask   = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
