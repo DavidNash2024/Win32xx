@@ -99,7 +99,7 @@ void CMainMDIFrame::OnCreate()
 
 	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
-	 m_bUseRebar = FALSE;				// Don't use rebars
+	// m_bUseRebar = FALSE;				// Don't use rebars
 
 	// call the base class function
 	CMDIFrame::OnCreate();
@@ -110,14 +110,11 @@ void CMainMDIFrame::OnCreate()
 	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{
-//		GetToolbar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
-		GetToolbar().SetButtonStyle(IDM_FILE_NEW, TBSTYLE_DROPDOWN);
+		GetToolbar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
+//		GetToolbar().SetButtonStyle(IDM_FILE_NEW, TBSTYLE_DROPDOWN);
 	}
 
-	GetToolbar().SetButtonText(IDM_FILE_NEW, "abb");
-	GetToolbar().SetButtonText(IDM_FILE_OPEN, "Second");
-//	GetToolbar().SetButtonSize(80,80);
-	GetToolbar().SetButtonSize(79, 79);
+
 	SetTheme();
 }
 
@@ -146,20 +143,26 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	CToolbar& TB = GetToolbar();
 	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
+	// Disable some of the toolbar buttons
+	TB.DisableButton(IDM_FILE_OPEN);
+	TB.DisableButton(IDM_FILE_SAVE);
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE);
+	TB.DisableButton(IDM_FILE_PRINT);
+
+//	GetToolbar().SetButtonText(IDM_FILE_NEW, "abb");
+//	GetToolbar().SetButtonText(IDM_FILE_OPEN, "Second");
+//	GetToolbar().SetButtonSize(80,80);
+//	GetToolbar().SetButtonSize(79, 79);
+
 	// Resize the Rebar band
 	if (IsRebarUsed())
 	{
 		CRebar& RB = GetRebar();
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 	}
-
-	// Disable some of the toolbar buttons
-//	TB.DisableButton(IDM_FILE_OPEN);
-	TB.DisableButton(IDM_FILE_SAVE);
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
+	RecalcLayout();
 }
 
 void CMainMDIFrame::SetTheme()

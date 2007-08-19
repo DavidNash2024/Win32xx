@@ -384,6 +384,15 @@ namespace Win32xx
 	{
 		SIZE sz = {0};
 		::SendMessage(m_hWnd, TB_GETMAXSIZE, 0, (LPARAM)&sz);
+
+		// Fix for a bug in the Win32 API
+		int xMaxSize = 0;
+		for (int j= 0 ; j < GetButtonCount(); j++)
+		{
+			xMaxSize += GetItemRect(j).right - GetItemRect(j).left;
+		}
+
+		sz.cx = xMaxSize;
 		return sz;
 	}
 
@@ -542,20 +551,19 @@ namespace Win32xx
 								if (IsXPThemed())
 								{
 									yAPos = cyImage/2;
-									xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx)/2;
+									xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
 								}
 								else
 								{
 									yAPos = 3 + cyImage/2;
-									xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -1)/2;
+									xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx)/2;
 								}
 							}
 							else
 							{				
 								xAPos = rcRect.right- 5;
 								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 7)/2;
-								if (IsXPThemed()) yAPos = 2 + (rcRect.bottom - rcRect.top)/2;
-								else              yAPos = (3 + rcRect.bottom - rcRect.top)/2;
+								yAPos = (3 + rcRect.bottom - rcRect.top)/2;
 							}
 						}
 
