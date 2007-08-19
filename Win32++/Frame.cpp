@@ -518,7 +518,7 @@ namespace Win32xx
 					// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
 					int nStyle = GetButtonStyle(dwItem);
 					LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
-					if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & 0x0080))
+					if ((((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & 0x0080)) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400))
 					{
 						int xAPos;	// x Arrow position
 						int yAPos;	// y Arrow position
@@ -1296,8 +1296,8 @@ namespace Win32xx
 		m_Theme.ShortBands   = Theme.ShortBands;
 		m_Theme.UseLines     = Theme.UseLines;
 
-		// For Win 2000 and above
-		if (GetWinVersion() >= 2500)
+		// Win95 - WinME fail to render round borders properly
+		if (GetWinVersion() >= 2400)
 		{
 			m_Theme.FlatStyle    = Theme.FlatStyle;
 			m_Theme.RoundBorders = Theme.RoundBorders;

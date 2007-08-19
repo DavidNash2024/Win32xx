@@ -144,17 +144,17 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_FILE_OPEN);
+//	TB.DisableButton(IDM_FILE_OPEN);
 	TB.DisableButton(IDM_FILE_SAVE);
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
 	TB.DisableButton(IDM_EDIT_PASTE);
 	TB.DisableButton(IDM_FILE_PRINT);
 
-//	GetToolbar().SetButtonText(IDM_FILE_NEW, "abb");
-//	GetToolbar().SetButtonText(IDM_FILE_OPEN, "Second");
+	GetToolbar().SetButtonText(IDM_FILE_NEW, "abb");
+	GetToolbar().SetButtonText(IDM_FILE_OPEN, "Second");
 //	GetToolbar().SetButtonSize(80,80);
-//	GetToolbar().SetButtonSize(79, 79);
+	GetToolbar().SetButtonSize(79, 79);
 
 	// Resize the Rebar band
 	if (IsRebarUsed())

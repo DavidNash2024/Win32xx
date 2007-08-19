@@ -155,7 +155,6 @@ void CMainFrame::SetTheme(UINT nStyle)
 {
 	CRebar& RB = GetRebar();
 	CToolbar& TB = GetToolbar();
-	HWND hWndMB = GetMenubar().GetHwnd();
 	BOOL T = TRUE;
 	BOOL F = FALSE;
 	HMENU hTheme = ::GetSubMenu(GetFrameMenu(), 3);
