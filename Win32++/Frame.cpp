@@ -464,29 +464,100 @@ namespace Win32xx
 						GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
 					}
 
+					// Calculate text size
+					TCHAR szText[80];
+					SIZE TextSize = {0};
+					BOOL HasText = (SendMessage(m_hWnd, TB_GETSTRING, (WPARAM) MAKEWPARAM (0,0), NULL) != -1);
+					if (HasText)	// Does any button have text?
+					{
+						HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
+						HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
+						if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
+						{
+							::GetTextExtentPoint32(hDC, szText, lstrlen(szText), &TextSize);
+						}
+						else
+						{
+							::GetTextExtentPoint32(hDC, _T(" "), lstrlen(_T(" ")), &TextSize);					
+						}
+						::SelectObject(hDC, hOldFont);
+					}
+
+					// Calculate image position
+					HIMAGELIST hImageList = m_hImageListHot? m_hImageListHot: m_hImageList;
+					int cxImage = 0;
+					int cyImage = 0;
+					ImageList_GetIconSize(hImageList, &cxImage, &cyImage);
+					
+					int xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage)/2;
+					int yImage = 1 + (rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
+					if (!IsXPThemed()) yImage = 3;
+		
+					// Calculate the text position
+					int xText, yText;
+					if (IsXPThemed())
+					{
+						xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
+						yText = 1 + (rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
+					}
+					else
+					{
+						xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx)/2;
+						yText = 4 + cyImage;
+					}
+									
 					// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
 					int nStyle = GetButtonStyle(dwItem);
 					LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
 					if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & 0x0080))
 					{
-						int xAPos;
-						int yAPos;
+						int xAPos;	// x Arrow position
+						int yAPos;	// y Arrow position
 
 						if (nStyle & TBSTYLE_DROPDOWN)
 						{
-							rcRect.right = rcRect.right - 12;
-							xAPos = rcRect.right + 6;
-							yAPos = (rcRect.bottom - rcRect.top)/2;
+							if (IsXPThemed())
+							{
+								xAPos = rcRect.right -6;
+								yAPos = (rcRect.bottom - rcRect.top +1)/2;
+								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage -11)/2;
+								yImage = (3 + rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
+								xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -12)/2;
+								yText = (3 + rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
+							}
+							else
+							{
+								xAPos = rcRect.right -5;
+								yAPos = (rcRect.bottom - rcRect.top +3)/2;
+								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage -13)/2;
+								xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -13)/2;
+							}
 						}
 						else
 						{
-							rcRect.right = rcRect.right - 8;
-							xAPos = rcRect.right + 3;
-							yAPos = (rcRect.bottom - rcRect.top)/2 +1;
+							if (HasText)
+							{						
+								xAPos = (7 + rcRect.right - rcRect.left + cxImage)/2 ;
+								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 9)/2;
+								if (IsXPThemed())
+								{
+									yAPos = cyImage/2;
+									xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx)/2;
+								}
+								else
+								{
+									yAPos = 3 + cyImage/2;
+									xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -1)/2;
+								}
+							}
+							else
+							{				
+								xAPos = rcRect.right- 5;
+								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 7)/2;
+								if (IsXPThemed()) yAPos = 2 + (rcRect.bottom - rcRect.top)/2;
+								else              yAPos = (3 + rcRect.bottom - rcRect.top)/2;
+							}
 						}
-
-						HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(0,0,0));
-						HPEN hOldPen = (HPEN)::SelectObject(hDC, (HPEN)hPen);
 
 						// Manually draw the dropdown arrow
 						for (int i = 2; i >= 0; i--)
@@ -495,41 +566,33 @@ namespace Win32xx
 							::LineTo  (hDC, xAPos +i,   yAPos - i+1);
 						}
 
-						::SelectObject(hDC, hOldPen);
-						::DeleteObject((HPEN)hPen);
-
 						// Draw line between icon and dropdown arrow
 						if (nStyle & TBSTYLE_DROPDOWN)
 						{
 							hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
 							hOldPen = (HPEN)::SelectObject(hDC, hPen);
-							::MoveToEx(hDC, rcRect.right, rcRect.top, NULL);
-							::LineTo(hDC, rcRect.right, rcRect.bottom);
+							::MoveToEx(hDC, rcRect.right - 13, rcRect.top, NULL);
+							::LineTo(hDC, rcRect.right - 13, rcRect.bottom);
 							::SelectObject(hDC, hOldPen);
 							::DeleteObject((HPEN)hPen);
 						}
-					}
+					}  
 
 					// Draw the button image
-					HIMAGELIST hImageList = m_hImageListHot? m_hImageListHot: m_hImageList;
-					::InflateRect(&rcRect, 1, 1);
-					int cx, cy;
-					ImageList_GetIconSize(hImageList, &cx, &cy);
-					int xOffset = (rcRect.right - rcRect.left - cx)/2;
-					int yOffset = 3;
-					ImageList_Draw(hImageList, iImage, hDC, rcRect.left + xOffset, yOffset, ILD_TRANSPARENT);
+					if (xImage > 0)
+					{
+						ImageList_Draw(hImageList, iImage, hDC, xImage, yImage, ILD_TRANSPARENT);
+					}
 
 					//Draw Text
-					TCHAR szText[80];
-					if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
+					if (lstrlen(szText) > 0)
 					{
+						RECT rcText = {xText, yText, xText + TextSize.cx, yText + TextSize.cy};
 						::SetBkMode(hDC, TRANSPARENT);
 						HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
 						HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
-						SIZE sz = {0};
-						::GetTextExtentPoint32(hDC, szText, lstrlen(szText)*sizeof(TCHAR), &sz);
-						rcRect.top = rcRect.bottom - sz.cy - yOffset;
-						::DrawTextEx(hDC, szText, lstrlen(szText), &rcRect, DT_CENTER, NULL);
+
+						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
 						::SelectObject(hDC, hOldFont);
 					}
 

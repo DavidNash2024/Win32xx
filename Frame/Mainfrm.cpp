@@ -68,7 +68,7 @@ void CMainFrame::OnCreate()
 
 	CToolbar& TB = GetToolbar();
 	TB.SetButtonText(IDM_FILE_NEW, _T("AABB"));
-	TB.SetButtonText(IDM_FILE_OPEN, _T("dd d"));
+	TB.SetButtonText(IDM_FILE_OPEN, _T("ddddd"));
 
 	CRebar& RB = GetRebar();
 	RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
