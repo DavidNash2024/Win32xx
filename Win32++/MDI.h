@@ -130,13 +130,11 @@ namespace Win32xx
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual void RecalcLayout();
-		virtual void SetFrameMenu(INT ID_MENU);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CMDIClient m_MDIClient;
 		std::vector <CMDIChild*> m_MDIChildVect;
-		HMENU m_hOrigMenu;
 	};
 
 } // namespace Win32xx

@@ -2604,7 +2604,9 @@ namespace Win32xx
 
 				// Add the menu title to the string table
 				TCHAR szMenuName[MAX_MENU_STRING +1];
-				::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
+				
+				if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
+					throw CWinException(TEXT("Menubar::SetMenu  GetMenuString failed"));
 
 				SetButtonText(i  + nMaxedOffset, szMenuName);
 			}

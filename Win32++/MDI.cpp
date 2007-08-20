@@ -79,7 +79,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	// Definitions for the CMDIFrame class
 	//
-	CMDIFrame::CMDIFrame() : m_hOrigMenu(NULL)
+	CMDIFrame::CMDIFrame()
 	{
 		m_bIsMDIFrame = TRUE;
 		SetView(m_MDIClient);
@@ -214,19 +214,6 @@ namespace Win32xx
 		}
 	}
 
-	void CMDIFrame::SetFrameMenu(INT ID_MENU)
-	{
-		CFrame::SetFrameMenu(ID_MENU);
-
-		if (m_hOrigMenu)
-			::DestroyMenu(m_hOrigMenu);
-
-		m_hOrigMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
-
-		if(!m_hOrigMenu)
-			DebugWarnMsg(_T("Load Menu failed"));
- 	}
-
 	LRESULT CMDIFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -259,7 +246,6 @@ namespace Win32xx
 	void CMDIClient::PreCreate(CREATESTRUCT &cs)
 	{
 		static CLIENTCREATESTRUCT clientcreate;
-		clientcreate.hWindowMenu  = GetApp()->GetFrame()->GetFrameMenu();
 		clientcreate.idFirstChild = IDW_FIRSTCHILD;
 
 		cs.lpCreateParams = &clientcreate;
@@ -454,8 +440,8 @@ namespace Win32xx
 				// No child is being activated
 				if (lParam == 0)
 				{
-					// Set the menu to frame's original menu
-					UpdateFrameMenu(pMDIFrame->m_hOrigMenu);					
+					// Set the menu to frame's original menu				
+					UpdateFrameMenu(pMDIFrame->GetFrameMenu());
 				}
 
 				::DrawMenuBar(pMDIFrame->GetHwnd());
