@@ -79,7 +79,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	// Definitions for the CMDIFrame class
 	//
-	CMDIFrame::CMDIFrame()
+	CMDIFrame::CMDIFrame() : m_hOrigMenu(NULL)
 	{
 		m_bIsMDIFrame = TRUE;
 		SetView(m_MDIClient);
@@ -213,6 +213,19 @@ namespace Win32xx
 			}
 		}
 	}
+
+	void CMDIFrame::SetFrameMenu(INT ID_MENU)
+	{
+		CFrame::SetFrameMenu(ID_MENU);
+
+		if (m_hOrigMenu)
+			::DestroyMenu(m_hOrigMenu);
+
+		m_hOrigMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
+
+		if(!m_hOrigMenu)
+			DebugWarnMsg(_T("Load Menu failed"));
+ 	}
 
 	LRESULT CMDIFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
@@ -400,7 +413,9 @@ namespace Win32xx
 
 		HWND hWnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
 		if ((m_hWnd != NULL) &&(hWnd == m_hWnd) && (m_hChildMenu != NULL))
+		{
 			UpdateFrameMenu(m_hChildMenu);
+		}
 
 		return (m_hChildMenu != NULL);
 	}
@@ -409,8 +424,8 @@ namespace Win32xx
 	{
 		CFrame* pFrame = GetApp()->GetFrame();
 		int nWindowItem = pFrame->GetMenuItemPos(hMenu, _T("Window"));
-		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
 
+		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
 		::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
 
 		if (pFrame->IsMenubarUsed())
@@ -427,19 +442,23 @@ namespace Win32xx
 		{
 		case WM_MDIACTIVATE:
 			{
-				CFrame* pFrame = GetApp()->GetFrame();
+				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 
 				// This child is being activated
 				if (lParam == (LPARAM) m_hWnd)
-					// Set the menu to child default menu if gaining focus
+				{
+					// Set the menu to child default menu
 					UpdateFrameMenu(m_hChildMenu);
+				}
 
 				// No child is being activated
 				if (lParam == 0)
-					// Set the menu to frame default menu if losing focus
-					UpdateFrameMenu(pFrame->GetFrameMenu());
+				{
+					// Set the menu to frame's original menu
+					UpdateFrameMenu(pMDIFrame->m_hOrigMenu);					
+				}
 
-				::DrawMenuBar(pFrame->GetHwnd());
+				::DrawMenuBar(pMDIFrame->GetHwnd());
 			}
 			return 0L ;
 		}

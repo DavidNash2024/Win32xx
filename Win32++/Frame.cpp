@@ -385,11 +385,11 @@ namespace Win32xx
 		SIZE sz = {0};
 		::SendMessage(m_hWnd, TB_GETMAXSIZE, 0, (LPARAM)&sz);
 
-		// Fix for a bug in the Win32 API
+		// This fixes a Windows bug calculating the size when TBSTYLE_DROPDOWN is used.
 		int xMaxSize = 0;
-		for (int j= 0 ; j < GetButtonCount(); j++)
+		for (int i= 0 ; i < GetButtonCount(); i++)
 		{
-			xMaxSize += GetItemRect(j).right - GetItemRect(j).left;
+			xMaxSize += GetItemRect(i).right - GetItemRect(i).left;
 		}
 
 		sz.cx = xMaxSize;
@@ -1533,17 +1533,11 @@ namespace Win32xx
 				::SetRect(&m_MDIRect[2 - i], left, top, right, bottom);
 			}
 				
-			int xMaxSize = 0;
-			for (int j= 0 ; j < GetButtonCount(); j++)
-			{
-				xMaxSize += GetItemRect(j).right - GetItemRect(j).left;
-			}		
-						
 			// Hide the MDI button if it won't fit
 			for (int k = 0 ; k <= 2 ; k++)
 			{
 				
-				if (m_MDIRect[k].left < xMaxSize)
+				if (m_MDIRect[k].left < GetMaxSize().cx)
 				{
 					::SetRectEmpty(&m_MDIRect[k]);
 				}
@@ -1741,7 +1735,6 @@ namespace Win32xx
 
 		HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
 		::FillRect(hDC, &rc, hbHighlight);
-
 
 	//	::FillRect(hDC, &rc, hBrush);
 	//	::SelectObject(hDC, OldBrush);
@@ -2611,8 +2604,7 @@ namespace Win32xx
 
 				// Add the menu title to the string table
 				TCHAR szMenuName[MAX_MENU_STRING +1];
-				if (!::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION))
-					return;
+				::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
 
 				SetButtonText(i  + nMaxedOffset, szMenuName);
 			}
@@ -2822,10 +2814,9 @@ namespace Win32xx
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
 
+		// By default, we use the rebar if we can
 		if (GetComCtlVersion() >= 470)
 			m_bUseRebar = TRUE;
-
-		SetFrameMenu(IDW_MAIN);
 
 		// Place this code in CMainFrame's constructor
 /*
@@ -3035,6 +3026,9 @@ namespace Win32xx
 		// Set the icon
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
+
+		// Set the menu
+		SetFrameMenu(IDW_MAIN);
 
 		// Set the accelerator table and HWND for translated messages
 		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
@@ -3319,7 +3313,6 @@ namespace Win32xx
 		if (IsRebarUsed())
 		{
 			::SendMessage(RB.GetHwnd(), WM_SIZE, 0, 0);
-		//	SetMenubarBandSize();
 		}
 		else
 			::SendMessage(GetToolbar().GetHwnd(), TB_AUTOSIZE, 0, 0);
@@ -3340,7 +3333,8 @@ namespace Win32xx
 		if (RB.GetTheme().UseThemes && RB.GetTheme().KeepBandsLeft)
 			RB.MoveBandsLeft();
 
-		SetMenubarBandSize();
+		if (IsMenubarUsed())
+			SetMenubarBandSize();
 
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}

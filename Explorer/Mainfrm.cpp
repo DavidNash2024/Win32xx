@@ -142,13 +142,6 @@ void CMainFrame::OnCreate()
 	CToolbar& TB = GetToolbar();
 	TB.SetImageList(9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
-	if (IsRebarUsed())
-	{
-		// Resize the Rebar band
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-	}
-
 	// Disable some buttons
 	TB.DisableButton(IDM_FILE_NEW);
 	TB.DisableButton(IDM_FILE_OPEN);
@@ -163,6 +156,13 @@ void CMainFrame::OnCreate()
 	if (GetComCtlVersion() >= 472)
 	{
 		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+	}
+
+	if (IsRebarUsed())
+	{
+		// Resize the Rebar band
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 	}
 
 	SetTheme();

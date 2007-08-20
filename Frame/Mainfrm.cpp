@@ -66,13 +66,7 @@ void CMainFrame::OnCreate()
 	// call the base class function
 	CFrame::OnCreate();
 
-	CToolbar& TB = GetToolbar();
-	TB.SetButtonText(IDM_FILE_NEW, _T("AABB"));
-	TB.SetButtonText(IDM_FILE_OPEN, _T("ddddd"));
-
-	CRebar& RB = GetRebar();
-	RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-	
+	// Set the rebar and toolbar theme
 	SetTheme();
 }
 
