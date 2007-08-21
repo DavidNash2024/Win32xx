@@ -245,8 +245,9 @@ namespace Win32xx
 
 	void CMDIClient::PreCreate(CREATESTRUCT &cs)
 	{
-		static CLIENTCREATESTRUCT clientcreate;
+		CLIENTCREATESTRUCT clientcreate;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD;
+		clientcreate.hWindowMenu = GetApp()->GetFrame()->GetFrameMenu();
 
 		cs.lpCreateParams = &clientcreate;
 		cs.lpszClass = _T("MDICLient");
