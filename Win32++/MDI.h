@@ -100,7 +100,7 @@ namespace Win32xx
 	public:
 		CMDIClient();
 		virtual ~CMDIClient();
-		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual HWND Create(HWND hWndParent = NULL);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	};
 
@@ -118,7 +118,7 @@ namespace Win32xx
 		virtual ~CMDIFrame();
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 		virtual CMDIClient& GetMDIClient() {return m_MDIClient;}
-		virtual HWND GetActiveMDIChild(BOOL* pIsMaxed = NULL );
+		virtual HWND GetActiveMDIChild() {return m_hActiveMDIChild;}
 		virtual BOOL IsMDIChildMaxed();
 
 	protected:
@@ -135,6 +135,7 @@ namespace Win32xx
 	private:
 		CMDIClient m_MDIClient;
 		std::vector <CMDIChild*> m_MDIChildVect;
+		HWND m_hActiveMDIChild;
 	};
 
 } // namespace Win32xx

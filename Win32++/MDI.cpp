@@ -79,7 +79,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	// Definitions for the CMDIFrame class
 	//
-	CMDIFrame::CMDIFrame()
+	CMDIFrame::CMDIFrame() : m_hActiveMDIChild(NULL)
 	{
 		m_bIsMDIFrame = TRUE;
 		SetView(m_MDIClient);
@@ -109,15 +109,10 @@ namespace Win32xx
 		return ::DefFrameProc(hWnd, m_MDIClient.GetHwnd(), uMsg, wParam, lParam);
 	}
 
-	HWND CMDIFrame::GetActiveMDIChild(BOOL* pIsMaxed /* = NULL */)
-	{
-		return (HWND)::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)pIsMaxed);
-	}
-
 	BOOL CMDIFrame::IsMDIChildMaxed()
 	{
 		BOOL bMaxed = FALSE;
-		GetActiveMDIChild(&bMaxed);
+		::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 
@@ -243,16 +238,34 @@ namespace Win32xx
 	{
 	}
 
-	void CMDIClient::PreCreate(CREATESTRUCT &cs)
+	HWND CMDIClient::Create(HWND hWndParent /* = NULL*/)
 	{
-		CLIENTCREATESTRUCT clientcreate;
-		clientcreate.idFirstChild = IDW_FIRSTCHILD;
-		clientcreate.hWindowMenu = GetApp()->GetFrame()->GetFrameMenu();
+		try
+		{
+			CLIENTCREATESTRUCT clientcreate ;
+			clientcreate.hWindowMenu  = m_hWnd;
+			clientcreate.idFirstChild = IDW_FIRSTCHILD ;
+			DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
-		cs.lpCreateParams = &clientcreate;
-		cs.lpszClass = _T("MDICLient");
-		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-		cs.dwExStyle = WS_EX_CLIENTEDGE;
+			// Create the view window
+			if (!CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""),
+					dword, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
+					throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
+
+			return m_hWnd;
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(TEXT("Exception in CMDIClient::Create"));
+		}
+
+		return m_hWnd;
 	}
 
 	LRESULT CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -434,13 +447,16 @@ namespace Win32xx
 				// This child is being activated
 				if (lParam == (LPARAM) m_hWnd)
 				{
+					pMDIFrame->m_hActiveMDIChild = m_hWnd;
 					// Set the menu to child default menu
-					UpdateFrameMenu(m_hChildMenu);
+					if (m_hChildMenu)
+						UpdateFrameMenu(m_hChildMenu);
 				}
 
 				// No child is being activated
 				if (lParam == 0)
 				{
+					pMDIFrame->m_hActiveMDIChild = NULL;
 					// Set the menu to frame's original menu				
 					UpdateFrameMenu(pMDIFrame->GetFrameMenu());
 				}
