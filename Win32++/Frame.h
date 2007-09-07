@@ -102,6 +102,7 @@ namespace Win32xx
 		virtual ~CToolbar();
 		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
 		virtual int  CommandToIndex(int iButtonID);
+		virtual void CreateDisabledImageList();
 		virtual void DisableButton(int iButtonID);
 		virtual void EnableButton(int iButtonID);
 		virtual int  GetButtonCount();

@@ -1,3 +1,15 @@
+Version 5.5
+-----------
+Bug Fixed:
+
+New Features:
+* If a resource for disabled toolbar items isn't provided, an ImageList
+   for disabled buttons is created for you.
+
+The following changes have been made to the Win32++ code:
+Added CToolbar::CreateDisabledImageList
+   
+
 Version 5.4
 -----------
 Bug Fixes:

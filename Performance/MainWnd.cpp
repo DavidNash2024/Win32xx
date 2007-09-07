@@ -8,7 +8,7 @@
 #include "resource.h"
 
 
-CMainWindow::CMainWindow() : m_hEdit(NULL), m_hFont(NULL), m_nTestMessages(0)
+CMainWindow::CMainWindow() : m_hEdit(NULL), m_hFont(NULL), m_nTestMessages(0), m_nTestWindows(0)
 {
 }
 
@@ -20,7 +20,7 @@ CMainWindow::~CMainWindow()
 	for (int i = 0 ; i < m_nTestWindows; i++)
 	{
 		delete m_pCTestWindows[i];
-	}
+	} 
 }
 
 void CMainWindow::Create()
@@ -41,7 +41,7 @@ void CMainWindow::CreateTestWindows(int nWindows)
 		// Create the test windows 
 		m_pCTestWindows.push_back(new CTestWindow());
 		m_pCTestWindows[i]->CreateWin(i);
-	}
+	} 
 }
 
 void CMainWindow::OnCreate()
@@ -57,7 +57,7 @@ void CMainWindow::OnCreate()
 	// Set a default font
 	m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-	::SendMessage(m_hEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
+	::SendMessage(m_hEdit, WM_SETFONT, (WPARAM)m_hFont, 0); 
 }
 
 void CMainWindow::OnInitialUpdate()
@@ -142,7 +142,7 @@ void CMainWindow::SendText(LPCTSTR str)
 	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)_T("\r\n"));
 	::SendMessage(m_hEdit, EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
 
-	TRACE(str);
+	TRACE(str); 
 }
 
 LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -177,7 +177,7 @@ LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// Message recieved when a test window is created
 		if (++nWindowsCreated == m_nTestWindows)
 			OnAllWindowsCreated();
-		break;
+		break; 
 	}
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

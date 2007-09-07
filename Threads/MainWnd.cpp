@@ -23,7 +23,9 @@ CMainWindow::~CMainWindow()
 	// m_pCThreads is a vector of CThread pointers
 	// Delete each CThread object
 	for (int i = 0 ; i < m_nThreads; i++)
+	{
 		delete m_pCThreads[i];
+	}
 }
 
 void CMainWindow::Create()
@@ -67,11 +69,16 @@ LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			//Close the thread windows
 			for (int i = 0 ; i < m_nThreads ; i++)
+			{
 				::SendMessage(m_pCThreads[i]->GetTestWindow().GetHwnd(), WM_CLOSE, 0, 0);
+			}
 		}
 		break;
 	
 	case WM_DESTROY:	
+		// Pause this thread to allow the others to complete
+		Sleep(500);
+		
 		// Post the WM_QUIT message to terminate the primary thread.
 		::PostQuitMessage(0);
 		break;

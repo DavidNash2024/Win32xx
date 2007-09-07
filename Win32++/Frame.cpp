@@ -265,6 +265,65 @@ namespace Win32xx
 		}
 	}
 
+	void CToolbar::CreateDisabledImageList()
+	{
+		if (m_hImageListDis)
+		{
+			ImageList_Destroy(m_hImageListDis);
+			m_hImageListDis = NULL;
+		}
+
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(m_hImageList);
+		if (nCount == 0)
+			return;
+
+		ImageList_GetIconSize(m_hImageList, &cx, &cy);
+		
+		// Create the destination ImageList
+		m_hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+		
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; i++)
+		{
+			HDC hDC = ::GetDC(m_hWnd);
+			HDC hdcMem = ::CreateCompatibleDC(NULL);
+			HBITMAP hbm = ::CreateCompatibleBitmap(hDC, cx, cx);
+			HBITMAP hbmOld = (HBITMAP)::SelectObject(hdcMem, hbm);
+			RECT rc;
+			SetRect(&rc, 0, 0, cx, cx);
+
+			// Set the mask color to magenta for the new ImageList
+			COLORREF crMask = RGB(255,0,255);
+			SolidFill(hdcMem, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_Draw(m_hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; x++)
+			{
+				for (int y = 0; y < cy; y++)
+				{
+					COLORREF clr = ::GetPixel(hdcMem, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE btGray = 63 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/15;
+						::SetPixel(hdcMem, x, y, RGB(btGray, btGray, btGray));
+					}
+				}
+			}  
+
+			// Cleanup the GDI objects
+			::SelectObject(hdcMem, hbmOld);
+			ImageList_AddMasked(m_hImageListDis, hbm, crMask);
+			::DeleteObject(hbm);
+			::DeleteDC(hdcMem);
+			::ReleaseDC(m_hWnd, hDC);
+		}
+	}
+
 	void CToolbar::DisableButton(int iButtonID)
 	// Disables the specified button in a toolbar
 	{
@@ -877,15 +936,29 @@ namespace Win32xx
 	// Assumes the width of the button image = bitmap_size / buttons
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	{
+		HBITMAP hbm = NULL;
+		
 		try
 		{
+			if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
+			if (m_hImageListDis) ::ImageList_Destroy(m_hImageListDis);
+			if (m_hImageListHot) ::ImageList_Destroy(m_hImageListHot);
+			m_hImageList = 0;
+			m_hImageListDis = 0;
+			m_hImageListHot = 0;
+
 			if (iNumButtons > 0)
 			{
 				// Set the button images
-				HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
+				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
+				if (!hbm)
+					throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
+				
 				BITMAP bm = {0};
 
-				::GetObject(hbm, sizeof(BITMAP), &bm);
+				if (!::GetObject(hbm, sizeof(BITMAP), &bm))
+					throw CWinException(_T("CToolbar::SetImageList ... GetObject failed "));
+
 				int iImageWidth  = bm.bmWidth / iNumButtons;
 				int iImageHeight = bm.bmHeight;
 
@@ -905,44 +978,62 @@ namespace Win32xx
 					return;
 				}
 
-				if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
-				if (m_hImageListDis) ::ImageList_Destroy(m_hImageListDis);
-				if (m_hImageListHot) ::ImageList_Destroy(m_hImageListHot);
-				m_hImageList = 0;
-				m_hImageListDis = 0;
-				m_hImageListHot = 0;
-
-				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
+				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+				if (!m_hImageList)
+					throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageList failed "));
+					
 				ImageList_AddMasked(m_hImageList, hbm, crMask);
-				::DeleteObject(hbm);
-
 				if(SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
 					throw CWinException(_T("CToolbar::SetImageList ... TB_SETIMAGELIST failed "));
+
+				::DeleteObject(hbm);
+				hbm = NULL;
 
 				if (ToolbarHotID)
 				{
 					hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
-					m_hImageListHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
+					if (!hbm) 
+						throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
+					
+					m_hImageListHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+					if (!m_hImageListHot) 
+						throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListHot failed "));
+					
 					ImageList_AddMasked(m_hImageListHot, hbm, crMask);
-					::DeleteObject(hbm);
+					
 					if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) == -1)
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
+					
+					::DeleteObject(hbm);
+					hbm = NULL;
 				}
 
 				if (ToolbarDisabledID)
 				{
 					hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
-					m_hImageListDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iNumButtons, 0);
-					ImageList_AddMasked(m_hImageListDis, hbm, crMask);
-					::DeleteObject(hbm);
-					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
-						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
+					if (!hbm)
+						throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
+
+					m_hImageListDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+					if (!m_hImageListDis)
+						throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListDis failed "));
 				}
+				else
+					CreateDisabledImageList();
+					
+				ImageList_AddMasked(m_hImageListDis, hbm, crMask);				
+				if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
+					throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
+					
+				::DeleteObject(hbm);
+				hbm = NULL;
+
 			}
 		}
 
 		catch (const CWinException &e)
 		{
+			if (hbm) ::DeleteObject(hbm);
 			e.MessageBox();
 		}
 
@@ -1179,6 +1270,11 @@ namespace Win32xx
 						::SelectObject(hDCSource, hOldSource);
 						::DeleteObject(hBitmapSource);
 						::DeleteDC(hDCSource);
+
+						HDC hDC1 = GetDC(m_hWnd);
+						::BitBlt(hDC1, 0, 0, BarWidth, BarHeight, hDCMem, 0, 0, SRCCOPY);
+						ReleaseDC(m_hWnd, hDC1);
+		//				::BitBlt(hDC, 0, 0, BarWidth, BarHeight, hDCMem, 0, 0, SRCCOPY);				
 					}
 				}
 			}
@@ -2655,7 +2751,7 @@ namespace Win32xx
 		int iImageWidth  = bm.bmWidth / (int)m_ImageData.size();
 		int iImageHeight = bm.bmHeight;
 
-		m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLORDDB | ILC_MASK, iImages, 0);
+		m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 		ImageList_AddMasked(m_hImageList, hbm, crMask);
 		::DeleteObject(hbm);
 	}
@@ -2883,8 +2979,8 @@ namespace Win32xx
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
-		rbbi.cx         = sz.cx+2;
-		rbbi.cxMinChild = sz.cx+2;
+		rbbi.cx         = sz.cx +2;
+		rbbi.cxMinChild = sz.cx +2;
 
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 		rbbi.hwndChild  = TB.GetHwnd();
