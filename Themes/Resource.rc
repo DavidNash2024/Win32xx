@@ -52,12 +52,12 @@ BEGIN
         MENUITEM "Blue, Locked Menu",           IDM_BLUE_LOCKED
         MENUITEM "Blue Background Only",        IDM_BLUE_BKGND
         MENUITEM "Blue Flat Look",              IDM_BLUE_FLAT
-		MENUITEM "Grey"                         IDM_GREY
-		MENUITEM "Olive"                        IDM_OLIVE
-        MENUITEM "Ochre"                        IDM_OCHRE
-        MENUITEM "Mauve"                        IDM_MAUVE
-	    MENUITEM "Pink"                         IDM_PINK
-        MENUITEM "Yellow"                       IDM_YELLOW
+		MENUITEM "Grey",                        IDM_GREY
+		MENUITEM "Olive",                       IDM_OLIVE
+        MENUITEM "Ochre",                       IDM_OCHRE
+        MENUITEM "Mauve",                       IDM_MAUVE
+	    MENUITEM "Pink",                        IDM_PINK
+        MENUITEM "Yellow",                      IDM_YELLOW
     END
     POPUP "&Help"
     BEGIN

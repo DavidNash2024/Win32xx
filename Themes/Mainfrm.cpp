@@ -205,7 +205,7 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_BLUE_BKGND:	// ICY_BLUE background only
 		{
-			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), NULL, NULL, F, F, F, F, F, T };
+			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), 0, 0, F, F, F, F, F, T };
 			RB.SetTheme(rt);
 
 			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};

@@ -30,6 +30,10 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::AddListboxBand(int Listbox_Height)
 {
+	// Get the reference to the rebar object
+	CRebar& RB = GetRebar();
+	REBARTHEME RBTheme = RB.GetTheme();
+
 	// Create the ComboboxEx window
 	CREATESTRUCT cs = {0};
 	cs.lpszClass = _T("COMBOBOXEX32");
@@ -49,11 +53,11 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.cxMinChild = 200;
 	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-	rbbi.clrBack    = GetSysColor(COLOR_BTNFACE);
+	rbbi.clrBack    = RBTheme.clrBand1;
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
 	rbbi.lpText     = _T("Address");
 
-	GetRebar().InsertBand(-1, &rbbi);
+	RB.InsertBand(-1, &rbbi);
 }
 
 void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
@@ -162,15 +166,15 @@ void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnCreate()
 {
+	// Call the base function first
 	CFrame::OnCreate();
-	AddListboxBand(22);
 	
-	// References to the CToolbar and CRebar objects
+	// Get the reference to the CToolbar
 	CToolbar& TB = GetToolbar();
 
 	// Set the image lists for normal, hot and disabled buttons
 	TB.SetImageList(5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
+	
 	if (IsRebarUsed())
 	{
 		// Resize the Rebar band
@@ -178,6 +182,7 @@ void CMainFrame::OnCreate()
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 
 		SetTheme();
+		AddListboxBand(22);
 	}
 }
 

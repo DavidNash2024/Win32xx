@@ -279,10 +279,10 @@ namespace Win32xx
 			return;
 
 		ImageList_GetIconSize(m_hImageList, &cx, &cy);
-		
+
 		// Create the destination ImageList
 		m_hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-		
+
 		// Process each image in the ImageList
 		for (int i = 0 ; i < nCount; i++)
 		{
@@ -313,7 +313,7 @@ namespace Win32xx
 						::SetPixel(hdcMem, x, y, RGB(btGray, btGray, btGray));
 					}
 				}
-			}  
+			}
 
 			// Cleanup the GDI objects
 			::SelectObject(hdcMem, hbmOld);
@@ -535,7 +535,7 @@ namespace Win32xx
 					// Calculate text size
 					TCHAR szText[80];
 					SIZE TextSize = {0};
-					BOOL HasText = (SendMessage(m_hWnd, TB_GETSTRING, (WPARAM) MAKEWPARAM (0,0), NULL) != -1);
+					BOOL HasText = (SendMessage(m_hWnd, TB_GETSTRING, (WPARAM) MAKEWPARAM (0,0), 0) != -1);
 					if (HasText)	// Does any button have text?
 					{
 						HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
@@ -546,7 +546,7 @@ namespace Win32xx
 						}
 						else
 						{
-							::GetTextExtentPoint32(hDC, _T(" "), lstrlen(_T(" ")), &TextSize);					
+							::GetTextExtentPoint32(hDC, _T(" "), lstrlen(_T(" ")), &TextSize);
 						}
 						::SelectObject(hDC, hOldFont);
 					}
@@ -556,11 +556,11 @@ namespace Win32xx
 					int cxImage = 0;
 					int cyImage = 0;
 					ImageList_GetIconSize(hImageList, &cxImage, &cyImage);
-					
+
 					int xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage)/2;
 					int yImage = 1 + (rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
 					if (!IsXPThemed()) yImage = 3;
-		
+
 					// Calculate the text position
 					int xText, yText;
 					if (IsXPThemed())
@@ -573,7 +573,7 @@ namespace Win32xx
 						xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx)/2;
 						yText = 4 + cyImage;
 					}
-									
+
 					// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
 					int nStyle = GetButtonStyle(dwItem);
 					LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
@@ -604,7 +604,7 @@ namespace Win32xx
 						else
 						{
 							if (HasText)
-							{						
+							{
 								xAPos = (7 + rcRect.right - rcRect.left + cxImage)/2 ;
 								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 9)/2;
 								if (IsXPThemed())
@@ -619,7 +619,7 @@ namespace Win32xx
 								}
 							}
 							else
-							{				
+							{
 								xAPos = rcRect.right- 5;
 								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 7)/2;
 								yAPos = (3 + rcRect.bottom - rcRect.top)/2;
@@ -643,7 +643,7 @@ namespace Win32xx
 							::SelectObject(hDC, hOldPen);
 							::DeleteObject((HPEN)hPen);
 						}
-					}  
+					}
 
 					// Draw the button image
 					if (xImage > 0)
@@ -937,7 +937,7 @@ namespace Win32xx
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	{
 		HBITMAP hbm = NULL;
-		
+
 		try
 		{
 			if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
@@ -953,7 +953,7 @@ namespace Win32xx
 				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 				if (!hbm)
 					throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
-				
+
 				BITMAP bm = {0};
 
 				if (!::GetObject(hbm, sizeof(BITMAP), &bm))
@@ -981,7 +981,7 @@ namespace Win32xx
 				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 				if (!m_hImageList)
 					throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageList failed "));
-					
+
 				ImageList_AddMasked(m_hImageList, hbm, crMask);
 				if(SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
 					throw CWinException(_T("CToolbar::SetImageList ... TB_SETIMAGELIST failed "));
@@ -992,18 +992,18 @@ namespace Win32xx
 				if (ToolbarHotID)
 				{
 					hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
-					if (!hbm) 
+					if (!hbm)
 						throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
-					
+
 					m_hImageListHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-					if (!m_hImageListHot) 
+					if (!m_hImageListHot)
 						throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListHot failed "));
-					
+
 					ImageList_AddMasked(m_hImageListHot, hbm, crMask);
-					
+
 					if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) == -1)
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
-					
+
 					::DeleteObject(hbm);
 					hbm = NULL;
 				}
@@ -1020,11 +1020,11 @@ namespace Win32xx
 				}
 				else
 					CreateDisabledImageList();
-					
-				ImageList_AddMasked(m_hImageListDis, hbm, crMask);				
+
+				ImageList_AddMasked(m_hImageListDis, hbm, crMask);
 				if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
 					throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
-					
+
 				::DeleteObject(hbm);
 				hbm = NULL;
 
@@ -1271,10 +1271,10 @@ namespace Win32xx
 						::DeleteObject(hBitmapSource);
 						::DeleteDC(hDCSource);
 
+						// Extra drawing to prevent jagged edge while moving band
 						HDC hDC1 = GetDC(m_hWnd);
-						::BitBlt(hDC1, 0, 0, BarWidth, BarHeight, hDCMem, 0, 0, SRCCOPY);
+						::BitBlt(hDC1, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hDCMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 						ReleaseDC(m_hWnd, hDC1);
-		//				::BitBlt(hDC, 0, 0, BarWidth, BarHeight, hDCMem, 0, 0, SRCCOPY);				
 					}
 				}
 			}
@@ -1628,21 +1628,21 @@ namespace Win32xx
 				int bottom = rc.bottom/2 + cy/2;
 				::SetRect(&m_MDIRect[2 - i], left, top, right, bottom);
 			}
-				
+
 			// Hide the MDI button if it won't fit
 			for (int k = 0 ; k <= 2 ; k++)
 			{
-				
+
 				if (m_MDIRect[k].left < GetMaxSize().cx)
 				{
 					::SetRectEmpty(&m_MDIRect[k]);
 				}
-			} 
+			}
 
 			DrawMDIButton(hDC, MDI_MIN, 0);
 			DrawMDIButton(hDC, MDI_RESTORE, 0);
-			DrawMDIButton(hDC, MDI_CLOSE, 0); 
-		} 
+			DrawMDIButton(hDC, MDI_CLOSE, 0);
+		}
 	}
 
 	void CMenubar::DrawMDIButton(HDC hDC, int iButton, UINT uState)
@@ -1684,7 +1684,7 @@ namespace Win32xx
 					DeleteObject(hWhitePen);
 					DeleteObject(hBlackPen);
 				}
-				
+
 				break;
 			case 2:
 				{
@@ -1701,17 +1701,17 @@ namespace Win32xx
 					SelectObject(hDC, hOldPen);
 					DeleteObject(hWhitePen);
 					DeleteObject(hBlackPen);
-				}			
+				}
 				break;
 			}
-			
+
 			switch (iButton)
 			{
 			case MDI_MIN:
 				// Manually Draw Minimise button
 				::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
 				::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
-				
+
 				::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
 				::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
 				break;
@@ -1722,16 +1722,16 @@ namespace Win32xx
 				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
 				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
 				::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
-				
+
 				::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
-				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);		
-				
+				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
+
 				::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
 				::LineTo(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
 				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
 				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
 				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
-				
+
 				::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
 				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
 				break;
@@ -2181,7 +2181,7 @@ namespace Win32xx
 						DrawMDIButton(hDC, MDI_MIN,     (m_nMDIButton == 0)? 2 : 0);
 						DrawMDIButton(hDC, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
 						DrawMDIButton(hDC, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
-					}				
+					}
 				}
 				::ReleaseDC(m_hWnd, hDC);
 
@@ -2509,10 +2509,10 @@ namespace Win32xx
 					if (PtInRect(&m_MDIRect[0], pt)) MDIButton = 0;
 					if (PtInRect(&m_MDIRect[1], pt)) MDIButton = 1;
 					if (PtInRect(&m_MDIRect[2], pt)) MDIButton = 2;
-					
+
 					if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
 					{
-						// toggle the MDI button image pressed/unpressed as required					
+						// toggle the MDI button image pressed/unpressed as required
 						if (MDIButton >= 0)
 						{
 							DrawMDIButton(hDC, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0))? 2 : 0);
@@ -2524,7 +2524,7 @@ namespace Win32xx
 							DrawMDIButton(hDC, MDI_MIN,     0);
 							DrawMDIButton(hDC, MDI_RESTORE, 0);
 							DrawMDIButton(hDC, MDI_CLOSE,   0);
-						} 
+						}
 					}
 					else	// mouse moved without left mouse button held down
 					{
@@ -2539,7 +2539,7 @@ namespace Win32xx
 							DrawMDIButton(hDC, MDI_MIN,     0);
 							DrawMDIButton(hDC, MDI_RESTORE, 0);
 							DrawMDIButton(hDC, MDI_CLOSE,   0);
-						} 
+						}
 					}
 				}
 				::DeleteDC(hDC);
@@ -2700,7 +2700,7 @@ namespace Win32xx
 
 				// Add the menu title to the string table
 				TCHAR szMenuName[MAX_MENU_STRING +1];
-				
+
 				if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
 					throw CWinException(TEXT("Menubar::SetMenu  GetMenuString failed"));
 
@@ -2890,7 +2890,7 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGING:
 			// Bypass CToolbar::WndProcDefault for this message
 			return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
-		
+
 		} // switch (uMsg)
 
 		return CToolbar::WndProcDefault(hWnd, uMsg, wParam, lParam);
