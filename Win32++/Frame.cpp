@@ -286,9 +286,9 @@ namespace Win32xx
 		// Process each image in the ImageList
 		for (int i = 0 ; i < nCount; i++)
 		{
-			HDC hDC = ::GetDC(m_hWnd);
+			HDC hdcToolbar = ::GetDC(m_hWnd);
 			HDC hdcMem = ::CreateCompatibleDC(NULL);
-			HBITMAP hbm = ::CreateCompatibleBitmap(hDC, cx, cx);
+			HBITMAP hbm = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
 			HBITMAP hbmOld = (HBITMAP)::SelectObject(hdcMem, hbm);
 			RECT rc;
 			SetRect(&rc, 0, 0, cx, cx);
@@ -315,12 +315,12 @@ namespace Win32xx
 				}
 			}
 
-			// Cleanup the GDI objects
-			::SelectObject(hdcMem, hbmOld);
 			ImageList_AddMasked(m_hImageListDis, hbm, crMask);
-			::DeleteObject(hbm);
+			
+			// Cleanup the GDI objects
+			::DeleteObject(::SelectObject(hdcMem, hbmOld));
 			::DeleteDC(hdcMem);
-			::ReleaseDC(m_hWnd, hDC);
+			::ReleaseDC(m_hWnd, hdcToolbar);
 		}
 	}
 
@@ -640,8 +640,7 @@ namespace Win32xx
 							hOldPen = (HPEN)::SelectObject(hDC, hPen);
 							::MoveToEx(hDC, rcRect.right - 13, rcRect.top, NULL);
 							::LineTo(hDC, rcRect.right - 13, rcRect.bottom);
-							::SelectObject(hDC, hOldPen);
-							::DeleteObject((HPEN)hPen);
+							::DeleteObject(::SelectObject(hDC, hOldPen));
 						}
 					}
 
@@ -1176,18 +1175,18 @@ namespace Win32xx
 		int BarHeight = rc.bottom - rc.top;
 
 		// Create and set up our memory DC
-		HDC hDCMem = ::CreateCompatibleDC(hDC);
-		HBITMAP hBitmap = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
-		HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hDCMem, (HBITMAP)hBitmap);
+		HDC hdcMem = ::CreateCompatibleDC(hDC);
+		HBITMAP hbmMem = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
+		HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, (HBITMAP)hbmMem);
 
 		// Draw to Rebar background to the memory DC
 		rc.right = 600;
-		GradientFill(hDCMem, m_Theme.clrBkGnd1, m_Theme.clrBkGnd2, &rc, TRUE);
+		GradientFill(hdcMem, m_Theme.clrBkGnd1, m_Theme.clrBkGnd2, &rc, TRUE);
 		if (BarWidth >= 600)
 		{
 			rc.left = 600;
 			rc.right = BarWidth;
-			SolidFill(hDCMem, m_Theme.clrBkGnd2, &rc);
+			SolidFill(hdcMem, m_Theme.clrBkGnd2, &rc);
 		}
 
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
@@ -1197,8 +1196,8 @@ namespace Win32xx
 			{
 				if (IsBandVisible(nBand))
 				{
-					HWND hWndMB = GetApp()->GetFrame()->GetMenubar().GetHwnd();
-					if (nBand != GetBand(hWndMB))
+					HWND hwndMenubar = GetApp()->GetFrame()->GetMenubar().GetHwnd();
+					if (nBand != GetBand(hwndMenubar))
 					{
 						// Determine the size of this band
 						RECT rcBand = GetBandRect(nBand);
@@ -1220,23 +1219,24 @@ namespace Win32xx
 						rcDraw.left -= xPad;
 
 						// Fill the Source HDC with the band's background
-						HBITMAP hBitmapSource = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
-						HDC hDCSource = ::CreateCompatibleDC(hDC);
-						HBITMAP hOldSource = (HBITMAP)::SelectObject(hDCSource, (HBITMAP)hBitmapSource);
+						HBITMAP hbmSource = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
+						HDC hdcSource = ::CreateCompatibleDC(hDC);
+						HBITMAP hbmSourceOld = (HBITMAP)::SelectObject(hdcSource, (HBITMAP)hbmSource);
 						RECT rcBorder = GetBandBorders(nBand);
 						rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
-						SolidFill(hDCSource, m_Theme.clrBand1, &rcDraw);
+						SolidFill(hdcSource, m_Theme.clrBand1, &rcDraw);
 						rcDraw.top = rcDraw.bottom;
 						rcDraw.bottom = rcBand.bottom;
-						GradientFill(hDCSource, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
+						GradientFill(hdcSource, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
 
 						// Set Curve amount for rounded edges
 						int Curve = m_Theme.RoundBorders? 12 : 0;
 
 						// Create our mask for rounded edges using RoundRect
-						HBITMAP hBitmapMask   = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
-						HDC hDCMask = ::CreateCompatibleDC(hDC);
-						HBITMAP hOldMask = (HBITMAP)::SelectObject(hDCMask, (HBITMAP)hBitmapMask);
+						HBITMAP hbmMask   = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
+						HDC hdcMask = ::CreateCompatibleDC(hDC);
+						HBITMAP hbmMaskOld = (HBITMAP)::SelectObject(hdcMask, (HBITMAP)hbmMask);
+		
 						rcDraw.top = rcBand.top;
 						if (!m_Theme.FlatStyle)
 							::InflateRect(&rcDraw, 1, 1);
@@ -1250,31 +1250,29 @@ namespace Win32xx
 
 						if (m_Theme.FlatStyle)
 						{
-							::BitBlt(hDCMask, left, top, cx, cy, hDCMask, left, top, PATINVERT);
-							::RoundRect(hDCMask, left, top, right, bottom, Curve, Curve);
+							::BitBlt(hdcMask, left, top, cx, cy, hdcMask, left, top, PATINVERT);
+							::RoundRect(hdcMask, left, top, right, bottom, Curve, Curve);
 						}
 						else
 						{
-							::RoundRect(hDCMask, left, top, right, bottom, Curve, Curve);
-							::BitBlt(hDCMask, left, top, cx, cy, hDCMask, left, top, PATINVERT);
+							::RoundRect(hdcMask, left, top, right, bottom, Curve, Curve);
+							::BitBlt(hdcMask, left, top, cx, cy, hdcMask, left, top, PATINVERT);
 						}
 
 						// Copy Source DC to Memory DC using the RoundRect mask
-						::BitBlt(hDCMem, left, top, cx, cy, hDCSource, left, top, SRCINVERT);
-						::BitBlt(hDCMem, left, top, cx, cy, hDCMask,   left, top, SRCAND);
-						::BitBlt(hDCMem, left, top, cx, cy, hDCSource, left, top, SRCINVERT);
+						::BitBlt(hdcMem, left, top, cx, cy, hdcSource, left, top, SRCINVERT);
+						::BitBlt(hdcMem, left, top, cx, cy, hdcMask,   left, top, SRCAND);
+						::BitBlt(hdcMem, left, top, cx, cy, hdcSource, left, top, SRCINVERT);
 
-						::SelectObject(hDCMask, hOldMask);
-						::DeleteObject(hBitmapMask);
-						::DeleteDC(hDCMask);
-						::SelectObject(hDCSource, hOldSource);
-						::DeleteObject(hBitmapSource);
-						::DeleteDC(hDCSource);
+						::DeleteObject(::SelectObject(hdcMask, hbmMaskOld));
+						::DeleteDC(hdcMask);
+						::DeleteObject(::SelectObject(hdcSource, hbmSourceOld));
+						::DeleteDC(hdcSource);
 
-						// Extra drawing to prevent jagged edge while moving band
-						HDC hDC1 = GetDC(m_hWnd);
-						::BitBlt(hDC1, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hDCMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
-						ReleaseDC(m_hWnd, hDC1);
+						// Extra drawing to prevent jagged edge while moving bands
+						HDC hdcRebar = ::GetDC(m_hWnd);
+						::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+						::ReleaseDC(m_hWnd, hdcRebar);
 					}
 				}
 			}
@@ -1288,17 +1286,16 @@ namespace Win32xx
 				rc = GetBandRect(j);
 				rc.left = max(0, rc.left - 4);
 				rc.bottom +=2;
-				::DrawEdge(hDCMem, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+				::DrawEdge(hdcMem, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 			}
 		}
 
 		// Copy the Memory DC to the window's DC
-		::BitBlt(hDC, 0, 0, BarWidth, BarHeight, hDCMem, 0, 0, SRCCOPY);
+		::BitBlt(hDC, 0, 0, BarWidth, BarHeight, hdcMem, 0, 0, SRCCOPY);
 
 		// Cleanup
-		::SelectObject(hDCMem, hOldBitmap);
-		::DeleteObject(hBitmap);
-		::DeleteDC(hDCMem);
+		::DeleteObject(SelectObject(hdcMem, hbmMemOld));
+		::DeleteDC(hdcMem);
 
 		return TRUE;
 	}
@@ -2168,8 +2165,8 @@ namespace Win32xx
 		{
 			if (pMDIFrame->IsMDIChildMaxed())
 			{
-				HDC hDC = ::GetDC(m_hWnd);
-				if (hDC)
+				HDC hdcMenubar = ::GetDC(m_hWnd);
+				if (hdcMenubar)
 				{
 					m_nMDIButton = -1;
 					if (PtInRect(&m_MDIRect[0], pt)) m_nMDIButton = 0;
@@ -2178,13 +2175,14 @@ namespace Win32xx
 
 					if (m_nMDIButton >= 0)
 					{
-						DrawMDIButton(hDC, MDI_MIN,     (m_nMDIButton == 0)? 2 : 0);
-						DrawMDIButton(hDC, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
-						DrawMDIButton(hDC, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
+						DrawMDIButton(hdcMenubar, MDI_MIN,     (m_nMDIButton == 0)? 2 : 0);
+						DrawMDIButton(hdcMenubar, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
+						DrawMDIButton(hdcMenubar, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
 					}
+					
+					::ReleaseDC(m_hWnd, hdcMenubar);
 				}
-				::ReleaseDC(m_hWnd, hDC);
-
+				
 				// Bring up the MDI Child window's system menu when the icon is pressed
 				if (HitTest() == 0)
 				{
@@ -2316,16 +2314,16 @@ namespace Win32xx
 
 		else
 		{
-			HDC hDC = GetDC(m_hWnd);
-			if (hDC)
+			HDC hdcMenubar = GetDC(m_hWnd);
+			if (hdcMenubar)
 			{
-				HFONT hfntOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+				HFONT hfntOld = (HFONT)::SelectObject(hdcMenubar, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
 				SIZE size;
 				int Iconx = 0;
 				int Icony = 0;
 
 				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-				GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
+				GetTextExtentPoint32(hdcMenubar, pmd->Text, lstrlen(pmd->Text), &size);
 
 				pmis->itemHeight = max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
 				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
@@ -2334,9 +2332,9 @@ namespace Win32xx
 				if (_tcschr(pmd->Text, _T('\t')))
 					pmis->itemWidth += POST_TEXT_GAP;
 
-				::SelectObject(hDC, hfntOld);
+				::SelectObject(hdcMenubar, hfntOld);
+				::ReleaseDC(m_hWnd, hdcMenubar);
 			}
-			::ReleaseDC(m_hWnd, hDC);
 		}
 
 		return TRUE;
@@ -2479,14 +2477,15 @@ namespace Win32xx
 		{
 			if (pMDIFrame->IsMDIChildMaxed())
 			{
-				HDC hDC = ::GetDC(m_hWnd);
-				if (hDC)
+				HDC hdcMenubar = ::GetDC(m_hWnd);
+				if (hdcMenubar)
 				{
-					DrawMDIButton(hDC, MDI_MIN,     0);
-					DrawMDIButton(hDC, MDI_RESTORE, 0);
-					DrawMDIButton(hDC, MDI_CLOSE,   0);
+					DrawMDIButton(hdcMenubar, MDI_MIN,     0);
+					DrawMDIButton(hdcMenubar, MDI_RESTORE, 0);
+					DrawMDIButton(hdcMenubar, MDI_CLOSE,   0);
+
+					::ReleaseDC(m_hWnd, hdcMenubar);
 				}
-				::DeleteDC(hDC);
 			}
 		}
 	}
@@ -2502,8 +2501,8 @@ namespace Win32xx
 		{
 			if (pMDIFrame->IsMDIChildMaxed())
 			{
-				HDC hDC = ::GetDC(m_hWnd);
-				if (hDC)
+				HDC hdcMenubar = ::GetDC(m_hWnd);
+				if (hdcMenubar)
 				{
 					int MDIButton = -1;
 					if (PtInRect(&m_MDIRect[0], pt)) MDIButton = 0;
@@ -2515,34 +2514,34 @@ namespace Win32xx
 						// toggle the MDI button image pressed/unpressed as required
 						if (MDIButton >= 0)
 						{
-							DrawMDIButton(hDC, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0))? 2 : 0);
-							DrawMDIButton(hDC, MDI_RESTORE, ((MDIButton == 1) && (m_nMDIButton == 1))? 2 : 0);
-							DrawMDIButton(hDC, MDI_CLOSE,   ((MDIButton == 2) && (m_nMDIButton == 2))? 2 : 0);
+							DrawMDIButton(hdcMenubar, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0))? 2 : 0);
+							DrawMDIButton(hdcMenubar, MDI_RESTORE, ((MDIButton == 1) && (m_nMDIButton == 1))? 2 : 0);
+							DrawMDIButton(hdcMenubar, MDI_CLOSE,   ((MDIButton == 2) && (m_nMDIButton == 2))? 2 : 0);
 						}
 						else
 						{
-							DrawMDIButton(hDC, MDI_MIN,     0);
-							DrawMDIButton(hDC, MDI_RESTORE, 0);
-							DrawMDIButton(hDC, MDI_CLOSE,   0);
+							DrawMDIButton(hdcMenubar, MDI_MIN,     0);
+							DrawMDIButton(hdcMenubar, MDI_RESTORE, 0);
+							DrawMDIButton(hdcMenubar, MDI_CLOSE,   0);
 						}
 					}
 					else	// mouse moved without left mouse button held down
 					{
 						if (MDIButton >= 0)
 						{
-							DrawMDIButton(hDC, MDI_MIN,     (MDIButton == 0)? 1 : 0);
-							DrawMDIButton(hDC, MDI_RESTORE, (MDIButton == 1)? 1 : 0);
-							DrawMDIButton(hDC, MDI_CLOSE,   (MDIButton == 2)? 1 : 0);
+							DrawMDIButton(hdcMenubar, MDI_MIN,     (MDIButton == 0)? 1 : 0);
+							DrawMDIButton(hdcMenubar, MDI_RESTORE, (MDIButton == 1)? 1 : 0);
+							DrawMDIButton(hdcMenubar, MDI_CLOSE,   (MDIButton == 2)? 1 : 0);
 						}
 						else
 						{
-							DrawMDIButton(hDC, MDI_MIN,     0);
-							DrawMDIButton(hDC, MDI_RESTORE, 0);
-							DrawMDIButton(hDC, MDI_CLOSE,   0);
+							DrawMDIButton(hdcMenubar, MDI_MIN,     0);
+							DrawMDIButton(hdcMenubar, MDI_RESTORE, 0);
+							DrawMDIButton(hdcMenubar, MDI_CLOSE,   0);
 						}
 					}
-				}
-				::DeleteDC(hDC);
+					::ReleaseDC(m_hWnd, hdcMenubar);
+				}			
 			}
 		}
 	}
@@ -2627,10 +2626,12 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, &m_MDIRect[1], TRUE);
 		::InvalidateRect(m_hWnd, &m_MDIRect[2], TRUE);
 		{
-			HDC hDC = ::GetDC(m_hWnd);
-			if (hDC)
-				DrawAllMDIButtons(hDC);
-			::ReleaseDC(m_hWnd, hDC);
+			HDC hdcMenubar = ::GetDC(m_hWnd);
+			if (hdcMenubar)
+			{
+				DrawAllMDIButtons(hdcMenubar);
+				::ReleaseDC(m_hWnd, hdcMenubar);
+			}
 		}
 	}
 
