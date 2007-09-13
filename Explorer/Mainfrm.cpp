@@ -158,6 +158,17 @@ void CMainFrame::OnCreate()
 		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 	}
 
+		// Add some text to the buttons
+ 	TB.SetButtonText(IDM_FILE_NEW,   _T("New"));
+	TB.SetButtonText(IDM_FILE_OPEN,  _T("Open"));
+	TB.SetButtonText(IDM_FILE_SAVE,  _T("Save"));
+	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
+	TB.SetButtonText(IDM_EDIT_COPY,  _T("Copy"));
+	TB.SetButtonText(IDM_EDIT_PASTE, _T("Paste"));
+	TB.SetButtonText(IDM_FILE_PRINT, _T("Print"));
+	TB.SetButtonText(IDM_VIEWMENU,   _T("View Menu"));
+	TB.SetButtonText(IDM_HELP_ABOUT, _T("About"));
+
 	if (IsRebarUsed())
 	{
 		// Resize the Rebar band

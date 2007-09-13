@@ -281,15 +281,15 @@ namespace Win32xx
 		ImageList_GetIconSize(m_hImageList, &cx, &cy);
 
 		// Create the destination ImageList
-		m_hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+		m_hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
 
 		// Process each image in the ImageList
 		for (int i = 0 ; i < nCount; i++)
 		{
 			HDC hdcToolbar = ::GetDC(m_hWnd);
 			HDC hdcMem = ::CreateCompatibleDC(NULL);
-			HBITMAP hbm = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
-			HBITMAP hbmOld = (HBITMAP)::SelectObject(hdcMem, hbm);
+			HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
+			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
 			RECT rc;
 			SetRect(&rc, 0, 0, cx, cx);
 
@@ -315,10 +315,11 @@ namespace Win32xx
 				}
 			}
 
-			ImageList_AddMasked(m_hImageListDis, hbm, crMask);
+			::SelectObject(hdcMem, hbmMemOld);
+			ImageList_AddMasked(m_hImageListDis, hbmMem, crMask);
 			
 			// Cleanup the GDI objects
-			::DeleteObject(::SelectObject(hdcMem, hbmOld));
+			::DeleteObject(hbmMem);
 			::DeleteDC(hdcMem);
 			::ReleaseDC(m_hWnd, hdcToolbar);
 		}
@@ -512,160 +513,156 @@ namespace Win32xx
 				::SendMessage(m_hWnd, TB_GETBUTTON, nButton, (LPARAM)&tb);
 				int iImage = (int)tb.dwData;
 
+				// Draw outline rectangle
 				if (nState & (CDIS_HOT | CDIS_SELECTED))
 				{
-					// Draw outline rectangle
 					HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
 					HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-					Rectangle(hDC, rcRect.left, rcRect.top, rcRect.right, rcRect.bottom);
+					::MoveToEx(hDC, rcRect.left, rcRect.top, NULL);
+					::LineTo(hDC, rcRect.left, rcRect.bottom-1);
+					::LineTo(hDC, rcRect.right-1, rcRect.bottom-1);
+					::LineTo(hDC, rcRect.right-1, rcRect.top);
+					::LineTo(hDC, rcRect.left, rcRect.top); 
 					::SelectObject(hDC, hOldPen);
 					::DeleteObject(hPen);
+				}
 
-					// Draw filled gradient rectange
-					::InflateRect(&rcRect, -1, -1);
-					if (nState & CDIS_SELECTED)
+				// Draw filled gradient rectange
+				::InflateRect(&rcRect, -1, -1);
+				if (nState & CDIS_SELECTED)
+				{
+					GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
+				}
+				else
+				if (nState & CDIS_HOT)
+				{
+					GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
+				}
+
+				// Calculate text size
+				TCHAR szText[80];
+				SIZE TextSize = {0};
+				BOOL HasText = (SendMessage(m_hWnd, TB_GETSTRING, (WPARAM) MAKEWPARAM (0,0), 0) != -1);
+				if (HasText)	// Does any button have text?
+				{
+					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
+					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
+					if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
 					{
-						GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
+						::GetTextExtentPoint32(hDC, szText, lstrlen(szText), &TextSize);
 					}
 					else
 					{
-						GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
+						::GetTextExtentPoint32(hDC, _T(" "), lstrlen(_T(" ")), &TextSize);
 					}
+					::SelectObject(hDC, hOldFont);
+				}
 
-					// Calculate text size
-					TCHAR szText[80];
-					SIZE TextSize = {0};
-					BOOL HasText = (SendMessage(m_hWnd, TB_GETSTRING, (WPARAM) MAKEWPARAM (0,0), 0) != -1);
-					if (HasText)	// Does any button have text?
+				// Calculate image position
+				HIMAGELIST hImageList;
+				if (nState & (CDIS_DISABLED))
+					hImageList = m_hImageListDis;
+				else
+					hImageList = m_hImageListHot? m_hImageListHot: m_hImageList;
+
+				int cxImage = 0;
+				int cyImage = 0;
+				ImageList_GetIconSize(hImageList, &cxImage, &cyImage);
+
+				int xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage)/2;
+				int yImage = 1 + (rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
+		//		if (!IsXPThemed()) yImage = 3;
+
+				// Calculate the text position
+				int xText, yText;
+				xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
+				yText = 1 + (rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
+
+				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
+				int nStyle = GetButtonStyle(dwItem);
+				LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
+				if ((((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & 0x0080)) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400))
+				{
+					int xAPos;	// x Arrow position
+					int yAPos;	// y Arrow position
+
+					if (nStyle & TBSTYLE_DROPDOWN)
 					{
-						HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
-						HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
-						if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
-						{
-							::GetTextExtentPoint32(hDC, szText, lstrlen(szText), &TextSize);
-						}
-						else
-						{
-							::GetTextExtentPoint32(hDC, _T(" "), lstrlen(_T(" ")), &TextSize);
-						}
-						::SelectObject(hDC, hOldFont);
-					}
-
-					// Calculate image position
-					HIMAGELIST hImageList = m_hImageListHot? m_hImageListHot: m_hImageList;
-					int cxImage = 0;
-					int cyImage = 0;
-					ImageList_GetIconSize(hImageList, &cxImage, &cyImage);
-
-					int xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage)/2;
-					int yImage = 1 + (rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
-					if (!IsXPThemed()) yImage = 3;
-
-					// Calculate the text position
-					int xText, yText;
-					if (IsXPThemed())
-					{
-						xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
-						yText = 1 + (rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
+						xAPos = rcRect.right -6;
+						yAPos = (rcRect.bottom - rcRect.top +1)/2;
+						xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage -11)/2;
+						yImage = (3 + rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
+						xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -12)/2;
+						yText = (3 + rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
 					}
 					else
 					{
-						xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx)/2;
-						yText = 4 + cyImage;
-					}
-
-					// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
-					int nStyle = GetButtonStyle(dwItem);
-					LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
-					if ((((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & 0x0080)) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400))
-					{
-						int xAPos;	// x Arrow position
-						int yAPos;	// y Arrow position
-
-						if (nStyle & TBSTYLE_DROPDOWN)
+						if (HasText)
 						{
-							if (IsXPThemed())
-							{
-								xAPos = rcRect.right -6;
-								yAPos = (rcRect.bottom - rcRect.top +1)/2;
-								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage -11)/2;
-								yImage = (3 + rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
-								xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -12)/2;
-								yText = (3 + rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
-							}
-							else
-							{
-								xAPos = rcRect.right -5;
-								yAPos = (rcRect.bottom - rcRect.top +3)/2;
-								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage -13)/2;
-								xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -13)/2;
-							}
+							xAPos = rcRect.right- 9;
+							xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 9)/2;
+							yAPos = cyImage/2;
+							xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
 						}
 						else
 						{
-							if (HasText)
-							{
-								xAPos = (7 + rcRect.right - rcRect.left + cxImage)/2 ;
-								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 9)/2;
-								if (IsXPThemed())
-								{
-									yAPos = cyImage/2;
-									xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
-								}
-								else
-								{
-									yAPos = 3 + cyImage/2;
-									xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx)/2;
-								}
-							}
-							else
-							{
-								xAPos = rcRect.right- 5;
-								xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 7)/2;
-								yAPos = (3 + rcRect.bottom - rcRect.top)/2;
-							}
-						}
-
-						// Manually draw the dropdown arrow
-						for (int i = 2; i >= 0; i--)
-						{
-							::MoveToEx(hDC, xAPos -i-1, yAPos - i+1, NULL);
-							::LineTo  (hDC, xAPos +i,   yAPos - i+1);
-						}
-
-						// Draw line between icon and dropdown arrow
-						if (nStyle & TBSTYLE_DROPDOWN)
-						{
-							hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-							hOldPen = (HPEN)::SelectObject(hDC, hPen);
-							::MoveToEx(hDC, rcRect.right - 13, rcRect.top, NULL);
-							::LineTo(hDC, rcRect.right - 13, rcRect.bottom);
-							::DeleteObject(::SelectObject(hDC, hOldPen));
+							xAPos = rcRect.right- 5;
+							xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 7)/2;
+							yAPos = (3 + rcRect.bottom - rcRect.top)/2;
 						}
 					}
 
-					// Draw the button image
-					if (xImage > 0)
+					// Manually draw the dropdown arrow
+					for (int i = 2; i >= 0; i--)
 					{
-						ImageList_Draw(hImageList, iImage, hDC, xImage, yImage, ILD_TRANSPARENT);
+						::MoveToEx(hDC, xAPos -i-1, yAPos - i+1, NULL);
+						::LineTo  (hDC, xAPos +i,   yAPos - i+1);
 					}
 
-					//Draw Text
-					if (lstrlen(szText) > 0)
+					// Draw line between icon and dropdown arrow
+					if (nStyle & TBSTYLE_DROPDOWN)
 					{
-						RECT rcText = {xText, yText, xText + TextSize.cx, yText + TextSize.cy};
-						::SetBkMode(hDC, TRANSPARENT);
-						HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
-						HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
+						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+						HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+						::MoveToEx(hDC, rcRect.right - 13, rcRect.top, NULL);
+						::LineTo(hDC, rcRect.right - 13, rcRect.bottom);
+						::DeleteObject(::SelectObject(hDC, hOldPen));
+					}
+				}
 
+				// Draw the button image
+				if (xImage > 0)
+				{
+					ImageList_Draw(hImageList, iImage, hDC, xImage, yImage, ILD_TRANSPARENT);
+				}
+
+				//Draw Text
+				if (lstrlen(szText) > 0)
+				{
+					RECT rcText = {xText, yText, xText + TextSize.cx, yText + TextSize.cy};
+					::SetBkMode(hDC, TRANSPARENT);
+					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
+					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
+
+					if (nState & (CDIS_DISABLED))
+					{
+						// Draw text twice for embossed look
+						OffsetRect(&rcText, 1, 1);
+						::SetTextColor(hDC, GetSysColor(COLOR_3DLIGHT));
 						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
-						::SelectObject(hDC, hOldFont);
+						OffsetRect(&rcText, -1, -1);
+						::SetTextColor(hDC, GetSysColor(COLOR_3DDKSHADOW));
+						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
 					}
-
-					return CDRF_SKIPDEFAULT;  // No further drawing
+					else
+					{
+						::SetTextColor(hDC, GetSysColor(COLOR_BTNTEXT));
+						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL); 
+					}
+					::SelectObject(hDC, hOldFont);
 				}
 			}
-			return CDRF_DODEFAULT ;   // Do default drawing
+			return CDRF_SKIPDEFAULT;  // No further drawing
 		}
 		return 0L;
 	}
@@ -1016,17 +1013,16 @@ namespace Win32xx
 					m_hImageListDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 					if (!m_hImageListDis)
 						throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListDis failed "));
+				
+					ImageList_AddMasked(m_hImageListDis, hbm, crMask);
+					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
+						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 				}
 				else
 					CreateDisabledImageList();
 
-				ImageList_AddMasked(m_hImageListDis, hbm, crMask);
-				if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
-					throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
-
 				::DeleteObject(hbm);
 				hbm = NULL;
-
 			}
 		}
 
