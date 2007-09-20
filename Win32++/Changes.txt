@@ -8,7 +8,8 @@ New Features:
 
 The following changes have been made to the Win32++ code:
 Added CToolbar::CreateDisabledImageList
-   
+Added CToolbar::HasText
+
 
 Version 5.4
 -----------

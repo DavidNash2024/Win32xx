@@ -112,6 +112,7 @@ namespace Win32xx
 		virtual RECT GetItemRect(int iIndex);
 		virtual SIZE GetMaxSize();
 		virtual TOOLBARTHEME& GetTheme() {return m_Theme;}
+		virtual BOOL HasText();
 		virtual int  HitTest();
 		virtual void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
 		virtual void SetBitmapSize(int cx, int cy);
@@ -138,6 +139,7 @@ namespace Win32xx
 		std::map<tString, int> m_StringMap;
 		UINT m_OldToolbarID;		// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		TOOLBARTHEME m_Theme;
+		BOOL m_bDrawArrowBkgrnd;
 
 	};  // class CToolbar
 

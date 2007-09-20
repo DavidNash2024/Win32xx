@@ -38,7 +38,7 @@ void CMainFrame::DoPopupMenu()
 	// Position the popup menu
 	CToolbar& TB = GetToolbar();
 	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
-	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
+	::MapWindowPoints(TB.GetHwnd(), NULL, (LPPOINT)&rc, 2);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);

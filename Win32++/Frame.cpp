@@ -191,7 +191,8 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL), m_OldToolbarID(0)
+	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL), 
+		                    m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_Theme, sizeof(TOOLBARTHEME));
 	}
@@ -456,6 +457,20 @@ namespace Win32xx
 		return sz;
 	}
 
+	BOOL CToolbar::HasText()
+	{
+		BOOL bReturn = FALSE;
+
+		for (int i = 0 ; i < GetButtonCount(); i++)
+		{
+			if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, GetCommandID(i), 0) != -1)
+				bReturn = TRUE;
+		}
+
+		return bReturn;
+	}
+
+
 	int CToolbar::HitTest()
 	{
 		// We do our own hit test since TB_HITTEST is a bit buggy,
@@ -489,8 +504,8 @@ namespace Win32xx
 	}
 
 	LRESULT CToolbar::OnCustomDraw(NMHDR* pNMHDR)
-	{
-		// Use custom draw to draw a rectangle over the hot button
+	// With CustomDraw we manually control the drawing of each toolbar button 
+	{	
 		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
 
 		switch (lpNMCustomDraw->nmcd.dwDrawStage)
@@ -507,11 +522,28 @@ namespace Win32xx
 				RECT rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
+				DWORD dwTBStyle = (DWORD)::SendMessage(m_hWnd, TB_GETSTYLE, 0, 0);
+				int nStyle = GetButtonStyle(dwItem);
 
 				int nButton = (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM) dwItem, 0);
 				TBBUTTON tb = {0};
 				::SendMessage(m_hWnd, TB_GETBUTTON, nButton, (LPARAM)&tb);
 				int iImage = (int)tb.dwData;
+
+				// Calculate text size
+				TCHAR szText[80] = _T("");
+				SIZE TextSize = {0};
+				if (HasText())	// Does any button have text?
+				{
+					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
+					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
+					if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
+					{
+						::GetTextExtentPoint32(hDC, szText, lstrlen(szText), &TextSize);
+					}
+
+					::SelectObject(hDC, hOldFont);
+				} 
 
 				// Draw outline rectangle
 				if (nState & (CDIS_HOT | CDIS_SELECTED))
@@ -527,89 +559,59 @@ namespace Win32xx
 					::DeleteObject(hPen);
 				}
 
-				// Draw filled gradient rectange
+				// Draw filled gradient background
 				::InflateRect(&rcRect, -1, -1);
-				if (nState & CDIS_SELECTED)
+				if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 				{
 					GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
 				}
-				else
-				if (nState & CDIS_HOT)
+				else if (nState & CDIS_HOT)
 				{
 					GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
 				}
 
-				// Calculate text size
-				TCHAR szText[80];
-				SIZE TextSize = {0};
-				BOOL HasText = (SendMessage(m_hWnd, TB_GETSTRING, (WPARAM) MAKEWPARAM (0,0), 0) != -1);
-				if (HasText)	// Does any button have text?
-				{
-					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
-					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
-					if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
-					{
-						::GetTextExtentPoint32(hDC, szText, lstrlen(szText), &TextSize);
-					}
-					else
-					{
-						::GetTextExtentPoint32(hDC, _T(" "), lstrlen(_T(" ")), &TextSize);
-					}
-					::SelectObject(hDC, hOldFont);
-				}
+				HIMAGELIST hImageList = (nState & CDIS_DISABLED)? m_hImageListDis : (m_hImageListHot? m_hImageListHot: m_hImageList);
 
 				// Calculate image position
-				HIMAGELIST hImageList;
-				if (nState & (CDIS_DISABLED))
-					hImageList = m_hImageListDis;
-				else
-					hImageList = m_hImageListHot? m_hImageListHot: m_hImageList;
-
 				int cxImage = 0;
 				int cyImage = 0;
 				ImageList_GetIconSize(hImageList, &cxImage, &cyImage);
 
-				int xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage)/2;
-				int yImage = 1 + (rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
-		//		if (!IsXPThemed()) yImage = 3;
+				int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
+				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & CDIS_SELECTED)? 1:0);
+				if (dwTBStyle & TBSTYLE_LIST)
+				{
+					xImage = rcRect.left + ((nStyle & TBSTYLE_DROPDOWN)? 9:6) + ((nState & CDIS_SELECTED)? 1:0);
+					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & CDIS_SELECTED)? 1:0);
 
-				// Calculate the text position
-				int xText, yText;
-				xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
-				yText = 1 + (rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
+					RECT rc = lpNMCustomDraw->rcText;
+					int iHeight = rc.bottom - rc.top;
+					iHeight = iHeight;
+				}
 
 				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
-				int nStyle = GetButtonStyle(dwItem);
 				LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
-				if ((((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| (nStyle & 0x0080)) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400))
+				if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| ((nStyle & 0x0080) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400)))
 				{
-					int xAPos;	// x Arrow position
-					int yAPos;	// y Arrow position
-
-					if (nStyle & TBSTYLE_DROPDOWN)
+					// Calculate the dropdown arrow position
+					int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 2)/2;
+					int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (6 + cyImage)/2;
+					if (dwTBStyle & TBSTYLE_LIST)
 					{
-						xAPos = rcRect.right -6;
-						yAPos = (rcRect.bottom - rcRect.top +1)/2;
-						xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage -11)/2;
-						yImage = (3 + rcRect.bottom - rcRect.top - cyImage - TextSize.cy)/2;
-						xText = rcRect.left + (rcRect.right - rcRect.left - TextSize.cx -12)/2;
-						yText = (3 + rcRect.bottom + rcRect.top + cyImage - TextSize.cy)/2;
+						xAPos = (nStyle & TBSTYLE_DROPDOWN)?rcRect.right -6:rcRect.right -5;
+						yAPos =	(rcRect.bottom - rcRect.top +1)/2 + ((nStyle & TBSTYLE_DROPDOWN)?0:1);
 					}
-					else
+
+					xImage -= (nStyle & TBSTYLE_DROPDOWN) ? ((dwTBStyle & TBSTYLE_LIST)? 3 : 6) : 4;
+
+					// Draw separate background for dropdown arrow
+					if (m_bDrawArrowBkgrnd)
 					{
-						if (HasText)
-						{
-							xAPos = rcRect.right- 9;
-							xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 9)/2;
-							yAPos = cyImage/2;
-							xText = rcRect.left + (-1 + rcRect.right - rcRect.left - TextSize.cx)/2;
-						}
-						else
-						{
-							xAPos = rcRect.right- 5;
-							xImage = rcRect.left + (rcRect.right - rcRect.left - cxImage - 7)/2;
-							yAPos = (3 + rcRect.bottom - rcRect.top)/2;
-						}
+						RECT rcArrowBkgnd = {0};
+						::CopyRect(&rcArrowBkgnd, &rcRect);
+						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
+						GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcArrowBkgnd, FALSE);
+						m_bDrawArrowBkgrnd = FALSE;
 					}
 
 					// Manually draw the dropdown arrow
@@ -620,7 +622,7 @@ namespace Win32xx
 					}
 
 					// Draw line between icon and dropdown arrow
-					if (nStyle & TBSTYLE_DROPDOWN)
+					if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
 					{
 						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
 						HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
@@ -635,11 +637,24 @@ namespace Win32xx
 				{
 					ImageList_Draw(hImageList, iImage, hDC, xImage, yImage, ILD_TRANSPARENT);
 				}
-
+		
 				//Draw Text
 				if (lstrlen(szText) > 0)
 				{
-					RECT rcText = {xText, yText, xText + TextSize.cx, yText + TextSize.cy};
+					RECT rcText = {0, 0, TextSize.cx, TextSize.cy};
+
+					int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
+					int yOffset = yImage + cyImage +1;
+
+					if (dwTBStyle & TBSTYLE_LIST)
+					{
+						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?10:6) + ((nState & CDIS_SELECTED)? 1:0);
+						yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
+						rcText.right = min(rcText.right,  rcRect.right - xOffset - ((nStyle & TBSTYLE_DROPDOWN)?14:10));
+					}
+
+					OffsetRect(&rcText, xOffset, yOffset);
+
 					::SetBkMode(hDC, TRANSPARENT);
 					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
 					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
@@ -647,22 +662,23 @@ namespace Win32xx
 					if (nState & (CDIS_DISABLED))
 					{
 						// Draw text twice for embossed look
-						OffsetRect(&rcText, 1, 1);
-						::SetTextColor(hDC, GetSysColor(COLOR_3DLIGHT));
+						::OffsetRect(&rcText, 1, 1);
+						::SetTextColor(hDC, RGB(255,255,255));
 						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
-						OffsetRect(&rcText, -1, -1);
-						::SetTextColor(hDC, GetSysColor(COLOR_3DDKSHADOW));
+						::OffsetRect(&rcText, -1, -1);
+						::SetTextColor(hDC, GetSysColor(COLOR_GRAYTEXT));
 						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
 					}
 					else
 					{
 						::SetTextColor(hDC, GetSysColor(COLOR_BTNTEXT));
-						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL); 
+						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 					}
 					::SelectObject(hDC, hOldFont);
 				}
 			}
-			return CDRF_SKIPDEFAULT;  // No further drawing
+		//	return CDRF_SKIPDEFAULT;  // No further drawing
+			return CDRF_DODEFAULT;  
 		}
 		return 0L;
 	}
@@ -676,6 +692,17 @@ namespace Win32xx
 				if (m_Theme.UseThemes)
 					return OnCustomDraw((LPNMHDR) lParam);
 			}
+			break;
+
+			case TBN_DROPDOWN:
+			{
+				int iItem = ((LPNMTOOLBAR) lParam)->iItem;			
+				
+				// a boolean expression
+				m_bDrawArrowBkgrnd = (GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
+			}
+			break;
+	
 		}
 		return 0L;
 	}
@@ -884,9 +911,9 @@ namespace Win32xx
 			if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tbb))
 				throw CWinException(_T("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
 
-			// Ensure the button now includes some text rows (5 rows should be plenty)
+			// Ensure the button now includes some text rows
 			if (::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0) == 0)
-				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 5, 0);
+				::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 1, 0);
 
 			// Turn on Toolbar drawing
 			::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
@@ -1067,6 +1094,10 @@ namespace Win32xx
 				}
 			}
 			break;
+		case WM_LBUTTONDBLCLK:
+			// Convert double left click to single left click
+		//	::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+			return 0L;	// Discard these messages
 		}
 
 		// pass unhandled messages on for default processing
