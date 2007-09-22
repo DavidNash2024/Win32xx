@@ -1,5 +1,5 @@
-// Win32++  Version 5.4
-// Released: 24th August, 2007 by:
+// Win32++  Version 5.5
+// Released: 4th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -191,7 +191,7 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL), 
+	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL),
 		                    m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_Theme, sizeof(TOOLBARTHEME));
@@ -318,7 +318,7 @@ namespace Win32xx
 
 			::SelectObject(hdcMem, hbmMemOld);
 			ImageList_AddMasked(m_hImageListDis, hbmMem, crMask);
-			
+
 			// Cleanup the GDI objects
 			::DeleteObject(hbmMem);
 			::DeleteDC(hdcMem);
@@ -504,8 +504,8 @@ namespace Win32xx
 	}
 
 	LRESULT CToolbar::OnCustomDraw(NMHDR* pNMHDR)
-	// With CustomDraw we manually control the drawing of each toolbar button 
-	{	
+	// With CustomDraw we manually control the drawing of each toolbar button
+	{
 		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
 
 		switch (lpNMCustomDraw->nmcd.dwDrawStage)
@@ -543,7 +543,7 @@ namespace Win32xx
 					}
 
 					::SelectObject(hDC, hOldFont);
-				} 
+				}
 
 				// Draw outline rectangle
 				if (nState & (CDIS_HOT | CDIS_SELECTED))
@@ -554,7 +554,7 @@ namespace Win32xx
 					::LineTo(hDC, rcRect.left, rcRect.bottom-1);
 					::LineTo(hDC, rcRect.right-1, rcRect.bottom-1);
 					::LineTo(hDC, rcRect.right-1, rcRect.top);
-					::LineTo(hDC, rcRect.left, rcRect.top); 
+					::LineTo(hDC, rcRect.left, rcRect.top);
 					::SelectObject(hDC, hOldPen);
 					::DeleteObject(hPen);
 				}
@@ -583,10 +583,6 @@ namespace Win32xx
 				{
 					xImage = rcRect.left + ((nStyle & TBSTYLE_DROPDOWN)? 9:6) + ((nState & CDIS_SELECTED)? 1:0);
 					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & CDIS_SELECTED)? 1:0);
-
-					RECT rc = lpNMCustomDraw->rcText;
-					int iHeight = rc.bottom - rc.top;
-					iHeight = iHeight;
 				}
 
 				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
@@ -637,11 +633,12 @@ namespace Win32xx
 				{
 					ImageList_Draw(hImageList, iImage, hDC, xImage, yImage, ILD_TRANSPARENT);
 				}
-		
+
 				//Draw Text
 				if (lstrlen(szText) > 0)
 				{
-					RECT rcText = {0, 0, TextSize.cx, TextSize.cy};
+					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
+					RECT rcText = {0, 0, min(TextSize.cx, iWidth), TextSize.cy};
 
 					int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
 					int yOffset = yImage + cyImage +1;
@@ -678,7 +675,7 @@ namespace Win32xx
 				}
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
-		//	return CDRF_DODEFAULT;  
+		//	return CDRF_DODEFAULT;
 		}
 		return 0L;
 	}
@@ -696,14 +693,13 @@ namespace Win32xx
 
 			case TBN_DROPDOWN:
 			{
-				TRACE("TBN_DROPDOWN");
-				int iItem = ((LPNMTOOLBAR) lParam)->iItem;			
-				
+				int iItem = ((LPNMTOOLBAR) lParam)->iItem;
+
 				// a boolean expression
 				m_bDrawArrowBkgrnd = (GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
 			}
 			break;
-	
+
 		}
 		return 0L;
 	}
@@ -1041,7 +1037,7 @@ namespace Win32xx
 					m_hImageListDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 					if (!m_hImageListDis)
 						throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListDis failed "));
-				
+
 					ImageList_AddMasked(m_hImageListDis, hbm, crMask);
 					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
@@ -1100,7 +1096,7 @@ namespace Win32xx
 			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 			return 0L;	// Discard these messages
 		}
-		
+
 		// pass unhandled messages on for default processing
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
@@ -1264,7 +1260,7 @@ namespace Win32xx
 						HBITMAP hbmMask   = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 						HDC hdcMask = ::CreateCompatibleDC(hDC);
 						HBITMAP hbmMaskOld = (HBITMAP)::SelectObject(hdcMask, (HBITMAP)hbmMask);
-		
+
 						rcDraw.top = rcBand.top;
 						if (!m_Theme.FlatStyle)
 							::InflateRect(&rcDraw, 1, 1);
@@ -2205,10 +2201,10 @@ namespace Win32xx
 						DrawMDIButton(hdcMenubar, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
 						DrawMDIButton(hdcMenubar, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
 					}
-					
+
 					::ReleaseDC(m_hWnd, hdcMenubar);
 				}
-				
+
 				// Bring up the MDI Child window's system menu when the icon is pressed
 				if (HitTest() == 0)
 				{
@@ -2567,7 +2563,7 @@ namespace Win32xx
 						}
 					}
 					::ReleaseDC(m_hWnd, hdcMenubar);
-				}			
+				}
 			}
 		}
 	}

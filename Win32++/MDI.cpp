@@ -1,5 +1,5 @@
-// Win32++  Version 5.4
-// Released: 24th August, 2007 by:
+// Win32++  Version 5.5
+// Released: 4th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -457,7 +457,7 @@ namespace Win32xx
 				if (lParam == 0)
 				{
 					pMDIFrame->m_hActiveMDIChild = NULL;
-					// Set the menu to frame's original menu				
+					// Set the menu to frame's original menu
 					UpdateFrameMenu(pMDIFrame->GetFrameMenu());
 				}
 

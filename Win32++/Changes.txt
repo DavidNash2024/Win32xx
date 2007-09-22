@@ -1,6 +1,11 @@
 Version 5.5
 -----------
-Bug Fixed:
+Bugs Fixed:
+* Visual Studio 6 (without a Platform SDK update) reports a 'TB_GETSTRING' 
+  as an undeclared identifier.
+* Dev-C++ reports a warning passing NULL used for non-pointer
+* Threads sample, can generate an exception in release mode
+* Performance sample, m_nTestWindows not initialised
 * Corrected text layout for toolbar buttons with TBSYLE_DROPDOWN style.
 
 New Features:
