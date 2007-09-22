@@ -166,6 +166,14 @@ SOURCE="..\Win32++\WinCore.h"
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\res\Enhanced.ico
+# End Source File
 # End Group
+# Begin Source File
+
+SOURCE=".\res\Win32++.manifest"
+# End Source File
 # End Target
 # End Project

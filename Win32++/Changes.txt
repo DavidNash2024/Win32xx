@@ -1,10 +1,17 @@
 Version 5.5
 -----------
 Bug Fixed:
+* Corrected text layout for toolbar buttons with TBSYLE_DROPDOWN style.
 
 New Features:
 * If a resource for disabled toolbar items isn't provided, an ImageList
    for disabled buttons is created for you.
+* Updated Rebar themes
+  - Improved rendering of non-toolbar bands during band repositioning
+  - Round borders and flat style now supported in Win95, Win98 & WinME
+* Updated Toolbar themes
+  - Improved layout of images and text on toolbar buttons
+  - Themed toolbar now supports TBSTYLE_LIST
 
 The following changes have been made to the Win32++ code:
 Added CToolbar::CreateDisabledImageList

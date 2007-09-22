@@ -138,6 +138,14 @@ SOURCE=.\View.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
+SOURCE=.\res\default1.bin
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\Enhanced.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\Resource.rc
 # End Source File
 # End Group
@@ -173,5 +181,9 @@ SOURCE="..\Win32++\WinCore.cpp"
 SOURCE="..\Win32++\WinCore.h"
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=".\res\Win32++.manifest"
+# End Source File
 # End Target
 # End Project

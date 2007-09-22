@@ -594,8 +594,8 @@ namespace Win32xx
 				if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| ((nStyle & 0x0080) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400)))
 				{
 					// Calculate the dropdown arrow position
-					int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 2)/2;
-					int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (6 + cyImage)/2;
+					int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 4)/2;
+					int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (cyImage)/2;
 					if (dwTBStyle & TBSTYLE_LIST)
 					{
 						xAPos = (nStyle & TBSTYLE_DROPDOWN)?rcRect.right -6:rcRect.right -5;
@@ -605,14 +605,14 @@ namespace Win32xx
 					xImage -= (nStyle & TBSTYLE_DROPDOWN) ? ((dwTBStyle & TBSTYLE_LIST)? 3 : 6) : 4;
 
 					// Draw separate background for dropdown arrow
-					if (m_bDrawArrowBkgrnd)
+					if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
 					{
 						RECT rcArrowBkgnd = {0};
 						::CopyRect(&rcArrowBkgnd, &rcRect);
 						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
 						GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcArrowBkgnd, FALSE);
-						m_bDrawArrowBkgrnd = FALSE;
 					}
+					m_bDrawArrowBkgrnd = FALSE;
 
 					// Manually draw the dropdown arrow
 					for (int i = 2; i >= 0; i--)
@@ -677,8 +677,8 @@ namespace Win32xx
 					::SelectObject(hDC, hOldFont);
 				}
 			}
-		//	return CDRF_SKIPDEFAULT;  // No further drawing
-			return CDRF_DODEFAULT;  
+			return CDRF_SKIPDEFAULT;  // No further drawing
+		//	return CDRF_DODEFAULT;  
 		}
 		return 0L;
 	}
@@ -696,6 +696,7 @@ namespace Win32xx
 
 			case TBN_DROPDOWN:
 			{
+				TRACE("TBN_DROPDOWN");
 				int iItem = ((LPNMTOOLBAR) lParam)->iItem;			
 				
 				// a boolean expression
@@ -719,8 +720,8 @@ namespace Win32xx
 	}
 
 	void CToolbar::SetBitmapSize(int cx, int cy)
-	// Call this function when the image size is not the default 16 x 15
-	// Call this function before adding a bitmap
+	// Needs to be used when the image size is not the default 16 x 15
+	// Call this function before using AddBitmap or ReplaceBitmap
 	{
 		if (!::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELONG(cx, cy)))
 			DebugWarnMsg(_T("CToolbar::SetBitmapSize  failed"));
@@ -1096,10 +1097,10 @@ namespace Win32xx
 			break;
 		case WM_LBUTTONDBLCLK:
 			// Convert double left click to single left click
-		//	::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 			return 0L;	// Discard these messages
 		}
-
+		
 		// pass unhandled messages on for default processing
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
@@ -1277,11 +1278,13 @@ namespace Win32xx
 
 						if (m_Theme.FlatStyle)
 						{
+							SolidFill(hdcMask, RGB(0,0,0), &rcDraw);
 							::BitBlt(hdcMask, left, top, cx, cy, hdcMask, left, top, PATINVERT);
 							::RoundRect(hdcMask, left, top, right, bottom, Curve, Curve);
 						}
 						else
 						{
+							SolidFill(hdcMask, RGB(0,0,0), &rcDraw);
 							::RoundRect(hdcMask, left, top, right, bottom, Curve, Curve);
 							::BitBlt(hdcMask, left, top, cx, cy, hdcMask, left, top, PATINVERT);
 						}
@@ -1415,13 +1418,9 @@ namespace Win32xx
 		m_Theme.LockMenuBand = Theme.LockMenuBand;
 		m_Theme.ShortBands   = Theme.ShortBands;
 		m_Theme.UseLines     = Theme.UseLines;
+		m_Theme.FlatStyle    = Theme.FlatStyle;
+		m_Theme.RoundBorders = Theme.RoundBorders;
 
-		// Win95 - WinME fail to render round borders properly
-		if (GetWinVersion() >= 2400)
-		{
-			m_Theme.FlatStyle    = Theme.FlatStyle;
-			m_Theme.RoundBorders = Theme.RoundBorders;
-		}
 
 		CMenubar& MB = GetApp()->GetFrame()->GetMenubar();
 		if (m_Theme.LockMenuBand)

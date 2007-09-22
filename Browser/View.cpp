@@ -7,9 +7,8 @@
 
 
 // Note: This code requires the following libraries to be linked:
-//  comsupp.lib (for ConvertStringToBSTR support)
 //  atl.lib		(assuming you want to link ATL staticly)
-//
+//  comctl32.lib
 
 
 #if defined (_MSC_VER) && _MSC_VER <= 1200
@@ -55,7 +54,6 @@ void CView::Navigate(LPCTSTR str)
 	// Navigate to the web page
 	VARIANT vars[4];
 	memset(vars,0,sizeof(vars));
-//	BSTR BStrURL = _com_util::ConvertStringToBSTR(str);
 	CComBSTR BStrURL(str);
 	HRESULT hrie = m_pInetExplorer->Navigate(BStrURL,vars,vars+1,vars+2,vars+3);
 	SysFreeString(BStrURL);
