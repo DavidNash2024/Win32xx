@@ -12,6 +12,7 @@ New Features:
 * Updated Toolbar themes
   - Improved layout of images and text on toolbar buttons
   - Themed toolbar now supports TBSTYLE_LIST
+* Added XP theme support for Visual Studio 6  
 
 The following changes have been made to the Win32++ code:
 Added CToolbar::CreateDisabledImageList
