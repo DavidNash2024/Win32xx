@@ -571,7 +571,8 @@ namespace Win32xx
 				}
 
 				HIMAGELIST hImageList = (nState & CDIS_DISABLED)? m_hImageListDis : (m_hImageListHot? m_hImageListHot: m_hImageList);
-
+				BOOL IsWin95 = ((GetWinVersion() == 1400) || (GetWinVersion() == 2400));
+				
 				// Calculate image position
 				int cxImage = 0;
 				int cyImage = 0;
@@ -581,13 +582,12 @@ namespace Win32xx
 				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & CDIS_SELECTED)? 1:0);
 				if (dwTBStyle & TBSTYLE_LIST)
 				{
-					xImage = rcRect.left + ((nStyle & TBSTYLE_DROPDOWN)? 9:6) + ((nState & CDIS_SELECTED)? 1:0);
+					xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
 					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & CDIS_SELECTED)? 1:0);
 				}
-
+				
 				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
-				LRESULT lrExtStyle = ::SendMessage(m_hWnd, TB_GETEXTENDEDSTYLE, 0, 0);
-				if (((nStyle & TBSTYLE_DROPDOWN) && (lrExtStyle & TBSTYLE_EX_DRAWDDARROWS))|| ((nStyle & 0x0080) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400)))
+				if ((nStyle & TBSTYLE_DROPDOWN) || ((nStyle & 0x0080) && (!IsWin95)))
 				{
 					// Calculate the dropdown arrow position
 					int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 4)/2;
@@ -598,7 +598,7 @@ namespace Win32xx
 						yAPos =	(rcRect.bottom - rcRect.top +1)/2 + ((nStyle & TBSTYLE_DROPDOWN)?0:1);
 					}
 
-					xImage -= (nStyle & TBSTYLE_DROPDOWN) ? ((dwTBStyle & TBSTYLE_LIST)? 3 : 6) : 4;
+					xImage -= (nStyle & TBSTYLE_DROPDOWN)?((dwTBStyle & TBSTYLE_LIST)? (IsXPThemed()?-4:0):6):((dwTBStyle & TBSTYLE_LIST)? 0:4);
 
 					// Draw separate background for dropdown arrow
 					if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
@@ -608,6 +608,7 @@ namespace Win32xx
 						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
 						GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcArrowBkgnd, FALSE);
 					}
+
 					m_bDrawArrowBkgrnd = FALSE;
 
 					// Manually draw the dropdown arrow
@@ -645,9 +646,9 @@ namespace Win32xx
 
 					if (dwTBStyle & TBSTYLE_LIST)
 					{
-						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?10:6) + ((nState & CDIS_SELECTED)? 1:0);
+						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);	
 						yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
-						rcText.right = min(rcText.right,  rcRect.right - xOffset - ((nStyle & TBSTYLE_DROPDOWN)?14:10));
+						rcText.right = min(rcText.right,  rcRect.right - xOffset);
 					}
 
 					OffsetRect(&rcText, xOffset, yOffset);
@@ -1092,9 +1093,35 @@ namespace Win32xx
 			}
 			break;
 		case WM_LBUTTONDBLCLK:
-			// Convert double left click to single left click
-			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-			return 0L;	// Discard these messages
+			// Doubleclicks on drop down buttons behave strangely because the popup
+			//  menu eats the LeftButtonUp messages, so we put them back.
+			{
+				int iButton = HitTest();
+				if (iButton >= 0)
+				{
+					DWORD nStyle = GetButtonStyle(GetCommandID(iButton));
+					if (((nStyle & 0x0080) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400)))
+					{
+						// DoubleClick on BTNS_WHOLEDROPDOWN button
+						::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+						return 0L;
+					}
+
+					if (nStyle & TBSTYLE_DROPDOWN)
+					{
+						RECT rcButton = GetItemRect(iButton);
+						int xPos = GET_X_LPARAM(lParam);
+						if (xPos >= rcButton.right -13)
+						{
+							// DoubleClick on dropdown part of TBSTYLE_DROPDOWN button
+							::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+							return 0L;
+						}
+					}
+				}
+			}
+
+			break;	
 		}
 
 		// pass unhandled messages on for default processing
@@ -1844,16 +1871,8 @@ namespace Win32xx
 
 	void CMenubar::DrawBackground(HDC hDC, RECT rc)
 	{
-	//	COLORREF colorBG = GetSysColor(bSelected ? COLOR_HIGHLIGHT : COLOR_MENU);
-	//	HBRUSH hBrush = ::CreateSolidBrush(colorBG);
-	//	HBRUSH OldBrush = (HBRUSH)::SelectObject(hDC, hBrush);
-
 		HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
 		::FillRect(hDC, &rc, hbHighlight);
-
-	//	::FillRect(hDC, &rc, hBrush);
-	//	::SelectObject(hDC, OldBrush);
-	//	::DeleteObject(hBrush);
 	}
 
 	void CMenubar::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
@@ -1959,6 +1978,7 @@ namespace Win32xx
 	}
 
 	LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
+	// CustomDraw is used to render the Menubar's toolbar buttons
 	{
 		// Use custom draw to draw a rectangle over the hot button
 		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
@@ -2024,8 +2044,7 @@ namespace Win32xx
 		case CDDS_POSTPAINT:
 			// Draw MDI Minimise, Restore and Close buttons
 			{
-				HDC hDC = lpNMCustomDraw->nmcd.hdc;
-				DrawAllMDIButtons(hDC);
+				DrawAllMDIButtons(lpNMCustomDraw->nmcd.hdc);
 			}
 			break;
 		}
@@ -2033,7 +2052,7 @@ namespace Win32xx
 	}
 
 	BOOL CMenubar::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
-	// Draw each popup menu item
+	// CustomDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
 
