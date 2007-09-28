@@ -18,12 +18,13 @@ class CTreeView : public CWnd
 public:
 	CTreeView();
 	virtual ~CTreeView();
-	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-	virtual BOOL GetRootItems();
-	virtual BOOL SelectFromListView(Cpidl& CpidlFull);
+	
+	BOOL GetRootItems();
+	BOOL SelectFromListView(Cpidl& CpidlFull);
 
 protected:
 	virtual void OnInitialUpdate();
+	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -47,12 +48,12 @@ private:
 	};  //class TreeItemData
 
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
-	virtual void DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen);
-	virtual void DoContextMenu(LPPOINT pptScreen);
-	virtual void EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent);
-	virtual BOOL GetChildItems(HTREEITEM hParentItem);
-	virtual HIMAGELIST GetImageList(BOOL bLarge);
-	virtual void SetImageLists();
+	void DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen);
+	void DoContextMenu(LPPOINT pptScreen);
+	void EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent);
+	BOOL GetChildItems(HTREEITEM hParentItem);
+	HIMAGELIST GetImageList(BOOL bLarge);
+	void SetImageLists();
 
 	HIMAGELIST m_hLargeImageList;
 	HIMAGELIST m_hSmallImageList;

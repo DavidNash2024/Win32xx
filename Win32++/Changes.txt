@@ -17,11 +17,21 @@ New Features:
 * Updated Toolbar themes
   - Improved layout of images and text on toolbar buttons
   - Themed toolbar now supports TBSTYLE_LIST
-* Added XP theme support for Visual Studio 6  
+* Added XP theme support for Visual Studio 6
+* Icons for disabled popup menu items are now greyed
+* Added Menubar theme support
+  - Gradient background for hot buttons (any two colors)
+  - Gradient background for pressed buttons (any two colors) 
 
 The following changes have been made to the Win32++ code:
+Added CMenubar::GetTheme
+Added CMenubar::SetTheme
 Added CToolbar::CreateDisabledImageList
 Added CToolbar::HasText
+Added ThemeMenubar
+Removed CFrame::SetBackground
+Renamed REBARTHEME to ThemeRebar
+Renamed TOOLBARTHEME to ThemeToolbar
 
 
 Version 5.4

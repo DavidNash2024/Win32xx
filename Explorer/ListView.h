@@ -17,16 +17,17 @@ class CListView : public CWnd
 public:
 	CListView();
 	virtual ~CListView();
-	virtual void DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
-	virtual void DoDisplay();
-	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-	virtual void ViewLargeIcons();
-	virtual void ViewList();
-	virtual void ViewSmallIcons();
-	virtual void ViewReport();
+	
+	void DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
+	void DoDisplay();
+	void ViewLargeIcons();
+	void ViewList();
+	void ViewSmallIcons();
+	void ViewReport();
 
 protected:
 	virtual void OnInitialUpdate();
+	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -49,16 +50,16 @@ private:
 	};  //class ListItemData (nested class)
 
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
-	virtual void DeleteItems();
-	virtual void DoBackgroundMenu(LPPOINT pptScreen);
-	virtual void DoContextMenu(LPPOINT pptScreen);
-	virtual void DoDefault(int iItem);
-	virtual void DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen);
-	virtual void EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlFull);
-	virtual BOOL GetFileSizeText(HANDLE hFile, LPTSTR szSize);
-	virtual BOOL GetLastWriteTime(HANDLE hFile, LPTSTR lpszString);
-	virtual HIMAGELIST GetImageList(BOOL bLarge);
-	virtual void SetImageLists();
+	void DeleteItems();
+	void DoBackgroundMenu(LPPOINT pptScreen);
+	void DoContextMenu(LPPOINT pptScreen);
+	void DoDefault(int iItem);
+	void DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen);
+	void EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlFull);
+	BOOL GetFileSizeText(HANDLE hFile, LPTSTR szSize);
+	BOOL GetLastWriteTime(HANDLE hFile, LPTSTR lpszString);
+	HIMAGELIST GetImageList(BOOL bLarge);
+	void SetImageLists();
 
 	Cpidl		  m_cpidlCurFull;  //Fully Qualified pidl
 	CShellFolder  m_csfCurFolder;  //Current Folder

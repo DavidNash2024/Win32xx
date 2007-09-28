@@ -138,6 +138,34 @@ void CMainFrame::OnCreate()
 	// call the base OnCreate function
 	CFrame::OnCreate();
 
+
+
+	SetButtons();
+
+	SetTheme();
+}
+
+LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+{
+	// Notification from our dropdown button is recieved if Comctl32.dll version
+	// is 4.70 or later (IE v3 required).
+    switch(((LPNMHDR)lParam)->code)
+	{
+ 		//Menu for dropdown toolbar button
+		case TBN_DROPDOWN:
+		{
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
+				DoPopupMenu();
+		}
+		break;
+
+	} //switch LPNMHDR
+
+	return 0L;
+}
+
+void CMainFrame::SetButtons()
+{
 	// Use larger buttons
 	CToolbar& TB = GetToolbar();
 	TB.SetImageList(9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
@@ -175,27 +203,6 @@ void CMainFrame::OnCreate()
 		CRebar& RB = GetRebar();
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 	}
-
-	SetTheme();
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
-{
-	// Notification from our dropdown button is recieved if Comctl32.dll version
-	// is 4.70 or later (IE v3 required).
-    switch(((LPNMHDR)lParam)->code)
-	{
- 		//Menu for dropdown toolbar button
-		case TBN_DROPDOWN:
-		{
-			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
-				DoPopupMenu();
-		}
-		break;
-
-	} //switch LPNMHDR
-
-	return 0L;
 }
 
 void CMainFrame::SetTheme()
@@ -203,7 +210,7 @@ void CMainFrame::SetTheme()
 	// Set the rebar theme
 	CRebar& RB = GetRebar();
 
-	REBARTHEME rt = {0};
+	ThemeRebar rt = {0};
 	rt.UseThemes= TRUE;
 	rt.clrBkGnd1 = RGB(150,190,245);
 	rt.clrBkGnd2 = RGB(196,215,250);
@@ -217,13 +224,13 @@ void CMainFrame::SetTheme()
 //	or you could use the following
 //	BOOL T = TRUE;
 //	BOOL F = FALSE;
-//	REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+//	ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 	RB.SetTheme(rt);
 
 	// Set the toolbar theme
 	CToolbar& TB = GetToolbar();
 
-	TOOLBARTHEME tt = {0};
+	ThemeToolbar tt = {0};
 	tt.UseThemes   = TRUE;
 	tt.clrHot1     = RGB(255, 230, 190);
 	tt.clrHot2     = RGB(255, 190, 100);
@@ -232,7 +239,7 @@ void CMainFrame::SetTheme()
 	tt.clrOutline  = RGB(192, 128, 255);
 
 //	or you could use the following
-//	TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 	TB.SetTheme(tt);
 
 	RecalcLayout();

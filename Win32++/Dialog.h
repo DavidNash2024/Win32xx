@@ -61,13 +61,14 @@ namespace Win32xx
 		virtual HWND DoModeless();
 
 	protected:
-		virtual POINT Center(HWND hWnd);
 		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
+
+		POINT Center(HWND hWnd);
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

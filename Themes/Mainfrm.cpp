@@ -163,10 +163,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 	{
 	case IDM_DEFAULT_THEME:	// Disable themes
 		{
-			REBARTHEME rt = {0};
+			ThemeRebar rt = {0};
 			RB.SetTheme(rt);
 			
-			TOOLBARTHEME tt = {0};
+			ThemeToolbar tt = {0};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -177,10 +177,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 	
 	case IDM_BLUE:	// ICY_BLUE Theme
 		{			
-			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, T, F};
+			ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -191,10 +191,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_BLUE_LOCKED:	// ICY_BLUE Theme
 		{			
-			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+			ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -205,10 +205,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_BLUE_BKGND:	// ICY_BLUE background only
 		{
-			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), 0, 0, F, F, F, F, F, T };
+			ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), 0, 0, F, F, F, F, F, T };
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -219,10 +219,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_BLUE_FLAT:	// ICY_BLUE Flat Theme
 		{
-			REBARTHEME rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), T, T, F, T, T, F};
+			ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), T, T, F, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -233,10 +233,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_GREY:	// Grey Theme
 		{			
-			REBARTHEME rt = {T, RGB(230, 230, 215), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172), F, T, T, T, T, F};
+			ThemeRebar rt = {T, RGB(230, 230, 215), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172), F, T, T, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -247,10 +247,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_OLIVE:
 		{			
-			REBARTHEME rt = {T, RGB(50, 150, 50), RGB(4, 204, 78), RGB(0, 120, 0), RGB(27, 159, 78), F, T, T, T, T, F};
+			ThemeRebar rt = {T, RGB(50, 150, 50), RGB(4, 204, 78), RGB(0, 120, 0), RGB(27, 159, 78), F, T, T, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -261,10 +261,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_YELLOW:
 		{			
-			REBARTHEME rt = {T, RGB(160, 160, 94), RGB(216, 216, 40), RGB(255, 255, 255), RGB(183, 183, 46), F, T, T, T, T, F};
+			ThemeRebar rt = {T, RGB(160, 160, 94), RGB(216, 216, 40), RGB(255, 255, 255), RGB(183, 183, 46), F, T, T, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -275,10 +275,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 
 	case IDM_OCHRE:
 		{			
-			REBARTHEME rt = {T, RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 217, 78), RGB(248, 141, 6), F, T, T, T, T, F};
+			ThemeRebar rt = {T, RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 217, 78), RGB(248, 141, 6), F, T, T, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -288,10 +288,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 		break;
 	case IDM_PINK:
 		{			
-			REBARTHEME rt = {T, RGB(248, 107, 243), RGB(248, 153, 179), RGB(248, 153, 179), RGB(195, 195, 172), F, T, T, T, T, F};
+			ThemeRebar rt = {T, RGB(248, 107, 243), RGB(248, 153, 179), RGB(248, 153, 179), RGB(195, 195, 172), F, T, T, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
+			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);
@@ -301,10 +301,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 		break;
 	case IDM_MAUVE:
 		{			
-			REBARTHEME rt = {T, RGB(190, 100, 125), RGB(210, 128, 155), RGB(219, 138, 188), RGB(90, 100, 125), F, T, T, T, T, F};
+			ThemeRebar rt = {T, RGB(190, 100, 125), RGB(210, 128, 155), RGB(219, 138, 188), RGB(90, 100, 125), F, T, T, T, T, F};
 			RB.SetTheme(rt);
 
-			TOOLBARTHEME tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetTheme(tt);
 			Arrows.SetTheme(tt);
 			Cards.SetTheme(tt);

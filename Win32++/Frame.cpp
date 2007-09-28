@@ -194,7 +194,7 @@ namespace Win32xx
 	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL),
 		                    m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
-		ZeroMemory(&m_Theme, sizeof(TOOLBARTHEME));
+		ZeroMemory(&m_Theme, sizeof(ThemeToolbar));
 	}
 
 	CToolbar::~CToolbar()
@@ -310,8 +310,8 @@ namespace Win32xx
 
 					if (clr != crMask)
 					{
-						BYTE btGray = 63 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/15;
-						::SetPixel(hdcMem, x, y, RGB(btGray, btGray, btGray));
+						BYTE byGray = 63 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/15;
+						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
 					}
 				}
 			}
@@ -653,7 +653,7 @@ namespace Win32xx
 
 					OffsetRect(&rcText, xOffset, yOffset);
 
-					::SetBkMode(hDC, TRANSPARENT);
+					int iMode = ::SetBkMode(hDC, TRANSPARENT);
 					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
 					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
 
@@ -673,6 +673,7 @@ namespace Win32xx
 						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 					}
 					::SelectObject(hDC, hOldFont);
+					::SetBkMode(hDC, iMode);
 				}
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
@@ -1063,7 +1064,7 @@ namespace Win32xx
 		}
 	}
 
-	void CToolbar::SetTheme(TOOLBARTHEME& Theme)
+	void CToolbar::SetTheme(ThemeToolbar& Theme)
 	{
 		m_Theme.UseThemes   = Theme.UseThemes;
 		m_Theme.clrHot1     = Theme.clrHot1;
@@ -1084,7 +1085,7 @@ namespace Win32xx
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 				if (GetApp()->GetFrame()->IsRebarUsed())
 				{
-					REBARTHEME& rb = GetApp()->GetFrame()->GetRebar().GetTheme();
+					ThemeRebar& rb = GetApp()->GetFrame()->GetRebar().GetTheme();
 					if (rb.UseThemes && rb.ShortBands)
 					{
 						pWinPos->cx = GetMaxSize().cx+2;
@@ -1133,7 +1134,7 @@ namespace Win32xx
 	//
 	CRebar::CRebar()
 	{
-		ZeroMemory(&m_Theme, sizeof(REBARTHEME));
+		ZeroMemory(&m_Theme, sizeof(ThemeRebar));
 	}
 
 	CRebar::~CRebar()
@@ -1323,7 +1324,7 @@ namespace Win32xx
 						::DeleteDC(hdcSource);
 
 						// Extra drawing to prevent jagged edge while moving bands
-						HDC hdcRebar = ::GetDC(m_hWnd);
+						HDC hdcRebar = ::GetDCEx(m_hWnd, NULL, DCX_NORESETATTRS);
 						::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 						::ReleaseDC(m_hWnd, hdcRebar);
 					}
@@ -1430,7 +1431,7 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_SETBARINFO, 0, (LPARAM)prbi);
 	}
 
-	void CRebar::SetTheme(REBARTHEME& Theme)
+	void CRebar::SetTheme(ThemeRebar& Theme)
 	{
 		m_Theme.UseThemes    = Theme.UseThemes;
 		m_Theme.clrBkGnd1    = Theme.clrBkGnd1;
@@ -1551,7 +1552,8 @@ namespace Win32xx
 		m_bKeyMode		= FALSE;
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
-		m_hImageList	= NULL;
+
+		ZeroMemory(&m_Theme, sizeof(ThemeMenubar));
 	}
 
 	CMenubar::~CMenubar()
@@ -1943,7 +1945,7 @@ namespace Win32xx
 		}
 	}
 
-	void CMenubar::DrawIcon(LPDRAWITEMSTRUCT pdis)
+	void CMenubar::DrawIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
 	{
 		if (!m_hImageList)
 			return;
@@ -1966,7 +1968,14 @@ namespace Win32xx
 		}
 
 		if (iImage >= 0 )
-			ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+			if ((bDisabled) && (m_hImageListDis))
+			{
+				ImageList_Draw(m_hImageListDis, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+			}
+			else
+			{
+				ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+			}
 	}
 
 	void CMenubar::OnCreate()
@@ -2020,21 +2029,37 @@ namespace Win32xx
 
 				else if (nState & (CDIS_HOT | CDIS_SELECTED))
 				{
-					// Draw highlight rectangle
-					HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-					::FillRect(hDC, &rcRect, hbHighlight);
-
+					if (m_Theme.UseThemes)
+					{
+						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
+						{
+							GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
+						}
+						else if (nState & CDIS_HOT)
+						{
+							GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
+						}
+					}
+					else
+					{
+						// Draw highlight rectangle
+						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
+						::FillRect(hDC, &rcRect, hbHighlight);
+					}
+					
 					TCHAR str[80] = {0};
 					int nLength = (int)::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM) NULL);
 					if ((nLength > 0) && (nLength < 80))
 						::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
 
 					// Draw highlight text
-					::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+					HFONT hFontOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
 					::SetTextColor(hDC, ::GetSysColor(COLOR_HIGHLIGHTTEXT));
-					::SetBkMode(hDC, TRANSPARENT);
+					int iMode = ::SetBkMode(hDC, TRANSPARENT);
 					::DrawText(hDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-
+					
+					::SetBkMode(hDC, iMode);
+					::SelectObject(hDC, hFontOld);		
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 			}
@@ -2060,6 +2085,8 @@ namespace Win32xx
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		HDC hDC = pdis->hDC;
 
+		SolidFill(hDC, RGB(255,0,255), &rc);
+
 		if (pmd->fType & MFT_SEPARATOR)
 		{
 			// draw separator
@@ -2072,16 +2099,16 @@ namespace Win32xx
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
 
-			if (bSelected)
+			if ((bSelected) && (!bDisabled))
 				DrawBackground(hDC, rc);
 			else
-				::FillRect(hDC, &rc, ::GetSysColorBrush(COLOR_MENU));
+			//	::FillRect(hDC, &rc, ::GetSysColorBrush(COLOR_MENU));
+				SolidFill(hDC, RGB(255,0,255), &rc);
 
-			// Draw checkmark or icon
 			if (bChecked)
 				DrawCheckmark(pdis);
 			else
-				DrawIcon(pdis);
+				DrawIcon(pdis, bDisabled);
 
 			// Calculate the text rect size
 			rc.left  = rc.bottom - rc.top + 2;
@@ -2089,9 +2116,10 @@ namespace Win32xx
 				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
 
 			// Draw the text
-			::SetBkMode(hDC, TRANSPARENT);
+			int iMode = ::SetBkMode(hDC, TRANSPARENT);
 			COLORREF colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 			DrawMenuText(hDC, pmd->Text, rc, colorText);
+			::SetBkMode(hDC, iMode);
 		}
 
 		return TRUE;
@@ -2140,7 +2168,6 @@ namespace Win32xx
 				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
 				::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 			}
-
 		}
 	}
 
@@ -2463,6 +2490,7 @@ namespace Win32xx
 
 		case WM_LBUTTONDBLCLK:
 			// Perform default action for DblClick on MDI Maxed icon
+			TRACE("WM_LBUTTONDBLCLK  in OnMenuInput");
 			if (IsMDIChildMaxed() && (HitTest() == 0))
 			{
 				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
@@ -2472,10 +2500,10 @@ namespace Win32xx
 				UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
 				if (nID)
 					::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0);
-				m_bExitAfter = TRUE;
-				return FALSE;
 			}
-			return TRUE;
+
+			m_bExitAfter = TRUE;
+			return FALSE;
 
 		case WM_MENUSELECT:
 			{
@@ -2796,6 +2824,7 @@ namespace Win32xx
 		m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 		ImageList_AddMasked(m_hImageList, hbm, crMask);
 		::DeleteObject(hbm);
+		CreateDisabledImageList();
 	}
 
     void CMenubar::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
@@ -2824,8 +2853,23 @@ namespace Win32xx
 
 		// Set the button images
         if (ImageList_GetImageCount(hImageList) == iImages)
+		{
             m_hImageList = hImageList;
+			CreateDisabledImageList();
+		}
     }
+
+	void CMenubar::SetTheme(ThemeMenubar& Theme)
+	{
+		m_Theme.UseThemes   = Theme.UseThemes;
+		m_Theme.clrHot1     = Theme.clrHot1;
+		m_Theme.clrHot2     = Theme.clrHot2;
+		m_Theme.clrPressed1 = Theme.clrPressed1;
+		m_Theme.clrPressed2 = Theme.clrPressed2;
+		m_Theme.clrOutline  = Theme.clrOutline;
+
+		::InvalidateRect(m_hWnd, NULL, TRUE);
+	}
 
 	LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
@@ -2887,9 +2931,13 @@ namespace Win32xx
 			ExitMenu();
 			return 0L;
 		case WM_LBUTTONDBLCLK:
+			TRACE("WM_LBUTTONDBLCLK");
 			// Convert double left click to single left click
+		//	::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+		//	::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-			return 0L;	// Discard these messages
+			return 0L;	// Discard these messages		
+		//	break;
 		case WM_LBUTTONDOWN:
 			// Do default processing first
 			CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
@@ -2914,7 +2962,7 @@ namespace Win32xx
 			break;
 		case USER_POPUPMENU:
 			DoPopupMenu();
-			return 0L;
+			return 0L; 
 		case WM_SYSKEYDOWN:
 			if ((wParam == VK_MENU) || (wParam == VK_F10))
 				return 0L;
@@ -3274,10 +3322,6 @@ namespace Win32xx
 			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().ShortBands)
 				return 1L;	// Supress maximise or minimise rebar band
 			break;
-	//	case RBN_CHILDSIZE :
-	//		if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().ShortBands)
-	//			GetRebar().MoveBandsLeft();
-	//		break;
 
 		// Display toolips for the toolbar
 		case TTN_GETDISPINFO:
@@ -3477,12 +3521,6 @@ namespace Win32xx
 			SetMenubarBandSize();
 
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
-	}
-
-	void CFrame::SetBackground(HBITMAP hBackground)
-	{
-		for (int nBands = 0; nBands < GetRebar().GetBandCount(); nBands++)
-			GetRebar().SetBandBitmap(nBands, hBackground);
 	}
 
 	void CFrame::SetFrameMenu(INT ID_MENU)

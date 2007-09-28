@@ -19,9 +19,10 @@ class CMainView : public CSplitter
 public:
 	CMainView(int nBarpos = 0, bool bVertical = true);
 	virtual ~CMainView(){}
-	virtual CListView& GetListView() {return m_ListView;}
-	virtual CTreeView& GetTreeView() {return m_TreeView;}
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	CListView& GetListView() {return m_ListView;}
+	CTreeView& GetTreeView() {return m_TreeView;}
 
 private:
 	CTreeView m_TreeView;

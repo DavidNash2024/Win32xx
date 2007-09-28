@@ -15,19 +15,23 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	virtual CMainView& GetMainView() {return m_MainView;}
-	virtual CListView& GetListView() {return m_MainView.GetListView();}
-	virtual CTreeView& GetTreeView() {return m_MainView.GetTreeView();}
-	virtual BOOL GetShowHidden() {return m_bShowHidden;}
+	
+	CMainView& GetMainView() {return m_MainView;}
+	CListView& GetListView() {return m_MainView.GetListView();}
+	CTreeView& GetTreeView() {return m_MainView.GetTreeView();}
+	BOOL GetShowHidden() {return m_bShowHidden;}
 
 protected:
-	virtual void DoPopupMenu();
 	virtual void OnInitialUpdate();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SetTheme();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	
+	void DoPopupMenu();
+	void SetTheme();
+	void SetButtons();
+	
 
 private:
 	CMainView m_MainView;

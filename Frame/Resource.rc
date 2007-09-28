@@ -1,24 +1,43 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
+#include "resrc2.h"
 
-#include <windows.h>
-#include <resource.h>
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.h"
 #include "resrc1.h"
 
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Australia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+#pragma code_page(1252)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       24      DISCARDABLE      "res/Win32++.manifest"
+1                       RT_MANIFEST             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDW_MAIN MENU DISCARDABLE
+IDW_MAIN MENU 
 BEGIN
     POPUP "&File"
     BEGIN
@@ -27,7 +46,7 @@ BEGIN
         MENUITEM "&Save",                       IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "&Print",                      IDM_FILE_PRINT
+        MENUITEM "&Print",                      IDM_FILE_PRINT, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -60,14 +79,14 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON    DISCARDABLE     "res/enhanced.ico"
+IDW_MAIN                ICON                    "res/enhanced.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP  MOVEABLE PURE   "res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "res/toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -75,8 +94,8 @@ IDW_MAIN                BITMAP  MOVEABLE PURE   "res/toolbar.bmp"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION |
-    WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
@@ -91,7 +110,7 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS MOVEABLE PURE
+IDW_MAIN ACCELERATORS 
 BEGIN
     "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
     VK_INSERT,      IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
@@ -109,19 +128,49 @@ BEGIN
 END
 
 
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resrc2.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""resource.h""\r\n"
+    "#include ""resrc1.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE DISCARDABLE
+STRINGTABLE 
 BEGIN
     IDW_MAIN                "Frame Window"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
 END
 
-STRINGTABLE DISCARDABLE
+STRINGTABLE 
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
@@ -133,7 +182,7 @@ BEGIN
     IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
-STRINGTABLE DISCARDABLE
+STRINGTABLE 
 BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
@@ -142,16 +191,58 @@ BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
-STRINGTABLE DISCARDABLE
+STRINGTABLE 
 BEGIN
     61440                   "Resize the Window"
+END
+
+STRINGTABLE 
+BEGIN
     61456                   "Move the Window"
+END
+
+STRINGTABLE 
+BEGIN
     61472                   "Minimize the Window"
+END
+
+STRINGTABLE 
+BEGIN
     61488                   "Maximize the Window"
+END
+
+STRINGTABLE 
+BEGIN
     61504                   "Select Next Window"
+END
+
+STRINGTABLE 
+BEGIN
     61520                   "Select Previous Window"
+END
+
+STRINGTABLE 
+BEGIN
     61536                   "Close the Window"
+END
+
+STRINGTABLE 
+BEGIN
     61728                   "Restore the Window"
 END
 
+#endif    // English (Australia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
 

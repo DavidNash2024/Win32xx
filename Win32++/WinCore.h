@@ -133,34 +133,35 @@ namespace Win32xx
 	class CWnd
 	{
 	public:
+		// Note: virtual functions can be overridden in inherited classes
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
-		virtual BOOL Attach(HWND hWnd);
-		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND Create(HWND hWndParent = NULL);
-		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual HWND Detach();
-		virtual void DestroyWindow();
-		virtual HWND GetAncestor(HWND hWnd);
-		virtual CWnd* GetCWndObject(HWND hWnd);
-		virtual HWND GetHwnd() {return m_hWnd;}
-		virtual void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
-		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
-		virtual LPCTSTR LoadString(UINT nID);
-		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
-		virtual void SetParent(HWND hParent);
-		virtual void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
+
+		BOOL Attach(HWND hWnd);
+		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		HWND Detach();
+		void DestroyWindow();
+		HWND GetAncestor(HWND hWnd);
+		CWnd* GetCWndObject(HWND hWnd);
+		HWND GetHwnd() {return m_hWnd;}
+		void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
+		LPCTSTR LoadString(UINT nID);
+		LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		BOOL RegisterClassEx(WNDCLASSEX& wcx);
+		void SetParent(HWND hParent);
+		void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
-		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL IsMDIChild() {return FALSE;}
+		// Note: virtual functions can be overridden in inherited classes
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnCreate();
@@ -168,12 +169,15 @@ namespace Win32xx
 		virtual	LRESULT OnNotifyFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnInitialUpdate();
 		virtual void OnPaint(HDC hDC);
-		virtual void RemoveHook();
-		virtual void SetHook();
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	
+		BOOL IsMDIChild() {return FALSE;}
+		void RemoveHook();
+		void SetHook();
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -184,7 +188,7 @@ namespace Win32xx
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
 		static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
-		virtual	void Subclass();
+		void Subclass();
 
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
@@ -203,27 +207,29 @@ namespace Win32xx
 		friend class CDialog;	// CDialog uses m_MapLock
 
 	public:
+		// Note: virtual functions can be overridden in inherited class
 		CWinApp(HINSTANCE hInstance);
 		virtual ~CWinApp();
 		virtual void CreateTrace();
-		virtual CFrame* GetFrame() {return m_pFrame;}
-		static CWinApp* GetApp() {return st_pTheApp;}
-		virtual HINSTANCE GetInstanceHandle() {return m_hInstance;}
-		virtual HINSTANCE GetResourceHandle() {return (m_hResource ? m_hResource : m_hInstance);}
-		virtual std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
-		virtual DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		virtual int MessageLoop();
-		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
-		virtual void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
-		virtual void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		virtual void Trace(LPCTSTR szString);
+
+		CFrame* GetFrame() {return m_pFrame;}
+		DWORD GetTlsIndex() {return st_dwTlsIndex;}
+		static CWinApp* GetApp() {return st_pTheApp;}
+		HINSTANCE GetInstanceHandle() {return m_hInstance;}
+		HINSTANCE GetResourceHandle() {return (m_hResource ? m_hResource : m_hInstance);}
+		std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
+		void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
+		void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
+		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 
 	protected:
 		HACCEL m_hAccelTable;		// handle to the accelerator table
 		HWND m_hWndAccel;			// handle to the window for accelerator keys
 
 	private:
-		virtual TLSData* SetTlsIndex();
+		TLSData* SetTlsIndex();
 
 		enum Constants
 		{
