@@ -1373,10 +1373,12 @@ namespace Win32xx
 			if (rc.top != OldrcTop)
 			{
 				// Maximize the last band on each row
-				::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0);
+				if (IsBandVisible(nBand))
+					::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0);
+				
 				OldrcTop = rc.top;
 			}
-		}
+		} 
 	}
 
 	void CRebar::ResizeBand(const int nBand, SIZE sz)
@@ -2085,12 +2087,20 @@ namespace Win32xx
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		HDC hDC = pdis->hDC;
 
-		SolidFill(hDC, RGB(255,0,255), &rc);
+		// Set the background color
+		RECT rcBorder = rc;		
+		SolidFill(hDC, RGB(240,240,255), &rcBorder);
+
+		// Draw the side bar
+		RECT rcBar = rc;
+		rcBar.right = 20;
+		GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcBar, TRUE);
 
 		if (pmd->fType & MFT_SEPARATOR)
 		{
 			// draw separator
 			rc.top += (rc.bottom - rc.top)/2;
+			rc.left = 21;
 			::DrawEdge(hDC, &rc,  EDGE_ETCHED, BF_TOP);
 		}
 		else
@@ -2099,11 +2109,12 @@ namespace Win32xx
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
 
+			rc.left = 21;
+
 			if ((bSelected) && (!bDisabled))
-				DrawBackground(hDC, rc);
+				DrawBackground(hDC, pdis->rcItem);
 			else
-			//	::FillRect(hDC, &rc, ::GetSysColorBrush(COLOR_MENU));
-				SolidFill(hDC, RGB(255,0,255), &rc);
+				SolidFill(hDC, RGB(240,240,255), &rc);
 
 			if (bChecked)
 				DrawCheckmark(pdis);

@@ -30,6 +30,8 @@ Added CToolbar::CreateDisabledImageList
 Added CToolbar::HasText
 Added ThemeMenubar
 Removed CFrame::SetBackground
+Removed CRebar::SetBandColor
+Removed CRebar::SetBandBitmap
 Renamed REBARTHEME to ThemeRebar
 Renamed TOOLBARTHEME to ThemeToolbar
 
