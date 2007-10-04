@@ -2501,7 +2501,6 @@ namespace Win32xx
 
 		case WM_LBUTTONDBLCLK:
 			// Perform default action for DblClick on MDI Maxed icon
-			TRACE("WM_LBUTTONDBLCLK  in OnMenuInput");
 			if (IsMDIChildMaxed() && (HitTest() == 0))
 			{
 				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
@@ -2942,13 +2941,9 @@ namespace Win32xx
 			ExitMenu();
 			return 0L;
 		case WM_LBUTTONDBLCLK:
-			TRACE("WM_LBUTTONDBLCLK");
 			// Convert double left click to single left click
-		//	::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-		//	::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 			return 0L;	// Discard these messages		
-		//	break;
 		case WM_LBUTTONDOWN:
 			// Do default processing first
 			CallPrevWindowProc(hWnd, uMsg, wParam, lParam);

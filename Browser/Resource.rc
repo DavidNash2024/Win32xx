@@ -10,7 +10,7 @@
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       24             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -155,13 +155,13 @@ END
 
 STRINGTABLE
 BEGIN
-    61536                   "Close the Window"
-    61488                   "Maximize the Window"
-    61472                   "Minimize the WIndow"
-    61456                   "Move the Window"
-    61504                   "Select Next Window"
-    61520                   "Select Previous Window"
-    61728                   "Restore the Window"
-    61440                   "Resize the Window"
+    SC_CLOSE                "Close the Window"
+    SC_MAXIMIZE             "Maximize the Window"
+    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MOVE                 "Move the Window"
+	SC_NEXTWINDOW           "Select Next Window"
+	SC_PREVWINDOW           "Select Previous Window"
+    SC_RESTORE              "Restore the Window"
+    SC_SIZE                 "Resize the Window"
 END
 
