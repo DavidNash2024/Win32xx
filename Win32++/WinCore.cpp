@@ -650,6 +650,7 @@ namespace Win32xx
 		int g2 = GetGValue(Color2);
 		int b2 = GetBValue(Color2);
 
+		COLORREF OldBkColor = ::GetBkColor(hDC);
 
 		if (bVertical)
 		{
@@ -658,7 +659,7 @@ namespace Win32xx
 				int r = r1 + (i * (r2-r1) / Width);
 				int g = g1 + (i * (g2-g1) / Width);
 				int b = b1 + (i * (b2-b1) / Width);
-				SetBkColor(hDC, RGB(r, g, b));
+				::SetBkColor(hDC, RGB(r, g, b));
 				RECT line;
 
 				::SetRect(&line, i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
@@ -672,13 +673,15 @@ namespace Win32xx
 				int r = r1 + (i * (r2-r1) / Height);
 				int g = g1 + (i * (g2-g1) / Height);
 				int b = b1 + (i * (b2-b1) / Height);
-				SetBkColor(hDC, RGB(r, g, b));
+				::SetBkColor(hDC, RGB(r, g, b));
 				RECT line;
 
 				::SetRect(&line, pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
 				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
 			}
 		}
+
+		::SetBkColor(hDC, OldBkColor);
 	}
 
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
@@ -997,8 +1000,9 @@ namespace Win32xx
 
 	void CWnd::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
 	{
-		::SetBkColor(hDC, Color);
+		COLORREF OldColor = ::SetBkColor(hDC, Color);
 		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
+		::SetBkColor(hDC, OldColor);
 	}
 
 	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)

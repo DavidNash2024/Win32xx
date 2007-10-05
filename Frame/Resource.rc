@@ -142,6 +142,7 @@ BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
+STRINGTABLE
 BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"

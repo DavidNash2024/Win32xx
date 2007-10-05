@@ -51,37 +51,37 @@ namespace Win32xx
 
 	struct ThemeMenubar
 	{
-		BOOL UseThemes;
-		COLORREF clrHot1;
-		COLORREF clrHot2;
-		COLORREF clrPressed1;
-		COLORREF clrPressed2;
-		COLORREF clrOutline;
+		BOOL UseThemes;			// TRUE if themes are used
+		COLORREF clrHot1;		// Color 1 for hot button
+		COLORREF clrHot2;		// Color 2 for hot button
+		COLORREF clrPressed1;	// Color 1 for pressed button and side bar in menu item
+		COLORREF clrPressed2;	// Color 2 for pressed button and side bar in menu item
+		COLORREF clrOutline;	// Colour for border outline
 	};
 
 	struct ThemeRebar
 	{
-		BOOL UseThemes;
-		COLORREF clrBkGnd1;
-		COLORREF clrBkGnd2;
-		COLORREF clrBand1;
-		COLORREF clrBand2;
-		BOOL FlatStyle;			
-		BOOL KeepBandsLeft;
-		BOOL LockMenuBand;
-		BOOL RoundBorders;		
-		BOOL ShortBands;
-		BOOL UseLines;
+		BOOL UseThemes;			// TRUE if themes are used
+		COLORREF clrBkGnd1;		// Color 1 for rebar background
+		COLORREF clrBkGnd2;		// Color 2 for rebar background
+		COLORREF clrBand1;		// Color 1 for rebar band background. Use NULL if not required
+		COLORREF clrBand2;		// Color 2 for rebar band background. Use NULL if not required
+		BOOL FlatStyle;			// Bands are rendered with flat rather than raised style
+		BOOL KeepBandsLeft;		// TRUE if we always keep bands left
+		BOOL LockMenuBand;		// Lock Menubar's band up top, without gripper
+		BOOL RoundBorders;		// Use rounded band borders
+		BOOL ShortBands;        // Allows bands to be shorter than maximum available width
+		BOOL UseLines;			// Displays horizontal lines between bands
 	};
 
 	struct ThemeToolbar
 	{
-		BOOL UseThemes;
-		COLORREF clrHot1;
-		COLORREF clrHot2;
-		COLORREF clrPressed1;
-		COLORREF clrPressed2;
-		COLORREF clrOutline;
+		BOOL UseThemes;			// TRUE if themes are used
+		COLORREF clrHot1;		// Color 1 for hot button
+		COLORREF clrHot2;		// Color 2 for hot button
+		COLORREF clrPressed1;	// Color 1 for pressed button
+		COLORREF clrPressed2;	// Color 2 for pressed button
+		COLORREF clrOutline;	// Colour for border outline
 	};
 
 	//////////////////////////////////////
@@ -222,7 +222,6 @@ namespace Win32xx
 
 		void DoAltKey(WORD KeyCode);
 		void DoPopupMenu();
-		void DrawBackground(HDC hDC, RECT rc);
 		void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		void DrawIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		void DrawAllMDIButtons(HDC hDC);
@@ -263,11 +262,13 @@ namespace Win32xx
 		};
 
 		struct ItemData
+		// Each Dropdown menu item has this data
 		{
 			HMENU hMenu;
 			UINT  nPos;
 			UINT  fType;
 			TCHAR Text[MAX_MENU_STRING];
+			HMENU hSubMenu;
 		};
 
 		BOOL m_bExitAfter;			// Exit after Popup menu ends
