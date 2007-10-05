@@ -310,7 +310,7 @@ namespace Win32xx
 
 					if (clr != crMask)
 					{
-						BYTE byGray = 63 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/15;
+						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
 						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
 					}
 				}
@@ -2116,9 +2116,12 @@ namespace Win32xx
 				if (m_Theme.UseThemes)
 				{
 					HBRUSH hBrush = ::CreateSolidBrush(m_Theme.clrHot1);
-					HBRUSH hBrushOrig = (HBRUSH)::SelectObject(hDC, hBrush);
+					HBRUSH hBrushOld = (HBRUSH)::SelectObject(hDC, hBrush);
+					HPEN hPen = CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+					HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
 					Rectangle(hDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
-					::DeleteObject(::SelectObject(hDC, hBrushOrig));
+					::DeleteObject(::SelectObject(hDC, hPenOld));
+					::DeleteObject(::SelectObject(hDC, hBrushOld));
 				}
 				else 
 					SolidFill(hDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);

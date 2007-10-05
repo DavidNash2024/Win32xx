@@ -54,6 +54,7 @@
 #ifdef _MSC_VER
   #pragma warning (disable : 4511) // copy operator could not be generated
   #pragma warning (disable : 4512) // assignment operator could not be generated
+  #pragma warning (disable : 4702) // unreachable code
 #endif // _MSC_VER
 
 
