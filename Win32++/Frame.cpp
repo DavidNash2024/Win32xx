@@ -2092,16 +2092,21 @@ namespace Win32xx
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		HDC hDC = pdis->hDC;
 
+		int BarWidth = m_Theme.UseThemes? 20 : 0; 
+
 		// Draw the side bar
-		RECT rcBar = rc;
-		rcBar.right = 20;
-		GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcBar, TRUE);
+		if (m_Theme.UseThemes)
+		{
+			RECT rcBar = rc;
+			rcBar.right = BarWidth;
+			GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcBar, TRUE);
+		}
 
 		if (pmd->fType & MFT_SEPARATOR)		// draw separator
 		{
 			RECT rcSep = rc;
 			rcSep.top += (rc.bottom - rc.top)/2;
-			rcSep.left = 21;
+			rcSep.left = BarWidth + 2;
 			::DrawEdge(hDC, &rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
@@ -2128,7 +2133,7 @@ namespace Win32xx
 			}
 			else	// draw non-selected item background
 			{
-				rcDraw.left = 20;
+				rcDraw.left = BarWidth;
 				SolidFill(hDC, RGB(255,255,255), &rcDraw);
 			}
 
