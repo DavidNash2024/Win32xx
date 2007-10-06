@@ -1324,7 +1324,7 @@ namespace Win32xx
 						::DeleteDC(hdcSource);
 
 						// Extra drawing to prevent jagged edge while moving bands
-						HDC hdcRebar = ::GetDCEx(m_hWnd, NULL, DCX_NORESETATTRS);
+						HDC hdcRebar = ::GetDCEx(m_hWnd, NULL, DCX_NORESETATTRS | DCX_CACHE | DCX_CLIPCHILDREN);
 						::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 						::ReleaseDC(m_hWnd, hdcRebar);
 					}
