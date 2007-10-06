@@ -1888,7 +1888,6 @@ namespace Win32xx
 				if (hbmPrev)
 				{
 					RECT rCheck = { 0, 0, cxCheck, cyCheck };
-
 					// Copy the check mark bitmap to hdcMem
 					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
 						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
@@ -1898,41 +1897,37 @@ namespace Win32xx
 					RECT rc = pdis->rcItem;
 					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 
-					if ((pdis->itemState & ODS_SELECTED) && (!m_Theme.UseThemes))
-					// Draw a white check mark for a selected item without themes.
-					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
+					// Draw a white or black check mark as required
+					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way				
+					HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
+					if (hdcMask)
 					{
-						HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
-						if (hdcMask)
+						HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
+						if (hbmMask)
 						{
-							HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
-							if (hbmMask)
+							HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
+							if (hbmPrevMask)
 							{
-								HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
-								if (hbmPrevMask)
+								::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
+								if ((pdis->itemState & ODS_SELECTED) && (!m_Theme.UseThemes))
 								{
-									// Set the colour of the check mark to white
-									SetBkColor(hdcMask, RGB(255, 255, 255));
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, PATCOPY);
-
-									// Invert the check mark bitmap
+									// Draw a white checkmark
 									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
-									
-									// Use the mask to copy the check mark to Menu's device context
 									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
 									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
-
-									::SelectObject(hdcMask, hbmPrevMask);
 								}
+								else
+								{								
+									// Draw a black checkmark
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);					
+									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
+								}
+								::SelectObject(hdcMask, hbmPrevMask);
 							}
 							::DeleteObject(hbmMask);
 						}
 						::DeleteDC(hdcMask);
 					}
-					else 
-						// Draw a black check mark for an unselected item (or with themes)
-						::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-
 					::SelectObject(hdcMem, hbmPrev);
 				}
 				::DeleteObject(hbmMono);
@@ -2093,9 +2088,7 @@ namespace Win32xx
 		HDC hDC = pdis->hDC;
 
 		int BarWidth = m_Theme.UseThemes? 20 : 0; 
-
-		// Draw the side bar
-		if (m_Theme.UseThemes)
+		if (m_Theme.UseThemes)		// Draw the side bar
 		{
 			RECT rcBar = rc;
 			rcBar.right = BarWidth;
@@ -2105,8 +2098,10 @@ namespace Win32xx
 		if (pmd->fType & MFT_SEPARATOR)		// draw separator
 		{
 			RECT rcSep = rc;
+			rcSep.left = BarWidth;
+			SolidFill(hDC, RGB(255,255,255), &rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
-			rcSep.left = BarWidth + 2;
+			rcSep.left = BarWidth + 2;			
 			::DrawEdge(hDC, &rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
