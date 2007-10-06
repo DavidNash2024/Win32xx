@@ -22,8 +22,10 @@ New Features:
 * Added Menubar theme support
   - Gradient background for hot buttons (any two colors)
   - Gradient background for pressed buttons (any two colors) 
+* Themes are enabled by default.   
 
 The following changes have been made to the Win32++ code:
+Added CFrame::SetTheme
 Added CMenubar::GetTheme
 Added CMenubar::SetTheme
 Added CToolbar::CreateDisabledImageList
