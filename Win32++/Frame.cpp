@@ -1324,8 +1324,10 @@ namespace Win32xx
 						::DeleteDC(hdcSource);
 
 						// Extra drawing to prevent jagged edge while moving bands
-						HDC hdcRebar = ::GetDCEx(m_hWnd, NULL, DCX_NORESETATTRS | DCX_CACHE | DCX_CLIPCHILDREN);
+					//	HDC hdcRebar = ::GetDCEx(m_hWnd, NULL, DCX_NORESETATTRS | DCX_CACHE | DCX_CLIPCHILDREN);
+						HDC hdcRebar = ::GetDC(m_hWnd);
 						::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+						::SelectObject(hdcRebar, ::GetStockObject(SYSTEM_FONT));
 						::ReleaseDC(m_hWnd, hdcRebar);
 					}
 				}
@@ -2043,8 +2045,11 @@ namespace Win32xx
 					else
 					{
 						// Draw highlight rectangle
+						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+						HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
 						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
 						::FillRect(hDC, &rcRect, hbHighlight);
+						::DeleteObject(::SelectObject(hDC, hPenOld));
 					}
 					
 					TCHAR str[80] = {0};
@@ -3031,7 +3036,8 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_StatusText(_T("Ready")), m_hMenu(NULL), m_pView(NULL)//,
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")), 
+						m_hMenu(NULL), m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
 
@@ -3290,6 +3296,9 @@ namespace Win32xx
 
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
+
+		if (m_bUseThemes)
+			SetTheme();
 
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
@@ -3652,6 +3661,64 @@ namespace Win32xx
 			// Place text in the 1st pane
 			GetStatusbar().SetPaneText(0, m_StatusText.c_str());
 		}
+	}
+
+	void CFrame::SetTheme()
+	{
+		// Note: To modify theme colors, override this function in CMainframe,
+		//        and make any modifications there.
+
+		// Set the rebar theme
+		CRebar& RB = GetRebar();
+
+		ThemeRebar rt = {0};
+		rt.UseThemes= TRUE;
+		rt.clrBkGnd1 = RGB(150,190,245);
+		rt.clrBkGnd2 = RGB(196,215,250);
+		rt.clrBand1  = RGB(220,230,250);
+		rt.clrBand2  = RGB( 70,130,220);
+		rt.KeepBandsLeft = TRUE;
+		rt.LockMenuBand  = TRUE;
+		rt.ShortBands    = TRUE;
+		rt.RoundBorders  = TRUE;
+
+	//	or you could use the following
+	//	BOOL T = TRUE;
+	//	BOOL F = FALSE;
+	//	ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+		RB.SetTheme(rt);
+
+		// Set the toolbar theme
+		CToolbar& TB = GetToolbar();
+
+		ThemeToolbar tt = {0};
+		tt.UseThemes   = TRUE;
+		tt.clrHot1     = RGB(255, 230, 190);
+		tt.clrHot2     = RGB(255, 190, 100);
+		tt.clrPressed1 = RGB(255, 140, 40);
+		tt.clrPressed2 = RGB(255, 180, 80);
+		tt.clrOutline  = RGB(192, 128, 255);
+
+	//	or you could use the following
+	//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+		TB.SetTheme(tt);
+
+		// Set the menubar theme
+		CMenubar& MB = GetMenubar();
+
+		ThemeMenubar tm = {0};
+		tm.UseThemes   = TRUE;
+		tm.clrHot1     = RGB(255, 230, 190);
+		tm.clrHot2     = RGB(255, 190, 100);
+		tm.clrPressed1 = RGB(255, 160, 50);
+		tm.clrPressed2 = RGB(255, 210, 90);
+		tm.clrOutline  = RGB(128, 128, 128);
+
+	//	or you could use the following
+	//	ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
+		MB.SetTheme(tm);
+
+		RecalcLayout();
 	}
 
 	void CFrame::SetView(CWnd& View)

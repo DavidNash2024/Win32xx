@@ -29,7 +29,6 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
 	void DoPopupMenu();
-	void SetTheme();
 	void SetButtons();
 	
 

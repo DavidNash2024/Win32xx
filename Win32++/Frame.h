@@ -302,6 +302,7 @@ namespace Win32xx
 		virtual int GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
+		virtual void SetTheme();
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 		
@@ -338,6 +339,7 @@ namespace Win32xx
         BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
+		BOOL m_bUseThemes;          // set to TRUE for themes
 		tString m_StatusText;		// a TCHAR std::string for status text
 		enum Constants
 		{

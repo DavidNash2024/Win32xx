@@ -183,6 +183,18 @@ void CMainFrame::OnCreate()
 
 		SetTheme();
 		AddListboxBand(22);
+
+		// Set the icons for popup menu items
+		std::vector<UINT> IconData;
+		IconData.push_back ( IDM_FILE_NEW  );
+		IconData.push_back ( IDM_FILE_OPEN );
+		IconData.push_back ( IDM_FILE_SAVE );
+		IconData.push_back ( IDM_EDIT_CUT  );
+		IconData.push_back ( IDM_EDIT_COPY );
+		IconData.push_back ( IDM_EDIT_PASTE);
+		IconData.push_back ( IDM_FILE_PRINT);
+		IconData.push_back ( IDM_HELP_ABOUT);
+		GetMenubar().SetIcons(IconData, IDW_MAIN, RGB(192, 192, 192));
 	}
 }
 
@@ -366,6 +378,21 @@ void CMainFrame::SetTheme()
 //	or you could use the following
 //	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 	TB.SetTheme(tt);
+
+	// Set the menubar theme
+	CMenubar& MB = GetMenubar();
+
+	ThemeMenubar tm = {0};
+	tm.UseThemes   = TRUE;
+	tm.clrHot1     = RGB(255, 230, 190);
+	tm.clrHot2     = RGB(255, 190, 100);
+	tm.clrPressed1 = RGB(255, 160, 50);
+	tm.clrPressed2 = RGB(255, 210, 90);
+	tm.clrOutline  = RGB(128, 128, 128);
+
+//	or you could use the following
+//	ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
+	MB.SetTheme(tm);
 
 	RecalcLayout();
 }

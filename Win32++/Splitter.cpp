@@ -111,7 +111,8 @@ namespace Win32xx
 			// Create the splitter bar
 			WNDCLASSEX wcx = {0};
 			wcx.cbSize = sizeof(WNDCLASSEX);
-			wcx.hbrBackground = (HBRUSH)(COLOR_BTNFACE+1);
+		//	wcx.hbrBackground = (HBRUSH)(COLOR_BTNFACE+1);
+			wcx.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
 
 			if (m_bVertical)
 			{

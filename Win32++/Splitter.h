@@ -87,6 +87,7 @@ namespace Win32xx
 		int m_nBarpreMove;	// Previous bar position, not updated during move
 		BOOL m_bCapture;	// Mouse capture flag
 		BOOL m_bVertical;   // Vertical or horizontal spliter bar
+		COLORREF m_color;	// Color of splitter bar
 
 	};
 

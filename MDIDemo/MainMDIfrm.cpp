@@ -158,46 +158,6 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	RecalcLayout();
 }
 
-void CMainMDIFrame::SetTheme()
-{
-	// Set the rebar theme
-	CRebar& RB = GetRebar();
-
-	ThemeRebar rt = {0};
-	rt.UseThemes= TRUE;
-	rt.clrBkGnd1 = RGB(150,190,245);
-	rt.clrBkGnd2 = RGB(196,215,250);
-	rt.clrBand1  = RGB(220,230,250);
-	rt.clrBand2  = RGB( 70,130,220);
-	rt.KeepBandsLeft = TRUE;
-	rt.LockMenuBand  = TRUE;
-	rt.ShortBands    = TRUE;
-	rt.RoundBorders  = TRUE;
-
-//	or you could use the following
-//	BOOL T = TRUE;
-//	BOOL F = FALSE;
-//	ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
-	RB.SetTheme(rt);
-
-	// Set the toolbar theme
-	CToolbar& TB = GetToolbar();
-
-	ThemeToolbar tt = {0};
-	tt.UseThemes   = TRUE;
-	tt.clrHot1     = RGB(255, 230, 190);
-	tt.clrHot2     = RGB(255, 190, 100);
-	tt.clrPressed1 = RGB(255, 140, 40);
-	tt.clrPressed2 = RGB(255, 180, 80);
-	tt.clrOutline  = RGB(192, 128, 255);
-
-//	or you could use the following
-//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-	TB.SetTheme(tt);
-
-	RecalcLayout();
-}
-
 LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
