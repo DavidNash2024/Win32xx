@@ -166,29 +166,29 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar();
-		virtual BOOL DeleteBand(const int nBand);
-		virtual int GetBand(const HWND hWnd) const;
-		virtual RECT GetBandBorders(int nBand);
-		virtual int GetBandCount() const;
-		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
-		virtual RECT GetBandRect(int i);
-		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
-		virtual int GetRowHeight(int nRow) const;
-		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
-		virtual BOOL IsBandVisible(int nBand);
-		virtual BOOL OnEraseBkgnd(HDC hDC);
-		virtual void MoveBandsLeft();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void ResizeBand(const int nBand, SIZE sz);
-		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
-		virtual	void SetBandBitmap(const int nBand, const HBITMAP hBackground);
-		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
-		virtual BOOL SetBarInfo(LPREBARINFO prbi);
-		virtual BOOL ShowBand(int nBand, BOOL fShow);
-		virtual void ShowGripper(int nBand, BOOL fShow);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		BOOL DeleteBand(const int nBand);
+		int GetBand(const HWND hWnd) const;
+		RECT GetBandBorders(int nBand);
+		int GetBandCount() const;
+		BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
+		RECT GetBandRect(int i);
+		BOOL GetBarInfo(LPREBARINFO prbi) const;
+		int GetRowHeight(int nRow) const;
 		ThemeRebar& GetTheme() {return m_Theme;}
+		BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
+		BOOL IsBandVisible(int nBand);
+		BOOL OnEraseBkgnd(HDC hDC);
+		void MoveBandsLeft();
+		void ResizeBand(const int nBand, SIZE sz);
+		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
+		void SetBandBitmap(const int nBand, const HBITMAP hBackground);
+		BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
+		BOOL SetBarInfo(LPREBARINFO prbi);
+		BOOL ShowBand(int nBand, BOOL fShow);
+		void ShowGripper(int nBand, BOOL fShow);
 		void SetTheme(ThemeRebar& Theme);
 
 	private:
@@ -221,6 +221,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+	private:
 		void DoAltKey(WORD KeyCode);
 		void DoPopupMenu();
 		void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
@@ -248,7 +249,7 @@ namespace Win32xx
 		void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 
-	private:
+//	private:
 		enum Constants
 		{
 			USER_POPUPMENU  = WM_APP + 2,	// creates the popup menu
