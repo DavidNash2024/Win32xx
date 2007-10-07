@@ -1,5 +1,5 @@
 // Win32++  Version 5.5
-// Released: 4th October, 2007 by:
+// Released: 9th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -67,6 +67,7 @@ namespace Win32xx
 		if (m_bCapture)
 		{
 			HDC hDC = ::GetDC(m_hWnd);
+
 			HBRUSH hOldBrush = (HBRUSH)::SelectObject(hDC, (HBRUSH)m_hbrDithered);
 
 			RECT rc = {0};
@@ -81,6 +82,7 @@ namespace Win32xx
 
 			// Clean up
 			::SelectObject(hDC, hOldBrush);
+			::SelectObject(hDC, GetStockObject(SYSTEM_FONT));
 			::ReleaseDC(m_hWndParent, hDC);
 		}
 	}
@@ -108,12 +110,18 @@ namespace Win32xx
 	{
 		try
 		{
-			// Create the splitter bar
+			// Set the color of the splitter bar
+			CRebar& RB = GetApp()->GetFrame()->GetRebar();
+			if (RB.GetTheme().UseThemes)
+				m_Bar.SetBkgndColor(RB.GetTheme().clrBkGnd2);
+			else
+				m_Bar.SetBkgndColor(GetSysColor(COLOR_BTNFACE));
+			
+			// Create the splitter bar		
 			WNDCLASSEX wcx = {0};
 			wcx.cbSize = sizeof(WNDCLASSEX);
-		//	wcx.hbrBackground = (HBRUSH)(COLOR_BTNFACE+1);
-			wcx.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
 
+			// Create the splitter bar
 			if (m_bVertical)
 			{
 				wcx.lpszClassName = _T("Win32++ V Splitter");
@@ -256,6 +264,15 @@ namespace Win32xx
 		m_nBarPos = nBarPos;
 		m_nOldBarPos = nBarPos;
 		RecalcLayout();
+	}
+
+	void CSplitter::SetBarColor(COLORREF color)
+	{
+		// Useful colors:
+		// GetSysColor(COLOR_BTNFACE)	// Default Grey
+		// RGB(196, 215, 250)			// Default Blue
+
+		m_Bar.SetBkgndColor(color);
 	}
 
 	void CSplitter::SetPanes(CWnd& Pane0, CWnd& Pane1)

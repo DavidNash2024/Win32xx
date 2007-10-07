@@ -1,5 +1,5 @@
 // Win32++  Version 5.5
-// Released: 4th October, 2007 by:
+// Released: 9th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -59,6 +59,7 @@ namespace Win32xx
 		virtual ~CSplitter();
 		virtual	int GetBarPos();
 		virtual void SetBarPos(int nBarPos);
+		virtual void SetBarColor(COLORREF color);
 		virtual void SetWidth(int nWidth);
 
 	protected:
@@ -86,9 +87,7 @@ namespace Win32xx
 		int m_nOldBarPos;	// Previous bar position, updated during move
 		int m_nBarpreMove;	// Previous bar position, not updated during move
 		BOOL m_bCapture;	// Mouse capture flag
-		BOOL m_bVertical;   // Vertical or horizontal spliter bar
-		COLORREF m_color;	// Color of splitter bar
-
+		BOOL m_bVertical;   // Vertical or horizontal splitter bar
 	};
 
 } // namespace Win32xx

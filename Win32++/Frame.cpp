@@ -1,5 +1,5 @@
 // Win32++  Version 5.5
-// Released: 4th October, 2007 by:
+// Released: 9th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -572,7 +572,7 @@ namespace Win32xx
 
 				HIMAGELIST hImageList = (nState & CDIS_DISABLED)? m_hImageListDis : (m_hImageListHot? m_hImageListHot: m_hImageList);
 				BOOL IsWin95 = ((GetWinVersion() == 1400) || (GetWinVersion() == 2400));
-				
+
 				// Calculate image position
 				int cxImage = 0;
 				int cyImage = 0;
@@ -585,7 +585,7 @@ namespace Win32xx
 					xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
 					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & CDIS_SELECTED)? 1:0);
 				}
-				
+
 				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
 				if ((nStyle & TBSTYLE_DROPDOWN) || ((nStyle & 0x0080) && (!IsWin95)))
 				{
@@ -646,7 +646,7 @@ namespace Win32xx
 
 					if (dwTBStyle & TBSTYLE_LIST)
 					{
-						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);	
+						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
 						yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
 						rcText.right = min(rcText.right,  rcRect.right - xOffset);
 					}
@@ -1122,7 +1122,7 @@ namespace Win32xx
 				}
 			}
 
-			break;	
+			break;
 		}
 
 		// pass unhandled messages on for default processing
@@ -1377,10 +1377,10 @@ namespace Win32xx
 				// Maximize the last band on each row
 				if (IsBandVisible(nBand))
 					::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0);
-				
+
 				OldrcTop = rc.top;
 			}
-		} 
+		}
 	}
 
 	void CRebar::ResizeBand(const int nBand, SIZE sz)
@@ -1900,7 +1900,7 @@ namespace Win32xx
 					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 
 					// Draw a white or black check mark as required
-					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way				
+					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
 					HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
 					if (hdcMask)
 					{
@@ -1919,9 +1919,9 @@ namespace Win32xx
 									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
 								}
 								else
-								{								
+								{
 									// Draw a black checkmark
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);					
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
 									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
 								}
 								::SelectObject(hdcMask, hbmPrevMask);
@@ -2029,7 +2029,7 @@ namespace Win32xx
 						{
 							GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
 						}
-						
+
 						// Draw border
 						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
 						HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
@@ -2039,7 +2039,7 @@ namespace Win32xx
 						::LineTo(hDC, rcRect.right-1, rcRect.bottom-1);
 						if (!(nState & CDIS_SELECTED))
 							::LineTo(hDC, rcRect.left, rcRect.bottom-1);
-						
+
 						::DeleteObject(::SelectObject(hDC, hPenOld));
 					}
 					else
@@ -2051,7 +2051,7 @@ namespace Win32xx
 						::FillRect(hDC, &rcRect, hbHighlight);
 						::DeleteObject(::SelectObject(hDC, hPenOld));
 					}
-					
+
 					TCHAR str[80] = {0};
 					int nLength = (int)::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM) NULL);
 					if ((nLength > 0) && (nLength < 80))
@@ -2061,12 +2061,12 @@ namespace Win32xx
 					HFONT hFontOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
 					if (!m_Theme.UseThemes)
 						::SetTextColor(hDC, ::GetSysColor(COLOR_HIGHLIGHTTEXT));
-					
+
 					int iMode = ::SetBkMode(hDC, TRANSPARENT);
 					::DrawText(hDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-					
+
 					::SetBkMode(hDC, iMode);
-					::SelectObject(hDC, hFontOld);		
+					::SelectObject(hDC, hFontOld);
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 			}
@@ -2092,7 +2092,7 @@ namespace Win32xx
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		HDC hDC = pdis->hDC;
 
-		int BarWidth = m_Theme.UseThemes? 20 : 0; 
+		int BarWidth = m_Theme.UseThemes? 20 : 0;
 		if (m_Theme.UseThemes)		// Draw the side bar
 		{
 			RECT rcBar = rc;
@@ -2106,7 +2106,7 @@ namespace Win32xx
 			rcSep.left = BarWidth;
 			SolidFill(hDC, RGB(255,255,255), &rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
-			rcSep.left = BarWidth + 2;			
+			rcSep.left = BarWidth + 2;
 			::DrawEdge(hDC, &rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
@@ -2115,7 +2115,7 @@ namespace Win32xx
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
 			RECT rcDraw = rc;
-		
+
 			if ((bSelected) && (!bDisabled))	// draw selected item background
 			{
 				if (m_Theme.UseThemes)
@@ -2128,7 +2128,7 @@ namespace Win32xx
 					::DeleteObject(::SelectObject(hDC, hPenOld));
 					::DeleteObject(::SelectObject(hDC, hBrushOld));
 				}
-				else 
+				else
 					SolidFill(hDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
 			}
 			else	// draw non-selected item background
@@ -2157,10 +2157,10 @@ namespace Win32xx
 			}
 			else
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
-	
+
 			DrawMenuText(hDC, pmd->Text, rc, colorText);
 			::SetBkMode(hDC, iMode);
-		}	
+		}
 
 		return TRUE;
 	}
@@ -2982,7 +2982,7 @@ namespace Win32xx
 		case WM_LBUTTONDBLCLK:
 			// Convert double left click to single left click
 			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-			return 0L;	// Discard these messages		
+			return 0L;	// Discard these messages
 		case WM_LBUTTONDOWN:
 			// Do default processing first
 			CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
@@ -3007,7 +3007,7 @@ namespace Win32xx
 			break;
 		case USER_POPUPMENU:
 			DoPopupMenu();
-			return 0L; 
+			return 0L;
 		case WM_SYSKEYDOWN:
 			if ((wParam == VK_MENU) || (wParam == VK_F10))
 				return 0L;
@@ -3036,7 +3036,7 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")), 
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")),
 						m_hMenu(NULL), m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
@@ -3697,7 +3697,7 @@ namespace Win32xx
 		tt.clrHot2     = RGB(255, 190, 100);
 		tt.clrPressed1 = RGB(255, 140, 40);
 		tt.clrPressed2 = RGB(255, 180, 80);
-		tt.clrOutline  = RGB(192, 128, 255);
+		tt.clrOutline  = RGB(128, 128, 255);
 
 	//	or you could use the following
 	//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};

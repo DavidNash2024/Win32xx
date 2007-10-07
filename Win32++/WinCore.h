@@ -1,5 +1,5 @@
 // Win32++  Version 5.5
-// Released: 4th October, 2007 by:
+// Released: 9th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -150,6 +150,7 @@ namespace Win32xx
 		HWND Detach();
 		void DestroyWindow();
 		HWND GetAncestor(HWND hWnd);
+		HBRUSH GetBkgndBrush() {return m_hBrushBkgnd;}
 		CWnd* GetCWndObject(HWND hWnd);
 		HWND GetHwnd() {return m_hWnd;}
 		void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
@@ -157,6 +158,7 @@ namespace Win32xx
 		LPCTSTR LoadString(UINT nID);
 		LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClassEx(WNDCLASSEX& wcx);
+		void SetBkgndColor(COLORREF color);
 		void SetParent(HWND hParent);
 		void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -175,7 +177,7 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	
+		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL IsMDIChild() {return FALSE;}
 		void RemoveHook();
 		void SetHook();
@@ -195,6 +197,7 @@ namespace Win32xx
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// Pre-Subclassed Window Procedure
 		TCHAR m_szString[MAX_STRING_SIZE + 1];	// TCHAR array used in LoadString
+		HBRUSH m_hBrushBkgnd;
 
 	}; // class CWnd
 

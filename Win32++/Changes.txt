@@ -9,8 +9,15 @@ Bugs Fixed:
 * Corrected text layout for toolbar buttons with TBSYLE_DROPDOWN style.
 
 New Features:
+* Themes are now enabled by default. CFrame::SetTheme defines the default
+  theme for the rebar, toolbar and menubar. To modify the theme, override
+  SetTheme in CMainFrame. To disable themes, set m_bUseThemes to FALSE in
+  CMainFrame::OnCreate.
+* The default color of a splitter bar is set to the background color of 
+  the rebar;  
 * If a resource for disabled toolbar items isn't provided, an ImageList
-   for disabled buttons is created for you.
+   for disabled buttons is created for you. This imagelist is used for
+   displaying disabled toobar buttons, and disabled menu items with an icon.
 * Updated Rebar themes
   - Improved rendering of non-toolbar bands during band repositioning
   - Round borders and flat style now supported in Win95, Win98 & WinME
@@ -21,15 +28,21 @@ New Features:
 * Icons for disabled popup menu items are now greyed
 * Added Menubar theme support
   - Gradient background for hot buttons (any two colors)
-  - Gradient background for pressed buttons (any two colors) 
-* Themes are enabled by default.   
+  - Gradient background for pressed buttons (any two colors)
+  - Gradient Sidebar for menu items based on pressed button colors.
+  - A border color for Menubar buttons and selected menu items
+* The background color of a window (window class) can now be set with
+   CWnd::SetBkgndColor
 
 The following changes have been made to the Win32++ code:
 Added CFrame::SetTheme
 Added CMenubar::GetTheme
 Added CMenubar::SetTheme
+Added CSplitter::SetBarColor
 Added CToolbar::CreateDisabledImageList
 Added CToolbar::HasText
+Added CWnd::GetBkgndBrush
+Added CWnd::SetBkgndColor
 Added ThemeMenubar
 Removed CFrame::SetBackground
 Removed CRebar::SetBandColor

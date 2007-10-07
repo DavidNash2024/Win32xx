@@ -1,5 +1,5 @@
 // Win32++  Version 5.5
-// Released: 4th October, 2007 by:
+// Released: 9th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -112,7 +112,7 @@ namespace Win32xx
 	public:
 		CToolbar();
 		virtual ~CToolbar();
-		
+
 		void AddBitmap(int iNumButtons, UINT ToolbarID);
 		int  CommandToIndex(int iButtonID);
 		void CreateDisabledImageList();
@@ -203,15 +203,15 @@ namespace Win32xx
 	{
 	public:
 		CMenubar();
-		virtual ~CMenubar();		
-		
-		HMENU GetMenu() {return m_hTopMenu;}	
+		virtual ~CMenubar();
+
+		HMENU GetMenu() {return m_hTopMenu;}
 		void MenuChar(WPARAM wParam, LPARAM lParam);
 		void SetIcons(const std::vector<UINT> ToolbarData, UINT nID_Image, COLORREF crMask);
 		void SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
 		void SysCommand(WPARAM wParam, LPARAM lParam);
 		void SetMenu(HMENU hMenu);
-		void SetTheme(ThemeMenubar& Theme);	
+		void SetTheme(ThemeMenubar& Theme);
 		ThemeMenubar& GetTheme() {return m_Theme;}
 
 	protected:
@@ -229,7 +229,7 @@ namespace Win32xx
 		void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		void ExitMenu();
 		void GrabFocus();
-		BOOL IsMDIChildMaxed();		
+		BOOL IsMDIChildMaxed();
 		LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
 		void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
@@ -245,7 +245,7 @@ namespace Win32xx
 		void ReleaseFocus();
 		void RevertPopupMenu(HMENU hMenu);
 		void SetHotItem(int nHot);
-		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);	
+		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 
 	private:
 		enum Constants
@@ -305,9 +305,9 @@ namespace Win32xx
 		virtual void SetTheme();
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
-		
+
 		HMENU GetFrameMenu() {return m_hMenu;}
-		CMenubar& GetMenubar() {return m_Menubar;}	
+		CMenubar& GetMenubar() {return m_Menubar;}
 		CRebar& GetRebar() {return m_Rebar;}
 		CStatusbar& GetStatusbar() {return m_Statusbar;}
 		CToolbar& GetToolbar() {return m_Toolbar;}
@@ -317,11 +317,11 @@ namespace Win32xx
 		BOOL IsRebarSupported() {return (GetComCtlVersion() >= 470);}
 		BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
 		void SetFrameMenu(INT ID_MENU);
-		void SetView(CWnd& pView);	
+		void SetView(CWnd& pView);
 
 	protected:
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
-		virtual void AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);	
+		virtual void AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
