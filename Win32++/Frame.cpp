@@ -1216,7 +1216,7 @@ namespace Win32xx
 		return !(rbbi.fStyle & RBBS_HIDDEN);
 	}
 
-	BOOL CRebar::OnEraseBkGnd(HDC hDC)
+	BOOL CRebar::OnEraseBkgnd(HDC hDC)
 	{
 		if (!m_Theme.UseThemes)
 			return FALSE;
@@ -1233,12 +1233,12 @@ namespace Win32xx
 
 		// Draw to Rebar background to the memory DC
 		rc.right = 600;
-		GradientFill(hdcMem, m_Theme.clrBkGnd1, m_Theme.clrBkGnd2, &rc, TRUE);
+		GradientFill(hdcMem, m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, &rc, TRUE);
 		if (BarWidth >= 600)
 		{
 			rc.left = 600;
 			rc.right = BarWidth;
-			SolidFill(hdcMem, m_Theme.clrBkGnd2, &rc);
+			SolidFill(hdcMem, m_Theme.clrBkgnd2, &rc);
 		}
 
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
@@ -1326,7 +1326,7 @@ namespace Win32xx
 						// Extra drawing to prevent jagged edge while moving bands
 					//	HDC hdcRebar = ::GetDCEx(m_hWnd, NULL, DCX_NORESETATTRS | DCX_CACHE | DCX_CLIPCHILDREN);
 						HDC hdcRebar = ::GetDC(m_hWnd);
-						::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+				//		::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 						::SelectObject(hdcRebar, ::GetStockObject(SYSTEM_FONT));
 						::ReleaseDC(m_hWnd, hdcRebar);
 					}
@@ -1438,8 +1438,8 @@ namespace Win32xx
 	void CRebar::SetTheme(ThemeRebar& Theme)
 	{
 		m_Theme.UseThemes    = Theme.UseThemes;
-		m_Theme.clrBkGnd1    = Theme.clrBkGnd1;
-		m_Theme.clrBkGnd2    = Theme.clrBkGnd2;
+		m_Theme.clrBkgnd1    = Theme.clrBkgnd1;
+		m_Theme.clrBkgnd2    = Theme.clrBkgnd2;
 		m_Theme.clrBand1     = Theme.clrBand1;
 		m_Theme.clrBand2     = Theme.clrBand2;
 		m_Theme.KeepBandsLeft= Theme.KeepBandsLeft;
@@ -1532,7 +1532,7 @@ namespace Win32xx
 			}
 			break;
 		case WM_ERASEBKGND:
-			if (OnEraseBkGnd((HDC)wParam))
+			if (OnEraseBkgnd((HDC)wParam))
 				return TRUE;
 			break;
 		}
@@ -3673,8 +3673,8 @@ namespace Win32xx
 
 		ThemeRebar rt = {0};
 		rt.UseThemes= TRUE;
-		rt.clrBkGnd1 = RGB(150,190,245);
-		rt.clrBkGnd2 = RGB(196,215,250);
+		rt.clrBkgnd1 = RGB(150,190,245);
+		rt.clrBkgnd2 = RGB(196,215,250);
 		rt.clrBand1  = RGB(220,230,250);
 		rt.clrBand2  = RGB( 70,130,220);
 		rt.KeepBandsLeft = TRUE;

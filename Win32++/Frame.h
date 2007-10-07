@@ -62,8 +62,8 @@ namespace Win32xx
 	struct ThemeRebar
 	{
 		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrBkGnd1;		// Color 1 for rebar background
-		COLORREF clrBkGnd2;		// Color 2 for rebar background
+		COLORREF clrBkgnd1;		// Color 1 for rebar background
+		COLORREF clrBkgnd2;		// Color 2 for rebar background
 		COLORREF clrBand1;		// Color 1 for rebar band background. Use NULL if not required
 		COLORREF clrBand2;		// Color 2 for rebar band background. Use NULL if not required
 		BOOL FlatStyle;			// Bands are rendered with flat rather than raised style
@@ -176,7 +176,7 @@ namespace Win32xx
 		virtual int GetRowHeight(int nRow) const;
 		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL IsBandVisible(int nBand);
-		virtual BOOL OnEraseBkGnd(HDC hDC);
+		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void MoveBandsLeft();
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void ResizeBand(const int nBand, SIZE sz);

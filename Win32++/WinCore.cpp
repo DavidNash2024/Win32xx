@@ -274,7 +274,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL), 
+	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
 					m_PrevWindowProc(NULL), m_hBrushBkgnd(NULL)
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
@@ -911,7 +911,7 @@ namespace Win32xx
 			wcx.hInstance	= GetApp()->GetInstanceHandle();
 			wcx.lpfnWndProc	= CWnd::StaticWindowProc;
 
-			if (wcx.hbrBackground == 0)	wcx.hbrBackground	= m_hBrushBkgnd? m_hBrushBkgnd : (HBRUSH)::GetStockObject(WHITE_BRUSH);	
+			if (wcx.hbrBackground == 0)	wcx.hbrBackground	= m_hBrushBkgnd? m_hBrushBkgnd : (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			if (wcx.hCursor == 0)		wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
 			if (wcx.hIcon == 0) 		wcx.hIcon			= ::LoadIcon(NULL, IDI_APPLICATION);
 			if (wcx.hIconSm == 0)		wcx.hIconSm			= ::LoadIcon(NULL, IDI_APPLICATION);
@@ -951,17 +951,20 @@ namespace Win32xx
 		// Note:  This sets the background color for all windows with this class name,
 		//         not just this window.
 
-		if (m_hBrushBkgnd) ::DeleteObject(m_hBrushBkgnd);		
+		if (m_hBrushBkgnd) ::DeleteObject(m_hBrushBkgnd);
 		m_hBrushBkgnd = CreateSolidBrush(color);
-	
+
 		if (m_hWnd)
 		{
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-			// use non 64 bit compliant code for Visual C++ 6 and below
-			::SetClassLong(m_hWnd, GCL_HBRBACKGROUND, (LONG)m_hBrushBkgnd);
-#else
-			// use 64 bit compliant code otherwise
+#if defined (_MSC_VER) && _MSC_VER > 1200
+  #pragma warning(push)
+  #pragma warning(disable: 4244 ) //Temporarily disable C4244 warning
+			// use 64 bit compliant code
 			::SetClassLongPtr(m_hWnd, GCLP_HBRBACKGROUND, (LONG_PTR)m_hBrushBkgnd);
+  #pragma warning(pop)    // Re-enable 4244 warnings
+#else
+			// use non 64 bit compliant code
+			::SetClassLong(m_hWnd, GCL_HBRBACKGROUND, (LONG)m_hBrushBkgnd);
 #endif
 		}
 	}

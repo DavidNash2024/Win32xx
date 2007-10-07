@@ -349,8 +349,8 @@ void CMainFrame::SetTheme()
 
 	ThemeRebar rt = {0};
 	rt.UseThemes= TRUE;
-	rt.clrBkGnd1 = RGB(150,190,245);
-	rt.clrBkGnd2 = RGB(196,215,250);
+	rt.clrBkgnd1 = RGB(150,190,245);
+	rt.clrBkgnd2 = RGB(196,215,250);
 	rt.clrBand1  = RGB(220,230,250);
 	rt.clrBand2  = RGB( 70,130,220);
 	rt.KeepBandsLeft = TRUE;
