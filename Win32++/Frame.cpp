@@ -1132,7 +1132,7 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CRebar class
 	//
-	CRebar::CRebar()
+	CRebar::CRebar() : m_bIsDragging(FALSE)
 	{
 		ZeroMemory(&m_Theme, sizeof(ThemeRebar));
 	}
@@ -1324,11 +1324,13 @@ namespace Win32xx
 						::DeleteDC(hdcSource);
 
 						// Extra drawing to prevent jagged edge while moving bands
-					//	HDC hdcRebar = ::GetDCEx(m_hWnd, NULL, DCX_NORESETATTRS | DCX_CACHE | DCX_CLIPCHILDREN);
-						HDC hdcRebar = ::GetDC(m_hWnd);
-				//		::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
-						::SelectObject(hdcRebar, ::GetStockObject(SYSTEM_FONT));
-						::ReleaseDC(m_hWnd, hdcRebar);
+						if (m_bIsDragging)
+						{
+							HDC hdcRebar = ::GetDC(m_hWnd);
+							::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+							::SelectObject(hdcRebar, ::GetStockObject(SYSTEM_FONT));
+							::ReleaseDC(m_hWnd, hdcRebar);
+						}
 					}
 				}
 			}
@@ -1517,6 +1519,7 @@ namespace Win32xx
 			break;
 		case WM_LBUTTONDOWN:
 			Orig_lParam = lParam;	// Store the x,y position
+			m_bIsDragging = TRUE;
 			break;
 		case WM_LBUTTONUP:
 			if (m_Theme.UseThemes && m_Theme.LockMenuBand)
@@ -1530,6 +1533,7 @@ namespace Win32xx
 					lParam = Orig_lParam;
 				}
 			}
+			m_bIsDragging = FALSE;
 			break;
 		case WM_ERASEBKGND:
 			if (OnEraseBkgnd((HDC)wParam))

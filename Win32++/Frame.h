@@ -193,6 +193,7 @@ namespace Win32xx
 
 	private:
 		ThemeRebar m_Theme;
+		BOOL m_bIsDragging;
 	};
 
 
