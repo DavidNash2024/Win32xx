@@ -467,6 +467,7 @@ namespace Win32xx
 				bReturn = TRUE;
 		}
 
+		// return TRUE if any button has text
 		return bReturn;
 	}
 
@@ -677,7 +678,6 @@ namespace Win32xx
 				}
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
-		//	return CDRF_DODEFAULT;
 		}
 		return 0L;
 	}

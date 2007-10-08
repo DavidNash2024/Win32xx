@@ -14,7 +14,7 @@ New Features:
   SetTheme in CMainFrame. To disable themes, set m_bUseThemes to FALSE in
   CMainFrame::OnCreate.
 * The default color of a splitter bar is set to the background color of 
-  the rebar;  
+  the rebar.  
 * If a resource for disabled toolbar items isn't provided, an ImageList
    for disabled buttons is created for you. This imagelist is used for
    displaying disabled toobar buttons, and disabled menu items with an icon.
