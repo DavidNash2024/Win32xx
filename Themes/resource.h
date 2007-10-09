@@ -39,7 +39,7 @@
 #define IDM_CARD_HEART                  152
 #define IDM_CARD_SPADE                  153
 
-#define IDM_DEFAULT_THEME               160
+#define IDM_NONE                        160
 #define IDM_BLUE                        161
 #define IDM_BLUE_LOCKED                 162
 #define IDM_BLUE_BKGND                  163
@@ -49,7 +49,7 @@
 #define IDM_OCHRE                       167
 #define IDM_MAUVE                       168
 #define IDM_PINK                        169
-#define IDM_YELLOW                      170
+#define IDM_GOLD                      170
 
 
 

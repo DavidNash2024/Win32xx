@@ -1902,6 +1902,8 @@ namespace Win32xx
 
 					RECT rc = pdis->rcItem;
 					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
+					if (m_Theme.UseThemes)
+						rc.left += 2;
 
 					// Draw a white or black check mark as required
 					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
@@ -2096,7 +2098,10 @@ namespace Win32xx
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		HDC hDC = pdis->hDC;
 
-		int BarWidth = m_Theme.UseThemes? 20 : 0;
+		int Iconx;
+		int Icony;
+		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+		int BarWidth = m_Theme.UseThemes? Iconx + 6 : 0;
 		if (m_Theme.UseThemes)		// Draw the side bar
 		{
 			RECT rcBar = rc;
@@ -3675,22 +3680,22 @@ namespace Win32xx
 		// Set the rebar theme
 		CRebar& RB = GetRebar();
 
-		ThemeRebar rt = {0};
-		rt.UseThemes= TRUE;
-		rt.clrBkgnd1 = RGB(150,190,245);
-		rt.clrBkgnd2 = RGB(196,215,250);
-		rt.clrBand1  = RGB(220,230,250);
-		rt.clrBand2  = RGB( 70,130,220);
-		rt.KeepBandsLeft = TRUE;
-		rt.LockMenuBand  = TRUE;
-		rt.ShortBands    = TRUE;
-		rt.RoundBorders  = TRUE;
+		ThemeRebar tr = {0};
+		tr.UseThemes= TRUE;
+		tr.clrBkgnd1 = RGB(150,190,245);
+		tr.clrBkgnd2 = RGB(196,215,250);
+		tr.clrBand1  = RGB(220,230,250);
+		tr.clrBand2  = RGB( 70,130,220);
+		tr.KeepBandsLeft = TRUE;
+		tr.LockMenuBand  = TRUE;
+		tr.ShortBands    = TRUE;
+		tr.RoundBorders  = TRUE;
 
 	//	or you could use the following
 	//	BOOL T = TRUE;
 	//	BOOL F = FALSE;
 	//	ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
-		RB.SetTheme(rt);
+		RB.SetTheme(tr);
 
 		// Set the toolbar theme
 		CToolbar& TB = GetToolbar();
@@ -3714,12 +3719,12 @@ namespace Win32xx
 		tm.UseThemes   = TRUE;
 		tm.clrHot1     = RGB(255, 230, 190);
 		tm.clrHot2     = RGB(255, 190, 100);
-		tm.clrPressed1 = RGB(255, 160, 50);
-		tm.clrPressed2 = RGB(255, 210, 90);
-		tm.clrOutline  = RGB(128, 128, 128);
+		tm.clrPressed1 = RGB(150,190,245);
+		tm.clrPressed2 = RGB(220,230,250);
+		tm.clrOutline  = RGB(128, 128, 200);
 
 	//	or you could use the following
-	//	ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
+	//	ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 		MB.SetTheme(tm);
 
 		RecalcLayout();

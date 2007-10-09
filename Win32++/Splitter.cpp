@@ -113,7 +113,7 @@ namespace Win32xx
 			// Set the color of the splitter bar
 			CRebar& RB = GetApp()->GetFrame()->GetRebar();
 			if (RB.GetTheme().UseThemes)
-				m_Bar.SetBkgndColor(RB.GetTheme().clrBkGnd2);
+				m_Bar.SetBkgndColor(RB.GetTheme().clrBkgnd2);
 			else
 				m_Bar.SetBkgndColor(GetSysColor(COLOR_BTNFACE));
 			

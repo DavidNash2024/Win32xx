@@ -249,7 +249,6 @@ namespace Win32xx
 		void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 
-//	private:
 		enum Constants
 		{
 			USER_POPUPMENU  = WM_APP + 2,	// creates the popup menu
@@ -298,6 +297,7 @@ namespace Win32xx
 	class CFrame : public CWnd
 	{
 	public:
+		// Note: virtual functions can be overridden in inherited classes
 		CFrame();
 		virtual ~CFrame();
 		virtual RECT GetClientSize();
