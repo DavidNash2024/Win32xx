@@ -27,7 +27,6 @@ public:
 	virtual void OnStatusTextChange(DISPPARAMS* pDispParams);
 	virtual void OnTimer(WPARAM wParam);
 	virtual void OnTitleChange(DISPPARAMS* pDispParams);
-	virtual void SetTheme();
 
 protected:
 	void AddListboxBand(int Listbox_Height);
