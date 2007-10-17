@@ -543,11 +543,16 @@ namespace Win32xx
 			::DestroyIcon(m_hIconSmall);
 		m_hIconSmall = NULL;
 
+		if (m_hBrushBkgnd != NULL)
+			::DeleteObject(m_hBrushBkgnd);
+		m_hBrushBkgnd = NULL;
+
 		if (::IsWindow(m_hWnd))
 			::DestroyWindow(m_hWnd);
 
 		m_hWnd = NULL;
 		m_hWndParent = NULL;
+		m_PrevWindowProc = NULL;
 	}
 
 	HWND CWnd::Detach()

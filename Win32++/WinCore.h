@@ -133,6 +133,8 @@ namespace Win32xx
 	//
 	class CWnd
 	{
+		friend class CPropertySheet; // CPropertySheet uses Subclass
+
 	public:
 		// Note: virtual functions can be overridden in inherited classes
 		CWnd();				// Constructor
@@ -141,6 +143,7 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual void DestroyWindow();
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -148,7 +151,6 @@ namespace Win32xx
 		BOOL Attach(HWND hWnd);
 		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		HWND Detach();
-		void DestroyWindow();
 		HWND GetAncestor(HWND hWnd);
 		HBRUSH GetBkgndBrush() {return m_hBrushBkgnd;}
 		CWnd* GetCWndObject(HWND hWnd);
@@ -209,6 +211,8 @@ namespace Win32xx
 	{
 		friend class CWnd;		// CWnd uses m_MapLock and SetTlsIndex
 		friend class CDialog;	// CDialog uses m_MapLock
+		friend class CPropertyPage; // CPropertyPage uses m_MapLock
+		friend class CPropertySheet; // CPropertSheet uses m_MapLock and SetTlsIndex
 
 	public:
 		// Note: virtual functions can be overridden in inherited class

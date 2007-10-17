@@ -2206,7 +2206,7 @@ namespace Win32xx
 
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
-				ItemData* pItem = new ItemData;		// deleted in DoPopupMenu
+				ItemData* pItem = new ItemData;		// deleted in RevertPopupMenu
 				ZeroMemory(pItem, sizeof(ItemData));
 				pItem->hMenu = hMenu;
 				pItem->nPos = i;
@@ -3041,7 +3041,7 @@ namespace Win32xx
 	} // LRESULT CMenubar::WndProc(...)
 
 
-	//////////////////////////////////
+	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
