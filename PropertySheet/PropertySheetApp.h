@@ -1,23 +1,23 @@
 //////////////////////////////////////////////////
-// FrameApp.h
+// PropertySheetApp.h
 
-#ifndef FRAMEAPP_H
-#define FRAMEAPP_H
+#ifndef PROPERTYSHEETAPP_H
+#define PROPERTYSHEETAPP_H
 
 #include "Mainfrm.h"
 
 
 // Declaration of the CFrameApp class
-class CPSApp : public CWinApp
+class CPropertySheetApp : public CWinApp
 {
 public:
-	CPSApp(HINSTANCE hInstance);
-	virtual ~CPSApp();
+	CPropertySheetApp(HINSTANCE hInstance);
+	virtual ~CPropertySheetApp();
 
 private:
 	CMainFrame m_Frame;
 };
 
 
-#endif // define FRAMEAPP_H
+#endif // define PROPERTYSHEETAPP_H
 

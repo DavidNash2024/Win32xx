@@ -7,7 +7,7 @@
 INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CPSApp theApp(hInstance);
+	CPropertySheetApp theApp(hInstance);
 
 	// Process the window messages
 	return theApp.MessageLoop();

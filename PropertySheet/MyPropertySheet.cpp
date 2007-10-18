@@ -10,7 +10,6 @@ CButtonPage::CButtonPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPrope
 
 BOOL CButtonPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	TRACE("Button DialogProc");
 	LPNMHDR     lpnmhdr;
 
 	switch (uMsg)
@@ -63,8 +62,6 @@ CComboPage::CComboPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPropert
 
 BOOL CComboPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	TRACE("Combo Boxes DialogProc");
-
 	LPNMHDR     lpnmhdr;
 
 	switch (uMsg)
@@ -110,12 +107,13 @@ BOOL CComboPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hwndParent /* = NULL*/) : CPropertySheet(pszCaption, hwndParent)
 {
 	m_PSH.pszIcon          = MAKEINTRESOURCE(IDI_BACKCOLOR);
-	m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USEICONID;
+	m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USEICONID  | PSH_USECALLBACK;
 }
 
 BOOL CMyPropertySheet::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-    // crack message parameters
+	TRACE("CMyPropertySheet::OnCommand");
+
     UINT nID = LOWORD(wParam);
     HWND hWndCtrl = (HWND)lParam;
     int nCode = HIWORD(wParam);
@@ -126,9 +124,9 @@ BOOL CMyPropertySheet::OnCommand(WPARAM wParam, LPARAM lParam)
         if (::SendMessage(hWndCtrl, WM_GETDLGCODE, 0, 0) &
             (DLGC_BUTTON|DLGC_DEFPUSHBUTTON))
         {
-            LONG lStyle = ::GetWindowLong(hWndCtrl, GWL_STYLE) & 0x0F;
-            if (lStyle == BS_PUSHBUTTON || lStyle == BS_DEFPUSHBUTTON ||
-                lStyle == BS_USERBUTTON || lStyle == BS_OWNERDRAW)
+       //     LONG lStyle = ::GetWindowLong(hWndCtrl, GWL_STYLE) & 0x0F;
+       //     if (lStyle == BS_PUSHBUTTON || lStyle == BS_DEFPUSHBUTTON ||
+       //         lStyle == BS_USERBUTTON || lStyle == BS_OWNERDRAW)
             {
                 if (nID == IDOK)
                 {
@@ -151,9 +149,10 @@ BOOL CMyPropertySheet::OnCommand(WPARAM wParam, LPARAM lParam)
                         return TRUE;
                     } */
                 }
-      /*          else if (nID == ID_APPLY_NOW)
+                else if (nID == ID_APPLY_NOW)
                 {
-                    if (YOU_WANT_TO_CLOSE_THE_PROPERTY_SHEET)
+					TRACE("Apply button Hit");
+                /*    if (YOU_WANT_TO_CLOSE_THE_PROPERTY_SHEET)
                     {
                         // do whatever you want before 
                         // closing the property page
@@ -170,10 +169,11 @@ BOOL CMyPropertySheet::OnCommand(WPARAM wParam, LPARAM lParam)
                     {
                         // do whatever you want.
                         return TRUE;
-                    }
-                } */
+                    }*/
+                } 
                 else if (nID == IDCANCEL)
                 {
+					TRACE("Cancel Button Hit");
            /*         if (YOU_WANT_TO_CLOSE_THE_PROPERTY_SHEET)
                     {
                         // do whatever you want before 
@@ -196,51 +196,18 @@ BOOL CMyPropertySheet::OnCommand(WPARAM wParam, LPARAM lParam)
             }
         }
     }
-    return FALSE;
+//   return FALSE;
+	return TRUE;
 }
-
-
-
 
 LRESULT CMyPropertySheet::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_CLOSE:
-		TRACE("WM_CLOSE");
-		break;
-	case WM_COMMAND:
-		TRACE("WM_COMMAND in CMyPropertySheet::WndProc");
-		if (LOWORD(wParam) == IDOK)
-			TRACE("Got OK button in CMyPropertySheet::WndProc");
-		break;
-	case WM_SYSCOMMAND:
-		if (wParam == SC_CLOSE)
-		{
-			DestroyWindow();
-			return 0L;
-		}
-	case WM_NCCREATE:
-		TRACE("WM_NCCREATE");
-		break;
-	case WM_NCACTIVATE:
-		TRACE("WM_NCACTIVATE");
-		break;
-	case PSM_SETWIZBUTTONS:
-		TRACE("PSM_SETWIZBUTTONS");
-		break;
-	case WM_ACTIVATE:
-		TRACE("WM_ACTIVATE");
-		break;
 
-	case WM_INITDIALOG:
-		TRACE("CMyPropertySheet::WndProc");
-		break;
 	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
 }
-
-
 

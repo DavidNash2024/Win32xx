@@ -1,11 +1,11 @@
 //////////////////////////////////////////////
-//FrameApp.cpp
+//PropertySheetApp.cpp
 
 #include "PropertySheetApp.h"
 
 
 // Definitions for the CFrameApp class
-CPSApp::CPSApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CPropertySheetApp::CPropertySheetApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
 	//Start Tracing
 	TRACE(_T("Tracing Started"));
@@ -21,6 +21,6 @@ CPSApp::CPSApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	}
 }
 
-CPSApp::~CPSApp()
+CPropertySheetApp::~CPropertySheetApp()
 {
 }
