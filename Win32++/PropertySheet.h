@@ -3,7 +3,11 @@
 
 #include "../Win32++/Dialog.h"
 
-#define ID_APPLY_NOW 0x3021
+#define ID_APPLY_NOW   0x3021
+#define ID_WIZBACK     0x3023
+#define ID_WIZNEXT     0x3024
+#define ID_WIZFINISH   0x3025
+#define ID_HELP        0xE146
 
 namespace Win32xx
 {
@@ -14,19 +18,27 @@ namespace Win32xx
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
 
-		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		PROPSHEETPAGE GetPSP() {return m_PSP;}
-		virtual void OnApply() { TRACE("Apply");}
-		virtual void OnCancel() {TRACE("Cancel");}
-		virtual BOOL OnInitDialog() { return TRUE;}
-		virtual void OnOK() {TRACE("OK");}
-		virtual void OnSetActive() {}
-		virtual void OnReset() {TRACE("Reset");}
-		virtual void OnWizardBack() {}
-		virtual void OnWizardFinish() {}
-		virtual void OnWizardNext() {}
-		static BOOL CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		BOOL IsButtonEnabled(int iButton);
+		virtual BOOL OnApply();
+		virtual void OnCancel();
+		virtual BOOL OnInitDialog();
+		virtual BOOL OnKillActive();
+		virtual void OnOK();
+		virtual BOOL OnQueryCancel();
+		virtual BOOL OnSetActive();
+		virtual LRESULT OnWizardBack();
+		virtual BOOL OnWizardFinish();
+		virtual LRESULT OnWizardNext();
+		void CancelToClose() {/*Not implemented*/}
+		void QuerySiblings() {/*Not implemented*/}
+		void SetModified()   {/*Not implemented*/}
+
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+
+		static LRESULT CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
 		PROPSHEETPAGE m_PSP;
@@ -52,7 +64,7 @@ namespace Win32xx
 		void GetPage() {}
 		int GetPageCount() {return (int)m_vPages.size();}
 		void GetPageIndex() {}
-		void GetTabControl() {}
+		HWND GetTabControl() {return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0, 0);}
 		virtual void OnInitSheet() {}
 		void RemovePage(CPropertyPage* pPage) {}
 		void SetActivePage() {}

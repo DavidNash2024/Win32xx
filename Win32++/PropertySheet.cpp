@@ -19,14 +19,14 @@ namespace Win32xx
 		m_PSP.dwSize        = sizeof(PROPSHEETPAGE);
 		m_PSP.hInstance     = GetApp()->GetInstanceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
-		m_PSP.pfnDlgProc    = CPropertyPage::StaticDialogProc;
+		m_PSP.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
 		m_PSP.lParam        = (LPARAM)this;
 		m_PSP.pszTitle      = m_szTitle;
 	}
 
-	BOOL CPropertyPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CPropertyPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derrived from CDialog if you wish to handle messages
+		// Override this function in your class derrived from CPropertyPage if you wish to handle messages
 		// A typical function might look like this:
 
 		//	switch (uMsg)
@@ -44,7 +44,7 @@ namespace Win32xx
 		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-	BOOL CPropertyPage::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CPropertyPage::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// All unhandled property page messages end up here
 
@@ -53,26 +53,8 @@ namespace Win32xx
 	    case WM_INITDIALOG:
 		    return OnInitDialog();
 
-		case WM_COMMAND:
-	        switch (LOWORD (wParam))
-	        {
-			case IDOK:
-				TRACE("WM_COMMAND IDOK");
-				break;
-			default:
-				{
-					OnCommand(wParam, lParam);
-
-					// Refelect this message if it's from a control
-					CWnd* Wnd = GetCWndObject((HWND)lParam);
-					if (Wnd != NULL)
-						Wnd->OnMessageReflect(uMsg, wParam, lParam);
-				}
-				break;  // Some commands require default processing
-	        }
-	        break;
 		case WM_NOTIFY:
-			return (OnNotify(wParam, lParam) == TRUE);
+			return OnNotify(wParam, lParam);
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -93,25 +75,149 @@ namespace Win32xx
 			return (BOOL) OnMessage(hWnd, uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
-	    return FALSE;
+	    return 0L;
 
 	} // LRESULT CALLBACK CPropertyPage::DialogProc(...)
 
-	BOOL CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CPropertyPage::IsButtonEnabled(int iButton)
+	{
+		HWND hWnd = ::GetDlgItem(::GetParent(m_hWnd), iButton);
+		if (hWnd == NULL)
+			return FALSE;
+		return ::IsWindowEnabled(hWnd);
+	}
+
+	BOOL CPropertyPage::OnApply() 
+	{
+		// This function is called for each page when the Apply button is pressed
+		// Override this function in your derived class if required.
+
+		OnOK();
+		return TRUE;
+	}
+
+	void CPropertyPage::OnCancel()
+	{
+		// This function is called for each page when the Cancel button is pressed
+		// Override this function in your derived class if required.
+	}
+
+	BOOL CPropertyPage::OnQueryCancel()
+	{
+		// Called when the cancel button is pressed, and before the cancel has taken place
+
+		return TRUE;    // ok to cancel
+	}
+
+	BOOL CPropertyPage::OnInitDialog()
+	{
+		// Called when the property page is created
+		// Override this function in your derived class if required.
+
+		return TRUE;
+	}
+
+	void CPropertyPage::OnOK() 
+	{
+		// Called for each page when the OK button is pressed
+		// Override this function in your derived class if required.	
+	}
+
+	BOOL CPropertyPage::OnSetActive() 
+	{
+		return TRUE;
+	}
+	
+	LRESULT CPropertyPage::OnWizardBack() 
+	{
+		// This function is called when the Back button is pressed on a wizard page
+		// Override this function in your derived class if required.
+
+		return 0L;
+	}
+	
+	BOOL CPropertyPage::OnWizardFinish() 
+	{
+		// This function is called when the Finish button is pressed on a wizard page
+		// Override this function in your derived class if required.
+
+		return TRUE;
+	}
+	
+	LRESULT CPropertyPage::OnWizardNext() 
+	{
+		// This function is called when the Next button is pressed on a wizard page
+		// Override this function in your derived class if required.
+
+		return 0L;
+	}
+
+	BOOL CPropertyPage::OnKillActive()
+	{
+		return TRUE;
+	}
+
+	LRESULT CPropertyPage::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		NMHDR* pNMHDR = (NMHDR*)lParam;
+		switch (pNMHDR->code)
+		{
+		case PSN_SETACTIVE:
+			return OnSetActive();
+			break;
+		case PSN_KILLACTIVE:
+			return !OnKillActive();
+			break;
+		case PSN_APPLY:
+			return OnApply() ? PSNRET_NOERROR : PSNRET_INVALID_NOCHANGEPAGE;
+			break;
+		case PSN_RESET:
+			OnCancel();
+			break;
+		case PSN_QUERYCANCEL:
+			return !OnQueryCancel();
+			break;
+		case PSN_WIZNEXT:
+			//WINBUG: Win32 will send a PSN_WIZBACK even if the button is disabled.
+		//	if (IsButtonEnabled(ID_WIZNEXT))
+				return OnWizardNext();
+			break;
+		case PSN_WIZBACK:
+			//WINBUG: Win32 will send a PSN_WIZBACK even if the button is disabled.
+		//	if (IsButtonEnabled(ID_WIZBACK))
+				return OnWizardBack();
+			break;
+		case PSN_WIZFINISH:
+			return  !OnWizardFinish();
+			break; 
+		case PSN_HELP:
+			SendMessage(m_hWnd, WM_COMMAND, ID_HELP, 0);
+			break;
+
+		default:
+			return FALSE;   // not handled
+		}
+		return TRUE;
+	}
+
+
+	LRESULT CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		GetApp()->m_MapLock.Lock();
 
 		if (uMsg == WM_INITDIALOG)
 		{
-			TRACE("WM_INITDIALOG in CPropertyPage::StaticDialogProc");
 			CPropertyPage* pPage = (CPropertyPage*)(((LPPROPSHEETPAGE)lParam)->lParam);
 			GetApp()->GetHWNDMap().insert(std::make_pair(hwndDlg, pPage));
+			pPage->m_hWnd = hwndDlg;
+			pPage->m_hWndParent = GetParent(hwndDlg);
 		}
 
 		// Allocate an iterator for our HWND map
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		
 		m = GetApp()->GetHWNDMap().find(hwndDlg);
+		
 		GetApp()->m_MapLock.Release();
 		if (m != GetApp()->GetHWNDMap().end())
 		{
