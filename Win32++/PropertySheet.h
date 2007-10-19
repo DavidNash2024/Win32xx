@@ -1,3 +1,49 @@
+// Latest verion available at:
+// http://sourceforge.net/projects/win32-framework
+
+
+// Win32++  Version 5.51 Beta
+// Released: 20th October, 2007 by:
+//
+//      David Nash
+//      email: dnash@bigpond.net.au
+//      url: http://users.bigpond.net.au/programming/
+//
+//
+// Copyright (c) 2005-2007  David Nash
+//
+// Permission is hereby granted, free of charge, to
+// any person obtaining a copy of this software and
+// associated documentation files (the "Software"),
+// to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice
+// shall be included in all copies or substantial portions
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+// ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+// PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+// SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+// ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////
+// PropertySheet.h
+//  Declaration of the following classes:
+//  CPropertyPage and CPropertySheet
+
 #ifndef PROPERTYSHEET_H
 #define PROPERTYSHEET_H
 
@@ -8,6 +54,10 @@
 #define ID_WIZNEXT     0x3024
 #define ID_WIZFINISH   0x3025
 #define ID_HELP        0xE146
+
+#ifndef PROPSHEETHEADER_V1_SIZE
+ #define PROPSHEETHEADER_V1_SIZE 40
+#endif
 
 namespace Win32xx
 {
@@ -23,22 +73,23 @@ namespace Win32xx
 		PROPSHEETPAGE GetPSP() {return m_PSP;}
 		BOOL IsButtonEnabled(int iButton);
 		virtual int Validate();
-		virtual BOOL OnApply();
+		virtual void OnApply();
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
-		virtual BOOL OnKillActive();
+		virtual void OnKillActive();
 		virtual void OnOK();
 		virtual BOOL OnQueryCancel();
-		virtual BOOL OnSetActive();
-		virtual LRESULT OnWizardBack();
+		virtual void OnSetActive();
+		virtual void OnWizardBack();
 		virtual BOOL OnWizardFinish();
-		virtual LRESULT OnWizardNext();
-		void CancelToClose() {/*Not implemented*/}
-		void QuerySiblings() {/*Not implemented*/}
-		void SetModified()   {/*Not implemented*/}
+		virtual void OnWizardNext();
+		virtual void CancelToClose();
+		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
+		virtual void SetModified(BOOL bChanged);
 
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 
+		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
 		static BOOL CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
@@ -53,7 +104,7 @@ namespace Win32xx
 	public:
 		CPropertySheet(UINT nIDCaption, HWND hwndParent = NULL);
 		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
-		virtual ~CPropertySheet(); 
+		virtual ~CPropertySheet();
 
 		void AddPage(CPropertyPage* pPage);
 		void BuildPageArray();
@@ -81,7 +132,7 @@ namespace Win32xx
 	private:
 		TCHAR m_szCaption[MAX_STRING_SIZE];
 		PROPSHEETPAGE* m_ppsp; // Array of PROPSHEETPAGE
-	
+
 	};
 
 }

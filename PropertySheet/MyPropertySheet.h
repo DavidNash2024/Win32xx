@@ -26,16 +26,16 @@ public:
 	CButtonPage(UINT nIDTemplate, LPCTSTR szTitle = NULL);
 	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual BOOL OnApply()		{TRACE ("OnAppy"); return TRUE;}
-	virtual void OnCancel()		{TRACE ("OnCancel"); }
-	virtual BOOL OnInitDialog()	{TRACE ("OnInitDialog"); return TRUE;}
-//	virtual BOOL OnKillActive()	{TRACE ("OnKillActive"); return TRUE;}
-	virtual void OnOK()			{TRACE ("OnOK"); }
-	virtual BOOL OnQueryCancel(){TRACE ("OnQueryCancel"); return TRUE;}
-	virtual BOOL OnSetActive()	{TRACE ("Button OnSetActive"); PropSheet_SetWizButtons(GetParent(m_hWnd), PSWIZB_NEXT); return FALSE;}
-	virtual LRESULT OnWizardBack()	{TRACE ("OnWizardBack"); return 0L;}
-	virtual BOOL OnWizardFinish()	{TRACE ("OnWizardFinish"); return TRUE;}
-	virtual LRESULT OnWizardNext()	{TRACE ("OnWizardNext"); return 0L;}
+	virtual void OnApply()		{ TRACE ("OnAppy"); }
+	virtual void OnCancel()		{ TRACE ("OnCancel"); }
+	virtual BOOL OnInitDialog()	{ TRACE ("OnInitDialog"); return TRUE; }
+//	virtual BOOL OnKillActive()	{ TRACE ("OnKillActive"); }
+	virtual void OnOK()			{ TRACE ("OnOK"); }
+	virtual BOOL OnQueryCancel(){ TRACE ("OnQueryCancel"); return TRUE; }
+	virtual void OnSetActive()	{ TRACE ("Button OnSetActive"); PropSheet_SetWizButtons(GetParent(m_hWnd), PSWIZB_NEXT); }
+	virtual void OnWizardBack()	{ TRACE ("OnWizardBack"); }
+	virtual BOOL OnWizardFinish()	{ TRACE ("OnWizardFinish"); return TRUE; }
+	virtual void OnWizardNext()	{ TRACE ("OnWizardNext"); }
 
 };
 
@@ -45,7 +45,7 @@ public:
 	CComboPage(UINT nIDTemplate, LPCTSTR szTitle  = NULL);
 	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual BOOL OnSetActive()	{TRACE ("Combo OnSetActive"); PropSheet_SetWizButtons(GetParent(m_hWnd), PSWIZB_BACK | PSWIZB_FINISH); return FALSE;}
+	virtual void OnSetActive()	{ TRACE ("Combo OnSetActive"); PropSheet_SetWizButtons(GetParent(m_hWnd), PSWIZB_BACK | PSWIZB_FINISH); }
 };
 
 

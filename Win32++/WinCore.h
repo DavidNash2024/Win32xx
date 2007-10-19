@@ -1,5 +1,9 @@
-// Win32++  Version 5.5
-// Released: 9th October, 2007 by:
+// Latest verion available at:
+// http://sourceforge.net/projects/win32-framework
+
+
+// Win32++  Version 5.51 Beta
+// Released: 20th October, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -133,7 +137,8 @@ namespace Win32xx
 	//
 	class CWnd
 	{
-		friend class CPropertySheet; // CPropertySheet uses Subclass
+		friend class CPropertySheet; // CPropertySheet uses Subclass, OnInitialUpdate
+		friend class CPropertyPage;
 
 	public:
 		// Note: virtual functions can be overridden in inherited classes

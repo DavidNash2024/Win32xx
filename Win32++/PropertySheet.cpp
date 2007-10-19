@@ -1,3 +1,50 @@
+// Latest verion available at:
+// http://sourceforge.net/projects/win32-framework
+
+
+// Win32++  Version 5.51 Beta
+// Released: 20th October, 2007 by:
+//
+//      David Nash
+//      email: dnash@bigpond.net.au
+//      url: http://users.bigpond.net.au/programming/
+//
+//
+// Copyright (c) 2005-2007  David Nash
+//
+// Permission is hereby granted, free of charge, to
+// any person obtaining a copy of this software and
+// associated documentation files (the "Software"),
+// to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice
+// shall be included in all copies or substantial portions
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+// ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+// PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+// SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+// ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////
+// PropertySheet.cpp
+//  Definitions for the following classes:
+//  CPropertyPage and CPropertySheet
+
+
 #include "PropertySheet.h"
 
 namespace Win32xx
@@ -6,10 +53,10 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CPropertyPage class
 	//
-	CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) 
+	CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/)
 	{
 		ZeroMemory(&m_PSP, sizeof(PROPSHEETPAGE));
-		m_szTitle[0] = '\0';
+		m_szTitle[0] = _T('\0');
 		if (szTitle)
 		{
 			lstrcpyn(m_szTitle, szTitle, MAX_STRING_SIZE);
@@ -17,12 +64,21 @@ namespace Win32xx
 		}
 
 		m_PSP.dwSize        = sizeof(PROPSHEETPAGE);
+		m_PSP.dwFlags       |= PSP_USECALLBACK;
 		m_PSP.hInstance     = GetApp()->GetInstanceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
-		m_PSP.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
-		m_PSP.lParam        = (LPARAM)this;
 		m_PSP.pszTitle      = m_szTitle;
+		m_PSP.pfnDlgProc    = CPropertyPage::StaticDialogProc;
+		m_PSP.lParam        = (LPARAM)this;
+		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
 	}
+
+	void CPropertyPage::CancelToClose()
+	{
+		if (m_hWnd)
+			::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0, 0);
+	}
+
 
 	BOOL CPropertyPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
@@ -85,13 +141,14 @@ namespace Win32xx
 		return ::IsWindowEnabled(hWnd);
 	}
 
-	BOOL CPropertyPage::OnApply() 
+	void CPropertyPage::OnApply()
 	{
 		// This function is called for each page when the Apply button is pressed
 		// Override this function in your derived class if required.
 
+		// Set the return value for this notification
 		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
-		return TRUE;
+		
 	}
 
 	void CPropertyPage::OnCancel()
@@ -103,8 +160,8 @@ namespace Win32xx
 	BOOL CPropertyPage::OnQueryCancel()
 	{
 		// Called when the cancel button is pressed, and before the cancel has taken place
-		
-		return TRUE;    // ok to cancel
+
+		return TRUE;    // Allow cancel to proceed
 	}
 
 	BOOL CPropertyPage::OnInitDialog()
@@ -112,55 +169,55 @@ namespace Win32xx
 		// Called when the property page is created
 		// Override this function in your derived class if required.
 
-		return TRUE;
+		// wParam holds handle of control to get keyboard focus when retun TRUE
+		// lParam holds pointer to PROPSHEETPAGE structure
+
+		return TRUE; // Pass Keyboard control to handle in WPARAM
 	}
 
-	BOOL CPropertyPage::OnKillActive()
+	void CPropertyPage::OnKillActive()
 	{
 		// This is called in response to a PSN_KILLACTIVE notification, which
 		// is sent whenever the OK or Apply button is pressed.
-		// It provides an opportunity to verify the page contents before it's closed.
+		// It provides an opportunity to validate the page contents before it's closed.
 
+		// Set the return value for this notification
 		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
-
-		return TRUE;
 	}
 
-	void CPropertyPage::OnOK() 
+	void CPropertyPage::OnOK()
 	{
 		// Called for each page when the OK button is pressed
 		// Override this function in your derived class if required.
 
+		// Set the return value for this notification
 		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
 	}
 
-	BOOL CPropertyPage::OnSetActive() 
+	void CPropertyPage::OnSetActive()
 	{
-		return TRUE;
+		// Called when a page becomes active
+		// Override this function in your derived class if required.
 	}
-	
-	LRESULT CPropertyPage::OnWizardBack() 
+
+	void CPropertyPage::OnWizardBack()
 	{
 		// This function is called when the Back button is pressed on a wizard page
 		// Override this function in your derived class if required.
-
-		return 0L;
 	}
-	
-	BOOL CPropertyPage::OnWizardFinish() 
+
+	BOOL CPropertyPage::OnWizardFinish()
 	{
 		// This function is called when the Finish button is pressed on a wizard page
 		// Override this function in your derived class if required.
 
-		return TRUE;
+		return TRUE; // Allow wizard to finish
 	}
-	
-	LRESULT CPropertyPage::OnWizardNext() 
+
+	void CPropertyPage::OnWizardNext()
 	{
 		// This function is called when the Next button is pressed on a wizard page
 		// Override this function in your derived class if required.
-
-		return 0L;
 	}
 
 	LRESULT CPropertyPage::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -169,89 +226,140 @@ namespace Win32xx
 		switch(pNotify->hdr.code)
 		{
 		case PSN_SETACTIVE:
-			return OnSetActive();
-			break;
+			OnSetActive();
+			return TRUE;
 		case PSN_KILLACTIVE:
-			return OnKillActive();
-			break;
+			OnKillActive();
+			return TRUE;
 		case PSN_APPLY:
-		//	return OnApply() ? PSNRET_NOERROR : PSNRET_INVALID_NOCHANGEPAGE;
 			if (pNotify->lParam)
 				OnOK();
-			else 
+			else
 				OnApply();
-		//	break;
-			return PSNRET_INVALID; 
+			return TRUE;
 		case PSN_RESET:
 			OnCancel();
-			break;
+			return TRUE;
 		case PSN_QUERYCANCEL:
 			return !OnQueryCancel();
-			break;
 		case PSN_WIZNEXT:
-			return OnWizardNext();
-			break;
+			OnWizardNext();
+			return TRUE;
 		case PSN_WIZBACK:
-			return OnWizardBack();
-			break;
+			OnWizardBack();
+			return TRUE;
 		case PSN_WIZFINISH:
-			return  !OnWizardFinish();
-			break; 
+			return !OnWizardFinish();
 		case PSN_HELP:
 			SendMessage(m_hWnd, WM_COMMAND, ID_HELP, 0);
-			break;
+			return TRUE;
 
-		default:
-			return FALSE;   // not handled
 		}
+		return FALSE;
+	}
+
+	LRESULT CPropertyPage::QuerySiblings(WPARAM wParam, LPARAM lParam)
+	{
+		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
+	}
+
+	void CPropertyPage::SetModified(BOOL bChanged)
+	{
+		if (m_hWnd != NULL) 
+		{
+			if (bChanged)
+				::SendMessage(m_hWndParent, PSM_CHANGED, (WPARAM)m_hWnd, 0);
+			else
+				::SendMessage(m_hWndParent, PSM_UNCHANGED, (WPARAM)m_hWnd, 0);
+		}
+	}
+
+	UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND /*hwnd*/, UINT uMsg, LPPROPSHEETPAGE ppsp)
+	{
+		// Note: the hwnd is always NULL
+		try
+		{
+			switch (uMsg)
+			{
+			case PSPCB_CREATE:
+				{
+					TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+					if (pTLSData == NULL)
+						throw (CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS")));
+
+					// Store the CPropertyPage pointer in Thread Local Storage
+					pTLSData->pCWnd = (CWnd*)ppsp->lParam;
+				}
+
+				return TRUE;
+			}
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();		
+		}
+
+		catch (...)
+		{
+			DebugErrMsg(_T("CPropertyPage::StaticPropSheetPageProc"));
+			throw;	// Rethrow unknown exception
+		}
+
 		return TRUE;
 	}
 
-
 	BOOL CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		GetApp()->m_MapLock.Lock();
-
-		if (uMsg == WM_INITDIALOG)
-		{
-			CPropertyPage* pPage = (CPropertyPage*)(((LPPROPSHEETPAGE)lParam)->lParam);
-			GetApp()->GetHWNDMap().insert(std::make_pair(hwndDlg, pPage));
-			pPage->m_hWnd = hwndDlg;
-			pPage->m_hWndParent = GetParent(hwndDlg);
-		}
-
+	{	
 		// Allocate an iterator for our HWND map
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		
+		// Find matching CWnd pointer for this HWND
+		GetApp()->m_MapLock.Lock();
 		m = GetApp()->GetHWNDMap().find(hwndDlg);
-		
 		GetApp()->m_MapLock.Release();
+		
 		if (m != GetApp()->GetHWNDMap().end())
-		{
+		{	// matching CWnd pointer found for this HWND, so call DialogProc
 			return ((CPropertyPage*)m->second)->DialogProc(hwndDlg, uMsg, wParam, lParam);
 		}
+		else
+		{	// matching CWnd pointer not found, so add it to HWNDMap now
+			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			CPropertyPage* pPage = (CPropertyPage*)pTLSData->pCWnd;
+			GetApp()->m_MapLock.Lock();
+			GetApp()->GetHWNDMap().insert(std::make_pair(hwndDlg, pPage));
+			GetApp()->m_MapLock.Release();
+			
+			// Set the hWnd members and call DialogProc for this message
+			pPage->m_hWnd = hwndDlg;
+			pPage->m_hWndParent = GetParent(hwndDlg);
+			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
+		}
 
-		return 0;
+		return 0;	// We never get here
 	}
 
 	int CPropertyPage::Validate()
 	{
 		// Override this function in your derived class if required.
 		// This function is used to validate the page. Specify the appropriate return
-		// value to indicate whether or not the page is valid. 
-		
+		// value to indicate whether or not the page is valid.
+
 		// The possible return values are:
 		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
 		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned to the page that had focus when the button was pressed.
+		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned 
+		//                               to the page that had focus when the button was pressed.
 
 
 		int nStatus = PSNRET_NOERROR;
 	//	int nStatus = PSNRET_INVALID;
 	//	int nStatus = PSNRET_INVALID_NOCHANGEPAGE;
 
+		// Tell the user what went wrong
 		if (nStatus != PSNRET_NOERROR)
-			MessageBox(m_hWnd, _T("Validation Failed"), _T("PageSheet Check"), MB_OK); 
+			MessageBox(m_hWnd, _T("Validation Failed"), _T("PageSheet Check"), MB_OK);
 
 		return nStatus;
 	}
@@ -263,7 +371,7 @@ namespace Win32xx
 	CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hwndParent /* = NULL*/)
 	{
 		m_szCaption[0] = _T('\0');
-		if (nIDCaption) lstrcpyn(m_szCaption, MAKEINTRESOURCE(nIDCaption), MAX_STRING_SIZE);	
+		if (nIDCaption) lstrcpyn(m_szCaption, MAKEINTRESOURCE(nIDCaption), MAX_STRING_SIZE);
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
 
@@ -271,14 +379,14 @@ namespace Win32xx
 			m_PSH.dwSize = sizeof(PROPSHEETHEADER);
 		else
 			m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
-		
+
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pszCaption       = m_szCaption;
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
-	
+
 	CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hwndParent /* = NULL*/)
 	{
 		m_szCaption[0] = _T('\0');
@@ -302,9 +410,10 @@ namespace Win32xx
 	{
 		for (int i = 0 ; i < (int)m_vPages.size(); i++)
 			delete m_vPages[i];
+		
 		delete []m_ppsp;
 	}
-	
+
 	void CPropertySheet::AddPage(CPropertyPage* pPage)
 	{
 		m_vPages.push_back(pPage);
@@ -325,7 +434,7 @@ namespace Win32xx
 		delete []m_ppsp;
 		m_ppsp = NULL;
 		m_ppsp = new PROPSHEETPAGE[m_vPages.size()];
-		
+
 		for (int i = 0 ; i < (int)m_vPages.size(); i++)
 		{
 			m_ppsp[i] = m_vPages[i]->GetPSP();
@@ -373,7 +482,7 @@ namespace Win32xx
 				w->Subclass();
 				w->OnInitialUpdate();
 			}
-		
+
 			catch (const CWinException &e)
 			{
 				e.MessageBox();
@@ -392,7 +501,7 @@ namespace Win32xx
 
 	HWND CPropertySheet::Create(HWND hWndParent /*= 0*/)
 	// Creates a modeless Property sheet
-	{		
+	{
 		if (hWndParent)
 		{
 			m_PSH.hwndParent = hWndParent;
@@ -434,13 +543,13 @@ namespace Win32xx
 
 			// Create the property sheet
 			ipResult = PropertySheet(ppsph);
-			
+
 			// Set the parent for a modeless property sheet
 			if (ppsph->dwFlags & PSH_MODELESS)
 			{
 				m_hWndParent = ppsph->hwndParent;
 			}
-		
+
 		}
 
 		catch (const CWinException &e)
@@ -466,7 +575,7 @@ namespace Win32xx
 		for (int i = 0 ; i < (int)m_vPages.size(); i++)
 			delete m_vPages[i];
 
-		m_vPages.clear();	
+		m_vPages.clear();
 	}
 
 	int CPropertySheet::DoModal()
@@ -498,7 +607,7 @@ namespace Win32xx
 		return pPage;
 	}
 
-	int CPropertySheet::GetPageCount() 
+	int CPropertySheet::GetPageCount()
 	{
 		return (int)m_vPages.size();
 	}
@@ -523,8 +632,8 @@ namespace Win32xx
 		int nPage = GetPageIndex(pPage);
 		if (m_hWnd != NULL)
 			SendMessage(m_hWnd, PSM_REMOVEPAGE, nPage, 0);
-		
-		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);		
+
+		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);
 		m_PSH.nPages = (int)m_vPages.size();
 	}
 
@@ -559,7 +668,7 @@ namespace Win32xx
 		}
 	}
 
-	void CPropertySheet::SetWizardMode(BOOL bWizard) 
+	void CPropertySheet::SetWizardMode(BOOL bWizard)
 	{
 		if (bWizard)
 		{
@@ -570,7 +679,7 @@ namespace Win32xx
 			m_PSH.dwFlags &= ~PSH_WIZARD;
 		}
 	}
-	
+
 	LRESULT CPropertySheet::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -590,7 +699,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);	
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx
