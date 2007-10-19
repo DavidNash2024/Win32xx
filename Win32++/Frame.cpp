@@ -768,7 +768,7 @@ namespace Win32xx
 
 					// Add the button to the toolbar
 					if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (LPARAM)&tbb))
-						throw (CWinException(_T("CToolbar::SetButtons  .. TB_ADDBUTTONS failed ")));
+						throw CWinException(_T("CToolbar::SetButtons  .. TB_ADDBUTTONS failed "));
 				}
 
 				// Set rows of text to zero

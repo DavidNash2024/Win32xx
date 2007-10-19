@@ -137,8 +137,6 @@ namespace Win32xx
 	//
 	class CWnd
 	{
-		friend class CPropertySheet; // CPropertySheet uses Subclass, OnInitialUpdate
-		friend class CPropertyPage;
 
 	public:
 		// Note: virtual functions can be overridden in inherited classes

@@ -1051,7 +1051,7 @@ namespace Win32xx
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 			if (pTLSData == NULL)
-				throw (CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS")));
+				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
 
 			CWnd* w = pTLSData->pCWnd;
 

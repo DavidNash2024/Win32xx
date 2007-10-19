@@ -106,21 +106,25 @@ namespace Win32xx
 		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
 		virtual ~CPropertySheet();
 
-		void AddPage(CPropertyPage* pPage);
-		void BuildPageArray();
+		virtual void AddPage(CPropertyPage* pPage);
+		virtual void BuildPageArray();
 		virtual HWND Create(HWND hWndParent = 0);
-		INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
+		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
+		virtual void CPropertySheet::DestroyButton(int iButton);
 		virtual void DestroyWindow();
-		int DoModal();
-		CPropertyPage* GetActivePage();
-		int GetPageCount();
-		int GetPageIndex(CPropertyPage* pPage);
-		HWND GetTabControl();
-		void RemovePage(CPropertyPage* pPage);
-		BOOL SetActivePage(int nPage);
-		BOOL SetActivePage(CPropertyPage* pPage);
-		void SetTitle(LPCTSTR szTitle);
-		void SetWizardMode(BOOL bWizard);
+		virtual int DoModal();
+		virtual CPropertyPage* GetActivePage();
+		virtual int GetPageCount();
+		virtual int GetPageIndex(CPropertyPage* pPage);
+		virtual HWND GetTabControl();
+		virtual BOOL IsModeless();
+		virtual BOOL IsWizard();
+		virtual void OnCreate();
+		virtual void RemovePage(CPropertyPage* pPage);
+		virtual BOOL SetActivePage(int nPage);
+		virtual BOOL SetActivePage(CPropertyPage* pPage);
+		virtual void SetTitle(LPCTSTR szTitle);
+		virtual void SetWizardMode(BOOL bWizard);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);

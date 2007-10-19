@@ -364,7 +364,7 @@ namespace Win32xx
 			if (m != GetApp()->GetHWNDMap().end())
 				return ((CDialog*)m->second)->DialogProc(hWnd, uMsg, wParam, lParam);
 
-			throw (CWinException(_T("CDialog::StaticDialogProc ... Failed to route message")));
+			throw CWinException(_T("CDialog::StaticDialogProc ... Failed to route message"));
 		}
 
 		catch (const CWinException &e )

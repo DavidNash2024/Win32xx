@@ -285,7 +285,7 @@ namespace Win32xx
 				{
 					TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 					if (pTLSData == NULL)
-						throw (CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS")));
+						throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
 
 					// Store the CPropertyPage pointer in Thread Local Storage
 					pTLSData->pCWnd = (CWnd*)ppsp->lParam;
@@ -463,23 +463,17 @@ namespace Win32xx
 		case PSCB_INITIALIZED:
 			try
 			{
-				std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-				// Retrieve pointer to CWnd object from Thread Local Storage TLS
+				// Retrieve pointer to CWnd object from Thread Local Storage
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 				if (!pTLSData)
-				{
-					throw (CWinException(_T("CPropertySheet::Callback ... Unable to get TLS")));
-				}
+					throw CWinException(_T("CPropertySheet::Callback ... Unable to get TLS"));
+		
+				CPropertySheet* w = (CPropertySheet*)pTLSData->pCWnd;
+				if (!w)
+					throw CWinException(_T("CPropertySheet::Callback ... Failed to get CWnd"));
 
-				// Store the Window pointer into the HWND map
-				CWnd* w = pTLSData->pCWnd;
-				GetApp()->m_MapLock.Lock();
-				GetApp()->GetHWNDMap().insert(std::make_pair(hwnd, w));
-				GetApp()->m_MapLock.Release();
-
-				w->m_hWnd = hwnd;
-				w->Subclass();
+				w->Attach(hwnd);
+				w->OnCreate();
 				w->OnInitialUpdate();
 			}
 
@@ -568,6 +562,19 @@ namespace Win32xx
 		return ipResult;
 	}
 
+	void CPropertySheet::DestroyButton(int IDButton)
+	{	
+		if (m_hWnd != NULL)
+		{
+			HWND hwndButton = ::GetDlgItem(m_hWnd, IDButton);
+			if (hwndButton != NULL)
+			{
+				::ShowWindow(hwndButton, SW_HIDE);
+				::EnableWindow(hwndButton, FALSE);
+			}
+		}
+	}
+
 	void CPropertySheet::DestroyWindow()
 	{
 		CWnd::DestroyWindow();
@@ -625,6 +632,45 @@ namespace Win32xx
 	HWND CPropertySheet::GetTabControl()
 	{
 		return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0, 0);
+	}
+
+	BOOL CPropertySheet::IsModeless()
+	{
+		return (m_PSH.dwFlags & PSH_MODELESS);
+	}
+	
+	BOOL CPropertySheet::IsWizard()
+	{
+		return (m_PSH.dwFlags & PSH_WIZARD);
+	}
+
+	void CPropertySheet::OnCreate()
+	{
+		// Adjust layout for modeless property sheet
+		if ((IsModeless()) && !(IsWizard()))
+		{
+			// Reposition windows
+			RECT rc;
+			::GetWindowRect(m_hWnd, &rc);
+			RECT rcButton;
+			HWND hwndOKButton = ::GetDlgItem(m_hWnd, IDOK);
+			::GetWindowRect(hwndOKButton, &rcButton);
+			::SetWindowPos(m_hWnd, NULL, 0, 0, rc.right - rc.left, rcButton.top - rc.top, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+
+			// Remove buttons
+			DestroyButton(IDOK);
+			DestroyButton(IDCANCEL);
+			DestroyButton(ID_APPLY_NOW);
+			DestroyButton(IDHELP);
+		}
+
+		// Remove system menu for wizards
+		if (IsWizard())
+		{
+			DWORD dwStyle = GetWindowLong(m_hWnd, GWL_STYLE);
+			dwStyle &= ~WS_SYSMENU;		
+			::SetWindowLong(m_hWnd, GWL_STYLE, dwStyle);
+		}
 	}
 
 	void CPropertySheet::RemovePage(CPropertyPage* pPage)
