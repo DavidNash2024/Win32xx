@@ -24,7 +24,7 @@ namespace Win32xx
 		m_PSP.pszTitle      = m_szTitle;
 	}
 
-	LRESULT CPropertyPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CPropertyPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CPropertyPage if you wish to handle messages
 		// A typical function might look like this:
@@ -44,7 +44,7 @@ namespace Win32xx
 		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-	LRESULT CPropertyPage::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CPropertyPage::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// All unhandled property page messages end up here
 
@@ -54,7 +54,7 @@ namespace Win32xx
 		    return OnInitDialog();
 
 		case WM_NOTIFY:
-			return OnNotify(wParam, lParam);
+			return (BOOL)OnNotify(wParam, lParam);
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -82,8 +82,6 @@ namespace Win32xx
 	BOOL CPropertyPage::IsButtonEnabled(int iButton)
 	{
 		HWND hWnd = ::GetDlgItem(::GetParent(m_hWnd), iButton);
-		if (hWnd == NULL)
-			return FALSE;
 		return ::IsWindowEnabled(hWnd);
 	}
 
@@ -92,7 +90,7 @@ namespace Win32xx
 		// This function is called for each page when the Apply button is pressed
 		// Override this function in your derived class if required.
 
-		OnOK();
+		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
 		return TRUE;
 	}
 
@@ -105,7 +103,7 @@ namespace Win32xx
 	BOOL CPropertyPage::OnQueryCancel()
 	{
 		// Called when the cancel button is pressed, and before the cancel has taken place
-
+		
 		return TRUE;    // ok to cancel
 	}
 
@@ -117,10 +115,23 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	BOOL CPropertyPage::OnKillActive()
+	{
+		// This is called in response to a PSN_KILLACTIVE notification, which
+		// is sent whenever the OK or Apply button is pressed.
+		// It provides an opportunity to verify the page contents before it's closed.
+
+		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
+
+		return TRUE;
+	}
+
 	void CPropertyPage::OnOK() 
 	{
 		// Called for each page when the OK button is pressed
-		// Override this function in your derived class if required.	
+		// Override this function in your derived class if required.
+
+		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
 	}
 
 	BOOL CPropertyPage::OnSetActive() 
@@ -152,25 +163,25 @@ namespace Win32xx
 		return 0L;
 	}
 
-	BOOL CPropertyPage::OnKillActive()
-	{
-		return TRUE;
-	}
-
 	LRESULT CPropertyPage::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
-		NMHDR* pNMHDR = (NMHDR*)lParam;
-		switch (pNMHDR->code)
+		LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
+		switch(pNotify->hdr.code)
 		{
 		case PSN_SETACTIVE:
 			return OnSetActive();
 			break;
 		case PSN_KILLACTIVE:
-			return !OnKillActive();
+			return OnKillActive();
 			break;
 		case PSN_APPLY:
-			return OnApply() ? PSNRET_NOERROR : PSNRET_INVALID_NOCHANGEPAGE;
-			break;
+		//	return OnApply() ? PSNRET_NOERROR : PSNRET_INVALID_NOCHANGEPAGE;
+			if (pNotify->lParam)
+				OnOK();
+			else 
+				OnApply();
+		//	break;
+			return PSNRET_INVALID; 
 		case PSN_RESET:
 			OnCancel();
 			break;
@@ -178,14 +189,10 @@ namespace Win32xx
 			return !OnQueryCancel();
 			break;
 		case PSN_WIZNEXT:
-			//WINBUG: Win32 will send a PSN_WIZBACK even if the button is disabled.
-		//	if (IsButtonEnabled(ID_WIZNEXT))
-				return OnWizardNext();
+			return OnWizardNext();
 			break;
 		case PSN_WIZBACK:
-			//WINBUG: Win32 will send a PSN_WIZBACK even if the button is disabled.
-		//	if (IsButtonEnabled(ID_WIZBACK))
-				return OnWizardBack();
+			return OnWizardBack();
 			break;
 		case PSN_WIZFINISH:
 			return  !OnWizardFinish();
@@ -201,7 +208,7 @@ namespace Win32xx
 	}
 
 
-	LRESULT CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		GetApp()->m_MapLock.Lock();
 
@@ -227,6 +234,28 @@ namespace Win32xx
 		return 0;
 	}
 
+	int CPropertyPage::Validate()
+	{
+		// Override this function in your derived class if required.
+		// This function is used to validate the page. Specify the appropriate return
+		// value to indicate whether or not the page is valid. 
+		
+		// The possible return values are:
+		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
+		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
+		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned to the page that had focus when the button was pressed.
+
+
+		int nStatus = PSNRET_NOERROR;
+	//	int nStatus = PSNRET_INVALID;
+	//	int nStatus = PSNRET_INVALID_NOCHANGEPAGE;
+
+		if (nStatus != PSNRET_NOERROR)
+			MessageBox(m_hWnd, _T("Validation Failed"), _T("PageSheet Check"), MB_OK); 
+
+		return nStatus;
+	}
+
 
 	///////////////////////////////////////////
 	// Definitions for the CPropertySheet class
@@ -236,8 +265,13 @@ namespace Win32xx
 		m_szCaption[0] = _T('\0');
 		if (nIDCaption) lstrcpyn(m_szCaption, MAKEINTRESOURCE(nIDCaption), MAX_STRING_SIZE);	
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
+		m_ppsp = NULL;
 
-		m_PSH.dwSize           = sizeof(PROPSHEETHEADER);
+		if (GetComCtlVersion() >= 471)
+			m_PSH.dwSize = sizeof(PROPSHEETHEADER);
+		else
+			m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
+		
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
@@ -250,8 +284,13 @@ namespace Win32xx
 		m_szCaption[0] = _T('\0');
 		if (pszCaption) lstrcpyn(m_szCaption, pszCaption, MAX_STRING_SIZE);
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
+		m_ppsp = NULL;
 
-		m_PSH.dwSize           = sizeof(PROPSHEETHEADER);
+		if (GetComCtlVersion() >= 471)
+			m_PSH.dwSize = sizeof(PROPSHEETHEADER);
+		else
+			m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
+
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
@@ -263,11 +302,36 @@ namespace Win32xx
 	{
 		for (int i = 0 ; i < (int)m_vPages.size(); i++)
 			delete m_vPages[i];
+		delete []m_ppsp;
 	}
 	
 	void CPropertySheet::AddPage(CPropertyPage* pPage)
 	{
 		m_vPages.push_back(pPage);
+
+		if (m_hWnd)
+		{
+			// property sheet already exists, so add page to it
+			PROPSHEETPAGE psp = pPage->GetPSP();
+			HPROPSHEETPAGE hpsp = ::CreatePropertySheetPage(&psp);
+			PropSheet_AddPage(m_hWnd, hpsp);
+		}
+
+		m_PSH.nPages = (int)m_vPages.size();
+	}
+
+	void CPropertySheet::BuildPageArray()
+	{
+		delete []m_ppsp;
+		m_ppsp = NULL;
+		m_ppsp = new PROPSHEETPAGE[m_vPages.size()];
+		
+		for (int i = 0 ; i < (int)m_vPages.size(); i++)
+		{
+			m_ppsp[i] = m_vPages[i]->GetPSP();
+		}
+
+		m_PSH.ppsp = (LPCPROPSHEETPAGE) m_ppsp;
 	}
 
 	void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT uMsg, LPARAM lParam)
@@ -307,6 +371,7 @@ namespace Win32xx
 
 				w->m_hWnd = hwnd;
 				w->Subclass();
+				w->OnInitialUpdate();
 			}
 		
 			catch (const CWinException &e)
@@ -334,15 +399,8 @@ namespace Win32xx
 			m_hWndParent = hWndParent;
 		}
 
-		// Create an array of PROPSHEETPAGEs
-		PROPSHEETPAGE* ppsp = new PROPSHEETPAGE[m_vPages.size()];
-		for (int i = 0 ; i < (int)m_vPages.size(); i++)
-		{
-			ppsp[i] = m_vPages[i]->GetPSP();
-		}
-
-		m_PSH.nPages           = (int)m_vPages.size();
-		m_PSH.ppsp             = (LPCPROPSHEETPAGE) ppsp;
+		BuildPageArray();
+		m_PSH.ppsp = m_ppsp;
 
 		// Create a modeless Property Sheet
 		m_PSH.dwFlags &= ~PSH_WIZARD;
@@ -382,9 +440,7 @@ namespace Win32xx
 			{
 				m_hWndParent = ppsph->hwndParent;
 			}
-			
-			// Window creation is complete. Now call OnInitialUpdate
-			OnInitialUpdate();
+		
 		}
 
 		catch (const CWinException &e)
@@ -415,21 +471,11 @@ namespace Win32xx
 
 	int CPropertySheet::DoModal()
 	{
-		// Create an array of PROPSHEETPAGEs
-		PROPSHEETPAGE* ppsp = new PROPSHEETPAGE[m_vPages.size()];
-		for (int i = 0 ; i < (int)m_vPages.size(); i++)
-		{
-			ppsp[i] = m_vPages[i]->GetPSP();
-		}
-
-		m_PSH.nPages           = (int)m_vPages.size();
-		m_PSH.ppsp             = (LPCPROPSHEETPAGE) ppsp;
+		BuildPageArray();
+		m_PSH.ppsp = m_ppsp;
 
 		// Create the Property Sheet
-		int nSuccess = (int)CreatePropertySheet(&m_PSH);
-
-		// Property sheet closed. Now clean up
-		delete []ppsp;
+		int nResult = (int)CreatePropertySheet(&m_PSH);
 
 		for (int j = 0 ; j < (int)m_vPages.size(); j++)
 		{
@@ -437,14 +483,86 @@ namespace Win32xx
 		}
 		m_vPages.clear();
 
-		return nSuccess;
+		return nResult;
+	}
+
+	CPropertyPage* CPropertySheet::GetActivePage()
+	{
+		CPropertyPage* pPage = NULL;
+		if (m_hWnd != NULL)
+		{
+			HWND hPage = (HWND)::SendMessage(m_hWnd, PSM_GETCURRENTPAGEHWND, 0, 0);
+			pPage = (CPropertyPage*)GetCWndObject(hPage);
+		}
+
+		return pPage;
+	}
+
+	int CPropertySheet::GetPageCount() 
+	{
+		return (int)m_vPages.size();
+	}
+
+	int CPropertySheet::GetPageIndex(CPropertyPage* pPage)
+	{
+		for (int i = 0; i < GetPageCount(); i++)
+		{
+			if (m_vPages[i] == pPage)
+				return i;
+		}
+		return -1;
+	}
+
+	HWND CPropertySheet::GetTabControl()
+	{
+		return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0, 0);
+	}
+
+	void CPropertySheet::RemovePage(CPropertyPage* pPage)
+	{
+		int nPage = GetPageIndex(pPage);
+		if (m_hWnd != NULL)
+			SendMessage(m_hWnd, PSM_REMOVEPAGE, nPage, 0);
+		
+		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);		
+		m_PSH.nPages = (int)m_vPages.size();
+	}
+
+	BOOL CPropertySheet::SetActivePage(int nPage)
+	{
+		if (m_hWnd != NULL)
+			return (BOOL)SendMessage(m_hWnd, PSM_SETCURSEL, nPage, 0);
+
+		return FALSE;
+	}
+
+	BOOL CPropertySheet::SetActivePage(CPropertyPage* pPage)
+	{
+		int nPage = GetPageIndex(pPage);
+		if ((m_hWnd != NULL) && (nPage >= 0))
+			return SetActivePage(nPage);
+
+		return FALSE;
+	}
+
+	void CPropertySheet::SetTitle(LPCTSTR szTitle)
+	{
+		if (szTitle)
+		{
+			lstrcpyn(m_szCaption, szTitle, MAX_STRING_SIZE);
+			m_PSH.dwFlags |= PSH_PROPTITLE;
+		}
+		else
+		{
+			m_szCaption[0] = _T('\0');
+			m_PSH.dwFlags &= ~PSH_PROPTITLE;
+		}
 	}
 
 	void CPropertySheet::SetWizardMode(BOOL bWizard) 
 	{
 		if (bWizard)
 		{
-			m_PSH.dwFlags &= ~PSH_MODELESS;
 			m_PSH.dwFlags |= PSH_WIZARD;
 		}
 		else
@@ -463,7 +581,7 @@ namespace Win32xx
 			break;
 
 		case WM_SYSCOMMAND:
-			if (wParam == SC_CLOSE)
+			if ((wParam == SC_CLOSE) && (m_PSH.dwFlags &  PSH_MODELESS))
 			{
 				DestroyWindow();
 				return 0L;

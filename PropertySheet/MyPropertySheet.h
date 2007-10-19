@@ -24,12 +24,12 @@ class CButtonPage : public CPropertyPage
 {
 public:
 	CButtonPage(UINT nIDTemplate, LPCTSTR szTitle = NULL);
-	virtual LRESULT DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	virtual BOOL OnApply()		{TRACE ("OnAppy"); return TRUE;}
 	virtual void OnCancel()		{TRACE ("OnCancel"); }
 	virtual BOOL OnInitDialog()	{TRACE ("OnInitDialog"); return TRUE;}
-	virtual BOOL OnKillActive()	{TRACE ("OnKillActive"); return TRUE;}
+//	virtual BOOL OnKillActive()	{TRACE ("OnKillActive"); return TRUE;}
 	virtual void OnOK()			{TRACE ("OnOK"); }
 	virtual BOOL OnQueryCancel(){TRACE ("OnQueryCancel"); return TRUE;}
 	virtual BOOL OnSetActive()	{TRACE ("Button OnSetActive"); PropSheet_SetWizButtons(GetParent(m_hWnd), PSWIZB_NEXT); return FALSE;}
@@ -43,7 +43,7 @@ class CComboPage : public CPropertyPage
 {
 public:
 	CComboPage(UINT nIDTemplate, LPCTSTR szTitle  = NULL);
-	LRESULT DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	virtual BOOL OnSetActive()	{TRACE ("Combo OnSetActive"); PropSheet_SetWizButtons(GetParent(m_hWnd), PSWIZB_BACK | PSWIZB_FINISH); return FALSE;}
 };

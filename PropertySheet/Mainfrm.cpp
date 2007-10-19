@@ -45,19 +45,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE; 
 	case IDM_MODELESS:
-	//	DoModelessPropSheet(m_hWnd);
+		// Permit only one Modeless property sheet
+		if (!m_ModelessPS.GetHwnd())
 		{
-		//	CMyPropertySheet mps(_T("Modless Property Sheet"), m_hWnd);
-			if (!m_ModelessPS.GetHwnd())
-			{
-				m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-				m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
-				m_ModelessPS.Create(m_hWnd);
-			}
+			m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
+			m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+			m_ModelessPS.SetTitle(_T("Modeless Property Sheet"));
+			m_ModelessPS.Create(m_hWnd);
 		}
 		return TRUE;
 	case IDM_MODAL:
-	//	DoModalPropSheet(m_hWnd);
 		{
 			CMyPropertySheet mps(_T("Modal Property Sheet"), m_hWnd);
 			mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
@@ -66,7 +63,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		}
 		return TRUE;
 	case IDM_WIZARD:
-	//	DoWizardPropSheet(m_hWnd);
 		{
 			CMyPropertySheet mps(NULL, m_hWnd);
 			mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
@@ -105,18 +101,6 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 	TRACE(_T("Frame created"));
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
-
-	// Some notifications should return a value when handled
-	return 0L;
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

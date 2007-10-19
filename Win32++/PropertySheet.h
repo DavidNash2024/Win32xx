@@ -18,10 +18,11 @@ namespace Win32xx
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
 
-		virtual LRESULT DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		PROPSHEETPAGE GetPSP() {return m_PSP;}
 		BOOL IsButtonEnabled(int iButton);
+		virtual int Validate();
 		virtual BOOL OnApply();
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
@@ -38,7 +39,7 @@ namespace Win32xx
 
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 
-		static LRESULT CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static BOOL CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
 		PROPSHEETPAGE m_PSP;
@@ -55,20 +56,19 @@ namespace Win32xx
 		virtual ~CPropertySheet(); 
 
 		void AddPage(CPropertyPage* pPage);
+		void BuildPageArray();
 		virtual HWND Create(HWND hWndParent = 0);
 		INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void DestroyWindow();
 		int DoModal();
-		void GetActiveIndex() {}
-		void GetActivePage() {}
-		void GetPage() {}
-		int GetPageCount() {return (int)m_vPages.size();}
-		void GetPageIndex() {}
-		HWND GetTabControl() {return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0, 0);}
-		virtual void OnInitSheet() {}
-		void RemovePage(CPropertyPage* pPage) {}
-		void SetActivePage() {}
-		void SetTitle() {}
+		CPropertyPage* GetActivePage();
+		int GetPageCount();
+		int GetPageIndex(CPropertyPage* pPage);
+		HWND GetTabControl();
+		void RemovePage(CPropertyPage* pPage);
+		BOOL SetActivePage(int nPage);
+		BOOL SetActivePage(CPropertyPage* pPage);
+		void SetTitle(LPCTSTR szTitle);
 		void SetWizardMode(BOOL bWizard);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -80,6 +80,7 @@ namespace Win32xx
 
 	private:
 		TCHAR m_szCaption[MAX_STRING_SIZE];
+		PROPSHEETPAGE* m_ppsp; // Array of PROPSHEETPAGE
 	
 	};
 
