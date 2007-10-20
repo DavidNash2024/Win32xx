@@ -474,7 +474,6 @@ namespace Win32xx
 
 				w->Attach(hwnd);
 				w->OnCreate();
-				w->OnInitialUpdate();
 			}
 
 			catch (const CWinException &e)
@@ -673,6 +672,11 @@ namespace Win32xx
 		}
 	}
 
+	void CPropertySheet::OnInitialUpdate()
+	{
+		CenterWindow();
+	}
+
 	void CPropertySheet::RemovePage(CPropertyPage* pPage)
 	{
 		int nPage = GetPageIndex(pPage);
@@ -728,11 +732,22 @@ namespace Win32xx
 
 	LRESULT CPropertySheet::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		static BOOL bFirstTime = TRUE;
 		switch (uMsg)
 		{
 		case WM_COMMAND:
 			// Handle user commands
 			OnCommand(wParam, lParam);
+			break;
+
+		case WM_ACTIVATE:
+			if (bFirstTime)
+				OnInitialUpdate();
+			bFirstTime = FALSE;
+			break;
+		
+		case WM_DESTROY:
+			bFirstTime = TRUE;
 			break;
 
 		case WM_SYSCOMMAND:

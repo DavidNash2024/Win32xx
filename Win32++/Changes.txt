@@ -1,3 +1,11 @@
+Version 5.51
+------------
+Added CPropertySheet class
+Added CPropertyPage class
+Added CWnd::CenterWindow
+Removed CDialog::Center
+
+
 Version 5.5
 -----------
 Bugs Fixed:

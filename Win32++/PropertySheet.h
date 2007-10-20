@@ -120,6 +120,7 @@ namespace Win32xx
 		virtual BOOL IsModeless();
 		virtual BOOL IsWizard();
 		virtual void OnCreate();
+		virtual void OnInitialUpdate();
 		virtual void RemovePage(CPropertyPage* pPage);
 		virtual BOOL SetActivePage(int nPage);
 		virtual BOOL SetActivePage(CPropertyPage* pPage);

@@ -83,46 +83,6 @@ namespace Win32xx
 		}
 	}
 
-	POINT CDialog::Center(HWND hWnd)
-	{
-		// Determine the position of the top left corner which would
-		// center the dialog on its parent window.
-
-		RECT rcDialog;
-		RECT rcParent;
-		RECT rcDesktop;
-		POINT CenterPos;
-
-		// Get screen dimensions excluding task bar
-		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-		int iWidth = rcDesktop.right;
-		int iHeight = rcDesktop.bottom;
-
-		// Get the dialog dimensions
-		::GetWindowRect(hWnd, &rcDialog);
-
-		// Get the parent window dimensions (parent could be the desktop)
-		HWND hParent = ::GetParent(hWnd);
-		if (hParent != NULL) ::GetWindowRect(hParent, &rcParent);
-		else rcParent = rcDesktop;
-
-		// Calculate point to center the dialog on the parent window
-		int x = rcParent.left + ((rcParent.right - rcParent.left) - (rcDialog.right - rcDialog.left))/2;
-		int y = rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDialog.bottom - rcDialog.top))/2;
-
-		// Keep the dialog wholly on the desktop
-		if (x < 0) x = 0;
-		if (y < 0) y = 0;
-		if (x > iWidth - (rcDialog.right - rcDialog.left))
-			x = iWidth - (rcDialog.right - rcDialog.left);
-		if (y > iHeight - (rcDialog.bottom - rcDialog.top))
-			y = iHeight - (rcDialog.bottom - rcDialog.top);
-
-		CenterPos.x = x;
-		CenterPos.y = y;
-		return CenterPos;
-	} // POINT CDialog::Center(HWND hWnd)
-
 	HWND CDialog::Create(HWND hWndParent = 0)
 	{
 		// Allow a dialog to be used as a child window
@@ -160,8 +120,7 @@ namespace Win32xx
 			{
 				m_hWnd = hWnd;
 				// Center the dialog
-				POINT CenterPt = Center(m_hWnd);
-				::SetWindowPos(m_hWnd, HWND_TOP, CenterPt.x, CenterPt.y, 0, 0,  SWP_NOSIZE);
+				CenterWindow();
 			}
 		    return OnInitDialog();
 	    case WM_COMMAND:

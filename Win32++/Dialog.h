@@ -71,7 +71,6 @@ namespace Win32xx
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
 
-		POINT Center(HWND hWnd);
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

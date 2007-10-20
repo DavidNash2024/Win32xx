@@ -153,6 +153,7 @@ namespace Win32xx
 
 		BOOL Attach(HWND hWnd);
 		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		void CenterWindow();
 		HWND Detach();
 		HWND GetAncestor(HWND hWnd);
 		HBRUSH GetBkgndBrush() {return m_hBrushBkgnd;}
