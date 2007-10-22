@@ -59,11 +59,14 @@ namespace Win32xx
 		CDialog(LPCTSTR lpszResName, HWND hWndParent = NULL);
 		CDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent = NULL);
 		virtual ~CDialog();
+
+		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
 
 	protected:
+		// These are the functions you might wish to override
 		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void EndDialog(INT_PTR nResult);
@@ -71,6 +74,7 @@ namespace Win32xx
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
 
+		// Can't override this function
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

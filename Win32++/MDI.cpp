@@ -69,7 +69,7 @@ namespace Win32xx
 		while ((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
 			if (status == -1) return -1;
-			if (!TranslateMDISysAccel(m_hWndAccel, &uMsg) &&
+			if (!TranslateMDISysAccel(GetFrame()->GetView()->GetHwnd(), &uMsg) &&
 				!TranslateAccelerator(m_hWndAccel, m_hAccel, &uMsg))
 			{
 				::TranslateMessage(&uMsg);
@@ -78,7 +78,6 @@ namespace Win32xx
 		}
 		return LOWORD(uMsg.wParam);
 	}
-
 
 	/////////////////////////////////////
 	// Definitions for the CMDIFrame class
@@ -293,10 +292,9 @@ namespace Win32xx
 				if (pFrame->GetMenubar().GetHwnd())
 				{
 					::PostMessage(pFrame->GetMenubar().GetHwnd(), WM_MDISETMENU, wParam, lParam);
-					return 0;
-				}
+				}			
 			}
-			break;
+			return 0; 
 		case WM_MDIACTIVATE:
 			{
 				// Suppress redraw to avoid flicker when activating maximised MDI children
@@ -304,6 +302,7 @@ namespace Win32xx
 				LRESULT lr = CallPrevWindowProc(m_hWnd, WM_MDIACTIVATE, wParam, lParam);
 				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
 				::RedrawWindow(m_hWnd, 0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+				
 				return lr;
 			}
 		}

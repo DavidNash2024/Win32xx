@@ -62,6 +62,8 @@ namespace Win32xx
 	public:
 		CMDIApp(HINSTANCE hInstance);
 	    virtual ~CMDIApp() {}
+
+		// These are the functions you might wish to override
 		virtual int MessageLoop();
 
 	protected:
@@ -77,10 +79,15 @@ namespace Win32xx
 	public:
 		CMDIChild();
 		virtual ~CMDIChild();
+		
+		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual void UpdateFrameMenu(HMENU hMenu);
+
+		// Its unlikely you would need to override these functions
 		virtual BOOL IsMDIChild() {return TRUE;}
 		virtual BOOL SetChildMenu(LPCTSTR MenuName);
-		virtual void UpdateFrameMenu(HMENU hMenu);
+
 
 	protected:
 		enum Constants
@@ -88,6 +95,7 @@ namespace Win32xx
 			MAX_MENU_STRING = 32,
 		};
 
+		// Its unlikely you would need to override these functions
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -102,6 +110,7 @@ namespace Win32xx
 	class CMDIClient : public CWnd
 	{
 	public:
+		// Its unlikely you would need to inherit from this class
 		CMDIClient();
 		virtual ~CMDIClient();
 		virtual HWND Create(HWND hWndParent = NULL);
@@ -121,19 +130,22 @@ namespace Win32xx
 		CMDIFrame();
 		virtual ~CMDIFrame();
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
-		virtual CMDIClient& GetMDIClient() {return m_MDIClient;}
-		virtual HWND GetActiveMDIChild() {return m_hActiveMDIChild;}
-		virtual BOOL IsMDIChildMaxed();
+		CMDIClient& GetMDIClient() {return m_MDIClient;}
+		HWND GetActiveMDIChild() {return m_hActiveMDIChild;}
+		BOOL IsMDIChildMaxed();
 
 	protected:
-		virtual void AddMDIChild(CMDIChild* pMDIChild);
-		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		// These are the functions you might wish to override
 		virtual void OnClose();
 		virtual BOOL OnCommandFrame(WPARAM wParam, LPARAM lParam);
 		virtual void OnWindowPosChanged();
+		virtual void RecalcLayout();
+
+		// Its unlikely you would need to override these functions
+		virtual void AddMDIChild(CMDIChild* pMDIChild);
+		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
-		virtual void RecalcLayout();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

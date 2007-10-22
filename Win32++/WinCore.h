@@ -139,38 +139,41 @@ namespace Win32xx
 	{
 
 	public:
-		// Note: virtual functions can be overridden in inherited classes
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
+
+		// These are the functions you might wish to override
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void DestroyWindow();
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 
-		BOOL Attach(HWND hWnd);
-		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
-		void CenterWindow();
-		HWND Detach();
-		HWND GetAncestor(HWND hWnd);
-		HBRUSH GetBkgndBrush() {return m_hBrushBkgnd;}
-		CWnd* GetCWndObject(HWND hWnd);
-		HWND GetHwnd() {return m_hWnd;}
-		void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
-		LPCTSTR LoadString(UINT nID);
-		LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		BOOL RegisterClassEx(WNDCLASSEX& wcx);
-		void SetBkgndColor(COLORREF color);
-		void SetParent(HWND hParent);
-		void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
+		// Its unlikely you would need to override these functions
+		virtual BOOL Attach(HWND hWnd);
+		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		virtual void CenterWindow();
+		virtual void DestroyWindow();
+		virtual HWND Detach();
+		virtual HWND GetAncestor(HWND hWnd);
+		virtual CWnd* GetCWndObject(HWND hWnd);
+		virtual void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
+		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
+		virtual LPCTSTR LoadString(UINT nID);
+		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
+		virtual void SetBkgndColor(COLORREF color);
+		virtual void SetParent(HWND hParent);
+		virtual void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		HWND GetHwnd() {return m_hWnd;}
+		HBRUSH GetBkgndBrush() {return m_hBrushBkgnd;}
+
 	protected:
-		// Note: virtual functions can be overridden in inherited classes
+		// These are the functions you might wish to override
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnCreate();
@@ -183,10 +186,11 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		BOOL IsMDIChild() {return FALSE;}
-		void RemoveHook();
-		void SetHook();
+		// Its unlikely you would need to override these functions
+		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL IsMDIChild() {return FALSE;}
+		virtual void RemoveHook();
+		virtual void SetHook();
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -219,11 +223,15 @@ namespace Win32xx
 		friend class CPropertySheet; // CPropertSheet uses m_MapLock and SetTlsIndex
 
 	public:
-		// Note: virtual functions can be overridden in inherited class
 		CWinApp(HINSTANCE hInstance);
 		virtual ~CWinApp();
-		virtual void CreateTrace();
+
+		// These are the functions you might wish to override
 		virtual int MessageLoop();
+
+		// Its unlikely you would need to override these functions
+		virtual void CreateTrace();
+		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
 		virtual void Trace(LPCTSTR szString);
 
 		CFrame* GetFrame() {return m_pFrame;}
@@ -232,7 +240,6 @@ namespace Win32xx
 		HINSTANCE GetInstanceHandle() {return m_hInstance;}
 		HINSTANCE GetResourceHandle() {return (m_hResource ? m_hResource : m_hInstance);}
 		std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
-		void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
 		void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 

@@ -47,9 +47,9 @@
 //
 
 #include "Frame.h"
+#include "MDI.h"
 #include <windowsx.h>
 #include <shlwapi.h>
-#include "MDI.h"
 #include "Default_Resource.h"
 
 
@@ -1600,7 +1600,7 @@ namespace Win32xx
 
 		HWND hMaxMDIChild = NULL;
 		if (IsMDIChildMaxed())
-			hMaxMDIChild = ((CMDIFrame*)GetApp()->GetFrame())->GetActiveMDIChild();
+			hMaxMDIChild = GetActiveMDIChild();
 
 		// Load the submenu
 		int nMaxedOffset = IsMDIChildMaxed()? 1:0;
@@ -1667,12 +1667,10 @@ namespace Win32xx
 
 	void CMenubar::DrawAllMDIButtons(HDC hDC)
 	{
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-
-		if (!pMDIFrame->IsMDIFrame())
+		if (!IsMDIFrame())
 			return;
 
-		if (pMDIFrame->IsMDIChildMaxed())
+		if (IsMDIChildMaxed())
 		{
 			int cx = GetSystemMetrics(SM_CXSMICON);
 			int cy = GetSystemMetrics(SM_CYSMICON);
@@ -1856,6 +1854,17 @@ namespace Win32xx
 		::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, MAKELONG(pt.x, pt.y));
 	}
 
+	HWND CMenubar::GetActiveMDIChild()
+	{
+		HWND hwndMDIChild = NULL;
+		if (IsMDIFrame())
+		{
+			hwndMDIChild = (HWND)::SendMessage(GetApp()->GetFrame()->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, NULL);
+		}
+		
+		return hwndMDIChild;
+	}
+
 	void CMenubar::GrabFocus()
 	{
 		if (::GetFocus() != m_hWnd)
@@ -1867,14 +1876,18 @@ namespace Win32xx
 	BOOL CMenubar::IsMDIChildMaxed()
 	{
 		BOOL bMaxed = FALSE;
-		CFrame* pFrame = GetApp()->GetFrame();
 
-		if (pFrame->IsMDIFrame())
+		if (IsMDIFrame())
 		{
-			bMaxed = ((CMDIFrame*)pFrame)->IsMDIChildMaxed();
+			::SendMessage(GetApp()->GetFrame()->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
 		}
 
 		return bMaxed;
+	}
+
+	BOOL CMenubar::IsMDIFrame()
+	{
+		return GetApp()->GetFrame()->IsMDIFrame();
 	}
 
 	void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
@@ -2013,8 +2026,7 @@ namespace Win32xx
 				if (IsMDIChildMaxed() && (dwItem == 0))
 				// Draw over MDI Max button
 				{
-					CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-					HICON hIcon = (HICON)::SendMessage(pMDIFrame->GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0);
+					HICON hIcon = (HICON)::SendMessage(GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0);
 					if (hIcon == NULL)
 						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 
@@ -2182,7 +2194,7 @@ namespace Win32xx
 	{
 		HWND hMaxMDIChild = NULL;
 		if (IsMDIChildMaxed())
-			hMaxMDIChild = ((CMDIFrame*)GetApp()->GetFrame())->GetActiveMDIChild();
+			hMaxMDIChild = GetActiveMDIChild();
 
 		HMENU hMenu = (HMENU)wParam;
 		if (hMenu == ::GetSystemMenu(hMaxMDIChild, FALSE))
@@ -2283,10 +2295,9 @@ namespace Win32xx
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
-		CMDIFrame* pMDIFrame = (CMDIFrame *)GetApp()->GetFrame();
-		if (pMDIFrame->IsMDIFrame())
+		if (IsMDIFrame())
 		{
-			if (pMDIFrame->IsMDIChildMaxed())
+			if (IsMDIChildMaxed())
 			{
 				HDC hdcMenubar = ::GetDC(m_hWnd);
 				if (hdcMenubar)
@@ -2322,11 +2333,10 @@ namespace Win32xx
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-		if (pMDIFrame->IsMDIFrame())
+		if (IsMDIFrame())
 		{
-			HWND MDIClient = pMDIFrame->GetMDIClient().GetHwnd();
-			HWND MDIChild = pMDIFrame->GetActiveMDIChild();
+			HWND MDIClient = GetApp()->GetFrame()->GetView()->GetHwnd();
+			HWND MDIChild = GetActiveMDIChild();
 
 			if (IsMDIChildMaxed())
 			{
@@ -2392,8 +2402,8 @@ namespace Win32xx
 
 		for (v = pMDIFrame->GetMDIChildVect().begin(); v < pMDIFrame->GetMDIChildVect().end(); v++)
 		{
-			HWND hWndMDIChild = (*v)->GetHwnd();
-			if (::IsWindowVisible(hWndMDIChild))
+			HWND hwndMDIChild = (*v)->GetHwnd();
+			if (::IsWindowVisible(hwndMDIChild))
 			{
 				// Add Separator
 				if (nWindow == 0)
@@ -2402,11 +2412,11 @@ namespace Win32xx
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
 				{
-					::GetWindowText(hWndMDIChild, szTitle, 25);
+					::GetWindowText(hwndMDIChild, szTitle, 25);
 					::wsprintf(szString, _T("&%d %s"), nWindow+1, szTitle);
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szString );
 
-					if (pMDIFrame->GetActiveMDIChild() == hWndMDIChild)
+					if (GetActiveMDIChild() == hwndMDIChild)
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					nWindow++;
@@ -2417,8 +2427,8 @@ namespace Win32xx
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
 					return;
 				}
-			}
-		}
+			} 
+		} 
 	}
 
 	BOOL CMenubar::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
@@ -2555,8 +2565,7 @@ namespace Win32xx
 			// Perform default action for DblClick on MDI Maxed icon
 			if (IsMDIChildMaxed() && (HitTest() == 0))
 			{
-				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-				HWND MDIChild = pMDIFrame->GetActiveMDIChild();
+				HWND MDIChild = GetActiveMDIChild();
 				HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
 
 				UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
@@ -2603,10 +2612,9 @@ namespace Win32xx
 
 	void CMenubar::OnMouseLeave()
 	{
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-		if (pMDIFrame->IsMDIFrame())
+		if (IsMDIFrame())
 		{
-			if (pMDIFrame->IsMDIChildMaxed())
+			if (IsMDIChildMaxed())
 			{
 				HDC hdcMenubar = ::GetDC(m_hWnd);
 				if (hdcMenubar)
@@ -2627,10 +2635,9 @@ namespace Win32xx
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-		if (pMDIFrame->IsMDIFrame())
+		if (IsMDIFrame())
 		{
-			if (pMDIFrame->IsMDIChildMaxed())
+			if (IsMDIChildMaxed())
 			{
 				HDC hdcMenubar = ::GetDC(m_hWnd);
 				if (hdcMenubar)
@@ -3043,6 +3050,7 @@ namespace Win32xx
 
 		return CToolbar::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProc(...)
+
 
 
 	///////////////////////////////////
