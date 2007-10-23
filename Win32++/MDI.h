@@ -82,7 +82,6 @@ namespace Win32xx
 		
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
-		virtual void UpdateFrameMenu(HMENU hMenu);
 
 		// Its unlikely you would need to override these functions
 		virtual BOOL IsMDIChild() {return TRUE;}
@@ -129,9 +128,13 @@ namespace Win32xx
 	public:
 		CMDIFrame();
 		virtual ~CMDIFrame();
+		virtual void AppendMDIMenu(HMENU hMenuWindow);
+		virtual void UpdateFrameMenu(HMENU hMenu);
+
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 		CMDIClient& GetMDIClient() {return m_MDIClient;}
 		HWND GetActiveMDIChild() {return m_hActiveMDIChild;}
+		CMDIChild* GetActiveMDIChildCWnd();
 		BOOL IsMDIChildMaxed();
 
 	protected:

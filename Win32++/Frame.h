@@ -213,7 +213,7 @@ namespace Win32xx
 		virtual void SetIcons(const std::vector<UINT> ToolbarData, UINT nID_Image, COLORREF crMask);
 		virtual void SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
 		virtual void SysCommand(WPARAM wParam, LPARAM lParam);
-		void OnMDISetMenu(WPARAM wParam, LPARAM lParam);
+	//	void AppendMDIMenu(HMENU hMenuWindow);
 
 		HMENU GetMenu() {return m_hTopMenu;}
 		void SetMenu(HMENU hMenu);
@@ -245,7 +245,6 @@ namespace Win32xx
 		void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		void OnLButtonUp(WPARAM wParam, LPARAM lParam);
-	//	void OnMDISetMenu(WPARAM wParam, LPARAM lParam);
 		BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		void OnMouseLeave();
 		void OnMouseMove(WPARAM wParam, LPARAM lParam);

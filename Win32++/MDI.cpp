@@ -107,9 +107,76 @@ namespace Win32xx
 		pMDIChild->Create(GetView()->GetHwnd());
 	}
 
+	void CMDIFrame::AppendMDIMenu(HMENU hMenuWindow)
+	{
+		// Adds the additional menu items the the "Window" submenu when
+		//  MDI child windows are created
+
+		if (!IsMenu(hMenuWindow))
+			return;
+
+		// Delete previously appended items
+		int nItems = ::GetMenuItemCount(hMenuWindow);
+		UINT uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
+		if ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
+		{
+			while ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
+			{
+				::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
+				uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
+			}
+			//delete the separator too
+			::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
+		}
+
+		// Append MDI Child windows
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+		TCHAR szTitle[25];
+		TCHAR szString[30];
+		int nWindow = 0;
+
+		// Allocate an iterator for our MDIChild vector
+		std::vector <CMDIChild*>::iterator v;
+
+		for (v = pMDIFrame->GetMDIChildVect().begin(); v < pMDIFrame->GetMDIChildVect().end(); v++)
+		{
+			HWND hwndMDIChild = (*v)->GetHwnd();
+			if (::GetWindowLong(hwndMDIChild, GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
+			{
+				// Add Separator
+				if (nWindow == 0)
+					::AppendMenu(hMenuWindow, MF_SEPARATOR, 0, NULL);
+
+				// Add a menu entry for each MDI child (up to 9)
+				if (nWindow < 9)
+				{
+					::GetWindowText(hwndMDIChild, szTitle, 25);
+					::wsprintf(szString, _T("&%d %s"), nWindow+1, szTitle);
+					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szString );
+
+					if (GetActiveMDIChild() == hwndMDIChild)
+						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
+
+					nWindow++;
+				}
+				else if (nWindow == 9)
+				// For the 10th MDI child, add this menu item and return
+				{
+					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
+					return;
+				}
+			} 
+		} 
+	}
+
 	LRESULT CMDIFrame::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefFrameProc(hWnd, m_MDIClient.GetHwnd(), uMsg, wParam, lParam);
+	}
+
+	CMDIChild* CMDIFrame::GetActiveMDIChildCWnd()
+	{
+		return (CMDIChild*)GetCWndObject(GetActiveMDIChild());
 	}
 
 	BOOL CMDIFrame::IsMDIChildMaxed()
@@ -210,6 +277,40 @@ namespace Win32xx
 				break;
 			}
 		}
+
+		HWND hMDIChild = GetActiveMDIChild();
+		CMDIChild* pMDIChild = (CMDIChild*) GetCWndObject(hMDIChild);
+		if (hMDIChild)
+		{
+			if (pMDIChild->m_hChildMenu)
+				UpdateFrameMenu(pMDIChild->m_hChildMenu);
+		}
+		else
+		{
+			if (IsMenubarUsed())
+				GetMenubar().SetMenu(GetFrameMenu());
+			else
+				::SetMenu(m_hWnd, GetFrameMenu());
+		}
+	}
+
+	void CMDIFrame::UpdateFrameMenu(HMENU hMenu)
+	{
+		int nWindowItem = GetMenuItemPos(hMenu, _T("Window"));
+		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
+
+		if (IsMenubarUsed())
+		{
+			AppendMDIMenu(hMenuWindow);
+			GetMenubar().SetMenu(hMenu);
+		}
+		else
+		{
+			::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
+			::DrawMenuBar(GetHwnd());
+		}
+
+		UpdateCheckMarks();
 	}
 
 	LRESULT CMDIFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -281,20 +382,20 @@ namespace Win32xx
 				CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
 
 				// Now remove MDI child
-				CMDIFrame* pFrame = (CMDIFrame*)GetApp()->GetFrame();
-				pFrame->RemoveMDIChild((HWND) wParam);
+				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+				pMDIFrame->RemoveMDIChild((HWND) wParam);
 			}
 			return 0; // Discard message
 
 		case WM_MDISETMENU:
 			{
-				CFrame* pFrame = GetApp()->GetFrame();
-				if (pFrame->GetMenubar().GetHwnd())
+				if (GetApp()->GetFrame()->IsMenubarUsed())
 				{
-					::PostMessage(pFrame->GetMenubar().GetHwnd(), WM_MDISETMENU, wParam, lParam);
+					return 0L;
 				}			
 			}
-			return 0; 
+			break;
+		
 		case WM_MDIACTIVATE:
 			{
 				// Suppress redraw to avoid flicker when activating maximised MDI children
@@ -315,6 +416,9 @@ namespace Win32xx
 	//
 	CMDIChild::CMDIChild() : m_hChildMenu(NULL)
 	{
+		// Set the MDI Child's menu in the constructor, like this ...
+		
+		// SetChildMenu(_T("MdiMenuView"));
 	}
 
 	CMDIChild::~CMDIChild()
@@ -389,6 +493,10 @@ namespace Win32xx
 			// Ensure bits revealed by round corners (XP themes) are redrawn
 			::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
+			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+			if (m_hChildMenu)
+				pMDIFrame->UpdateFrameMenu(m_hChildMenu);
+
 			return m_hWnd;
 		}
 
@@ -417,26 +525,12 @@ namespace Win32xx
 		HWND hWnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
 		if ((m_hWnd != NULL) &&(hWnd == m_hWnd) && (m_hChildMenu != NULL))
 		{
-			UpdateFrameMenu(m_hChildMenu);
+			CMDIFrame* pFrame = (CMDIFrame*)GetApp()->GetFrame();
+			if (m_hChildMenu)
+				pFrame->UpdateFrameMenu(m_hChildMenu);
 		}
 
 		return (m_hChildMenu != NULL);
-	}
-
-	void CMDIChild::UpdateFrameMenu(HMENU hMenu)
-	{
-		CFrame* pFrame = GetApp()->GetFrame();
-		int nWindowItem = pFrame->GetMenuItemPos(hMenu, _T("Window"));
-
-		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
-		::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
-
-		if (pFrame->IsMenubarUsed())
-			pFrame->GetMenubar().SetMenu(hMenu);
-		else
-			::DrawMenuBar(pFrame->GetHwnd());
-
-		pFrame->UpdateCheckMarks();
 	}
 
 	LRESULT CMDIChild::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -453,7 +547,7 @@ namespace Win32xx
 					pMDIFrame->m_hActiveMDIChild = m_hWnd;
 					// Set the menu to child default menu
 					if (m_hChildMenu)
-						UpdateFrameMenu(m_hChildMenu);
+						pMDIFrame->UpdateFrameMenu(m_hChildMenu);
 				}
 
 				// No child is being activated
@@ -461,7 +555,7 @@ namespace Win32xx
 				{
 					pMDIFrame->m_hActiveMDIChild = NULL;
 					// Set the menu to frame's original menu
-					UpdateFrameMenu(pMDIFrame->GetFrameMenu());
+					pMDIFrame->UpdateFrameMenu(pMDIFrame->GetFrameMenu());
 				}
 
 				::DrawMenuBar(pMDIFrame->GetHwnd());

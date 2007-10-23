@@ -47,7 +47,6 @@
 //
 
 #include "Frame.h"
-#include "MDI.h"
 #include <windowsx.h>
 #include <shlwapi.h>
 #include "Default_Resource.h"
@@ -2368,69 +2367,6 @@ namespace Win32xx
 		ExitMenu();
 	}
 
-	void CMenubar::OnMDISetMenu(WPARAM /*wParam*/, LPARAM lParam)
-	{
-		// Adds the additional menu items the the "Window" submenu when
-		//  MDI child windows are created
-
-		HMENU hMenuWindow = (HMENU)lParam;
-		if (!IsMenu(hMenuWindow))
-			return;
-
-		// Delete previously appended items
-		int nItems = ::GetMenuItemCount(hMenuWindow);
-		UINT uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
-		if ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
-		{
-			while ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
-			{
-				::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
-				uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
-			}
-			//delete the separator too
-			::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
-		}
-
-		// Append MDI Child windows
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-		TCHAR szTitle[25];
-		TCHAR szString[30];
-		int nWindow = 0;
-
-		// Allocate an iterator for our MDIChild vector
-		std::vector <CMDIChild*>::iterator v;
-
-		for (v = pMDIFrame->GetMDIChildVect().begin(); v < pMDIFrame->GetMDIChildVect().end(); v++)
-		{
-			HWND hwndMDIChild = (*v)->GetHwnd();
-			if (::IsWindowVisible(hwndMDIChild))
-			{
-				// Add Separator
-				if (nWindow == 0)
-					::AppendMenu(hMenuWindow, MF_SEPARATOR, 0, NULL);
-
-				// Add a menu entry for each MDI child (up to 9)
-				if (nWindow < 9)
-				{
-					::GetWindowText(hwndMDIChild, szTitle, 25);
-					::wsprintf(szString, _T("&%d %s"), nWindow+1, szTitle);
-					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szString );
-
-					if (GetActiveMDIChild() == hwndMDIChild)
-						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
-
-					nWindow++;
-				}
-				else if (nWindow == 9)
-				// For the 10th MDI child, add this menu item and return
-				{
-					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
-					return;
-				}
-			} 
-		} 
-	}
-
 	BOOL CMenubar::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
@@ -3012,9 +2948,6 @@ namespace Win32xx
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);
 			break;
-		case WM_MDISETMENU:
-			OnMDISetMenu(wParam, lParam);
-			return 0L;
 		case WM_MEASUREITEM:
 			if (OnMeasureItem(wParam, lParam))
 				return TRUE; // handled
