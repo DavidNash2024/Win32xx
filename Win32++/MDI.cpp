@@ -278,12 +278,9 @@ namespace Win32xx
 			}
 		}
 
-		HWND hMDIChild = GetActiveMDIChild();
-		CMDIChild* pMDIChild = (CMDIChild*) GetCWndObject(hMDIChild);
-		if (hMDIChild)
+		if ((GetActiveMDIChildCWnd()) && GetActiveMDIChildCWnd()->m_hChildMenu)
 		{
-			if (pMDIChild->m_hChildMenu)
-				UpdateFrameMenu(pMDIChild->m_hChildMenu);
+			UpdateFrameMenu(GetActiveMDIChildCWnd()->m_hChildMenu);
 		}
 		else
 		{

@@ -1,29 +1,10 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "resrc2.h"
 
-#define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 2 resource.
-//
-#define APSTUDIO_HIDDEN_SYMBOLS
+
 #include "windows.h"
-#undef APSTUDIO_HIDDEN_SYMBOLS
 #include "resource.h"
-#include "resrc1.h"
 
-/////////////////////////////////////////////////////////////////////////////
-#undef APSTUDIO_READONLY_SYMBOLS
-
-/////////////////////////////////////////////////////////////////////////////
-// English (Australia) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
-#pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -65,15 +46,15 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
-    POPUP "&Help"
-    BEGIN
-        MENUITEM "&About",                      IDM_HELP_ABOUT
-    END
     POPUP "PropertySheet"
     BEGIN
         MENUITEM "Modeless Property Sheet",     IDM_MODELESS
         MENUITEM "Modal Property Sheet",        IDM_MODAL
         MENUITEM "Wizard",                      IDM_WIZARD
+    END
+    POPUP "&Help"
+	BEGIN
+	    MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -172,36 +153,6 @@ BEGIN
 END
 
 
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE
-BEGIN
-    "resrc2.h\0"
-END
-
-2 TEXTINCLUDE
-BEGIN
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""resource.h""\r\n"
-    "#include ""resrc1.h""\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE
-BEGIN
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
@@ -244,56 +195,13 @@ END
 
 STRINGTABLE
 BEGIN
-    61536                   "Close the Window"
+    SC_CLOSE                "Close the Window"
+    SC_MAXIMIZE             "Maximize the Window"
+    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MOVE                 "Move the Window"
+	SC_NEXTWINDOW           "Select Next Window"
+	SC_PREVWINDOW           "Select Previous Window"
+    SC_RESTORE              "Restore the Window"
+    SC_SIZE                 "Resize the Window"
 END
-
-STRINGTABLE
-BEGIN
-    61488                   "Maximize the Window"
-END
-
-STRINGTABLE
-BEGIN
-    61472                   "Minimize the WIndow"
-END
-
-STRINGTABLE
-BEGIN
-    61456                   "Move the Window"
-END
-
-STRINGTABLE
-BEGIN
-    61504                   "Select Next Window"
-END
-
-STRINGTABLE
-BEGIN
-    61520                   "Select Previous Window"
-END
-
-STRINGTABLE
-BEGIN
-    61728                   "Restore the Window"
-END
-
-STRINGTABLE
-BEGIN
-    61440                   "Resize the Window"
-END
-
-#endif    // English (Australia) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
 

@@ -12,7 +12,7 @@ CView::CView()
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
-	TRACE(_T("View window created"));
+	TRACE(_T("View Window Created"));
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)
@@ -38,7 +38,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
 void CView::OnPaint(HDC hDC)
@@ -47,6 +47,6 @@ void CView::OnPaint(HDC hDC)
 	::GetClientRect(m_hWnd, &r);
 
 	// Centre some text in our view window
-	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	::DrawText(hDC, _T("Choose a Property Sheet from the menu"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
