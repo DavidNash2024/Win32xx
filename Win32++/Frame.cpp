@@ -1458,7 +1458,6 @@ namespace Win32xx
 					{
 						// DoubleClick on BTNS_WHOLEDROPDOWN button
 						::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-						::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 						return 0L;
 					}
 
@@ -1470,11 +1469,10 @@ namespace Win32xx
 						{
 							// DoubleClick on dropdown part of TBSTYLE_DROPDOWN button
 							::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-							::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 							return 0L;
 						}
-					}
-				}
+					} 
+				} 
 			}
 
 			break;
