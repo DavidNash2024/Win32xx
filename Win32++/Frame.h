@@ -140,23 +140,49 @@ namespace Win32xx
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 		
 		ThemeToolbar& GetTheme() {return m_Theme;}
+		virtual void SetThemeMenu(ThemeMenubar& Theme);
 		void SetTheme(ThemeToolbar& Theme);
 
 	protected:
+		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
+		virtual void DrawIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
+		virtual void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		virtual void OnCreate();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
+		virtual BOOL OnDrawItem(WPARAM, LPARAM lParam);
+		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		struct ItemData
+		// Each Dropdown menu item has this data
+		{
+			HMENU hMenu;
+			UINT  nPos;
+			UINT  fType;
+			TCHAR Text[MAX_MENU_STRING];
+			HMENU hSubMenu;
+		};
+
+		enum Constants
+		{
+			POST_TEXT_GAP   = 16,			// for owner draw menu item
+		};
 
 		HIMAGELIST m_hImageList;
 		HIMAGELIST m_hImageListHot;
 		HIMAGELIST m_hImageListDis;
+		std::vector<ItemData*> m_vpItemData;	// vector of ItemData pointers
+		std::vector<UINT> m_ImageData;			// vector of menu icons
+		ThemeToolbar m_Theme;
+		ThemeMenubar m_ThemeMenu;		// Theme structure
 
 	private:
 		std::map<tString, int> m_StringMap;
 		UINT m_OldToolbarID;		// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
-		ThemeToolbar m_Theme;
+
 		BOOL m_bDrawArrowBkgrnd;
 
 	};  // class CToolbar
@@ -213,15 +239,15 @@ namespace Win32xx
 		virtual void SetIcons(const std::vector<UINT> ToolbarData, UINT nID_Image, COLORREF crMask);
 		virtual void SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
 		virtual void SysCommand(WPARAM wParam, LPARAM lParam);
-	//	void AppendMDIMenu(HMENU hMenuWindow);
 
 		HMENU GetMenu() {return m_hTopMenu;}
 		void SetMenu(HMENU hMenu);
-		ThemeMenubar& GetTheme() {return m_Theme;}
-		void SetTheme(ThemeMenubar& Theme);
+		ThemeMenubar& GetTheme() {return m_ThemeMenu;}
+	//	void SetTheme(ThemeMenubar& Theme);
 
 	protected:
 		virtual void OnCreate();
+	//	virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -229,29 +255,29 @@ namespace Win32xx
 	private:
 		void DoAltKey(WORD KeyCode);
 		void DoPopupMenu();
-		void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
-		void DrawIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
+	//	void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
+	//	void DrawIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		void DrawAllMDIButtons(HDC hDC);
 		void DrawMDIButton(HDC hDC, int iButton, UINT uState);
-		void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
+	//	void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		void ExitMenu();
 		HWND GetActiveMDIChild();
 		void GrabFocus();
 		BOOL IsMDIChildMaxed();
 		BOOL IsMDIFrame();
 		LRESULT OnCustomDraw(NMHDR* pNMHDR);
-		BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
-		void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
+	//	BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
+		
 		void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		void OnLButtonUp(WPARAM wParam, LPARAM lParam);
-		BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
+	//	BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		void OnMouseLeave();
 		void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void OnWindowPosChanged();
 		void ReleaseFocus();
-		void RevertPopupMenu(HMENU hMenu);
+	//	void RevertPopupMenu(HMENU hMenu);
 		void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 
@@ -268,15 +294,7 @@ namespace Win32xx
 			MDI_CLOSE = 2,
 		};
 
-		struct ItemData
-		// Each Dropdown menu item has this data
-		{
-			HMENU hMenu;
-			UINT  nPos;
-			UINT  fType;
-			TCHAR Text[MAX_MENU_STRING];
-			HMENU hSubMenu;
-		};
+
 
 		BOOL m_bExitAfter;			// Exit after Popup menu ends
 		BOOL m_bKeyMode;			// keyboard navigation mode
@@ -290,9 +308,8 @@ namespace Win32xx
 		int m_nHotItem;				// hot item
 		int m_nMDIButton;           // the MDI button pressed
 		POINT m_OldMousePos;        // old Mouse position
-		std::vector<ItemData*> m_vpItemData;	// vector or ItemData pointers
-		std::vector<UINT> m_ImageData;
-		ThemeMenubar m_Theme;		// Theme structure
+	//	std::vector<UINT> m_ImageData;
+	//	ThemeMenubar m_ThemeMenu;		// Theme structure
 
 
 	};  // class CMenubar
