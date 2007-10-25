@@ -145,6 +145,15 @@ namespace Win32xx
 	        }
 	        break;
 		case WM_NOTIFY:
+			{
+				// Do Notification reflection if it came from a CWnd object
+				CWnd* WndFrom = GetCWndObject(((LPNMHDR)lParam)->hwndFrom);
+				if (WndFrom != NULL)
+				{
+					BOOL bReturn = WndFrom->OnNotifyReflect(wParam, lParam);
+					if (bReturn) return TRUE;
+				}
+			}
 			return (OnNotify(wParam, lParam) == TRUE);
 
 		// A set of messages to be reflected back to the control that generated them

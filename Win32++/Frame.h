@@ -58,8 +58,8 @@ namespace Win32xx
 		BOOL UseThemes;			// TRUE if themes are used
 		COLORREF clrHot1;		// Color 1 for hot button
 		COLORREF clrHot2;		// Color 2 for hot button
-		COLORREF clrPressed1;	// Color 1 for pressed button and side bar in menu item
-		COLORREF clrPressed2;	// Color 2 for pressed button and side bar in menu item
+		COLORREF clrPressed1;	// Color 1 for pressed button
+		COLORREF clrPressed2;	// Color 2 for pressed button
 		COLORREF clrOutline;	// Colour for border outline
 	};
 
@@ -118,7 +118,6 @@ namespace Win32xx
 		virtual ~CToolbar();
 		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
 		virtual int  CommandToIndex(int iButtonID);
-		virtual void CreateDisabledImageList();
 		virtual void DisableButton(int iButtonID);
 		virtual void EnableButton(int iButtonID);
 		virtual int  GetButtonCount();
@@ -162,8 +161,6 @@ namespace Win32xx
 		HIMAGELIST m_hImageList;
 		HIMAGELIST m_hImageListHot;
 		HIMAGELIST m_hImageListDis;
-		std::vector<ItemData*> m_vpItemData;	// vector of ItemData pointers
-		std::vector<UINT> m_ImageData;			// vector of menu icons
 
 	private:
 		std::map<tString, int> m_StringMap;
@@ -222,8 +219,6 @@ namespace Win32xx
 		CMenubar();
 		virtual ~CMenubar();	
 		virtual void MenuChar(WPARAM wParam, LPARAM lParam);
-		virtual void SetIcons(const std::vector<UINT> ToolbarData, UINT nID_Image, COLORREF crMask);
-		virtual void SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
 		virtual void SysCommand(WPARAM wParam, LPARAM lParam);
 
 		HMENU GetMenu() {return m_hTopMenu;}
@@ -306,6 +301,7 @@ namespace Win32xx
 		virtual void UpdateCheckMarks();
 
 		// Its unlikely you would need to override these functions
+		virtual	void CreateDisabledImageList();
 		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
@@ -327,7 +323,6 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
 		virtual void AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
-		virtual	void CreateDisabledImageList();
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
@@ -340,8 +335,8 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask);
-		virtual void SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
+		virtual void SetMenuIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask);
+		virtual void SetMenuIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Its unlikely you would need to override these functions

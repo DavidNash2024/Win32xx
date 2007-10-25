@@ -269,66 +269,6 @@ namespace Win32xx
 		}
 	}
 
-	void CToolbar::CreateDisabledImageList()
-	{
-		if (m_hImageListDis)
-		{
-			ImageList_Destroy(m_hImageListDis);
-			m_hImageListDis = NULL;
-		}
-
-		int cx, cy;
-		int nCount = ImageList_GetImageCount(m_hImageList);
-		if (nCount == 0)
-			return;
-
-		ImageList_GetIconSize(m_hImageList, &cx, &cy);
-
-		// Create the destination ImageList
-		m_hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
-
-		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; i++)
-		{
-			HDC hdcToolbar = ::GetDC(m_hWnd);
-			HDC hdcMem = ::CreateCompatibleDC(NULL);
-			HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
-			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
-			RECT rc;
-			SetRect(&rc, 0, 0, cx, cx);
-
-			// Set the mask color to magenta for the new ImageList
-			COLORREF crMask = RGB(255,0,255);
-			SolidFill(hdcMem, crMask, &rc);
-
-			// Draw the image on the memory DC
-			ImageList_Draw(m_hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
-
-			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; x++)
-			{
-				for (int y = 0; y < cy; y++)
-				{
-					COLORREF clr = ::GetPixel(hdcMem, x, y);
-
-					if (clr != crMask)
-					{
-						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
-						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
-					}
-				}
-			}
-
-			::SelectObject(hdcMem, hbmMemOld);
-			ImageList_AddMasked(m_hImageListDis, hbmMem, crMask);
-
-			// Cleanup the GDI objects
-			::DeleteObject(hbmMem);
-			::DeleteDC(hdcMem);
-			::ReleaseDC(m_hWnd, hdcToolbar);
-		}
-	}
-
 	void CToolbar::DisableButton(int iButtonID)
 	// Disables the specified button in a toolbar
 	{
@@ -1048,7 +988,7 @@ namespace Win32xx
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 				}
 				else
-					CreateDisabledImageList();
+					GetApp()->GetFrame()->CreateDisabledImageList();
 
 				::DeleteObject(hbm);
 				hbm = NULL;
@@ -1083,20 +1023,6 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_DRAWITEM:
-		//	if (OnDrawItem(wParam, lParam))
-			if (GetApp()->GetFrame()->OnDrawItem(wParam, lParam))
-				return TRUE; // handled
-			break;
-		case WM_INITMENUPOPUP:
-		//	OnInitMenuPopup(wParam, lParam);
-			GetApp()->GetFrame()->OnInitMenuPopup(wParam, lParam);
-			break;
-		case WM_MEASUREITEM:
-		//	if (OnMeasureItem(wParam, lParam))
-			if (GetApp()->GetFrame()->OnMeasureItem(wParam, lParam))
-				return TRUE; // handled
-			break;
 		case WM_WINDOWPOSCHANGING:
 			{
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
@@ -2494,76 +2420,6 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
-	void CMenubar::SetIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask)
-	// Set the drop-down icons using a bitmap resource
-	{
-		// Remove any existing imagelist
-		if (m_hImageList)
-		{
-			ImageList_Destroy(m_hImageList);
-			m_hImageList = NULL;
-		}
-		m_ImageData.clear();
-
-		if (ImageData.size() == 0)
-			return;
-
-		int iImages = 0;
-		for (unsigned int i = 0 ; i < ImageData.size(); i++)
-		{
-			if (ImageData[i] != 0)
-			{
-				m_ImageData.push_back(ImageData[i]);
-				iImages++;
-			}
-		}
-
-		// Set the button images
-		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID_Image));
-		BITMAP bm = {0};
-
-		::GetObject(hbm, sizeof(BITMAP), &bm);
-		int iImageWidth  = bm.bmWidth / (int)m_ImageData.size();
-		int iImageHeight = bm.bmHeight;
-
-		m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
-		ImageList_AddMasked(m_hImageList, hbm, crMask);
-		::DeleteObject(hbm);
-		CreateDisabledImageList();
-	}
-
-    void CMenubar::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
-	// Set the drop-down icons from an existing image list.
-	// The image list could be a collection of icons
-    {
-        // Remove any existing imagelist
-        if (m_hImageList)
-        {
-            ImageList_Destroy(m_hImageList);
-            m_hImageList = NULL;
-        }
-        m_ImageData.clear();
-        if (ImageData.size() == 0)
-            return;
-
-		int iImages = 0;
-        for (unsigned int i = 0 ; i < ImageData.size(); i++)
-        {
-            if (ImageData[i] != 0)
-            {
-                m_ImageData.push_back(ImageData[i]);
-                iImages++;
-            }
-        }
-
-		// Set the button images
-        if (ImageList_GetImageCount(hImageList) == iImages)
-		{
-            m_hImageList = hImageList;
-			CreateDisabledImageList();
-		}
-    }
-
 	LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		MSG* pMsg = (MSG*)lParam;
@@ -2866,7 +2722,6 @@ namespace Win32xx
 								::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
 								if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
 								{
-									TRACE("Draw white checkmark");
 									// Draw a white checkmark
 									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
 									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
@@ -2874,11 +2729,6 @@ namespace Win32xx
 								}
 								else
 								{
-									if (m_ThemeMenu.UseThemes)
-										TRACE("Using Themes");
-									else
-										TRACE("NotUsingThemes");
-									TRACE("Draw black checkmark");
 									// Draw a black checkmark
 									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
 									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
@@ -3120,7 +2970,7 @@ namespace Win32xx
 		}
 
 		// Set the icons for popup menu items
-		SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
+		SetMenuIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
 
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
@@ -3615,7 +3465,7 @@ namespace Win32xx
 			DebugWarnMsg(_T("Load Menu failed"));
  	}
 
-	void CFrame::SetIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask)
+	void CFrame::SetMenuIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask)
 	// Set the drop-down icons using a bitmap resource
 	{
 		// Remove any existing imagelist
@@ -3653,7 +3503,7 @@ namespace Win32xx
 		CreateDisabledImageList();
 	}
 
-    void CFrame::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
+    void CFrame::SetMenuIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
 	// Set the drop-down icons from an existing image list.
 	// The image list could be a collection of icons
     {

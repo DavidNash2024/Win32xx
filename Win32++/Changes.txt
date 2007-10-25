@@ -1,11 +1,30 @@
-Version 5.51
-------------
+Version 5.6
+-----------
+Bug Fixes:
+* MDI accelerators (Ctrl+F6) now work
+* Fixed notification reflection in CDialog
+
+New Features:
+* Property Sheets are now supported. The Property sheet generic demonstrates
+  the creation of wizards, as well as modal and modeless property sheets.
+* The owner drawing of menus has been moved from CMenubar to CFrame. Now all
+  menus belonging to CFrame (or CMainFrame) can be themed. Also the various
+  functions controlling the owner drawing of menus are now located in CFrame,
+  This allows them to be easily customised by overriding them in CMainFrame 
+
 Added CPropertySheet class
 Added CPropertyPage class
+Added CFrame::DrawCheckmark
+Added CFrame::DrawMenuItem
+Added CFrame::DrawMenuText
+Added CFrame::OnDrawItem
+Added CFrame::OnInitMenuPopup
+Added CFrame::OnMeasureItem
+Added CFrame::SetMenuIcons
 Added CWnd::CenterWindow
 Added CMDIFrame::GetActiveMDIChildCWnd
 Removed CDialog::Center
-
+Removed CMenubar::SetIcons
 
 Version 5.5
 -----------
