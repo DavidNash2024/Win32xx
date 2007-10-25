@@ -198,7 +198,6 @@ namespace Win32xx
 		                    m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_Theme, sizeof(ThemeToolbar));
-		ZeroMemory(&m_ThemeMenu, sizeof(ThemeMenubar));
 	}
 
 	CToolbar::~CToolbar()
@@ -336,129 +335,6 @@ namespace Win32xx
 		// An example of iButtonID would be IDM_FILE_OPEN
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0)))
 			DebugWarnMsg(_T("Disable button failed"));
-	}
-
-	void CToolbar::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
-	// Copy the checkmark or radiocheck transparently
-	{
-		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
-		if (hdcMem)
-		{
-			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
-			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-			HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-			if (hbmMono)
-			{
-				HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
-				if (hbmPrev)
-				{
-					RECT rCheck = { 0, 0, cxCheck, cyCheck };
-					// Copy the check mark bitmap to hdcMem
-					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
-					else
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
-
-					RECT rc = pdis->rcItem;
-					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
-					if (m_Theme.UseThemes)
-						rc.left += 2;
-
-					// Draw a white or black check mark as required
-					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-					HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
-					if (hdcMask)
-					{
-						HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
-						if (hbmMask)
-						{
-							HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
-							if (hbmPrevMask)
-							{
-								::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
-								if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
-								{
-									TRACE("Draw white checkmark");
-									// Draw a white checkmark
-									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
-								}
-								else
-								{
-									if (m_ThemeMenu.UseThemes)
-										TRACE("Using Themes");
-									else
-										TRACE("NotUsingThemes");
-									TRACE("Draw black checkmark");
-									// Draw a black checkmark
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
-								}
-								::SelectObject(hdcMask, hbmPrevMask);
-							}
-							::DeleteObject(hbmMask);
-						}
-						::DeleteDC(hdcMask);
-					}
-					::SelectObject(hdcMem, hbmPrev);
-				}
-				::DeleteObject(hbmMono);
-			}
-			::DeleteDC(hdcMem);
-		}
-	}
-
-	void CToolbar::DrawIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
-	{
-		if (!m_hImageList)
-			return;
-
-		int Iconx;
-		int Icony;
-		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-		HDC hDC = pdis->hDC;
-		RECT rc = pdis->rcItem;
-		int offset = (rc.bottom - rc.top - Icony)/2;
-		int height = rc.bottom - rc.top;
-		::SetRect(&rc, rc.left, rc.top, rc.left + height, rc.bottom);
-		::InflateRect(&rc, -offset, -offset);
-
-		int iImage = -1;
-		for (int i = 0 ; i < (int)m_ImageData.size(); i++)
-		{
-			if (m_ImageData[i] == pdis->itemID)
-				iImage = i;
-		}
-
-		if (iImage >= 0 )
-		{
-			if ((bDisabled) && (m_hImageListDis))
-				ImageList_Draw(m_hImageListDis, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
-			else
-				ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
-		}
-	}
-
-	void CToolbar::DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
-	{
-		// find the position of tab character
-		int nTab = -1;
-		for(int i = 0; i < lstrlen(ItemText); i++)
-		{
-			if(ItemText[i] == _T('\t'))
-			{
-				nTab = i;
-				break;
-			}
-		}
-
-		::SetTextColor(hDC, colorText);
-		::DrawText(hDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
-
-		// Draw text after tab right aligned
-		if(nTab != -1)
-			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
 	void CToolbar::EnableButton(int iButtonID)
@@ -809,183 +685,6 @@ namespace Win32xx
 		return 0L;
 	}
 
-	BOOL CToolbar::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
-	// OwnerDraw is used to render the popup menu items
-	{
-		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
-
-		RECT rc = pdis->rcItem;
-		ItemData* pmd = (ItemData*)pdis->itemData;
-		HDC hDC = pdis->hDC;
-
-		int Iconx;
-		int Icony;
-		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-		int BarWidth = m_ThemeMenu.UseThemes? Iconx + 6 : 0;
-		if (m_ThemeMenu.UseThemes)		// Draw the side bar
-		{
-			RECT rcBar = rc;
-			rcBar.right = BarWidth;
-			GradientFill(hDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
-		}
-
-		if (pmd->fType & MFT_SEPARATOR)		// draw separator
-		{
-			RECT rcSep = rc;
-			rcSep.left = BarWidth;
-			SolidFill(hDC, RGB(255,255,255), &rcSep);
-			rcSep.top += (rc.bottom - rc.top)/2;
-			rcSep.left = BarWidth + 2;
-			::DrawEdge(hDC, &rcSep,  EDGE_ETCHED, BF_TOP);
-		}
-		else
-		{
-			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			BOOL bSelected = pdis->itemState & ODS_SELECTED;
-			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
-			RECT rcDraw = rc;
-
-			if ((bSelected) && (!bDisabled))	// draw selected item background
-			{
-				if (m_ThemeMenu.UseThemes)
-				{
-					HBRUSH hBrush = ::CreateSolidBrush(m_ThemeMenu.clrHot1);
-					HBRUSH hBrushOld = (HBRUSH)::SelectObject(hDC, hBrush);
-					HPEN hPen = CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-					HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
-					Rectangle(hDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
-					::DeleteObject(::SelectObject(hDC, hPenOld));
-					::DeleteObject(::SelectObject(hDC, hBrushOld));
-				}
-				else
-					SolidFill(hDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
-			}
-			else	// draw non-selected item background
-			{
-				rcDraw.left = BarWidth;
-				SolidFill(hDC, RGB(255,255,255), &rcDraw);
-			}
-
-			if (bChecked)
-				DrawCheckmark(pdis);
-			else
-				DrawIcon(pdis, bDisabled);
-
-			// Calculate the text rect size
-			rc.left  = rc.bottom - rc.top + 2;
-			if (_tcschr(pmd->Text, _T('\t')))
-				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
-
-			// Draw the text
-			int iMode = ::SetBkMode(hDC, TRANSPARENT);
-			COLORREF colorText;
-			if (m_ThemeMenu.UseThemes)
-			{
-				rc.left += 8;
-				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
-			}
-			else
-				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
-
-			DrawMenuText(hDC, pmd->Text, rc, colorText);
-			::SetBkMode(hDC, iMode);
-		}
-
-		return TRUE;
-	}
-
-	void CToolbar::OnInitMenuPopup(WPARAM wParam, LPARAM /*lParam*/)
-	{
-		HMENU hMenu = (HMENU)wParam;
-
-		// Reverse any previous OwnerDraw for this menu (required for submenus)
-		RevertPopupMenu(hMenu);
-
-		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
-		{
-			MENUITEMINFO mii = {0};
-
-			// For Win95 and NT, cbSize needs to be 44
-			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
-				mii.cbSize = 44;
-			else
-				mii.cbSize = sizeof(MENUITEMINFO);
-
-			TCHAR szMenuItem[MAX_MENU_STRING];
-
-			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
-			mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;
-			mii.dwTypeData = szMenuItem;
-			mii.cch = MAX_MENU_STRING -1;
-
-			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
-			{
-				ItemData* pItem = new ItemData;		// deleted in RevertPopupMenu
-				ZeroMemory(pItem, sizeof(ItemData));
-				pItem->hMenu = hMenu;
-				pItem->nPos = i;
-				pItem->fType = mii.fType;
-				pItem->hSubMenu = mii.hSubMenu;
-				mii.fType |= MFT_OWNERDRAW;
-				lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
-				mii.dwItemData = (DWORD_PTR)pItem;
-
-				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
-				::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
-			}
-		}
-	}
-
-	BOOL CToolbar::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
-	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
-	//  values can be assigned with the menu item's dimensions.
-	{
-		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
-
-		ItemData* pmd = (ItemData *) pmis->itemData;
-
-		if (pmd->fType & MFT_SEPARATOR)
-		{
-			pmis->itemHeight = 7;
-			pmis->itemWidth  = 0;
-		}
-
-		else
-		{
-			HDC hdcMenubar = GetDC(m_hWnd);
-			if (hdcMenubar)
-			{
-				HFONT hfntOld = (HFONT)::SelectObject(hdcMenubar, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
-				SIZE size;
-				int Iconx = 0;
-				int Icony = 0;
-
-				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-				GetTextExtentPoint32(hdcMenubar, pmd->Text, lstrlen(pmd->Text), &size);
-
-				pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
-				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
-
-				// Allow extra width if the text includes a tab
-				if (_tcschr(pmd->Text, _T('\t')))
-					pmis->itemWidth += POST_TEXT_GAP;
-
-				// Allow extra width if the menu item has a sub menu
-				if (pmd->hSubMenu)
-					pmis->itemWidth += 10;
-
-				// Allow extra width for themed menu
-				if (m_Theme.UseThemes)
-					pmis->itemWidth += 8;
-
-				::SelectObject(hdcMenubar, hfntOld);
-				::ReleaseDC(m_hWnd, hdcMenubar);
-			}
-		}
-
-		return TRUE;
-	}
-
 	LRESULT CToolbar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
 	{
 		switch (((LPNMHDR)lParam)->code)
@@ -1019,32 +718,6 @@ namespace Win32xx
 		CFrame* pFrame = GetApp()->GetFrame();
 		if (pFrame->IsRebarUsed())
 			cs.style |= CCS_NODIVIDER | CCS_NORESIZE;
-	}
-
-	void CToolbar::RevertPopupMenu(HMENU hMenu)
-	{
-		int nItem = (int)m_vpItemData.size() -1;
-
-		while (nItem >= 0)
-		{
-			if ((m_vpItemData[nItem]->hMenu == hMenu) || (hMenu == NULL))
-			{
-				// Undo OwnerDraw and put the text back
-				MENUITEMINFO mii = {0};
-				// For Win95, cbSize needs to be 44
-				mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
-				mii.fMask = MIIM_TYPE;
-				mii.fType = m_vpItemData[nItem]->fType;
-				mii.dwTypeData = m_vpItemData[nItem]->Text;
-				mii.cch = lstrlen(m_vpItemData[nItem]->Text);
-				::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
-
-				// Delete the ItemData object, then erase the vector item
-				delete m_vpItemData[nItem];
-				m_vpItemData.erase(m_vpItemData.begin() + nItem);
-			}
-			nItem--;
-		}
 	}
 
 	void CToolbar::SetBitmapSize(int cx, int cy)
@@ -1406,31 +1079,22 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
-	void CToolbar::SetThemeMenu(ThemeMenubar& Theme)
-	{
-		m_ThemeMenu.UseThemes   = Theme.UseThemes;
-		m_ThemeMenu.clrHot1     = Theme.clrHot1;
-		m_ThemeMenu.clrHot2     = Theme.clrHot2;
-		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
-		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
-		m_ThemeMenu.clrOutline  = Theme.clrOutline;
-
-		::InvalidateRect(m_hWnd, NULL, TRUE);
-	}
-
 	LRESULT CToolbar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
 		case WM_DRAWITEM:
-			if (OnDrawItem(wParam, lParam))
+		//	if (OnDrawItem(wParam, lParam))
+			if (GetApp()->GetFrame()->OnDrawItem(wParam, lParam))
 				return TRUE; // handled
 			break;
 		case WM_INITMENUPOPUP:
-			OnInitMenuPopup(wParam, lParam);
+		//	OnInitMenuPopup(wParam, lParam);
+			GetApp()->GetFrame()->OnInitMenuPopup(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			if (OnMeasureItem(wParam, lParam))
+		//	if (OnMeasureItem(wParam, lParam))
+			if (GetApp()->GetFrame()->OnMeasureItem(wParam, lParam))
 				return TRUE; // handled
 			break;
 		case WM_WINDOWPOSCHANGING:
@@ -1914,7 +1578,7 @@ namespace Win32xx
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
 
-		ZeroMemory(&m_Theme, sizeof(ThemeMenubar));
+		ZeroMemory(&m_ThemeMenu, sizeof(ThemeMenubar));
 	}
 
 	CMenubar::~CMenubar()
@@ -1997,7 +1661,7 @@ namespace Win32xx
 		::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
 		m_pTLSData->hMenuHook = NULL;
 
-		RevertPopupMenu(0);
+		GetApp()->GetFrame()->RevertPopupMenu(0);
 
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
@@ -2165,28 +1829,7 @@ namespace Win32xx
 			}
 		}
 	}
-/*
-	void CMenubar::DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
-	{
-		// find the position of tab character
-		int nTab = -1;
-		for(int i = 0; i < lstrlen(ItemText); i++)
-		{
-			if(ItemText[i] == _T('\t'))
-			{
-				nTab = i;
-				break;
-			}
-		}
 
-		::SetTextColor(hDC, colorText);
-		::DrawText(hDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
-
-		// Draw text after tab right aligned
-		if(nTab != -1)
-			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
-	}
-*/
 	void CMenubar::ExitMenu()
 	{
 		ReleaseFocus();
@@ -2245,104 +1888,6 @@ namespace Win32xx
 			DoAltKey(LOWORD(wParam));
 	}
 
-/*	void CMenubar::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
-	// Copy the checkmark or radiocheck transparently
-	{
-		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
-		if (hdcMem)
-		{
-			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
-			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-			HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-			if (hbmMono)
-			{
-				HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
-				if (hbmPrev)
-				{
-					RECT rCheck = { 0, 0, cxCheck, cyCheck };
-					// Copy the check mark bitmap to hdcMem
-					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
-					else
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
-
-					RECT rc = pdis->rcItem;
-					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
-					if (m_Theme.UseThemes)
-						rc.left += 2;
-
-					// Draw a white or black check mark as required
-					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-					HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
-					if (hdcMask)
-					{
-						HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
-						if (hbmMask)
-						{
-							HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
-							if (hbmPrevMask)
-							{
-								::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
-								if ((pdis->itemState & ODS_SELECTED) && (!m_Theme.UseThemes))
-								{
-									// Draw a white checkmark
-									TRACE("White Checkmark");
-									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
-								}
-								else
-								{
-									TRACE("Black checkmark");
-									// Draw a black checkmark
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
-								}
-								::SelectObject(hdcMask, hbmPrevMask);
-							}
-							::DeleteObject(hbmMask);
-						}
-						::DeleteDC(hdcMask);
-					}
-					::SelectObject(hdcMem, hbmPrev);
-				}
-				::DeleteObject(hbmMono);
-			}
-			::DeleteDC(hdcMem);
-		}
-	}
-*/
-/*	void CMenubar::DrawIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
-	{
-		if (!m_hImageList)
-			return;
-
-		int Iconx;
-		int Icony;
-		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-		HDC hDC = pdis->hDC;
-		RECT rc = pdis->rcItem;
-		int offset = (rc.bottom - rc.top - Icony)/2;
-		int height = rc.bottom - rc.top;
-		::SetRect(&rc, rc.left, rc.top, rc.left + height, rc.bottom);
-		::InflateRect(&rc, -offset, -offset);
-
-		int iImage = -1;
-		for (int i = 0 ; i < (int)m_ImageData.size(); i++)
-		{
-			if (m_ImageData[i] == pdis->itemID)
-				iImage = i;
-		}
-
-		if (iImage >= 0 )
-		{
-			if ((bDisabled) && (m_hImageListDis))
-				ImageList_Draw(m_hImageListDis, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
-			else
-				ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
-		}
-	} 
-*/
 	void CMenubar::OnCreate()
 	{
 		m_pTLSData->pMenubar = this;
@@ -2418,7 +1963,7 @@ namespace Win32xx
 					else
 					{
 						// Draw highlight rectangle
-						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 						HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
 						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
 						::FillRect(hDC, &rcRect, hbHighlight);
@@ -2456,133 +2001,6 @@ namespace Win32xx
 		return 0L;
 	}
 
-//	BOOL CMenubar::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
-/*	// OwnerDraw is used to render the popup menu items
-	{
-		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
-
-		RECT rc = pdis->rcItem;
-		ItemData* pmd = (ItemData*)pdis->itemData;
-		HDC hDC = pdis->hDC;
-
-		int Iconx;
-		int Icony;
-		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-		int BarWidth = m_Theme.UseThemes? Iconx + 6 : 0;
-		if (m_Theme.UseThemes)		// Draw the side bar
-		{
-			RECT rcBar = rc;
-			rcBar.right = BarWidth;
-			GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcBar, TRUE);
-		}
-
-		if (pmd->fType & MFT_SEPARATOR)		// draw separator
-		{
-			RECT rcSep = rc;
-			rcSep.left = BarWidth;
-			SolidFill(hDC, RGB(255,255,255), &rcSep);
-			rcSep.top += (rc.bottom - rc.top)/2;
-			rcSep.left = BarWidth + 2;
-			::DrawEdge(hDC, &rcSep,  EDGE_ETCHED, BF_TOP);
-		}
-		else
-		{
-			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			BOOL bSelected = pdis->itemState & ODS_SELECTED;
-			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
-			RECT rcDraw = rc;
-
-			if ((bSelected) && (!bDisabled))	// draw selected item background
-			{
-				if (m_Theme.UseThemes)
-				{
-					HBRUSH hBrush = ::CreateSolidBrush(m_Theme.clrHot1);
-					HBRUSH hBrushOld = (HBRUSH)::SelectObject(hDC, hBrush);
-					HPEN hPen = CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-					HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
-					Rectangle(hDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
-					::DeleteObject(::SelectObject(hDC, hPenOld));
-					::DeleteObject(::SelectObject(hDC, hBrushOld));
-				}
-				else
-					SolidFill(hDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
-			}
-			else	// draw non-selected item background
-			{
-				rcDraw.left = BarWidth;
-				SolidFill(hDC, RGB(255,255,255), &rcDraw);
-			}
-
-			if (bChecked)
-				DrawCheckmark(pdis);
-			else
-				DrawIcon(pdis, bDisabled);
-
-			// Calculate the text rect size
-			rc.left  = rc.bottom - rc.top + 2;
-			if (_tcschr(pmd->Text, _T('\t')))
-				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
-
-			// Draw the text
-			int iMode = ::SetBkMode(hDC, TRANSPARENT);
-			COLORREF colorText;
-			if (m_Theme.UseThemes)
-			{
-				rc.left += 8;
-				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
-			}
-			else
-				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
-
-			DrawMenuText(hDC, pmd->Text, rc, colorText);
-			::SetBkMode(hDC, iMode);
-		}
-
-		return TRUE;
-	}
-*/
-//	void CMenubar::OnInitMenuPopup(WPARAM wParam, LPARAM /*lParam*/)
-/*	{
-		HMENU hMenu = (HMENU)wParam;
-
-		// Reverse any previous OwnerDraw for this menu (required for submenus)
-		RevertPopupMenu(hMenu);
-
-		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
-		{
-			MENUITEMINFO mii = {0};
-
-			// For Win95 and NT, cbSize needs to be 44
-			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
-				mii.cbSize = 44;
-			else
-				mii.cbSize = sizeof(MENUITEMINFO);
-
-			TCHAR szMenuItem[MAX_MENU_STRING];
-
-			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
-			mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;
-			mii.dwTypeData = szMenuItem;
-			mii.cch = MAX_MENU_STRING -1;
-
-			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
-			{
-				ItemData* pItem = new ItemData;		// deleted in RevertPopupMenu
-				ZeroMemory(pItem, sizeof(ItemData));
-				pItem->hMenu = hMenu;
-				pItem->nPos = i;
-				pItem->fType = mii.fType;
-				pItem->hSubMenu = mii.hSubMenu;
-				mii.fType |= MFT_OWNERDRAW;
-				lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
-				mii.dwItemData = (DWORD_PTR)pItem;
-
-				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
-				::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
-			}
-		}
-	}
-*/
 	void CMenubar::OnKeyDown(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		switch (wParam)
@@ -2712,56 +2130,6 @@ namespace Win32xx
 		m_nMDIButton = 0;
 		ExitMenu();
 	}
-
-//	BOOL CMenubar::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
-/*	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
-	//  values can be assigned with the menu item's dimensions.
-	{
-		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
-
-		ItemData* pmd = (ItemData *) pmis->itemData;
-
-		if (pmd->fType & MFT_SEPARATOR)
-		{
-			pmis->itemHeight = 7;
-			pmis->itemWidth  = 0;
-		}
-
-		else
-		{
-			HDC hdcMenubar = GetDC(m_hWnd);
-			if (hdcMenubar)
-			{
-				HFONT hfntOld = (HFONT)::SelectObject(hdcMenubar, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
-				SIZE size;
-				int Iconx = 0;
-				int Icony = 0;
-
-				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-				GetTextExtentPoint32(hdcMenubar, pmd->Text, lstrlen(pmd->Text), &size);
-
-				pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
-				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
-
-				// Allow extra width if the text includes a tab
-				if (_tcschr(pmd->Text, _T('\t')))
-					pmis->itemWidth += POST_TEXT_GAP;
-
-				// Allow extra width if the menu item has a sub menu
-				if (pmd->hSubMenu)
-					pmis->itemWidth += 10;
-
-				// Allow extra width for themed menu
-				if (m_Theme.UseThemes)
-					pmis->itemWidth += 8;
-
-				::SelectObject(hdcMenubar, hfntOld);
-				::ReleaseDC(m_hWnd, hdcMenubar);
-			}
-		}
-
-		return TRUE;
-	} */
 
 	BOOL CMenubar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// When a popup menu is active, StaticMsgHook directs all menu messages here
@@ -3014,33 +2382,6 @@ namespace Win32xx
 		return 0L;
 	} // CMenubar::OnNotify(...)
 
-	/*
-	void CMenubar::RevertPopupMenu(HMENU hMenu)
-	{
-		int nItem = (int)m_vpItemData.size() -1;
-
-		while (nItem >= 0)
-		{
-			if ((m_vpItemData[nItem]->hMenu == hMenu) || (hMenu == NULL))
-			{
-				// Undo OwnerDraw and put the text back
-				MENUITEMINFO mii = {0};
-				// For Win95, cbSize needs to be 44
-				mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
-				mii.fMask = MIIM_TYPE;
-				mii.fType = m_vpItemData[nItem]->fType;
-				mii.dwTypeData = m_vpItemData[nItem]->Text;
-				mii.cch = lstrlen(m_vpItemData[nItem]->Text);
-				::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
-
-				// Delete the ItemData object, then erase the vector item
-				delete m_vpItemData[nItem];
-				m_vpItemData.erase(m_vpItemData.begin() + nItem);
-			}
-			nItem--;
-		}
-	}
-*/
 	void CMenubar::OnWindowPosChanged()
 	{
 		::InvalidateRect(m_hWnd, &m_MDIRect[0], TRUE);
@@ -3141,6 +2482,18 @@ namespace Win32xx
 		}
 	}
 
+	void CMenubar::SetThemeMenu(ThemeMenubar& Theme)
+	{
+		m_ThemeMenu.UseThemes   = Theme.UseThemes;
+		m_ThemeMenu.clrHot1     = Theme.clrHot1;
+		m_ThemeMenu.clrHot2     = Theme.clrHot2;
+		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
+		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
+		m_ThemeMenu.clrOutline  = Theme.clrOutline;
+
+		::InvalidateRect(m_hWnd, NULL, TRUE);
+	}
+
 	void CMenubar::SetIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask)
 	// Set the drop-down icons using a bitmap resource
 	{
@@ -3210,19 +2563,7 @@ namespace Win32xx
 			CreateDisabledImageList();
 		}
     }
-/*
-	void CMenubar::SetTheme(ThemeMenubar& Theme)
-	{
-		m_ThemeMenu.UseThemes   = Theme.UseThemes;
-		m_ThemeMenu.clrHot1     = Theme.clrHot1;
-		m_ThemeMenu.clrHot2     = Theme.clrHot2;
-		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
-		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
-		m_ThemeMenu.clrOutline  = Theme.clrOutline;
 
-		::InvalidateRect(m_hWnd, NULL, TRUE);
-	}
-*/
 	LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		MSG* pMsg = (MSG*)lParam;
@@ -3266,7 +2607,7 @@ namespace Win32xx
 		case WM_CHAR:
 			return 0L;  // Discard these messages
 		case WM_DRAWITEM:
-			if (OnDrawItem(wParam, lParam))
+			if (GetApp()->GetFrame()->OnDrawItem(wParam, lParam))
 				return TRUE; // handled
 			break;
 		case WM_EXITMENULOOP:
@@ -3274,7 +2615,7 @@ namespace Win32xx
 				ExitMenu();
 			break;
 		case WM_INITMENUPOPUP:
-			OnInitMenuPopup(wParam, lParam);
+			GetApp()->GetFrame()->OnInitMenuPopup(wParam, lParam);
 			break;
 		case WM_KEYDOWN:
 			OnKeyDown(wParam, lParam);
@@ -3296,7 +2637,7 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			if (OnMeasureItem(wParam, lParam))
+			if (GetApp()->GetFrame()->OnMeasureItem(wParam, lParam))
 				return TRUE; // handled
 			break;
 		case WM_MOUSELEAVE:
@@ -3423,6 +2764,189 @@ namespace Win32xx
 		rbbi.hwndChild  = TB.GetHwnd();
 
 		GetRebar().InsertBand(-1, &rbbi);
+	}
+
+	void CFrame::CreateDisabledImageList()
+	{
+		if (m_hImageListDis)
+		{
+			ImageList_Destroy(m_hImageListDis);
+			m_hImageListDis = NULL;
+		}
+
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(m_hImageList);
+		if (nCount == 0)
+			return;
+
+		ImageList_GetIconSize(m_hImageList, &cx, &cy);
+
+		// Create the destination ImageList
+		m_hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
+
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; i++)
+		{
+			HDC hdcToolbar = ::GetDC(m_hWnd);
+			HDC hdcMem = ::CreateCompatibleDC(NULL);
+			HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
+			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
+			RECT rc;
+			SetRect(&rc, 0, 0, cx, cx);
+
+			// Set the mask color to magenta for the new ImageList
+			COLORREF crMask = RGB(255,0,255);
+			SolidFill(hdcMem, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_Draw(m_hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; x++)
+			{
+				for (int y = 0; y < cy; y++)
+				{
+					COLORREF clr = ::GetPixel(hdcMem, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
+						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
+					}
+				}
+			}
+
+			::SelectObject(hdcMem, hbmMemOld);
+			ImageList_AddMasked(m_hImageListDis, hbmMem, crMask);
+
+			// Cleanup the GDI objects
+			::DeleteObject(hbmMem);
+			::DeleteDC(hdcMem);
+			::ReleaseDC(m_hWnd, hdcToolbar);
+		}
+	}
+
+	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
+	// Copy the checkmark or radiocheck transparently
+	{
+		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
+		if (hdcMem)
+		{
+			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
+			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
+			HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+			if (hbmMono)
+			{
+				HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
+				if (hbmPrev)
+				{
+					RECT rCheck = { 0, 0, cxCheck, cyCheck };
+					// Copy the check mark bitmap to hdcMem
+					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
+						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
+					else
+						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
+
+					RECT rc = pdis->rcItem;
+					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
+					if (m_ThemeMenu.UseThemes)
+						rc.left += 2;
+
+					// Draw a white or black check mark as required
+					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
+					HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
+					if (hdcMask)
+					{
+						HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
+						if (hbmMask)
+						{
+							HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
+							if (hbmPrevMask)
+							{
+								::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
+								if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
+								{
+									TRACE("Draw white checkmark");
+									// Draw a white checkmark
+									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
+								}
+								else
+								{
+									if (m_ThemeMenu.UseThemes)
+										TRACE("Using Themes");
+									else
+										TRACE("NotUsingThemes");
+									TRACE("Draw black checkmark");
+									// Draw a black checkmark
+									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
+								}
+								::SelectObject(hdcMask, hbmPrevMask);
+							}
+							::DeleteObject(hbmMask);
+						}
+						::DeleteDC(hdcMask);
+					}
+					::SelectObject(hdcMem, hbmPrev);
+				}
+				::DeleteObject(hbmMono);
+			}
+			::DeleteDC(hdcMem);
+		}
+	}
+
+	void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
+	{
+		if (!m_hImageList)
+			return;
+
+		int Iconx;
+		int Icony;
+		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+		HDC hDC = pdis->hDC;
+		RECT rc = pdis->rcItem;
+		int offset = (rc.bottom - rc.top - Icony)/2;
+		int height = rc.bottom - rc.top;
+		::SetRect(&rc, rc.left, rc.top, rc.left + height, rc.bottom);
+		::InflateRect(&rc, -offset, -offset);
+
+		int iImage = -1;
+		for (int i = 0 ; i < (int)m_ImageData.size(); i++)
+		{
+			if (m_ImageData[i] == pdis->itemID)
+				iImage = i;
+		}
+
+		if (iImage >= 0 )
+		{
+			if ((bDisabled) && (m_hImageListDis))
+				ImageList_Draw(m_hImageListDis, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+			else
+				ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+		}
+	}
+
+	void CFrame::DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
+	{
+		// find the position of tab character
+		int nTab = -1;
+		for(int i = 0; i < lstrlen(ItemText); i++)
+		{
+			if(ItemText[i] == _T('\t'))
+			{
+				nTab = i;
+				break;
+			}
+		}
+
+		::SetTextColor(hDC, colorText);
+		::DrawText(hDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+
+		// Draw text after tab right aligned
+		if(nTab != -1)
+			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
 	RECT CFrame::GetClientSize()
@@ -3582,7 +3106,7 @@ namespace Win32xx
 			AddToolbarBand(GetToolbar(), m_ToolbarData, RGB(192, 192, 192), IDW_MAIN);
 
 			// Set the icons for popup menu items
-			GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
+		//	GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
 		}
 		else
 		{
@@ -3594,6 +3118,9 @@ namespace Win32xx
 			int iButtons = GetToolbar().SetButtons(m_ToolbarData);
 			GetToolbar().SetImageList(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 		}
+
+		// Set the icons for popup menu items
+		SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
 
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
@@ -3615,6 +3142,91 @@ namespace Win32xx
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
+	BOOL CFrame::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
+	// OwnerDraw is used to render the popup menu items
+	{
+		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
+
+		RECT rc = pdis->rcItem;
+		ItemData* pmd = (ItemData*)pdis->itemData;
+		HDC hDC = pdis->hDC;
+
+		int Iconx;
+		int Icony;
+		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+		int BarWidth = m_ThemeMenu.UseThemes? Iconx + 6 : 0;
+		if (m_ThemeMenu.UseThemes)		// Draw the side bar
+		{
+			RECT rcBar = rc;
+			rcBar.right = BarWidth;
+			GradientFill(hDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
+		}
+
+		if (pmd->fType & MFT_SEPARATOR)		// draw separator
+		{
+			RECT rcSep = rc;
+			rcSep.left = BarWidth;
+			SolidFill(hDC, RGB(255,255,255), &rcSep);
+			rcSep.top += (rc.bottom - rc.top)/2;
+			rcSep.left = BarWidth + 2;
+			::DrawEdge(hDC, &rcSep,  EDGE_ETCHED, BF_TOP);
+		}
+		else
+		{
+			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
+			BOOL bSelected = pdis->itemState & ODS_SELECTED;
+			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
+			RECT rcDraw = rc;
+
+			if ((bSelected) && (!bDisabled))	// draw selected item background
+			{
+				if (m_ThemeMenu.UseThemes)
+				{
+					HBRUSH hBrush = ::CreateSolidBrush(m_ThemeMenu.clrHot1);
+					HBRUSH hBrushOld = (HBRUSH)::SelectObject(hDC, hBrush);
+					HPEN hPen = CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+					HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
+					Rectangle(hDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+					::DeleteObject(::SelectObject(hDC, hPenOld));
+					::DeleteObject(::SelectObject(hDC, hBrushOld));
+				}
+				else
+					SolidFill(hDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
+			}
+			else	// draw non-selected item background
+			{
+				rcDraw.left = BarWidth;
+				SolidFill(hDC, RGB(255,255,255), &rcDraw);
+			}
+
+			if (bChecked)
+				DrawCheckmark(pdis);
+			else
+				DrawMenuIcon(pdis, bDisabled);
+
+			// Calculate the text rect size
+			rc.left  = rc.bottom - rc.top + 2;
+			if (_tcschr(pmd->Text, _T('\t')))
+				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
+
+			// Draw the text
+			int iMode = ::SetBkMode(hDC, TRANSPARENT);
+			COLORREF colorText;
+			if (m_ThemeMenu.UseThemes)
+			{
+				rc.left += 8;
+				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
+			}
+			else
+				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
+
+			DrawMenuText(hDC, pmd->Text, rc, colorText);
+			::SetBkMode(hDC, iMode);
+		}
+
+		return TRUE;
+	}
+
 	void CFrame::OnHelp()
 	{
 		static BOOL IsHelpOpen = FALSE;
@@ -3634,6 +3246,99 @@ namespace Win32xx
 			IsHelpOpen = FALSE;
 		}
 	}
+
+	void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		HMENU hMenu = (HMENU)wParam;
+
+		// Reverse any previous OwnerDraw for this menu (required for submenus)
+		RevertPopupMenu(hMenu);
+
+		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
+		{
+			MENUITEMINFO mii = {0};
+
+			// For Win95 and NT, cbSize needs to be 44
+			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+				mii.cbSize = 44;
+			else
+				mii.cbSize = sizeof(MENUITEMINFO);
+
+			TCHAR szMenuItem[MAX_MENU_STRING];
+
+			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
+			mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;
+			mii.dwTypeData = szMenuItem;
+			mii.cch = MAX_MENU_STRING -1;
+
+			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
+			{
+				ItemData* pItem = new ItemData;		// deleted in RevertPopupMenu
+				ZeroMemory(pItem, sizeof(ItemData));
+				pItem->hMenu = hMenu;
+				pItem->nPos = i;
+				pItem->fType = mii.fType;
+				pItem->hSubMenu = mii.hSubMenu;
+				mii.fType |= MFT_OWNERDRAW;
+				lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
+				mii.dwItemData = (DWORD_PTR)pItem;
+
+				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
+				::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
+			}
+		}
+	}
+
+	BOOL CFrame::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
+	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
+	//  values can be assigned with the menu item's dimensions.
+	{
+		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
+
+		ItemData* pmd = (ItemData *) pmis->itemData;
+
+		if (pmd->fType & MFT_SEPARATOR)
+		{
+			pmis->itemHeight = 7;
+			pmis->itemWidth  = 0;
+		}
+
+		else
+		{
+			HDC hdcMenubar = GetDC(m_hWnd);
+			if (hdcMenubar)
+			{
+				HFONT hfntOld = (HFONT)::SelectObject(hdcMenubar, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+				SIZE size;
+				int Iconx = 0;
+				int Icony = 0;
+
+				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+				GetTextExtentPoint32(hdcMenubar, pmd->Text, lstrlen(pmd->Text), &size);
+
+				pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
+				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
+
+				// Allow extra width if the text includes a tab
+				if (_tcschr(pmd->Text, _T('\t')))
+					pmis->itemWidth += POST_TEXT_GAP;
+
+				// Allow extra width if the menu item has a sub menu
+				if (pmd->hSubMenu)
+					pmis->itemWidth += 10;
+
+				// Allow extra width for themed menu
+				if (m_ThemeMenu.UseThemes)
+					pmis->itemWidth += 8;
+
+				::SelectObject(hdcMenubar, hfntOld);
+				::ReleaseDC(m_hWnd, hdcMenubar);
+			}
+		}
+
+		return TRUE;
+	}
+
 
 	void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
 	{
@@ -3873,6 +3578,32 @@ namespace Win32xx
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}
 
+	void CFrame::RevertPopupMenu(HMENU hMenu)
+	{
+		int nItem = (int)m_vpItemData.size() -1;
+
+		while (nItem >= 0)
+		{
+			if ((m_vpItemData[nItem]->hMenu == hMenu) || (hMenu == NULL))
+			{
+				// Undo OwnerDraw and put the text back
+				MENUITEMINFO mii = {0};
+				// For Win95, cbSize needs to be 44
+				mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
+				mii.fMask = MIIM_TYPE;
+				mii.fType = m_vpItemData[nItem]->fType;
+				mii.dwTypeData = m_vpItemData[nItem]->Text;
+				mii.cch = lstrlen(m_vpItemData[nItem]->Text);
+				::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
+
+				// Delete the ItemData object, then erase the vector item
+				delete m_vpItemData[nItem];
+				m_vpItemData.erase(m_vpItemData.begin() + nItem);
+			}
+			nItem--;
+		}
+	}
+
 	void CFrame::SetFrameMenu(INT ID_MENU)
 	{
 		if (m_hMenu)
@@ -3883,6 +3614,76 @@ namespace Win32xx
 		if(!m_hMenu)
 			DebugWarnMsg(_T("Load Menu failed"));
  	}
+
+	void CFrame::SetIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask)
+	// Set the drop-down icons using a bitmap resource
+	{
+		// Remove any existing imagelist
+		if (m_hImageList)
+		{
+			ImageList_Destroy(m_hImageList);
+			m_hImageList = NULL;
+		}
+		m_ImageData.clear();
+
+		if (ImageData.size() == 0)
+			return;
+
+		int iImages = 0;
+		for (unsigned int i = 0 ; i < ImageData.size(); i++)
+		{
+			if (ImageData[i] != 0)
+			{
+				m_ImageData.push_back(ImageData[i]);
+				iImages++;
+			}
+		}
+
+		// Set the button images
+		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID_Image));
+		BITMAP bm = {0};
+
+		::GetObject(hbm, sizeof(BITMAP), &bm);
+		int iImageWidth  = bm.bmWidth / (int)m_ImageData.size();
+		int iImageHeight = bm.bmHeight;
+
+		m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+		ImageList_AddMasked(m_hImageList, hbm, crMask);
+		::DeleteObject(hbm);
+		CreateDisabledImageList();
+	}
+
+    void CFrame::SetIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
+	// Set the drop-down icons from an existing image list.
+	// The image list could be a collection of icons
+    {
+        // Remove any existing imagelist
+        if (m_hImageList)
+        {
+            ImageList_Destroy(m_hImageList);
+            m_hImageList = NULL;
+        }
+        m_ImageData.clear();
+        if (ImageData.size() == 0)
+            return;
+
+		int iImages = 0;
+        for (unsigned int i = 0 ; i < ImageData.size(); i++)
+        {
+            if (ImageData[i] != 0)
+            {
+                m_ImageData.push_back(ImageData[i]);
+                iImages++;
+            }
+        }
+
+		// Set the button images
+        if (ImageList_GetImageCount(hImageList) == iImages)
+		{
+            m_hImageList = hImageList;
+			CreateDisabledImageList();
+		}
+    }
 
 	void CFrame::SetMenubarBandSize()
 	{
@@ -4018,7 +3819,13 @@ namespace Win32xx
 	//	or you could use the following
 	//	ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 		MB.SetThemeMenu(tm);
-		TB.SetThemeMenu(tm);
+
+		m_ThemeMenu.UseThemes   = TRUE;
+		m_ThemeMenu.clrHot1     = RGB(255, 230, 190);
+		m_ThemeMenu.clrHot2     = RGB(255, 190, 100);
+		m_ThemeMenu.clrPressed1 = RGB(150,190,245);
+		m_ThemeMenu.clrPressed2 = RGB(220,230,250);
+		m_ThemeMenu.clrOutline  = RGB(128, 128, 200);
 
 		RecalcLayout();
 	}
@@ -4109,6 +3916,17 @@ namespace Win32xx
 			case WM_TIMER:
 				OnTimer(wParam);
 				return 0L;
+			case WM_DRAWITEM:
+				if (OnDrawItem(wParam, lParam))
+					return TRUE; // handled
+				break;
+			case WM_INITMENUPOPUP:
+				OnInitMenuPopup(wParam, lParam);
+				break;
+			case WM_MEASUREITEM:
+				if (OnMeasureItem(wParam, lParam))
+					return TRUE; // handled
+				break;
 			} // switch uMsg
 
 		} // try
