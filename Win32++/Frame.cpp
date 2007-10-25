@@ -1007,7 +1007,7 @@ namespace Win32xx
 		}
 	}
 
-	void CToolbar::SetTheme(ThemeToolbar& Theme)
+	void CToolbar::SetToolbarTheme(ThemeToolbar& Theme)
 	{
 		m_Theme.UseThemes   = Theme.UseThemes;
 		m_Theme.clrHot1     = Theme.clrHot1;
@@ -1028,7 +1028,7 @@ namespace Win32xx
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 				if (GetApp()->GetFrame()->IsRebarUsed())
 				{
-					ThemeRebar& rb = GetApp()->GetFrame()->GetRebar().GetTheme();
+					ThemeRebar& rb = GetApp()->GetFrame()->GetRebar().GetRebarTheme();
 					if (rb.UseThemes && rb.ShortBands)
 					{
 						pWinPos->cx = GetMaxSize().cx+2;
@@ -1380,7 +1380,7 @@ namespace Win32xx
 		return (BOOL)::SendMessage(m_hWnd, RB_SETBARINFO, 0, (LPARAM)prbi);
 	}
 
-	void CRebar::SetTheme(ThemeRebar& Theme)
+	void CRebar::SetRebarTheme(ThemeRebar& Theme)
 	{
 		m_Theme.UseThemes    = Theme.UseThemes;
 		m_Theme.clrBkgnd1    = Theme.clrBkgnd1;
@@ -2408,7 +2408,7 @@ namespace Win32xx
 		}
 	}
 
-	void CMenubar::SetThemeMenu(ThemeMenubar& Theme)
+	void CMenubar::SetMenubarTheme(ThemeMenubar& Theme)
 	{
 		m_ThemeMenu.UseThemes   = Theme.UseThemes;
 		m_ThemeMenu.clrHot1     = Theme.clrHot1;
@@ -3220,11 +3220,11 @@ namespace Win32xx
 			::InvalidateRect(m_hWnd, NULL, TRUE);
 			break;
 		case RBN_LAYOUTCHANGED:
-			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().KeepBandsLeft)
+			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
 				GetRebar().MoveBandsLeft();
 			break;
 		case RBN_MINMAX:
-			if (GetRebar().GetTheme().UseThemes && GetRebar().GetTheme().ShortBands)
+			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().ShortBands)
 				return 1L;	// Supress maximise or minimise rebar band
 			break;
 
@@ -3419,7 +3419,7 @@ namespace Win32xx
 			::SetWindowPos(m_pView->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
-		if (RB.GetTheme().UseThemes && RB.GetTheme().KeepBandsLeft)
+		if (RB.GetRebarTheme().UseThemes && RB.GetRebarTheme().KeepBandsLeft)
 			RB.MoveBandsLeft();
 
 		if (IsMenubarUsed())
@@ -3552,7 +3552,7 @@ namespace Win32xx
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, &rbbi);
-		if (GetRebar().GetTheme().UseThemes)
+		if (GetRebar().GetRebarTheme().UseThemes)
 		{
 			rbbi.cxMinChild = Width;
 			rbbi.cx         = Width;
@@ -3638,7 +3638,7 @@ namespace Win32xx
 	//	BOOL T = TRUE;
 	//	BOOL F = FALSE;
 	//	ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
-		RB.SetTheme(tr);
+		RB.SetRebarTheme(tr);
 
 		// Set the toolbar theme
 		CToolbar& TB = GetToolbar();
@@ -3653,7 +3653,7 @@ namespace Win32xx
 
 	//	or you could use the following
 	//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-		TB.SetTheme(tt);
+		TB.SetToolbarTheme(tt);
 
 		// Set the menubar theme
 		CMenubar& MB = GetMenubar();
@@ -3668,7 +3668,7 @@ namespace Win32xx
 
 	//	or you could use the following
 	//	ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-		MB.SetThemeMenu(tm);
+		MB.SetMenubarTheme(tm);
 
 		m_ThemeMenu.UseThemes   = TRUE;
 		m_ThemeMenu.clrHot1     = RGB(255, 230, 190);

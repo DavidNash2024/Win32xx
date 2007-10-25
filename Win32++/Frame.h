@@ -138,8 +138,8 @@ namespace Win32xx
 		virtual void SetCommandID(int iIndex, int iButtonID);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 		
-		ThemeToolbar& GetTheme() {return m_Theme;}
-		void SetTheme(ThemeToolbar& Theme);
+		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
+		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	protected:
 		virtual void OnCreate();
@@ -201,8 +201,8 @@ namespace Win32xx
 		virtual void ShowGripper(int nBand, BOOL fShow);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		ThemeRebar& GetTheme() {return m_Theme;}
-		void SetTheme(ThemeRebar& Theme);
+		ThemeRebar& GetRebarTheme() {return m_Theme;}
+		void SetRebarTheme(ThemeRebar& Theme);
 
 	private:
 		ThemeRebar m_Theme;
@@ -223,8 +223,8 @@ namespace Win32xx
 
 		HMENU GetMenu() {return m_hTopMenu;}
 		void SetMenu(HMENU hMenu);
-		ThemeMenubar& GetTheme() {return m_ThemeMenu;}
-		void SetThemeMenu(ThemeMenubar& Theme);
+		ThemeMenubar& GetMenubarTheme() {return m_ThemeMenu;}
+		void SetMenubarTheme(ThemeMenubar& Theme);
 
 	protected:
 		virtual void OnCreate();

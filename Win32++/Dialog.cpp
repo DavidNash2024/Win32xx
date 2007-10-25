@@ -150,7 +150,7 @@ namespace Win32xx
 				CWnd* WndFrom = GetCWndObject(((LPNMHDR)lParam)->hwndFrom);
 				if (WndFrom != NULL)
 				{
-					BOOL bReturn = WndFrom->OnNotifyReflect(wParam, lParam);
+					BOOL bReturn = (BOOL)WndFrom->OnNotifyReflect(wParam, lParam);
 					if (bReturn) return TRUE;
 				}
 			}

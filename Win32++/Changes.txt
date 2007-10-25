@@ -1,7 +1,7 @@
 Version 5.6
 -----------
 Bug Fixes:
-* MDI accelerators (Ctrl+F6) now work
+* MDI accelerators (like Ctrl+F6) now work
 * Fixed notification reflection in CDialog
 
 New Features:
@@ -25,6 +25,12 @@ Added CWnd::CenterWindow
 Added CMDIFrame::GetActiveMDIChildCWnd
 Removed CDialog::Center
 Removed CMenubar::SetIcons
+Renamed CMenubar::GetTheme to CMenubar::GetMenubarTheme
+Renamed CMenubar::SetTheme to CMenubar::SetMenubarTheme
+Renamed CRebar::GetTheme   to CRebar::GetRebarTheme
+Renamed CRebar::SetTheme   to CRebar::SetRebarTheme
+Renamed CToolbar::GetTheme to CToolbar::GetToolbarTheme
+Renamed CToolbar::SetTheme to CToolbar::SetToolbarTheme
 
 Version 5.5
 -----------
