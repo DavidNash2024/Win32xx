@@ -6,11 +6,11 @@ Bug Fixes:
 
 New Features:
 * Property Sheets are now supported. The Property sheet generic demonstrates
-  the creation of wizards, as well as modal and modeless property sheets.
+  the use of wizards, as well as modal and modeless property sheets.
 * The owner drawing of menus has been moved from CMenubar to CFrame. Now all
   menus belonging to CFrame (or CMainFrame) can be themed. Also the various
   functions controlling the owner drawing of menus are now located in CFrame,
-  This allows them to be easily customised by overriding them in CMainFrame 
+  This allows them to be easily customised by overriding them in CMainFrame. 
 
 Added CPropertySheet class
 Added CPropertyPage class
@@ -21,10 +21,13 @@ Added CFrame::OnDrawItem
 Added CFrame::OnInitMenuPopup
 Added CFrame::OnMeasureItem
 Added CFrame::SetMenuIcons
-Added CWnd::CenterWindow
+Added CFrame::GetMenuTheme
+Added CFrame::SetMenuTheme
 Added CMDIFrame::GetActiveMDIChildCWnd
-Removed CDialog::Center
-Removed CMenubar::SetIcons
+Added CWnd::CenterWindow
+Removed CDialog::Center    (use CWnd::CenterWindow instead)
+Removed CMenubar::SetIcons (use CFrame::SetMenuIcons instead)
+Renamed ThemeMenubar       to ThemeMenu 
 Renamed CMenubar::GetTheme to CMenubar::GetMenubarTheme
 Renamed CMenubar::SetTheme to CMenubar::SetMenubarTheme
 Renamed CRebar::GetTheme   to CRebar::GetRebarTheme

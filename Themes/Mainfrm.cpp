@@ -172,8 +172,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {0};
+			ThemeMenu tm = {0};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_NONE, 0);
 		}
@@ -189,8 +190,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE, 0);
 		}
@@ -206,8 +208,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE_LOCKED, 0);
 		}
@@ -223,8 +226,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 			
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE_BKGND, 0);
 		}
@@ -240,8 +244,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE_FLAT, 0);
 		}
@@ -256,9 +261,10 @@ void CMainFrame::SetTheme(UINT nStyle)
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
-
-			ThemeMenubar tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
+	
+			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_GREY, 0);
 		}
@@ -274,8 +280,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
+			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_OLIVE, 0);
 		}
@@ -291,8 +298,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
+			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_GOLD, 0);
 		}
@@ -308,8 +316,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
+			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_OCHRE, 0);
 		}
@@ -324,8 +333,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
+			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_PINK, 0);
 		}
@@ -340,8 +350,9 @@ void CMainFrame::SetTheme(UINT nStyle)
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenubar tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
+			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
 
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_MAUVE, 0);
 		}

@@ -1061,8 +1061,8 @@ namespace Win32xx
 							::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 							return 0L;
 						}
-					} 
-				} 
+					}
+				}
 			}
 
 			break;
@@ -1504,7 +1504,7 @@ namespace Win32xx
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
 
-		ZeroMemory(&m_ThemeMenu, sizeof(ThemeMenubar));
+		ZeroMemory(&m_ThemeMenu, sizeof(ThemeMenu));
 	}
 
 	CMenubar::~CMenubar()
@@ -1777,9 +1777,9 @@ namespace Win32xx
 		HWND hwndMDIChild = NULL;
 		if (IsMDIFrame())
 		{
-			hwndMDIChild = (HWND)::SendMessage(GetApp()->GetFrame()->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, NULL);
+			hwndMDIChild = (HWND)::SendMessage(GetApp()->GetFrame()->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, 0);
 		}
-		
+
 		return hwndMDIChild;
 	}
 
@@ -2408,7 +2408,7 @@ namespace Win32xx
 		}
 	}
 
-	void CMenubar::SetMenubarTheme(ThemeMenubar& Theme)
+	void CMenubar::SetMenubarTheme(ThemeMenu& Theme)
 	{
 		m_ThemeMenu.UseThemes   = Theme.UseThemes;
 		m_ThemeMenu.clrHot1     = Theme.clrHot1;
@@ -3535,6 +3535,18 @@ namespace Win32xx
 		}
     }
 
+	void CFrame::SetMenuTheme(ThemeMenu& Theme)
+	{
+		m_ThemeMenu.UseThemes   = Theme.UseThemes;
+		m_ThemeMenu.clrHot1     = Theme.clrHot1;
+		m_ThemeMenu.clrHot2     = Theme.clrHot2;
+		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
+		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
+		m_ThemeMenu.clrOutline  = Theme.clrOutline;
+
+		::InvalidateRect(m_hWnd, NULL, TRUE);
+	}
+
 	void CFrame::SetMenubarBandSize()
 	{
 		// Sets the minimum width of the Menubar band to the width of the rebar
@@ -3658,7 +3670,7 @@ namespace Win32xx
 		// Set the menubar theme
 		CMenubar& MB = GetMenubar();
 
-		ThemeMenubar tm = {0};
+		ThemeMenu tm = {0};
 		tm.UseThemes   = TRUE;
 		tm.clrHot1     = RGB(255, 230, 190);
 		tm.clrHot2     = RGB(255, 190, 100);
@@ -3667,15 +3679,9 @@ namespace Win32xx
 		tm.clrOutline  = RGB(128, 128, 200);
 
 	//	or you could use the following
-	//	ThemeMenubar tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-		MB.SetMenubarTheme(tm);
-
-		m_ThemeMenu.UseThemes   = TRUE;
-		m_ThemeMenu.clrHot1     = RGB(255, 230, 190);
-		m_ThemeMenu.clrHot2     = RGB(255, 190, 100);
-		m_ThemeMenu.clrPressed1 = RGB(150,190,245);
-		m_ThemeMenu.clrPressed2 = RGB(220,230,250);
-		m_ThemeMenu.clrOutline  = RGB(128, 128, 200);
+	//	ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+		MB.SetMenubarTheme(tm);		// Sets the theme for Menubar buttons
+		SetMenuTheme(tm);			// Sets the theme for popup menus
 
 		RecalcLayout();
 	}

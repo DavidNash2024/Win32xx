@@ -53,7 +53,7 @@
 namespace Win32xx
 {
 
-	struct ThemeMenubar
+	struct ThemeMenu
 	{
 		BOOL UseThemes;			// TRUE if themes are used
 		COLORREF clrHot1;		// Color 1 for hot button
@@ -223,8 +223,8 @@ namespace Win32xx
 
 		HMENU GetMenu() {return m_hTopMenu;}
 		void SetMenu(HMENU hMenu);
-		ThemeMenubar& GetMenubarTheme() {return m_ThemeMenu;}
-		void SetMenubarTheme(ThemeMenubar& Theme);
+		ThemeMenu& GetMenubarTheme() {return m_ThemeMenu;}
+		void SetMenubarTheme(ThemeMenu& Theme);
 
 	protected:
 		virtual void OnCreate();
@@ -278,7 +278,7 @@ namespace Win32xx
 		int m_nHotItem;				// hot item
 		int m_nMDIButton;           // the MDI button pressed
 		POINT m_OldMousePos;        // old Mouse position
-		ThemeMenubar m_ThemeMenu;		// Theme structure
+		ThemeMenu m_ThemeMenu;		// Theme structure
 
 	};  // class CMenubar
 
@@ -308,6 +308,7 @@ namespace Win32xx
 		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual void SetFrameMenu(INT ID_MENU);
 		HMENU GetFrameMenu() {return m_hMenu;}
+		ThemeMenu& GetMenuTheme() {return m_ThemeMenu;}
 		CMenubar& GetMenubar() {return m_Menubar;}
 		CRebar& GetRebar() {return m_Rebar;}
 		CStatusbar& GetStatusbar() {return m_Statusbar;}
@@ -317,6 +318,7 @@ namespace Win32xx
 		BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
 		BOOL IsRebarSupported() {return (GetComCtlVersion() >= 470);}
 		BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
+		void SetMenuTheme(ThemeMenu& Theme);
 		void SetView(CWnd& pView);
 
 	protected:
@@ -369,7 +371,7 @@ namespace Win32xx
 		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
 		BOOL m_bUseThemes;          // set to TRUE for themes
 		tString m_StatusText;		// a TCHAR std::string for status text
-		ThemeMenubar m_ThemeMenu;	// Theme structure
+		ThemeMenu m_ThemeMenu;	// Theme structure
 		HIMAGELIST m_hImageList;	// Imagelist of menu icons
 		HIMAGELIST m_hImageListDis;	// Imagelist of disabled menu icons
 
