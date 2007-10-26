@@ -6,27 +6,38 @@ Bug Fixes:
 
 New Features:
 * Property Sheets are now supported. The Property sheet generic demonstrates
-  the use of wizards, as well as modal and modeless property sheets.
-* The owner drawing of menus has been moved from CMenubar to CFrame. Now all
-  menus belonging to CFrame (or CMainFrame) can be themed. Also the various
-  functions controlling the owner drawing of menus are now located in CFrame,
-  This allows them to be easily customised by overriding them in CMainFrame. 
+  the following:
+  - Modal property sheets.
+  - Modeless property sheets.
+  - Wizards.
+* The owner drawing of menus has been moved from CMenubar to CFrame. 
+  - Menus without rebars are also now themed.
+  - Other popup menus belonging to CFrame (or CMainFrame) are also now themed.
+  - Functions which customise the appearance of the menus are now located
+     in CFrame. They are easily overriden for a different visual effect.     
+* The icons used in popup menu items can come from several bitmap resources.
+  When an application has several toolbars in a rebar, for example, the icons 
+  from each of these can be displayed in popup menus.     
 
-Added CPropertySheet class
-Added CPropertyPage class
-Added CFrame::DrawCheckmark
-Added CFrame::DrawMenuItem
-Added CFrame::DrawMenuText
-Added CFrame::OnDrawItem
-Added CFrame::OnInitMenuPopup
-Added CFrame::OnMeasureItem
-Added CFrame::SetMenuIcons
-Added CFrame::GetMenuTheme
-Added CFrame::SetMenuTheme
-Added CMDIFrame::GetActiveMDIChildCWnd
-Added CWnd::CenterWindow
+The following changes have been made to the Win32++ code:
+Added  CPropertySheet class
+Added  CPropertyPage class
+Added  CFrame::DrawCheckmark
+Added  CFrame::DrawMenuItem
+Added  CFrame::DrawMenuText
+Added  CFrame::OnDrawItem
+Added  CFrame::OnInitMenuPopup
+Added  CFrame::OnMeasureItem
+Added  CFrame::AddMenuIcon
+Added  CFrame::AddMenuIcons
+Added  CFrame::GetMenuTheme
+Added  CFrame::SetMenuTheme
+Added  CMDIFrame::GetActiveMDIChildCWnd
+Added  CWnd::CenterWindow
 Removed CDialog::Center    (use CWnd::CenterWindow instead)
-Removed CMenubar::SetIcons (use CFrame::SetMenuIcons instead)
+Removed CMenubar::SetIcons (use CFrame::AddMenuIcons instead)
+Moved   CWnd::GradientFill to GradientFill
+Moved   CWnd::SolidFill    to SolidFill
 Renamed ThemeMenubar       to ThemeMenu 
 Renamed CMenubar::GetTheme to CMenubar::GetMenubarTheme
 Renamed CMenubar::SetTheme to CMenubar::SetMenubarTheme
@@ -34,8 +45,7 @@ Renamed CRebar::GetTheme   to CRebar::GetRebarTheme
 Renamed CRebar::SetTheme   to CRebar::SetRebarTheme
 Renamed CToolbar::GetTheme to CToolbar::GetToolbarTheme
 Renamed CToolbar::SetTheme to CToolbar::SetToolbarTheme
-Renamed CWnd::GradientFill to GradientFill
-Renamed CWnd::SolidFill    to SolidFill
+
 
 Version 5.5
 -----------

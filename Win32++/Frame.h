@@ -293,37 +293,39 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual RECT GetClientSize();
-		virtual int GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
+		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
+		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
-		// Its unlikely you would need to override these functions
-	//	virtual	void CreateDisabledImageList();
-	//	HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
-		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
-		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
-		virtual void RevertPopupMenu(HMENU hMenu);
+		// Its unlikely you would need to override these functions		
+		virtual HMENU GetFrameMenu() {return m_hMenu;}
 		virtual void SetFrameMenu(INT ID_MENU);
-		HMENU GetFrameMenu() {return m_hMenu;}
-		ThemeMenu& GetMenuTheme() {return m_ThemeMenu;}
-		CMenubar& GetMenubar() {return m_Menubar;}
-		CRebar& GetRebar() {return m_Rebar;}
-		CStatusbar& GetStatusbar() {return m_Statusbar;}
-		CToolbar& GetToolbar() {return m_Toolbar;}
-		CWnd* GetView() {return m_pView;}
+		virtual ThemeMenu& GetMenuTheme() {return m_ThemeMenu;}
+		virtual void SetMenuTheme(ThemeMenu& Theme);
+		virtual CWnd* GetView() {return m_pView;}
+		virtual void SetView(CWnd& pView);
+		
+		virtual CMenubar& GetMenubar() {return m_Menubar;}
+		virtual CRebar& GetRebar() {return m_Rebar;}
+		virtual CStatusbar& GetStatusbar() {return m_Statusbar;}
+		virtual CToolbar& GetToolbar() {return m_Toolbar;}
+		
 		BOOL IsMDIFrame() {return m_bIsMDIFrame;}
 		BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
 		BOOL IsRebarSupported() {return (GetComCtlVersion() >= 470);}
 		BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
-		void SetMenuTheme(ThemeMenu& Theme);
-		void SetView(CWnd& pView);
 
 	protected:
 		// These are the functions you might wish to override
+		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
+		virtual int  AddMenuIcons(const std::vector<UINT> MenuData, UINT nID_Image, COLORREF crMask);
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
 		virtual void AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
@@ -338,8 +340,6 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetMenuIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask);
-		virtual void SetMenuIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Its unlikely you would need to override these functions
@@ -365,7 +365,7 @@ namespace Win32xx
 
 		std::vector<UINT> m_ToolbarData;
 		std::vector<ItemData*> m_vpItemData;	// vector of ItemData pointers
-		std::vector<UINT> m_ImageData;			// vector of menu icons
+		std::vector<UINT> m_MenuData;			// vector of menu icons
 		BOOL m_bIsMDIFrame;			// TRUE if this is a MDI frame
         BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
