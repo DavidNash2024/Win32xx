@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.51 Beta
-// Released: 20th October, 2007 by:
+// Win32++  Version 5.6
+// Released: 15th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -79,7 +79,7 @@ namespace Win32xx
 	public:
 		CMDIChild();
 		virtual ~CMDIChild();
-		
+
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
 

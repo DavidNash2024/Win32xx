@@ -34,6 +34,8 @@ Renamed CRebar::GetTheme   to CRebar::GetRebarTheme
 Renamed CRebar::SetTheme   to CRebar::SetRebarTheme
 Renamed CToolbar::GetTheme to CToolbar::GetToolbarTheme
 Renamed CToolbar::SetTheme to CToolbar::SetToolbarTheme
+Renamed CWnd::GradientFill to GradientFill
+Renamed CWnd::SolidFill    to SolidFill
 
 Version 5.5
 -----------

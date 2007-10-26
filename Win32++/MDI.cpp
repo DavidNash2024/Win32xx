@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.51 Beta
-// Released: 20th October, 2007 by:
+// Win32++  Version 5.6
+// Released: 15th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -165,8 +165,8 @@ namespace Win32xx
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
 					return;
 				}
-			} 
-		} 
+			}
+		}
 	}
 
 	LRESULT CMDIFrame::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -389,10 +389,10 @@ namespace Win32xx
 				if (GetApp()->GetFrame()->IsMenubarUsed())
 				{
 					return 0L;
-				}			
+				}
 			}
 			break;
-		
+
 		case WM_MDIACTIVATE:
 			{
 				// Suppress redraw to avoid flicker when activating maximised MDI children
@@ -400,7 +400,7 @@ namespace Win32xx
 				LRESULT lr = CallPrevWindowProc(m_hWnd, WM_MDIACTIVATE, wParam, lParam);
 				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
 				::RedrawWindow(m_hWnd, 0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
-				
+
 				return lr;
 			}
 		}
@@ -414,7 +414,7 @@ namespace Win32xx
 	CMDIChild::CMDIChild() : m_hChildMenu(NULL)
 	{
 		// Set the MDI Child's menu in the constructor, like this ...
-		
+
 		// SetChildMenu(_T("MdiMenuView"));
 	}
 

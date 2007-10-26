@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.51 Beta
-// Released: 20th October, 2007 by:
+// Win32++  Version 5.6
+// Released: 15th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -690,53 +690,7 @@ namespace Win32xx
 		return NULL;
 	}
 
-	void CWnd::GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
-	// A simple but efficient Gradient Filler compatible with all Windows operating systems
-	{
-		int Width = pRc->right - pRc->left;
-		int Height = pRc->bottom - pRc->top;
 
-		int r1 = GetRValue(Color1);
-		int g1 = GetGValue(Color1);
-		int b1 = GetBValue(Color1);
-
-		int r2 = GetRValue(Color2);
-		int g2 = GetGValue(Color2);
-		int b2 = GetBValue(Color2);
-
-		COLORREF OldBkColor = ::GetBkColor(hDC);
-
-		if (bVertical)
-		{
-			for(int i=0; i < Width; i++)
-			{
-				int r = r1 + (i * (r2-r1) / Width);
-				int g = g1 + (i * (g2-g1) / Width);
-				int b = b1 + (i * (b2-b1) / Width);
-				::SetBkColor(hDC, RGB(r, g, b));
-				RECT line;
-
-				::SetRect(&line, i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
-				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-			}
-		}
-		else
-		{
-			for(int i=0; i < Height; i++)
-			{
-				int r = r1 + (i * (r2-r1) / Height);
-				int g = g1 + (i * (g2-g1) / Height);
-				int b = b1 + (i * (b2-b1) / Height);
-				::SetBkColor(hDC, RGB(r, g, b));
-				RECT line;
-
-				::SetRect(&line, pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
-				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-			}
-		}
-
-		::SetBkColor(hDC, OldBkColor);
-	}
 
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
 	{
@@ -1075,12 +1029,12 @@ namespace Win32xx
 		}
 	}
 
-	void CWnd::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
-	{
-		COLORREF OldColor = ::SetBkColor(hDC, Color);
-		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
-		::SetBkColor(hDC, OldColor);
-	}
+//	void CWnd::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
+//	{
+//		COLORREF OldColor = ::SetBkColor(hDC, Color);
+//		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
+//		::SetBkColor(hDC, OldColor);
+//	}
 
 	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)
 	// With a CBTHook in place, the application receives additional messages.
@@ -1369,5 +1323,9 @@ namespace Win32xx
 #endif  // _DEBUG
 	}
 
+	// Displays a warning message in a message box. Debug mode only.
+
+
 } // namespace Win32xx
+
 

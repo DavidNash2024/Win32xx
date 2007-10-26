@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.51 Beta
-// Released: 20th October, 2007 by:
+// Win32++  Version 5.6
+// Released: 15th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -988,7 +988,7 @@ namespace Win32xx
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 				}
 				else
-					GetApp()->GetFrame()->CreateDisabledImageList();
+					m_hImageListDis = CreateDisabledImageList(m_hImageList);
 
 				::DeleteObject(hbm);
 				hbm = NULL;
@@ -2535,7 +2535,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")),
-						m_hMenu(NULL), m_pView(NULL)
+						m_hMenu(NULL), m_pView(NULL), m_hImageList(NULL), m_hImageListDis(NULL)
 	{
 		GetApp()->SetFrame(this);
 
@@ -2576,6 +2576,7 @@ namespace Win32xx
 
 	void CFrame::AddMenubarBand(int Menubar_Height /* = MENUBAR_HEIGHT*/)
 	{
+		// Adds a Menubar to the rebar control
    		REBARBANDINFO rbbi = {0};
 		SIZE sz = GetMenubar().GetMaxSize();
 
@@ -2594,6 +2595,8 @@ namespace Win32xx
 
 	void CFrame::AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT, UINT ID_Disabled)
 	{
+		// Adds a Toolbar to the rebar control
+
 		if (TBData.size() == 0)
 		{
 			DebugErrMsg(_T("Toolbar must have some data"));
@@ -2622,6 +2625,67 @@ namespace Win32xx
 		GetRebar().InsertBand(-1, &rbbi);
 	}
 
+	/*
+	HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST hImageList)
+	{
+		// Returns a greyed image list, created from hImageList
+
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(hImageList);
+		if (nCount == 0)
+			return NULL;
+
+		ImageList_GetIconSize(hImageList, &cx, &cy);
+
+		// Create the destination ImageList
+		HIMAGELIST hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
+
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; i++)
+		{
+			HDC hdcToolbar = ::GetDC(m_hWnd);
+			HDC hdcMem = ::CreateCompatibleDC(NULL);
+			HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
+			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
+			RECT rc;
+			SetRect(&rc, 0, 0, cx, cx);
+
+			// Set the mask color to magenta for the new ImageList
+			COLORREF crMask = RGB(255,0,255);
+			SolidFill(hdcMem, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_Draw(hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; x++)
+			{
+				for (int y = 0; y < cy; y++)
+				{
+					COLORREF clr = ::GetPixel(hdcMem, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
+						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
+					}
+				}
+			}
+
+			::SelectObject(hdcMem, hbmMemOld);
+			ImageList_AddMasked(hImageListDis, hbmMem, crMask);
+
+			// Cleanup the GDI objects
+			::DeleteObject(hbmMem);
+			::DeleteDC(hdcMem);
+			::ReleaseDC(m_hWnd, hdcToolbar);
+		}
+
+		return hImageListDis;
+	}
+
+	*/
+	/*
 	void CFrame::CreateDisabledImageList()
 	{
 		if (m_hImageListDis)
@@ -2681,9 +2745,10 @@ namespace Win32xx
 			::ReleaseDC(m_hWnd, hdcToolbar);
 		}
 	}
+	*/
 
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
-	// Copy the checkmark or radiocheck transparently
+	// Draws the checkmark or radiocheck transparently
 	{
 		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
 		if (hdcMem)
@@ -2751,10 +2816,12 @@ namespace Win32xx
 	{
 		if (!m_hImageList)
 			return;
-
+		// Get icon size
 		int Iconx;
 		int Icony;
 		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+
+		// get the drawing rectangle
 		HDC hDC = pdis->hDC;
 		RECT rc = pdis->rcItem;
 		int offset = (rc.bottom - rc.top - Icony)/2;
@@ -2762,6 +2829,7 @@ namespace Win32xx
 		::SetRect(&rc, rc.left, rc.top, rc.left + height, rc.bottom);
 		::InflateRect(&rc, -offset, -offset);
 
+		// get the icon's location in the imagelist
 		int iImage = -1;
 		for (int i = 0 ; i < (int)m_ImageData.size(); i++)
 		{
@@ -2769,6 +2837,7 @@ namespace Win32xx
 				iImage = i;
 		}
 
+		// draw the image
 		if (iImage >= 0 )
 		{
 			if ((bDisabled) && (m_hImageListDis))
@@ -2791,10 +2860,11 @@ namespace Win32xx
 			}
 		}
 
+		// Draw the item text
 		::SetTextColor(hDC, colorText);
 		::DrawText(hDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
-		// Draw text after tab right aligned
+		// Draw text after tab, right aligned
 		if(nTab != -1)
 			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
@@ -2917,6 +2987,7 @@ namespace Win32xx
 
 	BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
 	{
+		// Handle the View Statusbar and Toolbar menu items
 		switch (LOWORD(wParam))
 		{
 		case IDW_VIEW_STATUSBAR:
@@ -2932,6 +3003,9 @@ namespace Win32xx
 
 	void CFrame::OnCreate()
 	{
+		// This is called when the frame window is being created.
+		// Override this in CMainFrame if you wish to modify what happens here
+
 		// Set the icon
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
@@ -2954,9 +3028,6 @@ namespace Win32xx
 
 			// Create the toolbar inside rebar
 			AddToolbarBand(GetToolbar(), m_ToolbarData, RGB(192, 192, 192), IDW_MAIN);
-
-			// Set the icons for popup menu items
-		//	GetMenubar().SetIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
 		}
 		else
 		{
@@ -3005,15 +3076,18 @@ namespace Win32xx
 		int Icony;
 		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
 		int BarWidth = m_ThemeMenu.UseThemes? Iconx + 6 : 0;
-		if (m_ThemeMenu.UseThemes)		// Draw the side bar
+
+		// Draw the side bar
+		if (m_ThemeMenu.UseThemes)
 		{
 			RECT rcBar = rc;
 			rcBar.right = BarWidth;
 			GradientFill(hDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
 		}
 
-		if (pmd->fType & MFT_SEPARATOR)		// draw separator
+		if (pmd->fType & MFT_SEPARATOR)
 		{
+			// draw separator
 			RECT rcSep = rc;
 			rcSep.left = BarWidth;
 			SolidFill(hDC, RGB(255,255,255), &rcSep);
@@ -3023,13 +3097,15 @@ namespace Win32xx
 		}
 		else
 		{
+			// draw menu item
 			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
 			RECT rcDraw = rc;
 
-			if ((bSelected) && (!bDisabled))	// draw selected item background
+			if ((bSelected) && (!bDisabled))
 			{
+				// draw selected item background
 				if (m_ThemeMenu.UseThemes)
 				{
 					HBRUSH hBrush = ::CreateSolidBrush(m_ThemeMenu.clrHot1);
@@ -3043,8 +3119,9 @@ namespace Win32xx
 				else
 					SolidFill(hDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
 			}
-			else	// draw non-selected item background
+			else
 			{
+				// draw non-selected item background
 				rcDraw.left = BarWidth;
 				SolidFill(hDC, RGB(255,255,255), &rcDraw);
 			}
@@ -3121,6 +3198,7 @@ namespace Win32xx
 			mii.dwTypeData = szMenuItem;
 			mii.cch = MAX_MENU_STRING -1;
 
+			// Specify owner-draw for the menu item type
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
 				ItemData* pItem = new ItemData;		// deleted in RevertPopupMenu
@@ -3466,14 +3544,14 @@ namespace Win32xx
  	}
 
 	void CFrame::SetMenuIcons(const std::vector<UINT> ImageData, UINT nID_Image, COLORREF crMask)
-	// Set the drop-down icons using a bitmap resource
+	// Set the icons for popup menu items from a bitmap resource
 	{
 		// Remove any existing imagelist
-		if (m_hImageList)
-		{
-			ImageList_Destroy(m_hImageList);
-			m_hImageList = NULL;
-		}
+		if (m_hImageList)    ImageList_Destroy(m_hImageList);
+		if (m_hImageListDis) ImageList_Destroy(m_hImageListDis);
+		m_hImageList = NULL;
+		m_hImageListDis = NULL;
+
 		m_ImageData.clear();
 
 		if (ImageData.size() == 0)
@@ -3500,23 +3578,24 @@ namespace Win32xx
 		m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 		ImageList_AddMasked(m_hImageList, hbm, crMask);
 		::DeleteObject(hbm);
-		CreateDisabledImageList();
+		m_hImageListDis = CreateDisabledImageList(m_hImageList);
 	}
 
     void CFrame::SetMenuIcons(const std::vector<UINT> ImageData, HIMAGELIST hImageList)
-	// Set the drop-down icons from an existing image list.
+	// Set the icons in popup menus from an existing image list.
 	// The image list could be a collection of icons
     {
-        // Remove any existing imagelist
-        if (m_hImageList)
-        {
-            ImageList_Destroy(m_hImageList);
-            m_hImageList = NULL;
-        }
+		// Remove any existing imagelist
+		if (m_hImageList)    ImageList_Destroy(m_hImageList);
+		if (m_hImageListDis) ImageList_Destroy(m_hImageListDis);
+		m_hImageList = NULL;
+		m_hImageListDis = NULL;
+
         m_ImageData.clear();
         if (ImageData.size() == 0)
             return;
 
+		// store the ImageData in m_ImageData
 		int iImages = 0;
         for (unsigned int i = 0 ; i < ImageData.size(); i++)
         {
@@ -3531,8 +3610,10 @@ namespace Win32xx
         if (ImageList_GetImageCount(hImageList) == iImages)
 		{
             m_hImageList = hImageList;
-			CreateDisabledImageList();
+			m_hImageListDis = CreateDisabledImageList(m_hImageList);
 		}
+		else
+			m_ImageData.clear();
     }
 
 	void CFrame::SetMenuTheme(ThemeMenu& Theme)
@@ -3773,6 +3854,7 @@ namespace Win32xx
 				OnTimer(wParam);
 				return 0L;
 			case WM_DRAWITEM:
+				// Owner draw menu itmes
 				if (OnDrawItem(wParam, lParam))
 					return TRUE; // handled
 				break;

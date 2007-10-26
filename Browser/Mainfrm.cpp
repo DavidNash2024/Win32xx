@@ -32,7 +32,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 {
 	// Get the reference to the rebar object
 	CRebar& RB = GetRebar();
-	ThemeRebar RBTheme = RB.GetTheme();
+	ThemeRebar RBTheme = RB.GetRebarTheme();
 
 	// Create the ComboboxEx window
 	CREATESTRUCT cs = {0};
@@ -174,7 +174,8 @@ void CMainFrame::OnCreate()
 
 	// Set the image lists for normal, hot and disabled buttons
 	TB.SetImageList(5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-	
+
+	std::vector<UINT> IconData;
 	if (IsRebarUsed())
 	{
 		// Resize the Rebar band
@@ -185,7 +186,6 @@ void CMainFrame::OnCreate()
 		AddListboxBand(22);
 
 		// Set the icons for popup menu items
-		std::vector<UINT> IconData;
 		IconData.push_back ( IDM_FILE_NEW  );
 		IconData.push_back ( IDM_FILE_OPEN );
 		IconData.push_back ( IDM_FILE_SAVE );
@@ -194,8 +194,8 @@ void CMainFrame::OnCreate()
 		IconData.push_back ( IDM_EDIT_PASTE);
 		IconData.push_back ( IDM_FILE_PRINT);
 		IconData.push_back ( IDM_HELP_ABOUT);
-		GetMenubar().SetIcons(IconData, IDW_MAIN, RGB(192, 192, 192));
 	}
+	SetMenuIcons(IconData, IDW_MAIN, RGB(192, 192, 192));
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)

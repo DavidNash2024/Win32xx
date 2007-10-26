@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.51 Beta
-// Released: 20th October, 2007 by:
+// Win32++  Version 5.6
+// Released: 15th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -159,14 +159,14 @@ namespace Win32xx
 		virtual HWND Detach();
 		virtual HWND GetAncestor(HWND hWnd);
 		virtual CWnd* GetCWndObject(HWND hWnd);
-		virtual void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
+	//	virtual void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
 		virtual void SetBkgndColor(COLORREF color);
 		virtual void SetParent(HWND hParent);
-		virtual void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
+	//	virtual void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HWND GetHwnd() {return m_hWnd;}
@@ -297,16 +297,6 @@ namespace Win32xx
 	// Returns a pointer to the CWinApp object
 	inline CWinApp* GetApp(){ return CWinApp::GetApp();}
 
-	// Displays a warning message in a message box. Debug mode only.
-	inline void DebugErrMsg(LPCTSTR ErrorMsg)
-	{
-	#ifdef _DEBUG
-		::MessageBox (0, ErrorMsg, _T("Exception"), MB_ICONEXCLAMATION | MB_OK);
-	#else
-		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
-	#endif  //_DEBUG
-	}
-
 	// Displays an error message in a message box. Debug mode only.
 	inline void DebugWarnMsg(LPCTSTR WarnMsg)
 	{
@@ -317,18 +307,28 @@ namespace Win32xx
 	#endif  //_DEBUG
 	}
 
-	// Define global static TRACE macro for Debug mode only
+	// Displays a warning message in a messagebox. Debug mode only
+	inline void DebugErrMsg(LPCTSTR ErrorMsg)
+	{
 	#ifdef _DEBUG
-	  #define TRACE(str) (GetApp()->Trace(str))
+		::MessageBox (0, ErrorMsg, _T("Exception"), MB_ICONEXCLAMATION | MB_OK);
 	#else
-	  #define TRACE(str) // no-op
-	#endif  // _DEBUG
+		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
+	#endif  //_DEBUG
+	}
 
 	// Define min and max functions (int only) for Dev-C++ compatibility
 	#undef max
 	#undef min
 	inline int max(int a, int b) {return a>b? a:b;}
 	inline int min(int a, int b) {return a<b? a:b;}
+
+	// Define global static TRACE macro for Debug mode only
+	#ifdef _DEBUG
+	  #define TRACE(str) (GetApp()->Trace(str))
+	#else
+	  #define TRACE(str) // no-op
+	#endif  // _DEBUG
 
 	inline int GetWinVersion()
 	{
@@ -434,7 +434,8 @@ namespace Win32xx
 		return bIsXPThemed;
 	}
 
-} // namespace Win32xx
+}; // namespace Win32xx
+
 
 // Automatically include the Win32xx namespace
 using namespace Win32xx;

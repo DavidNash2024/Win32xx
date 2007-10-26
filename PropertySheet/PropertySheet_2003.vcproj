@@ -219,6 +219,9 @@
 				RelativePath="resource.h">
 			</File>
 			<File
+				RelativePath=".\resrc1.h">
+			</File>
+			<File
 				RelativePath=".\resrc2.h">
 			</File>
 			<File

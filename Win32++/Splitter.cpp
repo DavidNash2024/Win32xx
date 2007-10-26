@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.51 Beta
-// Released: 20th October, 2007 by:
+// Win32++  Version 5.6
+// Released: 15th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -117,8 +117,8 @@ namespace Win32xx
 		{
 			// Set the color of the splitter bar
 			CRebar& RB = GetApp()->GetFrame()->GetRebar();
-			if (RB.GetTheme().UseThemes)
-				m_Bar.SetBkgndColor(RB.GetTheme().clrBkgnd2);
+			if (RB.GetRebarTheme().UseThemes)
+				m_Bar.SetBkgndColor(RB.GetRebarTheme().clrBkgnd2);
 			else
 				m_Bar.SetBkgndColor(GetSysColor(COLOR_BTNFACE));
 

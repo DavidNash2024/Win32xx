@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.51 Beta
-// Released: 20th October, 2007 by:
+// Win32++  Version 5.6
+// Released: 15th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -148,7 +148,7 @@ namespace Win32xx
 
 		// Set the return value for this notification
 		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
-		
+
 	}
 
 	void CPropertyPage::OnCancel()
@@ -168,9 +168,6 @@ namespace Win32xx
 	{
 		// Called when the property page is created
 		// Override this function in your derived class if required.
-
-		// wParam holds handle of control to get keyboard focus when retun TRUE
-		// lParam holds pointer to PROPSHEETPAGE structure
 
 		return TRUE; // Pass Keyboard control to handle in WPARAM
 	}
@@ -265,7 +262,7 @@ namespace Win32xx
 
 	void CPropertyPage::SetModified(BOOL bChanged)
 	{
-		if (m_hWnd != NULL) 
+		if (m_hWnd != NULL)
 		{
 			if (bChanged)
 				::SendMessage(m_hWndParent, PSM_CHANGED, (WPARAM)m_hWnd, 0);
@@ -297,7 +294,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			e.MessageBox();		
+			e.MessageBox();
 		}
 
 		catch (...)
@@ -310,15 +307,15 @@ namespace Win32xx
 	}
 
 	BOOL CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{	
+	{
 		// Allocate an iterator for our HWND map
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-		
+
 		// Find matching CWnd pointer for this HWND
 		GetApp()->m_MapLock.Lock();
 		m = GetApp()->GetHWNDMap().find(hwndDlg);
 		GetApp()->m_MapLock.Release();
-		
+
 		if (m != GetApp()->GetHWNDMap().end())
 		{	// matching CWnd pointer found for this HWND, so call DialogProc
 			return ((CPropertyPage*)m->second)->DialogProc(hwndDlg, uMsg, wParam, lParam);
@@ -330,7 +327,7 @@ namespace Win32xx
 			GetApp()->m_MapLock.Lock();
 			GetApp()->GetHWNDMap().insert(std::make_pair(hwndDlg, pPage));
 			GetApp()->m_MapLock.Release();
-			
+
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
 			pPage->m_hWndParent = GetParent(hwndDlg);
@@ -349,7 +346,7 @@ namespace Win32xx
 		// The possible return values are:
 		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
 		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned 
+		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned
 		//                               to the page that had focus when the button was pressed.
 
 
@@ -410,7 +407,7 @@ namespace Win32xx
 	{
 		for (int i = 0 ; i < (int)m_vPages.size(); i++)
 			delete m_vPages[i];
-		
+
 		delete []m_ppsp;
 	}
 
@@ -467,7 +464,7 @@ namespace Win32xx
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 				if (!pTLSData)
 					throw CWinException(_T("CPropertySheet::Callback ... Unable to get TLS"));
-		
+
 				CPropertySheet* w = (CPropertySheet*)pTLSData->pCWnd;
 				if (!w)
 					throw CWinException(_T("CPropertySheet::Callback ... Failed to get CWnd"));
@@ -562,7 +559,7 @@ namespace Win32xx
 	}
 
 	void CPropertySheet::DestroyButton(int IDButton)
-	{	
+	{
 		if (m_hWnd != NULL)
 		{
 			HWND hwndButton = ::GetDlgItem(m_hWnd, IDButton);
@@ -637,7 +634,7 @@ namespace Win32xx
 	{
 		return (m_PSH.dwFlags & PSH_MODELESS);
 	}
-	
+
 	BOOL CPropertySheet::IsWizard()
 	{
 		return (m_PSH.dwFlags & PSH_WIZARD);
@@ -667,7 +664,7 @@ namespace Win32xx
 		if (IsWizard())
 		{
 			DWORD dwStyle = GetWindowLong(m_hWnd, GWL_STYLE);
-			dwStyle &= ~WS_SYSMENU;		
+			dwStyle &= ~WS_SYSMENU;
 			::SetWindowLong(m_hWnd, GWL_STYLE, dwStyle);
 		}
 	}
@@ -745,7 +742,7 @@ namespace Win32xx
 				OnInitialUpdate();
 			bFirstTime = FALSE;
 			break;
-		
+
 		case WM_DESTROY:
 			bFirstTime = TRUE;
 			break;
