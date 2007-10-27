@@ -3213,16 +3213,16 @@ namespace Win32xx
 
 		else
 		{
-			HDC hdcMenubar = GetDC(m_hWnd);
-			if (hdcMenubar)
+			HDC hDC = GetDC(NULL);
+			if (hDC)
 			{
-				HFONT hfntOld = (HFONT)::SelectObject(hdcMenubar, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+				HFONT hfntOld = (HFONT)::SelectObject(hDC, (HFONT)::GetStockObject(ANSI_VAR_FONT));
 				SIZE size;
 				int Iconx = 0;
 				int Icony = 0;
 
 				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-				GetTextExtentPoint32(hdcMenubar, pmd->Text, lstrlen(pmd->Text), &size);
+				GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
 
 				pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
 				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
@@ -3239,8 +3239,8 @@ namespace Win32xx
 				if (m_ThemeMenu.UseThemes)
 					pmis->itemWidth += 8;
 
-				::SelectObject(hdcMenubar, hfntOld);
-				::ReleaseDC(m_hWnd, hdcMenubar);
+				::SelectObject(hDC, hfntOld);
+				::ReleaseDC(m_hWnd, hDC);
 			}
 		}
 

@@ -317,11 +317,14 @@ namespace Win32xx
 	#endif  //_DEBUG
 	}
 
-	// Define min and max functions (int only) for Dev-C++ compatibility
-	#undef max
-	#undef min
-	inline int max(int a, int b) {return a>b? a:b;}
-	inline int min(int a, int b) {return a<b? a:b;}
+	// Define min and max for Dev-C++ compatibility
+    #ifndef max
+      #define max(a,b)            (((a) > (b)) ? (a) : (b))
+    #endif
+
+    #ifndef min
+      #define min(a,b)            (((a) < (b)) ? (a) : (b))
+    #endif
 
 	// Define global static TRACE macro for Debug mode only
 	#ifdef _DEBUG
