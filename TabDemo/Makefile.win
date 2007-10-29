@@ -1,0 +1,45 @@
+# Project: TabDemo
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = ./Dev-C++/Release/TabDemo_private.res
+OBJ  = ./Dev-C++/Release/main.o ./Dev-C++/Release/TabDemoApp.o ./Dev-C++/Release/View.o ./Dev-C++/Release/WinCore.o ./Dev-C++/Release/TabControl.o $(RES)
+LINKOBJ  = ./Dev-C++/Release/main.o ./Dev-C++/Release/TabDemoApp.o ./Dev-C++/Release/View.o ./Dev-C++/Release/WinCore.o ./Dev-C++/Release/TabControl.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lComctl32  
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+BIN  = Dev-C++/Release/TabDemo.exe
+CXXFLAGS = $(CXXINCS) -D _WIN32_IE=0x0400 -D STRICT  
+CFLAGS = $(INCS)  
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before Dev-C++/Release/TabDemo.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "Dev-C++\Release\TabDemo.exe" $(LIBS)
+
+./Dev-C++/Release/main.o: main.cpp
+	$(CPP) -c main.cpp -o ./Dev-C++/Release/main.o $(CXXFLAGS)
+
+./Dev-C++/Release/TabDemoApp.o: TabDemoApp.cpp
+	$(CPP) -c TabDemoApp.cpp -o ./Dev-C++/Release/TabDemoApp.o $(CXXFLAGS)
+
+./Dev-C++/Release/View.o: View.cpp
+	$(CPP) -c View.cpp -o ./Dev-C++/Release/View.o $(CXXFLAGS)
+
+./Dev-C++/Release/WinCore.o: ../Win32++/WinCore.cpp
+	$(CPP) -c ../Win32++/WinCore.cpp -o ./Dev-C++/Release/WinCore.o $(CXXFLAGS)
+
+./Dev-C++/Release/TabControl.o: TabControl.cpp
+	$(CPP) -c TabControl.cpp -o ./Dev-C++/Release/TabControl.o $(CXXFLAGS)
+
+./Dev-C++/Release/TabDemo_private.res: TabDemo_private.rc 
+	$(WINDRES) -i TabDemo_private.rc --input-format=rc -o ./Dev-C++/Release/TabDemo_private.res -O coff 

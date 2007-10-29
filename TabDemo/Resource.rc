@@ -1,0 +1,35 @@
+// Resource Script.
+//
+
+#include "resource.h"
+#include "windows.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                 ICON                    "res/star.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                 "Simple Window"
+    IDS_FIRSTDAY             "Sunday"
+    IDS_SECONDDAY            "Monday"
+    IDS_THIRDDAY             "Tuesday"
+    IDS_FOURTHDAY            "Wednesday"
+    IDS_FIFHTDAY             "Thursday"
+    IDS_SIXTHDAY             "Friday"
+    IDS_SEVENTHDAY           "Saturday"
+END
+
+
