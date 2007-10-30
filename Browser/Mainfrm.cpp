@@ -195,7 +195,7 @@ void CMainFrame::OnCreate()
 		IconData.push_back ( IDM_FILE_PRINT);
 		IconData.push_back ( IDM_HELP_ABOUT);
 	}
-	SetMenuIcons(IconData, IDW_MAIN, RGB(192, 192, 192));
+	AddMenuIcons(IconData, IDW_MAIN, RGB(192, 192, 192));
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)

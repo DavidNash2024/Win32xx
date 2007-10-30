@@ -1,0 +1,40 @@
+///////////////////////////////////////////////////
+// Resource.h
+// This file contains the resource ID definitions.
+
+
+//The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,
+//  and Window Caption
+#define IDW_MAIN                        100
+
+
+//Resource IDs for the dialog
+#define IDD_DIALOG1                     101
+#define IDC_RADIO1						110
+#define IDC_RADIO2						111
+#define IDC_RADIO3						112
+#define IDC_CHECK1						113
+#define IDC_CHECK2						114
+#define IDC_CHECK3						115
+#define IDC_EDIT1						120
+#define IDC_LIST1						121
+#define IDC_BUTTON1						122
+#define IDC_RICHEDIT1					123
+#define IDC_STATIC1                     130
+#define IDC_STATIC2                     131
+#define IDC_STATIC3                     132
+#define IDC_HOTKEY1                     140
+#define IDB_BITMAP1                     150
+
+#define IDC_TAB1                        160
+#define IDD_BUTTONS                     161
+#define IDD_COMBOBOXES                  162
+
+#define IDC_BUTTON2                     170
+#define IDC_COMBO1                      171
+#define IDC_COMBO2                      172
+#define IDC_COMBO3                      173
+
+#define IDC_STATIC                      -1
+
+

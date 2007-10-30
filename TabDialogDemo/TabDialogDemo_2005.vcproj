@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="TabDemo"
-	ProjectGUID="{42CE8356-4E5E-49CE-88E7-4545C1C0D0B0}"
+	Name="TabDialogDemo"
+	ProjectGUID="{AD09440A-E5F6-419C-BE86-8047C2DF3E08}"
 	>
 	<Platforms>
 		<Platform
@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/TabDemo.tlb"
+				TypeLibraryName=".\Release/TabDialogDemo.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -52,7 +52,8 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/TabDemo.pch"
+				RuntimeTypeInfo="true"
+				PrecompiledHeaderFile=".\Release/TabDialogDemo.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -72,12 +73,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib"
-				OutputFile=".\Release/TabDemo.exe"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
+				OutputFile=".\Release/TabDialogDemo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/TabDemo.pdb"
+				ProgramDatabaseFile=".\Release/TabDialogDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -93,7 +94,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/TabDemo.bsc"
+				OutputFile=".\Release/TabDialogDemo.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -136,7 +137,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/TabDemo.tlb"
+				TypeLibraryName=".\Debug/TabDialogDemo.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -146,7 +147,8 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/TabDemo.pch"
+				RuntimeTypeInfo="true"
+				PrecompiledHeaderFile=".\Debug/TabDialogDemo.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -168,12 +170,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
-				OutputFile=".\Debug/TabDemo.exe"
+				OutputFile=".\Debug/TabDialogDemo.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/TabDemo.pdb"
+				ProgramDatabaseFile=".\Debug/TabDialogDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -189,7 +191,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/TabDemo.bsc"
+				OutputFile=".\Debug/TabDialogDemo.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -213,6 +215,26 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath="DialogApp.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="main.cpp"
 				>
 				<FileConfiguration
@@ -233,31 +255,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\TabControl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="TabDemoApp.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="View.cpp"
+				RelativePath="MyDialog.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -282,19 +280,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath="DialogApp.h"
+				>
+			</File>
+			<File
+				RelativePath="MyDialog.h"
+				>
+			</File>
+			<File
 				RelativePath="resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TabControl.h"
-				>
-			</File>
-			<File
-				RelativePath="TabDemoApp.h"
-				>
-			</File>
-			<File
-				RelativePath="View.h"
 				>
 			</File>
 		</Filter>
@@ -326,6 +320,14 @@
 		<Filter
 			Name="Win32++"
 			>
+			<File
+				RelativePath="..\Win32++\Dialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Win32++\Dialog.h"
+				>
+			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.cpp"
 				>

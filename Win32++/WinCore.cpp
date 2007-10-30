@@ -121,12 +121,13 @@ namespace Win32xx
 
 		if (m_IsTlsAllocatedHere)
 		{
-			// Allocate an iterator for our HWND map
+			// Check that all CWnd windows are destroyed
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-			//Check that all CWnd objects are destroyed
-			if (GetApp()->m_HWNDmap.begin() != GetApp()->m_HWNDmap.end())
-				DebugErrMsg(_T("Warning: Shutting down CWinApp before all CWnd objects destroyed"));
+			for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); m++)
+			{
+				(*m).second->DestroyWindow();
+			}
+			m_HWNDmap.clear();
 
 			// Do remaining tidy up
 			if (st_dwTlsIndex != TLS_OUT_OF_INDEXES)
@@ -314,17 +315,18 @@ namespace Win32xx
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
 		if (m_hBrushBkgnd) ::DeleteObject(m_hBrushBkgnd);
 
-
 		// Remove the map entries
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-		m = GetApp()->GetHWNDMap().begin();
-		while (m != GetApp()->GetHWNDMap().end())
+		if (GetApp()) 
 		{
-			if (m->second == this)
-			    GetApp()->GetHWNDMap().erase(m++);
-			else
-				m++;
+			std::map<HWND, CWnd*, CompareHWND>::iterator m;
+			m = GetApp()->GetHWNDMap().begin();
+			while (m != GetApp()->GetHWNDMap().end())
+			{
+				if (m->second == this)
+					GetApp()->GetHWNDMap().erase(m++);
+				else
+					m++;
+			}
 		}
 	}
 

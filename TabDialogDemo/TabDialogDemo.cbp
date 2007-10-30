@@ -3,16 +3,16 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="1"/>
 	<Project>
-		<Option title="TabDemo"/>
+		<Option title="TabDialogDemo"/>
 		<Option makefile="Makefile"/>
 		<Option makefile_is_custom="0"/>
 		<Option default_target="5"/>
 		<Option compiler="1"/>
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="borland\debug\TabDemo.exe"/>
+				<Option output="borland\debug\TabDialogDemo.exe"/>
 				<Option working_dir="Borland\Debug"/>
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\TabDemo\Borland\Debug"/>
+				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\TabDialogDemo\Borland\Debug"/>
 				<Option deps_output=".deps"/>
 				<Option type="0"/>
 				<Option compiler="2"/>
@@ -26,16 +26,16 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt"/>
-					<Add library="import32"/>
 					<Add library="comctl32"/>
+					<Add library="import32"/>
 					<Add directory="C:\Borland\BCC55\Lib"/>
 					<Add directory="C:\Borland\BCC55\Lib\PSDK"/>
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\TabDemo.exe"/>
+				<Option output="Borland\Release\TabDialogDemo.exe"/>
 				<Option working_dir="Borland\Release"/>
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\TabDemo\Borland\Release"/>
+				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\TabDialogDemo\Borland\Release"/>
 				<Option deps_output=".deps"/>
 				<Option type="0"/>
 				<Option compiler="2"/>
@@ -47,15 +47,15 @@
 					<Add directory="C:\Borland\BCC55\Include"/>
 				</ResourceCompiler>
 				<Linker>
-					<Add library="cw32mt"/>
-					<Add library="import32"/>
 					<Add library="comctl32"/>
+					<Add library="import32"/>
+					<Add library="cw32mt"/>
 					<Add directory="C:\Borland\BCC55\Lib"/>
 					<Add directory="C:\Borland\BCC55\Lib\PSDK"/>
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\TabDemo.exe"/>
+				<Option output="Microsoft\Debug\TabDialogDemo.exe"/>
 				<Option working_dir="Microsoft\Debug"/>
 				<Option object_output="Microsoft\Debug"/>
 				<Option deps_output=".deps"/>
@@ -78,15 +78,15 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="/DEBUG"/>
-					<Add library="gdi32"/>
-					<Add library="user32"/>
-					<Add library="kernel32"/>
-					<Add library="comctl32"/>
+					<Add library="ComCtl32"/>
+					<Add library="Gdi32"/>
+					<Add library="User32"/>
+					<Add library="Kernel32"/>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib"/>
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\TabDemo.exe"/>
+				<Option output="Microsoft\Release\TabDialogDemo.exe"/>
 				<Option working_dir="Microsoft\Release"/>
 				<Option object_output="Microsoft\Release"/>
 				<Option deps_output=".deps"/>
@@ -107,15 +107,15 @@
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
 				</ResourceCompiler>
 				<Linker>
-					<Add library="gdi32"/>
-					<Add library="kernel32"/>
-					<Add library="user32"/>
-					<Add library="comctl32"/>
+					<Add library="ComCtl32"/>
+					<Add library="Gdi32"/>
+					<Add library="Kernel32"/>
+					<Add library="User32"/>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib"/>
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\TabDemo.exe"/>
+				<Option output="GNU\Debug\TabDialogDemo.exe"/>
 				<Option working_dir="GNU\Debug"/>
 				<Option object_output="GNU\Debug"/>
 				<Option deps_output=".deps"/>
@@ -136,7 +136,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\TabDemo.exe"/>
+				<Option output="GNU\Release\TabDialogDemo.exe"/>
 				<Option working_dir="GNU\Release"/>
 				<Option object_output="GNU\Release"/>
 				<Option deps_output=".deps"/>
@@ -153,69 +153,49 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Unit filename="DialogApp.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="DialogApp.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="MyDialog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="MyDialog.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES"/>
-			<Option objectName="TabDemo\Resource.res"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="TabControl.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="TabControl.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="TabDemoApp.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="TabDemoApp.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="View.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="View.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
+			<Option objectName="Dialog\Resource.res"/>
 			<Option target="Debug Borland"/>
 			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
@@ -233,6 +213,37 @@
 			<Option target="Release MinGW GNU compiler"/>
 		</Unit>
 		<Unit filename="resource.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="resrc1.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="..\Win32++\Dialog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="..\Win32++\Dialog.h">
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>

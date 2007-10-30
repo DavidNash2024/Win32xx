@@ -1,24 +1,24 @@
 [Project]
-FileName=TabDemo_RELEASE.dev
-Name=TabDemo
-UnitCount=11
+FileName=TabDialogDemo_DEBUG.dev
+Name=TabDialogDemo
+UnitCount=12
 Type=0
 Ver=1
 ObjFiles=
 Includes=
 Libs=
-PrivateResource=TabDemo_private.rc
+PrivateResource=TabDialogDemo_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0400_@@_-D STRICT_@@_
+CppCompiler=-D_DEBUG_@@_-D _WIN32_IE=0x0400_@@_-D STRICT_@@_
 Linker=-lComctl32_@@_
 IsCpp=1
 Icon=
-ExeOutput=.\Dev-C++\Release
-ObjectOutput=.\Dev-C++\Release
-OverrideOutput=1
-OverrideOutputName=TabDemo.exe
+ExeOutput=.\Dev-C++\Debug
+ObjectOutput=.\Dev-C++\Debug
+OverrideOutput=0
+OverrideOutputName=TabDialogDemo.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -27,10 +27,10 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000
+CompilerSettings=0000001000000001000000
 
 [Unit1]
-FileName=main.cpp
+FileName=DialogApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=resource.h
+FileName=DialogApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -50,16 +50,17 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=Resource.rc
-Folder=Resource
+FileName=main.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=TabDemoApp.cpp
+FileName=MyDialog.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -69,7 +70,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=TabDemoApp.h
+FileName=MyDialog.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -79,17 +80,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=View.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
-FileName=View.h
+FileName=resource.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -98,17 +89,26 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit7]
+FileName=Resource.rc
+Folder=Resource
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit8]
-FileName=..\Win32++\WinCore.cpp
+FileName=resrc1.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit12]
 FileName=..\Win32++\WinCore.h
 CompileCpp=1
 Folder=Win32++
@@ -136,20 +136,30 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 
-[Unit10]
-FileName=TabControl.cpp
+[Unit11]
+FileName=..\Win32++\WinCore.cpp
 CompileCpp=1
-Folder=Source
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
-FileName=TabControl.h
+[Unit10]
+FileName=..\Win32++\Dialog.h
 CompileCpp=1
-Folder=Header
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=..\Win32++\Dialog.cpp
+CompileCpp=1
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

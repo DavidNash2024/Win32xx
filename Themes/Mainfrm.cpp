@@ -106,7 +106,7 @@ void CMainFrame::OnCreate()
 	if (IsRebarUsed())
 	{	
 		// Set the icons for popup menu items
-		SetMenuIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
+		AddMenuIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
 		
 		// Resize the rebar for the larger toolbar buttons
 		CRebar& RB = GetRebar();
