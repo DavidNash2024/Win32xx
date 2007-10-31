@@ -5,21 +5,24 @@ Bug Fixes:
 * Fixed notification reflection in CDialog
 
 New Features:
-* Property Sheets are now supported. The Property sheet generic demonstrates
-  the following:
+* Property Sheets are now supported. The files PropertySheet.cpp and 
+   PropertySheet.h have been added to Win32++. These files define
+   the CPropertySheet and CPropertyPage classes. The Property sheet generic 
+   demonstrates the following:
   - Modal property sheets.
   - Modeless property sheets.
   - Wizards.
-* The owner drawing of menus has been moved from CMenubar to CFrame. 
-  - Menus without rebars are also now themed.
-  - Other popup menus belonging to CFrame (or CMainFrame) are also now themed.
+* The owner drawing of menus has been moved from CMenubar to CFrame. This
+   provides the following:
+  - Frames without rebars have themed menus.
+  - Other popup menus belonging to CFrame (or CMainFrame) are themed.
   - Functions which customise the appearance of the menus are now located
      in CFrame. They are easily overriden for a different visual effect.     
 * The icons used in popup menu items can come from several bitmap resources.
   When an application has several toolbars in a rebar, for example, the icons 
   from each of these can be displayed in popup menus.
-* Added a colored rectangle around checkmarks
-* Added TabDialogDemo sample
+* Added a colored rectangle around checkmarks.
+* Added TabDialogDemo sample.
 
 The following changes have been made to the Win32++ code:
 Added  CPropertySheet class

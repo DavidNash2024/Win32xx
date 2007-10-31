@@ -11,15 +11,25 @@
 class CButtonDialog : public CDialog
 {
 public:
-	CButtonDialog(UINT nResID, HWND hWnd = NULL) : CDialog(nResID, hWnd) {}
+	CButtonDialog(UINT nResID, HWND hWnd = NULL);
+	~CButtonDialog();
+	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
+private:
+	HBRUSH m_hBrush;
 };
 
 class CComboBoxDialog : public CDialog
 {
 public:
-	CComboBoxDialog	(UINT nResID, HWND hWnd = NULL) : CDialog(nResID, hWnd)  {}
+	CComboBoxDialog	(UINT nResID, HWND hWnd = NULL);
+	~CComboBoxDialog();
+	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL OnInitDialog();
 
+private:
+	HBRUSH m_hBrush;
 };
 
 
@@ -34,7 +44,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-
+	virtual void OnOK();
 	void ShowButtonDialog();
 	void ShowComboBoxDialog();
 

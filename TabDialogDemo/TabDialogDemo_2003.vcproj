@@ -213,6 +213,9 @@
 			<File
 				RelativePath=".\resrc1.h">
 			</File>
+			<File
+				RelativePath=".\resrc2.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

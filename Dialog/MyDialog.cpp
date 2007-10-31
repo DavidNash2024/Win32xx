@@ -55,7 +55,7 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDC_CHECK3:
 		OnCheck3();
 		return TRUE;
-    } //switch (nID)
+    } //switch (LOWORD(wParam))
 
 	return FALSE;
 }

@@ -79,7 +79,7 @@ namespace Win32xx
 			if (IsModal)
 				::EndDialog(m_hWnd, 0);
 			else
-				::DestroyWindow(m_hWnd);
+				DestroyWindow();
 		}
 	}
 
@@ -263,6 +263,7 @@ namespace Win32xx
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
+				
 				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 
