@@ -2730,6 +2730,29 @@ namespace Win32xx
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
+		HDC hDC = pdis->hDC;
+		RECT rc = pdis->rcItem;
+		UINT fType = ((ItemData*)pdis->itemData)->fType;
+		
+		// Draw the checkmark's background rectangle	
+		if (m_ThemeMenu.UseThemes)
+		{
+			int Iconx, Icony;
+			ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+			int offset = -1 + (rc.bottom - rc.top - Icony)/2;
+			int height = rc.bottom - rc.top;
+			RECT rcBk;
+			::SetRect(&rcBk, rc.left, rc.top, rc.left + height, rc.bottom);
+			::InflateRect(&rcBk, -offset, -offset);
+			HBRUSH hbr = ::CreateSolidBrush(m_ThemeMenu.clrHot2);
+			HBRUSH hbrOld = (HBRUSH)::SelectObject(hDC, hbr);
+			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+			HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
+			::Rectangle(hDC, rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
+			::DeleteObject(::SelectObject(hDC, hPenOld));
+			::DeleteObject(::SelectObject(hDC, hbrOld));
+		}
+
 		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
 		if (hdcMem)
 		{
@@ -2743,7 +2766,7 @@ namespace Win32xx
 				{
 					RECT rCheck = { 0, 0, cxCheck, cyCheck };
 					// Copy the check mark bitmap to hdcMem
-					if (((ItemData*)pdis->itemData)->fType == MFT_RADIOCHECK)
+					if (fType == MFT_RADIOCHECK)
 						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
 					else
 						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
@@ -2775,7 +2798,8 @@ namespace Win32xx
 								else
 								{
 									// Draw a black checkmark
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+									int BullitOffset = ((fType == MFT_RADIOCHECK) && m_ThemeMenu.UseThemes)? 1 : 0;
+									::BitBlt(hdcMask, -BullitOffset, BullitOffset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
 									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
 								}
 								::SelectObject(hdcMask, hbmPrevMask);

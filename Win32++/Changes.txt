@@ -17,7 +17,9 @@ New Features:
      in CFrame. They are easily overriden for a different visual effect.     
 * The icons used in popup menu items can come from several bitmap resources.
   When an application has several toolbars in a rebar, for example, the icons 
-  from each of these can be displayed in popup menus.     
+  from each of these can be displayed in popup menus.
+* Added a colored rectangle around checkmarks
+* Added TabDialogDemo sample
 
 The following changes have been made to the Win32++ code:
 Added  CPropertySheet class
