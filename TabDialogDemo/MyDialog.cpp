@@ -24,11 +24,13 @@ BOOL CButtonDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	{
 	// Set the background color of the dialog
 	case WM_CTLCOLORDLG:
-		return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		break;
 	
 	// Set the background color of static controls
 	case WM_CTLCOLORSTATIC:
-		return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		break;
 	
 	}
 	// Pass unhandled messages on to parent DialogProc
@@ -118,15 +120,18 @@ CMyDialog::CMyDialog(UINT nResID, HWND hWndParent)
 
 CMyDialog::~CMyDialog()
 {
-
 }
 
 BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-		//Additional messages to be handled go here
-//	}
+	switch (uMsg)
+	{
+	case WM_CLOSE:
+		// close any modeless dialogs first
+		m_ButtonDialog.DestroyWindow();
+		m_ComboBoxDialog.DestroyWindow();
+		break;
+	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);

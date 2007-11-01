@@ -20,10 +20,9 @@
 #define IDC_CHECK2						114
 #define IDC_CHECK3						115
 #define IDC_BUTTON1						116
-//#define IDC_BUTTON2                     117
-#define IDC_COMBO1                      118
-#define IDC_COMBO2                      119
-#define IDC_COMBO3                      120
+#define IDC_COMBO1                      117
+#define IDC_COMBO2                      118
+#define IDC_COMBO3                      119
 
 #define IDC_STATIC                      -1
 
