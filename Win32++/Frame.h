@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.6
-// Released: 15th November, 2007 by:
+// Released: 10th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -304,19 +304,19 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
-		// Its unlikely you would need to override these functions		
+		// Its unlikely you would need to override these functions
 		virtual HMENU GetFrameMenu() {return m_hMenu;}
 		virtual void SetFrameMenu(INT ID_MENU);
 		virtual ThemeMenu& GetMenuTheme() {return m_ThemeMenu;}
 		virtual void SetMenuTheme(ThemeMenu& Theme);
 		virtual CWnd* GetView() {return m_pView;}
 		virtual void SetView(CWnd& pView);
-		
+
 		virtual CMenubar& GetMenubar() {return m_Menubar;}
 		virtual CRebar& GetRebar() {return m_Rebar;}
 		virtual CStatusbar& GetStatusbar() {return m_Statusbar;}
 		virtual CToolbar& GetToolbar() {return m_Toolbar;}
-		
+
 		BOOL IsMDIFrame() {return m_bIsMDIFrame;}
 		BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
 		BOOL IsRebarSupported() {return (GetComCtlVersion() >= 470);}

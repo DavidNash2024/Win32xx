@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.6
-// Released: 15th November, 2007 by:
+// Released: 10th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2589,12 +2589,12 @@ namespace Win32xx
 			m_hImageList = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 1, 0);
 			m_MenuData.clear();
 		}
-	
+
         if (ImageList_AddIcon(m_hImageList, hIcon) != -1)
 		{
 			TRACE("Add icon to imagelist");
 			m_MenuData.push_back(nID_MenuItem);
-			
+
 			// Recreate the Disabled imagelist
 			if (m_hImageListDis) ImageList_Destroy(m_hImageListDis);
 			m_hImageListDis = NULL;
@@ -2622,7 +2622,7 @@ namespace Win32xx
 
 		// Load the button images from Resouce ID
 		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID_Image));
-		
+
 		if ((iImages == 0) || (hbm == NULL))
 			return (int)m_MenuData.size();	// No valid images, so nothing to do!
 
@@ -2630,7 +2630,7 @@ namespace Win32xx
 		::GetObject(hbm, sizeof(BITMAP), &bm);
 		int iImageWidth  = bm.bmWidth / iImages;
 		int iImageHeight = bm.bmHeight;
-		
+
 		// Create the ImageList if required
 		if (m_hImageList == NULL)
 		{
@@ -2662,11 +2662,11 @@ namespace Win32xx
 				m_MenuData.push_back(MenuData[j]);
 			}
 		}
- 
+
 		// Add the images to the ImageList
 		ImageList_AddMasked(m_hImageList, hbm, crMask);
 		::DeleteObject(hbm);
-	
+
 		// Create the Disabled imagelist
 		if (m_hImageListDis) ImageList_Destroy(m_hImageListDis);
 		m_hImageListDis = NULL;
@@ -2733,8 +2733,8 @@ namespace Win32xx
 		HDC hDC = pdis->hDC;
 		RECT rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
-		
-		// Draw the checkmark's background rectangle	
+
+		// Draw the checkmark's background rectangle
 		if (m_ThemeMenu.UseThemes)
 		{
 			int Iconx, Icony;

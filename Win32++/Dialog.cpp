@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.6
-// Released: 15th November, 2007 by:
+// Released: 10th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -263,7 +263,7 @@ namespace Win32xx
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
-				
+
 				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 

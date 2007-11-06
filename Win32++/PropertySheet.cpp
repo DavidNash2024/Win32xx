@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.6
-// Released: 15th November, 2007 by:
+// Released: 10th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

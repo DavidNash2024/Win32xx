@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.6
-// Released: 15th November, 2007 by:
+// Released: 10th November, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -316,7 +316,7 @@ namespace Win32xx
 		if (m_hBrushBkgnd) ::DeleteObject(m_hBrushBkgnd);
 
 		// Remove the map entries
-		if (GetApp()) 
+		if (GetApp())
 		{
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 			m = GetApp()->GetHWNDMap().begin();
