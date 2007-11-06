@@ -4,30 +4,20 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-// Note: This code requires the following libraries to be linked:
-//  atl.lib		(assuming you want to link ATL staticly)
-//
 
-
+#include "../Win32++/Wincore.h"
 #include <exdisp.h>				// WebBrowser2 support
 #include <exdispid.h>
 #include <atlbase.h>			// ATL support
+extern CComModule _Module;		// Used later to initialise ATL
+#include <atlcom.h>				
+#include <atlhost.h>			// ActiveX support
 
-// For VS Studio 6 (ATL v3.0) and below
+
+// Define LONG_PTR for Visual Studio 6
 #if defined (_MSC_VER) && _MSC_VER <= 1200
-  extern CComModule _Module;
-  typedef long LONG_PTR;
-#else
-  struct CAtlDummyModule : CAtlModule
-  {
-	CAtlDummyModule() {memset(&m_libid, 1, sizeof(GUID));}
-	virtual HRESULT AddCommonRGSReplacements(IRegistrarBase*) { return S_OK; }
-  };
-#endif
-
-#include <atlcom.h>
-#include <atlhost.h>
-#include "../Win32++/Wincore.h"
+  #define LONG_PTR LONG
+#endif 
 
 
 class CView : public CWnd

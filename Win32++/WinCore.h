@@ -59,6 +59,7 @@
   #pragma warning (disable : 4511) // copy operator could not be generated
   #pragma warning (disable : 4512) // assignment operator could not be generated
   #pragma warning (disable : 4702) // unreachable code
+  #define _CRT_SECURE_NO_WARNINGS  // Eliminate deprecation warnings for VS2005
 #endif // _MSC_VER
 
 

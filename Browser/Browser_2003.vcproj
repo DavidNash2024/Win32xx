@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib atl.lib"
+				AdditionalDependencies="comctl32.lib"
 				OutputFile="$(OutDir)/Browser.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -80,7 +80,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib atl.lib"
+				AdditionalDependencies="comctl32.lib"
 				OutputFile="$(OutDir)/Browser.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"

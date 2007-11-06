@@ -2655,11 +2655,11 @@ namespace Win32xx
 
 		// Add the resource IDs to the m_MenuData vector
 		iImages += (int)m_MenuData.size();
-		for (unsigned int i = 0 ; i < MenuData.size(); i++)
+		for (unsigned int j = 0 ; j < MenuData.size(); j++)
 		{
-			if (MenuData[i] != 0)
+			if (MenuData[j] != 0)
 			{
-				m_MenuData.push_back(MenuData[i]);
+				m_MenuData.push_back(MenuData[j]);
 			}
 		}
  

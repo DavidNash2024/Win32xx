@@ -6,29 +6,17 @@
 #include "View.h"
 
 
-// Note: This code requires the following libraries to be linked:
-//  atl.lib		(assuming you want to link ATL staticly)
-//  comctl32.lib
-
-
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-  CComModule _Module; // For VS Studio 6 (ATL v3.0) and below
-#else
-  CAtlDummyModule _Module; //  for ATL v7 and above
-#endif
-
+CComModule _Module;
 
 // Definitions for the CView class
 CView::CView() : m_pInetExplorer(NULL)
 {
-
-// For VS Studio 6 (ATL v3.0) and below
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-	_Module.Init(NULL, GetApp()->GetInstanceHandle());
-#endif
-
-	AtlAxWinInit();			// Initialise ATL
-	OleInitialize(NULL);	// Initialise OLE
+	// Initialise ATL
+	GUID dummy = {1};
+	_Module.Init(NULL, GetApp()->GetInstanceHandle(), &dummy);
+	
+	// Initialise OLE
+	OleInitialize(NULL);
 }
 
 CView::~CView()
