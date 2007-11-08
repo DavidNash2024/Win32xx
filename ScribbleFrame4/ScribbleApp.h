@@ -15,6 +15,7 @@ class CScribbleApp : public CWinApp
 public:
     CScribbleApp(HINSTANCE hInstance);
     virtual ~CScribbleApp() {}
+	virtual BOOL InitInstance();
 
 private:
     CMainFrame m_Frame;

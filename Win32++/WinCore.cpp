@@ -181,6 +181,15 @@ namespace Win32xx
 		::SendMessage(m_hTraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
 	}
 
+	BOOL CWinApp::InitInstance()
+	{
+		// InitInstance contains the initialization code for your application
+		// You should override this function with the code to run when the application starts.
+
+		// return TRUE to indicate success. FALSE will end the application
+		return TRUE;
+	}
+
 	int CWinApp::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.
@@ -199,6 +208,21 @@ namespace Win32xx
 			}
 		}
 		return LOWORD(uMsg.wParam);
+	}
+
+	int CWinApp::Run() 
+	{
+		// InitInstance runs the App's initialization code 
+		if (InitInstance())
+		{
+			// Dispatch the window messages
+			return MessageLoop();
+		}
+		else
+		{
+			::PostQuitMessage(-1);
+			return -1;
+		}
 	}
 
 	void CWinApp::SetAccelerators(UINT ID_ACCEL, HWND hWndAccel)

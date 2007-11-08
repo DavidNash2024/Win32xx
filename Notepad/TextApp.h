@@ -14,6 +14,7 @@ class CTextApp : public CWinApp
 public:
 	CTextApp(HINSTANCE hInstance); 
 	virtual ~CTextApp()  {}
+	virtual BOOL InitInstance();
 
 private:
 	CMainFrame m_Frame;

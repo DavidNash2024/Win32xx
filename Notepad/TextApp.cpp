@@ -8,6 +8,10 @@
 
 CTextApp::CTextApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
+}
+
+BOOL CTextApp::InitInstance()
+{
 	//Start Tracing
 	TRACE(_T("Tracing Started"));
 
@@ -18,7 +22,8 @@ CTextApp::CTextApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	if (!m_Frame.GetHwnd())
 	{
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
-		::PostQuitMessage(0);
-	} 
-}
+		return FALSE;
+	}
 
+	return TRUE;
+}

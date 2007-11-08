@@ -14,7 +14,8 @@ class CDXApp : public CWinApp
 public:
     CDXApp(HINSTANCE hInstance);
     virtual ~CDXApp() {}
-	int MessageLoop();
+	virtual BOOL InitInstance();
+	virtual int MessageLoop();
 
 private:
     CView m_View;

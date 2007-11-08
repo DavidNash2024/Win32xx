@@ -15,6 +15,7 @@ class CShellApp : public CWinApp
 public:
 	CShellApp(HINSTANCE hInstance);
 	virtual ~CShellApp();
+	virtual BOOL InitInstance();
 
 private:
 	CMainFrame m_Frame;

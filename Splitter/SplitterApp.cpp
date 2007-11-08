@@ -8,6 +8,10 @@
 
 CSplitterApp::CSplitterApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
+}
+
+BOOL CSplitterApp::InitInstance()
+{
 	//Open the Trace Window
 	TRACE(_T("Trace started"));
 
@@ -18,8 +22,10 @@ CSplitterApp::CSplitterApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	if (!m_Frame.GetHwnd())
 	{
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
-		::PostQuitMessage(0);
+		return FALSE;
 	}
+
+	return TRUE;
 }
 
 

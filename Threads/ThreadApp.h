@@ -19,6 +19,7 @@ class CThreadApp : public CWinApp
 public:
 	CThreadApp(HINSTANCE hInstance);
 	virtual ~CThreadApp();
+	virtual BOOL InitInstance();
 	CMainWindow& GetMainWnd() {return m_MainWnd;}
 
 private:

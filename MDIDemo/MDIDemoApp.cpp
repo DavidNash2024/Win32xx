@@ -8,11 +8,18 @@
 
 CMDIDemoApp::CMDIDemoApp(HINSTANCE hInstance) : CMDIApp(hInstance)
 {
+}
+
+BOOL CMDIDemoApp::InitInstance()
+{
 	//Start Tracing
 	TRACE("Start Tracing");
 
     //Create the Window
-    m_MainMDIFrame.Create();
+	if (!m_MainMDIFrame.Create())
+		return FALSE;	// End application if create fails
+
+	return TRUE;
 }
 
 

@@ -8,6 +8,14 @@
 // Definitions for the CFrameApp class
 CPictureApp::CPictureApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
+}
+
+CPictureApp::~CPictureApp()
+{
+}
+
+BOOL CPictureApp::InitInstance()
+{
 	//Start Tracing
 	TRACE(_T("Tracing Started"));
 
@@ -18,10 +26,8 @@ CPictureApp::CPictureApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	if (!m_Frame.GetHwnd())
 	{
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
-		::PostQuitMessage(0);
+		return FALSE;
 	}
-}
 
-CPictureApp::~CPictureApp()
-{
+	return TRUE;
 }

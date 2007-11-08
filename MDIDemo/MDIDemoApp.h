@@ -13,6 +13,7 @@ class CMDIDemoApp : public CMDIApp
 public:
     CMDIDemoApp(HINSTANCE hInstance);
     virtual ~CMDIDemoApp() {}
+	virtual BOOL InitInstance();
 
 private:
     CMainMDIFrame m_MainMDIFrame;

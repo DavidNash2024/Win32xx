@@ -7,6 +7,14 @@
 // Definitions for the CFrameApp class
 CThemesApp::CThemesApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
+}
+
+CThemesApp::~CThemesApp()
+{
+}
+
+BOOL CThemesApp::InitInstance()
+{
 	//Start Tracing
 	TRACE("Tracing Started");
 
@@ -17,10 +25,8 @@ CThemesApp::CThemesApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	if (!m_Frame.GetHwnd())
 	{
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
-		::PostQuitMessage(0);
+		return FALSE;
 	}
-}
 
-CThemesApp::~CThemesApp()
-{
+	return TRUE;
 }

@@ -14,6 +14,7 @@ class CSplitterApp : public CWinApp
 public:
 	CSplitterApp(HINSTANCE hInstance);
 	virtual ~CSplitterApp()  {}
+	virtual BOOL InitInstance();
 
 private:
 	CMainFrame m_Frame;

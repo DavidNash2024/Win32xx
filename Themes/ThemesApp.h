@@ -13,6 +13,7 @@ class CThemesApp : public CWinApp
 public:
 	CThemesApp(HINSTANCE hInstance);
 	virtual ~CThemesApp();
+	virtual BOOL InitInstance();
 
 private:
 	CMainFrame m_Frame;

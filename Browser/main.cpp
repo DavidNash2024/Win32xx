@@ -10,6 +10,6 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
     CFrameApp MyApp(hInstance);
 
 
-	// Process the window messages
-    return MyApp.MessageLoop();
+	// Run the application
+    return MyApp.Run();
 }

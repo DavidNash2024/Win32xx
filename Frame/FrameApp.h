@@ -13,6 +13,7 @@ class CFrameApp : public CWinApp
 public:
 	CFrameApp(HINSTANCE hInstance);
 	virtual ~CFrameApp();
+	virtual BOOL InitInstance();
 
 private:
 	CMainFrame m_Frame;

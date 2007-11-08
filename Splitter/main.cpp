@@ -9,8 +9,8 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 	// Start Win32++
 	CSplitterApp theApp(hInstance);
 
-	// Process the window messages
-	return theApp.MessageLoop();
+	// Run the application
+	return theApp.Run();
 }
 
 

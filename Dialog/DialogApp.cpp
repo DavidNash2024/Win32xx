@@ -8,7 +8,11 @@
 // Definitions for the CDialogApp class
 CDialogApp::CDialogApp(HINSTANCE hInstance) : CWinApp(hInstance), m_MyDialog(IDD_DIALOG1)
 {
-    //Start Trace
+}
+
+CDialogApp::InitInstance()
+{
+	//Start Trace
     TRACE("Start Tracing");
 
 	//Display the Modal Dialog
@@ -16,6 +20,8 @@ CDialogApp::CDialogApp(HINSTANCE hInstance) : CWinApp(hInstance), m_MyDialog(IDD
 
 	//End the program
 	::PostQuitMessage(0);
+
+	return TRUE;
 }
 
 CDialogApp::~CDialogApp()

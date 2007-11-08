@@ -13,6 +13,7 @@ class CPictureApp : public CWinApp
 public:
 	CPictureApp(HINSTANCE hInstance);
 	virtual ~CPictureApp();
+	virtual BOOL InitInstance();
 
 private:
 	CMainFrame m_Frame;

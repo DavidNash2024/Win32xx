@@ -13,6 +13,7 @@ class CSimpleApp : public CWinApp
 public:
     CSimpleApp(HINSTANCE hInstance);
     virtual ~CSimpleApp() {}
+	virtual BOOL InitInstance();
 
 private:
     CView m_View;

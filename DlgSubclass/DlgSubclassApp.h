@@ -14,6 +14,7 @@ public:
 	CDlgSubclassApp(HINSTANCE hInstance);
 	virtual ~CDlgSubclassApp();
 	CMyDialog& GetDialog() {return m_MyDialog;}
+	virtual BOOL InitInstance();
 
 private:
 	CMyDialog m_MyDialog;

@@ -6,10 +6,16 @@
 
 CDXApp::CDXApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
+}
+
+BOOL CDXApp::InitInstance()
+{
 	TRACE("Tracing Started");
 
 	//Create the Window
     m_View.Create();
+
+	return TRUE;
 }
 
 int CDXApp::MessageLoop()

@@ -2535,7 +2535,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")),
-						m_hMenu(NULL), m_pView(NULL), m_hImageList(NULL), m_hImageListDis(NULL)
+						m_hImageList(NULL), m_hImageListDis(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
 		GetApp()->SetFrame(this);
 
@@ -2654,7 +2654,6 @@ namespace Win32xx
 		}
 
 		// Add the resource IDs to the m_MenuData vector
-		iImages += (int)m_MenuData.size();
 		for (unsigned int j = 0 ; j < MenuData.size(); j++)
 		{
 			if (MenuData[j] != 0)

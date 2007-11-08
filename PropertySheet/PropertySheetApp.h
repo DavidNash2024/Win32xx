@@ -13,6 +13,7 @@ class CPropertySheetApp : public CWinApp
 public:
 	CPropertySheetApp(HINSTANCE hInstance);
 	virtual ~CPropertySheetApp();
+	virtual BOOL InitInstance();
 
 private:
 	CMainFrame m_Frame;

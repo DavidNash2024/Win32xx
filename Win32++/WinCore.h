@@ -228,7 +228,9 @@ namespace Win32xx
 		virtual ~CWinApp();
 
 		// These are the functions you might wish to override
-		virtual int MessageLoop();
+		virtual BOOL InitInstance();
+		virtual int  MessageLoop();
+		virtual int  Run();
 
 		// Its unlikely you would need to override these functions
 		virtual void CreateTrace();

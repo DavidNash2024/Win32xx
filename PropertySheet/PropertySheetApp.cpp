@@ -7,6 +7,14 @@
 // Definitions for the CFrameApp class
 CPropertySheetApp::CPropertySheetApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
+}
+
+CPropertySheetApp::~CPropertySheetApp()
+{
+}
+
+BOOL CPropertySheetApp::InitInstance()
+{
 	//Start Tracing
 	TRACE(_T("Tracing Started"));
 
@@ -17,10 +25,8 @@ CPropertySheetApp::CPropertySheetApp(HINSTANCE hInstance) : CWinApp(hInstance)
 	if (!m_Frame.GetHwnd())
 	{
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
-		::PostQuitMessage(0);
+		return FALSE;
 	}
-}
 
-CPropertySheetApp::~CPropertySheetApp()
-{
+	return TRUE;
 }

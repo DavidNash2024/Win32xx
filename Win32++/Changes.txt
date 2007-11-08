@@ -6,6 +6,19 @@ Bug Fixes:
 * Browser sample now compiles with VS 2005 Express
 
 New Features:
+* Added InitInstance to CWinApp. Code to create windows should now be
+   placed in InitInstance instead of the constructor of the CWinApp
+   derived class. Doing this allows the CWinApp derrived class to be
+   fully constructed before attempting to create windows. A typical
+   WinMain now looks like this:
+    INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+    {
+      // Start Win32++
+      CFrameApp theApp(hInstance);
+   
+      // Run the application
+      return theApp.Run();  // <- This has changed
+    }
 * Property Sheets are now supported. The files PropertySheet.cpp and 
    PropertySheet.h have been added to Win32++. These files define
    the CPropertySheet and CPropertyPage classes. The Property sheet generic 
@@ -39,6 +52,8 @@ Added  CFrame::AddMenuIcons
 Added  CFrame::GetMenuTheme
 Added  CFrame::SetMenuTheme
 Added  CMDIFrame::GetActiveMDIChildCWnd
+Added  CWinApp::InitInstance
+Added  CWinApp::Run
 Added  CWnd::CenterWindow
 Removed CDialog::Center    (use CWnd::CenterWindow instead)
 Removed CMenubar::SetIcons (use CFrame::AddMenuIcons instead)

@@ -8,7 +8,15 @@
 // Definitions for the CDialogApp class
 CDlgSubclassApp::CDlgSubclassApp(HINSTANCE hInstance) : CWinApp(hInstance), m_MyDialog(IDD_DIALOG1)
 {
-    //Start Trace
+}
+
+CDlgSubclassApp::~CDlgSubclassApp()
+{
+}
+
+BOOL CDlgSubclassApp::InitInstance()
+{
+	//Start Trace
     TRACE("Start Tracing");
 
 	//Display the Modal Dialog
@@ -16,9 +24,7 @@ CDlgSubclassApp::CDlgSubclassApp(HINSTANCE hInstance) : CWinApp(hInstance), m_My
 
 	//End the program
 	::PostQuitMessage(0);
-}
 
-CDlgSubclassApp::~CDlgSubclassApp()
-{
+	return TRUE;
 }
 
