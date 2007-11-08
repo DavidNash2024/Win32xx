@@ -9,8 +9,9 @@ New Features:
 * Added InitInstance to CWinApp. Code to create windows should now be
    placed in InitInstance instead of the constructor of the CWinApp
    derived class. Doing this allows the CWinApp derrived class to be
-   fully constructed before attempting to create windows. A typical
-   WinMain now looks like this:
+   fully constructed before attempting to create windows. WinMain 
+   (or _tWinMain for Unicode apps) has also changed. A typical _tWinMain 
+   now looks like this:
     INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
     {
       // Start Win32++
