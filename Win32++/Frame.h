@@ -52,7 +52,17 @@
 
 namespace Win32xx
 {
+	////////////////////////////////////////////////
+	// Declarations for some useful functions
+	//
+	HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
+	void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
+	void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 
+
+	////////////////////////////////////////////////
+	// Declarations for structures for themes
+	//
 	struct ThemeMenu
 	{
 		BOOL UseThemes;			// TRUE if themes are used
@@ -391,132 +401,6 @@ namespace Win32xx
 
 	};  // class CFrame
 
-
-
-	//////////////////////////////////
-	// Global function declarations
-	//
-	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
-	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
-	inline void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
-
-
-	//////////////////////////////////
-	// Global function definitions
-	//
-	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList)
-	{
-		// Returns a greyed image list, created from hImageList
-
-		int cx, cy;
-		int nCount = ImageList_GetImageCount(hImageList);
-		if (nCount == 0)
-			return NULL;
-
-		ImageList_GetIconSize(hImageList, &cx, &cy);
-
-		// Create the destination ImageList
-		HIMAGELIST hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
-
-		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; i++)
-		{
-			HDC hdcToolbar = ::GetDC(NULL);
-			HDC hdcMem = ::CreateCompatibleDC(NULL);
-			HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
-			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
-			RECT rc;
-			SetRect(&rc, 0, 0, cx, cx);
-
-			// Set the mask color to magenta for the new ImageList
-			COLORREF crMask = RGB(255,0,255);
-			SolidFill(hdcMem, crMask, &rc);
-
-			// Draw the image on the memory DC
-			ImageList_Draw(hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
-
-			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; x++)
-			{
-				for (int y = 0; y < cy; y++)
-				{
-					COLORREF clr = ::GetPixel(hdcMem, x, y);
-
-					if (clr != crMask)
-					{
-						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
-						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
-					}
-				}
-			}
-
-			::SelectObject(hdcMem, hbmMemOld);
-			ImageList_AddMasked(hImageListDis, hbmMem, crMask);
-
-			// Cleanup the GDI objects
-			::DeleteObject(hbmMem);
-			::DeleteDC(hdcMem);
-			::ReleaseDC(NULL, hdcToolbar);
-		}
-
-		return hImageListDis;
-	}
-
-	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
-	// A simple but efficient Gradient Filler compatible with all Windows operating systems
-	{
-		int Width = pRc->right - pRc->left;
-		int Height = pRc->bottom - pRc->top;
-
-		int r1 = GetRValue(Color1);
-		int g1 = GetGValue(Color1);
-		int b1 = GetBValue(Color1);
-
-		int r2 = GetRValue(Color2);
-		int g2 = GetGValue(Color2);
-		int b2 = GetBValue(Color2);
-
-		COLORREF OldBkColor = ::GetBkColor(hDC);
-
-		if (bVertical)
-		{
-			for(int i=0; i < Width; i++)
-			{
-				int r = r1 + (i * (r2-r1) / Width);
-				int g = g1 + (i * (g2-g1) / Width);
-				int b = b1 + (i * (b2-b1) / Width);
-				::SetBkColor(hDC, RGB(r, g, b));
-				RECT line;
-
-				::SetRect(&line, i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
-				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-			}
-		}
-		else
-		{
-			for(int i=0; i < Height; i++)
-			{
-				int r = r1 + (i * (r2-r1) / Height);
-				int g = g1 + (i * (g2-g1) / Height);
-				int b = b1 + (i * (b2-b1) / Height);
-				::SetBkColor(hDC, RGB(r, g, b));
-				RECT line;
-
-				::SetRect(&line, pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
-				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-			}
-		}
-
-		::SetBkColor(hDC, OldBkColor);
-	}
-
-	inline void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
-	{
-		COLORREF OldColor = ::SetBkColor(hDC, Color);
-		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
-		::SetBkColor(hDC, OldColor);
-	}
-
-} //namespace Win32xx
+} // namespace Win32xx
 
 #endif // FRAME_H
