@@ -426,7 +426,6 @@ namespace Win32xx
 		RECT rc;
 		RECT rcParent;
 		RECT rcDesktop;
-	//	POINT CenterPos;
 
 		// Get screen dimensions excluding task bar
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
@@ -437,7 +436,6 @@ namespace Win32xx
 		::GetWindowRect(m_hWnd, &rc);
 
 		// Get the parent window dimensions (parent could be the desktop)
-	//	HWND hParent = ::GetParent(hWnd);
 		if (m_hWndParent != NULL) ::GetWindowRect(m_hWndParent, &rcParent);
 		else rcParent = rcDesktop;
 
@@ -453,11 +451,8 @@ namespace Win32xx
 		if (y > iHeight - (rc.bottom - rc.top))
 			y = iHeight - (rc.bottom - rc.top);
 
-	//	CenterPos.x = x;
-	//	CenterPos.y = y;
-
 		::SetWindowPos(m_hWnd, HWND_TOP, x, y, 0, 0,  SWP_NOSIZE);
-	//	return CenterPos;
+
 	} // POINT CWnd::CenterWindow()
 
 	HWND CWnd::Create(HWND hWndParent /* = NULL */)
@@ -1054,13 +1049,6 @@ namespace Win32xx
 			throw;	// Rethrow unknown exception
 		}
 	}
-
-//	void CWnd::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
-//	{
-//		COLORREF OldColor = ::SetBkColor(hDC, Color);
-//		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
-//		::SetBkColor(hDC, OldColor);
-//	}
 
 	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)
 	// With a CBTHook in place, the application receives additional messages.

@@ -9,6 +9,10 @@ CFrameApp::CFrameApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
 }
 
+CFrameApp::~CFrameApp()
+{
+}
+
 BOOL CFrameApp::InitInstance()
 {
 	//Start Tracing
@@ -29,6 +33,4 @@ BOOL CFrameApp::InitInstance()
 	return TRUE;
 }
 
-CFrameApp::~CFrameApp()
-{
-}
+

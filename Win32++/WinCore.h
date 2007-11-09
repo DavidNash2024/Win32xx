@@ -160,14 +160,12 @@ namespace Win32xx
 		virtual HWND Detach();
 		virtual HWND GetAncestor(HWND hWnd);
 		virtual CWnd* GetCWndObject(HWND hWnd);
-	//	virtual void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
 		virtual void SetBkgndColor(COLORREF color);
 		virtual void SetParent(HWND hParent);
-	//	virtual void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HWND GetHwnd() {return m_hWnd;}

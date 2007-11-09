@@ -3815,10 +3815,13 @@ namespace Win32xx
 } // namespace Win32xx
 
 
-HIMAGELIST Win32xx::CreateDisabledImageList(HIMAGELIST hImageList)
-{
-	// Returns a greyed image list, created from hImageList
+/////////////////////////////////////////////////////////////////
+// Definitions for some global functions in the Win32xx namespace
+//
 
+HIMAGELIST Win32xx::CreateDisabledImageList(HIMAGELIST hImageList)
+// Returns a greyed image list, created from hImageList
+{
 	int cx, cy;
 	int nCount = ImageList_GetImageCount(hImageList);
 	if (nCount == 0)
@@ -3922,6 +3925,7 @@ void Win32xx::GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc
 }
 
 void Win32xx::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
+// Fills a rectangle with a solid color
 {
 	COLORREF OldColor = ::SetBkColor(hDC, Color);
 	::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
