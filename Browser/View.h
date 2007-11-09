@@ -1,6 +1,46 @@
 /////////////////////////////////
 // View.h
 
+
+/////////////////////////////////////////////////////////////
+// An important note for Visual Studio 2005 Express users
+//  To compile this program you will need to do the following 
+//  
+//  1) Add the include\atl path of Platform SDK to the set of
+//      directories used for include files
+//
+//  2) Modify atlwin.h 
+//      Change SetChainEntry function at line 1725 and define
+//      "int i" at the first line of the function body
+//
+//  3) Modify atlbase.h
+//      Change AllocStdCallThunk and FreeStdCallThunk at line 287
+//
+//      Make these changes:
+//
+//		/* Comment these lines
+//		PVOID __stdcall __AllocStdCallThunk(VOID);
+//		VOID __stdcall __FreeStdCallThunk(PVOID);
+//
+//		#define AllocStdCallThunk() __AllocStdCallThunk()
+//		#define FreeStdCallThunk(p) __FreeStdCallThunk(p)
+//
+//		#pragma comment(lib, "atlthunk.lib")
+//		*/
+//
+//      and add these 2 lines:
+//		#define AllocStdCallThunk() HeapAlloc(GetProcessHeap(), 0, sizeof(_stdcallthunk))
+//		#define FreeStdCallThunk(p) HeapFree(GetProcessHeap(), 0, p)
+//
+//
+//		This information was published by Baryon Lee, in the CodeProject article
+//      titled "Using WTL with Visual C++ 2005 Express Edition"
+//      URL:  http://www.codeproject.com/wtl/WTLExpress.asp
+//
+//      This information was tested on Platform SDK version Windows Server 2003 R2
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
 #ifndef VIEW_H
 #define VIEW_H
 
