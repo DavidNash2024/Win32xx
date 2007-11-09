@@ -49,37 +49,37 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnHelp();
 		return TRUE;
 	case IDM_NONE:
-		SetTheme(IDM_NONE);
+		ChooseTheme(IDM_NONE);
 		return TRUE;
 	case IDM_BLUE:
-		SetTheme(IDM_BLUE);
+		ChooseTheme(IDM_BLUE);
 		return TRUE;
 	case IDM_BLUE_LOCKED:
-		SetTheme(IDM_BLUE_LOCKED);
+		ChooseTheme(IDM_BLUE_LOCKED);
 		return TRUE;
 	case IDM_BLUE_BKGND:
-		SetTheme(IDM_BLUE_BKGND);
+		ChooseTheme(IDM_BLUE_BKGND);
 		return TRUE;
 	case IDM_BLUE_FLAT:
-		SetTheme(IDM_BLUE_FLAT);
+		ChooseTheme(IDM_BLUE_FLAT);
 		return TRUE;
 	case IDM_GREY:
-		SetTheme(IDM_GREY);
+		ChooseTheme(IDM_GREY);
 		return TRUE;
 	case IDM_OLIVE:
-		SetTheme(IDM_OLIVE);
+		ChooseTheme(IDM_OLIVE);
 		return TRUE;
 	case IDM_OCHRE:
-		SetTheme(IDM_OCHRE);
+		ChooseTheme(IDM_OCHRE);
 		return TRUE;
 	case IDM_MAUVE:
-		SetTheme(IDM_MAUVE);
+		ChooseTheme(IDM_MAUVE);
 		return TRUE;
 	case IDM_PINK:
-		SetTheme(IDM_PINK);
+		ChooseTheme(IDM_PINK);
 		return TRUE;
 	case IDM_GOLD:
-		SetTheme(IDM_GOLD);
+		ChooseTheme(IDM_GOLD);
 		return TRUE;
 	}
 
@@ -113,7 +113,7 @@ void CMainFrame::OnCreate()
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 	
 		//Set our theme
-		SetTheme(IDM_BLUE);
+		ChooseTheme(IDM_BLUE);
 
 		// Add the Arrows toolbar
 		std::vector<UINT> ArrowsData;
@@ -151,7 +151,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	return 0L;
 }
 
-void CMainFrame::SetTheme(UINT nStyle)
+void CMainFrame::ChooseTheme(UINT nStyle)
 {
 	CRebar& RB = GetRebar();
 	CToolbar& TB = GetToolbar();

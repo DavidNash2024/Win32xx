@@ -8,6 +8,11 @@
 
 #include "../Win32++/MDI.h"
 
+// Define BTNS_WHOLEDROPDOWN
+#ifndef BTNS_WHOLEDROPDOWN
+  #define BTNS_WHOLEDROPDOWN 0x0080
+#endif
+
 
 class CMainMDIFrame : public CMDIFrame
 {

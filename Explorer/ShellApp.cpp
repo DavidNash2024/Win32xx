@@ -30,3 +30,4 @@ BOOL CShellApp::InitInstance()
 
 	return TRUE;
 }
+

@@ -21,3 +21,4 @@ BOOL CPerformanceApp::InitInstance()
 
 	return TRUE;
 }
+

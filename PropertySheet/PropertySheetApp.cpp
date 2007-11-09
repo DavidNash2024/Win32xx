@@ -30,3 +30,4 @@ BOOL CPropertySheetApp::InitInstance()
 
 	return TRUE;
 }
+

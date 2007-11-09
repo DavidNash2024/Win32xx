@@ -334,7 +334,6 @@ namespace Win32xx
 			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
 		}
 
-		return 0;	// We never get here
 	}
 
 	int CPropertyPage::Validate()

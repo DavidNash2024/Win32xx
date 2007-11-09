@@ -27,3 +27,4 @@ BOOL CDialogApp::InitInstance()
 
 	return TRUE;
 }
+

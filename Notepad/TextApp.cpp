@@ -27,3 +27,4 @@ BOOL CTextApp::InitInstance()
 
 	return TRUE;
 }
+

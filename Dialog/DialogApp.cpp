@@ -10,7 +10,7 @@ CDialogApp::CDialogApp(HINSTANCE hInstance) : CWinApp(hInstance), m_MyDialog(IDD
 {
 }
 
-CDialogApp::InitInstance()
+BOOL CDialogApp::InitInstance()
 {
 	//Start Trace
     TRACE("Start Tracing");

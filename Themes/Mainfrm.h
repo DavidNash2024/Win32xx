@@ -20,7 +20,7 @@ protected:
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SetTheme(UINT nStyle);
+	virtual void ChooseTheme(UINT nStyle);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
