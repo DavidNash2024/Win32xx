@@ -7,7 +7,7 @@
 INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CFrameApp theApp(hInstance);
+	CFormApp theApp(hInstance);
 
 	// Run the application
 	return theApp.Run();

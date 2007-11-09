@@ -1,18 +1,18 @@
 //////////////////////////////////////////////////
 // FrameApp.h
 
-#ifndef FRAMEAPP_H
-#define FRAMEAPP_H
+#ifndef FORMEAPP_H
+#define FORMAPP_H
 
 #include "Mainfrm.h"
 
 
 // Declaration of the CFrameApp class
-class CFrameApp : public CWinApp
+class CFormApp : public CWinApp
 {
 public:
-	CFrameApp(HINSTANCE hInstance);
-	virtual ~CFrameApp();
+	CFormApp(HINSTANCE hInstance);
+	virtual ~CFormApp();
 	virtual BOOL InitInstance();
 
 private:
@@ -20,5 +20,5 @@ private:
 };
 
 
-#endif // define FRAMEAPP_H
+#endif // define FORMAPP_H
 

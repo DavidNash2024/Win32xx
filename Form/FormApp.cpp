@@ -5,15 +5,15 @@
 
 
 // Definitions for the CFrameApp class
-CFrameApp::CFrameApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CFormApp::CFormApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
 }
 
-CFrameApp::~CFrameApp()
+CFormApp::~CFormApp()
 {
 }
 
-BOOL CFrameApp::InitInstance()
+BOOL CFormApp::InitInstance()
 {
 	//Start Tracing
 	TRACE("Tracing Started");
@@ -30,3 +30,4 @@ BOOL CFrameApp::InitInstance()
 
 	return TRUE;
 }
+
