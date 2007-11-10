@@ -988,7 +988,7 @@ namespace Win32xx
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 				}
 				else
-					m_hImageListDis = CreateDisabledImageList(m_hImageList);
+					m_hImageListDis = GetApp()->GetFrame()->CreateDisabledImageList(m_hImageList);
 
 				::DeleteObject(hbm);
 				hbm = NULL;
@@ -2726,6 +2726,63 @@ namespace Win32xx
 		GetRebar().InsertBand(-1, &rbbi);
 	}
 
+	HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST hImageList)
+	// Returns a greyed image list, created from hImageList
+	{
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(hImageList);
+		if (nCount == 0)
+			return NULL;
+
+		ImageList_GetIconSize(hImageList, &cx, &cy);
+
+		// Create the destination ImageList
+		HIMAGELIST hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
+
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; i++)
+		{
+			HDC hdcToolbar = ::GetDC(NULL);
+			HDC hdcMem = ::CreateCompatibleDC(NULL);
+			HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
+			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
+			RECT rc;
+			SetRect(&rc, 0, 0, cx, cx);
+
+			// Set the mask color to magenta for the new ImageList
+			COLORREF crMask = RGB(255,0,255);
+			SolidFill(hdcMem, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_Draw(hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; x++)
+			{
+				for (int y = 0; y < cy; y++)
+				{
+					COLORREF clr = ::GetPixel(hdcMem, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
+						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
+					}
+				}
+			}
+
+			::SelectObject(hdcMem, hbmMemOld);
+			ImageList_AddMasked(hImageListDis, hbmMem, crMask);
+
+			// Cleanup the GDI objects
+			::DeleteObject(hbmMem);
+			::DeleteDC(hdcMem);
+			::ReleaseDC(NULL, hdcToolbar);
+		}
+
+		return hImageListDis;
+	}
+
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
@@ -3818,63 +3875,6 @@ namespace Win32xx
 /////////////////////////////////////////////////////////////////
 // Definitions for some global functions in the Win32xx namespace
 //
-
-HIMAGELIST Win32xx::CreateDisabledImageList(HIMAGELIST hImageList)
-// Returns a greyed image list, created from hImageList
-{
-	int cx, cy;
-	int nCount = ImageList_GetImageCount(hImageList);
-	if (nCount == 0)
-		return NULL;
-
-	ImageList_GetIconSize(hImageList, &cx, &cy);
-
-	// Create the destination ImageList
-	HIMAGELIST hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
-
-	// Process each image in the ImageList
-	for (int i = 0 ; i < nCount; i++)
-	{
-		HDC hdcToolbar = ::GetDC(NULL);
-		HDC hdcMem = ::CreateCompatibleDC(NULL);
-		HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
-		HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
-		RECT rc;
-		SetRect(&rc, 0, 0, cx, cx);
-
-		// Set the mask color to magenta for the new ImageList
-		COLORREF crMask = RGB(255,0,255);
-		SolidFill(hdcMem, crMask, &rc);
-
-		// Draw the image on the memory DC
-		ImageList_Draw(hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
-
-		// Convert colored pixels to gray
-		for (int x = 0 ; x < cx; x++)
-		{
-			for (int y = 0; y < cy; y++)
-			{
-				COLORREF clr = ::GetPixel(hdcMem, x, y);
-
-				if (clr != crMask)
-				{
-					BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
-					::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
-				}
-			}
-		}
-
-		::SelectObject(hdcMem, hbmMemOld);
-		ImageList_AddMasked(hImageListDis, hbmMem, crMask);
-
-		// Cleanup the GDI objects
-		::DeleteObject(hbmMem);
-		::DeleteDC(hdcMem);
-		::ReleaseDC(NULL, hdcToolbar);
-	}
-
-	return hImageListDis;
-}
 
 void Win32xx::GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
 // A simple but efficient Gradient Filler compatible with all Windows operating systems

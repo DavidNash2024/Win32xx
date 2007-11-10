@@ -55,7 +55,6 @@ namespace Win32xx
 	////////////////////////////////////////////////
 	// Declarations for some useful functions
 	//
-	HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 	void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
 	void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 
@@ -302,6 +301,7 @@ namespace Win32xx
 		virtual ~CFrame();
 
 		// These are the functions you might wish to override
+		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual RECT GetClientSize();
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);

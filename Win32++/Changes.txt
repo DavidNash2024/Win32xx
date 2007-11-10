@@ -59,6 +59,7 @@ Added  CWinApp::Run
 Added  CWnd::CenterWindow
 Removed CDialog::Center    (use CWnd::CenterWindow instead)
 Removed CMenubar::SetIcons (use CFrame::AddMenuIcons instead)
+Moved   CToolbar::CreateDisabledImageList to CFrame::CreateDisabledImageList
 Moved   CWnd::GradientFill to GradientFill
 Moved   CWnd::SolidFill    to SolidFill
 Renamed ThemeMenubar       to ThemeMenu 
