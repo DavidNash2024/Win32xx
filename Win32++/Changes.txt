@@ -28,7 +28,7 @@ New Features:
   - Modeless property sheets.
   - Wizards.
 * The owner drawing of menus has been moved from CMenubar to CFrame. This
-   provides the following:
+   has the following advantages:
   - Frames without rebars have themed menus.
   - Other popup menus belonging to CFrame (or CMainFrame) are themed.
   - Functions which customise the appearance of the menus are now located
@@ -38,6 +38,7 @@ New Features:
   from each of these can be displayed in popup menus.
 * Added a colored rectangle around checkmarks.
 * Added TabDialogDemo sample.
+* CWnd objects can now be static variables
 
 The following changes have been made to the Win32++ code:
 Added  CPropertySheet class
