@@ -5,35 +5,38 @@
 #include "ShellWrapper.h"
 
 
+/////////////////////////////////////////////////////////////
+// Global function in the ShellWrapper namespace
+//
+BOOL ShellWrapper::GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName)
+{
+	if (!::SHGetPathFromIDList(pidlFull, pszPathName))
+	{
+		pszPathName[0] = _T('\0');
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+BOOL ShellWrapper::GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName)
+{
+	SHFILEINFO     sfi;
+
+	// Get the display name of the item
+	if(!::SHGetFileInfo((LPCTSTR)pidlFull, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+	{
+		pszDisplayName[0] = _T('\0');
+		return FALSE;
+	}
+
+	::lstrcpyn(pszDisplayName, sfi.szDisplayName, MAX_PATH -1);
+	return TRUE;
+}
+
+
 namespace ShellWrapper
 {
-
-	BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName)
-	{
-		if (!::SHGetPathFromIDList(pidlFull, pszPathName))
-		{
-			pszPathName[0] = _T('\0');
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
-	BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName)
-	{
-		SHFILEINFO     sfi;
-
-		// Get the display name of the item
-		if(!::SHGetFileInfo((LPCTSTR)pidlFull, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
-		{
-			pszDisplayName[0] = _T('\0');
-			return FALSE;
-		}
-
-		::lstrcpyn(pszDisplayName, sfi.szDisplayName, MAX_PATH -1);
-		return TRUE;
-	}
-
 
 	///////////////////////////////////
 	//CContextMenu function definitions

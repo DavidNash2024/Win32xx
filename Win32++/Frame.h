@@ -166,12 +166,11 @@ namespace Win32xx
 			TCHAR Text[MAX_MENU_STRING];
 			HMENU hSubMenu;
 		};
-
+	
+	private:
 		HIMAGELIST m_hImageList;
 		HIMAGELIST m_hImageListHot;
 		HIMAGELIST m_hImageListDis;
-
-	private:
 		std::map<tString, int> m_StringMap;
 		UINT m_OldToolbarID;		// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ThemeToolbar m_Theme;

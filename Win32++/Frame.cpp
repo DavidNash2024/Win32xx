@@ -988,6 +988,7 @@ namespace Win32xx
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 				}
 				else
+					// Use CFrame's CreateDisabledImageList function
 					m_hImageListDis = GetApp()->GetFrame()->CreateDisabledImageList(m_hImageList);
 
 				::DeleteObject(hbm);
