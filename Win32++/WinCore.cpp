@@ -1314,6 +1314,10 @@ namespace Win32xx
 		TCHAR buf2 [MAX_STRING_SIZE/2 -10];
 		TCHAR buf3 [MAX_STRING_SIZE];
 
+		buf1[0] = _T('\0');
+		buf2[0] = _T('\0');
+		buf3[0] = _T('\0');
+
 		::lstrcpyn(buf1, GetMessage(), MAX_STRING_SIZE/2 -10);
 
 		// Display Last Error information if it's useful

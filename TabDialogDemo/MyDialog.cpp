@@ -86,11 +86,13 @@ BOOL CComboBoxDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	{
 	// Set the background color of the dialog
 	case WM_CTLCOLORDLG:
-		return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		break;
 	
 	// Set the background color of static controls
 	case WM_CTLCOLORSTATIC:
-		return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		break;
 	
 	}
 	// Pass unhandled messages on to parent DialogProc
