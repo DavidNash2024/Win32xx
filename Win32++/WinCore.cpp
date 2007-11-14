@@ -68,7 +68,7 @@ namespace Win32xx
 	// You should run only one instance of the class inherited from this.
 	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hWndAccel(NULL), m_hFont(NULL),
 						m_hInstance(hInstance), m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL),
-						m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL), m_pTrace(NULL)
+						m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL)
 	{
 		try
 		{
@@ -76,49 +76,36 @@ namespace Win32xx
 			if (GetApp() == 0)
 			{
 				st_dwTlsIndex = ::TlsAlloc();
-				if (st_dwTlsIndex == TLS_OUT_OF_INDEXES)
+				if (st_dwTlsIndex != TLS_OUT_OF_INDEXES)
+				{
+					st_pTheApp = this;
+					m_IsTlsAllocatedHere = TRUE; //TLS allocated in this CWinApp object
+				}
+				else
+				{
+					// We only get here in the unlikely event that all TLS indexes are already allocated by this app
+					// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
 					throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
-
-				st_pTheApp = this;
-				m_IsTlsAllocatedHere = TRUE; //TLS allocated in this CWinApp object
+				}
 			}
 			else
 			{
 				// We get here if Win32++ is used incorrectly, i.e. more than one instance
 				// of a CWinApp derived class is started.
  				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
-			}
-
-			m_pTrace = new CWnd;
-
-#ifdef _DEBUG
-			CreateTrace();
-#endif
+			}	
 		}
 
 		catch (const CWinException &e)
-		{
+		{		
+			// Indicate the problem
 			e.MessageBox();
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWinApp::CWinApp"));
-			throw;	// Rethrow unknown exception
-		}
 	}
 
 	CWinApp::~CWinApp()
 	{
-		delete m_pTrace;
-
-		if (m_hRichEdit)
-			::FreeLibrary(m_hRichEdit);
-		if (m_hFont)
-			::DeleteObject(m_hFont);
-		if (m_hAccelTable)
-			::DestroyAcceleratorTable(m_hAccelTable);
-
 		if (m_IsTlsAllocatedHere)
 		{
 			// Check that all CWnd windows are destroyed
@@ -135,8 +122,8 @@ namespace Win32xx
 				::TlsSetValue(GetTlsIndex(), NULL);
 				::TlsFree(st_dwTlsIndex);
 				st_dwTlsIndex = TLS_OUT_OF_INDEXES;
-				st_pTheApp = 0;
 			}
+			st_pTheApp = 0;
 		}
 
 		std::vector<TLSData*>::iterator iter;
@@ -144,13 +131,20 @@ namespace Win32xx
 		{
 			delete *(iter);
 		}
+
+		if (m_hRichEdit)
+			::FreeLibrary(m_hRichEdit);
+		if (m_hFont)
+			::DeleteObject(m_hFont);
+		if (m_hAccelTable)
+			::DestroyAcceleratorTable(m_hAccelTable);
 	}
 
 	void CWinApp::CreateTrace()
-	// Called automatically in CWinApp's constructor if _Debug is defined.
+	// Called automatically in CWinApp::Run if _DEBUG is defined.
 	// You may called this function in release mode if you want to see the trace window.
 	{
-		if (m_pTrace->GetHwnd() != 0)
+		if (m_Trace.GetHwnd() != 0)
 		{
 			DebugErrMsg(_T("Error, CreateTrace should only be called once"));
 			return;
@@ -167,13 +161,13 @@ namespace Win32xx
 		r.left = r.right - TRACE_WIDTH;
 		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION /*| WS_VISIBLE*/;
 
-		m_pTrace->CreateEx(WS_EX_TOPMOST, _T("TRACE"), _T("Trace Window"), dwStyle, r, NULL, NULL);
+		m_Trace.CreateEx(WS_EX_TOPMOST, _T("TRACE"), _T("Trace Window"), dwStyle, r, NULL, NULL);
 
-		::GetClientRect(m_pTrace->GetHwnd(), &r);
+		::GetClientRect(m_Trace.GetHwnd(), &r);
 		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
 
 		m_hTraceEdit = ::CreateWindowEx(0L, _T("RichEdit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-					m_pTrace->GetHwnd(), NULL, GetApp()->GetInstanceHandle(), NULL);
+					m_Trace.GetHwnd(), NULL, GetApp()->GetInstanceHandle(), NULL);
 
 		// Set a default font
 		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
@@ -212,6 +206,12 @@ namespace Win32xx
 
 	int CWinApp::Run() 
 	{
+		// Create an invisible Trace window in Debug mode
+		// It's made visible on first use
+#ifdef _DEBUG
+		CreateTrace();
+#endif
+
 		// InitInstance runs the App's initialization code 
 		if (InitInstance())
 		{
@@ -273,7 +273,9 @@ namespace Win32xx
 	void CWinApp::Trace(LPCTSTR szString)
 	// Used by the TRACE macro to output text to the trace window
 	// Note: The TRACE macro is only active in debug mode (i.e when _DEBUG is defined)
-	// Call this function directly instead of TRACE to see trace output in release mode.
+	//       If you wish to see a trace window in release mode:
+	//         1) Call CreateTrace to create the trace window			
+	//		   2) Call this function directly instead of TRACE to see trace output.
 	{
 		// CreateTrace must be called once before using this function
 		if (m_hTraceEdit == 0)
@@ -283,8 +285,8 @@ namespace Win32xx
 		}
 
 		// The Trace window is initially invisible. Make it visible now.
-		if (!::IsWindowVisible(m_pTrace->GetHwnd()))
-			::ShowWindow(m_pTrace->GetHwnd(), SW_SHOWNA);
+		if (!::IsWindowVisible(m_Trace.GetHwnd()))
+			::ShowWindow(m_Trace.GetHwnd(), SW_SHOWNA);
 
 		HWND PreFocus = ::GetFocus();
 
@@ -307,26 +309,9 @@ namespace Win32xx
 					m_PrevWindowProc(NULL), m_hBrushBkgnd(NULL)
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
-		try
-		{
-			::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
-			m_szString[0] = _T('\0');
-
-			// Test if Win32++ has been started
-			if (GetApp() == 0)
-				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd construction"));
-			throw;	// Rethrow unknown exception
-		}
+		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
+		m_szString[0] = _T('\0');
+		
 	}
 
 	CWnd::~CWnd()
@@ -517,6 +502,10 @@ namespace Win32xx
 	{
 		try
 		{
+			// Test if Win32++ has been started
+			if (GetApp() == 0)
+				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+			
 			// Only one window per CWnd instance
 			if (::IsWindow(m_hWnd))
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));

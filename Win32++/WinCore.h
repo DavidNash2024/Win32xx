@@ -265,7 +265,7 @@ namespace Win32xx
 		HWND m_hTraceEdit;			// handle to the Trace edit window
 		BOOL m_IsTlsAllocatedHere;	// a flag set for the Thread Local Storage
 		CFrame* m_pFrame;			// pointer to the CFrame object
-		CWnd* m_pTrace;				// pointer the Trace CWnd object
+		CWnd m_Trace;				// CWnd object for the Trace window
 		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
 		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
 		static DWORD    st_dwTlsIndex;	// Thread Local Storage index
@@ -280,8 +280,9 @@ namespace Win32xx
 	{
 	public:
 		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
-		CWinException (const CWinException&) {}
 		void MessageBox() const;
+		CWinException(const CWinException&) {::MessageBox(NULL, "Copy Constructor", "", MB_OK);}			  // Disable copy construction
+		CWinException& operator = (const CWinException&); // Disable assignment operator
 
 	private:
 		LPCTSTR GetMessage() const { return m_msg; }
