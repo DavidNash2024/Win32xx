@@ -281,8 +281,6 @@ namespace Win32xx
 	public:
 		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
 		void MessageBox() const;
-		CWinException(const CWinException&) {::MessageBox(NULL, "Copy Constructor", "", MB_OK);}			  // Disable copy construction
-		CWinException& operator = (const CWinException&); // Disable assignment operator
 
 	private:
 		LPCTSTR GetMessage() const { return m_msg; }

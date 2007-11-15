@@ -58,6 +58,11 @@ namespace Win32xx
 	//////////////////////////////////////
 	// Definitions for the CStatusbar class
 	//
+	CStatusbar::CStatusbar()
+	{
+		m_szText[0] = _T('\0');
+	}
+
 	void CStatusbar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
@@ -101,6 +106,7 @@ namespace Win32xx
 
 			// Get the Text
 			TCHAR* szText = new TCHAR[iChars +1 ];
+			szText[0] = _T('\0');
 			::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
 
 			//Store the text in the member variable
@@ -821,7 +827,7 @@ namespace Win32xx
 				}
 
 				// No index for this string exists, so create it now
-				TCHAR szBuf[80];
+				TCHAR szBuf[80] = _T("");
 				lstrcpyn(szBuf, szText, 79);
 				szBuf[lstrlen(szBuf)+1] = _T('\0');		// Double-null terminate
 
@@ -1897,7 +1903,7 @@ namespace Win32xx
 						::DeleteObject(::SelectObject(hDC, hPenOld));
 					}
 
-					TCHAR str[80] = {0};
+					TCHAR str[80] = _T("");
 					int nLength = (int)::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM) NULL);
 					if ((nLength > 0) && (nLength < 80))
 						::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
@@ -2389,7 +2395,7 @@ namespace Win32xx
 					throw CWinException(_T("Menubar::SetMenu  TB_ADDBUTTONS failed"));
 
 				// Add the menu title to the string table
-				TCHAR szMenuName[MAX_MENU_STRING +1];
+				TCHAR szMenuName[MAX_MENU_STRING +1] = _T("");
 
 				if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
 					throw CWinException(TEXT("Menubar::SetMenu  GetMenuString failed"));
@@ -2538,6 +2544,8 @@ namespace Win32xx
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")),
 						m_hImageList(NULL), m_hImageListDis(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
+		
+		m_StatusText[0] = _T('\0');
 		GetApp()->SetFrame(this);
 
 		INITCOMMONCONTROLSEX InitStruct;
@@ -2979,8 +2987,8 @@ namespace Win32xx
 
 		for (int nItem = 0 ; nItem < nMenuItemCount; nItem++)
 		{
-			TCHAR szStr[MAX_MENU_STRING +1];
-			TCHAR szStripped[MAX_MENU_STRING +1];
+			TCHAR szStr[MAX_MENU_STRING +1] = _T("");
+			TCHAR szStripped[MAX_MENU_STRING +1] = _T("");
 
 			mii.fMask      = MIIM_TYPE;
 			mii.fType      = MFT_STRING;
@@ -3252,7 +3260,7 @@ namespace Win32xx
 			else
 				mii.cbSize = sizeof(MENUITEMINFO);
 
-			TCHAR szMenuItem[MAX_MENU_STRING];
+			TCHAR szMenuItem[MAX_MENU_STRING] = _T("");
 
 			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
 			mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;

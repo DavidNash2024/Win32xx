@@ -291,7 +291,7 @@ namespace Win32xx
 		HWND PreFocus = ::GetFocus();
 
 		// Add CR LF to the end
-		TCHAR str[80];
+		TCHAR str[80] = _T("");
 		::lstrcpyn(str, szString, 77);
 		::lstrcat(str, _T("\r\n"));
 
@@ -511,7 +511,7 @@ namespace Win32xx
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
 			// Ensure a window class is registered
-			TCHAR ClassName[MAX_STRING_SIZE];
+			TCHAR ClassName[MAX_STRING_SIZE] = _T("");
 			if (lstrlen(lpszClassName) == 0)
 				::lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
@@ -731,7 +731,7 @@ namespace Win32xx
 				if (::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE))
 					return (LPCTSTR) m_szString;
 
-				TCHAR msg[80];
+				TCHAR msg[80] = _T("");
 				::wsprintf(msg, _T("LoadString - No string resource for %d"), nID);
 				DebugWarnMsg(msg);
 			}
@@ -1299,13 +1299,9 @@ namespace Win32xx
 	{
 #ifdef _DEBUG
 
-		TCHAR buf1 [MAX_STRING_SIZE/2 -10];
-		TCHAR buf2 [MAX_STRING_SIZE/2 -10];
-		TCHAR buf3 [MAX_STRING_SIZE];
-
-		buf1[0] = _T('\0');
-		buf2[0] = _T('\0');
-		buf3[0] = _T('\0');
+		TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
+		TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
+		TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
 
 		::lstrcpyn(buf1, GetMessage(), MAX_STRING_SIZE/2 -10);
 

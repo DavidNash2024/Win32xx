@@ -104,7 +104,7 @@ namespace Win32xx
 	class CStatusbar : public CWnd
 	{
 	public:
-		CStatusbar() {}
+		CStatusbar(); 
 		virtual ~CStatusbar() {}
 		virtual void CreatePanes(int iPanes, const int iPaneWidths[]);
 		virtual LPCTSTR GetPaneText(int iPane);
@@ -157,16 +157,6 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		struct ItemData
-		// Each Dropdown menu item has this data
-		{
-			HMENU hMenu;
-			UINT  nPos;
-			UINT  fType;
-			TCHAR Text[MAX_MENU_STRING];
-			HMENU hSubMenu;
-		};
-	
 	private:
 		HIMAGELIST m_hImageList;
 		HIMAGELIST m_hImageListHot;
