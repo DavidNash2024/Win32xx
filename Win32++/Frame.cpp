@@ -2593,7 +2593,6 @@ namespace Win32xx
 		// Create a new ImageList if required
 		if ((cx != cxOld) || (cy != cyOld) || (m_hImageList == NULL))
 		{
-			TRACE("Creating ImageList");
 			if (m_hImageList) ImageList_Destroy(m_hImageList);
 			m_hImageList = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 1, 0);
 			m_MenuData.clear();
@@ -2601,7 +2600,6 @@ namespace Win32xx
 
         if (ImageList_AddIcon(m_hImageList, hIcon) != -1)
 		{
-			TRACE("Add icon to imagelist");
 			m_MenuData.push_back(nID_MenuItem);
 
 			// Recreate the Disabled imagelist
