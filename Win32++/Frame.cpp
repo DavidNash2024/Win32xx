@@ -2578,6 +2578,12 @@ namespace Win32xx
 
 	CFrame::~CFrame()
 	{
+		for (int nItem = 0; nItem < (int)m_vpItemData.size(); nItem++)
+		{
+			// These are normally deleted in OnExitMenuLoop
+			delete m_vpItemData[nItem];
+		}
+
 		if (m_hMenu)
 			::DestroyMenu(m_hMenu);
 	}
