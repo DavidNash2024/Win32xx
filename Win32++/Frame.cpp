@@ -3233,10 +3233,11 @@ namespace Win32xx
 			else
 				mii.cbSize = sizeof(MENUITEMINFO);
 			
-			mii.fMask = MIIM_TYPE;
+			mii.fMask = MIIM_TYPE | MIIM_DATA;
 			mii.fType = m_vpItemData[nItem]->fType;
 			mii.dwTypeData = m_vpItemData[nItem]->Text;
 			mii.cch = lstrlen(m_vpItemData[nItem]->Text);
+			mii.dwItemData = 0;
 			::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
 
 			// Delete the ItemData object, then erase the vector item
@@ -3289,18 +3290,21 @@ namespace Win32xx
 			// Specify owner-draw for the menu item type
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
-				ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
-				ZeroMemory(pItem, sizeof(ItemData));
-				pItem->hMenu = hMenu;
-				pItem->nPos = i;
-				pItem->fType = mii.fType;
-				pItem->hSubMenu = mii.hSubMenu;
-				mii.fType |= MFT_OWNERDRAW;
-				lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
-				mii.dwItemData = (DWORD_PTR)pItem;
+				if (mii.dwItemData == NULL)
+				{
+					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
+					ZeroMemory(pItem, sizeof(ItemData));
+					pItem->hMenu = hMenu;
+					pItem->nPos = i;
+					pItem->fType = mii.fType;
+					pItem->hSubMenu = mii.hSubMenu;
+					mii.fType |= MFT_OWNERDRAW;
+					lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
+					mii.dwItemData = (DWORD_PTR)pItem;
 
-				m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
-				::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
+					m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
+					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
+				}
 			}
 		}
 	}
