@@ -3303,7 +3303,13 @@ namespace Win32xx
 			HDC hDC = GetDC(NULL);
 			if (hDC)
 			{
-				HFONT hfntOld = (HFONT)::SelectObject(hDC, (HFONT)::GetStockObject(ANSI_VAR_FONT));
+				NONCLIENTMETRICS info = {0};
+				info.cbSize = sizeof(info);
+				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+ 
+				HFONT hFont = CreateFontIndirect(&info.lfMenuFont);
+				HFONT hfntOld = (HFONT)::SelectObject(hDC, hFont);
+
 				SIZE size;
 				int Iconx = 0;
 				int Icony = 0;
@@ -3326,13 +3332,14 @@ namespace Win32xx
 				if (m_ThemeMenu.UseThemes)
 					pmis->itemWidth += 8;
 
-				::SelectObject(hDC, hfntOld);
+				::DeleteObject(::SelectObject(hDC, hfntOld));
 				::ReleaseDC(m_hWnd, hDC);
 			}
 		}
 
 		return TRUE;
 	}
+
 
 
 	void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
