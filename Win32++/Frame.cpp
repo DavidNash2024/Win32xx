@@ -1594,8 +1594,6 @@ namespace Win32xx
 		::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
 		m_pTLSData->hMenuHook = NULL;
 
-		GetApp()->GetFrame()->RevertPopupMenu(0);
-
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
 		{
@@ -2476,6 +2474,7 @@ namespace Win32xx
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
+			GetApp()->GetFrame()->OnExitMenuLoop();
 			break;
 		case WM_INITMENUPOPUP:
 			GetApp()->GetFrame()->OnInitMenuPopup(wParam, lParam);
@@ -3221,6 +3220,31 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	void CFrame::OnExitMenuLoop()
+	{
+		for (int nItem = 0; nItem < (int)m_vpItemData.size(); nItem++)
+		{
+			// Undo OwnerDraw and put the text back
+			MENUITEMINFO mii = {0};
+			
+			// For Win95 and NT, cbSize needs to be 44
+			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+				mii.cbSize = 44;
+			else
+				mii.cbSize = sizeof(MENUITEMINFO);
+			
+			mii.fMask = MIIM_TYPE;
+			mii.fType = m_vpItemData[nItem]->fType;
+			mii.dwTypeData = m_vpItemData[nItem]->Text;
+			mii.cch = lstrlen(m_vpItemData[nItem]->Text);
+			::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
+
+			// Delete the ItemData object, then erase the vector item
+			delete m_vpItemData[nItem];
+		}
+		m_vpItemData.clear();
+	}
+
 	void CFrame::OnHelp()
 	{
 		static BOOL IsHelpOpen = FALSE;
@@ -3245,9 +3269,6 @@ namespace Win32xx
 	{
 		HMENU hMenu = (HMENU)wParam;
 
-		// Reverse any previous OwnerDraw for this menu (required for submenus)
-		RevertPopupMenu(hMenu);
-
 		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
 		{
 			MENUITEMINFO mii = {0};
@@ -3268,7 +3289,7 @@ namespace Win32xx
 			// Specify owner-draw for the menu item type
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
-				ItemData* pItem = new ItemData;		// deleted in RevertPopupMenu
+				ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
 				ZeroMemory(pItem, sizeof(ItemData));
 				pItem->hMenu = hMenu;
 				pItem->nPos = i;
@@ -3580,31 +3601,6 @@ namespace Win32xx
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}
 
-	void CFrame::RevertPopupMenu(HMENU hMenu)
-	{
-		int nItem = (int)m_vpItemData.size() -1;
-
-		while (nItem >= 0)
-		{
-			if ((m_vpItemData[nItem]->hMenu == hMenu) || (hMenu == NULL))
-			{
-				// Undo OwnerDraw and put the text back
-				MENUITEMINFO mii = {0};
-				// For Win95, cbSize needs to be 44
-				mii.cbSize = (GetWinVersion() == 1400)? 44 : sizeof(MENUITEMINFO);
-				mii.fMask = MIIM_TYPE;
-				mii.fType = m_vpItemData[nItem]->fType;
-				mii.dwTypeData = m_vpItemData[nItem]->Text;
-				mii.cch = lstrlen(m_vpItemData[nItem]->Text);
-				::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
-
-				// Delete the ItemData object, then erase the vector item
-				delete m_vpItemData[nItem];
-				m_vpItemData.erase(m_vpItemData.begin() + nItem);
-			}
-			nItem--;
-		}
-	}
 
 	void CFrame::SetFrameMenu(INT ID_MENU)
 	{
@@ -3865,6 +3861,9 @@ namespace Win32xx
 			case WM_MEASUREITEM:
 				if (OnMeasureItem(wParam, lParam))
 					return TRUE; // handled
+				break;
+			case WM_EXITMENULOOP:
+				OnExitMenuLoop();
 				break;
 			} // switch uMsg
 

@@ -294,9 +294,9 @@ namespace Win32xx
 		virtual RECT GetClientSize();
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnExitMenuLoop();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
-		virtual void RevertPopupMenu(HMENU hMenu);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
