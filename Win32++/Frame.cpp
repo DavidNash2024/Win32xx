@@ -3342,6 +3342,7 @@ namespace Win32xx
 				if (mii.dwItemData == NULL)
 				{
 					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
+					
 					// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
 					//  an exception when new fails. We make sure an exception gets thrown!
 					if (pItem == NULL)

@@ -708,14 +708,15 @@ namespace Win32xx
 			// return the CWnd pointer
 			return m->second;
 
-		return NULL;
+		return NULL;	// No matching CWnd for this HWND
 	}
-
-
 
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
 	{
-		HBITMAP hBitmap;
+		if (GetApp() == 0)
+			throw CWinException(_T("LoadBitmap ... Win32++ has not been initialised successfully."));
+		
+		HBITMAP hBitmap = NULL;
 
 		// Try to load the bitmap from the resource handle first
 		hBitmap = ::LoadBitmap(GetApp()->GetResourceHandle(), lpBitmapName);
@@ -724,41 +725,31 @@ namespace Win32xx
 		if (!hBitmap)
 			hBitmap = ::LoadBitmap(GetApp()->GetInstanceHandle(), lpBitmapName);
 
+		// No bitmap found, so display warning message
+		if (!hBitmap)
+			DebugWarnMsg(_T("Unable to load bitmap"));
+
 		return hBitmap;
 	}
 
 	LPCTSTR CWnd::LoadString(UINT nID)
 	{
 		// Returns the string associated with a Resource ID
-		try
+		
+		if (GetApp() == 0)
+			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
+
+		::lstrcpy(m_szString, _T(""));
+		if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_szString, MAX_STRING_SIZE))
 		{
-			if (GetApp() == 0)
-				throw CWinException(_T("Win32++ has not been initialised successfully."));
+			// The string resource might be in the application's resources instead
+			if (::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE))
+				return (LPCTSTR) m_szString;
 
-			::lstrcpy(m_szString, _T(""));
-			if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_szString, MAX_STRING_SIZE))
-			{
-				// The string resource might be in the application's resources instead
-				if (::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE))
-					return (LPCTSTR) m_szString;
-
-				TCHAR msg[80] = _T("");
-				::wsprintf(msg, _T("LoadString - No string resource for %d"), nID);
-				DebugWarnMsg(msg);
-			}
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd::LoadString"));
-			throw;	// Rethrow unknown exception
-		}
+			TCHAR msg[80] = _T("");
+			::wsprintf(msg, _T("LoadString - No string resource for %d"), nID);
+			DebugWarnMsg(msg);
+		}		
 
 		return (LPCTSTR) m_szString;
 	}
@@ -1117,6 +1108,7 @@ namespace Win32xx
 				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
 			}
 
+			// Every message should get routed, we should never get here
 			throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 		}
 

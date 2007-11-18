@@ -63,13 +63,14 @@
 #endif // _MSC_VER
 
 
-#include <windows.h>
-#include <commctrl.h>
 #include <vector>
 #include <string>
 #include <sstream>
-#include <tchar.h>
+#include <exception>
 #include <map>
+#include <windows.h>
+#include <commctrl.h>
+#include <tchar.h>
 #include <shlwapi.h>
 
 // Some useful type declarations

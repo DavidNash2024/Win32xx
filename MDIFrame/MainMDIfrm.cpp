@@ -39,7 +39,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		AddMDIChild(new CMDIChildView);
+		AddMDIChild(new CMDIChildView); // CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_CLOSE:          // Close the active MDI window
 		::SendMessage(GetActiveMDIChild(), WM_CLOSE, 0, 0);
