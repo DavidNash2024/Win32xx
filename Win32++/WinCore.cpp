@@ -100,6 +100,7 @@ namespace Win32xx
 		{		
 			// Indicate the problem
 			e.MessageBox();
+			throw;
 		}
 
 	}
@@ -249,6 +250,11 @@ namespace Win32xx
 				throw CWinException(_T("CWinApp::SetTlsIndex    Error, attempted to set TLS more than once"));
 
 			TLSData* pTLSData = new TLSData;
+			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+			//  an exception when new fails. We make sure an exception gets thrown!
+			if (pTLSData == NULL)
+				throw std::bad_alloc();  
+			
 			ZeroMemory(pTLSData, sizeof(TLSData));
 			::TlsSetValue(GetTlsIndex(), pTLSData);
 
@@ -260,11 +266,12 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CWnd construction"));
+			DebugErrMsg(_T("Exception in CWinApp::SetTlsIndex"));
 			throw;	// Rethrow unknown exception
 		}
 		return 0;
@@ -380,6 +387,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -479,6 +487,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -568,6 +577,7 @@ namespace Win32xx
 		{
 			m_hWndParent = NULL;
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -661,6 +671,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -740,6 +751,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -911,7 +923,7 @@ namespace Win32xx
 		try
 		{
 			if ((lstrlen(wcx.lpszClassName) == 0) || (lstrlen(wcx.lpszClassName) >  MAX_STRING_SIZE))
-				throw CWinException(_T("Wnd::RegisterClassEx   Invalid class name"));
+				throw CWinException(_T("CWnd::RegisterClassEx   Invalid class name"));
 
 			// Check to see if this classname is already registered
 			WNDCLASSEX wcxTest = {0};
@@ -940,6 +952,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -1030,6 +1043,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -1076,6 +1090,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -1108,6 +1123,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
@@ -1160,6 +1176,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)

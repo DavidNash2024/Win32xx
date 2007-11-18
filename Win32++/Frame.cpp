@@ -89,11 +89,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CStatusbar::CreatePanes"));
+			throw;
 		}
 	}
 
@@ -106,6 +108,12 @@ namespace Win32xx
 
 			// Get the Text
 			TCHAR* szText = new TCHAR[iChars +1 ];
+
+			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+			//  an exception when new fails. We make sure an exception gets thrown!
+			if (szText == NULL)
+				throw std::bad_alloc(); 
+
 			szText[0] = _T('\0');
 			::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
 
@@ -140,11 +148,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CStatusbar::SetPaneText"));
+			throw;
 		}
 	}
 
@@ -163,10 +173,19 @@ namespace Win32xx
 
 				int iParts = (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
 				int* iPaneWidths = new int[iParts];
+	
+				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+				//  an exception when new fails. We make sure an exception gets thrown!
+				if (iPaneWidths == NULL)
+					throw std::bad_alloc();  
+
 				::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);
 
 				int iNewParts = max(iPane+1, iParts);
 				int* iNewPaneWidths = new int[iNewParts];
+				if (iNewPaneWidths == NULL)
+					throw std::bad_alloc(); 
+
 				ZeroMemory(iNewPaneWidths, iNewParts*sizeof(int));
 
 				for (int i = 0; i < iParts; i++)
@@ -188,11 +207,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CStatusbar::SetPaneWidth"));
+			throw;
 		}
 	}
 
@@ -238,11 +259,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::AddBitmap"));
+			throw;
 		}
 	}
 
@@ -259,7 +282,7 @@ namespace Win32xx
 			tbrb.nIDOld = m_OldToolbarID;
 			tbrb.nButtons  = iNumButtons;
 			if (::SendMessage(m_hWnd, TB_REPLACEBITMAP, iNumButtons, (LPARAM)&tbrb) == 0)
-				throw CWinException(_T("CToolbar::AddBitmap  TB_REPLACEBITMAP failed"));
+				throw CWinException(_T("CToolbar::ReplaceBitmap  TB_REPLACEBITMAP failed"));
 
 			m_OldToolbarID = NewToolbarID;
 		}
@@ -267,11 +290,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::ReplaceBitmap"));
+			throw;
 		}
 	}
 
@@ -319,11 +344,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::GetButtonState"));
+			throw;
 		}
 		return 0;
 	}
@@ -357,11 +384,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::GetButtonStyle"));
+			throw;
 		}
 
 		return 0;
@@ -728,11 +757,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::SetButtons"));
+			throw;
 		}
 
 		return 0;
@@ -791,11 +822,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::SetButtonStyle"));
+			throw;
 		}
 	}
 
@@ -874,11 +907,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::SetButtonText"));
+			throw;
 		}
 	}
 
@@ -894,11 +929,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::SetCommandID"));
+			throw;
 		}
 	}
 
@@ -1006,11 +1043,13 @@ namespace Win32xx
 		{
 			if (hbm) ::DeleteObject(hbm);
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CToolbar::SetImageList"));
+			throw;
 		}
 	}
 
@@ -2405,11 +2444,13 @@ namespace Win32xx
 		catch(const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch(...)
 		{
 			DebugErrMsg(_T("Exception in CMenubar::SetMenu"));
+			throw;
 		}
 	}
 
@@ -3049,11 +3090,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CFrame::LoadCommonControls"));
+			throw;
 		}
 	}
 
@@ -3299,6 +3342,11 @@ namespace Win32xx
 				if (mii.dwItemData == NULL)
 				{
 					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
+					// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+					//  an exception when new fails. We make sure an exception gets thrown!
+					if (pItem == NULL)
+						throw std::bad_alloc();  
+
 					ZeroMemory(pItem, sizeof(ItemData));
 					pItem->hMenu = hMenu;
 					pItem->nPos = i;
@@ -3334,19 +3382,25 @@ namespace Win32xx
 			HDC hDC = GetDC(NULL);
 			if (hDC)
 			{
+				// Get the font used in menu items
 				NONCLIENTMETRICS info = {0};
 				info.cbSize = sizeof(info);
 				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+				// Default menu items are bold, so take this into account
+				if (::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
+					info.lfMenuFont.lfWeight = FW_BOLD;
  
 				HFONT hFont = CreateFontIndirect(&info.lfMenuFont);
 				HFONT hfntOld = (HFONT)::SelectObject(hDC, hFont);
 
+				// Calculate the size of the text
 				SIZE size;
+				GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
+
+				// Calculate the size of the icon
 				int Iconx = 0;
 				int Icony = 0;
-
 				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
-				GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
 
 				pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
 				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
@@ -3459,13 +3513,15 @@ namespace Win32xx
 				POINT pt = {0};
 				::GetCursorPos(&pt);
 
-				int nButton;
+				// Is the mouse hovering over the toolbar?
 				if (WindowFromPoint(pt) == tb.GetHwnd())
 				{
-					nButton = tb.HitTest();
+					// Which toolbar button is the mouse cursor hovering over?
+					int nButton = tb.HitTest();
 					if (nButton >= 0)
 					{
 						int nID = GetToolbar().GetCommandID(nButton);
+						// Only update the statusbar if things have changed
 						if (nID != nOldID)
 						{
 							if (nID != 0)
@@ -3538,30 +3594,17 @@ namespace Win32xx
 
   	void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
-		try
-		{
-			if (m_pView == NULL)
-				throw CWinException(_T("CFrame::PreCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
+		if (m_pView == NULL)
+			throw CWinException(_T("CFrame::PreCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
 
-			// Set the Window Class
-			cs.lpszClass = _T("Win32++ Frame");
+		// Set the Window Class
+		cs.lpszClass = _T("Win32++ Frame");
 
-			// Set the caption from the string resource
-			cs.lpszName = LoadString(IDW_MAIN);
+		// Set the caption from the string resource
+		cs.lpszName = LoadString(IDW_MAIN);
 
-			// Set the frame window styles
-			cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CFrame::PreCreate"));
-		}
+		// Set the frame window styles
+		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 	}
 
 	void CFrame::RecalcLayout()
@@ -3882,11 +3925,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CFrame::WndProc"));
+			throw;
 		}
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);

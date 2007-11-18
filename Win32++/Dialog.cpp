@@ -223,11 +223,13 @@ namespace Win32xx
 		catch (const CWinException &e )
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CDialog::DoModal"));
+			throw;
 		}
 
 		return 0;
@@ -278,11 +280,13 @@ namespace Win32xx
 		catch (const CWinException &e )
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CDialog::DoModeless"));
+			throw;
 		}
 
 		return m_hWnd;
@@ -339,11 +343,13 @@ namespace Win32xx
 		catch (const CWinException &e )
 		{
 			e.MessageBox();
+			throw;
 		}
 
 		catch (...)
 		{
 			DebugErrMsg(_T("Exception in CDialog::StaticDialogProc"));
+			throw;
 		}
 
 		return 0;
