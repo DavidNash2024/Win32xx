@@ -1353,7 +1353,6 @@ namespace Win32xx
                          CCS_NODIVIDER | RBS_VARHEIGHT | RBS_BANDBORDERS ;
 
 		cs.cy = 100;
-
 		cs.lpszClass = REBARCLASSNAME;
 	}
 

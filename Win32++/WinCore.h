@@ -66,16 +66,37 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <exception>
 #include <map>
 #include <windows.h>
 #include <commctrl.h>
 #include <tchar.h>
 #include <shlwapi.h>
 
+/////////////////////////////////
 // Some useful type declarations
+//
 typedef std::basic_string<TCHAR> tString;
 typedef std::basic_stringstream<TCHAR> tStringStream;
+
+////////////////////////////////
+// Some useful macros
+//
+
+// Define min and max for Dev-C++ compatibility
+#ifndef max
+  #define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+  #define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
+
+// Define global static TRACE macro for Debug mode only
+#ifdef _DEBUG
+  #define TRACE(str) (Win32xx::GetApp()->Trace(str))
+#else
+  #define TRACE(str) // no-op
+#endif  // _DEBUG
 
 
 namespace Win32xx
@@ -83,13 +104,7 @@ namespace Win32xx
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
-	class CWinApp;
 	class CFrame;
-	class CMenubar;
-	class CMDIChild;
-	class CMDIClient;
-	class CMDIFrame;
-	class CSplitter;
 	class CWnd;
 
 
@@ -111,7 +126,7 @@ namespace Win32xx
 	{
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		HHOOK  hCBTHook;	// CBT hook for Window creation
-		CMenubar* pMenubar;	// pointer to CMenubar object
+		CWnd* pMenubar;		// pointer to CMenubar object
 		HHOOK  hMenuHook;	// MSG hook for CMenubar
 	};
 
@@ -291,9 +306,8 @@ namespace Win32xx
 	};
 
 
-	//////////////////////////////////
-	// Global functions and macros
-	//  (within the Win32xx namespace)
+	//////////////////////////////////////////////////
+	// Global functions	(within the Win32xx namespace)
 
 	// Returns a pointer to the CWinApp object
 	inline CWinApp* GetApp(){ return CWinApp::GetApp();}
@@ -317,22 +331,6 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
 	#endif  //_DEBUG
 	}
-
-	// Define min and max for Dev-C++ compatibility
-    #ifndef max
-      #define max(a,b)            (((a) > (b)) ? (a) : (b))
-    #endif
-
-    #ifndef min
-      #define min(a,b)            (((a) < (b)) ? (a) : (b))
-    #endif
-
-	// Define global static TRACE macro for Debug mode only
-	#ifdef _DEBUG
-	  #define TRACE(str) (GetApp()->Trace(str))
-	#else
-	  #define TRACE(str) // no-op
-	#endif  // _DEBUG
 
 	inline int GetWinVersion()
 	{

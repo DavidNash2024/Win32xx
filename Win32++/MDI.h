@@ -128,9 +128,12 @@ namespace Win32xx
 	public:
 		CMDIFrame();
 		virtual ~CMDIFrame();
+		
+		// These are the functions you might wish to override
 		virtual void AppendMDIMenu(HMENU hMenuWindow);
 		virtual void UpdateFrameMenu(HMENU hMenu);
 
+		// These functions aren't virtual, so don't override them
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 		CMDIClient& GetMDIClient() {return m_MDIClient;}
 		HWND GetActiveMDIChild() {return m_hActiveMDIChild;}
