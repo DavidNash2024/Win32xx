@@ -100,9 +100,8 @@ namespace Win32xx
 		{		
 			// Indicate the problem
 			e.MessageBox();
-			throw;
+			if (st_pTheApp == NULL) throw;
 		}
-
 	}
 
 	CWinApp::~CWinApp()
@@ -266,14 +265,15 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
+			// No need to rethrow this message.
 		}
 
-		catch (...)
+		catch (const std::bad_alloc &)
 		{
-			DebugErrMsg(_T("Exception in CWinApp::SetTlsIndex"));
-			throw;	// Rethrow unknown exception
+			DebugErrMsg(_T("Failed to allocate mememory in CWinApp::SetTlsIndex"));
+			throw std::bad_alloc(); // Critical problem, so rethrow 
 		}
+
 		return 0;
 	}
 
@@ -390,12 +390,6 @@ namespace Win32xx
 			throw;
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd::Attach"));
-			throw;	// Rethrow unknown exception
-		}
-
 		return FALSE;
 	}
 
@@ -451,50 +445,35 @@ namespace Win32xx
 	HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
 	{
-		try
-		{
-			// Set the CREATESTRUCT parameters
-			PreCreate(m_cs);
+		// Set the CREATESTRUCT parameters
+		PreCreate(m_cs);
 
-			// Set the Window Class Name
-			TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
-			if (m_cs.lpszClass)
-				::lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
+		// Set the Window Class Name
+		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
+		if (m_cs.lpszClass)
+			::lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
-			// Set Parent
-			if (!hWndParent && m_cs.hwndParent)
-				hWndParent = m_cs.hwndParent;
+		// Set Parent
+		if (!hWndParent && m_cs.hwndParent)
+			hWndParent = m_cs.hwndParent;
 
-			// Set the window style
-			DWORD dwStyle;
-			if (m_cs.style)
-				dwStyle = m_cs.style;
-			else
-				dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : WS_OVERLAPPEDWINDOW);
+		// Set the window style
+		DWORD dwStyle;
+		if (m_cs.style)
+			dwStyle = m_cs.style;
+		else
+			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : WS_OVERLAPPEDWINDOW);
 
-			// Set window size and position
-			int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
-			int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
-			int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
-			int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
+		// Set window size and position
+		int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
+		int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
+		int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
+		int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
 
-			// Create the window
-			if (!CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-				cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams))
-				throw CWinException(_T("CWnd::Create ... CreateEx failed"));
-		}
+		// Create the window
+		CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
+			cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams);
 
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd::Create"));
-			throw;	// Rethrow unknown exception
-		}
 		return m_hWnd;
 	}
 
@@ -583,7 +562,7 @@ namespace Win32xx
 		catch (...)
 		{
 			m_hWndParent = NULL;
-			DebugErrMsg(_T("Exception in CWnd::CreateEx"));
+			DebugErrMsg(_T("Unknown exception in CWnd::CreateEx"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -674,12 +653,6 @@ namespace Win32xx
 			throw;
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Unknown exception in CWnd::Detach"));
-			throw;	// Rethrow unknown exception
-		}
-		return 0;
 	}
 
 	HWND CWnd::GetAncestor(HWND hWnd)
@@ -946,12 +919,6 @@ namespace Win32xx
 			throw;
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd::RegisterClassEx"));
-			throw;	// Rethrow unknown exception
-		}
-
 		return FALSE;
 	}
 
@@ -1034,13 +1001,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd::SetParent"));
-			throw;	// Rethrow unknown exception
+			// Not a critical problem, so no need to rethrow
 		}
 	}
 
@@ -1086,7 +1047,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CWnd::StaticCBTProc"));
+			DebugErrMsg(_T("Unknown exception in CWnd::StaticCBTProc"));
 			throw;	// Rethrow unknown exception
 		}
 
@@ -1171,11 +1132,6 @@ namespace Win32xx
 			throw;
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CWnd::Subclass"));
-			throw;	// Rethrow unknown exception
-		}
 	}
 
 	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

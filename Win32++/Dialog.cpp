@@ -228,7 +228,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CDialog::DoModal"));
+			DebugErrMsg(_T("Unknown exception in CDialog::DoModal"));
 			throw;
 		}
 
@@ -285,7 +285,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CDialog::DoModeless"));
+			DebugErrMsg(_T("Unknown exception in CDialog::DoModeless"));
 			throw;
 		}
 
@@ -348,7 +348,7 @@ namespace Win32xx
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CDialog::StaticDialogProc"));
+			DebugErrMsg(_T("Unknown exception in CDialog::StaticDialogProc"));
 			throw;
 		}
 

@@ -89,37 +89,41 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CStatusbar::CreatePanes"));
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 	}
 
 	LPCTSTR CStatusbar::GetPaneText(int iPane)
 	{
-		if (::IsWindow(m_hWnd))
+		try
 		{
-			// Get size of Text array
-			int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPane, 0));
+			if (::IsWindow(m_hWnd))
+			{
+				// Get size of Text array
+				int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPane, 0));
 
-			// Get the Text
-			TCHAR* szText = new TCHAR[iChars +1 ];
+				// Get the Text
+				TCHAR* szText = new TCHAR[iChars +1 ];
 
-			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
-			//  an exception when new fails. We make sure an exception gets thrown!
-			if (szText == NULL)
-				throw std::bad_alloc(); 
+				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+				//  an exception when new fails. We make sure an exception gets thrown!
+				if (szText == NULL)
+					throw std::bad_alloc(); 
 
-			szText[0] = _T('\0');
-			::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
+				szText[0] = _T('\0');
+				::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
 
-			//Store the text in the member variable
-			lstrcpyn(m_szText, szText, 80);
-			delete []szText;
+				//Store the text in the member variable
+				lstrcpyn(m_szText, szText, 80);
+				delete []szText;
+			}
+		}
+		
+		catch (const std::bad_alloc &)
+		{
+			DebugErrMsg(_T("Failed to allocate memory in CStatusbar::GetPaneText"));
+			lstrcpy(m_szText, _T(""));
+			// Not a critical problem, so no need to rethrow
 		}
 
 		return m_szText;
@@ -148,14 +152,9 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CStatusbar::SetPaneText"));
-			throw;
-		}
 	}
 
 	void CStatusbar::SetPaneWidth(int iPane, int iWidth)
@@ -207,13 +206,13 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
-		catch (...)
+		catch (const std::bad_alloc &)
 		{
 			DebugErrMsg(_T("Exception in CStatusbar::SetPaneWidth"));
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 	}
 
@@ -259,14 +258,9 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::AddBitmap"));
-			throw;
-		}
 	}
 
 	void CToolbar::ReplaceBitmap(int iNumButtons, UINT NewToolbarID)
@@ -290,13 +284,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::ReplaceBitmap"));
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 	}
 
@@ -344,14 +332,9 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::GetButtonState"));
-			throw;
-		}
 		return 0;
 	}
 
@@ -384,13 +367,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::GetButtonStyle"));
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
 		return 0;
@@ -757,13 +734,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::SetButtons"));
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
 		return 0;
@@ -822,13 +793,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::SetButtonStyle"));
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 	}
 
@@ -907,13 +872,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::SetButtonText"));
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 	}
 
@@ -929,14 +888,9 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::SetCommandID"));
-			throw;
-		}
 	}
 
 	void CToolbar::SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID /*= 0*/, UINT ToolbarDisabledID /*= 0*/)
@@ -1043,14 +997,9 @@ namespace Win32xx
 		{
 			if (hbm) ::DeleteObject(hbm);
 			e.MessageBox();
-			throw;
+			// Not a critical problem, so no need to rethrow
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CToolbar::SetImageList"));
-			throw;
-		}
 	}
 
 	void CToolbar::SetToolbarTheme(ThemeToolbar& Theme)
@@ -2446,11 +2395,6 @@ namespace Win32xx
 			throw;
 		}
 
-		catch(...)
-		{
-			DebugErrMsg(_T("Exception in CMenubar::SetMenu"));
-			throw;
-		}
 	}
 
 	void CMenubar::SetMenubarTheme(ThemeMenu& Theme)
@@ -3092,11 +3036,6 @@ namespace Win32xx
 			throw;
 		}
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CFrame::LoadCommonControls"));
-			throw;
-		}
 	}
 
 	BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
@@ -3858,81 +3797,65 @@ namespace Win32xx
 
 	LRESULT CFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		try
+		switch (uMsg)
 		{
-			switch (uMsg)
+		case WM_DESTROY:
+			::SetMenu(m_hWnd, NULL);
+			::KillTimer(m_hWnd, ID_STATUS_TIMER);
+			::PostQuitMessage(0);	// Terminates the application
+			return 0L;
+		case WM_ERASEBKGND:
+			return 0L;
+		case WM_HELP:
+			OnHelp();
+			return 0L;
+		case WM_MENUCHAR:
+			if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 			{
-			case WM_DESTROY:
-				::SetMenu(m_hWnd, NULL);
-				::KillTimer(m_hWnd, ID_STATUS_TIMER);
-				::PostQuitMessage(0);	// Terminates the application
+				// Activate Menubar for key pressed with Alt key held down
+				GetMenubar().MenuChar(wParam, lParam);
+				return -1;
+			}
+			break;
+		case WM_MENUSELECT:
+			OnMenuSelect(wParam, lParam);
+			return 0L;
+		case WM_SETFOCUS:
+			OnSetFocus();
+			break;
+		case WM_SIZE:
+			RecalcLayout();
+			return 0L;
+		case WM_SYSCOLORCHANGE:
+			// Changing themes trigger this
+			OnSysColorChange();
+			return 0L;
+		case WM_SYSCOMMAND:
+			if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
+			{
+				GetMenubar().SysCommand(wParam, lParam);
 				return 0L;
-			case WM_ERASEBKGND:
-				return 0L;
-			case WM_HELP:
-				OnHelp();
-				return 0L;
-			case WM_MENUCHAR:
-				if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
-				{
-					// Activate Menubar for key pressed with Alt key held down
-					GetMenubar().MenuChar(wParam, lParam);
-					return -1;
-				}
-				break;
-			case WM_MENUSELECT:
-				OnMenuSelect(wParam, lParam);
-				return 0L;
-			case WM_SETFOCUS:
-				OnSetFocus();
-				break;
-			case WM_SIZE:
-				RecalcLayout();
-				return 0L;
-			case WM_SYSCOLORCHANGE:
-				// Changing themes trigger this
-				OnSysColorChange();
-				return 0L;
-			case WM_SYSCOMMAND:
-				if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
-				{
-					GetMenubar().SysCommand(wParam, lParam);
-					return 0L;
-				}
-				break;
-			case WM_TIMER:
-				OnTimer(wParam);
-				return 0L;
-			case WM_DRAWITEM:
-				// Owner draw menu itmes
-				if (OnDrawItem(wParam, lParam))
-					return TRUE; // handled
-				break;
-			case WM_INITMENUPOPUP:
-				OnInitMenuPopup(wParam, lParam);
-				break;
-			case WM_MEASUREITEM:
-				if (OnMeasureItem(wParam, lParam))
-					return TRUE; // handled
-				break;
-			case WM_EXITMENULOOP:
-				OnExitMenuLoop();
-				break;
-			} // switch uMsg
-
-		} // try
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CFrame::WndProc"));
-			throw;
-		}
+			}
+			break;
+		case WM_TIMER:
+			OnTimer(wParam);
+			return 0L;
+		case WM_DRAWITEM:
+			// Owner draw menu itmes
+			if (OnDrawItem(wParam, lParam))
+				return TRUE; // handled
+			break;
+		case WM_INITMENUPOPUP:
+			OnInitMenuPopup(wParam, lParam);
+			break;
+		case WM_MEASUREITEM:
+			if (OnMeasureItem(wParam, lParam))
+				return TRUE; // handled
+			break;
+		case WM_EXITMENULOOP:
+			OnExitMenuLoop();
+			break;
+		} // switch uMsg
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	} // LRESULT CFrame::WndProcDefault(...)
