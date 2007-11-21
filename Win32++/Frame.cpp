@@ -1116,7 +1116,7 @@ namespace Win32xx
 	BOOL CRebar::GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const
 	{
 		// REBARBANDINFO describes individual BAND characteristics
-		prbbi->cbSize = sizeof(REBARBANDINFO);
+		prbbi->cbSize = REBARBANDINFO_V3_SIZE;
 		return (BOOL)::SendMessage(m_hWnd, RB_GETBANDINFO, nBand, (LPARAM)prbbi);
 	}
 
@@ -1147,7 +1147,7 @@ namespace Win32xx
 	BOOL CRebar::IsBandVisible(int nBand)
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, &rbbi);
 
@@ -1194,7 +1194,7 @@ namespace Win32xx
 
 						// Determine the size of the child window
 						REBARBANDINFO rbbi = {0};
-						rbbi.cbSize = sizeof(REBARBANDINFO);
+						rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 						rbbi.fMask = RBBIM_CHILD ;
 						GetBandInfo(nBand, &rbbi);
 						RECT rcChild;
@@ -1339,7 +1339,7 @@ namespace Win32xx
 	void CRebar::SetBandBitmap(const int nBand, const HBITMAP hBackground)
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, &rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
@@ -1352,7 +1352,7 @@ namespace Win32xx
 		// Won't work with XP themes enabled
 		// Won't work if a bitmap has been set
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask = RBBIM_COLORS;
 		rbbi.clrFore = clrFore;
 		rbbi.clrBack = clrBack;
@@ -1362,7 +1362,7 @@ namespace Win32xx
 	BOOL CRebar::SetBandInfo(const int nBand, LPREBARBANDINFO prbbi)
 	{
 		// REBARBANDINFO describes individual BAND characteristics
-		prbbi->cbSize = sizeof(REBARBANDINFO);
+		prbbi->cbSize = REBARBANDINFO_V3_SIZE;
 		return (BOOL)::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)prbbi);
 	}
 
@@ -1402,7 +1402,7 @@ namespace Win32xx
 	// Show or hide a band
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, &rbbi);
 		if (fShow)
@@ -1421,7 +1421,7 @@ namespace Win32xx
 	void CRebar::ShowGripper(int nBand, BOOL fShow)
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, &rbbi);
 		if (fShow)
@@ -2677,7 +2677,7 @@ namespace Win32xx
    		REBARBANDINFO rbbi = {0};
 		SIZE sz = GetMenubar().GetMaxSize();
 
-		rbbi.cbSize     = sizeof(REBARBANDINFO);
+		rbbi.cbSize     = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cxMinChild = sz.cx;
 		rbbi.cx         = sz.cx;
@@ -2709,7 +2709,7 @@ namespace Win32xx
 		REBARBANDINFO rbbi = {0};
 		SIZE sz = TB.GetMaxSize();
 
-		rbbi.cbSize     = sizeof(REBARBANDINFO);
+		rbbi.cbSize     = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
@@ -3277,7 +3277,7 @@ namespace Win32xx
 			// Specify owner-draw for the menu item type
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
-				if (mii.dwItemData == NULL)
+				if (mii.dwItemData == 0)
 				{
 					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
 					
@@ -3631,7 +3631,7 @@ namespace Win32xx
 		Width = Width - rc.left - rc.right - 2;
 
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, &rbbi);
 		if (GetRebar().GetRebarTheme().UseThemes)
