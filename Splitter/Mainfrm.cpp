@@ -29,7 +29,7 @@ CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch(LOWORD(wParam))
 	{

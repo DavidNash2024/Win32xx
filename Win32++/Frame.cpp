@@ -105,10 +105,10 @@ namespace Win32xx
 				// Get the Text
 				TCHAR* szText = new TCHAR[iChars +1 ];
 
-				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 				//  an exception when new fails. We make sure an exception gets thrown!
 				if (szText == NULL)
-					throw std::bad_alloc(); 
+					throw std::bad_alloc();
 
 				szText[0] = _T('\0');
 				::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
@@ -118,7 +118,7 @@ namespace Win32xx
 				delete []szText;
 			}
 		}
-		
+
 		catch (const std::bad_alloc &)
 		{
 			DebugErrMsg(_T("Failed to allocate memory in CStatusbar::GetPaneText"));
@@ -172,18 +172,18 @@ namespace Win32xx
 
 				int iParts = (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
 				int* iPaneWidths = new int[iParts];
-	
-				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+
+				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 				//  an exception when new fails. We make sure an exception gets thrown!
 				if (iPaneWidths == NULL)
-					throw std::bad_alloc();  
+					throw std::bad_alloc();
 
 				::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);
 
 				int iNewParts = max(iPane+1, iParts);
 				int* iNewPaneWidths = new int[iNewParts];
 				if (iNewPaneWidths == NULL)
-					throw std::bad_alloc(); 
+					throw std::bad_alloc();
 
 				ZeroMemory(iNewPaneWidths, iNewParts*sizeof(int));
 
@@ -2527,7 +2527,7 @@ namespace Win32xx
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")),
 						m_hImageList(NULL), m_hImageListDis(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
-		
+
 		m_StatusText[0] = _T('\0');
 		GetApp()->SetFrame(this);
 
@@ -3213,13 +3213,13 @@ namespace Win32xx
 		{
 			// Undo OwnerDraw and put the text back
 			MENUITEMINFO mii = {0};
-			
+
 			// For Win95 and NT, cbSize needs to be 44
 			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
 				mii.cbSize = 44;
 			else
 				mii.cbSize = sizeof(MENUITEMINFO);
-			
+
 			mii.fMask = MIIM_TYPE | MIIM_DATA;
 			mii.fType = m_vpItemData[nItem]->fType;
 			mii.dwTypeData = m_vpItemData[nItem]->Text;
@@ -3280,11 +3280,11 @@ namespace Win32xx
 				if (mii.dwItemData == 0)
 				{
 					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
-					
-					// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+
+					// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 					//  an exception when new fails. We make sure an exception gets thrown!
 					if (pItem == NULL)
-						throw std::bad_alloc();  
+						throw std::bad_alloc();
 
 					ZeroMemory(pItem, sizeof(ItemData));
 					pItem->hMenu = hMenu;
@@ -3328,7 +3328,7 @@ namespace Win32xx
 				// Default menu items are bold, so take this into account
 				if (::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
 					info.lfMenuFont.lfWeight = FW_BOLD;
- 
+
 				HFONT hFont = CreateFontIndirect(&info.lfMenuFont);
 				HFONT hfntOld = (HFONT)::SelectObject(hDC, hFont);
 
@@ -3921,5 +3921,5 @@ void Win32xx::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
 	COLORREF OldColor = ::SetBkColor(hDC, Color);
 	::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
 	::SetBkColor(hDC, OldColor);
-} 
+}
 

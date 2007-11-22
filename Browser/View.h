@@ -3,13 +3,18 @@
 
 
 /////////////////////////////////////////////////////////////
-// An important note for Visual Studio 2005 Express users
-//  To compile this program you will need to do the following 
-//  
-//  1) Add the include\atl path of Platform SDK to the set of
+// An important note for VS 2005 Express and VS 2008 Express users
+//  To compile this program you will need to do the following
+//
+//  1) The SDK shipped with VS 2008 Express does not include ATL.
+//      Users of VS2008 Express will need to download a Platform SDK.
+//      Users of VS2005 Express need to download a Platform SDK in
+//      for Win32 programming in any case.
+//
+//     Add the include\atl path of Platform SDK to the set of
 //      directories used for include files
 //
-//  2) Modify atlwin.h 
+//  2) Modify atlwin.h
 //      Change SetChainEntry function at line 1725 and define
 //      "int i" at the first line of the function body
 //
@@ -50,14 +55,14 @@
 #include <exdispid.h>
 #include <atlbase.h>			// ATL support
 extern CComModule _Module;		// Used later to initialise ATL
-#include <atlcom.h>				
+#include <atlcom.h>
 #include <atlhost.h>			// ActiveX support
 
 
 // Define LONG_PTR for Visual Studio 6
 #if defined (_MSC_VER) && _MSC_VER <= 1200
   #define LONG_PTR LONG
-#endif 
+#endif
 
 
 class CView : public CWnd
