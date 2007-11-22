@@ -1141,7 +1141,12 @@ namespace Win32xx
 
 	BOOL CRebar::InsertBand(const int nBand, LPREBARBANDINFO prbbi)
 	{
-		return (BOOL)::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)(LPREBARBANDINFO)prbbi);
+		BOOL bResult;
+		bResult = (BOOL)::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)(LPREBARBANDINFO)prbbi);
+		if (bResult == FALSE)
+			throw CWinException(_T("Failed to insert rebar band"));
+
+		return bResult;
 	}
 
 	BOOL CRebar::IsBandVisible(int nBand)
