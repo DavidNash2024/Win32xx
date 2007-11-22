@@ -93,11 +93,11 @@ namespace Win32xx
 				// We get here if Win32++ is used incorrectly, i.e. more than one instance
 				// of a CWinApp derived class is started.
  				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
-			}	
+			}
 		}
 
 		catch (const CWinException &e)
-		{		
+		{
 			// Indicate the problem
 			e.MessageBox();
 			if (st_pTheApp == NULL) throw;
@@ -204,7 +204,7 @@ namespace Win32xx
 		return LOWORD(uMsg.wParam);
 	}
 
-	int CWinApp::Run() 
+	int CWinApp::Run()
 	{
 		// Create an invisible Trace window in Debug mode
 		// It's made visible on first use
@@ -212,7 +212,7 @@ namespace Win32xx
 		CreateTrace();
 #endif
 
-		// InitInstance runs the App's initialization code 
+		// InitInstance runs the App's initialization code
 		if (InitInstance())
 		{
 			// Dispatch the window messages
@@ -249,11 +249,11 @@ namespace Win32xx
 				throw CWinException(_T("CWinApp::SetTlsIndex    Error, attempted to set TLS more than once"));
 
 			TLSData* pTLSData = new TLSData;
-			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing 
+			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 			//  an exception when new fails. We make sure an exception gets thrown!
 			if (pTLSData == NULL)
-				throw std::bad_alloc();  
-			
+				throw std::bad_alloc();
+
 			ZeroMemory(pTLSData, sizeof(TLSData));
 			::TlsSetValue(GetTlsIndex(), pTLSData);
 
@@ -271,7 +271,7 @@ namespace Win32xx
 		catch (const std::bad_alloc &)
 		{
 			DebugErrMsg(_T("Failed to allocate mememory in CWinApp::SetTlsIndex"));
-			throw std::bad_alloc(); // Critical problem, so rethrow 
+			throw std::bad_alloc(); // Critical problem, so rethrow
 		}
 
 		return 0;
@@ -281,7 +281,7 @@ namespace Win32xx
 	// Used by the TRACE macro to output text to the trace window
 	// Note: The TRACE macro is only active in debug mode (i.e when _DEBUG is defined)
 	//       If you wish to see a trace window in release mode:
-	//         1) Call CreateTrace to create the trace window			
+	//         1) Call CreateTrace to create the trace window
 	//		   2) Call this function directly instead of TRACE to see trace output.
 	{
 		// CreateTrace must be called once before using this function
@@ -318,7 +318,7 @@ namespace Win32xx
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
 		m_szString[0] = _T('\0');
-		
+
 	}
 
 	CWnd::~CWnd()
@@ -493,7 +493,7 @@ namespace Win32xx
 			// Test if Win32++ has been started
 			if (GetApp() == 0)
 				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
-			
+
 			// Only one window per CWnd instance
 			if (::IsWindow(m_hWnd))
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
@@ -688,8 +688,8 @@ namespace Win32xx
 	{
 		if (GetApp() == 0)
 			throw CWinException(_T("LoadBitmap ... Win32++ has not been initialised successfully."));
-		
-		HBITMAP hBitmap = NULL;
+
+		HBITMAP hBitmap;
 
 		// Try to load the bitmap from the resource handle first
 		hBitmap = ::LoadBitmap(GetApp()->GetResourceHandle(), lpBitmapName);
@@ -708,7 +708,7 @@ namespace Win32xx
 	LPCTSTR CWnd::LoadString(UINT nID)
 	{
 		// Returns the string associated with a Resource ID
-		
+
 		if (GetApp() == 0)
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
@@ -722,7 +722,7 @@ namespace Win32xx
 			TCHAR msg[80] = _T("");
 			::wsprintf(msg, _T("LoadString - No string resource for %d"), nID);
 			DebugWarnMsg(msg);
-		}		
+		}
 
 		return (LPCTSTR) m_szString;
 	}
@@ -919,7 +919,6 @@ namespace Win32xx
 			throw;
 		}
 
-		return FALSE;
 	}
 
 	void CWnd::RemoveHook()
@@ -1051,7 +1050,6 @@ namespace Win32xx
 			throw;	// Rethrow unknown exception
 		}
 
-		return 0L;
 	}
 
 	LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1084,8 +1082,6 @@ namespace Win32xx
 			DebugErrMsg(_T("Exception in CWnd::StaticWindowProc"));
 			throw;	// Rethrow unknown exception
 		}
-
-		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);;
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
 

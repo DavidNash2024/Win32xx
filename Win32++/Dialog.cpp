@@ -232,7 +232,6 @@ namespace Win32xx
 			throw;
 		}
 
-		return 0;
 	}
 
 	HWND CDialog::DoModeless()
@@ -352,7 +351,6 @@ namespace Win32xx
 			throw;
 		}
 
-		return 0;
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
 
 } // namespace Win32xx

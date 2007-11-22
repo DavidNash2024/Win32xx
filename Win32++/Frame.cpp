@@ -3331,7 +3331,7 @@ namespace Win32xx
 				info.cbSize = sizeof(info);
 				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 				// Default menu items are bold, so take this into account
-				if (::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
+				if ((INT)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
 					info.lfMenuFont.lfWeight = FW_BOLD;
 
 				HFONT hFont = CreateFontIndirect(&info.lfMenuFont);
