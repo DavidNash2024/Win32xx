@@ -100,7 +100,8 @@ namespace Win32xx
 		{
 			// Indicate the problem
 			e.MessageBox();
-			if (st_pTheApp == NULL) throw;
+			if (st_pTheApp == NULL) 
+				throw;
 		}
 	}
 
@@ -271,7 +272,7 @@ namespace Win32xx
 		catch (const std::bad_alloc &)
 		{
 			DebugErrMsg(_T("Failed to allocate mememory in CWinApp::SetTlsIndex"));
-			throw std::bad_alloc(); // Critical problem, so rethrow
+			throw; // Critical problem, so rethrow
 		}
 
 		return 0;

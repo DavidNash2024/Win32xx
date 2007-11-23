@@ -177,15 +177,15 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar();
-		virtual BOOL DeleteBand(const int nBand);
+		virtual void DeleteBand(const int nBand);
 		virtual int GetBand(const HWND hWnd) const;
 		virtual RECT GetBandBorders(int nBand);
 		virtual int GetBandCount() const;
-		virtual BOOL GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
+		virtual void GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
 		virtual RECT GetBandRect(int i);
-		virtual BOOL GetBarInfo(LPREBARINFO prbi) const;
+		virtual void GetBarInfo(LPREBARINFO prbi) const;
 		virtual int GetRowHeight(int nRow) const;
-		virtual BOOL InsertBand(const int nBand, LPREBARBANDINFO prbbi);
+		virtual void InsertBand(const int nBand, LPREBARBANDINFO prbbi);
 		virtual BOOL IsBandVisible(int nBand);
 		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -193,8 +193,8 @@ namespace Win32xx
 		virtual void ResizeBand(const int nBand, SIZE sz);
 		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
 		virtual void SetBandBitmap(const int nBand, const HBITMAP hBackground);
-		virtual BOOL SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
-		virtual BOOL SetBarInfo(LPREBARINFO prbi);
+		virtual void SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
+		virtual void SetBarInfo(LPREBARINFO prbi);
 		virtual BOOL ShowBand(int nBand, BOOL fShow);
 		virtual void ShowGripper(int nBand, BOOL fShow);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
