@@ -491,82 +491,75 @@ namespace Win32xx
 	{
 		try
 		{
-			// Test if Win32++ has been started
-			if (GetApp() == 0)
-				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+		// Test if Win32++ has been started
+		if (GetApp() == 0)
+			throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 
-			// Only one window per CWnd instance
-			if (::IsWindow(m_hWnd))
-				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
+		// Only one window per CWnd instance
+		if (::IsWindow(m_hWnd))
+			throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
-			// Ensure a window class is registered
-			TCHAR ClassName[MAX_STRING_SIZE] = _T("");
-			if (lstrlen(lpszClassName) == 0)
-				::lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
-			else
-				// Create our own local copy of szClassName.
-				::lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
+		// Ensure a window class is registered
+		TCHAR ClassName[MAX_STRING_SIZE] = _T("");
+		if (lstrlen(lpszClassName) == 0)
+			::lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
+		else
+			// Create our own local copy of szClassName.
+			::lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
 
-			// Register the window class
-			WNDCLASSEX wcx = {0};
-			wcx.cbSize = sizeof(WNDCLASSEX);
-			wcx.lpszClassName = ClassName;
-			wcx.hbrBackground = m_hBrushBkgnd;
-			if (!RegisterClassEx(wcx))
-				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
+		// Register the window class
+		WNDCLASSEX wcx = {0};
+		wcx.cbSize = sizeof(WNDCLASSEX);
+		wcx.lpszClassName = ClassName;
+		wcx.hbrBackground = m_hBrushBkgnd;
+		if (!RegisterClassEx(wcx))
+			throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
-			// Ensure this thread has the TLS index set
-			GetApp()->m_MapLock.Lock();
-			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
+		// Ensure this thread has the TLS index set
+		GetApp()->m_MapLock.Lock();
+		m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
 
-			if (m_pTLSData == NULL)
-				m_pTLSData = GetApp()->SetTlsIndex();
-			GetApp()->m_MapLock.Release();
+		if (m_pTLSData == NULL)
+			m_pTLSData = GetApp()->SetTlsIndex();
+		GetApp()->m_MapLock.Release();
 
-			// Create and store the CBT hook
-			SetHook();
+		// Create and store the CBT hook
+		SetHook();
 
-			// Create window
-			m_hWndParent = hParent;
-			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-				                      hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+		// Create window
+		m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
+			                      hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
 
-			// Tidy up
-			RemoveHook();
+		// Tidy up
+		RemoveHook();
 
-			// Now handle window creation failure
-			if (!m_hWnd)
-				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
+		// Now handle window creation failure
+		if (!m_hWnd)
+			throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
 
-			if (!::GetClassInfoEx(GetApp()->GetInstanceHandle(), ClassName, &wcx))
-				if (::GetClassInfoEx(NULL, ClassName, &wcx))
-					throw CWinException(_T("CWnd::CreateEx  Failed to get class info"));
+		if (!::GetClassInfoEx(GetApp()->GetInstanceHandle(), ClassName, &wcx))
+			if (::GetClassInfoEx(NULL, ClassName, &wcx))
+				throw CWinException(_T("CWnd::CreateEx  Failed to get class info"));
 
-			// Automatically subclass predefined window class types
-			if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
-			{
-				Subclass();
-				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
-			}
+		m_hWndParent = hParent;
 
-			// Window creation is complete. Now call OnInitialUpdate
-			OnInitialUpdate();
+		// Automatically subclass predefined window class types
+		if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
+		{
+			Subclass();
+			OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
+		}
+
+		// Window creation is complete. Now call OnInitialUpdate
+		OnInitialUpdate();
 		}
 
 		catch (const CWinException &e)
 		{
-			m_hWndParent = NULL;
 			e.MessageBox();
 			throw;
 		}
-
-		catch (...)
-		{
-			m_hWndParent = NULL;
-			DebugErrMsg(_T("Unknown exception in CWnd::CreateEx"));
-			throw;	// Rethrow unknown exception
-		}
-
+	
 		return m_hWnd;
 
 	} // void CWnd::CreateEx()
@@ -1055,6 +1048,7 @@ namespace Win32xx
 
 	LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		try
 		{
 			// Allocate an iterator for our HWND map
@@ -1075,14 +1069,21 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
+		}
+
+		catch (const std::bad_alloc &)
+		{
+			DebugErrMsg(_T("Memory allocation failure"));
+			throw;	// Rethrow exception
 		}
 
 		catch (...)
 		{
-			DebugErrMsg(_T("Exception in CWnd::StaticWindowProc"));
+			DebugErrMsg(_T("Unknown Exception in CWnd::StaticWindowProc"));
 			throw;	// Rethrow unknown exception
-		}
+		} 
+
+		return 0L;
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
 
