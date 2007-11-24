@@ -2951,7 +2951,6 @@ namespace Win32xx
 			e.MessageBox();
 			if (hComCtl)
 				::FreeLibrary(hComCtl);
-			throw;
 		}
 
 	}
