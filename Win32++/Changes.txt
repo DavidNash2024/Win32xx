@@ -1,8 +1,13 @@
-Version 5.7
+Version 5.61
 -----------
 New Features
 * Added support for Visual Studio 2008 and Visual Studio 2008 Express
+* Better exception handling:
+  - Any failure of 'new' now generates a bad_alloc exception
+  - Exceptions are thrown when rebar messages such as RB_INSERTBAND fail.
 
+Bug Fixes:
+* The size of text in dropdown menus is calculated more accurately.
 
 Version 5.6
 -----------

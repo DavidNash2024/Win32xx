@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.6
-// Released: 10th November, 2007 by:
+// Win32++  Version 5.61
+// Released: 7th December, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -100,7 +100,7 @@ namespace Win32xx
 		{
 			// Indicate the problem
 			e.MessageBox();
-			if (st_pTheApp == NULL) 
+			if (st_pTheApp == NULL)
 				throw;
 		}
 	}
@@ -559,7 +559,7 @@ namespace Win32xx
 			e.MessageBox();
 			throw;
 		}
-	
+
 		return m_hWnd;
 
 	} // void CWnd::CreateEx()
@@ -1081,7 +1081,7 @@ namespace Win32xx
 		{
 			DebugErrMsg(_T("Unknown Exception in CWnd::StaticWindowProc"));
 			throw;	// Rethrow unknown exception
-		} 
+		}
 
 		return 0L;
 

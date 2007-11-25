@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.6
-// Released: 10th November, 2007 by:
+// Win32++  Version 5.61
+// Released: 7th December, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

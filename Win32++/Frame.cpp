@@ -2,8 +2,8 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.6
-// Released: 10th November, 2007 by:
+// Win32++  Version 5.61
+// Released: 7th December, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -707,7 +707,7 @@ namespace Win32xx
 	//	TBSTYLE_DROPDOWN	Creates a drop-down list button
 	//	TBSTYLE_AUTOSIZE	The button's width will be calculated based on the text of the button, not on the size of the image
 	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it
-	{		
+	{
 		TBBUTTONINFO tbbi = {0};
 		tbbi.cbSize = sizeof(TBBUTTONINFO);
 		tbbi.dwMask = TBIF_STYLE;
@@ -1813,7 +1813,7 @@ namespace Win32xx
 					::SelectObject(hDC, hFontOld);
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
-			} 
+			}
 			return CDRF_DODEFAULT ;   // Do default drawing
 
 		// Painting cycle has completed
@@ -1823,7 +1823,7 @@ namespace Win32xx
 				DrawAllMDIButtons(lpNMCustomDraw->nmcd.hdc);
 			}
 			break;
-		} 
+		}
 		return 0L;
 	}
 
@@ -3670,7 +3670,7 @@ namespace Win32xx
 		MB.SetMenubarTheme(tm);		// Sets the theme for Menubar buttons
 		SetMenuTheme(tm);			// Sets the theme for popup menus
 
-		RecalcLayout();  
+		RecalcLayout();
 	}
 
 	void CFrame::SetView(CWnd& View)
