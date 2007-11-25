@@ -10,6 +10,9 @@
 //      Users of VS2008 Express will need to download a Platform SDK.
 //      Users of VS2005 Express need to download a Platform SDK in
 //      for Win32 programming in any case.
+//      Note that the more modern Windows SDK doesn't include ATL, so
+//      we must use the older Plaform SDK, currently available at:
+//      http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
 //
 //     Add the include\atl path of Platform SDK to the set of
 //      directories used for include files

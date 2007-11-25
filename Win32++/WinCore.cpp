@@ -1035,13 +1035,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Unknown exception in CWnd::StaticCBTProc"));
-			throw;	// Rethrow unknown exception
+			return 0L;
 		}
 
 	}

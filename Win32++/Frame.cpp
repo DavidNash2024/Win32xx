@@ -187,7 +187,6 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			// Not a critical problem, so no need to rethrow
 		}
 
 		catch (const std::bad_alloc &)
@@ -284,12 +283,10 @@ namespace Win32xx
 	//	TBSTATE_WRAP		The button is followed by a line break.
 	{
 		LRESULT lResult= ::SendMessage(m_hWnd, TB_GETSTATE, (WPARAM) iButtonID, 0);
-		if (lResult == -1)
+		if (lResult == -1L)
 			throw CWinException(_T("CToolbar::GetButtonState failed"));
 
 		return (UINT) lResult;
-
-		return 0;
 	}
 
 	BYTE CToolbar::GetButtonStyle(int iButtonID)
@@ -310,7 +307,7 @@ namespace Win32xx
 		TBBUTTON tbb = {0};
 
 		LRESULT lResult = ::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (LPARAM) &tbb);
-		if (lResult == -1)
+		if (lResult == -1L)
 			throw CWinException(_T("CToolbar::GetButtonStyle failed"));
 
 		return tbb.fsStyle;
@@ -849,7 +846,7 @@ namespace Win32xx
 					throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageList failed "));
 
 				ImageList_AddMasked(m_hImageList, hbm, crMask);
-				if(SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) == -1)
+				if(SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) == -1L)
 					throw CWinException(_T("CToolbar::SetImageList ... TB_SETIMAGELIST failed "));
 
 				::DeleteObject(hbm);
@@ -867,7 +864,7 @@ namespace Win32xx
 
 					ImageList_AddMasked(m_hImageListHot, hbm, crMask);
 
-					if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) == -1)
+					if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) == -1L)
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
 
 					::DeleteObject(hbm);
@@ -885,7 +882,7 @@ namespace Win32xx
 						throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListDis failed "));
 
 					ImageList_AddMasked(m_hImageListDis, hbm, crMask);
-					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1)
+					if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1L)
 						throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 				}
 				else
@@ -3731,7 +3728,7 @@ namespace Win32xx
 			{
 				// Activate Menubar for key pressed with Alt key held down
 				GetMenubar().MenuChar(wParam, lParam);
-				return -1;
+				return -1L;
 			}
 			break;
 		case WM_MENUSELECT:
