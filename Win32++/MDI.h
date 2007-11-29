@@ -84,7 +84,7 @@ namespace Win32xx
 		virtual HWND Create(HWND hWndParent = NULL);
 
 		// Its unlikely you would need to override these functions
-		virtual BOOL IsMDIChild() {return TRUE;}
+		virtual BOOL IsMDIChild() const {return TRUE;}
 		virtual BOOL SetChildMenu(LPCTSTR MenuName);
 
 
@@ -136,9 +136,9 @@ namespace Win32xx
 		// These functions aren't virtual, so don't override them
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 		CMDIClient& GetMDIClient() {return m_MDIClient;}
-		HWND GetActiveMDIChild() {return m_hActiveMDIChild;}
-		CMDIChild* GetActiveMDIChildCWnd();
-		BOOL IsMDIChildMaxed();
+		HWND GetActiveMDIChild() const {return m_hActiveMDIChild;}
+		CMDIChild* GetActiveMDIChildCWnd() const;
+		BOOL IsMDIChildMaxed() const;
 
 	protected:
 		// These are the functions you might wish to override

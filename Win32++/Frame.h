@@ -106,11 +106,11 @@ namespace Win32xx
 	public:
 		CStatusbar();
 		virtual ~CStatusbar() {}
-		virtual void CreatePanes(int iPanes, const int iPaneWidths[]);
+		virtual void CreatePanes(int iPanes, const int iPaneWidths[]) const;
 		virtual LPCTSTR GetPaneText(int iPane);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetPaneText(int iPane, LPCTSTR szText, UINT Style = 0);
-		virtual void SetPaneWidth(int iPane, int iWidth);
+		virtual void SetPaneText(int iPane, LPCTSTR szText, UINT Style = 0) const;
+		virtual void SetPaneWidth(int iPane, int iWidth) const;
 
 	private:
 		TCHAR m_szText[80];
@@ -126,28 +126,29 @@ namespace Win32xx
 		CToolbar();
 		virtual ~CToolbar();
 		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
-		virtual int  CommandToIndex(int iButtonID);
-		virtual void DisableButton(int iButtonID);
-		virtual void EnableButton(int iButtonID);
-		virtual int  GetButtonCount();
-		virtual UINT GetButtonState(int iButtonID);
-		virtual BYTE GetButtonStyle(int iButtonID);
-		virtual int  GetCommandID(int iIndex);
-		virtual RECT GetItemRect(int iIndex);
-		virtual SIZE GetMaxSize();
-		virtual BOOL HasText();
-		virtual int  HitTest();
 		virtual void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
-		virtual void SetBitmapSize(int cx, int cy);
 		virtual int  SetButtons(const std::vector<UINT> ToolbarData);
-		virtual void SetButtonSize(int cx, int cy);
-		virtual void SetButtonState(int iButtonID, UINT State);
-		virtual void SetButtonStyle(int iButtonID, BYTE Style);
 		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
-		virtual void SetCommandID(int iIndex, int iButtonID);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 
+		int  CommandToIndex(int iButtonID) const;
+		void DisableButton(int iButtonID) const;
+		void EnableButton(int iButtonID) const;
+		int  GetButtonCount() const;
+		UINT GetButtonState(int iButtonID) const;
+		BYTE GetButtonStyle(int iButtonID) const;
+		int  GetCommandID(int iIndex) const;
+		RECT GetItemRect(int iIndex) const;
+		SIZE GetMaxSize() const;
 		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
+		BOOL HasText() const;
+		int  HitTest() const;
+		void SetBitmapSize(int cx, int cy) const;
+		int  SetButtons(const std::vector<UINT> ToolbarData) const;
+		void SetButtonSize(int cx, int cy) const;
+		void SetButtonState(int iButtonID, UINT State) const;
+		void SetButtonStyle(int iButtonID, BYTE Style) const;
+		void SetCommandID(int iIndex, int iButtonID) const;
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	protected:
@@ -158,13 +159,13 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		HIMAGELIST m_hImageList;
-		HIMAGELIST m_hImageListHot;
-		HIMAGELIST m_hImageListDis;
-		std::map<tString, int> m_StringMap;
-		UINT m_OldToolbarID;		// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
-		ThemeToolbar m_Theme;
-		BOOL m_bDrawArrowBkgrnd;
+		HIMAGELIST m_hImageList;			// Imagelist for normal buttons
+		HIMAGELIST m_hImageListHot;			// Imagelist for hot buttons
+		HIMAGELIST m_hImageListDis;			// Imagelist for disabled buttons
+		std::map<tString, int> m_StringMap;	// a map of strings used in SetButtonText
+		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
+		ThemeToolbar m_Theme;				// The theme structure
+		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn 
 
 	};  // class CToolbar
 
@@ -177,27 +178,28 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar();
-		virtual void DeleteBand(const int nBand);
-		virtual int GetBand(const HWND hWnd) const;
-		virtual RECT GetBandBorders(int nBand);
-		virtual int GetBandCount() const;
-		virtual void GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
-		virtual RECT GetBandRect(int i);
-		virtual void GetBarInfo(LPREBARINFO prbi) const;
-		virtual int GetRowHeight(int nRow) const;
-		virtual void InsertBand(const int nBand, LPREBARBANDINFO prbbi);
-		virtual BOOL IsBandVisible(int nBand);
 		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void MoveBandsLeft();
-		virtual void ResizeBand(const int nBand, SIZE sz);
-		virtual void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack);
-		virtual void SetBandBitmap(const int nBand, const HBITMAP hBackground);
-		virtual void SetBandInfo(const int nBand, LPREBARBANDINFO prbbi);
-		virtual void SetBarInfo(LPREBARINFO prbi);
-		virtual BOOL ShowBand(int nBand, BOOL fShow);
-		virtual void ShowGripper(int nBand, BOOL fShow);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		void DeleteBand(const int nBand) const ;
+		int  GetBand(const HWND hWnd) const;
+		RECT GetBandBorders(int nBand) const;
+		int  GetBandCount() const;
+		void GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
+		RECT GetBandRect(int i) const;
+		void GetBarInfo(LPREBARINFO prbi) const;
+		int  GetRowHeight(int nRow) const;
+		void InsertBand(const int nBand, LPREBARBANDINFO prbbi) const;
+		BOOL IsBandVisible(int nBand) const;
+		void ResizeBand(const int nBand, SIZE sz) const;
+		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
+		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
+		void SetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
+		void SetBarInfo(LPREBARINFO prbi) const;
+		BOOL ShowBand(int nBand, BOOL fShow) const;
+		void ShowGripper(int nBand, BOOL fShow) const;
 
 		ThemeRebar& GetRebarTheme() {return m_Theme;}
 		void SetRebarTheme(ThemeRebar& Theme);
@@ -219,14 +221,22 @@ namespace Win32xx
 		virtual void MenuChar(WPARAM wParam, LPARAM lParam);
 		virtual void SysCommand(WPARAM wParam, LPARAM lParam);
 
-		HMENU GetMenu() {return m_hTopMenu;}
+		HMENU GetMenu() const {return m_hTopMenu;}
 		void SetMenu(HMENU hMenu);
 		ThemeMenu& GetMenubarTheme() {return m_ThemeMenu;}
 		void SetMenubarTheme(ThemeMenu& Theme);
 
 	protected:
 		virtual void OnCreate();
+		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
+		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
+		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
+		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
+		virtual void OnMouseLeave();
+		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual void OnWindowPosChanged();
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -238,16 +248,8 @@ namespace Win32xx
 		void ExitMenu();
 		HWND GetActiveMDIChild();
 		void GrabFocus();
-		BOOL IsMDIChildMaxed();
-		BOOL IsMDIFrame();
-		LRESULT OnCustomDraw(NMHDR* pNMHDR);
-		void OnKeyDown(WPARAM wParam, LPARAM lParam);
-		void OnLButtonDown(WPARAM wParam, LPARAM lParam);
-		void OnLButtonUp(WPARAM wParam, LPARAM lParam);
-		void OnMouseLeave();
-		void OnMouseMove(WPARAM wParam, LPARAM lParam);
-		BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		void OnWindowPosChanged();
+		BOOL IsMDIChildMaxed() const;
+		BOOL IsMDIFrame() const;
 		void ReleaseFocus();
 		void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
@@ -264,19 +266,19 @@ namespace Win32xx
 			MDI_CLOSE = 2,
 		};
 
-		BOOL m_bExitAfter;			// Exit after Popup menu ends
-		BOOL m_bKeyMode;			// keyboard navigation mode
-		BOOL m_bMenuActive;			// popup menu active
-		BOOL m_bSelPopup;           // a popup (cascade) menu is selected
-		HMENU m_hPopupMenu;			// handle to the popup menu
-		HMENU m_hSelMenu;			// handle to the casceded popup menu
-		HMENU m_hTopMenu;			// handle to the top level menu
-		HWND m_hPrevFocus;			// handle to window which had focus
-		RECT m_MDIRect[3];			// array of RECT for MDI buttons
-		int m_nHotItem;				// hot item
-		int m_nMDIButton;           // the MDI button pressed
-		POINT m_OldMousePos;        // old Mouse position
-		ThemeMenu m_ThemeMenu;		// Theme structure
+		BOOL  m_bExitAfter;		// Exit after Popup menu ends
+		BOOL  m_bKeyMode;		// keyboard navigation mode
+		BOOL  m_bMenuActive;	// popup menu active
+		BOOL  m_bSelPopup;		// a popup (cascade) menu is selected
+		HMENU m_hPopupMenu;		// handle to the popup menu
+		HMENU m_hSelMenu;		// handle to the casceded popup menu
+		HMENU m_hTopMenu;		// handle to the top level menu
+		HWND  m_hPrevFocus;		// handle to window which had focus
+		RECT  m_MDIRect[3];		// array of RECT for MDI buttons
+		int   m_nHotItem;		// hot item
+		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
+		POINT m_OldMousePos;	// old Mouse position
+		ThemeMenu m_ThemeMenu;	// Theme structure
 
 	};  // class CMenubar
 
@@ -303,23 +305,23 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
-		// Its unlikely you would need to override these functions
-		virtual HMENU GetFrameMenu() {return m_hMenu;}
-		virtual void SetFrameMenu(INT ID_MENU);
-		virtual ThemeMenu& GetMenuTheme() {return m_ThemeMenu;}
-		virtual void SetMenuTheme(ThemeMenu& Theme);
-		virtual CWnd* GetView() {return m_pView;}
-		virtual void SetView(CWnd& pView);
+		// These functions aren't virtual, so there's no point overriding them
+		HMENU GetFrameMenu() const	{return m_hMenu;}
+		ThemeMenu& GetMenuTheme()	{return m_ThemeMenu;}
+		CWnd* GetView() const		{return m_pView;}
+		void SetFrameMenu(INT ID_MENU);
+		void SetMenuTheme(ThemeMenu& Theme);
+		void SetView(CWnd& pView);
 
-		virtual CMenubar& GetMenubar() {return m_Menubar;}
-		virtual CRebar& GetRebar() {return m_Rebar;}
-		virtual CStatusbar& GetStatusbar() {return m_Statusbar;}
-		virtual CToolbar& GetToolbar() {return m_Toolbar;}
+		CMenubar& GetMenubar()		{return m_Menubar;}
+		CRebar& GetRebar()			{return m_Rebar;}
+		CStatusbar& GetStatusbar()	{return m_Statusbar;}
+		CToolbar& GetToolbar()		{return m_Toolbar;}
 
-		BOOL IsMDIFrame() {return m_bIsMDIFrame;}
-		BOOL IsMenubarUsed() {return (m_Menubar.GetHwnd() != 0);}
-		BOOL IsRebarSupported() {return (GetComCtlVersion() >= 470);}
-		BOOL IsRebarUsed() {return (m_Rebar.GetHwnd() != 0);}
+		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
+		BOOL IsMenubarUsed() const		{return (m_Menubar.GetHwnd() != 0);}
+		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
+		BOOL IsRebarUsed() const		{return (m_Rebar.GetHwnd() != 0);}
 
 	protected:
 		// These are the functions you might wish to override
@@ -362,31 +364,30 @@ namespace Win32xx
 			HMENU hSubMenu;
 		};
 
-		std::vector<UINT> m_ToolbarData;
-		std::vector<ItemData*> m_vpItemData;	// vector of ItemData pointers
-		std::vector<UINT> m_MenuData;			// vector of menu icons
-		BOOL m_bIsMDIFrame;			// TRUE if this is a MDI frame
-        BOOL m_bShowIndicatorStatus;	// set to TRUE to see indicators in status bar
-		BOOL m_bShowMenuStatus;		// set to TRUE to see menu and toolbar updates in status bar
-		BOOL m_bUseRebar;			// set to TRUE if Rebars are to be used
-		BOOL m_bUseThemes;          // set to TRUE for themes
-		tString m_StatusText;		// a TCHAR std::string for status text
-		ThemeMenu m_ThemeMenu;	// Theme structure
-		HIMAGELIST m_hImageList;	// Imagelist of menu icons
-		HIMAGELIST m_hImageListDis;	// Imagelist of disabled menu icons
-
+		std::vector<UINT> m_ToolbarData;	// vector of resource IDs for toolbar buttons
+		std::vector<ItemData*> m_vpItemData;// vector of ItemData pointers
+		std::vector<UINT> m_MenuData;		// vector of menu icon resource IDs
+		BOOL m_bIsMDIFrame;					// TRUE if this is a MDI frame
+        BOOL m_bShowIndicatorStatus;		// set to TRUE to see indicators in status bar
+		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
+		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
+		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
+		tString m_StatusText;				// a TCHAR std::string for status text
+		ThemeMenu m_ThemeMenu;				// Theme structure
+		HIMAGELIST m_hImageList;			// Imagelist of menu icons
+		HIMAGELIST m_hImageListDis;			// Imagelist of disabled menu icons
 
 	private:
 		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
 		BOOL OnCommandFrame(WPARAM wPAram, LPARAM lParam);
 		LRESULT OnNotifyFrame(WPARAM wParam, LPARAM lParam);
 
-		CMenubar m_Menubar;			// CMenubar object
-		CRebar m_Rebar;				// CRebar object
-		CStatusbar m_Statusbar;		// CStatusbar object
-		CToolbar m_Toolbar;			// CToolbar object
-		HMENU m_hMenu;				// handle to the frame menu
-		CWnd* m_pView;				// pointer to the View CWnd object
+		CMenubar m_Menubar;		// CMenubar object
+		CRebar m_Rebar;			// CRebar object
+		CStatusbar m_Statusbar;	// CStatusbar object
+		CToolbar m_Toolbar;		// CToolbar object
+		HMENU m_hMenu;			// handle to the frame menu
+		CWnd* m_pView;			// pointer to the View CWnd object
 
 	};  // class CFrame
 

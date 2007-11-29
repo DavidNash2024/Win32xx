@@ -649,7 +649,7 @@ namespace Win32xx
 
 	}
 
-	HWND CWnd::GetAncestor(HWND hWnd)
+	HWND CWnd::GetAncestor(HWND hWnd) const
 	{
 		// Returns the root parent.  Supports Win95
 		HWND hWndParent = ::GetParent(hWnd);
@@ -662,7 +662,7 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	CWnd* CWnd::GetCWndObject(HWND hWnd)
+	CWnd* CWnd::GetCWndObject(HWND hWnd) const
 	{
 		// Returns the CWnd object associated with the window handle
 

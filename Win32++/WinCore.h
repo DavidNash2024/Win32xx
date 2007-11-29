@@ -174,18 +174,19 @@ namespace Win32xx
 		virtual void CenterWindow();
 		virtual void DestroyWindow();
 		virtual HWND Detach();
-		virtual HWND GetAncestor(HWND hWnd);
-		virtual CWnd* GetCWndObject(HWND hWnd);
+		virtual HWND GetAncestor(HWND hWnd) const;
+		virtual CWnd* GetCWndObject(HWND hWnd) const;
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
 		virtual void SetBkgndColor(COLORREF color);
 		virtual void SetParent(HWND hParent);
+		
+		// These functions aren't virtual, so there's no point overriding them
+		HWND GetHwnd() const {return m_hWnd;}
+		HBRUSH GetBkgndBrush() const {return m_hBrushBkgnd;}
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		HWND GetHwnd() {return m_hWnd;}
-		HBRUSH GetBkgndBrush() {return m_hBrushBkgnd;}
 
 	protected:
 		// These are the functions you might wish to override
@@ -203,7 +204,7 @@ namespace Win32xx
 
 		// Its unlikely you would need to override these functions
 		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL IsMDIChild() {return FALSE;}
+		virtual BOOL IsMDIChild() const {return FALSE;}
 		virtual void RemoveHook();
 		virtual void SetHook();
 
@@ -222,7 +223,7 @@ namespace Win32xx
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// Pre-Subclassed Window Procedure
 		TCHAR m_szString[MAX_STRING_SIZE + 1];	// TCHAR array used in LoadString
-		HBRUSH m_hBrushBkgnd;
+		HBRUSH m_hBrushBkgnd;		// Brush created in SetBkgndColor
 
 	}; // class CWnd
 
@@ -254,8 +255,8 @@ namespace Win32xx
 		CFrame* GetFrame() {return m_pFrame;}
 		DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		static CWinApp* GetApp() {return st_pTheApp;}
-		HINSTANCE GetInstanceHandle() {return m_hInstance;}
-		HINSTANCE GetResourceHandle() {return (m_hResource ? m_hResource : m_hInstance);}
+		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
+		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
 		std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}

@@ -69,7 +69,7 @@ namespace Win32xx
 		cs.lpszClass = STATUSCLASSNAME;
 	}
 
-	void CStatusbar::CreatePanes(int iPanes, const int iPaneWidths[])
+	void CStatusbar::CreatePanes(int iPanes, const int iPaneWidths[]) const
 	{
 		// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
 		//  to the border of the window
@@ -120,7 +120,7 @@ namespace Win32xx
 		return m_szText;
 	}
 
-	void CStatusbar::SetPaneText(int iPane, LPCTSTR szText, UINT Style)
+	void CStatusbar::SetPaneText(int iPane, LPCTSTR szText, UINT Style) const
 	// Available Styles: Combinations of ...
 	//0					The text is drawn with a border to appear lower than the plane of the window.
 	//SBT_NOBORDERS		The text is drawn without borders.
@@ -138,7 +138,7 @@ namespace Win32xx
 		}
 	}
 
-	void CStatusbar::SetPaneWidth(int iPane, int iWidth)
+	void CStatusbar::SetPaneWidth(int iPane, int iWidth) const
 	{
 		// This changes the width of an existing pane, or creates a new pane
 		// with the specified width
@@ -213,7 +213,7 @@ namespace Win32xx
 		if (m_hImageListDis)  ::DeleteObject(m_hImageListDis);
 	}
 
-	int CToolbar::CommandToIndex(int iButtonID)
+	int CToolbar::CommandToIndex(int iButtonID) const
 	// Retrieves the zero-based index for the button associated with the specified command identifier
 	{
 		// returns -1 on fail
@@ -250,7 +250,7 @@ namespace Win32xx
 		m_OldToolbarID = NewToolbarID;
 	}
 
-	void CToolbar::DisableButton(int iButtonID)
+	void CToolbar::DisableButton(int iButtonID) const
 	// Disables the specified button in a toolbar
 	{
 		// An example of iButtonID would be IDM_FILE_OPEN
@@ -258,20 +258,20 @@ namespace Win32xx
 			DebugWarnMsg(_T("Disable button failed"));
 	}
 
-	void CToolbar::EnableButton(int iButtonID)
+	void CToolbar::EnableButton(int iButtonID) const
 	// Enables the specified button in a toolbar
 	{
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 )))
 			DebugWarnMsg(_T("Enable button failed"));
 	}
 
-	int CToolbar::GetButtonCount()
+	int CToolbar::GetButtonCount() const
 	// Retrieves a count of the buttons currently in the toolbar
 	{
 		return (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
 	}
 
-	UINT CToolbar::GetButtonState(int iButtonID)
+	UINT CToolbar::GetButtonState(int iButtonID) const
 	// Get the state of an individual button
 	//	TBSTATE_CHECKED		The button has the TBSTYLE_CHECK style and is being clicked.
 	//	TBSTATE_ELLIPSES	The button's text is cut off and an ellipsis is displayed.
@@ -289,7 +289,7 @@ namespace Win32xx
 		return (UINT) lResult;
 	}
 
-	BYTE CToolbar::GetButtonStyle(int iButtonID)
+	BYTE CToolbar::GetButtonStyle(int iButtonID) const
 	//	Get the the style of the toolbar control. The following button styles are supported:
 	//	TBSTYLE_BUTTON		Standard pushbutton (default)
 	//	TBSTYLE_SEP			Separator
@@ -313,7 +313,7 @@ namespace Win32xx
 		return tbb.fsStyle;
 	}
 
-	int CToolbar::GetCommandID(int iIndex)
+	int CToolbar::GetCommandID(int iIndex) const
 	// Retrieves information about the specified button in a toolbar
 	{
 		TBBUTTON tbb = {0};
@@ -323,7 +323,7 @@ namespace Win32xx
 		return tbb.idCommand;
 	}
 
-	RECT CToolbar::GetItemRect(int iIndex)
+	RECT CToolbar::GetItemRect(int iIndex) const
 	// Retrieves the bounding rectangle of a button in a toolbar
 	{
 		RECT rc = {0};
@@ -335,7 +335,7 @@ namespace Win32xx
 		return rc;
 	}
 
-	SIZE CToolbar::GetMaxSize()
+	SIZE CToolbar::GetMaxSize() const
 	// Retrieves the total size of all of the visible buttons and separators in the toolbar
 	{
 		SIZE sz = {0};
@@ -352,7 +352,7 @@ namespace Win32xx
 		return sz;
 	}
 
-	BOOL CToolbar::HasText()
+	BOOL CToolbar::HasText() const
 	{
 		BOOL bReturn = FALSE;
 
@@ -367,7 +367,7 @@ namespace Win32xx
 	}
 
 
-	int CToolbar::HitTest()
+	int CToolbar::HitTest() const
 	{
 		// We do our own hit test since TB_HITTEST is a bit buggy,
 		// and also doesn't work at all on earliest versions of Win95
@@ -612,7 +612,7 @@ namespace Win32xx
 			cs.style |= CCS_NODIVIDER | CCS_NORESIZE;
 	}
 
-	void CToolbar::SetBitmapSize(int cx, int cy)
+	void CToolbar::SetBitmapSize(int cx, int cy) const
 	// Needs to be used when the image size is not the default 16 x 15
 	// Call this function before using AddBitmap or ReplaceBitmap
 	{
@@ -669,7 +669,7 @@ namespace Win32xx
 		return iImages;
 	}
 
-	void CToolbar::SetButtonSize(int cx, int cy)
+	void CToolbar::SetButtonSize(int cx, int cy) const
 	// Sets the size of the buttons to be added to a toolbar
 	// The size can be set only before adding any buttons to the toolbar
 	{
@@ -678,7 +678,7 @@ namespace Win32xx
 			DebugWarnMsg(_T("CToolbar::SetButtonSize failed"));
 	}
 
-	void CToolbar::SetButtonState(int iButtonID, UINT State)
+	void CToolbar::SetButtonState(int iButtonID, UINT State) const
 	{
 	// Set the state of an individual button
 	//	TBSTATE_CHECKED		The button has the TBSTYLE_CHECK style and is being clicked.
@@ -694,7 +694,7 @@ namespace Win32xx
 			DebugWarnMsg(_T("CToolbar::SetButtonState failed"));
  	}
 
-	void CToolbar::SetButtonStyle(int iButtonID, BYTE Style)
+	void CToolbar::SetButtonStyle(int iButtonID, BYTE Style) const
 	//	The the style of the toolbar control. The following button styles are supported:
 	//	TBSTYLE_BUTTON		Standard pushbutton (default)
 	//	TBSTYLE_SEP			Separator
@@ -787,7 +787,7 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, &r, TRUE);
 	}
 
-	void CToolbar::SetCommandID(int iIndex, int iButtonID)
+	void CToolbar::SetCommandID(int iIndex, int iButtonID) const
 	// Sets the command identifier of a toolbar button
 	{
 		if (!::SendMessage(m_hWnd, TB_SETCMDID, iIndex, iButtonID))
@@ -801,8 +801,6 @@ namespace Win32xx
 	{
 		try
 		{
-			HBITMAP hbm = NULL;
-
 			if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
 			if (m_hImageListDis) ::ImageList_Destroy(m_hImageListDis);
 			if (m_hImageListHot) ::ImageList_Destroy(m_hImageListHot);
@@ -813,7 +811,7 @@ namespace Win32xx
 			if (iNumButtons > 0)
 			{
 				// Set the button images
-				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
+				HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 				if (!hbm)
 					throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
 
@@ -890,7 +888,6 @@ namespace Win32xx
 					m_hImageListDis = GetApp()->GetFrame()->CreateDisabledImageList(m_hImageList);
 
 				::DeleteObject(hbm);
-				hbm = NULL;
 			}
 		}
 
@@ -921,7 +918,7 @@ namespace Win32xx
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 				if (GetApp()->GetFrame()->IsRebarUsed())
 				{
-					ThemeRebar& rb = GetApp()->GetFrame()->GetRebar().GetRebarTheme();
+					ThemeRebar rb = GetApp()->GetFrame()->GetRebar().GetRebarTheme();
 					if (rb.UseThemes && rb.ShortBands)
 					{
 						pWinPos->cx = GetMaxSize().cx+2;
@@ -977,7 +974,7 @@ namespace Win32xx
 	{
 	}
 
-	void CRebar::DeleteBand(const int nBand)
+	void CRebar::DeleteBand(const int nBand) const
 	{
 		if (!::SendMessage(m_hWnd, RB_DELETEBAND, nBand, 0))
 			throw CWinException(_T("Failed to delete rebar band"));
@@ -1000,7 +997,7 @@ namespace Win32xx
 		return nResult;
 	}
 
-	RECT CRebar::GetBandBorders(int nBand)
+	RECT CRebar::GetBandBorders(int nBand) const
 	{
 		RECT rc = {0};
 		::SendMessage(m_hWnd, RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
@@ -1020,7 +1017,7 @@ namespace Win32xx
 			throw CWinException(_T("Failed to get rebar band info"));
 	}
 
-	RECT CRebar::GetBandRect(int i)
+	RECT CRebar::GetBandRect(int i) const
 	{
 		RECT rc = {0};
 		::SendMessage(m_hWnd, RB_GETRECT, i, (LPARAM)&rc);
@@ -1040,13 +1037,13 @@ namespace Win32xx
 		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0);
 	}
 
-	void CRebar::InsertBand(const int nBand, LPREBARBANDINFO prbbi)
+	void CRebar::InsertBand(const int nBand, LPREBARBANDINFO prbbi) const
 	{
 		if ( !::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)(LPREBARBANDINFO)prbbi))
 			throw CWinException(_T("Failed to insert rebar band"));
 	}
 
-	BOOL CRebar::IsBandVisible(int nBand)
+	BOOL CRebar::IsBandVisible(int nBand) const
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
@@ -1224,7 +1221,7 @@ namespace Win32xx
 		}
 	}
 
-	void CRebar::ResizeBand(const int nBand, SIZE sz)
+	void CRebar::ResizeBand(const int nBand, SIZE sz) const
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(rbbi);
@@ -1238,7 +1235,7 @@ namespace Win32xx
 		SetBandInfo(nBand, &rbbi );
 	}
 
-	void CRebar::SetBandBitmap(const int nBand, const HBITMAP hBackground)
+	void CRebar::SetBandBitmap(const int nBand, const HBITMAP hBackground) const
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
@@ -1249,7 +1246,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	void CRebar::SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack)
+	void CRebar::SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const
 	{
 		// Won't work with XP themes enabled
 		// Won't work if a bitmap has been set
@@ -1261,7 +1258,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	void CRebar::SetBandInfo(const int nBand, LPREBARBANDINFO prbbi)
+	void CRebar::SetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const
 	{
 		// REBARBANDINFO describes individual BAND characteristics
 		prbbi->cbSize = REBARBANDINFO_V3_SIZE;
@@ -1269,7 +1266,7 @@ namespace Win32xx
 			throw CWinException(_T("Failed to set rebar band info"));
 	}
 
-	void CRebar::SetBarInfo(LPREBARINFO prbi)
+	void CRebar::SetBarInfo(LPREBARINFO prbi) const
 	{
 		// REBARINFO associates an image list with the rebar
 		// A band will also need to set RBBIM_IMAGE
@@ -1302,7 +1299,7 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
-	BOOL CRebar::ShowBand(int nBand, BOOL fShow)
+	BOOL CRebar::ShowBand(int nBand, BOOL fShow) const
 	// Show or hide a band
 	{
 		REBARBANDINFO rbbi = {0};
@@ -1322,7 +1319,7 @@ namespace Win32xx
 		return fShow;
 	}
 
-	void CRebar::ShowGripper(int nBand, BOOL fShow)
+	void CRebar::ShowGripper(int nBand, BOOL fShow) const
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
@@ -1687,7 +1684,7 @@ namespace Win32xx
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
 
-	BOOL CMenubar::IsMDIChildMaxed()
+	BOOL CMenubar::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
 
@@ -1699,7 +1696,7 @@ namespace Win32xx
 		return bMaxed;
 	}
 
-	BOOL CMenubar::IsMDIFrame()
+	BOOL CMenubar::IsMDIFrame() const
 	{
 		return GetApp()->GetFrame()->IsMDIFrame();
 	}
@@ -3466,7 +3463,7 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		HWND hStatusbar = GetStatusbar().GetHwnd();
+		HWND hStatusbar = m_Statusbar.GetHwnd();
 		if (hStatusbar)
 		{
 			::SendMessage(hStatusbar, WM_SIZE, 0, 0);
@@ -3477,13 +3474,12 @@ namespace Win32xx
 		SetStatusText();
 
 		// Resize the rebar or toolbar
-		CRebar& RB = GetRebar();
 		if (IsRebarUsed())
 		{
-			::SendMessage(RB.GetHwnd(), WM_SIZE, 0, 0);
+			::SendMessage(m_Rebar.GetHwnd(), WM_SIZE, 0, 0);
 		}
 		else
-			::SendMessage(GetToolbar().GetHwnd(), TB_AUTOSIZE, 0, 0);
+			::SendMessage(m_Toolbar.GetHwnd(), TB_AUTOSIZE, 0, 0);
 
 		// Resize the View window
 		RECT rClient = GetClientSize();
@@ -3498,8 +3494,8 @@ namespace Win32xx
 			::SetWindowPos(m_pView->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
-		if (RB.GetRebarTheme().UseThemes && RB.GetRebarTheme().KeepBandsLeft)
-			RB.MoveBandsLeft();
+		if (m_Rebar.GetRebarTheme().UseThemes && m_Rebar.GetRebarTheme().KeepBandsLeft)
+			m_Rebar.MoveBandsLeft();
 
 		if (IsMenubarUsed())
 			SetMenubarBandSize();
@@ -3548,7 +3544,7 @@ namespace Win32xx
 		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, &rbbi);
-		if (GetRebar().GetRebarTheme().UseThemes)
+		if (m_Rebar.GetRebarTheme().UseThemes)
 		{
 			rbbi.cxMinChild = Width;
 			rbbi.cx         = Width;

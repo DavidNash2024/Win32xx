@@ -174,15 +174,15 @@ namespace Win32xx
 		return ::DefFrameProc(hWnd, m_MDIClient.GetHwnd(), uMsg, wParam, lParam);
 	}
 
-	CMDIChild* CMDIFrame::GetActiveMDIChildCWnd()
+	CMDIChild* CMDIFrame::GetActiveMDIChildCWnd() const
 	{
 		return (CMDIChild*)GetCWndObject(GetActiveMDIChild());
 	}
 
-	BOOL CMDIFrame::IsMDIChildMaxed()
+	BOOL CMDIFrame::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
-		::SendMessage(GetMDIClient().GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+		::SendMessage(m_MDIClient.GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 
