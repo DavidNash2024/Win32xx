@@ -67,30 +67,29 @@ namespace Win32xx
 	public:
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
-
 		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		PROPSHEETPAGE GetPSP() {return m_PSP;}
-		BOOL IsButtonEnabled(int iButton);
 		virtual int Validate();
 		virtual void OnApply();
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
 		virtual void OnKillActive();
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnOK();
 		virtual BOOL OnQueryCancel();
 		virtual void OnSetActive();
 		virtual void OnWizardBack();
 		virtual BOOL OnWizardFinish();
 		virtual void OnWizardNext();
-		virtual void CancelToClose();
 		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
-		virtual void SetModified(BOOL bChanged);
-
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
 		static BOOL CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		void CancelToClose() const;
+		PROPSHEETPAGE GetPSP() const {return m_PSP;}
+		BOOL IsButtonEnabled(int iButton) const;
+		void SetModified(BOOL bChanged) const;
 
 	protected:
 		PROPSHEETPAGE m_PSP;
@@ -105,20 +104,12 @@ namespace Win32xx
 		CPropertySheet(UINT nIDCaption, HWND hwndParent = NULL);
 		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
 		virtual ~CPropertySheet();
-
 		virtual void AddPage(CPropertyPage* pPage);
-		virtual void BuildPageArray();
 		virtual HWND Create(HWND hWndParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void CPropertySheet::DestroyButton(int iButton);
 		virtual void DestroyWindow();
 		virtual int DoModal();
-		virtual CPropertyPage* GetActivePage();
-		virtual int GetPageCount();
-		virtual int GetPageIndex(CPropertyPage* pPage);
-		virtual HWND GetTabControl();
-		virtual BOOL IsModeless();
-		virtual BOOL IsWizard();
 		virtual void OnCreate();
 		virtual void OnInitialUpdate();
 		virtual void RemovePage(CPropertyPage* pPage);
@@ -130,11 +121,20 @@ namespace Win32xx
 
 		static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);
 
+		CPropertyPage* GetActivePage() const;
+		int GetPageCount() const;
+		int GetPageIndex(CPropertyPage* pPage) const;
+		HWND GetTabControl()const;
+		BOOL IsModeless() const;
+		BOOL IsWizard() const;
+
 	protected:
 		PROPSHEETHEADER m_PSH;
 		std::vector<CPropertyPage*> m_vPages;
 
 	private:
+		void BuildPageArray();
+
 		TCHAR m_szCaption[MAX_STRING_SIZE];
 		PROPSHEETPAGE* m_ppsp; // Array of PROPSHEETPAGE
 

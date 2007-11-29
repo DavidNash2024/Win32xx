@@ -73,7 +73,7 @@ namespace Win32xx
 		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
 	}
 
-	void CPropertyPage::CancelToClose()
+	void CPropertyPage::CancelToClose() const
 	{
 		if (m_hWnd)
 			::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0, 0);
@@ -135,7 +135,7 @@ namespace Win32xx
 
 	} // LRESULT CALLBACK CPropertyPage::DialogProc(...)
 
-	BOOL CPropertyPage::IsButtonEnabled(int iButton)
+	BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
 		HWND hWnd = ::GetDlgItem(::GetParent(m_hWnd), iButton);
 		return ::IsWindowEnabled(hWnd);
@@ -260,7 +260,7 @@ namespace Win32xx
 		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
-	void CPropertyPage::SetModified(BOOL bChanged)
+	void CPropertyPage::SetModified(BOOL bChanged) const
 	{
 		if (m_hWnd != NULL)
 		{
@@ -597,7 +597,7 @@ namespace Win32xx
 		return nResult;
 	}
 
-	CPropertyPage* CPropertySheet::GetActivePage()
+	CPropertyPage* CPropertySheet::GetActivePage() const
 	{
 		CPropertyPage* pPage = NULL;
 		if (m_hWnd != NULL)
@@ -609,12 +609,12 @@ namespace Win32xx
 		return pPage;
 	}
 
-	int CPropertySheet::GetPageCount()
+	int CPropertySheet::GetPageCount() const
 	{
 		return (int)m_vPages.size();
 	}
 
-	int CPropertySheet::GetPageIndex(CPropertyPage* pPage)
+	int CPropertySheet::GetPageIndex(CPropertyPage* pPage) const
 	{
 		for (int i = 0; i < GetPageCount(); i++)
 		{
@@ -624,17 +624,17 @@ namespace Win32xx
 		return -1;
 	}
 
-	HWND CPropertySheet::GetTabControl()
+	HWND CPropertySheet::GetTabControl() const
 	{
 		return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0, 0);
 	}
 
-	BOOL CPropertySheet::IsModeless()
+	BOOL CPropertySheet::IsModeless() const
 	{
 		return (m_PSH.dwFlags & PSH_MODELESS);
 	}
 
-	BOOL CPropertySheet::IsWizard()
+	BOOL CPropertySheet::IsWizard() const
 	{
 		return (m_PSH.dwFlags & PSH_WIZARD);
 	}
