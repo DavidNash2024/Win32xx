@@ -974,13 +974,13 @@ namespace Win32xx
 	{
 	}
 
-	void CRebar::DeleteBand(const int nBand) const
+	void CRebar::DeleteBand(int nBand) const
 	{
 		if (!::SendMessage(m_hWnd, RB_DELETEBAND, nBand, 0))
 			throw CWinException(_T("Failed to delete rebar band"));
 	}
 
-	int CRebar::GetBand(const HWND hWnd) const
+	int CRebar::GetBand(HWND hWnd) const
 	// Returns the zero based band number for this window handle
 	{
 		int nResult = -1;
@@ -1009,7 +1009,7 @@ namespace Win32xx
 		return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0, 0);
 	}
 
-	void CRebar::GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const
+	void CRebar::GetBandInfo(int nBand, LPREBARBANDINFO prbbi) const
 	{
 		// REBARBANDINFO describes individual BAND characteristics
 		prbbi->cbSize = REBARBANDINFO_V3_SIZE;
@@ -1037,7 +1037,7 @@ namespace Win32xx
 		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0);
 	}
 
-	void CRebar::InsertBand(const int nBand, LPREBARBANDINFO prbbi) const
+	void CRebar::InsertBand(int nBand, LPREBARBANDINFO prbbi) const
 	{
 		if ( !::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)(LPREBARBANDINFO)prbbi))
 			throw CWinException(_T("Failed to insert rebar band"));
@@ -1221,7 +1221,7 @@ namespace Win32xx
 		}
 	}
 
-	void CRebar::ResizeBand(const int nBand, SIZE sz) const
+	void CRebar::ResizeBand(int nBand, SIZE sz) const
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(rbbi);
@@ -1235,7 +1235,7 @@ namespace Win32xx
 		SetBandInfo(nBand, &rbbi );
 	}
 
-	void CRebar::SetBandBitmap(const int nBand, const HBITMAP hBackground) const
+	void CRebar::SetBandBitmap(int nBand, HBITMAP hBackground) const
 	{
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = REBARBANDINFO_V3_SIZE;
@@ -1246,7 +1246,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	void CRebar::SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const
+	void CRebar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack) const
 	{
 		// Won't work with XP themes enabled
 		// Won't work if a bitmap has been set
@@ -1258,7 +1258,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	void CRebar::SetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const
+	void CRebar::SetBandInfo(int nBand, LPREBARBANDINFO prbbi) const
 	{
 		// REBARBANDINFO describes individual BAND characteristics
 		prbbi->cbSize = REBARBANDINFO_V3_SIZE;
