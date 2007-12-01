@@ -3652,10 +3652,9 @@ namespace Win32xx
 	//	ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 		
 		if (m_bUseRebar)
-			GetMenubar().SetMenubarTheme(tm);		// Sets the theme for Menubar buttons
+			GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
 		
-		SetMenuTheme(tm);			// Sets the theme for popup menus
-
+		SetMenuTheme(tm); // Sets the theme for popup menus
 		RecalcLayout();
 	}
 
