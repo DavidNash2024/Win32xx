@@ -40,7 +40,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
 	cs.cy = 100;	// required to display list
 	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
-	m_ComboboxEx.PreCreate(cs); 
+	m_ComboboxEx.PreCreate(cs);
 	m_ComboboxEx.Create(GetRebar().GetHwnd());
 
 	// Put the window in a new rebar band
@@ -70,7 +70,7 @@ void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
 		HWND hwnd = m_ComboboxEx.GetHwnd();
 
 		USES_CONVERSION;
-		::SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));		
+		::SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));
 	}
 }
 
@@ -96,7 +96,7 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 					break;
 				}
 			}
-		}		
+		}
 	}
 }
 
@@ -139,10 +139,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 			// User made selection from list
 			{
 				TCHAR szString[256];
-		
+
 				// Get text from edit box
 				::SendMessage(m_ComboboxEx.GetHwnd(), WM_GETTEXT, 256, (LPARAM)szString);
-			
+
 				// Navigate to web page
 				m_View.Navigate(szString);
 
@@ -167,7 +167,7 @@ void CMainFrame::OnCreate()
 {
 	// Call the base function first
 	CFrame::OnCreate();
-	
+
 	// Get the reference to the CToolbar
 	CToolbar& TB = GetToolbar();
 
@@ -181,7 +181,6 @@ void CMainFrame::OnCreate()
 		CRebar& RB = GetRebar();
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 
-		SetTheme();
 		AddListboxBand(22);
 
 		// Set the icons for popup menu items
@@ -227,7 +226,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 	{
 		CComVariant vtURL(*pDispParams->rgvarg[0].pvarVal);
 		vtURL.ChangeType(VT_BSTR);
-	
+
 		szString += OLE2T(vtURL.bstrVal);
 		TRACE(szString.c_str());
 	}
@@ -256,22 +255,22 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 					// Get text from edit box
 					::SendMessage(hwnd, WM_GETTEXT, 256, (LPARAM)szString);
-						
+
 					// Insert text into the list box.
 					COMBOBOXEXITEM CBXitem = {0};
 					CBXitem.mask = CBEIF_TEXT;
 					CBXitem.pszText = szString;
 					::SendMessage(hwnd, CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
-					
+
 					// Navigate to the web page
 					m_View.Navigate(szString);
-					
+
 					return FALSE;
 				}
 			}
 		}
 	}
-	
+
 	return 0L;
 }
 
@@ -287,7 +286,7 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 		if (pDispParams->rgvarg[0].vt == VT_I4)
 			szString << _T(", ProgressMax = ") << pDispParams->rgvarg[0].lVal;
 
-		TRACE(szString.str().c_str());		
+		TRACE(szString.str().c_str());
    }
 }
 
@@ -305,7 +304,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 {
 	USES_CONVERSION;
 	LPOLESTR lpStatusText = pDispParams->rgvarg->bstrVal;
-	
+
 
 	if (lpStatusText)
 	{
@@ -349,6 +348,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

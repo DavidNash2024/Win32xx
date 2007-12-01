@@ -1012,6 +1012,9 @@ namespace Win32xx
 	void CRebar::GetBandInfo(int nBand, LPREBARBANDINFO prbbi) const
 	{
 		// REBARBANDINFO describes individual BAND characteristics
+		if (nBand < 0)
+			throw CWinException(_T("Invalid Rebar band number"));
+
 		prbbi->cbSize = REBARBANDINFO_V3_SIZE;
 		if(!::SendMessage(m_hWnd, RB_GETBANDINFO, nBand, (LPARAM)prbbi))
 			throw CWinException(_T("Failed to get rebar band info"));
@@ -1260,6 +1263,9 @@ namespace Win32xx
 
 	void CRebar::SetBandInfo(int nBand, LPREBARBANDINFO prbbi) const
 	{
+		if (nBand < 0)
+			throw CWinException(_T("Invalid Rebar band number"));
+
 		// REBARBANDINFO describes individual BAND characteristics
 		prbbi->cbSize = REBARBANDINFO_V3_SIZE;
 		if(!::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)prbbi))
@@ -3597,29 +3603,7 @@ namespace Win32xx
 		// Note: To modify theme colors, override this function in CMainframe,
 		//        and make any modifications there.
 
-		// Set the rebar theme
-		CRebar& RB = GetRebar();
-
-		ThemeRebar tr = {0};
-		tr.UseThemes= TRUE;
-		tr.clrBkgnd1 = RGB(150,190,245);
-		tr.clrBkgnd2 = RGB(196,215,250);
-		tr.clrBand1  = RGB(220,230,250);
-		tr.clrBand2  = RGB( 70,130,220);
-		tr.KeepBandsLeft = TRUE;
-		tr.LockMenuBand  = TRUE;
-		tr.ShortBands    = TRUE;
-		tr.RoundBorders  = TRUE;
-
-	//	or you could use the following
-	//	BOOL T = TRUE;
-	//	BOOL F = FALSE;
-	//	ThemeRebar rt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
-		RB.SetRebarTheme(tr);
-
 		// Set the toolbar theme
-		CToolbar& TB = GetToolbar();
-
 		ThemeToolbar tt = {0};
 		tt.UseThemes   = TRUE;
 		tt.clrHot1     = RGB(255, 230, 190);
@@ -3627,14 +3611,35 @@ namespace Win32xx
 		tt.clrPressed1 = RGB(255, 140, 40);
 		tt.clrPressed2 = RGB(255, 180, 80);
 		tt.clrOutline  = RGB(128, 128, 255);
+		
+		//	or you could use the following
+		//	BOOL T = TRUE;
+		//	BOOL F = FALSE;
+		//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+		
+		GetToolbar().SetToolbarTheme(tt);
 
-	//	or you could use the following
-	//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-		TB.SetToolbarTheme(tt);
+		if (m_bUseRebar)
+		{
+			// Set the rebar theme
+			ThemeRebar tr = {0};
+			tr.UseThemes= TRUE;
+			tr.clrBkgnd1 = RGB(150,190,245);
+			tr.clrBkgnd2 = RGB(196,215,250);
+			tr.clrBand1  = RGB(220,230,250);
+			tr.clrBand2  = RGB( 70,130,220);
+			tr.KeepBandsLeft = TRUE;
+			tr.LockMenuBand  = TRUE;
+			tr.ShortBands    = TRUE;
+			tr.RoundBorders  = TRUE;
 
-		// Set the menubar theme
-		CMenubar& MB = GetMenubar();
+			//	or you could use the following
+			//	ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 
+			GetRebar().SetRebarTheme(tr);
+		}
+
+		// Set the menu themes
 		ThemeMenu tm = {0};
 		tm.UseThemes   = TRUE;
 		tm.clrHot1     = RGB(255, 230, 190);
@@ -3645,7 +3650,10 @@ namespace Win32xx
 
 	//	or you could use the following
 	//	ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-		MB.SetMenubarTheme(tm);		// Sets the theme for Menubar buttons
+		
+		if (m_bUseRebar)
+			GetMenubar().SetMenubarTheme(tm);		// Sets the theme for Menubar buttons
+		
 		SetMenuTheme(tm);			// Sets the theme for popup menus
 
 		RecalcLayout();

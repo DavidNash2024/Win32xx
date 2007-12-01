@@ -67,8 +67,6 @@ void CMainMDIFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-
-//	SetTheme();
 }
 
 LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

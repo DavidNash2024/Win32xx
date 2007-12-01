@@ -138,9 +138,7 @@ void CMainFrame::OnCreate()
 	// call the base OnCreate function
 	CFrame::OnCreate();
 
-
 	SetButtons();
-//	SetTheme();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
