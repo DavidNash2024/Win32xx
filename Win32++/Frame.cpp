@@ -2694,7 +2694,7 @@ namespace Win32xx
 		RECT rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
 
-		// Draw the checkmark's background rectangle
+		// Draw the checkmark's background rectangle first
 		if (m_ThemeMenu.UseThemes)
 		{
 			int Iconx, Icony;
@@ -2708,72 +2708,57 @@ namespace Win32xx
 			HBRUSH hbrOld = (HBRUSH)::SelectObject(hDC, hbr);
 			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 			HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
+			
+			// Draw the checkmark's background rectangle
 			::Rectangle(hDC, rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
+			
 			::DeleteObject(::SelectObject(hDC, hPenOld));
 			::DeleteObject(::SelectObject(hDC, hbrOld));
 		}
 
 		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
-		if (hdcMem)
+		int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
+		int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
+		HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+		HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
+		RECT rCheck = { 0, 0, cxCheck, cyCheck };
+		
+		// Copy the check mark bitmap to hdcMem
+		if (fType == MFT_RADIOCHECK)
+			::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
+		else
+			::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
+
+		int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
+		if (m_ThemeMenu.UseThemes)
+			rc.left += 2;
+
+		// Draw a white or black check mark as required
+		// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
+		HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
+		HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
+		HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
+
+		::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
+		if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
 		{
-			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
-			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-			HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-			if (hbmMono)
-			{
-				HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
-				if (hbmPrev)
-				{
-					RECT rCheck = { 0, 0, cxCheck, cyCheck };
-					// Copy the check mark bitmap to hdcMem
-					if (fType == MFT_RADIOCHECK)
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
-					else
-						::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
-
-					RECT rc = pdis->rcItem;
-					int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
-					if (m_ThemeMenu.UseThemes)
-						rc.left += 2;
-
-					// Draw a white or black check mark as required
-					// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-					HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
-					if (hdcMask)
-					{
-						HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
-						if (hbmMask)
-						{
-							HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
-							if (hbmPrevMask)
-							{
-								::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
-								if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
-								{
-									// Draw a white checkmark
-									::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
-									::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
-								}
-								else
-								{
-									// Draw a black checkmark
-									int BullitOffset = ((fType == MFT_RADIOCHECK) && m_ThemeMenu.UseThemes)? 1 : 0;
-									::BitBlt(hdcMask, -BullitOffset, BullitOffset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-									::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
-								}
-								::SelectObject(hdcMask, hbmPrevMask);
-							}
-							::DeleteObject(hbmMask);
-						}
-						::DeleteDC(hdcMask);
-					}
-					::SelectObject(hdcMem, hbmPrev);
-				}
-				::DeleteObject(hbmMono);
-			}
-			::DeleteDC(hdcMem);
+			// Draw a white checkmark
+			::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
+			::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+			::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
 		}
+		else
+		{
+			// Draw a black checkmark
+			int BullitOffset = ((fType == MFT_RADIOCHECK) && m_ThemeMenu.UseThemes)? 1 : 0;
+			::BitBlt(hdcMask, -BullitOffset, BullitOffset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
+			::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
+		}
+		
+		::DeleteObject(::SelectObject(hdcMask, hbmPrevMask));
+		::DeleteDC(hdcMask);
+		::DeleteObject(::SelectObject(hdcMem, hbmPrev));
+		::DeleteDC(hdcMem);
 	}
 
 	void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
