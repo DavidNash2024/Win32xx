@@ -303,7 +303,7 @@ namespace Win32xx
 		}
 		else
 		{
-			::SendMessage (GetParent(m_hWnd), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
+			::SendMessage (GetView()->GetHwnd(), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
 			::DrawMenuBar(GetHwnd());
 		}
 

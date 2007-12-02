@@ -2427,6 +2427,7 @@ namespace Win32xx
 	{
 
 		m_StatusText[0] = _T('\0');
+		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 		GetApp()->SetFrame(this);
 
 		INITCOMMONCONTROLSEX InitStruct;
