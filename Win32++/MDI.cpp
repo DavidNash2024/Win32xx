@@ -490,10 +490,6 @@ namespace Win32xx
 			// Ensure bits revealed by round corners (XP themes) are redrawn
 			::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
-			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-			if (m_hChildMenu)
-				pMDIFrame->UpdateFrameMenu(m_hChildMenu);
-
 			return m_hWnd;
 		}
 
@@ -554,8 +550,6 @@ namespace Win32xx
 					// Set the menu to frame's original menu
 					pMDIFrame->UpdateFrameMenu(pMDIFrame->GetFrameMenu());
 				}
-
-				::DrawMenuBar(pMDIFrame->GetHwnd());
 			}
 			return 0L ;
 		}
