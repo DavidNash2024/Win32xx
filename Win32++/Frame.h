@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.61
-// Released: 7th December, 2007 by:
+// Released: 5th December, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -165,7 +165,7 @@ namespace Win32xx
 		std::map<tString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ThemeToolbar m_Theme;				// The theme structure
-		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn 
+		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn
 
 	};  // class CToolbar
 

@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.61
-// Released: 7th December, 2007 by:
+// Released: 5th December, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -182,7 +182,7 @@ namespace Win32xx
 		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
 		virtual void SetBkgndColor(COLORREF color);
 		virtual void SetParent(HWND hParent);
-		
+
 		// These functions aren't virtual, so there's no point overriding them
 		HWND GetHwnd() const {return m_hWnd;}
 		HBRUSH GetBkgndBrush() const {return m_hBrushBkgnd;}

@@ -3,7 +3,7 @@
 
 
 // Win32++  Version 5.61
-// Released: 7th December, 2007 by:
+// Released: 5th December, 2007 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2715,10 +2715,10 @@ namespace Win32xx
 			HBRUSH hbrOld = (HBRUSH)::SelectObject(hDC, hbr);
 			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 			HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
-			
+
 			// Draw the checkmark's background rectangle
 			::Rectangle(hDC, rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
-			
+
 			::DeleteObject(::SelectObject(hDC, hPenOld));
 			::DeleteObject(::SelectObject(hDC, hbrOld));
 		}
@@ -2729,7 +2729,7 @@ namespace Win32xx
 		HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
 		HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
 		RECT rCheck = { 0, 0, cxCheck, cyCheck };
-		
+
 		// Copy the check mark bitmap to hdcMem
 		if (fType == MFT_RADIOCHECK)
 			::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
@@ -2761,7 +2761,7 @@ namespace Win32xx
 			::BitBlt(hdcMask, -BullitOffset, BullitOffset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
 			::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
 		}
-		
+
 		::DeleteObject(::SelectObject(hdcMask, hbmPrevMask));
 		::DeleteDC(hdcMask);
 		::DeleteObject(::SelectObject(hdcMem, hbmPrev));
@@ -3612,12 +3612,12 @@ namespace Win32xx
 		tt.clrPressed1 = RGB(255, 140, 40);
 		tt.clrPressed2 = RGB(255, 180, 80);
 		tt.clrOutline  = RGB(128, 128, 255);
-		
+
 		//	or you could use the following
 		//	BOOL T = TRUE;
 		//	BOOL F = FALSE;
 		//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-		
+
 		GetToolbar().SetToolbarTheme(tt);
 
 		if (m_bUseRebar)
@@ -3651,10 +3651,10 @@ namespace Win32xx
 
 	//	or you could use the following
 	//	ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-		
+
 		if (m_bUseRebar)
 			GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
-		
+
 		SetMenuTheme(tm); // Sets the theme for popup menus
 		RecalcLayout();
 	}
