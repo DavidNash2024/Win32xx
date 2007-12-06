@@ -1,7 +1,7 @@
 [Project]
 FileName=Splitter_RELEASE.dev
 Name=Splitter
-UnitCount=19
+UnitCount=21
 Type=0
 Ver=1
 ObjFiles=
@@ -220,9 +220,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\Windows\Rebar.h
+FileName=..\Win32++\GDI.cpp
 CompileCpp=1
-Folder=Header/Windows
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -230,9 +230,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=..\Windows\Splitter.cpp
+FileName=..\Win32++\GDI.h
 CompileCpp=1
-Folder=Source/Windows
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

@@ -215,26 +215,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="ThemesApp.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="main.cpp"
 				>
 				<FileConfiguration
@@ -256,6 +236,26 @@
 			</File>
 			<File
 				RelativePath="Mainfrm.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="ThemesApp.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -300,15 +300,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="ThemesApp.h"
-				>
-			</File>
-			<File
 				RelativePath="Mainfrm.h"
 				>
 			</File>
 			<File
 				RelativePath="resource.h"
+				>
+			</File>
+			<File
+				RelativePath="ThemesApp.h"
 				>
 			</File>
 			<File
@@ -362,6 +362,14 @@
 			</File>
 			<File
 				RelativePath="..\Win32++\Frame.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Win32++\GDI.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Win32++\GDI.h"
 				>
 			</File>
 			<File

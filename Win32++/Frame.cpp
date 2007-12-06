@@ -2,15 +2,15 @@
 // http://sourceforge.net/projects/win32-framework
 
 
-// Win32++  Version 5.61
-// Released: 5th December, 2007 by:
+// Win32++  Version 5.7
+// Released: ?? January, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: http://users.bigpond.net.au/programming/
 //
 //
-// Copyright (c) 2005-2007  David Nash
+// Copyright (c) 2005-2008  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -3765,64 +3765,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-
-/////////////////////////////////////////////////////////////////
-// Definitions for some global functions in the Win32xx namespace
-//
-
-void Win32xx::GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
-// A simple but efficient Gradient Filler compatible with all Windows operating systems
-{
-	int Width = pRc->right - pRc->left;
-	int Height = pRc->bottom - pRc->top;
-
-	int r1 = GetRValue(Color1);
-	int g1 = GetGValue(Color1);
-	int b1 = GetBValue(Color1);
-
-	int r2 = GetRValue(Color2);
-	int g2 = GetGValue(Color2);
-	int b2 = GetBValue(Color2);
-
-	COLORREF OldBkColor = ::GetBkColor(hDC);
-
-	if (bVertical)
-	{
-		for(int i=0; i < Width; i++)
-		{
-			int r = r1 + (i * (r2-r1) / Width);
-			int g = g1 + (i * (g2-g1) / Width);
-			int b = b1 + (i * (b2-b1) / Width);
-			::SetBkColor(hDC, RGB(r, g, b));
-			RECT line;
-
-			::SetRect(&line, i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
-			::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-		}
-	}
-	else
-	{
-		for(int i=0; i < Height; i++)
-		{
-			int r = r1 + (i * (r2-r1) / Height);
-			int g = g1 + (i * (g2-g1) / Height);
-			int b = b1 + (i * (b2-b1) / Height);
-			::SetBkColor(hDC, RGB(r, g, b));
-			RECT line;
-
-			::SetRect(&line, pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
-			::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-		}
-	}
-
-	::SetBkColor(hDC, OldBkColor);
-}
-
-void Win32xx::SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
-// Fills a rectangle with a solid color
-{
-	COLORREF OldColor = ::SetBkColor(hDC, Color);
-	::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
-	::SetBkColor(hDC, OldColor);
-}
 

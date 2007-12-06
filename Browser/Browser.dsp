@@ -104,6 +104,10 @@ SOURCE=.\FrameApp.cpp
 # End Source File
 # Begin Source File
 
+SOURCE="..\Win32++\GDI.cpp"
+# End Source File
+# Begin Source File
+
 SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
@@ -141,6 +145,10 @@ SOURCE="..\Win32++\Frame.h"
 # Begin Source File
 
 SOURCE=.\FrameApp.h
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\GDI.h"
 # End Source File
 # Begin Source File
 

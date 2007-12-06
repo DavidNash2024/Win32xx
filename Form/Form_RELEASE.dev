@@ -1,7 +1,7 @@
 [Project]
 FileName=Form_RELEASE.dev
 Name=Form
-UnitCount=16
+UnitCount=18
 Type=0
 Ver=1
 ObjFiles=
@@ -208,9 +208,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=FormApp.h
+FileName=..\Win32++\GDI.cpp
 CompileCpp=1
-Folder=Header
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -218,9 +218,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=FormApp.cpp
+FileName=..\Win32++\GDI.h
 CompileCpp=1
-Folder=Source
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

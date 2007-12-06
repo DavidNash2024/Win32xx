@@ -1,7 +1,7 @@
 [Project]
 FileName=Notepad_DEBUG.dev
 Name=Notepad
-UnitCount=17
+UnitCount=19
 Type=0
 Ver=1
 ObjFiles=
@@ -216,5 +216,23 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit18]
+FileName=..\Win32++\GDI.cpp
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
+[Unit19]
+FileName=..\Win32++\GDI.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

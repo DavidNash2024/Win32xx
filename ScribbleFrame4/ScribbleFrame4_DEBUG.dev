@@ -1,7 +1,7 @@
 [Project]
 FileName=ScribbleFrame4_DEBUG.dev
 Name=ScribbleFrame4
-UnitCount=16
+UnitCount=18
 Type=0
 Ver=1
 ObjFiles=
@@ -198,6 +198,26 @@ AutoIncBuildNr=0
 
 [Unit16]
 FileName=..\Win32++\Frame.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=..\Win32++\GDI.cpp
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=..\Win32++\GDI.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

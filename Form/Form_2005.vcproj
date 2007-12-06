@@ -333,6 +333,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Win32++\GDI.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Win32++\GDI.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Win32++\WinCore.cpp"
 				>
 			</File>

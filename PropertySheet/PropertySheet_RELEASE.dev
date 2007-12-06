@@ -1,7 +1,7 @@
 [Project]
 FileName=PropertySheet_RELEASE.dev
 Name=PropertySheet
-UnitCount=20
+UnitCount=22
 Type=0
 Ver=1
 ObjFiles=
@@ -238,6 +238,26 @@ BuildCmd=
 
 [Unit20]
 FileName=..\Win32++\PropertySheet.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=..\Win32++\GDI.cpp
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit22]
+FileName=..\Win32++\GDI.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

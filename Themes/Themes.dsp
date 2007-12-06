@@ -13,7 +13,7 @@ CFG=Themes - Win32 Debug
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Themes.mak" CFG="Frame - Win32 Debug"
+!MESSAGE NMAKE /f "Themes.mak" CFG="Themes - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -94,15 +94,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\ThemesApp.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\Mainfrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ThemesApp.cpp
 # End Source File
 # Begin Source File
 
@@ -118,15 +118,15 @@ SOURCE=..\Windows\Default_Resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThemesApp.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\Mainfrm.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ThemesApp.h
 # End Source File
 # Begin Source File
 
@@ -163,6 +163,14 @@ SOURCE="..\Win32++\Frame.cpp"
 # Begin Source File
 
 SOURCE="..\Win32++\Frame.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\GDI.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\GDI.h"
 # End Source File
 # Begin Source File
 

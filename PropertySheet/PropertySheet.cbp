@@ -326,6 +326,26 @@
 			<Option target="Debug MinGW GNU compiler"/>
 			<Option target="Release MinGW GNU compiler"/>
 		</Unit>
+		<Unit filename="..\Win32++\GDI.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
+		<Unit filename="..\Win32++\GDI.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug Borland"/>
+			<Option target="Release Borland"/>
+			<Option target="Debug Microsoft Visual C++"/>
+			<Option target="Release Microsoft Visual C++"/>
+			<Option target="Debug MinGW GNU compiler"/>
+			<Option target="Release MinGW GNU compiler"/>
+		</Unit>
 		<Unit filename="..\Win32++\PropertySheet.cpp">
 			<Option compilerVar="CPP"/>
 			<Option target="Debug Borland"/>

@@ -1,7 +1,7 @@
 [Project]
 FileName=MDIFrame_Debug.dev
 Name=MDIFrame
-UnitCount=18
+UnitCount=20
 Type=0
 Ver=1
 ObjFiles=
@@ -210,7 +210,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\Win32++\WinCore.cpp
+FileName=..\Win32++\GDI.cpp
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -261,6 +261,16 @@ AutoIncBuildNr=0
 FileName=resrc1.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit20]
+FileName=..\Win32++\GDI.h
+CompileCpp=1
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

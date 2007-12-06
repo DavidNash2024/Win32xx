@@ -1,7 +1,7 @@
 [Project]
 FileName=Shell_DEBUG.dev
 Name=Shell
-UnitCount=25
+UnitCount=27
 Type=0
 Ver=1
 ObjFiles=
@@ -296,5 +296,23 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 
+[Unit26]
+FileName=..\Win32++\GDI.cpp
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
+[Unit27]
+FileName=..\Win32++\GDI.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
