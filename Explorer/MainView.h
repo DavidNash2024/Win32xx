@@ -17,7 +17,7 @@
 class CMainView : public CSplitter
 {
 public:
-	CMainView(int nBarpos = 0, bool bVertical = true);
+	CMainView(/*int nBarpos = 0, bool bVertical = true*/);
 	virtual ~CMainView(){}
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

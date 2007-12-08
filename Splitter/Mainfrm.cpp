@@ -6,7 +6,7 @@
 #include "resource.h"
 
 
-CMainFrame::CMainFrame() : m_MainView(150, false)
+CMainFrame::CMainFrame() : m_MainView()
 {
 	SetView(m_MainView);
 

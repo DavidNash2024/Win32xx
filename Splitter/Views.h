@@ -53,7 +53,7 @@ private:
 class CMainView : public CSplitter
 {
 public:
-	CMainView(int nBarPos = 0, bool bVertical = true);
+	CMainView();
 	virtual ~CMainView(){}
 	virtual void Reposition();
 

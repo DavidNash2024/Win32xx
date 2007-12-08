@@ -6,8 +6,9 @@
 #include "mainfrm.h"
 
 
-CMainFrame::CMainFrame()  : m_MainView(200, true), m_bShowHidden(FALSE)
+CMainFrame::CMainFrame()  : m_MainView(), m_bShowHidden(FALSE)
 {
+
 	// Set m_MainView as the view window of the frame
 	SetView(m_MainView);
 

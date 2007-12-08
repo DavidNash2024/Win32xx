@@ -1,3 +1,24 @@
+Version 5.7
+-----------
+New Features
+* Added CDC class. This class simplifies the drawing to device contexts. 
+   - Automates the selection of GDI objects into the device context.
+   - Automates the destruction of GDI objects.
+   - Automates the deletion or release of the device context.
+   
+* Added an immediate mode to CSplitter. There is now the choice of resizing
+   the panes while the splitter bar is being dragged, or defer the resizing
+   until the splitter bar drag is complete (as before).
+   
+The following changes have been made to the Win32++ code:
+Added CDC class 
+Added CSplitter::SetImmediate
+Added CSplitter::SetVertical
+
+Changed CSplitter::CSplitter 	now requires no arguements
+
+
+
 Version 5.61
 -----------
 New Features

@@ -5,10 +5,10 @@
 #include "MainView.h"
 
 
-CMainView::CMainView(int nBarpos, bool bVertical) :
-	CSplitter(nBarpos, bVertical)
+CMainView::CMainView() :CSplitter()
 {
 	SetPanes(GetTreeView(), GetListView());
+	SetBarPos(200);
 }
 
 LRESULT CMainView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -1779,10 +1779,12 @@ namespace Win32xx
 						::MoveToEx(hDC, rcRect.left, rcRect.bottom -1, NULL);
 						::LineTo(hDC, rcRect.left, rcRect.top);
 						::LineTo(hDC, rcRect.right-1, rcRect.top);
-						::LineTo(hDC, rcRect.right-1, rcRect.bottom-1);
+						::LineTo(hDC, rcRect.right-1, rcRect.bottom);
 						if (!(nState & CDIS_SELECTED))
+						{
+							::MoveToEx(hDC, rcRect.right-1, rcRect.bottom-1, NULL);
 							::LineTo(hDC, rcRect.left, rcRect.bottom-1);
-
+						}
 						::DeleteObject(::SelectObject(hDC, hPenOld));
 					}
 					else

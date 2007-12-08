@@ -47,8 +47,11 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ////////////////////////////////
 // CTopView function definitions
-CTopView::CTopView() : CSplitter(100, true)
+CTopView::CTopView() : CSplitter()
 {
+	SetBarPos(100);
+	SetImmediate(true);
+	SetVertical(true);
 	m_TopLeft.SetString(_T("Top Left"));
 	m_TopRight.SetString(_T("Top Right"));
 
@@ -58,8 +61,11 @@ CTopView::CTopView() : CSplitter(100, true)
 
 ///////////////////////////////////
 // CBottomView function definitions
-CBottomView::CBottomView() : CSplitter(100, true)
+CBottomView::CBottomView() : CSplitter()
 {
+	SetBarPos(100);
+	SetImmediate(true);
+	SetVertical(true);
 	m_BottomLeft.SetString(_T("Bottom Left"));
 	m_BottomRight.SetString(_T("Bottom Right"));
 
@@ -69,9 +75,12 @@ CBottomView::CBottomView() : CSplitter(100, true)
 
 /////////////////////////////////
 // CMainView function definitions
-CMainView::CMainView(int nBarpos, bool bVertical) :
-	CSplitter(nBarpos, bVertical)
+CMainView::CMainView() :
+	CSplitter()
 {
+	SetBarPos(150);
+	SetImmediate(true);
+	SetVertical(false);
 	SetWidth(15);
 	SetPanes(m_Top, m_Bottom);
 }

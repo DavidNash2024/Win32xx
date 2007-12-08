@@ -50,8 +50,8 @@
 namespace Win32xx
 {
 
-	CSplitter::CSplitter(int nBarpos, BOOL bVertical) : m_pPane0(NULL), m_pPane1(NULL),
-					m_nBarPos(nBarpos), m_bCapture(false), m_bVertical(bVertical)
+	CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(0), m_bCapture(false), 
+		                       m_bVertical(true), m_bImmediate(false)
 	{
 		m_nWidth = 5;
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -69,6 +69,7 @@ namespace Win32xx
 
 	void CSplitter::DrawBar(int Pos)
 	{
+		// draws a hashed bar while the splitter bar is being dragged
 		if (m_bCapture)
 		{
 			HDC hDC = ::GetDC(m_hWnd);
@@ -105,7 +106,9 @@ namespace Win32xx
 			::ReleaseCapture();
 			m_bCapture = false;
 
-			DrawBar(m_nBarPos);
+			if (!m_bImmediate)
+				DrawBar(m_nBarPos);
+			
 			m_nBarPos = m_nBarpreMove;
 			m_nOldBarPos = m_nBarpreMove;
 		}
@@ -113,52 +116,39 @@ namespace Win32xx
 
 	void CSplitter::OnCreate()
 	{
-		try
+		// Set the color of the splitter bar
+		CRebar& RB = GetApp()->GetFrame()->GetRebar();
+		if (RB.GetRebarTheme().UseThemes)
+			m_Bar.SetBkgndColor(RB.GetRebarTheme().clrBkgnd2);
+		else
+			m_Bar.SetBkgndColor(GetSysColor(COLOR_BTNFACE));
+
+		// Create the splitter bar
+		WNDCLASSEX wcx = {0};
+		wcx.cbSize = sizeof(WNDCLASSEX);
+
+		// Create the splitter bar
+		if (m_bVertical)
 		{
-			// Set the color of the splitter bar
-			CRebar& RB = GetApp()->GetFrame()->GetRebar();
-			if (RB.GetRebarTheme().UseThemes)
-				m_Bar.SetBkgndColor(RB.GetRebarTheme().clrBkgnd2);
-			else
-				m_Bar.SetBkgndColor(GetSysColor(COLOR_BTNFACE));
-
-			// Create the splitter bar
-			WNDCLASSEX wcx = {0};
-			wcx.cbSize = sizeof(WNDCLASSEX);
-
-			// Create the splitter bar
-			if (m_bVertical)
-			{
-				wcx.lpszClassName = _T("Win32++ V Splitter");
-				wcx.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
-				m_Bar.RegisterClassEx(wcx);
-				m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
-			}
-			else
-			{
-				wcx.lpszClassName = _T("Win32++ H Splitter");
-				wcx.hCursor = ::LoadCursor (NULL, IDC_SIZENS);
-				m_Bar.RegisterClassEx(wcx);
-				m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
-			}
-
-			// Create the two window panes
-			if ((m_pPane0 == 0) || (m_pPane1 == 0))
-				throw CWinException(_T("CSplitter::OnCreate ... m_pPane0 or m_pPane1 is NULL\n Use SetPanes to set m_pPane0 & m_pPane1"));
-
-			m_pPane0->Create(m_hWnd);
-			m_pPane1->Create(m_hWnd);
+			wcx.lpszClassName = _T("Win32++ V Splitter");
+			wcx.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
+			m_Bar.RegisterClassEx(wcx);
+			m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
+		}
+		else
+		{
+			wcx.lpszClassName = _T("Win32++ H Splitter");
+			wcx.hCursor = ::LoadCursor (NULL, IDC_SIZENS);
+			m_Bar.RegisterClassEx(wcx);
+			m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
 		}
 
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
+		// Create the two window panes
+		if ((m_pPane0 == 0) || (m_pPane1 == 0))
+			throw CWinException(_T("CSplitter::OnCreate ... m_pPane0 or m_pPane1 is NULL\n Use SetPanes to set m_pPane0 & m_pPane1"));
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CSplitter::OnCreate"));
-		}
+		m_pPane0->Create(m_hWnd);
+		m_pPane1->Create(m_hWnd);
 	}
 
 	void CSplitter::OnLButtonDown()
@@ -166,13 +156,17 @@ namespace Win32xx
 		::SetCapture(m_hWnd);
 		m_bCapture = true;
 
-		DrawBar(m_nBarPos);
+		if (!m_bImmediate)
+			DrawBar(m_nBarPos);
+		
 		m_nBarpreMove = m_nBarPos;
 	}
 
 	void CSplitter::OnLButtonUp()
 	{
-		DrawBar(m_nBarPos);
+		if (!m_bImmediate)
+			DrawBar(m_nBarPos);
+		
 		::ReleaseCapture();
 
 		RecalcLayout();
@@ -217,8 +211,13 @@ namespace Win32xx
 					m_nBarPos = cy - m_nWidth/2;
 			}
 
-			DrawBar(m_nOldBarPos);
-			DrawBar(m_nBarPos);
+			if (m_bImmediate)
+				RecalcLayout();
+			else
+			{
+				DrawBar(m_nOldBarPos);
+				DrawBar(m_nBarPos);
+			}
 
 			m_nOldBarPos = m_nBarPos;
 		}
@@ -260,12 +259,14 @@ namespace Win32xx
 		if (nBarPos < 0) return;
 
 		RECT rClient = {0};
-		::GetClientRect(m_hWnd, &rClient);
-		int cx = rClient.right - rClient.left;
-		int cy = rClient.bottom - rClient.top;
-		if ((m_bVertical) && (nBarPos > cx)) return;
-		if ((!m_bVertical) && (nBarPos >cy)) return;
-
+		if (::GetClientRect(m_hWnd, &rClient))
+		{
+			int cx = rClient.right - rClient.left;
+			int cy = rClient.bottom - rClient.top;
+			if ((m_bVertical) && (nBarPos > cx)) return;
+			if ((!m_bVertical) && (nBarPos >cy)) return;
+		}
+		
 		m_nBarPos = nBarPos;
 		m_nOldBarPos = nBarPos;
 		RecalcLayout();
@@ -288,10 +289,31 @@ namespace Win32xx
 
 	void CSplitter::SetWidth(int nWidth)
 	{
+		// Sets the width of the splitter bar in pixels (default = 5)
 		if (nWidth > 0)
 			m_nWidth = nWidth;
 		else
-			::MessageBox(NULL, _T("Invalid Splitter bar width"), _T("Error"), MB_OK);
+			::DebugErrMsg(_T("Invalid Splitter bar width"));
+	
+		if (m_hWnd)
+			RecalcLayout();
+	}
+
+	void CSplitter::SetImmediate(bool bImmediate)
+	{
+		// Set to true to resize the panes while the splitter bar is moving
+		// Set to false to resize the panse after the splitter bar has moved
+		m_bImmediate = bImmediate;
+		if (m_hWnd)
+			RecalcLayout();
+	}
+	
+	void CSplitter::SetVertical(bool bVertical)
+	{
+		// Set to true for a vertical splitter bar, and false for a horizintal one
+		m_bVertical = bVertical;
+		if (m_hWnd)
+			RecalcLayout();
 	}
 
 	LRESULT CSplitter::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

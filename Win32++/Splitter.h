@@ -60,11 +60,13 @@ namespace Win32xx
 	class CSplitter : public CWnd
 	{
 	public:
-		CSplitter(int nBarpos, BOOL bVertical);
+		CSplitter();
 		virtual ~CSplitter();
 		virtual	int GetBarPos();
 		virtual void SetBarPos(int nBarPos);
 		virtual void SetBarColor(COLORREF color);
+		virtual void SetImmediate(bool bImmediate);
+		virtual void SetVertical(bool bVertical);
 		virtual void SetWidth(int nWidth);
 
 	protected:
@@ -91,8 +93,9 @@ namespace Win32xx
 		int m_nBarPos;		// X or Y position of the splitter bar
 		int m_nOldBarPos;	// Previous bar position, updated during move
 		int m_nBarpreMove;	// Previous bar position, not updated during move
-		BOOL m_bCapture;	// Mouse capture flag
-		BOOL m_bVertical;   // Vertical or horizontal splitter bar
+		bool m_bCapture;	// Mouse capture flag
+		bool m_bVertical;   // Vertical or horizontal splitter bar
+		bool m_bImmediate;	// Reposition immediately, or draw hashed reposition bar
 	};
 
 } // namespace Win32xx
