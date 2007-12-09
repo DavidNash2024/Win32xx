@@ -26,6 +26,7 @@
 #define IDW_CHILD7                      65
 #define IDW_CHILD8                      66
 #define IDW_CHILD9                      67
+#define IDW_CHILD10                     68
 
 // A generic ID for any static control
 #define IDW_STATIC                      -1

@@ -196,6 +196,11 @@ BEGIN
     IDW_CHILD3              "Activate this window"
     IDW_CHILD4              "Activate this window"
     IDW_CHILD5              "Activate this window"
+    IDW_CHILD6              "Activate this window"
+	IDW_CHILD7              "Activate this window"
+	IDW_CHILD8              "Activate this window"
+    IDW_CHILD9              "Activate this window"
+    IDW_CHILD10             "Select a window"
 END
 
 STRINGTABLE
@@ -222,14 +227,6 @@ END
 STRINGTABLE
 BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
-END
-
-STRINGTABLE
-BEGIN
-    IDW_CHILD6              "Activate this window"
-    IDW_CHILD7              "Activate this window"
-    IDW_CHILD8              "Activate this window"
-    IDW_CHILD9              "Activate this window"
 END
 
 STRINGTABLE

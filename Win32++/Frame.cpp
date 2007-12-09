@@ -366,7 +366,6 @@ namespace Win32xx
 		return bReturn;
 	}
 
-
 	int CToolbar::HitTest() const
 	{
 		// We do our own hit test since TB_HITTEST is a bit buggy,

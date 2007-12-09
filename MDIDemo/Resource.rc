@@ -278,6 +278,7 @@ BEGIN
     IDW_CHILD7              "Activate this window"
     IDW_CHILD8              "Activate this window"
     IDW_CHILD9              "Activate this window"
+    IDW_CHILD10             "Select a window"
 END
 
 STRINGTABLE
