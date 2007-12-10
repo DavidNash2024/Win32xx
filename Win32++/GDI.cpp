@@ -46,17 +46,22 @@ namespace Win32xx
 {
 
 	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
-		            m_hPenOld(0), m_hRegionOld(0)
+		            m_hPenOld(0), m_SavedDC(0), m_bAttachedDC(FALSE)
 	{
 		// After this constructor, you will need to assign a Device Context by using AttachDC
+		// Note that a HDC assigned by AttachDC is NOT released or deleted when CDC is destroyed
 
 	}
 
 	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
-		            m_hPenOld(0), m_hRegionOld(0)
+		            m_hPenOld(0), m_SavedDC(0), m_bAttachedDC(FALSE)
 	{
-		// This constructor attaches an existing HDC
-		AttachDC(hDC);
+		// This constructor assigns an existing HDC to the CDC
+		// The HDC WILL be released or deleted when the CDC object is destroyed
+		if (!hDC) throw CWinException(_T("Can't attach a NULL hDC"));
+
+		m_hDC = hDC;
+		m_SavedDC = ::SaveDC(hDC);
 
 		// Note: this constructor permits a call like this:
 		// CDC MyCDC = SomeHDC;
@@ -68,29 +73,35 @@ namespace Win32xx
 
 	CDC::~CDC()
 	{
-		if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
-		if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
-		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
-		if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
-		if (m_hRegionOld) ::SelectObject(m_hDC, m_hRegionOld);
-
 		if (m_hDC)
 		{
-			// We need to release a Window DC, and delete a memory DC
-			HWND hwnd = ::WindowFromDC(m_hDC);
-			if (hwnd) ::ReleaseDC(hwnd, m_hDC);
-			else      ::DeleteDC(m_hDC);
+			if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
+			if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
+			if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
+			if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
+			::RestoreDC(m_hDC, m_SavedDC);
+
+			if (m_bAttachedDC == FALSE)
+			{
+				// We need to release a Window DC, and delete a memory DC
+				HWND hwnd = ::WindowFromDC(m_hDC);
+				if (hwnd) ::ReleaseDC(hwnd, m_hDC);
+				else      ::DeleteDC(m_hDC);
+			}
 		}
 	}
 
 	void CDC::AttachDC(HDC hDC)
 	{
 		// Attach a pre-existing DC to this CDC object.
+		// You should use attach when the HDC is NOT to be released or deleted
 
 		if (m_hDC) throw CWinException(_T("Device Context ALREADY assigned"));
 		if (!hDC) throw CWinException(_T("Can't attach a NULL hDC"));
 
 		m_hDC = hDC;
+		m_SavedDC = ::SaveDC(hDC);
+		m_bAttachedDC = TRUE;
 	}
 
 	HDC CDC::DetachDC()
@@ -99,10 +110,11 @@ namespace Win32xx
 		if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 		if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
-		if (m_hRegionOld) ::SelectObject(m_hDC, m_hRegionOld);
 
 		HDC hDC = m_hDC;
+		::RestoreDC(m_hDC, m_SavedDC);
 		m_hDC = NULL;
+		m_bAttachedDC = FALSE;
 		return hDC;
 	}
 
@@ -118,7 +130,7 @@ namespace Win32xx
 		// Delete any existing bitmap
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
-		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
+		::SelectObject(m_hDC, hBitmap);
 	}
 
 	void CDC::CreateCompatibleBitmap(HDC hDC, int cx, int cy)
@@ -211,7 +223,7 @@ namespace Win32xx
 		if (!hBrush) throw CWinException(_T("Can't attach a NULL HBRUSH"));
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
-		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
+		::SelectObject(m_hDC, hBrush);
 	}
 
 	void CDC::CreateBrushIndirect(CONST LOGBRUSH *lplb)
@@ -315,7 +327,7 @@ namespace Win32xx
 		if (!hFont) throw CWinException(_T("Can't attach a NULL HFONT"));
 		if (m_hFontOld) ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
 
-		m_hFontOld = (HFONT)::SelectObject(m_hDC, hFont);
+		::SelectObject(m_hDC, hFont);
 	}
 
 	void CDC::CreateFont(
@@ -383,7 +395,7 @@ namespace Win32xx
 		if (!hPen) throw CWinException(_T("Can't attach a NULL HPEN"));
 		if (m_hPenOld) ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 
-		m_hPenOld = (HPEN)::SelectObject(m_hDC, hPen);
+		::SelectObject(m_hDC, hPen);
 	}
 
 	void CDC::CreatePen(int nStyle, int nWidth, COLORREF rgb)
@@ -433,9 +445,8 @@ namespace Win32xx
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (!hRegion) throw CWinException(_T("Can't attach a NULL HRGN"));
-		if (m_hRegionOld) ::SelectObject(m_hDC, m_hRegionOld);
 
-		m_hRegionOld = (HRGN)::SelectObject(m_hDC, hRegion);
+		::SelectObject(m_hDC, hRegion);
 	}
 
 } // namespace Win32xx
