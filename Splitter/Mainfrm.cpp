@@ -48,11 +48,11 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_SIZE:
-		if (::IsWindow(m_MainView.GetHwnd()))
+		if (::IsWindow(m_MainView))
 			m_MainView.Reposition();
 		break;
 	case USER_REARRANGED:
-		if (::IsWindow(m_MainView.GetHwnd()))
+		if (::IsWindow(m_MainView))
 			m_MainView.Reposition();
 		break;
 	}

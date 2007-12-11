@@ -1,18 +1,18 @@
 //////////////////////////////////////////////////
-// FrameApp.h
+// BrowserApp.h
 
-#ifndef FRAMEAPP_H
-#define FRAMEAPP_H
+#ifndef BROWSERAPP_H
+#define BROWSERAPP_H
 
 #include "Mainfrm.h"
 
 
 // Declaration of the CFrameApp class
-class CFrameApp : public CWinApp
+class CBrowserApp : public CWinApp
 {
 public:
-	CFrameApp(HINSTANCE hInstance);
-	virtual ~CFrameApp();
+	CBrowserApp(HINSTANCE hInstance);
+	virtual ~CBrowserApp();
 	BOOL InitInstance();
 
 private:
@@ -20,5 +20,5 @@ private:
 };
 
 
-#endif // define FRAMEAPP_H
+#endif // define BROWSERAPP_H
 

@@ -1,13 +1,13 @@
 /////////////////////////////////////////
 // main.cpp
 
-#include "FrameApp.h"
+#include "BrowserApp.h"
 
 
 INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {
     // Start Win32++
-    CFrameApp MyApp(hInstance);
+    CBrowserApp MyApp(hInstance);
 
 
 	// Run the application

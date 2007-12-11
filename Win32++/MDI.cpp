@@ -170,7 +170,7 @@ namespace Win32xx
 
 	LRESULT CMDIFrame::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefFrameProc(hWnd, m_MDIClient.GetHwnd(), uMsg, wParam, lParam);
+		return ::DefFrameProc(hWnd, m_MDIClient, uMsg, wParam, lParam);
 	}
 
 	CMDIChild* CMDIFrame::GetActiveMDIChildCWnd() const
@@ -181,7 +181,7 @@ namespace Win32xx
 	BOOL CMDIFrame::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
-		::SendMessage(m_MDIClient.GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+		::SendMessage(m_MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 

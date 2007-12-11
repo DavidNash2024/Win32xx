@@ -145,7 +145,7 @@ namespace Win32xx
 	// Called automatically in CWinApp::Run if _DEBUG is defined.
 	// You may called this function in release mode if you want to see the trace window.
 	{
-		if (m_Trace.GetHwnd() != 0)
+		if (m_Trace != 0)
 		{
 			DebugErrMsg(_T("Error, CreateTrace should only be called once"));
 			return;
@@ -164,11 +164,11 @@ namespace Win32xx
 
 		m_Trace.CreateEx(WS_EX_TOPMOST, _T("TRACE"), _T("Trace Window"), dwStyle, r, NULL, NULL);
 
-		::GetClientRect(m_Trace.GetHwnd(), &r);
+		::GetClientRect(m_Trace, &r);
 		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
 
 		m_hTraceEdit = ::CreateWindowEx(0L, _T("RichEdit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-					m_Trace.GetHwnd(), NULL, GetApp()->GetInstanceHandle(), NULL);
+					m_Trace, NULL, GetApp()->GetInstanceHandle(), NULL);
 
 		// Set a default font
 		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
@@ -293,8 +293,8 @@ namespace Win32xx
 		}
 
 		// The Trace window is initially invisible. Make it visible now.
-		if (!::IsWindowVisible(m_Trace.GetHwnd()))
-			::ShowWindow(m_Trace.GetHwnd(), SW_SHOWNA);
+		if (!::IsWindowVisible(m_Trace))
+			::ShowWindow(m_Trace, SW_SHOWNA);
 
 		HWND PreFocus = ::GetFocus();
 		tString String = szString;

@@ -92,15 +92,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\BrowserApp.cpp
+# End Source File
+# Begin Source File
+
 SOURCE="..\Win32++\Dialog.cpp"
 # End Source File
 # Begin Source File
 
 SOURCE="..\Win32++\Frame.cpp"
-# End Source File
-# Begin Source File
-
-SOURCE=.\FrameApp.cpp
 # End Source File
 # Begin Source File
 
@@ -132,6 +132,10 @@ SOURCE="..\Win32++\WinCore.cpp"
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\BrowserApp.h
+# End Source File
+# Begin Source File
+
 SOURCE="..\Win32++\Default_Resource.h"
 # End Source File
 # Begin Source File
@@ -141,10 +145,6 @@ SOURCE="..\Win32++\Dialog.h"
 # Begin Source File
 
 SOURCE="..\Win32++\Frame.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\FrameApp.h
 # End Source File
 # Begin Source File
 

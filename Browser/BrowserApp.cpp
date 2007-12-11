@@ -1,19 +1,20 @@
 //////////////////////////////////////////////
-//PropertySheetApp.cpp
-
-#include "PropertySheetApp.h"
+//BrowserApp.cpp
 
 
-// Definitions for the CFrameApp class
-CPropertySheetApp::CPropertySheetApp(HINSTANCE hInstance) : CWinApp(hInstance)
+#include "BrowserApp.h"
+
+
+// Definitions for the CBrowserApp class
+CBrowserApp::CBrowserApp(HINSTANCE hInstance) : CWinApp(hInstance)
 {
 }
 
-CPropertySheetApp::~CPropertySheetApp()
+CBrowserApp::~CBrowserApp()
 {
 }
 
-BOOL CPropertySheetApp::InitInstance()
+BOOL CBrowserApp::InitInstance()
 {
 	//Start Tracing
 	TRACE(_T("Tracing Started"));
@@ -29,4 +30,3 @@ BOOL CPropertySheetApp::InitInstance()
 
 	return TRUE;
 }
-

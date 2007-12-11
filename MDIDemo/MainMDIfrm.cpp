@@ -43,7 +43,7 @@ void CMainMDIFrame::DoPopupMenu()
 	// Position the popup menu
 	CToolbar& TB = GetToolbar();
 	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
-	::MapWindowPoints(GetToolbar().GetHwnd(), NULL, (LPPOINT)&rc, 2);
+	::MapWindowPoints(GetToolbar(), NULL, (LPPOINT)&rc, 2);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
@@ -124,7 +124,7 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
  		//Menu for dropdown toolbar button
 		case TBN_DROPDOWN:
 		{
-			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar())
 				DoPopupMenu();
 		}
 		break;
@@ -152,7 +152,7 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	if (IsRebarUsed())
 	{
 		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+		RB.ResizeBand(RB.GetBand(TB), TB.GetMaxSize());
 	}
 	RecalcLayout();
 

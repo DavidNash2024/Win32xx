@@ -67,8 +67,8 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 
 	// Put some text in the edit boxes
-	::SetDlgItemText(GetHwnd(), IDC_EDIT1, _T("Edit Control"));
-	::SetDlgItemText(GetHwnd(), IDC_RICHEDIT1, _T("Rich Edit Window"));
+	SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
+	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
 
 	// Put some text in the list box
 	HWND hListBox = ::GetDlgItem(GetHwnd(), IDC_LIST1);
@@ -86,43 +86,43 @@ void CMyDialog::OnOK()
 
 void CMyDialog::OnButton()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Button Pressed"));
+	SetDlgItemText(IDC_STATIC3, _T("Button Pressed"));
 	TRACE(_T("Button Pressed"));
 }
 
 void CMyDialog::OnCheck1()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 1"));
+	SetDlgItemText(IDC_STATIC3, _T("Check Box 1"));
 	TRACE(_T("Check Box 1"));
 }
 
 void CMyDialog::OnCheck2()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 2"));
+	SetDlgItemText(IDC_STATIC3, _T("Check Box 2"));
 	TRACE(_T("Check Box 2"));
 }
 
 void CMyDialog::OnCheck3()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 3"));
+	SetDlgItemText(IDC_STATIC3, _T("Check Box 3"));
 	TRACE(_T("Check Box 3"));
 }
 
 void CMyDialog::OnRadio1()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 1"));
+	SetDlgItemText(IDC_STATIC3, _T("Radio 1"));
 	TRACE(_T("Radio 1"));
 }
 
 void CMyDialog::OnRadio2()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 2"));
+	SetDlgItemText(IDC_STATIC3, _T("Radio 2"));
 	TRACE(_T("Radio 2"));
 }
 
 void CMyDialog::OnRadio3()
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 3"));
+	SetDlgItemText(IDC_STATIC3, _T("Radio 3"));
 	TRACE(_T("Radio 3"));
 }
 

@@ -242,16 +242,16 @@ namespace Win32xx
 			// Reposition our window panes and bar
 			::SetWindowPos(m_pPane0->GetHwnd(), NULL, 0, 0, m_nBarPos - w2, cy, SWP_SHOWWINDOW );
 			::SetWindowPos(m_pPane1->GetHwnd(), NULL, m_nBarPos - w2 + m_nWidth, 0, cx - m_nBarPos - m_nWidth + w2, cy, SWP_SHOWWINDOW );
-			::SetWindowPos(m_Bar.GetHwnd(), NULL, m_nBarPos - w2, 0, m_nWidth, cy, SWP_SHOWWINDOW );
+			::SetWindowPos(m_Bar, NULL, m_nBarPos - w2, 0, m_nWidth, cy, SWP_SHOWWINDOW );
 		}
 		else
 		{
 			// Reposition our window panes and bar
 			::SetWindowPos(m_pPane0->GetHwnd(), NULL, 0, 0, cx, m_nBarPos - w2, SWP_SHOWWINDOW );
 			::SetWindowPos(m_pPane1->GetHwnd(), NULL, 0, m_nBarPos - w2 + m_nWidth, cx, cy - m_nBarPos - m_nWidth + w2, SWP_SHOWWINDOW );
-			::SetWindowPos(m_Bar.GetHwnd(), NULL, 0, m_nBarPos - w2, cx, m_nWidth , SWP_SHOWWINDOW );
+			::SetWindowPos(m_Bar, NULL, 0, m_nBarPos - w2, cx, m_nWidth , SWP_SHOWWINDOW );
 		}
-		InvalidateRect(m_Bar.GetHwnd(), NULL, TRUE);
+		InvalidateRect(m_Bar, NULL, TRUE);
 	}
 
 	void CSplitter::SetBarPos(int nBarPos)
@@ -269,7 +269,8 @@ namespace Win32xx
 		
 		m_nBarPos = nBarPos;
 		m_nOldBarPos = nBarPos;
-		RecalcLayout();
+
+		if (m_hWnd)	RecalcLayout();
 	}
 
 	void CSplitter::SetBarColor(COLORREF color)
@@ -331,7 +332,7 @@ namespace Win32xx
 			{
 				POINT pt;
 				GetCursorPos(&pt);
-				if (WindowFromPoint(pt) == m_Bar.GetHwnd())
+				if (WindowFromPoint(pt) == m_Bar)
 					OnLButtonDown();
 			}
 			break;

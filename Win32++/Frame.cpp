@@ -1079,7 +1079,7 @@ namespace Win32xx
 			{
 				if (IsBandVisible(nBand))
 				{
-					HWND hwndMenubar = GetApp()->GetFrame()->GetMenubar().GetHwnd();
+					HWND hwndMenubar = GetApp()->GetFrame()->GetMenubar();
 					if (nBand != GetBand(hwndMenubar))
 					{
 						// Determine the size of this band
@@ -1276,9 +1276,9 @@ namespace Win32xx
 
 		CMenubar& MB = GetApp()->GetFrame()->GetMenubar();
 		if (m_Theme.LockMenuBand)
-			ShowGripper(GetBand(MB.GetHwnd()), FALSE);
+			ShowGripper(GetBand(MB), FALSE);
 		else
-			ShowGripper(GetBand(MB.GetHwnd()), TRUE);
+			ShowGripper(GetBand(MB), TRUE);
 
 		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
@@ -2532,7 +2532,7 @@ namespace Win32xx
 			rbbi.cyMinChild = Menubar_Height;
 			rbbi.cyMaxChild = Menubar_Height;
 			rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
-			rbbi.hwndChild  = GetMenubar().GetHwnd();
+			rbbi.hwndChild  = GetMenubar();
 
 			GetRebar().InsertBand(-1, &rbbi);
 			SetMenubarBandSize();
@@ -2557,7 +2557,7 @@ namespace Win32xx
 		try
 		{
 			// Create the Toolbar Window
-			TB.Create(GetRebar().GetHwnd());
+			TB.Create(GetRebar());
 			int nButtons = TB.SetButtons(TBData);
 			TB.SetImageList(nButtons, clrMask, ID_Normal, ID_HOT, ID_Disabled);
 
@@ -2573,7 +2573,7 @@ namespace Win32xx
 			rbbi.cxMinChild = sz.cx +2;
 
 			rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
-			rbbi.hwndChild  = TB.GetHwnd();
+			rbbi.hwndChild  = TB;
 
 			GetRebar().InsertBand(-1, &rbbi);
 		}
@@ -2768,15 +2768,15 @@ namespace Win32xx
 		::GetClientRect(m_hWnd, &rFrame);
 
 		// Get size of status bar window
-		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
-			::GetWindowRect(GetStatusbar().GetHwnd(), &rStatus);
+		if (::IsWindowVisible(GetStatusbar()))
+			::GetWindowRect(GetStatusbar(), &rStatus);
 
 		// Get size of top rebar or toolbar
 		if (IsRebarSupported() && m_bUseRebar)
-			::GetWindowRect(GetRebar().GetHwnd(), &rTop);
+			::GetWindowRect(GetRebar(), &rTop);
 		else
-			if (IsWindowVisible(GetToolbar().GetHwnd()))
-				::GetWindowRect(GetToolbar().GetHwnd(), &rTop);
+			if (IsWindowVisible(GetToolbar()))
+				::GetWindowRect(GetToolbar(), &rTop);
 
 		// Return client size less the rebar and status windows
 		int nHeight = rTop.bottom - rTop.top;
@@ -2910,7 +2910,7 @@ namespace Win32xx
 			GetRebar().Create(m_hWnd);
 
 			// Create the menu inside rebar
-			GetMenubar().Create(GetRebar().GetHwnd());
+			GetMenubar().Create(GetRebar());
 			GetMenubar().SetMenu(m_hMenu);
 			AddMenubarBand();
 
@@ -3072,7 +3072,7 @@ namespace Win32xx
 		{
 			// Store the window handle that currently has keyboard focus
 			HWND hPrevFocus = ::GetFocus();
-			if (hPrevFocus == GetMenubar().GetHwnd())
+			if (hPrevFocus == GetMenubar())
 				hPrevFocus = m_hWnd;
 
 			IsHelpOpen = TRUE;
@@ -3279,7 +3279,7 @@ namespace Win32xx
 				::GetCursorPos(&pt);
 
 				// Is the mouse hovering over the toolbar?
-				if (WindowFromPoint(pt) == tb.GetHwnd())
+				if (WindowFromPoint(pt) == tb)
 				{
 					// Which toolbar button is the mouse cursor hovering over?
 					int nButton = tb.HitTest();
@@ -3317,13 +3317,13 @@ namespace Win32xx
 
 	void CFrame::OnViewStatusbar()
 	{
-		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
+		if (::IsWindowVisible(GetStatusbar()))
 		{
-			::ShowWindow(GetStatusbar().GetHwnd(), SW_HIDE);
+			::ShowWindow(GetStatusbar(), SW_HIDE);
 		}
 		else
 		{
-			::ShowWindow(GetStatusbar().GetHwnd(), SW_SHOW);
+			::ShowWindow(GetStatusbar(), SW_SHOW);
 		}
 
 		UpdateCheckMarks();
@@ -3335,19 +3335,19 @@ namespace Win32xx
 
 	void CFrame::OnViewToolbar()
 	{
-		if (::IsWindowVisible(GetToolbar().GetHwnd()))
+		if (::IsWindowVisible(GetToolbar()))
 		{
 			if (IsMenubarUsed())
-				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), FALSE);
+				::SendMessage(GetRebar(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar()), FALSE);
 			else
-				::ShowWindow(GetToolbar().GetHwnd(), SW_HIDE);
+				::ShowWindow(GetToolbar(), SW_HIDE);
 		}
 		else
 		{
 			if (IsMenubarUsed())
-				::SendMessage(GetRebar().GetHwnd(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar().GetHwnd()), TRUE);
+				::SendMessage(GetRebar(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar()), TRUE);
 			else
-				::ShowWindow(GetToolbar().GetHwnd(), SW_SHOW);
+				::ShowWindow(GetToolbar(), SW_SHOW);
 		}
 
 		UpdateCheckMarks();
@@ -3378,7 +3378,7 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		HWND hStatusbar = m_Statusbar.GetHwnd();
+		HWND hStatusbar = m_Statusbar;
 		if (hStatusbar)
 		{
 			::SendMessage(hStatusbar, WM_SIZE, 0, 0);
@@ -3391,10 +3391,10 @@ namespace Win32xx
 		// Resize the rebar or toolbar
 		if (IsRebarUsed())
 		{
-			::SendMessage(m_Rebar.GetHwnd(), WM_SIZE, 0, 0);
+			::SendMessage(m_Rebar, WM_SIZE, 0, 0);
 		}
 		else
-			::SendMessage(m_Toolbar.GetHwnd(), TB_AUTOSIZE, 0, 0);
+			::SendMessage(m_Toolbar, TB_AUTOSIZE, 0, 0);
 
 		// Resize the View window
 		RECT rClient = GetClientSize();
@@ -3448,10 +3448,10 @@ namespace Win32xx
 		// This prevents other bands from moving to this Menubar's row.
 
 		RECT rc = {0};
-		GetClientRect(GetRebar().GetHwnd(), &rc);
+		GetClientRect(GetRebar(), &rc);
 		int Width = rc.right - rc.left;
 		CRebar& RB = GetRebar();
-		int nBand = RB.GetBand(GetMenubar().GetHwnd());
+		int nBand = RB.GetBand(GetMenubar());
 		rc = RB.GetBandBorders(nBand);
 		Width = Width - rc.left - rc.right - 2;
 
@@ -3470,7 +3470,7 @@ namespace Win32xx
 
 	void CFrame::SetStatusIndicators()
 	{
-		if (::IsWindow(GetStatusbar().GetHwnd()))
+		if (::IsWindow(GetStatusbar()))
 		{
 			static LPCTSTR OldStatus1 = NULL;
 			static LPCTSTR OldStatus2 = NULL;
@@ -3493,7 +3493,7 @@ namespace Win32xx
 
 	void CFrame::SetStatusText()
 	{
-		if (::IsWindow(GetStatusbar().GetHwnd()))
+		if (::IsWindow(GetStatusbar()))
 		{
 			// Get the coordinates of the parent window's client area.
 			RECT rcClient;
@@ -3590,7 +3590,7 @@ namespace Win32xx
 
 	void CFrame::UpdateCheckMarks()
 	{
-		if (::IsWindowVisible(GetToolbar().GetHwnd()))
+		if (::IsWindowVisible(GetToolbar()))
 		// Show toolbar check mark
 		{
 			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
@@ -3605,7 +3605,7 @@ namespace Win32xx
 				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 		}
 
-		if (::IsWindowVisible(GetStatusbar().GetHwnd()))
+		if (::IsWindowVisible(GetStatusbar()))
 		// Show status bar check mark
 		{
 			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);

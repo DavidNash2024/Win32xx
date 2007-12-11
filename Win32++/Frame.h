@@ -314,9 +314,9 @@ namespace Win32xx
 		CToolbar& GetToolbar()		{return m_Toolbar;}
 
 		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
-		BOOL IsMenubarUsed() const		{return (m_Menubar.GetHwnd() != 0);}
+		BOOL IsMenubarUsed() const		{return (m_Menubar != 0);}
 		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
-		BOOL IsRebarUsed() const		{return (m_Rebar.GetHwnd() != 0);}
+		BOOL IsRebarUsed() const		{return (m_Rebar != 0);}
 
 	protected:
 		// These are the functions you might wish to override
