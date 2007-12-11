@@ -50,7 +50,7 @@
 namespace Win32xx
 {
 
-	CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(0), m_bCapture(false), 
+	CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(10), m_bCapture(false), 
 		                       m_bVertical(true), m_bImmediate(false)
 	{
 		m_nWidth = 5;

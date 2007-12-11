@@ -4,7 +4,7 @@ New Features
 * Added CDC class. This class simplifies the drawing to device contexts. 
    - Automates the selection of GDI objects into the device context.
    - Automates the destruction of GDI objects.
-   - Automates the deletion or release of the device context.
+   - Automates the deletion or release of the device contexts.
    
 * Added an immediate mode to CSplitter. There is now the choice of resizing
    the panes while the splitter bar is being dragged, or defer the resizing
@@ -21,7 +21,14 @@ Added CWnd::SetWindowText
 
 Changed CSplitter::CSplitter 	now requires no arguements
 
-
+Incompatibilities with previous versions:
+CSplitter now has a default constructor. This simplifies the use of CSplitter.
+The following functions can be used to set the CSplitter paramerters:
+* SetBarPos	sets the initial splitter bar position (default is 10)
+* SetBarColor   sets the color of the splitter bar (default is rebar color)
+* SetImmediate  sets immediate mode true or false (default is false)
+* SetVertical   sets vertical bar mode true or false (default is true)
+* SetWidth      sets the width of the splitter bar (default is 5)
 
 Version 5.61
 -----------
