@@ -176,6 +176,7 @@ namespace Win32xx
 		virtual HWND Detach();
 		virtual HWND GetAncestor(HWND hWnd) const;
 		virtual CWnd* GetCWndObject(HWND hWnd) const;
+		virtual LPCTSTR GetDlgItemText(int nIDDlgItem);
 		virtual LPCTSTR GetWindowText();
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);

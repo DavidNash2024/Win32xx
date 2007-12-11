@@ -678,6 +678,15 @@ namespace Win32xx
 		return NULL;	// No matching CWnd for this HWND
 	}
 
+	LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem)
+	{
+		TCHAR szString[MAX_STRING_SIZE];
+
+		::GetDlgItemText(m_hWnd, nIDDlgItem, szString, MAX_STRING_SIZE);
+		m_String = szString;
+		return m_String.c_str();
+	}
+
 	LPCTSTR CWnd::GetWindowText()
 	{
 		TCHAR szString[MAX_STRING_SIZE];

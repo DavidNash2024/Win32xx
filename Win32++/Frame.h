@@ -108,7 +108,6 @@ namespace Win32xx
 		virtual void SetPaneWidth(int iPane, int iWidth) const;
 
 	private:
-	//	TCHAR m_szText[80];
 		tString m_String;
 	};
 
