@@ -16,6 +16,8 @@ Added CSplitter::SetImmediate
 Added CSplitter::SetVertical
 Added CWnd::GetDlgItemText
 Added CWnd::GetWindowText
+Added CWnd::SetDlgItemText
+Added CWnd::SetWindowText
 
 Changed CSplitter::CSplitter 	now requires no arguements
 

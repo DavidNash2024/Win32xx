@@ -503,6 +503,7 @@ namespace Win32xx
 					m_bDrawArrowBkgrnd = FALSE;
 
 					// Manually draw the dropdown arrow
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
 					for (int i = 2; i >= 0; i--)
 					{
 						::MoveToEx(DrawDC, xAPos -i-1, yAPos - i+1, NULL);

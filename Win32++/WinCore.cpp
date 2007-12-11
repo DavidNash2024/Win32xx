@@ -965,6 +965,11 @@ namespace Win32xx
 		}
 	}
 
+	BOOL CWnd::SetDlgItemText(int nID, LPCTSTR lpString)
+	{
+		return ::SetDlgItemText(m_hWnd, nID, lpString);
+	}
+
 	void CWnd::SetHook()
 	{
 		// Create the CBT Hook
@@ -997,23 +1002,20 @@ namespace Win32xx
 
 	void CWnd::SetParent(HWND hParent)
 	{
-		try
+		if (::IsWindow(hParent))
 		{
-			if (::IsWindow(hParent))
-			{
-				m_hWndParent = hParent;
-				if (::IsWindow(m_hWnd))
-					::SetParent(m_hWnd, hParent);
-			}
-			else
-				throw CWinException(_T("CWnd::SetParent ... Failed to set parent"));
+			m_hWndParent = hParent;
+			if (::IsWindow(m_hWnd))
+				::SetParent(m_hWnd, hParent);
 		}
+		else
+			throw CWinException(_T("CWnd::SetParent ... Failed to set parent"));
+	
+	}
 
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			// Not a critical problem, so no need to rethrow
-		}
+	BOOL CWnd::SetWindowText(LPCTSTR lpString)
+	{
+		return ::SetWindowText(m_hWnd, lpString);
 	}
 
 	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)

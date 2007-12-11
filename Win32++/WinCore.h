@@ -183,12 +183,15 @@ namespace Win32xx
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
 		virtual void SetBkgndColor(COLORREF color);
+		virtual BOOL SetDlgItemText(int nID, LPCTSTR lpString);
 		virtual void SetParent(HWND hParent);
+		virtual BOOL SetWindowText(LPCTSTR lpString);
 
 		// These functions aren't virtual, so there's no point overriding them
 		HWND GetHwnd() const {return m_hWnd;}
 		HBRUSH GetBkgndBrush() const {return m_hBrushBkgnd;}
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		operator HWND() const {return m_hWnd;}
 
 	protected:
 		// These are the functions you might wish to override
