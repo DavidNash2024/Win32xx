@@ -1099,7 +1099,7 @@ namespace Win32xx
 						int xPad = IsXPThemed()? 2: 0;
 						rcDraw.left -= xPad;
 
-						// Fill the Source HDC with the band's background
+						// Fill the Source CDC with the band's background
 						CDC SourceDC = ::CreateCompatibleDC(hDC);
 						SourceDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 						RECT rcBorder = GetBandBorders(nBand);
@@ -1854,22 +1854,18 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				HDC hdcMenubar = ::GetDC(m_hWnd);
-				if (hdcMenubar)
+				CDC MenubarDC = ::GetDC(m_hWnd);
+				m_nMDIButton = -1;
+				
+				if (PtInRect(&m_MDIRect[0], pt)) m_nMDIButton = 0;
+				if (PtInRect(&m_MDIRect[1], pt)) m_nMDIButton = 1;
+				if (PtInRect(&m_MDIRect[2], pt)) m_nMDIButton = 2;
+
+				if (m_nMDIButton >= 0)
 				{
-					m_nMDIButton = -1;
-					if (PtInRect(&m_MDIRect[0], pt)) m_nMDIButton = 0;
-					if (PtInRect(&m_MDIRect[1], pt)) m_nMDIButton = 1;
-					if (PtInRect(&m_MDIRect[2], pt)) m_nMDIButton = 2;
-
-					if (m_nMDIButton >= 0)
-					{
-						DrawMDIButton(hdcMenubar, MDI_MIN,     (m_nMDIButton == 0)? 2 : 0);
-						DrawMDIButton(hdcMenubar, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
-						DrawMDIButton(hdcMenubar, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
-					}
-
-					::ReleaseDC(m_hWnd, hdcMenubar);
+					DrawMDIButton(MenubarDC, MDI_MIN,     (m_nMDIButton == 0)? 2 : 0);
+					DrawMDIButton(MenubarDC, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
+					DrawMDIButton(MenubarDC, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
 				}
 
 				// Bring up the MDI Child window's system menu when the icon is pressed
@@ -2058,15 +2054,11 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				HDC hdcMenubar = ::GetDC(m_hWnd);
-				if (hdcMenubar)
-				{
-					DrawMDIButton(hdcMenubar, MDI_MIN,     0);
-					DrawMDIButton(hdcMenubar, MDI_RESTORE, 0);
-					DrawMDIButton(hdcMenubar, MDI_CLOSE,   0);
+				CDC MenubarDC = ::GetDC(m_hWnd);
 
-					::ReleaseDC(m_hWnd, hdcMenubar);
-				}
+				DrawMDIButton(MenubarDC, MDI_MIN,     0);
+				DrawMDIButton(MenubarDC, MDI_RESTORE, 0);
+				DrawMDIButton(MenubarDC, MDI_CLOSE,   0);
 			}
 		}
 	}
@@ -2081,46 +2073,42 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				HDC hdcMenubar = ::GetDC(m_hWnd);
-				if (hdcMenubar)
-				{
-					int MDIButton = -1;
-					if (PtInRect(&m_MDIRect[0], pt)) MDIButton = 0;
-					if (PtInRect(&m_MDIRect[1], pt)) MDIButton = 1;
-					if (PtInRect(&m_MDIRect[2], pt)) MDIButton = 2;
+				CDC MenubarDC = ::GetDC(m_hWnd);
+				int MDIButton = -1;
+				if (PtInRect(&m_MDIRect[0], pt)) MDIButton = 0;
+				if (PtInRect(&m_MDIRect[1], pt)) MDIButton = 1;
+				if (PtInRect(&m_MDIRect[2], pt)) MDIButton = 2;
 
-					if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
+				if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
+				{
+					// toggle the MDI button image pressed/unpressed as required
+					if (MDIButton >= 0)
 					{
-						// toggle the MDI button image pressed/unpressed as required
-						if (MDIButton >= 0)
-						{
-							DrawMDIButton(hdcMenubar, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0))? 2 : 0);
-							DrawMDIButton(hdcMenubar, MDI_RESTORE, ((MDIButton == 1) && (m_nMDIButton == 1))? 2 : 0);
-							DrawMDIButton(hdcMenubar, MDI_CLOSE,   ((MDIButton == 2) && (m_nMDIButton == 2))? 2 : 0);
-						}
-						else
-						{
-							DrawMDIButton(hdcMenubar, MDI_MIN,     0);
-							DrawMDIButton(hdcMenubar, MDI_RESTORE, 0);
-							DrawMDIButton(hdcMenubar, MDI_CLOSE,   0);
-						}
+						DrawMDIButton(MenubarDC, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0))? 2 : 0);
+						DrawMDIButton(MenubarDC, MDI_RESTORE, ((MDIButton == 1) && (m_nMDIButton == 1))? 2 : 0);
+						DrawMDIButton(MenubarDC, MDI_CLOSE,   ((MDIButton == 2) && (m_nMDIButton == 2))? 2 : 0);
 					}
-					else	// mouse moved without left mouse button held down
+					else
 					{
-						if (MDIButton >= 0)
-						{
-							DrawMDIButton(hdcMenubar, MDI_MIN,     (MDIButton == 0)? 1 : 0);
-							DrawMDIButton(hdcMenubar, MDI_RESTORE, (MDIButton == 1)? 1 : 0);
-							DrawMDIButton(hdcMenubar, MDI_CLOSE,   (MDIButton == 2)? 1 : 0);
-						}
-						else
-						{
-							DrawMDIButton(hdcMenubar, MDI_MIN,     0);
-							DrawMDIButton(hdcMenubar, MDI_RESTORE, 0);
-							DrawMDIButton(hdcMenubar, MDI_CLOSE,   0);
-						}
+						DrawMDIButton(MenubarDC, MDI_MIN,     0);
+						DrawMDIButton(MenubarDC, MDI_RESTORE, 0);
+						DrawMDIButton(MenubarDC, MDI_CLOSE,   0);
 					}
-					::ReleaseDC(m_hWnd, hdcMenubar);
+				}
+				else	// mouse moved without left mouse button held down
+				{
+					if (MDIButton >= 0)
+					{
+						DrawMDIButton(MenubarDC, MDI_MIN,     (MDIButton == 0)? 1 : 0);
+						DrawMDIButton(MenubarDC, MDI_RESTORE, (MDIButton == 1)? 1 : 0);
+						DrawMDIButton(MenubarDC, MDI_CLOSE,   (MDIButton == 2)? 1 : 0);
+					}
+					else
+					{
+						DrawMDIButton(MenubarDC, MDI_MIN,     0);
+						DrawMDIButton(MenubarDC, MDI_RESTORE, 0);
+						DrawMDIButton(MenubarDC, MDI_CLOSE,   0);
+					}
 				}
 			}
 		}
@@ -2619,43 +2607,37 @@ namespace Win32xx
 		// Process each image in the ImageList
 		for (int i = 0 ; i < nCount; i++)
 		{
-		//	HDC hdcToolbar = ::GetDC(NULL);
-			HDC DesktopDC = ::GetDC(NULL);
-			HDC hdcMem = ::CreateCompatibleDC(NULL);
-			HBITMAP hbmMem = ::CreateCompatibleBitmap(DesktopDC, cx, cx);
-			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
+			CDC DesktopDC = ::GetDC(NULL);
+			CDC MemDC = ::CreateCompatibleDC(NULL);
+			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
 			RECT rc;
 			SetRect(&rc, 0, 0, cx, cx);
 
 			// Set the mask color to magenta for the new ImageList
 			COLORREF crMask = RGB(255,0,255);
-			SolidFill(hdcMem, crMask, &rc);
+			SolidFill(MemDC, crMask, &rc);
 
 			// Draw the image on the memory DC
-			ImageList_Draw(hImageList, i, hdcMem, 0, 0, ILD_TRANSPARENT);
+			ImageList_Draw(hImageList, i, MemDC, 0, 0, ILD_TRANSPARENT);
 
 			// Convert colored pixels to gray
 			for (int x = 0 ; x < cx; x++)
 			{
 				for (int y = 0; y < cy; y++)
 				{
-					COLORREF clr = ::GetPixel(hdcMem, x, y);
+					COLORREF clr = ::GetPixel(MemDC, x, y);
 
 					if (clr != crMask)
 					{
 						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
-						::SetPixel(hdcMem, x, y, RGB(byGray, byGray, byGray));
+						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
 					}
 				}
 			}
 
-			::SelectObject(hdcMem, hbmMemOld);
-			ImageList_AddMasked(hImageListDis, hbmMem, crMask);
-
-			// Cleanup the GDI objects
-			::DeleteObject(hbmMem);
-			::DeleteDC(hdcMem);
-		//	::ReleaseDC(NULL, hdcToolbar);
+			HBITMAP hbm = MemDC.DetachBitmap();
+			ImageList_AddMasked(hImageListDis, hbm, crMask);
+			::DeleteObject(hbm);
 		}
 
 		return hImageListDis;

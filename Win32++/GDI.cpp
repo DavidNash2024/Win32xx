@@ -217,7 +217,8 @@ namespace Win32xx
 	{
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		
-		return (HBITMAP) ::GetCurrentObject(m_hDC, OBJ_BITMAP);
+		HBITMAP hbm = (HBITMAP) ::GetCurrentObject(m_hDC, OBJ_BITMAP);
+		return hbm;
 	}
 
 	// Brush functions
