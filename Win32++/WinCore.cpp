@@ -297,13 +297,10 @@ namespace Win32xx
 			::ShowWindow(m_Trace.GetHwnd(), SW_SHOWNA);
 
 		HWND PreFocus = ::GetFocus();
+		tString String = szString;
+		String += _T("\r\n");	// Add CR LF to the end
 
-		// Add CR LF to the end
-		TCHAR str[80] = _T("");
-		::lstrcpyn(str, szString, 77);
-		::lstrcat(str, _T("\r\n"));
-
-		::SendMessage(m_hTraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)str);
+		::SendMessage(m_hTraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)String.c_str());
 		::SendMessage(m_hTraceEdit, EM_SCROLLCARET, (WPARAM)0, (LPARAM)0);
 
 		SetFocus(PreFocus);
@@ -318,8 +315,6 @@ namespace Win32xx
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
-		m_String.clear();
-
 	}
 
 	CWnd::~CWnd()
@@ -724,7 +719,7 @@ namespace Win32xx
 		if (GetApp() == 0)
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
-		m_String.clear();
+		m_String = _T("");
 		TCHAR szString[MAX_STRING_SIZE] = _T("");
 		if (!::LoadString (GetApp()->GetResourceHandle(), nID, szString, MAX_STRING_SIZE))
 		{

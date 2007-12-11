@@ -60,7 +60,6 @@ namespace Win32xx
 	//
 	CStatusbar::CStatusbar()
 	{
-		m_String.clear();
 	}
 
 	void CStatusbar::PreCreate(CREATESTRUCT &cs)
@@ -90,7 +89,7 @@ namespace Win32xx
 		{
 			if (::IsWindow(m_hWnd))
 			{
-				m_String.clear();
+				m_String = _T("");
 
 				// Get size of Text array
 				int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPane, 0));

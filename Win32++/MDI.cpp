@@ -131,7 +131,6 @@ namespace Win32xx
 
 		// Append MDI Child windows
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-		TCHAR szTitle[25];
 		tStringStream StrStream;
 		int nWindow = 0;
 
