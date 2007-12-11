@@ -132,7 +132,7 @@ namespace Win32xx
 		// Append MDI Child windows
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 		TCHAR szTitle[25];
-		TCHAR szString[30];
+		tStringStream StrStream;
 		int nWindow = 0;
 
 		// Allocate an iterator for our MDIChild vector
@@ -150,9 +150,9 @@ namespace Win32xx
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
 				{
-					::GetWindowText(hwndMDIChild, szTitle, 25);
-					::wsprintf(szString, _T("&%d %s"), nWindow+1, szTitle);
-					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szString );
+					StrStream.str(_T(""));
+					StrStream << _T("&") << nWindow+1 << _T("   ") << (*v)->GetWindowText();
+					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, StrStream.str().c_str() );
 
 					if (GetActiveMDIChild() == hwndMDIChild)
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);

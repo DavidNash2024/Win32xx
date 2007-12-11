@@ -678,6 +678,15 @@ namespace Win32xx
 		return NULL;	// No matching CWnd for this HWND
 	}
 
+	LPCTSTR CWnd::GetWindowText()
+	{
+		TCHAR szString[MAX_STRING_SIZE];
+
+		::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE);
+		m_String = szString;
+		return m_String.c_str();
+	}
+
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
 	{
 		if (GetApp() == 0)
