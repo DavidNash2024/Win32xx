@@ -2619,9 +2619,10 @@ namespace Win32xx
 		// Process each image in the ImageList
 		for (int i = 0 ; i < nCount; i++)
 		{
-			HDC hdcToolbar = ::GetDC(NULL);
+		//	HDC hdcToolbar = ::GetDC(NULL);
+			HDC DesktopDC = ::GetDC(NULL);
 			HDC hdcMem = ::CreateCompatibleDC(NULL);
-			HBITMAP hbmMem = ::CreateCompatibleBitmap(hdcToolbar, cx, cx);
+			HBITMAP hbmMem = ::CreateCompatibleBitmap(DesktopDC, cx, cx);
 			HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, hbmMem);
 			RECT rc;
 			SetRect(&rc, 0, 0, cx, cx);
@@ -2654,7 +2655,7 @@ namespace Win32xx
 			// Cleanup the GDI objects
 			::DeleteObject(hbmMem);
 			::DeleteDC(hdcMem);
-			::ReleaseDC(NULL, hdcToolbar);
+		//	::ReleaseDC(NULL, hdcToolbar);
 		}
 
 		return hImageListDis;
@@ -3173,47 +3174,41 @@ namespace Win32xx
 
 		else
 		{
-			HDC hDC = GetDC(NULL);
-			if (hDC)
-			{
-				// Get the font used in menu items
-				NONCLIENTMETRICS info = {0};
-				info.cbSize = sizeof(info);
-				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-				// Default menu items are bold, so take this into account
-				if ((INT)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
-					info.lfMenuFont.lfWeight = FW_BOLD;
+			CDC DesktopDC = GetDC(NULL);
 
-				HFONT hFont = CreateFontIndirect(&info.lfMenuFont);
-				HFONT hfntOld = (HFONT)::SelectObject(hDC, hFont);
+			// Get the font used in menu items
+			NONCLIENTMETRICS info = {0};
+			info.cbSize = sizeof(info);
+			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			// Default menu items are bold, so take this into account
+			if ((INT)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
+				info.lfMenuFont.lfWeight = FW_BOLD;
 
-				// Calculate the size of the text
-				SIZE size;
-				GetTextExtentPoint32(hDC, pmd->Text, lstrlen(pmd->Text), &size);
+			DesktopDC.CreateFontIndirect(&info.lfMenuFont);
 
-				// Calculate the size of the icon
-				int Iconx = 0;
-				int Icony = 0;
-				ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+			// Calculate the size of the text
+			SIZE size;
+			GetTextExtentPoint32(DesktopDC, pmd->Text, lstrlen(pmd->Text), &size);
 
-				pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
-				pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
+			// Calculate the size of the icon
+			int Iconx = 0;
+			int Icony = 0;
+			ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
 
-				// Allow extra width if the text includes a tab
-				if (_tcschr(pmd->Text, _T('\t')))
-					pmis->itemWidth += POST_TEXT_GAP;
+			pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
+			pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
 
-				// Allow extra width if the menu item has a sub menu
-				if (pmd->hSubMenu)
-					pmis->itemWidth += 10;
+			// Allow extra width if the text includes a tab
+			if (_tcschr(pmd->Text, _T('\t')))
+				pmis->itemWidth += POST_TEXT_GAP;
 
-				// Allow extra width for themed menu
-				if (m_ThemeMenu.UseThemes)
-					pmis->itemWidth += 8;
+			// Allow extra width if the menu item has a sub menu
+			if (pmd->hSubMenu)
+				pmis->itemWidth += 10;
 
-				::DeleteObject(::SelectObject(hDC, hfntOld));
-				::ReleaseDC(m_hWnd, hDC);
-			}
+			// Allow extra width for themed menu
+			if (m_ThemeMenu.UseThemes)
+				pmis->itemWidth += 8;
 		}
 
 		return TRUE;
