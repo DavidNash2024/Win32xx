@@ -71,6 +71,33 @@ namespace Win32xx
 		// CDC MyCDC = ::GetDC(SomeHWND);
 	}
 
+	CDC::CDC(const CDC& CopyCDC)
+	{
+		m_hDC		  = CopyCDC.m_hDC;
+		m_hBitmapOld  = CopyCDC.m_hBitmapOld;
+		m_hBrushOld   = CopyCDC.m_hBrushOld;
+		m_hFontOld	  = CopyCDC.m_hFontOld;
+        m_hPenOld	  = CopyCDC.m_hPenOld;
+		m_SavedDC	  = CopyCDC.m_SavedDC;
+		m_bAttachedDC = CopyCDC.m_SavedDC;
+	}
+
+	CDC& CDC::operator = (const CDC& rhs)
+	{
+		// Check for self assignment
+		if (&rhs == this) return *this;
+
+		m_hDC		  = rhs.m_hDC;
+		m_hBitmapOld  = rhs.m_hBitmapOld;
+		m_hBrushOld   = rhs.m_hBrushOld;
+		m_hFontOld	  = rhs.m_hFontOld;
+        m_hPenOld	  = rhs.m_hPenOld;
+		m_SavedDC	  = rhs.m_SavedDC;
+		m_bAttachedDC = rhs.m_SavedDC;
+
+		return *this;
+	}
+
 	CDC::~CDC()
 	{
 		if (m_hDC)
@@ -211,14 +238,6 @@ namespace Win32xx
 		HBITMAP hBitmap = (HBITMAP)::SelectObject(m_hDC, m_hBitmapOld);
 		m_hBitmapOld = NULL;
 		return hBitmap;
-	}
-
-	HBITMAP CDC::GetCurrentBitmap()
-	{
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		
-		HBITMAP hbm = (HBITMAP) ::GetCurrentObject(m_hDC, OBJ_BITMAP);
-		return hbm;
 	}
 
 	// Brush functions

@@ -1479,7 +1479,7 @@ namespace Win32xx
 			GrabFocus();
 	}
 
-	void CMenubar::DrawAllMDIButtons(HDC hDC)
+	void CMenubar::DrawAllMDIButtons(CDC DrawDC)
 	{
 		if (!IsMDIFrame())
 			return;
@@ -1511,20 +1511,14 @@ namespace Win32xx
 				}
 			}
 
-			DrawMDIButton(hDC, MDI_MIN, 0);
-			DrawMDIButton(hDC, MDI_RESTORE, 0);
-			DrawMDIButton(hDC, MDI_CLOSE, 0);
+			DrawMDIButton(DrawDC, MDI_MIN, 0);
+			DrawMDIButton(DrawDC, MDI_RESTORE, 0);
+			DrawMDIButton(DrawDC, MDI_CLOSE, 0);
 		}
 	}
 
-	void CMenubar::DrawMDIButton(HDC hDC, int iButton, UINT uState)
+	void CMenubar::DrawMDIButton(CDC DrawDC, int iButton, UINT uState)
 	{
-		// uState: Normal = 0, Hot = 1, Pressed = 2
-		// iButton: MDI_MIN = 0, MDI_RESTORE = 1, MDI_CLOSE = 2
-
-		CDC DrawDC;
-		DrawDC.AttachDC(hDC);
-
 		if (!IsRectEmpty(&m_MDIRect[iButton]))
 		{
 			switch (uState)
@@ -1786,7 +1780,9 @@ namespace Win32xx
 		case CDDS_POSTPAINT:
 			// Draw MDI Minimise, Restore and Close buttons
 			{
-				DrawAllMDIButtons(lpNMCustomDraw->nmcd.hdc);
+				CDC DrawDC;
+				DrawDC.AttachDC(lpNMCustomDraw->nmcd.hdc);
+				DrawAllMDIButtons(DrawDC);
 			}
 			break;
 		}
@@ -2168,12 +2164,8 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, &m_MDIRect[1], TRUE);
 		::InvalidateRect(m_hWnd, &m_MDIRect[2], TRUE);
 		{
-			HDC hdcMenubar = ::GetDC(m_hWnd);
-			if (hdcMenubar)
-			{
-				DrawAllMDIButtons(hdcMenubar);
-				::ReleaseDC(m_hWnd, hdcMenubar);
-			}
+			CDC MenubarDC = ::GetDC(m_hWnd);
+			DrawAllMDIButtons(MenubarDC);
 		}
 	}
 
@@ -2716,7 +2708,8 @@ namespace Win32xx
 		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
 
 		// get the drawing rectangle
-		HDC hDC = pdis->hDC;
+		CDC DrawDC;
+		DrawDC.AttachDC(pdis->hDC);
 		RECT rc = pdis->rcItem;
 		int offset = (rc.bottom - rc.top - Icony)/2;
 		int height = rc.bottom - rc.top;
@@ -2735,13 +2728,13 @@ namespace Win32xx
 		if (iImage >= 0 )
 		{
 			if ((bDisabled) && (m_hImageListDis))
-				ImageList_Draw(m_hImageListDis, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+				ImageList_Draw(m_hImageListDis, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
 			else
-				ImageList_Draw(m_hImageList, iImage, hDC, rc.left, rc.top, ILD_TRANSPARENT);
+				ImageList_Draw(m_hImageList, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
 		}
 	}
 
-	void CFrame::DrawMenuText(HDC hDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
+	void CFrame::DrawMenuText(CDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
 	{
 		// find the position of tab character
 		int nTab = -1;
@@ -2755,12 +2748,12 @@ namespace Win32xx
 		}
 
 		// Draw the item text
-		::SetTextColor(hDC, colorText);
-		::DrawText(hDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+		::SetTextColor(DrawDC, colorText);
+		::DrawText(DrawDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
 		// Draw text after tab, right aligned
 		if(nTab != -1)
-			::DrawText(hDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+			::DrawText(DrawDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
 	RECT CFrame::GetClientSize()

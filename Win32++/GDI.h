@@ -96,6 +96,8 @@ namespace Win32xx
 	public:
 		CDC();
 		CDC(HDC hDC);
+		CDC(const CDC&); // Copy constructor
+		CDC& operator = (const CDC& rhs);	// Assignment operator
 		virtual ~CDC();
 
 		// Allocate the Device Context
@@ -112,7 +114,6 @@ namespace Win32xx
 		virtual void CreateDIBSection(HDC hdc, CONST BITMAPINFO *pbmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset);
 		virtual HBITMAP DetachBitmap();
-		virtual HBITMAP GetCurrentBitmap();
 
 		// Create and Select Brushes
 		virtual void AttachBrush(HBRUSH hBrush);
@@ -146,9 +147,6 @@ namespace Win32xx
 		operator HDC() const {return m_hDC;}
 
 	private:
-		CDC(const CDC&);				// Disable copy construction
-		CDC& operator = (const CDC&);	// Disable assignment operator
-
 		HDC m_hDC;
 		HBITMAP m_hBitmapOld;
 		HBRUSH m_hBrushOld;

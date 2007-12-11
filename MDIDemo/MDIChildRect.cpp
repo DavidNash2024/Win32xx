@@ -45,19 +45,14 @@ LRESULT CMDIChildRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 			nGreen  = rand () & 255;
 			nBlue   = rand () & 255;
 
-			HDC hdc = GetDC (m_hWnd);
-			HBRUSH hBrush = ::CreateSolidBrush (RGB (nRed, nGreen, nBlue));
-			HBRUSH hOldBrush = (HBRUSH)::SelectObject (hdc, hBrush);
+			CDC RectDC = GetDC (m_hWnd);
+			RectDC.CreateSolidBrush (RGB (nRed, nGreen, nBlue));
 
             int Left   = (xLeft < xRight) ? xLeft : xRight;
             int Top    = (yTop < yBottom) ? yTop  : yBottom;
             int Right  = (xLeft > xRight) ? xLeft : xRight;
             int Bottom = (yTop > yBottom) ? yTop  : yBottom;
-            ::Rectangle (hdc, Left, Top, Right, Bottom);
-
-			::SelectObject (hdc, hOldBrush);
-			::DeleteObject (hBrush);
-			::ReleaseDC (m_hWnd, hdc);
+            ::Rectangle (RectDC, Left, Top, Right, Bottom);
 		}
 		break;
 
