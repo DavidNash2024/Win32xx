@@ -213,6 +213,13 @@ namespace Win32xx
 		return hBitmap;
 	}
 
+	HBITMAP CDC::GetCurrentBitmap()
+	{
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		
+		return (HBITMAP) ::GetCurrentObject(m_hDC, OBJ_BITMAP);
+	}
+
 	// Brush functions
 	void CDC::AttachBrush(HBRUSH hBrush)
 	{

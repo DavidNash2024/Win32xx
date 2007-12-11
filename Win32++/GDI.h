@@ -112,6 +112,7 @@ namespace Win32xx
 		virtual void CreateDIBSection(HDC hdc, CONST BITMAPINFO *pbmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset);
 		virtual HBITMAP DetachBitmap();
+		virtual HBITMAP GetCurrentBitmap();
 
 		// Create and Select Brushes
 		virtual void AttachBrush(HBRUSH hBrush);

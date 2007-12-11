@@ -413,7 +413,8 @@ namespace Win32xx
 		// An item is about to be drawn
 		case CDDS_ITEMPREPAINT:
 			{
-				HDC hDC = lpNMCustomDraw->nmcd.hdc;
+				CDC DrawDC;
+				DrawDC.AttachDC(lpNMCustomDraw->nmcd.hdc);
 				RECT rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -430,39 +431,33 @@ namespace Win32xx
 				SIZE TextSize = {0};
 				if (HasText())	// Does any button have text?
 				{
-					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
-					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
+					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
 					if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
 					{
-						::GetTextExtentPoint32(hDC, szText, lstrlen(szText), &TextSize);
+						::GetTextExtentPoint32(DrawDC, szText, lstrlen(szText), &TextSize);
 					}
-
-					::SelectObject(hDC, hOldFont);
 				}
 
 				// Draw outline rectangle
 				if (nState & (CDIS_HOT | CDIS_SELECTED))
 				{
-					HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-					HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-					::MoveToEx(hDC, rcRect.left, rcRect.top, NULL);
-					::LineTo(hDC, rcRect.left, rcRect.bottom-1);
-					::LineTo(hDC, rcRect.right-1, rcRect.bottom-1);
-					::LineTo(hDC, rcRect.right-1, rcRect.top);
-					::LineTo(hDC, rcRect.left, rcRect.top);
-					::SelectObject(hDC, hOldPen);
-					::DeleteObject(hPen);
+					DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+					::MoveToEx(DrawDC, rcRect.left, rcRect.top, NULL);
+					::LineTo(DrawDC, rcRect.left, rcRect.bottom-1);
+					::LineTo(DrawDC, rcRect.right-1, rcRect.bottom-1);
+					::LineTo(DrawDC, rcRect.right-1, rcRect.top);
+					::LineTo(DrawDC, rcRect.left, rcRect.top);
 				}
 
 				// Draw filled gradient background
 				::InflateRect(&rcRect, -1, -1);
 				if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 				{
-					GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
+					GradientFill(DrawDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
 				}
 				else if (nState & CDIS_HOT)
 				{
-					GradientFill(hDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
+					GradientFill(DrawDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
 				}
 
 				HIMAGELIST hImageList = (nState & CDIS_DISABLED)? m_hImageListDis : (m_hImageListHot? m_hImageListHot: m_hImageList);
@@ -501,7 +496,7 @@ namespace Win32xx
 						RECT rcArrowBkgnd = {0};
 						::CopyRect(&rcArrowBkgnd, &rcRect);
 						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
-						GradientFill(hDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcArrowBkgnd, FALSE);
+						GradientFill(DrawDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcArrowBkgnd, FALSE);
 					}
 
 					m_bDrawArrowBkgrnd = FALSE;
@@ -509,25 +504,23 @@ namespace Win32xx
 					// Manually draw the dropdown arrow
 					for (int i = 2; i >= 0; i--)
 					{
-						::MoveToEx(hDC, xAPos -i-1, yAPos - i+1, NULL);
-						::LineTo  (hDC, xAPos +i,   yAPos - i+1);
+						::MoveToEx(DrawDC, xAPos -i-1, yAPos - i+1, NULL);
+						::LineTo  (DrawDC, xAPos +i,   yAPos - i+1);
 					}
 
 					// Draw line between icon and dropdown arrow
 					if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
 					{
-						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-						HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-						::MoveToEx(hDC, rcRect.right - 13, rcRect.top, NULL);
-						::LineTo(hDC, rcRect.right - 13, rcRect.bottom);
-						::DeleteObject(::SelectObject(hDC, hOldPen));
+						DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+						::MoveToEx(DrawDC, rcRect.right - 13, rcRect.top, NULL);
+						::LineTo(DrawDC, rcRect.right - 13, rcRect.bottom);
 					}
 				}
 
 				// Draw the button image
 				if (xImage > 0)
 				{
-					ImageList_Draw(hImageList, iImage, hDC, xImage, yImage, ILD_TRANSPARENT);
+					ImageList_Draw(hImageList, iImage, DrawDC, xImage, yImage, ILD_TRANSPARENT);
 				}
 
 				//Draw Text
@@ -548,27 +541,25 @@ namespace Win32xx
 
 					OffsetRect(&rcText, xOffset, yOffset);
 
-					int iMode = ::SetBkMode(hDC, TRANSPARENT);
-					HFONT hFont = (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0);
-					HFONT hOldFont = (HFONT)::SelectObject(hDC, hFont);
+					int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
+					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
 
 					if (nState & (CDIS_DISABLED))
 					{
 						// Draw text twice for embossed look
 						::OffsetRect(&rcText, 1, 1);
-						::SetTextColor(hDC, RGB(255,255,255));
-						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
+						::SetTextColor(DrawDC, RGB(255,255,255));
+						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
 						::OffsetRect(&rcText, -1, -1);
-						::SetTextColor(hDC, GetSysColor(COLOR_GRAYTEXT));
-						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
+						::SetTextColor(DrawDC, GetSysColor(COLOR_GRAYTEXT));
+						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
 					}
 					else
 					{
-						::SetTextColor(hDC, GetSysColor(COLOR_BTNTEXT));
-						::DrawTextEx(hDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
+						::SetTextColor(DrawDC, GetSysColor(COLOR_BTNTEXT));
+						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 					}
-					::SelectObject(hDC, hOldFont);
-					::SetBkMode(hDC, iMode);
+					::SetBkMode(DrawDC, iMode);
 				}
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
@@ -1066,18 +1057,17 @@ namespace Win32xx
 		int BarHeight = rc.bottom - rc.top;
 
 		// Create and set up our memory DC
-		HDC hdcMem = ::CreateCompatibleDC(hDC);
-		HBITMAP hbmMem = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
-		HBITMAP hbmMemOld = (HBITMAP)::SelectObject(hdcMem, (HBITMAP)hbmMem);
+		CDC MemDC = ::CreateCompatibleDC(hDC);
+		MemDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 
 		// Draw to Rebar background to the memory DC
 		rc.right = 600;
-		GradientFill(hdcMem, m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, &rc, TRUE);
+		GradientFill(MemDC, m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, &rc, TRUE);
 		if (BarWidth >= 600)
 		{
 			rc.left = 600;
 			rc.right = BarWidth;
-			SolidFill(hdcMem, m_Theme.clrBkgnd2, &rc);
+			SolidFill(MemDC, m_Theme.clrBkgnd2, &rc);
 		}
 
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
@@ -1110,23 +1100,21 @@ namespace Win32xx
 						rcDraw.left -= xPad;
 
 						// Fill the Source HDC with the band's background
-						HBITMAP hbmSource = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
-						HDC hdcSource = ::CreateCompatibleDC(hDC);
-						HBITMAP hbmSourceOld = (HBITMAP)::SelectObject(hdcSource, (HBITMAP)hbmSource);
+						CDC SourceDC = ::CreateCompatibleDC(hDC);
+						SourceDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 						RECT rcBorder = GetBandBorders(nBand);
 						rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
-						SolidFill(hdcSource, m_Theme.clrBand1, &rcDraw);
+						SolidFill(SourceDC, m_Theme.clrBand1, &rcDraw);
 						rcDraw.top = rcDraw.bottom;
 						rcDraw.bottom = rcBand.bottom;
-						GradientFill(hdcSource, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
+						GradientFill(SourceDC, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
 
 						// Set Curve amount for rounded edges
 						int Curve = m_Theme.RoundBorders? 12 : 0;
 
 						// Create our mask for rounded edges using RoundRect
-						HBITMAP hbmMask   = ::CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
-						HDC hdcMask = ::CreateCompatibleDC(hDC);
-						HBITMAP hbmMaskOld = (HBITMAP)::SelectObject(hdcMask, (HBITMAP)hbmMask);
+						CDC MaskDC = ::CreateCompatibleDC(hDC);
+						MaskDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 
 						rcDraw.top = rcBand.top;
 						if (!m_Theme.FlatStyle)
@@ -1141,34 +1129,27 @@ namespace Win32xx
 
 						if (m_Theme.FlatStyle)
 						{
-							SolidFill(hdcMask, RGB(0,0,0), &rcDraw);
-							::BitBlt(hdcMask, left, top, cx, cy, hdcMask, left, top, PATINVERT);
-							::RoundRect(hdcMask, left, top, right, bottom, Curve, Curve);
+							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
+							::BitBlt(MaskDC, left, top, cx, cy, MaskDC, left, top, PATINVERT);
+							::RoundRect(MaskDC, left, top, right, bottom, Curve, Curve);
 						}
 						else
 						{
-							SolidFill(hdcMask, RGB(0,0,0), &rcDraw);
-							::RoundRect(hdcMask, left, top, right, bottom, Curve, Curve);
-							::BitBlt(hdcMask, left, top, cx, cy, hdcMask, left, top, PATINVERT);
+							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
+							::RoundRect(MaskDC, left, top, right, bottom, Curve, Curve);
+							::BitBlt(MaskDC, left, top, cx, cy, MaskDC, left, top, PATINVERT);
 						}
 
 						// Copy Source DC to Memory DC using the RoundRect mask
-						::BitBlt(hdcMem, left, top, cx, cy, hdcSource, left, top, SRCINVERT);
-						::BitBlt(hdcMem, left, top, cx, cy, hdcMask,   left, top, SRCAND);
-						::BitBlt(hdcMem, left, top, cx, cy, hdcSource, left, top, SRCINVERT);
-
-						::DeleteObject(::SelectObject(hdcMask, hbmMaskOld));
-						::DeleteDC(hdcMask);
-						::DeleteObject(::SelectObject(hdcSource, hbmSourceOld));
-						::DeleteDC(hdcSource);
+						::BitBlt(MemDC, left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+						::BitBlt(MemDC, left, top, cx, cy, MaskDC,   left, top, SRCAND);
+						::BitBlt(MemDC, left, top, cx, cy, SourceDC, left, top, SRCINVERT);
 
 						// Extra drawing to prevent jagged edge while moving bands
 						if (m_bIsDragging)
 						{
-							HDC hdcRebar = ::GetDC(m_hWnd);
-							::BitBlt(hdcRebar, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, hdcMem, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
-							::SelectObject(hdcRebar, ::GetStockObject(SYSTEM_FONT));
-							::ReleaseDC(m_hWnd, hdcRebar);
+							CDC RebarDC = ::GetDC(m_hWnd);
+							::BitBlt(RebarDC, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 						}
 					}
 				}
@@ -1183,16 +1164,12 @@ namespace Win32xx
 				rc = GetBandRect(j);
 				rc.left = max(0, rc.left - 4);
 				rc.bottom +=2;
-				::DrawEdge(hdcMem, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+				::DrawEdge(MemDC, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 			}
 		}
 
 		// Copy the Memory DC to the window's DC
-		::BitBlt(hDC, 0, 0, BarWidth, BarHeight, hdcMem, 0, 0, SRCCOPY);
-
-		// Cleanup
-		::DeleteObject(SelectObject(hdcMem, hbmMemOld));
-		::DeleteDC(hdcMem);
+		::BitBlt(hDC, 0, 0, BarWidth, BarHeight, MemDC, 0, 0, SRCCOPY);
 
 		return TRUE;
 	}
@@ -1545,6 +1522,9 @@ namespace Win32xx
 		// uState: Normal = 0, Hot = 1, Pressed = 2
 		// iButton: MDI_MIN = 0, MDI_RESTORE = 1, MDI_CLOSE = 2
 
+		CDC DrawDC;
+		DrawDC.AttachDC(hDC);
+
 		if (!IsRectEmpty(&m_MDIRect[iButton]))
 		{
 			switch (uState)
@@ -1552,103 +1532,92 @@ namespace Win32xx
 			case 0:
 				{
 					// Draw a grey outline
-					HPEN hPen = ::CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
-					HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-					::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-					SelectObject(hDC, hOldPen);
-					DeleteObject(hPen);
+					DrawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
+					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			case 1:
 				{
-					// Draw outline, white at top, black on bottom
-					HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					HPEN hOldPen = (HPEN)::SelectObject(hDC, hBlackPen);
-					::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					::SelectObject(hDC, hWhitePen);
-					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-					SelectObject(hDC, hOldPen);
-					DeleteObject(hWhitePen);
-					DeleteObject(hBlackPen);
+					// Draw outline, white at top, black on bottom					
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 
 				break;
 			case 2:
 				{
 					// Draw outline, black on top, white on bottom
-					HPEN hWhitePen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					HPEN hBlackPen = ::CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					HPEN hOldPen = (HPEN)::SelectObject(hDC, hWhitePen);
-					::MoveToEx(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(hDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					::SelectObject(hDC, hBlackPen);
-					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(hDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-					SelectObject(hDC, hOldPen);
-					DeleteObject(hWhitePen);
-					DeleteObject(hBlackPen);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
+					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			}
+
+			DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 
 			switch (iButton)
 			{
 			case MDI_MIN:
 				// Manually Draw Minimise button
-				::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
-				::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
+				::MoveToEx(DrawDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
+				::LineTo(DrawDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
 
-				::MoveToEx(hDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
-				::LineTo(hDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
+				::MoveToEx(DrawDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
+				::LineTo(DrawDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
 				break;
 			case MDI_RESTORE:
 				// Manually Draw Restore Button
-				::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
-				::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
-				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
-				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
-				::LineTo(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				::MoveToEx(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
+				::LineTo(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
+				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
+				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
+				::LineTo(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
 
-				::MoveToEx(hDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
-				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
+				::MoveToEx(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
+				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
 
-				::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
-				::LineTo(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
-				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
-				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
-				::LineTo(hDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
+				::MoveToEx(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
+				::LineTo(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
+				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
+				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
+				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
 
-				::MoveToEx(hDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
-				::LineTo(hDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
+				::MoveToEx(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
+				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
 				break;
 			case MDI_CLOSE:
 				// Manually Draw Close Button
-				::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +5, NULL);
-				::LineTo(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
+				::MoveToEx(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +5, NULL);
+				::LineTo(DrawDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(hDC, m_MDIRect[2].left + 5, m_MDIRect[2].top +5, NULL);
-				::LineTo(hDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
+				::MoveToEx(DrawDC, m_MDIRect[2].left + 5, m_MDIRect[2].top +5, NULL);
+				::LineTo(DrawDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
 
-				::MoveToEx(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +6, NULL);
-				::LineTo(hDC, m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
+				::MoveToEx(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +6, NULL);
+				::LineTo(DrawDC, m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(hDC, m_MDIRect[2].right -5, m_MDIRect[2].top +5, NULL);
-				::LineTo(hDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
+				::MoveToEx(DrawDC, m_MDIRect[2].right -5, m_MDIRect[2].top +5, NULL);
+				::LineTo(DrawDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(hDC, m_MDIRect[2].right -5, m_MDIRect[2].top +6, NULL);
-				::LineTo(hDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
+				::MoveToEx(DrawDC, m_MDIRect[2].right -5, m_MDIRect[2].top +6, NULL);
+				::LineTo(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(hDC, m_MDIRect[2].right -6, m_MDIRect[2].top +5, NULL);
-				::LineTo(hDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
+				::MoveToEx(DrawDC, m_MDIRect[2].right -6, m_MDIRect[2].top +5, NULL);
+				::LineTo(DrawDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
 				break;
 			}
 		}
@@ -1735,7 +1704,8 @@ namespace Win32xx
 		// An item is about to be drawn
 		case CDDS_ITEMPREPAINT:
 			{
-				HDC hDC = lpNMCustomDraw->nmcd.hdc;
+				CDC DrawDC;
+				DrawDC.AttachDC(lpNMCustomDraw->nmcd.hdc);
 				RECT rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -1754,7 +1724,7 @@ namespace Win32xx
 					int cy = ::GetSystemMetrics (SM_CYSMICON);
 					int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
 					int x = 0;
-					::DrawIconEx(hDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+					::DrawIconEx(DrawDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
@@ -1765,35 +1735,31 @@ namespace Win32xx
 					{
 						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							GradientFill(hDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcRect, FALSE);
+							GradientFill(DrawDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							GradientFill(hDC, m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, &rcRect, FALSE);
+							GradientFill(DrawDC, m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, &rcRect, FALSE);
 						}
 
 						// Draw border
-						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
-						::MoveToEx(hDC, rcRect.left, rcRect.bottom -1, NULL);
-						::LineTo(hDC, rcRect.left, rcRect.top);
-						::LineTo(hDC, rcRect.right-1, rcRect.top);
-						::LineTo(hDC, rcRect.right-1, rcRect.bottom);
+						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+						::MoveToEx(DrawDC, rcRect.left, rcRect.bottom -1, NULL);
+						::LineTo(DrawDC, rcRect.left, rcRect.top);
+						::LineTo(DrawDC, rcRect.right-1, rcRect.top);
+						::LineTo(DrawDC, rcRect.right-1, rcRect.bottom);
 						if (!(nState & CDIS_SELECTED))
 						{
-							::MoveToEx(hDC, rcRect.right-1, rcRect.bottom-1, NULL);
-							::LineTo(hDC, rcRect.left, rcRect.bottom-1);
+							::MoveToEx(DrawDC, rcRect.right-1, rcRect.bottom-1, NULL);
+							::LineTo(DrawDC, rcRect.left, rcRect.bottom-1);
 						}
-						::DeleteObject(::SelectObject(hDC, hPenOld));
 					}
 					else
 					{
 						// Draw highlight rectangle
-						HPEN hPen = ::CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
+						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-						::FillRect(hDC, &rcRect, hbHighlight);
-						::DeleteObject(::SelectObject(hDC, hPenOld));
+						::FillRect(DrawDC, &rcRect, hbHighlight);
 					}
 
 					TCHAR str[80] = _T("");
@@ -1802,16 +1768,15 @@ namespace Win32xx
 						::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
 
 					// Draw highlight text
-					HFONT hFontOld = (HFONT)::SelectObject(hDC, (HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
 					if (!m_ThemeMenu.UseThemes)
-						::SetTextColor(hDC, ::GetSysColor(COLOR_HIGHLIGHTTEXT));
+						::SetTextColor(DrawDC, ::GetSysColor(COLOR_HIGHLIGHTTEXT));
 
 					rcRect.bottom += 1;
-					int iMode = ::SetBkMode(hDC, TRANSPARENT);
-					::DrawText(hDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+					int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
+					::DrawText(DrawDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-					::SetBkMode(hDC, iMode);
-					::SelectObject(hDC, hFontOld);
+					::SetBkMode(DrawDC, iMode);
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 			}
