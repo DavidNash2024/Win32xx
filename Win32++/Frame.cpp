@@ -2663,7 +2663,8 @@ namespace Win32xx
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
-		HDC hDC = pdis->hDC;
+		CDC DrawDC;
+		DrawDC.AttachDC(pdis->hDC);
 		RECT rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
 
@@ -2677,30 +2678,24 @@ namespace Win32xx
 			RECT rcBk;
 			::SetRect(&rcBk, rc.left, rc.top, rc.left + height, rc.bottom);
 			::InflateRect(&rcBk, -offset, -offset);
-			HBRUSH hbr = ::CreateSolidBrush(m_ThemeMenu.clrHot2);
-			HBRUSH hbrOld = (HBRUSH)::SelectObject(hDC, hbr);
-			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-			HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
+			DrawDC.CreateSolidBrush(m_ThemeMenu.clrHot2);
+			DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 
 			// Draw the checkmark's background rectangle
-			::Rectangle(hDC, rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
-
-			::DeleteObject(::SelectObject(hDC, hPenOld));
-			::DeleteObject(::SelectObject(hDC, hbrOld));
+			::Rectangle(DrawDC, rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 		}
 
-		HDC hdcMem = ::CreateCompatibleDC(pdis->hDC);
+		CDC MemDC = ::CreateCompatibleDC(pdis->hDC);
 		int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 		int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-		HBITMAP hbmMono = ::CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-		HBITMAP hbmPrev = (HBITMAP)::SelectObject(hdcMem, hbmMono);
+		MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
 		RECT rCheck = { 0, 0, cxCheck, cyCheck };
 
 		// Copy the check mark bitmap to hdcMem
 		if (fType == MFT_RADIOCHECK)
-			::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUBULLET);
+			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUBULLET);
 		else
-			::DrawFrameControl(hdcMem, &rCheck, DFC_MENU, DFCS_MENUCHECK);
+			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUCHECK);
 
 		int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 		if (m_ThemeMenu.UseThemes)
@@ -2708,30 +2703,24 @@ namespace Win32xx
 
 		// Draw a white or black check mark as required
 		// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-		HDC hdcMask = ::CreateCompatibleDC(pdis->hDC);
-		HBITMAP hbmMask = ::CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
-		HBITMAP hbmPrevMask = (HBITMAP)::SelectObject(hdcMask, hbmMask);
+		CDC MaskDC = ::CreateCompatibleDC(pdis->hDC);
+		MaskDC.CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
 
-		::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMask, 0, 0, WHITENESS);
+		::BitBlt(MaskDC, 0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
 		if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
 		{
 			// Draw a white checkmark
-			::BitBlt(hdcMem, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, DSTINVERT);
-			::BitBlt(hdcMask, 0, 0, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-			::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCPAINT);
+			::BitBlt(MemDC, 0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
+			::BitBlt(MaskDC, 0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
 		}
 		else
 		{
 			// Draw a black checkmark
 			int BullitOffset = ((fType == MFT_RADIOCHECK) && m_ThemeMenu.UseThemes)? 1 : 0;
-			::BitBlt(hdcMask, -BullitOffset, BullitOffset, cxCheck, cyCheck, hdcMem, 0, 0, SRCAND);
-			::BitBlt(pdis->hDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, hdcMask, 0, 0, SRCAND);
+			::BitBlt(MaskDC, -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
-
-		::DeleteObject(::SelectObject(hdcMask, hbmPrevMask));
-		::DeleteDC(hdcMask);
-		::DeleteObject(::SelectObject(hdcMem, hbmPrev));
-		::DeleteDC(hdcMem);
 	}
 
 	void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
@@ -2992,7 +2981,8 @@ namespace Win32xx
 
 		RECT rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
-		HDC hDC = pdis->hDC;
+		CDC DrawDC;
+		DrawDC.AttachDC(pdis->hDC);
 
 		int Iconx;
 		int Icony;
@@ -3004,7 +2994,7 @@ namespace Win32xx
 		{
 			RECT rcBar = rc;
 			rcBar.right = BarWidth;
-			GradientFill(hDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
+			GradientFill(DrawDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
 		}
 
 		if (pmd->fType & MFT_SEPARATOR)
@@ -3012,10 +3002,10 @@ namespace Win32xx
 			// draw separator
 			RECT rcSep = rc;
 			rcSep.left = BarWidth;
-			SolidFill(hDC, RGB(255,255,255), &rcSep);
+			SolidFill(DrawDC, RGB(255,255,255), &rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
 			rcSep.left = BarWidth + 2;
-			::DrawEdge(hDC, &rcSep,  EDGE_ETCHED, BF_TOP);
+			::DrawEdge(DrawDC, &rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
 		{
@@ -3030,22 +3020,18 @@ namespace Win32xx
 				// draw selected item background
 				if (m_ThemeMenu.UseThemes)
 				{
-					HBRUSH hBrush = ::CreateSolidBrush(m_ThemeMenu.clrHot1);
-					HBRUSH hBrushOld = (HBRUSH)::SelectObject(hDC, hBrush);
-					HPEN hPen = CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-					HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
-					Rectangle(hDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
-					::DeleteObject(::SelectObject(hDC, hPenOld));
-					::DeleteObject(::SelectObject(hDC, hBrushOld));
+					DrawDC.CreateSolidBrush(m_ThemeMenu.clrHot1);
+					DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+					Rectangle(DrawDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 				}
 				else
-					SolidFill(hDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
+					SolidFill(DrawDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
 			}
 			else
 			{
 				// draw non-selected item background
 				rcDraw.left = BarWidth;
-				SolidFill(hDC, RGB(255,255,255), &rcDraw);
+				SolidFill(DrawDC, RGB(255,255,255), &rcDraw);
 			}
 
 			if (bChecked)
@@ -3059,7 +3045,7 @@ namespace Win32xx
 				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
 
 			// Draw the text
-			int iMode = ::SetBkMode(hDC, TRANSPARENT);
+			int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
 			COLORREF colorText;
 			if (m_ThemeMenu.UseThemes)
 			{
@@ -3069,11 +3055,11 @@ namespace Win32xx
 			else
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 
-			DrawMenuText(hDC, pmd->Text, rc, colorText);
-			::SetBkMode(hDC, iMode);
+			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
+			::SetBkMode(DrawDC, iMode);
 		}
 
-		return TRUE;
+		return TRUE; 
 	}
 
 	void CFrame::OnExitMenuLoop()
