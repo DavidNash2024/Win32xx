@@ -227,7 +227,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// Pre-Subclassed Window Procedure
-		tString m_String;			// a TCHAR std::string
+		tString m_String;			// a TCHAR std::string, temporary storage for strings
 		HBRUSH m_hBrushBkgnd;		// Brush created in SetBkgndColor
 
 	}; // class CWnd

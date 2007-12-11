@@ -675,19 +675,44 @@ namespace Win32xx
 
 	LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem)
 	{
-		TCHAR szString[MAX_STRING_SIZE];
+		// Calculate the buffer size to hold the null terminated text
+		int nLength = 1 + ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
+		
+		m_String = _T("");	
+		if (nLength > 0)
+		{
+			TCHAR* szString = new TCHAR[nLength]; 
+			if (szString == NULL)
+				throw std::bad_alloc();
 
-		::GetDlgItemText(m_hWnd, nIDDlgItem, szString, MAX_STRING_SIZE);
-		m_String = szString;
+			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, nLength);
+			m_String = szString;
+
+			delete []szString;
+		}
+
+		// Never return a pointer to a local variable because it goes out of scope.
+		// Here we return a pointer to a member variable, which is fine.
 		return m_String.c_str();
 	}
 
 	LPCTSTR CWnd::GetWindowText()
 	{
-		TCHAR szString[MAX_STRING_SIZE];
+		// Calculate the buffer size to hold the null terminated text
+		int nLength = 1 + ::GetWindowTextLength(m_hWnd);
+		
+		m_String = _T("");
+		if (nLength > 0)
+		{
+			TCHAR* szString = new TCHAR[nLength]; 
+			if (szString == NULL)
+				throw std::bad_alloc();
 
-		::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE);
-		m_String = szString;
+			::GetWindowText(m_hWnd, szString, nLength);
+			m_String = szString;
+
+			delete []szString;
+		}
 		return m_String.c_str();
 	}
 
