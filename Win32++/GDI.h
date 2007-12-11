@@ -85,11 +85,13 @@ namespace Win32xx
 	//  the GDI objects and device context.
 
 	// Notes:
-	//  * GDI objects attached to the CDC are automatically deleted. If you don't want
-	//     the GDI object or device context deleted when the CDC drops out of scope,
-	//     detach them first.
-	//  * Region GDI objects are a special case. They are not created or deleted by CDC.
-	//     They can be attached to a CDC, but its your responsibility to delete them.
+	//  * A device context assigned to a CDC object will be released or deleted, however
+	//     a device context attached to a CDC (via the attach member function) will NOT 
+	//     be released or deleted when the CDC object is destroyed.
+	//  * A GDI object created by one of the CDC member functions will be deleted, however
+	//     an existing GDI object attached to a CDC object will NOT be deleted when the
+	//     CDC object is destroyed.
+
 
 	class CDC
 	{
