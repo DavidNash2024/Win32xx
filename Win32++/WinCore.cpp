@@ -318,7 +318,7 @@ namespace Win32xx
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
-		m_szString[0] = _T('\0');
+		m_String.clear();
 
 	}
 
@@ -706,19 +706,24 @@ namespace Win32xx
 		if (GetApp() == 0)
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
-		::lstrcpy(m_szString, _T(""));
-		if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_szString, MAX_STRING_SIZE))
+		m_String.clear();
+		TCHAR szString[MAX_STRING_SIZE] = _T("");
+		if (!::LoadString (GetApp()->GetResourceHandle(), nID, szString, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
-			if (::LoadString (GetApp()->GetInstanceHandle(), nID, m_szString, MAX_STRING_SIZE))
-				return (LPCTSTR) m_szString;
+			if (::LoadString (GetApp()->GetInstanceHandle(), nID, szString, MAX_STRING_SIZE))
+			{
+				m_String = szString;
+				return (LPCTSTR) m_String.c_str();
+			}
 
 			TCHAR msg[80] = _T("");
 			::wsprintf(msg, _T("LoadString - No string resource for %d"), nID);
 			DebugWarnMsg(msg);
 		}
 
-		return (LPCTSTR) m_szString;
+		m_String = szString;
+		return m_String.c_str();
 	}
 
 	BOOL CWnd::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)

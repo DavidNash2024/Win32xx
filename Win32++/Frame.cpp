@@ -60,7 +60,7 @@ namespace Win32xx
 	//
 	CStatusbar::CStatusbar()
 	{
-		m_szText[0] = _T('\0');
+		m_String.clear();
 	}
 
 	void CStatusbar::PreCreate(CREATESTRUCT &cs)
@@ -90,6 +90,8 @@ namespace Win32xx
 		{
 			if (::IsWindow(m_hWnd))
 			{
+				m_String.clear();
+
 				// Get size of Text array
 				int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPane, 0));
 
@@ -105,7 +107,7 @@ namespace Win32xx
 				::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
 
 				//Store the text in the member variable
-				lstrcpyn(m_szText, szText, 80);
+				m_String = szText;
 				delete []szText;
 			}
 		}
@@ -113,11 +115,11 @@ namespace Win32xx
 		catch (const std::bad_alloc &)
 		{
 			DebugErrMsg(_T("Failed to allocate memory in CStatusbar::GetPaneText"));
-			lstrcpy(m_szText, _T(""));
+			m_String = _T("");
 			// Not a critical problem, so no need to rethrow
 		}
 
-		return m_szText;
+		return m_String.c_str();
 	}
 
 	void CStatusbar::SetPaneText(int iPane, LPCTSTR szText, UINT Style) const
@@ -2372,7 +2374,6 @@ namespace Win32xx
 						m_hImageList(NULL), m_hImageListDis(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
 
-		m_StatusText[0] = _T('\0');
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 		GetApp()->SetFrame(this);
 
