@@ -698,6 +698,8 @@ namespace Win32xx
 
 	LPCTSTR CWnd::GetWindowText()
 	{
+		// Gets the window title for an ordinary window, or the text in an edit control
+
 		// Calculate the buffer size to hold the null terminated text
 		int nLength = 1 + ::GetWindowTextLength(m_hWnd);
 		
@@ -1040,6 +1042,8 @@ namespace Win32xx
 
 	BOOL CWnd::SetWindowText(LPCTSTR lpString)
 	{
+		// Sets the window title for an ordinary window, or the text in an edit control
+
 		return ::SetWindowText(m_hWnd, lpString);
 	}
 
