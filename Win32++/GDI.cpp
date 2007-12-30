@@ -102,10 +102,13 @@ namespace Win32xx
 	{
 		if (m_hDC)
 		{
+			// Delete any GDI objects created by this CDC
 			if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 			if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 			if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 			if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
+
+			// Restore the DC to its original state
 			::RestoreDC(m_hDC, m_SavedDC);
 
 			if (m_bAttachedDC == FALSE)
@@ -139,7 +142,10 @@ namespace Win32xx
 		if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
 
 		HDC hDC = m_hDC;
+
+		// Restore the DC to its original state
 		::RestoreDC(m_hDC, m_SavedDC);
+
 		m_hDC = NULL;
 		m_bAttachedDC = FALSE;
 		return hDC;
