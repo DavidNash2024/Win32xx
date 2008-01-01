@@ -79,7 +79,9 @@ namespace Win32xx
 		m_hFontOld	  = CopyCDC.m_hFontOld;
         m_hPenOld	  = CopyCDC.m_hPenOld;
 		m_SavedDC	  = CopyCDC.m_SavedDC;
-		m_bAttachedDC = CopyCDC.m_bAttachedDC;
+		
+		// Flag the DC as attached, so it is not deleted in the destructor
+		m_bAttachedDC = TRUE;
 	}
 
 	CDC& CDC::operator = (const CDC& rhs)
@@ -93,7 +95,9 @@ namespace Win32xx
 		m_hFontOld	  = rhs.m_hFontOld;
         m_hPenOld	  = rhs.m_hPenOld;
 		m_SavedDC	  = rhs.m_SavedDC;
-		m_bAttachedDC = rhs.m_bAttachedDC;
+		
+		// Flag the DC as attached, so it is not deleted in the destructor
+		m_bAttachedDC = TRUE; 
 
 		return *this;
 	}
