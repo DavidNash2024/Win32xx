@@ -62,7 +62,6 @@
   #define _CRT_SECURE_NO_WARNINGS  // Eliminate deprecation warnings for VS2005
 #endif // _MSC_VER
 
-
 #include <vector>
 #include <string>
 #include <sstream>
@@ -444,9 +443,12 @@ namespace Win32xx
 
 }; // namespace Win32xx
 
-
 // Automatically include the Win32xx namespace
-using namespace Win32xx;
+// define NO_USING_NAMESPACE to skip this step
+#ifndef NO_USING_NAMESPACE
+  using namespace Win32xx;
+#endif
+
 
 #endif // WINCORE_H
 
