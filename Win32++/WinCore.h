@@ -51,7 +51,7 @@
 
 #if defined (_MSC_VER) && _MSC_VER <= 1200
   // Correct for bug in Visual Studio 6
-  #pragma warning (disable : 4786)
+  #pragma warning (disable : 4786) // identifier was truncated
   #define DWORD_PTR DWORD
 #endif // (_MSC_VER) && _MSC_VER <= 1200
 
@@ -81,6 +81,7 @@ namespace Win32xx {}
 /////////////////////////////////
 // Some useful type declarations
 //
+
 typedef std::basic_string<TCHAR> tString;
 typedef std::basic_stringstream<TCHAR> tStringStream;
 
