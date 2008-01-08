@@ -71,6 +71,13 @@
 #include <tchar.h>
 #include <shlwapi.h>
 
+// Automatically include the Win32xx namespace
+// define NO_USING_NAMESPACE to skip this step
+namespace Win32xx {}
+#ifndef NO_USING_NAMESPACE
+  using namespace Win32xx;
+#endif
+
 /////////////////////////////////
 // Some useful type declarations
 //
@@ -442,12 +449,6 @@ namespace Win32xx
 	}
 
 }; // namespace Win32xx
-
-// Automatically include the Win32xx namespace
-// define NO_USING_NAMESPACE to skip this step
-#ifndef NO_USING_NAMESPACE
-  using namespace Win32xx;
-#endif
 
 
 #endif // WINCORE_H
