@@ -3085,8 +3085,11 @@ namespace Win32xx
 		}
 	}
 
-	void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM /*lParam*/)
+	void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
+		// The system menu shouldn't be owner drawn
+		if (lParam) return;
+
 		HMENU hMenu = (HMENU)wParam;
 
 		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
