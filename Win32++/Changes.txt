@@ -10,6 +10,9 @@ New Features
    the panes while the splitter bar is being dragged, or defer the resizing
    until the splitter bar drag is complete (as before).
    
+* Added support for Borland Developer Studio 2006.
+
+   
 The following changes have been made to the Win32++ code:
 Added CDC class 
 Added CSplitter::SetImmediate
