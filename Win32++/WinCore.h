@@ -62,6 +62,8 @@
   #define _CRT_SECURE_NO_WARNINGS  // Eliminate deprecation warnings for VS2005
 #endif // _MSC_VER
 
+#define STRICT
+
 #include <vector>
 #include <string>
 #include <sstream>
@@ -84,6 +86,7 @@ namespace Win32xx {}
 
 typedef std::basic_string<TCHAR> tString;
 typedef std::basic_stringstream<TCHAR> tStringStream;
+// Note: Borland's free compiler version 5.5 has a buggy implementation of stringstream and iostream
 
 ////////////////////////////////
 // Some useful macros

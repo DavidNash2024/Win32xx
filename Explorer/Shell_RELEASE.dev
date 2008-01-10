@@ -11,7 +11,7 @@ PrivateResource=Shell_RELEASE_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D STRICT_@@_-D _WIN32_IE=0x0500_@@_
+CppCompiler=-D _WIN32_IE=0x0500_@@_
 Linker=-lComctl32_@@_-lOle32_@@_-lShlwapi_@@_
 IsCpp=1
 Icon=

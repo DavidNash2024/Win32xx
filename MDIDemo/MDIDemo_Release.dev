@@ -11,7 +11,7 @@ PrivateResource=MDIDemo_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0500_@@_-D STRICT_@@_
+CppCompiler=-D _WIN32_IE=0x0500_@@__@@_
 Linker=-lComctl32_@@__@@_
 IsCpp=1
 Icon=

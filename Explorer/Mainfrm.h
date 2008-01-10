@@ -13,9 +13,9 @@
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
-	
+
 	CMainView& GetMainView() {return m_MainView;}
 	CListView& GetListView() {return m_MainView.GetListView();}
 	CTreeView& GetTreeView() {return m_MainView.GetTreeView();}
@@ -27,10 +27,10 @@ protected:
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
+
 	void DoPopupMenu();
 	void SetButtons();
-	
+
 
 private:
 	CMainView m_MainView;

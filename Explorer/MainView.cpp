@@ -5,7 +5,7 @@
 #include "MainView.h"
 
 
-CMainView::CMainView() :CSplitter()
+CMainView::CMainView() 
 {
 	SetPanes(GetTreeView(), GetListView());
 	SetBarPos(200);

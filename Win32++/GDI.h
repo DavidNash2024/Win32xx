@@ -91,6 +91,8 @@ namespace Win32xx
 	//  * A GDI object created by one of the CDC member functions will be deleted, however
 	//     an existing GDI object attached to a CDC object will NOT be deleted when the
 	//     CDC object is destroyed.
+	//  * A detach function is provided for each GDI object type, but there is no need to
+	//     detach a GDI object, unless of course you wish to use it outside the CDC object.
 
 
 	class CDC
