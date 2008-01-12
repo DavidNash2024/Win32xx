@@ -89,6 +89,10 @@ void CMainFrame::OnFileNew()
 {
 	if (m_View.m_pPicture)
 		m_View.m_pPicture->Release();
+	
+	// Set a default title
+	::SetWindowText(m_hWnd, LoadString(IDW_MAIN));
+	
 	m_View.m_pPicture = NULL;
 	::InvalidateRect(m_View.GetHwnd(), NULL, TRUE);
 }
@@ -105,10 +109,8 @@ void CMainFrame::OnFileOpen()
 	ofn.lpstrFile	= szFile;
 	ofn.nMaxFile	= MAX_PATH;
 
-	if (IDOK == ::GetOpenFileName(&ofn))
+	if (IDOK == ::GetOpenFileName(&ofn))	// OK button hit in file open dialog
 		m_View.LoadPictureFile(szFile);
-	else
-		TRACE(_T("Failed to open file name"));
 }
 
 void CMainFrame::OnFileSave()
@@ -137,6 +139,8 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	cs.y = CW_USEDEFAULT;
 	cs.cx = 652;
 	cs.cy = 595;
+
+	CFrame::PreCreate(cs);
 }
 					
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

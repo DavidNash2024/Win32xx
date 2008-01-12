@@ -12,6 +12,8 @@ New Features
    
 * Added support for Borland Developer Studio 2006.
 
+* Remove the need for the CBT hook during window creation
+
    
 The following changes have been made to the Win32++ code:
 Added CDC class 

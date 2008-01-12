@@ -225,8 +225,6 @@ namespace Win32xx
 		// Its unlikely you would need to override these functions
 		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL IsMDIChild() const {return FALSE;}
-	//	virtual void RemoveHook();
-	//	virtual void SetHook();
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -236,7 +234,6 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
-	//	static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
 		void Subclass();
 
 		HICON m_hIconLarge;			// handle to the window's large icon

@@ -518,18 +518,12 @@ namespace Win32xx
 				m_pTLSData = GetApp()->SetTlsIndex();
 			GetApp()->m_MapLock.Release();
 
-			// Create and store the CBT hook
-		//	SetHook();
-
 			// Store the CWnd pointer in thread local storage
 			m_pTLSData->pCWnd = this;
 
 			// Create window
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 									hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
-
-			// Tidy up
-		//	RemoveHook();
 
 			// Now handle window creation failure
 			if (!m_hWnd)
@@ -545,14 +539,18 @@ namespace Win32xx
 			if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
 			{
 				Subclass();
+
+				// Send a message to force the HWND to be added to the map
 				::SendMessage(m_hWnd, WM_NULL, 0, 0);
+				
 				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
 			}
 
+			// Clear the CWnd pointer from TLS
+			m_pTLSData->pCWnd = NULL;
+
 			// Window creation is complete. Now call OnInitialUpdate
 			OnInitialUpdate();
-
-			m_pTLSData->pCWnd = NULL;
 		}
 
 		catch (const CWinException &e)
@@ -966,15 +964,6 @@ namespace Win32xx
 
 	}
 
-/*	void CWnd::RemoveHook()
-	{
-		if (m_pTLSData->hCBTHook)
-		{
-			::UnhookWindowsHookEx(m_pTLSData->hCBTHook);
-			m_pTLSData->hCBTHook = NULL;
-		}
-	} */
-
 	void CWnd::SetBkgndColor(COLORREF color)
 	{
 		// Note:  This sets the background color for all windows with this class name,
@@ -1002,18 +991,6 @@ namespace Win32xx
 	{
 		return ::SetDlgItemText(m_hWnd, nID, lpString);
 	}
-
-/*	void CWnd::SetHook()
-	{
-		// Create the CBT Hook
-		HHOOK hHook = ::SetWindowsHookEx(WH_CBT, (HOOKPROC)CWnd::StaticCBTProc, 0, ::GetCurrentThreadId());
-		if (!hHook)
-			throw CWinException(_T("CWnd::SetHook ... SetWindowsHookEx Failed"));
-
-		// Store the hook and 'this' pointer in Thread Local Storage
-		m_pTLSData->hCBTHook = hHook;
-		m_pTLSData->pCWnd = this;
-	} */
 
 	HICON CWnd::SetIconLarge(int nIcon)
 	{
@@ -1053,48 +1030,6 @@ namespace Win32xx
 		return ::SetWindowText(m_hWnd, lpString);
 	}
 
-/*	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)
-	// With a CBTHook in place, the application receives additional messages.
-	// The HCBT_CREATEWND message is the first message to be generated when
-	// a window is about to be created.
-	{
-		try
-		{
-			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			if (pTLSData == NULL)
-				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
-
-			CWnd* w = pTLSData->pCWnd;
-
-			// Only proceed for HCBT_CREATEWND messages
-			if (msg == HCBT_CREATEWND)
-			{
-				// Now remove the CBT hook
-				::UnhookWindowsHookEx(pTLSData->hCBTHook);
-				pTLSData->hCBTHook = NULL;
-
-				// Store the Window pointer into the HWND map
-				GetApp()->m_MapLock.Lock();
-				GetApp()->GetHWNDMap().insert(std::make_pair((HWND) wParam, w));
-				GetApp()->m_MapLock.Release();
-
-				// Store the HWND in the CWnd object early
-				w->m_hWnd = (HWND) wParam;
-
-				return 0L;
-			}
-			return ::CallNextHookEx(pTLSData->hCBTHook, msg, wParam, lParam);
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			return 0L;
-		}
-
-	} */
-
 	LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
@@ -1112,7 +1047,7 @@ namespace Win32xx
 				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
 			}
 
-			// The HWND wasn't in the map, so add it now
+			// The HWND wasn't found in the map, so add it now
 
 			// Retrieve the pointer to the TLS Data
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
@@ -1135,9 +1070,6 @@ namespace Win32xx
 			w->m_hWnd = hWnd;
 
 			return w->WndProc(hWnd, uMsg, wParam, lParam);
-
-			// Every message should get routed, we should never get here
-		//	throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 		}
 
 		catch (const CWinException &e)

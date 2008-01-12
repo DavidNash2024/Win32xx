@@ -3,6 +3,7 @@
 //  Definitions for the CView class
 
 #include "view.h"
+#include "resource.h"
 
 #define HIMETRIC_INCH	2540
 
@@ -33,10 +34,14 @@ void CView::LoadPictureFile(LPCTSTR szFile)
 	TRACE(szFile);
 
 	// Create IPicture from image file
-	if (S_OK != ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,
-						IID_IPicture, (LPVOID *)&m_pPicture))
+	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
+		::SetWindowText(m_hWndParent, szFile);
+	else
 	{
 		TRACE(_T("Failed to load picture"));
+
+		// Set Frame title back to default
+		::SetWindowText(m_hWndParent, LoadString(IDW_MAIN));
 	}
 	
 	::InvalidateRect(m_hWnd, NULL, TRUE);
