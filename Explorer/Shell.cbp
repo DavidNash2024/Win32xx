@@ -133,7 +133,6 @@
 					<Add option="-g3"/>
 					<Add option="-D__DEBUG__"/>
 					<Add option="-D_DEBUG"/>
-					<Add option="-DSTRICT"/>
 					<Add option="-D_WIN32_IE=0x0500"/>
 				</Compiler>
 				<Linker>
@@ -152,7 +151,6 @@
 				<Option projectResourceIncludeDirsRelation="0"/>
 				<Compiler>
 					<Add option="-Wall"/>
-					<Add option="-DSTRICT"/>
 					<Add option="-D_WIN32_IE=0x0500"/>
 				</Compiler>
 				<Linker>

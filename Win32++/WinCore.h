@@ -62,6 +62,11 @@
   #define _CRT_SECURE_NO_WARNINGS  // Eliminate deprecation warnings for VS2005
 #endif // _MSC_VER
 
+// Work around for a bug in VS 2008 (fails on XP and Win2000 without this fix)
+#ifndef _WIN32_WINNT
+  #define _WIN32_WINNT 0x0500
+#endif
+
 #define STRICT
 
 #include <vector>
@@ -220,8 +225,8 @@ namespace Win32xx
 		// Its unlikely you would need to override these functions
 		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL IsMDIChild() const {return FALSE;}
-		virtual void RemoveHook();
-		virtual void SetHook();
+	//	virtual void RemoveHook();
+	//	virtual void SetHook();
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -231,7 +236,7 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
-		static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
+	//	static LRESULT CALLBACK StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam);
 		void Subclass();
 
 		HICON m_hIconLarge;			// handle to the window's large icon

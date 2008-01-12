@@ -486,67 +486,73 @@ namespace Win32xx
 	{
 		try
 		{
-		// Test if Win32++ has been started
-		if (GetApp() == 0)
-			throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+			// Test if Win32++ has been started
+			if (GetApp() == 0)
+				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 
-		// Only one window per CWnd instance
-		if (::IsWindow(m_hWnd))
-			throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
+			// Only one window per CWnd instance
+			if (::IsWindow(m_hWnd))
+				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
-		// Ensure a window class is registered
-		TCHAR ClassName[MAX_STRING_SIZE] = _T("");
-		if (lstrlen(lpszClassName) == 0)
-			::lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
-		else
-			// Create our own local copy of szClassName.
-			::lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
+			// Ensure a window class is registered
+			TCHAR ClassName[MAX_STRING_SIZE] = _T("");
+			if (lstrlen(lpszClassName) == 0)
+				::lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
+			else
+				// Create our own local copy of szClassName.
+				::lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
 
-		// Register the window class
-		WNDCLASSEX wcx = {0};
-		wcx.cbSize = sizeof(WNDCLASSEX);
-		wcx.lpszClassName = ClassName;
-		wcx.hbrBackground = m_hBrushBkgnd;
-		if (!RegisterClassEx(wcx))
-			throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
+			// Register the window class
+			WNDCLASSEX wcx = {0};
+			wcx.cbSize = sizeof(WNDCLASSEX);
+			wcx.lpszClassName = ClassName;
+			wcx.hbrBackground = m_hBrushBkgnd;
+			if (!RegisterClassEx(wcx))
+				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
-		// Ensure this thread has the TLS index set
-		GetApp()->m_MapLock.Lock();
-		m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
+			// Ensure this thread has the TLS index set
+			GetApp()->m_MapLock.Lock();
+			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
 
-		if (m_pTLSData == NULL)
-			m_pTLSData = GetApp()->SetTlsIndex();
-		GetApp()->m_MapLock.Release();
+			if (m_pTLSData == NULL)
+				m_pTLSData = GetApp()->SetTlsIndex();
+			GetApp()->m_MapLock.Release();
 
-		// Create and store the CBT hook
-		SetHook();
+			// Create and store the CBT hook
+		//	SetHook();
 
-		// Create window
-		m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-			                      hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+			// Store the CWnd pointer in thread local storage
+			m_pTLSData->pCWnd = this;
 
-		// Tidy up
-		RemoveHook();
+			// Create window
+			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
+									hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
 
-		// Now handle window creation failure
-		if (!m_hWnd)
-			throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
+			// Tidy up
+		//	RemoveHook();
 
-		if (!::GetClassInfoEx(GetApp()->GetInstanceHandle(), ClassName, &wcx))
-			if (::GetClassInfoEx(NULL, ClassName, &wcx))
-				throw CWinException(_T("CWnd::CreateEx  Failed to get class info"));
+			// Now handle window creation failure
+			if (!m_hWnd)
+				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
 
-		m_hWndParent = hParent;
+			if (!::GetClassInfoEx(GetApp()->GetInstanceHandle(), ClassName, &wcx))
+				if (::GetClassInfoEx(NULL, ClassName, &wcx))
+					throw CWinException(_T("CWnd::CreateEx  Failed to get class info"));
 
-		// Automatically subclass predefined window class types
-		if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
-		{
-			Subclass();
-			OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
-		}
+			m_hWndParent = hParent;
 
-		// Window creation is complete. Now call OnInitialUpdate
-		OnInitialUpdate();
+			// Automatically subclass predefined window class types
+			if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
+			{
+				Subclass();
+				::SendMessage(m_hWnd, WM_NULL, 0, 0);
+				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
+			}
+
+			// Window creation is complete. Now call OnInitialUpdate
+			OnInitialUpdate();
+
+			m_pTLSData->pCWnd = NULL;
 		}
 
 		catch (const CWinException &e)
@@ -960,14 +966,14 @@ namespace Win32xx
 
 	}
 
-	void CWnd::RemoveHook()
+/*	void CWnd::RemoveHook()
 	{
 		if (m_pTLSData->hCBTHook)
 		{
 			::UnhookWindowsHookEx(m_pTLSData->hCBTHook);
 			m_pTLSData->hCBTHook = NULL;
 		}
-	}
+	} */
 
 	void CWnd::SetBkgndColor(COLORREF color)
 	{
@@ -997,7 +1003,7 @@ namespace Win32xx
 		return ::SetDlgItemText(m_hWnd, nID, lpString);
 	}
 
-	void CWnd::SetHook()
+/*	void CWnd::SetHook()
 	{
 		// Create the CBT Hook
 		HHOOK hHook = ::SetWindowsHookEx(WH_CBT, (HOOKPROC)CWnd::StaticCBTProc, 0, ::GetCurrentThreadId());
@@ -1007,7 +1013,7 @@ namespace Win32xx
 		// Store the hook and 'this' pointer in Thread Local Storage
 		m_pTLSData->hCBTHook = hHook;
 		m_pTLSData->pCWnd = this;
-	}
+	} */
 
 	HICON CWnd::SetIconLarge(int nIcon)
 	{
@@ -1047,7 +1053,7 @@ namespace Win32xx
 		return ::SetWindowText(m_hWnd, lpString);
 	}
 
-	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)
+/*	LRESULT CALLBACK CWnd::StaticCBTProc(int msg, WPARAM wParam, LPARAM lParam)
 	// With a CBTHook in place, the application receives additional messages.
 	// The HCBT_CREATEWND message is the first message to be generated when
 	// a window is about to be created.
@@ -1087,7 +1093,7 @@ namespace Win32xx
 			return 0L;
 		}
 
-	}
+	} */
 
 	LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
@@ -1097,6 +1103,7 @@ namespace Win32xx
 			// Allocate an iterator for our HWND map
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
+			// Find the CWnd pointer mapped to this HWND
 			GetApp()->m_MapLock.Lock();
 			m = GetApp()->GetHWNDMap().find(hWnd);
 			GetApp()->m_MapLock.Release();
@@ -1105,8 +1112,32 @@ namespace Win32xx
 				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
 			}
 
+			// The HWND wasn't in the map, so add it now
+
+			// Retrieve the pointer to the TLS Data
+			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			if (pTLSData == NULL)
+				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
+
+			// Retrieve pointer to CWnd object from Thread Local Storage TLS
+			CWnd* w = pTLSData->pCWnd;
+			if (w == NULL)
+				throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
+
+			pTLSData->pCWnd = NULL;
+
+			// Store the Window pointer into the HWND map
+			GetApp()->m_MapLock.Lock();
+			GetApp()->GetHWNDMap().insert(std::make_pair(hWnd, w));
+			GetApp()->m_MapLock.Release();
+
+			// Store the HWND in the CWnd object early
+			w->m_hWnd = hWnd;
+
+			return w->WndProc(hWnd, uMsg, wParam, lParam);
+
 			// Every message should get routed, we should never get here
-			throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
+		//	throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 		}
 
 		catch (const CWinException &e)

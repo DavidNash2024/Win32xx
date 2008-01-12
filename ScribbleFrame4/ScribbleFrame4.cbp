@@ -128,7 +128,6 @@
 					<Add option="-D__DEBUG__"/>
 					<Add option="-D_DEBUG"/>
 					<Add option="-D_WIN32_IE=0x0400"/>
-					<Add option="-DSTRICT"/>
 				</Compiler>
 				<Linker>
 					<Add library="comctl32"/>
@@ -145,7 +144,6 @@
 				<Option projectResourceIncludeDirsRelation="0"/>
 				<Compiler>
 					<Add option="-D_WIN32_IE=0x0400"/>
-					<Add option="-DSTRICT"/>
 				</Compiler>
 				<Linker>
 					<Add library="comctl32"/>

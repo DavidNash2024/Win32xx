@@ -10,7 +10,7 @@
 	</PersonalityInfo>
 	<CPlusPlusBuilder.Personality>
 		<Source>
-			<Source Name="MainSource">TabDialog_BDS.bpf</Source>
+			<Source Name="MainSource">TabDialogDemo_BDS.bpf</Source>
 		</Source>
 		<BCBPROJECT>
       <project version="10.0">
@@ -28,7 +28,7 @@
         <property category="build.config.1" name="settings.win32b" value="default"/>
         <property category="build.config.1" name="type" value="Toolset"/>
         <property category="build.config.1" name="win32.win32b.builddir" value="Release_Build"/>
-        <property category="build.node" name="name" value="TabDialog_BDS.exe"/>
+        <property category="build.node" name="name" value="TabDialogDemo_BDS.exe"/>
         <property category="build.node" name="packages" value="vclx;vcl;rtl;dbrtl;vcldb;adortl;dbxcds;dbexpress;xmlrtl;vclie;inet;inetdbbde;inetdbxpress;soaprtl;dsnap;bdertl;vcldbx"/>
         <property category="build.node" name="use_packages" value="1"/>
         <property category="build.platform" name="active" value="win32"/>
@@ -136,7 +136,7 @@
           <property category="win32.*.win32b.ilink32" name="option.Tpp.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.aa.enabled" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.ap.enabled" value="0"/>
-          <property category="win32.*.win32b.ilink32" name="option.dynamicrtl.enabled" value="1"/>
+          <property category="win32.*.win32b.ilink32" name="option.dynamicrtl.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.j.arg.1" value="..\Win32++"/>
           <property category="win32.*.win32b.ilink32" name="option.j.arg.merge" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.j.enabled" value="0"/>
@@ -149,17 +149,17 @@
         </optionset>
       </project>
       <FILELIST>
-        <FILE FILENAME="TabDialog_BDS.bpf" CONTAINERID="BPF" LOCALCOMMAND="" UNITNAME="TabDialog_BDS" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="TabDialogDemo_BDS.bpf" CONTAINERID="BPF" LOCALCOMMAND="" UNITNAME="TabDialogDemo_BDS" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="DialogApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="DialogApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="MyDialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyDialog" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\Dialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Dialog" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\WinCore.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="WinCore" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\Dialog.h" CONTAINERID="" LOCALCOMMAND=""/>
-        <FILE FILENAME="..\Win32++\WinCore.h" CONTAINERID="" LOCALCOMMAND=""/>
-        <FILE FILENAME="DialogApp.h" CONTAINERID="" LOCALCOMMAND=""/>
-        <FILE FILENAME="MyDialog.h" CONTAINERID="" LOCALCOMMAND=""/>
-        <FILE FILENAME="resource.h" CONTAINERID="" LOCALCOMMAND=""/>
+        <FILE FILENAME="..\Win32++\Dialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\Win32++\WinCore.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="DialogApp.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="MyDialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="resource.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>
         <VersionInfo>
