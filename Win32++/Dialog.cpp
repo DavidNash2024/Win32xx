@@ -198,9 +198,6 @@ namespace Win32xx
 				m_pTLSData = GetApp()->SetTlsIndex();
 			GetApp()->m_MapLock.Release();
 
-			// Create and store the CBT hook
-		//	SetHook();
-
 			// Store the CWnd pointer in Thread Local Storage
 			m_pTLSData->pCWnd = this;
 
@@ -217,7 +214,6 @@ namespace Win32xx
 				nResult = ::DialogBox(hInstance, m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 			// Tidy up
-		//	RemoveHook();
 			m_hWnd = NULL;
 			m_pTLSData->pCWnd = NULL;
 
@@ -250,9 +246,6 @@ namespace Win32xx
 				m_pTLSData = GetApp()->SetTlsIndex();
 			GetApp()->m_MapLock.Release();
 
-			// Create and store the CBT hook
-		//	SetHook();
-
 			// Store the CWnd pointer in Thread Local Storage
 			m_pTLSData->pCWnd = this;
 
@@ -270,7 +263,6 @@ namespace Win32xx
 			}
 
 			// Tidy up
-		//	RemoveHook();
 			m_pTLSData->pCWnd = NULL;
 
 			// Now handle dialog creation failure
@@ -323,17 +315,7 @@ namespace Win32xx
 	{
 		try
 		{
-	/*		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-			GetApp()->m_MapLock.Lock();
-			m = GetApp()->GetHWNDMap().find(hWnd);
-			GetApp()->m_MapLock.Release();
-			if (m != GetApp()->GetHWNDMap().end())
-				return ((CDialog*)m->second)->DialogProc(hWnd, uMsg, wParam, lParam);
-
-			throw CWinException(_T("CDialog::StaticDialogProc ... Failed to route message")); */
-
-						// Allocate an iterator for our HWND map
+			// Allocate an iterator for our HWND map
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
 			// Find the CWnd pointer mapped to this HWND
@@ -344,7 +326,6 @@ namespace Win32xx
 				return ((CDialog*)m->second)->DialogProc(hWnd, uMsg, wParam, lParam);
 
 			// The HWND wasn't in the map, so add it now
-
 			
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 			if (pTLSData == NULL)

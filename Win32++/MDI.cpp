@@ -131,7 +131,7 @@ namespace Win32xx
 
 		// Append MDI Child windows
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-		TCHAR text[80];
+		TCHAR text[MAX_MENU_STRING];
 		int nWindow = 0;
 
 		// Allocate an iterator for our MDIChild vector
@@ -149,19 +149,19 @@ namespace Win32xx
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
 				{
-					TCHAR Title[70];
-					if (lstrlen((*v)->GetWindowText()) < 70)
+					TCHAR Title[MAX_MENU_STRING - 10];
+					if (lstrlen((*v)->GetWindowText()) < MAX_MENU_STRING - 10)
 					{
 						lstrcpy(Title, (*v)->GetWindowText());
 					}
 					else
 					{
 						// truncate the long window title
-						lstrcpyn(Title, (*v)->GetWindowText(), 65);
+						lstrcpyn(Title, (*v)->GetWindowText(), MAX_MENU_STRING - 15);
 						lstrcat(Title, _T(" ..."));
 					}
 
-					wsprintf(text, _T("&%d   %s"), nWindow+1, Title);
+					wsprintf(text, _T("&%d  %s"), nWindow+1, Title);
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, text );
 
 					if (GetActiveMDIChild() == hwndMDIChild)
@@ -351,30 +351,15 @@ namespace Win32xx
 
 	HWND CMDIClient::Create(HWND hWndParent /* = NULL*/)
 	{
-		try
-		{
-			CLIENTCREATESTRUCT clientcreate ;
-			clientcreate.hWindowMenu  = m_hWnd;
-			clientcreate.idFirstChild = IDW_FIRSTCHILD ;
-			DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+		CLIENTCREATESTRUCT clientcreate ;
+		clientcreate.hWindowMenu  = m_hWnd;
+		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
+		DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
-			// Create the view window
-			if (!CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""),
-					dword, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
-					throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
-
-			return m_hWnd;
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(TEXT("Exception in CMDIClient::Create"));
-		}
+		// Create the view window
+		if (!CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""),
+				dword, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
+				throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
 
 		return m_hWnd;
 	}
@@ -443,79 +428,65 @@ namespace Win32xx
 	// and then maximizing if required.
 
 	{
-		try
+		//Call PreCreate in case its overloaded
+		PreCreate(m_cs);
+
+		//Determine if the window should be created maximized
+		BOOL bMax = FALSE;
+		::SendMessage(hWndParent, WM_MDIGETACTIVE, 0, (LPARAM)&bMax);
+		bMax = bMax | (m_cs.style & WS_MAXIMIZE);
+
+		// Set the Window Class Name
+		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ MDI Child");
+		if (m_cs.lpszClass)
+			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
+
+		// Set Parent
+		if (!hWndParent)
+			hWndParent = m_cs.hwndParent;
+
+		// Set the window style
+		DWORD dwStyle;
+		dwStyle = m_cs.style & ~WS_MAXIMIZE;
+
+		// Set window size and position
+		int x = CW_USEDEFAULT;
+		int	y = CW_USEDEFAULT;
+		int cx = CW_USEDEFAULT;
+		int cy = CW_USEDEFAULT;
+		if(m_cs.cx && m_cs.cy)
 		{
-			//Call PreCreate in case its overloaded
-			PreCreate(m_cs);
-
-			//Determine if the window should be created maximized
-			BOOL bMax = FALSE;
-			::SendMessage(hWndParent, WM_MDIGETACTIVE, 0, (LPARAM)&bMax);
-			bMax = bMax | (m_cs.style & WS_MAXIMIZE);
-
-			// Set the Window Class Name
-			TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ MDI Child");
-			if (m_cs.lpszClass)
-				lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
-
-			// Set Parent
-			if (!hWndParent)
-				hWndParent = m_cs.hwndParent;
-
-			// Set the window style
-			DWORD dwStyle;
-			dwStyle = m_cs.style & ~WS_MAXIMIZE;
-
-			// Set window size and position
-			int x = CW_USEDEFAULT;
-			int	y = CW_USEDEFAULT;
-			int cx = CW_USEDEFAULT;
-			int cy = CW_USEDEFAULT;
-			if(m_cs.cx && m_cs.cy)
-			{
-				x = m_cs.x;
-				y = m_cs.y;
-				cx = m_cs.cx;
-				cy = m_cs.cy;
-			}
-
-			// Set the extended style
-			DWORD dwExStyle = m_cs.dwExStyle | WS_EX_MDICHILD;
-
-			// Turn off redraw while creating the window
-			::SendMessage(hWndParent, WM_SETREDRAW, FALSE, 0);
-
-			// Create the window
-			if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-				cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams))
-				throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
-
-			if (bMax)
-				::ShowWindow(m_hWnd, SW_MAXIMIZE);
-
-			// Turn redraw back on
-			::SendMessage(hWndParent, WM_SETREDRAW, TRUE, 0);
-			::RedrawWindow(hWndParent, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
-
-			// Ensure bits revealed by round corners (XP themes) are redrawn
-			::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
-
-			CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
-			if (m_hChildMenu)
-				pMDIFrame->UpdateFrameMenu(m_hChildMenu);
-
-			return m_hWnd;
+			x = m_cs.x;
+			y = m_cs.y;
+			cx = m_cs.cx;
+			cy = m_cs.cy;
 		}
 
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
+		// Set the extended style
+		DWORD dwExStyle = m_cs.dwExStyle | WS_EX_MDICHILD;
 
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CMDIChild::Create"));
-		}
+		// Turn off redraw while creating the window
+		::SendMessage(hWndParent, WM_SETREDRAW, FALSE, 0);
+
+		// Create the window
+		if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
+			cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams))
+			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
+
+		if (bMax)
+			::ShowWindow(m_hWnd, SW_MAXIMIZE);
+
+		// Turn redraw back on
+		::SendMessage(hWndParent, WM_SETREDRAW, TRUE, 0);
+		::RedrawWindow(hWndParent, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+
+		// Ensure bits revealed by round corners (XP themes) are redrawn
+		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
+
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+		if (m_hChildMenu)
+			pMDIFrame->UpdateFrameMenu(m_hChildMenu);
+
 		return m_hWnd;
 	}
 

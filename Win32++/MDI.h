@@ -87,13 +87,7 @@ namespace Win32xx
 		virtual BOOL IsMDIChild() const {return TRUE;}
 		virtual BOOL SetChildMenu(LPCTSTR MenuName);
 
-
 	protected:
-		enum Constants
-		{
-			MAX_MENU_STRING = 32,
-		};
-
 		// Its unlikely you would need to override these functions
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

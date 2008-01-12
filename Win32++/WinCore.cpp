@@ -594,16 +594,14 @@ namespace Win32xx
 
 	HWND CWnd::Detach()
 	{
-		try
-		{
-			//Only a subclassed window can be detached
-			if (m_PrevWindowProc == 0)
-				throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
+		//Only a subclassed window can be detached
+		if (m_PrevWindowProc == 0)
+			throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
 
 #if defined (_MSC_VER) && _MSC_VER <= 1200
 
-			// use non 64 bit compliant code for Visual C++ 6 and below
-			::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
+		// use non 64 bit compliant code for Visual C++ 6 and below
+		::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
 
 #else
   #if defined(_MSC_VER)
@@ -611,41 +609,33 @@ namespace Win32xx
     #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
   #endif //defined(_MSC_VER)
 
-			// use 64 bit compliant code otherwise
-			::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
+		// use 64 bit compliant code otherwise
+		::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 
   #if defined(_MSC_VER)
     #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
   #endif //defined(_MSC_VER)
 #endif // defined (_MSC_VER) && _MSC_VER <= 1200
 
-			// Remove the map entry
-			std::map<HWND, CWnd*, CompareHWND>::iterator m;
-			GetApp()->m_MapLock.Lock();
-			m = GetApp()->GetHWNDMap().find(m_hWnd);
-			if (m != GetApp()->GetHWNDMap().end())
-				GetApp()->GetHWNDMap().erase(m);
-			else
-			{
-				GetApp()->m_MapLock.Release();
-				throw CWinException(_T("CWnd::Detach  Unable to find window to detach"));
-			}
-			GetApp()->m_MapLock.Release();
-
-			// Clear member variables
-			HWND hWnd = m_hWnd;
-			m_hWnd = NULL;
-			m_hWndParent = NULL;
-			m_PrevWindowProc = NULL;
-			return hWnd;
-		}
-
-		catch (const CWinException &e)
+		// Remove the map entry
+		std::map<HWND, CWnd*, CompareHWND>::iterator m;
+		GetApp()->m_MapLock.Lock();
+		m = GetApp()->GetHWNDMap().find(m_hWnd);
+		if (m != GetApp()->GetHWNDMap().end())
+			GetApp()->GetHWNDMap().erase(m);
+		else
 		{
-			e.MessageBox();
-			throw;
+			GetApp()->m_MapLock.Release();
+			throw CWinException(_T("CWnd::Detach  Unable to find window to detach"));
 		}
+		GetApp()->m_MapLock.Release();
 
+		// Clear member variables
+		HWND hWnd = m_hWnd;
+		m_hWnd = NULL;
+		m_hWndParent = NULL;
+		m_PrevWindowProc = NULL;
+		return hWnd;
 	}
 
 	HWND CWnd::GetAncestor(HWND hWnd) const
@@ -927,41 +917,31 @@ namespace Win32xx
 
 	BOOL CWnd::RegisterClassEx(WNDCLASSEX& wcx)
 	{
-		try
-		{
-			if ((lstrlen(wcx.lpszClassName) == 0) || (lstrlen(wcx.lpszClassName) >  MAX_STRING_SIZE))
-				throw CWinException(_T("CWnd::RegisterClassEx   Invalid class name"));
+		if ((lstrlen(wcx.lpszClassName) == 0) || (lstrlen(wcx.lpszClassName) >  MAX_STRING_SIZE))
+			throw CWinException(_T("CWnd::RegisterClassEx   Invalid class name"));
 
-			// Check to see if this classname is already registered
-			WNDCLASSEX wcxTest = {0};
-			wcxTest.cbSize = sizeof(WNDCLASSEX);
+		// Check to see if this classname is already registered
+		WNDCLASSEX wcxTest = {0};
+		wcxTest.cbSize = sizeof(WNDCLASSEX);
 
-			if (::GetClassInfoEx(GetApp()->GetInstanceHandle(), wcx.lpszClassName, &wcxTest))
-				return TRUE;
-
-			// Set reasonable defaults
-			wcx.cbSize		= sizeof(WNDCLASSEX);
-			wcx.hInstance	= GetApp()->GetInstanceHandle();
-			wcx.lpfnWndProc	= CWnd::StaticWindowProc;
-
-			if (wcx.hbrBackground == 0)	wcx.hbrBackground	= m_hBrushBkgnd? m_hBrushBkgnd : (HBRUSH)::GetStockObject(WHITE_BRUSH);
-			if (wcx.hCursor == 0)		wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
-			if (wcx.hIcon == 0) 		wcx.hIcon			= ::LoadIcon(NULL, IDI_APPLICATION);
-			if (wcx.hIconSm == 0)		wcx.hIconSm			= ::LoadIcon(NULL, IDI_APPLICATION);
-
-			// Register the WNDCLASSEX structure
-			if (!::RegisterClassEx(&wcx))
-				throw CWinException(_T("Failed to register Window Class"));
-
+		if (::GetClassInfoEx(GetApp()->GetInstanceHandle(), wcx.lpszClassName, &wcxTest))
 			return TRUE;
-		}
 
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			throw;
-		}
+		// Set reasonable defaults
+		wcx.cbSize		= sizeof(WNDCLASSEX);
+		wcx.hInstance	= GetApp()->GetInstanceHandle();
+		wcx.lpfnWndProc	= CWnd::StaticWindowProc;
 
+		if (wcx.hbrBackground == 0)	wcx.hbrBackground	= m_hBrushBkgnd? m_hBrushBkgnd : (HBRUSH)::GetStockObject(WHITE_BRUSH);
+		if (wcx.hCursor == 0)		wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
+		if (wcx.hIcon == 0) 		wcx.hIcon			= ::LoadIcon(NULL, IDI_APPLICATION);
+		if (wcx.hIconSm == 0)		wcx.hIconSm			= ::LoadIcon(NULL, IDI_APPLICATION);
+
+		// Register the WNDCLASSEX structure
+		if (!::RegisterClassEx(&wcx))
+			throw CWinException(_T("Failed to register Window Class"));
+
+		return TRUE;
 	}
 
 	void CWnd::SetBkgndColor(COLORREF color)
@@ -1096,20 +1076,18 @@ namespace Win32xx
 	void CWnd::Subclass()
 	// A private function used by CreateEx, Attach and AttachDlgItem
 	{
-		try
-		{
-			if (m_PrevWindowProc)
-				throw CWinException(_T("Subclass failed.  Already Subclassed"));
+		if (m_PrevWindowProc)
+			throw CWinException(_T("Subclass failed.  Already Subclassed"));
 
-			// Subclass the window to pass messages to WndProc
+		// Subclass the window to pass messages to WndProc
 
 #if defined (_MSC_VER) && _MSC_VER <= 1200
 
-			// use non 64 bit compliant code for Visual C++ 6 and below
-			WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
-			if (WndProc == CWnd::StaticWindowProc)
-				throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
-			m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
+		// use non 64 bit compliant code for Visual C++ 6 and below
+		WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
+		if (WndProc == CWnd::StaticWindowProc)
+			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
+		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 #else
 
   #if defined(_MSC_VER)
@@ -1117,24 +1095,16 @@ namespace Win32xx
     #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
   #endif //defined(_MSC_VER)
 
-			// use 64 bit compliant code otherwise
-			WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
-			if (WndProc == CWnd::StaticWindowProc)
-				throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
-			m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+		// use 64 bit compliant code otherwise
+		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
+		if (WndProc == CWnd::StaticWindowProc)
+			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
+		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 
   #if defined(_MSC_VER)
     #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
   #endif //defined(_MSC_VER)
 #endif // defined (_MSC_VER) && _MSC_VER <= 1200
-
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			throw;
-		}
 
 	}
 
