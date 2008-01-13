@@ -2291,9 +2291,8 @@ namespace Win32xx
 		case WM_CHAR:
 			return 0L;  // Discard these messages
 		case WM_DRAWITEM:
-			if (GetApp()->GetFrame()->OnDrawItem(wParam, lParam))
-				return TRUE; // handled
-			break;
+			GetApp()->GetFrame()->OnDrawItem(wParam, lParam);
+			return TRUE; // handled
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
@@ -2322,9 +2321,8 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			if (GetApp()->GetFrame()->OnMeasureItem(wParam, lParam))
-				return TRUE; // handled
-			break;
+			GetApp()->GetFrame()->OnMeasureItem(wParam, lParam);
+			return TRUE; // handled
 		case WM_MOUSELEAVE:
 			OnMouseLeave();
 			break;
@@ -2944,7 +2942,7 @@ namespace Win32xx
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
-	BOOL CFrame::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
+	void CFrame::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
@@ -3027,9 +3025,7 @@ namespace Win32xx
 
 			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
 			::SetBkMode(DrawDC, iMode);
-		}
-
-		return TRUE; 
+		} 
 	}
 
 	void CFrame::OnExitMenuLoop()
@@ -3130,7 +3126,7 @@ namespace Win32xx
 		}
 	}
 
-	BOOL CFrame::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
+	void CFrame::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
@@ -3182,8 +3178,6 @@ namespace Win32xx
 			if (m_ThemeMenu.UseThemes)
 				pmis->itemWidth += 8;
 		}
-
-		return TRUE;
 	}
 
 
@@ -3664,16 +3658,14 @@ namespace Win32xx
 			return 0L;
 		case WM_DRAWITEM:
 			// Owner draw menu itmes
-			if (OnDrawItem(wParam, lParam))
-				return TRUE; // handled
-			break;
+			OnDrawItem(wParam, lParam);
+			return TRUE; // handled
 		case WM_INITMENUPOPUP:
 			OnInitMenuPopup(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			if (OnMeasureItem(wParam, lParam))
-				return TRUE; // handled
-			break;
+			OnMeasureItem(wParam, lParam);
+			return TRUE; // handled
 		case WM_EXITMENULOOP:
 			OnExitMenuLoop();
 			break;

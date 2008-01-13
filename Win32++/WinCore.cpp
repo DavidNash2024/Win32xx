@@ -556,7 +556,6 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
-			throw;
 		}
 
 		return m_hWnd;
@@ -917,31 +916,41 @@ namespace Win32xx
 
 	BOOL CWnd::RegisterClassEx(WNDCLASSEX& wcx)
 	{
-		if ((lstrlen(wcx.lpszClassName) == 0) || (lstrlen(wcx.lpszClassName) >  MAX_STRING_SIZE))
-			throw CWinException(_T("CWnd::RegisterClassEx   Invalid class name"));
+		try
+		{
+			if ((lstrlen(wcx.lpszClassName) == 0) || (lstrlen(wcx.lpszClassName) >  MAX_STRING_SIZE))
+				throw CWinException(_T("CWnd::RegisterClassEx   Invalid class name"));
 
-		// Check to see if this classname is already registered
-		WNDCLASSEX wcxTest = {0};
-		wcxTest.cbSize = sizeof(WNDCLASSEX);
+			// Check to see if this classname is already registered
+			WNDCLASSEX wcxTest = {0};
+			wcxTest.cbSize = sizeof(WNDCLASSEX);
 
-		if (::GetClassInfoEx(GetApp()->GetInstanceHandle(), wcx.lpszClassName, &wcxTest))
+			if (::GetClassInfoEx(GetApp()->GetInstanceHandle(), wcx.lpszClassName, &wcxTest))
+				return TRUE;
+
+			// Set reasonable defaults
+			wcx.cbSize		= sizeof(WNDCLASSEX);
+			wcx.hInstance	= GetApp()->GetInstanceHandle();
+			wcx.lpfnWndProc	= CWnd::StaticWindowProc;
+
+			if (wcx.hbrBackground == 0)	wcx.hbrBackground	= m_hBrushBkgnd? m_hBrushBkgnd : (HBRUSH)::GetStockObject(WHITE_BRUSH);
+			if (wcx.hCursor == 0)		wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
+			if (wcx.hIcon == 0) 		wcx.hIcon			= ::LoadIcon(NULL, IDI_APPLICATION);
+			if (wcx.hIconSm == 0)		wcx.hIconSm			= ::LoadIcon(NULL, IDI_APPLICATION);
+
+			// Register the WNDCLASSEX structure
+			if (!::RegisterClassEx(&wcx))
+				throw CWinException(_T("Failed to register Window Class"));
+
 			return TRUE;
-
-		// Set reasonable defaults
-		wcx.cbSize		= sizeof(WNDCLASSEX);
-		wcx.hInstance	= GetApp()->GetInstanceHandle();
-		wcx.lpfnWndProc	= CWnd::StaticWindowProc;
-
-		if (wcx.hbrBackground == 0)	wcx.hbrBackground	= m_hBrushBkgnd? m_hBrushBkgnd : (HBRUSH)::GetStockObject(WHITE_BRUSH);
-		if (wcx.hCursor == 0)		wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
-		if (wcx.hIcon == 0) 		wcx.hIcon			= ::LoadIcon(NULL, IDI_APPLICATION);
-		if (wcx.hIconSm == 0)		wcx.hIconSm			= ::LoadIcon(NULL, IDI_APPLICATION);
-
-		// Register the WNDCLASSEX structure
-		if (!::RegisterClassEx(&wcx))
-			throw CWinException(_T("Failed to register Window Class"));
-
-		return TRUE;
+		}
+		
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
+		
+		return FALSE;
 	}
 
 	void CWnd::SetBkgndColor(COLORREF color)
