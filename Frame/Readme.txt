@@ -1,5 +1,5 @@
 Frame Window
-------------
+============
 
 This program has a frame window which includes a Tool Bar and 
 Status Bar.  A child view window is super-imposed over the client
@@ -14,7 +14,7 @@ templates for other programs.  The classes within the Win32xx
 namespace are intended to be used without modification.
 
 Generic Information about Win32++ Projects
-------------------------------------------
+==========================================
 
 The various directories may contain the following types of files:
 
@@ -34,7 +34,7 @@ rc        | A C++ resouce file
 txt       | A text file
 
 Supported Compilers and Integrated Development Environments (IDEs)
------------------------------------------------------------------
+==================================================================
 Win32++ supports the following:
 * Borland C++ Compiler 5.5
 * Borland Developer Studio 2006
@@ -57,7 +57,7 @@ CodeBlocks is an IDE. The project files are configured for the following compile
 Dev-C++ is an IDE which supports the MinGW GNU compiler
 
 Supported Operating Systems
----------------------------
+===========================
 The programs compiled with Win32++ can run on the following operating systems:
 * Win95 (all versions, with or without Internet Explorer 4 installed)
 * Win98 (both versions)
@@ -82,7 +82,7 @@ Win32++ is intended to be 64bit compliant, and should be capable of generating 6
 This feature has not been tested as yet.
 
 Directory Structure
--------------------
+===================
 When extracting the files from the zip archive, be sure to preserve the directory structure.
 The directory structure will typically look like this:
 

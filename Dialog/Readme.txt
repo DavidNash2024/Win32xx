@@ -1,5 +1,5 @@
 Dialog Example
---------------
+==============
 
 This program has a modal dialog as its main window.
 
@@ -11,8 +11,15 @@ The CMyDialog and CDialogApp classes are intended as templates for other
 programs.  The classes within the Win32xx namespace are intended to 
 be used without modification.
 
+Dialog applications are easy to create, provided we have access to a 
+resource editor to build the resource script file for us (often called
+resource.rc). Commercial compilers usually include a resource editor
+for this purpose, but free compilers generally don't. For a free 
+resource editor, try resedit from here: http://www.resedit.net/
+
+
 Generic Information about Win32++ Projects
-------------------------------------------
+==========================================
 
 The various directories may contain the following types of files:
 
@@ -32,7 +39,7 @@ rc        | A C++ resouce file
 txt       | A text file
 
 Supported Compilers and Integrated Development Environments (IDEs)
------------------------------------------------------------------
+==================================================================
 Win32++ supports the following:
 * Borland C++ Compiler 5.5
 * Borland Developer Studio 2006
@@ -55,7 +62,7 @@ CodeBlocks is an IDE. The project files are configured for the following compile
 Dev-C++ is an IDE which supports the MinGW GNU compiler
 
 Supported Operating Systems
----------------------------
+===========================
 The programs compiled with Win32++ can run on the following operating systems:
 * Win95 (all versions, with or without Internet Explorer 4 installed)
 * Win98 (both versions)
@@ -80,7 +87,7 @@ Win32++ is intended to be 64bit compliant, and should be capable of generating 6
 This feature has not been tested as yet.
 
 Directory Structure
--------------------
+===================
 When extracting the files from the zip archive, be sure to preserve the directory structure.
 The directory structure will typically look like this:
 
@@ -92,5 +99,4 @@ ParentFolder\Win32++
 
 The files which form the Win32++ library are contained in the Win32++ subdirectory.
 It is located as a sibling directory to the various projects.
-
 
