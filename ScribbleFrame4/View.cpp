@@ -57,11 +57,13 @@ void CView::OnPaint(HDC hDC)
 
 void CView::PreCreate(CREATESTRUCT &cs)
 {
+	// Set the extra style to provide a sunken effect
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
 void CView::PreRegisterClass(WNDCLASS &wc)
 {
+	// Set the background brush, class name and cursor
 	wc.hbrBackground = m_hBrush;
 	wc.lpszClassName = "Scribble Window";
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));

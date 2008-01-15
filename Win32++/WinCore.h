@@ -350,7 +350,7 @@ namespace Win32xx
   // Global functions to extend the WinCE API
   //
 
-  #ifdef _WIN32_WCE
+  #ifdef _WIN32_WCE		// for WinCE operating systems
 
   inline UINT wce_GetMenuState(HMENU hMenu, UINT uId, UINT uFlags)
   {
@@ -434,7 +434,7 @@ namespace Win32xx
       return InsertMenu(hMenu, uPosition, uFlags, uIDNewItem, lpNewItem);
 	}
 
-#else // _WIN_WCE not defined
+#else // for Win32 operating systems
 
 	inline int GetWinVersion()
 	{

@@ -150,7 +150,24 @@ namespace Win32xx
 			return;
 		}
 
-#ifndef _WIN32_WCE
+#ifdef _WIN32_WCE	// for WinCE operating systems
+
+		// Position window at the botton of the desktop area
+		RECT r = {0};
+		::SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
+		r.top = r.bottom - TRACE_HEIGHT;
+		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION;
+
+		m_Trace.CreateEx(WS_EX_TOPMOST, TEXT("TRACE"), TEXT("Trace Window"), dwStyle, r, NULL, NULL);
+
+		::GetClientRect(m_Trace, &r);
+		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
+
+		m_hTraceEdit = ::CreateWindowEx(0L, TEXT("Edit"), TEXT(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
+					m_Trace, NULL, GetApp()->GetInstanceHandle(), NULL);
+
+#else	// for Win32 operating systems	
+
 		{
 			m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
 			if (!m_hRichEdit)
@@ -444,16 +461,17 @@ namespace Win32xx
 	HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
 	{
+		// Set the CREATESTRUCT parameters
+		PreCreate(m_cs);
+		
 		// Set the WNDCLASS parameters
 		PreRegisterClass(m_wc);
 		if (m_wc.lpszClassName)
 		{
 			RegisterClass(m_wc);
 			m_cs.lpszClass = m_wc.lpszClassName;
+			m_cs.style |= m_wc.style; 
 		}
-		
-		// Set the CREATESTRUCT parameters
-		PreCreate(m_cs);
 
 		// Set the Window Class Name
 		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
@@ -900,6 +918,7 @@ namespace Win32xx
 
 	void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters
+	//  Useful for setting the window to a predefined type (eg TOOLBARCLASSNAME)
 	{
 		m_cs.cx             = cs.cx;
 		m_cs.cy             = cs.cy;
@@ -920,6 +939,7 @@ namespace Win32xx
 
 	void CWnd::PreRegisterClass(WNDCLASS& wc)
 	// Called by CWnd::Create to set some window parameters
+	//  Useful for setting the background brush and cursor
 	{
 		m_wc.style			= wc.style;
 		m_wc.lpfnWndProc	= CWnd::StaticWindowProc;
@@ -933,7 +953,8 @@ namespace Win32xx
 		m_wc.lpszClassName  = wc.lpszClassName;
 
 		// Overide this function in your derived class to set the
-		// WNDCLASS values prior to window creation
+		// WNDCLASS values prior to window creation. Be sure to set
+		// the ClassnName for this function to take effect
 	}
 
 	BOOL CWnd::RegisterClass(WNDCLASS& wc)
@@ -960,7 +981,7 @@ namespace Win32xx
 			if (!::RegisterClass(&wc))
 				throw CWinException(_T("Failed to register Window Class"));
 
-			// Store callback address (its not always CWnd::StaticWindowProc)
+			// Store callback address (its not always simply the function pointer to CWnd::StaticWindowProc)
 			CCriticalSection RegLock;
 			RegLock.Lock();
 			if (st_pfnWndProc == 0)
