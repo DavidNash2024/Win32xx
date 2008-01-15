@@ -23,24 +23,6 @@ void CView::ClearPoints()
 	::InvalidateRect(GetHwnd(), NULL, TRUE);
 }
 
-HWND CView::Create(HWND hWndParent = 0)
-{
-	WNDCLASS wc = {0};
-	wc.hbrBackground = m_hBrush;
-	wc.lpszClassName = "Scribble Window";
-	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
-	RegisterClass(wc);
-
-	DWORD dwStyle = WS_VISIBLE | WS_CHILD; 
-	DWORD dwExStyle = WS_EX_CLIENTEDGE;
-	int x  = CW_USEDEFAULT;
-	int y  = CW_USEDEFAULT;
-	int cx = CW_USEDEFAULT;
-	int cy = CW_USEDEFAULT;
-
-	return CreateEx(dwExStyle, wc.lpszClassName, _T(""), dwStyle, x, y, cx, cy, hWndParent, NULL, NULL); 
-}
-
 void CView::DrawLine(int x, int y)
 {
 	HDC hDC = ::GetDC(m_hWnd);
@@ -71,6 +53,18 @@ void CView::OnPaint(HDC hDC)
 			::DeleteObject(hPen);
 		}
 	}
+}
+
+void CView::PreCreate(CREATESTRUCT &cs)
+{
+	cs.dwExStyle = WS_EX_CLIENTEDGE;
+}
+
+void CView::PreRegisterClass(WNDCLASS &wc)
+{
+	wc.hbrBackground = m_hBrush;
+	wc.lpszClassName = "Scribble Window";
+	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 
 void CView::SetPen(COLORREF color)

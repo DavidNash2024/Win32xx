@@ -318,6 +318,7 @@ namespace Win32xx
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
+		::ZeroMemory(&m_wc, sizeof(WNDCLASS));
 	}
 
 	CWnd::~CWnd()
@@ -443,13 +444,21 @@ namespace Win32xx
 	HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
 	{
+		// Set the WNDCLASS parameters
+		PreRegisterClass(m_wc);
+		if (m_wc.lpszClassName)
+		{
+			RegisterClass(m_wc);
+			m_cs.lpszClass = m_wc.lpszClassName;
+		}
+		
 		// Set the CREATESTRUCT parameters
 		PreCreate(m_cs);
 
 		// Set the Window Class Name
 		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
 		if (m_cs.lpszClass)
-			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
+			lstrcpy(szClassName, m_cs.lpszClass);
 
 		// Set Parent
 		if (!hWndParent && m_cs.hwndParent)
@@ -904,8 +913,27 @@ namespace Win32xx
 		m_cs.style          = cs.style;
 		m_cs.x              = cs.x;
 		m_cs.y              = cs.y;
+		
 		// Overide this function in your derived class to set the
 		// CREATESTRUCT values prior to window creation
+	}
+
+	void CWnd::PreRegisterClass(WNDCLASS& wc)
+	// Called by CWnd::Create to set some window parameters
+	{
+		m_wc.style			= wc.style;
+		m_wc.lpfnWndProc	= CWnd::StaticWindowProc;
+		m_wc.cbClsExtra		= wc.cbClsExtra;
+		m_wc.cbWndExtra		= wc.cbWndExtra;
+		m_wc.hInstance		= GetApp()->GetInstanceHandle();
+		m_wc.hIcon			= wc.hIcon;
+		m_wc.hCursor		= wc.hCursor;
+		m_wc.hbrBackground	= wc.hbrBackground;
+		m_wc.lpszMenuName	= wc.lpszMenuName;
+		m_wc.lpszClassName  = wc.lpszClassName;
+
+		// Overide this function in your derived class to set the
+		// WNDCLASS values prior to window creation
 	}
 
 	BOOL CWnd::RegisterClass(WNDCLASS& wc)

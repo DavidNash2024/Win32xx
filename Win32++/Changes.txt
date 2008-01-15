@@ -14,6 +14,8 @@ New Features
 
 * Remove the need for the CBT hook during window creation.
 
+* Merged the Win32++ and WinCE frameworks.
+
    
 The following changes have been made to the Win32++ code:
 Added CDC class 
@@ -21,8 +23,10 @@ Added CSplitter::SetImmediate
 Added CSplitter::SetVertical
 Added CWnd::GetDlgItemText
 Added CWnd::GetWindowText
+Added CWnd::PreRegisterClass
 Added CWnd::SetDlgItemText
 Added CWnd::SetWindowText
+Removed CWnd::SetBkgndColor
 
 Changed CSplitter::CSplitter 	now requires no arguements
 

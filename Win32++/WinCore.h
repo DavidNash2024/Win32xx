@@ -89,7 +89,7 @@ namespace Win32xx {}
 //
 
 typedef std::basic_string<TCHAR> tString;
-#ifndef _WIN32_CE
+#ifndef _WIN32_WCE
   typedef std::basic_stringstream<TCHAR> tStringStream;
 #endif
 
@@ -178,6 +178,7 @@ namespace Win32xx
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 		// Its unlikely you would need to override these functions
 		virtual BOOL Attach(HWND hWnd);
@@ -224,6 +225,7 @@ namespace Win32xx
 		HWND m_hWnd;			// handle to this object's window
 		HWND m_hWndParent;		// handle to this object's window parent
 		TLSData* m_pTLSData;	// a structure for the Thread Local Storage data
+		WNDCLASS m_wc;			// defines initialisation parameters for RegisterClass
 
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
@@ -343,7 +345,96 @@ namespace Win32xx
 	#endif  //_DEBUG
 	}
 
-  #ifndef _WIN32_WCE
+
+  ///////////////////////////////////////////
+  // Global functions to extend the WinCE API
+  //
+
+  #ifdef _WIN32_WCE
+
+  inline UINT wce_GetMenuState(HMENU hMenu, UINT uId, UINT uFlags)
+  {
+      MENUITEMINFO mii;
+
+      memset(&mii, 0, sizeof(MENUITEMINFO));
+      mii.cbSize = sizeof(MENUITEMINFO);
+      mii.fMask = MIIM_STATE;
+
+      if (uFlags & MF_BYPOSITION) {
+          GetMenuItemInfo(hMenu, uId, TRUE, &mii);
+      }
+      else
+      {
+          GetMenuItemInfo(hMenu, uId, FALSE, &mii);
+      }
+
+      return mii.fState;
+  }
+
+  inline int wce_GetMenuItemCount(HMENU hMenu)
+  {
+      const int MAX_NUM_ITEMS = 256;
+      int  iPos, iCount;
+
+      MENUITEMINFO mii;
+      memset(&mii, 0, sizeof(MENUITEMINFO));
+      mii.cbSize = sizeof(MENUITEMINFO);
+
+      iCount = 0;
+      for (iPos = 0; iPos < MAX_NUM_ITEMS; iPos++)
+      {
+          if (FALSE == GetMenuItemInfo(hMenu, (UINT)iPos, TRUE, &mii))
+          {
+              break;
+          }
+          iCount++;
+      }
+
+      return iCount;
+  }
+
+  inline UINT wce_GetMenuItemID(HMENU hMenu, int nPos)
+  {
+      MENUITEMINFO mii;
+      memset(&mii, 0, sizeof(mii));
+      mii.cbSize = sizeof(mii);
+      mii.fMask = MIIM_ID;
+      GetMenuItemInfo(hMenu, nPos, TRUE, &mii);
+
+      return mii.wID;
+  }
+
+
+  inline BOOL wce_ModifyMenu(
+      HMENU hMenu,      // handle of menu
+      UINT uPosition,  // menu item to modify
+      UINT uFlags,     // menu item flags
+      UINT uIDNewItem, // menu item identifier or handle of drop-down menu or submenu
+      LPCTSTR lpNewItem // menu item content
+      )
+  {
+      // Handle MF_BYCOMMAND case
+      if (MF_BYPOSITION != (uFlags & MF_BYPOSITION))
+      {
+          int nMax = wce_GetMenuItemCount(hMenu);
+          int nCount = 0;
+          while (uPosition != wce_GetMenuItemID(hMenu, nCount) && (nCount < nMax))
+          {
+              nCount++;
+          }
+          uPosition = nCount;
+          uFlags |= MF_BYPOSITION;
+      }
+
+      if (FALSE == DeleteMenu(hMenu, uPosition, uFlags))
+      {
+          return FALSE;
+      }
+
+      return InsertMenu(hMenu, uPosition, uFlags, uIDNewItem, lpNewItem);
+	}
+
+#else // _WIN_WCE not defined
 
 	inline int GetWinVersion()
 	{
@@ -448,7 +539,7 @@ namespace Win32xx
 
 		return bIsXPThemed;
 	}
-  
+
   #endif // _WIN32_WCE
 
   #ifndef lstrcpyn
@@ -463,20 +554,11 @@ namespace Win32xx
 	}
   #endif // !lstrcpyn
 
-	inline BOOL IsWinCE()
-	{
-	#ifdef _WIN32_WCE
-		return TRUE;
-	#endif
-		
-		return FALSE;
-	}
-
-  #ifndef TLS_OUT_OF_INDEXES 
+  #ifndef TLS_OUT_OF_INDEXES
 	#define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
   #endif
-  
-  #ifndef WM_PARENTNOTIFY 
+
+  #ifndef WM_PARENTNOTIFY
     #define WM_PARENTNOTIFY 0x0210
   #endif
 

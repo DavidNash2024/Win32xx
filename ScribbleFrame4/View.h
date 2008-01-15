@@ -18,7 +18,8 @@ public:
 	CView();
 	virtual ~CView();
 	virtual void ClearPoints();
-	virtual HWND Create(HWND hWndParent /*= 0*/);
+	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual void SetPen(COLORREF Color);
 
 protected:
