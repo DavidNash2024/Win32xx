@@ -12,7 +12,7 @@ New Features
    
 * Added support for Borland Developer Studio 2006.
 
-* Remove the need for the CBT hook during window creation
+* Remove the need for the CBT hook during window creation.
 
    
 The following changes have been made to the Win32++ code:
@@ -27,7 +27,7 @@ Added CWnd::SetWindowText
 Changed CSplitter::CSplitter 	now requires no arguements
 
 Incompatibilities with previous versions:
-CSplitter now has a default constructor. This simplifies the use of CSplitter.
+CSplitter now uses a default constructor. This simplifies the use of CSplitter.
 The following functions can be used to set the CSplitter paramerters:
 * SetBarPos	sets the initial splitter bar position (default is 10)
 * SetBarColor   sets the color of the splitter bar (default is rebar color)

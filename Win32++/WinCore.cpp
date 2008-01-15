@@ -1,9 +1,5 @@
-// Latest verion available at:
-// http://sourceforge.net/projects/win32-framework
-
-
 // Win32++  Version 5.7
-// Released: ?? January, 2008 by:
+// Released: 15th February, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -59,6 +55,9 @@ namespace Win32xx
 
 	// Static variable for the pointer to the CWinApp object
 	CWinApp* CWinApp::st_pTheApp = 0;
+
+	// Store the pointer used for our CWnd::StaticWindowProc function
+	WNDPROC st_pfnWndProc = 0;
 
 	///////////////////////////////////
 	// Definitions for the CWinApp class
@@ -151,9 +150,12 @@ namespace Win32xx
 			return;
 		}
 
-		m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
-		if (!m_hRichEdit)
-			DebugErrMsg(_T("Failed to load the RichEdit dll"));
+#ifndef _WIN32_WCE
+		{
+			m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
+			if (!m_hRichEdit)
+				DebugErrMsg(_T("Failed to load the RichEdit dll"));
+		}
 
 		// Position window at the botton right of the desktop area
 		RECT r = {0};
@@ -166,7 +168,7 @@ namespace Win32xx
 
 		::GetClientRect(m_Trace, &r);
 		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
-
+		
 		m_hTraceEdit = ::CreateWindowEx(0L, _T("RichEdit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
 					m_Trace, NULL, GetApp()->GetInstanceHandle(), NULL);
 
@@ -174,6 +176,7 @@ namespace Win32xx
 		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 		::SendMessage(m_hTraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
+#endif
 	}
 
 	BOOL CWinApp::InitInstance()
@@ -310,8 +313,8 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
-					m_PrevWindowProc(NULL), m_hBrushBkgnd(NULL)
+	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL), 
+					m_hIconSmall(NULL), m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
@@ -325,7 +328,6 @@ namespace Win32xx
 		// Destroy the GDI objects
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-		if (m_hBrushBkgnd) ::DeleteObject(m_hBrushBkgnd);
 
 		// Remove the map entries
 		if (GetApp())
@@ -447,7 +449,7 @@ namespace Win32xx
 		// Set the Window Class Name
 		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
 		if (m_cs.lpszClass)
-			::lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
+			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
 		// Set Parent
 		if (!hWndParent && m_cs.hwndParent)
@@ -455,11 +457,12 @@ namespace Win32xx
 
 		// Set the window style
 		DWORD dwStyle;
+		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 		if (m_cs.style)
 			dwStyle = m_cs.style;
-		else
-			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : WS_OVERLAPPEDWINDOW);
-
+		else 
+			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+		
 		// Set window size and position
 		int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
 		int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
@@ -497,17 +500,15 @@ namespace Win32xx
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE] = _T("");
 			if (lstrlen(lpszClassName) == 0)
-				::lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
+				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
 				// Create our own local copy of szClassName.
-				::lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
+				lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
 
 			// Register the window class
-			WNDCLASSEX wcx = {0};
-			wcx.cbSize = sizeof(WNDCLASSEX);
-			wcx.lpszClassName = ClassName;
-			wcx.hbrBackground = m_hBrushBkgnd;
-			if (!RegisterClassEx(wcx))
+			WNDCLASS wc = {0};
+			wc.lpszClassName = ClassName;
+			if (!RegisterClass(wc))
 				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
 			// Ensure this thread has the TLS index set
@@ -529,20 +530,17 @@ namespace Win32xx
 			if (!m_hWnd)
 				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
 
-			if (!::GetClassInfoEx(GetApp()->GetInstanceHandle(), ClassName, &wcx))
-				if (::GetClassInfoEx(NULL, ClassName, &wcx))
-					throw CWinException(_T("CWnd::CreateEx  Failed to get class info"));
-
 			m_hWndParent = hParent;
 
 			// Automatically subclass predefined window class types
-			if (wcx.lpfnWndProc != CWnd::StaticWindowProc)
+			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
+			if (wc.lpfnWndProc != st_pfnWndProc)
 			{
 				Subclass();
 
 				// Send a message to force the HWND to be added to the map
 				::SendMessage(m_hWnd, WM_NULL, 0, 0);
-				
+
 				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
 			}
 
@@ -578,10 +576,6 @@ namespace Win32xx
 		if (m_hIconSmall != NULL)
 			::DestroyIcon(m_hIconSmall);
 		m_hIconSmall = NULL;
-
-		if (m_hBrushBkgnd != NULL)
-			::DeleteObject(m_hBrushBkgnd);
-		m_hBrushBkgnd = NULL;
 
 		if (::IsWindow(m_hWnd))
 			::DestroyWindow(m_hWnd);
@@ -670,11 +664,11 @@ namespace Win32xx
 	{
 		// Calculate the buffer size to hold the null terminated text
 		int nLength = 1 + ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
-		
-		m_String = _T("");	
+
+		m_String = _T("");
 		if (nLength > 0)
 		{
-			TCHAR* szString = new TCHAR[nLength]; 
+			TCHAR* szString = new TCHAR[nLength];
 			if (szString == NULL)
 				throw std::bad_alloc();
 
@@ -695,11 +689,11 @@ namespace Win32xx
 
 		// Calculate the buffer size to hold the null terminated text
 		int nLength = 1 + ::GetWindowTextLength(m_hWnd);
-		
+
 		m_String = _T("");
 		if (nLength > 0)
 		{
-			TCHAR* szString = new TCHAR[nLength]; 
+			TCHAR* szString = new TCHAR[nLength];
 			if (szString == NULL)
 				throw std::bad_alloc();
 
@@ -914,66 +908,48 @@ namespace Win32xx
 		// CREATESTRUCT values prior to window creation
 	}
 
-	BOOL CWnd::RegisterClassEx(WNDCLASSEX& wcx)
+	BOOL CWnd::RegisterClass(WNDCLASS& wc)
 	{
 		try
 		{
-			if ((lstrlen(wcx.lpszClassName) == 0) || (lstrlen(wcx.lpszClassName) >  MAX_STRING_SIZE))
-				throw CWinException(_T("CWnd::RegisterClassEx   Invalid class name"));
+			if ((lstrlen(wc.lpszClassName) == 0) || (lstrlen(wc.lpszClassName) >  MAX_STRING_SIZE))
+				throw CWinException(_T("CWnd::RegisterClass   Invalid class name"));
 
 			// Check to see if this classname is already registered
-			WNDCLASSEX wcxTest = {0};
-			wcxTest.cbSize = sizeof(WNDCLASSEX);
+			WNDCLASS wcTest = {0};
 
-			if (::GetClassInfoEx(GetApp()->GetInstanceHandle(), wcx.lpszClassName, &wcxTest))
+			if (::GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest))
 				return TRUE;
 
 			// Set reasonable defaults
-			wcx.cbSize		= sizeof(WNDCLASSEX);
-			wcx.hInstance	= GetApp()->GetInstanceHandle();
-			wcx.lpfnWndProc	= CWnd::StaticWindowProc;
+			wc.hInstance	= GetApp()->GetInstanceHandle();
+			wc.lpfnWndProc	= CWnd::StaticWindowProc;
 
-			if (wcx.hbrBackground == 0)	wcx.hbrBackground	= m_hBrushBkgnd? m_hBrushBkgnd : (HBRUSH)::GetStockObject(WHITE_BRUSH);
-			if (wcx.hCursor == 0)		wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
-			if (wcx.hIcon == 0) 		wcx.hIcon			= ::LoadIcon(NULL, IDI_APPLICATION);
-			if (wcx.hIconSm == 0)		wcx.hIconSm			= ::LoadIcon(NULL, IDI_APPLICATION);
+			if (wc.hbrBackground == 0)	wc.hbrBackground	= (HBRUSH)::GetStockObject(WHITE_BRUSH);
+			if (wc.hCursor == 0)		wc.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
 
-			// Register the WNDCLASSEX structure
-			if (!::RegisterClassEx(&wcx))
+			// Register the WNDCLASS structure
+			if (!::RegisterClass(&wc))
 				throw CWinException(_T("Failed to register Window Class"));
 
+			// Store callback address (its not always CWnd::StaticWindowProc)
+			CCriticalSection RegLock;
+			RegLock.Lock();
+			if (st_pfnWndProc == 0)
+			{
+				GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest);
+				st_pfnWndProc = wcTest.lpfnWndProc;
+			}
+			RegLock.Release();
 			return TRUE;
 		}
-		
+
 		catch (const CWinException &e)
 		{
 			e.MessageBox();
 		}
-		
+
 		return FALSE;
-	}
-
-	void CWnd::SetBkgndColor(COLORREF color)
-	{
-		// Note:  This sets the background color for all windows with this class name,
-		//         not just this window.
-
-		if (m_hBrushBkgnd) ::DeleteObject(m_hBrushBkgnd);
-		m_hBrushBkgnd = CreateSolidBrush(color);
-
-		if (m_hWnd)
-		{
-#if defined (_MSC_VER) && _MSC_VER > 1200
-  #pragma warning(push)
-  #pragma warning(disable: 4244 ) //Temporarily disable C4244 warning
-			// use 64 bit compliant code
-			::SetClassLongPtr(m_hWnd, GCLP_HBRBACKGROUND, (LONG_PTR)m_hBrushBkgnd);
-  #pragma warning(pop)    // Re-enable 4244 warnings
-#else
-			// use non 64 bit compliant code
-			::SetClassLong(m_hWnd, GCL_HBRBACKGROUND, (LONG)m_hBrushBkgnd);
-#endif
-		}
 	}
 
 	BOOL CWnd::SetDlgItemText(int nID, LPCTSTR lpString)
@@ -1009,7 +985,7 @@ namespace Win32xx
 		}
 		else
 			throw CWinException(_T("CWnd::SetParent ... Failed to set parent"));
-	
+
 	}
 
 	BOOL CWnd::SetWindowText(LPCTSTR lpString)
@@ -1251,7 +1227,7 @@ namespace Win32xx
 		TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
 		TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
 
-		::lstrcpyn(buf1, GetMessage(), MAX_STRING_SIZE/2 -10);
+		lstrcpyn(buf1, GetMessage(), MAX_STRING_SIZE/2 -10);
 
 		// Display Last Error information if it's useful
 		if (m_err != 0)
@@ -1261,7 +1237,7 @@ namespace Win32xx
 				NULL, m_err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 				(LPTSTR) &lpMsgBuf, 0, NULL );
 
-			::lstrcpyn(buf2, (LPTSTR)lpMsgBuf, MAX_STRING_SIZE/2 -10);
+			lstrcpyn(buf2, (LPTSTR)lpMsgBuf, MAX_STRING_SIZE/2 -10);
 
 			::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);
 			::LocalFree(lpMsgBuf);

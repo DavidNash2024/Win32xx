@@ -1,9 +1,5 @@
-// Latest verion available at:
-// http://sourceforge.net/projects/win32-framework
-
-
 // Win32++  Version 5.7
-// Released: ?? January, 2008 by:
+// Released: 15th February, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -326,7 +322,7 @@ namespace Win32xx
 				return ((CDialog*)m->second)->DialogProc(hWnd, uMsg, wParam, lParam);
 
 			// The HWND wasn't in the map, so add it now
-			
+
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 			if (pTLSData == NULL)
 				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));

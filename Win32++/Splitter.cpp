@@ -1,9 +1,5 @@
-// Latest verion available at:
-// http://sourceforge.net/projects/win32-framework
-
-
 // Win32++  Version 5.7
-// Released: ?? January, 2008 by:
+// Released: 15th February, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -50,7 +46,7 @@
 namespace Win32xx
 {
 
-	CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(10), m_bCapture(false), 
+	CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(10), m_bCapture(false),
 		                       m_bVertical(true), m_bImmediate(false)
 	{
 		m_nWidth = 5;
@@ -72,9 +68,8 @@ namespace Win32xx
 		// draws a hashed bar while the splitter bar is being dragged
 		if (m_bCapture)
 		{
-			HDC hDC = ::GetDC(m_hWnd);
-
-			HBRUSH hOldBrush = (HBRUSH)::SelectObject(hDC, (HBRUSH)m_hbrDithered);
+			CDC BarDC = ::GetDC(m_hWnd);
+			BarDC.AttachBrush(m_hbrDithered);
 
 			RECT rc = {0};
 			GetClientRect(m_hWnd, &rc);
@@ -82,14 +77,9 @@ namespace Win32xx
 			int cy = rc.bottom - rc.top;
 
 			if (m_bVertical)
-				::PatBlt (hDC, Pos - m_nWidth/2, 0, m_nWidth, cy, PATINVERT);
+				::PatBlt (BarDC, Pos - m_nWidth/2, 0, m_nWidth, cy, PATINVERT);
 			else
-				::PatBlt (hDC, 0, Pos - m_nWidth/2, cx, m_nWidth, PATINVERT);
-
-			// Clean up
-			::SelectObject(hDC, hOldBrush);
-			::SelectObject(hDC, GetStockObject(SYSTEM_FONT));
-			::ReleaseDC(m_hWndParent, hDC);
+				::PatBlt (BarDC, 0, Pos - m_nWidth/2, cx, m_nWidth, PATINVERT);
 		}
 	}
 
@@ -108,7 +98,7 @@ namespace Win32xx
 
 			if (!m_bImmediate)
 				DrawBar(m_nBarPos);
-			
+
 			m_nBarPos = m_nBarpreMove;
 			m_nOldBarPos = m_nBarpreMove;
 		}
@@ -158,7 +148,7 @@ namespace Win32xx
 
 		if (!m_bImmediate)
 			DrawBar(m_nBarPos);
-		
+
 		m_nBarpreMove = m_nBarPos;
 	}
 
@@ -166,7 +156,7 @@ namespace Win32xx
 	{
 		if (!m_bImmediate)
 			DrawBar(m_nBarPos);
-		
+
 		::ReleaseCapture();
 
 		RecalcLayout();
@@ -266,7 +256,7 @@ namespace Win32xx
 			if ((m_bVertical) && (nBarPos > cx)) return;
 			if ((!m_bVertical) && (nBarPos >cy)) return;
 		}
-		
+
 		m_nBarPos = nBarPos;
 		m_nOldBarPos = nBarPos;
 
@@ -295,7 +285,7 @@ namespace Win32xx
 			m_nWidth = nWidth;
 		else
 			::DebugErrMsg(_T("Invalid Splitter bar width"));
-	
+
 		if (m_hWnd)
 			RecalcLayout();
 	}
@@ -308,7 +298,7 @@ namespace Win32xx
 		if (m_hWnd)
 			RecalcLayout();
 	}
-	
+
 	void CSplitter::SetVertical(bool bVertical)
 	{
 		// Set to true for a vertical splitter bar, and false for a horizintal one

@@ -1,9 +1,5 @@
-// Latest verion available at:
-// http://sourceforge.net/projects/win32-framework
-
-
 // Win32++  Version 5.7
-// Released: ?? January, 2008 by:
+// Released: 15th February, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -37,7 +33,6 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //
 ////////////////////////////////////////////////////////
-
 
 
 ////////////////////////////////////////////////////////
@@ -1531,7 +1526,7 @@ namespace Win32xx
 				break;
 			case 1:
 				{
-					// Draw outline, white at top, black on bottom					
+					// Draw outline, white at top, black on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
 					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
@@ -1847,7 +1842,7 @@ namespace Win32xx
 			{
 				CDC MenubarDC = ::GetDC(m_hWnd);
 				m_nMDIButton = -1;
-				
+
 				if (PtInRect(&m_MDIRect[0], pt)) m_nMDIButton = 0;
 				if (PtInRect(&m_MDIRect[1], pt)) m_nMDIButton = 1;
 				if (PtInRect(&m_MDIRect[2], pt)) m_nMDIButton = 2;
@@ -3025,7 +3020,7 @@ namespace Win32xx
 
 			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
 			::SetBkMode(DrawDC, iMode);
-		} 
+		}
 	}
 
 	void CFrame::OnExitMenuLoop()

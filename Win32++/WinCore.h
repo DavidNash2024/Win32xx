@@ -1,9 +1,5 @@
-// Latest verion available at:
-// http://sourceforge.net/projects/win32-framework
-
-
 // Win32++  Version 5.7
-// Released: ?? January, 2008 by:
+// Released: 15th February, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -71,12 +67,15 @@
 
 #include <vector>
 #include <string>
-#include <sstream>
 #include <map>
 #include <windows.h>
 #include <commctrl.h>
 #include <tchar.h>
 #include <shlwapi.h>
+#ifndef _WIN32_WCE
+  #include <sstream>
+#endif
+
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
@@ -85,17 +84,14 @@ namespace Win32xx {}
   using namespace Win32xx;
 #endif
 
-/////////////////////////////////
-// Some useful type declarations
+///////////////////////////////////////////
+// Some useful type declarations and macros
 //
 
 typedef std::basic_string<TCHAR> tString;
-typedef std::basic_stringstream<TCHAR> tStringStream;
-// Note: Borland's free compiler version 5.5 has a buggy implementation of stringstream and iostream
-
-////////////////////////////////
-// Some useful macros
-//
+#ifndef _WIN32_CE
+  typedef std::basic_stringstream<TCHAR> tStringStream;
+#endif
 
 // Define min and max for Dev-C++ compatibility
 #ifndef max
@@ -196,15 +192,13 @@ namespace Win32xx
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL RegisterClassEx(WNDCLASSEX& wcx);
-		virtual void SetBkgndColor(COLORREF color);
+		virtual BOOL RegisterClass(WNDCLASS& wc);
 		virtual BOOL SetDlgItemText(int nID, LPCTSTR lpString);
 		virtual void SetParent(HWND hParent);
 		virtual BOOL SetWindowText(LPCTSTR lpString);
 
 		// These functions aren't virtual, so there's no point overriding them
 		HWND GetHwnd() const {return m_hWnd;}
-		HBRUSH GetBkgndBrush() const {return m_hBrushBkgnd;}
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
 
@@ -240,7 +234,6 @@ namespace Win32xx
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// Pre-Subclassed Window Procedure
 		tString m_String;			// a TCHAR std::string, temporary storage for strings
-		HBRUSH m_hBrushBkgnd;		// Brush created in SetBkgndColor
 
 	}; // class CWnd
 
@@ -350,6 +343,8 @@ namespace Win32xx
 	#endif  //_DEBUG
 	}
 
+  #ifndef _WIN32_WCE
+
 	inline int GetWinVersion()
 	{
 		DWORD dwVersion = GetVersion();
@@ -453,8 +448,39 @@ namespace Win32xx
 
 		return bIsXPThemed;
 	}
+  
+  #endif // _WIN32_WCE
 
-}; // namespace Win32xx
+  #ifndef lstrcpyn
+	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
+	{
+		if(lpstrDest == NULL || lpstrSrc == NULL || nLength <= 0)
+			return NULL;
+		int nLen = min(lstrlen(lpstrSrc), nLength - 1);
+		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
+		lpstrDest[nLen] = 0;
+		return lpstrRet;
+	}
+  #endif // !lstrcpyn
+
+	inline BOOL IsWinCE()
+	{
+	#ifdef _WIN32_WCE
+		return TRUE;
+	#endif
+		
+		return FALSE;
+	}
+
+  #ifndef TLS_OUT_OF_INDEXES 
+	#define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
+  #endif
+  
+  #ifndef WM_PARENTNOTIFY 
+    #define WM_PARENTNOTIFY 0x0210
+  #endif
+
+	}; // namespace Win32xx
 
 
 #endif // WINCORE_H

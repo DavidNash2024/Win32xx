@@ -1,9 +1,5 @@
-// Latest verion available at:
-// http://sourceforge.net/projects/win32-framework
-
-
 // Win32++  Version 5.7
-// Released: ?? January, 2008 by:
+// Released: 15th February, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -79,7 +75,7 @@ namespace Win32xx
 		m_hFontOld	  = CopyCDC.m_hFontOld;
         m_hPenOld	  = CopyCDC.m_hPenOld;
 		m_SavedDC	  = CopyCDC.m_SavedDC;
-		
+
 		// Flag the DC as attached, so it is not deleted in the destructor
 		m_bAttachedDC = TRUE;
 	}
@@ -95,9 +91,9 @@ namespace Win32xx
 		m_hFontOld	  = rhs.m_hFontOld;
         m_hPenOld	  = rhs.m_hPenOld;
 		m_SavedDC	  = rhs.m_SavedDC;
-		
+
 		// Flag the DC as attached, so it is not deleted in the destructor
-		m_bAttachedDC = TRUE; 
+		m_bAttachedDC = TRUE;
 
 		return *this;
 	}
