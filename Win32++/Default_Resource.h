@@ -12,24 +12,34 @@
 #define IDW_VIEW_TOOLBAR                53
 #define IDW_VIEW_STATUSBAR              54
 
+// Resource IDs for the Command Bands
+#define IDW_CMD_BANDS                   55
+#define IDW_MENUBAR                     56
+#define IDW_TOOLBAR                     57
+
+// Resource ID for the Accelerator key
+#define IDW_QUIT                        58
+
 // Resource IDs for MDI menu items
-#define IDW_WINDOW_CASCADE              55
-#define IDW_WINDOW_TILE                 56
-#define IDW_WINDOW_ARRANGE              57
-#define IDW_WINDOW_CLOSEALL             58
-#define IDW_FIRSTCHILD                  59
-#define IDW_CHILD2                      60
-#define IDW_CHILD3                      61
-#define IDW_CHILD4                      62
-#define IDW_CHILD5                      63
-#define IDW_CHILD6                      64
-#define IDW_CHILD7                      65
-#define IDW_CHILD8                      66
-#define IDW_CHILD9                      67
-#define IDW_CHILD10                     68
+#define IDW_WINDOW_CASCADE              60
+#define IDW_WINDOW_TILE                 61
+#define IDW_WINDOW_ARRANGE              62
+#define IDW_WINDOW_CLOSEALL             63
+#define IDW_FIRSTCHILD                  64
+#define IDW_CHILD2                      65
+#define IDW_CHILD3                      66
+#define IDW_CHILD4                      67
+#define IDW_CHILD5                      68
+#define IDW_CHILD6                      69
+#define IDW_CHILD7                      70
+#define IDW_CHILD8                      71
+#define IDW_CHILD9                      72
+#define IDW_CHILD10                     73
 
 // A generic ID for any static control
-#define IDW_STATIC                      -1
+#ifndef IDC_STATIC
+  #define IDC_STATIC                      -1
+#endif
 
 
 // Notes about Resource IDs

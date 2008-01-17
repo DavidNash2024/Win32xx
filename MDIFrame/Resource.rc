@@ -118,7 +118,7 @@ CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0//, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "MDI Frame",IDW_STATIC,60,22,64,11
+    CTEXT           "MDI Frame",IDC_STATIC,60,22,64,11
     ICON            IDW_MAIN,0,4,4,20,20
 END
 

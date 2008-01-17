@@ -618,12 +618,8 @@ namespace Win32xx
 		if (m_PrevWindowProc == 0)
 			throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
 
-#if defined (_MSC_VER) && _MSC_VER <= 1200
+#if defined GWLP_WNDPROC
 
-		// use non 64 bit compliant code for Visual C++ 6 and below
-		::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
-
-#else
   #if defined(_MSC_VER)
     #pragma warning(push)
     #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
@@ -635,7 +631,12 @@ namespace Win32xx
   #if defined(_MSC_VER)
     #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
   #endif //defined(_MSC_VER)
-#endif // defined (_MSC_VER) && _MSC_VER <= 1200
+
+#else
+		// use non 64 bit compliant code 
+		::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
+
+#endif // defined GWLP_WNDPROC
 
 		// Remove the map entry
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
@@ -1115,31 +1116,31 @@ namespace Win32xx
 
 		// Subclass the window to pass messages to WndProc
 
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-
-		// use non 64 bit compliant code for Visual C++ 6 and below
-		WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
-		if (WndProc == CWnd::StaticWindowProc)
-			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
-		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
-#else
+#if defined  GWLP_WNDPROC // defined if Win64 supported
 
   #if defined(_MSC_VER)
     #pragma warning(push)
     #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
   #endif //defined(_MSC_VER)
 
-		// use 64 bit compliant code otherwise
+		// use 64 bit compliant code 
 		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
-		if (WndProc == CWnd::StaticWindowProc)
+		if (WndProc == st_pfnWndProc)
 			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 
   #if defined(_MSC_VER)
     #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
   #endif //defined(_MSC_VER)
-#endif // defined (_MSC_VER) && _MSC_VER <= 1200
 
+#else
+		// use non 64 bit compliant code
+		WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
+		if (WndProc == st_pfnWndProc)
+			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
+		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
+
+#endif // defined GWLP_WNDPROC
 	}
 
 	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

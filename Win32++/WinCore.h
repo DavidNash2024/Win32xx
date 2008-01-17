@@ -547,7 +547,7 @@ namespace Win32xx
 	{
 		if(lpstrDest == NULL || lpstrSrc == NULL || nLength <= 0)
 			return NULL;
-		int nLen = min(lstrlen(lpstrSrc), nLength - 1);
+		int nLen = min((int)lstrlen(lpstrSrc), nLength - 1);
 		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
 		lpstrDest[nLen] = 0;
 		return lpstrRet;

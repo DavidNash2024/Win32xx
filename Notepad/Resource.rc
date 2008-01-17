@@ -80,7 +80,7 @@ CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Text Processing Application",IDW_STATIC,61,22,64,18
+    CTEXT           "Text Processing Application",IDC_STATIC,61,22,64,18
     ICON            IDW_MAIN,0,4,4,20,20
 END
 
