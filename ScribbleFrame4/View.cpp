@@ -5,6 +5,7 @@
 #include <Windowsx.h>
 #include "resource.h"
 #include "view.h"
+#include "../Win32++/GDI.h"
 
 
 CView::CView() : m_PenColor(RGB(0,0,0))
@@ -34,7 +35,14 @@ void CView::DrawLine(int x, int y)
 	
 	::ReleaseDC(m_hWnd, hDC);
 	::SelectObject(hDC, hOldPen);
-	::DeleteObject(hPen);
+	::DeleteObject(hPen); 
+
+	// or we could do it like this:
+	
+	// CDC DrawDC = ::GetDC(m_hWnd);
+	// DrawDC.CreatePen(PS_SOLID, 1, m_points.back().color);
+	// ::MoveToEx(DrawDC, m_points.back().x, m_points.back().y, NULL); ;
+	// ::LineTo(DrawDC, x, y);
 }
 
 void CView::OnPaint(HDC hDC)

@@ -3230,7 +3230,7 @@ namespace Win32xx
 			break;
 		} // switch LPNMHDR
 
-		return 0;
+		return 0L;
 
 	} // CFrame::OnNotifyFrame(...)
 

@@ -38,6 +38,7 @@
 #ifndef GDI_H
 #define GDI_H
 
+#include "WinCore.h"
 
 namespace Win32xx
 {
