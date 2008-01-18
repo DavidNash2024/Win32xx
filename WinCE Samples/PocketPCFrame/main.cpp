@@ -1,0 +1,30 @@
+///////////////////////////////////////
+// main.cpp
+
+#include "..\Win32++\WinCore.h"
+#include "resource.h"
+#include "FrameApp.h"
+
+
+
+int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
+{
+	TCHAR szBuf[100];
+	::LoadString(hInstance, IDW_MAIN, szBuf, 100);
+	HWND hWnd = FindWindow(szBuf, NULL);
+
+	// If application is already running, restore it and quit
+	if (hWnd)
+	{
+		SetForegroundWindow ((HWND)(((DWORD)hWnd) | 0x01));
+		DebugWarnMsg(TEXT("Application Already running"));
+		return -1;
+	}
+
+	//Start the framework
+    CFrameApp MyApp(hInstance);
+
+    //Process the window messages
+    return MyApp.Run();
+}
+

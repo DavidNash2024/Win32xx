@@ -417,9 +417,9 @@ namespace Win32xx
 				int nStyle = GetButtonStyle(dwItem);
 
 				int nButton = (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM) dwItem, 0);
-				TBBUTTON tb = {0};
-				::SendMessage(m_hWnd, TB_GETBUTTON, nButton, (LPARAM)&tb);
-				int iImage = (int)tb.dwData;
+				TBBUTTON tbb = {0};
+				::SendMessage(m_hWnd, TB_GETBUTTON, nButton, (LPARAM)&tbb);
+				int iImage = (int)tbb.dwData;
 
 				// Calculate text size
 				TCHAR szText[80] = _T("");
@@ -622,7 +622,7 @@ namespace Win32xx
 		if (iNumButtons > 0)
 		{
 			// TBBUTTON structure for each button in the toolbar
-			TBBUTTON tbb;
+			TBBUTTON tbb = {0};
 
 			for (int j = 0 ; j < iNumButtons; j++)
 			{

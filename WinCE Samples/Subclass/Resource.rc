@@ -1,0 +1,19 @@
+//Microsoft eMbedded Visual C++ generated resource script.
+//
+
+#include "resource.h"
+#include "newres.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDW_MAIN                "WinCE subclass example"
+END
+
+
+
