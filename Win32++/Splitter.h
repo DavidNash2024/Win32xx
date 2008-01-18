@@ -83,7 +83,8 @@ namespace Win32xx
 
 	private:
 
-		HBRUSH m_hbrDithered; // Brush for the splitter bar
+		HBRUSH m_hbrDithered; // Brush for the splitter bar during dragging
+		HBRUSH m_hbrBackground; // Brush for the splitter bar background
 		HBITMAP	m_hbm;		// Used to create m_hbrDithered
 		int m_nWidth;		// Width of the splitter bar
 		int m_nBarPos;		// X or Y position of the splitter bar

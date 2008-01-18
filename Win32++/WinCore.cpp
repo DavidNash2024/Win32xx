@@ -72,7 +72,7 @@ namespace Win32xx
 		try
 		{
 			// Test if this is the first instance of CWinApp
-			if (GetApp() == 0)
+			if (0 == GetApp() )
 			{
 				st_dwTlsIndex = ::TlsAlloc();
 				if (st_dwTlsIndex != TLS_OUT_OF_INDEXES)
@@ -99,7 +99,7 @@ namespace Win32xx
 		{
 			// Indicate the problem
 			e.MessageBox();
-			if (st_pTheApp == NULL)
+			if (NULL == st_pTheApp)
 				throw;
 		}
 	}
@@ -214,7 +214,7 @@ namespace Win32xx
 
 		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
-			if (status == -1) return -1;
+			if (-1 == status) return -1;
 
 			if (!::TranslateAccelerator(m_hWndAccel, m_hAccelTable, &uMsg))
 			{
@@ -272,7 +272,7 @@ namespace Win32xx
 			TLSData* pTLSData = new TLSData;
 			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 			//  an exception when new fails. We make sure an exception gets thrown!
-			if (pTLSData == NULL)
+			if (NULL == pTLSData)
 				throw std::bad_alloc();
 
 			ZeroMemory(pTLSData, sizeof(TLSData));
@@ -306,7 +306,7 @@ namespace Win32xx
 	//		   2) Call this function directly instead of TRACE to see trace output.
 	{
 		// CreateTrace must be called once before using this function
-		if (m_hTraceEdit == 0)
+		if (0 == m_hTraceEdit)
 		{
 			::MessageBox(NULL, _T("Must call CreateTrace before Trace"), _T("Error"), MB_OK);
 			return;
@@ -354,7 +354,7 @@ namespace Win32xx
 			m = GetApp()->GetHWNDMap().begin();
 			while (m != GetApp()->GetHWNDMap().end())
 			{
-				if (m->second == this)
+				if (this == m->second)
 					GetApp()->GetHWNDMap().erase(m++);
 				else
 					m++;
@@ -517,7 +517,7 @@ namespace Win32xx
 		try
 		{
 			// Test if Win32++ has been started
-			if (GetApp() == 0)
+			if (0 == GetApp())
 				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 
 			// Only one window per CWnd instance
@@ -526,7 +526,7 @@ namespace Win32xx
 
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE] = _T("");
-			if (lstrlen(lpszClassName) == 0)
+			if (0 == lstrlen(lpszClassName) )
 				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
 				// Create our own local copy of szClassName.
@@ -542,7 +542,7 @@ namespace Win32xx
 			GetApp()->m_MapLock.Lock();
 			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
 
-			if (m_pTLSData == NULL)
+			if (NULL == m_pTLSData)
 				m_pTLSData = GetApp()->SetTlsIndex();
 			GetApp()->m_MapLock.Release();
 
@@ -615,7 +615,7 @@ namespace Win32xx
 	HWND CWnd::Detach()
 	{
 		//Only a subclassed window can be detached
-		if (m_PrevWindowProc == 0)
+		if (0 == m_PrevWindowProc)
 			throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
 
 #if defined GWLP_WNDPROC
@@ -697,7 +697,7 @@ namespace Win32xx
 		if (nLength > 0)
 		{
 			TCHAR* szString = new TCHAR[nLength];
-			if (szString == NULL)
+			if (NULL == szString)
 				throw std::bad_alloc();
 
 			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, nLength);
@@ -720,7 +720,7 @@ namespace Win32xx
 		if (nLength > 0)
 		{
 			TCHAR* szString = new TCHAR[nLength];
-			if (szString == NULL)
+			if (NULL == szString)
 				throw std::bad_alloc();
 
 			::GetWindowText(m_hWnd, szString, nLength);
@@ -733,7 +733,7 @@ namespace Win32xx
 
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
 	{
-		if (GetApp() == 0)
+		if (0 == GetApp())
 			throw CWinException(_T("LoadBitmap ... Win32++ has not been initialised successfully."));
 
 		HBITMAP hBitmap;
@@ -756,7 +756,7 @@ namespace Win32xx
 	{
 		// Returns the string associated with a Resource ID
 
-		if (GetApp() == 0)
+		if (0 == GetApp())
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
 		m_LoadString = _T("");
@@ -963,7 +963,7 @@ namespace Win32xx
 	{
 		try
 		{
-			if ((lstrlen(wc.lpszClassName) == 0) || (lstrlen(wc.lpszClassName) >  MAX_STRING_SIZE))
+			if (0 == (lstrlen(wc.lpszClassName) ) || (lstrlen(wc.lpszClassName) >  MAX_STRING_SIZE))
 				throw CWinException(_T("CWnd::RegisterClass   Invalid class name"));
 
 			// Check to see if this classname is already registered
@@ -976,8 +976,8 @@ namespace Win32xx
 			wc.hInstance	= GetApp()->GetInstanceHandle();
 			wc.lpfnWndProc	= CWnd::StaticWindowProc;
 
-			if (wc.hbrBackground == 0)	wc.hbrBackground	= (HBRUSH)::GetStockObject(WHITE_BRUSH);
-			if (wc.hCursor == 0)		wc.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
+			if (0 == wc.hbrBackground)	wc.hbrBackground	= (HBRUSH)::GetStockObject(WHITE_BRUSH);
+			if (0 == wc.hCursor)		wc.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
 
 			// Register the WNDCLASS structure
 			if (!::RegisterClass(&wc))
@@ -986,7 +986,7 @@ namespace Win32xx
 			// Store callback address (its not always simply the function pointer to CWnd::StaticWindowProc)
 			CCriticalSection RegLock;
 			RegLock.Lock();
-			if (st_pfnWndProc == 0)
+			if (0 == st_pfnWndProc)
 			{
 				GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest);
 				st_pfnWndProc = wcTest.lpfnWndProc;
@@ -1055,12 +1055,12 @@ namespace Win32xx
 
 			// Retrieve the pointer to the TLS Data
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			if (pTLSData == NULL)
+			if (NULL == pTLSData)
 				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
 			CWnd* w = pTLSData->pCWnd;
-			if (w == NULL)
+			if (NULL == w)
 				throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 
 			pTLSData->pCWnd = NULL;

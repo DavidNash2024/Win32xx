@@ -53,6 +53,7 @@ namespace Win32xx
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
 		m_hbrDithered = ::CreatePatternBrush (m_hbm);
+		m_hbrBackground = NULL;
 		m_nOldBarPos = m_nBarPos;
 		m_nBarpreMove = m_nBarPos;
 	}
@@ -61,6 +62,7 @@ namespace Win32xx
 	{
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbm);
+		::DeleteObject(m_hbrBackground);
 	}
 
 	void CSplitter::DrawBar(int Pos)
@@ -109,28 +111,29 @@ namespace Win32xx
 		// Set the color of the splitter bar
 		CRebar& RB = GetApp()->GetFrame()->GetRebar();
 		if (RB.GetRebarTheme().UseThemes)
-			m_Bar.SetBkgndColor(RB.GetRebarTheme().clrBkgnd2);
+			SetBarColor(RB.GetRebarTheme().clrBkgnd2);
 		else
-			m_Bar.SetBkgndColor(GetSysColor(COLOR_BTNFACE));
-
+			SetBarColor(GetSysColor(COLOR_BTNFACE));
+			
 		// Create the splitter bar
-		WNDCLASSEX wcx = {0};
-		wcx.cbSize = sizeof(WNDCLASSEX);
+		WNDCLASS wc = {0};
 
 		// Create the splitter bar
 		if (m_bVertical)
 		{
-			wcx.lpszClassName = _T("Win32++ V Splitter");
-			wcx.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
-			m_Bar.RegisterClassEx(wcx);
-			m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
+			wc.lpszClassName = _T("Win32++ V Splitter");
+			wc.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
+			wc.hbrBackground = m_hbrBackground; 
+			m_Bar.RegisterClass(wc);
+			m_Bar.CreateEx(0L, wc.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
 		}
 		else
 		{
-			wcx.lpszClassName = _T("Win32++ H Splitter");
-			wcx.hCursor = ::LoadCursor (NULL, IDC_SIZENS);
-			m_Bar.RegisterClassEx(wcx);
-			m_Bar.CreateEx(0L, wcx.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
+			wc.lpszClassName = _T("Win32++ H Splitter");
+			wc.hCursor = ::LoadCursor (NULL, IDC_SIZENS);
+			wc.hbrBackground = m_hbrBackground;
+			m_Bar.RegisterClass(wc);
+			m_Bar.CreateEx(0L, wc.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
 		}
 
 		// Create the two window panes
@@ -269,7 +272,21 @@ namespace Win32xx
 		// GetSysColor(COLOR_BTNFACE)	// Default Grey
 		// RGB(196, 215, 250)			// Default Blue
 
-		m_Bar.SetBkgndColor(color);
+		if (m_hbrBackground)
+			::DeleteObject(m_hbrBackground);
+
+		m_hbrBackground = ::CreateSolidBrush(color);
+		
+		if (0 != m_Bar.GetHwnd())
+		{
+
+	#ifdef GCLP_HBRBACKGROUND
+			SetClassLongPtr(m_Bar.GetHwnd(), GCLP_HBRBACKGROUND, (LONG_PTR)m_hbrBackground);
+	#else
+			SetClassLong(m_Bar.GetHwnd(), GCL_HBRBACKGROUND, (LONG)m_hbrBackground);
+	#endif
+
+		}
 	}
 
 	void CSplitter::SetPanes(CWnd& Pane0, CWnd& Pane1)

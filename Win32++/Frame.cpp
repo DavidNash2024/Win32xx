@@ -93,7 +93,7 @@ namespace Win32xx
 
 				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 				//  an exception when new fails. We make sure an exception gets thrown!
-				if (szText == NULL)
+				if (NULL == szText)
 					throw std::bad_alloc();
 
 				szText[0] = _T('\0');
@@ -151,14 +151,14 @@ namespace Win32xx
 
 				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 				//  an exception when new fails. We make sure an exception gets thrown!
-				if (iPaneWidths == NULL)
+				if (NULL == iPaneWidths)
 					throw std::bad_alloc();
 
 				::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);
 
 				int iNewParts = max(iPane+1, iParts);
 				int* iNewPaneWidths = new int[iNewParts];
-				if (iNewPaneWidths == NULL)
+				if (NULL == iNewPaneWidths)
 					throw std::bad_alloc();
 
 				ZeroMemory(iNewPaneWidths, iNewParts*sizeof(int));
@@ -166,7 +166,7 @@ namespace Win32xx
 				for (int i = 0; i < iParts; i++)
 					iNewPaneWidths[i] = iPaneWidths[i];
 
-				if (iPane == 0)
+				if (0 == iPane)
 					iNewPaneWidths[iPane] = iWidth;
 				else
 					iNewPaneWidths[iPane] = iNewPaneWidths[iPane -1] + iWidth;
@@ -223,7 +223,7 @@ namespace Win32xx
 		TBADDBITMAP tbab = {0};
 		tbab.hInst = GetApp()->GetInstanceHandle();
 		tbab.nID   = ToolbarID;
-		if (::SendMessage(m_hWnd, TB_ADDBITMAP, iNumButtons, (LPARAM)&tbab) == -1)
+		if (-1 == ::SendMessage(m_hWnd, TB_ADDBITMAP, iNumButtons, (LPARAM)&tbab) )
 			throw CWinException(_T("CToolbar::AddBitmap  TB_ADDBITMAP failed"));
 
 		m_OldToolbarID = ToolbarID;
@@ -239,7 +239,7 @@ namespace Win32xx
 		tbrb.nIDNew = NewToolbarID;
 		tbrb.nIDOld = m_OldToolbarID;
 		tbrb.nButtons  = iNumButtons;
-		if (::SendMessage(m_hWnd, TB_REPLACEBITMAP, iNumButtons, (LPARAM)&tbrb) == 0)
+		if (0 == ::SendMessage(m_hWnd, TB_REPLACEBITMAP, iNumButtons, (LPARAM)&tbrb) )
 			throw CWinException(_T("CToolbar::ReplaceBitmap  TB_REPLACEBITMAP failed"));
 
 		m_OldToolbarID = NewToolbarID;
@@ -278,7 +278,7 @@ namespace Win32xx
 	//	TBSTATE_WRAP		The button is followed by a line break.
 	{
 		LRESULT lResult= ::SendMessage(m_hWnd, TB_GETSTATE, (WPARAM) iButtonID, 0);
-		if (lResult == -1L)
+		if (-1L == lResult)
 			throw CWinException(_T("CToolbar::GetButtonState failed"));
 
 		return (UINT) lResult;
@@ -296,13 +296,13 @@ namespace Win32xx
 	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it
 	{
 		int iIndex = CommandToIndex(iButtonID);
-		if (iIndex == -1)
+		if (-1 == iIndex)
 			throw CWinException(_T("CToolbar::GetButtonStyle failed to get command ID"));
 
 		TBBUTTON tbb = {0};
 
 		LRESULT lResult = ::SendMessage(m_hWnd, TB_GETBUTTON, iIndex, (LPARAM) &tbb);
-		if (lResult == -1L)
+		if (-1L == lResult)
 			throw CWinException(_T("CToolbar::GetButtonStyle failed"));
 
 		return tbb.fsStyle;
@@ -456,7 +456,7 @@ namespace Win32xx
 				}
 
 				HIMAGELIST hImageList = (nState & CDIS_DISABLED)? m_hImageListDis : (m_hImageListHot? m_hImageListHot: m_hImageList);
-				BOOL IsWin95 = ((GetWinVersion() == 1400) || (GetWinVersion() == 2400));
+				BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
 
 				// Calculate image position
 				int cxImage = 0;
@@ -628,7 +628,7 @@ namespace Win32xx
 			{
 				ZeroMemory(&tbb, sizeof(TBBUTTON));
 
-				if (ToolbarData[j] == 0)
+				if (0 == ToolbarData[j])
 				{
 					tbb.fsStyle = TBSTYLE_SEP;
 				}
@@ -708,7 +708,7 @@ namespace Win32xx
 	// all versions of Windows, including Win95 with COMCTL32.DLL version 4.0
 	{
 		int iIndex = CommandToIndex(iButtonID);
-		if (iIndex == -1)
+		if (-1 == iIndex)
 			throw CWinException(_T("CToolbar::SetButtonText  failed to get Command ID"));
 
 		tString sString = szText;
@@ -717,9 +717,9 @@ namespace Win32xx
 
 		// Check to see if the string is already added
 		m = m_StringMap.find(sString);
-		if (m == m_StringMap.end())
+		if (m_StringMap.end() == m)
 		{
-			if (m_StringMap.size() == 0)
+			if (0 == m_StringMap.size())
 			{
 				// Place a blank string first in the string table, in case some
 				// buttons don't have text
@@ -734,7 +734,7 @@ namespace Win32xx
 			szBuf[lstrlen(szBuf)+1] = _T('\0');		// Double-null terminate
 
 			iString = (int)::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szBuf);
-			if (iString == -1)
+			if (-1 == iString )
 				throw CWinException(_T("CToolbar::SetButtonText  TB_ADDSTRING failed"));
 
 			// Save the string its index in our map
@@ -762,7 +762,7 @@ namespace Win32xx
 			throw CWinException(_T("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
 
 		// Ensure the button now includes some text rows
-		if (::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0) == 0)
+		if (0 == ::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0))
 			::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 1, 0);
 
 		// Turn on Toolbar drawing
@@ -809,7 +809,7 @@ namespace Win32xx
 			int iImageHeight = bm.bmHeight;
 
 			// Toolbar ImageLists require Comctl32.dll version 4.7 or later
-			if (GetComCtlVersion() == 400)
+			if (400 == GetComCtlVersion())
 			{
 				// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
 				// Instead we simply add/replace the bitmap.
@@ -829,7 +829,7 @@ namespace Win32xx
 				throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageList failed "));
 
 			ImageList_AddMasked(m_hImageList, hbm, crMask);
-			if(SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) == -1L)
+			if(-1L == SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) )
 				throw CWinException(_T("CToolbar::SetImageList ... TB_SETIMAGELIST failed "));
 
 			::DeleteObject(hbm);
@@ -847,7 +847,7 @@ namespace Win32xx
 
 				ImageList_AddMasked(m_hImageListHot, hbm, crMask);
 
-				if(SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) == -1L)
+				if(-1L == SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) )
 					throw CWinException(_T("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
 
 				::DeleteObject(hbm);
@@ -865,7 +865,7 @@ namespace Win32xx
 					throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListDis failed "));
 
 				ImageList_AddMasked(m_hImageListDis, hbm, crMask);
-				if(SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) == -1L)
+				if(-1L == SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) )
 					throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 			else
@@ -963,7 +963,7 @@ namespace Win32xx
 	// Returns the zero based band number for this window handle
 	{
 		int nResult = -1;
-		if (hWnd == NULL) return nResult;
+		if (NULL == hWnd) return nResult;
 
 		for (int nBand = 0; nBand < GetBandCount(); nBand++)
 		{
@@ -1410,7 +1410,7 @@ namespace Win32xx
 		// Load the submenu
 		int nMaxedOffset = IsMDIChildMaxed()? 1:0;
 		m_hPopupMenu = ::GetSubMenu(m_hTopMenu, m_nHotItem - nMaxedOffset);
-		if (IsMDIChildMaxed() && (m_nHotItem == 0))
+		if (IsMDIChildMaxed() && (0 == m_nHotItem) )
 			m_hPopupMenu = ::GetSystemMenu(hMaxMDIChild, FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button
@@ -1456,7 +1456,7 @@ namespace Win32xx
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
 		{
-			if (m_hPopupMenu == ::GetSystemMenu(hMaxMDIChild, FALSE))
+			if (::GetSystemMenu(hMaxMDIChild, FALSE) == m_hPopupMenu )
 			{
 				if (nID)
 					::SendMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0);
@@ -1696,11 +1696,11 @@ namespace Win32xx
 				// Leave a 2 pixel gap above the drawn rectangle
 				rcRect.top = 2;
 
-				if (IsMDIChildMaxed() && (dwItem == 0))
+				if (IsMDIChildMaxed() && (0 == dwItem))
 				// Draw over MDI Max button
 				{
 					HICON hIcon = (HICON)::SendMessage(GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0);
-					if (hIcon == NULL)
+					if (NULL == hIcon)
 						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 
 					int cx = ::GetSystemMetrics (SM_CXSMICON);
@@ -1848,13 +1848,13 @@ namespace Win32xx
 
 				if (m_nMDIButton >= 0)
 				{
-					DrawMDIButton(MenubarDC, MDI_MIN,     (m_nMDIButton == 0)? 2 : 0);
-					DrawMDIButton(MenubarDC, MDI_RESTORE, (m_nMDIButton == 1)? 2 : 0);
-					DrawMDIButton(MenubarDC, MDI_CLOSE,   (m_nMDIButton == 2)? 2 : 0);
+					DrawMDIButton(MenubarDC, MDI_MIN,     (0 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(MenubarDC, MDI_RESTORE, (1 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(MenubarDC, MDI_CLOSE,   (2 == m_nMDIButton)? 2 : 0);
 				}
 
 				// Bring up the MDI Child window's system menu when the icon is pressed
-				if (HitTest() == 0)
+				if (0 == HitTest())
 				{
 					m_nHotItem = 0;
 					::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
@@ -1883,19 +1883,19 @@ namespace Win32xx
 				// Process the MDI button action when the left mouse button is up
 				if (PtInRect(&m_MDIRect[0], pt))
 				{
-					if (m_nMDIButton == MDI_MIN)
+					if (MDI_MIN == m_nMDIButton)
 						::ShowWindow(MDIChild, SW_MINIMIZE);
 				}
 
 				if (PtInRect(&m_MDIRect[1], pt))
 				{
-					if (m_nMDIButton == MDI_RESTORE)
+					if (MDI_RESTORE == m_nMDIButton)
 					::PostMessage(MDIClient, WM_MDIRESTORE, (WPARAM)MDIChild, 0);
 				}
 
 				if (PtInRect(&m_MDIRect[2], pt))
 				{
-					if (m_nMDIButton == MDI_CLOSE)
+					if (MDI_CLOSE == m_nMDIButton)
 						::PostMessage(MDIChild, WM_CLOSE, 0, 0);
 				}
 			}
@@ -1986,7 +1986,7 @@ namespace Win32xx
 
 		case WM_LBUTTONDBLCLK:
 			// Perform default action for DblClick on MDI Maxed icon
-			if (IsMDIChildMaxed() && (HitTest() == 0))
+			if (IsMDIChildMaxed() && (0 == HitTest()))
 			{
 				HWND MDIChild = GetActiveMDIChild();
 				HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
@@ -2064,14 +2064,14 @@ namespace Win32xx
 				if (PtInRect(&m_MDIRect[1], pt)) MDIButton = 1;
 				if (PtInRect(&m_MDIRect[2], pt)) MDIButton = 2;
 
-				if (wParam == MK_LBUTTON)  // mouse moved with left mouse button is held down
+				if (MK_LBUTTON == wParam)  // mouse moved with left mouse button is held down
 				{
 					// toggle the MDI button image pressed/unpressed as required
 					if (MDIButton >= 0)
 					{
-						DrawMDIButton(MenubarDC, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0))? 2 : 0);
-						DrawMDIButton(MenubarDC, MDI_RESTORE, ((MDIButton == 1) && (m_nMDIButton == 1))? 2 : 0);
-						DrawMDIButton(MenubarDC, MDI_CLOSE,   ((MDIButton == 2) && (m_nMDIButton == 2))? 2 : 0);
+						DrawMDIButton(MenubarDC, MDI_MIN,     ((0 == MDIButton) && (0 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(MenubarDC, MDI_RESTORE, ((1 == MDIButton) && (1 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(MenubarDC, MDI_CLOSE,   ((2 == MDIButton) && (2 == m_nMDIButton))? 2 : 0);
 					}
 					else
 					{
@@ -2084,9 +2084,9 @@ namespace Win32xx
 				{
 					if (MDIButton >= 0)
 					{
-						DrawMDIButton(MenubarDC, MDI_MIN,     (MDIButton == 0)? 1 : 0);
-						DrawMDIButton(MenubarDC, MDI_RESTORE, (MDIButton == 1)? 1 : 0);
-						DrawMDIButton(MenubarDC, MDI_CLOSE,   (MDIButton == 2)? 1 : 0);
+						DrawMDIButton(MenubarDC, MDI_MIN,     (0 == MDIButton)? 1 : 0);
+						DrawMDIButton(MenubarDC, MDI_RESTORE, (1 == MDIButton)? 1 : 0);
+						DrawMDIButton(MenubarDC, MDI_CLOSE,   (2 == MDIButton)? 1 : 0);
 					}
 					else
 					{
@@ -2222,7 +2222,7 @@ namespace Win32xx
 			// Add the menu title to the string table
 			TCHAR szMenuName[MAX_MENU_STRING +1] = _T("");
 
-			if (::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) == 0)
+			if (0 == ::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) )
 				throw CWinException(TEXT("Menubar::SetMenu  GetMenuString failed"));
 
 			SetButtonText(i  + nMaxedOffset, szMenuName);
@@ -2248,7 +2248,7 @@ namespace Win32xx
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 		CMenubar* pMenubar = (CMenubar*)pTLSData->pMenubar;
 
-		if (pMenubar && nCode == MSGF_MENU)
+		if (pMenubar && (MSGF_MENU == nCode))
 		{
 			// process menu message
 			if (pMenubar->OnMenuInput(pMsg->message, pMsg->wParam, pMsg->lParam))
@@ -2262,9 +2262,9 @@ namespace Win32xx
 
 	void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
 	{
-		if (wParam == SC_KEYMENU)
+		if (SC_KEYMENU == wParam)
 		{
-			if (lParam == 0)
+			if (0 == lParam)
 			{
 				// Alt/F10 key toggled
 				GrabFocus();
@@ -2327,11 +2327,11 @@ namespace Win32xx
 			DoPopupMenu();
 			return 0L;
 		case WM_SYSKEYDOWN:
-			if ((wParam == VK_MENU) || (wParam == VK_F10))
+			if ((VK_MENU == wParam) || (VK_F10 == wParam))
 				return 0L;
 			break;
 		case WM_SYSKEYUP:
-			if ((wParam == VK_MENU) || (wParam == VK_F10))
+			if ((VK_MENU == wParam) || (VK_F10 == wParam))
 			{
 				ExitMenu();
 				return 0L;
@@ -2411,7 +2411,7 @@ namespace Win32xx
 		ImageList_GetIconSize(m_hImageList, &cxOld, &cyOld );
 
 		// Create a new ImageList if required
-		if ((cx != cxOld) || (cy != cyOld) || (m_hImageList == NULL))
+		if ((cx != cxOld) || (cy != cyOld) || (NULL == m_hImageList))
 		{
 			if (m_hImageList) ImageList_Destroy(m_hImageList);
 			m_hImageList = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 1, 0);
@@ -2450,7 +2450,7 @@ namespace Win32xx
 		// Load the button images from Resouce ID
 		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID_Image));
 
-		if ((iImages == 0) || (hbm == NULL))
+		if ((0 == iImages) || (NULL == hbm))
 			return (int)m_MenuData.size();	// No valid images, so nothing to do!
 
 		BITMAP bm = {0};
@@ -2459,7 +2459,7 @@ namespace Win32xx
 		int iImageHeight = bm.bmHeight;
 
 		// Create the ImageList if required
-		if (m_hImageList == NULL)
+		if (NULL == m_hImageList)
 		{
 			m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 			m_MenuData.clear();
@@ -2533,7 +2533,7 @@ namespace Win32xx
 	{
 		// Adds a Toolbar to the rebar control
 
-		if (TBData.size() == 0)
+		if (0 == TBData.size())
 		{
 			DebugErrMsg(_T("Toolbar must have some data"));
 			return;
@@ -2574,7 +2574,7 @@ namespace Win32xx
 	{
 		int cx, cy;
 		int nCount = ImageList_GetImageCount(hImageList);
-		if (nCount == 0)
+		if (0 == nCount)
 			return NULL;
 
 		ImageList_GetIconSize(hImageList, &cx, &cy);
@@ -2653,7 +2653,7 @@ namespace Win32xx
 		RECT rCheck = { 0, 0, cxCheck, cyCheck };
 
 		// Copy the check mark bitmap to hdcMem
-		if (fType == MFT_RADIOCHECK)
+		if (MFT_RADIOCHECK == fType)
 			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUBULLET);
 		else
 			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUCHECK);
@@ -2678,7 +2678,7 @@ namespace Win32xx
 		else
 		{
 			// Draw a black checkmark
-			int BullitOffset = ((fType == MFT_RADIOCHECK) && m_ThemeMenu.UseThemes)? 1 : 0;
+			int BullitOffset = ((MFT_RADIOCHECK == fType) && m_ThemeMenu.UseThemes)? 1 : 0;
 			::BitBlt(MaskDC, -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
 			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
@@ -2706,7 +2706,7 @@ namespace Win32xx
 		int iImage = -1;
 		for (int i = 0 ; i < (int)m_MenuData.size(); i++)
 		{
-			if (m_MenuData[i] == pdis->itemID)
+			if (pdis->itemID == m_MenuData[i])
 				iImage = i;
 		}
 
@@ -2726,7 +2726,7 @@ namespace Win32xx
 		int nTab = -1;
 		for(int i = 0; i < lstrlen(ItemText); i++)
 		{
-			if(ItemText[i] == _T('\t'))
+			if(_T('\t') == ItemText[i])
 			{
 				nTab = i;
 				break;
@@ -2784,7 +2784,7 @@ namespace Win32xx
 		MENUITEMINFO mii = {0};
 
 		// For Win95 and NT, cbSize needs to be 44
-		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
 			mii.cbSize = 44;
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
@@ -2812,7 +2812,7 @@ namespace Win32xx
 				szStripped[j] = _T('\0');	// Append null tchar
 
 				// Compare the strings
-				if (lstrcmp(szStripped, szItem) == 0)
+				if (0 == lstrcmp(szStripped, szItem))
 					return nItem;
 			}
 		}
@@ -3029,7 +3029,7 @@ namespace Win32xx
 			MENUITEMINFO mii = {0};
 
 			// For Win95 and NT, cbSize needs to be 44
-			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+			if ((1400 == GetWinVersion()) || (2400 == GetWinVersion()))
 				mii.cbSize = 44;
 			else
 				mii.cbSize = sizeof(MENUITEMINFO);
@@ -3079,7 +3079,7 @@ namespace Win32xx
 			MENUITEMINFO mii = {0};
 
 			// For Win95 and NT, cbSize needs to be 44
-			if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+			if ((1400 == GetWinVersion()) || (2400 == GetWinVersion()))
 				mii.cbSize = 44;
 			else
 				mii.cbSize = sizeof(MENUITEMINFO);
@@ -3094,13 +3094,13 @@ namespace Win32xx
 			// Specify owner-draw for the menu item type
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
-				if (mii.dwItemData == 0)
+				if (0 == mii.dwItemData)
 				{
 					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
 
 					// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 					//  an exception when new fails. We make sure an exception gets thrown!
-					if (pItem == NULL)
+					if (NULL == pItem)
 						throw std::bad_alloc();
 
 					ZeroMemory(pItem, sizeof(ItemData));
@@ -3251,7 +3251,7 @@ namespace Win32xx
 
 	void CFrame::OnTimer(WPARAM wParam)
 	{
-		if (wParam == ID_STATUS_TIMER)
+		if (ID_STATUS_TIMER == wParam)
 		{
 			if (m_bShowMenuStatus)
 			{
@@ -3337,7 +3337,7 @@ namespace Win32xx
 
   	void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
-		if (m_pView == NULL)
+		if (NULL == m_pView)
 			throw CWinException(_T("CFrame::PreCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
 
 		// Set the Window Class
@@ -3635,7 +3635,7 @@ namespace Win32xx
 			OnSysColorChange();
 			return 0L;
 		case WM_SYSCOMMAND:
-			if ((wParam == SC_KEYMENU) && (lParam != VK_SPACE) && IsMenubarUsed())
+			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
 			{
 				GetMenubar().SysCommand(wParam, lParam);
 				return 0L;

@@ -402,14 +402,7 @@ namespace Win32xx
       return mii.wID;
   }
 
-
-  inline BOOL wce_ModifyMenu(
-      HMENU hMenu,      // handle of menu
-      UINT uPosition,  // menu item to modify
-      UINT uFlags,     // menu item flags
-      UINT uIDNewItem, // menu item identifier or handle of drop-down menu or submenu
-      LPCTSTR lpNewItem // menu item content
-      )
+  inline BOOL wce_ModifyMenu(HMENU hMenu, UINT uPosition, UINT uFlags, UINT uIDNewItem, LPCTSTR lpNewItem)
   {
       // Handle MF_BYCOMMAND case
       if (MF_BYPOSITION != (uFlags & MF_BYPOSITION))
@@ -483,7 +476,7 @@ namespace Win32xx
 				{
 					DLLVERSIONINFO dvi;
 					dvi.cbSize = sizeof dvi;
-					if(pfnDLLGetVersion(&dvi) == NOERROR)
+					if(NOERROR == pfnDLLGetVersion(&dvi))
 					{
 						DWORD dwVerMajor = dvi.dwMajorVersion;
 						DWORD dwVerMinor = dvi.dwMinorVersion;
@@ -543,7 +536,7 @@ namespace Win32xx
   #ifndef lstrcpyn
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
 	{
-		if(lpstrDest == NULL || lpstrSrc == NULL || nLength <= 0)
+		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
 			return NULL;
 		int nLen = min((int)lstrlen(lpstrSrc), nLength - 1);
 		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));

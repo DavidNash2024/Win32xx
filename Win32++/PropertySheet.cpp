@@ -277,7 +277,7 @@ namespace Win32xx
 			case PSPCB_CREATE:
 				{
 					TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-					if (pTLSData == NULL)
+					if (NULL == pTLSData)
 						throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
 
 					// Store the CPropertyPage pointer in Thread Local Storage
@@ -517,7 +517,7 @@ namespace Win32xx
 			// Ensure this thread has the TLS index set
 			GetApp()->m_MapLock.Lock();
 			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
-			if (m_pTLSData == NULL)
+			if (NULL == m_pTLSData)
 			{
 				m_pTLSData = GetApp()->SetTlsIndex();
 			}
@@ -743,7 +743,7 @@ namespace Win32xx
 			break;
 
 		case WM_SYSCOMMAND:
-			if ((wParam == SC_CLOSE) && (m_PSH.dwFlags &  PSH_MODELESS))
+			if ((SC_CLOSE == wParam) && (m_PSH.dwFlags &  PSH_MODELESS))
 			{
 				DestroyWindow();
 				return 0L;

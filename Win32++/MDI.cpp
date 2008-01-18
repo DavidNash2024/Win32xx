@@ -63,7 +63,7 @@ namespace Win32xx
 
 		while ((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
-			if (status == -1) return -1;
+			if (-1 == status) return -1;
 			if (!TranslateMDISysAccel(GetFrame()->GetView()->GetHwnd(), &uMsg) &&
 				!TranslateAccelerator(m_hWndAccel, m_hAccel, &uMsg))
 			{
@@ -137,7 +137,7 @@ namespace Win32xx
 			if (::GetWindowLong(hwndMDIChild, GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
 			{
 				// Add Separator
-				if (nWindow == 0)
+				if (0 == nWindow)
 					::AppendMenu(hMenuWindow, MF_SEPARATOR, 0, NULL);
 
 				// Add a menu entry for each MDI child (up to 9)
@@ -160,7 +160,7 @@ namespace Win32xx
 
 					nWindow++;
 				}
-				else if (nWindow == 9)
+				else if (9 == nWindow)
 				// For the 10th MDI child, add this menu item and return
 				{
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
@@ -492,7 +492,7 @@ namespace Win32xx
 		m_hChildMenu = ::LoadMenu (hInstance, MenuName);
 
 		HWND hWnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
-		if ((m_hWnd != NULL) &&(hWnd == m_hWnd) && (m_hChildMenu != NULL))
+		if ((NULL != m_hWnd) &&(hWnd == m_hWnd) && (NULL != m_hChildMenu))
 		{
 			CMDIFrame* pFrame = (CMDIFrame*)GetApp()->GetFrame();
 			if (m_hChildMenu)
@@ -520,7 +520,7 @@ namespace Win32xx
 				}
 
 				// No child is being activated
-				if (lParam == 0)
+				if (0 == lParam)
 				{
 					pMDIFrame->m_hActiveMDIChild = NULL;
 					// Set the menu to frame's original menu

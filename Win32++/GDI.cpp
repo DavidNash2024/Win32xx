@@ -83,7 +83,7 @@ namespace Win32xx
 	CDC& CDC::operator = (const CDC& rhs)
 	{
 		// Check for self assignment
-		if (&rhs == this) return *this;
+		if (this == &rhs) return *this;
 
 		m_hDC		  = rhs.m_hDC;
 		m_hBitmapOld  = rhs.m_hBitmapOld;
@@ -111,7 +111,7 @@ namespace Win32xx
 			// Restore the DC to its original state
 			::RestoreDC(m_hDC, m_SavedDC);
 
-			if (m_bAttachedDC == FALSE)
+			if (FALSE == m_bAttachedDC)
 			{
 				// We need to release a Window DC, and delete a memory DC
 				HWND hwnd = ::WindowFromDC(m_hDC);

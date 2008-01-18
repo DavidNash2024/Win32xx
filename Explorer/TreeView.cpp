@@ -17,7 +17,7 @@ CTreeView::CTreeView()
 	try
 	{
 		HRESULT hr = ::CoInitialize(NULL);
-		if (!((hr == S_OK) || (hr == S_FALSE)))
+		if (!((S_OK == hr) || (S_FALSE == hr)))
 			throw CWinException(_T("Problem Initializing COM"));;
 
 		SetImageLists();
@@ -422,7 +422,7 @@ BOOL CTreeView::SelectFromListView(Cpidl& cpidlFull)
 		TreeItemData* pTD = (TreeItemData*)tvItem.lParam;
 
 		//Compare the pidls
-		if (cpidlFull == pTD->GetFullCpidl())
+		if (pTD->GetFullCpidl() == cpidlFull)
 		{
 			TreeView_SelectItem(m_hWnd, hChild);
 			return TRUE;

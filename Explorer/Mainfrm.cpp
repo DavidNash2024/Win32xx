@@ -56,7 +56,7 @@ void CMainFrame::DoPopupMenu()
 
 		// Fix for an undocumented bug in the Win32 API
 		// For Win95 and NT, cbSize needs to be 44
-		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
+		if ((1400 == GetWinVersion()) || (2400 == GetWinVersion()))
 			mii.cbSize = 44;
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
@@ -118,7 +118,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_SHOW_HIDDEN:
 		m_bShowHidden = !m_bShowHidden;
-		::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, (m_bShowHidden == TRUE)? MF_CHECKED : MF_UNCHECKED);
+		::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, (TRUE == m_bShowHidden)? MF_CHECKED : MF_UNCHECKED);
 
 		// Refresh the Listview display
 		GetListView().DoDisplay();

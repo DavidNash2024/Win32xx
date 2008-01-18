@@ -150,7 +150,7 @@ namespace Win32xx
 					if (bReturn) return TRUE;
 				}
 			}
-			return (OnNotify(wParam, lParam) == TRUE);
+			return (TRUE == OnNotify(wParam, lParam) );
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -190,7 +190,7 @@ namespace Win32xx
 			GetApp()->m_MapLock.Lock();
 			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
 
-			if (m_pTLSData == NULL)
+			if (NULL == m_pTLSData)
 				m_pTLSData = GetApp()->SetTlsIndex();
 			GetApp()->m_MapLock.Release();
 
@@ -238,7 +238,7 @@ namespace Win32xx
 			GetApp()->m_MapLock.Lock();
 			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
 
-			if (m_pTLSData == NULL)
+			if (NULL == m_pTLSData)
 				m_pTLSData = GetApp()->SetTlsIndex();
 			GetApp()->m_MapLock.Release();
 
@@ -324,12 +324,12 @@ namespace Win32xx
 			// The HWND wasn't in the map, so add it now
 
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			if (pTLSData == NULL)
+			if (NULL == pTLSData)
 				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
 			CDialog* w = (CDialog*)pTLSData->pCWnd;
-			if (w == NULL)
+			if (NULL == w)
 				throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 
 			pTLSData->pCWnd = NULL;

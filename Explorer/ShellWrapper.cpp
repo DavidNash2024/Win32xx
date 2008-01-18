@@ -71,11 +71,11 @@ namespace ShellWrapper
 	HRESULT CContextMenu::QueryInterface(REFIID iid, CContextMenu2& ccm2)
 	{
 		HRESULT hr = 0;
-		if (iid == IID_IContextMenu2)
+		if (IID_IContextMenu2 == iid)
 		{
 			IContextMenu2* pIContextMenu2 = NULL;
 			hr = m_pIContextMenu->QueryInterface(iid, (VOID**)&pIContextMenu2);
-			if (hr == S_OK)
+			if (S_OK == hr)
 				ccm2.Attach(pIContextMenu2);
 			else
 			{
@@ -166,7 +166,7 @@ namespace ShellWrapper
 		LPITEMIDLIST pidl = cpidl.GetPidl();
 
 		HRESULT hr = m_IShellFolder->BindToObject(pidl, pbc, riid, (VOID**)&FolderTemp);
-		if(hr == S_OK)
+		if(S_OK == hr)
 			NewFolder.Attach(FolderTemp);
 		else
 		{
@@ -204,7 +204,7 @@ namespace ShellWrapper
 	{
 		IContextMenu* pcm;
 		HRESULT hr = m_IShellFolder->CreateViewObject(hwnd, riid, (LPVOID*)&pcm);
-		if (hr == S_OK)
+		if (S_OK == hr)
 			ccm.Attach(pcm);
 		else
 		{
@@ -218,7 +218,7 @@ namespace ShellWrapper
 	{
 		LPENUMIDLIST pEnum;
 		HRESULT hr = m_IShellFolder->EnumObjects(hwndOwner, grfFlags, &pEnum);
-		if (hr == S_OK)
+		if (S_OK == hr)
 			cenumIDList.Attach(pEnum);
 		else
 		{
@@ -263,7 +263,7 @@ namespace ShellWrapper
 		IContextMenu* ppv;
 		HRESULT hr = m_IShellFolder->GetUIObjectOf(hwndOwner, nItems, pPidlArray, riid, &rgfReserved, (VOID**)&ppv);
 
-		if (hr == S_OK)
+		if (S_OK == hr)
 			cm.Attach(ppv);
 		else
 		{
@@ -309,10 +309,10 @@ namespace ShellWrapper
 		if (m_pEnumIDList)
 		{
 			HRESULT hr = m_pEnumIDList->Next(Elements, &pidl, &ulFetched);
-			if (hr == NOERROR)
+			if (NOERROR == hr)
 				cpidl.Attach(pidl);
 
-			if ((hr != NOERROR) && (hr != S_FALSE))
+			if ((NOERROR != hr) && (S_FALSE != hr))
 			{
 				TRACE(_T("CEnumIDList::Next failed"));
 			}
@@ -412,7 +412,7 @@ namespace ShellWrapper
 		UINT cbSource;
 		Delete(); //Release the memory for m_pidl
 
-		if(pidlSource == NULL) return;
+		if(NULL == pidlSource) return;
 
 		//Allocate memory for m_pidl
 		cbSource = GetSize(pidlSource);
@@ -431,7 +431,7 @@ namespace ShellWrapper
 		m_pidlParent = NULL;
 
 	// Make sure it's a valid PIDL.
-		if (m_pidl == NULL)
+		if (NULL == m_pidl)
 			return(NULL);
 
 	// Copy m_pidl to m_pidlParent
@@ -462,7 +462,7 @@ namespace ShellWrapper
 	LPITEMIDLIST Cpidl::GetRelative()
 	//Stores a copy of the relative pidl obtained from a fully qualified pidl source.
 	{
-		if(m_pidl == NULL) return NULL;
+		if(NULL == m_pidl) return NULL;
 
 		LPITEMIDLIST pidlNext = m_pidl;
 		LPITEMIDLIST pidlRel  = m_pidl;
@@ -537,14 +537,14 @@ namespace ShellWrapper
 	LPITEMIDLIST Cpidl::GetNextItem(LPCITEMIDLIST pidl)
 	{
 		// Check for valid pidl.
-		if(pidl == NULL)
+		if(NULL == pidl)
 			return NULL;
 
 		// Get the size of the specified item identifier.
 		int cb = pidl->mkid.cb;
 
 		// If the size is zero, it is the end of the list.
-		if (cb == 0)
+		if (0 == cb)
 			return NULL;
 
 		// Add cb to pidl (casting to increment by bytes).
@@ -555,6 +555,6 @@ namespace ShellWrapper
 	{
 		CShellFolder sf;
 		sf.SHGetDesktopFolder();
-		return (sf.CompareIDs(0, *this, cpidl) == 0);
+		return (0 == sf.CompareIDs(0, *this, cpidl) );
 	}
 }

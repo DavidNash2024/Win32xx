@@ -27,7 +27,7 @@ CListView::CListView()
 	try
 	{
 		HRESULT hr = ::CoInitialize(NULL);
-		if (!((hr == S_OK) || (hr == S_FALSE)))
+		if (!((S_OK == hr) || (S_FALSE == hr)))
 			throw CWinException(_T("Problem Initializing COM"));;
 
 		SetImageLists();
@@ -577,7 +577,7 @@ void CListView::OnInitialUpdate()
 		lvc.pszText = szText;
 		lvc.cx = ColSize[iCol];
 
-		if (iCol == 1) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
+		if (1 == iCol) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
 		else lvc.fmt = LVCFMT_LEFT;		//left-aligned column
 
 		::LoadString(GetApp()->GetInstanceHandle(), IDS_COLUMN1 + iCol,
