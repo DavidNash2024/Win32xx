@@ -188,15 +188,13 @@ namespace Win32xx
 		virtual HWND Detach();
 		virtual HWND GetAncestor(HWND hWnd) const;
 		virtual CWnd* GetCWndObject(HWND hWnd) const;
-		virtual LPCTSTR GetDlgItemText(int nIDDlgItem);
-		virtual LPCTSTR GetWindowText();
+		virtual tString GetDlgItemString(int nIDDlgItem);
+		virtual tString GetWindowString();
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL RegisterClass(WNDCLASS& wc);
-		virtual BOOL SetDlgItemText(int nID, LPCTSTR lpString);
 		virtual void SetParent(HWND hParent);
-		virtual BOOL SetWindowText(LPCTSTR lpString);
 
 		// These functions aren't virtual, so there's no point overriding them
 		HWND GetHwnd() const {return m_hWnd;}
@@ -235,7 +233,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// Pre-Subclassed Window Procedure
-		tString m_String;			// a TCHAR std::string, temporary storage for strings
+		tString m_LoadString;		// a TCHAR std::string, temporary storage for strings
 
 	}; // class CWnd
 

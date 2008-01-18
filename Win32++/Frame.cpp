@@ -78,14 +78,13 @@ namespace Win32xx
 		}
 	}
 
-	LPCTSTR CStatusbar::GetPaneText(int iPane)
+	tString CStatusbar::GetPaneText(int iPane)
 	{
+		tString PaneText;
 		try
 		{
 			if (::IsWindow(m_hWnd))
 			{
-				m_String = _T("");
-
 				// Get size of Text array
 				int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPane, 0));
 
@@ -101,7 +100,7 @@ namespace Win32xx
 				::SendMessage(m_hWnd, SB_GETTEXT, iPane, (LPARAM)szText);
 
 				//Store the text in the member variable
-				m_String = szText;
+				PaneText = szText;
 				delete []szText;
 			}
 		}
@@ -109,11 +108,11 @@ namespace Win32xx
 		catch (const std::bad_alloc &)
 		{
 			DebugErrMsg(_T("Failed to allocate memory in CStatusbar::GetPaneText"));
-			m_String = _T("");
+			PaneText = _T("");
 			// Not a critical problem, so no need to rethrow
 		}
 
-		return m_String.c_str();
+		return PaneText;
 	}
 
 	void CStatusbar::SetPaneText(int iPane, LPCTSTR szText, UINT Style) const
@@ -2856,7 +2855,6 @@ namespace Win32xx
 			if (hComCtl)
 				::FreeLibrary(hComCtl);
 		}
-
 	}
 
 	BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
@@ -3175,8 +3173,6 @@ namespace Win32xx
 		}
 	}
 
-
-
 	void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
 	{
 		// Set the Statusbar text when we hover over a menu
@@ -3185,10 +3181,12 @@ namespace Win32xx
 		{
 			int nID = LOWORD (wParam);
 			HMENU hMenu = (HMENU) lParam;
+			
 			if ((hMenu != ::GetMenu(m_hWnd)) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				m_StatusText = LoadString(nID);
 			else
 				m_StatusText = _T("Ready");
+			
 			SetStatusText();
 		}
 	}
@@ -3215,7 +3213,7 @@ namespace Win32xx
 				return 1L;	// Supress maximise or minimise rebar band
 			break;
 
-		// Display toolips for the toolbar
+		// Display tooltips for the toolbar
 		case TTN_GETDISPINFO:
 			{
 				int iIndex =  GetToolbar().HitTest();
@@ -3223,8 +3221,7 @@ namespace Win32xx
 				if (iIndex >= 0)
 				{
 					int nID = GetToolbar().GetCommandID(iIndex);
-					if (nID > 0)
-						lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
+					if (nID > 0) lpDispInfo->lpszText = (LPSTR)LoadString(nID);
 				}
 			}
 			break;
@@ -3303,13 +3300,9 @@ namespace Win32xx
 	void CFrame::OnViewStatusbar()
 	{
 		if (::IsWindowVisible(GetStatusbar()))
-		{
 			::ShowWindow(GetStatusbar(), SW_HIDE);
-		}
 		else
-		{
 			::ShowWindow(GetStatusbar(), SW_SHOW);
-		}
 
 		UpdateCheckMarks();
 

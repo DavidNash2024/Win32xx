@@ -688,12 +688,12 @@ namespace Win32xx
 		return NULL;	// No matching CWnd for this HWND
 	}
 
-	LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem)
+	tString CWnd::GetDlgItemString(int nIDDlgItem)
 	{
 		// Calculate the buffer size to hold the null terminated text
 		int nLength = 1 + ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
 
-		m_String = _T("");
+		tString String;
 		if (nLength > 0)
 		{
 			TCHAR* szString = new TCHAR[nLength];
@@ -701,24 +701,22 @@ namespace Win32xx
 				throw std::bad_alloc();
 
 			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, nLength);
-			m_String = szString;
+			String = szString;
 
 			delete []szString;
 		}
 
-		// Never return a pointer to a local variable because it goes out of scope.
-		// Here we return a pointer to a member variable, which is fine.
-		return m_String.c_str();
+		return String;
 	}
 
-	LPCTSTR CWnd::GetWindowText()
+	tString CWnd::GetWindowString()
 	{
 		// Gets the window title for an ordinary window, or the text in an edit control
 
 		// Calculate the buffer size to hold the null terminated text
 		int nLength = 1 + ::GetWindowTextLength(m_hWnd);
 
-		m_String = _T("");
+		tString String;
 		if (nLength > 0)
 		{
 			TCHAR* szString = new TCHAR[nLength];
@@ -726,11 +724,11 @@ namespace Win32xx
 				throw std::bad_alloc();
 
 			::GetWindowText(m_hWnd, szString, nLength);
-			m_String = szString;
+			String = szString;
 
 			delete []szString;
 		}
-		return m_String.c_str();
+		return String;
 	}
 
 	HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
@@ -761,15 +759,15 @@ namespace Win32xx
 		if (GetApp() == 0)
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
-		m_String = _T("");
+		m_LoadString = _T("");
 		TCHAR szString[MAX_STRING_SIZE] = _T("");
 		if (!::LoadString (GetApp()->GetResourceHandle(), nID, szString, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
 			if (::LoadString (GetApp()->GetInstanceHandle(), nID, szString, MAX_STRING_SIZE))
 			{
-				m_String = szString;
-				return (LPCTSTR) m_String.c_str();
+				m_LoadString = szString;
+				return (LPCTSTR) m_LoadString.c_str();
 			}
 
 			TCHAR msg[80] = _T("");
@@ -777,8 +775,11 @@ namespace Win32xx
 			DebugWarnMsg(msg);
 		}
 
-		m_String = szString;
-		return m_String.c_str();
+		m_LoadString = szString;
+
+		// Never return a pointer to a local variable, it is out of scope when the function returns.
+		// We return a pointer to a member variable so it remains in scope.
+		return m_LoadString.c_str();
 	}
 
 	BOOL CWnd::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -1002,11 +1003,6 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	BOOL CWnd::SetDlgItemText(int nID, LPCTSTR lpString)
-	{
-		return ::SetDlgItemText(m_hWnd, nID, lpString);
-	}
-
 	HICON CWnd::SetIconLarge(int nIcon)
 	{
 		m_hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
@@ -1036,13 +1032,6 @@ namespace Win32xx
 		else
 			throw CWinException(_T("CWnd::SetParent ... Failed to set parent"));
 
-	}
-
-	BOOL CWnd::SetWindowText(LPCTSTR lpString)
-	{
-		// Sets the window title for an ordinary window, or the text in an edit control
-
-		return ::SetWindowText(m_hWnd, lpString);
 	}
 
 	LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

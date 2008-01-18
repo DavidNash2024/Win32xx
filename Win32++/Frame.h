@@ -98,13 +98,11 @@ namespace Win32xx
 		CStatusbar();
 		virtual ~CStatusbar() {}
 		virtual void CreatePanes(int iPanes, const int iPaneWidths[]) const;
-		virtual LPCTSTR GetPaneText(int iPane);
+		virtual tString GetPaneText(int iPane);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void SetPaneText(int iPane, LPCTSTR szText, UINT Style = 0) const;
 		virtual void SetPaneWidth(int iPane, int iWidth) const;
 
-	private:
-		tString m_String;
 	};
 
 
