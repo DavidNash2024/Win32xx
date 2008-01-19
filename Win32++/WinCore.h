@@ -65,6 +65,10 @@
 
 #define STRICT
 
+#ifdef _WIN32_WCE
+#include "WCEstddef.h"
+#endif
+
 #include <vector>
 #include <string>
 #include <map>

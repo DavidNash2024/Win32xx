@@ -52,6 +52,7 @@ The programs compiled with Win32++ can run on the following operating systems:
 * Windows XP
 * Windows Server 2003
 * Windows Vista
+* Windows CE
 
 Note: Programs compiled with Visual Studio.net 2008 and Visual Studio.net 2008 Express
 will not run on operating systems earlier than Windows 2000.
@@ -79,4 +80,42 @@ ParentFolder\Win32++
 
 The files which form the Win32++ library are contained in the Win32++ subdirectory.
 It is located as a sibling directory to the various projects.
+
+Components of Win32++
+=====================
+
+Files             |  Classes         | Operating Systems 
+==================+==================+==================
+Wincore.h         | CCriticalSection | Win32 and WinCE
+Wincore.cpp       | CWinApp          |
+                  | CWnd             |
+------------------+------------------+------------------                
+Dialog.h          | CDialog          | Win32 and WinCE
+Dialog.cpp        |                  |
+------------------+------------------+------------------
+GDI.h             | CDC              | Win32 and WinCE
+GDI.cpp           |                  |
+------------------+------------------+------------------
+PropertySheet.h   | CPropertySheet   | Win32 and WinCE
+PropertySheet.cpp | CPropertyPage    |
+------------------+------------------+------------------
+Frame.h           | CRebar           | Win32 only
+Frame.cpp         | CStatusbar       |
+                  | CToolbar         |
+                  | CMenubar         |
+                  | CFrame           |
+------------------+------------------+------------------
+MDI.h             | CMDIFrame        | Win32 only
+MDI.cpp           | CMDIClient       |
+                  | CMDIChild        |   
+------------------+------------------+------------------
+Splitter.h        | CSplitter        | Win32 only
+Splitter.cpp      |                  |
+------------------+------------------+------------------
+WCEframe.h        | CFrame           | WinCE only
+WCEframe.cpp      | CCmdbar          |                 
+                 
+
+
+
 

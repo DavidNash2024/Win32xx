@@ -5,18 +5,7 @@ New Features
 ------------
 * Win32++ now also directly supports the Windows CE operating systems. 
    Windows CE is the operating system used on such things as Pocket PCs, 
-   embeded systems and SmartPhones. Three styles of frames are 
-   provided for WinCE OSs:
-   - FullFrame.  This provides a full featured frame for applications. It uses
-     a Commandbands control to hold a menu and toolbar, and also has an 
-     optional status bar. It uses a separate window (sometimes referred to as 
-     a view window) over the client area of the frame window.
-   - MiniFrame. This provides a simple frame, which uses Commandbar to display
-     a menu at the top of the frame. The Commandbar can also display toolbar 
-     buttons.
-   - PocketFrame. This is another simple frame. This one uses a SHMenubar to 
-     display a menu at the bottom of the frame. The SHMenubar can also 
-     display toolbar buttons.
+   embeded systems and SmartPhones. 
   
 * A CDC class. This class simplifies the drawing to device contexts. 
    This class can be used anywhere we would normally use a handle to a 

@@ -4,6 +4,7 @@
 #include "SimpleApp.h"
 #include "Resource.h"
 
+
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {
 	TCHAR szBuf[MAX_STRING_SIZE];
