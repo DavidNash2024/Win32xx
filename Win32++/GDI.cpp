@@ -114,9 +114,14 @@ namespace Win32xx
 			if (FALSE == m_bAttachedDC)
 			{
 				// We need to release a Window DC, and delete a memory DC
+
+#ifndef _WIN32_WCE
 				HWND hwnd = ::WindowFromDC(m_hDC);
 				if (hwnd) ::ReleaseDC(hwnd, m_hDC);
 				else      ::DeleteDC(m_hDC);
+#else
+				::DeleteDC(m_hDC);
+#endif
 			}
 		}
 	}
@@ -192,6 +197,7 @@ namespace Win32xx
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
 
+#ifndef _WIN32_WCE
 	void CDC::CreateBitmapIndirect(CONST BITMAP *lpbm)
 	{
 		// Creates a bitmap and selects it into the device context
@@ -218,6 +224,7 @@ namespace Win32xx
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
+#endif
 
 	void CDC::CreateDIBSection(HDC hdc, CONST BITMAPINFO *pbmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset)
@@ -259,6 +266,7 @@ namespace Win32xx
 		::SelectObject(m_hDC, hBrush);
 	}
 
+#ifndef _WIN32_WCE
 	void CDC::CreateBrushIndirect(CONST LOGBRUSH *lplb)
 	{
 		// Creates the brush and selects it into the device context
@@ -284,6 +292,20 @@ namespace Win32xx
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
+	
+	void CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
+	{
+		// Creates the brush and selects it into the device context
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
+
+		HBRUSH hBrush = ::CreateHatchBrush(fnStyle, rgb);
+		if (!hBrush) throw CWinException(_T("CreateHatchBrush failed"));
+
+		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
+	}
+#endif
 
 	void CDC::CreateDIBPatternBrushPt(CONST VOID *lpPackedDIB, UINT iUsage)
 	{
@@ -294,19 +316,6 @@ namespace Win32xx
 
 		HBRUSH hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, iUsage);
 		if (!hBrush) throw CWinException(_T("CreateDIBPatternPrushPt failed"));
-
-		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
-	}
-
-	void CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
-	{
-		// Creates the brush and selects it into the device context
-
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
-
-		HBRUSH hBrush = ::CreateHatchBrush(fnStyle, rgb);
-		if (!hBrush) throw CWinException(_T("CreateHatchBrush failed"));
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -362,7 +371,7 @@ namespace Win32xx
 
 		::SelectObject(m_hDC, hFont);
 	}
-
+#ifndef _WIN32_WCE
 	void CDC::CreateFont(
 					int nHeight,               // height of font
   					int nWidth,                // average character width
@@ -393,6 +402,7 @@ namespace Win32xx
 
 		m_hFontOld = (HFONT)::SelectObject(m_hDC, hFont);
 	}
+#endif
 
 	void CDC::CreateFontIndirect(CONST LOGFONT* pLF)
 	{

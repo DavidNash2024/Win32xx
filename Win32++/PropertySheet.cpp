@@ -367,10 +367,14 @@ namespace Win32xx
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
 
+#ifdef _WIN32_WCE
+		m_PSH.dwSize = sizeof(PROPSHEETHEADER);
+#else
 		if (GetComCtlVersion() >= 471)
 			m_PSH.dwSize = sizeof(PROPSHEETHEADER);
 		else
 			m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
+#endif
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hwndParent;
@@ -386,10 +390,14 @@ namespace Win32xx
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
 
+#ifdef _WIN32_WCE
+		m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
+#else
 		if (GetComCtlVersion() >= 471)
 			m_PSH.dwSize = sizeof(PROPSHEETHEADER);
 		else
 			m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
+#endif
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hwndParent;

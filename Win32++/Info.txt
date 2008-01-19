@@ -12,10 +12,15 @@ sln       | A project file used by Visual Studio 2003, VS2005 or VS2008
 vcproj    | A project file used by Visual Studio 2003, VS2005 or VS2008
 bdsproj   | A project file used by Borland Developer Studio 2006 
 bpf       | A project file used by Borland Developer Studio 2006 
+vcp       | A project file used by eMbedded Visual C++
+vcw       | A project file used by eMbedded Visual C++
 dev       | A project file used by Dev-C++
 cpp       | A C++ source file 
 h         | A C++ header file
-rc        | A C++ resouce file 
+rc        | A C++ resouce file
+ico       | An icon resoure file
+bmp       | A bitmap resource file
+manifest  | A manifest resource file
 txt       | A text file
 
 Supported Compilers and Integrated Development Environments (IDEs)

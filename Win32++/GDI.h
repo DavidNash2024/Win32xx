@@ -108,30 +108,20 @@ namespace Win32xx
 		// Create and Select Bitmaps
 		virtual void AttachBitmap(HBITMAP hBitmap);
 		virtual void CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, CONST VOID *pvColors);
-		virtual void CreateBitmapIndirect(CONST BITMAP *lpbm);
 		virtual void CreateCompatibleBitmap(HDC hDC, int cx, int cy);
-		virtual void CreateDIBitmap(HDC hdc, CONST BITMAPINFOHEADER *lpbmih, DWORD fdwInit, CONST VOID *lpbInit,
-										CONST BITMAPINFO *lpbmi,  UINT fuUsage);
 		virtual void CreateDIBSection(HDC hdc, CONST BITMAPINFO *pbmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset);
 		virtual HBITMAP DetachBitmap();
 
 		// Create and Select Brushes
 		virtual void AttachBrush(HBRUSH hBrush);
-		virtual void CreateBrushIndirect(CONST LOGBRUSH *lplb);
-		virtual void CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
 		virtual void CreateDIBPatternBrushPt(const VOID *lpPackedDIB, UINT iUsage);
-		virtual void CreateHatchBrush(int fnStyle, COLORREF rgb);
 		virtual void CreatePatternBrush(HBITMAP hbmp);
 		virtual void CreateSolidBrush(COLORREF rbg);
 		virtual HBRUSH DetachBrush();
 
 		// Create and Select Fonts
 		virtual void AttachFont(HFONT hFont);
-		virtual void CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
-  							DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
-  							DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality,
-  							DWORD fdwPitchAndFamily, LPCTSTR lpszFace);
 		virtual void CreateFontIndirect(CONST LOGFONT* pLF);
 		virtual HFONT DetachFont();
 
@@ -146,6 +136,23 @@ namespace Win32xx
 
 		// Cast the CDC object to a HDC
 		operator HDC() const {return m_hDC;}
+
+#ifndef _WIN32_WCE
+		// Create and Select Bitmaps
+		virtual void CreateBitmapIndirect(CONST BITMAP *lpbm);
+		virtual void CreateDIBitmap(HDC hdc, CONST BITMAPINFOHEADER *lpbmih, DWORD fdwInit, CONST VOID *lpbInit,
+										CONST BITMAPINFO *lpbmi,  UINT fuUsage);
+		// Create and Select Brushes
+		virtual void CreateBrushIndirect(CONST LOGBRUSH *lplb);
+		virtual void CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
+		virtual void CreateHatchBrush(int fnStyle, COLORREF rgb);
+
+		// Create and Select Fonts
+		virtual void CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
+  							DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
+  							DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality,
+  							DWORD fdwPitchAndFamily, LPCTSTR lpszFace);
+#endif
 
 	private:
 		HDC m_hDC;
