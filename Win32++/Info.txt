@@ -79,7 +79,8 @@ ParentFolder\Program2
 ParentFolder\Win32++
 
 The files which form the Win32++ library are contained in the Win32++ subdirectory.
-It is located as a sibling directory to the various projects.
+It is located as a sibling directory to the various projects. All the projects 
+share the Win32++ files.
 
 Components of Win32++
 =====================
