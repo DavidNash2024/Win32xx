@@ -361,6 +361,7 @@ namespace Win32xx
 		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
+		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		tString m_StatusText;				// a TCHAR std::string for status text
 		ThemeMenu m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_hImageList;			// Imagelist of menu icons

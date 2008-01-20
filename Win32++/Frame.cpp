@@ -45,7 +45,6 @@
 #include <windowsx.h>
 #include <shlwapi.h>
 #include <uxtheme.h>
-#include <tmschema.h>
 #include "Default_Resource.h"
 
 
@@ -2357,7 +2356,7 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_StatusText(_T("Ready")),
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_StatusText(_T("Ready")),
 						m_hImageList(NULL), m_hImageListDis(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
 
@@ -3246,6 +3245,8 @@ namespace Win32xx
 			GetRebar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
 		}
 
+		if (m_bUpdateTheme) SetTheme();
+
 		//Reposition and redraw everything
 		RecalcLayout();
 		::RedrawWindow(m_hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
@@ -3506,6 +3507,9 @@ namespace Win32xx
 	{
 		// Note: To modify theme colors, override this function in CMainframe,
 		//        and make any modifications there.
+
+		// Set a flag redo SetTheme when the theme changes
+		m_bUpdateTheme = TRUE;
 
 		// Detect the XP theme name
 		WCHAR Name[30] = L"";

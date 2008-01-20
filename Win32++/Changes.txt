@@ -23,6 +23,9 @@ New Features
    the panes while the splitter bar is being dragged, or defer the resizing
    until the splitter bar drag is complete (as before).
    
+* Automatically detects the XP theme used (Default, Silver or Olive), and
+   adjusts the theme colors accordingly.
+   
 * Added project files for Borland's Turbo C++ 2006.
 
   
