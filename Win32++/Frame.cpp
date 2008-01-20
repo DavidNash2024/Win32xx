@@ -44,6 +44,8 @@
 #include "Frame.h"
 #include <windowsx.h>
 #include <shlwapi.h>
+#include <uxtheme.h>
+#include <tmschema.h>
 #include "Default_Resource.h"
 
 
@@ -3181,12 +3183,12 @@ namespace Win32xx
 		{
 			int nID = LOWORD (wParam);
 			HMENU hMenu = (HMENU) lParam;
-			
+
 			if ((hMenu != ::GetMenu(m_hWnd)) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				m_StatusText = LoadString(nID);
 			else
 				m_StatusText = _T("Ready");
-			
+
 			SetStatusText();
 		}
 	}
@@ -3221,7 +3223,7 @@ namespace Win32xx
 				if (iIndex >= 0)
 				{
 					int nID = GetToolbar().GetCommandID(iIndex);
-					if (nID > 0) lpDispInfo->lpszText = (LPSTR)LoadString(nID);
+					if (nID > 0) lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
 				}
 			}
 			break;
@@ -3505,58 +3507,83 @@ namespace Win32xx
 		// Note: To modify theme colors, override this function in CMainframe,
 		//        and make any modifications there.
 
-		// Set the toolbar theme
-		ThemeToolbar tt = {0};
-		tt.UseThemes   = TRUE;
-		tt.clrHot1     = RGB(255, 230, 190);
-		tt.clrHot2     = RGB(255, 190, 100);
-		tt.clrPressed1 = RGB(255, 140, 40);
-		tt.clrPressed2 = RGB(255, 180, 80);
-		tt.clrOutline  = RGB(128, 128, 255);
-
-		//	or you could use the following
-		//	BOOL T = TRUE;
-		//	BOOL F = FALSE;
-		//	ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-
-		GetToolbar().SetToolbarTheme(tt);
-
-		if (m_bUseRebar)
+		// Detect the XP theme name
+		WCHAR Name[30] = L"";
+		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+		if(hMod)
 		{
-			// Set the rebar theme
-			ThemeRebar tr = {0};
-			tr.UseThemes= TRUE;
-			tr.clrBkgnd1 = RGB(150,190,245);
-			tr.clrBkgnd2 = RGB(196,215,250);
-			tr.clrBand1  = RGB(220,230,250);
-			tr.clrBand2  = RGB( 70,130,220);
-			tr.KeepBandsLeft = TRUE;
-			tr.LockMenuBand  = TRUE;
-			tr.ShortBands    = TRUE;
-			tr.RoundBorders  = TRUE;
+			typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pszThemeFileName, int cchMaxNameChars,
+				LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
 
-			//	or you could use the following
-			//	ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+			PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
 
-			GetRebar().SetRebarTheme(tr);
+			(*pfn)(0, 0, Name, 30, 0, 0);
+
+			::FreeLibrary(hMod);
 		}
 
-		// Set the menu themes
-		ThemeMenu tm = {0};
-		tm.UseThemes   = TRUE;
-		tm.clrHot1     = RGB(255, 230, 190);
-		tm.clrHot2     = RGB(255, 190, 100);
-		tm.clrPressed1 = RGB(150,190,245);
-		tm.clrPressed2 = RGB(220,230,250);
-		tm.clrOutline  = RGB(128, 128, 200);
+		enum Themetype{ Blue, Silver, Olive };
 
-	//	or you could use the following
-	//	ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+		int Theme = Blue;
+		if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
+		if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
+		if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
 
-		if (m_bUseRebar)
-			GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
+		BOOL T = TRUE;
+		BOOL F = FALSE;
 
-		SetMenuTheme(tm); // Sets the theme for popup menus
+		switch (Theme)
+		{
+		case Blue:
+			{
+				// Use this theme by default
+				ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+				ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+
+				GetToolbar().SetToolbarTheme(tt);
+				SetMenuTheme(tm); // Sets the theme for popup menus
+				if (m_bUseRebar)
+				{
+					GetRebar().SetRebarTheme(tr);
+					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
+				}
+			}
+			break;
+
+		case Silver:
+			{
+				ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+				ThemeRebar tr = {T, RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172), F, T, T, T, T, F};
+				ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
+
+				GetToolbar().SetToolbarTheme(tt);
+				SetMenuTheme(tm); // Sets the theme for popup menus
+				if (m_bUseRebar)
+				{
+					GetRebar().SetRebarTheme(tr);
+					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
+				}
+			}
+			break;
+
+		case Olive:
+			{
+				ThemeRebar tr = {T, RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78), F, T, T, T, T, F};
+				ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
+				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
+
+				GetToolbar().SetToolbarTheme(tt);
+				SetMenuTheme(tm); // Sets the theme for popup menus
+				if (m_bUseRebar)
+				{
+					GetRebar().SetRebarTheme(tr);
+					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
+				}
+			}
+			break;
+		}
+
 		RecalcLayout();
 	}
 
