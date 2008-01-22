@@ -140,62 +140,6 @@ namespace Win32xx
 			::DestroyAcceleratorTable(m_hAccelTable);
 	}
 
-	void CWinApp::CreateTrace()
-	// Called automatically in CWinApp::Run if _DEBUG is defined.
-	// You may called this function in release mode if you want to see the trace window.
-	{
-		if (m_Trace != 0)
-		{
-			DebugErrMsg(_T("Error, CreateTrace should only be called once"));
-			return;
-		}
-
-#ifdef _WIN32_WCE	// for WinCE operating systems
-
-		// Position window at the botton of the desktop area
-		RECT r = {0};
-		::SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
-		r.top = r.bottom - TRACE_HEIGHT;
-		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION;
-
-		m_Trace.CreateEx(WS_EX_TOPMOST, TEXT("TRACE"), TEXT("Trace Window"), dwStyle, r, NULL, NULL);
-
-		::GetClientRect(m_Trace, &r);
-		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
-
-		m_hTraceEdit = ::CreateWindowEx(0L, TEXT("Edit"), TEXT(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-					m_Trace, NULL, GetApp()->GetInstanceHandle(), NULL);
-
-#else	// for Win32 operating systems	
-
-		{
-			m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
-			if (!m_hRichEdit)
-				DebugErrMsg(_T("Failed to load the RichEdit dll"));
-		}
-
-		// Position window at the botton right of the desktop area
-		RECT r = {0};
-		::SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
-		r.top = r.bottom - TRACE_HEIGHT;
-		r.left = r.right - TRACE_WIDTH;
-		DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION /*| WS_VISIBLE*/;
-
-		m_Trace.CreateEx(WS_EX_TOPMOST, _T("TRACE"), _T("Trace Window"), dwStyle, r, NULL, NULL);
-
-		::GetClientRect(m_Trace, &r);
-		dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
-		
-		m_hTraceEdit = ::CreateWindowEx(0L, _T("RichEdit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-					m_Trace, NULL, GetApp()->GetInstanceHandle(), NULL);
-
-		// Set a default font
-		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-		::SendMessage(m_hTraceEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
-#endif
-	}
-
 	BOOL CWinApp::InitInstance()
 	{
 		// InitInstance contains the initialization code for your application
@@ -227,12 +171,6 @@ namespace Win32xx
 
 	int CWinApp::Run()
 	{
-		// Create an invisible Trace window in Debug mode
-		// It's made visible on first use
-#ifdef _DEBUG
-		CreateTrace();
-#endif
-
 		// InitInstance runs the App's initialization code
 		if (InitInstance())
 		{
@@ -297,35 +235,6 @@ namespace Win32xx
 
 		return 0;
 	}
-
-	void CWinApp::Trace(LPCTSTR szString)
-	// Used by the TRACE macro to output text to the trace window
-	// Note: The TRACE macro is only active in debug mode (i.e when _DEBUG is defined)
-	//       If you wish to see a trace window in release mode:
-	//         1) Call CreateTrace to create the trace window
-	//		   2) Call this function directly instead of TRACE to see trace output.
-	{
-		// CreateTrace must be called once before using this function
-		if (0 == m_hTraceEdit)
-		{
-			::MessageBox(NULL, _T("Must call CreateTrace before Trace"), _T("Error"), MB_OK);
-			return;
-		}
-
-		// The Trace window is initially invisible. Make it visible now.
-		if (!::IsWindowVisible(m_Trace))
-			::ShowWindow(m_Trace, SW_SHOWNA);
-
-		HWND PreFocus = ::GetFocus();
-		tString String = szString;
-		String += _T("\r\n");	// Add CR LF to the end
-
-		::SendMessage(m_hTraceEdit, EM_REPLACESEL, (WPARAM)FALSE, (LPARAM)String.c_str());
-		::SendMessage(m_hTraceEdit, EM_SCROLLCARET, (WPARAM)0, (LPARAM)0);
-
-		SetFocus(PreFocus);
-	}
-
 
 	////////////////////////////////////////
 	// Definitions for the CWnd class

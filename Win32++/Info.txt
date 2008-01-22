@@ -26,8 +26,8 @@ txt       | A text file
 Supported Compilers and Integrated Development Environments (IDEs)
 ==================================================================
 Win32++ supports the following:
-* Borland C++ Compiler 5.5
 * Borland Developer Studio 2006
+* Borland Turbo C++ 2006
 * CodeBlocks
 * Dev-C++
 * MinGW GCC Compiler
@@ -40,7 +40,6 @@ Win32++ supports the following:
 * Visual Studio.net 2008 Express
 
 CodeBlocks is an IDE. The project files are configured for the following compilers
-* Borland C++ Compiler 5.5
 * MinGW GNU compiler
 * Visual C++ Toolkit 2003
 

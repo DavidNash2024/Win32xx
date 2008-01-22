@@ -1,4 +1,6 @@
 #include "view.h"
+#include "Resource.h"
+
 
 void CView::OnPaint(HDC hDC)
 {

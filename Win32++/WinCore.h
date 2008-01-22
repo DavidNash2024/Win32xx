@@ -108,7 +108,8 @@ typedef std::basic_string<TCHAR> tString;
 
 // Define global static TRACE macro for Debug mode only
 #ifdef _DEBUG
-  #define TRACE(str) (Win32xx::GetApp()->Trace(str))
+//  #define TRACE(str) (Win32xx::GetApp()->Trace(str))
+  #define TRACE(str) ::OutputDebugString(str)
 #else
   #define TRACE(str) // no-op
 #endif  // _DEBUG
@@ -262,9 +263,7 @@ namespace Win32xx
 		virtual int  Run();
 
 		// Its unlikely you would need to override these functions
-		virtual void CreateTrace();
 		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
-		virtual void Trace(LPCTSTR szString);
 
 		CFrame* GetFrame() {return m_pFrame;}
 		DWORD GetTlsIndex() {return st_dwTlsIndex;}

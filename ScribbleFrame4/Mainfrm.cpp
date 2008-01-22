@@ -74,19 +74,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		::MessageBox(NULL, _T("Edit Undo"), _T("Menu"), MB_OK);
 		return TRUE;
 	case IDM_PEN_RED:
-		TRACE("Red pen selected");
+		TRACE("Red pen selected\n\n");
 		m_View.SetPen(RGB(255,0,0));
 		return TRUE;
 	case IDM_PEN_BLUE:
-		TRACE("Blue pen selected");
+		TRACE("Blue pen selected\n\n");
 		m_View.SetPen(RGB(0,0,255));
 		return TRUE;
 	case IDM_PEN_GREEN:
-		TRACE("Green pen selected");
+		TRACE("Green pen selected\n\n");
 		m_View.SetPen(RGB(0,196,0));
 		return TRUE;
 	case IDM_PEN_BLACK:
-		TRACE("Black pen selected");
+		TRACE("Black pen selected\n\n");
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
 	case IDM_HELP_ABOUT:

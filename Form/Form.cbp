@@ -9,51 +9,6 @@
 		<Option default_target="5"/>
 		<Option compiler="1"/>
 		<Build>
-			<Target title="Debug Borland">
-				<Option output="borland\debug\Form.exe"/>
-				<Option working_dir="Borland\Debug"/>
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\Form\Borland\Debug"/>
-				<Option deps_output=".deps"/>
-				<Option type="0"/>
-				<Option compiler="2"/>
-				<Option projectResourceIncludeDirsRelation="0"/>
-				<Compiler>
-					<Add option="-w-par"/>
-					<Add option="-D_DEBUG"/>
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:\Borland\BCC55\Include"/>
-				</ResourceCompiler>
-				<Linker>
-					<Add library="cw32mt"/>
-					<Add library="comctl32"/>
-					<Add library="import32"/>
-					<Add directory="C:\Borland\BCC55\Lib"/>
-					<Add directory="C:\Borland\BCC55\Lib\PSDK"/>
-				</Linker>
-			</Target>
-			<Target title="Release Borland">
-				<Option output="Borland\Release\Form.exe"/>
-				<Option working_dir="Borland\Release"/>
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\Form\Borland\Release"/>
-				<Option deps_output=".deps"/>
-				<Option type="0"/>
-				<Option compiler="2"/>
-				<Option projectResourceIncludeDirsRelation="0"/>
-				<Compiler>
-					<Add option="-w-par"/>
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:\Borland\BCC55\Include"/>
-				</ResourceCompiler>
-				<Linker>
-					<Add library="comctl32"/>
-					<Add library="import32"/>
-					<Add library="cw32mt"/>
-					<Add directory="C:\Borland\BCC55\Lib"/>
-					<Add directory="C:\Borland\BCC55\Lib\PSDK"/>
-				</Linker>
-			</Target>
 			<Target title="Debug Microsoft Visual C++">
 				<Option output="Microsoft\Debug\Form.exe"/>
 				<Option working_dir="Microsoft\Debug"/>
@@ -154,8 +109,6 @@
 		</Build>
 		<Unit filename="FormApp.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -165,8 +118,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -174,8 +125,6 @@
 		</Unit>
 		<Unit filename="Mainfrm.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -185,8 +134,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -194,8 +141,6 @@
 		</Unit>
 		<Unit filename="MyDialog.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -205,8 +150,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -215,8 +158,6 @@
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES"/>
 			<Option objectName="Form\Resource.res"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -224,8 +165,6 @@
 		</Unit>
 		<Unit filename="main.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -235,8 +174,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -246,8 +183,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -257,8 +192,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -266,8 +199,6 @@
 		</Unit>
 		<Unit filename="..\Win32++\Dialog.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -277,8 +208,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -286,8 +215,6 @@
 		</Unit>
 		<Unit filename="..\Win32++\Frame.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -297,8 +224,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -306,8 +231,6 @@
 		</Unit>
 		<Unit filename="..\Win32++\GDI.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -317,8 +240,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -326,8 +247,6 @@
 		</Unit>
 		<Unit filename="..\Win32++\WinCore.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>
@@ -337,8 +256,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="Debug Borland"/>
-			<Option target="Release Borland"/>
 			<Option target="Debug Microsoft Visual C++"/>
 			<Option target="Release Microsoft Visual C++"/>
 			<Option target="Debug MinGW GNU compiler"/>

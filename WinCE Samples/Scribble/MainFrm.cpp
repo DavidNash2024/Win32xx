@@ -48,15 +48,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	// Respond to Toolbar buttons
 	case IDM_RED:
 		m_PenColor = RGB(255, 0, 0);
+		TRACE(_T("Red Pen Selected \n\n"));
 		break;
 	case IDM_BLUE:
 		m_PenColor = RGB(0, 0, 255);
+		TRACE(_T("Blue Pen Selected \n\n"));
 		break;
 	case IDM_GREEN:
 		m_PenColor = RGB(0, 191, 0);
+		TRACE(_T("Green Pen Selected \n\n"));
 		break;
 	case IDM_BLACK:
 		m_PenColor = RGB(0, 0, 0);
+		TRACE(_T("Black Pen Selected \n\n"));
 		break;
 
 	// Respond to the accelerator key
@@ -71,15 +75,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 void CMainFrame::OnInitialUpdate()
 {
 	// Startup code goes here
-	TCHAR szText[80];
-	int i = _WIN32_WCE;
-	wsprintf(szText, _T("_WIN32_WCE = %d"), i);
-	TRACE(szText);
-#ifndef _WIN32_WCE
-	DebugWarnMsg(_T("_WIN32_WCE not defined"));
-#endif
-
-
 }
 
 void CMainFrame::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
@@ -104,7 +99,7 @@ void CMainFrame::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	if (wParam & MK_LBUTTON)
 	{	
 		TCHAR str[80];
-		::wsprintf(str, TEXT("Draw Point:  %d, %d"), LOWORD(lParam), HIWORD(lParam));
+		::wsprintf(str, TEXT("Draw Point:  %d, %d\n"), LOWORD(lParam), HIWORD(lParam));
 		TRACE(str);
 
 		DrawLine(LOWORD(lParam), HIWORD(lParam));

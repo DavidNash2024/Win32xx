@@ -12,7 +12,7 @@ CView::CView()
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
-	TRACE(_T("View window created"));
+	TRACE(_T("View window created\n\n"));
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)
@@ -38,7 +38,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
 void CView::OnPaint(HDC hDC)

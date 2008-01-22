@@ -65,10 +65,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnInitialUpdate()
 {
 	// Startup code goes here
-	TRACE(TEXT("Frame Created"));
-
-	TRACE(TEXT("Move the trace window up to see menu"));
-
+	TRACE(TEXT("Frame Created\n"));
 }
 
 void CMainFrame::OnPaint(HDC hDC)

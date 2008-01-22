@@ -73,7 +73,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	TRACE(_T("Frame created"));
+	TRACE(_T("Frame created\n\n"));
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -96,6 +96,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

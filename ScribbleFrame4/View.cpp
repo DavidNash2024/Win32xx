@@ -109,7 +109,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
          if (wParam & MK_LBUTTON)
         {	
 			char str[80];
-			::wsprintf(str, "Draw Point:  %d, %d", GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			::wsprintf(str, "Draw Point:  %d, %d\n", GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			TRACE(str);
 
 			DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
