@@ -153,8 +153,10 @@ SOURCE="..\Win32++\WinCore.cpp"
 DEP_CPP_WINCO=\
 	"..\Win32++\Default_Resource.h"\
 	"..\Win32++\dialog.h"\
-	"..\Win32++\FullFrame.h"\
 	"..\Win32++\WinCore.h"\
+	
+NODEP_CPP_WINCO=\
+	"..\Win32++\FullFrame.h"\
 	
 # End Source File
 # Begin Source File
