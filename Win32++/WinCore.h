@@ -45,8 +45,8 @@
 #ifndef WINCORE_H
 #define WINCORE_H
 
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-  // Correct for bug in Visual Studio 6
+#if defined (_MSC_VER) && _MSC_VER <= 1202
+  // Correct for bug in VS 6 and Embedded C++ 4.0
   #pragma warning (disable : 4786) // identifier was truncated
   #define DWORD_PTR DWORD
 #endif // (_MSC_VER) && _MSC_VER <= 1200
