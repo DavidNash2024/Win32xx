@@ -879,7 +879,10 @@ namespace Win32xx
 			WNDCLASS wcTest = {0};
 
 			if (::GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest))
+			{
+				wc = wcTest;
 				return TRUE;
+			}
 
 			// Set reasonable defaults
 			wc.hInstance	= GetApp()->GetInstanceHandle();

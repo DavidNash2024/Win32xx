@@ -32,6 +32,10 @@ void CView::DrawLine(int x, int y)
 	
 	::MoveToEx(hDC, m_points.back().x, m_points.back().y, NULL); ;
 	::LineTo(hDC, x, y);
+
+	char str[80];
+	::wsprintf(str, "Draw Point:  %d, %d\n", x, y);
+	TRACE(str);
 	
 	::ReleaseDC(m_hWnd, hDC);
 	::SelectObject(hDC, hOldPen);
@@ -108,10 +112,6 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
          // hold down the left mouse button and move mouse to draw lines.
          if (wParam & MK_LBUTTON)
         {	
-			char str[80];
-			::wsprintf(str, "Draw Point:  %d, %d\n", GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			TRACE(str);
-
 			DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
         }
