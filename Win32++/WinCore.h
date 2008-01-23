@@ -63,6 +63,15 @@
   #define _WIN32_WINNT 0x0500
 #endif
 
+// Set some minimum defaults (you can reset these before including WinCore.h)
+#ifndef WINVER
+#define WINVER 0x0400		// Windows 95
+#endif
+#ifndef _WIN32_IE
+#define _WIN32_IE 0x0400	// Internet Explorer 4
+#endif
+
+
 #define STRICT
 
 #ifdef _WIN32_WCE
@@ -76,7 +85,7 @@
 #include <commctrl.h>
 #include <tchar.h>
 #include <shlwapi.h>
-#ifndef _WIN32_WCE
+#ifndef _WIN32_WCE	// Windows CE doesn't support streams
   #include <sstream>
 #endif
 
@@ -108,7 +117,6 @@ typedef std::basic_string<TCHAR> tString;
 
 // Define global static TRACE macro for Debug mode only
 #ifdef _DEBUG
-//  #define TRACE(str) (Win32xx::GetApp()->Trace(str))
   #define TRACE(str) ::OutputDebugString(str)
 #else
   #define TRACE(str) // no-op
