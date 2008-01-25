@@ -1441,7 +1441,7 @@ namespace Win32xx
 			::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
 
 		// Hook messages about to be processed by the shortcut menu
-		m_pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());;
+		m_pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
 		// Display the shortcut menu
 		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,

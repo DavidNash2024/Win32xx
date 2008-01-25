@@ -348,7 +348,7 @@ namespace Win32xx
 	inline void DebugErrMsg(LPCTSTR ErrorMsg)
 	{
 	#ifdef _DEBUG
-		::MessageBox (0, ErrorMsg, _T("Exception"), MB_ICONEXCLAMATION | MB_OK);
+		::MessageBox (0, ErrorMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 	#else
 		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
 	#endif  //_DEBUG

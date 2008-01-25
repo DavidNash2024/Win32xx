@@ -441,9 +441,11 @@ namespace Win32xx
 				// Create our own local copy of szClassName.
 				lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
 
-			// Register the window class
+			// Register the window class (if not already registered)
 			WNDCLASS wc = {0};
 			wc.lpszClassName = ClassName;
+			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 			if (!RegisterClass(wc))
 				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
@@ -884,12 +886,9 @@ namespace Win32xx
 				return TRUE;
 			}
 
-			// Set reasonable defaults
+			// Set defaults
 			wc.hInstance	= GetApp()->GetInstanceHandle();
 			wc.lpfnWndProc	= CWnd::StaticWindowProc;
-
-			if (0 == wc.hbrBackground)	wc.hbrBackground	= (HBRUSH)::GetStockObject(WHITE_BRUSH);
-			if (0 == wc.hCursor)		wc.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
 
 			// Register the WNDCLASS structure
 			if (!::RegisterClass(&wc))

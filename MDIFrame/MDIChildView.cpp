@@ -13,6 +13,7 @@ CMDIChildView::CMDIChildView() : m_Color(RGB(0,0,255))
 
 CMDIChildView::~CMDIChildView()
 {
+	TRACE(_T("MDI Child destroyed\n"));
 }
 
 void CMDIChildView::OnInitialUpdate()
@@ -20,6 +21,8 @@ void CMDIChildView::OnInitialUpdate()
 	::SetWindowText(m_hWnd, _T("View Window"));
 	SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
+
+	TRACE(_T("MDI Child created\n"));
 }
 
 void CMDIChildView::OnPaint(HDC hDC)
