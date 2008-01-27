@@ -129,7 +129,7 @@ void CMainWindow::PerformanceTest()
 	SendText(str.str().c_str());
 	
 	str.str(tString()); // erase the stream
-	str << lr << _T(" total messages sent");
+	str << lr << _T(" total messages sent\n");
 	TRACE(str.str().c_str()); 
 
 	MessageBox(m_hWnd, str.str().c_str(), _T("Info"), MB_OK);
@@ -142,7 +142,8 @@ void CMainWindow::SendText(LPCTSTR str)
 	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)_T("\r\n"));
 	::SendMessage(m_hEdit, EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
 
-	TRACE(str); 
+	TRACE(str);
+	TRACE(_T("\n"));
 }
 
 LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

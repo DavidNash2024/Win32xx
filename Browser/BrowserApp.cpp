@@ -16,9 +16,6 @@ CBrowserApp::~CBrowserApp()
 
 BOOL CBrowserApp::InitInstance()
 {
-	//Start Tracing
-	TRACE(_T("Tracing Started"));
-
 	//Create the Frame Window
 	if (!m_Frame.Create())
 	{

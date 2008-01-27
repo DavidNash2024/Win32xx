@@ -24,16 +24,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	// Respond to menu items
 	case IDM_EDIT_CUT:
-		TRACE(TEXT("Cut ... Menu item"));
+		TRACE(TEXT("Cut ... Menu item\n"));
 		return TRUE;
 	case IDM_EDIT_COPY:
-		TRACE(TEXT("Copy ... Menu item"));
+		TRACE(TEXT("Copy ... Menu item\n"));
 		return TRUE;
     case IDM_EDIT_PASTE:
-		TRACE(TEXT("PASTE ... Menu item"));
+		TRACE(TEXT("PASTE ... Menu item\n"));
 		return TRUE;
 	case IDM_EDIT_CLEAR:
-		TRACE(TEXT("CLEAR ... Menu item"));
+		TRACE(TEXT("CLEAR ... Menu item\n"));
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		{
@@ -44,13 +44,13 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	// Respond to Toolbar buttons
 	case IDM_BOLD:
-		TRACE(TEXT("Bold button pressed"));
+		TRACE(TEXT("Bold button pressed\n"));
 		return TRUE;
 	case IDM_ITALIC:
-		TRACE(TEXT("Italic button pressed"));
+		TRACE(TEXT("Italic button pressed\n"));
 		return TRUE;
 	case IDM_UNDERLINE:
-		TRACE(TEXT("Underline button pressed"));
+		TRACE(TEXT("Underline button pressed\n"));
 		return TRUE;
 
 	// Respond to the accelerator key

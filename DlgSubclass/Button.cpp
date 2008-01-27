@@ -10,23 +10,23 @@ LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_MOUSEMOVE:
-		TRACE("CButton::WndProc - WM_MOUSEMOVE Message");
+		TRACE("CButton::WndProc - WM_MOUSEMOVE Message\n");
 		dialog.SetStatic("WM_MOUSEMOVE");
 		break;
 	case WM_NCHITTEST:
-		TRACE("CButton::WndProc - WM_NCHITTEST Message");
+		TRACE("CButton::WndProc - WM_NCHITTEST Message\n");
 		dialog.SetStatic("WM_NCHITTEST");
 		break;
 	case WM_SETCURSOR:
-		TRACE("CButton::WndProc - WM_SETCURSOR Message");
+		TRACE("CButton::WndProc - WM_SETCURSOR Message\n");
 		dialog.SetStatic("WM_SETCURSOR");
 		break;
 	case WM_LBUTTONDOWN:
-		TRACE("CButton::WndProc - WM_LBUTTONDOWN Message");
+		TRACE("CButton::WndProc - WM_LBUTTONDOWN Message\n");
 		dialog.SetStatic("WM_LBUTTONDOWN");
 		break;
 	case WM_LBUTTONUP:
-		TRACE("CButton::WndProc - WM_LBUTTONUP Message");
+		TRACE("CButton::WndProc - WM_LBUTTONUP Message\n");
 		dialog.SetStatic("WM_LBUTTONUP");
 		break;	
 

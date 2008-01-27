@@ -31,14 +31,15 @@ void CView::LoadPictureFile(LPCTSTR szFile)
 		m_pPicture = NULL;
 	}
 
-	TRACE(szFile);
+	TRACE(szFile); 
+	TRACE(_T("\n"));
 
 	// Create IPicture from image file
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 		::SetWindowText(m_hWndParent, szFile);
 	else
 	{
-		TRACE(_T("Failed to load picture"));
+		TRACE(_T("Failed to load picture\n"));
 
 		// Set Frame title back to default
 		::SetWindowText(m_hWndParent, LoadString(IDW_MAIN));

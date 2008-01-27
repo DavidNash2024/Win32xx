@@ -12,7 +12,7 @@ CView::CView()
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
-	TRACE("View window created");
+	TRACE("View window created\n");
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)

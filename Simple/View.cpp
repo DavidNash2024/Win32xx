@@ -18,7 +18,7 @@ void CView::OnCreate()
 	SetIconSmall(IDW_MAIN);
 	SetIconLarge(IDW_MAIN);
 
-	TRACE("OnCreate");
+	TRACE("OnCreate\n");
 }
 
 void CView::OnDestroy()
@@ -32,7 +32,7 @@ void CView::OnInitialUpdate()
 	// OnInitialUpdate is called after the window is created.
 	// Tasks which are to done after the window is created go here.
 
-	TRACE("OnInitialUpdate");
+	TRACE("OnInitialUpdate\n");
 }
 
 void CView::OnPaint(HDC hDC)

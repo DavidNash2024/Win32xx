@@ -26,7 +26,7 @@ BOOL CButtonPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CButtonPage::OnApply()
 { 
-	TRACE (_T("Appy button pressed")); 
+	TRACE (_T("Appy button pressed\n")); 
 	
 	// Call the base class's OnApply
 	CPropertyPage::OnApply(); 
@@ -34,18 +34,18 @@ void CButtonPage::OnApply()
 
 void CButtonPage::OnCancel()
 { 
-	TRACE (_T("Cancel button pressed")); 
+	TRACE (_T("Cancel button pressed\n")); 
 }
 
 BOOL CButtonPage::OnInitDialog()
 { 
-	TRACE (_T("Button page created")); 
+	TRACE (_T("Button page created\n")); 
 	return TRUE; 
 }
 
 void CButtonPage::OnOK()
 { 
-	TRACE (_T("OK button pressed"));
+	TRACE (_T("OK button pressed\n"));
 
 	// Call the base class's OnOK
 	CPropertyPage::OnOK(); 
@@ -53,7 +53,7 @@ void CButtonPage::OnOK()
 
 BOOL CButtonPage::OnQueryCancel()
 { 
-	TRACE (_T("Ok to Cancel?")); 
+	TRACE (_T("Ok to Cancel?\n")); 
 	
 	// return TRUE means OK to cancel
 	return TRUE; 
@@ -61,7 +61,7 @@ BOOL CButtonPage::OnQueryCancel()
 
 void CButtonPage::OnSetActive()
 {
-	TRACE("Button page is now active");
+	TRACE("Button page is now active\n");
 
 	// Set the wizard buttons
 	PropSheet_SetWizButtons(m_hWndParent, PSWIZB_NEXT);
@@ -86,7 +86,7 @@ int CButtonPage::Validate()
 	if (nStatus != PSNRET_NOERROR)
 		MessageBox(m_hWnd, _T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
 	else
-		TRACE(_T("Button Page Validation passed"));
+		TRACE(_T("Button Page Validation passed\n"));
 	
 	return nStatus;
 }

@@ -15,9 +15,7 @@ CSubApp::~CSubApp()
 
 BOOL CSubApp::InitInstance()
 {
-	//Start Tracing
-	TRACE("Tracing Started");
-	TRACE("Move the mouse over the button to see messages");
+	TRACE("Move the mouse over the button to see messages\n");
 
 	//Create the Outer Window
 	m_Win.Create();

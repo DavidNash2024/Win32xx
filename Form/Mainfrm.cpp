@@ -66,7 +66,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	TRACE("Frame created");
+	TRACE("Frame created\n");
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)

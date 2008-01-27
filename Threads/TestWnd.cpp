@@ -41,7 +41,7 @@ LRESULT CTestWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		{
 			tStringStream str;
-			str << _T("Closing test Window ") << m_nThread;
+			str << _T("Closing test Window ") << m_nThread << _T("\n");
 			TRACE(str.str().c_str());
 		}
 		break;

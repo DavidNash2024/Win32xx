@@ -431,7 +431,7 @@ BOOL CTreeView::SelectFromListView(Cpidl& cpidlFull)
 		//Next Sibling
 		hChild = TreeView_GetNextSibling(m_hWnd, hChild);
 	}
-	TRACE(_T("Item NOT found"));
+	TRACE(_T("Item NOT found\n"));
 
 	return FALSE;
 }

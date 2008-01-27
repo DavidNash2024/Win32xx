@@ -16,9 +16,6 @@ CDlgSubclassApp::~CDlgSubclassApp()
 
 BOOL CDlgSubclassApp::InitInstance()
 {
-	//Start Trace
-    TRACE("Start Tracing");
-
 	//Display the Modal Dialog
 	m_MyDialog.DoModal();
 

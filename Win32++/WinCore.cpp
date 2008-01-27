@@ -196,7 +196,7 @@ namespace Win32xx
 
 		m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
 		if (!m_hAccelTable)
-			DebugWarnMsg(_T("Load Accelerators failed"));
+			TRACE(_T("Load Accelerators failed\n"));
 	}
 
 	TLSData* CWinApp::SetTlsIndex()
@@ -657,7 +657,7 @@ namespace Win32xx
 
 		// No bitmap found, so display warning message
 		if (!hBitmap)
-			DebugWarnMsg(_T("Unable to load bitmap"));
+			TRACE(_T("Unable to load bitmap\n"));
 
 		return hBitmap;
 	}
@@ -681,8 +681,8 @@ namespace Win32xx
 			}
 
 			TCHAR msg[80] = _T("");
-			::wsprintf(msg, _T("LoadString - No string resource for %d"), nID);
-			DebugWarnMsg(msg);
+			::wsprintf(msg, _T("LoadString - No string resource for %d\n"), nID);
+			TRACE(msg);
 		}
 
 		m_LoadString = szString;

@@ -50,7 +50,7 @@ void CMainWindow::OnCreate()
 void CMainWindow::OnAllWindowsCreated()
 {
 	tStringStream str;
-	str << m_nThreads << _T(" Threads with windows created");
+	str << m_nThreads << _T(" Threads with windows created\n");
 	TRACE(str.str().c_str());
 }
 

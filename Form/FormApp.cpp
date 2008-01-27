@@ -15,9 +15,6 @@ CFormApp::~CFormApp()
 
 BOOL CFormApp::InitInstance()
 {
-	//Start Tracing
-	TRACE("Tracing Started");
-
 	//Create the Frame Window
 	m_Frame.Create();
 

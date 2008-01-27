@@ -15,9 +15,6 @@ CFrameApp::~CFrameApp()
 
 BOOL CFrameApp::InitInstance()
 {
-	//Start Tracing
-	TRACE(_T("Tracing Started"));
-
 	//Create the Frame Window
 	if (!m_Frame.Create())	
 	{

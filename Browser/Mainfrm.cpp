@@ -160,7 +160,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 {
-	TRACE(_T("OnDocumentBegin"));
+	TRACE(_T("OnDocumentBegin\n"));
 }
 
 void CMainFrame::OnCreate()
@@ -228,13 +228,14 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		vtURL.ChangeType(VT_BSTR);
 
 		szString += OLE2T(vtURL.bstrVal);
+		szString += _T("\n");
 		TRACE(szString.c_str());
 	}
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
-	TRACE(_T("NewWindow2"));
+	TRACE(_T("NewWindow2\n"));
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -286,6 +287,7 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 		if (pDispParams->rgvarg[0].vt == VT_I4)
 			szString << _T(", ProgressMax = ") << pDispParams->rgvarg[0].lVal;
 
+		szString << _T("\n");
 		TRACE(szString.str().c_str());
    }
 }
@@ -297,6 +299,7 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 		str << _T("Property Change:") << OLE2T(pDispParams->rgvarg[0].bstrVal);
 
+	str << _T("\n");
 	TRACE(str.str().c_str());
 }
 
@@ -325,7 +328,7 @@ void CMainFrame::OnTimer(WPARAM wParam)
 
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
-	TRACE(_T("TitleChange: "));
+	TRACE(_T("TitleChange: \n"));
 	USES_CONVERSION;
 	tStringStream str;
 

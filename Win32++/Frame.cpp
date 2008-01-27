@@ -251,14 +251,14 @@ namespace Win32xx
 	{
 		// An example of iButtonID would be IDM_FILE_OPEN
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0)))
-			DebugWarnMsg(_T("Disable button failed"));
+			TRACE(_T("Disable button failed\n"));
 	}
 
 	void CToolbar::EnableButton(int iButtonID) const
 	// Enables the specified button in a toolbar
 	{
 		if (!::SendMessage(m_hWnd, TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 )))
-			DebugWarnMsg(_T("Enable button failed"));
+			TRACE(_T("Enable button failed\n"));
 	}
 
 	int CToolbar::GetButtonCount() const
@@ -604,7 +604,7 @@ namespace Win32xx
 	// Call this function before using AddBitmap or ReplaceBitmap
 	{
 		if (!::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELONG(cx, cy)))
-			DebugWarnMsg(_T("CToolbar::SetBitmapSize  failed"));
+			TRACE(_T("CToolbar::SetBitmapSize  failed\n"));
 	}
 
 	int CToolbar::SetButtons(const std::vector<UINT> ToolbarData)
@@ -651,7 +651,7 @@ namespace Win32xx
 			::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
 		}
 		else
-			DebugWarnMsg(_T("No Resource IDs for Toolbar"));
+			TRACE(_T("No Resource IDs for Toolbar\n"));
 
 		return iImages;
 	}
@@ -662,7 +662,7 @@ namespace Win32xx
 	{
 
 		if (!::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy)))
-			DebugWarnMsg(_T("CToolbar::SetButtonSize failed"));
+			TRACE(_T("CToolbar::SetButtonSize failed\n"));
 	}
 
 	void CToolbar::SetButtonState(int iButtonID, UINT State) const
@@ -678,7 +678,7 @@ namespace Win32xx
 	//	TBSTATE_WRAP		The button is followed by a line break.
 
 		if (!::SendMessage(m_hWnd, TB_SETSTATE, (WPARAM) iButtonID, (LPARAM)MAKELONG (State, 0)))
-			DebugWarnMsg(_T("CToolbar::SetButtonState failed"));
+			TRACE(_T("CToolbar::SetButtonState failed\n"));
  	}
 
 	void CToolbar::SetButtonStyle(int iButtonID, BYTE Style) const
@@ -3408,7 +3408,7 @@ namespace Win32xx
 		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
 
 		if(!m_hMenu)
-			DebugWarnMsg(_T("Load Menu failed"));
+			TRACE(_T("Load Menu failed\n"));
  	}
 
 	void CFrame::SetMenuTheme(ThemeMenu& Theme)

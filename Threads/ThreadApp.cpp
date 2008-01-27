@@ -15,9 +15,6 @@ CThreadApp::~CThreadApp()
 
 BOOL CThreadApp::InitInstance()
 {
-	//Start Tracing
-	TRACE(_T("Tracing Started"));
-
 	m_MainWnd.Create();
 
 	return TRUE;

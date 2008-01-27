@@ -36,29 +36,29 @@ LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_MOUSEMOVE:
-		TRACE("CButton::WndProc - WM_MOUSEMOVE Message");
+		TRACE("CButton::WndProc - WM_MOUSEMOVE Message\n");
 		break;
 	case WM_NCHITTEST:
-		TRACE("CButton::WndProc - WM_NCHITTEST Message");
+		TRACE("CButton::WndProc - WM_NCHITTEST Message\n");
 		break;
 	case WM_SETCURSOR:
-		TRACE("CButton::WndProc - WM_SETCURSOR Message");
+		TRACE("CButton::WndProc - WM_SETCURSOR Message\n");
 		break;
 	case WM_LBUTTONDOWN:
-		TRACE("CButton::WndProc - WM_LBUTTONDOWN Message");
+		TRACE("CButton::WndProc - WM_LBUTTONDOWN Message\n");
 		break;
 	case WM_LBUTTONUP:
-		TRACE("CButton::WndProc - WM_LBUTTONUP Message");
+		TRACE("CButton::WndProc - WM_LBUTTONUP Message\n");
 		break;
 	case WM_NCPAINT:
-		TRACE("CButton::WndProc - WM_NCPAINT Message");
+		TRACE("CButton::WndProc - WM_NCPAINT Message\n");
 		break;
 	case WM_PAINT:
-		TRACE("CButton::WndProc - WM_PAINT Message");
+		TRACE("CButton::WndProc - WM_PAINT Message\n");
 		break;
 
 	default:
-		TRACE("CButton::WndProc - Unspecified Message");
+		TRACE("CButton::WndProc - Unspecified Message\n");
 		break;
 	}
 	

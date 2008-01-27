@@ -25,11 +25,11 @@ LRESULT CView::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case WM_LBUTTONDOWN:
 			// NOTE: You must be in debug mode to see the trace window
-			TRACE(TEXT("Left mouse button down message"));
+			TRACE(TEXT("Left mouse button down message\n"));
 			break;
 		case WM_LBUTTONUP:
 			// NOTE: You must be in debug mode to see the trace window
-			TRACE(TEXT("Left mouse button up message"));
+			TRACE(TEXT("Left mouse button up message\n"));
 			break;
 	}
 

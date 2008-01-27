@@ -86,48 +86,48 @@ BOOL CMyDialog::OnInitDialog()
 void CMyDialog::OnOK()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("OK Button Pressed."));
-	TRACE(_T("OK Button Pressed."));
+	TRACE(_T("OK Button Pressed.\n"));
 }
 
 void CMyDialog::OnButton()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Button Pressed"));
-	TRACE(_T("Button Pressed"));
+	TRACE(_T("Button Pressed\n"));
 }
 
 void CMyDialog::OnCheck1()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 1"));
-	TRACE(_T("Check Box 1"));
+	TRACE(_T("Check Box 1\n"));
 }
 
 void CMyDialog::OnCheck2()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 2"));
-	TRACE(_T("Check Box 2"));
+	TRACE(_T("Check Box 2\n"));
 }
 
 void CMyDialog::OnCheck3()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Check Box 3"));
-	TRACE(_T("Check Box 3"));
+	TRACE(_T("Check Box 3\n"));
 }
 
 void CMyDialog::OnRadio1()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 1"));
-	TRACE(_T("Radio 1"));
+	TRACE(_T("Radio 1\n"));
 }
 
 void CMyDialog::OnRadio2()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 2"));
-	TRACE(_T("Radio 2"));
+	TRACE(_T("Radio 2\n"));
 }
 
 void CMyDialog::OnRadio3()
 {
 	::SetDlgItemText(GetHwnd(), IDC_STATIC3, _T("Radio 3"));
-	TRACE(_T("Radio 3"));
+	TRACE(_T("Radio 3\n"));
 }
 
