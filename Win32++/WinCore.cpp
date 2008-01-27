@@ -239,7 +239,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL), 
+	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL),
 					m_hIconSmall(NULL), m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
@@ -372,14 +372,14 @@ namespace Win32xx
 	{
 		// Set the CREATESTRUCT parameters
 		PreCreate(m_cs);
-		
+
 		// Set the WNDCLASS parameters
 		PreRegisterClass(m_wc);
 		if (m_wc.lpszClassName)
 		{
 			RegisterClass(m_wc);
 			m_cs.lpszClass = m_wc.lpszClassName;
-			m_cs.style |= m_wc.style; 
+			m_cs.style |= m_wc.style;
 		}
 
 		// Set the Window Class Name
@@ -396,9 +396,9 @@ namespace Win32xx
 		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 		if (m_cs.style)
 			dwStyle = m_cs.style;
-		else 
+		else
 			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
-		
+
 		// Set window size and position
 		int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
 		int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
@@ -429,7 +429,7 @@ namespace Win32xx
 			if (0 == GetApp())
 				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 
-			// Only one window per CWnd instance
+			// Only one window per CWnd instance allowed
 			if (::IsWindow(m_hWnd))
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
@@ -441,12 +441,11 @@ namespace Win32xx
 				// Create our own local copy of szClassName.
 				lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
 
-			// Register the window class (if not already registered)
 			WNDCLASS wc = {0};
 			wc.lpszClassName = ClassName;
 			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
-			if (!RegisterClass(wc))
+			if (!RegisterClass(wc))	// Register the window class (if not already registered)
 				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
 			// Ensure this thread has the TLS index set
@@ -544,7 +543,7 @@ namespace Win32xx
   #endif //defined(_MSC_VER)
 
 #else
-		// use non 64 bit compliant code 
+		// use non 64 bit compliant code
 		::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
 
 #endif // defined GWLP_WNDPROC
@@ -845,7 +844,7 @@ namespace Win32xx
 		m_cs.style          = cs.style;
 		m_cs.x              = cs.x;
 		m_cs.y              = cs.y;
-		
+
 		// Overide this function in your derived class to set the
 		// CREATESTRUCT values prior to window creation
 	}
@@ -1023,7 +1022,7 @@ namespace Win32xx
     #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
   #endif //defined(_MSC_VER)
 
-		// use 64 bit compliant code 
+		// use 64 bit compliant code
 		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
 		if (WndProc == st_pfnWndProc)
 			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
@@ -1171,8 +1170,6 @@ namespace Win32xx
 
 	void CWinException::MessageBox() const
 	{
-#ifdef _DEBUG
-
 		TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
 		TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
 		TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
@@ -1195,12 +1192,8 @@ namespace Win32xx
 		else
 			::wsprintf(buf3, _T("%s"), buf1);
 
-		DebugErrMsg(buf3);
-
-#endif  // _DEBUG
+		::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 	}
-
-	// Displays a warning message in a message box. Debug mode only.
 
 
 } // namespace Win32xx

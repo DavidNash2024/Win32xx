@@ -340,9 +340,18 @@ void CMainFrame::OnFileOpen()
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
 	TCHAR szFilters[] = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn;
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
+	OPENFILENAME ofn = {0};
+	if (GetWinVersion() >= 2500)
+	{
+		// For Win2000 and above
+		ofn.lStructSize = sizeof(OPENFILENAME);
+	}
+	else
+	{
+		// For older operating systems
+		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
+	}
+	
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
@@ -372,9 +381,18 @@ void CMainFrame::OnFileSaveAs()
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
 	TCHAR szFilters[] = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn;
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
+	OPENFILENAME ofn = {0};
+	if (GetWinVersion() >= 2500)
+	{
+		// For Win2000 and above
+		ofn.lStructSize = sizeof(OPENFILENAME);
+	}
+	else
+	{
+		// For older operating systems
+		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
+	}
+	
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
