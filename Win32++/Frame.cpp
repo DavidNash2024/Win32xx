@@ -409,8 +409,7 @@ namespace Win32xx
 		// An item is about to be drawn
 		case CDDS_ITEMPREPAINT:
 			{
-				CDC DrawDC;
-				DrawDC.AttachDC(lpNMCustomDraw->nmcd.hdc);
+				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
 				RECT rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -558,8 +557,9 @@ namespace Win32xx
 						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 					}
 					::SetBkMode(DrawDC, iMode);
-					DrawDC.DetachFont();
+					DrawDC.DetachFont();					
 				}
+				DrawDC.DetachDC();
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
 		}
@@ -1471,7 +1471,7 @@ namespace Win32xx
 			GrabFocus();
 	}
 
-	void CMenubar::DrawAllMDIButtons(CDC DrawDC)
+	void CMenubar::DrawAllMDIButtons(CDC& DrawDC)
 	{
 		if (!IsMDIFrame())
 			return;
@@ -1509,7 +1509,7 @@ namespace Win32xx
 		}
 	}
 
-	void CMenubar::DrawMDIButton(CDC DrawDC, int iButton, UINT uState)
+	void CMenubar::DrawMDIButton(CDC& DrawDC, int iButton, UINT uState)
 	{
 		if (!IsRectEmpty(&m_MDIRect[iButton]))
 		{
@@ -1690,8 +1690,7 @@ namespace Win32xx
 		// An item is about to be drawn
 		case CDDS_ITEMPREPAINT:
 			{
-				CDC DrawDC;
-				DrawDC.AttachDC(lpNMCustomDraw->nmcd.hdc);
+				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
 				RECT rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -1712,6 +1711,7 @@ namespace Win32xx
 					int x = 0;
 					::DrawIconEx(DrawDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
+					DrawDC.DetachDC();
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 
@@ -1764,8 +1764,10 @@ namespace Win32xx
 
 					::SetBkMode(DrawDC, iMode);
 					DrawDC.DetachFont();
+					DrawDC.DetachDC();
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
+				DrawDC.DetachDC();
 			}
 			return CDRF_DODEFAULT ;   // Do default drawing
 
@@ -1773,9 +1775,9 @@ namespace Win32xx
 		case CDDS_POSTPAINT:
 			// Draw MDI Minimise, Restore and Close buttons
 			{
-				CDC DrawDC;
-				DrawDC.AttachDC(lpNMCustomDraw->nmcd.hdc);
+				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
 				DrawAllMDIButtons(DrawDC);
+				DrawDC.DetachDC();
 			}
 			break;
 		}
@@ -2628,8 +2630,7 @@ namespace Win32xx
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
-		CDC DrawDC;
-		DrawDC.AttachDC(pdis->hDC);
+		CDC DrawDC = pdis->hDC;
 		RECT rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
 
@@ -2686,6 +2687,7 @@ namespace Win32xx
 			::BitBlt(MaskDC, -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
 			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
+		DrawDC.DetachDC();
 	}
 
 	void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
@@ -2698,8 +2700,7 @@ namespace Win32xx
 		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
 
 		// get the drawing rectangle
-		CDC DrawDC;
-		DrawDC.AttachDC(pdis->hDC);
+		CDC DrawDC = pdis->hDC;
 		RECT rc = pdis->rcItem;
 		int offset = (rc.bottom - rc.top - Icony)/2;
 		int height = rc.bottom - rc.top;
@@ -2722,9 +2723,10 @@ namespace Win32xx
 			else
 				ImageList_Draw(m_hImageList, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
 		}
+		DrawDC.DetachDC();
 	}
 
-	void CFrame::DrawMenuText(CDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
+	void CFrame::DrawMenuText(HDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
 	{
 		// find the position of tab character
 		int nTab = -1;
@@ -2946,8 +2948,7 @@ namespace Win32xx
 
 		RECT rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
-		CDC DrawDC;
-		DrawDC.AttachDC(pdis->hDC);
+		CDC DrawDC = pdis->hDC;
 
 		int Iconx;
 		int Icony;
@@ -3023,6 +3024,7 @@ namespace Win32xx
 			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
 			::SetBkMode(DrawDC, iMode);
 		}
+		DrawDC.DetachDC();
 	}
 
 	void CFrame::OnExitMenuLoop()

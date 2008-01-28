@@ -41,16 +41,11 @@
 namespace Win32xx
 {
 
-	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
-		            m_hPenOld(0), m_bAttachedDC(FALSE)
+	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0)
 	{
-		// After this constructor, you will need to assign a Device Context by using AttachDC
-		// Note that a HDC assigned by AttachDC is NOT released or deleted when CDC is destroyed
-
 	}
 
-	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
-		            m_hPenOld(0), m_bAttachedDC(FALSE)
+	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0)
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
@@ -66,33 +61,9 @@ namespace Win32xx
 		// CDC MyCDC = ::GetDC(SomeHWND);
 	}
 
-	CDC::CDC(const CDC& CopyCDC)
+	void CDC::operator = (const HDC hDC)
 	{
-		m_hDC		  = CopyCDC.m_hDC;
-		m_hBitmapOld  = CopyCDC.m_hBitmapOld;
-		m_hBrushOld   = CopyCDC.m_hBrushOld;
-		m_hFontOld	  = CopyCDC.m_hFontOld;
-        m_hPenOld	  = CopyCDC.m_hPenOld;
-
-		// Flag the DC as attached, so it is not deleted in the destructor
-		m_bAttachedDC = TRUE;
-	}
-
-	CDC& CDC::operator = (const CDC& rhs)
-	{
-		// Check for self assignment
-		if (this == &rhs) return *this;
-
-		m_hDC		  = rhs.m_hDC;
-		m_hBitmapOld  = rhs.m_hBitmapOld;
-		m_hBrushOld   = rhs.m_hBrushOld;
-		m_hFontOld	  = rhs.m_hFontOld;
-        m_hPenOld	  = rhs.m_hPenOld;
-
-		// Flag the DC as attached, so it is not deleted in the destructor
-		m_bAttachedDC = TRUE;
-
-		return *this;
+		AttachDC(hDC);
 	}
 
 	CDC::~CDC()
@@ -105,32 +76,26 @@ namespace Win32xx
 			if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 			if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
 
-			if (FALSE == m_bAttachedDC)
-			{
-				// We need to release a Window DC, and delete a memory DC
+			// We need to release a Window DC, and delete a memory DC
 
 #ifndef _WIN32_WCE
-				HWND hwnd = ::WindowFromDC(m_hDC);
-				if (hwnd) ::ReleaseDC(hwnd, m_hDC);
-				else      ::DeleteDC(m_hDC);
+			HWND hwnd = ::WindowFromDC(m_hDC);
+			if (hwnd) ::ReleaseDC(hwnd, m_hDC);
+			else      ::DeleteDC(m_hDC);
 #else
-				::DeleteDC(m_hDC);
+			::DeleteDC(m_hDC);
 #endif
-			}
 		}
 	}
 
 	void CDC::AttachDC(HDC hDC)
 	{
-		// Attach a pre-existing DC to this CDC object.
-		// You should use attach when the HDC is NOT to be released or deleted
-
 		if (m_hDC) throw CWinException(_T("Device Context ALREADY assigned"));
 		if (!hDC) throw CWinException(_T("Can't attach a NULL hDC"));
 
 		m_hDC = hDC;
-		m_bAttachedDC = TRUE;
 	}
+
 
 	HDC CDC::DetachDC()
 	{
@@ -142,7 +107,6 @@ namespace Win32xx
 		HDC hDC = m_hDC;
 
 		m_hDC = NULL;
-		m_bAttachedDC = FALSE;
 		return hDC;
 	}
 
@@ -157,6 +121,7 @@ namespace Win32xx
 
 		// Delete any existing bitmap
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
+		
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
 

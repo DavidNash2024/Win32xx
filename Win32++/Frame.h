@@ -232,8 +232,8 @@ namespace Win32xx
 	private:
 		void DoAltKey(WORD KeyCode);
 		void DoPopupMenu();
-		void DrawAllMDIButtons(CDC DrawDC);
-		void DrawMDIButton(CDC DrawDC, int iButton, UINT uState);
+		void DrawAllMDIButtons(CDC& DrawDC);
+		void DrawMDIButton(CDC& DrawDC, int iButton, UINT uState);
 		void ExitMenu();
 		HWND GetActiveMDIChild();
 		void GrabFocus();
@@ -320,7 +320,7 @@ namespace Win32xx
 		virtual void AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
-		virtual void DrawMenuText(CDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
+		virtual void DrawMenuText(HDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
