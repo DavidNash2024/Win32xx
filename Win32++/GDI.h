@@ -160,7 +160,6 @@ namespace Win32xx
 		HBRUSH m_hBrushOld;
 		HFONT m_hFontOld;
 		HPEN m_hPenOld;
-		int m_SavedDC;
 		BOOL m_bAttachedDC;
 
 	};

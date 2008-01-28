@@ -432,6 +432,7 @@ namespace Win32xx
 					{
 						::GetTextExtentPoint32(DrawDC, szText, lstrlen(szText), &TextSize);
 					}
+					DrawDC.DetachFont();
 				}
 
 				// Draw outline rectangle
@@ -557,6 +558,7 @@ namespace Win32xx
 						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 					}
 					::SetBkMode(DrawDC, iMode);
+					DrawDC.DetachFont();
 				}
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
@@ -1761,6 +1763,7 @@ namespace Win32xx
 					::DrawText(DrawDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
 					::SetBkMode(DrawDC, iMode);
+					DrawDC.DetachFont();
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 			}
