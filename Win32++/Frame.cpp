@@ -431,6 +431,7 @@ namespace Win32xx
 					{
 						::GetTextExtentPoint32(DrawDC, szText, lstrlen(szText), &TextSize);
 					}
+					// Detach the font so it doesn't get destroyed
 					DrawDC.DetachFont();
 				}
 
@@ -557,8 +558,10 @@ namespace Win32xx
 						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 					}
 					::SetBkMode(DrawDC, iMode);
+					// Detach the font so it doesn't get destroyed
 					DrawDC.DetachFont();					
 				}
+				// Detach the DC so it doesn't get destroyed
 				DrawDC.DetachDC();
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
@@ -1061,6 +1064,7 @@ namespace Win32xx
 			rc.right = BarWidth;
 			SolidFill(MemDC, m_Theme.clrBkgnd2, &rc);
 		}
+
 
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
 		{
@@ -1711,6 +1715,7 @@ namespace Win32xx
 					int x = 0;
 					::DrawIconEx(DrawDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
+					// Detach the DC so it doesn't get destroyed
 					DrawDC.DetachDC();
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
@@ -1767,6 +1772,7 @@ namespace Win32xx
 					DrawDC.DetachDC();
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
+				// Detach the DC so it doesn't get destroyed
 				DrawDC.DetachDC();
 			}
 			return CDRF_DODEFAULT ;   // Do default drawing
@@ -1777,6 +1783,7 @@ namespace Win32xx
 			{
 				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
 				DrawAllMDIButtons(DrawDC);
+				// Detach the DC so it doesn't get destroyed
 				DrawDC.DetachDC();
 			}
 			break;
@@ -2619,6 +2626,7 @@ namespace Win32xx
 				}
 			}
 
+			// Detach the bitmap so we can use it.
 			HBITMAP hbm = MemDC.DetachBitmap();
 			ImageList_AddMasked(hImageListDis, hbm, crMask);
 			::DeleteObject(hbm);
@@ -2687,6 +2695,7 @@ namespace Win32xx
 			::BitBlt(MaskDC, -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
 			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
+		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
 	}
 
@@ -2723,6 +2732,7 @@ namespace Win32xx
 			else
 				ImageList_Draw(m_hImageList, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
 		}
+		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
 	}
 
@@ -3024,6 +3034,7 @@ namespace Win32xx
 			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
 			::SetBkMode(DrawDC, iMode);
 		}
+		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
 	}
 

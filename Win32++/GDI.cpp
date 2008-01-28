@@ -41,11 +41,13 @@
 namespace Win32xx
 {
 
-	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0)
+	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), 
+		m_hPenOld(0), m_IsCopy(FALSE)
 	{
 	}
 
-	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0)
+	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), 
+		m_hPenOld(0), m_IsCopy(FALSE)
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
@@ -61,6 +63,16 @@ namespace Win32xx
 		// CDC MyCDC = ::GetDC(SomeHWND);
 	}
 
+	CDC::CDC(const CDC& rhs)
+	{
+		m_hBitmapOld = rhs.m_hBitmapOld;
+		m_hBrushOld  = rhs.m_hBrushOld;
+		m_hDC		 = rhs.m_hDC;
+		m_hFontOld	 = rhs.m_hFontOld;
+		m_hPenOld    = rhs.m_hPenOld;
+		m_IsCopy     = TRUE;
+	} 
+
 	void CDC::operator = (const HDC hDC)
 	{
 		AttachDC(hDC);
@@ -68,9 +80,10 @@ namespace Win32xx
 
 	CDC::~CDC()
 	{
-		if (m_hDC)
+		// We don't delete the CDC's resources if the CDC is just a copy
+		if ((m_hDC) && !m_IsCopy)
 		{
-			// Delete any GDI objects created by this CDC
+			// Delete any GDI objects belonging to this CDC
 			if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 			if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 			if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
@@ -99,6 +112,7 @@ namespace Win32xx
 
 	HDC CDC::DetachDC()
 	{
+		if (!m_hDC) throw CWinException(_T("No HDC assigned to this CDC"));
 		if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 		if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
@@ -121,7 +135,7 @@ namespace Win32xx
 
 		// Delete any existing bitmap
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
-		
+
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
 
@@ -197,7 +211,7 @@ namespace Win32xx
 	HBITMAP CDC::DetachBitmap()
 	{
 		// Use this to detach the bitmap from the HDC.
-		// You are then responible for deleting the bitmap
+		// You are then responible for deleting the detached bitmap
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (!m_hBitmapOld) throw CWinException(_T("No Bitmap to detach"));
@@ -245,7 +259,7 @@ namespace Win32xx
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
-	
+
 	void CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
 	{
 		// Creates the brush and selects it into the device context
@@ -302,7 +316,7 @@ namespace Win32xx
 	HBRUSH CDC::DetachBrush()
 	{
 		// Use this to detach the brush from the HDC.
-		// You are then responible for deleting the brush
+		// You are then responible for deleting the detached brush
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (!m_hBrushOld) throw CWinException(_T("No Brush to detach"));
@@ -371,7 +385,7 @@ namespace Win32xx
 	HFONT CDC::DetachFont()
 	{
 		// Use this to detach the font from the HDC.
-		// You are then responible for deleting the font
+		// You are then responible for deleting the detached font
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (!m_hFontOld) throw CWinException(_T("No Font to detach"));
@@ -422,7 +436,7 @@ namespace Win32xx
 	HPEN CDC::DetachPen()
 	{
 		// Use this to detach the pen from the HDC.
-		// You are then responible for deleting the pen
+		// You are then responible for deleting the detached pen
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (!m_hPenOld) throw CWinException(_T("No Pen to detach"));

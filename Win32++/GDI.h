@@ -85,7 +85,7 @@ namespace Win32xx
 	//  * A device context assigned to a CDC object will be released or deleted, unless
 	//     it is detached.
 	//  * A GDI object created by one of the CDC member, or one attached to the CDC
-	//     object (except regions) will be deleted when the CDC object is destroyed, 
+	//     object (except regions) will be deleted when the CDC object is destroyed,
 	//     unless it is detached.
 
 
@@ -96,10 +96,11 @@ namespace Win32xx
 		CDC(HDC hDC);
 		void operator = (const HDC hDC);
 		virtual ~CDC();
+		CDC(const CDC& rhs);
+		HDC GetDC() const {return m_hDC;}
 
 		virtual void AttachDC(HDC hDC);
 		virtual HDC  DetachDC();
-		HDC GetDC() const {return m_hDC;}
 
 		// Create and Select Bitmaps
 		virtual void AttachBitmap(HBITMAP hBitmap);
@@ -151,7 +152,6 @@ namespace Win32xx
 #endif
 
 	private:
-		CDC(const CDC&);				// Disable copy construction
 		CDC& operator = (const CDC&);	// Disable assignment operator
 
 		HDC m_hDC;
@@ -159,7 +159,7 @@ namespace Win32xx
 		HBRUSH m_hBrushOld;
 		HFONT m_hFontOld;
 		HPEN m_hPenOld;
-
+		BOOL m_IsCopy;
 	};
 
 } // namespace Win32xx
