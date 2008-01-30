@@ -46,7 +46,7 @@
 #define WINCORE_H
 
 #if defined (_MSC_VER) && _MSC_VER <= 1202
-  // Correct for bug in VS 6 and Embedded C++ 4.0
+  // Ignore warning in VS 6 and Embedded C++ 4.0
   #pragma warning (disable : 4786) // identifier was truncated
   #define DWORD_PTR DWORD
 #endif // (_MSC_VER) && _MSC_VER <= 1200
@@ -58,7 +58,7 @@
   #define _CRT_SECURE_NO_WARNINGS  // Eliminate deprecation warnings for VS2005
 #endif // _MSC_VER
 
-// Work around for a bug in VS 2008 (fails on XP and Win2000 without this fix)
+// Required for VS 2008 (fails on XP and Win2000 without this fix)
 #ifndef _WIN32_WINNT
   #define _WIN32_WINNT 0x0500
 #endif

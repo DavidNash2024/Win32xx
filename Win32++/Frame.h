@@ -116,7 +116,7 @@ namespace Win32xx
 		virtual ~CToolbar();
 		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
 		virtual void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
-		virtual int  SetButtons(const std::vector<UINT> ToolbarData);
+		virtual int  SetButtons(const std::vector<UINT>& ToolbarData) const;
 		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 
@@ -133,7 +133,6 @@ namespace Win32xx
 		BOOL HasText() const;
 		int  HitTest() const;
 		void SetBitmapSize(int cx, int cy) const;
-		int  SetButtons(const std::vector<UINT> ToolbarData) const;
 		void SetButtonSize(int cx, int cy) const;
 		void SetButtonState(int iButtonID, UINT State) const;
 		void SetButtonStyle(int iButtonID, BYTE Style) const;
@@ -315,9 +314,9 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
-		virtual int  AddMenuIcons(const std::vector<UINT> MenuData, UINT nID_Image, COLORREF crMask);
+		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, UINT nID_Image, COLORREF crMask);
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
-		virtual void AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
+		virtual void AddToolbarBand(CToolbar& TB, const std::vector<UINT>& TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(HDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);

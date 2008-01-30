@@ -612,7 +612,7 @@ namespace Win32xx
 			TRACE(_T("CToolbar::SetBitmapSize  failed\n"));
 	}
 
-	int CToolbar::SetButtons(const std::vector<UINT> ToolbarData)
+	int CToolbar::SetButtons(const std::vector<UINT>& ToolbarData) const
 	// Assigns a resource ID to each toolbar button
 	{
 		int iImages = 0;
@@ -2446,7 +2446,7 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	int CFrame::AddMenuIcons(const std::vector<UINT> MenuData, UINT nID_Image, COLORREF crMask)
+	int CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, UINT nID_Image, COLORREF crMask)
 	// Adds the icons from a bitmap resouce to an internal ImageList for use with popup menu items.
 	// Note:  If existing are a different size to the new ones, the old ones will be removed!
 	{
@@ -2542,7 +2542,7 @@ namespace Win32xx
 		}
 	}
 
-	void CFrame::AddToolbarBand(CToolbar& TB, std::vector<UINT> TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT, UINT ID_Disabled)
+	void CFrame::AddToolbarBand(CToolbar& TB, const std::vector<UINT>& TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT, UINT ID_Disabled)
 	{
 		// Adds a Toolbar to the rebar control
 

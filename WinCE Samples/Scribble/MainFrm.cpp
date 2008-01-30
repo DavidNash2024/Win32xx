@@ -14,7 +14,7 @@ CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
 	m_ToolbarData.push_back ( IDM_BLACK );
 }
 
-void CMainFrame::DrawLine(int x, int y)
+void CMainFrame::DrawLine(short x, short y)
 {
 	HDC hDC = ::GetDC(m_hWnd);
 	HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points.back().color);
@@ -99,7 +99,7 @@ void CMainFrame::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	if (wParam & MK_LBUTTON)
 	{	
 		TCHAR str[80];
-		::wsprintf(str, TEXT("Draw Point:  %d, %d\n"), LOWORD(lParam), HIWORD(lParam));
+		::wsprintf(str, TEXT("Draw Point:  %hd, %hd\n"), LOWORD(lParam), HIWORD(lParam));
 		TRACE(str);
 
 		DrawLine(LOWORD(lParam), HIWORD(lParam));

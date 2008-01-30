@@ -18,7 +18,7 @@ public:
 	virtual void SetPen(COLORREF Color);
 
 protected:
-	virtual void DrawLine(int x, int y);
+	virtual void DrawLine(short x, short y);
 	virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 	virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 	virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
@@ -29,8 +29,8 @@ protected:
 private:
 	struct PlotPoint
 	{
-		int x;
-		int y;
+		short x;
+		short y;
 		bool PenDown;
 		COLORREF color;
 	};

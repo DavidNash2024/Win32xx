@@ -63,14 +63,17 @@ namespace Win32xx
 		// CDC MyCDC = ::GetDC(SomeHWND);
 	}
 
-	CDC::CDC(const CDC& rhs)
+	CDC::CDC(const CDC& rhs)	// Copy constructor
 	{
 		m_hBitmapOld = rhs.m_hBitmapOld;
 		m_hBrushOld  = rhs.m_hBrushOld;
 		m_hDC		 = rhs.m_hDC;
 		m_hFontOld	 = rhs.m_hFontOld;
 		m_hPenOld    = rhs.m_hPenOld;
-		m_IsCopy     = TRUE;
+	
+		// This CDC is a copy, so we won't need to delete GDI resources 
+		//  in the destructor
+		m_IsCopy     = TRUE; 
 	} 
 
 	void CDC::operator = (const HDC hDC)

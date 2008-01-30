@@ -96,8 +96,7 @@ namespace Win32xx
 		CDC(HDC hDC);
 		void operator = (const HDC hDC);
 		virtual ~CDC();
-		CDC(const CDC& rhs);
-		HDC GetDC() const {return m_hDC;}
+		CDC(const CDC& rhs);	// Copy constructor
 
 		virtual void AttachDC(HDC hDC);
 		virtual HDC  DetachDC();
