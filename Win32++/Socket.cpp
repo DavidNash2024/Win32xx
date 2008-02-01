@@ -39,6 +39,9 @@
 // Socket.cpp
 //  Definitions for the CSocket class:
 
+
+#include <Winsock2.h>
+#include "WinCore.h"
 #include "Socket.h"
 
 
@@ -46,7 +49,7 @@ CSocket::CSocket()
 {
 	WSADATA wsaData;
 
-	if (0 != WSAStartup(MAKEWORD(2,2), &wsaData)
+	if (0 != WSAStartup(MAKEWORD(2,2), &wsaData))
 		throw CWinException(_T("WSAStartup failed"));
 }
 

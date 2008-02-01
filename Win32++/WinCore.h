@@ -72,7 +72,9 @@
 #endif
 
 
-#define STRICT
+#ifndef STRICT
+#define STRICT 1
+#endif
 
 #ifdef _WIN32_WCE
 #include "WCEstddef.h"
