@@ -49,6 +49,9 @@ public:
 	CSocket();
 	~CSocket();
 
+	void Create();
+	void Connect();
+
 private:
 
 }
