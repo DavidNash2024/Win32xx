@@ -607,7 +607,7 @@ namespace Win32xx
 		if (m_hWnd != NULL)
 		{
 			HWND hPage = (HWND)::SendMessage(m_hWnd, PSM_GETCURRENTPAGEHWND, 0, 0);
-			pPage = (CPropertyPage*)GetCWndObject(hPage);
+			pPage = (CPropertyPage*)FromHandle(hPage);
 		}
 
 		return pPage;

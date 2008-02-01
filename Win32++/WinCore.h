@@ -203,8 +203,8 @@ namespace Win32xx
 		virtual void CenterWindow();
 		virtual void DestroyWindow();
 		virtual HWND Detach();
+		virtual CWnd* FromHandle(HWND hWnd) const;
 		virtual HWND GetAncestor(HWND hWnd) const;
-		virtual CWnd* GetCWndObject(HWND hWnd) const;
 		virtual tString GetDlgItemString(int nIDDlgItem);
 		virtual tString GetWindowString();
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);

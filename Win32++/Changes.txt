@@ -5,7 +5,9 @@ New Features
 ------------
 * Win32++ now also directly supports the Windows CE operating systems. 
    Windows CE is the operating system used on such things as Pocket PCs, 
-   embeded systems and SmartPhones. 
+   embeded systems and SmartPhones. The Win32++ examples for Windows CE
+   include the project files for eMbedded Visual C++ 4.0, and Visual 
+   Studio 2005.
   
 * Added a CDC class. This class simplifies the drawing to device contexts. 
    This class can be used anywhere we would normally use a handle to a 
@@ -14,32 +16,32 @@ New Features
    - Automates the destruction of GDI objects.
    - Automates the deletion or release of the device contexts.
    
-* PreRegisterClass can now be used to set the WNDCLASS parameters prior
-   to registering the window class (which occurs automatically when created 
-   by CWnd::Create). This provides a convenient way to set a window's 
+* PreRegisterClass can now be used to set the WNDCLASS parameters before the
+   window class is registered. This provides a convenient way to set a window's 
    background brush or cursor.
    
-* Improvements to tracing. Tracing now utilises the debug output pane, 
-   provided by the various compiler IDEs instead of a separate window.
-   It now uses OutputDebugString instead of a separate, so it is also
-   compatible with debuggers.
-   
+* Improvements to tracing. It now uses OutputDebugString to send the trace
+   output the debug/output pane of the various IDE's. This is now also 
+   compatible with debuggers, should you choose to use them. Previously the 
+   tracing created a separate window to display text.
+
 * Added an immediate mode to CSplitter. There is now the choice of resizing
    the panes while the splitter bar is being dragged, or defer the resizing
-   until the splitter bar drag is complete (as before).
+   until the splitter bar drag is complete (as before). CSplitter's 
+   constructor now requires no arguements, making the class simpler to use.
    
 * Automatically detects the XP theme used (Default, Silver or Olive), and
    adjusts the theme colors accordingly.
    
-* Added project files for Borland's Turbo C++ 2006.
+* Added project files for Borland's Turbo C++ 2006. This is a free compiler
+   available from Borland. It can be downloaded here: 
+   http://www.codegear.com/downloads/free/turbo
 
 * Enhanced the tutorial. It now also demonstrates file operations and printing.
 
   
 Other Changes:
 --------------
-* Changed CSplitter. Its constructor now requires no arguements.
-
 * Changed the way windows are created. We no longer use a CBT hook as part of 
    the window creation process. It was this change which allowed Win32++ to
    directly support Windows CE.

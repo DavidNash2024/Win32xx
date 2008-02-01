@@ -177,7 +177,7 @@ namespace Win32xx
 
 	CMDIChild* CMDIFrame::GetActiveMDIChildCWnd() const
 	{
-		return (CMDIChild*)GetCWndObject(GetActiveMDIChild());
+		return (CMDIChild*)FromHandle(GetActiveMDIChild());
 	}
 
 	BOOL CMDIFrame::IsMDIChildMaxed() const

@@ -569,20 +569,7 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	HWND CWnd::GetAncestor(HWND hWnd) const
-	{
-		// Returns the root parent.  Supports Win95
-		HWND hWndParent = ::GetParent(hWnd);
-		while (::IsChild(hWndParent, hWnd))
-		{
-			hWnd = hWndParent;
-			hWndParent = ::GetParent(hWnd);
-		}
-
-		return hWnd;
-	}
-
-	CWnd* CWnd::GetCWndObject(HWND hWnd) const
+	CWnd* CWnd::FromHandle(HWND hWnd) const
 	{
 		// Returns the CWnd object associated with the window handle
 
@@ -596,6 +583,19 @@ namespace Win32xx
 			return m->second;
 
 		return NULL;	// No matching CWnd for this HWND
+	}
+
+	HWND CWnd::GetAncestor(HWND hWnd) const
+	{
+		// Returns the root parent.  Supports Win95
+		HWND hWndParent = ::GetParent(hWnd);
+		while (::IsChild(hWndParent, hWnd))
+		{
+			hWnd = hWndParent;
+			hWndParent = ::GetParent(hWnd);
+		}
+
+		return hWnd;
 	}
 
 	tString CWnd::GetDlgItemString(int nIDDlgItem)
@@ -760,7 +760,7 @@ namespace Win32xx
 			}
 		}
 
-		CWnd* Wnd = GetCWndObject(hWnd);
+		CWnd* Wnd = FromHandle(hWnd);
 
 		if (Wnd != NULL)
 			return Wnd->OnMessageReflect(uMsg, wParam, lParam);
@@ -1077,7 +1077,7 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Refelect this message if it's from a control
-				CWnd* Wnd = GetCWndObject((HWND)lParam);
+				CWnd* Wnd = FromHandle((HWND)lParam);
 				if (Wnd != NULL)
 					if (Wnd->OnMessageReflect(uMsg, wParam, lParam))
 						return TRUE;
@@ -1106,7 +1106,7 @@ namespace Win32xx
 				if (lr) return lr;
 
 				// Do Notification reflection if it came from a CWnd object
-				CWnd* WndFrom = GetCWndObject(((LPNMHDR)lParam)->hwndFrom);
+				CWnd* WndFrom = FromHandle(((LPNMHDR)lParam)->hwndFrom);
 				if (WndFrom != NULL)
 				{
 					lr = WndFrom->OnNotifyReflect(wParam, lParam);

@@ -47,7 +47,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ////////////////////////////////
 // CTopView function definitions
-CTopView::CTopView() : CSplitter()
+CTopView::CTopView()
 {
 	SetBarPos(100);
 	SetImmediate(true);
@@ -61,7 +61,7 @@ CTopView::CTopView() : CSplitter()
 
 ///////////////////////////////////
 // CBottomView function definitions
-CBottomView::CBottomView() : CSplitter()
+CBottomView::CBottomView()
 {
 	SetBarPos(100);
 	SetImmediate(true);
@@ -75,8 +75,7 @@ CBottomView::CBottomView() : CSplitter()
 
 /////////////////////////////////
 // CMainView function definitions
-CMainView::CMainView() :
-	CSplitter()
+CMainView::CMainView() 
 {
 	SetBarPos(150);
 	SetImmediate(true);

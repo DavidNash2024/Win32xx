@@ -133,7 +133,7 @@ namespace Win32xx
 					OnCommand(wParam, lParam);
 
 					// Refelect this message if it's from a control
-					CWnd* Wnd = GetCWndObject((HWND)lParam);
+					CWnd* Wnd = FromHandle((HWND)lParam);
 					if (Wnd != NULL)
 						Wnd->OnMessageReflect(uMsg, wParam, lParam);
 				}
@@ -143,7 +143,7 @@ namespace Win32xx
 		case WM_NOTIFY:
 			{
 				// Do Notification reflection if it came from a CWnd object
-				CWnd* WndFrom = GetCWndObject(((LPNMHDR)lParam)->hwndFrom);
+				CWnd* WndFrom = FromHandle(((LPNMHDR)lParam)->hwndFrom);
 				if (WndFrom != NULL)
 				{
 					BOOL bReturn = (BOOL)WndFrom->OnNotifyReflect(wParam, lParam);
