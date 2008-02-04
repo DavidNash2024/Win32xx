@@ -267,6 +267,12 @@
 				RelativePath="..\Win32++\GDI.h">
 			</File>
 			<File
+				RelativePath="..\Win32++\Socket.cpp">
+			</File>
+			<File
+				RelativePath="..\Win32++\Socket.h">
+			</File>
+			<File
 				RelativePath="..\Win32++\WinCore.cpp">
 			</File>
 			<File

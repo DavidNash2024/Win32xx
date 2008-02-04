@@ -43,18 +43,30 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-class CSocket
+namespace Win32xx
 {
-public:
-	CSocket();
-	~CSocket();
 
-	void Create();
-	void Connect();
+	class CSocket
+	{
+	public:
+		CSocket();
+		~CSocket();
+		SOCKET& GetSocket() {return m_DataSocket;}
 
-private:
+		virtual void Accept();
+		virtual void Connect();
+		virtual BOOL Create( int nSocketType = SOCK_STREAM );
+		virtual int Receive( char* buf, int len, int flags);
+		virtual int Send( char* buf, int len, int flags);
 
-};
+	private:
+		BOOL m_WSAStarted;
+		SOCKET m_Socket;
+		SOCKET m_DataSocket;
+		int m_SocketType;
+	};
+
+}
 
 
 

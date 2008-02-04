@@ -4,7 +4,9 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
+
 #include "../Win32++/frame.h"
+#include "../Win32++/Socket.h"
 #include "View.h"
 
 
@@ -24,6 +26,8 @@ protected:
 
 private:
 	CView m_View;
+	CSocket m_Server;
+	CSocket m_Client;
 };
 
 #endif //MAINFRM_H

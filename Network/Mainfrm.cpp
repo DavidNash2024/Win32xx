@@ -74,6 +74,10 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 	TRACE(_T("Frame created\n"));
+
+	m_Server.Create();
+
+	m_Client.Create();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
