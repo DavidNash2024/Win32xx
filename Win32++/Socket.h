@@ -36,22 +36,23 @@
 
 
 ///////////////////////////////////////////////////////
-// WinCore.h
+// Socket.h
 //  Declaration of the CSocket class
 
 
 #ifndef SOCKET_H
 #define SOCKET_H
 
+#include "WinCore.h"
+
 namespace Win32xx
 {
-
 	class CSocket
 	{
 	public:
 		CSocket();
 		~CSocket();
-		SOCKET& GetSocket() {return m_DataSocket;}
+		SOCKET& GetSocket() const {return (const SOCKET) m_DataSocket;}
 
 		virtual void Accept();
 		virtual void Connect();
@@ -59,7 +60,14 @@ namespace Win32xx
 		virtual int Receive( char* buf, int len, int flags);
 		virtual int Send( char* buf, int len, int flags);
 
+		virtual BOOL OnAccept()  {return FALSE;}
+		virtual BOOL OnClose() 	 {return FALSE;}
+		virtual BOOL OnConnect() {return FALSE;}
+		virtual BOOL OnReceive() {return FALSE;}
+
 	private:
+		static DWORD WINAPI AcceptThread(LPVOID pCThread);
+
 		BOOL m_WSAStarted;
 		SOCKET m_Socket;
 		SOCKET m_DataSocket;
@@ -69,6 +77,5 @@ namespace Win32xx
 }
 
 
-
-
 #endif // #ifndef SOCKET_H
+

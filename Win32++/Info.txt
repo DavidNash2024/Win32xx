@@ -104,6 +104,9 @@ GDI.cpp           |                  |
 PropertySheet.h   | CPropertySheet   | Win32 and WinCE
 PropertySheet.cpp | CPropertyPage    |
 ------------------+------------------+------------------
+Socket.h          | CSocket          | Win32 and WinCE
+Socket.cpp        |                  |
+------------------+------------------+------------------
 Frame.h           | CRebar           | Win32 only
 Frame.cpp         | CStatusbar       |
                   | CToolbar         |

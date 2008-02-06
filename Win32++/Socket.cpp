@@ -41,7 +41,7 @@
 
 
 #include <Winsock2.h>
-// #include "WinCore.h"
+#include "WinCore.h"
 #include "Socket.h"
 
 namespace Win32xx
@@ -50,23 +50,32 @@ namespace Win32xx
 	CSocket::CSocket() : m_WSAStarted(FALSE), m_Socket(0), m_SocketType(0), m_DataSocket(0)
 	{
 		WSADATA wsaData;
-
 		int WSA_Status = WSAStartup(MAKEWORD(2,2), &wsaData);
-		if (WSA_Status != 0)
-			MessageBox(NULL, "WSAStartup failed", "Error", MB_OK);
-		else
+
+		if (WSA_Status == 0)
 			m_WSAStarted = TRUE;
+		else
+			throw CWinException(_T("WSAStartup failed"));
 	}
 
 	CSocket::~CSocket()
 	{
-		if (m_WSAStarted)
-			WSACleanup();
+		if (m_DataSocket)
+		{
+			shutdown(m_DataSocket, SD_BOTH);
+			closesocket(m_DataSocket);
+		}
+
+		if (m_Socket)
+		{
+			shutdown(m_Socket, SD_BOTH);
+			closesocket(m_Socket);
+		}
+		if (m_WSAStarted) WSACleanup();
 	}
 
 	void CSocket::Accept()
-	{	
-
+	{
 	    // Bind the socket.
 		sockaddr_in service;
 
@@ -75,30 +84,29 @@ namespace Win32xx
 		service.sin_port = htons( 27015 );
 
 		if ( bind( m_Socket, (SOCKADDR*) &service, sizeof(service) ) == SOCKET_ERROR )
-		{
-		//	printf( "bind() failed.\n" );
-			closesocket(m_Socket);
-			return;
-		}
+			throw CWinException(_T("Bind failed"));
 
 	    // Listen on the socket.
-		if ( listen( m_Socket, 1 ) == SOCKET_ERROR )
-		//	printf( "Error listening on socket.\n");
-			::MessageBox(NULL, "Error listening on socket", "Error", MB_OK);
+		if ( SOCKET_ERROR == listen( m_Socket, 1 ) )
+			throw CWinException(_T("Error listening on socket"));
 
+		::CreateThread(NULL, 0, CSocket::AcceptThread, (LPVOID) this, 0, NULL);
+	}
 
+	DWORD WINAPI CSocket::AcceptThread(LPVOID pCSocket)
+	{
+		CSocket* pSocket = (CSocket*)pCSocket;
 		SOCKET AcceptSocket;
-		while (1) 
-		{
-			do
-			{
-				AcceptSocket = accept( m_Socket, NULL, NULL );
-			} 
-			while ( AcceptSocket == SOCKET_ERROR );
 
-			m_DataSocket = AcceptSocket; 
-			break;
+		do
+		{
+			AcceptSocket = accept( pSocket->m_Socket, NULL, NULL );
 		}
+		while ( SOCKET_ERROR == AcceptSocket );
+
+		pSocket->m_DataSocket = AcceptSocket;
+		pSocket->OnAccept();
+		return 0;
 	}
 
 	void CSocket::Connect()
@@ -110,12 +118,12 @@ namespace Win32xx
 		clientService.sin_addr.s_addr = inet_addr( "127.0.0.1" );
 		clientService.sin_port = htons( 27015 );
 
-		if ( connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) ) == SOCKET_ERROR) 
+		if ( SOCKET_ERROR == connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) ) )
 		{
-		//	printf( "Failed to connect.\n" );
-		//	WSACleanup();
-			return;
+			throw CWinException (_T("Connect failed"));
 		}
+
+		OnConnect();
 	}
 
 	BOOL CSocket::Create( int nSocketType /*= SOCK_STREAM*/)
@@ -139,8 +147,6 @@ namespace Win32xx
 		{
 			return FALSE;
 		}
-
-		m_DataSocket = m_Socket;
 
 		return TRUE;
 	}
