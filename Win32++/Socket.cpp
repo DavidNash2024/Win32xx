@@ -44,7 +44,7 @@
 #include "WinCore.h"
 #include "Socket.h"
 
-HANDLE g_NetworkEvent = 0;
+
 
 namespace Win32xx
 {
@@ -64,43 +64,49 @@ namespace Win32xx
 	{
 		if (m_WSAStarted)
 		{
-			for (unsigned int i = 0; i < ConnectedSockets.size(); i++)
-			{
-				delete ConnectedSockets[i];
-			}
-
 			if (m_Socket)
 			{
 				shutdown(m_Socket, SD_BOTH);
 				closesocket(m_Socket);
 			}
+			
+			WSACleanup();
 		}
-
-		WSACleanup();
 	}
 
-	DWORD WINAPI CSocket::ClientThread(LPVOID thread_data)
+	DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
 	{
 		DWORD Event;
 
 		WSANETWORKEVENTS NetworkEvents;
-		char str[200];
-		DWORD recvLength;
 		CSocket* pSocket = (CSocket*)thread_data;
 		SOCKET sClient = pSocket->m_Socket;
+		HANDLE NetworkEvent = WSACreateEvent();
+
+		if(WSAEventSelect(sClient, NetworkEvent,FD_READ|FD_WRITE|FD_CLOSE|FD_ACCEPT)==	SOCKET_ERROR)
+		{
+			TRACE("Error in Event Select\n");
+			return 1;
+		}
 
 		while(true)
 		{
-			if ((Event = WSAWaitForMultipleEvents(1, &g_NetworkEvent, FALSE,WSA_INFINITE, FALSE)) == WSA_WAIT_FAILED)
+			if ((Event = WSAWaitForMultipleEvents(1, &NetworkEvent, FALSE,WSA_INFINITE, FALSE)) == WSA_WAIT_FAILED)
 			{
 				TRACE("WSAWaitForMultipleEvents failed with error \n");
-      			return 0;
+      			return 1;
 			}
 
-			if (WSAEnumNetworkEvents(sClient, g_NetworkEvent, &NetworkEvents) == SOCKET_ERROR)
+			if (WSAEnumNetworkEvents(sClient, NetworkEvent, &NetworkEvents) == SOCKET_ERROR)
 			{
 				TRACE("WSAEnumNetworkEvents failed with error \n");
-  				return 0;
+  				return 1;
+			}
+
+			if (NetworkEvents.lNetworkEvents & FD_ACCEPT)
+			{
+				TRACE("Accepting connection from client");
+				pSocket->OnAccept();
 			}
 
 			if (NetworkEvents.lNetworkEvents & FD_READ)
@@ -111,17 +117,24 @@ namespace Win32xx
 				}
 				else
 				{
-					recvLength = recv(sClient,str,200,0);
+				/*	recvLength = recv(sClient,str,200,0);
 					str[recvLength] = '\0';
 					TRACE(str);
-					send(sClient,str,200,0);
+					send(sClient,str,200,0); */
+					pSocket->OnReceive();
 				}
+			}
+
+			if (NetworkEvents.lNetworkEvents & FD_CONNECT)
+			{
+				pSocket->OnConnect();
 			}
 			
 			if (NetworkEvents.lNetworkEvents & FD_CLOSE)
 			{
 				shutdown(sClient,FD_READ|FD_WRITE);
 				closesocket(sClient);
+				pSocket->OnClose();
 				ExitThread(0);
 			}
 		}
@@ -129,64 +142,15 @@ namespace Win32xx
 		return 0;
 	}
 
-	void CSocket::StartServer(u_short LocalPort)
+	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
 	{
-	    // Bind the socket.
-		sockaddr_in service;
-
-		service.sin_family = AF_INET;
-		service.sin_addr.s_addr = htonl(INADDR_ANY);
-		service.sin_port = htons( LocalPort );
-
-		if ( bind( m_Socket, (SOCKADDR*) &service, sizeof(service) ) == SOCKET_ERROR )
-			throw CWinException(_T("Bind failed"));
-
-	    // Listen on the socket.
-		if ( SOCKET_ERROR == listen( m_Socket, 1 ) )
-			throw CWinException(_T("Error listening on socket"));
-
-		::CreateThread(NULL, 0, CSocket::ServerThread, (LPVOID) this, 0, NULL);
+		rClientSock.m_Socket = accept(m_Socket, addr, addrlen);
+		::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) &rClientSock, 0, NULL); 
 	}
 
-	void CSocket::StopServer()
+	int CSocket::Bind(const struct sockaddr* name, int namelen)
 	{
-		for (unsigned int i = 0; i < ConnectedSockets.size(); i++)
-		{
-			delete ConnectedSockets[i];
-		}
-
-		// also send stop event
-		// also delete server thread
-	}
-
-	DWORD WINAPI CSocket::ServerThread(LPVOID pCSocket)
-	{
-		CSocket* pMainSocket = (CSocket*)pCSocket;
-		g_NetworkEvent = WSACreateEvent();
-
-		while(1)
-		{
-			SOCKET ConnectedSocket;
-			ConnectedSocket = accept( pMainSocket->m_Socket, NULL, NULL );
-			if (INVALID_SOCKET == ConnectedSocket)
-			{
-				TRACE("Accept failed");
-			}
-			TRACE("Client accepted\n");
-
-			if(WSAEventSelect(ConnectedSocket,g_NetworkEvent,FD_READ|FD_WRITE|FD_CLOSE)==	SOCKET_ERROR)
-			{
-				TRACE("Error in Event Select\n");
-				break;
-			}
-
-			CSocket* pConnected = new CSocket;
-			pConnected->m_Socket = ConnectedSocket;
-			pMainSocket->ConnectedSockets.push_back(pConnected);
-			::CreateThread(NULL, 0, CSocket::ClientThread, (LPVOID) pConnected, 0, NULL);
-		}
-		
-		return 0;
+		return bind (m_Socket, name, namelen);
 	}
 
 	void CSocket::Connect(LPCTSTR addr, u_short remotePort)
@@ -203,12 +167,14 @@ namespace Win32xx
 			throw CWinException (_T("Connect failed"));
 		}
 
-		OnConnect();
+		// Start monitoring the socket for events
+		::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+
 	}
 
 	BOOL CSocket::Create( int nSocketType /*= SOCK_STREAM*/)
 	{
-		// Exit if socket WSAStartup failed or sochet already created
+		// Exit if socket WSAStartup failed or socket already created
 		// then ...
 
 		switch(nSocketType)
@@ -231,33 +197,20 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	void CSocket::Receive(int flags)
+	int CSocket::Listen(int backlog)
 	{
-	//	::CreateThread(NULL, 0, CSocket::ReceiveThread, (LPVOID) this, 0, NULL);		
+		int Error = listen(m_Socket, backlog);
+		::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+
+		return Error;
 	}
 
-	DWORD WINAPI CSocket::ReceiveThread(LPVOID pCSocket)
+	int CSocket::Receive(char* buf, int len, int flags)
 	{
-		CSocket* pSocket = (CSocket*)pCSocket;
-
-		char buf[1024] = {0};
-		int nReceived = -1;
-
-		do
-		{
-			nReceived = recv(pSocket->m_Socket, buf, 1024, 0);
-		}
-		while (nReceived <= 0);
-		
-		pSocket->m_nReceived = nReceived;
-		pSocket->m_strReceived = buf;
-		pSocket->Send(buf, 1024, 0);
-		pSocket->OnReceive();
-
-		return 0;
+		return recv(m_Socket, buf, len, flags);		
 	}
 
-	int CSocket::Send( char* buf, int len, int flags)
+	int CSocket::Send(const char* buf, int len, int flags)
 	{
 		return send(m_Socket, buf, len, flags);
 	}

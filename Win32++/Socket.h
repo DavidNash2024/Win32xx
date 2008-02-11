@@ -52,34 +52,28 @@ namespace Win32xx
 	{
 	public:
 		CSocket();
-		~CSocket();
+		virtual ~CSocket();
 		SOCKET& GetSocket() const {return (const SOCKET) m_Socket;}
 
-		virtual void StartServer(u_short LocalPort);
-		virtual	void StopServer();
-		virtual void StartClient(LPCTSTR addr, UINT remotePort) {}
+		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
+		virtual int  Bind(const struct sockaddr* name, int namelen);
 		virtual void Connect(LPCTSTR addr, u_short remotePort);
 		virtual BOOL Create( int nSocketType = SOCK_STREAM );
-		virtual void Receive(int flags);
-		virtual int Send( char* buf, int len, int flags);
+		virtual int  Listen(int backlog);
+		virtual int  Receive(char* buf, int len, int flags);
+		virtual int  Send( const char* buf, int len, int flags);
 
 		virtual BOOL OnAccept()  {return FALSE;}
 		virtual BOOL OnClose() 	 {return FALSE;}
 		virtual BOOL OnConnect() {return FALSE;}
 		virtual BOOL OnReceive() {return FALSE;}
 
-//	private:
-		static DWORD WINAPI ServerThread(LPVOID pCSocket);
-		static DWORD WINAPI ReceiveThread(LPVOID pCSocket);
-		static DWORD WINAPI ClientThread(LPVOID thread_data);
+	private:
+		static DWORD WINAPI EventThread(LPVOID thread_data);
 
 		BOOL m_WSAStarted;
 		SOCKET m_Socket;
 		int m_SocketType;
-		int m_nReceived;
-		std::string m_strReceived;
-		std::vector<CSocket*> ConnectedSockets;
-
 	};
 
 }
