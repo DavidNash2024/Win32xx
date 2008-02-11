@@ -63,6 +63,10 @@
   #define _WIN32_WINNT 0x0500
 #endif
 
+#ifdef _WIN32_WCE
+#include "WCEstddef.h"
+#endif
+
 // Set some minimum defaults (you can reset these before including WinCore.h)
 #ifndef WINVER
 #define WINVER 0x0400		// Windows 95
@@ -71,13 +75,8 @@
 #define _WIN32_IE 0x0400	// Internet Explorer 4
 #endif
 
-
 #ifndef STRICT
 #define STRICT 1
-#endif
-
-#ifdef _WIN32_WCE
-#include "WCEstddef.h"
 #endif
 
 #include <vector>

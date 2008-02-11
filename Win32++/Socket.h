@@ -47,17 +47,20 @@
 
 namespace Win32xx
 {
+
 	class CSocket
 	{
 	public:
 		CSocket();
 		~CSocket();
-		SOCKET& GetSocket() const {return (const SOCKET) m_DataSocket;}
+		SOCKET& GetSocket() const {return (const SOCKET) m_Socket;}
 
-		virtual void Accept();
-		virtual void Connect();
+		virtual void StartServer(u_short LocalPort);
+		virtual	void StopServer();
+		virtual void StartClient(LPCTSTR addr, UINT remotePort) {}
+		virtual void Connect(LPCTSTR addr, u_short remotePort);
 		virtual BOOL Create( int nSocketType = SOCK_STREAM );
-		virtual int Receive( char* buf, int len, int flags);
+		virtual void Receive(int flags);
 		virtual int Send( char* buf, int len, int flags);
 
 		virtual BOOL OnAccept()  {return FALSE;}
@@ -65,13 +68,18 @@ namespace Win32xx
 		virtual BOOL OnConnect() {return FALSE;}
 		virtual BOOL OnReceive() {return FALSE;}
 
-	private:
-		static DWORD WINAPI AcceptThread(LPVOID pCThread);
+//	private:
+		static DWORD WINAPI ServerThread(LPVOID pCSocket);
+		static DWORD WINAPI ReceiveThread(LPVOID pCSocket);
+		static DWORD WINAPI ClientThread(LPVOID thread_data);
 
 		BOOL m_WSAStarted;
 		SOCKET m_Socket;
-		SOCKET m_DataSocket;
 		int m_SocketType;
+		int m_nReceived;
+		std::string m_strReceived;
+		std::vector<CSocket*> ConnectedSockets;
+
 	};
 
 }
