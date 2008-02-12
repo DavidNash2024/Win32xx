@@ -79,14 +79,14 @@ namespace Win32xx
 
 	DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
 	{
-		DWORD Event;
+	//	DWORD Event;
 
 		WSANETWORKEVENTS NetworkEvents;
 		CSocket* pSocket = (CSocket*)thread_data;
 		SOCKET sClient = pSocket->m_Socket;
 		HANDLE NetworkEvent = WSACreateEvent();
 
-		if(WSAEventSelect(sClient, NetworkEvent,FD_READ|FD_WRITE|FD_CLOSE|FD_ACCEPT)==	SOCKET_ERROR)
+		if(	SOCKET_ERROR == WSAEventSelect(sClient, NetworkEvent,FD_READ|FD_WRITE|FD_CLOSE|FD_ACCEPT))
 		{
 			TRACE("Error in Event Select\n");
 			return 1;
@@ -94,16 +94,16 @@ namespace Win32xx
 
 		for (;;) // an infinite loop
 		{
-			if ((Event = WSAWaitForMultipleEvents(1, &NetworkEvent, FALSE,WSA_INFINITE, FALSE)) == WSA_WAIT_FAILED)
+			if ( WSA_WAIT_FAILED == WSAWaitForMultipleEvents(1, &NetworkEvent, FALSE,WSA_INFINITE, FALSE))
 			{
 				TRACE("WSAWaitForMultipleEvents failed with error \n");
-      			return 1;
+				return 1;
 			}
 
 			if (WSAEnumNetworkEvents(sClient, NetworkEvent, &NetworkEvents) == SOCKET_ERROR)
 			{
 				TRACE("WSAEnumNetworkEvents failed with error \n");
-  				return 1;
+				return 1;
 			}
 
 			if (NetworkEvents.lNetworkEvents & FD_ACCEPT)
@@ -128,7 +128,7 @@ namespace Win32xx
 			{
 				pSocket->OnConnect();
 			}
-			
+
 			if (NetworkEvents.lNetworkEvents & FD_CLOSE)
 			{
 				shutdown(sClient,FD_READ|FD_WRITE);
@@ -138,7 +138,7 @@ namespace Win32xx
 			}
 		}
 
-		return 0;
+	//	return 0;
 	}
 
 	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
