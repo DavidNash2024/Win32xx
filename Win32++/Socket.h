@@ -53,13 +53,14 @@ namespace Win32xx
 	public:
 		CSocket();
 		virtual ~CSocket();
-		SOCKET& GetSocket() const {return (const SOCKET) m_Socket;}
+		SOCKET& GetSocket() {return m_Socket;}
 
 		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
 		virtual int  Bind(const struct sockaddr* name, int namelen);
-		virtual void Connect(LPCTSTR addr, u_short remotePort);
+		virtual void Connect(LPCTSTR addr, int remotePort);
 		virtual BOOL Create( int nSocketType = SOCK_STREAM );
-		virtual int  Listen(int backlog);
+		virtual void Disconnect();
+		virtual int  Listen(int backlog = SOMAXCONN);
 		virtual int  Receive(char* buf, int len, int flags);
 		virtual int  Send( const char* buf, int len, int flags);
 

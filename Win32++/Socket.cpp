@@ -65,13 +65,16 @@ namespace Win32xx
 		if (m_WSAStarted)
 		{
 			if (m_Socket)
-			{
-				shutdown(m_Socket, SD_BOTH);
-				closesocket(m_Socket);
-			}
+				Disconnect();
 			
 			WSACleanup();
 		}
+	}
+
+	void CSocket::Disconnect()
+	{
+		shutdown(m_Socket, SD_BOTH);
+		closesocket(m_Socket);
 	}
 
 	DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
@@ -89,7 +92,7 @@ namespace Win32xx
 			return 1;
 		}
 
-		while(true)
+		for (;;) // an infinite loop
 		{
 			if ((Event = WSAWaitForMultipleEvents(1, &NetworkEvent, FALSE,WSA_INFINITE, FALSE)) == WSA_WAIT_FAILED)
 			{
@@ -117,10 +120,6 @@ namespace Win32xx
 				}
 				else
 				{
-				/*	recvLength = recv(sClient,str,200,0);
-					str[recvLength] = '\0';
-					TRACE(str);
-					send(sClient,str,200,0); */
 					pSocket->OnReceive();
 				}
 			}
@@ -153,14 +152,14 @@ namespace Win32xx
 		return bind (m_Socket, name, namelen);
 	}
 
-	void CSocket::Connect(LPCTSTR addr, u_short remotePort)
+	void CSocket::Connect(LPCTSTR addr, int remotePort)
 	{
 		// Connect to a server.
 		sockaddr_in clientService;
 
 		clientService.sin_family = AF_INET;
 		clientService.sin_addr.s_addr = inet_addr( addr );
-		clientService.sin_port = htons( remotePort );
+		clientService.sin_port = htons( (u_short)remotePort );
 
 		if ( SOCKET_ERROR == connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) ) )
 		{
@@ -197,7 +196,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	int CSocket::Listen(int backlog)
+	int CSocket::Listen(int backlog /*= SOMAXCONN*/)
 	{
 		int Error = listen(m_Socket, backlog);
 		::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);

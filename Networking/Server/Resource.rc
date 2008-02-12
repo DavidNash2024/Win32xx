@@ -1,0 +1,57 @@
+// Microsoft Visual C++ generated resource script.
+//
+
+#include "resource.h"
+#include "windows.h"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       24             "res/Win32++.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "res/Dialog.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 248, 201
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Server Dialog"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_SEND,21,145,96,35,ES_MULTILINE | ES_AUTOHSCROLL |
+                    WS_DISABLED | NOT WS_BORDER,WS_EX_STATICEDGE
+    PUSHBUTTON      "Start Server",IDC_BUTTON_START,160,57,63,24
+    GROUPBOX        "Server Configuration",IDC_STATIC2,16,7,213,80,BS_LEFT
+    GROUPBOX        "Send / Receive Data",IDC_STATIC4,16,95,213,91,BS_LEFT
+    EDITTEXT        IDC_EDIT_RECEIVE,130,145,93,35,ES_MULTILINE |
+                    ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL
+    EDITTEXT        IDC_EDIT_STATUS,21,33,95,48,ES_MULTILINE |
+                    ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
+    CTEXT           "Server Status",IDC_STATIC,21,22,95,9
+    CTEXT           "Type data to Send ",IDC_STATIC,36,136,64,9
+    EDITTEXT        IDC_EDIT_PORT,160,33,63,15,ES_AUTOHSCROLL | ES_NUMBER
+    CTEXT           "Port Number",IDC_STATIC,168,23,55,9
+    PUSHBUTTON      "Send",IDC_BUTTON_SEND,97,111,54,19,WS_DISABLED
+    CTEXT           "Received Data",IDC_STATIC,143,136,64,9
+    CONTROL         "TCP",IDC_RADIO_TCP,"Button",BS_AUTORADIOBUTTON,124,44,
+                    29,10
+    CONTROL         "UDP",IDC_RADIO_UDP,"Button",BS_AUTORADIOBUTTON,124,61,
+                    29,10
+END
+
+
+
