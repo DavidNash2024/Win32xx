@@ -2,29 +2,29 @@
 #include "DialogApp.h"
 #include "Server.h"
 
-
-BOOL CClientSocket::OnClose()
+/////////////////////////////////////////
+// Definitions of the CClientSocket class
+//
+void CClientSocket::OnClose()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnClientClose();
-	return TRUE;
+	Dialog.OnClientClose(this);
 }
 
-BOOL CClientSocket::OnReceive()
+void CClientSocket::OnReceive()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
 	Dialog.OnClientReceive(this);
-	return TRUE;
 }
 
 
-
-
-BOOL CListenSocket::OnAccept()
+/////////////////////////////////////////
+// Definitions of the CListenSocket class
+//
+void CListenSocket::OnAccept()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
 	Dialog.OnListenAccept();
-	return TRUE;
 }
 
 

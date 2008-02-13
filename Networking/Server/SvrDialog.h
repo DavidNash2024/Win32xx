@@ -15,7 +15,7 @@ class CSvrDialog : public CDialog
 public:
 	CSvrDialog(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CSvrDialog();
-	void OnClientClose();
+	void OnClientClose(CClientSocket* pClient);
 	void OnClientReceive(CClientSocket* pClient);
 	void OnListenAccept();
 	void StartServer(int LocalPort);
@@ -34,7 +34,7 @@ private:
 	void OnUDP();
 
 	CListenSocket m_ListenSocket;
-	std::vector<CClientSocket*> ConnectedSockets;
+	std::vector<CClientSocket*> m_ConnectedSockets;
 	BOOL m_bServerStarted;
 };
 

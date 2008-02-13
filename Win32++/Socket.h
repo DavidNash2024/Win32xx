@@ -64,10 +64,15 @@ namespace Win32xx
 		virtual int  Receive(char* buf, int len, int flags);
 		virtual int  Send( const char* buf, int len, int flags);
 
-		virtual BOOL OnAccept()  {return FALSE;}
-		virtual BOOL OnClose() 	 {return FALSE;}
-		virtual BOOL OnConnect() {return FALSE;}
-		virtual BOOL OnReceive() {return FALSE;}
+		virtual void OnAccept()		{}
+		virtual void OnAddresListChange() {}
+		virtual void OnClose() 		{}
+		virtual void OnConnect()	{}
+		virtual void OnOutOfBand()	{}
+		virtual void OnQualityOfService() {}
+		virtual void OnReceive()	{}
+		virtual void OnRoutingChange() {}
+		virtual void OnSend()		{}
 
 	private:
 		static DWORD WINAPI EventThread(LPVOID thread_data);
@@ -75,6 +80,9 @@ namespace Win32xx
 		BOOL m_WSAStarted;
 		SOCKET m_Socket;
 		int m_SocketType;
+		HANDLE m_StopRequestEvent;
+		HANDLE m_StoppedEvent;
+		HANDLE m_EventThread;
 	};
 
 }

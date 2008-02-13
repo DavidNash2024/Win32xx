@@ -61,7 +61,7 @@ namespace Win32xx
 
 		m_PSP.dwSize        = sizeof(PROPSHEETPAGE);
 		m_PSP.dwFlags       |= PSP_USECALLBACK;
-		m_PSP.hInstance     = GetApp()->GetInstanceHandle();
+		m_PSP.hInstance     = GetApp()->GetResourceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
 		m_PSP.pszTitle      = m_szTitle;
 		m_PSP.pfnDlgProc    = CPropertyPage::StaticDialogProc;

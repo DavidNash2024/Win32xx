@@ -5,9 +5,9 @@
 
 class CClient : public CSocket
 {
-	virtual BOOL OnClose();
-	virtual BOOL OnConnect();
-	virtual BOOL OnReceive();
+	virtual void OnClose();
+	virtual void OnConnect();
+	virtual void OnReceive();
 };
 
 

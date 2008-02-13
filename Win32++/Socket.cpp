@@ -49,7 +49,7 @@
 namespace Win32xx
 {
 
-	CSocket::CSocket() : m_WSAStarted(FALSE), m_Socket(0), m_SocketType(0)
+	CSocket::CSocket() : m_WSAStarted(FALSE), m_Socket(0), m_SocketType(0), m_EventThread(0)
 	{
 		WSADATA wsaData;
 		int WSA_Status = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -58,6 +58,9 @@ namespace Win32xx
 			m_WSAStarted = TRUE;
 		else
 			throw CWinException(_T("WSAStartup failed"));
+
+		m_StopRequestEvent = CreateEvent(0, TRUE, FALSE, 0);
+		m_StoppedEvent = CreateEvent(0, TRUE, FALSE, 0);
 	}
 
 	CSocket::~CSocket()
@@ -69,82 +72,119 @@ namespace Win32xx
 			
 			WSACleanup();
 		}
+
+		// Close handles
+		::CloseHandle(m_StopRequestEvent);
+		::CloseHandle(m_StoppedEvent);
+		::CloseHandle(m_EventThread);
 	}
 
 	void CSocket::Disconnect()
 	{
+		if (m_EventThread)
+		{
+			// Trigger thread to stop
+			::SetEvent(m_StopRequestEvent);
+			
+			// Wait until thread finished
+			::WaitForSingleObject(m_StoppedEvent, INFINITE);
+
+			CloseHandle(m_EventThread);
+			m_EventThread = 0;
+		}
+		
 		shutdown(m_Socket, SD_BOTH);
 		closesocket(m_Socket);
+		ResetEvent(m_StopRequestEvent);
+		ResetEvent(m_StoppedEvent);
 	}
 
 	DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
 	{
-	//	DWORD Event;
+		// These are the possible network event notifications:
+		//	FD_READ 	Notification of readiness for reading. 
+		//	FD_WRITE 	Motification of readiness for writing. 
+		//	FD_OOB 		Notification of the arrival of Out Of Band data. 
+		//	FD_ACCEPT 	Notification of incoming connections. 
+		//	FD_CONNECT 	Notification of completed connection or multipoint join operation. 
+		//	FD_CLOSE 	Notification of socket closure.
+		//	FD_QOS		notification of socket Quality Of Service changes
+		//	FD_ROUTING_INTERFACE_CHANGE	Notification of routing interface changes for the specified destination. 
+		//	FD_ADDRESS_LIST_CHANGE		Notification of local address list changes for the address family of the socket. 
 
 		WSANETWORKEVENTS NetworkEvents;
 		CSocket* pSocket = (CSocket*)thread_data;
 		SOCKET sClient = pSocket->m_Socket;
 		HANDLE NetworkEvent = WSACreateEvent();
+		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE | 
+			          FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
-		if(	SOCKET_ERROR == WSAEventSelect(sClient, NetworkEvent,FD_READ|FD_WRITE|FD_CLOSE|FD_ACCEPT))
+		if(	SOCKET_ERROR == WSAEventSelect(sClient, NetworkEvent, Events))
 		{
 			TRACE("Error in Event Select\n");
 			return 1;
 		}
 
-		for (;;) // an infinite loop
+		// loop until the stop event is set
+		while( WAIT_OBJECT_0 != WaitForSingleObject(pSocket->m_StopRequestEvent, 0) )
 		{
-			if ( WSA_WAIT_FAILED == WSAWaitForMultipleEvents(1, &NetworkEvent, FALSE,WSA_INFINITE, FALSE))
+			// Wait 200 ms for a network event
+			if ( WSA_WAIT_FAILED == WSAWaitForMultipleEvents(1, &NetworkEvent, FALSE, 200, FALSE))
 			{
-				TRACE("WSAWaitForMultipleEvents failed with error \n");
-				return 1;
+				throw CWinException(_T("WSAWaitForMultipleEvents failed"));
+				return 0;
 			}
-
-			if (WSAEnumNetworkEvents(sClient, NetworkEvent, &NetworkEvents) == SOCKET_ERROR)
+			else
 			{
-				TRACE("WSAEnumNetworkEvents failed with error \n");
-				return 1;
-			}
-
-			if (NetworkEvents.lNetworkEvents & FD_ACCEPT)
-			{
-				TRACE("Accepting connection from client");
-				pSocket->OnAccept();
-			}
-
-			if (NetworkEvents.lNetworkEvents & FD_READ)
-			{
-				if (NetworkEvents.lNetworkEvents & FD_READ && NetworkEvents.iErrorCode[FD_READ_BIT] != 0)
+				if ( SOCKET_ERROR == WSAEnumNetworkEvents(sClient, NetworkEvent, &NetworkEvents) )
 				{
-					TRACE("FD_READ failed with error \n");
+					throw CWinException(_T("WSAEnumNetworkEvents failed"));
+					return 0;
 				}
-				else
-				{
+
+				if (NetworkEvents.lNetworkEvents & FD_ACCEPT)
+					pSocket->OnAccept();
+
+				if (NetworkEvents.lNetworkEvents & FD_READ)
 					pSocket->OnReceive();
+
+				if (NetworkEvents.lNetworkEvents & FD_WRITE)
+					pSocket->OnSend();
+
+				if (NetworkEvents.lNetworkEvents & FD_OOB)
+					pSocket->OnOutOfBand();
+				
+				if (NetworkEvents.lNetworkEvents & FD_QOS)
+					pSocket->OnQualityOfService();
+	
+				if (NetworkEvents.lNetworkEvents & FD_CONNECT)
+					pSocket->OnConnect();
+				
+				if (NetworkEvents.lNetworkEvents & FD_ROUTING_INTERFACE_CHANGE)
+					pSocket->OnRoutingChange();
+
+				if (NetworkEvents.lNetworkEvents & FD_ADDRESS_LIST_CHANGE)
+					pSocket->OnAddresListChange();
+
+				if (NetworkEvents.lNetworkEvents & FD_CLOSE)
+				{
+					shutdown(sClient, FD_READ | FD_WRITE);
+					closesocket(sClient);
+					pSocket->OnClose();
+					return 0;
 				}
-			}
-
-			if (NetworkEvents.lNetworkEvents & FD_CONNECT)
-			{
-				pSocket->OnConnect();
-			}
-
-			if (NetworkEvents.lNetworkEvents & FD_CLOSE)
-			{
-				shutdown(sClient,FD_READ|FD_WRITE);
-				closesocket(sClient);
-				pSocket->OnClose();
-				ExitThread(0);
 			}
 		}
-
-	//	return 0;
+		
+		// Stop request event detected, so set the stopped event and exit
+		SetEvent(pSocket->m_StoppedEvent);
+		return 0;
 	}
 
 	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
 	{
 		rClientSock.m_Socket = accept(m_Socket, addr, addrlen);
-		::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) &rClientSock, 0, NULL); 
+		rClientSock.m_EventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) &rClientSock, 0, NULL); 
 	}
 
 	int CSocket::Bind(const struct sockaddr* name, int namelen)
@@ -167,7 +207,7 @@ namespace Win32xx
 		}
 
 		// Start monitoring the socket for events
-		::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+		m_EventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
 
 	}
 
@@ -199,7 +239,7 @@ namespace Win32xx
 	int CSocket::Listen(int backlog /*= SOMAXCONN*/)
 	{
 		int Error = listen(m_Socket, backlog);
-		::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+		m_EventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
 
 		return Error;
 	}

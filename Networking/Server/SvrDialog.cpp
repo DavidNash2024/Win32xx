@@ -46,9 +46,23 @@ BOOL CSvrDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
-void CSvrDialog::OnClientClose()
+void CSvrDialog::OnClientClose(CClientSocket* pClient)
 {
 	Append(IDC_EDIT_STATUS, "Client disconnected");
+
+	std::vector<CClientSocket*>::iterator Iter;
+
+	for (Iter = m_ConnectedSockets.begin(); Iter != m_ConnectedSockets.end(); Iter++)
+	{
+		if (*Iter == pClient) break;
+	}
+
+	// Delete the disconnected client socket and remove it from our vector
+	if (Iter != m_ConnectedSockets.end())
+	{
+		delete *Iter;
+		m_ConnectedSockets.erase(Iter);
+	}
 }
 
 BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -121,7 +135,6 @@ void CSvrDialog::OnStartServer()
 	else
 	{
 		StopServer();
-		m_ListenSocket.Disconnect();
 		Append(IDC_EDIT_STATUS, "Server Stopped");
 		::SetDlgItemText(m_hWnd, IDC_BUTTON_START, "Start Server");
 		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), TRUE);
@@ -157,7 +170,7 @@ void CSvrDialog::OnListenAccept()
 		throw CWinException (_T("Failed to accept connection from client"));
 	} 
 	
-	ConnectedSockets.push_back(pClient);
+	m_ConnectedSockets.push_back(pClient);
 
 	Append(IDC_EDIT_STATUS, "Client Connected");
 	EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
@@ -194,10 +207,11 @@ void CSvrDialog::StartServer(int LocalPort)
 
 void CSvrDialog::StopServer()
 {
-	for (unsigned int i = 0; i < ConnectedSockets.size(); i++)
+	for (unsigned int i = 0; i < m_ConnectedSockets.size(); i++)
 	{
-		delete ConnectedSockets[i];
+		delete m_ConnectedSockets[i];
 	}
 	
-	ConnectedSockets.clear();
+	m_ConnectedSockets.clear();
+	m_ListenSocket.Disconnect();
 }
