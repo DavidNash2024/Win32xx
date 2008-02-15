@@ -43,6 +43,7 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
+
 #include "WinCore.h"
 
 namespace Win32xx
@@ -57,16 +58,17 @@ namespace Win32xx
 
 		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
 		virtual int  Bind(const struct sockaddr* name, int namelen);
-		virtual void Connect(LPCTSTR addr, int remotePort);
+		virtual int Connect(LPCTSTR addr, int remotePort);
 		virtual BOOL Create( int nSocketType = SOCK_STREAM );
 		virtual void Disconnect();
 		virtual int  Listen(int backlog = SOMAXCONN);
 		virtual int  Receive(char* buf, int len, int flags);
 		virtual int  Send( const char* buf, int len, int flags);
+		virtual void StopThread();
 
 		virtual void OnAccept()		{}
 		virtual void OnAddresListChange() {}
-		virtual void OnClose() 		{}
+		virtual void OnDisconnect()	{}
 		virtual void OnConnect()	{}
 		virtual void OnOutOfBand()	{}
 		virtual void OnQualityOfService() {}
@@ -80,9 +82,8 @@ namespace Win32xx
 		BOOL m_WSAStarted;
 		SOCKET m_Socket;
 		int m_SocketType;
-		HANDLE m_StopRequestEvent;
-		HANDLE m_StoppedEvent;
 		HANDLE m_EventThread;
+		BOOL m_bStopThread;
 	};
 
 }

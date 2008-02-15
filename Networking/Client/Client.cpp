@@ -3,21 +3,24 @@
 #include "Client.h"
 
 
-void CClient::OnClose()
+void CClient::OnDisconnect()
 {
 	CClientDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnClientClose();
+//	Dialog.OnClientDisconnect();
+	PostMessage(Dialog, USER_DISCONNECT, 0, 0);
 }
 
 void CClient::OnConnect()
 {
 	CClientDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnClientConnect();
+//	Dialog.OnClientConnect();
+	PostMessage(Dialog, USER_CONNECT, 0, 0);
 }
 
 void CClient::OnReceive()
 {
 	CClientDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnClientReceive();
+//	Dialog.OnClientReceive();
+	PostMessage(Dialog, USER_RECEIVE, 0, 0);
 }
 

@@ -38,16 +38,24 @@ void CClientDialog::Append(int nID, LPCTSTR buf)
 
 BOOL CClientDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-		//Additional messages to be handled go here
-//	}
+	switch (uMsg)
+	{
+	case USER_CONNECT:
+		OnClientConnect();
+		break;
+	case USER_DISCONNECT:
+		OnClientDisconnect();
+		break;
+	case USER_RECEIVE:
+		OnClientReceive();
+		break;
+	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
-void CClientDialog::OnClientClose()
+void CClientDialog::OnClientDisconnect()
 {
 
 	SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, "Disconnected from server");
@@ -71,11 +79,12 @@ void CClientDialog::OnClientConnect()
 	m_bClientConnected = TRUE;
 }
 
-void CClientDialog::OnClientReceive()
+int CClientDialog::OnClientReceive()
 {
-	char buf[200];
-	m_Client.Receive(buf, 200, 0);
+	char buf[1025] = {0};
+	int iChars = m_Client.Receive(buf, 1024, 0);
 	Append(IDC_EDIT_RECEIVE, buf);
+	return iChars;
 }
 
 BOOL CClientDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -140,7 +149,8 @@ void CClientDialog::OnStartClient()
 			std::string sAddr =  inet_ntoa(addr);
 
 			// Connect to the server
-			m_Client.Connect(sAddr.c_str(), RemotePort);
+			if (0 != m_Client.Connect(sAddr.c_str(), RemotePort))
+				throw CWinException("Failed to connect to server");
 
 			OnClientConnect();
 		}
@@ -150,7 +160,7 @@ void CClientDialog::OnStartClient()
 	else
 	{
 		m_Client.Disconnect();
-		OnClientClose();
+		OnClientDisconnect();
 	}
 }
 

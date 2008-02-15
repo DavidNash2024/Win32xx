@@ -16,9 +16,9 @@ public:
 	CClientDialog(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CClientDialog();
 
-	void OnClientClose();
+	void OnClientDisconnect();
 	void OnClientConnect();
-	void OnClientReceive();
+	int OnClientReceive();
 
 protected:
 	virtual BOOL OnInitDialog();

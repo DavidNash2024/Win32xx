@@ -5,16 +5,18 @@
 /////////////////////////////////////////
 // Definitions of the CClientSocket class
 //
-void CClientSocket::OnClose()
+void CClientSocket::OnDisconnect()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnClientClose(this);
+	PostMessage(Dialog, USER_DISCONNECT, (WPARAM)this, 0);
+//	Dialog.OnClientDisconnect(this);
 }
 
 void CClientSocket::OnReceive()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnClientReceive(this);
+//	Dialog.OnClientReceive(this);
+	PostMessage(Dialog, USER_RECEIVE, (WPARAM)this, 0);
 }
 
 
@@ -24,7 +26,8 @@ void CClientSocket::OnReceive()
 void CListenSocket::OnAccept()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnListenAccept();
+//	Dialog.OnListenAccept();
+	PostMessage(Dialog, USER_ACCEPT, 0, 0);
 }
 
 
