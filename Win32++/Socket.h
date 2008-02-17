@@ -44,28 +44,30 @@
 #define SOCKET_H
 
 
-#include "WinCore.h"
+#define THREAD_TIMEOUT 100
+
 
 namespace Win32xx
 {
+
+	// The CSocket class represents a network socket. It encapsualtes many of the
+	// Windows Socket fuctions, providing an object-oriented approach to network programming.
+	// CSocket responds automatically to network events. For example, it calls OnReceive 
+	// when there is data on the socket to be read, and OnAccept when a server should
+	// accept a connection from a client.
+
+	// Refer to the network sample for an example of how to use this class to create a
+	// TCP client & server, and a UDP client and server.
+	
+
 
 	class CSocket
 	{
 	public:
 		CSocket();
 		virtual ~CSocket();
-		SOCKET& GetSocket() {return m_Socket;}
 
-		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
-		virtual int  Bind(const struct sockaddr* name, int namelen);
-		virtual int Connect(LPCTSTR addr, int remotePort);
-		virtual BOOL Create( int nSocketType = SOCK_STREAM );
-		virtual void Disconnect();
-		virtual int  Listen(int backlog = SOMAXCONN);
-		virtual int  Receive(char* buf, int len, int flags);
-		virtual int  Send( const char* buf, int len, int flags);
-		virtual void StopThread();
-
+		// Override these functions to monitor events
 		virtual void OnAccept()		{}
 		virtual void OnAddresListChange() {}
 		virtual void OnDisconnect()	{}
@@ -75,14 +77,32 @@ namespace Win32xx
 		virtual void OnReceive()	{}
 		virtual void OnRoutingChange() {}
 		virtual void OnSend()		{}
+		
+		// Its unlikely you would need to override these functions
+		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
+		virtual int  Bind(const struct sockaddr* name, int namelen);
+		virtual int  Connect(const char* addr, int remotePort);
+		virtual BOOL Create(int nSocketType = SOCK_STREAM);
+		virtual void Disconnect();
+		virtual int  Listen(int backlog = SOMAXCONN);
+		virtual int  Receive(char* buf, int len, int flags);
+		virtual int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen);
+		virtual int  Send(const char* buf, int len, int flags);
+		virtual int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen);
+		virtual void StartNotifyEvents();
+		virtual void StopNotifyEvents();
+		SOCKET& GetSocket() {return m_Socket;}
+
+		// Allow CSocket to be used as a SOCKET
+		operator SOCKET() const {return m_Socket;}
 
 	private:
+		CSocket(const CSocket&);				// Disable copy construction
+		CSocket& operator = (const CSocket&);	// Disable assignment operator
 		static DWORD WINAPI EventThread(LPVOID thread_data);
 
-		BOOL m_WSAStarted;
 		SOCKET m_Socket;
-		int m_SocketType;
-		HANDLE m_EventThread;
+		HANDLE m_hEventThread;
 		BOOL m_bStopThread;
 	};
 

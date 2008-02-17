@@ -8,8 +8,6 @@
 #include "Server.h"
 #include "resource.h"
 
-#define IDT_TIMER1 400
-
 
 // Declaration of the CMyDialog class
 class CSvrDialog : public CDialog
@@ -18,15 +16,12 @@ public:
 	CSvrDialog(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CSvrDialog();
 	void Append(int nID, LPCTSTR buf);
-	void CleanDisconnected();
-	void OnClientDisconnect(CClientSocket* pClient);
-	void OnClientReceive(CClientSocket* pClient);
-	void OnListenAccept();
+	void OnSocketDisconnect(CServerSocket* pClient);
+	void OnSocketReceive(CServerSocket* pClient);
+	void OnSocketAccept();
 	void OnSend();
 	void OnStartServer();
-	void OnTCP();
-	void OnUDP();
-	BOOL StartServer(int LocalPort);
+	BOOL StartServer();
 	void StopServer();
 	
 protected:
@@ -35,11 +30,11 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 private:
-	CListenSocket m_ListenSocket;
-	std::vector<CClientSocket*> m_ConnectedSockets;
-//	CClientSocket* m_DisconnectingSocket;
-	std::vector<CClientSocket*> m_DisconnectedSockets;
+	CServerSocket m_ListenSocket;
+	std::vector<CServerSocket*> m_ConnectedSockets;
 	BOOL m_bServerStarted;
+	int  m_SocketType;
+	sockaddr_in m_ClientAddr;
 };
 
 #endif //SVRDIALOG_H

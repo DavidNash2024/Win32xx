@@ -8,7 +8,7 @@
 
 // Definitions for the CSvrDialog class
 CSvrDialog::CSvrDialog(UINT nResID, HWND hWndParent) : CDialog(nResID, hWndParent), 
-              m_bServerStarted(FALSE)//, m_DisconnectingSocket(0)
+              m_bServerStarted(FALSE), m_SocketType(SOCK_STREAM)
 {
 }
 
@@ -37,61 +37,44 @@ void CSvrDialog::Append(int nID, LPCTSTR buf)
 	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) buf));
 }
 
-void CSvrDialog::CleanDisconnected()
-{
-	for (unsigned int i = 0; i < m_DisconnectedSockets.size(); i++)
-	{
-		delete m_DisconnectedSockets[i];
-	}
-	m_DisconnectedSockets.clear();
-}
-
 BOOL CSvrDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	// process the dialog messages
 	switch (uMsg)
 	{
-	case USER_ACCEPT:
-		OnListenAccept();
-		break;
 	case USER_DISCONNECT:
-		OnClientDisconnect((CClientSocket*)wParam);
+		// respond to the user defined message posted to the dialog
+		OnSocketDisconnect((CServerSocket*)wParam);
 		break;
-	case USER_RECEIVE:
-		OnClientReceive((CClientSocket*)wParam);
-		break;
-	case WM_TIMER:
-		if (IDT_TIMER1 == wParam) 
-			CleanDisconnected();
-		break; 
  	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
-void CSvrDialog::OnClientDisconnect(CClientSocket* pClient)
+void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
 {
+	// Respond to a socket disconnect notification
 	Append(IDC_EDIT_STATUS, "Client disconnected");
 
-	std::vector<CClientSocket*>::iterator Iter;
-
+	// Iterate through the vector, looking for the matching CServerSocket pointer 
+	std::vector<CServerSocket*>::iterator Iter;
 	for (Iter = m_ConnectedSockets.begin(); Iter != m_ConnectedSockets.end(); Iter++)
 	{
 		if (*Iter == pClient) break;
 	}
 
-	// Move the socket to the disconnected pool
+	// delete the CServerSocket, and remove its pointer
 	if (Iter != m_ConnectedSockets.end())
 	{
-		m_DisconnectedSockets.push_back(pClient);
-	//	m_DisconnectedSockets.push_back(m_DisconnectingSocket);
-	//	m_DisconnectingSocket = pClient;
+		delete pClient;
 		m_ConnectedSockets.erase(Iter);
-	}    
+	}  
 }
 
 BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
+	// Respond to the various dialog buttons
 	switch (LOWORD(wParam))
     {
 	case IDC_BUTTON_START:
@@ -100,13 +83,6 @@ BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDC_BUTTON_SEND:
 		OnSend();
 		return TRUE;
-	case IDC_RADIO_TCP:
-		OnTCP();
-		return TRUE;
-	case IDC_RADIO_UDP:
-		OnUDP();
-		return TRUE;
-
     } //switch (LOWORD(wParam))
 
 	return FALSE;
@@ -128,45 +104,48 @@ BOOL CSvrDialog::OnInitDialog()
 	SetDlgItemText(m_hWnd, IDC_EDIT_PORT, _T("3000"));
 	::SendMessage(GetDlgItem(m_hWnd, IDC_RADIO_TCP), BM_SETCHECK, BST_CHECKED, 0);
 
-	// Start the 1 second timer
-	SetTimer(m_hWnd, IDT_TIMER1, 1000, NULL);
-
 	return true;
 }
 
 void CSvrDialog::OnStartServer()
 {
+	// Respond to the Start/Stop Button press
 	TRACE(_T("Start/Stop Button Pressed\n"));
-	
+
 	if (!m_bServerStarted)
 	{
-		// Create the main socket
-		if (m_ListenSocket.Create())
+		// Attempt to start the server
+		if (!StartServer())	
+			return;
+
+		// Update the dialog
+		SetDlgItemText(m_hWnd, IDC_BUTTON_START, "Stop Server");
+		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), FALSE);
+		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), FALSE);
+		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), FALSE);
+		if (m_SocketType == SOCK_STREAM)
 		{
-			// Retrieve the local port number
-			std::string s = GetDlgItemString(IDC_EDIT_PORT);
-			int LocalPort = atoi(s.c_str());
-
-			if (!StartServer(LocalPort))
-				return;
-
-			Append(IDC_EDIT_STATUS, "Server Started");
+			Append(IDC_EDIT_STATUS, "TCP Server Started");
 			Append(IDC_EDIT_STATUS, "Waiting for client ...");
-			::SetDlgItemText(m_hWnd, IDC_BUTTON_START, "Stop Server");
-			EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), FALSE);
-		} 
-
+		}
 		else
 		{
-			Append(IDC_EDIT_STATUS, "Start Failed");
+			Append(IDC_EDIT_STATUS, "UDP Server Started");
+			Append(IDC_EDIT_STATUS, "Waiting for client data");
 		}
 	}
 	else
 	{
 		StopServer();
+
+		// Update the dialog
 		Append(IDC_EDIT_STATUS, "Server Stopped");
-		::SetDlgItemText(m_hWnd, IDC_BUTTON_START, "Start Server");
+		SetDlgItemText(m_hWnd, IDC_BUTTON_START, "Start Server");
 		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), TRUE);
+		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), TRUE);
+		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), TRUE);
+		EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), FALSE);
+		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), FALSE);
 	}
 	m_bServerStarted = !m_bServerStarted;
 }
@@ -176,67 +155,109 @@ void CSvrDialog::OnSend()
 	// Responds to the send button
 
 	std::string s = GetDlgItemString(IDC_EDIT_SEND);
-//	m_DataSocket.Send((char*)s.c_str(), s.length(), 0);
+
+	switch(m_SocketType)
+	{
+		case SOCK_STREAM:
+			break;
+		case SOCK_DGRAM:
+			m_ListenSocket.SendTo(s.c_str(), s.length(), 0, (SOCKADDR*)&m_ClientAddr, sizeof(m_ClientAddr));
+			break;
+	}
 }
 
-void CSvrDialog::OnTCP()
+void CSvrDialog::OnSocketAccept()
 {
-	TRACE(_T("Radio TCP\n"));
-}
-
-void CSvrDialog::OnUDP()
-{
-	TRACE(_T("Radio UDP\n"));
-}
-
-void CSvrDialog::OnListenAccept()
-{
-	CClientSocket* pClient = new CClientSocket;
+	// Accept the connection from the client
+	CServerSocket* pClient = new CServerSocket;
 	m_ListenSocket.Accept(*pClient, NULL, NULL);
 	if (INVALID_SOCKET == m_ListenSocket.GetSocket())
 	{
 		delete pClient;
 		TRACE("Failed to accept connection from client");
+		return;
 	} 
 	
+	pClient->StartNotifyEvents();
+
 	m_ConnectedSockets.push_back(pClient);
 
+	// Update the dialog
 	Append(IDC_EDIT_STATUS, "Client Connected");
 	EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
 	EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
 }
 
-void CSvrDialog::OnClientReceive(CClientSocket* pClient)
+void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 {
-	char str[1025] = {0};
-	pClient->Receive(str, 1024, 0);
-	TRACE(str);
-	pClient->Send(str, strlen(str), 0);
+	// This trick ensures our char array is NULL terminated
+	char str[1025] = {0};			// Assign all 1025 elements to NULL
+	
+	switch (m_SocketType)
+	{
+	case SOCK_STREAM:
+		{
+			pClient->Receive(str, 1024, 0); // Receive up to 1024 chars
+			TRACE(str);
+			pClient->Send(str, strlen(str), 0);
+		}
+		break;
+	case SOCK_DGRAM:
+		{
+			int addrlen = sizeof(m_ClientAddr);
+			m_ListenSocket.ReceiveFrom(str, 1024, 0, (SOCKADDR*)&m_ClientAddr, &addrlen); 
+			TRACE("[Received:] "); TRACE(str); TRACE("\n");
+			EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
+			EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);			
+		}
+		break;
+	}
+	
 	Append(IDC_EDIT_RECEIVE, str);
 }
 
-BOOL CSvrDialog::StartServer(int LocalPort)
+BOOL CSvrDialog::StartServer()
 {
-    // Bind the socket.
+	LRESULT lr = SendMessage(GetDlgItem(m_hWnd, IDC_RADIO_TCP), BM_GETCHECK, 0, 0);
+	m_SocketType = (lr == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
+
+	// Create the main socket
+	if (!m_ListenSocket.Create(m_SocketType))
+	{
+		Append(IDC_EDIT_STATUS, "Create Socket Failed");
+		return FALSE;
+	}
+	
+	// Retrieve the local port number
+	std::string s = GetDlgItemString(IDC_EDIT_PORT);
+	int LocalPort = atoi(s.c_str());
+
+	// Bind the socket.
 	sockaddr_in service;
 
 	service.sin_family = AF_INET;
 	service.sin_addr.s_addr = htonl(INADDR_ANY);
 	service.sin_port = htons( (u_short)LocalPort );
 
+	// Bind the IP address to the listening socket
 	if ( m_ListenSocket.Bind( (SOCKADDR*) &service, sizeof(service) ) == SOCKET_ERROR )
 	{
 		Append(IDC_EDIT_STATUS, "Bind failed");
 		return FALSE;
 	}
 
-	// Listen on the socket.
-	if ( SOCKET_ERROR == m_ListenSocket.Listen() )
+	if (m_SocketType == SOCK_STREAM)
 	{
-		Append(IDC_EDIT_STATUS, "Error listening on socket");
-		return FALSE;
+		// Listen for connections from clients (TCP server only)
+		if ( SOCKET_ERROR == m_ListenSocket.Listen() )
+		{
+			Append(IDC_EDIT_STATUS, "Error listening on socket");
+			return FALSE;
+		}
 	}
-	
+
+	m_ListenSocket.StartNotifyEvents();
+
 	return TRUE;
 }
 
@@ -244,18 +265,10 @@ void CSvrDialog::StopServer()
 {
 	m_ListenSocket.Disconnect();
 	
+	// Delete the client connections
 	for (unsigned int i = 0; i < m_ConnectedSockets.size(); i++)
 	{
 		delete m_ConnectedSockets[i];
 	}
 	m_ConnectedSockets.clear();
-
-	for (unsigned int i = 0; i < m_DisconnectedSockets.size(); i++)
-	{
-		delete m_DisconnectedSockets[i];
-	}
-	m_DisconnectedSockets.clear();
-
-//	if (m_DisconnectingSocket)
-//		delete m_DisconnectingSocket;
 }

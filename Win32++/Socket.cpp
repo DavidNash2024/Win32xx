@@ -40,69 +40,47 @@
 //  Definitions for the CSocket class:
 
 
+
 #include <Winsock2.h>
 #include "WinCore.h"
 #include "Socket.h"
 
 
-
 namespace Win32xx
 {
-
-	CSocket::CSocket() : m_WSAStarted(FALSE), m_Socket(0), m_SocketType(0), m_EventThread(0), m_bStopThread(FALSE)
+	CSocket::CSocket() : m_Socket(0), m_hEventThread(0), m_bStopThread(FALSE)
 	{
-		WSADATA wsaData;
-		int WSA_Status = WSAStartup(MAKEWORD(2,2), &wsaData);
+		try
+		{
+			// Initialise the Windows Socket services
+			WSADATA wsaData;
 
-		if (WSA_Status == 0)
-			m_WSAStarted = TRUE;
-		else
-			throw CWinException(_T("WSAStartup failed"));
+			if (0 != WSAStartup(MAKEWORD(2,2), &wsaData))
+				throw CWinException(_T("WSAStartup failed"));
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+			throw;
+		}
 	}
 
 	CSocket::~CSocket()
 	{
 		Disconnect();
-		if (m_WSAStarted)
-		{
-			if (m_Socket)
-				Disconnect();
 
-			WSACleanup();
-		}
-
-		// Close handles
-	//	::CloseHandle(m_EventThread);
+		// Terminate the  Windows Socket services 
+		WSACleanup();
 	}
 
 	void CSocket::Disconnect()
 	{
-		if (m_EventThread)
-		{
-			// Trigger thread to stop
-			DWORD dwExitCode STILL_ACTIVE;
-			int WatchDog = 0;
-			while (STILL_ACTIVE == dwExitCode)
-			{
-				m_bStopThread = TRUE;
-				GetExitCodeThread(m_EventThread, &dwExitCode);
-				
-				if (STILL_ACTIVE == dwExitCode) Sleep(5);
-				WatchDog++;
-				if (WatchDog >= 100)
-				{
-					TerminateThread(m_EventThread, 0);
-					TRACE(" *** Forced thread closure *** \n");
-				}
-			}
-
-			CloseHandle(m_EventThread);
-			m_EventThread = 0;
-		}
-
+		StopNotifyEvents();
 		shutdown(m_Socket, SD_BOTH);
 		closesocket(m_Socket);
 		m_bStopThread = FALSE;
+		m_Socket = 0;
 	}
 
 	DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
@@ -114,7 +92,7 @@ namespace Win32xx
 		//	FD_ACCEPT 	Notification of incoming connections.
 		//	FD_CONNECT 	Notification of completed connection or multipoint join operation.
 		//	FD_CLOSE 	Notification of socket closure.
-		//	FD_QOS		notification of socket Quality Of Service changes
+		//	FD_QOS		Notification of socket Quality Of Service changes
 		//	FD_ROUTING_INTERFACE_CHANGE	Notification of routing interface changes for the specified destination.
 		//	FD_ADDRESS_LIST_CHANGE		Notification of local address list changes for the address family of the socket.
 
@@ -130,26 +108,24 @@ namespace Win32xx
 
 		if(	SOCKET_ERROR == WSAEventSelect(sClient, hNetworkEvent, Events))
 		{
-			TRACE("Error in Event Select\n");
+			TRACE(_T("Error in Event Select\n"));
 			return 0;
 		}
 
-		// loop until the stop event is set
-		//while( WAIT_OBJECT_0 != WaitForSingleObject(pSocket->m_StopRequestEvent, 0) )
+		// loop until the stop thread flag is set
 		while (FALSE == pSocket->m_bStopThread)
-	//	for (;;)
 		{
+			// Wait 100 ms for a network event
+			DWORD dwResult = WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, THREAD_TIMEOUT, FALSE);
 
-			// Wait 200 ms for a network event
-			if ( WSA_WAIT_FAILED == WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, 200, FALSE))
+			if (WSA_WAIT_FAILED == dwResult)		
 			{
 				TRACE(_T("WSAWaitForMultipleEvents failed"));
 				return 0;
 			}
-			else
+			
+			if (WSA_WAIT_TIMEOUT != dwResult)
 			{
-			//	if (pSocket->m_bStopThread)
-			//		break;
 
 				if ( SOCKET_ERROR == WSAEnumNetworkEvents(sClient, hNetworkEvent, &NetworkEvents) )
 				{
@@ -186,7 +162,7 @@ namespace Win32xx
 					shutdown(sClient, SD_BOTH);
 					closesocket(sClient);
 					pSocket->OnDisconnect();
-					break;
+					return 0;
 				}
 			}
 		}
@@ -200,18 +176,23 @@ namespace Win32xx
 		if (INVALID_SOCKET == rClientSock.m_Socket)
 			return;
 
-		DWORD dwExitCode;
-		GetExitCodeThread(rClientSock.m_EventThread, &dwExitCode);
-		if (dwExitCode != STILL_ACTIVE)
-			rClientSock.m_EventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) &rClientSock, 0, NULL);
+	//	rClientSock.StopNotifyEvents();
+	//	rClientSock.m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) &rClientSock, 0, NULL);
+	//	rClientSock.StartNotifyEvents();
 	}
 
 	int CSocket::Bind(const struct sockaddr* name, int namelen)
 	{	
-		return bind (m_Socket, name, namelen);	
+		int Result = bind (m_Socket, name, namelen);
+
+	//	StopNotifyEvents();
+	//	m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+	//	StartNotifyEvents();
+
+		return Result;
 	}
 
-	int CSocket::Connect(LPCTSTR addr, int remotePort)
+	int CSocket::Connect(const char* addr, int remotePort)
 	{
 		sockaddr_in clientService;
 		clientService.sin_family = AF_INET;
@@ -225,29 +206,25 @@ namespace Win32xx
 		}
 
 		// Start monitoring the socket for events
-		DWORD dwExitCode;
-		GetExitCodeThread(m_EventThread, &dwExitCode);
-		if (dwExitCode != STILL_ACTIVE)
-			m_EventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+	//	StopEventThread();	// Ensure no EventThread is already running
+	//	m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+	//	StartNotifyEvents();
 
 		return 0;
 	}
 
 	BOOL CSocket::Create( int nSocketType /*= SOCK_STREAM*/)
 	{
-		// Exit if socket WSAStartup failed or socket already created
-		// then ...
-
 		switch(nSocketType)
 		{
-			case SOCK_STREAM:
-				m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-				break;
-			case SOCK_DGRAM:
-				m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-				break;
-			default:
-				return FALSE;
+		case SOCK_STREAM:
+			m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+			break;
+		case SOCK_DGRAM:
+			m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+			break;
+		default:
+			return FALSE;
 		}
 
 		if(m_Socket == INVALID_SOCKET)
@@ -263,14 +240,13 @@ namespace Win32xx
 		int Error = listen(m_Socket, backlog);
 		if (Error)
 		{
-			TRACE("Listen Failed");
+			TRACE(_T("Listen Failed"));
 			return Error;
 		}
 
-		DWORD dwExitCode;
-		GetExitCodeThread(m_EventThread, &dwExitCode);
-		if (dwExitCode != STILL_ACTIVE)
-			m_EventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+	//	StopEventThread();
+	//	m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+	//	StartNotifyEvents();
 		
 		return Error;
 	}
@@ -280,27 +256,60 @@ namespace Win32xx
 		return recv(m_Socket, buf, len, flags);
 	}
 
+	int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
+	{
+		return recvfrom(m_Socket, buf, len, flags, from, fromlen);
+	}
+
 	int CSocket::Send(const char* buf, int len, int flags)
 	{
 		return send(m_Socket, buf, len, flags);
 	}
 
-	void CSocket::StopThread()
+	int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
 	{
-		if (m_EventThread)
+		return sendto(m_Socket, buf, len, flags, to, tolen);
+	}
+
+	void CSocket::StartNotifyEvents()
+	{
+		StopNotifyEvents();
+		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+	}
+
+	void CSocket::StopNotifyEvents()
+	{
+		// Terminates the event thread (gracefully if possible)
+		if (m_hEventThread)
 		{
-			// Trigger thread to stop
-			DWORD dwExitCode STILL_ACTIVE;
+			DWORD dwExitCode = 0;
+			SetThreadPriority(m_hEventThread, THREAD_PRIORITY_HIGHEST);
+			int WatchDog = 0;
+			
+			GetExitCodeThread(m_hEventThread, &dwExitCode);
 			while (STILL_ACTIVE == dwExitCode)
 			{
-				m_bStopThread = TRUE;
-				Sleep(50);
-				GetExitCodeThread(m_EventThread, &dwExitCode);
+				WatchDog++;
+				m_bStopThread = TRUE;	// A flag monitored by the event thread
+
+				// Wait up to 100ms for the thread to signal it has ended
+				if ( (WAIT_TIMEOUT == ::WaitForSingleObject(m_hEventThread, THREAD_TIMEOUT) )
+					&& (WatchDog >= 10) )
+				{
+					// Note: TerminateThread is our method of last resort to get the thread to
+					//  end. An excessive delay in processing any of the notification functions 
+					//  can cause us to get here. (Yes one second is an excessive delay!) 
+					TerminateThread(m_hEventThread, 0);
+					TRACE(_T(" *** Forced thread closure *** \n"));
+				}
+				GetExitCodeThread(m_hEventThread, &dwExitCode);
 			}
 
-			CloseHandle(m_EventThread);
-			m_EventThread = 0;
+			CloseHandle(m_hEventThread);
+			m_hEventThread = 0;
 		}
+		m_bStopThread = FALSE;
 	}
-}
+
+} // namespace Win32xx
 

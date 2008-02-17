@@ -2,33 +2,35 @@
 #include "DialogApp.h"
 #include "Server.h"
 
+
 /////////////////////////////////////////
-// Definitions of the CClientSocket class
+// Definitions of the CServerSocket class
 //
-void CClientSocket::OnDisconnect()
+void CServerSocket::OnDisconnect()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
+
+// Note: We must post a message in response to this event, because
+//	      CSvrDialog::OnSocketDisconnet will destroy this CServerSocket
+//	      object.
+
 	PostMessage(Dialog, USER_DISCONNECT, (WPARAM)this, 0);
-//	Dialog.OnClientDisconnect(this);
 }
 
-void CClientSocket::OnReceive()
+void CServerSocket::OnAccept()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-//	Dialog.OnClientReceive(this);
-	PostMessage(Dialog, USER_RECEIVE, (WPARAM)this, 0);
+	Dialog.OnSocketAccept();
 }
 
-
-/////////////////////////////////////////
-// Definitions of the CListenSocket class
-//
-void CListenSocket::OnAccept()
+void CServerSocket::OnReceive()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-//	Dialog.OnListenAccept();
-	PostMessage(Dialog, USER_ACCEPT, 0, 0);
+	Dialog.OnSocketReceive(this);
 }
+
+
+
 
 
 

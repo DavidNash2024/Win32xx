@@ -29,11 +29,10 @@ private:
 	void Append(int nID, LPCTSTR buf);
 	void OnStartClient();
 	void OnSend();
-	void OnTCP();
-	void OnUDP();
 
 	CClient m_Client;
 	BOOL m_bClientConnected;
+	int  m_SocketType;
 };
 
 #endif //CLIENTDIALOG_H

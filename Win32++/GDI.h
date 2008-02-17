@@ -50,10 +50,6 @@ namespace Win32xx
 	void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
 
 
-	///////////////////////////////////////////////
-	// Declarations for the CDC class
-	//
-
 	// This class provides a device context, along with the various associated objects
 	//  such as Bitmaps, Brushes, Bitmaps, Fonts and Pens. This class handles the creation,
 	//  selection, de-selection and deletion of these objects automatically. It also
@@ -89,6 +85,10 @@ namespace Win32xx
 	//     unless it is detached.
 
 
+
+	///////////////////////////////////////////////
+	// Declarations for the CDC class
+	//
 	class CDC
 	{
 	public:
