@@ -23,4 +23,9 @@
 #define IDC_RADIO_TCP                   140
 #define IDC_RADIO_UDP                   141
 
+#define IDD_DIALOG2                     150
+#define IDC_EDIT_RECEIVE2               151
+#define IDC_EDIT_SEND2                  152
+#define IDC_BUTTON_SEND2                153
+
 #define IDC_STATIC                      -1

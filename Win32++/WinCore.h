@@ -116,20 +116,21 @@ typedef std::basic_string<TCHAR> tString;
   #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-// TRACE sends a string to the debug/output pane, or an external debugger
-//  we use an inline instead of a macro for TRACE to avoid C4390 warnings 
-inline void TRACE(LPCTSTR str)	
-{
-#ifdef _DEBUG
-    OutputDebugString(str);
-#else
-	UNREFERENCED_PARAMETER(str); // no-op
-#endif
-}
-
-
 namespace Win32xx
 {
+
+	// TRACE sends a string to the debug/output pane, or an external debugger
+	//  we use an inline instead of a macro for TRACE to avoid C4390 warnings 
+	inline void TRACE(LPCTSTR str)	
+	{
+	#ifdef _DEBUG
+		OutputDebugString(str);
+	#else
+		UNREFERENCED_PARAMETER(str); // no-op
+	#endif
+	}
+
+
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere

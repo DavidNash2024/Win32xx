@@ -5,6 +5,14 @@
 #include "resource.h"
 
 
+CTCPClientDlg::CTCPClientDlg(UINT nResID, HWND hWndParent) : 
+				CDialog(nResID, hWndParent), m_pSocket(0)
+{
+}
+
+void CTCPClientDlg::Send()
+{
+}
 
 // Definitions for the CSvrDialog class
 CSvrDialog::CSvrDialog(UINT nResID, HWND hWndParent) : CDialog(nResID, hWndParent), 
@@ -39,11 +47,13 @@ void CSvrDialog::Append(int nID, LPCTSTR buf)
 
 BOOL CSvrDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// process the dialog messages
+	// respond to the user defined message posted to the dialog
 	switch (uMsg)
 	{
+	case USER_ACCEPT:
+		OnSocketAccept();
+		break;
 	case USER_DISCONNECT:
-		// respond to the user defined message posted to the dialog
 		OnSocketDisconnect((CServerSocket*)wParam);
 		break;
  	}
@@ -58,16 +68,20 @@ void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
 	Append(IDC_EDIT_STATUS, "Client disconnected");
 
 	// Iterate through the vector, looking for the matching CServerSocket pointer 
-	std::vector<CServerSocket*>::iterator Iter;
+	std::vector<Client>::iterator Iter;
 	for (Iter = m_ConnectedSockets.begin(); Iter != m_ConnectedSockets.end(); Iter++)
 	{
-		if (*Iter == pClient) break;
+		Client c = *Iter;
+		if (c.pSocket == pClient)
+			break;
 	}
 
 	// delete the CServerSocket, and remove its pointer
 	if (Iter != m_ConnectedSockets.end())
 	{
-		delete pClient;
+		Client c = *Iter;
+		delete c.pSocket;
+		delete c.pDialog;
 		m_ConnectedSockets.erase(Iter);
 	}  
 }
@@ -180,7 +194,12 @@ void CSvrDialog::OnSocketAccept()
 	
 	pClient->StartNotifyEvents();
 
-	m_ConnectedSockets.push_back(pClient);
+	Client c;
+	c.pSocket = pClient;
+	c.pDialog = new CTCPClientDlg(IDD_DIALOG2, m_hWnd);
+	c.pDialog->m_pSocket = pClient;
+	c.pDialog->DoModeless();
+	m_ConnectedSockets.push_back(c);
 
 	// Update the dialog
 	Append(IDC_EDIT_STATUS, "Client Connected");
@@ -268,7 +287,8 @@ void CSvrDialog::StopServer()
 	// Delete the client connections
 	for (unsigned int i = 0; i < m_ConnectedSockets.size(); i++)
 	{
-		delete m_ConnectedSockets[i];
+		delete m_ConnectedSockets[i].pDialog;
+		delete m_ConnectedSockets[i].pSocket;
 	}
 	m_ConnectedSockets.clear();
 }

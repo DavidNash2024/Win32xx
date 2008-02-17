@@ -20,7 +20,8 @@ void CServerSocket::OnDisconnect()
 void CServerSocket::OnAccept()
 {
 	CSvrDialog& Dialog = ((CDialogApp*)GetApp())->GetDialog();
-	Dialog.OnSocketAccept();
+//	Dialog.OnSocketAccept();
+	PostMessage(Dialog, USER_ACCEPT, 0, 0);
 }
 
 void CServerSocket::OnReceive()

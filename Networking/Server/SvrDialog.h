@@ -9,10 +9,30 @@
 #include "resource.h"
 
 
-// Declaration of the CMyDialog class
+class CServerSocket;
+
+// Declaration of the CTCPClientDlg class
+class CTCPClientDlg : public CDialog
+{
+public:
+	CTCPClientDlg(UINT nResID, HWND hWndParent = NULL);
+	virtual ~CTCPClientDlg() {}
+	void Send();
+
+	CServerSocket* m_pSocket;
+};
+
+
+// Declaration of the CSvrDialog class
 class CSvrDialog : public CDialog
 {
 public:
+	struct Client
+	{
+		CServerSocket* pSocket;
+		CTCPClientDlg* pDialog;
+	};
+
 	CSvrDialog(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CSvrDialog();
 	void Append(int nID, LPCTSTR buf);
@@ -23,7 +43,7 @@ public:
 	void OnStartServer();
 	BOOL StartServer();
 	void StopServer();
-	
+
 protected:
 	virtual BOOL OnInitDialog();
 	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -31,7 +51,7 @@ protected:
 
 private:
 	CServerSocket m_ListenSocket;
-	std::vector<CServerSocket*> m_ConnectedSockets;
+	std::vector<Client> m_ConnectedSockets;
 	BOOL m_bServerStarted;
 	int  m_SocketType;
 	sockaddr_in m_ClientAddr;

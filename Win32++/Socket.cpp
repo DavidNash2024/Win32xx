@@ -173,23 +173,11 @@ namespace Win32xx
 	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
 	{
 		rClientSock.m_Socket = accept(m_Socket, addr, addrlen);
-		if (INVALID_SOCKET == rClientSock.m_Socket)
-			return;
-
-	//	rClientSock.StopNotifyEvents();
-	//	rClientSock.m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) &rClientSock, 0, NULL);
-	//	rClientSock.StartNotifyEvents();
 	}
 
 	int CSocket::Bind(const struct sockaddr* name, int namelen)
 	{	
-		int Result = bind (m_Socket, name, namelen);
-
-	//	StopNotifyEvents();
-	//	m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
-	//	StartNotifyEvents();
-
-		return Result;
+		return bind (m_Socket, name, namelen);
 	}
 
 	int CSocket::Connect(const char* addr, int remotePort)
@@ -204,11 +192,6 @@ namespace Win32xx
 			TRACE(_T("Connect failed\n"));
 			return SOCKET_ERROR;
 		}
-
-		// Start monitoring the socket for events
-	//	StopEventThread();	// Ensure no EventThread is already running
-	//	m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
-	//	StartNotifyEvents();
 
 		return 0;
 	}
@@ -243,11 +226,7 @@ namespace Win32xx
 			TRACE(_T("Listen Failed"));
 			return Error;
 		}
-
-	//	StopEventThread();
-	//	m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
-	//	StartNotifyEvents();
-		
+	
 		return Error;
 	}
 
