@@ -76,10 +76,9 @@ namespace Win32xx
 
 	void CSocket::Disconnect()
 	{
-		StopNotifyEvents();
 		shutdown(m_Socket, SD_BOTH);
 		closesocket(m_Socket);
-		m_bStopThread = FALSE;
+		StopNotifyEvents();
 		m_Socket = 0;
 	}
 

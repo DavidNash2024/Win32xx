@@ -5,8 +5,10 @@
 #include "../../Win32++/Socket.h"
 
 // User defined message
-#define USER_DISCONNECT	WM_APP+1
-#define USER_ACCEPT     WM_APP+2
+#define USER_ACCEPT     WM_APP+1
+#define USER_DISCONNECT	WM_APP+2
+#define USER_RECEIVE    WM_APP+3
+
 
 
 // For a TCP server, inherit a class from CSocket and override OnAccept, OnDisconnect

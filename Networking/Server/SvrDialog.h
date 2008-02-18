@@ -17,6 +17,10 @@ class CTCPClientDlg : public CDialog
 public:
 	CTCPClientDlg(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CTCPClientDlg() {}
+	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	void Append(int nID, LPCTSTR buf);
+	void Receive();
 	void Send();
 
 	CServerSocket* m_pSocket;
@@ -27,12 +31,6 @@ public:
 class CSvrDialog : public CDialog
 {
 public:
-	struct Client
-	{
-		CServerSocket* pSocket;
-		CTCPClientDlg* pDialog;
-	};
-
 	CSvrDialog(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CSvrDialog();
 	void Append(int nID, LPCTSTR buf);
@@ -50,11 +48,11 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 private:
-	CServerSocket m_ListenSocket;
-	std::vector<Client> m_ConnectedSockets;
+	CServerSocket m_MainSocket; 
+	std::map<CServerSocket*, CTCPClientDlg*> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs 	
 	BOOL m_bServerStarted;
-	int  m_SocketType;
-	sockaddr_in m_ClientAddr;
+	int  m_SocketType;			// either SOCK_STREAM or SOCK_DGRAM
+	sockaddr_in m_ClientAddr;	// Stores connect address from UDP client
 };
 
 #endif //SVRDIALOG_H
