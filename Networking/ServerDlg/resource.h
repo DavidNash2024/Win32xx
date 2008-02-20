@@ -17,18 +17,14 @@
 #define IDC_BUTTON_START				120
 #define IDC_BUTTON_SEND                 121
 #define IDC_BUTTON_CLEAR                122
-#define IDC_STATIC1                     130
-#define IDC_STATIC2                     131
-#define IDC_STATIC3                     132
-#define IDC_STATIC4                     133
-#define IDC_RADIO_TCP                   140
-#define IDC_RADIO_UDP                   141
+#define IDC_RADIO_TCP                   130
+#define IDC_RADIO_UDP                   131
 
-#define IDD_DIALOG2                     150
-#define IDC_EDIT_RECEIVE2               151
-#define IDC_EDIT_SEND2                  152
-#define IDC_BUTTON_SEND2                153
-#define IDC_BUTTON_CLEAR2               154
+#define IDD_DIALOG2                     140
+#define IDC_EDIT_RECEIVE2               141
+#define IDC_EDIT_SEND2                  142
+#define IDC_BUTTON_SEND2                143
+#define IDC_BUTTON_CLEAR2               144
 
 #define IDC_STATIC                      -1
 

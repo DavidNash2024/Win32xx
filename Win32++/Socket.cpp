@@ -35,11 +35,6 @@
 ////////////////////////////////////////////////////////
 
 
-////////////////////////////////////////////////////////
-// Socket.cpp
-//  Definitions for the CSocket class:
-
-
 
 #include <Winsock2.h>
 #include "WinCore.h"
@@ -56,7 +51,7 @@ namespace Win32xx
 			WSADATA wsaData;
 
 			if (0 != WSAStartup(MAKEWORD(2,2), &wsaData))
-				throw CWinException(_T("WSAStartup failed"));
+				throw CWinException("WSAStartup failed");
 		}
 
 		catch (const CWinException &e)
@@ -70,15 +65,88 @@ namespace Win32xx
 	{
 		Disconnect();
 
-		// Terminate the  Windows Socket services 
+		// Terminate the  Windows Socket services
 		WSACleanup();
+	}
+
+	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
+	{
+		rClientSock.m_Socket = accept(m_Socket, addr, addrlen);
+		if (SOCKET_ERROR == rClientSock.GetSocket())
+			TRACE(_T("Accept failed\n"));
+	}
+
+	int CSocket::Bind(const char* addr, int remotePort)
+	{
+		sockaddr_in clientService;
+		clientService.sin_family = AF_INET;
+		clientService.sin_addr.s_addr = inet_addr( addr );
+		clientService.sin_port = htons( (u_short)remotePort );
+
+		int Result = bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
+		if ( 0 != Result )
+			TRACE(_T("Bind failed\n"));
+		return Result;
+	}
+
+	int CSocket::Bind(const struct sockaddr* name, int namelen)
+	{
+		int Result = bind (m_Socket, name, namelen);
+		if ( 0 != Result )
+			TRACE(_T("Bind failed\n"));
+		return Result;
+	}
+
+	int CSocket::Connect(const char* addr, int remotePort)
+	{
+		sockaddr_in clientService;
+		clientService.sin_family = AF_INET;
+		clientService.sin_addr.s_addr = inet_addr( addr );
+		clientService.sin_port = htons( (u_short)remotePort );
+
+		int Result = connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
+		if ( 0 != Result )
+			TRACE(_T("Connect failed\n"));
+		return Result;
+	}
+
+	int CSocket::Connect(const struct sockaddr* name, int namelen)
+	{
+		int Result = connect( m_Socket, (SOCKADDR*) &name, sizeof(namelen) );
+		if ( 0 != Result )
+			TRACE(_T("Connect failed\n"));
+		return Result;
+	}
+
+	BOOL CSocket::Create( int nSocketType /*= SOCK_STREAM*/)
+	{
+		switch(nSocketType)
+		{
+		case SOCK_STREAM:
+			m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+			break;
+		case SOCK_DGRAM:
+			m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+			break;
+		default:
+			TRACE("Unknown Socket Type");
+			return FALSE;
+		}
+
+		if(m_Socket == INVALID_SOCKET)
+		{
+			TRACE(_T("Failed to create socket"));
+			return FALSE;
+		}
+
+		return TRUE;
 	}
 
 	void CSocket::Disconnect()
 	{
+		StopEvents();
 		shutdown(m_Socket, SD_BOTH);
 		closesocket(m_Socket);
-		StopNotifyEvents();
 		m_Socket = 0;
 	}
 
@@ -117,12 +185,12 @@ namespace Win32xx
 			// Wait 100 ms for a network event
 			DWORD dwResult = WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, THREAD_TIMEOUT, FALSE);
 
-			if (WSA_WAIT_FAILED == dwResult)		
+			if (WSA_WAIT_FAILED == dwResult)
 			{
 				TRACE(_T("WSAWaitForMultipleEvents failed"));
 				return 0;
 			}
-			
+
 			if (WSA_WAIT_TIMEOUT != dwResult)
 			{
 
@@ -169,93 +237,93 @@ namespace Win32xx
 		return 0;
 	}
 
-	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
+	int  CSocket::GetPeerName(struct sockaddr* name, int* namelen)
 	{
-		rClientSock.m_Socket = accept(m_Socket, addr, addrlen);
+		int Result = getpeername(m_Socket, name, namelen);
+		if (0 != Result)
+			TRACE(_T("Listen Failed"));
+		return Result;
 	}
 
-	int CSocket::Bind(const struct sockaddr* name, int namelen)
-	{	
-		return bind (m_Socket, name, namelen);
+	int  CSocket::GetSockName(struct sockaddr* name, int* namelen)
+	{
+		int Result = getsockname(m_Socket, name, namelen);
+		if (0 != Result)
+			TRACE(_T("Listen Failed"));
+		return Result;
 	}
 
-	int CSocket::Connect(const char* addr, int remotePort)
+	int  CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen)
 	{
-		sockaddr_in clientService;
-		clientService.sin_family = AF_INET;
-		clientService.sin_addr.s_addr = inet_addr( addr );
-		clientService.sin_port = htons( (u_short)remotePort );
-
-		if ( SOCKET_ERROR == connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) ) )
-		{
-			TRACE(_T("Connect failed\n"));
-			return SOCKET_ERROR;
-		}
-
-		return 0;
+		int Result = getsockopt(m_Socket, level, optname, optval, optlen);
+		if (0 != Result)
+			TRACE(_T("Listen Failed"));
+		return Result;
 	}
 
-	BOOL CSocket::Create( int nSocketType /*= SOCK_STREAM*/)
+	int CSocket::ioCtlSocket(long cmd, u_long* argp)
 	{
-		switch(nSocketType)
-		{
-		case SOCK_STREAM:
-			m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-			break;
-		case SOCK_DGRAM:
-			m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-			break;
-		default:
-			return FALSE;
-		}
-
-		if(m_Socket == INVALID_SOCKET)
-		{
-			return FALSE;
-		}
-
-		return TRUE;
+		int Result = ioctlsocket(m_Socket, cmd, argp);
+		if (0 != Result)
+			TRACE(_T("Listen Failed"));
+		return Result;
 	}
 
 	int CSocket::Listen(int backlog /*= SOMAXCONN*/)
 	{
-		int Error = listen(m_Socket, backlog);
-		if (Error)
-		{
+		int Result = listen(m_Socket, backlog);
+		if (0 != Result)
 			TRACE(_T("Listen Failed"));
-			return Error;
-		}
-	
-		return Error;
+		return Result;
 	}
 
 	int CSocket::Receive(char* buf, int len, int flags)
 	{
-		return recv(m_Socket, buf, len, flags);
+		int Result = recv(m_Socket, buf, len, flags);
+		if (SOCKET_ERROR == Result)
+			TRACE(_T("SetSockOpt failed\n"));
+		return Result;
 	}
 
 	int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
 	{
-		return recvfrom(m_Socket, buf, len, flags, from, fromlen);
+		int Result = recvfrom(m_Socket, buf, len, flags, from, fromlen);
+		if (SOCKET_ERROR == Result)
+			TRACE(_T("SetSockOpt failed\n"));
+		return Result;
 	}
 
 	int CSocket::Send(const char* buf, int len, int flags)
 	{
-		return send(m_Socket, buf, len, flags);
+		int Result = send(m_Socket, buf, len, flags);
+		if (SOCKET_ERROR == Result)
+			TRACE(_T("SetSockOpt failed\n"));
+		return Result;
 	}
 
 	int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
 	{
-		return sendto(m_Socket, buf, len, flags, to, tolen);
+		int Result =  sendto(m_Socket, buf, len, flags, to, tolen);
+		if (SOCKET_ERROR == Result)
+			TRACE(_T("SetSockOpt failed\n"));
+		return Result;
 	}
 
-	void CSocket::StartNotifyEvents()
+	int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen)
 	{
-		StopNotifyEvents();
+		int Result = setsockopt(m_Socket, level, optname, optval, optlen);
+		if (0 != Result)
+			TRACE(_T("SetSockOpt failed\n"));
+		return Result;
+	}
+
+	void CSocket::StartEvents()
+	{
+		StopEvents();
 		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
 	}
 
-	void CSocket::StopNotifyEvents()
+	void CSocket::StopEvents()
 	{
 		// Terminates the event thread (gracefully if possible)
 		if (m_hEventThread)
@@ -263,7 +331,7 @@ namespace Win32xx
 			DWORD dwExitCode = 0;
 			SetThreadPriority(m_hEventThread, THREAD_PRIORITY_HIGHEST);
 			int WatchDog = 0;
-			
+
 			GetExitCodeThread(m_hEventThread, &dwExitCode);
 			while (STILL_ACTIVE == dwExitCode)
 			{
@@ -275,8 +343,8 @@ namespace Win32xx
 					&& (WatchDog >= 10) )
 				{
 					// Note: TerminateThread is our method of last resort to get the thread to
-					//  end. An excessive delay in processing any of the notification functions 
-					//  can cause us to get here. (Yes one second is an excessive delay!) 
+					//  end. An excessive delay in processing any of the notification functions
+					//  can cause us to get here. (Yes one second is an excessive delay!)
 					TerminateThread(m_hEventThread, 0);
 					TRACE(_T(" *** Forced thread closure *** \n"));
 				}

@@ -35,10 +35,6 @@
 ////////////////////////////////////////////////////////
 
 
-///////////////////////////////////////////////////////
-// Socket.h
-//  Declaration of the CSocket class
-
 
 #ifndef SOCKET_H
 #define SOCKET_H
@@ -52,13 +48,13 @@ namespace Win32xx
 
 	// The CSocket class represents a network socket. It encapsualtes many of the
 	// Windows Socket fuctions, providing an object-oriented approach to network programming.
-	// CSocket responds automatically to network events. For example, it calls OnReceive 
+	// CSocket responds automatically to network events. For example, it calls OnReceive
 	// when there is data on the socket to be read, and OnAccept when a server should
 	// accept a connection from a client.
 
 	// Refer to the network sample for an example of how to use this class to create a
 	// TCP client & server, and a UDP client and server.
-	
+
 
 
 	class CSocket
@@ -77,20 +73,27 @@ namespace Win32xx
 		virtual void OnReceive()	{}
 		virtual void OnRoutingChange() {}
 		virtual void OnSend()		{}
-		
+
 		// Its unlikely you would need to override these functions
 		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
+		virtual int  Bind(const char* addr, int remotePort);
 		virtual int  Bind(const struct sockaddr* name, int namelen);
 		virtual int  Connect(const char* addr, int remotePort);
+		virtual int  Connect(const struct sockaddr* name, int namelen);
 		virtual BOOL Create(int nSocketType = SOCK_STREAM);
 		virtual void Disconnect();
+		virtual int  GetPeerName(struct sockaddr* name, int* namelen);
+		virtual int  GetSockName(struct sockaddr* name, int* namelen);
+		virtual int  GetSockOpt(int level, int optname, char* optval, int* optlen);
+		virtual int  ioCtlSocket(long cmd, u_long* argp);
 		virtual int  Listen(int backlog = SOMAXCONN);
 		virtual int  Receive(char* buf, int len, int flags);
 		virtual int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen);
 		virtual int  Send(const char* buf, int len, int flags);
 		virtual int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen);
-		virtual void StartNotifyEvents();
-		virtual void StopNotifyEvents();
+		virtual int  SetSockOpt(int level, int optname, const char* optval, int optlen);
+		virtual void StartEvents();
+		virtual void StopEvents();
 		SOCKET& GetSocket() {return m_Socket;}
 
 		// Allow CSocket to be used as a SOCKET

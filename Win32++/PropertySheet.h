@@ -40,6 +40,7 @@
 //  Declaration of the following classes:
 //  CPropertyPage and CPropertySheet
 
+
 #ifndef PROPERTYSHEET_H
 #define PROPERTYSHEET_H
 

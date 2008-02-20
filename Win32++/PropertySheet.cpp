@@ -38,7 +38,7 @@
 ////////////////////////////////////////////////////////
 // PropertySheet.cpp
 //  Definitions for the following classes:
-//  CPropertyPage and CPropertySheet
+//  CPropertyPage and CPropertySheet classes:
 
 
 #include "PropertySheet.h"

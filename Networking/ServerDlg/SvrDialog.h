@@ -19,6 +19,7 @@ public:
 	virtual ~CTCPClientDlg() {}
 	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual BOOL OnInitDialog();
 	void Append(int nID, LPCTSTR buf);
 	void Receive();
 	void Send();

@@ -37,9 +37,8 @@
 
 ////////////////////////////////////////////////////////
 // Frame.cpp
-// Definitions for the following classes:
-// CFrame, CStatusbar and CToolbar classes
-//
+// Definitions for the CFrame, CStatusbar and CToolbar classes:
+
 
 #include "Frame.h"
 #include <windowsx.h>
@@ -559,7 +558,7 @@ namespace Win32xx
 					}
 					::SetBkMode(DrawDC, iMode);
 					// Detach the font so it doesn't get destroyed
-					DrawDC.DetachFont();					
+					DrawDC.DetachFont();
 				}
 				// Detach the DC so it doesn't get destroyed
 				DrawDC.DetachDC();

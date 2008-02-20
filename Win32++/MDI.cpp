@@ -37,8 +37,9 @@
 
 ////////////////////////////////////////////////////////
 // MDI.cpp
-// Definitions for the following classes:
-// CMDIApp, CMDIFrame, CMDIClient and CMDIChild classes
+// Definitions for the CMDIApp, CMDIFrame, CMDIClient
+//  and CMDIChildclasses:
+
 
 
 #include "WinCore.h"

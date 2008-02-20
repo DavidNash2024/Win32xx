@@ -39,10 +39,13 @@ void CClientDialog::Append(int nID, LPCTSTR buf)
 
 BOOL CClientDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-//
-//	}
+	switch (uMsg)
+	{
+	case WM_ACTIVATE:
+		// Give focus to the Send Edit box
+		SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
+		break;
+	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
@@ -99,6 +102,8 @@ BOOL CClientDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDC_BUTTON_SEND:
 		OnSend();
+		// Give keyboard focus to the Send edit box
+		SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
 		return TRUE;
     } //switch (LOWORD(wParam))
 
@@ -140,7 +145,10 @@ void CClientDialog::OnStartClient()
 			{
 				// Create the socket
 				if (!m_Client.Create())
-					throw CWinException("Failed to create Client socket");
+				{
+					MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
+					return;
+				}
 
 				// Get the port number
 				std::string sPort = GetDlgItemString(IDC_EDIT_PORT);
@@ -155,9 +163,13 @@ void CClientDialog::OnStartClient()
 
 				// Connect to the server
 				if (0 != m_Client.Connect(sAddr.c_str(), RemotePort))
-					throw CWinException("Failed to connect to server");
+				{
+					MessageBox(m_hWnd, _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING);
+					m_Client.Disconnect();
+					return;
+				}
 
-				m_Client.StartNotifyEvents();					
+				m_Client.StartEvents();					
 			}
 			break;
 
@@ -165,9 +177,12 @@ void CClientDialog::OnStartClient()
 			{
 				// Create the socket
 				if (!m_Client.Create(SOCK_DGRAM))
-					throw CWinException("Failed to create Client socket");
+				{
+					MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
+					return;
+				}
 			
-				m_Client.StartNotifyEvents();
+				m_Client.StartEvents();
 
 				//Update the dialog
 				EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);

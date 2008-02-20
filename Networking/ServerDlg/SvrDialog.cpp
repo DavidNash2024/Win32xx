@@ -55,10 +55,18 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
     {
 	case IDC_BUTTON_SEND2:
 		Send();
+		// Give keyboard focus to the Send Edit box
+		SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND2), TRUE);
 		return TRUE;
 	}
 
 	return FALSE;
+}
+
+BOOL CTCPClientDlg::OnInitDialog()
+{
+	SetForegroundWindow(m_hWnd);
+	return TRUE;
 }
 
 void CTCPClientDlg::Receive()
@@ -253,7 +261,7 @@ void CSvrDialog::OnSocketAccept()
 		return;
 	} 
 	
-	pClient->StartNotifyEvents();
+	pClient->StartEvents();
 
 	// Create the new chat dialog
 	CTCPClientDlg* pDialog = new CTCPClientDlg(IDD_DIALOG2, m_hWnd);
@@ -336,7 +344,7 @@ BOOL CSvrDialog::StartServer()
 		}
 	}
 
-	m_MainSocket.StartNotifyEvents();
+	m_MainSocket.StartEvents();
 
 	return TRUE;
 }

@@ -1,0 +1,51 @@
+# Project: Server
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
+WINDRES = windres.exe
+RES  = ./Dev-C++/Debug/Server_private.res
+OBJ  = ./Dev-C++/Debug/Client.o ./Dev-C++/Debug/ClientDialog.o ./Dev-C++/Debug/DialogApp.o ./Dev-C++/Debug/main.o ./Dev-C++/Debug/Dialog.o ./Dev-C++/Debug/Socket.o ./Dev-C++/Debug/WinCore.o $(RES)
+LINKOBJ  = ./Dev-C++/Debug/Client.o ./Dev-C++/Debug/ClientDialog.o ./Dev-C++/Debug/DialogApp.o ./Dev-C++/Debug/main.o ./Dev-C++/Debug/Dialog.o ./Dev-C++/Debug/Socket.o ./Dev-C++/Debug/WinCore.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lComctl32 -lws2_32  -g3 
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+BIN  = Dev-C++/Debug/Server.exe
+CXXFLAGS = $(CXXINCS) -D_DEBUG -D _WIN32_IE=0x0400    -fexceptions -g3
+CFLAGS = $(INCS)   -fexceptions -g3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before Dev-C++/Debug/Server.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "Dev-C++\Debug\Server.exe" $(LIBS)
+
+./Dev-C++/Debug/Client.o: Client.cpp
+	$(CPP) -c Client.cpp -o ./Dev-C++/Debug/Client.o $(CXXFLAGS)
+
+./Dev-C++/Debug/ClientDialog.o: ClientDialog.cpp
+	$(CPP) -c ClientDialog.cpp -o ./Dev-C++/Debug/ClientDialog.o $(CXXFLAGS)
+
+./Dev-C++/Debug/DialogApp.o: DialogApp.cpp
+	$(CPP) -c DialogApp.cpp -o ./Dev-C++/Debug/DialogApp.o $(CXXFLAGS)
+
+./Dev-C++/Debug/main.o: main.cpp
+	$(CPP) -c main.cpp -o ./Dev-C++/Debug/main.o $(CXXFLAGS)
+
+./Dev-C++/Debug/Dialog.o: ../../Win32++/Dialog.cpp
+	$(CPP) -c ../../Win32++/Dialog.cpp -o ./Dev-C++/Debug/Dialog.o $(CXXFLAGS)
+
+./Dev-C++/Debug/Socket.o: ../../Win32++/Socket.cpp
+	$(CPP) -c ../../Win32++/Socket.cpp -o ./Dev-C++/Debug/Socket.o $(CXXFLAGS)
+
+./Dev-C++/Debug/WinCore.o: ../../Win32++/WinCore.cpp
+	$(CPP) -c ../../Win32++/WinCore.cpp -o ./Dev-C++/Debug/WinCore.o $(CXXFLAGS)
+
+./Dev-C++/Debug/Server_private.res: Server_private.rc 
+	$(WINDRES) -i Server_private.rc --input-format=rc -o ./Dev-C++/Debug/Server_private.res -O coff 

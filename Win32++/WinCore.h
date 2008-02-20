@@ -120,8 +120,8 @@ namespace Win32xx
 {
 
 	// TRACE sends a string to the debug/output pane, or an external debugger
-	//  we use an inline instead of a macro for TRACE to avoid C4390 warnings 
-	inline void TRACE(LPCTSTR str)	
+	//  we use an inline instead of a macro for TRACE to avoid C4390 warnings
+	inline void TRACE(LPCTSTR str)
 	{
 	#ifdef _DEBUG
 		OutputDebugString(str);
@@ -324,7 +324,32 @@ namespace Win32xx
 	{
 	public:
 		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
-		void MessageBox() const;
+		void MessageBox() const
+		{
+			TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
+			TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
+			TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
+
+			lstrcpyn(buf1, GetMessage(), MAX_STRING_SIZE/2 -10);
+
+			// Display Last Error information if it's useful
+			if (m_err != 0)
+			{
+				LPVOID lpMsgBuf;
+				::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+					NULL, m_err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+					(LPTSTR) &lpMsgBuf, 0, NULL );
+
+				lstrcpyn(buf2, (LPTSTR)lpMsgBuf, MAX_STRING_SIZE/2 -10);
+
+				::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);
+				::LocalFree(lpMsgBuf);
+			}
+			else
+				::wsprintf(buf3, _T("%s"), buf1);
+
+			::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		}
 
 	private:
 		LPCTSTR GetMessage() const { return m_msg; }
