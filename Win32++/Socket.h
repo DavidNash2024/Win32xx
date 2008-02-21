@@ -35,6 +35,29 @@
 ////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////
+// Socket.h
+//  Declaration of the CSocket class
+//
+// The CSocket class represents a network socket. It encapsualtes many of
+// the Windows Socket API fuctions, providing an object-oriented approach
+// to network programming. After StartEvents is called, CSocket monitors
+// the socket and responds automatically to network events. This event
+// monitoring, for example, automatically calls OnReceive when there is
+// data on the socket to be read, and OnAccept when a server should accept
+// a connection from a client.
+
+// Users of this class should be aware that functions like OnReceive,
+// OnAccept, etc. are called on a different thread from the one CSocket is
+// instanciated on. The thread for these functions needs to respond quickly
+// to other network events, so it shouldn't be delayed. It also doesn't run
+// a message loop, so it can't be used to create windows. For these reasons
+// it might be best to use PostMessage in response to these functions in a
+// windows environment.
+
+// Refer to the network samples for an example of how to use this class to
+// create a TCP client & server, and a UDP client and server.
+
 
 #ifndef SOCKET_H
 #define SOCKET_H
@@ -45,17 +68,6 @@
 
 namespace Win32xx
 {
-
-	// The CSocket class represents a network socket. It encapsualtes many of the
-	// Windows Socket fuctions, providing an object-oriented approach to network programming.
-	// CSocket responds automatically to network events. For example, it calls OnReceive
-	// when there is data on the socket to be read, and OnAccept when a server should
-	// accept a connection from a client.
-
-	// Refer to the network sample for an example of how to use this class to create a
-	// TCP client & server, and a UDP client and server.
-
-
 
 	class CSocket
 	{

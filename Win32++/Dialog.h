@@ -35,10 +35,31 @@
 ////////////////////////////////////////////////////////
 
 
-//////////////////////////////////////////
+////////////////////////////////////////////////////////
 // Dialog.h
 //  Declaration of the CDialog class
 //
+// CDialog adds support for dialogs to Win32++. Dialogs are specialised
+// windows which are a parent window for common controls. Common controls
+// are special window types such as buttons, edit controls, tree views, 
+// list views, static text etc. 
+
+// The layout of a dialog is typically defined in a resource script file
+// (often resource.rc). While this script file can be constructed manually, 
+// it is often created using a resource editor. If your compiler doesn't 
+// include a resource editor, you might find ResEdit useful. It is a free 
+// resource editor available for download at:
+// http://www.resedit.net/
+
+// CDialog supports modal and modeless dialogs. It also supports creating 
+// dialogs defined in a resource script file, as well as those defined in a
+// dialog template.
+
+// Use the Dialog generic program as the starting point for your own dialog
+// applications. 
+// The DlgSubclass sample demonstrates how to use subclassing to customise
+// the behaviour of common controls in a dialog.
+
 
 #ifndef DIALOG_H
 #define DIALOG_H
@@ -48,6 +69,7 @@
 
 namespace Win32xx
 {
+
 	class CDialog : public CWnd
 	{
 	public:

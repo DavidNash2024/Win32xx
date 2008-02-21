@@ -38,8 +38,28 @@
 ///////////////////////////////////////////////////////
 // WinCore.h
 //  Declaration of the following classes:
-//  CWinApp, CWnd, CWinClass, and CWinException
-
+//  CWinApp, CWnd, CWinClass, CWinException, and CCriticalSection
+//
+// This file contains the declarations for the core set of classes required to
+// create simple windows using Win32++.  Five classes are declared here:
+//
+// 1) WinApp: This class is used to define the message loop. Inherit from 
+//            this class and use it to start the Win32++ application.
+//
+// 2) CWnd:   This class is used to represent a window. It provides a means
+//            of creating the window, and handling its messages. Inherit
+//            from this class to define the window to be created.
+//
+// 3) CWinClass: This class is internally by Win32++ to register the various 
+//            "window classes" (not to be confused with a C++ class). You can   
+//            also use it to register your own "window class".
+//
+// 4) CWinException: This class is used internally by Win32++ to handle
+//            exceptions. You can also use it to throw and catch exceptions.
+//
+// 5) CCriticalSection: This class is used internally to manage thread access
+//            to shared resources. You can also use this class to lock and 
+//            release your own critical sections.
 
 
 #ifndef WINCORE_H
@@ -118,7 +138,6 @@ typedef std::basic_string<TCHAR> tString;
 
 namespace Win32xx
 {
-
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	//  we use an inline instead of a macro for TRACE to avoid C4390 warnings
 	inline void TRACE(LPCTSTR str)
@@ -302,14 +321,10 @@ namespace Win32xx
 		};
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
-		HFONT m_hFont;				// handle to the font in the Trace window
 		HINSTANCE m_hInstance;		// handle to the applications instance
 		HINSTANCE m_hResource;		// handle to the applications resources
-		HMODULE m_hRichEdit;		// handle to the module for the RichEdit dll
-		HWND m_hTraceEdit;			// handle to the Trace edit window
 		BOOL m_IsTlsAllocatedHere;	// a flag set for the Thread Local Storage
 		CFrame* m_pFrame;			// pointer to the CFrame object
-		CWnd m_Trace;				// CWnd object for the Trace window
 		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
 		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
 		static DWORD    st_dwTlsIndex;	// Thread Local Storage index
@@ -324,13 +339,14 @@ namespace Win32xx
 	{
 	public:
 		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
+		LPCTSTR What() const {return m_msg;}
 		void MessageBox() const
 		{
 			TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
 			TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
 			TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
 
-			lstrcpyn(buf1, GetMessage(), MAX_STRING_SIZE/2 -10);
+			lstrcpyn(buf1, m_msg, MAX_STRING_SIZE/2 -10);
 
 			// Display Last Error information if it's useful
 			if (m_err != 0)
@@ -352,10 +368,9 @@ namespace Win32xx
 		}
 
 	private:
-		LPCTSTR GetMessage() const { return m_msg; }
-
 		DWORD  m_err;
 		LPCTSTR m_msg;
+
 	};
 
 

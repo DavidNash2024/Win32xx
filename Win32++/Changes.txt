@@ -8,6 +8,13 @@ New Features
    embeded systems and SmartPhones. The Win32++ examples for Windows CE
    include the project files for eMbedded Visual C++ 4.0, and Visual 
    Studio 2005.
+   
+* Added Networking support. Win32++ now includes a CSocket class which
+   encapsulates much of the Winsock API. This class is capable of monitoring
+   network events, such as connection requests from clients, and notification
+   that the socket has data ready to be received. Command line and dialog
+   samples are provide to demonstrate how the class can be used to create
+   TCP/IP (and UDP/IP) servers and clients.
   
 * Added a CDC class. This class simplifies the drawing to device contexts. 
    This class can be used anywhere we would normally use a handle to a 

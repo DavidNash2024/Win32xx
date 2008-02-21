@@ -34,6 +34,43 @@
 //
 ////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////
+// GDI.h
+//  Declaration of the CGDI class
+//
+// This class provides a device context, along with the various associated 
+//  objects such as Bitmaps, Brushes, Bitmaps, Fonts and Pens. This class 
+//  handles the creation, selection, de-selection and deletion of these objects
+//  automatically. It also automatically deletes or releases the device context 
+//  itself as appropriate. Any failure to create the new GDI object throws an 
+//  exception.
+//
+// Coding Exampe without CDC ...
+//  HDC hDC = ::CreateCompatibleDC(SomeHDC);
+//  HPEN hPen = :: CreatePen(PS_SOLID, 1, RGB(255,0,0);
+//  HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
+//	::MoveToEx(hDC, 0, 0, NULL);
+//  ::LineTo(hDC, 50, 50);
+//  ::SelectObject(hDC, hPenOld);
+//  ::DeleteObject(hPen);
+//  ::DeleteDC(hDC);
+//
+// Coding Example with CDC ...
+//  CDC DrawDC = ::CreateCompatibleDC(SomeHDC);
+//  DrawDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
+//	::MoveToEx(DrawDC, 0, 0, NULL);
+//  ::LineTo(DrawDC, 50, 50);
+//
+// When the CDC object drops out of scope, it's destructor is called, cleaning up
+//  the GDI objects and device context.
+//
+// Notes:
+//  * A device context assigned to a CDC object will be released or deleted, unless
+//     it is detached.
+//  * A GDI object created by one of the CDC member, or one attached to the CDC
+//     object (except regions) will be deleted when the CDC object is destroyed,
+//     unless it is detached.
+
 
 #ifndef GDI_H
 #define GDI_H
@@ -48,42 +85,6 @@ namespace Win32xx
 	//
 	void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
 	void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
-
-
-	// This class provides a device context, along with the various associated objects
-	//  such as Bitmaps, Brushes, Bitmaps, Fonts and Pens. This class handles the creation,
-	//  selection, de-selection and deletion of these objects automatically. It also
-	//  automatically deletes or releases the device context itself as appropriate.
-	//  Any failure to create the new GDI object throws an exception.
-
-
-	// Coding Exampe without CDC ...
-	//  HDC hDC = ::CreateCompatibleDC(SomeHDC);
-	//  HPEN hPen = :: CreatePen(PS_SOLID, 1, RGB(255,0,0);
-	//  HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
-	//	::MoveToEx(hDC, 0, 0, NULL);
-	//  ::LineTo(hDC, 50, 50);
-	//  ::SelectObject(hDC, hPenOld);
-	//  ::DeleteObject(hPen);
-	//  ::DeleteDC(hDC);
-
-	// Coding Example with CDC ...
-	//  CDC DrawDC = ::CreateCompatibleDC(SomeHDC);
-	//  DrawDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
-	//	::MoveToEx(DrawDC, 0, 0, NULL);
-	//  ::LineTo(DrawDC, 50, 50);
-
-
-	// When the CDC object drops out of scope, it's destructor is called, cleaning up
-	//  the GDI objects and device context.
-
-	// Notes:
-	//  * A device context assigned to a CDC object will be released or deleted, unless
-	//     it is detached.
-	//  * A GDI object created by one of the CDC member, or one attached to the CDC
-	//     object (except regions) will be deleted when the CDC object is destroyed,
-	//     unless it is detached.
-
 
 
 	///////////////////////////////////////////////

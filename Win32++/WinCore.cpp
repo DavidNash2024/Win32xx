@@ -65,9 +65,8 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hWndAccel(NULL), m_hFont(NULL),
-						m_hInstance(hInstance), m_hResource(hInstance), m_hRichEdit(NULL), m_hTraceEdit(NULL),
-						m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL)
+	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hWndAccel(NULL), m_hInstance(hInstance), 
+		                m_hResource(hInstance), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL)
 	{
 		try
 		{
@@ -132,10 +131,6 @@ namespace Win32xx
 			delete *(iter);
 		}
 
-		if (m_hRichEdit)
-			::FreeLibrary(m_hRichEdit);
-		if (m_hFont)
-			::DeleteObject(m_hFont);
 		if (m_hAccelTable)
 			::DestroyAcceleratorTable(m_hAccelTable);
 	}

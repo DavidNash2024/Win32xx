@@ -213,9 +213,6 @@
 				RelativePath="resource.h">
 			</File>
 			<File
-				RelativePath=".\resrc2.h">
-			</File>
-			<File
 				RelativePath="View.h">
 			</File>
 		</Filter>

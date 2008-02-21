@@ -40,6 +40,35 @@
 //  Declaration of the CMDIApp, CMDIChild,
 //   CMDIClient,  CMDIFrame classes
 
+// The classes defined here add MDI frames support to Win32++. MDI
+// (Multiple Document Interface) frames host one or more child windows. The
+// child windows hosted by a MDI frame can be different types. For example,
+// some MDI child windows could be used to edit text, while others could be
+// used to display a bitmap. Four classes are defined here to support MDI
+// frames:
+
+// 1) CMDIApp.  This class inherits from CWinApp. It modifies the message loop
+//    to make it compatible with MDI applications. Inherit from this class to
+//    start your Win32++ MDI application.
+//
+// 2) CMDIFrame. This class inherits from CFrame, and adds the functionality
+//    required by MDI frames. It keeps track of the MDI children created and
+//    destroyed, and adjusts the menu when a MDI child is activated. Use the
+//    AddMDIChild function to add MDI child windows to the MDI frame. Inherit
+//    from CMDIFrame to create your own MDI frame.
+//
+// 3) CMDIClient: This is an internal class used by CMDIFrame. You won't need
+//    to use this class directly.
+//
+// 4) CMDIChild: All MDI child windows (ie. CWnd classes) should inherit from
+//    this class. Each MDI child type can have a different frame menu.
+
+// Use the MDIFrame generic application as the starting point for your own MDI
+// frame applications.
+// Refer to the MDIDemo sample for an example on how to use these classes to
+// create a MDI frame application with different types of MDI child windows.
+
+
 #ifndef MDI_H
 #define MDI_H
 

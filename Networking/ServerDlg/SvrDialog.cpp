@@ -267,6 +267,7 @@ void CSvrDialog::OnSocketAccept()
 	CTCPClientDlg* pDialog = new CTCPClientDlg(IDD_DIALOG2, m_hWnd);
 	pDialog->m_pSocket = pClient;
 	pDialog->DoModeless();
+	SetForegroundWindow(pDialog->GetHwnd());
 
 	// Add the socket and dialog to the map
 	m_ConnectedClients.insert(std::make_pair(pClient, pDialog));
