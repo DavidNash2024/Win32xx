@@ -332,47 +332,6 @@ namespace Win32xx
 	};
 
 
-	////////////////////////////////////////
-	// Declaration of the CWinException class
-	//
-	class CWinException
-	{
-	public:
-		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
-		LPCTSTR What() const {return m_msg;}
-		void MessageBox() const
-		{
-			TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
-			TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
-			TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
-
-			lstrcpyn(buf1, m_msg, MAX_STRING_SIZE/2 -10);
-
-			// Display Last Error information if it's useful
-			if (m_err != 0)
-			{
-				LPVOID lpMsgBuf;
-				::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-					NULL, m_err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-					(LPTSTR) &lpMsgBuf, 0, NULL );
-
-				lstrcpyn(buf2, (LPTSTR)lpMsgBuf, MAX_STRING_SIZE/2 -10);
-
-				::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);
-				::LocalFree(lpMsgBuf);
-			}
-			else
-				::wsprintf(buf3, _T("%s"), buf1);
-
-			::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-		}
-
-	private:
-		DWORD  m_err;
-		LPCTSTR m_msg;
-
-	};
-
 
 	//////////////////////////////////////////////////
 	// Global functions	(within the Win32xx namespace)
@@ -610,7 +569,49 @@ namespace Win32xx
     #define WM_PARENTNOTIFY 0x0210
   #endif
 
-	}; // namespace Win32xx
+	////////////////////////////////////////
+	// Declaration of the CWinException class
+	//
+	class CWinException
+	{
+	public:
+		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
+		LPCTSTR What() const {return m_msg;}
+		void MessageBox() const
+		{
+			TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
+			TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
+			TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
+
+			lstrcpyn(buf1, m_msg, MAX_STRING_SIZE/2 -10);
+
+			// Display Last Error information if it's useful
+			if (m_err != 0)
+			{
+				LPVOID lpMsgBuf;
+				::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+					NULL, m_err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+					(LPTSTR) &lpMsgBuf, 0, NULL );
+
+				lstrcpyn(buf2, (LPTSTR)lpMsgBuf, MAX_STRING_SIZE/2 -10);
+
+				::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);
+				::LocalFree(lpMsgBuf);
+			}
+			else
+				::wsprintf(buf3, _T("%s"), buf1);
+
+			::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		}
+
+	private:
+		DWORD  m_err;
+		LPCTSTR m_msg;
+
+	};
+
+
+}; // namespace Win32xx
 
 
 #endif // WINCORE_H

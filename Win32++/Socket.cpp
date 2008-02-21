@@ -51,7 +51,7 @@ namespace Win32xx
 			WSADATA wsaData;
 
 			if (0 != WSAStartup(MAKEWORD(2,2), &wsaData))
-				throw CWinException("WSAStartup failed");
+				throw CWinException(_T("WSAStartup failed"));
 		}
 
 		catch (const CWinException &e)
@@ -129,7 +129,7 @@ namespace Win32xx
 			m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 			break;
 		default:
-			TRACE("Unknown Socket Type");
+			TRACE(_T("Unknown Socket Type"));
 			return FALSE;
 		}
 
