@@ -38,6 +38,10 @@
 //////////////////////////////////////////////////////
 // Splitter.h
 
+// The CSplitter class positions 3 windows over the parent window.
+// The CWnd classes for these windows are m_Bar, m_pPane0 and m_pPane1.
+// Use SetPanes to set the CWnd objects for m_pPane0 and m_Pane1.
+
 
 #ifndef SPLITTER_H
 #define SPLITTER_H
@@ -46,12 +50,6 @@
 
 namespace Win32xx
 {
-
-// The CSplitter class positions 3 windows over the parent window.
-// The CWnd classes for these windows are m_Bar, m_pPane0 and m_pPane1.
-// Use SetPanes to set the CWnd objects for m_pPane0 and m_Pane1.
-
-
 	// Declaration of the CSplitter class
 	class CSplitter : public CWnd
 	{

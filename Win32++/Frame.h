@@ -38,6 +38,30 @@
 ////////////////////////////////////////////////////////
 // Frame.h
 //  Declaration of the CFrame, CStatusbar and CToolbar classes
+//
+// The classes declared in this file support SDI (Single Document Interface)
+// frames on Win32/Win64 operating systems (not Windows CE). For Windows CE,
+// use WCEframe.h instead. SDI frames are a simple frame which supports a
+// single client window. Refer to MDI.h for frames that support several
+// child windows.
+//
+// To create a frame based application, inherit a CMainFrame class from CFrame.
+// The other classes are used internally by
+// CFrame.
+//
+// CFrame is responsible for creating a window which includes a menu and
+// toolbar (usualy hosted within a rebar), and a status bar, and managing
+// the position of these windows and the "view" window. The "view" window
+// is a seperate CWnd object assigned to the frame with the SetView function.
+//
+// When compiling an application with these classes, it will need to be linked
+// with Comctl32.lib.
+//
+// Use the Frame generic application as the starting point for your own frame
+// applications.
+// Refer to the Notepad and Scribble samples for examples on how to use these
+// classes to create a frame application.
+
 
 #ifndef FRAME_H
 #define FRAME_H

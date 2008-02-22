@@ -39,6 +39,17 @@
 // WCEframe.h
 // Definitions for the CCmdbar and CFrame
 
+// These classes are provide a frame window for use on Window CE devices such
+// as Pocket PCs. The frame uses CommandBar (a control unique to the Windows CE
+// operating systems) to display the menu and toolbar.
+//
+// Use the PocketPCFrame generic application as the starting point for your own
+// frame based applications on the Pocket PC.
+//
+// Refer to the Scribble demo application for an example of how these classes
+// can be used.
+
+
 #ifndef WCEFRAME_H
 #define WCEFRAME_H
 
@@ -53,7 +64,7 @@
 
 #ifdef SHELL_AYGSHELL
   #include <aygshell.h>
-  #pragma comment(lib, "aygshell.lib") 
+  #pragma comment(lib, "aygshell.lib")
 #endif // SHELL_AYGSHELL
 
 #if (_WIN32_WCE < 0x500 && defined(SHELL_AYGSHELL)) || _WIN32_WCE == 420
@@ -109,10 +120,10 @@ namespace Win32xx
 
 	protected:
 		std::vector<UINT> m_ToolbarData;
-		
+
 	private:
 		CCmdbar m_Menubar;
-	
+
 #ifdef SHELL_AYGSHELL
 		SHACTIVATEINFO m_sai;
 #endif

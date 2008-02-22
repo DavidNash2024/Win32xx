@@ -58,6 +58,9 @@
 // Refer to the network samples for an example of how to use this class to
 // create a TCP client & server, and a UDP client and server.
 
+// To compile programs with CSocket, link with ws3_32.lib for Win32/Win64,
+// and ws2.lib for Windows CE.
+
 
 #ifndef SOCKET_H
 #define SOCKET_H

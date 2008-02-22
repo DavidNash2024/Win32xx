@@ -40,6 +40,15 @@
 //  Declaration of the following classes:
 //  CPropertyPage and CPropertySheet
 
+// These classes add support for property sheets to Win32++. A property sheet
+// will have one or more property pages. These pages are much like dialogs
+// which are presented within a tabbed dialog or within a wizard. The data
+// on a property page can be validated before the next page is presented.
+// Property sheets have three modes of use: Modal, Modeless, and Wizard.
+//
+// Refer to the PropertySheet demo program for an example of how propert sheets
+// can be used.
+
 
 #ifndef PROPERTYSHEET_H
 #define PROPERTYSHEET_H
