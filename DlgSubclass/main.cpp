@@ -4,10 +4,10 @@
 #include "DlgSubclassApp.h"
 
 
-INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CDlgSubclassApp theApp(hInstance);
+	CDlgSubclassApp theApp;
 
 	// Run the application
 	return theApp.Run();

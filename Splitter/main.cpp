@@ -4,10 +4,10 @@
 #include "SplitterApp.h"
 
 
-INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CSplitterApp theApp(hInstance);
+	CSplitterApp theApp;
 
 	// Run the application
 	return theApp.Run();

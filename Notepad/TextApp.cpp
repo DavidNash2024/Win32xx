@@ -6,7 +6,7 @@
 #include "resource.h"
 
 
-CTextApp::CTextApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CTextApp::CTextApp()
 {
 }
 

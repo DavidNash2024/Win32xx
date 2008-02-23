@@ -4,10 +4,10 @@
 #include "BrowserApp.h"
 
 
-INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
     // Start Win32++
-    CBrowserApp MyApp(hInstance);
+    CBrowserApp MyApp;
 
 
 	// Run the application

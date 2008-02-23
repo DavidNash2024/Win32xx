@@ -5,7 +5,7 @@
 #include "SubApp.h"
 
 
-CSubApp::CSubApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CSubApp::CSubApp()
 {
 }
 

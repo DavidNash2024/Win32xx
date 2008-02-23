@@ -5,7 +5,7 @@
 
 
 // Definitions for the CFrameApp class
-CPropertySheetApp::CPropertySheetApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CPropertySheetApp::CPropertySheetApp()
 {
 }
 

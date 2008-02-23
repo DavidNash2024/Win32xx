@@ -6,7 +6,7 @@
 
 
 // Definitions for the CDialogApp class
-CDialogApp::CDialogApp(HINSTANCE hInstance) : CWinApp(hInstance), m_SvrDialog(IDD_DIALOG1)
+CDialogApp::CDialogApp() : m_SvrDialog(IDD_DIALOG1)
 {
 }
 

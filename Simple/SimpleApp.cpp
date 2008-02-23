@@ -5,7 +5,7 @@
 
 
 // Definitions for the CSimpleApp class
-CSimpleApp::CSimpleApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CSimpleApp::CSimpleApp()
 {
 }
 

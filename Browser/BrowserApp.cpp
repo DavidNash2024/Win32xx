@@ -6,7 +6,7 @@
 
 
 // Definitions for the CBrowserApp class
-CBrowserApp::CBrowserApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CBrowserApp::CBrowserApp()
 {
 }
 

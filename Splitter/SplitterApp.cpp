@@ -6,7 +6,7 @@
 #include "SplitterApp.h"
 
 
-CSplitterApp::CSplitterApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CSplitterApp::CSplitterApp()
 {
 }
 

@@ -4,10 +4,10 @@
 #include "DXApp.h"
 
 
-INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
     // Start Win32++
-    CDXApp MyApp(hInstance);
+    CDXApp MyApp;
 
 	// Run the application
 	return MyApp.Run();

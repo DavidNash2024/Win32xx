@@ -12,7 +12,7 @@
 class CSplitterApp : public CWinApp
 {
 public:
-	CSplitterApp(HINSTANCE hInstance);
+	CSplitterApp();
 	virtual ~CSplitterApp()  {}
 	virtual BOOL InitInstance();
 

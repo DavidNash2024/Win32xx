@@ -11,7 +11,7 @@
 class CMDIDemoApp : public CMDIApp
 {
 public:
-    CMDIDemoApp(HINSTANCE hInstance);
+    CMDIDemoApp();
     virtual ~CMDIDemoApp() {}
 	virtual BOOL InitInstance();
 

@@ -6,7 +6,7 @@
 #include "MDIFrameApp.h"
 
 
-CMDIFrameApp::CMDIFrameApp(HINSTANCE hInstance) : CMDIApp(hInstance)
+CMDIFrameApp::CMDIFrameApp()
 {
 }
 

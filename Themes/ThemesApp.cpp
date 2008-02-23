@@ -5,7 +5,7 @@
 
 
 // Definitions for the CFrameApp class
-CThemesApp::CThemesApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CThemesApp::CThemesApp()
 {
 }
 

@@ -85,7 +85,7 @@ namespace Win32xx
 	class CMDIApp : public CWinApp
 	{
 	public:
-		CMDIApp(HINSTANCE hInstance);
+		CMDIApp();
 	    virtual ~CMDIApp() {}
 
 		// These are the functions you might wish to override

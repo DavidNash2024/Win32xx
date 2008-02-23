@@ -6,7 +6,7 @@
 
 
 // Definitions for the CFrameApp class
-CPictureApp::CPictureApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CPictureApp::CPictureApp()
 {
 }
 

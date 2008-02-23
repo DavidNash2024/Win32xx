@@ -6,7 +6,7 @@
 #include "DialogApp.h"
 
 
-CDialogApp::CDialogApp(HINSTANCE hInstance) : CWinApp(hInstance), MyDialog(IDD_DIALOG)
+CDialogApp::CDialogApp() : MyDialog(IDD_DIALOG)
 {
 }
 

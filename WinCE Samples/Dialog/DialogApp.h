@@ -13,7 +13,7 @@
 class CDialogApp : public CWinApp
 {
 public:
-	CDialogApp(HINSTANCE hInstance);
+	CDialogApp();
 	virtual ~CDialogApp();
 	virtual BOOL InitInstance();
 

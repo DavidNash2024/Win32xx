@@ -5,7 +5,7 @@
 
 
 
-CThreadApp::CThreadApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CThreadApp::CThreadApp()
 {
 }
 

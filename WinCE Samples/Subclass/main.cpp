@@ -19,7 +19,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 	}
 
 	// Start Win32++
-	CSubclassApp theApp(hInstance);
+	CSubclassApp theApp;
 
 	// Process the window messages
 	return theApp.Run();

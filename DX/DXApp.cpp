@@ -4,7 +4,7 @@
 #include "DXApp.h"
 
 
-CDXApp::CDXApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CDXApp::CDXApp()
 {
 }
 

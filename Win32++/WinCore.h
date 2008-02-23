@@ -287,7 +287,7 @@ namespace Win32xx
 		friend class CPropertySheet; // CPropertSheet uses m_MapLock and SetTlsIndex
 
 	public:
-		CWinApp(HINSTANCE hInstance);
+		CWinApp();
 		virtual ~CWinApp();
 
 		// These are the functions you might wish to override

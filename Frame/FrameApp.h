@@ -11,7 +11,7 @@
 class CFrameApp : public CWinApp
 {
 public:
-	CFrameApp(HINSTANCE hInstance);
+	CFrameApp();
 	virtual ~CFrameApp();
 	virtual BOOL InitInstance();
 

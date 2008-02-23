@@ -6,7 +6,7 @@
 #include "MDIDemoApp.h"
 
 
-CMDIDemoApp::CMDIDemoApp(HINSTANCE hInstance) : CMDIApp(hInstance)
+CMDIDemoApp::CMDIDemoApp()
 {
 }
 

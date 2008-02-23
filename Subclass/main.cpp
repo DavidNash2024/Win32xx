@@ -4,10 +4,10 @@
 #include "SubApp.h"
 
 
-INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CSubApp theApp(hInstance);
+	CSubApp theApp;
 
 	// Run the application
 	return theApp.Run();

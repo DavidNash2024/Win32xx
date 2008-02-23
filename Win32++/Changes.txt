@@ -5,7 +5,7 @@ New Features
 ------------
 * Win32++ now also directly supports the Windows CE operating systems. 
    Windows CE is the operating system used on such things as Pocket PCs, 
-   embeded systems and SmartPhones. The Win32++ examples for Windows CE
+   embedded systems and SmartPhones. The Win32++ examples for Windows CE
    include the project files for eMbedded Visual C++ 4.0, and Visual 
    Studio 2005.
    
@@ -35,7 +35,7 @@ New Features
 * Added an immediate mode to CSplitter. There is now the choice of resizing
    the panes while the splitter bar is being dragged, or defer the resizing
    until the splitter bar drag is complete (as before). CSplitter's 
-   constructor now requires no arguements, making the class simpler to use.
+   constructor now requires no arguments, making the class simpler to use.
    
 * Automatically detects the XP theme used (Default, Silver or Olive), and
    adjusts the theme colors accordingly.
@@ -52,27 +52,35 @@ Other Changes:
 * Changed the way windows are created. We no longer use a CBT hook as part of 
    the window creation process. It was this change which allowed Win32++ to
    directly support Windows CE.
+   
+* CWinApp no longer requires the application's hInstance in its constructor.   
 
 Incompatibilities with previous versions:
 -----------------------------------------
+* CWinApp now uses a default constructor. This makes this class simpler to use,
+   but existing applications will need to remove the hInstance function 
+   argument from any class inherited from CWinApp or CMDIApp.
+
+* Frame applications use the CDC class, so GDI.cpp will need to be added
+   to existing projects.
+
 * CSplitter now uses a default constructor. This simplifies the use of 
   CSplitter. The following functions can be used to set the CSplitter 
-  paramerters:
+  parameters:
  - SetBarPos	sets the initial splitter bar position (default is 10)
  - SetBarColor   sets the color of the splitter bar (default is rebar color)
  - SetImmediate  sets immediate mode true or false (default is false)
  - SetVertical   sets vertical bar mode true or false (default is true)
  - SetWidth      sets the width of the splitter bar (default is 5)
  
- * Frame applications use the CDC class, so GDI.cpp will need to be added
-   to existing projects.
+* CWnd::GetCWndObject has been renamed to CWnd::FromHandle
 
 
 Version 5.6
 ===========
 * Added InitInstance to CWinApp. Code to create windows should now be
    placed in InitInstance instead of the constructor of the CWinApp
-   derived class. Doing this allows the CWinApp derrived class to be
+   derived class. Doing this allows the CWinApp derived class to be
    fully constructed before attempting to create windows. 
 * Property Sheets are now supported. The files PropertySheet.cpp and 
    PropertySheet.h have been added to Win32++. These files define
@@ -86,7 +94,7 @@ Version 5.6
   - Frames without rebars have themed menus.
   - Other popup menus belonging to CFrame (or CMainFrame) are themed.
   - Functions which customise the appearance of the menus are now located
-     in CFrame. They are easily overriden for a different visual effect.     
+     in CFrame. They are easily overridden for a different visual effect.     
 * The icons used in popup menu items can come from several bitmap resources.
   When an application has several toolbars in a rebar, for example, the icons 
   from each of these can be displayed in popup menus.
@@ -97,7 +105,7 @@ Version 5.5
 ===========
 * If a resource for disabled toolbar items isn't provided, an ImageList
    for disabled buttons is created for you. This imagelist is used for
-   displaying disabled toobar buttons, and disabled menu items with an icon.
+   displaying disabled toolbar buttons, and disabled menu items with an icon.
 * Updated Rebar themes
   - Improved rendering of non-toolbar bands during band repositioning
   - Round borders and flat style now supported in Win95, Win98 & WinME
@@ -147,7 +155,7 @@ Version 5.3
 
 Version 5.2
 ===========
-* Added a seperate HINSTANCE for resources. This provides for multilingual
+* Added a separate HINSTANCE for resources. This provides for multilingual
    support, when resources are loaded via a DLL.
 * The thread a CWnd object runs in is now determined when its window is 
    created, rather than when the CWnd object is instantiated.
@@ -209,7 +217,7 @@ Version 2
 * Now uses TLS to store our "this" pointer during window creation,
    instead of a global variable for thread safety.
 * The code is now Unicode compliant.
-* Added debug mode. Exceptions produce a warning in a messagebox
+* Added debug mode. Exceptions produce a warning in a message box
    if _DEBUG is defined. 
 * Added CWinApp class to start Win32++.
 * Added CDialog class to support modal and modeless dialogs as well

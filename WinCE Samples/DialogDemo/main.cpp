@@ -19,7 +19,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 	}
 
 	// The one and only CDialogApp object
-	CDialogApp theApp(hInstance);
+	CDialogApp theApp;
 
 	//Process the window messages
 	return theApp.Run();

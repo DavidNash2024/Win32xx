@@ -12,7 +12,7 @@
 class CDXApp : public CWinApp
 {
 public:
-    CDXApp(HINSTANCE hInstance);
+    CDXApp();
     virtual ~CDXApp() {}
 	virtual BOOL InitInstance();
 	virtual int MessageLoop();

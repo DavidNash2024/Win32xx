@@ -22,7 +22,7 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLi
 	}
 
 	//Start the framework
-    CFrameApp MyApp(hInstance);
+    CFrameApp MyApp;
 
     //Process the window messages
     return MyApp.Run();

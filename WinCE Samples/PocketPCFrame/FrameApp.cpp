@@ -1,6 +1,6 @@
 #include "FrameApp.h"
 
-CFrameApp::CFrameApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CFrameApp::CFrameApp()
 {
 }
 

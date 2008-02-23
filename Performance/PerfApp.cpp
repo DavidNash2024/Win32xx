@@ -4,7 +4,7 @@
 #include "PerfApp.h"
 
 
-CPerformanceApp::CPerformanceApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CPerformanceApp::CPerformanceApp()
 {
 }
 

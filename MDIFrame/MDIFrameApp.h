@@ -11,7 +11,7 @@
 class CMDIFrameApp : public CMDIApp
 {
 public:
-    CMDIFrameApp(HINSTANCE hInstance);
+    CMDIFrameApp();
     virtual ~CMDIFrameApp() {}
 	virtual BOOL InitInstance();
 

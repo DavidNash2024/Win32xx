@@ -11,7 +11,7 @@
 class CSubclassApp : public CWinApp
 {
 public:
-	CSubclassApp(HINSTANCE hInstance);
+	CSubclassApp();
 	virtual ~CSubclassApp();
 	virtual BOOL InitInstance();
 

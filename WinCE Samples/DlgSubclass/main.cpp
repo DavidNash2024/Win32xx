@@ -19,7 +19,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 	}
 
 	// Start Win32++
-	CDlgSubclassApp theApp(hInstance);
+	CDlgSubclassApp theApp;
 
 	// Process the window messages
 	return theApp.Run();

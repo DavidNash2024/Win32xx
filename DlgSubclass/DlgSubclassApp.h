@@ -11,7 +11,7 @@
 class CDlgSubclassApp : public CWinApp
 {
 public:
-	CDlgSubclassApp(HINSTANCE hInstance);
+	CDlgSubclassApp();
 	virtual ~CDlgSubclassApp();
 	CMyDialog& GetDialog() {return m_MyDialog;}
 	virtual BOOL InitInstance();

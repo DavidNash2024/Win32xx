@@ -11,7 +11,7 @@
 class CPictureApp : public CWinApp
 {
 public:
-	CPictureApp(HINSTANCE hInstance);
+	CPictureApp();
 	virtual ~CPictureApp();
 	virtual BOOL InitInstance();
 

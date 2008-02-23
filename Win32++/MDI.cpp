@@ -52,9 +52,9 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CMDIApp class
 	//
-	CMDIApp::CMDIApp(HINSTANCE hInstance) : CWinApp(hInstance)
+	CMDIApp::CMDIApp()
 	{
-		m_hAccel = LoadAccelerators (hInstance, MAKEINTRESOURCE(IDW_MAIN)) ;
+		m_hAccel = LoadAccelerators (GetInstanceHandle(), MAKEINTRESOURCE(IDW_MAIN)) ;
 	}
 
 	int CMDIApp::MessageLoop()

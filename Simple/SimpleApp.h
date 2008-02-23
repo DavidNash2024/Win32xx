@@ -11,7 +11,7 @@
 class CSimpleApp : public CWinApp
 {
 public:
-    CSimpleApp(HINSTANCE hInstance);
+    CSimpleApp();
     virtual ~CSimpleApp() {}
 	virtual BOOL InitInstance();
 

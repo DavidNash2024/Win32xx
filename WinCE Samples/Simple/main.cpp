@@ -20,7 +20,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 	}
 
 	//Start the framework
-    CSimpleApp MyApp(hInstance);
+    CSimpleApp MyApp;
 
     //Process the window messages
     return MyApp.Run();

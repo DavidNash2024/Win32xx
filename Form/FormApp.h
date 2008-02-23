@@ -11,7 +11,7 @@
 class CFormApp : public CWinApp
 {
 public:
-	CFormApp(HINSTANCE hInstance);
+	CFormApp();
 	virtual ~CFormApp();
 	virtual BOOL InitInstance();
 

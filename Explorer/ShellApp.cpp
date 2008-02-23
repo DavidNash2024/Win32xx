@@ -5,7 +5,7 @@
 #include "ShellApp.h"
 
 
-CShellApp::CShellApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CShellApp::CShellApp()
 {
 }
 

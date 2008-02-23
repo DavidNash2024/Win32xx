@@ -6,7 +6,7 @@
 
 
 // Definitions for the CDialogApp class
-CDlgSubclassApp::CDlgSubclassApp(HINSTANCE hInstance) : CWinApp(hInstance), m_MyDialog(IDD_DIALOG1)
+CDlgSubclassApp::CDlgSubclassApp() : m_MyDialog(IDD_DIALOG1)
 {
 }
 

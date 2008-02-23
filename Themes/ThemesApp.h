@@ -11,7 +11,7 @@
 class CThemesApp : public CWinApp
 {
 public:
-	CThemesApp(HINSTANCE hInstance);
+	CThemesApp();
 	virtual ~CThemesApp();
 	virtual BOOL InitInstance();
 

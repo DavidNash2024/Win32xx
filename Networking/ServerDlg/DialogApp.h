@@ -11,7 +11,7 @@
 class CDialogApp : public CWinApp
 {
 public:
-	CDialogApp(HINSTANCE hInstance); 
+	CDialogApp(); 
 	virtual ~CDialogApp();
 	virtual BOOL InitInstance();
 	CSvrDialog& GetDialog() {return m_SvrDialog;}

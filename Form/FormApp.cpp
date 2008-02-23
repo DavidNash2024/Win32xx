@@ -5,7 +5,7 @@
 
 
 // Definitions for the CFrameApp class
-CFormApp::CFormApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CFormApp::CFormApp()
 {
 }
 

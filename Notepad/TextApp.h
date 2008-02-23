@@ -12,7 +12,7 @@
 class CTextApp : public CWinApp
 {
 public:
-	CTextApp(HINSTANCE hInstance); 
+	CTextApp(); 
 	virtual ~CTextApp()  {}
 	virtual BOOL InitInstance();
 

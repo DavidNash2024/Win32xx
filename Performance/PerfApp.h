@@ -15,7 +15,7 @@
 class CPerformanceApp : public CWinApp
 {
 public:
-	CPerformanceApp(HINSTANCE hInstance);
+	CPerformanceApp();
 	virtual ~CPerformanceApp();
 	virtual BOOL InitInstance();
 	CMainWindow& GetMainWnd() {return m_MainWnd;}

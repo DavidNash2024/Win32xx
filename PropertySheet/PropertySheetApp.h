@@ -11,7 +11,7 @@
 class CPropertySheetApp : public CWinApp
 {
 public:
-	CPropertySheetApp(HINSTANCE hInstance);
+	CPropertySheetApp();
 	virtual ~CPropertySheetApp();
 	virtual BOOL InitInstance();
 

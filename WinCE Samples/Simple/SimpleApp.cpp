@@ -1,6 +1,6 @@
 #include "SimpleApp.h"
 
-CSimpleApp::CSimpleApp(HINSTANCE hInstance) : CWinApp(hInstance)
+CSimpleApp::CSimpleApp()
 {
 }
 

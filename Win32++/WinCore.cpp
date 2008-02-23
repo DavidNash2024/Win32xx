@@ -65,8 +65,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp(HINSTANCE hInstance) : m_hAccelTable(NULL), m_hWndAccel(NULL), m_hInstance(hInstance), 
-		                m_hResource(hInstance), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL)
+	CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL) 
 	{
 		try
 		{
@@ -92,6 +91,9 @@ namespace Win32xx
 				// of a CWinApp derived class is started.
  				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
+
+			m_hInstance = (HINSTANCE) ::GetModuleHandle(0);
+			m_hResource = m_hInstance;
 		}
 
 		catch (const CWinException &e)

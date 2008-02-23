@@ -13,7 +13,7 @@
 class CShellApp : public CWinApp
 {
 public:
-	CShellApp(HINSTANCE hInstance);
+	CShellApp();
 	virtual ~CShellApp();
 	virtual BOOL InitInstance();
 

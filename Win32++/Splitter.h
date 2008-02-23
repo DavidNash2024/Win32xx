@@ -41,6 +41,8 @@
 // The CSplitter class positions 3 windows over the parent window.
 // The CWnd classes for these windows are m_Bar, m_pPane0 and m_pPane1.
 // Use SetPanes to set the CWnd objects for m_pPane0 and m_Pane1.
+//
+// Refer to the Splitter sample for a demonstration of how to use CSplitter.
 
 
 #ifndef SPLITTER_H

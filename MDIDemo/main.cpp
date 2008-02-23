@@ -4,10 +4,10 @@
 
 #include "MDIDemoApp.h"
 
-INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-    CMDIDemoApp MyApp(hInstance);
+    CMDIDemoApp MyApp;
 
 	// Run the application
 	return MyApp.Run();
