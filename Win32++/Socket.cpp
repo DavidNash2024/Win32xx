@@ -37,7 +37,7 @@
 
 
 #include <Winsock2.h>
-#include "WinCore.h"
+#include "WinCore.h" // required for CWinException and TRACE
 #include "Socket.h"
 
 
@@ -144,8 +144,8 @@ namespace Win32xx
 
 	void CSocket::Disconnect()
 	{
-		StopEvents();
 		shutdown(m_Socket, SD_BOTH);
+		StopEvents();
 		closesocket(m_Socket);
 		m_Socket = 0;
 	}
@@ -187,16 +187,17 @@ namespace Win32xx
 
 			if (WSA_WAIT_FAILED == dwResult)
 			{
-				TRACE(_T("WSAWaitForMultipleEvents failed"));
+				TRACE(_T("WSAWaitForMultipleEvents failed\n"));
 				return 0;
 			}
 
+			// Proceed if a network event occurred
 			if (WSA_WAIT_TIMEOUT != dwResult)
 			{
 
 				if ( SOCKET_ERROR == WSAEnumNetworkEvents(sClient, hNetworkEvent, &NetworkEvents) )
 				{
-					TRACE(_T("WSAEnumNetworkEvents failed"));
+					TRACE(_T("WSAEnumNetworkEvents failed\n"));
 					return 0;
 				}
 
@@ -319,7 +320,9 @@ namespace Win32xx
 
 	void CSocket::StartEvents()
 	{
-		StopEvents();
+		// This function starts the thread which monitors the socket for events.
+
+		StopEvents();	// Ensure the thread isn't already running
 		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
 	}
 

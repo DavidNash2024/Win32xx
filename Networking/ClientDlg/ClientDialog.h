@@ -30,7 +30,7 @@ private:
 	void OnStartClient();
 	void OnSend();
 
-	CClient m_Client;
+	CClientSocket m_Client;
 	BOOL m_bClientConnected;
 	int  m_SocketType;
 };

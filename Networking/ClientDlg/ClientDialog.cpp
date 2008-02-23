@@ -6,15 +6,13 @@
 
 
 // Definitions for the CMyDialog class
-CClientDialog::CClientDialog(UINT nResID, HWND hWndParent) : 
+CClientDialog::CClientDialog(UINT nResID, HWND hWndParent) :
 		CDialog(nResID, hWndParent), m_bClientConnected(FALSE), m_SocketType(SOCK_STREAM)
 {
-
 }
 
 CClientDialog::~CClientDialog()
 {
-
 }
 
 void CClientDialog::Append(int nID, LPCTSTR buf)
@@ -41,6 +39,15 @@ BOOL CClientDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 {
 	switch (uMsg)
 	{
+	case USER_CONNECT:
+		OnClientConnect();
+		break;
+	case USER_DISCONNECT:
+		OnClientDisconnect();
+		break;
+	case USER_RECEIVE:
+		OnClientReceive();
+		break;
 	case WM_ACTIVATE:
 		// Give focus to the Send Edit box
 		SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
@@ -70,7 +77,11 @@ void CClientDialog::OnClientDisconnect()
 void CClientDialog::OnClientConnect()
 {
 	// Called when the connection to the server is established
+
 	m_bClientConnected = TRUE;
+
+	// Move focus to the Send Edit box
+	SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
 
 	// Update the dialog
 	SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, "Connected to server");
@@ -156,7 +167,7 @@ void CClientDialog::OnStartClient()
 
 				// Get the IP Address from the IP Address control
 				DWORD dwAddr = 0;
-				SendMessage(GetDlgItem(m_hWnd, IDC_IPADDRESS1), IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );  
+				SendMessage(GetDlgItem(m_hWnd, IDC_IPADDRESS1), IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 				in_addr addr = {0};
 				addr.S_un.S_addr = htonl(dwAddr);
 				std::string sAddr =  inet_ntoa(addr);
@@ -169,7 +180,7 @@ void CClientDialog::OnStartClient()
 					return;
 				}
 
-				m_Client.StartEvents();					
+				m_Client.StartEvents();
 			}
 			break;
 
@@ -181,7 +192,7 @@ void CClientDialog::OnStartClient()
 					MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
 					return;
 				}
-			
+
 				m_Client.StartEvents();
 
 				//Update the dialog
@@ -234,7 +245,7 @@ void CClientDialog::OnSend()
 
 			// Get the IP Address from the IP Address control
 			DWORD dwAddr = 0;
-			SendMessage(GetDlgItem(m_hWnd, IDC_IPADDRESS1), IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );  
+			SendMessage(GetDlgItem(m_hWnd, IDC_IPADDRESS1), IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 
 			sockaddr_in peer = {0};
 			peer.sin_family = AF_INET;

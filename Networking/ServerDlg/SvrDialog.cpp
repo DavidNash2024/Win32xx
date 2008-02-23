@@ -267,7 +267,13 @@ void CSvrDialog::OnSocketAccept()
 	CTCPClientDlg* pDialog = new CTCPClientDlg(IDD_DIALOG2, m_hWnd);
 	pDialog->m_pSocket = pClient;
 	pDialog->DoModeless();
-	SetForegroundWindow(pDialog->GetHwnd());
+
+	// Reposition the chat dialog
+	RECT r = {0};
+	::GetWindowRect(pDialog->GetHwnd(), &r);
+	int offset  = 4 * (m_ConnectedClients.size() - 1);
+	MoveWindow(pDialog->GetHwnd(), r.left + offset, r.top + offset + 80, r.right - r.left, r.bottom - r.top, TRUE);
+	ShowWindow(pDialog->GetHwnd(), SW_SHOW);
 
 	// Add the socket and dialog to the map
 	m_ConnectedClients.insert(std::make_pair(pClient, pDialog));
