@@ -43,22 +43,22 @@
 // This file contains the declarations for the core set of classes required to
 // create simple windows using Win32++.  Five classes are declared here:
 //
-// 1) WinApp: This class is used to define the message loop. Inherit from 
+// 1) WinApp: This class is used to define the message loop. Inherit from
 //            this class and use it to start the Win32++ application.
 //
 // 2) CWnd:   This class is used to represent a window. It provides a means
 //            of creating the window, and handling its messages. Inherit
 //            from this class to define the window to be created.
 //
-// 3) CWinClass: This class is internally by Win32++ to register the various 
-//            "window classes" (not to be confused with a C++ class). You can   
+// 3) CWinClass: This class is internally by Win32++ to register the various
+//            "window classes" (not to be confused with a C++ class). You can
 //            also use it to register your own "window class".
 //
 // 4) CWinException: This class is used internally by Win32++ to handle
 //            exceptions. You can also use it to throw and catch exceptions.
 //
 // 5) CCriticalSection: This class is used internally to manage thread access
-//            to shared resources. You can also use this class to lock and 
+//            to shared resources. You can also use this class to lock and
 //            release your own critical sections.
 
 
@@ -560,6 +560,38 @@ namespace Win32xx
 		return lpstrRet;
 	}
   #endif // !lstrcpyn
+
+	inline tString CharToTString(const char* s)
+	{
+		// Handy for converting char to TCHAR
+		tString tstr;
+  #ifdef UNICODE
+		int len = 1 + strlen(s);
+		TCHAR* t = new TCHAR[len];
+		mbstowcs(t, s, len);
+		tstr = t;
+		delete []t;
+  #else
+		tstr = s;
+  #endif
+		return tstr;
+	}
+
+	inline std::string TcharToString(LPCTSTR t)
+	{
+		// Handy for converting TCHAR to char
+		std::string str;
+  #ifdef UNICODE
+		int len = 1 + lstrlen(t);
+		char* c = new char[len];
+		wcstombs(c, t, len);
+		str = c;
+		delete []c;
+  #else
+		str = t;
+  #endif
+		return str;
+	}
 
   #ifndef TLS_OUT_OF_INDEXES
 	#define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)

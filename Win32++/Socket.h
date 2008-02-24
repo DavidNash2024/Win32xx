@@ -120,8 +120,10 @@ namespace Win32xx
 		static DWORD WINAPI EventThread(LPVOID thread_data);
 
 		SOCKET m_Socket;
-		HANDLE m_hEventThread;
-		BOOL m_bStopThread;
+		HANDLE m_hEventThread;	// Handle to the thread
+		HANDLE m_StopRequest;	// An event to signal the event thread should stop
+		HANDLE m_ThreadStopping;// An event to signal the event thread is stopping
+
 	};
 
 }

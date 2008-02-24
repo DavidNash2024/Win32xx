@@ -43,15 +43,18 @@
 
 namespace Win32xx
 {
-	CSocket::CSocket() : m_Socket(0), m_hEventThread(0), m_bStopThread(FALSE)
+	CSocket::CSocket() : m_Socket(0), m_hEventThread(0)
 	{
 		try
 		{
 			// Initialise the Windows Socket services
 			WSADATA wsaData;
 
-			if (0 != WSAStartup(MAKEWORD(2,2), &wsaData))
+			if (0 != ::WSAStartup(MAKEWORD(2,2), &wsaData))
 				throw CWinException(_T("WSAStartup failed"));
+
+			m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
+			m_ThreadStopping = ::CreateEvent(0, TRUE, FALSE, 0);
 		}
 
 		catch (const CWinException &e)
@@ -65,13 +68,17 @@ namespace Win32xx
 	{
 		Disconnect();
 
+		// Close handles
+		::CloseHandle(m_StopRequest);
+		::CloseHandle(m_ThreadStopping);
+
 		// Terminate the  Windows Socket services
-		WSACleanup();
+		::WSACleanup();
 	}
 
 	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
 	{
-		rClientSock.m_Socket = accept(m_Socket, addr, addrlen);
+		rClientSock.m_Socket = ::accept(m_Socket, addr, addrlen);
 		if (SOCKET_ERROR == rClientSock.GetSocket())
 			TRACE(_T("Accept failed\n"));
 	}
@@ -83,7 +90,7 @@ namespace Win32xx
 		clientService.sin_addr.s_addr = inet_addr( addr );
 		clientService.sin_port = htons( (u_short)remotePort );
 
-		int Result = bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
+		int Result = ::bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 		if ( 0 != Result )
 			TRACE(_T("Bind failed\n"));
 		return Result;
@@ -91,7 +98,7 @@ namespace Win32xx
 
 	int CSocket::Bind(const struct sockaddr* name, int namelen)
 	{
-		int Result = bind (m_Socket, name, namelen);
+		int Result = ::bind (m_Socket, name, namelen);
 		if ( 0 != Result )
 			TRACE(_T("Bind failed\n"));
 		return Result;
@@ -104,15 +111,16 @@ namespace Win32xx
 		clientService.sin_addr.s_addr = inet_addr( addr );
 		clientService.sin_port = htons( (u_short)remotePort );
 
-		int Result = connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
+		int Result = ::connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 		if ( 0 != Result )
 			TRACE(_T("Connect failed\n"));
+
 		return Result;
 	}
 
 	int CSocket::Connect(const struct sockaddr* name, int namelen)
 	{
-		int Result = connect( m_Socket, (SOCKADDR*) &name, sizeof(namelen) );
+		int Result = ::connect( m_Socket, (SOCKADDR*) &name, sizeof(namelen) );
 		if ( 0 != Result )
 			TRACE(_T("Connect failed\n"));
 		return Result;
@@ -123,10 +131,10 @@ namespace Win32xx
 		switch(nSocketType)
 		{
 		case SOCK_STREAM:
-			m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+			m_Socket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 			break;
 		case SOCK_DGRAM:
-			m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+			m_Socket = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 			break;
 		default:
 			TRACE(_T("Unknown Socket Type"));
@@ -144,9 +152,9 @@ namespace Win32xx
 
 	void CSocket::Disconnect()
 	{
-		shutdown(m_Socket, SD_BOTH);
+		::shutdown(m_Socket, SD_BOTH);
 		StopEvents();
-		closesocket(m_Socket);
+		::closesocket(m_Socket);
 		m_Socket = 0;
 	}
 
@@ -166,28 +174,40 @@ namespace Win32xx
 		WSANETWORKEVENTS NetworkEvents;
 		CSocket* pSocket = (CSocket*)thread_data;
 		SOCKET sClient = pSocket->m_Socket;
-		HANDLE hNetworkEvent = WSACreateEvent();
+
+		HANDLE hNetworkEvent = ::WSACreateEvent();
 		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE |
 			          FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
-		if (pSocket->m_bStopThread)
-			return 0;
-
+		// Associate the network event object (hNetworkEvents) with the 
+		// specified network events (Events) on socket sClient.
 		if(	SOCKET_ERROR == WSAEventSelect(sClient, hNetworkEvent, Events))
 		{
 			TRACE(_T("Error in Event Select\n"));
+			::SetEvent(pSocket->m_ThreadStopping);
+			::WSACloseEvent(hNetworkEvent);
 			return 0;
 		}
 
-		// loop until the stop thread flag is set
-		while (FALSE == pSocket->m_bStopThread)
+		// loop until the stop event is set
+		for (;;) // infinite loop
 		{
 			// Wait 100 ms for a network event
-			DWORD dwResult = WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, THREAD_TIMEOUT, FALSE);
+			DWORD dwResult = ::WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, THREAD_TIMEOUT, FALSE);
 
+			// Check event for stop thread
+			if(::WaitForSingleObject(pSocket->m_StopRequest, 0) == WAIT_OBJECT_0)
+			{
+				::WSACloseEvent(hNetworkEvent);
+				::SetEvent(pSocket->m_ThreadStopping);
+				return 0;
+			}
+			
 			if (WSA_WAIT_FAILED == dwResult)
 			{
 				TRACE(_T("WSAWaitForMultipleEvents failed\n"));
+				::WSACloseEvent(hNetworkEvent);
+				::SetEvent(pSocket->m_ThreadStopping);
 				return 0;
 			}
 
@@ -195,9 +215,11 @@ namespace Win32xx
 			if (WSA_WAIT_TIMEOUT != dwResult)
 			{
 
-				if ( SOCKET_ERROR == WSAEnumNetworkEvents(sClient, hNetworkEvent, &NetworkEvents) )
+				if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(sClient, hNetworkEvent, &NetworkEvents) )
 				{
 					TRACE(_T("WSAEnumNetworkEvents failed\n"));
+					::WSACloseEvent(hNetworkEvent);
+					::SetEvent(pSocket->m_ThreadStopping);
 					return 0;
 				}
 
@@ -227,92 +249,92 @@ namespace Win32xx
 
 				if (NetworkEvents.lNetworkEvents & FD_CLOSE)
 				{
-					shutdown(sClient, SD_BOTH);
-					closesocket(sClient);
+					::shutdown(sClient, SD_BOTH);
+					::closesocket(sClient);
 					pSocket->OnDisconnect();
+					::WSACloseEvent(hNetworkEvent);
+					::SetEvent(pSocket->m_ThreadStopping);
 					return 0;
 				}
 			}
 		}
-
-		return 0;
 	}
 
 	int  CSocket::GetPeerName(struct sockaddr* name, int* namelen)
 	{
-		int Result = getpeername(m_Socket, name, namelen);
+		int Result = ::getpeername(m_Socket, name, namelen);
 		if (0 != Result)
-			TRACE(_T("Listen Failed"));
+			TRACE(_T("GetPeerName failed\n"));
 		return Result;
 	}
 
 	int  CSocket::GetSockName(struct sockaddr* name, int* namelen)
 	{
-		int Result = getsockname(m_Socket, name, namelen);
+		int Result = ::getsockname(m_Socket, name, namelen);
 		if (0 != Result)
-			TRACE(_T("Listen Failed"));
+			TRACE(_T("GetSockName Failed\n"));
 		return Result;
 	}
 
 	int  CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen)
 	{
-		int Result = getsockopt(m_Socket, level, optname, optval, optlen);
+		int Result = ::getsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
-			TRACE(_T("Listen Failed"));
+			TRACE(_T("GetSockOpt Failed\n"));
 		return Result;
 	}
 
 	int CSocket::ioCtlSocket(long cmd, u_long* argp)
 	{
-		int Result = ioctlsocket(m_Socket, cmd, argp);
+		int Result = ::ioctlsocket(m_Socket, cmd, argp);
 		if (0 != Result)
-			TRACE(_T("Listen Failed"));
+			TRACE(_T("ioCtlSocket Failed\n"));
 		return Result;
 	}
 
 	int CSocket::Listen(int backlog /*= SOMAXCONN*/)
 	{
-		int Result = listen(m_Socket, backlog);
+		int Result = ::listen(m_Socket, backlog);
 		if (0 != Result)
-			TRACE(_T("Listen Failed"));
+			TRACE(_T("Listen Failed\n"));
 		return Result;
 	}
 
 	int CSocket::Receive(char* buf, int len, int flags)
 	{
-		int Result = recv(m_Socket, buf, len, flags);
+		int Result = ::recv(m_Socket, buf, len, flags);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("SetSockOpt failed\n"));
+			TRACE(_T("Receive failed\n"));
 		return Result;
 	}
 
 	int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
 	{
-		int Result = recvfrom(m_Socket, buf, len, flags, from, fromlen);
+		int Result = ::recvfrom(m_Socket, buf, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("SetSockOpt failed\n"));
+			TRACE(_T("ReceiveFrom failed\n"));
 		return Result;
 	}
 
 	int CSocket::Send(const char* buf, int len, int flags)
 	{
-		int Result = send(m_Socket, buf, len, flags);
+		int Result = ::send(m_Socket, buf, len, flags);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("SetSockOpt failed\n"));
+			TRACE(_T("Send failed\n"));
 		return Result;
 	}
 
 	int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
 	{
-		int Result =  sendto(m_Socket, buf, len, flags, to, tolen);
+		int Result =  ::sendto(m_Socket, buf, len, flags, to, tolen);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("SetSockOpt failed\n"));
+			TRACE(_T("SendTo failed\n"));
 		return Result;
 	}
 
 	int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen)
 	{
-		int Result = setsockopt(m_Socket, level, optname, optval, optlen);
+		int Result = ::setsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
 			TRACE(_T("SetSockOpt failed\n"));
 		return Result;
@@ -321,43 +343,36 @@ namespace Win32xx
 	void CSocket::StartEvents()
 	{
 		// This function starts the thread which monitors the socket for events.
-
 		StopEvents();	// Ensure the thread isn't already running
 		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
 	}
 
 	void CSocket::StopEvents()
 	{
-		// Terminates the event thread (gracefully if possible)
+		// Terminates the event thread gracefully (if possible)
 		if (m_hEventThread)
 		{
-			DWORD dwExitCode = 0;
-			SetThreadPriority(m_hEventThread, THREAD_PRIORITY_HIGHEST);
-			int WatchDog = 0;
+			::SetThreadPriority(m_hEventThread, THREAD_PRIORITY_HIGHEST);
+			::SetEvent(m_StopRequest);
 
-			GetExitCodeThread(m_hEventThread, &dwExitCode);
-			while (STILL_ACTIVE == dwExitCode)
+			for (;;)	// infinite loop
 			{
-				WatchDog++;
-				m_bStopThread = TRUE;	// A flag monitored by the event thread
-
-				// Wait up to 100ms for the thread to signal it has ended
-				if ( (WAIT_TIMEOUT == ::WaitForSingleObject(m_hEventThread, THREAD_TIMEOUT) )
-					&& (WatchDog >= 10) )
+				// wait for the Thread stopping event to be set
+				if ( WAIT_TIMEOUT == ::WaitForSingleObject(m_ThreadStopping, THREAD_TIMEOUT * 10) )
 				{
-					// Note: TerminateThread is our method of last resort to get the thread to
-					//  end. An excessive delay in processing any of the notification functions
-					//  can cause us to get here. (Yes one second is an excessive delay!)
-					TerminateThread(m_hEventThread, 0);
-					TRACE(_T(" *** Forced thread closure *** \n"));
-				}
-				GetExitCodeThread(m_hEventThread, &dwExitCode);
+					// Note: An excessive delay in processing any of the notification functions 
+					// can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
+					TRACE(_T("*** Error: Event Thread won't die ***\n") );
+				} 
+				else break;
 			}
 
-			CloseHandle(m_hEventThread);
+			::CloseHandle(m_hEventThread);
 			m_hEventThread = 0;
 		}
-		m_bStopThread = FALSE;
+
+		::ResetEvent(m_StopRequest);
+		::ResetEvent(m_ThreadStopping);
 	}
 
 } // namespace Win32xx

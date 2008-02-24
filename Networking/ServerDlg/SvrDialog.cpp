@@ -24,13 +24,13 @@ void CTCPClientDlg::Append(int nID, LPCTSTR buf)
 	if (ndx)
 	{
 		SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-		SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) "\r\n"));
+		SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) (_T( "\r\n")));
 	}
 
 	// Append text
 	ndx = GetWindowTextLength(hEdit);
 	SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) buf));
+	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
 BOOL CTCPClientDlg::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -73,12 +73,14 @@ void CTCPClientDlg::Receive()
 {
 	char str[1025] = {0};			// Assign all 1025 elements to NULL
 	m_pSocket->Receive(str, 1024, 0);
-	Append(IDC_EDIT_RECEIVE2, str);
+	tString t = CharToTString(str);
+	Append(IDC_EDIT_RECEIVE2, t.c_str());
 }
 
 void CTCPClientDlg::Send()
 {
-	std::string s = GetDlgItemString(IDC_EDIT_SEND2);
+	tString t = GetDlgItemString(IDC_EDIT_SEND2);
+	std::string s = TcharToString(t.c_str());
 	m_pSocket->Send(s.c_str(), s.length(), 0);
 }
 
@@ -107,13 +109,13 @@ void CSvrDialog::Append(int nID, LPCTSTR buf)
 	if (ndx)
 	{
 		SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-		SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) "\r\n"));
+		SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) ((LPCTSTR)_T("\r\n")));
 	}
 
 	// Append text
 	ndx = GetWindowTextLength(hEdit);
 	SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) buf));
+	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
 BOOL CSvrDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -139,7 +141,7 @@ BOOL CSvrDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
 {
 	// Respond to a socket disconnect notification
-	Append(IDC_EDIT_STATUS, "Client disconnected");
+	Append(IDC_EDIT_STATUS, _T("Client disconnected"));
 
 
 	// Allocate an iterator for our CServerSocket map
@@ -202,19 +204,19 @@ void CSvrDialog::OnStartServer()
 			return;
 
 		// Update the dialog
-		SetDlgItemText(m_hWnd, IDC_BUTTON_START, "Stop Server");
+		SetDlgItemText(m_hWnd, IDC_BUTTON_START, _T("Stop Server"));
 		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), FALSE);
 		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), FALSE);
 		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), FALSE);
 		if (m_SocketType == SOCK_STREAM)
 		{
-			Append(IDC_EDIT_STATUS, "TCP Server Started");
-			Append(IDC_EDIT_STATUS, "Waiting for client ...");
+			Append(IDC_EDIT_STATUS, _T("TCP Server Started"));
+			Append(IDC_EDIT_STATUS, _T("Waiting for client ..."));
 		}
 		else
 		{
-			Append(IDC_EDIT_STATUS, "UDP Server Started");
-			Append(IDC_EDIT_STATUS, "Waiting for client data");
+			Append(IDC_EDIT_STATUS, _T("UDP Server Started"));
+			Append(IDC_EDIT_STATUS, _T("Waiting for client data"));
 		}
 	}
 	else
@@ -222,8 +224,8 @@ void CSvrDialog::OnStartServer()
 		StopServer();
 
 		// Update the dialog
-		Append(IDC_EDIT_STATUS, "Server Stopped");
-		SetDlgItemText(m_hWnd, IDC_BUTTON_START, "Start Server");
+		Append(IDC_EDIT_STATUS, _T("Server Stopped"));
+		SetDlgItemText(m_hWnd, IDC_BUTTON_START, _T("Start Server"));
 		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), TRUE);
 		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), TRUE);
 		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), TRUE);
@@ -243,7 +245,8 @@ void CSvrDialog::OnSend()
 			// TCP connections have a seperate chat dialog for sending/receiving data
 			break;
 		case SOCK_DGRAM:
-			std::string s = GetDlgItemString(IDC_EDIT_SEND);
+			tString t = GetDlgItemString(IDC_EDIT_SEND);
+			std::string s = TcharToString(t.c_str());
 			m_MainSocket.SendTo(s.c_str(), s.length(), 0, (SOCKADDR*)&m_ClientAddr, sizeof(m_ClientAddr));
 			break;
 	}
@@ -257,7 +260,7 @@ void CSvrDialog::OnSocketAccept()
 	if (INVALID_SOCKET == m_MainSocket.GetSocket())
 	{
 		delete pClient;
-		TRACE("Failed to accept connection from client");
+		TRACE(_T("Failed to accept connection from client"));
 		return;
 	} 
 	
@@ -279,7 +282,7 @@ void CSvrDialog::OnSocketAccept()
 	m_ConnectedClients.insert(std::make_pair(pClient, pDialog));
 
 	// Update the dialog
-	Append(IDC_EDIT_STATUS, "Client Connected");
+	Append(IDC_EDIT_STATUS, _T("Client Connected"));
 }
 
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
@@ -301,14 +304,15 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		{
 			int addrlen = sizeof(m_ClientAddr);
 			m_MainSocket.ReceiveFrom(str, 1024, 0, (SOCKADDR*)&m_ClientAddr, &addrlen); 
-			TRACE("[Received:] "); TRACE(str); TRACE("\n");
+			tString t = CharToTString(str);
+			TRACE(_T("[Received:] ")); TRACE(t.c_str()); TRACE(_T("\n"));
 			EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
 			EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);			
 		}
 		break;
 	}
-	
-	Append(IDC_EDIT_RECEIVE, str);
+	tString t = CharToTString(str);
+	Append(IDC_EDIT_RECEIVE, t.c_str());
 }
 
 BOOL CSvrDialog::StartServer()
@@ -319,13 +323,13 @@ BOOL CSvrDialog::StartServer()
 	// Create the main socket
 	if (!m_MainSocket.Create(m_SocketType))
 	{
-		Append(IDC_EDIT_STATUS, "Create Socket Failed");
+		Append(IDC_EDIT_STATUS, _T("Create Socket Failed"));
 		return FALSE;
 	}
 	
 	// Retrieve the local port number
-	std::string s = GetDlgItemString(IDC_EDIT_PORT);
-	int LocalPort = atoi(s.c_str());
+	tString s = GetDlgItemString(IDC_EDIT_PORT);
+	int LocalPort = _tstoi(s.c_str());
 
 	// Bind the socket.
 	sockaddr_in service;
@@ -337,7 +341,7 @@ BOOL CSvrDialog::StartServer()
 	// Bind the IP address to the listening socket
 	if ( m_MainSocket.Bind( (SOCKADDR*) &service, sizeof(service) ) == SOCKET_ERROR )
 	{
-		Append(IDC_EDIT_STATUS, "Bind failed");
+		Append(IDC_EDIT_STATUS, _T("Bind failed"));
 		return FALSE;
 	}
 
@@ -346,7 +350,7 @@ BOOL CSvrDialog::StartServer()
 		// Listen for connections from clients (TCP server only)
 		if ( SOCKET_ERROR == m_MainSocket.Listen() )
 		{
-			Append(IDC_EDIT_STATUS, "Error listening on socket");
+			Append(IDC_EDIT_STATUS, _T("Error listening on socket"));
 			return FALSE;
 		}
 	}
