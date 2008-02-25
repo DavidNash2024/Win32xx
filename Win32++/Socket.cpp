@@ -344,7 +344,8 @@ namespace Win32xx
 	{
 		// This function starts the thread which monitors the socket for events.
 		StopEvents();	// Ensure the thread isn't already running
-		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, NULL);
+		DWORD ThreadID;	// a return variable required for Win95, Win98, WinME
+		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
 	}
 
 	void CSocket::StopEvents()

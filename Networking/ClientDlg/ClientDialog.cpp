@@ -128,6 +128,7 @@ void CClientDialog::OnClientConnect()
 
 	// Move focus to the Send Edit box
 	SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
+	::SetForegroundWindow(m_hWnd);
 
 	// Update the dialog
 	SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, _T("Connected to server"));
@@ -256,6 +257,7 @@ void CClientDialog::OnStartClient()
 				EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), FALSE);
 				SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Disconnect"));
 				SetWindowText(GetDlgItem(m_hWnd, IDC_EDIT_STATUS), _T("Ready to Send"));
+				SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
 				m_bClientConnected = TRUE;
 			}
 			break;

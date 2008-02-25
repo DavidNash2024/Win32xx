@@ -45,7 +45,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 
 	// Put the window in a new rebar band
 	REBARBANDINFO rbbi = {0};
-	rbbi.cbSize		= REBARBANDINFO_V3_SIZE;
+	rbbi.cbSize		= sizeof(REBARBANDINFO);
 	rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
 	rbbi.cyMinChild = Listbox_Height;
 	rbbi.cyMaxChild = Listbox_Height;

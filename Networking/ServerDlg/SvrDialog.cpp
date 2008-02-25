@@ -307,7 +307,8 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 			tString t = CharToTString(str);
 			TRACE(_T("[Received:] ")); TRACE(t.c_str()); TRACE(_T("\n"));
 			EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
-			EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);			
+			EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
+			SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
 		}
 		break;
 	}
