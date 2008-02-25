@@ -92,19 +92,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\Client\Client.cpp
+SOURCE=.\DialogApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\Client\ClientDialog.cpp
+SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\Client\DialogApp.cpp
+SOURCE=.\Server.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\Client\main.cpp
+SOURCE=.\SvrDialog.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -112,19 +112,19 @@ SOURCE=..\Client\main.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\Client\Client.h
+SOURCE=.\DialogApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\Client\ClientDialog.h
+SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\Client\DialogApp.h
+SOURCE=.\Server.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\Client\resource.h
+SOURCE=.\SvrDialog.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -132,16 +132,12 @@ SOURCE=..\Client\resource.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=..\Client\Resource.rc
+SOURCE=.\Resource.rc
 # End Source File
 # End Group
 # Begin Group "Win32++"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\..\Win32++\Default_Resource.h"
-# End Source File
 # Begin Source File
 
 SOURCE="..\..\Win32++\Dialog.cpp"

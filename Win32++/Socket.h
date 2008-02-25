@@ -40,7 +40,7 @@
 //  Declaration of the CSocket class
 //
 // The CSocket class represents a network socket. It encapsualtes many of
-// the Windows Socket API fuctions, providing an object-oriented approach
+// the Windows Socket SPI fuctions, providing an object-oriented approach
 // to network programming. After StartEvents is called, CSocket monitors
 // the socket and responds automatically to network events. This event
 // monitoring, for example, automatically calls OnReceive when there is
@@ -59,7 +59,9 @@
 // create a TCP client & server, and a UDP client and server.
 
 // To compile programs with CSocket, link with ws3_32.lib for Win32/Win64,
-// and ws2.lib for Windows CE.
+// and ws2.lib for Windows CE. Windows 95 systems will need to install the
+// "Windows Sockets 2.0 for Windows 95". It's available from:
+// http://support.microsoft.com/kb/182108/EN-US/
 
 
 #ifndef SOCKET_H

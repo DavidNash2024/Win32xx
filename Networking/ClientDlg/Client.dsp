@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="Server" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="Client" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=Server - Win32 Debug
+CFG=Client - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Server.mak".
+!MESSAGE NMAKE /f "Client.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Server.mak" CFG="Server - Win32 Debug"
+!MESSAGE NMAKE /f "Client.mak" CFG="Client - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Server - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "Server - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "Client - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "Client - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "Server - Win32 Debug"
+!IF  "$(CFG)" == "Client - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -53,9 +53,9 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib ws2_w32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
-!ELSEIF  "$(CFG)" == "Server - Win32 Release"
+!ELSEIF  "$(CFG)" == "Client - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -79,17 +79,25 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib ws2_32.lib /nologo /subsystem:windows /machine:I386
 
 !ENDIF 
 
 # Begin Target
 
-# Name "Server - Win32 Debug"
-# Name "Server - Win32 Release"
+# Name "Client - Win32 Debug"
+# Name "Client - Win32 Release"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\Client.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ClientDialog.cpp
+# End Source File
 # Begin Source File
 
 SOURCE=.\DialogApp.cpp
@@ -98,21 +106,21 @@ SOURCE=.\DialogApp.cpp
 
 SOURCE=.\main.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=.\MyDialog.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\DialogApp.h
+SOURCE=.\Client.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MyDialog.h
+SOURCE=.\ClientDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DialogApp.h
 # End Source File
 # Begin Source File
 
@@ -132,19 +140,27 @@ SOURCE=.\Resource.rc
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.cpp"
+SOURCE="..\..\Win32++\Dialog.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\..\Win32++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.cpp"
+SOURCE="..\..\Win32++\Socket.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\Socket.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\WinCore.cpp"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\WinCore.h"
 # End Source File
 # End Group
 # End Target

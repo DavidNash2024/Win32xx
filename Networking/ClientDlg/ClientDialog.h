@@ -27,6 +27,7 @@ protected:
 
 private:
 	void Append(int nID, LPCTSTR buf);
+	void LoadCommonControlsEx();
 	void OnStartClient();
 	void OnSend();
 

@@ -213,6 +213,9 @@ namespace Win32xx
 			m_hWnd = NULL;
 			m_pTLSData->pCWnd = NULL;
 
+			if (nResult == -1)
+				throw CWinException(_T("Failed to create modal dialog box"));
+
 			return nResult;
 		}
 

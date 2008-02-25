@@ -328,8 +328,9 @@ BOOL CSvrDialog::StartServer()
 	}
 	
 	// Retrieve the local port number
-	tString s = GetDlgItemString(IDC_EDIT_PORT);
-	int LocalPort = _tstoi(s.c_str());
+	tString tPort = GetDlgItemString(IDC_EDIT_PORT);
+	std::string sPort = TcharToString(tPort.c_str());
+	int LocalPort = atoi(sPort.c_str());
 
 	// Bind the socket.
 	sockaddr_in service;
