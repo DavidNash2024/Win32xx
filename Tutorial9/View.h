@@ -20,14 +20,12 @@ public:
 	virtual void ClearPoints();
 	virtual void FileOpen(LPCTSTR szFilename);
 	virtual void FileSave(LPCTSTR szFilename);
-	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual void SetPen(COLORREF Color);
 
 protected:
-	virtual void DrawLine(int x, int y);
+	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual void OnPaint(HDC hDC);
-	virtual void StorePoint(int x, int y, bool PenDown);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
@@ -38,6 +36,12 @@ private:
 		bool PenDown;
 		COLORREF color;
 	};
+
+	void DrawLine(int x, int y);
+	void OnLButtonDown(LPARAM lParam);
+	void OnLButtonUp(LPARAM lParam);
+	void OnMouseMove(WPARAM wParam, LPARAM lParam);
+	void StorePoint(int x, int y, bool PenDown);
 
 	HBRUSH m_hBrush;
 	vector<PlotPoint> m_points;	// Points of lines to draw

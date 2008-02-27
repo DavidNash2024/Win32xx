@@ -55,24 +55,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_PRINT:
 		OnFilePrint();
 		return TRUE;
-	case IDM_EDIT_COPY:
-		::MessageBox(NULL, _T("Edit Copy"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_PASTE:
-		::MessageBox(NULL, _T("Edit Paste"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_CUT:
-		::MessageBox(NULL, _T("Edit Cut"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_DELETE:
-		::MessageBox(NULL, _T("Edit Delete"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_REDO:
-		::MessageBox(NULL, _T("Edit Redo"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_UNDO:
-		::MessageBox(NULL, _T("Edit Undo"), _T("Menu"), MB_OK);
-		return TRUE;
 	case IDM_PEN_RED:
 		m_View.SetPen(RGB(255,0,0));
 		return TRUE;
@@ -205,8 +187,7 @@ void CMainFrame::OnFilePrint()
 	}
 
 	// Zero and then initialize the members of a DOCINFO structure.
-	DOCINFO di;
-	memset( &di, 0, sizeof(DOCINFO) );
+	DOCINFO di = {0};
 	di.cbSize = sizeof(DOCINFO);
 	di.lpszDocName = _T("Scribble Printout");
 	di.lpszOutput = (LPTSTR) NULL;

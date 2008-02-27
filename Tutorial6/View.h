@@ -17,22 +17,26 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
-	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual void PreRegisterClass(WNDCLASS &wc);
 
 protected:
-	virtual void DrawLine(int x, int y);
 	virtual void OnPaint(HDC hDC);
+	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void StorePoint(int x, int y, bool PenDown);
 
-private:	
+private:
 	struct PlotPoint
 	{
 		int x;
 		int y;
 		bool PenDown;
 	};
+
+	void DrawLine(int x, int y);
+	void OnLButtonDown(LPARAM lParam);
+	void OnLButtonUp(LPARAM lParam);
+	void OnMouseMove(WPARAM wParam, LPARAM lParam);
+	void StorePoint(int x, int y, bool PenDown);
 
 	HBRUSH m_hBrush;
 	vector<PlotPoint> m_points;	// Points of lines to draw

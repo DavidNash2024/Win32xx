@@ -66,40 +66,49 @@ void CView::StorePoint(int x, int y, bool PenDown)
 	m_points.push_back(P1); //Add the point to the vector
 }
 
+void CView::OnLButtonDown(LPARAM lParam)
+{
+ 	// Capture mouse input.
+ 	::SetCapture(m_hWnd);
+
+	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+}
+
+void CView::OnLButtonUp(LPARAM lParam)
+{
+	{
+		//Release the capture on the mouse
+		::ReleaseCapture();
+
+		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+	}
+}
+
+void CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
+{
+	// hold down the left mouse button and move mouse to draw lines.
+	if (wParam & MK_LBUTTON)
+	{
+		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+	}
+}
+
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_LBUTTONDOWN:
- 		// Capture mouse input.
- 		::SetCapture(hWnd);
-
-		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+		OnLButtonDown(lParam);
 		break;
 
 	case WM_MOUSEMOVE:
-         // hold down the left mouse button and move mouse to draw lines.
-         if (wParam & MK_LBUTTON)
-        {
-			DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
-        }
+		OnMouseMove(wParam, lParam);
         break;
 
     case WM_LBUTTONUP:
-		{
-			//Release the capture on the mouse
-			::ReleaseCapture();
-
-			StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
-		}
+		OnLButtonUp(lParam);
 		break;
-
-	//Not Required within a CFrame
-/*	case WM_DESTROY:
-		//End the program when window is destroyed
-		::PostQuitMessage(0);
-		break; */
 	}
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

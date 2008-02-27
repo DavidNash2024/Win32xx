@@ -30,16 +30,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-    POPUP "&Edit"
-    BEGIN
-        MENUITEM "Undo",                        IDM_EDIT_UNDO
-        MENUITEM "Redo",                        IDM_EDIT_REDO
-        MENUITEM SEPARATOR
-        MENUITEM "Cu&t",                        IDM_EDIT_CUT
-        MENUITEM "&Copy",                       IDM_EDIT_COPY
-        MENUITEM "&Paste",                      IDM_EDIT_PASTE
-        MENUITEM "De&lete",                     IDM_EDIT_DELETE
-    END
     POPUP "&View"
     BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED

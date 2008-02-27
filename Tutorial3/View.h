@@ -19,10 +19,14 @@ public:
 	virtual ~CView(){}
 
 protected:
-	virtual void DrawLine(int x, int y);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	void DrawLine(int x, int y);
+	void OnLButtonDown(LPARAM lParam);
+	void OnLButtonUp(LPARAM lParam);
+	void OnMouseMove(WPARAM wParam, LPARAM lParam);
+
 	POINT m_OldPt;
 };
 

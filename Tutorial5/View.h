@@ -19,9 +19,7 @@ public:
 	virtual ~CView(){}
 
 protected:
-	virtual void DrawLine(int x, int y);
 	virtual void OnPaint(HDC hDC);
-	virtual void StorePoint(int x, int y, bool PenDown);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
@@ -31,6 +29,12 @@ private:
 		int y;
 		bool PenDown;
 	};
+
+	void DrawLine(int x, int y);
+	void OnLButtonDown(LPARAM lParam);
+	void OnLButtonUp(LPARAM lParam);
+	void OnMouseMove(WPARAM wParam, LPARAM lParam);
+	void StorePoint(int x, int y, bool PenDown);
 
 	vector<PlotPoint> m_points;	// Points of lines to draw
 };

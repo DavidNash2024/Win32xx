@@ -55,34 +55,20 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_PRINT:
 		OnFilePrint();
 		return TRUE;
-	case IDM_EDIT_COPY:
-		::MessageBox(NULL, _T("Edit Copy"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_PASTE:
-		::MessageBox(NULL, _T("Edit Paste"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_CUT:
-		::MessageBox(NULL, _T("Edit Cut"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_DELETE:
-		::MessageBox(NULL, _T("Edit Delete"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_REDO:
-		::MessageBox(NULL, _T("Edit Redo"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_EDIT_UNDO:
-		::MessageBox(NULL, _T("Edit Undo"), _T("Menu"), MB_OK);
-		return TRUE;
 	case IDM_PEN_RED:
+		TRACE(_T("Red pen selected\n"));
 		m_View.SetPen(RGB(255,0,0));
 		return TRUE;
 	case IDM_PEN_BLUE:
+		TRACE(_T("Blue pen selected\n"));
 		m_View.SetPen(RGB(0,0,255));
 		return TRUE;
 	case IDM_PEN_GREEN:
+		TRACE(_T("Green pen selected\n"));
 		m_View.SetPen(RGB(0,196,0));
 		return TRUE;
 	case IDM_PEN_BLACK:
+		TRACE(_T("Black pen selected\n"));
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
 	case IDM_HELP_ABOUT:
