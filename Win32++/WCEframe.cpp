@@ -1,5 +1,5 @@
-// Win32++  Version 5.7
-// Released: 15th February, 2008 by:
+// Win32++  Version 6.0
+// Released: 4th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -128,7 +128,7 @@ namespace Win32xx
 		CommandBar_InsertMenubar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
 #endif
 		return m_hWnd;
-	} 
+	}
 
 	int CCmdbar::GetHeight()
 	{
@@ -160,7 +160,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CFrame class
 	//  This class creates a simple frame using CCmdbar
-	CFrame::CFrame() 
+	CFrame::CFrame()
 	{
 #ifdef SHELL_AYGSHELL
 		// Initialize the shell activate info structure
@@ -260,7 +260,7 @@ namespace Win32xx
 	{
 		int iImages = 0;
 		int iNumButtons = (int)ToolbarData.size();
-		
+
 
 		if (iNumButtons > 0)
 		{
@@ -305,7 +305,7 @@ namespace Win32xx
      			break;
 
 #ifdef SHELL_AYGSHELL
-			
+
 			case WM_SETTINGCHANGE:
 				SHHandleWMSettingChange(hwnd, wParam, lParam, &m_sai);
      			break;

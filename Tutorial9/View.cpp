@@ -71,9 +71,9 @@ void CView::FileOpen(LPCTSTR szFilename)
 {
 	// empty the PlotPoint vector
 	m_points.clear();
-	
+
 	DWORD nBytesRead;
-	
+
 	// Create a handle to the file
 	HANDLE hFile = CreateFile(szFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (INVALID_HANDLE_VALUE != hFile)
@@ -82,13 +82,13 @@ void CView::FileOpen(LPCTSTR szFilename)
 		{
 			nBytesRead = 0;
 			PlotPoint pp;
-						
+
 			// Read a PlotPoint struct from the file
 			if (!ReadFile(hFile, &pp, sizeof(PlotPoint), &nBytesRead, NULL))
 				throw CWinException(_T("Failed to read from file"));
 
 			// store the PlotPoint in the PlotPoint vector
-			if (nBytesRead == sizeof(PlotPoint)) 
+			if (nBytesRead == sizeof(PlotPoint))
 				m_points.push_back(pp);
 
 		} while (nBytesRead == sizeof(PlotPoint));
@@ -186,6 +186,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
+	//Use the default message handling for remaining messages
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

@@ -1,5 +1,5 @@
-// Win32++  Version 5.7
-// Released: 15th February, 2008 by:
+// Win32++  Version 6.0
+// Released: 4th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -38,11 +38,11 @@
 // GDI.h
 //  Declaration of the CGDI class
 //
-// This class provides a device context, along with the various associated 
-//  objects such as Bitmaps, Brushes, Bitmaps, Fonts and Pens. This class 
+// This class provides a device context, along with the various associated
+//  objects such as Bitmaps, Brushes, Bitmaps, Fonts and Pens. This class
 //  handles the creation, selection, de-selection and deletion of these objects
-//  automatically. It also automatically deletes or releases the device context 
-//  itself as appropriate. Any failure to create the new GDI object throws an 
+//  automatically. It also automatically deletes or releases the device context
+//  itself as appropriate. Any failure to create the new GDI object throws an
 //  exception.
 //
 // Coding Exampe without CDC ...

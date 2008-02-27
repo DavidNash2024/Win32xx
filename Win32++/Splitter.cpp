@@ -1,5 +1,5 @@
-// Win32++  Version 5.7
-// Released: 15th February, 2008 by:
+// Win32++  Version 6.0
+// Released: 4th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -114,7 +114,7 @@ namespace Win32xx
 			SetBarColor(RB.GetRebarTheme().clrBkgnd2);
 		else
 			SetBarColor(GetSysColor(COLOR_BTNFACE));
-			
+
 		// Create the splitter bar
 		WNDCLASS wc = {0};
 
@@ -123,7 +123,7 @@ namespace Win32xx
 		{
 			wc.lpszClassName = _T("Win32++ V Splitter");
 			wc.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
-			wc.hbrBackground = m_hbrBackground; 
+			wc.hbrBackground = m_hbrBackground;
 			m_Bar.RegisterClass(wc);
 			m_Bar.CreateEx(0L, wc.lpszClassName, NULL, WS_VISIBLE |  WS_CHILD, 0, 0, 0, 0, m_hWnd, NULL);
 		}
@@ -276,7 +276,7 @@ namespace Win32xx
 			::DeleteObject(m_hbrBackground);
 
 		m_hbrBackground = ::CreateSolidBrush(color);
-		
+
 		if (0 != m_Bar.GetHwnd())
 		{
 

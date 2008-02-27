@@ -167,6 +167,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
+	//Use the default message handling for remaining messages
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

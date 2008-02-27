@@ -1,5 +1,5 @@
-// Win32++  Version 5.7
-// Released: 15th February, 2008 by:
+// Win32++  Version 6.0
+// Released: 4th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -179,7 +179,7 @@ namespace Win32xx
 		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE |
 			          FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
-		// Associate the network event object (hNetworkEvents) with the 
+		// Associate the network event object (hNetworkEvents) with the
 		// specified network events (Events) on socket sClient.
 		if(	SOCKET_ERROR == WSAEventSelect(sClient, hNetworkEvent, Events))
 		{
@@ -202,7 +202,7 @@ namespace Win32xx
 				::SetEvent(pSocket->m_ThreadStopping);
 				return 0;
 			}
-			
+
 			if (WSA_WAIT_FAILED == dwResult)
 			{
 				TRACE(_T("WSAWaitForMultipleEvents failed\n"));
@@ -361,10 +361,10 @@ namespace Win32xx
 				// wait for the Thread stopping event to be set
 				if ( WAIT_TIMEOUT == ::WaitForSingleObject(m_ThreadStopping, THREAD_TIMEOUT * 10) )
 				{
-					// Note: An excessive delay in processing any of the notification functions 
+					// Note: An excessive delay in processing any of the notification functions
 					// can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
 					TRACE(_T("*** Error: Event Thread won't die ***\n") );
-				} 
+				}
 				else break;
 			}
 

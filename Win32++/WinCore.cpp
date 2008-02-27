@@ -1,5 +1,5 @@
-// Win32++  Version 5.7
-// Released: 15th February, 2008 by:
+// Win32++  Version 6.0
+// Released: 4th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -65,7 +65,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL) 
+	CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL)
 	{
 		try
 		{

@@ -1,5 +1,5 @@
-// Win32++  Version 5.7
-// Released: 15th February, 2008 by:
+// Win32++  Version 6.0
+// Released: 4th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -41,12 +41,12 @@
 namespace Win32xx
 {
 
-	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), 
+	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
 		m_hPenOld(0), m_IsCopy(FALSE)
 	{
 	}
 
-	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), 
+	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
 		m_hPenOld(0), m_IsCopy(FALSE)
 	{
 		// This constructor assigns an existing HDC to the CDC
@@ -70,11 +70,11 @@ namespace Win32xx
 		m_hDC		 = rhs.m_hDC;
 		m_hFontOld	 = rhs.m_hFontOld;
 		m_hPenOld    = rhs.m_hPenOld;
-	
-		// This CDC is a copy, so we won't need to delete GDI resources 
+
+		// This CDC is a copy, so we won't need to delete GDI resources
 		//  in the destructor
-		m_IsCopy     = TRUE; 
-	} 
+		m_IsCopy     = TRUE;
+	}
 
 	void CDC::operator = (const HDC hDC)
 	{
