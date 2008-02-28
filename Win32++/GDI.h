@@ -36,9 +36,9 @@
 
 ////////////////////////////////////////////////////////
 // GDI.h
-//  Declaration of the CGDI class
-//
-// This class provides a device context, along with the various associated
+//  Declaration of the CDC class
+
+// The CDC class provides a device context, along with the various associated
 //  objects such as Bitmaps, Brushes, Bitmaps, Fonts and Pens. This class
 //  handles the creation, selection, de-selection and deletion of these objects
 //  automatically. It also automatically deletes or releases the device context

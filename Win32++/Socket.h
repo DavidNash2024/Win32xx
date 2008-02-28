@@ -58,7 +58,7 @@
 // Refer to the network samples for an example of how to use this class to
 // create a TCP client & server, and a UDP client and server.
 
-// To compile programs with CSocket, link with ws3_32.lib for Win32/Win64,
+// To compile programs with CSocket, link with ws3_32.lib for Win32,
 // and ws2.lib for Windows CE. Windows 95 systems will need to install the
 // "Windows Sockets 2.0 for Windows 95". It's available from:
 // http://support.microsoft.com/kb/182108/EN-US/

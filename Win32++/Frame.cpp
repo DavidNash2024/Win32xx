@@ -222,7 +222,7 @@ namespace Win32xx
 	{
 
 		TBADDBITMAP tbab = {0};
-		tbab.hInst = GetApp()->GetInstanceHandle();
+		tbab.hInst = GetApp()->GetResourceHandle();
 		tbab.nID   = ToolbarID;
 		if (-1 == ::SendMessage(m_hWnd, TB_ADDBITMAP, iNumButtons, (LPARAM)&tbab) )
 			throw CWinException(_T("CToolbar::AddBitmap  TB_ADDBITMAP failed"));
@@ -235,8 +235,8 @@ namespace Win32xx
 	//       For more colours, use SetImageList instead
 	{
 		TBREPLACEBITMAP tbrb = {0};
-		tbrb.hInstNew = GetApp()->GetInstanceHandle();
-		tbrb.hInstOld = GetApp()->GetInstanceHandle();
+		tbrb.hInstNew = GetApp()->GetResourceHandle();
+		tbrb.hInstOld = GetApp()->GetResourceHandle();
 		tbrb.nIDNew = NewToolbarID;
 		tbrb.nIDOld = m_OldToolbarID;
 		tbrb.nButtons  = iNumButtons;
