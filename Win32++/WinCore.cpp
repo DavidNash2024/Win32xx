@@ -191,7 +191,7 @@ namespace Win32xx
 
 		m_hWndAccel = hWndAccel;
 
-		m_hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
+		m_hAccelTable = ::LoadAccelerators(m_hResource, MAKEINTRESOURCE(ID_ACCEL));
 		if (!m_hAccelTable)
 			TRACE(_T("Load Accelerators failed\n"));
 	}
@@ -1041,8 +1041,8 @@ namespace Win32xx
 
 	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derrived from CWnd if you wish to handle messages
-		// A typical function might look like this:
+		// Override this function in your class derrived from CWnd to handle
+		//  window messages. A typical function might look like this:
 
 		//	switch (uMsg)
 		//	{
@@ -1161,9 +1161,6 @@ namespace Win32xx
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
-
-
-
 
 
 } // namespace Win32xx

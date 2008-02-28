@@ -11,7 +11,7 @@
 // CView function definitions
 CView::CView()
 {
-	m_str[0] = (TCHAR) '\0';
+	m_str[0] = _T('\0');
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)

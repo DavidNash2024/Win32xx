@@ -66,44 +66,68 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 
-
 void CView::FileOpen(LPCTSTR szFilename)
 {
+	// empty the PlotPoint vector
 	m_points.clear();
-	PlotPoint pp;
-	ifstream myfile(szFilename, ios::in | ios::binary);
 
-	if (myfile.is_open())
+	DWORD nBytesRead;
+
+	// Create a handle to the file
+	HANDLE hFile = CreateFile(szFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (INVALID_HANDLE_VALUE != hFile)
 	{
-		while (myfile.read((char*)&pp, sizeof(PlotPoint)))
+		do
 		{
-			m_points.push_back(pp);
-		}
+			nBytesRead = 0;
+			PlotPoint pp;
 
-		myfile.close();
+			// Read a PlotPoint struct from the file
+			if (!ReadFile(hFile, &pp, sizeof(PlotPoint), &nBytesRead, NULL))
+				throw CWinException(_T("Failed to read from file"));
+
+			// store the PlotPoint in the PlotPoint vector
+			if (nBytesRead == sizeof(PlotPoint))
+				m_points.push_back(pp);
+			else if (nBytesRead != 0)
+			{
+				m_points.clear();
+				throw CWinException (_T("Error while reading from file"));
+			}
+
+
+		} while (nBytesRead == sizeof(PlotPoint));
+
+		CloseHandle(hFile);
 	}
 	else
-		DebugErrMsg(_T("File Open failed!"));
+		throw CWinException(_T("Failed to open file for reading"));
 
-	 ::InvalidateRect(m_hWnd, NULL, TRUE);
+	// repaint the view window
+	::InvalidateRect(m_hWnd, NULL, TRUE);
 }
 
 
 void CView::FileSave(LPCTSTR szFilename)
 {
-	ofstream myfile(szFilename, ios::out | ios::binary);
+	DWORD nBytesWritten;
+	HANDLE hFile = CreateFile(szFilename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	if (myfile.is_open())
+	if (INVALID_HANDLE_VALUE != hFile)
 	{
 		for (int i = 0; i < (int)m_points.size(); ++i)
 		{
-			myfile.write((const char*)&m_points[i], sizeof(PlotPoint));
+			if ((!WriteFile(hFile, &m_points[i], sizeof(PlotPoint), &nBytesWritten, NULL))
+				|| (nBytesWritten != sizeof(PlotPoint)))
+			{
+				throw CWinException (_T("Error while writing to file"));
+			}
 		}
 
-		myfile.close();
+		CloseHandle(hFile);
 	}
 	else
-		DebugErrMsg(_T("File Save failed!"));
+		throw CWinException(_T("Failed to open file for writing"));
 }
 
 void CView::SetPen(COLORREF color)
