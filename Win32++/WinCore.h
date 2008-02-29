@@ -260,7 +260,6 @@ namespace Win32xx
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
 		HWND m_hWndParent;		// handle to this object's window parent
-		TLSData* m_pTLSData;	// a structure for the Thread Local Storage data
 		WNDCLASS m_wc;			// defines initialisation parameters for RegisterClass
 
 	private:
@@ -283,6 +282,7 @@ namespace Win32xx
 	{
 		friend class CWnd;		// CWnd uses m_MapLock and SetTlsIndex
 		friend class CDialog;	// CDialog uses m_MapLock
+		friend class CMenubar;	// CMenubar uses GetTlsIndex
 		friend class CPropertyPage; // CPropertyPage uses m_MapLock
 		friend class CPropertySheet; // CPropertSheet uses m_MapLock and SetTlsIndex
 
@@ -294,16 +294,13 @@ namespace Win32xx
 		virtual BOOL InitInstance();
 		virtual int  MessageLoop();
 		virtual int  Run();
-
-		// Its unlikely you would need to override these functions
 		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
 
+		// These functions aren't intended to be overridden
 		CFrame* GetFrame() {return m_pFrame;}
-		DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		static CWinApp* GetApp() {return st_pTheApp;}
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		std::map <HWND, CWnd*, CompareHWND>& GetHWNDMap() {return m_HWNDmap;}
 		void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 
@@ -312,13 +309,17 @@ namespace Win32xx
 		HWND m_hWndAccel;			// handle to the window for accelerator keys
 
 	private:
-		TLSData* SetTlsIndex();
-
 		enum Constants
 		{
 			TRACE_HEIGHT = 200,
 			TRACE_WIDTH  = 400
 		};
+
+		void AddToMap(HWND hWnd, CWnd* w);
+		CWnd* GetCWndFromMap(HWND hWnd);
+		BOOL RemoveFromMap(CWnd* w);
+		DWORD GetTlsIndex() {return st_dwTlsIndex;}
+		TLSData* SetTlsIndex();
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		HINSTANCE m_hInstance;		// handle to the applications instance
@@ -610,7 +611,7 @@ namespace Win32xx
 		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
 		LPCTSTR What() const {return m_msg;}
 		void MessageBox() const
-		{		
+		{
 			TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
 			TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
 			TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
@@ -620,7 +621,7 @@ namespace Win32xx
 			// Display Last Error information if it's useful
 			if (m_err != 0)
 			{
-				::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, m_err, 
+				::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, m_err,
 					MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf2, MAX_STRING_SIZE/2 -10, NULL);
 
 				::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);

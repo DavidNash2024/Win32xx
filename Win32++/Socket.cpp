@@ -54,7 +54,7 @@ namespace Win32xx
 				throw CWinException(_T("WSAStartup failed"));
 
 			m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
-			m_ThreadStopping = ::CreateEvent(0, TRUE, FALSE, 0);
+			m_Stopped = ::CreateEvent(0, TRUE, FALSE, 0);
 		}
 
 		catch (const CWinException &e)
@@ -70,7 +70,7 @@ namespace Win32xx
 
 		// Close handles
 		::CloseHandle(m_StopRequest);
-		::CloseHandle(m_ThreadStopping);
+		::CloseHandle(m_Stopped);
 
 		// Terminate the  Windows Socket services
 		::WSACleanup();
@@ -184,7 +184,7 @@ namespace Win32xx
 		if(	SOCKET_ERROR == WSAEventSelect(sClient, hNetworkEvent, Events))
 		{
 			TRACE(_T("Error in Event Select\n"));
-			::SetEvent(pSocket->m_ThreadStopping);
+			::SetEvent(pSocket->m_Stopped);
 			::WSACloseEvent(hNetworkEvent);
 			return 0;
 		}
@@ -199,7 +199,7 @@ namespace Win32xx
 			if(::WaitForSingleObject(pSocket->m_StopRequest, 0) == WAIT_OBJECT_0)
 			{
 				::WSACloseEvent(hNetworkEvent);
-				::SetEvent(pSocket->m_ThreadStopping);
+				::SetEvent(pSocket->m_Stopped);
 				return 0;
 			}
 
@@ -207,7 +207,7 @@ namespace Win32xx
 			{
 				TRACE(_T("WSAWaitForMultipleEvents failed\n"));
 				::WSACloseEvent(hNetworkEvent);
-				::SetEvent(pSocket->m_ThreadStopping);
+				::SetEvent(pSocket->m_Stopped);
 				return 0;
 			}
 
@@ -219,7 +219,7 @@ namespace Win32xx
 				{
 					TRACE(_T("WSAEnumNetworkEvents failed\n"));
 					::WSACloseEvent(hNetworkEvent);
-					::SetEvent(pSocket->m_ThreadStopping);
+					::SetEvent(pSocket->m_Stopped);
 					return 0;
 				}
 
@@ -253,7 +253,7 @@ namespace Win32xx
 					::closesocket(sClient);
 					pSocket->OnDisconnect();
 					::WSACloseEvent(hNetworkEvent);
-					::SetEvent(pSocket->m_ThreadStopping);
+					::SetEvent(pSocket->m_Stopped);
 					return 0;
 				}
 			}
@@ -359,7 +359,7 @@ namespace Win32xx
 			for (;;)	// infinite loop
 			{
 				// wait for the Thread stopping event to be set
-				if ( WAIT_TIMEOUT == ::WaitForSingleObject(m_ThreadStopping, THREAD_TIMEOUT * 10) )
+				if ( WAIT_TIMEOUT == ::WaitForSingleObject(m_Stopped, THREAD_TIMEOUT * 10) )
 				{
 					// Note: An excessive delay in processing any of the notification functions
 					// can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
@@ -373,7 +373,7 @@ namespace Win32xx
 		}
 
 		::ResetEvent(m_StopRequest);
-		::ResetEvent(m_ThreadStopping);
+		::ResetEvent(m_Stopped);
 	}
 
 } // namespace Win32xx

@@ -304,25 +304,19 @@ namespace Win32xx
 
 	BOOL CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Allocate an iterator for our HWND map
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
 		// Find matching CWnd pointer for this HWND
-		GetApp()->m_MapLock.Lock();
-		m = GetApp()->GetHWNDMap().find(hwndDlg);
-		GetApp()->m_MapLock.Release();
-
-		if (m != GetApp()->GetHWNDMap().end())
-		{	// matching CWnd pointer found for this HWND, so call DialogProc
-			return ((CPropertyPage*)m->second)->DialogProc(hwndDlg, uMsg, wParam, lParam);
+		CPropertyPage* pPage = (CPropertyPage*)GetApp()->GetCWndFromMap(hwndDlg);
+		if (pPage != 0)
+		{	
+			// matching CWnd pointer found for this HWND, so call DialogProc
+			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
 		}
 		else
-		{	// matching CWnd pointer not found, so add it to HWNDMap now
+		{	
+			// matching CWnd pointer not found, so add it to HWNDMap now
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			CPropertyPage* pPage = (CPropertyPage*)pTLSData->pCWnd;
-			GetApp()->m_MapLock.Lock();
-			GetApp()->GetHWNDMap().insert(std::make_pair(hwndDlg, pPage));
-			GetApp()->m_MapLock.Release();
+			pPage = (CPropertyPage*)pTLSData->pCWnd;		
+			GetApp()->AddToMap(hwndDlg, pPage);
 
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
@@ -523,13 +517,7 @@ namespace Win32xx
 				throw CWinException(_T("CreatePropertySheet ... Window already exists"));
 
 			// Ensure this thread has the TLS index set
-			GetApp()->m_MapLock.Lock();
-			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
-			if (NULL == m_pTLSData)
-			{
-				m_pTLSData = GetApp()->SetTlsIndex();
-			}
-			GetApp()->m_MapLock.Release();
+			m_pTLSData = GetApp()->SetTlsIndex();
 
 			// Store the 'this' pointer in Thread Local Storage
 			m_pTLSData->pCWnd = this;
@@ -542,7 +530,6 @@ namespace Win32xx
 			{
 				m_hWndParent = ppsph->hwndParent;
 			}
-
 		}
 
 		catch (const CWinException &e)

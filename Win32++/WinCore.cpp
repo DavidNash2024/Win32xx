@@ -137,6 +137,50 @@ namespace Win32xx
 			::DestroyAcceleratorTable(m_hAccelTable);
 	}
 
+	void CWinApp::AddToMap(HWND hWnd, CWnd* w)
+	{
+		// Store the Window pointer into the HWND map
+		m_MapLock.Lock();
+		m_HWNDmap.insert(std::make_pair(hWnd, w));
+		m_MapLock.Release();
+	}
+
+	CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
+	{
+		// Allocate an iterator for our HWND map
+		std::map<HWND, CWnd*, CompareHWND>::iterator m;
+
+		// Find the CWnd pointer mapped to this HWND
+		m_MapLock.Lock();
+		m = m_HWNDmap.find(hWnd);
+		m_MapLock.Release();
+		if (m != m_HWNDmap.end())
+			return m->second;
+		else
+			return 0;
+	}
+
+	BOOL CWinApp::RemoveFromMap(CWnd* w)
+	{
+		// Allocate an iterator for our HWND map
+		std::map<HWND, CWnd*, CompareHWND>::iterator m;
+
+		// Erase the CWnd pointer entry from the map
+		m_MapLock.Lock();
+		for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); m++)
+		{
+			if (w == m->second)
+			{
+				m_HWNDmap.erase(m);
+				m_MapLock.Release();
+				return TRUE;
+			}
+		}
+
+		m_MapLock.Release();
+		return FALSE;
+	}
+
 	BOOL CWinApp::InitInstance()
 	{
 		// InitInstance contains the initialization code for your application
@@ -200,33 +244,39 @@ namespace Win32xx
 	{
 		try
 		{
-			// Called once for any thread that has a CWnd object
-			if ((TLSData*)::TlsGetValue(GetTlsIndex()) != NULL)
-				throw CWinException(_T("CWinApp::SetTlsIndex    Error, attempted to set TLS more than once"));
-
-			TLSData* pTLSData = new TLSData;
-			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
-			//  an exception when new fails. We make sure an exception gets thrown!
+			m_MapLock.Lock();
+			TLSData* pTLSData = (TLSData*)::TlsGetValue(GetTlsIndex());
 			if (NULL == pTLSData)
-				throw std::bad_alloc();
+			{
+				// Called once for any thread that has a CWnd object
 
-			ZeroMemory(pTLSData, sizeof(TLSData));
-			::TlsSetValue(GetTlsIndex(), pTLSData);
+				pTLSData = new TLSData;
+				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
+				//  an exception when new fails. We make sure an exception gets thrown!
+				if (NULL == pTLSData)
+					throw std::bad_alloc();
 
-			// Store pointer in vector for deletion in destructor
-			m_ThreadData.push_back(pTLSData);
+				ZeroMemory(pTLSData, sizeof(TLSData));
+				::TlsSetValue(GetTlsIndex(), pTLSData);
+
+				// Store pointer in vector for deletion in destructor
+				m_ThreadData.push_back(pTLSData);
+			}
+			m_MapLock.Release();
 			return pTLSData;
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			// No need to rethrow this message.
 		}
 
 		catch (const std::bad_alloc &)
 		{
+			m_MapLock.Release();
 			DebugErrMsg(_T("Failed to allocate mememory in CWinApp::SetTlsIndex"));
+			throw; // Critical problem, so rethrow
+		}
+
+		catch (...)
+		{
+			m_MapLock.Release();
+			DebugErrMsg(_T("Exception thrown in CWinApp::SetTlsIndex"));
 			throw; // Critical problem, so rethrow
 		}
 
@@ -236,7 +286,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_pTLSData(NULL), m_hIconLarge(NULL),
+	CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), m_hIconLarge(NULL),
 					m_hIconSmall(NULL), m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
@@ -256,15 +306,7 @@ namespace Win32xx
 		// Remove the map entries
 		if (GetApp())
 		{
-			std::map<HWND, CWnd*, CompareHWND>::iterator m;
-			m = GetApp()->GetHWNDMap().begin();
-			while (m != GetApp()->GetHWNDMap().end())
-			{
-				if (this == m->second)
-					GetApp()->GetHWNDMap().erase(m++);
-				else
-					m++;
-			}
+			GetApp()->RemoveFromMap(this);
 		}
 	}
 
@@ -275,13 +317,7 @@ namespace Win32xx
 		{
 			if (IsWindow(hWnd))
 			{
-				// Allocate an iterator for our HWND map
-				std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-				GetApp()->m_MapLock.Lock();
-				m = GetApp()->GetHWNDMap().find(hWnd);
-				GetApp()->m_MapLock.Release();
-				if (m != GetApp()->GetHWNDMap().end())
+				if (0 != GetApp()->GetCWndFromMap(hWnd))
 					throw CWinException(_T("Window already attached to this CWnd object"));
 
 				m_hWnd = hWnd;
@@ -290,9 +326,7 @@ namespace Win32xx
 				if (m_PrevWindowProc)
 				{
 					// Store the CWnd pointer in the HWND map
-					GetApp()->m_MapLock.Lock();
-					GetApp()->GetHWNDMap().insert(std::make_pair(hWnd, this));
-					GetApp()->m_MapLock.Release();
+					GetApp()->AddToMap(hWnd, this);
 
 					m_hWnd = hWnd;
 					m_hWndParent = ::GetParent(hWnd);
@@ -446,15 +480,10 @@ namespace Win32xx
 				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
 			// Ensure this thread has the TLS index set
-			GetApp()->m_MapLock.Lock();
-			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
-
-			if (NULL == m_pTLSData)
-				m_pTLSData = GetApp()->SetTlsIndex();
-			GetApp()->m_MapLock.Release();
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 			// Store the CWnd pointer in thread local storage
-			m_pTLSData->pCWnd = this;
+			pTLSData->pCWnd = this;
 
 			// Create window
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
@@ -479,7 +508,7 @@ namespace Win32xx
 			}
 
 			// Clear the CWnd pointer from TLS
-			m_pTLSData->pCWnd = NULL;
+			pTLSData->pCWnd = NULL;
 
 			// Window creation is complete. Now call OnInitialUpdate
 			OnInitialUpdate();
@@ -546,17 +575,8 @@ namespace Win32xx
 #endif // defined GWLP_WNDPROC
 
 		// Remove the map entry
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-		GetApp()->m_MapLock.Lock();
-		m = GetApp()->GetHWNDMap().find(m_hWnd);
-		if (m != GetApp()->GetHWNDMap().end())
-			GetApp()->GetHWNDMap().erase(m);
-		else
-		{
-			GetApp()->m_MapLock.Release();
+		if (!GetApp()->RemoveFromMap(this))
 			throw CWinException(_T("CWnd::Detach  Unable to find window to detach"));
-		}
-		GetApp()->m_MapLock.Release();
 
 		// Clear member variables
 		HWND hWnd = m_hWnd;
@@ -569,17 +589,7 @@ namespace Win32xx
 	CWnd* CWnd::FromHandle(HWND hWnd) const
 	{
 		// Returns the CWnd object associated with the window handle
-
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-		GetApp()->m_MapLock.Lock();
-		m = GetApp()->GetHWNDMap().find(hWnd);
-		GetApp()->m_MapLock.Release();
-		if (m != GetApp()->GetHWNDMap().end())
-			// return the CWnd pointer
-			return m->second;
-
-		return NULL;	// No matching CWnd for this HWND
+		return GetApp()->GetCWndFromMap(hWnd);
 	}
 
 	HWND CWnd::GetAncestor(HWND hWnd) const
@@ -943,44 +953,38 @@ namespace Win32xx
 
 	LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		try
 		{
-			// Allocate an iterator for our HWND map
-			std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-			// Find the CWnd pointer mapped to this HWND
-			GetApp()->m_MapLock.Lock();
-			m = GetApp()->GetHWNDMap().find(hWnd);
-			GetApp()->m_MapLock.Release();
-			if (m != GetApp()->GetHWNDMap().end())
+			CWnd* w = GetApp()->GetCWndFromMap(hWnd);
+			if (0 != w)
 			{
-				return m->second->WndProc(hWnd, uMsg, wParam, lParam);
+				// CWnd pointer found, so call the CWnd's WndProc
+				return w->WndProc(hWnd, uMsg, wParam, lParam);
 			}
+			else
+			{
+				// The CWnd pointer wasn't found in the map, so add it now
 
-			// The HWND wasn't found in the map, so add it now
+				// Retrieve the pointer to the TLS Data
+				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				if (NULL == pTLSData)
+					throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
 
-			// Retrieve the pointer to the TLS Data
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			if (NULL == pTLSData)
-				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
+				// Retrieve pointer to CWnd object from Thread Local Storage TLS
+				w = pTLSData->pCWnd;
+				if (NULL == w)
+					throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 
-			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			CWnd* w = pTLSData->pCWnd;
-			if (NULL == w)
-				throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
+				pTLSData->pCWnd = NULL;
 
-			pTLSData->pCWnd = NULL;
+				// Store the CWnd pointer in the HWND map
+				GetApp()->AddToMap(hWnd, w);
 
-			// Store the Window pointer into the HWND map
-			GetApp()->m_MapLock.Lock();
-			GetApp()->GetHWNDMap().insert(std::make_pair(hWnd, w));
-			GetApp()->m_MapLock.Release();
+				// Store the HWND in the CWnd object early
+				w->m_hWnd = hWnd;
 
-			// Store the HWND in the CWnd object early
-			w->m_hWnd = hWnd;
-
-			return w->WndProc(hWnd, uMsg, wParam, lParam);
+				return w->WndProc(hWnd, uMsg, wParam, lParam);
+			}
 		}
 
 		catch (const CWinException &e)

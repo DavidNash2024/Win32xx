@@ -1443,11 +1443,13 @@ namespace Win32xx
 		//  the popup menu. Messages are sent to StaticMsgHook.
 
 		// Remove any remaining hook first
-		if (m_pTLSData->hMenuHook != NULL)
-			::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
+		TLSData* pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
+		pTLSData->pMenubar = this;
+		if (pTLSData->hMenuHook != NULL)
+			::UnhookWindowsHookEx(pTLSData->hMenuHook);
 
 		// Hook messages about to be processed by the shortcut menu
-		m_pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+		pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
 		// Display the shortcut menu
 		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
@@ -1457,8 +1459,8 @@ namespace Win32xx
 		m_bMenuActive = FALSE;
 
 		// Remove the message hook
-		::UnhookWindowsHookEx(m_pTLSData->hMenuHook);
-		m_pTLSData->hMenuHook = NULL;
+		::UnhookWindowsHookEx(pTLSData->hMenuHook);
+		pTLSData->hMenuHook = NULL;
 
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
@@ -1673,8 +1675,6 @@ namespace Win32xx
 
 	void CMenubar::OnCreate()
 	{
-		m_pTLSData->pMenubar = this;
-
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	}

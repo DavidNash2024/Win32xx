@@ -187,15 +187,10 @@ namespace Win32xx
 			IsModal=TRUE;
 
 			// Ensure this thread has the TLS index set
-			GetApp()->m_MapLock.Lock();
-			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
-
-			if (NULL == m_pTLSData)
-				m_pTLSData = GetApp()->SetTlsIndex();
-			GetApp()->m_MapLock.Release();
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 			// Store the CWnd pointer in Thread Local Storage
-			m_pTLSData->pCWnd = this;
+			pTLSData->pCWnd = this;
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 
@@ -211,7 +206,7 @@ namespace Win32xx
 			}
 			// Tidy up
 			m_hWnd = NULL;
-			m_pTLSData->pCWnd = NULL;
+			pTLSData->pCWnd = NULL;
 
 			if (nResult == -1)
 				throw CWinException(_T("Failed to create modal dialog box"));
@@ -238,15 +233,10 @@ namespace Win32xx
 			IsModal=FALSE;
 
 			// Ensure this thread has the TLS index set
-			GetApp()->m_MapLock.Lock();
-			m_pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
-
-			if (NULL == m_pTLSData)
-				m_pTLSData = GetApp()->SetTlsIndex();
-			GetApp()->m_MapLock.Release();
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 			// Store the CWnd pointer in Thread Local Storage
-			m_pTLSData->pCWnd = this;
+			pTLSData->pCWnd = this;
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 
@@ -262,7 +252,7 @@ namespace Win32xx
 			}
 
 			// Tidy up
-			m_pTLSData->pCWnd = NULL;
+			pTLSData->pCWnd = NULL;
 
 			// Now handle dialog creation failure
 			if (!m_hWnd)
@@ -314,38 +304,37 @@ namespace Win32xx
 	{
 		try
 		{
-			// Allocate an iterator for our HWND map
-			std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
 			// Find the CWnd pointer mapped to this HWND
-			GetApp()->m_MapLock.Lock();
-			m = GetApp()->GetHWNDMap().find(hWnd);
-			GetApp()->m_MapLock.Release();
-			if (m != GetApp()->GetHWNDMap().end())
-				return ((CDialog*)m->second)->DialogProc(hWnd, uMsg, wParam, lParam);
+			CDialog* w = (CDialog*)GetApp()->GetCWndFromMap(hWnd);
+			if (0 != w)
+			{
+				// CDialog pointer found, so call the CDialog's DialogProc
+				return w->DialogProc(hWnd, uMsg, wParam, lParam);
+			}
 
-			// The HWND wasn't in the map, so add it now
+			else
+			{
+				// The HWND wasn't in the map, so add it now
 
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			if (NULL == pTLSData)
-				throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
+				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				if (NULL == pTLSData)
+					throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
 
-			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			CDialog* w = (CDialog*)pTLSData->pCWnd;
-			if (NULL == w)
-				throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
+				// Retrieve pointer to CWnd object from Thread Local Storage TLS
+				w = (CDialog*)pTLSData->pCWnd;
+				if (NULL == w)
+					throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
 
-			pTLSData->pCWnd = NULL;
+				pTLSData->pCWnd = NULL;
 
-			// Store the Window pointer into the HWND map
-			GetApp()->m_MapLock.Lock();
-			GetApp()->GetHWNDMap().insert(std::make_pair(hWnd, w));
-			GetApp()->m_MapLock.Release();
+				// Store the Window pointer into the HWND map
+				GetApp()->AddToMap(hWnd, w);
 
-			// Store the HWND in the CDialog object early
-			w->m_hWnd = hWnd;
+				// Store the HWND in the CDialog object early
+				w->m_hWnd = hWnd;
 
-			return w->DialogProc(hWnd, uMsg, wParam, lParam);
+				return w->DialogProc(hWnd, uMsg, wParam, lParam);
+			}
 		}
 
 		catch (const CWinException &e )

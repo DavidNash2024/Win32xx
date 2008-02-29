@@ -297,6 +297,7 @@ namespace Win32xx
 		POINT m_OldMousePos;	// old Mouse position
 		ThemeMenu m_ThemeMenu;	// Theme structure
 
+
 	};  // class CMenubar
 
 	//////////////////////////////////
