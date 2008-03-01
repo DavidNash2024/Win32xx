@@ -392,6 +392,16 @@ namespace Win32xx
 		// allows buttons to have a separate dropdown arrow
 		// Note: TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
 		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
+
+		// Add extra styles for toolbars inside a rebar
+		TCHAR ClassName[32];
+		::GetClassName(m_hWndParent, ClassName, 32);
+		if (0 == lstrcmp(ClassName, REBARCLASSNAME))
+		{
+			DWORD style = ::GetWindowLong(m_hWnd, GWL_STYLE);
+			style |= CCS_NODIVIDER | CCS_NORESIZE;
+			::SetWindowLong(m_hWnd, GWL_STYLE, style);
+		}
 	}
 
 	LRESULT CToolbar::OnCustomDraw(NMHDR* pNMHDR)
@@ -597,11 +607,6 @@ namespace Win32xx
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 		cs.lpszClass = TOOLBARCLASSNAME;
-
-		// Add extra styles for toolbars inside a rebar
-		CFrame* pFrame = GetApp()->GetFrame();
-		if (pFrame->IsRebarUsed())
-			cs.style |= CCS_NODIVIDER | CCS_NORESIZE;
 	}
 
 	void CToolbar::SetBitmapSize(int cx, int cy) const
@@ -875,8 +880,9 @@ namespace Win32xx
 					throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 			else
-				// Use CFrame's CreateDisabledImageList function
-				m_hImageListDis = GetApp()->GetFrame()->CreateDisabledImageList(m_hImageList);
+			{
+				m_hImageListDis = CreateDisabledImageList(m_hImageList);
+			}
 
 			::DeleteObject(hbm);
 		}
@@ -900,10 +906,11 @@ namespace Win32xx
 		{
 		case WM_WINDOWPOSCHANGING:
 			{
+				CFrame* pFrame = (CFrame*)FromHandle(GetAncestor(m_hWnd));
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-				if (GetApp()->GetFrame()->IsRebarUsed())
+				if (pFrame->IsRebarUsed())
 				{
-					ThemeRebar rb = GetApp()->GetFrame()->GetRebar().GetRebarTheme();
+					ThemeRebar rb = pFrame->GetRebar().GetRebarTheme();
 					if (rb.UseThemes && rb.ShortBands)
 					{
 						pWinPos->cx = GetMaxSize().cx+2;
@@ -1073,7 +1080,8 @@ namespace Win32xx
 			{
 				if (IsBandVisible(nBand))
 				{
-					HWND hwndMenubar = GetApp()->GetFrame()->GetMenubar();
+					CFrame* pFrame = (CFrame*)FromHandle(m_hWndParent);
+					HWND hwndMenubar = pFrame->GetMenubar();
 					if (nBand != GetBand(hwndMenubar))
 					{
 						// Determine the size of this band
@@ -1267,8 +1275,8 @@ namespace Win32xx
 		m_Theme.FlatStyle    = Theme.FlatStyle;
 		m_Theme.RoundBorders = Theme.RoundBorders;
 
-
-		CMenubar& MB = GetApp()->GetFrame()->GetMenubar();
+		CFrame* pFrame = (CFrame*)FromHandle(m_hWndParent);
+		CMenubar& MB = pFrame->GetMenubar();
 		if (m_Theme.LockMenuBand)
 			ShowGripper(GetBand(MB), FALSE);
 		else
@@ -1636,7 +1644,7 @@ namespace Win32xx
 		HWND hwndMDIChild = NULL;
 		if (IsMDIFrame())
 		{
-			hwndMDIChild = (HWND)::SendMessage(GetApp()->GetFrame()->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, 0);
+			hwndMDIChild = (HWND)::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, 0);
 		}
 
 		return hwndMDIChild;
@@ -1656,7 +1664,7 @@ namespace Win32xx
 
 		if (IsMDIFrame())
 		{
-			::SendMessage(GetApp()->GetFrame()->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+			::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
 		}
 
 		return bMaxed;
@@ -1664,7 +1672,7 @@ namespace Win32xx
 
 	BOOL CMenubar::IsMDIFrame() const
 	{
-		return GetApp()->GetFrame()->IsMDIFrame();
+		return m_pFrame->IsMDIFrame();
 	}
 
 	void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
@@ -1677,6 +1685,8 @@ namespace Win32xx
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+
+		m_pFrame = (CFrame*)FromHandle(GetAncestor(m_hWnd));
 	}
 
 	LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
@@ -1884,7 +1894,7 @@ namespace Win32xx
 
 		if (IsMDIFrame())
 		{
-			HWND MDIClient = GetApp()->GetFrame()->GetView()->GetHwnd();
+			HWND MDIClient = m_pFrame->GetView()->GetHwnd();
 			HWND MDIChild = GetActiveMDIChild();
 
 			if (IsMDIChildMaxed())
@@ -2298,15 +2308,15 @@ namespace Win32xx
 		case WM_CHAR:
 			return 0L;  // Discard these messages
 		case WM_DRAWITEM:
-			GetApp()->GetFrame()->OnDrawItem(wParam, lParam);
+			m_pFrame->OnDrawItem(wParam, lParam);
 			return TRUE; // handled
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
-			GetApp()->GetFrame()->OnExitMenuLoop();
+			m_pFrame->OnExitMenuLoop();
 			break;
 		case WM_INITMENUPOPUP:
-			GetApp()->GetFrame()->OnInitMenuPopup(wParam, lParam);
+			m_pFrame->OnInitMenuPopup(wParam, lParam);
 			break;
 		case WM_KEYDOWN:
 			OnKeyDown(wParam, lParam);
@@ -2328,7 +2338,7 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			GetApp()->GetFrame()->OnMeasureItem(wParam, lParam);
+			m_pFrame->OnMeasureItem(wParam, lParam);
 			return TRUE; // handled
 		case WM_MOUSELEAVE:
 			OnMouseLeave();
@@ -2385,6 +2395,9 @@ namespace Win32xx
 		// By default, we use the rebar if we can
 		if (GetComCtlVersion() >= 470)
 			m_bUseRebar = TRUE;
+
+		for (int i = 0 ; i < 3 ; i++)
+			m_OldStatus[i] = _T('\0');
 
 		// Place this code in CMainFrame's constructor
 /*
@@ -2582,58 +2595,7 @@ namespace Win32xx
 		}
 	}
 
-	HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST hImageList)
-	// Returns a greyed image list, created from hImageList
-	{
-		int cx, cy;
-		int nCount = ImageList_GetImageCount(hImageList);
-		if (0 == nCount)
-			return NULL;
 
-		ImageList_GetIconSize(hImageList, &cx, &cy);
-
-		// Create the destination ImageList
-		HIMAGELIST hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
-
-		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; i++)
-		{
-			CDC DesktopDC = ::GetDC(NULL);
-			CDC MemDC = ::CreateCompatibleDC(NULL);
-			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
-			RECT rc;
-			SetRect(&rc, 0, 0, cx, cx);
-
-			// Set the mask color to magenta for the new ImageList
-			COLORREF crMask = RGB(255,0,255);
-			SolidFill(MemDC, crMask, &rc);
-
-			// Draw the image on the memory DC
-			ImageList_Draw(hImageList, i, MemDC, 0, 0, ILD_TRANSPARENT);
-
-			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; x++)
-			{
-				for (int y = 0; y < cy; y++)
-				{
-					COLORREF clr = ::GetPixel(MemDC, x, y);
-
-					if (clr != crMask)
-					{
-						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
-						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
-					}
-				}
-			}
-
-			// Detach the bitmap so we can use it.
-			HBITMAP hbm = MemDC.DetachBitmap();
-			ImageList_AddMasked(hImageListDis, hbm, crMask);
-			::DeleteObject(hbm);
-		}
-
-		return hImageListDis;
-	}
 
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
@@ -3469,22 +3431,18 @@ namespace Win32xx
 	{
 		if (::IsWindow(GetStatusbar()))
 		{
-			static LPCTSTR OldStatus1 = NULL;
-			static LPCTSTR OldStatus2 = NULL;
-			static LPCTSTR OldStatus3 = NULL;
-
 			LPCTSTR Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? _T("\tCAP") : _T("");
 			LPCTSTR Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? _T("\tNUM") : _T("");
 			LPCTSTR Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? _T("\tSCRL"): _T("");
 
 			// Only update indictors if the text has changed
-			if (Status1 != OldStatus1) 	GetStatusbar().SetPaneText(1, (Status1));
-			if (Status2 != OldStatus2)  GetStatusbar().SetPaneText(2, (Status2));
-			if (Status3 != OldStatus3)  GetStatusbar().SetPaneText(3, (Status3));
+			if (Status1 != m_OldStatus[0]) 	GetStatusbar().SetPaneText(1, (Status1));
+			if (Status2 != m_OldStatus[1])  GetStatusbar().SetPaneText(2, (Status2));
+			if (Status3 != m_OldStatus[2])  GetStatusbar().SetPaneText(3, (Status3));
 
-			OldStatus1 = Status1;
-			OldStatus2 = Status2;
-			OldStatus3 = Status3;
+			m_OldStatus[0] = Status1;
+			m_OldStatus[1] = Status2;
+			m_OldStatus[2] = Status3;
 		}
 	}
 

@@ -240,16 +240,20 @@ namespace Win32xx
 			TRACE(_T("Load Accelerators failed\n"));
 	}
 
+	void CWinApp::SetFrame(CFrame* pFrame)
+	{
+		// Store the pointer to the (first) frame
+		if (0 == pFrame)
+			m_pFrame = pFrame;
+	}
+
 	TLSData* CWinApp::SetTlsIndex()
 	{
 		try
 		{
-			m_MapLock.Lock();
 			TLSData* pTLSData = (TLSData*)::TlsGetValue(GetTlsIndex());
 			if (NULL == pTLSData)
 			{
-				// Called once for any thread that has a CWnd object
-
 				pTLSData = new TLSData;
 				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 				//  an exception when new fails. We make sure an exception gets thrown!
@@ -262,21 +266,12 @@ namespace Win32xx
 				// Store pointer in vector for deletion in destructor
 				m_ThreadData.push_back(pTLSData);
 			}
-			m_MapLock.Release();
 			return pTLSData;
 		}
 
 		catch (const std::bad_alloc &)
 		{
-			m_MapLock.Release();
 			DebugErrMsg(_T("Failed to allocate mememory in CWinApp::SetTlsIndex"));
-			throw; // Critical problem, so rethrow
-		}
-
-		catch (...)
-		{
-			m_MapLock.Release();
-			DebugErrMsg(_T("Exception thrown in CWinApp::SetTlsIndex"));
 			throw; // Critical problem, so rethrow
 		}
 

@@ -218,7 +218,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 
-		// Its unlikely you would need to override these functions
+		// These functions aren't intended to be overridden
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		virtual void CenterWindow();
@@ -295,13 +295,13 @@ namespace Win32xx
 		virtual int  MessageLoop();
 		virtual int  Run();
 		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
+		virtual void SetFrame(CFrame* pFrame);
 
 		// These functions aren't intended to be overridden
 		CFrame* GetFrame() {return m_pFrame;}
 		static CWinApp* GetApp() {return st_pTheApp;}
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		void SetFrame(CFrame* pFrame){m_pFrame = pFrame;}
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 
 	protected:

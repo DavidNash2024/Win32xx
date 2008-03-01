@@ -143,12 +143,15 @@ namespace Win32xx
 	public:
 		CToolbar();
 		virtual ~CToolbar();
+
+		// These are the functions you might wish to override
 		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
 		virtual void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
 		virtual int  SetButtons(const std::vector<UINT>& ToolbarData) const;
 		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
 		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 
+		// These functions aren't intended to be overridden
 		int  CommandToIndex(int iButtonID) const;
 		void DisableButton(int iButtonID) const;
 		void EnableButton(int iButtonID) const;
@@ -195,11 +198,14 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar();
-		virtual BOOL OnEraseBkgnd(HDC hDC);
-		virtual void PreCreate(CREATESTRUCT& cs);
+				
+		// These are the functions you might wish to override
 		virtual void MoveBandsLeft();
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
+		virtual void ShowGripper(int nBand, BOOL fShow) const;
+		virtual BOOL ShowBand(int nBand, BOOL fShow) const;
+		virtual void ResizeBand(const int nBand, SIZE sz) const;
+		
+		// These functions aren't intended to be overridden
 		void DeleteBand(const int nBand) const ;
 		int  GetBand(const HWND hWnd) const;
 		RECT GetBandBorders(int nBand) const;
@@ -209,19 +215,21 @@ namespace Win32xx
 		void GetBarInfo(LPREBARINFO prbi) const;
 		int  GetRowHeight(int nRow) const;
 		void InsertBand(const int nBand, LPREBARBANDINFO prbbi) const;
-		BOOL IsBandVisible(int nBand) const;
-		void ResizeBand(const int nBand, SIZE sz) const;
+		BOOL IsBandVisible(int nBand) const;	
 		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
 		void SetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
 		void SetBarInfo(LPREBARINFO prbi) const;
-		BOOL ShowBand(int nBand, BOOL fShow) const;
-		void ShowGripper(int nBand, BOOL fShow) const;
-
 		ThemeRebar& GetRebarTheme() {return m_Theme;}
 		void SetRebarTheme(ThemeRebar& Theme);
 
+	protected:
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	private:
+		virtual BOOL OnEraseBkgnd(HDC hDC);
+
 		ThemeRebar m_Theme;
 		BOOL m_bIsDragging;
 	};
@@ -296,6 +304,7 @@ namespace Win32xx
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
 		POINT m_OldMousePos;	// old Mouse position
 		ThemeMenu m_ThemeMenu;	// Theme structure
+		CFrame* m_pFrame;       // Pointer to the frame.
 
 
 	};  // class CMenubar
@@ -310,7 +319,6 @@ namespace Win32xx
 		virtual ~CFrame();
 
 		// These are the functions you might wish to override
-		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual RECT GetClientSize();
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
@@ -323,7 +331,7 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
-		// These functions aren't virtual, so there's no point overriding them
+		// These functions aren't intended to be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		ThemeMenu& GetMenuTheme()	{return m_ThemeMenu;}
 		CWnd* GetView() const		{return m_pView;}
@@ -407,8 +415,69 @@ namespace Win32xx
 		CToolbar m_Toolbar;		// CToolbar object
 		HMENU m_hMenu;			// handle to the frame menu
 		CWnd* m_pView;			// pointer to the View CWnd object
+		LPCTSTR m_OldStatus[3];	// Array of TCHAR pointers;
 
 	};  // class CFrame
+
+
+	//////////////////////////////////
+	// Declaration of global functions
+	//
+	inline 	//////////////////////////////////////
+	// Definitions for the global functions
+	//
+	HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList)
+	// Returns a greyed image list, created from hImageList
+	{
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(hImageList);
+		if (0 == nCount)
+			return NULL;
+
+		ImageList_GetIconSize(hImageList, &cx, &cy);
+
+		// Create the destination ImageList
+		HIMAGELIST hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
+
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; i++)
+		{
+			CDC DesktopDC = ::GetDC(NULL);
+			CDC MemDC = ::CreateCompatibleDC(NULL);
+			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
+			RECT rc;
+			SetRect(&rc, 0, 0, cx, cx);
+
+			// Set the mask color to magenta for the new ImageList
+			COLORREF crMask = RGB(255,0,255);
+			SolidFill(MemDC, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_Draw(hImageList, i, MemDC, 0, 0, ILD_TRANSPARENT);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; x++)
+			{
+				for (int y = 0; y < cy; y++)
+				{
+					COLORREF clr = ::GetPixel(MemDC, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
+						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
+					}
+				}
+			}
+
+			// Detach the bitmap so we can use it.
+			HBITMAP hbm = MemDC.DetachBitmap();
+			ImageList_AddMasked(hImageListDis, hbm, crMask);
+			::DeleteObject(hbm);
+		}
+
+		return hImageListDis;
+	}
 
 } // namespace Win32xx
 
