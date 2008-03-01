@@ -125,14 +125,12 @@ namespace Win32xx
 			::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
 		}
 
-		// Append MDI Child windows
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 		int nWindow = 0;
 
 		// Allocate an iterator for our MDIChild vector
 		std::vector <CMDIChild*>::iterator v;
 
-		for (v = pMDIFrame->GetMDIChildVect().begin(); v < pMDIFrame->GetMDIChildVect().end(); v++)
+		for (v = GetMDIChildVect().begin(); v < GetMDIChildVect().end(); v++)
 		{
 			HWND hwndMDIChild = (*v)->GetHwnd();
 			if (::GetWindowLong(hwndMDIChild, GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
@@ -235,9 +233,7 @@ namespace Win32xx
 			// Refresh Menubar Window
 			HMENU hMenu= GetMenubar().GetMenu();
 			GetMenubar().SetMenu(hMenu);
-
-			CFrame* pFrame = GetApp()->GetFrame();
-			pFrame->UpdateCheckMarks();
+			UpdateCheckMarks();
 		}
 	}
 
@@ -358,6 +354,7 @@ namespace Win32xx
 
 	LRESULT CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(m_hWndParent);
 		switch (uMsg)
 		{
 		case WM_MDIDESTROY:
@@ -366,14 +363,13 @@ namespace Win32xx
 				CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
 
 				// Now remove MDI child
-				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
 				pMDIFrame->RemoveMDIChild((HWND) wParam);
 			}
 			return 0; // Discard message
 
 		case WM_MDISETMENU:
 			{
-				if (GetApp()->GetFrame()->IsMenubarUsed())
+				if (pMDIFrame->IsMenubarUsed())
 				{
 					return 0L;
 				}
@@ -475,7 +471,7 @@ namespace Win32xx
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
 		if (m_hChildMenu)
 			pMDIFrame->UpdateFrameMenu(m_hChildMenu);
 
@@ -495,7 +491,7 @@ namespace Win32xx
 		HWND hWnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
 		if ((NULL != m_hWnd) &&(hWnd == m_hWnd) && (NULL != m_hChildMenu))
 		{
-			CMDIFrame* pFrame = (CMDIFrame*)GetApp()->GetFrame();
+			CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
 			if (m_hChildMenu)
 				pFrame->UpdateFrameMenu(m_hChildMenu);
 		}
@@ -509,7 +505,7 @@ namespace Win32xx
 		{
 		case WM_MDIACTIVATE:
 			{
-				CMDIFrame* pMDIFrame = (CMDIFrame*)GetApp()->GetFrame();
+				CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
 
 				// This child is being activated
 				if (lParam == (LPARAM) m_hWnd)

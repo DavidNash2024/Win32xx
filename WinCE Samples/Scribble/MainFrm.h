@@ -8,7 +8,7 @@
 #include <vector>
 
 
-class CMainFrame : public CFrame
+class CMainFrame : public CWceFrame
 {
 public:
 	CMainFrame();

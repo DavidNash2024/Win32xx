@@ -243,7 +243,7 @@ namespace Win32xx
 	void CWinApp::SetFrame(CFrame* pFrame)
 	{
 		// Store the pointer to the (first) frame
-		if (0 == pFrame)
+		if (0 == m_pFrame)
 			m_pFrame = pFrame;
 	}
 

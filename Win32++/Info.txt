@@ -121,8 +121,8 @@ MDI.cpp           | CMDIClient       |                   | frames.
 Splitter.h        | CSplitter        | Win32 only        | Adds support for
 Splitter.cpp      |                  |                   | splitter windows.
 ------------------+------------------+-------------------+---------------------
-WCEframe.h        | CFrame           | WinCE only        | Adds support for
-WCEframe.cpp      | CCmdbar          |                   | frames in WinCE.
+WceFrame.h        | CWceFrame        | WinCE only        | Adds support for
+WceFrame.cpp      | CCmdbar          |                   | frames in WinCE.
 ------------------+------------------+-------------------+---------------------                 
 
 

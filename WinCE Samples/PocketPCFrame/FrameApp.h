@@ -5,11 +5,11 @@
 #include "MainFrm.h"
 
 
-class CFrameApp : public CWinApp
+class CWceFrameApp : public CWinApp
 {
 public:
-    CFrameApp();
-    virtual ~CFrameApp() {}
+    CWceFrameApp();
+    virtual ~CWceFrameApp() {}
 	virtual BOOL InitInstance();
 
 private:

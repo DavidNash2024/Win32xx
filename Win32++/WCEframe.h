@@ -36,14 +36,14 @@
 
 
 //////////////////////////////////////////////////////
-// WCEframe.h
-// Definitions for the CCmdbar and CFrame
+// WceFrame.h
+// Definitions for the CCmdbar and CWceFrame
 
 // These classes are provide a frame window for use on Window CE devices such
 // as Pocket PCs. The frame uses CommandBar (a control unique to the Windows CE
 // operating systems) to display the menu and toolbar.
 //
-// Use the PocketPCFrame generic application as the starting point for your own
+// Use the PocketPCWceFrame generic application as the starting point for your own
 // frame based applications on the Pocket PC.
 //
 // Refer to the Scribble demo application for an example of how these classes
@@ -102,13 +102,13 @@ namespace Win32xx
 
 
 	//////////////////////////////////////
-	// Declaration of the CFrame class
+	// Declaration of the CWceFrame class
 	//  A mini frame based on CCmdbar
-	class CFrame : public CWnd
+	class CWceFrame : public CWnd
 	{
 	public:
-		CFrame();
-		virtual ~CFrame();
+		CWceFrame();
+		virtual ~CWceFrame();
 		virtual RECT GetClientRect();
 		virtual CCmdbar* GetMenubar() {return &m_Menubar;}
 		virtual void OnCreate();

@@ -1,10 +1,10 @@
 #include "FrameApp.h"
 
-CFrameApp::CFrameApp()
+CWceFrameApp::CWceFrameApp()
 {
 }
 
-BOOL CFrameApp::InitInstance()
+BOOL CWceFrameApp::InitInstance()
 {
 	//Create the Window
     m_Frame.Create();

@@ -423,10 +423,7 @@ namespace Win32xx
 	//////////////////////////////////
 	// Declaration of global functions
 	//
-	inline 	//////////////////////////////////////
-	// Definitions for the global functions
-	//
-	HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList)
+	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList)
 	// Returns a greyed image list, created from hImageList
 	{
 		int cx, cy;

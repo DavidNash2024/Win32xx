@@ -38,7 +38,7 @@
 ////////////////////////////////////////////////////////
 // WCEframe.cpp
 //  Definitions for the following classes:
-//  CCmdbar and CFrame
+//  CCmdbar and CWceFrame
 
 
 #include "WCEframe.h"
@@ -158,9 +158,9 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////
-	// Definitions for the CFrame class
+	// Definitions for the CWceFrame class
 	//  This class creates a simple frame using CCmdbar
-	CFrame::CFrame()
+	CWceFrame::CWceFrame()
 	{
 #ifdef SHELL_AYGSHELL
 		// Initialize the shell activate info structure
@@ -169,11 +169,11 @@ namespace Win32xx
 #endif
 	}
 
-	CFrame::~CFrame()
+	CWceFrame::~CWceFrame()
 	{
 	}
 
-	RECT CFrame::GetClientRect()
+	RECT CWceFrame::GetClientRect()
 	{
 		RECT r;
 		::GetClientRect(m_hWnd, &r);
@@ -186,7 +186,7 @@ namespace Win32xx
 		return r;
 	}
 
-	void CFrame::OnCreate()
+	void CWceFrame::OnCreate()
 	{
 		// Create the Commandbar
 		m_Menubar.Create(m_hWnd);
@@ -207,7 +207,7 @@ namespace Win32xx
 
 	}
 
-	void CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
+	void CWceFrame::OnActivate(WPARAM wParam, LPARAM lParam)
 	{
 #ifdef SHELL_AYGSHELL
 		// Notify shell of our activate message
@@ -222,7 +222,7 @@ namespace Win32xx
 #endif
 	}
 
-	void CFrame::PreCreate(CREATESTRUCT &cs)
+	void CWceFrame::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_VISIBLE;
 
@@ -230,7 +230,7 @@ namespace Win32xx
 		cs.lpszClass = LoadString(IDW_MAIN);
 	}
 
-	void CFrame::RecalcLayout()
+	void CWceFrame::RecalcLayout()
 	{
 		HWND hwndCB = m_Menubar.GetHwnd();
 		if (hwndCB)
@@ -249,7 +249,7 @@ namespace Win32xx
 		UpdateWindow(m_hWnd);
 	}
 
-	void CFrame::SetButtons(const std::vector<UINT> ToolbarData)
+	void CWceFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	// Define the resource IDs for the toolbar like this in the Frame's constructor
 	// m_ToolbarData.push_back ( 0 );				// Separator
 	// m_ToolbarData.clear();
@@ -293,7 +293,7 @@ namespace Win32xx
 		}
 	}
 
-	LRESULT CFrame::WndProcDefault(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CWceFrame::WndProcDefault(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{

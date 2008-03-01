@@ -7,7 +7,7 @@
 #include "..\Win32++\Dialog.h"
 
 
-class CMainFrame : public CFrame
+class CMainFrame : public CWceFrame
 {
 public:
 	CMainFrame();
