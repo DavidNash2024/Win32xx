@@ -275,7 +275,6 @@ namespace Win32xx
 			throw; // Critical problem, so rethrow
 		}
 
-		return 0;
 	}
 
 	////////////////////////////////////////

@@ -2379,7 +2379,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_StatusText(_T("Ready")),
-						m_hImageList(NULL), m_hImageListDis(NULL), m_hMenu(NULL), m_pView(NULL)
+						m_hImageList(NULL), m_hImageListDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -3028,21 +3028,20 @@ namespace Win32xx
 
 	void CFrame::OnHelp()
 	{
-		static BOOL IsHelpOpen = FALSE;
-		if (!IsHelpOpen)
+		if (NULL == m_pAboutDialog)
 		{
 			// Store the window handle that currently has keyboard focus
 			HWND hPrevFocus = ::GetFocus();
 			if (hPrevFocus == GetMenubar())
 				hPrevFocus = m_hWnd;
 
-			IsHelpOpen = TRUE;
-			CDialog AboutDialog(IDW_ABOUT, m_hWnd);
-			AboutDialog.DoModal();
-
-			// Return the keyboard focus back to the window that had it
+			m_pAboutDialog = new CDialog(IDW_ABOUT, m_hWnd);
+			m_pAboutDialog->DoModal();
+			
+			// Clean up
+			delete m_pAboutDialog;
+			m_pAboutDialog = NULL;
 			::SetFocus(hPrevFocus);
-			IsHelpOpen = FALSE;
 		}
 	}
 

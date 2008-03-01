@@ -409,6 +409,7 @@ namespace Win32xx
 		BOOL OnCommandFrame(WPARAM wPAram, LPARAM lParam);
 		LRESULT OnNotifyFrame(WPARAM wParam, LPARAM lParam);
 
+		CDialog* m_pAboutDialog;// Pointer to the about dialog 
 		CMenubar m_Menubar;		// CMenubar object
 		CRebar m_Rebar;			// CRebar object
 		CStatusbar m_Statusbar;	// CStatusbar object
