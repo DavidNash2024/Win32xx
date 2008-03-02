@@ -75,7 +75,7 @@ namespace Win32xx
 		virtual ~CPropertyPage() {}
 		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual int Validate();
+
 		virtual void OnApply();
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
@@ -88,6 +88,7 @@ namespace Win32xx
 		virtual BOOL OnWizardFinish();
 		virtual void OnWizardNext();
 		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
+		virtual int Validate();
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
 		static BOOL CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -113,7 +114,7 @@ namespace Win32xx
 		virtual void AddPage(CPropertyPage* pPage);
 		virtual HWND Create(HWND hWndParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
-		virtual void CPropertySheet::DestroyButton(int iButton);
+		virtual void DestroyButton(int iButton);
 		virtual void DestroyWindow();
 		virtual int DoModal();
 		virtual void OnCreate();

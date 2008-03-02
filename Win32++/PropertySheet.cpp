@@ -517,10 +517,10 @@ namespace Win32xx
 				throw CWinException(_T("CreatePropertySheet ... Window already exists"));
 
 			// Ensure this thread has the TLS index set
-			m_pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 			// Store the 'this' pointer in Thread Local Storage
-			m_pTLSData->pCWnd = this;
+			pTLSData->pCWnd = this;
 
 			// Create the property sheet
 			ipResult = PropertySheet(ppsph);
