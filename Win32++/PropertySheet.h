@@ -83,7 +83,7 @@ namespace Win32xx
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnOK();
 		virtual BOOL OnQueryCancel();
-		virtual BOOL OnQuerySiblings();
+		virtual BOOL OnQuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetActive();
 		virtual void OnWizardBack();
 		virtual BOOL OnWizardFinish();

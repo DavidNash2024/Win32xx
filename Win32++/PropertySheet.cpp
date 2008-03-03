@@ -107,7 +107,7 @@ namespace Win32xx
 		    return OnInitDialog();
 
 		case PSM_QUERYSIBLINGS:
-			return (BOOL)OnQuerySiblings();
+			return (BOOL)OnQuerySiblings(wParam, lParam);
 
 		case WM_NOTIFY:
 			return (BOOL)OnNotify(wParam, lParam);
@@ -164,11 +164,14 @@ namespace Win32xx
 		return TRUE;    // Allow cancel to proceed
 	}
 
-	BOOL CPropertyPage::OnQuerySiblings()
+	BOOL CPropertyPage::OnQuerySiblings(WPARAM wParam, LPARAM lParam)
 	{
 		// Responds to a query request from the Property Sheet.
-		// Return zero for pass, nonzero for fail
+		// The values for wParam and lParam are the ones set by
+		// the CPropertySheet::QuerySiblings call
 
+		// return zero to allow other siblings to be queried, or
+		// return nonzero to stop query at this page.
 		return 0;
 	}
 
@@ -683,6 +686,9 @@ namespace Win32xx
 
 	LRESULT CPropertySheet::QuerySiblings(WPARAM wParam, LPARAM lParam)
 	{
+		// Set wParam and lParam to values you want passed to the
+		// property pages in CPropertyPage::OnQuerySiblings.
+		
 		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
