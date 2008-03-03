@@ -164,7 +164,7 @@ namespace Win32xx
 		return TRUE;    // Allow cancel to proceed
 	}
 
-	BOOL CPropertyPage::OnQuerySiblings(WPARAM wParam, LPARAM lParam)
+	BOOL CPropertyPage::OnQuerySiblings(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		// Responds to a query request from the Property Sheet.
 		// The values for wParam and lParam are the ones set by
