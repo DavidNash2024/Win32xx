@@ -333,7 +333,6 @@ namespace Win32xx
 	};
 
 
-
 	//////////////////////////////////////////////////
 	// Global functions	(within the Win32xx namespace)
 
@@ -361,88 +360,7 @@ namespace Win32xx
 	}
 
 
-  ///////////////////////////////////////////
-  // Global functions to extend the WinCE API
-  //
-
-  #ifdef _WIN32_WCE		// for WinCE operating systems
-
-  inline UINT wce_GetMenuState(HMENU hMenu, UINT uId, UINT uFlags)
-  {
-      MENUITEMINFO mii;
-
-      memset(&mii, 0, sizeof(MENUITEMINFO));
-      mii.cbSize = sizeof(MENUITEMINFO);
-      mii.fMask = MIIM_STATE;
-
-      if (uFlags & MF_BYPOSITION) {
-          GetMenuItemInfo(hMenu, uId, TRUE, &mii);
-      }
-      else
-      {
-          GetMenuItemInfo(hMenu, uId, FALSE, &mii);
-      }
-
-      return mii.fState;
-  }
-
-  inline int wce_GetMenuItemCount(HMENU hMenu)
-  {
-      const int MAX_NUM_ITEMS = 256;
-      int  iPos, iCount;
-
-      MENUITEMINFO mii;
-      memset(&mii, 0, sizeof(MENUITEMINFO));
-      mii.cbSize = sizeof(MENUITEMINFO);
-
-      iCount = 0;
-      for (iPos = 0; iPos < MAX_NUM_ITEMS; iPos++)
-      {
-          if (FALSE == GetMenuItemInfo(hMenu, (UINT)iPos, TRUE, &mii))
-          {
-              break;
-          }
-          iCount++;
-      }
-
-      return iCount;
-  }
-
-  inline UINT wce_GetMenuItemID(HMENU hMenu, int nPos)
-  {
-      MENUITEMINFO mii;
-      memset(&mii, 0, sizeof(mii));
-      mii.cbSize = sizeof(mii);
-      mii.fMask = MIIM_ID;
-      GetMenuItemInfo(hMenu, nPos, TRUE, &mii);
-
-      return mii.wID;
-  }
-
-  inline BOOL wce_ModifyMenu(HMENU hMenu, UINT uPosition, UINT uFlags, UINT uIDNewItem, LPCTSTR lpNewItem)
-  {
-      // Handle MF_BYCOMMAND case
-      if (MF_BYPOSITION != (uFlags & MF_BYPOSITION))
-      {
-          int nMax = wce_GetMenuItemCount(hMenu);
-          int nCount = 0;
-          while (uPosition != wce_GetMenuItemID(hMenu, nCount) && (nCount < nMax))
-          {
-              nCount++;
-          }
-          uPosition = nCount;
-          uFlags |= MF_BYPOSITION;
-      }
-
-      if (FALSE == DeleteMenu(hMenu, uPosition, uFlags))
-      {
-          return FALSE;
-      }
-
-      return InsertMenu(hMenu, uPosition, uFlags, uIDNewItem, lpNewItem);
-	}
-
-#else // for Win32 operating systems
+  #ifndef _WIN32_WCE		// for Win32/64 operating systems
 
 	inline int GetWinVersion()
 	{
@@ -548,7 +466,7 @@ namespace Win32xx
 		return bIsXPThemed;
 	}
 
-  #endif // _WIN32_WCE
+  #endif // #ifndef _WIN32_WCE
 
   #ifndef lstrcpyn
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)

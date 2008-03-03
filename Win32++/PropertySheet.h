@@ -83,11 +83,11 @@ namespace Win32xx
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnOK();
 		virtual BOOL OnQueryCancel();
+		virtual BOOL OnQuerySiblings();
 		virtual void OnSetActive();
 		virtual void OnWizardBack();
 		virtual BOOL OnWizardFinish();
 		virtual void OnWizardNext();
-		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual int Validate();
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
@@ -119,6 +119,7 @@ namespace Win32xx
 		virtual int DoModal();
 		virtual void OnCreate();
 		virtual void OnInitialUpdate();
+		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void RemovePage(CPropertyPage* pPage);
 		virtual BOOL SetActivePage(int nPage);
 		virtual BOOL SetActivePage(CPropertyPage* pPage);

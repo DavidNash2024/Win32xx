@@ -71,6 +71,7 @@ namespace Win32xx
 
 	void CPropertyPage::CancelToClose() const
 	{
+		// Disables the Cancel button and changes the text of the OK button to "Close." 
 		if (m_hWnd)
 			::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0, 0);
 	}
@@ -104,6 +105,9 @@ namespace Win32xx
 	    {
 	    case WM_INITDIALOG:
 		    return OnInitDialog();
+
+		case PSM_QUERYSIBLINGS:
+			return (BOOL)OnQuerySiblings();
 
 		case WM_NOTIFY:
 			return (BOOL)OnNotify(wParam, lParam);
@@ -158,6 +162,14 @@ namespace Win32xx
 		// Called when the cancel button is pressed, and before the cancel has taken place
 
 		return TRUE;    // Allow cancel to proceed
+	}
+
+	BOOL CPropertyPage::OnQuerySiblings()
+	{
+		// Responds to a query request from the Property Sheet.
+		// Return zero for pass, nonzero for fail
+
+		return 0;
 	}
 
 	BOOL CPropertyPage::OnInitDialog()
@@ -249,11 +261,6 @@ namespace Win32xx
 
 		}
 		return FALSE;
-	}
-
-	LRESULT CPropertyPage::QuerySiblings(WPARAM wParam, LPARAM lParam)
-	{
-		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
 	void CPropertyPage::SetModified(BOOL bChanged) const
@@ -672,6 +679,11 @@ namespace Win32xx
 
 		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);
 		m_PSH.nPages = (int)m_vPages.size();
+	}
+
+	LRESULT CPropertySheet::QuerySiblings(WPARAM wParam, LPARAM lParam)
+	{
+		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
 	BOOL CPropertySheet::SetActivePage(int nPage)
