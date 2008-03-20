@@ -2594,8 +2594,6 @@ namespace Win32xx
 		}
 	}
 
-
-
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
