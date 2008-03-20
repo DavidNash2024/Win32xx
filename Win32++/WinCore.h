@@ -271,11 +271,10 @@ namespace Win32xx
 	//
 	class CWinApp
 	{
-		friend class CWnd;		// CWnd uses m_MapLock and SetTlsIndex
-		friend class CDialog;	// CDialog uses m_MapLock
-		friend class CMenubar;	// CMenubar uses GetTlsIndex
-		friend class CPropertyPage; // CPropertyPage uses m_MapLock
-		friend class CPropertySheet; // CPropertSheet uses m_MapLock and SetTlsIndex
+		friend class CWnd;		// CWnd uses AddToMap and RemoveFromMap
+		friend class CDialog;	// CDialog uses AddToMap
+		friend class CPropertyPage;	// CPropertyPage uses AddToMap
+		friend class CPropertySheet; // CPropertSheet uses AddToMap
 
 	public:
 		CWinApp();
@@ -290,10 +289,13 @@ namespace Win32xx
 
 		// These functions aren't intended to be overridden
 		CFrame* GetFrame() {return m_pFrame;}
+		DWORD GetTlsIndex() {return st_dwTlsIndex;}
 		static CWinApp* GetApp() {return st_pTheApp;}
+		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
+		TLSData* SetTlsIndex();
 
 	protected:
 		HACCEL m_hAccelTable;		// handle to the accelerator table
@@ -307,10 +309,7 @@ namespace Win32xx
 		};
 
 		void AddToMap(HWND hWnd, CWnd* w);
-		CWnd* GetCWndFromMap(HWND hWnd);
 		BOOL RemoveFromMap(CWnd* w);
-		DWORD GetTlsIndex() {return st_dwTlsIndex;}
-		TLSData* SetTlsIndex();
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		HINSTANCE m_hInstance;		// handle to the applications instance
