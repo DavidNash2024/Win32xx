@@ -1,5 +1,5 @@
-// Win32++  Version 6.0
-// Released: 4th March, 2008 by:
+// Win32++  Version 6.01
+// Released: 20th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -50,7 +50,7 @@
 // * CMenubar for managing the menu inside the rebar.
 // * CToolbar for managing the frame's toolbar.
 // * CStatusbar for managing the frame's status bar.
-// In each case these members is exposed by a GetXXX function, allowing 
+// In each case these members is exposed by a GetXXX function, allowing
 // them to be altered or sent messages.
 
 // CFrame is responsible for creating a window which includes a menu and
@@ -198,13 +198,13 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar();
-				
+
 		// These are the functions you might wish to override
 		virtual void MoveBandsLeft();
 		virtual void ShowGripper(int nBand, BOOL fShow) const;
 		virtual BOOL ShowBand(int nBand, BOOL fShow) const;
 		virtual void ResizeBand(const int nBand, SIZE sz) const;
-		
+
 		// These functions aren't intended to be overridden
 		void DeleteBand(const int nBand) const ;
 		int  GetBand(const HWND hWnd) const;
@@ -215,7 +215,7 @@ namespace Win32xx
 		void GetBarInfo(LPREBARINFO prbi) const;
 		int  GetRowHeight(int nRow) const;
 		void InsertBand(const int nBand, LPREBARBANDINFO prbbi) const;
-		BOOL IsBandVisible(int nBand) const;	
+		BOOL IsBandVisible(int nBand) const;
 		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
 		void SetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
@@ -409,7 +409,7 @@ namespace Win32xx
 		BOOL OnCommandFrame(WPARAM wPAram, LPARAM lParam);
 		LRESULT OnNotifyFrame(WPARAM wParam, LPARAM lParam);
 
-		CDialog* m_pAboutDialog;// Pointer to the about dialog 
+		CDialog* m_pAboutDialog;// Pointer to the about dialog
 		CMenubar m_Menubar;		// CMenubar object
 		CRebar m_Rebar;			// CRebar object
 		CStatusbar m_Statusbar;	// CStatusbar object

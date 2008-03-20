@@ -1,5 +1,5 @@
-// Win32++  Version 6.0
-// Released: 4th March, 2008 by:
+// Win32++  Version 6.01
+// Released: 20th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -44,7 +44,6 @@
 #include "Frame.h"
 #include <windowsx.h>
 #include <shlwapi.h>
-#include <uxtheme.h>
 #include "Default_Resource.h"
 
 
@@ -3037,7 +3036,7 @@ namespace Win32xx
 
 			m_pAboutDialog = new CDialog(IDW_ABOUT, m_hWnd);
 			m_pAboutDialog->DoModal();
-			
+
 			// Clean up
 			delete m_pAboutDialog;
 			m_pAboutDialog = NULL;

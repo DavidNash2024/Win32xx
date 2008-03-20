@@ -1,5 +1,5 @@
-// Win32++  Version 6.0
-// Released: 4th March, 2008 by:
+// Win32++  Version 6.01
+// Released: 20th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -71,7 +71,7 @@ namespace Win32xx
 
 	void CPropertyPage::CancelToClose() const
 	{
-		// Disables the Cancel button and changes the text of the OK button to "Close." 
+		// Disables the Cancel button and changes the text of the OK button to "Close."
 		if (m_hWnd)
 			::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0, 0);
 	}
@@ -317,15 +317,15 @@ namespace Win32xx
 		// Find matching CWnd pointer for this HWND
 		CPropertyPage* pPage = (CPropertyPage*)GetApp()->GetCWndFromMap(hwndDlg);
 		if (pPage != 0)
-		{	
+		{
 			// matching CWnd pointer found for this HWND, so call DialogProc
 			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
 		}
 		else
-		{	
+		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			pPage = (CPropertyPage*)pTLSData->pCWnd;		
+			pPage = (CPropertyPage*)pTLSData->pCWnd;
 			GetApp()->AddToMap(hwndDlg, pPage);
 
 			// Set the hWnd members and call DialogProc for this message
@@ -688,7 +688,7 @@ namespace Win32xx
 	{
 		// Set wParam and lParam to values you want passed to the
 		// property pages in CPropertyPage::OnQuerySiblings.
-		
+
 		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 

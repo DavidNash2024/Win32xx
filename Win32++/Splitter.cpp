@@ -1,5 +1,5 @@
-// Win32++  Version 6.0
-// Released: 4th March, 2008 by:
+// Win32++  Version 6.01
+// Released: 20th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -280,7 +280,7 @@ namespace Win32xx
 		if (0 != m_Bar.GetHwnd())
 		{
 
-	#ifdef GCLP_HBRBACKGROUND
+	#ifdef SetClassLongPtr
 			SetClassLongPtr(m_Bar.GetHwnd(), GCLP_HBRBACKGROUND, (LONG_PTR)m_hbrBackground);
 	#else
 			SetClassLong(m_Bar.GetHwnd(), GCL_HBRBACKGROUND, (LONG)m_hbrBackground);
@@ -301,7 +301,7 @@ namespace Win32xx
 		if (nWidth > 0)
 			m_nWidth = nWidth;
 		else
-			::DebugErrMsg(_T("Invalid Splitter bar width"));
+			DebugErrMsg(_T("Invalid Splitter bar width"));
 
 		if (m_hWnd)
 			RecalcLayout();

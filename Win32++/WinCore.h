@@ -1,5 +1,5 @@
-// Win32++  Version 6.0
-// Released: 4th March, 2008 by:
+// Win32++  Version 6.01
+// Released: 20th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -65,11 +65,9 @@
 #ifndef WINCORE_H
 #define WINCORE_H
 
-#if defined (_MSC_VER) && _MSC_VER <= 1202
-  // Ignore warning in VS 6 and Embedded C++ 4.0
-  #pragma warning (disable : 4786) // identifier was truncated
+#ifndef DWORD_PTR
   #define DWORD_PTR DWORD
-#endif // (_MSC_VER) && _MSC_VER <= 1200
+#endif
 
 #ifdef _MSC_VER
   #pragma warning (disable : 4511) // copy operator could not be generated
@@ -85,14 +83,6 @@
 
 #ifdef _WIN32_WCE
 #include "WCEstddef.h"
-#endif
-
-// Set some minimum defaults (you can reset these before including WinCore.h)
-#ifndef WINVER
-#define WINVER 0x0400		// Windows 95
-#endif
-#ifndef _WIN32_IE
-#define _WIN32_IE 0x0400	// Internet Explorer 4
 #endif
 
 #ifndef STRICT
@@ -485,7 +475,7 @@ namespace Win32xx
 		// Handy for converting char to TCHAR
 		tString tstr;
   #ifdef UNICODE
-		int len = 1 + strlen(s);
+		int len = 1 + (int)strlen(s);
 		TCHAR* t = new TCHAR[len];
 		mbstowcs(t, s, len);
 		tstr = t;

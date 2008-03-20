@@ -1,5 +1,5 @@
-// Win32++  Version 6.0
-// Released: 4th March, 2008 by:
+// Win32++  Version 6.01
+// Released: 20th March, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -548,25 +548,15 @@ namespace Win32xx
 		if (0 == m_PrevWindowProc)
 			throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
 
-#if defined GWLP_WNDPROC
-
-  #if defined(_MSC_VER)
-    #pragma warning(push)
-    #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
-  #endif //defined(_MSC_VER)
-
+#if defined SetWindowLongPtr
 		// use 64 bit compliant code otherwise
 		::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
-
-  #if defined(_MSC_VER)
-    #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
-  #endif //defined(_MSC_VER)
 
 #else
 		// use non 64 bit compliant code
 		::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)m_PrevWindowProc);
 
-#endif // defined GWLP_WNDPROC
+#endif // defined SetWindowLongPtr
 
 		// Remove the map entry
 		if (!GetApp()->RemoveFromMap(this))
@@ -1010,22 +1000,13 @@ namespace Win32xx
 
 		// Subclass the window to pass messages to WndProc
 
-#if defined  GWLP_WNDPROC // defined if Win64 supported
-
-  #if defined(_MSC_VER)
-    #pragma warning(push)
-    #pragma warning(disable: 4244 4312) //Temporarily disable these warnings
-  #endif //defined(_MSC_VER)
+#if defined  GetWindowLongPtr // defined if Win64 supported
 
 		// use 64 bit compliant code
 		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
 		if (WndProc == st_pfnWndProc)
 			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
-
-  #if defined(_MSC_VER)
-    #pragma warning(pop)    // Re-enable 4244 + 4312 warnings
-  #endif //defined(_MSC_VER)
 
 #else
 		// use non 64 bit compliant code
@@ -1034,7 +1015,7 @@ namespace Win32xx
 			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 
-#endif // defined GWLP_WNDPROC
+#endif // defined GetWindowLongPtr
 	}
 
 	LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
