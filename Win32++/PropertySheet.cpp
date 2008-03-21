@@ -326,11 +326,11 @@ namespace Win32xx
 			// matching CWnd pointer not found, so add it to HWNDMap now
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 			pPage = (CPropertyPage*)pTLSData->pCWnd;
-			GetApp()->AddToMap(hwndDlg, pPage);
 
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
 			pPage->m_hWndParent = GetParent(hwndDlg);
+			pPage->AddToMap();
 			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
 		}
 

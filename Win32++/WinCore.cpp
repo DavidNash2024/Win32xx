@@ -137,14 +137,6 @@ namespace Win32xx
 			::DestroyAcceleratorTable(m_hAccelTable);
 	}
 
-	void CWinApp::AddToMap(HWND hWnd, CWnd* w)
-	{
-		// Store the Window pointer into the HWND map
-		m_MapLock.Lock();
-		m_HWNDmap.insert(std::make_pair(hWnd, w));
-		m_MapLock.Release();
-	}
-
 	CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
@@ -158,27 +150,6 @@ namespace Win32xx
 			return m->second;
 		else
 			return 0;
-	}
-
-	BOOL CWinApp::RemoveFromMap(CWnd* w)
-	{
-		// Allocate an iterator for our HWND map
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-		// Erase the CWnd pointer entry from the map
-		m_MapLock.Lock();
-		for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); m++)
-		{
-			if (w == m->second)
-			{
-				m_HWNDmap.erase(m);
-				m_MapLock.Release();
-				return TRUE;
-			}
-		}
-
-		m_MapLock.Release();
-		return FALSE;
 	}
 
 	BOOL CWinApp::InitInstance()
@@ -300,8 +271,21 @@ namespace Win32xx
 		// Remove the map entries
 		if (GetApp())
 		{
-			GetApp()->RemoveFromMap(this);
+			RemoveFromMap();
 		}
+	}
+
+	void CWnd::AddToMap()
+	{
+		// Store the Window pointer into the HWND map
+		GetApp()->m_MapLock.Lock();
+		if (m_hWnd == 0)
+			throw CWinException(_T("CWnd::AddToMap  can't add a NULL HWND"));
+		if (GetApp()->GetCWndFromMap(m_hWnd))
+			throw CWinException(_T("CWnd::AddToMap  HWND already in map"));
+
+		GetApp()->m_HWNDmap.insert(std::make_pair(m_hWnd, this));
+		GetApp()->m_MapLock.Release();
 	}
 
 	BOOL CWnd::Attach(HWND hWnd)
@@ -315,20 +299,19 @@ namespace Win32xx
 					throw CWinException(_T("Window already attached to this CWnd object"));
 
 				m_hWnd = hWnd;
+				m_hWndParent = ::GetParent(hWnd);
 				Subclass();
 
 				if (m_PrevWindowProc)
 				{
 					// Store the CWnd pointer in the HWND map
-					GetApp()->AddToMap(hWnd, this);
-
-					m_hWnd = hWnd;
-					m_hWndParent = ::GetParent(hWnd);
+					AddToMap();				
 					return TRUE;
 				}
 				else
 				{
 					m_hWnd = NULL;
+					m_hWndParent = NULL;
 					throw CWinException(_T("CWnd::Attach .. Subclass failed"));
 				}
 			}
@@ -559,7 +542,7 @@ namespace Win32xx
 #endif // defined SetWindowLongPtr
 
 		// Remove the map entry
-		if (!GetApp()->RemoveFromMap(this))
+		if (!RemoveFromMap())
 			throw CWinException(_T("CWnd::Detach  Unable to find window to detach"));
 
 		// Clear member variables
@@ -904,6 +887,27 @@ namespace Win32xx
 		return FALSE;
 	}
 
+	BOOL CWnd::RemoveFromMap()
+	{
+		// Allocate an iterator for our HWND map
+		std::map<HWND, CWnd*, CompareHWND>::iterator m;
+
+		// Erase the CWnd pointer entry from the map
+		GetApp()->m_MapLock.Lock();
+		for (m = GetApp()->m_HWNDmap.begin(); m != GetApp()->m_HWNDmap.end(); m++)
+		{
+			if (this == m->second)
+			{
+				GetApp()->m_HWNDmap.erase(m);
+				GetApp()->m_MapLock.Release();
+				return TRUE;
+			}
+		}
+
+		GetApp()->m_MapLock.Release();
+		return FALSE;
+	}
+
 	HICON CWnd::SetIconLarge(int nIcon)
 	{
 		m_hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
@@ -962,10 +966,8 @@ namespace Win32xx
 				pTLSData->pCWnd = NULL;
 
 				// Store the CWnd pointer in the HWND map
-				GetApp()->AddToMap(hWnd, w);
-
-				// Store the HWND in the CWnd object early
 				w->m_hWnd = hWnd;
+				w->AddToMap();
 
 				return w->WndProc(hWnd, uMsg, wParam, lParam);
 			}

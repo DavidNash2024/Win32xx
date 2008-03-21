@@ -247,6 +247,7 @@ namespace Win32xx
 		// Its unlikely you would need to override these functions
 		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL IsMDIChild() const {return FALSE;}
+		void AddToMap();
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -256,6 +257,7 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
+		BOOL RemoveFromMap();
 		void Subclass();
 
 		HICON m_hIconLarge;			// handle to the window's large icon
@@ -271,10 +273,7 @@ namespace Win32xx
 	//
 	class CWinApp
 	{
-		friend class CWnd;		// CWnd uses AddToMap and RemoveFromMap
-		friend class CDialog;	// CDialog uses AddToMap
-		friend class CPropertyPage;	// CPropertyPage uses AddToMap
-		friend class CPropertySheet; // CPropertSheet uses AddToMap
+		friend class CWnd;	// CWnd needs access to CWinApp's private members
 
 	public:
 		CWinApp();
@@ -307,9 +306,6 @@ namespace Win32xx
 			TRACE_HEIGHT = 200,
 			TRACE_WIDTH  = 400
 		};
-
-		void AddToMap(HWND hWnd, CWnd* w);
-		BOOL RemoveFromMap(CWnd* w);
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		HINSTANCE m_hInstance;		// handle to the applications instance

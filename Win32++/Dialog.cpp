@@ -328,10 +328,8 @@ namespace Win32xx
 				pTLSData->pCWnd = NULL;
 
 				// Store the Window pointer into the HWND map
-				GetApp()->AddToMap(hWnd, w);
-
-				// Store the HWND in the CDialog object early
 				w->m_hWnd = hWnd;
+				w->AddToMap();
 
 				return w->DialogProc(hWnd, uMsg, wParam, lParam);
 			}
