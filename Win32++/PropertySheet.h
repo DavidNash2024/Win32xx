@@ -97,12 +97,13 @@ namespace Win32xx
 		PROPSHEETPAGE GetPSP() const {return m_PSP;}
 		BOOL IsButtonEnabled(int iButton) const;
 		void SetModified(BOOL bChanged) const;
+		void SetTitle(LPCTSTR szTitle);
 
 	protected:
 		PROPSHEETPAGE m_PSP;
 
 	private:
-		TCHAR m_szTitle[MAX_STRING_SIZE];
+		tString m_Title;
 	};
 
 	class CPropertySheet : public CWnd
@@ -143,7 +144,7 @@ namespace Win32xx
 	private:
 		void BuildPageArray();
 
-		TCHAR m_szCaption[MAX_STRING_SIZE];
+		tString m_Title;
 		PROPSHEETPAGE* m_ppsp; // Array of PROPSHEETPAGE
 
 	};

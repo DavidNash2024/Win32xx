@@ -262,7 +262,7 @@ namespace Win32xx
 
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
-		WNDPROC m_PrevWindowProc;	// Pre-Subclassed Window Procedure
+		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
 		tString m_LoadString;		// a TCHAR std::string, temporary storage for strings
 
 	}; // class CWnd
@@ -288,7 +288,7 @@ namespace Win32xx
 
 		// These functions aren't intended to be overridden
 		CFrame* GetFrame() {return m_pFrame;}
-		DWORD GetTlsIndex() {return st_dwTlsIndex;}
+		DWORD GetTlsIndex() {return m_TlsIndex;}
 		static CWinApp* GetApp() {return st_pTheApp;}
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
@@ -307,6 +307,8 @@ namespace Win32xx
 			TRACE_WIDTH  = 400
 		};
 
+		void DefaultClass();
+
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		HINSTANCE m_hInstance;		// handle to the applications instance
 		HINSTANCE m_hResource;		// handle to the applications resources
@@ -314,8 +316,9 @@ namespace Win32xx
 		CFrame* m_pFrame;			// pointer to the CFrame object
 		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
 		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
-		static DWORD    st_dwTlsIndex;	// Thread Local Storage index
-		static CWinApp* st_pTheApp;		// a pointer to this CWinApp object
+		DWORD m_TlsIndex;			// Thread Local Storage index
+		static CWinApp* st_pTheApp;	// a pointer to this CWinApp object
+		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
 	};
 
 
@@ -455,6 +458,7 @@ namespace Win32xx
   #endif // #ifndef _WIN32_WCE
 
   #ifndef lstrcpyn
+	// Required for WinCE
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
 	{
 		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)

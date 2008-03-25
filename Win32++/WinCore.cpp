@@ -50,14 +50,10 @@ namespace Win32xx
 	// Global variables within the Win32xx namespace
 	//
 
-	// Static variable for Thread Local Storage Index
-	DWORD CWinApp::st_dwTlsIndex = TLS_OUT_OF_INDEXES;
 
 	// Static variable for the pointer to the CWinApp object
 	CWinApp* CWinApp::st_pTheApp = 0;
 
-	// Store the pointer used for our CWnd::StaticWindowProc function
-	WNDPROC st_pfnWndProc = 0;
 
 	///////////////////////////////////
 	// Definitions for the CWinApp class
@@ -65,15 +61,16 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_IsTlsAllocatedHere(FALSE), m_pFrame(NULL)
+	CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_IsTlsAllocatedHere(FALSE), 
+		                 m_pFrame(NULL), m_Callback(NULL)
 	{
 		try
 		{
 			// Test if this is the first instance of CWinApp
 			if (0 == GetApp() )
 			{
-				st_dwTlsIndex = ::TlsAlloc();
-				if (st_dwTlsIndex != TLS_OUT_OF_INDEXES)
+				m_TlsIndex = ::TlsAlloc();
+				if (m_TlsIndex != TLS_OUT_OF_INDEXES)
 				{
 					st_pTheApp = this;
 					m_IsTlsAllocatedHere = TRUE; //TLS allocated in this CWinApp object
@@ -94,6 +91,7 @@ namespace Win32xx
 
 			m_hInstance = (HINSTANCE) ::GetModuleHandle(0);
 			m_hResource = m_hInstance;
+			DefaultClass();
 		}
 
 		catch (const CWinException &e)
@@ -118,11 +116,11 @@ namespace Win32xx
 			m_HWNDmap.clear();
 
 			// Do remaining tidy up
-			if (st_dwTlsIndex != TLS_OUT_OF_INDEXES)
+			if (m_TlsIndex != TLS_OUT_OF_INDEXES)
 			{
 				::TlsSetValue(GetTlsIndex(), NULL);
-				::TlsFree(st_dwTlsIndex);
-				st_dwTlsIndex = TLS_OUT_OF_INDEXES;
+				::TlsFree(m_TlsIndex);
+				m_TlsIndex = TLS_OUT_OF_INDEXES;
 			}
 			st_pTheApp = 0;
 		}
@@ -135,6 +133,30 @@ namespace Win32xx
 
 		if (m_hAccelTable)
 			::DestroyAcceleratorTable(m_hAccelTable);
+	}
+
+	void CWinApp::DefaultClass()
+	{
+		// Register a default window class so we can get the callback
+		// address of CWnd::StaticWindowProc
+		
+		WNDCLASS wcDefault = {0};
+		
+		LPCTSTR szClassName = _T("Win32++ Window");
+		wcDefault.hInstance	= GetApp()->GetInstanceHandle();
+		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
+		wcDefault.lpszClassName = szClassName;
+
+		if (0 == ::RegisterClass(&wcDefault))
+			throw CWinException(_T("CWinApp::DefaultClass ... Failed to set Default class"));
+
+		ZeroMemory(&wcDefault, sizeof(wcDefault));
+		
+		if (!::GetClassInfo(GetApp()->GetInstanceHandle(), szClassName, &wcDefault))
+			throw CWinException(_T("CWinApp::DefaultClass ... Failed to get Default class info"));
+		
+		// Save the callback address of CWnd::StaticWindowProc
+		m_Callback = wcDefault.lpfnWndProc;
 	}
 
 	CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
@@ -277,7 +299,7 @@ namespace Win32xx
 
 	void CWnd::AddToMap()
 	{
-		// Store the Window pointer into the HWND map
+		// Store the window handle and CWnd pointer in the HWND map
 		GetApp()->m_MapLock.Lock();
 		if (m_hWnd == 0)
 			throw CWinException(_T("CWnd::AddToMap  can't add a NULL HWND"));
@@ -474,7 +496,7 @@ namespace Win32xx
 
 			// Automatically subclass predefined window class types
 			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
-			if (wc.lpfnWndProc != st_pfnWndProc)
+			if (wc.lpfnWndProc != GetApp()->m_Callback)
 			{
 				Subclass();
 
@@ -852,7 +874,6 @@ namespace Win32xx
 
 			// Check to see if this classname is already registered
 			WNDCLASS wcTest = {0};
-
 			if (::GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest))
 			{
 				wc = wcTest;
@@ -867,15 +888,6 @@ namespace Win32xx
 			if (!::RegisterClass(&wc))
 				throw CWinException(_T("Failed to register Window Class"));
 
-			// Store callback address (its not always simply the function pointer to CWnd::StaticWindowProc)
-			CCriticalSection RegLock;
-			RegLock.Lock();
-			if (0 == st_pfnWndProc)
-			{
-				GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest);
-				st_pfnWndProc = wcTest.lpfnWndProc;
-			}
-			RegLock.Release();
 			return TRUE;
 		}
 
@@ -1006,14 +1018,14 @@ namespace Win32xx
 
 		// use 64 bit compliant code
 		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
-		if (WndProc == st_pfnWndProc)
+		if (WndProc == GetApp()->m_Callback)
 			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 
 #else
 		// use non 64 bit compliant code
 		WNDPROC WndProc = (WNDPROC)::GetWindowLong(m_hWnd, GWL_WNDPROC);
-		if (WndProc == st_pfnWndProc)
+		if (WndProc == GetApp()->m_Callback)
 			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 		m_PrevWindowProc = (WNDPROC)::SetWindowLong(m_hWnd, GWL_WNDPROC, (LONG)CWnd::StaticWindowProc);
 

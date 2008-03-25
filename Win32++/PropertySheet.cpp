@@ -52,21 +52,16 @@ namespace Win32xx
 	CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/)
 	{
 		ZeroMemory(&m_PSP, sizeof(PROPSHEETPAGE));
-		m_szTitle[0] = _T('\0');
-		if (szTitle)
-		{
-			lstrcpyn(m_szTitle, szTitle, MAX_STRING_SIZE);
-			m_PSP.dwFlags  = PSP_USETITLE;
-		}
 
 		m_PSP.dwSize        = sizeof(PROPSHEETPAGE);
 		m_PSP.dwFlags       |= PSP_USECALLBACK;
 		m_PSP.hInstance     = GetApp()->GetResourceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
-		m_PSP.pszTitle      = m_szTitle;
+		m_PSP.pszTitle      = m_Title.c_str();
 		m_PSP.pfnDlgProc    = CPropertyPage::StaticDialogProc;
 		m_PSP.lParam        = (LPARAM)this;
 		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
+		SetTitle(szTitle);
 	}
 
 	void CPropertyPage::CancelToClose() const
@@ -277,6 +272,22 @@ namespace Win32xx
 		}
 	}
 
+	void CPropertyPage::SetTitle(LPCTSTR szTitle) 
+	{
+		if (szTitle)
+		{
+			m_Title = szTitle;
+			m_PSP.dwFlags |= PSP_USETITLE;
+		}
+		else
+		{
+			m_Title.erase();
+			m_PSP.dwFlags &= ~PSP_USETITLE;
+		}
+		
+		m_PSP.pszTitle = m_Title.c_str();
+	}
+
 	UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND /*hwnd*/, UINT uMsg, LPPROPSHEETPAGE ppsp)
 	{
 		// Note: the hwnd is always NULL
@@ -366,8 +377,6 @@ namespace Win32xx
 	//
 	CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hwndParent /* = NULL*/)
 	{
-		m_szCaption[0] = _T('\0');
-		if (nIDCaption) lstrcpyn(m_szCaption, MAKEINTRESOURCE(nIDCaption), MAX_STRING_SIZE);
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
 
@@ -383,14 +392,12 @@ namespace Win32xx
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
-		m_PSH.pszCaption       = m_szCaption;
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
+		SetTitle(LoadString(nIDCaption));
 	}
 
 	CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hwndParent /* = NULL*/)
 	{
-		m_szCaption[0] = _T('\0');
-		if (pszCaption) lstrcpyn(m_szCaption, pszCaption, MAX_STRING_SIZE);
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
 
@@ -406,8 +413,8 @@ namespace Win32xx
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
-		m_PSH.pszCaption       = m_szCaption;
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
+		SetTitle(pszCaption);
 	}
 
 	CPropertySheet::~CPropertySheet()
@@ -713,14 +720,16 @@ namespace Win32xx
 	{
 		if (szTitle)
 		{
-			lstrcpyn(m_szCaption, szTitle, MAX_STRING_SIZE);
+			m_Title = szTitle;
 			m_PSH.dwFlags |= PSH_PROPTITLE;
 		}
 		else
 		{
-			m_szCaption[0] = _T('\0');
+			m_Title.erase();
 			m_PSH.dwFlags &= ~PSH_PROPTITLE;
 		}
+		
+		m_PSH.pszCaption = m_Title.c_str();
 	}
 
 	void CPropertySheet::SetWizardMode(BOOL bWizard)
