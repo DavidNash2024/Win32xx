@@ -146,6 +146,8 @@ namespace Win32xx
 		wcDefault.hInstance	= GetApp()->GetInstanceHandle();
 		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
 		wcDefault.lpszClassName = szClassName;
+		wcDefault.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+		wcDefault.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
 		if (0 == ::RegisterClass(&wcDefault))
 			throw CWinException(_T("CWinApp::DefaultClass ... Failed to set Default class"));

@@ -69,12 +69,14 @@
   #define DWORD_PTR DWORD
 #endif
 
+// Remove pointless warning messages 
 #ifdef _MSC_VER
   #pragma warning (disable : 4511) // copy operator could not be generated
   #pragma warning (disable : 4512) // assignment operator could not be generated
   #pragma warning (disable : 4702) // unreachable code
   #pragma warning (disable : 4786) // identifier was truncated
-  #define _CRT_SECURE_NO_WARNINGS  // Eliminate deprecation warnings for VS2005
+  #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
+  #define _CRT_SECURE_NO_WARNINGS  // eliminate deprecation warnings for VS2005
 #endif // _MSC_VER
 
 // Required for VS 2008 (fails on XP and Win2000 without this fix)
