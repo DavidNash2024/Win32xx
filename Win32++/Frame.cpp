@@ -137,6 +137,10 @@ namespace Win32xx
 	{
 		// This changes the width of an existing pane, or creates a new pane
 		// with the specified width
+
+		int* iPaneWidths = NULL;
+		int* iNewPaneWidths = NULL;
+
 		try
 		{
 			if (::IsWindow(m_hWnd))
@@ -147,7 +151,7 @@ namespace Win32xx
 				if (iPane < 0) iPane = 0;
 
 				int iParts = (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
-				int* iPaneWidths = new int[iParts];
+				iPaneWidths = new int[iParts];
 
 				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 				//  an exception when new fails. We make sure an exception gets thrown!
@@ -157,7 +161,7 @@ namespace Win32xx
 				::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPaneWidths);
 
 				int iNewParts = max(iPane+1, iParts);
-				int* iNewPaneWidths = new int[iNewParts];
+				iNewPaneWidths = new int[iNewParts];
 				if (NULL == iNewPaneWidths)
 					throw std::bad_alloc();
 
@@ -181,11 +185,17 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
+			if (iNewPaneWidths) delete []iNewPaneWidths;
+			if (iPaneWidths)	delete []iPaneWidths;
+			
 			e.MessageBox();
 		}
 
 		catch (const std::bad_alloc &)
 		{
+			if (iNewPaneWidths) delete []iNewPaneWidths;
+			if (iPaneWidths)	delete []iPaneWidths;
+			
 			DebugErrMsg(_T("Exception in CStatusbar::SetPaneWidth"));
 			// Not a critical problem, so no need to rethrow
 		}
@@ -3033,6 +3043,11 @@ namespace Win32xx
 				hPrevFocus = m_hWnd;
 
 			m_pAboutDialog = new CDialog(IDW_ABOUT, m_hWnd);
+			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
+			//  an exception when new fails. We make sure an exception gets thrown!
+			if (NULL == m_pAboutDialog)
+				throw CWinException(_T("CFrame::Help failed to allocate memory for Dialog"));
+			
 			m_pAboutDialog->DoModal();
 
 			// Clean up

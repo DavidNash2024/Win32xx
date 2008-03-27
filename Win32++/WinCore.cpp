@@ -598,20 +598,14 @@ namespace Win32xx
 
 	tString CWnd::GetDlgItemString(int nIDDlgItem)
 	{
-		// Calculate the buffer size to hold the null terminated text
-		int nLength = 1 + ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
+		int nLength = ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
 
 		tString String;
 		if (nLength > 0)
 		{
-			TCHAR* szString = new TCHAR[nLength];
-			if (NULL == szString)
-				throw std::bad_alloc();
-
-			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, nLength);
+			TCHAR szString[MAX_STRING_SIZE];
+			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, MAX_STRING_SIZE);
 			String = szString;
-
-			delete []szString;
 		}
 
 		return String;
@@ -621,20 +615,14 @@ namespace Win32xx
 	{
 		// Gets the window title for an ordinary window, or the text in an edit control
 
-		// Calculate the buffer size to hold the null terminated text
-		int nLength = 1 + ::GetWindowTextLength(m_hWnd);
+		int nLength = ::GetWindowTextLength(m_hWnd);
 
 		tString String;
 		if (nLength > 0)
 		{
-			TCHAR* szString = new TCHAR[nLength];
-			if (NULL == szString)
-				throw std::bad_alloc();
-
-			::GetWindowText(m_hWnd, szString, nLength);
+			TCHAR szString[MAX_STRING_SIZE];
+			::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE);
 			String = szString;
-
-			delete []szString;
 		}
 		return String;
 	}
