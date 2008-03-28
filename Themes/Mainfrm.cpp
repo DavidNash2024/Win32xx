@@ -100,7 +100,7 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 	
 	CToolbar& TB = GetToolbar();
-	TB.SetImageList(8, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(TB, 8, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Resize the Rebar band
 	if (IsRebarUsed())
@@ -108,10 +108,6 @@ void CMainFrame::OnCreate()
 		// Set the icons for popup menu items
 		AddMenuIcons(m_ToolbarData, IDB_TOOLBAR_SML, RGB(255, 0, 255));
 		
-		// Resize the rebar for the larger toolbar buttons
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-	
 		//Set our theme
 		ChooseTheme(IDM_BLUE);
 
@@ -119,7 +115,9 @@ void CMainFrame::OnCreate()
 		std::vector<UINT> ArrowsData;
 		ArrowsData.push_back(IDM_ARROW_LEFT);
 		ArrowsData.push_back(IDM_ARROW_RIGHT);
-		AddToolbarBand(Arrows, ArrowsData, RGB(255,0,255), IDB_ARROWS);
+		AddToolbarBand(Arrows);
+		int iButtons = Arrows.SetButtons(ArrowsData);
+		SetToolbarImages(Arrows, iButtons, RGB(255,0,255), IDB_ARROWS);	
 
 		// Add the Cards toolbar
 		std::vector<UINT> CardsData;
@@ -127,7 +125,9 @@ void CMainFrame::OnCreate()
 		CardsData.push_back(IDM_CARD_DIAMOND);
 		CardsData.push_back(IDM_CARD_HEART);
 		CardsData.push_back(IDM_CARD_SPADE);
-		AddToolbarBand(Cards, CardsData, RGB(255,0,255), IDB_CARDS);
+		AddToolbarBand(Cards);
+		iButtons = Cards.SetButtons(CardsData);
+		SetToolbarImages(Cards, iButtons, RGB(255,0,255), IDB_CARDS);
 	}
 }
 

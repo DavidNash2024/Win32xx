@@ -205,17 +205,13 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	CToolbar::CToolbar() : m_hImageList(NULL), m_hImageListHot(NULL), m_hImageListDis(NULL),
-		                    m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
+	CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_Theme, sizeof(ThemeToolbar));
 	}
 
 	CToolbar::~CToolbar()
 	{
-		if (m_hImageList)     ::DeleteObject(m_hImageList);
-		if (m_hImageListHot)  ::DeleteObject(m_hImageListHot);
-		if (m_hImageListDis)  ::DeleteObject(m_hImageListDis);
 	}
 
 	int CToolbar::CommandToIndex(int iButtonID) const
@@ -476,13 +472,29 @@ namespace Win32xx
 					GradientFill(DrawDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
 				}
 
-				HIMAGELIST hImageList = (nState & CDIS_DISABLED)? m_hImageListDis : (m_hImageListHot? m_hImageListHot: m_hImageList);
+				// Get the appropriate image list depending on the button state
+				HIMAGELIST himlToolbar;				
+				if (nState & CDIS_DISABLED)
+				{
+					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0, 0);
+				}
+				else if (nState & (CDIS_HOT | CDIS_SELECTED))
+				{
+					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0, 0);
+					if (0 == himlToolbar)
+						himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST, 0, 0);
+				}
+				else
+				{
+					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST, 0, 0);
+				}
+
 				BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
 
 				// Calculate image position
 				int cxImage = 0;
 				int cyImage = 0;
-				ImageList_GetIconSize(hImageList, &cxImage, &cyImage);
+				ImageList_GetIconSize(himlToolbar, &cxImage, &cyImage);
 
 				int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
 				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & CDIS_SELECTED)? 1:0);
@@ -537,7 +549,7 @@ namespace Win32xx
 				// Draw the button image
 				if (xImage > 0)
 				{
-					ImageList_Draw(hImageList, iImage, DrawDC, xImage, yImage, ILD_TRANSPARENT);
+					ImageList_Draw(himlToolbar, iImage, DrawDC, xImage, yImage, ILD_TRANSPARENT);
 				}
 
 				//Draw Text
@@ -588,6 +600,16 @@ namespace Win32xx
 		return 0L;
 	}
 
+	void CToolbar::OnDestroy()
+	{
+		HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST,    0, 0);
+		HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0, 0);
+		HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0, 0);
+		ImageList_Destroy(himlToolbar);
+		ImageList_Destroy(himlToolbarHot);
+		ImageList_Destroy(himlToolbarDis);
+	}
+
 	LRESULT CToolbar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
 	{
 		switch (((LPNMHDR)lParam)->code)
@@ -616,6 +638,30 @@ namespace Win32xx
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 		cs.lpszClass = TOOLBARCLASSNAME;
+	}
+
+	void CToolbar::SetBitmap(int iNumButtons, UINT nID) 
+	{
+		// Set the button images
+		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID));
+		if (!hbm)
+			throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
+
+		BITMAP bm = {0};
+
+		if (!::GetObject(hbm, sizeof(BITMAP), &bm))
+			throw CWinException(_T("CToolbar::SetImageList ... GetObject failed "));
+
+		int iImageWidth  = bm.bmWidth / iNumButtons;
+		int iImageHeight = bm.bmHeight;
+
+		// Set the bitmap size first
+		SetBitmapSize(iImageWidth, iImageHeight);
+
+		if (m_OldToolbarID)
+			ReplaceBitmap(iNumButtons, nID);
+		else
+			AddBitmap(iNumButtons, nID);
 	}
 
 	void CToolbar::SetBitmapSize(int cx, int cy) const
@@ -800,103 +846,6 @@ namespace Win32xx
 			throw CWinException(_T("CToolbar::SetCommandID failed"));
 	}
 
-	void CToolbar::SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID /*= 0*/, UINT ToolbarDisabledID /*= 0*/)
-	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
-	// Assumes the width of the button image = bitmap_size / buttons
-	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
-	{
-
-		if (m_hImageList)    ::ImageList_Destroy(m_hImageList);
-		if (m_hImageListDis) ::ImageList_Destroy(m_hImageListDis);
-		if (m_hImageListHot) ::ImageList_Destroy(m_hImageListHot);
-		m_hImageList = 0;
-		m_hImageListDis = 0;
-		m_hImageListHot = 0;
-
-		if (iNumButtons > 0)
-		{
-			// Set the button images
-			HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
-			if (!hbm)
-				throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
-
-			BITMAP bm = {0};
-
-			if (!::GetObject(hbm, sizeof(BITMAP), &bm))
-				throw CWinException(_T("CToolbar::SetImageList ... GetObject failed "));
-
-			int iImageWidth  = bm.bmWidth / iNumButtons;
-			int iImageHeight = bm.bmHeight;
-
-			// Toolbar ImageLists require Comctl32.dll version 4.7 or later
-			if (400 == GetComCtlVersion())
-			{
-				// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
-				// Instead we simply add/replace the bitmap.
-
-				// Set the bitmap size first
-				SetBitmapSize(iImageWidth, iImageHeight);
-
-				if (m_OldToolbarID)
-					ReplaceBitmap(iNumButtons, ToolbarID);
-				else
-					AddBitmap(iNumButtons, ToolbarID);
-				return;
-			}
-
-			m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-			if (!m_hImageList)
-				throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageList failed "));
-
-			ImageList_AddMasked(m_hImageList, hbm, crMask);
-			if(-1L == SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList) )
-				throw CWinException(_T("CToolbar::SetImageList ... TB_SETIMAGELIST failed "));
-
-			::DeleteObject(hbm);
-			hbm = NULL;
-
-			if (ToolbarHotID)
-			{
-				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
-				if (!hbm)
-					throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
-
-				m_hImageListHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-				if (!m_hImageListHot)
-					throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListHot failed "));
-
-				ImageList_AddMasked(m_hImageListHot, hbm, crMask);
-
-				if(-1L == SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)m_hImageListHot) )
-					throw CWinException(_T("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
-
-				::DeleteObject(hbm);
-				hbm = NULL;
-			}
-
-			if (ToolbarDisabledID)
-			{
-				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
-				if (!hbm)
-					throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
-
-				m_hImageListDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-				if (!m_hImageListDis)
-					throw CWinException(_T("CToolbar::SetImageList ... Create m_hImageListDis failed "));
-
-				ImageList_AddMasked(m_hImageListDis, hbm, crMask);
-				if(-1L == SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)m_hImageListDis) )
-					throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
-			}
-			else
-			{
-				m_hImageListDis = CreateDisabledImageList(m_hImageList);
-			}
-
-			::DeleteObject(hbm);
-		}
-	}
-
 	void CToolbar::SetToolbarTheme(ThemeToolbar& Theme)
 	{
 		m_Theme.UseThemes   = Theme.UseThemes;
@@ -906,7 +855,7 @@ namespace Win32xx
 		m_Theme.clrPressed2 = Theme.clrPressed2;
 		m_Theme.clrOutline  = Theme.clrOutline;
 
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		::InvalidateRect(m_hWnd, NULL, TRUE); 
 	}
 
 	LRESULT CToolbar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -956,6 +905,10 @@ namespace Win32xx
 				}
 			}
 
+			break;
+
+		case WM_DESTROY:
+			OnDestroy();
 			break;
 		}
 
@@ -2388,7 +2341,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_StatusText(_T("Ready")),
-						m_hImageList(NULL), m_hImageListDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL)
+						m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL), m_himlMenu(NULL), m_himlMenuDis(NULL)
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -2434,8 +2387,7 @@ namespace Win32xx
 			delete m_vpItemData[nItem];
 		}
 
-		if (m_hMenu)
-			::DestroyMenu(m_hMenu);
+		if (m_hMenu) ::DestroyMenu(m_hMenu);
 	}
 
 	BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)
@@ -2443,24 +2395,24 @@ namespace Win32xx
 		// Get ImageList image size
 		int cxOld;
 		int cyOld;
-		ImageList_GetIconSize(m_hImageList, &cxOld, &cyOld );
+		ImageList_GetIconSize(m_himlMenu, &cxOld, &cyOld );
 
 		// Create a new ImageList if required
-		if ((cx != cxOld) || (cy != cyOld) || (NULL == m_hImageList))
+		if ((cx != cxOld) || (cy != cyOld) || (NULL == m_himlMenu))
 		{
-			if (m_hImageList) ImageList_Destroy(m_hImageList);
-			m_hImageList = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 1, 0);
+			if (m_himlMenu) ImageList_Destroy(m_himlMenu);
+			m_himlMenu = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 1, 0);
 			m_MenuData.clear();
 		}
 
-        if (ImageList_AddIcon(m_hImageList, hIcon) != -1)
+        if (ImageList_AddIcon(m_himlMenu, hIcon) != -1)
 		{
 			m_MenuData.push_back(nID_MenuItem);
 
 			// Recreate the Disabled imagelist
-			if (m_hImageListDis) ImageList_Destroy(m_hImageListDis);
-			m_hImageListDis = NULL;
-			m_hImageListDis = CreateDisabledImageList(m_hImageList);
+			if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
+			m_himlMenuDis = NULL;
+			m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
 
 			return TRUE;
 		}
@@ -2494,9 +2446,9 @@ namespace Win32xx
 		int iImageHeight = bm.bmHeight;
 
 		// Create the ImageList if required
-		if (NULL == m_hImageList)
+		if (NULL == m_himlMenu)
 		{
-			m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+			m_himlMenu = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 			m_MenuData.clear();
 		}
 		else
@@ -2504,13 +2456,13 @@ namespace Win32xx
 			int Oldcx;
 			int Oldcy;
 
-			ImageList_GetIconSize(m_hImageList, &Oldcx, &Oldcy);
+			ImageList_GetIconSize(m_himlMenu, &Oldcx, &Oldcy);
 			if ((iImageWidth != Oldcx) || (iImageHeight != Oldcy))
 			{
-				// The new icons are a different size to the old ones in m_hImageList,
+				// The new icons are a different size to the old ones in m_himlToolbar,
 				//  so we throw the old ones away.
-				ImageList_Destroy(m_hImageList);
-				m_hImageList = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+				ImageList_Destroy(m_himlMenu);
+				m_himlMenu = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 				m_MenuData.clear();
 			}
 		}
@@ -2525,13 +2477,13 @@ namespace Win32xx
 		}
 
 		// Add the images to the ImageList
-		ImageList_AddMasked(m_hImageList, hbm, crMask);
+		ImageList_AddMasked(m_himlMenu, hbm, crMask);
 		::DeleteObject(hbm);
 
 		// Create the Disabled imagelist
-		if (m_hImageListDis) ImageList_Destroy(m_hImageListDis);
-		m_hImageListDis = NULL;
-		m_hImageListDis = CreateDisabledImageList(m_hImageList);
+		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
+		m_himlMenuDis = NULL;
+		m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
 
 		// return the number of menu icons
 		return (int)m_MenuData.size();
@@ -2539,69 +2491,98 @@ namespace Win32xx
 
 	void CFrame::AddMenubarBand(int Menubar_Height /* = MENUBAR_HEIGHT*/)
 	{
-		try
-		{
-			// Adds a Menubar to the rebar control
-   			REBARBANDINFO rbbi = {0};
-			SIZE sz = GetMenubar().GetMaxSize();
+		// Adds a Menubar to the rebar control
+		REBARBANDINFO rbbi = {0};
+		SIZE sz = GetMenubar().GetMaxSize();
 
-			rbbi.cbSize     = sizeof(REBARBANDINFO);
-			rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
-			rbbi.cxMinChild = sz.cx;
-			rbbi.cx         = sz.cx;
-			rbbi.cyMinChild = Menubar_Height;
-			rbbi.cyMaxChild = Menubar_Height;
-			rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
-			rbbi.hwndChild  = GetMenubar();
+		rbbi.cbSize     = sizeof(REBARBANDINFO);
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.cxMinChild = sz.cx;
+		rbbi.cx         = sz.cx;
+		rbbi.cyMinChild = Menubar_Height;
+		rbbi.cyMaxChild = Menubar_Height;
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
+		rbbi.hwndChild  = GetMenubar();
 
-			GetRebar().InsertBand(-1, &rbbi);
-			SetMenubarBandSize();
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
+		GetRebar().InsertBand(-1, &rbbi);
+		SetMenubarBandSize();
 	}
 
-	void CFrame::AddToolbarBand(CToolbar& TB, const std::vector<UINT>& TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT, UINT ID_Disabled)
+	void CFrame::AddToolbarBand(CToolbar& TB)
 	{
 		// Adds a Toolbar to the rebar control
 
-		if (0 == TBData.size())
+		// Create the Toolbar Window
+		TB.Create(GetRebar());
+
+		// Fill the REBARBAND structure
+		REBARBANDINFO rbbi = {0};
+		SIZE sz = TB.GetMaxSize();
+
+		rbbi.cbSize     = sizeof(REBARBANDINFO);
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.cyMinChild = sz.cy;
+		rbbi.cyMaxChild = sz.cy;
+		rbbi.cx         = sz.cx +2;
+		rbbi.cxMinChild = sz.cx +2;
+
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+		rbbi.hwndChild  = TB;
+
+		GetRebar().InsertBand(-1, &rbbi);
+	}
+
+	HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
+	// Returns a greyed image list, created from hImageList
+	{
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(himlNormal);
+		if (0 == nCount)
+			return NULL;
+
+		ImageList_GetIconSize(himlNormal, &cx, &cy);
+
+		// Create the disabled ImageList
+		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
+
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; i++)
 		{
-			DebugErrMsg(_T("Toolbar must have some data"));
-			return;
+			CDC DesktopDC = ::GetDC(NULL);
+			CDC MemDC = ::CreateCompatibleDC(NULL);
+			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
+			RECT rc;
+			SetRect(&rc, 0, 0, cx, cx);
+
+			// Set the mask color to magenta for the new ImageList
+			COLORREF crMask = RGB(255,0,255);
+			SolidFill(MemDC, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_Draw(himlNormal, i, MemDC, 0, 0, ILD_TRANSPARENT);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; x++)
+			{
+				for (int y = 0; y < cy; y++)
+				{
+					COLORREF clr = ::GetPixel(MemDC, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
+						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
+					}
+				}
+			}
+
+			// Detach the bitmap so we can use it.
+			HBITMAP hbm = MemDC.DetachBitmap();
+			ImageList_AddMasked(himlDisabled, hbm, crMask);
+			::DeleteObject(hbm);
 		}
 
-		try
-		{
-			// Create the Toolbar Window
-			TB.Create(GetRebar());
-			int nButtons = TB.SetButtons(TBData);
-			TB.SetImageList(nButtons, clrMask, ID_Normal, ID_HOT, ID_Disabled);
-
-			// Fill the REBARBAND structure
-			REBARBANDINFO rbbi = {0};
-			SIZE sz = TB.GetMaxSize();
-
-			rbbi.cbSize     = sizeof(REBARBANDINFO);
-			rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
-			rbbi.cyMinChild = sz.cy;
-			rbbi.cyMaxChild = sz.cy;
-			rbbi.cx         = sz.cx +2;
-			rbbi.cxMinChild = sz.cx +2;
-
-			rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
-			rbbi.hwndChild  = TB;
-
-			GetRebar().InsertBand(-1, &rbbi);
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
+		return himlDisabled;
 	}
 
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
@@ -2615,7 +2596,7 @@ namespace Win32xx
 		if (m_ThemeMenu.UseThemes)
 		{
 			int Iconx, Icony;
-			ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 			int offset = -1 + (rc.bottom - rc.top - Icony)/2;
 			int height = rc.bottom - rc.top;
 			RECT rcBk;
@@ -2670,12 +2651,12 @@ namespace Win32xx
 
 	void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
 	{
-		if (!m_hImageList)
+		if (!m_himlMenu)
 			return;
 		// Get icon size
 		int Iconx;
 		int Icony;
-		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+		ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 
 		// get the drawing rectangle
 		CDC DrawDC = pdis->hDC;
@@ -2696,10 +2677,10 @@ namespace Win32xx
 		// draw the image
 		if (iImage >= 0 )
 		{
-			if ((bDisabled) && (m_hImageListDis))
-				ImageList_Draw(m_hImageListDis, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
+			if ((bDisabled) && (m_himlMenuDis))
+				ImageList_Draw(m_himlMenuDis, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
 			else
-				ImageList_Draw(m_hImageList, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
+				ImageList_Draw(m_himlMenu, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
 		}
 		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
@@ -2871,7 +2852,7 @@ namespace Win32xx
 		SetFrameMenu(IDW_MAIN);
 
 		// Set the accelerator table and HWND for translated messages
-		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
+		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());	
 
 		if (IsRebarSupported() && m_bUseRebar)
 		{
@@ -2884,18 +2865,20 @@ namespace Win32xx
 			AddMenubarBand();
 
 			// Create the toolbar inside rebar
-			AddToolbarBand(GetToolbar(), m_ToolbarData, RGB(192, 192, 192), IDW_MAIN);
+			AddToolbarBand(GetToolbar());
 		}
 		else
 		{
 			// Create the toolbar without a rebar
 			GetToolbar().Create(m_hWnd);
-
-			// Set the ImageList for the toolbar
-			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			int iButtons = GetToolbar().SetButtons(m_ToolbarData);
-			GetToolbar().SetImageList(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 		}
+
+		// Set the toolbar data
+		int iButtons = GetToolbar().SetButtons(m_ToolbarData);
+			
+		// Set the toolbar images
+		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
+		SetToolbarImages(m_Toolbar, iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 
 		// Add the icons for popup menu items
 		AddMenuIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
@@ -2931,7 +2914,7 @@ namespace Win32xx
 
 		int Iconx;
 		int Icony;
-		ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+		ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 		int BarWidth = m_ThemeMenu.UseThemes? Iconx + 6 : 0;
 
 		// Draw the side bar
@@ -3144,7 +3127,7 @@ namespace Win32xx
 			// Calculate the size of the icon
 			int Iconx = 0;
 			int Icony = 0;
-			ImageList_GetIconSize(m_hImageList, &Iconx, &Icony);
+			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 
 			pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
 			pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
@@ -3234,7 +3217,7 @@ namespace Win32xx
 			GetRebar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
 		}
 
-		if (m_bUpdateTheme) SetTheme();
+		if ((m_bUpdateTheme) && (m_bUseThemes)) SetTheme();
 
 		//Reposition and redraw everything
 		RecalcLayout();
@@ -3574,6 +3557,102 @@ namespace Win32xx
 		}
 
 		RecalcLayout();
+	}
+
+	void CFrame::SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID /*= 0*/, UINT ToolbarDisabledID /*= 0*/)
+	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
+	// Assumes the width of the button image = bitmap_size / buttons
+	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
+	{
+		if (iNumButtons > 0)
+		{
+			// Set the button images
+			HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
+			if (!hbm)
+				throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
+
+			BITMAP bm = {0};
+
+			if (!::GetObject(hbm, sizeof(BITMAP), &bm))
+				throw CWinException(_T("CToolbar::SetImageList ... GetObject failed "));
+
+			int iImageWidth  = bm.bmWidth / iNumButtons;
+			int iImageHeight = bm.bmHeight;
+
+			// Set the bitmap size first
+			TB.SetBitmapSize(iImageWidth, iImageHeight);
+
+			// Toolbar ImageLists require Comctl32.dll version 4.7 or later
+			if (400 == GetComCtlVersion())
+			{
+				// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
+				// Instead we simply set the bitmap.
+				TB.SetBitmap(iNumButtons, ToolbarID);
+				return;
+			}
+
+			HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(TB, TB_GETIMAGELIST,    0, 0);
+			HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(TB, TB_GETHOTIMAGELIST, 0, 0);
+			HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(TB, TB_GETDISABLEDIMAGELIST, 0, 0);
+			ImageList_Destroy(himlToolbar);
+			ImageList_Destroy(himlToolbarHot);
+			ImageList_Destroy(himlToolbarDis);
+
+			himlToolbar = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+			if (!himlToolbar)
+				throw CWinException(_T("CToolbar::SetImageList ... Create m_himlToolbar failed "));
+
+			ImageList_AddMasked(himlToolbar, hbm, crMask);
+			if(-1L == SendMessage(TB, TB_SETIMAGELIST, 0, (LPARAM)himlToolbar) )
+				throw CWinException(_T("CToolbar::SetImageList ... TB_SETIMAGELIST failed "));
+
+			::DeleteObject(hbm);
+			hbm = NULL;
+
+			if (ToolbarHotID)
+			{
+				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
+				if (!hbm)
+					throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
+
+				himlToolbarHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+				if (!himlToolbarHot)
+					throw CWinException(_T("CToolbar::SetImageList ... Create m_himlToolbarHot failed "));
+
+				ImageList_AddMasked(himlToolbarHot, hbm, crMask);
+
+				if(-1L == SendMessage(TB, TB_SETHOTIMAGELIST, 0, (LPARAM)himlToolbarHot) )
+					throw CWinException(_T("CToolbar::SetImageList ... TB_SETHOTIMAGELIST failed "));
+
+				::DeleteObject(hbm);
+				hbm = NULL;
+			} 
+
+			if (ToolbarDisabledID)
+			{
+				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
+				if (!hbm)
+					throw CWinException(_T("CToolbar::SetImageList ... LoadBitmap failed "));
+
+				himlToolbarDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+				if (!himlToolbarDis)
+					throw CWinException(_T("CToolbar::SetImageList ... Create m_himlToolbarDis failed "));
+
+				ImageList_AddMasked(himlToolbarDis, hbm, crMask);
+				if(-1L == SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+					throw CWinException(_T("CToolbar::SetImageList ... TB_SETDISABLEDIMAGELIST failed "));
+			}
+		//	else
+		//	{
+		//		himlToolbarDis = CreateDisabledImageList(himlToolbar);
+		//	}
+
+			// Adjust the rebar band size
+			if (m_bUseRebar)
+				m_Rebar.ResizeBand(m_Rebar.GetBand(TB), TB.GetMaxSize());
+
+			::DeleteObject(hbm);
+		}
 	}
 
 	void CFrame::SetView(CWnd& View)

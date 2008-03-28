@@ -149,7 +149,6 @@ namespace Win32xx
 		virtual void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
 		virtual int  SetButtons(const std::vector<UINT>& ToolbarData) const;
 		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
-		virtual void SetImageList(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 
 		// These functions aren't intended to be overridden
 		int  CommandToIndex(int iButtonID) const;
@@ -164,6 +163,7 @@ namespace Win32xx
 		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
 		BOOL HasText() const;
 		int  HitTest() const;
+		void SetBitmap(int iNumButtons, UINT nID);
 		void SetBitmapSize(int cx, int cy) const;
 		void SetButtonSize(int cx, int cy) const;
 		void SetButtonState(int iButtonID, UINT State) const;
@@ -173,15 +173,13 @@ namespace Win32xx
 
 	protected:
 		virtual void OnCreate();
+		virtual void OnDestroy();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		HIMAGELIST m_hImageList;			// Imagelist for normal buttons
-		HIMAGELIST m_hImageListHot;			// Imagelist for hot buttons
-		HIMAGELIST m_hImageListDis;			// Imagelist for disabled buttons
 		std::map<tString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ThemeToolbar m_Theme;				// The theme structure
@@ -328,6 +326,7 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
+		virtual void SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
@@ -354,7 +353,8 @@ namespace Win32xx
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, UINT nID_Image, COLORREF crMask);
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
-		virtual void AddToolbarBand(CToolbar& TB, const std::vector<UINT>& TBData, COLORREF clrMask, UINT ID_Normal, UINT ID_HOT = 0, UINT ID_Disabled = 0);
+		virtual void AddToolbarBand(CToolbar& TB);
+		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(HDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
@@ -401,8 +401,6 @@ namespace Win32xx
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		tString m_StatusText;				// a TCHAR std::string for status text
 		ThemeMenu m_ThemeMenu;				// Theme structure
-		HIMAGELIST m_hImageList;			// Imagelist of menu icons
-		HIMAGELIST m_hImageListDis;			// Imagelist of disabled menu icons
 
 	private:
 		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
@@ -417,65 +415,10 @@ namespace Win32xx
 		HMENU m_hMenu;			// handle to the frame menu
 		CWnd* m_pView;			// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];	// Array of TCHAR pointers;
+		HIMAGELIST m_himlMenu;		// Imagelist of menu icons
+		HIMAGELIST m_himlMenuDis;	// Imagelist of disabled menu icons
 
 	};  // class CFrame
-
-
-	//////////////////////////////////
-	// Declaration of global functions
-	//
-	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList)
-	// Returns a greyed image list, created from hImageList
-	{
-		int cx, cy;
-		int nCount = ImageList_GetImageCount(hImageList);
-		if (0 == nCount)
-			return NULL;
-
-		ImageList_GetIconSize(hImageList, &cx, &cy);
-
-		// Create the destination ImageList
-		HIMAGELIST hImageListDis = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
-
-		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; i++)
-		{
-			CDC DesktopDC = ::GetDC(NULL);
-			CDC MemDC = ::CreateCompatibleDC(NULL);
-			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
-			RECT rc;
-			SetRect(&rc, 0, 0, cx, cx);
-
-			// Set the mask color to magenta for the new ImageList
-			COLORREF crMask = RGB(255,0,255);
-			SolidFill(MemDC, crMask, &rc);
-
-			// Draw the image on the memory DC
-			ImageList_Draw(hImageList, i, MemDC, 0, 0, ILD_TRANSPARENT);
-
-			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; x++)
-			{
-				for (int y = 0; y < cy; y++)
-				{
-					COLORREF clr = ::GetPixel(MemDC, x, y);
-
-					if (clr != crMask)
-					{
-						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
-						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
-					}
-				}
-			}
-
-			// Detach the bitmap so we can use it.
-			HBITMAP hbm = MemDC.DetachBitmap();
-			ImageList_AddMasked(hImageListDis, hbm, crMask);
-			::DeleteObject(hbm);
-		}
-
-		return hImageListDis;
-	}
 
 } // namespace Win32xx
 
