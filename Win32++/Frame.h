@@ -326,7 +326,7 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
-		virtual void SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID = 0, UINT ToolbarDisabledID = 0);
+		virtual void SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 

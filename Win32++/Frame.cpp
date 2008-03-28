@@ -3559,7 +3559,7 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	void CFrame::SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID /*= 0*/, UINT ToolbarDisabledID /*= 0*/)
+	void CFrame::SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = bitmap_size / buttons
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
@@ -3578,9 +3578,6 @@ namespace Win32xx
 
 			int iImageWidth  = bm.bmWidth / iNumButtons;
 			int iImageHeight = bm.bmHeight;
-
-			// Set the bitmap size first
-			TB.SetBitmapSize(iImageWidth, iImageHeight);
 
 			// Toolbar ImageLists require Comctl32.dll version 4.7 or later
 			if (400 == GetComCtlVersion())

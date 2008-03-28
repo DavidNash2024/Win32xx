@@ -117,7 +117,7 @@ void CMainFrame::OnCreate()
 		ArrowsData.push_back(IDM_ARROW_RIGHT);
 		AddToolbarBand(Arrows);
 		int iButtons = Arrows.SetButtons(ArrowsData);
-		SetToolbarImages(Arrows, iButtons, RGB(255,0,255), IDB_ARROWS);	
+		SetToolbarImages(Arrows, iButtons, RGB(255,0,255), IDB_ARROWS, 0, 0);	
 
 		// Add the Cards toolbar
 		std::vector<UINT> CardsData;
@@ -127,7 +127,7 @@ void CMainFrame::OnCreate()
 		CardsData.push_back(IDM_CARD_SPADE);
 		AddToolbarBand(Cards);
 		iButtons = Cards.SetButtons(CardsData);
-		SetToolbarImages(Cards, iButtons, RGB(255,0,255), IDB_CARDS);
+		SetToolbarImages(Cards, iButtons, RGB(255,0,255), IDB_CARDS, 0, 0);
 	}
 }
 
