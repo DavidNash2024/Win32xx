@@ -172,7 +172,7 @@ void CMainFrame::OnCreate()
 	CToolbar& TB = GetToolbar();
 
 	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(TB, 5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	std::vector<UINT> IconData;
 	if (IsRebarUsed())

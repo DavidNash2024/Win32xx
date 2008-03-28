@@ -70,7 +70,7 @@ void CMainFrame::OnCreate()
 	CToolbar& TB = GetToolbar();
 
 	// Set the image lists for normal, hot and disabled buttons
-	TB.SetImageList(8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(TB, 8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Disable some of the toolbar buttons
 	TB.DisableButton(IDM_EDIT_CUT);

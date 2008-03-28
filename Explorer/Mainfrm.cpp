@@ -164,7 +164,7 @@ void CMainFrame::SetButtons()
 {
 	// Use larger buttons
 	CToolbar& TB = GetToolbar();
-	TB.SetImageList(9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(TB, 9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS); 
 
 	// Disable some buttons
 	TB.DisableButton(IDM_FILE_NEW);

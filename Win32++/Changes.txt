@@ -1,3 +1,13 @@
+Version 6.01
+============
+Added    CFrame::SetToolbarImages
+Removed  CToolbar::SetToolbarImageList
+Added    CToolbar::SetBitmap
+Renamed  CreateDisabledImageList to CFrame::CreateDisabledImageList
+
+Bug Fix: The correct imagelist is now used for normal and hot toolbar buttons
+
+
 Version 6.0
 ===========
 
