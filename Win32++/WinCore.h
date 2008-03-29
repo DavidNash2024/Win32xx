@@ -477,9 +477,14 @@ namespace Win32xx
 		// Handy for converting char to TCHAR
 		tString tstr;
   #ifdef UNICODE
-		TCHAR t[MAX_STRING_SIZE+1];
-		mbstowcs(t, s, MAX_STRING_SIZE);
+		int len = 1 + strlen(s);
+		
+		TCHAR* t = new TCHAR[len];	
+		if (NULL == t) throw std::bad_alloc();
+
+		mbstowcs(t, s, len);
 		tstr = t;
+		delete []t;
   #else
 		tstr = s;
   #endif
@@ -491,9 +496,14 @@ namespace Win32xx
 		// Handy for converting TCHAR to char
 		std::string str;
   #ifdef UNICODE
-		char c[MAX_STRING_SIZE+1];
-		wcstombs(c, t, MAX_STRING_SIZE);
+		int len = 1 + lstrlen(t);
+		
+		char* c = new char[len];
+		if (NULL == c) thow std::bad_alloc();
+
+		wcstombs(c, t, len);
 		str = c;
+		delete []c;
   #else
 		str = t;
   #endif

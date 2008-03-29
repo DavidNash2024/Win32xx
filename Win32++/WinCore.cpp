@@ -207,16 +207,31 @@ namespace Win32xx
 
 	int CWinApp::Run()
 	{
-		// InitInstance runs the App's initialization code
-		if (InitInstance())
+		try
 		{
-			// Dispatch the window messages
-			return MessageLoop();
+			// InitInstance runs the App's initialization code
+			if (InitInstance())
+			{
+				// Dispatch the window messages
+				return MessageLoop();
+			}
+			else
+			{
+				::PostQuitMessage(-1);
+				return -1;
+			}
 		}
-		else
+
+		catch (const std::bad_alloc &)
 		{
-			::PostQuitMessage(-1);
-			return -1;
+			::MessageBox(NULL, _T("Memory allocation failure"), _T("Bad Alloc Exception"), MB_OK);
+			throw;	// Rethrow unknown exception
+		}
+
+		catch (...)
+		{
+			::MessageBox(NULL, _T("Unknown Exception"), _T("Error"), MB_OK);
+			throw;	// Rethrow unknown exception
 		}
 	}
 
@@ -269,7 +284,6 @@ namespace Win32xx
 			DebugErrMsg(_T("Failed to allocate mememory in CWinApp::SetTlsIndex"));
 			throw; // Critical problem, so rethrow
 		}
-
 	}
 
 	////////////////////////////////////////

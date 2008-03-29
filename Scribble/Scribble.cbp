@@ -1,257 +1,129 @@
-<?xml version="1.0"?>
-<!DOCTYPE CodeBlocks_project_file>
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_project_file>
-	<FileVersion major="1" minor="1"/>
+	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Scribble"/>
-		<Option makefile="Makefile"/>
-		<Option makefile_is_custom="0"/>
-		<Option default_target="5"/>
-		<Option compiler="1"/>
+		<Option title="Scribble" />
+		<Option pch_mode="0" />
+		<Option compiler="msvctk" />
 		<Build>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\frame.exe"/>
-				<Option working_dir="Microsoft\Debug"/>
-				<Option object_output="Microsoft\Debug"/>
-				<Option deps_output=".deps"/>
-				<Option type="0"/>
-				<Option compiler="1"/>
-				<Option projectResourceIncludeDirsRelation="0"/>
+				<Option output="Microsoft\Debug\frame.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft\Debug" />
+				<Option object_output="Microsoft\Debug" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
 				<Compiler>
-					<Add option="/MLd"/>
-					<Add option="/GA"/>
-					<Add option="/GX"/>
-					<Add option="/W3"/>
-					<Add option="/Zi"/>
-					<Add option="/DWIN32"/>
-					<Add option="/D_DEBUG"/>
-					<Add option="/D_WINDOWS"/>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+					<Add option="/MLd" />
+					<Add option="/GA" />
+					<Add option="/GX" />
+					<Add option="/W3" />
+					<Add option="/Zi /D_DEBUG" />
+					<Add option="/Zi" />
+					<Add option="/DWIN32" />
+					<Add option="/D_DEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="/DEBUG"/>
-					<Add library="gdi32"/>
-					<Add library="user32"/>
-					<Add library="kernel32"/>
-					<Add library="comctl32"/>
-					<Add library="Comdlg32"/>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib"/>
+					<Add option="/DEBUG" />
+					<Add library="gdi32" />
+					<Add library="user32" />
+					<Add library="kernel32" />
+					<Add library="comctl32" />
+					<Add library="Comdlg32" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\frame.exe"/>
-				<Option working_dir="Microsoft\Release"/>
-				<Option object_output="Microsoft\Release"/>
-				<Option deps_output=".deps"/>
-				<Option type="0"/>
-				<Option compiler="1"/>
-				<Option projectResourceIncludeDirsRelation="0"/>
+				<Option output="Microsoft\Release\frame.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft\Release" />
+				<Option object_output="Microsoft\Release" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
 				<Compiler>
-					<Add option="/MT"/>
-					<Add option="/GX"/>
-					<Add option="/Ox"/>
-					<Add option="/W3"/>
-					<Add option="/DWIN32"/>
-					<Add option="/DNDEBUG"/>
-					<Add option="/D_WINDOWS"/>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+					<Add option="/MT" />
+					<Add option="/GX" />
+					<Add option="/Ox" />
+					<Add option="/W3" />
+					<Add option="/DWIN32" />
+					<Add option="/DNDEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include"/>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="gdi32"/>
-					<Add library="kernel32"/>
-					<Add library="user32"/>
-					<Add library="comctl32"/>
-					<Add library="Comdlg32"/>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib"/>
+					<Add library="gdi32" />
+					<Add library="kernel32" />
+					<Add library="user32" />
+					<Add library="comctl32" />
+					<Add library="Comdlg32" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\frame.exe"/>
-				<Option working_dir="GNU\Debug"/>
-				<Option object_output="GNU\Debug"/>
-				<Option deps_output=".deps"/>
-				<Option type="0"/>
-				<Option compiler="0"/>
-				<Option projectResourceIncludeDirsRelation="0"/>
+				<Option output="GNU\Debug\frame.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU\Debug" />
+				<Option object_output="GNU\Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
-					<Add option="-g"/>
-					<Add option="-g3"/>
-					<Add option="-D__DEBUG__"/>
-					<Add option="-D_DEBUG"/>
-					<Add option="-D_WIN32_IE=0x0400"/>
+					<Add option="-g" />
+					<Add option="-g3" />
+					<Add option="-D__DEBUG__" />
+					<Add option="-D_DEBUG" />
+					<Add option="-D_WIN32_IE=0x0400" />
 				</Compiler>
 				<Linker>
-					<Add library="comctl32"/>
-					<Add directory="C:\Dev-Cpp\lib"/>
+					<Add library="comctl32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\frame.exe"/>
-				<Option working_dir="GNU\Release"/>
-				<Option object_output="GNU\Release"/>
-				<Option deps_output=".deps"/>
-				<Option type="0"/>
-				<Option compiler="0"/>
-				<Option projectResourceIncludeDirsRelation="0"/>
+				<Option output="GNU\Release\frame.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU\Release" />
+				<Option object_output="GNU\Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
-					<Add option="-D_WIN32_IE=0x0400"/>
+					<Add option="-D_WIN32_IE=0x0400" />
 				</Compiler>
 				<Linker>
-					<Add library="comctl32"/>
-					<Add directory="C:\Dev-Cpp\lib"/>
+					<Add library="comctl32" />
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="Mainfrm.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="Mainfrm.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+		</VirtualTargets>
+		<Unit filename="Mainfrm.cpp" />
+		<Unit filename="Mainfrm.h" />
 		<Unit filename="Resource.rc">
-			<Option compilerVar="WINDRES"/>
-			<Option objectName="Scribble\Resource.res"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
+			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="ScribbleApp.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="ScribbleApp.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="View.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="View.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="main.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="resource.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\Default_Resource.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\Dialog.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\Dialog.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\Frame.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\Frame.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\GDI.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\GDI.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\WinCore.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
-		<Unit filename="..\Win32++\WinCore.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="Debug Microsoft Visual C++"/>
-			<Option target="Release Microsoft Visual C++"/>
-			<Option target="Debug MinGW GNU compiler"/>
-			<Option target="Release MinGW GNU compiler"/>
-		</Unit>
+		<Unit filename="ScribbleApp.cpp" />
+		<Unit filename="ScribbleApp.h" />
+		<Unit filename="View.cpp" />
+		<Unit filename="View.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="resource.h" />
+		<Unit filename="..\Win32++\Default_Resource.h" />
+		<Unit filename="..\Win32++\Dialog.cpp" />
+		<Unit filename="..\Win32++\Dialog.h" />
+		<Unit filename="..\Win32++\Frame.cpp" />
+		<Unit filename="..\Win32++\Frame.h" />
+		<Unit filename="..\Win32++\GDI.cpp" />
+		<Unit filename="..\Win32++\GDI.h" />
+		<Unit filename="..\Win32++\WinCore.cpp" />
+		<Unit filename="..\Win32++\WinCore.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
