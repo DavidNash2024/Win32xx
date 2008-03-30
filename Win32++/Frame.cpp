@@ -2341,7 +2341,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_StatusText(_T("Ready")),
-						m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL), m_himlMenu(NULL), m_himlMenuDis(NULL)
+						m_pAboutDialog(NULL), m_himlMenu(NULL), m_himlMenuDis(NULL), m_hMenu(NULL), m_pView(NULL) 
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -2388,6 +2388,8 @@ namespace Win32xx
 		}
 
 		if (m_hMenu) ::DestroyMenu(m_hMenu);
+		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
+		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
 	}
 
 	BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)
@@ -2543,6 +2545,61 @@ namespace Win32xx
 		ImageList_GetIconSize(himlNormal, &cx, &cy);
 
 		// Create the disabled ImageList
+		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
+
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; i++)
+		{
+			CDC DesktopDC = ::GetDC(NULL);
+			CDC MemDC = ::CreateCompatibleDC(NULL);
+			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
+			RECT rc;
+			SetRect(&rc, 0, 0, cx, cx);
+
+			// Set the mask color to magenta for the new ImageList
+			COLORREF crMask = RGB(200, 200, 200);
+			SolidFill(MemDC, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_SetBkColor(himlNormal, crMask);
+			ImageList_Draw(himlNormal, i, MemDC, 0, 0, ILD_NORMAL);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; x++)
+			{
+				for (int y = 0; y < cy; y++)
+				{
+					COLORREF clr = ::GetPixel(MemDC, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
+						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
+					}
+
+				}
+			}
+
+			// Detach the bitmap so we can use it.
+			HBITMAP hbm = MemDC.DetachBitmap();
+			ImageList_AddMasked(himlDisabled, hbm, crMask);
+			::DeleteObject(hbm);
+		}
+
+		return himlDisabled;
+	}
+
+/*	HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
+	// Returns a greyed image list, created from hImageList
+	{
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(himlNormal);
+		if (0 == nCount)
+			return NULL;
+
+		ImageList_GetIconSize(himlNormal, &cx, &cy);
+
+		// Create the disabled ImageList
 		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
 
 		// Process each image in the ImageList
@@ -2583,7 +2640,7 @@ namespace Win32xx
 		}
 
 		return himlDisabled;
-	}
+	} */
 
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently

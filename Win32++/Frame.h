@@ -401,6 +401,8 @@ namespace Win32xx
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		tString m_StatusText;				// a TCHAR std::string for status text
 		ThemeMenu m_ThemeMenu;				// Theme structure
+		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
+		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
 
 	private:
 		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
@@ -415,8 +417,6 @@ namespace Win32xx
 		HMENU m_hMenu;			// handle to the frame menu
 		CWnd* m_pView;			// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];	// Array of TCHAR pointers;
-		HIMAGELIST m_himlMenu;		// Imagelist of menu icons
-		HIMAGELIST m_himlMenuDis;	// Imagelist of disabled menu icons
 
 	};  // class CFrame
 

@@ -5,6 +5,11 @@ Removed  CToolbar::SetToolbarImageList
 Added    CToolbar::SetBitmap
 Moved    CreateDisabledImageList to CFrame::CreateDisabledImageList
 
+New Features:
+------------
+* 32 bit bitmaps are now supported for toolbars
+
+
 Bug Fixes: 
 * The normal and hot toolbar buttons are now displayed correctly.
 * Corrected some VC6 compatiblity problems.
