@@ -499,7 +499,7 @@ namespace Win32xx
 		int len = 1 + lstrlen(t);
 		
 		char* c = new char[len];
-		if (NULL == c) thow std::bad_alloc();
+		if (NULL == c) throw std::bad_alloc();
 
 		wcstombs(c, t, len);
 		str = c;

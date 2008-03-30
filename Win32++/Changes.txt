@@ -7,7 +7,7 @@ Moved    CreateDisabledImageList to CFrame::CreateDisabledImageList
 
 New Features:
 ------------
-* 32 bit bitmaps are now supported for toolbars
+* 32 bit bitmaps are now supported for toolbars (requires XP or Vista)
 
 
 Bug Fixes: 
