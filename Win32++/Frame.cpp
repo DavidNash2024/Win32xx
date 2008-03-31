@@ -2422,9 +2422,10 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	int CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, UINT nID_Image, COLORREF crMask)
+	int CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
 	// Adds the icons from a bitmap resouce to an internal ImageList for use with popup menu items.
 	// Note:  If existing are a different size to the new ones, the old ones will be removed!
+	//        The ToolbarDisabledID is ignored unless ToolbarID and ToolbarDisabledID bitmaps are the same size.
 	{
 		// Count the MenuData entries excluding seperators
 		int iImages = 0;
@@ -2437,7 +2438,7 @@ namespace Win32xx
 		}
 
 		// Load the button images from Resouce ID
-		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID_Image));
+		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 
 		if ((0 == iImages) || (NULL == hbm))
 			return (int)m_MenuData.size();	// No valid images, so nothing to do!
@@ -2465,7 +2466,10 @@ namespace Win32xx
 				//  so we throw the old ones away.
 				ImageList_Destroy(m_himlMenu);
 				m_himlMenu = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+				ImageList_Destroy(m_himlMenuDis);
+				m_himlMenuDis = NULL;
 				m_MenuData.clear();
+				TRACE(_T("WARNING: Discarded old menu icons\n"));
 			}
 		}
 
@@ -2483,9 +2487,36 @@ namespace Win32xx
 		::DeleteObject(hbm);
 
 		// Create the Disabled imagelist
-		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
-		m_himlMenuDis = NULL;
-		m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
+		if (ToolbarDisabledID)
+		{
+			if (0 != m_himlMenuDis)
+				m_himlMenuDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+
+			HBITMAP hbmDis = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
+
+			BITMAP bmDis = {0};
+			::GetObject(hbmDis, sizeof(BITMAP), &bmDis);
+			int iImageWidthDis  = bmDis.bmWidth / iImages;
+			int iImageHeightDis = bmDis.bmHeight;
+			
+			// Normal and Disabled icons must be the same size
+			if ((iImageWidthDis == iImageWidth) && (iImageHeightDis == iImageHeight))
+			{
+				ImageList_AddMasked(m_himlMenu, hbmDis, crMask);
+			}
+			else
+			{
+				ImageList_Destroy(m_himlMenuDis);
+				m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
+				TRACE(_T("WARNING:  Using default disabled menu icons\n"));
+			}
+			::DeleteObject(hbmDis);		
+		}
+		else
+		{
+			if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
+			m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
+		}
 
 		// return the number of menu icons
 		return (int)m_MenuData.size();
@@ -2556,8 +2587,8 @@ namespace Win32xx
 			RECT rc;
 			SetRect(&rc, 0, 0, cx, cx);
 
-			// Set the mask color to magenta for the new ImageList
-			COLORREF crMask = RGB(120, 120, 120);
+			// Set the mask color to grey for the new ImageList
+			COLORREF crMask = RGB(120, 199, 120);
 			SolidFill(MemDC, crMask, &rc);
 
 			// Draw the image on the memory DC
@@ -2588,59 +2619,6 @@ namespace Win32xx
 
 		return himlDisabled;
 	}
-
-/*	HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
-	// Returns a greyed image list, created from hImageList
-	{
-		int cx, cy;
-		int nCount = ImageList_GetImageCount(himlNormal);
-		if (0 == nCount)
-			return NULL;
-
-		ImageList_GetIconSize(himlNormal, &cx, &cy);
-
-		// Create the disabled ImageList
-		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 0);
-
-		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; i++)
-		{
-			CDC DesktopDC = ::GetDC(NULL);
-			CDC MemDC = ::CreateCompatibleDC(NULL);
-			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
-			RECT rc;
-			SetRect(&rc, 0, 0, cx, cx);
-
-			// Set the mask color to magenta for the new ImageList
-			COLORREF crMask = RGB(255,0,255);
-			SolidFill(MemDC, crMask, &rc);
-
-			// Draw the image on the memory DC
-			ImageList_Draw(himlNormal, i, MemDC, 0, 0, ILD_TRANSPARENT);
-
-			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; x++)
-			{
-				for (int y = 0; y < cy; y++)
-				{
-					COLORREF clr = ::GetPixel(MemDC, x, y);
-
-					if (clr != crMask)
-					{
-						BYTE byGray = 95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20;
-						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
-					}
-				}
-			}
-
-			// Detach the bitmap so we can use it.
-			HBITMAP hbm = MemDC.DetachBitmap();
-			ImageList_AddMasked(himlDisabled, hbm, crMask);
-			::DeleteObject(hbm);
-		}
-
-		return himlDisabled;
-	} */
 
 	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
@@ -2937,8 +2915,8 @@ namespace Win32xx
 		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 		SetToolbarImages(m_Toolbar, iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 
-		// Add the icons for popup menu items
-		AddMenuIcons(m_ToolbarData, IDW_MAIN, RGB(192, 192, 192));
+		// Set the icons for popup menu items
+		SetMenuIcons(m_ToolbarData, RGB(192, 192, 192), IDW_MAIN, 0);
 
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
@@ -3439,6 +3417,22 @@ namespace Win32xx
 		if(!m_hMenu)
 			TRACE(_T("Load Menu failed\n"));
  	}
+	int CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
+	{
+		// Remove any existing menu icons
+		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
+		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
+		m_himlMenu = NULL;
+		m_himlMenuDis = NULL;
+		m_MenuData.clear();
+
+		// Exit if no ToolbarID is specified
+		if (ToolbarID == 0) return 0;
+
+		// Add the menu icons from the bitmap IDs
+		return AddMenuIcons(MenuData, crMask, ToolbarID, ToolbarDisabledID);
+	}
+
 
 	void CFrame::SetMenuTheme(ThemeMenu& Theme)
 	{

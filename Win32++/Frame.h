@@ -42,7 +42,7 @@
 // The classes declared in this file support SDI (Single Document Interface)
 // frames on Win32/Win64 operating systems (not Windows CE). For Windows CE,
 // use WCEframe.h instead. SDI frames are a simple frame which supports a
-// single client window. Refer to MDI.h for frames that support several
+// single view window. Refer to MDI.h for frames that support several
 // child windows.
 
 // CFrame also includes each of the following classes as members:
@@ -51,7 +51,7 @@
 // * CToolbar for managing the frame's toolbar.
 // * CStatusbar for managing the frame's status bar.
 // In each case these members is exposed by a GetXXX function, allowing
-// them to be altered or sent messages.
+// them to be accessed or sent messages.
 
 // CFrame is responsible for creating a window which includes a menu and
 // toolbar (usualy hosted within a rebar), and a status bar, and managing
@@ -317,12 +317,15 @@ namespace Win32xx
 		virtual ~CFrame();
 
 		// These are the functions you might wish to override
+		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
+		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual RECT GetClientSize();
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual void OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual int  SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
@@ -350,8 +353,6 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
-		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, UINT nID_Image, COLORREF crMask);
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
 		virtual void AddToolbarBand(CToolbar& TB);
 		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);

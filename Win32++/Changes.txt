@@ -1,5 +1,6 @@
 Version 6.01
 ============
+Added    CFrame::SetMenuIcons
 Added    CFrame::SetToolbarImages
 Removed  CToolbar::SetToolbarImageList
 Added    CToolbar::SetBitmap
