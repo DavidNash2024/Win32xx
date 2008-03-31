@@ -2557,7 +2557,7 @@ namespace Win32xx
 			SetRect(&rc, 0, 0, cx, cx);
 
 			// Set the mask color to magenta for the new ImageList
-			COLORREF crMask = RGB(200, 200, 200);
+			COLORREF crMask = RGB(120, 120, 120);
 			SolidFill(MemDC, crMask, &rc);
 
 			// Draw the image on the memory DC
@@ -3696,6 +3696,13 @@ namespace Win32xx
 				if(-1L == SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
 					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
+			else
+			{
+				himlToolbarDis = CreateDisabledImageList(himlToolbar);
+				if(-1L == SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
+			}
+
 
 			// Adjust the rebar band size
 			if (m_bUseRebar)
