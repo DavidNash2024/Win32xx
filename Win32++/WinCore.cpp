@@ -61,8 +61,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_IsTlsAllocatedHere(FALSE), 
-		                 m_pFrame(NULL), m_Callback(NULL)
+	CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_pFrame(NULL), m_Callback(NULL)
 	{
 		try
 		{
@@ -73,7 +72,6 @@ namespace Win32xx
 				if (m_TlsIndex != TLS_OUT_OF_INDEXES)
 				{
 					st_pTheApp = this;
-					m_IsTlsAllocatedHere = TRUE; //TLS allocated in this CWinApp object
 				}
 				else
 				{
@@ -105,25 +103,22 @@ namespace Win32xx
 
 	CWinApp::~CWinApp()
 	{
-		if (m_IsTlsAllocatedHere)
+		// Check that all CWnd windows are destroyed
+		std::map<HWND, CWnd*, CompareHWND>::iterator m;
+		for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); ++m)
 		{
-			// Check that all CWnd windows are destroyed
-			std::map<HWND, CWnd*, CompareHWND>::iterator m;
-			for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); ++m)
-			{
-				(*m).second->DestroyWindow();
-			}
-			m_HWNDmap.clear();
-
-			// Do remaining tidy up
-			if (m_TlsIndex != TLS_OUT_OF_INDEXES)
-			{
-				::TlsSetValue(GetTlsIndex(), NULL);
-				::TlsFree(m_TlsIndex);
-				m_TlsIndex = TLS_OUT_OF_INDEXES;
-			}
-			st_pTheApp = 0;
+			(*m).second->DestroyWindow();
 		}
+		m_HWNDmap.clear();
+
+		// Do remaining tidy up
+		if (m_TlsIndex != TLS_OUT_OF_INDEXES)
+		{
+			::TlsSetValue(GetTlsIndex(), NULL);
+			::TlsFree(m_TlsIndex);
+			m_TlsIndex = TLS_OUT_OF_INDEXES;
+		}
+		st_pTheApp = 0;
 
 		std::vector<TLSData*>::iterator iter;
 		for(iter = m_ThreadData.begin(); iter != m_ThreadData.end(); ++iter)

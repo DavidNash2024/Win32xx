@@ -314,7 +314,6 @@ namespace Win32xx
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		HINSTANCE m_hInstance;		// handle to the applications instance
 		HINSTANCE m_hResource;		// handle to the applications resources
-		BOOL m_IsTlsAllocatedHere;	// a flag set for the Thread Local Storage
 		CFrame* m_pFrame;			// pointer to the CFrame object
 		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
 		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread

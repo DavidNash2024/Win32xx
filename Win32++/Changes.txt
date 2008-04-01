@@ -5,15 +5,19 @@ Added    CFrame::SetToolbarImages
 Removed  CToolbar::SetToolbarImageList
 Added    CToolbar::SetBitmap
 Moved    CreateDisabledImageList to CFrame::CreateDisabledImageList
+Modified CFrame::AddMenuIcons
 
 New Features:
 ------------
 * 32 bit bitmaps are now supported for toolbars (requires XP or Vista)
+* SetMenuIcons and AddMenuIcons now also accept a bitmap for disabled icons
+   in addition to the bitmap for normal icons.
 
 
 Bug Fixes: 
 * The normal and hot toolbar buttons are now displayed correctly.
 * Corrected some VC6 compatiblity problems.
+* CreateDisabledImageList now supports 32 bit images.
 
 
 Version 6.0
