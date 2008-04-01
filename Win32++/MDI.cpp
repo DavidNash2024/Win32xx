@@ -130,7 +130,7 @@ namespace Win32xx
 		// Allocate an iterator for our MDIChild vector
 		std::vector <CMDIChild*>::iterator v;
 
-		for (v = GetMDIChildVect().begin(); v < GetMDIChildVect().end(); v++)
+		for (v = GetMDIChildVect().begin(); v < GetMDIChildVect().end(); ++v)
 		{
 			HWND hwndMDIChild = (*v)->GetHwnd();
 			if (::GetWindowLong(hwndMDIChild, GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
@@ -157,7 +157,7 @@ namespace Win32xx
 					if (GetActiveMDIChild() == hwndMDIChild)
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
-					nWindow++;
+					++nWindow;
 				}
 				else if (9 == nWindow)
 				// For the 10th MDI child, add this menu item and return
@@ -266,7 +266,7 @@ namespace Win32xx
 		// Allocate an iterator for our HWND map
 		std::vector <CMDIChild*>::iterator v;
 
-		for (v = m_MDIChildVect.begin(); v!= m_MDIChildVect.end(); v++)
+		for (v = m_MDIChildVect.begin(); v!= m_MDIChildVect.end(); ++v)
 		{
 			if ((*v)->GetHwnd() == hWnd)
 			{

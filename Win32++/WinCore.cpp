@@ -109,7 +109,7 @@ namespace Win32xx
 		{
 			// Check that all CWnd windows are destroyed
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
-			for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); m++)
+			for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); ++m)
 			{
 				(*m).second->DestroyWindow();
 			}
@@ -126,7 +126,7 @@ namespace Win32xx
 		}
 
 		std::vector<TLSData*>::iterator iter;
-		for(iter = m_ThreadData.begin(); iter != m_ThreadData.end(); iter++)
+		for(iter = m_ThreadData.begin(); iter != m_ThreadData.end(); ++iter)
 		{
 			delete *(iter);
 		}
@@ -910,7 +910,7 @@ namespace Win32xx
 
 		// Erase the CWnd pointer entry from the map
 		GetApp()->m_MapLock.Lock();
-		for (m = GetApp()->m_HWNDmap.begin(); m != GetApp()->m_HWNDmap.end(); m++)
+		for (m = GetApp()->m_HWNDmap.begin(); m != GetApp()->m_HWNDmap.end(); ++m)
 		{
 			if (this == m->second)
 			{

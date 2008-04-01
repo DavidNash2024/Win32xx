@@ -167,7 +167,7 @@ namespace Win32xx
 
 				ZeroMemory(iNewPaneWidths, iNewParts*sizeof(int));
 
-				for (int i = 0; i < iParts; i++)
+				for (int i = 0; i < iParts; ++i)
 					iNewPaneWidths[i] = iPaneWidths[i];
 
 				if (0 == iPane)
@@ -344,7 +344,7 @@ namespace Win32xx
 
 		// This fixes a Windows bug calculating the size when TBSTYLE_DROPDOWN is used.
 		int xMaxSize = 0;
-		for (int i= 0 ; i < GetButtonCount(); i++)
+		for (int i= 0 ; i < GetButtonCount(); ++i)
 		{
 			xMaxSize += GetItemRect(i).right - GetItemRect(i).left;
 		}
@@ -357,7 +357,7 @@ namespace Win32xx
 	{
 		BOOL bReturn = FALSE;
 
-		for (int i = 0 ; i < GetButtonCount(); i++)
+		for (int i = 0 ; i < GetButtonCount(); ++i)
 		{
 			if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, GetCommandID(i), 0) != -1)
 				bReturn = TRUE;
@@ -379,7 +379,7 @@ namespace Win32xx
 		int nButtons = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
 		int iButton = -1;
 
-		for (int i = 0 ; i < nButtons; i++)
+		for (int i = 0 ; i < nButtons; ++i)
 		{
 			RECT r = GetItemRect(i);
 			if (::PtInRect(&r, pt))
@@ -531,7 +531,7 @@ namespace Win32xx
 
 					// Manually draw the dropdown arrow
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
-					for (int i = 2; i >= 0; i--)
+					for (int i = 2; i >= 0; --i)
 					{
 						::MoveToEx(DrawDC, xAPos -i-1, yAPos - i+1, NULL);
 						::LineTo  (DrawDC, xAPos +i,   yAPos - i+1);
@@ -690,7 +690,7 @@ namespace Win32xx
 			// TBBUTTON structure for each button in the toolbar
 			TBBUTTON tbb = {0};
 
-			for (int j = 0 ; j < iNumButtons; j++)
+			for (int j = 0 ; j < iNumButtons; ++j)
 			{
 				ZeroMemory(&tbb, sizeof(TBBUTTON));
 
@@ -940,7 +940,7 @@ namespace Win32xx
 		int nResult = -1;
 		if (NULL == hWnd) return nResult;
 
-		for (int nBand = 0; nBand < GetBandCount(); nBand++)
+		for (int nBand = 0; nBand < GetBandCount(); ++nBand)
 		{
 			REBARBANDINFO rbbi = {0};
 			rbbi.fMask = RBBIM_CHILD;
@@ -1038,7 +1038,7 @@ namespace Win32xx
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
 		{
 			// Draw the individual band backgrounds
-			for (int nBand = 0 ; nBand < GetBandCount(); nBand++)
+			for (int nBand = 0 ; nBand < GetBandCount(); ++nBand)
 			{
 				if (IsBandVisible(nBand))
 				{
@@ -1125,7 +1125,7 @@ namespace Win32xx
 		if (m_Theme.UseLines)
 		{
 			// Draw lines between bands
-			for (int j = 0; j < GetBandCount()-1; j++)
+			for (int j = 0; j < GetBandCount()-1; ++j)
 			{
 				rc = GetBandRect(j);
 				rc.left = max(0, rc.left - 4);
@@ -1152,7 +1152,7 @@ namespace Win32xx
 	void CRebar::MoveBandsLeft()
 	{
 		int OldrcTop = -1;
-		for (int nBand = GetBandCount() -1; nBand >= 0; nBand--)
+		for (int nBand = GetBandCount() -1; nBand >= 0; --nBand)
 		{
 			RECT rc = GetBandRect(nBand);
 			if (rc.top != OldrcTop)
@@ -1460,7 +1460,7 @@ namespace Win32xx
 			::GetClientRect(m_hWnd, &rc);
 
 			// Assign values to each element of the RECT array
-			for (int i = 0 ; i < 3 ; i++)
+			for (int i = 0 ; i < 3 ; ++i)
 			{
 				int left = rc.right - (i+1)*cx - 4*(i+1);
 				int top = rc.bottom/2 - cy/2;
@@ -1470,7 +1470,7 @@ namespace Win32xx
 			}
 
 			// Hide the MDI button if it won't fit
-			for (int k = 0 ; k <= 2 ; k++)
+			for (int k = 0 ; k <= 2 ; ++k)
 			{
 
 				if (m_MDIRect[k].left < GetMaxSize().cx)
@@ -1919,7 +1919,7 @@ namespace Win32xx
 					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 
 					// Move left to next topmenu item
-					(m_nHotItem > 0)? m_nHotItem-- : m_nHotItem = GetButtonCount()-1;
+					(m_nHotItem > 0)? --m_nHotItem : m_nHotItem = GetButtonCount()-1;
 					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
@@ -1935,7 +1935,7 @@ namespace Win32xx
 					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 
 					// Move right to next topmenu item
-					(m_nHotItem < GetButtonCount()-1)? m_nHotItem++ : m_nHotItem = 0;
+					(m_nHotItem < GetButtonCount()-1)? ++m_nHotItem : m_nHotItem = 0;
 					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
@@ -2193,7 +2193,7 @@ namespace Win32xx
 			SetButtonText(0, _T("    "));
 		}
 
-		for (int i = 0 ; i < ::GetMenuItemCount(hMenu); i++)
+		for (int i = 0 ; i < ::GetMenuItemCount(hMenu); ++i)
 		{
 			// Assign the Toolbar Button struct
 			TBBUTTON tbb = {0};
@@ -2358,7 +2358,7 @@ namespace Win32xx
 		if (GetComCtlVersion() >= 470)
 			m_bUseRebar = TRUE;
 
-		for (int i = 0 ; i < 3 ; i++)
+		for (int i = 0 ; i < 3 ; ++i)
 			m_OldStatus[i] = _T('\0');
 
 		// Place this code in CMainFrame's constructor
@@ -2381,7 +2381,7 @@ namespace Win32xx
 
 	CFrame::~CFrame()
 	{
-		for (int nItem = 0; nItem < (int)m_vpItemData.size(); nItem++)
+		for (int nItem = 0; nItem < (int)m_vpItemData.size(); ++nItem)
 		{
 			// These are normally deleted in OnExitMenuLoop
 			delete m_vpItemData[nItem];
@@ -2429,11 +2429,11 @@ namespace Win32xx
 	{
 		// Count the MenuData entries excluding seperators
 		int iImages = 0;
-		for (unsigned int i = 0 ; i < MenuData.size(); i++)
+		for (unsigned int i = 0 ; i < MenuData.size(); ++i)
 		{
 			if (MenuData[i] != 0)	// Don't count seperators
 			{
-				iImages++;
+				++iImages;
 			}
 		}
 
@@ -2474,7 +2474,7 @@ namespace Win32xx
 		}
 
 		// Add the resource IDs to the m_MenuData vector
-		for (unsigned int j = 0 ; j < MenuData.size(); j++)
+		for (unsigned int j = 0 ; j < MenuData.size(); ++j)
 		{
 			if (MenuData[j] != 0)
 			{
@@ -2579,7 +2579,7 @@ namespace Win32xx
 		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
 
 		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; i++)
+		for (int i = 0 ; i < nCount; ++i)
 		{
 			CDC DesktopDC = ::GetDC(NULL);
 			CDC MemDC = ::CreateCompatibleDC(NULL);
@@ -2596,9 +2596,9 @@ namespace Win32xx
 			ImageList_Draw(himlNormal, i, MemDC, 0, 0, ILD_NORMAL);
 
 			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; x++)
+			for (int x = 0 ; x < cx; ++x)
 			{
-				for (int y = 0; y < cy; y++)
+				for (int y = 0; y < cy; ++y)
 				{
 					COLORREF clr = ::GetPixel(MemDC, x, y);
 
@@ -2703,7 +2703,7 @@ namespace Win32xx
 
 		// get the icon's location in the imagelist
 		int iImage = -1;
-		for (int i = 0 ; i < (int)m_MenuData.size(); i++)
+		for (int i = 0 ; i < (int)m_MenuData.size(); ++i)
 		{
 			if (pdis->itemID == m_MenuData[i])
 				iImage = i;
@@ -2725,7 +2725,7 @@ namespace Win32xx
 	{
 		// find the position of tab character
 		int nTab = -1;
-		for(int i = 0; i < lstrlen(ItemText); i++)
+		for(int i = 0; i < lstrlen(ItemText); ++i)
 		{
 			if(_T('\t') == ItemText[i])
 			{
@@ -2790,7 +2790,7 @@ namespace Win32xx
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
 
-		for (int nItem = 0 ; nItem < nMenuItemCount; nItem++)
+		for (int nItem = 0 ; nItem < nMenuItemCount; ++nItem)
 		{
 			TCHAR szStr[MAX_MENU_STRING +1] = _T("");
 			TCHAR szStripped[MAX_MENU_STRING +1] = _T("");
@@ -2805,7 +2805,7 @@ namespace Win32xx
 			{
 				// Strip out any & characters
 				int j = 0;
-				for (int i = 0; i < lstrlen(szStr); i++)
+				for (int i = 0; i < lstrlen(szStr); ++i)
 				{
 					if (szStr[i] != _T('&'))
 						szStripped[j++] = szStr[i];
@@ -3027,7 +3027,7 @@ namespace Win32xx
 
 	void CFrame::OnExitMenuLoop()
 	{
-		for (int nItem = 0; nItem < (int)m_vpItemData.size(); nItem++)
+		for (int nItem = 0; nItem < (int)m_vpItemData.size(); ++nItem)
 		{
 			// Undo OwnerDraw and put the text back
 			MENUITEMINFO mii = {0};
@@ -3082,7 +3082,7 @@ namespace Win32xx
 
 		HMENU hMenu = (HMENU)wParam;
 
-		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; i++)
+		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; ++i)
 		{
 			MENUITEMINFO mii = {0};
 
@@ -3247,7 +3247,7 @@ namespace Win32xx
 	void CFrame::OnSysColorChange()
 	{
 		// Honor theme color changes
-		for (int nBand = 0; nBand <= GetRebar().GetBandCount(); nBand++)
+		for (int nBand = 0; nBand <= GetRebar().GetBandCount(); ++nBand)
 		{
 			GetRebar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
 		}

@@ -485,7 +485,7 @@ void Win32xx::GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc
 
 	if (bVertical)
 	{
-		for(int i=0; i < Width; i++)
+		for(int i=0; i < Width; ++i)
 		{
 			int r = r1 + (i * (r2-r1) / Width);
 			int g = g1 + (i * (g2-g1) / Width);
@@ -499,7 +499,7 @@ void Win32xx::GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc
 	}
 	else
 	{
-		for(int i=0; i < Height; i++)
+		for(int i=0; i < Height; ++i)
 		{
 			int r = r1 + (i * (r2-r1) / Height);
 			int g = g1 + (i * (g2-g1) / Height);
