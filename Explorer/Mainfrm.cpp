@@ -153,11 +153,18 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
 				DoPopupMenu();
 		}
-		break;
 
 	} //switch LPNMHDR
 
 	return 0L;
+}
+
+void CMainFrame::OnSetFocus()
+{
+	CFrame::OnSetFocus();
+
+	// Pass the focus back to the control that had it before
+	SetFocus(m_MainView.GetOldFocus());
 }
 
 void CMainFrame::SetButtons()
@@ -205,7 +212,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-		//Additional messages to be handled go here
+//
 //	}
 
 	// pass any unhandled messages on for default processing

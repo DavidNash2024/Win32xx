@@ -217,13 +217,18 @@ namespace ShellWrapper
 	HRESULT CShellFolder::EnumObjects(HWND hwndOwner, int grfFlags, CEnumIDList& cenumIDList)
 	{
 		LPENUMIDLIST pEnum;
-		HRESULT hr = m_IShellFolder->EnumObjects(hwndOwner, grfFlags, &pEnum);
-		if (S_OK == hr)
-			cenumIDList.Attach(pEnum);
-		else
+		HRESULT hr = 0;
+		if (m_IShellFolder)
 		{
-			TRACE(_T("CShellFolder::EnumObjects failed\n"));
+			hr = m_IShellFolder->EnumObjects(hwndOwner, grfFlags, &pEnum);
+			if (S_OK == hr)
+				cenumIDList.Attach(pEnum);
+			else
+				TRACE(_T("CShellFolder::EnumObjects failed\n"));
 		}
+		else
+			TRACE(_T("CShellFolder::EnumObjects failed\n"));
+
 		return hr;
 	}
 

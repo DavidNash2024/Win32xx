@@ -73,6 +73,7 @@ namespace Win32xx
 		virtual void OnLButtonUp();
 		virtual void OnMouseMove();
 		virtual void OnSize();
+		virtual void OnSysColorChange();
 		virtual void RecalcLayout();
 		virtual void SetPanes(CWnd& Pane0, CWnd& Pane1);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

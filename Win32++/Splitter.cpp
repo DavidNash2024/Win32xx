@@ -221,6 +221,14 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
+	void CSplitter::OnSysColorChange()
+	{
+		// Set the color of the splitter bar
+		CRebar& RB = GetApp()->GetFrame()->GetRebar();
+		if (RB.GetRebarTheme().UseThemes)
+			SetBarColor(RB.GetRebarTheme().clrBkgnd2);
+	}
+
 	void CSplitter::RecalcLayout()
 	{
 		RECT r = {0};
@@ -354,6 +362,9 @@ namespace Win32xx
 			return 0L;
 		case WM_SIZE:
 			OnSize();
+			break;
+		case WM_SYSCOLORCHANGE:
+			OnSysColorChange();
 			break;
 		}
 

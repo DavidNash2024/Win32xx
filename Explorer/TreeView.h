@@ -17,12 +17,11 @@ class CTreeView : public CWnd
 {
 public:
 	CTreeView();
-	virtual ~CTreeView();
-	
+	virtual ~CTreeView();	
 	BOOL GetRootItems();
 	BOOL SelectFromListView(Cpidl& CpidlFull);
 
-protected:
+ protected:
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);

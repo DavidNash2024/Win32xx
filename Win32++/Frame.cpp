@@ -187,7 +187,7 @@ namespace Win32xx
 		{
 			if (iNewPaneWidths) delete []iNewPaneWidths;
 			if (iPaneWidths)	delete []iPaneWidths;
-			
+
 			e.MessageBox();
 		}
 
@@ -195,7 +195,7 @@ namespace Win32xx
 		{
 			if (iNewPaneWidths) delete []iNewPaneWidths;
 			if (iPaneWidths)	delete []iPaneWidths;
-			
+
 			DebugErrMsg(_T("Exception in CStatusbar::SetPaneWidth"));
 			// Not a critical problem, so no need to rethrow
 		}
@@ -473,7 +473,7 @@ namespace Win32xx
 				}
 
 				// Get the appropriate image list depending on the button state
-				HIMAGELIST himlToolbar;				
+				HIMAGELIST himlToolbar;
 				if (nState & CDIS_DISABLED)
 				{
 					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0, 0);
@@ -640,7 +640,7 @@ namespace Win32xx
 		cs.lpszClass = TOOLBARCLASSNAME;
 	}
 
-	void CToolbar::SetBitmap(int iNumButtons, UINT nID) 
+	void CToolbar::SetBitmap(int iNumButtons, UINT nID)
 	{
 		// Set the button images
 		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID));
@@ -855,7 +855,7 @@ namespace Win32xx
 		m_Theme.clrPressed2 = Theme.clrPressed2;
 		m_Theme.clrOutline  = Theme.clrOutline;
 
-		::InvalidateRect(m_hWnd, NULL, TRUE); 
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
 	LRESULT CToolbar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2341,7 +2341,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_StatusText(_T("Ready")),
-						m_pAboutDialog(NULL), m_himlMenu(NULL), m_himlMenuDis(NULL), m_hMenu(NULL), m_pView(NULL) 
+						m_pAboutDialog(NULL), m_himlMenu(NULL), m_himlMenuDis(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -2498,7 +2498,7 @@ namespace Win32xx
 			::GetObject(hbmDis, sizeof(BITMAP), &bmDis);
 			int iImageWidthDis  = bmDis.bmWidth / iImages;
 			int iImageHeightDis = bmDis.bmHeight;
-			
+
 			// Normal and Disabled icons must be the same size
 			if ((iImageWidthDis == iImageWidth) && (iImageHeightDis == iImageHeight))
 			{
@@ -2510,7 +2510,7 @@ namespace Win32xx
 				m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
 				TRACE(_T("WARNING:  Using default disabled menu icons\n"));
 			}
-			::DeleteObject(hbmDis);		
+			::DeleteObject(hbmDis);
 		}
 		else
 		{
@@ -2887,7 +2887,7 @@ namespace Win32xx
 		SetFrameMenu(IDW_MAIN);
 
 		// Set the accelerator table and HWND for translated messages
-		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());	
+		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
 
 		if (IsRebarSupported() && m_bUseRebar)
 		{
@@ -2910,7 +2910,7 @@ namespace Win32xx
 
 		// Set the toolbar data
 		int iButtons = GetToolbar().SetButtons(m_ToolbarData);
-			
+
 		// Set the toolbar images
 		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 		SetToolbarImages(m_Toolbar, iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
@@ -3065,7 +3065,7 @@ namespace Win32xx
 			//  an exception when new fails. We make sure an exception gets thrown!
 			if (NULL == m_pAboutDialog)
 				throw CWinException(_T("CFrame::Help failed to allocate memory for Dialog"));
-			
+
 			m_pAboutDialog->DoModal();
 
 			// Clean up
@@ -3674,7 +3674,7 @@ namespace Win32xx
 
 				::DeleteObject(hbm);
 				hbm = NULL;
-			} 
+			}
 
 			if (ToolbarDisabledID)
 			{
@@ -3779,6 +3779,9 @@ namespace Win32xx
 		case WM_SYSCOLORCHANGE:
 			// Changing themes trigger this
 			OnSysColorChange();
+
+			// Forward the message to the view window
+			::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
 			return 0L;
 		case WM_SYSCOMMAND:
 			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())

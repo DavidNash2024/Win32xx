@@ -19,14 +19,19 @@ class CMainView : public CSplitter
 public:
 	CMainView();
 	virtual ~CMainView(){}
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
+	HWND GetOldFocus() {return m_hwndOldFocus;}
 	CListView& GetListView() {return m_ListView;}
 	CTreeView& GetTreeView() {return m_TreeView;}
+
+protected:
+	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CTreeView m_TreeView;
 	CListView m_ListView;
+	HWND m_hwndOldFocus;
+
 };
 
 #endif  //MAINVIEW_H

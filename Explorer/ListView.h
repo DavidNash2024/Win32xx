@@ -17,7 +17,6 @@ class CListView : public CWnd
 public:
 	CListView();
 	virtual ~CListView();
-	
 	void DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
 	void DoDisplay();
 	void ViewLargeIcons();
