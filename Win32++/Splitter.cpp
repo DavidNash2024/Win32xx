@@ -365,6 +365,8 @@ namespace Win32xx
 			break;
 		case WM_SYSCOLORCHANGE:
 			OnSysColorChange();
+			::PostMessage(m_pPane0->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
+			::PostMessage(m_pPane1->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
 			break;
 		}
 
