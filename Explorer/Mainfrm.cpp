@@ -164,7 +164,8 @@ void CMainFrame::OnSetFocus()
 	CFrame::OnSetFocus();
 
 	// Pass the focus back to the control that had it before
-	SetFocus(m_MainView.GetOldFocus());
+	if (m_MainView.GetOldFocus())
+		SetFocus(m_MainView.GetOldFocus());
 }
 
 void CMainFrame::SetButtons()
