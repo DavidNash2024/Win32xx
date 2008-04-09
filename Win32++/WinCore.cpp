@@ -1095,11 +1095,24 @@ namespace Win32xx
 				if (lr) return lr;
 
 				// Do Notification reflection if it came from a CWnd object
-				CWnd* WndFrom = FromHandle(((LPNMHDR)lParam)->hwndFrom);
+				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
+				CWnd* WndFrom = FromHandle(hwndFrom);
 				if (WndFrom != NULL)
 				{
 					lr = WndFrom->OnNotifyReflect(wParam, lParam);
 					if (lr) return lr;
+				}
+
+				if (m_hWnd != ::GetParent(hwndFrom))
+				{
+					// Some controls (eg ListView) have child windows. 
+					// Reflect those notifications too.
+					CWnd* WndFromParent = FromHandle(GetParent(hwndFrom));
+					if (WndFromParent != NULL)
+					{
+						lr = WndFromParent->OnNotifyReflect(wParam, lParam);
+						if (lr) return lr;
+					}
 				}
 
 				// Handle user notifications
