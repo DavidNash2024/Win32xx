@@ -1,5 +1,5 @@
 // Win32++  Version 6.01
-// Released: 20th March, 2008 by:
+// Released: 10th April, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -153,7 +153,7 @@ namespace Win32xx
 
 				if (m_hWnd != ::GetParent(hwndFrom))
 				{
-					// Some controls (eg ListView) have child windows. 
+					// Some controls (eg ListView) have child windows.
 					// Reflect those notifications too.
 					CWnd* WndFromParent = FromHandle(GetParent(hwndFrom));
 					if (WndFromParent != NULL)

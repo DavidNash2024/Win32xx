@@ -1,5 +1,5 @@
 // Win32++  Version 6.01
-// Released: 20th March, 2008 by:
+// Released: 10th April, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

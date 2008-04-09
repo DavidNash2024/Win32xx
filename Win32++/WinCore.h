@@ -1,5 +1,5 @@
 // Win32++  Version 6.01
-// Released: 20th March, 2008 by:
+// Released: 10th April, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -69,7 +69,7 @@
   #define DWORD_PTR DWORD
 #endif
 
-// Remove pointless warning messages 
+// Remove pointless warning messages
 #ifdef _MSC_VER
   #pragma warning (disable : 4511) // copy operator could not be generated
   #pragma warning (disable : 4512) // assignment operator could not be generated
@@ -480,8 +480,8 @@ namespace Win32xx
 		tString tstr;
   #ifdef UNICODE
 		int len = 1 + strlen(s);
-		
-		TCHAR* t = new TCHAR[len];	
+
+		TCHAR* t = new TCHAR[len];
 		if (NULL == t) throw std::bad_alloc();
 
 		mbstowcs(t, s, len);
@@ -499,7 +499,7 @@ namespace Win32xx
 		std::string str;
   #ifdef UNICODE
 		int len = 1 + lstrlen(t);
-		
+
 		char* c = new char[len];
 		if (NULL == c) throw std::bad_alloc();
 

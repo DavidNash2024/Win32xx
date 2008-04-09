@@ -1,5 +1,5 @@
 // Win32++  Version 6.01
-// Released: 20th March, 2008 by:
+// Released: 10th April, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -272,7 +272,7 @@ namespace Win32xx
 		}
 	}
 
-	void CPropertyPage::SetTitle(LPCTSTR szTitle) 
+	void CPropertyPage::SetTitle(LPCTSTR szTitle)
 	{
 		if (szTitle)
 		{
@@ -284,7 +284,7 @@ namespace Win32xx
 			m_Title.erase();
 			m_PSP.dwFlags &= ~PSP_USETITLE;
 		}
-		
+
 		m_PSP.pszTitle = m_Title.c_str();
 	}
 
@@ -728,7 +728,7 @@ namespace Win32xx
 			m_Title.erase();
 			m_PSH.dwFlags &= ~PSH_PROPTITLE;
 		}
-		
+
 		m_PSH.pszCaption = m_Title.c_str();
 	}
 

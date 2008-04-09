@@ -1,5 +1,5 @@
 // Win32++  Version 6.01
-// Released: 20th March, 2008 by:
+// Released: 10th April, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -134,9 +134,9 @@ namespace Win32xx
 	{
 		// Register a default window class so we can get the callback
 		// address of CWnd::StaticWindowProc
-		
+
 		WNDCLASS wcDefault = {0};
-		
+
 		LPCTSTR szClassName = _T("Win32++ Window");
 		wcDefault.hInstance	= GetApp()->GetInstanceHandle();
 		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
@@ -148,10 +148,10 @@ namespace Win32xx
 			throw CWinException(_T("CWinApp::DefaultClass ... Failed to set Default class"));
 
 		ZeroMemory(&wcDefault, sizeof(wcDefault));
-		
+
 		if (!::GetClassInfo(GetApp()->GetInstanceHandle(), szClassName, &wcDefault))
 			throw CWinException(_T("CWinApp::DefaultClass ... Failed to get Default class info"));
-		
+
 		// Save the callback address of CWnd::StaticWindowProc
 		m_Callback = wcDefault.lpfnWndProc;
 	}
@@ -338,7 +338,7 @@ namespace Win32xx
 				if (m_PrevWindowProc)
 				{
 					// Store the CWnd pointer in the HWND map
-					AddToMap();				
+					AddToMap();
 					return TRUE;
 				}
 				else
@@ -1105,7 +1105,7 @@ namespace Win32xx
 
 				if (m_hWnd != ::GetParent(hwndFrom))
 				{
-					// Some controls (eg ListView) have child windows. 
+					// Some controls (eg ListView) have child windows.
 					// Reflect those notifications too.
 					CWnd* WndFromParent = FromHandle(GetParent(hwndFrom));
 					if (WndFromParent != NULL)
