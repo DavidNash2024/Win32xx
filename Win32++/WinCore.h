@@ -78,6 +78,9 @@
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
   #define _CRT_SECURE_NO_WARNINGS  // eliminate deprecation warnings for VS2005
 #endif // _MSC_VER
+#ifdef __BORLANDC__
+  #pragma option -w-8027		   // function not expanded inline
+#endif
 
 // Required for VS 2008 (fails on XP and Win2000 without this fix)
 #ifndef _WIN32_WINNT
