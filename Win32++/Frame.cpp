@@ -2341,7 +2341,7 @@ namespace Win32xx
 	//
 	CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_StatusText(_T("Ready")),
-						m_pAboutDialog(NULL), m_himlMenu(NULL), m_himlMenuDis(NULL), m_hMenu(NULL), m_pView(NULL)
+						 m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));

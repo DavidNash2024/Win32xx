@@ -105,7 +105,29 @@ namespace Win32xx
 			return (BOOL)OnQuerySiblings(wParam, lParam);
 
 		case WM_NOTIFY:
-			return (BOOL)OnNotify(wParam, lParam);
+			{
+				// Do Notification reflection if it came from a CWnd object
+				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
+				CWnd* WndFrom = FromHandle(hwndFrom);
+				if (WndFrom != NULL)
+				{
+					BOOL bReturn = (BOOL)WndFrom->OnNotifyReflect(wParam, lParam);
+					if (bReturn) return TRUE;
+				}
+
+				if (m_hWnd != ::GetParent(hwndFrom))
+				{
+					// Some controls (eg ListView) have child windows.
+					// Reflect those notifications too.
+					CWnd* WndFromParent = FromHandle(GetParent(hwndFrom));
+					if (WndFromParent != NULL)
+					{
+						BOOL bReturn = (BOOL)WndFromParent->OnNotifyReflect(wParam, lParam);
+						if (bReturn) return TRUE;
+					}
+				}
+			}
+			return (TRUE == OnNotify(wParam, lParam) );
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
