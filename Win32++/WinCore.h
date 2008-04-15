@@ -114,15 +114,6 @@ namespace Win32xx {}
   using namespace Win32xx;
 #endif
 
-///////////////////////////////////////////
-// Some useful type declarations and macros
-//
-
-typedef std::basic_string<TCHAR> tString;
-#ifndef _WIN32_WCE
-  typedef std::basic_stringstream<TCHAR> tStringStream;
-#endif
-
 // Define min and max for Dev-C++ compatibility
 #ifndef max
   #define max(a,b)            (((a) > (b)) ? (a) : (b))
@@ -134,6 +125,14 @@ typedef std::basic_string<TCHAR> tString;
 
 namespace Win32xx
 {
+	///////////////////////////////////////////
+	// Some useful type declarations and macros
+	//
+	typedef std::basic_string<TCHAR> tString;
+	#ifndef _WIN32_WCE
+		typedef std::basic_stringstream<TCHAR> tStringStream;
+	#endif
+
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	//  we use an inline instead of a macro for TRACE to avoid C4390 warnings
 	inline void TRACE(LPCTSTR str)
