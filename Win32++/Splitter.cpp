@@ -287,13 +287,7 @@ namespace Win32xx
 
 		if (0 != m_Bar.GetHwnd())
 		{
-
-	#ifdef SetClassLongPtr
 			SetClassLongPtr(m_Bar.GetHwnd(), GCLP_HBRBACKGROUND, (LONG_PTR)m_hbrBackground);
-	#else
-			SetClassLong(m_Bar.GetHwnd(), GCL_HBRBACKGROUND, (LONG)m_hbrBackground);
-	#endif
-
 		}
 	}
 

@@ -401,7 +401,7 @@ namespace ShellWrapper
 	DWORD_PTR Cpidl::SHGetFileInfo(DWORD dwFileAttributes, SHFILEINFO& sfi, UINT uFlags)
 	{
 		LPITEMIDLIST pidl = m_pidl;
-		return ::SHGetFileInfo((LPCTSTR)pidl, dwFileAttributes, &sfi, sizeof(SHFILEINFO), uFlags);
+		return (DWORD_PTR)::SHGetFileInfo((LPCTSTR)pidl, dwFileAttributes, &sfi, sizeof(SHFILEINFO), uFlags);
 	}
 
 	void Cpidl::Copy(const Cpidl& cpidlSource)

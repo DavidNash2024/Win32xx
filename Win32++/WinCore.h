@@ -65,9 +65,6 @@
 #ifndef WINCORE_H
 #define WINCORE_H
 
-#ifndef DWORD_PTR
-  #define DWORD_PTR DWORD
-#endif
 
 // Remove pointless warning messages
 #ifdef _MSC_VER
@@ -104,6 +101,32 @@
 #include <shlwapi.h>
 #ifndef _WIN32_WCE	// Windows CE doesn't support streams
   #include <sstream>
+#endif
+
+// For compilers lacking Win64 support
+#ifndef  GetWindowLongPtr
+  #define GetWindowLongPtr   GetWindowLong
+  #define SetWindowLongPtr   SetWindowLong
+  #define GWLP_WNDPROC       GWL_WNDPROC
+  #define GWLP_HINSTANCE     GWL_HINSTANCE
+  #define GWLP_ID            GWL_ID
+  #define GWLP_USERDATA      GWL_USERDATA
+  #define DWLP_DLGPROC       DWL_DLGPROC
+  #define DWLP_MSGRESULT     DWL_MSGRESULT
+  #define DWLP_USER          DWL_USER
+  #define DWORD_PTR          DWORD
+  #define LONG_PTR           LONG
+#endif
+#ifndef GetClassLongPtr
+  #define GetClassLongPtr    GetClassLong
+  #define SetClassLongPtr    SetClassLong
+  #define GCLP_HBRBACKGROUND GCL_HBRBACKGROUND
+  #define GCLP_HCURSOR       GCL_HCURSOR
+  #define GCLP_HICON         GCL_HICON
+  #define GCLP_HICONSM       GCL_HICONSM
+  #define GCLP_HMODULE       GCL_HMODULE
+  #define GCLP_MENUNAME      GCL_MENUNAME
+  #define GCLP_WNDPROC       GCL_WNDPROC 
 #endif
 
 

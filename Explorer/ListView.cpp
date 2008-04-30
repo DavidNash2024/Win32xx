@@ -422,7 +422,7 @@ LRESULT CListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	case NM_RETURN:
 		{
 			//get the item that has the focus
-			LRESULT nItem = ::SendMessage(m_hWnd, LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0));
+			int nItem = (int)::SendMessage(m_hWnd, LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0));
 
 			if(nItem != -1)
 				DoDefault(nItem);

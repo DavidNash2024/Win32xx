@@ -403,9 +403,9 @@ namespace Win32xx
 		::GetClassName(m_hWndParent, ClassName, 32);
 		if (0 == lstrcmp(ClassName, REBARCLASSNAME))
 		{
-			DWORD style = ::GetWindowLong(m_hWnd, GWL_STYLE);
+			DWORD style = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 			style |= CCS_NODIVIDER | CCS_NORESIZE;
-			::SetWindowLong(m_hWnd, GWL_STYLE, style);
+			::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
 		}
 	}
 

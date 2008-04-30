@@ -58,7 +58,7 @@ namespace Win32xx
 		m_PSP.hInstance     = GetApp()->GetResourceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
 		m_PSP.pszTitle      = m_Title.c_str();
-		m_PSP.pfnDlgProc    = CPropertyPage::StaticDialogProc;
+		m_PSP.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
 		m_PSP.lParam        = (LPARAM)this;
 		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
 		SetTitle(szTitle);
@@ -164,8 +164,7 @@ namespace Win32xx
 		// Override this function in your derived class if required.
 
 		// Set the return value for this notification
-		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
-
+		SetWindowLongPtr(m_hWnd, DWLP_MSGRESULT, Validate());
 	}
 
 	void CPropertyPage::OnCancel()
@@ -207,7 +206,8 @@ namespace Win32xx
 		// It provides an opportunity to validate the page contents before it's closed.
 
 		// Set the return value for this notification
-		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
+		SetWindowLongPtr(m_hWnd, DWLP_MSGRESULT, Validate());
+
 	}
 
 	void CPropertyPage::OnOK()
@@ -216,7 +216,7 @@ namespace Win32xx
 		// Override this function in your derived class if required.
 
 		// Set the return value for this notification
-		SetWindowLong(m_hWnd, DWL_MSGRESULT, Validate());
+		SetWindowLongPtr(m_hWnd, DWLP_MSGRESULT, Validate());
 	}
 
 	void CPropertyPage::OnSetActive()
@@ -692,9 +692,9 @@ namespace Win32xx
 		// Remove system menu for wizards
 		if (IsWizard())
 		{
-			DWORD dwStyle = GetWindowLong(m_hWnd, GWL_STYLE);
+			DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 			dwStyle &= ~WS_SYSMENU;
-			::SetWindowLong(m_hWnd, GWL_STYLE, dwStyle);
+			::SetWindowLongPtr(m_hWnd, GWL_STYLE, dwStyle);
 		}
 	}
 
