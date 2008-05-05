@@ -1,5 +1,5 @@
-// Win32++  Version 6.01
-// Released: 10th April, 2008 by:
+// Win32++  Version 6.02
+// Released: 7th May, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -126,7 +126,7 @@
   #define GCLP_HICONSM       GCL_HICONSM
   #define GCLP_HMODULE       GCL_HMODULE
   #define GCLP_MENUNAME      GCL_MENUNAME
-  #define GCLP_WNDPROC       GCL_WNDPROC 
+  #define GCLP_WNDPROC       GCL_WNDPROC
 #endif
 
 
