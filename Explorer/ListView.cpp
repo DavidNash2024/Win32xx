@@ -613,26 +613,26 @@ void CListView::SetImageLists()
 
 void CListView::ViewLargeIcons()
 {
-	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
-	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
+	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
 }
 
 void CListView::ViewSmallIcons()
 {
-	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
+	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
 }
 
 void CListView::ViewList()
 {
-	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
-	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
+	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
 }
 
 void CListView::ViewReport()
 {
-	DWORD dwStyle = ::GetWindowLong(m_hWnd, GWL_STYLE);
-	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 }
 
 LRESULT CListView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
