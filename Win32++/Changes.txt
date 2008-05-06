@@ -5,9 +5,13 @@ New Features
 ------------
 * Added support for x64 applications.
 
-Win32++ can now be compiled as a 64 bit application.  The manifest file has 
+Win32++ can now be used to build 64 bit applications. The manifest file has 
 been modified to support both 32bit and 64bit applications. The new manifest
-should be used for 64 bit applications which use common controls.
+should be used for any 64 bit applications that use common controls.
+
+Users are encouraged to use the modern Win64 API functions like:
+GetWindowLongPtr, SetWindowLongPtr, GetClassLongPtr and SetClassLongPtr.
+Win32++ will convert these back to their Win32 API counterparts if required.
 
 
 Version 6.01
