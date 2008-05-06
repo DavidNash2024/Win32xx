@@ -358,7 +358,7 @@ namespace Win32xx
 		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
-		virtual void DrawMenuText(HDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
+		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);

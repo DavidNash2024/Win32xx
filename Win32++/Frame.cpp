@@ -2721,7 +2721,7 @@ namespace Win32xx
 		DrawDC.DetachDC();
 	}
 
-	void CFrame::DrawMenuText(HDC DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
+	void CFrame::DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
 	{
 		// find the position of tab character
 		int nTab = -1;
