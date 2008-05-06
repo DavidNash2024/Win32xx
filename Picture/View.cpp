@@ -52,7 +52,7 @@ void CView::OnInitialUpdate()
 {
 	// Set the window background to black
 	m_hBrush = ::CreateSolidBrush(RGB(0,0,0));
-	::SetClassLong(m_hWnd, GCL_HBRBACKGROUND, (LONG)m_hBrush);
+	::SetClassLongPtr(m_hWnd, GCLP_HBRBACKGROUND, (LONG_PTR)m_hBrush);
 
 	// Load picture at startup
 	TCHAR szPath[MAX_STRING_SIZE];
