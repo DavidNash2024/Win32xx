@@ -41,13 +41,11 @@
 namespace Win32xx
 {
 
-	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
-		m_hPenOld(0), m_IsCopy(FALSE)
+	CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0)
 	{
 	}
 
-	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0),
-		m_hPenOld(0), m_IsCopy(FALSE)
+	CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0)
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
@@ -63,19 +61,6 @@ namespace Win32xx
 		// CDC MyCDC = ::GetDC(SomeHWND);
 	}
 
-	CDC::CDC(const CDC& rhs)	// Copy constructor
-	{
-		m_hBitmapOld = rhs.m_hBitmapOld;
-		m_hBrushOld  = rhs.m_hBrushOld;
-		m_hDC		 = rhs.m_hDC;
-		m_hFontOld	 = rhs.m_hFontOld;
-		m_hPenOld    = rhs.m_hPenOld;
-
-		// This CDC is a copy, so we won't need to delete GDI resources
-		//  in the destructor
-		m_IsCopy     = TRUE;
-	}
-
 	void CDC::operator = (const HDC hDC)
 	{
 		AttachDC(hDC);
@@ -83,8 +68,7 @@ namespace Win32xx
 
 	CDC::~CDC()
 	{
-		// We don't delete the CDC's resources if the CDC is just a copy
-		if ((m_hDC) && !m_IsCopy)
+		if (m_hDC)
 		{
 			// Delete any GDI objects belonging to this CDC
 			if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
@@ -94,13 +78,13 @@ namespace Win32xx
 
 			// We need to release a Window DC, and delete a memory DC
 
-#ifndef _WIN32_WCE
+	#ifndef _WIN32_WCE
 			HWND hwnd = ::WindowFromDC(m_hDC);
 			if (hwnd) ::ReleaseDC(hwnd, m_hDC);
 			else      ::DeleteDC(m_hDC);
-#else
+	#else
 			::DeleteDC(m_hDC);
-#endif
+	#endif			
 		}
 	}
 

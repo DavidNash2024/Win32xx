@@ -97,7 +97,6 @@ namespace Win32xx
 		CDC(HDC hDC);
 		void operator = (const HDC hDC);
 		virtual ~CDC();
-		CDC(const CDC& rhs);	// Copy constructor
 
 		virtual void AttachDC(HDC hDC);
 		virtual HDC  DetachDC();
@@ -153,13 +152,13 @@ namespace Win32xx
 
 	private:
 		CDC& operator = (const CDC&);	// Disable assignment operator
+		CDC(const CDC&);				// Disable copy constructor
 
 		HDC m_hDC;
 		HBITMAP m_hBitmapOld;
 		HBRUSH m_hBrushOld;
 		HFONT m_hFontOld;
 		HPEN m_hPenOld;
-		BOOL m_IsCopy;
 	};
 
 } // namespace Win32xx
