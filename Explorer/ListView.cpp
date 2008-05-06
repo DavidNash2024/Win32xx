@@ -620,7 +620,7 @@ void CListView::ViewLargeIcons()
 void CListView::ViewSmallIcons()
 {
 	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
-	::SetWindowLong(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
+	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
 }
 
 void CListView::ViewList()
