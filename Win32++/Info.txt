@@ -70,8 +70,7 @@ Win32++ is Unicode compliant and can therefore be used to develop Unicode applic
 Users are advised that only NT based operating systems (namely NT, Win2000, XP, Vista etc.)
 support Unicode applications.
 
-Win32++ is intended to be 64bit compliant, and should be capable of generating 64bit code.
-This feature has not been tested as yet.
+Win32++ is supports 64bit compilers, and can be used to develop 64bit code.
 
 Directory Structure
 ===================
