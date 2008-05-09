@@ -2965,7 +2965,10 @@ namespace Win32xx
 			// draw separator
 			RECT rcSep = rc;
 			rcSep.left = BarWidth;
-			SolidFill(DrawDC, RGB(255,255,255), &rcSep);
+			if (m_ThemeMenu.UseThemes)
+				SolidFill(DrawDC, RGB(255,255,255), &rcSep);
+			else
+				SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
 			rcSep.left = BarWidth + 2;
 			::DrawEdge(DrawDC, &rcSep,  EDGE_ETCHED, BF_TOP);
@@ -2994,7 +2997,10 @@ namespace Win32xx
 			{
 				// draw non-selected item background
 				rcDraw.left = BarWidth;
-				SolidFill(DrawDC, RGB(255,255,255), &rcDraw);
+				if (m_ThemeMenu.UseThemes)
+					SolidFill(DrawDC, RGB(255,255,255), &rcDraw);
+				else
+					SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcDraw);
 			}
 
 			if (bChecked)
