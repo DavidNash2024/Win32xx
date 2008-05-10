@@ -93,11 +93,11 @@ namespace Win32xx
 			{
 				// This CDC is just a temporary clone, created by the copy constructor
                 // so pass members back to the original
-				m_pCopiedFrom->m_hPenOld		= m_hPenOld;
+				m_pCopiedFrom->m_hPenOld	= m_hPenOld;
 				m_pCopiedFrom->m_hBrushOld	= m_hBrushOld;
 				m_pCopiedFrom->m_hBitmapOld	= m_hBitmapOld;
 				m_pCopiedFrom->m_hFontOld	= m_hFontOld;
-				m_pCopiedFrom->m_hDC			= m_hDC;
+				m_pCopiedFrom->m_hDC		= m_hDC;
 			}
 			else
 			{
