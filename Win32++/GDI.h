@@ -1,5 +1,5 @@
-// Win32++  Version 6.02
-// Released: 7th May, 2008 by:
+// Win32++  Version 6.02a
+// Released: 11th May, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -95,6 +95,7 @@ namespace Win32xx
 	public:
 		CDC();
 		CDC(HDC hDC);
+		CDC(const CDC& rhs);				// Copy constructor
 		void operator = (const HDC hDC);
 		virtual ~CDC();
 
@@ -152,13 +153,13 @@ namespace Win32xx
 
 	private:
 		CDC& operator = (const CDC&);	// Disable assignment operator
-		CDC(const CDC&);				// Disable copy constructor
-
 		HDC m_hDC;
 		HBITMAP m_hBitmapOld;
 		HBRUSH m_hBrushOld;
 		HFONT m_hFontOld;
 		HPEN m_hPenOld;
+		BOOL m_IsCopy;
+		CDC* m_pCopiedFrom;
 	};
 
 } // namespace Win32xx
