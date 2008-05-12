@@ -1,3 +1,7 @@
+Version 6.02a
+=============
+Corrects a problem compiling Win32++ with Dev-C++ (or MinGW).
+
 Version 6.02
 ============
 
