@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<PersonalityInfo>
 		<Option>
@@ -153,7 +153,6 @@
         <FILE FILENAME="main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="MainWin.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MainWin" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="SubApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="SubApp" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\WinCore.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="WinCore" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\WinCore.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="Button.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="MainWin.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>

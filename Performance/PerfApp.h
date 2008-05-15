@@ -7,9 +7,9 @@
 #ifndef PERFAPP_H
 #define PERFAPP_H
 
+#include "MainWnd.h"
 #include <string>
 #include <sstream>
-#include "MainWnd.h"
 
 
 class CPerformanceApp : public CWinApp

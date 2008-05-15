@@ -6,9 +6,10 @@
 #ifndef MAINWND_H
 #define MAINWND_H
 
-#include <vector>
+
 #include "TestWnd.h"
 #include "MyDialog.h"
+#include <vector>
 
 
 class CMainWindow : public CWnd
@@ -16,7 +17,7 @@ class CMainWindow : public CWnd
 public:
 	CMainWindow();
 	virtual ~CMainWindow();
-	virtual void Create();
+	virtual HWND Create(HWND hParent = 0);
 	virtual void CreateTestWindows(int nWindows);
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();

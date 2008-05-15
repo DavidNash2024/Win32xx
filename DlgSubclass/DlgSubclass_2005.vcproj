@@ -256,15 +256,7 @@
 			Name="Win32+"
 			>
 			<File
-				RelativePath="..\Win32++\Dialog.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\Win32++\Dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Win32++\WinCore.cpp"
 				>
 			</File>
 			<File

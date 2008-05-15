@@ -2,8 +2,8 @@
 // TestWnd.cpp
 //  Definitions for the CTestWindow class
 
-#include "PerfApp.h"
 #include "TestWnd.h"
+#include "PerfApp.h"
 
 
 CTestWindow::CTestWindow()

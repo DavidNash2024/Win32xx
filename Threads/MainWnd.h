@@ -6,8 +6,10 @@
 #ifndef MAINWND_H
 #define MAINWND_H
 
-#include <vector>
+
 #include "../Win32++/WinCore.h"
+#include <vector>
+
 
 // Forward declaration of the CThread class
 class CThread;
@@ -17,7 +19,7 @@ class CMainWindow : public CWnd
 public:
 	CMainWindow();
 	virtual ~CMainWindow();
-	virtual void Create();
+	virtual HWND Create(HWND hParent = 0);
 	virtual void OnAllWindowsCreated();
 
 protected:

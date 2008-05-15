@@ -1,7 +1,7 @@
 [Project]
 FileName=Performance.dev
 Name=Performance
-UnitCount=15
+UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
@@ -40,16 +40,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\Win32++\WinCore.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
 FileName=MainWnd.cpp
 CompileCpp=1
 Folder=Source
@@ -59,7 +49,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
+[Unit3]
 FileName=MainWnd.h
 CompileCpp=1
 Folder=Header
@@ -69,8 +59,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
-FileName=resource.h
+[Unit4]
+FileName=TestWnd.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -79,7 +69,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=Performance.rc
 CompileCpp=1
 Folder=Resource
@@ -89,7 +79,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=..\Win32++\Dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -99,10 +89,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
-FileName=MyDialog.cpp
+[Unit9]
+FileName=MyDialog.h
 CompileCpp=1
-Folder=Source
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
+FileName=..\Win32++\WinCore.h
+CompileCpp=1
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -110,9 +110,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=MyDialog.h
+FileName=TestWnd.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -138,9 +138,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit12]
-FileName=..\Win32++\WinCore.h
+FileName=PerfApp.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -148,8 +148,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=TestWnd.cpp
-Folder=Source
+FileName=PerfApp.h
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -198,7 +198,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=TestWnd.h
+FileName=resource.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -208,9 +208,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\Win32++\Dialog.cpp
+FileName=MyDialog.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

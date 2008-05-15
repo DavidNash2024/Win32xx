@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<PersonalityInfo>
 		<Option>
@@ -180,10 +180,6 @@
         </optionset>
       </project>
       <FILELIST>
-        <FILE FILENAME="..\Win32++\Dialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Dialog" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\Frame.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Frame" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\WinCore.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="WinCore" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\GDI.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="GDI" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\Dialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\Frame.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\GDI.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
@@ -203,7 +199,6 @@
         <FILE FILENAME="ShellWrapper.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="TreeView.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="TreeView" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="TreeView.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\Splitter.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Splitter" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\Splitter.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>

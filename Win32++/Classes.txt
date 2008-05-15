@@ -4,33 +4,33 @@ The classes which form Win32++ are located in the following files:
 Files             |  Classes         | Operating Systems 
 ==================+==================+==================
 Wincore.h         | CCriticalSection | Win32 and WinCE
-Wincore.cpp       | CWinApp          |
+                  | CWinApp          |
                   | CWnd             |
 ------------------+------------------+------------------                
 Dialog.h          | CDialog          | Win32 and WinCE
-Dialog.cpp        |                  |
+                  |                  |
 ------------------+------------------+------------------
 GDI.h             | CDC              | Win32 and WinCE
-GDI.cpp           |                  |
+                  |                  |
 ------------------+------------------+------------------
 PropertySheet.h   | CPropertySheet   | Win32 and WinCE
-PropertySheet.cpp | CPropertyPage    |
+                  | CPropertyPage    |
 ------------------+------------------+------------------
 Frame.h           | CRebar           | Win32 only
-Frame.cpp         | CStatusbar       |
+                  | CStatusbar       |
                   | CToolbar         |
                   | CMenubar         |
                   | CFrame           |
 ------------------+------------------+------------------
 MDI.h             | CMDIFrame        | Win32 only
-MDI.cpp           | CMDIClient       |
+                  | CMDIClient       |
                   | CMDIChild        |   
 ------------------+------------------+------------------
 Splitter.h        | CSplitter        | Win32 only
-Splitter.cpp      |                  |
+                  |                  |
 ------------------+------------------+------------------
 WceFrame.h        | CWceFrame        | WinCE only
-WceFrame.cpp      | CCmdbar          |                 
+                  | CCmdbar          |                 
                  
 
 

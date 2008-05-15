@@ -328,15 +328,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\Win32++\Dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Win32++\Frame.cpp"
 				>
 			</File>
 			<File
@@ -344,23 +336,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\Win32++\GDI.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Splitter.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\Win32++\Splitter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Win32++\WinCore.cpp"
 				>
 			</File>
 			<File

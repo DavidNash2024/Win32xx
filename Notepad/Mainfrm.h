@@ -6,9 +6,9 @@
 #define MAINFRM_H
 
 
+#include "../Win32++/frame.h"
 #include <string>
 #include <sstream>
-#include "../Win32++/frame.h"
 #include "RichView.h"
 
 // required for Dev-C++

@@ -169,31 +169,16 @@
 				RelativePath="..\Win32++\Default_Resource.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\Dialog.h">
-			</File>
-			<File
-				RelativePath="..\Win32++\Frame.cpp">
 			</File>
 			<File
 				RelativePath="..\Win32++\Frame.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\GDI.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\MDI.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\MDI.h">
-			</File>
-			<File
-				RelativePath="..\Win32++\WinCore.cpp">
 			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.h">

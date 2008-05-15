@@ -93,37 +93,37 @@ Components of Win32++
  Files            |  Classes         | Operating Systems | Description
 ==================+==================+===================+=====================
 Wincore.h         | CCriticalSection | Win32 and WinCE   | The core set of 
-Wincore.cpp       | CWinApp          |                   | classes required for
+                  | CWinApp          |                   | classes required for
                   | CWinException    |                   | all Win32++ 
                   | CWnd             |                   | applications.
 ------------------+------------------+-------------------+---------------------                
 Dialog.h          | CDialog          | Win32 and WinCE   | Adds dialog support.
-Dialog.cpp        |                  |                   |
+                  |                  |                   |
 ------------------+------------------+-------------------+---------------------
 GDI.h             | CDC              | Win32 and WinCE   | A helper class for 
-GDI.cpp           |                  |                   | GDI graphics.
+                  |                  |                   | GDI graphics.
 ------------------+------------------+-------------------+---------------------
 PropertySheet.h   | CPropertySheet   | Win32 and WinCE   | Adds property sheet
-PropertySheet.cpp | CPropertyPage    |                   | support.
+                  | CPropertyPage    |                   | support.
 ------------------+------------------+-------------------+---------------------
 Socket.h          | CSocket          | Win32 and WinCE   | Adds network  
-Socket.cpp        |                  |                   | support.
+                  |                  |                   | support.
 ------------------+------------------+-------------------+---------------------
 Frame.h           | CRebar           | Win32 only        | Adds support for
-Frame.cpp         | CStatusbar       |                   | frames. Includes a
+                  | CStatusbar       |                   | frames. Includes a
                   | CToolbar         |                   | toolbar and menubar
                   | CMenubar         |                   | inside a rebar, and 
                   | CFrame           |                   | a statusbar.
 ------------------+------------------+-------------------+---------------------
 MDI.h             | CMDIFrame        | Win32 only        | Adds support for MDI
-MDI.cpp           | CMDIClient       |                   | frames.
+                  | CMDIClient       |                   | frames.
                   | CMDIChild        |                   |
 ------------------+------------------+-------------------+---------------------
 Splitter.h        | CSplitter        | Win32 only        | Adds support for
-Splitter.cpp      |                  |                   | splitter windows.
+                  |                  |                   | splitter windows.
 ------------------+------------------+-------------------+---------------------
 WceFrame.h        | CWceFrame        | WinCE only        | Adds support for
-WceFrame.cpp      | CCmdbar          |                   | frames in WinCE.
+                  | CCmdbar          |                   | frames in WinCE.
 ------------------+------------------+-------------------+---------------------                 
 
 

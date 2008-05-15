@@ -117,7 +117,6 @@
 				</Compiler>
 				<Linker>
 					<Add library="comctl32" />
-					<Add directory="C:\Dev-Cpp\lib" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -132,7 +131,6 @@
 				</Compiler>
 				<Linker>
 					<Add library="comctl32" />
-					<Add directory="C:\Dev-Cpp\lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -151,15 +149,10 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="..\Win32++\Default_Resource.h" />
-		<Unit filename="..\Win32++\Dialog.cpp" />
 		<Unit filename="..\Win32++\Dialog.h" />
-		<Unit filename="..\Win32++\Frame.cpp" />
 		<Unit filename="..\Win32++\Frame.h" />
-		<Unit filename="..\Win32++\GDI.cpp" />
 		<Unit filename="..\Win32++\GDI.h" />
-		<Unit filename="..\Win32++\MDI.cpp" />
 		<Unit filename="..\Win32++\MDI.h" />
-		<Unit filename="..\Win32++\WinCore.cpp" />
 		<Unit filename="..\Win32++\WinCore.h" />
 		<Extensions>
 			<code_completion />

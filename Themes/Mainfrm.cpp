@@ -106,7 +106,7 @@ void CMainFrame::OnCreate()
 	if (IsRebarUsed())
 	{	
 		// Set the icons for popup menu items
-		AddMenuIcons(m_ToolbarData, RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
+		SetMenuIcons(m_ToolbarData, RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
 		
 		//Set our theme
 		ChooseTheme(IDM_BLUE);

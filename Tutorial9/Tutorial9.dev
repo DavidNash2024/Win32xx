@@ -1,7 +1,7 @@
 [Project]
-FileName=Tutorial9_DEBUG.dev
+FileName=Tutorial9.dev
 Name=Tutorial9
-UnitCount=18
+UnitCount=14
 Type=0
 Ver=1
 ObjFiles=
@@ -119,16 +119,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\Win32++\WinCore.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
 FileName=..\Win32++\WinCore.h
 CompileCpp=1
 Folder=Win32++
@@ -138,7 +128,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit11]
 FileName=..\Win32++\Default_Resource.h
 CompileCpp=1
 Folder=Win32++
@@ -148,8 +138,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit12]
+FileName=..\Win32++\Dialog.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit13]
-FileName=..\Win32++\Dialog.cpp
+FileName=..\Win32++\Frame.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -159,7 +159,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\Win32++\Dialog.h
+FileName=..\Win32++\GDI.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

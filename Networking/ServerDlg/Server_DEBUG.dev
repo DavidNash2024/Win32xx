@@ -1,7 +1,7 @@
 [Project]
 FileName=Server_DEBUG.dev
 Name=Server
-UnitCount=16
+UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
@@ -80,7 +80,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\..\Win32++\Dialog.h
+FileName=..\..\Win32++\Socket.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -108,7 +108,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit11]
-FileName=..\..\Win32++\Dialog.cpp
+FileName=..\..\Win32++\Dialog.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -168,7 +168,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\..\Win32++\Socket.cpp
+FileName=..\..\Win32++\WinCore.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

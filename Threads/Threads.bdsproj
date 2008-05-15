@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<PersonalityInfo>
 		<Option>
@@ -154,7 +154,6 @@
         <FILE FILENAME="TestWnd.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="TestWnd" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="Thread.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Thread" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="ThreadApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ThreadApp" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\WinCore.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="WinCore" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\WinCore.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="MainWnd.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="resource.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>

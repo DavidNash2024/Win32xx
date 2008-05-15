@@ -140,23 +140,11 @@ SOURCE=.\Resource.rc
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\..\Win32++\Dialog.cpp"
-# End Source File
-# Begin Source File
-
 SOURCE="..\..\Win32++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\Socket.cpp"
-# End Source File
-# Begin Source File
-
 SOURCE="..\..\Win32++\Socket.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\Win32++\WinCore.cpp"
 # End Source File
 # Begin Source File
 

@@ -3,13 +3,13 @@
 //  Definitions for the CMainWindow class
 
 
-#include <string>
-#include <sstream>
+
 #include "ThreadApp.h"
 #include "MainWnd.h"
 #include "Thread.h"
 #include "resource.h"
-
+#include <string>
+#include <sstream>
 
 
 CMainWindow::CMainWindow()
@@ -28,13 +28,13 @@ CMainWindow::~CMainWindow()
 	}
 }
 
-void CMainWindow::Create()
+HWND CMainWindow::Create(HWND hParent)
 {
 	tString str = _T("Main Thread Window");
 	
 	// Create the main window
-	CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		20 , 50, 400, 300, NULL, NULL);
+	return CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+		20 , 50, 400, 300, hParent, NULL);
 }
 
 void CMainWindow::OnCreate()

@@ -1,7 +1,7 @@
 [Project]
 FileName=Client_RELEASE.dev
 Name=Server
-UnitCount=16
+UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
@@ -30,26 +30,6 @@ CompilerSet=0
 CompilerSettings=0000001000000000000000
 
 [Unit5]
-FileName=..\..\Win32++\Socket.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
-FileName=..\..\Win32++\WinCore.h
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-CompileCpp=1
-
-[Unit8]
 FileName=Client.cpp
 CompileCpp=1
 Folder=Source
@@ -59,8 +39,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
-FileName=Client.h
+[Unit7]
+FileName=ClientDialog.cpp
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit8]
+FileName=ClientDialog.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -69,10 +59,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
-FileName=ClientDialog.cpp
+[Unit9]
+FileName=DialogApp.cpp
 CompileCpp=1
 Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
+FileName=DialogApp.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -98,9 +98,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit11]
-FileName=ClientDialog.h
+FileName=main.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -108,9 +108,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=DialogApp.cpp
+FileName=resource.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -128,16 +128,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\..\Win32++\Dialog.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
 FileName=..\..\Win32++\Dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -147,8 +137,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit3]
+FileName=..\..\Win32++\Socket.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit4]
-FileName=..\..\Win32++\Socket.cpp
+FileName=..\..\Win32++\WinCore.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -158,9 +158,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\..\Win32++\WinCore.cpp
+FileName=Client.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -168,11 +168,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=DialogApp.h
+FileName=Resource.rc
 CompileCpp=1
-Folder=Header
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

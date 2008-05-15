@@ -2,11 +2,12 @@
 // View.cpp
 //  Definitions for the CView class
 
-#include <fstream>
+
+#include "view.h"
 #include <Windowsx.h>	// defines GET_X_LPARAM
 #include "resource.h"
-#include "view.h"
 #include "../Win32++/GDI.h"
+
 
 using namespace std;
 

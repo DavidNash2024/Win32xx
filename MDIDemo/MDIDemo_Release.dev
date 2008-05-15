@@ -1,7 +1,7 @@
 [Project]
 FileName=MDIDemo_Release.dev
 Name=MDIDemo
-UnitCount=23
+UnitCount=18
 Type=0
 Ver=1
 ObjFiles=
@@ -190,7 +190,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\Win32++\Dialog.cpp
+FileName=..\Win32++\MDI.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -258,7 +258,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit18]
-FileName=..\Win32++\Frame.cpp
+FileName=..\Win32++\GDI.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

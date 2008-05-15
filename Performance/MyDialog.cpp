@@ -2,8 +2,8 @@
 // MyDialog.cpp
 
 
-#include "PerfApp.h"
 #include "MyDialog.h"
+#include "PerfApp.h"
 #include "resource.h"
 
 

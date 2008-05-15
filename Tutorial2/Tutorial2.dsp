@@ -108,10 +108,6 @@ SOURCE=.\main.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.cpp"
-# End Source File
-# Begin Source File
-
 SOURCE="..\Win32++\WinCore.h"
 # End Source File
 # End Group

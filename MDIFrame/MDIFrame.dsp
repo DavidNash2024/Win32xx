@@ -144,15 +144,7 @@ SOURCE="..\Win32++\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.cpp"
-# End Source File
-# Begin Source File
-
 SOURCE="..\Win32++\Dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\Frame.cpp"
 # End Source File
 # Begin Source File
 
@@ -160,23 +152,11 @@ SOURCE="..\Win32++\Frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\GDI.cpp"
-# End Source File
-# Begin Source File
-
 SOURCE="..\Win32++\GDI.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\MDI.cpp"
-# End Source File
-# Begin Source File
-
 SOURCE="..\Win32++\MDI.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\WinCore.cpp"
 # End Source File
 # Begin Source File
 

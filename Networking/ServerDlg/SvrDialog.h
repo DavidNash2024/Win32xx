@@ -4,8 +4,9 @@
 #ifndef SVRDIALOG_H
 #define SVRDIALOG_H
 
-#include "../../Win32++/Dialog.h"
+
 #include "Server.h"
+#include "../../Win32++/Dialog.h"
 #include "resource.h"
 
 

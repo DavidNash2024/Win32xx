@@ -1,7 +1,7 @@
 [Project]
 FileName=Picture_DEBUG.dev
 Name=Picture
-UnitCount=17
+UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
@@ -147,16 +147,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\Win32++\Dialog.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
 FileName=..\Win32++\Dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -166,8 +156,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit12]
+FileName=..\Win32++\Frame.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit13]
-FileName=..\Win32++\Frame.cpp
+FileName=..\Win32++\GDI.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

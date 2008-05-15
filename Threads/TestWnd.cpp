@@ -3,9 +3,9 @@
 //  Definitions for the CTestWindow class
 
 
-#include "ThreadApp.h"
-#include "TestWnd.h"
 
+#include "TestWnd.h"
+#include "ThreadApp.h"
 
 
 CTestWindow::CTestWindow()

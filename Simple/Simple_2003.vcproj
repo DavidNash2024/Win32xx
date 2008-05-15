@@ -189,9 +189,6 @@
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\Win32++\WinCore.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\WinCore.h">
 			</File>
 		</Filter>

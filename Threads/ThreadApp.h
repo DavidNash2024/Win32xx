@@ -6,9 +6,10 @@
 #ifndef THREADAPP_H
 #define THREADAPP_H
 
+
+#include "MainWnd.h"
 #include <string>
 #include <sstream>
-#include "MainWnd.h"
 
 
 class CThreadApp : public CWinApp

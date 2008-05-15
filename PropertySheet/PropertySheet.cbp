@@ -151,15 +151,10 @@
 		<Unit filename="resource.h" />
 		<Unit filename="resrc1.h" />
 		<Unit filename="..\Win32++\Default_Resource.h" />
-		<Unit filename="..\Win32++\Dialog.cpp" />
 		<Unit filename="..\Win32++\Dialog.h" />
-		<Unit filename="..\Win32++\Frame.cpp" />
 		<Unit filename="..\Win32++\Frame.h" />
-		<Unit filename="..\Win32++\GDI.cpp" />
 		<Unit filename="..\Win32++\GDI.h" />
-		<Unit filename="..\Win32++\PropertySheet.cpp" />
 		<Unit filename="..\Win32++\PropertySheet.h" />
-		<Unit filename="..\Win32++\WinCore.cpp" />
 		<Unit filename="..\Win32++\WinCore.h" />
 		<Extensions>
 			<code_completion />

@@ -231,6 +231,9 @@
 				RelativePath=".\res\Toolbar.bmp">
 			</File>
 			<File
+				RelativePath=".\res\Win32++.manifest">
+			</File>
+			<File
 				RelativePath=".\res\Zapotec.bmp">
 			</File>
 		</Filter>
@@ -238,21 +241,12 @@
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\Win32++\Dialog.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\Dialog.h">
-			</File>
-			<File
-				RelativePath="..\Win32++\WinCore.cpp">
 			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.h">
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\res\Win32++.manifest">
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

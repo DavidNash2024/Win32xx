@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<PersonalityInfo>
 		<Option>
@@ -109,6 +109,7 @@
         <optionset name="all_configurations">
           <property category="node" name="displayname" value="All Configurations"/>
           <property category="win32.*.win32b.bcc32" name="container.SelectedOptimizations.containerenabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="container.SelectedWarnings.containerenabled" value="1"/>
           <property category="win32.*.win32b.bcc32" name="option.H=.arg.1" value="$(BDS)\lib\vcl100.csm"/>
           <property category="win32.*.win32b.bcc32" name="option.H=.arg.merge" value="1"/>
           <property category="win32.*.win32b.bcc32" name="option.H=.enabled" value="0"/>
@@ -126,6 +127,7 @@
           <property category="win32.*.win32b.bcc32" name="option.Od.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.Ve.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.b.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.disablewarns.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.sysdefines.arg.1" value="_RTLDLL"/>
           <property category="win32.*.win32b.bcc32" name="option.sysdefines.arg.2" value="USEPACKAGES"/>
           <property category="win32.*.win32b.bcc32" name="option.sysdefines.arg.3" value="NO_STRICT"/>
@@ -136,6 +138,32 @@
           <property category="win32.*.win32b.bcc32" name="option.tWC.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.tWD.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.tWM.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.w.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wbbf.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wbei.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wcln.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wcod.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wcom.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wdef.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wdpu.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wdsz.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wifr.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wmcc.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wnak.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wnin.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wnod.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wnvf.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wonr.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wpar.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wpia.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wpin.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wrpt.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wrvl.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.wsig.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wstu.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wucp.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wuse.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.wzdi.enabled" value="0"/>
           <property category="win32.*.win32b.dcc32" name="option.I.arg.1" value="..\Win32++"/>
           <property category="win32.*.win32b.dcc32" name="option.I.arg.merge" value="1"/>
           <property category="win32.*.win32b.dcc32" name="option.I.enabled" value="0"/>
@@ -180,10 +208,6 @@
         </optionset>
       </project>
       <FILELIST>
-        <FILE FILENAME="..\Win32++\Dialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Dialog" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\Frame.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Frame" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\WinCore.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="WinCore" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\GDI.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="GDI" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\Dialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\Frame.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\Win32++\GDI.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>

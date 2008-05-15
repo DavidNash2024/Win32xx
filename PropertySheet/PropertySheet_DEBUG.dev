@@ -1,7 +1,7 @@
 [Project]
 FileName=PropertySheet_DEBUG.dev
 Name=PropertySheet
-UnitCount=22
+UnitCount=17
 Type=0
 Ver=1
 ObjFiles=
@@ -119,16 +119,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\Win32++\WinCore.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
 FileName=..\Win32++\WinCore.h
 CompileCpp=1
 Folder=Win32++
@@ -138,7 +128,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit11]
 FileName=..\Win32++\Default_Resource.h
 CompileCpp=1
 Folder=Win32++
@@ -148,17 +138,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
-FileName=..\Win32++\Dialog.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit14]
+[Unit12]
 FileName=..\Win32++\Dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -168,10 +148,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
-FileName=..\Win32++\Frame.cpp
+[Unit13]
+FileName=..\Win32++\Frame.h
 CompileCpp=1
 Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=MyPropertySheet.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=MyPropertySheet.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -197,7 +197,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=..\Win32++\Frame.h
+FileName=..\Win32++\PropertySheet.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -207,9 +207,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=MyPropertySheet.h
+FileName=..\Win32++\GDI.h
 CompileCpp=1
-Folder=Header
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

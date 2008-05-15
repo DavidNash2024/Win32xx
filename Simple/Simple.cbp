@@ -146,7 +146,6 @@
 		<Unit filename="View.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
-		<Unit filename="..\Win32++\WinCore.cpp" />
 		<Unit filename="..\Win32++\WinCore.h" />
 		<Extensions>
 			<code_completion />
