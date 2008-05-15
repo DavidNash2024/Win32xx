@@ -74,7 +74,6 @@
 #include "WinCore.h"
 #include "dialog.h"
 #include "GDI.h"
-#include <windowsx.h>
 #include <shlwapi.h>
 #include "Default_Resource.h"
 
@@ -1268,7 +1267,8 @@ namespace Win32xx
 					if (nStyle & TBSTYLE_DROPDOWN)
 					{
 						RECT rcButton = GetItemRect(iButton);
-						int xPos = GET_X_LPARAM(lParam);
+						
+						int xPos = ((int)(short)LOWORD(lParam));
 						if (xPos >= rcButton.right -13)
 						{
 							// DoubleClick on dropdown part of TBSTYLE_DROPDOWN button
@@ -1671,7 +1671,7 @@ namespace Win32xx
 			{
 				// We want to lock the first row in place, but allow other bands to move!
 				// Use move messages to limit the resizing of bands
-				int y = GET_Y_LPARAM(lParam);
+				int y = ((int)(short)HIWORD(lParam));
 
 				if (y <= GetRowHeight(0))
 					return 0L;	// throw this message away
@@ -1685,7 +1685,7 @@ namespace Win32xx
 			if (m_Theme.UseThemes && m_Theme.LockMenuBand)
 			{
 				// Use move messages to limit the resizing of bands
-				int y = GET_Y_LPARAM(lParam);
+				int y = ((int)(short)HIWORD(lParam));
 
 				if (y <= GetRowHeight(0))
 				{
@@ -2191,8 +2191,10 @@ namespace Win32xx
 		GrabFocus();
 		m_nMDIButton = 0;
 		POINT pt;
-		pt.x = GET_X_LPARAM(lParam);
-		pt.y = GET_Y_LPARAM(lParam);
+
+
+		pt.x = ((int)(short)LOWORD(lParam));
+		pt.y = ((int)(short)HIWORD(lParam));
 
 		if (IsMDIFrame())
 		{
@@ -2225,8 +2227,8 @@ namespace Win32xx
 	inline void CMenubar::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		POINT pt;
-		pt.x = GET_X_LPARAM(lParam);
-		pt.y = GET_Y_LPARAM(lParam);
+		pt.x = ((int)(short)LOWORD(lParam));
+		pt.y = ((int)(short)HIWORD(lParam));
 
 		if (IsMDIFrame())
 		{
@@ -2372,8 +2374,8 @@ namespace Win32xx
 		case WM_MOUSEMOVE:
 			{
 				POINT pt = {0};
-				pt.x = GET_X_LPARAM(lParam);
-				pt.y = GET_Y_LPARAM(lParam);
+				pt.x = ((int)(short)LOWORD(lParam));
+				pt.y = ((int)(short)HIWORD(lParam));
 
 				// Skip if mouse hasn't moved
 				if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
@@ -2410,8 +2412,8 @@ namespace Win32xx
 	inline void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		POINT pt;
-		pt.x = GET_X_LPARAM(lParam);
-		pt.y = GET_Y_LPARAM(lParam);
+		pt.x = ((int)(short)LOWORD(lParam));
+		pt.y = ((int)(short)HIWORD(lParam));
 
 		if (IsMDIFrame())
 		{
