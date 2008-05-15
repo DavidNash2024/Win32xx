@@ -57,6 +57,7 @@
 #include "WinCore.h"
 #include <commctrl.h>
 #include <vector>
+#include "Default_Resource.h"
 
 #if defined(WIN32_PLATFORM_PSPC) || defined(WIN32_PLATFORM_WFSP)
   #define SHELL_AYGSHELL

@@ -45,4 +45,4 @@ This information was published by Baryon Lee, in the CodeProject article
 titled "Using WTL with Visual C++ 2005 Express Edition"
 URL:  http://www.codeproject.com/wtl/WTLExpress.asp
 
-This information was tested on Platform SDK version Windows Server 2003 R2
+This information was tested on Platform SDK version Windows Server 2003 SP1
