@@ -327,15 +327,6 @@ namespace Win32xx
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
-	/*	{
-			static CWinApp* pWinApp = 0;
-			if (pWinApp == 0)
-			{
-				pWinApp = pThis;
-			}
-
-			return pWinApp;
-		} */
 		TLSData* SetTlsIndex();
 
 	protected:

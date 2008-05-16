@@ -361,6 +361,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Win32++\Toolbar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Win32++\WinCore.h"
 				>
 			</File>
