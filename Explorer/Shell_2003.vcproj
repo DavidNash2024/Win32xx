@@ -216,6 +216,9 @@
 				RelativePath=".\LeftView.h">
 			</File>
 			<File
+				RelativePath=".\ListView.h">
+			</File>
+			<File
 				RelativePath="Mainfrm.h">
 			</File>
 			<File
@@ -235,6 +238,9 @@
 			</File>
 			<File
 				RelativePath=".\ShellWrapper.h">
+			</File>
+			<File
+				RelativePath=".\TreeView.h">
 			</File>
 		</Filter>
 		<Filter
@@ -260,7 +266,22 @@
 				RelativePath="..\Win32++\GDI.h">
 			</File>
 			<File
+				RelativePath="..\Win32++\ListView.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\Rebar.h">
+			</File>
+			<File
 				RelativePath="..\Win32++\Splitter.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\Statusbar.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\Toolbar.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\TreeView.h">
 			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.h">

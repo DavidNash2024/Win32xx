@@ -7,13 +7,14 @@
 #define LEFTVIEW_H
 
 
+#include "../Win32++/TreeView.h"
 #include <vector>
 #include "ShellWrapper.h"
 
 using namespace ShellWrapper;
 
 
-class CLeftView : public CWnd
+class CLeftView : public CTreeView
 {
 public:
 	CLeftView();

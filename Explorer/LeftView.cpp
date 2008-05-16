@@ -388,8 +388,10 @@ void CLeftView::PreCreate(CREATESTRUCT &cs)
 {
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |
 					TVS_HASBUTTONS | TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS ;
+	
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
-	cs.lpszClass = WC_TREEVIEW;
+
+	CTreeView::PreCreate(cs);
 }
 
 BOOL CLeftView::SelectFromListView(Cpidl& cpidlFull)

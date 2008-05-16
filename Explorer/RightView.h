@@ -6,13 +6,14 @@
 #ifndef RIGHTVIEW_H
 #define RIGHTVIEW_H
 
-//Include WinCore.h first
-#include "../Win32++/WinCore.h"
+
+#include "../Win32++/ListView.h"
 #include <Windowsx.h>
 #include <vector>
 
 
-class CRightView : public CWnd
+
+class CRightView : public CListView
 {
 public:
 	CRightView();
