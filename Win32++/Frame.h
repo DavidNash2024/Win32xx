@@ -37,7 +37,7 @@
 
 ////////////////////////////////////////////////////////
 // Frame.h
-//  Declaration of the CFrame, CStatusbar and CToolbar classes
+//  Declaration of the CFrame and CMenubar classes
 
 // The classes declared in this file support SDI (Single Document Interface)
 // frames on Win32/Win64 operating systems (not Windows CE). For Windows CE,

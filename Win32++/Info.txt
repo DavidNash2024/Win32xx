@@ -109,12 +109,21 @@ PropertySheet.h   | CPropertySheet   | Win32 and WinCE   | Adds property sheet
 Socket.h          | CSocket          | Win32 and WinCE   | Adds network  
                   |                  |                   | support.
 ------------------+------------------+-------------------+---------------------
-Frame.h           | CRebar           | Win32 only        | Adds support for
-                  | CStatusbar       |                   | frames. Includes a
-                  | CToolbar         |                   | toolbar and menubar
-                  | CMenubar         |                   | inside a rebar, and 
-                  | CFrame           |                   | a statusbar.
+Rebar.h           | CRebar           | Win32 and WinCE   | Adds support for a 
+                  |                  |                   | Rebar control.
 ------------------+------------------+-------------------+---------------------
+Statusbar.h       | CStatusbar       | Win32 and WinCE   | Adds support for a
+                  |                  |                   | Status bar control.
+------------------+------------------+-------------------+---------------------
+Toolbar.h         | CToolbar         | Win32 and WinCE   | Adds support for a
+                  |                  |                   | Toolbar control.
+------------------+------------------+-------------------+--------------------- 
+Frame.h           | CMenubar         | Win32 only        | Adds support for
+                  | CFrame           |                   | frames. Includes a
+                  |                  |                   | toolbar and menubar
+                  |                  |                   | inside a rebar, and 
+                  |                  |                   | a statusbar.
+------------------+------------------+-------------------+---------------------               
 MDI.h             | CMDIFrame        | Win32 only        | Adds support for MDI
                   | CMDIClient       |                   | frames.
                   | CMDIChild        |                   |

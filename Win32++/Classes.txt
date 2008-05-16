@@ -1,37 +1,51 @@
 The classes which form Win32++ are located in the following files:
 
 
-Files             |  Classes         | Operating Systems 
-==================+==================+==================
-Wincore.h         | CCriticalSection | Win32 and WinCE
-                  | CWinApp          |
-                  | CWnd             |
-------------------+------------------+------------------                
-Dialog.h          | CDialog          | Win32 and WinCE
-                  |                  |
-------------------+------------------+------------------
-GDI.h             | CDC              | Win32 and WinCE
-                  |                  |
-------------------+------------------+------------------
-PropertySheet.h   | CPropertySheet   | Win32 and WinCE
-                  | CPropertyPage    |
-------------------+------------------+------------------
-Frame.h           | CRebar           | Win32 only
-                  | CStatusbar       |
-                  | CToolbar         |
-                  | CMenubar         |
-                  | CFrame           |
-------------------+------------------+------------------
-MDI.h             | CMDIFrame        | Win32 only
-                  | CMDIClient       |
-                  | CMDIChild        |   
-------------------+------------------+------------------
-Splitter.h        | CSplitter        | Win32 only
-                  |                  |
-------------------+------------------+------------------
-WceFrame.h        | CWceFrame        | WinCE only
-                  | CCmdbar          |                 
-                 
+ Files            |  Classes         | Operating Systems | Description
+==================+==================+===================+=====================
+Wincore.h         | CCriticalSection | Win32 and WinCE   | The core set of 
+                  | CWinApp          |                   | classes required for
+                  | CWinException    |                   | all Win32++ 
+                  | CWnd             |                   | applications.
+------------------+------------------+-------------------+---------------------                
+Dialog.h          | CDialog          | Win32 and WinCE   | Adds dialog support.
+                  |                  |                   |
+------------------+------------------+-------------------+---------------------
+GDI.h             | CDC              | Win32 and WinCE   | A helper class for 
+                  |                  |                   | GDI graphics.
+------------------+------------------+-------------------+---------------------
+PropertySheet.h   | CPropertySheet   | Win32 and WinCE   | Adds property sheet
+                  | CPropertyPage    |                   | support.
+------------------+------------------+-------------------+---------------------
+Socket.h          | CSocket          | Win32 and WinCE   | Adds network  
+                  |                  |                   | support.
+------------------+------------------+-------------------+---------------------
+Rebar.h           | CRebar           | Win32 and WinCE   | Adds support for a 
+                  |                  |                   | Rebar control.
+------------------+------------------+-------------------+---------------------
+Statusbar.h       | CStatusbar       | Win32 and WinCE   | Adds support for a
+                  |                  |                   | Status bar control.
+------------------+------------------+-------------------+---------------------
+Toolbar.h         | CToolbar         | Win32 and WinCE   | Adds support for a
+                  |                  |                   | Toolbar control.
+------------------+------------------+-------------------+--------------------- 
+Frame.h           | CMenubar         | Win32 only        | Adds support for
+                  | CFrame           |                   | frames. Includes a
+                  |                  |                   | toolbar and menubar
+                  |                  |                   | inside a rebar, and 
+                  |                  |                   | a statusbar.
+------------------+------------------+-------------------+---------------------               
+MDI.h             | CMDIFrame        | Win32 only        | Adds support for MDI
+                  | CMDIClient       |                   | frames.
+                  | CMDIChild        |                   |
+------------------+------------------+-------------------+---------------------
+Splitter.h        | CSplitter        | Win32 only        | Adds support for
+                  |                  |                   | splitter windows.
+------------------+------------------+-------------------+---------------------
+WceFrame.h        | CWceFrame        | WinCE only        | Adds support for
+                  | CCmdbar          |                   | frames in WinCE.
+------------------+------------------+-------------------+---------------------                 
+
 
 
                  
