@@ -1,18 +1,18 @@
 //////////////////////////////////////////////////////////
-// TreeView.cpp
-//  Definitions for the CTreeView and TreeItemData classes
+// LeftView.cpp
+//  Definitions for the CLeftView and TreeItemData classes
 
 
 #include "ShellApp.h"
 #include "Mainfrm.h"
 #include "MainView.h"
-#include "ListView.h"
-#include "TreeView.h"
+#include "RightView.h"
+#include "LeftView.h"
 #include "Resource.h"
 
 ////////////////////////////////
-//CTreeView function definitions
-CTreeView::CTreeView()
+//CLeftView function definitions
+CLeftView::CLeftView()
 {
 	try
 	{
@@ -34,7 +34,7 @@ CTreeView::CTreeView()
 	}
 }
 
-CTreeView::~CTreeView()
+CLeftView::~CLeftView()
 {
 	std::vector<TreeItemData*>::iterator Iter;
 	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); Iter++)
@@ -46,7 +46,7 @@ CTreeView::~CTreeView()
 	::CoUninitialize(); // Shut down COM
 }
 
-int CALLBACK CTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+int CALLBACK CLeftView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
 	UNREFERENCED_PARAMETER(lParamSort);
 	TreeItemData* pItem1 = (TreeItemData*)lParam1;
@@ -60,7 +60,7 @@ int CALLBACK CTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPara
 	return (short)SCODE_CODE(GetScode(hr));
 }
 
-void CTreeView::DoContextMenu(LPPOINT pptScreen)
+void CLeftView::DoContextMenu(LPPOINT pptScreen)
 {
 	TVHITTESTINFO  tvhti;
 	tvhti.pt = *pptScreen;
@@ -72,7 +72,7 @@ void CTreeView::DoContextMenu(LPPOINT pptScreen)
 		DoItemMenu(tvhti.hItem , pptScreen);
 }
 
-void CTreeView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
+void CLeftView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
 {
 	TVITEM tvItem = {0};
 	tvItem.mask = TVIF_PARAM;
@@ -131,7 +131,7 @@ void CTreeView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
 	}
 }
 
-LRESULT CTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
+LRESULT CLeftView::OnNotifyReflect(WPARAM, LPARAM lParam)
 {
 	LPNMHDR  lpnmh = (LPNMHDR) lParam;
 
@@ -212,7 +212,7 @@ LRESULT CTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	return 0;
 }
 
-void CTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent)
+void CLeftView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent)
 {
 	CEnumIDList cEnum;
 	if(SUCCEEDED(cParentFolder.EnumObjects(NULL, SHCONTF_FOLDERS | SHCONTF_INCLUDEHIDDEN, cEnum)))
@@ -263,7 +263,7 @@ void CTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, 
 	}
 }
 
-BOOL CTreeView::GetChildItems(HTREEITEM hParentItem)
+BOOL CLeftView::GetChildItems(HTREEITEM hParentItem)
 {
 	TVITEM tvItem = {0};
 	tvItem.mask = TVIF_PARAM;
@@ -310,7 +310,7 @@ BOOL CTreeView::GetChildItems(HTREEITEM hParentItem)
 	return TRUE;
 }
 
-HIMAGELIST CTreeView::GetImageList(BOOL bLarge)
+HIMAGELIST CLeftView::GetImageList(BOOL bLarge)
 {
 	if (bLarge)
 		return m_hLargeImageList;
@@ -318,7 +318,7 @@ HIMAGELIST CTreeView::GetImageList(BOOL bLarge)
 		return m_hSmallImageList;
 }
 
-BOOL CTreeView::GetRootItems()
+BOOL CLeftView::GetRootItems()
 {
 	TreeView_DeleteAllItems(m_hWnd);
 
@@ -376,7 +376,7 @@ BOOL CTreeView::GetRootItems()
 	return FALSE;
 }
 
-void CTreeView::OnInitialUpdate()
+void CLeftView::OnInitialUpdate()
 {
 	TreeView_DeleteAllItems(m_hWnd);
 
@@ -384,7 +384,7 @@ void CTreeView::OnInitialUpdate()
 	::SendMessage(m_hWnd, TVM_SETIMAGELIST, TVSIL_NORMAL, (LPARAM) GetImageList(FALSE));
 }
 
-void CTreeView::PreCreate(CREATESTRUCT &cs)
+void CLeftView::PreCreate(CREATESTRUCT &cs)
 {
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |
 					TVS_HASBUTTONS | TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS ;
@@ -392,7 +392,7 @@ void CTreeView::PreCreate(CREATESTRUCT &cs)
 	cs.lpszClass = WC_TREEVIEW;
 }
 
-BOOL CTreeView::SelectFromListView(Cpidl& cpidlFull)
+BOOL CLeftView::SelectFromListView(Cpidl& cpidlFull)
 {
 	HTREEITEM hItem = TreeView_GetSelection(m_hWnd);
 
@@ -436,7 +436,7 @@ BOOL CTreeView::SelectFromListView(Cpidl& cpidlFull)
 	return FALSE;
 }
 
-void CTreeView::SetImageLists()
+void CLeftView::SetImageLists()
 {
 	SHFILEINFO  sfi;
 
@@ -448,7 +448,7 @@ void CTreeView::SetImageLists()
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 
-LRESULT CTreeView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CLeftView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -468,19 +468,19 @@ LRESULT CTreeView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ///////////////////////////////////
 //TreeItemData function definitions
-CTreeView::TreeItemData::TreeItemData(Cpidl& cpidl)
+CLeftView::TreeItemData::TreeItemData(Cpidl& cpidl)
 {
 	m_cpidlRel  = cpidl;
 	m_cpidlFull = cpidl;
 }
 
-CTreeView::TreeItemData::TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
+CLeftView::TreeItemData::TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
 {
 	m_cParentFolder = cParentFolder;
 	m_cpidlFull     = cpidlParent + cpidlRel;
 	m_cpidlRel      = cpidlRel;
 }
 
-CTreeView::TreeItemData::~TreeItemData()
+CLeftView::TreeItemData::~TreeItemData()
 {
 }

@@ -16,8 +16,8 @@ public:
 	CMainFrame();
 	virtual ~CMainFrame();
 	CMainView& GetMainView() {return m_MainView;}
-	CListView& GetListView() {return m_MainView.GetListView();}
-	CTreeView& GetTreeView() {return m_MainView.GetTreeView();}
+	CRightView& GetListView() {return m_MainView.GetListView();}
+	CLeftView& GetTreeView() {return m_MainView.GetTreeView();}
 	BOOL GetShowHidden() {return m_bShowHidden;}
 
 protected:

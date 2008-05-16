@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////
-// TreeView.h
-//  Declaration of the CTreeView class
+// LeftView.h
+//  Declaration of the CLeftView class
 
 
-#ifndef TREEVIEW_H
-#define TREEVIEW_H
+#ifndef LEFTVIEW_H
+#define LEFTVIEW_H
 
 
 #include <vector>
@@ -13,11 +13,11 @@
 using namespace ShellWrapper;
 
 
-class CTreeView : public CWnd
+class CLeftView : public CWnd
 {
 public:
-	CTreeView();
-	virtual ~CTreeView();	
+	CLeftView();
+	virtual ~CLeftView();
 	BOOL GetRootItems();
 	BOOL SelectFromListView(Cpidl& CpidlFull);
 
@@ -28,7 +28,7 @@ public:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	class TreeItemData //A nested class inside CTreeView
+	class TreeItemData //A nested class inside CLeftView
 	{
 	public:
 		TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder);
@@ -43,7 +43,7 @@ private:
 		Cpidl        m_cpidlFull;		//Fully Qualified PIDL
 		Cpidl        m_cpidlRel;		//Relative PIDL
 		CShellFolder m_cParentFolder;	//Parent Folder
-	
+
 	};  //class TreeItemData
 
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
@@ -60,4 +60,4 @@ private:
 	std::vector <TreeItemData*> m_pItems;
 };
 
-#endif  //TREEVIEW_H
+#endif  // LEFTVIEW_H

@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////
-// ListView.h
-//  Declaration of the CListView class
+// RightView.h
+//  Declaration of the CRightView class
 
 
-#ifndef LISTVIEW_H
-#define LISTVIEW_H
+#ifndef RIGHTVIEW_H
+#define RIGHTVIEW_H
 
 //Include WinCore.h first
 #include "../Win32++/WinCore.h"
@@ -12,11 +12,11 @@
 #include <vector>
 
 
-class CListView : public CWnd
+class CRightView : public CWnd
 {
 public:
-	CListView();
-	virtual ~CListView();
+	CRightView();
+	virtual ~CRightView();
 	void DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
 	void DoDisplay();
 	void ViewLargeIcons();
@@ -31,7 +31,7 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	class ListItemData  //A nested class inside CListView
+	class ListItemData  //A nested class inside CRightView
 	{
 	public:
 		ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder);
@@ -68,4 +68,4 @@ private:
 	HIMAGELIST m_hSmallImageList;
 };
 
-#endif  //LISTVIEW_H
+#endif  // RIGHTVIEW_H

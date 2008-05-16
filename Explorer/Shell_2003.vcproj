@@ -143,7 +143,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath=".\ListView.cpp">
+				RelativePath=".\LeftView.cpp">
 			</File>
 			<File
 				RelativePath="main.cpp">
@@ -185,6 +185,9 @@
 				RelativePath=".\MainView.cpp">
 			</File>
 			<File
+				RelativePath=".\RightView.cpp">
+			</File>
+			<File
 				RelativePath="ShellApp.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -205,15 +208,12 @@
 			<File
 				RelativePath=".\ShellWrapper.cpp">
 			</File>
-			<File
-				RelativePath=".\TreeView.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\ListView.h">
+				RelativePath=".\LeftView.h">
 			</File>
 			<File
 				RelativePath="Mainfrm.h">
@@ -228,13 +228,13 @@
 				RelativePath="resrc1.h">
 			</File>
 			<File
+				RelativePath=".\RightView.h">
+			</File>
+			<File
 				RelativePath="ShellApp.h">
 			</File>
 			<File
 				RelativePath=".\ShellWrapper.h">
-			</File>
-			<File
-				RelativePath=".\TreeView.h">
 			</File>
 		</Filter>
 		<Filter
