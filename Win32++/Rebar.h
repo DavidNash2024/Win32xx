@@ -479,7 +479,7 @@ namespace Win32xx
 			{
 				// We want to lock the first row in place, but allow other bands to move!
 				// Use move messages to limit the resizing of bands
-				int y = ((int)(short)HIWORD(lParam));
+				int y = GET_Y_LPARAM(lParam);
 
 				if (y <= GetRowHeight(0))
 					return 0L;	// throw this message away
@@ -493,7 +493,7 @@ namespace Win32xx
 			if (m_Theme.UseThemes && m_Theme.LockMenuBand)
 			{
 				// Use move messages to limit the resizing of bands
-				int y = ((int)(short)HIWORD(lParam));
+				int y = GET_Y_LPARAM(lParam);
 
 				if (y <= GetRowHeight(0))
 				{

@@ -175,6 +175,18 @@ namespace Win32xx
 	#endif
 	}
 
+	// define useful macros from WindowsX.h
+	#define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
+	#define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
+
+	// Required for WinCE	
+	#ifndef TLS_OUT_OF_INDEXES
+	  #define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
+	#endif
+	#ifndef WM_PARENTNOTIFY
+	  #define WM_PARENTNOTIFY 0x0210
+	#endif
+
 
 	////////////////////////////////////////////////
 	// Forward declarations.
@@ -393,13 +405,98 @@ namespace Win32xx
 		return str;
 	}
 
-  #ifndef TLS_OUT_OF_INDEXES
-	#define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
-  #endif
+	/////////////////////////////////////////
+	// Useful structures
+	struct CSize : SIZE
+	{
+		CSize()						{ cx = 0; cy = 0; }
+		CSize(int CX, int CY)		{ cx = CX; cy = CY; }
+		CSize(SIZE sz)				{ cx = sz.cx; cy = sz.cy; } 
+		CSize(POINT pt)				{ cx = pt.x;  cx = pt.y; }
+		CSize(DWORD dw)				{ cx = (short)LOWORD(dw); cx = (short)HIWORD(dw); }
+		void SetSize(int CX, int CY){ cx = CX; cy = CY; } 
+		BOOL operator == (SIZE sz)	{ return (cx == sz.cx && cy == sz.cy); }
+		BOOL operator != (SIZE sz)	{ return !(cx == sz.cx && cy == sz.cy); }
+	};
 
-  #ifndef WM_PARENTNOTIFY
-    #define WM_PARENTNOTIFY 0x0210
-  #endif
+	struct CPoint : POINT
+	{
+		CPoint()					{ x = 0; y = 0; }
+		CPoint(int X, int Y)		{ x = X; y = Y; }
+		CPoint(SIZE sz)				{ x = sz.cx; y = sz.cy; } 
+		CPoint(POINT pt)			{ x = pt.x ; y = pt.y; }
+		CPoint(DWORD dw)			{ x = (short)LOWORD(dw); y = (short)HIWORD(dw); }
+		void Offset(int dx, int dy)	{ x += dx; y += dy; }
+		void SetPoint(int X, int Y)	{ x = X; y = Y; } 
+		BOOL operator == (POINT pt)	{ return  ((x == pt.x) && (y == pt.y)); }
+		BOOL operator != (POINT pt)	{ return !((x == pt.x) && (y == pt.y)); }
+	};
+
+	struct CRect : RECT
+	{
+		CRect() 
+		{ left = top = right = bottom = 0; }
+		
+		CRect(int Left, int Top, int Right, int Bottom) 
+		{ left = Left; top = Top; right = Right; bottom = Bottom; }
+		
+		CRect(RECT rc) 
+		{ left = rc.left; top = rc.top; right = rc.right; bottom = rc.bottom; } 
+
+		operator LPRECT()			
+		{ return this; }
+		
+		operator LPCRECT() const	
+		{ return this; }
+		
+		BOOL operator == (RECT& rc)	
+		{ return ::EqualRect(this, &rc); }
+		
+		BOOL operator != (RECT& rc)	
+		{ return !::EqualRect(this, &rc); }
+		
+		void  operator=( RECT& srcRect)	
+		{ ::CopyRect(this, &srcRect); }
+
+		int Height()
+		{ return bottom - top; }
+		
+		int Width()
+		{ return right - left; }
+		
+		void CopyRect(RECT* pRect)	
+		{ ::CopyRect(pRect, this); }
+		
+		BOOL EqualRect(const RECT* pRect) 
+		{ return ::EqualRect(pRect, this); }
+		
+		BOOL InflateRect(int dx, int dy) 
+		{ return ::InflateRect(this, dx, dy); }
+		
+		BOOL IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
+		{ return ::IntersectRect(this, lpRect1, lpRect2); }
+		
+		BOOL IsRectEmpty()
+		{::IsRectEmpty(this);}
+		
+		BOOL OffsetRect(int dx, int dy) 
+		{ return ::OffsetRect(this, dx, dy); }
+
+		BOOL PtInRect(POINT pt)		
+		{ return ::PtInRect(this, pt); }
+		
+		BOOL SetRect(int left, int top, int right, int bottom) 
+		{ return ::SetRect(this, left, top, right, bottom); }
+		
+		BOOL SetRectEmpty()
+		{ return ::SetRectEmpty(this); } 
+		
+		BOOL SubtractRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
+		{ return ::SubtractRect(this, pRcSrc1, pRcSrc2); }
+		
+		BOOL UnionRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
+		{ return ::UnionRect(this, pRcSrc1, pRcSrc2); }
+	};
 
 
 	/////////////////////////////////////////
@@ -410,11 +507,11 @@ namespace Win32xx
 	class CCriticalSection
 	{
 		public:
-		CCriticalSection()	{::InitializeCriticalSection(&m_cs);}
-		~CCriticalSection()	{::DeleteCriticalSection(&m_cs);}
+		CCriticalSection()	{ ::InitializeCriticalSection(&m_cs); }
+		~CCriticalSection()	{ ::DeleteCriticalSection(&m_cs); }
 
-		void Lock()		{::EnterCriticalSection(&m_cs);}
-		void Release()	{::LeaveCriticalSection(&m_cs);}
+		void Lock()		{ ::EnterCriticalSection(&m_cs); }
+		void Release()	{ ::LeaveCriticalSection(&m_cs); }
 
 		private:
 		CRITICAL_SECTION m_cs;

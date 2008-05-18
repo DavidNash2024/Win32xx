@@ -799,7 +799,7 @@ namespace Win32xx
 					{
 						RECT rcButton = GetItemRect(iButton);
 
-						int xPos = ((int)(short)LOWORD(lParam));
+						int xPos = GET_X_LPARAM(lParam);
 						if (xPos >= rcButton.right -13)
 						{
 							// DoubleClick on dropdown part of TBSTYLE_DROPDOWN button

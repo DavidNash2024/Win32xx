@@ -774,8 +774,8 @@ namespace Win32xx
 		POINT pt;
 
 
-		pt.x = ((int)(short)LOWORD(lParam));
-		pt.y = ((int)(short)HIWORD(lParam));
+		pt.x = GET_X_LPARAM(lParam);
+		pt.y = GET_Y_LPARAM(lParam);
 
 		if (IsMDIFrame())
 		{
@@ -808,8 +808,8 @@ namespace Win32xx
 	inline void CMenubar::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		POINT pt;
-		pt.x = ((int)(short)LOWORD(lParam));
-		pt.y = ((int)(short)HIWORD(lParam));
+		pt.x = GET_X_LPARAM(lParam);
+		pt.y = GET_Y_LPARAM(lParam);
 
 		if (IsMDIFrame())
 		{
@@ -955,8 +955,8 @@ namespace Win32xx
 		case WM_MOUSEMOVE:
 			{
 				POINT pt = {0};
-				pt.x = ((int)(short)LOWORD(lParam));
-				pt.y = ((int)(short)HIWORD(lParam));
+				pt.x = GET_X_LPARAM(lParam);
+				pt.y = GET_Y_LPARAM(lParam);
 
 				// Skip if mouse hasn't moved
 				if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
@@ -993,8 +993,8 @@ namespace Win32xx
 	inline void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		POINT pt;
-		pt.x = ((int)(short)LOWORD(lParam));
-		pt.y = ((int)(short)HIWORD(lParam));
+		pt.x = GET_X_LPARAM(lParam);
+		pt.y = GET_Y_LPARAM(lParam);
 
 		if (IsMDIFrame())
 		{
