@@ -38,28 +38,32 @@
 ///////////////////////////////////////////////////////
 // WinCore.h
 //  Declaration of the following classes:
-//  CWinApp, CWnd, CWinClass, CWinException, and CCriticalSection
+//  CWinApp, CWnd, CWinException, and CCriticalSection
 //
 // This file contains the declarations for the core set of classes required to
 // create simple windows using Win32++.  Five classes are declared here:
 //
-// 1) WinApp: This class is used to define the message loop. Inherit from
-//            this class and use it to start the Win32++ application.
-//
-// 2) CWnd:   This class is used to represent a window. It provides a means
-//            of creating the window, and handling its messages. Inherit
-//            from this class to define the window to be created.
-//
-// 3) CWinClass: This class is internally by Win32++ to register the various
-//            "window classes" (not to be confused with a C++ class). You can
-//            also use it to register your own "window class".
-//
-// 4) CWinException: This class is used internally by Win32++ to handle
-//            exceptions. You can also use it to throw and catch exceptions.
-//
-// 5) CCriticalSection: This class is used internally to manage thread access
+// 1) CCriticalSection: This class is used internally to manage thread access
 //            to shared resources. You can also use this class to lock and
 //            release your own critical sections.
+//
+// 2) CWinException: This class is used internally by Win32++ to handle
+//            exceptions. You can also use it to throw and catch exceptions.
+//
+// 3) WinApp: This class is used start Win32++ and run the message loop. You  
+//            should inherit from this class to start Win32++ in your own 
+//            application.
+//
+// 4) CWnd:   This class is used to represent a window. It provides a means
+//            of creating the window, and handling its messages. Inherit
+//            from this class to define and control windows.
+//
+// Note: This header file (or another Win32++ header file which includes it)
+//       should be included before all other header files. It sets some
+//       important macros which need to be set before including Windows.h
+//       Including this file first also allows it to disable some pointless
+//       warning messages (see below).
+
 
 
 #ifndef WINCORE_H
@@ -74,7 +78,7 @@
   #pragma warning (disable : 4786) // identifier was truncated
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
   #ifndef _CRT_SECURE_NO_WARNINGS
-    #define _CRT_SECURE_NO_WARNINGS  // eliminate deprecation warnings for VS2005
+    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005
   #endif
 #endif // _MSC_VER
 #ifdef __BORLANDC__
@@ -177,7 +181,7 @@ namespace Win32xx
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CFrame;
-	class CWnd;
+	class CWnd;		
 
 
 	enum Constants
@@ -202,165 +206,12 @@ namespace Win32xx
 		HHOOK  hMenuHook;	// MSG hook for CMenubar
 	};
 
-
-	/////////////////////////////////////////
-	// Declarations for the CCriticalSection class
-	//
-
-	// This class is used for thread synchronisation
-	class CCriticalSection
-	{
-		public:
-		CCriticalSection()	{::InitializeCriticalSection(&m_cs);}
-		~CCriticalSection()	{::DeleteCriticalSection(&m_cs);}
-
-		void Lock()		{::EnterCriticalSection(&m_cs);}
-		void Release()	{::LeaveCriticalSection(&m_cs);}
-
-		private:
-		CRITICAL_SECTION m_cs;
-	};
-
-	////////////////////////////////
-	// Declaration of the CWnd class
-	//
-	class CWnd
-	{
-
-	public:
-		CWnd();				// Constructor
-		virtual ~CWnd();	// Destructor
-
-		// These are the functions you might wish to override
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		virtual HWND Create(HWND hWndParent = NULL);
-		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void PreRegisterClass(WNDCLASS& wc);
-
-		// These functions aren't intended to be overridden
-		virtual BOOL Attach(HWND hWnd);
-		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
-		virtual void CenterWindow();
-		virtual void DestroyWindow();
-		virtual HWND Detach();
-		virtual CWnd* FromHandle(HWND hWnd) const;
-		virtual HWND GetAncestor(HWND hWnd) const;
-		virtual tString GetDlgItemString(int nIDDlgItem);
-		virtual tString GetWindowString();
-		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
-		virtual LPCTSTR LoadString(UINT nID);
-		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL RegisterClass(WNDCLASS& wc);
-		virtual void SetParent(HWND hParent);
-
-		// These functions aren't virtual, so there's no point overriding them
-		HWND GetHwnd() const {return m_hWnd;}
-		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		operator HWND() const {return m_hWnd;}
-
-	protected:
-		// These are the functions you might wish to override
-		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
-		virtual void OnCreate();
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual	LRESULT OnNotifyFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
-		virtual void OnInitialUpdate();
-		virtual void OnPaint(HDC hDC);
-		virtual HICON SetIconLarge(int nIcon);
-		virtual HICON SetIconSmall(int nIcon);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		// Its unlikely you would need to override these functions
-		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL IsMDIChild() const {return FALSE;}
-		void AddToMap();
-
-		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
-		HWND m_hWnd;			// handle to this object's window
-		HWND m_hWndParent;		// handle to this object's window parent
-		WNDCLASS m_wc;			// defines initialisation parameters for RegisterClass
-		CWinApp* pWinApp;
-
-	private:
-		CWnd(const CWnd&);				// Disable copy construction
-		CWnd& operator = (const CWnd&); // Disable assignment operator
-		BOOL RemoveFromMap();
-		void Subclass();
-
-		HICON m_hIconLarge;			// handle to the window's large icon
-		HICON m_hIconSmall;			// handle to the window's small icon
-		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		tString m_LoadString;		// a TCHAR std::string, temporary storage for strings
-
-	}; // class CWnd
-
-
-	///////////////////////////////
-	// Declaration of the CWinApp class
-	//
-	class CWinApp
-	{
-		friend class CWnd;	// CWnd needs access to CWinApp's private members
-
-	public:
-		CWinApp();
-		virtual ~CWinApp();
-
-		// These are the functions you might wish to override
-		virtual BOOL InitInstance();
-		virtual int  MessageLoop();
-		virtual int  Run();
-		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
-		virtual void SetFrame(CFrame* pFrame);
-
-		// These functions aren't intended to be overridden
-		CFrame* GetFrame() {return m_pFrame;}
-		DWORD GetTlsIndex() {return m_TlsIndex;}
-		CWnd* GetCWndFromMap(HWND hWnd);
-		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
-		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
-		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
-		TLSData* SetTlsIndex();
-
-	protected:
-		HACCEL m_hAccelTable;		// handle to the accelerator table
-		HWND m_hWndAccel;			// handle to the window for accelerator keys
-
-	private:
-		enum Constants
-		{
-			TRACE_HEIGHT = 200,
-			TRACE_WIDTH  = 400
-		};
-
-		void DefaultClass();
-
-		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
-		HINSTANCE m_hInstance;		// handle to the applications instance
-		HINSTANCE m_hResource;		// handle to the applications resources
-		CFrame* m_pFrame;			// pointer to the CFrame object
-		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
-		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
-		DWORD m_TlsIndex;			// Thread Local Storage index
-		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
-	};
-
-
+	
 	//////////////////////////////////////////////////
 	// Global functions	(within the Win32xx namespace)
 
-	// Returns a pointer to the CWinApp object
-	inline CWinApp* GetApp()
-	{
-		return CWinApp::SetnGetThis();
-	}
+	// Returns a pointer to CWinApp (defined later)
+	CWinApp* GetApp();
 
 	// Displays an error message in a message box. Debug mode only.
 	inline void DebugWarnMsg(LPCTSTR WarnMsg)
@@ -550,6 +401,26 @@ namespace Win32xx
     #define WM_PARENTNOTIFY 0x0210
   #endif
 
+
+	/////////////////////////////////////////
+	// Declarations for the CCriticalSection class
+	//
+
+	// This class is used for thread synchronisation
+	class CCriticalSection
+	{
+		public:
+		CCriticalSection()	{::InitializeCriticalSection(&m_cs);}
+		~CCriticalSection()	{::DeleteCriticalSection(&m_cs);}
+
+		void Lock()		{::EnterCriticalSection(&m_cs);}
+		void Release()	{::LeaveCriticalSection(&m_cs);}
+
+		private:
+		CRITICAL_SECTION m_cs;
+	};
+
+
 	////////////////////////////////////////
 	// Declaration of the CWinException class
 	//
@@ -586,6 +457,145 @@ namespace Win32xx
 
 	};
 
+	////////////////////////////////
+	// Declaration of the CWnd class
+	//
+	class CWnd
+	{
+
+	public:
+		CWnd();				// Constructor
+		virtual ~CWnd();	// Destructor
+
+		// These are the functions you might wish to override
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		virtual HWND Create(HWND hWndParent = NULL);
+		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS& wc);
+
+		// These functions aren't intended to be overridden
+		virtual BOOL Attach(HWND hWnd);
+		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		virtual void CenterWindow();
+		virtual void DestroyWindow();
+		virtual HWND Detach();
+		virtual CWnd* FromHandle(HWND hWnd) const;
+		virtual HWND GetAncestor(HWND hWnd) const;
+		virtual tString GetDlgItemString(int nIDDlgItem);
+		virtual tString GetWindowString();
+		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
+		virtual LPCTSTR LoadString(UINT nID);
+		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL RegisterClass(WNDCLASS& wc);
+		virtual void SetParent(HWND hParent);
+
+		// These functions aren't virtual, so there's no point overriding them
+		HWND GetHwnd() const {return m_hWnd;}
+		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		operator HWND() const {return m_hWnd;}
+
+	protected:
+		// These are the functions you might wish to override
+		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
+		virtual void OnCreate();
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual	LRESULT OnNotifyFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
+		virtual void OnInitialUpdate();
+		virtual void OnPaint(HDC hDC);
+		virtual HICON SetIconLarge(int nIcon);
+		virtual HICON SetIconSmall(int nIcon);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		// Its unlikely you would need to override these functions
+		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL IsMDIChild() const {return FALSE;}
+		void AddToMap();
+
+		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
+		HWND m_hWnd;			// handle to this object's window
+		HWND m_hWndParent;		// handle to this object's window parent
+		WNDCLASS m_wc;			// defines initialisation parameters for RegisterClass
+		CWinApp* pWinApp;
+
+	private:
+		CWnd(const CWnd&);				// Disable copy construction
+		CWnd& operator = (const CWnd&); // Disable assignment operator
+		BOOL RemoveFromMap();
+		void Subclass();
+
+		HICON m_hIconLarge;			// handle to the window's large icon
+		HICON m_hIconSmall;			// handle to the window's small icon
+		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
+		tString m_LoadString;		// a TCHAR std::string, temporary storage for strings
+
+	}; // class CWnd
+
+
+	///////////////////////////////
+	// Declaration of the CWinApp class
+	//
+	class CWinApp
+	{
+		friend class CWnd;	// CWnd needs access to CWinApp's private members
+
+	public:
+		CWinApp();
+		virtual ~CWinApp();
+
+		// These are the functions you might wish to override
+		virtual BOOL InitInstance();
+		virtual int  MessageLoop();
+		virtual int  Run();
+		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
+		virtual void SetFrame(CFrame* pFrame);
+
+		// These functions aren't intended to be overridden
+		CFrame* GetFrame() {return m_pFrame;}
+		DWORD GetTlsIndex() {return m_TlsIndex;}
+		CWnd* GetCWndFromMap(HWND hWnd);
+		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
+		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
+		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
+		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
+		TLSData* SetTlsIndex();
+
+	protected:
+		HACCEL m_hAccelTable;		// handle to the accelerator table
+		HWND m_hWndAccel;			// handle to the window for accelerator keys
+
+	private:
+		enum Constants
+		{
+			TRACE_HEIGHT = 200,
+			TRACE_WIDTH  = 400
+		};
+
+		void DefaultClass();
+
+		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
+		HINSTANCE m_hInstance;		// handle to the applications instance
+		HINSTANCE m_hResource;		// handle to the applications resources
+		CFrame* m_pFrame;			// pointer to the CFrame object
+		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
+		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
+		DWORD m_TlsIndex;			// Thread Local Storage index
+		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
+	};
+
+	
+	// Global function, returns a pointer to the CWinApp derrived class
+	inline CWinApp* GetApp()
+	{
+		return CWinApp::SetnGetThis();
+	}
+
+
 	///////////////////////////////////
 	// Definitions for the CWinApp class
 	//
@@ -597,7 +607,7 @@ namespace Win32xx
 		try
 		{
 			// Test if this is the first instance of CWinApp
-			if (0 == GetApp() )
+			if (0 == SetnGetThis() )
 			{
 				m_TlsIndex = ::TlsAlloc();
 				if (m_TlsIndex == TLS_OUT_OF_INDEXES)
@@ -606,6 +616,7 @@ namespace Win32xx
 					// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
 					throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 				}
+				SetnGetThis(this);
 			}
 			else
 			{
@@ -616,8 +627,7 @@ namespace Win32xx
 
 			m_hInstance = (HINSTANCE) ::GetModuleHandle(0);
 			m_hResource = m_hInstance;
-			DefaultClass();
-			SetnGetThis(this);
+			DefaultClass();		
 		}
 
 		catch (const CWinException &e)
@@ -818,6 +828,7 @@ namespace Win32xx
 			throw; // Critical problem, so rethrow
 		}
 	}
+
 
 	////////////////////////////////////////
 	// Definitions for the CWnd class

@@ -85,6 +85,19 @@ namespace Win32xx
 		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE) { return (BOOL)::SendMessage(m_hWnd, TVM_SETINSERTMARK, (WPARAM)fAfter, (LPARAM)hItem); }
 		COLORREF SetInsertMarkColor(COLORREF clrInsertMark) { return (COLORREF)::SendMessage(m_hWnd, TVM_SETINSERTMARKCOLOR, 0, (LPARAM) clrInsertMark); }
 		BOOL SetItem(TVITEM tvItem) { return (BOOL)::SendMessage(m_hWnd, TVM_SETITEM, 0, (LPARAM)&tvItem ); }
+		BOOL SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam)
+		{
+			TVITEM tvi = {0};
+			tvi.hItem = hItem;
+			tvi.mask  = nMask;
+			tvi.pszText = (LPTSTR)szText;
+			tvi.iImage  = nImage;
+			tvi.iSelectedImage = nSelectedImage;
+			tvi.state = nState;
+			tvi.stateMask = nStateMask;
+			tvi.lParam = lParam;
+			return (BOOL)::SendMessage( m_hWnd, TVM_SETITEM, 0, (LPARAM)&tvi );
+		}
 		BOOL SetItemData(HTREEITEM hItem, DWORD_PTR dwData) 
 		{
 			TVITEM tvi = {0};

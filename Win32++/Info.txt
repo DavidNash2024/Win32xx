@@ -117,6 +117,12 @@ Statusbar.h       | CStatusbar       | Win32 and WinCE   | Adds support for a
 ------------------+------------------+-------------------+---------------------
 Toolbar.h         | CToolbar         | Win32 and WinCE   | Adds support for a
                   |                  |                   | Toolbar control.
+------------------+------------------+-------------------+---------------------
+ListView.h        | CListView        | Win32 and WinCE   | Adds support for a
+                  |                  |                   | ListView control.
+------------------+------------------+-------------------+---------------------
+TreeView.h        | CTreeView        | Win32 and WinCE   | Adds support for a
+                  |                  |                   | TreeViewr control.
 ------------------+------------------+-------------------+--------------------- 
 Frame.h           | CMenubar         | Win32 only        | Adds support for
                   | CFrame           |                   | frames. Includes a
