@@ -93,10 +93,13 @@ Components of Win32++
  Files            |  Classes         | Operating Systems | Description
 ==================+==================+===================+=====================
 Wincore.h         | CCriticalSection | Win32 and WinCE   | The core set of 
-                  | CWinApp          |                   | classes required for
-                  | CWinException    |                   | all Win32++ 
-                  | CWnd             |                   | applications.
-------------------+------------------+-------------------+---------------------                
+                  | CPoint           |                   | classes required for
+                  | CRect            |                   | all Win32++ 
+                  | CSize            |                   | applications. 
+                  | CWinApp          |                   | 
+                  | CWinException    |                   | 
+                  | CWnd             |                   | 
+------------------+------------------+-------------------+---------------------
 Dialog.h          | CDialog          | Win32 and WinCE   | Adds dialog support.
                   |                  |                   |
 ------------------+------------------+-------------------+---------------------
@@ -129,7 +132,7 @@ Frame.h           | CMenubar         | Win32 only        | Adds support for
                   |                  |                   | toolbar and menubar
                   |                  |                   | inside a rebar, and 
                   |                  |                   | a statusbar.
-------------------+------------------+-------------------+---------------------               
+------------------+------------------+-------------------+---------------------  
 MDI.h             | CMDIFrame        | Win32 only        | Adds support for MDI
                   | CMDIClient       |                   | frames.
                   | CMDIChild        |                   |
@@ -139,6 +142,4 @@ Splitter.h        | CSplitter        | Win32 only        | Adds support for
 ------------------+------------------+-------------------+---------------------
 WceFrame.h        | CWceFrame        | WinCE only        | Adds support for
                   | CCmdbar          |                   | frames in WinCE.
-------------------+------------------+-------------------+---------------------                 
-
-
+------------------+------------------+-------------------+---------------------

@@ -23,9 +23,9 @@ to manage the Tree-View common control. You can inherit from this class
 when creating your own Tree-View control in a window, or attaching a 
 Tree-View control from a dialog.
 
-* Added CPoint struct
-* Added CRect struct
-* Added CSize struct
+* Added CPoint class
+* Added CRect class
+* Added CSize class
 
 
 Notes for users of previous versions:

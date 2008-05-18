@@ -406,9 +406,11 @@ namespace Win32xx
 	}
 
 	/////////////////////////////////////////
-	// Useful structures
-	struct CSize : SIZE
+	// Definition of the CSize class
+	// This class can be used to replace the SIZE structure
+	class CSize : public SIZE
 	{
+	public:
 		CSize()						{ cx = 0; cy = 0; }
 		CSize(int CX, int CY)		{ cx = CX; cy = CY; }
 		CSize(SIZE sz)				{ cx = sz.cx; cy = sz.cy; } 
@@ -419,8 +421,12 @@ namespace Win32xx
 		BOOL operator != (SIZE sz)	{ return !(cx == sz.cx && cy == sz.cy); }
 	};
 
-	struct CPoint : POINT
+	/////////////////////////////////////////
+	// Definition of the CPoint class
+	// This class can be used to replace the POINT structure
+	class CPoint : public POINT
 	{
+	public:
 		CPoint()					{ x = 0; y = 0; }
 		CPoint(int X, int Y)		{ x = X; y = Y; }
 		CPoint(SIZE sz)				{ x = sz.cx; y = sz.cy; } 
@@ -432,8 +438,12 @@ namespace Win32xx
 		BOOL operator != (POINT pt)	{ return !((x == pt.x) && (y == pt.y)); }
 	};
 
-	struct CRect : RECT
+	/////////////////////////////////////////
+	// Definition of the CRect class
+	// This class can be used to replace the RECT structure.
+	class CRect : public RECT
 	{
+	public:
 		CRect() 
 		{ left = top = right = bottom = 0; }
 		
@@ -442,6 +452,12 @@ namespace Win32xx
 		
 		CRect(RECT rc) 
 		{ left = rc.left; top = rc.top; right = rc.right; bottom = rc.bottom; } 
+
+		CRect(POINT pt, SIZE sz)
+		{ right = (left = pt.x) + sz.cx; bottom = (top = pt.y) + sz.cy; }
+
+		CRect(POINT topLeft, POINT bottomRight)
+		{ left = topLeft.x; top = topLeft.y; right = bottomRight.x; bottom = bottomRight.y; }
 
 		operator LPRECT()			
 		{ return this; }
