@@ -155,6 +155,7 @@ namespace Win32xx
 	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/)
 	{
 		ZeroMemory(&m_PSP, sizeof(PROPSHEETPAGE));
+		SetTitle(szTitle);
 
 		m_PSP.dwSize        = sizeof(PROPSHEETPAGE);
 		m_PSP.dwFlags       |= PSP_USECALLBACK;
@@ -164,7 +165,6 @@ namespace Win32xx
 		m_PSP.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
 		m_PSP.lParam        = (LPARAM)this;
 		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
-		SetTitle(szTitle);
 	}
 
 	inline void CPropertyPage::CancelToClose() const
@@ -525,6 +525,7 @@ namespace Win32xx
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
+		SetTitle(pszCaption);
 
 #ifdef _WIN32_WCE
 		m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
@@ -539,7 +540,6 @@ namespace Win32xx
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
-		SetTitle(pszCaption);
 	}
 
 	inline CPropertySheet::~CPropertySheet()

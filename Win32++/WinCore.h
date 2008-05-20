@@ -526,7 +526,7 @@ namespace Win32xx
 		CCriticalSection()	{ ::InitializeCriticalSection(&m_cs); }
 		~CCriticalSection()	{ ::DeleteCriticalSection(&m_cs); }
 
-		void Lock()		{ ::EnterCriticalSection(&m_cs); }
+		void Lock() 	{ ::EnterCriticalSection(&m_cs); }
 		void Release()	{ ::LeaveCriticalSection(&m_cs); }
 
 		private:
@@ -593,13 +593,13 @@ namespace Win32xx
 		// These functions aren't intended to be overridden
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
-		virtual void CenterWindow();
+		virtual void CenterWindow() const;
 		virtual void DestroyWindow();
 		virtual HWND Detach();
 		virtual CWnd* FromHandle(HWND hWnd) const;
 		virtual HWND GetAncestor(HWND hWnd) const;
-		virtual tString GetDlgItemString(int nIDDlgItem);
-		virtual tString GetWindowString();
+		virtual tString GetDlgItemString(int nIDDlgItem) const;
+		virtual tString GetWindowString() const;
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -669,8 +669,8 @@ namespace Win32xx
 		virtual void SetFrame(CFrame* pFrame);
 
 		// These functions aren't intended to be overridden
-		CFrame* GetFrame() {return m_pFrame;}
-		DWORD GetTlsIndex() {return m_TlsIndex;}
+		CFrame* GetFrame() const {return m_pFrame;}
+		DWORD GetTlsIndex() const {return m_TlsIndex;}
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
@@ -1034,7 +1034,7 @@ namespace Win32xx
 		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
 	}
 
-	inline void CWnd::CenterWindow()
+	inline void CWnd::CenterWindow() const
 	{
 		// Centers this window over it's parent
 
@@ -1259,7 +1259,7 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	inline tString CWnd::GetDlgItemString(int nIDDlgItem)
+	inline tString CWnd::GetDlgItemString(int nIDDlgItem) const
 	{
 		int nLength = ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
 
@@ -1274,7 +1274,7 @@ namespace Win32xx
 		return String;
 	}
 
-	inline tString CWnd::GetWindowString()
+	inline tString CWnd::GetWindowString() const
 	{
 		// Gets the window title for an ordinary window, or the text in an edit control
 

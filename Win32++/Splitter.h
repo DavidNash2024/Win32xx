@@ -132,6 +132,8 @@ namespace Win32xx
 				::PatBlt (BarDC, Pos - m_nWidth/2, 0, m_nWidth, cy, PATINVERT);
 			else
 				::PatBlt (BarDC, 0, Pos - m_nWidth/2, cx, m_nWidth, PATINVERT);
+
+			BarDC.DetachBrush();
 		}
 	}
 

@@ -92,7 +92,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\ListView.cpp
+SOURCE=.\LeftView.cpp
 # End Source File
 # Begin Source File
 
@@ -108,20 +108,24 @@ SOURCE=.\MainView.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\RightView.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ShellApp.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\ShellWrapper.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=.\TreeView.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\LeftView.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\ListView.h
@@ -141,6 +145,10 @@ SOURCE=.\resource.h
 # Begin Source File
 
 SOURCE=.\resrc1.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\RightView.h
 # End Source File
 # Begin Source File
 
@@ -184,7 +192,15 @@ SOURCE="..\Win32++\GDI.h"
 # End Source File
 # Begin Source File
 
+SOURCE="..\Win32++\ListView.h"
+# End Source File
+# Begin Source File
+
 SOURCE="..\Win32++\Splitter.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\TreeView.h"
 # End Source File
 # Begin Source File
 

@@ -2,6 +2,7 @@
 #define TREEVIEW_H
 
 #include "../Win32++/WinCore.h"
+#include "Commctrl.h"
 
 
 namespace Win32xx
@@ -12,47 +13,67 @@ namespace Win32xx
 	public:
 		CTreeView() {}
 		virtual ~CTreeView() {}
-		virtual void PreCreate(CREATESTRUCT &cs) { cs.lpszClass = WC_TREEVIEW; }
+		
+		virtual void PreCreate(CREATESTRUCT &cs) 
+		{ cs.lpszClass = WC_TREEVIEW; }
 
-		COLORREF GetBkColor() { return (COLORREF)::SendMessage(m_hWnd, TVM_GETBKCOLOR, 0, 0); }
+// Attributes
+		COLORREF GetBkColor() const
+		{ return TreeView_GetBkColor( m_hWnd ); }
 		
-		int GetCheckState(HTREEITEM hItem) { return TreeView_GetCheckState(m_hWnd, hItem); }
+		HTREEITEM GetChildItem(HTREEITEM hItem) const
+		{ return TreeView_GetChild(m_hWnd, hItem); }
 		
-		HTREEITEM GetChildItem(HTREEITEM hItem) { return TreeView_GetChild(m_hWnd, hItem); }
-		int  GetCount() { return (int)::SendMessage(m_hWnd, TVM_GETCOUNT, 0, 0); }
-		HTREEITEM GetDropHiLightItem() { return TreeView_GetDropHilight(m_hWnd); }
-		HWND GetEditControl() { return (HWND)::SendMessage(m_hWnd, TVM_GETEDITCONTROL, 0, 0); }
-		HTREEITEM GetFirstVisibleItem() { return TreeView_GetFirstVisible(m_hWnd); }
-		HIMAGELIST GetImageList(int iType) { return (HIMAGELIST)::SendMessage(m_hWnd, TVM_GETIMAGELIST, (WPARAM) iType, 0); }
-		int  GetIndent() { return (int)::SendMessage(m_hWnd, TVM_GETINDENT, 0, 0); }
-		COLORREF GetInsertMarkColor() { return (COLORREF)::SendMessage(m_hWnd, TVM_GETINSERTMARKCOLOR, 0, 0); }
-		BOOL GetItem(TVITEM* pItem) { return (BOOL)::SendMessage(m_hWnd, TVM_GETITEM, 0, (LPARAM) pItem); }
-		DWORD_PTR GetItemData(HTREEITEM hItem) 
+		UINT  GetCount() const
+		{ return TreeView_GetCount( m_hWnd ); }
+		
+		HTREEITEM GetDropHiLightItem() const 
+		{ return TreeView_GetDropHilight(m_hWnd); }
+		
+		HWND GetEditControl() const
+		{ return TreeView_GetEditControl( m_hWnd ); }
+		
+		HTREEITEM GetFirstVisibleItem() const
+		{ return TreeView_GetFirstVisible(m_hWnd); }
+		
+		HIMAGELIST GetImageList(int iImageType) const
+		{ return TreeView_GetImageList( m_hWnd, iImageType ); }
+		
+		UINT  GetIndent() const
+		{ return TreeView_GetIndent( m_hWnd ); }
+		
+		COLORREF GetInsertMarkColor() const 
+		{ return TreeView_GetInsertMarkColor( m_hWnd ); }
+		
+		BOOL GetItem(TVITEM* pItem) const
+		{ return TreeView_GetItem( m_hWnd, pItem ); }
+		
+		DWORD_PTR GetItemData(HTREEITEM hItem) const 
 		{
 			TVITEM tvi = {0};
 			tvi.mask = TVIF_PARAM;
 			tvi.hItem = hItem;
-			::SendMessage(m_hWnd, TVM_GETITEM, 0, (LPARAM)&tvi);
-			return tvi.lParam;
+			return TreeView_GetItem( m_hWnd, hItem );
 		}
-		int  GetItemHeight() { return (int)::SendMessage(m_hWnd, TVM_GETITEMHEIGHT, 0, 0); }
-		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) 
+		
+		int  GetItemHeight() const
+		{ return TreeView_GetItemHeight( m_hWnd ); }
+		
+		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const
 		{
 			TVITEM tvi = {0};
 			tvi.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 			tvi.hItem = hItem;
-			BOOL bResult = ::SendMessage(m_hWnd, TVM_GETITEM, 0, (LPARAM)&tvi);
+			BOOL bResult = TreeView_GetItem( m_hWnd, &tvi );
 			nImage = tvi.iImage;
 			nSelectedImage = tvi.iSelectedImage;
 			return bResult;	
 		}
-		BOOL GetItemRect(HTREEITEM hItem, LPRECT pRect, BOOL bTextOnly) 
-		{ 
-			*(HTREEITEM*)pRect = hItem;
-			return (BOOL)::SendMessage(m_hWnd, TVM_GETITEMRECT, (WPARAM) bTextOnly, (LPARAM)pRect ); 
-		}
-		UINT GetItemState(HTREEITEM hItem, UINT nStateMask) { return (UINT)::SendMessage(m_hWnd, TVM_GETITEMSTATE, (WPARAM)hItem, (LPARAM)nStateMask); }
-		tString GetItemText(HTREEITEM hItem)
+		
+		BOOL GetItemRect(HTREEITEM hItem, LPRECT pRect, BOOL bTextOnly) const
+		{ return TreeView_GetItemRect( m_hWnd, hItem, pRect, bTextOnly ); }
+		
+		tString GetItemText(HTREEITEM hItem) const
 		{
 			TVITEM tvi = {0};
 			tvi.hItem = hItem;
@@ -64,27 +85,64 @@ namespace Win32xx
 			tString t = tvi.pszText;
 			return t;
 		}
-		COLORREF GetLineColor() { return (COLORREF)::SendMessage(m_hWnd, TVM_GETLINECOLOR, 0, 0); }
-		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) { return (HTREEITEM)::SendMessage(m_hWnd, TVM_GETNEXTITEM, (WPARAM)nCode, (LPARAM)hItem); }
-		HTREEITEM GetNextSiblingItem(HTREEITEM hItem) { return TreeView_GetNextSibling(m_hWnd, hItem); }
-		HTREEITEM GetNextVisibleItem(HTREEITEM hItem) { return TreeView_GetNextVisible(m_hWnd, hItem); }
-		HTREEITEM GetParentItem(HTREEITEM hItem) { return TreeView_GetParent(m_hWnd, hItem); }
-		HTREEITEM GetPrevSiblingItem(HTREEITEM hItem) { return TreeView_GetPrevSibling(m_hWnd, hItem); }
-		HTREEITEM GetPrevVisibleItem(HTREEITEM hItem) { return TreeView_GetPrevSibling(m_hWnd, hItem); }
-		HTREEITEM GetRootItem() {TreeView_GetRoot(m_hWnd); }
-		int GetScrollTime() { return (int)::SendMessage(m_hWnd, TVM_GETSCROLLTIME, 0, 0); }
-		HTREEITEM GetSelectedItem() { return TreeView_GetSelection(m_hWnd); }
-		COLORREF GetTextColor() { return (COLORREF)::SendMessage(m_hWnd, TVM_GETTEXTCOLOR, 0, 0); }
-		HWND GetToolTips() { return (HWND)::SendMessage(m_hWnd, TVM_GETTOOLTIPS, 0, 0); }
-		int GetVisibleCount() { return (int)::SendMessage(m_hWnd, TVM_GETVISIBLECOUNT, 0, 0); }
-		BOOL ItemHasChildren(HTREEITEM hItem) { return (BOOL)TreeView_GetItemState(m_hWnd, hItem, TVIF_CHILDREN); }
-		COLORREF SetBkColor(COLORREF clrBk) { return (COLORREF)::SendMessage(m_hWnd, TVM_SETBKCOLOR, 0, (LPARAM)clrBk); }
-		void SetCheckState(HTREEITEM hItem, BOOL fCheck) { TreeView_SetCheckState(m_hWnd, hItem, fCheck ); }
-		HIMAGELIST SetImageList(HIMAGELIST himl, int nType) { return (HIMAGELIST)::SendMessage(m_hWnd, TVM_SETIMAGELIST, (WPARAM) nType, (LPARAM) (HIMAGELIST) himl); }
-		void SetIndent(int indent) { ::SendMessage(m_hWnd, TVM_SETINDENT, (WPARAM) indent, 0); }
-		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE) { return (BOOL)::SendMessage(m_hWnd, TVM_SETINSERTMARK, (WPARAM)fAfter, (LPARAM)hItem); }
-		COLORREF SetInsertMarkColor(COLORREF clrInsertMark) { return (COLORREF)::SendMessage(m_hWnd, TVM_SETINSERTMARKCOLOR, 0, (LPARAM) clrInsertMark); }
-		BOOL SetItem(TVITEM tvItem) { return (BOOL)::SendMessage(m_hWnd, TVM_SETITEM, 0, (LPARAM)&tvItem ); }
+		
+		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const
+		{ return TreeView_GetNextItem( m_hWnd, hItem, nCode); }
+		
+		HTREEITEM GetNextSiblingItem(HTREEITEM hItem) const
+		{ return TreeView_GetNextSibling(m_hWnd, hItem); }
+		
+		HTREEITEM GetNextVisibleItem(HTREEITEM hItem) const
+		{ return TreeView_GetNextVisible(m_hWnd, hItem); }
+		
+		HTREEITEM GetParentItem(HTREEITEM hItem) const
+		{ return TreeView_GetParent(m_hWnd, hItem); }
+		
+		HTREEITEM GetPrevSiblingItem(HTREEITEM hItem) const
+		{ return TreeView_GetPrevSibling(m_hWnd, hItem); }
+		
+		HTREEITEM GetPrevVisibleItem(HTREEITEM hItem) const
+		{ return TreeView_GetPrevSibling(m_hWnd, hItem); }
+		
+		HTREEITEM GetRootItem() const
+		{TreeView_GetRoot(m_hWnd); }
+		
+		int GetScrollTime() const
+		{ return TreeView_GetScrollTime( m_hWnd ); }
+		
+		HTREEITEM GetSelectedItem() const 
+		{ return TreeView_GetSelection(m_hWnd); }
+		
+		COLORREF GetTextColor() const
+		{ return TreeView_GetTextColor( m_hWnd ); }
+		
+		HWND GetToolTips() const
+		{ return TreeView_GetToolTips( m_hWnd ); }
+		
+		UINT GetVisibleCount() const
+		{ return TreeView_GetVisibleCount( m_hWnd ); }
+		
+		BOOL ItemHasChildren(HTREEITEM hItem) const 
+		{ return (BOOL)TreeView_GetChild( m_hWnd, hItem ); }
+		
+		COLORREF SetBkColor(COLORREF clrBk) 
+		{ return TreeView_SetBkColor( m_hWnd, clrBk ); }
+				
+		HIMAGELIST SetImageList(HIMAGELIST himl, int nType) 
+		{ return TreeView_SetImageList( m_hWnd, himl, nType ); }
+
+		void SetIndent(int indent) 
+		{ TreeView_SetIndent( m_hWnd, indent ); }
+		
+		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE) 
+		{ return TreeView_SetInsertMark( m_hWnd, hItem, fAfter ); }
+		
+		COLORREF SetInsertMarkColor(COLORREF clrInsertMark) 
+		{ return TreeView_SetInsertMarkColor( m_hWnd, clrInsertMark ); }
+		
+		BOOL SetItem(TVITEM tvItem) 
+		{ return TreeView_SetItem( m_hWnd, &tvItem ); }
+		
 		BOOL SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam)
 		{
 			TVITEM tvi = {0};
@@ -96,17 +154,20 @@ namespace Win32xx
 			tvi.state = nState;
 			tvi.stateMask = nStateMask;
 			tvi.lParam = lParam;
-			return (BOOL)::SendMessage( m_hWnd, TVM_SETITEM, 0, (LPARAM)&tvi );
+			return TreeView_SetItem( m_hWnd, &tvi );
 		}
+		
 		BOOL SetItemData(HTREEITEM hItem, DWORD_PTR dwData) 
 		{
 			TVITEM tvi = {0};
 			tvi.hItem = hItem;
 			tvi.mask = TVIF_PARAM;
 			tvi.lParam = dwData;
-			return (BOOL)::SendMessage(m_hWnd, TVM_SETITEM, 0, (LPARAM)&tvi );
+			return TreeView_SetItem( m_hWnd, &tvi );
 		}
-		int  SetItemHeight(SHORT cyItem) { return (int)::SendMessage(m_hWnd, TVM_SETITEMHEIGHT, (WPARAM)cyItem, 0 ); }
+		int  SetItemHeight(SHORT cyItem) 
+		{ return TreeView_SetItemHeight( m_hWnd, cyItem ); }
+		
 		BOOL SetItemImage(HTREEITEM hItem, int nImage, int nSelectedImage)
 		{
 			TVITEM tvi = {0};
@@ -114,36 +175,69 @@ namespace Win32xx
 			tvi.iImage = nImage;
 			tvi.iSelectedImage = nSelectedImage;
 			tvi.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-			return (BOOL)::SendMessage(m_hWnd, TVM_SETITEM, 0, (LPARAM)&tvi );
+			return TreeView_SetItem(m_hWnd, &tvi );
 		}
-		void SetItemState(HTREEITEM hItem, UINT state, UINT stateMask) { TreeView_SetItemState(m_hWnd, hItem, state, stateMask); }
+		
 		BOOL SetItemText(HTREEITEM hItem, LPCTSTR szText) 
 		{
 			TVITEM tvi = {0};
 			tvi.hItem = hItem;
 			tvi.pszText = (LPTSTR)szText;
 			tvi.mask = TVIF_TEXT;
-			return (BOOL)::SendMessage(m_hWnd, TVM_SETITEM, 0, (LPARAM)&tvi );
+			return TreeView_SetItem(m_hWnd, &tvi );
 		}
-		COLORREF SetLineColor(COLORREF clr) { return (COLORREF)::SendMessage(m_hWnd, TVM_SETLINECOLOR, 0, (LPARAM)clr); }
-		UINT SetScrollTime(UINT uScrollTime) { return (UINT)::SendMessage(m_hWnd, TVM_SETSCROLLTIME, (WPARAM)uScrollTime, 0); }
-		COLORREF SetTextColor(COLORREF clrText) { return (COLORREF)::SendMessage(m_hWnd, TVM_SETTEXTCOLOR, 0, (LPARAM)clrText ); }
-		HWND SetToolTips(HWND hwndTooltip) { return (HWND)::SendMessage(m_hWnd, TVM_SETTOOLTIPS, (WPARAM)hwndTooltip, 0); }
+		
+		UINT SetScrollTime(UINT uScrollTime) 
+		{ return TreeView_SetScrollTime( m_hWnd, uScrollTime ); }
+		
+		COLORREF SetTextColor(COLORREF clrText) 
+		{ return TreeView_SetTextColor( m_hWnd, clrText ); }
+		
+		HWND SetToolTips(HWND hwndTooltip) 
+		{ return TreeView_SetToolTips( m_hWnd, hwndTooltip ); }
 
-		HTREEITEM CreateDragImage(HTREEITEM hItem) { return (HTREEITEM)::SendMessage(m_hWnd, TVM_CREATEDRAGIMAGE, 0, (LPARAM)hItem); }
-		BOOL DeletAllItems() {return (BOOL)::SendMessage(m_hWnd, TVM_DELETEITEM, 0, 0 ); }
-		BOOL DeleteItem(HTREEITEM hItem) { return (BOOL)::SendMessage(m_hWnd, TVM_DELETEITEM, 0, (LPARAM)hItem ); }
-		HWND EditLabel(HTREEITEM hItem) { return (HWND)::SendMessage(m_hWnd, TVM_EDITLABEL, 0, (LPARAM)hItem ); }
-		BOOL EnsureVisible(HTREEITEM hItem) { return (BOOL)::SendMessage(m_hWnd, TVM_ENSUREVISIBLE, 0, (LPARAM)hItem ); }
-		BOOL Expand(HTREEITEM hItem, UINT nCode) { return (BOOL)::SendMessage(m_hWnd, TVM_EXPAND, (WPARAM)nCode, (LPARAM)hItem ); }
-		HTREEITEM HitTest(LPTVHITTESTINFO pht) { return (HTREEITEM)::SendMessage(m_hWnd, TVM_HITTEST, 0, (LPARAM)pht ); }
-		HTREEITEM InsertItem(LPTVINSERTSTRUCT pIS) { return (HTREEITEM)::SendMessage(m_hWnd, TVM_INSERTITEM, 0, (LPARAM)pIS ); }
-		BOOL Select(HTREEITEM hitem, UINT flag) { return TreeView_Select(m_hWnd, hitem, flag ); }
-		BOOL SelectDropTarget(HTREEITEM hItem) { return TreeView_SelectDropTarget(m_hWnd, hItem); }
-		BOOL SelectItem(HTREEITEM hItem, DWORD dwFlag = 0) { return (BOOL)::SendMessage(m_hWnd, TVM_SELECTITEM, (WPARAM)dwFlag, (LPARAM)hItem ); }
-		BOOL SelectSetFirstVisible(HTREEITEM hItem) { return TreeView_SelectSetFirstVisible(m_hWnd, hItem); }
-		BOOL SortChildren(HTREEITEM hItem, BOOL bRecurse) { return (BOOL)::SendMessage(m_hWnd, TVM_SORTCHILDREN,  (WPARAM)bRecurse, (LPARAM)hItem ); }
-		BOOL SortChildrenCB(LPTVSORTCB psort) { return (BOOL)::SendMessage(m_hWnd, TVM_SORTCHILDRENCB, 0, (LPARAM)psort ); }
+// Operations
+		HIMAGELIST CreateDragImage(HTREEITEM hItem) 
+		{ return TreeView_CreateDragImage( m_hWnd, hItem ); }
+		
+		BOOL DeletAllItems() 
+		{return TreeView_DeleteAllItems( m_hWnd ); }
+		
+		BOOL DeleteItem(HTREEITEM hItem) 
+		{ return TreeView_DeleteItem( m_hWnd, hItem ); }
+		
+		HWND EditLabel(HTREEITEM hItem) 
+		{ return TreeView_EditLabel( m_hWnd, hItem ); }
+		
+		BOOL EnsureVisible(HTREEITEM hItem) 
+		{ return TreeView_EnsureVisible( m_hWnd, hItem ); }
+		
+		BOOL Expand(HTREEITEM hItem, UINT nCode) 
+		{ return TreeView_Expand( m_hWnd, hItem, nCode ); }
+		
+		HTREEITEM HitTest(LPTVHITTESTINFO pht) 
+		{ return TreeView_HitTest( m_hWnd, pht ); }
+		
+		HTREEITEM InsertItem(LPTVINSERTSTRUCT pis) 
+		{ return TreeView_InsertItem( m_hWnd, pis ); }
+		
+		BOOL Select(HTREEITEM hitem, UINT flag) 
+		{ return TreeView_Select(m_hWnd, hitem, flag ); }
+		
+		BOOL SelectDropTarget(HTREEITEM hItem) 
+		{ return TreeView_SelectDropTarget(m_hWnd, hItem); }
+		
+		BOOL SelectItem(HTREEITEM hItem, DWORD dwFlag = 0) 
+		{ return (BOOL)::SendMessage(m_hWnd, TVM_SELECTITEM, (WPARAM)dwFlag, (LPARAM)hItem ); }
+		
+		BOOL SelectSetFirstVisible(HTREEITEM hItem) 
+		{ return TreeView_SelectSetFirstVisible(m_hWnd, hItem); }
+		
+		BOOL SortChildren(HTREEITEM hItem, BOOL fRecurse) 
+		{ return TreeView_SortChildren( m_hWnd, hItem, fRecurse ); }
+		
+		BOOL SortChildrenCB(LPTVSORTCB psort, BOOL fRecurse) 
+		{ return TreeView_SortChildrenCB( m_hWnd, psort, fRecurse ); }
 	};
 
 } // namespace Win32xx

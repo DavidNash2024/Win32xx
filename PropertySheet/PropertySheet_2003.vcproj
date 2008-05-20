@@ -251,6 +251,9 @@
 			<File
 				RelativePath=".\res\Toolbar24_h.bmp">
 			</File>
+			<File
+				RelativePath=".\res\Win32++.manifest">
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
@@ -262,9 +265,6 @@
 				RelativePath="..\Win32++\Dialog.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\Frame.h">
 			</File>
 			<File
@@ -274,15 +274,9 @@
 				RelativePath="..\Win32++\PropertySheet.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\WinCore.h">
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\res\Win32++.manifest">
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
