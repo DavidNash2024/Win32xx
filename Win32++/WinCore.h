@@ -50,8 +50,8 @@
 // 2) CWinException: This class is used internally by Win32++ to handle
 //            exceptions. You can also use it to throw and catch exceptions.
 //
-// 3) WinApp: This class is used start Win32++ and run the message loop. You  
-//            should inherit from this class to start Win32++ in your own 
+// 3) WinApp: This class is used start Win32++ and run the message loop. You
+//            should inherit from this class to start Win32++ in your own
 //            application.
 //
 // 4) CWnd:   This class is used to represent a window. It provides a means
@@ -179,7 +179,7 @@ namespace Win32xx
 	#define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
 	#define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
 
-	// Required for WinCE	
+	// Required for WinCE
 	#ifndef TLS_OUT_OF_INDEXES
 	  #define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
 	#endif
@@ -193,7 +193,7 @@ namespace Win32xx
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CFrame;
-	class CWnd;		
+	class CWnd;
 
 
 	enum Constants
@@ -218,7 +218,7 @@ namespace Win32xx
 		HHOOK  hMenuHook;	// MSG hook for CMenubar
 	};
 
-	
+
 	//////////////////////////////////////////////////
 	// Global functions	(within the Win32xx namespace)
 
@@ -413,10 +413,10 @@ namespace Win32xx
 	public:
 		CSize()						{ cx = 0; cy = 0; }
 		CSize(int CX, int CY)		{ cx = CX; cy = CY; }
-		CSize(SIZE sz)				{ cx = sz.cx; cy = sz.cy; } 
+		CSize(SIZE sz)				{ cx = sz.cx; cy = sz.cy; }
 		CSize(POINT pt)				{ cx = pt.x;  cx = pt.y; }
 		CSize(DWORD dw)				{ cx = (short)LOWORD(dw); cx = (short)HIWORD(dw); }
-		void SetSize(int CX, int CY){ cx = CX; cy = CY; } 
+		void SetSize(int CX, int CY){ cx = CX; cy = CY; }
 		BOOL operator == (SIZE sz)	{ return (cx == sz.cx && cy == sz.cy); }
 		BOOL operator != (SIZE sz)	{ return !(cx == sz.cx && cy == sz.cy); }
 	};
@@ -429,11 +429,11 @@ namespace Win32xx
 	public:
 		CPoint()					{ x = 0; y = 0; }
 		CPoint(int X, int Y)		{ x = X; y = Y; }
-		CPoint(SIZE sz)				{ x = sz.cx; y = sz.cy; } 
+		CPoint(SIZE sz)				{ x = sz.cx; y = sz.cy; }
 		CPoint(POINT pt)			{ x = pt.x ; y = pt.y; }
 		CPoint(DWORD dw)			{ x = (short)LOWORD(dw); y = (short)HIWORD(dw); }
 		void Offset(int dx, int dy)	{ x += dx; y += dy; }
-		void SetPoint(int X, int Y)	{ x = X; y = Y; } 
+		void SetPoint(int X, int Y)	{ x = X; y = Y; }
 		BOOL operator == (POINT pt)	{ return  ((x == pt.x) && (y == pt.y)); }
 		BOOL operator != (POINT pt)	{ return !((x == pt.x) && (y == pt.y)); }
 	};
@@ -444,14 +444,14 @@ namespace Win32xx
 	class CRect : public RECT
 	{
 	public:
-		CRect() 
+		CRect()
 		{ left = top = right = bottom = 0; }
-		
-		CRect(int Left, int Top, int Right, int Bottom) 
+
+		CRect(int Left, int Top, int Right, int Bottom)
 		{ left = Left; top = Top; right = Right; bottom = Bottom; }
-		
-		CRect(RECT rc) 
-		{ left = rc.left; top = rc.top; right = rc.right; bottom = rc.bottom; } 
+
+		CRect(RECT rc)
+		{ left = rc.left; top = rc.top; right = rc.right; bottom = rc.bottom; }
 
 		CRect(POINT pt, SIZE sz)
 		{ right = (left = pt.x) + sz.cx; bottom = (top = pt.y) + sz.cy; }
@@ -459,57 +459,57 @@ namespace Win32xx
 		CRect(POINT topLeft, POINT bottomRight)
 		{ left = topLeft.x; top = topLeft.y; right = bottomRight.x; bottom = bottomRight.y; }
 
-		operator LPRECT()			
+		operator LPRECT()
 		{ return this; }
-		
-		operator LPCRECT() const	
+
+		operator LPCRECT() const
 		{ return this; }
-		
-		BOOL operator == (RECT& rc)	
+
+		BOOL operator == (RECT& rc)
 		{ return ::EqualRect(this, &rc); }
-		
-		BOOL operator != (RECT& rc)	
+
+		BOOL operator != (RECT& rc)
 		{ return !::EqualRect(this, &rc); }
-		
-		void  operator=( RECT& srcRect)	
+
+		void  operator=( RECT& srcRect)
 		{ ::CopyRect(this, &srcRect); }
 
 		int Height()
 		{ return bottom - top; }
-		
+
 		int Width()
 		{ return right - left; }
-		
-		void CopyRect(RECT* pRect)	
+
+		void CopyRect(RECT* pRect)
 		{ ::CopyRect(pRect, this); }
-		
-		BOOL EqualRect(const RECT* pRect) 
+
+		BOOL EqualRect(const RECT* pRect)
 		{ return ::EqualRect(pRect, this); }
-		
-		BOOL InflateRect(int dx, int dy) 
+
+		BOOL InflateRect(int dx, int dy)
 		{ return ::InflateRect(this, dx, dy); }
-		
+
 		BOOL IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
 		{ return ::IntersectRect(this, lpRect1, lpRect2); }
-		
+
 		BOOL IsRectEmpty()
-		{::IsRectEmpty(this);}
-		
-		BOOL OffsetRect(int dx, int dy) 
+		{ return ::IsRectEmpty(this);}
+
+		BOOL OffsetRect(int dx, int dy)
 		{ return ::OffsetRect(this, dx, dy); }
 
-		BOOL PtInRect(POINT pt)		
+		BOOL PtInRect(POINT pt)
 		{ return ::PtInRect(this, pt); }
-		
-		BOOL SetRect(int left, int top, int right, int bottom) 
+
+		BOOL SetRect(int left, int top, int right, int bottom)
 		{ return ::SetRect(this, left, top, right, bottom); }
-		
+
 		BOOL SetRectEmpty()
-		{ return ::SetRectEmpty(this); } 
-		
+		{ return ::SetRectEmpty(this); }
+
 		BOOL SubtractRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
 		{ return ::SubtractRect(this, pRcSrc1, pRcSrc2); }
-		
+
 		BOOL UnionRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
 		{ return ::UnionRect(this, pRcSrc1, pRcSrc2); }
 	};
@@ -701,7 +701,7 @@ namespace Win32xx
 		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
 	};
 
-	
+
 	// Global function, returns a pointer to the CWinApp derrived class
 	inline CWinApp* GetApp()
 	{
@@ -740,7 +740,7 @@ namespace Win32xx
 
 			m_hInstance = (HINSTANCE) ::GetModuleHandle(0);
 			m_hResource = m_hInstance;
-			DefaultClass();		
+			DefaultClass();
 		}
 
 		catch (const CWinException &e)

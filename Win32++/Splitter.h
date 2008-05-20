@@ -256,7 +256,7 @@ namespace Win32xx
 					m_nBarPos = cy - m_nWidth/2;
 			}
 
-			if (m_bImmediate)
+			if (m_bImmediate) 
 				RecalcLayout();
 			else
 			{
@@ -293,7 +293,7 @@ namespace Win32xx
 		if (m_bVertical)
 		{
 			// Reposition our window panes and bar
-			::SetWindowPos(m_pPane0->GetHwnd(), NULL, 0, 0, m_nBarPos - w2, cy, SWP_SHOWWINDOW );
+			::SetWindowPos(m_pPane0->GetHwnd(), NULL, 0, 0, m_nBarPos - w2, cy, SWP_SHOWWINDOW);
 			::SetWindowPos(m_pPane1->GetHwnd(), NULL, m_nBarPos - w2 + m_nWidth, 0, cx - m_nBarPos - m_nWidth + w2, cy, SWP_SHOWWINDOW );
 			::SetWindowPos(m_Bar, NULL, m_nBarPos - w2, 0, m_nWidth, cy, SWP_SHOWWINDOW );
 		}

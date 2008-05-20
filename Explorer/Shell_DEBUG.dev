@@ -1,7 +1,7 @@
 [Project]
 FileName=Shell_DEBUG.dev
 Name=Shell
-UnitCount=18
+UnitCount=22
 Type=0
 Ver=1
 ObjFiles=
@@ -210,9 +210,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\Win32++\Frame.h
+FileName=LeftView.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -220,9 +220,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\Win32++\Splitter.h
+FileName=LeftView.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -230,9 +230,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=..\Win32++\WinCore.h
+FileName=RightView.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -240,9 +240,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=..\Win32++\GDI.h
+FileName=RightView.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

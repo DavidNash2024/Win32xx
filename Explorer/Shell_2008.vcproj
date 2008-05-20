@@ -214,24 +214,8 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="ListView.cpp"
+				RelativePath=".\LeftView.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="main.cpp"
@@ -294,6 +278,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\RightView.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ShellApp.cpp"
 				>
 				<FileConfiguration
@@ -333,33 +321,13 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="TreeView.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="ListView.h"
+				RelativePath=".\LeftView.h"
 				>
 			</File>
 			<File
@@ -379,15 +347,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RightView.h"
+				>
+			</File>
+			<File
 				RelativePath="ShellApp.h"
 				>
 			</File>
 			<File
 				RelativePath="ShellWrapper.h"
-				>
-			</File>
-			<File
-				RelativePath="TreeView.h"
 				>
 			</File>
 		</Filter>
@@ -436,7 +404,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Win32++\ListView.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Win32++\Splitter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Win32++\TreeView.h"
 				>
 			</File>
 			<File
