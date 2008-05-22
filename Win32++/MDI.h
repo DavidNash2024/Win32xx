@@ -123,8 +123,6 @@ namespace Win32xx
 
 		// Its unlikely you would need to override these functions
 		virtual void AddMDIChild(CMDIChild* pMDIChild);
-		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnCommandFrame(WPARAM wParam, LPARAM lParam);
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -140,6 +138,8 @@ namespace Win32xx
 		};
 
 		void AppendMDIMenu(HMENU hMenuWindow);
+		LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		BOOL OnCommandFrame(WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(HMENU hMenu);
 
 		CMDIClient m_MDIClient;
