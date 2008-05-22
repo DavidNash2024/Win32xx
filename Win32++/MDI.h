@@ -136,6 +136,7 @@ namespace Win32xx
 			virtual HWND Create(HWND hWndParent = NULL);
 			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
+		friend class CMDIClient;
 
 		void AppendMDIMenu(HMENU hMenuWindow);
 		LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
