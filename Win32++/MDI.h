@@ -108,10 +108,6 @@ namespace Win32xx
 		CMDIFrame();
 		virtual ~CMDIFrame();
 
-		// These are the functions you might wish to override
-		virtual void AppendMDIMenu(HMENU hMenuWindow);
-		virtual void UpdateFrameMenu(HMENU hMenu);
-
 		// These functions aren't virtual, so don't override them
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
 		HWND GetActiveMDIChild() const {return m_hActiveMDIChild;}
@@ -121,7 +117,6 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual void OnClose();
-		virtual BOOL OnCommandFrame(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual void OnWindowPosChanged();
 		virtual void RecalcLayout();
@@ -129,6 +124,7 @@ namespace Win32xx
 		// Its unlikely you would need to override these functions
 		virtual void AddMDIChild(CMDIChild* pMDIChild);
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnCommandFrame(WPARAM wParam, LPARAM lParam);
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -142,6 +138,9 @@ namespace Win32xx
 			virtual HWND Create(HWND hWndParent = NULL);
 			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
+
+		void AppendMDIMenu(HMENU hMenuWindow);
+		void UpdateFrameMenu(HMENU hMenu);
 
 		CMDIClient m_MDIClient;
 		std::vector <CMDIChild*> m_MDIChildVect;
