@@ -656,6 +656,7 @@ namespace Win32xx
 	class CWinApp
 	{
 		friend class CWnd;	// CWnd needs access to CWinApp's private members
+		friend class CMDIFrame; // Accesses m_hMDIView
 
 	public:
 		CWinApp();
@@ -699,6 +700,7 @@ namespace Win32xx
 		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
 		DWORD m_TlsIndex;			// Thread Local Storage index
 		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
+		HWND m_hMDIView;			// handle to the MDI client (if any)
 	};
 
 
@@ -715,7 +717,8 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_pFrame(NULL), m_Callback(NULL)
+	inline CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_pFrame(NULL),
+								m_Callback(NULL), m_hMDIView(NULL)
 	{
 		try
 		{
@@ -840,12 +843,14 @@ namespace Win32xx
 		{
 			if (-1 == status) return -1;
 
-			if (!::TranslateAccelerator(m_hWndAccel, m_hAccelTable, &uMsg))
+			if (!TranslateMDISysAccel(m_hMDIView, &uMsg) &&
+				!TranslateAccelerator(m_hWndAccel, m_hAccelTable, &uMsg))
 			{
 				::TranslateMessage(&uMsg);
 				::DispatchMessage(&uMsg);
 			}
 		}
+
 		return LOWORD(uMsg.wParam);
 	}
 

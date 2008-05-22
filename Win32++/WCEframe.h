@@ -111,7 +111,7 @@ namespace Win32xx
 		CWceFrame();
 		virtual ~CWceFrame();
 		virtual RECT GetClientRect();
-		virtual CCmdbar* GetMenubar() {return &m_Menubar;}
+		virtual CCmdbar& GetMenubar() {return m_Menubar;}
 		virtual void OnCreate();
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -369,10 +369,10 @@ namespace Win32xx
 			}
 
 			// Add the bitmap
-			GetMenubar()->AddBitmap(IDW_MAIN, iImages , 16, 16);
+			GetMenubar().AddBitmap(IDW_MAIN, iImages , 16, 16);
 
 			// Add the buttons
-			GetMenubar()->AddButtons(iNumButtons, tbb);
+			GetMenubar().AddButtons(iNumButtons, tbb);
 		}
 	}
 

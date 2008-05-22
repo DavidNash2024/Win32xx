@@ -8,7 +8,7 @@
 #include "MainMDIFrm.h"
 
 
-class CMDIFrameApp : public CMDIApp
+class CMDIFrameApp : public CWinApp
 {
 public:
     CMDIFrameApp();

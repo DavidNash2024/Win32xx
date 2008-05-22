@@ -8,7 +8,7 @@
 #include "MainMDIFrm.h"
 
 
-class CMDIDemoApp : public CMDIApp
+class CMDIDemoApp : public CWinApp
 {
 public:
     CMDIDemoApp();

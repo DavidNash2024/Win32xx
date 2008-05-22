@@ -27,6 +27,11 @@ Tree-View control from a dialog.
 * Added CRect class
 * Added CSize class
 
+* Removed CMDIApp
+This class is no longer required, since it's functionality has been merged
+with CWinApp. All applications (including MDI) now use CWinApp to start
+Win32++.
+
 
 Notes for users of previous versions:
 -------------------------------------
@@ -36,7 +41,8 @@ Notes for users of previous versions:
 * CRebar, CStatusbar, and CToolbar have been moved to their own header files,
   but this does not require a change to existing user code.
  
-
+* For MDI applications inherit from CWinApp rather than CMDIApp to start 
+  Win32++.
 
 Version 6.02a
 =============

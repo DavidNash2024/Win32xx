@@ -35,10 +35,9 @@
 ////////////////////////////////////////////////////////
 
 
-//////////////////////////////////////////
+////////////////////////////////////////////////////////
 // MDI.h
-//  Declaration of the CMDIApp, CMDIChild,
-//   CMDIClient,  CMDIFrame classes
+//  Declaration of the CMDIChild and CMDIFrame classes
 
 // The classes defined here add MDI frames support to Win32++. MDI
 // (Multiple Document Interface) frames host one or more child windows. The
@@ -47,20 +46,14 @@
 // used to display a bitmap. Four classes are defined here to support MDI
 // frames:
 
-// 1) CMDIApp.  This class inherits from CWinApp. It modifies the message loop
-//    to make it compatible with MDI applications. Inherit from this class to
-//    start your Win32++ MDI application.
-//
-// 2) CMDIFrame. This class inherits from CFrame, and adds the functionality
+
+// 1) CMDIFrame. This class inherits from CFrame, and adds the functionality
 //    required by MDI frames. It keeps track of the MDI children created and
 //    destroyed, and adjusts the menu when a MDI child is activated. Use the
 //    AddMDIChild function to add MDI child windows to the MDI frame. Inherit
 //    from CMDIFrame to create your own MDI frame.
 //
-// 3) CMDIClient: This is an internal class used by CMDIFrame. You won't need
-//    to use this class directly.
-//
-// 4) CMDIChild: All MDI child windows (ie. CWnd classes) should inherit from
+// 2) CMDIChild: All MDI child windows (ie. CWnd classes) should inherit from
 //    this class. Each MDI child type can have a different frame menu.
 
 // Use the MDIFrame generic application as the starting point for your own MDI
@@ -79,24 +72,6 @@
 
 namespace Win32xx
 {
-
-	///////////////////////////////////
-	// Declaration of the CMDIApp class
-	//
-	class CMDIApp : public CWinApp
-	{
-	public:
-		CMDIApp();
-	    virtual ~CMDIApp() {}
-
-		// These are the functions you might wish to override
-		virtual int MessageLoop();
-
-	protected:
-		HACCEL m_hAccel;
-	};
-
-
 	/////////////////////////////////////
 	// Declaration of the CMDIChild class
 	//
@@ -122,27 +97,11 @@ namespace Win32xx
 		HMENU m_hChildMenu;
 	};
 
-
-	//////////////////////////////////////
-	// Declaration of the CMDIClient class
-	//
-	class CMDIClient : public CWnd
-	{
-	public:
-		// Its unlikely you would need to inherit from this class
-		CMDIClient();
-		virtual ~CMDIClient();
-		virtual HWND Create(HWND hWndParent = NULL);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	};
-
-
 	/////////////////////////////////////
 	// Declaration of the CMDIFrame class
 	//
 	class CMDIFrame : public CFrame
 	{
-		friend class CMDIClient;	// CMDIClient uses RemoveMDIChild
 		friend class CMDIChild;     // CMDIChild uses m_hOrigMenu
 
 	public:
@@ -155,7 +114,6 @@ namespace Win32xx
 
 		// These functions aren't virtual, so don't override them
 		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
-		CMDIClient& GetMDIClient() {return m_MDIClient;}
 		HWND GetActiveMDIChild() const {return m_hActiveMDIChild;}
 		CMDIChild* GetActiveMDIChildCWnd() const;
 		BOOL IsMDIChildMaxed() const;
@@ -164,6 +122,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual void OnClose();
 		virtual BOOL OnCommandFrame(WPARAM wParam, LPARAM lParam);
+		virtual void OnCreate();
 		virtual void OnWindowPosChanged();
 		virtual void RecalcLayout();
 
@@ -175,36 +134,20 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		class CMDIClient : public CWnd  // a nested class within CMDIFrame
+		{
+		public:
+			CMDIClient() {}
+			virtual ~CMDIClient() {}
+			virtual HWND Create(HWND hWndParent = NULL);
+			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		};
+
 		CMDIClient m_MDIClient;
 		std::vector <CMDIChild*> m_MDIChildVect;
 		HWND m_hActiveMDIChild;
 	};
 
-	///////////////////////////////////
-	// Definitions for the CMDIApp class
-	//
-	inline CMDIApp::CMDIApp()
-	{
-		m_hAccel = LoadAccelerators (GetInstanceHandle(), MAKEINTRESOURCE(IDW_MAIN)) ;
-	}
-
-	inline int CMDIApp::MessageLoop()
-	{
-		MSG uMsg;
-		int status;
-
-		while ((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
-		{
-			if (-1 == status) return -1;
-			if (!TranslateMDISysAccel(GetFrame()->GetView()->GetHwnd(), &uMsg) &&
-				!TranslateAccelerator(m_hWndAccel, m_hAccel, &uMsg))
-			{
-				::TranslateMessage(&uMsg);
-				::DispatchMessage(&uMsg);
-			}
-		}
-		return LOWORD(uMsg.wParam);
-	}
 
 	/////////////////////////////////////
 	// Definitions for the CMDIFrame class
@@ -357,6 +300,12 @@ namespace Win32xx
 			::DestroyWindow(m_hWnd);
 	}
 
+	inline void CMDIFrame::OnCreate()
+	{
+		CFrame::OnCreate();
+		GetApp()->m_hMDIView = GetView()->GetHwnd();
+	}
+
 	inline void CMDIFrame::OnWindowPosChanged()
 	{
 		if (IsMenubarUsed())
@@ -457,18 +406,7 @@ namespace Win32xx
 	}
 
 
-	//////////////////////////////////////
-	// Definitions for the CMDIClient class
-	//
-	inline CMDIClient::CMDIClient()
-	{
-	}
-
-	inline CMDIClient::~CMDIClient()
-	{
-	}
-
-	inline HWND CMDIClient::Create(HWND hWndParent /* = NULL*/)
+	inline HWND CMDIFrame::CMDIClient::Create(HWND hWndParent /* = NULL*/)
 	{
 		CLIENTCREATESTRUCT clientcreate ;
 		clientcreate.hWindowMenu  = m_hWnd;
@@ -483,7 +421,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline LRESULT CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(m_hWndParent);
 		switch (uMsg)
