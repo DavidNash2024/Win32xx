@@ -21,5 +21,9 @@ private:
 };
 
 
+// returns a reference to the CDlgSubclassApp object
+inline CDlgSubclassApp& GetDlgApp() { return *((CDlgSubclassApp*)GetApp()); }
+
+
 #endif // define DLGSUBCLASSAPP_H
 

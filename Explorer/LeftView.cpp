@@ -63,59 +63,25 @@ int CALLBACK CLeftView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPara
 
 HWND CLeftView::Create(HWND hWndParent/* = 0*/)
 {
-	m_hWndParent = hWndParent;
-	m_hThread = ::CreateThread(NULL, 0, CLeftView::ThreadStart, (LPVOID) this, 0, &m_dwThreadID);
+	// Pass the parent hwnd to the CREATESTRUCT
+	m_cs.hwndParent = hWndParent;
+	
+	// Create the thread
+	m_hThread = ::CreateThread(NULL, 0, CLeftView::RunThread, (LPVOID) this, 0, &m_dwThreadID);
 	if (!m_hThread)
 		throw CWinException(_T("Failed to create thread"));
 
-//	Sleep(500);
-	return m_hWnd;
+	return m_hWnd; // Window not created yet
 }
 
-HWND CLeftView::CreateWin()
+HWND CLeftView::CreateThreadWin()
 {
-	HWND hWndParent = m_hWndParent;
-
 	// Set the CREATESTRUCT parameters
 	PreCreate(m_cs);
 
-	// Set the WNDCLASS parameters
-	PreRegisterClass(m_wc);
-	if (m_wc.lpszClassName)
-	{
-		RegisterClass(m_wc);
-		m_cs.lpszClass = m_wc.lpszClassName;
-		m_cs.style |= m_wc.style;
-	}
-
-	// Set the Window Class Name
-	TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
-	if (m_cs.lpszClass)
-		lstrcpy(szClassName, m_cs.lpszClass);
-
-	// Set Parent
-	if (!hWndParent && m_cs.hwndParent)
-		hWndParent = m_cs.hwndParent;
-
-	// Set the window style
-	DWORD dwStyle;
-	DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-	if (m_cs.style)
-		dwStyle = m_cs.style;
-	else
-		dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
-
-	// Set window size and position
-	int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
-	int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
-	int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
-	int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
-
 	// Create the window
-	CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-		cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams);
-
-	return m_hWnd;	
+	return CreateEx(m_cs.dwExStyle, m_cs.lpszClass, m_cs.lpszName, m_cs.style, 0, 0, 0, 0, 
+		m_cs.hwndParent, m_cs.hMenu, m_cs.lpCreateParams);	
 }
 
 void CLeftView::DoContextMenu(LPPOINT pptScreen)
@@ -260,10 +226,9 @@ LRESULT CLeftView::OnNotifyReflect(WPARAM, LPARAM lParam)
 		{
 			LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
 			TreeItemData* pItem = (TreeItemData*)pnmtv->itemNew.lParam;
-			CMainFrame* pFrame = (CMainFrame*) GetApp()->GetFrame();
 
-			pFrame->GetMainView().GetListView().DisplayFolder(pItem->GetParentFolder(),
-				pItem->GetFullCpidl(), pItem->GetRelCpidl());
+			CRightView& LeftView = GetShellApp().GetMainFrame().GetListView();
+			LeftView.DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
 		}
 		break;
 	} // switch(lpnmh->code)
@@ -442,17 +407,16 @@ void CLeftView::OnInitialUpdate()
 	//Set the image list
 	::SendMessage(m_hWnd, TVM_SETIMAGELIST, TVSIL_NORMAL, (LPARAM) GetImageList(FALSE));
 
-	CMainView& MainView = ((CMainFrame*)GetApp()->GetFrame())->GetMainView();
+	CMainView& MainView = GetShellApp().GetMainFrame().GetMainView();
 	MainView.RecalcLayout();
 	MainView.GetTreeView().GetRootItems();
 }
 
 void CLeftView::PreCreate(CREATESTRUCT &cs)
 {
+	cs.dwExStyle = WS_EX_CLIENTEDGE;
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |
 					TVS_HASBUTTONS | TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS ;
-	
-	cs.dwExStyle = WS_EX_CLIENTEDGE;
 
 	CTreeView::PreCreate(cs);
 }
@@ -513,12 +477,12 @@ void CLeftView::SetImageLists()
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 
-DWORD WINAPI CLeftView::ThreadStart(LPVOID This)
+DWORD WINAPI CLeftView::RunThread(LPVOID This)
 // This function is called automatically when the thread is started
 {
 	// Get the pointer for this CThread object 
 	CLeftView* pLeftView = (CLeftView*)This;	
-	pLeftView->CreateWin();
+	pLeftView->CreateThreadWin();
 
 	// The message loop runs until PostQuitMessage is processed
 	GetApp()->MessageLoop();

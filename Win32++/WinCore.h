@@ -91,7 +91,7 @@
 #endif
 
 #ifdef _WIN32_WCE
-#include "WCEstddef.h"
+  #include "WCEstddef.h"
 #endif
 
 #ifndef STRICT
@@ -192,8 +192,10 @@ namespace Win32xx
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
 	class CWinApp;
-	class CFrame;
 	class CWnd;
+#ifndef _WIN32_WCE
+	class CFrame;
+#endif
 
 
 	enum Constants
@@ -656,7 +658,9 @@ namespace Win32xx
 	class CWinApp
 	{
 		friend class CWnd;	// CWnd needs access to CWinApp's private members
+	#ifndef _WIN32_WCE
 		friend class CMDIFrame; // Accesses m_hMDIView
+	#endif
 
 	public:
 		CWinApp();
@@ -667,10 +671,12 @@ namespace Win32xx
 		virtual int  MessageLoop();
 		virtual int  Run();
 		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
-		virtual void SetFrame(CFrame* pFrame);
 
 		// These functions aren't intended to be overridden
+#ifndef _WIN32_WCE
 		CFrame* GetFrame() const {return m_pFrame;}
+		void SetFrame(CFrame* pFrame) { if (0 == m_pFrame) m_pFrame = pFrame; }
+#endif
 		DWORD GetTlsIndex() const {return m_TlsIndex;}
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
@@ -695,12 +701,14 @@ namespace Win32xx
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		HINSTANCE m_hInstance;		// handle to the applications instance
 		HINSTANCE m_hResource;		// handle to the applications resources
-		CFrame* m_pFrame;			// pointer to the CFrame object
 		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
 		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
 		DWORD m_TlsIndex;			// Thread Local Storage index
 		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
+#ifndef _WIN32_WCE
+		CFrame* m_pFrame;			// pointer to the CFrame object
 		HWND m_hMDIView;			// handle to the MDI client (if any)
+#endif
 	};
 
 
@@ -717,11 +725,16 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_pFrame(NULL),
-								m_Callback(NULL), m_hMDIView(NULL)
+	inline CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_Callback(NULL)
 	{
 		try
 		{
+
+#ifndef _WIN32_WCE
+			m_pFrame = 0;
+			m_hMDIView = 0;
+#endif
+
 			// Test if this is the first instance of CWinApp
 			if (0 == SetnGetThis() )
 			{
@@ -839,6 +852,18 @@ namespace Win32xx
 		MSG uMsg;
 		int status;
 
+#ifdef _WIN32_WCE		
+		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
+		{
+			if (-1 == status) return -1;
+
+			if (!TranslateAccelerator(m_hWndAccel, m_hAccelTable, &uMsg))
+			{
+				::TranslateMessage(&uMsg);
+				::DispatchMessage(&uMsg);
+			}
+		}
+#else
 		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
 			if (-1 == status) return -1;
@@ -850,7 +875,7 @@ namespace Win32xx
 				::DispatchMessage(&uMsg);
 			}
 		}
-
+#endif
 		return LOWORD(uMsg.wParam);
 	}
 
@@ -897,13 +922,6 @@ namespace Win32xx
 		m_hAccelTable = ::LoadAccelerators(m_hResource, MAKEINTRESOURCE(ID_ACCEL));
 		if (!m_hAccelTable)
 			TRACE(_T("Load Accelerators failed\n"));
-	}
-
-	inline void CWinApp::SetFrame(CFrame* pFrame)
-	{
-		// Store the pointer to the (first) frame
-		if (0 == m_pFrame)
-			m_pFrame = pFrame;
 	}
 
 	inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)

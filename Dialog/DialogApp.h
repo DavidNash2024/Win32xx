@@ -20,6 +20,9 @@ private:
 	CMyDialog m_MyDialog;
 };
 
+// returns a reference to the CDialogApp object
+inline CDialogApp& GetDialogApp() { return *((CDialogApp*)GetApp()); }
+
 
 #endif // define DIALOGAPP_H
 

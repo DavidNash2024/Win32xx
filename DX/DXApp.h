@@ -16,9 +16,15 @@ public:
     virtual ~CDXApp() {}
 	virtual BOOL InitInstance();
 	virtual int MessageLoop();
+	CView& GetView() { return m_View; }
 
 private:
     CView m_View;
 };
+
+
+// returns a reference to the CDXApp object
+inline CDXApp& GetDXApp() { return *((CDXApp*)GetApp()); }
+
 
 #endif

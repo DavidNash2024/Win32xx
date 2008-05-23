@@ -14,10 +14,15 @@ public:
 	CBrowserApp();
 	virtual ~CBrowserApp();
 	BOOL InitInstance();
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
+
+
+// returns a reference to the CBrowserApp object
+inline CBrowserApp& GetBrowserApp() { return *((CBrowserApp*)GetApp()); }
 
 
 #endif // define BROWSERAPP_H

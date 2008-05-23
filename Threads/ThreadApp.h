@@ -25,5 +25,9 @@ private:
 };
 
 
+// returns a reference to the CThreadApp object
+inline CThreadApp& GetThreadApp() { return *((CThreadApp*)GetApp()); }
+
+
 #endif  //THREADAPP_H
 

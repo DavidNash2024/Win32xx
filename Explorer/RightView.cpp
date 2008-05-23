@@ -2,7 +2,7 @@
 // RightView.cpp
 //  Definitions for the CRightView and ListItemData classes
 
-#include "MainFrm.h"
+#include "ShellApp.h"
 #include "RightView.h"
 #include "resource.h"
 
@@ -214,8 +214,7 @@ void CRightView::DoDefault(int iItem)
 
 							if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
 							{
-								CMainFrame* pMainFrame = (CMainFrame*)GetApp()->GetFrame();
-								pMainFrame->GetTreeView().SelectFromListView(pInfo->GetFullPidl());
+								GetShellApp().GetMainFrame().GetTreeView().SelectFromListView(pInfo->GetFullPidl());
 							}
 							else
 							{
@@ -437,7 +436,7 @@ void CRightView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 	CEnumIDList cEnum;
 
 	int grFlags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
-	if (((CMainFrame*)GetApp()->GetFrame())->GetShowHidden())
+	if ( GetShellApp().GetMainFrame().GetShowHidden() )
 		grFlags |= SHCONTF_INCLUDEHIDDEN;
 
 	if(SUCCEEDED(cPFolder.EnumObjects(NULL, grFlags, cEnum)))

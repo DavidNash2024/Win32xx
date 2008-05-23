@@ -25,5 +25,9 @@ private:
 };
 
 
+// returns a reference to the CPerformanceApp object
+inline CPerformanceApp& GetPerfApp() { return *((CPerformanceApp*)GetApp()); }
+
+
 #endif  //PERFAPP_H
 

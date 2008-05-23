@@ -21,5 +21,9 @@ private:
 };
 
 
+// returns a reference to the CDialogApp object
+inline CDialogApp& GetDlgApp() { return *((CDialogApp*)GetApp()); }
+
+
 #endif // define DIALOGAPP_H
 

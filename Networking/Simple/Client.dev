@@ -1,7 +1,7 @@
 [Project]
 FileName=Client.dev
 Name=Client
-UnitCount=1
+UnitCount=2
 Type=1
 Ver=1
 ObjFiles=
@@ -12,7 +12,7 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=
 CppCompiler=
-Linker=-lws2_32_@@_
+Linker=-lws2_32_@@_-lgdi32_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++
@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++
 OverrideOutput=0
 OverrideOutputName=Server.exe
 HostApplication=
-Folders=Win32++
+Folders=
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -50,7 +50,7 @@ AutoIncBuildNr=0
 [Unit1]
 FileName=Client.cpp
 CompileCpp=1
-Folder=Client
+Folder=
 Compile=1
 Link=1
 Priority=1000
@@ -58,9 +58,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\..\Win32++\Socket.cpp
+FileName=..\..\Win32++\Socket.h
 CompileCpp=1
-Folder=Win32++
+Folder=Client
 Compile=1
 Link=1
 Priority=1000

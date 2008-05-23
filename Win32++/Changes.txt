@@ -32,6 +32,10 @@ This class is no longer required, since it's functionality has been merged
 with CWinApp. All applications (including MDI) now use CWinApp to start
 Win32++.
 
+* Enhanced the Explorer sample.
+The explorer sample now uses separate threads for the TreeView and ListView
+windows. This improves the application's responsiveness.
+
 
 Notes for users of previous versions:
 -------------------------------------
@@ -82,7 +86,7 @@ New Features:
 
 Bug Fixes: 
 * The normal and hot toolbar buttons are now displayed correctly.
-* Corrected some VC6 compatiblity problems.
+* Corrected some VC6 compatibility problems.
 * CreateDisabledImageList now supports 32 bit images.
 
 

@@ -20,11 +20,11 @@ public:
 	CLeftView();
 	virtual ~CLeftView();
 	virtual HWND Create(HWND hWndParent = 0);
-	HWND CreateWin();
+	HWND CreateThreadWin();
 	HIMAGELIST GetImageList(BOOL bLarge);
 	BOOL GetRootItems();
 	BOOL SelectFromListView(Cpidl& CpidlFull);
-	static DWORD WINAPI ThreadStart(LPVOID This);
+	static DWORD WINAPI RunThread(LPVOID This);
 
  protected:
 	virtual void OnInitialUpdate();
