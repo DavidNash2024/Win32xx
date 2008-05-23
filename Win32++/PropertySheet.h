@@ -504,6 +504,7 @@ namespace Win32xx
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
+		SetTitle(LoadString(nIDCaption));
 
 #ifdef _WIN32_WCE
 		m_PSH.dwSize = sizeof(PROPSHEETHEADER);
@@ -518,7 +519,6 @@ namespace Win32xx
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
-		SetTitle(LoadString(nIDCaption));
 	}
 
 	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hwndParent /* = NULL*/)
@@ -844,15 +844,9 @@ namespace Win32xx
 	inline void CPropertySheet::SetTitle(LPCTSTR szTitle)
 	{
 		if (szTitle)
-		{
 			m_Title = szTitle;
-			m_PSH.dwFlags |= PSH_PROPTITLE;
-		}
 		else
-		{
 			m_Title.erase();
-			m_PSH.dwFlags &= ~PSH_PROPTITLE;
-		}
 
 		m_PSH.pszCaption = m_Title.c_str();
 	}
@@ -860,13 +854,9 @@ namespace Win32xx
 	inline void CPropertySheet::SetWizardMode(BOOL bWizard)
 	{
 		if (bWizard)
-		{
 			m_PSH.dwFlags |= PSH_WIZARD;
-		}
 		else
-		{
 			m_PSH.dwFlags &= ~PSH_WIZARD;
-		}
 	}
 
 	inline LRESULT CPropertySheet::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
