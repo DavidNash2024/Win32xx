@@ -22,6 +22,7 @@ public:
 
 protected:
 	virtual void OnInitialUpdate();
+	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);

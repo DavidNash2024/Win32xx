@@ -29,6 +29,9 @@ CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 
 CMainFrame::~CMainFrame()
 {
+	// Allow the TreeView Thread to complete before proceeding
+	HANDLE hThread = GetTreeView().m_hThread;
+	MsgWaitForMultipleObjects(1, &hThread, FALSE, INFINITE, 0);
 }
 
 void CMainFrame::DoPopupMenu()
@@ -76,8 +79,9 @@ void CMainFrame::DoPopupMenu()
 
 void CMainFrame::OnInitialUpdate()
 {
+	TRACE("CMainFrame::OnOnitialUpdate\n");
 	// All windows are now created, so populate the treeview
-	GetTreeView().GetRootItems();
+//	GetTreeView().GetRootItems();
 
 	// Uncheck the hidden menu item
 	::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, MF_UNCHECKED);
@@ -85,6 +89,12 @@ void CMainFrame::OnInitialUpdate()
 	// Place Radio button in view menu
 	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1);
 	::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+}
+
+void CMainFrame::OnClose()
+{
+	// Destroying the TreeView triggers shutdown of the Treeview thread.
+	GetTreeView().DestroyWindow();
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -126,6 +136,17 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_VIEWMENU:
 		// This Command is recieved if Comctl32.dll version is below 4.7
 		DoPopupMenu();
+		return TRUE;
+	case IDM_EDIT_TAB:
+		TRACE("Tab key hit\n");
+		if (GetMainView().GetOldFocus() == GetTreeView())
+		{
+			SetFocus(GetListView());
+			if ( 0 > GetListView().GetNextItem( -1, LVNI_ALL | LVNI_SELECTED ) )
+				GetListView().SetItemState( 0, LVIS_SELECTED, LVIS_SELECTED );
+		}
+		else
+			SetFocus( GetTreeView() );
 		return TRUE;
 	} // switch cmd
 
@@ -211,10 +232,12 @@ void CMainFrame::SetButtons()
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-//
-//	}
+	switch (uMsg)
+	{
+	case WM_CLOSE:
+		OnClose();
+		break;
+	}
 
 	// pass any unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

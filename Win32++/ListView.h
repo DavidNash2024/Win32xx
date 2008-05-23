@@ -226,14 +226,8 @@ namespace Win32xx
 		BOOL SetItemState( int iItem, LVITEM* pItem )
 		{ return (BOOL)::SendMessage(m_hWnd, LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)pItem); }
 
-        BOOL SetItemState( int iItem, UINT nState, UINT nMask )
-		{
-			LVITEM lvi = {0};
-			lvi.iItem = iItem;
-			lvi.state = nState;
-			lvi.stateMask = nMask;
-			return ListView_SetItem(m_hWnd, &lvi);
-		}
+        void SetItemState( int iItem, UINT nState, UINT nMask )
+		{ ListView_SetItemState(m_hWnd, iItem, nState, nMask); }
 
 		void SetItemText( int iItem, int iSubItem, LPCTSTR pszText )
 		{ ListView_SetItemText(m_hWnd, iItem, iSubItem, (LPTSTR)pszText ); }

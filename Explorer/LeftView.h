@@ -19,8 +19,12 @@ class CLeftView : public CTreeView
 public:
 	CLeftView();
 	virtual ~CLeftView();
+	virtual HWND Create(HWND hWndParent = 0);
+	HWND CreateWin();
+	HIMAGELIST GetImageList(BOOL bLarge);
 	BOOL GetRootItems();
 	BOOL SelectFromListView(Cpidl& CpidlFull);
+	static DWORD WINAPI ThreadStart(LPVOID This);
 
  protected:
 	virtual void OnInitialUpdate();
@@ -52,13 +56,17 @@ private:
 	void DoContextMenu(LPPOINT pptScreen);
 	void EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent);
 	BOOL GetChildItems(HTREEITEM hParentItem);
-	HIMAGELIST GetImageList(BOOL bLarge);
+	
 	void SetImageLists();
 
 	HIMAGELIST m_hLargeImageList;
 	HIMAGELIST m_hSmallImageList;
 	CContextMenu2 m_ccm2;
 	std::vector <TreeItemData*> m_pItems;
+public:
+	HANDLE m_hThread;
+	DWORD m_dwThreadID;
+	
 };
 
 #endif  // LEFTVIEW_H

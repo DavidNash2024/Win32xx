@@ -64,6 +64,7 @@ namespace Win32xx
 		virtual void SetImmediate(bool bImmediate);
 		virtual void SetVertical(bool bVertical);
 		virtual void SetWidth(int nWidth);
+		virtual void RecalcLayout();
 
 	protected:
 		virtual void DrawBar(int Pos);
@@ -74,7 +75,6 @@ namespace Win32xx
 		virtual void OnMouseMove();
 		virtual void OnSize();
 		virtual void OnSysColorChange();
-		virtual void RecalcLayout();
 		virtual void SetPanes(CWnd& Pane0, CWnd& Pane1);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
