@@ -9,7 +9,6 @@ CMainView::CMainView() : m_hwndOldFocus(NULL)
 {
 	SetPanes(GetTreeView(), GetListView());
 	SetBarPos(200);
-	SetImmediate(true);
 }
 
 LRESULT CMainView::OnNotify(WPARAM /*wParam*/, LPARAM lParam)

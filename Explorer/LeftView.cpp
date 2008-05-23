@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // LeftView.cpp
-//  Definitions for the CLeftView and TreeItemData classes
+//  Definitions for the CMyTreeView and TreeItemData classes
 
 
 #include "ShellApp.h"
@@ -11,8 +11,8 @@
 #include "Resource.h"
 
 ////////////////////////////////
-//CLeftView function definitions
-CLeftView::CLeftView() : m_hThread(0)
+//CMyTreeView function definitions
+CMyTreeView::CMyTreeView() : m_hThread(0)
 {
 	try
 	{
@@ -34,7 +34,7 @@ CLeftView::CLeftView() : m_hThread(0)
 	}
 }
 
-CLeftView::~CLeftView()
+CMyTreeView::~CMyTreeView()
 {
 	std::vector<TreeItemData*>::iterator Iter;
 	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); Iter++)
@@ -47,7 +47,7 @@ CLeftView::~CLeftView()
 	::CoUninitialize(); // Shut down COM
 }
 
-int CALLBACK CLeftView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+int CALLBACK CMyTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
 	UNREFERENCED_PARAMETER(lParamSort);
 	TreeItemData* pItem1 = (TreeItemData*)lParam1;
@@ -61,20 +61,20 @@ int CALLBACK CLeftView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPara
 	return (short)SCODE_CODE(GetScode(hr));
 }
 
-HWND CLeftView::Create(HWND hWndParent/* = 0*/)
+HWND CMyTreeView::Create(HWND hWndParent/* = 0*/)
 {
 	// Pass the parent hwnd to the CREATESTRUCT
 	m_cs.hwndParent = hWndParent;
 	
 	// Create the thread
-	m_hThread = ::CreateThread(NULL, 0, CLeftView::RunThread, (LPVOID) this, 0, &m_dwThreadID);
+	m_hThread = ::CreateThread(NULL, 0, CMyTreeView::RunThread, (LPVOID) this, 0, &m_dwThreadID);
 	if (!m_hThread)
 		throw CWinException(_T("Failed to create thread"));
 
 	return m_hWnd; // Window not created yet
 }
 
-HWND CLeftView::CreateThreadWin()
+HWND CMyTreeView::CreateThreadWin()
 {
 	// Set the CREATESTRUCT parameters
 	PreCreate(m_cs);
@@ -84,7 +84,7 @@ HWND CLeftView::CreateThreadWin()
 		m_cs.hwndParent, m_cs.hMenu, m_cs.lpCreateParams);	
 }
 
-void CLeftView::DoContextMenu(LPPOINT pptScreen)
+void CMyTreeView::DoContextMenu(LPPOINT pptScreen)
 {
 	TVHITTESTINFO  tvhti;
 	tvhti.pt = *pptScreen;
@@ -96,7 +96,7 @@ void CLeftView::DoContextMenu(LPPOINT pptScreen)
 		DoItemMenu(tvhti.hItem , pptScreen);
 }
 
-void CLeftView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
+void CMyTreeView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
 {
 	TVITEM tvItem = {0};
 	tvItem.mask = TVIF_PARAM;
@@ -155,7 +155,7 @@ void CLeftView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
 	}
 }
 
-LRESULT CLeftView::OnNotifyReflect(WPARAM, LPARAM lParam)
+LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
 {
 	LPNMHDR  lpnmh = (LPNMHDR) lParam;
 
@@ -227,7 +227,7 @@ LRESULT CLeftView::OnNotifyReflect(WPARAM, LPARAM lParam)
 			LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
 			TreeItemData* pItem = (TreeItemData*)pnmtv->itemNew.lParam;
 
-			CRightView& LeftView = GetShellApp().GetMainFrame().GetListView();
+			CMyListView& LeftView = GetShellApp().GetMainFrame().GetListView();
 			LeftView.DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
 		}
 		break;
@@ -235,7 +235,7 @@ LRESULT CLeftView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	return 0;
 }
 
-void CLeftView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent)
+void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent)
 {
 	CEnumIDList cEnum;
 	if(SUCCEEDED(cParentFolder.EnumObjects(NULL, SHCONTF_FOLDERS | SHCONTF_INCLUDEHIDDEN, cEnum)))
@@ -286,7 +286,7 @@ void CLeftView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, 
 	}
 }
 
-BOOL CLeftView::GetChildItems(HTREEITEM hParentItem)
+BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 {
 	TVITEM tvItem = {0};
 	tvItem.mask = TVIF_PARAM;
@@ -333,7 +333,7 @@ BOOL CLeftView::GetChildItems(HTREEITEM hParentItem)
 	return TRUE;
 }
 
-HIMAGELIST CLeftView::GetImageList(BOOL bLarge)
+HIMAGELIST CMyTreeView::GetImageList(BOOL bLarge)
 {
 	if (bLarge)
 		return m_hLargeImageList;
@@ -341,7 +341,7 @@ HIMAGELIST CLeftView::GetImageList(BOOL bLarge)
 		return m_hSmallImageList;
 }
 
-BOOL CLeftView::GetRootItems()
+BOOL CMyTreeView::GetRootItems()
 {
 	TreeView_DeleteAllItems(m_hWnd);
 
@@ -399,9 +399,9 @@ BOOL CLeftView::GetRootItems()
 	return FALSE;
 }
 
-void CLeftView::OnInitialUpdate()
+void CMyTreeView::OnInitialUpdate()
 {
-	TRACE("CLeftView::OnOnitialUpdate\n");
+	TRACE("CMyTreeView::OnOnitialUpdate\n");
 	TreeView_DeleteAllItems(m_hWnd);
 
 	//Set the image list
@@ -412,7 +412,7 @@ void CLeftView::OnInitialUpdate()
 	MainView.GetTreeView().GetRootItems();
 }
 
-void CLeftView::PreCreate(CREATESTRUCT &cs)
+void CMyTreeView::PreCreate(CREATESTRUCT &cs)
 {
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |
@@ -421,7 +421,7 @@ void CLeftView::PreCreate(CREATESTRUCT &cs)
 	CTreeView::PreCreate(cs);
 }
 
-BOOL CLeftView::SelectFromListView(Cpidl& cpidlFull)
+BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 {
 	HTREEITEM hItem = TreeView_GetSelection(m_hWnd);
 
@@ -465,7 +465,7 @@ BOOL CLeftView::SelectFromListView(Cpidl& cpidlFull)
 	return FALSE;
 }
 
-void CLeftView::SetImageLists()
+void CMyTreeView::SetImageLists()
 {
 	SHFILEINFO  sfi;
 
@@ -477,12 +477,12 @@ void CLeftView::SetImageLists()
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 
-DWORD WINAPI CLeftView::RunThread(LPVOID This)
+DWORD WINAPI CMyTreeView::RunThread(LPVOID This)
 // This function is called automatically when the thread is started
 {
 	// Get the pointer for this CThread object 
-	CLeftView* pLeftView = (CLeftView*)This;	
-	pLeftView->CreateThreadWin();
+	CMyTreeView* pTreeView = (CMyTreeView*)This;	
+	pTreeView->CreateThreadWin();
 
 	// The message loop runs until PostQuitMessage is processed
 	GetApp()->MessageLoop();
@@ -490,7 +490,7 @@ DWORD WINAPI CLeftView::RunThread(LPVOID This)
 	return 0;
 }
 
-LRESULT CLeftView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyTreeView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -513,19 +513,19 @@ LRESULT CLeftView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ///////////////////////////////////
 //TreeItemData function definitions
-CLeftView::TreeItemData::TreeItemData(Cpidl& cpidl)
+CMyTreeView::TreeItemData::TreeItemData(Cpidl& cpidl)
 {
 	m_cpidlRel  = cpidl;
 	m_cpidlFull = cpidl;
 }
 
-CLeftView::TreeItemData::TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
+CMyTreeView::TreeItemData::TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
 {
 	m_cParentFolder = cParentFolder;
 	m_cpidlFull     = cpidlParent + cpidlRel;
 	m_cpidlRel      = cpidlRel;
 }
 
-CLeftView::TreeItemData::~TreeItemData()
+CMyTreeView::TreeItemData::~TreeItemData()
 {
 }

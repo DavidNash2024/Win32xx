@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 // LeftView.h
-//  Declaration of the CLeftView class
+//  Declaration of the CMyTreeView class
 
 
 #ifndef LEFTVIEW_H
@@ -14,11 +14,11 @@
 using namespace ShellWrapper;
 
 
-class CLeftView : public CTreeView
+class CMyTreeView : public CTreeView
 {
 public:
-	CLeftView();
-	virtual ~CLeftView();
+	CMyTreeView();
+	virtual ~CMyTreeView();
 	virtual HWND Create(HWND hWndParent = 0);
 	HWND CreateThreadWin();
 	HIMAGELIST GetImageList(BOOL bLarge);
@@ -33,7 +33,7 @@ public:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	class TreeItemData //A nested class inside CLeftView
+	class TreeItemData //A nested class inside CMyTreeView
 	{
 	public:
 		TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder);

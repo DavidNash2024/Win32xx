@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 // RightView.h
-//  Declaration of the CRightView class
+//  Declaration of the CMyListView class
 
 
 #ifndef RIGHTVIEW_H
@@ -13,11 +13,11 @@
 
 
 
-class CRightView : public CListView
+class CMyListView : public CListView
 {
 public:
-	CRightView();
-	virtual ~CRightView();
+	CMyListView();
+	virtual ~CMyListView();
 	void DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
 	void DoDisplay();
 	void ViewLargeIcons();
@@ -32,7 +32,7 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	class ListItemData  //A nested class inside CRightView
+	class ListItemData  //A nested class inside CMyListView
 	{
 	public:
 		ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder);
@@ -67,6 +67,7 @@ private:
 	std::vector <ListItemData*> m_pItems;
 	HIMAGELIST m_hLargeImageList;
 	HIMAGELIST m_hSmallImageList;
+
 };
 
 #endif  // RIGHTVIEW_H

@@ -1,14 +1,14 @@
 //////////////////////////////////////////////////////////
 // RightView.cpp
-//  Definitions for the CRightView and ListItemData classes
+//  Definitions for the CMyListView and ListItemData classes
 
 #include "ShellApp.h"
 #include "RightView.h"
 #include "resource.h"
 
 ////////////////////////////////
-//CRightView function definitions
-int CALLBACK CRightView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+//CMyListView function definitions
+int CALLBACK CMyListView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
 	UNREFERENCED_PARAMETER(lParamSort);
 	ListItemData*  pItem1 = (ListItemData*)lParam1;
@@ -22,7 +22,7 @@ int CALLBACK CRightView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPar
 	return (short)SCODE_CODE(GetScode(hr));
 }
 
-CRightView::CRightView()
+CMyListView::CMyListView()
 {
 	try
 	{
@@ -44,14 +44,14 @@ CRightView::CRightView()
 	}
 }
 
-CRightView::~CRightView()
+CMyListView::~CMyListView()
 {
 	DeleteItems();
 
 	::CoUninitialize(); // Shut down COM
 }
 
-void CRightView::DeleteItems()
+void CMyListView::DeleteItems()
 {
 	std::vector<ListItemData*>::iterator Iter;
 	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); Iter++)
@@ -62,7 +62,7 @@ void CRightView::DeleteItems()
 	m_pItems.clear();
 }
 
-void CRightView::DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlFull, Cpidl& cpidlRel)
+void CMyListView::DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlFull, Cpidl& cpidlRel)
 {
 	m_cpidlCurFull = cpidlFull;
 	if(cParentFolder.GetIShellFolder())
@@ -73,7 +73,7 @@ void CRightView::DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlFull, Cp
 	DoDisplay();
 }
 
-void CRightView::DoBackgroundMenu(LPPOINT pptScreen)
+void CMyListView::DoBackgroundMenu(LPPOINT pptScreen)
 {
 	HRESULT        hr;
 	if(m_csfCurFolder.GetIShellFolder())
@@ -135,7 +135,7 @@ void CRightView::DoBackgroundMenu(LPPOINT pptScreen)
 	}
 }
 
-void CRightView::DoContextMenu(LPPOINT pptScreen)
+void CMyListView::DoContextMenu(LPPOINT pptScreen)
 {
 	LVHITTESTINFO  lvhti;
 	lvhti.pt = *pptScreen;
@@ -174,7 +174,7 @@ void CRightView::DoContextMenu(LPPOINT pptScreen)
 		DoBackgroundMenu(pptScreen);
 }
 
-void CRightView::DoDefault(int iItem)
+void CMyListView::DoDefault(int iItem)
 {
 	LVITEM   lvItem = {0};
 	lvItem.mask = LVIF_PARAM;
@@ -234,7 +234,7 @@ void CRightView::DoDefault(int iItem)
 	}
 }
 
-void CRightView::DoDisplay()
+void CMyListView::DoDisplay()
 {
 	ListView_DeleteAllItems(m_hWnd);
 	DeleteItems();
@@ -256,7 +256,7 @@ void CRightView::DoDisplay()
 	}
 }
 
-void CRightView::DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen)
+void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen)
 {
 	Cpidl* cpidlArray = new Cpidl[cbItems];
 
@@ -316,7 +316,7 @@ void CRightView::DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen)
 	delete []cpidlArray;
 }
 
-LRESULT CRightView::OnNotifyReflect(WPARAM, LPARAM lParam)
+LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 {
 	LPNMHDR  pnmh = (LPNMHDR) lParam;
 
@@ -431,7 +431,7 @@ LRESULT CRightView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	return 0;
 }
 
-void CRightView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
+void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 {
 	CEnumIDList cEnum;
 
@@ -493,7 +493,7 @@ void CRightView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 	}
 }
 
-BOOL CRightView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
+BOOL CMyListView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
 {
 	DWORD dwFileSizeLo;
 	DWORD dwFileSizeHi;
@@ -522,7 +522,7 @@ BOOL CRightView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
 	return TRUE;
 }
 
-BOOL CRightView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
+BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
 {
 	FILETIME ftCreate, ftAccess, ftWrite;
 	SYSTEMTIME stLocal;
@@ -549,7 +549,7 @@ BOOL CRightView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
 	return TRUE;
 }
 
-HIMAGELIST CRightView::GetImageList(BOOL bLarge)
+HIMAGELIST CMyListView::GetImageList(BOOL bLarge)
 {
 	if (bLarge)
 		return m_hLargeImageList;
@@ -557,7 +557,7 @@ HIMAGELIST CRightView::GetImageList(BOOL bLarge)
 		return m_hSmallImageList;
 }
 
-void CRightView::OnInitialUpdate()
+void CMyListView::OnInitialUpdate()
 {
 	//Set the image lists
 	::SendMessage(m_hWnd, LVM_SETIMAGELIST, LVSIL_NORMAL, (LPARAM) GetImageList(TRUE));
@@ -589,7 +589,7 @@ void CRightView::OnInitialUpdate()
 	ViewReport();
 }
 
-void CRightView::PreCreate(CREATESTRUCT &cs)
+void CMyListView::PreCreate(CREATESTRUCT &cs)
 {
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | LVS_AUTOARRANGE |
             LVS_ICON | LVS_SHAREIMAGELISTS | LVS_SHOWSELALWAYS;
@@ -597,8 +597,7 @@ void CRightView::PreCreate(CREATESTRUCT &cs)
 	cs.lpszClass = WC_LISTVIEW;
 }
 
-
-void CRightView::SetImageLists()
+void CMyListView::SetImageLists()
 {
 	SHFILEINFO  sfi;
 
@@ -610,31 +609,31 @@ void CRightView::SetImageLists()
 		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 
-void CRightView::ViewLargeIcons()
+void CMyListView::ViewLargeIcons()
 {
 	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
 }
 
-void CRightView::ViewSmallIcons()
+void CMyListView::ViewSmallIcons()
 {
 	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
 }
 
-void CRightView::ViewList()
+void CMyListView::ViewList()
 {
 	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
 }
 
-void CRightView::ViewReport()
+void CMyListView::ViewReport()
 {
 	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 }
 
-LRESULT CRightView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyListView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -654,7 +653,7 @@ LRESULT CRightView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ///////////////////////////////////
 //ListItemData function definitions
-CRightView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
+CMyListView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
 {
 	m_cParentFolder = cParentFolder;
 	m_cpidlFull     = cpidlParent + cpidlRel;
@@ -662,6 +661,6 @@ CRightView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShe
 }
 
 
-CRightView::ListItemData::~ListItemData()
+CMyListView::ListItemData::~ListItemData()
 {
 }
