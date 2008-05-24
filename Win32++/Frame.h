@@ -2445,9 +2445,9 @@ namespace Win32xx
 			LPCTSTR Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? _T("\tSCRL"): _T("");
 
 			// Only update indictors if the text has changed
-			if (Status1 != m_OldStatus[0]) 	GetStatusbar().SetPaneText(1, (Status1));
-			if (Status2 != m_OldStatus[1])  GetStatusbar().SetPaneText(2, (Status2));
-			if (Status3 != m_OldStatus[2])  GetStatusbar().SetPaneText(3, (Status3));
+			if (Status1 != m_OldStatus[0]) 	GetStatusbar().SetPartText(1, (Status1));
+			if (Status2 != m_OldStatus[1])  GetStatusbar().SetPartText(2, (Status2));
+			if (Status3 != m_OldStatus[2])  GetStatusbar().SetPartText(3, (Status3));
 
 			m_OldStatus[0] = Status1;
 			m_OldStatus[1] = Status2;
@@ -2470,19 +2470,19 @@ namespace Win32xx
 			if (m_bShowIndicatorStatus)
 			{
 				// Create 4 panes
-				GetStatusbar().CreatePanes(4, iPaneWidths);
+				GetStatusbar().CreateParts(4, iPaneWidths);
 
 				// Or you could create the 4 panes this way
-				//	GetStatusbar().SetPaneWidth(0, width - 110);
-				//	GetStatusbar().SetPaneWidth(1, 30);
-				//	GetStatusbar().SetPaneWidth(2, 30);
-				//	GetStatusbar().SetPaneWidth(3, 30);
+				//	GetStatusbar().SetPartWidth(0, width - 110);
+				//	GetStatusbar().SetPartWidth(1, 30);
+				//	GetStatusbar().SetPartWidth(2, 30);
+				//	GetStatusbar().SetPartWidth(3, 30);
 
 				SetStatusIndicators();
 			}
 
 			// Place text in the 1st pane
-			GetStatusbar().SetPaneText(0, m_StatusText.c_str());
+			GetStatusbar().SetPartText(0, m_StatusText.c_str());
 		}
 	}
 
