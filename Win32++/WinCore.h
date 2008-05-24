@@ -267,7 +267,7 @@ namespace Win32xx
 		//  2500     Windows 2000
 		//  2501     Windows XP
 		//  2502     Windows Server 2003
-		//  2600     Windows Vista
+		//  2600     Windows Vista and Windows Server 2008
 
 		return nVersion;
 	}
@@ -852,7 +852,7 @@ namespace Win32xx
 		MSG uMsg;
 		int status;
 
-#ifdef _WIN32_WCE		
+#ifdef _WIN32_WCE
 		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
 			if (-1 == status) return -1;

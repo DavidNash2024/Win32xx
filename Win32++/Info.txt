@@ -134,8 +134,7 @@ Frame.h           | CMenubar         | Win32 only        | Adds support for
                   |                  |                   | a statusbar.
 ------------------+------------------+-------------------+---------------------  
 MDI.h             | CMDIFrame        | Win32 only        | Adds support for MDI
-                  | CMDIClient       |                   | frames.
-                  | CMDIChild        |                   |
+                  | CMDIChild        |                   | frames.
 ------------------+------------------+-------------------+---------------------
 Splitter.h        | CSplitter        | Win32 only        | Adds support for
                   |                  |                   | splitter windows.
