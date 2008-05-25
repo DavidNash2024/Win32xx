@@ -75,26 +75,25 @@ namespace Win32xx
 		void DeleteBand(const int nBand) const;
 		int  GetBand(const HWND hWnd) const;
 		RECT GetBandBorders(int nBand) const;
-		int  GetBandCount() const	{ return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0, 0); }
+		int  GetBandCount() const;
 		void GetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
 		RECT GetBandRect(int i) const;
-		UINT GetBarHeight() const	{ return (UINT)::SendMessage(m_hWnd, RB_GETBARHEIGHT, 0, 0); }
+		UINT GetBarHeight() const;
 		void GetBarInfo(LPREBARINFO prbi) const;
-		UINT GetRowCount() const	{ return (UINT)::SendMessage(m_hWnd, RB_GETROWCOUNT, 0, 0); }
-		int  GetRowHeight(int nRow) const { return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0); }
-		HWND GetToolTips() const	{return (HWND)::SendMessage(m_hWnd, RB_GETTOOLTIPS, 0, 0);}
-		int  HitTest(RBHITTESTINFO* prbht) { return (int)::SendMessage(m_hWnd, RB_HITTEST, 0, (LPARAM)prbht); }
-		int  IDToIndex(UINT uBandID) const { return (int)::SendMessage(m_hWnd, RB_IDTOINDEX, (WPARAM)uBandID, 0); }
+		UINT GetRowCount() const;
+		int  GetRowHeight(int nRow) const;
+		HWND GetToolTips() const;
+		int  HitTest(RBHITTESTINFO* prbht);
+		int  IDToIndex(UINT uBandID) const;
 		void InsertBand(const int nBand, LPREBARBANDINFO prbbi) const;
 		BOOL IsBandVisible(int nBand) const;
-		void MaximizeBand(UINT uBand, BOOL fIdeal = FALSE) { ::SendMessage(m_hWnd, RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)fIdeal); }
-		void MinimizeBand(UINT uBand) { ::SendMessage(m_hWnd, RB_MINIMIZEBAND, (WPARAM)uBand, 0); }
-		BOOL MoveBand(UINT uFrom, UINT uTo) { return (BOOL)::SendMessage(m_hWnd, RB_MOVEBAND, (WPARAM)uFrom, (LPARAM)uTo); }
+		void MaximizeBand(UINT uBand, BOOL fIdeal = FALSE);
+		void MinimizeBand(UINT uBand);
+		BOOL MoveBand(UINT uFrom, UINT uTo);
 		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
 		void SetBandInfo(const int nBand, LPREBARBANDINFO prbbi) const;
-		void SetBarInfo(LPREBARINFO prbi) const;
-		BOOL ShowBand(UINT uBand, BOOL fShow = TRUE) { return (BOOL)::SendMessage(m_hWnd, RB_SHOWBAND, (WPARAM)uBand, (LPARAM)fShow); }  
+		void SetBarInfo(LPREBARINFO prbi) const; 
 
 		ThemeRebar& GetRebarTheme() {return m_Theme;}
 		void SetRebarTheme(ThemeRebar& Theme);
@@ -155,6 +154,11 @@ namespace Win32xx
 		return rc;
 	}
 
+	inline int  CRebar::GetBandCount() const	
+	{ 
+		return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0, 0); 
+	}
+
 	inline void CRebar::GetBandInfo(int nBand, LPREBARBANDINFO prbbi) const
 	{
 		// REBARBANDINFO describes individual BAND characteristics
@@ -173,6 +177,11 @@ namespace Win32xx
 		return rc;
 	}
 
+	inline UINT CRebar::GetBarHeight() const	
+	{ 
+		return (UINT)::SendMessage(m_hWnd, RB_GETBARHEIGHT, 0, 0); 
+	}
+
 	inline void CRebar::GetBarInfo(LPREBARINFO prbi) const
 	{
 		// REBARINFO describes overall rebar control characteristics
@@ -181,7 +190,30 @@ namespace Win32xx
 			throw CWinException(_T("Failed to get rebar info"));
 	}
 
+	inline UINT CRebar::GetRowCount() const	
+	{ 
+		return (UINT)::SendMessage(m_hWnd, RB_GETROWCOUNT, 0, 0); 
+	}
 
+	inline int CRebar::GetRowHeight(int nRow) const 
+	{ 
+		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0); 
+	}
+
+	inline HWND CRebar::GetToolTips() const	
+	{
+		return (HWND)::SendMessage(m_hWnd, RB_GETTOOLTIPS, 0, 0);
+	}
+
+	inline int CRebar::HitTest(RBHITTESTINFO* prbht) 
+	{ 
+		return (int)::SendMessage(m_hWnd, RB_HITTEST, 0, (LPARAM)prbht); 
+	}
+
+	inline int CRebar::IDToIndex(UINT uBandID) const 
+	{ 
+		return (int)::SendMessage(m_hWnd, RB_IDTOINDEX, (WPARAM)uBandID, 0); 
+	}
 
 	inline void CRebar::InsertBand(int nBand, LPREBARBANDINFO prbbi) const
 	{
@@ -333,6 +365,21 @@ namespace Win32xx
 
 		cs.cy = 100;
 		cs.lpszClass = REBARCLASSNAME;
+	}
+
+	inline void CRebar::MaximizeBand(UINT uBand, BOOL fIdeal /*= FALSE*/) 
+	{ 
+		::SendMessage(m_hWnd, RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)fIdeal); 
+	}
+	
+	inline void CRebar::MinimizeBand(UINT uBand) 
+	{ 
+		::SendMessage(m_hWnd, RB_MINIMIZEBAND, (WPARAM)uBand, 0); 
+	}
+		
+	inline BOOL CRebar::MoveBand(UINT uFrom, UINT uTo) 
+	{ 
+		return (BOOL)::SendMessage(m_hWnd, RB_MOVEBAND, (WPARAM)uFrom, (LPARAM)uTo); 
 	}
 
 	inline void CRebar::MoveBandsLeft()

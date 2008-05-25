@@ -57,17 +57,12 @@ namespace Win32xx
 		virtual void SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
 		virtual void SetPartWidth(int iPart, int iWidth) const;
 
-		int GetPartCount() { return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0); }
-		HICON GetPartIcon(int iPart) { return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0); }
-		RECT GetPartRect(int iPart) 
-		{
-			RECT rc;
-			SendMessage(m_hWnd, SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
-			return rc;
-		}
-		BOOL IsSimple() { return (BOOL)::SendMessage(m_hWnd, SB_ISSIMPLE, 0, 0); }
-		BOOL SetPartIcon(int iPart, HICON hIcon) { return (BOOL)::SendMessage(m_hWnd, SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon); }
-		void SetSimple(BOOL fSimple = TRUE) { ::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0); }
+		int GetPartCount();
+		HICON GetPartIcon(int iPart);
+		RECT GetPartRect(int iPart); 
+		BOOL IsSimple();
+		BOOL SetPartIcon(int iPart, HICON hIcon);
+		void SetSimple(BOOL fSimple = TRUE);
 	};
 
 	//////////////////////////////////////
@@ -96,6 +91,23 @@ namespace Win32xx
 			if (!::SendMessage(m_hWnd, SB_SETPARTS, iParts, (LPARAM)iPaneWidths))
 				throw CWinException(_T("CStatusbar::CreateParts failed"));
 		}
+	}
+
+	inline int CStatusbar::GetPartCount() 
+	{ 
+		return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0); 
+	}
+	
+	inline HICON CStatusbar::GetPartIcon(int iPart) 
+	{ 
+		return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0); 
+	}
+	
+	inline RECT CStatusbar::GetPartRect(int iPart) 
+	{
+		RECT rc;
+		SendMessage(m_hWnd, SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
+		return rc;
 	}
 
 	inline tString CStatusbar::GetPartText(int iPart) const
@@ -135,6 +147,11 @@ namespace Win32xx
 		return PaneText;
 	}
 
+	inline BOOL CStatusbar::IsSimple() 
+	{ 
+		return (BOOL)::SendMessage(m_hWnd, SB_ISSIMPLE, 0, 0); 
+	}
+
 	inline void CStatusbar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
 	// Available Styles: Combinations of ...
 	//0					The text is drawn with a border to appear lower than the plane of the window.
@@ -151,6 +168,11 @@ namespace Win32xx
 					throw CWinException(_T("Failed to set status bar text"));
 			}
 		}
+	}
+
+	inline BOOL CStatusbar::SetPartIcon(int iPart, HICON hIcon) 
+	{ 
+		return (BOOL)::SendMessage(m_hWnd, SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon); 
 	}
 
 	inline void CStatusbar::SetPartWidth(int iPart, int iWidth) const
@@ -219,6 +241,11 @@ namespace Win32xx
 			DebugErrMsg(_T("Exception in CStatusbar::SetPartWidth"));
 			// Not a critical problem, so no need to rethrow
 		}
+	}
+
+	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/) 
+	{ 
+		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0); 
 	}
 
 } // namespace Win32xx
