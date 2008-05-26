@@ -430,7 +430,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 		}
 
 		//Next Sibling
-		hChild = TreeView_GetNextSibling(m_hWnd, hChild);
+		hChild = GetNextSibling(hChild);
 	}
 	TRACE(_T("Item NOT found\n"));
 

@@ -135,12 +135,12 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
 	lvhti.pt = ptScreen;
 	ScreenToClient(m_hWnd, &lvhti.pt);
 	lvhti.flags = LVHT_NOWHERE;
-	ListView_HitTest(m_hWnd, &lvhti);
+	HitTest(lvhti);
 
 	if(LVHT_ONITEM & lvhti.flags)
 	{
 		//get the selected items
-		UINT  nItems = ListView_GetSelectedCount(m_hWnd);
+		UINT  nItems = GetSelectedCount();
 		LPINT pItems = new int[nItems];
 
 		if(pItems)
@@ -153,7 +153,7 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
 
 		for(i = 1, nCurItem = -1; i < nItems; i++)
 		{
-			nCurItem = ListView_GetNextItem(m_hWnd, nCurItem, LVNI_SELECTED);
+			nCurItem = GetNextItem(nCurItem, LVNI_SELECTED);
 			if(nCurItem != lvhti.iItem)
 				pItems[i] = nCurItem;
 			else
@@ -174,7 +174,7 @@ void CMyListView::DoDefault(int iItem)
 	lvItem.mask = LVIF_PARAM;
 	lvItem.iItem = iItem;
 
-	if(ListView_GetItem(m_hWnd, &lvItem))
+	if(GetItem(lvItem))
 	{
 		HRESULT        hr;
 		ListItemData*  pInfo = (ListItemData*)lvItem.lParam;
@@ -230,7 +230,7 @@ void CMyListView::DoDefault(int iItem)
 
 void CMyListView::DoDisplay()
 {
-	ListView_DeleteAllItems(m_hWnd);
+	DeleteAllItems();
 	DeleteItems();
 
 	if(m_csfCurFolder.GetIShellFolder())
@@ -242,7 +242,7 @@ void CMyListView::DoDisplay()
 		::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
 
 		EnumObjects(m_csfCurFolder, m_cpidlCurFull);
-		ListView_SortItems(m_hWnd, CompareProc, 0);
+		SortItems(CompareProc, 0);
 
 		//turn redawing back on
 		::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
@@ -259,7 +259,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 		LVITEM lvItem = {0};
 		lvItem.mask = LVIF_PARAM;
 		lvItem.iItem = piItems[i];
-		if(ListView_GetItem(m_hWnd, &lvItem))
+		if(GetItem(lvItem))
 		{
 			ListItemData*  pInfo = (ListItemData*)lvItem.lParam;
 			cpidlArray[i] = pInfo->GetRelPidl();
@@ -483,7 +483,7 @@ void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 				lvItem.state |= LVIS_CUT;
 			}
 
-			ListView_InsertItem(m_hWnd, &lvItem);
+			InsertItem(lvItem);
 			ulFetched = 0;
 		}
 	}
@@ -578,7 +578,7 @@ void CMyListView::OnInitialUpdate()
 		::LoadString(GetApp()->GetInstanceHandle(), IDS_COLUMN1 + iCol,
 			szText, sizeof(szText)/sizeof(szText[0]));
 
-		ListView_InsertColumn(m_hWnd, iCol, &lvc);
+		InsertColumn(iCol, lvc);
     }
 
 	//Set initial the view style as report

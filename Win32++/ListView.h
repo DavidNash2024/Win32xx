@@ -80,7 +80,7 @@ namespace Win32xx
 		BOOL SetTextColor( COLORREF clrText );
 		HWND SetToolTips( HWND hWndToolTip );
 		void SetWorkAreas( int nWorkAreas, CRect& pRectArray );
-		int SubItemHitTest( LPLVHITTESTINFO pInfo );
+		int SubItemHitTest( LVHITTESTINFO& htInfo );
 
 		// Operations
 		BOOL Arrange( UINT nCode );
@@ -90,8 +90,8 @@ namespace Win32xx
 		BOOL DeleteItem( int iItem );
 		HWND EditLabel( int iItem );
 		BOOL EnsureVisible( int iItem, BOOL fPartialOK );
-		int FindItem( LVFINDINFO* pFindInfo, int iStart = -1 ) const;
-		int HitTest( LVHITTESTINFO* pHitTestInfo ) const;
+		int FindItem( LVFINDINFO& FindInfo, int iStart = -1 ) const;
+		int HitTest( LVHITTESTINFO& HitTestInfo ) const;
         int HitTest( CPoint pt, UINT* pFlags = NULL ) const;
 		int InsertColumn( int iCol, const LVCOLUMN& pColumn );
         int InsertColumn( int iCol, LPCTSTR pszColumnHeading, int iFormat = LVCFMT_LEFT,
@@ -559,10 +559,10 @@ namespace Win32xx
 		ListView_SetWorkAreas( m_hWnd, nWorkAreas, pRectArray );
 	}
 
-	inline int CListView::SubItemHitTest( LPLVHITTESTINFO pInfo )
+	inline int CListView::SubItemHitTest( LVHITTESTINFO& htInfo )
 	// Determines which list-view item or subitem is located at a given position.	
 	{
-		return ListView_SubItemHitTest( m_hWnd, pInfo );
+		return ListView_SubItemHitTest( m_hWnd, &htInfo );
 	}
 
 	// Operations
@@ -610,16 +610,16 @@ namespace Win32xx
 		return SendMessage( m_hWnd, LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK );
 	}
 
-	inline int CListView::FindItem( LVFINDINFO* pFindInfo, int iStart /*= -1*/ ) const
+	inline int CListView::FindItem( LVFINDINFO& FindInfo, int iStart /*= -1*/ ) const
 	// Searches for a list-view item with the specified characteristics.	
 	{
-		return ListView_FindItem( m_hWnd, iStart, pFindInfo );
+		return ListView_FindItem( m_hWnd, iStart, &FindInfo );
 	}
 
-	inline int CListView::HitTest( LVHITTESTINFO* pHitTestInfo ) const
+	inline int CListView::HitTest( LVHITTESTINFO& HitTestInfo ) const
 	// Determines which list-view item, if any, is at a specified position.	
 	{
-		return ListView_HitTest( m_hWnd, pHitTestInfo );
+		return ListView_HitTest( m_hWnd, &HitTestInfo );
 	}
 
     inline int CListView::HitTest( CPoint pt, UINT* pFlags /*= NULL*/ ) const
