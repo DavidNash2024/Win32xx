@@ -17,7 +17,7 @@ namespace Win32xx
 
 // Attributes
 		COLORREF GetBkColor() const;
-		HTREEITEM GetChildItem(HTREEITEM hItem) const;
+		HTREEITEM GetChild(HTREEITEM hItem) const;
 		UINT  GetCount() const;
 		HTREEITEM GetDropHiLightItem() const;
 		HWND GetEditControl() const;
@@ -32,7 +32,7 @@ namespace Win32xx
 		BOOL GetItemRect(HTREEITEM hItem, LPRECT pRect, BOOL bTextOnly) const;
 		tString GetItemText(HTREEITEM hItem) const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
-		HTREEITEM GetNextSiblingItem(HTREEITEM hItem) const;
+		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
 		HTREEITEM GetNextVisibleItem(HTREEITEM hItem) const;
 		HTREEITEM GetParentItem(HTREEITEM hItem) const;
 		HTREEITEM GetPrevSiblingItem(HTREEITEM hItem) const;
@@ -61,7 +61,7 @@ namespace Win32xx
 
 // Operations
 		HIMAGELIST CreateDragImage(HTREEITEM hItem);
-		BOOL DeletAllItems();
+		BOOL DeleteAllItems();
 		BOOL DeleteItem(HTREEITEM hItem);
 		HWND EditLabel(HTREEITEM hItem);
 		BOOL EnsureVisible(HTREEITEM hItem);
@@ -70,6 +70,7 @@ namespace Win32xx
 		HTREEITEM InsertItem(LPTVINSERTSTRUCT pis);
 		BOOL Select(HTREEITEM hitem, UINT flag);
 		BOOL SelectDropTarget(HTREEITEM hItem);
+		BOOL SelectItem(HTREEITEM hItem);
 		BOOL SelectSetFirstVisible(HTREEITEM hItem);
 		BOOL SortChildren(HTREEITEM hItem, BOOL fRecurse);
 		BOOL SortChildrenCB(LPTVSORTCB psort, BOOL fRecurse);
@@ -89,7 +90,7 @@ namespace Win32xx
 		return TreeView_GetBkColor( m_hWnd ); 
 	}
 
-	inline HTREEITEM CTreeView::GetChildItem(HTREEITEM hItem) const
+	inline HTREEITEM CTreeView::GetChild(HTREEITEM hItem) const
 	// Retrieves the first child item of the specified tree-view item. 
 	{ 
 		return TreeView_GetChild(m_hWnd, hItem); 
@@ -196,7 +197,7 @@ namespace Win32xx
 		return TreeView_GetNextItem( m_hWnd, hItem, nCode); 
 	}
 
-	inline HTREEITEM CTreeView::GetNextSiblingItem(HTREEITEM hItem) const
+	inline HTREEITEM CTreeView::GetNextSibling(HTREEITEM hItem) const
 	// Retrieves the next sibling item of a specified item in a tree-view control. 
 	{ 
 		return TreeView_GetNextSibling(m_hWnd, hItem); 
@@ -386,7 +387,7 @@ namespace Win32xx
 		return TreeView_CreateDragImage( m_hWnd, hItem ); 
 	}
 
-	inline BOOL CTreeView::DeletAllItems()
+	inline BOOL CTreeView::DeleteAllItems()
 	// Deletes all items from a tree-view control.
 	{
 		return TreeView_DeleteAllItems( m_hWnd ); 
@@ -444,6 +445,12 @@ namespace Win32xx
 	// target of a drag-and-drop operation.
 	{ 
 		return TreeView_SelectDropTarget(m_hWnd, hItem); 
+	}
+
+	inline BOOL CTreeView::SelectItem(HTREEITEM hItem)
+	// Selects the specified tree-view item. 
+	{
+		return TreeView_SelectItem(m_hWnd, hItem);
 	}
 
 	inline BOOL CTreeView::SelectSetFirstVisible(HTREEITEM hItem)
