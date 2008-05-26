@@ -5,31 +5,50 @@ New Features
 ------------
 * All Win32++ code has been moved to header files.
 This simplifies the use of Win32++. To add Win32++ to a project, simply 
-include the appropriate Win32++ header files in your code. There is now
-no need to add the Win32++ files to the project, although doing so may
+include the appropriate Win32++ header files in your code. There is no longer
+any need to add the Win32++ files to the project, although doing so may
 still prove useful under some circumstances. Depending on the compiler/IDE
-used, adding the header files to the project can be useful if you wish to
-see the various Win32++ classes in the class view.
+used, adding the Win32++ header files to the project may add the various 
+Win32++ classes to the class view.
  
 * Added CListView class.
-This class wraps the various messages and macros used by the Win32/64 API
-to manage the List-View common control. You can inherit from this class
+This class encapsulates the various messages and macros used by the Win32/64 
+API to manage the List-View common control. You can inherit from this class
 when creating your own List-View control in a window, or attaching a 
 List-View control from a dialog.
 
 * Added CTreeView class.
-This class wraps the various messages and macros used by the Win32/64 API
-to manage the Tree-View common control. You can inherit from this class
+This class encapsulates the various messages and macros used by the Win32/64 
+API to manage the Tree-View common control. You can inherit from this class
 when creating your own Tree-View control in a window, or attaching a 
 Tree-View control from a dialog.
 
 * Added CPoint class
+This class can be used anywhere a POINT struct can be used. In addition 
+- CPoint has a constructor, so it can set a default value when used as
+   a function argument.
+- It makes porting code from MFC or WTL a little easier.
+
 * Added CRect class
+This class can be used anywhere a RECT struct can be used. In addition 
+- CPoint has a constructor, so it can set a default value when used as
+   a function argument.
+- CRect can be constructed in several different convenient ways.
+- A number of useful members have been added to the CRect, such as
+   Height and Width.
+- It makes porting code from MFC or WTL a little easier.
+
 * Added CSize class
+This class can be used anywhere a SIZE struct can be used. In addition 
+- CPoint has a constructor, so it can set a default value when used as
+   a function argument.
+- It makes porting code from MFC or WTL a little easier.
+
+* Extended the CRebar, CToolbar and CStatusbar classes.
 
 * Removed CMDIApp
 This class is no longer required, since it's functionality has been merged
-with CWinApp. All applications (including MDI) now use CWinApp to start
+with CWinApp. All applications (including MDI apps) now use CWinApp to start
 Win32++.
 
 
