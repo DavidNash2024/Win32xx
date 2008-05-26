@@ -127,6 +127,8 @@ namespace Win32xx
 	}
 
 	inline void CToolbar::AddBitmap(int iNumButtons, UINT ToolbarID)
+	// Adds one or more images to the list of button images available for a toolbar.
+		
 	// Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
 	{
@@ -141,6 +143,8 @@ namespace Win32xx
 	}
 
 	inline void CToolbar::ReplaceBitmap(int iNumButtons, UINT NewToolbarID)
+	// Replaces an existing bitmap with a new bitmap.
+
 	// Note: ReplaceBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
 	{
@@ -273,10 +277,11 @@ namespace Win32xx
 	}
 
 	inline int CToolbar::HitTest() const
-	{
-		// We do our own hit test since TB_HITTEST is a bit buggy,
-		// and also doesn't work at all on earliest versions of Win95
+	// Determines where a point lies in a toolbar control.
 
+	// We do our own hit test since TB_HITTEST is a bit buggy,
+	// and also doesn't work at all on earliest versions of Win95	
+	{
 		POINT pt = {0};
 		::GetCursorPos(&pt);
 		::ScreenToClient(m_hWnd, &pt);
@@ -516,6 +521,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CToolbar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
+	// Notifications sent to the parent window are reflected back here
 	{
 		switch (((LPNMHDR)lParam)->code)
 		{
@@ -541,6 +547,7 @@ namespace Win32xx
 
 	inline void CToolbar::PreCreate(CREATESTRUCT &cs)
 	{
+		// Sets the CREATESTRUCT parameters prior to window creation
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 		cs.lpszClass = TOOLBARCLASSNAME;
 	}
@@ -570,6 +577,8 @@ namespace Win32xx
 	}
 
 	inline void CToolbar::SetBitmapSize(int cx, int cy) const
+	// Sets the size of the bitmapped images to be added to a toolbar.
+
 	// Needs to be used when the image size is not the default 16 x 15
 	// Call this function before using AddBitmap or ReplaceBitmap
 	{
