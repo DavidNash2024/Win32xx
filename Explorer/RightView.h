@@ -8,7 +8,6 @@
 
 
 #include "../Win32++/ListView.h"
-#include <Windowsx.h>
 #include <vector>
 
 

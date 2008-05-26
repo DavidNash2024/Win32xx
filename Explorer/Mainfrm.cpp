@@ -79,9 +79,8 @@ void CMainFrame::DoPopupMenu()
 
 void CMainFrame::OnInitialUpdate()
 {
-	TRACE("CMainFrame::OnOnitialUpdate\n");
 	// All windows are now created, so populate the treeview
-//	GetTreeView().GetRootItems();
+	GetTreeView().GetRootItems();
 
 	// Uncheck the hidden menu item
 	::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, MF_UNCHECKED);
@@ -138,15 +137,18 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		DoPopupMenu();
 		return TRUE;
 	case IDM_EDIT_TAB:
-		TRACE("Tab key hit\n");
-		if (GetMainView().GetOldFocus() == GetTreeView())
 		{
-			SetFocus(GetListView());
-			if ( 0 > GetListView().GetNextItem( -1, LVNI_ALL | LVNI_SELECTED ) )
-				GetListView().SetItemState( 0, LVIS_SELECTED, LVIS_SELECTED );
+			if (GetMainView().GetOldFocus() == GetTreeView())
+			{
+				// Set ListView focus
+				SetFocus(GetListView());
+				int item =  max(0, GetListView().GetNextItem( -1, LVNI_ALL | LVNI_FOCUSED ));
+				GetListView().SetItemState( item, LVIS_SELECTED, LVIS_SELECTED );
+			}
+			else
+				// Set TreeView focus
+				SetFocus( GetTreeView() );
 		}
-		else
-			SetFocus( GetTreeView() );
 		return TRUE;
 	} // switch cmd
 

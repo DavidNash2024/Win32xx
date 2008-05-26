@@ -25,7 +25,7 @@ namespace Win32xx
 		HIMAGELIST GetImageList(int iImageType) const;
 		UINT  GetIndent() const;
 		COLORREF GetInsertMarkColor() const;
-		BOOL GetItem(TVITEM* pItem) const;
+		BOOL GetItem(LPTVITEM pItem) const;
 		DWORD_PTR GetItemData(HTREEITEM hItem) const;
 		int  GetItemHeight() const;
 		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
@@ -49,7 +49,7 @@ namespace Win32xx
 		void SetIndent(int indent);
 		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE);
 		COLORREF SetInsertMarkColor(COLORREF clrInsertMark);
-		BOOL SetItem(TVITEM tvItem);
+		BOOL SetItem(LPTVITEM pItem);
 		BOOL SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam);
 		BOOL SetItemData(HTREEITEM hItem, DWORD_PTR dwData);
 		int  SetItemHeight(SHORT cyItem);
@@ -301,10 +301,10 @@ namespace Win32xx
 		return TreeView_SetInsertMarkColor( m_hWnd, clrInsertMark ); 
 	}
 
-	inline BOOL CTreeView::SetItem(TVITEM tvItem)
+	inline BOOL CTreeView::SetItem(LPTVITEM pItem)
 	// Sets some or all of a tree-view item's attributes. 
 	{ 
-		return TreeView_SetItem( m_hWnd, &tvItem ); 
+		return TreeView_SetItem( m_hWnd, pItem ); 
 	}
 
 	inline BOOL CTreeView::SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam)

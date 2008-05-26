@@ -109,25 +109,19 @@ void CMyListView::DoBackgroundMenu(LPPOINT pptScreen)
 
 					if(idCmd)
 					{
-						if(idCmd < idCmdFirst)
-						{
-							//this is one of our commands
-							FORWARD_WM_COMMAND(m_hWndParent, idCmd, NULL, 0, SendMessage);
-						}
-						else
-						{
-							CMINVOKECOMMANDINFO  cmi = {0};
-							cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-							cmi.hwnd = m_hWndParent;
-							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
-							cmi.nShow = SW_SHOWNORMAL;
-							ccm.InvokeCommand(cmi);
+						CMINVOKECOMMANDINFO  cmi = {0};
+						cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
+						cmi.hwnd = m_hWndParent;
+						cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
+						cmi.nShow = SW_SHOWNORMAL;
+						ccm.InvokeCommand(cmi);
 
-							//The operation performed by the context menu may have
-							// changed the contents of the folder, so do a refresh.
-							DoDisplay();
-						}
+						//The operation performed by the context menu may have
+						// changed the contents of the folder, so do a refresh.
+						DoDisplay();
 					}
+
+					m_ccm2.Release();
 				}
 				::DestroyMenu(hPopup);
 			}
@@ -307,6 +301,8 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen)
 						//	the contents of the folder, so do a refresh.
 							DoDisplay();
 						}
+
+						m_ccm2.Release();
 					}
 				}
 				::DestroyMenu(hPopup);

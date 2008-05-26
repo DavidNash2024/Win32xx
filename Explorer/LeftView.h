@@ -19,12 +19,9 @@ class CMyTreeView : public CTreeView
 public:
 	CMyTreeView();
 	virtual ~CMyTreeView();
-	virtual HWND Create(HWND hWndParent = 0);
-	HWND CreateThreadWin();
 	HIMAGELIST GetImageList(BOOL bLarge);
 	BOOL GetRootItems();
 	BOOL SelectFromListView(Cpidl& CpidlFull);
-	static DWORD WINAPI RunThread(LPVOID This);
 
  protected:
 	virtual void OnInitialUpdate();

@@ -129,6 +129,12 @@ namespace ShellWrapper
 		return hr;
 	}
 
+	void CContextMenu2::Release()
+	{
+		m_pIContextMenu2->Release();
+		m_pIContextMenu2 = 0;
+	}
+
 	///////////////////////////////////
 	//CShellFolder function definitions
 	CShellFolder::CShellFolder() : m_IShellFolder(NULL)

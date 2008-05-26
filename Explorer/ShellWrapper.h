@@ -68,12 +68,14 @@ namespace ShellWrapper
 		CContextMenu2();
 		virtual ~CContextMenu2();
 
+		void Attach(IContextMenu2* pIContextMenu2);
 		virtual HRESULT HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual IContextMenu2* GetIContextMenu2() {return m_pIContextMenu2;}
+		void Release();
 
 	private:
-		void Attach(IContextMenu2* pIContextMenu2);
 		IContextMenu2* m_pIContextMenu2;
+
 	};
 
 	//Wrapper class for an IContextMenu pointer
