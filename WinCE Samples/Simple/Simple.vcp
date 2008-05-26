@@ -102,29 +102,41 @@ LINK32=link.exe
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
-	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\WCEstddef.h"\
 	"..\Win32++\WinCore.h"\
 	".\SimpleApp.h"\
 	".\view.h"\
+	{$(INCLUDE)}"ceconfig.h"\
+	
+NODEP_CPP_MAIN_=\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\SimpleApp.cpp
 DEP_CPP_SIMPL=\
-	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\WCEstddef.h"\
 	"..\Win32++\WinCore.h"\
 	".\SimpleApp.h"\
 	".\view.h"\
+	{$(INCLUDE)}"ceconfig.h"\
+	
+NODEP_CPP_SIMPL=\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\View.cpp
 DEP_CPP_VIEW_=\
-	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\WCEstddef.h"\
 	"..\Win32++\WinCore.h"\
 	".\view.h"\
+	{$(INCLUDE)}"ceconfig.h"\
+	
+NODEP_CPP_VIEW_=\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # End Group
@@ -149,15 +161,15 @@ SOURCE=.\view.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.cpp"
-DEP_CPP_WINCO=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\dialog.h"\
-	"..\Win32++\WinCore.h"\
-	
-NODEP_CPP_WINCO=\
-	"..\Win32++\FullFrame.h"\
-	
+SOURCE="..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce400\STANDARDSDK\Include\Emulator\ceconfig.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\Default_Resource.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\WCEstddef.h"
 # End Source File
 # Begin Source File
 

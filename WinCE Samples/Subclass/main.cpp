@@ -4,7 +4,7 @@
 #include "SubclassApp.h"
 #include "Resource.h"
 
-int WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
+INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {
 	TCHAR szBuf[MAX_STRING_SIZE];
 	::LoadString(hInstance, IDW_MAIN, szBuf, MAX_STRING_SIZE -1);

@@ -102,41 +102,57 @@ LINK32=link.exe
 
 SOURCE=.\Button.cpp
 DEP_CPP_BUTTO=\
-	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\WCEstddef.h"\
 	"..\Win32++\WinCore.h"\
 	".\Button.h"\
+	{$(INCLUDE)}"ceconfig.h"\
+	
+NODEP_CPP_BUTTO=\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
-	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\WCEstddef.h"\
 	"..\Win32++\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
-	".\SubApp.h"\
+	".\SubclassApp.h"\
+	{$(INCLUDE)}"ceconfig.h"\
+	
+NODEP_CPP_MAIN_=\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\MainWin.cpp
 DEP_CPP_MAINW=\
-	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\WCEstddef.h"\
 	"..\Win32++\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
+	{$(INCLUDE)}"ceconfig.h"\
+	
+NODEP_CPP_MAINW=\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
-SOURCE=.\SubApp.cpp
-DEP_CPP_SUBAP=\
-	"..\Win32++\Default_Resource.h"\
+SOURCE=.\SubclassApp.cpp
+DEP_CPP_SUBCL=\
+	"..\Win32++\WCEstddef.h"\
 	"..\Win32++\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
-	".\SubApp.h"\
+	".\SubclassApp.h"\
+	{$(INCLUDE)}"ceconfig.h"\
+	
+NODEP_CPP_SUBCL=\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # End Group
@@ -153,7 +169,7 @@ SOURCE=.\MainWin.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\SubApp.h
+SOURCE=.\SubclassApp.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -165,13 +181,7 @@ SOURCE=.\SubApp.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.cpp"
-DEP_CPP_WINCO=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\dialog.h"\
-	"..\Win32++\FullFrame.h"\
-	"..\Win32++\WinCore.h"\
-	
+SOURCE="..\Win32++\Default_Resource.h"
 # End Source File
 # Begin Source File
 

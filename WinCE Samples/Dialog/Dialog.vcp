@@ -167,24 +167,7 @@ SOURCE=.\res\star.ico
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.cpp"
-DEP_CPP_DIALOG=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
-	
-# End Source File
-# Begin Source File
-
 SOURCE="..\Win32++\Dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\WinCore.cpp"
-DEP_CPP_WINCO=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\WinCore.h"\
-	
 # End Source File
 # Begin Source File
 
