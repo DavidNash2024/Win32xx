@@ -61,25 +61,25 @@ int CALLBACK CMyTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPa
 	return (short)SCODE_CODE(GetScode(hr));
 }
 
-void CMyTreeView::DoContextMenu(LPPOINT pptScreen)
+void CMyTreeView::DoContextMenu(CPoint& ptScreen)
 {
 	TVHITTESTINFO  tvhti;
-	tvhti.pt = *pptScreen;
+	tvhti.pt = ptScreen;
 	ScreenToClient(m_hWnd, &tvhti.pt);
 	tvhti.flags = LVHT_NOWHERE;
-	HitTest(&tvhti);
+	HitTest(tvhti);
 
 	if(TVHT_ONITEM & tvhti.flags)
-		DoItemMenu(tvhti.hItem , pptScreen);
+		DoItemMenu(tvhti.hItem , ptScreen);
 }
 
-void CMyTreeView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
+void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 {
 	TVITEM tvItem = {0};
 	tvItem.mask = TVIF_PARAM;
 	tvItem.hItem = hItem;
 
-	if(GetItem(&tvItem))
+	if(GetItem(tvItem))
 	{
 		HRESULT        hr;
 		TreeItemData*  pInfo = (TreeItemData*)tvItem.lParam;
@@ -109,7 +109,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, LPPOINT pptScreen)
 						cm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
 						UINT idCmd = ::TrackPopupMenu(hPopup, TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON ,
-							pptScreen->x, pptScreen->y, 0, m_hWnd, NULL);
+							ptScreen.x, ptScreen.y, 0, m_hWnd, NULL);
 
 						//A Treeview control sometimes requires this to end the
 						// TrackPopupMenu properly
@@ -142,9 +142,9 @@ LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	{
 	case NM_RCLICK:
 		{
-			POINT ptScreen;
+			CPoint ptScreen;
 			::GetCursorPos(&ptScreen);
-			DoContextMenu(&ptScreen);
+			DoContextMenu(ptScreen);
 		}
 		break;
 	case TVN_GETDISPINFO:
@@ -259,7 +259,7 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
 			tvInsert.hInsertAfter = TVI_LAST;
 			tvInsert.hParent = hParentItem;
 
-			InsertItem(&tvInsert);
+			InsertItem(tvInsert);
 			ulFetched = 0;
 		}
 	}
@@ -270,7 +270,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 	TVITEM tvItem = {0};
 	tvItem.mask = TVIF_PARAM;
 	tvItem.hItem = hParentItem;
-	if (!GetItem(&tvItem))
+	if (!GetItem(tvItem))
 		return FALSE;
 
 	//change the cursor
@@ -301,7 +301,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 	tvSort.hParent = hParentItem;
 	tvSort.lpfnCompare = CompareProc;
 	tvSort.lParam = 0;
-	SortChildrenCB(&tvSort, 0);
+	SortChildrenCB(tvSort, 0);
 
 	//turn redawing back on in the TreeView
 	::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
@@ -355,7 +355,7 @@ BOOL CMyTreeView::GetRootItems()
 		::SetFocus(m_hWnd);
 
 		//add the item
-		hParentItem = InsertItem(&tvInsert);
+		hParentItem = InsertItem(tvInsert);
 
 		//go ahead and expand this item
 		Expand(hParentItem, TVE_EXPAND);
@@ -402,7 +402,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 	tvItem.mask = TVIF_CHILDREN;
 	tvItem.cChildren = 1;
 	tvItem.hItem = hItem;
-	SetItem(&tvItem);
+	SetItem(tvItem);
 
 	//Expand the tree item
 	Expand(hItem, TVE_EXPAND);
@@ -416,7 +416,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 		TVITEM tvItem = {0};
 		tvItem.mask = TVIF_PARAM;
 		tvItem.hItem = hChild;
-		if(!GetItem(&tvItem))
+		if(!GetItem(tvItem))
 			return FALSE;
 
 		//Get the TreeItemData pointer from the item's lParam

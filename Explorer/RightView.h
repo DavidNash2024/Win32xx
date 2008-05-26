@@ -50,10 +50,10 @@ private:
 
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 	void DeleteItems();
-	void DoBackgroundMenu(LPPOINT pptScreen);
-	void DoContextMenu(LPPOINT pptScreen);
+	void DoBackgroundMenu(CPoint& ptScreen);
+	void DoContextMenu(CPoint& ptScreen);
 	void DoDefault(int iItem);
-	void DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen);
+	void DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen);
 	void EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlFull);
 	BOOL GetFileSizeText(HANDLE hFile, LPTSTR szSize);
 	BOOL GetLastWriteTime(HANDLE hFile, LPTSTR lpszString);

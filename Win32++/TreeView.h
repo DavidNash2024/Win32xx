@@ -25,11 +25,11 @@ namespace Win32xx
 		HIMAGELIST GetImageList(int iImageType) const;
 		UINT  GetIndent() const;
 		COLORREF GetInsertMarkColor() const;
-		BOOL GetItem(LPTVITEM pItem) const;
+		BOOL GetItem(TVITEM& Item) const;
 		DWORD_PTR GetItemData(HTREEITEM hItem) const;
 		int  GetItemHeight() const;
 		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
-		BOOL GetItemRect(HTREEITEM hItem, LPRECT pRect, BOOL bTextOnly) const;
+		BOOL GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const;
 		tString GetItemText(HTREEITEM hItem) const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
@@ -49,7 +49,7 @@ namespace Win32xx
 		void SetIndent(int indent);
 		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE);
 		COLORREF SetInsertMarkColor(COLORREF clrInsertMark);
-		BOOL SetItem(LPTVITEM pItem);
+		BOOL SetItem(TVITEM& Item);
 		BOOL SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam);
 		BOOL SetItemData(HTREEITEM hItem, DWORD_PTR dwData);
 		int  SetItemHeight(SHORT cyItem);
@@ -66,14 +66,14 @@ namespace Win32xx
 		HWND EditLabel(HTREEITEM hItem);
 		BOOL EnsureVisible(HTREEITEM hItem);
 		BOOL Expand(HTREEITEM hItem, UINT nCode);
-		HTREEITEM HitTest(LPTVHITTESTINFO pht);
-		HTREEITEM InsertItem(LPTVINSERTSTRUCT pis);
+		HTREEITEM HitTest(TVHITTESTINFO& ht);
+		HTREEITEM InsertItem(TVINSERTSTRUCT& tvIS);
 		BOOL Select(HTREEITEM hitem, UINT flag);
 		BOOL SelectDropTarget(HTREEITEM hItem);
 		BOOL SelectItem(HTREEITEM hItem);
 		BOOL SelectSetFirstVisible(HTREEITEM hItem);
 		BOOL SortChildren(HTREEITEM hItem, BOOL fRecurse);
-		BOOL SortChildrenCB(LPTVSORTCB psort, BOOL fRecurse);
+		BOOL SortChildrenCB(TVSORTCB& sort, BOOL fRecurse);
 
 	};
 
@@ -138,10 +138,10 @@ namespace Win32xx
 		return TreeView_GetInsertMarkColor( m_hWnd ); 
 	}
 
-	inline BOOL CTreeView::GetItem(TVITEM* pItem) const
+	inline BOOL CTreeView::GetItem(TVITEM& Item) const
 	// Retrieves some or all of a tree-view item's attributes.
 	{ 
-		return TreeView_GetItem( m_hWnd, pItem ); 
+		return TreeView_GetItem( m_hWnd, &Item ); 
 	}
 
 	inline DWORD_PTR CTreeView::GetItemData(HTREEITEM hItem) const
@@ -171,10 +171,10 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline BOOL CTreeView::GetItemRect(HTREEITEM hItem, LPRECT pRect, BOOL bTextOnly) const
+	inline BOOL CTreeView::GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const
 	// Retrieves the bounding rectangle for a tree-view item and indicates whether the item is visible.
 	{ 
-		return TreeView_GetItemRect( m_hWnd, hItem, pRect, bTextOnly ); 
+		return TreeView_GetItemRect( m_hWnd, hItem, &rc, bTextOnly ); 
 	}
 
 	inline tString CTreeView::GetItemText(HTREEITEM hItem) const
@@ -301,10 +301,10 @@ namespace Win32xx
 		return TreeView_SetInsertMarkColor( m_hWnd, clrInsertMark ); 
 	}
 
-	inline BOOL CTreeView::SetItem(LPTVITEM pItem)
+	inline BOOL CTreeView::SetItem(TVITEM& Item)
 	// Sets some or all of a tree-view item's attributes. 
 	{ 
-		return TreeView_SetItem( m_hWnd, pItem ); 
+		return TreeView_SetItem( m_hWnd, &Item ); 
 	}
 
 	inline BOOL CTreeView::SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam)
@@ -421,16 +421,16 @@ namespace Win32xx
 		return TreeView_Expand( m_hWnd, hItem, nCode ); 
 	}
 
-	inline HTREEITEM CTreeView::HitTest(LPTVHITTESTINFO pht)
+	inline HTREEITEM CTreeView::HitTest(TVHITTESTINFO& ht)
 	// Determines the location of the specified point relative to the client area of a tree-view control.
 	{ 
-		return TreeView_HitTest( m_hWnd, pht ); 
+		return TreeView_HitTest( m_hWnd, &ht ); 
 	}
 
-	inline HTREEITEM CTreeView::InsertItem(LPTVINSERTSTRUCT pis)
+	inline HTREEITEM CTreeView::InsertItem(TVINSERTSTRUCT& tvIS)
 	// Inserts a new item in a tree-view control.
 	{ 
-		return TreeView_InsertItem( m_hWnd, pis ); 
+		return TreeView_InsertItem( m_hWnd, &tvIS ); 
 	}
 
 	inline BOOL CTreeView::Select(HTREEITEM hitem, UINT flag)
@@ -466,10 +466,10 @@ namespace Win32xx
 		return TreeView_SortChildren( m_hWnd, hItem, fRecurse ); 
 	}
 
-	inline BOOL CTreeView::SortChildrenCB(LPTVSORTCB psort, BOOL fRecurse)
+	inline BOOL CTreeView::SortChildrenCB(TVSORTCB& sort, BOOL fRecurse)
 	// Sorts tree-view items using an application-defined callback function that compares the items.
 	{ 
-		return TreeView_SortChildrenCB( m_hWnd, psort, fRecurse ); 
+		return TreeView_SortChildrenCB( m_hWnd, &sort, fRecurse ); 
 	}
 
 

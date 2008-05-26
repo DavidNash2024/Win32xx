@@ -17,10 +17,10 @@ namespace Win32xx
 		// Attributes
 		CSize ApproximateViewRect(CSize sz = CSize(-1, -1), int iCount = -1) const;
 		COLORREF GetBkColor( ) const;
-		BOOL GetBkImage( LVBKIMAGE* plvbkImage ) const;
+		BOOL GetBkImage( LVBKIMAGE& lvbkImage ) const;
 		UINT GetCallbackMask( ) const;
 		BOOL GetCheckState( UINT nItem ) const;
-		BOOL GetColumn( int iCol, LVCOLUMN* pColumn ) const;
+		BOOL GetColumn( int iCol, LVCOLUMN& Column ) const;
 		BOOL GetColumnOrderArray( LPINT piArray, int iCount = -1 );
 		int GetColumnWidth( int iCol ) const;
 		int GetCountPerPage( ) const;
@@ -31,31 +31,31 @@ namespace Win32xx
 		int GetHotItem( ) const;
 		DWORD GetHoverTime( ) const;
 		HIMAGELIST GetImageList( int nImageType ) const;
-		BOOL GetItem( LVITEM* pItem ) const;
+		BOOL GetItem( LVITEM& lvItem ) const;
 		int GetItemCount( ) const;
 		DWORD_PTR GetItemData( int iItem ) const;
-		BOOL GetItemPosition( int iItem, LPPOINT pPoint ) const;
-		BOOL GetItemRect( int iItem, LPRECT pRect, UINT nCode ) const;
+		BOOL GetItemPosition( int iItem, CPoint& pt ) const;
+		BOOL GetItemRect( int iItem, CRect& rc, UINT nCode ) const;
 		UINT GetItemState( int iItem, UINT nMask ) const;
 		tString GetItemText( int iItem, int iSubItem ) const;
 		int GetNextItem( int iItem, int iFlags ) const;
 		UINT GetNumberOfWorkAreas( ) const;
-		BOOL GetOrigin( LPPOINT pPoint ) const;
+		BOOL GetOrigin( CPoint& pt ) const;
 		UINT GetSelectedCount( ) const;
 		int GetSelectionMark( );
 		int GetStringWidth( LPCTSTR pszString ) const;
-		BOOL GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& Rect );
+		BOOL GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc );
 		COLORREF GetTextBkColor( ) const;
 		COLORREF GetTextColor( ) const;
 		HWND GetToolTips( ) const;
 		int GetTopIndex( ) const;
-		BOOL GetViewRect( LPRECT pRect ) const;
+		BOOL GetViewRect( CRect& rc ) const;
 		void GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const;
 		BOOL SetBkColor( COLORREF clrBk );
-		BOOL SetBkImage( LVBKIMAGE* plvbkImage );
+		BOOL SetBkImage( LVBKIMAGE& plvbkImage );
 		BOOL SetCallbackMask( UINT nMask );
 		void SetCheckState( int iItem, BOOL fCheck = TRUE );
-		BOOL SetColumn( int iCol, const LVCOLUMN* pColumn );
+		BOOL SetColumn( int iCol, const LVCOLUMN& pColumn );
 		BOOL SetColumnOrderArray( int iCount, LPINT piArray );
 		BOOL SetColumnWidth( int iCol, int cx );
 		DWORD SetExtendedStyle( DWORD dwNewStyle );
@@ -65,26 +65,26 @@ namespace Win32xx
 		CSize SetIconSpacing( int cx, int cy );
 		CSize SetIconSpacing( CSize sz );
 		HIMAGELIST SetImageList( HIMAGELIST himl, int iImageListType );
-		BOOL SetItem( LVITEM* pItem );
+		BOOL SetItem( LVITEM& pItem );
 		BOOL SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
 						UINT nState, UINT nStateMask, LPARAM lParam, int iIndent );
 		void SetItemCount( int iCount );
 		void SetItemCountEx( int iCount, DWORD dwFlags = LVSICF_NOINVALIDATEALL );
 		BOOL SetItemData( int iItem, DWORD_PTR dwData );
-		BOOL SetItemPosition( int iItem, POINT pt );
-		BOOL SetItemState( int iItem, LVITEM* pItem );
+		BOOL SetItemPosition( int iItem, CPoint& pt );
+		BOOL SetItemState( int iItem, LVITEM& Item );
         void SetItemState( int iItem, UINT nState, UINT nMask );
 		void SetItemText( int iItem, int iSubItem, LPCTSTR pszText );
 		int SetSelectionMark( int iIndex );
 		BOOL SetTextBkColor( COLORREF clrBkText );
 		BOOL SetTextColor( COLORREF clrText );
 		HWND SetToolTips( HWND hWndToolTip );
-		void SetWorkAreas( int nWorkAreas, LPRECT pRectArray );
+		void SetWorkAreas( int nWorkAreas, CRect& pRectArray );
 		int SubItemHitTest( LPLVHITTESTINFO pInfo );
 
 		// Operations
 		BOOL Arrange( UINT nCode );
-		HIMAGELIST CreateDragImage( int iItem, LPPOINT pPoint );
+		HIMAGELIST CreateDragImage( int iItem, CPoint& pt );
 		BOOL DeleteAllItems( );
 		BOOL DeleteColumn( int iCol );
 		BOOL DeleteItem( int iItem );
@@ -93,10 +93,10 @@ namespace Win32xx
 		int FindItem( LVFINDINFO* pFindInfo, int iStart = -1 ) const;
 		int HitTest( LVHITTESTINFO* pHitTestInfo ) const;
         int HitTest( CPoint pt, UINT* pFlags = NULL ) const;
-		int InsertColumn( int iCol, const LVCOLUMN* pColumn );
+		int InsertColumn( int iCol, const LVCOLUMN& pColumn );
         int InsertColumn( int iCol, LPCTSTR pszColumnHeading, int iFormat = LVCFMT_LEFT,
 							int iWidth = -1, int iSubItem = -1 );
-		int InsertItem( const LVITEM* pItem );
+		int InsertItem( const LVITEM& pItem );
         int InsertItem( int iItem, LPCTSTR pszText );
         int InsertItem( int iItem, LPCTSTR pszText, int iImage );
 		BOOL RedrawItems( int iFirst, int iLast );
@@ -124,10 +124,10 @@ namespace Win32xx
 		return ListView_GetBkColor( m_hWnd );
 	}
 
-	inline BOOL CListView::GetBkImage( LVBKIMAGE* plvbkImage ) const
+	inline BOOL CListView::GetBkImage( LVBKIMAGE& lvbkImage ) const
 	// Retrieves the background image in a list-view control.	
 	{
-		return ListView_GetBkImage( m_hWnd, plvbkImage );
+		return ListView_GetBkImage( m_hWnd, &lvbkImage );
 	}
 
 	inline UINT CListView::GetCallbackMask( ) const
@@ -142,10 +142,10 @@ namespace Win32xx
 		return ListView_GetCheckState( m_hWnd, nItem );
 	}
 
-	inline BOOL CListView::GetColumn( int iCol, LVCOLUMN* pColumn ) const
+	inline BOOL CListView::GetColumn( int iCol, LVCOLUMN& Column ) const
 	// Retrieves the attributes of a list-view control's column.	
 	{
-		return ListView_GetColumn( m_hWnd, iCol, pColumn );
+		return ListView_GetColumn( m_hWnd, iCol, &Column );
 	}
 
 	inline BOOL CListView::GetColumnOrderArray( LPINT piArray, int iCount /*= -1*/ )
@@ -209,10 +209,10 @@ namespace Win32xx
 		return ListView_GetImageList( m_hWnd, nImageType );
 	}
 
-	inline BOOL CListView::GetItem( LVITEM* pItem ) const
+	inline BOOL CListView::GetItem( LVITEM& Item ) const
 	// Retrieves some or all of a list-view item's attributes.	
 	{
-		return ListView_GetItem( m_hWnd, pItem );
+		return ListView_GetItem( m_hWnd, &Item );
 	}
 
 	inline int CListView::GetItemCount( ) const
@@ -230,16 +230,16 @@ namespace Win32xx
 		return ListView_GetItem(m_hWnd, &lvi);
 	}
 
-	inline BOOL CListView::GetItemPosition( int iItem, LPPOINT pPoint ) const
+	inline BOOL CListView::GetItemPosition( int iItem, CPoint& pt ) const
 	// Retrieves the position of a list-view item.	
 	{
-		return ListView_GetItemPosition( m_hWnd, iItem, pPoint );
+		return ListView_GetItemPosition( m_hWnd, iItem, &pt );
 	}
 
-	inline BOOL CListView::GetItemRect( int iItem, LPRECT pRect, UINT nCode ) const
+	inline BOOL CListView::GetItemRect( int iItem, CRect& rc, UINT nCode ) const
 	// Retrieves the bounding rectangle for all or part of an item in the current view.
 	{
-		return ListView_GetItemRect( m_hWnd, iItem, pRect, nCode );
+		return ListView_GetItemRect( m_hWnd, iItem, &rc, nCode );
 	}
 
 	inline UINT CListView::GetItemState( int iItem, UINT nMask ) const
@@ -286,10 +286,10 @@ namespace Win32xx
 		return nWorkAreas;
 	}
 
-	inline BOOL CListView::GetOrigin( LPPOINT pPoint ) const
+	inline BOOL CListView::GetOrigin( CPoint& pt ) const
 	// Retrieves the current view origin for a list-view control.	
 	{
-		return ListView_GetOrigin( m_hWnd, pPoint );
+		return ListView_GetOrigin( m_hWnd, &pt );
 	}
 
 	inline UINT CListView::GetSelectedCount( ) const
@@ -310,10 +310,10 @@ namespace Win32xx
 		return (int)::SendMessage( m_hWnd, LVM_GETSTRINGWIDTH, 0, (LPARAM)pszString );
 	}
 
-	inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& Rect )
+	inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc )
 	// Retrieves information about the rectangle that surrounds a subitem in a list-view control.	
 	{
-		return ListView_GetSubItemRect( m_hWnd, iItem, iSubItem, iCode, &Rect );
+		return ListView_GetSubItemRect( m_hWnd, iItem, iSubItem, iCode, &rc );
 	}
 
 	inline COLORREF CListView::GetTextBkColor( ) const
@@ -340,10 +340,10 @@ namespace Win32xx
 		return ListView_GetTopIndex( m_hWnd );
 	}
 
-	inline BOOL CListView::GetViewRect( LPRECT pRect ) const
+	inline BOOL CListView::GetViewRect( CRect& rc ) const
 	// Retrieves the bounding rectangle of all items in the list-view control.	
 	{
-		return ListView_GetViewRect( m_hWnd, pRect );
+		return ListView_GetViewRect( m_hWnd, &rc );
 	}
 
 	inline void CListView::GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const
@@ -358,10 +358,10 @@ namespace Win32xx
 		return ListView_SetBkColor( m_hWnd, clrBk );
 	}
 
-	inline BOOL CListView::SetBkImage( LVBKIMAGE* plvbkImage )
+	inline BOOL CListView::SetBkImage( LVBKIMAGE& lvbkImage )
 	// Sets the background image in a list-view control.	
 	{
-		return ListView_SetBkImage( m_hWnd, plvbkImage );
+		return ListView_SetBkImage( m_hWnd, &lvbkImage );
 	}
 
 	inline BOOL CListView::SetCallbackMask( UINT nMask )
@@ -377,10 +377,10 @@ namespace Win32xx
 		ListView_SetItemState(m_hWnd, iItem, INDEXTOSTATEIMAGEMASK((fCheck==TRUE)?2:1),LVIS_STATEIMAGEMASK);
 	}
 
-	inline BOOL CListView::SetColumn( int iCol, const LVCOLUMN* pColumn )
+	inline BOOL CListView::SetColumn( int iCol, const LVCOLUMN& Column )
 	// Sets the attributes of a list-view column.	
 	{	
-		return ListView_SetColumn( m_hWnd, iCol, pColumn );
+		return ListView_SetColumn( m_hWnd, iCol, &Column );
 	}
 
 	inline BOOL CListView::SetColumnOrderArray( int iCount, LPINT piArray )
@@ -438,7 +438,7 @@ namespace Win32xx
 		return ListView_SetImageList( m_hWnd, himl, iImageListType );
 	}
 
-	inline BOOL CListView::SetItem( LVITEM* pItem )
+	inline BOOL CListView::SetItem( LVITEM& Item )
 	// Sets some or all of a list-view item's attributes.
 
 	// The declaration for TVITEM:
@@ -452,9 +452,9 @@ namespace Win32xx
 	//		int cchTextMax;
     //		int iImage;
 	//		LPARAM lParam;
-	// } LVITEM, *LPLVITEM;	
+	// } LVITEM, *LVITEM&;	
 	{
-		return ListView_SetItem( m_hWnd, pItem );
+		return ListView_SetItem( m_hWnd, &Item );
 	}
 
 	inline BOOL CListView::SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
@@ -497,13 +497,13 @@ namespace Win32xx
 		return ListView_SetItem(m_hWnd, &lvi);
 	}
 
-	inline BOOL CListView::SetItemPosition( int iItem, POINT pt )
+	inline BOOL CListView::SetItemPosition( int iItem, CPoint& pt )
 	// Moves an item to a specified position in a list-view control (in icon or small icon view).
 	{
 		return ListView_SetItemPosition( m_hWnd, iItem, pt.x, pt.y );
 	}
 
-	inline BOOL CListView::SetItemState( int iItem, LVITEM* pItem )
+	inline BOOL CListView::SetItemState( int iItem, LVITEM& Item )
 	// Changes the state of an item in a list-view control.
 
 	// Possible values of nMask:
@@ -514,7 +514,7 @@ namespace Win32xx
 	// LVIS_OVERLAYMASK		Use this mask to retrieve the item's overlay image index.
 	// LVIS_STATEIMAGEMASK	Use this mask to retrieve the item's state image index.	
 	{
-		return (BOOL)::SendMessage(m_hWnd, LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)pItem);
+		return (BOOL)::SendMessage(m_hWnd, LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)&Item);
 	}
 
     inline void CListView::SetItemState( int iItem, UINT nState, UINT nMask )
@@ -553,7 +553,7 @@ namespace Win32xx
 		return (HWND)::SendMessage(m_hWnd, LVM_SETTOOLTIPS, (WPARAM)hWndToolTip, 0);
 	}
 
-	inline void CListView::SetWorkAreas( int nWorkAreas, LPRECT pRectArray )
+	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray )
 	// Sets the working area within a list-view control.	
 	{
 		ListView_SetWorkAreas( m_hWnd, nWorkAreas, pRectArray );
@@ -573,10 +573,10 @@ namespace Win32xx
 		return ListView_Arrange( m_hWnd, nCode );
 	}
 
-	inline HIMAGELIST CListView::CreateDragImage( int iItem, LPPOINT pPoint )
+	inline HIMAGELIST CListView::CreateDragImage( int iItem, CPoint& pt )
 	// Creates a drag image list for the specified item.
 	{
-		return ListView_CreateDragImage( m_hWnd, iItem, pPoint );
+		return ListView_CreateDragImage( m_hWnd, iItem, &pt );
 	}
 
 	inline BOOL CListView::DeleteAllItems( )
@@ -631,10 +631,10 @@ namespace Win32xx
 		return ListView_HitTest( m_hWnd, &hti );
 	}
 
-	inline int CListView::InsertColumn( int iCol, const LVCOLUMN* pColumn )
+	inline int CListView::InsertColumn( int iCol, const LVCOLUMN& Column )
 	// Inserts a new column in a list-view control.	
 	{
-		return ListView_InsertColumn( m_hWnd, iCol, pColumn );
+		return ListView_InsertColumn( m_hWnd, iCol, &Column );
 	}
 
     inline int CListView::InsertColumn( int iCol, LPCTSTR pszColumnHeading, int iFormat /*= LVCFMT_LEFT*/,
@@ -650,10 +650,10 @@ namespace Win32xx
 		return ListView_InsertColumn( m_hWnd, iCol, &lvc );
 	}
 
-	inline int CListView::InsertItem( const LVITEM* pItem )
+	inline int CListView::InsertItem( const LVITEM& Item )
 	// Inserts a new item in a list-view control.	
 	{
-		return ListView_InsertItem( m_hWnd, pItem );
+		return ListView_InsertItem( m_hWnd, &Item );
 	}
 
     inline int CListView::InsertItem( int iItem, LPCTSTR pszText )

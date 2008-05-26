@@ -73,7 +73,7 @@ void CMyListView::DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlFull, C
 	DoDisplay();
 }
 
-void CMyListView::DoBackgroundMenu(LPPOINT pptScreen)
+void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 {
 	HRESULT        hr;
 	if(m_csfCurFolder.GetIShellFolder())
@@ -105,7 +105,7 @@ void CMyListView::DoBackgroundMenu(LPPOINT pptScreen)
 					ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
 					idCmd = ::TrackPopupMenu(hPopup, TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-						pptScreen->x, pptScreen->y, 0, m_hWnd, NULL);
+						ptScreen.x, ptScreen.y, 0, m_hWnd, NULL);
 
 					if(idCmd)
 					{
@@ -129,10 +129,10 @@ void CMyListView::DoBackgroundMenu(LPPOINT pptScreen)
 	}
 }
 
-void CMyListView::DoContextMenu(LPPOINT pptScreen)
+void CMyListView::DoContextMenu(CPoint& ptScreen)
 {
 	LVHITTESTINFO  lvhti;
-	lvhti.pt = *pptScreen;
+	lvhti.pt = ptScreen;
 	ScreenToClient(m_hWnd, &lvhti.pt);
 	lvhti.flags = LVHT_NOWHERE;
 	ListView_HitTest(m_hWnd, &lvhti);
@@ -160,12 +160,12 @@ void CMyListView::DoContextMenu(LPPOINT pptScreen)
 				i--;
 		}
 
-		DoItemMenu(pItems, nItems, pptScreen);
+		DoItemMenu(pItems, nItems, ptScreen);
 		delete []pItems;
 		}
 	}
 	else
-		DoBackgroundMenu(pptScreen);
+		DoBackgroundMenu(ptScreen);
 }
 
 void CMyListView::DoDefault(int iItem)
@@ -250,7 +250,7 @@ void CMyListView::DoDisplay()
 	}
 }
 
-void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen)
+void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 {
 	Cpidl* cpidlArray = new Cpidl[cbItems];
 
@@ -286,7 +286,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, LPPOINT pptScreen)
 						ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 						UINT  idCmd;
 						idCmd = ::TrackPopupMenu( hPopup, TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-									pptScreen->x, pptScreen->y, 0, m_hWnd, NULL);
+									ptScreen.x, ptScreen.y, 0, m_hWnd, NULL);
 
 						if(idCmd)
 						{
@@ -320,9 +320,9 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	{
 	case NM_RCLICK:
 		{
-			POINT ptScreen;
+			CPoint ptScreen;
 			::GetCursorPos(&ptScreen);
-			DoContextMenu(&ptScreen);
+			DoContextMenu(ptScreen);
 		}
 		break;
 	case WM_INITMENUPOPUP:

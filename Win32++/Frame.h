@@ -1494,7 +1494,7 @@ namespace Win32xx
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.hwndChild  = GetMenubar();
 
-		GetRebar().InsertBand(-1, &rbbi);
+		GetRebar().InsertBand(-1, rbbi);
 		SetMenubarBandSize();
 		GetRebar().SetMenubar(GetMenubar());
 	}
@@ -1520,7 +1520,7 @@ namespace Win32xx
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 		rbbi.hwndChild  = TB;
 
-		GetRebar().InsertBand(-1, &rbbi);
+		GetRebar().InsertBand(-1, rbbi);
 	}
 
 	inline HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
@@ -2426,14 +2426,14 @@ namespace Win32xx
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
-		RB.GetBandInfo(nBand, &rbbi);
+		RB.GetBandInfo(nBand, rbbi);
 		if (m_Rebar.GetRebarTheme().UseThemes)
 		{
 			rbbi.cxMinChild = Width;
 			rbbi.cx         = Width;
 		}
 
-		RB.SetBandInfo(nBand, &rbbi);
+		RB.SetBandInfo(nBand, rbbi);
 	}
 
 	inline void CFrame::SetStatusIndicators()
