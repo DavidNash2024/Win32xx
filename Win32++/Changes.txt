@@ -23,26 +23,16 @@ API to manage the Tree-View common control. You can inherit from this class
 when creating your own Tree-View control in a window, or attaching a 
 Tree-View control from a dialog.
 
-* Added CPoint class
-This class can be used anywhere a POINT struct can be used. In addition 
-- CPoint has a constructor, so it can set a default value when used as
-   a function argument.
-- It makes porting code from MFC or WTL a little easier.
-
-* Added CRect class
-This class can be used anywhere a RECT struct can be used. In addition 
-- CPoint has a constructor, so it can set a default value when used as
-   a function argument.
-- CRect can be constructed in several different convenient ways.
-- A number of useful members have been added to the CRect, such as
-   Height and Width.
-- It makes porting code from MFC or WTL a little easier.
-
-* Added CSize class
-This class can be used anywhere a SIZE struct can be used. In addition 
-- CPoint has a constructor, so it can set a default value when used as
-   a function argument.
-- It makes porting code from MFC or WTL a little easier.
+* Added CPoint CRect and CSize classes
+The CPoint, CRect and CSize classes can be used anywhere a POINT, RECT
+or CSize struct can be used respectively. In addition:
+- The constructors ensure that members are set to reasonable values.
+- The constructors allow a default value to be set when the class is
+   used as a function argument.
+- Multiple CRect constructors allow CRect objects to be created in several
+   different convenient ways.
+- The CRect class adds additional members such as Height and Width.   
+- These classes makes porting code from MFC or WTL a little easier.
 
 * Extended the CRebar, CToolbar and CStatusbar classes.
 
