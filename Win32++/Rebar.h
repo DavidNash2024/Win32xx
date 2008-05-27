@@ -65,14 +65,7 @@ namespace Win32xx
 		CRebar();
 		virtual ~CRebar();
 
-		// These are the functions you might wish to override
-		virtual void MoveBandsLeft();
-		virtual void ShowGripper(int nBand, BOOL fShow) const;
-		virtual BOOL ShowBand(int nBand, BOOL fShow) const;
-		virtual void ResizeBand(const int nBand, const CSize& sz) const;
-
-		// These functions aren't intended to be overridden
-		void DeleteBand(const int nBand) const;
+	// Attributes
 		int  GetBand(const HWND hWnd) const;
 		CRect GetBandBorders(int nBand) const;
 		int  GetBandCount() const;
@@ -83,6 +76,17 @@ namespace Win32xx
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
 		HWND GetToolTips() const;
+		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
+		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
+		void SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
+		void SetBarInfo(REBARINFO& rbi) const; 
+		ThemeRebar& GetRebarTheme() {return m_Theme;}
+		void SetRebarTheme(ThemeRebar& Theme);
+		HWND GetMenubar() {return m_hMenubar;}
+		void SetMenubar(HWND hMenubar) {m_hMenubar = hMenubar;}
+
+	// Operations
+		void DeleteBand(const int nBand) const;
 		int  HitTest(RBHITTESTINFO& rbht);
 		int  IDToIndex(UINT uBandID) const;
 		void InsertBand(const int nBand, REBARBANDINFO& rbbi) const;
@@ -90,23 +94,18 @@ namespace Win32xx
 		void MaximizeBand(UINT uBand, BOOL fIdeal = FALSE);
 		void MinimizeBand(UINT uBand);
 		BOOL MoveBand(UINT uFrom, UINT uTo);
-		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
-		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
-		void SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
-		void SetBarInfo(REBARINFO& rbi) const; 
-
-		ThemeRebar& GetRebarTheme() {return m_Theme;}
-		void SetRebarTheme(ThemeRebar& Theme);
-		HWND GetMenubar() {return m_hMenubar;}
-		void SetMenubar(HWND hMenubar) {m_hMenubar = hMenubar;}
+		void MoveBandsLeft();
+		void ShowGripper(int nBand, BOOL fShow) const;
+		BOOL ShowBand(int nBand, BOOL fShow) const;
+		void ResizeBand(const int nBand, const CSize& sz) const;
 
 	protected:
+	//Overridables
+		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	private:
-		virtual BOOL OnEraseBkgnd(HDC hDC);
-
+	private:	
 		ThemeRebar m_Theme;
 		BOOL m_bIsDragging;
 		HWND m_hMenubar;

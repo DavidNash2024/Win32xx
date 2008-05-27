@@ -106,15 +106,15 @@ namespace Win32xx
 	public:
 		CMenubar();
 		virtual ~CMenubar();
-		virtual void MenuChar(WPARAM wParam, LPARAM lParam);
-		virtual void SysCommand(WPARAM wParam, LPARAM lParam);
-
+		void MenuChar(WPARAM wParam, LPARAM lParam);
+		void SysCommand(WPARAM wParam, LPARAM lParam);
 		HMENU GetMenu() const {return m_hTopMenu;}
 		void SetMenu(HMENU hMenu);
 		ThemeMenu& GetMenubarTheme() {return m_ThemeMenu;}
 		void SetMenubarTheme(ThemeMenu& Theme);
 
 	protected:
+	//Overridables
 		virtual void OnCreate();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);

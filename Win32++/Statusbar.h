@@ -51,17 +51,22 @@ namespace Win32xx
 	public:
 		CStatusbar();
 		virtual ~CStatusbar() {}
-		virtual void CreateParts(int iParts, const int iPaneWidths[]) const;
-		virtual tString GetPartText(int iPart) const;
+	
+	// Overridables
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
-		virtual void SetPartWidth(int iPart, int iWidth) const;
-
+		
+	// Attributes
 		int GetPartCount();
 		HICON GetPartIcon(int iPart);
-		CRect GetPartRect(int iPart); 
+		CRect GetPartRect(int iPart); 		
+		tString GetPartText(int iPart) const;
 		BOOL IsSimple();
 		BOOL SetPartIcon(int iPart, HICON hIcon);
+		void SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
+		void SetPartWidth(int iPart, int iWidth) const;			
+	
+	// Operations
+		void CreateParts(int iParts, const int iPaneWidths[]) const;
 		void SetSimple(BOOL fSimple = TRUE);
 	};
 

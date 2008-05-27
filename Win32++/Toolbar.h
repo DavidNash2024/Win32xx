@@ -64,16 +64,8 @@ namespace Win32xx
 		CToolbar();
 		virtual ~CToolbar();
 
-		// These are the functions you might wish to override
-		virtual void AddBitmap(int iNumButtons, UINT ToolbarID);
-		virtual void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
-		virtual int  SetButtons(const std::vector<UINT>& ToolbarData) const;
-		virtual void SetButtonText(int iButtonID, LPCTSTR szText);
-
-		// These functions aren't intended to be overridden
+	// Attributes	
 		int  CommandToIndex(int iButtonID) const;
-		void DisableButton(int iButtonID) const;
-		void EnableButton(int iButtonID) const;
 		int  GetButtonCount() const;
 		UINT GetButtonState(int iButtonID) const;
 		BYTE GetButtonStyle(int iButtonID) const;
@@ -85,13 +77,22 @@ namespace Win32xx
 		int  HitTest() const;
 		void SetBitmap(int iNumButtons, UINT nID);
 		void SetBitmapSize(int cx, int cy) const;
+		int  SetButtons(const std::vector<UINT>& ToolbarData) const;
 		void SetButtonSize(int cx, int cy) const;
 		void SetButtonState(int iButtonID, UINT State) const;
-		void SetButtonStyle(int iButtonID, BYTE Style) const;
+		void SetButtonStyle(int iButtonID, BYTE Style) const;	
+		void SetButtonText(int iButtonID, LPCTSTR szText);
 		void SetCommandID(int iIndex, int iButtonID) const;
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
+	// Operations
+		void AddBitmap(int iNumButtons, UINT ToolbarID);
+		void DisableButton(int iButtonID) const;
+		void EnableButton(int iButtonID) const;
+		void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
+
 	protected:
+	// Overridables
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
