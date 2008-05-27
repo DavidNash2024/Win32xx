@@ -123,7 +123,7 @@ namespace Win32xx
 			CDC BarDC = ::GetDC(m_hWnd);
 			BarDC.AttachBrush(m_hbrDithered);
 
-			RECT rc = {0};
+			CRect rc;
 			GetClientRect(m_hWnd, &rc);
 			int cx = rc.right - rc.left;
 			int cy = rc.bottom - rc.top;
@@ -232,7 +232,7 @@ namespace Win32xx
 			Oldpt.x = pt.x;
 			Oldpt.y = pt.y;
 
-			RECT rc = {0};
+			CRect rc;
 			::GetClientRect(m_hWnd, &rc);
 			int cx = rc.right - rc.left;
 			int cy = rc.bottom - rc.top;
@@ -283,7 +283,7 @@ namespace Win32xx
 
 	inline void CSplitter::RecalcLayout()
 	{
-		RECT r = {0};
+		CRect r;
 		::GetClientRect(m_hWnd, &r);
 
 		int cx = r.right - r.left;
@@ -311,7 +311,7 @@ namespace Win32xx
 	{
 		if (nBarPos < 0) return;
 
-		RECT rClient = {0};
+		CRect rClient;
 		if (::GetClientRect(m_hWnd, &rClient))
 		{
 			int cx = rClient.right - rClient.left;

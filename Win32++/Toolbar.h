@@ -78,7 +78,7 @@ namespace Win32xx
 		UINT GetButtonState(int iButtonID) const;
 		BYTE GetButtonStyle(int iButtonID) const;
 		int  GetCommandID(int iIndex) const;
-		RECT GetItemRect(int iIndex) const;
+		CRect GetItemRect(int iIndex) const;
 		SIZE GetMaxSize() const;
 		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
 		BOOL HasText() const;
@@ -233,10 +233,10 @@ namespace Win32xx
 		return tbb.idCommand;
 	}
 
-	inline RECT CToolbar::GetItemRect(int iIndex) const
+	inline CRect CToolbar::GetItemRect(int iIndex) const
 	// Retrieves the bounding rectangle of a button in a toolbar
 	{
-		RECT rc = {0};
+		CRect rc;
 		int iCount = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
 
 		if (iCount >= iIndex)
@@ -291,7 +291,7 @@ namespace Win32xx
 
 		for (int i = 0 ; i < nButtons; ++i)
 		{
-			RECT r = GetItemRect(i);
+			CRect r = GetItemRect(i);
 			if (::PtInRect(&r, pt))
 				iButton = i;
 		}
@@ -335,7 +335,7 @@ namespace Win32xx
 		case CDDS_ITEMPREPAINT:
 			{
 				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
-				RECT rcRect = lpNMCustomDraw->nmcd.rc;
+				CRect rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
 				DWORD dwTBStyle = (DWORD)::SendMessage(m_hWnd, TB_GETSTYLE, 0, 0);
@@ -431,7 +431,7 @@ namespace Win32xx
 					// Draw separate background for dropdown arrow
 					if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
 					{
-						RECT rcArrowBkgnd = {0};
+						CRect rcArrowBkgnd;
 						::CopyRect(&rcArrowBkgnd, &rcRect);
 						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
 						GradientFill(DrawDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcArrowBkgnd, FALSE);
@@ -466,7 +466,7 @@ namespace Win32xx
 				if (lstrlen(szText) > 0)
 				{
 					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
-					RECT rcText = {0, 0, min(TextSize.cx, iWidth), TextSize.cy};
+					CRect rcText(0, 0, min(TextSize.cx, iWidth), TextSize.cy);
 
 					int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
 					int yOffset = yImage + cyImage +1;
@@ -749,7 +749,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
 
 		// Redraw button
-		RECT r = GetItemRect(iIndex);
+		CRect r = GetItemRect(iIndex);
 		::InvalidateRect(m_hWnd, &r, TRUE);
 	}
 
@@ -806,7 +806,7 @@ namespace Win32xx
 
 					if (nStyle & TBSTYLE_DROPDOWN)
 					{
-						RECT rcButton = GetItemRect(iButton);
+						CRect rcButton = GetItemRect(iButton);
 
 						int xPos = GET_X_LPARAM(lParam);
 						if (xPos >= rcButton.right -13)

@@ -74,10 +74,10 @@ namespace Win32xx
 		// These functions aren't intended to be overridden
 		void DeleteBand(const int nBand) const;
 		int  GetBand(const HWND hWnd) const;
-		RECT GetBandBorders(int nBand) const;
+		CRect GetBandBorders(int nBand) const;
 		int  GetBandCount() const;
 		void GetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
-		RECT GetBandRect(int i) const;
+		CRect GetBandRect(int i) const;
 		UINT GetBarHeight() const;
 		void GetBarInfo(REBARINFO& rbi) const;
 		UINT GetRowCount() const;
@@ -148,10 +148,10 @@ namespace Win32xx
 		return nResult;
 	}
 
-	inline RECT CRebar::GetBandBorders(int nBand) const
+	inline CRect CRebar::GetBandBorders(int nBand) const
 	// Retrieves the borders of a band.
 	{
-		RECT rc = {0};
+		CRect rc;
 		::SendMessage(m_hWnd, RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
 		return rc;
 	}
@@ -174,10 +174,10 @@ namespace Win32xx
 			throw CWinException(_T("Failed to get rebar band info"));
 	}
 
-	inline RECT CRebar::GetBandRect(int i) const
+	inline CRect CRebar::GetBandRect(int i) const
 	// Retrieves the bounding rectangle for a given band in a rebar control.
 	{
-		RECT rc = {0};
+		CRect rc;
 		::SendMessage(m_hWnd, RB_GETRECT, i, (LPARAM)&rc);
 		return rc;
 	}
@@ -251,23 +251,23 @@ namespace Win32xx
 		if (!m_Theme.UseThemes)
 			return FALSE;
 
-		RECT rc;
-		GetClientRect(m_hWnd, &rc);
-		int BarWidth = rc.right - rc.left;
-		int BarHeight = rc.bottom - rc.top;
+		CRect rcRebar;
+		GetClientRect(m_hWnd, &rcRebar);
+		int BarWidth = rcRebar.Width();
+		int BarHeight = rcRebar.Height();
 
 		// Create and set up our memory DC
 		CDC MemDC = ::CreateCompatibleDC(hDC);
 		MemDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 
 		// Draw to Rebar background to the memory DC
-		rc.right = 600;
-		GradientFill(MemDC, m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, &rc, TRUE);
+		rcRebar.right = 600;
+		GradientFill(MemDC, m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, &rcRebar, TRUE);
 		if (BarWidth >= 600)
 		{
-			rc.left = 600;
-			rc.right = BarWidth;
-			SolidFill(MemDC, m_Theme.clrBkgnd2, &rc);
+			rcRebar.left = 600;
+			rcRebar.right = BarWidth;
+			SolidFill(MemDC, m_Theme.clrBkgnd2, &rcRebar);
 		}
 
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
@@ -280,19 +280,19 @@ namespace Win32xx
 					if (nBand != GetBand(m_hMenubar))
 					{
 						// Determine the size of this band
-						RECT rcBand = GetBandRect(nBand);
+						CRect rcBand = GetBandRect(nBand);
 
 						// Determine the size of the child window
 						REBARBANDINFO rbbi = {0};
 						rbbi.cbSize = sizeof(REBARBANDINFO);
 						rbbi.fMask = RBBIM_CHILD ;
 						GetBandInfo(nBand, rbbi);
-						RECT rcChild;
+						CRect rcChild;
 						::GetWindowRect(rbbi.hwndChild, &rcChild);
 						int ChildWidth = rcChild.right - rcChild.left;
 
 						// Determine our drawing rectangle
-						RECT rcDraw = {0};
+						CRect rcDraw;
 						CopyRect(&rcDraw, &rcBand);
 						rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
 						int xPad = IsXPThemed()? 2: 0;
@@ -301,7 +301,7 @@ namespace Win32xx
 						// Fill the Source CDC with the band's background
 						CDC SourceDC = ::CreateCompatibleDC(hDC);
 						SourceDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
-						RECT rcBorder = GetBandBorders(nBand);
+						CRect rcBorder = GetBandBorders(nBand);
 						rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
 						SolidFill(SourceDC, m_Theme.clrBand1, &rcDraw);
 						rcDraw.top = rcDraw.bottom;
@@ -360,10 +360,10 @@ namespace Win32xx
 			// Draw lines between bands
 			for (int j = 0; j < GetBandCount()-1; ++j)
 			{
-				rc = GetBandRect(j);
-				rc.left = max(0, rc.left - 4);
-				rc.bottom +=2;
-				::DrawEdge(MemDC, &rc, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+				rcRebar = GetBandRect(j);
+				rcRebar.left = max(0, rcRebar.left - 4);
+				rcRebar.bottom +=2;
+				::DrawEdge(MemDC, &rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 			}
 		}
 
@@ -407,7 +407,7 @@ namespace Win32xx
 		int OldrcTop = -1;
 		for (int nBand = GetBandCount() -1; nBand >= 0; --nBand)
 		{
-			RECT rc = GetBandRect(nBand);
+			CRect rc = GetBandRect(nBand);
 			if (rc.top != OldrcTop)
 			{
 				// Maximize the last band on each row

@@ -162,7 +162,7 @@ namespace Win32xx
 		HMENU m_hSelMenu;		// handle to the casceded popup menu
 		HMENU m_hTopMenu;		// handle to the top level menu
 		HWND  m_hPrevFocus;		// handle to window which had focus
-		RECT  m_MDIRect[3];		// array of RECT for MDI buttons
+		CRect m_MDIRect[3];		// array of Crect for MDI buttons
 		int   m_nHotItem;		// hot item
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
 		POINT m_OldMousePos;	// old Mouse position
@@ -184,7 +184,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
-		virtual RECT GetClientSize();
+		virtual CRect GetClientRect();
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
@@ -223,7 +223,7 @@ namespace Win32xx
 		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
-		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText);
+		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
@@ -346,7 +346,7 @@ namespace Win32xx
 			m_hPopupMenu = ::GetSystemMenu(hMaxMDIChild, FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button
-		RECT rc = GetItemRect(m_nHotItem);
+		CRect rc = GetItemRect(m_nHotItem);
 
 		// convert rectangle to desktop coordinates
 		::MapWindowPoints(m_hWnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
@@ -411,10 +411,10 @@ namespace Win32xx
 		{
 			int cx = GetSystemMetrics(SM_CXSMICON);
 			int cy = GetSystemMetrics(SM_CYSMICON);
-			RECT rc;
+			CRect rc;
 			::GetClientRect(m_hWnd, &rc);
 
-			// Assign values to each element of the RECT array
+			// Assign values to each element of the CRect array
 			for (int i = 0 ; i < 3 ; ++i)
 			{
 				int left = rc.right - (i+1)*cx - 4*(i+1);
@@ -622,7 +622,7 @@ namespace Win32xx
 		case CDDS_ITEMPREPAINT:
 			{
 				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
-				RECT rcRect = lpNMCustomDraw->nmcd.rc;
+				CRect rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
 
@@ -1542,8 +1542,8 @@ namespace Win32xx
 			CDC DesktopDC = ::GetDC(NULL);
 			CDC MemDC = ::CreateCompatibleDC(NULL);
 			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
-			RECT rc;
-			SetRect(&rc, 0, 0, cx, cx);
+			CRect rc;
+			rc.SetRect(0, 0, cx, cx);
 
 			// Set the mask color to grey for the new ImageList
 			COLORREF crMask = RGB(120, 199, 120);
@@ -1582,7 +1582,7 @@ namespace Win32xx
 	// Draws the checkmark or radiocheck transparently
 	{
 		CDC DrawDC = pdis->hDC;
-		RECT rc = pdis->rcItem;
+		CRect rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
 
 		// Draw the checkmark's background rectangle first
@@ -1592,9 +1592,9 @@ namespace Win32xx
 			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 			int offset = -1 + (rc.bottom - rc.top - Icony)/2;
 			int height = rc.bottom - rc.top;
-			RECT rcBk;
-			::SetRect(&rcBk, rc.left, rc.top, rc.left + height, rc.bottom);
-			::InflateRect(&rcBk, -offset, -offset);
+			CRect rcBk;
+			rcBk.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
+			rcBk.InflateRect( -offset, -offset );
 			DrawDC.CreateSolidBrush(m_ThemeMenu.clrHot2);
 			DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 
@@ -1606,7 +1606,7 @@ namespace Win32xx
 		int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 		int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 		MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-		RECT rCheck = { 0, 0, cxCheck, cyCheck };
+		CRect rCheck( 0, 0, cxCheck, cyCheck);
 
 		// Copy the check mark bitmap to hdcMem
 		if (MFT_RADIOCHECK == fType)
@@ -1653,11 +1653,11 @@ namespace Win32xx
 
 		// get the drawing rectangle
 		CDC DrawDC = pdis->hDC;
-		RECT rc = pdis->rcItem;
+		CRect rc = pdis->rcItem;
 		int offset = (rc.bottom - rc.top - Icony)/2;
 		int height = rc.bottom - rc.top;
-		::SetRect(&rc, rc.left, rc.top, rc.left + height, rc.bottom);
-		::InflateRect(&rc, -offset, -offset);
+		rc.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
+		rc.InflateRect( -offset, -offset);
 
 		// get the icon's location in the imagelist
 		int iImage = -1;
@@ -1679,7 +1679,7 @@ namespace Win32xx
 		DrawDC.DetachDC();
 	}
 
-	inline void CFrame::DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, RECT rc, COLORREF colorText)
+	inline void CFrame::DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText)
 	{
 		// find the position of tab character
 		int nTab = -1;
@@ -1701,40 +1701,40 @@ namespace Win32xx
 			::DrawText(DrawDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
-	inline RECT CFrame::GetClientSize()
+	inline CRect CFrame::GetClientRect()
 	{
-		RECT rFrame  = {0};
-		RECT rStatus = {0};
-		RECT rTop  = {0};
-		RECT rClientSize = {0};
+		CRect rcFrame;
+		CRect rcStatus;
+		CRect rcTop;
+		CRect rcClientSize;
 
 		// Get the size of the client area of the frame window
-		::GetClientRect(m_hWnd, &rFrame);
+		::GetClientRect(m_hWnd, &rcFrame);
 
 		// Get size of status bar window
 		if (::IsWindowVisible(GetStatusbar()))
-			::GetWindowRect(GetStatusbar(), &rStatus);
+			::GetWindowRect(GetStatusbar(), &rcStatus);
 
 		// Get size of top rebar or toolbar
 		if (IsRebarSupported() && m_bUseRebar)
-			::GetWindowRect(GetRebar(), &rTop);
+			::GetWindowRect(GetRebar(), &rcTop);
 		else
 			if (IsWindowVisible(GetToolbar()))
-				::GetWindowRect(GetToolbar(), &rTop);
+				::GetWindowRect(GetToolbar(), &rcTop);
 
 		// Return client size less the rebar and status windows
-		int nHeight = rTop.bottom - rTop.top;
-		int top = rFrame.top + nHeight;
-		int left = rFrame.left;
-		int right = rFrame.right;
-		int bottom = rFrame.bottom - rFrame.top - (rStatus.bottom - rStatus.top);
+		int nHeight = rcTop.bottom - rcTop.top;
+		int top = rcFrame.top + nHeight;
+		int left = rcFrame.left;
+		int right = rcFrame.right;
+		int bottom = rcFrame.Height() - (rcStatus.Height());
 		if ((bottom <= top) ||( right <= left))
 			top = left = right = bottom = 0;
 
-		::SetRect(&rClientSize, left, top, right, bottom);
+		::SetRect(&rcClientSize, left, top, right, bottom);
 
-		return rClientSize;
-	} // RECT CFrame::GetClientSize()
+		return rcClientSize;
+	} // CRect CFrame::GetClientRect()
 
 	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
 	// Returns the position of the menu item, given it's name
@@ -1901,7 +1901,7 @@ namespace Win32xx
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
 
-		RECT rc = pdis->rcItem;
+		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		CDC DrawDC = pdis->hDC;
 
@@ -1913,7 +1913,7 @@ namespace Win32xx
 		// Draw the side bar
 		if (m_ThemeMenu.UseThemes)
 		{
-			RECT rcBar = rc;
+			CRect rcBar = rc;
 			rcBar.right = BarWidth;
 			GradientFill(DrawDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
 		}
@@ -1921,7 +1921,7 @@ namespace Win32xx
 		if (pmd->fType & MFT_SEPARATOR)
 		{
 			// draw separator
-			RECT rcSep = rc;
+			CRect rcSep = rc;
 			rcSep.left = BarWidth;
 			if (m_ThemeMenu.UseThemes)
 				SolidFill(DrawDC, RGB(255,255,255), &rcSep);
@@ -1937,7 +1937,7 @@ namespace Win32xx
 			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
-			RECT rcDraw = rc;
+			CRect rcDraw = rc;
 
 			if ((bSelected) && (!bDisabled))
 			{
@@ -2349,7 +2349,7 @@ namespace Win32xx
 			::SendMessage(m_Toolbar, TB_AUTOSIZE, 0, 0);
 
 		// Resize the View window
-		RECT rClient = GetClientSize();
+		CRect rClient = GetClientRect();
 
 		if ((rClient.bottom - rClient.top) >= 0)
 		{
@@ -2415,13 +2415,12 @@ namespace Win32xx
 		// Sets the minimum width of the Menubar band to the width of the rebar
 		// This prevents other bands from moving to this Menubar's row.
 
-		RECT rc = {0};
-		GetClientRect(GetRebar(), &rc);
-		int Width = rc.right - rc.left;
+		CRect rcClient;
+		::GetClientRect(GetRebar(), &rcClient);
 		CRebar& RB = GetRebar();
 		int nBand = RB.GetBand(GetMenubar());
-		rc = RB.GetBandBorders(nBand);
-		Width = Width - rc.left - rc.right - 2;
+		CRect rcBorder = RB.GetBandBorders(nBand);
+		int Width = rcClient.Width() - rcBorder.Width() - 2;
 
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(REBARBANDINFO);
@@ -2460,7 +2459,7 @@ namespace Win32xx
 		if (::IsWindow(GetStatusbar()))
 		{
 			// Get the coordinates of the parent window's client area.
-			RECT rcClient;
+			CRect rcClient;
 			::GetClientRect(m_hWnd, &rcClient);
 
 			// width = max(300, rcClient.right)

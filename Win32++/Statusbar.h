@@ -59,7 +59,7 @@ namespace Win32xx
 
 		int GetPartCount();
 		HICON GetPartIcon(int iPart);
-		RECT GetPartRect(int iPart); 
+		CRect GetPartRect(int iPart); 
 		BOOL IsSimple();
 		BOOL SetPartIcon(int iPart, HICON hIcon);
 		void SetSimple(BOOL fSimple = TRUE);
@@ -103,9 +103,9 @@ namespace Win32xx
 		return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0); 
 	}
 	
-	inline RECT CStatusbar::GetPartRect(int iPart) 
+	inline CRect CStatusbar::GetPartRect(int iPart) 
 	{
-		RECT rc;
+		CRect rc;
 		SendMessage(m_hWnd, SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
 		return rc;
 	}

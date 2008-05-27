@@ -623,9 +623,7 @@ namespace Win32xx
 				int g = g1 + (i * (g2-g1) / Width);
 				int b = b1 + (i * (b2-b1) / Width);
 				::SetBkColor(hDC, RGB(r, g, b));
-				RECT line;
-
-				::SetRect(&line, i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
+				CRect line( i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
 				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
 			}
 		}
@@ -637,9 +635,7 @@ namespace Win32xx
 				int g = g1 + (i * (g2-g1) / Height);
 				int b = b1 + (i * (b2-b1) / Height);
 				::SetBkColor(hDC, RGB(r, g, b));
-				RECT line;
-
-				::SetRect(&line, pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
+				CRect line( pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
 				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
 			}
 		}

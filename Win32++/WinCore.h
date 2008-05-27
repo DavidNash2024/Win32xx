@@ -584,7 +584,7 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1061,9 +1061,9 @@ namespace Win32xx
 	{
 		// Centers this window over it's parent
 
-		RECT rc;
-		RECT rcParent;
-		RECT rcDesktop;
+		CRect rc;
+		CRect rcParent;
+		CRect rcDesktop;
 
 		// Get screen dimensions excluding task bar
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
@@ -1078,16 +1078,16 @@ namespace Win32xx
 		else rcParent = rcDesktop;
 
 		// Calculate point to center the dialog on the parent window
-		int x = rcParent.left + ((rcParent.right - rcParent.left) - (rc.right - rc.left))/2;
-		int y = rcParent.top + ((rcParent.bottom - rcParent.top) - (rc.bottom - rc.top))/2;
+		int x = rcParent.left + (rcParent.Width() - rc.Width())/2;
+		int y = rcParent.top + (rcParent.Height() - rc.Height())/2;
 
 		// Keep the dialog wholly on the desktop
 		if (x < 0) x = 0;
 		if (y < 0) y = 0;
-		if (x > iWidth - (rc.right - rc.left))
-			x = iWidth - (rc.right - rc.left);
-		if (y > iHeight - (rc.bottom - rc.top))
-			y = iHeight - (rc.bottom - rc.top);
+		if (x > iWidth - rc.Width())
+			x = iWidth - rc.Width();
+		if (y > iHeight - rc.Height())
+			y = iHeight - rc.Height();
 
 		::SetWindowPos(m_hWnd, HWND_TOP, x, y, 0, 0,  SWP_NOSIZE);
 
@@ -1138,7 +1138,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, RECT rSize, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rSize, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
 	{
 		int x = rSize.left;
 		int y = rSize.top;
