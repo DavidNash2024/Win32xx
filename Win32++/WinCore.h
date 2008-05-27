@@ -901,7 +901,13 @@ namespace Win32xx
 		catch (const std::bad_alloc &)
 		{
 			::MessageBox(NULL, _T("Memory allocation failure"), _T("Bad Alloc Exception"), MB_OK);
-			throw;	// Rethrow unknown exception
+			throw;	// Rethrow bad alloc exception
+		}
+
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+			throw;	// Rethrow exception
 		}
 
 		catch (...)
@@ -1095,44 +1101,52 @@ namespace Win32xx
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
 	{
-		// Set the CREATESTRUCT parameters
-		PreCreate(m_cs);
-
-		// Set the WNDCLASS parameters
-		PreRegisterClass(m_wc);
-		if (m_wc.lpszClassName)
+		try
 		{
-			RegisterClass(m_wc);
-			m_cs.lpszClass = m_wc.lpszClassName;
-			m_cs.style |= m_wc.style;
+			// Set the CREATESTRUCT parameters
+			PreCreate(m_cs);
+
+			// Set the WNDCLASS parameters
+			PreRegisterClass(m_wc);
+			if (m_wc.lpszClassName)
+			{
+				RegisterClass(m_wc);
+				m_cs.lpszClass = m_wc.lpszClassName;
+				m_cs.style |= m_wc.style;
+			}
+
+			// Set the Window Class Name
+			TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
+			if (m_cs.lpszClass)
+				lstrcpy(szClassName, m_cs.lpszClass);
+
+			// Set Parent
+			if (!hWndParent && m_cs.hwndParent)
+				hWndParent = m_cs.hwndParent;
+
+			// Set the window style
+			DWORD dwStyle;
+			DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+			if (m_cs.style)
+				dwStyle = m_cs.style;
+			else
+				dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+
+			// Set window size and position
+			int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
+			int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
+			int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
+			int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
+
+			// Create the window
+			CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
+				cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams);
 		}
 
-		// Set the Window Class Name
-		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
-		if (m_cs.lpszClass)
-			lstrcpy(szClassName, m_cs.lpszClass);
-
-		// Set Parent
-		if (!hWndParent && m_cs.hwndParent)
-			hWndParent = m_cs.hwndParent;
-
-		// Set the window style
-		DWORD dwStyle;
-		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		if (m_cs.style)
-			dwStyle = m_cs.style;
-		else
-			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
-
-		// Set window size and position
-		int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
-		int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
-		int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
-		int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
-
-		// Create the window
-		CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-			cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams);
+		catch (const CWinException &e)
+		{
+			e.MessageBox();
+		}
 
 		return m_hWnd;
 	}

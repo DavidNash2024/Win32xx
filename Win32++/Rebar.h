@@ -73,6 +73,8 @@ namespace Win32xx
 		CRect GetBandRect(int i) const;
 		UINT GetBarHeight() const;
 		void GetBarInfo(REBARINFO& rbi) const;
+		HWND GetMenubar() {return m_hMenubar;}
+		ThemeRebar& GetRebarTheme() {return m_Theme;}
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
 		HWND GetToolTips() const;
@@ -80,10 +82,8 @@ namespace Win32xx
 		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
 		void SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
 		void SetBarInfo(REBARINFO& rbi) const; 
-		ThemeRebar& GetRebarTheme() {return m_Theme;}
-		void SetRebarTheme(ThemeRebar& Theme);
-		HWND GetMenubar() {return m_hMenubar;}
 		void SetMenubar(HWND hMenubar) {m_hMenubar = hMenubar;}
+		void SetRebarTheme(ThemeRebar& Theme);	
 
 	// Operations
 		void DeleteBand(const int nBand) const;
@@ -95,10 +95,10 @@ namespace Win32xx
 		void MinimizeBand(UINT uBand);
 		BOOL MoveBand(UINT uFrom, UINT uTo);
 		void MoveBandsLeft();
+		void ResizeBand(const int nBand, const CSize& sz) const;
 		void ShowGripper(int nBand, BOOL fShow) const;
 		BOOL ShowBand(int nBand, BOOL fShow) const;
-		void ResizeBand(const int nBand, const CSize& sz) const;
-
+		
 	protected:
 	//Overridables
 		virtual BOOL OnEraseBkgnd(HDC hDC);
