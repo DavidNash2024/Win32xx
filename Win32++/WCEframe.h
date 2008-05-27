@@ -110,7 +110,7 @@ namespace Win32xx
 	public:
 		CWceFrame();
 		virtual ~CWceFrame();
-		virtual RECT GetClientRect();
+		virtual CRect GetClientRect();
 		virtual CCmdbar& GetMenubar() {return m_Menubar;}
 		virtual void OnCreate();
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
@@ -256,9 +256,9 @@ namespace Win32xx
 	{
 	}
 
-	inline RECT CWceFrame::GetClientRect()
+	inline CRect CWceFrame::GetClientRect()
 	{
-		RECT r;
+		CRect r;
 		::GetClientRect(m_hWnd, &r);
 
 #ifndef SHELL_AYGSHELL
@@ -318,11 +318,11 @@ namespace Win32xx
 		HWND hwndCB = m_Menubar.GetHwnd();
 		if (hwndCB)
 		{
-			RECT rc = {0};			// Desktop window size
-			RECT rcMenuBar = {0};	// Menubar window size
+			CRect rc;			// Desktop window size
+			CRect rcMenuBar;	// Menubar window size
 
 			::SystemParametersInfo(SPI_GETWORKAREA, 0, &rc, 0);
-			GetWindowRect(hwndCB, &rcMenuBar);
+			::GetWindowRect(hwndCB, &rcMenuBar);
 			rc.bottom -= (rcMenuBar.bottom - rcMenuBar.top);
 
 			MoveWindow(m_hWnd, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, FALSE);

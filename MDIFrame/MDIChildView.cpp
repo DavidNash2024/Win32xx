@@ -28,10 +28,9 @@ void CMDIChildView::OnInitialUpdate()
 void CMDIChildView::OnPaint(HDC hDC)
 {
 	//Centre some text in our view window
-	RECT r;
-	::GetClientRect(m_hWnd, &r);
+	CRect rc = GetClientRect();
 	::SetTextColor(hDC, m_Color);
-	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	::DrawText(hDC, _T("View Window"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)

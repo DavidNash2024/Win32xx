@@ -51,6 +51,13 @@ This class is no longer required, since it's functionality has been merged
 with CWinApp. All applications (including MDI apps) now use CWinApp to start
 Win32++.
 
+* Modified CFrame
+- renamed CFrame::GetClientSize to CFrame::GetClientRect
+
+* Extended CWnd
+- Added CWnd::GetClientRect
+- Added CWnd::GetWindowRect
+
 
 
 Notes for users of previous versions:
@@ -63,6 +70,10 @@ Notes for users of previous versions:
  
 * For MDI applications inherit from CWinApp rather than CMDIApp to start 
   Win32++.
+  
+* GetClientRect and GetWindowRect functions have been added to CWnd. If you
+  prefer to use the native Win32/64 functions prefix them with the global
+  scope specifier (::), for example ::GetClientRect(hwnd, &rc).
 
 Version 6.02a
 =============

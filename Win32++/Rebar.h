@@ -69,7 +69,7 @@ namespace Win32xx
 		virtual void MoveBandsLeft();
 		virtual void ShowGripper(int nBand, BOOL fShow) const;
 		virtual BOOL ShowBand(int nBand, BOOL fShow) const;
-		virtual void ResizeBand(const int nBand, SIZE sz) const;
+		virtual void ResizeBand(const int nBand, const CSize& sz) const;
 
 		// These functions aren't intended to be overridden
 		void DeleteBand(const int nBand) const;
@@ -251,8 +251,7 @@ namespace Win32xx
 		if (!m_Theme.UseThemes)
 			return FALSE;
 
-		CRect rcRebar;
-		GetClientRect(m_hWnd, &rcRebar);
+		CRect rcRebar = GetClientRect();
 		int BarWidth = rcRebar.Width();
 		int BarHeight = rcRebar.Height();
 
@@ -419,7 +418,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CRebar::ResizeBand(int nBand, SIZE sz) const
+	inline void CRebar::ResizeBand(int nBand, const CSize& sz) const
 	// Sets a band's size
 	{
 		REBARBANDINFO rbbi = {0};

@@ -43,8 +43,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CView::OnPaint(HDC hDC)
 {
-	CRect rc;
-	::GetClientRect(m_hWnd, &rc);
+	CRect rc = GetClientRect();
 
 	// Centre some text in our view window
 	::DrawText(hDC, _T("View Window"), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);

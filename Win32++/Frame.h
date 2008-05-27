@@ -165,7 +165,7 @@ namespace Win32xx
 		CRect m_MDIRect[3];		// array of Crect for MDI buttons
 		int   m_nHotItem;		// hot item
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
-		POINT m_OldMousePos;	// old Mouse position
+		CPoint m_OldMousePos;	// old Mouse position
 		ThemeMenu m_ThemeMenu;	// Theme structure
 		CFrame* m_pFrame;       // Pointer to the frame.
 
@@ -411,8 +411,7 @@ namespace Win32xx
 		{
 			int cx = GetSystemMetrics(SM_CXSMICON);
 			int cy = GetSystemMetrics(SM_CYSMICON);
-			CRect rc;
-			::GetClientRect(m_hWnd, &rc);
+			CRect rc = GetClientRect();
 
 			// Assign values to each element of the CRect array
 			for (int i = 0 ; i < 3 ; ++i)
@@ -548,7 +547,7 @@ namespace Win32xx
 		::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, (LPARAM) MAKELONG (FALSE, 0));
 		SetHotItem(-1);
 
-		POINT pt = {0};
+		CPoint pt;
 		::GetCursorPos(&pt);
 		::ScreenToClient(m_hWnd, &pt);
 
@@ -771,8 +770,7 @@ namespace Win32xx
 	{
 		GrabFocus();
 		m_nMDIButton = 0;
-		POINT pt;
-
+		CPoint pt;
 
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
@@ -807,7 +805,7 @@ namespace Win32xx
 
 	inline void CMenubar::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 	{
-		POINT pt;
+		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
@@ -818,7 +816,7 @@ namespace Win32xx
 
 			if (IsMDIChildMaxed())
 			{
-				POINT pt = {0};
+				CPoint pt;
 				::GetCursorPos(&pt);
 				::ScreenToClient(m_hWnd, &pt);
 
@@ -954,7 +952,7 @@ namespace Win32xx
 
 		case WM_MOUSEMOVE:
 			{
-				POINT pt = {0};
+				CPoint pt;
 				pt.x = GET_X_LPARAM(lParam);
 				pt.y = GET_Y_LPARAM(lParam);
 
@@ -992,7 +990,7 @@ namespace Win32xx
 
 	inline void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
-		POINT pt;
+		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
@@ -1483,7 +1481,7 @@ namespace Win32xx
 	{
 		// Adds a Menubar to the rebar control
 		REBARBANDINFO rbbi = {0};
-		SIZE sz = GetMenubar().GetMaxSize();
+		CSize sz = GetMenubar().GetMaxSize();
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
@@ -1508,7 +1506,7 @@ namespace Win32xx
 
 		// Fill the REBARBAND structure
 		REBARBANDINFO rbbi = {0};
-		SIZE sz = TB.GetMaxSize();
+		CSize sz = TB.GetMaxSize();
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
@@ -1713,14 +1711,14 @@ namespace Win32xx
 
 		// Get size of status bar window
 		if (::IsWindowVisible(GetStatusbar()))
-			::GetWindowRect(GetStatusbar(), &rcStatus);
+			rcStatus = GetStatusbar().GetWindowRect();
 
 		// Get size of top rebar or toolbar
 		if (IsRebarSupported() && m_bUseRebar)
-			::GetWindowRect(GetRebar(), &rcTop);
+			rcTop = GetRebar().GetWindowRect();
 		else
 			if (IsWindowVisible(GetToolbar()))
-				::GetWindowRect(GetToolbar(), &rcTop);
+				rcTop = GetToolbar().GetWindowRect();
 
 		// Return client size less the rebar and status windows
 		int nHeight = rcTop.bottom - rcTop.top;
@@ -2120,7 +2118,7 @@ namespace Win32xx
 			DesktopDC.CreateFontIndirect(&info.lfMenuFont);
 
 			// Calculate the size of the text
-			SIZE size;
+			CSize size;
 			GetTextExtentPoint32(DesktopDC, pmd->Text, lstrlen(pmd->Text), &size);
 
 			// Calculate the size of the icon
@@ -2231,7 +2229,7 @@ namespace Win32xx
 			{
 				static int nOldID = -1;
 				CToolbar& tb = GetToolbar();
-				POINT pt = {0};
+				CPoint pt;
 				::GetCursorPos(&pt);
 
 				// Is the mouse hovering over the toolbar?
@@ -2415,8 +2413,7 @@ namespace Win32xx
 		// Sets the minimum width of the Menubar band to the width of the rebar
 		// This prevents other bands from moving to this Menubar's row.
 
-		CRect rcClient;
-		::GetClientRect(GetRebar(), &rcClient);
+		CRect rcClient = GetClientRect();
 		CRebar& RB = GetRebar();
 		int nBand = RB.GetBand(GetMenubar());
 		CRect rcBorder = RB.GetBandBorders(nBand);
@@ -2459,8 +2456,7 @@ namespace Win32xx
 		if (::IsWindow(GetStatusbar()))
 		{
 			// Get the coordinates of the parent window's client area.
-			CRect rcClient;
-			::GetClientRect(m_hWnd, &rcClient);
+			CRect rcClient = GetClientRect();
 
 			// width = max(300, rcClient.right)
 			int width = (300 > rcClient.right) ? 300 : rcClient.right;

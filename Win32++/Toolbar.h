@@ -79,7 +79,7 @@ namespace Win32xx
 		BYTE GetButtonStyle(int iButtonID) const;
 		int  GetCommandID(int iIndex) const;
 		CRect GetItemRect(int iIndex) const;
-		SIZE GetMaxSize() const;
+		CSize GetMaxSize() const;
 		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
 		BOOL HasText() const;
 		int  HitTest() const;
@@ -245,10 +245,10 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline SIZE CToolbar::GetMaxSize() const
+	inline CSize CToolbar::GetMaxSize() const
 	// Retrieves the total size of all of the visible buttons and separators in the toolbar
 	{
-		SIZE sz = {0};
+		CSize sz;
 		::SendMessage(m_hWnd, TB_GETMAXSIZE, 0, (LPARAM)&sz);
 
 		// This fixes a Windows bug calculating the size when TBSTYLE_DROPDOWN is used.
@@ -282,7 +282,7 @@ namespace Win32xx
 	// We do our own hit test since TB_HITTEST is a bit buggy,
 	// and also doesn't work at all on earliest versions of Win95	
 	{
-		POINT pt = {0};
+		CPoint pt;
 		::GetCursorPos(&pt);
 		::ScreenToClient(m_hWnd, &pt);
 
@@ -348,7 +348,7 @@ namespace Win32xx
 
 				// Calculate text size
 				TCHAR szText[80] = _T("");
-				SIZE TextSize = {0};
+				CSize TextSize;
 				if (HasText())	// Does any button have text?
 				{
 					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));

@@ -600,7 +600,9 @@ namespace Win32xx
 		virtual HWND Detach();
 		virtual CWnd* FromHandle(HWND hWnd) const;
 		virtual HWND GetAncestor(HWND hWnd) const;
+		virtual CRect GetClientRect() const;
 		virtual tString GetDlgItemString(int nIDDlgItem) const;
+		virtual CRect GetWindowRect() const;
 		virtual tString GetWindowString() const;
 		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 		virtual LPCTSTR LoadString(UINT nID);
@@ -1061,7 +1063,7 @@ namespace Win32xx
 	{
 		// Centers this window over it's parent
 
-		CRect rc;
+		CRect rc = GetWindowRect();
 		CRect rcParent;
 		CRect rcDesktop;
 
@@ -1069,9 +1071,6 @@ namespace Win32xx
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
 		int iWidth = rcDesktop.right;
 		int iHeight = rcDesktop.bottom;
-
-		// Get the dialog dimensions
-		::GetWindowRect(m_hWnd, &rc);
 
 		// Get the parent window dimensions (parent could be the desktop)
 		if (m_hWndParent != NULL) ::GetWindowRect(m_hWndParent, &rcParent);
@@ -1282,6 +1281,13 @@ namespace Win32xx
 		return hWnd;
 	}
 
+	inline CRect CWnd::GetClientRect() const
+	{
+		CRect rc;
+		::GetClientRect(m_hWnd, &rc);
+		return rc;
+	}
+
 	inline tString CWnd::GetDlgItemString(int nIDDlgItem) const
 	{
 		int nLength = ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
@@ -1295,6 +1301,13 @@ namespace Win32xx
 		}
 
 		return String;
+	}
+
+	inline CRect CWnd::GetWindowRect() const
+	{
+		CRect rc;
+		::GetWindowRect(m_hWnd, &rc);
+		return rc;
 	}
 
 	inline tString CWnd::GetWindowString() const

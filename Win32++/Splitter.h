@@ -123,8 +123,7 @@ namespace Win32xx
 			CDC BarDC = ::GetDC(m_hWnd);
 			BarDC.AttachBrush(m_hbrDithered);
 
-			CRect rc;
-			GetClientRect(m_hWnd, &rc);
+			CRect rc = GetClientRect();
 			int cx = rc.right - rc.left;
 			int cy = rc.bottom - rc.top;
 
@@ -222,8 +221,8 @@ namespace Win32xx
 	{
 		if (m_bCapture)
 		{
-			POINT pt = {0};
-			static POINT Oldpt = {0};
+			CPoint pt;
+			static CPoint Oldpt;
 			::GetCursorPos(&pt);
 			::ScreenToClient (m_hWnd, &pt);
 
@@ -391,7 +390,7 @@ namespace Win32xx
 			// Check for left mouse button down in child window
 			if (wParam == WM_LBUTTONDOWN)
 			{
-				POINT pt;
+				CPoint pt;
 				GetCursorPos(&pt);
 				if (WindowFromPoint(pt) == m_Bar)
 					OnLButtonDown();
