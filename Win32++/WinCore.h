@@ -938,7 +938,7 @@ namespace Win32xx
 		// Once stored, it can be used later to return the 'this' pointer.
 		static CWinApp* pWinApp = 0;
 
-		if (pWinApp == 0)
+		if (0 == pWinApp)
 			pWinApp = pThis;
 
 		return pWinApp;

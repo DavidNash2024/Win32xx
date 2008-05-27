@@ -3,7 +3,7 @@
 //              and CMainView and CView classes
 
 
-#include "MainFrm.h"
+#include "SplitterApp.h"
 #include "Views.h"
 
 
@@ -87,15 +87,15 @@ CMainView::CMainView()
 void CMainView::Reposition()
 //Repositions the splitter windows
 {
-	//A handy trick to get a pointer to our CFrame object
-	CFrame* pFrame = GetApp()->GetFrame();
+	//A handy trick to get a pointer to our CMainFrame object
+	CMainFrame& MainFrame = GetSplitApp().GetMainFrame();
 
 	//Get the client area of our frame
-	RECT r = pFrame->GetClientSize();
+	CRect rc = MainFrame.GetClientRect();
 
-	int pos = (r.bottom - r.top)/2;
+	int pos = (rc.Height())/2;
 	SetBarPos(pos);
-	pos = (r.right - r.left)/3;
+	pos = (rc.Width())/3;
 	m_Top.SetBarPos(pos);
 	m_Bottom.SetBarPos(pos);
 }

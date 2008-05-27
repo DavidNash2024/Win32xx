@@ -56,7 +56,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
 	rbbi.lpText     = _T("Address");
 
-	RB.InsertBand(-1, &rbbi);
+	RB.InsertBand(-1, rbbi);
 }
 
 void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
@@ -313,10 +313,10 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 	{
 		if (lstrcmp(OLE2T(lpStatusText), _T("")))
 		{
-			GetStatusbar().SetPaneText(0, OLE2T(lpStatusText));
+			GetStatusbar().SetPartText(0, OLE2T(lpStatusText));
 		}
 		else
-			GetStatusbar().SetPaneText(0, _T("Done"));
+			GetStatusbar().SetPartText(0, _T("Done"));
 	}
 }
 

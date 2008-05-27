@@ -206,10 +206,10 @@ namespace Win32xx
 		void SetMenuTheme(ThemeMenu& Theme);
 		void SetView(CWnd& pView);
 
-		CMenubar&  GetMenubar() 		{return m_Menubar;}
-		CRebar&  GetRebar() 			{return m_Rebar;}
-		CStatusbar&  GetStatusbar() 	{return m_Statusbar;}
-		CToolbar&  GetToolbar() 		{return m_Toolbar;}
+		CMenubar&  GetMenubar() const		{return (CMenubar&)m_Menubar;}
+		CRebar&  GetRebar() const			{return (CRebar&)m_Rebar;}
+		CStatusbar&  GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
+		CToolbar&  GetToolbar() const		{return (CToolbar&)m_Toolbar;}
 
 		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
 		BOOL IsMenubarUsed() const		{return (m_Menubar != 0);}

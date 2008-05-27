@@ -166,10 +166,9 @@ void CMainFrame::OnFileSaveAs()
 void CMainFrame::OnFilePrint()
 {
 	// Get the dimensions of the View window
-	RECT rcView;
-	GetClientRect (m_View.GetHwnd(), &rcView);
-	int Width = rcView.right - rcView.left;
-	int Height = rcView.bottom - rcView.top;
+	CRect rcView = m_View.GetClientRect();
+	int Width = rcView.Width();
+	int Height = rcView.Height();
 
 	// Extract the bitmap from the View window
 	CDC ViewDC = GetDC(m_View.GetHwnd());
