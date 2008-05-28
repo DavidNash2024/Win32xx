@@ -184,8 +184,8 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
-		virtual CRect GetClientRect() const;
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
+		virtual CRect GetViewRect() const;
 		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
@@ -1699,37 +1699,6 @@ namespace Win32xx
 			::DrawText(DrawDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
-	inline CRect CFrame::GetClientRect() const
-	{
-		// Get the size of the client area of the frame window
-		CRect rcFrame;
-		::GetClientRect(m_hWnd, &rcFrame);
-
-		// Get size of status bar window
-		CRect rcStatus;
-		if (::IsWindowVisible(m_Statusbar))
-			rcStatus = m_Statusbar.GetWindowRect();
-
-		// Get size of top rebar or toolbar
-		CRect rcTop;
-		if (IsRebarSupported() && m_bUseRebar)
-			rcTop = m_Rebar.GetWindowRect();
-		else
-			if (IsWindowVisible(m_Toolbar))
-				rcTop = m_Toolbar.GetWindowRect();
-
-		// Return client size less the rebar and status windows
-		int top = rcFrame.top + rcTop.Height();
-		int left = rcFrame.left;
-		int right = rcFrame.right;
-		int bottom = rcFrame.Height() - (rcStatus.Height());
-		if ((bottom <= top) ||( right <= left))
-			top = left = right = bottom = 0;
-
-		CRect rcView(left, top, right, bottom);
-		return rcView;
-	} // CRect CFrame::GetClientRect()
-
 	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
 	// Returns the position of the menu item, given it's name
 	{
@@ -1772,6 +1741,36 @@ namespace Win32xx
 
 		return -1;
 	}
+
+	inline CRect CFrame::GetViewRect() const
+	{
+		// Get the frame's client area
+		CRect rcFrame = GetClientRect();
+
+		// Get the statusbar's window area
+		CRect rcStatus;
+		if (::IsWindowVisible(m_Statusbar))
+			rcStatus = m_Statusbar.GetWindowRect();
+
+		// Get the top rebar or toolbar's window area
+		CRect rcTop;
+		if (IsRebarSupported() && m_bUseRebar)
+			rcTop = m_Rebar.GetWindowRect();
+		else
+			if (IsWindowVisible(m_Toolbar))
+				rcTop = m_Toolbar.GetWindowRect();
+
+		// Return client size less the rebar and status windows
+		int top = rcFrame.top + rcTop.Height();
+		int left = rcFrame.left;
+		int right = rcFrame.right;
+		int bottom = rcFrame.Height() - (rcStatus.Height());
+		if ((bottom <= top) ||( right <= left))
+			top = left = right = bottom = 0;
+
+		CRect rcView(left, top, right, bottom);
+		return rcView;
+	} // CRect CFrame::GetViewRect()
 
 	inline void CFrame::LoadCommonControls(INITCOMMONCONTROLSEX InitStruct)
 	{
@@ -2343,7 +2342,7 @@ namespace Win32xx
 			::SendMessage(m_Toolbar, TB_AUTOSIZE, 0, 0);
 
 		// Resize the View window
-		CRect rClient = GetClientRect();
+		CRect rClient = GetViewRect();
 
 		if ((rClient.bottom - rClient.top) >= 0)
 		{

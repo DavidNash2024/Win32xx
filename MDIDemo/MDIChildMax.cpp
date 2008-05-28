@@ -25,9 +25,8 @@ void CMDIChildMax::OnInitialUpdate()
 void CMDIChildMax::OnPaint(HDC hDC)
 {
 	//Centre some text in our view window
-	RECT r;
-	::GetClientRect(m_hWnd, &r);
-	::DrawText(hDC, _T("Maxed Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	CRect rc = GetClientRect();
+	::DrawText(hDC, _T("Maxed Window"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CMDIChildMax::PreCreate(CREATESTRUCT &cs)

@@ -70,7 +70,7 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnPaint(HDC hDC)
 {
-	RECT rt = GetClientRect();
+	RECT rt = GetViewRect();
 	LPCTSTR szHello = LoadString(IDS_HELLO);
 	DrawText(hDC, szHello, lstrlen(szHello), &rt, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }

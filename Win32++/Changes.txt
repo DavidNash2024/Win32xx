@@ -42,7 +42,7 @@ with CWinApp. All applications (including MDI apps) now use CWinApp to start
 Win32++.
 
 * Modified CFrame
-- renamed CFrame::GetClientSize to CFrame::GetClientRect
+- renamed CFrame::GetClientSize to CFrame::GetViewRect
 
 * Extended CWnd
 - Added CWnd::GetClientRect

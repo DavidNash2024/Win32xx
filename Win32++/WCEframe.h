@@ -110,7 +110,7 @@ namespace Win32xx
 	public:
 		CWceFrame();
 		virtual ~CWceFrame();
-		virtual CRect GetClientRect() const;
+		CRect GetViewRect() const;
 		CCmdbar& GetMenubar() const {return (CCmdbar&)m_Menubar;}
 		virtual void OnCreate();
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
@@ -256,7 +256,7 @@ namespace Win32xx
 	{
 	}
 
-	inline CRect CWceFrame::GetClientRect() const
+	inline CRect CWceFrame::GetViewRect() const
 	{
 		CRect r;
 		::GetClientRect(m_hWnd, &r);

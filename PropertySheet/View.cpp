@@ -43,8 +43,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CView::OnPaint(HDC hDC)
 {
-	RECT r;
-	::GetClientRect(m_hWnd, &r);
+	CRect r = GetClientRect();
 
 	// Centre some text in our view window
 	::DrawText(hDC, _T("Choose a Property Sheet from the menu"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);

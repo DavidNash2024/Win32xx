@@ -593,24 +593,23 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS& wc);
 
 		// These functions aren't intended to be overridden
-		virtual BOOL Attach(HWND hWnd);
-		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
-		virtual void CenterWindow() const;
-		virtual void DestroyWindow();
-		virtual HWND Detach();
-		virtual CWnd* FromHandle(HWND hWnd) const;
-		virtual HWND GetAncestor(HWND hWnd) const;
-		virtual CRect GetClientRect() const;
-		virtual tString GetDlgItemString(int nIDDlgItem) const;
-		virtual CRect GetWindowRect() const;
-		virtual tString GetWindowString() const;
-		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
-		virtual LPCTSTR LoadString(UINT nID);
-		virtual LRESULT OnMessage(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL RegisterClass(WNDCLASS& wc);
-		virtual void SetParent(HWND hParent);
+		BOOL Attach(HWND hWnd);
+		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		void CenterWindow() const;
+		void DestroyWindow();
+		HWND Detach();
+		CWnd* FromHandle(HWND hWnd) const;
+		HWND GetAncestor(HWND hWnd) const;
+		CRect GetClientRect() const;
+		tString GetDlgItemString(int nIDDlgItem) const;
+		CRect GetWindowRect() const;
+		tString GetWindowString() const;
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
+		LPCTSTR LoadString(UINT nID);
+		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		BOOL RegisterClass(WNDCLASS& wc);
+		void SetParent(HWND hParent);
 
-		// These functions aren't virtual, so there's no point overriding them
 		HWND GetHwnd() const {return m_hWnd;}
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
@@ -1420,7 +1419,7 @@ namespace Win32xx
 		// after window creation.
 	}
 
-	inline LRESULT CWnd::OnMessage(HWND hWndParent, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::MessageReflect(HWND hWndParent, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// A function used to call OnMessageReflect. You shouldn't need to call or
 		//  override this function.
@@ -1847,7 +1846,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			lr = OnMessage(hWnd, uMsg, wParam, lParam);
+			lr = MessageReflect(hWnd, uMsg, wParam, lParam);
 			if (lr) return lr;	// Message processed so return
 			break;				// Do default processing when message not already processed
 

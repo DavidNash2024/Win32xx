@@ -11,7 +11,7 @@ void CView::OnCreate()
 	// OnCreate is called automatically during window creation when a
 	// WM_CREATE message received.
 
-	// Tasks such as setting the icon, creating child windows, or other tasks 
+	// Tasks such as setting the icon, creating child windows, or other tasks
 	// associated with creating windows are normally performed here.
 
 	// Set the window's icon
@@ -41,8 +41,7 @@ void CView::OnPaint(HDC hDC)
 	// window needs to be repainted.
 
 	// Centre some text in our view window
-	RECT r;
-	::GetClientRect(m_hWnd, &r);
+	CRect r = GetClientRect();
 	::DrawText(hDC, LoadString(IDW_MAIN), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
@@ -72,7 +71,7 @@ void CView::OnSize()
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// This function is our message procedure. We process the messages for
-	// the view window here.  Unprocessed messages are passed on for 
+	// the view window here.  Unprocessed messages are passed on for
 	//  default processing.
 
 	switch(uMsg)
@@ -87,5 +86,5 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }

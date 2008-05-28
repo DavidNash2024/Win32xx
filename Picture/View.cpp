@@ -16,7 +16,7 @@ CView::~CView()
 {
 	if (m_hBrush)
 		::DeleteObject(m_hBrush);
-	
+
 	if (m_pPicture)
 		m_pPicture->Release();
 
@@ -31,7 +31,7 @@ void CView::LoadPictureFile(LPCTSTR szFile)
 		m_pPicture = NULL;
 	}
 
-	TRACE(szFile); 
+	TRACE(szFile);
 	TRACE(_T("\n"));
 
 	// Create IPicture from image file
@@ -44,7 +44,7 @@ void CView::LoadPictureFile(LPCTSTR szFile)
 		// Set Frame title back to default
 		::SetWindowText(m_hWndParent, LoadString(IDW_MAIN));
 	}
-	
+
 	::InvalidateRect(m_hWnd, NULL, TRUE);
 }
 
@@ -71,14 +71,13 @@ void CView::OnPaint(HDC hDC)
 		long hmHeight;
 		m_pPicture->get_Width(&hmWidth);
 		m_pPicture->get_Height(&hmHeight);
-		
+
 		// convert himetric to pixels
 		int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
 		int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
-		
-		RECT rc;
-		::GetClientRect(m_hWnd, &rc);
-		
+
+		CRect rc = GetClientRect();
+
 		// display picture using IPicture::Render
 		m_pPicture->Render(hDC, 0, 0, nWidth, nHeight, 0, hmHeight, hmWidth, -hmHeight, &rc);
 	}
@@ -95,20 +94,20 @@ void CView::PreCreate(CREATESTRUCT &cs)
 
 void CView::SavePicture(LPCTSTR szFile)
 {
-	// get a IPictureDisp interface from your IPicture pointer  	  
-	IPictureDisp *pDisp = NULL; 
+	// get a IPictureDisp interface from your IPicture pointer
+	IPictureDisp *pDisp = NULL;
 
-	if (SUCCEEDED(m_pPicture->QueryInterface(IID_IPictureDisp,  (void**) &pDisp)))  
-	{  
-		// Save the IPicture image as a bitmap  	  
-		OleSavePictureFile(pDisp,  T2BSTR(szFile));  
-		pDisp->Release();  
+	if (SUCCEEDED(m_pPicture->QueryInterface(IID_IPictureDisp,  (void**) &pDisp)))
+	{
+		// Save the IPicture image as a bitmap
+		OleSavePictureFile(pDisp,  T2BSTR(szFile));
+		pDisp->Release();
 	}
 }
 
 BSTR CView::T2BSTR(LPCTSTR szString)
 {
-	::SysFreeString(m_BStrString);   
+	::SysFreeString(m_BStrString);
 	m_BStrString = ::SysAllocString(T2OLE(szString));
 	return m_BStrString;
 }

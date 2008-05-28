@@ -33,10 +33,9 @@ void CMDIChildView::OnClose()
 void CMDIChildView::OnPaint(HDC hDC)
 {
 	//Centre some text in our view window
-	RECT r;
-	::GetClientRect(m_hWnd, &r);
+	RECT rc = GetClientRect();
 	::SetTextColor(hDC, m_Color);
-	::DrawText(hDC, _T("View Window"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	::DrawText(hDC, _T("View Window"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 BOOL CMDIChildView::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -80,7 +79,7 @@ LRESULT CMDIChildView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		::InvalidateRect(hWnd, NULL, TRUE);
 		break;		// Also do default processing
 	}
-	
+
 	// Do default processing for other messages
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
