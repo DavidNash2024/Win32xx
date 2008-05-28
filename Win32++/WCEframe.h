@@ -88,7 +88,7 @@ namespace Win32xx
 		virtual int  AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight);
 		virtual BOOL AddButtons(int nButtons, TBBUTTON* pTBButton);
 		virtual HWND Create(HWND hwndParent);
-		virtual int  GetHeight();
+		virtual int  GetHeight() const;
 		virtual HWND InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton);
 		virtual BOOL IsVisible();
 		virtual BOOL Show(BOOL fShow);
@@ -110,7 +110,7 @@ namespace Win32xx
 	public:
 		CWceFrame();
 		virtual ~CWceFrame();
-		virtual CRect GetClientRect();
+		virtual CRect GetClientRect() const;
 		CCmdbar& GetMenubar() const {return (CCmdbar&)m_Menubar;}
 		virtual void OnCreate();
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
@@ -213,7 +213,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline int CCmdbar::GetHeight()
+	inline int CCmdbar::GetHeight() const
 	{
 		return CommandBar_Height(m_hWnd);
 	}
@@ -256,7 +256,7 @@ namespace Win32xx
 	{
 	}
 
-	inline CRect CWceFrame::GetClientRect() 
+	inline CRect CWceFrame::GetClientRect() const
 	{
 		CRect r;
 		::GetClientRect(m_hWnd, &r);
