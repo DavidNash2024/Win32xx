@@ -46,7 +46,7 @@ void CMainWindow::CreateTestWindows(int nWindows)
 
 void CMainWindow::OnCreate()
 {
-	CRectr = GetCLientRect();
+	CRect r = GetClientRect();
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
 
 	// Create an Edit window over the client area of the main window
