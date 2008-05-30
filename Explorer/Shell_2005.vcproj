@@ -215,10 +215,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\LeftView.cpp"
-				>
-			</File>
-			<File
 				RelativePath="main.cpp"
 				>
 				<FileConfiguration
@@ -279,7 +275,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\RightView.cpp"
+				RelativePath=".\MyListView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MyTreeView.cpp"
 				>
 			</File>
 			<File
@@ -328,10 +328,6 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\LeftView.h"
-				>
-			</File>
-			<File
 				RelativePath="Mainfrm.h"
 				>
 			</File>
@@ -340,15 +336,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MyListView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MyTreeView.h"
+				>
+			</File>
+			<File
 				RelativePath="resource.h"
 				>
 			</File>
 			<File
 				RelativePath="resrc1.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RightView.h"
 				>
 			</File>
 			<File

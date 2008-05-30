@@ -48,26 +48,6 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit1]
-FileName=LeftView.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
-FileName=LeftView.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
 FileName=main.cpp
 CompileCpp=1
 Folder=Source
@@ -77,7 +57,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
+[Unit2]
 FileName=Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -87,7 +67,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit5]
+[Unit3]
 FileName=Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -97,7 +77,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit4]
 FileName=MainView.cpp
 CompileCpp=1
 Folder=Source
@@ -107,7 +87,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit5]
 FileName=MainView.h
 CompileCpp=1
 Folder=Header
@@ -117,7 +97,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit6]
 FileName=resource.h
 CompileCpp=1
 Folder=Header
@@ -127,8 +107,9 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=Resource.rc
+CompileCpp=1
 Folder=Source
 Compile=1
 Link=0
@@ -136,27 +117,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
-FileName=RightView.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
-FileName=RightView.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
+[Unit8]
 FileName=ShellApp.cpp
 CompileCpp=1
 Folder=Source
@@ -166,17 +127,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit9]
 FileName=ShellApp.h
-CompileCpp=1
 Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit14]
+[Unit10]
 FileName=ShellWrapper.cpp
 CompileCpp=1
 Folder=Source
@@ -186,7 +147,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit11]
 FileName=ShellWrapper.h
 CompileCpp=1
 Folder=Header
@@ -196,7 +157,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
+[Unit12]
 FileName=..\Win32++\WinCore.h
 CompileCpp=1
 Folder=Win32++
@@ -206,7 +167,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit13]
 FileName=..\Win32++\Dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -216,7 +177,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit14]
 FileName=..\Win32++\Frame.h
 CompileCpp=1
 Folder=Win32++
@@ -226,7 +187,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit15]
 FileName=..\Win32++\GDI.h
 CompileCpp=1
 Folder=Win32++
@@ -236,7 +197,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit16]
 FileName=..\Win32++\ListView.h
 CompileCpp=1
 Folder=Win32++
@@ -246,7 +207,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit17]
 FileName=..\Win32++\Rebar.h
 CompileCpp=1
 Folder=Win32++
@@ -256,7 +217,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit18]
 FileName=..\Win32++\Splitter.h
 CompileCpp=1
 Folder=Win32++
@@ -266,7 +227,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit19]
 FileName=..\Win32++\Statusbar.h
 CompileCpp=1
 Folder=Win32++
@@ -276,7 +237,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit20]
 FileName=..\Win32++\Toolbar.h
 CompileCpp=1
 Folder=Win32++
@@ -286,10 +247,50 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit21]
 FileName=..\Win32++\TreeView.h
 CompileCpp=1
 Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit22]
+FileName=MyListView.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=MyListView.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit24]
+FileName=MyTreeView.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit25]
+FileName=MyTreeView.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

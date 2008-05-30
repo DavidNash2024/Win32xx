@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////
-// RightView.h
+// MyListView.h
 //  Declaration of the CMyListView class
 
 
-#ifndef RIGHTVIEW_H
-#define RIGHTVIEW_H
+#ifndef MYLISTVIEW_H
+#define MYLISTVIEW_H
 
 
 #include "../Win32++/ListView.h"
@@ -69,4 +69,4 @@ private:
 
 };
 
-#endif  // RIGHTVIEW_H
+#endif  // MYLISTVIEW_H

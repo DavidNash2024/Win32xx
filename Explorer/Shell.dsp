@@ -93,10 +93,6 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\LeftView.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
@@ -109,7 +105,11 @@ SOURCE=.\MainView.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\RightView.cpp
+SOURCE=.\MyListView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyTreeView.cpp
 # End Source File
 # Begin Source File
 
@@ -125,19 +125,19 @@ SOURCE=.\ShellWrapper.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\LeftView.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ListView.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\Mainfrm.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\MainView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyListView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyTreeView.h
 # End Source File
 # Begin Source File
 
@@ -149,19 +149,11 @@ SOURCE=.\resrc1.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\RightView.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ShellApp.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\ShellWrapper.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TreeView.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -197,7 +189,19 @@ SOURCE="..\Win32++\ListView.h"
 # End Source File
 # Begin Source File
 
+SOURCE="..\Win32++\Rebar.h"
+# End Source File
+# Begin Source File
+
 SOURCE="..\Win32++\Splitter.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\Statusbar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\Toolbar.h"
 # End Source File
 # Begin Source File
 

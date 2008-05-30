@@ -7,8 +7,8 @@
 #define MAINVIEW_H
 
 #include "../Win32++/Splitter.h"
-#include "LeftView.h"
-#include "RightView.h"
+#include "MyTreeView.h"
+#include "MyListView.h"
 
 #ifndef BTNS_WHOLEDROPDOWN
   #define BTNS_WHOLEDROPDOWN  0x0080

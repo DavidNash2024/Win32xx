@@ -144,17 +144,17 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="LeftView.cpp" />
-		<Unit filename="LeftView.h" />
 		<Unit filename="MainView.cpp" />
 		<Unit filename="MainView.h" />
 		<Unit filename="Mainfrm.cpp" />
 		<Unit filename="Mainfrm.h" />
+		<Unit filename="MyListView.cpp" />
+		<Unit filename="MyListView.h" />
+		<Unit filename="MyTreeView.cpp" />
+		<Unit filename="MyTreeView.h" />
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="RightView.cpp" />
-		<Unit filename="RightView.h" />
 		<Unit filename="ShellApp.cpp" />
 		<Unit filename="ShellApp.h" />
 		<Unit filename="ShellWrapper.cpp" />

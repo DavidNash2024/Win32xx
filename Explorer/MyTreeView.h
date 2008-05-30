@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////
-// LeftView.h
+// MyTreeView.h
 //  Declaration of the CMyTreeView class
 
 
-#ifndef LEFTVIEW_H
-#define LEFTVIEW_H
+#ifndef MYTREEVIEW_H
+#define MYTREEVIEW_H
 
 
 #include "../Win32++/TreeView.h"
@@ -66,4 +66,4 @@ public:
 	
 };
 
-#endif  // LEFTVIEW_H
+#endif  // MYTREEVIEW_H

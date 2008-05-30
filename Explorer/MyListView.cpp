@@ -3,7 +3,7 @@
 //  Definitions for the CMyListView and ListItemData classes
 
 #include "ShellApp.h"
-#include "RightView.h"
+#include "MyListView.h"
 #include "resource.h"
 
 ////////////////////////////////

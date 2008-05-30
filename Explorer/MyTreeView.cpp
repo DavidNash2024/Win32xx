@@ -6,8 +6,8 @@
 #include "ShellApp.h"
 #include "Mainfrm.h"
 #include "MainView.h"
-#include "RightView.h"
-#include "LeftView.h"
+#include "MyTreeView.h"
+#include "MyListView.h"
 #include "Resource.h"
 
 ////////////////////////////////
