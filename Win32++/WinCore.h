@@ -420,7 +420,7 @@ namespace Win32xx
 		CSize(DWORD dw)				{ cx = (short)LOWORD(dw); cx = (short)HIWORD(dw); }
 		void SetSize(int CX, int CY){ cx = CX; cy = CY; }
 		BOOL operator == (SIZE sz)	{ return (cx == sz.cx && cy == sz.cy); }
-		BOOL operator != (SIZE sz)	{ return !(cx == sz.cx && cy == sz.cy); }
+		BOOL operator != (SIZE sz)	{ return (cx != sz.cx || cy != sz.cy); }
 	};
 
 	/////////////////////////////////////////
@@ -436,8 +436,8 @@ namespace Win32xx
 		CPoint(DWORD dw)			{ x = (short)LOWORD(dw); y = (short)HIWORD(dw); }
 		void Offset(int dx, int dy)	{ x += dx; y += dy; }
 		void SetPoint(int X, int Y)	{ x = X; y = Y; }
-		BOOL operator == (POINT pt)	{ return  ((x == pt.x) && (y == pt.y)); }
-		BOOL operator != (POINT pt)	{ return !((x == pt.x) && (y == pt.y)); }
+		BOOL operator == (POINT pt)	{ return ((x == pt.x) && (y == pt.y)); }
+		BOOL operator != (POINT pt)	{ return ((x != pt.x) || (y != pt.y)); }
 	};
 
 	/////////////////////////////////////////
