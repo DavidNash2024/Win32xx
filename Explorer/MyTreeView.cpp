@@ -395,7 +395,7 @@ void CMyTreeView::PreCreate(CREATESTRUCT &cs)
 
 BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 {
-	HTREEITEM hItem = GetSelectedItem();
+	HTREEITEM hItem = GetSelection();
 
 	//Set parent item's has Children flag
 	TVITEM tvItem = {0};

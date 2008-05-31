@@ -60,25 +60,27 @@ namespace Win32xx
 		UINT  GetCount() const;
 		HTREEITEM GetDropHiLightItem() const;
 		HWND GetEditControl() const;
-		HTREEITEM GetFirstVisibleItem() const;
+		HTREEITEM GetFirstVisible() const;
 		HIMAGELIST GetImageList(int iImageType) const;
 		UINT  GetIndent() const;
 		COLORREF GetInsertMarkColor() const;
+		BOOL GetISearchString(LPTSTR szString);
 		BOOL GetItem(TVITEM& Item) const;
 		DWORD_PTR GetItemData(HTREEITEM hItem) const;
 		int  GetItemHeight() const;
 		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
 		BOOL GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const;
 		tString GetItemText(HTREEITEM hItem) const;
+		HTREEITEM GetLastVisible() const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
-		HTREEITEM GetNextVisibleItem(HTREEITEM hItem) const;
-		HTREEITEM GetParentItem(HTREEITEM hItem) const;
-		HTREEITEM GetPrevSiblingItem(HTREEITEM hItem) const;
-		HTREEITEM GetPrevVisibleItem(HTREEITEM hItem) const;
+		HTREEITEM GetNextVisible(HTREEITEM hItem) const;
+		HTREEITEM GetParent(HTREEITEM hItem) const;
+		HTREEITEM GetPrevSibling(HTREEITEM hItem) const;
+		HTREEITEM GetPrevVisible(HTREEITEM hItem) const;
 		HTREEITEM GetRootItem() const;
 		int GetScrollTime() const;
-		HTREEITEM GetSelectedItem() const;
+		HTREEITEM GetSelection() const;
 		COLORREF GetTextColor() const;
 		HWND GetToolTips() const;
 		UINT GetVisibleCount() const;
@@ -103,6 +105,7 @@ namespace Win32xx
 		BOOL DeleteAllItems();
 		BOOL DeleteItem(HTREEITEM hItem);
 		HWND EditLabel(HTREEITEM hItem);
+		BOOL EndEditLabelNow(BOOL fCancel);
 		BOOL EnsureVisible(HTREEITEM hItem);
 		BOOL Expand(HTREEITEM hItem, UINT nCode);
 		HTREEITEM HitTest(TVHITTESTINFO& ht);
@@ -153,7 +156,7 @@ namespace Win32xx
 		return TreeView_GetEditControl( m_hWnd );
 	}
 
-	inline HTREEITEM CTreeView::GetFirstVisibleItem() const
+	inline HTREEITEM CTreeView::GetFirstVisible() const
 	// Retrieves the first visible item in a tree-view control window.
 	{
 		return TreeView_GetFirstVisible(m_hWnd);
@@ -175,6 +178,12 @@ namespace Win32xx
 	// Retrieves the color used to draw the insertion mark for the tree view.
 	{
 		return TreeView_GetInsertMarkColor( m_hWnd );
+	}
+
+	inline BOOL CTreeView::GetISearchString(LPTSTR szString)
+	// Retrieves the incremental search string for a tree-view control.
+	{
+		return TreeView_GetISearchString(m_hWnd, szString);
 	}
 
 	inline BOOL CTreeView::GetItem(TVITEM& Item) const
@@ -230,6 +239,13 @@ namespace Win32xx
 		return t;
 	}
 
+	inline HTREEITEM CTreeView::GetLastVisible() const
+	// Retrieves the last expanded item in a tree-view control.
+	// This does not retrieve the last item visible in the tree-view window.
+	{
+		return TreeView_GetLastVisible(m_hWnd);
+	}
+
 	inline HTREEITEM CTreeView::GetNextItem(HTREEITEM hItem, UINT nCode) const
 	// Retrieves the tree-view item that bears the specified relationship to a specified item.
 	{
@@ -242,25 +258,25 @@ namespace Win32xx
 		return TreeView_GetNextSibling(m_hWnd, hItem);
 	}
 
-	inline HTREEITEM CTreeView::GetNextVisibleItem(HTREEITEM hItem) const
+	inline HTREEITEM CTreeView::GetNextVisible(HTREEITEM hItem) const
 	// Retrieves the next visible item that follows a specified item in a tree-view control.
 	{
 		return TreeView_GetNextVisible(m_hWnd, hItem);
 	}
 
-	inline HTREEITEM CTreeView::GetParentItem(HTREEITEM hItem) const
+	inline HTREEITEM CTreeView::GetParent(HTREEITEM hItem) const
 	// Retrieves the parent item of the specified tree-view item.
 	{
 		return TreeView_GetParent(m_hWnd, hItem);
 	}
 
-	inline HTREEITEM CTreeView::GetPrevSiblingItem(HTREEITEM hItem) const
+	inline HTREEITEM CTreeView::GetPrevSibling(HTREEITEM hItem) const
 	// Retrieves the previous sibling item of a specified item in a tree-view control.
 	{
 		return TreeView_GetPrevSibling(m_hWnd, hItem);
 	}
 
-	inline HTREEITEM CTreeView::GetPrevVisibleItem(HTREEITEM hItem) const
+	inline HTREEITEM CTreeView::GetPrevVisible(HTREEITEM hItem) const
 	// Retrieves the first visible item that precedes a specified item in a tree-view control.
 	{
 		return TreeView_GetPrevSibling(m_hWnd, hItem);
@@ -278,7 +294,7 @@ namespace Win32xx
 		return TreeView_GetScrollTime( m_hWnd );
 	}
 
-	inline HTREEITEM CTreeView::GetSelectedItem() const
+	inline HTREEITEM CTreeView::GetSelection() const
 	// Retrieves the currently selected item in a tree-view control.
 	{
 		return TreeView_GetSelection(m_hWnd);
@@ -444,6 +460,12 @@ namespace Win32xx
 	// The specified item  is implicitly selected and focused.
 	{
 		return TreeView_EditLabel( m_hWnd, hItem );
+	}
+
+	inline BOOL CTreeView::EndEditLabelNow(BOOL fCancel)
+	// Ends the editing of a tree-view item's label.
+	{
+		return TreeView_EndEditLabelNow(m_hWnd, fCancel);
 	}
 
 	inline BOOL CTreeView::EnsureVisible(HTREEITEM hItem)

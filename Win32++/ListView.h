@@ -64,7 +64,7 @@ namespace Win32xx
 		int GetCountPerPage( ) const;
 		HWND GetEditControl( ) const;
 		DWORD GetExtendedStyle( ) const;
-		HWND GetHeaderCtrl( ) const;
+		HWND GetHeader( ) const;
 		HCURSOR GetHotCursor( );
 		int GetHotItem( ) const;
 		DWORD GetHoverTime( ) const;
@@ -217,7 +217,7 @@ namespace Win32xx
 		return ListView_GetExtendedListViewStyle( m_hWnd );
 	}
 
-	inline HWND CListView::GetHeaderCtrl( ) const
+	inline HWND CListView::GetHeader( ) const
 	// Retrieves the handle to the header control used by a list-view control.
 	{
 		return ListView_GetHeader( m_hWnd );
