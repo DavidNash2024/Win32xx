@@ -1,5 +1,5 @@
 // Win32++  Version 6.1
-// Released: 7th June, 2008 by:
+// Released: 3rd June, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -81,9 +81,9 @@ namespace Win32xx
 		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
 		void SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
-		void SetBarInfo(REBARINFO& rbi) const; 
+		void SetBarInfo(REBARINFO& rbi) const;
 		void SetMenubar(HWND hMenubar) {m_hMenubar = hMenubar;}
-		void SetRebarTheme(ThemeRebar& Theme);	
+		void SetRebarTheme(ThemeRebar& Theme);
 
 	// Operations
 		void DeleteBand(const int nBand) const;
@@ -98,14 +98,14 @@ namespace Win32xx
 		void ResizeBand(const int nBand, const CSize& sz) const;
 		void ShowGripper(int nBand, BOOL fShow) const;
 		BOOL ShowBand(int nBand, BOOL fShow) const;
-		
+
 	protected:
 	//Overridables
 		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	private:	
+	private:
 		ThemeRebar m_Theme;
 		BOOL m_bIsDragging;
 		HWND m_hMenubar;
@@ -124,7 +124,7 @@ namespace Win32xx
 	}
 
 	inline void CRebar::DeleteBand(int nBand) const
-	// Deletes a band from a rebar control. 
+	// Deletes a band from a rebar control.
 	{
 		if (!::SendMessage(m_hWnd, RB_DELETEBAND, nBand, 0))
 			throw CWinException(_T("Failed to delete rebar band"));
@@ -155,18 +155,18 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline int  CRebar::GetBandCount() const	
-	// Retrieves the count of bands currently in the rebar control. 
-	{ 
-		return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0, 0); 
+	inline int  CRebar::GetBandCount() const
+	// Retrieves the count of bands currently in the rebar control.
+	{
+		return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0, 0);
 	}
 
 	inline void CRebar::GetBandInfo(int nBand, REBARBANDINFO& rbbi) const
-	// Retrieves information about a specified band in a rebar control. 
+	// Retrieves information about a specified band in a rebar control.
 	{
 		if (nBand < 0)
 			throw CWinException(_T("Invalid Rebar band number"));
-		
+
 		// REBARBANDINFO describes individual BAND characteristics
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		if(!::SendMessage(m_hWnd, RB_GETBANDINFO, nBand, (LPARAM)&rbbi))
@@ -181,10 +181,10 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline UINT CRebar::GetBarHeight() const	
-	// Retrieves the height of the rebar control. 
-	{ 
-		return (UINT)::SendMessage(m_hWnd, RB_GETBARHEIGHT, 0, 0); 
+	inline UINT CRebar::GetBarHeight() const
+	// Retrieves the height of the rebar control.
+	{
+		return (UINT)::SendMessage(m_hWnd, RB_GETBARHEIGHT, 0, 0);
 	}
 
 	inline void CRebar::GetBarInfo(REBARINFO& rbi) const
@@ -196,35 +196,35 @@ namespace Win32xx
 			throw CWinException(_T("Failed to get rebar info"));
 	}
 
-	inline UINT CRebar::GetRowCount() const	
-	// Retrieves the number of rows of bands in a rebar control. 
-	{ 
-		return (UINT)::SendMessage(m_hWnd, RB_GETROWCOUNT, 0, 0); 
+	inline UINT CRebar::GetRowCount() const
+	// Retrieves the number of rows of bands in a rebar control.
+	{
+		return (UINT)::SendMessage(m_hWnd, RB_GETROWCOUNT, 0, 0);
 	}
 
-	inline int CRebar::GetRowHeight(int nRow) const 
+	inline int CRebar::GetRowHeight(int nRow) const
 	// Retrieves the height of a specified row in a rebar control.
-	{ 
-		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0); 
+	{
+		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0);
 	}
 
-	inline HWND CRebar::GetToolTips() const	
+	inline HWND CRebar::GetToolTips() const
 	// Retrieves the handle to any ToolTip control associated with the rebar control.
 	{
 		return (HWND)::SendMessage(m_hWnd, RB_GETTOOLTIPS, 0, 0);
 	}
 
-	inline int CRebar::HitTest(RBHITTESTINFO& rbht) 
-	// Determines which portion of a rebar band is at a given point on the screen, 
-	//  if a rebar band exists at that point. 
-	{ 
-		return (int)::SendMessage(m_hWnd, RB_HITTEST, 0, (LPARAM)&rbht); 
+	inline int CRebar::HitTest(RBHITTESTINFO& rbht)
+	// Determines which portion of a rebar band is at a given point on the screen,
+	//  if a rebar band exists at that point.
+	{
+		return (int)::SendMessage(m_hWnd, RB_HITTEST, 0, (LPARAM)&rbht);
 	}
 
-	inline int CRebar::IDToIndex(UINT uBandID) const 
-	// Converts a band identifier to a band index in a rebar control.	
-	{ 
-		return (int)::SendMessage(m_hWnd, RB_IDTOINDEX, (WPARAM)uBandID, 0); 
+	inline int CRebar::IDToIndex(UINT uBandID) const
+	// Converts a band identifier to a band index in a rebar control.
+	{
+		return (int)::SendMessage(m_hWnd, RB_IDTOINDEX, (WPARAM)uBandID, 0);
 	}
 
 	inline void CRebar::InsertBand(int nBand, REBARBANDINFO& rbbi) const
@@ -381,26 +381,26 @@ namespace Win32xx
 		cs.lpszClass = REBARCLASSNAME;
 	}
 
-	inline void CRebar::MaximizeBand(UINT uBand, BOOL fIdeal /*= FALSE*/) 
+	inline void CRebar::MaximizeBand(UINT uBand, BOOL fIdeal /*= FALSE*/)
 	// Resizes a band in a rebar control to either its ideal or largest size.
-	{ 
-		::SendMessage(m_hWnd, RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)fIdeal); 
+	{
+		::SendMessage(m_hWnd, RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)fIdeal);
 	}
-	
-	inline void CRebar::MinimizeBand(UINT uBand) 
-	// Resizes a band in a rebar control to its smallest size. 
-	{ 
-		::SendMessage(m_hWnd, RB_MINIMIZEBAND, (WPARAM)uBand, 0); 
+
+	inline void CRebar::MinimizeBand(UINT uBand)
+	// Resizes a band in a rebar control to its smallest size.
+	{
+		::SendMessage(m_hWnd, RB_MINIMIZEBAND, (WPARAM)uBand, 0);
 	}
-		
-	inline BOOL CRebar::MoveBand(UINT uFrom, UINT uTo) 
+
+	inline BOOL CRebar::MoveBand(UINT uFrom, UINT uTo)
 	// Moves a band from one index to another.
-	{ 
-		return (BOOL)::SendMessage(m_hWnd, RB_MOVEBAND, (WPARAM)uFrom, (LPARAM)uTo); 
+	{
+		return (BOOL)::SendMessage(m_hWnd, RB_MOVEBAND, (WPARAM)uFrom, (LPARAM)uTo);
 	}
 
 	inline void CRebar::MoveBandsLeft()
-	// Repositions the bands so they are left justified 
+	// Repositions the bands so they are left justified
 	{
 		int OldrcTop = -1;
 		for (int nBand = GetBandCount() -1; nBand >= 0; --nBand)
@@ -447,7 +447,7 @@ namespace Win32xx
 	inline void CRebar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack) const
 	// Sets the band's color
 	// Note:	Won't work with XP themes enabled
-	//			Won't work if a bitmap has been set	
+	//			Won't work if a bitmap has been set
 	{
 
 		REBARBANDINFO rbbi = {0};
@@ -459,7 +459,7 @@ namespace Win32xx
 	}
 
 	inline void CRebar::SetBandInfo(int nBand, REBARBANDINFO& rbbi) const
-	// Sets the characteristics of a rebar control.	
+	// Sets the characteristics of a rebar control.
 	{
 		if (nBand < 0)
 			throw CWinException(_T("Invalid Rebar band number"));
@@ -472,7 +472,7 @@ namespace Win32xx
 
 	inline void CRebar::SetBarInfo(REBARINFO& rbi) const
 	// REBARINFO associates an image list with the rebar
-	// A band will also need to set RBBIM_IMAGE	
+	// A band will also need to set RBBIM_IMAGE
 	{
 		rbi.cbSize = sizeof(REBARINFO);
 		if (!::SendMessage(m_hWnd, RB_SETBARINFO, 0, (LPARAM)&rbi))

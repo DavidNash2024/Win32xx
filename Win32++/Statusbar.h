@@ -1,5 +1,5 @@
 // Win32++  Version 6.1
-// Released: 7th June, 2008 by:
+// Released: 3rd June, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -51,20 +51,20 @@ namespace Win32xx
 	public:
 		CStatusbar();
 		virtual ~CStatusbar() {}
-	
+
 	// Overridables
 		virtual void PreCreate(CREATESTRUCT& cs);
-		
+
 	// Attributes
 		int GetPartCount();
 		HICON GetPartIcon(int iPart);
-		CRect GetPartRect(int iPart); 		
+		CRect GetPartRect(int iPart);
 		tString GetPartText(int iPart) const;
 		BOOL IsSimple();
 		BOOL SetPartIcon(int iPart, HICON hIcon);
 		void SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
-		void SetPartWidth(int iPart, int iWidth) const;			
-	
+		void SetPartWidth(int iPart, int iWidth) const;
+
 	// Operations
 		void CreateParts(int iParts, const int iPaneWidths[]) const;
 		void SetSimple(BOOL fSimple = TRUE);
@@ -98,17 +98,17 @@ namespace Win32xx
 		}
 	}
 
-	inline int CStatusbar::GetPartCount() 
-	{ 
-		return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0); 
+	inline int CStatusbar::GetPartCount()
+	{
+		return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
 	}
-	
-	inline HICON CStatusbar::GetPartIcon(int iPart) 
-	{ 
-		return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0); 
+
+	inline HICON CStatusbar::GetPartIcon(int iPart)
+	{
+		return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0);
 	}
-	
-	inline CRect CStatusbar::GetPartRect(int iPart) 
+
+	inline CRect CStatusbar::GetPartRect(int iPart)
 	{
 		CRect rc;
 		SendMessage(m_hWnd, SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
@@ -152,9 +152,9 @@ namespace Win32xx
 		return PaneText;
 	}
 
-	inline BOOL CStatusbar::IsSimple() 
-	{ 
-		return (BOOL)::SendMessage(m_hWnd, SB_ISSIMPLE, 0, 0); 
+	inline BOOL CStatusbar::IsSimple()
+	{
+		return (BOOL)::SendMessage(m_hWnd, SB_ISSIMPLE, 0, 0);
 	}
 
 	inline void CStatusbar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
@@ -175,9 +175,9 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CStatusbar::SetPartIcon(int iPart, HICON hIcon) 
-	{ 
-		return (BOOL)::SendMessage(m_hWnd, SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon); 
+	inline BOOL CStatusbar::SetPartIcon(int iPart, HICON hIcon)
+	{
+		return (BOOL)::SendMessage(m_hWnd, SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon);
 	}
 
 	inline void CStatusbar::SetPartWidth(int iPart, int iWidth) const
@@ -248,9 +248,9 @@ namespace Win32xx
 		}
 	}
 
-	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/) 
-	{ 
-		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0); 
+	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/)
+	{
+		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0);
 	}
 
 } // namespace Win32xx

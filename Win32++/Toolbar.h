@@ -1,5 +1,5 @@
 // Win32++  Version 6.1
-// Released: 7th June, 2008 by:
+// Released: 3rd June, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -64,7 +64,7 @@ namespace Win32xx
 		CToolbar();
 		virtual ~CToolbar();
 
-	// Attributes	
+	// Attributes
 		int  CommandToIndex(int iButtonID) const;
 		int  GetButtonCount() const;
 		UINT GetButtonState(int iButtonID) const;
@@ -80,7 +80,7 @@ namespace Win32xx
 		int  SetButtons(const std::vector<UINT>& ToolbarData) const;
 		void SetButtonSize(int cx, int cy) const;
 		void SetButtonState(int iButtonID, UINT State) const;
-		void SetButtonStyle(int iButtonID, BYTE Style) const;	
+		void SetButtonStyle(int iButtonID, BYTE Style) const;
 		void SetButtonText(int iButtonID, LPCTSTR szText);
 		void SetCommandID(int iIndex, int iButtonID) const;
 		void SetToolbarTheme(ThemeToolbar& Theme);
@@ -129,7 +129,7 @@ namespace Win32xx
 
 	inline void CToolbar::AddBitmap(int iNumButtons, UINT ToolbarID)
 	// Adds one or more images to the list of button images available for a toolbar.
-		
+
 	// Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
 	{
@@ -281,7 +281,7 @@ namespace Win32xx
 	// Determines where a point lies in a toolbar control.
 
 	// We do our own hit test since TB_HITTEST is a bit buggy,
-	// and also doesn't work at all on earliest versions of Win95	
+	// and also doesn't work at all on earliest versions of Win95
 	{
 		CPoint pt;
 		::GetCursorPos(&pt);

@@ -1,5 +1,5 @@
 // Win32++  Version 6.1
-// Released: 7th June, 2008 by:
+// Released: 3rd June, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -255,7 +255,7 @@ namespace Win32xx
 					m_nBarPos = cy - m_nWidth/2;
 			}
 
-			if (m_bImmediate) 
+			if (m_bImmediate)
 				RecalcLayout();
 			else
 			{

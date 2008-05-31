@@ -1,5 +1,5 @@
 // Win32++  Version 6.1
-// Released: 7th June, 2008 by:
+// Released: 3rd June, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -583,8 +583,6 @@ namespace Win32xx
 		virtual ~CWnd();	// Destructor
 
 		// These are the functions you might wish to override
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -596,6 +594,8 @@ namespace Win32xx
 		BOOL Attach(HWND hWnd);
 		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		void CenterWindow() const;
+		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		void DestroyWindow();
 		HWND Detach();
 		CWnd* FromHandle(HWND hWnd) const;
@@ -623,15 +623,15 @@ namespace Win32xx
 		virtual	LRESULT OnNotifyFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnInitialUpdate();
 		virtual void OnPaint(HDC hDC);
-		virtual HICON SetIconLarge(int nIcon);
-		virtual HICON SetIconSmall(int nIcon);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Its unlikely you would need to override these functions
+		virtual void AddToMap();
 		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL IsMDIChild() const {return FALSE;}
-		void AddToMap();
+		virtual HICON SetIconLarge(int nIcon);
+		virtual HICON SetIconSmall(int nIcon);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -670,8 +670,6 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL InitInstance();
 		virtual int  MessageLoop();
-		virtual int  Run();
-		virtual void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
 
 		// These functions aren't intended to be overridden
 #ifndef _WIN32_WCE
@@ -682,8 +680,10 @@ namespace Win32xx
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
+		int Run();
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
+		void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
 		TLSData* SetTlsIndex();
 
 	protected:
