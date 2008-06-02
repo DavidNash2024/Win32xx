@@ -57,7 +57,7 @@ void CMainFrame::DoPopupMenu()
 	{
 		ZeroMemory(&mii, sizeof(MENUITEMINFO));
 
-		// Fix for an undocumented bug in the Win32 API
+		// Fix for an undocumented bug in the Windows API
 		// For Win95 and NT, cbSize needs to be 44
 		if ((1400 == GetWinVersion()) || (2400 == GetWinVersion()))
 			mii.cbSize = 44;

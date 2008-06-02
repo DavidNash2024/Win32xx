@@ -150,13 +150,13 @@ namespace Win32xx
 
 		//	switch (uMsg)
 		//	{
-		//	case MESSAGE1:		// Some Win32 API message
+		//	case MESSAGE1:		// Some Windows API message
 		//		OnMessage1();	// A user defined function
 		//		break;			// Also do default processing
 		//	case MESSAGE2:
 		//		OnMessage2();
 		//		return x;		// Don't do default processing, but instead return
-		//						//  a value recommended by the Win32 API documentation
+		//						//  a value recommended by the Windows API documentation
 		//	}
 
 		// Always pass unhandled messages on to DialogProcDefault

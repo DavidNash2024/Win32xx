@@ -624,14 +624,15 @@ namespace Win32xx
 		virtual void OnInitialUpdate();
 		virtual void OnPaint(HDC hDC);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		// Its unlikely you would need to override these functions
-		virtual void AddToMap();
-		virtual LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL IsMDIChild() const {return FALSE;}
-		virtual HICON SetIconLarge(int nIcon);
-		virtual HICON SetIconSmall(int nIcon);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		// These functions aren't intended to be overridden
+		void AddToMap();
+		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		BOOL IsMDIChild() const {return FALSE;}
+		HICON SetIconLarge(int nIcon);
+		HICON SetIconSmall(int nIcon);
+		
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -1496,7 +1497,7 @@ namespace Win32xx
 		// switch (((LPNMHDR)lParam)->code)
 		// {
 		//		Handle your notifications from the CHILD window here
-		//      Return the value recommended by the Win32 API documentation.
+		//      Return the value recommended by the Windows API documentation.
 		//      For many notifications, the return value doesn't matter, but for some it does.
 		// }
 
@@ -1514,7 +1515,7 @@ namespace Win32xx
 		// switch (((LPNMHDR)lParam)->code)
 		// {
 		//		Handle your notifications from this window here
-		//      Return the value recommended by the Win32 API documentation.
+		//      Return the value recommended by the Windows API documentation.
 		// }
 
 		// return 0L for unhandled notifications
@@ -1728,13 +1729,13 @@ namespace Win32xx
 
 		//	switch (uMsg)
 		//	{
-		//	case MESSAGE1:		// Some Win32 API message
+		//	case MESSAGE1:		// Some Windows API message
 		//		OnMessage1();	// A user defined function
 		//		break;			// Also do default processing
 		//	case MESSAGE2:
 		//		OnMessage2();
 		//		return x;		// Don't do default processing, but instead return
-		//						//  a value recommended by the Win32 API documentation
+		//						//  a value recommended by the Windows API documentation
 		//	}
 
 		// Always pass unhandled messages on to WndProcDefault
