@@ -698,6 +698,8 @@ namespace Win32xx
 			TRACE_WIDTH  = 400
 		};
 
+		CWinApp(const CWinApp&);				// Disable copy construction
+		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		void DefaultClass();
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
