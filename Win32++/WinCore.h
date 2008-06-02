@@ -38,7 +38,8 @@
 ///////////////////////////////////////////////////////
 // WinCore.h
 //  Declaration of the following classes:
-//  CWinApp, CWnd, CWinException, and CCriticalSection
+//  CWinApp, CWnd, CWinException, CCriticalSection
+//  CPoint, CRect, and CSize
 //
 // This file contains the declarations for the core set of classes required to
 // create simple windows using Win32++.  Five classes are declared here:
