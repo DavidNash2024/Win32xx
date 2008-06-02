@@ -58,6 +58,10 @@
 //            of creating the window, and handling its messages. Inherit
 //            from this class to define and control windows.
 //
+// 5) CPoint, CRect and CSize:
+//            These class can be used in place of a POINT, RECT or SIZE
+//            repectively.
+//
 // Note: This header file (or another Win32++ header file which includes it)
 //       should be included before all other header files. It sets some
 //       important macros which need to be set before including Windows.h
