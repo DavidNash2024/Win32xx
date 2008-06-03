@@ -27,11 +27,10 @@ Tree-View control from a dialog.
 The CPoint, CRect and CSize classes can be used anywhere a POINT, RECT
 or CSize struct can be used respectively. In addition:
 - The constructors ensure that members are set to reasonable values.
-- The constructors allow a default value to be set when the class is
-   used as a function argument.
-- Multiple CRect constructors allow CRect objects to be created in several
-   different convenient ways.
-- The CRect class adds additional members such as Height and Width.   
+  They also allow a default value to be set when the class is used as a 
+  function argument.
+- The classes have additional member functions, including operator==
+  and operator!= .   
 - These classes makes porting code from MFC or WTL a little easier.
 
 * Extended the CRebar, CToolbar and CStatusbar classes.
