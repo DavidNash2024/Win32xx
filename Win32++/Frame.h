@@ -2499,9 +2499,9 @@ namespace Win32xx
 			::FreeLibrary(hMod);
 		}
 
-		enum Themetype{ Blue, Silver, Olive };
+		enum Themetype{ Grey, Blue, Silver, Olive };
 
-		int Theme = Blue;
+		int Theme = Grey;
 		if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
 		if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
 		if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
@@ -2511,6 +2511,21 @@ namespace Win32xx
 
 		switch (Theme)
 		{
+		case Grey:
+			{
+				ThemeToolbar tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
+				ThemeRebar tr = {T, RGB(212, 208, 200), RGB(230, 226, 222), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
+				ThemeMenu tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+
+				GetToolbar().SetToolbarTheme(tt);
+				SetMenuTheme(tm); // Sets the theme for popup menus
+				if (IsRebarUsed())
+				{
+					GetRebar().SetRebarTheme(tr);
+					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
+				}
+			}
+			break;
 		case Blue:
 			{
 				// Use this theme by default
@@ -2520,7 +2535,7 @@ namespace Win32xx
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus
-				if (m_bUseRebar)
+				if (IsRebarUsed())
 				{
 					GetRebar().SetRebarTheme(tr);
 					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
@@ -2536,7 +2551,7 @@ namespace Win32xx
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus
-				if (m_bUseRebar)
+				if (IsRebarUsed())
 				{
 					GetRebar().SetRebarTheme(tr);
 					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
@@ -2552,7 +2567,7 @@ namespace Win32xx
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus
-				if (m_bUseRebar)
+				if (IsRebarUsed())
 				{
 					GetRebar().SetRebarTheme(tr);
 					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
