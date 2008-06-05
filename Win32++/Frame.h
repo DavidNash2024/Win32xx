@@ -50,7 +50,7 @@
 // * CMenubar for managing the menu inside the rebar.
 // * CToolbar for managing the frame's toolbar.
 // * CStatusbar for managing the frame's status bar.
-// In each case these members is exposed by a GetXXX function, allowing
+// In each case these members are exposed by a GetXXX function, allowing
 // them to be accessed or sent messages.
 
 // CFrame is responsible for creating a window which includes a menu and
@@ -1879,6 +1879,8 @@ namespace Win32xx
 		GetStatusbar().Create(m_hWnd);
 
 		// Create the view window
+		if (NULL == m_pView)
+			throw CWinException(_T("CFrame::OnCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
 		m_pView->Create(m_hWnd);
 
 		// Reposition the child windows
@@ -2304,9 +2306,6 @@ namespace Win32xx
 
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
-		if (NULL == m_pView)
-			throw CWinException(_T("CFrame::PreCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
-
 		// Set the Window Class
 		cs.lpszClass = _T("Win32++ Frame");
 
