@@ -111,7 +111,7 @@ namespace Win32xx
 	inline CRect CStatusbar::GetPartRect(int iPart)
 	{
 		CRect rc;
-		SendMessage(m_hWnd, SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
+		::SendMessage(m_hWnd, SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
 		return rc;
 	}
 

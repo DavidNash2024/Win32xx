@@ -90,10 +90,10 @@ namespace Win32xx
 	struct ThemeMenu
 	{
 		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrHot1;		// Color 1 for hot button
-		COLORREF clrHot2;		// Color 2 for hot button
-		COLORREF clrPressed1;	// Color 1 for pressed button
-		COLORREF clrPressed2;	// Color 2 for pressed button
+		COLORREF clrHot1;		// Colour 1 for hot button
+		COLORREF clrHot2;		// Colour 2 for hot button
+		COLORREF clrPressed1;	// Colour 1 for pressed button
+		COLORREF clrPressed2;	// Colour 2 for pressed button
 		COLORREF clrOutline;	// Colour for border outline
 	};
 
@@ -2619,7 +2619,7 @@ namespace Win32xx
 				throw CWinException(_T("CFrame::SetToolbarImages ... Create himlToolbar failed "));
 
 			ImageList_AddMasked(himlToolbar, hbm, crMask);
-			if(-1L == SendMessage(TB, TB_SETIMAGELIST, 0, (LPARAM)himlToolbar) )
+			if(-1L == ::SendMessage(TB, TB_SETIMAGELIST, 0, (LPARAM)himlToolbar) )
 				throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETIMAGELIST failed "));
 
 			::DeleteObject(hbm);
@@ -2637,7 +2637,7 @@ namespace Win32xx
 
 				ImageList_AddMasked(himlToolbarHot, hbm, crMask);
 
-				if(-1L == SendMessage(TB, TB_SETHOTIMAGELIST, 0, (LPARAM)himlToolbarHot) )
+				if(-1L == ::SendMessage(TB, TB_SETHOTIMAGELIST, 0, (LPARAM)himlToolbarHot) )
 					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETHOTIMAGELIST failed "));
 
 				::DeleteObject(hbm);
@@ -2655,13 +2655,13 @@ namespace Win32xx
 					throw CWinException(_T("CFrame::SetToolbarImages ... Create himlToolbarDis failed "));
 
 				ImageList_AddMasked(himlToolbarDis, hbm, crMask);
-				if(-1L == SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+				if(-1L == ::SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
 					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 			else
 			{
 				himlToolbarDis = CreateDisabledImageList(himlToolbar);
-				if(-1L == SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+				if(-1L == ::SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
 					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 

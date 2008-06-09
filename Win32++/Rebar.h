@@ -44,10 +44,10 @@ namespace Win32xx
 	struct ThemeRebar
 	{
 		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrBkgnd1;		// Color 1 for rebar background
-		COLORREF clrBkgnd2;		// Color 2 for rebar background
-		COLORREF clrBand1;		// Color 1 for rebar band background. Use NULL if not required
-		COLORREF clrBand2;		// Color 2 for rebar band background. Use NULL if not required
+		COLORREF clrBkgnd1;		// Colour 1 for rebar background
+		COLORREF clrBkgnd2;		// Colour 2 for rebar background
+		COLORREF clrBand1;		// Colour 1 for rebar band background. Use NULL if not required
+		COLORREF clrBand2;		// Colour 2 for rebar band background. Use NULL if not required
 		BOOL FlatStyle;			// Bands are rendered with flat rather than raised style
 		BOOL KeepBandsLeft;		// TRUE if we always keep bands left
 		BOOL LockMenuBand;		// Lock Menubar's band up top, without gripper

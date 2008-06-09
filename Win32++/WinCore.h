@@ -603,7 +603,7 @@ namespace Win32xx
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		void DestroyWindow();
 		HWND Detach();
-		CWnd* FromHandle(HWND hWnd) const;
+		static CWnd* FromHandle(HWND hWnd);
 		HWND GetAncestor(HWND hWnd) const;
 		CRect GetClientRect() const;
 		tString GetDlgItemString(int nIDDlgItem) const;
@@ -615,6 +615,91 @@ namespace Win32xx
 		BOOL RegisterClass(WNDCLASS& wc);
 		void SetParent(HWND hParent);
 
+
+		BOOL CloseWindow() 
+		{return ::CloseWindow(m_hWnd);}
+
+		BOOL EnableWindow(BOOL bEnable = TRUE)
+		{return ::EnableWindow(m_hWnd, bEnable);}
+
+		ULONG_PTR GetClassLongPtr(int nIndex) 
+		{return ::GetClassLongPtr(m_hWnd, nIndex);}
+
+		LONG_PTR GetWindowLongPtr(int nIndex) 
+		{return ::GetWindowLongPtr(m_hWnd, nIndex);}
+
+		BOOL GetWindowPlacement(WINDOWPLACEMENT *lpwndpl) 
+		{return ::GetWindowPlacement(m_hWnd, lpwndpl);}
+
+		void Invalidate(BOOL bErase = TRUE)
+		{::InvalidateRect(m_hWnd, NULL, bErase);}
+
+		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) 
+		{return ::InvalidateRect(m_hWnd, lpRect, bErase);}
+
+		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) 
+		{return ::InvalidateRgn(m_hWnd, hRgn, bErase);}
+
+		BOOL IsChild(const CWnd* pWndParent)
+		{return ::IsChild(pWndParent->GetHwnd(), m_hWnd);}
+
+		BOOL IsIconic()
+		{return ::IsIconic(m_hWnd);}
+
+		BOOL IsEnabled()
+		{return ::IsWindowEnabled(m_hWnd);}
+
+		BOOL IsVisible()
+		{return ::IsWindowVisible(m_hWnd);}
+
+		BOOL IsZoomed()
+		{return ::IsZoomed(m_hWnd);}
+
+		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE)
+		{::MoveWindow(m_hWnd, x, y, nWidth, nHeight, bRepaint = TRUE);}
+
+		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE)
+		{::MoveWindow(m_hWnd, rc.left, rc.top, rc.Width(), rc.Height(), bRepaint);}
+
+		BOOL PostMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0)
+		{return ::PostMessage(m_hWnd, Msg, wParam, lParam);}
+
+		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE )
+		{return ::RedrawWindow(m_hWnd, lpRectUpdate, hRgn, flags);}
+
+		LRESULT SendMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0)
+		{return ::SendMessage(m_hWnd, Msg, wParam, lParam);}
+
+		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong)
+		{return ::SetClassLongPtr(m_hWnd, nIndex, dwNewLong);}
+	
+		BOOL SetForegroundWindow()
+		{return ::SetForegroundWindow(m_hWnd);}
+
+		BOOL SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl)
+		{return ::SetWindowPlacement(m_hWnd, lpwndpl);}
+
+		BOOL SetRedraw(BOOL bRedraw = TRUE)
+		{SendMessage(WM_SETREDRAW, (WPARAM)bRedraw, 0);}
+
+		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE)
+		{return ::SetWindowRgn(m_hWnd, hRgn, bRedraw);}
+
+		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong)
+		{return ::SetWindowLongPtr(m_hWnd, nIndex, dwNewLong);}
+
+		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL)
+		{return ::ShowWindow(m_hWnd, nCmdShow);}
+
+		BOOL UpdateWindow()
+		{return ::UpdateWindow(m_hWnd);}
+
+		BOOL ValidateRect(CRect& rc)
+		{return ::ValidateRect(m_hWnd, &rc);}
+
+		BOOL ValidateRgn(HRGN hRgn)
+		{return ::ValidateRgn(m_hWnd, hRgn);} 
+		
 		HWND GetHwnd() const {return m_hWnd;}
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
@@ -1283,7 +1368,7 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	inline CWnd* CWnd::FromHandle(HWND hWnd) const
+	inline CWnd* CWnd::FromHandle(HWND hWnd)
 	{
 		// Returns the CWnd object associated with the window handle
 		return GetApp()->GetCWndFromMap(hWnd);
