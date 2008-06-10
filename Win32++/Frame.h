@@ -1544,7 +1544,7 @@ namespace Win32xx
 			rc.SetRect(0, 0, cx, cx);
 
 			// Set the mask color to grey for the new ImageList
-			COLORREF crMask = RGB(120, 199, 120);
+			COLORREF crMask = RGB(200, 199, 200);
 			SolidFill(MemDC, crMask, &rc);
 
 			// Draw the image on the memory DC
