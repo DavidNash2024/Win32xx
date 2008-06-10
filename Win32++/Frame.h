@@ -2359,6 +2359,8 @@ namespace Win32xx
 		if (IsMenubarUsed())
 			SetMenubarBandSize();
 
+		m_Toolbar.SetLimitMaxSize(m_Rebar.GetRebarTheme().ShortBands);
+
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}
 
