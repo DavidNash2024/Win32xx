@@ -1519,7 +1519,6 @@ namespace Win32xx
 		rbbi.hwndChild  = TB;
 
 		GetRebar().InsertBand(-1, rbbi);
-		TB.SetLimitMaxSize(m_Rebar.GetRebarTheme().ShortBands);
 	}
 
 	inline HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
@@ -2336,7 +2335,6 @@ namespace Win32xx
 		// Resize the rebar or toolbar
 		if (IsRebarUsed())
 		{
-			m_Toolbar.SetLimitMaxSize(m_Rebar.GetRebarTheme().ShortBands);
 			::SendMessage(m_Rebar, WM_SIZE, 0, 0);
 			::InvalidateRect(m_Rebar, NULL, TRUE);
 		}
@@ -2361,8 +2359,6 @@ namespace Win32xx
 
 		if (IsMenubarUsed())
 			SetMenubarBandSize();
-
-		m_Toolbar.SetLimitMaxSize(m_Rebar.GetRebarTheme().ShortBands);
 
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}

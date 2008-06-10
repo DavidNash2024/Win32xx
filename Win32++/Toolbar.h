@@ -39,6 +39,7 @@
 #define TOOLBAR_H
 
 #include "WinCore.h"
+#include "Rebar.h"
 
 
 namespace Win32xx
@@ -83,7 +84,6 @@ namespace Win32xx
 		void SetButtonStyle(int iButtonID, BYTE Style) const;
 		void SetButtonText(int iButtonID, LPCTSTR szText);
 		void SetCommandID(int iIndex, int iButtonID) const;
-		void SetLimitMaxSize(BOOL bLimit);
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	// Operations
@@ -106,14 +106,13 @@ namespace Win32xx
 		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ThemeToolbar m_Theme;				// The theme structure
 		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn
-		BOOL m_bLimitMaxSize;				// True for short toolbar inside rebar band
 
 	};  // class CToolbar
 
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	inline CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE), m_bLimitMaxSize(TRUE)
+	inline CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_Theme, sizeof(ThemeToolbar));
 	}
@@ -763,12 +762,6 @@ namespace Win32xx
 			throw CWinException(_T("CToolbar::SetCommandID failed"));
 	}
 
-	inline void CToolbar::SetLimitMaxSize(BOOL bLimit)
-	{
-		// Set to TRUE to when ThemeRebar.ShorBands = TRUE
-		m_bLimitMaxSize = bLimit;
-	}
-
 	inline void CToolbar::SetToolbarTheme(ThemeToolbar& Theme)
 	{
 		m_Theme.UseThemes   = Theme.UseThemes;
@@ -791,10 +784,14 @@ namespace Win32xx
 				TCHAR ClassName[32];
 				::GetClassName(m_hWndParent, ClassName, 32);
 
-				if (m_bLimitMaxSize && (0 == lstrcmp(ClassName, REBARCLASSNAME)))
+				if (0 == lstrcmp(ClassName, REBARCLASSNAME))
 				{
-					LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-					pWinPos->cx = GetMaxSize().cx+2;
+					CRebar* pRebar = (CRebar*)FromHandle(m_hWndParent);
+					if (pRebar && (pRebar->GetRebarTheme().ShortBands))
+					{
+						LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+						pWinPos->cx = GetMaxSize().cx+2;
+					}
 				}
 			}
 			break;
