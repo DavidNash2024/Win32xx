@@ -182,7 +182,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 	
 	case IDM_BLUE:	// ICY_BLUE Theme
 		{			
-			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, T, F};
+			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, F, F};
 			if (IsRebarUsed()) RB.SetRebarTheme(tr);
 
 			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
@@ -362,6 +362,14 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 
 	::InvalidateRect(GetMenubar().GetHwnd(), NULL, TRUE);
 	RecalcLayout();
+}
+
+void CMainFrame::RecalcLayout()
+{
+	Arrows.SetLimitMaxSize( GetRebar().GetRebarTheme().ShortBands );
+	Cards.SetLimitMaxSize( GetRebar().GetRebarTheme().ShortBands );
+
+	CFrame::RecalcLayout();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

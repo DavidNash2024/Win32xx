@@ -113,7 +113,7 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	inline CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE), m_bLimitMaxSize(FALSE)
+	inline CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE), m_bLimitMaxSize(TRUE)
 	{
 		ZeroMemory(&m_Theme, sizeof(ThemeToolbar));
 	}

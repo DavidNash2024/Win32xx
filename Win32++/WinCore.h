@@ -609,95 +609,101 @@ namespace Win32xx
 		tString GetDlgItemString(int nIDDlgItem) const;
 		CRect GetWindowRect() const;
 		tString GetWindowString() const;
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
 		LPCTSTR LoadString(UINT nID);
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClass(WNDCLASS& wc);
 		void SetParent(HWND hParent);
 
 
-		BOOL CloseWindow() 
+		BOOL CloseWindow() const
 		{return ::CloseWindow(m_hWnd);}
 
-		BOOL EnableWindow(BOOL bEnable = TRUE)
+		BOOL EnableWindow(BOOL bEnable = TRUE) const
 		{return ::EnableWindow(m_hWnd, bEnable);}
 
-		ULONG_PTR GetClassLongPtr(int nIndex) 
+		ULONG_PTR GetClassLongPtr(int nIndex) const
 		{return ::GetClassLongPtr(m_hWnd, nIndex);}
 
-		LONG_PTR GetWindowLongPtr(int nIndex) 
+		LONG_PTR GetWindowLongPtr(int nIndex) const
 		{return ::GetWindowLongPtr(m_hWnd, nIndex);}
 
-		BOOL GetWindowPlacement(WINDOWPLACEMENT *lpwndpl) 
+		BOOL GetWindowPlacement(WINDOWPLACEMENT *lpwndpl) const
 		{return ::GetWindowPlacement(m_hWnd, lpwndpl);}
 
-		void Invalidate(BOOL bErase = TRUE)
+		void Invalidate(BOOL bErase = TRUE) const
 		{::InvalidateRect(m_hWnd, NULL, bErase);}
 
-		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) 
+		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const
 		{return ::InvalidateRect(m_hWnd, lpRect, bErase);}
 
-		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) 
+		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const
 		{return ::InvalidateRgn(m_hWnd, hRgn, bErase);}
 
-		BOOL IsChild(const CWnd* pWndParent)
+		BOOL IsChild(const CWnd* pWndParent) const
 		{return ::IsChild(pWndParent->GetHwnd(), m_hWnd);}
 
-		BOOL IsIconic()
+		BOOL IsIconic() const
 		{return ::IsIconic(m_hWnd);}
 
-		BOOL IsEnabled()
+		BOOL IsEnabled() const
 		{return ::IsWindowEnabled(m_hWnd);}
 
-		BOOL IsVisible()
+		BOOL IsVisible() const
 		{return ::IsWindowVisible(m_hWnd);}
 
-		BOOL IsZoomed()
+		BOOL IsZoomed() const
 		{return ::IsZoomed(m_hWnd);}
 
-		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE)
+		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const
 		{::MoveWindow(m_hWnd, x, y, nWidth, nHeight, bRepaint = TRUE);}
 
-		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE)
+		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const
 		{::MoveWindow(m_hWnd, rc.left, rc.top, rc.Width(), rc.Height(), bRepaint);}
 
-		BOOL PostMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0)
+		BOOL PostMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0) const
 		{return ::PostMessage(m_hWnd, Msg, wParam, lParam);}
 
-		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE )
+		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const
 		{return ::RedrawWindow(m_hWnd, lpRectUpdate, hRgn, flags);}
 
-		LRESULT SendMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0)
+		LRESULT SendMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0) const
 		{return ::SendMessage(m_hWnd, Msg, wParam, lParam);}
 
-		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong)
+		HWND SetCapture() const
+		{return ::SetCapture(m_hWnd);}
+
+		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const
 		{return ::SetClassLongPtr(m_hWnd, nIndex, dwNewLong);}
+
+		HWND SetFocus() const
+		{return ::SetFocus(m_hWnd);}
 	
-		BOOL SetForegroundWindow()
+		BOOL SetForegroundWindow() const
 		{return ::SetForegroundWindow(m_hWnd);}
 
-		BOOL SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl)
+		BOOL SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl) const
 		{return ::SetWindowPlacement(m_hWnd, lpwndpl);}
 
-		BOOL SetRedraw(BOOL bRedraw = TRUE)
+		BOOL SetRedraw(BOOL bRedraw = TRUE) const
 		{SendMessage(WM_SETREDRAW, (WPARAM)bRedraw, 0);}
 
-		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE)
+		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const
 		{return ::SetWindowRgn(m_hWnd, hRgn, bRedraw);}
 
-		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong)
+		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const
 		{return ::SetWindowLongPtr(m_hWnd, nIndex, dwNewLong);}
 
-		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL)
+		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const
 		{return ::ShowWindow(m_hWnd, nCmdShow);}
 
-		BOOL UpdateWindow()
+		BOOL UpdateWindow() const
 		{return ::UpdateWindow(m_hWnd);}
 
-		BOOL ValidateRect(CRect& rc)
+		BOOL ValidateRect(CRect& rc) const
 		{return ::ValidateRect(m_hWnd, &rc);}
 
-		BOOL ValidateRgn(HRGN hRgn)
+		BOOL ValidateRgn(HRGN hRgn) const
 		{return ::ValidateRgn(m_hWnd, hRgn);} 
 		
 		HWND GetHwnd() const {return m_hWnd;}
@@ -1432,7 +1438,7 @@ namespace Win32xx
 		return String;
 	}
 
-	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName)
+	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
 	{
 		if (0 == GetApp())
 			throw CWinException(_T("LoadBitmap ... Win32++ has not been initialised successfully."));
@@ -1453,7 +1459,7 @@ namespace Win32xx
 		return hBitmap;
 	}
 
-	inline LPCTSTR CWnd::LoadString(UINT nID)
+	inline LPCTSTR CWnd::LoadString(UINT nID) 
 	{
 		// Returns the string associated with a Resource ID
 
