@@ -1,5 +1,5 @@
-// Win32++  Version 6.1
-// Released: 3rd June, 2008 by:
+// Win32++  Version 6.2
+// Released: 4th June, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -678,7 +678,7 @@ namespace Win32xx
 
 		HWND SetFocus() const
 		{return ::SetFocus(m_hWnd);}
-	
+
 		BOOL SetForegroundWindow() const
 		{return ::SetForegroundWindow(m_hWnd);}
 
@@ -704,8 +704,8 @@ namespace Win32xx
 		{return ::ValidateRect(m_hWnd, &rc);}
 
 		BOOL ValidateRgn(HRGN hRgn) const
-		{return ::ValidateRgn(m_hWnd, hRgn);} 
-		
+		{return ::ValidateRgn(m_hWnd, hRgn);}
+
 		HWND GetHwnd() const {return m_hWnd;}
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
@@ -728,7 +728,7 @@ namespace Win32xx
 		BOOL IsMDIChild() const {return FALSE;}
 		HICON SetIconLarge(int nIcon);
 		HICON SetIconSmall(int nIcon);
-		
+
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
@@ -1459,7 +1459,7 @@ namespace Win32xx
 		return hBitmap;
 	}
 
-	inline LPCTSTR CWnd::LoadString(UINT nID) 
+	inline LPCTSTR CWnd::LoadString(UINT nID)
 	{
 		// Returns the string associated with a Resource ID
 

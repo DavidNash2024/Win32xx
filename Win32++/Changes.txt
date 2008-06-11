@@ -7,6 +7,13 @@ The default colour scheme has been changed from blue to grey. The blue,
 olive and silver colour schemes continue to be used on Windows XP with 
 themes enabled. 
 
+New Features
+------------
+* Extended CWnd
+CWnd now includes functions which wrap many of the Win32/Win64 API 
+functions pertaining to windows.
+
+
 
 Version 6.1
 ===========
