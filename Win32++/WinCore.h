@@ -755,10 +755,7 @@ namespace Win32xx
 	//
 	class CWinApp
 	{
-		friend class CWnd;	// CWnd needs access to CWinApp's private members
-	#ifndef _WIN32_WCE
-		friend class CMDIFrame; // Accesses m_hMDIView
-	#endif
+		friend class CWnd;	// CWnd needs access to CWinApp's private member
 
 	public:
 		CWinApp();
@@ -771,7 +768,8 @@ namespace Win32xx
 		// These functions aren't intended to be overridden
 #ifndef _WIN32_WCE
 		CFrame* GetFrame() const {return m_pFrame;}
-		void SetFrame(CFrame* pFrame) { if (0 == m_pFrame) m_pFrame = pFrame; }
+		void SetFrame(CFrame* pFrame)  { m_pFrame = pFrame; }
+		void SetMDIView(HWND hMDIView) { m_hMDIView = hMDIView; }
 #endif
 		DWORD GetTlsIndex() const {return m_TlsIndex;}
 		CWnd* GetCWndFromMap(HWND hWnd);

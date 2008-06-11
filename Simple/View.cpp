@@ -11,7 +11,7 @@ void CView::OnCreate()
 	// OnCreate is called automatically during window creation when a
 	// WM_CREATE message received.
 
-	// Tasks such as setting the icon, creating child windows, or other tasks
+	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
 
 	// Set the window's icon

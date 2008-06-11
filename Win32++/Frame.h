@@ -1345,6 +1345,7 @@ namespace Win32xx
 		if (m_hMenu) ::DestroyMenu(m_hMenu);
 		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
 		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
+		if (GetApp()) GetApp()->SetFrame(0);
 	}
 
 	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)

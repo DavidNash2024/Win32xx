@@ -67,7 +67,7 @@ void CMainMDIFrame::OnCreate()
 	// m_bUseThemes = FALSE;            // Don't use themes
 
 	// call the base class function
-	CFrame::OnCreate();
+	CMDIFrame::OnCreate();
 }
 
 LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -21,7 +21,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View",                   IDM_FILE_NEW
+        MENUITEM "New &View\tCtrl+N",                   IDM_FILE_NEW
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -47,7 +47,7 @@ MDIMENUVIEW MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View",                   IDM_FILE_NEW
+        MENUITEM "New &View\tCtrl+N",                   IDM_FILE_NEW
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
