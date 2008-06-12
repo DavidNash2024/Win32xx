@@ -1267,6 +1267,8 @@ namespace Win32xx
 			// Only one window per CWnd instance allowed
 			if (::IsWindow(m_hWnd))
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
+			else
+				DestroyWindow();
 
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE] = _T("");

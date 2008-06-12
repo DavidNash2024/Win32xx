@@ -87,6 +87,7 @@ namespace Win32xx
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	// Operations
+		virtual HWND Create(HWND hWndParent = 0);
 		void AddBitmap(int iNumButtons, UINT ToolbarID);
 		void DisableButton(int iButtonID) const;
 		void EnableButton(int iButtonID) const;
@@ -128,6 +129,12 @@ namespace Win32xx
 		return (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
 	}
 
+	inline HWND CToolbar::Create(HWND hWndParent)
+	{
+		m_StringMap.clear();
+		return CWnd::Create(hWndParent);
+	}
+
 	inline void CToolbar::AddBitmap(int iNumButtons, UINT ToolbarID)
 	// Adds one or more images to the list of button images available for a toolbar.
 
@@ -142,24 +149,6 @@ namespace Win32xx
 			throw CWinException(_T("CToolbar::AddBitmap  TB_ADDBITMAP failed"));
 
 		m_OldToolbarID = ToolbarID;
-	}
-
-	inline void CToolbar::ReplaceBitmap(int iNumButtons, UINT NewToolbarID)
-	// Replaces an existing bitmap with a new bitmap.
-
-	// Note: ReplaceBitmap supports a maximum colour depth of 8 bits (256 colours)
-	//       For more colours, use an ImageList instead
-	{
-		TBREPLACEBITMAP tbrb = {0};
-		tbrb.hInstNew = GetApp()->GetResourceHandle();
-		tbrb.hInstOld = GetApp()->GetResourceHandle();
-		tbrb.nIDNew = NewToolbarID;
-		tbrb.nIDOld = m_OldToolbarID;
-		tbrb.nButtons  = iNumButtons;
-		if (0 == ::SendMessage(m_hWnd, TB_REPLACEBITMAP, iNumButtons, (LPARAM)&tbrb) )
-			throw CWinException(_T("CToolbar::ReplaceBitmap  TB_REPLACEBITMAP failed"));
-
-		m_OldToolbarID = NewToolbarID;
 	}
 
 	inline void CToolbar::DisableButton(int iButtonID) const
@@ -552,6 +541,24 @@ namespace Win32xx
 		// Sets the CREATESTRUCT parameters prior to window creation
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 		cs.lpszClass = TOOLBARCLASSNAME;
+	}
+
+	inline void CToolbar::ReplaceBitmap(int iNumButtons, UINT NewToolbarID)
+	// Replaces an existing bitmap with a new bitmap.
+
+	// Note: ReplaceBitmap supports a maximum colour depth of 8 bits (256 colours)
+	//       For more colours, use an ImageList instead
+	{
+		TBREPLACEBITMAP tbrb = {0};
+		tbrb.hInstNew = GetApp()->GetResourceHandle();
+		tbrb.hInstOld = GetApp()->GetResourceHandle();
+		tbrb.nIDNew = NewToolbarID;
+		tbrb.nIDOld = m_OldToolbarID;
+		tbrb.nButtons  = iNumButtons;
+		if (0 == ::SendMessage(m_hWnd, TB_REPLACEBITMAP, iNumButtons, (LPARAM)&tbrb) )
+			throw CWinException(_T("CToolbar::ReplaceBitmap  TB_REPLACEBITMAP failed"));
+
+		m_OldToolbarID = NewToolbarID;
 	}
 
 	inline void CToolbar::SetBitmap(int iNumButtons, UINT nID)

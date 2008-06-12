@@ -301,6 +301,7 @@ namespace Win32xx
 		m_bKeyMode		= FALSE;
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
+		m_hPopupMenu	= 0;
 
 		ZeroMemory(&m_ThemeMenu, sizeof(ThemeMenu));
 	}
