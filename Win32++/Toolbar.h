@@ -87,7 +87,6 @@ namespace Win32xx
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	// Operations
-		virtual HWND Create(HWND hWndParent = 0);
 		void AddBitmap(int iNumButtons, UINT ToolbarID);
 		void DisableButton(int iButtonID) const;
 		void EnableButton(int iButtonID) const;
@@ -95,6 +94,7 @@ namespace Win32xx
 
 	protected:
 	// Overridables
+		virtual void Clear();
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
@@ -122,19 +122,6 @@ namespace Win32xx
 	{
 	}
 
-	inline int CToolbar::CommandToIndex(int iButtonID) const
-	// Retrieves the zero-based index for the button associated with the specified command identifier
-	{
-		// returns -1 on fail
-		return (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
-	}
-
-	inline HWND CToolbar::Create(HWND hWndParent)
-	{
-		m_StringMap.clear();
-		return CWnd::Create(hWndParent);
-	}
-
 	inline void CToolbar::AddBitmap(int iNumButtons, UINT ToolbarID)
 	// Adds one or more images to the list of button images available for a toolbar.
 
@@ -150,6 +137,21 @@ namespace Win32xx
 
 		m_OldToolbarID = ToolbarID;
 	}
+
+	inline int CToolbar::CommandToIndex(int iButtonID) const
+	// Retrieves the zero-based index for the button associated with the specified command identifier
+	{
+		// returns -1 on fail
+		return (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
+	}
+
+	inline void CToolbar::Clear()
+	// Allows CToolbar to be reused after the window is destroyed
+	{
+		CWnd::Clear();
+		m_StringMap.clear();
+	}
+
 
 	inline void CToolbar::DisableButton(int iButtonID) const
 	// Disables the specified button in a toolbar

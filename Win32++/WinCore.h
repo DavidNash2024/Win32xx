@@ -600,7 +600,7 @@ namespace Win32xx
 		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		void CenterWindow() const;
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rSize, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		void DestroyWindow();
 		HWND Detach();
 		static CWnd* FromHandle(HWND hWnd);
@@ -614,7 +614,6 @@ namespace Win32xx
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClass(WNDCLASS& wc);
 		void SetParent(HWND hParent);
-
 
 		BOOL CloseWindow() const
 		{return ::CloseWindow(m_hWnd);}
@@ -651,6 +650,9 @@ namespace Win32xx
 
 		BOOL IsVisible() const
 		{return ::IsWindowVisible(m_hWnd);}
+
+		BOOL IsWindow() const
+		{return ::IsWindow(m_hWnd);}
 
 		BOOL IsZoomed() const
 		{return ::IsZoomed(m_hWnd);}
@@ -712,6 +714,7 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
+		virtual void Clear();
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnCreate();
@@ -1115,7 +1118,7 @@ namespace Win32xx
 	{
 		try
 		{
-			if (IsWindow(hWnd))
+			if (IsWindow())
 			{
 				if (0 != GetApp()->GetCWndFromMap(hWnd))
 					throw CWinException(_T("Window already attached to this CWnd object"));
@@ -1194,6 +1197,26 @@ namespace Win32xx
 
 	} // POINT CWnd::CenterWindow()
 
+	inline void CWnd::Clear()
+	// Clears the member variables, allowing the CWnd to be reused.
+	// The window must be destroyed before this function is called.
+	{
+		if (IsWindow())
+			throw CWinException(_T("CWnd::Clear  Window should be destroyed first"));
+
+		if (m_hIconLarge != NULL)
+			::DestroyIcon(m_hIconLarge);	
+
+		if (m_hIconSmall != NULL)
+			::DestroyIcon(m_hIconSmall);
+
+		m_hIconLarge = NULL;
+		m_hIconSmall = NULL;
+		m_hWnd = NULL;
+		m_hWndParent = NULL;
+		m_PrevWindowProc = NULL;
+	}
+
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
 	{
@@ -1247,13 +1270,13 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rSize, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
 	{
-		int x = rSize.left;
-		int y = rSize.top;
-		int nWidth = rSize.right - rSize.left;
-		int nHeight = rSize.bottom - rSize.top;
-		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight, hParent, hMenu, lpParam);
+		int x = rc.left;
+		int y = rc.top;
+		int cx = rc.Width();
+		int cy = rc.Height();
+		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hParent, hMenu, lpParam);
 	}
 
 	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
@@ -1267,8 +1290,9 @@ namespace Win32xx
 			// Only one window per CWnd instance allowed
 			if (::IsWindow(m_hWnd))
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
-			else
-				DestroyWindow();
+			
+			// Allow the CWnd to be reused
+			Clear();
 
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE] = _T("");
@@ -1338,20 +1362,8 @@ namespace Win32xx
 
 	inline void CWnd::DestroyWindow()
 	{
-		if (m_hIconLarge != NULL)
-			::DestroyIcon(m_hIconLarge);
-		m_hIconLarge = NULL;
-
-		if (m_hIconSmall != NULL)
-			::DestroyIcon(m_hIconSmall);
-		m_hIconSmall = NULL;
-
-		if (::IsWindow(m_hWnd))
-			::DestroyWindow(m_hWnd);
-
-		m_hWnd = NULL;
-		m_hWndParent = NULL;
-		m_PrevWindowProc = NULL;
+		::DestroyWindow(m_hWnd);
+		Clear();
 	}
 
 	inline HWND CWnd::Detach()

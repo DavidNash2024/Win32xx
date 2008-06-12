@@ -251,7 +251,7 @@ namespace Win32xx
 		// A modal dialog box must be closed by the user before the application continues
 		try
 		{
-			if (IsWindow(m_hWnd))
+			if (IsWindow())
 				throw CWinException(_T("CDialog::DoModal ... Window already exists"));
 
 			IsModal=TRUE;
@@ -297,7 +297,7 @@ namespace Win32xx
 		// Modeless dialog
 		try
 		{
-			if (IsWindow(m_hWnd))
+			if (IsWindow())
 				throw CWinException(_T("CDialog::DoModeless ... Window already exists"));
 
 			IsModal=FALSE;
