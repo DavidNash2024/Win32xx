@@ -361,6 +361,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Win32++\Rebar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Win32++\Statusbar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Win32++\Toolbar.h"
 				>
 			</File>

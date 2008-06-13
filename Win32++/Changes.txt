@@ -11,7 +11,40 @@ New Features
 ------------
 * Extended CWnd
 CWnd now includes functions which wrap many of the Win32/Win64 API 
-functions pertaining to windows.
+functions pertaining to windows. The new functions added are:
+ Close Window
+ EnableWindow
+ GetClassLongPtr 
+ GetWindowLongPtr
+ GetWindowPlacement
+ Invalidate
+ InvalidateRect
+ InvalidateRgn
+ IsChild
+ IsIconic
+ IsEnabled 
+ IsWindow
+ IsVisible
+ IsWindow
+ IsZoomed
+ MoveWindow
+ MoveWindow
+ PostMessage
+ RedrawWindow
+ SendMessage
+ SetCapture
+ SetClassLongPtr
+ SetFocus
+ SetForegroundWindow
+ SetWindowPlacement
+ SetRedraw
+ SetWindowRgn
+ SetWindowLongPtr
+ ShowWindow
+ UpdateWindow
+ ValidateRect
+ ValidateRgn
+
 
 
 
