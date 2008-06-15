@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib advapi32.lib"
 				OutputFile=".\Debug/PropertySheet.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -170,7 +170,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib advapi32.lib"
 				OutputFile=".\Release/PropertySheet.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

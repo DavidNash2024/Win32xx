@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib advapi32.lib"
 				OutputFile=".\Release/Splitter.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -166,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib advapi32.lib"
 				OutputFile=".\Debug/Splitter.exe"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

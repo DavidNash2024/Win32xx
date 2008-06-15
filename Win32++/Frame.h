@@ -1830,20 +1830,20 @@ namespace Win32xx
 				DWORD dwLeft = max(rc.left, 0);
 				DWORD dwWidth = max(rc.Width(), 100);
 				DWORD dwHeight = max(rc.Height(), 50);
-				
+
 				if (RegCreateKeyEx(HKEY_CURRENT_USER, KeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
-				
-				if (RegSetValueEx(hKey, _T("Top"), NULL, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
+
+				if (RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
-				
-				if (RegSetValueEx(hKey, _T("Left"), NULL, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
+
+				if (RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
-				
-				if (RegSetValueEx(hKey, _T("Width"), NULL, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
+
+				if (RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
-				
-				if (RegSetValueEx(hKey, _T("Height"), NULL, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
+
+				if (RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
 
 				RegCloseKey(hKey);
@@ -2362,7 +2362,7 @@ namespace Win32xx
 		{
 			tString KeyString = _T("Software\\") + m_KeyName;
 			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, KeyString.c_str(), 0, KEY_READ, &hKey); 
+			RegOpenKeyEx(HKEY_CURRENT_USER, KeyString.c_str(), 0, KEY_READ, &hKey);
 			if (hKey)
 			{
 				DWORD dwType = REG_BINARY;
@@ -2375,13 +2375,13 @@ namespace Win32xx
 
 				// Get current desktop size to ensure reasonable a window position
 				CRect rcDesktop;
-				SystemParametersInfo(SPI_GETWORKAREA, NULL, &rcDesktop, NULL); 
-				
+				SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
+
 				cs.y = min(dwTop, (UINT)rcDesktop.bottom - 30);
 				cs.x = min(dwLeft, (UINT)rcDesktop.right - 90);
 				cs.cx = dwWidth;
 				cs.cy = dwHeight;
-				
+
 				RegCloseKey(hKey);
 			}
 		}

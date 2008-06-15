@@ -75,6 +75,7 @@
 					<Add library="comctl32" />
 					<Add library="ole32" />
 					<Add library="shell32" />
+					<Add library="Advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -104,6 +105,7 @@
 					<Add library="user32" />
 					<Add library="ole32" />
 					<Add library="shell32" />
+					<Add library="Advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>

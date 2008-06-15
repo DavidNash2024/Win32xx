@@ -71,6 +71,7 @@
 					<Add library="user32" />
 					<Add library="kernel32" />
 					<Add library="comctl32" />
+					<Add library="advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -98,6 +99,7 @@
 					<Add library="kernel32" />
 					<Add library="user32" />
 					<Add library="comctl32" />
+					<Add library="advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>

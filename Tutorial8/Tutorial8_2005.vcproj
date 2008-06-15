@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib advapi32.lib"
 				OutputFile=".\Debug/Tutorial8.exe"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib advapi32.lib"
 				OutputFile=".\Release/Tutorial8.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

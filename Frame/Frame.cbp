@@ -71,6 +71,7 @@
 					<Add library="Gdi32" />
 					<Add library="User32" />
 					<Add library="Kernel32" />
+					<Add library="Advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -98,6 +99,7 @@
 					<Add library="Gdi32" />
 					<Add library="Kernel32" />
 					<Add library="User32" />
+					<Add library="Advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>

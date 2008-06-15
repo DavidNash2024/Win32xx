@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib Advapi32.lib"
 				OutputFile=".\Debug/Scribble.exe"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib Advapi32.lib"
 				OutputFile=".\Release/Scribble.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

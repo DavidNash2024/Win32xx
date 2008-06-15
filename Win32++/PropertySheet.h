@@ -267,7 +267,7 @@ namespace Win32xx
 		// Override this function in your derived class if required.
 
 		// Set the return value for this notification
-		SetWindowLongPtr(m_hWnd, DWLP_MSGRESULT, Validate());
+		SetWindowLongPtr(DWLP_MSGRESULT, Validate());
 	}
 
 	inline void CPropertyPage::OnCancel()
@@ -309,7 +309,7 @@ namespace Win32xx
 		// It provides an opportunity to validate the page contents before it's closed.
 
 		// Set the return value for this notification
-		SetWindowLongPtr(m_hWnd, DWLP_MSGRESULT, Validate());
+		SetWindowLongPtr(DWLP_MSGRESULT, Validate());
 
 	}
 
@@ -319,7 +319,7 @@ namespace Win32xx
 		// Override this function in your derived class if required.
 
 		// Set the return value for this notification
-		SetWindowLongPtr(m_hWnd, DWLP_MSGRESULT, Validate());
+		SetWindowLongPtr(DWLP_MSGRESULT, Validate());
 	}
 
 	inline void CPropertyPage::OnSetActive()

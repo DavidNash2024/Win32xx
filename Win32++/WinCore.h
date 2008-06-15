@@ -629,24 +629,28 @@ namespace Win32xx
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const;
-		BOOL PostMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0) const;
+		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
+		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const
+		{return ::PostMessage(hWnd, uMsg, wParam, lParam);}
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
-		LRESULT SendMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0) const;
+		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
+		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+		{ return ::SendMessage(hWnd, uMsg, wParam, lParam);}
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
 		void SetParent(HWND hParent);
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
-		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;	
+		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl) const;
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
 		BOOL ValidateRect(CRect& rc) const;
 		BOOL ValidateRgn(HRGN hRgn) const;
-		
+
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
 
@@ -1146,7 +1150,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::CloseWindow() const
-	// The CloseWindow function minimizes (but does not destroy) the window. 
+	// The CloseWindow function minimizes (but does not destroy) the window.
 	// To destroy a window, an application must use the DestroyWindow function.
 	{
 		return ::CloseWindow(m_hWnd);
@@ -1317,7 +1321,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::EnableWindow(BOOL bEnable /*= TRUE*/) const
-	// The EnableWindow function enables or disables mouse and 
+	// The EnableWindow function enables or disables mouse and
 	// keyboard input to the window.
 	{
 		return ::EnableWindow(m_hWnd, bEnable);
@@ -1343,7 +1347,7 @@ namespace Win32xx
 	}
 
 	inline ULONG_PTR CWnd::GetClassLongPtr(int nIndex) const
-	// The GetClassLongPtr function retrieves the specified value from the 
+	// The GetClassLongPtr function retrieves the specified value from the
 	// WNDCLASSEX structure associated with the window.
 	{
 		return ::GetClassLongPtr(m_hWnd, nIndex);
@@ -1378,8 +1382,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::GetWindowPlacement(WINDOWPLACEMENT *lpwndpl) const
-	// The GetWindowPlacement function retrieves the show state and the restored, 
-	// minimized, and maximized positions of the window. 
+	// The GetWindowPlacement function retrieves the show state and the restored,
+	// minimized, and maximized positions of the window.
 	{
 		return ::GetWindowPlacement(m_hWnd, lpwndpl);
 	}
@@ -1408,56 +1412,56 @@ namespace Win32xx
 	}
 
 	inline void CWnd::Invalidate(BOOL bErase /*= TRUE*/) const
-	// The Invalidate function adds the entire client area the window's update region. 
-	// The update region represents the portion of the window's client area that must be redrawn. 
+	// The Invalidate function adds the entire client area the window's update region.
+	// The update region represents the portion of the window's client area that must be redrawn.
 	{
 		::InvalidateRect(m_hWnd, NULL, bErase);
 	}
 
 	inline BOOL CWnd::InvalidateRect(CONST RECT* lpRect, BOOL bErase /*= TRUE*/) const
-	// The InvalidateRect function adds a rectangle to the window's update region. 
-	// The update region represents the portion of the window's client area that must be redrawn. 
+	// The InvalidateRect function adds a rectangle to the window's update region.
+	// The update region represents the portion of the window's client area that must be redrawn.
 	{
 		return ::InvalidateRect(m_hWnd, lpRect, bErase);
 	}
 
 	inline BOOL CWnd::InvalidateRgn(CONST HRGN hRgn, BOOL bErase /*= TRUE*/) const
-	// The InvalidateRgn function invalidates the client area within the specified region 
-	// by adding it to the current update region of a window. The invalidated region, 
-	// along with all other areas in the update region, is marked for painting when the 
+	// The InvalidateRgn function invalidates the client area within the specified region
+	// by adding it to the current update region of a window. The invalidated region,
+	// along with all other areas in the update region, is marked for painting when the
 	// next WM_PAINT message occurs.
 	{
 		return ::InvalidateRgn(m_hWnd, hRgn, bErase);
 	}
 
 	inline BOOL CWnd::IsChild(const CWnd* pWndParent) const
-	// The IsChild function tests whether a window is a child window or descendant window 
+	// The IsChild function tests whether a window is a child window or descendant window
 	// of a parent window's CWnd.
 	{
 		return ::IsChild(pWndParent->GetHwnd(), m_hWnd);
 	}
 
 	inline BOOL CWnd::IsEnabled() const
-	// The IsEnabled function determines whether the window is enabled 
+	// The IsEnabled function determines whether the window is enabled
 	// for mouse and keyboard input.
 	{
 		return ::IsWindowEnabled(m_hWnd);
 	}
 
 	inline BOOL CWnd::IsIconic() const
-	// The IsIconic function determines whether the window is minimized (iconic). 
+	// The IsIconic function determines whether the window is minimized (iconic).
 	{
 		return ::IsIconic(m_hWnd);
 	}
 
 	inline BOOL CWnd::IsVisible() const
-	// The IsVisible function retrieves the visibility state of the window. 
+	// The IsVisible function retrieves the visibility state of the window.
 	{
 		return ::IsWindowVisible(m_hWnd);
 	}
 
 	inline BOOL CWnd::IsWindow() const
-	// The IsWindow function determines whether the window exists. 
+	// The IsWindow function determines whether the window exists.
 	{
 		return ::IsWindow(m_hWnd);
 	}
@@ -1667,12 +1671,12 @@ namespace Win32xx
 		// Override this function in your derived class to perform drawing tasks.
 	}
 
-	inline BOOL CWnd::PostMessage(UINT Msg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
-	// The PostMessage function places (posts) a message in the message queue 
-	// associated with the thread that created the window and returns without 
+	inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
+	// The PostMessage function places (posts) a message in the message queue
+	// associated with the thread that created the window and returns without
 	// waiting for the thread to process the message.
 	{
-		return ::PostMessage(m_hWnd, Msg, wParam, lParam);
+		return ::PostMessage(m_hWnd, uMsg, wParam, lParam);
 	}
 
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
@@ -1717,7 +1721,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::RedrawWindow(CRect* lpRectUpdate, HRGN hRgn, UINT flags) const
-	// The RedrawWindow function updates the specified rectangle or region in a window's client area. 
+	// The RedrawWindow function updates the specified rectangle or region in a window's client area.
 	{
 		return ::RedrawWindow(m_hWnd, lpRectUpdate, hRgn, flags);
 	}
@@ -1776,30 +1780,30 @@ namespace Win32xx
 				}
 			}
 
-			GetApp()->m_MapLock.Release();	
+			GetApp()->m_MapLock.Release();
 		}
 		return FALSE;
 	}
 
-	inline LRESULT CWnd::SendMessage(UINT Msg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
-	// The SendMessage function sends the specified message to a window or windows. 
-	// It calls the window procedure for the window and does not return until the 
+	inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
+	// The SendMessage function sends the specified message to a window or windows.
+	// It calls the window procedure for the window and does not return until the
 	// window procedure has processed the message.
 	{
-		return ::SendMessage(m_hWnd, Msg, wParam, lParam);
+		return ::SendMessage(m_hWnd, uMsg, wParam, lParam);
 	}
 
 	inline HWND CWnd::SetCapture() const
-	// The SetCapture function sets the mouse capture to the window. 
-	// SetCapture captures mouse input either when the mouse is over the capturing 
-	// window, or when the mouse button was pressed while the mouse was over the 
+	// The SetCapture function sets the mouse capture to the window.
+	// SetCapture captures mouse input either when the mouse is over the capturing
+	// window, or when the mouse button was pressed while the mouse was over the
 	// capturing window and the button is still down.
 	{
 		return ::SetCapture(m_hWnd);
 	}
 
 	inline ULONG_PTR CWnd::SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const
-	// The SetClassLongPtr function replaces the specified value at the specified offset in the 
+	// The SetClassLongPtr function replaces the specified value at the specified offset in the
 	// extra class memory or the WNDCLASSEX structure for the class to which the window belongs.
 	{
 		return ::SetClassLongPtr(m_hWnd, nIndex, dwNewLong);
@@ -1812,8 +1816,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetForegroundWindow() const
-	// The SetForegroundWindow function puts the thread that created the window into the 
-	// foreground and activates the window. 
+	// The SetForegroundWindow function puts the thread that created the window into the
+	// foreground and activates the window.
 	{
 		return ::SetForegroundWindow(m_hWnd);
 	}
@@ -1850,8 +1854,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetRedraw(BOOL bRedraw /*= TRUE*/) const
-	//  This function allows changes in that window to be redrawn or prevents changes 
-	// in that window from being redrawn. 
+	//  This function allows changes in that window to be redrawn or prevents changes
+	// in that window from being redrawn.
 	{
 		return ::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0);
 	}
@@ -1863,14 +1867,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl) const
-	// The SetWindowPlacement function sets the show state and the restored, minimized, 
-	// and maximized positions of the window. 
+	// The SetWindowPlacement function sets the show state and the restored, minimized,
+	// and maximized positions of the window.
 	{
 		return ::SetWindowPlacement(m_hWnd, lpwndpl);
 	}
 
 	inline int CWnd::SetWindowRgn(HRGN hRgn, BOOL bRedraw /*= TRUE*/) const
-	// The SetWindowRgn function sets the window region of the window. 
+	// The SetWindowRgn function sets the window region of the window.
 	// The window region determines the area within the window where the system permits drawing.
 	{
 		return ::SetWindowRgn(m_hWnd, hRgn, bRedraw);
@@ -1883,23 +1887,23 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::UpdateWindow() const
-	// The UpdateWindow function updates the client area of the window by sending a 
-	// WM_PAINT message to the window if the window's update region is not empty. 
-	// If the update region is empty, no message is sent. 
+	// The UpdateWindow function updates the client area of the window by sending a
+	// WM_PAINT message to the window if the window's update region is not empty.
+	// If the update region is empty, no message is sent.
 	{
 		return ::UpdateWindow(m_hWnd);
 	}
 
 	inline BOOL CWnd::ValidateRect(CRect& rc) const
-	// The ValidateRect function validates the client area within a rectangle by 
+	// The ValidateRect function validates the client area within a rectangle by
 	// removing the rectangle from the update region of the window.
 	{
 		return ::ValidateRect(m_hWnd, &rc);
 	}
 
 	inline BOOL CWnd::ValidateRgn(HRGN hRgn) const
-	// The ValidateRgn function validates the client area within a region by 
-	// removing the region from the current update region of the window. 
+	// The ValidateRgn function validates the client area within a region by
+	// removing the region from the current update region of the window.
 	{
 		return ::ValidateRgn(m_hWnd, hRgn);
 	}

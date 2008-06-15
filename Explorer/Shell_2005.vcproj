@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib Advapi32.lib"
 				OutputFile=".\Release/Shell.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -169,7 +169,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib Advapi32.lib"
 				OutputFile=".\Debug/Shell.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"

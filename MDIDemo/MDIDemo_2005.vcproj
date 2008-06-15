@@ -72,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Advapi32.lib"
 				OutputFile=".\Release/MDIDemo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Advapi32.lib"
 				OutputFile=".\Debug/MDIDemo.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
