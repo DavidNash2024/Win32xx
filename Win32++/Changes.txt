@@ -9,6 +9,12 @@ themes enabled.
 
 New Features
 ------------
+* Frame applications now store the window size and position in the registry.
+To enable this, set the m_KeyName member variable in CMainFrame's constructor.
+This member variable can be used to reflect the company name and application name,
+for example:
+  m_KeyName = _T("SomeCompany\\SomeApp");
+
 * Extended CWnd
 CWnd now includes functions which wrap many of the Win32/Win64 API 
 functions pertaining to windows. The new functions added are:

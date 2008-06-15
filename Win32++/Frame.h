@@ -224,6 +224,7 @@ namespace Win32xx
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
+		virtual void OnClose();
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
@@ -265,6 +266,7 @@ namespace Win32xx
 		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
+		tString m_KeyName;					// a TCHAR std::string for Registry key name
 		tString m_StatusText;				// a TCHAR std::string for status text
 		ThemeMenu m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
@@ -1811,6 +1813,44 @@ namespace Win32xx
 		}
 	}
 
+	inline void CFrame::OnClose()
+	{
+		// Store the window position in the registry
+		if (!m_KeyName.empty())
+		{
+			WINDOWPLACEMENT Wndpl = {0};
+			Wndpl.length = sizeof(WINDOWPLACEMENT);
+			if (GetWindowPlacement(&Wndpl))
+			{
+				// Get the Frame's window position
+				CRect rc = Wndpl.rcNormalPosition;
+				tString KeyName = _T("Software\\") + m_KeyName;
+				HKEY hKey = NULL;
+				DWORD dwTop = max(rc.top, 0);
+				DWORD dwLeft = max(rc.left, 0);
+				DWORD dwWidth = max(rc.Width(), 100);
+				DWORD dwHeight = max(rc.Height(), 50);
+				
+				if (RegCreateKeyEx(HKEY_CURRENT_USER, KeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
+				
+				if (RegSetValueEx(hKey, _T("Top"), NULL, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+				
+				if (RegSetValueEx(hKey, _T("Left"), NULL, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+				
+				if (RegSetValueEx(hKey, _T("Width"), NULL, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+				
+				if (RegSetValueEx(hKey, _T("Height"), NULL, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+
+				RegCloseKey(hKey);
+			}
+		}
+	}
+
 	inline BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		// Handle the View Statusbar and Toolbar menu items
@@ -2316,6 +2356,35 @@ namespace Win32xx
 
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
+
+		// Retrieve the previous window position from the registry
+		if (!m_KeyName.empty())
+		{
+			tString KeyString = _T("Software\\") + m_KeyName;
+			HKEY hKey = 0;
+			RegOpenKeyEx(HKEY_CURRENT_USER, KeyString.c_str(), 0, KEY_READ, &hKey); 
+			if (hKey)
+			{
+				DWORD dwType = REG_BINARY;
+				DWORD BufferSize = sizeof(DWORD);
+				DWORD dwTop, dwLeft, dwWidth, dwHeight;
+				RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
+				RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
+				RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
+				RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
+
+				// Get current desktop size to ensure reasonable a window position
+				CRect rcDesktop;
+				SystemParametersInfo(SPI_GETWORKAREA, NULL, &rcDesktop, NULL); 
+				
+				cs.y = min(dwTop, (UINT)rcDesktop.bottom - 30);
+				cs.x = min(dwLeft, (UINT)rcDesktop.right - 90);
+				cs.cx = dwWidth;
+				cs.cy = dwHeight;
+				
+				RegCloseKey(hKey);
+			}
+		}
 	}
 
 	inline void CFrame::RecalcLayout()
@@ -2720,6 +2789,9 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
+		case WM_CLOSE:
+			OnClose();
+			break;
 		case WM_DESTROY:
 			::SetMenu(m_hWnd, NULL);
 			::KillTimer(m_hWnd, ID_STATUS_TIMER);

@@ -27,6 +27,10 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	// Comment the line below to disable storing the window position in the registry
+	// Adjust the Company and Application name as appropriate
+	m_KeyName = _T("SomeCompany\\SomeApp");
 }
 
 CMainFrame::~CMainFrame()
@@ -63,7 +67,7 @@ void CMainFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
 	// m_bUseThemes = FALSE;            // Don't use themes
-
+	
 	// call the base class function
 	CFrame::OnCreate();
 }
