@@ -28,6 +28,9 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_PEN_BLACK  );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	// Set the name of the registry key
+	m_KeyName = _T("Win32++\\Scribble Sample");
 }
 
 CMainFrame::~CMainFrame()

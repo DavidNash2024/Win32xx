@@ -21,6 +21,9 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_STOP );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HOME );
+
+	// Set the name of the registry key
+	m_KeyName = _T("Win32++\\Browser Sample");
 }
 
 CMainFrame::~CMainFrame()

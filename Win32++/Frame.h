@@ -224,7 +224,7 @@ namespace Win32xx
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
-		virtual void OnClose();
+		virtual void OnCloseFrame();
 		virtual void OnCreate();
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
@@ -1813,7 +1813,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::OnClose()
+	inline void CFrame::OnCloseFrame()
 	{
 		// Store the window position in the registry
 		if (!m_KeyName.empty())
@@ -2790,7 +2790,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_CLOSE:
-			OnClose();
+			OnCloseFrame();
 			break;
 		case WM_DESTROY:
 			::SetMenu(m_hWnd, NULL);

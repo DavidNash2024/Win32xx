@@ -645,7 +645,7 @@ namespace Win32xx
 	// Ensures that a list-view item is either entirely or partially visible,
 	// scrolling the list-view control if necessary.
 	{
-		return SendMessage( m_hWnd, LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK );
+		return SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK );
 	}
 
 	inline int CListView::FindItem( LVFINDINFO& FindInfo, int iStart /*= -1*/ ) const

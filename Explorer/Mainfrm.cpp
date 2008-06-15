@@ -25,6 +25,10 @@ CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 	m_ToolbarData.push_back ( IDM_VIEWMENU);
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	
+	// Set the name of the registry key
+	m_KeyName = _T("Win32++\\Explorer Sample");
 }
 
 CMainFrame::~CMainFrame()
@@ -141,13 +145,13 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 			if (GetMainView().GetOldFocus() == GetTreeView())
 			{
 				// Set ListView focus
-				SetFocus(GetListView());
+				GetListView().SetFocus();
 				int item =  max(0, GetListView().GetNextItem( -1, LVNI_ALL | LVNI_FOCUSED ));
 				GetListView().SetItemState( item, LVIS_SELECTED, LVIS_SELECTED );
 			}
 			else
 				// Set TreeView focus
-				SetFocus( GetTreeView() );
+				GetTreeView().SetFocus();
 		}
 		return TRUE;
 	} // switch cmd
@@ -188,7 +192,7 @@ void CMainFrame::OnSetFocus()
 
 	// Pass the focus back to the control that had it before
 	if (m_MainView.GetOldFocus())
-		SetFocus(m_MainView.GetOldFocus());
+		::SetFocus(m_MainView.GetOldFocus());
 }
 
 void CMainFrame::SetButtons()

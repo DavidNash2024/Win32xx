@@ -31,6 +31,9 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	// Set the name of the registry key
+	m_KeyName = _T("Win32++\\Notepad Sample");
 }
 
 CMainFrame::~CMainFrame()
@@ -106,7 +109,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnHelp();
 		return TRUE;
 	} // switch cmd
-	
+
 	return FALSE;
 } // CMainFrame::OnCommand(...)
 
@@ -351,7 +354,7 @@ void CMainFrame::OnFileOpen()
 		// For older operating systems
 		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
 	}
-	
+
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
@@ -392,7 +395,7 @@ void CMainFrame::OnFileSaveAs()
 		// For older operating systems
 		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
 	}
-	
+
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
@@ -439,7 +442,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		::InvalidateRect(m_RichView.GetHwnd(), NULL, TRUE);
 		break;
 	}
-	
+
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

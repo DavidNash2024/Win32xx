@@ -22,6 +22,10 @@ CMainMDIFrame::CMainMDIFrame()
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	// Comment the line below to disable storing the window position in the registry
+	// Adjust the Company and Application name as appropriate
+	m_KeyName = _T("Win32++\\MDI Frame");
 }
 
 CMainMDIFrame::~CMainMDIFrame()

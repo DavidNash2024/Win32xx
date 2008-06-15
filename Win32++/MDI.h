@@ -116,12 +116,12 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual void OnClose();
 		virtual void OnWindowPosChanged();
 		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
 		virtual void AddMDIChild(CMDIChild* pMDIChild);
+		virtual void OnCloseFrame();
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -288,7 +288,7 @@ namespace Win32xx
 			break;
 		default:    // Pass to active child...
 			{
-				if (IsWindow (GetActiveMDIChild()))
+				if (GetActiveMDIChildCWnd()->IsWindow())
 					::SendMessage(GetActiveMDIChild(), WM_COMMAND, wParam, lParam);
 			}
 			break ;
@@ -296,10 +296,11 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline void CMDIFrame::OnClose()
+	inline void CMDIFrame::OnCloseFrame()
 	{
+		CFrame::OnCloseFrame();
 		if (RemoveAllMDIChildren())
-			::DestroyWindow(m_hWnd);
+			::DestroyWindow(m_hWnd);		
 	}
 
 	inline void CMDIFrame::OnWindowPosChanged()
@@ -389,7 +390,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_CLOSE:
-			OnClose();
+			OnCloseFrame();
 			return 0;
 
 		case WM_WINDOWPOSCHANGED:
@@ -473,7 +474,7 @@ namespace Win32xx
 
 	inline CMDIChild::~CMDIChild()
 	{
-		if (IsWindow(m_hWnd))
+		if (IsWindow())
 			::SendMessage(m_hWndParent, WM_MDIDESTROY, (WPARAM)m_hWnd, 0);
 
 		if (m_hChildMenu)

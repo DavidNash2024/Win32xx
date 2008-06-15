@@ -27,6 +27,9 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	// Set the name of the registry key
+	m_KeyName = _T("Win32++\\Themes Sample");
 }
 
 CMainFrame::~CMainFrame()
@@ -98,16 +101,16 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-	
+
 	CToolbar& TB = GetToolbar();
 	SetToolbarImages(TB, 8, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Resize the Rebar band
 	if (IsRebarUsed())
-	{	
+	{
 		// Set the icons for popup menu items
 		SetMenuIcons(m_ToolbarData, RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
-		
+
 		//Set our theme
 		ChooseTheme(IDM_BLUE);
 
@@ -117,7 +120,7 @@ void CMainFrame::OnCreate()
 		ArrowsData.push_back(IDM_ARROW_RIGHT);
 		AddToolbarBand(Arrows);
 		int iButtons = Arrows.SetButtons(ArrowsData);
-		SetToolbarImages(Arrows, iButtons, RGB(255,0,255), IDB_ARROWS, 0, 0);	
+		SetToolbarImages(Arrows, iButtons, RGB(255,0,255), IDB_ARROWS, 0, 0);
 
 		// Add the Cards toolbar
 		std::vector<UINT> CardsData;
@@ -166,7 +169,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		{
 			ThemeRebar tr = {0};
 			RB.SetRebarTheme(tr);
-			
+
 			ThemeToolbar tt = {0};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
@@ -179,9 +182,9 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_NONE, 0);
 		}
 		break;
-	
+
 	case IDM_BLUE:	// ICY_BLUE Theme
-		{			
+		{
 			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, F, F};
 			RB.SetRebarTheme(tr);
 
@@ -199,7 +202,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		break;
 
 	case IDM_BLUE_LOCKED:	// ICY_BLUE Theme
-		{			
+		{
 			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 			RB.SetRebarTheme(tr);
 
@@ -229,7 +232,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-			
+
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE_BKGND, 0);
 		}
 		break;
@@ -253,7 +256,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		break;
 
 	case IDM_GREY:	// Grey Theme
-		{			
+		{
 			ThemeRebar tr = {T, RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172), F, T, T, T, T, F};
 			RB.SetRebarTheme(tr);
 
@@ -261,7 +264,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
-	
+
 			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
 			MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
@@ -271,7 +274,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		break;
 
 	case IDM_OLIVE:
-		{			
+		{
 			ThemeRebar tr = {T, RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78), F, T, T, T, T, F};
 			RB.SetRebarTheme(tr);
 
@@ -289,7 +292,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		break;
 
 	case IDM_GOLD:
-		{			
+		{
 			ThemeRebar tr = {T, RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50), F, T, T, T, T, F};
 			RB.SetRebarTheme(tr);
 
@@ -307,7 +310,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		break;
 
 	case IDM_OCHRE:
-		{			
+		{
 			ThemeRebar tr = {T, RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6), F, T, T, T, T, F};
 			RB.SetRebarTheme(tr);
 
@@ -324,7 +327,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		}
 		break;
 	case IDM_PINK:
-		{			
+		{
 			ThemeRebar tr = {T, RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170), F, T, T, T, T, F};
 			RB.SetRebarTheme(tr);
 
@@ -341,7 +344,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		}
 		break;
 	case IDM_MAUVE:
-		{			
+		{
 			ThemeRebar tr = {T, RGB(210, 128, 155), RGB(230, 160, 190), RGB(230, 158, 188), RGB(110, 100, 125), F, T, T, T, T, F};
 			RB.SetRebarTheme(tr);
 

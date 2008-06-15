@@ -27,6 +27,9 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	// Set the name of the registry key
+	m_KeyName = _T("Win32++\\Picture Sample");
 }
 
 CMainFrame::~CMainFrame()
@@ -37,7 +40,7 @@ CMainFrame::~CMainFrame()
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	// OnCommand responds to menu and and toolbar input
-	
+
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
@@ -75,7 +78,7 @@ void CMainFrame::OnCreate()
 	// Disable some of the toolbar buttons
 	TB.DisableButton(IDM_EDIT_CUT);
 	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE); 
+	TB.DisableButton(IDM_EDIT_PASTE);
 	TB.DisableButton(IDM_FILE_PRINT);
 
 	if (IsRebarUsed())
@@ -89,10 +92,10 @@ void CMainFrame::OnFileNew()
 {
 	if (m_View.m_pPicture)
 		m_View.m_pPicture->Release();
-	
+
 	// Set a default title
 	::SetWindowText(m_hWnd, LoadString(IDW_MAIN));
-	
+
 	m_View.m_pPicture = NULL;
 	::InvalidateRect(m_View.GetHwnd(), NULL, TRUE);
 }
@@ -116,16 +119,16 @@ void CMainFrame::OnFileOpen()
 void CMainFrame::OnFileSave()
 {
 	TCHAR szFile[MAX_STRING_SIZE];
-	szFile[0] = '\0'; 
+	szFile[0] = '\0';
 
 	OPENFILENAME Ofn = {0};
-	::GetSaveFileName(&Ofn); 
-	Ofn.lStructSize = sizeof(OPENFILENAME); 
-	Ofn.lpstrFilter = _T("*.bmp\0"); 
-	Ofn.lpstrFile= szFile; 
-	Ofn.nMaxFile = MAX_STRING_SIZE; 
+	::GetSaveFileName(&Ofn);
+	Ofn.lStructSize = sizeof(OPENFILENAME);
+	Ofn.lpstrFilter = _T("*.bmp\0");
+	Ofn.lpstrFile= szFile;
+	Ofn.nMaxFile = MAX_STRING_SIZE;
 	Ofn.lpstrDefExt = _T("bmp");
-	Ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT; 
+	Ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
 
 	if (GetSaveFileName(&Ofn))
 	{
@@ -142,7 +145,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 
 	CFrame::PreCreate(cs);
 }
-					
+
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)

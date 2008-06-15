@@ -24,6 +24,9 @@ CMainMDIFrame::CMainMDIFrame()
 	m_ToolbarData.push_back ( IDM_FILE_PRINT );
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+
+	// Set the name of the registry key
+	m_KeyName = _T("Win32++\\MDI Frame Demo");
 }
 
 CMainMDIFrame::~CMainMDIFrame()

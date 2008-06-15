@@ -303,7 +303,7 @@ namespace Win32xx
 			::SetWindowPos(m_pPane1->GetHwnd(), NULL, 0, m_nBarPos - w2 + m_nWidth, cx, cy - m_nBarPos - m_nWidth + w2, SWP_SHOWWINDOW );
 			::SetWindowPos(m_Bar, NULL, 0, m_nBarPos - w2, cx, m_nWidth , SWP_SHOWWINDOW );
 		}
-		InvalidateRect(m_Bar, NULL, TRUE);
+		InvalidateRect(NULL, TRUE);
 	}
 
 	inline void CSplitter::SetBarPos(int nBarPos)
@@ -338,7 +338,7 @@ namespace Win32xx
 
 		if (0 != m_Bar.GetHwnd())
 		{
-			SetClassLongPtr(m_Bar.GetHwnd(), GCLP_HBRBACKGROUND, (LONG_PTR)m_hbrBackground);
+			m_Bar.SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_hbrBackground);
 		}
 	}
 
