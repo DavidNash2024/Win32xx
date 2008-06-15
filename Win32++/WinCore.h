@@ -630,13 +630,9 @@ namespace Win32xx
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const;
 		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
-		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const
-		{return ::PostMessage(hWnd, uMsg, wParam, lParam);}
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
-		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
-		{ return ::SendMessage(hWnd, uMsg, wParam, lParam);}
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		HWND SetFocus() const;
@@ -653,6 +649,12 @@ namespace Win32xx
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
+
+		// Required by some macros
+		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const
+			{return ::PostMessage(hWnd, uMsg, wParam, lParam);}
+		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+			{ return ::SendMessage(hWnd, uMsg, wParam, lParam);}
 
 	protected:
 		// These are the functions you might wish to override
