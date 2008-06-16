@@ -169,7 +169,7 @@ namespace Win32xx
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
-		if (!hDC) throw CWinException(_T("Can't attach a NULL hDC"));
+		if (!hDC) throw CWinException(_T("Can't assign a NULL hDC"));
 
 		m_hDC = hDC;
 

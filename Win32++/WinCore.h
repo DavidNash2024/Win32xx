@@ -818,7 +818,7 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); ++m)
 		{
-			(*m).second->DestroyWindow();
+			DestroyWindow((*m).first);
 		}
 		m_HWNDmap.clear();
 
@@ -1304,7 +1304,6 @@ namespace Win32xx
 	inline void CWnd::DestroyWindow()
 	{
 		::DestroyWindow(m_hWnd);
-		Clear();
 	}
 
 	inline HWND CWnd::Detach()
