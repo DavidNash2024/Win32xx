@@ -1767,7 +1767,13 @@ namespace Win32xx
 
 		// Set the last menu MRU entry
 		MENUITEMINFO mii = {0};
-		mii.cbSize = sizeof(mii);
+		
+		// For Win95 and NT, cbSize needs to be 44
+		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
+			mii.cbSize = 44;
+		else
+			mii.cbSize = sizeof(MENUITEMINFO);
+		
 		mii.fMask = MIIM_STRING | MIIM_ID | MIIM_STATE;
 		mii.fType = MFT_STRING;
 		mii.wID = uLastMRU_ID;
