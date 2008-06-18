@@ -269,8 +269,8 @@ namespace Win32xx
 		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
-		tString m_KeyName;					// a TCHAR std::string for Registry key name
-		tString m_StatusText;				// a TCHAR std::string for status text
+		tString m_tsKeyName;					// a TCHAR std::string for Registry key name
+		tString m_tsStatusText;				// a TCHAR std::string for status text
 		ThemeMenu m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
@@ -1302,7 +1302,7 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_StatusText(_T("Ready")),
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_tsStatusText(_T("Ready")),
 						 m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL)
 	{
 
@@ -1918,7 +1918,7 @@ namespace Win32xx
 	inline void CFrame::OnCloseFrame()
 	{
 		// Store the window position in the registry
-		if (!m_KeyName.empty())
+		if (!m_tsKeyName.empty())
 		{
 			WINDOWPLACEMENT Wndpl = {0};
 			Wndpl.length = sizeof(WINDOWPLACEMENT);
@@ -1926,14 +1926,14 @@ namespace Win32xx
 			{
 				// Get the Frame's window position
 				CRect rc = Wndpl.rcNormalPosition;
-				tString KeyName = _T("Software\\") + m_KeyName;
+				tString tsKeyName = _T("Software\\") + m_tsKeyName;
 				HKEY hKey = NULL;
 				DWORD dwTop = max(rc.top, 0);
 				DWORD dwLeft = max(rc.left, 0);
 				DWORD dwWidth = max(rc.Width(), 100);
 				DWORD dwHeight = max(rc.Height(), 50);
 
-				if (RegCreateKeyEx(HKEY_CURRENT_USER, KeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 				if (RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
@@ -2294,9 +2294,9 @@ namespace Win32xx
 			HMENU hMenu = (HMENU) lParam;
 
 			if ((hMenu != ::GetMenu(m_hWnd)) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
-				m_StatusText = LoadString(nID);
+				m_tsStatusText = LoadString(nID);
 			else
-				m_StatusText = _T("Ready");
+				m_tsStatusText = _T("Ready");
 
 			SetStatusText();
 		}
@@ -2385,9 +2385,9 @@ namespace Win32xx
 						if (nID != nOldID)
 						{
 							if (nID != 0)
-								m_StatusText = LoadString(nID);
+								m_tsStatusText = LoadString(nID);
 							else
-								m_StatusText = _T("Ready");
+								m_tsStatusText = _T("Ready");
 
 							SetStatusText();
 						}
@@ -2398,7 +2398,7 @@ namespace Win32xx
 				{
 					if (nOldID != -1)
 					{
-						m_StatusText = _T("Ready");
+						m_tsStatusText = _T("Ready");
 						SetStatusText();
 					}
 					nOldID = -1;
@@ -2460,11 +2460,11 @@ namespace Win32xx
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
 		// Retrieve the previous window position from the registry
-		if (!m_KeyName.empty())
+		if (!m_tsKeyName.empty())
 		{
-			tString KeyString = _T("Software\\") + m_KeyName;
+			tString tsKey = _T("Software\\") + m_tsKeyName;
 			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, KeyString.c_str(), 0, KEY_READ, &hKey);
+			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 			if (hKey)
 			{
 				DWORD dwType = REG_BINARY;
@@ -2645,7 +2645,7 @@ namespace Win32xx
 			}
 
 			// Place text in the 1st pane
-			GetStatusbar().SetPartText(0, m_StatusText.c_str());
+			GetStatusbar().SetPartText(0, m_tsStatusText.c_str());
 		}
 	}
 

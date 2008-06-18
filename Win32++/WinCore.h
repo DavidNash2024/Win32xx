@@ -112,9 +112,7 @@
 #include <commctrl.h>
 #include <tchar.h>
 #include <shlwapi.h>
-#ifndef _WIN32_WCE	// Windows CE doesn't support streams
-  #include <sstream>
-#endif
+
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -166,9 +164,6 @@ namespace Win32xx
 	// Some useful type declarations and macros
 	//
 	typedef std::basic_string<TCHAR> tString;
-	#ifndef _WIN32_WCE
-		typedef std::basic_stringstream<TCHAR> tStringStream;
-	#endif
 
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	//  we use an inline instead of a macro for TRACE to avoid C4390 warnings
@@ -696,7 +691,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		tString m_LoadString;		// a TCHAR std::string, temporary storage for strings
+		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings
 
 	}; // class CWnd
 
@@ -1371,15 +1366,15 @@ namespace Win32xx
 	{
 		int nLength = ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
 
-		tString String;
+		tString tstr;
 		if (nLength > 0)
 		{
 			TCHAR szString[MAX_STRING_SIZE];
 			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, MAX_STRING_SIZE);
-			String = szString;
+			tstr = szString;
 		}
 
-		return String;
+		return tstr;
 	}
 
 	inline LONG_PTR CWnd::GetWindowLongPtr(int nIndex) const
@@ -1410,14 +1405,14 @@ namespace Win32xx
 
 		int nLength = ::GetWindowTextLength(m_hWnd);
 
-		tString String;
+		tString tstr;
 		if (nLength > 0)
 		{
 			TCHAR szString[MAX_STRING_SIZE];
 			::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE);
-			String = szString;
+			tstr = szString;
 		}
-		return String;
+		return tstr;
 	}
 
 	inline void CWnd::Invalidate(BOOL bErase /*= TRUE*/) const
@@ -1513,15 +1508,15 @@ namespace Win32xx
 		if (0 == GetApp())
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
-		m_LoadString = _T("");
+		m_tsLoadString = _T("");
 		TCHAR szString[MAX_STRING_SIZE] = _T("");
 		if (!::LoadString (GetApp()->GetResourceHandle(), nID, szString, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
 			if (::LoadString (GetApp()->GetInstanceHandle(), nID, szString, MAX_STRING_SIZE))
 			{
-				m_LoadString = szString;
-				return (LPCTSTR) m_LoadString.c_str();
+				m_tsLoadString = szString;
+				return (LPCTSTR) m_tsLoadString.c_str();
 			}
 
 			TCHAR msg[80] = _T("");
@@ -1529,11 +1524,11 @@ namespace Win32xx
 			TRACE(msg);
 		}
 
-		m_LoadString = szString;
+		m_tsLoadString = szString;
 
 		// Never return a pointer to a local variable, it is out of scope when the function returns.
 		// We return a pointer to a member variable so it remains in scope.
-		return m_LoadString.c_str();
+		return m_tsLoadString.c_str();
 	}
 
 	inline BOOL CWnd::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)

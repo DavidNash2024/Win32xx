@@ -218,17 +218,19 @@ namespace Win32xx
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
 				{
-					tStringStream sStream;
-					sStream << _T("&") << nWindow+1 << _T("  ") << (*v)->GetWindowString();
-					tString MenuString = sStream.str();
-					if (MenuString.length() > MAX_MENU_STRING -5)
+					tString tsMenuItem = (*v)->GetWindowString();
+
+					if (tsMenuItem.length() > MAX_MENU_STRING -10)
 					{
 						// Truncate the string if its too long
-						MenuString.erase(MenuString.length() - MAX_MENU_STRING +5);
-						MenuString += _T(" ...");
+						tsMenuItem.erase(tsMenuItem.length() - MAX_MENU_STRING +10);
+						tsMenuItem += _T(" ...");
 					}
 
-					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString.c_str() );
+					TCHAR szMenuString[MAX_MENU_STRING+1];
+					wsprintf(szMenuString, _T("&%d %s"), nWindow+1, tsMenuItem.c_str());
+
+					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szMenuString);
 
 					if (GetActiveMDIChild() == hwndMDIChild)
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
