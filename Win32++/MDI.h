@@ -221,10 +221,10 @@ namespace Win32xx
 					tStringStream sStream;
 					sStream << _T("&") << nWindow+1 << _T("  ") << (*v)->GetWindowString();
 					tString MenuString = sStream.str();
-					if (MenuString.length() > MAX_MENU_STRING)
+					if (MenuString.length() > MAX_MENU_STRING -5)
 					{
 						// Truncate the string if its too long
-						MenuString.erase(MAX_MENU_STRING);
+						MenuString.erase(MenuString.length() - MAX_MENU_STRING +5);
 						MenuString += _T(" ...");
 					}
 

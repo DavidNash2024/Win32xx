@@ -28,6 +28,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 IDW_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&View"
@@ -162,5 +164,25 @@ BEGIN
 	SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_FILE_MRU_FILE1       "Open this document"
+    IDW_FILE_MRU_FILE2       "Open this document"
+    IDW_FILE_MRU_FILE3       "Open this document"
+    IDW_FILE_MRU_FILE4       "Open this document"
+    IDW_FILE_MRU_FILE5       "Open this document"
+    IDW_FILE_MRU_FILE6       "Open this document"
+    IDW_FILE_MRU_FILE7       "Open this document"
+    IDW_FILE_MRU_FILE8       "Open this document"
+    IDW_FILE_MRU_FILE9       "Open this document"
+    IDW_FILE_MRU_FILE10      "Open this document"
+    IDW_FILE_MRU_FILE11      "Open this document"
+    IDW_FILE_MRU_FILE12      "Open this document"
+    IDW_FILE_MRU_FILE13      "Open this document"
+    IDW_FILE_MRU_FILE14      "Open this document"
+    IDW_FILE_MRU_FILE15      "Open this document"
+    IDW_FILE_MRU_FILE16      "Open this document"
 END
 

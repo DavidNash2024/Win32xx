@@ -36,6 +36,25 @@
 #define IDW_CHILD9                      72
 #define IDW_CHILD10                     73
 
+#define IDW_FILE_MRU_FILE1               75
+#define IDW_FILE_MRU_FILE2               76
+#define IDW_FILE_MRU_FILE3               77
+#define IDW_FILE_MRU_FILE4               78
+#define IDW_FILE_MRU_FILE5               79
+#define IDW_FILE_MRU_FILE6               80
+#define IDW_FILE_MRU_FILE7               81
+#define IDW_FILE_MRU_FILE8               82
+#define IDW_FILE_MRU_FILE9               83
+#define IDW_FILE_MRU_FILE10              84
+#define IDW_FILE_MRU_FILE11              85
+#define IDW_FILE_MRU_FILE12              86
+#define IDW_FILE_MRU_FILE13              87
+#define IDW_FILE_MRU_FILE14              88
+#define IDW_FILE_MRU_FILE15              89
+#define IDW_FILE_MRU_FILE16              90
+
+
+
 // A generic ID for any static control
 #ifndef IDC_STATIC
   #define IDC_STATIC                      -1

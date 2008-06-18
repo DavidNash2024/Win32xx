@@ -29,4 +29,3 @@
 //Resource ID for the cursor
 #define IDC_CURSOR1                     140
 
-

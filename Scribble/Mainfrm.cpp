@@ -80,6 +80,27 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
+	case IDW_FILE_MRU_FILE1:
+	case IDW_FILE_MRU_FILE2:
+	case IDW_FILE_MRU_FILE3:
+	case IDW_FILE_MRU_FILE4:
+	case IDW_FILE_MRU_FILE5:
+	case IDW_FILE_MRU_FILE6:
+	case IDW_FILE_MRU_FILE7:
+	case IDW_FILE_MRU_FILE8:
+	case IDW_FILE_MRU_FILE9:
+	case IDW_FILE_MRU_FILE10:
+	case IDW_FILE_MRU_FILE11:
+	case IDW_FILE_MRU_FILE12:
+	case IDW_FILE_MRU_FILE13:
+	case IDW_FILE_MRU_FILE14:
+	case IDW_FILE_MRU_FILE15:
+	case IDW_FILE_MRU_FILE16:
+		{
+			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+			m_View.FileOpen(GetMRUEntry(nMRUIndex).c_str());
+			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -118,6 +139,7 @@ void CMainFrame::OnFileOpen()
 
 	// Save the filename
 	m_PathName = szFilePathName;
+	AddMRUEntry(szFilePathName);
 }
 
 void CMainFrame::OnFileSave()
@@ -162,6 +184,7 @@ void CMainFrame::OnFileSaveAs()
 
 	// Save the file name
 	m_View.FileSave(szFilePathName);
+	AddMRUEntry(szFilePathName);
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice

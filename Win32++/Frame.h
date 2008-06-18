@@ -202,6 +202,7 @@ namespace Win32xx
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		ThemeMenu& GetMenuTheme()	{return m_ThemeMenu;}
 		CWnd* GetView() const		{return m_pView;}
+		tString CFrame::GetMRUEntry(int nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
 		void SetView(CWnd& pView);
@@ -219,6 +220,7 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
+		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolbarBand(CToolbar& TB);
 		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
@@ -234,6 +236,7 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void UpdateMRUMenu();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Its unlikely you would need to override these functions
@@ -285,6 +288,7 @@ namespace Win32xx
 		HMENU m_hMenu;			// handle to the frame menu
 		CWnd* m_pView;			// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];	// Array of TCHAR pointers;
+		std::vector<tString> m_MRUEntries;
 
 	};  // class CFrame
 
@@ -1701,6 +1705,98 @@ namespace Win32xx
 		// Draw text after tab, right aligned
 		if(nTab != -1)
 			::DrawText(DrawDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+	}
+
+	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
+	{
+		// Erase duplicate entries from vector
+		for (int i = m_MRUEntries.size() -1; i >= 0; --i)
+		{
+			if (m_MRUEntries[i] == szMRUEntry)
+				m_MRUEntries.erase(m_MRUEntries.begin() + i);
+		}
+
+		// Insert the entry at the beginning of the vector
+		m_MRUEntries.insert(m_MRUEntries.begin(), szMRUEntry);
+
+		// Delete excessive MRU entries
+		if (m_MRUEntries.size() > 16)
+			m_MRUEntries.erase(m_MRUEntries.begin()+16, m_MRUEntries.end());
+
+		UpdateMRUMenu(); 
+	}
+
+	inline tString CFrame::GetMRUEntry(int nIndex)
+	{
+		tString tsPathName = m_MRUEntries[nIndex];
+		
+		// Now put the selected entry at Index 0
+		AddMRUEntry(tsPathName.c_str());
+		return tsPathName;
+	}
+
+	inline void CFrame::UpdateMRUMenu()
+	{
+		if (m_MRUEntries.size() == 0) return;	// Nothing to do
+		
+		// Get the handle to the Menu entry titled "File" 
+		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
+		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
+
+		// Remove all but the last MRU Menu entry
+		for (UINT u = IDW_FILE_MRU_FILE1 +1; u <= IDW_FILE_MRU_FILE1 +16; ++u)
+		{
+			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
+		}
+
+		int nMaxMRUIndex =  m_MRUEntries.size()-1;
+		UINT uLastMRU_ID = IDW_FILE_MRU_FILE1 + nMaxMRUIndex;
+
+		tString tsItemText = m_MRUEntries[nMaxMRUIndex];
+		if (tsItemText.length() > MAX_MENU_STRING - 10)
+		{
+			// Truncate the string if its too long
+			tsItemText.erase(0, tsItemText.length() - MAX_MENU_STRING +10);
+			tsItemText = _T("... ") + tsItemText;
+		}
+
+		// Prefix the string with its number
+		TCHAR szTemp[MAX_MENU_STRING+1];
+		wsprintf(szTemp, _T("%d %s"), nMaxMRUIndex+1, tsItemText.c_str());
+		tsItemText = szTemp;
+
+		// Set the last menu MRU entry
+		MENUITEMINFO mii = {0};
+		mii.cbSize = sizeof(mii);
+		mii.fMask = MIIM_STRING | MIIM_ID | MIIM_STATE;
+		mii.fType = MFT_STRING;
+		mii.wID = uLastMRU_ID;
+		mii.dwTypeData = (LPTSTR)tsItemText.c_str();
+		SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
+
+		// Now we can insert the other menu MRU entries before the last MRU entry
+		for (int index = 0; index < nMaxMRUIndex; ++index)
+		{
+			mii.fMask = MIIM_STRING | MIIM_ID;
+			mii.fType = MFT_STRING;
+			mii.wID = IDW_FILE_MRU_FILE1 + index;
+			tsItemText = m_MRUEntries[index];
+
+			if (tsItemText.length() > MAX_MENU_STRING -10)
+			{
+				// Truncate the string if its too long
+				tsItemText.erase(0, tsItemText.length() - MAX_MENU_STRING +10);
+				tsItemText = _T("... ") + tsItemText;
+			}
+			
+			wsprintf(szTemp, _T("%d %s"), index+1, tsItemText.c_str());
+			tsItemText = szTemp;
+
+			mii.dwTypeData = (LPTSTR)tsItemText.c_str();
+			InsertMenuItem(hFileMenu, uLastMRU_ID, FALSE, &mii);
+		}
+
+		DrawMenuBar(m_hWnd); 
 	}
 
 	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
