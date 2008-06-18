@@ -1774,7 +1774,7 @@ namespace Win32xx
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
 		
-		mii.fMask = MIIM_STRING | MIIM_ID | MIIM_STATE;
+		mii.fMask = /*MIIM_STRING |*/MIIM_TYPE | MIIM_ID | MIIM_STATE;
 		mii.fType = MFT_STRING;
 		mii.wID = uLastMRU_ID;
 		mii.dwTypeData = (LPTSTR)tsItemText.c_str();
@@ -1783,7 +1783,7 @@ namespace Win32xx
 		// Now we can insert the other menu MRU entries before the last MRU entry
 		for (int index = 0; index < nMaxMRUIndex; ++index)
 		{
-			mii.fMask = MIIM_STRING | MIIM_ID;
+			mii.fMask = /*MIIM_STRING |*/MIIM_TYPE | MIIM_ID;
 			mii.fType = MFT_STRING;
 			mii.wID = IDW_FILE_MRU_FILE1 + index;
 			tsItemText = m_MRUEntries[index];

@@ -141,7 +141,7 @@ namespace Win32xx
 
 	inline CCmdbar::~CCmdbar()
 	{
-		if (IsWindow(m_hWnd))
+		if (IsWindow())
 			::CommandBar_Destroy(m_hWnd);
 	}
 
@@ -325,11 +325,11 @@ namespace Win32xx
 			::GetWindowRect(hwndCB, &rcMenuBar);
 			rc.bottom -= (rcMenuBar.bottom - rcMenuBar.top);
 
-			MoveWindow(m_hWnd, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, FALSE);
+			MoveWindow(rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, FALSE);
 		}
 
-		ShowWindow(m_hWnd, TRUE);
-		UpdateWindow(m_hWnd);
+		ShowWindow(TRUE);
+		UpdateWindow();
 	}
 
 	inline void CWceFrame::SetButtons(const std::vector<UINT> ToolbarData)

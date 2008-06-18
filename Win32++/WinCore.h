@@ -129,6 +129,7 @@
   #define DWLP_USER          DWL_USER
   #define DWORD_PTR          DWORD
   #define LONG_PTR           LONG
+  #define ULONG_PTR          LONG
 #endif
 #ifndef GetClassLongPtr
   #define GetClassLongPtr    GetClassLong
@@ -599,7 +600,6 @@ namespace Win32xx
 		BOOL Attach(HWND hWnd);
 		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		void CenterWindow() const;
-		BOOL CloseWindow() const;
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		void DestroyWindow();
@@ -612,7 +612,6 @@ namespace Win32xx
 		tString GetDlgItemString(int nIDDlgItem) const;
 		HWND GetHwnd() const {return m_hWnd;}
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
-		BOOL GetWindowPlacement(WINDOWPLACEMENT *lpwndpl) const;
 		CRect GetWindowRect() const;
 		tString GetWindowString() const;
 		void Invalidate(BOOL bErase = TRUE) const;
@@ -620,10 +619,8 @@ namespace Win32xx
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pWndParent) const;
 		BOOL IsEnabled() const;
-		BOOL IsIconic() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;
-		BOOL IsZoomed() const;
 		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
 		LPCTSTR LoadString(UINT nID);
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -639,13 +636,20 @@ namespace Win32xx
 		BOOL SetForegroundWindow() const;
 		void SetParent(HWND hParent);
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
-		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
-		BOOL SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl) const;
+		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;	
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
 		BOOL ValidateRect(CRect& rc) const;
 		BOOL ValidateRgn(HRGN hRgn) const;
+
+#ifndef _WIN32_WCE
+		BOOL CloseWindow() const;
+		BOOL GetWindowPlacement(WINDOWPLACEMENT *lpwndpl) const;
+		BOOL IsIconic() const;
+		BOOL IsZoomed() const;
+		BOOL SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl) const;
+#endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
@@ -1151,12 +1155,14 @@ namespace Win32xx
 		m_PrevWindowProc = NULL;
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CWnd::CloseWindow() const
 	// The CloseWindow function minimizes (but does not destroy) the window.
 	// To destroy a window, an application must use the DestroyWindow function.
 	{
 		return ::CloseWindow(m_hWnd);
 	}
+#endif
 
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
@@ -1382,12 +1388,14 @@ namespace Win32xx
 		return ::GetWindowLongPtr(m_hWnd, nIndex);
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CWnd::GetWindowPlacement(WINDOWPLACEMENT *lpwndpl) const
 	// The GetWindowPlacement function retrieves the show state and the restored,
 	// minimized, and maximized positions of the window.
 	{
 		return ::GetWindowPlacement(m_hWnd, lpwndpl);
 	}
+#endif
 
 	inline CRect CWnd::GetWindowRect() const
 	{
@@ -1449,11 +1457,13 @@ namespace Win32xx
 		return ::IsWindowEnabled(m_hWnd);
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CWnd::IsIconic() const
 	// The IsIconic function determines whether the window is minimized (iconic).
 	{
 		return ::IsIconic(m_hWnd);
 	}
+#endif
 
 	inline BOOL CWnd::IsVisible() const
 	// The IsVisible function retrieves the visibility state of the window.
@@ -1467,11 +1477,13 @@ namespace Win32xx
 		return ::IsWindow(m_hWnd);
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CWnd::IsZoomed() const
 	// The IsZoomed function determines whether the window is maximized.
 	{
 		return ::IsZoomed(m_hWnd);
 	}
+#endif
 
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
 	{
@@ -1867,12 +1879,14 @@ namespace Win32xx
 		return ::SetWindowLongPtr(m_hWnd, nIndex, dwNewLong);
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CWnd::SetWindowPlacement(const WINDOWPLACEMENT*lpwndpl) const
 	// The SetWindowPlacement function sets the show state and the restored, minimized,
 	// and maximized positions of the window.
 	{
 		return ::SetWindowPlacement(m_hWnd, lpwndpl);
 	}
+#endif
 
 	inline int CWnd::SetWindowRgn(HRGN hRgn, BOOL bRedraw /*= TRUE*/) const
 	// The SetWindowRgn function sets the window region of the window.
