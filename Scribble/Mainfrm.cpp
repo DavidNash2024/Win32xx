@@ -97,8 +97,13 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDW_FILE_MRU_FILE15:
 	case IDW_FILE_MRU_FILE16:
 		{
+
 			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-			m_View.FileOpen(GetMRUEntry(nMRUIndex).c_str());
+			tString tsMRUText = GetMRUEntry(nMRUIndex);
+			
+			if (FALSE == m_View.FileOpen(tsMRUText.c_str()))
+				RemoveMRUEntry(tsMRUText.c_str());
+
 			return TRUE;
 		}
 	}

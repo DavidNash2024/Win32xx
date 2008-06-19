@@ -236,6 +236,8 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
+		virtual void SaveRegistrySettings();
 		virtual void UpdateMRUMenu();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -1847,40 +1849,7 @@ namespace Win32xx
 
 	inline void CFrame::OnCloseFrame()
 	{
-		// Store the window position in the registry
-		if (!m_tsKeyName.empty())
-		{
-			WINDOWPLACEMENT Wndpl = {0};
-			Wndpl.length = sizeof(WINDOWPLACEMENT);
-			if (GetWindowPlacement(&Wndpl))
-			{
-				// Get the Frame's window position
-				CRect rc = Wndpl.rcNormalPosition;
-				tString tsKeyName = _T("Software\\") + m_tsKeyName;
-				HKEY hKey = NULL;
-				DWORD dwTop = max(rc.top, 0);
-				DWORD dwLeft = max(rc.left, 0);
-				DWORD dwWidth = max(rc.Width(), 100);
-				DWORD dwHeight = max(rc.Height(), 50);
-
-				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-				if (RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
-
-				if (RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
-
-				if (RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
-
-				if (RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
-
-				RegCloseKey(hKey);
-			}
-		}
+		SaveRegistrySettings();
 	}
 
 	inline BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
@@ -2392,7 +2361,7 @@ namespace Win32xx
 		// Retrieve the previous window position from the registry
 		if (!m_tsKeyName.empty())
 		{
-			tString tsKey = _T("Software\\") + m_tsKeyName;
+			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
 			HKEY hKey = 0;
 			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 			if (hKey)
@@ -2466,6 +2435,74 @@ namespace Win32xx
 		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 	}
 
+	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
+	{
+		for (int i = m_MRUEntries.size() -1; i >= 0; --i)
+		{
+			if (m_MRUEntries[i] == szMRUEntry)
+				m_MRUEntries.erase(m_MRUEntries.begin() + i);
+		}
+
+		UpdateMRUMenu(); 
+	}
+
+	inline void CFrame::SaveRegistrySettings()
+	{
+		// Store the window position in the registry
+		if (!m_tsKeyName.empty())
+		{
+			WINDOWPLACEMENT Wndpl = {0};
+			Wndpl.length = sizeof(WINDOWPLACEMENT);
+			if (GetWindowPlacement(&Wndpl))
+			{
+				// Get the Frame's window position
+				CRect rc = Wndpl.rcNormalPosition;
+				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Position");;
+				HKEY hKey = NULL;
+				DWORD dwTop = max(rc.top, 0);
+				DWORD dwLeft = max(rc.left, 0);
+				DWORD dwWidth = max(rc.Width(), 100);
+				DWORD dwHeight = max(rc.Height(), 50);
+
+				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+				if (RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+
+				if (RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+
+				if (RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+
+				if (RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+
+				RegCloseKey(hKey);
+			}
+
+			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+			HKEY hKey = NULL;
+
+			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+			for (UINT i = 0; i < 16; ++i)
+			{
+				TCHAR szEntry[10];
+				wsprintf(szEntry, _T("File %d\0"), i+1);
+				tString tsPathName;
+				if (i < m_MRUEntries.size())
+					tsPathName = m_MRUEntries[i];
+				
+				if (RegSetValueEx(hKey, szEntry, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
+					throw (CWinException(_T("RegSetValueEx Failed")));
+			}
+
+			RegCloseKey(hKey);			
+		} 
+	}
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)
 	{
@@ -2818,9 +2855,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::UpdateMRUMenu()
-	{
-		if (m_MRUEntries.size() == 0) return;	// Nothing to do
-		
+	{	
 		// Get the handle to the Menu entry titled "File" 
 		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
 		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
@@ -2833,18 +2868,24 @@ namespace Win32xx
 
 		int nMaxMRUIndex =  m_MRUEntries.size()-1;
 		UINT uLastMRU_ID = IDW_FILE_MRU_FILE1 + nMaxMRUIndex;
-
-		tString tsItemText = m_MRUEntries[nMaxMRUIndex];
-		if (tsItemText.length() > MAX_MENU_STRING - 10)
-		{
-			// Truncate the string if its too long
-			tsItemText.erase(0, tsItemText.length() - MAX_MENU_STRING +10);
-			tsItemText = _T("... ") + tsItemText;
-		}
-
-		// Prefix the string with its number
 		TCHAR szText[MAX_MENU_STRING+1];
-		wsprintf(szText, _T("%d %s"), nMaxMRUIndex+1, tsItemText.c_str());
+		tString tsItemText;
+
+		if (nMaxMRUIndex >= 0)
+		{
+			tsItemText = m_MRUEntries[nMaxMRUIndex];
+			if (tsItemText.length() > MAX_MENU_STRING - 10)
+			{
+				// Truncate the string if its too long
+				tsItemText.erase(0, tsItemText.length() - MAX_MENU_STRING +10);
+				tsItemText = _T("... ") + tsItemText;
+			}
+
+			// Prefix the string with its number
+			wsprintf(szText, _T("%d %s"), nMaxMRUIndex+1, tsItemText.c_str());
+		}
+		else
+			lstrcpy(szText, _T("Recent Files"));
 
 		// Set the last menu MRU entry
 		MENUITEMINFO mii = {0};
@@ -2855,16 +2896,17 @@ namespace Win32xx
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
 		
-		mii.fMask = /*MIIM_STRING |*/MIIM_TYPE | MIIM_ID | MIIM_STATE;
+		mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
 		mii.fType = MFT_STRING;
 		mii.wID = uLastMRU_ID;
+		mii.fState = (nMaxMRUIndex >= 0)? 0: MFS_GRAYED;
 		mii.dwTypeData = szText;
 		SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
 
 		// Now we can insert the other menu MRU entries before the last MRU entry
 		for (int index = 0; index < nMaxMRUIndex; ++index)
 		{
-			mii.fMask = /*MIIM_STRING |*/MIIM_TYPE | MIIM_ID;
+			mii.fMask = MIIM_TYPE | MIIM_ID;
 			mii.fType = MFT_STRING;
 			mii.wID = IDW_FILE_MRU_FILE1 + index;
 			tsItemText = m_MRUEntries[index];

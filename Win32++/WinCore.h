@@ -564,7 +564,7 @@ namespace Win32xx
 			else
 				::wsprintf(buf3, _T("%s"), buf1);
 
-			DebugErrMsg(buf3);
+			::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 		}
 
 	private:

@@ -28,7 +28,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "Recent File",                 IDW_FILE_MRU_FILE1, GRAYED
+        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END

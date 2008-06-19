@@ -24,7 +24,7 @@ CView::~CView()
 void CView::ClearPoints()
 {
 	m_points.clear();
-	::InvalidateRect(GetHwnd(), NULL, TRUE);
+	Invalidate();
 }
 
 void CView::DrawLine(int x, int y)
@@ -42,13 +42,12 @@ void CView::OnPaint(HDC hDC)
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points[i].color);
-			HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+			CDC PaintDC = hDC;
+			PaintDC.CreatePen(PS_SOLID, 1, m_points[i].color);
 			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
 			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
 			bDraw = m_points[i].PenDown;
-			::SelectObject(hDC, hOldPen);
-			::DeleteObject(hPen);
+			PaintDC.DetachDC();	// Otherwise the DC would be deleted
 		}
 	}
 }
@@ -68,7 +67,7 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 }
 
 
-void CView::FileOpen(LPCTSTR szFilename)
+BOOL CView::FileOpen(LPCTSTR szFilename)
 {
 	// empty the PlotPoint vector
 	m_points.clear();
@@ -86,7 +85,10 @@ void CView::FileOpen(LPCTSTR szFilename)
 
 			// Read a PlotPoint struct from the file
 			if (!ReadFile(hFile, &pp, sizeof(PlotPoint), &nBytesRead, NULL))
+			{
+				Invalidate();
 				throw CWinException(_T("Failed to read from file"));
+			}
 
 			// store the PlotPoint in the PlotPoint vector
 			if (nBytesRead == sizeof(PlotPoint))
@@ -94,7 +96,8 @@ void CView::FileOpen(LPCTSTR szFilename)
 			else if (nBytesRead != 0)
 			{
 				m_points.clear();
-				throw CWinException (_T("Error while reading from file"));
+				Invalidate();
+				throw CWinException (_T("Invalid data in file"));
 			}
 
 
@@ -103,14 +106,21 @@ void CView::FileOpen(LPCTSTR szFilename)
 		CloseHandle(hFile);
 	}
 	else
-		throw CWinException(_T("Failed to open file for reading"));
+	{
+		tString tsErrMsg = _T("Failed to open file ");
+		tsErrMsg += szFilename;
+		::MessageBox (0, tsErrMsg.c_str(), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		Invalidate();
+		return FALSE;
+	}
 
 	// repaint the view window
-	::InvalidateRect(m_hWnd, NULL, TRUE);
+	Invalidate();
+	return TRUE;
 }
 
 
-void CView::FileSave(LPCTSTR szFilename)
+BOOL CView::FileSave(LPCTSTR szFilename)
 {
 	DWORD nBytesWritten;
 	HANDLE hFile = CreateFile(szFilename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -130,6 +140,8 @@ void CView::FileSave(LPCTSTR szFilename)
 	}
 	else
 		throw CWinException(_T("Failed to open file for writing"));
+
+	return TRUE;
 }
 
 void CView::SetPen(COLORREF color)
