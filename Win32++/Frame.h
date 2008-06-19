@@ -1523,8 +1523,8 @@ namespace Win32xx
 		m_MRUEntries.insert(m_MRUEntries.begin(), szMRUEntry);
 
 		// Delete excessive MRU entries
-		if (m_MRUEntries.size() > 16)
-			m_MRUEntries.erase(m_MRUEntries.begin()+16, m_MRUEntries.end());
+		if (m_MRUEntries.size() > m_nMaxMRU)
+			m_MRUEntries.erase(m_MRUEntries.begin() + m_nMaxMRU, m_MRUEntries.end());
 
 		UpdateMRUMenu(); 
 	}
