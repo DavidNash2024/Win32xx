@@ -30,7 +30,10 @@ CMainFrame::CMainFrame()
 
 	// Comment the line below to disable storing the window position in the registry
 	// Adjust the Company and Application name as appropriate
-	m_tsKeyName = _T("Win32++\\Frame");
+	SetRegistryKey("Win32++\\Frame");
+
+	// Load the settings from the registry
+	LoadRegistrySettings();
 }
 
 CMainFrame::~CMainFrame()

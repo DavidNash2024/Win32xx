@@ -186,6 +186,7 @@ namespace Win32xx
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
+		virtual void LoadRegistrySettings(UINT nMaxMRU = 5);
 		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
@@ -205,6 +206,7 @@ namespace Win32xx
 		tString CFrame::GetMRUEntry(int nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
+		void SetRegistryKey(LPCTSTR szKeyName) {m_tsKeyName = szKeyName;}
 		void SetView(CWnd& pView);
 
 		CMenubar&  GetMenubar() const		{return (CMenubar&)m_Menubar;}
@@ -271,8 +273,6 @@ namespace Win32xx
 		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
-		tString m_tsKeyName;					// a TCHAR std::string for Registry key name
-		tString m_tsStatusText;				// a TCHAR std::string for status text
 		ThemeMenu m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
@@ -282,15 +282,18 @@ namespace Win32xx
 		BOOL OnCommandFrame(WPARAM wPAram, LPARAM lParam);
 		LRESULT OnNotifyFrame(WPARAM wParam, LPARAM lParam);
 
-		CDialog* m_pAboutDialog;// Pointer to the about dialog
-		CMenubar m_Menubar;		// CMenubar object
-		CRebar m_Rebar;			// CRebar object
-		CStatusbar m_Statusbar;	// CStatusbar object
-		CToolbar m_Toolbar;		// CToolbar object
-		HMENU m_hMenu;			// handle to the frame menu
-		CWnd* m_pView;			// pointer to the View CWnd object
-		LPCTSTR m_OldStatus[3];	// Array of TCHAR pointers;
-		std::vector<tString> m_MRUEntries;
+		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
+		CMenubar m_Menubar;					// CMenubar object
+		CRebar m_Rebar;						// CRebar object
+		CStatusbar m_Statusbar;				// CStatusbar object
+		CToolbar m_Toolbar;					// CToolbar object
+		HMENU m_hMenu;						// handle to the frame menu
+		CWnd* m_pView;						// pointer to the View CWnd object
+		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
+		std::vector<tString> m_MRUEntries;	// Vector of tStrings for MRU entires
+		tString m_tsKeyName;				// TCHAR std::string for Registry key name
+		tString m_tsStatusText;				// TCHAR std::string for status text
+		UINT m_nMaxMRU;						// maximum number of MRU entries
 
 	};  // class CFrame
 
@@ -1847,6 +1850,41 @@ namespace Win32xx
 		}
 	}
 
+	inline void CFrame::LoadRegistrySettings(UINT nMaxMRU /*= 5*/)
+	{
+		m_nMaxMRU = min(nMaxMRU, 16);
+		if (!m_tsKeyName.empty())
+		{
+			// Prepare to load the MRU from the registry
+			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+			HKEY hKey = NULL;
+
+			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+			{
+				for (UINT i = 0; i < m_nMaxMRU; ++i)
+				{
+					DWORD dwType = REG_SZ;
+					DWORD dwBufferSize = 0;
+					TCHAR szSubKey[10] = _T("");
+					wsprintf(szSubKey, _T("File %d\0"), i+1);
+					
+					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
+					TCHAR* szPathName = new TCHAR[dwBufferSize];
+					if (NULL == szPathName) throw std::bad_alloc();
+				
+					// load the entry from the registry
+					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
+					{
+						if (lstrlen(szPathName)) 
+							m_MRUEntries.push_back(szPathName);
+					}
+
+					delete []szPathName;
+				}
+			}
+		}
+	}
+
 	inline void CFrame::OnCloseFrame()
 	{
 		SaveRegistrySettings();
@@ -1901,6 +1939,8 @@ namespace Win32xx
 			// Create the toolbar without a rebar
 			GetToolbar().Create(m_hWnd);
 		}
+
+		UpdateMRUMenu();
 
 		// Set the toolbar data
 		int iButtons = GetToolbar().SetButtons(m_ToolbarData);
@@ -2066,7 +2106,7 @@ namespace Win32xx
 			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 			//  an exception when new fails. We make sure an exception gets thrown!
 			if (NULL == m_pAboutDialog)
-				throw CWinException(_T("CFrame::Help failed to allocate memory for Dialog"));
+				throw std::bad_alloc();
 
 			m_pAboutDialog->DoModal();
 
@@ -2488,15 +2528,15 @@ namespace Win32xx
 			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 				throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-			for (UINT i = 0; i < 16; ++i)
+			for (UINT i = 0; i < m_nMaxMRU; ++i)
 			{
-				TCHAR szEntry[10];
-				wsprintf(szEntry, _T("File %d\0"), i+1);
+				TCHAR szSubKey[10];
+				wsprintf(szSubKey, _T("File %d\0"), i+1);
 				tString tsPathName;
 				if (i < m_MRUEntries.size())
 					tsPathName = m_MRUEntries[i];
 				
-				if (RegSetValueEx(hKey, szEntry, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
+				if (RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
 			}
 
@@ -2866,7 +2906,8 @@ namespace Win32xx
 			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
 		}
 
-		int nMaxMRUIndex =  m_MRUEntries.size()-1;
+		UINT nMaxMRUIndex =  m_MRUEntries.size()-1;
+		nMaxMRUIndex = min(nMaxMRUIndex, m_nMaxMRU);
 		UINT uLastMRU_ID = IDW_FILE_MRU_FILE1 + nMaxMRUIndex;
 		TCHAR szText[MAX_MENU_STRING+1];
 		tString tsItemText;
@@ -2904,7 +2945,7 @@ namespace Win32xx
 		SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
 
 		// Now we can insert the other menu MRU entries before the last MRU entry
-		for (int index = 0; index < nMaxMRUIndex; ++index)
+		for (UINT index = 0; index < nMaxMRUIndex; ++index)
 		{
 			mii.fMask = MIIM_TYPE | MIIM_ID;
 			mii.fType = MFT_STRING;

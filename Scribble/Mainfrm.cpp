@@ -29,8 +29,11 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Set the name of the registry key
-	m_tsKeyName = _T("Win32++\\Scribble Sample");
+	// Set the name of the registry key "CompanyName\\Application"
+	SetRegistryKey(_T("Win32++\\Scribble Sample"));
+
+	// Load the settings from the registry
+	LoadRegistrySettings();
 }
 
 CMainFrame::~CMainFrame()
@@ -97,11 +100,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDW_FILE_MRU_FILE15:
 	case IDW_FILE_MRU_FILE16:
 		{
-
 			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 			tString tsMRUText = GetMRUEntry(nMRUIndex);
 			
-			if (FALSE == m_View.FileOpen(tsMRUText.c_str()))
+			if (m_View.FileOpen(tsMRUText.c_str()))
+				m_PathName = tsMRUText;
+			else
 				RemoveMRUEntry(tsMRUText.c_str());
 
 			return TRUE;
