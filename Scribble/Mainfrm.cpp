@@ -30,7 +30,7 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
 	// Set the name of the registry key
-	m_KeyName = _T("Win32++\\Scribble Sample");
+	m_tsKeyName = _T("Win32++\\Scribble Sample");
 }
 
 CMainFrame::~CMainFrame()

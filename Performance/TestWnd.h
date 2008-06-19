@@ -8,6 +8,7 @@
 
 #include "../Win32++/WinCore.h"
 
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 class CTestWindow : public CWnd
 {
