@@ -1853,37 +1853,62 @@ namespace Win32xx
 
 	inline void CFrame::LoadRegistrySettings(UINT nMaxMRU /*= 0*/)
 	{
-		m_nMaxMRU = min(nMaxMRU, 16);
-		if (!m_tsKeyName.empty())
+		if (m_tsKeyName.empty())
+			throw CWinException(_T("KeyName must be set before calling LoadRegistrySettings"));
+
+		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
+		HKEY hKey = 0;
+		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
+		if (hKey)
 		{
-			// Prepare to load the MRU from the registry
-			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
-			HKEY hKey = NULL;
+			DWORD dwType = REG_BINARY;
+			DWORD BufferSize = sizeof(DWORD);
+			DWORD dwTop, dwLeft, dwWidth, dwHeight;
+			RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
+			RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
+			RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
+			RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
 
-			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
-			{
-				for (UINT i = 0; i < m_nMaxMRU; ++i)
-				{
-					DWORD dwType = REG_SZ;
-					DWORD dwBufferSize = 0;
-					TCHAR szSubKey[10] = _T("");
-					wsprintf(szSubKey, _T("File %d\0"), i+1);
+			// Get current desktop size to ensure reasonable a window position
+			CRect rcDesktop;
+			SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
 
-					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
-					TCHAR* szPathName = new TCHAR[dwBufferSize];
-					if (NULL == szPathName) throw std::bad_alloc();
+	/*		cs.y = min(dwTop, (UINT)rcDesktop.bottom - 30);
+			cs.x = min(dwLeft, (UINT)rcDesktop.right - 90);
+			cs.cx = dwWidth;
+			cs.cy = dwHeight; */
 
-					// load the entry from the registry
-					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
-					{
-						if (lstrlen(szPathName))
-							m_MRUEntries.push_back(szPathName);
-					}
-
-					delete []szPathName;
-				}
-			}
+			RegCloseKey(hKey);
 		}
+
+		// Load the MRU from the registry
+		m_nMaxMRU = min(nMaxMRU, 16);
+		tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+		hKey = NULL;
+
+		if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+		{
+			for (UINT i = 0; i < m_nMaxMRU; ++i)
+			{
+				DWORD dwType = REG_SZ;
+				DWORD dwBufferSize = 0;
+				TCHAR szSubKey[10] = _T("");
+				wsprintf(szSubKey, _T("File %d\0"), i+1);
+
+				RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
+				TCHAR* szPathName = new TCHAR[dwBufferSize];
+				if (NULL == szPathName) throw std::bad_alloc();
+
+				// load the entry from the registry
+				if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
+				{
+					if (lstrlen(szPathName))
+						m_MRUEntries.push_back(szPathName);
+				}
+
+				delete []szPathName;
+			}
+		}	
 	}
 
 	inline void CFrame::OnCloseFrame()
@@ -2909,7 +2934,7 @@ namespace Win32xx
 
 		int nMaxMRUIndex =  m_MRUEntries.size()-1;
 		nMaxMRUIndex = min(nMaxMRUIndex, (int)m_nMaxMRU);
-		UINT uLastMRU_ID = IDW_FILE_MRU_FILE1 + nMaxMRUIndex;
+		UINT uLastMRU_ID = IDW_FILE_MRU_FILE1 + max(0, nMaxMRUIndex);
 		TCHAR szText[MAX_MENU_STRING+1];
 		tString tsItemText;
 
