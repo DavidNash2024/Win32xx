@@ -294,6 +294,7 @@ namespace Win32xx
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
 		tString m_tsStatusText;				// TCHAR std::string for status text
 		UINT m_nMaxMRU;						// maximum number of MRU entries
+		CRect m_rcPosition;					// CRect of the starting window position
 
 	};  // class CFrame
 
@@ -1872,11 +1873,10 @@ namespace Win32xx
 			// Get current desktop size to ensure reasonable a window position
 			CRect rcDesktop;
 			SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-
-	/*		cs.y = min(dwTop, (UINT)rcDesktop.bottom - 30);
-			cs.x = min(dwLeft, (UINT)rcDesktop.right - 90);
-			cs.cx = dwWidth;
-			cs.cy = dwHeight; */
+			m_rcPosition.top = min(dwTop, (UINT)rcDesktop.bottom - 30);
+			m_rcPosition.left = min(dwLeft, (UINT)rcDesktop.right - 90);
+			m_rcPosition.bottom = m_rcPosition.top + dwHeight;
+			m_rcPosition.right = m_rcPosition.left + dwWidth;
 
 			RegCloseKey(hKey);
 		}
@@ -2424,34 +2424,11 @@ namespace Win32xx
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
-		// Retrieve the previous window position from the registry
-		if (!m_tsKeyName.empty())
-		{
-			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
-			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
-			if (hKey)
-			{
-				DWORD dwType = REG_BINARY;
-				DWORD BufferSize = sizeof(DWORD);
-				DWORD dwTop, dwLeft, dwWidth, dwHeight;
-				RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
-				RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
-				RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
-				RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
-
-				// Get current desktop size to ensure reasonable a window position
-				CRect rcDesktop;
-				SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-
-				cs.y = min(dwTop, (UINT)rcDesktop.bottom - 30);
-				cs.x = min(dwLeft, (UINT)rcDesktop.right - 90);
-				cs.cx = dwWidth;
-				cs.cy = dwHeight;
-
-				RegCloseKey(hKey);
-			}
-		}
+		// Set the original window position
+		cs.x  = m_rcPosition.left;
+		cs.y  = m_rcPosition.top;
+		cs.cx = m_rcPosition.Width();
+		cs.cy = m_rcPosition.Height();
 	}
 
 	inline void CFrame::RecalcLayout()
