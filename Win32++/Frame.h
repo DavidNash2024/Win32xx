@@ -2906,8 +2906,8 @@ namespace Win32xx
 			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
 		}
 
-		UINT nMaxMRUIndex =  m_MRUEntries.size()-1;
-		nMaxMRUIndex = min(nMaxMRUIndex, m_nMaxMRU);
+		int nMaxMRUIndex =  m_MRUEntries.size()-1;
+		nMaxMRUIndex = min(nMaxMRUIndex, (int)m_nMaxMRU);
 		UINT uLastMRU_ID = IDW_FILE_MRU_FILE1 + nMaxMRUIndex;
 		TCHAR szText[MAX_MENU_STRING+1];
 		tString tsItemText;
@@ -2945,7 +2945,7 @@ namespace Win32xx
 		SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
 
 		// Now we can insert the other menu MRU entries before the last MRU entry
-		for (UINT index = 0; index < nMaxMRUIndex; ++index)
+		for (int index = 0; index < nMaxMRUIndex; ++index)
 		{
 			mii.fMask = MIIM_TYPE | MIIM_ID;
 			mii.fType = MFT_STRING;

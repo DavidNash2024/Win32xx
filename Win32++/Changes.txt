@@ -14,6 +14,9 @@ To enable this, set the m_KeyName member variable in CMainFrame's constructor.
 This member variable can be used to reflect the company name and application name,
 for example:
   m_KeyName = _T("SomeCompany\\SomeApp");
+  
+* Frame applications now provide a Most Recently Used (MRU) list. This list is 
+stored in the registry.
 
 * Extended CWnd
 CWnd now includes functions which wrap many of the Win32/Win64 API 
