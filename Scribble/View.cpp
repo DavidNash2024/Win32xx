@@ -66,43 +66,45 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 
-
 BOOL CView::FileOpen(LPCTSTR szFilename)
 {
 	// empty the PlotPoint vector
 	m_points.clear();
-
 	DWORD nBytesRead;
+	BOOL bResult = FALSE;
 
 	// Create a handle to the file
 	HANDLE hFile = CreateFile(szFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (INVALID_HANDLE_VALUE != hFile)
-	{
+	{	
 		do
 		{
 			nBytesRead = 0;
 			PlotPoint pp;
 
-			// Read a PlotPoint struct from the file
-			if (!ReadFile(hFile, &pp, sizeof(PlotPoint), &nBytesRead, NULL))
+			if (ReadFile(hFile, &pp, sizeof(PlotPoint), &nBytesRead, NULL))
 			{
-				Invalidate();
-				throw CWinException(_T("Failed to read from file"));
-			}
-
-			// store the PlotPoint in the PlotPoint vector
-			if (nBytesRead == sizeof(PlotPoint))
-				m_points.push_back(pp);
-			else if (nBytesRead != 0)
+				if (nBytesRead == sizeof(PlotPoint))
+					m_points.push_back(pp);
+			} 
+			else
 			{
 				m_points.clear();
-				Invalidate();
-				throw CWinException (_T("Invalid data in file"));
+				::MessageBox (0, _T("Failed to read from file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+				break;
 			}
-
 
 		} while (nBytesRead == sizeof(PlotPoint));
 
+		if (0 != nBytesRead)
+		{
+			// Failed to read all of the file
+			m_points.clear();
+			::MessageBox (0, _T("Invalid data in file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		}
+		else
+			bResult = TRUE;
+			
 		CloseHandle(hFile);
 	}
 	else
@@ -110,38 +112,37 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 		tString tsErrMsg = _T("Failed to open file ");
 		tsErrMsg += szFilename;
 		::MessageBox (0, tsErrMsg.c_str(), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-		Invalidate();
-		return FALSE;
 	}
 
-	// repaint the view window
 	Invalidate();
-	return TRUE;
+	return bResult;
 }
-
 
 BOOL CView::FileSave(LPCTSTR szFilename)
 {
 	DWORD nBytesWritten;
 	HANDLE hFile = CreateFile(szFilename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	if (INVALID_HANDLE_VALUE != hFile)
+	if (INVALID_HANDLE_VALUE == hFile)
 	{
-		for (int i = 0; i < (int)m_points.size(); ++i)
-		{
-			if ((!WriteFile(hFile, &m_points[i], sizeof(PlotPoint), &nBytesWritten, NULL))
-				|| (nBytesWritten != sizeof(PlotPoint)))
-			{
-				throw CWinException (_T("Error while writing to file"));
-			}
-		}
-
-		CloseHandle(hFile);
+		::MessageBox (0, _T("Failed to open file for writing"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		return FALSE;
 	}
-	else
-		throw CWinException(_T("Failed to open file for writing"));
+	
+	BOOL bResult = TRUE;
+	for (int i = 0; i < (int)m_points.size(); ++i)
+	{
+		if ((!WriteFile(hFile, &m_points[i], sizeof(PlotPoint), &nBytesWritten, NULL))
+			|| (nBytesWritten != sizeof(PlotPoint)))
+		{
+			::MessageBox (0, _T("Error while writing to file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+			bResult = FALSE;
+			break;
+		}
+	}
 
-	return TRUE;
+	CloseHandle(hFile);
+	return bResult;
 }
 
 void CView::SetPen(COLORREF color)

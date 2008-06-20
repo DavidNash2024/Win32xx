@@ -186,7 +186,7 @@ namespace Win32xx
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
-		virtual void LoadRegistrySettings(UINT nMaxMRU = 5);
+		virtual void LoadRegistrySettings(UINT nMaxMRU = 0);
 		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
@@ -1308,7 +1308,8 @@ namespace Win32xx
 	//
 	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_tsStatusText(_T("Ready")),
-						 m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL)
+						 m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL),
+						 m_pView(NULL), m_nMaxMRU(0)
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -1526,7 +1527,7 @@ namespace Win32xx
 		if (m_MRUEntries.size() > m_nMaxMRU)
 			m_MRUEntries.erase(m_MRUEntries.begin() + m_nMaxMRU, m_MRUEntries.end());
 
-		UpdateMRUMenu(); 
+		UpdateMRUMenu();
 	}
 
 	inline void CFrame::AddToolbarBand(CToolbar& TB)
@@ -1777,7 +1778,7 @@ namespace Win32xx
 	inline tString CFrame::GetMRUEntry(int nIndex)
 	{
 		tString tsPathName = m_MRUEntries[nIndex];
-		
+
 		// Now put the selected entry at Index 0
 		AddMRUEntry(tsPathName.c_str());
 		return tsPathName;
@@ -1850,7 +1851,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::LoadRegistrySettings(UINT nMaxMRU /*= 5*/)
+	inline void CFrame::LoadRegistrySettings(UINT nMaxMRU /*= 0*/)
 	{
 		m_nMaxMRU = min(nMaxMRU, 16);
 		if (!m_tsKeyName.empty())
@@ -1867,15 +1868,15 @@ namespace Win32xx
 					DWORD dwBufferSize = 0;
 					TCHAR szSubKey[10] = _T("");
 					wsprintf(szSubKey, _T("File %d\0"), i+1);
-					
+
 					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
 					TCHAR* szPathName = new TCHAR[dwBufferSize];
 					if (NULL == szPathName) throw std::bad_alloc();
-				
+
 					// load the entry from the registry
 					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
 					{
-						if (lstrlen(szPathName)) 
+						if (lstrlen(szPathName))
 							m_MRUEntries.push_back(szPathName);
 					}
 
@@ -2483,7 +2484,7 @@ namespace Win32xx
 				m_MRUEntries.erase(m_MRUEntries.begin() + i);
 		}
 
-		UpdateMRUMenu(); 
+		UpdateMRUMenu();
 	}
 
 	inline void CFrame::SaveRegistrySettings()
@@ -2535,13 +2536,13 @@ namespace Win32xx
 				tString tsPathName;
 				if (i < m_MRUEntries.size())
 					tsPathName = m_MRUEntries[i];
-				
+
 				if (RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
 			}
 
-			RegCloseKey(hKey);			
-		} 
+			RegCloseKey(hKey);
+		}
 	}
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)
@@ -2895,8 +2896,8 @@ namespace Win32xx
 	}
 
 	inline void CFrame::UpdateMRUMenu()
-	{	
-		// Get the handle to the Menu entry titled "File" 
+	{
+		// Get the handle to the Menu entry titled "File"
 		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
 		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
 
@@ -2930,13 +2931,13 @@ namespace Win32xx
 
 		// Set the last menu MRU entry
 		MENUITEMINFO mii = {0};
-		
+
 		// For Win95 and NT, cbSize needs to be 44
 		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
 			mii.cbSize = 44;
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
-		
+
 		mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
 		mii.fType = MFT_STRING;
 		mii.wID = uLastMRU_ID;
@@ -2958,7 +2959,7 @@ namespace Win32xx
 				tsItemText.erase(0, tsItemText.length() - MAX_MENU_STRING +10);
 				tsItemText = _T("... ") + tsItemText;
 			}
-			
+
 			wsprintf(szText, _T("%d %s"), index+1, tsItemText.c_str());
 			tsItemText = szText;
 
@@ -2966,7 +2967,7 @@ namespace Win32xx
 			InsertMenuItem(hFileMenu, uLastMRU_ID, FALSE, &mii);
 		}
 
-		DrawMenuBar(m_hWnd); 
+		DrawMenuBar(m_hWnd);
 	}
 
 

@@ -19,8 +19,8 @@ public:
 	CView();
 	virtual ~CView();
 	virtual void ClearPoints();
-	virtual void FileOpen(LPCTSTR szFilename);
-	virtual void FileSave(LPCTSTR szFilename);
+	virtual BOOL FileOpen(LPCTSTR szFilename);
+	virtual BOOL FileSave(LPCTSTR szFilename);
 	virtual void SetPen(COLORREF Color);
 
 protected:

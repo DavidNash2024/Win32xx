@@ -33,7 +33,7 @@ CMainFrame::CMainFrame()
 	SetRegistryKey(_T("Win32++\\Scribble Sample"));
 
 	// Load the settings from the registry
-	LoadRegistrySettings();
+	LoadRegistrySettings(5);
 }
 
 CMainFrame::~CMainFrame()
