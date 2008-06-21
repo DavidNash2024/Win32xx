@@ -28,9 +28,12 @@ CMainFrame::CMainFrame() : m_MyDialog(IDD_DIALOG1)
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Comment the line below to disable storing the window position in the registry
+	// Set the name of the registry key
 	// Adjust the Company and Application name as appropriate
-	m_KeyName = _T("Win32++\\Form");
+	SetRegistryKey(_T("Win32++\\Form"));
+
+	// Load settings from the registry
+	LoadRegistrySettings();
 }
 
 CMainFrame::~CMainFrame()
@@ -75,12 +78,9 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-	// Set the initial window size
-	cs.x = CW_USEDEFAULT;
-	cs.y = CW_USEDEFAULT;
+	CFrame::PreCreate(cs);
 	cs.cx = 500;
 	cs.cy = 420;
-	CFrame::PreCreate(cs);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

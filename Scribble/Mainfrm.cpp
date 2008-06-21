@@ -32,7 +32,7 @@ CMainFrame::CMainFrame()
 	// Set the name of the registry key "CompanyName\\Application"
 	SetRegistryKey(_T("Win32++\\Scribble Sample"));
 
-	// Load the settings from the registry
+	// Load the settings from the registry with 5 MRU entries
 	LoadRegistrySettings(5);
 }
 
@@ -88,21 +88,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDW_FILE_MRU_FILE3:
 	case IDW_FILE_MRU_FILE4:
 	case IDW_FILE_MRU_FILE5:
-	case IDW_FILE_MRU_FILE6:
-	case IDW_FILE_MRU_FILE7:
-	case IDW_FILE_MRU_FILE8:
-	case IDW_FILE_MRU_FILE9:
-	case IDW_FILE_MRU_FILE10:
-	case IDW_FILE_MRU_FILE11:
-	case IDW_FILE_MRU_FILE12:
-	case IDW_FILE_MRU_FILE13:
-	case IDW_FILE_MRU_FILE14:
-	case IDW_FILE_MRU_FILE15:
-	case IDW_FILE_MRU_FILE16:
 		{
 			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 			tString tsMRUText = GetMRUEntry(nMRUIndex);
-			
+
 			if (m_View.FileOpen(tsMRUText.c_str()))
 				m_PathName = tsMRUText;
 			else

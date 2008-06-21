@@ -28,8 +28,12 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Set the name of the registry key
-	m_KeyName = _T("Win32++\\Themes Sample");
+	// Comment the line below to disable storing the window position in the registry
+	// Adjust the Company and Application name as appropriate
+	SetRegistryKey("Win32++\\Themes Sample");
+
+	// Load the settings from the registry
+	LoadRegistrySettings();
 }
 
 CMainFrame::~CMainFrame()
@@ -185,7 +189,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 
 	case IDM_BLUE:	// ICY_BLUE Theme
 		{
-			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, F, F};
+			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, T, F};
 			RB.SetRebarTheme(tr);
 
 			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};

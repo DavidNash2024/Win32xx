@@ -23,7 +23,10 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_HOME );
 
 	// Set the name of the registry key
-	m_KeyName = _T("Win32++\\Browser Sample");
+	SetRegistryKey(_T("Win32++\\Browser Sample"));
+
+	// Load settings from the registry
+	LoadRegistrySettings();
 }
 
 CMainFrame::~CMainFrame()
@@ -201,7 +204,7 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
-	m_StatusText = _T("Done");
+	GetStatusbar().SetPartText(0, _T("Done"));
 }
 
 void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
@@ -326,7 +329,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 void CMainFrame::OnTimer(WPARAM wParam)
 {
 	CFrame::OnTimer(wParam);
-	m_StatusText = _T("Done");
+	GetStatusbar().SetPartText(0, _T("Done"));
 }
 
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)

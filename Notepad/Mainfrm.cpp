@@ -15,7 +15,7 @@
 // definitions for the CMainFrame class
 CMainFrame::CMainFrame()
 {
-	m_strPathName = _T("");
+	m_stPathName = _T("");
 	SetView(m_RichView);
 
 	// Define the resource IDs for the toolbar
@@ -32,8 +32,12 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Set the name of the registry key
-	m_KeyName = _T("Win32++\\Notepad Sample");
+
+	// Set the name of the registry key "CompanyName\\Application"
+	SetRegistryKey(_T("Win32++\\Notepad Sample"));
+
+	// Load the settings from the registry with 5 MRU entries
+	LoadRegistrySettings(5);
 }
 
 CMainFrame::~CMainFrame()
@@ -108,6 +112,24 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_HELP_ABOUT:
 		OnHelp();
 		return TRUE;
+			case IDW_FILE_MRU_FILE1:
+	case IDW_FILE_MRU_FILE2:
+	case IDW_FILE_MRU_FILE3:
+	case IDW_FILE_MRU_FILE4:
+	case IDW_FILE_MRU_FILE5:
+		{
+			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+			tString tsMRUText = GetMRUEntry(nMRUIndex);
+
+			if (ReadFile(tsMRUText.c_str()))
+				m_stPathName = tsMRUText;
+			else
+				RemoveMRUEntry(tsMRUText.c_str());
+
+			return TRUE;
+		}
+
+	return FALSE;
 	} // switch cmd
 
 	return FALSE;
@@ -117,7 +139,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 void CMainFrame::OnFileNew()
 {
 	::SetWindowText(m_RichView.GetHwnd(), _T(""));
-	m_strPathName = _T("");
+	m_stPathName = _T("");
 	SetWindowTitle();
 	m_RichView.SetFontDefaults();
 	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
@@ -183,7 +205,7 @@ void CMainFrame::OnFilePrint()
 		DOCINFO di;
 		ZeroMemory(&di, sizeof(di));
 		di.cbSize = sizeof(DOCINFO);
-		di.lpszDocName = m_strPathName.c_str();
+		di.lpszDocName = m_stPathName.c_str();
 
 		// Do not print to file.
 		di.lpszOutput = NULL;
@@ -275,7 +297,7 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 	ReadFile(szFileName);
 }
 
-void CMainFrame::ReadFile(LPCTSTR szFileName)
+BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
 	HANDLE hFile;
 
@@ -288,7 +310,7 @@ void CMainFrame::ReadFile(LPCTSTR szFileName)
 		tStringStream buf;
 		buf << _T("Failed to load:  ") << szFileName;
 		::MessageBox(NULL, buf.str().c_str(), _T("Warning"), MB_ICONWARNING);
-		return;
+		return FALSE;
 	}
 
 	//Set default font and color
@@ -305,9 +327,11 @@ void CMainFrame::ReadFile(LPCTSTR szFileName)
 
 	//Clear the modified text flag
 	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
+
+	return TRUE;
 }
 
-void CMainFrame::WriteFile(LPCTSTR szFileName)
+BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 {
 	HANDLE hFile;
 
@@ -320,7 +344,7 @@ void CMainFrame::WriteFile(LPCTSTR szFileName)
 		tStringStream buf;
 		buf << _T("Failed to load:   ") << szFileName;
 		::MessageBox(NULL, buf.str().c_str(), _T("Warning"), MB_ICONWARNING);
-		return;
+		return FALSE;
 	}
 
 	EDITSTREAM es;
@@ -332,9 +356,10 @@ void CMainFrame::WriteFile(LPCTSTR szFileName)
 	::SendMessage(m_RichView.GetHwnd(), EM_STREAMOUT, SF_TEXT, (LPARAM)&es);
 	::CloseHandle(hFile);
 
-
 	//Clear the modified text flag
 	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
+
+	return TRUE;
 }
 
 void CMainFrame::OnFileOpen()
@@ -367,15 +392,16 @@ void CMainFrame::OnFileOpen()
 
 	ReadFile(szFilePathName);
 	SetFileName(szFilePathName);
+	AddMRUEntry(szFilePathName);
 	SetWindowTitle();
 }
 
 void CMainFrame::OnFileSave()
 {
-	if (m_strPathName == _T(""))
+	if (m_stPathName == _T(""))
 		OnFileSaveAs();
 	else
-		WriteFile(m_strPathName.c_str());
+		WriteFile(m_stPathName.c_str());
 }
 
 void CMainFrame::OnFileSaveAs()
@@ -409,6 +435,7 @@ void CMainFrame::OnFileSaveAs()
 
 	WriteFile(szFilePathName);
 	SetFileName(szFilePathName);
+	AddMRUEntry(szFilePathName);
 	SetWindowTitle();
 }
 
@@ -418,16 +445,16 @@ void CMainFrame::SetFileName(TCHAR* szFilePathName)
 	int i = lstrlen(szFilePathName)+1;
 	while ((--i > 0) && (szFilePathName[i-1] != _T('\\')));
 
-	m_strPathName = szFilePathName+i;
+	m_stPathName = szFilePathName+i;
 }
 
 void CMainFrame::SetWindowTitle()
 {
     tString Title;
 
-	if (m_strPathName == _T("")) Title = _T("TextEdit - Untitled");
+	if (m_stPathName == _T("")) Title = _T("TextEdit - Untitled");
 
-	else Title = _T("TextEdit - ") + m_strPathName;
+	else Title = _T("TextEdit - ") + m_stPathName;
 	::SetWindowText(m_hWnd, Title.c_str());
 }
 

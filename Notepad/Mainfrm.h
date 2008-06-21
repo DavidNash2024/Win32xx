@@ -16,6 +16,7 @@
 #define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
 #endif
 
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
@@ -45,17 +46,17 @@ protected:
 	virtual void OnFileSave();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void ReadFile(LPCTSTR szFileName);
+	virtual BOOL ReadFile(LPCTSTR szFileName);
 	virtual void SetFileName(TCHAR* szFullFileName);
 	virtual void SetWindowTitle();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void WriteFile(LPCTSTR szFileName);
-	static DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
-	static DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
+	virtual BOOL WriteFile(LPCTSTR szFileName);
+	static  DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
+	static  DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 
 private:
 	CRichView m_RichView;
-	tString m_strPathName;
+	tString m_stPathName;
 };
 
 #endif //MAINFRM_H

@@ -28,8 +28,12 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Set the name of the registry key
-	m_KeyName = _T("Win32++\\Picture Sample");
+	// Comment the line below to disable storing the window position in the registry
+	// Adjust the Company and Application name as appropriate
+	SetRegistryKey("Win32++\\Picture Frame");
+
+	// Load the settings from the registry
+	LoadRegistrySettings();
 }
 
 CMainFrame::~CMainFrame()

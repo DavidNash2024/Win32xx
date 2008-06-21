@@ -1854,61 +1854,74 @@ namespace Win32xx
 
 	inline void CFrame::LoadRegistrySettings(UINT nMaxMRU /*= 0*/)
 	{
-		if (m_tsKeyName.empty())
-			throw CWinException(_T("KeyName must be set before calling LoadRegistrySettings"));
-
-		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
-		HKEY hKey = 0;
-		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
-		if (hKey)
+		try 
 		{
-			DWORD dwType = REG_BINARY;
-			DWORD BufferSize = sizeof(DWORD);
-			DWORD dwTop, dwLeft, dwWidth, dwHeight;
-			RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
-			RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
-			RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
-			RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
+			if (m_tsKeyName.empty())
+				throw CWinException(_T("KeyName must be set before calling LoadRegistrySettings"));
 
-			// Get current desktop size to ensure reasonable a window position
-			CRect rcDesktop;
-			SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-			m_rcPosition.top = min(dwTop, (UINT)rcDesktop.bottom - 30);
-			m_rcPosition.left = min(dwLeft, (UINT)rcDesktop.right - 90);
-			m_rcPosition.bottom = m_rcPosition.top + dwHeight;
-			m_rcPosition.right = m_rcPosition.left + dwWidth;
+			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
+			HKEY hKey = 0;
+			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
+			if (hKey)
+			{
+				DWORD dwType = REG_BINARY;
+				DWORD BufferSize = sizeof(DWORD);
+				DWORD dwTop, dwLeft, dwWidth, dwHeight;
+				RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
+				RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
+				RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
+				RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
 
-			RegCloseKey(hKey);
+				// Get current desktop size to ensure reasonable a window position
+				CRect rcDesktop;
+				SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
+				m_rcPosition.top = min(dwTop, (UINT)rcDesktop.bottom - 30);
+				m_rcPosition.left = min(dwLeft, (UINT)rcDesktop.right - 90);
+				m_rcPosition.bottom = m_rcPosition.top + dwHeight;
+				m_rcPosition.right = m_rcPosition.left + dwWidth;
+
+				RegCloseKey(hKey);
+			}
+
+			// Load the MRU from the registry
+			m_nMaxMRU = min(nMaxMRU, 16);
+			tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+			hKey = NULL;
+
+			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+			{
+				for (UINT i = 0; i < m_nMaxMRU; ++i)
+				{
+					DWORD dwType = REG_SZ;
+					DWORD dwBufferSize = 0;
+					TCHAR szSubKey[10] = _T("");
+					wsprintf(szSubKey, _T("File %d\0"), i+1);
+
+					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
+					TCHAR* szPathName = new TCHAR[dwBufferSize];
+					if (NULL == szPathName) throw std::bad_alloc();
+
+					// load the entry from the registry
+					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
+					{
+						if (lstrlen(szPathName))
+							m_MRUEntries.push_back(szPathName);
+					}
+
+					delete []szPathName;
+				}
+			}
 		}
 
-		// Load the MRU from the registry
-		m_nMaxMRU = min(nMaxMRU, 16);
-		tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
-		hKey = NULL;
-
-		if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+		catch(const CWinException& e)
 		{
-			for (UINT i = 0; i < m_nMaxMRU; ++i)
-			{
-				DWORD dwType = REG_SZ;
-				DWORD dwBufferSize = 0;
-				TCHAR szSubKey[10] = _T("");
-				wsprintf(szSubKey, _T("File %d\0"), i+1);
+			e.MessageBox();
+		}
 
-				RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
-				TCHAR* szPathName = new TCHAR[dwBufferSize];
-				if (NULL == szPathName) throw std::bad_alloc();
-
-				// load the entry from the registry
-				if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
-				{
-					if (lstrlen(szPathName))
-						m_MRUEntries.push_back(szPathName);
-				}
-
-				delete []szPathName;
-			}
-		}	
+		catch(std::bad_alloc)
+		{
+			::MessageBox(NULL, _T("Memory allocation error in LoadRegistrySettings"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		}
 	}
 
 	inline void CFrame::OnCloseFrame()

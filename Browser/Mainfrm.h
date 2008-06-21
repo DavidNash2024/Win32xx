@@ -6,7 +6,9 @@
 
 #include "../Win32++/frame.h"
 #include "View.h"
+#include <sstream>
 
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame

@@ -38,13 +38,12 @@ void CView::OnPaint(HDC hDC)
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points[i].color);
-			HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+			CDC PaintDC = hDC;
+			PaintDC.CreatePen(PS_SOLID, 1, m_points[i].color);
 			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
 			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
 			bDraw = m_points[i].PenDown;
-			::SelectObject(hDC, hOldPen);
-			::DeleteObject(hPen);
+			PaintDC.DetachDC();	// Otherwise the DC would be deleted
 		}
 	}
 }

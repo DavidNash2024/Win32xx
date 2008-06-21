@@ -91,7 +91,7 @@ void CMainView::Reposition()
 	CMainFrame& MainFrame = GetSplitApp().GetMainFrame();
 
 	//Get the client area of our frame
-	CRect rc = MainFrame.GetClientRect();
+	CRect rc = MainFrame.GetViewRect();
 
 	int pos = (rc.Height())/2;
 	SetBarPos(pos);
