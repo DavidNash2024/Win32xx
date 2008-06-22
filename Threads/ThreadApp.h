@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 class CThreadApp : public CWinApp
 {

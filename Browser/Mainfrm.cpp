@@ -4,6 +4,9 @@
 
 #include "resource.h"
 #include "mainfrm.h"
+#include <sstream>
+
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 
 // Definitions for the CMainFrame class

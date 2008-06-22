@@ -8,7 +8,6 @@
 
 #include "../Win32++/WinCore.h"
 
-
 class CTestWindow : public CWnd
 {
 public:

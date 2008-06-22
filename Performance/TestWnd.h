@@ -8,7 +8,6 @@
 
 #include "../Win32++/WinCore.h"
 
-typedef std::basic_stringstream<TCHAR> tStringStream;
 
 class CTestWindow : public CWnd
 {
@@ -26,8 +25,8 @@ private:
 	};
 
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
-	int m_nWindow; 
+
+	int m_nWindow;
 };
 
 

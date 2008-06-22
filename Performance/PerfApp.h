@@ -8,8 +8,9 @@
 #define PERFAPP_H
 
 #include "MainWnd.h"
-#include <string>
 #include <sstream>
+
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 
 class CPerformanceApp : public CWinApp
