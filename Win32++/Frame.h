@@ -2538,25 +2538,29 @@ namespace Win32xx
 				RegCloseKey(hKey);
 			}
 
-			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
-			HKEY hKey = NULL;
-
-			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-				throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-			for (UINT i = 0; i < m_nMaxMRU; ++i)
+			// Store the MRU entries in the registry
+			if (m_nMaxMRU > 0)
 			{
-				TCHAR szSubKey[10];
-				wsprintf(szSubKey, _T("File %d\0"), i+1);
-				tString tsPathName;
-				if (i < m_MRUEntries.size())
-					tsPathName = m_MRUEntries[i];
+				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+				HKEY hKey = NULL;
 
-				if (RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
+				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+				for (UINT i = 0; i < m_nMaxMRU; ++i)
+				{
+					TCHAR szSubKey[10];
+					wsprintf(szSubKey, _T("File %d\0"), i+1);
+					tString tsPathName;
+					if (i < m_MRUEntries.size())
+						tsPathName = m_MRUEntries[i];
+
+					if (RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
+						throw (CWinException(_T("RegSetValueEx Failed")));
+				}
+
+				RegCloseKey(hKey);
 			}
-
-			RegCloseKey(hKey);
 		}
 	}
 
