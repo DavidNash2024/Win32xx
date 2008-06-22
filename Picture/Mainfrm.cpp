@@ -30,7 +30,7 @@ CMainFrame::CMainFrame()
 
 	// Comment the line below to disable storing the window position in the registry
 	// Adjust the Company and Application name as appropriate
-	SetRegistryKey("Win32++\\Picture Frame");
+	SetRegistryKey(_T("Win32++\\Picture Frame"));
 
 	// Load the settings from the registry
 	LoadRegistrySettings();

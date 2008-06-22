@@ -30,7 +30,7 @@ CMainFrame::CMainFrame()
 
 	// Comment the line below to disable storing the window position in the registry
 	// Adjust the Company and Application name as appropriate
-	SetRegistryKey("Win32++\\PropertySheet Sample");
+	SetRegistryKey(_T("Win32++\\PropertySheet Sample"));
 
 	// Load the settings from the registry
 	LoadRegistrySettings();
@@ -50,7 +50,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE; 
+		return TRUE;
 	case IDM_MODELESS:
 		// Permit only one Modeless property sheet
 		if (!m_ModelessPS.GetHwnd())
@@ -76,7 +76,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 			mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 			mps.SetWizardMode(TRUE);
 			mps.DoModal();
-		} 
+		}
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -118,6 +118,6 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

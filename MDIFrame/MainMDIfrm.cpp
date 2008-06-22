@@ -25,7 +25,7 @@ CMainMDIFrame::CMainMDIFrame()
 
 	// Comment the line below to disable storing the window position in the registry
 	// Adjust the Company and Application name as appropriate
-	SetRegistryKey("Win32++\\MDI Frame");
+	SetRegistryKey(_T("Win32++\\MDI Frame"));
 
 	// Load the settings from the registry
 	LoadRegistrySettings();
