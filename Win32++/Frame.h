@@ -2974,18 +2974,21 @@ namespace Win32xx
 
 			BOOL bResult;
 			if (index == nMaxMRUIndex)
-				// Replace the last MRU entry
+				// Replace the last MRU entry first
 				bResult = SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
 			else
-				// Insert the other MRU entries
+				// Insert the other MRU entries next
 				bResult = InsertMenuItem(hFileMenu, IDW_FILE_MRU_FILE1 + index + 1, FALSE, &mii);
 
-			if (!bResult) TRACE(_T("Failed to set MRU menu item"));
+			if (!bResult) 
+			{
+				TRACE(_T("Failed to set MRU menu item\n"));
+				break;
+			}
 		}
 
 		DrawMenuBar(m_hWnd);
 	}
-
 
 	inline LRESULT CFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
