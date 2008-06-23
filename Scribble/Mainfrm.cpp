@@ -32,8 +32,8 @@ CMainFrame::CMainFrame()
 	// Set the name of the registry key "CompanyName\\Application"
 	SetRegistryKey(_T("Win32++\\Scribble Sample"));
 
-	// Load the settings from the registry with 5 MRU entries
-	LoadRegistrySettings(5);
+	// Load the settings from the registry with 4 MRU entries
+	LoadRegistrySettings(4);
 }
 
 CMainFrame::~CMainFrame()

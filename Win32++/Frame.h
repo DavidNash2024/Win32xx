@@ -2919,36 +2919,43 @@ namespace Win32xx
 		// Get the handle to the Menu entry titled "File"
 		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
 		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
-
-		// Remove all but the last MRU Menu entry
-		for (UINT u = IDW_FILE_MRU_FILE1 +1; u <= IDW_FILE_MRU_FILE1 +16; ++u)
+		
+		// Remove all but the first MRU Menu entry
+		for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
 		{
 			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
 		}
 
 		int nMaxMRUIndex =  m_MRUEntries.size()-1;
 		nMaxMRUIndex = min(nMaxMRUIndex, (int)m_nMaxMRU);
-		UINT uLastMRU_ID = IDW_FILE_MRU_FILE1 + max(0, nMaxMRUIndex);
-		TCHAR szText[MAX_MENU_STRING+1];
-		tString tsItemText;
 
+		// Set the text for the MRU Menu
+		tString tsMRUArray[16];
 		if (nMaxMRUIndex >= 0)
 		{
-			tsItemText = m_MRUEntries[nMaxMRUIndex];
-			if (tsItemText.length() > MAX_MENU_STRING - 10)
+			for (int n = 0; n <= nMaxMRUIndex; ++n)
 			{
-				// Truncate the string if its too long
-				tsItemText.erase(0, tsItemText.length() - MAX_MENU_STRING +10);
-				tsItemText = _T("... ") + tsItemText;
+				tsMRUArray[n] = m_MRUEntries[n];
+				if (tsMRUArray[n].length() > MAX_MENU_STRING - 10)
+				{							
+					// Truncate the string if its too long
+					tsMRUArray[n].erase(0, tsMRUArray[n].length() - MAX_MENU_STRING +10);
+					tsMRUArray[n] = _T("... ") + tsMRUArray[n];
+				}
+				
+				// Prefix the string with its number
+				TCHAR tVal[5];
+				wsprintf(tVal, _T("%d "), n+1);
+				tsMRUArray[n] = tVal + tsMRUArray[n];			
 			}
-
-			// Prefix the string with its number
-			wsprintf(szText, _T("%d %s"), nMaxMRUIndex+1, tsItemText.c_str());
 		}
 		else
-			lstrcpy(szText, _T("Recent Files"));
+		{
+			tsMRUArray[0] = _T("Recent Files");
+			nMaxMRUIndex = 0;
+		}
 
-		// Set the last menu MRU entry
+		// Set MRU menu items
 		MENUITEMINFO mii = {0};
 
 		// For Win95 and NT, cbSize needs to be 44
@@ -2957,33 +2964,23 @@ namespace Win32xx
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
 
-		mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
-		mii.fType = MFT_STRING;
-		mii.wID = uLastMRU_ID;
-		mii.fState = (nMaxMRUIndex >= 0)? 0: MFS_GRAYED;
-		mii.dwTypeData = szText;
-		SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
-
-		// Now we can insert the other menu MRU entries before the last MRU entry
-		for (int index = 0; index < nMaxMRUIndex; ++index)
+		for (int index = nMaxMRUIndex; index >= 0; --index)
 		{
-			mii.fMask = MIIM_TYPE | MIIM_ID;
+			mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
+			mii.fState = (0 == m_MRUEntries.size())? MFS_GRAYED : 0;
 			mii.fType = MFT_STRING;
 			mii.wID = IDW_FILE_MRU_FILE1 + index;
-			tsItemText = m_MRUEntries[index];
+			mii.dwTypeData = (LPTSTR)tsMRUArray[index].c_str();
 
-			if (tsItemText.length() > MAX_MENU_STRING -10)
-			{
-				// Truncate the string if its too long
-				tsItemText.erase(0, tsItemText.length() - MAX_MENU_STRING +10);
-				tsItemText = _T("... ") + tsItemText;
-			}
+			BOOL bResult;
+			if (index == nMaxMRUIndex)
+				// Replace the last MRU entry
+				bResult = SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
+			else
+				// Insert the other MRU entries
+				bResult = InsertMenuItem(hFileMenu, IDW_FILE_MRU_FILE1 + index + 1, FALSE, &mii);
 
-			wsprintf(szText, _T("%d %s"), index+1, tsItemText.c_str());
-			tsItemText = szText;
-
-			mii.dwTypeData = (LPTSTR)tsItemText.c_str();
-			InsertMenuItem(hFileMenu, uLastMRU_ID, FALSE, &mii);
+			if (!bResult) TRACE(_T("Failed to set MRU menu item"));
 		}
 
 		DrawMenuBar(m_hWnd);

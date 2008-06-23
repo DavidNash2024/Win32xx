@@ -216,9 +216,8 @@ namespace Win32xx
 	struct TLSData
 	{
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
-		HHOOK  hCBTHook;	// CBT hook for Window creation
-		CWnd* pMenubar;		// pointer to CMenubar object
-		HHOOK  hMenuHook;	// MSG hook for CMenubar
+		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
+		HHOOK hMenuHook;	// WH_MSGFILTER hook for CMenubar (used when popup menu is active)
 	};
 
 
@@ -817,7 +816,7 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); ++m)
 		{
-			DestroyWindow((*m).first);
+			::DestroyWindow((*m).first);
 		}
 		m_HWNDmap.clear();
 
@@ -826,7 +825,6 @@ namespace Win32xx
 		{
 			::TlsSetValue(GetTlsIndex(), NULL);
 			::TlsFree(m_TlsIndex);
-			m_TlsIndex = TLS_OUT_OF_INDEXES;
 		}
 
 		std::vector<TLSData*>::iterator iter;
@@ -1177,9 +1175,9 @@ namespace Win32xx
 			}
 
 			// Set the Window Class Name
-			TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ Window");
+			TCHAR szClassName[MAX_STRING_SIZE +1] = _T("Win32++ Window");
 			if (m_cs.lpszClass)
-				lstrcpy(szClassName, m_cs.lpszClass);
+				lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
 			// Set Parent
 			if (!hWndParent && m_cs.hwndParent)
@@ -1237,7 +1235,7 @@ namespace Win32xx
 			Clear();
 
 			// Ensure a window class is registered
-			TCHAR ClassName[MAX_STRING_SIZE] = _T("");
+			TCHAR ClassName[MAX_STRING_SIZE +1] = _T("");
 			if (0 == lstrlen(lpszClassName) )
 				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
@@ -1369,7 +1367,7 @@ namespace Win32xx
 		tString tstr;
 		if (nLength > 0)
 		{
-			TCHAR szString[MAX_STRING_SIZE];
+			TCHAR szString[MAX_STRING_SIZE +1];
 			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, MAX_STRING_SIZE);
 			tstr = szString;
 		}
@@ -1408,7 +1406,7 @@ namespace Win32xx
 		tString tstr;
 		if (nLength > 0)
 		{
-			TCHAR szString[MAX_STRING_SIZE];
+			TCHAR szString[MAX_STRING_SIZE +1];
 			::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE);
 			tstr = szString;
 		}
@@ -1509,7 +1507,7 @@ namespace Win32xx
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
 		m_tsLoadString = _T("");
-		TCHAR szString[MAX_STRING_SIZE] = _T("");
+		TCHAR szString[MAX_STRING_SIZE +1] = _T("");
 		if (!::LoadString (GetApp()->GetResourceHandle(), nID, szString, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
