@@ -2916,6 +2916,8 @@ namespace Win32xx
 
 	inline void CFrame::UpdateMRUMenu()
 	{
+		if (0 >= m_nMaxMRU) return;
+
 		// Get the handle to the Menu entry titled "File"
 		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
 		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
