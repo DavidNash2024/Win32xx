@@ -24,12 +24,9 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Comment the line below to disable storing the window position in the registry
-	// Adjust the Company and Application name as appropriate
-	SetRegistryKey(_T("Win32++\\Splitter Sample"));
-
-	// Load the settings from the registry
-	LoadRegistrySettings();
+	// Set the registry key name, and load the initial window position
+	// Use a registry key name like "CompanyName\\Application"
+	LoadRegistrySettings(_T("Win32++\\Splitter Sample"));	
 }
 
 CMainFrame::~CMainFrame()

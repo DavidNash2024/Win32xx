@@ -186,7 +186,7 @@ namespace Win32xx
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
-		virtual void LoadRegistrySettings(UINT nMaxMRU = 0);
+		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
@@ -202,17 +202,18 @@ namespace Win32xx
 		// These functions aren't intended to be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		ThemeMenu& GetMenuTheme()	{return m_ThemeMenu;}
+		tString GetRegistryKeyName(){return m_tsKeyName;}
 		CWnd* GetView() const		{return m_pView;}
 		tString CFrame::GetMRUEntry(int nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
-		void SetRegistryKey(LPCTSTR szKeyName) {m_tsKeyName = szKeyName;}
+		void LoadRegistrySettings(LPCTSTR szKeyName);
 		void SetView(CWnd& pView);
 
-		CMenubar&  GetMenubar() const		{return (CMenubar&)m_Menubar;}
-		CRebar&  GetRebar() const			{return (CRebar&)m_Rebar;}
-		CStatusbar&  GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
-		CToolbar&  GetToolbar() const		{return (CToolbar&)m_Toolbar;}
+		CMenubar& GetMenubar() const		{return (CMenubar&)m_Menubar;}
+		CRebar& GetRebar() const			{return (CRebar&)m_Rebar;}
+		CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
+		CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
 
 		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
 		BOOL IsMenubarUsed() const		{return (m_Menubar != 0);}
@@ -1852,41 +1853,17 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::LoadRegistrySettings(UINT nMaxMRU /*= 0*/)
+	inline void CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
 		try 
 		{
 			if (m_tsKeyName.empty())
-				throw CWinException(_T("KeyName must be set before calling LoadRegistrySettings"));
-
-			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
-			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
-			if (hKey)
-			{
-				DWORD dwType = REG_BINARY;
-				DWORD BufferSize = sizeof(DWORD);
-				DWORD dwTop, dwLeft, dwWidth, dwHeight;
-				RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
-				RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
-				RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
-				RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
-
-				// Get current desktop size to ensure reasonable a window position
-				CRect rcDesktop;
-				SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-				m_rcPosition.top = min(dwTop, (UINT)rcDesktop.bottom - 30);
-				m_rcPosition.left = min(dwLeft, (UINT)rcDesktop.right - 90);
-				m_rcPosition.bottom = m_rcPosition.top + dwHeight;
-				m_rcPosition.right = m_rcPosition.left + dwWidth;
-
-				RegCloseKey(hKey);
-			}
+				throw CWinException(_T("KeyName must be set before calling LoadRegistryMRUSettings"));
 
 			// Load the MRU from the registry
 			m_nMaxMRU = min(nMaxMRU, 16);
-			tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
-			hKey = NULL;
+			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+			HKEY hKey = NULL;
 
 			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
 			{
@@ -1920,7 +1897,36 @@ namespace Win32xx
 
 		catch(std::bad_alloc)
 		{
-			::MessageBox(NULL, _T("Memory allocation error in LoadRegistrySettings"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+			::MessageBox(NULL, _T("Memory allocation error in LoadRegistryMRUSettings"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		}
+	}
+
+	inline void CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+	{
+		m_tsKeyName = szKeyName;
+	
+		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
+		HKEY hKey = 0;
+		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
+		if (hKey)
+		{
+			DWORD dwType = REG_BINARY;
+			DWORD BufferSize = sizeof(DWORD);
+			DWORD dwTop, dwLeft, dwWidth, dwHeight;
+			RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
+			RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
+			RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
+			RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
+
+			// Get current desktop size to ensure reasonable a window position
+			CRect rcDesktop;
+			SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
+			m_rcPosition.top = min(dwTop, (UINT)rcDesktop.bottom - 30);
+			m_rcPosition.left = min(dwLeft, (UINT)rcDesktop.right - 90);
+			m_rcPosition.bottom = m_rcPosition.top + dwHeight;
+			m_rcPosition.right = m_rcPosition.left + dwWidth;
+
+			RegCloseKey(hKey);
 		}
 	}
 

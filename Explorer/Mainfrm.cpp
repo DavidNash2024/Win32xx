@@ -26,11 +26,9 @@ CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Set the name of the registry key
-	SetRegistryKey(_T("Win32++\\Explorer Sample"));
-
-	// Load settings from the registry
-	LoadRegistrySettings();
+	// Set the registry key name, and load the initial window position
+	// Use a registry key name like "CompanyName\\Application"
+	LoadRegistrySettings(_T("Win32++\\Explorer Sample"));
 }
 
 CMainFrame::~CMainFrame()

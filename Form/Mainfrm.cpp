@@ -28,12 +28,9 @@ CMainFrame::CMainFrame() : m_MyDialog(IDD_DIALOG1)
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Set the name of the registry key
-	// Adjust the Company and Application name as appropriate
-	SetRegistryKey(_T("Win32++\\Form"));
-
-	// Load settings from the registry
-	LoadRegistrySettings();
+	// Set the registry key name, and load the initial window position
+	// Use a registry key name like "CompanyName\\Application"
+	LoadRegistrySettings(_T("Win32++\\Form"));
 }
 
 CMainFrame::~CMainFrame()

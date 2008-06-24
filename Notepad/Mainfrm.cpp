@@ -32,12 +32,12 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-
-	// Set the name of the registry key "CompanyName\\Application"
-	SetRegistryKey(_T("Win32++\\Notepad Sample"));
+	// Set the registry key name, and load the initial window position
+	// Use a registry key name like "CompanyName\\Application"
+	LoadRegistrySettings(_T("Win32++\\Notepad Sample"));
 
 	// Load the settings from the registry with 5 MRU entries
-	LoadRegistrySettings(5);
+	LoadRegistryMRUSettings(5);
 }
 
 CMainFrame::~CMainFrame()

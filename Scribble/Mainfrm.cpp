@@ -29,11 +29,12 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
-	// Set the name of the registry key "CompanyName\\Application"
-	SetRegistryKey(_T("Win32++\\Scribble Sample"));
+	// Set the registry key name, and load the initial window position
+	// Use a registry key name like "CompanyName\\Application"
+	LoadRegistrySettings(_T("Win32++\\Scribble Sample"));
 
 	// Load the settings from the registry with 4 MRU entries
-	LoadRegistrySettings(4);
+	LoadRegistryMRUSettings(4);
 }
 
 CMainFrame::~CMainFrame()

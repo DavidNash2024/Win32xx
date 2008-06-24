@@ -25,11 +25,9 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HOME );
 
-	// Set the name of the registry key
-	SetRegistryKey(_T("Win32++\\Browser Sample"));
-
-	// Load settings from the registry
-	LoadRegistrySettings();
+	// Set the registry key name, and load the initial window position
+	// Use a registry key name like "CompanyName\\Application"
+	LoadRegistrySettings(_T("Win32++\\Browser Sample"));
 }
 
 CMainFrame::~CMainFrame()
