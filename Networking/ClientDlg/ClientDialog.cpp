@@ -65,17 +65,17 @@ void CClientDialog::OnClientDisconnect()
 {
 	// Called when the socket is disconnected from the server
 	m_bClientConnected = FALSE;
-	EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), TRUE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), TRUE);
 
 	// Update the dialog
-	SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, _T("Disconnected from server"));
-	EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), FALSE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), FALSE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), TRUE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), TRUE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), TRUE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), TRUE);
-	SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Connect"));
+	::SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, _T("Disconnected from server"));
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), FALSE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), FALSE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), TRUE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), TRUE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), TRUE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), TRUE);
+	::SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Connect"));
 }
 
 void CClientDialog::LoadCommonControlsEx()
@@ -124,21 +124,21 @@ void CClientDialog::OnClientConnect()
 {
 	// Called when the connection to the server is established
 	m_bClientConnected = TRUE;
-	EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), TRUE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), TRUE);
 
 	// Move focus to the Send Edit box
-	SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
+	::SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
 	::SetForegroundWindow(m_hWnd);
 
 	// Update the dialog
-	SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, _T("Connected to server"));
-	EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), FALSE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), FALSE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), FALSE);
-	EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), FALSE);
-	SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Disconnect"));
+	::SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, _T("Connected to server"));
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), FALSE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), FALSE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), FALSE);
+	::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), FALSE);
+	::SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Disconnect"));
 }
 
 int CClientDialog::OnClientReceive()
@@ -211,7 +211,7 @@ void CClientDialog::OnStartClient()
 
 				// Get the port number
 				tString tPort = GetDlgItemString(IDC_EDIT_PORT);
-				std::string sPort = TcharToString(tPort.c_str());
+				std::string sPort = TCharToString(tPort.c_str());
 				int RemotePort = atoi(sPort.c_str());
 
 				// Get the IP Address from the IP Address control
@@ -222,14 +222,14 @@ void CClientDialog::OnStartClient()
 				std::string sAddr =  inet_ntoa(addr);
 
 				// Temporarily disable the Connect/Disconnect button
-				EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), FALSE);
+				::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), FALSE);
 
 				// Connect to the server
 				if (0 != m_Client.Connect(sAddr.c_str(), RemotePort))
 				{
 					MessageBox(m_hWnd, _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING);
 					m_Client.Disconnect();
-					EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), TRUE);
+					::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), TRUE);
 					return;
 				}
 				m_Client.StartEvents();
@@ -242,22 +242,22 @@ void CClientDialog::OnStartClient()
 				// Create the socket
 				if (!m_Client.Create(SOCK_DGRAM))
 				{
-					MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
+					::MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
 					return;
 				}
 
 				m_Client.StartEvents();
 
 				//Update the dialog
-				EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
-				EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
-				EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), FALSE);
-				EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), FALSE);
-				EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), FALSE);
-				EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), FALSE);
-				SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Disconnect"));
-				SetWindowText(GetDlgItem(m_hWnd, IDC_EDIT_STATUS), _T("Ready to Send"));
-				SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
+				::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), TRUE);
+				::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
+				::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), FALSE);
+				::EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), FALSE);
+				::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), FALSE);
+				::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), FALSE);
+				::SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Disconnect"));
+				::SetWindowText(GetDlgItem(m_hWnd, IDC_EDIT_STATUS), _T("Ready to Send"));
+				::SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(m_hWnd, IDC_EDIT_SEND), TRUE);
 				m_bClientConnected = TRUE;
 			}
 			break;
@@ -269,14 +269,14 @@ void CClientDialog::OnStartClient()
 		m_Client.Disconnect();
 
 		// Update the dialog
-		EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), FALSE);
-		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), FALSE);
-		EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), TRUE);
-		EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), TRUE);
-		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), TRUE);
-		EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), TRUE);
-		SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Connect"));
-		SetWindowText(GetDlgItem(m_hWnd, IDC_EDIT_STATUS), _T("Not Connected"));
+		::EnableWindow(GetDlgItem(m_hWnd, IDC_BUTTON_SEND), FALSE);
+		::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_SEND), FALSE);
+		::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_PORT), TRUE);
+		::EnableWindow(GetDlgItem(m_hWnd, IDC_IPADDRESS1), TRUE);
+		::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_TCP), TRUE);
+		::EnableWindow(GetDlgItem(m_hWnd, IDC_RADIO_UDP), TRUE);
+		::SetWindowText(GetDlgItem(m_hWnd, IDC_BUTTON_CONNECT), _T("Connect"));
+		::SetWindowText(GetDlgItem(m_hWnd, IDC_EDIT_STATUS), _T("Not Connected"));
 		m_bClientConnected = FALSE;
 	}
 }
@@ -288,7 +288,7 @@ void CClientDialog::OnSend()
 	case SOCK_STREAM:	// for TCP client
 		{
 			tString t = GetDlgItemString(IDC_EDIT_SEND);
-			std::string s = TcharToString(t.c_str());
+			std::string s = TCharToString(t.c_str());
 			m_Client.Send(s.c_str(), s.length(), 0);
 		}
 		break;
@@ -296,7 +296,7 @@ void CClientDialog::OnSend()
 		{
 			// Get the port number
 			tString tPort = GetDlgItemString(IDC_EDIT_PORT);
-			std::string sPort = TcharToString(tPort.c_str());
+			std::string sPort = TCharToString(tPort.c_str());
 			int RemotePort = atoi(sPort.c_str());
 
 			// Get the IP Address from the IP Address control
@@ -309,7 +309,7 @@ void CClientDialog::OnSend()
 			peer.sin_addr.S_un.S_addr = htonl(dwAddr);
 
 			tString t = GetDlgItemString(IDC_EDIT_SEND);
-			std::string s = TcharToString(t.c_str());
+			std::string s = TCharToString(t.c_str());
 			m_Client.SendTo(s.c_str(), s.length(), 0, (SOCKADDR*)&peer, sizeof(peer));
 		}
 		break;

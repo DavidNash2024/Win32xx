@@ -388,7 +388,7 @@ namespace Win32xx
 		return tstr;
 	}
 
-	inline std::string TcharToString(LPCTSTR t)
+	inline std::string TCharToString(LPCTSTR t)
 	{
 		// Handy for converting TCHAR to char
 		std::string str;
