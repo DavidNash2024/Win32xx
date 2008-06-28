@@ -12,7 +12,7 @@ CButton::~CButton()
 void CButton::PreCreate(CREATESTRUCT &cs)
 {
 	// Choose "BUTTON as the window class. This is a predefined window class
-	//  which creates a button window. Since its a predefined window class, Win32++ 
+	//  which creates a button window. Since its a predefined window class, WinDev++
 	//  automatically subclasses it, so the window messages are passed via WndProc
 	cs.lpszClass = _T("BUTTON");
 
@@ -31,7 +31,7 @@ void CButton::OnInitialUpdate()
 
 LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// Run this application in Debug mode so you can see the text displayed 
+	// Run this application in Debug mode so you can see the text displayed
 	//  in the Trace window when the mouse is over the button.
 	switch (uMsg)
 	{
@@ -61,7 +61,7 @@ LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		TRACE("CButton::WndProc - Unspecified Message\n");
 		break;
 	}
-	
+
 	// Pass unhandled messages on to parent WndProc
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }

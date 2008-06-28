@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++
 OverrideOutput=0
 OverrideOutputName=Subclass.exe
 HostApplication=
-Folders=Header,Source,Win32++
+Folders=Header,Source,WinDev++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -118,9 +118,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\Win32++\WinCore.h
+FileName=..\WinDev++\WinCore.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -128,9 +128,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\Win32++\WinCore.h
+FileName=..\WinDev++\WinCore.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000

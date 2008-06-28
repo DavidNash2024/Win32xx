@@ -6,7 +6,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "../Win32++/Frame.h"
+#include "../WinDev++/Frame.h"
 #include "View.h"
 
 // required for Dev-C++

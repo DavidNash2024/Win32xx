@@ -6,7 +6,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "../Win32++/WinCore.h"
+#include "../WinDev++/WinCore.h"
 #include <vector>
 
 

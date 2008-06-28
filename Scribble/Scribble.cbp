@@ -151,11 +151,11 @@
 		<Unit filename="View.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
-		<Unit filename="..\Win32++\Default_Resource.h" />
-		<Unit filename="..\Win32++\Dialog.h" />
-		<Unit filename="..\Win32++\Frame.h" />
-		<Unit filename="..\Win32++\GDI.h" />
-		<Unit filename="..\Win32++\WinCore.h" />
+		<Unit filename="..\WinDev++\Default_Resource.h" />
+		<Unit filename="..\WinDev++\Dialog.h" />
+		<Unit filename="..\WinDev++\Frame.h" />
+		<Unit filename="..\WinDev++\GDI.h" />
+		<Unit filename="..\WinDev++\WinCore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

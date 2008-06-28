@@ -6,7 +6,7 @@
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-	// Start Win32++
+	// Start WinDev++
 	CSplitterApp theApp;
 
 	// Run the application
