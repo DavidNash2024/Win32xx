@@ -2,7 +2,7 @@
 #ifndef MYPROPERTYSHEET_H
 #define MYPROPERTYSHEET_H
 
-#include "../Win32++/PropertySheet.h"
+#include "../WinDev++/PropertySheet.h"
 
 INT_PTR CALLBACK  ButtonsDlgProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK  ComboDlgProc(HWND, UINT, WPARAM, LPARAM);

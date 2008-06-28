@@ -6,7 +6,7 @@
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-	// Start Win32++
+	// Start WinDev++
 	CPropertySheetApp theApp;
 
 	// Run the application
