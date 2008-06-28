@@ -65,7 +65,7 @@
  #define PROPSHEETHEADER_V1_SIZE 40
 #endif
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	class CPropertyPage : public CWnd

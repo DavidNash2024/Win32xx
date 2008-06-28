@@ -50,7 +50,7 @@
 
 #include "Frame.h"
 
-namespace WinDevxx
+namespace WinDev
 {
 	// Declaration of the CSplitter class
 	class CSplitter : public CWnd
@@ -419,6 +419,6 @@ namespace WinDevxx
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // SPLITTER_H

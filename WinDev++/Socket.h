@@ -75,7 +75,7 @@
 #define THREAD_TIMEOUT 100
 
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	class CSocket

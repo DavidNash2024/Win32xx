@@ -44,7 +44,7 @@
 #include "Commctrl.h"
 
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	class CTreeView : public CWnd
@@ -534,7 +534,7 @@ namespace WinDevxx
 	}
 
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // #ifndef TREEVIEW_H
 

@@ -70,7 +70,7 @@
 
 
 
-namespace WinDevxx
+namespace WinDev
 {
 	/////////////////////////////////////
 	// Declaration of the CMDIChild class
@@ -603,7 +603,7 @@ namespace WinDevxx
 	}
 
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // MDI_H
 

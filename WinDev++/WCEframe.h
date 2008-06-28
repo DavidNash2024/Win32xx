@@ -73,7 +73,7 @@
 #endif
 
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	////////////////////////////////////
@@ -399,6 +399,6 @@ namespace WinDevxx
 	}
 
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // WCEFRAME_H

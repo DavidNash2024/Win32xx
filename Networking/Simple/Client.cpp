@@ -4,7 +4,7 @@
 #include "../../WinDev++/Socket.h"
 
 using namespace std;
-using namespace WinDevxx;
+using namespace WinDev;
 
 
 class CClientSocket : public CSocket

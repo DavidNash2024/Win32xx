@@ -38,7 +38,7 @@
 #define REBAR_H
 
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	struct ThemeRebar
@@ -585,6 +585,6 @@ namespace WinDevxx
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // #ifndef REBAR_H

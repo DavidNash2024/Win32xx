@@ -142,11 +142,11 @@
 #endif
 
 
-// Automatically include the WinDevxx namespace
+// Automatically include the WinDev namespace
 // define NO_USING_NAMESPACE to skip this step
-namespace WinDevxx {}
+namespace WinDev {}
 #ifndef NO_USING_NAMESPACE
-  using namespace WinDevxx;
+  using namespace WinDev;
 #endif
 
 // Define min and max for Dev-C++ compatibility
@@ -158,7 +158,7 @@ namespace WinDevxx {}
   #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-namespace WinDevxx
+namespace WinDev
 {
 	///////////////////////////////////////////
 	// Some useful type declarations and macros
@@ -222,7 +222,7 @@ namespace WinDevxx
 
 
 	//////////////////////////////////////////////////
-	// Global functions	(within the WinDevxx namespace)
+	// Global functions	(within the WinDev namespace)
 
 	// Returns a pointer to CWinApp (defined later)
 	CWinApp* GetApp();
@@ -2121,7 +2121,7 @@ namespace WinDevxx
 	} // LRESULT CWnd::WindowProc(...)
 
 
-}; // namespace WinDevxx
+}; // namespace WinDev
 
 
 #endif // WINCORE_H

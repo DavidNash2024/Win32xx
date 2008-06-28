@@ -7,10 +7,10 @@ area of the frame window.
 
 Classes derived from CWnd are used to create the windows.  The files
 for this are located in the WinDev++ directory, and the code
-is lcoated in the WinDevxx namespace.
+is lcoated in the WinDev namespace.
 
 The CView, CFrameApp and CMainFrame classes are intended as 
-templates for other programs.  The classes within the WinDevxx 
+templates for other programs.  The classes within the WinDev 
 namespace are intended to be used without modification.
 
 Generic Information about WinDev++ Projects

@@ -42,7 +42,7 @@
 #include "Rebar.h"
 
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	struct ThemeToolbar
@@ -845,6 +845,6 @@ namespace WinDevxx
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // #ifndef TOOLBAR_H

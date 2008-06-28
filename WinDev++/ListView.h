@@ -42,7 +42,7 @@
 #include "WinCore.h"
 #include "Commctrl.h"
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	class CListView : public CWnd
@@ -740,7 +740,7 @@ namespace WinDevxx
 		return ListView_Update( m_hWnd, iItem );
 	}
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // #ifndef LISTVIEW_H
 

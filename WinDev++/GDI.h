@@ -78,7 +78,7 @@
 
 #include "WinCore.h"
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	///////////////////////////////////////////////
@@ -597,7 +597,7 @@ namespace WinDevxx
 
 
 	/////////////////////////////////////////////////////////////////
-	// Definitions for some global functions in the WinDevxx namespace
+	// Definitions for some global functions in the WinDev namespace
 	//
 
 	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
@@ -654,7 +654,7 @@ namespace WinDevxx
 
 
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // GDI_H
 

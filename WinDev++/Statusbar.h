@@ -40,7 +40,7 @@
 
 #include "WinCore.h"
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	//////////////////////////////////////
@@ -253,6 +253,6 @@ namespace WinDevxx
 		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0);
 	}
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // #ifndef STATUSBAR_H

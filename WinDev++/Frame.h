@@ -81,7 +81,7 @@
 #include "Default_Resource.h"
 
 
-namespace WinDevxx
+namespace WinDev
 {
 
 	////////////////////////////////////////////////
@@ -3068,6 +3068,6 @@ namespace WinDevxx
 	} // LRESULT CFrame::WndProcDefault(...)
 
 
-} // namespace WinDevxx
+} // namespace WinDev
 
 #endif // FRAME_H
