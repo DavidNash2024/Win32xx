@@ -127,16 +127,16 @@ SOURCE=.\resource.h
 SOURCE=.\Resource.rc
 # End Source File
 # End Group
-# Begin Group "Win32++"
+# Begin Group "WinDev++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\WinDev++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\WinDev++\WinCore.h"
 # End Source File
 # End Group
 # End Target

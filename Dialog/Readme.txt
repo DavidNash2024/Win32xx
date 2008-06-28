@@ -4,11 +4,11 @@ Dialog Example
 This program has a modal dialog as its main window.
 
 A class derived from CDialog is used to create the dialog.  The files
-for this are located in the Win32++ directory, and the code
-is lcoated in the Win32xx namespace.
+for this are located in the WinDev++ directory, and the code
+is lcoated in the WinDevxx namespace.
 
 The CMyDialog and CDialogApp classes are intended as templates for other 
-programs.  The classes within the Win32xx namespace are intended to 
+programs.  The classes within the WinDevxx namespace are intended to 
 be used without modification.
 
 Dialog applications are easy to create, provided we have access to a 
@@ -18,7 +18,7 @@ for this purpose, but free compilers generally don't. For a free
 resource editor, try resedit from here: http://www.resedit.net/
 
 
-Generic Information about Win32++ Projects
+Generic Information about WinDev++ Projects
 ==========================================
 
 The various directories may contain the following types of files:
@@ -40,7 +40,7 @@ txt       | A text file
 
 Supported Compilers and Integrated Development Environments (IDEs)
 ==================================================================
-Win32++ supports the following:
+WinDev++ supports the following:
 * Borland C++ Compiler 5.5
 * Borland Developer Studio 2006
 * CodeBlocks
@@ -63,7 +63,7 @@ Dev-C++ is an IDE which supports the MinGW GNU compiler
 
 Supported Operating Systems
 ===========================
-The programs compiled with Win32++ can run on the following operating systems:
+The programs compiled with WinDev++ can run on the following operating systems:
 * Win95 (all versions, with or without Internet Explorer 4 installed)
 * Win98 (both versions)
 * WinME
@@ -76,14 +76,14 @@ The programs compiled with Win32++ can run on the following operating systems:
 Note: Programs compiled with Visual Studio.net 2008 and Visual Studio.net 2008 Express
 will not run on operating systems earlier than Windows 2000.
 
-Win32++ automatically detects if the operating system is capable of using rebars. If 
-rebars are not supported by the OS, Win32++ produces a frame without rebars.
+WinDev++ automatically detects if the operating system is capable of using rebars. If 
+rebars are not supported by the OS, WinDev++ produces a frame without rebars.
 
-Win32++ is Unicode compliant and can therefore be used to develop Unicode applications.
+WinDev++ is Unicode compliant and can therefore be used to develop Unicode applications.
 Users are advised that only NT based operating systems (namely NT, Win2000, XP, Vista etc.)
 support Unicode applications.
 
-Win32++ is intended to be 64bit compliant, and should be capable of generating 64bit code.
+WinDev++ is intended to be 64bit compliant, and should be capable of generating 64bit code.
 This feature has not been tested as yet.
 
 Directory Structure
@@ -95,8 +95,8 @@ ParentFolder
 ParentFolder\Program1
 ParentFolder\Program2
 ....
-ParentFolder\Win32++
+ParentFolder\WinDev++
 
-The files which form the Win32++ library are contained in the Win32++ subdirectory.
+The files which form the WinDev++ library are contained in the WinDev++ subdirectory.
 It is located as a sibling directory to the various projects.
 
