@@ -195,9 +195,9 @@ NODEP_CPP_BUTTO=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE emulator) Debug"
 
 DEP_CPP_BUTTO=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\DlgSubclassApp.h"\
 	".\Hyperlink.h"\
@@ -223,9 +223,9 @@ NODEP_CPP_BUTTO=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_BUTTO=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\DlgSubclassApp.h"\
 	".\Hyperlink.h"\
@@ -258,9 +258,9 @@ NODEP_CPP_DLGSU=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE emulator) Debug"
 
 DEP_CPP_DLGSU=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\DlgSubclassApp.h"\
 	".\Hyperlink.h"\
@@ -286,9 +286,9 @@ NODEP_CPP_DLGSU=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_DLGSU=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\DlgSubclassApp.h"\
 	".\Hyperlink.h"\
@@ -316,8 +316,8 @@ NODEP_CPP_HYPER=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE emulator) Debug"
 
 DEP_CPP_HYPER=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Hyperlink.h"\
 	
 
@@ -334,8 +334,8 @@ NODEP_CPP_HYPER=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_HYPER=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Hyperlink.h"\
 	
 
@@ -364,9 +364,9 @@ NODEP_CPP_MAIN_=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE emulator) Debug"
 
 DEP_CPP_MAIN_=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\DlgSubclassApp.h"\
 	".\Hyperlink.h"\
@@ -392,9 +392,9 @@ NODEP_CPP_MAIN_=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_MAIN_=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\DlgSubclassApp.h"\
 	".\Hyperlink.h"\
@@ -426,9 +426,9 @@ NODEP_CPP_MYDIA=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE emulator) Debug"
 
 DEP_CPP_MYDIA=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\Hyperlink.h"\
 	".\MyDialog.h"\
@@ -452,9 +452,9 @@ NODEP_CPP_MYDIA=\
 !ELSEIF  "$(CFG)" == "DlgSubclass - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_MYDIA=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WinCore.h"\
 	".\Button.h"\
 	".\Hyperlink.h"\
 	".\MyDialog.h"\
@@ -513,23 +513,23 @@ SOURCE=.\res\Dialog.ico
 # End Source File
 # Begin Source File
 
-SOURCE=".\res\Win32++.manifest"
+SOURCE=".\res\WinDev++.manifest"
 # End Source File
 # End Group
-# Begin Group "Win32++"
+# Begin Group "WinDev++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE="..\WinDev++\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\WinDev++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\WinDev++\WinCore.h"
 # End Source File
 # End Group
 # End Target

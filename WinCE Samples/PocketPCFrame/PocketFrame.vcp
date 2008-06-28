@@ -198,16 +198,16 @@ NODEP_CPP_FRAME=\
 !ELSEIF  "$(CFG)" == "PocketFrame - Win32 (WCE emulator) Debug"
 
 DEP_CPP_FRAME=\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WCEframe.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WCEframe.h"\
+	"..\WinDev++\WCEstddef.h"\
+	"..\WinDev++\WinCore.h"\
 	".\FrameApp.h"\
 	".\MainFrm.h"\
 	
 NODEP_CPP_FRAME=\
 	"..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce420\POCKET PC 2003\Include\emulator\vibrate.h"\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\WinDev++\DeviceResolutionAware.h"\
 	".\econfig.h"\
 	".\inuserm.h"\
 	".\ipapi.h"\
@@ -222,8 +222,8 @@ DEP_CPP_FRAME=\
 	
 NODEP_CPP_FRAME=\
 	"..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce420\POCKET PC 2003\Include\ARMV4\vibrate.h"\
-	"..\Win32++\WCEControls.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\WCEControls.h"\
+	"..\WinDev++\WinCore.h"\
 	".\inuserm.h"\
 	".\ipapi.h"\
 	".\ygshell.h"\
@@ -232,15 +232,15 @@ NODEP_CPP_FRAME=\
 !ELSEIF  "$(CFG)" == "PocketFrame - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_FRAME=\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WCEframe.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WCEframe.h"\
+	"..\WinDev++\WCEstddef.h"\
+	"..\WinDev++\WinCore.h"\
 	".\FrameApp.h"\
 	".\MainFrm.h"\
 	
 NODEP_CPP_FRAME=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\WinDev++\DeviceResolutionAware.h"\
 	".\econfig.h"\
 	
 
@@ -272,16 +272,16 @@ NODEP_CPP_MAIN_=\
 !ELSEIF  "$(CFG)" == "PocketFrame - Win32 (WCE emulator) Debug"
 
 DEP_CPP_MAIN_=\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WCEframe.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WCEframe.h"\
+	"..\WinDev++\WCEstddef.h"\
+	"..\WinDev++\WinCore.h"\
 	".\FrameApp.h"\
 	".\MainFrm.h"\
 	
 NODEP_CPP_MAIN_=\
 	"..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce420\POCKET PC 2003\Include\emulator\vibrate.h"\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\WinDev++\DeviceResolutionAware.h"\
 	".\econfig.h"\
 	".\inuserm.h"\
 	".\ipapi.h"\
@@ -296,8 +296,8 @@ DEP_CPP_MAIN_=\
 	
 NODEP_CPP_MAIN_=\
 	"..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce420\POCKET PC 2003\Include\ARMV4\vibrate.h"\
-	"..\Win32++\WCEControls.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\WCEControls.h"\
+	"..\WinDev++\WinCore.h"\
 	".\inuserm.h"\
 	".\ipapi.h"\
 	".\ygshell.h"\
@@ -306,15 +306,15 @@ NODEP_CPP_MAIN_=\
 !ELSEIF  "$(CFG)" == "PocketFrame - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_MAIN_=\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WCEframe.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WCEframe.h"\
+	"..\WinDev++\WCEstddef.h"\
+	"..\WinDev++\WinCore.h"\
 	".\FrameApp.h"\
 	".\MainFrm.h"\
 	
 NODEP_CPP_MAIN_=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\WinDev++\DeviceResolutionAware.h"\
 	".\econfig.h"\
 	
 
@@ -345,15 +345,15 @@ NODEP_CPP_MAINF=\
 !ELSEIF  "$(CFG)" == "PocketFrame - Win32 (WCE emulator) Debug"
 
 DEP_CPP_MAINF=\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WCEframe.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WCEframe.h"\
+	"..\WinDev++\WCEstddef.h"\
+	"..\WinDev++\WinCore.h"\
 	".\MainFrm.h"\
 	
 NODEP_CPP_MAINF=\
 	"..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce420\POCKET PC 2003\Include\emulator\vibrate.h"\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\WinDev++\DeviceResolutionAware.h"\
 	".\econfig.h"\
 	".\inuserm.h"\
 	".\ipapi.h"\
@@ -367,8 +367,8 @@ DEP_CPP_MAINF=\
 	
 NODEP_CPP_MAINF=\
 	"..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce420\POCKET PC 2003\Include\ARMV4\vibrate.h"\
-	"..\Win32++\WCEControls.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\WCEControls.h"\
+	"..\WinDev++\WinCore.h"\
 	".\inuserm.h"\
 	".\ipapi.h"\
 	".\ygshell.h"\
@@ -377,14 +377,14 @@ NODEP_CPP_MAINF=\
 !ELSEIF  "$(CFG)" == "PocketFrame - Win32 (WCE ARMV4) Debug"
 
 DEP_CPP_MAINF=\
-	"..\Win32++\Dialog.h"\
-	"..\Win32++\WCEframe.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\WinDev++\Dialog.h"\
+	"..\WinDev++\WCEframe.h"\
+	"..\WinDev++\WCEstddef.h"\
+	"..\WinDev++\WinCore.h"\
 	".\MainFrm.h"\
 	
 NODEP_CPP_MAINF=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\WinDev++\DeviceResolutionAware.h"\
 	".\econfig.h"\
 	
 
@@ -443,28 +443,28 @@ SOURCE=.\Resource.rc
 SOURCE=.\toolbar.bmp
 # End Source File
 # End Group
-# Begin Group "Win32++"
+# Begin Group "WinDev++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE="..\WinDev++\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\WinDev++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WCEframe.h"
+SOURCE="..\WinDev++\WCEframe.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WCEstddef.h"
+SOURCE="..\WinDev++\WCEstddef.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\WinDev++\WinCore.h"
 # End Source File
 # End Group
 # End Target
