@@ -6,7 +6,7 @@
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-    // Start Win32++
+    // Start WinDev++
     CScribbleApp MyApp;
 
 	// Run the application

@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "../Win32++/Wincore.h"
+#include "../WinDev++/Wincore.h"
 
 // Note:  This application doesn't end when the window is closed
 // Refer to the tutorial at http://users.bigpond.net.au/programming/tutorial.htm
@@ -9,7 +9,7 @@
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-	// Start Win32++
+	// Start WinDev++
 	CWinApp MyApp;
 
 	// Create a CWnd object

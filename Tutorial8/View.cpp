@@ -6,7 +6,7 @@
 #include <Windowsx.h>	// defines GET_X_LPARAM
 #include "resource.h"
 #include "view.h"
-#include "../Win32++/GDI.h"
+#include "../WinDev++/GDI.h"
 
 using namespace std;
 
@@ -75,7 +75,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	// Create a handle to the file
 	HANDLE hFile = CreateFile(szFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (INVALID_HANDLE_VALUE != hFile)
-	{	
+	{
 		do
 		{
 			nBytesRead = 0;
@@ -85,7 +85,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 			{
 				if (nBytesRead == sizeof(PlotPoint))
 					m_points.push_back(pp);
-			} 
+			}
 			else
 			{
 				m_points.clear();
@@ -103,7 +103,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 		}
 		else
 			bResult = TRUE;
-			
+
 		CloseHandle(hFile);
 	}
 	else
@@ -127,7 +127,7 @@ BOOL CView::FileSave(LPCTSTR szFilename)
 		::MessageBox (0, _T("Failed to open file for writing"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 		return FALSE;
 	}
-	
+
 	BOOL bResult = TRUE;
 	for (int i = 0; i < (int)m_points.size(); ++i)
 	{

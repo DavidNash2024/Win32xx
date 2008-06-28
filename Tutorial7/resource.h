@@ -2,7 +2,7 @@
 // Resource.h
 //This file contains the resource ID definitions.
 
-#include "../Win32++/Default_Resource.h"
+#include "../WinDev++/Default_Resource.h"
 
 //Resource IDs for menu items and Toolbar items
 #define IDM_FILE_NEW                    101
