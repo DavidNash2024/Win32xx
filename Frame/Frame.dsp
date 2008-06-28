@@ -149,37 +149,37 @@ SOURCE=.\res\Enhanced.ico
 SOURCE=.\Resource.rc
 # End Source File
 # End Group
-# Begin Group "Win32++"
+# Begin Group "WinDev++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE="..\WinDev++\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\WinDev++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Frame.h"
+SOURCE="..\WinDev++\Frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\GDI.h"
+SOURCE="..\WinDev++\GDI.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Toolbar.h"
+SOURCE="..\WinDev++\Toolbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\WinDev++\WinCore.h"
 # End Source File
 # End Group
 # Begin Source File
 
-SOURCE=".\res\Win32++.manifest"
+SOURCE=".\res\WinDev++.manifest"
 # End Source File
 # End Target
 # End Project

@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
 OverrideOutputName=Frame.exe
 HostApplication=
-Folders=Header,Resource,Source,Win32++
+Folders=Header,Resource,Source,WinDev++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -119,9 +119,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\Win32++\WinCore.h
+FileName=..\WinDev++\WinCore.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -129,9 +129,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\Win32++\Default_Resource.h
+FileName=..\WinDev++\Default_Resource.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -139,9 +139,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\Win32++\Dialog.h
+FileName=..\WinDev++\Dialog.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -149,9 +149,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\Win32++\Frame.h
+FileName=..\WinDev++\Frame.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -159,9 +159,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\Win32++\GDI.h
+FileName=..\WinDev++\GDI.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -169,9 +169,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\Win32++\Frame.cpp
+FileName=..\WinDev++\Frame.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -197,9 +197,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=..\Win32++\Frame.h
+FileName=..\WinDev++\Frame.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -207,9 +207,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\Win32++\GDI.cpp
+FileName=..\WinDev++\GDI.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -217,9 +217,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\Win32++\GDI.h
+FileName=..\WinDev++\GDI.h
 CompileCpp=1
-Folder=Win32++
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000

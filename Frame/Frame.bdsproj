@@ -115,7 +115,7 @@
           <property category="win32.*.win32b.bcc32" name="option.Hc.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.He.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.Hs.enabled" value="0"/>
-          <property category="win32.*.win32b.bcc32" name="option.I.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.2" value="$(BDS)\include"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.3" value="$(BDS)\include\dinkumware"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.4" value="$(BDS)\include\vcl"/>
@@ -136,27 +136,27 @@
           <property category="win32.*.win32b.bcc32" name="option.tWC.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.tWD.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.tWM.enabled" value="1"/>
-          <property category="win32.*.win32b.dcc32" name="option.I.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.dcc32" name="option.I.arg.merge" value="1"/>
           <property category="win32.*.win32b.dcc32" name="option.I.enabled" value="0"/>
-          <property category="win32.*.win32b.dcc32" name="option.O.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.dcc32" name="option.O.arg.merge" value="1"/>
           <property category="win32.*.win32b.dcc32" name="option.O.enabled" value="0"/>
-          <property category="win32.*.win32b.dcc32" name="option.R.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.dcc32" name="option.R.arg.merge" value="1"/>
           <property category="win32.*.win32b.dcc32" name="option.R.enabled" value="0"/>
-          <property category="win32.*.win32b.dcc32" name="option.U.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.dcc32" name="option.U.arg.2" value=".\"/>
           <property category="win32.*.win32b.dcc32" name="option.U.arg.3" value="$(BDS)\lib"/>
           <property category="win32.*.win32b.dcc32" name="option.U.arg.4" value="$(BDS)\lib\obj"/>
           <property category="win32.*.win32b.dcc32" name="option.U.arg.merge" value="1"/>
           <property category="win32.*.win32b.dcc32" name="option.U.enabled" value="1"/>
           <property category="win32.*.win32b.dcc32" name="param.filenames.merge" value="1"/>
-          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.idl2cpp" name="option.I.arg.merge" value="1"/>
           <property category="win32.*.win32b.idl2cpp" name="option.I.enabled" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.Gi.enabled" value="0"/>
-          <property category="win32.*.win32b.ilink32" name="option.L.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.ilink32" name="option.L.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.ilink32" name="option.L.arg.2" value="$(BDS)\lib"/>
           <property category="win32.*.win32b.ilink32" name="option.L.arg.3" value="$(BDS)\lib\obj"/>
           <property category="win32.*.win32b.ilink32" name="option.L.arg.4" value="$(BDS)\lib\psdk"/>
@@ -168,7 +168,7 @@
           <property category="win32.*.win32b.ilink32" name="option.aa.enabled" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.ap.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.dynamicrtl.enabled" value="0"/>
-          <property category="win32.*.win32b.ilink32" name="option.j.arg.1" value="..\Win32++"/>
+          <property category="win32.*.win32b.ilink32" name="option.j.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.ilink32" name="option.j.arg.merge" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.j.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="param.libfiles.1" value="import32.lib"/>
@@ -185,10 +185,10 @@
         <FILE FILENAME="Mainfrm.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Mainfrm" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="View.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="View" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\Dialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\Frame.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\GDI.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\Win32++\WinCore.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\WinDev++\Dialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\WinDev++\Frame.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\WinDev++\GDI.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\WinDev++\WinCore.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="View.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="FrameApp.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="Mainfrm.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
