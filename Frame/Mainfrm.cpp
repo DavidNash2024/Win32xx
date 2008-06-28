@@ -30,7 +30,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Frame"));
+	LoadRegistrySettings(_T("WinDev++\\Frame"));
 }
 
 CMainFrame::~CMainFrame()
