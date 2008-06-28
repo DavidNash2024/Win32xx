@@ -10,7 +10,7 @@
 			<Target title="Debug Borland">
 				<Option output="borland\debug\frame.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Debug" />
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\Win32++\DlgSubclass\Borland\Debug" />
+				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\WinDev++\DlgSubclass\Borland\Debug" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
@@ -29,7 +29,7 @@
 			<Target title="Release Borland">
 				<Option output="Borland\Release\frame.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Release" />
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\Win32++\DlgSubclass\Borland\Release" />
+				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\SourceForge\WinDev++\DlgSubclass\Borland\Release" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
@@ -153,8 +153,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="resrc1.h" />
-		<Unit filename="..\Win32++\Dialog.h" />
-		<Unit filename="..\Win32++\WinCore.h" />
+		<Unit filename="..\WinDev++\Dialog.h" />
+		<Unit filename="..\WinDev++\WinCore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -4,7 +4,7 @@
 #ifndef HYPERLINK_H
 #define HYPERLINK_H
 
-#include "../Win32++/WinCore.h"
+#include "../WinDev++/WinCore.h"
 
 #ifndef IDC_HAND
 #define IDC_HAND  MAKEINTRESOURCE(32649)
@@ -26,11 +26,11 @@ protected:
 
 private:
 	BOOL	m_bUrlVisited;
-	BOOL	m_bClicked;		
+	BOOL	m_bClicked;
 	COLORREF m_crVisited;
 	COLORREF m_crNotVisited;
-	HCURSOR m_hCursor;	
-	HFONT	m_hUrlFont;		
+	HCURSOR m_hCursor;
+	HFONT	m_hUrlFont;
 };
 
 #endif // HYPERLINK_H
