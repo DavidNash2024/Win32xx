@@ -1309,9 +1309,9 @@ namespace WinDev
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_tsStatusText(_T("Ready")),
-						 m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL),
-						 m_pView(NULL), m_nMaxMRU(0)
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_himlMenu(NULL),
+		                m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL),
+		                m_tsStatusText(_T("Ready")), m_nMaxMRU(0)
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));

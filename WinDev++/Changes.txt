@@ -3,7 +3,12 @@ Version 6.2
 
 Changes
 -------
-The default colour scheme has been changed from blue to grey. The blue,
+* The framework has been renamed to WinDev++ (previously it was Win32++).
+The new name more accurately reflects the capabilities of the framework,
+as it is now capable of developing Win64 and WinCE applications in 
+addition to Win32 applications.
+
+* The default colour scheme has been changed from blue to grey. The blue,
 olive and silver colour schemes continue to be used on Windows XP with 
 themes enabled. 
 
