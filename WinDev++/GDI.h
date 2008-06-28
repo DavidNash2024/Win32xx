@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -78,7 +78,7 @@
 
 #include "WinCore.h"
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	///////////////////////////////////////////////
@@ -597,7 +597,7 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////////////////////////////
-	// Definitions for some global functions in the Win32xx namespace
+	// Definitions for some global functions in the WinDevxx namespace
 	//
 
 	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
@@ -654,7 +654,7 @@ namespace Win32xx
 
 
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // GDI_H
 

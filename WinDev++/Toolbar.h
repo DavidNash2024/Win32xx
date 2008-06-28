@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -42,7 +42,7 @@
 #include "Rebar.h"
 
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	struct ThemeToolbar
@@ -845,6 +845,6 @@ namespace Win32xx
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // #ifndef TOOLBAR_H

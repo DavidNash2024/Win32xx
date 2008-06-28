@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -40,7 +40,7 @@
 
 #include "WinCore.h"
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	//////////////////////////////////////
@@ -253,6 +253,6 @@ namespace Win32xx
 		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0);
 	}
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // #ifndef STATUSBAR_H

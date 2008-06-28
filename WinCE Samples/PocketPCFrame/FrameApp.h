@@ -1,7 +1,7 @@
 #ifndef SIMPLEAPP_H
 #define SIMPLEAPP_H
 
-#include "..\Win32++\Wincore.h"
+#include "../WinDev++/Wincore.h"
 #include "MainFrm.h"
 
 

@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -40,7 +40,7 @@
 //  Declaration of the following classes:
 //  CPropertyPage and CPropertySheet
 
-// These classes add support for property sheets to Win32++. A property sheet
+// These classes add support for property sheets to WinDev++. A property sheet
 // will have one or more property pages. These pages are much like dialogs
 // which are presented within a tabbed dialog or within a wizard. The data
 // on a property page can be validated before the next page is presented.
@@ -53,7 +53,7 @@
 #ifndef PROPERTYSHEET_H
 #define PROPERTYSHEET_H
 
-#include "../Win32++/Dialog.h"
+#include "Dialog.h"
 
 #define ID_APPLY_NOW   0x3021
 #define ID_WIZBACK     0x3023
@@ -65,7 +65,7 @@
  #define PROPSHEETHEADER_V1_SIZE 40
 #endif
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	class CPropertyPage : public CWnd

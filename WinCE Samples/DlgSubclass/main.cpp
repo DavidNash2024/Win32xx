@@ -18,7 +18,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 		return -1;
 	}
 
-	// Start Win32++
+	// Start WinDev++
 	CDlgSubclassApp theApp;
 
 	// Process the window messages

@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -38,7 +38,7 @@
 #define REBAR_H
 
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	struct ThemeRebar
@@ -585,6 +585,6 @@ namespace Win32xx
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // #ifndef REBAR_H

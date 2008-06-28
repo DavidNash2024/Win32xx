@@ -62,13 +62,13 @@ Version 6.1
 
 New Features
 ------------
-* All Win32++ code has been moved to header files.
-This simplifies the use of Win32++. To add Win32++ to a project, simply 
-include the appropriate Win32++ header files in your code. There is no longer
-any need to add the Win32++ files to the project, although doing so may
+* All WinDev++ code has been moved to header files.
+This simplifies the use of WinDev++. To add WinDev++ to a project, simply 
+include the appropriate WinDev++ header files in your code. There is no longer
+any need to add the WinDev++ files to the project, although doing so may
 still prove useful under some circumstances. Depending on the compiler/IDE
-used, adding the Win32++ header files to the project may add the various 
-Win32++ classes to the class view.
+used, adding the WinDev++ header files to the project may add the various 
+WinDev++ classes to the class view.
  
 * Added CListView class.
 This class encapsulates the various messages and macros used by the Win32/64 
@@ -97,7 +97,7 @@ or CSize struct can be used respectively. In addition:
 * Removed CMDIApp
 This class is no longer required, since it's functionality has been merged
 with CWinApp. All applications (including MDI apps) now use CWinApp to start
-Win32++.
+WinDev++.
 
 * Modified CFrame
 - renamed CFrame::GetClientSize to CFrame::GetViewRect
@@ -110,14 +110,14 @@ Win32++.
 
 Notes for users of previous versions:
 -------------------------------------
-* There are no cpp files as part of Win32++ now, so these files need to be
+* There are no cpp files as part of WinDev++ now, so these files need to be
   removed from your existing project when upgrading.
   
 * CRebar, CStatusbar, and CToolbar have been moved to their own header files,
   but this does not require a change to existing user code.
  
 * For MDI applications inherit from CWinApp rather than CMDIApp to start 
-  Win32++.
+  WinDev++.
   
 * GetClientRect and GetWindowRect functions have been added to CWnd. If you
   prefer to use the native Win32/64 functions prefix them with the global
@@ -125,7 +125,7 @@ Notes for users of previous versions:
 
 Version 6.02a
 =============
-Corrects a problem compiling Win32++ with Dev-C++ (or MinGW).
+Corrects a problem compiling WinDev++ with Dev-C++ (or MinGW).
 
 Version 6.02
 ============
@@ -134,13 +134,13 @@ New Features
 ------------
 * Added support for x64 applications.
 
-Win32++ can now be used to build 64 bit applications. The manifest file has 
+WinDev++ can now be used to build 64 bit applications. The manifest file has 
 been modified to support both 32bit and 64bit applications. The new manifest
 should be used for any 64 bit applications that use common controls.
 
 Users are encouraged to use the modern Win64 API functions like:
 GetWindowLongPtr, SetWindowLongPtr, GetClassLongPtr and SetClassLongPtr.
-Win32++ will convert these back to their Win32 API counterparts if required.
+WinDev++ will convert these back to their Win32 API counterparts if required.
 
 
 Version 6.01
@@ -170,13 +170,13 @@ Version 6.0
 
 New Features
 ------------
-* Win32++ now also directly supports the Windows CE operating systems. 
+* WinDev++ now also directly supports the Windows CE operating systems. 
    Windows CE is the operating system used on such things as Pocket PCs, 
-   embedded systems and SmartPhones. The Win32++ examples for Windows CE
+   embedded systems and SmartPhones. The WinDev++ examples for Windows CE
    include the project files for eMbedded Visual C++ 4.0, and Visual 
    Studio 2005.
    
-* Added Networking support. Win32++ now includes a CSocket class which
+* Added Networking support. WinDev++ now includes a CSocket class which
    encapsulates much of the Winsock API. This class is capable of monitoring
    network events, such as connection requests from clients, and notification
    that the socket has data ready to be received. Command line and dialog
@@ -217,7 +217,7 @@ New Features
 Other Changes:
 --------------
 * Changed the way windows are created. We no longer use a CBT hook as part of 
-   the window creation process. It was this change which allowed Win32++ to
+   the window creation process. It was this change which allowed WinDev++ to
    directly support Windows CE.
    
 * CWinApp no longer requires the application's hInstance in its constructor.   
@@ -250,7 +250,7 @@ Version 5.6
    derived class. Doing this allows the CWinApp derived class to be
    fully constructed before attempting to create windows. 
 * Property Sheets are now supported. The files PropertySheet.cpp and 
-   PropertySheet.h have been added to Win32++. These files define
+   PropertySheet.h have been added to WinDev++. These files define
    the CPropertySheet and CPropertyPage classes. The Property sheet generic 
    demonstrates the following:
   - Modal property sheets.
@@ -327,7 +327,7 @@ Version 5.2
 * The thread a CWnd object runs in is now determined when its window is 
    created, rather than when the CWnd object is instantiated.
 * Added the Internet Browser Sample. It demonstrates how to host an ActiveX
-   control in a Win32++ window. It requires ATL.
+   control in a WinDev++ window. It requires ATL.
 * Added the Performance sample. This program now also conducts a simple 
    performance test to measure the efficiency of the message handling. 
 
@@ -386,7 +386,7 @@ Version 2
 * The code is now Unicode compliant.
 * Added debug mode. Exceptions produce a warning in a message box
    if _DEBUG is defined. 
-* Added CWinApp class to start Win32++.
+* Added CWinApp class to start WinDev++.
 * Added CDialog class to support modal and modeless dialogs as well
    as indirect dialogs (dialogs created from a dialog template in
    memory).
@@ -398,7 +398,7 @@ Version 2
    method of creating a window with sensible defaults. Override this
    in your derived class to customise it further.
    Also, if the Window Class name is not provided, one is provided for
-   you. The window class name provided is "Win32++ Window"
+   you. The window class name provided is "WinDev++ Window"
     
 
 Version 1.0

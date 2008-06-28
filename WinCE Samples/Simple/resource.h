@@ -2,8 +2,8 @@
 // Microsoft eMbedded Visual C++ generated include file.
 //
 
-// include the Resource IDs defined by Win32++
-#include "../Win32++/Default_Resource.h"
+// include the Resource IDs defined by WinDev++
+#include "../WinDev++/Default_Resource.h"
 
 // String resource ID
 #define IDS_HELLO						100

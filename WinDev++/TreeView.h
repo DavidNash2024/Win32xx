@@ -1,4 +1,4 @@
-// Win32++  Version 6.1
+// WinDev++  Version 6.1
 // Released: 3rd June, 2008 by:
 //
 //      David Nash
@@ -40,11 +40,11 @@
 #ifndef TREEVIEW_H
 #define TREEVIEW_H
 
-#include "../Win32++/WinCore.h"
+#include "WinCore.h"
 #include "Commctrl.h"
 
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	class CTreeView : public CWnd
@@ -534,7 +534,7 @@ namespace Win32xx
 	}
 
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // #ifndef TREEVIEW_H
 

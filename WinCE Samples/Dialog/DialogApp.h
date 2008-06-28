@@ -6,7 +6,7 @@
 #define DIALOGAPP_H
 
 
-#include "..\Win32++\dialog.h"
+#include "..\WinDev++\dialog.h"
 #include "MyDialog.h"
 
 

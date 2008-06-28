@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -50,7 +50,7 @@
 
 #include "Frame.h"
 
-namespace Win32xx
+namespace WinDevxx
 {
 	// Declaration of the CSplitter class
 	class CSplitter : public CWnd
@@ -172,7 +172,7 @@ namespace Win32xx
 		// Create the splitter bar
 		if (m_bVertical)
 		{
-			wc.lpszClassName = _T("Win32++ V Splitter");
+			wc.lpszClassName = _T("WinDev++ V Splitter");
 			wc.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
 			wc.hbrBackground = m_hbrBackground;
 			m_Bar.RegisterClass(wc);
@@ -180,7 +180,7 @@ namespace Win32xx
 		}
 		else
 		{
-			wc.lpszClassName = _T("Win32++ H Splitter");
+			wc.lpszClassName = _T("WinDev++ H Splitter");
 			wc.hCursor = ::LoadCursor (NULL, IDC_SIZENS);
 			wc.hbrBackground = m_hbrBackground;
 			m_Bar.RegisterClass(wc);
@@ -419,6 +419,6 @@ namespace Win32xx
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // SPLITTER_H

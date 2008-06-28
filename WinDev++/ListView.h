@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -39,10 +39,10 @@
 #ifndef LISTVIEW_H
 #define LISTVIEW_H
 
-#include "../Win32++/WinCore.h"
+#include "WinCore.h"
 #include "Commctrl.h"
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	class CListView : public CWnd
@@ -740,7 +740,7 @@ namespace Win32xx
 		return ListView_Update( m_hWnd, iItem );
 	}
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // #ifndef LISTVIEW_H
 

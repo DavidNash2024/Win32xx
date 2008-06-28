@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -81,7 +81,7 @@
 #include "Default_Resource.h"
 
 
-namespace Win32xx
+namespace WinDevxx
 {
 
 	////////////////////////////////////////////////
@@ -1855,7 +1855,7 @@ namespace Win32xx
 
 	inline void CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
-		try 
+		try
 		{
 			if (m_tsKeyName.empty())
 				throw CWinException(_T("KeyName must be set before calling LoadRegistryMRUSettings"));
@@ -1904,7 +1904,7 @@ namespace Win32xx
 	inline void CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
 		m_tsKeyName = szKeyName;
-	
+
 		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
@@ -2435,7 +2435,7 @@ namespace Win32xx
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
 		// Set the Window Class
-		cs.lpszClass = _T("Win32++ Frame");
+		cs.lpszClass = _T("WinDev++ Frame");
 
 		// Set the caption from the string resource
 		cs.lpszName = LoadString(IDW_MAIN);
@@ -2927,7 +2927,7 @@ namespace Win32xx
 		// Get the handle to the Menu entry titled "File"
 		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
 		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
-		
+
 		// Remove all but the first MRU Menu entry
 		for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
 		{
@@ -2945,16 +2945,16 @@ namespace Win32xx
 			{
 				tsMRUArray[n] = m_MRUEntries[n];
 				if (tsMRUArray[n].length() > MAX_MENU_STRING - 10)
-				{							
+				{
 					// Truncate the string if its too long
 					tsMRUArray[n].erase(0, tsMRUArray[n].length() - MAX_MENU_STRING +10);
 					tsMRUArray[n] = _T("... ") + tsMRUArray[n];
 				}
-				
+
 				// Prefix the string with its number
 				TCHAR tVal[5];
 				wsprintf(tVal, _T("%d "), n+1);
-				tsMRUArray[n] = tVal + tsMRUArray[n];			
+				tsMRUArray[n] = tVal + tsMRUArray[n];
 			}
 		}
 		else
@@ -2988,7 +2988,7 @@ namespace Win32xx
 				// Insert the other MRU entries next
 				bResult = InsertMenuItem(hFileMenu, IDW_FILE_MRU_FILE1 + index + 1, FALSE, &mii);
 
-			if (!bResult) 
+			if (!bResult)
 			{
 				TRACE(_T("Failed to set MRU menu item\n"));
 				break;
@@ -3068,6 +3068,6 @@ namespace Win32xx
 	} // LRESULT CFrame::WndProcDefault(...)
 
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // FRAME_H

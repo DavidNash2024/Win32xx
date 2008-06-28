@@ -1,4 +1,4 @@
-// Win32++  Version 6.2
+// WinDev++  Version 6.2
 // Released: 4th June, 2008 by:
 //
 //      David Nash
@@ -39,7 +39,7 @@
 // MDI.h
 //  Declaration of the CMDIChild and CMDIFrame classes
 
-// The classes defined here add MDI frames support to Win32++. MDI
+// The classes defined here add MDI frames support to WinDev++. MDI
 // (Multiple Document Interface) frames host one or more child windows. The
 // child windows hosted by a MDI frame can be different types. For example,
 // some MDI child windows could be used to edit text, while others could be
@@ -70,7 +70,7 @@
 
 
 
-namespace Win32xx
+namespace WinDevxx
 {
 	/////////////////////////////////////
 	// Declaration of the CMDIChild class
@@ -302,7 +302,7 @@ namespace Win32xx
 	{
 		CFrame::OnCloseFrame();
 		if (RemoveAllMDIChildren())
-			::DestroyWindow(m_hWnd);		
+			::DestroyWindow(m_hWnd);
 	}
 
 	inline void CMDIFrame::OnWindowPosChanged()
@@ -498,7 +498,7 @@ namespace Win32xx
 		bMax = bMax | (m_cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
-		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ MDI Child");
+		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("WinDev++ MDI Child");
 		if (m_cs.lpszClass)
 			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
@@ -603,7 +603,7 @@ namespace Win32xx
 	}
 
 
-} // namespace Win32xx
+} // namespace WinDevxx
 
 #endif // MDI_H
 

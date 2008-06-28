@@ -2,9 +2,9 @@
 #define VIEW_H
 
 
-#include "..\Win32++\Wincore.h"
-#include "..\Win32++\WCEframe.h"
-#include "..\Win32++\Dialog.h"
+#include "../WinDev++/Wincore.h"
+#include "../WinDev++/WCEframe.h"
+#include "../WinDev++/Dialog.h"
 #include <vector>
 
 
