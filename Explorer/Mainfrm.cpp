@@ -28,7 +28,7 @@ CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Explorer Sample"));
+	LoadRegistrySettings(_T("WinDev++\\Explorer Sample"));
 }
 
 CMainFrame::~CMainFrame()
@@ -199,7 +199,7 @@ void CMainFrame::SetButtons()
 {
 	// Use larger buttons
 	CToolbar& TB = GetToolbar();
-	SetToolbarImages(TB, 9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS); 
+	SetToolbarImages(TB, 9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Disable some buttons
 	TB.DisableButton(IDM_FILE_NEW);

@@ -5,7 +5,7 @@
 #ifndef DXAPP_H
 #define DXAPP_H
 
-#include "../Win32++/WinCore.h"
+#include "../WinDev++/WinCore.h"
 #include "View.h"
 
 

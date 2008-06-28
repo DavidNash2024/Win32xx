@@ -7,7 +7,7 @@
 #define MYTREEVIEW_H
 
 
-#include "../Win32++/TreeView.h"
+#include "../WinDev++/TreeView.h"
 #include <vector>
 #include "ShellWrapper.h"
 
@@ -53,7 +53,7 @@ private:
 	void DoContextMenu(CPoint& ptScreen);
 	void EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent);
 	BOOL GetChildItems(HTREEITEM hParentItem);
-	
+
 	void SetImageLists();
 
 	HIMAGELIST m_hLargeImageList;
@@ -63,7 +63,7 @@ private:
 public:
 	HANDLE m_hThread;
 	DWORD m_dwThreadID;
-	
+
 };
 
 #endif  // MYTREEVIEW_H
