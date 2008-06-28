@@ -325,26 +325,26 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Win32++"
+			Name="WinDev++"
 			>
 			<File
-				RelativePath="..\Win32++\Default_Resource.h"
+				RelativePath="..\WinDev++\Default_Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\WinDev++\Dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h"
+				RelativePath="..\WinDev++\Frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h"
+				RelativePath="..\WinDev++\GDI.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\WinDev++\WinCore.h"
 				>
 			</File>
 		</Filter>
