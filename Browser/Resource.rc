@@ -10,7 +10,7 @@
 // RT_MANIFEST
 //
 
-1                       24             "res/Win32++.manifest"
+1                       24             "res/WinDev++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -83,7 +83,7 @@ CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Win32++ Internet Browser",IDC_STATIC,45,23,94,11
+    CTEXT           "WinDev++ Internet Browser",IDC_STATIC,45,23,94,11
     ICON            IDW_MAIN,0,4,4,20,20
 END
 
@@ -118,7 +118,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                "Win32++ Internet Browser"
+    IDW_MAIN                "WinDev++ Internet Browser"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
 END

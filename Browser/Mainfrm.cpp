@@ -27,7 +27,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Browser Sample"));
+	LoadRegistrySettings(_T("WinDev++\\Browser Sample"));
 }
 
 CMainFrame::~CMainFrame()
