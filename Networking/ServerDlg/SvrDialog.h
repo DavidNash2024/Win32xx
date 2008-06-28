@@ -6,7 +6,7 @@
 
 
 #include "Server.h"
-#include "../../Win32++/Dialog.h"
+#include "../../WinDev++/Dialog.h"
 #include "resource.h"
 
 
@@ -50,8 +50,8 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 private:
-	CServerSocket m_MainSocket; 
-	std::map<CServerSocket*, CTCPClientDlg*> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs 	
+	CServerSocket m_MainSocket;
+	std::map<CServerSocket*, CTCPClientDlg*> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
 	BOOL m_bServerStarted;
 	int  m_SocketType;			// either SOCK_STREAM or SOCK_DGRAM
 	sockaddr_in m_ClientAddr;	// Stores connect address from UDP client

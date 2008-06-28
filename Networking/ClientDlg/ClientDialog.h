@@ -4,7 +4,7 @@
 #ifndef CLIENTDIALOG_H
 #define CLIENTDIALOG_H
 
-#include "../../Win32++/Dialog.h"
+#include "../../WinDev++/Dialog.h"
 #include "Client.h"
 #include "resource.h"
 
