@@ -7,7 +7,7 @@
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-	// Start Win32++
+	// Start WinDev++
 	CThreadApp theApp;
 
 	// Run the application

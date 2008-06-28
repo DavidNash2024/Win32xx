@@ -7,7 +7,7 @@
 #define MAINWND_H
 
 
-#include "../Win32++/WinCore.h"
+#include "../WinDev++/WinCore.h"
 #include <vector>
 
 
@@ -30,7 +30,7 @@ private:
 	enum Constants
 	{
 		WM_WINDOWCREATED = WM_USER+1,	// the message sent when window is created
-		WM_TESTMESSAGE   = WM_USER+2	// the test message 
+		WM_TESTMESSAGE   = WM_USER+2	// the test message
 	};
 
 	std::vector<CThread*> m_pCThreads;	// A vector of CThread pointers

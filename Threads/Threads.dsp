@@ -143,12 +143,12 @@ SOURCE=.\ThreadApp.h
 SOURCE=.\Threads.rc
 # End Source File
 # End Group
-# Begin Group "Win32++"
+# Begin Group "WinDev++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\WinDev++\WinCore.h"
 # End Source File
 # End Group
 # End Target

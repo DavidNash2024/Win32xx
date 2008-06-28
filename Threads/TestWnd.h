@@ -6,7 +6,7 @@
 #ifndef TESTWND_H
 #define TESTWND_H
 
-#include "../Win32++/WinCore.h"
+#include "../WinDev++/WinCore.h"
 
 class CTestWindow : public CWnd
 {
@@ -24,8 +24,8 @@ private:
 	};
 
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
-	int m_nThread; 
+
+	int m_nThread;
 };
 
 
