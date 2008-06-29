@@ -1051,27 +1051,27 @@ namespace WinDev
 	{
 		try
 		{
-			if (IsWindow())
+			if (!::IsWindow(hWnd))
+				throw CWinException(_T("Attach failed, not a valid hwnd"));
+			
+			if (0 != GetApp()->GetCWndFromMap(hWnd))
+				throw CWinException(_T("Window already attached to this CWnd object"));
+
+			m_hWnd = hWnd;
+			m_hWndParent = ::GetParent(hWnd);
+			Subclass();
+
+			if (m_PrevWindowProc)
 			{
-				if (0 != GetApp()->GetCWndFromMap(hWnd))
-					throw CWinException(_T("Window already attached to this CWnd object"));
-
-				m_hWnd = hWnd;
-				m_hWndParent = ::GetParent(hWnd);
-				Subclass();
-
-				if (m_PrevWindowProc)
-				{
-					// Store the CWnd pointer in the HWND map
-					AddToMap();
-					return TRUE;
-				}
-				else
-				{
-					m_hWnd = NULL;
-					m_hWndParent = NULL;
-					throw CWinException(_T("CWnd::Attach .. Subclass failed"));
-				}
+				// Store the CWnd pointer in the HWND map
+				AddToMap();
+				return TRUE;
+			}
+			else
+			{
+				m_hWnd = NULL;
+				m_hWndParent = NULL;
+				throw CWinException(_T("CWnd::Attach .. Subclass failed"));
 			}
 		}
 

@@ -4,13 +4,6 @@
 
 #include "../WinDev++/PropertySheet.h"
 
-INT_PTR CALLBACK  ButtonsDlgProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK  ComboDlgProc(HWND, UINT, WPARAM, LPARAM);
-int CALLBACK  PropSheetCallback(HWND, UINT, LPARAM);
-
-void DoModalPropSheet(HWND hwndOwner);
-HWND DoModelessPropSheet(HWND hwndOwner);
-void DoWizardPropSheet(HWND hwndOwner);
 
 class CMyPropertySheet : public CPropertySheet
 {
