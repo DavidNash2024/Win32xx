@@ -1081,7 +1081,6 @@ namespace WinDev
 			throw;
 		}
 
-		return FALSE;
 	}
 
 	inline BOOL CWnd::AttachDlgItem(UINT nID, CWnd* pParent)

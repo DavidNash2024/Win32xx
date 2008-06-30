@@ -10,7 +10,7 @@
 	</PersonalityInfo>
 	<CPlusPlusBuilder.Personality>
 		<Source>
-			<Source Name="MainSource">PropertySheet.bpf</Source>
+			<Source Name="MainSource">Server_bds.bpf</Source>
 		</Source>
 		<BCBPROJECT>
       <project version="10.0">
@@ -28,7 +28,7 @@
         <property category="build.config.1" name="settings.win32b" value="default"/>
         <property category="build.config.1" name="type" value="Toolset"/>
         <property category="build.config.1" name="win32.win32b.builddir" value="Release_Build"/>
-        <property category="build.node" name="name" value="PropertySheet.exe"/>
+        <property category="build.node" name="name" value="Server_bds.exe"/>
         <property category="build.node" name="packages" value="vclx;vcl;rtl;dbrtl;vcldb;adortl;dbxcds;dbexpress;xmlrtl;vclie;inet;inetdbbde;inetdbxpress;soaprtl;dsnap;bdertl;vcldbx"/>
         <property category="build.node" name="sparelibs" value="rtl.lib"/>
         <property category="build.node" name="use_packages" value="1"/>
@@ -155,7 +155,11 @@
           <property category="win32.*.win32b.idl2cpp" name="option.I.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.idl2cpp" name="option.I.arg.merge" value="1"/>
           <property category="win32.*.win32b.idl2cpp" name="option.I.enabled" value="1"/>
+          <property category="win32.*.win32b.ilink32" name="container.SelectedWarnings.containerenabled" value="1"/>
+          <property category="win32.*.win32b.ilink32" name="option.-w-.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.Gi.enabled" value="0"/>
+          <property category="win32.*.win32b.ilink32" name="option.Gpd.enabled" value="0"/>
+          <property category="win32.*.win32b.ilink32" name="option.Gpr.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.L.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.ilink32" name="option.L.arg.2" value="$(BDS)\lib"/>
           <property category="win32.*.win32b.ilink32" name="option.L.arg.3" value="$(BDS)\lib\obj"/>
@@ -166,11 +170,18 @@
           <property category="win32.*.win32b.ilink32" name="option.Tpe.enabled" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.Tpp.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.aa.enabled" value="1"/>
+          <property category="win32.*.win32b.ilink32" name="option.additional_switches.arg" value="Ws2_32.lib"/>
+          <property category="win32.*.win32b.ilink32" name="option.additional_switches.arg.merge" value="1"/>
+          <property category="win32.*.win32b.ilink32" name="option.additional_switches.enabled" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.ap.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.dynamicrtl.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="option.j.arg.1" value="..\WinDev++"/>
           <property category="win32.*.win32b.ilink32" name="option.j.arg.merge" value="1"/>
           <property category="win32.*.win32b.ilink32" name="option.j.enabled" value="0"/>
+          <property category="win32.*.win32b.ilink32" name="option.m.enabled" value="0"/>
+          <property category="win32.*.win32b.ilink32" name="option.s.enabled" value="0"/>
+          <property category="win32.*.win32b.ilink32" name="option.w.enabled" value="0"/>
+          <property category="win32.*.win32b.ilink32" name="option.x.enabled" value="0"/>
           <property category="win32.*.win32b.ilink32" name="param.libfiles.1" value="import32.lib"/>
           <property category="win32.*.win32b.ilink32" name="param.libfiles.2" value="cw32mti.lib"/>
           <property category="win32.*.win32b.ilink32" name="param.libfiles.merge" value="1"/>
@@ -181,17 +192,13 @@
       </project>
       <FILELIST>
         <FILE FILENAME="Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>
-        <FILE FILENAME="..\WinDev++\Dialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\WinDev++\Frame.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\WinDev++\GDI.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\WinDev++\WinCore.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="resource.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\WinDev++\Socket.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\WinDev++\WinCore.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="DialogApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="DialogApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="Mainfrm.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Mainfrm" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="MyPropertySheet.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyPropertySheet" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="PropertySheetApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="PropertySheetApp" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="View.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="View" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\WinDev++\PropertySheet.h" CONTAINERID="" LOCALCOMMAND=""/>
+        <FILE FILENAME="Server.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Server" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="SvrDialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="SvrDialog" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>
         <VersionInfo>

@@ -129,7 +129,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 			return TRUE;
 		}
 
-	return FALSE;
 	} // switch cmd
 
 	return FALSE;

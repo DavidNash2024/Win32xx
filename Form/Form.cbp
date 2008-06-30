@@ -14,7 +14,6 @@
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-D_DEBUG" />
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />

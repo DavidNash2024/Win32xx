@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Performance", "Performance_2008.vcproj", "{73A482E5-0188-4E6F-98BF-7FF2D65CEB82}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Performance", "Performance_2008.vcproj", "{F066294C-68B6-423A-85A1-2745A5E8EE80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,10 +8,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{73A482E5-0188-4E6F-98BF-7FF2D65CEB82}.Debug|Win32.ActiveCfg = Debug|Win32
-		{73A482E5-0188-4E6F-98BF-7FF2D65CEB82}.Debug|Win32.Build.0 = Debug|Win32
-		{73A482E5-0188-4E6F-98BF-7FF2D65CEB82}.Release|Win32.ActiveCfg = Release|Win32
-		{73A482E5-0188-4E6F-98BF-7FF2D65CEB82}.Release|Win32.Build.0 = Release|Win32
+		{F066294C-68B6-423A-85A1-2745A5E8EE80}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F066294C-68B6-423A-85A1-2745A5E8EE80}.Debug|Win32.Build.0 = Debug|Win32
+		{F066294C-68B6-423A-85A1-2745A5E8EE80}.Release|Win32.ActiveCfg = Release|Win32
+		{F066294C-68B6-423A-85A1-2745A5E8EE80}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
 [Project]
 FileName=Notepad_DEBUG.dev
 Name=Notepad
-UnitCount=15
+UnitCount=14
 Type=0
 Ver=1
 ObjFiles=
@@ -97,16 +97,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=resrc1.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
 FileName=RichView.cpp
 CompileCpp=1
 Folder=Source
@@ -116,7 +106,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=RichView.h
 CompileCpp=1
 Folder=Header
@@ -126,7 +116,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=TextApp.cpp
 CompileCpp=1
 Folder=Source
@@ -136,7 +126,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=TextApp.h
 CompileCpp=1
 Folder=Header
@@ -146,7 +136,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit10]
 FileName=..\WinDev++\WinCore.h
 CompileCpp=1
 Folder=WinDev++
@@ -156,7 +146,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit11]
 FileName=..\WinDev++\Default_Resource.h
 CompileCpp=1
 Folder=WinDev++
@@ -166,7 +156,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit12]
 FileName=..\WinDev++\Dialog.h
 CompileCpp=1
 Folder=WinDev++
@@ -176,8 +166,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit13]
 FileName=..\WinDev++\Frame.h
+CompileCpp=1
+Folder=WinDev++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\WinDev++\GDI.h
 CompileCpp=1
 Folder=WinDev++
 Compile=1

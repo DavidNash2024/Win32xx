@@ -1,7 +1,7 @@
 [Project]
 FileName=Dialog_DEBUG.dev
 Name=Dialog
-UnitCount=10
+UnitCount=9
 Type=0
 Ver=1
 ObjFiles=
@@ -99,9 +99,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=resrc1.h
+FileName=..\WinDev++\Dialog.h
 CompileCpp=1
-Folder=Header
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -137,7 +137,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\WinDev++\Dialog.h
+FileName=..\WinDev++\WinCore.h
 CompileCpp=1
 Folder=WinDev++
 Compile=1

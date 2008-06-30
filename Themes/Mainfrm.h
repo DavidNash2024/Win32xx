@@ -4,7 +4,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "../DevDev++/frame.h"
+#include "../WinDev++/frame.h"
 #include "View.h"
 
 
