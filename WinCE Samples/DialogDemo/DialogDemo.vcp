@@ -1,24 +1,24 @@
-# Microsoft eMbedded Visual Tools Project File - Name="Subclass" - Package Owner=<4>
+# Microsoft eMbedded Visual Tools Project File - Name="DialogDemo" - Package Owner=<4>
 # Microsoft eMbedded Visual Tools Generated Build File, Format Version 6.02
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (WCE emulator) Application" 0xa601
 
-CFG=Subclass - Win32 (WCE emulator) Debug
+CFG=DialogDemo - Win32 (WCE emulator) Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Subclass.vcn".
+!MESSAGE NMAKE /f "DialogDemo.vcn".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Subclass.vcn" CFG="Subclass - Win32 (WCE emulator) Debug"
+!MESSAGE NMAKE /f "DialogDemo.vcn" CFG="DialogDemo - Win32 (WCE emulator) Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Subclass - Win32 (WCE emulator) Release" (based on "Win32 (WCE emulator) Application")
-!MESSAGE "Subclass - Win32 (WCE emulator) Debug" (based on "Win32 (WCE emulator) Application")
+!MESSAGE "DialogDemo - Win32 (WCE emulator) Release" (based on "Win32 (WCE emulator) Application")
+!MESSAGE "DialogDemo - Win32 (WCE emulator) Debug" (based on "Win32 (WCE emulator) Application")
 !MESSAGE 
 
 # Begin Project
@@ -30,7 +30,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "Subclass - Win32 (WCE emulator) Release"
+!IF  "$(CFG)" == "DialogDemo - Win32 (WCE emulator) Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -59,7 +59,7 @@ LINK32=link.exe
 # ADD BASE LINK32 commctrl.lib coredll.lib $(CEx86Corelibc) /nologo /base:"0x00010000" /stack:0x10000,0x1000 /entry:"WinMainCRTStartup" /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /subsystem:$(CESubsystem) /MACHINE:IX86
 # ADD LINK32 commctrl.lib coredll.lib $(CEx86Corelibc) /nologo /base:"0x00010000" /stack:0x10000,0x1000 /entry:"WinMainCRTStartup" /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /subsystem:$(CESubsystem) /MACHINE:IX86
 
-!ELSEIF  "$(CFG)" == "Subclass - Win32 (WCE emulator) Debug"
+!ELSEIF  "$(CFG)" == "DialogDemo - Win32 (WCE emulator) Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -79,7 +79,7 @@ LINK32=link.exe
 # ADD BASE RSC /l 0x409 /d "$(CePlatform)" /d UNDER_CE=$(CEVersion) /d _WIN32_WCE=$(CEVersion) /d "UNICODE" /d "_UNICODE" /d "DEBUG" /d "_X86_" /d "x86" /d "_i386_" /r
 # ADD RSC /l 0x409 /d "$(CePlatform)" /d UNDER_CE=$(CEVersion) /d _WIN32_WCE=$(CEVersion) /d "UNICODE" /d "_UNICODE" /d "DEBUG" /d "_X86_" /d "x86" /d "_i386_" /r
 # ADD BASE CPP /nologo /W3 /Zi /Od /D "DEBUG" /D "_i386_" /D UNDER_CE=$(CEVersion) /D _WIN32_WCE=$(CEVersion) /D "$(CePlatform)" /D "i_386_" /D "UNICODE" /D "_UNICODE" /D "_X86_" /D "x86" /YX /Gs8192 /GF /c
-# ADD CPP /nologo /W3 /GX /Zi /Od /D "_DEBUG" /D "_i386_" /D UNDER_CE=$(CEVersion) /D _WIN32_WCE=$(CEVersion) /D "$(CePlatform)" /D "i_386_" /D "UNICODE" /D "_UNICODE" /D "_X86_" /D "x86" /FR /YX /Gs8192 /GF /c
+# ADD CPP /nologo /W3 /GX /Zi /Od /D "DEBUG" /D "_i386_" /D UNDER_CE=$(CEVersion) /D _WIN32_WCE=$(CEVersion) /D "$(CePlatform)" /D "i_386_" /D "UNICODE" /D "_UNICODE" /D "_X86_" /D "x86" /YX /Gs8192 /GF /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 BSC32=bscmake.exe
@@ -93,21 +93,25 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "Subclass - Win32 (WCE emulator) Release"
-# Name "Subclass - Win32 (WCE emulator) Debug"
+# Name "DialogDemo - Win32 (WCE emulator) Release"
+# Name "DialogDemo - Win32 (WCE emulator) Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\Button.cpp
-DEP_CPP_BUTTO=\
+SOURCE=.\DialogApp.cpp
+DEP_CPP_DIALO=\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\dialog.h"\
 	"..\WinDev++\WCEstddef.h"\
 	"..\WinDev++\WinCore.h"\
-	".\Button.h"\
+	".\DialogApp.h"\
+	".\MyDialog.h"\
+	".\resource.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
-NODEP_CPP_BUTTO=\
+NODEP_CPP_DIALO=\
 	"..\WinDev++\DeviceResolutionAware.h"\
 	
 # End Source File
@@ -115,11 +119,13 @@ NODEP_CPP_BUTTO=\
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\dialog.h"\
 	"..\WinDev++\WCEstddef.h"\
 	"..\WinDev++\WinCore.h"\
-	".\Button.h"\
-	".\MainWin.h"\
-	".\SubclassApp.h"\
+	".\DialogApp.h"\
+	".\MyDialog.h"\
+	".\resource.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MAIN_=\
@@ -128,34 +134,17 @@ NODEP_CPP_MAIN_=\
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainWin.cpp
-DEP_CPP_MAINW=\
+SOURCE=.\MyDialog.cpp
+DEP_CPP_MYDIA=\
+	"..\WinDev++\Default_Resource.h"\
+	"..\WinDev++\dialog.h"\
 	"..\WinDev++\WCEstddef.h"\
 	"..\WinDev++\WinCore.h"\
-	".\Button.h"\
-	".\MainWin.h"\
+	".\MyDialog.h"\
+	".\resource.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
-NODEP_CPP_MAINW=\
-	"..\WinDev++\DeviceResolutionAware.h"\
-	
-# End Source File
-# Begin Source File
-
-SOURCE=.\Resource.rc
-# End Source File
-# Begin Source File
-
-SOURCE=.\SubclassApp.cpp
-DEP_CPP_SUBCL=\
-	"..\WinDev++\WCEstddef.h"\
-	"..\WinDev++\WinCore.h"\
-	".\Button.h"\
-	".\MainWin.h"\
-	".\SubclassApp.h"\
-	{$(INCLUDE)}"ceconfig.h"\
-	
-NODEP_CPP_SUBCL=\
+NODEP_CPP_MYDIA=\
 	"..\WinDev++\DeviceResolutionAware.h"\
 	
 # End Source File
@@ -165,39 +154,35 @@ NODEP_CPP_SUBCL=\
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\Button.h
+SOURCE=.\DialogApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainWin.h
+SOURCE=.\MyDialog.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\resource.h
 # End Source File
-# Begin Source File
-
-SOURCE=.\SubclassApp.h
-# End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\Resource.rc
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\star.ico
+# End Source File
 # End Group
 # Begin Group "WinDev++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce400\STANDARDSDK\Include\Emulator\ceconfig.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\WinDev++\Default_Resource.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\WinDev++\WCEstddef.h"
+SOURCE="..\WinDev++\DialogDemo.h"
 # End Source File
 # Begin Source File
 

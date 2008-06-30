@@ -1,7 +1,7 @@
 [Project]
-FileName=DlgSubclass_DEBUG.dev
+FileName=DlgSubclass_RELEASE.dev
 Name=DlgSubclass
-UnitCount=14
+UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
@@ -11,7 +11,7 @@ PrivateResource=DlgSubclass_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D_DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@_
+CppCompiler=-D _WIN32_IE=0x0400_@@_-D _DEBUG_@@__@@_
 Linker=-lComctl32_@@_
 IsCpp=1
 Icon=
@@ -80,9 +80,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=resrc1.h
+FileName=..\WinDev++\WinCore.h
 CompileCpp=1
-Folder=Header
+Folder=WinDev++
 Compile=1
 Link=1
 Priority=1000
@@ -90,7 +90,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\WinDev++\WinCore.h
+FileName=..\WinDev++\Dialog.h
 Folder=WinDev++
 Compile=1
 Link=1
@@ -100,9 +100,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=..\WinDev++\Dialog.h
+FileName=MyDialog.cpp
 CompileCpp=1
-Folder=WinDev++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -110,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=Button.h
+FileName=Hyperlink.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -138,7 +138,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit11]
-FileName=MyDialog.h
+FileName=Button.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -148,6 +148,16 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
+FileName=MyDialog.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
 FileName=Button.cpp
 CompileCpp=1
 Folder=Source
@@ -157,20 +167,10 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
-FileName=MyDialog.cpp
+[Unit13]
+FileName=Hyperlink.cpp
 CompileCpp=1
 Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
-FileName=Hyperlink.h
-CompileCpp=1
-Folder=Header
 Compile=1
 Link=1
 Priority=1000
