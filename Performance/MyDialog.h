@@ -4,6 +4,7 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
+#include <sstream>
 #include "../WinDev++/dialog.h"
 #include "resource.h"
 

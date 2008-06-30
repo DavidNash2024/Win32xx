@@ -6,10 +6,9 @@
 #ifndef THREADAPP_H
 #define THREADAPP_H
 
-
 #include "MainWnd.h"
 #include <string>
-#include <sstream>
+
 
 typedef std::basic_stringstream<TCHAR> tStringStream;
 

@@ -6,6 +6,7 @@
 #ifndef TESTWND_H
 #define TESTWND_H
 
+#include <sstream>
 #include "../WinDev++/WinCore.h"
 
 

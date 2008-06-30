@@ -7,8 +7,9 @@
 #ifndef PERFAPP_H
 #define PERFAPP_H
 
-#include "MainWnd.h"
 #include <sstream>
+#include "MainWnd.h"
+
 
 typedef std::basic_stringstream<TCHAR> tStringStream;
 
