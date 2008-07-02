@@ -603,6 +603,7 @@ namespace WinDev
 		HWND GetAncestor(HWND hWnd) const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		CRect GetClientRect() const;
+		inline HWND GetDlgItem(int nIDDlgItem) const;
 		tString GetDlgItemString(int nIDDlgItem) const;
 		HWND GetHwnd() const {return m_hWnd;}
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
@@ -1359,9 +1360,14 @@ namespace WinDev
 		return rc;
 	}
 
+	inline HWND CWnd::GetDlgItem(int nIDDlgItem) const
+	{
+		return ::GetDlgItem(m_hWnd, nIDDlgItem);
+	}
+
 	inline tString CWnd::GetDlgItemString(int nIDDlgItem) const
 	{
-		int nLength = ::GetWindowTextLength(GetDlgItem(m_hWnd, nIDDlgItem));
+		int nLength = ::GetWindowTextLength(GetDlgItem(nIDDlgItem));
 
 		tString tstr;
 		if (nLength > 0)

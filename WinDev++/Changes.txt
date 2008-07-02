@@ -28,7 +28,8 @@ CWnd now includes functions which wrap many of the Win32/Win64 API
 functions pertaining to windows. The new functions added are:
  Close Window
  EnableWindow
- GetClassLongPtr 
+ GetClassLongPtr
+ GetDlgItem
  GetWindowLongPtr
  GetWindowPlacement
  Invalidate
