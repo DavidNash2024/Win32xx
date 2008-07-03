@@ -2,9 +2,10 @@
 //
 
 
-
-#include "windows.h"
-#include "commctrl.h"
+#ifndef __BORLANDC__
+  #include "windows.h"
+  #include "commctrl.h"
+#endif
 #include "resource.h"
 
 

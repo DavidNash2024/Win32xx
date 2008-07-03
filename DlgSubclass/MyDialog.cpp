@@ -80,7 +80,7 @@ BOOL CMyDialog::OnInitDialog()
 	::SetDlgItemText(GetHwnd(), IDC_RICHEDIT1, _T("Rich Edit Window"));
 
 	// Put some text in the list box
-	HWND hListBox = ::GetDlgItem(GetHwnd(), IDC_LIST1);
+	HWND hListBox = GetDlgItem(IDC_LIST1);
 	for (int i = 0 ; i < 8 ; i++)
 		::SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
 

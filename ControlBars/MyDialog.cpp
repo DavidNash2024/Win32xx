@@ -21,7 +21,7 @@ BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_HSCROLL:
 		OnHScroll(wParam, lParam);
-		break;		
+		break;
 	}
 
 	// Pass unhandled messages on to parent DialogProc
@@ -41,7 +41,7 @@ void CMyDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 		SetScroll(nPos);		// Set the scroll bar position
 		SetStatic(TRUE, nPos);	// Set the static text
 	}
-	
+
 	else if (GetDlgItem(IDC_SCROLLBAR1) == (HWND)lParam)
 	{
 		// Scrollbar input
@@ -50,30 +50,30 @@ void CMyDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 		switch (LOWORD (wParam))
 		{
 		// user clicked left arrow
-		case SB_LINELEFT: 
+		case SB_LINELEFT:
 			m_si.nPos -= 1;
 			break;
-              
+
 		// user clicked right arrow
-		case SB_LINERIGHT: 
+		case SB_LINERIGHT:
 			m_si.nPos += 1;
 			break;
-              
+
 		// user clicked the scroll bar shaft left of the scroll box
 		case SB_PAGELEFT:
 			m_si.nPos -= m_si.nPage;
 			break;
-              
+
 		// user clicked the scroll bar shaft right of the scroll box
 		case SB_PAGERIGHT:
 			m_si.nPos += m_si.nPage;
 			break;
-              
+
 		// user dragged the scroll box
-		case SB_THUMBTRACK: 
+		case SB_THUMBTRACK:
 			m_si.nPos = m_si.nTrackPos;
 			break;
-              
+
 		default :
 			break;
 		}
@@ -81,11 +81,11 @@ void CMyDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 		// Set the scroll bar position
 		SetScroll(m_si.nPos);
 		::GetScrollInfo(GetDlgItem(IDC_SCROLLBAR1), SB_CTL, &m_si);
-	
+
 		// Set the slider bar position
 		::SendMessage(GetDlgItem(IDC_SLIDER1), TBM_SETPOS, TRUE, (LPARAM)m_si.nPos);
-				
-		SetProgress(m_si.nPos);			// Set the progress bar position	
+
+		SetProgress(m_si.nPos);			// Set the progress bar position
 		SetStatic(FALSE, m_si.nPos);	// Set the static text
 	}
 }
@@ -104,8 +104,8 @@ BOOL CMyDialog::OnInitDialog()
 	m_si.fMask = SIF_ALL;
 	::SetScrollInfo(GetDlgItem(IDC_SCROLLBAR1), SB_CTL, &m_si, TRUE);
 
-	// The slider has a tic mark every ten units
-	::SendMessage(GetDlgItem(IDC_SLIDER1), TBM_SETTICFREQ,  (WPARAM)10, 0); 
+	// Set a tic mark every ten units for the slider control
+	::SendMessage(GetDlgItem(IDC_SLIDER1), TBM_SETTICFREQ,  (WPARAM)10, 0);
 
 	return true;
 }
@@ -123,12 +123,12 @@ void CMyDialog::SetProgress(int nPos)
 }
 
 void CMyDialog::SetScroll(int nPos)
-{		
+{
 	SCROLLINFO si = {0};
 	si.cbSize = sizeof(SCROLLINFO);
 	si.fMask = SIF_POS;
 	si.nPos = nPos;
-	
+
 	// Set the scroll bar position
 	::SetScrollInfo(GetDlgItem(IDC_SCROLLBAR1), SB_CTL, &si, TRUE);
 }

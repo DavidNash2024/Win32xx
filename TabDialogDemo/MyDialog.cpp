@@ -104,9 +104,9 @@ BOOL CComboBoxDialog::OnInitDialog()
 	// Put some text in the Combo Boxes
 	for (int i = 0 ; i < 6 ; i++)
 	{
-		::SendMessage( ::GetDlgItem(GetHwnd(), IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM) _T("C Box 1"));
-		::SendMessage( ::GetDlgItem(GetHwnd(), IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM) _T("C Box 2"));
-		::SendMessage( ::GetDlgItem(GetHwnd(), IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM) _T("C Box 3"));
+		::SendMessage( GetDlgItem(IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM) _T("C Box 1"));
+		::SendMessage( GetDlgItem(IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM) _T("C Box 2"));
+		::SendMessage( GetDlgItem(IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM) _T("C Box 3"));
 	}
 
 	return TRUE;
@@ -147,7 +147,7 @@ BOOL CMyDialog::OnInitDialog()
 
 	TCITEM tie;
 	TCHAR szText[256];
-	HWND hwndTab = GetDlgItem(m_hWnd, IDC_TAB1);
+	HWND hwndTab = GetDlgItem(IDC_TAB1);
 	
 	// Add tabs
 	tie.mask = TCIF_TEXT | TCIF_IMAGE;
@@ -200,7 +200,7 @@ void CMyDialog::OnOK()
 
 void CMyDialog::ShowButtonDialog()
 {
-	HWND hwndTab = GetDlgItem(m_hWnd, IDC_TAB1);
+	HWND hwndTab = GetDlgItem(IDC_TAB1);
 	m_ComboBoxDialog.DestroyWindow();
 	
 	// Create a modeless dialog
@@ -210,7 +210,7 @@ void CMyDialog::ShowButtonDialog()
 
 void CMyDialog::ShowComboBoxDialog()
 {
-	HWND hwndTab = GetDlgItem(m_hWnd, IDC_TAB1);
+	HWND hwndTab = GetDlgItem(IDC_TAB1);
 	m_ButtonDialog.DestroyWindow();
 	
 	// Create a modeless dialog
