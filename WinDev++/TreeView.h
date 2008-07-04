@@ -1,5 +1,5 @@
-// WinDev++  Version 6.1
-// Released: 3rd June, 2008 by:
+// WinDev++  Version 6.2
+// Released: 14th June, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
