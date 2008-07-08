@@ -140,9 +140,15 @@
 		<Unit filename="DialogApp.h" />
 		<Unit filename="MyDialog.cpp" />
 		<Unit filename="MyDialog.h" />
+		<Unit filename="Progressbar.cpp" />
+		<Unit filename="Progressbar.h" />
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="Scrollbar.cpp" />
+		<Unit filename="Scrollbar.h" />
+		<Unit filename="Slider.cpp" />
+		<Unit filename="Slider.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="resrc1.h" />

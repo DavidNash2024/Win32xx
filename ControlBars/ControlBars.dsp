@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="Dialog" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="ControlBars" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
@@ -102,6 +102,18 @@ SOURCE=.\main.cpp
 
 SOURCE=.\MyDialog.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\Progressbar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Scrollbar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Slider.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -116,7 +128,19 @@ SOURCE=.\MyDialog.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Progressbar.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Scrollbar.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Slider.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

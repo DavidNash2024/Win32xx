@@ -273,6 +273,18 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Progressbar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Scrollbar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Slider.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -287,7 +299,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Progressbar.h"
+				>
+			</File>
+			<File
 				RelativePath="resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Scrollbar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Slider.h"
 				>
 			</File>
 		</Filter>

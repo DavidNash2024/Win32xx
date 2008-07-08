@@ -23,7 +23,7 @@ LRESULT CScrollbar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/
 			CMyDialog& MyDialog = GetDialogApp().GetDialog();
 
 			::GetScrollInfo(m_hWnd, SB_CTL, &m_si);
-			
+
 			switch (LOWORD (wParam))
 			{
 			// user clicked left arrow
@@ -59,7 +59,7 @@ LRESULT CScrollbar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/
 			MyDialog.SetSlider(m_si.nPos);			// Set the slider position
 			MyDialog.SetProgress(m_si.nPos);		// Set the progress bar position
 			MyDialog.SetStatic(FALSE, m_si.nPos);	// Set the static text
-			
+
 			break;
 		}
 	}
@@ -78,3 +78,4 @@ void CScrollbar::SetScroll(int nPos)
 	// Set the scroll bar position
 	::SetScrollInfo(m_hWnd, SB_CTL, &m_si, TRUE);
 }
+

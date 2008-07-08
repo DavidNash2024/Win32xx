@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<PersonalityInfo>
 		<Option>
@@ -189,6 +189,9 @@
         <FILE FILENAME="main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="MyDialog.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="MyDialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyDialog" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="Progressbar.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Progressbar" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="Scrollbar.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Scrollbar" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="Slider.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Slider" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>
         <VersionInfo>
