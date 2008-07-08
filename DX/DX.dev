@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++
 OverrideOutput=1
 OverrideOutputName=DX.exe
 HostApplication=
-Folders=WinDev++
+Folders=DevWin++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -108,9 +108,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\WinDev++\WinCore.h
+FileName=..\DevWin++\WinCore.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -118,8 +118,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\WinDev++\WinCore.h
-Folder=WinDev++
+FileName=..\DevWin++\WinCore.h
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000

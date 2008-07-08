@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++
 OverrideOutput=1
 OverrideOutputName=Tutorial3.exe
 HostApplication=
-Folders=Header,Source,WinDev++
+Folders=Header,Source,DevWin++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -68,9 +68,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit6]
-FileName=..\WinDev++\WinCore.h
+FileName=..\DevWin++\WinCore.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -78,9 +78,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\WinDev++\WinCore.h
+FileName=..\DevWin++\WinCore.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000

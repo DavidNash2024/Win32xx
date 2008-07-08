@@ -102,41 +102,41 @@ LINK32=link.exe
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
-	"..\WinDev++\WCEstddef.h"\
-	"..\WinDev++\WinCore.h"\
+	"..\DevWin++\WCEstddef.h"\
+	"..\DevWin++\WinCore.h"\
 	".\SimpleApp.h"\
 	".\view.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MAIN_=\
-	"..\WinDev++\DeviceResolutionAware.h"\
+	"..\DevWin++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\SimpleApp.cpp
 DEP_CPP_SIMPL=\
-	"..\WinDev++\WCEstddef.h"\
-	"..\WinDev++\WinCore.h"\
+	"..\DevWin++\WCEstddef.h"\
+	"..\DevWin++\WinCore.h"\
 	".\SimpleApp.h"\
 	".\view.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_SIMPL=\
-	"..\WinDev++\DeviceResolutionAware.h"\
+	"..\DevWin++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\View.cpp
 DEP_CPP_VIEW_=\
-	"..\WinDev++\WCEstddef.h"\
-	"..\WinDev++\WinCore.h"\
+	"..\DevWin++\WCEstddef.h"\
+	"..\DevWin++\WinCore.h"\
 	".\view.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_VIEW_=\
-	"..\WinDev++\DeviceResolutionAware.h"\
+	"..\DevWin++\DeviceResolutionAware.h"\
 	
 # End Source File
 # End Group
@@ -156,7 +156,7 @@ SOURCE=.\view.h
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
-# Begin Group "WinDev++"
+# Begin Group "DevWin++"
 
 # PROP Default_Filter ""
 # Begin Source File
@@ -165,15 +165,15 @@ SOURCE="..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce400\STANDARDSD
 # End Source File
 # Begin Source File
 
-SOURCE="..\WinDev++\Default_Resource.h"
+SOURCE="..\DevWin++\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\WinDev++\WCEstddef.h"
+SOURCE="..\DevWin++\WCEstddef.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\WinDev++\WinCore.h"
+SOURCE="..\DevWin++\WinCore.h"
 # End Source File
 # End Group
 # End Target

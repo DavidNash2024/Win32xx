@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=0
 OverrideOutputName=DlgSubclass.exe
 HostApplication=
-Folders=Header,Resource,Source,WinDev++
+Folders=Header,Resource,Source,DevWin++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -80,9 +80,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\WinDev++\WinCore.h
+FileName=..\DevWin++\WinCore.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -90,8 +90,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\WinDev++\Dialog.h
-Folder=WinDev++
+FileName=..\DevWin++\Dialog.h
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000

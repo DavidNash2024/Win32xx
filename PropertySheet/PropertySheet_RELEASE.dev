@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
 OverrideOutputName=PropertySheet.exe
 HostApplication=
-Folders=Header,Resource,Source,WinDev++
+Folders=Header,Resource,Source,DevWin++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -119,9 +119,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\WinDev++\WinCore.h
+FileName=..\DevWin++\WinCore.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -129,9 +129,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\WinDev++\Default_Resource.h
+FileName=..\DevWin++\Default_Resource.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -139,9 +139,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\WinDev++\Dialog.h
+FileName=..\DevWin++\Dialog.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -149,9 +149,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\WinDev++\Frame.h
+FileName=..\DevWin++\Frame.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -197,9 +197,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=..\WinDev++\PropertySheet.h
+FileName=..\DevWin++\PropertySheet.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -207,9 +207,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\WinDev++\GDI.h
+FileName=..\DevWin++\GDI.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -227,9 +227,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\WinDev++\PropertySheet.cpp
+FileName=..\DevWin++\PropertySheet.cpp
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -237,9 +237,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\WinDev++\PropertySheet.h
+FileName=..\DevWin++\PropertySheet.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -247,9 +247,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=..\WinDev++\GDI.cpp
+FileName=..\DevWin++\GDI.cpp
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -257,9 +257,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=..\WinDev++\GDI.h
+FileName=..\DevWin++\GDI.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000

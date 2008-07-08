@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++
 OverrideOutput=0
 OverrideOutputName=Tutorial2.exe
 HostApplication=
-Folders=WinDev++
+Folders=DevWin++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -58,9 +58,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\WinDev++\WinCore.h
+FileName=..\DevWin++\WinCore.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000
@@ -68,9 +68,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\WinDev++\WinCore.h
+FileName=..\DevWin++\WinCore.h
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000

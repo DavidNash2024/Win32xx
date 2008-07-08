@@ -58,7 +58,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\..\WinDev++\Socket.h
+FileName=..\..\DevWin++\Socket.h
 CompileCpp=1
 Folder=Client
 Compile=1

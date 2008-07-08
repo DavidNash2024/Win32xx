@@ -738,22 +738,22 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="WinDev++"
+			Name="DevWin++"
 			>
 			<File
-				RelativePath="..\WinDev++\Dialog.h"
+				RelativePath="..\DevWin++\Dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\WCEframe.h"
+				RelativePath="..\DevWin++\WCEframe.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\WCEstddef.h"
+				RelativePath="..\DevWin++\WCEstddef.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\WinCore.h"
+				RelativePath="..\DevWin++\WinCore.h"
 				>
 			</File>
 		</Filter>

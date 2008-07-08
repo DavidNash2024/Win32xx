@@ -18,7 +18,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 		return -1;
 	}
 
-	// Start WinDev++
+	// Start DevWin++
 	CSubclassApp theApp;
 
 	// Process the window messages

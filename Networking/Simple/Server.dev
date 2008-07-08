@@ -58,9 +58,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit2]
-FileName=..\..\WinDev++\Socket.cpp
+FileName=..\..\DevWin++\Socket.cpp
 CompileCpp=1
-Folder=WinDev++
+Folder=DevWin++
 Compile=1
 Link=1
 Priority=1000

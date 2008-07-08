@@ -341,30 +341,30 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="WinDev++"
+			Name="DevWin++"
 			>
 			<File
-				RelativePath="..\WinDev++\Dialog.h"
+				RelativePath="..\DevWin++\Dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\Frame.h"
+				RelativePath="..\DevWin++\Frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\Rebar.h"
+				RelativePath="..\DevWin++\Rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\Statusbar.h"
+				RelativePath="..\DevWin++\Statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\Toolbar.h"
+				RelativePath="..\DevWin++\Toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\WinDev++\WinCore.h"
+				RelativePath="..\DevWin++\WinCore.h"
 				>
 			</File>
 		</Filter>

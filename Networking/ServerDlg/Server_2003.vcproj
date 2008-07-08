@@ -220,23 +220,23 @@
 				RelativePath=".\res\Toolbar.bmp">
 			</File>
 			<File
-				RelativePath=".\res\WinDev++.manifest">
+				RelativePath=".\res\DevWin++.manifest">
 			</File>
 			<File
 				RelativePath=".\res\Zapotec.bmp">
 			</File>
 		</Filter>
 		<Filter
-			Name="WinDev++"
+			Name="DevWin++"
 			Filter="">
 			<File
-				RelativePath="..\..\WinDev++\Dialog.h">
+				RelativePath="..\..\DevWin++\Dialog.h">
 			</File>
 			<File
-				RelativePath="..\..\WinDev++\Socket.h">
+				RelativePath="..\..\DevWin++\Socket.h">
 			</File>
 			<File
-				RelativePath="..\..\WinDev++\WinCore.h">
+				RelativePath="..\..\DevWin++\WinCore.h">
 			</File>
 		</Filter>
 	</Files>

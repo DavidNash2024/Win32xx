@@ -151,16 +151,16 @@ SOURCE=.\resrc1.h
 SOURCE=.\res\Dialog.ico
 # End Source File
 # End Group
-# Begin Group "WinDev++"
+# Begin Group "DevWin++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\WinDev++\Dialog.h"
+SOURCE="..\DevWin++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\WinDev++\WinCore.h"
+SOURCE="..\DevWin++\WinCore.h"
 # End Source File
 # End Group
 # End Target

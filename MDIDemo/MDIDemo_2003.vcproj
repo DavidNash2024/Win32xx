@@ -163,25 +163,25 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="WinDev++"
+			Name="DevWin++"
 			Filter="">
 			<File
-				RelativePath="..\WinDev++\Default_Resource.h">
+				RelativePath="..\DevWin++\Default_Resource.h">
 			</File>
 			<File
-				RelativePath="..\WinDev++\Dialog.h">
+				RelativePath="..\DevWin++\Dialog.h">
 			</File>
 			<File
-				RelativePath="..\WinDev++\Frame.h">
+				RelativePath="..\DevWin++\Frame.h">
 			</File>
 			<File
-				RelativePath="..\WinDev++\GDI.h">
+				RelativePath="..\DevWin++\GDI.h">
 			</File>
 			<File
-				RelativePath="..\WinDev++\MDI.h">
+				RelativePath="..\DevWin++\MDI.h">
 			</File>
 			<File
-				RelativePath="..\WinDev++\WinCore.h">
+				RelativePath="..\DevWin++\WinCore.h">
 			</File>
 		</Filter>
 	</Files>

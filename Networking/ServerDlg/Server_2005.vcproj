@@ -282,22 +282,22 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="WinDev++"
+			Name="DevWin++"
 			>
 			<File
-				RelativePath="..\..\WinDev++\Default_Resource.h"
+				RelativePath="..\..\DevWin++\Default_Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\WinDev++\Dialog.h"
+				RelativePath="..\..\DevWin++\Dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\WinDev++\Socket.h"
+				RelativePath="..\..\DevWin++\Socket.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\WinDev++\WinCore.h"
+				RelativePath="..\..\DevWin++\WinCore.h"
 				>
 			</File>
 		</Filter>

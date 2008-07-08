@@ -2,9 +2,9 @@
 #define MAINFRM_H
 
 
-#include "../WinDev++/Wincore.h"
-#include "../WinDev++/WCEframe.h"
-#include "../WinDev++/Dialog.h"
+#include "../DevWin++/Wincore.h"
+#include "../DevWin++/WCEframe.h"
+#include "../DevWin++/Dialog.h"
 
 
 class CMainFrame : public CWceFrame

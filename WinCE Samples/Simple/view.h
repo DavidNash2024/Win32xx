@@ -1,7 +1,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "../WinDev++/Wincore.h"
+#include "../DevWin++/Wincore.h"
 
 
 class CView : public CWnd

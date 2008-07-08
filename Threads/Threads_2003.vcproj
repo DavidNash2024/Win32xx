@@ -218,10 +218,10 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="WinDev++"
+			Name="DevWin++"
 			Filter="">
 			<File
-				RelativePath="..\WinDev++\WinCore.h">
+				RelativePath="..\DevWin++\WinCore.h">
 			</File>
 		</Filter>
 	</Files>

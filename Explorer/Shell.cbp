@@ -164,14 +164,14 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="resrc1.h" />
-		<Unit filename="..\WinDev++\Default_Resource.h" />
-		<Unit filename="..\WinDev++\Dialog.h" />
-		<Unit filename="..\WinDev++\Frame.h" />
-		<Unit filename="..\WinDev++\GDI.h" />
-		<Unit filename="..\WinDev++\ListView.h" />
-		<Unit filename="..\WinDev++\Splitter.h" />
-		<Unit filename="..\WinDev++\TreeView.h" />
-		<Unit filename="..\WinDev++\WinCore.h" />
+		<Unit filename="..\DevWin++\Default_Resource.h" />
+		<Unit filename="..\DevWin++\Dialog.h" />
+		<Unit filename="..\DevWin++\Frame.h" />
+		<Unit filename="..\DevWin++\GDI.h" />
+		<Unit filename="..\DevWin++\ListView.h" />
+		<Unit filename="..\DevWin++\Splitter.h" />
+		<Unit filename="..\DevWin++\TreeView.h" />
+		<Unit filename="..\DevWin++\WinCore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
