@@ -5,6 +5,9 @@
 #define MYDIALOG_H
 
 #include "../DevWin++/dialog.h"
+#include "Progressbar.h"
+#include "Scrollbar.h"
+#include "Slider.h"
 #include "resource.h"
 
 
@@ -17,16 +20,17 @@ public:
 
 	void SetProgress(int nPos);
 	void SetScroll(int nPos);
+	void SetSlider(int nPos);
 	void SetStatic(BOOL IsSlider, int nPos);
 
 protected:
 	virtual BOOL OnInitDialog();
-	virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
-	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void OnOK();
 
 private:
-	SCROLLINFO m_si;
+	CProgressbar m_Progressbar;
+	CScrollbar m_Scrollbar;
+	CSlider m_Slider;
 };
 
 #endif //MYDIALOG_H

@@ -198,6 +198,15 @@
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Progressbar.cpp">
+			</File>
+			<File
+				RelativePath=".\Scrollbar.cpp">
+			</File>
+			<File
+				RelativePath=".\Slider.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -209,10 +218,16 @@
 				RelativePath="MyDialog.h">
 			</File>
 			<File
+				RelativePath=".\Progressbar.h">
+			</File>
+			<File
 				RelativePath="resource.h">
 			</File>
 			<File
-				RelativePath=".\resrc1.h">
+				RelativePath=".\Scrollbar.h">
+			</File>
+			<File
+				RelativePath=".\Slider.h">
 			</File>
 		</Filter>
 		<Filter
