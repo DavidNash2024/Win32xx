@@ -7,7 +7,7 @@
 
 
 #include <sstream>
-#include "../WinDev++/frame.h"
+#include "../DevWin++/frame.h"
 #include "RichView.h"
 
 // required for Dev-C++

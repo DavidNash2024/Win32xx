@@ -4,7 +4,7 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-#include "../WinDev++/dialog.h"
+#include "../DevWin++/dialog.h"
 #include "resource.h"
 
 

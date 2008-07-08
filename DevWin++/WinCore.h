@@ -1,4 +1,4 @@
-// WinDev++  Version 6.2
+// DevWin++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -38,21 +38,21 @@
 ///////////////////////////////////////////////////////
 // WinCore.h
 //  Declaration of the following classes:
-//  CWinApp, CWnd, CWinException, CCriticalSection
+//  CWinApp, CWnd, CWinException, CCriticalSection,
 //  CPoint, CRect, and CSize
 //
 // This file contains the declarations for the core set of classes required to
-// create simple windows using WinDev++.  Five classes are declared here:
+// create simple windows using DevWin++.  Five classes are declared here:
 //
 // 1) CCriticalSection: This class is used internally to manage thread access
 //            to shared resources. You can also use this class to lock and
 //            release your own critical sections.
 //
-// 2) CWinException: This class is used internally by WinDev++ to handle
+// 2) CWinException: This class is used internally by DevWin++ to handle
 //            exceptions. You can also use it to throw and catch exceptions.
 //
-// 3) WinApp: This class is used start WinDev++ and run the message loop. You
-//            should inherit from this class to start WinDev++ in your own
+// 3) WinApp: This class is used start DevWin++ and run the message loop. You
+//            should inherit from this class to start DevWin++ in your own
 //            application.
 //
 // 4) CWnd:   This class is used to represent a window. It provides a means
@@ -63,7 +63,7 @@
 //            These class can be used in place of a POINT, RECT or SIZE
 //            repectively.
 //
-// Note: This header file (or another WinDev++ header file which includes it)
+// Note: This header file (or another DevWin++ header file which includes it)
 //       should be included before all other header files. It sets some
 //       important macros which need to be set before including Windows.h
 //       Including this file first also allows it to disable some pointless
@@ -142,11 +142,11 @@
 #endif
 
 
-// Automatically include the WinDev namespace
+// Automatically include the DevWin namespace
 // define NO_USING_NAMESPACE to skip this step
-namespace WinDev {}
+namespace DevWin {}
 #ifndef NO_USING_NAMESPACE
-  using namespace WinDev;
+  using namespace DevWin;
 #endif
 
 // Define min and max for Dev-C++ compatibility
@@ -158,7 +158,7 @@ namespace WinDev {}
   #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-namespace WinDev
+namespace DevWin
 {
 	///////////////////////////////////////////
 	// Some useful type declarations and macros
@@ -222,7 +222,7 @@ namespace WinDev
 
 
 	//////////////////////////////////////////////////
-	// Global functions	(within the WinDev namespace)
+	// Global functions	(within the DevWin namespace)
 
 	// Returns a pointer to CWinApp (defined later)
 	CWinApp* GetApp();
@@ -767,7 +767,7 @@ namespace WinDev
 	// Definitions for the CWinApp class
 	//
 
-	// To begin WinDev++, inherit your application class from this one.
+	// To begin DevWin++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
 	inline CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_Callback(NULL)
 	{
@@ -786,14 +786,14 @@ namespace WinDev
 				if (m_TlsIndex == TLS_OUT_OF_INDEXES)
 				{
 					// We only get here in the unlikely event that all TLS indexes are already allocated by this app
-					// At least 64 TLS indexes per process are allowed. WinDev++ requires only one TLS index.
+					// At least 64 TLS indexes per process are allowed. DevWin++ requires only one TLS index.
 					throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 				}
 				SetnGetThis(this);
 			}
 			else
 			{
-				// We get here if WinDev++ is used incorrectly, i.e. more than one instance
+				// We get here if DevWin++ is used incorrectly, i.e. more than one instance
 				// of a CWinApp derived class is started.
  				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
@@ -845,7 +845,7 @@ namespace WinDev
 
 		WNDCLASS wcDefault = {0};
 
-		LPCTSTR szClassName		= _T("WinDev++ Window");
+		LPCTSTR szClassName		= _T("DevWin++ Window");
 		wcDefault.hInstance		= GetInstanceHandle();
 		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
 		wcDefault.lpszClassName = szClassName;
@@ -1175,7 +1175,7 @@ namespace WinDev
 			}
 
 			// Set the Window Class Name
-			TCHAR szClassName[MAX_STRING_SIZE +1] = _T("WinDev++ Window");
+			TCHAR szClassName[MAX_STRING_SIZE +1] = _T("DevWin++ Window");
 			if (m_cs.lpszClass)
 				lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
@@ -1223,9 +1223,9 @@ namespace WinDev
 	{
 		try
 		{
-			// Test if WinDev++ has been started
+			// Test if DevWin++ has been started
 			if (0 == GetApp())
-				throw CWinException(_T("WinDev++ has not been initialised properly.\n Start the WinDev++ by inheriting from CWinApp."));
+				throw CWinException(_T("DevWin++ has not been initialised properly.\n Start the DevWin++ by inheriting from CWinApp."));
 
 			// Only one window per CWnd instance allowed
 			if (::IsWindow(m_hWnd))
@@ -1237,7 +1237,7 @@ namespace WinDev
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE +1] = _T("");
 			if (0 == lstrlen(lpszClassName) )
-				lstrcpyn (ClassName, _T("WinDev++ Window"), MAX_STRING_SIZE);
+				lstrcpyn (ClassName, _T("DevWin++ Window"), MAX_STRING_SIZE);
 			else
 				// Create our own local copy of szClassName.
 				lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
@@ -1486,7 +1486,7 @@ namespace WinDev
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
 	{
 		if (0 == GetApp())
-			throw CWinException(_T("LoadBitmap ... WinDev++ has not been initialised successfully."));
+			throw CWinException(_T("LoadBitmap ... DevWin++ has not been initialised successfully."));
 
 		HBITMAP hBitmap;
 
@@ -1509,7 +1509,7 @@ namespace WinDev
 		// Returns the string associated with a Resource ID
 
 		if (0 == GetApp())
-			throw CWinException(_T("LoadString ... WinDev++ has not been initialised successfully."));
+			throw CWinException(_T("LoadString ... DevWin++ has not been initialised successfully."));
 
 		m_tsLoadString = _T("");
 		TCHAR szString[MAX_STRING_SIZE +1] = _T("");
@@ -2033,7 +2033,7 @@ namespace WinDev
 				if (OnCommand(wParam, lParam))
 					return TRUE;
 
-				// Handle WinDev++ frame commands
+				// Handle DevWin++ frame commands
 				if (OnCommandFrame(wParam, lParam))
 					return TRUE;
 			}
@@ -2048,7 +2048,7 @@ namespace WinDev
 	//		return 0L;
 		case WM_NOTIFY:
 			{
-				// Handle the WinDev++ frame notifications
+				// Handle the DevWin++ frame notifications
 				lr = OnNotifyFrame(wParam, lParam);
 				if (lr) return lr;
 
@@ -2126,7 +2126,7 @@ namespace WinDev
 	} // LRESULT CWnd::WindowProc(...)
 
 
-}; // namespace WinDev
+}; // namespace DevWin
 
 
 #endif // WINCORE_H

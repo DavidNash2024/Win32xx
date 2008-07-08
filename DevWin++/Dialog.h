@@ -1,4 +1,4 @@
-// WinDev++  Version 6.2
+// DevWin++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -39,7 +39,7 @@
 // Dialog.h
 //  Declaration of the CDialog class
 
-// CDialog adds support for dialogs to WinDev++. Dialogs are specialised
+// CDialog adds support for dialogs to DevWin++. Dialogs are specialised
 // windows which are a parent window for common controls. Common controls
 // are special window types such as buttons, edit controls, tree views,
 // list views, static text etc.
@@ -67,7 +67,7 @@
 #include "WinCore.h"
 
 
-namespace WinDev
+namespace DevWin
 {
 
 	class CDialog : public CWnd
@@ -413,7 +413,7 @@ namespace WinDev
 
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
 
-} // namespace WinDev
+} // namespace DevWin
 
 #endif // DIALOG_H
 

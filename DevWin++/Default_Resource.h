@@ -1,4 +1,4 @@
-// This file contains the resource ID definitions for WinDev++.
+// This file contains the resource ID definitions for DevWin++.
 
 
 // The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,
@@ -66,16 +66,16 @@
 //   resource IDs higher than 65535 aren't supported on Windows 95
 //
 // * CMenubar uses resource IDs beginning from 0 for the top level menu items.
-//   WinDev++ leaves resource IDs below 51 unallocated for top level menu items.
+//   DevWin++ leaves resource IDs below 51 unallocated for top level menu items.
 //
 // * Windows uses the icon with the lowest resource ID as the application's
 //   icon. The application's icon is IDW_MAIN, which is the first resource ID
-//   defined by WinDev++.
+//   defined by DevWin++.
 //
 // * When more than one static control is used in a dialog, the controls should
 //   have a unique ID, unless a resource ID of -1 is used.
 //
-// * Users of WinDev++ are advised to begin their resource IDs from 100 to
-//   allow for possible expansion of WinDev++.
+// * Users of DevWin++ are advised to begin their resource IDs from 100 to
+//   allow for possible expansion of DevWin++.
 
 

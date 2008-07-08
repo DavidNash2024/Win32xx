@@ -6,7 +6,7 @@
 #ifndef MDICHILDMAX_H
 #define MDICHILDMAX_H
 
-#include "../WinDev++/MDI.h"
+#include "../DevWin++/MDI.h"
 
 
 class CMDIChildMax : public CMDIChild

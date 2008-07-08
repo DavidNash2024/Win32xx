@@ -1,4 +1,4 @@
-// WinDev++  Version 6.2
+// DevWin++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -78,7 +78,7 @@
 
 #include "WinCore.h"
 
-namespace WinDev
+namespace DevWin
 {
 
 	///////////////////////////////////////////////
@@ -597,7 +597,7 @@ namespace WinDev
 
 
 	/////////////////////////////////////////////////////////////////
-	// Definitions for some global functions in the WinDev namespace
+	// Definitions for some global functions in the DevWin namespace
 	//
 
 	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
@@ -654,7 +654,7 @@ namespace WinDev
 
 
 
-} // namespace WinDev
+} // namespace DevWin
 
 #endif // GDI_H
 

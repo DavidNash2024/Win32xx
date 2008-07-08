@@ -30,7 +30,7 @@ CMainFrame::CMainFrame() : m_MyDialog(IDD_DIALOG1)
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("WinDev++\\Form"));
+	LoadRegistrySettings(_T("DevWin++\\Form"));
 }
 
 CMainFrame::~CMainFrame()

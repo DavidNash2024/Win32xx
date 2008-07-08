@@ -2,7 +2,7 @@
 // ScribbleApp.h
 
 
-#include "../WinDev++/WinCore.h"
+#include "../DevWin++/WinCore.h"
 #include "View.h"
 
 

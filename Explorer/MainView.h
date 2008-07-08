@@ -6,7 +6,7 @@
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
-#include "../WinDev++/Splitter.h"
+#include "../DevWin++/Splitter.h"
 #include "MyTreeView.h"
 #include "MyListView.h"
 

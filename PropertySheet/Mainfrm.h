@@ -4,7 +4,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "../WinDev++/frame.h"
+#include "../DevWin++/frame.h"
 #include "View.h"
 #include "MyPropertySheet.h"
 

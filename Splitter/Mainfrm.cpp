@@ -26,7 +26,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("WinDev++\\Splitter Sample"));
+	LoadRegistrySettings(_T("DevWin++\\Splitter Sample"));
 }
 
 CMainFrame::~CMainFrame()

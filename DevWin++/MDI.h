@@ -1,4 +1,4 @@
-// WinDev++  Version 6.2
+// DevWin++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -39,7 +39,7 @@
 // MDI.h
 //  Declaration of the CMDIChild and CMDIFrame classes
 
-// The classes defined here add MDI frames support to WinDev++. MDI
+// The classes defined here add MDI frames support to DevWin++. MDI
 // (Multiple Document Interface) frames host one or more child windows. The
 // child windows hosted by a MDI frame can be different types. For example,
 // some MDI child windows could be used to edit text, while others could be
@@ -70,7 +70,7 @@
 
 
 
-namespace WinDev
+namespace DevWin
 {
 	/////////////////////////////////////
 	// Declaration of the CMDIChild class
@@ -498,7 +498,7 @@ namespace WinDev
 		bMax = bMax | (m_cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
-		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("WinDev++ MDI Child");
+		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("DevWin++ MDI Child");
 		if (m_cs.lpszClass)
 			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
@@ -603,7 +603,7 @@ namespace WinDev
 	}
 
 
-} // namespace WinDev
+} // namespace DevWin
 
 #endif // MDI_H
 

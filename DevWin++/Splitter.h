@@ -1,4 +1,4 @@
-// WinDev++  Version 6.2
+// DevWin++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -50,7 +50,7 @@
 
 #include "Frame.h"
 
-namespace WinDev
+namespace DevWin
 {
 	// Declaration of the CSplitter class
 	class CSplitter : public CWnd
@@ -172,7 +172,7 @@ namespace WinDev
 		// Create the splitter bar
 		if (m_bVertical)
 		{
-			wc.lpszClassName = _T("WinDev++ V Splitter");
+			wc.lpszClassName = _T("DevWin++ V Splitter");
 			wc.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
 			wc.hbrBackground = m_hbrBackground;
 			m_Bar.RegisterClass(wc);
@@ -180,7 +180,7 @@ namespace WinDev
 		}
 		else
 		{
-			wc.lpszClassName = _T("WinDev++ H Splitter");
+			wc.lpszClassName = _T("DevWin++ H Splitter");
 			wc.hCursor = ::LoadCursor (NULL, IDC_SIZENS);
 			wc.hbrBackground = m_hbrBackground;
 			m_Bar.RegisterClass(wc);
@@ -419,6 +419,6 @@ namespace WinDev
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace WinDev
+} // namespace DevWin
 
 #endif // SPLITTER_H

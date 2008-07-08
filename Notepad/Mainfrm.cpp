@@ -34,7 +34,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("WinDev++\\Notepad Sample"));
+	LoadRegistrySettings(_T("DevWin++\\Notepad Sample"));
 
 	// Load the settings from the registry with 5 MRU entries
 	LoadRegistryMRUSettings(5);

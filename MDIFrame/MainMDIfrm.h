@@ -6,7 +6,7 @@
 #define MAINMDIFRM_H
 
 
-#include "../WinDev++/MDI.h"
+#include "../DevWin++/MDI.h"
 
 
 class CMainMDIFrame : public CMDIFrame

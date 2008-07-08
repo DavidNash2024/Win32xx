@@ -6,7 +6,7 @@
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-    // Start WinDev++
+    // Start DevWin++
     CBrowserApp MyApp;
 
 

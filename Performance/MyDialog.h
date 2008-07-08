@@ -5,7 +5,7 @@
 #define MYDIALOG_H
 
 #include <sstream>
-#include "../WinDev++/dialog.h"
+#include "../DevWin++/dialog.h"
 #include "resource.h"
 
 

@@ -2,7 +2,7 @@
 #ifndef MYPROPERTYSHEET_H
 #define MYPROPERTYSHEET_H
 
-#include "../WinDev++/PropertySheet.h"
+#include "../DevWin++/PropertySheet.h"
 
 
 class CMyPropertySheet : public CPropertySheet

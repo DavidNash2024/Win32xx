@@ -1,4 +1,4 @@
-// WinDev++  Version 6.2
+// DevWin++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -44,7 +44,7 @@
 #include "Commctrl.h"
 
 
-namespace WinDev
+namespace DevWin
 {
 
 	class CTreeView : public CWnd
@@ -534,7 +534,7 @@ namespace WinDev
 	}
 
 
-} // namespace WinDev
+} // namespace DevWin
 
 #endif // #ifndef TREEVIEW_H
 

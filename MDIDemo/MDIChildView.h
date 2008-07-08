@@ -6,7 +6,7 @@
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
 
-#include "../WinDev++/MDI.h"
+#include "../DevWin++/MDI.h"
 
 
 class CMDIChildView : public CMDIChild

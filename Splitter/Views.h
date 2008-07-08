@@ -8,7 +8,7 @@
 #define VIEWS_H
 
 #include <tchar.h>
-#include "../WinDev++/Splitter.h"
+#include "../DevWin++/Splitter.h"
 
 
 class CView : public CWnd

@@ -6,7 +6,7 @@
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-    // Start WinDev++
+    // Start DevWin++
     CSimpleApp MyApp;
 
 	// Run the application

@@ -1,4 +1,4 @@
-// WinDev++  Version 6.2
+// DevWin++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -81,7 +81,7 @@
 #include "Default_Resource.h"
 
 
-namespace WinDev
+namespace DevWin
 {
 
 	////////////////////////////////////////////////
@@ -2435,7 +2435,7 @@ namespace WinDev
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
 		// Set the Window Class
-		cs.lpszClass = _T("WinDev++ Frame");
+		cs.lpszClass = _T("DevWin++ Frame");
 
 		// Set the caption from the string resource
 		cs.lpszName = LoadString(IDW_MAIN);
@@ -3068,6 +3068,6 @@ namespace WinDev
 	} // LRESULT CFrame::WndProcDefault(...)
 
 
-} // namespace WinDev
+} // namespace DevWin
 
 #endif // FRAME_H

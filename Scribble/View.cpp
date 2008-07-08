@@ -6,7 +6,7 @@
 #include "view.h"
 #include <Windowsx.h>	// defines GET_X_LPARAM
 #include "resource.h"
-#include "../WinDev++/GDI.h"
+#include "../DevWin++/GDI.h"
 
 
 using namespace std;

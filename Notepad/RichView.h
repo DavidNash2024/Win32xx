@@ -1,7 +1,7 @@
 #ifndef RICHVIEW_H
 #define RICHVIEW_H
 
-#include "../WinDev++/frame.h"
+#include "../DevWin++/frame.h"
 
 class CRichView : public CWnd
 {
