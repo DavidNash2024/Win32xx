@@ -1162,22 +1162,21 @@ namespace DevWinPlus
 	{
 		try
 		{
-			// Set the CREATESTRUCT parameters
-			PreCreate(m_cs);
-
 			// Set the WNDCLASS parameters
 			PreRegisterClass(m_wc);
 			if (m_wc.lpszClassName)
 			{
 				RegisterClass(m_wc);
 				m_cs.lpszClass = m_wc.lpszClassName;
-				m_cs.style |= m_wc.style;
 			}
 
+			// Set the CREATESTRUCT parameters
+			PreCreate(m_cs);
+
 			// Set the Window Class Name
-			TCHAR szClassName[MAX_STRING_SIZE +1] = _T("DevWin++ Window");
-			if (m_cs.lpszClass)
-				lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
+		//	TCHAR szClassName[MAX_STRING_SIZE +1] = _T("DevWin++ Window");
+			if (!m_cs.lpszClass)
+				lstrcpy((LPTSTR)m_cs.lpszClass, _T("DevWin++ Window"));
 
 			// Set Parent
 			if (!hWndParent && m_cs.hwndParent)
@@ -1198,7 +1197,7 @@ namespace DevWinPlus
 			int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
 
 			// Create the window
-			CreateEx(m_cs.dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
+			CreateEx(m_cs.dwExStyle, m_cs.lpszClass, m_cs.lpszName, dwStyle, x, y,
 				cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams);
 		}
 
