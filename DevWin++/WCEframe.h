@@ -73,7 +73,7 @@
 #endif
 
 
-namespace DevWin
+namespace DevWinPlus
 {
 
 	////////////////////////////////////
@@ -399,6 +399,6 @@ namespace DevWin
 	}
 
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // WCEFRAME_H

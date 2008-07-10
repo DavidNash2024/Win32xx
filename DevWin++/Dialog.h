@@ -67,7 +67,7 @@
 #include "WinCore.h"
 
 
-namespace DevWin
+namespace DevWinPlus
 {
 
 	class CDialog : public CWnd
@@ -413,7 +413,7 @@ namespace DevWin
 
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // DIALOG_H
 

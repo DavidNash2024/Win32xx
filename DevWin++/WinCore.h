@@ -144,9 +144,9 @@
 
 // Automatically include the DevWin namespace
 // define NO_USING_NAMESPACE to skip this step
-namespace DevWin {}
+namespace DevWinPlus {}
 #ifndef NO_USING_NAMESPACE
-  using namespace DevWin;
+  using namespace DevWinPlus;
 #endif
 
 // Define min and max for Dev-C++ compatibility
@@ -158,7 +158,7 @@ namespace DevWin {}
   #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-namespace DevWin
+namespace DevWinPlus
 {
 	///////////////////////////////////////////
 	// Some useful type declarations and macros
@@ -2126,7 +2126,7 @@ namespace DevWin
 	} // LRESULT CWnd::WindowProc(...)
 
 
-}; // namespace DevWin
+}; // namespace DevWinPlus
 
 
 #endif // WINCORE_H

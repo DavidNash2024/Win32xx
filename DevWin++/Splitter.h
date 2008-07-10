@@ -50,7 +50,7 @@
 
 #include "Frame.h"
 
-namespace DevWin
+namespace DevWinPlus
 {
 	// Declaration of the CSplitter class
 	class CSplitter : public CWnd
@@ -419,6 +419,6 @@ namespace DevWin
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // SPLITTER_H

@@ -78,7 +78,7 @@
 
 #include "WinCore.h"
 
-namespace DevWin
+namespace DevWinPlus
 {
 
 	///////////////////////////////////////////////
@@ -653,8 +653,7 @@ namespace DevWin
 	}
 
 
-
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // GDI_H
 

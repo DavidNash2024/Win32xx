@@ -38,7 +38,7 @@
 #define REBAR_H
 
 
-namespace DevWin
+namespace DevWinPlus
 {
 
 	struct ThemeRebar
@@ -585,6 +585,6 @@ namespace DevWin
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // #ifndef REBAR_H

@@ -40,7 +40,7 @@
 
 #include "WinCore.h"
 
-namespace DevWin
+namespace DevWinPlus
 {
 
 	//////////////////////////////////////
@@ -253,6 +253,6 @@ namespace DevWin
 		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0);
 	}
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // #ifndef STATUSBAR_H

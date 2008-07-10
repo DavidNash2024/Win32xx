@@ -70,7 +70,7 @@
 
 
 
-namespace DevWin
+namespace DevWinPlus
 {
 	/////////////////////////////////////
 	// Declaration of the CMDIChild class
@@ -603,7 +603,7 @@ namespace DevWin
 	}
 
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // MDI_H
 

@@ -81,7 +81,7 @@
 #include "Default_Resource.h"
 
 
-namespace DevWin
+namespace DevWinPlus
 {
 
 	////////////////////////////////////////////////
@@ -3068,6 +3068,6 @@ namespace DevWin
 	} // LRESULT CFrame::WndProcDefault(...)
 
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // FRAME_H

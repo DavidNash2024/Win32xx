@@ -42,7 +42,7 @@
 #include "Rebar.h"
 
 
-namespace DevWin
+namespace DevWinPlus
 {
 
 	struct ThemeToolbar
@@ -845,6 +845,6 @@ namespace DevWin
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace DevWin
+} // namespace DevWinPlus
 
 #endif // #ifndef TOOLBAR_H
