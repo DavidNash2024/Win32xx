@@ -632,6 +632,7 @@ namespace DevWinPlus
 		void SetParent(HWND hParent);
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
+		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags);
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
@@ -1851,7 +1852,7 @@ namespace DevWinPlus
 
 	inline void CWnd::SetParent(HWND hParent)
 	{
-		if (::IsWindow(hParent))
+		if ((0 == hParent) || (::IsWindow(hParent)))
 		{
 			m_hWndParent = hParent;
 			if (::IsWindow(m_hWnd))
@@ -1883,6 +1884,11 @@ namespace DevWinPlus
 		return ::SetWindowPlacement(m_hWnd, lpwndpl);
 	}
 #endif
+
+	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags)
+	{
+		return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
+	}
 
 	inline int CWnd::SetWindowRgn(HRGN hRgn, BOOL bRedraw /*= TRUE*/) const
 	// The SetWindowRgn function sets the window region of the window.
