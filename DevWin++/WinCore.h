@@ -1174,9 +1174,8 @@ namespace DevWinPlus
 			PreCreate(m_cs);
 
 			// Set the Window Class Name
-		//	TCHAR szClassName[MAX_STRING_SIZE +1] = _T("DevWin++ Window");
 			if (!m_cs.lpszClass)
-				lstrcpy((LPTSTR)m_cs.lpszClass, _T("DevWin++ Window"));
+				m_cs.lpszClass = _T("DevWin++ Window");
 
 			// Set Parent
 			if (!hWndParent && m_cs.hwndParent)
