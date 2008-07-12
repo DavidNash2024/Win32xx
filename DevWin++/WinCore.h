@@ -625,6 +625,7 @@ namespace DevWinPlus
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
+		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		HWND SetFocus() const;
@@ -632,7 +633,7 @@ namespace DevWinPlus
 		void SetParent(HWND hParent);
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
-		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags);
+		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
@@ -1300,11 +1301,13 @@ namespace DevWinPlus
 	}
 
 	inline void CWnd::DestroyWindow()
+	// The DestroyWindow function destroys the window.
 	{
 		::DestroyWindow(m_hWnd);
 	}
 
 	inline HWND CWnd::Detach()
+	// Reverse an Attach
 	{
 		//Only a subclassed window can be detached
 		if (0 == m_PrevWindowProc)
@@ -1333,6 +1336,8 @@ namespace DevWinPlus
 	}
 
 	inline HWND CWnd::GetAncestor(HWND hWnd) const
+	// The GetAncestor function retrieves the handle to the ancestor (root parent)
+	// of the window.
 	{
 		// Returns the root parent.  Supports Win95
 		HWND hWndParent = ::GetParent(hWnd);
@@ -1353,6 +1358,10 @@ namespace DevWinPlus
 	}
 
 	inline CRect CWnd::GetClientRect() const
+	// The GetClientRect function retrieves the coordinates of a window's client area.
+	// The client coordinates specify the upper-left and lower-right corners of the
+	// client area. Because client coordinates are relative to the upper-left corner
+	// of a window's client area, the coordinates of the upper-left corner are (0,0).
 	{
 		CRect rc;
 		::GetClientRect(m_hWnd, &rc);
@@ -1360,11 +1369,14 @@ namespace DevWinPlus
 	}
 
 	inline HWND CWnd::GetDlgItem(int nIDDlgItem) const
+	// The GetDlgItem function retrieves a handle to a control in the specified dialog box.
 	{
 		return ::GetDlgItem(m_hWnd, nIDDlgItem);
 	}
 
 	inline tString CWnd::GetDlgItemString(int nIDDlgItem) const
+	// The GetDlgItemString function retrieves the title or text associated
+	// with a control in a dialog box.
 	{
 		int nLength = ::GetWindowTextLength(GetDlgItem(nIDDlgItem));
 
@@ -1395,6 +1407,9 @@ namespace DevWinPlus
 #endif
 
 	inline CRect CWnd::GetWindowRect() const
+	// retrieves the dimensions of the bounding rectangle of the specified window.
+	// The dimensions are given in screen coordinates that are relative to the
+	// upper-left corner of the screen.
 	{
 		CRect rc;
 		::GetWindowRect(m_hWnd, &rc);
@@ -1677,6 +1692,7 @@ namespace DevWinPlus
 	}
 
 	inline void CWnd::OnPaint(HDC)
+	// Called when part of the client area of the window needs to be painted
 	{
 		// Override this function in your derived class to perform drawing tasks.
 	}
@@ -1737,6 +1753,8 @@ namespace DevWinPlus
 	}
 
 	inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
+	// Used by the PreRegisterClass function to register a window class prior
+	// to window creation
 	{
 		try
 		{
@@ -1803,6 +1821,13 @@ namespace DevWinPlus
 		return ::SendMessage(m_hWnd, uMsg, wParam, lParam);
 	}
 
+	inline HWND CWnd::SetActiveWindow() const
+	// The SetActiveWindow function activates the window, but
+	// not if the application is in the background.
+	{
+		return ::SetActiveWindow(m_hWnd);
+	}
+
 	inline HWND CWnd::SetCapture() const
 	// The SetCapture function sets the mouse capture to the window.
 	// SetCapture captures mouse input either when the mouse is over the capturing
@@ -1851,6 +1876,7 @@ namespace DevWinPlus
 	}
 
 	inline void CWnd::SetParent(HWND hParent)
+	// The SetParent function changes the parent window of the child window.
 	{
 		if ((0 == hParent) || (::IsWindow(hParent)))
 		{
@@ -1864,7 +1890,7 @@ namespace DevWinPlus
 	}
 
 	inline BOOL CWnd::SetRedraw(BOOL bRedraw /*= TRUE*/) const
-	//  This function allows changes in that window to be redrawn or prevents changes
+	// This function allows changes in that window to be redrawn or prevents changes
 	// in that window from being redrawn.
 	{
 		return ::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0);
@@ -1885,7 +1911,9 @@ namespace DevWinPlus
 	}
 #endif
 
-	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags)
+	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
+	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
+	// or top-level window.
 	{
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
@@ -1926,6 +1954,8 @@ namespace DevWinPlus
 	}
 
 	inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// All CWnd windows direct their messages here. This function redirects the message
+	// to the CWnd's WndProc function.
 	{
 		try
 		{
@@ -2015,7 +2045,7 @@ namespace DevWinPlus
 
 	inline LRESULT CWnd::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// All unhandled window messages (excluding dialogs) end up here
+		// All WndProc functions should pass unhandled window messages to this function
 
 		LRESULT lr;
 

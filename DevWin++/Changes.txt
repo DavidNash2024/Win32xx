@@ -42,20 +42,19 @@ functions pertaining to windows. The new functions added are:
  PostMessage
  RedrawWindow
  SendMessage
+ SetActiveWindow
  SetCapture
  SetClassLongPtr
  SetFocus
  SetForegroundWindow
- SetWindowPlacement
  SetRedraw
- SetWindowRgn
  SetWindowLongPtr
+ SetWindowPlacement
+ SetWindowRgn
  ShowWindow
  UpdateWindow
  ValidateRect
  ValidateRgn
-
-
 
 
 Version 6.1
