@@ -290,7 +290,7 @@ namespace DevWinPlus
 			break;
 		default:    // Pass to active child...
 			{
-				if (GetActiveMDIChildCWnd()->IsWindow())
+				if (::IsWindow (GetActiveMDIChild()))
 					::SendMessage(GetActiveMDIChild(), WM_COMMAND, wParam, lParam);
 			}
 			break ;
