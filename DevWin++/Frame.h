@@ -2478,7 +2478,7 @@ namespace DevWinPlus
 		// Resize the View window
 		CRect rClient = GetViewRect();
 
-		if ((rClient.bottom - rClient.top) >= 0)
+		if ((rClient.bottom - rClient.top) > 0)
 		{
 			int x  = rClient.left;
 			int y  = rClient.top;
