@@ -6,7 +6,7 @@
 #ifndef MDICHILDRECT_H
 #define MDICHILDRECT_H
 
-#include "../DevWin++/MDI.h"
+#include "../Win32++/MDI.h"
 
 
 class CMDIChildRect : public CMDIChild

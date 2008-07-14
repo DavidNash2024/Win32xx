@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
 OverrideOutputName=Server.exe
 HostApplication=
-Folders=Header,Resource,Source,DevWin++
+Folders=Header,Resource,Source,Win32++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -118,9 +118,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit1]
-FileName=..\..\DevWin++\Default_Resource.h
+FileName=..\..\Win32++\Default_Resource.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -128,9 +128,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\..\DevWin++\Dialog.h
+FileName=..\..\Win32++\Dialog.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -138,9 +138,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\..\DevWin++\Socket.h
+FileName=..\..\Win32++\Socket.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -148,9 +148,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\..\DevWin++\WinCore.h
+FileName=..\..\Win32++\WinCore.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

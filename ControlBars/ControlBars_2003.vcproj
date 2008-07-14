@@ -244,17 +244,17 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="DevWin++"
+			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\DevWin++\Dialog.h">
+				RelativePath="..\Win32++\Dialog.h">
 			</File>
 			<File
-				RelativePath="..\DevWin++\WinCore.h">
+				RelativePath="..\Win32++\WinCore.h">
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\res\DevWin++.manifest">
+			RelativePath=".\res\Win32++.manifest">
 		</File>
 	</Files>
 	<Globals>

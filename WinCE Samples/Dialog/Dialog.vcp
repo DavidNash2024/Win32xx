@@ -102,9 +102,9 @@ LINK32=link.exe
 
 SOURCE=.\DialogApp.cpp
 DEP_CPP_DIALO=\
-	"..\DevWin++\Default_Resource.h"\
-	"..\DevWin++\Dialog.h"\
-	"..\DevWin++\WinCore.h"\
+	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\Dialog.h"\
+	"..\Win32++\WinCore.h"\
 	".\DialogApp.h"\
 	".\MyDialog.h"\
 	".\resource.h"\
@@ -114,9 +114,9 @@ DEP_CPP_DIALO=\
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
-	"..\DevWin++\Default_Resource.h"\
-	"..\DevWin++\Dialog.h"\
-	"..\DevWin++\WinCore.h"\
+	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\Dialog.h"\
+	"..\Win32++\WinCore.h"\
 	".\DialogApp.h"\
 	".\MyDialog.h"\
 	".\resource.h"\
@@ -126,9 +126,9 @@ DEP_CPP_MAIN_=\
 
 SOURCE=.\MyDialog.cpp
 DEP_CPP_MYDIA=\
-	"..\DevWin++\Default_Resource.h"\
-	"..\DevWin++\Dialog.h"\
-	"..\DevWin++\WinCore.h"\
+	"..\Win32++\Default_Resource.h"\
+	"..\Win32++\Dialog.h"\
+	"..\Win32++\WinCore.h"\
 	".\MyDialog.h"\
 	".\resource.h"\
 	
@@ -162,16 +162,16 @@ SOURCE=.\Resource.rc
 SOURCE=.\res\star.ico
 # End Source File
 # End Group
-# Begin Group "DevWin++"
+# Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\DevWin++\Dialog.h"
+SOURCE="..\Win32++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\WinCore.h"
+SOURCE="..\Win32++\WinCore.h"
 # End Source File
 # End Group
 # End Target

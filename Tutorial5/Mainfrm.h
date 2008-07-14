@@ -6,7 +6,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "../DevWin++/Frame.h"
+#include "../Win32++/Frame.h"
 #include "View.h"
 
 

@@ -325,38 +325,38 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="DevWin++"
+			Name="Win32++"
 			>
 			<File
-				RelativePath="..\DevWin++\Default_Resource.h"
+				RelativePath="..\Win32++\Default_Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\DevWin++\Dialog.h"
+				RelativePath="..\Win32++\Dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\DevWin++\Frame.h"
+				RelativePath="..\Win32++\Frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\DevWin++\GDI.h"
+				RelativePath="..\Win32++\GDI.h"
 				>
 			</File>
 			<File
-				RelativePath="..\DevWin++\Rebar.h"
+				RelativePath="..\Win32++\Rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\DevWin++\Statusbar.h"
+				RelativePath="..\Win32++\Statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\DevWin++\Toolbar.h"
+				RelativePath="..\Win32++\Toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\DevWin++\WinCore.h"
+				RelativePath="..\Win32++\WinCore.h"
 				>
 			</File>
 		</Filter>

@@ -1,11 +1,11 @@
-The classes which form DevWin++ are located in the following files:
+The classes which form Win32++ are located in the following files:
 
 
  Files            |  Classes         | Operating Systems | Description
 ==================+==================+===================+=====================
 Wincore.h         | CCriticalSection | Win32 and WinCE   | The core set of 
                   | CPoint           |                   | classes required for
-                  | CRect            |                   | all DevWin++ 
+                  | CRect            |                   | all Win32++ 
                   | CSize            |                   | applications. 
                   | CWinApp          |                   | 
                   | CWinException    |                   | 

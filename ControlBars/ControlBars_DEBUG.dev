@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=0
 OverrideOutputName=ControlBars.exe
 HostApplication=
-Folders=DevWin++,Header,Resource,Source
+Folders=Win32++,Header,Resource,Source
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -99,9 +99,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\DevWin++\Dialog.h
+FileName=..\Win32++\Dialog.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -137,9 +137,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\DevWin++\WinCore.h
+FileName=..\Win32++\WinCore.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

@@ -145,8 +145,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="resrc1.h" />
-		<Unit filename="..\DevWin++\Dialog.h" />
-		<Unit filename="..\DevWin++\WinCore.h" />
+		<Unit filename="..\Win32++\Dialog.h" />
+		<Unit filename="..\Win32++\WinCore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

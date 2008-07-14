@@ -28,7 +28,7 @@ CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("DevWin++\\Explorer Sample"));
+	LoadRegistrySettings(_T("Win32++\\Explorer Sample"));
 }
 
 CMainFrame::~CMainFrame()

@@ -1,7 +1,7 @@
 ///////////////////////////////////
 // main.cpp
 
-#include "../DevWin++/Wincore.h"
+#include "../Win32++/Wincore.h"
 
 
 class CView : public CWnd
@@ -36,7 +36,7 @@ BOOL CSimpleApp::InitInstance()
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-    // Start DevWin++
+    // Start Win32++
     CSimpleApp MyApp;
 
 	// Run the application

@@ -7,7 +7,7 @@
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-	// Start DevWin++
+	// Start Win32++
 	CDialogApp theApp;
 
 	// Run the application

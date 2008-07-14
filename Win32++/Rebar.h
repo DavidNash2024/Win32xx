@@ -1,4 +1,4 @@
-// DevWin++  Version 6.2
+// Win32++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -38,7 +38,7 @@
 #define REBAR_H
 
 
-namespace DevWinPlus
+namespace Win32xx
 {
 
 	struct ThemeRebar
@@ -585,6 +585,6 @@ namespace DevWinPlus
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-} // namespace DevWinPlus
+} // namespace Win32xx
 
 #endif // #ifndef REBAR_H

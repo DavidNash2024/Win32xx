@@ -1,4 +1,4 @@
-// DevWin++  Version 6.2
+// Win32++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -42,7 +42,7 @@
 #include "WinCore.h"
 #include "Commctrl.h"
 
-namespace DevWinPlus
+namespace Win32xx
 {
 
 	class CListView : public CWnd
@@ -740,7 +740,7 @@ namespace DevWinPlus
 		return ListView_Update( m_hWnd, iItem );
 	}
 
-} // namespace DevWinPlus
+} // namespace Win32xx
 
 #endif // #ifndef LISTVIEW_H
 

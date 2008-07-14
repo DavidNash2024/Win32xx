@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
 OverrideOutputName=MDIFrame.exe
 HostApplication=
-Folders=Header,Resource,Source,DevWin++
+Folders=Header,Resource,Source,Win32++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -120,9 +120,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\DevWin++\WinCore.h
+FileName=..\Win32++\WinCore.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -130,8 +130,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\DevWin++\Default_Resource.h
-Folder=DevWin++
+FileName=..\Win32++\Default_Resource.h
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -140,9 +140,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit12]
-FileName=..\DevWin++\Dialog.h
+FileName=..\Win32++\Dialog.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -150,9 +150,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\DevWin++\Frame.h
+FileName=..\Win32++\Frame.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -160,9 +160,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\DevWin++\MDI.h
+FileName=..\Win32++\MDI.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -170,9 +170,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\DevWin++\GDI.h
+FileName=..\Win32++\GDI.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -180,9 +180,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=..\DevWin++\Frame.h
+FileName=..\Win32++\Frame.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -190,9 +190,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\DevWin++\MDI.cpp
+FileName=..\Win32++\MDI.cpp
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -200,9 +200,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\DevWin++\GDI.cpp
+FileName=..\Win32++\GDI.cpp
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -248,9 +248,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit18]
-FileName=..\DevWin++\MDI.h
+FileName=..\Win32++\MDI.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -258,9 +258,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\DevWin++\GDI.h
+FileName=..\Win32++\GDI.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

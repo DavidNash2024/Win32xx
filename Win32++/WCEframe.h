@@ -1,4 +1,4 @@
-// DevWin++  Version 6.2
+// Win32++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -73,7 +73,7 @@
 #endif
 
 
-namespace DevWinPlus
+namespace Win32xx
 {
 
 	////////////////////////////////////
@@ -399,6 +399,6 @@ namespace DevWinPlus
 	}
 
 
-} // namespace DevWinPlus
+} // namespace Win32xx
 
 #endif // WCEFRAME_H

@@ -212,10 +212,10 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 		</Filter>
 		<Filter
-			Name="DevWin++"
+			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\DevWin++\WinCore.h">
+				RelativePath="..\Win32++\WinCore.h">
 			</File>
 		</Filter>
 	</Files>

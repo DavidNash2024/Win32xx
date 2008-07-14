@@ -164,52 +164,52 @@ SOURCE=.\ShellWrapper.h
 SOURCE=.\Resource.rc
 # End Source File
 # End Group
-# Begin Group "DevWin++"
+# Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\DevWin++\Default_Resource.h"
+SOURCE="..\Win32++\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\Dialog.h"
+SOURCE="..\Win32++\Dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\Frame.h"
+SOURCE="..\Win32++\Frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\GDI.h"
+SOURCE="..\Win32++\GDI.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\ListView.h"
+SOURCE="..\Win32++\ListView.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\Rebar.h"
+SOURCE="..\Win32++\Rebar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\Splitter.h"
+SOURCE="..\Win32++\Splitter.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\Statusbar.h"
+SOURCE="..\Win32++\Statusbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\Toolbar.h"
+SOURCE="..\Win32++\Toolbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\TreeView.h"
+SOURCE="..\Win32++\TreeView.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\WinCore.h"
+SOURCE="..\Win32++\WinCore.h"
 # End Source File
 # End Group
 # End Target

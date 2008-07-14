@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 #include "winsock2.h"
-#include "../../DevWin++/Socket.h"
+#include "../../Win32++/Socket.h"
 
 using namespace std;
-using namespace DevWin;
+using namespace Win32xx;
 
 
 class CClientSocket : public CSocket

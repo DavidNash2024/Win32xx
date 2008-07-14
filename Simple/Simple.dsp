@@ -127,12 +127,12 @@ SOURCE=.\View.h
 SOURCE=.\Resource.rc
 # End Source File
 # End Group
-# Begin Group "DevWin++"
+# Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\DevWin++\WinCore.h"
+SOURCE="..\Win32++\WinCore.h"
 # End Source File
 # End Group
 # End Target

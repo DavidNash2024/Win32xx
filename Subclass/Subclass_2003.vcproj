@@ -144,10 +144,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 		</Filter>
 		<Filter
-			Name="DevWin++"
+			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\DevWin++\WinCore.h">
+				RelativePath="..\Win32++\WinCore.h">
 			</File>
 		</Filter>
 	</Files>

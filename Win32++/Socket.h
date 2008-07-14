@@ -1,4 +1,4 @@
-// DevWin++  Version 6.2
+// Win32++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -75,7 +75,7 @@
 #define THREAD_TIMEOUT 100
 
 
-namespace DevWinPlus
+namespace Win32xx
 {
 
 	class CSocket

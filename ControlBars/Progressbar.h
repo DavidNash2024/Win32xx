@@ -1,7 +1,7 @@
 #ifndef PROGRESSBAR_H
 #define PROGRESSBAR_H
 
-#include "../DevWin++/WinCore.h"
+#include "../Win32++/WinCore.h"
 
 class CProgressbar : public CWnd
 {

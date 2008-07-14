@@ -6,7 +6,7 @@
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-	// Start DevWin++
+	// Start Win32++
 	CThemesApp theApp;
 
 	// Run the application

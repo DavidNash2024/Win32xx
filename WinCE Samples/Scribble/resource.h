@@ -3,7 +3,7 @@
 // Used by DEFAULT.RC
 //
 
-#include "../DevWin++/Default_Resource.h"
+#include "../Win32++/Default_Resource.h"
 
 // String resource IDs
 #define IDS_HELLO						100

@@ -223,13 +223,13 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="DevWin++"
+			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\DevWin++\Dialog.h">
+				RelativePath="..\Win32++\Dialog.h">
 			</File>
 			<File
-				RelativePath="..\DevWin++\WinCore.h">
+				RelativePath="..\Win32++\WinCore.h">
 			</File>
 		</Filter>
 	</Files>

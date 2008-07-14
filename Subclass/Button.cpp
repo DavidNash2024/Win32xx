@@ -12,7 +12,7 @@ CButton::~CButton()
 void CButton::PreCreate(CREATESTRUCT &cs)
 {
 	// Choose "BUTTON as the window class. This is a predefined window class
-	//  which creates a button window. Since its a predefined window class, DevWin++
+	//  which creates a button window. Since its a predefined window class, Win32++
 	//  automatically subclasses it, so the window messages are passed via WndProc
 	cs.lpszClass = _T("BUTTON");
 

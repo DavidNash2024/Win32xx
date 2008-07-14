@@ -91,7 +91,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	// Set some optional parameters for the window
 	cs.style = WS_HSCROLL| WS_VSCROLL | WS_VISIBLE | WS_CHILD;
 	cs.dwExStyle = WS_EX_CLIENTEDGE;		// Extended style
-	cs.lpszClass = _T("DevWin++ Window");	// Window class name
+	cs.lpszClass = _T("Win32++ Window");	// Window class name
 }
 
 

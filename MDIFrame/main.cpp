@@ -5,7 +5,7 @@
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-	// Start DevWin++
+	// Start Win32++
     CMDIFrameApp MyApp;
 
 	// Run the application

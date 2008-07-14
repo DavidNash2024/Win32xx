@@ -1,4 +1,4 @@
-// DevWin++  Version 6.2
+// Win32++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -40,7 +40,7 @@
 
 #include "WinCore.h"
 
-namespace DevWinPlus
+namespace Win32xx
 {
 
 	//////////////////////////////////////
@@ -253,6 +253,6 @@ namespace DevWinPlus
 		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0);
 	}
 
-} // namespace DevWinPlus
+} // namespace Win32xx
 
 #endif // #ifndef STATUSBAR_H

@@ -31,7 +31,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("DevWin++\\Scribble Sample"));
+	LoadRegistrySettings(_T("Win32++\\Scribble Sample"));
 
 	// Load the settings from the registry with 4 MRU entries
 	LoadRegistryMRUSettings(4);

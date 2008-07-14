@@ -3,8 +3,8 @@
 // This file contains the resource ID definitions.
 
 
-// include the Resource IDs defined by DevWin++
-#include "../DevWin++/Default_Resource.h"
+// include the Resource IDs defined by Win32++
+#include "../Win32++/Default_Resource.h"
 
 
 //Resource IDs for menu items and Toolbar items

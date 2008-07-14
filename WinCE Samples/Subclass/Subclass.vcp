@@ -102,42 +102,42 @@ LINK32=link.exe
 
 SOURCE=.\Button.cpp
 DEP_CPP_BUTTO=\
-	"..\DevWin++\WCEstddef.h"\
-	"..\DevWin++\WinCore.h"\
+	"..\Win32++\WCEstddef.h"\
+	"..\Win32++\WinCore.h"\
 	".\Button.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_BUTTO=\
-	"..\DevWin++\DeviceResolutionAware.h"\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
-	"..\DevWin++\WCEstddef.h"\
-	"..\DevWin++\WinCore.h"\
+	"..\Win32++\WCEstddef.h"\
+	"..\Win32++\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
 	".\SubclassApp.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MAIN_=\
-	"..\DevWin++\DeviceResolutionAware.h"\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\MainWin.cpp
 DEP_CPP_MAINW=\
-	"..\DevWin++\WCEstddef.h"\
-	"..\DevWin++\WinCore.h"\
+	"..\Win32++\WCEstddef.h"\
+	"..\Win32++\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MAINW=\
-	"..\DevWin++\DeviceResolutionAware.h"\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
@@ -148,15 +148,15 @@ SOURCE=.\Resource.rc
 
 SOURCE=.\SubclassApp.cpp
 DEP_CPP_SUBCL=\
-	"..\DevWin++\WCEstddef.h"\
-	"..\DevWin++\WinCore.h"\
+	"..\Win32++\WCEstddef.h"\
+	"..\Win32++\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
 	".\SubclassApp.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_SUBCL=\
-	"..\DevWin++\DeviceResolutionAware.h"\
+	"..\Win32++\DeviceResolutionAware.h"\
 	
 # End Source File
 # End Group
@@ -184,7 +184,7 @@ SOURCE=.\SubclassApp.h
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
-# Begin Group "DevWin++"
+# Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
@@ -193,15 +193,15 @@ SOURCE="..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce400\STANDARDSD
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\Default_Resource.h"
+SOURCE="..\Win32++\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\WCEstddef.h"
+SOURCE="..\Win32++\WCEstddef.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\DevWin++\WinCore.h"
+SOURCE="..\Win32++\WinCore.h"
 # End Source File
 # End Group
 # End Target

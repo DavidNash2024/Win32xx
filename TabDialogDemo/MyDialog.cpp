@@ -205,7 +205,7 @@ void CMyDialog::ShowButtonDialog()
 	
 	// Create a modeless dialog
 	m_ButtonDialog.Create(hwndTab);
-	SetWindowPos(m_ButtonDialog.GetHwnd(), HWND_TOP, 0, 20, 0, 0, SWP_NOSIZE);
+	::SetWindowPos(m_ButtonDialog.GetHwnd(), HWND_TOP, 0, 20, 0, 0, SWP_NOSIZE);
 }
 
 void CMyDialog::ShowComboBoxDialog()
@@ -215,6 +215,6 @@ void CMyDialog::ShowComboBoxDialog()
 	
 	// Create a modeless dialog
 	m_ComboBoxDialog.Create(hwndTab);
-	SetWindowPos(m_ComboBoxDialog.GetHwnd(), HWND_TOP, 0, 20, 0, 0, SWP_NOSIZE);
+	::SetWindowPos(m_ComboBoxDialog.GetHwnd(), HWND_TOP, 0, 20, 0, 0, SWP_NOSIZE);
 }
 

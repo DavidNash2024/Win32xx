@@ -6,7 +6,7 @@
 
 
 #include "Server.h"
-#include "../../DevWin++/Dialog.h"
+#include "../../Win32++/Dialog.h"
 #include "resource.h"
 
 

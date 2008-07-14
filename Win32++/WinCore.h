@@ -1,4 +1,4 @@
-// DevWin++  Version 6.2
+// Win32++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -42,17 +42,17 @@
 //  CPoint, CRect, and CSize
 //
 // This file contains the declarations for the core set of classes required to
-// create simple windows using DevWin++.  Five classes are declared here:
+// create simple windows using Win32++.  Five classes are declared here:
 //
 // 1) CCriticalSection: This class is used internally to manage thread access
 //            to shared resources. You can also use this class to lock and
 //            release your own critical sections.
 //
-// 2) CWinException: This class is used internally by DevWin++ to handle
+// 2) CWinException: This class is used internally by Win32++ to handle
 //            exceptions. You can also use it to throw and catch exceptions.
 //
-// 3) WinApp: This class is used start DevWin++ and run the message loop. You
-//            should inherit from this class to start DevWin++ in your own
+// 3) WinApp: This class is used start Win32++ and run the message loop. You
+//            should inherit from this class to start Win32++ in your own
 //            application.
 //
 // 4) CWnd:   This class is used to represent a window. It provides a means
@@ -63,7 +63,7 @@
 //            These class can be used in place of a POINT, RECT or SIZE
 //            repectively.
 //
-// Note: This header file (or another DevWin++ header file which includes it)
+// Note: This header file (or another Win32++ header file which includes it)
 //       should be included before all other header files. It sets some
 //       important macros which need to be set before including Windows.h
 //       Including this file first also allows it to disable some pointless
@@ -142,11 +142,11 @@
 #endif
 
 
-// Automatically include the DevWin namespace
+// Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
-namespace DevWinPlus {}
+namespace Win32xx {}
 #ifndef NO_USING_NAMESPACE
-  using namespace DevWinPlus;
+  using namespace Win32xx;
 #endif
 
 // Define min and max for Dev-C++ compatibility
@@ -158,7 +158,7 @@ namespace DevWinPlus {}
   #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-namespace DevWinPlus
+namespace Win32xx
 {
 	///////////////////////////////////////////
 	// Some useful type declarations and macros
@@ -222,7 +222,7 @@ namespace DevWinPlus
 
 
 	//////////////////////////////////////////////////
-	// Global functions	(within the DevWin namespace)
+	// Global functions	(within the Win32xx namespace)
 
 	// Returns a pointer to CWinApp (defined later)
 	CWinApp* GetApp();
@@ -769,7 +769,7 @@ namespace DevWinPlus
 	// Definitions for the CWinApp class
 	//
 
-	// To begin DevWin++, inherit your application class from this one.
+	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
 	inline CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_Callback(NULL)
 	{
@@ -788,14 +788,14 @@ namespace DevWinPlus
 				if (m_TlsIndex == TLS_OUT_OF_INDEXES)
 				{
 					// We only get here in the unlikely event that all TLS indexes are already allocated by this app
-					// At least 64 TLS indexes per process are allowed. DevWin++ requires only one TLS index.
+					// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
 					throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 				}
 				SetnGetThis(this);
 			}
 			else
 			{
-				// We get here if DevWin++ is used incorrectly, i.e. more than one instance
+				// We get here if Win32++ is used incorrectly, i.e. more than one instance
 				// of a CWinApp derived class is started.
  				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
@@ -847,7 +847,7 @@ namespace DevWinPlus
 
 		WNDCLASS wcDefault = {0};
 
-		LPCTSTR szClassName		= _T("DevWin++ Window");
+		LPCTSTR szClassName		= _T("Win32++ Window");
 		wcDefault.hInstance		= GetInstanceHandle();
 		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
 		wcDefault.lpszClassName = szClassName;
@@ -1177,7 +1177,7 @@ namespace DevWinPlus
 
 			// Set the Window Class Name
 			if (!m_cs.lpszClass)
-				m_cs.lpszClass = _T("DevWin++ Window");
+				m_cs.lpszClass = _T("Win32++ Window");
 
 			// Set Parent
 			if (!hWndParent && m_cs.hwndParent)
@@ -1223,9 +1223,9 @@ namespace DevWinPlus
 	{
 		try
 		{
-			// Test if DevWin++ has been started
+			// Test if Win32++ has been started
 			if (0 == GetApp())
-				throw CWinException(_T("DevWin++ has not been initialised properly.\n Start the DevWin++ by inheriting from CWinApp."));
+				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 
 			// Only one window per CWnd instance allowed
 			if (::IsWindow(m_hWnd))
@@ -1237,7 +1237,7 @@ namespace DevWinPlus
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE +1] = _T("");
 			if (0 == lstrlen(lpszClassName) )
-				lstrcpyn (ClassName, _T("DevWin++ Window"), MAX_STRING_SIZE);
+				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
 				// Create our own local copy of szClassName.
 				lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
@@ -1500,7 +1500,7 @@ namespace DevWinPlus
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
 	{
 		if (0 == GetApp())
-			throw CWinException(_T("LoadBitmap ... DevWin++ has not been initialised successfully."));
+			throw CWinException(_T("LoadBitmap ... Win32++ has not been initialised successfully."));
 
 		HBITMAP hBitmap;
 
@@ -1523,7 +1523,7 @@ namespace DevWinPlus
 		// Returns the string associated with a Resource ID
 
 		if (0 == GetApp())
-			throw CWinException(_T("LoadString ... DevWin++ has not been initialised successfully."));
+			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
 		m_tsLoadString = _T("");
 		TCHAR szString[MAX_STRING_SIZE +1] = _T("");
@@ -2067,7 +2067,7 @@ namespace DevWinPlus
 				if (OnCommand(wParam, lParam))
 					return TRUE;
 
-				// Handle DevWin++ frame commands
+				// Handle Win32++ frame commands
 				if (OnCommandFrame(wParam, lParam))
 					return TRUE;
 			}
@@ -2082,7 +2082,7 @@ namespace DevWinPlus
 	//		return 0L;
 		case WM_NOTIFY:
 			{
-				// Handle the DevWin++ frame notifications
+				// Handle the Win32++ frame notifications
 				lr = OnNotifyFrame(wParam, lParam);
 				if (lr) return lr;
 
@@ -2160,7 +2160,7 @@ namespace DevWinPlus
 	} // LRESULT CWnd::WindowProc(...)
 
 
-}; // namespace DevWinPlus
+}; // namespace Win32xx
 
 
 #endif // WINCORE_H

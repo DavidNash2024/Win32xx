@@ -1,7 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../../DevWin++\Socket.h"
+#include "../../Win32++\Socket.h"
 
 // User defined message
 #define USER_ACCEPT     WM_APP+1

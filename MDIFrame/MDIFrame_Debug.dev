@@ -20,7 +20,7 @@ ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=1
 OverrideOutputName=MDIFrame.exe
 HostApplication=
-Folders=Header,Resource,Source,DevWin++
+Folders=Header,Resource,Source,Win32++
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -137,9 +137,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\DevWin++\WinCore.h
+FileName=..\Win32++\WinCore.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -147,9 +147,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\DevWin++\Dialog.h
+FileName=..\Win32++\Dialog.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -157,9 +157,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\DevWin++\Frame.h
+FileName=..\Win32++\Frame.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -167,9 +167,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\DevWin++\GDI.h
+FileName=..\Win32++\GDI.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -177,9 +177,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\DevWin++\MDI.h
+FileName=..\Win32++\MDI.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -187,9 +187,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\DevWin++\Rebar.h
+FileName=..\Win32++\Rebar.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -197,9 +197,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=..\DevWin++\Statusbar.h
+FileName=..\Win32++\Statusbar.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -207,9 +207,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\DevWin++\Toolbar.h
+FileName=..\Win32++\Toolbar.h
 CompileCpp=1
-Folder=DevWin++
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

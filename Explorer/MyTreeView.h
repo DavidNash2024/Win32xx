@@ -7,7 +7,7 @@
 #define MYTREEVIEW_H
 
 
-#include "../DevWin++/TreeView.h"
+#include "../Win32++/TreeView.h"
 #include <vector>
 #include "ShellWrapper.h"
 

@@ -1,4 +1,4 @@
-// DevWin++  Version 6.2
+// Win32++  Version 6.2
 // Released: 14th June, 2008 by:
 //
 //      David Nash
@@ -81,7 +81,7 @@
 #include "Default_Resource.h"
 
 
-namespace DevWinPlus
+namespace Win32xx
 {
 
 	////////////////////////////////////////////////
@@ -2435,7 +2435,7 @@ namespace DevWinPlus
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
 		// Set the Window Class
-		cs.lpszClass = _T("DevWin++ Frame");
+		cs.lpszClass = _T("Win32++ Frame");
 
 		// Set the caption from the string resource
 		cs.lpszName = LoadString(IDW_MAIN);
@@ -3068,6 +3068,6 @@ namespace DevWinPlus
 	} // LRESULT CFrame::WndProcDefault(...)
 
 
-} // namespace DevWinPlus
+} // namespace Win32xx
 
 #endif // FRAME_H

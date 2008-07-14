@@ -6,7 +6,7 @@
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
-    // Start DevWin++
+    // Start Win32++
     CDXApp MyApp;
 
 	// Run the application

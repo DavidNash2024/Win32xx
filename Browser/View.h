@@ -53,7 +53,7 @@
 #define VIEW_H
 
 
-#include "../DevWin++/Wincore.h"
+#include "../Win32++/Wincore.h"
 #include <exdisp.h>				// WebBrowser2 support
 #include <exdispid.h>
 #include <atlbase.h>			// ATL support
