@@ -1,7 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
 
-
 #ifndef __BORLANDC__
   #include "windows.h"
   #include "commctrl.h"
@@ -9,12 +8,14 @@
 #include "resource.h"
 
 
+
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       24             "res/Win32++.manifest"
+1                       24                       "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -48,14 +49,11 @@ BEGIN
     GROUPBOX        "Static Control",IDC_STATIC1,178,14,78,51,BS_LEFT
     LTEXT           "Input displayed here",IDC_STATIC2,183,23,71,35
     CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS |
-                    WS_TABSTOP,32,20,111,23
+                    WS_TABSTOP,25,21,118,23
     CONTROL         "",IDC_PROGRESS1,"msctls_progress32",0x0,32,99,104,21
     SCROLLBAR       IDC_SCROLLBAR1,32,60,104,14
     LTEXT           "Slider Control",IDC_STATIC,32,9,68,11
     LTEXT           "Progress bar Control",IDC_STATIC,32,87,68,11
     LTEXT           "Scroll bar Control",IDC_STATIC,32,50,68,11
 END
-
-
-
 
