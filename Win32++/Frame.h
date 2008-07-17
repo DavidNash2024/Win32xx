@@ -1135,6 +1135,8 @@ namespace Win32xx
 
 	inline void CMenubar::SetMenu(HMENU hMenu)
 	{
+		if (!IsWindow()) return;
+
 		m_hTopMenu = hMenu;
 		int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
 
@@ -1932,6 +1934,12 @@ namespace Win32xx
 
 	inline void CFrame::OnCloseFrame()
 	{
+		m_Menubar.DestroyWindow();
+		m_Toolbar.DestroyWindow();
+		m_Rebar.DestroyWindow();
+		m_Statusbar.DestroyWindow();
+		m_pView->DestroyWindow();
+		
 		SaveRegistrySettings();
 	}
 

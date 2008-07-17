@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////
-// MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
+// DockFrame.cpp  - definitions for the CDockFrame class
 
 
 #include "resource.h"
-#include "mainMDIfrm.h"
+#include "DockFrame.h"
 #include "MDIChildView.h"
 
 
-CMainMDIFrame::CMainMDIFrame()
+CDockFrame::CDockFrame()
 {
 	// Define the resource IDs for the toolbar
 	m_ToolbarData.clear();
@@ -28,18 +28,18 @@ CMainMDIFrame::CMainMDIFrame()
 	LoadRegistrySettings(_T("Win32++\\MDI Frame"));
 }
 
-CMainMDIFrame::~CMainMDIFrame()
+CDockFrame::~CDockFrame()
 {
 }
 
-void CMainMDIFrame::OnInitialUpdate()
+void CDockFrame::OnInitialUpdate()
 {
 	TRACE(_T("MDI Frame started \n"));
 	//The frame is now created.
 	//Place any additional startup code here.
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CDockFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
@@ -59,7 +59,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
-void CMainMDIFrame::OnCreate()
+void CDockFrame::OnCreate()
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -76,7 +76,71 @@ void CMainMDIFrame::OnCreate()
 	RecalcLayout();
 }
 
-void CMainMDIFrame::RecalcLayout()
+LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+{
+	switch (((LPNMHDR)lParam)->code)
+	{
+	case USER_DRAGSTART:
+		TRACE("Drag Start notification\n");
+		break;
+
+	case USER_DRAGMOVE:
+	//	TRACE("Drag Move notification\n");
+		{
+			LPDRAGPOS pdp = (LPDRAGPOS)lParam;
+			TCHAR szText[80];
+			wsprintf(szText, "Cursor  %d, %d\n", pdp->ptPos.x, pdp->ptPos.y);
+			TRACE(szText);
+			
+			CRect rcWindow = GetViewRect();
+			MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rcWindow, 2);
+			
+			CRect rcLeft = rcWindow;
+			rcLeft.InflateRect(0, -30);
+			rcLeft.right = rcLeft.left + 30;
+			if (rcLeft.PtInRect(pdp->ptPos))
+				TRACE("Could dock left\n");
+
+			CRect rcRight = rcWindow;
+			rcRight.InflateRect(0, -30);
+			rcRight.left = rcRight.right - 30;
+			if (rcRight.PtInRect(pdp->ptPos))
+				TRACE("Could dock right\n");
+
+		}
+		break;
+
+	case USER_DRAGEND:
+		TRACE("Drag End notification\n");
+		{
+			LPDRAGPOS pdp = (LPDRAGPOS)lParam;
+			CRect rcWindow = GetViewRect();
+			MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rcWindow, 2);
+			
+			CRect rcLeft = rcWindow;
+			rcLeft.InflateRect(0, -30);
+			rcLeft.right = rcLeft.left + 30;
+			if (rcLeft.PtInRect(pdp->ptPos))
+				m_DockContainer.Dock();
+
+			CRect rcRight = rcWindow;
+			rcRight.InflateRect(0, -30);
+			rcRight.left = rcRight.right - 30;
+			if (rcRight.PtInRect(pdp->ptPos))
+				TRACE("Should dock right\n");
+		}
+		break;
+
+	case WM_PARENTNOTIFY:
+		TRACE("WM_PARENTNOTIFY\n");
+		break;
+
+	}
+
+	return 0L;
+}
+
+void CDockFrame::RecalcLayout()
 {
 	if ((!GetView()) || (!GetView()->GetHwnd()))
 		return;
@@ -131,7 +195,7 @@ void CMainMDIFrame::RecalcLayout()
 }
 
 
-LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{

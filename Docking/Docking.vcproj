@@ -116,13 +116,13 @@
 				RelativePath=".\DockContainer.cpp">
 			</File>
 			<File
+				RelativePath=".\DockFrame.cpp">
+			</File>
+			<File
 				RelativePath=".\DockingApp.cpp">
 			</File>
 			<File
 				RelativePath=".\main.cpp">
-			</File>
-			<File
-				RelativePath=".\MainMDIfrm.cpp">
 			</File>
 			<File
 				RelativePath=".\MDIChildView.cpp">
@@ -136,10 +136,10 @@
 				RelativePath=".\DockContainer.h">
 			</File>
 			<File
-				RelativePath=".\DockingApp.h">
+				RelativePath=".\DockFrame.h">
 			</File>
 			<File
-				RelativePath=".\MainMDIfrm.h">
+				RelativePath=".\DockingApp.h">
 			</File>
 			<File
 				RelativePath=".\MDIChildView.h">

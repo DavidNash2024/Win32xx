@@ -6,13 +6,62 @@
 #include "../Win32++/mdi.h"
 
 
+
 CDockContainer::CDockContainer() : m_IsDocked(TRUE)
 {
+}
+
+void CDockContainer::Dock()
+{
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+	SetWindowLongPtr(GWL_STYLE, dwStyle);
+					
+	// Supress redraw while we reposition the window
+//	SetRedraw(FALSE);
+	ShowWindow(SW_HIDE);
+	SetParent(GetApp()->GetFrame()->GetHwnd());
+//	SetRedraw(TRUE);
+	ShowWindow();
+	
+	m_IsDocked = TRUE;
+	GetApp()->GetFrame()->RecalcLayout();
+	SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+//	::SetActiveWindow(m_hWndParent);
+	::SetForegroundWindow(m_hWndParent);
+	::SetFocus(m_hWndParent);
+//	SetFocus();
 }
 
 void CDockContainer::PreCreate(CREATESTRUCT &cs)
 {
 	cs.dwExStyle = WS_EX_TOOLWINDOW;
+}
+
+void CDockContainer::SendNotify(UINT nMessageID)
+{	
+	// Send a USER_DRAGMOVE notification to the frame
+	DRAGPOS DragPos;
+	DragPos.hdr.code = nMessageID;
+	DragPos.hdr.hwndFrom = m_hWnd;
+	GetCursorPos(&DragPos.ptPos);
+	SendMessage(GetApp()->GetFrame()->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
+}
+
+void CDockContainer::UnDock()
+{
+	DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+	SetWindowLongPtr(GWL_STYLE, dwStyle);
+					
+	// Supress redraw while we reposition the window
+	SetRedraw(FALSE);
+	CRect rc = GetWindowRect();
+	SetParent(0);
+	SetWindowPos(NULL, rc.left, rc.top, 0, 0, SWP_NOSIZE);
+	SetRedraw(TRUE);
+	
+	m_IsDocked = FALSE;
+	GetApp()->GetFrame()->RecalcLayout();
+	SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
 }
 
 LRESULT CDockContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -46,6 +95,7 @@ LRESULT CDockContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		TRACE("WM_NCACTIVATE\n");
 		break;
 	case WM_NCCALCSIZE:
+		// Set the non-client area (This also controls the client area) 
 		TRACE("WM_NCCALCSIZE\n");
 		if (m_IsDocked)
 		{
@@ -59,6 +109,7 @@ LRESULT CDockContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		{
 			CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			// Indicate the point is in the caption if in the non-client area
 			if (pt.y < 0) return HTCAPTION;
 		}
 		break;
@@ -66,50 +117,47 @@ LRESULT CDockContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		TRACE("WM_NCLBUTTONDOWN\n");
 		Oldpt.x = GET_X_LPARAM(lParam); 
 		Oldpt.y = GET_Y_LPARAM(lParam);
+		bNCLButtonDown = TRUE;
 		if (m_IsDocked)
 		{		
-			bNCLButtonDown = TRUE;
 			return 0L;
+		}
+		else
+		{
+			// Send a USER_DRAGSTART notification to the frame
+			SendNotify(USER_DRAGSTART);
 		}
 		break;
 
 	case WM_NCLBUTTONUP:
 		TRACE("WM_NCLBUTTONUP\n");
-		if (m_IsDocked)
-		{		
+		{
 			bNCLButtonDown = FALSE;
 		}
 		break;
 
 	case WM_NCMOUSEMOVE:
 		TRACE("WM_NCMOUSEMOVE\n");
+		{
+			if (m_IsDocked)
+			{	
+				// Discard phantom mouse move messages
+				if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
+					return 0L;
 
-		if (m_IsDocked)
-		{	
-			// Discard phantom mouse move messages
-			if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
-				return 0L;
-
-
-			if (bNCLButtonDown)
-			{
-				DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
-				dwStyle &= ~WS_CHILD;
-				dwStyle |= WS_POPUP| WS_CAPTION | WS_SYSMENU  ;
-				SetWindowLongPtr(GWL_STYLE, dwStyle);
-				
-				// Supress redraw while we reposition the window
-				SetRedraw(FALSE);
-				CRect rc = GetWindowRect();
-				SetParent(0);
-				SetWindowPos(NULL, rc.left, rc.top, 0, 0, SWP_NOSIZE);
-				SetRedraw(TRUE);
-				
-				m_IsDocked = FALSE;
-				GetApp()->GetFrame()->RecalcLayout();
-				SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
-				PostMessage(WM_NCLBUTTONDOWN, wParam, lParam);
+				if (bNCLButtonDown)
+				{
+					UnDock();
+					PostMessage(WM_NCLBUTTONDOWN, wParam, lParam);
+				}
 			}
+			else if (bNCLButtonDown)
+			{
+				// We get a WM_NCMOUSEMOVE (not WM_NCLBUTTONUP) when drag of non-docked window ends
+				// Send a USER_DRAGEND notification to the frame
+				SendNotify(USER_DRAGEND);
+				bNCLButtonDown = FALSE;
+			}		
 		}
 		break;
 
@@ -139,6 +187,15 @@ LRESULT CDockContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		TRACE("WM_KILLFOCUS\n");
 		if (m_IsDocked)
 			SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+		break;
+
+	case WM_WINDOWPOSCHANGED:
+	//	TRACE("WM_WINDOWPOSCHANGED\n");
+		if (!m_IsDocked)
+		{	
+			// Send a USER_DRAGMOVE notification to the frame
+			SendNotify(USER_DRAGMOVE);
+		}
 		break;
 	}
 

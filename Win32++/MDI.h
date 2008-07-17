@@ -319,7 +319,8 @@ namespace Win32xx
 	inline void CMDIFrame::RecalcLayout()
 	{
 		CFrame::RecalcLayout();
-		::RedrawWindow(m_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+	//	::RedrawWindow(m_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0, 0) ;
 	}
 
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()

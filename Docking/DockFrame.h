@@ -1,25 +1,26 @@
 ///////////////////////////////////////////////////////
-// MainMDIfrm.h
-//  Declaration of the CMainFrame class
+// DockFrame.h
+//  Declaration of the CDockFrame class
 
-#ifndef MAINMDIFRM_H
-#define MAINMDIFRM_H
+#ifndef DOCKFRAME_H
+#define DOCKFRAME_H
 
 
 #include "../Win32++/MDI.h"
 #include "DockContainer.h"
 
 
-class CMainMDIFrame : public CMDIFrame
+class CDockFrame : public CMDIFrame
 {
 public:
-	CMainMDIFrame(void);
-	virtual ~CMainMDIFrame();
+	CDockFrame(void);
+	virtual ~CDockFrame();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
+	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void RecalcLayout();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -27,5 +28,5 @@ private:
 	CDockContainer m_DockContainer;
 };
 
-#endif  //MAINMDIFRM_H
+#endif  // DOCKFRAME_H
 
