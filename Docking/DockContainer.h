@@ -16,26 +16,27 @@ enum Constants
 	USER_DRAGEND  = WM_APP + 3  // mouse position during drag release
 };
 
-typedef struct tagDRAGPOS 
+typedef struct DRAGPOS 
 {
     NMHDR hdr;
     POINT ptPos;
-} DRAGPOS, *LPDRAGPOS;
+} *LPDRAGPOS;
 
 class CDockContainer : public CWnd
 {
 public:
 	CDockContainer();
 	virtual ~CDockContainer() {}
-	virtual void Dock();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	BOOL IsDocked() {return m_IsDocked;}
+	BOOL IsDocked() {return (BOOL)m_DockState;}
+	UINT GetDockState() {return m_DockState;}
+	void SetDockState(UINT uDockState) {m_DockState = uDockState;}
 	virtual void SendNotify(UINT nMessageID);
 	virtual void UnDock();
 
 private:
-	BOOL m_IsDocked;
+	UINT m_DockState;
 };
 
 

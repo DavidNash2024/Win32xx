@@ -1,3 +1,9 @@
+Version 6.3
+===========
+* Added Docking
+* Added PreTranslateMessage
+
+
 Version 6.2
 ===========
 
@@ -20,39 +26,7 @@ stored in the registry.
 
 * Extended CWnd
 CWnd now includes functions which wrap many of the Win32/Win64 API 
-functions pertaining to windows. The new functions added are:
- Close Window
- EnableWindow
- GetClassLongPtr
- GetDlgItem
- GetWindowLongPtr
- GetWindowPlacement
- Invalidate
- InvalidateRect
- InvalidateRgn
- IsChild
- IsIconic
- IsEnabled 
- IsVisible
- IsWindow
- IsZoomed
- MoveWindow
- PostMessage
- RedrawWindow
- SendMessage
- SetActiveWindow
- SetCapture
- SetClassLongPtr
- SetFocus
- SetForegroundWindow
- SetRedraw
- SetWindowLongPtr
- SetWindowPlacement
- SetWindowRgn
- ShowWindow
- UpdateWindow
- ValidateRect
- ValidateRgn
+functions pertaining to windows. 
 
 
 Version 6.1

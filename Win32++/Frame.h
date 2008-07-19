@@ -239,6 +239,7 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void SaveRegistrySettings();
 		virtual void UpdateMRUMenu();
@@ -1971,9 +1972,6 @@ namespace Win32xx
 		// Set the menu
 		SetFrameMenu(IDW_MAIN);
 
-		// Set the accelerator table and HWND for translated messages
-		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
-
 		if (IsRebarSupported() && m_bUseRebar)
 		{
 			// Create the rebar
@@ -2456,6 +2454,17 @@ namespace Win32xx
 		cs.y  = m_rcPosition.top;
 		cs.cx = m_rcPosition.Width();
 		cs.cy = m_rcPosition.Height();
+	}
+
+	inline BOOL CFrame::PreTranslateMessage(MSG* pMsg)
+	{
+		HACCEL hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
+		{
+			if (TranslateAccelerator(m_hWnd, hAccelTable, pMsg))
+				return TRUE;
+		} 
+		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline void CFrame::RecalcLayout()

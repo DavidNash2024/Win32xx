@@ -87,6 +87,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
@@ -368,6 +369,19 @@ namespace Win32xx
 	{
 		// Override to customize OnOK behaviour
 		EndDialog(IDOK);
+	}
+
+	inline BOOL CDialog::PreTranslateMessage(MSG* pMsg)
+	{
+		// allow the dialog to translate Tab, Left, Right, Up, and Down arrow keys
+		if (pMsg->message == WM_KEYDOWN && (pMsg->wParam == VK_TAB || pMsg->wParam == VK_LEFT 
+			|| pMsg->wParam == VK_UP || pMsg->wParam == VK_RIGHT || pMsg->wParam == VK_DOWN))
+		{
+			if (IsDialogMessage(m_hWnd, pMsg))
+				return TRUE;
+		}
+
+		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline BOOL CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

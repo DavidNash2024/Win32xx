@@ -589,6 +589,7 @@ namespace Win32xx
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 		// These functions aren't intended to be overridden
 		BOOL Attach(HWND hWnd);
@@ -726,12 +727,8 @@ namespace Win32xx
 		int Run();
 		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
-		void SetAccelerators(UINT ID_ACCEL, HWND hWndAccel);
 		TLSData* SetTlsIndex();
 
-	protected:
-		HACCEL m_hAccelTable;		// handle to the accelerator table
-		HWND m_hWndAccel;			// handle to the window for accelerator keys
 
 	private:
 		enum Constants
@@ -771,7 +768,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : m_hAccelTable(NULL), m_hWndAccel(NULL), m_Callback(NULL)
+	inline CWinApp::CWinApp() : /*m_hAccelTable(NULL), m_hWndAccel(NULL),*/ m_Callback(NULL)
 	{
 		try
 		{
@@ -836,8 +833,6 @@ namespace Win32xx
 			delete *(iter);
 		}
 
-		if (m_hAccelTable)
-			::DestroyAcceleratorTable(m_hAccelTable);
 	}
 
 	inline void CWinApp::DefaultClass()
@@ -897,30 +892,34 @@ namespace Win32xx
 		MSG uMsg;
 		int status;
 
-#ifdef _WIN32_WCE
 		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
 		{
 			if (-1 == status) return -1;
 
-			if (!TranslateAccelerator(m_hWndAccel, m_hAccelTable, &uMsg))
-			{
-				::TranslateMessage(&uMsg);
-				::DispatchMessage(&uMsg);
-			}
-		}
-#else
-		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
-		{
-			if (-1 == status) return -1;
+			BOOL Processed = FALSE;
 
-			if (!TranslateMDISysAccel(m_hMDIView, &uMsg) &&
-				!TranslateAccelerator(m_hWndAccel, m_hAccelTable, &uMsg))
+			// only pre-translate input events
+			if ((uMsg.message >= WM_KEYFIRST || uMsg.message <= WM_KEYLAST) &&
+				(uMsg.message >= WM_MOUSEFIRST || uMsg.message <= WM_MOUSELAST))
+			{
+				// Also loop through the chain of parents
+				for (HWND hWnd = uMsg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+				{
+					CWnd* pWnd = GetCWndFromMap(hWnd);
+					if (pWnd && pWnd->PreTranslateMessage(&uMsg))
+					{
+						Processed = TRUE;
+						continue;
+					}
+				}
+			}
+
+			if (!Processed)
 			{
 				::TranslateMessage(&uMsg);
 				::DispatchMessage(&uMsg);
 			}
-		}
-#endif
+		} 
 		return LOWORD(uMsg.wParam);
 	}
 
@@ -958,21 +957,6 @@ namespace Win32xx
 			::MessageBox(NULL, _T("Unknown Exception"), _T("Error"), MB_OK);
 			throw;	// Rethrow unknown exception
 		}
-	}
-
-	inline void CWinApp::SetAccelerators(UINT ID_ACCEL, HWND hWndAccel)
-	// ID_ACCEL is the resource ID of the accelerator table
-	// hWndAccel is the window handle for translated messages
-	{
-
-		if (m_hAccelTable)
-			::DestroyAcceleratorTable(m_hAccelTable);
-
-		m_hWndAccel = hWndAccel;
-
-		m_hAccelTable = ::LoadAccelerators(m_hResource, MAKEINTRESOURCE(ID_ACCEL));
-		if (!m_hAccelTable)
-			TRACE(_T("Load Accelerators failed\n"));
 	}
 
 	inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)
@@ -1743,7 +1727,17 @@ namespace Win32xx
 
 		// Overide this function in your derived class to set the
 		// WNDCLASS values prior to window creation. Be sure to set
-		// the ClassnName for this function to take effect
+		// the ClassnName for this function to take effect.
+	}
+
+	inline BOOL CWnd::PreTranslateMessage(MSG* /*pMsg*/)
+	{
+		// Override this function if your class requires input messages to be
+		// translated before normal processing. Function which translate messages
+		// include TranslateAccelerator, TranslateMDISysAccel and IsDialogMessage. 
+		// Return TRUE if the message is translated.
+		
+		return FALSE;
 	}
 
 	inline BOOL CWnd::RedrawWindow(CRect* lpRectUpdate, HRGN hRgn, UINT flags) const

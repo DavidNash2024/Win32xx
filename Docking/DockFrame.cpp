@@ -32,6 +32,49 @@ CDockFrame::~CDockFrame()
 {
 }
 
+void CDockFrame::Dock()
+{				
+	m_DockContainer.SetParent(GetApp()->GetFrame()->GetHwnd());
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+	m_DockContainer.SetWindowLongPtr(GWL_STYLE, dwStyle);	
+//	m_DockContainer.m_IsDocked = TRUE;
+	m_DockContainer.SetDockState(DS_DOCK_LEFT);
+	RecalcLayout();
+	
+	SetForegroundWindow();
+	m_DockContainer.SetFocus();
+}
+
+UINT CDockFrame::GetDockSide(LPDRAGPOS pdp)
+{
+	CRect rcWindow = GetViewRect();
+	MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rcWindow, 2);
+	
+	CRect rcLeft = rcWindow;
+	rcLeft.right = rcLeft.left + 30;
+	if (rcLeft.PtInRect(pdp->ptPos))
+		return DS_DOCK_LEFT;
+
+	CRect rcRight = rcWindow;
+	rcRight.left = rcRight.right - 30;
+	if (rcRight.PtInRect(pdp->ptPos))
+		return DS_DOCK_RIGHT;
+
+	CRect rcTop = rcWindow;
+	rcTop.InflateRect(-30, 0);
+	rcTop.bottom = rcRight.top + 30;
+	if (rcTop.PtInRect(pdp->ptPos))
+		return DS_DOCK_TOP;
+
+	CRect rcBottom = rcWindow;
+	rcBottom.InflateRect(-30, 0);
+	rcBottom.top = rcRight.bottom - 30;
+	if (rcBottom.PtInRect(pdp->ptPos))
+		return DS_DOCK_BOTTOM;
+
+	return 0;
+}
+
 void CDockFrame::OnInitialUpdate()
 {
 	TRACE(_T("MDI Frame started \n"));
@@ -87,46 +130,33 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	case USER_DRAGMOVE:
 	//	TRACE("Drag Move notification\n");
 		{
-			LPDRAGPOS pdp = (LPDRAGPOS)lParam;
-			TCHAR szText[80];
-			wsprintf(szText, "Cursor  %d, %d\n", pdp->ptPos.x, pdp->ptPos.y);
-			TRACE(szText);
-			
-			CRect rcWindow = GetViewRect();
-			MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rcWindow, 2);
-			
-			CRect rcLeft = rcWindow;
-			rcLeft.InflateRect(0, -30);
-			rcLeft.right = rcLeft.left + 30;
-			if (rcLeft.PtInRect(pdp->ptPos))
-				TRACE("Could dock left\n");
+			UINT uDockSide = GetDockSide((LPDRAGPOS)lParam);
 
-			CRect rcRight = rcWindow;
-			rcRight.InflateRect(0, -30);
-			rcRight.left = rcRight.right - 30;
-			if (rcRight.PtInRect(pdp->ptPos))
-				TRACE("Could dock right\n");
-
+			switch (uDockSide)
+			{
+			case DS_DOCK_LEFT:
+				TRACE("Could dock Left\n");
+				break;
+			case DS_DOCK_RIGHT:
+				TRACE("Could dock Right\n");
+				break;
+			case DS_DOCK_TOP:
+				TRACE("Could dock Top\n");
+				break;
+			case DS_DOCK_BOTTOM:
+				TRACE("Could dock Bottom\n");
+				break;
+			}
 		}
 		break;
 
 	case USER_DRAGEND:
 		TRACE("Drag End notification\n");
 		{
-			LPDRAGPOS pdp = (LPDRAGPOS)lParam;
-			CRect rcWindow = GetViewRect();
-			MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rcWindow, 2);
-			
-			CRect rcLeft = rcWindow;
-			rcLeft.InflateRect(0, -30);
-			rcLeft.right = rcLeft.left + 30;
-			if (rcLeft.PtInRect(pdp->ptPos))
-				m_DockContainer.Dock();
+			if (DS_DOCK_LEFT == GetDockSide((LPDRAGPOS)lParam))
+				Dock();
 
-			CRect rcRight = rcWindow;
-			rcRight.InflateRect(0, -30);
-			rcRight.left = rcRight.right - 30;
-			if (rcRight.PtInRect(pdp->ptPos))
+			if (DS_DOCK_RIGHT == GetDockSide((LPDRAGPOS)lParam))
 				TRACE("Should dock right\n");
 		}
 		break;
@@ -134,7 +164,6 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	case WM_PARENTNOTIFY:
 		TRACE("WM_PARENTNOTIFY\n");
 		break;
-
 	}
 
 	return 0L;
@@ -191,7 +220,7 @@ void CDockFrame::RecalcLayout()
 	::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 
 	// For MDI Frames
-	::RedrawWindow(m_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+	//::RedrawWindow(m_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 }
 
 

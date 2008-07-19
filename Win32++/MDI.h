@@ -122,6 +122,7 @@ namespace Win32xx
 		// Its unlikely you would need to override these functions
 		virtual void AddMDIChild(CMDIChild* pMDIChild);
 		virtual void OnCloseFrame();
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -314,6 +315,17 @@ namespace Win32xx
 			GetMenubar().SetMenu(hMenu);
 			UpdateCheckMarks();
 		}
+	}
+
+	inline BOOL CMDIFrame::PreTranslateMessage(MSG* pMsg)
+	{
+		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
+		{
+			if (TranslateMDISysAccel(GetView()->GetHwnd(), pMsg))
+				return TRUE;
+		}
+
+		return CFrame::PreTranslateMessage(pMsg);
 	}
 
 	inline void CMDIFrame::RecalcLayout()
