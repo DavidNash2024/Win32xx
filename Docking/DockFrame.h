@@ -7,7 +7,7 @@
 
 
 #include "../Win32++/MDI.h"
-#include "DockContainer.h"
+#include "Dockable.h"
 
 
 // Docking Styles
@@ -15,12 +15,6 @@
 #define DS_DOCK_RIGHT		0x0002
 #define DS_DOCK_TOP			0x0004
 #define DS_DOCK_BOTTOM		0x0008
-
-struct DockInfo
-{
-	UINT			uDockedState;
-	CDockContainer	Docker;
-};
 
 
 class CDockFrame : public CMDIFrame
@@ -40,7 +34,7 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CDockContainer m_DockContainer;
+	CDockable m_DockContainer;
 };
 
 #endif  // DOCKFRAME_H

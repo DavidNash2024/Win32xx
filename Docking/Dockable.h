@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////
-// DockContainer.h
-//  Declaration of the CDockContainer class
+// Dockable.h
+//  Declaration of the CDockable class
 
-#ifndef DOCKCONTAINER_H
-#define DOCKCONTAINER_H
+#ifndef DOCKABLE_H
+#define DOCKABLE_H
 
 
 #include "../Win32++/WinCore.h"
@@ -16,17 +16,17 @@ enum Constants
 	USER_DRAGEND  = WM_APP + 3  // mouse position during drag release
 };
 
-typedef struct DRAGPOS 
+typedef struct DRAGPOS
 {
     NMHDR hdr;
     POINT ptPos;
 } *LPDRAGPOS;
 
-class CDockContainer : public CWnd
+class CDockable : public CWnd
 {
 public:
-	CDockContainer();
-	virtual ~CDockContainer() {}
+	CDockable();
+	virtual ~CDockable() {}
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	BOOL IsDocked() {return (BOOL)m_DockState;}
@@ -40,5 +40,5 @@ private:
 };
 
 
-#endif // DOCKCONTAINER_H
+#endif // DOCKABLE_H
 

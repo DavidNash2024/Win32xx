@@ -1,22 +1,22 @@
 //////////////////////////////////////////////
 // DockContainer.cpp
-//  Definitions for the CDockContainer class
+//  Definitions for the CDockable class
 
-#include "DockContainer.h"
+#include "Dockable.h"
 #include "../Win32++/mdi.h"
 
 #include "DockFrame.h"
 
-CDockContainer::CDockContainer() : m_DockState(DS_DOCK_LEFT)//m_IsDocked(TRUE)
+CDockable::CDockable() : m_DockState(DS_DOCK_LEFT)//m_IsDocked(TRUE)
 {
 }
 
-void CDockContainer::PreCreate(CREATESTRUCT &cs)
+void CDockable::PreCreate(CREATESTRUCT &cs)
 {
 	cs.dwExStyle = WS_EX_TOOLWINDOW;
 }
 
-void CDockContainer::SendNotify(UINT nMessageID)
+void CDockable::SendNotify(UINT nMessageID)
 {	
 	// Send a USER_DRAGMOVE notification to the frame
 	DRAGPOS DragPos;
@@ -27,7 +27,7 @@ void CDockContainer::SendNotify(UINT nMessageID)
 }
 
 
-void CDockContainer::UnDock()
+void CDockable::UnDock()
 {
 	DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
 	SetWindowLongPtr(GWL_STYLE, dwStyle);
@@ -44,7 +44,7 @@ void CDockContainer::UnDock()
 	SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
 }
 
-LRESULT CDockContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	int NCHeight = 20;
 	static BOOL bNCLButtonDown = FALSE;
