@@ -1,5 +1,5 @@
-// Win32++  Version 6.2
-// Released: 14th June, 2008 by:
+// Win32++  Version 6.3
+// Released: 14th August, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -888,7 +888,6 @@ namespace Win32xx
 	inline int CWinApp::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.
-
 		MSG uMsg;
 		int status;
 
@@ -919,7 +918,7 @@ namespace Win32xx
 				::TranslateMessage(&uMsg);
 				::DispatchMessage(&uMsg);
 			}
-		} 
+		}
 		return LOWORD(uMsg.wParam);
 	}
 
@@ -1734,9 +1733,9 @@ namespace Win32xx
 	{
 		// Override this function if your class requires input messages to be
 		// translated before normal processing. Function which translate messages
-		// include TranslateAccelerator, TranslateMDISysAccel and IsDialogMessage. 
+		// include TranslateAccelerator, TranslateMDISysAccel and IsDialogMessage.
 		// Return TRUE if the message is translated.
-		
+
 		return FALSE;
 	}
 

@@ -1,5 +1,5 @@
-// Win32++  Version 6.2
-// Released: 14th June, 2008 by:
+// Win32++  Version 6.3
+// Released: 14th August, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1940,7 +1940,7 @@ namespace Win32xx
 		m_Rebar.DestroyWindow();
 		m_Statusbar.DestroyWindow();
 		m_pView->DestroyWindow();
-		
+
 		SaveRegistrySettings();
 	}
 
@@ -2463,7 +2463,7 @@ namespace Win32xx
 		{
 			if (TranslateAccelerator(m_hWnd, hAccelTable, pMsg))
 				return TRUE;
-		} 
+		}
 		return CWnd::PreTranslateMessage(pMsg);
 	}
 

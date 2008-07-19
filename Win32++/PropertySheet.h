@@ -1,5 +1,5 @@
-// Win32++  Version 6.2
-// Released: 14th June, 2008 by:
+// Win32++  Version 6.3
+// Released: 14th August, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -120,6 +120,7 @@ namespace Win32xx
 		virtual int DoModal();
 		virtual void OnCreate();
 		virtual void OnInitialUpdate();
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void RemovePage(CPropertyPage* pPage);
 		virtual BOOL SetActivePage(int nPage);
@@ -814,6 +815,27 @@ namespace Win32xx
 
 		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);
 		m_PSH.nPages = (int)m_vPages.size();
+	}
+
+	inline BOOL CPropertySheet::PreTranslateMessage(MSG* pMsg)
+	{
+		// allow sheet to translate Ctrl+Tab, Shift+Ctrl+Tab, Ctrl+PageUp, and Ctrl+PageDown
+		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
+			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
+		{
+			if (SendMessage(PSM_ISDIALOGMESSAGE, 0, (LPARAM)pMsg))
+				return TRUE;
+		}
+
+		// allow the dialog to translate Tab, Left, Right, Up, and Down arrow keys
+		if (pMsg->message == WM_KEYDOWN && (pMsg->wParam == VK_TAB || pMsg->wParam == VK_LEFT
+			|| pMsg->wParam == VK_UP || pMsg->wParam == VK_RIGHT || pMsg->wParam == VK_DOWN))
+		{
+			if (IsDialogMessage(m_hWnd, pMsg))
+				return TRUE;
+		}
+
+		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline LRESULT CPropertySheet::QuerySiblings(WPARAM wParam, LPARAM lParam)

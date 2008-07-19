@@ -1,5 +1,5 @@
-// Win32++  Version 6.2
-// Released: 14th June, 2008 by:
+// Win32++  Version 6.3
+// Released: 14th August, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -374,7 +374,7 @@ namespace Win32xx
 	inline BOOL CDialog::PreTranslateMessage(MSG* pMsg)
 	{
 		// allow the dialog to translate Tab, Left, Right, Up, and Down arrow keys
-		if (pMsg->message == WM_KEYDOWN && (pMsg->wParam == VK_TAB || pMsg->wParam == VK_LEFT 
+		if (pMsg->message == WM_KEYDOWN && (pMsg->wParam == VK_TAB || pMsg->wParam == VK_LEFT
 			|| pMsg->wParam == VK_UP || pMsg->wParam == VK_RIGHT || pMsg->wParam == VK_DOWN))
 		{
 			if (IsDialogMessage(m_hWnd, pMsg))
