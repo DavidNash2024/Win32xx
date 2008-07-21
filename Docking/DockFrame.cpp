@@ -25,24 +25,44 @@ CDockFrame::CDockFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\MDI Frame"));
+	LoadRegistrySettings(_T("Win32++\\Docking Frame"));
 }
 
 CDockFrame::~CDockFrame()
 {
+	std::vector <CDockable*>::iterator v;
+
+	while(m_vDockables.size() > 0)
+	{
+		v = m_vDockables.begin();
+		delete *v;
+		m_vDockables.erase(v);
+	}
 }
 
-void CDockFrame::Dock()
-{				
-	m_DockContainer.SetParent(GetApp()->GetFrame()->GetHwnd());
-	DWORD dwStyle = WS_CHILD | WS_VISIBLE;
-	m_DockContainer.SetWindowLongPtr(GWL_STYLE, dwStyle);	
-//	m_DockContainer.m_IsDocked = TRUE;
-	m_DockContainer.SetDockState(DS_DOCK_LEFT);
-	RecalcLayout();
-	
-	SetForegroundWindow();
-	m_DockContainer.SetFocus();
+void CDockFrame::AddDockable(CDockable* pDockable, UINT uDockSide, int DockWidth)
+{
+	m_vDockables.push_back(pDockable);
+	pDockable->SetDockWidth(DockWidth);
+	HWND hDockable = pDockable->Create(m_hWnd);
+	Dock(hDockable, uDockSide);
+}
+
+void CDockFrame::Dock(HWND hDockable, UINT DockState)
+{	
+	CDockable* pDockable = (CDockable*)FromHandle(hDockable);
+	if (pDockable)
+	{
+		pDockable->SetParent(GetApp()->GetFrame()->GetHwnd());
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);	
+		pDockable->SetDockState(DockState);
+		RecalcLayout();
+		
+		SetForegroundWindow();
+		pDockable->SetFocus();
+	}
+	else MessageBox(m_hWnd, _T("Can't dock this type of window"), _T("Error"), MB_OK); 
 }
 
 UINT CDockFrame::GetDockSide(LPDRAGPOS pdp)
@@ -80,6 +100,10 @@ void CDockFrame::OnInitialUpdate()
 	TRACE(_T("MDI Frame started \n"));
 	//The frame is now created.
 	//Place any additional startup code here.
+
+	AddDockable(new CDockable, DS_DOCK_LEFT, 45);
+	AddDockable(new CDockable, DS_DOCK_RIGHT, 120);
+	AddDockable(new CDockable, DS_DOCK_BOTTOM, 120);
 }
 
 BOOL CDockFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -115,7 +139,7 @@ void CDockFrame::OnCreate()
 
 	// call the base class function
 	CMDIFrame::OnCreate();
-	m_DockContainer.Create(m_hWnd);
+	GetView()->SetWindowLongPtr(GWL_EXSTYLE, NULL);
 	RecalcLayout();
 }
 
@@ -153,11 +177,11 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	case USER_DRAGEND:
 		TRACE("Drag End notification\n");
 		{
-			if (DS_DOCK_LEFT == GetDockSide((LPDRAGPOS)lParam))
-				Dock();
+			LPDRAGPOS pdp = (LPDRAGPOS)lParam;
+			UINT DockSide = GetDockSide(pdp);
+			HWND hDockable = pdp->hdr.hwndFrom;
 
-			if (DS_DOCK_RIGHT == GetDockSide((LPDRAGPOS)lParam))
-				TRACE("Should dock right\n");
+			if (DockSide) Dock(hDockable, DockSide);
 		}
 		break;
 
@@ -196,19 +220,49 @@ void CDockFrame::RecalcLayout()
 
 	// Resize the View window
 	CRect rClient = GetViewRect();
-	int DockWidth = m_DockContainer.IsDocked()? 100 : 0;
 
-	if ((rClient.bottom - rClient.top) >= 0)
+
+	if ((rClient.Height()) >= 0)
 	{
 		int x  = rClient.left;
 		int y  = rClient.top;
-		int cx = rClient.right - rClient.left;
-		int cy = rClient.bottom - rClient.top;
+		int cx = rClient.Width();
+		int cy = rClient.Height();
 
-		::SetWindowPos(GetView()->GetHwnd(), NULL, x + DockWidth, y, cx - DockWidth, cy, SWP_SHOWWINDOW );
-		
-		if (m_DockContainer.IsDocked())
-			::SetWindowPos(m_DockContainer.GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
+		for (UINT i = 0 ; i < m_vDockables.size(); ++i)
+		{
+			int DockWidth = m_vDockables[i]->GetDockWidth();
+			switch (m_vDockables[i]->m_DockState)
+			{
+			case DS_DOCK_LEFT:
+				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
+				cx -= DockWidth;
+				x  += DockWidth;
+				break;
+
+			case DS_DOCK_RIGHT:
+				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x + cx - DockWidth, y, DockWidth, cy, SWP_SHOWWINDOW );
+				cx -= DockWidth;
+				break;
+				
+			case DS_DOCK_TOP:
+				DockWidth = min(DockWidth, cy);
+				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, cx, DockWidth, SWP_SHOWWINDOW );
+				cy -= DockWidth;
+				y += DockWidth;
+				break;
+
+			case DS_DOCK_BOTTOM:
+				DockWidth = min(DockWidth, cy);
+				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth), cx, DockWidth, SWP_SHOWWINDOW );
+				cy -= DockWidth;
+				break;
+
+			default:
+				break;
+			}
+		}
+		::SetWindowPos(GetView()->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );		
 	}
 
 	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
@@ -218,9 +272,6 @@ void CDockFrame::RecalcLayout()
 		SetMenubarBandSize();
 
 	::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
-
-	// For MDI Frames
-	//::RedrawWindow(m_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 }
 
 

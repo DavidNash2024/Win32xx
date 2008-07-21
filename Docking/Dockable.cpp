@@ -7,7 +7,7 @@
 
 #include "DockFrame.h"
 
-CDockable::CDockable() : m_DockState(DS_DOCK_LEFT)//m_IsDocked(TRUE)
+CDockable::CDockable() : m_DockState(DS_DOCK_LEFT)
 {
 }
 

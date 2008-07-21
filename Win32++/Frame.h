@@ -1354,7 +1354,7 @@ namespace Win32xx
 
 	inline CFrame::~CFrame()
 	{
-		for (int nItem = 0; nItem < (int)m_vpItemData.size(); ++nItem)
+		for (UINT nItem = 0; nItem < m_vpItemData.size(); ++nItem)
 		{
 			// These are normally deleted in OnExitMenuLoop
 			delete m_vpItemData[nItem];
@@ -1697,7 +1697,7 @@ namespace Win32xx
 
 		// get the icon's location in the imagelist
 		int iImage = -1;
-		for (int i = 0 ; i < (int)m_MenuData.size(); ++i)
+		for (UINT i = 0 ; i < m_MenuData.size(); ++i)
 		{
 			if (pdis->itemID == m_MenuData[i])
 				iImage = i;
@@ -2120,7 +2120,7 @@ namespace Win32xx
 
 	inline void CFrame::OnExitMenuLoop()
 	{
-		for (int nItem = 0; nItem < (int)m_vpItemData.size(); ++nItem)
+		for (UINT nItem = 0; nItem < m_vpItemData.size(); ++nItem)
 		{
 			// Undo OwnerDraw and put the text back
 			MENUITEMINFO mii = {0};
@@ -2499,8 +2499,8 @@ namespace Win32xx
 		{
 			int x  = rClient.left;
 			int y  = rClient.top;
-			int cx = rClient.right - rClient.left;
-			int cy = rClient.bottom - rClient.top;
+			int cx = rClient.Width();
+			int cy = rClient.Height();
 
 			::SetWindowPos(m_pView->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}

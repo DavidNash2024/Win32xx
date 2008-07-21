@@ -22,8 +22,9 @@ class CDockFrame : public CMDIFrame
 public:
 	CDockFrame(void);
 	virtual ~CDockFrame();
+	void AddDockable(CDockable* pDockable, UINT uDockSide, int DockWidth);
 	UINT GetDockSide(LPDRAGPOS pdp);
-	void Dock();
+	virtual void Dock(HWND hDockable, UINT DockState);
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -34,8 +35,9 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CDockable m_DockContainer;
+	std::vector<CDockable*> m_vDockables;
 };
+
 
 #endif  // DOCKFRAME_H
 

@@ -718,7 +718,6 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		CFrame* GetFrame() const {return m_pFrame;}
 		void SetFrame(CFrame* pFrame)  { m_pFrame = pFrame; }
-		void SetMDIView(HWND hMDIView) { m_hMDIView = hMDIView; }
 #endif
 		DWORD GetTlsIndex() const {return m_TlsIndex;}
 		CWnd* GetCWndFromMap(HWND hWnd);

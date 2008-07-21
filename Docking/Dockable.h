@@ -29,14 +29,19 @@ public:
 	virtual ~CDockable() {}
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	BOOL IsDocked() {return (BOOL)m_DockState;}
-	UINT GetDockState() {return m_DockState;}
-	void SetDockState(UINT uDockState) {m_DockState = uDockState;}
 	virtual void SendNotify(UINT nMessageID);
 	virtual void UnDock();
 
-private:
+	// Attributes
+	BOOL IsDocked() {return (BOOL)m_DockState;}
+	UINT GetDockState() {return m_DockState;}
+	int GetDockWidth() {return m_DockWidth;}
+	void SetDockState(UINT uDockState) {m_DockState = uDockState;}
+	void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
+
+public:
 	UINT m_DockState;
+	int m_DockWidth;
 };
 
 

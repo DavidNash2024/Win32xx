@@ -134,7 +134,6 @@ namespace Win32xx
 			CMDIClient() {}
 			virtual ~CMDIClient() {}
 			virtual HWND Create(HWND hWndParent = NULL);
-			virtual void OnCreate();
 			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
 		friend class CMDIClient;
@@ -170,8 +169,6 @@ namespace Win32xx
 			delete *v;
 			m_MDIChildVect.erase(v);
 		}
-
-		if (GetApp()) GetApp()->SetMDIView(0);
 	}
 
 	inline void CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
@@ -430,12 +427,6 @@ namespace Win32xx
 				throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
 
 		return m_hWnd;
-	}
-
-	inline void CMDIFrame::CMDIClient::OnCreate()
-	{
-		// Enable MDI accelerators (CTRL+F4, CTRL+F6, CTRL+SHIFT+F6)
-		GetApp()->SetMDIView( m_hWnd );
 	}
 
 	inline LRESULT CMDIFrame::CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
