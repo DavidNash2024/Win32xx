@@ -35,7 +35,25 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	class CBar : public CWnd
+	{
+	public:
+		CBar()  {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
+		~CBar() {::DeleteObject(m_hbrBackground);}
+
+		virtual void PreRegisterClass(WNDCLASS& wc)
+		{
+			wc.lpszClassName = _T("Win32++ Bar");
+			wc.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
+			wc.hbrBackground = m_hbrBackground;
+		}
+
+	private:
+		HBRUSH m_hbrBackground;
+	};
+
 	std::vector<CDockable*> m_vDockables;
+	std::vector<CBar*> m_vBars;
 };
 
 

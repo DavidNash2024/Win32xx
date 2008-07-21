@@ -38,11 +38,23 @@ CDockFrame::~CDockFrame()
 		delete *v;
 		m_vDockables.erase(v);
 	}
+
+	std::vector <CBar*>::iterator b;
+	
+	while(m_vBars.size() > 0)
+	{
+		b = m_vBars.begin();
+		delete *b;
+		m_vBars.erase(b);
+	}
 }
 
 void CDockFrame::AddDockable(CDockable* pDockable, UINT uDockSide, int DockWidth)
 {
 	m_vDockables.push_back(pDockable);
+	CBar* pBar = new CBar;
+	m_vBars.push_back(pBar);
+	pBar->Create(m_hWnd);
 	pDockable->SetDockWidth(DockWidth);
 	HWND hDockable = pDockable->Create(m_hWnd);
 	Dock(hDockable, uDockSide);
@@ -103,7 +115,7 @@ void CDockFrame::OnInitialUpdate()
 
 	AddDockable(new CDockable, DS_DOCK_LEFT, 45);
 	AddDockable(new CDockable, DS_DOCK_RIGHT, 120);
-	AddDockable(new CDockable, DS_DOCK_BOTTOM, 120);
+	AddDockable(new CDockable, DS_DOCK_BOTTOM, 90);
 }
 
 BOOL CDockFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -236,26 +248,30 @@ void CDockFrame::RecalcLayout()
 			{
 			case DS_DOCK_LEFT:
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
-				cx -= DockWidth;
-				x  += DockWidth;
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x + DockWidth, y, 5, cy, SWP_SHOWWINDOW );
+				cx -= (DockWidth +5);
+				x  += DockWidth +5;
 				break;
 
 			case DS_DOCK_RIGHT:
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x + cx - DockWidth, y, DockWidth, cy, SWP_SHOWWINDOW );
-				cx -= DockWidth;
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x + cx - DockWidth -5, y, 5, cy, SWP_SHOWWINDOW );
+				cx -= (DockWidth +5);
 				break;
 				
 			case DS_DOCK_TOP:
 				DockWidth = min(DockWidth, cy);
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, cx, DockWidth, SWP_SHOWWINDOW );
-				cy -= DockWidth;
-				y += DockWidth;
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, y + DockWidth, cx, 5, SWP_SHOWWINDOW );
+				cy -= (DockWidth +5);
+				y += DockWidth +5;
 				break;
 
 			case DS_DOCK_BOTTOM:
 				DockWidth = min(DockWidth, cy);
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth), cx, DockWidth, SWP_SHOWWINDOW );
-				cy -= DockWidth;
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth-5), cx, 5, SWP_SHOWWINDOW );
+				cy -= (DockWidth +5);
 				break;
 
 			default:
