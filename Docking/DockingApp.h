@@ -14,16 +14,16 @@ public:
     CDockingApp();
     virtual ~CDockingApp() {}
 	virtual BOOL InitInstance();
-	CDockFrame& GetMDIFrame() { return m_MainMDIFrame; }
+	CDockFrame& GetDockFrame() { return m_DockFrame; }
 
 private:
-    CDockFrame m_MainMDIFrame;
+    CDockFrame m_DockFrame;
 
 };
 
 
 // returns a reference to the CDockingApp object
-inline CDockingApp& GetMDIApp() { return *((CDockingApp*)GetApp()); }
+inline CDockingApp& GetDockApp() { return *((CDockingApp*)GetApp()); }
 
 
 #endif // DOCKINGAPP_H

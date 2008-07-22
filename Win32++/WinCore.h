@@ -728,14 +728,7 @@ namespace Win32xx
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 		TLSData* SetTlsIndex();
 
-
 	private:
-		enum Constants
-		{
-			TRACE_HEIGHT = 200,
-			TRACE_WIDTH  = 400
-		};
-
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		void DefaultClass();
@@ -749,7 +742,6 @@ namespace Win32xx
 		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
 #ifndef _WIN32_WCE
 		CFrame* m_pFrame;			// pointer to the CFrame object
-		HWND m_hMDIView;			// handle to the MDI client (if any)
 #endif
 	};
 
@@ -774,7 +766,6 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 			m_pFrame = 0;
-			m_hMDIView = 0;
 #endif
 
 			// Test if this is the first instance of CWinApp

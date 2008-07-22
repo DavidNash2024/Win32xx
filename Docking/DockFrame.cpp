@@ -3,7 +3,8 @@
 
 
 #include "resource.h"
-#include "DockFrame.h"
+//#include "DockFrame.h"
+#include "DockingApp.h"
 #include "MDIChildView.h"
 
 
@@ -79,43 +80,43 @@ void CDockFrame::Dock(HWND hDockable, UINT DockState)
 
 UINT CDockFrame::GetDockSide(LPDRAGPOS pdp)
 {
-	CRect rcWindow = GetViewRect();
-	MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rcWindow, 2);
+	CRect rcWindow = GetView()->GetClientRect();
+	MapWindowPoints(GetView()->GetHwnd(), NULL, (LPPOINT)&rcWindow, 2);
 	
 	CRect rcLeft = rcWindow;
 	rcLeft.right = rcLeft.left + 30;
 	if (rcLeft.PtInRect(pdp->ptPos))
-		return DS_DOCK_LEFT;
+		return DS_DOCKED_LEFT;
 
 	CRect rcRight = rcWindow;
 	rcRight.left = rcRight.right - 30;
 	if (rcRight.PtInRect(pdp->ptPos))
-		return DS_DOCK_RIGHT;
+		return DS_DOCKED_RIGHT;
 
 	CRect rcTop = rcWindow;
 	rcTop.InflateRect(-30, 0);
 	rcTop.bottom = rcRight.top + 30;
 	if (rcTop.PtInRect(pdp->ptPos))
-		return DS_DOCK_TOP;
+		return DS_DOCKED_TOP;
 
 	CRect rcBottom = rcWindow;
 	rcBottom.InflateRect(-30, 0);
 	rcBottom.top = rcRight.bottom - 30;
 	if (rcBottom.PtInRect(pdp->ptPos))
-		return DS_DOCK_BOTTOM;
+		return DS_DOCKED_BOTTOM;
 
 	return 0;
 }
 
 void CDockFrame::OnInitialUpdate()
 {
-	TRACE(_T("MDI Frame started \n"));
+	TRACE(_T("Docking Frame started \n"));
 	//The frame is now created.
 	//Place any additional startup code here.
 
-	AddDockable(new CDockable, DS_DOCK_LEFT, 45);
-	AddDockable(new CDockable, DS_DOCK_RIGHT, 120);
-	AddDockable(new CDockable, DS_DOCK_BOTTOM, 90);
+	AddDockable(new CDockable, DS_DOCKED_LEFT, 45);
+	AddDockable(new CDockable, DS_DOCKED_RIGHT, 120);
+	AddDockable(new CDockable, DS_DOCKED_BOTTOM, 90);
 }
 
 BOOL CDockFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -159,34 +160,34 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 {
 	switch (((LPNMHDR)lParam)->code)
 	{
-	case USER_DRAGSTART:
+	case USER_DOCKDRAGSTART:
 		TRACE("Drag Start notification\n");
 		break;
 
-	case USER_DRAGMOVE:
+	case USER_DOCKDRAGMOVE:
 	//	TRACE("Drag Move notification\n");
 		{
 			UINT uDockSide = GetDockSide((LPDRAGPOS)lParam);
 
 			switch (uDockSide)
 			{
-			case DS_DOCK_LEFT:
+			case DS_DOCKED_LEFT:
 				TRACE("Could dock Left\n");
 				break;
-			case DS_DOCK_RIGHT:
+			case DS_DOCKED_RIGHT:
 				TRACE("Could dock Right\n");
 				break;
-			case DS_DOCK_TOP:
+			case DS_DOCKED_TOP:
 				TRACE("Could dock Top\n");
 				break;
-			case DS_DOCK_BOTTOM:
+			case DS_DOCKED_BOTTOM:
 				TRACE("Could dock Bottom\n");
 				break;
 			}
 		}
 		break;
 
-	case USER_DRAGEND:
+	case USER_DOCKDRAGEND:
 		TRACE("Drag End notification\n");
 		{
 			LPDRAGPOS pdp = (LPDRAGPOS)lParam;
@@ -241,40 +242,63 @@ void CDockFrame::RecalcLayout()
 		int cx = rClient.Width();
 		int cy = rClient.Height();
 
+		int bw = 5;	// Width of the splitter bar
+
 		for (UINT i = 0 ; i < m_vDockables.size(); ++i)
 		{
 			int DockWidth = m_vDockables[i]->GetDockWidth();
 			switch (m_vDockables[i]->m_DockState)
 			{
-			case DS_DOCK_LEFT:
+			case DS_DOCKED_LEFT:
+				{
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x + DockWidth, y, 5, cy, SWP_SHOWWINDOW );
-				cx -= (DockWidth +5);
-				x  += DockWidth +5;
+				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				int bw1 = min(bw, cx-DockWidth);
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x + DockWidth, y, bw1, cy, SWP_SHOWWINDOW );
+				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				cx -= (DockWidth +bw1);
+				x  += DockWidth +bw1;
+				}
 				break;
 
-			case DS_DOCK_RIGHT:
-				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x + cx - DockWidth, y, DockWidth, cy, SWP_SHOWWINDOW );
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x + cx - DockWidth -5, y, 5, cy, SWP_SHOWWINDOW );
-				cx -= (DockWidth +5);
+			case DS_DOCKED_RIGHT:
+				{
+				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth), y, DockWidth, cy, SWP_SHOWWINDOW );
+				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				int bw1 = min(bw, cx-DockWidth);
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth -bw1), y, bw1, cy, SWP_SHOWWINDOW );
+				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				cx -= (DockWidth +bw1);
+				}
 				break;
 				
-			case DS_DOCK_TOP:
+			case DS_DOCKED_TOP:
+				{
 				DockWidth = min(DockWidth, cy);
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, cx, DockWidth, SWP_SHOWWINDOW );
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, y + DockWidth, cx, 5, SWP_SHOWWINDOW );
-				cy -= (DockWidth +5);
-				y += DockWidth +5;
+				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				int bw1 = min(bw, cy-DockWidth);
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, y + DockWidth, cx, bw1, SWP_SHOWWINDOW );
+				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				cy -= (DockWidth +bw1);
+				y += DockWidth +bw1;
+				}
 				break;
 
-			case DS_DOCK_BOTTOM:
+			case DS_DOCKED_BOTTOM:
+				{
 				DockWidth = min(DockWidth, cy);
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth), cx, DockWidth, SWP_SHOWWINDOW );
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth-5), cx, 5, SWP_SHOWWINDOW );
-				cy -= (DockWidth +5);
+				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				int bw1 = min(bw, cy-DockWidth);
+				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth-bw1), cx, min(cy, bw1), SWP_SHOWWINDOW );
+				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				cy -= (DockWidth +bw1);
+				}
 				break;
 
 			default:
+				m_vBars[i]->ShowWindow(SW_HIDE);
 				break;
 			}
 		}
@@ -293,10 +317,47 @@ void CDockFrame::RecalcLayout()
 
 LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
+	switch (uMsg)
+	{
+	case WM_SETCURSOR:
+	//	TRACE("WM_SETCURSOR from CDockFrame\n");
+		break;
+	}
 
-//	}
+	// pass unhandled messages on for default processing
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT CDockFrame::CBar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	CDockFrame& DFrame = GetDockApp().GetDockFrame();
+	
+	switch (uMsg)
+	{
+	case WM_SETCURSOR:
+		{
+			for (UINT u = 0; u < DFrame.m_vBars.size(); ++u)
+			{
+				if (hWnd == DFrame.m_vBars[u]->GetHwnd())
+				{
+					if ((DFrame.m_vDockables[u]->m_DockState == DS_DOCKED_LEFT) 
+						|| (DFrame.m_vDockables[u]->m_DockState == DS_DOCKED_RIGHT))
+						SetCursor(LoadCursor(NULL, IDC_SIZEWE));
+					else
+						SetCursor(LoadCursor(NULL, IDC_SIZENS));
+					return TRUE;
+				}
+			}
+		}
+		break;
+
+	case WM_LBUTTONDOWN:
+		TRACE("WM_LBUTTONDOWN");
+		break;
+	case WM_LBUTTONUP:
+		TRACE("WM_LBUTTONUP");
+		break;
+	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

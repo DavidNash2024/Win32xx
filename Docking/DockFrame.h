@@ -10,11 +10,11 @@
 #include "Dockable.h"
 
 
-// Docking Styles
-#define DS_DOCK_LEFT		0x0001
-#define DS_DOCK_RIGHT		0x0002
-#define DS_DOCK_TOP			0x0004
-#define DS_DOCK_BOTTOM		0x0008
+// Docking States
+#define DS_DOCKED_LEFT		0x0001
+#define DS_DOCKED_RIGHT		0x0002
+#define DS_DOCKED_TOP			0x0004
+#define DS_DOCKED_BOTTOM		0x0008
 
 
 class CDockFrame : public CMDIFrame
@@ -48,13 +48,17 @@ private:
 			wc.hbrBackground = m_hbrBackground;
 		}
 
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	private:
 		HBRUSH m_hbrBackground;
 	};
+	friend class CBar;
 
 	std::vector<CDockable*> m_vDockables;
 	std::vector<CBar*> m_vBars;
 };
+
 
 
 #endif  // DOCKFRAME_H

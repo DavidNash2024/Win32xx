@@ -7,7 +7,7 @@
 
 #include "DockFrame.h"
 
-CDockable::CDockable() : m_DockState(DS_DOCK_LEFT)
+CDockable::CDockable() : m_DockState(DS_DOCKED_LEFT)
 {
 }
 
@@ -18,14 +18,13 @@ void CDockable::PreCreate(CREATESTRUCT &cs)
 
 void CDockable::SendNotify(UINT nMessageID)
 {	
-	// Send a USER_DRAGMOVE notification to the frame
+	// Send a USER_DOCKDRAGMOVE notification to the frame
 	DRAGPOS DragPos;
 	DragPos.hdr.code = nMessageID;
 	DragPos.hdr.hwndFrom = m_hWnd;
 	GetCursorPos(&DragPos.ptPos);
 	SendMessage(GetApp()->GetFrame()->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
 }
-
 
 void CDockable::UnDock()
 {
@@ -53,30 +52,22 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_ACTIVATE:
-		TRACE("WM_ACTIVATE\n");
 		break;
 	case WM_ACTIVATEAPP:
-		TRACE("WM_ACTIVATEAPP\n");
 		break;
 	case WM_LBUTTONDOWN:
-		TRACE("WM_LBUTTONDOWN\n");
 		break;
 	case WM_LBUTTONUP:
-		TRACE("WM_LBUTTONUP\n");
 		break;
 	case WM_MOUSEACTIVATE:
-		TRACE("WM_MOUSEACTIVATE\n");
 		if (GetFocus() != hWnd) SetFocus();
 		break;
 	case WM_MOUSEMOVE:
-		TRACE("WM_MOUSEMOVE\n");
 		break;
 	case WM_NCACTIVATE:
-		TRACE("WM_NCACTIVATE\n");
 		break;
 	case WM_NCCALCSIZE:
 		// Set the non-client area (This also controls the client area) 
-		TRACE("WM_NCCALCSIZE\n");
 		if (IsDocked())
 		{
 			LPRECT rc = (LPRECT)lParam;
@@ -84,7 +75,6 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_NCHITTEST:
-		//	TRACE("WM_NCHITTEST\n");
 		if (IsDocked())
 		{
 			CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -94,7 +84,6 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_NCLBUTTONDOWN:
-		TRACE("WM_NCLBUTTONDOWN\n");
 		Oldpt.x = GET_X_LPARAM(lParam); 
 		Oldpt.y = GET_Y_LPARAM(lParam);
 		bNCLButtonDown = TRUE;
@@ -104,20 +93,18 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		else
 		{
-			// Send a USER_DRAGSTART notification to the frame
-			SendNotify(USER_DRAGSTART);
+			// Send a USER_DOCKDRAGSTART notification to the frame
+			SendNotify(USER_DOCKDRAGSTART);
 		}
 		break;
 
 	case WM_NCLBUTTONUP:
-		TRACE("WM_NCLBUTTONUP\n");
 		{
 			bNCLButtonDown = FALSE;
 		}
 		break;
 
 	case WM_NCMOUSEMOVE:
-		TRACE("WM_NCMOUSEMOVE\n");
 		{
 			if (IsDocked())
 			{	
@@ -134,15 +121,14 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			else if (bNCLButtonDown)
 			{
 				// We get a WM_NCMOUSEMOVE (not WM_NCLBUTTONUP) when drag of non-docked window ends
-				// Send a USER_DRAGEND notification to the frame
-				SendNotify(USER_DRAGEND);
+				// Send a USER_DOCKDRAGEND notification to the frame
+				SendNotify(USER_DOCKDRAGEND);
 				bNCLButtonDown = FALSE;
 			}		
 		}
 		break;
 
 	case WM_NCPAINT:
-		TRACE("WM_NCPAINT\n");
 		if (IsDocked())
 		{
 			CDC dc = GetWindowDC(hWnd);
@@ -158,23 +144,20 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_SETFOCUS:
-		TRACE("WM_SETFOCUS\n");
 		if (IsDocked())
 			SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
 		break;
 
 	case WM_KILLFOCUS:
-		TRACE("WM_KILLFOCUS\n");
 		if (IsDocked())
 			SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
 		break;
 
 	case WM_WINDOWPOSCHANGED:
-	//	TRACE("WM_WINDOWPOSCHANGED\n");
 		if (!IsDocked())
 		{	
-			// Send a USER_DRAGMOVE notification to the frame
-			SendNotify(USER_DRAGMOVE);
+			// Send a USER_DOCKDRAGMOVE notification to the frame
+			SendNotify(USER_DOCKDRAGMOVE);
 		}
 		break;
 	}
