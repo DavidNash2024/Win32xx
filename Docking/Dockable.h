@@ -10,13 +10,13 @@
 
 enum Constants
 {
-	// Notification messages
-	USER_DOCKDRAGSTART= WM_APP + 1, // mouse position during drag start
-	USER_DOCKDRAGMOVE = WM_APP + 2,	// mouse position during drag move
-	USER_DOCKDRAGEND  = WM_APP + 3, // mouse position during drag release
-	USER_BARDRAGSTART = WM_APP + 4,
-	USER_BARDRAGMOVE  = WM_APP + 5,
-	USER_BARDRAGEND   = WM_APP + 6
+	// Docking Notifications
+	DN_DOCK_START= WM_APP + 1,	// Start dock window drag
+	DN_DOCK_MOVE = WM_APP + 2,	// Dock window draging
+	DN_DOCK_END  = WM_APP + 3,	// End dock window dragging
+	DN_BAR_START = WM_APP + 4,	// Start splitter bar drag
+	DN_BAR_MOVE  = WM_APP + 5,	// Splitter bar dragging
+	DN_BAR_END   = WM_APP + 6   // End splitter bar drag
 };
 
 typedef struct DRAGPOS

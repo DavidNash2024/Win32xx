@@ -10,6 +10,10 @@
 
 CDockFrame::CDockFrame()
 {
+	WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
+	m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
+	m_hbrDithered = ::CreatePatternBrush (m_hbm);
+
 	// Define the resource IDs for the toolbar
 	m_ToolbarData.clear();
 	m_ToolbarData.push_back ( IDM_FILE_NEW   );
@@ -48,6 +52,9 @@ CDockFrame::~CDockFrame()
 		delete *b;
 		m_vBars.erase(b);
 	}
+
+	::DeleteObject(m_hbrDithered);
+	::DeleteObject(m_hbm);
 }
 
 void CDockFrame::AddDockable(CDockable* pDockable, UINT uDockSide, int DockWidth)
@@ -76,6 +83,68 @@ void CDockFrame::Dock(HWND hDockable, UINT DockState)
 		pDockable->SetFocus();
 	}
 	else MessageBox(m_hWnd, _T("Can't dock this type of window"), _T("Error"), MB_OK); 
+}
+
+void CDockFrame::DrawHashBar(HWND hBar, POINT Pos)
+{
+	// draws a hashed bar while the splitter bar is being dragged
+	{
+		CDockable* pDock = ((CBar*)FromHandle(hBar))->m_pDockable;
+		BOOL bVertical = (pDock->GetDockState() == DS_DOCKED_LEFT) || (pDock->GetDockState() == DS_DOCKED_RIGHT);
+		int nBarWidth = 5;
+		
+		CDC BarDC = ::GetDC(m_hWnd);
+		BarDC.AttachBrush(m_hbrDithered);
+		
+		CRect rc = pDock->GetWindowRect();
+		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+		int cx = rc.Width();
+		int cy = rc.Height();
+
+		if (bVertical)
+			::PatBlt (BarDC, Pos.x - nBarWidth/2, rc.top, nBarWidth, cy, PATINVERT);
+		else
+			::PatBlt (BarDC, rc.left, Pos.y - nBarWidth/2, cx, nBarWidth, PATINVERT);
+		
+		BarDC.DetachBrush();
+	}
+}
+
+/*RECT CDockFrame::GetResizeBoundary(HWND hBar)
+{
+	CDockable* pDock = (CDockable*)FromHandle(hBar);
+	CRect rc = pDock->GetWindowRect();
+
+	return rc;
+}
+*/
+
+int CDockFrame::GetDockIndex(HWND hWnd)
+{
+	for (UINT u = 0; u < m_vDockables.size(); ++u)
+	{
+		if (hWnd == m_vDockables[u]->GetHwnd())
+			return u;
+	}
+
+	return -1;
+}
+
+CDockable* CDockFrame::GetDockNeighbor(HWND hWnd, UINT uDockState)
+{
+	for (UINT u = 0; u < m_vBars.size(); ++u)
+	{
+		if (hWnd == m_vBars[u]->GetHwnd())
+		{
+			for (UINT v = u+1; v < m_vDockables.size(); ++v)
+			{
+				if (uDockState == m_vDockables[v]->GetDockState())
+					return m_vDockables[v];
+			}
+		}
+	}
+
+	return NULL;
 }
 
 UINT CDockFrame::GetDockSide(LPDRAGPOS pdp)
@@ -158,13 +227,16 @@ void CDockFrame::OnCreate()
 
 LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 {
+	static POINT OldPoint = {0};
+	LPDRAGPOS pdp = (LPDRAGPOS)lParam;
+
 	switch (((LPNMHDR)lParam)->code)
 	{
-	case USER_DOCKDRAGSTART:
+	case DN_DOCK_START:
 		TRACE("Drag Start notification\n");
 		break;
 
-	case USER_DOCKDRAGMOVE:
+	case DN_DOCK_MOVE:
 	//	TRACE("Drag Move notification\n");
 		{
 			UINT uDockSide = GetDockSide((LPDRAGPOS)lParam);
@@ -187,10 +259,9 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 		}
 		break;
 
-	case USER_DOCKDRAGEND:
+	case DN_DOCK_END:
 		TRACE("Drag End notification\n");
 		{
-			LPDRAGPOS pdp = (LPDRAGPOS)lParam;
 			UINT DockSide = GetDockSide(pdp);
 			HWND hDockable = pdp->hdr.hwndFrom;
 
@@ -198,8 +269,92 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 		}
 		break;
 
-	case WM_PARENTNOTIFY:
-		TRACE("WM_PARENTNOTIFY\n");
+	case DN_BAR_START:
+		{
+			TRACE("Start drag bar notification\n");	
+			POINT pt = pdp->ptPos;
+			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			DrawHashBar(pdp->hdr.hwndFrom, pt);
+			OldPoint = pt;
+		}
+		break;
+
+	case DN_BAR_MOVE:
+		{
+			TRACE("bar dragged notification\n");
+			POINT pt = pdp->ptPos;
+			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			DrawHashBar(pdp->hdr.hwndFrom, OldPoint);
+			DrawHashBar(pdp->hdr.hwndFrom, pt);
+			OldPoint = pt;
+		}
+		break;
+
+	case DN_BAR_END:
+		{
+			TRACE("End drag bar notification\n");
+			POINT pt = pdp->ptPos;
+			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			DrawHashBar(pdp->hdr.hwndFrom, pt);
+
+			CDockable* pDock = ((CBar*)FromHandle(pdp->hdr.hwndFrom))->m_pDockable;
+			CRect rc = pDock->GetWindowRect();
+			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+
+			switch (pDock->GetDockState())
+			{
+			case DS_DOCKED_LEFT:
+				pDock->SetDockWidth(pt.x - rc.left);
+				pDock = GetDockNeighbor(pdp->hdr.hwndFrom, DS_DOCKED_LEFT);
+				if (pDock)
+				{
+					TRACE("Has a neighbor");
+					rc = pDock->GetWindowRect();
+					MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+					int barWidth = 5;
+					pDock->SetDockWidth(rc.right - pt.x - barWidth);
+				}
+				break;
+			case DS_DOCKED_RIGHT:
+				pDock->SetDockWidth(rc.right - pt.x);
+				pDock = GetDockNeighbor(pdp->hdr.hwndFrom, DS_DOCKED_RIGHT);
+				if (pDock)
+				{
+					TRACE("Has a neighbor");
+					rc = pDock->GetWindowRect();
+					MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+					int barWidth = 5;
+					pDock->SetDockWidth(pt.x - rc.left - barWidth);
+				}
+				break;
+			case DS_DOCKED_TOP:
+				pDock->SetDockWidth(pt.y - rc.top);
+				pDock = GetDockNeighbor(pdp->hdr.hwndFrom, DS_DOCKED_TOP);
+				if (pDock)
+				{
+					TRACE("Has a neighbor");
+					rc = pDock->GetWindowRect();
+					MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+					int barWidth = 5;
+					pDock->SetDockWidth(rc.bottom - pt.y - barWidth);
+				}
+				break;
+			case DS_DOCKED_BOTTOM:
+				pDock->SetDockWidth(rc.bottom - pt.y);
+				pDock = GetDockNeighbor(pdp->hdr.hwndFrom, DS_DOCKED_BOTTOM);
+				if (pDock)
+				{
+					TRACE("Has a neighbor");
+					rc = pDock->GetWindowRect();
+					MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+					int barWidth = 5;
+					pDock->SetDockWidth(pt.y - rc.top - barWidth);
+				}
+				break;
+			}
+			RecalcLayout();
+		
+		}
 		break;
 	}
 
@@ -252,10 +407,10 @@ void CDockFrame::RecalcLayout()
 			case DS_DOCKED_LEFT:
 				{
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
-				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
 				int bw1 = min(bw, cx-DockWidth);
 				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x + DockWidth, y, bw1, cy, SWP_SHOWWINDOW );
 				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cx -= (DockWidth +bw1);
 				x  += DockWidth +bw1;
 				}
@@ -264,10 +419,10 @@ void CDockFrame::RecalcLayout()
 			case DS_DOCKED_RIGHT:
 				{
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth), y, DockWidth, cy, SWP_SHOWWINDOW );
-				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
 				int bw1 = min(bw, cx-DockWidth);
 				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth -bw1), y, bw1, cy, SWP_SHOWWINDOW );
 				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cx -= (DockWidth +bw1);
 				}
 				break;
@@ -276,10 +431,10 @@ void CDockFrame::RecalcLayout()
 				{
 				DockWidth = min(DockWidth, cy);
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, cx, DockWidth, SWP_SHOWWINDOW );
-				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
 				int bw1 = min(bw, cy-DockWidth);
 				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, y + DockWidth, cx, bw1, SWP_SHOWWINDOW );
 				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cy -= (DockWidth +bw1);
 				y += DockWidth +bw1;
 				}
@@ -289,16 +444,17 @@ void CDockFrame::RecalcLayout()
 				{
 				DockWidth = min(DockWidth, cy);
 				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth), cx, DockWidth, SWP_SHOWWINDOW );
-				::RedrawWindow(m_vDockables[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
 				int bw1 = min(bw, cy-DockWidth);
 				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth-bw1), cx, min(cy, bw1), SWP_SHOWWINDOW );
 				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cy -= (DockWidth +bw1);
 				}
 				break;
 
 			default:
 				m_vBars[i]->ShowWindow(SW_HIDE);
+				m_vBars[i]->m_pDockable = NULL;
 				break;
 			}
 		}
@@ -328,34 +484,56 @@ LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
+void CDockFrame::CBar::SendNotify(UINT nMessageID)
+{	
+	// Send a splitter bar notification to the frame
+	DRAGPOS DragPos;
+	DragPos.hdr.code = nMessageID;
+	DragPos.hdr.hwndFrom = m_hWnd;
+	GetCursorPos(&DragPos.ptPos);
+	SendMessage(GetApp()->GetFrame()->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
+}
+
 LRESULT CDockFrame::CBar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	CDockFrame& DFrame = GetDockApp().GetDockFrame();
-	
+
 	switch (uMsg)
 	{
 	case WM_SETCURSOR:
 		{
-			for (UINT u = 0; u < DFrame.m_vBars.size(); ++u)
+			if (m_pDockable)
 			{
-				if (hWnd == DFrame.m_vBars[u]->GetHwnd())
-				{
-					if ((DFrame.m_vDockables[u]->m_DockState == DS_DOCKED_LEFT) 
-						|| (DFrame.m_vDockables[u]->m_DockState == DS_DOCKED_RIGHT))
-						SetCursor(LoadCursor(NULL, IDC_SIZEWE));
-					else
-						SetCursor(LoadCursor(NULL, IDC_SIZENS));
-					return TRUE;
-				}
+				UINT uSide = m_pDockable->m_DockState;
+				if ((uSide == DS_DOCKED_LEFT) || (uSide == DS_DOCKED_RIGHT))	
+					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDC_SPLITH)));
+				else				
+					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDC_SPLITV)));
+				
+				return TRUE;
 			}
-		}
+		}			
 		break;
 
 	case WM_LBUTTONDOWN:
-		TRACE("WM_LBUTTONDOWN");
+		SendNotify(DN_BAR_START);
+		SetCapture();
+		m_IsCaptured = TRUE;
 		break;
+	
 	case WM_LBUTTONUP:
-		TRACE("WM_LBUTTONUP");
+		if (m_IsCaptured)
+		{
+			SendNotify(DN_BAR_END);
+			ReleaseCapture();
+			m_IsCaptured = FALSE;
+		}
+		break;
+
+	case WM_MOUSEMOVE:
+		if (m_IsCaptured)
+		{
+			SendNotify(DN_BAR_MOVE);
+		}
 		break;
 	}
 

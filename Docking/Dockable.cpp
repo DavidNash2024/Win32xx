@@ -18,7 +18,7 @@ void CDockable::PreCreate(CREATESTRUCT &cs)
 
 void CDockable::SendNotify(UINT nMessageID)
 {	
-	// Send a USER_DOCKDRAGMOVE notification to the frame
+	// Send a docking notification to the frame
 	DRAGPOS DragPos;
 	DragPos.hdr.code = nMessageID;
 	DragPos.hdr.hwndFrom = m_hWnd;
@@ -93,8 +93,8 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		else
 		{
-			// Send a USER_DOCKDRAGSTART notification to the frame
-			SendNotify(USER_DOCKDRAGSTART);
+			// Send a DN_DOCK_START notification to the frame
+			SendNotify(DN_DOCK_START);
 		}
 		break;
 
@@ -121,8 +121,8 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			else if (bNCLButtonDown)
 			{
 				// We get a WM_NCMOUSEMOVE (not WM_NCLBUTTONUP) when drag of non-docked window ends
-				// Send a USER_DOCKDRAGEND notification to the frame
-				SendNotify(USER_DOCKDRAGEND);
+				// Send a DN_DOCK_END notification to the frame
+				SendNotify(DN_DOCK_END);
 				bNCLButtonDown = FALSE;
 			}		
 		}
@@ -156,8 +156,8 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_WINDOWPOSCHANGED:
 		if (!IsDocked())
 		{	
-			// Send a USER_DOCKDRAGMOVE notification to the frame
-			SendNotify(USER_DOCKDRAGMOVE);
+			// Send a DN_DOCK_MOVE notification to the frame
+			SendNotify(DN_DOCK_MOVE);
 		}
 		break;
 	}

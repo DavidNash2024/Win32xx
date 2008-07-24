@@ -22,7 +22,12 @@
 #define IDM_HELP_ABOUT                  130
 
 // Icon Resource
-#define IDI_VIEW                        141
+#define IDI_VIEW                        140
+
+// Cursor Resource
+#define IDC_SPLITH                      141
+#define IDC_SPLITV                      142
+#define IDC_TRACK4WAY                   143
 
 // Menu Resource
 #define IDM_COLOR_BLACK                 163

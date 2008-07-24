@@ -21,7 +21,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View\tCtrl+N",                   IDM_FILE_NEW
+        MENUITEM "New &View\tCtrl+N",           IDM_FILE_NEW
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -47,7 +47,7 @@ MDIMENUVIEW MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View\tCtrl+N",                   IDM_FILE_NEW
+        MENUITEM "New &View\tCtrl+N",           IDM_FILE_NEW
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -105,6 +105,15 @@ IDI_VIEW                ICON                    "res/view.ico"
 //
 
 IDW_MAIN                BITMAP                  "res/toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// CURSOR
+//
+
+IDC_SPLITH               CURSOR                  "res/SplitH.cur"
+IDC_SPLITV               CURSOR                  "res/SplitV.cur"
+IDC_TRACK4WAY            CURSOR                  "res/Trck4Way.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //

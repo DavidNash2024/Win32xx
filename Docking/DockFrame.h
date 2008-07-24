@@ -23,7 +23,10 @@ public:
 	CDockFrame(void);
 	virtual ~CDockFrame();
 	void AddDockable(CDockable* pDockable, UINT uDockSide, int DockWidth);
+//	RECT GetResizeBoundary(HWND hBar);
 	UINT GetDockSide(LPDRAGPOS pdp);
+	int GetDockIndex(HWND hWnd);
+	CDockable* GetDockNeighbor(HWND hWnd, UINT uDockState);
 	virtual void Dock(HWND hDockable, UINT DockState);
 
 protected:
@@ -38,7 +41,7 @@ private:
 	class CBar : public CWnd
 	{
 	public:
-		CBar()  {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
+		CBar() : m_IsCaptured(FALSE), m_pDockable(NULL) {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
 		~CBar() {::DeleteObject(m_hbrBackground);}
 
 		virtual void PreRegisterClass(WNDCLASS& wc)
@@ -48,15 +51,25 @@ private:
 			wc.hbrBackground = m_hbrBackground;
 		}
 
+		void SendNotify(UINT nMessageID);
+
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		CDockable* m_pDockable;
 
 	private:
 		HBRUSH m_hbrBackground;
+		BOOL m_IsCaptured;
+		
 	};
 	friend class CBar;
 
+	void DrawHashBar(HWND hBar, POINT Pos);
+
 	std::vector<CDockable*> m_vDockables;
 	std::vector<CBar*> m_vBars;
+	HBITMAP	m_hbm;
+	HBRUSH m_hbrDithered;
 };
 
 
