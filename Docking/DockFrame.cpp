@@ -8,7 +8,7 @@
 #include "MDIChildView.h"
 
 
-CDockFrame::CDockFrame()
+CDockFrame::CDockFrame() : m_BarWidth(6)
 {
 	WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 	m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -69,6 +69,7 @@ void CDockFrame::AddDockable(CDockable* pDockable, UINT uDockSide, int DockWidth
 	pBar->Create(m_hWnd);
 	m_vBars.push_back(pBar);
 
+	// Dock the dockable window
 	Dock(hDockable, uDockSide);
 }
 
@@ -105,7 +106,6 @@ void CDockFrame::DrawHashBar(HWND hBar, POINT Pos)
 	{
 		CDockable* pDock = ((CBar*)FromHandle(hBar))->m_pDockable;
 		BOOL bVertical = (pDock->GetDockState() == DS_DOCKED_LEFT) || (pDock->GetDockState() == DS_DOCKED_RIGHT);
-		int nBarWidth = 5;
 		
 		CDC BarDC = ::GetDC(m_hWnd);
 		BarDC.AttachBrush(m_hbrDithered);
@@ -116,9 +116,9 @@ void CDockFrame::DrawHashBar(HWND hBar, POINT Pos)
 		int cy = rc.Height();
 
 		if (bVertical)
-			::PatBlt (BarDC, Pos.x - nBarWidth/2, rc.top, nBarWidth, cy, PATINVERT);
+			::PatBlt (BarDC, Pos.x - m_BarWidth/2, rc.top, m_BarWidth, cy, PATINVERT);
 		else
-			::PatBlt (BarDC, rc.left, Pos.y - nBarWidth/2, cx, nBarWidth, PATINVERT);
+			::PatBlt (BarDC, rc.left, Pos.y - m_BarWidth/2, cx, m_BarWidth, PATINVERT);
 		
 		BarDC.DetachBrush();
 	}
@@ -224,7 +224,6 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 {
 	static POINT OldPoint = {0};
 	LPDRAGPOS pdp = (LPDRAGPOS)lParam;
-	int nBarWidth = 5;
 
 	switch (((LPNMHDR)lParam)->code)
 	{
@@ -341,7 +340,7 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 			case DS_DOCKED_LEFT:
 				{
 					// Resize dockable
-					pDock->SetDockWidth(pt.x - rcDock.left - nBarWidth/2);
+					pDock->SetDockWidth(pt.x - rcDock.left - m_BarWidth/2);
 					
 					// Resize neighbouring dockable
 					CDockable* pDockNbr = GetDockNeighbour(pDock);
@@ -349,14 +348,14 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 					{
 						rcDock = pDockNbr->GetWindowRect();
 						MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);						
-						pDockNbr->SetDockWidth(rcDock.right - pt.x - nBarWidth);
+						pDockNbr->SetDockWidth(rcDock.right - pt.x - m_BarWidth/2);
 					}
 				}
 				break;
 			case DS_DOCKED_RIGHT:
 				{
 					// Resize dockable
-					pDock->SetDockWidth(rcDock.right - pt.x - nBarWidth + nBarWidth/2);
+					pDock->SetDockWidth(rcDock.right - pt.x - m_BarWidth/2);
 
 					// Resize neighbouring dockable
 					CDockable* pDockNbr = GetDockNeighbour(pDock);
@@ -364,14 +363,14 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 					{
 						rcDock = pDockNbr->GetWindowRect();
 						MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
-						pDockNbr->SetDockWidth(pt.x - rcDock.left - nBarWidth);
+						pDockNbr->SetDockWidth(pt.x - rcDock.left - m_BarWidth/2);
 					}
 				}
 				break;
 			case DS_DOCKED_TOP:
 				{
 					// Resize dockable
-					pDock->SetDockWidth(pt.y - rcDock.top - nBarWidth/2);
+					pDock->SetDockWidth(pt.y - rcDock.top - m_BarWidth/2);
 
 					// Resize neighbouring dockable
 					CDockable* pDockNbr = GetDockNeighbour(pDock);
@@ -379,14 +378,14 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 					{
 						rcDock = pDockNbr->GetWindowRect();
 						MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
-						pDockNbr->SetDockWidth(rcDock.bottom - pt.y - nBarWidth);
+						pDockNbr->SetDockWidth(rcDock.bottom - pt.y - m_BarWidth/2);
 					}
 				}
 				break;
 			case DS_DOCKED_BOTTOM:
 				{
 					// Resize dockable
-					pDock->SetDockWidth(rcDock.bottom - pt.y - nBarWidth + nBarWidth/2);
+					pDock->SetDockWidth(rcDock.bottom - pt.y - m_BarWidth/2);
 
 					// Resize neighbouring dockable
 					CDockable* pDockNbr = GetDockNeighbour(pDock);
@@ -394,7 +393,7 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 					{
 						rcDock = pDockNbr->GetWindowRect();
 						MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
-						pDockNbr->SetDockWidth(pt.y - rcDock.top - nBarWidth);
+						pDockNbr->SetDockWidth(pt.y - rcDock.top - m_BarWidth/2);
 					}
 					break;
 				}
@@ -444,7 +443,7 @@ void CDockFrame::RecalcLayout()
 		int cx = rClient.Width();
 		int cy = rClient.Height();
 
-		int bw = 5;	// Width of the splitter bar
+		int bw = m_BarWidth;	// Width of the splitter bar
 
 		for (UINT i = 0 ; i < m_vDockables.size(); ++i)
 		{
@@ -531,6 +530,18 @@ LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
+void CDockFrame::CBar::OnPaint(HDC hDC)
+{
+	CDC dc = hDC;
+	RECT rc = GetClientRect();
+	
+	dc.CreateSolidBrush(RGB(232, 228, 220));
+	dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+	Rectangle(dc, rc.left, rc.top, rc.right, rc.bottom);
+
+	dc.DetachDC();
+}
+
 void CDockFrame::CBar::SendNotify(UINT nMessageID)
 {	
 	// Send a splitter bar notification to the frame
@@ -538,6 +549,7 @@ void CDockFrame::CBar::SendNotify(UINT nMessageID)
 	DragPos.hdr.code = nMessageID;
 	DragPos.hdr.hwndFrom = m_hWnd;
 	GetCursorPos(&DragPos.ptPos);
+	DragPos.ptPos.x += 1;
 	SendMessage(GetApp()->GetFrame()->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
 }
 

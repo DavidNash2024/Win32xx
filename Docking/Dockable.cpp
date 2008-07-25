@@ -140,7 +140,7 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (hWnd == GetFocus())
 				SolidFill(dc, GetSysColor(COLOR_ACTIVECAPTION), &rc);	
 			else
-				SolidFill(dc, RGB(192, 192, 192), &rc);		
+				SolidFill(dc, RGB(232, 228, 220), &rc);		
 		}
 		break;
 	case WM_SETFOCUS:
