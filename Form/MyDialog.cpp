@@ -35,6 +35,11 @@ BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
+void CMyDialog::OnCancel()
+{
+	// Discard these messages
+}
+
 BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))

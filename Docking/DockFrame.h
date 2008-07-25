@@ -13,8 +13,8 @@
 // Docking States
 #define DS_DOCKED_LEFT		0x0001
 #define DS_DOCKED_RIGHT		0x0002
-#define DS_DOCKED_TOP			0x0004
-#define DS_DOCKED_BOTTOM		0x0008
+#define DS_DOCKED_TOP		0x0004
+#define DS_DOCKED_BOTTOM	0x0008
 
 
 class CDockFrame : public CMDIFrame
@@ -23,10 +23,8 @@ public:
 	CDockFrame(void);
 	virtual ~CDockFrame();
 	void AddDockable(CDockable* pDockable, UINT uDockSide, int DockWidth);
-//	RECT GetResizeBoundary(HWND hBar);
+	CDockable* GetDockNeighbour(CDockable* pDock);
 	UINT GetDockSide(LPDRAGPOS pdp);
-	int GetDockIndex(HWND hWnd);
-	CDockable* GetDockNeighbor(HWND hWnd, UINT uDockState);
 	virtual void Dock(HWND hDockable, UINT DockState);
 
 protected:
