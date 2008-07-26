@@ -352,6 +352,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Win32++\GDI.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Win32++\Rebar.h"
 				>
 			</File>

@@ -186,6 +186,18 @@ SOURCE="..\Win32++\PropertySheet.h"
 # End Source File
 # Begin Source File
 
+SOURCE="..\Win32++\Rebar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\Statusbar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\Win32++\Toolbar.h"
+# End Source File
+# Begin Source File
+
 SOURCE="..\Win32++\WinCore.h"
 # End Source File
 # End Group

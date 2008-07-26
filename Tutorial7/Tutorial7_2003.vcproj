@@ -226,9 +226,6 @@
 				RelativePath="resource.h">
 			</File>
 			<File
-				RelativePath=".\resrc1.h">
-			</File>
-			<File
 				RelativePath="ScribbleApp.h">
 			</File>
 			<File
@@ -256,6 +253,15 @@
 			</File>
 			<File
 				RelativePath="..\Win32++\GDI.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\Rebar.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\Statusbar.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\Toolbar.h">
 			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.h">

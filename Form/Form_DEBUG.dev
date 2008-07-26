@@ -1,7 +1,7 @@
 [Project]
 FileName=Form_DEBUG.dev
 Name=Form
-UnitCount=14
+UnitCount=17
 Type=0
 Ver=1
 ObjFiles=
@@ -170,9 +170,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=FormApp.h
+FileName=..\Win32++\Rebar.h
 CompileCpp=1
-Folder=Header
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -198,9 +198,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=FormApp.cpp
+FileName=..\Win32++\Statusbar.h
 CompileCpp=1
-Folder=Source
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -208,7 +208,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\Win32++\GDI.cpp
+FileName=..\Win32++\Toolbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

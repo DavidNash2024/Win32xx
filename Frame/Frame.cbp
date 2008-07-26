@@ -156,6 +156,9 @@
 		<Unit filename="..\Win32++\Dialog.h" />
 		<Unit filename="..\Win32++\Frame.h" />
 		<Unit filename="..\Win32++\GDI.h" />
+		<Unit filename="..\Win32++\Rebar.h" />
+		<Unit filename="..\Win32++\Statusbar.h" />
+		<Unit filename="..\Win32++\Toolbar.h" />
 		<Unit filename="..\Win32++\WinCore.h" />
 		<Extensions>
 			<code_completion />

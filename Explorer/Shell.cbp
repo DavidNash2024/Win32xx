@@ -169,7 +169,10 @@
 		<Unit filename="..\Win32++\Frame.h" />
 		<Unit filename="..\Win32++\GDI.h" />
 		<Unit filename="..\Win32++\ListView.h" />
+		<Unit filename="..\Win32++\Rebar.h" />
 		<Unit filename="..\Win32++\Splitter.h" />
+		<Unit filename="..\Win32++\Statusbar.h" />
+		<Unit filename="..\Win32++\Toolbar.h" />
 		<Unit filename="..\Win32++\TreeView.h" />
 		<Unit filename="..\Win32++\WinCore.h" />
 		<Extensions>

@@ -1,7 +1,7 @@
 [Project]
-FileName=PropertySheet_RELEASE.dev
+FileName=PropertySheet_DEBUG.dev
 Name=PropertySheet
-UnitCount=17
+UnitCount=20
 Type=0
 Ver=1
 ObjFiles=
@@ -217,9 +217,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=MyPropertySheet.cpp
+FileName=..\Win32++\Rebar.h
 CompileCpp=1
-Folder=Source
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -227,7 +227,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\Win32++\PropertySheet.cpp
+FileName=..\Win32++\Statusbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -237,7 +237,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\Win32++\PropertySheet.h
+FileName=..\Win32++\Toolbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
