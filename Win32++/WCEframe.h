@@ -115,6 +115,7 @@ namespace Win32xx
 		virtual void OnCreate();
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RecalcLayout();
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
 		virtual	LRESULT WndProcDefault(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -124,6 +125,7 @@ namespace Win32xx
 
 	private:
 		CCmdbar m_Menubar;
+		tString m_tsAppName;
 
 #ifdef SHELL_AYGSHELL
 		SHACTIVATEINFO m_sai;
@@ -279,14 +281,10 @@ namespace Win32xx
 		if (m_ToolbarData.size() > 0)
 			SetButtons(m_ToolbarData);
 
-		// Set the accelerator table and HWND for translated messages
-		GetApp()->SetAccelerators(IDW_MAIN, GetHwnd());
-
 #ifndef SHELL_AYGSHELL
 		// Add close button
 		m_Menubar.AddAdornments(0);
 #endif
-
 
 	}
 
@@ -310,7 +308,19 @@ namespace Win32xx
 		cs.style = WS_VISIBLE;
 
 		// Choose a unique class name for this app
-		cs.lpszClass = LoadString(IDW_MAIN);
+		m_tsAppName = LoadString(IDW_MAIN);
+		cs.lpszClass = m_tsAppName.c_str();
+	}
+
+	inline BOOL CWceFrame::PreTranslateMessage(MSG* pMsg)
+	{
+		HACCEL hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
+		{
+			if (TranslateAccelerator(m_hWnd, hAccelTable, pMsg))
+				return TRUE;
+		}
+		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline void CWceFrame::RecalcLayout()

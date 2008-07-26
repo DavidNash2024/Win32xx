@@ -96,7 +96,7 @@ IDW_MAIN                BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 
 STRINGTABLE DISCARDABLE
 BEGIN
-    IDW_MAIN                "WinCE++ Menubar App"
+    IDW_MAIN                "Pocket PC Frame"
 END
 
 STRINGTABLE DISCARDABLE
