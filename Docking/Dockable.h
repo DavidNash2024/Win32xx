@@ -7,6 +7,7 @@
 
 
 #include "../Win32++/WinCore.h"
+#include "../Win32++/GDI.h"
 
 enum Constants
 {
@@ -30,6 +31,7 @@ class CDockable : public CWnd
 public:
 	CDockable();
 	virtual ~CDockable() {}
+	virtual void Draw3DBorder(RECT& Rect);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void SendNotify(UINT nMessageID);
@@ -45,6 +47,7 @@ public:
 public:
 	UINT m_DockState;
 	int m_DockWidth;
+	int m_NCHeight;
 };
 
 

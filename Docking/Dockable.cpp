@@ -7,13 +7,38 @@
 
 #include "DockFrame.h"
 
-CDockable::CDockable() : m_DockState(DS_DOCKED_LEFT)
+CDockable::CDockable() : m_NCHeight(20), m_DockState(0)
 {
+}
+
+void CDockable::Draw3DBorder(RECT& Rect)
+{
+	// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
+	// This draws a 2 pixel border around the specified Rect
+	CDC dc = GetWindowDC(m_hWnd);
+	CRect rcw = Rect;
+	dc.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
+	MoveToEx(dc, 0, rcw.Height(), NULL);
+	LineTo(dc, 0, 0);
+	LineTo(dc, rcw.Width(), 0);
+	dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DDKSHADOW));
+	MoveToEx(dc, 1, rcw.Height()-2, NULL);
+	LineTo(dc, 1, 1);
+	LineTo(dc, rcw.Width()-2, 1);
+	dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DHILIGHT));
+	MoveToEx(dc, rcw.Width()-1, 0, NULL);
+	LineTo(dc, rcw.Width()-1, rcw.Height()-1);
+	LineTo(dc, 0, rcw.Height()-1);
+	dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DLIGHT));
+	MoveToEx(dc, rcw.Width()-2, 1, NULL);
+	LineTo(dc, rcw.Width()-2, rcw.Height()-2);
+	LineTo(dc, 1, rcw.Height()-2);
 }
 
 void CDockable::PreCreate(CREATESTRUCT &cs)
 {
-	cs.dwExStyle = WS_EX_TOOLWINDOW;
+	cs.dwExStyle = WS_EX_TOOLWINDOW | WS_EX_CLIENTEDGE;
+//	cs.dwExStyle = WS_EX_TOOLWINDOW;
 }
 
 void CDockable::SendNotify(UINT nMessageID)
@@ -45,7 +70,7 @@ void CDockable::UnDock()
 
 LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	int NCHeight = 20;
+	
 	static BOOL bNCLButtonDown = FALSE;
 	static CPoint Oldpt;
 	
@@ -71,7 +96,7 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (IsDocked())
 		{
 			LPRECT rc = (LPRECT)lParam;
-			rc->top += NCHeight;
+			rc->top += m_NCHeight;
 		}
 		break;
 	case WM_NCHITTEST:
@@ -130,19 +155,58 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_NCPAINT:
 		if (IsDocked())
-		{
+		{		
 			CDC dc = GetWindowDC(hWnd);
 			CRect rc = GetWindowRect();
-			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
-			rc.bottom = -rc.top;
-			rc.top = 0;
 
+			// Set the font for the title
+			NONCLIENTMETRICS info = {0};
+			info.cbSize = sizeof(info);
+			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			dc.CreateFontIndirect(&info.lfStatusFont);
+			
+			// Set the Colours
 			if (hWnd == GetFocus())
-				SolidFill(dc, GetSysColor(COLOR_ACTIVECAPTION), &rc);	
+			{
+				dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
+				::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
+				::SetTextColor(dc, RGB(255, 255, 255));
+			}
 			else
-				SolidFill(dc, RGB(232, 228, 220), &rc);		
+			{
+				dc.CreateSolidBrush(RGB(232, 228, 220));
+				::SetBkColor(dc, RGB(232, 228, 220));
+				::SetTextColor(dc, RGB(0, 0, 0));
+			}
+		
+			// Handle the WS_EX_CLIENTEDGE style
+			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+			{
+				dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));		
+				Rectangle(dc, 2, 2, rc.Width()-2, 2 + m_NCHeight);
+
+				// Set the title
+				CRect rcText(8, 2, rc.Width()-4, 2 + m_NCHeight);			
+				::DrawText(dc, _T("Class View - Docking"), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+
+				// Draw the client edge
+				Draw3DBorder(rc);
+
+				// Cleanup possible rubbish in the client area
+				if ((rc.Height() < m_NCHeight+4) || (rc.Width() < 4))
+					Invalidate();
+			}
+			else
+			{
+				dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));		
+				Rectangle(dc, 0, 0, rc.Width(), m_NCHeight);
+				CRect rcText(8, 2, rc.Width()-4, 2 + m_NCHeight);
+				::DrawText(dc, _T("Title"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+			}
+
+			return 0;
 		}
-		break;
+		break; 
 	case WM_SETFOCUS:
 		if (IsDocked())
 			SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);

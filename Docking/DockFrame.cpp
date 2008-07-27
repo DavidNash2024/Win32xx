@@ -8,7 +8,7 @@
 #include "MDIChildView.h"
 
 
-CDockFrame::CDockFrame() : m_BarWidth(6)
+CDockFrame::CDockFrame() : m_BarWidth(4)
 {
 	WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 	m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -216,8 +216,8 @@ void CDockFrame::OnCreate()
 
 	// call the base class function
 	CMDIFrame::OnCreate();
-	GetView()->SetWindowLongPtr(GWL_EXSTYLE, NULL);
-	RecalcLayout();
+//	GetView()->SetWindowLongPtr(GWL_EXSTYLE, NULL);
+//	RecalcLayout();
 }
 
 LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -532,14 +532,14 @@ LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CDockFrame::CBar::OnPaint(HDC hDC)
 {
-	CDC dc = hDC;
+/*	CDC dc = hDC;
 	RECT rc = GetClientRect();
 	
 	dc.CreateSolidBrush(RGB(232, 228, 220));
 	dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
 	Rectangle(dc, rc.left, rc.top, rc.right, rc.bottom);
 
-	dc.DetachDC();
+	dc.DetachDC(); */
 }
 
 void CDockFrame::CBar::SendNotify(UINT nMessageID)
