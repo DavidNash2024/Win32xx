@@ -42,7 +42,6 @@ private:
 		CBar() : m_IsCaptured(FALSE), m_pDockable(NULL) {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
 		~CBar() {::DeleteObject(m_hbrBackground);}
 
-		virtual void CBar::OnPaint(HDC hDC);
 		virtual void PreRegisterClass(WNDCLASS& wc)
 		{
 			wc.lpszClassName = _T("Win32++ Bar");

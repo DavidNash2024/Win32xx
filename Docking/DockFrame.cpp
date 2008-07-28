@@ -183,6 +183,8 @@ void CDockFrame::OnInitialUpdate()
 		AddDockable(new CDockable, DS_DOCKED_LEFT, 45);
 		AddDockable(new CDockable, DS_DOCKED_RIGHT, 120);
 		AddDockable(new CDockable, DS_DOCKED_BOTTOM, 90);
+		AddDockable(new CDockable, DS_DOCKED_TOP, 100);
+
 	}
 }
 
@@ -296,12 +298,6 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 			CPoint ptmin(min(rcDock.left, rcDockNbr.left), min(rcDock.top, rcDockNbr.top));
 			CPoint ptmax(max(rcDock.right, rcDockNbr.right), max(rcDock.bottom, rcDockNbr.bottom));
 
-			int MinWidth = 30;
-			pt.x = max(pt.x, ptmin.x + MinWidth);
-			pt.x = min(pt.x, ptmax.x - MinWidth);
-			pt.y = max(pt.y, ptmin.y + MinWidth);
-			pt.y = min(pt.y, ptmax.y - MinWidth);
-
 			if (pt != OldPoint)			
 			{
 				DrawHashBar(pdp->hdr.hwndFrom, OldPoint);
@@ -329,12 +325,6 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 			
 			CPoint ptmin(min(rcDock.left, rcDockNbr.left), min(rcDock.top, rcDockNbr.top));
 			CPoint ptmax(max(rcDock.right, rcDockNbr.right), max(rcDock.bottom, rcDockNbr.bottom));
-
-			int MinWidth = 30;
-			pt.x = max(pt.x, ptmin.x + MinWidth);
-			pt.x = min(pt.x, ptmax.x - MinWidth);
-			pt.y = max(pt.y, ptmin.y + MinWidth);
-			pt.y = min(pt.y, ptmax.y - MinWidth);
 
 			DrawHashBar(pdp->hdr.hwndFrom, pt);
 
@@ -457,6 +447,7 @@ void CDockFrame::RecalcLayout()
 			{
 			case DS_DOCKED_LEFT:
 				{
+				DockWidth = min(DockWidth, cx);
 				hDwp = ::DeferWindowPos(hDwp, m_vDockables[i]->GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
 				int bw1 = min(bw, cx-DockWidth);
 				hDwp = ::DeferWindowPos(hDwp, m_vBars[i]->GetHwnd(), NULL, x + DockWidth, y, bw1, cy, SWP_SHOWWINDOW );
@@ -468,6 +459,7 @@ void CDockFrame::RecalcLayout()
 
 			case DS_DOCKED_RIGHT:
 				{
+				DockWidth = min(DockWidth, cx);
 				hDwp = ::DeferWindowPos(hDwp, m_vDockables[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth), y, DockWidth, cy, SWP_SHOWWINDOW );
 				int bw1 = min(bw, cx-DockWidth);
 				hDwp = ::DeferWindowPos(hDwp, m_vBars[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth -bw1), y, bw1, cy, SWP_SHOWWINDOW );
@@ -475,7 +467,7 @@ void CDockFrame::RecalcLayout()
 				cx -= (DockWidth +bw1);
 				}
 				break;
-				
+
 			case DS_DOCKED_TOP:
 				{
 				DockWidth = min(DockWidth, cy);
@@ -487,7 +479,7 @@ void CDockFrame::RecalcLayout()
 				y += DockWidth +bw1;
 				}
 				break;
-
+				
 			case DS_DOCKED_BOTTOM:
 				{
 				DockWidth = min(DockWidth, cy);
@@ -530,18 +522,6 @@ LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
-}
-
-void CDockFrame::CBar::OnPaint(HDC hDC)
-{
-/*	CDC dc = hDC;
-	RECT rc = GetClientRect();
-	
-	dc.CreateSolidBrush(RGB(232, 228, 220));
-	dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-	Rectangle(dc, rc.left, rc.top, rc.right, rc.bottom);
-
-	dc.DetachDC(); */
 }
 
 void CDockFrame::CBar::SendNotify(UINT nMessageID)
