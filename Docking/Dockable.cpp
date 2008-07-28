@@ -32,7 +32,7 @@ void CDockable::Draw3DBorder(RECT& Rect)
 	dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DLIGHT));
 	MoveToEx(dc, rcw.Width()-2, 1, NULL);
 	LineTo(dc, rcw.Width()-2, rcw.Height()-2);
-	LineTo(dc, 1, rcw.Height()-2);
+	LineTo(dc, 1, rcw.Height()-2); 
 }
 
 void CDockable::PreCreate(CREATESTRUCT &cs)
@@ -201,7 +201,7 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));		
 				Rectangle(dc, 0, 0, rc.Width(), m_NCHeight);
 				CRect rcText(8, 2, rc.Width()-4, 2 + m_NCHeight);
-				::DrawText(dc, _T("Title"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+				::DrawText(dc, _T("Class View - Docking"), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 			}
 
 			return 0;

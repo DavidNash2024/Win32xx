@@ -178,9 +178,12 @@ void CDockFrame::OnInitialUpdate()
 	//The frame is now created.
 	//Place any additional startup code here.
 
-	AddDockable(new CDockable, DS_DOCKED_LEFT, 45);
-	AddDockable(new CDockable, DS_DOCKED_RIGHT, 120);
-	AddDockable(new CDockable, DS_DOCKED_BOTTOM, 90);
+	for (int i = 0 ; i < 4 ; ++i)
+	{
+		AddDockable(new CDockable, DS_DOCKED_LEFT, 45);
+		AddDockable(new CDockable, DS_DOCKED_RIGHT, 120);
+		AddDockable(new CDockable, DS_DOCKED_BOTTOM, 90);
+	}
 }
 
 BOOL CDockFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -444,6 +447,8 @@ void CDockFrame::RecalcLayout()
 		int cy = rClient.Height();
 
 		int bw = m_BarWidth;	// Width of the splitter bar
+		
+		HDWP hDwp = BeginDeferWindowPos(2*m_vDockables.size());
 
 		for (UINT i = 0 ; i < m_vDockables.size(); ++i)
 		{
@@ -452,10 +457,9 @@ void CDockFrame::RecalcLayout()
 			{
 			case DS_DOCKED_LEFT:
 				{
-				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
+				hDwp = ::DeferWindowPos(hDwp, m_vDockables[i]->GetHwnd(), NULL, x, y, DockWidth, cy, SWP_SHOWWINDOW );
 				int bw1 = min(bw, cx-DockWidth);
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x + DockWidth, y, bw1, cy, SWP_SHOWWINDOW );
-				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				hDwp = ::DeferWindowPos(hDwp, m_vBars[i]->GetHwnd(), NULL, x + DockWidth, y, bw1, cy, SWP_SHOWWINDOW );
 				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cx -= (DockWidth +bw1);
 				x  += DockWidth +bw1;
@@ -464,10 +468,9 @@ void CDockFrame::RecalcLayout()
 
 			case DS_DOCKED_RIGHT:
 				{
-				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth), y, DockWidth, cy, SWP_SHOWWINDOW );
+				hDwp = ::DeferWindowPos(hDwp, m_vDockables[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth), y, DockWidth, cy, SWP_SHOWWINDOW );
 				int bw1 = min(bw, cx-DockWidth);
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth -bw1), y, bw1, cy, SWP_SHOWWINDOW );
-				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				hDwp = ::DeferWindowPos(hDwp, m_vBars[i]->GetHwnd(), NULL, max(x, x + cx - DockWidth -bw1), y, bw1, cy, SWP_SHOWWINDOW );
 				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cx -= (DockWidth +bw1);
 				}
@@ -476,10 +479,9 @@ void CDockFrame::RecalcLayout()
 			case DS_DOCKED_TOP:
 				{
 				DockWidth = min(DockWidth, cy);
-				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, y, cx, DockWidth, SWP_SHOWWINDOW );
+				hDwp = ::DeferWindowPos(hDwp, m_vDockables[i]->GetHwnd(), NULL, x, y, cx, DockWidth, SWP_SHOWWINDOW );
 				int bw1 = min(bw, cy-DockWidth);
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, y + DockWidth, cx, bw1, SWP_SHOWWINDOW );
-				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				hDwp = ::DeferWindowPos(hDwp, m_vBars[i]->GetHwnd(), NULL, x, y + DockWidth, cx, bw1, SWP_SHOWWINDOW );
 				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cy -= (DockWidth +bw1);
 				y += DockWidth +bw1;
@@ -489,10 +491,9 @@ void CDockFrame::RecalcLayout()
 			case DS_DOCKED_BOTTOM:
 				{
 				DockWidth = min(DockWidth, cy);
-				::SetWindowPos(m_vDockables[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth), cx, DockWidth, SWP_SHOWWINDOW );
+				hDwp = ::DeferWindowPos(hDwp, m_vDockables[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth), cx, DockWidth, SWP_SHOWWINDOW );
 				int bw1 = min(bw, cy-DockWidth);
-				::SetWindowPos(m_vBars[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth-bw1), cx, min(cy, bw1), SWP_SHOWWINDOW );
-				::RedrawWindow(m_vBars[i]->GetHwnd(), NULL, NULL, RDW_INVALIDATE|RDW_ERASE);
+				hDwp = ::DeferWindowPos(hDwp, m_vBars[i]->GetHwnd(), NULL, x, max(y, y + cy - DockWidth-bw1), cx, min(cy, bw1), SWP_SHOWWINDOW );
 				m_vBars[i]->m_pDockable = m_vDockables[i];
 				cy -= (DockWidth +bw1);
 				}
@@ -504,7 +505,8 @@ void CDockFrame::RecalcLayout()
 				break;
 			}
 		}
-		::SetWindowPos(GetView()->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );		
+		hDwp = ::DeferWindowPos(hDwp, GetView()->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );
+		EndDeferWindowPos(hDwp);
 	}
 
 	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
