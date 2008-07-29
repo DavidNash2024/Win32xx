@@ -313,15 +313,12 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 			CPoint ptmin(min(rcDock.left, rcDockNbr.left), min(rcDock.top, rcDockNbr.top));
 			CPoint ptmax(max(rcDock.right, rcDockNbr.right), max(rcDock.bottom, rcDockNbr.bottom));
 
-<<<<<<< .mine
 			int MinWidth = 0;
 			pt.x = max(pt.x, ptmin.x + MinWidth);
 			pt.x = min(pt.x, ptmax.x - MinWidth);
 			pt.y = max(pt.y, ptmin.y + MinWidth);
 			pt.y = min(pt.y, ptmax.y - MinWidth);
 
-=======
->>>>>>> .r568
 			if (pt != OldPoint)
 			{
 				DrawHashBar(pdp->hdr.hwndFrom, OldPoint);
@@ -350,15 +347,12 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 			CPoint ptmin(min(rcDock.left, rcDockNbr.left), min(rcDock.top, rcDockNbr.top));
 			CPoint ptmax(max(rcDock.right, rcDockNbr.right), max(rcDock.bottom, rcDockNbr.bottom));
 
-<<<<<<< .mine
 			int MinWidth = 0;
 			pt.x = max(pt.x, ptmin.x + MinWidth);
 			pt.x = min(pt.x, ptmax.x - MinWidth);
 			pt.y = max(pt.y, ptmin.y + MinWidth);
 			pt.y = min(pt.y, ptmax.y - MinWidth);
 
-=======
->>>>>>> .r568
 			DrawHashBar(pdp->hdr.hwndFrom, pt);
 
 			switch (pDock->GetDockState())
@@ -556,13 +550,8 @@ LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
-<<<<<<< .mine
 void CDockFrame::CBar::SendNotify(UINT nMessageID)
 {
-=======
-void CDockFrame::CBar::SendNotify(UINT nMessageID)
-{	
->>>>>>> .r568
 	// Send a splitter bar notification to the frame
 	DRAGPOS DragPos;
 	DragPos.hdr.code = nMessageID;
