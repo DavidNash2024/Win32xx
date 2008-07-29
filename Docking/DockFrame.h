@@ -69,6 +69,8 @@ private:
 	HBITMAP	m_hbm;
 	HBRUSH m_hbrDithered;
 	int m_BarWidth;
+	BOOL m_IsInDockZone;
+	BOOL m_IsDraggingDockable;
 };
 
 

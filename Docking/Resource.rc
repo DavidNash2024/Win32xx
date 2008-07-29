@@ -108,12 +108,12 @@ IDW_MAIN                BITMAP                  "res/toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// CURSOR
+// Cursor
 //
 
-IDC_SPLITH               CURSOR                  "res/SplitH.cur"
-IDC_SPLITV               CURSOR                  "res/SplitV.cur"
-IDC_TRACK4WAY            CURSOR                  "res/Trck4Way.cur"
+IDC_SPLITH              CURSOR                  "res/SplitH.cur"
+IDC_SPLITV              CURSOR                  "res/SplitV.cur"
+IDC_TRACK4WAY           CURSOR                  "res/Trck4Way.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -70,8 +70,8 @@ void CDockable::UnDock()
 
 LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	
-	static BOOL bNCLButtonDown = FALSE;
+	static BOOL IsNcLButtonDown = FALSE;
+	static BOOL InCaption = FALSE;
 	static CPoint Oldpt;
 	
 	switch (uMsg)
@@ -79,6 +79,9 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		break;
 	case WM_ACTIVATEAPP:
+		break;
+	case WM_CLOSE:
+		IsNcLButtonDown = FALSE;
 		break;
 	case WM_LBUTTONDOWN:
 		break;
@@ -111,9 +114,12 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_NCLBUTTONDOWN:
 		Oldpt.x = GET_X_LPARAM(lParam); 
 		Oldpt.y = GET_Y_LPARAM(lParam);
-		bNCLButtonDown = TRUE;
+		IsNcLButtonDown = TRUE;
 		if (IsDocked())
-		{		
+		{	
+			CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			MapWindowPoints(NULL, hWnd, &pt, 1);
+			InCaption = (pt.y < 0); // Boolean expression
 			return 0L;
 		}
 		else
@@ -125,7 +131,7 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_NCLBUTTONUP:
 		{
-			bNCLButtonDown = FALSE;
+			IsNcLButtonDown = FALSE;
 		}
 		break;
 
@@ -137,18 +143,18 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
 					return 0L;
 
-				if (bNCLButtonDown)
+				if (IsNcLButtonDown && InCaption)
 				{
 					UnDock();
 					PostMessage(WM_NCLBUTTONDOWN, wParam, lParam);
 				}
 			}
-			else if (bNCLButtonDown)
+			else if (IsNcLButtonDown)
 			{
 				// We get a WM_NCMOUSEMOVE (not WM_NCLBUTTONUP) when drag of non-docked window ends
 				// Send a DN_DOCK_END notification to the frame
 				SendNotify(DN_DOCK_END);
-				bNCLButtonDown = FALSE;
+				IsNcLButtonDown = FALSE;
 			}		
 		}
 		break;
