@@ -584,6 +584,7 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual void Destroy();
 		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -1271,6 +1272,14 @@ namespace Win32xx
 	// CMDIChild and CMDIFrame override this function
 	{
 		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+
+	inline void CWnd::Destroy()
+	{
+		DestroyWindow();
+		
+		// Return the CWnd to its default state
+		Clear();
 	}
 
 	inline void CWnd::DestroyWindow()

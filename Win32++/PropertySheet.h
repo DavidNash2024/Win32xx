@@ -112,11 +112,11 @@ namespace Win32xx
 		CPropertySheet(UINT nIDCaption, HWND hwndParent = NULL);
 		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
 		virtual ~CPropertySheet();
-		virtual void AddPage(CPropertyPage* pPage);
+		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
 		virtual HWND Create(HWND hWndParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void DestroyButton(int iButton);
-		virtual void DestroyWindow();
+		virtual void Destroy();
 		virtual int DoModal();
 		virtual void OnCreate();
 		virtual void OnInitialUpdate();
@@ -551,7 +551,7 @@ namespace Win32xx
 		delete []m_ppsp;
 	}
 
-	inline void CPropertySheet::AddPage(CPropertyPage* pPage)
+	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
 	{
 		m_vPages.push_back(pPage);
 
@@ -564,6 +564,8 @@ namespace Win32xx
 		}
 
 		m_PSH.nPages = (int)m_vPages.size();
+
+		return pPage;
 	}
 
 	inline void CPropertySheet::BuildPageArray()
@@ -704,9 +706,9 @@ namespace Win32xx
 		}
 	}
 
-	inline void CPropertySheet::DestroyWindow()
+	inline void CPropertySheet::Destroy()
 	{
-		CWnd::DestroyWindow();
+		CWnd::Destroy();
 
 		for (int i = 0 ; i < (int)m_vPages.size(); i++)
 			delete m_vPages[i];
@@ -904,7 +906,7 @@ namespace Win32xx
 		case WM_SYSCOMMAND:
 			if ((SC_CLOSE == wParam) && (m_PSH.dwFlags &  PSH_MODELESS))
 			{
-				DestroyWindow();
+				Destroy();
 				return 0L;
 			}
 			break;

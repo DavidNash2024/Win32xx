@@ -120,7 +120,7 @@ namespace Win32xx
 		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
-		virtual void AddMDIChild(CMDIChild* pMDIChild);
+		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
 		virtual void OnCloseFrame();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMDIChild(HWND hWnd);
@@ -171,10 +171,12 @@ namespace Win32xx
 		}
 	}
 
-	inline void CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
+	inline CMDIChild* CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
 	{
 		m_MDIChildVect.push_back(pMDIChild);
 		pMDIChild->Create(GetView()->GetHwnd());
+
+		return pMDIChild;
 	}
 
 	inline void CMDIFrame::AppendMDIMenu(HMENU hMenuWindow)

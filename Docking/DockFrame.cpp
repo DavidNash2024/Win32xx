@@ -178,13 +178,12 @@ void CDockFrame::OnInitialUpdate()
 	//The frame is now created.
 	//Place any additional startup code here.
 
-	for (int i = 0 ; i < 4 ; ++i)
+//	for (int i = 0 ; i < 4 ; ++i)
 	{
 		AddDockable(new CDockable, DS_DOCKED_LEFT, 45);
 		AddDockable(new CDockable, DS_DOCKED_RIGHT, 120);
 		AddDockable(new CDockable, DS_DOCKED_BOTTOM, 90);
 		AddDockable(new CDockable, DS_DOCKED_TOP, 100);
-
 	}
 }
 
@@ -241,6 +240,15 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	//	TRACE("Drag Move notification\n");
 		{
 			UINT uDockSide = GetDockSide((LPDRAGPOS)lParam);
+
+			CPoint pt = pdp->ptPos;
+			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			HWND hChild = ChildWindowFromPoint(m_hWnd, pt);
+
+			if (SendMessage(hChild, DN_CANDOCKHERE, 0, 0))
+				TRACE("*** Can dock here\n");
+			else
+				TRACE("!!! Can't dock here\n");
 
 			switch (uDockSide)
 			{
@@ -427,6 +435,71 @@ LRESULT CDockFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	return 0L;
 }
 
+int CDockFrame::GetChildWidths(CDockable* pDock, UINT DockSide)
+{
+	int ChildWidth = 0;
+	CDockable* pDockChild = pDock->GetDockChild(DockSide);
+	if (pDockChild)
+		ChildWidth = pDockChild->GetDockWidth() + GetChildWidths(pDockChild, DockSide);
+
+	return ChildWidth;
+}
+
+void CDockFrame::RecalcDockables()
+{
+	CRect rcDockRoot = GetViewRect();
+
+	for (UINT u = 0; u < m_vDockables.size(); u++)
+	{
+		CRect rcParent;
+		CDockable* pDockParent = m_vDockables[u]->GetDockParent();
+		if (pDockParent)
+			rcParent = pDockParent->GetDockRect();
+		else
+			rcParent = rcDockRoot;
+
+		CRect rc = rcParent;
+		UINT DockSide = m_vDockables[u]->GetDockState();
+		switch (DockSide)
+		{
+		case DS_DOCKED_LEFT:
+			{
+				int cx = m_vDockables[u]->GetDockWidth() + GetChildWidths(m_vDockables[u], DockSide);
+				rc.right -= cx;
+				rcParent.left += cx;
+			}
+			break;
+		case DS_DOCKED_RIGHT:
+			{
+				int cx = m_vDockables[u]->GetDockWidth() + GetChildWidths(m_vDockables[u], DockSide);
+				rc.left += cx;
+				rcParent.right -= cx;
+			}
+			break;
+		case DS_DOCKED_TOP:
+			{
+				int cy = m_vDockables[u]->GetDockWidth() + GetChildWidths(m_vDockables[u], DockSide);
+				rc.bottom -= cy;
+				rcParent.top += cy;
+			}
+			break;
+		case DS_DOCKED_BOTTOM:
+			{
+				int cy = m_vDockables[u]->GetDockWidth() + GetChildWidths(m_vDockables[u], DockSide);
+				rc.top +=cy;
+				rcParent.bottom -= cy;
+			}
+			break;
+		}
+
+		m_vDockables[u]->SetDockRect(rc);
+		if (pDockParent)
+			pDockParent->SetDockRect(rcParent);
+		else
+			rcDockRoot = rcParent;
+	}
+}
+
 void CDockFrame::RecalcLayout()
 {
 	if ((!GetView()) || (!GetView()->GetHwnd()))
@@ -506,7 +579,7 @@ void CDockFrame::RecalcLayout()
 				y += DockWidth +bw1;
 				}
 				break;
-				
+
 			case DS_DOCKED_BOTTOM:
 				{
 				DockWidth = min(DockWidth, cy);
@@ -536,7 +609,6 @@ void CDockFrame::RecalcLayout()
 
 	::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
 }
-
 
 LRESULT CDockFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

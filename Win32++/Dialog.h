@@ -133,7 +133,7 @@ namespace Win32xx
 			if (IsModal)
 				::EndDialog(m_hWnd, 0);
 			else
-				DestroyWindow();
+				Destroy();
 		}
 	}
 
@@ -345,7 +345,7 @@ namespace Win32xx
 			if (IsModal)
 				::EndDialog(m_hWnd, nResult);
 			else
-				::DestroyWindow(m_hWnd);
+				Destroy();
 		}
 		m_hWnd = NULL;
 	}

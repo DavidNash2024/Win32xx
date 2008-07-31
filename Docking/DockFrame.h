@@ -32,6 +32,7 @@ protected:
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+	virtual void RecalcDockables();
 	virtual void RecalcLayout();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -63,6 +64,7 @@ private:
 	friend class CBar;
 
 	void DrawHashBar(HWND hBar, POINT Pos);
+	int GetChildWidths(CDockable* pDock, UINT Dockside);
 
 	std::vector<CDockable*> m_vDockables;
 	std::vector<CBar*> m_vBars;

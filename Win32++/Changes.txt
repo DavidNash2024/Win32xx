@@ -1,7 +1,11 @@
 Version 6.3
 ===========
 * Added Docking
+ - Added CDockFrame
+ - Added CDockable
 * Added PreTranslateMessage
+* Added CWnd::Destroy
+
 
 
 Version 6.2
@@ -25,8 +29,8 @@ for example:
 stored in the registry.
 
 * Extended CWnd
-CWnd now includes functions which wrap many of the Win32/Win64 API 
-functions pertaining to windows. 
+CWnd now includes functions which wrap many of the Windows API functions that 
+affect to windows. 
 
 
 Version 6.1
@@ -186,73 +190,19 @@ New Features
 * Enhanced the tutorial. It now also demonstrates file operations and printing.
 
   
-Other Changes:
---------------
-* Changed the way windows are created. We no longer use a CBT hook as part of 
-   the window creation process. It was this change which allowed Win32++ to
-   directly support Windows CE.
-   
-* CWinApp no longer requires the application's hInstance in its constructor.   
-
-Incompatibilities with previous versions:
------------------------------------------
-* CWinApp now uses a default constructor. This makes this class simpler to use,
-   but existing applications will need to remove the hInstance function 
-   argument from any class inherited from CWinApp or CMDIApp.
-
-* Frame applications use the CDC class, so GDI.cpp will need to be added
-   to existing projects.
-
-* CSplitter now uses a default constructor. This simplifies the use of 
-  CSplitter. The following functions can be used to set the CSplitter 
-  parameters:
- - SetBarPos	sets the initial splitter bar position (default is 10)
- - SetBarColor   sets the color of the splitter bar (default is rebar color)
- - SetImmediate  sets immediate mode true or false (default is false)
- - SetVertical   sets vertical bar mode true or false (default is true)
- - SetWidth      sets the width of the splitter bar (default is 5)
- 
-* CWnd::GetCWndObject has been renamed to CWnd::FromHandle
-
-
 Version 5.6
 ===========
-* Added InitInstance to CWinApp. Code to create windows should now be
-   placed in InitInstance instead of the constructor of the CWinApp
-   derived class. Doing this allows the CWinApp derived class to be
-   fully constructed before attempting to create windows. 
 * Property Sheets are now supported. The files PropertySheet.cpp and 
    PropertySheet.h have been added to Win32++. These files define
    the CPropertySheet and CPropertyPage classes. The Property sheet generic 
    demonstrates the following:
   - Modal property sheets.
   - Modeless property sheets.
-  - Wizards.
-* The owner drawing of menus has been moved from CMenubar to CFrame. This
-   has the following advantages:
-  - Frames without rebars have themed menus.
-  - Other popup menus belonging to CFrame (or CMainFrame) are themed.
-  - Functions which customise the appearance of the menus are now located
-     in CFrame. They are easily overridden for a different visual effect.     
-* The icons used in popup menu items can come from several bitmap resources.
-  When an application has several toolbars in a rebar, for example, the icons 
-  from each of these can be displayed in popup menus.
-* Added a colored rectangle around checkmarks.
+  - Wizards.    
 
 
 Version 5.5
 ===========
-* If a resource for disabled toolbar items isn't provided, an ImageList
-   for disabled buttons is created for you. This imagelist is used for
-   displaying disabled toolbar buttons, and disabled menu items with an icon.
-* Updated Rebar themes
-  - Improved rendering of non-toolbar bands during band repositioning
-  - Round borders and flat style now supported in Win95, Win98 & WinME
-* Updated Toolbar themes
-  - Improved layout of images and text on toolbar buttons
-  - Themed toolbar now supports TBSTYLE_LIST
-* Added XP theme support for Visual Studio 6
-* Icons for disabled popup menu items are now greyed
 * Added Menubar theme support
   - Gradient background for hot buttons (any two colors)
   - Gradient background for pressed buttons (any two colors)
@@ -285,19 +235,17 @@ Version 5.3
    used to determine which menu items display an icon. By default, the
    framework uses the toolbar's bitmap and resource IDs for displaying 
    icons. Override CFrame::SetButtons to change this behavior.
-* Automatic subclassing for windows using WinAPI defined window classes.
+* Automatic subclassing for windows using Windows API defined window classes.
    Now when a window is based on predefined window classes, like the 
    common controls (e.g. list-view, tree-view, richedit), the window is
    automatically subclassed. There is now no need to call the subclass
-   function in use code.   
+   function in user code.   
 
 
 Version 5.2
 ===========
 * Added a separate HINSTANCE for resources. This provides for multilingual
    support, when resources are loaded via a DLL.
-* The thread a CWnd object runs in is now determined when its window is 
-   created, rather than when the CWnd object is instantiated.
 * Added the Internet Browser Sample. It demonstrates how to host an ActiveX
    control in a Win32++ window. It requires ATL.
 * Added the Performance sample. This program now also conducts a simple 
@@ -353,8 +301,6 @@ Version 3
 
 Version 2
 =========
-* Now uses TLS to store our "this" pointer during window creation,
-   instead of a global variable for thread safety.
 * The code is now Unicode compliant.
 * Added debug mode. Exceptions produce a warning in a message box
    if _DEBUG is defined. 
@@ -362,15 +308,7 @@ Version 2
 * Added CDialog class to support modal and modeless dialogs as well
    as indirect dialogs (dialogs created from a dialog template in
    memory).
-* The instance handle of the application is stored as a member variable
-   of CWinApp. You can access this via the GetApp global function
-   e.g. GetApp()->GetInstanceHandle()
-* Simplified window creation:
-   The Create function has been added to provide a simple 
-   method of creating a window with sensible defaults. Override this
-   in your derived class to customise it further.
-   Also, if the Window Class name is not provided, one is provided for
-   you. The window class name provided is "Win32++ Window"
+* Added the Create function to simplify window creation.
     
 
 Version 1.0

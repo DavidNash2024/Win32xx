@@ -50,7 +50,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_MODELESS:
 		// Permit only one Modeless property sheet
-		if (!m_ModelessPS.GetHwnd())
+		if (!m_ModelessPS.IsWindow())
 		{
 			m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 			m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));

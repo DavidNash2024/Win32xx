@@ -7,7 +7,8 @@
 
 #include "DockFrame.h"
 
-CDockable::CDockable() : m_NCHeight(20), m_DockState(0)
+CDockable::CDockable() : m_NCHeight(20), m_DockState(0), m_DockWidth(0), m_pDockParent(NULL),
+	              m_pDockChildLeft(0), m_pDockChildRight(0), m_pDockChildTop(0), m_pDockChildBottom(0)
 {
 }
 
@@ -33,6 +34,23 @@ void CDockable::Draw3DBorder(RECT& Rect)
 	MoveToEx(dc, rcw.Width()-2, 1, NULL);
 	LineTo(dc, rcw.Width()-2, rcw.Height()-2);
 	LineTo(dc, 1, rcw.Height()-2); 
+}
+
+CDockable* CDockable::GetDockChild(UINT DockSide)
+{
+	switch (DockSide)
+	{
+	case DS_DOCKED_LEFT:
+		return m_pDockChildLeft;
+	case DS_DOCKED_RIGHT:
+		return m_pDockChildRight;
+	case DS_DOCKED_TOP:
+		return m_pDockChildTop;
+	case DS_DOCKED_BOTTOM:
+		return m_pDockChildBottom;
+	default:
+		return NULL;
+	}
 }
 
 void CDockable::PreCreate(CREATESTRUCT &cs)
@@ -230,6 +248,9 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendNotify(DN_DOCK_MOVE);
 		}
 		break;
+
+	case DN_CANDOCKHERE:
+		return TRUE;
 	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);

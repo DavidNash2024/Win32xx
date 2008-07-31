@@ -1935,13 +1935,13 @@ namespace Win32xx
 
 	inline void CFrame::OnCloseFrame()
 	{
-		m_Menubar.DestroyWindow();
-		m_Toolbar.DestroyWindow();
-		m_Rebar.DestroyWindow();
-		m_Statusbar.DestroyWindow();
-		m_pView->DestroyWindow();
-
 		SaveRegistrySettings();
+
+		m_Menubar.Destroy();
+		m_Toolbar.Destroy();
+		m_Rebar.Destroy();
+		m_Statusbar.Destroy();
+		m_pView->Destroy();	
 	}
 
 	inline BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
