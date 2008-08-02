@@ -8,6 +8,8 @@
 
 #include "../Win32++/WinCore.h"
 #include "../Win32++/GDI.h"
+//#include "DockFrame.h"
+
 
 enum Constants
 {
@@ -29,12 +31,41 @@ typedef struct DRAGPOS
     POINT ptPos;
 } *LPDRAGPOS;
 
+class CDockable;
+
+class CBar : public CWnd
+{
+public:
+	CBar() : m_IsCaptured(FALSE), m_pDockable(NULL) {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
+	~CBar() {::DeleteObject(m_hbrBackground);}
+
+	virtual void PreRegisterClass(WNDCLASS& wc)
+	{
+		wc.lpszClassName = _T("Win32++ Bar");
+		wc.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
+		wc.hbrBackground = m_hbrBackground;
+	}
+
+	void SendNotify(UINT nMessageID);
+
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	CDockable* m_pDockable;
+
+private:
+	HBRUSH m_hbrBackground;
+	BOOL m_IsCaptured;
+	
+};
+
 class CDockable : public CWnd
 {
 public:
 	CDockable();
 	virtual ~CDockable() {}
+	void AddDockChild(CDockable* pDockable);
 	virtual void Draw3DBorder(RECT& Rect);
+	virtual void OnCreate();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void SendNotify(UINT nMessageID);
@@ -42,25 +73,23 @@ public:
 
 	// Attributes
 	BOOL IsDocked() {return (BOOL)m_DockState;}
-	CDockable* GetDockChild(UINT DockSide);
+//	CDockable* GetDockChild(UINT DockSide);
 	CDockable* GetDockParent() {return m_pDockParent;}
-	CRect& GetDockRect() {return m_rcDock;}
+//	CRect& GetDockRect() {return m_rcDock;}
 	UINT GetDockState() {return m_DockState;}
 	int GetDockWidth() {return m_DockWidth;}
-	void SetDockRect(RECT rc) {m_rcDock = rc;}
+//	void SetDockRect(RECT rc) {m_rcDock = rc;}
 	void SetDockState(UINT uDockState) {m_DockState = uDockState;}
 	void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
 
 public:
 	UINT m_DockState;
+	CBar m_Bar;
 	CDockable* m_pDockParent;
-	CDockable* m_pDockChildLeft;
-	CDockable* m_pDockChildRight;
-	CDockable* m_pDockChildTop;
-	CDockable* m_pDockChildBottom;
+	std::vector <CDockable*> m_vDockChildren;
 	int m_DockWidth;
 	int m_NCHeight;
-	CRect m_rcDock;
+//	CRect m_rcDock;
 };
 
 

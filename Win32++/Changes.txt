@@ -70,38 +70,6 @@ or CSize struct can be used respectively. In addition:
 
 * Extended the CRebar, CToolbar and CStatusbar classes.
 
-* Removed CMDIApp
-This class is no longer required, since it's functionality has been merged
-with CWinApp. All applications (including MDI apps) now use CWinApp to start
-Win32++.
-
-* Modified CFrame
-- renamed CFrame::GetClientSize to CFrame::GetViewRect
-
-* Extended CWnd
-- Added CWnd::GetClientRect
-- Added CWnd::GetWindowRect
-
-
-
-Notes for users of previous versions:
--------------------------------------
-* There are no cpp files as part of Win32++ now, so these files need to be
-  removed from your existing project when upgrading.
-  
-* CRebar, CStatusbar, and CToolbar have been moved to their own header files,
-  but this does not require a change to existing user code.
- 
-* For MDI applications inherit from CWinApp rather than CMDIApp to start 
-  Win32++.
-  
-* GetClientRect and GetWindowRect functions have been added to CWnd. If you
-  prefer to use the native Win32/64 functions prefix them with the global
-  scope specifier (::), for example ::GetClientRect(hwnd, &rc).
-
-Version 6.02a
-=============
-Corrects a problem compiling Win32++ with Dev-C++ (or MinGW).
 
 Version 6.02
 ============
@@ -133,12 +101,6 @@ New Features:
 * 32 bit bitmaps are now supported for toolbars (requires XP or Vista)
 * SetMenuIcons and AddMenuIcons now also accept a bitmap for disabled icons
    in addition to the bitmap for normal icons.
-
-
-Bug Fixes: 
-* The normal and hot toolbar buttons are now displayed correctly.
-* Corrected some VC6 compatibility problems.
-* CreateDisabledImageList now supports 32 bit images.
 
 
 Version 6.0

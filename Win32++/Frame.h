@@ -1,5 +1,5 @@
 // Win32++  Version 6.3
-// Released: 14th August, 2008 by:
+// Released: 14th September, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1941,7 +1941,7 @@ namespace Win32xx
 		m_Toolbar.Destroy();
 		m_Rebar.Destroy();
 		m_Statusbar.Destroy();
-		m_pView->Destroy();	
+		m_pView->Destroy();
 	}
 
 	inline BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)

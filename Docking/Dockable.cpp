@@ -7,8 +7,8 @@
 
 #include "DockFrame.h"
 
-CDockable::CDockable() : m_NCHeight(20), m_DockState(0), m_DockWidth(0), m_pDockParent(NULL),
-	              m_pDockChildLeft(0), m_pDockChildRight(0), m_pDockChildTop(0), m_pDockChildBottom(0)
+CDockable::CDockable() : m_NCHeight(20), m_DockState(0), m_DockWidth(0), m_pDockParent(NULL) //,
+	           //   m_pDockChildLeft(0), m_pDockChildRight(0), m_pDockChildTop(0), m_pDockChildBottom(0)
 {
 }
 
@@ -36,21 +36,29 @@ void CDockable::Draw3DBorder(RECT& Rect)
 	LineTo(dc, 1, rcw.Height()-2); 
 }
 
+/*
 CDockable* CDockable::GetDockChild(UINT DockSide)
 {
-	switch (DockSide)
-	{
-	case DS_DOCKED_LEFT:
-		return m_pDockChildLeft;
-	case DS_DOCKED_RIGHT:
-		return m_pDockChildRight;
-	case DS_DOCKED_TOP:
-		return m_pDockChildTop;
-	case DS_DOCKED_BOTTOM:
-		return m_pDockChildBottom;
-	default:
-		return NULL;
-	}
+//	switch (DockSide)
+//	{
+//	case DS_DOCKED_LEFT:
+//		return m_pDockChildLeft;
+//	case DS_DOCKED_RIGHT:
+//		return m_pDockChildRight;
+//	case DS_DOCKED_TOP:
+//		return m_pDockChildTop;
+//	case DS_DOCKED_BOTTOM:
+//		return m_pDockChildBottom;
+//	default:
+//		return NULL;
+//	}
+	return NULL;
+}
+*/
+
+void CDockable::OnCreate()
+{
+	m_Bar.Create(m_hWndParent);
 }
 
 void CDockable::PreCreate(CREATESTRUCT &cs)
@@ -67,6 +75,11 @@ void CDockable::SendNotify(UINT nMessageID)
 	DragPos.hdr.hwndFrom = m_hWnd;
 	GetCursorPos(&DragPos.ptPos);
 	SendMessage(GetApp()->GetFrame()->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
+}
+
+void CDockable::AddDockChild(CDockable* pDockable)
+{
+	m_vDockChildren.push_back(pDockable);
 }
 
 void CDockable::UnDock()
@@ -104,6 +117,7 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		break;
 	case WM_LBUTTONUP:
+		TRACE("WM_LBUTTONUP");
 		break;
 	case WM_MOUSEACTIVATE:
 		if (GetFocus() != hWnd) SetFocus();
@@ -137,7 +151,8 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{	
 			CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			MapWindowPoints(NULL, hWnd, &pt, 1);
-			InCaption = (pt.y < 0); // Boolean expression
+			InCaption = (pt.y < -1); // Boolean expression
+			if (InCaption) TRACE ("In Caption");
 			return 0L;
 		}
 		else
@@ -230,7 +245,15 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			return 0;
 		}
-		break; 
+		break;
+	case WM_CAPTURECHANGED:
+		if ((HWND)lParam != 0)
+		{
+		TRACE("Lost Capture");
+		SendNotify(DN_DOCK_END);
+		IsNcLButtonDown = FALSE;
+		}
+		break;
 	case WM_SETFOCUS:
 		if (IsDocked())
 			SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
@@ -253,5 +276,5 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	}
 
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }

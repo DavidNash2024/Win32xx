@@ -1,5 +1,5 @@
 // Win32++  Version 6.3
-// Released: 14th August, 2008 by:
+// Released: 14th September, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1230,14 +1230,15 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			// Create window
+			m_hWndParent = hParent;
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 									hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+
+			if (m_hWnd == 0) m_hWndParent = 0;
 
 			// Now handle window creation failure
 			if (!m_hWnd)
 				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
-
-			m_hWndParent = hParent;
 
 			// Automatically subclass predefined window class types
 			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
@@ -1277,7 +1278,7 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	{
 		DestroyWindow();
-		
+
 		// Return the CWnd to its default state
 		Clear();
 	}
