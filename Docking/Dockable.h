@@ -8,7 +8,13 @@
 
 #include "../Win32++/WinCore.h"
 #include "../Win32++/GDI.h"
-//#include "DockFrame.h"
+#include "View.h"
+
+// Docking States
+#define DS_DOCKED_LEFT		0x0001
+#define DS_DOCKED_RIGHT		0x0002
+#define DS_DOCKED_TOP		0x0004
+#define DS_DOCKED_BOTTOM	0x0008
 
 
 enum Constants
@@ -61,24 +67,29 @@ private:
 class CDockable : public CWnd
 {
 public:
+	// Operations
 	CDockable();
-	virtual ~CDockable() {}
-	void AddDockChild(CDockable* pDockable);
+	virtual ~CDockable();
+	virtual CDockable* AddDockChild(CDockable* pDockable, UINT uDockSide, int DockWidth);
+	virtual void Dock(CDockable* hDockable, UINT uDockSide);
 	virtual void Draw3DBorder(RECT& Rect);
+	virtual void DrawHashBar(HWND hBar, POINT Pos);
+	virtual UINT GetDockSide(LPDRAGPOS pdp);
 	virtual void OnCreate();
+	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual void RecalcDockLayout(HDWP& hdwp);
 	virtual void SendNotify(UINT nMessageID);
 	virtual void UnDock();
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	// Attributes
 	BOOL IsDocked() {return (BOOL)m_DockState;}
-//	CDockable* GetDockChild(UINT DockSide);
 	CDockable* GetDockParent() {return m_pDockParent;}
-//	CRect& GetDockRect() {return m_rcDock;}
+	CRect& GetDockRect() {return m_rcDock;}
 	UINT GetDockState() {return m_DockState;}
 	int GetDockWidth() {return m_DockWidth;}
-//	void SetDockRect(RECT rc) {m_rcDock = rc;}
+	void SetDockRect(RECT rc) {m_rcDock = rc;}
 	void SetDockState(UINT uDockState) {m_DockState = uDockState;}
 	void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
 
@@ -89,7 +100,14 @@ public:
 	std::vector <CDockable*> m_vDockChildren;
 	int m_DockWidth;
 	int m_NCHeight;
-//	CRect m_rcDock;
+	CRect m_rcDock;
+	CView m_View;
+	int m_BarWidth;
+	HBRUSH m_hbrDithered;
+	HBITMAP	m_hbm;
+	BOOL m_IsDraggingDockable;
+	BOOL m_IsInDockZone;
+	HWND m_hDockParent;
 };
 
 

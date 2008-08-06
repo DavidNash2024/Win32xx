@@ -5,7 +5,7 @@
 #ifndef DOCKINGAPP_H
 #define DOCKINGAPP_H
 
-#include "DockFrame.h"
+#include "Mainfrm.h"
 
 
 class CDockingApp : public CWinApp
@@ -14,10 +14,10 @@ public:
     CDockingApp();
     virtual ~CDockingApp() {}
 	virtual BOOL InitInstance();
-	CDockFrame& GetDockFrame() { return m_DockFrame; }
+	CMainFrame& GetMainFrame() { return m_MainFrame; }
 
 private:
-    CDockFrame m_DockFrame;
+    CMainFrame m_MainFrame;
 
 };
 

@@ -116,16 +116,19 @@
 				RelativePath=".\Dockable.cpp">
 			</File>
 			<File
-				RelativePath=".\DockFrame.cpp">
-			</File>
-			<File
 				RelativePath=".\DockingApp.cpp">
 			</File>
 			<File
 				RelativePath=".\main.cpp">
 			</File>
 			<File
+				RelativePath=".\Mainfrm.cpp">
+			</File>
+			<File
 				RelativePath=".\MDIChildView.cpp">
+			</File>
+			<File
+				RelativePath=".\View.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -136,10 +139,10 @@
 				RelativePath=".\Dockable.h">
 			</File>
 			<File
-				RelativePath=".\DockFrame.h">
+				RelativePath=".\DockingApp.h">
 			</File>
 			<File
-				RelativePath=".\DockingApp.h">
+				RelativePath=".\Mainfrm.h">
 			</File>
 			<File
 				RelativePath=".\MDIChildView.h">
@@ -149,6 +152,9 @@
 			</File>
 			<File
 				RelativePath=".\resrc1.h">
+			</File>
+			<File
+				RelativePath=".\View.h">
 			</File>
 		</Filter>
 		<Filter
