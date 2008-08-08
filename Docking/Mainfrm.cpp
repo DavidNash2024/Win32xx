@@ -74,10 +74,12 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnInitialUpdate()
 {
-	m_DockView.AddDockChild(new CDockable, DS_DOCKED_LEFT, 100);
-	m_DockView.AddDockChild(new CDockable, DS_DOCKED_RIGHT, 100);
-	m_DockView.AddDockChild(new CDockable, DS_DOCKED_TOP, 100);
-	m_DockView.AddDockChild(new CDockable, DS_DOCKED_BOTTOM, 100);
+	CMyDockable* pDockLeft   = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_LEFT, 100);
+	CMyDockable* pDockRight  = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
+	CMyDockable* pDockTop    = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_TOP, 100);
+	CMyDockable* pDockBottom = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
+
+	pDockLeft->AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -90,11 +92,6 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 
 	// Some notifications should return a value when handled
 	return 0L;
-}
-
-void CMainFrame::RecalcLayout()
-{
-	CFrame::RecalcLayout();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

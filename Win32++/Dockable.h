@@ -8,7 +8,7 @@
 
 #include "../Win32++/WinCore.h"
 #include "../Win32++/GDI.h"
-#include "View.h"
+
 
 // Docking States
 #define DS_DOCKED_LEFT		0x0001
@@ -16,8 +16,10 @@
 #define DS_DOCKED_TOP		0x0004
 #define DS_DOCKED_BOTTOM	0x0008
 
+namespace Win32xx
+{
 
-enum Constants
+enum Constants1
 {
 	// Docking Notifications
 	DN_DOCK_START= WM_APP + 1,	// Start dock window drag
@@ -101,7 +103,7 @@ public:
 	int m_DockWidth;
 	int m_NCHeight;
 	CRect m_rcDock;
-	CView m_View;
+	CWnd* m_pView;
 	int m_BarWidth;
 	HBRUSH m_hbrDithered;
 	HBITMAP	m_hbm;
@@ -110,6 +112,7 @@ public:
 	HWND m_hDockParent;
 };
 
+}
 
 #endif // DOCKABLE_H
 

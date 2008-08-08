@@ -53,6 +53,11 @@
 #define IDW_FILE_MRU_FILE15              89
 #define IDW_FILE_MRU_FILE16              90
 
+// Cursor Resource
+#define IDW_SPLITH                       91
+#define IDW_SPLITV                       92
+#define IDW_TRACK4WAY                    93
+
 
 
 // A generic ID for any static control

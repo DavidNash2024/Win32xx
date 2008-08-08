@@ -239,6 +239,7 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void SaveRegistrySettings();
@@ -2440,9 +2441,6 @@ namespace Win32xx
 
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
-		// Set the Window Class
-		cs.lpszClass = _T("Win32++ Frame");
-
 		// Set the caption from the string resource
 		cs.lpszName = LoadString(IDW_MAIN);
 
@@ -2454,6 +2452,12 @@ namespace Win32xx
 		cs.y  = m_rcPosition.top;
 		cs.cx = m_rcPosition.Width();
 		cs.cy = m_rcPosition.Height();
+	}
+
+	inline void CFrame::PreRegisterClass(WNDCLASS &wc)
+	{
+		// Set the Window Class
+		wc.lpszClassName =  _T("Win32++ Frame");
 	}
 
 	inline BOOL CFrame::PreTranslateMessage(MSG* pMsg)
