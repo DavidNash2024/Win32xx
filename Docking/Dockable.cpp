@@ -46,13 +46,10 @@ void CDockable::Dock(CDockable* pDockable, UINT DockState)
 	pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);	
 	pDockable->SetDockState(DockState);
 		
-//	CRect rc = GetClientRect();
-
-//	SetDockRect(rc);
 	HDWP hdwp = BeginDeferWindowPos(4);
 	RecalcDockLayout(hdwp);	
 	EndDeferWindowPos(hdwp);
-//	GetApp()->GetFrame()->RecalcLayout();
+
 	SetForegroundWindow();
 	pDockable->SetFocus(); 
 }
@@ -571,6 +568,8 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				// Send a DN_DOCK_MOVE notification to the frame
 				SendNotify(DN_DOCK_MOVE);
 			}
+			
+			// Reposition the dock children
 			HDWP hdwp = BeginDeferWindowPos(4);
 			RecalcDockLayout(hdwp);
 			EndDeferWindowPos(hdwp);
