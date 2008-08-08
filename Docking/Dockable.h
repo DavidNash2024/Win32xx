@@ -48,7 +48,6 @@ public:
 	virtual void PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ Bar");
-		wc.hCursor = ::LoadCursor (NULL, IDC_SIZEWE);
 		wc.hbrBackground = m_hbrBackground;
 	}
 
@@ -78,6 +77,7 @@ public:
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual void RecalcDockLayout(HDWP& hdwp);
 	virtual void SendNotify(UINT nMessageID);
 	virtual void UnDock();

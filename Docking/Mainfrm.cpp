@@ -92,6 +92,11 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	return 0L;
 }
 
+void CMainFrame::RecalcLayout()
+{
+	CFrame::RecalcLayout();
+}
+
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)

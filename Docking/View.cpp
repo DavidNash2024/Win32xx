@@ -25,7 +25,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.lpszClass = _T("View");
 
 	// Set the extended style
-	cs.dwExStyle = WS_EX_CLIENTEDGE;
+//	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

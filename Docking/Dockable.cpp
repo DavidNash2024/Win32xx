@@ -16,7 +16,7 @@ CDockable::CDockable() : m_NCHeight(20), m_DockState(0), m_DockWidth(0), m_pDock
 
 CDockable::~CDockable()
 {
-	for (UINT u = 0 ; u < m_vDockChildren.size() ; u++)
+	for (UINT u = 0 ; u < m_vDockChildren.size() ; ++u)
 	{
 		delete m_vDockChildren[u];
 	}
@@ -46,11 +46,13 @@ void CDockable::Dock(CDockable* pDockable, UINT DockState)
 	pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);	
 	pDockable->SetDockState(DockState);
 		
-	HDWP hdwp = BeginDeferWindowPos(4);
-	RecalcDockLayout(hdwp);
-	
-	EndDeferWindowPos(hdwp);
+//	CRect rc = GetClientRect();
 
+//	SetDockRect(rc);
+	HDWP hdwp = BeginDeferWindowPos(4);
+	RecalcDockLayout(hdwp);	
+	EndDeferWindowPos(hdwp);
+//	GetApp()->GetFrame()->RecalcLayout();
 	SetForegroundWindow();
 	pDockable->SetFocus(); 
 }
@@ -306,8 +308,14 @@ void CDockable::PreCreate(CREATESTRUCT &cs)
 //	cs.dwExStyle = WS_EX_TOOLWINDOW;
 }
 
+void CDockable::PreRegisterClass(WNDCLASS &wc)
+{
+	wc.lpszClassName = _T("Win32++ Dockable");
+}
+
 void CDockable::RecalcDockLayout(HDWP& hdwp)
 {	
+	// ToDo Feed in a rectangle for recursion
 	CRect rc = GetClientRect();
 		
 	for (UINT u = 0; u < m_vDockChildren.size(); ++u)
@@ -333,9 +341,7 @@ void CDockable::RecalcDockLayout(HDWP& hdwp)
 			rcChild.top = rcChild.bottom - DockWidth;
 			break;
 		}
-	//	m_vDockChildren[u]->SetDockRect(rcChild);
-	//	m_vDockChildren[u]->RecalcDockLayout(hdwp);
-		
+	
 		if (m_vDockChildren[u]->IsDocked())
 		{
 			hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->GetHwnd(), NULL, rcChild.left, rcChild.top, rcChild.Width(), rcChild.Height(), SWP_SHOWWINDOW );
@@ -357,7 +363,7 @@ void CDockable::RecalcDockLayout(HDWP& hdwp)
 		else
 			m_vDockChildren[u]->m_Bar.ShowWindow(SW_HIDE);
 	}
-	
+
 	hdwp = ::DeferWindowPos(hdwp, m_View.GetHwnd(), NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 }
 
@@ -385,7 +391,7 @@ void CDockable::UnDock()
 	SetRedraw(TRUE);
 	
 	m_DockState = 0;
-//	GetApp()->GetFrame()->RecalcLayout();
+
 	HDWP hdwd = BeginDeferWindowPos(4);
 	pDockParent->RecalcDockLayout(hdwd);
 	EndDeferWindowPos(hdwd);
@@ -559,16 +565,32 @@ LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_WINDOWPOSCHANGED:
-		if (!IsDocked())
-		{	
-			// Send a DN_DOCK_MOVE notification to the frame
-			SendNotify(DN_DOCK_MOVE);
+		{
+			if (!IsDocked())
+			{	
+				// Send a DN_DOCK_MOVE notification to the frame
+				SendNotify(DN_DOCK_MOVE);
+			}
+			HDWP hdwp = BeginDeferWindowPos(4);
+			RecalcDockLayout(hdwp);
+			EndDeferWindowPos(hdwp);
 		}
 		break;
 
 	case DN_CANDOCKHERE:
 		return TRUE;
+	
+	case WM_SIZE:
+		{
+		//	HDWP hdwp;
+		//	SetDockRect(GetClientRect());
+		//	RecalcDockLayout(hdwp);
+		}
+		break;
 	}
+
+
+			
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
