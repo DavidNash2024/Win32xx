@@ -41,12 +41,17 @@ typedef struct DRAGPOS
 
 class CDockable;
 
-class CBar : public CWnd
+class CDockBar : public CWnd
 {
 public:
-	CBar() : m_IsCaptured(FALSE), m_pDockable(NULL) {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
-	~CBar() {::DeleteObject(m_hbrBackground);}
+	CDockBar() : m_IsCaptured(FALSE), m_pDockable(NULL) {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
+	~CDockBar() {::DeleteObject(m_hbrBackground);}
 
+	virtual void PreCreate(CREATESTRUCT& cs)
+	{
+	//	cs.dwExStyle = WS_EX_CLIENTEDGE;
+	}
+	
 	virtual void PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ Bar");
@@ -65,6 +70,16 @@ private:
 	
 };
 
+class CDockCaption : public CWnd
+{
+public:
+	CDockCaption() {}
+	virtual ~CDockCaption() {}
+	virtual void OnPaint(HDC hDC);
+	virtual void SendNotify(UINT nMessageID);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+};
+
 class CDockable : public CWnd
 {
 public:
@@ -74,6 +89,7 @@ public:
 	virtual CDockable* AddDockChild(CDockable* pDockable, UINT uDockSide, int DockWidth);
 	virtual void Dock(CDockable* hDockable, UINT uDockSide);
 	virtual void Draw3DBorder(RECT& Rect);
+	virtual void DrawCaption();
 	virtual void DrawHashBar(HWND hBar, POINT Pos);
 	virtual UINT GetDockSide(LPDRAGPOS pdp);
 	virtual void OnCreate();
@@ -97,7 +113,8 @@ public:
 
 public:
 	UINT m_DockState;
-	CBar m_Bar;
+	CDockBar m_Bar;
+	CDockCaption m_Caption;
 	CDockable* m_pDockParent;
 	std::vector <CDockable*> m_vDockChildren;
 	int m_DockWidth;

@@ -80,6 +80,9 @@ void CMainFrame::OnInitialUpdate()
 	CMyDockable* pDockBottom = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
 
 	pDockLeft->AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
+	pDockRight->AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
+	pDockTop->AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
+	pDockBottom->AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)

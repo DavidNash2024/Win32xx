@@ -125,6 +125,9 @@
 				RelativePath=".\MDIChildRect.cpp">
 			</File>
 			<File
+				RelativePath=".\MDIChildText.cpp">
+			</File>
+			<File
 				RelativePath=".\MDIChildView.cpp">
 			</File>
 			<File
@@ -143,6 +146,9 @@
 			</File>
 			<File
 				RelativePath=".\MDIChildRect.h">
+			</File>
+			<File
+				RelativePath=".\MDIChildText.h">
 			</File>
 			<File
 				RelativePath=".\MDIChildView.h">

@@ -26,12 +26,14 @@
 #define IDI_VIEW                        121
 #define IDI_RECT                        122
 #define IDI_MAX                         123
+#define IDI_TEXT                        124
 
 // Menu Resources
 #define IDM_NEWMENU                     130
 #define IDM_FILE_NEWVIEW                131
 #define IDM_FILE_NEWRECT                132
-#define IDM_FILE_NEWMAX                 133
+#define IDM_FILE_NEWTEXT                133
+#define IDM_FILE_NEWMAX                 134
 
 #define IDM_COLOR_BLACK                 135
 #define IDM_COLOR_RED                   136

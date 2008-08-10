@@ -300,9 +300,10 @@ namespace Win32xx
 
 	inline void CMDIFrame::OnCloseFrame()
 	{
-		CFrame::OnCloseFrame();
 		if (RemoveAllMDIChildren())
 			::DestroyWindow(m_hWnd);
+
+		CFrame::OnCloseFrame();
 	}
 
 	inline void CMDIFrame::OnWindowPosChanged()

@@ -25,6 +25,7 @@ BEGIN
         MENUITEM "New &View",                   IDM_FILE_NEWVIEW
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -56,6 +57,7 @@ BEGIN
         MENUITEM "New &View",                   IDM_FILE_NEWVIEW
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
     END
 END
 
@@ -67,6 +69,7 @@ BEGIN
         MENUITEM "New &View",                   IDM_FILE_NEWVIEW
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -114,6 +117,37 @@ BEGIN
         MENUITEM "New &View",                   IDM_FILE_NEWVIEW
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
+        MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
+        MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
+    END
+    POPUP "&View"
+	BEGIN
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+	END
+	POPUP "&Help"
+	BEGIN
+	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
+MDIMENUTEXT MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New &View",                   IDM_FILE_NEWVIEW
+        MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
+        MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -143,6 +177,7 @@ BEGIN
         MENUITEM "New &View",                   IDM_FILE_NEWVIEW
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -175,6 +210,7 @@ IDW_MAIN                 ICON                   "res/mdi.ico"
 IDI_VIEW                ICON                    "res/view.ico"
 IDI_RECT                ICON                    "res/rect.ico"
 IDI_MAX                 ICON                    "res/max.ico"
+IDI_TEXT                ICON                    "res/text.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -286,6 +322,7 @@ BEGIN
     IDM_FILE_NEWVIEW        "Create View MDI Child"
     IDM_FILE_NEWRECT        "Create Rect MDI Child"
     IDM_FILE_NEWMAX         "Create Maxed MDI Child"
+    IDM_FILE_NEWTEXT        "Create Text MDI Child"
     IDM_FILE_CLOSE          "Close MDI Window"
     IDM_COLOR_BLACK         "Use Black Printing"
     IDM_COLOR_RED           "Use Red Printing"
