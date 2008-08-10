@@ -296,6 +296,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\MDIChildText.cpp"
+				>
+			</File>
+			<File
 				RelativePath="MDIChildView.cpp"
 				>
 				<FileConfiguration
@@ -346,6 +350,10 @@
 			</File>
 			<File
 				RelativePath="MDIChildRect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildText.h"
 				>
 			</File>
 			<File

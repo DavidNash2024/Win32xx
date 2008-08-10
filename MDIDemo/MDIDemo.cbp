@@ -141,6 +141,8 @@
 		<Unit filename="MDIChildMax.h" />
 		<Unit filename="MDIChildRect.cpp" />
 		<Unit filename="MDIChildRect.h" />
+		<Unit filename="MDIChildText.cpp" />
+		<Unit filename="MDIChildText.h" />
 		<Unit filename="MDIChildView.cpp" />
 		<Unit filename="MDIChildView.h" />
 		<Unit filename="MDIDemoApp.cpp" />

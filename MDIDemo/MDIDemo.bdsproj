@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<PersonalityInfo>
 		<Option>
@@ -198,6 +198,7 @@
         <FILE FILENAME="MDIDemoApp.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="resource.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>
+        <FILE FILENAME="MDIChildText.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MDIChildText" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>
         <VersionInfo>

@@ -112,6 +112,10 @@ SOURCE=.\MDIChildRect.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\MDIChildText.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MDIChildView.cpp
 # End Source File
 # Begin Source File
@@ -129,6 +133,10 @@ SOURCE=.\MainMDIfrm.h
 # Begin Source File
 
 SOURCE=.\MDIChildRect.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MDIChildText.h
 # End Source File
 # Begin Source File
 
