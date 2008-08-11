@@ -22,7 +22,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	// take more precise control over the window we create.
 
 	// Set the Window Class name
-	cs.lpszClass = _T("View");
+	cs.lpszClass = _T("Edit");
 
 	// Set the extended style
 //	cs.dwExStyle = WS_EX_CLIENTEDGE;
@@ -32,6 +32,10 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
+	case WM_MOUSEACTIVATE:
+		TRACE("WM_MOUSEACTIVATE\n");
+		SetFocus();
+		break;
 	case WM_SIZE:
 		::InvalidateRect(hWnd, NULL, TRUE);
 		break;	// Also do default processing

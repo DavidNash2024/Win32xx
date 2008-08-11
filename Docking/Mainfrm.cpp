@@ -74,10 +74,10 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnInitialUpdate()
 {
-	CMyDockable* pDockLeft   = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_LEFT, 100);
-	CMyDockable* pDockRight  = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
-	CMyDockable* pDockTop    = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_TOP, 100);
-	CMyDockable* pDockBottom = (CMyDockable*)m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
+	CDockable* pDockLeft   = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_LEFT, 100);
+	CDockable* pDockRight  = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
+	CDockable* pDockTop    = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_TOP, 100);
+	CDockable* pDockBottom = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
 
 	pDockLeft->AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
 	pDockRight->AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
