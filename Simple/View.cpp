@@ -65,7 +65,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 void CView::OnSize()
 {
 	// Force the window to be repainted during resizing
-	::InvalidateRect(m_hWnd, NULL, TRUE);
+	Invalidate();
 }
 
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

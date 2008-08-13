@@ -10,10 +10,11 @@
 class CMyDockable : public CDockable
 {
 public:
-	CMyDockable() { m_pView = new CView; }
-	~CMyDockable() { delete m_pView; }
+	CMyDockable() { SetView(m_View); }
+	virtual ~CMyDockable() {}
 private:
 
+	CView m_View;
 };
 
 

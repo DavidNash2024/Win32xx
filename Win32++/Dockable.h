@@ -24,8 +24,8 @@
 #define DN_BAR_END			WM_APP + 6  
 
 // Docking Messages
-#define DN_CANDOCKHERE		WM_APP + 7
-#define DN_FOCUSCHANGE      WM_APP + 8
+#define DM_CANDOCKHERE		WM_APP + 7
+#define DM_ISDOCKABLE       WM_APP + 8
 
 namespace Win32xx
 {
@@ -40,32 +40,31 @@ namespace Win32xx
 
 	class CDockBar : public CWnd
 	{
+		friend class CDockable;
 	public:
 		CDockBar() : m_IsCaptured(FALSE), m_pDockable(NULL) {m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));}
-		~CDockBar() {::DeleteObject(m_hbrBackground);}
-
-		virtual void PreCreate(CREATESTRUCT& cs)
-		{
-		//	cs.dwExStyle = WS_EX_CLIENTEDGE;
-		}
-		
-		virtual void PreRegisterClass(WNDCLASS& wc)
-		{
-			wc.lpszClassName = _T("Win32++ Bar");
-			wc.hbrBackground = m_hbrBackground;
-		}
-
-		void SendNotify(UINT nMessageID);
-
+		virtual ~CDockBar() {::DeleteObject(m_hbrBackground);}
+		virtual void PreCreate(CREATESTRUCT& cs);	
+		virtual void PreRegisterClass(WNDCLASS& wc);
+		virtual void SendNotify(UINT nMessageID);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		CDockable* m_pDockable;
-
 	private:
+		CDockable* m_pDockable;
 		HBRUSH m_hbrBackground;
-		BOOL m_IsCaptured;
-		
+		BOOL m_IsCaptured;		
 	};
+
+	inline void CDockBar::PreCreate(CREATESTRUCT& /*cs*/)
+	{
+	//	cs.dwExStyle = WS_EX_CLIENTEDGE;
+	}
+
+	inline void CDockBar::PreRegisterClass(WNDCLASS& wc)
+	{
+		wc.lpszClassName = _T("Win32++ Bar");
+		wc.hbrBackground = m_hbrBackground;
+	}
 
 	class CDockCaption : public CWnd
 	{
@@ -88,6 +87,8 @@ namespace Win32xx
 		virtual void Draw3DBorder(RECT& Rect);
 		virtual void DrawCaption();
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
+		virtual CDockable* GetDockableFromPoint(POINT pt);
+		virtual CDockable* GetDockAncestor();
 		virtual UINT GetDockSide(LPDRAGPOS pdp);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -99,20 +100,25 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Attributes
-		BOOL IsDocked() {return (BOOL)m_DockState;}
-	//	CDockable* GetDockParent() {return m_pDockParent;}
-		CRect& GetDockRect() {return m_rcDock;}
-		UINT GetDockState() {return m_DockState;}
-		int GetDockWidth() {return m_DockWidth;}
+		virtual CDockBar& GetBar() const			{return (CDockBar&)m_Bar;}
+		virtual CDockCaption& GetCaption() const	{return (CDockCaption&)m_Caption;}
+		CDockable* GetDockParent() const {return m_pDockParent;}
+		const CRect& GetDockRect() const {return m_rcDock;}
+		UINT GetDockState() const {return m_DockState;}
+		int GetDockWidth() const {return m_DockWidth;}
+		CWnd* GetView() const {return m_pView;}
+		BOOL IsDocked() const {return (BOOL)m_DockState;}
 		void SetDockRect(RECT rc) {m_rcDock = rc;}
 		void SetDockState(UINT uDockState) {m_DockState = uDockState;}
 		void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
+		void SetView(CWnd& View) {m_pView = &View;}
 
-	public:
+	private:
 		UINT m_DockState;
 		CDockBar m_Bar;
 		CDockCaption m_Caption;
 		CDockable* m_pDockParent;
+		CDockable* m_pDockOrigParent;
 		std::vector <CDockable*> m_vDockChildren;
 		int m_DockWidth;
 		int m_NCHeight;
@@ -123,7 +129,6 @@ namespace Win32xx
 		HBITMAP	m_hbm;
 		BOOL m_IsDraggingDockable;
 		BOOL m_IsInDockZone;
-	//	HWND m_hDockParent;
 
 	}; // class CDockable
 

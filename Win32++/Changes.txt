@@ -5,6 +5,8 @@ Version 6.3
  - Added CDockable
 * Added PreTranslateMessage
 * Added CWnd::Destroy
+* Removed CWinApp::GetFrame
+* Removed CWinApp::SetFrame
 
 
 
@@ -21,8 +23,8 @@ New Features
 ------------
 * Frame applications now store the window size and position in the registry.
 To enable this, set the m_KeyName member variable in CMainFrame's constructor.
-This member variable can be used to reflect the company name and application name,
-for example:
+This member variable can be used to reflect the company name and application
+name, for example:
   m_KeyName = _T("SomeCompany\\SomeApp");
   
 * Frame applications now provide a Most Recently Used (MRU) list. This list is 

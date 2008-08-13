@@ -69,12 +69,8 @@ LRESULT CMDIChildText::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	switch (uMsg)
 	{
 	case WM_SETFOCUS:
-		::SetFocus(m_TextWindow.GetHwnd());
+		m_TextWindow.SetFocus();
 		break;
-	case WM_ACTIVATE:
-		TRACE("WM_ACTIVATE\n");
-		break;
-
 	case WM_SIZE:
 		{
 			CRect rc = GetClientRect();

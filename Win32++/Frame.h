@@ -98,6 +98,10 @@ namespace Win32xx
 	};
 
 
+	// Forward declaration of CFrame. Its defined later.
+	class CFrame;
+
+
 	////////////////////////////////////
 	// Declaration of the CMenubar class
 	//
@@ -199,9 +203,15 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
+		// Attributes
+		virtual CMenubar& GetMenubar() const		{return (CMenubar&)m_Menubar;}
+		virtual CRebar& GetRebar() const			{return (CRebar&)m_Rebar;}
+		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
+		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
+
 		// These functions aren't intended to be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
-		ThemeMenu& GetMenuTheme()	{return m_ThemeMenu;}
+		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
 		CWnd* GetView() const		{return m_pView;}
 		tString CFrame::GetMRUEntry(int nIndex);
@@ -210,15 +220,10 @@ namespace Win32xx
 		void LoadRegistrySettings(LPCTSTR szKeyName);
 		void SetView(CWnd& pView);
 
-		CMenubar& GetMenubar() const		{return (CMenubar&)m_Menubar;}
-		CRebar& GetRebar() const			{return (CRebar&)m_Rebar;}
-		CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
-		CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
-
 		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
-		BOOL IsMenubarUsed() const		{return (m_Menubar != 0);}
+		BOOL IsMenubarUsed() const		{return (GetMenubar() != 0);}
 		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
-		BOOL IsRebarUsed() const		{return (m_Rebar != 0);}
+		BOOL IsRebarUsed() const		{return (GetRebar() != 0);}
 
 	protected:
 		// These are the functions you might wish to override
@@ -1319,7 +1324,6 @@ namespace Win32xx
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
-		GetApp()->SetFrame(this);
 
 		INITCOMMONCONTROLSEX InitStruct;
 		InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -1364,7 +1368,6 @@ namespace Win32xx
 		if (m_hMenu) ::DestroyMenu(m_hMenu);
 		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
 		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
-		if (GetApp()) GetApp()->SetFrame(0);
 	}
 
 	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)
@@ -1797,16 +1800,16 @@ namespace Win32xx
 
 		// Get the statusbar's window area
 		CRect rcStatus;
-		if (::IsWindowVisible(m_Statusbar))
-			rcStatus = m_Statusbar.GetWindowRect();
+		if (GetStatusbar().IsVisible())
+			rcStatus = GetStatusbar().GetWindowRect();
 
 		// Get the top rebar or toolbar's window area
 		CRect rcTop;
 		if (IsRebarSupported() && m_bUseRebar)
-			rcTop = m_Rebar.GetWindowRect();
+			rcTop = GetRebar().GetWindowRect();
 		else
-			if (IsWindowVisible(m_Toolbar))
-				rcTop = m_Toolbar.GetWindowRect();
+			if (GetToolbar().IsVisible())
+				rcTop = GetToolbar().GetWindowRect();
 
 		// Return client size less the rebar and status windows
 		int top = rcFrame.top + rcTop.Height();
@@ -1938,11 +1941,11 @@ namespace Win32xx
 	{
 		SaveRegistrySettings();
 
-		m_Menubar.Destroy();
-		m_Toolbar.Destroy();
-		m_Rebar.Destroy();
-		m_Statusbar.Destroy();
-		m_pView->Destroy();
+		GetMenubar().Destroy();
+		GetToolbar().Destroy();
+		GetRebar().Destroy();
+		GetStatusbar().Destroy();
+		GetView()->Destroy();
 	}
 
 	inline BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
@@ -1999,7 +2002,7 @@ namespace Win32xx
 
 		// Set the toolbar images
 		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-		SetToolbarImages(m_Toolbar, iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
+		SetToolbarImages(GetToolbar(), iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 
 		// Set the icons for popup menu items
 		SetMenuIcons(m_ToolbarData, RGB(192, 192, 192), IDW_MAIN, 0);
@@ -2420,14 +2423,14 @@ namespace Win32xx
 		if (::IsWindowVisible(GetToolbar()))
 		{
 			if (IsMenubarUsed())
-				::SendMessage(GetRebar(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar()), FALSE);
+				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
 			else
 				::ShowWindow(GetToolbar(), SW_HIDE);
 		}
 		else
 		{
 			if (IsMenubarUsed())
-				::SendMessage(GetRebar(), RB_SHOWBAND, m_Rebar.GetBand(GetToolbar()), TRUE);
+				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
 			else
 				::ShowWindow(GetToolbar(), SW_SHOW);
 		}
@@ -2477,11 +2480,10 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		HWND hStatusbar = m_Statusbar;
-		if (hStatusbar)
+		if (GetStatusbar())
 		{
-			::SendMessage(hStatusbar, WM_SIZE, 0, 0);
-			::InvalidateRect(hStatusbar, NULL, TRUE);
+			GetStatusbar().SendMessage(WM_SIZE, 0, 0);
+			GetStatusbar().Invalidate();
 		}
 
 		// Reposition the text
@@ -2490,11 +2492,11 @@ namespace Win32xx
 		// Resize the rebar or toolbar
 		if (IsRebarUsed())
 		{
-			::SendMessage(m_Rebar, WM_SIZE, 0, 0);
-			::InvalidateRect(m_Rebar, NULL, TRUE);
+			GetRebar().SendMessage(WM_SIZE, 0, 0);
+			GetRebar().Invalidate();
 		}
 		else
-			::SendMessage(m_Toolbar, TB_AUTOSIZE, 0, 0);
+			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
 
 		// Resize the View window
 		CRect rClient = GetViewRect();
@@ -2506,11 +2508,11 @@ namespace Win32xx
 			int cx = rClient.Width();
 			int cy = rClient.Height();
 
-			::SetWindowPos(m_pView->GetHwnd(), NULL, x, y, cx, cy, SWP_SHOWWINDOW );
+			m_pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
-		if (m_Rebar.GetRebarTheme().UseThemes && m_Rebar.GetRebarTheme().KeepBandsLeft)
-			m_Rebar.MoveBandsLeft();
+		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+			GetRebar().MoveBandsLeft();
 
 		if (IsMenubarUsed())
 			SetMenubarBandSize();
@@ -2645,7 +2647,7 @@ namespace Win32xx
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, rbbi);
-		if (m_Rebar.GetRebarTheme().UseThemes)
+		if (GetRebar().GetRebarTheme().UseThemes)
 		{
 			rbbi.cxMinChild = Width;
 			rbbi.cx         = Width;
@@ -2896,7 +2898,7 @@ namespace Win32xx
 
 			// Adjust the rebar band size
 			if (m_bUseRebar)
-				m_Rebar.ResizeBand(m_Rebar.GetBand(TB), TB.GetMaxSize());
+				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
 
 			::DeleteObject(hbm);
 		}

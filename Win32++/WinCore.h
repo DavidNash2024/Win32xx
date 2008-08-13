@@ -194,10 +194,6 @@ namespace Win32xx
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CWnd;
-#ifndef _WIN32_WCE
-	class CFrame;
-#endif
-
 
 	enum Constants
 	{
@@ -705,7 +701,7 @@ namespace Win32xx
 	//
 	class CWinApp
 	{
-		friend class CWnd;	// CWnd needs access to CWinApp's private member
+		friend class CWnd;	// CWnd needs access to CWinApp's private members
 
 	public:
 		CWinApp();
@@ -716,10 +712,6 @@ namespace Win32xx
 		virtual int  MessageLoop();
 
 		// These functions aren't intended to be overridden
-#ifndef _WIN32_WCE
-		CFrame* GetFrame() const {return m_pFrame;}
-		void SetFrame(CFrame* pFrame)  { m_pFrame = pFrame; }
-#endif
 		DWORD GetTlsIndex() const {return m_TlsIndex;}
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
@@ -741,9 +733,7 @@ namespace Win32xx
 		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
 		DWORD m_TlsIndex;			// Thread Local Storage index
 		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
-#ifndef _WIN32_WCE
-		CFrame* m_pFrame;			// pointer to the CFrame object
-#endif
+
 	};
 
 
@@ -764,10 +754,6 @@ namespace Win32xx
 	{
 		try
 		{
-
-#ifndef _WIN32_WCE
-			m_pFrame = 0;
-#endif
 
 			// Test if this is the first instance of CWinApp
 			if (0 == SetnGetThis() )

@@ -30,7 +30,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
+/*	switch (uMsg)
 	{
 	case WM_MOUSEACTIVATE:
 		TRACE("WM_MOUSEACTIVATE\n");
@@ -38,8 +38,8 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_SIZE:
 		::InvalidateRect(hWnd, NULL, TRUE);
-		break;	// Also do default processing
-	}
+		break;	// Also do default processing 
+	}*/
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

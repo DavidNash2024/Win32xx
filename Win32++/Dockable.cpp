@@ -23,7 +23,7 @@ namespace Win32xx
 
 		// Set the Colours
 		CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
-		if (pDock->m_pView->GetHwnd() == GetFocus())
+		if (pDock->GetView()->GetHwnd() == GetFocus())
 		{
 			dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
 			::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
@@ -64,7 +64,7 @@ namespace Win32xx
 			{
 				TRACE("WM_LBUTTONDOWN\n");
 				CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
-				pDock->m_pView->SetFocus();
+				pDock->GetView()->SetFocus();
 				Oldpt.x = GET_X_LPARAM(lParam);
 				Oldpt.y = GET_Y_LPARAM(lParam);
 			}
@@ -94,11 +94,12 @@ namespace Win32xx
 	}
 
 	CDockable::CDockable() : m_NCHeight(20), m_DockState(0), m_DockWidth(0), m_pDockParent(NULL),
-					m_BarWidth(4), m_IsDraggingDockable(FALSE), m_IsInDockZone(FALSE)//, m_hDockParent(NULL)
+					m_BarWidth(4), m_IsDraggingDockable(FALSE), m_IsInDockZone(FALSE), m_pDockOrigParent(NULL)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
 		m_hbrDithered = ::CreatePatternBrush (m_hbm);
+		m_Bar.m_pDockable = this;
 	}
 
 	CDockable::~CDockable()
@@ -222,6 +223,50 @@ namespace Win32xx
 		}
 	}
 
+	CDockable* CDockable::GetDockableFromPoint(POINT pt)
+	// Retrieves the top level Dockable at the given point 
+	{
+		CDockable* pDock = NULL;
+		
+		CRect rc = GetDockAncestor()->GetWindowRect();
+
+		if (PtInRect(&rc, pt))
+		{
+			TRACE("Point is in Ancestor\n");
+			pDock=GetDockAncestor();
+		}
+
+		HWND hAncestor = GetDockAncestor()->GetHwnd();
+		CPoint ptLocal = pt;
+		MapWindowPoints(NULL, hAncestor, &ptLocal, 1);
+		HWND hDockChild = ChildWindowFromPoint(hAncestor, ptLocal);
+		
+		while (SendMessage(hDockChild, DM_ISDOCKABLE, 0, 0))
+		{
+			pDock = (CDockable*)FromHandle(hDockChild);
+			ptLocal = pt;
+			MapWindowPoints(NULL, hDockChild, &ptLocal, 1);
+			hDockChild = ChildWindowFromPoint(hDockChild, ptLocal);
+			if (hDockChild == pDock->GetHwnd()) break;
+		}
+
+		return pDock;
+	}
+
+	CDockable* CDockable::GetDockAncestor()
+	// The GetDockAncestor function retrieves the pointer to the 
+	//  ancestor (root dockable parent) of the Dockable.
+	{
+		CDockable* pDock = this;
+
+		while (pDock->m_pDockOrigParent)
+		{
+			pDock = pDock->m_pDockOrigParent;
+		}
+
+		return pDock;
+	}
+
 	UINT CDockable::GetDockSide(LPDRAGPOS pdp)
 	{
 		CRect rcWindow = GetClientRect();
@@ -257,6 +302,8 @@ namespace Win32xx
 		m_Bar.Create(m_hWndParent);
 		m_pView->Create(m_hWnd);
 		m_Caption.Create(m_hWnd);
+		if (SendMessage(m_hWndParent, DM_ISDOCKABLE, 0, 0))
+			m_pDockOrigParent = (CDockable*)FromHandle(m_hWndParent);
 	}
 
 	LRESULT CDockable::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -268,7 +315,6 @@ namespace Win32xx
 		{
 		case DN_DOCK_START:
 			{
-				TRACE("Drag Start notification\n");
 				UnDock();
 				m_IsDraggingDockable = TRUE;
 				SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
@@ -276,18 +322,8 @@ namespace Win32xx
 			break;
 
 		case DN_DOCK_MOVE:
-			TRACE("Drag Move notification\n");
 			{
 				UINT uDockSide = GetDockSide((LPDRAGPOS)lParam);
-
-				CPoint pt = pdp->ptPos;
-				MapWindowPoints(NULL, m_hWnd, &pt, 1);
-				HWND hChild = ChildWindowFromPoint(m_hWnd, pt);
-
-				if (SendMessage(hChild, DN_CANDOCKHERE, 0, 0))
-					TRACE("*** Can dock here\n");
-				else
-					TRACE("!!! Can't dock here\n");
 
 				switch (uDockSide)
 				{
@@ -320,7 +356,6 @@ namespace Win32xx
 			break;
 
 		case DN_DOCK_END:
-			TRACE("Drag End notification\n");
 			{
 				UINT DockSide = GetDockSide(pdp);
 				HWND hDockable = pdp->hdr.hwndFrom;
@@ -333,7 +368,6 @@ namespace Win32xx
 
 		case DN_BAR_START:
 			{
-				TRACE("Start drag bar notification\n");
 				POINT pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 				DrawHashBar(pdp->hdr.hwndFrom, pt);
@@ -343,7 +377,6 @@ namespace Win32xx
 
 		case DN_BAR_MOVE:
 			{
-				TRACE("bar dragged notification\n");
 				CPoint pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
@@ -362,7 +395,6 @@ namespace Win32xx
 
 		case DN_BAR_END:
 			{
-				TRACE("End drag bar notification\n");
 				POINT pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
@@ -390,12 +422,6 @@ namespace Win32xx
 
 				RecalcDockLayout();
 			}
-			break;
-		case DN_FOCUSCHANGE:
-			// Pass this notification up to the top level Dockable, then RecalDockLayout
-			// The RecalcLayout redraws the caption when docked
-			if (m_pDockParent) 	SendNotify(DN_FOCUSCHANGE);
-			else				RecalcDockLayout();
 			break;
 		}
 
@@ -458,8 +484,6 @@ namespace Win32xx
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_BarWidth;
 
 				hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->m_Bar.GetHwnd(), NULL, rcBar.left, rcBar.top, rcBar.Width(), rcBar.Height(), SWP_SHOWWINDOW );
-
-				m_vDockChildren[u]->m_Bar.m_pDockable = m_vDockChildren[u];
 				rc.SubtractRect(rc, rcBar);
 			}
 			else
@@ -487,8 +511,12 @@ namespace Win32xx
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
 		GetCursorPos(&DragPos.ptPos);
-		if (m_pDockParent)
-			SendMessage(m_pDockParent->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
+
+		CDockable* pDock = GetDockableFromPoint(DragPos.ptPos);
+		
+		if (pDock)
+			SendMessage(pDock->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
+
 	}
 
 	void CDockable::UnDock()
@@ -506,7 +534,7 @@ namespace Win32xx
 		m_DockState = 0;
 		m_pDockParent->RecalcDockLayout();
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
-	//	m_pDockParent = NULL;
+		m_pDockParent = NULL;
 	}
 
 	LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -520,10 +548,8 @@ namespace Win32xx
 			SendNotify(DN_DOCK_END);
 			break;
 		case WM_MOUSEACTIVATE:
-			if (m_pDockParent)
-				SendNotify(DN_FOCUSCHANGE);
-			else
-				RecalcDockLayout();
+			// Focus changed, so redraw the captions
+			GetDockAncestor()->RecalcDockLayout();
 			break;
 		case WM_LBUTTONUP:
 			{
@@ -535,7 +561,7 @@ namespace Win32xx
 			{
 				if (!IsDocked())
 				{
-					// Send a DN_DOCK_MOVE notification to the frame
+					// Send a Move notification to the parent
 					SendNotify(DN_DOCK_MOVE);
 				}
 
@@ -544,7 +570,11 @@ namespace Win32xx
 			}
 			break;
 
-		case DN_CANDOCKHERE:
+		case DM_CANDOCKHERE:
+			return TRUE;
+
+		case DM_ISDOCKABLE:
+			// This is a CDockable window
 			return TRUE;
 
 		}
@@ -554,7 +584,7 @@ namespace Win32xx
 
 	void CDockBar::SendNotify(UINT nMessageID)
 	{
-		// Send a splitter bar notification to the frame
+		// Send a splitter bar notification to the parent
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
@@ -571,7 +601,7 @@ namespace Win32xx
 			{
 				if (m_pDockable)
 				{
-					UINT uSide = m_pDockable->m_DockState;
+					UINT uSide = m_pDockable->GetDockState();
 					if ((uSide == DS_DOCKED_LEFT) || (uSide == DS_DOCKED_RIGHT))
 						SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITH)));
 					else
@@ -583,9 +613,11 @@ namespace Win32xx
 			break;
 
 		case WM_LBUTTONDOWN:
-			SendNotify(DN_BAR_START);
-			SetCapture();
-			m_IsCaptured = TRUE;
+			{
+				SendNotify(DN_BAR_START);
+				SetCapture();
+				m_IsCaptured = TRUE;
+			}
 			break;
 
 		case WM_LBUTTONUP:
