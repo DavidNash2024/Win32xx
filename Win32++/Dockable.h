@@ -118,7 +118,7 @@ namespace Win32xx
 		CDockBar m_Bar;
 		CDockCaption m_Caption;
 		CDockable* m_pDockParent;
-		CDockable* m_pDockOrigParent;
+		CDockable* m_pDockAncestor;
 		std::vector <CDockable*> m_vDockChildren;
 		int m_DockWidth;
 		int m_NCHeight;
