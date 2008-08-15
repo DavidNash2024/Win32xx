@@ -96,6 +96,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual void RecalcDockLayout();
 		virtual void SendNotify(UINT nMessageID);
+		void ShowStats();
 		virtual void UnDock();
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

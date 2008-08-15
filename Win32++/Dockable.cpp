@@ -120,7 +120,6 @@ namespace Win32xx
 		pDockable->SetDockWidth(DockWidth);
 		pDockable->Create(m_hWnd);
 
-
 		// Dock the dockable window
 		Dock(pDockable, uDockSide);
 
@@ -129,15 +128,19 @@ namespace Win32xx
 
 	void CDockable::Dock(CDockable* pDockable, UINT DockState)
 	{
+		// Set the docking relationships
 		m_vDockChildren.push_back(pDockable);
 		pDockable->SetParent(m_hWnd);
 		pDockable->m_pDockParent = this;
+		pDockable->m_Bar.SetParent(m_hWnd);
+		
+		// Set the dock styles
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
 		pDockable->SetDockState(DockState);
 
+		// Redraw the docked windows
 		RecalcDockLayout();
-
 		pDockable->GetView()->SetFocus();
 	}
 
@@ -228,12 +231,10 @@ namespace Win32xx
 	// Retrieves the top level Dockable at the given point 
 	{
 		CDockable* pDock = NULL;
-		TRACE("In GetDockableFromPoint\n");
 		CRect rc = GetDockAncestor()->GetWindowRect();
 
 		if (PtInRect(&rc, pt))
 		{
-			TRACE("Point is in Ancestor\n");
 			pDock=GetDockAncestor();
 		}
 
@@ -251,8 +252,6 @@ namespace Win32xx
 			if (hDockChild == pDock->GetHwnd()) break;
 		}
 
-		if (0 == pDock) TRACE("Null pDock\n");
-
 		return pDock;
 	}
 
@@ -260,14 +259,6 @@ namespace Win32xx
 	// The GetDockAncestor function retrieves the pointer to the 
 	//  ancestor (root dockable parent) of the Dockable.
 	{
-	/*	CDockable* pDock = this;
-
-		while (pDock->m_pDockAncestor)
-		{
-			pDock = pDock->m_pDockAncestor;
-		}
-
-		return pDock;  */ 
 		return m_pDockAncestor;
 	}
 
@@ -334,22 +325,22 @@ namespace Win32xx
 				switch (uDockSide)
 				{
 				case DS_DOCKED_LEFT:
-					TRACE("Could dock Left\n");
+				//	TRACE("Could dock Left\n");
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
 				case DS_DOCKED_RIGHT:
-					TRACE("Could dock Right\n");
+				//	TRACE("Could dock Right\n");
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
 				case DS_DOCKED_TOP:
-					TRACE("Could dock Top\n");
+				//	TRACE("Could dock Top\n");
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
 				case DS_DOCKED_BOTTOM:
-					TRACE("Could dock Bottom\n");
+				//	TRACE("Could dock Bottom\n");
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
@@ -479,6 +470,7 @@ namespace Win32xx
 			if (m_vDockChildren[u]->IsDocked())
 			{
 				hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->GetHwnd(), NULL, rcChild.left, rcChild.top, rcChild.Width(), rcChild.Height(), SWP_SHOWWINDOW );
+			//	::SetWindowPos(m_vDockChildren[u]->GetHwnd(), NULL, rcChild.left, rcChild.top, rcChild.Width(), rcChild.Height(), SWP_SHOWWINDOW );
 				rc.SubtractRect(rc, rcChild);
 
 				// Draw the bar
@@ -490,24 +482,36 @@ namespace Win32xx
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_BarWidth;
 
 				hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->m_Bar.GetHwnd(), NULL, rcBar.left, rcBar.top, rcBar.Width(), rcBar.Height(), SWP_SHOWWINDOW );
+			//	::SetWindowPos(m_vDockChildren[u]->m_Bar.GetHwnd(), NULL, rcBar.left, rcBar.top, rcBar.Width(), rcBar.Height(), SWP_SHOWWINDOW );
 				rc.SubtractRect(rc, rcBar);
 			}
-			else
-				m_vDockChildren[u]->m_Bar.ShowWindow(SW_HIDE);
+		//	else
+		//	{
+		//		m_vDockChildren[u]->m_Bar.ShowWindow(SW_HIDE);
+		//		TRACE("Child is not docked!\n");
+		//	}
 		}
 
 		if (IsDocked())
 		{
 			hdwp = ::DeferWindowPos(hdwp, m_Caption.GetHwnd(), NULL, rc.left, rc.top, rc.Width(), m_NCHeight, SWP_SHOWWINDOW );
+		//	::SetWindowPos(m_Caption.GetHwnd(), NULL, rc.left, rc.top, rc.Width(), m_NCHeight, SWP_SHOWWINDOW );
 			hdwp = ::DeferWindowPos(hdwp, m_pView->GetHwnd(), NULL, rc.left, rc.top + m_NCHeight, rc.Width() , rc.Height()- m_NCHeight, SWP_SHOWWINDOW );
+		//	::SetWindowPos(m_pView->GetHwnd(), NULL, rc.left, rc.top + m_NCHeight, rc.Width() , rc.Height()- m_NCHeight, SWP_SHOWWINDOW );
 		}
 		else
 		{
 			m_Caption.ShowWindow(SW_HIDE);
+			if (this != GetDockAncestor())
+				rc = GetClientRect();
+
 			hdwp = ::DeferWindowPos(hdwp, m_pView->GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
+		//	::SetWindowPos(m_pView->GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
+
 		}
 		
 		EndDeferWindowPos(hdwp);
+		ShowStats();
 	}
 
 	void CDockable::SendNotify(UINT nMessageID)
@@ -523,6 +527,16 @@ namespace Win32xx
 		if (pDock)
 			SendMessage(pDock->GetHwnd(), WM_NOTIFY, 0, (LPARAM)&DragPos);
 
+	}
+
+	void CDockable::ShowStats()
+	{
+		TCHAR text[80];
+		HWND hParent = 0;
+		if (m_pDockParent) hParent = m_pDockParent->GetHwnd();
+		wsprintf(text, "Parent %#08lX,  Children %d", hParent, m_vDockChildren.size());
+		::SetWindowText(m_pView->GetHwnd(), text);
+		::SetWindowText(m_hWnd, text);
 	}
 
 	void CDockable::UnDock()
@@ -541,10 +555,14 @@ namespace Win32xx
 		for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
 		{
 			if (m_pDockParent->m_vDockChildren[u] == this)
+			{
+				TRACE("Removing Child pDock\n");
 				m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
-			break;
+				break;
+			}
 		}
 
+		// Promote the first child to replace this Dock parent
 		if (m_vDockChildren.size() > 0)
 		{
 			m_vDockChildren[0]->m_DockState = m_DockState;
@@ -553,36 +571,24 @@ namespace Win32xx
 			m_vDockChildren[0]->SetParent(m_pDockParent->GetHwnd());
 			m_vDockChildren[0]->m_Bar.SetParent(m_pDockParent->GetHwnd());			
 		}
+
+		// Move the remaining dock children to the first dock child
+		for (UINT u1 = 1; u1 < m_vDockChildren.size(); ++u1)
+		{
+			m_vDockChildren[u1]->m_pDockParent = m_vDockChildren[0];
+			m_vDockChildren[u1]->SetParent(m_vDockChildren[0]->GetHwnd());
+			m_vDockChildren[u1]->m_Bar.SetParent(m_vDockChildren[0]->GetHwnd());
+			m_vDockChildren[0]->m_vDockChildren.push_back(m_vDockChildren[u1]);
+		}
+
 		m_DockState = 0;
 		m_vDockChildren.clear();
-		Invalidate();
+		m_pDockParent = NULL;
+		
 
-/*
-
-Simple - 
-m_pDockParent->ReplaceChild(this, NULL);
-m_pDockParent = NULL;
-
-
-Harder - 
-m_pDockParent->ReplaceChild(this, m_pDockChild[0]);
-m_pDockChild[0]->m_pDockParent = m_pDockParent;
-m_pDockParent = NULL;
-
-
-ReplaceChild(CDockable* pDockCurrent, CDockable* pDockNew)
-{
-    for (UINT u = 0; u < m_vDockChildren.size(); ++u)
-    {
-        if (m_vDockChildren[u] == pDockCurrent)
-            m_vDockChildren[u] = pDockNew;
-    }
-}
-
-*/
 		GetDockAncestor()->RecalcDockLayout();
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
-		m_pDockParent = NULL;
+		Invalidate();
 	}
 
 	LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
