@@ -594,6 +594,8 @@ namespace Win32xx
 		void CenterWindow() const;
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags);
+		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, RECT rc, UINT uFlags);
 		void DestroyWindow();
 		HWND Detach();
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
@@ -632,7 +634,9 @@ namespace Win32xx
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
+		BOOL SetWindowPos(HWND hWndInsertAfter, RECT rc, UINT uFlags) const;
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
+		BOOL SetWindowText(LPCTSTR lpString) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
 		BOOL ValidateRect(CRect& rc) const;
@@ -1253,6 +1257,18 @@ namespace Win32xx
 		return m_hWnd;
 
 	} // void CWnd::CreateEx()
+
+	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags)
+	// The DeferWindowPos function updates the specified multiple-window – position structure for the specified window.
+	{
+		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
+	}
+
+	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, RECT rc, UINT uFlags)
+	// The DeferWindowPos function updates the specified multiple-window – position structure for the specified window.
+	{
+		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
+	}
 
 	inline LRESULT CWnd::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
@@ -1897,6 +1913,13 @@ namespace Win32xx
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 
+	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, RECT rc, UINT uFlags) const
+	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
+	// or top-level window.
+	{
+		return ::SetWindowPos(m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
+	}
+
 	inline int CWnd::SetWindowRgn(HRGN hRgn, BOOL bRedraw /*= TRUE*/) const
 	// The SetWindowRgn function sets the window region of the window.
 	// The window region determines the area within the window where the system permits drawing.
@@ -1908,6 +1931,12 @@ namespace Win32xx
 	// The ShowWindow function sets the window's show state.
 	{
 		return ::ShowWindow(m_hWnd, nCmdShow);
+	}
+
+	inline BOOL CWnd::SetWindowText(LPCTSTR lpString) const
+	// The SetWindowText function changes the text of the specified window's title bar (if it has one). 
+	{
+		return ::SetWindowText(m_hWnd, lpString);
 	}
 
 	inline BOOL CWnd::UpdateWindow() const
