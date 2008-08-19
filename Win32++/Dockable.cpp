@@ -22,7 +22,8 @@ namespace Win32xx
 		dc.CreateFontIndirect(&info.lfStatusFont);
 
 		// Set the Colours
-		CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
+		//To-do  Do a better job of this ...
+		CDockable* pDock = (CDockable*)FromHandle(GetParent(m_hWndParent));
 		if (pDock->GetView()->GetHwnd() == GetFocus())
 		{
 			dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
@@ -51,7 +52,8 @@ namespace Win32xx
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
 		GetCursorPos(&DragPos.ptPos);
-		SendMessage(m_hWndParent, WM_NOTIFY, 0, (LPARAM)&DragPos);
+		//To-do:  Do a better job of this
+		SendMessage(GetParent(m_hWndParent), WM_NOTIFY, 0, (LPARAM)&DragPos);
 	}
 
 	LRESULT CDockCaption::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -63,7 +65,8 @@ namespace Win32xx
 		case WM_LBUTTONDOWN:
 			{
 				TRACE("WM_LBUTTONDOWN\n");
-				CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
+				//To-do Do a better job of this
+				CDockable* pDock = (CDockable*)FromHandle(GetParent(m_hWndParent));
 				pDock->GetView()->SetFocus();
 				Oldpt.x = GET_X_LPARAM(lParam);
 				Oldpt.y = GET_Y_LPARAM(lParam);
@@ -298,8 +301,10 @@ namespace Win32xx
 	void CDockable::OnCreate()
 	{
 		m_Bar.Create(m_hWndParent);
-		m_pView->Create(m_hWnd);
-		m_Caption.Create(m_hWnd);
+		m_Client.Create(m_hWnd);
+		GetView()->Create(m_Client.GetHwnd());
+	//	m_Caption.Create(m_hWnd);
+		m_Caption.Create(m_Client.GetHwnd());
 		if (SendMessage(m_hWndParent, DM_ISDOCKABLE, 0, 0))
 			m_pDockAncestor = ((CDockable*)FromHandle(m_hWndParent))->m_pDockAncestor;
 		else
@@ -488,19 +493,18 @@ namespace Win32xx
 			//	::SetWindowPos(m_vDockChildren[u]->m_Bar.GetHwnd(), NULL, rcBar.left, rcBar.top, rcBar.Width(), rcBar.Height(), SWP_SHOWWINDOW );
 				rc.SubtractRect(rc, rcBar);
 			}
-		//	else
-		//	{
-		//		m_vDockChildren[u]->m_Bar.ShowWindow(SW_HIDE);
-		//		TRACE("Child is not docked!\n");
-		//	}
 		}
 
 		if (IsDocked())
 		{
-			hdwp = ::DeferWindowPos(hdwp, m_Caption.GetHwnd(), NULL, rc.left, rc.top, rc.Width(), m_NCHeight, SWP_SHOWWINDOW );
-		//	::SetWindowPos(m_Caption.GetHwnd(), NULL, rc.left, rc.top, rc.Width(), m_NCHeight, SWP_SHOWWINDOW );
-			hdwp = ::DeferWindowPos(hdwp, m_pView->GetHwnd(), NULL, rc.left, rc.top + m_NCHeight, rc.Width() , rc.Height()- m_NCHeight, SWP_SHOWWINDOW );
-		//	::SetWindowPos(m_pView->GetHwnd(), NULL, rc.left, rc.top + m_NCHeight, rc.Width() , rc.Height()- m_NCHeight, SWP_SHOWWINDOW );
+			hdwp = ::DeferWindowPos(hdwp, m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
+		//	::SetWindowPos(m_Client.GetHwnd(), NULL, rc.left, rc.top + m_NCHeight, rc.Width() , rc.Height()- m_NCHeight, SWP_SHOWWINDOW );
+		
+		//	hdwp = ::DeferWindowPos(hdwp, m_Caption.GetHwnd(), NULL, 0, 0, rc.Width(), m_NCHeight, SWP_SHOWWINDOW );
+			::SetWindowPos(m_Caption.GetHwnd(), NULL, 0, 0, rc.Width(), m_NCHeight, SWP_SHOWWINDOW );
+
+		//	hdwp = ::DeferWindowPos(hdwp, GetView()->GetHwnd(), NULL, 0, m_NCHeight, rc.Width() , rc.Height()- m_NCHeight, SWP_SHOWWINDOW );
+			::SetWindowPos(GetView()->GetHwnd(), NULL, 0, m_NCHeight, rc.Width() , rc.Height()- m_NCHeight, SWP_SHOWWINDOW );
 		}
 		else
 		{
@@ -508,9 +512,11 @@ namespace Win32xx
 			if (this != GetDockAncestor())
 				rc = GetClientRect();
 
-			hdwp = ::DeferWindowPos(hdwp, m_pView->GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
-		//	::SetWindowPos(m_pView->GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
-
+			hdwp = ::DeferWindowPos(hdwp, m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
+		//	::SetWindowPos(m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW );	
+		
+		//	hdwp = ::DeferWindowPos(hdwp, GetView()->GetHwnd(), NULL, 0, 0, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
+			::SetWindowPos(GetView()->GetHwnd(), NULL, 0, 0, rc.Width() , rc.Height(), SWP_SHOWWINDOW );
 		}
 		
 		EndDeferWindowPos(hdwp);
@@ -538,7 +544,7 @@ namespace Win32xx
 		HWND hParent = 0;
 		if (m_pDockParent) hParent = m_pDockParent->GetHwnd();
 		wsprintf(text, "Parent %#08lX,  Children %d", hParent, m_vDockChildren.size());
-		::SetWindowText(m_pView->GetHwnd(), text);
+		::SetWindowText(GetView()->GetHwnd(), text);
 		::SetWindowText(m_hWnd, text);
 	}
 
@@ -559,8 +565,6 @@ namespace Win32xx
 		{
 			if (m_pDockParent->m_vDockChildren[u] == this)
 			{
-				TRACE("Removing Child pDock\n");
-			//	m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
 				if (m_vDockChildren.size() > 0)
 					m_pDockParent->m_vDockChildren[u] = m_vDockChildren[0];
 				else
@@ -574,7 +578,6 @@ namespace Win32xx
 		{
 			m_vDockChildren[0]->m_DockState = m_DockState;
 			m_vDockChildren[0]->m_DockWidth = m_DockWidth;
-		//	m_pDockParent->m_vDockChildren.push_back(m_vDockChildren[0]);
 			m_vDockChildren[0]->m_pDockParent = m_pDockParent;
 			m_vDockChildren[0]->SetParent(m_pDockParent->GetHwnd());
 			m_vDockChildren[0]->m_Bar.SetParent(m_pDockParent->GetHwnd());			
@@ -595,13 +598,16 @@ namespace Win32xx
 
 		GetDockAncestor()->RecalcDockLayout();
 		
-		//To-do: This would work better with a dock client rect.
-		CRect rcAdjusted = m_pView->GetWindowRect();
+	/*	//To-do: This would work better with a dock client rect.
+		CRect rcAdjusted = GetView()->GetWindowRect();
 		rcAdjusted.top += m_NCHeight;
 		AdjustWindowRect(&rcAdjusted, dwStyle, FALSE);
 	//	SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
 		SetWindowPos(NULL, rcAdjusted,  SWP_FRAMECHANGED | SWP_DRAWFRAME);
+	*/
 
+		CRect rcClient = m_Client.GetWindowRect();
+		SetWindowPos(NULL, rcClient,  SWP_FRAMECHANGED | SWP_DRAWFRAME);
 		Invalidate();
 	}
 

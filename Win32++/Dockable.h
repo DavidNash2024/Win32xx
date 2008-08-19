@@ -76,6 +76,16 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	};
 
+	class CDockClient : public CWnd
+	{
+	public:
+		CDockClient() : m_pView(0) {}
+		virtual ~CDockClient() {}
+		virtual void PregisterClass(WNDCLASS& wc) {wc.lpszClassName = _T("Win32++ DockClient");}
+
+		CWnd* m_pView;
+	};
+
 	class CDockable : public CWnd
 	{
 	public:
@@ -104,27 +114,24 @@ namespace Win32xx
 		virtual CDockBar& GetBar() const			{return (CDockBar&)m_Bar;}
 		virtual CDockCaption& GetCaption() const	{return (CDockCaption&)m_Caption;}
 		CDockable* GetDockParent() const {return m_pDockParent;}
-		const CRect& GetDockRect() const {return m_rcDock;}
 		UINT GetDockState() const {return m_DockState;}
 		int GetDockWidth() const {return m_DockWidth;}
-		CWnd* GetView() const {return m_pView;}
+		CWnd* GetView() const {return m_Client.m_pView;}
 		BOOL IsDocked() const {return (BOOL)m_DockState;}
-		void SetDockRect(RECT rc) {m_rcDock = rc;}
 		void SetDockState(UINT uDockState) {m_DockState = uDockState;}
 		void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
-		void SetView(CWnd& View) {m_pView = &View;}
+		void SetView(CWnd& View) {m_Client.m_pView = &View;}
 
 	private:
 		UINT m_DockState;
 		CDockBar m_Bar;
 		CDockCaption m_Caption;
+		CDockClient m_Client;
 		CDockable* m_pDockParent;
 		CDockable* m_pDockAncestor;
 		std::vector <CDockable*> m_vDockChildren;
 		int m_DockWidth;
 		int m_NCHeight;
-		CRect m_rcDock;
-		CWnd* m_pView;
 		int m_BarWidth;
 		HBRUSH m_hbrDithered;
 		HBITMAP	m_hbm;
