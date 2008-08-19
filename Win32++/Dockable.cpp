@@ -554,13 +554,17 @@ namespace Win32xx
 		SetWindowPos(NULL, rc.left, rc.top, 0, 0, SWP_NOSIZE);
 		SetRedraw(TRUE);
 		m_Bar.ShowWindow(SW_HIDE);
-		
+
 		for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
 		{
 			if (m_pDockParent->m_vDockChildren[u] == this)
 			{
 				TRACE("Removing Child pDock\n");
-				m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
+			//	m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
+				if (m_vDockChildren.size() > 0)
+					m_pDockParent->m_vDockChildren[u] = m_vDockChildren[0];
+				else
+					m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
 				break;
 			}
 		}
@@ -569,7 +573,8 @@ namespace Win32xx
 		if (m_vDockChildren.size() > 0)
 		{
 			m_vDockChildren[0]->m_DockState = m_DockState;
-			m_pDockParent->m_vDockChildren.push_back(m_vDockChildren[0]);
+			m_vDockChildren[0]->m_DockWidth = m_DockWidth;
+		//	m_pDockParent->m_vDockChildren.push_back(m_vDockChildren[0]);
 			m_vDockChildren[0]->m_pDockParent = m_pDockParent;
 			m_vDockChildren[0]->SetParent(m_pDockParent->GetHwnd());
 			m_vDockChildren[0]->m_Bar.SetParent(m_pDockParent->GetHwnd());			
@@ -583,14 +588,20 @@ namespace Win32xx
 			m_vDockChildren[u1]->m_Bar.SetParent(m_vDockChildren[0]->GetHwnd());
 			m_vDockChildren[0]->m_vDockChildren.push_back(m_vDockChildren[u1]);
 		}
-
+		
 		m_DockState = 0;
 		m_vDockChildren.clear();
-		m_pDockParent = NULL;
-		
+		m_pDockParent = NULL;		
 
 		GetDockAncestor()->RecalcDockLayout();
-		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+		
+		//To-do: This would work better with a dock client rect.
+		CRect rcAdjusted = m_pView->GetWindowRect();
+		rcAdjusted.top += m_NCHeight;
+		AdjustWindowRect(&rcAdjusted, dwStyle, FALSE);
+	//	SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+		SetWindowPos(NULL, rcAdjusted,  SWP_FRAMECHANGED | SWP_DRAWFRAME);
+
 		Invalidate();
 	}
 
