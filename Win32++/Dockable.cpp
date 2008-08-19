@@ -4,7 +4,7 @@
 
 #include "../Win32++/Dockable.h"
 #include "../Win32++/Default_Resource.h"
-#include "resource.h"
+
 
 namespace Win32xx
 {
@@ -94,7 +94,7 @@ namespace Win32xx
 	}
 
 	CDockable::CDockable() : m_NCHeight(20), m_DockState(0), m_DockWidth(0), m_pDockParent(NULL),
-					m_BarWidth(4), m_IsDraggingDockable(FALSE), m_IsInDockZone(FALSE)
+					m_BarWidth(4)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -264,8 +264,11 @@ namespace Win32xx
 
 	UINT CDockable::GetDockSide(LPDRAGPOS pdp)
 	{
-		CRect rcWindow = GetClientRect();
-		MapWindowPoints(GetHwnd(), NULL, (LPPOINT)&rcWindow, 2);
+		//	CRect rcWindow = GetClientRect();
+		//	MapWindowPoints(GetHwnd(), NULL, (LPPOINT)&rcWindow, 2);
+
+		CRect rcWindow = GetView()->GetClientRect();
+		MapWindowPoints(GetView()->GetHwnd(), NULL, (LPPOINT)&rcWindow, 2); 
 
 		CRect rcLeft = rcWindow;
 		rcLeft.right = rcLeft.left + 30;
