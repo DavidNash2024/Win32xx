@@ -343,9 +343,12 @@ namespace Win32xx
 		{
 		case DN_DOCK_START:
 			{
-				UnDock();
-				m_IsDraggingDockable = TRUE;
-				SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
+				if (IsDocked())
+				{
+					UnDock();
+					m_IsDraggingDockable = TRUE;
+					SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
+				}
 			}
 			break;
 
@@ -469,6 +472,7 @@ namespace Win32xx
 
 	void CDockable::RecalcDockLayout()
 	{
+		TRACE("Starting RecalcDockLayout ... ");
 		HDWP hdwp = BeginDeferWindowPos(4);
 
 		CRect rc = GetWindowRect();
@@ -534,6 +538,7 @@ namespace Win32xx
 		
 		EndDeferWindowPos(hdwp);
 		ShowStats();
+		TRACE("   RecalcDockLayout ended\n");
 	}
 
 	void CDockable::SendNotify(UINT nMessageID)
@@ -620,24 +625,12 @@ namespace Win32xx
 
 	LRESULT CDockable::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		static BOOL IsNcLButtonDown = FALSE;
 		static CPoint Oldpt;
 
 		switch (uMsg)
 		{
 		case WM_EXITSIZEMOVE:
 			SendNotify(DN_DOCK_END);
-			break;
-		
-		// To-do : Do we need this case?
-		case WM_MOUSEACTIVATE:
-			// Focus changed, so redraw the captions
-			GetDockAncestor()->RecalcDockLayout();
-			break;
-		case WM_LBUTTONUP:
-			{
-				IsNcLButtonDown = FALSE;
-			}
 			break;
 
 		case WM_WINDOWPOSCHANGED:
