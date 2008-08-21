@@ -66,24 +66,27 @@ namespace Win32xx
 		wc.hbrBackground = m_hbrBackground;
 	}
 
-	class CDockCaption : public CWnd
-	{
-	public:
-		CDockCaption() {}
-		virtual ~CDockCaption() {}
-		virtual void OnPaint(HDC hDC);
-		virtual void SendNotify(UINT nMessageID);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	};
-
 	class CDockClient : public CWnd
 	{
 	public:
-		CDockClient() : m_pView(0) {}
+		CDockClient() : m_pView(0), m_NCHeight(20) {}
 		virtual ~CDockClient() {}
-		virtual void PregisterClass(WNDCLASS& wc) {wc.lpszClassName = _T("Win32++ DockClient");}
+		BOOL IsLeftButtonDown();
+		virtual void PreRegisterClass(WNDCLASS& wc) 
+		{
+			wc.lpszClassName = _T("Win32++ DockClient");
+		}
+		virtual void PreCreate(CREATESTRUCT& cs)
+		{
+			cs.dwExStyle = WS_EX_CLIENTEDGE;
+		}
+		virtual void SendNotify(UINT nMessageID);
+		void SetDock(CDockable* pDock) {m_pDock = pDock;}
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		CDockable* m_pDock;
 		CWnd* m_pView;
+		int m_NCHeight;
 	};
 
 	class CDockable : public CWnd
@@ -95,7 +98,6 @@ namespace Win32xx
 		virtual CDockable* AddDockChild(CDockable* pDockable, UINT uDockSide, int DockWidth);
 		virtual void Dock(CDockable* hDockable, UINT uDockSide);
 		virtual void Draw3DBorder(RECT& Rect);
-		virtual void DrawCaption();
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
 		virtual CDockable* GetDockableFromPoint(POINT pt);
 		virtual CDockable* GetDockAncestor();
@@ -112,7 +114,6 @@ namespace Win32xx
 
 		// Attributes
 		virtual CDockBar& GetBar() const			{return (CDockBar&)m_Bar;}
-		virtual CDockCaption& GetCaption() const	{return (CDockCaption&)m_Caption;}
 		CDockable* GetDockParent() const {return m_pDockParent;}
 		UINT GetDockState() const {return m_DockState;}
 		int GetDockWidth() const {return m_DockWidth;}
@@ -125,7 +126,6 @@ namespace Win32xx
 	private:
 		UINT m_DockState;
 		CDockBar m_Bar;
-		CDockCaption m_Caption;
 		CDockClient m_Client;
 		CDockable* m_pDockParent;
 		CDockable* m_pDockAncestor;
