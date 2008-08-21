@@ -190,9 +190,6 @@
 				RelativePath="..\Win32++\Dialog.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Dockable.cpp">
-			</File>
-			<File
 				RelativePath="..\Win32++\Dockable.h">
 			</File>
 			<File
