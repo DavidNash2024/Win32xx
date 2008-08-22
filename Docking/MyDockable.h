@@ -10,7 +10,7 @@
 class CMyDockable : public CDockable
 {
 public:
-	CMyDockable() { SetView(m_View); }
+	CMyDockable();
 	virtual ~CMyDockable() {}
 private:
 

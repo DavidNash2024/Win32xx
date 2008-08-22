@@ -732,8 +732,7 @@ namespace Win32xx
 
 			if (m_vDockChildren[u]->IsDocked())
 			{
-				if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->GetHwnd(), NULL, rcChild.left, rcChild.top, rcChild.Width(), rcChild.Height(), SWP_SHOWWINDOW );
-			//	::SetWindowPos(m_vDockChildren[u]->GetHwnd(), NULL, rcChild.left, rcChild.top, rcChild.Width(), rcChild.Height(), SWP_SHOWWINDOW );
+				if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->GetHwnd(), NULL, rcChild.left, rcChild.top, rcChild.Width(), rcChild.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED );
 				rc.SubtractRect(rc, rcChild);
 
 				// Draw the bar
@@ -745,7 +744,6 @@ namespace Win32xx
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_BarWidth;
 
 				if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->m_Bar.GetHwnd(), NULL, rcBar.left, rcBar.top, rcBar.Width(), rcBar.Height(), SWP_SHOWWINDOW );
-			//	::SetWindowPos(m_vDockChildren[u]->m_Bar.GetHwnd(), NULL, rcBar.left, rcBar.top, rcBar.Width(), rcBar.Height(), SWP_SHOWWINDOW );
 				rc.SubtractRect(rc, rcBar);
 			}
 		}
@@ -753,15 +751,13 @@ namespace Win32xx
 		if (IsDocked())
 		{
 			if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-		//	::SetWindowPos(m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED );
 		}
 		else
 		{
 			if (this != GetDockAncestor())
 				rc = GetClientRect();
 
-			if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-		//	::SetWindowPos(m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED );	
+			if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);	
 		}
 		
 		if (hdwp) EndDeferWindowPos(hdwp);

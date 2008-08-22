@@ -162,6 +162,10 @@ SOURCE="..\Win32++\Dialog.h"
 # End Source File
 # Begin Source File
 
+SOURCE="..\Win32++\Dockable.h"
+# End Source File
+# Begin Source File
+
 SOURCE="..\Win32++\Frame.h"
 # End Source File
 # Begin Source File
