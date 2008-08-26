@@ -116,6 +116,7 @@ namespace Win32xx
 	public:
 		CDockClient();
 		virtual ~CDockClient() {}
+		virtual void Draw3DBorder(RECT& Rect);
 		virtual BOOL IsLeftButtonDown();
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -142,7 +143,6 @@ namespace Win32xx
 		virtual ~CDockable();
 		virtual CDockable* AddDockChild(CDockable* pDockable, UINT uDockSide, int DockWidth);
 		virtual void Dock(CDockable* hDockable, UINT uDockSide);
-		virtual void Draw3DBorder(RECT& Rect);
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
 		virtual CDockable* GetDockableFromPoint(POINT pt);
 		virtual CDockable* GetDockAncestor();
@@ -230,8 +230,8 @@ namespace Win32xx
 					else
 						SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV)));
 
-					return TRUE;
-				}
+					return TRUE; 
+				} 
 			}
 			break;
 
@@ -405,6 +405,8 @@ namespace Win32xx
 				Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
 				CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
 				::DrawText(dc, _T("Class View - Docking"), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+
+				Draw3DBorder(rc);
 			}
 			break;	// also do default painting
 
@@ -477,12 +479,13 @@ namespace Win32xx
 			pDockable->SetDockStyle(DockState);
 
 			// Redraw the docked windows
-			RecalcDockLayout();
+			GetDockAncestor()->RecalcDockLayout();
+			pDockable->m_Client.Invalidate();
 			pDockable->GetView()->SetFocus();
 		}
 	}
 
-	inline void CDockable::Draw3DBorder(RECT& Rect)
+	inline void CDockClient::Draw3DBorder(RECT& Rect)
 	{
 		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
 		// This draws a 2 pixel border around the specified Rect
@@ -606,8 +609,6 @@ namespace Win32xx
 		GetView()->Create(m_Client.GetHwnd());
 		if (SendMessage(m_hWndParent, DM_ISDOCKABLE, 0, 0))
 			m_pDockAncestor = ((CDockable*)FromHandle(m_hWndParent))->m_pDockAncestor;
-		else
-			TRACE("This is the Ancestor\n");
 	}
 
 	inline LRESULT CDockable::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -908,7 +909,7 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			{
-				if (!IsDocked())
+				if (!IsDocked() && (hWnd != GetDockAncestor()->GetHwnd()))
 				{
 					// Send a Move notification to the parent
 					SendNotify(DN_DOCK_MOVE);
