@@ -80,6 +80,10 @@
 #include <shlwapi.h>
 #include "Default_Resource.h"
 
+#ifndef RBN_MINMAX
+  #define RBN_MINMAX RBN_FIRST - 21
+#endif
+
 
 namespace Win32xx
 {
@@ -2298,10 +2302,6 @@ namespace Win32xx
 
 	inline LRESULT CFrame::OnNotifyFrame(WPARAM /*wParam*/, LPARAM lParam)
 	{
-
-#ifndef RBN_MINMAX
-  #define RBN_MINMAX RBN_FIRST - 21
-#endif
 
 		switch (((LPNMHDR)lParam)->code)
 		{

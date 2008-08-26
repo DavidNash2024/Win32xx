@@ -149,6 +149,18 @@ namespace Win32xx {}
   using namespace Win32xx;
 #endif
 
+// define useful macros from WindowsX.h
+#define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
+
+// Required for WinCE
+#ifndef TLS_OUT_OF_INDEXES
+  #define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
+#endif
+#ifndef WM_PARENTNOTIFY
+  #define WM_PARENTNOTIFY 0x0210
+#endif
+
 // Define min and max for Dev-C++ compatibility
 #ifndef max
   #define max(a,b)            (((a) > (b)) ? (a) : (b))
@@ -160,9 +172,7 @@ namespace Win32xx {}
 
 namespace Win32xx
 {
-	///////////////////////////////////////////
-	// Some useful type declarations and macros
-	//
+	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
 	// TRACE sends a string to the debug/output pane, or an external debugger
@@ -175,19 +185,6 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(str); // no-op
 	#endif
 	}
-
-	// define useful macros from WindowsX.h
-	#define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
-	#define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
-
-	// Required for WinCE
-	#ifndef TLS_OUT_OF_INDEXES
-	  #define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
-	#endif
-	#ifndef WM_PARENTNOTIFY
-	  #define WM_PARENTNOTIFY 0x0210
-	#endif
-
 
 	////////////////////////////////////////////////
 	// Forward declarations.
