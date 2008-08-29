@@ -54,14 +54,16 @@
 #define DS_DOCKED_RIGHT		0x0002
 #define DS_DOCKED_TOP		0x0004
 #define DS_DOCKED_BOTTOM	0x0008
-#define DS_DOCKABLE_LEFT    0x0010
-#define DS_DOCKABLE_RIGHT   0x0020
-#define DS_DOCKABLE_TOP     0x0040
-#define DS_DOCKABLE_BOTTOM  0x0080
-#define DS_CAN_RESIZE       0x0100
-#define DS_AUTO_RESIZE      0x0200
-#define DS_HAS_CAPTION      0x0400
-#define DS_CAN_UNDOCK       0x0800
+#define DS_NODOCK_LEFT      0x0010
+#define DS_NODOCK_RIGHT     0x0020
+#define DS_NODOCK_TOP       0x0040
+#define DS_NODOCK_BOTTOM    0x0080
+#define DS_NO_RESIZE        0x0100
+#define DS_NO_AUTO_RESIZE   0x0200
+#define DS_NO_CAPTION       0x0400
+#define DS_NO_UNDOCK        0x0800
+#define DS_CLIENTEDGE       0x1000
+#define DS_FLATLOOK         0x2000
 
 // Docking Notifications
 #define DN_DOCK_START		WM_APP + 1
@@ -176,6 +178,7 @@ namespace Win32xx
 		std::vector <CDockable*> m_vDockChildren;
 		int m_BarWidth;
 		int m_DockWidth;
+		double m_DockWidthRatio;
 		int m_NCHeight;
 		DWORD m_DockStyle;
 		HBRUSH m_hbrDithered;
@@ -429,8 +432,8 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() :  m_pDockParent(NULL), m_BarWidth(4), m_DockWidth(0), m_NCHeight(20),
-					m_DockStyle(0)
+	inline CDockable::CDockable() :  m_pDockParent(NULL), m_BarWidth(4), m_DockWidth(0),
+					m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -463,7 +466,7 @@ namespace Win32xx
 		return pDockable;
 	}
 
-	inline void CDockable::Dock(CDockable* pDockable, UINT DockState)
+	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
 	{
 		if (!pDockable->IsDocked())
 		{
@@ -476,8 +479,26 @@ namespace Win32xx
 			// Set the dock styles
 			DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 			pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
-			pDockable->SetDockStyle(DockState);
-
+			pDockable->SetDockStyle(DockStyle);
+			
+			// Adjust docked width if required
+			if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
+			{
+				double ClientWidth = m_Client.GetWindowRect().Width();
+				if (pDockable->GetDockWidth() > ((ClientWidth -m_BarWidth)/2.0))
+					pDockable->SetDockWidth(max(m_BarWidth, (int)((ClientWidth -m_BarWidth)/2.0)));
+				
+				pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Width();
+			}
+			else
+			{
+				double ClientWidth = m_Client.GetWindowRect().Height();
+				if (pDockable->GetDockWidth() > ((ClientWidth -m_BarWidth)/2.0))
+					pDockable->SetDockWidth(max(m_BarWidth, (int)((ClientWidth -m_BarWidth)/2.0)));
+				
+				pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Height();
+			}
+			
 			// Redraw the docked windows
 			GetDockAncestor()->RecalcDockLayout();
 			pDockable->m_Client.Invalidate();
@@ -716,15 +737,19 @@ namespace Win32xx
 				{
 				case DS_DOCKED_LEFT:
 					pDock->SetDockWidth(pt.x - rcDock.left - m_BarWidth/2);
+					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Width();
 					break;
 				case DS_DOCKED_RIGHT:
 					pDock->SetDockWidth(rcDock.right - pt.x - m_BarWidth/2);
+					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Width();
 					break;
 				case DS_DOCKED_TOP:
 					pDock->SetDockWidth(pt.y - rcDock.top - m_BarWidth/2);
+					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Height();
 					break;
 				case DS_DOCKED_BOTTOM:
 					pDock->SetDockWidth(rcDock.bottom - pt.y - m_BarWidth/2);
+					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Height();
 					break;
 				}
 
@@ -757,24 +782,29 @@ namespace Win32xx
 		for (UINT u = 0; u < m_vDockChildren.size(); ++u)
 		{
 			CRect rcChild = rc;
-			int DockWidth;
+			double DockWidth;
+		//	int DockWidth;
 			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Width());
-				rcChild.right = rcChild.left + DockWidth;
+			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Width());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Width(), rcChild.Width());
+				rcChild.right = rcChild.left + (int)DockWidth;
 				break;
 			case DS_DOCKED_RIGHT:
-				DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Width());
-				rcChild.left = rcChild.right - DockWidth;
+			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Width());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Width(), rcChild.Width());
+				rcChild.left = rcChild.right - (int)DockWidth;
 				break;
 			case DS_DOCKED_TOP:
-				DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Height());
-				rcChild.bottom = rcChild.top + DockWidth;
+			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Height());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Height(), rcChild.Height());
+				rcChild.bottom = rcChild.top + (int)DockWidth;
 				break;
 			case DS_DOCKED_BOTTOM:
-				DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Height());
-				rcChild.top = rcChild.bottom - DockWidth;
+			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Height());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Height(), rcChild.Height());
+				rcChild.top = rcChild.bottom - (int)DockWidth;
 				break;
 			}
 

@@ -160,7 +160,8 @@ namespace Win32xx
 	inline void CSplitter::OnCreate()
 	{
 		// Set the color of the splitter bar
-		CRebar& RB = GetApp()->GetFrame()->GetRebar();
+		CFrame* pFrame = (CFrame*)FromHandle(GetAncestor(m_hWnd));
+		CRebar& RB = pFrame->GetRebar();
 		if (RB.GetRebarTheme().UseThemes)
 			SetBarColor(RB.GetRebarTheme().clrBkgnd2);
 		else
@@ -275,7 +276,8 @@ namespace Win32xx
 	inline void CSplitter::OnSysColorChange()
 	{
 		// Set the color of the splitter bar
-		CRebar& RB = GetApp()->GetFrame()->GetRebar();
+		CFrame* pFrame = (CFrame*)FromHandle(GetAncestor(m_hWnd));
+		CRebar& RB = pFrame->GetRebar();
 		if (RB.GetRebarTheme().UseThemes)
 			SetBarColor(RB.GetRebarTheme().clrBkgnd2);
 	}
