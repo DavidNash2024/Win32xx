@@ -28,6 +28,7 @@ txt       | A text file
 Supported Compilers and Integrated Development Environments (IDEs)
 ==================================================================
 Win32++ supports the following:
+* Borland Compiler Version 5.5
 * Borland Developer Studio 2006
 * Borland Turbo C++ 2006
 * CodeBlocks

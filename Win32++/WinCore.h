@@ -702,7 +702,8 @@ namespace Win32xx
 	//
 	class CWinApp
 	{
-		friend class CWnd;	// CWnd needs access to CWinApp's private members
+		friend class CWnd;			// CWnd needs access to CWinApp's private members
+		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 
 	public:
 		CWinApp();
@@ -718,14 +719,14 @@ namespace Win32xx
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
 		int Run();
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
-		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
+		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}		
 		TLSData* SetTlsIndex();
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		void DefaultClass();
+		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
 		HINSTANCE m_hInstance;		// handle to the applications instance
@@ -811,6 +812,7 @@ namespace Win32xx
 			delete *(iter);
 		}
 
+		SetnGetThis((CWinApp*)-1);
 	}
 
 	inline void CWinApp::DefaultClass()
@@ -827,8 +829,9 @@ namespace Win32xx
 		wcDefault.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 		wcDefault.hCursor		= ::LoadCursor(NULL, IDC_ARROW);
 
-		if (0 == ::RegisterClass(&wcDefault))
-			throw CWinException(_T("CWinApp::DefaultClass ... Failed to set Default class"));
+		if (!::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault))
+			if (0 == ::RegisterClass(&wcDefault))
+				throw CWinException(_T("CWinApp::DefaultClass ... Failed to set Default class"));
 
 		// Retrieve the class information
 		ZeroMemory(&wcDefault, sizeof(wcDefault));
@@ -940,9 +943,12 @@ namespace Win32xx
 	{
 		// This function stores the 'this' pointer in a static variable.
 		// Once stored, it can be used later to return the 'this' pointer.
+		// CWinApp's Destructor calls this function with a value of -1.
 		static CWinApp* pWinApp = 0;
 
-		if (0 == pWinApp)
+		if ((CWinApp*)-1 == pThis)
+			pWinApp = 0;	
+		else if (0 == pWinApp)
 			pWinApp = pThis;
 
 		return pWinApp;
@@ -1091,7 +1097,7 @@ namespace Win32xx
 
 		::SetWindowPos(m_hWnd, HWND_TOP, x, y, 0, 0,  SWP_NOSIZE);
 
-	} // POINT CWnd::CenterWindow()
+	} 
 
 	inline void CWnd::Clear()
 	// Clears the member variables, allowing the CWnd to be reused.
@@ -1102,7 +1108,7 @@ namespace Win32xx
 
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-		if (m_hWnd)	      RemoveFromMap();
+		if ((m_hWnd) && GetApp()) RemoveFromMap();
 
 		m_hIconLarge = NULL;
 		m_hIconSmall = NULL;
@@ -1253,7 +1259,7 @@ namespace Win32xx
 
 		return m_hWnd;
 
-	} // void CWnd::CreateEx()
+	} // HWND CWnd::CreateEx()
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags)
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the specified window.
