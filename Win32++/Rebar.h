@@ -447,8 +447,8 @@ namespace Win32xx
 
 	inline void CRebar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack) const
 	// Sets the band's color
-	// Note:	Won't work with XP themes enabled
-	//			Won't work if a bitmap has been set
+	// Note:	No effect with XP themes enabled
+	//			No effect if a bitmap has been set
 	{
 
 		REBARBANDINFO rbbi = {0};

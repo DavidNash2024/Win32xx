@@ -7,6 +7,7 @@ Version 6.3
 * Added CWnd::Destroy
 * Removed CWinApp::GetFrame
 * Removed CWinApp::SetFrame
+* Changed CFrame::SetView.  Can now change from one view window to another
 
 
 

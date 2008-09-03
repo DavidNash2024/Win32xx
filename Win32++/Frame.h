@@ -2905,9 +2905,20 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetView(CWnd& View)
+	// Sets or changes the View window displayed within the frame
 	{
-		// You call this function to assign the View window object to the frame
+		// Destroy the existing view window (if any)
+		if (m_pView) m_pView->Destroy();
+		
+		// Assign the view window
 		m_pView = &View;
+		
+		if (m_hWnd)
+		{
+			// The frame is already created, so create and position the new view too
+			m_pView->Create(m_hWnd);
+			RecalcLayout();
+		}
 	}
 
 	inline void CFrame::UpdateCheckMarks()
