@@ -91,7 +91,7 @@ namespace Win32xx
 
 	/////////////////////////////////////////
 	// Declaration of the CDockBar class
-	//
+	//  It's the splitter bar that seperates the docked panes. 
 	class CDockBar : public CWnd
 	{
 	public:
@@ -112,7 +112,9 @@ namespace Win32xx
 
 	/////////////////////////////////////////
 	// Declaration of the CDockClient class
-	//
+	//  It's a window inside a CDockable which includes all of this docked client.
+	//  It's the remaining part of the CDockable that doesn't belong to the CDockable's children.
+	//  The Dockable's view window is a child window of CDockClient.
 	class CDockClient : public CWnd
 	{
 	public:
@@ -136,7 +138,9 @@ namespace Win32xx
 
 	/////////////////////////////////////////
 	// Declaration of the CDockable class
-	//
+	//  A CDockable window allows other CDockable windows to be "docked" inside it.
+	//  A CDockable can dock on the top, left, right or bottom side of a parent CDockable.
+	//  There is no theoretical limit to the number of CDockables within CDockables.
 	class CDockable : public CWnd
 	{
 	public:
@@ -199,6 +203,7 @@ namespace Win32xx
 
 	inline CDockBar::~CDockBar()
 	{
+		::UnregisterClass(_T("Win32++ Bar"), GetApp()->GetInstanceHandle());
 		::DeleteObject(m_hbrBackground);
 	}
 
@@ -657,22 +662,22 @@ namespace Win32xx
 				switch (uDockSide)
 				{
 				case DS_DOCKED_LEFT:
-				//	TRACE("Could dock Left\n");
+					TRACE("Could dock Left\n");					
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
 				case DS_DOCKED_RIGHT:
-				//	TRACE("Could dock Right\n");
+					TRACE("Could dock Right\n");
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
 				case DS_DOCKED_TOP:
-				//	TRACE("Could dock Top\n");
+					TRACE("Could dock Top\n");
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
 				case DS_DOCKED_BOTTOM:
-				//	TRACE("Could dock Bottom\n");
+					TRACE("Could dock Bottom\n");
 					m_IsInDockZone = TRUE;
 					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
 					break;
