@@ -72,7 +72,7 @@
 #define FRAME_H
 
 #include "WinCore.h"
-#include "dialog.h"
+#include "Dialog.h"
 #include "GDI.h"
 #include "Statusbar.h"
 #include "Toolbar.h"

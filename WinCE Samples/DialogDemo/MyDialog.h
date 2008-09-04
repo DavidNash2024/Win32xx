@@ -2,7 +2,7 @@
 #define MYDIALOG_H
 
 
-#include "../Win32++/dialog.h"
+#include "../Win32++/Dialog.h"
 #include "resource.h"
 
 

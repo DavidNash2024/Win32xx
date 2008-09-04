@@ -2,7 +2,7 @@
 #define MAINFRM_H
 
 
-#include "../Win32++/Wincore.h"
+#include "../Win32++/WinCore.h"
 #include "../Win32++/WCEframe.h"
 #include "../Win32++/Dialog.h"
 

@@ -1,7 +1,7 @@
 ///////////////////////////////////
 // main.cpp
 
-#include "../Win32++/Wincore.h"
+#include "../Win32++/WinCore.h"
 
 
 class CView : public CWnd

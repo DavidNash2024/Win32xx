@@ -5,7 +5,7 @@
 #ifndef SCRIBBLEAPP_H
 #define SCRIBBLEAPP_H
 
-#include "../Win32++/Wincore.h"
+#include "../Win32++/WinCore.h"
 #include "Mainfrm.h"
 
 

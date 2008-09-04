@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
 //App.cpp -  Definitions for the CDialogApp class
 
-#include "../Win32++/dialog.h"
+#include "../Win32++/Dialog.h"
 #include "resource.h"
 #include "DialogApp.h"
 
