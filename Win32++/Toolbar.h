@@ -66,6 +66,7 @@ namespace Win32xx
 		virtual ~CToolbar();
 
 	// Attributes
+		virtual void Destroy();
 		int  CommandToIndex(int iButtonID) const;
 		int  GetButtonCount() const;
 		UINT GetButtonState(int iButtonID) const;
@@ -94,7 +95,6 @@ namespace Win32xx
 
 	protected:
 	// Overridables
-		virtual void Clear();
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
@@ -145,10 +145,10 @@ namespace Win32xx
 		return (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
 	}
 
-	inline void CToolbar::Clear()
+	inline void CToolbar::Destroy()
 	// Allows CToolbar to be reused after the window is destroyed
 	{
-		CWnd::Clear();
+		CWnd::Destroy();
 		m_StringMap.clear();
 	}
 

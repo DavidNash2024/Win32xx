@@ -1,10 +1,10 @@
 Version 6.3
 ===========
 * Added Docking
- - Added CDockFrame
  - Added CDockable
-* Added PreTranslateMessage
-* Added CWnd::Destroy
+* Added PreTranslateMessage. Allows modeless dialogs and propertysheets to
+                             process the tab (and other) keys.
+* Added CWnd::Destroy. Allows a CWnd to be reused.
 * Removed CWinApp::GetFrame
 * Removed CWinApp::SetFrame
 * Changed CFrame::SetView.  Can now change from one view window to another

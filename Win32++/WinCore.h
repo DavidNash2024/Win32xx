@@ -658,7 +658,7 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual void Clear();
+	//	virtual void Clear();
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnCreate();
@@ -998,9 +998,7 @@ namespace Win32xx
 	inline CWnd::~CWnd()
 	{
 		// Destroy the window for this object
-		if (::IsWindow(m_hWnd)) DestroyWindow();
-
-		Clear();
+		Destroy();
 	}
 
 	inline void CWnd::AddToMap()
@@ -1099,7 +1097,7 @@ namespace Win32xx
 
 	} 
 
-	inline void CWnd::Clear()
+/*	inline void CWnd::Clear()
 	// Clears the member variables, allowing the CWnd to be reused.
 	// The window must be destroyed before this function is called.
 	{
@@ -1108,14 +1106,14 @@ namespace Win32xx
 
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-		if ((m_hWnd) && GetApp()) RemoveFromMap();
+		if (m_hWnd) RemoveFromMap();
 
 		m_hIconLarge = NULL;
 		m_hIconSmall = NULL;
 		m_hWnd = NULL;
 		m_hWndParent = NULL;
 		m_PrevWindowProc = NULL;
-	}
+	} */
 
 #ifndef _WIN32_WCE
 	inline BOOL CWnd::CloseWindow() const
@@ -1199,7 +1197,7 @@ namespace Win32xx
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
 			// Prepare the CWnd if it has been reused
-			Clear();
+			Destroy();
 
 			// Ensure a window class is registered
 			TCHAR ClassName[MAX_STRING_SIZE +1] = _T("");
@@ -1282,10 +1280,18 @@ namespace Win32xx
 
 	inline void CWnd::Destroy()
 	{
-		DestroyWindow();
+		if (IsWindow()) DestroyWindow();
 
 		// Return the CWnd to its default state
-		Clear();
+		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
+		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
+		if (m_hWnd) RemoveFromMap();
+
+		m_hIconLarge = NULL;
+		m_hIconSmall = NULL;
+		m_hWnd = NULL;
+		m_hWndParent = NULL;
+		m_PrevWindowProc = NULL;
 	}
 
 	inline void CWnd::DestroyWindow()
@@ -1305,7 +1311,7 @@ namespace Win32xx
 
 		// Clear member variables
 		HWND hWnd = m_hWnd;
-		Clear();
+		Destroy();
 
 		return hWnd;
 	}
