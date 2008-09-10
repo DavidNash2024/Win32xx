@@ -105,7 +105,7 @@ void CClientDialog::LoadCommonControlsEx()
 		}
 		else
 		{
-			MessageBox(NULL, _T("Common Control Version 4.71 or later required (IE 4)"), "NOT SUPPORTED", MB_ICONSTOP);
+			MessageBox(NULL, _T("Common Control Version 4.71 or later required (IE 4)"), _T("NOT SUPPORTED"), MB_ICONSTOP);
 		}
 
 		::FreeLibrary(hComCtl);
