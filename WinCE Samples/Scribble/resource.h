@@ -18,7 +18,7 @@
 #define IDM_MAIN_COMMAND1				120
 #define IDM_MAIN_COMMAND2				121
 #define IDM_MAIN_COMMAND3				122
-#define IDM_NEW                         130
+#define IDM_NEW                         120		// Same as IDM_COMMAND1
 #define IDM_HELP                        150
 #define IDM_HELP_ABOUT					151
 
