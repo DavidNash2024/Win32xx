@@ -17,7 +17,7 @@
 #define IDM_MAIN_COMMAND1				120
 #define IDM_MAIN_COMMAND2				121
 #define IDM_MAIN_COMMAND3				122
-#define IDM_NEW                         130
+#define IDM_NEW                         120 // Same as IDM_MAIN_COMMAND1
 #define IDM_EDIT                        140
 #define IDM_EDIT_CUT                    141
 #define IDM_EDIT_COPY                   142
