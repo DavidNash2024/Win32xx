@@ -116,12 +116,13 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual void OnWindowPosChanged();
 		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
 		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
-		virtual void OnCloseFrame();
+		virtual void OnFrameClose();
+		virtual	BOOL OnFrameCommand(WPARAM wParam, LPARAM lParam);
+		virtual void OnFrameWindowPosChanged();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
@@ -140,7 +141,6 @@ namespace Win32xx
 
 		void AppendMDIMenu(HMENU hMenuWindow);
 		LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		BOOL OnCommandFrame(WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(HMENU hMenu);
 
 		CMDIClient m_MDIClient;
@@ -264,7 +264,7 @@ namespace Win32xx
 		return bMaxed;
 	}
 
-	inline BOOL CMDIFrame::OnCommandFrame(WPARAM wParam, LPARAM lParam)
+	inline BOOL CMDIFrame::OnFrameCommand(WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
 		{
@@ -298,15 +298,15 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline void CMDIFrame::OnCloseFrame()
+	inline void CMDIFrame::OnFrameClose()
 	{
 		if (RemoveAllMDIChildren())
 			::DestroyWindow(m_hWnd);
 
-		CFrame::OnCloseFrame();
+		CFrame::OnFrameClose();
 	}
 
-	inline void CMDIFrame::OnWindowPosChanged()
+	inline void CMDIFrame::OnFrameWindowPosChanged()
 	{
 		if (IsMenubarUsed())
 		{
@@ -405,12 +405,12 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_CLOSE:
-			OnCloseFrame();
+			OnFrameClose();
 			return 0;
 
 		case WM_WINDOWPOSCHANGED:
 			// MDI Child or MDI frame has been resized
-			OnWindowPosChanged();
+			OnFrameWindowPosChanged();
 			break; // Continue with default processing
 
 		} // switch uMsg

@@ -664,12 +664,11 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-	//	virtual void Clear();
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnCommandFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
+		virtual BOOL OnFrameCommand(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual	LRESULT OnNotifyFrame(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
+		virtual	LRESULT OnFrameNotify(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnInitialUpdate();
 		virtual void OnPaint(HDC hDC);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -2091,7 +2090,7 @@ namespace Win32xx
 					return TRUE;
 
 				// Handle Win32++ frame commands
-				if (OnCommandFrame(wParam, lParam))
+				if (OnFrameCommand(wParam, lParam))
 					return TRUE;
 			}
 			break;  // Note: Some MDI commands require default processing
@@ -2106,7 +2105,7 @@ namespace Win32xx
 		case WM_NOTIFY:
 			{
 				// Handle the Win32++ frame notifications
-				lr = OnNotifyFrame(wParam, lParam);
+				lr = OnFrameNotify(wParam, lParam);
 				if (lr) return lr;
 
 				// Do Notification reflection if it came from a CWnd object

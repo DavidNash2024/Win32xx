@@ -238,13 +238,15 @@ namespace Win32xx
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
-		virtual void OnCloseFrame();
 		virtual void OnCreate();
+		virtual void OnFrameClose();
+		virtual BOOL OnFrameCommand(WPARAM wPAram, LPARAM lParam);
+		virtual LRESULT OnFrameNotify(WPARAM wParam, LPARAM lParam);
+		virtual void OnFrameSetFocus();
+		virtual void OnFrameSysColorChange();
+		virtual	void OnFrameTimer(WPARAM wParam);
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
-		virtual void OnSetFocus();
-		virtual void OnSysColorChange();
-		virtual	void OnTimer(WPARAM wParam);
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -291,8 +293,6 @@ namespace Win32xx
 
 	private:
 		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
-		BOOL OnCommandFrame(WPARAM wPAram, LPARAM lParam);
-		LRESULT OnNotifyFrame(WPARAM wParam, LPARAM lParam);
 
 		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
 		CMenubar m_Menubar;					// CMenubar object
@@ -1591,6 +1591,13 @@ namespace Win32xx
 
 			// Set the mask color to grey for the new ImageList
 			COLORREF crMask = RGB(200, 199, 200);
+			if ( GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
+			{
+				HPALETTE hPal = (HPALETTE)GetCurrentObject(DesktopDC, OBJ_PAL);
+				UINT Index = GetNearestPaletteIndex(hPal, crMask);
+				if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
+			}
+ 			
 			SolidFill(MemDC, crMask, &rc);
 
 			// Draw the image on the memory DC
@@ -1619,7 +1626,7 @@ namespace Win32xx
 			::DeleteObject(hbm);
 		}
 
-		return himlDisabled;
+		return himlDisabled; 
 	}
 
 	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
@@ -1941,33 +1948,6 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::OnCloseFrame()
-	{
-		SaveRegistrySettings();
-
-		GetMenubar().Destroy();
-		GetToolbar().Destroy();
-		GetRebar().Destroy();
-		GetStatusbar().Destroy();
-		GetView()->Destroy();
-	}
-
-	inline BOOL CFrame::OnCommandFrame(WPARAM wParam, LPARAM /*lParam*/)
-	{
-		// Handle the View Statusbar and Toolbar menu items
-		switch (LOWORD(wParam))
-		{
-		case IDW_VIEW_STATUSBAR:
-			OnViewStatusbar();
-			return TRUE;
-		case IDW_VIEW_TOOLBAR:
-			OnViewToolbar();
-			return TRUE;
-		} // switch cmd
-
-		return FALSE;
-	}
-
 	inline void CFrame::OnCreate()
 	{
 		// This is called when the frame window is being created.
@@ -2096,7 +2076,7 @@ namespace Win32xx
 					SolidFill(DrawDC, RGB(255,255,255), &rcDraw);
 				else
 					SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcDraw);
-			}
+			}  
 
 			if (bChecked)
 				DrawCheckmark(pdis);
@@ -2150,6 +2130,36 @@ namespace Win32xx
 			delete m_vpItemData[nItem];
 		}
 		m_vpItemData.clear();
+	}
+
+	inline void CFrame::OnFrameClose()
+	{
+		// Called in response to a WM_CLOSE message for the frame.
+		// It's called called OnFrameClose to avoid being accidently overriden
+		// by a user's possible OnClose function.
+		SaveRegistrySettings();
+
+		GetMenubar().Destroy();
+		GetToolbar().Destroy();
+		GetRebar().Destroy();
+		GetStatusbar().Destroy();
+		GetView()->Destroy();
+	}
+
+	inline BOOL CFrame::OnFrameCommand(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		// Handle the View Statusbar and Toolbar menu items
+		switch (LOWORD(wParam))
+		{
+		case IDW_VIEW_STATUSBAR:
+			OnViewStatusbar();
+			return TRUE;
+		case IDW_VIEW_TOOLBAR:
+			OnViewToolbar();
+			return TRUE;
+		} // switch cmd
+
+		return FALSE;
 	}
 
 	inline void CFrame::OnHelp()
@@ -2300,7 +2310,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CFrame::OnNotifyFrame(WPARAM /*wParam*/, LPARAM lParam)
+	inline LRESULT CFrame::OnFrameNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 
 		switch (((LPNMHDR)lParam)->code)
@@ -2334,14 +2344,14 @@ namespace Win32xx
 
 		return 0L;
 
-	} // CFrame::OnNotifyFrame(...)
+	} // CFrame::OnFrameNotify(...)
 
-	inline void CFrame::OnSetFocus()
+	inline void CFrame::OnFrameSetFocus()
 	{
 		SetStatusText();
 	}
 
-	inline void CFrame::OnSysColorChange()
+	inline void CFrame::OnFrameSysColorChange()
 	{
 		// Honor theme color changes
 		for (int nBand = 0; nBand <= GetRebar().GetBandCount(); ++nBand)
@@ -2356,7 +2366,7 @@ namespace Win32xx
 		::RedrawWindow(m_hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
 
-	inline void CFrame::OnTimer(WPARAM wParam)
+	inline void CFrame::OnFrameTimer(WPARAM wParam)
 	{
 		if (ID_STATUS_TIMER == wParam)
 		{
@@ -2682,8 +2692,7 @@ namespace Win32xx
 			// Get the coordinates of the parent window's client area.
 			CRect rcClient = GetClientRect();
 
-			// width = max(300, rcClient.right)
-			int width = (300 > rcClient.right) ? 300 : rcClient.right;
+			int width = max(300, rcClient.right);
 			int iPaneWidths[] = {width - 110, width - 80, width - 50, width - 20};
 
 			if (m_bShowIndicatorStatus)
@@ -3037,7 +3046,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_CLOSE:
-			OnCloseFrame();
+			OnFrameClose();
 			break;
 		case WM_DESTROY:
 			::SetMenu(m_hWnd, NULL);
@@ -3061,14 +3070,14 @@ namespace Win32xx
 			OnMenuSelect(wParam, lParam);
 			return 0L;
 		case WM_SETFOCUS:
-			OnSetFocus();
+			OnFrameSetFocus();
 			break;
 		case WM_SIZE:
 			RecalcLayout();
 			return 0L;
 		case WM_SYSCOLORCHANGE:
 			// Changing themes trigger this
-			OnSysColorChange();
+			OnFrameSysColorChange();
 
 			// Forward the message to the view window
 			::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
@@ -3081,7 +3090,7 @@ namespace Win32xx
 			}
 			break;
 		case WM_TIMER:
-			OnTimer(wParam);
+			OnFrameTimer(wParam);
 			return 0L;
 		case WM_DRAWITEM:
 			// Owner draw menu itmes
