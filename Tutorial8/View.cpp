@@ -5,7 +5,7 @@
 
 #include "resource.h"
 #include "view.h"
-#include "../Win32++/GDI.h"
+#include "../Win32++/gdi.h"
 
 using namespace std;
 
