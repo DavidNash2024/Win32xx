@@ -7,7 +7,7 @@
 #define MYLISTVIEW_H
 
 
-#include "../Win32++/ListView.h"
+#include "../Win32++/listview.h"
 #include <vector>
 
 

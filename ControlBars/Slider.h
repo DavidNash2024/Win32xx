@@ -1,7 +1,7 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
-#include "../Win32++/WinCore.h"
+#include "../Win32++/wincore.h"
 
 class CSlider : public CWnd
 {

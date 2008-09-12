@@ -4,7 +4,7 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-#include "../Win32++/Dialog.h"
+#include "../Win32++/dialog.h"
 #include "Progressbar.h"
 #include "Scrollbar.h"
 #include "Slider.h"

@@ -6,7 +6,7 @@
 #ifndef MDICHILDTEXT_H
 #define MDICHILDTEXT_H
 
-#include "../Win32++/MDI.h"
+#include "../Win32++/mdi.h"
 
 class CRichEdit : public CWnd
 {
