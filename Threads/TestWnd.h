@@ -7,7 +7,7 @@
 #define TESTWND_H
 
 #include <sstream>
-#include "../Win32++/WinCore.h"
+#include "../Win32++/wincore.h"
 
 
 class CTestWindow : public CWnd

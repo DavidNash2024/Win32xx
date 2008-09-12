@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "../Win32++/WinCore.h"
+#include "../Win32++/wincore.h"
 
 // Note:  This application doesn't end when the window is closed
 // Refer to the tutorial at http://users.bigpond.net.au/programming/tutorial.htm

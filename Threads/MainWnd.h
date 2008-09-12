@@ -7,7 +7,7 @@
 #define MAINWND_H
 
 #include <sstream>
-#include "../Win32++/WinCore.h"
+#include "../Win32++/wincore.h"
 
 
 // Forward declaration of the CThread class
