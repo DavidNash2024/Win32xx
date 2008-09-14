@@ -652,9 +652,9 @@ namespace Win32xx
 		::SetBkColor(hDC, OldColor);
 	}
 
-	inline void TintBitmap(HBITMAP hbmSource, COLORREF clrTint)
-	// Modifies the colour of the supplied Device Dependant Bitmap.
-	// The tint colour is the colour that white becomes after the modification.
+	inline void TintBitmap(HBITMAP hbmSource, int cRed, int cGreen, int cBlue)
+	// Modifies the colour of the supplied Device Dependant Bitmap, by the colour 
+	// correction values specified. The correction values can range from -255 to +255.
 	// This function gains its speed by accessing the bitmap colour information
 	// directly, rather than using GetPixel/SetPixel.
 	{
@@ -681,10 +681,22 @@ namespace Win32xx
 		GetDIBits(MemDC, hbmSource, 0, bi.biHeight, lpvBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 		UINT nWidthBytes = bi.biSizeImage/bi.biHeight;
 
-		// Calculate the RGB colour ratios
-		int RedTint   = (GetRValue(clrTint)+1);
-		int BlueTint  = (GetBValue(clrTint)+1);
-		int GreenTint = (GetGValue(clrTint)+1);
+		// Ensure sane colour correction values
+		cBlue  = min(cBlue, 255);
+		cBlue  = max(cBlue, -255);
+		cRed   = min(cRed, 255);
+		cRed   = max(cRed, -255);
+		cGreen = min(cGreen, 255);
+		cGreen = max(cGreen, -255);
+
+		// Pre-calculate the RGB modification values
+		int b1 = 256 - cBlue;
+		int g1 = 256 - cGreen;
+		int r1 = 256 - cRed;
+
+		int b2 = 256 + cBlue;
+		int g2 = 256 + cGreen;
+		int r2 = 256 + cRed;
 
 		// Modify the colour
 		int yOffset = 0;
@@ -698,19 +710,30 @@ namespace Win32xx
 			{
 				// Calculate Index
 				Index = yOffset + xOffset;
+
+				// Adjust the colour values
+				if (cBlue > 0)
+					lpvBits[Index]   = (BYTE)(cBlue + (((lpvBits[Index] *b1)+128) >>8));
+				else if (cBlue < 0)
+					lpvBits[Index]   = (BYTE)((lpvBits[Index] *b2) >>8);
 				
-				// modify the colour by the tint values
-				lpvBits[Index]   = (BYTE)((lpvBits[Index]   * (BlueTint))  >> 8);
-				lpvBits[Index+1] = (BYTE)((lpvBits[Index+1] * (GreenTint)) >> 8);
-				lpvBits[Index+2] = (BYTE)((lpvBits[Index+2] * (RedTint))   >> 8);
+				if (cGreen > 0)
+					lpvBits[Index+1] = (BYTE)(cGreen + (((lpvBits[Index+1] *g1)+128) >>8));
+				else if (cGreen < 0)
+					lpvBits[Index+1] = (BYTE)((lpvBits[Index+1] *g2) >>8);
+				
+				if (cRed > 0)
+					lpvBits[Index+2] = (BYTE)(cRed + (((lpvBits[Index+2] *r1)+128) >>8));
+				else if (cRed < 0)
+					lpvBits[Index+2] = (BYTE)((lpvBits[Index+2] *r2) >>8);
 
 				// Increment the horizontal offset
-				xOffset += bpPixel;
+				xOffset += bpPixel; 
 			}
 
 			// Increment vertical offset
 			yOffset += nWidthBytes;
-		} 
+		}  
 
 		// Save the modified colour back into our source DDB
 		SetDIBits(MemDC, hbmSource, 0, bi.biHeight, lpvBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);

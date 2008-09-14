@@ -1,0 +1,198 @@
+// Microsoft Visual C++ generated resource script.
+//
+
+#include "windows.h"
+#include "resource.h"
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       24                     "res/Win32++.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New...",                      IDM_FILE_NEW
+        MENUITEM "&Open...",                    IDM_FILE_OPEN
+        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
+        MENUITEM SEPARATOR
+        MENUITEM "&Print",                      IDM_FILE_PRINT, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR                
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Undo",                        IDM_EDIT_UNDO
+        MENUITEM "Redo",                        IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t",                        IDM_EDIT_CUT
+        MENUITEM "&Copy",                       IDM_EDIT_COPY
+        MENUITEM "&Paste",                      IDM_EDIT_PASTE
+        MENUITEM "De&lete",                     IDM_EDIT_DELETE
+    END
+    POPUP "&Image"
+    BEGIN
+      MENUITEM "&Tint",                          IDM_VIEW_TINT
+    END   
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "res/enhanced.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDW_MAIN                BITMAP                  "res/toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDW_ABOUT DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
+    CTEXT           "Fast GDI Demonstration",IDC_STATIC,60,22,64,11
+    ICON            IDW_MAIN,0,4,4,20,20
+END
+
+IDD_DIALOG1 DIALOGEX 0, 0, 291, 147
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Colour Correction Dialog"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    CONTROL         "",IDC_SLIDER_RED,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | TBS_HORZ | WS_TABSTOP,184,28,80,25
+    CONTROL         "",IDC_SLIDER_GREEN,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | TBS_HORZ | WS_TABSTOP,184,57,80,25
+    CONTROL         "",IDC_SLIDER_BLUE,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | TBS_HORZ | WS_TABSTOP,184,87,80,25
+    CONTROL         "",IDC_BITMAP1,"Static",SS_BLACKFRAME,7,7,150,133,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
+    LTEXT           "R:",IDC_STATIC,172,36,12,11
+    LTEXT           "G:",IDC_STATIC,172,65,12,11
+    LTEXT           "B:",IDC_STATIC,173,95,11,11
+    CTEXT           "Adjust Colour",IDC_STATIC,184,17,80,10
+    PUSHBUTTON      "OK",IDC_BUTTON1,234,126,50,14
+    PUSHBUTTON      "Cancel",IDC_BUTTON2,184,126,50,14
+    EDITTEXT        IDC_EDIT_RED,264,34,20,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_GREEN,264,62,20,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_BLUE,264,92,20,14,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDW_MAIN ACCELERATORS 
+BEGIN
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_CUT,           VIRTKEY, SHIFT, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      IDM_EDIT_PASTE,         VIRTKEY, SHIFT, NOINVERT
+    VK_BACK,        IDM_EDIT_UNDO,          VIRTKEY, ALT, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDW_MAIN                "Fast GDI Demo"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+END
+
+STRINGTABLE 
+BEGIN
+    IDM_FILE_NEW            "Create a New Document"
+    IDM_FILE_OPEN           "Open Existing Document"
+    IDM_FILE_SAVE           "Save the Document"
+    IDM_FILE_SAVEAS         "Save the Document with a new name"
+    IDM_FILE_PRINT          "Print the Document"
+    IDM_FILE_EXIT           "End the Program"
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
+END
+
+STRINGTABLE 
+BEGIN
+    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
+    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
+    IDM_EDIT_DELETE         "Erase the selected Contents"
+    IDM_VIEW_TINT           "Adjust the colour of the image"
+    IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE 
+BEGIN
+    61536                   "Close the Window"
+    61488                   "Maximize the Window"
+    61472                   "Minimize the WIndow"
+    61456                   "Move the Window"
+    61504                   "Select Next Window"
+    61520                   "Select Previous Window"
+    61728                   "Restore the Window"
+    61440                   "Resize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_FILE_MRU_FILE1       "Open this document"
+    IDW_FILE_MRU_FILE2       "Open this document"
+    IDW_FILE_MRU_FILE3       "Open this document"
+    IDW_FILE_MRU_FILE4       "Open this document"
+END
+
+
+

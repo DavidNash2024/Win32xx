@@ -15,7 +15,7 @@ class CView : public CWnd
 {
 public:
 	CView();
-	~CView(){}
+	virtual ~CView(){}
 	virtual TCHAR* GetString(){return m_str;};
 	virtual void SetString(TCHAR* str);
 

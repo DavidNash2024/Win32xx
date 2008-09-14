@@ -2719,6 +2719,11 @@ namespace Win32xx
 		// Note: To modify theme colors, override this function in CMainframe,
 		//        and make any modifications there.
 
+		// Avoid themes if using less than 16 bit colors
+		CDC DesktopDC = GetDC(NULL);
+		if (::GetDeviceCaps(DesktopDC, BITSPIXEL) < 16)
+			return;
+
 		// Set a flag redo SetTheme when the theme changes
 		m_bUpdateTheme = TRUE;
 
@@ -2749,10 +2754,10 @@ namespace Win32xx
 
 		switch (Theme)
 		{
-		case Grey:
+		case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 			{
 				ThemeToolbar tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
-				ThemeRebar tr = {T, RGB(212, 208, 200), RGB(230, 226, 222), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
+				ThemeRebar tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
 				ThemeMenu tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 
 				GetToolbar().SetToolbarTheme(tt);
@@ -2766,7 +2771,7 @@ namespace Win32xx
 			break;
 		case Blue:
 			{
-				// Use this theme by default
+				// Used for XP default (blue) color scheme
 				ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 				ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
@@ -2783,6 +2788,7 @@ namespace Win32xx
 
 		case Silver:
 			{
+				// Used for XP Silver color scheme
 				ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 				ThemeRebar tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
 				ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
@@ -2799,6 +2805,7 @@ namespace Win32xx
 
 		case Olive:
 			{
+				// Used for XP Olive color scheme
 				ThemeRebar tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, T, T, T, T, F};
 				ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
 				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
