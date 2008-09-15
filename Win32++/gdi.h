@@ -713,17 +713,17 @@ namespace Win32xx
 
 				// Adjust the colour values
 				if (cBlue > 0)
-					lpvBits[Index]   = (BYTE)(cBlue + (((lpvBits[Index] *b1)+128) >>8));
+					lpvBits[Index]   = (BYTE)(cBlue + (((lpvBits[Index] *b1)) >>8));
 				else if (cBlue < 0)
 					lpvBits[Index]   = (BYTE)((lpvBits[Index] *b2) >>8);
 				
 				if (cGreen > 0)
-					lpvBits[Index+1] = (BYTE)(cGreen + (((lpvBits[Index+1] *g1)+128) >>8));
+					lpvBits[Index+1] = (BYTE)(cGreen + (((lpvBits[Index+1] *g1)) >>8));
 				else if (cGreen < 0)
 					lpvBits[Index+1] = (BYTE)((lpvBits[Index+1] *g2) >>8);
 				
 				if (cRed > 0)
-					lpvBits[Index+2] = (BYTE)(cRed + (((lpvBits[Index+2] *r1)+128) >>8));
+					lpvBits[Index+2] = (BYTE)(cRed + (((lpvBits[Index+2] *r1)) >>8));
 				else if (cRed < 0)
 					lpvBits[Index+2] = (BYTE)((lpvBits[Index+2] *r2) >>8);
 

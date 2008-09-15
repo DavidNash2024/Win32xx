@@ -35,6 +35,7 @@
 #define IDC_EDIT_GREEN                  147
 #define IDC_EDIT_BLUE                   148
 #define IDC_BITMAP1                     149
+#define IDC_CHECK1                      150
         
 
 

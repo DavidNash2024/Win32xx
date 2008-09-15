@@ -1722,7 +1722,9 @@ namespace Win32xx
 		m_cs.y              = cs.y;
 
 		// Overide this function in your derived class to set the
-		// CREATESTRUCT values prior to window creation
+		// CREATESTRUCT values prior to window creation.
+		// The cs.lpszClass parameter should NOT be specified if the
+		// PreRegisterClass function is used to create a window class.
 	}
 
 	inline void CWnd::PreRegisterClass(WNDCLASS& wc)

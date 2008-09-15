@@ -7,14 +7,14 @@
 #include "resource.h"
 
 
-CView::CView() : m_hBitmap(NULL)
+CView::CView() : m_hbmImage(NULL)
 {
 
 }
 
 CView::~CView()
 {
-	::DeleteObject(m_hBitmap);
+	::DeleteObject(m_hbmImage);
 }
 
 BOOL CView::FileOpen(LPCTSTR szFilename)
@@ -22,13 +22,13 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	Invalidate();
 	if (szFilename)
 	{
-		m_hBitmap = (HBITMAP)::LoadImage(GetApp()->GetInstanceHandle(), 
+		m_hbmImage = (HBITMAP)::LoadImage(GetApp()->GetInstanceHandle(), 
 					szFilename, 0, 0, IMAGE_BITMAP, LR_LOADFROMFILE);
 	}
 	else
-		m_hBitmap = NULL;
+		m_hbmImage = NULL;
 
-	return (BOOL)m_hBitmap;
+	return (BOOL)m_hbmImage;
 }
 
 void CView::OnInitialUpdate()
@@ -48,11 +48,11 @@ void CView::PreCreate(CREATESTRUCT &cs)
 
 void CView::OnPaint(HDC hDC)
 {
-	if (m_hBitmap)
+	if (m_hbmImage)
 	{
 		CDC memDC = ::CreateCompatibleDC(hDC);
 		CRect rcView = GetClientRect();
-		memDC.AttachBitmap(m_hBitmap);
+		memDC.AttachBitmap(m_hbmImage);
 		::BitBlt(hDC, 0, 0, rcView.Width(), rcView.Height(), memDC, 0, 0, SRCCOPY);
 		memDC.DetachBitmap();
 	}
@@ -68,24 +68,24 @@ void CView::OnPaint(HDC hDC)
 
 void CView::Tint()
 {
-	if (m_hBitmap)
+	if (m_hbmImage)
 	{
 		CColourDialog Dialog(IDD_DIALOG1);
-		Dialog.SetBitmap(m_hBitmap);
+		Dialog.CreateImagePreview(m_hbmImage);
 
 		Dialog.DoModal();
-		TintBitmap(m_hBitmap, -80, -80, 0);
+		TintBitmap(m_hbmImage, Dialog.GetcRed(), Dialog.GetcGreen(), Dialog.GetcBlue());
 
 		// Copy the modified bitmap to the window
 		CDC viewDC = GetDC(m_hWnd);
 		CDC memDC = ::CreateCompatibleDC(viewDC);
 		CRect rcView = GetClientRect();
-		memDC.AttachBitmap(m_hBitmap);
+		memDC.AttachBitmap(m_hbmImage);
 		::BitBlt(viewDC, 0, 0, rcView.Width(), rcView.Height(), memDC, 0, 0, SRCCOPY);
 		memDC.DetachBitmap();
 	}
 	else
-		MessageBox(m_hWnd, _T("Open a Bitmap file first!"), _T("Errro"), MB_OK);
+		MessageBox(m_hWnd, _T("Open a Bitmap file first!"), _T("Error"), MB_OK);
 }
 
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -93,7 +93,7 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_WINDOWPOSCHANGED:
-		if (NULL == m_hBitmap) Invalidate();
+		if (NULL == m_hbmImage) Invalidate();
 		break;
 	}
 

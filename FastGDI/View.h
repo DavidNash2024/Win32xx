@@ -25,7 +25,8 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	HBITMAP m_hBitmap;
+	HBITMAP m_hbmImage;
+	HBITMAP m_hbmSmallImage;
 };
 
 
