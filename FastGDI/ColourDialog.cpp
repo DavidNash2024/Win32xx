@@ -1,6 +1,9 @@
 
 #include "../Win32++/gdi.h"
+#include "FastGDIApp.h"
+#include "Mainfrm.h"
 #include "ColourDialog.h"
+
 
 CColourDialog::CColourDialog(UINT nResID) : CDialog(nResID), m_hbmPreview(0), m_hbmPreviewOrig(0)
 {
@@ -24,14 +27,9 @@ BOOL CColourDialog::OnInitDialog()
 	
 	// Set Trackbar ranges
 	m_RedSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
-	m_GreenSlider.SendMessage(TBM_SETRANGE,  (WPARAM)FALSE, (LPARAM)MAKELONG(-255, 255));
-	m_BlueSlider.SendMessage(TBM_SETRANGE,  (WPARAM)FALSE, (LPARAM)MAKELONG(-255, 255));
+	m_GreenSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
+	m_BlueSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
 	
-	// Set tick marks
-	m_RedSlider.SendMessage(TBM_SETTICFREQ,  (WPARAM)64, 0);
-	m_GreenSlider.SendMessage(TBM_SETTICFREQ,  (WPARAM)64, 0);
-	m_BlueSlider.SendMessage(TBM_SETTICFREQ,  (WPARAM)64, 0);
-
 	// Attach the Edit controls to CWnd objects
 	m_RedEdit.AttachDlgItem(IDC_EDIT_RED, this);
 	m_GreenEdit.AttachDlgItem(IDC_EDIT_GREEN, this);
@@ -40,6 +38,10 @@ BOOL CColourDialog::OnInitDialog()
 	m_RedEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
 	m_GreenEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
 	m_BlueEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
+
+	// Create the two image previews
+	m_Preview.AttachDlgItem(IDC_PREVIEW, this);
+	CreateImagePreviews(GetFrameApp().GetMainFrame().GetMyView().GetImage());
 
 	return TRUE;
 }
@@ -60,8 +62,9 @@ BOOL CColourDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
-void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
+void CColourDialog::OnHScroll(WPARAM /*wParam*/, LPARAM lParam)
 {
+	// Update the text for the colour's edit control
 	int nPos = SendMessage((HWND)lParam, TBM_GETPOS, 0, 0);
 	TCHAR Text[5];
 	wsprintf(Text, _T("%d\0"), nPos);
@@ -73,6 +76,7 @@ void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 	else if ((HWND)lParam == m_BlueSlider.GetHwnd())
 		SendMessage(m_BlueEdit.GetHwnd(), WM_SETTEXT, 0, (LPARAM)&Text);
 
+	// Store the colour values
 	m_cRed   = m_RedSlider.SendMessage(TBM_GETPOS);
 	m_cGreen = m_GreenSlider.SendMessage(TBM_GETPOS);
 	m_cBlue  = m_BlueSlider.SendMessage(TBM_GETPOS);
@@ -86,8 +90,19 @@ void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 	Mem1DC.DetachBitmap();
 	Mem2DC.DetachBitmap();
 
+	// Update the colour of the preview image
 	TintBitmap(m_hbmPreview, m_cRed, m_cGreen, m_cBlue);
 	OnPaint();
+}
+
+void CColourDialog::OnOK()
+{
+	// Get a reference to our CMainFrame object
+	CMainFrame& MainFrame = GetFrameApp().GetMainFrame();
+	
+	MainFrame.ModifyBitmap(m_cRed, m_cGreen, m_cBlue);
+
+	CDialog::OnOK();
 }
 
 void CColourDialog::OnPaint()
@@ -96,13 +111,12 @@ void CColourDialog::OnPaint()
 	BITMAP bm;
 	::GetObject(m_hbmPreview, sizeof(BITMAP), &bm);
 
+	// Get the size of the destination display area
+	CRect rcView = m_Preview.GetClientRect();
+	::MapWindowPoints(m_Preview.GetHwnd(), m_hWnd, (LPPOINT)&rcView, 2);
+
 	int nLeftDest;
 	int nTopDest;
-	HWND hWndBitmap = GetDlgItem(IDC_BITMAP1);
-	CRect rcView;
-	::GetClientRect(hWndBitmap, &rcView);
-	::MapWindowPoints(hWndBitmap, m_hWnd, (LPPOINT)&rcView, 2);
-
 	if (bm.bmWidth < bm.bmHeight)
 	{
 		nLeftDest = rcView.left + (rcView.Width() - bm.bmWidth)/2;
@@ -121,14 +135,16 @@ void CColourDialog::OnPaint()
 	MemDC.DetachBitmap();
 }
 
-void CColourDialog::CreateImagePreview(HBITMAP hbmImage)
+void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
+// Creates the two Preview bitmaps: m_Preview and m_PreviewOrig
 {
 	// Get the size of the bitmap
 	BITMAP bm;
 	::GetObject(hbmImage, sizeof(BITMAP), &bm);
 
 	// Get the size of the destination display area
-	CRect rcView(16, 16, 239, 201);
+	CRect rcView = m_Preview.GetClientRect();
+	::MapWindowPoints(m_Preview.GetHwnd(), m_hWnd, (LPPOINT)&rcView, 2);
 
 	// Calculate the stretch values, preserving the aspect ratio
 	int nWidthDest;
@@ -148,7 +164,7 @@ void CColourDialog::CreateImagePreview(HBITMAP hbmImage)
 		nHeightDest = (int)(rcView.Width()*AspectRatio);
 	}
 
-	// Copy the bitmap to a memory DC
+	// Create the Device Contexts and compatible bitmaps
 	CDC Dest1DC = ::CreateCompatibleDC(NULL);
 	CDC Dest2DC = ::CreateCompatibleDC(NULL);
 	CDC MemDC  = ::CreateCompatibleDC(NULL);

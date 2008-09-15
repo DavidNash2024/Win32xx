@@ -11,8 +11,8 @@ CMainFrame::CMainFrame()
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
-	//Set m_View as the view window of the frame
-	SetView(m_View);
+	//Set m_MyView as the view window of the frame
+	SetView(m_MyView);
 
 	// Set the Resource IDs for the toolbar buttons
 	m_ToolbarData.clear();
@@ -41,6 +41,25 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
+void CMainFrame::OnAdjustImage()
+{
+	if (GetMyView().GetImage())
+	{
+		// Initiate the Colour Adjust Dialog
+		CColourDialog Dialog(IDD_DIALOG1);
+	//	Dialog.CreateImagePreviews(GetMyView().GetImage());
+		Dialog.DoModal();
+	}
+	else
+		MessageBox(m_hWnd, _T("Open a Bitmap file first!"), _T("Error"), MB_OK);
+}
+
+void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue)
+{
+	TintBitmap(GetMyView().GetImage(), cRed, cGreen, cBlue);
+	GetMyView().Invalidate();
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	// OnCommand responds to menu and and toolbar input
@@ -48,7 +67,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		m_View.FileOpen(NULL);
+		m_MyView.FileOpen(NULL);
 		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
@@ -57,8 +76,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
-	case IDM_VIEW_TINT:
-		m_View.Tint();
+	case IDM_IMAGE_ADJUST:
+		OnAdjustImage();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -72,7 +91,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 			tString tsMRUText = GetMRUEntry(nMRUIndex);
 
-			if (m_View.FileOpen(tsMRUText.c_str()))
+			if (m_MyView.FileOpen(tsMRUText.c_str()))
 				m_PathName = tsMRUText;
 			else
 				RemoveMRUEntry(tsMRUText.c_str());
@@ -128,7 +147,7 @@ void CMainFrame::OnFileOpen()
 		return;
 
 	// Load the bitmap
-	m_View.FileOpen(szFilePathName);
+	m_MyView.FileOpen(szFilePathName);
 
 	// Save the filename
 	m_PathName = szFilePathName;

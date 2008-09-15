@@ -1,28 +1,11 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "resrc1.h"
 
-#define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 2 resource.
-//
-#define APSTUDIO_HIDDEN_SYMBOLS
+
+
 #include "windows.h"
-#undef APSTUDIO_HIDDEN_SYMBOLS
 #include "resource.h"
 
-/////////////////////////////////////////////////////////////////////////////
-#undef APSTUDIO_READONLY_SYMBOLS
-
-/////////////////////////////////////////////////////////////////////////////
-// English (Australia) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
-#pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -51,19 +34,9 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-    POPUP "&Edit"
-    BEGIN
-        MENUITEM "Undo",                        IDM_EDIT_UNDO
-        MENUITEM "Redo",                        IDM_EDIT_REDO
-        MENUITEM SEPARATOR
-        MENUITEM "Cu&t",                        IDM_EDIT_CUT
-        MENUITEM "&Copy",                       IDM_EDIT_COPY
-        MENUITEM "&Paste",                      IDM_EDIT_PASTE
-        MENUITEM "De&lete",                     IDM_EDIT_DELETE
-    END
     POPUP "&Image"
     BEGIN
-        MENUITEM "&Tint",                       IDM_VIEW_TINT
+        MENUITEM "Adjust &Colour",              IDM_IMAGE_ADJUST
     END
     POPUP "&View"
     BEGIN
@@ -102,7 +75,7 @@ IDW_ABOUT DIALOGEX 0, 0, 186, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
+FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
     CTEXT           "Fast GDI Demonstration",IDC_STATIC,44,22,98,11
@@ -112,8 +85,8 @@ END
 IDD_DIALOG1 DIALOGEX 0, 0, 291, 134
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
-CAPTION "Colour Correction Dialog"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
+CAPTION "Colour Adjustment Dialog"
+FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     CONTROL         "",IDC_SLIDER_RED,"msctls_trackbar32",TBS_TOP | 
                     TBS_NOTICKS | WS_TABSTOP,180,35,80,15
@@ -121,7 +94,7 @@ BEGIN
                     TBS_NOTICKS | WS_TABSTOP,180,53,80,15
     CONTROL         "",IDC_SLIDER_BLUE,"msctls_trackbar32",TBS_TOP | 
                     TBS_NOTICKS | WS_TABSTOP,180,71,80,15
-    CONTROL         "",IDC_BITMAP1,"Static",SS_BLACKFRAME,7,7,155,120,
+    CONTROL         "",IDC_PREVIEW,"Static",SS_BLACKFRAME,7,7,155,120,
                     WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
     LTEXT           "R:",IDC_STATIC,172,38,8,11
     CTEXT           "Adjust Colour",IDC_STATIC,183,17,80,10
@@ -160,35 +133,6 @@ BEGIN
 END
 
 
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resrc1.h\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""resource.h""\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE 
-BEGIN
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
@@ -209,57 +153,23 @@ BEGIN
     IDM_FILE_SAVEAS         "Save the Document with a new name"
     IDM_FILE_PRINT          "Print the Document"
     IDM_FILE_EXIT           "End the Program"
-    IDM_EDIT_UNDO           "Undo the last action"
-    IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
 STRINGTABLE 
 BEGIN
-    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
-    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
-    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
-    IDM_EDIT_DELETE         "Erase the selected Contents"
-    IDM_VIEW_TINT           "Adjust the colour of the image"
+    IDM_IMAGE_ADJUST        "Adjust the colour of the image"
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
 STRINGTABLE 
 BEGIN
     61536                   "Close the Window"
-END
-
-STRINGTABLE 
-BEGIN
     61488                   "Maximize the Window"
-END
-
-STRINGTABLE 
-BEGIN
     61472                   "Minimize the WIndow"
-END
-
-STRINGTABLE 
-BEGIN
     61456                   "Move the Window"
-END
-
-STRINGTABLE 
-BEGIN
     61504                   "Select Next Window"
-END
-
-STRINGTABLE 
-BEGIN
     61520                   "Select Previous Window"
-END
-
-STRINGTABLE 
-BEGIN
     61728                   "Restore the Window"
-END
-
-STRINGTABLE 
-BEGIN
     61440                   "Resize the Window"
 END
 
@@ -271,18 +181,5 @@ BEGIN
     IDW_FILE_MRU_FILE4      "Open this document"
 END
 
-#endif    // English (Australia) resources
-/////////////////////////////////////////////////////////////////////////////
 
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
 

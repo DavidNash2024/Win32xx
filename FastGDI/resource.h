@@ -21,7 +21,7 @@
 #define IDM_EDIT_COPY                   113
 #define IDM_EDIT_PASTE                  114
 #define IDM_EDIT_DELETE                 115
-#define IDM_VIEW_TINT                   116
+#define IDM_IMAGE_ADJUST                116
 #define IDM_HELP_ABOUT                  120
 
 #define IDB_PICTURE                     130
@@ -34,7 +34,7 @@
 #define IDC_EDIT_RED                    146
 #define IDC_EDIT_GREEN                  147
 #define IDC_EDIT_BLUE                   148
-#define IDC_BITMAP1                     149
+#define IDC_PREVIEW                     149
 #define IDC_CHECK1                      150
         
 

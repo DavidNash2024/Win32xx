@@ -50,6 +50,7 @@ void CView::OnPaint(HDC hDC)
 {
 	if (m_hbmImage)
 	{
+		// We have an image, so display it
 		CDC memDC = ::CreateCompatibleDC(hDC);
 		CRect rcView = GetClientRect();
 		memDC.AttachBitmap(m_hbmImage);
@@ -58,34 +59,10 @@ void CView::OnPaint(HDC hDC)
 	}
 	else
 	{
+		// There is no image, so display a hint to get one
 		CRect rc = GetClientRect();
-
-		// Centre some text in our view window
 		::DrawText(hDC, _T("Load a Bitmap File from the menu or Toolbar"), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
-}
-
-
-void CView::Tint()
-{
-	if (m_hbmImage)
-	{
-		CColourDialog Dialog(IDD_DIALOG1);
-		Dialog.CreateImagePreview(m_hbmImage);
-
-		Dialog.DoModal();
-		TintBitmap(m_hbmImage, Dialog.GetcRed(), Dialog.GetcGreen(), Dialog.GetcBlue());
-
-		// Copy the modified bitmap to the window
-		CDC viewDC = GetDC(m_hWnd);
-		CDC memDC = ::CreateCompatibleDC(viewDC);
-		CRect rcView = GetClientRect();
-		memDC.AttachBitmap(m_hbmImage);
-		::BitBlt(viewDC, 0, 0, rcView.Width(), rcView.Height(), memDC, 0, 0, SRCCOPY);
-		memDC.DetachBitmap();
-	}
-	else
-		MessageBox(m_hWnd, _T("Open a Bitmap file first!"), _T("Error"), MB_OK);
 }
 
 LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -93,11 +70,12 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_WINDOWPOSCHANGED:
+		// Keep the text (if any) centered in the window
 		if (NULL == m_hbmImage) Invalidate();
 		break;
 	}
 
-	// pass unhandled messages on for default processing
+	// Pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 

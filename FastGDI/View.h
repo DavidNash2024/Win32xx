@@ -15,8 +15,8 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
-	virtual void Tint();
 	virtual BOOL FileOpen(LPCTSTR szFilename);
+	HBITMAP GetImage() {return m_hbmImage;}
 
 protected:
 	virtual void OnInitialUpdate();
