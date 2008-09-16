@@ -117,7 +117,7 @@ void CColourDialog::OnPaint()
 
 	int nLeftDest;
 	int nTopDest;
-	if (bm.bmWidth < bm.bmHeight)
+	if (bm.bmWidth < bm.bmHeight*rcView.Width()/rcView.Height())
 	{
 		nLeftDest = rcView.left + (rcView.Width() - bm.bmWidth)/2;
 		nTopDest = rcView.top;
@@ -151,7 +151,7 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 	int nHeightDest;
 	double AspectRatio;
 	
-	if (bm.bmWidth < bm.bmHeight)
+	if (bm.bmWidth < bm.bmHeight*rcView.Width()/rcView.Height())
 	{
 		AspectRatio = (double)bm.bmWidth / (double)bm.bmHeight;
 		nWidthDest = (int)(rcView.Height()*AspectRatio);

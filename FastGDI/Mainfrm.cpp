@@ -20,11 +20,7 @@ CMainFrame::CMainFrame()
 	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
 	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
 	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
-	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
-	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_FILE_PRINT );
+	m_ToolbarData.push_back ( IDM_IMAGE_ADJUST);
 	m_ToolbarData.push_back ( 0 );				// Separator
 	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 
@@ -47,7 +43,6 @@ void CMainFrame::OnAdjustImage()
 	{
 		// Initiate the Colour Adjust Dialog
 		CColourDialog Dialog(IDD_DIALOG1);
-	//	Dialog.CreateImagePreviews(GetMyView().GetImage());
 		Dialog.DoModal();
 	}
 	else
@@ -67,7 +62,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		m_MyView.FileOpen(NULL);
+		{
+			CToolbar& TB = GetToolbar();
+			TB.DisableButton(IDM_IMAGE_ADJUST);
+			EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
+			m_MyView.FileOpen(NULL);
+		}
 		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
@@ -90,11 +90,20 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		{
 			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 			tString tsMRUText = GetMRUEntry(nMRUIndex);
+			CToolbar& TB = GetToolbar();
 
 			if (m_MyView.FileOpen(tsMRUText.c_str()))
+			{
 				m_PathName = tsMRUText;
+				TB.EnableButton(IDM_IMAGE_ADJUST);
+				EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
+			}
 			else
+			{
 				RemoveMRUEntry(tsMRUText.c_str());
+				TB.DisableButton(IDM_IMAGE_ADJUST);
+				EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
+			}
 
 			return TRUE;
 		}
@@ -116,6 +125,13 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+
+	// Disable a the Save toolbar button
+	CToolbar& TB = GetToolbar();
+	TB.DisableButton(IDM_FILE_SAVE);
+	TB.DisableButton(IDM_IMAGE_ADJUST);
+	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
+	SetMenuIcons(m_ToolbarData, RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
 }
 
 void CMainFrame::OnFileOpen()
@@ -152,6 +168,10 @@ void CMainFrame::OnFileOpen()
 	// Save the filename
 	m_PathName = szFilePathName;
 	AddMRUEntry(szFilePathName);
+
+	CToolbar& TB = GetToolbar();
+	TB.EnableButton(IDM_IMAGE_ADJUST);
+	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 }
 
 void CMainFrame::OnInitialUpdate()
