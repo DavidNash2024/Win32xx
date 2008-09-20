@@ -43,9 +43,9 @@
 #define DOCKABLE_H
 
 
-#include "../Win32++/wincore.h"
-#include "../Win32++/gdi.h"
-#include "../Win32++/Default_Resource.h"
+#include "wincore.h"
+#include "gdi.h"
+#include "Default_Resource.h"
 
 
 // Docking Styles
@@ -158,6 +158,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual void RecalcDockLayout();
+		virtual void RecalcDockChildLayout(CRect rc);
 		virtual void SendNotify(UINT nMessageID);
 		void ShowStats();	// To-do: Remove this function
 		virtual void UnDock();
@@ -427,7 +428,9 @@ namespace Win32xx
 			break;
 		case WM_MOUSEACTIVATE:
 			// Focus changed, so redraw the captions
-			m_pDock->GetDockAncestor()->RecalcDockLayout();
+			{
+				m_pDock->RecalcDockLayout();
+			}
 			break;
 		}
 
@@ -489,23 +492,23 @@ namespace Win32xx
 			// Adjust docked width if required
 			if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
 			{
-				double ClientWidth = m_Client.GetWindowRect().Width();
-				if (pDockable->GetDockWidth() > ((ClientWidth -m_BarWidth)/2.0))
-					pDockable->SetDockWidth(max(m_BarWidth, (int)((ClientWidth -m_BarWidth)/2.0)));
+				double Width = GetWindowRect().Width();
+				if (pDockable->GetDockWidth() > ((Width -m_BarWidth)/2.0))
+					pDockable->SetDockWidth(max(m_BarWidth, (int)((Width -m_BarWidth)/2.0)));
 				
 				pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Width();
 			}
 			else
 			{
-				double ClientWidth = m_Client.GetWindowRect().Height();
-				if (pDockable->GetDockWidth() > ((ClientWidth -m_BarWidth)/2.0))
-					pDockable->SetDockWidth(max(m_BarWidth, (int)((ClientWidth -m_BarWidth)/2.0)));
+				double Height = GetWindowRect().Height();
+				if (pDockable->GetDockWidth() > ((Height -m_BarWidth)/2.0))
+					pDockable->SetDockWidth(max(m_BarWidth, (int)((Height -m_BarWidth)/2.0)));
 				
 				pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Height();
 			}
 			
 			// Redraw the docked windows
-			GetDockAncestor()->RecalcDockLayout();
+			RecalcDockLayout();
 			pDockable->m_Client.Invalidate();
 			pDockable->GetView()->SetFocus();
 		}
@@ -777,37 +780,43 @@ namespace Win32xx
 		wc.lpszClassName = _T("Win32++ Dockable");
 	}
 
-	inline void CDockable::RecalcDockLayout()
-	{
-		HDWP hdwp = BeginDeferWindowPos(4);
+	inline void CDockable::RecalcDockChildLayout(CRect rc)
+	{	 
+		// This funcion positions the Dockable window, along with the Dockable's
+		// dock children, and draws the splitter bars.
+		// Note: This function is used recursively.
 
-		CRect rc = GetWindowRect();
-		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
-
+		// Step 1: Set this Dockable's position	(unless this is the dock ancestor).
+		// Note:The dock ancestor is the parent of all dockables. It's size is   
+		// not managed here. It's typically set in CFrame::RecalcLayout.
+		if (this != GetDockAncestor())
+		{
+			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			MapWindowPoints(GetDockParent()->GetHwnd(), GetHwnd(), (LPPOINT)&rc, 2);
+		}
+			
+		// Step 2: Set the position of each Dockable child 
 		for (UINT u = 0; u < m_vDockChildren.size(); ++u)
 		{
 			CRect rcChild = rc;
 			double DockWidth;
-		//	int DockWidth;
+
+			// Calculate the size of the Dockable child
 			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Width());
 				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Width(), rcChild.Width());
 				rcChild.right = rcChild.left + (int)DockWidth;
 				break;
 			case DS_DOCKED_RIGHT:
-			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Width());
 				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Width(), rcChild.Width());
 				rcChild.left = rcChild.right - (int)DockWidth;
 				break;
 			case DS_DOCKED_TOP:
-			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Height());
 				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Height(), rcChild.Height());
 				rcChild.bottom = rcChild.top + (int)DockWidth;
 				break;
 			case DS_DOCKED_BOTTOM:
-			//	DockWidth = min(m_vDockChildren[u]->GetDockWidth(), rcChild.Height());
 				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Height(), rcChild.Height());
 				rcChild.top = rcChild.bottom - (int)DockWidth;
 				break;
@@ -815,10 +824,11 @@ namespace Win32xx
 
 			if (m_vDockChildren[u]->IsDocked())
 			{
-				if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->GetHwnd(), NULL, rcChild.left, rcChild.top, rcChild.Width(), rcChild.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED );
+				// Position the Dockable child recursively (as it might also have Dockable children) 
+				m_vDockChildren[u]->RecalcDockChildLayout(rcChild);
 				rc.SubtractRect(rc, rcChild);
 
-				// Draw the bar
+				// Calculate the dimensions of the splitter bar
 				CRect rcBar = rc;
 				DWORD DockSide = m_vDockChildren[u]->GetDockStyle() & 0xF;
 				if (DS_DOCKED_LEFT   == DockSide) rcBar.right  = rcBar.left + m_BarWidth;
@@ -826,25 +836,37 @@ namespace Win32xx
 				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + m_BarWidth;
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_BarWidth;
 
-				if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_vDockChildren[u]->m_Bar.GetHwnd(), NULL, rcBar.left, rcBar.top, rcBar.Width(), rcBar.Height(), SWP_SHOWWINDOW );
+				// Draw the splitter bar
+				m_vDockChildren[u]->m_Bar.SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED );
 				rc.SubtractRect(rc, rcBar);
 			}
 		}
 
+		// Step 3: Set the client window position for this Dockable
 		if (IsDocked())
 		{
-			if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			// This dockable's client window occupies the area of the Dockable window
+			// that remains after the after the Dockable children and splitter bars have
+			// been taken into account.
+			m_Client.SetWindowPos(NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		}
 		else
 		{
+			// The dock ancestor (the parent of all Dockables) is always 'undocked'. 
 			if (this != GetDockAncestor())
 				rc = GetClientRect();
 
-			if (hdwp) hdwp = ::DeferWindowPos(hdwp, m_Client.GetHwnd(), NULL, rc.left, rc.top, rc.Width() , rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			m_Client.SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		}
-
-		if (hdwp) EndDeferWindowPos(hdwp);
+	
 		ShowStats();
+	}
+
+	inline void CDockable::RecalcDockLayout()
+	{
+		CRect rc = GetDockAncestor()->GetWindowRect();
+		MapWindowPoints(NULL, GetDockAncestor()->GetHwnd(), (LPPOINT)&rc, 2);
+		GetDockAncestor()->RecalcDockChildLayout(rc);
 	}
 
 	inline void CDockable::SendNotify(UINT nMessageID)
@@ -864,13 +886,26 @@ namespace Win32xx
 
 	inline void CDockable::ShowStats()
 	{
+		// ToDo:  Remove this function
 		TCHAR text[80];
-		HWND hParent = 0;
-		if (m_pDockParent) hParent = m_pDockParent->GetHwnd();
-		wsprintf(text, "Parent %#08lX,  Children %d", hParent, m_vDockChildren.size());
-		if (IsDocked()) lstrcat(text, _T(" Docked"));
-		::SetWindowText(GetView()->GetHwnd(), text);
+		TCHAR AllText[160];
+		wsprintf(text, _T("Handle: %#08lx"), GetHwnd());
 		::SetWindowText(m_hWnd, text);
+		lstrcpy(AllText, text);
+		
+		if (m_pDockParent)
+		{
+			wsprintf(text, _T("\r\nParent: %#08lx"), GetDockParent()->GetHwnd());
+			lstrcat(AllText, text);
+		}
+		else
+			lstrcat(AllText, _T("\r\nDockAncestor")); 
+		
+		CRect rc = m_Client.GetClientRect();
+		wsprintf(text, _T("\r\n#Children %d \r\nSize %d x %d"), m_vDockChildren.size(), rc.Width(), rc.Height());
+		lstrcat(AllText, text);
+		if (IsDocked()) lstrcat(AllText, _T("\r\nDocked"));
+		::SetWindowText(GetView()->GetHwnd(), AllText);
 	}
 
 	inline void CDockable::UnDock()
@@ -905,6 +940,7 @@ namespace Win32xx
 			{
 				m_vDockChildren[0]->m_DockStyle = m_DockStyle;
 				m_vDockChildren[0]->m_DockWidth = m_DockWidth;
+				m_vDockChildren[0]->m_DockWidthRatio = m_DockWidthRatio;
 				m_vDockChildren[0]->m_pDockParent = m_pDockParent;
 				m_vDockChildren[0]->SetParent(m_pDockParent->GetHwnd());
 				m_vDockChildren[0]->m_Bar.SetParent(m_pDockParent->GetHwnd());
@@ -923,12 +959,12 @@ namespace Win32xx
 			m_vDockChildren.clear();
 			m_pDockParent = NULL;
 
-			GetDockAncestor()->RecalcDockLayout();
+			SetWindowPos(NULL, rc,  SWP_FRAMECHANGED | SWP_DRAWFRAME);
+			CRect rcClient = GetClientRect();
+			m_Client.SetWindowPos(NULL, rcClient,  SWP_SHOWWINDOW);
+			m_Client.RedrawWindow();
 
-			// Set the undocked window to the correct size and redraw
-			CRect rcClient = m_Client.GetWindowRect();
-			SetWindowPos(NULL, rcClient,  SWP_FRAMECHANGED | SWP_DRAWFRAME);
-			Invalidate();
+			RecalcDockLayout();
 		}
 	}
 
@@ -950,8 +986,11 @@ namespace Win32xx
 					SendNotify(DN_DOCK_MOVE);
 				}
 
-				// Reposition the dock children
-				RecalcDockLayout();
+				if (hWnd == GetDockAncestor()->GetHwnd())
+				{
+					// Reposition the dock children
+					RecalcDockLayout();
+				}
 			}
 			break;
 

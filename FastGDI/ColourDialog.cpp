@@ -182,7 +182,6 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 	::StretchBlt(Dest1DC, 0, 0, nWidthDest, nHeightDest, MemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 
 	// Make a second copy of the bitmap
-	SetStretchBltMode(Dest2DC, COLORONCOLOR);
 	::BitBlt(Dest2DC, 0, 0, nWidthDest, nHeightDest, Dest1DC, 0, 0, SRCCOPY);
 	
 	// Release the bitmaps
