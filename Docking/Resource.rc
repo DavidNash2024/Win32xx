@@ -157,35 +157,6 @@ BEGIN
 END
 
 
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE
-BEGIN
-    "resrc1.h\0"
-END
-
-2 TEXTINCLUDE
-BEGIN
-    "#include ""resource.h""\r\n"
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE
-BEGIN
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table

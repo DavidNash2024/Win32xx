@@ -508,9 +508,8 @@ namespace Win32xx
 			}
 			
 			// Redraw the docked windows
-			RecalcDockLayout();
-			pDockable->m_Client.Invalidate();
 			pDockable->GetView()->SetFocus();
+			RecalcDockLayout();		
 		}
 	}
 
@@ -867,6 +866,7 @@ namespace Win32xx
 		CRect rc = GetDockAncestor()->GetWindowRect();
 		MapWindowPoints(NULL, GetDockAncestor()->GetHwnd(), (LPPOINT)&rc, 2);
 		GetDockAncestor()->RecalcDockChildLayout(rc);
+		GetDockAncestor()->RedrawWindow();
 	}
 
 	inline void CDockable::SendNotify(UINT nMessageID)
@@ -889,17 +889,17 @@ namespace Win32xx
 		// ToDo:  Remove this function
 		TCHAR text[80];
 		TCHAR AllText[160];
-		wsprintf(text, _T("Handle: %#08lx"), GetHwnd());
+		wsprintf(text, _T("Dockable: %#08lx"), GetHwnd());
 		::SetWindowText(m_hWnd, text);
 		lstrcpy(AllText, text);
 		
 		if (m_pDockParent)
 		{
-			wsprintf(text, _T("\r\nParent: %#08lx"), GetDockParent()->GetHwnd());
+			wsprintf(text, _T("\r\nDockParent: %#08lx"), GetDockParent()->GetHwnd());
 			lstrcat(AllText, text);
 		}
-		else
-			lstrcat(AllText, _T("\r\nDockAncestor")); 
+		else if (this == GetDockAncestor())
+			lstrcat(AllText, _T("\r\nThis is the DockAncestor")); 
 		
 		CRect rc = m_Client.GetClientRect();
 		wsprintf(text, _T("\r\n#Children %d \r\nSize %d x %d"), m_vDockChildren.size(), rc.Width(), rc.Height());
@@ -912,17 +912,7 @@ namespace Win32xx
 	{
 		if (IsDocked())
 		{
-			DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-			SetWindowLongPtr(GWL_STYLE, dwStyle);
-
-			// Supress redraw while we reposition the window
-			SetRedraw(FALSE);
-			CRect rc = GetWindowRect();
-			SetParent(0);
-			SetWindowPos(NULL, rc.left, rc.top, 0, 0, SWP_NOSIZE);
-			SetRedraw(TRUE);
-			m_Bar.ShowWindow(SW_HIDE);
-
+			// Promote the first child to replace this Dock parent 
 			for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
 			{
 				if (m_pDockParent->m_vDockChildren[u] == this)
@@ -934,8 +924,7 @@ namespace Win32xx
 					break;
 				}
 			}
-
-			// Promote the first child to replace this Dock parent
+		
 			if (m_vDockChildren.size() > 0)
 			{
 				m_vDockChildren[0]->m_DockStyle = m_DockStyle;
@@ -955,16 +944,27 @@ namespace Win32xx
 				m_vDockChildren[0]->m_vDockChildren.push_back(m_vDockChildren[u1]);
 			}
 
-			m_DockStyle = 0;
+			// Change the window to an "undocked" style
+			DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+			SetWindowLongPtr(GWL_STYLE, dwStyle);
+
+			m_Bar.ShowWindow(SW_HIDE);			
 			m_vDockChildren.clear();
-			m_pDockParent = NULL;
-
-			SetWindowPos(NULL, rc,  SWP_FRAMECHANGED | SWP_DRAWFRAME);
-			CRect rcClient = GetClientRect();
-			m_Client.SetWindowPos(NULL, rcClient,  SWP_SHOWWINDOW);
-			m_Client.RedrawWindow();
-
+			m_pDockParent = NULL;		
+			m_DockStyle = 0;
 			RecalcDockLayout();
+			ShowStats();
+
+			// Supress redraw while we reposition the window
+			SetRedraw(FALSE);
+			CRect rc = m_Client.GetWindowRect();
+			SetParent(0);
+			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			SetRedraw(TRUE);
+			
+			// Redraw all the windows
+			GetDockAncestor()->RedrawWindow();
+			RedrawWindow();
 		}
 	}
 
@@ -984,6 +984,8 @@ namespace Win32xx
 				{
 					// Send a Move notification to the parent
 					SendNotify(DN_DOCK_MOVE);
+					CRect rc = GetClientRect();
+					m_Client.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 				}
 
 				if (hWnd == GetDockAncestor()->GetHwnd())
