@@ -429,6 +429,7 @@ namespace Win32xx
 		case WM_MOUSEACTIVATE:
 			// Focus changed, so redraw the captions
 			{
+				m_pView->SetFocus();
 				m_pDock->RecalcDockLayout();
 			}
 			break;
