@@ -1,5 +1,5 @@
 // Win32++  Version 6.3
-// Released: 14th September, 2008 by:
+// Released: 7th October, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -945,7 +945,7 @@ namespace Win32xx
 	
 	inline void CDockable::ShowDockHint(LPDRAGPOS pDragPos)
 	{
-		UINT uDockSide = GetDockSide(pDragPos);
+		UINT uDockSide = GetDockSide(pDragPos) & 0xF;
 		CDockable* pDockTarget = GetDockableFromPoint(pDragPos->ptPos);
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
 		if (uDockSide & 0xF)
@@ -963,19 +963,26 @@ namespace Win32xx
 					MapWindowPoints(NULL, pDockTarget->GetHwnd(), (LPPOINT)&rcHint, 2);
 				}
 
+				int Width = pDockDrag->GetDockWidth();
+				CRect rcDockTarget = pDockTarget->GetWindowRect();			 
+				if ((uDockSide  == DS_DOCKED_LEFT) || (uDockSide  == DS_DOCKED_RIGHT))
+					Width = min(Width, rcDockTarget.Width()/2);
+				else
+					Width = min(Width, rcDockTarget.Height()/2);	
+
 				switch (uDockSide)
 				{
 				case DS_DOCKED_LEFT:
-					rcHint.right = rcHint.left + pDockDrag->GetDockWidth();
+					rcHint.right = rcHint.left + Width;
 					break;
 				case DS_DOCKED_RIGHT:
-					rcHint.left = rcHint.right - pDockDrag->GetDockWidth();
+					rcHint.left = rcHint.right - Width;
 					break;
 				case DS_DOCKED_TOP:
-					rcHint.bottom = rcHint.top + pDockDrag->GetDockWidth();
+					rcHint.bottom = rcHint.top + Width;
 					break;
 				case DS_DOCKED_BOTTOM:
-					rcHint.top = rcHint.bottom - pDockDrag->GetDockWidth();
+					rcHint.top = rcHint.bottom - Width;
 					break;
 				}
 				
