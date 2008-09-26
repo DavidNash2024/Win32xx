@@ -72,6 +72,7 @@
 					<Add library="User32" />
 					<Add library="Kernel32" />
 					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -100,6 +101,7 @@
 					<Add library="Kernel32" />
 					<Add library="User32" />
 					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -140,6 +142,8 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
+		<Unit filename="ColourDialog.cpp" />
+		<Unit filename="ColourDialog.h" />
 		<Unit filename="FastGDIApp.cpp" />
 		<Unit filename="FastGDIApp.h" />
 		<Unit filename="Mainfrm.cpp" />
@@ -151,7 +155,6 @@
 		<Unit filename="View.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
-		<Unit filename="resrc1.h" />
 		<Unit filename="..\Win32++\Default_Resource.h" />
 		<Unit filename="..\Win32++\Dialog.h" />
 		<Unit filename="..\Win32++\Frame.h" />

@@ -11,7 +11,7 @@
 class CColourDialog : public CDialog
 {
 public:
-    CColourDialog(UINT nResID); 
+    CColourDialog(UINT nResID);
     virtual ~CColourDialog();
 	virtual void CColourDialog::CreateImagePreviews(HBITMAP hbmImage);
 
@@ -22,7 +22,7 @@ protected:
 
 private:
 	void OnHScroll(WPARAM wParam, LPARAM lParam);
-	void OnPaint();
+	void OnPaintPreview();
 
 	// CWnd object for the dialog controls to attach to
 	CWnd m_RedSlider;
