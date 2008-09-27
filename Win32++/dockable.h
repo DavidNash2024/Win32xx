@@ -207,9 +207,7 @@ namespace Win32xx
 		int m_NCHeight;
 		DWORD m_DockStyle;
 		HBRUSH m_hbrDithered;
-		HBITMAP	m_hbm;
-		BOOL m_IsDraggingDockable;
-		BOOL m_IsInDockZone;
+		HBITMAP	m_hbmHash;
 
 	}; // class CDockable
 
@@ -502,8 +500,8 @@ namespace Win32xx
 					m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
-		m_hbm = ::CreateBitmap (8, 8, 1, 1, HashPattern);
-		m_hbrDithered = ::CreatePatternBrush (m_hbm);
+		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
+		m_hbrDithered = ::CreatePatternBrush (m_hbmHash);
 		m_Bar.SetDock(this);
 		m_Client.SetDock(this);
 		m_pDockAncestor = this;
@@ -517,7 +515,7 @@ namespace Win32xx
 		}
 
 		::DeleteObject(m_hbrDithered);
-		::DeleteObject(m_hbm);
+		::DeleteObject(m_hbmHash);
 	}
 
 	inline CDockable* CDockable::AddDockChild(CDockable* pDockable, UINT uDockSide, int DockWidth)
@@ -549,7 +547,8 @@ namespace Win32xx
 		// Adjust docked width if required
 		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
-			double Width = GetWindowRect().Width();
+		//	double Width = GetWindowRect().Width();
+			double Width = m_Client.GetWindowRect().Width();
 			if (pDockable->GetDockWidth() > ((Width -m_BarWidth)/2.0))
 				pDockable->SetDockWidth(max(m_BarWidth, (int)((Width -m_BarWidth)/2.0)));
 			
@@ -557,7 +556,8 @@ namespace Win32xx
 		}
 		else
 		{
-			double Height = GetWindowRect().Height();
+		//	double Height = GetWindowRect().Height();
+			double Height = m_Client.GetWindowRect().Height();
 			if (pDockable->GetDockWidth() > ((Height -m_BarWidth)/2.0))
 				pDockable->SetDockWidth(max(m_BarWidth, (int)((Height -m_BarWidth)/2.0)));
 			
@@ -707,7 +707,6 @@ namespace Win32xx
 				if (IsDocked())
 				{
 					UnDock();
-					m_IsDraggingDockable = TRUE;
 					SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
 				}
 			}
@@ -715,35 +714,6 @@ namespace Win32xx
 
 		case DN_DOCK_MOVE:
 			{
-				UINT uDockSide = GetDockSide((LPDRAGPOS)lParam);
-
-				switch (uDockSide)
-				{
-				case DS_DOCKED_LEFT:
-					TRACE("Could dock Left\n");
-					m_IsInDockZone = TRUE;
-					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
-					break;
-				case DS_DOCKED_RIGHT:
-					TRACE("Could dock Right\n");
-					m_IsInDockZone = TRUE;
-					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
-					break;
-				case DS_DOCKED_TOP:
-					TRACE("Could dock Top\n");
-					m_IsInDockZone = TRUE;
-					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
-					break;
-				case DS_DOCKED_BOTTOM:
-					TRACE("Could dock Bottom\n");
-					m_IsInDockZone = TRUE;
-					SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_TRACK4WAY)));
-					break;
-				default:
-					m_IsInDockZone = FALSE;
-					SetCursor(LoadCursor(NULL, IDC_ARROW));
-					break;
-				}
 				ShowDockHint((LPDRAGPOS)lParam);
 			}
 			break;
@@ -754,7 +724,6 @@ namespace Win32xx
 				HWND hDockable = pdp->hdr.hwndFrom;
 				CDockable* pDock = (CDockable*)FromHandle(hDockable);
 				if (DockSide) Dock(pDock, DockSide);
-				m_IsDraggingDockable = FALSE;
 				SetCursor(LoadCursor(NULL, IDC_ARROW));
 				GetDockHint().Destroy();
 			}
@@ -921,7 +890,6 @@ namespace Win32xx
 
 	inline void CDockable::RecalcDockLayout()
 	{
-		TRACE("RecalcDockLayout\n");
 		CRect rc = GetDockAncestor()->GetWindowRect();
 		MapWindowPoints(NULL, GetDockAncestor()->GetHwnd(), (LPPOINT)&rc, 2);
 		GetDockAncestor()->RecalcDockChildLayout(rc);
@@ -940,7 +908,8 @@ namespace Win32xx
 
 		if (pDock)
 			pDock->SendMessage(WM_NOTIFY, 0, (LPARAM)&DragPos);
-
+		else if (GetDockHint().IsWindow())
+			GetDockHint().Destroy();
 	}
 	
 	inline void CDockable::ShowDockHint(LPDRAGPOS pDragPos)
@@ -964,7 +933,7 @@ namespace Win32xx
 				}
 
 				int Width = pDockDrag->GetDockWidth();
-				CRect rcDockTarget = pDockTarget->GetWindowRect();			 
+				CRect rcDockTarget = pDockTarget->m_Client.GetWindowRect();			 
 				if ((uDockSide  == DS_DOCKED_LEFT) || (uDockSide  == DS_DOCKED_RIGHT))
 					Width = min(Width, rcDockTarget.Width()/2);
 				else
@@ -985,19 +954,18 @@ namespace Win32xx
 					rcHint.top = rcHint.bottom - Width;
 					break;
 				}
-				
-							
+										
 				// Save the Dock window's blue tinted bitmap
-				CDC DockTargetDC;
+				CDC TargetDC;
 				if (pDockTarget == GetDockAncestor())
-					DockTargetDC = GetDC(pDockTarget->m_Client.GetHwnd());
+					TargetDC = GetDC(pDockTarget->m_Client.GetHwnd());
 				else
-					DockTargetDC = GetWindowDC(pDockTarget->m_Client.GetHwnd());
+					TargetDC = GetWindowDC(pDockTarget->GetHwnd());
 				
-				CDC MemDC = CreateCompatibleDC(DockTargetDC);
-				CRect rcDock = pDockTarget->GetClientRect();
-				MemDC.CreateCompatibleBitmap(DockTargetDC, rcHint.Width(), rcHint.Height());
-				BitBlt(MemDC, 0, 0, rcHint.Width(), rcHint.Height(), DockTargetDC, rcHint.left, rcHint.top, SRCCOPY);
+				CDC MemDC = CreateCompatibleDC(TargetDC);
+				CRect rcBitmap = rcHint;
+				MemDC.CreateCompatibleBitmap(TargetDC, rcBitmap.Width(), rcBitmap.Height());
+				BitBlt(MemDC, 0, 0, rcBitmap.Width(), rcBitmap.Height(), TargetDC, rcBitmap.left, rcBitmap.top, SRCCOPY);
 				HBITMAP hbmDock = MemDC.DetachBitmap();
 				TintBitmap(hbmDock, -128, -128, 0);
 				GetDockHint().SetBitmap(hbmDock);
