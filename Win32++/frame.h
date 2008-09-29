@@ -1,5 +1,5 @@
 // Win32++  Version 6.3
-// Released: 7th October, 2008 by:
+// Released: 15th October, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -207,7 +207,10 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
-		// Attributes
+		// Virtual Attributes
+		// If you need to modify the default behaviour of the menubar, rebar, 
+		// statusbar or toolbar, inherrit from those classes, and override 
+		// the following attribute functions.
 		virtual CMenubar& GetMenubar() const		{return (CMenubar&)m_Menubar;}
 		virtual CRebar& GetRebar() const			{return (CRebar&)m_Rebar;}
 		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}

@@ -9,12 +9,24 @@
 
 class CMyDockable : public CDockable
 {
+protected:
+	// Override nested class
+//	class CMyDockBar : public CDockBar
+//	{
+//	};
 public:
 	CMyDockable();
 	virtual ~CMyDockable() {}
+//	virtual CMyDockBar& GetDockBar() const 
+//	{
+		// Override GetDockbar to use overridden nested class
+	//	TRACE("GetMyDockBar\n");
+//		return (CMyDockBar&)m_MyDockBar;
+//	} 
 private:
 
 	CView m_View;
+//	CMyDockBar m_MyDockBar;
 };
 
 

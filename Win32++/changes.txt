@@ -1,15 +1,24 @@
 Version 6.3
 ===========
-* Added Docking
- - Added CDockable
-* Added PreTranslateMessage. Allows modeless dialogs and propertysheets to
+
+Major Changes
+-------------
+Added Docking.
+
+
+
+Changes
+-------
+* Added CDockable class to support docking
+* Added CWnd::PreTranslateMessage. Allows modeless dialogs and propertysheets to
                              process the tab (and other) keys.
 * Added CWnd::Destroy. Allows a CWnd to be reused.
 * Removed CWinApp::GetFrame
 * Removed CWinApp::SetFrame
 * Changed CFrame::SetView.  Can now change from one view window to another
 * Added FastGDI demo.  Demonstrates the use of the TintBitmap function.
-*
+* Added DrawBitmap
+* Added TintBitmap
 
 
 

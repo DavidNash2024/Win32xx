@@ -53,11 +53,18 @@
 #define IDW_FILE_MRU_FILE15              89
 #define IDW_FILE_MRU_FILE16              90
 
-// Cursor Resource
+// Cursor Resources
 #define IDW_SPLITH                       91
 #define IDW_SPLITV                       92
 #define IDW_TRACK4WAY                    93
 
+// Docking Bitmap Resources
+#define IDW_SDBOTTOM                     94
+#define IDW_SDCENTER                     95
+#define IDW_SDLEFT                       96
+#define IDW_SDMIDDLE                     97
+#define IDW_SDRIGHT                      98
+#define IDW_SDTOP                        99
 
 
 // A generic ID for any static control

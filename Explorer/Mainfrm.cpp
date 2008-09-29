@@ -188,8 +188,6 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 
 void CMainFrame::OnSetFocus()
 {
-	CFrame::OnSetFocus();
-
 	// Pass the focus back to the control that had it before
 	if (m_MainView.GetOldFocus())
 		::SetFocus(m_MainView.GetOldFocus());

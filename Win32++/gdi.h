@@ -1,5 +1,5 @@
 // Win32++  Version 6.3
-// Released: 7th October, 2008 by:
+// Released: 15th October, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -599,6 +599,27 @@ namespace Win32xx
 	/////////////////////////////////////////////////////////////////
 	// Definitions for some global functions in the Win32xx namespace
 	//
+
+	inline void DrawBitmap(HDC hDC, int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask)
+	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
+	// Suitable for use with a Window DC or a memory DC
+	{
+		// Create the Image memory DC
+		CDC dcImage = CreateCompatibleDC(hDC);
+		dcImage.AttachBitmap(hbmImage);
+			
+		// Create the Mask memory DC
+		HBITMAP hbmMask = CreateBitmap(cx, cy, 1, 1, NULL);
+		CDC dcMask = CreateCompatibleDC(hDC);
+		dcMask.AttachBitmap(hbmMask);
+		SetBkColor(dcImage, clrMask);
+		BitBlt(dcMask, 0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
+
+		// Mask the image to the DC provided
+		BitBlt(hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+		BitBlt(hDC, x, y, cx, cy, dcMask, 0, 0, SRCAND);
+		BitBlt(hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+	}
 
 	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
 	// A simple but efficient Gradient Filler compatible with all Windows operating systems
