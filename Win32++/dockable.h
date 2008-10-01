@@ -308,7 +308,7 @@ namespace Win32xx
 	// TODO: Do we need this function?
 	inline void CDockable::CDockClient::Draw3DBorder(RECT& Rect)
 	{
-	/*	// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
+		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
 		// This draws a 2 pixel border around the specified Rect
 		CDC dc = GetWindowDC(m_hWnd);
 		CRect rcw = Rect;
@@ -327,7 +327,7 @@ namespace Win32xx
 		dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DLIGHT));
 		MoveToEx(dc, rcw.Width()-2, 1, NULL);
 		LineTo(dc, rcw.Width()-2, rcw.Height()-2);
-		LineTo(dc, 1, rcw.Height()-2); */
+		LineTo(dc, 1, rcw.Height()-2); 
 	}
 
 	inline void CDockable::CDockClient::PreRegisterClass(WNDCLASS& wc)
@@ -571,15 +571,17 @@ namespace Win32xx
 		cs.cx = 88;
 		cs.cy = 88;
 		cs.style = WS_POPUP;
+		cs.dwExStyle = WS_EX_TOPMOST;
 		cs.lpszClass = _T("Win32++ DockTargeting");
 	}
 
 	inline CDockable::CDockTargeting::SetRegion()
 	{
+		// Use a region to create an irregularly shapped window
 		POINT ptArray[16] = { {0,29}, {22, 29}, {29, 22}, {29, 0}, 
 		                      {58, 0}, {58, 22}, {64, 29}, {87, 29}, 
-		                      {87, 57}, {64, 57}, {57, 64}, {57, 87}, 
-		                      {29, 87}, {29, 64}, {22, 57}, {0, 57} };
+		                      {87, 58}, {64, 58}, {58, 64}, {58, 87}, 
+		                      {29, 87}, {29, 64}, {23, 58}, {0, 58} };
 	
 		HRGN hrgnPoly = CreatePolygonRgn(ptArray, 16, WINDING);
 		SetWindowRgn(hrgnPoly, FALSE);
@@ -636,21 +638,21 @@ namespace Win32xx
 
 	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
 	{
+		// Set the dock styles
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
+		pDockable->SetDockStyle(DockStyle);
+		pDockable->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE );
+
 		// Set the docking relationships
 		m_vDockChildren.push_back(pDockable);
 		pDockable->SetParent(m_hWnd);
 		pDockable->m_pDockParent = this;
 		pDockable->GetDockBar().SetParent(m_hWnd);
-
-		// Set the dock styles
-		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
-		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
-		pDockable->SetDockStyle(DockStyle);
 		
 		// Adjust docked width if required
 		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
-		//	double Width = GetWindowRect().Width();
 			double Width = GetDockClient().GetWindowRect().Width();
 			if (pDockable->GetDockWidth() > ((Width -m_DockBarWidth)/2.0))
 				pDockable->SetDockWidth(max(m_DockBarWidth, (int)((Width -m_DockBarWidth)/2.0)));
@@ -659,7 +661,6 @@ namespace Win32xx
 		}
 		else
 		{
-		//	double Height = GetWindowRect().Height();
 			double Height = GetDockClient().GetWindowRect().Height();
 			if (pDockable->GetDockWidth() > ((Height -m_DockBarWidth)/2.0))
 				pDockable->SetDockWidth(max(m_DockBarWidth, (int)((Height -m_DockBarWidth)/2.0)));
@@ -669,6 +670,7 @@ namespace Win32xx
 		
 		// Redraw the docked windows
 		pDockable->GetView()->SetFocus();
+		pDockable->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE );
 		RecalcDockLayout();		
 	}
 
@@ -1069,12 +1071,17 @@ namespace Win32xx
 		int cyImage = 88;
 
 		if (!GetDockTargeting().IsWindow())
+		{
+			TRACE("Targeting Window Created\n");
 			GetDockTargeting().Create();
-		
+		}
+
+
 		CRect rcTarget = pDockTarget->GetDockClient().GetWindowRect();
 		int xMid = rcTarget.left + (rcTarget.Width() - cxImage)/2;
 		int yMid = rcTarget.top + (rcTarget.Height() - cyImage)/2;
-		GetDockTargeting().SetWindowPos(HWND_TOPMOST, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW); 
+				
+		GetDockTargeting().SetWindowPos(NULL, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);			
 	}
 
 	inline void CDockable::ShowStats()
@@ -1098,7 +1105,10 @@ namespace Win32xx
 		wsprintf(text, _T("\r\n#Children %d \r\nSize %d x %d"), m_vDockChildren.size(), rc.Width(), rc.Height());
 		lstrcat(AllText, text);
 		if (IsDocked()) lstrcat(AllText, _T("\r\nDocked"));
+		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_TOPMOST)
+			lstrcat(AllText, _T("\r\nTopMost"));
 		::SetWindowText(GetView()->GetHwnd(), AllText);
+
 	}
 
 	inline void CDockable::UnDock()
@@ -1152,7 +1162,7 @@ namespace Win32xx
 			SetRedraw(FALSE);
 			CRect rc = GetDockClient().GetWindowRect();
 			SetParent(0);
-			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			SetWindowPos(HWND_TOPMOST, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 			SetRedraw(TRUE);
 			
 			// Redraw all the windows
@@ -1192,7 +1202,6 @@ namespace Win32xx
 		case DM_ISDOCKABLE:
 			// This is a CDockable window
 			return TRUE;
-
 		}
 
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
