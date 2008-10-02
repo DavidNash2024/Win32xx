@@ -49,7 +49,6 @@
 
 
 // Docking Styles
-#define DS_NOT_DOCKED       0x0000
 #define DS_DOCKED_LEFT		0x0001
 #define DS_DOCKED_RIGHT		0x0002
 #define DS_DOCKED_TOP		0x0004
@@ -122,7 +121,7 @@ namespace Win32xx
 			CDockClient();
 			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
-			virtual BOOL IsLeftButtonDown();
+		//	virtual BOOL IsLeftButtonDown();
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void PreCreate(CREATESTRUCT& cs);
 			virtual void SendNotify(UINT nMessageID);
@@ -342,20 +341,6 @@ namespace Win32xx
 		cs.dwExStyle = WS_EX_CLIENTEDGE;
 	}
 
-	inline BOOL CDockable::CDockClient::IsLeftButtonDown()
-	{
-		SHORT state;
-		if (GetSystemMetrics(SM_SWAPBUTTON))
-			// Mouse buttons are swapped
-			state = GetAsyncKeyState(VK_RBUTTON);
-		else
-			// Mouse buttons are not swapped
-			state = GetAsyncKeyState(VK_LBUTTON);
-
-		// returns true if the left mouse button is down
-		return (state & 0x8000);
-	}
-
 	inline void CDockable::CDockClient::SendNotify(UINT nMessageID)
 	{
 		// Fill the DragPos structure with data
@@ -442,6 +427,7 @@ namespace Win32xx
 				DefWindowProc(hWnd, uMsg, wParam, lParam);
 				
 				// Acquire the DC for our NonClient painting
+				// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
 				CDC dc;
 				if (wParam != 1)
 					dc = GetDCEx(hWnd, (HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
@@ -532,6 +518,16 @@ namespace Win32xx
 	{
 		if (uDockSide & 0xF)
 		{
+			// Ensure a new hint window is created if dock side changes
+			static UINT uDockSideOld = 0;
+			if (uDockSide != uDockSideOld)
+			{
+				Destroy();
+				pDockTarget->RedrawWindow();
+				TRACE("Dock Side Changed \n");
+			}
+			uDockSideOld = uDockSide;
+
 			// Create the hint window if required
 			if (!IsWindow()) 
 			{
@@ -573,11 +569,12 @@ namespace Win32xx
 				dcMem.CreateCompatibleBitmap(dcTarget, rcBitmap.Width(), rcBitmap.Height());
 				BitBlt(dcMem, 0, 0, rcBitmap.Width(), rcBitmap.Height(), dcTarget, rcBitmap.left, rcBitmap.top, SRCCOPY);
 				HBITMAP hbmDock = dcMem.DetachBitmap();
-				TintBitmap(hbmDock, -64, -64, 0);
+				TintBitmap(hbmDock, -80, -64, 0);
 				SetBitmap(hbmDock);
 
 				// Create the Hint window
-				Create(pDockTarget->GetDockAncestor()->GetHwnd());
+				if (!IsWindow()) 
+					Create(pDockTarget->GetDockAncestor()->GetHwnd());
 				MapWindowPoints(pDockTarget->GetHwnd(), pDockTarget->GetDockAncestor()->GetHwnd(), (LPPOINT)&rcHint, 2);
 				
 				SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER);
@@ -630,7 +627,11 @@ namespace Win32xx
 		cs.cx = 88;
 		cs.cy = 88;
 		cs.style = WS_POPUP;
-		cs.dwExStyle = WS_EX_TOPMOST;
+		
+		// WS_EX_TOOLWINDOW prevents the window being displayed on the taskbar
+		// WS_EX_TOPMOST keeps the window on top of all non Topmost windows
+		cs.dwExStyle = WS_EX_TOPMOST|WS_EX_TOOLWINDOW;
+		
 		cs.lpszClass = _T("Win32++ DockTargeting");
 	}
 
@@ -656,17 +657,28 @@ namespace Win32xx
 		int cxImage = 88;
 		int cyImage = 88;
 
+		// Ensure a new window if the dock target changes
+		static CDockable* pDockTargetOld = 0;
+		if (pDockTarget != pDockTargetOld)
+		{
+			Destroy();
+			TRACE("Changed Dock Target\n");
+		}
+		pDockTargetOld = pDockTarget;
+
 		if (!IsWindow())
 		{
 			TRACE("Targeting Window Created\n");
 			Create();
 		}
-
+		
 		CRect rcTarget = pDockTarget->GetDockClient().GetWindowRect();
 		int xMid = rcTarget.left + (rcTarget.Width() - cxImage)/2;
 		int yMid = rcTarget.top + (rcTarget.Height() - cyImage)/2;
 				
-		SetWindowPos(NULL, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+		SetWindowPos(HWND_TOPMOST, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+
+		// Create the docking zone rectangles
 		CPoint pt = pDragPos->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		CRect rcLeft(0, 29, 31, 58);
@@ -674,34 +686,37 @@ namespace Win32xx
 		CRect rcRight(55, 29, 87, 58);
 		CRect rcBottom(29, 55, 58, 87);
 		
+		// Test if our cursor is in one of the docking zones
 		if (PtInRect(&rcLeft, pt)) 
 		{
-			TRACE("Dock LEFT!\n");
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockTarget->m_DockZone = DS_DOCKED_LEFT;
+			pDockDrag->m_DockZone = DS_DOCKED_LEFT;
 		}
 		else if (PtInRect(&rcTop, pt))
 		{
-			TRACE("Dock TOP!\n");
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
 			pDockTarget->m_DockZone = DS_DOCKED_TOP;
+			pDockDrag->m_DockZone = DS_DOCKED_TOP;
 		}
 		else if (PtInRect(&rcRight, pt))
 		{
-			TRACE("Dock RIGHT!\n");
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockTarget->m_DockZone = DS_DOCKED_RIGHT;
+			pDockDrag->m_DockZone = DS_DOCKED_RIGHT;
 		}
 		else if (PtInRect(&rcBottom, pt))
 		{
-			TRACE("Dock BOTTOM!\n");
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
 			pDockTarget->m_DockZone = DS_DOCKED_BOTTOM;
+			pDockDrag->m_DockZone = DS_DOCKED_BOTTOM;
 		}
 		else
 		{
+			// Not in a docking zone, so clean up
 			pDockTarget->GetDockHint().Destroy();
 			pDockTarget->m_DockZone = 0;
+			pDockDrag->m_DockZone = 0;
 		}
 	}
 	
@@ -921,9 +936,12 @@ namespace Win32xx
 			break;
 
 		case DN_DOCK_END:
-			{			
+			{	
 				CDockable* pDock = (CDockable*)FromHandle(pdp->hdr.hwndFrom);
-				if (m_DockZone) Dock(pDock, m_DockZone);
+				UINT DockZone = m_DockZone;
+				m_DockZone = 0;
+				pDock->m_DockZone = 0;
+				if (DockZone) Dock(pDock, DockZone);
 				GetDockHint().Destroy();
 				GetDockTargeting().Destroy();
 			}
@@ -1210,9 +1228,21 @@ namespace Win32xx
 			SendNotify(DN_DOCK_END);
 			break;
 
+		case WM_WINDOWPOSCHANGING:
+			{
+				// Suspend dock drag moving while over dock zone
+				if (m_DockZone)
+				{
+                	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
+					pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_NOREDRAW|SWP_NOOWNERZORDER;
+					return 0;
+				} 
+				break;
+			}
+		
 		case WM_WINDOWPOSCHANGED:
 			{
-				if (!IsDocked() && (hWnd != GetDockAncestor()->GetHwnd()))
+				if (!IsDocked() && (hWnd != GetDockAncestor()->GetHwnd()) && IsLeftButtonDown())
 				{
 					// Send a Move notification to the parent
 					SendNotify(DN_DOCK_MOVE);

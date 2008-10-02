@@ -406,6 +406,20 @@ namespace Win32xx
 		return str;
 	}
 
+	inline BOOL IsLeftButtonDown()
+	{
+		SHORT state;
+		if (GetSystemMetrics(SM_SWAPBUTTON))
+			// Mouse buttons are swapped
+			state = GetAsyncKeyState(VK_RBUTTON);
+		else
+			// Mouse buttons are not swapped
+			state = GetAsyncKeyState(VK_LBUTTON);
+
+		// returns true if the left mouse button is down
+		return (state & 0x8000);
+	}
+
 	/////////////////////////////////////////
 	// Definition of the CSize class
 	// This class can be used to replace the SIZE structure

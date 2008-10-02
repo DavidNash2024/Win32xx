@@ -15,10 +15,11 @@ Changes
 * Added CWnd::Destroy. Allows a CWnd to be reused.
 * Removed CWinApp::GetFrame
 * Removed CWinApp::SetFrame
-* Changed CFrame::SetView.  Can now change from one view window to another
+* Changed CFrame::SetView.  Can now swap from one view window to another
 * Added FastGDI demo.  Demonstrates the use of the TintBitmap function.
 * Added DrawBitmap
 * Added TintBitmap
+* Added IsLeftButtonDown
 
 
 
