@@ -2,6 +2,7 @@
 // View.cpp
 
 #include "resource.h"
+#include "BrowserApp.h"
 #include "Mainfrm.h"
 #include "View.h"
 
@@ -102,54 +103,54 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
 	if (!pDispParams)
 		return E_INVALIDARG;
 
-	CMainFrame* pMainFrame = (CMainFrame*)GetApp()->GetFrame();
+	CMainFrame& MainFrame = GetBrowserApp().GetMainFrame();
 
 	switch (dispidMember)
 	{
 
 	case DISPID_BEFORENAVIGATE2:
-		pMainFrame->OnBeforeNavigate(pDispParams);
+		MainFrame.OnBeforeNavigate(pDispParams);
 		break;
 
 	case DISPID_COMMANDSTATECHANGE:
-		pMainFrame->OnCommandStateChange(pDispParams);
+		MainFrame.OnCommandStateChange(pDispParams);
 		break;
 
 	case DISPID_DOCUMENTCOMPLETE:
-		pMainFrame->OnDocumentComplete(pDispParams);
+		MainFrame.OnDocumentComplete(pDispParams);
 		break;
 
 	case DISPID_DOWNLOADBEGIN:
-		pMainFrame->OnDownloadBegin(pDispParams);
+		MainFrame.OnDownloadBegin(pDispParams);
 		break;
 
 	case DISPID_DOWNLOADCOMPLETE:
-		pMainFrame->OnDownloadBegin(pDispParams);
+		MainFrame.OnDownloadBegin(pDispParams);
 		break;
 
 	case DISPID_NAVIGATECOMPLETE2:
-		pMainFrame->OnNavigateComplete2(pDispParams);
+		MainFrame.OnNavigateComplete2(pDispParams);
 	   break;
 
 	case DISPID_PROGRESSCHANGE:
-		pMainFrame->OnProgressChange(pDispParams);
+		MainFrame.OnProgressChange(pDispParams);
 	   break;
 
 	case DISPID_PROPERTYCHANGE:
-		pMainFrame->OnPropertyChange(pDispParams);
+		MainFrame.OnPropertyChange(pDispParams);
 	   break;
 
 	case DISPID_STATUSTEXTCHANGE:
-		pMainFrame->OnStatusTextChange(pDispParams);
+		MainFrame.OnStatusTextChange(pDispParams);
 		break;
 
 	case DISPID_NEWWINDOW2:
-		pMainFrame->OnNewWindow2(pDispParams);
+		MainFrame.OnNewWindow2(pDispParams);
 		break;
 
 	case DISPID_TITLECHANGE:
-		pMainFrame->OnTitleChange(pDispParams);
-	   break;
+		MainFrame.OnTitleChange(pDispParams);
+		break;
    }
 
    return S_OK;

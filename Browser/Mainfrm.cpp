@@ -329,7 +329,6 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnTimer(WPARAM wParam)
 {
-	CFrame::OnTimer(wParam);
 	GetStatusbar().SetPartText(0, _T("Done"));
 }
 

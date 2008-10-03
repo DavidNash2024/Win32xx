@@ -195,12 +195,14 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_DockClient;}
 		int GetDockWidth() const {return m_DockWidth;}
 		CWnd* GetView() const {return GetDockClient().m_pView;}
-		BOOL IsDocked() const {return (BOOL)(m_DockStyle & 0xF);}
+		BOOL IsDocked() const {return m_Docked;}
 		void SetDockStyle(DWORD dwDockStyle) {m_DockStyle = dwDockStyle;} //To-do: ensure sane dock styles
 		void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
 		void SetView(CWnd& View) {GetDockClient().m_pView = &View;}
 
 		UINT m_DockZone;
+		BOOL m_BlockMove;
+		BOOL m_Docked;
 	private:
 		CDockBar m_DockBar;
 		CDockHint m_DockHint;
@@ -409,7 +411,7 @@ namespace Win32xx
 					{
 						CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
 						pDock->UnDock();
-						::PostMessage(m_hWndParent, WM_NCLBUTTONDOWN, wParam, lParam);
+					//	::SendMessage(m_hWndParent, WM_NCLBUTTONDOWN, wParam, lParam);
 					}
 				}
 				else if (IsLeftButtonDown())
@@ -691,32 +693,32 @@ namespace Win32xx
 		{
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockTarget->m_DockZone = DS_DOCKED_LEFT;
-			pDockDrag->m_DockZone = DS_DOCKED_LEFT;
+			pDockDrag->m_BlockMove = TRUE;
 		}
 		else if (PtInRect(&rcTop, pt))
 		{
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
 			pDockTarget->m_DockZone = DS_DOCKED_TOP;
-			pDockDrag->m_DockZone = DS_DOCKED_TOP;
+			pDockDrag->m_BlockMove = TRUE;
 		}
 		else if (PtInRect(&rcRight, pt))
 		{
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockTarget->m_DockZone = DS_DOCKED_RIGHT;
-			pDockDrag->m_DockZone = DS_DOCKED_RIGHT;
+			pDockDrag->m_BlockMove = TRUE;
 		}
 		else if (PtInRect(&rcBottom, pt))
 		{
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
 			pDockTarget->m_DockZone = DS_DOCKED_BOTTOM;
-			pDockDrag->m_DockZone = DS_DOCKED_BOTTOM;
+			pDockDrag->m_BlockMove = TRUE;
 		}
 		else
 		{
 			// Not in a docking zone, so clean up
 			pDockTarget->GetDockHint().Destroy();
 			pDockTarget->m_DockZone = 0;
-			pDockDrag->m_DockZone = 0;
+			pDockDrag->m_BlockMove = FALSE;
 		}
 	}
 	
@@ -734,7 +736,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() :  m_DockZone(0), m_pDockParent(NULL), m_DockBarWidth(4), 
+	inline CDockable::CDockable() :  m_DockZone(0), m_BlockMove(FALSE), m_Docked(FALSE), m_pDockParent(NULL), m_DockBarWidth(4), 
 					m_DockWidth(0), m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -771,6 +773,7 @@ namespace Win32xx
 	{
 		// Set the dock styles
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+		pDockable->m_BlockMove = FALSE;
 		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
 		pDockable->SetDockStyle(DockStyle);
 		pDockable->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE );
@@ -802,7 +805,9 @@ namespace Win32xx
 		// Redraw the docked windows
 		pDockable->GetView()->SetFocus();
 		pDockable->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE );
-		RecalcDockLayout();		
+		pDockable->m_Docked = TRUE;
+		RecalcDockLayout();
+		
 	}
 
 
@@ -836,25 +841,29 @@ namespace Win32xx
 	// Retrieves the top level Dockable at the given point
 	{
 		CDockable* pDock = NULL;
-		CRect rc = GetDockAncestor()->GetWindowRect();
-
+		CRect rc = GetDockAncestor()->GetDockClient().GetWindowRect();
 		if (PtInRect(&rc, pt))
-		{
 			pDock=GetDockAncestor();
-		}
 
 		HWND hAncestor = GetDockAncestor()->GetHwnd();
 		CPoint ptLocal = pt;
 		MapWindowPoints(NULL, hAncestor, &ptLocal, 1);
 		HWND hDockChild = ChildWindowFromPoint(hAncestor, ptLocal);
 
+		CDockable* pDockChild = 0;
 		while (SendMessage(hDockChild, DM_ISDOCKABLE, 0, 0))
 		{
-			pDock = (CDockable*)FromHandle(hDockChild);
+			pDockChild = (CDockable*)FromHandle(hDockChild);
 			ptLocal = pt;
 			MapWindowPoints(NULL, hDockChild, &ptLocal, 1);
 			hDockChild = ChildWindowFromPoint(hDockChild, ptLocal);
-			if (hDockChild == pDock->GetHwnd()) break;
+		} 
+		
+		if (pDockChild)
+		{
+			rc = pDockChild->GetDockClient().GetWindowRect();
+			if (PtInRect(&rc, pt))
+				pDock = pDockChild;
 		}
 
 		return pDock;
@@ -1065,7 +1074,8 @@ namespace Win32xx
 				break;
 			}
 
-			if (m_vDockChildren[u]->IsDocked())
+		//	if (m_vDockChildren[u]->IsDocked())
+			if (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 				// Position the Dockable child recursively (as it might also have Dockable children) 
 				m_vDockChildren[u]->RecalcDockChildLayout(rcChild);
@@ -1125,10 +1135,12 @@ namespace Win32xx
 
 		if (pDock)
 			pDock->SendMessage(WM_NOTIFY, 0, (LPARAM)&DragPos);
-		else if (GetDockHint().IsWindow())
-			GetDockHint().Destroy();
-		else if (GetDockTargeting().IsWindow())
-			GetDockTargeting().Destroy();
+		else
+		{
+			if (GetDockHint().IsWindow())		GetDockHint().Destroy();
+			if (GetDockTargeting().IsWindow())	GetDockTargeting().Destroy();
+			m_BlockMove = FALSE;
+		}
 	}
 	
 	inline void CDockable::ShowStats()
@@ -1155,7 +1167,6 @@ namespace Win32xx
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_TOPMOST)
 			lstrcat(AllText, _T("\r\nTopMost"));
 		::SetWindowText(GetView()->GetHwnd(), AllText);
-
 	}
 
 	inline void CDockable::UnDock()
@@ -1209,12 +1220,18 @@ namespace Win32xx
 			SetRedraw(FALSE);
 			CRect rc = GetDockClient().GetWindowRect();
 			SetParent(0);
-			SetWindowPos(HWND_TOPMOST, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 			SetRedraw(TRUE);
 			
 			// Redraw all the windows
 			GetDockAncestor()->RedrawWindow();
+			CPoint pt;
+			pt.GetCursorPos();
+			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
 			RedrawWindow();
+			m_Docked = FALSE;
+			TRACE("Undock Complete\n");
 		}
 	}
 
@@ -1225,16 +1242,18 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_EXITSIZEMOVE:
+			m_BlockMove = FALSE;
 			SendNotify(DN_DOCK_END);
 			break;
 
 		case WM_WINDOWPOSCHANGING:
 			{
 				// Suspend dock drag moving while over dock zone
-				if (m_DockZone)
+				if (m_BlockMove)
 				{
                 	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
-					pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_NOREDRAW|SWP_NOOWNERZORDER;
+				//	pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_NOREDRAW|SWP_NOOWNERZORDER;
+					pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED| SWP_NOOWNERZORDER;
 					return 0;
 				} 
 				break;
