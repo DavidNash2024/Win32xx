@@ -74,6 +74,7 @@
 
 // Docking Messages
 #define DM_ISDOCKABLE       WM_APP + 7
+#define DM_MAKETOPMOST      WM_APP + 8
 
 namespace Win32xx
 {
@@ -1256,22 +1257,22 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-	/*	case WM_ACTIVATE:
-			if (WA_INACTIVE == LOWORD(wParam))
+		case WM_ACTIVATE:
+			if (!IsDocked())
 			{
-				TRACE("Window is Deactivated\n");
-				SetWindowPos(HWND_TOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
-				ShowStats();
+				if (WA_INACTIVE == LOWORD(wParam))
+				{
+					TRACE("Window is Deactivated\n");
+					PostMessage(DM_MAKETOPMOST, TRUE, 0);
+				}
+				else
+				{
+					TRACE("Window is Activated\n");
+					PostMessage(DM_MAKETOPMOST, FALSE, 0);
+				}
 			}
-			else
-			{
-				TRACE("Window is Activated\n");
-				SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_SHOWWINDOW);
-				ShowStats();
-			}
-
 			break;
-*/
+
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
 			SendNotify(DN_DOCK_END);
@@ -1294,7 +1295,10 @@ namespace Win32xx
 				if (!IsDocked() && (hWnd != GetDockAncestor()->GetHwnd()) && IsLeftButtonDown() )
 				{
 					// Send a Move notification to the parent
-					SendNotify(DN_DOCK_MOVE);
+					LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
+					if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
+						SendNotify(DN_DOCK_MOVE);
+					
 					CRect rc = GetClientRect();
 					GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 				}
@@ -1310,8 +1314,27 @@ namespace Win32xx
 		case DM_ISDOCKABLE:
 			// This is a CDockable window
 			return TRUE;
+		
+		case DM_MAKETOPMOST:
+			if (wParam)
+			{				
+				SetWindowPos(HWND_TOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
+				ShowStats();
+			}
+			else
+			{
+				HWND hAncestor = GetAncestor(GetDockAncestor()->GetHwnd());
+				::SendMessage(hAncestor, WM_SETREDRAW, (WPARAM)FALSE, 0);
+			//	::SetActiveWindow(hAncestor);
+				::SetWindowPos(hAncestor, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
+				SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_SHOWWINDOW);
+				::SendMessage(hAncestor, WM_SETREDRAW, (WPARAM)TRUE, 0);
+				::RedrawWindow(hAncestor, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE);
+				ShowStats();
+			}
+			return 0;
 		}
-
+		
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
