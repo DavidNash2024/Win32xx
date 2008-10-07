@@ -121,7 +121,6 @@ namespace Win32xx
 			CDockClient();
 			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
-		//	virtual BOOL IsLeftButtonDown();
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void PreCreate(CREATESTRUCT& cs);
 			virtual void SendNotify(UINT nMessageID);
@@ -143,8 +142,8 @@ namespace Win32xx
 			CDockHint();
 			virtual ~CDockHint();
 			virtual void OnPaint(HDC hDC);
+			virtual void PreCreate(CREATESTRUCT &cs);
 			void SetBitmap(HBITMAP hbmBlueTint);
-		//	virtual void ShowHint(LPDRAGPOS pDragPos);
 			virtual void ShowHint(CDockable* pDockTarget, CDockable* pDockDrag, UINT uDockSide);
 		
 		private:
@@ -174,7 +173,6 @@ namespace Win32xx
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
 		virtual CDockable* const GetDockableFromPoint(POINT pt);
 		virtual CDockable* const GetDockAncestor();
-	//	virtual UINT const GetDockSide(LPDRAGPOS pdp);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -411,7 +409,6 @@ namespace Win32xx
 					{
 						CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
 						pDock->UnDock();
-					//	::SendMessage(m_hWndParent, WM_NCLBUTTONDOWN, wParam, lParam);
 					}
 				}
 				else if (IsLeftButtonDown())
@@ -510,6 +507,16 @@ namespace Win32xx
 		MemDC.DetachBitmap();
 	}
 
+	inline void CDockable::CDockHint::PreCreate(CREATESTRUCT &cs)
+	{
+		cs.style = WS_POPUP;
+		
+		// WS_EX_TOOLWINDOW prevents the window being displayed on the taskbar
+		cs.dwExStyle = WS_EX_TOOLWINDOW;
+		
+		cs.lpszClass = _T("Win32++ DockHint");
+	}
+
 	inline void CDockable::CDockHint::SetBitmap(HBITMAP hbm)
 	{
 		if (m_hbmBlueTint) ::DeleteObject(m_hbmBlueTint);
@@ -561,11 +568,20 @@ namespace Win32xx
 					rcHint.top = rcHint.bottom - Width;
 					break;
 				}
+
+				// Process any queued messages first
+				MSG msg;
+				while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					::TranslateMessage(&msg);
+					::DispatchMessage(&msg);
+				}
 										
 				// Save the Dock window's blue tinted bitmap
 				CDC dcTarget;
 				dcTarget = GetWindowDC(pDockTarget->GetHwnd());
 				
+				TRACE("Create Bitmap\n");
 				CDC dcMem = CreateCompatibleDC(dcTarget);
 				CRect rcBitmap = rcHint;
 				dcMem.CreateCompatibleBitmap(dcTarget, rcBitmap.Width(), rcBitmap.Height());
@@ -576,10 +592,10 @@ namespace Win32xx
 
 				// Create the Hint window
 				if (!IsWindow()) 
-					Create(pDockTarget->GetDockAncestor()->GetHwnd());
-				MapWindowPoints(pDockTarget->GetHwnd(), pDockTarget->GetDockAncestor()->GetHwnd(), (LPPOINT)&rcHint, 2);
+					Create();
+				MapWindowPoints(pDockTarget->GetHwnd(), NULL, (LPPOINT)&rcHint, 2);
 				
-				SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER);
+				SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
 			}
 		}
 		else if (IsWindow()) Destroy();
@@ -691,27 +707,27 @@ namespace Win32xx
 		// Test if our cursor is in one of the docking zones
 		if (PtInRect(&rcLeft, pt)) 
 		{
+			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockTarget->m_DockZone = DS_DOCKED_LEFT;
-			pDockDrag->m_BlockMove = TRUE;
 		}
 		else if (PtInRect(&rcTop, pt))
 		{
+			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
 			pDockTarget->m_DockZone = DS_DOCKED_TOP;
-			pDockDrag->m_BlockMove = TRUE;
 		}
 		else if (PtInRect(&rcRight, pt))
 		{
+			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockTarget->m_DockZone = DS_DOCKED_RIGHT;
-			pDockDrag->m_BlockMove = TRUE;
 		}
 		else if (PtInRect(&rcBottom, pt))
 		{
+			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
 			pDockTarget->m_DockZone = DS_DOCKED_BOTTOM;
-			pDockDrag->m_BlockMove = TRUE;
 		}
 		else
 		{
@@ -1074,7 +1090,6 @@ namespace Win32xx
 				break;
 			}
 
-		//	if (m_vDockChildren[u]->IsDocked())
 			if (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 				// Position the Dockable child recursively (as it might also have Dockable children) 
@@ -1241,6 +1256,22 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
+		case WM_ACTIVATE:
+			if (WA_INACTIVE == LOWORD(wParam))
+			{
+				TRACE("Window is Deactivated\n");
+				SetWindowPos(HWND_TOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
+				ShowStats();
+			}
+			else
+			{
+				TRACE("Window is Activated\n");
+				SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_SHOWWINDOW);
+				ShowStats();
+			}
+
+			break;
+
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
 			SendNotify(DN_DOCK_END);
@@ -1252,7 +1283,6 @@ namespace Win32xx
 				if (m_BlockMove)
 				{
                 	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
-				//	pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_NOREDRAW|SWP_NOOWNERZORDER;
 					pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED| SWP_NOOWNERZORDER;
 					return 0;
 				} 
@@ -1261,7 +1291,7 @@ namespace Win32xx
 		
 		case WM_WINDOWPOSCHANGED:
 			{
-				if (!IsDocked() && (hWnd != GetDockAncestor()->GetHwnd()) && IsLeftButtonDown())
+				if (!IsDocked() && (hWnd != GetDockAncestor()->GetHwnd()) && IsLeftButtonDown() )
 				{
 					// Send a Move notification to the parent
 					SendNotify(DN_DOCK_MOVE);
