@@ -1256,7 +1256,7 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-		case WM_ACTIVATE:
+	/*	case WM_ACTIVATE:
 			if (WA_INACTIVE == LOWORD(wParam))
 			{
 				TRACE("Window is Deactivated\n");
@@ -1271,7 +1271,7 @@ namespace Win32xx
 			}
 
 			break;
-
+*/
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
 			SendNotify(DN_DOCK_END);
