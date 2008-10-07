@@ -106,11 +106,7 @@ SOURCE=.\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MyDockable.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\View.cpp
+SOURCE=.\TextDockable.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -130,15 +126,11 @@ SOURCE=.\Mainfrm.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MyDockable.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\View.h
+SOURCE=.\TextDockable.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

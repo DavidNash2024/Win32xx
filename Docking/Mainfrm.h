@@ -5,7 +5,7 @@
 #define MAINFRM_H
 
 #include "../Win32++/frame.h"
-#include "MyDockable.h"
+#include "TextDockable.h"
 
 
 // Declaration of the CMainFrame class
@@ -23,7 +23,7 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CMyDockable m_DockView;
+	CTextDockable m_DockView;
 };
 
 #endif //MAINFRM_H

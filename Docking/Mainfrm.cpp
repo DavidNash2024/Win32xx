@@ -74,15 +74,15 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnInitialUpdate()
 {
-	CDockable* pDockLeft   = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_LEFT, 100);
-	CDockable* pDockRight  = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
-	CDockable* pDockTop    = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_TOP, 100);
-	CDockable* pDockBottom = m_DockView.AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
+	CDockable* pDockLeft   = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_LEFT, 100);
+	CDockable* pDockRight  = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	CDockable* pDockTop    = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_TOP, 100);
+	CDockable* pDockBottom = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
 
-	pDockLeft->AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
-	pDockRight->AddDockChild(new CMyDockable, DS_DOCKED_BOTTOM, 100);
-	pDockTop->AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
-	pDockBottom->AddDockChild(new CMyDockable, DS_DOCKED_RIGHT, 100);
+	pDockLeft->AddDockChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+	pDockRight->AddDockChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+	pDockTop->AddDockChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	pDockBottom->AddDockChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)

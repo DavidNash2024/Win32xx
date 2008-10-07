@@ -192,11 +192,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MyDockable.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\View.cpp"
+				RelativePath=".\TextDockable.cpp"
 				>
 			</File>
 		</Filter>
@@ -214,10 +210,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MyDockable.h"
-				>
-			</File>
-			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
@@ -226,7 +218,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\View.h"
+				RelativePath=".\TextDockable.h"
 				>
 			</File>
 		</Filter>

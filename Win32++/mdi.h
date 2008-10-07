@@ -90,7 +90,7 @@ namespace Win32xx
 
 	protected:
 		// Its unlikely you would need to override these functions
-		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
@@ -140,7 +140,7 @@ namespace Win32xx
 		friend class CMDIClient;
 
 		void AppendMDIMenu(HMENU hMenuWindow);
-		LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(HMENU hMenu);
 
 		CMDIClient m_MDIClient;
@@ -247,7 +247,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CMDIFrame::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefFrameProc(hWnd, m_MDIClient, uMsg, wParam, lParam);
 	}
@@ -560,7 +560,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline LRESULT CMDIChild::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIChild::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefMDIChildProc(hWnd, uMsg, wParam, lParam);
 	}

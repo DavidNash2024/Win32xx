@@ -144,13 +144,11 @@
 		<Unit filename="DockingApp.h" />
 		<Unit filename="Mainfrm.cpp" />
 		<Unit filename="Mainfrm.h" />
-		<Unit filename="MyDockable.cpp" />
-		<Unit filename="MyDockable.h" />
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="View.cpp" />
-		<Unit filename="View.h" />
+		<Unit filename="TextDockable.cpp" />
+		<Unit filename="TextDockable.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="..\Win32++\Default_Resource.h" />

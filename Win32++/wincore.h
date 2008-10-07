@@ -599,7 +599,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void Destroy();
-		virtual LRESULT DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -612,6 +612,7 @@ namespace Win32xx
 		void CenterWindow() const;
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags);
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, RECT rc, UINT uFlags);
 		void DestroyWindow();
@@ -1291,7 +1292,13 @@ namespace Win32xx
 		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
 	}
 
-	inline LRESULT CWnd::DefWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// This function provides default processing for any window messages that an application does not process.
+	{
+		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+	}
+
+	inline LRESULT CWnd::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
@@ -2194,7 +2201,7 @@ namespace Win32xx
 		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		return DefWndProc(hWnd, uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
 
