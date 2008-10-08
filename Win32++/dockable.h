@@ -49,20 +49,21 @@
 
 
 // Docking Styles
-#define DS_DOCKED_LEFT		0x0001
-#define DS_DOCKED_RIGHT		0x0002
-#define DS_DOCKED_TOP		0x0004
-#define DS_DOCKED_BOTTOM	0x0008
-#define DS_NODOCK_LEFT      0x0010
-#define DS_NODOCK_RIGHT     0x0020
-#define DS_NODOCK_TOP       0x0040
-#define DS_NODOCK_BOTTOM    0x0080
-#define DS_NO_RESIZE        0x0100
-#define DS_NO_AUTO_RESIZE   0x0200
-#define DS_NO_CAPTION       0x0400
-#define DS_NO_UNDOCK        0x0800
-#define DS_CLIENTEDGE       0x1000
-#define DS_FLATLOOK         0x2000
+#define DS_NOTDOCKED			0x0000
+#define DS_DOCKED_LEFT			0x0001
+#define DS_DOCKED_RIGHT			0x0002
+#define DS_DOCKED_TOP			0x0004
+#define DS_DOCKED_BOTTOM		0x0008
+#define DS_NODOCKCHILD_LEFT		0x0010	
+#define DS_NODOCKCHILD_RIGHT	0x0020	
+#define DS_NODOCKCHILD_TOP		0x0040	
+#define DS_NODOCKCHILD_BOTTOM	0x0080	
+#define DS_NO_RESIZE			0x0100	
+#define DS_NO_AUTO_RESIZE		0x0200	//Not Implemented yet
+#define DS_NO_CAPTION			0x0400
+#define DS_NO_UNDOCK			0x0800
+#define DS_CLIENTEDGE			0x1000	//Not Implemented yet
+#define DS_FLATLOOK				0x2000	//Not Implemented yet
 
 // Docking Notifications
 #define DN_DOCK_START		WM_APP + 1
@@ -86,6 +87,20 @@ namespace Win32xx
 	} *LPDRAGPOS;
 
 
+	// A global function to report the state of the left mouse button
+	inline BOOL IsLeftButtonDown()
+	{
+		SHORT state;
+		if (GetSystemMetrics(SM_SWAPBUTTON))
+			// Mouse buttons are swapped
+			state = GetAsyncKeyState(VK_RBUTTON);
+		else
+			// Mouse buttons are not swapped
+			state = GetAsyncKeyState(VK_LBUTTON);
+
+		// returns true if the left mouse button is down
+		return (state & 0x8000);
+	}
 
 	/////////////////////////////////////////
 	// Declaration of the CDockable class
@@ -173,7 +188,8 @@ namespace Win32xx
 		// Operations
 		CDockable();
 		virtual ~CDockable();
-		virtual CDockable* AddDockChild(CDockable* pDockable, UINT uDockSide, int DockWidth);
+		virtual CDockable* AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth);
+		virtual CDockable* AddUnDocked(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc);
 		virtual void DeleteDockable(CDockable* pDockable);
 		virtual void Dock(CDockable* hDockable, UINT uDockSide);
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
@@ -221,7 +237,6 @@ namespace Win32xx
 
 		std::vector <CDockable*> m_vDockChildren;
 		std::vector <CDockable*> m_vAllDockables;	// Only used in DockAncestor
-	//	int m_DockBarWidth;
 		int m_DockWidth;
 		double m_DockWidthRatio;
 		int m_NCHeight;
@@ -282,44 +297,51 @@ namespace Win32xx
 
 	inline LRESULT CDockable::CDockBar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		switch (uMsg)
 		{
-		case WM_SETCURSOR:
+			switch (uMsg)
 			{
-				if (GetDock())
+			case WM_SETCURSOR:
 				{
-					DWORD dwSide = GetDock()->GetDockStyle() & 0xF;
-					if ((dwSide == DS_DOCKED_LEFT) || (dwSide == DS_DOCKED_RIGHT))
-						SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITH)));
+					if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
+					{
+						DWORD dwSide = GetDock()->GetDockStyle() & 0xF;
+						if ((dwSide == DS_DOCKED_LEFT) || (dwSide == DS_DOCKED_RIGHT))
+							SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITH)));
+						else
+							SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV)));
+
+						return TRUE;
+					}
 					else
-						SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV)));
-
-					return TRUE;
+						SetCursor(LoadCursor(NULL, IDC_ARROW));
 				}
-			}
-			break;
+				break;
 
-		case WM_LBUTTONDOWN:
-			{
-				SendNotify(DN_BAR_START);
-				SetCapture();
-			}
-			break;
+			case WM_LBUTTONDOWN:
+				{
+					if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
+					{
+						SendNotify(DN_BAR_START);
+						SetCapture();
+					}
+				}
+				break;
 
-		case WM_LBUTTONUP:
-			if (GetCapture() == hWnd)
-			{
-				SendNotify(DN_BAR_END);
-				ReleaseCapture();
-			}
-			break;
+			case WM_LBUTTONUP:
+				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == hWnd))
+				{
+					SendNotify(DN_BAR_END);
+					ReleaseCapture();
+				}
+				break;
 
-		case WM_MOUSEMOVE:
-			if (GetCapture() == hWnd)
-			{
-				SendNotify(DN_BAR_MOVE);
+			case WM_MOUSEMOVE:
+				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == hWnd))
+				{
+					SendNotify(DN_BAR_MOVE);
+				}
+				break;
 			}
-			break;
 		}
 
 		// pass unhandled messages on for default processing
@@ -385,115 +407,128 @@ namespace Win32xx
 	{
 		static CPoint Oldpt;
 
-		switch (uMsg)
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-		case WM_NCACTIVATE:
-			break;
-		case WM_NCCALCSIZE:
-			// Sets the non-client area (and hence sets the client area)
-			if (m_pDock->IsDocked())
+			switch (uMsg)
 			{
-				LPRECT rc = (LPRECT)lParam;
-				rc->top += m_NCHeight;
-			}
-			break;
-		case WM_NCHITTEST:
-			// Identify which part of the non-client area the cursor is over
-			if (m_pDock->IsDocked())
-			{
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				MapWindowPoints(NULL, m_hWnd, &pt, 1);
-
-				// Indicate if the point is in the caption
-				if (pt.y < 0) return HTCAPTION;
-			}
-			break;
-		case WM_NCLBUTTONDOWN:
-			Oldpt.x = GET_X_LPARAM(lParam);
-			Oldpt.y = GET_Y_LPARAM(lParam);
-			if (m_pDock->IsDocked())
-			{
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				MapWindowPoints(NULL, hWnd, &pt, 1);
-				m_pView->SetFocus();
-				return 0L;
-			}
-			else
-			{
-				// Send a DN_DOCK_START notification to the dockable
-				SendNotify(DN_DOCK_START);
-			}
-			break;
-
-		case WM_NCMOUSEMOVE:
-			{
+			case WM_NCCALCSIZE:
+				// Sets the non-client area (and hence sets the client area)
 				if (m_pDock->IsDocked())
 				{
-					// Discard phantom mouse move messages
-					if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
-						return 0L;
+					LPRECT rc = (LPRECT)lParam;
+					rc->top += m_NCHeight;
+				}
+				break;
+			case WM_NCHITTEST:
+				// Identify which part of the non-client area the cursor is over
+				if (m_pDock->IsDocked())
+				{
+					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
-					if (IsLeftButtonDown() && (wParam == HTCAPTION))
+					// Indicate if the point is in the caption
+					if (pt.y < 0) return HTCAPTION;
+				}
+				break;
+			case WM_NCLBUTTONDOWN:
+				Oldpt.x = GET_X_LPARAM(lParam);
+				Oldpt.y = GET_Y_LPARAM(lParam);
+				if (m_pDock->IsDocked())
+				{
+					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					MapWindowPoints(NULL, hWnd, &pt, 1);
+					m_pView->SetFocus();
+					return 0L;
+				}
+				else
+				{
+					// Send a DN_DOCK_START notification to the dockable
+					SendNotify(DN_DOCK_START);
+				}
+				break;
+
+			case WM_NCMOUSEMOVE:
+				{
+					if (m_pDock->IsDocked())
 					{
-						CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
-						pDock->UnDock();
+						// Discard phantom mouse move messages
+						if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
+							return 0L;
+
+						if (IsLeftButtonDown() && (wParam == HTCAPTION))
+						{
+							CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
+							pDock->UnDock();
+						}
+					}
+					else if (IsLeftButtonDown())
+					{
+						// We get a WM_NCMOUSEMOVE (not WM_NCLBUTTONUP) when drag of non-docked window ends
+						// Send a DN_DOCK_END notification to the frame
+						SendNotify(DN_DOCK_END);
 					}
 				}
-				else if (IsLeftButtonDown())
+				break;
+
+			case WM_NCPAINT:
+				if (m_pDock->IsDocked())
 				{
-					// We get a WM_NCMOUSEMOVE (not WM_NCLBUTTONUP) when drag of non-docked window ends
-					// Send a DN_DOCK_END notification to the frame
-					SendNotify(DN_DOCK_END);
+					DefWindowProc(uMsg, wParam, lParam);
+
+					// Acquire the DC for our NonClient painting
+					// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
+					CDC dc;
+					if (wParam != 1)
+						dc = GetDCEx(hWnd, (HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
+					else
+						dc 	= GetWindowDC(hWnd);
+
+					CRect rc = GetWindowRect();
+					int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
+
+					// Set the font for the title
+					NONCLIENTMETRICS info = {0};
+					info.cbSize = sizeof(info);
+					SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+					dc.CreateFontIndirect(&info.lfStatusFont);
+
+					// Set the Colours
+					if (m_pView->GetHwnd() == GetFocus())
+					{
+						dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
+						::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
+						::SetTextColor(dc, RGB(255, 255, 255));
+					}
+					else
+					{
+						dc.CreateSolidBrush(RGB(232, 228, 220));
+						::SetBkColor(dc, RGB(232, 228, 220));
+						::SetTextColor(dc, RGB(0, 0, 0));
+					}
+
+					dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
+					Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
+					CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
+					::DrawText(dc, _T("Class View - Docking"), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+
+					Draw3DBorder(rc);
+					return 0;
 				}
+				break;	// also do default painting
+
+			case WM_MOUSEACTIVATE:
+				// Focus changed, so redraw the captions
+				{
+					m_pView->SetFocus();
+					m_pDock->RecalcDockLayout();
+				}
+				break;
+
 			}
-			break;
+		}
 
-		case WM_NCPAINT:
-			if (m_pDock->IsDocked())
-			{
-				DefWindowProc(uMsg, wParam, lParam);
-
-				// Acquire the DC for our NonClient painting
-				// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
-				CDC dc;
-				if (wParam != 1)
-					dc = GetDCEx(hWnd, (HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
-				else
-					dc 	= GetWindowDC(hWnd);
-
-				CRect rc = GetWindowRect();
-				int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
-
-				// Set the font for the title
-				NONCLIENTMETRICS info = {0};
-				info.cbSize = sizeof(info);
-				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-				dc.CreateFontIndirect(&info.lfStatusFont);
-
-				// Set the Colours
-				if (m_pView->GetHwnd() == GetFocus())
-				{
-					dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
-					::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
-					::SetTextColor(dc, RGB(255, 255, 255));
-				}
-				else
-				{
-					dc.CreateSolidBrush(RGB(232, 228, 220));
-					::SetBkColor(dc, RGB(232, 228, 220));
-					::SetTextColor(dc, RGB(0, 0, 0));
-				}
-
-				dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
-				Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
-				CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
-				::DrawText(dc, _T("Class View - Docking"), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
-
-				Draw3DBorder(rc);
-				return 0;
-			}
-			break;	// also do default painting
-
+		switch (uMsg)
+		{
 		case WM_WINDOWPOSCHANGED:
 			{
 				// Reposition the View window to cover the DockClient's client area
@@ -501,15 +536,8 @@ namespace Win32xx
 				m_pView->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 			}
 			break;
-		case WM_MOUSEACTIVATE:
-			// Focus changed, so redraw the captions
-			{
-				m_pView->SetFocus();
-				m_pDock->RecalcDockLayout();
-			}
-			break;
 		}
-
+	
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
@@ -733,25 +761,25 @@ namespace Win32xx
 		CRect rcBottom(29, 55, 58, 87);
 
 		// Test if our cursor is in one of the docking zones
-		if (PtInRect(&rcLeft, pt))
+		if ((PtInRect(&rcLeft, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_LEFT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockTarget->m_DockZone = DS_DOCKED_LEFT;
 		}
-		else if (PtInRect(&rcTop, pt))
+		else if ((PtInRect(&rcTop, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_TOP))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
 			pDockTarget->m_DockZone = DS_DOCKED_TOP;
 		}
-		else if (PtInRect(&rcRight, pt))
+		else if ((PtInRect(&rcRight, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_RIGHT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockTarget->m_DockZone = DS_DOCKED_RIGHT;
 		}
-		else if (PtInRect(&rcBottom, pt))
+		else if ((PtInRect(&rcBottom, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_BOTTOM))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
@@ -807,16 +835,40 @@ namespace Win32xx
 		}
 	}
 
-	inline CDockable* CDockable::AddDockChild(CDockable* pDockable, UINT uDockSide, int DockWidth)
+	inline CDockable* CDockable::AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth)
 	{
 		// Create the dockable window
 		pDockable->SetDockWidth(DockWidth);
-		pDockable->SetDockStyle(uDockSide);
+		pDockable->SetDockStyle(uDockStyle);
 		pDockable->Create(m_hWnd);
 
 		// Dock the dockable window
-		Dock(pDockable, uDockSide);
+		Dock(pDockable, uDockStyle);
 
+		// Store the Dockable's pointer in the DockAncestor's vector for later deletion
+		GetDockAncestor()->m_vAllDockables.push_back(pDockable);
+		return pDockable;
+	}
+
+	inline CDockable* CDockable::AddUnDocked(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc)
+	{
+		pDockable->SetDockWidth(DockWidth);
+		pDockable->SetDockStyle(uDockStyle & 0XFFFFFF0);
+		
+		// Initially create the Dockable as a child window
+		// This makes our Dockable "owned" by the DockAncestor
+		pDockable->Create(m_hWnd);
+		
+		// Change the Dockable to a POPUP window
+		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
+		pDockable->SetRedraw(FALSE);
+		pDockable->SetParent(0);
+		pDockable->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+		pDockable->SetRedraw(TRUE);
+		pDockable->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+
+		// Store the Dockable's pointer in the DockAncestor's vector for later deletion
 		GetDockAncestor()->m_vAllDockables.push_back(pDockable);
 		return pDockable;
 	}
@@ -1023,7 +1075,7 @@ namespace Win32xx
 				UINT DockZone = m_DockZone;
 				m_DockZone = 0;
 				pDock->m_DockZone = 0;
-				if (DockZone) Dock(pDock, DockZone);
+				if (DockZone) Dock(pDock, pDock->GetDockStyle() | DockZone);
 				GetDockHint().Destroy();
 				GetDockTargeting().Destroy();
 			}
@@ -1243,7 +1295,7 @@ namespace Win32xx
 
 	inline void CDockable::UnDock()
 	{
-		if (IsDocked())
+		if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
 		{
 			// Promote the first child to replace this Dock parent
 			for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
@@ -1260,7 +1312,7 @@ namespace Win32xx
 
 			if (m_vDockChildren.size() > 0)
 			{
-				m_vDockChildren[0]->m_DockStyle = m_DockStyle;
+				m_vDockChildren[0]->m_DockStyle = (m_vDockChildren[0]->m_DockStyle & 0xFFFFFFF0 ) | (m_DockStyle & 0xF);
 				m_vDockChildren[0]->m_DockWidth = m_DockWidth;
 				m_vDockChildren[0]->m_DockWidthRatio = m_DockWidthRatio;
 				m_vDockChildren[0]->m_pDockParent = m_pDockParent;
@@ -1284,7 +1336,7 @@ namespace Win32xx
 			GetDockBar().ShowWindow(SW_HIDE);
 			m_vDockChildren.clear();
 			m_pDockParent = NULL;
-			m_DockStyle = 0;
+			m_DockStyle = m_DockStyle & 0xFFFFFFF0;
 			RecalcDockLayout();
 			ShowStats();
 
@@ -1304,6 +1356,7 @@ namespace Win32xx
 			RedrawWindow();
 			m_Docked = FALSE;
 			TRACE("Undock Complete\n");
+			ShowStats();
 		}
 	}
 
@@ -1348,12 +1401,15 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			{
-				if (!IsDocked() && (hWnd != GetDockAncestor()->GetHwnd()) && IsLeftButtonDown() )
+				if ( !IsDocked() && ( hWnd != GetDockAncestor()->GetHwnd() ) )
 				{
 					// Send a Move notification to the parent
-					LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
-					if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
-						SendNotify(DN_DOCK_MOVE);
+					if ( IsLeftButtonDown() )
+					{
+						LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
+						if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
+							SendNotify(DN_DOCK_MOVE);
+					}
 
 					CRect rc = GetClientRect();
 					GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
@@ -1374,11 +1430,13 @@ namespace Win32xx
 		case DM_MAKETOPMOST:
 			if (wParam)
 			{
+				// Make the window topmost
 				SetWindowPos(HWND_TOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
 				ShowStats();
 			}
 			else
 			{
+				// Make the window non-topmost
 				HWND hAncestor = GetAncestor(GetDockAncestor()->GetHwnd());
 				::SendMessage(hAncestor, WM_SETREDRAW, (WPARAM)FALSE, 0);
 				::SetWindowPos(hAncestor, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);

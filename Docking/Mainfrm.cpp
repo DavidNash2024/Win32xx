@@ -74,37 +74,16 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnInitialUpdate()
 {
-	CDockable* pDockLeft   = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_LEFT, 100);
-	CDockable* pDockRight  = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
-	CDockable* pDockTop    = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_TOP, 100);
-	CDockable* pDockBottom = m_DockView.AddDockChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT, 100);
+	CDockable* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	CDockable* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP, 100);
+	CDockable* pDockBottom = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
 
-	pDockLeft->AddDockChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
-	pDockRight->AddDockChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
-	pDockTop->AddDockChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
-	pDockBottom->AddDockChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	pDockLeft->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+	pDockRight->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+	pDockTop->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	pDockBottom->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
 
-	// Some notifications should return a value when handled
-	return 0L;
-}
-
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-//	switch (uMsg)
-//	{
-		//Additional messages to be handled go here
-//	}
-
-	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
-}
 
