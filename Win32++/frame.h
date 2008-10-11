@@ -234,7 +234,7 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual void AddMenubarBand(int Menubar_Height = MENUBAR_HEIGHT);
+		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolbarBand(CToolbar& TB);
 		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
@@ -266,7 +266,6 @@ namespace Win32xx
 		enum Constants
 		{
 			ID_STATUS_TIMER = 1,
-			MENUBAR_HEIGHT  = 22,
 			POST_TEXT_GAP   = 16,			// for owner draw menu item
 			USER_REARRANGED = WM_APP + 1	// frame window rearranged message
 		};
@@ -1507,11 +1506,22 @@ namespace Win32xx
 		return (int)m_MenuData.size();
 	}
 
-	inline void CFrame::AddMenubarBand(int Menubar_Height /* = MENUBAR_HEIGHT*/)
+	inline void CFrame::AddMenubarBand()
 	{
 		// Adds a Menubar to the rebar control
 		REBARBANDINFO rbbi = {0};
 		CSize sz = GetMenubar().GetMaxSize();
+
+		// Calculate the Menubar height from the menu font
+		CSize csMenubar;
+		NONCLIENTMETRICS nm = {0};
+		nm.cbSize = sizeof (NONCLIENTMETRICS);
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		LOGFONT lf = nm.lfMenuFont;
+		CDC dcFrame = GetDC();
+		dcFrame.CreateFontIndirect(&lf);
+		::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
+		int Menubar_Height = csMenubar.cy + 8;
 
 		rbbi.cbSize     = sizeof(REBARBANDINFO);
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
@@ -2257,17 +2267,17 @@ namespace Win32xx
 
 		else
 		{
-			CDC DesktopDC = GetDC(NULL);
+			CDC DesktopDC = ::GetDC(NULL);
 
 			// Get the font used in menu items
-			NONCLIENTMETRICS info = {0};
-			info.cbSize = sizeof(info);
-			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			NONCLIENTMETRICS nm = {0};
+			nm.cbSize = sizeof(nm);
+			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(nm), &nm, 0);
 			// Default menu items are bold, so take this into account
 			if ((INT)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
-				info.lfMenuFont.lfWeight = FW_BOLD;
+				nm.lfMenuFont.lfWeight = FW_BOLD;
 
-			DesktopDC.CreateFontIndirect(&info.lfMenuFont);
+			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
 
 			// Calculate the size of the text
 			CSize size;
@@ -2362,9 +2372,49 @@ namespace Win32xx
 			GetRebar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
 		}
 
+		// Update the status bar font and text
+		NONCLIENTMETRICS nm = {0};
+		nm.cbSize = sizeof (NONCLIENTMETRICS);
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		LOGFONT lf = nm.lfStatusFont;
+		HFONT hFontOld = (HFONT)GetStatusbar().SendMessage(WM_GETFONT, 0, 0);
+		HFONT hFont = ::CreateFontIndirect(&lf);
+		GetStatusbar().SendMessage(WM_SETFONT, (WPARAM)hFont, TRUE);
+		::DeleteObject(hFontOld);
+		SetStatusText();
+
+		// Update the menubar font and band size
+		if(IsMenubarUsed())
+		{
+			// Update the font
+			NONCLIENTMETRICS nm = {0};
+			nm.cbSize = sizeof (NONCLIENTMETRICS);
+			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+			LOGFONT lf = nm.lfMenuFont;
+			HFONT hFontOld = (HFONT)GetMenubar().SendMessage(WM_GETFONT, 0, 0);
+			HFONT hFont = ::CreateFontIndirect(&lf);
+			GetMenubar().SendMessage(WM_SETFONT, (WPARAM)hFont, TRUE);
+			::DeleteObject(hFontOld);
+
+			// Update the band size
+			CSize csMenubar;
+			CDC dcFrame = GetDC();
+			dcFrame.CreateFontIndirect(&lf);
+			::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
+			int Menubar_Height = csMenubar.cy + 8;
+			int nBand = GetRebar().GetBand(GetMenubar().GetHwnd());
+			REBARBANDINFO rbbi = {0};
+			rbbi.cbSize = sizeof(REBARBANDINFO);
+			rbbi.fMask = RBBIM_CHILDSIZE;
+			GetRebar().GetBandInfo(nBand, rbbi);
+			rbbi.cyMinChild = Menubar_Height;
+			rbbi.cyMaxChild = Menubar_Height;
+			GetRebar().SetBandInfo(nBand, rbbi);
+		}
+
 		if ((m_bUpdateTheme) && (m_bUseThemes)) SetTheme();
 
-		//Reposition and redraw everything
+		// Reposition and redraw everything
 		RecalcLayout();
 		::RedrawWindow(m_hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 	}
@@ -2692,22 +2742,29 @@ namespace Win32xx
 	{
 		if (::IsWindow(GetStatusbar()))
 		{
+			// Calculate the width of the text indicators
+			CDC dcStatus = GetStatusbar().GetDC();
+			CSize csCAP, csNUM, csSCRL;
+			::GetTextExtentPoint32(dcStatus, _T("\tCAP"), lstrlen(_T("\tCAP")), &csCAP);
+			::GetTextExtentPoint32(dcStatus, _T("\tNUM"), lstrlen(_T("\tNUM")), &csNUM);
+			::GetTextExtentPoint32(dcStatus, _T("\tSCRL"), lstrlen(_T("\tSCRL")), &csSCRL);
+
 			// Get the coordinates of the parent window's client area.
 			CRect rcClient = GetClientRect();
 
 			int width = max(300, rcClient.right);
-			int iPaneWidths[] = {width - 110, width - 80, width - 50, width - 20};
+		//	int iPaneWidths[] = {width - 110, width - 80, width - 50, width - 20};
 
 			if (m_bShowIndicatorStatus)
 			{
 				// Create 4 panes
-				GetStatusbar().CreateParts(4, iPaneWidths);
+		//		GetStatusbar().CreateParts(4, iPaneWidths);
 
 				// Or you could create the 4 panes this way
-				//	GetStatusbar().SetPartWidth(0, width - 110);
-				//	GetStatusbar().SetPartWidth(1, 30);
-				//	GetStatusbar().SetPartWidth(2, 30);
-				//	GetStatusbar().SetPartWidth(3, 30);
+					GetStatusbar().SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
+					GetStatusbar().SetPartWidth(1, csCAP.cx);
+					GetStatusbar().SetPartWidth(2, csNUM.cx);
+					GetStatusbar().SetPartWidth(3, csSCRL.cx);
 
 				SetStatusIndicators();
 			}
@@ -2723,7 +2780,7 @@ namespace Win32xx
 		//        and make any modifications there.
 
 		// Avoid themes if using less than 16 bit colors
-		CDC DesktopDC = GetDC(NULL);
+		CDC DesktopDC = ::GetDC(NULL);
 		if (::GetDeviceCaps(DesktopDC, BITSPIXEL) < 16)
 			return;
 

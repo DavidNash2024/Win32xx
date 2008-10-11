@@ -100,11 +100,11 @@ SOURCE=.\MainMDIfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildView.cpp
+SOURCE=.\MDIFrameApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIFrameApp.cpp
+SOURCE=.\SimpleMDIChild.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -116,15 +116,15 @@ SOURCE=.\MainMDIfrm.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildView.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\MDIFrameApp.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SimpleMDIChild.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

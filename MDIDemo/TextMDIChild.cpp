@@ -1,11 +1,11 @@
 //////////////////////////////////////////////
 // MDIChildText.cpp
-//  Definitions for the CMDIChildText class
+//  Definitions for the CTextMDIChild class
 
-#include "MDIChildText.h"
+#include "TextMDIChild.h"
 #include "resource.h"
 
-CRichEdit::CRichEdit() : m_hFont(NULL)
+CTextView::CTextView() : m_hFont(NULL)
 {
 	m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hRichEdit)
@@ -14,14 +14,14 @@ CRichEdit::CRichEdit() : m_hFont(NULL)
     }
 }
 
-CRichEdit::~CRichEdit()
+CTextView::~CTextView()
 {
 	Destroy();
 	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
 	if (m_hFont) ::DeleteObject(m_hFont);
 }
 
-void CRichEdit::OnCreate()
+void CTextView::OnCreate()
 {
 	//Set font
 	if (!m_hFont)
@@ -33,7 +33,7 @@ void CRichEdit::OnCreate()
 	SendMessage(WM_SETFONT, (WPARAM)m_hFont,0);
 }
 
-void CRichEdit::PreCreate(CREATESTRUCT &cs)
+void CTextView::PreCreate(CREATESTRUCT &cs)
 {
 	cs.lpszClass = _T("RichEdit");
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
@@ -41,42 +41,36 @@ void CRichEdit::PreCreate(CREATESTRUCT &cs)
 }
 
 
-CMDIChildText::CMDIChildText()
+CTextMDIChild::CTextMDIChild()
 {
-
 	SetChildMenu(_T("MdiMenuText"));
+	SetView(m_TextView);
 }
 
-CMDIChildText::~CMDIChildText()
+CTextMDIChild::~CTextMDIChild()
 {
 	
 }
 
-void CMDIChildText::OnCreate()
+void CTextMDIChild::OnCreate()
 {
-	m_TextWindow.Create(m_hWnd);
+	m_TextView.Create(m_hWnd);
 }
 
-void CMDIChildText::OnInitialUpdate()
+void CTextMDIChild::OnInitialUpdate()
 {
 	::SetWindowText(m_hWnd, _T("Text Window"));
 	SetIconLarge(IDI_TEXT);
 	SetIconSmall(IDI_TEXT);
 }
 
-LRESULT CMDIChildText::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CTextMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_SETFOCUS:
-		m_TextWindow.SetFocus();
+		m_TextView.SetFocus();
 		break;
-	case WM_SIZE:
-		{
-			CRect rc = GetClientRect();
-			m_TextWindow.SetWindowPos(NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
-		}
-		break;		// Also do default processing
 	}
 
 	// Do default processing for other messages

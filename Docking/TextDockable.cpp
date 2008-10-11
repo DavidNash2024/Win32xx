@@ -42,6 +42,7 @@ void CTextDockable::OnCreate()
 	else
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 
+	// Call the base function
 	CDockable::OnCreate();
 }
 

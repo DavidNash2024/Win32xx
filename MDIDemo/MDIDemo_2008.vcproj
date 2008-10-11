@@ -252,72 +252,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MDIChildMax.cpp"
+				RelativePath=".\MaxMDIChild.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="MDIChildMax.h"
-				>
-			</File>
-			<File
-				RelativePath="MDIChildRect.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MDIChildText.cpp"
-				>
-			</File>
-			<File
-				RelativePath="MDIChildView.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="MDIDemoApp.cpp"
@@ -339,6 +275,18 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\RectMDIChild.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleMDIChild.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TextMDIChild.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -349,15 +297,7 @@
 				>
 			</File>
 			<File
-				RelativePath="MDIChildRect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MDIChildText.h"
-				>
-			</File>
-			<File
-				RelativePath="MDIChildView.h"
+				RelativePath=".\MaxMDIChild.h"
 				>
 			</File>
 			<File
@@ -365,7 +305,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RectMDIChild.h"
+				>
+			</File>
+			<File
 				RelativePath="resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleMDIChild.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TextMDIChild.h"
 				>
 			</File>
 		</Filter>

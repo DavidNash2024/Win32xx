@@ -609,7 +609,8 @@ namespace Win32xx
 		HWND GetAncestor(HWND hWnd) const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		CRect GetClientRect() const;
-		inline HWND GetDlgItem(int nIDDlgItem) const;
+		HDC GetDC();
+		HWND GetDlgItem(int nIDDlgItem) const;
 		tString GetDlgItemString(int nIDDlgItem) const;
 		HWND GetHwnd() const {return m_hWnd;}
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
@@ -1374,6 +1375,11 @@ namespace Win32xx
 		CRect rc;
 		::GetClientRect(m_hWnd, &rc);
 		return rc;
+	}
+
+	inline HDC CWnd::GetDC()
+	{
+		return ::GetDC(m_hWnd);
 	}
 
 	inline HWND CWnd::GetDlgItem(int nIDDlgItem) const

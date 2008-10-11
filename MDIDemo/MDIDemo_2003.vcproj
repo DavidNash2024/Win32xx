@@ -119,19 +119,19 @@
 				RelativePath=".\MainMDIfrm.cpp">
 			</File>
 			<File
-				RelativePath=".\MDIChildMax.cpp">
-			</File>
-			<File
-				RelativePath=".\MDIChildRect.cpp">
-			</File>
-			<File
-				RelativePath=".\MDIChildText.cpp">
-			</File>
-			<File
-				RelativePath=".\MDIChildView.cpp">
+				RelativePath=".\MaxMDIChild.cpp">
 			</File>
 			<File
 				RelativePath=".\MDIDemoApp.cpp">
+			</File>
+			<File
+				RelativePath=".\RectMDIChild.cpp">
+			</File>
+			<File
+				RelativePath=".\SimpleMDIChild.cpp">
+			</File>
+			<File
+				RelativePath=".\TextMDIChild.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -142,22 +142,22 @@
 				RelativePath=".\MainMDIfrm.h">
 			</File>
 			<File
-				RelativePath=".\MDIChildMax.h">
-			</File>
-			<File
-				RelativePath=".\MDIChildRect.h">
-			</File>
-			<File
-				RelativePath=".\MDIChildText.h">
-			</File>
-			<File
-				RelativePath=".\MDIChildView.h">
+				RelativePath=".\MaxMDIChild.h">
 			</File>
 			<File
 				RelativePath=".\MDIDemoApp.h">
 			</File>
 			<File
+				RelativePath=".\RectMDIChild.h">
+			</File>
+			<File
 				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\SimpleMDIChild.h">
+			</File>
+			<File
+				RelativePath=".\TextMDIChild.h">
 			</File>
 		</Filter>
 		<Filter

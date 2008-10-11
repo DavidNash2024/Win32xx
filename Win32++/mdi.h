@@ -77,6 +77,7 @@ namespace Win32xx
 	//
 	class CMDIChild : public CWnd
 	{
+		friend class CMDIFrame;
 	public:
 		CMDIChild();
 		virtual ~CMDIChild();
@@ -87,13 +88,17 @@ namespace Win32xx
 		// Its unlikely you would need to override these functions
 		virtual BOOL IsMDIChild() const {return TRUE;}
 		virtual BOOL SetChildMenu(LPCTSTR MenuName);
+		virtual CWnd* GetView() const	{return m_pView;}
+		virtual void SetView(CWnd& pView);
 
 	protected:
 		// Its unlikely you would need to override these functions
 		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual void OnCreate();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	public:
+	private:
+		CWnd* m_pView;				// pointer to the View CWnd object
 		HMENU m_hChildMenu;
 	};
 
@@ -476,7 +481,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CMDIChild class
 	//
-	inline CMDIChild::CMDIChild() : m_hChildMenu(NULL)
+	inline CMDIChild::CMDIChild() : m_pView(NULL), m_hChildMenu(NULL)
 	{
 		// Set the MDI Child's menu in the constructor, like this ...
 
@@ -565,6 +570,15 @@ namespace Win32xx
 		return ::DefMDIChildProc(hWnd, uMsg, wParam, lParam);
 	}
 
+	inline void CMDIChild::OnCreate()
+	{
+		// Create the view window
+		if (NULL == m_pView)
+			throw CWinException(_T("CMDIChild::OnCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
+		
+		m_pView->Create(m_hWnd);
+	}
+	
 	inline BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)
 	{
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
@@ -579,6 +593,18 @@ namespace Win32xx
 		}
 
 		return (m_hChildMenu != NULL);
+	}
+
+	inline void CMDIChild::SetView(CWnd& View)
+	// Sets or changes the View window displayed within the frame
+	{
+		// Destroy the existing view window (if any)
+		if (m_pView) m_pView->Destroy();
+		
+		// Assign the view window
+		m_pView = &View;
+		
+		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 	}
 
 	inline LRESULT CMDIChild::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -607,6 +633,13 @@ namespace Win32xx
 				}
 			}
 			return 0L ;
+
+		case WM_WINDOWPOSCHANGED:
+			{
+				// Resize the View window
+				CRect rc = GetClientRect();
+				m_pView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+			}
 		}
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}

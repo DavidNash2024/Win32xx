@@ -119,10 +119,10 @@
 				RelativePath=".\MainMDIfrm.cpp">
 			</File>
 			<File
-				RelativePath=".\MDIChildView.cpp">
+				RelativePath=".\MDIFrameApp.cpp">
 			</File>
 			<File
-				RelativePath=".\MDIFrameApp.cpp">
+				RelativePath=".\SimpleMDIChild.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -133,9 +133,6 @@
 				RelativePath=".\MainMDIfrm.h">
 			</File>
 			<File
-				RelativePath=".\MDIChildView.h">
-			</File>
-			<File
 				RelativePath=".\MDIFrameApp.h">
 			</File>
 			<File
@@ -143,6 +140,9 @@
 			</File>
 			<File
 				RelativePath=".\resrc1.h">
+			</File>
+			<File
+				RelativePath=".\SimpleMDIChild.h">
 			</File>
 		</Filter>
 		<Filter

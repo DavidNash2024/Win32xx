@@ -1,28 +1,12 @@
 //////////////////////////////////////////////
 // MDIChildRect.cpp
-//  Definitions for the CMDIChildRect class
+//  Definitions for the CRectView and CRectMDIChild class
 
-#include "MDIChildRect.h"
+#include "RectMDIChild.h"
 #include "resource.h"
 
-
-CMDIChildRect::CMDIChildRect()
-{
-	SetChildMenu(_T ("MdiMenuRect"));
-}
-
-CMDIChildRect::~CMDIChildRect()
-{
-}
-
-void CMDIChildRect::OnInitialUpdate()
-{
-	::SetWindowText(m_hWnd, _T("Rectangle Window"));
-	SetIconLarge(IDI_RECT);
-	SetIconSmall(IDI_RECT);
-}
-
-LRESULT CMDIChildRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+// CRectView definitions
+LRESULT CRectView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -69,3 +53,23 @@ LRESULT CMDIChildRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
+
+
+// CRectView definitions
+CRectMDIChild::CRectMDIChild()
+{
+	SetChildMenu(_T ("MdiMenuRect"));
+	SetView(m_RectView);
+}
+
+CRectMDIChild::~CRectMDIChild()
+{
+}
+
+void CRectMDIChild::OnInitialUpdate()
+{
+	::SetWindowText(m_hWnd, _T("Rectangle Window"));
+	SetIconLarge(IDI_RECT);
+	SetIconSmall(IDI_RECT);
+}
+

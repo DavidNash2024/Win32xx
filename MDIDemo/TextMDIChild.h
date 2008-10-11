@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 // MDIChildText.h
-//  Declaration of the CMDIChildText class
+//  Declaration of the CTextMDIChild class
 
 
 #ifndef MDICHILDTEXT_H
@@ -8,11 +8,11 @@
 
 #include "../Win32++/mdi.h"
 
-class CRichEdit : public CWnd
+class CTextView : public CWnd
 {
 public:
-	CRichEdit();
-	virtual ~CRichEdit();
+	CTextView();
+	virtual ~CTextView();
 	virtual void OnCreate();
 	virtual void PreCreate(CREATESTRUCT &cs);
 
@@ -24,11 +24,11 @@ private:
 
 
 
-class CMDIChildText : public CMDIChild
+class CTextMDIChild : public CMDIChild
 {
 public:
-	CMDIChildText();
-	virtual ~CMDIChildText();
+	CTextMDIChild();
+	virtual ~CTextMDIChild();
 
 protected:
 	virtual void OnCreate();
@@ -36,7 +36,7 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CRichEdit m_TextWindow;
+	CTextView m_TextView;
 
 };
 

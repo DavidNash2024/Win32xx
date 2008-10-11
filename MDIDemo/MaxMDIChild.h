@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 // MDIChildMax.h
-//  Declaration of the CMDIChildMax class
+//  Declaration of the CMaxView and CMaxMDIChild classes
 
 
 #ifndef MDICHILDMAX_H
@@ -8,18 +8,26 @@
 
 #include "../Win32++/mdi.h"
 
+// Declaration of CMaxView
+class CMaxView : public CWnd
+{
+	virtual void OnPaint(HDC hDC);
+};
 
-class CMDIChildMax : public CMDIChild
+// Declaration of CMaxMDIChild
+class CMaxMDIChild : public CMDIChild
 {
 public:
-	CMDIChildMax();
-	virtual ~CMDIChildMax();
+	CMaxMDIChild();
+	virtual ~CMaxMDIChild();
 
 protected:
 	virtual void OnInitialUpdate();
-	virtual void OnPaint(HDC hDC);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	CMaxView m_MaxView;
 };
 
 #endif  //MDICHILDMAX_H

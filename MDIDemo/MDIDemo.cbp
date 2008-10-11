@@ -137,21 +137,21 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="MDIChildMax.cpp" />
-		<Unit filename="MDIChildMax.h" />
-		<Unit filename="MDIChildRect.cpp" />
-		<Unit filename="MDIChildRect.h" />
-		<Unit filename="MDIChildText.cpp" />
-		<Unit filename="MDIChildText.h" />
-		<Unit filename="MDIChildView.cpp" />
-		<Unit filename="MDIChildView.h" />
 		<Unit filename="MDIDemoApp.cpp" />
 		<Unit filename="MDIDemoApp.h" />
 		<Unit filename="MainMDIfrm.cpp" />
 		<Unit filename="MainMDIfrm.h" />
+		<Unit filename="MaxMDIChild.cpp" />
+		<Unit filename="MaxMDIChild.h" />
+		<Unit filename="RectMDIChild.cpp" />
+		<Unit filename="RectMDIChild.h" />
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="SimpleMDIChild.cpp" />
+		<Unit filename="SimpleMDIChild.h" />
+		<Unit filename="TextMDIChild.cpp" />
+		<Unit filename="TextMDIChild.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="..\Win32++\Default_Resource.h" />

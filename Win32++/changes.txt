@@ -3,15 +3,16 @@ Version 6.3
 
 Major Changes
 -------------
-Added Docking.
+Added support for docking.  A CWnd object inherited from CDockable is capable
+of docking other CDockable objects.
 
 
 
 Changes
 -------
 * Added CDockable class to support docking
-* Added CWnd::PreTranslateMessage. Allows modeless dialogs and propertysheets to
-                             process the tab (and other) keys.
+* Added CWnd::PreTranslateMessage. Allows modeless dialogs and propertysheets
+    to process the tab (and other) keys.
 * Added CWnd::Destroy. Allows a CWnd to be reused.
 * Removed CWinApp::GetFrame
 * Removed CWinApp::SetFrame

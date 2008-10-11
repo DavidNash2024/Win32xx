@@ -100,27 +100,23 @@ SOURCE=.\MainMDIfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildMax.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MDIChildMax.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\MDIChildRect.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MDIChildText.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MDIChildView.cpp
+SOURCE=.\MaxMDIChild.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\MDIDemoApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\RectMDIChild.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SimpleMDIChild.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TextMDIChild.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -132,15 +128,7 @@ SOURCE=.\MainMDIfrm.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildRect.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\MDIChildText.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\MDIChildView.h
+SOURCE=.\MaxMDIChild.h
 # End Source File
 # Begin Source File
 
@@ -149,6 +137,14 @@ SOURCE=.\MDIDemoApp.h
 # Begin Source File
 
 SOURCE=.\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SimpleMDIChild.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TextMDIChild.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -56,7 +56,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 
 	// Attributes
-		int GetPartCount();
+		int GetParts();
 		HICON GetPartIcon(int iPart);
 		CRect GetPartRect(int iPart);
 		tString GetPartText(int iPart) const;
@@ -98,7 +98,7 @@ namespace Win32xx
 		}
 	}
 
-	inline int CStatusbar::GetPartCount()
+	inline int CStatusbar::GetParts()
 	{
 		return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
 	}

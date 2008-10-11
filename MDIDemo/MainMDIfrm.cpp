@@ -4,10 +4,10 @@
 
 #include "resource.h"
 #include "mainMDIfrm.h"
-#include "MDIChildView.h"
-#include "MDIChildRect.h"
-#include "MDIChildMax.h"
-#include "MDIChildText.h"
+#include "SimpleMDIChild.h"
+#include "RectMDIChild.h"
+#include "MaxMDIChild.h"
+#include "TextMDIChild.h"
 
 
 CMainMDIFrame::CMainMDIFrame()
@@ -74,16 +74,16 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		DoPopupMenu();
 		return TRUE;
 	case IDM_FILE_NEWVIEW:
-		AddMDIChild(new CMDIChildView);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CSimpleMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_NEWRECT:
-		AddMDIChild(new CMDIChildRect);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CRectMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_NEWTEXT:
-		AddMDIChild(new CMDIChildText);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CTextMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_NEWMAX:
-		AddMDIChild(new CMDIChildMax);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CMaxMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_CLOSE:	// Close the active MDI window
 		::SendMessage(GetActiveMDIChild(), WM_CLOSE, 0, 0);

@@ -253,27 +253,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MDIChildView.cpp"
+				RelativePath=".\MDIFrameApp.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MDIFrameApp.cpp"
+				RelativePath=".\SimpleMDIChild.cpp"
 				>
 			</File>
 		</Filter>
@@ -286,15 +270,15 @@
 				>
 			</File>
 			<File
-				RelativePath="MDIChildView.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MDIFrameApp.h"
 				>
 			</File>
 			<File
 				RelativePath="resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleMDIChild.h"
 				>
 			</File>
 		</Filter>

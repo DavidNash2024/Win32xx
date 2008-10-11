@@ -139,8 +139,6 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="MDIChildView.cpp" />
-		<Unit filename="MDIChildView.h" />
 		<Unit filename="MDIFrameApp.cpp" />
 		<Unit filename="MDIFrameApp.h" />
 		<Unit filename="MainMDIfrm.cpp" />
@@ -148,6 +146,8 @@
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="SimpleMDIChild.cpp" />
+		<Unit filename="SimpleMDIChild.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="..\Win32++\Default_Resource.h" />

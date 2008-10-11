@@ -17,6 +17,8 @@ Dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
 Dockable.h        | CDockable        | Win32, Win64      | Adds support for
                   | CDockBar         |                   | docking windows.
                   | CDockClient      |                   |
+                  | CDockHint        |                   |
+                  | CDockTarget      |                   |
 ------------------+------------------+-------------------+---------------------
 GDI.h             | CDC              | Win32, Win64      | A helper class for 
                   |                  | and WinCE         | GDI graphics.
