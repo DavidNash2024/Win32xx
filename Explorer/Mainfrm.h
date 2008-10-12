@@ -26,7 +26,6 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void OnSetFocus();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	void DoPopupMenu();

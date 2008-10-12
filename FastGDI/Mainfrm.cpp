@@ -46,7 +46,7 @@ void CMainFrame::OnAdjustImage()
 		Dialog.DoModal();
 	}
 	else
-		MessageBox(m_hWnd, _T("Open a Bitmap file first!"), _T("Error"), MB_OK);
+		MessageBox(_T("Open a Bitmap file first!"), _T("Error"), MB_OK);
 }
 
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue)
@@ -172,6 +172,12 @@ void CMainFrame::OnFileOpen()
 	CToolbar& TB = GetToolbar();
 	TB.EnableButton(IDM_IMAGE_ADJUST);
 	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
+
+	if (GetMyView().GetImage())
+	{
+		CRect rcImage = GetMyView().GetImageSize();
+		AdjustFrameRect(rcImage);
+	}
 }
 
 void CMainFrame::OnInitialUpdate()

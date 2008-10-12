@@ -29,7 +29,7 @@ LRESULT CRectView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			nGreen  = rand () & 255;
 			nBlue   = rand () & 255;
 
-			CDC RectDC = GetDC (m_hWnd);
+			CDC RectDC = GetDC();
 			RectDC.CreateSolidBrush (RGB (nRed, nGreen, nBlue));
 
             int Left   = (xLeft < xRight) ? xLeft : xRight;

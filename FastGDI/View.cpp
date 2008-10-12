@@ -31,6 +31,18 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	return (BOOL)m_hbmImage;
 }
 
+RECT CView::GetImageSize()
+{
+	BITMAP bm;
+	::GetObject(m_hbmImage, sizeof(BITMAP), &bm);
+
+	CRect rc;
+	rc.right = bm.bmWidth;
+	rc.bottom = bm.bmHeight;
+	
+	return rc;
+}
+
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created

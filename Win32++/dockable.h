@@ -361,7 +361,7 @@ namespace Win32xx
 	{
 		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
 		// This draws a 2 pixel border around the specified Rect
-		CDC dc = GetWindowDC(m_hWnd);
+		CDC dc = GetWindowDC();
 		CRect rcw = Rect;
 		dc.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
 		MoveToEx(dc, 0, rcw.Height(), NULL);
@@ -479,9 +479,9 @@ namespace Win32xx
 					// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
 					CDC dc;
 					if (wParam != 1)
-						dc = GetDCEx(hWnd, (HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
+						dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
 					else
-						dc 	= GetWindowDC(hWnd);
+						dc 	= GetWindowDC();
 
 					CRect rc = GetWindowRect();
 					int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
@@ -635,7 +635,7 @@ namespace Win32xx
 
 				// Save the Dock window's blue tinted bitmap
 				CDC dcTarget;
-				dcTarget = GetWindowDC(pDockTarget->GetHwnd());
+				dcTarget = pDockTarget->GetWindowDC();
 
 				TRACE("Create Bitmap\n");
 				CDC dcMem = CreateCompatibleDC(dcTarget);

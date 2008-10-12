@@ -170,7 +170,7 @@ namespace Win32xx
 		HMENU m_hSelMenu;		// handle to the casceded popup menu
 		HMENU m_hTopMenu;		// handle to the top level menu
 		HWND  m_hPrevFocus;		// handle to window which had focus
-		CRect m_MDIRect[3];		// array of Crect for MDI buttons
+		CRect m_MDIRect[3];		// array of CRect for MDI buttons
 		int   m_nHotItem;		// hot item
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
 		CPoint m_OldMousePos;	// old Mouse position
@@ -192,6 +192,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
 		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
@@ -309,6 +310,7 @@ namespace Win32xx
 		tString m_tsStatusText;				// TCHAR std::string for status text
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
+		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
 
 	};  // class CFrame
 
@@ -439,13 +441,15 @@ namespace Win32xx
 			int cx = GetSystemMetrics(SM_CXSMICON);
 			int cy = GetSystemMetrics(SM_CYSMICON);
 			CRect rc = GetClientRect();
+			int gap = 4;
+			rc.right -= gap;
 
 			// Assign values to each element of the CRect array
 			for (int i = 0 ; i < 3 ; ++i)
 			{
-				int left = rc.right - (i+1)*cx - 4*(i+1);
+				int left = rc.right - (i+1)*cx - gap*(i+1);
 				int top = rc.bottom/2 - cy/2;
-				int right = rc.right - i*cx - 4*(i+1);
+				int right = rc.right - i*cx - gap*(i+1);
 				int bottom = rc.bottom/2 + cy/2;
 				::SetRect(&m_MDIRect[2 - i], left, top, right, bottom);
 			}
@@ -1326,7 +1330,7 @@ namespace Win32xx
 	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_himlMenu(NULL),
 		                m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL),
-		                m_tsStatusText(_T("Ready")), m_nMaxMRU(0)
+		                m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0)
 	{
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -1578,6 +1582,29 @@ namespace Win32xx
 		rbbi.hwndChild  = TB;
 
 		GetRebar().InsertBand(-1, rbbi);
+	}
+
+	inline void CFrame::AdjustFrameRect(RECT rcView) const
+	// Adjust the size of the frame to accommodate the View window's dimensions
+	{
+		// Adjust for the view styles
+		CRect rc = rcView;
+		DWORD dwStyle = GetView()->GetWindowLongPtr(GWL_STYLE);
+		DWORD dwExStyle = GetView()->GetWindowLongPtr(GWL_EXSTYLE);
+		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
+		
+		// Calculate the new frame height
+		CRect rcFrameBefore = GetWindowRect();
+		CRect rcViewBefore = GetViewRect();
+		int Height = rc.Height() + rcFrameBefore.Height() - rcViewBefore.Height();
+
+		// Adjust for the frame styles
+		dwStyle = GetWindowLongPtr(GWL_STYLE);
+		dwExStyle = GetWindowLongPtr(GWL_EXSTYLE);
+		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
+
+		// Calculate final rect size, and reposition frame 
+		SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
 	}
 
 	inline HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
@@ -2601,7 +2628,7 @@ namespace Win32xx
 		{
 			WINDOWPLACEMENT Wndpl = {0};
 			Wndpl.length = sizeof(WINDOWPLACEMENT);
-			if (GetWindowPlacement(&Wndpl))
+			if (GetWindowPlacement(Wndpl))
 			{
 				// Get the Frame's window position
 				CRect rc = Wndpl.rcNormalPosition;
@@ -3105,13 +3132,34 @@ namespace Win32xx
 			}
 		}
 
-		DrawMenuBar(m_hWnd);
+		DrawMenuBar();
 	}
 
 	inline LRESULT CFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
+		case WM_ACTIVATE:
+			{
+				if (LOWORD(wParam) == WA_INACTIVE)
+				{
+					// Save the hwnd of the window which currently has focus
+					// (this must be CFrame window itself or a child window
+					m_hOldFocus = GetFocus();
+				}
+				else
+				{
+					// Do default processing first
+					DefWindowProc(WM_ACTIVATE, wParam, lParam);
+					
+					// Now set the focus to the appropriate child window
+					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
+					return 0;
+				}
+			}
+			break;
+
+
 		case WM_CLOSE:
 			OnFrameClose();
 			break;

@@ -140,20 +140,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		// This Command is recieved if Comctl32.dll version is below 4.7
 		DoPopupMenu();
 		return TRUE;
-	case IDM_EDIT_TAB:
-		{
-			if (GetMainView().GetOldFocus() == GetTreeView())
-			{
-				// Set ListView focus
-				GetListView().SetFocus();
-				int item =  max(0, GetListView().GetNextItem( -1, LVNI_ALL | LVNI_FOCUSED ));
-				GetListView().SetItemState( item, LVIS_SELECTED, LVIS_SELECTED );
-			}
-			else
-				// Set TreeView focus
-				GetTreeView().SetFocus();
-		}
-		return TRUE;
 	} // switch cmd
 
 	return FALSE;
@@ -184,13 +170,6 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	} //switch LPNMHDR
 
 	return 0L;
-}
-
-void CMainFrame::OnSetFocus()
-{
-	// Pass the focus back to the control that had it before
-	if (m_MainView.GetOldFocus())
-		::SetFocus(m_MainView.GetOldFocus());
 }
 
 void CMainFrame::SetButtons()
