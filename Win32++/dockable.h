@@ -356,7 +356,6 @@ namespace Win32xx
 	{
 	}
 
-	// TODO: Do we need this function?
 	inline void CDockable::CDockClient::Draw3DBorder(RECT& Rect)
 	{
 		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
@@ -589,7 +588,6 @@ namespace Win32xx
 			{
 				Destroy();
 				pDockTarget->RedrawWindow();
-				TRACE("Dock Side Changed \n");
 			}
 			uDockSideOld = uDockSide;
 
@@ -637,7 +635,6 @@ namespace Win32xx
 				CDC dcTarget;
 				dcTarget = pDockTarget->GetWindowDC();
 
-				TRACE("Create Bitmap\n");
 				CDC dcMem = CreateCompatibleDC(dcTarget);
 				CRect rcBitmap = rcHint;
 				dcMem.CreateCompatibleBitmap(dcTarget, rcBitmap.Width(), rcBitmap.Height());
@@ -734,17 +731,12 @@ namespace Win32xx
 		// Ensure a new window if the dock target changes
 		static CDockable* pDockTargetOld = 0;
 		if (pDockTarget != pDockTargetOld)
-		{
 			Destroy();
-			TRACE("Changed Dock Target\n");
-		}
+
 		pDockTargetOld = pDockTarget;
 
 		if (!IsWindow())
-		{
-			TRACE("Targeting Window Created\n");
 			Create();
-		}
 
 		CRect rcTarget = pDockTarget->GetDockClient().GetWindowRect();
 		int xMid = rcTarget.left + (rcTarget.Width() - cxImage)/2;
@@ -1269,7 +1261,6 @@ namespace Win32xx
 
 	inline void CDockable::ShowStats()
 	{
-		// ToDo:  Remove this function
 		TCHAR text[80];
 		TCHAR AllText[160];
 		wsprintf(text, _T("Dockable: %#08lx"), GetHwnd());
@@ -1355,7 +1346,6 @@ namespace Win32xx
 			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
 			RedrawWindow();
 			m_Docked = FALSE;
-			TRACE("Undock Complete\n");
 			ShowStats();
 		}
 	}
@@ -1370,15 +1360,9 @@ namespace Win32xx
 			if (!IsDocked())
 			{
 				if (WA_INACTIVE == LOWORD(wParam))
-				{
-					TRACE("Window is Deactivated\n");
 					PostMessage(DM_MAKETOPMOST, TRUE, 0);
-				}
 				else
-				{
-					TRACE("Window is Activated\n");
 					PostMessage(DM_MAKETOPMOST, FALSE, 0);
-				}
 			}
 			break;
 

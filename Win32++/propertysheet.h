@@ -492,7 +492,7 @@ namespace Win32xx
 
 		// Tell the user what went wrong
 		if (nStatus != PSNRET_NOERROR)
-			MessageBox(m_hWnd, _T("Validation Failed"), _T("PageSheet Check"), MB_OK);
+			MessageBox(_T("Validation Failed"), _T("PageSheet Check"), MB_OK);
 
 		return nStatus;
 	}

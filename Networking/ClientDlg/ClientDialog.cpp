@@ -105,7 +105,7 @@ void CClientDialog::LoadCommonControlsEx()
 		}
 		else
 		{
-			MessageBox(NULL, _T("Common Control Version 4.71 or later required (IE 4)"), _T("NOT SUPPORTED"), MB_ICONSTOP);
+			::MessageBox(NULL, _T("Common Control Version 4.71 or later required (IE 4)"), _T("NOT SUPPORTED"), MB_ICONSTOP);
 		}
 
 		::FreeLibrary(hComCtl);
@@ -205,7 +205,7 @@ void CClientDialog::OnStartClient()
 				// Create the socket
 				if (!m_Client.Create())
 				{
-					MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
+					::MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
 					return;
 				}
 
@@ -227,7 +227,7 @@ void CClientDialog::OnStartClient()
 				// Connect to the server
 				if (0 != m_Client.Connect(sAddr.c_str(), RemotePort))
 				{
-					MessageBox(m_hWnd, _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING);
+					MessageBox(_T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING);
 					m_Client.Disconnect();
 					::EnableWindow(GetDlgItem(IDC_BUTTON_CONNECT), TRUE);
 					return;

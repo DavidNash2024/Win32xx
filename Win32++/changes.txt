@@ -3,25 +3,114 @@ Version 6.3
 
 Major Changes
 -------------
-Added support for docking.  A CWnd object inherited from CDockable is capable
-of docking other CDockable objects.
+* Added support for docking. See below for more information on Docking  
+   - Note: CDockable is now recommended over CSplitter for splitter apps.     
+* Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
+* MDI child windows now require a view window. The use of a view window is 
+   now the same for Frames, MDI children, and dockables.
+* Added message translation. This allows modeless dialogs and propertysheets
+    to process the tab (and other) keys.
+* Added a CWnd::Destroy function. This returns a CWnd back to its default
+    state ready to be reused.
+* SetView can now be used to change the frame's view from one CWnd to 
+    another.
+* The Frame now stores which child window had focus before it is de-activated,
+    and returns focus to this child when the frame application is reactivated.    
+    
+    
+Fixes
+-----    
+* CFrame now supports Extra Large fonts in the menu and status bar. Also, font
+    size can be changed while the application is running.
+* 16Bit colours (and greyscale) are now rendered properly
+* Tabbing now works for modeless dialogs and property sheets
+   (uses PreTranslateMessage).            
 
 
+More About Docking
+------------------
+* Any CWnd object inherrited from CDockable is capable of docking other CWnd
+    objects inherrited from CDockable.
+* Dockables can be docked in any of the 4 sides. Any number of windows can be 
+   docked on a side.
+* A dockable could be docked inside another dockable which in turn is docked
+   inside another. There is no theoretical limit as to depth of dockables 
+   within dockables.
+* Dockables have a View window, just like the Frame, and MDI children.
+* Dockables are seperated by a movable splitter bar.
+* Dockables use a modern style of dock targeting and dock hinting (the same
+    as Visual Studio 2005 and 2008).
+* Dockables can have styles including:
+  - DS_NOTDOCKED			   
+  - DS_DOCKED_LEFT	   
+  - DS_DOCKED_RIGHT   
+  - DS_DOCKED_TOP		   
+  - DS_DOCKED_BOTTOM  
+  - DS_NODOCKCHILD_LEFT	 	
+  - DS_NODOCKCHILD_RIGHT	 	
+  - DS_NODOCKCHILD_TOP	 
+  - DS_NODOCKCHILD_BOTTOM	 	
+  - DS_NO_RESIZE				 
+  - DS_NO_CAPTION		 
+  - DS_NO_UNDOCK
+* CDockable is now the recommended alternative to CSplitter (being much simpler
+    to implement - see the example below). The DS_NO_CAPTION and DS_NO_UNDOCK
+    styles should be specified if docking and undocking are not required.
 
-Changes
+Example of how to dock 8 dockables inside a dockable view:
+----------------------------------------------------------
+void CMainFrame::OnInitialUpdate()
+{
+    // CTextDockable in inherrited from CDockable
+	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT, 100);
+	CDockable* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	CDockable* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP, 100);
+	CDockable* pDockBottom = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+
+	// Dock 4 dockables inside other dockables
+    pDockLeft->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+	pDockRight->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+	pDockTop->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	pDockBottom->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+}      			   
+
+(Refer to the Docking sample for an example of to use CDockable.)    
+
+All Changes
 -------
 * Added CDockable class to support docking
-* Added CWnd::PreTranslateMessage. Allows modeless dialogs and propertysheets
-    to process the tab (and other) keys.
-* Added CWnd::Destroy. Allows a CWnd to be reused.
+* Added CDockBar class (a nested class of CDockable)
+* Added CDockClient class (a nested class of CDockable)
+* Added CDockHint class (a nested class of CDockable)
+* Added CDockTarget class (a nested class of CDockable)
+* Added Docking demo
+* Added FastGDI demo
+* Added DrawBitmap (global function in gdi.h)
+* Added TintBitmap (global function in gdi.h)
+* Added IsLeftButtonDown (global function in dockable.h)
+* Added CWnd::BringWindowToTop
+* Added CWnd::Destroy 
+* Added CWnd::DrawMenuBar
+* Added CWnd::GetDC
+* Added CWnd::GetDCEx
+* Added CWnd::GetMenu
+* Added CWnd::GetScrollInfo
+* Added CWnd::GetScrollPos
+* Added CWnd::GetScrollRange
+* Added CWnd::GetWindow
+* Added CWnd::GetWindowDC
+* Added CWnd::MessageBox
+* Added CWnd::PreTranslateMessage
+* Added CWnd::ReleaseDC
+* Added CWnd::ScrollWindow
+* Added CWnd::SetMenu
+* Added CWnd::SetScrollInfo
+* Added CWnd::SetScrollPos
+* Added CWnd::SetScrollRange
 * Removed CWinApp::GetFrame
 * Removed CWinApp::SetFrame
-* Changed CFrame::SetView.  Can now swap from one view window to another
-* Added FastGDI demo.  Demonstrates the use of the TintBitmap function.
-* Added DrawBitmap
-* Added TintBitmap
-* Added IsLeftButtonDown
-
+* Changed CFrame::SetView 
+ 
 
 
 Version 6.2

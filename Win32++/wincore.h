@@ -616,10 +616,8 @@ namespace Win32xx
 		HWND GetDlgItem(int nIDDlgItem) const;
 		tString GetDlgItemString(int nIDDlgItem) const;
 		HWND GetHwnd() const {return m_hWnd;}
-		HMENU GetMenu() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
-		int  GetScrollPos(int nBar) const;
-		BOOL GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
+
 		HWND GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
@@ -642,19 +640,17 @@ namespace Win32xx
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
 		int  ReleaseDC(HDC hDC) const;
-		BOOL ScrollWindow(int XAmount, int YAmount, RECT& Rect, RECT& ClipRect) const;
+
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
 		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
-		BOOL SetMenu(HMENU hMenu) const;
+
 		void SetParent(HWND hParent);
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		int  SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const;
-		int  SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
-		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, RECT rc, UINT uFlags) const;
@@ -667,9 +663,16 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		BOOL CloseWindow() const;
+		HMENU GetMenu() const;
+		int  GetScrollPos(int nBar) const;
+		BOOL GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
 		BOOL GetWindowPlacement(WINDOWPLACEMENT& pwndpl) const;
 		BOOL IsIconic() const;
 		BOOL IsZoomed() const;
+		BOOL SetMenu(HMENU hMenu) const;
+		BOOL ScrollWindow(int XAmount, int YAmount, RECT& Rect, RECT& ClipRect) const;
+		int  SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
+		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
 #endif
 
@@ -744,7 +747,7 @@ namespace Win32xx
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
 		int Run();
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}		
+		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
 		TLSData* SetTlsIndex();
 
 	private:
@@ -972,7 +975,7 @@ namespace Win32xx
 		static CWinApp* pWinApp = 0;
 
 		if ((CWinApp*)-1 == pThis)
-			pWinApp = 0;	
+			pWinApp = 0;
 		else if (0 == pWinApp)
 			pWinApp = pThis;
 
@@ -1085,7 +1088,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::BringWindowToTop() const
-	// The BringWindowToTop function brings the specified window to the top 
+	// The BringWindowToTop function brings the specified window to the top
 	// of the Z order. If the window is a top-level window, it is activated.
 	{
 		return ::BringWindowToTop(m_hWnd);
@@ -1127,25 +1130,7 @@ namespace Win32xx
 
 		::SetWindowPos(m_hWnd, HWND_TOP, x, y, 0, 0,  SWP_NOSIZE);
 
-	} 
-
-/*	inline void CWnd::Clear()
-	// Clears the member variables, allowing the CWnd to be reused.
-	// The window must be destroyed before this function is called.
-	{
-		if (IsWindow())
-			throw CWinException(_T("CWnd::Clear  Window should be destroyed first"));
-
-		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
-		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-		if (m_hWnd) RemoveFromMap();
-
-		m_hIconLarge = NULL;
-		m_hIconSmall = NULL;
-		m_hWnd = NULL;
-		m_hWndParent = NULL;
-		m_PrevWindowProc = NULL;
-	} */
+	}
 
 #ifndef _WIN32_WCE
 	inline BOOL CWnd::CloseWindow() const
@@ -1407,14 +1392,14 @@ namespace Win32xx
 	}
 
 	inline HDC CWnd::GetDC() const
-	// The GetDC function retrieves a handle to a display device context (DC) for the 
-	// client area of the window. 
+	// The GetDC function retrieves a handle to a display device context (DC) for the
+	// client area of the window.
 	{
 		return ::GetDC(m_hWnd);
 	}
 
 	inline HDC CWnd::GetDCEx(HRGN hrgnClip, DWORD flags) const
-	// The GetDCEx function retrieves a handle to a display device context (DC) for the 
+	// The GetDCEx function retrieves a handle to a display device context (DC) for the
 	// client area or entire area of a window
 	{
 		return ::GetDCEx(m_hWnd, hrgnClip, flags);
@@ -1443,12 +1428,13 @@ namespace Win32xx
 		return tstr;
 	}
 
+#ifndef _WIN32_WCE
 	inline HMENU CWnd::GetMenu() const
-	// The GetMenu function retrieves a handle to the menu assigned to the window. 
+	// The GetMenu function retrieves a handle to the menu assigned to the window.
 	{
 		return ::GetMenu(m_hWnd);
 	}
-
+#endif
 
 	inline LONG_PTR CWnd::GetWindowLongPtr(int nIndex) const
 	// The GetWindowLongPtr function retrieves information about the window.
@@ -1457,29 +1443,31 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::GetScrollInfo(int fnBar, SCROLLINFO& si) const
-	// The GetScrollInfo function retrieves the parameters of a scroll bar, including 
-	// the minimum and maximum scrolling positions, the page size, and the position 
+	// The GetScrollInfo function retrieves the parameters of a scroll bar, including
+	// the minimum and maximum scrolling positions, the page size, and the position
 	// of the scroll box (thumb).
 	{
-		::GetScrollInfo(m_hWnd, fnBar, &si);
+		return ::GetScrollInfo(m_hWnd, fnBar, &si);
 	}
 
+#ifndef _WIN32_WCE
 	inline int CWnd::GetScrollPos(int nBar) const
-	// The GetScrollPos function retrieves the current position of the scroll box 
+	// The GetScrollPos function retrieves the current position of the scroll box
 	// (thumb) in the specified scroll bar.
 	{
-		::GetScrollPos(m_hWnd, nBar);
+		return ::GetScrollPos(m_hWnd, nBar);
 	}
 
 	inline BOOL CWnd::GetScrollRange(int nBar, int& MinPos, int& MaxPos) const
-	// The GetScrollRange function retrieves the current minimum and maximum scroll box 
-	// (thumb) positions for the specified scroll bar. 
+	// The GetScrollRange function retrieves the current minimum and maximum scroll box
+	// (thumb) positions for the specified scroll bar.
 	{
 		return ::GetScrollRange(m_hWnd, nBar, &MinPos, &MaxPos );
 	}
+#endif
 
 	inline HWND CWnd::GetWindow(UINT uCmd) const
-	// The GetWindow function retrieves a handle to a window that has the specified 
+	// The GetWindow function retrieves a handle to a window that has the specified
 	// relationship (Z-Order or owner) to the specified window.
 	// Possible uCmd values: GW_CHILD, GW_ENABLEDPOPUP, GW_HWNDFIRST, GW_HWNDLAST,
 	// GW_HWNDNEXT, GW_HWNDPREV, GW_OWNER
@@ -1488,7 +1476,7 @@ namespace Win32xx
 	}
 
 	inline HDC CWnd::GetWindowDC() const
-	// The GetWindowDC function retrieves the device context (DC) for the entire 
+	// The GetWindowDC function retrieves the device context (DC) for the entire
 	// window, including title bar, menus, and scroll bars.
 	{
 		return ::GetWindowDC(m_hWnd);
@@ -1677,8 +1665,8 @@ namespace Win32xx
 
 	inline int CWnd::MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const
 	// The MessageBox function creates, displays, and operates a message box.
-	// Possible combinations of uType values include: MB_OK, MB_HELP, MB_OKCANCEL, MB_RETRYCANCEL, 
-	// MB_YESNO, MB_YESNOCANCEL, MB_ICONEXCLAMATION, MB_ICONWARNING, MB_ICONERROR (+ many others). 
+	// Possible combinations of uType values include: MB_OK, MB_HELP, MB_OKCANCEL, MB_RETRYCANCEL,
+	// MB_YESNO, MB_YESNOCANCEL, MB_ICONEXCLAMATION, MB_ICONWARNING, MB_ICONERROR (+ many others).
 	{
 		return ::MessageBox(m_hWnd, lpText, lpCaption, uType);
 	}
@@ -1908,7 +1896,7 @@ namespace Win32xx
 	}
 
 	inline int CWnd::ReleaseDC(HDC hDC) const
-	// The ReleaseDC function releases a device context (DC), freeing it for use 
+	// The ReleaseDC function releases a device context (DC), freeing it for use
 	// by other applications.
 	{
 		return ::ReleaseDC(m_hWnd, hDC);
@@ -1939,12 +1927,13 @@ namespace Win32xx
 		return FALSE;
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, RECT& Rect, RECT& ClipRect) const
-	// The ScrollWindow function scrolls the contents of the window's client area. 
+	// The ScrollWindow function scrolls the contents of the window's client area.
 	{
 		return ::ScrollWindow(m_hWnd, XAmount, YAmount, &Rect, &ClipRect);
 	}
-
+#endif
 
 	inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
 	// The SendMessage function sends the specified message to a window or windows.
@@ -2008,12 +1997,13 @@ namespace Win32xx
 		return m_hIconSmall;
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CWnd::SetMenu(HMENU hMenu) const
-	// The SetMenu function assigns a new menu to the specified window. 
+	// The SetMenu function assigns a new menu to the specified window.
 	{
 		return ::SetMenu(m_hWnd, hMenu);
 	}
-
+#endif
 
 	inline void CWnd::SetParent(HWND hParent)
 	// The SetParent function changes the parent window of the child window.
@@ -2036,26 +2026,28 @@ namespace Win32xx
 		return ::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0);
 	}
 
+#ifndef _WIN32_WCE
 	inline int CWnd::SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const
-	// The SetScrollInfo function sets the parameters of a scroll bar, including 
-	// the minimum and maximum scrolling positions, the page size, and the 
-	// position of the scroll box (thumb). 
+	// The SetScrollInfo function sets the parameters of a scroll bar, including
+	// the minimum and maximum scrolling positions, the page size, and the
+	// position of the scroll box (thumb).
 	{
 		return ::SetScrollInfo(m_hWnd, fnBar, &si, fRedraw);
 	}
 
 	inline int CWnd::SetScrollPos(int nBar, int nPos, BOOL bRedraw) const
-	// The SetScrollPos function sets the position of the scroll box (thumb) in 
-	// the specified scroll bar 
+	// The SetScrollPos function sets the position of the scroll box (thumb) in
+	// the specified scroll bar
 	{
 		return ::SetScrollPos(m_hWnd, nBar, nPos, bRedraw);
 	}
 
 	inline BOOL CWnd::SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const
-	// The SetScrollRange function sets the minimum and maximum scroll box positions for the scroll bar. 
+	// The SetScrollRange function sets the minimum and maximum scroll box positions for the scroll bar.
 	{
 		return ::SetScrollRange(m_hWnd, nBar, nMinPos, nMaxPos, bRedraw);
 	}
+#endif
 
 	inline LONG_PTR CWnd::SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const
 	// The SetWindowLongPtr function changes an attribute of the window.
@@ -2100,7 +2092,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetWindowText(LPCTSTR lpString) const
-	// The SetWindowText function changes the text of the window's title bar (if it has one). 
+	// The SetWindowText function changes the text of the window's title bar (if it has one).
 	{
 		return ::SetWindowText(m_hWnd, lpString);
 	}

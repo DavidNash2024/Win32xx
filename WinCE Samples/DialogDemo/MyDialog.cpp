@@ -21,7 +21,7 @@ void CMyDialog::AddToButton()
 	//set text to show in control
 	TCHAR szBufW[16];
 	wsprintf(szBufW, L"Button %d", m_nCounter);
-	Button_SetText(hwButton, szBufW);
+	::Button_SetText(hwButton, szBufW);
 	return;
 }
 
@@ -36,7 +36,7 @@ void CMyDialog::AddToComboBox()
 	if (m_nCounter)
 	{
 		ComboBox_AddString(hwComboBox, szBufW);
-		ComboBox_SetText(hwComboBox, szBufW);
+		::ComboBox_SetText(hwComboBox, szBufW);
 		ComboBox_SetCurSel(hwComboBox, m_nCounter-1);
 	}
 	else 

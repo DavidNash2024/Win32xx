@@ -130,7 +130,7 @@ void CMainWindow::PerformanceTest()
 	str << lr << _T(" total messages sent\n");
 	TRACE(str.str().c_str());
 
-	MessageBox(m_hWnd, str.str().c_str(), _T("Info"), MB_OK);
+	MessageBox(str.str().c_str(), _T("Info"), MB_OK);
 }
 
 void CMainWindow::SendText(LPCTSTR str)

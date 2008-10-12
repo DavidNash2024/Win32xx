@@ -53,7 +53,7 @@ void CSimpleMDIChild::OnInitialUpdate()
 void CSimpleMDIChild::OnClose()
 {
 	//Action to take when the window is about to close
-	int Result = MessageBox(m_hWnd, _T("OK to close Window?"), _T("File Close"), MB_YESNO);
+	int Result = MessageBox(_T("OK to close Window?"), _T("File Close"), MB_YESNO);
 	if (Result == IDYES)
 		::SendMessage(m_hWndParent, WM_MDIDESTROY, (WPARAM)m_hWnd, 0);
 }

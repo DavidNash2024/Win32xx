@@ -196,7 +196,7 @@ void CMainFrame::OnFilePrint()
 	int Height = rcView.Height();
 
 	// Extract the bitmap from the View window
-	CDC ViewDC = GetDC(m_View.GetHwnd());
+	CDC ViewDC = m_View.GetDC();
 	CDC MemDC = CreateCompatibleDC(ViewDC);
 	MemDC.CreateCompatibleBitmap(ViewDC, Width, Height);
 	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);

@@ -85,7 +85,7 @@ int CButtonPage::Validate()
 
 // Tell the user what went wrong
 	if (nStatus != PSNRET_NOERROR)
-		MessageBox(m_hWnd, _T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
+		MessageBox(_T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
 	else
 		TRACE(_T("Button Page Validation passed\n"));
 	
