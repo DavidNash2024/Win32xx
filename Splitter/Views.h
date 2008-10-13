@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////
 // Views.h
-//  Declaration of the CTopView, CBottomView
+//  Declaration of the CMainPane, CBottomPane
 //   and CView classes
 
 
@@ -8,62 +8,99 @@
 #define VIEWS_H
 
 #include <tchar.h>
-#include "../Win32++/splitter.h"
+#include "../Win32++/dockable.h"
 
 
-class CView : public CWnd
+class CTopLeftView : public CWnd
 {
-public:
-	CView();
-	virtual ~CView(){}
-	virtual TCHAR* GetString(){return m_str;};
-	virtual void SetString(TCHAR* str);
-
 protected:
 	virtual void OnPaint(HDC hDC);
-	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-private:
-	TCHAR m_str[41];
 };
 
-class CTopView : public CSplitter
+class CTopRightView : public CWnd
 {
-public:
-	CTopView();
-	virtual ~CTopView(){}
-
-private:
-	CView m_TopLeft;
-	CView m_TopRight;
-};
-
-class CBottomView : public CSplitter
-{
-public:
-	CBottomView();
-	virtual ~CBottomView(){}
-
-private:
-	CView m_BottomLeft;
-	CView m_BottomRight;
-};
-
-class CMainView : public CSplitter
-{
-public:
-	CMainView();
-	virtual ~CMainView(){}
-	virtual void Reposition();
-
 protected:
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual void OnPaint(HDC hDC);
+};
 
-private:
-	CTopView m_Top;
-	CBottomView m_Bottom;
+class CBottomLeftView : public CWnd
+{
+protected:
+	virtual void PreCreate(CREATESTRUCT &cs) 
+	{
+		cs.lpszClass = _T("EDIT");
+	}
+};
+
+class CBottomRightView : public CWnd
+{
+protected:
+	virtual void PreCreate(CREATESTRUCT &cs) 
+	{
+		cs.lpszClass = _T("EDIT");
+	}
 };
 
 
-#endif // CVIEWS_H
+class CMainPane : public CDockable
+{
+public:
+	CMainPane() {SetView(m_View);}
+//	virtual void OnInitialUpdate() {SetBarWidth(10);}
+	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
+private:
+	CTopLeftView m_View;
+};
+
+class CTopRightPane : public CDockable
+{
+public:
+	CTopRightPane() {SetView(m_View);}
+//	virtual void OnInitialUpdate() {SetBarWidth(10);}
+	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
+private:
+	CTopRightView m_View;
+};
+
+class CBottomPane : public CDockable
+{
+public:
+	CBottomPane() {SetView(m_View);}
+	virtual void OnInitialUpdate() 
+	{
+		SetBarColor(RGB(255, 0, 0));
+		SetBarWidth(10);
+	}
+	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
+private:
+	CBottomLeftView m_View;
+};
+
+class CBottomRightPane : public CDockable
+{
+public:
+	CBottomRightPane() {SetView(m_View);}
+//	virtual void OnInitialUpdate() {SetBarWidth(10);}
+	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
+private:
+	CBottomRightView m_View;
+};
+
+
+#endif // VIEWS_H

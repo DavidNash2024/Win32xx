@@ -254,6 +254,9 @@
 				RelativePath="..\Win32++\Dialog.h">
 			</File>
 			<File
+				RelativePath="..\Win32++\dockable.h">
+			</File>
+			<File
 				RelativePath="..\Win32++\Frame.h">
 			</File>
 			<File

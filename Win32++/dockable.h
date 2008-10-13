@@ -54,15 +54,15 @@
 #define DS_DOCKED_RIGHT			0x0002
 #define DS_DOCKED_TOP			0x0004
 #define DS_DOCKED_BOTTOM		0x0008
-#define DS_NODOCKCHILD_LEFT		0x0010	
-#define DS_NODOCKCHILD_RIGHT	0x0020	
-#define DS_NODOCKCHILD_TOP		0x0040	
-#define DS_NODOCKCHILD_BOTTOM	0x0080	
+#define DS_NO_DOCKCHILD_LEFT	0x0010	
+#define DS_NO_DOCKCHILD_RIGHT	0x0020	
+#define DS_NO_DOCKCHILD_TOP		0x0040	
+#define DS_NO_DOCKCHILD_BOTTOM	0x0080	
 #define DS_NO_RESIZE			0x0100	
 #define DS_NO_AUTO_RESIZE		0x0200	//Not Implemented yet
 #define DS_NO_CAPTION			0x0400
 #define DS_NO_UNDOCK			0x0800
-#define DS_CLIENTEDGE			0x1000	//Not Implemented yet
+#define DS_CLIENTEDGE			0x1000	
 #define DS_FLATLOOK				0x2000	//Not Implemented yet
 
 // Docking Notifications
@@ -117,6 +117,7 @@ namespace Win32xx
 			CDockBar();
 			virtual ~CDockBar();
 			virtual int GetWidth() {return m_DockBarWidth;}
+			virtual void OnPaint(HDC hDC);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
 			virtual void SetColor(COLORREF color);
@@ -148,10 +149,13 @@ namespace Win32xx
 
 			CDockable* GetDock() {return m_pDock;}
 			void SetDock(CDockable* pDock) {m_pDock = pDock;}
+			void SetCaption(LPCTSTR szCaption) {m_tsCaption = szCaption;}
 
 			CDockable* m_pDock;
 			CWnd* m_pView;
 			int m_NCHeight;
+		private:
+			tString m_tsCaption;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -181,7 +185,6 @@ namespace Win32xx
 			virtual void SetRegion();
 			virtual void ShowTargeting(LPDRAGPOS pDragPos);
 			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 		};
 
 	public:
@@ -201,9 +204,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual void RecalcDockLayout();
 		virtual void RecalcDockChildLayout(CRect rc);
-
 		virtual void SendNotify(UINT nMessageID);
-		void ShowStats();	// To-do: Remove this function
 		virtual void UnDock();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -220,13 +221,15 @@ namespace Win32xx
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		virtual int GetBarWidth() {return GetDockBar().GetWidth();}
 		virtual void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
-		void SetDockStyle(DWORD dwDockStyle) {m_DockStyle = dwDockStyle;} //To-do: ensure sane dock styles
+		void SetCaption(LPCTSTR szCaption) {GetDockClient().SetCaption(szCaption);}
+		void SetDockStyle(DWORD dwDockStyle); 
 		void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
 		void SetView(CWnd& View) {GetDockClient().m_pView = &View;}
 
 		UINT m_DockZone;
 		BOOL m_BlockMove;
 		BOOL m_Docked;
+	
 	private:
 		CDockBar m_DockBar;
 		CDockHint m_DockHint;
@@ -261,6 +264,15 @@ namespace Win32xx
 		::DeleteObject(m_hbrBackground);
 	}
 
+	inline void CDockable::CDockBar::OnPaint(HDC hDC)
+	{
+		CRect rcClient = GetClientRect();
+		CDC dcView = hDC;
+		dcView.AttachBrush(m_hbrBackground);
+		PatBlt(dcView, 0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
+		dcView.DetachBrush();
+	}
+
 	inline void CDockable::CDockBar::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ Bar");
@@ -288,11 +300,6 @@ namespace Win32xx
 			::DeleteObject(m_hbrBackground);
 
 		m_hbrBackground = ::CreateSolidBrush(color);
-
-		if (0 != GetHwnd())
-		{
-			SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_hbrBackground);
-		}
 	}
 
 	inline LRESULT CDockable::CDockBar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -387,7 +394,9 @@ namespace Win32xx
 
 	inline void CDockable::CDockClient::PreCreate(CREATESTRUCT& cs)
 	{
-		cs.dwExStyle = WS_EX_CLIENTEDGE;
+		DWORD dwStyle = GetDock()->GetDockStyle();
+		if ((dwStyle & DS_CLIENTEDGE) || (dwStyle & DS_FLATLOOK))
+			cs.dwExStyle = WS_EX_CLIENTEDGE;
 	}
 
 	inline void CDockable::CDockClient::SendNotify(UINT nMessageID)
@@ -508,9 +517,11 @@ namespace Win32xx
 					dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
 					Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
 					CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
-					::DrawText(dc, _T("Class View - Docking"), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+					::DrawText(dc, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
-					Draw3DBorder(rc);
+					if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+						Draw3DBorder(rc);
+					
 					return 0;
 				}
 				break;	// also do default painting
@@ -753,25 +764,25 @@ namespace Win32xx
 		CRect rcBottom(29, 55, 58, 87);
 
 		// Test if our cursor is in one of the docking zones
-		if ((PtInRect(&rcLeft, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_LEFT))
+		if ((PtInRect(&rcLeft, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockTarget->m_DockZone = DS_DOCKED_LEFT;
 		}
-		else if ((PtInRect(&rcTop, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_TOP))
+		else if ((PtInRect(&rcTop, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
 			pDockTarget->m_DockZone = DS_DOCKED_TOP;
 		}
-		else if ((PtInRect(&rcRight, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_RIGHT))
+		else if ((PtInRect(&rcRight, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockTarget->m_DockZone = DS_DOCKED_RIGHT;
 		}
-		else if ((PtInRect(&rcBottom, pt)) && !(pDockTarget->GetDockStyle() & DS_NODOCKCHILD_BOTTOM))
+		else if ((PtInRect(&rcBottom, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().ShowHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
@@ -800,7 +811,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() :  m_DockZone(0), m_BlockMove(FALSE), m_Docked(FALSE), m_pDockParent(NULL), /*m_DockBarWidth(4),*/
+	inline CDockable::CDockable() :  m_DockZone(0), m_BlockMove(FALSE), m_Docked(FALSE), m_pDockParent(NULL), 
 					m_DockWidth(0), m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -839,6 +850,31 @@ namespace Win32xx
 
 		// Store the Dockable's pointer in the DockAncestor's vector for later deletion
 		GetDockAncestor()->m_vAllDockables.push_back(pDockable);
+
+		// Issue TRACE warnings for any missing resources
+		HMODULE hMod= GetApp()->GetInstanceHandle();
+		if (!(uDockStyle & DS_NO_RESIZE))
+		{
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
+				TRACE(_T("\n**WARNING** Horizontal cursor resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
+				TRACE(_T("\n**WARNING** Vertical cursor resource missing\n"));
+		}
+
+		if (!(uDockStyle & DS_NO_UNDOCK))
+		{
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking center bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDLEFT), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking left bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDRIGHT), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking right bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDTOP), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking top bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking center bottom resource missing\n"));
+		}
+
 		return pDockable;
 	}
 
@@ -944,11 +980,13 @@ namespace Win32xx
 			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 			int cx = rc.Width();
 			int cy = rc.Height();
+		//	int BarWidth = GetBarWidth();
+			int BarWidth = pDock->GetDockBar().GetWidth();
 
 			if (bVertical)
-				::PatBlt (BarDC, Pos.x - GetBarWidth()/2, rc.top, GetBarWidth(), cy, PATINVERT);
+				::PatBlt (BarDC, Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
 			else
-				::PatBlt (BarDC, rc.left, Pos.y - GetBarWidth()/2, cx, GetBarWidth(), PATINVERT);
+				::PatBlt (BarDC, rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
 
 			BarDC.DetachBrush();
 		}
@@ -1031,6 +1069,8 @@ namespace Win32xx
 		GetDockClient().SetDock(this);
 		GetDockBar().Create(m_hWndParent);
 		GetDockClient().Create(m_hWnd);
+		if (NULL == GetView())
+			throw CWinException(_T("No View window assigned to Dockable")); 
 		GetView()->Create(GetDockClient().GetHwnd());
 		if (SendMessage(m_hWndParent, DM_ISDOCKABLE, 0, 0))
 			m_pDockAncestor = ((CDockable*)FromHandle(m_hWndParent))->m_pDockAncestor;
@@ -1110,23 +1150,24 @@ namespace Win32xx
 				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
 
 				DrawHashBar(pdp->hdr.hwndFrom, pt);
+				int BarWidth = pDock->GetDockBar().GetWidth();
 
 				switch (pDock->GetDockStyle() & 0xF)
 				{
 				case DS_DOCKED_LEFT:
-					pDock->SetDockWidth(pt.x - rcDock.left - GetBarWidth()/2);
+					pDock->SetDockWidth(pt.x - rcDock.left - BarWidth/2);
 					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Width();
 					break;
 				case DS_DOCKED_RIGHT:
-					pDock->SetDockWidth(rcDock.right - pt.x - GetBarWidth()/2);
+					pDock->SetDockWidth(rcDock.right - pt.x - BarWidth/2);
 					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Width();
 					break;
 				case DS_DOCKED_TOP:
-					pDock->SetDockWidth(pt.y - rcDock.top - GetBarWidth()/2);
+					pDock->SetDockWidth(pt.y - rcDock.top - BarWidth/2);
 					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Height();
 					break;
 				case DS_DOCKED_BOTTOM:
-					pDock->SetDockWidth(rcDock.bottom - pt.y - GetBarWidth()/2);
+					pDock->SetDockWidth(rcDock.bottom - pt.y - BarWidth/2);
 					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Height();
 					break;
 				}
@@ -1200,10 +1241,11 @@ namespace Win32xx
 				// Calculate the dimensions of the splitter bar
 				CRect rcBar = rc;
 				DWORD DockSide = m_vDockChildren[u]->GetDockStyle() & 0xF;
-				if (DS_DOCKED_LEFT   == DockSide) rcBar.right  = rcBar.left + GetBarWidth();
-				if (DS_DOCKED_RIGHT  == DockSide) rcBar.left   = rcBar.right - GetBarWidth();
-				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + GetBarWidth();
-				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - GetBarWidth();
+
+				if (DS_DOCKED_LEFT   == DockSide) rcBar.right  = rcBar.left + m_vDockChildren[u]->GetBarWidth();
+				if (DS_DOCKED_RIGHT  == DockSide) rcBar.left   = rcBar.right - m_vDockChildren[u]->GetBarWidth();
+				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + m_vDockChildren[u]->GetBarWidth();
+				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_vDockChildren[u]->GetBarWidth();
 
 				// Draw the splitter bar
 				m_vDockChildren[u]->GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED );
@@ -1227,8 +1269,6 @@ namespace Win32xx
 
 			GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		}
-
-		ShowStats();
 	}
 
 	inline void CDockable::RecalcDockLayout()
@@ -1259,29 +1299,26 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDockable::ShowStats()
+	inline void CDockable::SetDockStyle(DWORD dwDockStyle)
 	{
-		TCHAR text[80];
-		TCHAR AllText[160];
-		wsprintf(text, _T("Dockable: %#08lx"), GetHwnd());
-		::SetWindowText(m_hWnd, text);
-		lstrcpy(AllText, text);
-
-		if (m_pDockParent)
+		if ((dwDockStyle & DS_CLIENTEDGE) != (m_DockStyle & DS_CLIENTEDGE))
 		{
-			wsprintf(text, _T("\r\nDockParent: %#08lx"), GetDockParent()->GetHwnd());
-			lstrcat(AllText, text);
+			if (dwDockStyle & DS_CLIENTEDGE)
+			{
+				DWORD dwExStyle = GetDockClient().GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
+				GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
+				GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+			}
+			else
+			{
+				DWORD dwExStyle = GetDockClient().GetWindowLongPtr(GWL_EXSTYLE);
+				dwExStyle &= ~WS_EX_CLIENTEDGE;
+				GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
+				GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+			}
 		}
-		else if (this == GetDockAncestor())
-			lstrcat(AllText, _T("\r\nThis is the DockAncestor"));
-
-		CRect rc = GetDockClient().GetClientRect();
-		wsprintf(text, _T("\r\n#Children %d \r\nSize %d x %d"), m_vDockChildren.size(), rc.Width(), rc.Height());
-		lstrcat(AllText, text);
-		if (IsDocked()) lstrcat(AllText, _T("\r\nDocked"));
-		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_TOPMOST)
-			lstrcat(AllText, _T("\r\nTopMost"));
-		::SetWindowText(GetView()->GetHwnd(), AllText);
+		
+		m_DockStyle = dwDockStyle;
 	}
 
 	inline void CDockable::UnDock()
@@ -1329,7 +1366,6 @@ namespace Win32xx
 			m_pDockParent = NULL;
 			m_DockStyle = m_DockStyle & 0xFFFFFFF0;
 			RecalcDockLayout();
-			ShowStats();
 
 			// Supress redraw while we reposition the window
 			SetRedraw(FALSE);
@@ -1346,7 +1382,6 @@ namespace Win32xx
 			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
 			RedrawWindow();
 			m_Docked = FALSE;
-			ShowStats();
 		}
 	}
 
@@ -1416,7 +1451,6 @@ namespace Win32xx
 			{
 				// Make the window topmost
 				SetWindowPos(HWND_TOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
-				ShowStats();
 			}
 			else
 			{
@@ -1427,7 +1461,6 @@ namespace Win32xx
 				SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_SHOWWINDOW);
 				::SendMessage(hAncestor, WM_SETREDRAW, (WPARAM)TRUE, 0);
 				::RedrawWindow(hAncestor, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE);
-				ShowStats();
 			}
 			return 0;
 		}

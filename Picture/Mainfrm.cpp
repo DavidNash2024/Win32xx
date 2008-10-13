@@ -114,7 +114,11 @@ void CMainFrame::OnFileOpen()
 	ofn.nMaxFile	= MAX_PATH;
 
 	if (IDOK == ::GetOpenFileName(&ofn))	// OK button hit in file open dialog
+	{
 		m_View.LoadPictureFile(szFile);
+		CRect rcImage = m_View.GetImageRect();
+		AdjustFrameRect(rcImage);
+	}
 }
 
 void CMainFrame::OnFileSave()

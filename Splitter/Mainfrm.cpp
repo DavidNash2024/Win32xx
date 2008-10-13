@@ -47,19 +47,31 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
+void CMainFrame::OnInitialUpdate()
+{
+	// Set the styles for splitter panes
+	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
+	m_MainView.SetDockStyle(dwStyle);
+
+	CRect rcView = GetViewRect();
+
+	// Add the bottom pane first. It is a child of the main pane.
+	CDockable* pDockBottom = m_MainView.AddDockedChild(new CBottomPane, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2);
+
+	// Add the bottom right pane. It is a child of the bottom pane 
+	pDockBottom->AddDockedChild(new CBottomRightPane, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/3);
+
+	// Add the top right pane. It is a child of the main pane.
+	m_MainView.AddDockedChild(new CTopRightPane, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/3);
+
+}
+
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_SIZE:
-		if (::IsWindow(m_MainView))
-			m_MainView.Reposition();
-		break;
-	case USER_REARRANGED:
-		if (::IsWindow(m_MainView))
-			m_MainView.Reposition();
-		break;
-	}
+//	switch (uMsg)
+//	{
+
+//	}
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }

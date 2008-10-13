@@ -27,13 +27,14 @@ CTextDockable::CTextDockable()
 	// Set the view window to our edit control
 	SetView(m_View);
 
-	// Set the width of the splitter bar
-	SetBarWidth(8);
 }
 
 
-void CTextDockable::OnCreate()
+void CTextDockable::OnInitialUpdate()
 {
+	// Set the width of the splitter bar
+	SetBarWidth(8);
+
 	// Set the color of the splitter bar
 	CMainFrame& MainFrame = GetDockApp().GetMainFrame();
 	CRebar& RB = MainFrame.GetRebar();
@@ -42,7 +43,7 @@ void CTextDockable::OnCreate()
 	else
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 
-	// Call the base function
-	CDockable::OnCreate();
+	SetCaption (_T("Class View - Docking"));
+
 }
 

@@ -26,7 +26,7 @@ class CTextDockable : public CDockable
 public:
 	CTextDockable();
 	virtual ~CTextDockable() {}
-	virtual void OnCreate();
+	virtual void OnInitialUpdate();
 
 private:
 	CTextView m_View;

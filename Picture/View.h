@@ -14,6 +14,7 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
+	virtual RECT GetImageRect();
 	virtual void LoadPictureFile(LPCTSTR szFile);
 	virtual void SavePicture(LPCTSTR szFile);
 

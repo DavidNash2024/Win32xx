@@ -97,6 +97,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 				m_PathName = tsMRUText;
 				TB.EnableButton(IDM_IMAGE_ADJUST);
 				EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
+
+				// Adjust the window size
+				CRect rcImage = GetMyView().GetImageSize();
+				AdjustFrameRect(rcImage);
 			}
 			else
 			{
@@ -186,18 +190,6 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 	TRACE(_T("Frame created\n"));
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
-
-	// Some notifications should return a value when handled
-	return 0L;
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

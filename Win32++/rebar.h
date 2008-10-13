@@ -557,7 +557,7 @@ namespace Win32xx
 				if (y <= GetRowHeight(0))
 					return 0L;	// throw this message away
 			}
-			break;
+			break; 
 		case WM_LBUTTONDOWN:
 			Orig_lParam = lParam;	// Store the x,y position
 			m_bIsDragging = TRUE;
@@ -575,7 +575,7 @@ namespace Win32xx
 				}
 			}
 			m_bIsDragging = FALSE;
-			break;
+			break; 
 		case WM_ERASEBKGND:
 			if (OnEraseBkgnd((HDC)wParam))
 				return TRUE;

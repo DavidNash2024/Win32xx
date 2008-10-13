@@ -62,12 +62,23 @@ END
 // remains consistent on all systems.
 IDW_MAIN                 ICON                    "res/Splitter.ico"
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDW_SPLITH              CURSOR                  "res/SplitH.cur"
+IDW_SPLITV              CURSOR                  "res/SplitV.cur"
+
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
 IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -2743,7 +2743,7 @@ namespace Win32xx
 			rbbi.cx         = Width;
 		}
 
-		RB.SetBandInfo(nBand, rbbi);
+		RB.SetBandInfo(nBand, rbbi); 
 	}
 
 	inline void CFrame::SetStatusIndicators()
@@ -3145,7 +3145,7 @@ namespace Win32xx
 				{
 					// Save the hwnd of the window which currently has focus
 					// (this must be CFrame window itself or a child window
-					m_hOldFocus = GetFocus();
+					if (!IsIconic()) m_hOldFocus = GetFocus();
 				}
 				else
 				{
@@ -3203,6 +3203,9 @@ namespace Win32xx
 				GetMenubar().SysCommand(wParam, lParam);
 				return 0L;
 			}
+			
+			if (SC_MINIMIZE == wParam)
+				m_hOldFocus = GetFocus();
 			break;
 		case WM_TIMER:
 			OnFrameTimer(wParam);

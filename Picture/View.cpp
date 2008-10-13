@@ -2,6 +2,9 @@
 // View.cpp
 //  Definitions for the CView class
 
+#include "../Win32++/gdi.h"
+#include "PictureApp.h"
+#include "Mainfrm.h"
 #include "view.h"
 #include "resource.h"
 
@@ -23,6 +26,29 @@ CView::~CView()
 	::CoUninitialize();
 }
 
+RECT CView::GetImageRect()
+{
+	// get width and height of picture
+	long hmWidth = 0;
+	long hmHeight = 0;
+	
+	if (m_pPicture)
+	{
+		m_pPicture->get_Width(&hmWidth);
+		m_pPicture->get_Height(&hmHeight);
+	}
+
+	// convert himetric to pixels
+	CDC hDC = GetDC();
+	int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
+	int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
+	
+	CRect rcImage;
+	rcImage.right = max(nWidth, 200);
+	rcImage.bottom = max(nHeight, 200);
+	return rcImage;
+}
+
 void CView::LoadPictureFile(LPCTSTR szFile)
 {
 	if (m_pPicture)
@@ -37,6 +63,7 @@ void CView::LoadPictureFile(LPCTSTR szFile)
 	// Create IPicture from image file
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 		::SetWindowText(m_hWndParent, szFile);
+	
 	else
 	{
 		TRACE(_T("Failed to load picture\n"));
@@ -60,6 +87,10 @@ void CView::OnInitialUpdate()
 	GetCurrentDirectory(MAX_STRING_SIZE - lstrlen(szFile) , szPath);
 	lstrcat(szPath, _T("./PongaFern.jpg"));
 	LoadPictureFile(szPath);
+
+	CMainFrame& Frame = GetPicApp().GetMainFrame();
+	CRect rcImage = GetImageRect();
+	Frame.AdjustFrameRect(rcImage);
 }
 
 void CView::OnPaint(HDC hDC)
