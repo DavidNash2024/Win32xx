@@ -73,7 +73,7 @@ public:
 	virtual void OnInitialUpdate() 
 	{
 		SetBarColor(RGB(255, 0, 0));
-		SetBarWidth(10);
+		SetBarWidth(12);
 	}
 	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{

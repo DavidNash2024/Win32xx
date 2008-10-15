@@ -943,19 +943,19 @@ namespace Win32xx
 		{
 			double Width = GetDockClient().GetWindowRect().Width();
 			double BarWidth = pDockable->GetBarWidth();
-			if (pDockable->GetDockWidth() > ((Width - BarWidth)/2.0))
-				pDockable->SetDockWidth(max(GetBarWidth(), (int)((Width - BarWidth)/2.0)));
+			if (pDockable->GetDockWidth() > (Width/2.0 - BarWidth))
+				pDockable->SetDockWidth( (int)(Width/2.0 - BarWidth));
 
-			pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Width();
+			pDockable->m_DockWidthRatio = ((double)pDockable->GetDockWidth() + BarWidth) / (double)GetWindowRect().Width();
 		}
 		else
 		{
 			double Height = GetDockClient().GetWindowRect().Height();
 			double BarWidth = pDockable->GetBarWidth();
-			if (pDockable->GetDockWidth() > ((Height - BarWidth)/2.0))
-				pDockable->SetDockWidth(max(GetBarWidth(), (int)((Height - BarWidth)/2.0)));
+			if (pDockable->GetDockWidth() > (Height/2.0 - BarWidth))
+				pDockable->SetDockWidth( (int)(Height/2.0 - BarWidth));
 
-			pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Height();
+			pDockable->m_DockWidthRatio = ((double)pDockable->GetDockWidth() + BarWidth) / (double)GetWindowRect().Height();
 		}
 
 		// Redraw the docked windows
@@ -963,10 +963,7 @@ namespace Win32xx
 		pDockable->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE );
 		pDockable->m_Docked = TRUE;
 		RecalcDockLayout();
-
 	}
-
-
 
 	inline void CDockable::DrawHashBar(HWND hBar, POINT Pos)
 	{
@@ -983,7 +980,6 @@ namespace Win32xx
 			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 			int cx = rc.Width();
 			int cy = rc.Height();
-		//	int BarWidth = GetBarWidth();
 			int BarWidth = pDock->GetDockBar().GetWidth();
 
 			if (bVertical)
@@ -1153,25 +1149,25 @@ namespace Win32xx
 				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
 
 				DrawHashBar(pdp->hdr.hwndFrom, pt);
-				int BarWidth = pDock->GetDockBar().GetWidth();
+				double BarWidth = pDock->GetDockBar().GetWidth();
 
 				switch (pDock->GetDockStyle() & 0xF)
 				{
 				case DS_DOCKED_LEFT:
-					pDock->SetDockWidth(pt.x - rcDock.left - BarWidth/2);
-					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Width();
+					pDock->SetDockWidth(pt.x - rcDock.left - (int)(.5 + 1.5*BarWidth));
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth )/((double)pDock->m_pDockParent->GetWindowRect().Width() - BarWidth);
 					break;
 				case DS_DOCKED_RIGHT:
-					pDock->SetDockWidth(rcDock.right - pt.x - BarWidth/2);
-					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Width();
+					pDock->SetDockWidth(rcDock.right - pt.x - (int)(.5 + 1.5*BarWidth));
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width() - BarWidth);
 					break;
 				case DS_DOCKED_TOP:
-					pDock->SetDockWidth(pt.y - rcDock.top - BarWidth/2);
-					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Height();
+					pDock->SetDockWidth(pt.y - rcDock.top - (int)(.5 + 1.5*BarWidth));
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - BarWidth);
 					break;
 				case DS_DOCKED_BOTTOM:
-					pDock->SetDockWidth(rcDock.bottom - pt.y - BarWidth/2);
-					pDock->m_DockWidthRatio = (double)pDock->GetDockWidth()/(double)pDock->m_pDockParent->GetWindowRect().Height();
+					pDock->SetDockWidth(rcDock.bottom - pt.y - (int)(.5 + 1.5*BarWidth));
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - BarWidth);
 					break;
 				}
 
@@ -1213,24 +1209,25 @@ namespace Win32xx
 		{
 			CRect rcChild = rc;
 			double DockWidth;
+			double BarWidth = m_vDockChildren[u]->GetBarWidth();
 
 			// Calculate the size of the Dockable child
 			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Width(), rcChild.Width());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width() - BarWidth), rcChild.Width());
 				rcChild.right = rcChild.left + (int)DockWidth;
 				break;
 			case DS_DOCKED_RIGHT:
-				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Width(), rcChild.Width());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width() - BarWidth), rcChild.Width());
 				rcChild.left = rcChild.right - (int)DockWidth;
 				break;
 			case DS_DOCKED_TOP:
-				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Height(), rcChild.Height());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height() - BarWidth), rcChild.Height());
 				rcChild.bottom = rcChild.top + (int)DockWidth;
 				break;
 			case DS_DOCKED_BOTTOM:
-				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*GetWindowRect().Height(), rcChild.Height());
+				DockWidth = min(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height() - BarWidth), rcChild.Height());
 				rcChild.top = rcChild.bottom - (int)DockWidth;
 				break;
 			}
