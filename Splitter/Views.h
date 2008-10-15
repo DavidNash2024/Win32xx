@@ -9,36 +9,33 @@
 
 #include <tchar.h>
 #include "../Win32++/dockable.h"
+#include "../Win32++/listview.h"
+#include "../Win32++/treeview.h"
 
 
-class CTopLeftView : public CWnd
+class CMySimpleView : public CWnd
 {
 protected:
 	virtual void OnPaint(HDC hDC);
 };
 
-class CTopRightView : public CWnd
+class CMyTreeView : public CTreeView
 {
-protected:
-	virtual void OnPaint(HDC hDC);
 };
 
-class CBottomLeftView : public CWnd
+class CMyTextView : public CWnd
 {
 protected:
 	virtual void PreCreate(CREATESTRUCT &cs) 
 	{
 		cs.lpszClass = _T("EDIT");
+		cs.style = ES_MULTILINE|WS_CHILD;
 	}
+	virtual void OnInitialUpdate() {SetWindowText(_T("Text View"));}
 };
 
-class CBottomRightView : public CWnd
+class CMyListView : public CListView
 {
-protected:
-	virtual void PreCreate(CREATESTRUCT &cs) 
-	{
-		cs.lpszClass = _T("EDIT");
-	}
 };
 
 
@@ -46,28 +43,27 @@ class CMainPane : public CDockable
 {
 public:
 	CMainPane() {SetView(m_View);}
-//	virtual void OnInitialUpdate() {SetBarWidth(10);}
 	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 private:
-	CTopLeftView m_View;
+	CMySimpleView m_View;
 };
 
 class CTopRightPane : public CDockable
 {
 public:
 	CTopRightPane() {SetView(m_View);}
-//	virtual void OnInitialUpdate() {SetBarWidth(10);}
 	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 private:
-	CTopRightView m_View;
+//	CMyTextView m_View;
+	CMySimpleView m_View;
 };
 
 class CBottomPane : public CDockable
@@ -85,21 +81,22 @@ public:
 	}
 
 private:
-	CBottomLeftView m_View;
+//	CMyTreeView m_View;
+	CMySimpleView m_View;
 };
 
 class CBottomRightPane : public CDockable
 {
 public:
 	CBottomRightPane() {SetView(m_View);}
-//	virtual void OnInitialUpdate() {SetBarWidth(10);}
 	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 private:
-	CBottomRightView m_View;
+//	CMyListView m_View;
+	CMySimpleView m_View;
 };
 
 

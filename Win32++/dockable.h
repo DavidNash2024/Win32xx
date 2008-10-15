@@ -147,6 +147,7 @@ namespace Win32xx
 			virtual void SendNotify(UINT nMessageID);
 			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+			tString GetCaption() {return m_tsCaption;}
 			CDockable* GetDock() {return m_pDock;}
 			void SetDock(CDockable* pDock) {m_pDock = pDock;}
 			void SetCaption(LPCTSTR szCaption) {m_tsCaption = szCaption;}
@@ -209,6 +210,7 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Attributes
+		tString GetCaption() {return GetDockClient().GetCaption();}
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
 		CDockable* GetDockParent() const {return m_pDockParent;}
 		DWORD GetDockStyle() const {return m_DockStyle;}
@@ -860,7 +862,6 @@ namespace Win32xx
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
 				TRACE(_T("\n**WARNING** Vertical cursor resource missing\n"));
 		}
-
 		if (!(uDockStyle & DS_NO_UNDOCK))
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
@@ -941,16 +942,18 @@ namespace Win32xx
 		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
 			double Width = GetDockClient().GetWindowRect().Width();
-			if (pDockable->GetDockWidth() > ((Width - GetBarWidth())/2.0))
-				pDockable->SetDockWidth(max(GetBarWidth(), (int)((Width -GetBarWidth())/2.0)));
+			double BarWidth = pDockable->GetBarWidth();
+			if (pDockable->GetDockWidth() > ((Width - BarWidth)/2.0))
+				pDockable->SetDockWidth(max(GetBarWidth(), (int)((Width - BarWidth)/2.0)));
 
 			pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Width();
 		}
 		else
 		{
 			double Height = GetDockClient().GetWindowRect().Height();
-			if (pDockable->GetDockWidth() > ((Height - GetBarWidth())/2.0))
-				pDockable->SetDockWidth(max(GetBarWidth(), (int)((Height - GetBarWidth())/2.0)));
+			double BarWidth = pDockable->GetBarWidth();
+			if (pDockable->GetDockWidth() > ((Height - BarWidth)/2.0))
+				pDockable->SetDockWidth(max(GetBarWidth(), (int)((Height - BarWidth)/2.0)));
 
 			pDockable->m_DockWidthRatio = (double)pDockable->GetDockWidth() / (double)GetWindowRect().Height();
 		}

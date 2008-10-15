@@ -59,10 +59,10 @@ void CMainFrame::OnInitialUpdate()
 	CDockable* pDockBottom = m_MainView.AddDockedChild(new CBottomPane, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2);
 
 	// Add the bottom right pane. It is a child of the bottom pane 
-	pDockBottom->AddDockedChild(new CBottomRightPane, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/3);
+	pDockBottom->AddDockedChild(new CBottomRightPane, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
 
 	// Add the top right pane. It is a child of the main pane.
-	m_MainView.AddDockedChild(new CTopRightPane, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/3);
+	m_MainView.AddDockedChild(new CTopRightPane, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
 
 }
 
