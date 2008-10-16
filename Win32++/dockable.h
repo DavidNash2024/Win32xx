@@ -142,6 +142,8 @@ namespace Win32xx
 			CDockClient();
 			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
+			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
+			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void PreCreate(CREATESTRUCT& cs);
 			virtual void SendNotify(UINT nMessageID);
@@ -389,6 +391,63 @@ namespace Win32xx
 		LineTo(dc, 1, rcw.Height()-2);
 	}
 
+	inline void CDockable::CDockClient::DrawCaption(WPARAM wParam, BOOL bFocus)
+	{
+		// Acquire the DC for our NonClient painting
+		// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
+		CDC dc;
+		if (wParam != 1)
+			dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
+		else
+			dc 	= GetWindowDC();
+
+		CRect rc = GetWindowRect();
+		int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
+
+		// Set the font for the title
+		NONCLIENTMETRICS info = {0};
+		info.cbSize = sizeof(info);
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		dc.CreateFontIndirect(&info.lfStatusFont);
+
+		// Set the Colours
+		if (bFocus)
+		{
+			dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
+			::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
+			::SetTextColor(dc, RGB(255, 255, 255));
+		}
+		else
+		{
+			dc.CreateSolidBrush(RGB(232, 228, 220));
+			::SetBkColor(dc, RGB(232, 228, 220));
+			::SetTextColor(dc, RGB(0, 0, 0));
+		}
+
+		dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
+		Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
+		CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
+		::DrawText(dc, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+
+		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+			Draw3DBorder(rc);
+	}
+
+	inline LRESULT CDockable::CDockClient::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		switch (((LPNMHDR)lParam)->code)
+		{
+		case NM_SETFOCUS:
+			DrawCaption((WPARAM)1, TRUE);
+			break;
+		case NM_KILLFOCUS:
+			DrawCaption((WPARAM)1, FALSE);
+			break;
+		}
+
+		return 0;
+	}
+
 	inline void CDockable::CDockClient::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ DockClient");
@@ -485,9 +544,12 @@ namespace Win32xx
 				{
 					DefWindowProc(uMsg, wParam, lParam);
 
+					BOOL IsFocused =  (m_pView->GetHwnd() == GetFocus());
+					DrawCaption(wParam, IsFocused);
+
 					// Acquire the DC for our NonClient painting
 					// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
-					CDC dc;
+				/*	CDC dc;
 					if (wParam != 1)
 						dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
 					else
@@ -523,7 +585,7 @@ namespace Win32xx
 
 					if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 						Draw3DBorder(rc);
-					
+				*/	
 					return 0;
 				}
 				break;	// also do default painting
@@ -1149,25 +1211,35 @@ namespace Win32xx
 				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
 
 				DrawHashBar(pdp->hdr.hwndFrom, pt);
-				double BarWidth = pDock->GetDockBar().GetWidth();
+				double dBarWidth = pDock->GetDockBar().GetWidth();
+				int iBarWidth    = pDock->GetDockBar().GetWidth();
+				int DockWidth;
 
 				switch (pDock->GetDockStyle() & 0xF)
 				{
 				case DS_DOCKED_LEFT:
-					pDock->SetDockWidth(pt.x - rcDock.left - (int)(.5 + 1.5*BarWidth));
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth )/((double)pDock->m_pDockParent->GetWindowRect().Width() - BarWidth);
+					DockWidth = max(pt.x, iBarWidth/2) - rcDock.left - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = max(-iBarWidth, DockWidth);
+					pDock->SetDockWidth(DockWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth )/((double)pDock->m_pDockParent->GetWindowRect().Width() - dBarWidth);
 					break;
 				case DS_DOCKED_RIGHT:
-					pDock->SetDockWidth(rcDock.right - pt.x - (int)(.5 + 1.5*BarWidth));
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width() - BarWidth);
+					DockWidth = rcDock.right - max(pt.x, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = max(-iBarWidth, DockWidth);
+					pDock->SetDockWidth(DockWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width() - dBarWidth);
 					break;
 				case DS_DOCKED_TOP:
-					pDock->SetDockWidth(pt.y - rcDock.top - (int)(.5 + 1.5*BarWidth));
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - BarWidth);
+					DockWidth = max(pt.y, iBarWidth/2) - rcDock.top - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = max(-iBarWidth, DockWidth);
+					pDock->SetDockWidth(DockWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - dBarWidth);
 					break;
 				case DS_DOCKED_BOTTOM:
-					pDock->SetDockWidth(rcDock.bottom - pt.y - (int)(.5 + 1.5*BarWidth));
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + BarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - BarWidth);
+					DockWidth = rcDock.bottom - max(pt.y, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = max(-iBarWidth, DockWidth);
+					pDock->SetDockWidth(DockWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - dBarWidth);
 					break;
 				}
 

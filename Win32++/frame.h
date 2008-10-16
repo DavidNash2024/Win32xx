@@ -3146,6 +3146,16 @@ namespace Win32xx
 					// Save the hwnd of the window which currently has focus
 					// (this must be CFrame window itself or a child window
 					if (!IsIconic()) m_hOldFocus = GetFocus();
+
+					// Send a notification to the child window's parent
+					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+					NMHDR nhdr={0};
+					nhdr.hwndFrom = m_hOldFocus;
+					nhdr.idFrom = idCtrl;
+					nhdr.code = NM_KILLFOCUS;
+					HWND hParent = ::GetParent(m_hOldFocus);
+					if (hParent)
+						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				}
 				else
 				{
@@ -3154,6 +3164,17 @@ namespace Win32xx
 					
 					// Now set the focus to the appropriate child window
 					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
+					
+					// Send a notification to the child window's parent
+					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+					NMHDR nhdr={0};
+					nhdr.hwndFrom = m_hOldFocus;
+					nhdr.idFrom = idCtrl;
+					nhdr.code = NM_SETFOCUS;
+					HWND hParent = ::GetParent(m_hOldFocus);
+					if (hParent)
+						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
+
 					return 0;
 				}
 			}

@@ -19,9 +19,6 @@ protected:
 	virtual void OnPaint(HDC hDC);
 };
 
-class CMyTreeView : public CTreeView
-{
-};
 
 class CMyTextView : public CWnd
 {
@@ -34,8 +31,20 @@ protected:
 	virtual void OnInitialUpdate() {SetWindowText(_T("Text View"));}
 };
 
+class CMyTreeView : public CTreeView
+{
+	virtual void OnInitialUpdate() {}
+private:
+	HIMAGELIST m_hLargeImageList;
+	HIMAGELIST m_hSmallImageList;
+};
+
 class CMyListView : public CListView
 {
+	virtual void OnInitialUpdate() {}
+private:
+	HIMAGELIST m_hLargeImageList;
+	HIMAGELIST m_hSmallImageList;
 };
 
 
@@ -62,8 +71,7 @@ public:
 	}
 
 private:
-//	CMyTextView m_View;
-	CMySimpleView m_View;
+	CMyTextView m_View;
 };
 
 class CBottomPane : public CDockable
@@ -81,8 +89,8 @@ public:
 	}
 
 private:
-//	CMyTreeView m_View;
-	CMySimpleView m_View;
+	CMyTreeView m_View;
+
 };
 
 class CBottomRightPane : public CDockable
@@ -95,8 +103,8 @@ public:
 	}
 
 private:
-//	CMyListView m_View;
-	CMySimpleView m_View;
+	CMyListView m_View;
+
 };
 
 

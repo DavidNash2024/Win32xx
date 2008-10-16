@@ -78,6 +78,8 @@ IDW_SPLITV              CURSOR                  "res/SplitV.cur"
 //
 
 IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
+IDB_CLASSVIEW            BITMAP                  "res/classview.bmp"
+IDB_FILEVIEW             BITMAP                  "res/fileview.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////
