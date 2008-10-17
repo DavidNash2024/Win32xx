@@ -200,6 +200,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SplitterPanes.cpp">
+			</File>
+			<File
 				RelativePath="Views.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -234,6 +237,9 @@
 				RelativePath="SplitterApp.h">
 			</File>
 			<File
+				RelativePath=".\SplitterPanes.h">
+			</File>
+			<File
 				RelativePath="Views.h">
 			</File>
 		</Filter>
@@ -263,6 +269,9 @@
 				RelativePath="..\Win32++\GDI.h">
 			</File>
 			<File
+				RelativePath="..\Win32++\listview.h">
+			</File>
+			<File
 				RelativePath="..\Win32++\Rebar.h">
 			</File>
 			<File
@@ -273,6 +282,9 @@
 			</File>
 			<File
 				RelativePath="..\Win32++\Toolbar.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\treeview.h">
 			</File>
 			<File
 				RelativePath="..\Win32++\WinCore.h">

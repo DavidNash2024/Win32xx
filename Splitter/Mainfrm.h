@@ -9,7 +9,7 @@
 
 #include "../Win32++/frame.h"
 #include <string>
-#include "Views.h"
+#include "SplitterPanes.h"
 
 
 class CMainFrame : public CFrame
@@ -24,7 +24,7 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CMainPane m_MainView;
+	CPaneTopLeft m_MainView;
 };
 
 #endif //MAINFRM_H

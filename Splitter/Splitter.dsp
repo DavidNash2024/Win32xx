@@ -104,6 +104,10 @@ SOURCE=.\SplitterApp.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\SplitterPanes.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Views.cpp
 # End Source File
 # End Group
@@ -125,6 +129,10 @@ SOURCE=.\resrc1.h
 # Begin Source File
 
 SOURCE=.\SplitterApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SplitterPanes.h
 # End Source File
 # Begin Source File
 

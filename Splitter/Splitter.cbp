@@ -145,6 +145,8 @@
 		</Unit>
 		<Unit filename="SplitterApp.cpp" />
 		<Unit filename="SplitterApp.h" />
+		<Unit filename="SplitterPanes.cpp" />
+		<Unit filename="SplitterPanes.h" />
 		<Unit filename="Views.cpp" />
 		<Unit filename="Views.h" />
 		<Unit filename="main.cpp" />

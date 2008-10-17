@@ -20,7 +20,8 @@
 #define IDM_EDIT_PASTE                  114
 #define IDM_EDIT_DELETE                 115
 #define IDM_HELP_ABOUT                  120
-
+#define IDB_CLASSVIEW                   130 
+#define IDB_FILEVIEW                    131
 
 
 

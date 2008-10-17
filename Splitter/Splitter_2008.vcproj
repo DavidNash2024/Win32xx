@@ -277,6 +277,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SplitterPanes.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Views.cpp"
 				>
 			</File>
@@ -303,6 +307,10 @@
 			</File>
 			<File
 				RelativePath="SplitterApp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SplitterPanes.h"
 				>
 			</File>
 			<File

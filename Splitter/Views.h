@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////
 // Views.h
-//  Declaration of the CMainPane, CBottomPane
+//  Declaration of the CPaneTopLeft, CPaneBottomLeft
 //   and CView classes
 
 
@@ -13,97 +13,54 @@
 #include "../Win32++/treeview.h"
 
 
-class CMySimpleView : public CWnd
+class CViewSimple : public CWnd
 {
+public:
+	CViewSimple() {}
+	virtual ~CViewSimple() {}
+
 protected:
 	virtual void OnPaint(HDC hDC);
 };
 
 
-class CMyTextView : public CWnd
+class CViewText : public CWnd
 {
+public:
+	CViewText() {}
+	virtual ~CViewText() {}
+
 protected:
-	virtual void PreCreate(CREATESTRUCT &cs) 
-	{
-		cs.lpszClass = _T("EDIT");
-		cs.style = ES_MULTILINE|WS_CHILD;
-	}
-	virtual void OnInitialUpdate() {SetWindowText(_T("Text View"));}
+	virtual void PreCreate(CREATESTRUCT &cs); 
+	virtual void OnInitialUpdate(); 
+
 };
 
-class CMyTreeView : public CTreeView
-{
-	virtual void OnInitialUpdate() {}
-private:
-	HIMAGELIST m_hLargeImageList;
-	HIMAGELIST m_hSmallImageList;
-};
-
-class CMyListView : public CListView
-{
-	virtual void OnInitialUpdate() {}
-private:
-	HIMAGELIST m_hLargeImageList;
-	HIMAGELIST m_hSmallImageList;
-};
-
-
-class CMainPane : public CDockable
+class CViewTree : public CTreeView
 {
 public:
-	CMainPane() {SetView(m_View);}
-	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
-	}
+	CViewTree();
+	virtual void OnInitialUpdate();
+	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 private:
-	CMySimpleView m_View;
-};
-
-class CTopRightPane : public CDockable
-{
-public:
-	CTopRightPane() {SetView(m_View);}
-	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
-	}
-
-private:
-	CMyTextView m_View;
-};
-
-class CBottomPane : public CDockable
-{
-public:
-	CBottomPane() {SetView(m_View);}
-	virtual void OnInitialUpdate() 
-	{
-		SetBarColor(RGB(255, 0, 0));
-		SetBarWidth(12);
-	}
-	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
-	}
-
-private:
-	CMyTreeView m_View;
+	HIMAGELIST m_himlNormal;
 
 };
 
-class CBottomRightPane : public CDockable
+class CViewList : public CListView
 {
 public:
-	CBottomRightPane() {SetView(m_View);}
-	LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
-	}
+	CViewList();
+	virtual ~CViewList() {}
+	virtual int  AddItem(LPCTSTR szText, int nImage);
+	virtual void InsertItems();
+	virtual void OnInitialUpdate();
+	virtual void SetColumns();
+	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 
 private:
-	CMyListView m_View;
+	HIMAGELIST m_himlSmall;
 
 };
 

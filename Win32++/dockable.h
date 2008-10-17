@@ -395,42 +395,46 @@ namespace Win32xx
 	{
 		// Acquire the DC for our NonClient painting
 		// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
-		CDC dc;
-		if (wParam != 1)
-			dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
-		else
-			dc 	= GetWindowDC();
 
-		CRect rc = GetWindowRect();
-		int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
-
-		// Set the font for the title
-		NONCLIENTMETRICS info = {0};
-		info.cbSize = sizeof(info);
-		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		dc.CreateFontIndirect(&info.lfStatusFont);
-
-		// Set the Colours
-		if (bFocus)
+		if (!(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
-			::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
-			::SetTextColor(dc, RGB(255, 255, 255));
-		}
-		else
-		{
-			dc.CreateSolidBrush(RGB(232, 228, 220));
-			::SetBkColor(dc, RGB(232, 228, 220));
-			::SetTextColor(dc, RGB(0, 0, 0));
-		}
+			CDC dc;
+			if (wParam != 1)
+				dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
+			else
+				dc 	= GetWindowDC();
 
-		dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
-		Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
-		CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
-		::DrawText(dc, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			CRect rc = GetWindowRect();
+			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 
-		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
-			Draw3DBorder(rc);
+			// Set the font for the title
+			NONCLIENTMETRICS info = {0};
+			info.cbSize = sizeof(info);
+			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			dc.CreateFontIndirect(&info.lfStatusFont);
+
+			// Set the Colours
+			if (bFocus)
+			{
+				dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
+				::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
+				::SetTextColor(dc, RGB(255, 255, 255));
+			}
+			else
+			{
+				dc.CreateSolidBrush(RGB(232, 228, 220));
+				::SetBkColor(dc, RGB(232, 228, 220));
+				::SetTextColor(dc, RGB(0, 0, 0));
+			}
+
+			dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
+			Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
+			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
+			::DrawText(dc, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+
+			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+				Draw3DBorder(rc);
+		}
 	}
 
 	inline LRESULT CDockable::CDockClient::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -547,45 +551,6 @@ namespace Win32xx
 					BOOL IsFocused =  (m_pView->GetHwnd() == GetFocus());
 					DrawCaption(wParam, IsFocused);
 
-					// Acquire the DC for our NonClient painting
-					// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
-				/*	CDC dc;
-					if (wParam != 1)
-						dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
-					else
-						dc 	= GetWindowDC();
-
-					CRect rc = GetWindowRect();
-					int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
-
-					// Set the font for the title
-					NONCLIENTMETRICS info = {0};
-					info.cbSize = sizeof(info);
-					SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-					dc.CreateFontIndirect(&info.lfStatusFont);
-
-					// Set the Colours
-					if (m_pView->GetHwnd() == GetFocus())
-					{
-						dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
-						::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
-						::SetTextColor(dc, RGB(255, 255, 255));
-					}
-					else
-					{
-						dc.CreateSolidBrush(RGB(232, 228, 220));
-						::SetBkColor(dc, RGB(232, 228, 220));
-						::SetTextColor(dc, RGB(0, 0, 0));
-					}
-
-					dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
-					Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
-					CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
-					::DrawText(dc, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
-
-					if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
-						Draw3DBorder(rc);
-				*/	
 					return 0;
 				}
 				break;	// also do default painting
