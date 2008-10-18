@@ -1,13 +1,13 @@
 //////////////////////////////////////////////
 // MDIChildMax.cpp
-//  Definitions for the CMaxView and CMaxMDIChild classes
+//  Definitions for the CViewMax and CMDIChildMax classes
 
-#include "MaxMDIChild.h"
+#include "MDIChildMax.h"
 #include "resource.h"
 
 
-// CMaxView definitions
-void CMaxView::OnPaint(HDC hDC)
+// CViewMax definitions
+void CViewMax::OnPaint(HDC hDC)
 {
 	//Centre some text in our view window
 	CRect rc = GetClientRect();
@@ -15,30 +15,30 @@ void CMaxView::OnPaint(HDC hDC)
 }
 
 
-// CMaxMDIChild definitions
-CMaxMDIChild::CMaxMDIChild()
+// CMDIChildMax definitions
+CMDIChildMax::CMDIChildMax()
 {
 	SetChildMenu(_T("MdiMenuMax"));
 	SetView(m_MaxView);
 }
 
-CMaxMDIChild::~CMaxMDIChild()
+CMDIChildMax::~CMDIChildMax()
 {
 }
 
-void CMaxMDIChild::OnInitialUpdate()
+void CMDIChildMax::OnInitialUpdate()
 {
 	::SetWindowText(m_hWnd, _T("Maximised Window"));
 	SetIconLarge(IDI_MAX);
 	SetIconSmall(IDI_MAX);
 }
 
-void CMaxMDIChild::PreCreate(CREATESTRUCT &cs)
+void CMDIChildMax::PreCreate(CREATESTRUCT &cs)
 {
 	cs.style = WS_MAXIMIZE;
 }
 
-LRESULT CMaxMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildMax::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

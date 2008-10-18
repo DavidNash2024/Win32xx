@@ -4,10 +4,12 @@
 
 #include "resource.h"
 #include "mainMDIfrm.h"
-#include "SimpleMDIChild.h"
-#include "RectMDIChild.h"
-#include "MaxMDIChild.h"
-#include "TextMDIChild.h"
+#include "MDIChildSimple.h"
+#include "MDIChildRect.h"
+#include "MDIChildMax.h"
+#include "MDIChildText.h"
+#include "MDIChildTreeView.h"
+#include "MDIChildListView.h"
 
 
 CMainMDIFrame::CMainMDIFrame()
@@ -74,16 +76,22 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		DoPopupMenu();
 		return TRUE;
 	case IDM_FILE_NEWVIEW:
-		AddMDIChild(new CSimpleMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CMDIChildSimple);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_NEWRECT:
-		AddMDIChild(new CRectMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CMDIChildRect);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_NEWTEXT:
-		AddMDIChild(new CTextMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CMDIChildText);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_NEWMAX:
-		AddMDIChild(new CMaxMDIChild);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		AddMDIChild(new CMDIChildMax);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		return TRUE;
+	case IDM_FILE_NEWTREE:
+		AddMDIChild(new CMDIChildTreeView);	// CMDIFrame::RemoveMDIChild deletes this pointer
+		return TRUE;
+	case IDM_FILE_NEWLIST:
+		AddMDIChild(new CMDIChildListView);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_CLOSE:	// Close the active MDI window
 		::SendMessage(GetActiveMDIChild(), WM_CLOSE, 0, 0);

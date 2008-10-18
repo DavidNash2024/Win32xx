@@ -9,7 +9,7 @@
 
 
 ///////////////////////////////////////////////
-// CViewSimple fucntions
+// CViewSimple functions
 void CViewSimple::OnPaint(HDC hDC)
 {
 	//Centre some text in the window
@@ -20,7 +20,7 @@ void CViewSimple::OnPaint(HDC hDC)
 
 
 ///////////////////////////////////////////////
-// CViewList fucntions
+// CViewList functions
 CViewList::CViewList() : m_himlSmall(0)
 {
 }
@@ -108,7 +108,7 @@ void CViewList::InsertItems()
 
 
 ///////////////////////////////////////////////
-// CViewTree fucntions
+// CViewTree functions
 CViewTree::CViewTree() : m_himlNormal(0)
 {
 }
@@ -171,7 +171,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 
 
 ///////////////////////////////////////////////
-// CViewText fucntions
+// CViewText functions
 void CViewText::OnInitialUpdate()
 {
 	SetWindowText(_T("Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ..."));
@@ -182,3 +182,4 @@ void CViewText::PreCreate(CREATESTRUCT &cs)
 	cs.lpszClass = _T("EDIT");
 	cs.style = ES_MULTILINE|WS_CHILD;
 }
+

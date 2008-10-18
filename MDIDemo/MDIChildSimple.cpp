@@ -1,16 +1,16 @@
 //////////////////////////////////////////////
-// MDIChildView.cpp
-//  Definitions for the CSimpleView and CSimpleMDIChild classes
+// MDIChildSimple.cpp
+//  Definitions for the CViewSimple and CMDIChildSimple classes
 
-#include "SimpleMDIChild.h"
+#include "MDIChildSimple.h"
 #include "resource.h"
 
-// CSimpleView definitions
-CSimpleView::CSimpleView() : m_Color(RGB(0,0,255))
+// CViewSimple definitions
+CViewSimple::CViewSimple() : m_Color(RGB(0,0,255))
 {
 }
 
-void CSimpleView::OnPaint(HDC hDC)
+void CViewSimple::OnPaint(HDC hDC)
 {
 	//Centre some text in our view window
 	RECT rc = GetClientRect();
@@ -18,7 +18,7 @@ void CSimpleView::OnPaint(HDC hDC)
 	::DrawText(hDC, _T("View Window"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CSimpleView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewSimple::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -32,25 +32,25 @@ LRESULT CSimpleView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
-// CSimpleMDIChild definitions
-CSimpleMDIChild::CSimpleMDIChild()
+// CMDIChildSimple definitions
+CMDIChildSimple::CMDIChildSimple()
 {
 	SetView(m_View);
 	SetChildMenu(_T("MdiMenuView"));
 }
 
-CSimpleMDIChild::~CSimpleMDIChild()
+CMDIChildSimple::~CMDIChildSimple()
 {
 }
 
-void CSimpleMDIChild::OnInitialUpdate()
+void CMDIChildSimple::OnInitialUpdate()
 {
 	::SetWindowText(m_hWnd, _T("Simple Window"));
 	SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
 }
 
-void CSimpleMDIChild::OnClose()
+void CMDIChildSimple::OnClose()
 {
 	//Action to take when the window is about to close
 	int Result = MessageBox(_T("OK to close Window?"), _T("File Close"), MB_YESNO);
@@ -58,7 +58,7 @@ void CSimpleMDIChild::OnClose()
 		::SendMessage(m_hWndParent, WM_MDIDESTROY, (WPARAM)m_hWnd, 0);
 }
 
-BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
 	{
@@ -87,7 +87,7 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
-LRESULT CSimpleMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildSimple::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

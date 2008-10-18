@@ -1,11 +1,11 @@
 //////////////////////////////////////////////
 // MDIChildText.cpp
-//  Definitions for the CTextMDIChild class
+//  Definitions for the CMDIChildText class
 
-#include "TextMDIChild.h"
+#include "MDIChildText.h"
 #include "resource.h"
 
-CTextView::CTextView() : m_hFont(NULL)
+CViewText::CViewText() : m_hFont(NULL)
 {
 	m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hRichEdit)
@@ -14,14 +14,14 @@ CTextView::CTextView() : m_hFont(NULL)
     }
 }
 
-CTextView::~CTextView()
+CViewText::~CViewText()
 {
 	Destroy();
 	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
 	if (m_hFont) ::DeleteObject(m_hFont);
 }
 
-void CTextView::OnCreate()
+void CViewText::OnCreate()
 {
 	//Set font
 	if (!m_hFont)
@@ -33,7 +33,7 @@ void CTextView::OnCreate()
 	SendMessage(WM_SETFONT, (WPARAM)m_hFont,0);
 }
 
-void CTextView::PreCreate(CREATESTRUCT &cs)
+void CViewText::PreCreate(CREATESTRUCT &cs)
 {
 	cs.lpszClass = _T("RichEdit");
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
@@ -41,30 +41,30 @@ void CTextView::PreCreate(CREATESTRUCT &cs)
 }
 
 
-CTextMDIChild::CTextMDIChild()
+CMDIChildText::CMDIChildText()
 {
 	SetChildMenu(_T("MdiMenuText"));
 	SetView(m_TextView);
 }
 
-CTextMDIChild::~CTextMDIChild()
+CMDIChildText::~CMDIChildText()
 {
 	
 }
 
-void CTextMDIChild::OnCreate()
+void CMDIChildText::OnCreate()
 {
 	m_TextView.Create(m_hWnd);
 }
 
-void CTextMDIChild::OnInitialUpdate()
+void CMDIChildText::OnInitialUpdate()
 {
 	::SetWindowText(m_hWnd, _T("Text Window"));
 	SetIconLarge(IDI_TEXT);
 	SetIconSmall(IDI_TEXT);
 }
 
-LRESULT CTextMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildText::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

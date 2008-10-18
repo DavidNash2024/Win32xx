@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 // MDIChildRect.h
-//  Declaration of the CRectView and CRectMDIChild classes
+//  Declaration of the CViewRect and CMDIChildRect classes
 
 
 #ifndef MDICHILDRECT_H
@@ -8,8 +8,8 @@
 
 #include "../Win32++/mdi.h"
 
-// Declaration of CRectView
-class CRectView : public CWnd
+// Declaration of CViewRect
+class CViewRect : public CWnd
 {
 public:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -20,18 +20,18 @@ private:
 };
 
 
-// Declaration of CRectMDIChild
-class CRectMDIChild : public CMDIChild
+// Declaration of CMDIChildRect
+class CMDIChildRect : public CMDIChild
 {
 public:
-	CRectMDIChild();
-	virtual ~CRectMDIChild();
+	CMDIChildRect();
+	virtual ~CMDIChildRect();
 
 protected:
 	virtual void OnInitialUpdate();
 
 private:
-	CRectView m_RectView;
+	CViewRect m_RectView;
 
 };
 

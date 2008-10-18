@@ -26,6 +26,8 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -58,6 +60,8 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
     END
 END
 
@@ -70,6 +74,8 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -118,6 +124,8 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -148,6 +156,8 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -178,6 +188,8 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -199,6 +211,71 @@ BEGIN
 	    MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
+
+MDIMENUTREE MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New &View",                   IDM_FILE_NEWVIEW
+        MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
+        MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
+        MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
+        MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
+    END
+    POPUP "&View"
+	BEGIN
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+	END
+	POPUP "&Help"
+	BEGIN
+	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
+MDIMENULIST MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New &View",                   IDM_FILE_NEWVIEW
+        MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
+        MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
+        MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
+        MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
+    END
+    POPUP "&View"
+	BEGIN
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+	END
+	POPUP "&Help"
+	BEGIN
+	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -221,6 +298,8 @@ IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
 IDB_TOOLBAR_NORM         BITMAP                  "res/toolbar24.bmp"
 IDB_TOOLBAR_HOT          BITMAP                  "res/toolbar24_h.bmp"
 IDB_TOOLBAR_DIS          BITMAP                  "res/toolbar24_d.bmp"
+IDB_CLASSVIEW            BITMAP                  "res/classview.bmp"
+IDB_FILEVIEW             BITMAP                  "res/fileview.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -323,6 +402,8 @@ BEGIN
     IDM_FILE_NEWRECT        "Create Rect MDI Child"
     IDM_FILE_NEWMAX         "Create Maxed MDI Child"
     IDM_FILE_NEWTEXT        "Create Text MDI Child"
+    IDM_FILE_NEWTREE        "Create Tree-View MDI Child"
+    IDM_FILE_NEWLIST        "Create List-View MDI Child"
     IDM_FILE_CLOSE          "Close MDI Window"
     IDM_COLOR_BLACK         "Use Black Printing"
     IDM_COLOR_RED           "Use Red Printing"

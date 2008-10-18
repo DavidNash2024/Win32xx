@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
-// MDIChildView.h
-//  Declaration of the CSimpleView and CSimpleMDIChild class
+// MDIChildSimple.h
+//  Declaration of the CViewSimple and CMDIChildSimple class
 
 
 #ifndef MDICHILDVIEW_H
@@ -8,11 +8,11 @@
 
 #include "../Win32++/mdi.h"
 
-// Declaration of CSimpleView
-class CSimpleView : public CWnd
+// Declaration of CViewSimple
+class CViewSimple : public CWnd
 {
 public:
-	CSimpleView();
+	CViewSimple();
 	virtual void OnPaint(HDC hDC);
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
@@ -24,12 +24,12 @@ private:
 };
 
 
-// Declaration of CSimpleMDIChild
-class CSimpleMDIChild : public CMDIChild
+// Declaration of CMDIChildSimple
+class CMDIChildSimple : public CMDIChild
 {
 public:
-	CSimpleMDIChild();
-	virtual ~CSimpleMDIChild();
+	CMDIChildSimple();
+	virtual ~CMDIChildSimple();
 
 protected:
 	virtual void OnClose();
@@ -38,7 +38,7 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CSimpleView m_View;
+	CViewSimple m_View;
 };
 
 #endif  //MDICHILDVIEW_H
