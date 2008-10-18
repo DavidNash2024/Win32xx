@@ -23,7 +23,11 @@ void CViewSimple::OnPaint(HDC hDC)
 // CViewList fucntions
 CViewList::CViewList() : m_himlSmall(0)
 {
+}
 
+CViewList::~CViewList()
+{
+	if (IsWindow()) DeleteAllItems();
 }
 
 void CViewList::OnInitialUpdate()
@@ -109,6 +113,11 @@ CViewTree::CViewTree() : m_himlNormal(0)
 {
 }
 
+CViewTree::~CViewTree()
+{
+	if (IsWindow()) DeleteAllItems();
+}
+
 void CViewTree::OnInitialUpdate()
 {
 	//set the image lists
@@ -132,13 +141,13 @@ void CViewTree::OnInitialUpdate()
 	AddItem(htiCTreeViewApp, _T("InitInstance()"), 3);
 	HTREEITEM htiMainFrame = AddItem(htiRoot, _T("CMainFrame"), 1);
 	AddItem(htiMainFrame, _T("CMainFrame()"), 3);
-	AddItem(htiMainFrame, _T("OnCommand()"), 3);
-	AddItem(htiMainFrame, _T("OnInitialUpdate()"), 3);
-	AddItem(htiMainFrame, _T("WndProc()"), 3);
+	AddItem(htiMainFrame, _T("OnCommand()"), 4);
+	AddItem(htiMainFrame, _T("OnInitialUpdate()"), 4);
+	AddItem(htiMainFrame, _T("WndProc()"), 4);
 	HTREEITEM htiView = AddItem(htiRoot, _T("CView"), 1);
 	AddItem(htiView, _T("CView()"), 3);
-	AddItem(htiView, _T("OnInitialUpdate()"), 3);
-	AddItem(htiView, _T("WndProc()"), 3);
+	AddItem(htiView, _T("OnInitialUpdate()"), 4);
+	AddItem(htiView, _T("WndProc()"), 4);
 
 	// Expand some tree-view items
 	Expand(htiRoot, TVE_EXPAND);
@@ -155,7 +164,6 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 
 	TVINSERTSTRUCT tvis = {0};
 	tvis.hParent = hParent;
-	tvis.hInsertAfter = TVI_LAST;
 	tvis.item = tvi;
 
 	return InsertItem(tvis);
@@ -166,7 +174,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 // CViewText fucntions
 void CViewText::OnInitialUpdate()
 {
-	SetWindowText(_T("Text Edit Window\n\r\n\r\n\r\n\r You can type some text here ..."));
+	SetWindowText(_T("Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ..."));
 }
 
 void CViewText::PreCreate(CREATESTRUCT &cs)

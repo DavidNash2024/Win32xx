@@ -40,6 +40,7 @@ class CViewTree : public CTreeView
 {
 public:
 	CViewTree();
+	virtual ~CViewTree();
 	virtual void OnInitialUpdate();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
@@ -52,7 +53,7 @@ class CViewList : public CListView
 {
 public:
 	CViewList();
-	virtual ~CViewList() {}
+	virtual ~CViewList();
 	virtual int  AddItem(LPCTSTR szText, int nImage);
 	virtual void InsertItems();
 	virtual void OnInitialUpdate();

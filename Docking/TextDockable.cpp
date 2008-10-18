@@ -26,9 +26,7 @@ CTextDockable::CTextDockable()
 {
 	// Set the view window to our edit control
 	SetView(m_View);
-
 }
-
 
 void CTextDockable::OnInitialUpdate()
 {
@@ -44,6 +42,5 @@ void CTextDockable::OnInitialUpdate()
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 
 	SetCaption (_T("Class View - Docking"));
-
 }
 

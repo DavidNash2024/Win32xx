@@ -268,7 +268,8 @@ namespace Win32xx
 		{
 			ID_STATUS_TIMER = 1,
 			POST_TEXT_GAP   = 16,			// for owner draw menu item
-			USER_REARRANGED = WM_APP + 1	// frame window rearranged message
+			USER_REARRANGED = WM_APP + 1,	// frame window rearranged message
+			DN_UNDOCKED     = WM_APP + 7	// Notification that a window is undocked
 		};
 
 		struct ItemData
@@ -2355,6 +2356,9 @@ namespace Win32xx
 
 		switch (((LPNMHDR)lParam)->code)
 		{
+		case DN_UNDOCKED:
+			m_hOldFocus = 0;
+			break;
 		case RBN_HEIGHTCHANGE:
 			RecalcLayout();
 			::InvalidateRect(m_hWnd, NULL, TRUE);
