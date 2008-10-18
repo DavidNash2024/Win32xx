@@ -113,6 +113,9 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\Dockables.cpp">
+			</File>
+			<File
 				RelativePath=".\DockingApp.cpp">
 			</File>
 			<File
@@ -122,13 +125,16 @@
 				RelativePath=".\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath=".\TextDockable.cpp">
+				RelativePath=".\Views.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\Dockables.h">
+			</File>
 			<File
 				RelativePath=".\DockingApp.h">
 			</File>
@@ -142,7 +148,7 @@
 				RelativePath=".\resrc1.h">
 			</File>
 			<File
-				RelativePath=".\TextDockable.h">
+				RelativePath=".\Views.h">
 			</File>
 		</Filter>
 		<Filter

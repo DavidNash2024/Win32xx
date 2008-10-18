@@ -75,15 +75,15 @@ void CMainFrame::OnCreate()
 void CMainFrame::OnInitialUpdate()
 {
 	m_DockView.SetDockStyle(DS_CLIENTEDGE);
-	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT|DS_CLIENTEDGE, 100);
-	CDockable* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 100);
-	CDockable* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP|DS_CLIENTEDGE, 100);
-	CDockable* pDockBottom = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 100);
+	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT|DS_CLIENTEDGE, 200);
+	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 200);
+	CDockable* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP|DS_CLIENTEDGE, 100);
+	CDockable* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 100);
 
-	pDockLeft->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 100);
-	pDockRight->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 100);
-	pDockTop->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 100);
-	pDockBottom->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 100);
+	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 150);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 150);
+	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 100);
+	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 100);
 }
 
 

@@ -5,7 +5,7 @@
 #define MAINFRM_H
 
 #include "../Win32++/frame.h"
-#include "TextDockable.h"
+#include "Dockables.h"
 
 
 // Declaration of the CMainFrame class
@@ -21,7 +21,7 @@ protected:
 	virtual void OnInitialUpdate();
 
 private:
-	CTextDockable m_DockView;
+	CDockSimple m_DockView;
 };
 
 #endif //MAINFRM_H

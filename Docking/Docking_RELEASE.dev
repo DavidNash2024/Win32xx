@@ -1,7 +1,7 @@
 [Project]
 FileName=Docking_RELEASE.dev
 Name=Docking
-UnitCount=9
+UnitCount=11
 Type=0
 Ver=1
 ObjFiles=
@@ -117,7 +117,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=TextDockable.cpp
+FileName=Dockables.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -127,7 +127,27 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=TextDockable.h
+FileName=Dockables.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
+FileName=Views.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=Views.h
 CompileCpp=1
 Folder=Header
 Compile=1

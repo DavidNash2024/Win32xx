@@ -111,6 +111,8 @@ IDW_SDLEFT              BITMAP                  "res/SDleft.bmp"
 IDW_SDMIDDLE            BITMAP                  "res/SDmiddle.bmp"
 IDW_SDRIGHT             BITMAP                  "res/SDright.bmp"
 IDW_SDTOP               BITMAP                  "res/SDtop.bmp"
+IDB_CLASSVIEW            BITMAP                  "res/classview.bmp"
+IDB_FILEVIEW             BITMAP                  "res/fileview.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -119,7 +121,6 @@ IDW_SDTOP               BITMAP                  "res/SDtop.bmp"
 
 IDW_SPLITH              CURSOR                  "res/SplitH.cur"
 IDW_SPLITV              CURSOR                  "res/SplitV.cur"
-IDW_TRACK4WAY           CURSOR                  "res/Trck4Way.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //

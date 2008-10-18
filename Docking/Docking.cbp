@@ -140,6 +140,8 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
+		<Unit filename="Dockables.cpp" />
+		<Unit filename="Dockables.h" />
 		<Unit filename="DockingApp.cpp" />
 		<Unit filename="DockingApp.h" />
 		<Unit filename="Mainfrm.cpp" />
@@ -147,8 +149,8 @@
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="TextDockable.cpp" />
-		<Unit filename="TextDockable.h" />
+		<Unit filename="Views.cpp" />
+		<Unit filename="Views.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Unit filename="..\Win32++\Default_Resource.h" />

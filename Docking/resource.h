@@ -27,7 +27,10 @@
 // Cursor Resource
 #define IDC_SPLITH                      141
 #define IDC_SPLITV                      142
-#define IDC_TRACK4WAY                   143
+
+// Bitmap Resource
+#define IDB_CLASSVIEW                   144
+#define IDB_FILEVIEW                    145
 
 // Menu Resource
 #define IDM_COLOR_BLACK                 163

@@ -94,6 +94,10 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\Dockables.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DockingApp.cpp
 # End Source File
 # Begin Source File
@@ -106,7 +110,7 @@ SOURCE=.\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\TextDockable.cpp
+SOURCE=.\Views.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -115,6 +119,10 @@ SOURCE=.\TextDockable.cpp
 # Begin Source File
 
 SOURCE=..\Windows\Default_Resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dockables.h
 # End Source File
 # Begin Source File
 
@@ -130,7 +138,7 @@ SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\TextDockable.h
+SOURCE=.\Views.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
