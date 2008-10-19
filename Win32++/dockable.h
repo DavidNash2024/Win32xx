@@ -1440,6 +1440,7 @@ namespace Win32xx
 			SetParent(0);
 			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 			SetRedraw(TRUE);
+			SetWindowText(GetCaption().c_str());
 
 			// Redraw all the windows
 			GetDockAncestor()->RedrawWindow();

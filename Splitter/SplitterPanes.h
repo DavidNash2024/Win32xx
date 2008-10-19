@@ -1,6 +1,8 @@
 #ifndef SPLITTERPANES_H
 #define SPLITTERPANES_H
 
+
+#include "../Win32++/dockable.h"
 #include "Views.h"
 
 class CPaneTopLeft : public CDockable

@@ -253,7 +253,27 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MaxMDIChild.cpp"
+				RelativePath=".\MDIChildListView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildMax.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildRect.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildSimple.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildTreeView.cpp"
 				>
 			</File>
 			<File
@@ -276,29 +296,33 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\RectMDIChild.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleMDIChild.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TextMDIChild.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="MainMDIfrm.h"
+				RelativePath=".\MDIChildListView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MaxMDIChild.h"
+				RelativePath=".\MDIChildMax.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildRect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildSimple.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MDIChildTreeView.h"
 				>
 			</File>
 			<File
@@ -306,15 +330,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RectMDIChild.h"
-				>
-			</File>
-			<File
 				RelativePath="resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleMDIChild.h"
 				>
 			</File>
 			<File

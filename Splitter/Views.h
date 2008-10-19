@@ -8,7 +8,7 @@
 #define VIEWS_H
 
 #include <tchar.h>
-#include "../Win32++/dockable.h"
+
 #include "../Win32++/listview.h"
 #include "../Win32++/treeview.h"
 
@@ -21,6 +21,7 @@ public:
 
 protected:
 	virtual void OnPaint(HDC hDC);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 

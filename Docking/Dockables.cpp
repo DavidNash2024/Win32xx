@@ -30,6 +30,7 @@ void CDockSimple::OnInitialUpdate()
 	SetCaption (_T("Simple View - Docking"));
 }
 
+
 //////////////////////////////////////////////
 //  Definitions for the CDockText class
 CDockText::CDockText()

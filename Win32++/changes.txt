@@ -7,7 +7,8 @@ Major Changes
    - Note: CDockable is now recommended over CSplitter for splitter apps.     
 * Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
 * MDI child windows now require a view window. The use of a view window is 
-   now the same for Frames, MDI children, and dockables.
+   now the same for Frames, MDI children, and dockables. The MDI demo sample
+   has been extended to include ListView and TreeView views.
 * Added message translation. This allows modeless dialogs and propertysheets
     to process the tab (and other) keys.
 * Added a CWnd::Destroy function. This returns a CWnd back to its default
@@ -25,6 +26,15 @@ Fixes
 * 16Bit colours (and greyscale) are now rendered properly
 * Tabbing now works for modeless dialogs and property sheets
    (uses PreTranslateMessage).            
+
+
+Incompatibilities with previous versions
+----------------------------------------
+* MDI Child windows now require a view. Refer to the MDI Demo sample for an
+   example of how to add views to a MDI child.
+* Some functions have been added to CWnd which have the same name as their 
+   Win32 counterparts. Prefix functions with the global scope specifier '::' 
+   to use the original Win32 API function instead of the Win32++ version.
 
 
 More About Docking
