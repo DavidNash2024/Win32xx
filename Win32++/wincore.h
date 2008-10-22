@@ -1214,7 +1214,7 @@ namespace Win32xx
 				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 
 			// Only one window per CWnd instance allowed
-		//	if (::IsWindow(m_hWnd))
+			if (::IsWindow(m_hWnd))
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
 			// Prepare the CWnd if it has been reused
