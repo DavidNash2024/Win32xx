@@ -1,3 +1,10 @@
+Version 6.4
+===========
+
+Added CWnd::GetZOrder
+
+
+
 Version 6.3
 ===========
 

@@ -1,5 +1,5 @@
-// Win32++  Version 6.3
-// Released: 19th October, 2008 by:
+// Win32++  Version 6.4
+// Released: ??th November, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -3177,13 +3177,27 @@ namespace Win32xx
 					nhdr.code = NM_SETFOCUS;
 					HWND hParent = ::GetParent(m_hOldFocus);
 					if (hParent)
-						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
+						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+
+					// Also send notification to view for dockables
+					m_pView->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 
 					return 0;
 				}
 			}
 			break;
+		case WM_NCPAINT:
+		case WM_NCMOUSEMOVE:
+			{
+				NMHDR nhdr={0};
+				nhdr.code = NM_SETFOCUS;
+				nhdr.hwndFrom = m_hWnd;
 
+				// These messages possible indicate a change of focus, so
+				//  we send the notification to view for dockables.
+				m_pView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
+			}
+			break;
 
 		case WM_CLOSE:
 			OnFrameClose();

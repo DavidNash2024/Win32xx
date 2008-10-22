@@ -1,5 +1,5 @@
-// Win32++  Version 6.3
-// Released: 19th October, 2008 by:
+// Win32++  Version 6.4
+// Released: ??th November, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -564,6 +564,9 @@ namespace Win32xx
 			else
 				::wsprintf(buf3, _T("%s"), buf1);
 
+			TRACE(_T("*** ERROR: An Exception occured ***\n"));
+			TRACE(buf3);
+
 			::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 		}
 
@@ -587,6 +590,7 @@ namespace Win32xx
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void Destroy();
 		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual int GetZOrder();
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -617,7 +621,6 @@ namespace Win32xx
 		tString GetDlgItemString(int nIDDlgItem) const;
 		HWND GetHwnd() const {return m_hWnd;}
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
-
 		HWND GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
@@ -676,6 +679,7 @@ namespace Win32xx
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
 #endif
 
+		static BOOL CALLBACK StaticEnumWindowsProc(HWND hwnd, LPARAM lParam);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
 
@@ -1210,7 +1214,7 @@ namespace Win32xx
 				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
 
 			// Only one window per CWnd instance allowed
-			if (::IsWindow(m_hWnd))
+		//	if (::IsWindow(m_hWnd))
 				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
 
 			// Prepare the CWnd if it has been reused
@@ -1516,6 +1520,22 @@ namespace Win32xx
 			tstr = szString;
 		}
 		return tstr;
+	}
+
+	inline int CWnd::GetZOrder()
+	// returns the z order of the window (zero is topmost)
+	{
+		struct ZORODERSTRUCT
+		{
+			HWND hWnd;    
+			int iZOrder;
+		};
+	    
+		ZORODERSTRUCT ZOrder = {0};
+		ZOrder.hWnd = m_hWnd;    
+		EnumWindows(CWnd::StaticEnumWindowsProc, (LPARAM)&ZOrder);
+	    
+		return ZOrder.iZOrder;
 	}
 
 	inline void CWnd::Invalidate(BOOL bErase /*= TRUE*/) const
@@ -2117,6 +2137,25 @@ namespace Win32xx
 	// removing the region from the current update region of the window.
 	{
 		return ::ValidateRgn(m_hWnd, hRgn);
+	}
+
+	inline BOOL CALLBACK CWnd::StaticEnumWindowsProc(HWND hwnd, LPARAM lParam)
+	// The callback function used by GetZOrder. iZorder is zero for a top most window.
+	{
+		struct ZORODERSTRUCT
+		{
+			HWND hWnd;    
+			int iZOrder;
+		};
+	    
+		ZORODERSTRUCT* pZOrder = (ZORODERSTRUCT*)lParam;
+		if (hwnd == pZOrder->hWnd)
+		{
+			return FALSE;
+		}    
+	    
+		++pZOrder->iZOrder;
+		return TRUE;
 	}
 
 	inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

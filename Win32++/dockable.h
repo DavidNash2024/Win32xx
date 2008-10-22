@@ -1,5 +1,5 @@
-// Win32++  Version 6.3
-// Released: 19th October, 2008 by:
+// Win32++  Version 6.4
+// Released: ??th November, 2008 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -74,9 +74,6 @@
 #define DN_BAR_END			WM_APP + 6
 #define DN_UNDOCKED         WM_APP + 7
 
-// Docking Messages
-#define DM_ISDOCKABLE       WM_APP + 8
-#define DM_MAKETOPMOST      WM_APP + 9
 
 namespace Win32xx
 {
@@ -101,6 +98,16 @@ namespace Win32xx
 
 		// returns true if the left mouse button is down
 		return (state & 0x8000);
+	}
+
+	inline BOOL IsDockable(HWND hWnd)
+	{
+		TCHAR szClassName[80];
+		GetClassName(hWnd, szClassName, 80);
+		if (0 == lstrcmp(szClassName, _T("Win32++ Dockable")))
+			return TRUE;
+		else 
+			return FALSE;
 	}
 
 	/////////////////////////////////////////
@@ -1062,7 +1069,7 @@ namespace Win32xx
 		HWND hDockChild = ChildWindowFromPoint(hAncestor, ptLocal);
 
 		CDockable* pDockChild = 0;
-		while (SendMessage(hDockChild, DM_ISDOCKABLE, 0, 0))
+		while (IsDockable(hDockChild))
 		{
 			pDockChild = (CDockable*)FromHandle(hDockChild);
 			ptLocal = pt;
@@ -1128,8 +1135,12 @@ namespace Win32xx
 		if (NULL == GetView())
 			throw CWinException(_T("No View window assigned to Dockable")); 
 		GetView()->Create(GetDockClient().GetHwnd());
-		if (SendMessage(m_hWndParent, DM_ISDOCKABLE, 0, 0))
-			m_pDockAncestor = ((CDockable*)FromHandle(m_hWndParent))->m_pDockAncestor;
+
+		if (IsDockable(m_hWndParent))
+		{
+			CDockable* pDockParent = (CDockable*)FromHandle(m_hWndParent);
+			m_pDockAncestor = pDockParent->m_pDockAncestor;
+		}
 		else
 			m_pDockAncestor = this;
 	}
@@ -1241,9 +1252,29 @@ namespace Win32xx
 				RecalcDockLayout();
 			}
 			break;
+
+			case NM_SETFOCUS:
+			{
+				if (this == GetDockAncestor())
+				{
+					for (UINT u = 0; u < m_vAllDockables.size(); ++u)
+					{
+						if (!m_vAllDockables[u]->IsDocked())
+						{							
+							CWnd* pFrame = FromHandle(GetAncestor(m_hWnd));
+							if (pFrame->GetZOrder() < m_vAllDockables[u]->GetZOrder())
+							{
+								m_vAllDockables[u]->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+							}
+						}
+					}
+				}
+			}
+			break;
 		}
 
 		return 0L;
+
 	}
 
 	inline void CDockable::PreCreate(CREATESTRUCT &cs)
@@ -1467,18 +1498,6 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-		case WM_ACTIVATE:
-			if (!IsDocked())
-			{
-				if (WA_INACTIVE == LOWORD(wParam))
-				{
-					PostMessage(DM_MAKETOPMOST, TRUE, 0);
-				}
-				else
-					PostMessage(DM_MAKETOPMOST, FALSE, 0);
-			}
-			break;
-
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
 			SendNotify(DN_DOCK_END);
@@ -1520,27 +1539,6 @@ namespace Win32xx
 			}
 			break;
 
-		case DM_ISDOCKABLE:
-			// This is a CDockable window
-			return TRUE;
-
-		case DM_MAKETOPMOST:
-			if (wParam)
-			{
-				// Make the window topmost
-				SetWindowPos(HWND_TOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
-			}
-			else
-			{
-				// Make the window non-topmost
-				HWND hAncestor = GetAncestor(GetDockAncestor()->GetHwnd());
-				::SendMessage(hAncestor, WM_SETREDRAW, (WPARAM)FALSE, 0);
-				::SetWindowPos(hAncestor, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE|SWP_SHOWWINDOW);
-				SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_SHOWWINDOW);
-				::SendMessage(hAncestor, WM_SETREDRAW, (WPARAM)TRUE, 0);
-				::RedrawWindow(hAncestor, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE);
-			}
-			return 0;
 		}
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);

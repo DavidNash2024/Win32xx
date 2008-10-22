@@ -1,5 +1,5 @@
-Win32++  Version 6.3
-Released: 19th October, 2008 by:
+Win32++  Version 6.4
+Released: ??th November, 2008 by:
 
      David Nash
      email: dnash@bigpond.net.au
