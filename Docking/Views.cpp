@@ -24,6 +24,10 @@ LRESULT CViewSimple::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		Invalidate();
 		break;
+	
+	case WM_WINDOWPOSCHANGED:
+		Invalidate();
+		break;
 	}
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

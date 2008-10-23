@@ -151,6 +151,7 @@ namespace Win32xx
 			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
+			virtual void DrawCloseButton(CDC& DrawDC, UINT uState);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void PreCreate(CREATESTRUCT& cs);
@@ -167,6 +168,7 @@ namespace Win32xx
 			int m_NCHeight;
 		private:
 			tString m_tsCaption;
+			CRect m_rcClose;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -261,6 +263,7 @@ namespace Win32xx
 		HBRUSH m_hbrDithered;
 		HBITMAP	m_hbmHash;
 		int m_nDockID;
+		BOOL m_IsUndocking;
 
 	}; // class CDockable
 
@@ -443,12 +446,86 @@ namespace Win32xx
 			Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
 			
 			// Display the caption
-			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 -rcAdjust, m_NCHeight +rcAdjust);
+			int cx = GetSystemMetrics(SM_CXSMICON);
+			int cy = GetSystemMetrics(SM_CYSMICON);
+			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_NCHeight +rcAdjust);
 			::DrawText(dc, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+
+			// Draw the close button
+			int gap = 4;
+			m_rcClose.right = rc.right - gap;
+			m_rcClose.left = m_rcClose.right - cx;
+			m_rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
+			m_rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
+			
+			DrawCloseButton(dc, 1);
 
 			// Draw the 3D border
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 				Draw3DBorder(rc);
+		}
+	}
+
+	inline void CDockable::CDockClient::DrawCloseButton(CDC& DrawDC, UINT uState)
+	{
+		CRect rcClose = m_rcClose;
+		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
+		rcClose.OffsetRect(2, m_NCHeight+2);
+
+		if (!IsRectEmpty(&rcClose))
+		{
+			switch (uState)
+			{
+			case 1:
+				{
+					// Draw outline, white at top, black on bottom
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::LineTo(DrawDC, rcClose.left, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+				}
+
+				break;
+			case 2:
+				{
+					// Draw outline, black on top, white on bottom
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::LineTo(DrawDC, rcClose.left, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+				}
+				break;
+			}
+
+			if (m_pView->GetHwnd() == GetFocus())
+				DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
+			else
+				DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+
+			// Manually Draw Close Button					
+			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.left + 4, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -4);
+
+			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +4, NULL);
+			::LineTo(DrawDC, rcClose.right - 4, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +4, NULL);
+			::LineTo(DrawDC, rcClose.left + 3, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.right -5, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -4);
 		}
 	}
 
@@ -514,6 +591,12 @@ namespace Win32xx
 				if (m_pDock->IsDocked())
 				{
 					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					if (m_rcClose.PtInRect(pt))
+					{
+					//	TRACE("Over close button\n");
+						return HTCLOSE;
+					}
+
 					MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 					// Indicate if the point is in the caption
@@ -521,6 +604,9 @@ namespace Win32xx
 				}
 				break;
 			case WM_NCLBUTTONDOWN:
+				if (HTCLOSE == wParam)
+					TRACE("Button Down on Close\n");
+
 				Oldpt.x = GET_X_LPARAM(lParam);
 				Oldpt.y = GET_Y_LPARAM(lParam);
 				if (m_pDock->IsDocked())
@@ -535,6 +621,10 @@ namespace Win32xx
 					// Send a DN_DOCK_START notification to the dockable
 					SendNotify(DN_DOCK_START);
 				}
+				break;
+			case WM_NCLBUTTONUP:
+				if (HTCLOSE == wParam)
+					TRACE("Button Up on Close\n");
 				break;
 
 			case WM_NCMOUSEMOVE:
@@ -859,7 +949,8 @@ namespace Win32xx
 	// Definitions for the CDockable class
 	//
 	inline CDockable::CDockable() :  m_DockZone(0), m_BlockMove(FALSE), m_Docked(FALSE), m_pDockParent(NULL), 
-					m_DockWidth(0), m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0), m_nDockID(0)
+					m_DockWidth(0), m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0), m_nDockID(0),
+					m_IsUndocking(FALSE)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1154,7 +1245,7 @@ namespace Win32xx
 		{
 		case DN_DOCK_START:
 			{
-				if (IsDocked())
+				if (IsDocked() && !m_IsUndocking)
 				{
 					UnDock();
 					SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
@@ -1164,7 +1255,8 @@ namespace Win32xx
 
 		case DN_DOCK_MOVE:
 			{
-				GetDockTargeting().ShowTargeting((LPDRAGPOS)lParam);
+				if (!m_IsUndocking)
+					GetDockTargeting().ShowTargeting((LPDRAGPOS)lParam);
 			}
 			break;
 
@@ -1254,9 +1346,12 @@ namespace Win32xx
 			break;
 
 			case NM_SETFOCUS:
+			// our frame has possibly grabbed focus
 			{
 				if (this == GetDockAncestor())
 				{
+					// Create a map to store any Undocked dockables, along with their Z order
+					std::map<int, CDockable*> mapZorder;
 					for (UINT u = 0; u < m_vAllDockables.size(); ++u)
 					{
 						if (!m_vAllDockables[u]->IsDocked())
@@ -1264,9 +1359,26 @@ namespace Win32xx
 							CWnd* pFrame = FromHandle(GetAncestor(m_hWnd));
 							if (pFrame->GetZOrder() < m_vAllDockables[u]->GetZOrder())
 							{
-								m_vAllDockables[u]->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+								// Insert map entries sorted by their Z order
+								mapZorder.insert(std::pair<int, CDockable*>(m_vAllDockables[u]->GetZOrder(), m_vAllDockables[u]));
 							}
 						}
+					}
+
+					// iterate through the map in reverse order to preseve the original Z order
+					std::map<int, CDockable*>::reverse_iterator RevItor;
+					for (RevItor = mapZorder.rbegin(); RevItor != mapZorder.rend(); ++RevItor)
+					{
+						RevItor->second->SetRedraw(FALSE);
+						RevItor->second->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+					}
+
+					// Now iterate forwards through the map to redraw the windows
+					std::map<int, CDockable*>::iterator Itor;
+					for (Itor = mapZorder.begin(); Itor != mapZorder.end(); ++Itor)
+					{
+						Itor->second->SetRedraw(TRUE);
+						Itor->second->RedrawWindow();
 					}
 				}
 			}
@@ -1421,6 +1533,7 @@ namespace Win32xx
 
 	inline void CDockable::UnDock()
 	{
+		m_IsUndocking = TRUE;
 		if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
 		{
 			// Promote the first child to replace this Dock parent
@@ -1464,6 +1577,7 @@ namespace Win32xx
 			m_pDockParent = NULL;
 			m_DockStyle = m_DockStyle & 0xFFFFFFF0;
 			RecalcDockLayout();
+			m_Docked = FALSE;
 
 			// Supress redraw while we reposition the window
 			SetRedraw(FALSE);
@@ -1480,7 +1594,6 @@ namespace Win32xx
 			MapWindowPoints(NULL, m_hWnd, &pt, 1);
 			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
 			RedrawWindow();		
-			m_Docked = FALSE;		
 			
 			// Send the undock notification to the frame
 			NMHDR nmhdr = {0};
@@ -1489,6 +1602,7 @@ namespace Win32xx
 			nmhdr.idFrom = m_nDockID;
 			HWND hwndFrame = GetAncestor(GetDockAncestor()->GetHwnd());
 			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
+			m_IsUndocking = FALSE;
 		}
 	}
 
