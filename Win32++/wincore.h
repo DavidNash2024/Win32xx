@@ -1859,8 +1859,17 @@ namespace Win32xx
 		m_wc.lpszClassName  = wc.lpszClassName;
 
 		// Overide this function in your derived class to set the
-		// WNDCLASS values prior to window creation. Be sure to set
-		// the ClassnName for this function to take effect.
+		// WNDCLASS values prior to window creation. 
+		
+		// ADDITIONAL NOTES:  
+		// 1) The lpszClassName must be set for this function to take effect.
+		// 2) The lpfnWndProc is always CWnd::StaticWindowProc.
+		// 3) No other defaults are set, so the following settings might prove useful
+		//     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+		//     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+		//     wc.hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+		// 4) The styles that can be set here are WNDCLASS styles. These are a different 
+		//     set of styles to those set by CREATESTRUCT (used in PreCreate).
 	}
 
 	inline BOOL CWnd::PreTranslateMessage(MSG* /*pMsg*/)

@@ -152,6 +152,7 @@ namespace Win32xx
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
 			virtual void DrawCloseButton(CDC& DrawDC, UINT uState);
+			virtual BOOL IsClosePressed();
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void PreCreate(CREATESTRUCT& cs);
@@ -169,6 +170,7 @@ namespace Win32xx
 		private:
 			tString m_tsCaption;
 			CRect m_rcClose;
+			BOOL m_bClosePressed;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -377,7 +379,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 	// Definitions for the CDockClient class nested within CDockable
 	//
-	inline CDockable::CDockClient::CDockClient() : m_pView(0), m_NCHeight(20)
+	inline CDockable::CDockClient::CDockClient() : m_pView(0), m_NCHeight(20), m_bClosePressed(FALSE)
 	{
 	}
 
@@ -458,7 +460,7 @@ namespace Win32xx
 			m_rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
 			m_rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
 			
-			DrawCloseButton(dc, 1);
+			DrawCloseButton(dc, 0);
 
 			// Draw the 3D border
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
@@ -506,7 +508,7 @@ namespace Win32xx
 			if (m_pView->GetHwnd() == GetFocus())
 				DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
 			else
-				DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+				DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
 			// Manually Draw Close Button					
 			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
@@ -527,6 +529,11 @@ namespace Win32xx
 			::MoveToEx(DrawDC, rcClose.right -5, rcClose.top +3, NULL);
 			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -4);
 		}
+	}
+
+	inline BOOL CDockable::CDockClient::IsClosePressed()
+	{
+		return m_bClosePressed;
 	}
 
 	inline LRESULT CDockable::CDockClient::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -591,21 +598,21 @@ namespace Win32xx
 				if (m_pDock->IsDocked())
 				{
 					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					
+					// Indicate if the point is in the close button
 					if (m_rcClose.PtInRect(pt))
-					{
-					//	TRACE("Over close button\n");
 						return HTCLOSE;
-					}
 
 					MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 					// Indicate if the point is in the caption
-					if (pt.y < 0) return HTCAPTION;
+					if (pt.y < 0) 
+						return HTCAPTION;
 				}
 				break;
 			case WM_NCLBUTTONDOWN:
-				if (HTCLOSE == wParam)
-					TRACE("Button Down on Close\n");
+				if (HTCLOSE == wParam) m_bClosePressed = TRUE;
+				else	m_bClosePressed = FALSE;
 
 				Oldpt.x = GET_X_LPARAM(lParam);
 				Oldpt.y = GET_Y_LPARAM(lParam);
@@ -623,8 +630,18 @@ namespace Win32xx
 				}
 				break;
 			case WM_NCLBUTTONUP:
-				if (HTCLOSE == wParam)
-					TRACE("Button Up on Close\n");
+				if ((HTCLOSE == wParam) && m_bClosePressed)
+				{
+					// Process this message first
+					DefWindowProc(uMsg, wParam, lParam);
+					
+					// Now destroy the dockable
+					CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
+					pDock->UnDock();
+					pDock->Destroy();
+					return 0;
+				}
+				m_bClosePressed = FALSE;
 				break;
 
 			case WM_NCMOUSEMOVE:
@@ -635,7 +652,7 @@ namespace Win32xx
 						if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
 							return 0L;
 
-						if (IsLeftButtonDown() && (wParam == HTCAPTION))
+						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && !m_bClosePressed)
 						{
 							CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
 							pDock->UnDock();
@@ -1578,14 +1595,17 @@ namespace Win32xx
 			m_DockStyle = m_DockStyle & 0xFFFFFFF0;
 			RecalcDockLayout();
 			m_Docked = FALSE;
-
+			
 			// Supress redraw while we reposition the window
 			SetRedraw(FALSE);
 			CRect rc = GetDockClient().GetWindowRect();
 			SetParent(0);
-			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
-			SetRedraw(TRUE);
+			SetWindowPos(NULL, rc, SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 			SetWindowText(GetCaption().c_str());
+			
+			// Re-enable redraw unless the window is about to be destroyed 
+			if (!GetDockClient().IsClosePressed())
+				SetRedraw(TRUE);
 
 			// Redraw all the windows
 			GetDockAncestor()->RedrawWindow();
@@ -1593,7 +1613,7 @@ namespace Win32xx
 			pt.GetCursorPos();
 			MapWindowPoints(NULL, m_hWnd, &pt, 1);
 			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
-			RedrawWindow();		
+			RedrawWindow();	
 			
 			// Send the undock notification to the frame
 			NMHDR nmhdr = {0};
@@ -1602,7 +1622,7 @@ namespace Win32xx
 			nmhdr.idFrom = m_nDockID;
 			HWND hwndFrame = GetAncestor(GetDockAncestor()->GetHwnd());
 			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
-			m_IsUndocking = FALSE;
+			m_IsUndocking = FALSE; 
 		}
 	}
 
