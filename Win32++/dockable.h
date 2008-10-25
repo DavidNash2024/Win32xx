@@ -265,7 +265,6 @@ namespace Win32xx
 		HBRUSH m_hbrDithered;
 		HBITMAP	m_hbmHash;
 		int m_nDockID;
-		BOOL m_IsUndocking;
 
 	}; // class CDockable
 
@@ -966,8 +965,7 @@ namespace Win32xx
 	// Definitions for the CDockable class
 	//
 	inline CDockable::CDockable() :  m_DockZone(0), m_BlockMove(FALSE), m_Docked(FALSE), m_pDockParent(NULL), 
-					m_DockWidth(0), m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0), m_nDockID(0),
-					m_IsUndocking(FALSE)
+					m_DockWidth(0), m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0), m_nDockID(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1115,7 +1113,6 @@ namespace Win32xx
 
 		// Redraw the docked windows
 		pDockable->GetView()->SetFocus();
-		pDockable->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE );
 		pDockable->m_Docked = TRUE;
 		RecalcDockLayout();
 	}
@@ -1262,7 +1259,7 @@ namespace Win32xx
 		{
 		case DN_DOCK_START:
 			{
-				if (IsDocked() && !m_IsUndocking)
+				if (IsDocked())
 				{
 					UnDock();
 					SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
@@ -1272,8 +1269,7 @@ namespace Win32xx
 
 		case DN_DOCK_MOVE:
 			{
-				if (!m_IsUndocking)
-					GetDockTargeting().ShowTargeting((LPDRAGPOS)lParam);
+				GetDockTargeting().ShowTargeting((LPDRAGPOS)lParam);
 			}
 			break;
 
@@ -1550,7 +1546,6 @@ namespace Win32xx
 
 	inline void CDockable::UnDock()
 	{
-		m_IsUndocking = TRUE;
 		if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
 		{
 			// Promote the first child to replace this Dock parent
@@ -1594,8 +1589,7 @@ namespace Win32xx
 			m_pDockParent = NULL;
 			m_DockStyle = m_DockStyle & 0xFFFFFFF0;
 			RecalcDockLayout();
-			m_Docked = FALSE;
-			
+
 			// Supress redraw while we reposition the window
 			SetRedraw(FALSE);
 			CRect rc = GetDockClient().GetWindowRect();
@@ -1613,7 +1607,8 @@ namespace Win32xx
 			pt.GetCursorPos();
 			MapWindowPoints(NULL, m_hWnd, &pt, 1);
 			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
-			RedrawWindow();	
+			RedrawWindow();
+			m_Docked = FALSE;		
 			
 			// Send the undock notification to the frame
 			NMHDR nmhdr = {0};
@@ -1622,7 +1617,6 @@ namespace Win32xx
 			nmhdr.idFrom = m_nDockID;
 			HWND hwndFrame = GetAncestor(GetDockAncestor()->GetHwnd());
 			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
-			m_IsUndocking = FALSE; 
 		}
 	}
 
