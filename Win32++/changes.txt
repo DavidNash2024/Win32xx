@@ -1,6 +1,7 @@
 Version 6.4
 ===========
 
+Added close button to the caption of docked windows
 Added CWnd::GetZOrder
 
 

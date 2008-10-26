@@ -235,7 +235,8 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_DockClient;}
 		int GetDockWidth() const {return m_DockWidth;}
 		CWnd* GetView() const {return GetDockClient().m_pView;}
-		BOOL IsDocked() const {return m_Docked;}
+		BOOL IsDocked() const;
+		BOOL IsUnDocked() const;
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		virtual int GetBarWidth() {return GetDockBar().GetWidth();}
 		virtual void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
@@ -246,7 +247,6 @@ namespace Win32xx
 
 		UINT m_DockZone;
 		BOOL m_BlockMove;
-		BOOL m_Docked;
 	
 	private:
 		CDockBar m_DockBar;
@@ -265,6 +265,7 @@ namespace Win32xx
 		HBRUSH m_hbrDithered;
 		HBITMAP	m_hbmHash;
 		int m_nDockID;
+		BOOL m_UnDocking;
 
 	}; // class CDockable
 
@@ -964,8 +965,8 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() :  m_DockZone(0), m_BlockMove(FALSE), m_Docked(FALSE), m_pDockParent(NULL), 
-					m_DockWidth(0), m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0), m_nDockID(0)
+	inline CDockable::CDockable() :  m_DockZone(0), m_BlockMove(FALSE), m_pDockParent(NULL), m_DockWidth(0),
+					 m_DockWidthRatio(1.0), m_NCHeight(20), m_DockStyle(0), m_nDockID(0), m_UnDocking(FALSE)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1079,11 +1080,11 @@ namespace Win32xx
 	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
 	{
 		// Set the dock styles
+		GetDockAncestor()->SetRedraw(FALSE);
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		pDockable->m_BlockMove = FALSE;
 		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
 		pDockable->SetDockStyle(DockStyle);
-		pDockable->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE );
 
 		// Set the docking relationships
 		m_vDockChildren.push_back(pDockable);
@@ -1113,8 +1114,9 @@ namespace Win32xx
 
 		// Redraw the docked windows
 		pDockable->GetView()->SetFocus();
-		pDockable->m_Docked = TRUE;
+		GetDockAncestor()->SetRedraw(TRUE);
 		RecalcDockLayout();
+
 	}
 
 	inline void CDockable::DrawHashBar(HWND hBar, POINT Pos)
@@ -1230,6 +1232,16 @@ namespace Win32xx
 		return 0;
 	}
 	*/
+
+	inline BOOL CDockable::IsDocked() const
+	{
+		return ((m_DockStyle&0xF) && !m_UnDocking); // Boolean expression
+	}
+
+	inline BOOL CDockable::IsUnDocked() const
+	{
+		return (!(m_DockStyle&0xF) && !m_UnDocking); // Boolean expression
+	}
 
 	inline void CDockable::OnCreate()
 	{
@@ -1367,7 +1379,7 @@ namespace Win32xx
 					std::map<int, CDockable*> mapZorder;
 					for (UINT u = 0; u < m_vAllDockables.size(); ++u)
 					{
-						if (!m_vAllDockables[u]->IsDocked())
+						if (m_vAllDockables[u]->IsUnDocked())
 						{							
 							CWnd* pFrame = FromHandle(GetAncestor(m_hWnd));
 							if (pFrame->GetZOrder() < m_vAllDockables[u]->GetZOrder())
@@ -1548,6 +1560,8 @@ namespace Win32xx
 	{
 		if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
 		{
+			m_UnDocking = TRUE;
+
 			// Promote the first child to replace this Dock parent
 			for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
 			{
@@ -1594,6 +1608,7 @@ namespace Win32xx
 			SetRedraw(FALSE);
 			CRect rc = GetDockClient().GetWindowRect();
 			SetParent(0);
+			m_UnDocking = FALSE;
 			SetWindowPos(NULL, rc, SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 			SetWindowText(GetCaption().c_str());
 			
@@ -1607,8 +1622,7 @@ namespace Win32xx
 			pt.GetCursorPos();
 			MapWindowPoints(NULL, m_hWnd, &pt, 1);
 			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
-			RedrawWindow();
-			m_Docked = FALSE;		
+			RedrawWindow();	
 			
 			// Send the undock notification to the frame
 			NMHDR nmhdr = {0};
@@ -1618,6 +1632,8 @@ namespace Win32xx
 			HWND hwndFrame = GetAncestor(GetDockAncestor()->GetHwnd());
 			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
 		}
+
+		m_UnDocking = FALSE;
 	}
 
 	inline LRESULT CDockable::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1645,7 +1661,7 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			{
-				if ( !IsDocked() && ( hWnd != GetDockAncestor()->GetHwnd() ) )
+				if ( IsUnDocked() && ( hWnd != GetDockAncestor()->GetHwnd() ) )
 				{
 					// Send a Move notification to the parent
 					if ( IsLeftButtonDown() )
