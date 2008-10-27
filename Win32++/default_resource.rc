@@ -30,22 +30,22 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-	    MENUITEM "Undo",                        IDM_EDIT_UNDO
-	    MENUITEM "Redo",                        IDM_EDIT_REDO
-	    MENUITEM SEPARATOR
-	    MENUITEM "Cu&t",                        IDM_EDIT_CUT
-	    MENUITEM "&Copy",                       IDM_EDIT_COPY
-	    MENUITEM "&Paste",                      IDM_EDIT_PASTE
-	    MENUITEM "De&lete",                     IDM_EDIT_DELETE
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
+        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -60,19 +60,19 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-	    MENUITEM "Undo",                        IDM_EDIT_UNDO
-	    MENUITEM "Redo",                        IDM_EDIT_REDO
-	    MENUITEM SEPARATOR
-	    MENUITEM "Cu&t",                        IDM_EDIT_CUT
-	    MENUITEM "&Copy",                       IDM_EDIT_COPY
-	    MENUITEM "&Paste",                      IDM_EDIT_PASTE
-	    MENUITEM "De&lete",                     IDM_EDIT_DELETE
+        MENUITEM "Undo",                        IDM_EDIT_UNDO
+        MENUITEM "Redo",                        IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t",                        IDM_EDIT_CUT
+        MENUITEM "&Copy",                       IDM_EDIT_COPY
+        MENUITEM "&Paste",                      IDM_EDIT_PASTE
+        MENUITEM "De&lete",                     IDM_EDIT_DELETE
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
+    BEGIN
+        MENUITEM "Tool Bar",                    IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "Status Bar",                  IDW_VIEW_STATUSBAR, CHECKED
+    END
     POPUP "&Color"
     BEGIN
         MENUITEM "&Black",                      IDM_COLOR_BLACK
@@ -88,9 +88,9 @@ BEGIN
         MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
         MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
     END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "About",                       IDM_HELP_ABOUT
     END
 END
 
@@ -102,7 +102,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDW_MAIN                 ICON                    "res/mdi.ico"
-IDI_VIEW                ICON                     "res/view.ico"
+IDI_VIEW                 ICON                    "res/view.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -135,19 +135,16 @@ END
 
 IDW_MAIN ACCELERATORS
 BEGIN
-    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
-    VK_INSERT,      IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_CUT,           VIRTKEY, SHIFT, NOINVERT
-    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
-    VK_INSERT,      IDM_EDIT_PASTE,         VIRTKEY, SHIFT, NOINVERT
-    VK_BACK,        IDM_EDIT_UNDO,          VIRTKEY, ALT, NOINVERT
-    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
+    "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,         VIRTKEY, NOINVERT
 END
 
 
@@ -224,8 +221,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END

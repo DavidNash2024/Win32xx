@@ -30,13 +30,6 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
-	POPUP "&Window"
-    BEGIN
-        MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
-        MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
-        MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
-        MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
-    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -64,8 +57,8 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
-        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+        MENUITEM "Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
     POPUP "&Color"
     BEGIN
@@ -84,7 +77,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About",                      IDM_HELP_ABOUT
+        MENUITEM "About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -111,8 +104,8 @@ IDW_SDLEFT              BITMAP                  "res/SDleft.bmp"
 IDW_SDMIDDLE            BITMAP                  "res/SDmiddle.bmp"
 IDW_SDRIGHT             BITMAP                  "res/SDright.bmp"
 IDW_SDTOP               BITMAP                  "res/SDtop.bmp"
-IDB_CLASSVIEW            BITMAP                  "res/classview.bmp"
-IDB_FILEVIEW             BITMAP                  "res/fileview.bmp"
+IDB_CLASSVIEW           BITMAP                  "res/classview.bmp"
+IDB_FILEVIEW            BITMAP                  "res/fileview.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -184,8 +177,8 @@ BEGIN
     IDW_CHILD4              "Activate this window"
     IDW_CHILD5              "Activate this window"
     IDW_CHILD6              "Activate this window"
-	IDW_CHILD7              "Activate this window"
-	IDW_CHILD8              "Activate this window"
+    IDW_CHILD7              "Activate this window"
+    IDW_CHILD8              "Activate this window"
     IDW_CHILD9              "Activate this window"
     IDW_CHILD10             "Select a window"
 END
@@ -231,8 +224,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END
