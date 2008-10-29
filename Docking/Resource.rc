@@ -153,6 +153,12 @@ END
 
 STRINGTABLE
 BEGIN
+    IDM_DOCK_DEFAULT        "Restore default dock layout"
+    IDM_DOCK_CLOSEALL       "Close all docked and undocked windows"
+END
+
+STRINGTABLE
+BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
