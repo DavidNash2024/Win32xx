@@ -167,10 +167,11 @@ namespace Win32xx
 			CDockable* m_pDock;
 			CWnd* m_pView;
 			int m_NCHeight;
+			BOOL m_bClosing;
+		
 		private:
 			tString m_tsCaption;
-			CRect m_rcClose;
-			BOOL m_bClosePressed;
+			CRect m_rcClose;	
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -209,12 +210,14 @@ namespace Win32xx
 		CDockable();
 		virtual ~CDockable();
 		virtual CDockable* AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, int nDockID = 0);
-		virtual CDockable* AddUnDocked(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc, int nDockID = 0);
+		virtual CDockable* AddUndockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc, int nDockID = 0);
+		virtual void CloseAllDockables();
 		virtual void DeleteDockable(CDockable* pDockable);
 		virtual void Dock(CDockable* hDockable, UINT uDockSide);
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
 		virtual CDockable* const GetDockableFromPoint(POINT pt);
 		virtual CDockable* const GetDockAncestor();
+		virtual CDockable* const GetDockFromID(int n_DockID);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -227,9 +230,11 @@ namespace Win32xx
 
 		// Attributes
 		std::vector <CDockable*> const GetAllDockables();
+		std::vector <CDockable*> const GetDockChildren() {return m_vDockChildren;}
 		tString GetCaption() {return GetDockClient().GetCaption();}
 		CDockable* const GetDockable(int nDockID);
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
+		int GetDockID() const {return m_nDockID;}
 		CDockable* GetDockParent() const {return m_pDockParent;}
 		DWORD GetDockStyle() const {return m_DockStyle;}
 		virtual CDockHint& GetDockHint() const {return m_pDockAncestor->m_DockHint;}
@@ -238,7 +243,7 @@ namespace Win32xx
 		int GetDockWidth() const {return m_DockWidth;}
 		CWnd* GetView() const {return GetDockClient().m_pView;}
 		BOOL IsDocked() const;
-		BOOL IsUnDocked() const;
+		BOOL IsUndocked() const;
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		virtual int GetBarWidth() {return GetDockBar().GetWidth();}
 		virtual void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
@@ -381,7 +386,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 	// Definitions for the CDockClient class nested within CDockable
 	//
-	inline CDockable::CDockClient::CDockClient() : m_pView(0), m_NCHeight(20), m_bClosePressed(FALSE)
+	inline CDockable::CDockClient::CDockClient() : m_pView(0), m_NCHeight(20), m_bClosing(FALSE)
 	{
 	}
 
@@ -535,7 +540,7 @@ namespace Win32xx
 
 	inline BOOL CDockable::CDockClient::IsClosePressed()
 	{
-		return m_bClosePressed;
+		return m_bClosing;
 	}
 
 	inline LRESULT CDockable::CDockClient::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -613,8 +618,8 @@ namespace Win32xx
 				}
 				break;
 			case WM_NCLBUTTONDOWN:
-				if (HTCLOSE == wParam) m_bClosePressed = TRUE;
-				else	m_bClosePressed = FALSE;
+				if (HTCLOSE == wParam) m_bClosing = TRUE;
+				else	m_bClosing = FALSE;
 
 				Oldpt.x = GET_X_LPARAM(lParam);
 				Oldpt.y = GET_Y_LPARAM(lParam);
@@ -632,7 +637,7 @@ namespace Win32xx
 				}
 				break;
 			case WM_NCLBUTTONUP:
-				if ((HTCLOSE == wParam) && m_bClosePressed)
+				if ((HTCLOSE == wParam) && m_bClosing)
 				{
 					// Process this message first
 					DefWindowProc(uMsg, wParam, lParam);
@@ -643,7 +648,7 @@ namespace Win32xx
 					pDock->Destroy();
 					return 0;
 				}
-				m_bClosePressed = FALSE;
+				m_bClosing = FALSE;
 				break;
 
 			case WM_NCMOUSEMOVE:
@@ -654,7 +659,7 @@ namespace Win32xx
 						if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
 							return 0L;
 
-						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && !m_bClosePressed)
+						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && !m_bClosing)
 						{
 							CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
 							pDock->UnDock();
@@ -1034,7 +1039,7 @@ namespace Win32xx
 		return pDockable;
 	}
 
-	inline CDockable* CDockable::AddUnDocked(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc, int nDockID /* = 0*/)
+	inline CDockable* CDockable::AddUndockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc, int nDockID /* = 0*/)
 	{
 		pDockable->SetDockWidth(DockWidth);
 		pDockable->SetDockStyle(uDockStyle & 0XFFFFFF0);
@@ -1058,6 +1063,28 @@ namespace Win32xx
 		return pDockable;
 	}
 
+	inline void CDockable::CloseAllDockables()
+	{
+		if (this != GetDockAncestor())
+			throw CWinException(_T("Must call CloseAllDockables from the DockAncestor"));
+
+		std::vector <CDockable*>::iterator v;
+		
+		SetRedraw(FALSE);
+		while(m_vAllDockables.size() > 0)
+		{
+			v = m_vAllDockables.begin();
+			(*v)->GetDockClient().m_bClosing = TRUE;
+			(*v)->UnDock();
+			(*v)->Destroy();
+			delete *v;
+			m_vAllDockables.erase(v);
+		}
+
+		SetRedraw(TRUE);
+		RedrawWindow();
+	}
+
 	inline void CDockable::DeleteDockable(CDockable* pDockable)
 	{
 		if ((this == GetDockAncestor()) && (this != pDockable))
@@ -1065,7 +1092,7 @@ namespace Win32xx
 			UnDock();
 			Destroy();
 			std::vector <CDockable*>::iterator v;
-			for (v = GetDockAncestor()->m_vAllDockables.begin(); v < GetDockAncestor()->m_vAllDockables.end(); v++)
+			for (v = GetDockAncestor()->m_vAllDockables.begin(); v != GetDockAncestor()->m_vAllDockables.end(); v++)
 			{
 				if (*v == pDockable)
 				{
@@ -1094,7 +1121,7 @@ namespace Win32xx
 		pDockable->m_pDockParent = this;
 		pDockable->GetDockBar().SetParent(m_hWnd);
 
-		// Adjust docked width if required
+		// Limit the docked size to half the parent's size
 		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
 			double Width = GetDockClient().GetWindowRect().Width();
@@ -1202,6 +1229,22 @@ namespace Win32xx
 		return m_pDockAncestor;
 	}
 
+	inline CDockable* const CDockable::GetDockFromID(int n_DockID)
+	{
+		std::vector <CDockable*>::iterator v;
+
+		if (GetDockAncestor())
+		{
+			for (v = GetDockAncestor()->m_vAllDockables.begin(); v != GetDockAncestor()->m_vAllDockables.end(); v++)
+			{
+				if (n_DockID == (*v)->GetDockID())
+					return *v;    
+			}
+		}
+	    
+		return 0;
+	}
+
 	/*
 	inline UINT const CDockable::GetDockSide(LPDRAGPOS pdp)
 	{
@@ -1239,7 +1282,7 @@ namespace Win32xx
 		return ((m_DockStyle&0xF) && !m_UnDocking); // Boolean expression
 	}
 
-	inline BOOL CDockable::IsUnDocked() const
+	inline BOOL CDockable::IsUndocked() const
 	{
 		return (!(m_DockStyle&0xF) && !m_UnDocking); // Boolean expression
 	}
@@ -1380,7 +1423,7 @@ namespace Win32xx
 					std::map<int, CDockable*> mapZorder;
 					for (UINT u = 0; u < m_vAllDockables.size(); ++u)
 					{
-						if (m_vAllDockables[u]->IsUnDocked())
+						if (m_vAllDockables[u]->IsUndocked())
 						{
 							CWnd* pFrame = FromHandle(GetAncestor(m_hWnd));
 							if (pFrame->GetZOrder() < m_vAllDockables[u]->GetZOrder())
@@ -1468,7 +1511,8 @@ namespace Win32xx
 				break;
 			}
 
-			if (m_vDockChildren[u]->GetDockStyle() & 0xF)
+		//	if (m_vDockChildren[u]->GetDockStyle() & 0xF)
+			if (m_vDockChildren[u]->IsDocked())
 			{
 				// Position the Dockable child recursively (as it might also have Dockable children)
 				m_vDockChildren[u]->RecalcDockChildLayout(rcChild);
@@ -1662,7 +1706,7 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			{
-				if ( IsUnDocked() && ( hWnd != GetDockAncestor()->GetHwnd() ) )
+				if ( IsUndocked() && ( hWnd != GetDockAncestor()->GetHwnd() ) )
 				{
 					// Send a Move notification to the parent
 					if ( IsLeftButtonDown() )
@@ -1684,6 +1728,9 @@ namespace Win32xx
 			}
 			break;
 
+		case WM_CLOSE:
+			ShowWindow(SW_HIDE);
+			break;
 		}
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);

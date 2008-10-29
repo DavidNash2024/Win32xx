@@ -1940,18 +1940,18 @@ namespace Win32xx
 		if (pApp)
 		{
 			// Erase the CWnd pointer entry from the map
-			GetApp()->m_MapLock.Lock();
-			for (m = GetApp()->m_HWNDmap.begin(); m != GetApp()->m_HWNDmap.end(); ++m)
+			pApp->m_MapLock.Lock();
+			for (m = pApp->m_HWNDmap.begin(); m != pApp->m_HWNDmap.end(); ++m)
 			{
 				if (this == m->second)
 				{
-					GetApp()->m_HWNDmap.erase(m);
-					GetApp()->m_MapLock.Release();
+					pApp->m_HWNDmap.erase(m);
+					pApp->m_MapLock.Release();
 					return TRUE;
 				}
 			}
 
-			GetApp()->m_MapLock.Release();
+			pApp->m_MapLock.Release();
 		}
 		return FALSE;
 	}

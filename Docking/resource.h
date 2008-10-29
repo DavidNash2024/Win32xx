@@ -33,11 +33,9 @@
 #define IDB_FILEVIEW                    145
 
 // Menu Resource
-#define IDM_COLOR_BLACK                 163
-#define IDM_COLOR_RED                   164
-#define IDM_COLOR_GREEN                 165
-#define IDM_COLOR_BLUE                  166
-#define IDM_COLOR_WHITE                 167
+#define IDM_DOCK_DEFAULT                150
+#define IDM_DOCK_CLOSEALL               151
+
 
 
 

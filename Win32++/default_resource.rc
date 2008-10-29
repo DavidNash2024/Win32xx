@@ -139,12 +139,12 @@ BEGIN
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
-    "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
-    "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_DELETE,         VIRTKEY, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
 END
 
 
