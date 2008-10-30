@@ -30,7 +30,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\DockingFrame"));
+	LoadRegistrySettings(_T("Win32++\\Docking App"));
 }
 
 CMainFrame::~CMainFrame()
@@ -87,6 +87,10 @@ void CMainFrame::OnInitialUpdate()
 		LoadDefaultDockables();
 	else
 		LoadRegistryDockables();
+
+	// Ensure we have some docked/undocked windows
+	if (0 == m_DockView.GetAllDockables().size())
+		LoadDefaultDockables();
 }
 
 void CMainFrame::LoadDefaultDockables()
@@ -246,7 +250,6 @@ void CMainFrame::SaveDockables()
 		HKEY hKeyDock = NULL;
 		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
-
 		
 		RegDeleteKey(hKey, _T("Docked Windows"));
 		if (RegCreateKeyEx(hKey, _T("Docked Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))

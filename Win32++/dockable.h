@@ -1089,8 +1089,8 @@ namespace Win32xx
 	{
 		if ((this == GetDockAncestor()) && (this != pDockable))
 		{
-			UnDock();
-			Destroy();
+			pDockable->UnDock();
+			pDockable->Destroy();
 			std::vector <CDockable*>::iterator v;
 			for (v = GetDockAncestor()->m_vAllDockables.begin(); v != GetDockAncestor()->m_vAllDockables.end(); v++)
 			{
@@ -1103,7 +1103,7 @@ namespace Win32xx
 			}
 		}
 		else
-			throw CWinException(_T("Invalid use of RemoveDockable"));
+			throw CWinException(_T("Must call RemoveDockable from the DockAncestor"));
 	}
 
 	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
@@ -1175,6 +1175,24 @@ namespace Win32xx
 
 	inline std::vector <CDockable*> const CDockable::GetAllDockables()
 	{
+		// Clean up m_vAllDockables first by removing destroyed CDockable windows
+		if (this == GetDockAncestor())
+		{
+			std::vector<CDockable*>::reverse_iterator ritor;;
+			for (ritor = m_vAllDockables.rbegin(); ritor < m_vAllDockables.rend(); ++ritor)
+			{
+				// Delete any closed dockables
+				if (!(*ritor)->IsWindow())
+				{
+					delete *ritor;
+					m_vAllDockables.erase(ritor.base()-1);
+				}
+			}
+		}
+		else
+			throw CWinException(_T("Must call GetAllDockables from the DockAncestor\n"));
+
+		// now return m_vAllDockables 
 		return GetDockAncestor()->m_vAllDockables;
 	}
 
