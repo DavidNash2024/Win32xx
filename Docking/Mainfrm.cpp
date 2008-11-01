@@ -96,7 +96,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::LoadDefaultDockables()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockables state in the registry
-	
+
 	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT|DS_CLIENTEDGE, 200, ID_CLASS1);
 	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 200, ID_CLASS2);
 	CDockable* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP|DS_CLIENTEDGE, 100, ID_TEXT1);
@@ -130,7 +130,7 @@ void CMainFrame::LoadRegistryDockables()
 			{
 				CDockable* pDock;
 				if ((0 == di.DockParentID) || (-1 == di.DockParentID))
-					pDock = &m_DockView;		
+					pDock = &m_DockView;
 				else
 					pDock = m_DockView.GetDockFromID(di.DockParentID);
 
@@ -202,7 +202,7 @@ void CMainFrame::LoadRegistryDockables()
 void CMainFrame::SaveDockables()
 {
 	// NOTE: This function assumes that each dockable has a unique DockID
-	
+
 	std::vector<DockedInfo> DockList;
 	std::vector <CDockable*> v1 = m_DockView.GetDockChildren();
 	std::vector <CDockable*>::iterator itor;
@@ -217,7 +217,7 @@ void CMainFrame::SaveDockables()
 		di.DockWidth = (*itor)->GetDockWidth();
 		if (0 != di.DockID)
 			DockList.push_back(di);
-	}	
+	}
 
 	// Add remaining docked children of children to the DockList vector
 	UINT u = 0;
@@ -250,11 +250,11 @@ void CMainFrame::SaveDockables()
 		HKEY hKeyDock = NULL;
 		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
-		
+
 		RegDeleteKey(hKey, _T("Docked Windows"));
 		if (RegCreateKeyEx(hKey, _T("Docked Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
-		
+
 		// Add the Docked windows information to the registry
 		for (UINT u = 0; u < DockList.size(); ++u)
 		{
@@ -265,7 +265,7 @@ void CMainFrame::SaveDockables()
 			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
 		}
 
-		// Add the Undocked windows information to the registry	
+		// Add the Undocked windows information to the registry
 		int nUndocked = DockList.size();
 		for (UINT u = 0; u <  m_DockView.GetAllDockables().size(); ++u)
 		{
@@ -296,3 +296,4 @@ void CMainFrame::SaveRegistrySettings()
 	CFrame::SaveRegistrySettings();
 	SaveDockables();
 }
+

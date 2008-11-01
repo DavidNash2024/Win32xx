@@ -152,11 +152,12 @@ namespace Win32xx
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
 			virtual void DrawCloseButton(CDC& DrawDC, UINT uState);
-			virtual BOOL IsClosePressed();
+			virtual BOOL IsClosing();
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void PreCreate(CREATESTRUCT& cs);
 			virtual void SendNotify(UINT nMessageID);
+			virtual void SetClosing() {m_bClosing = TRUE;}
 			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			tString GetCaption() {return m_tsCaption;}
@@ -167,11 +168,12 @@ namespace Win32xx
 			CDockable* m_pDock;
 			CWnd* m_pView;
 			int m_NCHeight;
-			BOOL m_bClosing;
+			
 		
 		private:
 			tString m_tsCaption;
-			CRect m_rcClose;	
+			CRect m_rcClose;
+			BOOL m_bClosing;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -242,6 +244,7 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_DockClient;}
 		int GetDockWidth() const {return m_DockWidth;}
 		CWnd* GetView() const {return GetDockClient().m_pView;}
+		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
 		BOOL IsUndocked() const;
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
@@ -538,7 +541,7 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CDockable::CDockClient::IsClosePressed()
+	inline BOOL CDockable::CDockClient::IsClosing()
 	{
 		return m_bClosing;
 	}
@@ -1057,6 +1060,7 @@ namespace Win32xx
 		pDockable->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		pDockable->SetRedraw(TRUE);
 		pDockable->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		pDockable->SetWindowText(GetCaption().c_str());
 
 		// Store the Dockable's pointer in the DockAncestor's vector for later deletion
 		GetDockAncestor()->m_vAllDockables.push_back(pDockable);
@@ -1074,7 +1078,7 @@ namespace Win32xx
 		while(m_vAllDockables.size() > 0)
 		{
 			v = m_vAllDockables.begin();
-			(*v)->GetDockClient().m_bClosing = TRUE;
+			(*v)->GetDockClient().SetClosing();
 			(*v)->UnDock();
 			(*v)->Destroy();
 			delete *v;
@@ -1616,6 +1620,8 @@ namespace Win32xx
 			}
 		}
 
+		if (IsWindow())
+			RecalcDockLayout();
 		m_DockStyle = dwDockStyle;
 	}
 
@@ -1657,28 +1663,36 @@ namespace Win32xx
 				m_vDockChildren[0]->m_vDockChildren.push_back(m_vDockChildren[u1]);
 			}
 
-			// Change the window to an "undocked" style
-			DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-			SetWindowLongPtr(GWL_STYLE, dwStyle);
+			// Position and draw the undocked window, unless it is about to be closed
+			if (!IsClosing())
+			{
+				// Change the window to an "undocked" style
+				DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+				SetWindowLongPtr(GWL_STYLE, dwStyle);
 
-			GetDockBar().ShowWindow(SW_HIDE);
-			m_vDockChildren.clear();
-			m_pDockParent = NULL;
-			m_DockStyle = m_DockStyle & 0xFFFFFFF0;
-			RecalcDockLayout();
+				GetDockBar().ShowWindow(SW_HIDE);
+				m_vDockChildren.clear();
+				m_pDockParent = NULL;
+				m_DockStyle = m_DockStyle & 0xFFFFFFF0;
+				RecalcDockLayout();
 
-			// Supress redraw while we reposition the window
-			SetRedraw(FALSE);
-			CRect rc = GetDockClient().GetWindowRect();
-			SetParent(0);
-			m_UnDocking = FALSE;
-			SetWindowPos(NULL, rc, SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
-			SetWindowText(GetCaption().c_str());
+				// Supress redraw while we reposition the window
+				SetRedraw(FALSE);
+				CRect rc = GetDockClient().GetWindowRect();
+				SetParent(0);
+				m_UnDocking = FALSE;
+				SetWindowPos(NULL, rc, SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+				SetWindowText(GetCaption().c_str());
 
-			// Re-enable redraw unless the window is about to be destroyed
-			if (!GetDockClient().IsClosePressed())
+				// Re-enable redraw 
 				SetRedraw(TRUE);
-
+			}
+			else
+			{
+				GetDockBar().ShowWindow(SW_HIDE);
+				RecalcDockLayout();
+			}
+			
 			// Redraw all the windows
 			GetDockAncestor()->RedrawWindow();
 			CPoint pt;
