@@ -1,8 +1,17 @@
 Version 6.4
 ===========
 
-Added close button to the caption of docked windows
+Docking
+ - Added close button to the caption of docked windows
+ - Added save/restore dock layout to docking sample
+ - Added Close all dockables and Default Dock layout to docking sample
 Added CWnd::GetZOrder
+Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
+Added TRACE output to display error in the event of an exception.
+
+Fixes
+-----
+Fixed Z order of undocked windows
 
 
 

@@ -84,6 +84,7 @@ namespace Win32xx
 		void SetButtonState(int iButtonID, UINT State) const;
 		void SetButtonStyle(int iButtonID, BYTE Style) const;
 		void SetButtonText(int iButtonID, LPCTSTR szText);
+		void SetButtonWidth(int iButtonID, int nWidth) const;
 		void SetCommandID(int iIndex, int iButtonID) const;
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
@@ -762,6 +763,21 @@ namespace Win32xx
 		// Redraw button
 		CRect r = GetItemRect(iIndex);
 		::InvalidateRect(m_hWnd, &r, TRUE);
+	}
+
+	inline void CToolbar::SetButtonWidth(int iButtonID, int nWidth) const
+	{
+		// The set button width can adjust the width of the button after it is created.
+		// This is useful when replacing a button with a ComboBox or other control.
+
+		TBBUTTONINFO tbbi = {0};
+		tbbi.cbSize = sizeof(TBBUTTONINFO);
+		tbbi.dwMask = TBIF_SIZE;
+		tbbi.cx = (WORD)nWidth;
+		::SendMessage(m_hWnd, TB_SETBUTTONINFO, (WPARAM)iButtonID, (LPARAM)&tbbi);
+
+		// Note:  TB_SETBUTTONINFO requires comctl32.dll version 4.71 or later
+		//        i.e. Win95 with IE4 / NT with IE4   or later
 	}
 
 	inline void CToolbar::SetCommandID(int iIndex, int iButtonID) const
