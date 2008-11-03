@@ -6,11 +6,13 @@
 
 
 CRichView::CRichView(void) : m_hFont(NULL), m_hInstRichEdit(NULL)
-{    
-	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
+{ 
+	// Changed from RichEdit v1.0 to RichEdit v2.0 for Unicode support!
+
+	m_hInstRichEdit = ::LoadLibrary(_T("Riched20.dll")); // RichEdit ver 2.0
     if (!m_hInstRichEdit)
     {
-		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
+		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load Riched20.dll"), _T(""), MB_ICONWARNING);
     }
 }
 
@@ -28,7 +30,7 @@ void CRichView::PreCreate(CREATESTRUCT &cs)
 				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 
 	cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
-	cs.lpszClass = _T("RichEdit");
+	cs.lpszClass = RICHEDIT_CLASS; // RichEdit ver 2.0
 }
 
 void CRichView::OnInitialUpdate(void)
@@ -49,8 +51,14 @@ void CRichView::SetFontDefaults()
 {
 	//Set font
 	if (!m_hFont)
-		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+		m_hFont = ::CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
+
 	::SendMessage(m_hWnd, WM_SETFONT, (WPARAM)(HFONT)m_hFont,0);
+
+	// Prevent Unicode characters from changing the font
+	LRESULT lres = SendMessage(EM_GETLANGOPTIONS, 0, 0);
+	lres &= ~IMF_AUTOFONT;
+	SendMessage(EM_SETLANGOPTIONS, 0, lres);
 }
 
