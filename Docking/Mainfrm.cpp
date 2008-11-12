@@ -97,15 +97,17 @@ void CMainFrame::LoadDefaultDockables()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockables state in the registry
 
-	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT|DS_CLIENTEDGE, 200, ID_CLASS1);
-	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 200, ID_CLASS2);
-	CDockable* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP|DS_CLIENTEDGE, 100, ID_TEXT1);
-	CDockable* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 100, ID_TEXT2);
+	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each dockable
 
-	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 150, ID_FILES1);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM|DS_CLIENTEDGE, 150, ID_FILES2);
-	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 100, ID_SIMPLE1);
-	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT|DS_CLIENTEDGE, 100, ID_SIMPLE2);
+	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT | dwStyle, 200, ID_CLASS1);
+	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_RIGHT | dwStyle, 200, ID_CLASS2);
+	CDockable* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP | dwStyle, 100, ID_TEXT1);
+	CDockable* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT2);
+
+	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_FILES1);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_FILES2);
+	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_SIMPLE1);
+	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_SIMPLE2);
 }
 
 void CMainFrame::LoadRegistryDockables()

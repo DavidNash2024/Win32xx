@@ -69,8 +69,7 @@
 //  * A device context assigned to a CDC object will be released or deleted, unless
 //     it is detached.
 //  * A GDI object created by one of the CDC member, or one attached to the CDC
-//     object (except regions) will be deleted when the CDC object is destroyed,
-//     unless it is detached.
+//     object will be deleted when the CDC object is destroyed, unless it is detached.
 
 
 #ifndef GDI_H
@@ -122,8 +121,16 @@ namespace Win32xx
 		virtual void CreatePenIndirect(const LOGPEN *lplgpn);
 		virtual HPEN DetachPen();
 
-		// Select Regions
+		// Create Select Regions
 		virtual void AttachRegion(HRGN hRegion);
+		virtual void CreateEllipticRgn(int left, int top, int right, int bottom);
+		virtual void CreateEllipticRgnIndirect(const RECT* prc);
+		virtual void CreatePolygonRgn(const POINT* ppt, int cPoints, int fnPolyFillMode);
+		virtual void CreatePolyPolygonRgn(const POINT* ppt, const int* pPolyCounts, int nCount, int fnPolyFillMode);
+		virtual void CreateRectRgn(int left, int top, int right, int bottom);
+		virtual void CreateRectRgnIndirect(const RECT* prc);
+		virtual HRGN DetachRegion();
+		virtual void ExtCreateRegion(const XFORM *pXform, DWORD nCount, const RGNDATA *pRgnData);
 
 		// Cast the CDC object to a HDC
 		operator HDC() const {return m_hDC;}
@@ -152,6 +159,7 @@ namespace Win32xx
 		HBRUSH m_hBrushOld;
 		HFONT m_hFontOld;
 		HPEN m_hPenOld;
+		HRGN m_hRgnOld;
 		BOOL m_IsCopy;
 		CDC* m_pCopiedFrom;
 	};
@@ -160,12 +168,12 @@ namespace Win32xx
 	// Definitions of the CDC class
 	//
 	inline CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0),
-					m_IsCopy(FALSE), m_pCopiedFrom(0)
+					m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0)
 	{
 	}
 
 	inline CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0),
-						m_IsCopy(FALSE), m_pCopiedFrom(0)
+						m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0)
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
@@ -191,6 +199,7 @@ namespace Win32xx
 		m_hDC		 = rhs.m_hDC;
 		m_hFontOld	 = rhs.m_hFontOld;
 		m_hPenOld    = rhs.m_hPenOld;
+		m_hRgnOld    = rhs.m_hRgnOld;
 
 		// This CDC is a copy, so we won't need to delete GDI resources
 		//  in the destructor
@@ -215,6 +224,7 @@ namespace Win32xx
 				m_pCopiedFrom->m_hBrushOld	= m_hBrushOld;
 				m_pCopiedFrom->m_hBitmapOld	= m_hBitmapOld;
 				m_pCopiedFrom->m_hFontOld	= m_hFontOld;
+				m_pCopiedFrom->m_hRgnOld    = m_hRgnOld;
 				m_pCopiedFrom->m_hDC		= m_hDC;
 			}
 			else
@@ -224,6 +234,7 @@ namespace Win32xx
 				if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 				if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 				if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
+				if (m_hRgnOld)    ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
 
 				// We need to release a Window DC, and delete a memory DC
 	#ifndef _WIN32_WCE
@@ -584,14 +595,141 @@ namespace Win32xx
 
 	// Region functions
 	inline void CDC::AttachRegion(HRGN hRegion)
-	{
+	{		
 		// Use this to attach an existing region.
-		// You are responible for deleting the region
+		// The region will be deleted for you, unless its detached
+		// Note: The shape of a region cannot be changed while it is attached to a DC
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (!hRegion) throw CWinException(_T("Can't attach a NULL HRGN"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
 
-		::SelectObject(m_hDC, hRegion);
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRegion);
+	}
+
+	inline void CDC::CreateEllipticRgn(int left, int top, int right, int bottom)
+	{
+		// Creates the ellyiptical region from the bounding rectangle co-ordinates
+		// and selects it into the device context
+		// The region will be deleted for you, unless its detached
+		// Note: The shape of a region cannot be changed while it is attached to a DC
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
+
+		HRGN hRgn = ::CreateEllipticRgn(left, top, right, bottom);
+		if (!hRgn) throw CWinException(_T("CreateEllipticRgn failed"));
+
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRgn);
+	}
+
+	inline void CDC::CreateEllipticRgnIndirect(const RECT* prc)
+	{
+		// Creates the ellyiptical region from the bounding rectangle co-ordinates
+		// and selects it into the device context
+		// The region will be deleted for you, unless its detached
+		// Note: The shape of a region cannot be changed while it is attached to a DC
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
+
+		HRGN hRgn = ::CreateEllipticRgnIndirect(prc);
+		if (!hRgn) throw CWinException(_T("CreateEllipticRgnIndirect failed"));
+
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRgn);
+	}
+
+	inline void CDC::CreatePolygonRgn(const POINT* ppt, int cPoints, int fnPolyFillMode)
+	{
+		// Creates the polygon region from the array of points and selects it into 
+		// the device context. The polygon is presumed closed
+		// The region will be deleted for you, unless its detached
+		// Note: The shape of a region cannot be changed while it is attached to a DC
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
+
+		HRGN hRgn = ::CreatePolygonRgn(ppt, cPoints, fnPolyFillMode);
+		if (!hRgn) throw CWinException(_T("CreatePolygonRgn failed"));
+
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRgn);
+	}
+
+	inline void CDC::CreatePolyPolygonRgn(const POINT* ppt, const int* pPolyCounts, int nCount, int fnPolyFillMode)
+	{
+		// Creates the polygon region from a series of polygons.The polygons can overlap.
+		// The region will be deleted for you, unless its detached
+		// Note: The shape of a region cannot be changed while it is attached to a DC
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
+
+		HRGN hRgn = ::CreatePolyPolygonRgn(ppt, pPolyCounts, nCount, fnPolyFillMode);
+		if (!hRgn) throw CWinException(_T("CreatePolyPolygonRgn failed"));
+
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRgn);
+	}
+		
+	inline void CDC::CreateRectRgn(int left, int top, int right, int bottom)
+	{
+		// Creates a rectangular region from the rectangle co-ordinates.
+		// The region will be deleted for you, unless its detached
+		// Note: The shape of a region cannot be changed while it is attached to a DC
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
+
+		HRGN hRgn = ::CreateRectRgn(left, top, right, bottom);
+		if (!hRgn) throw CWinException(_T("CreateRectRgn failed"));
+
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRgn);
+	}
+
+	inline void CDC::CreateRectRgnIndirect(const RECT* prc)
+	{
+		// Creates a rectangular region from the rectangle co-ordinates.
+		// The region will be deleted for you, unless its detached
+		// Note: The shape of a region cannot be changed while it is attached to a DC
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
+
+		HRGN hRgn = ::CreateRectRgnIndirect(prc);
+		if (!hRgn) throw CWinException(_T("CreateRectRgnIndirect failed"));
+
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRgn);
+	}
+
+	inline void CDC::ExtCreateRegion(const XFORM *pXform, DWORD nCount, const RGNDATA *pRgnData)
+	{
+		// Creates a region from the specified region data and tranformation data.
+		// The region will be deleted for you, unless its detached
+		// Notes: The shape of a region cannot be changed while it is attached to a DC
+		//        GetRegionData can be used to get a region's data
+		//        If the XFROM pointer is NULL, the identity transformation is used. 
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (m_hRgnOld) ::DeleteObject(::SelectObject(m_hDC, m_hRgnOld));
+
+		HRGN hRgn = ::ExtCreateRegion(pXform, nCount, pRgnData);
+		if (!hRgn) throw CWinException(_T("ExtCreateRegion failed"));
+
+		m_hRgnOld = (HRGN)::SelectObject(m_hDC, hRgn);
+	}
+
+
+
+	inline HRGN CDC::DetachRegion()
+	{
+		// Use this to detach the region from the HDC.
+		// You are then responible for deleting the detached region
+
+		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		if (!m_hRgnOld) throw CWinException(_T("No Region to detach"));
+
+		HRGN hRgn = (HRGN)::SelectObject(m_hDC, m_hRgnOld);
+		m_hRgnOld = NULL;
+		return hRgn;
 	}
 
 

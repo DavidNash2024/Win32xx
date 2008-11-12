@@ -69,7 +69,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 
 
 ///////////////////////////////////////////////
-// CViewTree functions
+// CMDIChildTreeView functions
 CMDIChildTreeView::CMDIChildTreeView()
 {
 	SetChildMenu(_T("MdiMenuTree"));

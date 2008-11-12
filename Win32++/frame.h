@@ -196,10 +196,10 @@ namespace Win32xx
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
 		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
-		virtual void OnDrawItem(WPARAM wParam, LPARAM lParam);
-		virtual void OnExitMenuLoop();
-		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
-		virtual void OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnFrameDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnFrameExitMenuLoop();
+		virtual void OnFrameInitMenuPopup(WPARAM wParam, LPARAM lParam);
+		virtual void OnFrameMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual int  SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
@@ -1259,15 +1259,15 @@ namespace Win32xx
 		case WM_CHAR:
 			return 0L;  // Discard these messages
 		case WM_DRAWITEM:
-			m_pFrame->OnDrawItem(wParam, lParam);
+			m_pFrame->OnFrameDrawItem(wParam, lParam);
 			return TRUE; // handled
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
-			m_pFrame->OnExitMenuLoop();
+			m_pFrame->OnFrameExitMenuLoop();
 			break;
 		case WM_INITMENUPOPUP:
-			m_pFrame->OnInitMenuPopup(wParam, lParam);
+			m_pFrame->OnFrameInitMenuPopup(wParam, lParam);
 			break;
 		case WM_KEYDOWN:
 			OnKeyDown(wParam, lParam);
@@ -1289,7 +1289,7 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			m_pFrame->OnMeasureItem(wParam, lParam);
+			m_pFrame->OnFrameMeasureItem(wParam, lParam);
 			return TRUE; // handled
 		case WM_MOUSELEAVE:
 			OnMouseLeave();
@@ -1372,7 +1372,7 @@ namespace Win32xx
 	{
 		for (UINT nItem = 0; nItem < m_vpItemData.size(); ++nItem)
 		{
-			// These are normally deleted in OnExitMenuLoop
+			// These are normally deleted in OnFrameExitMenuLoop
 			delete m_vpItemData[nItem];
 		}
 
@@ -2054,7 +2054,7 @@ namespace Win32xx
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
-	inline void CFrame::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline void CFrame::OnFrameDrawItem(WPARAM /*wParam*/, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
@@ -2147,7 +2147,7 @@ namespace Win32xx
 		DrawDC.DetachDC();
 	}
 
-	inline void CFrame::OnExitMenuLoop()
+	inline void CFrame::OnFrameExitMenuLoop()
 	{
 		for (UINT nItem = 0; nItem < m_vpItemData.size(); ++nItem)
 		{
@@ -2227,7 +2227,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	inline void CFrame::OnFrameInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
@@ -2256,7 +2256,7 @@ namespace Win32xx
 			{
 				if (0 == mii.dwItemData)
 				{
-					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
+					ItemData* pItem = new ItemData;		// deleted in OnFrameExitMenuLoop
 
 					// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 					//  an exception when new fails. We make sure an exception gets thrown!
@@ -2279,7 +2279,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline void CFrame::OnFrameMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
@@ -3250,17 +3250,30 @@ namespace Win32xx
 			OnFrameTimer(wParam);
 			return 0L;
 		case WM_DRAWITEM:
-			// Owner draw menu itmes
-			OnDrawItem(wParam, lParam);
-			return TRUE; // handled
+			// Owner draw menu items
+			{
+				LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
+				if ((pdis->CtlType == ODT_MENU) && !IsMenubarUsed())
+				{
+					OnFrameDrawItem(wParam, lParam);
+					return TRUE; // handled
+				}
+			}
+			break;
 		case WM_INITMENUPOPUP:
-			OnInitMenuPopup(wParam, lParam);
+			OnFrameInitMenuPopup(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			OnMeasureItem(wParam, lParam);
-			return TRUE; // handled
+			{
+				LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
+				if ((pmis->CtlType == ODT_MENU) && !IsMenubarUsed())
+				{
+					OnFrameMeasureItem(wParam, lParam);
+					return TRUE; // handled
+				}
+			}
 		case WM_EXITMENULOOP:
-			OnExitMenuLoop();
+			OnFrameExitMenuLoop();
 			break;
 		} // switch uMsg
 

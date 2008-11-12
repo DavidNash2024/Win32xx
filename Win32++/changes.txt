@@ -1,6 +1,8 @@
 Version 6.4
 ===========
 
+Added Region support to CDC
+
 Docking
  - Added close button to the caption of docked windows
  - Added save/restore dock layout to docking sample
@@ -13,6 +15,14 @@ Notepad sample
 
 All Changes
 -----------
+Added CDC::CreateEllipticRegion
+Added CDC::CreateEllipticRegionIndirect
+Added CDC::CreatePolygonRgn
+Added CDC::CreatePolyPolygonRgn
+Added CDC::CreateRectRgn
+Added CDC::CreateRectRgnIndirect
+Added CDC::DetachRegion
+Added CDC::ExtCreateRegion 
 Added CWnd::GetZOrder
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
 Added TRACE output to display error in the event of an exception.

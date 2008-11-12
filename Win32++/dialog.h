@@ -373,9 +373,8 @@ namespace Win32xx
 
 	inline BOOL CDialog::PreTranslateMessage(MSG* pMsg)
 	{
-		// allow the dialog to translate Tab, Left, Right, Up, and Down arrow keys
-		if (pMsg->message == WM_KEYDOWN && (pMsg->wParam == VK_TAB || pMsg->wParam == VK_LEFT
-			|| pMsg->wParam == VK_UP || pMsg->wParam == VK_RIGHT || pMsg->wParam == VK_DOWN))
+		// allow the dialog to translate keyboard input
+		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
 		{
 			if (IsDialogMessage(m_hWnd, pMsg))
 				return TRUE;
