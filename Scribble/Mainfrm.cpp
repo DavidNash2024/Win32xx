@@ -12,22 +12,21 @@ CMainFrame::CMainFrame()
 	SetView(m_View);
 
 	// Define our toolbar
-	m_ToolbarData.clear();
-	m_ToolbarData.push_back ( IDM_FILE_NEW   );
-	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
-	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
-	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
-	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
-	m_ToolbarData.push_back ( IDM_FILE_PRINT );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_PEN_RED    );
-	m_ToolbarData.push_back ( IDM_PEN_BLUE   );
-	m_ToolbarData.push_back ( IDM_PEN_GREEN  );
-	m_ToolbarData.push_back ( IDM_PEN_BLACK  );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_PEN_RED    );
+	AddToolbarButton( IDM_PEN_BLUE   );
+	AddToolbarButton( IDM_PEN_GREEN  );
+	AddToolbarButton( IDM_PEN_BLACK  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT );
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"

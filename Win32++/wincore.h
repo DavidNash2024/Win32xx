@@ -808,7 +808,12 @@ namespace Win32xx
  				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
 
-			m_hInstance = (HINSTANCE) ::GetModuleHandle(0);
+		    // Get store the instance handle (also works if Win32++ is in a DLL)		
+			TCHAR szModuleName[MAX_PATH + 1];
+			::GetModuleFileName(NULL, szModuleName, MAX_PATH);
+			m_hInstance = (HINSTANCE) ::GetModuleHandle(szModuleName);
+			if (m_hInstance == NULL) m_hInstance = GetModuleHandle(0); // required for WinCE
+
 			m_hResource = m_hInstance;
 			DefaultClass();
 		}

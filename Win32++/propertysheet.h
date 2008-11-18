@@ -553,6 +553,9 @@ namespace Win32xx
 
 	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
 	{
+		if (NULL == pPage)
+			throw CWinException(_T("Cannot add NULL Property Page"));
+
 		m_vPages.push_back(pPage);
 
 		if (m_hWnd)

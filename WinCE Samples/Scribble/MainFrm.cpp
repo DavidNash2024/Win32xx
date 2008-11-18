@@ -6,12 +6,11 @@
 CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
 {
 	// Set the Resource IDs for the toolbar buttons
-	m_ToolbarData.clear();
-	m_ToolbarData.push_back ( 0 );			// Separator
-	m_ToolbarData.push_back ( IDM_RED  );
-	m_ToolbarData.push_back ( IDM_BLUE );
-	m_ToolbarData.push_back ( IDM_GREEN );
-	m_ToolbarData.push_back ( IDM_BLACK );
+	AddToolbarButton( 0 );			// Separator
+	AddToolbarButton( IDM_RED  );
+	AddToolbarButton( IDM_BLUE );
+	AddToolbarButton( IDM_GREEN );
+	AddToolbarButton( IDM_BLACK );
 }
 
 void CMainFrame::DrawLine(short x, short y)

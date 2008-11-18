@@ -22,7 +22,8 @@ Added CDC::CreatePolyPolygonRgn
 Added CDC::CreateRectRgn
 Added CDC::CreateRectRgnIndirect
 Added CDC::DetachRegion
-Added CDC::ExtCreateRegion 
+Added CDC::ExtCreateRegion
+Added CFrame::AddToolbarButton 
 Added CWnd::GetZOrder
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
 Added TRACE output to display error in the event of an exception.

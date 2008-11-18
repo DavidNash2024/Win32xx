@@ -5,12 +5,10 @@
 CMainFrame::CMainFrame()
 {
 	// Set the Resource IDs for the toolbar buttons
-	m_ToolbarData.clear();
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_BOLD  );
-	m_ToolbarData.push_back ( IDM_ITALIC);
-	m_ToolbarData.push_back ( IDM_UNDERLINE);
-
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_BOLD  );
+	AddToolbarButton( IDM_ITALIC);
+	AddToolbarButton( IDM_UNDERLINE);
 }
 
 CMainFrame::~CMainFrame()

@@ -192,6 +192,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual int  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual void AddToolbarButton(UINT nID);
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
@@ -1352,19 +1353,18 @@ namespace Win32xx
 
 		// Place this code in CMainFrame's constructor
 /*
-		// Define the resource IDs for the toolbar
-		m_ToolbarData.clear();
-		m_ToolbarData.push_back ( IDM_FILE_NEW   );
-		m_ToolbarData.push_back ( IDM_FILE_OPEN  );
-		m_ToolbarData.push_back ( IDM_FILE_SAVE  );
-		m_ToolbarData.push_back ( 0 );				// Separator
-		m_ToolbarData.push_back ( IDM_EDIT_CUT   );
-		m_ToolbarData.push_back ( IDM_EDIT_COPY  );
-		m_ToolbarData.push_back ( IDM_EDIT_PASTE );
-		m_ToolbarData.push_back ( 0 );				// Separator
-		m_ToolbarData.push_back ( IDM_FILE_PRINT );
-		m_ToolbarData.push_back ( 0 );				// Separator
-		m_ToolbarData.push_back ( IDM_HELP_ABOUT );
+		// Set the Resource IDs for the toolbar buttons
+		AddToolbarButton( IDM_FILE_NEW   );
+		AddToolbarButton( IDM_FILE_OPEN  );
+		AddToolbarButton( IDM_FILE_SAVE  );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_EDIT_CUT   );
+		AddToolbarButton( IDM_EDIT_COPY  );
+		AddToolbarButton( IDM_EDIT_PASTE );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_FILE_PRINT );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_HELP_ABOUT );
 */
 	}
 
@@ -1583,6 +1583,13 @@ namespace Win32xx
 		rbbi.hwndChild  = TB;
 
 		GetRebar().InsertBand(-1, rbbi);
+	}
+
+	inline void CFrame::AddToolbarButton(UINT nID)
+	// Adds Resource IDs to toolbar buttons.
+	// A resource ID of 0 is a separator
+	{
+		m_ToolbarData.push_back(nID);
 	}
 
 	inline void CFrame::AdjustFrameRect(RECT rcView) const

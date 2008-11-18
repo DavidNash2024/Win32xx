@@ -178,6 +178,9 @@ namespace Win32xx
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
 	{
+		if (NULL == pMDIChild)
+			throw CWinException(_T("Cannot add Null MDI Child"));
+
 		m_MDIChildVect.push_back(pMDIChild);
 		pMDIChild->Create(GetView()->GetHwnd());
 

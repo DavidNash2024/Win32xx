@@ -1,7 +1,7 @@
 [Project]
 FileName=MDIDemo_Debug.dev
 Name=MDIDemo
-UnitCount=24
+UnitCount=28
 Type=0
 Ver=1
 ObjFiles=
@@ -98,17 +98,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=MDIChildView.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
 FileName=Resource.rc
+CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
@@ -116,17 +107,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=MDIDemoApp.cpp
-CompileCpp=1
 Folder=Source
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit9]
+[Unit8]
 FileName=main.cpp
 CompileCpp=1
 Folder=Source
@@ -136,7 +127,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=MainMDIfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -146,7 +137,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit10]
 FileName=MDIChildMax.cpp
 CompileCpp=1
 Folder=Source
@@ -156,7 +147,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit11]
 FileName=MDIChildRect.cpp
 CompileCpp=1
 Folder=Source
@@ -166,17 +157,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
-FileName=MDIChildView.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit14]
+[Unit12]
 FileName=..\Win32++\WinCore.h
 CompileCpp=1
 Folder=Win32++
@@ -186,7 +167,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit13]
 FileName=..\Win32++\Dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -196,7 +177,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
+[Unit14]
 FileName=..\Win32++\Frame.h
 CompileCpp=1
 Folder=Win32++
@@ -206,7 +187,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit15]
 FileName=..\Win32++\GDI.h
 CompileCpp=1
 Folder=Win32++
@@ -216,7 +197,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit16]
 FileName=..\Win32++\MDI.h
 CompileCpp=1
 Folder=Win32++
@@ -226,7 +207,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit17]
 FileName=..\Win32++\Rebar.h
 CompileCpp=1
 Folder=Win32++
@@ -236,7 +217,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit18]
 FileName=..\Win32++\Splitter.h
 CompileCpp=1
 Folder=Win32++
@@ -246,7 +227,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit19]
 FileName=..\Win32++\Statusbar.h
 CompileCpp=1
 Folder=Win32++
@@ -256,7 +237,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit20]
 FileName=..\Win32++\Toolbar.h
 CompileCpp=1
 Folder=Win32++
@@ -266,7 +247,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit21]
 FileName=MDIChildText.cpp
 CompileCpp=1
 Folder=Source
@@ -276,8 +257,68 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit22]
 FileName=MDIChildText.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=MDIChildTreeView.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit24]
+FileName=MDIChildListView.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit25]
+FileName=MDIChildSimple.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit26]
+FileName=MDIChildListView.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit27]
+FileName=MDIChildSimple.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit28]
+FileName=MDIChildTreeView.h
 CompileCpp=1
 Folder=Header
 Compile=1

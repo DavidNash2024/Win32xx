@@ -16,14 +16,13 @@ CMainFrame::CMainFrame()
 	SetView(m_View);
 
 	// Set the Resource IDs for the toolbar buttons
-	m_ToolbarData.clear();
-	m_ToolbarData.push_back ( IDM_BACK   );
-	m_ToolbarData.push_back ( IDM_FORWARD );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_REFRESH );
-	m_ToolbarData.push_back ( IDM_STOP );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_HOME );
+	AddToolbarButton( IDM_BACK   );
+	AddToolbarButton( IDM_FORWARD );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_REFRESH );
+	AddToolbarButton( IDM_STOP );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HOME );
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
