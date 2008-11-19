@@ -110,6 +110,7 @@ namespace Win32xx
 	public:
 		CWceFrame();
 		virtual ~CWceFrame();
+		virtual void AddToolbarButton(UINT nID);
 		CRect GetViewRect() const;
 		CCmdbar& GetMenubar() const {return (CCmdbar&)m_Menubar;}
 		virtual void OnCreate();
@@ -256,6 +257,13 @@ namespace Win32xx
 
 	inline CWceFrame::~CWceFrame()
 	{
+	}
+
+	inline void CWceFrame::AddToolbarButton(UINT nID)
+	// Adds Resource IDs to toolbar buttons.
+	// A resource ID of 0 is a separator
+	{
+		m_ToolbarData.push_back(nID);
 	}
 
 	inline CRect CWceFrame::GetViewRect() const
