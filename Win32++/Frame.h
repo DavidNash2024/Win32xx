@@ -221,9 +221,9 @@ namespace Win32xx
 		// These functions aren't intended to be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
-		LPCTSTR GetRegistryKeyName(){return m_tsKeyName.c_str();}
+		tString GetRegistryKeyName(){return m_tsKeyName;}
 		CWnd* GetView() const		{return m_pView;}
-		LPCTSTR CFrame::GetMRUEntry(int nIndex);
+		tString GetMRUEntry(int nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
 		void LoadRegistrySettings(LPCTSTR szKeyName);
@@ -1843,16 +1843,17 @@ namespace Win32xx
 		return -1;
 	}
 
-	inline LPCTSTR CFrame::GetMRUEntry(int nIndex)
+	inline tString CFrame::GetMRUEntry(int nIndex)
 	{
-		if (nIndex >= (int)m_MRUEntries.size())
-			return NULL;
+		tString tsPathName;
+		if (nIndex < (int)m_MRUEntries.size())
+		{
+			tsPathName = m_MRUEntries[nIndex];
 
-		tString tsPathName = m_MRUEntries[nIndex];
-
-		// Now put the selected entry at Index 0
-		AddMRUEntry(tsPathName.c_str());
-		return m_MRUEntries[0].c_str();
+			// Now put the selected entry at Index 0
+			AddMRUEntry(tsPathName.c_str());
+		}
+		return tsPathName;
 	}
 
 	inline CRect CFrame::GetViewRect() const

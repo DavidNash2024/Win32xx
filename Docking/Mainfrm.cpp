@@ -82,7 +82,7 @@ void CMainFrame::OnInitialUpdate()
 {
 	m_DockView.SetDockStyle(DS_CLIENTEDGE);
 
-	if (NULL == GetRegistryKeyName())
+	if (0 == GetRegistryKeyName().size())
 		LoadDefaultDockables();
 	else
 		LoadRegistryDockables();
@@ -111,10 +111,9 @@ void CMainFrame::LoadDefaultDockables()
 
 void CMainFrame::LoadRegistryDockables()
 {
-	if (NULL != GetRegistryKeyName())
+	if (0 != GetRegistryKeyName().size())
 	{
-		tString RegKeyName = GetRegistryKeyName();
-		tString tsKey = _T("Software\\") + RegKeyName + _T("\\Docked Windows");
+		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\Docked Windows");
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 		if (hKey)
@@ -245,10 +244,9 @@ void CMainFrame::SaveDockables()
 		++u;
 	}
 
-	if (NULL != GetRegistryKeyName())
+	if (0 != GetRegistryKeyName().size())
 	{
-		tString RegKeyName = GetRegistryKeyName();
-		tString tsKeyName = _T("Software\\") + RegKeyName;
+		tString tsKeyName = _T("Software\\") + GetRegistryKeyName();
 		HKEY hKey = NULL;
 		HKEY hKeyDock = NULL;
 		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
