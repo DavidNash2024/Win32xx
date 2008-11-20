@@ -27,6 +27,8 @@ Added CFrame::AddToolbarButton
 Added CWnd::GetZOrder
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
 Added TRACE output to display error in the event of an exception.
+Changed CFrame::GetRegistryKeyName - now returns LPCTSTR
+Changed CFrame::GetMRUEntry - now returns LPCTSTR
 
 Fixes
 -----
