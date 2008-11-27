@@ -87,7 +87,7 @@ namespace Win32xx
 		void SetButtonText(int iButtonID, LPCTSTR szText);
 		void SetButtonWidth(int iButtonID, int nWidth) const;
 		void SetCommandID(int iIndex, int iButtonID) const;
-		void SetToolbarImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
+		void SetImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	// Operations
@@ -789,7 +789,7 @@ namespace Win32xx
 			throw CWinException(_T("CToolbar::SetCommandID failed"));
 	}
 
-	inline void CToolbar::SetToolbarImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
+	inline void CToolbar::SetImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = bitmap_size / buttons
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);

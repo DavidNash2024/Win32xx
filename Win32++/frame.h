@@ -2928,7 +2928,7 @@ namespace Win32xx
 
 	inline void CFrame::SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	{
-		TB.SetToolbarImages(iNumButtons, crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
+		TB.SetImages(iNumButtons, crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
 
 		// Adjust the rebar band size
 		if (m_bUseRebar)
@@ -3177,7 +3177,7 @@ namespace Win32xx
 			// Owner draw menu items
 			{
 				LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
-				if ((pdis->CtlType == ODT_MENU) && !IsMenubarUsed())
+				if (pdis->CtlType == ODT_MENU)
 				{
 					OnFrameDrawItem(wParam, lParam);
 					return TRUE; // handled
@@ -3190,7 +3190,7 @@ namespace Win32xx
 		case WM_MEASUREITEM:
 			{
 				LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
-				if ((pmis->CtlType == ODT_MENU) && !IsMenubarUsed())
+				if (pmis->CtlType == ODT_MENU)
 				{
 					OnFrameMeasureItem(wParam, lParam);
 					return TRUE; // handled

@@ -26,7 +26,9 @@ Added CDC::ExtCreateRegion
 Added CFrame::AddToolbarButton 
 Added CWnd::GetZOrder
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
+Added CToolbar::SetImages
 Added TRACE output to display error in the event of an exception.
+Subclassed windows now call OnCommand 
 
 Fixes
 -----

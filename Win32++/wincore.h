@@ -2265,10 +2265,6 @@ namespace Win32xx
 
 		LRESULT lr;
 
-		// Use CallWindowProc for subclassed windows
-	//	if (m_PrevWindowProc)
-	//		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
-
     	switch (uMsg)
 		{
 		case WM_COMMAND:
@@ -2298,6 +2294,9 @@ namespace Win32xx
 	//		return 0L;
 		case WM_NOTIFY:
 			{
+				// Subclassed windows don't handle notifications
+				if (m_PrevWindowProc) break; 
+
 				// Handle the Win32++ frame notifications
 				lr = OnFrameNotify(wParam, lParam);
 				if (lr) return lr;
@@ -2366,6 +2365,9 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
+			// Subclassed windows don't handle notifications
+			if (m_PrevWindowProc) break; 
+			
 			lr = MessageReflect(hWnd, uMsg, wParam, lParam);
 			if (lr) return lr;	// Message processed so return
 			break;				// Do default processing when message not already processed
