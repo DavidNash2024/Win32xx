@@ -900,6 +900,68 @@ namespace Win32xx
 		// Cleanup
 		delete []lpvBits;
 	}
+	
+	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal)
+	// Returns a greyed image list, created from hImageList
+	{
+		int cx, cy;
+		int nCount = ImageList_GetImageCount(himlNormal);
+		if (0 == nCount)
+			return NULL;
+
+		ImageList_GetIconSize(himlNormal, &cx, &cy);
+
+		// Create the disabled ImageList
+		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
+
+		// Process each image in the ImageList
+		for (int i = 0 ; i < nCount; ++i)
+		{
+			CDC DesktopDC = ::GetDC(NULL);
+			CDC MemDC = ::CreateCompatibleDC(NULL);
+			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
+			CRect rc;
+			rc.SetRect(0, 0, cx, cx);
+
+			// Set the mask color to grey for the new ImageList
+			COLORREF crMask = RGB(200, 199, 200);
+			if ( GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
+			{
+				HPALETTE hPal = (HPALETTE)GetCurrentObject(DesktopDC, OBJ_PAL);
+				UINT Index = GetNearestPaletteIndex(hPal, crMask);
+				if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
+			}
+ 			
+			SolidFill(MemDC, crMask, &rc);
+
+			// Draw the image on the memory DC
+			ImageList_SetBkColor(himlNormal, crMask);
+			ImageList_Draw(himlNormal, i, MemDC, 0, 0, ILD_NORMAL);
+
+			// Convert colored pixels to gray
+			for (int x = 0 ; x < cx; ++x)
+			{
+				for (int y = 0; y < cy; ++y)
+				{
+					COLORREF clr = ::GetPixel(MemDC, x, y);
+
+					if (clr != crMask)
+					{
+						BYTE byGray = (BYTE) (95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20);
+						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
+					}
+
+				}
+			}
+
+			// Detach the bitmap so we can use it.
+			HBITMAP hbm = MemDC.DetachBitmap();
+			ImageList_AddMasked(himlDisabled, hbm, crMask);
+			::DeleteObject(hbm);
+		}
+
+		return himlDisabled; 
+	}
 
 } // namespace Win32xx
 

@@ -239,7 +239,7 @@ namespace Win32xx
 		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolbarBand(CToolbar& TB);
-		virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
+	//	virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
@@ -1614,7 +1614,7 @@ namespace Win32xx
 		// Calculate final rect size, and reposition frame 
 		SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
 	}
-
+/*
 	inline HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
 	// Returns a greyed image list, created from hImageList
 	{
@@ -1675,7 +1675,7 @@ namespace Win32xx
 		}
 
 		return himlDisabled; 
-	}
+	} */
 
 	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
@@ -2927,99 +2927,12 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
-	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
-	// Assumes the width of the button image = bitmap_size / buttons
-	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	{
-		if (iNumButtons > 0)
-		{
-			// Set the button images
-			HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
-			if (!hbm)
-				throw CWinException(_T("CFrame::SetToolbarImages ... LoadBitmap failed "));
+		TB.SetToolbarImages(iNumButtons, crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
 
-			BITMAP bm = {0};
-
-			if (!::GetObject(hbm, sizeof(BITMAP), &bm))
-				throw CWinException(_T("CFrame::SetToolbarImages ... GetObject failed "));
-
-			int iImageWidth  = bm.bmWidth / iNumButtons;
-			int iImageHeight = bm.bmHeight;
-
-			// Toolbar ImageLists require Comctl32.dll version 4.7 or later
-			if (400 == GetComCtlVersion())
-			{
-				// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
-				// Instead we simply set the bitmap.
-				TB.SetBitmap(iNumButtons, ToolbarID);
-				return;
-			}
-
-			HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(TB, TB_GETIMAGELIST,    0, 0);
-			HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(TB, TB_GETHOTIMAGELIST, 0, 0);
-			HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(TB, TB_GETDISABLEDIMAGELIST, 0, 0);
-			ImageList_Destroy(himlToolbar);
-			ImageList_Destroy(himlToolbarHot);
-			ImageList_Destroy(himlToolbarDis);
-
-			himlToolbar = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-			if (!himlToolbar)
-				throw CWinException(_T("CFrame::SetToolbarImages ... Create himlToolbar failed "));
-
-			ImageList_AddMasked(himlToolbar, hbm, crMask);
-			if(-1L == ::SendMessage(TB, TB_SETIMAGELIST, 0, (LPARAM)himlToolbar) )
-				throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETIMAGELIST failed "));
-
-			::DeleteObject(hbm);
-			hbm = NULL;
-
-			if (ToolbarHotID)
-			{
-				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
-				if (!hbm)
-					throw CWinException(_T("CFrame::SetToolbarImages ... LoadBitmap failed "));
-
-				himlToolbarHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-				if (!himlToolbarHot)
-					throw CWinException(_T("CFrame::SetToolbarImages ... Create himlToolbarHot failed "));
-
-				ImageList_AddMasked(himlToolbarHot, hbm, crMask);
-
-				if(-1L == ::SendMessage(TB, TB_SETHOTIMAGELIST, 0, (LPARAM)himlToolbarHot) )
-					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETHOTIMAGELIST failed "));
-
-				::DeleteObject(hbm);
-				hbm = NULL;
-			}
-
-			if (ToolbarDisabledID)
-			{
-				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
-				if (!hbm)
-					throw CWinException(_T("CFrame::SetToolbarImages ... LoadBitmap failed "));
-
-				himlToolbarDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-				if (!himlToolbarDis)
-					throw CWinException(_T("CFrame::SetToolbarImages ... Create himlToolbarDis failed "));
-
-				ImageList_AddMasked(himlToolbarDis, hbm, crMask);
-				if(-1L == ::SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
-					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
-			}
-			else
-			{
-				himlToolbarDis = CreateDisabledImageList(himlToolbar);
-				if(-1L == ::SendMessage(TB, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
-					throw CWinException(_T("CFrame::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
-			}
-
-
-			// Adjust the rebar band size
-			if (m_bUseRebar)
+		// Adjust the rebar band size
+		if (m_bUseRebar)
 				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
-
-			::DeleteObject(hbm);
-		}
 	}
 
 	inline void CFrame::SetView(CWnd& View)

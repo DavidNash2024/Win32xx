@@ -2266,8 +2266,8 @@ namespace Win32xx
 		LRESULT lr;
 
 		// Use CallWindowProc for subclassed windows
-		if (m_PrevWindowProc)
-			return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
+	//	if (m_PrevWindowProc)
+	//		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
 
     	switch (uMsg)
 		{
@@ -2329,6 +2329,8 @@ namespace Win32xx
 
 		case WM_PAINT:
 			{
+				if (m_PrevWindowProc) break; // Allow normal painting for subclassed windows
+
 				if (::GetUpdateRect(hWnd, NULL, FALSE))
 				{
 					::PAINTSTRUCT ps;
@@ -2371,7 +2373,10 @@ namespace Win32xx
 		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure
-		return DefWndProc(hWnd, uMsg, wParam, lParam);
+		if (m_PrevWindowProc)
+			return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
+		else
+			return DefWndProc(hWnd, uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
 

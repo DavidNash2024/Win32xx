@@ -38,6 +38,9 @@
 #ifndef REBAR_H
 #define REBAR_H
 
+#include "wincore.h"
+#include "gdi.h"
+
 
 namespace Win32xx
 {

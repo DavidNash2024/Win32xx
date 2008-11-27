@@ -39,6 +39,7 @@
 #define TOOLBAR_H
 
 #include "wincore.h"
+#include "gdi.h"
 #include "rebar.h"
 
 
@@ -86,6 +87,7 @@ namespace Win32xx
 		void SetButtonText(int iButtonID, LPCTSTR szText);
 		void SetButtonWidth(int iButtonID, int nWidth) const;
 		void SetCommandID(int iIndex, int iButtonID) const;
+		void SetToolbarImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	// Operations
@@ -785,6 +787,102 @@ namespace Win32xx
 	{
 		if (!::SendMessage(m_hWnd, TB_SETCMDID, iIndex, iButtonID))
 			throw CWinException(_T("CToolbar::SetCommandID failed"));
+	}
+
+	inline void CToolbar::SetToolbarImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
+	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
+	// Assumes the width of the button image = bitmap_size / buttons
+	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
+	{
+		if (iNumButtons > 0)
+		{
+			// Set the button images
+			HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
+			if (!hbm)
+				throw CWinException(_T("CToolbar::SetToolbarImages ... LoadBitmap failed "));
+
+			BITMAP bm = {0};
+
+			if (!::GetObject(hbm, sizeof(BITMAP), &bm))
+				throw CWinException(_T("CToolbar::SetToolbarImages ... GetObject failed "));
+
+			int iImageWidth  = bm.bmWidth / iNumButtons;
+			int iImageHeight = bm.bmHeight;
+
+			// Toolbar ImageLists require Comctl32.dll version 4.7 or later
+			if (400 == GetComCtlVersion())
+			{
+				// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
+				// Instead we simply set the bitmap.
+				SetBitmap(iNumButtons, ToolbarID);
+				return;
+			}
+
+			HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST,    0, 0);
+			HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0, 0);
+			HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0, 0);
+			ImageList_Destroy(himlToolbar);
+			ImageList_Destroy(himlToolbarHot);
+			ImageList_Destroy(himlToolbarDis);
+
+			himlToolbar = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+			if (!himlToolbar)
+				throw CWinException(_T("CToolbar::SetToolbarImages ... Create himlToolbar failed "));
+
+			ImageList_AddMasked(himlToolbar, hbm, crMask);
+			if(-1L == ::SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)himlToolbar) )
+				throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETIMAGELIST failed "));
+
+			::DeleteObject(hbm);
+			hbm = NULL;
+
+			if (ToolbarHotID)
+			{
+				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
+				if (!hbm)
+					throw CWinException(_T("CToolbar::SetToolbarImages ... LoadBitmap failed "));
+
+				himlToolbarHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+				if (!himlToolbarHot)
+					throw CWinException(_T("CToolbar::SetToolbarImages ... Create himlToolbarHot failed "));
+
+				ImageList_AddMasked(himlToolbarHot, hbm, crMask);
+
+				if(-1L == ::SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)himlToolbarHot) )
+					throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETHOTIMAGELIST failed "));
+
+				::DeleteObject(hbm);
+				hbm = NULL;
+			}
+
+			if (ToolbarDisabledID)
+			{
+				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
+				if (!hbm)
+					throw CWinException(_T("CToolbar::SetToolbarImages ... LoadBitmap failed "));
+
+				himlToolbarDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
+				if (!himlToolbarDis)
+					throw CWinException(_T("CToolbar::SetToolbarImages ... Create himlToolbarDis failed "));
+
+				ImageList_AddMasked(himlToolbarDis, hbm, crMask);
+				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+					throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
+			}
+			else
+			{
+				himlToolbarDis = CreateDisabledImageList(himlToolbar);
+				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+					throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
+			}
+
+
+			// Adjust the rebar band size
+		//	if (m_bUseRebar)
+		//		GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
+
+			::DeleteObject(hbm);
+		}
 	}
 
 	inline void CToolbar::SetToolbarTheme(ThemeToolbar& Theme)
