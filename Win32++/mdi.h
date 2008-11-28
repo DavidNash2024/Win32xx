@@ -114,10 +114,10 @@ namespace Win32xx
 		virtual ~CMDIFrame();
 
 		// These functions aren't virtual, so don't override them
-		std::vector <CMDIChild*>& GetMDIChildVect() {return m_MDIChildVect;}
-		HWND GetActiveMDIChild() const {return m_hActiveMDIChild;}
-		CMDIChild* GetActiveMDIChildCWnd() const;
+		std::vector <CMDIChild*>& GetAllMDIChildren() {return m_MDIChildVect;}
+		CMDIChild* GetActiveMDIChild() const;
 		BOOL IsMDIChildMaxed() const;
+		void SetActiveMDIChild(CMDIChild* pChild);
 
 	protected:
 		// These are the functions you might wish to override
@@ -214,7 +214,7 @@ namespace Win32xx
 		// Allocate an iterator for our MDIChild vector
 		std::vector <CMDIChild*>::iterator v;
 
-		for (v = GetMDIChildVect().begin(); v < GetMDIChildVect().end(); ++v)
+		for (v = GetAllMDIChildren().begin(); v < GetAllMDIChildren().end(); ++v)
 		{
 			HWND hwndMDIChild = (*v)->GetHwnd();
 			if (::GetWindowLong(hwndMDIChild, GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
@@ -240,7 +240,7 @@ namespace Win32xx
 
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szMenuString);
 
-					if (GetActiveMDIChild() == hwndMDIChild)
+					if (GetActiveMDIChild()->GetHwnd() == hwndMDIChild)
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					++nWindow;
@@ -260,9 +260,9 @@ namespace Win32xx
 		return ::DefFrameProc(hWnd, m_MDIClient, uMsg, wParam, lParam);
 	}
 
-	inline CMDIChild* CMDIFrame::GetActiveMDIChildCWnd() const
+	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
 	{
-		return (CMDIChild*)FromHandle(GetActiveMDIChild());
+		return (CMDIChild*)FromHandle(m_hActiveMDIChild);
 	}
 
 	inline BOOL CMDIFrame::IsMDIChildMaxed() const
@@ -298,8 +298,8 @@ namespace Win32xx
 			break;
 		default:    // Pass to active child...
 			{
-				if (::IsWindow (GetActiveMDIChild()))
-					::SendMessage(GetActiveMDIChild(), WM_COMMAND, wParam, lParam);
+				if (GetActiveMDIChild()->IsWindow())
+					GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
 			}
 			break ;
 		}
@@ -378,9 +378,9 @@ namespace Win32xx
 			}
 		}
 
-		if ((GetActiveMDIChildCWnd()) && GetActiveMDIChildCWnd()->m_hChildMenu)
+		if ((GetActiveMDIChild()) && GetActiveMDIChild()->m_hChildMenu)
 		{
-			UpdateFrameMenu(GetActiveMDIChildCWnd()->m_hChildMenu);
+			UpdateFrameMenu(GetActiveMDIChild()->m_hChildMenu);
 		}
 		else
 		{
@@ -389,6 +389,18 @@ namespace Win32xx
 			else
 				::SetMenu(m_hWnd, GetFrameMenu());
 		}
+	}
+
+	inline void CMDIFrame::SetActiveMDIChild(CMDIChild* pChild)
+	{
+		if (!pChild->IsWindow())
+			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Invalid MDI child"));
+
+		SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0);
+		
+		// Verify
+		if (m_hActiveMDIChild != pChild->GetHwnd())
+			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Failed"));
 	}
 
 	inline void CMDIFrame::UpdateFrameMenu(HMENU hMenu)

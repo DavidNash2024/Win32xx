@@ -1,18 +1,18 @@
 Version 6.4
 ===========
 
-Added Region support to CDC
-
-Docking
- - Added close button to the caption of docked windows
- - Added save/restore dock layout to docking sample
- - Added Close all dockables and Default Dock layout to docking sample
-
-
-Notepad sample
- - Now capable of handling Unicode text
+Major Changes
+------------
+* Docking:
+  - Added tabbed docking container with optional toolbar
+  - Added close button to the caption of docked windows
+* Added Region support to CDC class.
+* Docking sample enhancements:
+  - Added save/restore dock layout to docking sample
+  - Added Close all dockables and Default Dock layout to docking sample
+* Notepad sample enhancements:
+  - Now capable of handling Unicode text
  
-
 All Changes
 -----------
 Added CDC::CreateEllipticRegion
@@ -27,8 +27,12 @@ Added CFrame::AddToolbarButton
 Added CWnd::GetZOrder
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
 Added CToolbar::SetImages
-Added TRACE output to display error in the event of an exception.
-Subclassed windows now call OnCommand 
+Added CMDI::SetActiveMDIChild 
+Changed CMDI::GetActiveMDIChild (it now returns a CWnd* instead of a HWND)
+Removed CMDI::GetActiveMDIChildCWnd
+
+Subclassed windows now call OnCommand
+Exceptions now genereate TRACE output to display the error.
 
 Fixes
 -----
