@@ -80,7 +80,7 @@ namespace Win32xx
 		int  HitTest() const;
 		void SetBitmap(int iNumButtons, UINT nID);
 		void SetBitmapSize(int cx, int cy) const;
-		int  SetButtons(const std::vector<UINT>& ToolbarData) const;
+		int  SetButtons(const std::vector<UINT>& vToolbarData) const;
 		void SetButtonSize(int cx, int cy) const;
 		void SetButtonState(int iButtonID, UINT State) const;
 		void SetButtonStyle(int iButtonID, BYTE Style) const;
@@ -600,11 +600,11 @@ namespace Win32xx
 			TRACE(_T("CToolbar::SetBitmapSize  failed\n"));
 	}
 
-	inline int CToolbar::SetButtons(const std::vector<UINT>& ToolbarData) const
+	inline int CToolbar::SetButtons(const std::vector<UINT>& vToolbarData) const
 	// Assigns a resource ID to each toolbar button
 	{
 		int iImages = 0;
-		int iNumButtons = (int)ToolbarData.size();
+		int iNumButtons = (int)vToolbarData.size();
 
 		// Remove any existing buttons
 		while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0, 0) > 0)
@@ -622,7 +622,7 @@ namespace Win32xx
 			{
 				ZeroMemory(&tbb, sizeof(TBBUTTON));
 
-				if (0 == ToolbarData[j])
+				if (0 == vToolbarData[j])
 				{
 					tbb.fsStyle = TBSTYLE_SEP;
 				}
@@ -630,7 +630,7 @@ namespace Win32xx
 				{
 					tbb.dwData  = iImages;
 					tbb.iBitmap = iImages++;
-					tbb.idCommand = ToolbarData[j];
+					tbb.idCommand = vToolbarData[j];
 					tbb.fsState = TBSTATE_ENABLED;
 					tbb.fsStyle = TBSTYLE_BUTTON;
 				}

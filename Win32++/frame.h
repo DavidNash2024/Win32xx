@@ -213,21 +213,21 @@ namespace Win32xx
 		// If you need to modify the default behaviour of the menubar, rebar, 
 		// statusbar or toolbar, inherrit from those classes, and override 
 		// the following attribute functions.
-		virtual CMenubar& GetMenubar() const		{return (CMenubar&)m_Menubar;}
-		virtual CRebar& GetRebar() const			{return (CRebar&)m_Rebar;}
-		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
-		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
+		virtual CMenubar& GetMenubar() const		{return (CMenubar&)m_wndMenubar;}
+		virtual CRebar& GetRebar() const			{return (CRebar&)m_wndRebar;}
+		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_wndStatusbar;}
+		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_wndToolbar;}
 
 		// These functions aren't intended to be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
-		CWnd* GetView() const		{return m_pView;}
+		CWnd* GetView() const		{return m_pwndView;}
 		tString GetMRUEntry(int nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
 		void LoadRegistrySettings(LPCTSTR szKeyName);
-		void SetView(CWnd& pView);
+		void SetView(CWnd& wndView);
 
 		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
 		BOOL IsMenubarUsed() const		{return (GetMenubar() != 0);}
@@ -300,14 +300,14 @@ namespace Win32xx
 		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
 
 		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
-		CMenubar m_Menubar;					// CMenubar object
-		CRebar m_Rebar;						// CRebar object
-		CStatusbar m_Statusbar;				// CStatusbar object
-		CToolbar m_Toolbar;					// CToolbar object
+		CMenubar m_wndMenubar;				// CMenubar object
+		CRebar m_wndRebar;					// CRebar object
+		CStatusbar m_wndStatusbar;			// CStatusbar object
+		CToolbar m_wndToolbar;				// CToolbar object
 		HMENU m_hMenu;						// handle to the frame menu
-		CWnd* m_pView;						// pointer to the View CWnd object
+		CWnd* m_pwndView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
-		std::vector<tString> m_MRUEntries;	// Vector of tStrings for MRU entires
+		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
 		tString m_tsStatusText;				// TCHAR std::string for status text
 		UINT m_nMaxMRU;						// maximum number of MRU entries
@@ -1331,7 +1331,7 @@ namespace Win32xx
 	//
 	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_himlMenu(NULL),
-		                m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL),
+		                m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pwndView(NULL),
 		                m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0)
 	{
 
@@ -1545,18 +1545,18 @@ namespace Win32xx
 	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
 	{
 		// Erase duplicate entries from vector
-		for (int i = (int)m_MRUEntries.size() -1; i >= 0; --i)
+		for (int i = (int)m_vMRUEntries.size() -1; i >= 0; --i)
 		{
-			if (m_MRUEntries[i] == szMRUEntry)
-				m_MRUEntries.erase(m_MRUEntries.begin() + i);
+			if (m_vMRUEntries[i] == szMRUEntry)
+				m_vMRUEntries.erase(m_vMRUEntries.begin() + i);
 		}
 
 		// Insert the entry at the beginning of the vector
-		m_MRUEntries.insert(m_MRUEntries.begin(), szMRUEntry);
+		m_vMRUEntries.insert(m_vMRUEntries.begin(), szMRUEntry);
 
 		// Delete excessive MRU entries
-		if (m_MRUEntries.size() > m_nMaxMRU)
-			m_MRUEntries.erase(m_MRUEntries.begin() + m_nMaxMRU, m_MRUEntries.end());
+		if (m_vMRUEntries.size() > m_nMaxMRU)
+			m_vMRUEntries.erase(m_vMRUEntries.begin() + m_nMaxMRU, m_vMRUEntries.end());
 
 		UpdateMRUMenu();
 	}
@@ -1846,9 +1846,9 @@ namespace Win32xx
 	inline tString CFrame::GetMRUEntry(int nIndex)
 	{
 		tString tsPathName;
-		if (nIndex < (int)m_MRUEntries.size())
+		if (nIndex < (int)m_vMRUEntries.size())
 		{
-			tsPathName = m_MRUEntries[nIndex];
+			tsPathName = m_vMRUEntries[nIndex];
 
 			// Now put the selected entry at Index 0
 			AddMRUEntry(tsPathName.c_str());
@@ -1952,7 +1952,7 @@ namespace Win32xx
 					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
 					{
 						if (lstrlen(szPathName))
-							m_MRUEntries.push_back(szPathName);
+							m_vMRUEntries.push_back(szPathName);
 					}
 
 					delete []szPathName;
@@ -2053,9 +2053,9 @@ namespace Win32xx
 		GetStatusbar().Create(m_hWnd);
 
 		// Create the view window
-		if (NULL == m_pView)
-			throw CWinException(_T("CFrame::OnCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
-		m_pView->Create(m_hWnd);
+		if (NULL == m_pwndView)
+			throw CWinException(_T("CFrame::OnCreate ... m_pwndView is NULL\n\nUse SetView to set the View Window"));
+		m_pwndView->Create(m_hWnd);
 
 		// Reposition the child windows
 		RecalcLayout();
@@ -2581,7 +2581,7 @@ namespace Win32xx
 
 	inline void CFrame::RecalcLayout()
 	{
-		if ((!m_pView) || (!m_pView->GetHwnd()))
+		if ((!m_pwndView) || (!m_pwndView->GetHwnd()))
 			return;
 
 		// Resize the status bar
@@ -2613,7 +2613,7 @@ namespace Win32xx
 			int cx = rClient.Width();
 			int cy = rClient.Height();
 
-			m_pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
+			m_pwndView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
 		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
@@ -2627,10 +2627,10 @@ namespace Win32xx
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	{
-		for (int i = (int)m_MRUEntries.size() -1; i >= 0; --i)
+		for (int i = (int)m_vMRUEntries.size() -1; i >= 0; --i)
 		{
-			if (m_MRUEntries[i] == szMRUEntry)
-				m_MRUEntries.erase(m_MRUEntries.begin() + i);
+			if (m_vMRUEntries[i] == szMRUEntry)
+				m_vMRUEntries.erase(m_vMRUEntries.begin() + i);
 		}
 
 		UpdateMRUMenu();
@@ -2686,8 +2686,8 @@ namespace Win32xx
 					TCHAR szSubKey[10];
 					wsprintf(szSubKey, _T("File %d\0"), i+1);
 					tString tsPathName;
-					if (i < m_MRUEntries.size())
-						tsPathName = m_MRUEntries[i];
+					if (i < m_vMRUEntries.size())
+						tsPathName = m_vMRUEntries[i];
 
 					if (RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
 						throw (CWinException(_T("RegSetValueEx Failed")));
@@ -2935,19 +2935,19 @@ namespace Win32xx
 				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
 	}
 
-	inline void CFrame::SetView(CWnd& View)
+	inline void CFrame::SetView(CWnd& wndView)
 	// Sets or changes the View window displayed within the frame
 	{
 		// Destroy the existing view window (if any)
-		if (m_pView) m_pView->Destroy();
+		if (m_pwndView) m_pwndView->Destroy();
 		
 		// Assign the view window
-		m_pView = &View;
+		m_pwndView = &wndView;
 		
 		if (m_hWnd)
 		{
 			// The frame is already created, so create and position the new view too
-			m_pView->Create(m_hWnd);
+			m_pwndView->Create(m_hWnd);
 			RecalcLayout();
 		}
 	}
@@ -2999,7 +2999,7 @@ namespace Win32xx
 			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
 		}
 
-		int nMaxMRUIndex =  (int)m_MRUEntries.size()-1;
+		int nMaxMRUIndex =  (int)m_vMRUEntries.size()-1;
 		nMaxMRUIndex = min(nMaxMRUIndex, (int)m_nMaxMRU);
 
 		// Set the text for the MRU Menu
@@ -3008,7 +3008,7 @@ namespace Win32xx
 		{
 			for (int n = 0; n <= nMaxMRUIndex; ++n)
 			{
-				tsMRUArray[n] = m_MRUEntries[n];
+				tsMRUArray[n] = m_vMRUEntries[n];
 				if (tsMRUArray[n].length() > MAX_MENU_STRING - 10)
 				{
 					// Truncate the string if its too long
@@ -3040,7 +3040,7 @@ namespace Win32xx
 		for (int index = nMaxMRUIndex; index >= 0; --index)
 		{
 			mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
-			mii.fState = (0 == m_MRUEntries.size())? MFS_GRAYED : 0;
+			mii.fState = (0 == m_vMRUEntries.size())? MFS_GRAYED : 0;
 			mii.fType = MFT_STRING;
 			mii.wID = IDW_FILE_MRU_FILE1 + index;
 			mii.dwTypeData = (LPTSTR)tsMRUArray[index].c_str();
@@ -3104,7 +3104,7 @@ namespace Win32xx
 						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 
 					// Also send notification to view for dockables
-					m_pView->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+					m_pwndView->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 
 					return 0;
 				}
@@ -3119,7 +3119,7 @@ namespace Win32xx
 
 				// These messages possible indicate a change of focus, so
 				//  we send the notification to view for dockables.
-				m_pView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
+				m_pwndView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
 			}
 			break;
 
@@ -3158,7 +3158,7 @@ namespace Win32xx
 			OnFrameSysColorChange();
 
 			// Forward the message to the view window
-			::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
+			::PostMessage(m_pwndView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
 			return 0L;
 		case WM_SYSCOMMAND:
 			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())

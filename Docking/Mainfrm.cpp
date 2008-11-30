@@ -204,7 +204,7 @@ void CMainFrame::SaveDockables()
 {
 	// NOTE: This function assumes that each dockable has a unique DockID
 
-	std::vector<DockedInfo> DockList;
+	std::vector<DockedInfo> vDockList;
 	std::vector <CDockable*> v1 = m_DockView.GetDockChildren();
 	std::vector <CDockable*>::iterator itor;
 
@@ -217,15 +217,15 @@ void CMainFrame::SaveDockables()
 		di.DockStyle = (*itor)->GetDockStyle();
 		di.DockWidth = (*itor)->GetDockWidth();
 		if (0 != di.DockID)
-			DockList.push_back(di);
+			vDockList.push_back(di);
 	}
 
 	// Add remaining docked children of children to the DockList vector
 	UINT u = 0;
-	while (u < DockList.size())
+	while (u < vDockList.size())
 	{
 		//Add all the children of DockList[u]
-		CDockable* pDock = m_DockView.GetDockFromID(DockList[u].DockID);
+		CDockable* pDock = m_DockView.GetDockFromID(vDockList[u].DockID);
 		std::vector <CDockable*> v2 = pDock->GetDockChildren();
 
 		for (itor = v2.begin(); itor != v2.end(); ++itor)
@@ -238,7 +238,7 @@ void CMainFrame::SaveDockables()
 			di.DockWidth = (*itor)->GetDockWidth();
 
 			if ((0 != di.DockID) && (0 != di.DockParentID))
-				DockList.push_back(di);
+				vDockList.push_back(di);
 		}
 
 		++u;
@@ -257,9 +257,9 @@ void CMainFrame::SaveDockables()
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 		// Add the Docked windows information to the registry
-		for (UINT u = 0; u < DockList.size(); ++u)
+		for (UINT u = 0; u < vDockList.size(); ++u)
 		{
-			DockedInfo di = DockList[u];
+			DockedInfo di = vDockList[u];
 			TCHAR szNumber[16];
 			tString tsSubKey = _T("DockChild");
 			tsSubKey += _itot(u, szNumber, 10);
@@ -267,7 +267,7 @@ void CMainFrame::SaveDockables()
 		}
 
 		// Add the Undocked windows information to the registry
-		int nUndocked = DockList.size();
+		int nUndocked = vDockList.size();
 		for (UINT u = 0; u <  m_DockView.GetAllDockables().size(); ++u)
 		{
 			CDockable* pDock = m_DockView.GetAllDockables()[u];

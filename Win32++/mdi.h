@@ -88,7 +88,7 @@ namespace Win32xx
 		// Its unlikely you would need to override these functions
 		virtual BOOL IsMDIChild() const {return TRUE;}
 		virtual BOOL SetChildMenu(LPCTSTR MenuName);
-		virtual CWnd* GetView() const	{return m_pView;}
+		virtual CWnd* GetView() const	{return m_pwndView;}
 		virtual void SetView(CWnd& pView);
 
 	protected:
@@ -98,7 +98,7 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		CWnd* m_pView;				// pointer to the View CWnd object
+		CWnd* m_pwndView;				// pointer to the View CWnd object
 		HMENU m_hChildMenu;
 	};
 
@@ -114,7 +114,7 @@ namespace Win32xx
 		virtual ~CMDIFrame();
 
 		// These functions aren't virtual, so don't override them
-		std::vector <CMDIChild*>& GetAllMDIChildren() {return m_MDIChildVect;}
+		std::vector <CMDIChild*>& GetAllMDIChildren() {return m_vMDIChild;}
 		CMDIChild* GetActiveMDIChild() const;
 		BOOL IsMDIChildMaxed() const;
 		void SetActiveMDIChild(CMDIChild* pChild);
@@ -148,8 +148,8 @@ namespace Win32xx
 		LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(HMENU hMenu);
 
-		CMDIClient m_MDIClient;
-		std::vector <CMDIChild*> m_MDIChildVect;
+		CMDIClient m_wndMDIClient;
+		std::vector <CMDIChild*> m_vMDIChild;
 		HWND m_hActiveMDIChild;
 	};
 
@@ -160,7 +160,7 @@ namespace Win32xx
 	inline CMDIFrame::CMDIFrame() : m_hActiveMDIChild(NULL)
 	{
 		m_bIsMDIFrame = TRUE;
-		SetView(m_MDIClient);
+		SetView(m_wndMDIClient);
 	}
 
 	inline CMDIFrame::~CMDIFrame()
@@ -168,11 +168,11 @@ namespace Win32xx
 		// Ensure all MDI child objects are destroyed
 		std::vector <CMDIChild*>::iterator v;
 
-		while(m_MDIChildVect.size() > 0)
+		while(m_vMDIChild.size() > 0)
 		{
-			v = m_MDIChildVect.begin();
+			v = m_vMDIChild.begin();
 			delete *v;
-			m_MDIChildVect.erase(v);
+			m_vMDIChild.erase(v);
 		}
 	}
 
@@ -181,7 +181,7 @@ namespace Win32xx
 		if (NULL == pMDIChild)
 			throw CWinException(_T("Cannot add Null MDI Child"));
 
-		m_MDIChildVect.push_back(pMDIChild);
+		m_vMDIChild.push_back(pMDIChild);
 		pMDIChild->Create(GetView()->GetHwnd());
 
 		return pMDIChild;
@@ -257,7 +257,7 @@ namespace Win32xx
 
 	inline LRESULT CMDIFrame::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefFrameProc(hWnd, m_MDIClient, uMsg, wParam, lParam);
+		return ::DefFrameProc(hWnd, m_wndMDIClient, uMsg, wParam, lParam);
 	}
 
 	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
@@ -268,7 +268,7 @@ namespace Win32xx
 	inline BOOL CMDIFrame::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
-		::SendMessage(m_MDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+		::SendMessage(m_wndMDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 
@@ -350,9 +350,9 @@ namespace Win32xx
 		// Allocate an iterator for our MDIChild vector
 		std::vector <CMDIChild*>::iterator v;
 
-		while(m_MDIChildVect.size() > 0)
+		while(m_vMDIChild.size() > 0)
 		{
-			v = m_MDIChildVect.begin();
+			v = m_vMDIChild.begin();
 			HWND hWnd = (*v)->GetHwnd();
 			::SendMessage(hWnd, WM_CLOSE, 0, 0);
 			if (::IsWindow(hWnd))
@@ -368,12 +368,12 @@ namespace Win32xx
 		// Allocate an iterator for our HWND map
 		std::vector <CMDIChild*>::iterator v;
 
-		for (v = m_MDIChildVect.begin(); v!= m_MDIChildVect.end(); ++v)
+		for (v = m_vMDIChild.begin(); v!= m_vMDIChild.end(); ++v)
 		{
 			if ((*v)->GetHwnd() == hWnd)
 			{
 				delete *v;
-				m_MDIChildVect.erase(v);
+				m_vMDIChild.erase(v);
 				break;
 			}
 		}
@@ -496,7 +496,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CMDIChild class
 	//
-	inline CMDIChild::CMDIChild() : m_pView(NULL), m_hChildMenu(NULL)
+	inline CMDIChild::CMDIChild() : m_pwndView(NULL), m_hChildMenu(NULL)
 	{
 		// Set the MDI Child's menu in the constructor, like this ...
 
@@ -588,10 +588,10 @@ namespace Win32xx
 	inline void CMDIChild::OnCreate()
 	{
 		// Create the view window
-		if (NULL == m_pView)
-			throw CWinException(_T("CMDIChild::OnCreate ... m_pView is NULL\n\nUse SetView to set the View Window"));
+		if (NULL == m_pwndView)
+			throw CWinException(_T("CMDIChild::OnCreate ... m_pwndView is NULL\n\nUse SetView to set the View Window"));
 		
-		m_pView->Create(m_hWnd);
+		m_pwndView->Create(m_hWnd);
 	}
 	
 	inline BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)
@@ -614,10 +614,10 @@ namespace Win32xx
 	// Sets or changes the View window displayed within the frame
 	{
 		// Destroy the existing view window (if any)
-		if (m_pView) m_pView->Destroy();
+		if (m_pwndView) m_pwndView->Destroy();
 		
 		// Assign the view window
-		m_pView = &View;
+		m_pwndView = &View;
 		
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 	}
@@ -653,7 +653,7 @@ namespace Win32xx
 			{
 				// Resize the View window
 				CRect rc = GetClientRect();
-				m_pView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+				m_pwndView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 			}
 		}
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);

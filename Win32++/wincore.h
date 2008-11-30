@@ -198,7 +198,7 @@ namespace Win32xx
 		MAX_STRING_SIZE = 255,
 	};
 
-	// The comparison function object used by CWinApp::m_HWNDmap
+	// The comparison function object used by CWinApp::m_mapHWND
 	struct CompareHWND
 	{
 		bool operator()(HWND const a, const HWND b) const
@@ -629,7 +629,7 @@ namespace Win32xx
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
-		BOOL IsChild(const CWnd* pWndParent) const;
+		BOOL IsChild(const CWnd* pwndParent) const;
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;
@@ -746,7 +746,7 @@ namespace Win32xx
 		virtual int  MessageLoop();
 
 		// These functions aren't intended to be overridden
-		DWORD GetTlsIndex() const {return m_TlsIndex;}
+		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
@@ -760,13 +760,13 @@ namespace Win32xx
 		void DefaultClass();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
-		CCriticalSection m_MapLock;	// thread synchronisation for m_HWNDmap
-		HINSTANCE m_hInstance;		// handle to the applications instance
-		HINSTANCE m_hResource;		// handle to the applications resources
-		std::map<HWND, CWnd*, CompareHWND> m_HWNDmap;	// maps window handles to CWnd objects
-		std::vector<TLSData*> m_ThreadData;	// vector of TLSData pointers, one for each thread
-		DWORD m_TlsIndex;			// Thread Local Storage index
-		WNDPROC m_Callback;			// callback address of CWnd::StaticWndowProc
+		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
+		HINSTANCE m_hInstance;			// handle to the applications instance
+		HINSTANCE m_hResource;			// handle to the applications resources
+		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
+		std::vector<TLSData*> m_vTLSData;	// vector of TLSData pointers, one for each thread
+		DWORD m_dwTlsIndex;				// Thread Local Storage index
+		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
 
@@ -784,16 +784,15 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You should run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : /*m_hAccelTable(NULL), m_hWndAccel(NULL),*/ m_Callback(NULL)
+	inline CWinApp::CWinApp() : m_Callback(NULL)
 	{
 		try
 		{
-
 			// Test if this is the first instance of CWinApp
 			if (0 == SetnGetThis() )
 			{
-				m_TlsIndex = ::TlsAlloc();
-				if (m_TlsIndex == TLS_OUT_OF_INDEXES)
+				m_dwTlsIndex = ::TlsAlloc();
+				if (m_dwTlsIndex == TLS_OUT_OF_INDEXES)
 				{
 					// We only get here in the unlikely event that all TLS indexes are already allocated by this app
 					// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
@@ -827,21 +826,21 @@ namespace Win32xx
 	{
 		// Check that all CWnd windows are destroyed
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-		for (m = m_HWNDmap.begin(); m != m_HWNDmap.end(); ++m)
+		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
 		{
 			::DestroyWindow((*m).first);
 		}
-		m_HWNDmap.clear();
+		m_mapHWND.clear();
 
 		// Do remaining tidy up
-		if (m_TlsIndex != TLS_OUT_OF_INDEXES)
+		if (m_dwTlsIndex != TLS_OUT_OF_INDEXES)
 		{
 			::TlsSetValue(GetTlsIndex(), NULL);
-			::TlsFree(m_TlsIndex);
+			::TlsFree(m_dwTlsIndex);
 		}
 
 		std::vector<TLSData*>::iterator iter;
-		for(iter = m_ThreadData.begin(); iter != m_ThreadData.end(); ++iter)
+		for(iter = m_vTLSData.begin(); iter != m_vTLSData.end(); ++iter)
 		{
 			delete *(iter);
 		}
@@ -882,10 +881,10 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
 		// Find the CWnd pointer mapped to this HWND
-		m_MapLock.Lock();
-		m = m_HWNDmap.find(hWnd);
-		m_MapLock.Release();
-		if (m != m_HWNDmap.end())
+		m_csMapLock.Lock();
+		m = m_mapHWND.find(hWnd);
+		m_csMapLock.Release();
+		if (m != m_mapHWND.end())
 			return m->second;
 		else
 			return 0;
@@ -1005,7 +1004,7 @@ namespace Win32xx
 				::TlsSetValue(GetTlsIndex(), pTLSData);
 
 				// Store pointer in vector for deletion in destructor
-				m_ThreadData.push_back(pTLSData);
+				m_vTLSData.push_back(pTLSData);
 			}
 			return pTLSData;
 		}
@@ -1038,14 +1037,14 @@ namespace Win32xx
 	inline void CWnd::AddToMap()
 	{
 		// Store the window handle and CWnd pointer in the HWND map
-		GetApp()->m_MapLock.Lock();
+		GetApp()->m_csMapLock.Lock();
 		if (m_hWnd == 0)
 			throw CWinException(_T("CWnd::AddToMap  can't add a NULL HWND"));
 		if (GetApp()->GetCWndFromMap(m_hWnd))
 			throw CWinException(_T("CWnd::AddToMap  HWND already in map"));
 
-		GetApp()->m_HWNDmap.insert(std::make_pair(m_hWnd, this));
-		GetApp()->m_MapLock.Release();
+		GetApp()->m_mapHWND.insert(std::make_pair(m_hWnd, this));
+		GetApp()->m_csMapLock.Release();
 	}
 
 	inline BOOL CWnd::Attach(HWND hWnd)
@@ -1563,11 +1562,11 @@ namespace Win32xx
 		return ::InvalidateRgn(m_hWnd, hRgn, bErase);
 	}
 
-	inline BOOL CWnd::IsChild(const CWnd* pWndParent) const
+	inline BOOL CWnd::IsChild(const CWnd* pwndParent) const
 	// The IsChild function tests whether a window is a child window or descendant window
 	// of a parent window's CWnd.
 	{
-		return ::IsChild(pWndParent->GetHwnd(), m_hWnd);
+		return ::IsChild(pwndParent->GetHwnd(), m_hWnd);
 	}
 
 	inline BOOL CWnd::IsEnabled() const
@@ -1942,18 +1941,18 @@ namespace Win32xx
 		if (pApp)
 		{
 			// Erase the CWnd pointer entry from the map
-			pApp->m_MapLock.Lock();
-			for (m = pApp->m_HWNDmap.begin(); m != pApp->m_HWNDmap.end(); ++m)
+			pApp->m_csMapLock.Lock();
+			for (m = pApp->m_mapHWND.begin(); m != pApp->m_mapHWND.end(); ++m)
 			{
 				if (this == m->second)
 				{
-					pApp->m_HWNDmap.erase(m);
-					pApp->m_MapLock.Release();
+					pApp->m_mapHWND.erase(m);
+					pApp->m_csMapLock.Release();
 					return TRUE;
 				}
 			}
 
-			pApp->m_MapLock.Release();
+			pApp->m_csMapLock.Release();
 		}
 		return FALSE;
 	}
@@ -2294,9 +2293,6 @@ namespace Win32xx
 	//		return 0L;
 		case WM_NOTIFY:
 			{
-				// Subclassed windows don't handle notifications
-				if (m_PrevWindowProc) break; 
-
 				// Handle the Win32++ frame notifications
 				lr = OnFrameNotify(wParam, lParam);
 				if (lr) return lr;
@@ -2323,7 +2319,9 @@ namespace Win32xx
 				}
 
 				// Handle user notifications
-				return  OnNotify(wParam, lParam);
+				lr = OnNotify(wParam, lParam);
+				if (lr) return lr;
+				break;
 			}
 
 		case WM_PAINT:
@@ -2365,9 +2363,6 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			// Subclassed windows don't handle notifications
-			if (m_PrevWindowProc) break; 
-			
 			lr = MessageReflect(hWnd, uMsg, wParam, lParam);
 			if (lr) return lr;	// Message processed so return
 			break;				// Do default processing when message not already processed
