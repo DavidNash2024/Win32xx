@@ -2302,6 +2302,8 @@ namespace Win32xx
 				CWnd* WndFrom = FromHandle(hwndFrom);
 				if (WndFrom != NULL)
 				{
+					if (m_PrevWindowProc) break; // Suppress for subclassed windows
+
 					lr = WndFrom->OnNotifyReflect(wParam, lParam);
 					if (lr) return lr;
 				}
@@ -2310,6 +2312,9 @@ namespace Win32xx
 				{
 					// Some controls (eg ListView) have child windows.
 					// Reflect those notifications too.
+
+					if (m_PrevWindowProc) break; // Suppress for subclassed windows
+
 					CWnd* WndFromParent = FromHandle(GetParent(hwndFrom));
 					if (WndFromParent != NULL)
 					{
@@ -2363,6 +2368,8 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
+			if (m_PrevWindowProc) break; // Suppress for subclassed windows
+
 			lr = MessageReflect(hWnd, uMsg, wParam, lParam);
 			if (lr) return lr;	// Message processed so return
 			break;				// Do default processing when message not already processed

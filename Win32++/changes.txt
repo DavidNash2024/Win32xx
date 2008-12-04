@@ -27,9 +27,10 @@ Added CFrame::AddToolbarButton
 Added CWnd::GetZOrder
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
 Added CToolbar::SetImages
-Added CMDI::SetActiveMDIChild 
-Changed CMDI::GetActiveMDIChild (it now returns a CWnd* instead of a HWND)
-Removed CMDI::GetActiveMDIChildCWnd
+Added CMDIFrame::SetActiveMDIChild 
+Changed CMDIFrame::GetActiveMDIChild (it now returns a CWnd* instead of a HWND)
+Removed CMDIFrame::GetActiveMDIChildCWnd
+Renamed CMDIFrame::GetMDIChildVect to CMDIFrame::GetAllMDIChildren  
 
 Subclassed windows now call OnCommand and OnNotify
 Exceptions now genereate TRACE output to display the error.
