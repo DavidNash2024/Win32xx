@@ -46,7 +46,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		AddMDIChild(new CSimpleMDIChild); // CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_CLOSE:          // Close the active MDI window
-		::SendMessage(GetActiveMDIChild(), WM_CLOSE, 0, 0);
+		GetActiveMDIChild()->SendMessage(WM_CLOSE, 0, 0);
 		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);

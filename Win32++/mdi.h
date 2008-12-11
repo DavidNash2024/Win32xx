@@ -456,7 +456,7 @@ namespace Win32xx
 
 	inline LRESULT CMDIFrame::CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(m_hWndParent);
+		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
 		switch (uMsg)
 		{
 		case WM_MDIDESTROY:
