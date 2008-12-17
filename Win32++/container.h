@@ -1,20 +1,126 @@
-//////////////////////////////////////////////
-// container.cpp
-//  Definitions for the CContainer class
+// Win32++  Version 6.4
+// Released: ??th January, 2009 by:
+//
+//      David Nash
+//      email: dnash@bigpond.net.au
+//      url: http://users.bigpond.net.au/programming/
+//
+//
+// Copyright (c) 2005-2009  David Nash
+//
+// Permission is hereby granted, free of charge, to
+// any person obtaining a copy of this software and
+// associated documentation files (the "Software"),
+// to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice
+// shall be included in all copies or substantial portions
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+// ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+// PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+// SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+// ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////////////////////////////////////////////////////////
 
-#include "../Win32++/gdi.h"
-#include "container.h"
-#include "ContainerApp.h"
-#include "resource.h"
+
+//////////////////////////////////////////////////////
+// container.h
+// Declaration of the CContainer and CTabPage classes
+
+
+#ifndef CONTAINER_H
+#define CONTAINER_H
+
+#include <vector>
+#include "../Win32++/wincore.h"
+#include "../Win32++/toolbar.h"
+
+namespace Win32xx
+{
+
+class CContainer;
+
+struct TabPageInfo
+{
+//	CWnd* pwndView;
+	TCHAR szTitle[MAX_MENU_STRING];
+	HICON hIcon;
+	CContainer* pwndContainer;
+};
+
+////////////////////////////////////
+// Declaration of the CTabPage class
+class CTabPage : public CWnd
+{
+public:
+	CTabPage()  {}
+	virtual ~CTabPage() {}
+	virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_wndToolbar;}
+	virtual CWnd* GetView() const		{return m_pwndView;}
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void OnCreate();
+	virtual void PreRegisterClass(WNDCLASS &wc);
+	virtual void RecalcLayout();
+	virtual void SetView(CWnd& wndView);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	CToolbar m_wndToolbar;
+	CWnd* m_pwndView;
+
+};
+
+///////////////////////////////////////
+// Declaration of the CContainer class
+class CContainer : public CWnd
+{
+public:
+	CContainer();
+	virtual ~CContainer();
+	virtual void AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON hIcon);
+	virtual void AddToolbarButton(UINT nID);
+	virtual int FindPage(CWnd* pwndPage);
+	virtual SIZE GetMaxTabTextSize();
+	virtual CTabPage& GetPage() const		{return (CTabPage&)m_wndPage;}
+	virtual CToolbar& GetToolbar() const	{return m_wndPage.GetToolbar();}	
+	virtual void RemoveContainer(CContainer& Wnd);
+	virtual void SelectPage(int iPage);
+
+protected:
+	virtual void OnCreate();
+	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+	virtual void OnPaint();
+	virtual void PreCreate(CREATESTRUCT& cs);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	HIMAGELIST m_himlTab;
+	std::vector<UINT> m_vToolbarData;	
+	std::vector<TabPageInfo> m_vTabPageInfo;
+	int m_iCurrentPage;
+	CTabPage m_wndPage; 
+};
 
 /////////////////////////////////////
 // Declaration of the CTabPage class
-BOOL CTabPage::OnCommand(WPARAM wParam, LPARAM lParam)
+inline BOOL CTabPage::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	 return (BOOL)::SendMessage(m_hWndParent, WM_COMMAND, wParam, lParam);
 }
 
-void CTabPage::OnCreate()
+inline void CTabPage::OnCreate()
 {
 //	if ((m_pwndView) &&(NULL == m_pwndView->GetHwnd()))
 	{	
@@ -22,13 +128,13 @@ void CTabPage::OnCreate()
 	}
 }
 
-void CTabPage::PreRegisterClass(WNDCLASS &wc)
+inline void CTabPage::PreRegisterClass(WNDCLASS &wc)
 {
 	wc.lpszClassName = _T("Win32++ TabPage");
 	wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 }
 
-void CTabPage::RecalcLayout()
+inline void CTabPage::RecalcLayout()
 {
 	CRect rc = GetClientRect();
 	CRect rcToolbar = m_wndToolbar.GetClientRect();
@@ -37,7 +143,7 @@ void CTabPage::RecalcLayout()
 	GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 }
 
-void CTabPage::SetView(CWnd& wndView)
+inline void CTabPage::SetView(CWnd& wndView)
 // Sets or changes the View window displayed within the frame
 {	
 	// Assign the view window
@@ -51,7 +157,7 @@ void CTabPage::SetView(CWnd& wndView)
 	}
 }
 
-LRESULT CTabPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+inline LRESULT CTabPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -66,7 +172,7 @@ LRESULT CTabPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////
 // Declaration of the CContainer class
-CContainer::CContainer() : m_iCurrentPage(0)
+inline CContainer::CContainer() : m_iCurrentPage(0)
 {
 	m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
@@ -84,12 +190,12 @@ CContainer::CContainer() : m_iCurrentPage(0)
 //	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
-CContainer::~CContainer()
+inline CContainer::~CContainer()
 {
 	ImageList_Destroy(m_himlTab);
 }
 
-void CContainer::AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON hIcon)
+inline void CContainer::AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON hIcon)
 // Adds an existing container to this one
 {
 	TabPageInfo tbi = {0};
@@ -111,14 +217,14 @@ void CContainer::AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON 
 	}
 }
 
-void CContainer::AddToolbarButton(UINT nID)
+inline void CContainer::AddToolbarButton(UINT nID)
 // Adds Resource IDs to toolbar buttons.
 // A resource ID of 0 is a separator
 {
 	m_vToolbarData.push_back(nID);
 }
 
-int CContainer::FindPage(CWnd* pwndPage)
+inline int CContainer::FindPage(CWnd* pwndPage)
 {
 	int iPage = -1;
 
@@ -134,7 +240,7 @@ int CContainer::FindPage(CWnd* pwndPage)
 	return iPage;
 }
 
-SIZE CContainer::GetMaxTabTextSize()
+inline SIZE CContainer::GetMaxTabTextSize()
 {
 	CSize Size;
 
@@ -157,7 +263,7 @@ SIZE CContainer::GetMaxTabTextSize()
 	return Size;
 }
 
-void CContainer::OnCreate()
+inline void CContainer::OnCreate()
 {
 	// Create the page window
 	m_wndPage.Create(m_hWnd);
@@ -188,7 +294,7 @@ void CContainer::OnCreate()
 	}
 }
 
-LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
+inline LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
 {
 	switch (((LPNMHDR)lParam)->code)
 	{
@@ -204,7 +310,7 @@ LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
 	return 0L;
 }
 
-void CContainer::OnPaint()
+inline void CContainer::OnPaint()
 {
 	// Microsoft's drawing for a tab control is rubbish, so we do our own.
 	// We use double buffering and regions to eliminate flicker
@@ -305,7 +411,7 @@ void CContainer::OnPaint()
 	// hrgnClip is attached to dcView, so it will be deleted automatically
 } 
 
-void CContainer::PreCreate(CREATESTRUCT& cs)
+inline void CContainer::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM ;
 	cs.lpszClass = WC_TABCONTROL;
@@ -313,7 +419,7 @@ void CContainer::PreCreate(CREATESTRUCT& cs)
 //	cs.dwExStyle = WS_EX_COMPOSITED;
 }
 
-void CContainer::RemoveContainer(CContainer& Wnd)
+inline void CContainer::RemoveContainer(CContainer& Wnd)
 {
 	// Allocate an iterator for the TabPageInfo vector
 /*	std::vector<TabPageInfo>::iterator iter;
@@ -328,7 +434,7 @@ void CContainer::RemoveContainer(CContainer& Wnd)
 	} */		
 }
 
-void CContainer::SelectPage(int iPage)
+inline void CContainer::SelectPage(int iPage)
 {
 	// Determine the size of the tab page's view area
 	CRect rc = GetClientRect();
@@ -342,7 +448,7 @@ void CContainer::SelectPage(int iPage)
 	m_iCurrentPage = iPage; 
 }
 
-LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+inline LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static HBRUSH hbr = 0;
 	
@@ -389,5 +495,6 @@ LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// pass unhandled messages on for default processing
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
+}
 
-
+#endif // CONTAINER_H

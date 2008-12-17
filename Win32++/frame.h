@@ -1,12 +1,12 @@
 // Win32++  Version 6.4
-// Released: ??th November, 2008 by:
+// Released: ??th January, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: http://users.bigpond.net.au/programming/
 //
 //
-// Copyright (c) 2005-2008  David Nash
+// Copyright (c) 2005-2009  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and

@@ -145,9 +145,6 @@
 				RelativePath=".\Classes.cpp">
 			</File>
 			<File
-				RelativePath=".\container.cpp">
-			</File>
-			<File
 				RelativePath=".\ContainerApp.cpp">
 			</File>
 			<File
@@ -197,9 +194,6 @@
 				RelativePath=".\Classes.h">
 			</File>
 			<File
-				RelativePath=".\container.h">
-			</File>
-			<File
 				RelativePath=".\ContainerApp.h">
 			</File>
 			<File
@@ -240,6 +234,9 @@
 		<Filter
 			Name="Win32++"
 			Filter="">
+			<File
+				RelativePath="..\Win32++\container.h">
+			</File>
 			<File
 				RelativePath="..\Win32++\Dialog.h">
 			</File>
