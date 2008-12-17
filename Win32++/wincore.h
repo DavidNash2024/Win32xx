@@ -672,6 +672,7 @@ namespace Win32xx
 		BOOL GetWindowPlacement(WINDOWPLACEMENT& pwndpl) const;
 		BOOL IsIconic() const;
 		BOOL IsZoomed() const;
+		BOOL LockWindowUpdate(HWND hWndLock) const;
 		BOOL SetMenu(HMENU hMenu) const;
 		BOOL ScrollWindow(int XAmount, int YAmount, RECT& Rect, RECT& ClipRect) const;
 		int  SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
@@ -1654,6 +1655,15 @@ namespace Win32xx
 		// We return a pointer to a member variable so it remains in scope.
 		return m_tsLoadString.c_str();
 	}
+
+#ifndef _WIN32_WCE
+	inline BOOL CWnd::LockWindowUpdate(HWND hWndLock) const
+	// Disables or enables drawing in the specified window. Only one window can be locked at a time.
+	// Use a hWndLock of NULL to re-enable drawing in the window
+	{
+		return ::LockWindowUpdate(hWndLock);
+	}
+#endif
 
 	inline BOOL CWnd::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{

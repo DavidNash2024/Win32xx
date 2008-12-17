@@ -15,6 +15,7 @@ Major Changes
  
 All Changes
 -----------
+Added CDockable class
 Added CDC::CreateEllipticRegion
 Added CDC::CreateEllipticRegionIndirect
 Added CDC::CreatePolygonRgn
@@ -25,6 +26,7 @@ Added CDC::DetachRegion
 Added CDC::ExtCreateRegion
 Added CFrame::AddToolbarButton 
 Added CWnd::GetZOrder
+Added CWnd::LockWindowUpdate
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
 Added CToolbar::SetImages
 Added CMDIFrame::SetActiveMDIChild 
