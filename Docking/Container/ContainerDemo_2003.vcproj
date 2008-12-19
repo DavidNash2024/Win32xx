@@ -214,6 +214,9 @@
 			<File
 				RelativePath="resource.h">
 			</File>
+			<File
+				RelativePath=".\Views.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

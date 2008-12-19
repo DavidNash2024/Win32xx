@@ -64,6 +64,7 @@
 #define DS_NO_UNDOCK			0x0800
 #define DS_CLIENTEDGE			0x1000
 #define DS_FLATLOOK				0x2000	//Not Implemented yet
+#define DS_DOCKED_CONTAINER		0x4000  //Not Implemented yet
 
 // Docking Notifications
 #define DN_DOCK_START		WM_APP + 1
@@ -1482,6 +1483,7 @@ namespace Win32xx
 
 	inline void CDockable::PreCreate(CREATESTRUCT &cs)
 	{
+		cs.style = WS_CHILD;
 		cs.dwExStyle = WS_EX_TOOLWINDOW;
 	}
 

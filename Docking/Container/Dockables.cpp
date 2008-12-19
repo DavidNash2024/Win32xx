@@ -110,13 +110,13 @@ void CDockFiles::OnInitialUpdate()
 
 
 /////////////////////////////////////////////////
-//  Definitions for the CDockContainerFiles class
-CDockContainer::CDockContainer() 
+//  Definitions for the CDockClassContainerFiles class
+CDockClassContainer::CDockClassContainer() 
 { 
 	SetView(m_Classes); 
 }
 
-void CDockContainer::OnInitialUpdate()
+void CDockClassContainer::OnInitialUpdate()
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
@@ -129,5 +129,28 @@ void CDockContainer::OnInitialUpdate()
 	else
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 
-	SetCaption (_T("Simple View - Docking"));
+	SetCaption (_T("Class View - Docking container"));
+}
+
+/////////////////////////////////////////////////
+//  Definitions for the CDockFileContainer class
+CDockFileContainer::CDockFileContainer() 
+{ 
+	SetView(m_Files); 
+}
+
+void CDockFileContainer::OnInitialUpdate()
+{
+	// Set the width of the splitter bar
+	SetBarWidth(8);
+
+	// Set the color of the splitter bar
+	CMainFrame& MainFrame = GetContainerApp().GetMainFrame();
+	CRebar& RB = MainFrame.GetRebar();
+	if (RB.GetRebarTheme().UseThemes)
+		SetBarColor(RB.GetRebarTheme().clrBkgnd2);
+	else
+		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
+
+	SetCaption (_T("File View - Docking Container"));
 }

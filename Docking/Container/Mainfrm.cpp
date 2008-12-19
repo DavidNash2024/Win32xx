@@ -80,10 +80,10 @@ void CMainFrame::OnInitialUpdate()
 	m_DockView.SetDockStyle(dwStyle);
 
 	// Add the Dock container on the right
-	CDockContainer* pDockRight  = (CDockContainer*)m_DockView.AddDockedChild(new CDockContainer, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINER);
-	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW));
-	pDockRight->m_Files.GetPage().Create(pDockRight->GetView()->GetHwnd());
-	pDockRight->m_Classes.AddContainer(&(pDockRight->m_Files), _T("FileView"), hIcon);	
+	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClassContainer, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINCLASSES);
+	CContainer* pContainer = (CContainer*)pDockRight->GetView();
+	pContainer->AddContainer(new CContainFiles, _T("FileView"), IDI_FILEVIEW);
+//	pDockRight->AddDockedChild(new CDockFileContainer, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES);
 	
 	// Add the remaining dockables
 	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT | dwStyle, 200, ID_CLASS1);

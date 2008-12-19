@@ -11,6 +11,7 @@
 #include "../../Win32++/dockable.h"
 #include "../../Win32++/listview.h"
 #include "../../Win32++/treeview.h"
+#include <richedit.h>
 
 
 class CViewSimple : public CWnd
@@ -28,12 +29,15 @@ protected:
 class CViewText : public CWnd
 {
 public:
-	CViewText() {}
-	virtual ~CViewText() {}
+	CViewText();
+	virtual ~CViewText();
 
 protected:
 	virtual void PreCreate(CREATESTRUCT &cs); 
 	virtual void OnInitialUpdate(); 
+
+private:
+	HMODULE m_hRichEdit;
 
 };
 

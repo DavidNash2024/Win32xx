@@ -61,16 +61,28 @@ private:
 
 };
 
-// Declaration of the CDockContainer class
-class CDockContainer : public CDockable
+// Declaration of the CDockClassContainer class
+class CDockClassContainer : public CDockable
 {
 public:
-	CDockContainer(); 
-	virtual ~CDockContainer() {}
+	CDockClassContainer(); 
+	virtual ~CDockClassContainer() {}
 	virtual void OnInitialUpdate();
 
 //private:
 	CContainClasses m_Classes;
+
+};
+
+// Declaration of the CDockFileContainer class
+class CDockFileContainer : public CDockable
+{
+public:
+	CDockFileContainer(); 
+	virtual ~CDockFileContainer() {}
+	virtual void OnInitialUpdate();
+
+//private:
 	CContainFiles m_Files;
 
 };

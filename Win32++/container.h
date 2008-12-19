@@ -46,6 +46,7 @@
 #include <vector>
 #include "../Win32++/wincore.h"
 #include "../Win32++/toolbar.h"
+#include "../Win32++/dockable.h"
 
 namespace Win32xx
 {
@@ -91,6 +92,7 @@ namespace Win32xx
 
 		CContainer();
 		virtual ~CContainer();
+		virtual void AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, UINT nID_Icon);
 		virtual void AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON hIcon);
 		virtual void AddToolbarButton(UINT nID);
 	//	virtual int FindPage(CWnd* pwndPage);
@@ -99,6 +101,8 @@ namespace Win32xx
 		virtual CToolbar& GetToolbar() const	{return m_wndPage.GetToolbar();}	
 		virtual void RemoveContainer(CContainer& Wnd);
 		virtual void SelectPage(int iPage);
+
+	//	virtual CWnd* GetView() const {return GetPage().GetView();}
 
 	protected:
 		virtual void OnCreate();
@@ -138,11 +142,11 @@ namespace Win32xx
 
 	inline void CContainer::CTabPage::RecalcLayout()
 	{
+		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
 		CRect rc = GetClientRect();
 		CRect rcToolbar = m_wndToolbar.GetClientRect();
 		rc.top += rcToolbar.Height();
-		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
-		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW); 
 	}
 
 	inline void CContainer::CTabPage::SetView(CWnd& wndView)
@@ -195,6 +199,12 @@ namespace Win32xx
 	inline CContainer::~CContainer()
 	{
 		ImageList_Destroy(m_himlTab);
+	}
+
+	inline void CContainer::AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, UINT nID_Icon)
+	{
+		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
+		AddContainer(pwndContainer, szTitle, hIcon);
 	}
 
 	inline void CContainer::AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON hIcon)
@@ -296,6 +306,7 @@ namespace Win32xx
 			tie.pszText = m_vTabPageInfo[i].szTitle; 
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
+		
 	}
 
 	inline LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
@@ -440,6 +451,12 @@ namespace Win32xx
 
 	inline void CContainer::SelectPage(int iPage)
 	{
+		if (m_vTabPageInfo[iPage].pwndContainer->GetPage().GetHwnd() == NULL)
+		{
+	//	pDockRight->m_Files.GetPage().Create(pDockRight->GetView()->GetHwnd());
+			m_vTabPageInfo[iPage].pwndContainer->GetPage().Create(m_hWnd);
+		}
+
 		// Determine the size of the tab page's view area
 		CRect rc = GetClientRect();
 		TabCtrl_AdjustRect(m_hWnd, FALSE, &rc); 
@@ -473,25 +490,19 @@ namespace Win32xx
 			return -1;
 		case WM_SIZE: 
 			{ 
-				GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
-			
-				int Width = GET_X_LPARAM(lParam);
-				int Height = GET_Y_LPARAM(lParam);
-				
-				// Determine the size of the tab page's view area
-				CRect rc(0, 0, Width, Height);
-				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc); 
-				m_wndPage.SetWindowPos(HWND_TOP, rc, 0);
-		 
-				// Position and size the static control to fit the tab control's display area
 				if ((int)m_vTabPageInfo.size() > m_iCurrentPage) 
 				{
-					m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);	
-
+					GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+					
+					// Set the tab sizes
+					CRect rc = GetClientRect();
 					int nItemWidth = min(25 + GetMaxTabTextSize().cx, rc.Width()/(int)m_vTabPageInfo.size());
 					SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
-				} 
-				
+					
+					// Position the View over the tab control's display area
+					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+					m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);	
+				}			
 			} 
 			break;   
 		} 

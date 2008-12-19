@@ -24,7 +24,8 @@ public:
 		ID_SIMPLE2 = 6,
 		ID_TEXT1 = 7,
 		ID_TEXT2 = 8,
-		ID_CONTAINER = 9
+		ID_CONTAINCLASSES = 9,
+		ID_CONTAINFILES = 10
 	};
 
 	CMainFrame(void);

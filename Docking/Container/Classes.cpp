@@ -27,8 +27,7 @@ CContainClasses::CContainClasses()
 
 	GetPage().SetView(m_ViewClasses);
 
-	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW));
-	AddContainer(this, _T("ClassView"), hIcon);
+	AddContainer(this, _T("ClassView"), IDI_CLASSVIEW);
 }
 
 
