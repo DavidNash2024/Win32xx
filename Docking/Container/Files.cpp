@@ -98,10 +98,8 @@ void CViewFiles::InsertItems()
 // CContainFiles functions
 CContainFiles::CContainFiles() 
 {
-	GetPage().SetView(m_ViewFiles);
-
-	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW));
-//	InsertPage(m_ViewFiles, _T("FileView"), hIcon);
-	AddContainer(this, _T("FileView"), hIcon);
+	SetTabText(_T("FileView"));
+	SetTabIcon(IDI_FILEVIEW);
+	SetView(m_ViewFiles);
 }
 

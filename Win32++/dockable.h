@@ -89,9 +89,6 @@ namespace Win32xx
 		CContainer* pwndContainer;
 	};
 
-	////////////////////////////////////
-	// Declaration of the CTabPage class
-
 
 	///////////////////////////////////////
 	// Declaration of the CContainer class
@@ -116,22 +113,24 @@ namespace Win32xx
 		private:
 			CToolbar m_wndToolbar;
 			CWnd* m_pwndView;
-
 		};
 
 		CContainer();
 		virtual ~CContainer();
-		virtual void AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, UINT nID_Icon);
-		virtual void AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON hIcon);
+		virtual void AddContainer(CContainer* pwndContainer);
 		virtual void AddToolbarButton(UINT nID);
-	//	virtual int FindPage(CWnd* pwndPage);
 		virtual SIZE GetMaxTabTextSize();
 		virtual CTabPage& GetPage() const		{return (CTabPage&)m_wndPage;}
 		virtual CToolbar& GetToolbar() const	{return m_wndPage.GetToolbar();}	
 		virtual void RemoveContainer(CContainer& Wnd);
 		virtual void SelectPage(int iPage);
-
-	//	virtual CWnd* GetView() const {return GetPage().GetView();}
+		virtual LPCTSTR GetTabText() {return m_stTabText.c_str();}
+		virtual void SetTabText(LPCTSTR szText) {m_stTabText = szText;}
+		virtual HICON GetTabIcon() {return m_hTabIcon;}
+		virtual void SetTabIcon(HICON hTabIcon) {m_hTabIcon = hTabIcon;}
+		virtual void SetTabIcon(UINT nID_Icon) 
+		{ m_hTabIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon)); }
+		virtual void SetView(CWnd& Wnd);
 
 	protected:
 		virtual void OnCreate();
@@ -146,6 +145,8 @@ namespace Win32xx
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		int m_iCurrentPage;
 		CTabPage m_wndPage; 
+		std::string m_stTabText;
+		HICON m_hTabIcon;
 	};
 
 	typedef struct DRAGPOS
@@ -1082,11 +1083,9 @@ namespace Win32xx
 
 		if (uDockStyle & DS_DOCKED_CONTAINER)
 		{
-		//	CContainer* pContainer = (CContainer*)pDockable->GetView();
+			// Add a container to an existing docked container
 			CContainer* pContainer = (CContainer*)GetView();
-		
-		#define IDI_FILEVIEW 131
-			pContainer->AddContainer((CContainer*)pDockable->GetView(), _T("FileView"), IDI_FILEVIEW);
+			pContainer->AddContainer((CContainer*)pDockable->GetView());
 		}
 		else
 		{
@@ -1657,7 +1656,6 @@ namespace Win32xx
 
 	inline void CDockable::RecalcDockLayout()
 	{
-		TRACE("RecalcDockLayout\n");
 		CRect rc = GetDockAncestor()->GetWindowRect();
 		MapWindowPoints(NULL, GetDockAncestor()->GetHwnd(), (LPPOINT)&rc, 2);
 		GetDockAncestor()->RecalcDockChildLayout(rc);
@@ -1910,7 +1908,7 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class
-	inline CContainer::CContainer() : m_iCurrentPage(0)
+	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
@@ -1933,23 +1931,16 @@ namespace Win32xx
 		ImageList_Destroy(m_himlTab);
 	}
 
-	inline void CContainer::AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, UINT nID_Icon)
-	{
-		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
-		AddContainer(pwndContainer, szTitle, hIcon);
-	}
-
-	inline void CContainer::AddContainer(CContainer* pwndContainer, LPCTSTR szTitle, HICON hIcon)
-	// Adds an existing container to this one
+	inline void CContainer::AddContainer(CContainer* pwndContainer)
 	{
 		TabPageInfo tbi = {0};
 		tbi.pwndContainer = pwndContainer;
-		lstrcpy(tbi.szTitle, szTitle);
-		tbi.hIcon = hIcon;
+		lstrcpy(tbi.szTitle, GetTabText());
+		tbi.hIcon = GetTabIcon();
 		int iNewPage = m_vTabPageInfo.size();
 		
 		m_vTabPageInfo.push_back(tbi);
-		ImageList_AddIcon(m_himlTab, hIcon);
+		ImageList_AddIcon(m_himlTab, GetTabIcon());
 
 		if (m_hWnd)
 		{
@@ -1960,31 +1951,13 @@ namespace Win32xx
 			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
 		}
 	}
-
+	
 	inline void CContainer::AddToolbarButton(UINT nID)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
 		m_vToolbarData.push_back(nID);
 	}
-
-	/*
-	inline int CContainer::FindPage(CWnd* pwndPage)
-	{
-		int iPage = -1;
-
-		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
-		{
-			if (m_vTabPageInfo[i].pwndView == pwndPage)
-			{
-				iPage = i;
-				break;
-			}
-		}
-
-		return iPage;
-	}
-	*/
 
 	inline SIZE CContainer::GetMaxTabTextSize()
 	{
@@ -2185,7 +2158,6 @@ namespace Win32xx
 	{
 		if (m_vTabPageInfo[iPage].pwndContainer->GetPage().GetHwnd() == NULL)
 		{
-	//	pDockRight->m_Files.GetPage().Create(pDockRight->GetView()->GetHwnd());
 			m_vTabPageInfo[iPage].pwndContainer->GetPage().Create(m_hWnd);
 		}
 		
@@ -2201,6 +2173,19 @@ namespace Win32xx
 		m_vTabPageInfo[iPage].pwndContainer->GetPage().GetView()->SetFocus();
 
 		m_iCurrentPage = iPage; 
+	}
+
+	inline void CContainer::SetView(CWnd& Wnd)
+	{
+		TabPageInfo tbi = {0};
+		tbi.pwndContainer = this;
+		lstrcpy(tbi.szTitle, GetTabText());
+		tbi.hIcon = GetTabIcon();
+		
+		m_vTabPageInfo.push_back(tbi);
+		ImageList_AddIcon(m_himlTab, GetTabIcon());
+
+		GetPage().SetView(Wnd);
 	}
 
 	inline LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2226,16 +2211,16 @@ namespace Win32xx
 			{ 
 				if ((int)m_vTabPageInfo.size() > m_iCurrentPage) 
 				{
-					GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
-					
-					// Set the tab sizes
+					GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);					
 					CRect rc = GetClientRect();
-					int nItemWidth = min(25 + GetMaxTabTextSize().cx, rc.Width()/(int)m_vTabPageInfo.size());
-					SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
-					
+
 					// Position the View over the tab control's display area
 					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 					m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);	
+
+					// Set the tab sizes
+					int nItemWidth = min(25 + GetMaxTabTextSize().cx, rc.Width()/(int)m_vTabPageInfo.size());
+					SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
 				}			
 			} 
 			break;   

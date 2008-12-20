@@ -25,9 +25,9 @@ CContainClasses::CContainClasses()
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 
-	GetPage().SetView(m_ViewClasses);
-
-	AddContainer(this, _T("ClassView"), IDI_CLASSVIEW);
+	SetTabText(_T("ClassView"));
+	SetTabIcon(IDI_CLASSVIEW);
+	SetView(m_ViewClasses);
 }
 
 

@@ -25,10 +25,13 @@ CContainClasses::CContainClasses()
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 
-	GetPage().SetView(m_ViewClasses);
+//	GetPage().SetView(m_ViewClasses);
 
-	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW));
-	AddContainer(this, _T("ClassView"), hIcon);
+//	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW));
+//	AddContainer(this, _T("ClassView"), hIcon);
+	SetTabText(_T("ClassView"));
+	SetTabIcon(IDI_CLASSVIEW);
+	SetView(m_ViewClasses);
 }
 
 

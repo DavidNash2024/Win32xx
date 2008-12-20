@@ -77,13 +77,11 @@ void CMainFrame::OnCreate()
 	// call the base class function
 	CFrame::OnCreate();
 
-	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW));
-	m_Files.GetPage().Create(GetView()->GetHwnd());
-	m_Classes.AddContainer(&m_Files, _T("FileView"), hIcon);
-//	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW));
-//	m_Classes.GetPage().Create(GetView()->GetHwnd());
-//	m_Files.AddContainer(&m_Classes, _T("ClassView"), hIcon);
-		
+	m_Classes.SetTabText(_T("ClassView"));
+	m_Classes.SetTabIcon(IDI_CLASSVIEW);
+	m_Files.SetTabText(_T("FileView"));
+	m_Files.SetTabIcon(IDI_FILEVIEW);
+	m_Classes.AddContainer(&m_Files);	
 }
 
 void CMainFrame::OnInitialUpdate()
