@@ -81,9 +81,9 @@ void CMainFrame::OnInitialUpdate()
 
 	// Add the Dock container on the right
 	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClassContainer, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINCLASSES);
-	CContainer* pContainer = (CContainer*)pDockRight->GetView();
-	pContainer->AddContainer(new CContainFiles, _T("FileView"), IDI_FILEVIEW);
-//	pDockRight->AddDockedChild(new CDockFileContainer, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES);
+//	CContainer* pContainer = (CContainer*)pDockRight->GetView();
+//	pContainer->AddContainer(new CContainFiles, _T("FileView"), IDI_FILEVIEW);
+	pDockRight->AddDockedChild(new CDockFileContainer, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES);
 	
 	// Add the remaining dockables
 	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT | dwStyle, 200, ID_CLASS1);

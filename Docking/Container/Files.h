@@ -7,8 +7,8 @@
 #define FILES_H
 
 
+#include "../../Win32++/dockable.h"
 #include "../../Win32++/listview.h"
-#include "../../Win32++/container.h"
 #include "resource.h"
 
 

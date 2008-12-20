@@ -9,7 +9,7 @@
 
 #include "../../Win32++/mdi.h"
 #include "../../Win32++/treeview.h"
-#include "../../Win32++/container.h"
+#include "../../Win32++/dockable.h"
 #include "resource.h"
 
 

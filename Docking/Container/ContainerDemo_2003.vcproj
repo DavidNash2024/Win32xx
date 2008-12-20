@@ -247,9 +247,6 @@
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\..\Win32++\container.h">
-			</File>
-			<File
 				RelativePath="..\..\Win32++\dialog.h">
 			</File>
 			<File

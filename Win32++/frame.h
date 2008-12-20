@@ -3109,7 +3109,7 @@ namespace Win32xx
 					return 0;
 				}
 			}
-			break;
+			break; 
 		case WM_NCPAINT:
 		case WM_NCMOUSEMOVE:
 			{
@@ -3119,9 +3119,9 @@ namespace Win32xx
 
 				// These messages possible indicate a change of focus, so
 				//  we send the notification to view for dockables.
-				m_pwndView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
+				m_pwndView->PostMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
 			}
-			break;
+			break; 
 
 		case WM_CLOSE:
 			OnFrameClose();
