@@ -434,12 +434,19 @@ namespace Win32xx
 		CPoint(SIZE sz)				{ x = sz.cx; y = sz.cy; }
 		CPoint(POINT pt)			{ x = pt.x ; y = pt.y; }
 		CPoint(DWORD dw)			{ x = (short)LOWORD(dw); y = (short)HIWORD(dw); }
-		void GetCursorPos()         { POINT pt; ::GetCursorPos(&pt); x=pt.x; y=pt.y; }
+	//	void GetCursorPos()         { POINT pt; ::GetCursorPos(&pt); x=pt.x; y=pt.y; }
 		void Offset(int dx, int dy)	{ x += dx; y += dy; }
 		void SetPoint(int X, int Y)	{ x = X; y = Y; }
 		BOOL operator == (POINT pt)	{ return ((x == pt.x) && (y == pt.y)); }
 		BOOL operator != (POINT pt)	{ return ((x != pt.x) || (y != pt.y)); }
 	};
+
+	inline CPoint GetCursorPos()
+	{
+		CPoint pt;
+		::GetCursorPos(&pt);
+		return pt;
+	}
 
 	/////////////////////////////////////////
 	// Definition of the CRect class

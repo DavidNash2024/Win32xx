@@ -1712,6 +1712,9 @@ namespace Win32xx
 		{
 			m_UnDocking = TRUE;
 
+			// Get the current mouse position
+			CPoint pt = GetCursorPos();		
+
 			// Promote the first child to replace this Dock parent
 			for (UINT u = 0 ; u < m_pwndDockParent->m_vDockChildren.size(); ++u)
 			{
@@ -1776,12 +1779,8 @@ namespace Win32xx
 			
 			// Redraw all the windows
 			GetDockAncestor()->RedrawWindow();
-			CPoint pt;
-			pt.GetCursorPos();
-			MapWindowPoints(NULL, m_hWnd, &pt, 1);
-			::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, (LPARAM)&pt);
 			RedrawWindow();
-
+			
 			// Send the undock notification to the frame
 			NMHDR nmhdr = {0};
 			nmhdr.hwndFrom = m_hWnd;
@@ -1789,6 +1788,11 @@ namespace Win32xx
 			nmhdr.idFrom = m_nDockID;
 			HWND hwndFrame = GetAncestor(GetDockAncestor()->GetHwnd());
 			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
+
+			// Initiate the window move
+			SetCursorPos(pt.x, pt.y);
+			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 		}
 
 		m_UnDocking = FALSE;
