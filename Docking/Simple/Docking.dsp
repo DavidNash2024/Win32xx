@@ -166,6 +166,10 @@ SOURCE="..\Win32++\Dockable.h"
 # End Source File
 # Begin Source File
 
+SOURCE="..\..\Win32++\dockable.h"
+# End Source File
+# Begin Source File
+
 SOURCE="..\Win32++\Frame.h"
 # End Source File
 # Begin Source File

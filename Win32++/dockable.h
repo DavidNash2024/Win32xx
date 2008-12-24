@@ -339,6 +339,7 @@ namespace Win32xx
 
 		BOOL m_BlockMove;
 		BOOL m_UnDocking;
+		BOOL m_DragFullWindows;
 		int m_DockWidth;
 		int m_nDockID;
 		int m_NCHeight;
@@ -386,7 +387,7 @@ namespace Win32xx
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
-		GetCursorPos(&DragPos.ptPos);
+		::GetCursorPos(&DragPos.ptPos);
 		DragPos.ptPos.x += 1;
 		SendMessage(m_hWndParent, WM_NOTIFY, 0, (LPARAM)&DragPos);
 	}
@@ -652,7 +653,7 @@ namespace Win32xx
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
-		GetCursorPos(&DragPos.ptPos);
+		::GetCursorPos(&DragPos.ptPos);
 
 		// Send a DragPos notification to the dockable
 		SendMessage(m_hWndParent, WM_NOTIFY, 0, (LPARAM)&DragPos);
@@ -834,6 +835,7 @@ namespace Win32xx
 			{
 				Destroy();
 				pDockTarget->RedrawWindow();
+				pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
 			}
 			uDockSideOld = uDockSide;
 
@@ -975,11 +977,11 @@ namespace Win32xx
 		int cyImage = 88;
 
 		// Ensure a new window if the dock target changes
-		static CDockable* pDockTargetOld = 0;
-		if (pDockTarget != pDockTargetOld)
-			Destroy();
+	//	static CDockable* pDockTargetOld = 0;
+	//	if (pDockTarget != pDockTargetOld)
+	//		Destroy();
 
-		pDockTargetOld = pDockTarget;
+	//	pDockTargetOld = pDockTarget;
 
 		if (!IsWindow())
 			Create();
@@ -1026,6 +1028,10 @@ namespace Win32xx
 		else
 		{
 			// Not in a docking zone, so clean up
+
+			if (pDockDrag->m_BlockMove)
+				pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
+
 			pDockTarget->GetDockHint().Destroy();
 			pDockTarget->m_DockZone = 0;
 			pDockDrag->m_BlockMove = FALSE;
@@ -1046,8 +1052,8 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() : m_pwndDockParent(NULL), m_BlockMove(FALSE), m_UnDocking(FALSE), m_DockWidth(0),
-                    m_nDockID(0), m_NCHeight(20), m_DockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0)
+	inline CDockable::CDockable() : m_pwndDockParent(NULL), m_BlockMove(FALSE), m_UnDocking(FALSE), m_DragFullWindows(FALSE),
+					m_DockWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1668,7 +1674,7 @@ namespace Win32xx
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
-		GetCursorPos(&DragPos.ptPos);
+		::GetCursorPos(&DragPos.ptPos);
 
 		CDockable* pDock = GetDockableFromPoint(DragPos.ptPos);
 
@@ -1804,10 +1810,28 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
+		case WM_SYSCOMMAND:
+			{
+				// Test if the window is being moved
+				if ((wParam&0xFFF0) == SC_MOVE)
+				{
+					BOOL bResult = FALSE;
+
+					if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
+					{
+						// Turn on DragFullWindows during the window move
+						m_DragFullWindows = bResult;
+						SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
+					}
+				}
+			}
+			break;
+
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
 			SendNotify(DN_DOCK_END);
-			break;
+			SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, m_DragFullWindows, 0, 0);
+			break;		
 
 		case WM_WINDOWPOSCHANGING:
 			{
@@ -1815,7 +1839,7 @@ namespace Win32xx
 				if (m_BlockMove)
 				{
                 	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
-					pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED| SWP_NOOWNERZORDER;
+					pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED|SWP_NOOWNERZORDER|SWP_NOREDRAW;
 					return 0;
 				}
 				break;
@@ -1823,8 +1847,17 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			{
+				TRACE ("WM_WINDOWPOSCHANGED\n");
 				if ( IsUndocked() && ( hWnd != GetDockAncestor()->GetHwnd() ) )
 				{
+				
+				//	if (m_BlockMove)
+				//	{
+                //		LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
+				//		pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED| SWP_NOOWNERZORDER;
+				//		return 0;
+				//	}
+					
 					// Send a Move notification to the parent
 					if ( IsLeftButtonDown() )
 					{

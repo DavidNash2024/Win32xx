@@ -268,9 +268,9 @@ void CMainFrame::SaveDockables()
 
 		// Add the Undocked windows information to the registry
 		int nUndocked = vDockList.size();
-		for (UINT u = 0; u <  m_DockView.GetAllDockables().size(); ++u)
+		for (UINT v = 0; v <  m_DockView.GetAllDockables().size(); ++v)
 		{
-			CDockable* pDock = m_DockView.GetAllDockables()[u];
+			CDockable* pDock = m_DockView.GetAllDockables()[v];
 			if (pDock->IsUndocked())
 			{
 				DockedInfo di = {0};
