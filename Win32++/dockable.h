@@ -2160,7 +2160,6 @@ namespace Win32xx
 		// Cleanup
 		::DeleteObject(hrgnSrc1);
 		::DeleteObject(hrgnSrc2);
-	//	::DeleteObject(hrgnClip);
 		// hrgnClip is attached to dcView, so it will be deleted automatically	
 	}
 
@@ -2241,17 +2240,19 @@ namespace Win32xx
 		case WM_SIZE:
 			{
 				if ((int)m_vTabPageInfo.size() > m_iCurrentPage)
-				{
-					GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+				{				
+					// Set the tab sizes
 					CRect rc = GetClientRect();
+					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+					int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vTabPageInfo.size());
+					SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
+
+					// Recalculate the rectangle size (its affected by the tab sizes)
+					rc = GetClientRect();
+					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);	
 
 					// Position the View over the tab control's display area
-					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 					m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-
-					// Set the tab sizes
-					int nItemWidth = min(25 + GetMaxTabTextSize().cx, rc.Width()/(int)m_vTabPageInfo.size());
-					SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
 				}
 			}
 			break;
