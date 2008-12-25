@@ -13,4 +13,5 @@ INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 	return theApp.Run();
 }
 
-
+// Note:
+// _tWinMain is the Unicode variant of WinMain.

@@ -23,7 +23,7 @@ void CView::OnCreate()
 
 void CView::OnDestroy()
 {
-	// Post a message to end the application
+	// End the application when the window is destroyed
 	::PostQuitMessage(0);
 }
 
@@ -47,7 +47,7 @@ void CView::OnPaint(HDC hDC)
 
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-	// This function will be called automaticly by Create. It provides an
+	// This function will be called automatically by Create. It provides an
 	// opportunity to set various window parameters prior to window creation.
 	// You are not required to set these parameters, any paramters which
 	// aren't specified are set to reasonable defaults.

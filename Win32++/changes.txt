@@ -40,6 +40,8 @@ Exceptions now genereate TRACE output to display the error.
 Fixes
 -----
 Fixed Z order of undocked windows
+Added Win98 and WinME support for docking
+Fixed dock hinting with Vista AERO 
 
 
 

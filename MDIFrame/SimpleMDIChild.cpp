@@ -35,7 +35,10 @@ LRESULT CSimpleView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CSimpleMDIChild definitions
 CSimpleMDIChild::CSimpleMDIChild()
 {
+    // Set m_View as the view window of the MDI child
 	SetView(m_View);
+	
+	// Set the menu for this MDI child
 	SetChildMenu(_T("MdiMenuView"));
 }
 
@@ -45,13 +48,17 @@ CSimpleMDIChild::~CSimpleMDIChild()
 
 void CSimpleMDIChild::OnInitialUpdate()
 {
+    // Set the window caption
 	::SetWindowText(m_hWnd, _T("Simple Window"));
-	SetIconLarge(IDI_VIEW);
+	
+    // Set the window icons
+    SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
 }
 
 BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
+    // Respond to menu and toolbar input
 	switch (LOWORD(wParam))
 	{
 	case IDM_COLOR_BLACK:

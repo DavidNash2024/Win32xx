@@ -21,7 +21,7 @@ private:
 };
 
 
-// returns a reference to the CFrameApp object
+// a useful function that returns a reference to the CFrameApp object
 inline CFrameApp& GetFrameApp() { return *((CFrameApp*)GetApp()); }
 
 
