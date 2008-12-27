@@ -1072,15 +1072,14 @@ namespace Win32xx
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
 
-		// Ensure all dockables are destroyed
+		// Ensure all dockables are destroyed		
 		std::vector <CDockable*>::iterator v;
 		if (this == GetDockAncestor())
 		{
-			while(m_vAllDockables.size() > 0)
+			for (v = m_vAllDockables.begin(); v != m_vAllDockables.end(); ++v)
 			{
-				v = GetDockAncestor()->m_vAllDockables.begin();
+				(*v)->Destroy();
 				delete *v;
-				GetDockAncestor()->m_vAllDockables.erase(v);
 			}
 		}
 	}
