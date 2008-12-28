@@ -3088,7 +3088,7 @@ namespace Win32xx
 				else
 				{
 					// Do default processing first
-					DefWindowProc(WM_ACTIVATE, wParam, lParam);
+					DefWindowProc(uMsg, wParam, lParam);
 					
 					// Now set the focus to the appropriate child window
 					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
@@ -3109,20 +3109,22 @@ namespace Win32xx
 					return 0;
 				}
 			}
-			break; 
+			break;  
 		case WM_NCPAINT:
-		case WM_NCMOUSEMOVE:
 			{
+				// Do default processing first
+				DefWindowProc(uMsg, wParam, lParam);
+				
 				NMHDR nhdr={0};
 				nhdr.code = NM_SETFOCUS;
 				nhdr.hwndFrom = m_hWnd;
 
-				// These messages possible indicate a change of focus, so
-				//  we send the notification to view for dockables.
-				m_pwndView->PostMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
+				// This message indicates a possible change of focus, so
+				//  we send the notification to the view for dockables.
+				m_pwndView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
 			}
-			break; 
-
+			return 0;
+	
 		case WM_CLOSE:
 			OnFrameClose();
 			break;
