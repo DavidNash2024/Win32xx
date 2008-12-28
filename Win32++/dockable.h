@@ -300,6 +300,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual void RecalcDockLayout();
 		virtual void RecalcDockChildLayout(CRect rc);
+		virtual void RecalcZOrder();
 		virtual void SendNotify(UINT nMessageID);
 		virtual void UnDock();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1076,10 +1077,13 @@ namespace Win32xx
 		std::vector <CDockable*>::iterator v;
 		if (this == GetDockAncestor())
 		{
-			for (v = m_vAllDockables.begin(); v != m_vAllDockables.end(); ++v)
+		//	for (v = m_vAllDockables.begin(); v != m_vAllDockables.end(); ++v)
+			while (m_vAllDockables.size() > 0)
 			{
+				v = m_vAllDockables.begin();
 				(*v)->Destroy();
 				delete *v;
+				m_vAllDockables.erase(v);
 			}
 		}
 	}
@@ -1529,46 +1533,57 @@ namespace Win32xx
 
 			case NM_SETFOCUS:
 			// our frame has possibly grabbed focus
-			{
-				if (this == GetDockAncestor())
-				{
-					// Create a map to store any Undocked dockables, along with their Z order
-					std::map<int, CDockable*> mapZorder;
-					for (UINT u = 0; u < m_vAllDockables.size(); ++u)
-					{
-						if (m_vAllDockables[u]->IsUndocked())
-						{
-							CWnd* pFrame = FromHandle(GetAncestor(m_hWnd));
-							if (pFrame->GetZOrder() < m_vAllDockables[u]->GetZOrder())
-							{
-								// Insert map entries sorted by their Z order
-								mapZorder.insert(std::pair<int, CDockable*>(m_vAllDockables[u]->GetZOrder(), m_vAllDockables[u]));
-							}
-						}
-					}
-
-					// iterate through the map in reverse order to preseve the original Z order
-					std::map<int, CDockable*>::reverse_iterator RevItor;
-					for (RevItor = mapZorder.rbegin(); RevItor != mapZorder.rend(); ++RevItor)
-					{
-						RevItor->second->SetRedraw(FALSE);
-						RevItor->second->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
-					}
-
-					// Now iterate forwards through the map to redraw the windows
-					std::map<int, CDockable*>::iterator Itor;
-					for (Itor = mapZorder.begin(); Itor != mapZorder.end(); ++Itor)
-					{
-						Itor->second->SetRedraw(TRUE);
-						Itor->second->RedrawWindow();
-					}
-				}
-			}
+			if (this == GetDockAncestor())
+				RecalcZOrder();
 			break;
 		}
 
 		return 0L;
 
+	}
+
+	inline void CDockable::RecalcZOrder()
+	{
+	//	if (this == GetDockAncestor())
+		{
+			// Create a map to store any Undocked dockables, along with their Z order
+			std::map<int, CDockable*> mapZorder;
+			for (UINT u = 0; u < GetDockAncestor()->m_vAllDockables.size(); ++u)
+			{
+				if (GetDockAncestor()->m_vAllDockables[u]->IsUndocked())
+				{
+				//	CWnd* pFrame = FromHandle(GetAncestor(m_hWnd));
+				//	if (pFrame->GetZOrder() < GetDockAncestor()->m_vAllDockables[u]->GetZOrder())
+					{
+						// Insert map entries sorted by their Z order
+						mapZorder.insert(std::pair<int, CDockable*>(GetDockAncestor()->m_vAllDockables[u]->GetZOrder(), GetDockAncestor()->m_vAllDockables[u]));
+					}
+				}
+			}
+
+			CWnd* pFrame = FromHandle(GetAncestor(GetDockAncestor()->GetHwnd()));
+			pFrame->SetRedraw(FALSE);
+			pFrame->SetWindowPos(NULL, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+
+			// iterate through the map in reverse order to preseve the original Z order
+			std::map<int, CDockable*>::reverse_iterator RevItor;
+			for (RevItor = mapZorder.rbegin(); RevItor != mapZorder.rend(); ++RevItor)
+			{
+				RevItor->second->SetRedraw(FALSE);
+				RevItor->second->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+			}
+
+			// Now iterate forwards through the map to redraw the windows
+			std::map<int, CDockable*>::iterator Itor;
+			for (Itor = mapZorder.begin(); Itor != mapZorder.end(); ++Itor)
+			{
+				Itor->second->SetRedraw(TRUE);
+				Itor->second->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ALLCHILDREN);
+			}
+
+			pFrame->SetRedraw(TRUE);
+			pFrame->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ALLCHILDREN);
+		}		
 	}
 
 	inline void CDockable::PreCreate(CREATESTRUCT &cs)
@@ -1875,6 +1890,15 @@ namespace Win32xx
 
 		case WM_CLOSE:
 			ShowWindow(SW_HIDE);
+			break;
+	
+		case WM_MOUSEACTIVATE:
+			if ((LOWORD(wParam) != WA_INACTIVE) && IsUndocked())
+			{
+				LRESULT lr = ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+				RecalcZOrder();
+				return lr;
+			}
 			break;
 		}
 

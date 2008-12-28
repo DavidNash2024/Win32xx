@@ -239,7 +239,6 @@ namespace Win32xx
 		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolbarBand(CToolbar& TB);
-	//	virtual HIMAGELIST CreateDisabledImageList(HIMAGELIST hImageList);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
@@ -1614,68 +1613,6 @@ namespace Win32xx
 		// Calculate final rect size, and reposition frame 
 		SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
 	}
-/*
-	inline HIMAGELIST CFrame::CreateDisabledImageList(HIMAGELIST himlNormal)
-	// Returns a greyed image list, created from hImageList
-	{
-		int cx, cy;
-		int nCount = ImageList_GetImageCount(himlNormal);
-		if (0 == nCount)
-			return NULL;
-
-		ImageList_GetIconSize(himlNormal, &cx, &cy);
-
-		// Create the disabled ImageList
-		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
-
-		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; ++i)
-		{
-			CDC DesktopDC = ::GetDC(NULL);
-			CDC MemDC = ::CreateCompatibleDC(NULL);
-			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
-			CRect rc;
-			rc.SetRect(0, 0, cx, cx);
-
-			// Set the mask color to grey for the new ImageList
-			COLORREF crMask = RGB(200, 199, 200);
-			if ( GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
-			{
-				HPALETTE hPal = (HPALETTE)GetCurrentObject(DesktopDC, OBJ_PAL);
-				UINT Index = GetNearestPaletteIndex(hPal, crMask);
-				if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
-			}
- 			
-			SolidFill(MemDC, crMask, &rc);
-
-			// Draw the image on the memory DC
-			ImageList_SetBkColor(himlNormal, crMask);
-			ImageList_Draw(himlNormal, i, MemDC, 0, 0, ILD_NORMAL);
-
-			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; ++x)
-			{
-				for (int y = 0; y < cy; ++y)
-				{
-					COLORREF clr = ::GetPixel(MemDC, x, y);
-
-					if (clr != crMask)
-					{
-						BYTE byGray = (BYTE) (95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20);
-						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
-					}
-
-				}
-			}
-
-			// Detach the bitmap so we can use it.
-			HBITMAP hbm = MemDC.DetachBitmap();
-			ImageList_AddMasked(himlDisabled, hbm, crMask);
-			::DeleteObject(hbm);
-		}
-
-		return himlDisabled; 
-	} */
 
 	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
@@ -2795,18 +2732,14 @@ namespace Win32xx
 			CRect rcClient = GetClientRect();
 
 			int width = max(300, rcClient.right);
-		//	int iPaneWidths[] = {width - 110, width - 80, width - 50, width - 20};
 
 			if (m_bShowIndicatorStatus)
 			{
 				// Create 4 panes
-		//		GetStatusbar().CreateParts(4, iPaneWidths);
-
-				// Or you could create the 4 panes this way
-					GetStatusbar().SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
-					GetStatusbar().SetPartWidth(1, csCAP.cx);
-					GetStatusbar().SetPartWidth(2, csNUM.cx);
-					GetStatusbar().SetPartWidth(3, csSCRL.cx);
+				GetStatusbar().SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
+				GetStatusbar().SetPartWidth(1, csCAP.cx);
+				GetStatusbar().SetPartWidth(2, csNUM.cx);
+				GetStatusbar().SetPartWidth(3, csSCRL.cx);
 
 				SetStatusIndicators();
 			}
@@ -3088,7 +3021,7 @@ namespace Win32xx
 				else
 				{
 					// Do default processing first
-					DefWindowProc(uMsg, wParam, lParam);
+					LRESULT lr = DefWindowProc(uMsg, wParam, lParam);
 					
 					// Now set the focus to the appropriate child window
 					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
@@ -3106,24 +3039,42 @@ namespace Win32xx
 					// Also send notification to view for dockables
 					m_pwndView->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 
-					return 0;
+					return lr;
 				}
 			}
 			break;  
-		case WM_NCPAINT:
-			{
-				// Do default processing first
-				DefWindowProc(uMsg, wParam, lParam);
-				
-				NMHDR nhdr={0};
-				nhdr.code = NM_SETFOCUS;
-				nhdr.hwndFrom = m_hWnd;
 
-				// This message indicates a possible change of focus, so
-				//  we send the notification to the view for dockables.
-				m_pwndView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
+		case WM_SYSCOMMAND:
+			{
+				switch (wParam & 0xFFF0)
+				{
+				case SC_MOVE:
+					{
+						// Do default processing first
+						LRESULT lr = DefWindowProc(uMsg, wParam, lParam);
+						
+						NMHDR nhdr={0};
+						nhdr.code = NM_SETFOCUS;
+						nhdr.hwndFrom = m_hWnd;
+
+						// This message indicates a possible change of focus, so
+						//  we send the notification to the view for dockables.
+						m_pwndView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
+
+						return lr;
+					}
+				case SC_KEYMENU:
+					if ((VK_SPACE != lParam) && IsMenubarUsed())
+					{
+						GetMenubar().SysCommand(wParam, lParam);
+						return 0L;
+					}
+				case SC_MINIMIZE:
+					m_hOldFocus = GetFocus();
+					break;
+				}			
 			}
-			return 0;
+			break;
 	
 		case WM_CLOSE:
 			OnFrameClose();
@@ -3162,16 +3113,16 @@ namespace Win32xx
 			// Forward the message to the view window
 			::PostMessage(m_pwndView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
 			return 0L;
-		case WM_SYSCOMMAND:
-			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
-			{
-				GetMenubar().SysCommand(wParam, lParam);
-				return 0L;
-			}
-			
-			if (SC_MINIMIZE == wParam)
-				m_hOldFocus = GetFocus();
-			break;
+	//	case WM_SYSCOMMAND:
+	//		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
+	//		{
+	//			GetMenubar().SysCommand(wParam, lParam);
+	//			return 0L;
+	//		}
+	//		
+	//		if (SC_MINIMIZE == wParam)
+	//			m_hOldFocus = GetFocus();
+	//		break;
 		case WM_TIMER:
 			OnFrameTimer(wParam);
 			return 0L;
