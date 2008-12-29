@@ -696,6 +696,7 @@ namespace Win32xx
 						return HTCAPTION;
 				}
 				break;
+
 			case WM_NCLBUTTONDOWN:
 				if (HTCLOSE == wParam) m_bClosing = TRUE;
 				else	m_bClosing = FALSE;
@@ -728,6 +729,7 @@ namespace Win32xx
 					return 0;
 				}
 				m_bClosing = FALSE;
+
 				break;
 
 			case WM_NCMOUSEMOVE:
@@ -735,7 +737,7 @@ namespace Win32xx
 					if (m_pDock->IsDocked())
 					{
 						// Discard phantom mouse move messages
-						if ((Oldpt.x == GET_X_LPARAM(lParam)) && (Oldpt.y == GET_Y_LPARAM(lParam)))
+						if ( (Oldpt.x == GET_X_LPARAM(lParam) ) && (Oldpt.y == GET_Y_LPARAM(lParam)))
 							return 0L;
 
 						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && !m_bClosing)
@@ -1562,8 +1564,11 @@ namespace Win32xx
 			}
 
 			CWnd* pFrame = FromHandle(GetAncestor(GetDockAncestor()->GetHwnd()));
-			pFrame->SetRedraw(FALSE);
-			pFrame->SetWindowPos(NULL, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+			if (pFrame)
+			{
+				pFrame->SetRedraw(FALSE);
+				pFrame->SetWindowPos(NULL, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+			}
 
 			// iterate through the map in reverse order to preseve the original Z order
 			std::map<int, CDockable*>::reverse_iterator RevItor;
@@ -1581,8 +1586,11 @@ namespace Win32xx
 				Itor->second->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ALLCHILDREN);
 			}
 
-			pFrame->SetRedraw(TRUE);
-			pFrame->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ALLCHILDREN);
+			if (pFrame)
+			{
+				pFrame->SetRedraw(TRUE);
+				pFrame->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ALLCHILDREN);
+			}
 		}		
 	}
 
@@ -1892,7 +1900,7 @@ namespace Win32xx
 			ShowWindow(SW_HIDE);
 			break;
 	
-		case WM_MOUSEACTIVATE:
+		case WM_ACTIVATE:
 			if ((LOWORD(wParam) != WA_INACTIVE) && IsUndocked())
 			{
 				LRESULT lr = ::DefWindowProc(hWnd, uMsg, wParam, lParam);

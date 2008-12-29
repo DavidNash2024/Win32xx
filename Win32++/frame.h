@@ -3049,6 +3049,9 @@ namespace Win32xx
 				switch (wParam & 0xFFF0)
 				{
 				case SC_MOVE:
+				case SC_MAXIMIZE:
+				case SC_RESTORE:
+				case SC_SIZE:
 					{
 						// Do default processing first
 						LRESULT lr = DefWindowProc(uMsg, wParam, lParam);
