@@ -710,12 +710,8 @@ namespace Win32xx
 					m_pwndView->SetFocus();
 					return 0L;
 				}
-				else
-				{
-					// Send a DN_DOCK_START notification to the dockable
-					SendNotify(DN_DOCK_START);
-				}
 				break;
+			
 			case WM_NCLBUTTONUP:
 				if ((HTCLOSE == wParam) && m_bClosing)
 				{
@@ -729,7 +725,6 @@ namespace Win32xx
 					return 0;
 				}
 				m_bClosing = FALSE;
-
 				break;
 
 			case WM_NCMOUSEMOVE:
@@ -745,12 +740,6 @@ namespace Win32xx
 							CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
 							pDock->UnDock();
 						}
-					}
-					else if (IsLeftButtonDown())
-					{
-						// We get a WM_NCMOUSEMOVE (not WM_NCLBUTTONUP) when drag of non-docked window ends
-						// Send a DN_DOCK_END notification to the frame
-						SendNotify(DN_DOCK_END);
 					}
 				}
 				break;
@@ -1882,6 +1871,11 @@ namespace Win32xx
 						LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
 						if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
 							SendNotify(DN_DOCK_MOVE);
+					}
+					else
+					{
+						SendNotify(DN_DOCK_END);
+						RecalcDockLayout();
 					}
 
 					CRect rc = GetClientRect();
