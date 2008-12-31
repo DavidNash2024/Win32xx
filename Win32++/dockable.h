@@ -1841,7 +1841,7 @@ namespace Win32xx
 					}
 				}
 			}
-			break;
+			break; 
 
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
@@ -1874,10 +1874,10 @@ namespace Win32xx
 					}
 					else
 					{
-						SendNotify(DN_DOCK_END);
-						RecalcDockLayout();
+						if (GetDockTargeting().IsWindow())	GetDockTargeting().Destroy();
+						m_BlockMove = FALSE;
 					}
-
+					
 					CRect rc = GetClientRect();
 					GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 				}
