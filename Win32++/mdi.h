@@ -171,6 +171,7 @@ namespace Win32xx
 		while(m_vMDIChild.size() > 0)
 		{
 			v = m_vMDIChild.begin();
+			(*v)->Destroy();
 			delete *v;
 			m_vMDIChild.erase(v);
 		}
