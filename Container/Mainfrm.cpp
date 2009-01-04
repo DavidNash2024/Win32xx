@@ -32,11 +32,6 @@ CMainFrame::CMainFrame()
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\Tab Demo"));
-
-//	HICON hIcon = LoadIcon(GetTabDemoApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW));
-//	m_View.InsertPage(m_ViewList, _T("FileView"), hIcon);
-//	HICON hIcon = LoadIcon(GetTabDemoApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW));
-//	m_View.InsertPage(m_ViewTree, _T("ClassView"), hIcon);
 }
 
 CMainFrame::~CMainFrame()
@@ -77,10 +72,6 @@ void CMainFrame::OnCreate()
 	// call the base class function
 	CFrame::OnCreate();
 
-	m_Classes.SetTabText(_T("ClassView"));
-	m_Classes.SetTabIcon(IDI_CLASSVIEW);
-	m_Files.SetTabText(_T("FileView"));
-	m_Files.SetTabIcon(IDI_FILEVIEW);
 	m_Classes.AddContainer(&m_Files);	
 }
 

@@ -76,6 +76,8 @@
 #define DN_BAR_END			WM_APP + 6
 #define DN_UNDOCKED         WM_APP + 7
 
+// Docking Messages
+#define DM_IS_CONTAINER     WM_APP + 8	// CContainer windows return TRUE for this message
 
 namespace Win32xx
 {
@@ -122,6 +124,7 @@ namespace Win32xx
 		virtual ~CContainer();
 		virtual void AddContainer(CContainer* pwndContainer);
 		virtual void AddToolbarButton(UINT nID);
+		virtual CContainer* GetContainer(int iPage);
 		virtual SIZE GetMaxTabTextSize();
 		virtual CTabPage& GetPage() const		{return (CTabPage&)m_wndPage;}
 		virtual CToolbar& GetToolbar() const	{return m_wndPage.GetToolbar();}
@@ -319,6 +322,7 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_wndDockClient;}
 		int GetDockWidth() const {return m_DockWidth;}
 		CWnd* GetView() const {return GetDockClient().m_pwndView;}
+		BOOL HasContainer() const {return (BOOL)SendMessage(DM_IS_CONTAINER);}
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
 		BOOL IsUndocked() const;
@@ -328,7 +332,7 @@ namespace Win32xx
 		void SetCaption(LPCTSTR szCaption) {GetDockClient().SetCaption(szCaption);}
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
-		void SetView(CWnd& wndView) {GetDockClient().m_pwndView = &wndView;}
+		void SetView(CWnd& wndView);
 
 	private:
 		CDockBar m_wndDockBar;
@@ -1050,8 +1054,9 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() : m_pwndDockParent(NULL), m_BlockMove(FALSE), m_UnDocking(FALSE), m_DragFullWindows(FALSE),
-					m_DockWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0)
+	inline CDockable::CDockable() : m_pwndDockParent(NULL), m_BlockMove(FALSE), m_UnDocking(FALSE), 
+		            m_DragFullWindows(FALSE), m_DockWidth(0), m_nDockID(0), m_NCHeight(20), 
+					m_DockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1384,7 +1389,7 @@ namespace Win32xx
 		return 0;
 	}
 	*/
-
+	
 	inline BOOL CDockable::IsDocked() const
 	{
 		return ((m_DockStyle&0xF) && !m_UnDocking); // Boolean expression
@@ -1728,6 +1733,11 @@ namespace Win32xx
 		m_DockStyle = dwDockStyle;
 	}
 
+	inline void CDockable::SetView(CWnd& wndView)
+	{
+		GetDockClient().m_pwndView = &wndView;
+	}
+
 	inline void CDockable::UnDock()
 	{
 		if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
@@ -1992,12 +2002,12 @@ namespace Win32xx
 	{
 		TabPageInfo tbi = {0};
 		tbi.pwndContainer = pwndContainer;
-		lstrcpy(tbi.szTitle, GetTabText());
-		tbi.hIcon = GetTabIcon();
+		lstrcpy(tbi.szTitle, pwndContainer->GetTabText());
+		tbi.hIcon = pwndContainer->GetTabIcon();
 		int iNewPage = m_vTabPageInfo.size();
 
 		m_vTabPageInfo.push_back(tbi);
-		ImageList_AddIcon(m_himlTab, GetTabIcon());
+		ImageList_AddIcon(m_himlTab, pwndContainer->GetTabIcon());
 
 		if (m_hWnd)
 		{
@@ -2014,6 +2024,11 @@ namespace Win32xx
 	// A resource ID of 0 is a separator
 	{
 		m_vToolbarData.push_back(nID);
+	}
+
+	inline CContainer* CContainer::GetContainer(int iPage)
+	{
+		return m_vTabPageInfo[iPage].pwndContainer;
 	}
 
 	inline SIZE CContainer::GetMaxTabTextSize()
@@ -2247,8 +2262,13 @@ namespace Win32xx
 
 	inline LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		static BOOL IsTracking = FALSE;
+
 		switch (uMsg)
 		{
+		case DM_IS_CONTAINER:	// A message to test if this is a Container window
+			return TRUE;
+
 		case WM_PAINT:
 			{
 				// Remove all pending paint requests
@@ -2281,6 +2301,39 @@ namespace Win32xx
 				}
 			}
 			break;
+
+		case WM_MOUSELEAVE:
+			{
+				IsTracking = FALSE;
+				if (IsLeftButtonDown())
+				{
+					TRACE("Should Undock\n");
+				}
+			}
+			break;
+
+		case WM_LBUTTONDOWN:
+			if (!IsTracking)	
+			{
+				TRACKMOUSEEVENT TrackMouseEventStruct = {0};
+				TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
+				TrackMouseEventStruct.dwFlags = TME_LEAVE;
+				TrackMouseEventStruct.hwndTrack = m_hWnd;
+				TrackMouseEvent(&TrackMouseEventStruct);
+				IsTracking = TRUE;
+			}
+			break; 
+		case WM_MOUSEMOVE:
+			if (!IsTracking && !IsLeftButtonDown())	
+			{
+				TRACKMOUSEEVENT TrackMouseEventStruct = {0};
+				TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
+				TrackMouseEventStruct.dwFlags = TME_LEAVE;
+				TrackMouseEventStruct.hwndTrack = m_hWnd;
+				TrackMouseEvent(&TrackMouseEventStruct);
+				IsTracking = TRUE;
+			}
+			break; 
 		}
 
 		// pass unhandled messages on for default processing

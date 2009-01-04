@@ -235,10 +235,10 @@
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\Win32++\container.h">
+				RelativePath="..\Win32++\Dialog.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h">
+				RelativePath="..\Win32++\dockable.h">
 			</File>
 			<File
 				RelativePath="..\Win32++\Frame.h">
