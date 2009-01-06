@@ -81,8 +81,9 @@
 #include "Default_Resource.h"
 
 #ifndef RBN_MINMAX
-  #define RBN_MINMAX RBN_FIRST - 21
+  #define (RBN_MINMAX RBN_FIRST - 21)
 #endif
+
 
 
 namespace Win32xx
@@ -149,11 +150,6 @@ namespace Win32xx
 		void ReleaseFocus();
 		void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
-
-		enum Constants
-		{
-			USER_POPUPMENU  = WM_APP + 2,	// creates the popup menu
-		};
 
 		enum MDIButtonType
 		{
@@ -268,8 +264,6 @@ namespace Win32xx
 		{
 			ID_STATUS_TIMER = 1,
 			POST_TEXT_GAP   = 16,			// for owner draw menu item
-			USER_REARRANGED = WM_APP + 1,	// frame window rearranged message
-			DN_UNDOCKED     = WM_APP + 7	// Notification that a window is undocked
 		};
 
 		struct ItemData
@@ -349,7 +343,7 @@ namespace Win32xx
 			m_bKeyMode = TRUE;
 			SetHotItem(ID);
 			m_bMenuActive = TRUE;
-			::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+			::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 		}
 		else
 			::MessageBeep(MB_OK);
@@ -768,7 +762,7 @@ namespace Win32xx
 		case VK_UP:
 		case VK_RETURN:
 			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+			::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 			break;
 
 		case VK_LEFT:
@@ -789,7 +783,7 @@ namespace Win32xx
 				if (::SendMessage(m_hWnd, TB_MAPACCELERATOR, wParam, (LPARAM) &ID))
 				{
 					m_nHotItem = ID;
-					::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 				}
 				else
 					::MessageBeep(MB_OK);
@@ -829,7 +823,7 @@ namespace Win32xx
 				if (0 == HitTest())
 				{
 					m_nHotItem = 0;
-					::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 				}
 			}
 		}
@@ -910,7 +904,7 @@ namespace Win32xx
 					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-					::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0);
 					break;
 
@@ -926,7 +920,7 @@ namespace Win32xx
 					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-					::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0);
 					break;
 
@@ -1082,7 +1076,7 @@ namespace Win32xx
 
 		case TBN_DROPDOWN:
 			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+			::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 			break;
 
 		case TBN_HOTITEMCHANGE:
@@ -1100,7 +1094,7 @@ namespace Win32xx
 						::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
 
 						//Always use PostMessage for USER_POPUPMENU (not SendMessage)
-						::PostMessage(m_hWnd, USER_POPUPMENU, 0, 0);
+						::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
 					}
 					m_nHotItem = nButton;
 				}
@@ -1297,7 +1291,7 @@ namespace Win32xx
 		case WM_MOUSEMOVE:
 			OnMouseMove(wParam, lParam);
 			break;
-		case USER_POPUPMENU:
+		case UWM_POPUPMENU:
 			DoPopupMenu();
 			return 0L;
 		case WM_SYSKEYDOWN:
@@ -2304,7 +2298,7 @@ namespace Win32xx
 
 		switch (((LPNMHDR)lParam)->code)
 		{
-		case DN_UNDOCKED:
+		case UWM_UNDOCKED:
 			m_hOldFocus = 0;
 			break;
 		case RBN_HEIGHTCHANGE:
@@ -2559,7 +2553,7 @@ namespace Win32xx
 		if (IsMenubarUsed())
 			SetMenubarBandSize();
 
-		::SendMessage(m_hWnd, USER_REARRANGED, 0, 0);
+		::SendMessage(m_hWnd, UWM_REARRANGED, 0, 0);
 	}
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)

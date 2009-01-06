@@ -67,17 +67,7 @@
 #define DS_FLATLOOK				0x2000	//Not Implemented yet
 #define DS_DOCKED_CONTAINER		0x4000
 
-// Docking Notifications
-#define DN_DOCK_START		WM_APP + 1
-#define DN_DOCK_MOVE		WM_APP + 2
-#define DN_DOCK_END			WM_APP + 3
-#define DN_BAR_START		WM_APP + 4
-#define DN_BAR_MOVE			WM_APP + 5
-#define DN_BAR_END			WM_APP + 6
-#define DN_UNDOCKED         WM_APP + 7
 
-// Docking Messages
-#define DM_IS_CONTAINER     WM_APP + 8	// CContainer windows return TRUE for this message
 
 namespace Win32xx
 {
@@ -175,16 +165,6 @@ namespace Win32xx
 
 		// returns true if the left mouse button is down
 		return (state & 0x8000);
-	}
-
-	inline BOOL IsDockable(HWND hWnd)
-	{
-		TCHAR szClassName[80];
-		GetClassName(hWnd, szClassName, 80);
-		if (0 == lstrcmp(szClassName, _T("Win32++ Dockable")))
-			return TRUE;
-		else
-			return FALSE;
 	}
 
 	/////////////////////////////////////////
@@ -322,7 +302,6 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_wndDockClient;}
 		int GetDockWidth() const {return m_DockWidth;}
 		CWnd* GetView() const {return GetDockClient().m_pwndView;}
-		BOOL HasContainer() const {return (BOOL)SendMessage(DM_IS_CONTAINER);}
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
 		BOOL IsUndocked() const;
@@ -438,7 +417,7 @@ namespace Win32xx
 				{
 					if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
 					{
-						SendNotify(DN_BAR_START);
+						SendNotify(UWM_BAR_START);
 						SetCapture();
 					}
 				}
@@ -447,7 +426,7 @@ namespace Win32xx
 			case WM_LBUTTONUP:
 				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == hWnd))
 				{
-					SendNotify(DN_BAR_END);
+					SendNotify(UWM_BAR_END);
 					ReleaseCapture();
 				}
 				break;
@@ -455,7 +434,7 @@ namespace Win32xx
 			case WM_MOUSEMOVE:
 				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == hWnd))
 				{
-					SendNotify(DN_BAR_MOVE);
+					SendNotify(UWM_BAR_MOVE);
 				}
 				break;
 			}
@@ -1317,7 +1296,7 @@ namespace Win32xx
 		HWND hDockChild = ChildWindowFromPoint(hAncestor, ptLocal);
 
 		CDockable* pDockChild = 0;
-		while (IsDockable(hDockChild))
+		while (::SendMessage(hDockChild, UWM_IS_DOCKABLE, 0, 0))
 		{
 			pDockChild = (CDockable*)FromHandle(hDockChild);
 			ptLocal = pt;
@@ -1410,7 +1389,7 @@ namespace Win32xx
 			throw CWinException(_T("No View window assigned to Dockable"));
 		GetView()->Create(GetDockClient().GetHwnd());
 
-		if (IsDockable(m_hWndParent))
+		if (::SendMessage(m_hWndParent, UWM_IS_DOCKABLE, 0, 0))
 		{
 			CDockable* pDockParent = (CDockable*)FromHandle(m_hWndParent);
 			m_pwndDockAncestor = pDockParent->m_pwndDockAncestor;
@@ -1426,7 +1405,7 @@ namespace Win32xx
 
 		switch (((LPNMHDR)lParam)->code)
 		{
-		case DN_DOCK_START:
+		case UWM_DOCK_START:
 			{
 				if (IsDocked())
 				{
@@ -1436,13 +1415,13 @@ namespace Win32xx
 			}
 			break;
 
-		case DN_DOCK_MOVE:
+		case UWM_DOCK_MOVE:
 			{
 				GetDockTargeting().ShowTargeting((LPDRAGPOS)lParam);
 			}
 			break;
 
-		case DN_DOCK_END:
+		case UWM_DOCK_END:
 			{
 				CDockable* pDock = (CDockable*)FromHandle(pdp->hdr.hwndFrom);
 				UINT DockZone = m_DockZone;
@@ -1454,7 +1433,7 @@ namespace Win32xx
 			}
 			break;
 
-		case DN_BAR_START:
+		case UWM_BAR_START:
 			{
 				CPoint pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
@@ -1463,7 +1442,7 @@ namespace Win32xx
 			}
 			break;
 
-		case DN_BAR_MOVE:
+		case UWM_BAR_MOVE:
 			{
 				CPoint pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
@@ -1481,7 +1460,7 @@ namespace Win32xx
 			}
 			break;
 
-		case DN_BAR_END:
+		case UWM_BAR_END:
 			{
 				POINT pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
@@ -1816,7 +1795,7 @@ namespace Win32xx
 			// Send the undock notification to the frame
 			NMHDR nmhdr = {0};
 			nmhdr.hwndFrom = m_hWnd;
-			nmhdr.code = DN_UNDOCKED;
+			nmhdr.code = UWM_UNDOCKED;
 			nmhdr.idFrom = m_nDockID;
 			HWND hwndFrame = GetAncestor(GetDockAncestor()->GetHwnd());
 			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
@@ -1836,6 +1815,9 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
+		case UWM_IS_DOCKABLE:	// A message to test if this is a Container window
+			return TRUE;
+		
 		case WM_SYSCOMMAND:
 			{
 				// Test if the window is being moved
@@ -1855,7 +1837,7 @@ namespace Win32xx
 
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
-			SendNotify(DN_DOCK_END);
+			SendNotify(UWM_DOCK_END);
 			SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, m_DragFullWindows, 0, 0);
 			break;
 
@@ -1880,7 +1862,7 @@ namespace Win32xx
 					{
 						LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
 						if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
-							SendNotify(DN_DOCK_MOVE);
+							SendNotify(UWM_DOCK_MOVE);
 					}
 					else
 					{
@@ -2266,7 +2248,7 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-		case DM_IS_CONTAINER:	// A message to test if this is a Container window
+		case UWM_IS_CONTAINER:	// A message to test if this is a Container window
 			return TRUE;
 
 		case WM_PAINT:

@@ -42,7 +42,7 @@
 //  CPoint, CRect, and CSize
 //
 // This file contains the declarations for the core set of classes required to
-// create simple windows using Win32++.  Five classes are declared here:
+// create simple windows using Win32++.  Seven classes are declared here:
 //
 // 1) CCriticalSection: This class is used internally to manage thread access
 //            to shared resources. You can also use this class to lock and
@@ -79,7 +79,7 @@
 #ifdef _MSC_VER
   #pragma warning (disable : 4511) // copy operator could not be generated
   #pragma warning (disable : 4512) // assignment operator could not be generated
-  #pragma warning (disable : 4702) // unreachable code
+  #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
   #pragma warning (disable : 4786) // identifier was truncated
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
   #ifndef _CRT_SECURE_NO_WARNINGS
@@ -100,7 +100,7 @@
 #endif
 
 #ifndef STRICT
-#define STRICT 1
+  #define STRICT 1
 #endif
 
 #define _WINSOCKAPI_            // Prevent winsock.h #include's.
@@ -141,6 +141,19 @@
   #define GCLP_WNDPROC       GCL_WNDPROC
 #endif
 
+// Messages defined by Win32++
+#define UWM_REARRANGED		(WM_APP + 1)	// frame window rearranged message
+#define UWM_POPUPMENU		(WM_APP + 2)	// creates the popup menu
+#define UWM_DOCK_START		(WM_APP + 3)
+#define UWM_DOCK_MOVE		(WM_APP + 4)
+#define UWM_DOCK_END		(WM_APP + 5)
+#define UWM_BAR_START		(WM_APP + 6)
+#define UWM_BAR_MOVE		(WM_APP + 7)
+#define UWM_BAR_END			(WM_APP + 8)
+#define UWM_UNDOCKED		(WM_APP + 9)
+#define UWM_IS_DOCKABLE     (WM_APP + 10)   // CDockable window returns TRUE for this message
+#define UWM_IS_CONTAINER	(WM_APP + 11)	// CContainer window return TRUE for this message
+
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
@@ -155,7 +168,7 @@ namespace Win32xx {}
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
-  #define TLS_OUT_OF_INDEXES ((DWORD)0xFFFFFFFF)
+  #define TLS_OUT_OF_INDEXES ((DWORD_PTR) -1)
 #endif
 #ifndef WM_PARENTNOTIFY
   #define WM_PARENTNOTIFY 0x0210
@@ -637,6 +650,8 @@ namespace Win32xx
 		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pwndParent) const;
+		BOOL IsContainer() const;
+		BOOL IsDockable() const;
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;
@@ -1575,6 +1590,16 @@ namespace Win32xx
 	// of a parent window's CWnd.
 	{
 		return ::IsChild(pwndParent->GetHwnd(), m_hWnd);
+	}
+
+	inline BOOL CWnd::IsContainer() const 
+	{
+		return (BOOL)SendMessage(UWM_IS_CONTAINER);
+	}
+
+	inline BOOL CWnd::IsDockable() const
+	{
+		return (BOOL)SendMessage(UWM_IS_DOCKABLE);
 	}
 
 	inline BOOL CWnd::IsEnabled() const
