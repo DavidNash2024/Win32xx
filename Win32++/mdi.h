@@ -457,7 +457,7 @@ namespace Win32xx
 
 	inline LRESULT CMDIFrame::CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
+		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
 		switch (uMsg)
 		{
 		case WM_MDIDESTROY:
@@ -574,7 +574,7 @@ namespace Win32xx
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
-		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
+		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
 		if (m_hChildMenu)
 			pMDIFrame->UpdateFrameMenu(m_hChildMenu);
 
@@ -603,7 +603,7 @@ namespace Win32xx
 		HWND hWnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
 		if ((NULL != m_hWnd) &&(hWnd == m_hWnd) && (NULL != m_hChildMenu))
 		{
-			CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
+			CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor());
 			if (m_hChildMenu)
 				pFrame->UpdateFrameMenu(m_hChildMenu);
 		}
@@ -629,7 +629,7 @@ namespace Win32xx
 		{
 		case WM_MDIACTIVATE:
 			{
-				CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor(m_hWnd));
+				CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
 
 				// This child is being activated
 				if (lParam == (LPARAM) m_hWnd)

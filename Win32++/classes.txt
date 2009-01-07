@@ -49,7 +49,6 @@ mdi.h             | CMDIFrame        | Win32, Win64      | Adds support for MDI
 ------------------+------------------+-------------------+---------------------
 dockable.h        | CDockable        | Win32, Win64      | Adds support for
                   | CContainer       |                   | docking windows.
-                  | CTabPage         |                   |
 ------------------+------------------+-------------------+---------------------
 wceframe.h        | CWceFrame        | WinCE only        | Adds support for
                   | CCmdbar          |                   | frames in WinCE.

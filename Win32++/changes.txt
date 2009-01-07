@@ -25,7 +25,6 @@ Added CDC::CreateRectRgnIndirect
 Added CDC::DetachRegion
 Added CDC::ExtCreateRegion
 Added CFrame::AddToolbarButton 
-Added CWnd::GetZOrder
 Added CWnd::IsContainer
 Added CWnd::IsDockable
 Added CWnd::LockWindowUpdate
@@ -44,6 +43,20 @@ Fixes
 Fixed Z order of undocked windows
 Added Win98 and WinME support for docking
 Fixed dock hinting with Vista AERO 
+
+More About Docking Containers
+-----------------------------
+* A container is used as the view window of a dockable.
+* Any CWnd object inherrited from CContainer is capable of docking other CWnd
+   objects inherrited from CContainer. There is no theoretical limit as to the
+   number of containers that can be contained.
+* A child container (one that is container within another) can not in turn
+   container other containers.   
+* Containers have a View window, just like Frames, MDI children and dockables.
+* Containers can optionally include a toolbar.
+* When a container contains other containers, each container's view is displayed
+   in a seperate tab.
+* Containers can be individually undocked from their parent container.
 
 
 

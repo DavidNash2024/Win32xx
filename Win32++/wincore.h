@@ -610,7 +610,6 @@ namespace Win32xx
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void Destroy();
 		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual int GetZOrder();
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -632,7 +631,7 @@ namespace Win32xx
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
 		static CWnd* FromHandle(HWND hWnd);
-		HWND GetAncestor(HWND hWnd) const;
+		HWND GetAncestor() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		CRect GetClientRect() const;
 		HDC  GetDC() const;
@@ -665,14 +664,12 @@ namespace Win32xx
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
 		int  ReleaseDC(HDC hDC) const;
-
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
 		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
-
 		void SetParent(HWND hParent);
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		int  SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const;
@@ -702,7 +699,6 @@ namespace Win32xx
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
 #endif
 
-		static BOOL CALLBACK StaticEnumWindowsProc(HWND hwnd, LPARAM lParam);
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
 
@@ -1386,11 +1382,12 @@ namespace Win32xx
 		return GetApp()->GetCWndFromMap(hWnd);
 	}
 
-	inline HWND CWnd::GetAncestor(HWND hWnd) const
+	inline HWND CWnd::GetAncestor() const
 	// The GetAncestor function retrieves the handle to the ancestor (root parent)
 	// of the window.
 	{
 		// Returns the root parent.  Supports Win95
+		HWND hWnd = m_hWnd;
 		HWND hWndParent = ::GetParent(hWnd);
 		while (::IsChild(hWndParent, hWnd))
 		{
@@ -1544,22 +1541,6 @@ namespace Win32xx
 			tstr = szString;
 		}
 		return tstr;
-	}
-
-	inline int CWnd::GetZOrder()
-	// returns the z order of the window (zero is topmost)
-	{
-		struct ZORODERSTRUCT
-		{
-			HWND hWnd;    
-			int iZOrder;
-		};
-	    
-		ZORODERSTRUCT ZOrder = {0};
-		ZOrder.hWnd = m_hWnd;    
-		EnumWindows(CWnd::StaticEnumWindowsProc, (LPARAM)&ZOrder);
-	    
-		return ZOrder.iZOrder;
 	}
 
 	inline void CWnd::Invalidate(BOOL bErase /*= TRUE*/) const
@@ -2189,25 +2170,6 @@ namespace Win32xx
 	// removing the region from the current update region of the window.
 	{
 		return ::ValidateRgn(m_hWnd, hRgn);
-	}
-
-	inline BOOL CALLBACK CWnd::StaticEnumWindowsProc(HWND hwnd, LPARAM lParam)
-	// The callback function used by GetZOrder. iZorder is zero for a top most window.
-	{
-		struct ZORODERSTRUCT
-		{
-			HWND hWnd;    
-			int iZOrder;
-		};
-	    
-		ZORODERSTRUCT* pZOrder = (ZORODERSTRUCT*)lParam;
-		if (hwnd == pZOrder->hWnd)
-		{
-			return FALSE;
-		}    
-	    
-		++pZOrder->iZOrder;
-		return TRUE;
 	}
 
 	inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

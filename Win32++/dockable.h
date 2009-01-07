@@ -283,7 +283,6 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual void RecalcDockLayout();
 		virtual void RecalcDockChildLayout(CRect rc);
-		virtual void RecalcZOrder();
 		virtual void SendNotify(UINT nMessageID);
 		virtual void UnDock();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -871,7 +870,7 @@ namespace Win32xx
 
 				// Create the Hint window
 				if (!IsWindow())
-					Create();
+					Create(pDockTarget->GetHwnd());
 				MapWindowPoints(pDockTarget->GetHwnd(), NULL, (LPPOINT)&rcHint, 2);
 				SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
 				
@@ -1065,11 +1064,16 @@ namespace Win32xx
 
 	inline CDockable* CDockable::AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, int nDockID /* = 0*/)
 	{
-		// Create the dockable window
+		// Create the dockable window with the frame window as its parent. 
+		// This pernamently sets the frame window as the dockable window's owner,
+		// even when its parent is subsequently changed.
 		pDockable->SetDockWidth(DockWidth);
 		pDockable->SetDockStyle(uDockStyle);
 		pDockable->m_nDockID = nDockID;
-		pDockable->Create(m_hWnd);
+		HWND hwndFrame = GetAncestor();
+		pDockable->Create(hwndFrame);
+		pDockable->SetParent(m_hWnd);
+		pDockable->m_pwndDockAncestor = GetDockAncestor();
 
 		if (uDockStyle & DS_DOCKED_CONTAINER)
 		{
@@ -1118,9 +1122,13 @@ namespace Win32xx
 		pDockable->SetDockStyle(uDockStyle & 0XFFFFFF0);
 		pDockable->m_nDockID = nDockID;
 
-		// Initially create the Dockable as a child window
-		// This makes our Dockable "owned" by the DockAncestor
-		pDockable->Create(m_hWnd);
+		// Initially create the as a child window of the frame
+		// This makes the frame window the owner of our dockable
+	//	pDockable->Create(m_hWnd);
+		HWND hwndFrame = GetAncestor();
+		pDockable->Create(hwndFrame);
+		pDockable->SetParent(m_hWnd);
+		pDockable->m_pwndDockAncestor = GetDockAncestor();
 
 		// Change the Dockable to a POPUP window
 		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
@@ -1381,6 +1389,7 @@ namespace Win32xx
 
 	inline void CDockable::OnCreate()
 	{
+		// Create the various child windows
 		GetDockBar().SetDock(this);
 		GetDockClient().SetDock(this);
 		GetDockBar().Create(m_hWndParent);
@@ -1389,13 +1398,13 @@ namespace Win32xx
 			throw CWinException(_T("No View window assigned to Dockable"));
 		GetView()->Create(GetDockClient().GetHwnd());
 
-		if (::SendMessage(m_hWndParent, UWM_IS_DOCKABLE, 0, 0))
-		{
-			CDockable* pDockParent = (CDockable*)FromHandle(m_hWndParent);
-			m_pwndDockAncestor = pDockParent->m_pwndDockAncestor;
-		}
-		else
-			m_pwndDockAncestor = this;
+		// Assume this dockable is the DockAncestor for now.
+		m_pwndDockAncestor = this;
+		
+		// Now remove the WS_POPUP style. It was required to allow this window
+		// to be owned by the frame window.
+		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
+		SetParent(m_hWndParent);
 	}
 
 	inline LRESULT CDockable::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -1506,70 +1515,15 @@ namespace Win32xx
 			}
 			break;
 
-			case NM_SETFOCUS:
-			// our frame has possibly grabbed focus
-			if (this == GetDockAncestor())
-				RecalcZOrder();
-			break;
 		}
 
 		return 0L;
 
 	}
 
-	inline void CDockable::RecalcZOrder()
-	{
-	//	if (this == GetDockAncestor())
-		{
-			// Create a map to store any Undocked dockables, along with their Z order
-			std::map<int, CDockable*> mapZorder;
-			for (UINT u = 0; u < GetDockAncestor()->m_vAllDockables.size(); ++u)
-			{
-				if (GetDockAncestor()->m_vAllDockables[u]->IsUndocked())
-				{
-				//	CWnd* pFrame = FromHandle(GetAncestor(m_hWnd));
-				//	if (pFrame->GetZOrder() < GetDockAncestor()->m_vAllDockables[u]->GetZOrder())
-					{
-						// Insert map entries sorted by their Z order
-						mapZorder.insert(std::pair<int, CDockable*>(GetDockAncestor()->m_vAllDockables[u]->GetZOrder(), GetDockAncestor()->m_vAllDockables[u]));
-					}
-				}
-			}
-
-			CWnd* pFrame = FromHandle(GetAncestor(GetDockAncestor()->GetHwnd()));
-			if (pFrame)
-			{
-				pFrame->SetRedraw(FALSE);
-				pFrame->SetWindowPos(NULL, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
-			}
-
-			// iterate through the map in reverse order to preseve the original Z order
-			std::map<int, CDockable*>::reverse_iterator RevItor;
-			for (RevItor = mapZorder.rbegin(); RevItor != mapZorder.rend(); ++RevItor)
-			{
-				RevItor->second->SetRedraw(FALSE);
-				RevItor->second->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
-			}
-
-			// Now iterate forwards through the map to redraw the windows
-			std::map<int, CDockable*>::iterator Itor;
-			for (Itor = mapZorder.begin(); Itor != mapZorder.end(); ++Itor)
-			{
-				Itor->second->SetRedraw(TRUE);
-				Itor->second->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ALLCHILDREN);
-			}
-
-			if (pFrame)
-			{
-				pFrame->SetRedraw(TRUE);
-				pFrame->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ALLCHILDREN);
-			}
-		}		
-	}
-
 	inline void CDockable::PreCreate(CREATESTRUCT &cs)
 	{
-		cs.style = WS_CHILD;
+		cs.style = WS_POPUP | WS_CHILD;
 		cs.dwExStyle = WS_EX_TOOLWINDOW;
 	}
 
@@ -1719,6 +1673,9 @@ namespace Win32xx
 
 	inline void CDockable::UnDock()
 	{
+		// Undocking isn't supported on Win95
+		if (1400 == GetWinVersion()) return;
+
 		if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
 		{
 			m_UnDocking = TRUE;
@@ -1797,7 +1754,7 @@ namespace Win32xx
 			nmhdr.hwndFrom = m_hWnd;
 			nmhdr.code = UWM_UNDOCKED;
 			nmhdr.idFrom = m_nDockID;
-			HWND hwndFrame = GetAncestor(GetDockAncestor()->GetHwnd());
+			HWND hwndFrame = GetDockAncestor()->GetAncestor();
 			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
 
 			// Initiate the window move
@@ -1884,15 +1841,6 @@ namespace Win32xx
 
 		case WM_CLOSE:
 			ShowWindow(SW_HIDE);
-			break;
-	
-		case WM_ACTIVATE:
-			if ((LOWORD(wParam) != WA_INACTIVE) && IsUndocked())
-			{
-				LRESULT lr = ::DefWindowProc(hWnd, uMsg, wParam, lParam);
-				RecalcZOrder();
-				return lr;
-			}
 			break;
 		}
 

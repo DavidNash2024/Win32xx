@@ -628,7 +628,7 @@ namespace Win32xx
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
-		m_pFrame = (CFrame*)FromHandle(GetAncestor(m_hWnd));
+		m_pFrame = (CFrame*)FromHandle(GetAncestor());
 	}
 
 	inline LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
@@ -754,7 +754,7 @@ namespace Win32xx
 		case VK_SPACE:
 			ExitMenu();
 			// Bring up the system menu
-			::PostMessage(GetAncestor(m_hWnd), WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
+			::PostMessage(GetAncestor(), WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
 			break;
 
 		// Handle VK_DOWN,VK_UP and VK_RETURN together
@@ -972,7 +972,7 @@ namespace Win32xx
 				m_bSelPopup = ((HIWORD(wParam) & MF_POPUP) != 0);
 
 				// Reflect message back to the frame window
-				::SendMessage(GetAncestor(m_hWnd), WM_MENUSELECT, wParam, lParam);
+				::SendMessage(GetAncestor(), WM_MENUSELECT, wParam, lParam);
 			}
 			return TRUE;
 
@@ -3010,69 +3010,11 @@ namespace Win32xx
 					nhdr.code = NM_KILLFOCUS;
 					HWND hParent = ::GetParent(m_hOldFocus);
 					if (hParent)
-						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-				}
-				else
-				{
-					// Do default processing first
-					LRESULT lr = DefWindowProc(uMsg, wParam, lParam);
-					
-					// Now set the focus to the appropriate child window
-					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
-					
-					// Send a notification to the child window's parent
-					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-					NMHDR nhdr={0};
-					nhdr.hwndFrom = m_hOldFocus;
-					nhdr.idFrom = idCtrl;
-					nhdr.code = NM_SETFOCUS;
-					HWND hParent = ::GetParent(m_hOldFocus);
-					if (hParent)
-						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-
-					// Also send notification to view for dockables
-					m_pwndView->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-
-					return lr;
+						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
 				}
 			}
 			break;  
 
-		case WM_SYSCOMMAND:
-			{
-				switch (wParam & 0xFFF0)
-				{
-				case SC_MOVE:
-				case SC_MAXIMIZE:
-				case SC_RESTORE:
-				case SC_SIZE:
-					{
-						// Do default processing first
-						LRESULT lr = DefWindowProc(uMsg, wParam, lParam);
-						
-						NMHDR nhdr={0};
-						nhdr.code = NM_SETFOCUS;
-						nhdr.hwndFrom = m_hWnd;
-
-						// This message indicates a possible change of focus, so
-						//  we send the notification to the view for dockables.
-						m_pwndView->SendMessage(WM_NOTIFY, 0, (LPARAM)&nhdr);
-
-						return lr;
-					}
-				case SC_KEYMENU:
-					if ((VK_SPACE != lParam) && IsMenubarUsed())
-					{
-						GetMenubar().SysCommand(wParam, lParam);
-						return 0L;
-					}
-				case SC_MINIMIZE:
-					m_hOldFocus = GetFocus();
-					break;
-				}			
-			}
-			break;
-	
 		case WM_CLOSE:
 			OnFrameClose();
 			break;
@@ -3110,16 +3052,16 @@ namespace Win32xx
 			// Forward the message to the view window
 			::PostMessage(m_pwndView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
 			return 0L;
-	//	case WM_SYSCOMMAND:
-	//		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
-	//		{
-	//			GetMenubar().SysCommand(wParam, lParam);
-	//			return 0L;
-	//		}
-	//		
-	//		if (SC_MINIMIZE == wParam)
-	//			m_hOldFocus = GetFocus();
-	//		break;
+		case WM_SYSCOMMAND:
+			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
+			{
+				GetMenubar().SysCommand(wParam, lParam);
+				return 0L;
+			}
+			
+			if (SC_MINIMIZE == wParam)
+				m_hOldFocus = GetFocus();
+			break;
 		case WM_TIMER:
 			OnFrameTimer(wParam);
 			return 0L;
