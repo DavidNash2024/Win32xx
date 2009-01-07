@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
-// Classes.h
-//  Declaration of CViewClasses and CContainClasses
+// Classes.h - Declaration of CViewClasses, CContainClasses,
+//              and CDockClasses classes
 
 
 #ifndef CLASSES_H
@@ -11,7 +11,7 @@
 #include "../../Win32++/dockable.h"
 #include "resource.h"
 
-
+// Declaration of the CViewClasses class
 class CViewClasses : public CTreeView
 {
 public:
@@ -25,6 +25,7 @@ private:
 	
 };
 
+// Declaration of the CContainClasses class
 class CContainClasses : public CContainer
 {
 public:
@@ -36,6 +37,20 @@ private:
 	CViewClasses m_ViewClasses;
 
 };
+
+// Declaration of the CDockClasses class
+class CDockClasses : public CDockable
+{
+public:
+	CDockClasses(); 
+	virtual ~CDockClasses() {}
+	virtual void OnInitialUpdate();
+
+private:
+	CContainClasses m_Classes;
+
+};
+
 
 
 #endif  //CLASSES_H

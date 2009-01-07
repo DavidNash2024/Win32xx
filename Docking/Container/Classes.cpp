@@ -1,55 +1,11 @@
-//////////////////////////////////////////////
-// Classes.cpp
-//  Definitions for CViewClasses and CContainClasses
+///////////////////////////////////////////////////
+// Classes.cpp - Definitions for the CViewClasses, CContainClasses
+//               and CDockClasses classes
 
 
 #include "ContainerApp.h"
 #include "Classes.h"
 #include "resource.h"
-
-
-///////////////////////////////////////////////
-// CContainClasses functions
-CContainClasses::CContainClasses() 
-{
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
-	SetTabText(_T("ClassView"));
-	SetTabIcon(IDI_CLASSVIEW);
-	SetView(m_ViewClasses);
-}
-
-
-BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
-{
-	// OnCommand responds to menu and and toolbar input
-
-	switch(LOWORD(wParam))
-	{
-	case IDM_FILE_NEW:
-		TRACE(_T("File New\n"));
-		break;
-	case IDM_FILE_OPEN:
-		TRACE(_T("File Open\n"));
-		break;
-	case IDM_FILE_SAVE:
-		TRACE(_T("FILE Save\n"));
-		break;
-	}
-
-	return FALSE;
-}
 
 
 ///////////////////////////////////////////////
@@ -113,5 +69,74 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 
 	return InsertItem(tvis);
 }
+
+
+///////////////////////////////////////////////
+// CContainClasses functions
+CContainClasses::CContainClasses() 
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT );
+
+	SetTabText(_T("ClassView"));
+	SetTabIcon(IDI_CLASSVIEW);
+	SetView(m_ViewClasses);
+}
+
+
+BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+{
+	// OnCommand responds to menu and and toolbar input
+
+	switch(LOWORD(wParam))
+	{
+	case IDM_FILE_NEW:
+		TRACE(_T("File New\n"));
+		break;
+	case IDM_FILE_OPEN:
+		TRACE(_T("File Open\n"));
+		break;
+	case IDM_FILE_SAVE:
+		TRACE(_T("FILE Save\n"));
+		break;
+	}
+
+	return FALSE;
+}
+
+
+/////////////////////////////////////////////////
+//  Definitions for the CDockClasses class
+CDockClasses::CDockClasses() 
+{ 
+	SetView(m_Classes); 
+}
+
+void CDockClasses::OnInitialUpdate()
+{
+	// Set the width of the splitter bar
+	SetBarWidth(8);
+
+	// Set the color of the splitter bar
+	CMainFrame& MainFrame = GetContainerApp().GetMainFrame();
+	CRebar& RB = MainFrame.GetRebar();
+	if (RB.GetRebarTheme().UseThemes)
+		SetBarColor(RB.GetRebarTheme().clrBkgnd2);
+	else
+		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
+
+	SetCaption (_T("Class View - Docking container"));
+}
+
 
 

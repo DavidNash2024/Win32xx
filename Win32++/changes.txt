@@ -46,12 +46,19 @@ Fixed dock hinting with Vista AERO
 
 More About Docking Containers
 -----------------------------
-* A container is used as the view window of a dockable.
-* Any CWnd object inherrited from CContainer is capable of docking other CWnd
+A container can be used is a view window for a frame, MDI child, dockable etc.
+It has a tab control, and is capable of containing and displaying other
+containers. Each container will in turn have a view window of its own. The view 
+for each container as well as it's toolbar (if any) is displayed in the tab's 
+page. When used as the view window of a dockable, the container also permits
+ docking and undocking of it's containers.  
+
+In Summary:
+* Any CWnd object inherrited from CContainer is capable of containing other CWnd
    objects inherrited from CContainer. There is no theoretical limit as to the
    number of containers that can be contained.
-* A child container (one that is container within another) can not in turn
-   container other containers.   
+* A child container (a container contained within another) can not in turn
+   contain other containers.   
 * Containers have a View window, just like Frames, MDI children and dockables.
 * Containers can optionally include a toolbar.
 * When a container contains other containers, each container's view is displayed

@@ -213,61 +213,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Dockables.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Files.cpp"
 				>
 			</File>
 			<File
-				RelativePath="main.cpp"
+				RelativePath=".\main.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Mainfrm.cpp"
+				RelativePath=".\Mainfrm.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Views.cpp"
+				RelativePath=".\Simple.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Text.cpp"
 				>
 			</File>
 		</Filter>
@@ -284,7 +246,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Dockables.h"
+				RelativePath=".\DockContainer.h"
 				>
 			</File>
 			<File
@@ -292,15 +254,19 @@
 				>
 			</File>
 			<File
-				RelativePath="Mainfrm.h"
+				RelativePath=".\Mainfrm.h"
 				>
 			</File>
 			<File
-				RelativePath="resource.h"
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Views.h"
+				RelativePath=".\Simple.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Text.h"
 				>
 			</File>
 		</Filter>
@@ -381,6 +347,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\Readme.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

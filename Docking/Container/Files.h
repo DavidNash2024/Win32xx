@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////////////
-// Files.h
-//  Declaration of CContainFiles and CViewFiles
+/////////////////////////////////////////////////
+// Files.h - Declaration of the CViewFiles, CContainFiles 
+//           and CDockFiles classes
 
 
 #ifndef FILES_H
@@ -11,7 +11,7 @@
 #include "../../Win32++/listview.h"
 #include "resource.h"
 
-
+// Declaration of the CViewFiles class
 class CViewFiles : public CListView
 {
 public:
@@ -25,9 +25,9 @@ public:
 
 private:
 	HIMAGELIST m_himlSmall;
-
 };
 
+// Declaration of the CContainFiles class
 class CContainFiles : public CContainer
 {
 public:
@@ -38,9 +38,17 @@ private:
 	CViewFiles m_ViewFiles;
 };
 
+// Declaration of the CDockFiles class
+class CDockFiles : public CDockable
+{
+public:
+	CDockFiles(); 
+	virtual ~CDockFiles() {}
+	virtual void OnInitialUpdate();
 
-
+private:
+	CContainFiles m_Files;
+};
 
 
 #endif // FILES_H
-

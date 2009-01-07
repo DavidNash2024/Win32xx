@@ -145,17 +145,18 @@
 		<Unit filename="ContainerApp.cpp" />
 		<Unit filename="ContainerApp.h" />
 		<Unit filename="DockContainer.h" />
-		<Unit filename="Dockables.cpp" />
-		<Unit filename="Dockables.h" />
 		<Unit filename="Files.cpp" />
 		<Unit filename="Files.h" />
 		<Unit filename="Mainfrm.cpp" />
 		<Unit filename="Mainfrm.h" />
+		<Unit filename="Makefile.win" />
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="Views.cpp" />
-		<Unit filename="Views.h" />
+		<Unit filename="Simple.cpp" />
+		<Unit filename="Simple.h" />
+		<Unit filename="Text.cpp" />
+		<Unit filename="Text.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
 		<Extensions>

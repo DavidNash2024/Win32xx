@@ -148,9 +148,6 @@
 				RelativePath=".\ContainerApp.cpp">
 			</File>
 			<File
-				RelativePath=".\Dockables.cpp">
-			</File>
-			<File
 				RelativePath=".\Files.cpp">
 			</File>
 			<File
@@ -190,7 +187,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Views.cpp">
+				RelativePath=".\Simple.cpp">
+			</File>
+			<File
+				RelativePath=".\Text.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -203,9 +203,6 @@
 				RelativePath=".\ContainerApp.h">
 			</File>
 			<File
-				RelativePath=".\Dockables.h">
-			</File>
-			<File
 				RelativePath=".\Files.h">
 			</File>
 			<File
@@ -215,7 +212,10 @@
 				RelativePath="resource.h">
 			</File>
 			<File
-				RelativePath=".\Views.h">
+				RelativePath=".\Simple.h">
+			</File>
+			<File
+				RelativePath=".\Text.h">
 			</File>
 		</Filter>
 		<Filter

@@ -81,7 +81,7 @@
 #include "Default_Resource.h"
 
 #ifndef RBN_MINMAX
-  #define (RBN_MINMAX RBN_FIRST - 21)
+  #define RBN_MINMAX (RBN_FIRST - 21)
 #endif
 
 

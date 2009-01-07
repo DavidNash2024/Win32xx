@@ -5,7 +5,10 @@
 #define MAINFRM_H
 
 #include "../../Win32++/frame.h"
-#include "Dockables.h"
+#include "Classes.h"
+#include "Files.h"
+#include "Simple.h"
+#include "Text.h"
 
 
 // Declaration of the CMainFrame class

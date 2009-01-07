@@ -102,10 +102,6 @@ SOURCE=.\ContainerApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Dockables.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\Files.cpp
 # End Source File
 # Begin Source File
@@ -118,7 +114,11 @@ SOURCE=.\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Views.cpp
+SOURCE=.\Simple.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Text.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -131,10 +131,6 @@ SOURCE=.\Classes.h
 # Begin Source File
 
 SOURCE=.\ContainerApp.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Dockables.h
 # End Source File
 # Begin Source File
 
@@ -154,7 +150,11 @@ SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Views.h
+SOURCE=.\Simple.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Text.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

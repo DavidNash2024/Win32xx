@@ -1,10 +1,11 @@
 //////////////////////////////////////////////
-// Files.cpp
-//  Definitions for CViewFiles and CContainFiles
+// Files.cpp - Definitions for CViewFiles, CContainFiles
+//             and DockFiles classes
 
 #include "ContainerApp.h"
 #include "Files.h"
 #include "resource.h"
+
 
 ///////////////////////////////////////////////
 // CViewFiles functions
@@ -102,4 +103,28 @@ CContainFiles::CContainFiles()
 	SetTabIcon(IDI_FILEVIEW);
 	SetView(m_ViewFiles);
 }
+
+/////////////////////////////////////////////////
+//  Definitions for the CDockFiles class
+CDockFiles::CDockFiles() 
+{ 
+	SetView(m_Files); 
+}
+
+void CDockFiles::OnInitialUpdate()
+{
+	// Set the width of the splitter bar
+	SetBarWidth(8);
+
+	// Set the color of the splitter bar
+	CMainFrame& MainFrame = GetContainerApp().GetMainFrame();
+	CRebar& RB = MainFrame.GetRebar();
+	if (RB.GetRebarTheme().UseThemes)
+		SetBarColor(RB.GetRebarTheme().clrBkgnd2);
+	else
+		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
+
+	SetCaption (_T("File View - Docking Container"));
+}
+
 
