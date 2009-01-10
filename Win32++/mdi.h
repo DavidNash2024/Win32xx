@@ -590,7 +590,7 @@ namespace Win32xx
 	{
 		// Create the view window
 		if (NULL == m_pwndView)
-			throw CWinException(_T("CMDIChild::OnCreate ... m_pwndView is NULL\n\nUse SetView to set the View Window"));
+			throw CWinException(_T("CMDIChild::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
 		
 		m_pwndView->Create(m_hWnd);
 	}

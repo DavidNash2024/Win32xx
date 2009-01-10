@@ -586,6 +586,7 @@ namespace Win32xx
 
 			TRACE(_T("*** ERROR: An Exception occured ***\n"));
 			TRACE(buf3);
+			TRACE(_T("\n\n"));
 
 			::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 		}

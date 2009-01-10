@@ -1985,7 +1985,7 @@ namespace Win32xx
 
 		// Create the view window
 		if (NULL == m_pwndView)
-			throw CWinException(_T("CFrame::OnCreate ... m_pwndView is NULL\n\nUse SetView to set the View Window"));
+			throw CWinException(_T("CFrame::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
 		m_pwndView->Create(m_hWnd);
 
 		// Reposition the child windows
@@ -3011,6 +3011,26 @@ namespace Win32xx
 					HWND hParent = ::GetParent(m_hOldFocus);
 					if (hParent)
 						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
+				}
+				else
+				{
+					// Do default processing first
+					DefWindowProc(WM_ACTIVATE, wParam, lParam);
+					
+					// Now set the focus to the appropriate child window
+					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
+					
+					// Send a notification to the child window's parent
+					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+					NMHDR nhdr={0};
+					nhdr.hwndFrom = m_hOldFocus;
+					nhdr.idFrom = idCtrl;
+					nhdr.code = NM_SETFOCUS;
+					HWND hParent = ::GetParent(m_hOldFocus);
+					if (hParent)
+						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
+
+					return 0;
 				}
 			}
 			break;  

@@ -138,52 +138,52 @@ void CMainFrame::LoadRegistryDockables()
 				switch(di.DockID)
 				{
 				case ID_CLASS1:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockClass, di.DockStyle, di.DockWidth, ID_CLASS1);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockClass, di.DockStyle, di.DockWidth, di.Rect, ID_CLASS1);
+					else
+						pDock->AddDockedChild(new CDockClass, di.DockStyle, di.DockWidth, ID_CLASS1);
 					break;
 				case ID_CLASS2:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockClass, di.DockStyle, di.DockWidth, ID_CLASS2);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockClass, di.DockStyle, di.DockWidth, di.Rect, ID_CLASS2);
+					else
+						pDock->AddDockedChild(new CDockClass, di.DockStyle, di.DockWidth, ID_CLASS2);					
 					break;
 				case ID_FILES1:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES1);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES1);
+					else
+						pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES1);
 					break;
 				case ID_FILES2:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES2);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES2);
+					else
+						pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES2);
 					break;
 				case ID_SIMPLE1:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockSimple, di.DockStyle, di.DockWidth, ID_SIMPLE1);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockSimple, di.DockStyle, di.DockWidth, di.Rect, ID_SIMPLE1);
+					else
+						pDock->AddDockedChild(new CDockSimple, di.DockStyle, di.DockWidth, ID_SIMPLE1);
 					break;
 				case ID_SIMPLE2:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockSimple, di.DockStyle, di.DockWidth, ID_SIMPLE2);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockSimple, di.DockStyle, di.DockWidth, di.Rect, ID_SIMPLE2);
+					else
+						pDock->AddDockedChild(new CDockSimple, di.DockStyle, di.DockWidth, ID_SIMPLE2);
 					break;
 				case ID_TEXT1:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT1);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT1);
+					else
+						pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT1);
 					break;
 				case ID_TEXT2:
-					if (-1 != di.DockParentID)
-						pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT2);
-					else
+					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
+					else;
+						pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT2);
 					break;
 				default:
 					TRACE("Unknown Dock ID\n");

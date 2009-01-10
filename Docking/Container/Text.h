@@ -1,5 +1,5 @@
-////////////////////////////////////////////
-// Text.h - Declaration of the CViewText 
+///////////////////////////////////////////////////////
+// Text.h - Declaration of the CViewText, CContainText, 
 //          and CDockText classes
 
 #ifndef TEXT_H
@@ -25,6 +25,17 @@ private:
 
 };
 
+// Declaration of the CContainText class
+class CContainText : public CContainer
+{
+public:
+	CContainText() { SetView(m_ViewText); } 
+	~CContainText() {}
+
+private:
+	CViewText m_ViewText;
+};
+
 // Declaration of the CDockText class
 class CDockText : public CDockable
 {
@@ -34,7 +45,7 @@ public:
 	virtual void OnInitialUpdate();
 
 private:
-	CViewText m_View;
+	CContainText m_View;
 
 };
 
