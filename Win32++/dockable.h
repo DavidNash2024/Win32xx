@@ -124,13 +124,19 @@ namespace Win32xx
 		virtual CWnd* GetView() const			{return GetTabPage().GetView();}
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
-		virtual LPCTSTR GetTabText() {return m_stTabText.c_str();}
-		virtual void SetTabText(LPCTSTR szText) {m_stTabText = szText;}
-		virtual HICON GetTabIcon() {return m_hTabIcon;}
-		virtual void SetTabIcon(HICON hTabIcon) {m_hTabIcon = hTabIcon;}
-		virtual void SetTabIcon(UINT nID_Icon)
-		{ m_hTabIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon)); }
+		virtual void SetTabSize();
 		virtual void SetView(CWnd& Wnd);
+		
+		// Attributes
+		LPCTSTR GetTabText() {return m_stTabText.c_str();}
+		void SetTabText(LPCTSTR szText) {m_stTabText = szText;}
+		HICON GetTabIcon() {return m_hTabIcon;}
+		void SetTabIcon(HICON hTabIcon) {m_hTabIcon = hTabIcon;}
+		void SetTabIcon(UINT nID_Icon)
+		{ m_hTabIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon)); }
+		
+
+
 
 	protected:
 		virtual void OnCreate();
@@ -308,6 +314,7 @@ namespace Win32xx
 		CWnd* GetView() const {return GetDockClient().m_pwndView;}
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
+		BOOL IsChildFocused() const;
 		BOOL IsUndocked() const;
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		virtual int GetBarWidth() {return GetDockBar().GetWidth();}
@@ -487,11 +494,14 @@ namespace Win32xx
 
 		if (!(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
+			static BOOL bOldFocus = FALSE;
 			CDC dc;
-			if (wParam != 1)
+			if ((wParam != 1) && (bFocus == bOldFocus))
 				dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
 			else
 				dc 	= GetWindowDC();
+
+			bOldFocus = bFocus;
 
 			CRect rc = GetWindowRect();
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
@@ -532,9 +542,8 @@ namespace Win32xx
 			m_rcClose.left = m_rcClose.right - cx;
 			m_rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
 			m_rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
-
 			DrawCloseButton(dc, 0);
-
+			
 			// Draw the 3D border
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 				Draw3DBorder(rc);
@@ -578,7 +587,7 @@ namespace Win32xx
 				break;
 			}
 
-			if (m_pwndView->GetHwnd() == GetFocus())
+			if (m_pDock->IsChildFocused())
 				DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
 			else
 				DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
@@ -694,7 +703,9 @@ namespace Win32xx
 				{
 					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 					MapWindowPoints(NULL, hWnd, &pt, 1);
+					
 					m_pwndView->SetFocus();
+					
 					return 0L;
 				}
 				break;
@@ -735,10 +746,7 @@ namespace Win32xx
 				if (m_pDock->IsDocked())
 				{
 					DefWindowProc(uMsg, wParam, lParam);
-
-					BOOL IsFocused =  (m_pwndView->GetHwnd() == GetFocus());
-					DrawCaption(wParam, IsFocused);
-
+					DrawCaption(wParam, m_pDock->IsChildFocused());
 					return 0;
 				}
 				break;	// also do default painting
@@ -747,6 +755,7 @@ namespace Win32xx
 				// Focus changed, so redraw the captions
 				{
 					m_pwndView->SetFocus();
+					
 					m_pDock->RecalcDockLayout();
 				}
 				break;
@@ -1387,6 +1396,19 @@ namespace Win32xx
 		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
+	inline BOOL CDockable::IsChildFocused() const
+	// returns true if this dockable or any of its children has focus
+	{
+		HWND hwnd = ::GetFocus();
+		while (hwnd != NULL)
+		{
+			if (hwnd == m_hWnd) return TRUE;
+			hwnd = GetParent(hwnd);
+		}
+
+		return FALSE;
+	}
+
 	inline BOOL CDockable::IsUndocked() const
 	{
 		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
@@ -1980,6 +2002,17 @@ namespace Win32xx
 		case WM_SIZE:
 			RecalcLayout();
 			break;
+		case WM_NOTIFY:
+			switch (((LPNMHDR)lParam)->code)
+			{
+			// Send the focus change notifications to the grandparent
+			case NM_KILLFOCUS:
+			case NM_SETFOCUS:
+				::SendMessage(GetParent(m_hWndParent), WM_NOTIFY, wParam, lParam);
+				break;
+			}
+
+			break;
 		}
 
 		// pass unhandled messages on for default processing
@@ -2029,6 +2062,8 @@ namespace Win32xx
 			tie.iImage = iNewPage;
 			tie.pszText = m_vTabPageInfo[iNewPage].szTitle;
 			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
+
+			SetTabSize();
 		}
 	}
 
@@ -2082,7 +2117,7 @@ namespace Win32xx
 	}
 
 	inline void CContainer::OnCreate()
-	{	
+	{		
 		if (NULL == GetView())
 			throw CWinException(_T("CContainer::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
 				
@@ -2113,7 +2148,6 @@ namespace Win32xx
 			tie.pszText = m_vTabPageInfo[i].szTitle;
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
-
 	}
 
 	inline LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
@@ -2290,6 +2324,14 @@ namespace Win32xx
 		m_iCurrentPage = iPage;
 	}
 
+	inline void CContainer::SetTabSize()
+	{
+		CRect rc = GetClientRect();
+		TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+		int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vTabPageInfo.size());
+		SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
+	}
+
 	inline void CContainer::SetView(CWnd& Wnd)
 	{
 		TabPageInfo tbi = {0};
@@ -2330,16 +2372,11 @@ namespace Win32xx
 				if ((int)m_vTabPageInfo.size() > m_iCurrentPage)
 				{				
 					// Set the tab sizes
-					CRect rc = GetClientRect();
-					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-					int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vTabPageInfo.size());
-					SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
-
-					// Recalculate the rectangle size (its affected by the tab sizes)
-					rc = GetClientRect();
-					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);	
+					SetTabSize();
 
 					// Position the View over the tab control's display area
+					CRect rc = GetClientRect();
+					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
 					m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetTabPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 				}
 			}

@@ -2996,6 +2996,9 @@ namespace Win32xx
 		{
 		case WM_ACTIVATE:
 			{
+				// Do default processing first
+				DefWindowProc(uMsg, wParam, lParam);
+				
 				if (LOWORD(wParam) == WA_INACTIVE)
 				{
 					// Save the hwnd of the window which currently has focus
@@ -3010,13 +3013,10 @@ namespace Win32xx
 					nhdr.code = NM_KILLFOCUS;
 					HWND hParent = ::GetParent(m_hOldFocus);
 					if (hParent)
-						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
+						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				}
 				else
-				{
-					// Do default processing first
-					DefWindowProc(WM_ACTIVATE, wParam, lParam);
-					
+				{					
 					// Now set the focus to the appropriate child window
 					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
 					
@@ -3029,11 +3029,9 @@ namespace Win32xx
 					HWND hParent = ::GetParent(m_hOldFocus);
 					if (hParent)
 						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
-
-					return 0;
-				}
+				} 
 			}
-			break;  
+			return 0L;
 
 		case WM_CLOSE:
 			OnFrameClose();
