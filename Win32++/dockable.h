@@ -1814,7 +1814,7 @@ namespace Win32xx
 		
 		if (GetView() == pContainer)
 		{
-			// Since the parent container is being undocked, we need
+			// The parent container is being undocked, so we need
 			// to transfer our child containers to a different dockable
 			
 			// Choose a new dockable from among the dockables for child containers
@@ -1850,13 +1850,23 @@ namespace Win32xx
 			pDockNew->m_DockWidthRatio	= m_DockWidthRatio;
 			pDockNew->SetParent(m_hWndParent);
 			pDockNew->GetDockBar().SetParent(m_hWndParent);
-			pDockNew->m_pwndDockParent->m_vDockChildren.push_back(pDockNew);
+
+			// insert pDockNew into the the DockParent's DockChildren vector
+			std::vector<CDockable*>::iterator p;
+			for (p = pDockNew->m_pwndDockParent->m_vDockChildren.begin(); p != pDockNew->m_pwndDockParent->m_vDockChildren.end(); ++p)
+			{
+				if (*p == this)
+				{
+					pDockNew->m_pwndDockParent->m_vDockChildren.insert(p, pDockNew);
+					break;
+				}
+			}
 		}
 		else
 			// This is a child container, so simply remove it from the parent
 			((CContainer*)GetView())->RemoveContainer(pContainer);
 
-		// Finally do the undocking
+		// Finally do the actual undocking
 		for (int i = 0; i < (int)GetAllDockables().size(); ++i)
 		{
 			CDockable* pDock = GetAllDockables()[i];
