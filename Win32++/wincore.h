@@ -142,17 +142,19 @@
 #endif
 
 // Messages defined by Win32++
-#define UWM_REARRANGED		(WM_APP + 1)	// frame window rearranged message
-#define UWM_POPUPMENU		(WM_APP + 2)	// creates the popup menu
-#define UWM_DOCK_START		(WM_APP + 3)
-#define UWM_DOCK_MOVE		(WM_APP + 4)
-#define UWM_DOCK_END		(WM_APP + 5)
-#define UWM_BAR_START		(WM_APP + 6)
-#define UWM_BAR_MOVE		(WM_APP + 7)
-#define UWM_BAR_END			(WM_APP + 8)
-#define UWM_UNDOCKED		(WM_APP + 9)
-#define UWM_IS_DOCKABLE     (WM_APP + 10)   // CDockable window returns TRUE for this message
-#define UWM_IS_CONTAINER	(WM_APP + 11)	// CContainer window return TRUE for this message
+#define UWM_REARRANGED		(WM_APP + 1)	// Notification - frame window rearranged message
+#define UWM_POPUPMENU		(WM_APP + 2)	// Message - creates the popup menu
+#define UWM_DOCK_START		(WM_APP + 3)	// Notification - about to start undocking
+#define UWM_DOCK_MOVE		(WM_APP + 4)	// Notification - undockable is being moved
+#define UWM_DOCK_END		(WM_APP + 5)	// Notification - dockable has been docked
+#define UWM_BAR_START		(WM_APP + 6)	// Notification - dockable bar selected for move
+#define UWM_BAR_MOVE		(WM_APP + 7)	// Notification - dockable bar moved
+#define UWM_BAR_END			(WM_APP + 8)	// Notification - end of dockable bar move
+#define UWM_UNDOCKED		(WM_APP + 9)	// Notification sent by dockable when undocked
+#define UWM_IS_DOCKABLE     (WM_APP + 10)   // Message - CDockable window returns TRUE for this message
+#define UWM_IS_CONTAINER	(WM_APP + 11)	// Message - CContainer window return TRUE for this message
+#define UWM_FRAMELOSTFOCUS	(WM_APP + 12)   // Notification sent by frame to view window when focus lost
+#define UWM_FRAMEGOTFOCUS	(WM_APP + 13)   // Notification sent by frame to view window
 
 
 // Automatically include the Win32xx namespace

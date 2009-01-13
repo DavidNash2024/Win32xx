@@ -3005,30 +3005,32 @@ namespace Win32xx
 					// (this must be CFrame window itself or a child window
 					if (!IsIconic()) m_hOldFocus = GetFocus();
 
-					// Send a notification to the child window's parent
+					// Send a notification to the view window
 					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
 					NMHDR nhdr={0};
 					nhdr.hwndFrom = m_hOldFocus;
 					nhdr.idFrom = idCtrl;
-					nhdr.code = NM_KILLFOCUS;
-					HWND hParent = ::GetParent(m_hOldFocus);
-					if (hParent)
-						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+					nhdr.code = UWM_FRAMELOSTFOCUS;
+				//	HWND hParent = ::GetParent(m_hOldFocus);
+				//	if (hParent)
+				//		::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+					GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				}
 				else
 				{					
 					// Now set the focus to the appropriate child window
 					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
 					
-					// Send a notification to the child window's parent
+					// Send a notification to the view window
 					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
 					NMHDR nhdr={0};
 					nhdr.hwndFrom = m_hOldFocus;
 					nhdr.idFrom = idCtrl;
 					nhdr.code = NM_SETFOCUS;
-					HWND hParent = ::GetParent(m_hOldFocus);
-					if (hParent)
-						::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr); 
+				//	HWND hParent = ::GetParent(m_hOldFocus);
+				//	if (hParent)
+				//		::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+					GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				} 
 			}
 			return 0L;

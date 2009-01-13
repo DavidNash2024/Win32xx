@@ -122,6 +122,7 @@ namespace Win32xx
 		virtual CTabPage& GetTabPage() const	{return (CTabPage&)m_wndPage;}
 		virtual CToolbar& GetToolbar() const	{return m_wndPage.GetToolbar();}
 		virtual CWnd* GetView() const			{return GetTabPage().GetView();}
+		virtual CWnd* GetCurrentView() const	{return m_pwndContainerParent->GetTabPage().GetView();}
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
@@ -153,6 +154,8 @@ namespace Win32xx
 		CTabPage m_wndPage;
 		std::string m_stTabText;
 		HICON m_hTabIcon;
+		CContainer* m_pwndContainerParent;
+		
 	};
 
 	typedef struct DRAGPOS
@@ -218,7 +221,7 @@ namespace Win32xx
 			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
-			virtual void DrawCloseButton(CDC& DrawDC, UINT uState);
+			virtual void DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus);
 			virtual BOOL IsClosing();
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS& wc);
@@ -314,7 +317,8 @@ namespace Win32xx
 		CWnd* GetView() const {return GetDockClient().m_pwndView;}
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
-		BOOL IsChildFocused() const;
+	//	BOOL IsChildFocused() const;
+		BOOL IsChildOfDockable(HWND hwnd) const;
 		BOOL IsUndocked() const;
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		virtual int GetBarWidth() {return GetDockBar().GetWidth();}
@@ -542,7 +546,7 @@ namespace Win32xx
 			m_rcClose.left = m_rcClose.right - cx;
 			m_rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
 			m_rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
-			DrawCloseButton(dc, 0);
+			DrawCloseButton(dc, 0, bFocus);
 			
 			// Draw the 3D border
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
@@ -550,7 +554,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDockable::CDockClient::DrawCloseButton(CDC& DrawDC, UINT uState)
+	inline void CDockable::CDockClient::DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus)
 	{
 		CRect rcClose = m_rcClose;
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
@@ -587,7 +591,7 @@ namespace Win32xx
 				break;
 			}
 
-			if (m_pDock->IsChildFocused())
+			if (bFocus)
 				DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
 			else
 				DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
@@ -626,7 +630,7 @@ namespace Win32xx
 			if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 				DrawCaption((WPARAM)1, TRUE);
 			break;
-		case NM_KILLFOCUS:
+		case UWM_FRAMELOSTFOCUS:
 			if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 				DrawCaption((WPARAM)1, FALSE);
 			break;
@@ -746,7 +750,8 @@ namespace Win32xx
 				if (m_pDock->IsDocked())
 				{
 					DefWindowProc(uMsg, wParam, lParam);
-					DrawCaption(wParam, m_pDock->IsChildFocused());
+					BOOL bFocus = m_pDock->IsChildOfDockable(GetFocus());
+					DrawCaption(wParam, bFocus);
 					return 0;
 				}
 				break;	// also do default painting
@@ -1396,13 +1401,35 @@ namespace Win32xx
 		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-	inline BOOL CDockable::IsChildFocused() const
+/*	inline BOOL CDockable::IsChildFocused() const
 	// returns true if this dockable or any of its children has focus
 	{
 		HWND hwnd = ::GetFocus();
 		while (hwnd != NULL)
 		{
-			if (hwnd == m_hWnd) return TRUE;
+			if (hwnd == m_hWnd) 
+				return TRUE;
+			
+			if (TRUE == ::SendMessage(hwnd, UWM_IS_DOCKABLE, 0, 0))
+				break;
+
+			hwnd = GetParent(hwnd);
+		}
+
+		return FALSE;
+	}
+*/
+	inline BOOL CDockable::IsChildOfDockable(HWND hwnd) const
+	// returns true if the specified window is a child of this dockable
+	{
+		while (hwnd != NULL)
+		{
+			if (hwnd == m_hWnd) 
+				return TRUE;
+			
+			if (TRUE == ::SendMessage(hwnd, UWM_IS_DOCKABLE, 0, 0))
+				break;
+
 			hwnd = GetParent(hwnd);
 		}
 
@@ -1541,7 +1568,35 @@ namespace Win32xx
 				RecalcDockLayout();
 			}
 			break;
-
+		case NM_SETFOCUS:
+			{
+				if (this == GetDockAncestor())
+				{
+					std::vector<CDockable*>::iterator iter;
+					for (iter = m_vAllDockables.begin(); iter != m_vAllDockables.end(); ++iter)
+					{
+						if ((*iter)->IsChildOfDockable(::GetFocus()))
+						{
+							(*iter)->GetDockClient().DrawCaption((WPARAM)1, TRUE);
+						}
+					}
+				}
+			}
+			break;
+		case UWM_FRAMELOSTFOCUS:
+			{
+				if (this == GetDockAncestor())
+				{
+					std::vector<CDockable*>::iterator iter;
+					for (iter = m_vAllDockables.begin(); iter != m_vAllDockables.end(); ++iter)
+					{
+						if ((*iter)->IsChildOfDockable(::GetFocus()))
+						{
+							(*iter)->GetDockClient().DrawCaption((WPARAM)1, FALSE);
+						}
+					}
+				}
+			}
 		}
 
 		return 0L;
@@ -1962,7 +2017,7 @@ namespace Win32xx
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-		///////////////////////////////////////////
+	///////////////////////////////////////////
 	// Declaration of the nested CTabPage class
 	inline BOOL CContainer::CTabPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
@@ -2018,6 +2073,7 @@ namespace Win32xx
 			// Send the focus change notifications to the grandparent
 			case NM_KILLFOCUS:
 			case NM_SETFOCUS:
+			case UWM_FRAMELOSTFOCUS:
 				::SendMessage(GetParent(m_hWndParent), WM_NOTIFY, wParam, lParam);
 				break;
 			}
@@ -2031,7 +2087,7 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class
-	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0)
+	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0), m_pwndContainerParent(NULL)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
@@ -2075,6 +2131,8 @@ namespace Win32xx
 
 			SetTabSize();
 		}
+
+		pwndContainer->m_pwndContainerParent = this;
 	}
 
 	inline void CContainer::AddToolbarButton(UINT nID)
@@ -2158,6 +2216,8 @@ namespace Win32xx
 			tie.pszText = m_vTabPageInfo[i].szTitle;
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
+
+		m_pwndContainerParent = this;
 	}
 
 	inline LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
@@ -2311,6 +2371,8 @@ namespace Win32xx
 
 		if (iTab == m_iCurrentPage)
 			SelectPage(0);
+
+		pWnd->m_pwndContainerParent = pWnd;
 	}
 
 	inline void CContainer::SelectPage(int iPage)
@@ -2430,7 +2492,12 @@ namespace Win32xx
 				TrackMouseEvent(&TrackMouseEventStruct);
 				IsTracking = TRUE;
 			}
-			break; 
+			break;
+		case WM_SETFOCUS:
+			{
+				GetCurrentView()->SetFocus();
+			}
+			break;
 		}
 
 		// pass unhandled messages on for default processing
