@@ -193,6 +193,9 @@ void CMainFrame::LoadRegistryDockables()
 				i++;
 				tsSubKey = _T("DockChild");
 				tsSubKey += _itot(i, szNumber, 10);
+
+				if (i > 14)
+					TRACE("Too many registry entries in LoadRegistryDockables\n");
 			}
 		}
 
@@ -264,6 +267,8 @@ void CMainFrame::SaveDockables()
 			tString tsSubKey = _T("DockChild");
 			tsSubKey += _itot(u, szNumber, 10);
 			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
+			if (u > (int)m_DockView.GetAllDockables().size())
+				TRACE("Too Many registry entries\n");
 		}
 
 		// Add the Undocked windows information to the registry
@@ -284,6 +289,8 @@ void CMainFrame::SaveDockables()
 				tsSubKey += _itot(nUndocked, szNumber, 10);
 				RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
 				++nUndocked;
+				if ((nUndocked) > (int)m_DockView.GetAllDockables().size())
+					TRACE("Too Many registry entries in SaveRegistrySettings\n");
 			}
 		}
 

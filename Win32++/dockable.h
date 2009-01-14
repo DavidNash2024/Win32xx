@@ -1172,21 +1172,15 @@ namespace Win32xx
 		while(m_vAllDockables.size() > 0)
 		{
 			v = m_vAllDockables.begin();
-			if (*v)
-			{
-				if ((*v)->IsWindow())
-				{
-					(*v)->GetDockClient().SetClosing();
-					(*v)->Undock();
-				}
-				(*v)->Destroy();
-			}
+			if (*v)  (*v)->Destroy();
+
 			delete *v;
 			m_vAllDockables.erase(v);
 		}
 
+		m_vDockChildren.clear();
 		SetRedraw(TRUE);
-		RedrawWindow();
+		RecalcDockLayout();
 	}
 
 	inline void CDockable::DeleteDockable(CDockable* pDockable)
@@ -1291,21 +1285,16 @@ namespace Win32xx
 	inline std::vector <CDockable*> const CDockable::GetAllDockables()
 	{
 		// Clean up m_vAllDockables first by removing destroyed CDockable windows
-	//	if (this == GetDockAncestor())
-	//	{
-			std::vector<CDockable*>::reverse_iterator ritor;;
-			for (ritor = GetDockAncestor()->m_vAllDockables.rbegin(); ritor < GetDockAncestor()->m_vAllDockables.rend(); ++ritor)
+		std::vector<CDockable*>::reverse_iterator riter;
+		for (riter = GetDockAncestor()->m_vAllDockables.rbegin(); riter < GetDockAncestor()->m_vAllDockables.rend(); ++riter)
+		{
+			// Delete any closed dockables
+			if (!(*riter)->IsWindow() && (this != (*riter)))
 			{
-				// Delete any closed dockables
-				if (!(*ritor)->IsWindow() && (this != (*ritor)))
-				{
-					delete *ritor;
-					m_vAllDockables.erase(ritor.base()-1);
-				}
+				delete *riter;
+				m_vAllDockables.erase(riter.base()-1);
 			}
-	//	}
-	//	else
-	//		throw CWinException(_T("Must call GetAllDockables from the DockAncestor\n"));
+		}
 
 		// now return m_vAllDockables
 		return GetDockAncestor()->m_vAllDockables;
@@ -1826,6 +1815,8 @@ namespace Win32xx
 					m_vDockChildren[0]->m_vDockChildren.push_back(m_vDockChildren[u1]);
 				}
 
+				m_vDockChildren.clear();
+				m_pwndDockParent = 0;
 			}
 
 			// Position and draw the undocked window, unless it is about to be closed
@@ -1884,10 +1875,6 @@ namespace Win32xx
 	{
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
-
-		// Ensure pContainer really points to a container
-		if (!(pContainer->IsContainer()))
-			throw CWinException(_T("CDockable::UndockContainer... Not a container!")); 
 		
 		if (GetView() == pContainer)
 		{
@@ -1940,23 +1927,20 @@ namespace Win32xx
 			}
 		}
 		else
+		{
 			// This is a child container, so simply remove it from the parent
 			((CContainer*)GetView())->RemoveContainer(pContainer);
+			((CContainer*)GetView())->SetTabSize();
+		}
 
 		// Finally do the actual undocking
-	//	for (int i = 0; i < (int)GetAllDockables().size(); ++i)
-	//	{
-	//		CDockable* pDock = GetAllDockables()[i];
-	//		if (pContainer == pDock->GetView())
-	//		{	
-				CDockable* pDock = GetDockFromView(pContainer);
-				CRect rc = GetDockClient().GetWindowRect();
-				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
-				pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-				pDock->Undock();
-	//			break;
-	//		}
-	//	}
+
+		CDockable* pDock = GetDockFromView(pContainer);
+		CRect rc = GetDockClient().GetWindowRect();
+		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+		pDock->Undock();
+
 	}
 
 	inline LRESULT CDockable::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
