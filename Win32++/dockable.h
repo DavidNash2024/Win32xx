@@ -122,7 +122,10 @@ namespace Win32xx
 		virtual CTabPage& GetTabPage() const	{return (CTabPage&)m_wndPage;}
 		virtual CToolbar& GetToolbar() const	{return m_wndPage.GetToolbar();}
 		virtual CWnd* GetView() const			{return GetTabPage().GetView();}
-		virtual CWnd* GetCurrentView() const	{return m_pwndContainerParent->GetTabPage().GetView();}
+		virtual CWnd* GetCurrentView() const	
+		{		
+			return m_pwndContainerParent->m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetTabPage().GetView();
+		}
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
@@ -1165,9 +1168,15 @@ namespace Win32xx
 		while(m_vAllDockables.size() > 0)
 		{
 			v = m_vAllDockables.begin();
-			(*v)->GetDockClient().SetClosing();
-			(*v)->Undock();
-			(*v)->Destroy();
+			if (*v)
+			{
+				if ((*v)->IsWindow())
+				{
+					(*v)->GetDockClient().SetClosing();
+					(*v)->Undock();
+				}
+				(*v)->Destroy();
+			}
 			delete *v;
 			m_vAllDockables.erase(v);
 		}
@@ -1243,6 +1252,7 @@ namespace Win32xx
 		}
 
 		// Redraw the docked windows
+		::SetFocus(GetAncestor());
 		pDockable->GetView()->SetFocus();
 		GetDockAncestor()->SetRedraw(TRUE);
 		RecalcDockLayout();
@@ -2012,6 +2022,11 @@ namespace Win32xx
 		case WM_CLOSE:
 			ShowWindow(SW_HIDE);
 			break;
+
+		case WM_SETFOCUS:
+			// Pass focus on the the view window
+			GetView()->SetFocus();
+			break;
 		}
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -2495,6 +2510,7 @@ namespace Win32xx
 			break;
 		case WM_SETFOCUS:
 			{
+				// Pass focus on to the current view
 				GetCurrentView()->SetFocus();
 			}
 			break;
