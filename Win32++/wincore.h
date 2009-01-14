@@ -449,7 +449,6 @@ namespace Win32xx
 		CPoint(SIZE sz)				{ x = sz.cx; y = sz.cy; }
 		CPoint(POINT pt)			{ x = pt.x ; y = pt.y; }
 		CPoint(DWORD dw)			{ x = (short)LOWORD(dw); y = (short)HIWORD(dw); }
-	//	void GetCursorPos()         { POINT pt; ::GetCursorPos(&pt); x=pt.x; y=pt.y; }
 		void Offset(int dx, int dy)	{ x += dx; y += dy; }
 		void SetPoint(int X, int Y)	{ x = X; y = Y; }
 		BOOL operator == (POINT pt)	{ return ((x == pt.x) && (y == pt.y)); }
@@ -652,8 +651,8 @@ namespace Win32xx
 		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pwndParent) const;
-		BOOL IsContainer() const;
-		BOOL IsDockable() const;
+		virtual BOOL IsContainer() const;
+		virtual BOOL IsDockable() const;
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;

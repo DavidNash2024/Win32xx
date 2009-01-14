@@ -60,7 +60,6 @@ void CDockText::OnInitialUpdate()
 	else
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 
-	SetCaption (_T("Text View - Docking"));
 }
 
 

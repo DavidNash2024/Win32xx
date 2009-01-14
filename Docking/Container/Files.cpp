@@ -101,6 +101,7 @@ CContainFiles::CContainFiles()
 {
 	SetTabText(_T("FileView"));
 	SetTabIcon(IDI_FILEVIEW);
+	SetDockCaption (_T("File View - Docking container"));
 	SetView(m_ViewFiles);
 }
 
@@ -123,8 +124,6 @@ void CDockFiles::OnInitialUpdate()
 		SetBarColor(RB.GetRebarTheme().clrBkgnd2);
 	else
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
-
-	SetCaption (_T("File View - Docking Container"));
 }
 
 

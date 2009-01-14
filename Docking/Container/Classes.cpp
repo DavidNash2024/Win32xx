@@ -90,6 +90,7 @@ CContainClasses::CContainClasses()
 
 	SetTabText(_T("ClassView"));
 	SetTabIcon(IDI_CLASSVIEW);
+	SetDockCaption (_T("Class View - Docking container"));
 	SetView(m_ViewClasses);
 }
 
@@ -135,7 +136,6 @@ void CDockClasses::OnInitialUpdate()
 	else
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 
-	SetCaption (_T("Class View - Docking container"));
 }
 
 

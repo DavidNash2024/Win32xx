@@ -126,6 +126,7 @@ namespace Win32xx
 		{		
 			return m_pwndContainerParent->m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetTabPage().GetView();
 		}
+		virtual BOOL IsContainer() const {return TRUE;}
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
@@ -138,9 +139,9 @@ namespace Win32xx
 		void SetTabIcon(HICON hTabIcon) {m_hTabIcon = hTabIcon;}
 		void SetTabIcon(UINT nID_Icon)
 		{ m_hTabIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon)); }
+		void SetDockCaption(LPCTSTR szCaption) {m_tsCaption = szCaption;}
+		tString GetDockCaption() {return m_tsCaption;}
 		
-
-
 
 	protected:
 		virtual void OnCreate();
@@ -158,6 +159,7 @@ namespace Win32xx
 		std::string m_stTabText;
 		HICON m_hTabIcon;
 		CContainer* m_pwndContainerParent;
+		tString m_tsCaption;
 		
 	};
 
@@ -236,7 +238,8 @@ namespace Win32xx
 			tString GetCaption() {return m_tsCaption;}
 			CDockable* GetDock() {return m_pDock;}
 			void SetDock(CDockable* pDock) {m_pDock = pDock;}
-			void SetCaption(LPCTSTR szCaption) {m_tsCaption = szCaption;}
+			void SetCaption(LPCTSTR szCaption)
+			{m_tsCaption = szCaption;}
 
 			CDockable* m_pDock;
 			CWnd* m_pwndView;
@@ -293,6 +296,7 @@ namespace Win32xx
 		virtual CDockable* const GetDockableFromPoint(POINT pt);
 		virtual CDockable* const GetDockAncestor();
 		virtual CDockable* const GetDockFromID(int n_DockID);
+		virtual CDockable* const GetDockFromView(CWnd* pView);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -320,13 +324,13 @@ namespace Win32xx
 		CWnd* GetView() const {return GetDockClient().m_pwndView;}
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
-	//	BOOL IsChildFocused() const;
 		BOOL IsChildOfDockable(HWND hwnd) const;
+		virtual BOOL IsDockable() const {return TRUE;}
 		BOOL IsUndocked() const;
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		virtual int GetBarWidth() {return GetDockBar().GetWidth();}
 		virtual void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
-		void SetCaption(LPCTSTR szCaption) {GetDockClient().SetCaption(szCaption);}
+		virtual void SetCaption(LPCTSTR szCaption);
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
 		void SetView(CWnd& wndView);
@@ -1374,6 +1378,20 @@ namespace Win32xx
 		return 0;
 	}
 
+	inline CDockable* const CDockable::GetDockFromView(CWnd* pView)
+	{
+		CDockable* pDock = 0;
+		std::vector<CDockable*>::iterator iter;
+		std::vector<CDockable*> AllDockables = GetAllDockables();
+		for (iter = AllDockables.begin(); iter != AllDockables.end(); ++iter)
+		{
+			if ((*iter)->GetView() == pView)
+				pDock = (*iter);
+		}
+
+		return pDock;
+	}
+
 	/*
 	inline UINT const CDockable::GetDockSide(LPDRAGPOS pdp)
 	{
@@ -1411,24 +1429,6 @@ namespace Win32xx
 		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-/*	inline BOOL CDockable::IsChildFocused() const
-	// returns true if this dockable or any of its children has focus
-	{
-		HWND hwnd = ::GetFocus();
-		while (hwnd != NULL)
-		{
-			if (hwnd == m_hWnd) 
-				return TRUE;
-			
-			if (TRUE == ::SendMessage(hwnd, UWM_IS_DOCKABLE, 0, 0))
-				break;
-
-			hwnd = GetParent(hwnd);
-		}
-
-		return FALSE;
-	}
-*/
 	inline BOOL CDockable::IsChildOfDockable(HWND hwnd) const
 	// returns true if the specified window is a child of this dockable
 	{
@@ -1758,9 +1758,21 @@ namespace Win32xx
 		m_DockStyle = dwDockStyle;
 	}
 
+	inline void CDockable::SetCaption(LPCTSTR szCaption) 
+	{
+		GetDockClient().SetCaption(szCaption);
+		SetWindowText(szCaption);
+	}
+
 	inline void CDockable::SetView(CWnd& wndView)
 	{
-		GetDockClient().m_pwndView = &wndView;
+		CWnd* pWnd = &wndView;
+		GetDockClient().m_pwndView = pWnd;
+		if (pWnd->IsContainer())
+		{
+			CContainer* pContainer = (CContainer*)&wndView;
+			SetCaption(pContainer->GetDockCaption().c_str());
+		}
 	}
 
 	inline void CDockable::Undock()
@@ -1932,18 +1944,19 @@ namespace Win32xx
 			((CContainer*)GetView())->RemoveContainer(pContainer);
 
 		// Finally do the actual undocking
-		for (int i = 0; i < (int)GetAllDockables().size(); ++i)
-		{
-			CDockable* pDock = GetAllDockables()[i];
-			if (pContainer == pDock->GetView())
-			{
+	//	for (int i = 0; i < (int)GetAllDockables().size(); ++i)
+	//	{
+	//		CDockable* pDock = GetAllDockables()[i];
+	//		if (pContainer == pDock->GetView())
+	//		{	
+				CDockable* pDock = GetDockFromView(pContainer);
 				CRect rc = GetDockClient().GetWindowRect();
 				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 				pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 				pDock->Undock();
-				break;
-			}
-		}
+	//			break;
+	//		}
+	//	}
 	}
 
 	inline LRESULT CDockable::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2408,6 +2421,14 @@ namespace Win32xx
 		m_vTabPageInfo[iPage].pwndContainer->GetTabPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 		m_vTabPageInfo[iPage].pwndContainer->GetTabPage().GetView()->SetFocus();
 
+		// Adjust the docking caption
+		if (::SendMessage(GetParent(m_hWndParent), UWM_IS_DOCKABLE, 0, 0))
+		{
+			CDockable* pDock = (CDockable*)FromHandle(GetParent(m_hWndParent));
+			pDock->SetCaption(m_vTabPageInfo[iPage].pwndContainer->GetDockCaption().c_str());
+			pDock->RedrawWindow();
+		}
+		
 		m_iCurrentPage = iPage;
 	}
 
