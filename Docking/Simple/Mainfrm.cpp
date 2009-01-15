@@ -182,7 +182,7 @@ void CMainFrame::LoadRegistryDockables()
 				case ID_TEXT2:
 					if (-1 == di.DockParentID)
 						pDock->AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
-					else;
+					else
 						pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT2);
 					break;
 				default:
@@ -194,8 +194,6 @@ void CMainFrame::LoadRegistryDockables()
 				tsSubKey = _T("DockChild");
 				tsSubKey += _itot(i, szNumber, 10);
 
-				if (i > 8)
-					TRACE("Too many registry entries in LoadRegistryDockables\n");
 			}
 		}
 
@@ -271,21 +269,15 @@ void CMainFrame::SaveDockables()
 			tString tsSubKey = _T("DockChild");
 			tsSubKey += _itot(u, szNumber, 10);
 			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
-			if (u > (int)m_DockView.GetAllDockables().size())
-				TRACE("Too Many registry entries\n");
 		}
 
 		// Add the Undocked windows information to the registry
-		int nUndocked = vDockList.size();
+		int nTotal = vDockList.size();
 		for (UINT v = 0; v <  m_DockView.GetAllDockables().size(); ++v)
 		{
 			CDockable* pDock = m_DockView.GetAllDockables()[v];
 			if (pDock->IsUndocked())
 			{
-				if (!(pDock->IsWindow()))
-					TRACE(_T("Woops ...\n"));
-				if (!(pDock->GetDockClient().IsWindow()))
-					TRACE(_T("Woops ... No DockClient window\n"));
 				DockedInfo di = {0};
 				di.DockID = pDock->GetDockID();
 				di.DockParentID = -1;
@@ -294,11 +286,9 @@ void CMainFrame::SaveDockables()
 				di.Rect = pDock->GetWindowRect();
 				TCHAR szNumber[16];
 				tString tsSubKey = _T("DockChild");
-				tsSubKey += _itot(nUndocked, szNumber, 10);
+				tsSubKey += _itot(nTotal, szNumber, 10);
 				RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
-				++nUndocked;
-				if ((nUndocked) > (int)m_DockView.GetAllDockables().size())
-					TRACE("Too Many registry entries in SaveRegistrySettings\n");
+				++nTotal;
 			}
 		}
 

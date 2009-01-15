@@ -1140,7 +1140,6 @@ namespace Win32xx
 
 		// Initially create the as a child window of the frame
 		// This makes the frame window the owner of our dockable
-	//	pDockable->Create(m_hWnd);
 		HWND hwndFrame = GetAncestor();
 		pDockable->Create(hwndFrame);
 		pDockable->SetParent(m_hWnd);
