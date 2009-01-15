@@ -194,7 +194,7 @@ void CMainFrame::LoadRegistryDockables()
 				tsSubKey = _T("DockChild");
 				tsSubKey += _itot(i, szNumber, 10);
 
-				if (i > 14)
+				if (i > 8)
 					TRACE("Too many registry entries in LoadRegistryDockables\n");
 			}
 		}
@@ -247,6 +247,10 @@ void CMainFrame::SaveDockables()
 		++u;
 	}
 
+	TCHAR szText[80];
+	wsprintf(szText, _T("# of Docked entries = %d\n"), (int)vDockList.size());
+	TRACE(szText);
+
 	if (0 != GetRegistryKeyName().size())
 	{
 		tString tsKeyName = _T("Software\\") + GetRegistryKeyName();
@@ -278,6 +282,10 @@ void CMainFrame::SaveDockables()
 			CDockable* pDock = m_DockView.GetAllDockables()[v];
 			if (pDock->IsUndocked())
 			{
+				if (!(pDock->IsWindow()))
+					TRACE(_T("Woops ...\n"));
+				if (!(pDock->GetDockClient().IsWindow()))
+					TRACE(_T("Woops ... No DockClient window\n"));
 				DockedInfo di = {0};
 				di.DockID = pDock->GetDockID();
 				di.DockParentID = -1;

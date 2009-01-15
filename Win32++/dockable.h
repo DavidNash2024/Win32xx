@@ -1790,7 +1790,7 @@ namespace Win32xx
 					{
 						if (m_vDockChildren.size() > 0)
 							m_pwndDockParent->m_vDockChildren[u] = m_vDockChildren[0];
-						else
+						else				
 							m_pwndDockParent->m_vDockChildren.erase(m_pwndDockParent->m_vDockChildren.begin() + u);
 						break;
 					}
@@ -2017,7 +2017,9 @@ namespace Win32xx
 			break;
 
 		case WM_CLOSE:
-			ShowWindow(SW_HIDE);
+			{
+				ShowWindow(SW_HIDE);
+			}
 			break;
 
 		case WM_SETFOCUS:
@@ -2144,6 +2146,8 @@ namespace Win32xx
 			SetTabSize();
 		}
 
+		// Set the parent container relationships
+		pwndContainer->GetTabPage().SetParent(m_hWnd);
 		pwndContainer->m_pwndContainerParent = this;
 	}
 
@@ -2381,20 +2385,22 @@ namespace Win32xx
 			}
 		}
 
-		if (iTab == m_iCurrentPage)
-			SelectPage(0);
-
+		// Set the parent container relationships
+		pWnd->GetTabPage().SetParent(pWnd->GetHwnd());
 		pWnd->m_pwndContainerParent = pWnd;
+
+		// Display the first page
+		SelectPage(0);
+		TabCtrl_SetCurSel(m_hWnd, 0);
 	}
 
 	inline void CContainer::SelectPage(int iPage)
 	{
 		if (m_vTabPageInfo[iPage].pwndContainer->GetTabPage().GetHwnd() == NULL)
 		{
+			TRACE("Creating new page\n");
 			m_vTabPageInfo[iPage].pwndContainer->GetTabPage().Create(m_hWnd);
 		}
-
-		m_vTabPageInfo[iPage].pwndContainer->GetTabPage().SetParent(m_hWnd);
 
 		// Determine the size of the tab page's view area
 		CRect rc = GetClientRect();
