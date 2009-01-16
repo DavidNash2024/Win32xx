@@ -1153,7 +1153,7 @@ namespace Win32xx
 		pDockable->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		pDockable->SetRedraw(TRUE);
 		pDockable->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-		pDockable->SetWindowText(GetCaption().c_str());
+		pDockable->SetWindowText(pDockable->GetCaption().c_str());
 
 		// Store the Dockable's pointer in the DockAncestor's vector for later deletion
 		GetDockAncestor()->m_vAllDockables.push_back(pDockable);
@@ -1892,7 +1892,9 @@ namespace Win32xx
 					break;
 				}
 			}
-			
+
+			if (pDockNew)
+			{
 			// Move containers from the old dockable to the new dockable
 			CContainer* pContainerNew = (CContainer*)pDockNew->GetView();
 			for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
@@ -1924,6 +1926,9 @@ namespace Win32xx
 					break;
 				}
 			}
+			}
+	
+			
 		}
 		else
 		{
@@ -1932,8 +1937,8 @@ namespace Win32xx
 			((CContainer*)GetView())->SetTabSize();
 		}
 
+		
 		// Finally do the actual undocking
-
 		CDockable* pDock = GetDockFromView(pContainer);
 		CRect rc = GetDockClient().GetWindowRect();
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);

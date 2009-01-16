@@ -29,7 +29,11 @@ private:
 class CContainText : public CContainer
 {
 public:
-	CContainText() { SetView(m_ViewText); } 
+	CContainText() 
+	{
+		SetView(m_ViewText); 
+		SetDockCaption (_T("Text View - Docking container"));
+	} 
 	~CContainText() {}
 
 private:
