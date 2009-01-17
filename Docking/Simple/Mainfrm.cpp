@@ -29,7 +29,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Docking App"));
+	LoadRegistrySettings(_T("Win32++\\Simple Docking"));
 }
 
 CMainFrame::~CMainFrame()
@@ -216,7 +216,7 @@ void CMainFrame::SaveDockables()
 	// NOTE: This function assumes that each dockable has a unique DockID
 
 	std::vector<DockedInfo> vDockList;
-	std::vector <CDockable*> v1 = m_DockView.GetDockChildren();
+	std::vector <CDockable*> & v1 = m_DockView.GetDockChildren();
 	std::vector <CDockable*>::iterator itor;
 
 	// Add m_DockView's docked children to the DockList vector
@@ -227,6 +227,7 @@ void CMainFrame::SaveDockables()
 		di.DockID = (*itor)->GetDockID();
 		di.DockStyle = (*itor)->GetDockStyle();
 		di.DockWidth = (*itor)->GetDockWidth();
+
 		if (0 != di.DockID)
 			vDockList.push_back(di);
 	}
@@ -237,7 +238,7 @@ void CMainFrame::SaveDockables()
 	{
 		//Add all the children of DockList[u]
 		CDockable* pDock = m_DockView.GetDockFromID(vDockList[u].DockID);
-		std::vector <CDockable*> v2 = pDock->GetDockChildren();
+		std::vector <CDockable*> & v2 = pDock->GetDockChildren();
 
 		for (itor = v2.begin(); itor != v2.end(); ++itor)
 		{

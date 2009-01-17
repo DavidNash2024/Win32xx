@@ -14,7 +14,6 @@ CMainFrame::CMainFrame()
 
 	//Set m_View as the view window of the frame
 	SetView(m_Classes);
-//	SetView(m_Files);
 
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
@@ -31,7 +30,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Tab Demo"));
+	LoadRegistrySettings(_T("Win32++\\Container Demo"));
 }
 
 CMainFrame::~CMainFrame()

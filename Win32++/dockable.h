@@ -295,10 +295,10 @@ namespace Win32xx
 		virtual void DeleteDockable(CDockable* pDockable);
 		virtual void Dock(CDockable* hDockable, UINT uDockSide);
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
-		virtual CDockable* const GetDockableFromPoint(POINT pt);
-		virtual CDockable* const GetDockAncestor();
-		virtual CDockable* const GetDockFromID(int n_DockID);
-		virtual CDockable* const GetDockFromView(CWnd* pView);
+		virtual CDockable* GetDockableFromPoint(POINT pt) const;
+		virtual CDockable* GetDockAncestor() const;
+		virtual CDockable* GetDockFromID(int n_DockID) const;
+		virtual CDockable* GetDockFromView(CWnd* pView) const;
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -311,10 +311,10 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Attributes
-		std::vector <CDockable*> const GetAllDockables();
-		std::vector <CDockable*> const GetDockChildren() {return m_vDockChildren;}
+		std::vector <CDockable*> & GetAllDockables() const;
+		std::vector <CDockable*> & GetDockChildren() const {return (std::vector <CDockable*> &)m_vDockChildren;}
 		tString GetCaption() {return GetDockClient().GetCaption();}
-		CDockable* const GetDockable(int nDockID);
+		CDockable* GetDockable(int nDockID) const;
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_wndDockBar;}
 		int GetDockID() const {return m_nDockID;}
 		CDockable* GetDockParent() const {return m_pwndDockParent;}
@@ -322,7 +322,22 @@ namespace Win32xx
 		virtual CDockHint& GetDockHint() const {return m_pwndDockAncestor->m_wndDockHint;}
 		virtual CDockTargeting& GetDockTargeting() const {return m_pwndDockAncestor->m_wndDockTargetting;}
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_wndDockClient;}
-		int GetDockWidth() const {return m_DockWidth;}
+		int GetDockWidth() const
+		{
+			CRect rcParent;
+			if (GetDockParent())
+				rcParent = GetDockParent()->GetWindowRect();
+			else
+				rcParent = GetDockAncestor()->GetWindowRect();
+
+			double DockWidth;
+			if ((GetDockStyle() & DS_DOCKED_LEFT) || (GetDockStyle() & DS_DOCKED_RIGHT))
+				DockWidth = (double)((rcParent.Width()/* - (GetBarWidth())*/)*m_DockWidthRatio);
+			else
+				DockWidth = (double)((rcParent.Height()/* - (GetBarWidth())*/)*m_DockWidthRatio);
+			
+			return (int)DockWidth;
+		}
 		CWnd* GetView() const {return GetDockClient().m_pwndView;}
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
@@ -330,11 +345,15 @@ namespace Win32xx
 		virtual BOOL IsDockable() const {return TRUE;}
 		BOOL IsUndocked() const;
 		virtual void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
-		virtual int GetBarWidth() {return GetDockBar().GetWidth();}
+		virtual int GetBarWidth() const {return GetDockBar().GetWidth();}
 		virtual void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
 		virtual void SetCaption(LPCTSTR szCaption);
 		void SetDockStyle(DWORD dwDockStyle);
-		void SetDockWidth(int DockWidth) {m_DockWidth = DockWidth;}
+		void SetDockWidth(int DockWidth) 
+		{
+			m_DockStartWidth = DockWidth - GetBarWidth();
+			m_DockWidthRatio = 1.0;
+		}
 		void SetView(CWnd& wndView);
 
 	private:
@@ -350,7 +369,7 @@ namespace Win32xx
 
 		BOOL m_BlockMove;
 		BOOL m_Undocking;
-		int m_DockWidth;
+		int m_DockStartWidth;
 		int m_nDockID;
 		int m_NCHeight;
 		UINT m_DockZone;
@@ -650,6 +669,7 @@ namespace Win32xx
 	inline void CDockable::CDockClient::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ DockClient");
+		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 	}
 
 	inline void CDockable::CDockClient::PreCreate(CREATESTRUCT& cs)
@@ -1060,7 +1080,7 @@ namespace Win32xx
 	// Definitions for the CDockable class
 	//
 	inline CDockable::CDockable() : m_pwndDockParent(NULL), m_pwndDockAncestor(NULL), m_BlockMove(FALSE), 
-		            m_Undocking(FALSE), m_DockWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0),
+		            m_Undocking(FALSE), m_DockStartWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0),
 					m_DockWidthRatio(1.0), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -1234,20 +1254,20 @@ namespace Win32xx
 		{
 			double Width = GetDockClient().GetWindowRect().Width();
 			double BarWidth = pDockable->GetBarWidth();
-			if (pDockable->GetDockWidth() > (Width/2.0 - BarWidth))
-				pDockable->SetDockWidth( (int)(Width/2.0 - BarWidth));
+		/*	if (pDockable->m_DockStartWidth > (Width/2.0 - BarWidth))
+				pDockable->SetDockWidth( (int)(Width/2.0 - BarWidth)); */
 
-			pDockable->m_DockWidthRatio = ((double)pDockable->GetDockWidth() + BarWidth) / (double)GetWindowRect().Width();
+			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth + BarWidth/2) / (double)GetWindowRect().Width();
 		}
 		else
 		{
 			double Height = GetDockClient().GetWindowRect().Height();
 			double BarWidth = pDockable->GetBarWidth();
-			if (pDockable->GetDockWidth() > (Height/2.0 - BarWidth))
-				pDockable->SetDockWidth( (int)(Height/2.0 - BarWidth));
+		/*	if (pDockable->m_DockStartWidth > (Height/2.0 - BarWidth))
+				pDockable->SetDockWidth( (int)(Height/2.0 - BarWidth)); */
 
-			pDockable->m_DockWidthRatio = ((double)pDockable->GetDockWidth() + BarWidth) / (double)GetWindowRect().Height();
-		}
+			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth + BarWidth/2) / (double)GetWindowRect().Height();
+		} 
 
 		// Redraw the docked windows
 		::SetFocus(GetAncestor());
@@ -1282,25 +1302,25 @@ namespace Win32xx
 		}
 	}
 
-	inline std::vector <CDockable*> const CDockable::GetAllDockables()
+	inline std::vector <CDockable*> & CDockable::GetAllDockables() const
 	{
 		// Clean up m_vAllDockables first by removing destroyed CDockable windows
-		std::vector<CDockable*>::reverse_iterator riter;
-		for (riter = GetDockAncestor()->m_vAllDockables.rbegin(); riter < GetDockAncestor()->m_vAllDockables.rend(); ++riter)
-		{
-			// Delete any closed dockables
-			if (!(*riter)->IsWindow() && (this != (*riter)))
-			{
-				delete *riter;
-				m_vAllDockables.erase(riter.base()-1);
-			}
-		}
+	//	std::vector<CDockable*>::reverse_iterator riter;
+	//	for (riter = GetDockAncestor()->m_vAllDockables.rbegin(); riter < GetDockAncestor()->m_vAllDockables.rend(); ++riter)
+	//	{
+	//		// Delete any closed dockables
+	//		if (!(*riter)->IsWindow() && (this != (*riter)))
+	//		{
+	//			delete *riter;
+	//			m_vAllDockables.erase(riter.base()-1);
+	//		}
+	//	}
 
 		// now return m_vAllDockables
 		return GetDockAncestor()->m_vAllDockables;
 	}
 
-	inline CDockable* const CDockable::GetDockable(int nDockID)
+	inline CDockable* CDockable::GetDockable(int nDockID) const
 	{
 		int nDockMax = GetDockAncestor()->m_vAllDockables.size();
 		for (int i = 0; i < nDockMax; i++)
@@ -1312,7 +1332,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline CDockable* const CDockable::GetDockableFromPoint(POINT pt)
+	inline CDockable* CDockable::GetDockableFromPoint(POINT pt) const
 	// Retrieves the top level Dockable at the given point
 	{
 		CDockable* pDock = NULL;
@@ -1344,14 +1364,14 @@ namespace Win32xx
 		return pDock;
 	}
 
-	inline CDockable* const CDockable::GetDockAncestor()
+	inline CDockable* CDockable::GetDockAncestor() const
 	// The GetDockAncestor function retrieves the pointer to the
 	//  ancestor (root dockable parent) of the Dockable.
 	{
 		return m_pwndDockAncestor;
 	}
 
-	inline CDockable* const CDockable::GetDockFromID(int n_DockID)
+	inline CDockable* CDockable::GetDockFromID(int n_DockID) const
 	{
 		std::vector <CDockable*>::iterator v;
 
@@ -1367,7 +1387,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline CDockable* const CDockable::GetDockFromView(CWnd* pView)
+	inline CDockable* CDockable::GetDockFromView(CWnd* pView) const
 	{
 		CDockable* pDock = 0;
 		std::vector<CDockable*>::iterator iter;
@@ -1541,26 +1561,26 @@ namespace Win32xx
 				case DS_DOCKED_LEFT:
 					DockWidth = max(pt.x, iBarWidth/2) - rcDock.left - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth )/((double)pDock->m_pwndDockParent->GetWindowRect().Width() - dBarWidth);
+					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth )/((double)pDock->m_pwndDockParent->GetWindowRect().Width() - dBarWidth);
 					break;
 				case DS_DOCKED_RIGHT:
 					DockWidth = rcDock.right - max(pt.x, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Width() - dBarWidth);
+					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Width() - dBarWidth);
 					break;
 				case DS_DOCKED_TOP:
 					DockWidth = max(pt.y, iBarWidth/2) - rcDock.top - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Height() - dBarWidth);
+					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Height() - dBarWidth);
 					break;
 				case DS_DOCKED_BOTTOM:
 					DockWidth = rcDock.bottom - max(pt.y, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->GetDockWidth() + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Height() - dBarWidth);
+					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Height() - dBarWidth);
 					break;
 				}
 
@@ -1611,6 +1631,7 @@ namespace Win32xx
 	inline void CDockable::PreRegisterClass(WNDCLASS &wc)
 	{
 		wc.lpszClassName = _T("Win32++ Dockable");
+		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 	}
 
 	inline void CDockable::RecalcDockChildLayout(CRect rc)
@@ -1799,7 +1820,7 @@ namespace Win32xx
 				if (m_vDockChildren.size() > 0)
 				{
 					m_vDockChildren[0]->m_DockStyle = (m_vDockChildren[0]->m_DockStyle & 0xFFFFFFF0 ) | (m_DockStyle & 0xF);
-					m_vDockChildren[0]->m_DockWidth = m_DockWidth;
+					m_vDockChildren[0]->m_DockStartWidth = m_DockStartWidth;
 					m_vDockChildren[0]->m_DockWidthRatio = m_DockWidthRatio;
 					m_vDockChildren[0]->m_pwndDockParent = m_pwndDockParent;
 					m_vDockChildren[0]->SetParent(m_pwndDockParent->GetHwnd());
@@ -1912,7 +1933,7 @@ namespace Win32xx
 			pDockNew->m_vDockChildren	= m_vDockChildren;
 			pDockNew->m_pwndDockParent	= m_pwndDockParent;
 			pDockNew->m_DockStyle		= m_DockStyle;
-			pDockNew->m_DockWidth		= m_DockWidth;
+			pDockNew->m_DockStartWidth		= m_DockStartWidth;
 			pDockNew->m_DockWidthRatio	= m_DockWidthRatio;
 			pDockNew->SetParent(m_hWndParent);
 			pDockNew->GetDockBar().SetParent(m_hWndParent);
