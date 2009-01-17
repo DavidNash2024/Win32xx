@@ -150,6 +150,8 @@
 		<Unit filename="Mainfrm.cpp" />
 		<Unit filename="Mainfrm.h" />
 		<Unit filename="Makefile.win" />
+		<Unit filename="Output.cpp" />
+		<Unit filename="Output.h" />
 		<Unit filename="Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

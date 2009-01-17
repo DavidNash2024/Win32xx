@@ -114,6 +114,10 @@ SOURCE=.\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Output.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Simple.cpp
 # End Source File
 # Begin Source File
@@ -143,6 +147,10 @@ SOURCE=.\Files.h
 # Begin Source File
 
 SOURCE=.\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Output.h
 # End Source File
 # Begin Source File
 

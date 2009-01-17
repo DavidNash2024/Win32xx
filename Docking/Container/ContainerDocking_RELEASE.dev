@@ -1,7 +1,7 @@
 [Project]
 FileName=ContainerDocking_RELEASE.dev
 Name=ContainerDocking
-UnitCount=16
+UnitCount=18
 Type=0
 Ver=1
 ObjFiles=
@@ -188,9 +188,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\Win32++\Toolbar.h
+FileName=Output.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -198,9 +198,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\Win32++\GDI.h
+FileName=Output.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

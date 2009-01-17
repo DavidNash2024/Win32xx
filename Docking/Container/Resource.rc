@@ -62,6 +62,7 @@ END
 IDW_MAIN                ICON                    "res/Docking.ico"
 IDI_CLASSVIEW           ICON                    "res/classview.ico"
 IDI_FILEVIEW            ICON                    "res/fileview.ico"
+IDI_TEXT                ICON                    "res/text.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -9,6 +9,7 @@
 #include "Files.h"
 #include "Simple.h"
 #include "Text.h"
+#include "Output.h"
 
 
 // Declaration of the CMainFrame class
@@ -18,16 +19,12 @@ public:
 
 	enum DockIDs
 	{
-		ID_CLASS1 = 1,
-		ID_CLASS2 = 2,
-		ID_FILES1 = 3,
-		ID_FILES2 = 4,
-		ID_SIMPLE1 = 5,
-		ID_SIMPLE2 = 6,
-		ID_TEXT1 = 7,
-		ID_TEXT2 = 8,
-		ID_CONTAINCLASSES = 9,
-		ID_CONTAINFILES = 10
+		ID_CONTAINCLASSES1 = 1,
+		ID_CONTAINFILES1 = 2,
+		ID_CONTAINCLASSES2 = 3,
+		ID_CONTAINFILES2 = 4,
+		ID_TEXT = 5,
+		ID_OUTPUT = 6
 	};
 
 	CMainFrame(void);

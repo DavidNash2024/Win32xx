@@ -133,16 +133,18 @@ namespace Win32xx
 		virtual void SetView(CWnd& Wnd);
 		
 		// Attributes
-		LPCTSTR GetTabText() {return m_stTabText.c_str();}
-		void SetTabText(LPCTSTR szText) {m_stTabText = szText;}
-		HICON GetTabIcon() {return m_hTabIcon;}
-		void SetTabIcon(HICON hTabIcon) {m_hTabIcon = hTabIcon;}
+		LPCTSTR GetTabText() { return m_stTabText.c_str(); }
+		void SetTabText(LPCTSTR szText) { m_stTabText = szText; }
+		HICON GetTabIcon() { return m_hTabIcon; }
+		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon)
-		{ m_hTabIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon)); }
-		void SetDockCaption(LPCTSTR szCaption) {m_tsCaption = szCaption;}
-		tString GetDockCaption() {return m_tsCaption;}
+		{
+			HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
+			SetTabIcon(hIcon);
+		}
+		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
+		tString GetDockCaption() { return m_tsCaption; }
 		
-
 	protected:
 		virtual void OnCreate();
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -348,7 +350,6 @@ namespace Win32xx
 
 		BOOL m_BlockMove;
 		BOOL m_Undocking;
-		BOOL m_DragFullWindows;
 		int m_DockWidth;
 		int m_nDockID;
 		int m_NCHeight;
@@ -1059,8 +1060,8 @@ namespace Win32xx
 	// Definitions for the CDockable class
 	//
 	inline CDockable::CDockable() : m_pwndDockParent(NULL), m_pwndDockAncestor(NULL), m_BlockMove(FALSE), 
-		            m_Undocking(FALSE), m_DragFullWindows(FALSE), m_DockWidth(0), m_nDockID(0), m_NCHeight(20), 
-					m_DockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0)
+		            m_Undocking(FALSE), m_DockWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0),
+					m_DockWidthRatio(1.0), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1965,9 +1966,15 @@ namespace Win32xx
 
 					if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
 					{
-						// Turn on DragFullWindows during the window move
-						m_DragFullWindows = bResult;
-						SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
+						// Turn on DragFullWindows for this move
+						SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);			
+					
+						// Process this message
+						DefWindowProc(uMsg, wParam, lParam);
+						
+						// Return DragFullWindows to its previous state
+						SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, bResult, 0, 0);
+						return 0L;
 					}
 				}
 			}
@@ -1976,7 +1983,6 @@ namespace Win32xx
 		case WM_EXITSIZEMOVE:
 			m_BlockMove = FALSE;
 			SendNotify(UWM_DOCK_END);
-			SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, m_DragFullWindows, 0, 0);
 			break;
 
 		case WM_WINDOWPOSCHANGING:
@@ -2208,6 +2214,14 @@ namespace Win32xx
 	{		
 		if (NULL == GetView())
 			throw CWinException(_T("CContainer::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
+
+		TabPageInfo tbi = {0};
+		tbi.pwndContainer = this;
+		lstrcpy(tbi.szTitle, GetTabText());
+		tbi.hIcon = GetTabIcon();
+
+		m_vTabPageInfo.push_back(tbi);
+		ImageList_AddIcon(m_himlTab, GetTabIcon()); 
 				
 		// Create the page window
 		m_wndPage.Create(m_hWnd);
@@ -2436,14 +2450,6 @@ namespace Win32xx
 
 	inline void CContainer::SetView(CWnd& Wnd)
 	{
-		TabPageInfo tbi = {0};
-		tbi.pwndContainer = this;
-		lstrcpy(tbi.szTitle, GetTabText());
-		tbi.hIcon = GetTabIcon();
-
-		m_vTabPageInfo.push_back(tbi);
-		ImageList_AddIcon(m_himlTab, GetTabIcon());
-
 		GetTabPage().SetView(Wnd);
 	}
 
@@ -2491,7 +2497,6 @@ namespace Win32xx
 				{
 					if (::SendMessage(GetParent(m_hWndParent), UWM_IS_DOCKABLE, 0, 0)) 
 					{
-						TRACE("Should Undock\n");
 						CContainer* pContainer = GetContainer(m_iCurrentPage);
 
 						CDockable* pDock = (CDockable*) FromHandle(GetParent(m_hWndParent));

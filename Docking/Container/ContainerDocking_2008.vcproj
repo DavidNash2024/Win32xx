@@ -225,6 +225,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Output.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Simple.cpp"
 				>
 			</File>
@@ -255,6 +259,10 @@
 			</File>
 			<File
 				RelativePath=".\Mainfrm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Output.h"
 				>
 			</File>
 			<File

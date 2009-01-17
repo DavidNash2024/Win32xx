@@ -23,10 +23,12 @@
 #define IDM_EDIT_DELETE                 115
 #define IDM_HELP_ABOUT                  120
 
-#define IDI_CLASSVIEW                   130
-#define IDI_FILEVIEW                    131
-#define IDB_CLASSVIEW                   132
-#define IDB_FILEVIEW                    133
+
+#define IDB_CLASSVIEW                   130
+#define IDB_FILEVIEW                    131
+#define IDI_CLASSVIEW                   132
+#define IDI_FILEVIEW                    133
+#define IDI_TEXT                        134
 
 
 
