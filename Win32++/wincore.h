@@ -155,6 +155,7 @@
 #define UWM_IS_CONTAINER	(WM_APP + 11)	// Message - CContainer window return TRUE for this message
 #define UWM_FRAMELOSTFOCUS	(WM_APP + 12)   // Notification sent by frame to view window when focus lost
 #define UWM_FRAMEGOTFOCUS	(WM_APP + 13)   // Notification sent by frame to view window
+#define UWM_DOCK_DESTROYED	(WM_APP + 14)	// Message posted when dockable is destroyed   
 
 
 // Automatically include the Win32xx namespace

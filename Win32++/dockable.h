@@ -116,16 +116,18 @@ namespace Win32xx
 		virtual void AddContainer(CContainer* pwndContainer);
 		virtual void AddToolbarButton(UINT nID);
 		virtual CContainer* GetContainer(int iPage);
-		virtual std::vector<TabPageInfo> GetAllContainers() const {return m_vTabPageInfo;}
+		virtual std::vector<TabPageInfo>& GetAllContainers() const {return m_pwndContainerParent->m_vTabPageInfo;}
 		virtual int GetContainerIndex(CContainer* pwndContainer);
 		virtual SIZE GetMaxTabTextSize();
 		virtual CTabPage& GetTabPage() const	{return (CTabPage&)m_wndPage;}
 		virtual CToolbar& GetToolbar() const	{return m_wndPage.GetToolbar();}
 		virtual CWnd* GetView() const			{return GetTabPage().GetView();}
-		virtual CWnd* GetCurrentView() const	
+		virtual CWnd* GetActiveView() const	
 		{		
 			return m_pwndContainerParent->m_vTabPageInfo[m_iCurrentPage].pwndContainer->GetTabPage().GetView();
 		}
+		virtual CContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
+		virtual CContainer* GetContainerFromView(CWnd* pwndView) const;
 		virtual BOOL IsContainer() const {return TRUE;}
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
@@ -351,7 +353,7 @@ namespace Win32xx
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockWidth(int DockWidth) 
 		{
-			m_DockStartWidth = DockWidth - GetBarWidth();
+			m_DockStartWidth = DockWidth/* - GetBarWidth()*/;
 			m_DockWidthRatio = 1.0;
 		}
 		void SetView(CWnd& wndView);
@@ -391,7 +393,6 @@ namespace Win32xx
 
 	inline CDockable::CDockBar::~CDockBar()
 	{
-		::UnregisterClass(_T("Win32++ Bar"), GetApp()->GetInstanceHandle());
 		::DeleteObject(m_hbrBackground);
 	}
 
@@ -734,10 +735,8 @@ namespace Win32xx
 				if (m_pDock->IsDocked())
 				{
 					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-					MapWindowPoints(NULL, hWnd, &pt, 1);
-					
-					m_pwndView->SetFocus();
-					
+					MapWindowPoints(NULL, hWnd, &pt, 1);				
+					m_pwndView->SetFocus();				
 					return 0L;
 				}
 				break;
@@ -749,9 +748,19 @@ namespace Win32xx
 					DefWindowProc(uMsg, wParam, lParam);
 
 					// Now destroy the dockable
-					CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
-					pDock->Undock();
-					pDock->Destroy();
+					if (m_pDock->GetView()->IsContainer())
+					{
+						CContainer* pContainer = ((CContainer*)m_pDock->GetView())->GetActiveContainer();				
+						m_pDock->UndockContainer(pContainer);
+						CDockable* pDock = m_pDock->GetDockFromView(pContainer);
+						pDock->Destroy();
+					}
+					else
+					{
+						m_pDock->Undock();
+						m_pDock->Destroy();
+					}
+					
 					return 0;
 				}
 				m_bClosing = FALSE;
@@ -792,7 +801,6 @@ namespace Win32xx
 					m_pDock->RecalcDockLayout();
 				}
 				break;
-
 			}
 		}
 
@@ -1095,17 +1103,20 @@ namespace Win32xx
 		::DeleteObject(m_hbmHash);
 
 		// Ensure all dockables are destroyed		
-		std::vector <CDockable*>::iterator v;
-		if (this == GetDockAncestor())
+		std::vector <CDockable*>::iterator iter;
+		if (this != GetDockAncestor())
 		{
-			while (m_vAllDockables.size() > 0)
+			for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
 			{
-				v = m_vAllDockables.begin();
-				(*v)->Destroy();
-				delete *v;
-				m_vAllDockables.erase(v);
-			}
+				if ((*iter) == this)
+				{
+					GetAllDockables().erase(iter);
+					break;
+				}
+			} 
 		}
+		else
+			CloseAllDockables();
 	}
 
 	inline CDockable* CDockable::AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, int nDockID /* = 0*/)
@@ -1189,13 +1200,9 @@ namespace Win32xx
 		std::vector <CDockable*>::iterator v;
 
 		SetRedraw(FALSE);
-		while(m_vAllDockables.size() > 0)
+		for (v = m_vAllDockables.begin(); v != m_vAllDockables.end(); ++v)
 		{
-			v = m_vAllDockables.begin();
 			if (*v)  (*v)->Destroy();
-
-			delete *v;
-			m_vAllDockables.erase(v);
 		}
 
 		m_vDockChildren.clear();
@@ -1249,24 +1256,24 @@ namespace Win32xx
 		pDockable->m_pwndDockParent = this;
 		pDockable->GetDockBar().SetParent(m_hWnd);
 
-		// Limit the docked size to half the parent's size
+		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
 			double Width = GetDockClient().GetWindowRect().Width();
 			double BarWidth = pDockable->GetBarWidth();
-		/*	if (pDockable->m_DockStartWidth > (Width/2.0 - BarWidth))
-				pDockable->SetDockWidth( (int)(Width/2.0 - BarWidth)); */
+			if (pDockable->m_DockStartWidth >= (Width - BarWidth))
+				pDockable->SetDockWidth( (int)(Width*0.5 - BarWidth));  
 
-			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth + BarWidth/2) / (double)GetWindowRect().Width();
+			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth) / (double)GetWindowRect().Width();
 		}
 		else
 		{
 			double Height = GetDockClient().GetWindowRect().Height();
 			double BarWidth = pDockable->GetBarWidth();
-		/*	if (pDockable->m_DockStartWidth > (Height/2.0 - BarWidth))
-				pDockable->SetDockWidth( (int)(Height/2.0 - BarWidth)); */
+			if (pDockable->m_DockStartWidth >= (Height - BarWidth))
+				pDockable->SetDockWidth( (int)(Height*0.5 - BarWidth));  
 
-			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth + BarWidth/2) / (double)GetWindowRect().Height();
+			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth) / (double)GetWindowRect().Height();
 		} 
 
 		// Redraw the docked windows
@@ -1304,19 +1311,6 @@ namespace Win32xx
 
 	inline std::vector <CDockable*> & CDockable::GetAllDockables() const
 	{
-		// Clean up m_vAllDockables first by removing destroyed CDockable windows
-	//	std::vector<CDockable*>::reverse_iterator riter;
-	//	for (riter = GetDockAncestor()->m_vAllDockables.rbegin(); riter < GetDockAncestor()->m_vAllDockables.rend(); ++riter)
-	//	{
-	//		// Delete any closed dockables
-	//		if (!(*riter)->IsWindow() && (this != (*riter)))
-	//		{
-	//			delete *riter;
-	//			m_vAllDockables.erase(riter.base()-1);
-	//		}
-	//	}
-
-		// now return m_vAllDockables
 		return GetDockAncestor()->m_vAllDockables;
 	}
 
@@ -1561,25 +1555,25 @@ namespace Win32xx
 				case DS_DOCKED_LEFT:
 					DockWidth = max(pt.x, iBarWidth/2) - rcDock.left - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth )/((double)pDock->m_pwndDockParent->GetWindowRect().Width() - dBarWidth);
 					break;
 				case DS_DOCKED_RIGHT:
 					DockWidth = rcDock.right - max(pt.x, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Width() - dBarWidth);
 					break;
 				case DS_DOCKED_TOP:
 					DockWidth = max(pt.y, iBarWidth/2) - rcDock.top - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Height() - dBarWidth);
 					break;
 				case DS_DOCKED_BOTTOM:
 					DockWidth = rcDock.bottom - max(pt.y, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = max(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth +iBarWidth);
+					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pwndDockParent->GetWindowRect().Height() - dBarWidth);
 					break;
 				}
@@ -1917,40 +1911,42 @@ namespace Win32xx
 
 			if (pDockNew)
 			{
-			// Move containers from the old dockable to the new dockable
-			CContainer* pContainerNew = (CContainer*)pDockNew->GetView();
-			for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
-			{
-				if ((*iter).pwndContainer != pContainer)
+				// Move containers from the old dockable to the new dockable
+				CContainer* pContainerNew = (CContainer*)pDockNew->GetView();
+				for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
 				{
-					pContainer->RemoveContainer((*iter).pwndContainer);
-					if (pContainerNew != (*iter).pwndContainer)
-						pContainerNew->AddContainer((*iter).pwndContainer);
+					if ((*iter).pwndContainer != pContainer)
+					{
+						pContainer->RemoveContainer((*iter).pwndContainer);
+						if (pContainerNew != (*iter).pwndContainer)
+						{
+							pContainerNew->AddContainer((*iter).pwndContainer);
+							CDockable* pDock = GetDockFromView((*iter).pwndContainer);
+							pDock->SetParent(pDockNew->GetHwnd());
+						}
+					}
 				}
-			}
 
-			// Now swap the dockables over
-			pDockNew->m_vDockChildren	= m_vDockChildren;
-			pDockNew->m_pwndDockParent	= m_pwndDockParent;
-			pDockNew->m_DockStyle		= m_DockStyle;
-			pDockNew->m_DockStartWidth		= m_DockStartWidth;
-			pDockNew->m_DockWidthRatio	= m_DockWidthRatio;
-			pDockNew->SetParent(m_hWndParent);
-			pDockNew->GetDockBar().SetParent(m_hWndParent);
+				// Now swap the dockables over
+				pDockNew->m_vDockChildren	= m_vDockChildren;
+				pDockNew->m_pwndDockParent	= m_pwndDockParent;
+				pDockNew->m_DockStyle		= m_DockStyle;
+				pDockNew->m_DockStartWidth	= m_DockStartWidth;
+				pDockNew->m_DockWidthRatio	= m_DockWidthRatio;
+				pDockNew->SetParent(m_hWndParent);
+				pDockNew->GetDockBar().SetParent(m_hWndParent);
 
-			// insert pDockNew into the the DockParent's DockChildren vector
-			std::vector<CDockable*>::iterator p;
-			for (p = pDockNew->m_pwndDockParent->m_vDockChildren.begin(); p != pDockNew->m_pwndDockParent->m_vDockChildren.end(); ++p)
-			{
-				if (*p == this)
+				// insert pDockNew into the the DockParent's DockChildren vector
+				std::vector<CDockable*>::iterator p;
+				for (p = pDockNew->m_pwndDockParent->m_vDockChildren.begin(); p != pDockNew->m_pwndDockParent->m_vDockChildren.end(); ++p)
 				{
-					pDockNew->m_pwndDockParent->m_vDockChildren.insert(p, pDockNew);
-					break;
+					if (*p == this)
+					{
+						pDockNew->m_pwndDockParent->m_vDockChildren.insert(p, pDockNew);
+						break;
+					}
 				}
-			}
-			}
-	
-			
+			}			
 		}
 		else
 		{
@@ -1958,7 +1954,6 @@ namespace Win32xx
 			((CContainer*)GetView())->RemoveContainer(pContainer);
 			((CContainer*)GetView())->SetTabSize();
 		}
-
 		
 		// Finally do the actual undocking
 		CDockable* pDock = GetDockFromView(pContainer);
@@ -2052,11 +2047,27 @@ namespace Win32xx
 				ShowWindow(SW_HIDE);
 			}
 			break;
+		case WM_DESTROY:
+			{
+				// Post a destroy dockable message
+				if (GetDockAncestor() != this)
+					::PostMessage(GetDockAncestor()->GetHwnd(), UWM_DOCK_DESTROYED, (WPARAM)this, 0);
+			}
+			break;
 
 		case WM_SETFOCUS:
 			// Pass focus on the the view window
 			GetView()->SetFocus();
 			break;
+
+		case UWM_DOCK_DESTROYED:
+			{
+				CDockable* pDock = (CDockable*)wParam;
+				if (pDock != GetDockAncestor())
+				{
+					delete pDock;
+				}
+			}
 		}
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -2197,6 +2208,19 @@ namespace Win32xx
 			return NULL;
 	}
 
+	inline CContainer* CContainer::GetContainerFromView(CWnd* pwndView) const
+	{
+		std::vector<TabPageInfo>::iterator iter;
+		CContainer* pContainer = 0;
+		for (iter = GetAllContainers().begin(); iter != GetAllContainers().end(); ++iter)
+		{
+			if ((*iter).pwndContainer->GetView() == pwndView)
+				pContainer = (*iter).pwndContainer;
+		}
+
+		return pContainer;
+	}
+
 	inline int CContainer::GetContainerIndex(CContainer* pwndContainer)
 	{
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
@@ -2292,8 +2316,7 @@ namespace Win32xx
 	}
 
 	inline void CContainer::Paint()
-	{
-		
+	{	
 		// Microsoft's drawing for a tab control is rubbish, so we do our own.
 		// We use double buffering and regions to eliminate flicker
 
@@ -2552,7 +2575,7 @@ namespace Win32xx
 		case WM_SETFOCUS:
 			{
 				// Pass focus on to the current view
-				GetCurrentView()->SetFocus();
+				GetActiveView()->SetFocus();
 			}
 			break;
 		}

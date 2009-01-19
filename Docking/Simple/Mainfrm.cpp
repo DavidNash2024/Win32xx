@@ -256,10 +256,6 @@ void CMainFrame::SaveDockables()
 		++u;
 	}
 
-	TCHAR szText[80];
-	wsprintf(szText, _T("# of Docked entries = %d\n"), (int)vDockList.size());
-	TRACE(szText);
-
 	if (0 != GetRegistryKeyName().size())
 	{
 		tString tsKeyName = _T("Software\\") + GetRegistryKeyName();
