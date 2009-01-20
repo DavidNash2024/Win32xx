@@ -2357,6 +2357,9 @@ namespace Win32xx
 		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
 		CRect rcTab = GetClientRect();
 		TabCtrl_AdjustRect(m_hWnd, FALSE, &rcTab);
+		if (rcTab.Height() < 0) rcTab.top = rcTab.bottom;
+		if (rcTab.Width() < 0) rcTab.left = rcTab.right;
+		
 		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
 		HRGN hrgnClip = ::CreateRectRgn(0, 0, 0, 0);
 		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF); 
