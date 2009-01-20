@@ -695,6 +695,7 @@ namespace Win32xx
 	inline LRESULT CDockable::CDockClient::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		static CPoint Oldpt;
+		static HWND hwndButtonDown = 0;
 
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
@@ -730,6 +731,7 @@ namespace Win32xx
 				if (HTCLOSE == wParam) m_bClosing = TRUE;
 				else	m_bClosing = FALSE;
 
+				hwndButtonDown = hWnd;
 				Oldpt.x = GET_X_LPARAM(lParam);
 				Oldpt.y = GET_Y_LPARAM(lParam);
 				if (m_pDock->IsDocked())
@@ -742,6 +744,7 @@ namespace Win32xx
 				break;
 			
 			case WM_NCLBUTTONUP:
+				hwndButtonDown = 0;
 				if ((HTCLOSE == wParam) && m_bClosing)
 				{
 					// Process this message first
@@ -774,12 +777,14 @@ namespace Win32xx
 						if ( (Oldpt.x == GET_X_LPARAM(lParam) ) && (Oldpt.y == GET_Y_LPARAM(lParam)))
 							return 0L;
 
-						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && !m_bClosing)
+						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (hWnd == hwndButtonDown))
 						{
 							CDockable* pDock = (CDockable*)FromHandle(m_hWndParent);
 							pDock->Undock();
 						}
 					}
+
+					hwndButtonDown = 0;
 				}
 				break;
 
@@ -880,13 +885,21 @@ namespace Win32xx
 					rcHint.InflateRect(-2, -2);
 				MapWindowPoints(NULL, pDockTarget->GetHwnd(), (LPPOINT)&rcHint, 2);
 
-				int Width = pDockDrag->GetDockWidth();
+				int Width ;//= pDockDrag->GetDockWidth();
+				CRect rcDockDrag = pDockDrag->GetWindowRect();			
 				CRect rcDockTarget = pDockTarget->GetDockClient().GetWindowRect();
 				if ((uDockSide  == DS_DOCKED_LEFT) || (uDockSide  == DS_DOCKED_RIGHT))
-					Width = min(Width, rcDockTarget.Width()/2);
+				{
+					Width = rcDockDrag.Width();
+					if (Width >= (rcDockTarget.Width() - pDockDrag->GetBarWidth()))
+						Width = max(rcDockTarget.Width()/2 - pDockDrag->GetBarWidth(), pDockDrag->GetBarWidth());
+				}
 				else
-					Width = min(Width, rcDockTarget.Height()/2);
-
+				{
+					Width = rcDockDrag.Height();
+					if (Width >= (rcDockTarget.Height() - pDockDrag->GetBarWidth()))
+						Width = max(rcDockTarget.Height()/2 - pDockDrag->GetBarWidth(), pDockDrag->GetBarWidth());
+				}
 				switch (uDockSide)
 				{
 				case DS_DOCKED_LEFT:
@@ -1007,16 +1020,8 @@ namespace Win32xx
 	{
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
 		CDockable* pDockTarget = pDockDrag->GetDockableFromPoint(pDragPos->ptPos);
-
 		int cxImage = 88;
 		int cyImage = 88;
-
-		// Ensure a new window if the dock target changes
-	//	static CDockable* pDockTargetOld = 0;
-	//	if (pDockTarget != pDockTargetOld)
-	//		Destroy();
-
-	//	pDockTargetOld = pDockTarget;
 
 		if (!IsWindow())
 			Create();
@@ -1202,10 +1207,21 @@ namespace Win32xx
 		SetRedraw(FALSE);
 		for (v = m_vAllDockables.begin(); v != m_vAllDockables.end(); ++v)
 		{
+			// Destroy the window
 			if (*v)  (*v)->Destroy();
 		}
 
 		m_vDockChildren.clear();
+
+		// Process any queued messages now. The UWM_DOCK_DESTROYED messages will be
+		//  processed at this point, deleting the dockables.
+		MSG msg;
+		while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		{
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+		
 		SetRedraw(TRUE);
 		RecalcDockLayout();
 	}
@@ -1259,19 +1275,19 @@ namespace Win32xx
 		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
-			double Width = GetDockClient().GetWindowRect().Width();
-			double BarWidth = pDockable->GetBarWidth();
+			int Width = GetDockClient().GetWindowRect().Width();
+			int BarWidth = pDockable->GetBarWidth();
 			if (pDockable->m_DockStartWidth >= (Width - BarWidth))
-				pDockable->SetDockWidth( (int)(Width*0.5 - BarWidth));  
+				pDockable->SetDockWidth(max(Width/2 - BarWidth, BarWidth));  
 
 			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth) / (double)GetWindowRect().Width();
 		}
 		else
 		{
-			double Height = GetDockClient().GetWindowRect().Height();
-			double BarWidth = pDockable->GetBarWidth();
+			int Height = GetDockClient().GetWindowRect().Height();
+			int BarWidth = pDockable->GetBarWidth();
 			if (pDockable->m_DockStartWidth >= (Height - BarWidth))
-				pDockable->SetDockWidth( (int)(Height*0.5 - BarWidth));  
+				pDockable->SetDockWidth(max(Height/2 - BarWidth, BarWidth));  
 
 			pDockable->m_DockWidthRatio = ((double)pDockable->m_DockStartWidth) / (double)GetWindowRect().Height();
 		} 
@@ -1503,7 +1519,17 @@ namespace Win32xx
 				UINT DockZone = m_DockZone;
 				m_DockZone = 0;
 				pDock->m_DockZone = 0;
-				if (DockZone) Dock(pDock, pDock->GetDockStyle() | DockZone);
+
+				if (DockZone)
+				{
+					CRect rc = pDock->GetWindowRect();
+					if ((DockZone & DS_DOCKED_LEFT) || (DockZone & DS_DOCKED_RIGHT))
+						pDock->SetDockWidth(rc.Width());
+					if ((DockZone & DS_DOCKED_TOP)  || (DockZone & DS_DOCKED_BOTTOM))
+						pDock->SetDockWidth(rc.Height());
+					Dock(pDock, pDock->GetDockStyle() | DockZone);
+				}
+				
 				GetDockHint().Destroy();
 				GetDockTargeting().Destroy();
 			}
@@ -1853,7 +1879,7 @@ namespace Win32xx
 				CRect rc = GetDockClient().GetWindowRect();
 				SetParent(0);
 				m_Undocking = FALSE;
-				SetWindowPos(NULL, rc, SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+				SetWindowPos(NULL, pt.x - rc.Width()/2, pt.y - m_NCHeight/2, rc.Width(), rc.Height(), SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 				SetWindowText(GetCaption().c_str());
 
 				// Re-enable redraw
