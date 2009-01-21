@@ -36,23 +36,24 @@ LRESULT CViewSimple::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ///////////////////////////////////////////////
 // CViewList functions
-CViewList::CViewList() : m_himlSmall(0)
+CViewList::CViewList() : m_himlSmall(0), m_hbmImage(0)
 {
 }
 
 CViewList::~CViewList()
 {
 	if (IsWindow()) DeleteAllItems();
+	ImageList_Destroy(m_himlSmall);
+	DeleteObject(m_hbmImage);
 }
 
 void CViewList::OnInitialUpdate()
 {
 	// Set the image lists
 	m_himlSmall = ImageList_Create(16, 15, ILC_COLORDDB | ILC_MASK, 1, 0);
-	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
-	ImageList_AddMasked(m_himlSmall, hbm, RGB(255, 0, 255));
+	m_hbmImage = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
+	ImageList_AddMasked(m_himlSmall, m_hbmImage, RGB(255, 0, 255));
 	SetImageList(m_himlSmall, LVSIL_SMALL);
-	::DeleteObject(hbm);
 
 	// Set the report style
 	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
@@ -125,23 +126,24 @@ void CViewList::InsertItems()
 
 ///////////////////////////////////////////////
 // CViewTree functions
-CViewTree::CViewTree() : m_himlNormal(0)
+CViewTree::CViewTree() : m_himlNormal(0), m_hbmImage(0)
 {
 }
 
 CViewTree::~CViewTree()
 {
 	if (IsWindow()) DeleteAllItems();
+	ImageList_Destroy(m_himlNormal);
+	DeleteObject(m_hbmImage);
 }
 
 void CViewTree::OnInitialUpdate()
 {
 	//set the image lists
 	m_himlNormal = ImageList_Create(16, 15, ILC_COLORDDB | ILC_MASK, 1, 0);
-	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_CLASSVIEW));
-	ImageList_AddMasked(m_himlNormal, hbm, RGB(255, 0, 0));
+	m_hbmImage = LoadBitmap(MAKEINTRESOURCE(IDB_CLASSVIEW));
+	ImageList_AddMasked(m_himlNormal, m_hbmImage, RGB(255, 0, 0));
 	SetImageList(m_himlNormal, LVSIL_NORMAL);
-	::DeleteObject(hbm);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
@@ -168,7 +170,7 @@ void CViewTree::OnInitialUpdate()
 
 	// Expand some tree-view items
 	Expand(htiRoot, TVE_EXPAND);
-	Expand(htiCTreeViewApp, TVE_EXPAND);
+	Expand(htiCTreeViewApp, TVE_EXPAND); 
 }
 
 HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
