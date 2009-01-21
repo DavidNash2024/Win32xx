@@ -1106,13 +1106,23 @@ namespace Win32xx
 	{
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
-
-		// Ensure all dockables are destroyed		
+		
 		std::vector <CDockable*>::iterator iter;
-		if (this != GetDockAncestor())
+		if (GetDockAncestor() == this)
+		{
+			// Ensure all child dockables are destroyed
+			iter = GetAllDockables().begin();
+			while (iter != GetAllDockables().end())
+			{
+				delete(*iter);
+				iter = GetAllDockables().begin();
+			} 
+		}
+		else
 		{
 			for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
 			{
+				// Remove this child entry from the DockAncestor's m_vAllDockables vector 
 				if ((*iter) == this)
 				{
 					GetAllDockables().erase(iter);
@@ -1120,8 +1130,6 @@ namespace Win32xx
 				}
 			} 
 		}
-		else
-			CloseAllDockables();
 	}
 
 	inline CDockable* CDockable::AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, int nDockID /* = 0*/)

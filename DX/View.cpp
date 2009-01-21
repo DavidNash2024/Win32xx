@@ -34,8 +34,8 @@ void CView::OnCreate()
         if( SUCCEEDED( InitGeometry() ) )
         {
 			// Show the window
-			ShowWindow( m_hWnd, SW_SHOWDEFAULT );
-			UpdateWindow( m_hWnd );
+			ShowWindow(SW_SHOWDEFAULT);
+			UpdateWindow();
 		}
 	}
 }
