@@ -266,21 +266,59 @@ namespace Win32xx
 			HBITMAP m_hbmBlueTint;
 		};
 
-		class CDockTargeting : public CWnd
+		class CTarget : public CWnd
 		{
 		public:
-			CDockTargeting();
-			virtual ~CDockTargeting();
-			virtual void OnPaint(HDC hDC);
-			virtual void OnCreate() {SetRegion();}
-			virtual void PreCreate(CREATESTRUCT &cs);
-			virtual void SetRegion();
-			virtual void ShowTargeting(LPDRAGPOS pDragPos);
-			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			CTarget() {}
+			virtual ~CTarget() {}
+			virtual void PreCreate(CREATESTRUCT &cs)
+				{
+					cs.style = WS_POPUP;
+					cs.dwExStyle = WS_EX_TOPMOST|WS_EX_TOOLWINDOW;
+					cs.lpszClass = _T("Win32++ DockTargeting");
+				}
 		};
 
-		friend class CDockTargeting;    // required by Borland compilers
+		class CTargetCentre : public CTarget
+		{
+		public:
+			CTargetCentre();
+			virtual ~CTargetCentre();
+			virtual void OnPaint(HDC hDC);
+			virtual void OnCreate();
+			virtual void CheckTarget(LPDRAGPOS pDragPos);
+		//	virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		};
 
+		friend class CTargetCentre;    // required by Borland compilers
+
+		class CTargetLeft : public CTarget
+		{
+		public:
+			virtual void CheckTarget(LPDRAGPOS pDragPos);
+			virtual void OnPaint(HDC hDC);
+		};
+
+		class CTargetTop : public CTarget
+		{
+		public:
+			virtual void CheckTarget(LPDRAGPOS pDragPos);
+			virtual void OnPaint(HDC hDC); 
+		};
+
+		class CTargetRight : public CTarget
+		{
+		public:
+			virtual void CheckTarget(LPDRAGPOS pDragPos);
+			virtual void OnPaint(HDC hDC); 
+		};
+
+		class CTargetBottom : public CTarget
+		{
+		public:
+			virtual void CheckTarget(LPDRAGPOS pDragPos);
+			virtual void OnPaint(HDC hDC); 
+		};
 	public:
 		// Operations
 		CDockable();
@@ -308,7 +346,7 @@ namespace Win32xx
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_wndDockBar;}
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_wndDockClient;}
 		virtual CDockHint& GetDockHint() const {return m_pwndDockAncestor->m_wndDockHint;}
-		virtual CDockTargeting& GetDockTargeting() const {return m_pwndDockAncestor->m_wndDockTargetting;}		
+	//	virtual CTargetCentre& GetDockTargeting() const {return m_pwndDockAncestor->m_wndCentreTarget;}		
 		
 		std::vector <CDockable*> & GetAllDockables() const {return GetDockAncestor()->m_vAllDockables;}
 		std::vector <CDockable*> & GetDockChildren() const {return (std::vector <CDockable*> &)m_vDockChildren;}
@@ -336,12 +374,16 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		CDockBar m_wndDockBar;
-		CDockHint m_wndDockHint;
-		CDockClient m_wndDockClient;
-		CDockTargeting m_wndDockTargetting;
-		CDockable* m_pwndDockParent;
-		CDockable* m_pwndDockAncestor;
+		CDockBar		m_wndDockBar;
+		CDockHint		m_wndDockHint;
+		CDockClient		m_wndDockClient;
+		CTargetCentre	m_wndCentreTarget;
+		CTargetLeft		m_wndLeftTarget;
+		CTargetTop		m_wndTopTarget;
+		CTargetRight	m_wndRightTarget;
+		CTargetBottom	m_wndBottomTarget;
+		CDockable*		m_pwndDockParent;
+		CDockable*		m_pwndDockAncestor;
 
 		std::vector <CDockable*> m_vDockChildren;
 		std::vector <CDockable*> m_vAllDockables;	// Only used in DockAncestor
@@ -929,17 +971,17 @@ namespace Win32xx
 
 
 	////////////////////////////////////////////////////////////////
-	// Definitions for the CDockTargeting class nested within CDockable
+	// Definitions for the CTargetCentre class nested within CDockable
 	//
-	inline CDockable::CDockTargeting::CDockTargeting()
+	inline CDockable::CTargetCentre::CTargetCentre()
 	{
 	}
 
-	inline CDockable::CDockTargeting::~CDockTargeting()
+	inline CDockable::CTargetCentre::~CTargetCentre()
 	{
 	}
 
-	inline void CDockable::CDockTargeting::OnPaint(HDC hDC)
+	inline void CDockable::CTargetCentre::OnPaint(HDC hDC)
 	{
 		HBITMAP hbmCenter = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDCENTER),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
@@ -965,21 +1007,7 @@ namespace Win32xx
 		::DeleteObject(hbmBottom);
 	}
 
-
-	inline void CDockable::CDockTargeting::PreCreate(CREATESTRUCT &cs)
-	{
-		cs.cx = 88;
-		cs.cy = 88;
-		cs.style = WS_POPUP;
-
-		// WS_EX_TOOLWINDOW prevents the window being displayed on the taskbar
-		// WS_EX_TOPMOST keeps the window on top of all non Topmost windows
-		cs.dwExStyle = WS_EX_TOPMOST|WS_EX_TOOLWINDOW;
-
-		cs.lpszClass = _T("Win32++ DockTargeting");
-	}
-
-	inline void CDockable::CDockTargeting::SetRegion()
+	inline void CDockable::CTargetCentre::OnCreate()
 	{
 		// Use a region to create an irregularly shapped window
 		POINT ptArray[16] = { {0,29}, {22, 29}, {29, 22}, {29, 0},
@@ -993,22 +1021,22 @@ namespace Win32xx
 		DeleteObject(hrgnPoly);
 	}
 
-	inline void CDockable::CDockTargeting::ShowTargeting(LPDRAGPOS pDragPos)
+	inline void CDockable::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
 		CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
+		
 		int cxImage = 88;
 		int cyImage = 88;
 
 		if (!IsWindow())
 			Create();
-
+		
 		CRect rcTarget = pDockTarget->GetDockClient().GetWindowRect();
 		int xMid = rcTarget.left + (rcTarget.Width() - cxImage)/2;
 		int yMid = rcTarget.top + (rcTarget.Height() - cyImage)/2;
-
 		SetWindowPos(HWND_TOPMOST, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
-
+		
 		// Create the docking zone rectangles
 		CPoint pt = pDragPos->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
@@ -1055,7 +1083,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CDockable::CDockTargeting::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+/*	inline LRESULT CDockable::CTargetCentre::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
@@ -1063,8 +1091,118 @@ namespace Win32xx
 			return 0;
 		}
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+	} */
+
+	////////////////////////////////////////////////////////////////
+	// Definitions for the CTargetLeft class nested within CDockable
+	//
+	inline void CDockable::CTargetLeft::CheckTarget(LPDRAGPOS pDragPos)
+	{
+		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+	//	CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
+		int cxImage = 31;
+		int cyImage = 29;	
+
+		if (!IsWindow())
+		{
+			Create();
+			CRect rc = pDockDrag->GetDockAncestor()->GetWindowRect();
+		//	int xMid = rc.left + (rc.Width() - cxImage)/2;
+			int yMid = rc.top + (rc.Height() - cyImage)/2;
+			SetWindowPos(HWND_TOPMOST, rc.left + 10, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+		}
 	}
 
+	inline void CDockable::CTargetLeft::OnPaint(HDC hDC) 
+	{
+		HBITMAP hbmLeft= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDLEFT),
+			                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		DrawBitmap(hDC, 0, 0, 31, 29, hbmLeft, RGB(255,0,255));
+		::DeleteObject(hbmLeft);
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Definitions for the CTargetTop class nested within CDockable
+	//
+	inline void CDockable::CTargetTop::CheckTarget(LPDRAGPOS pDragPos)
+	{
+		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+	//	CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
+		int cxImage = 29;
+		int cyImage = 31;	
+
+		if (!IsWindow())
+		{
+			Create();
+			CRect rc = pDockDrag->GetDockAncestor()->GetWindowRect();
+			int xMid = rc.left + (rc.Width() - cxImage)/2;
+		//	int yMid = rc.top + (rc.Height() - cyImage)/2;
+			SetWindowPos(HWND_TOPMOST, xMid, rc.top + 10, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+		}
+	}
+
+	inline void CDockable::CTargetTop::OnPaint(HDC hDC)
+	{
+		HBITMAP hbmTop= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDTOP),
+			                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		DrawBitmap(hDC, 0, 0, 29, 31, hbmTop, RGB(255,0,255));
+		::DeleteObject(hbmTop);
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Definitions for the CTargetRight class nested within CDockable
+	//
+	inline void CDockable::CTargetRight::CheckTarget(LPDRAGPOS pDragPos)
+	{
+		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+	//	CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
+		int cxImage = 31;
+		int cyImage = 29;	
+
+		if (!IsWindow())
+		{
+			Create();
+			CRect rc = pDockDrag->GetDockAncestor()->GetWindowRect();
+		//	int xMid = rc.left + (rc.Width() - cxImage)/2;
+			int yMid = rc.top + (rc.Height() - cyImage)/2;
+			SetWindowPos(HWND_TOPMOST, rc.right - 10 - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+		}
+	}
+
+	inline void CDockable::CTargetRight::OnPaint(HDC hDC) 
+	{
+		HBITMAP hbmRight= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDRIGHT),
+			                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		DrawBitmap(hDC, 0, 0, 31, 29, hbmRight, RGB(255,0,255));
+		::DeleteObject(hbmRight);
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Definitions for the CTargetBottom class nested within CDockable
+	//
+	inline void CDockable::CTargetBottom::CheckTarget(LPDRAGPOS pDragPos)
+	{
+		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+	//	CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
+		int cxImage = 29;
+		int cyImage = 31;	
+
+		if (!IsWindow())
+		{
+			Create();
+			CRect rc = pDockDrag->GetDockAncestor()->GetWindowRect();
+			int xMid = rc.left + (rc.Width() - cxImage)/2;
+		//	int yMid = rc.top + (rc.Height() - cyImage)/2;
+			SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - 10 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+		}
+	}
+	inline void CDockable::CTargetBottom::OnPaint(HDC hDC) 
+	{
+		HBITMAP hbmBottom= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDBOTTOM),
+			                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		DrawBitmap(hDC, 0, 0, 29, 31, hbmBottom, RGB(255,0,255));
+		::DeleteObject(hbmBottom);
+	}
 
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
@@ -1494,7 +1632,11 @@ namespace Win32xx
 
 		case UWM_DOCK_MOVE:
 			{
-				GetDockTargeting().ShowTargeting((LPDRAGPOS)lParam);
+				GetDockAncestor()->m_wndCentreTarget.CheckTarget((LPDRAGPOS)lParam);
+				GetDockAncestor()->m_wndLeftTarget.CheckTarget((LPDRAGPOS)lParam);
+				GetDockAncestor()->m_wndTopTarget.CheckTarget((LPDRAGPOS)lParam);
+				GetDockAncestor()->m_wndRightTarget.CheckTarget((LPDRAGPOS)lParam);
+				GetDockAncestor()->m_wndBottomTarget.CheckTarget((LPDRAGPOS)lParam);
 			}
 			break;
 
@@ -1516,7 +1658,11 @@ namespace Win32xx
 				}
 				
 				GetDockHint().Destroy();
-				GetDockTargeting().Destroy();
+				GetDockAncestor()->m_wndCentreTarget.Destroy();
+				GetDockAncestor()->m_wndLeftTarget.Destroy();
+				GetDockAncestor()->m_wndTopTarget.Destroy();
+				GetDockAncestor()->m_wndRightTarget.Destroy();
+				GetDockAncestor()->m_wndBottomTarget.Destroy();
 			}
 			break;
 
@@ -1744,7 +1890,11 @@ namespace Win32xx
 		else
 		{
 			if (GetDockHint().IsWindow())		GetDockHint().Destroy();
-			if (GetDockTargeting().IsWindow())	GetDockTargeting().Destroy();
+			if (GetDockAncestor()->m_wndCentreTarget.IsWindow())	GetDockAncestor()->m_wndCentreTarget.Destroy();
+			if (GetDockAncestor()->m_wndLeftTarget.IsWindow())		GetDockAncestor()->m_wndLeftTarget.Destroy();
+			if (GetDockAncestor()->m_wndTopTarget.IsWindow())		GetDockAncestor()->m_wndTopTarget.Destroy();
+			if (GetDockAncestor()->m_wndRightTarget.IsWindow())		GetDockAncestor()->m_wndRightTarget.Destroy();
+			if (GetDockAncestor()->m_wndBottomTarget.IsWindow())	GetDockAncestor()->m_wndBottomTarget.Destroy();
 			m_BlockMove = FALSE;
 		}
 	}
@@ -2024,7 +2174,7 @@ namespace Win32xx
 				if (m_BlockMove)
 				{
                 	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
-					pWndPos->flags = SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED|SWP_NOOWNERZORDER|SWP_NOREDRAW;
+					pWndPos->flags |= SWP_NOMOVE|SWP_FRAMECHANGED;
 					return 0;
 				}
 				break;
@@ -2043,7 +2193,11 @@ namespace Win32xx
 					}
 					else
 					{
-						if (GetDockTargeting().IsWindow())	GetDockTargeting().Destroy();
+						if (GetDockAncestor()->m_wndCentreTarget.IsWindow())	GetDockAncestor()->m_wndCentreTarget.Destroy();
+						if (GetDockAncestor()->m_wndLeftTarget.IsWindow())		GetDockAncestor()->m_wndLeftTarget.Destroy();
+						if (GetDockAncestor()->m_wndTopTarget.IsWindow())		GetDockAncestor()->m_wndTopTarget.Destroy();
+						if (GetDockAncestor()->m_wndRightTarget.IsWindow())		GetDockAncestor()->m_wndRightTarget.Destroy();
+						if (GetDockAncestor()->m_wndBottomTarget.IsWindow())	GetDockAncestor()->m_wndBottomTarget.Destroy();
 						m_BlockMove = FALSE;
 					}
 					
