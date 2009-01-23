@@ -770,6 +770,9 @@ namespace Win32xx
 		BitBlt(hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
 		BitBlt(hDC, x, y, cx, cy, dcMask, 0, 0, SRCAND);
 		BitBlt(hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+
+		// Detach the bitmap before the dcImage is destroyed
+		dcImage.DetachBitmap();
 	}
 
 	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
