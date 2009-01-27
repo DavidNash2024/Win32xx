@@ -240,7 +240,7 @@ namespace Win32xx
 			BOOL IsClosing();
 			void SetDock(CDockable* pDock)	{ m_pDock = pDock;}
 			void SetCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
-			void SetClosing()				{ m_bClosing = TRUE; }
+			void SetClosePressed()			{ m_bClosePressed = TRUE; }
 			void SetView(CWnd& Wnd)			{ m_pwndView = &Wnd; }
 
 		private:
@@ -249,7 +249,7 @@ namespace Win32xx
 			int m_NCHeight;
 			tString m_tsCaption;
 			CRect m_rcClose;
-			BOOL m_bClosing;
+			BOOL m_bClosePressed;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -303,8 +303,6 @@ namespace Win32xx
 			BOOL m_bIsOverContainer;
 		};
 
-		friend class CTargetCentre;    // required by Borland compilers
-
 		class CTargetLeft : public CTarget
 		{
 		public:
@@ -332,6 +330,13 @@ namespace Win32xx
 			CTargetBottom() {SetImage(IDW_SDBOTTOM);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 		};
+
+		friend class CTargetCentre;    
+		friend class CTargetLeft;
+		friend class CTargetTop;
+		friend class CTargetRight;
+		friend class CTargetBottom;
+
 	public:
 		// Operations
 		CDockable();
@@ -526,7 +531,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 	// Definitions for the CDockClient class nested within CDockable
 	//
-	inline CDockable::CDockClient::CDockClient() : m_pwndView(0), m_NCHeight(20), m_bClosing(FALSE)
+	inline CDockable::CDockClient::CDockClient() : m_pwndView(0), m_NCHeight(20), m_bClosePressed(FALSE)
 	{
 	}
 
@@ -623,6 +628,13 @@ namespace Win32xx
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
 		rcClose.OffsetRect(2, m_NCHeight+2);
 
+		// Correct for a a bug in the windows MapWindowPoints function!
+		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+		{
+			if (GetWindowRect().Height() < (m_NCHeight+4))
+				rcClose.OffsetRect(-2, -2);
+		}
+
 		if (!IsRectEmpty(&rcClose))
 		{
 			switch (uState)
@@ -682,7 +694,7 @@ namespace Win32xx
 
 	inline BOOL CDockable::CDockClient::IsClosing()
 	{
-		return m_bClosing;
+		return m_bClosePressed;
 	}
 
 	inline LRESULT CDockable::CDockClient::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -763,8 +775,8 @@ namespace Win32xx
 				break;
 
 			case WM_NCLBUTTONDOWN:
-				if (HTCLOSE == wParam) m_bClosing = TRUE;
-				else	m_bClosing = FALSE;
+				if (HTCLOSE == wParam) m_bClosePressed = TRUE;
+				else	m_bClosePressed = FALSE;
 
 				hwndButtonDown = hWnd;
 				Oldpt.x = GET_X_LPARAM(lParam);
@@ -780,7 +792,7 @@ namespace Win32xx
 			
 			case WM_NCLBUTTONUP:
 				hwndButtonDown = 0;
-				if ((HTCLOSE == wParam) && m_bClosing)
+				if ((HTCLOSE == wParam) && m_bClosePressed)
 				{
 					// Process this message first
 					DefWindowProc(uMsg, wParam, lParam);
@@ -789,8 +801,9 @@ namespace Win32xx
 					if (m_pDock->GetView()->IsContainer())
 					{
 						CContainer* pContainer = ((CContainer*)m_pDock->GetView())->GetActiveContainer();				
-						m_pDock->UndockContainer(pContainer);
-						CDockable* pDock = m_pDock->GetDockFromView(pContainer);
+						CDockable* pDock = m_pDock->GetDockFromView(pContainer);					
+						pDock->GetDockClient().SetClosePressed();
+						m_pDock->UndockContainer(pContainer);					
 						pDock->Destroy();
 					}
 					else
@@ -801,7 +814,7 @@ namespace Win32xx
 					
 					return 0;
 				}
-				m_bClosing = FALSE;
+				m_bClosePressed = FALSE;
 				break;
 
 			case WM_NCMOUSEMOVE:
@@ -976,7 +989,6 @@ namespace Win32xx
 		static UINT uDockSideOld = 0;
 		if (uDockSide != uDockSideOld)
 		{
-			TRACE("Destroying Hint Window\n");
 			Destroy();
 			pDockTarget->RedrawWindow();
 			pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
@@ -1055,7 +1067,6 @@ namespace Win32xx
 		// Create the Hint window
 		if (!IsWindow())
 		{
-			TRACE("Creating Hint Window\n");
 			Create(pDockTarget->GetHwnd());
 		}
 
@@ -1242,7 +1253,6 @@ namespace Win32xx
 			CRect rc = pDockTarget->GetWindowRect();
 			int yMid = rc.top + (rc.Height() - cyImage)/2;
 			SetWindowPos(HWND_TOPMOST, rc.left + 10, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
-			TRACE("Creating Leftmost Target\n");
 		} 
 
 		CRect rcLeft(0, 0, cxImage, cyImage);
@@ -1818,7 +1828,7 @@ namespace Win32xx
 			if (TRUE == ::SendMessage(hwnd, UWM_IS_DOCKABLE, 0, 0))
 				break;
 
-			hwnd = GetParent(hwnd);
+			hwnd = ::GetParent(hwnd);
 		}
 
 		return FALSE;
@@ -1868,7 +1878,6 @@ namespace Win32xx
 
 		case UWM_DOCK_MOVE:
 			{
-				TRACE("Notify DockMove\n");
 				CheckAllTargets((LPDRAGPOS)lParam);
 			}
 			break;
@@ -1896,13 +1905,11 @@ namespace Win32xx
 					break;
 				case DS_DOCKED_LEFTMOST:
 				case DS_DOCKED_RIGHTMOST:
-					TRACE("Dock LeftMost/RightMost \n");
 					pDock->SetDockWidth(rc.Width());
 					DockOuter(pDock, pDock->GetDockStyle() | DockZone);
 					break;
 				case DS_DOCKED_TOPMOST:
 				case DS_DOCKED_BOTTOMMOST:
-					TRACE("Dock TopMost/BottomMost\n");
 					pDock->SetDockWidth(rc.Height());
 					DockOuter(pDock, pDock->GetDockStyle() | DockZone);
 					break;
@@ -2265,7 +2272,9 @@ namespace Win32xx
 				CRect rc = GetDockClient().GetWindowRect();
 				SetParent(0);
 				m_Undocking = FALSE;
+
 				SetWindowPos(NULL, pt.x - rc.Width()/2, pt.y - m_NCHeight/2, rc.Width(), rc.Height(), SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+				
 				SetWindowText(GetCaption().c_str());
 
 				// Re-enable redraw
@@ -2316,7 +2325,7 @@ namespace Win32xx
 			{
 				if ((*iter).pwndContainer != pContainer)
 				{
-					pDockNew = (CDockable*)FromHandle(GetParent(GetParent((*iter).pwndContainer->GetHwnd())));				
+					pDockNew = (CDockable*)FromHandle(::GetParent((*iter).pwndContainer->GetParent()));	
 					break;
 				}
 			}
@@ -2539,7 +2548,7 @@ namespace Win32xx
 			case NM_KILLFOCUS:
 			case NM_SETFOCUS:
 			case UWM_FRAMELOSTFOCUS:
-				::SendMessage(GetParent(m_hWndParent), WM_NOTIFY, wParam, lParam);
+				::SendMessage(::GetParent(m_hWndParent), WM_NOTIFY, wParam, lParam);
 				break;
 			}
 
@@ -2580,6 +2589,22 @@ namespace Win32xx
 	{
 		if (this == m_pwndContainerParent)
 		{
+			if (pwndContainer->GetAllContainers().size() > 1)
+			{
+				// The container we're about to add has children, so transfer those first
+				std::vector<TabPageInfo>::reverse_iterator riter;
+				for ( riter = pwndContainer->GetAllContainers().rbegin() ; riter < pwndContainer->GetAllContainers().rend() -1; ++riter )
+				{
+					// Remove child container from pwndContainer
+					CContainer* pwndContainerChild = (*riter).pwndContainer;
+					pwndContainerChild->ShowWindow(SW_HIDE);
+					pwndContainer->RemoveContainer(pwndContainerChild);
+					
+					// Add child container to this container
+					AddContainer(pwndContainerChild);
+				}
+			}
+
 			TabPageInfo tbi = {0};
 			tbi.pwndContainer = pwndContainer;
 			lstrcpy(tbi.szTitle, pwndContainer->GetTabText());
@@ -2598,11 +2623,14 @@ namespace Win32xx
 				SetTabSize();
 			}
 
-			// Set the parent container relationships
-			pwndContainer->GetTabPage().SetParent(m_hWnd);
-			pwndContainer->m_pwndContainerParent = this;
+			if (pwndContainer->IsWindow())
+			{
+				// Set the parent container relationships
+				pwndContainer->GetTabPage().SetParent(m_hWnd);
+				pwndContainer->m_pwndContainerParent = this;
 
-			SelectPage(iNewPage);	
+				SelectPage(iNewPage);
+			}
 		}
 	}
 
@@ -2887,6 +2915,13 @@ namespace Win32xx
 		{
 			TabCtrl_SetCurSel(m_hWnd, iPage);
 
+			// Create the new container window if required
+			if (!m_vTabPageInfo[iPage].pwndContainer->IsWindow())
+			{
+				m_vTabPageInfo[iPage].pwndContainer->Create(GetParent());
+				m_vTabPageInfo[iPage].pwndContainer->GetTabPage().SetParent(m_hWnd);
+			}
+			
 			// Determine the size of the tab page's view area
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
@@ -2897,9 +2932,9 @@ namespace Win32xx
 			m_vTabPageInfo[iPage].pwndContainer->GetTabPage().GetView()->SetFocus();
 
 			// Adjust the docking caption
-			if (::SendMessage(GetParent(m_hWndParent), UWM_IS_DOCKABLE, 0, 0))
+			if (::SendMessage(::GetParent(m_hWndParent), UWM_IS_DOCKABLE, 0, 0))
 			{
-				CDockable* pDock = (CDockable*)FromHandle(GetParent(m_hWndParent));
+				CDockable* pDock = (CDockable*)FromHandle(::GetParent(m_hWndParent));
 				pDock->SetCaption(m_vTabPageInfo[iPage].pwndContainer->GetDockCaption().c_str());
 				pDock->RedrawWindow();
 			}
@@ -2969,11 +3004,11 @@ namespace Win32xx
 				IsTracking = FALSE;
 				if (IsLeftButtonDown())
 				{
-					if (::SendMessage(GetParent(m_hWndParent), UWM_IS_DOCKABLE, 0, 0)) 
+					if (::SendMessage(::GetParent(m_hWndParent), UWM_IS_DOCKABLE, 0, 0)) 
 					{
 						CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
 
-						CDockable* pDock = (CDockable*) FromHandle(GetParent(m_hWndParent));
+						CDockable* pDock = (CDockable*) FromHandle(::GetParent(m_hWndParent));
 						pDock->UndockContainer(pContainer);
 					}
 				}

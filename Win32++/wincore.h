@@ -642,6 +642,7 @@ namespace Win32xx
 		HWND GetDlgItem(int nIDDlgItem) const;
 		tString GetDlgItemString(int nIDDlgItem) const;
 		HWND GetHwnd() const {return m_hWnd;}
+		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
@@ -1463,6 +1464,11 @@ namespace Win32xx
 		return ::GetMenu(m_hWnd);
 	}
 #endif
+
+	inline HWND CWnd::GetParent() const
+	{
+		return ::GetParent(m_hWnd);
+	}
 
 	inline LONG_PTR CWnd::GetWindowLongPtr(int nIndex) const
 	// The GetWindowLongPtr function retrieves information about the window.
@@ -2322,7 +2328,7 @@ namespace Win32xx
 
 					if (m_PrevWindowProc) break; // Suppress for subclassed windows
 
-					CWnd* WndFromParent = FromHandle(GetParent(hwndFrom));
+					CWnd* WndFromParent = FromHandle(::GetParent(hwndFrom));
 					if (WndFromParent != NULL)
 					{
 						lr = WndFromParent->OnNotifyReflect(wParam, lParam);

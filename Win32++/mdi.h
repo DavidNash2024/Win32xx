@@ -600,7 +600,7 @@ namespace Win32xx
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 		m_hChildMenu = ::LoadMenu (hInstance, MenuName);
 
-		HWND hWnd = (HWND)::SendMessage(GetParent(m_hWnd), WM_MDIGETACTIVE, 0, 0);
+		HWND hWnd = (HWND)::SendMessage(GetParent(), WM_MDIGETACTIVE, 0, 0);
 		if ((NULL != m_hWnd) &&(hWnd == m_hWnd) && (NULL != m_hChildMenu))
 		{
 			CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor());

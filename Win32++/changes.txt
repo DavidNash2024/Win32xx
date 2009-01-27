@@ -25,7 +25,8 @@ Added CDC::CreateRectRgn
 Added CDC::CreateRectRgnIndirect
 Added CDC::DetachRegion
 Added CDC::ExtCreateRegion
-Added CFrame::AddToolbarButton 
+Added CFrame::AddToolbarButton
+Added CWnd::GetParent
 Added CWnd::IsContainer
 Added CWnd::IsDockable
 Added CWnd::LockWindowUpdate
