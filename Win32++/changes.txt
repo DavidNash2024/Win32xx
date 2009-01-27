@@ -6,6 +6,7 @@ Major Changes
 * Docking:
   - Added tabbed docking container with optional toolbar
   - Added close button to the caption of docked windows
+  - Added outer docking.
 * Added Region support to CDC class.
 * Docking sample enhancements:
   - Added save/restore dock layout to docking sample
@@ -33,7 +34,14 @@ Added CToolbar::SetImages
 Added CMDIFrame::SetActiveMDIChild 
 Changed CMDIFrame::GetActiveMDIChild (it now returns a CWnd* instead of a HWND)
 Removed CMDIFrame::GetActiveMDIChildCWnd
-Renamed CMDIFrame::GetMDIChildVect to CMDIFrame::GetAllMDIChildren  
+Renamed CMDIFrame::GetMDIChildVect to CMDIFrame::GetAllMDIChildren
+
+Added the following docking styles:
+DS_DOCKED_CONTAINER	
+DS_DOCKED_LEFTMOST  
+DS_DOCKED_RIGHTMOST 
+DS_DOCKED_TOPMOST	
+DS_DOCKED_BOTTOMMOST
 
 Subclassed windows now call OnCommand and OnNotify
 Exceptions now genereate TRACE output to display the error.
@@ -64,11 +72,15 @@ In Summary:
 * A child container (a container contained within another) can not in turn
    contain other containers.   
 * Containers have a View window, just like Frames, MDI children and dockables.
+* Containers can set an icon and text for the tab, as well as text for the 
+  docking caption.
 * Containers can optionally include a toolbar.
 * When a container contains other containers, each container's view is displayed
    in a seperate tab.
 * Containers can be individually undocked from their parent container.
-
+* A Container with child containers can be undocked as a group.
+* An undocked container group (Container with children) can be docked as a
+  group inside another docked container.
 
 
 Version 6.3
