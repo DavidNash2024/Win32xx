@@ -214,7 +214,7 @@ void CMyListView::DoDefault(int iItem)
 							{
 								CMINVOKECOMMANDINFO  cmi = {0};
 								cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-								cmi.hwnd = GetParent(m_hWnd);
+								cmi.hwnd = GetParent();
 								cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
 								cmi.nShow = SW_SHOWNORMAL;
 								ccm.InvokeCommand(cmi);
@@ -292,7 +292,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 						{
 							CMINVOKECOMMANDINFO  cmi = {0};
 							cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-							cmi.hwnd = (HWND)GetParent(m_hWnd);
+							cmi.hwnd = GetParent();
 							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
 							cmi.nShow = SW_SHOWNORMAL;
 							ccm.InvokeCommand(cmi);

@@ -674,7 +674,7 @@ namespace Win32xx
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
-		void SetParent(HWND hParent);
+		HWND SetParent(HWND hParent);
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		int  SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
@@ -2067,18 +2067,12 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CWnd::SetParent(HWND hParent)
+	inline HWND CWnd::SetParent(HWND hParent)
 	// The SetParent function changes the parent window of the child window.
 	{
-		if ((0 == hParent) || (::IsWindow(hParent)))
-		{
-			m_hWndParent = hParent;
-			if (::IsWindow(m_hWnd))
-				::SetParent(m_hWnd, hParent);
-		}
-		else
-			throw CWinException(_T("CWnd::SetParent ... Failed to set parent"));
-
+		HWND hWndOldParent = ::SetParent(m_hWnd, hParent);
+		m_hWndParent = ::GetParent(m_hWnd);
+		return hWndOldParent;
 	}
 
 	inline BOOL CWnd::SetRedraw(BOOL bRedraw /*= TRUE*/) const

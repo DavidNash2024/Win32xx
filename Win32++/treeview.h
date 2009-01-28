@@ -75,7 +75,7 @@ namespace Win32xx
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
 		HTREEITEM GetNextVisible(HTREEITEM hItem) const;
-		HTREEITEM GetParent(HTREEITEM hItem) const;
+		HTREEITEM GetParentItem(HTREEITEM hItem) const;
 		HTREEITEM GetPrevSibling(HTREEITEM hItem) const;
 		HTREEITEM GetPrevVisible(HTREEITEM hItem) const;
 		HTREEITEM GetRootItem() const;
@@ -264,7 +264,7 @@ namespace Win32xx
 		return TreeView_GetNextVisible(m_hWnd, hItem);
 	}
 
-	inline HTREEITEM CTreeView::GetParent(HTREEITEM hItem) const
+	inline HTREEITEM CTreeView::GetParentItem(HTREEITEM hItem) const
 	// Retrieves the parent item of the specified tree-view item.
 	{
 		return TreeView_GetParent(m_hWnd, hItem);

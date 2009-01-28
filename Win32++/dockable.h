@@ -2356,6 +2356,7 @@ namespace Win32xx
 				pDockNew->m_DockWidthRatio	= m_DockWidthRatio;
 				pDockNew->SetParent(m_hWndParent);
 				pDockNew->GetDockBar().SetParent(m_hWndParent);
+				pDockNew->GetView()->SetFocus();
 
 				// insert pDockNew into the the DockParent's DockChildren vector
 				std::vector<CDockable*>::iterator p;
@@ -2374,6 +2375,7 @@ namespace Win32xx
 			// This is a child container, so simply remove it from the parent
 			((CContainer*)GetView())->RemoveContainer(pContainer);
 			((CContainer*)GetView())->SetTabSize();
+			((CContainer*)GetView())->SetFocus();
 		}
 		
 		// Finally do the actual undocking
@@ -2628,8 +2630,7 @@ namespace Win32xx
 				// Set the parent container relationships
 				pwndContainer->GetTabPage().SetParent(m_hWnd);
 				pwndContainer->m_pwndContainerParent = this;
-
-				SelectPage(iNewPage);
+				pwndContainer->GetTabPage().ShowWindow(SW_HIDE);
 			}
 		}
 	}
