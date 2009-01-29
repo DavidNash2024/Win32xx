@@ -1,19 +1,19 @@
 ///////////////////////////////////////////////
-//ShellApp.cpp -  Definitions for the CShellApp class
+//ExplorerApp.cpp -  Definitions for the CExplorerApp class
 
 #include "resource.h"
-#include "ShellApp.h"
+#include "ExplorerApp.h"
 
 
-CShellApp::CShellApp()
+CExplorerApp::CExplorerApp()
 {
 }
 
-CShellApp::~CShellApp()
+CExplorerApp::~CExplorerApp()
 {
 }
 
-BOOL CShellApp::InitInstance()
+BOOL CExplorerApp::InitInstance()
 {
 	//Create the Frame Window
 	if (!m_Frame.Create())

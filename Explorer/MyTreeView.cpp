@@ -3,7 +3,7 @@
 //  Definitions for the CMyTreeView and TreeItemData classes
 
 
-#include "ShellApp.h"
+#include "ExplorerApp.h"
 #include "Mainfrm.h"
 #include "MainView.h"
 #include "MyTreeView.h"
@@ -206,7 +206,7 @@ LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
 			LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
 			TreeItemData* pItem = (TreeItemData*)pnmtv->itemNew.lParam;
 
-			CMyListView& LeftView = GetShellApp().GetMainFrame().GetListView();
+			CMyListView& LeftView = GetExplorerApp().GetMainFrame().GetListView();
 			LeftView.DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
 		}
 		break;

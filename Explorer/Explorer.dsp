@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="Shell" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="Explorer" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=Shell - Win32 Debug
+CFG=Explorer - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Shell.mak".
+!MESSAGE NMAKE /f "Explorer.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Shell.mak" CFG="Shell - Win32 Debug"
+!MESSAGE NMAKE /f "Explorer.mak" CFG="Explorer - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Shell - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "Shell - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "Explorer - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "Explorer - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "Shell - Win32 Release"
+!IF  "$(CFG)" == "Explorer - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -55,7 +55,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 
-!ELSEIF  "$(CFG)" == "Shell - Win32 Debug"
+!ELSEIF  "$(CFG)" == "Explorer - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -86,8 +86,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "Shell - Win32 Release"
-# Name "Shell - Win32 Debug"
+# Name "Explorer - Win32 Release"
+# Name "Explorer - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -113,7 +113,7 @@ SOURCE=.\MyTreeView.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ShellApp.cpp
+SOURCE=.\ExplorerApp.cpp
 # End Source File
 # Begin Source File
 
@@ -149,7 +149,7 @@ SOURCE=.\resrc1.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ShellApp.h
+SOURCE=.\ExplorerApp.h
 # End Source File
 # Begin Source File
 

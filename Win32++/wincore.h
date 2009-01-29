@@ -624,6 +624,7 @@ namespace Win32xx
 		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		BOOL BringWindowToTop() const;
 		void CenterWindow() const;
+		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -668,10 +669,12 @@ namespace Win32xx
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
 		int  ReleaseDC(HDC hDC) const;
+		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
 		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
+		BOOL SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
 		HWND SetParent(HWND hParent);
@@ -1159,6 +1162,13 @@ namespace Win32xx
 		::SetWindowPos(m_hWnd, HWND_TOP, x, y, 0, 0,  SWP_NOSIZE);
 
 	}
+
+	inline BOOL CWnd::CheckDlgButton(int nIDButton, UINT uCheck) const
+	// The CheckDlgButton function changes the check state of a button control.
+	{
+		return ::CheckDlgButton(m_hWnd, nIDButton, uCheck);
+	}
+
 
 #ifndef _WIN32_WCE
 	inline BOOL CWnd::CloseWindow() const
@@ -1997,6 +2007,13 @@ namespace Win32xx
 	}
 #endif
 
+	inline LRESULT CWnd::SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const
+	// The SendDlgItemMessage function sends a message to the specified control in a dialog box.	
+	{
+		return ::SendDlgItemMessage(m_hWnd, nIDDlgItem, Msg, wParam, lParam);
+	}
+
+
 	inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
 	// The SendMessage function sends the specified message to a window or windows.
 	// It calls the window procedure for the window and does not return until the
@@ -2141,16 +2158,22 @@ namespace Win32xx
 		return ::SetWindowRgn(m_hWnd, hRgn, bRedraw);
 	}
 
-	inline BOOL CWnd::ShowWindow(int nCmdShow /*= SW_SHOWNORMAL*/) const
-	// The ShowWindow function sets the window's show state.
+	inline BOOL CWnd::SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const
+	// The SetDlgItemText function sets the title or text of a control in a dialog box. 
 	{
-		return ::ShowWindow(m_hWnd, nCmdShow);
+		return ::SetDlgItemText(m_hWnd, nIDDlgItem, lpString);
 	}
 
 	inline BOOL CWnd::SetWindowText(LPCTSTR lpString) const
 	// The SetWindowText function changes the text of the window's title bar (if it has one).
 	{
 		return ::SetWindowText(m_hWnd, lpString);
+	}
+
+	inline BOOL CWnd::ShowWindow(int nCmdShow /*= SW_SHOWNORMAL*/) const
+	// The ShowWindow function sets the window's show state.
+	{
+		return ::ShowWindow(m_hWnd, nCmdShow);
 	}
 
 	inline BOOL CWnd::UpdateWindow() const

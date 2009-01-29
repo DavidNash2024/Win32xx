@@ -1,13 +1,13 @@
 [Project]
-FileName=Shell_DEBUG.dev
-Name=Shell
+FileName=Explorer_DEBUG.dev
+Name=Explorer
 UnitCount=25
 Type=0
 Ver=1
 ObjFiles=
 Includes=
 Libs=
-PrivateResource=Shell_RELEASE_private.rc
+PrivateResource=Explorer_DEBUG_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Debug
 ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=1
-OverrideOutputName=Shell.exe
+OverrideOutputName=Explorer.exe
 HostApplication=
 Folders=Header,Source,Win32++
 CommandLine=
@@ -118,7 +118,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=ShellApp.cpp
+FileName=ExplorerApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -128,7 +128,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=ShellApp.h
+FileName=ExplorerApp.h
 Folder=Header
 Compile=1
 Link=1

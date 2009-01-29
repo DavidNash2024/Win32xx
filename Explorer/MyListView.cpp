@@ -2,7 +2,7 @@
 // RightView.cpp
 //  Definitions for the CMyListView and ListItemData classes
 
-#include "ShellApp.h"
+#include "ExplorerApp.h"
 #include "MyListView.h"
 #include "resource.h"
 
@@ -208,7 +208,7 @@ void CMyListView::DoDefault(int iItem)
 
 							if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
 							{
-								GetShellApp().GetMainFrame().GetTreeView().SelectFromListView(pInfo->GetFullPidl());
+								GetExplorerApp().GetMainFrame().GetTreeView().SelectFromListView(pInfo->GetFullPidl());
 							}
 							else
 							{
@@ -432,7 +432,7 @@ void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 	CEnumIDList cEnum;
 
 	int grFlags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
-	if ( GetShellApp().GetMainFrame().GetShowHidden() )
+	if ( GetExplorerApp().GetMainFrame().GetShowHidden() )
 		grFlags |= SHCONTF_INCLUDEHIDDEN;
 
 	if(SUCCEEDED(cPFolder.EnumObjects(NULL, grFlags, cEnum)))

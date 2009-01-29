@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Shell"
+	Name="Explorer"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -27,7 +27,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\Release/Shell.pch"
+				PrecompiledHeaderFile=".\Release/Explorer.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -38,9 +38,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Release/Shell.exe"
+				OutputFile=".\Release/Explorer.exe"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/Shell.pdb"
+				ProgramDatabaseFile=".\Release/Explorer.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -49,7 +49,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Shell.tlb"
+				TypeLibraryName=".\Release/Explorer.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -88,7 +88,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\Debug/Shell.pch"
+				PrecompiledHeaderFile=".\Debug/Explorer.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -100,10 +100,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Debug/Shell.exe"
+				OutputFile=".\Debug/Explorer.exe"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Shell.pdb"
+				ProgramDatabaseFile=".\Debug/Explorer.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -112,7 +112,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Shell.tlb"
+				TypeLibraryName=".\Debug/Explorer.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -188,7 +188,7 @@
 				RelativePath=".\MyTreeView.cpp">
 			</File>
 			<File
-				RelativePath="ShellApp.cpp">
+				RelativePath="ExplorerApp.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
@@ -234,7 +234,7 @@
 				RelativePath=".\RightView.h">
 			</File>
 			<File
-				RelativePath="ShellApp.h">
+				RelativePath="ExplorerApp.h">
 			</File>
 			<File
 				RelativePath=".\ShellWrapper.h">

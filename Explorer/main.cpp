@@ -1,13 +1,13 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "ShellApp.h"
+#include "ExplorerApp.h"
 
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CShellApp theApp;
+	CExplorerApp theApp;
 
 	// Run the application
 	return theApp.Run();

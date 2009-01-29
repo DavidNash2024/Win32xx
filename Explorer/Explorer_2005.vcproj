@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="Shell"
+	Version="8.00"
+	Name="Explorer"
 	ProjectGUID="{382FD0A0-2437-41B0-B13D-AE0745269029}"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -42,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Shell.tlb"
+				TypeLibraryName=".\Release/Explorer.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -54,7 +53,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/Shell.pch"
+				PrecompiledHeaderFile=".\Release/Explorer.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -74,15 +73,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib"
-				OutputFile=".\Release/Shell.exe"
+				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib Advapi32.lib"
+				OutputFile=".\Release/Explorer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/Shell.pdb"
+				ProgramDatabaseFile=".\Release/Explorer.pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -97,13 +94,16 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/Shell.bsc"
+				OutputFile=".\Release/Explorer.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -137,7 +137,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Shell.tlb"
+				TypeLibraryName=".\Debug/Explorer.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -148,7 +148,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/Shell.pch"
+				PrecompiledHeaderFile=".\Debug/Explorer.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -169,16 +169,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib"
-				OutputFile=".\Debug/Shell.exe"
+				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib Advapi32.lib"
+				OutputFile=".\Debug/Explorer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Shell.pdb"
+				ProgramDatabaseFile=".\Debug/Explorer.pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -193,13 +191,16 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/Shell.bsc"
+				OutputFile=".\Debug/Explorer.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -282,7 +283,7 @@
 				>
 			</File>
 			<File
-				RelativePath="ShellApp.cpp"
+				RelativePath="ExplorerApp.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -351,7 +352,7 @@
 				>
 			</File>
 			<File
-				RelativePath="ShellApp.h"
+				RelativePath="ExplorerApp.h"
 				>
 			</File>
 			<File

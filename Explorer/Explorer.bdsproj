@@ -10,7 +10,7 @@
 	</PersonalityInfo>
 	<CPlusPlusBuilder.Personality>
 		<Source>
-			<Source Name="MainSource">Shell.bpf</Source>
+			<Source Name="MainSource">Explorer.bpf</Source>
 		</Source>
 		<BCBPROJECT>
       <project version="10.0">
@@ -28,7 +28,7 @@
         <property category="build.config.1" name="settings.win32b" value="default"/>
         <property category="build.config.1" name="type" value="Toolset"/>
         <property category="build.config.1" name="win32.win32b.builddir" value="Release_Build"/>
-        <property category="build.node" name="name" value="Shell.exe"/>
+        <property category="build.node" name="name" value="Explorer.exe"/>
         <property category="build.node" name="packages" value="vclx;vcl;rtl;dbrtl;vcldb;adortl;dbxcds;dbexpress;xmlrtl;vclie;inet;inetdbbde;inetdbxpress;soaprtl;dsnap;bdertl;vcldbx"/>
         <property category="build.node" name="sparelibs" value="rtl.lib"/>
         <property category="build.node" name="use_packages" value="1"/>
@@ -187,8 +187,8 @@
         <FILE FILENAME="MainView.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="resource.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>
-        <FILE FILENAME="ShellApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ShellApp" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="ShellApp.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="ExplorerApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ExplorerApp" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="ExplorerApp.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="ShellWrapper.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ShellWrapper" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="ShellWrapper.h" CONTAINERID="" LOCALCOMMAND="" UNITNAME="" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="MyListView.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyListView" FORMNAME="" DESIGNCLASS=""/>
