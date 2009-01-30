@@ -653,7 +653,7 @@ namespace Win32xx
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
-		BOOL IsChild(const CWnd* pwndParent) const;
+		BOOL IsChild(const CWnd* pWndParent) const;
 		virtual BOOL IsContainer() const;
 		virtual BOOL IsDockable() const;
 		BOOL IsEnabled() const;
@@ -695,7 +695,7 @@ namespace Win32xx
 		HMENU GetMenu() const;
 		int  GetScrollPos(int nBar) const;
 		BOOL GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
-		BOOL GetWindowPlacement(WINDOWPLACEMENT& pwndpl) const;
+		BOOL GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
 		BOOL IsIconic() const;
 		BOOL IsZoomed() const;
 		BOOL LockWindowUpdate(HWND hWndLock) const;
@@ -1085,7 +1085,7 @@ namespace Win32xx
 				throw CWinException(_T("Window already attached to this CWnd object"));
 
 			m_hWnd = hWnd;
-			m_hWndParent = ::GetParent(hWnd);
+			m_hWndParent = GetParent();
 			Subclass();
 
 			if (m_PrevWindowProc)
@@ -1144,7 +1144,7 @@ namespace Win32xx
 		int iHeight = rcDesktop.bottom;
 
 		// Get the parent window dimensions (parent could be the desktop)
-		if (m_hWndParent != NULL) ::GetWindowRect(m_hWndParent, &rcParent);
+		if (GetParent() != NULL) ::GetWindowRect(m_hWndParent, &rcParent);
 		else rcParent = rcDesktop;
 
 		// Calculate point to center the dialog on the parent window
@@ -1585,11 +1585,11 @@ namespace Win32xx
 		return ::InvalidateRgn(m_hWnd, hRgn, bErase);
 	}
 
-	inline BOOL CWnd::IsChild(const CWnd* pwndParent) const
+	inline BOOL CWnd::IsChild(const CWnd* pWndParent) const
 	// The IsChild function tests whether a window is a child window or descendant window
 	// of a parent window's CWnd.
 	{
-		return ::IsChild(pwndParent->GetHwnd(), m_hWnd);
+		return ::IsChild(pWndParent->GetHwnd(), m_hWnd);
 	}
 
 	inline BOOL CWnd::IsContainer() const 

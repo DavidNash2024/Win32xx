@@ -306,7 +306,7 @@ namespace Win32xx
 
 		// Add extra styles for toolbars inside a rebar
 		TCHAR ClassName[32];
-		::GetClassName(m_hWndParent, ClassName, 32);
+		::GetClassName(GetParent(), ClassName, 32);
 		if (0 == lstrcmp(ClassName, REBARCLASSNAME))
 		{
 			DWORD style = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
@@ -905,11 +905,11 @@ namespace Win32xx
 			{
 				// Adjust size for toolbars inside a rebar
 				TCHAR ClassName[32];
-				::GetClassName(m_hWndParent, ClassName, 32);
+				::GetClassName(GetParent(), ClassName, 32);
 
 				if (0 == lstrcmp(ClassName, REBARCLASSNAME))
 				{
-					CRebar* pRebar = (CRebar*)FromHandle(m_hWndParent);
+					CRebar* pRebar = (CRebar*)FromHandle(GetParent());
 					if (pRebar && (pRebar->GetRebarTheme().ShortBands))
 					{
 						LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
