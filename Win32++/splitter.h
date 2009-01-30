@@ -392,8 +392,7 @@ namespace Win32xx
 			// Check for left mouse button down in child window
 			if (wParam == WM_LBUTTONDOWN)
 			{
-				CPoint pt;
-				GetCursorPos(&pt);
+				CPoint pt = GetCursorPos();
 				if (WindowFromPoint(pt) == m_Bar)
 					OnLButtonDown();
 			}

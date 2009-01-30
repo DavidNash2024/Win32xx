@@ -9,7 +9,8 @@
 CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 {
 	// Set m_MainView as the view window of the frame
-	SetView(m_MainView);
+//	SetView(m_MainView);
+	SetView(m_LeftPane);
 
 	// Define our toolbar data
 	AddToolbarButton( IDM_FILE_NEW   );
@@ -32,9 +33,6 @@ CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 
 CMainFrame::~CMainFrame()
 {
-	// Allow the TreeView Thread to complete before proceeding
-	HANDLE hThread = GetTreeView().m_hThread;
-	MsgWaitForMultipleObjects(1, &hThread, FALSE, INFINITE, 0);
 }
 
 void CMainFrame::DoPopupMenu()
@@ -82,8 +80,11 @@ void CMainFrame::DoPopupMenu()
 
 void CMainFrame::OnInitialUpdate()
 {
+	int Width = (int) (GetWindowRect().Width() * 0.7);
+	m_RightPane = (CRightPane*)m_LeftPane.AddDockedChild(new CRightPane, DS_DOCKED_RIGHT, Width);
+
 	// All windows are now created, so populate the treeview
-	GetTreeView().GetRootItems();
+	GetTreeView()->GetRootItems();
 
 	// Uncheck the hidden menu item
 	::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, MF_UNCHECKED);
@@ -96,7 +97,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnClose()
 {
 	// Destroying the TreeView triggers shutdown of the Treeview thread.
-	GetTreeView().DestroyWindow();
+	GetTreeView()->DestroyWindow();
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -113,19 +114,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnHelp();
 		return TRUE;
 	case IDM_VIEW_LARGEICON:
-		GetListView().ViewLargeIcons();
+		GetListView()->ViewLargeIcons();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
 		return TRUE;
 	case IDM_VIEW_SMALLICON:
-		GetListView().ViewSmallIcons();
+		GetListView()->ViewSmallIcons();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
 		return TRUE;
 	case IDM_VIEW_LIST:
-		GetListView().ViewList();
+		GetListView()->ViewList();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
 		return TRUE;
 	case IDM_VIEW_REPORT:
-		GetListView().ViewReport();
+		GetListView()->ViewReport();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 		return TRUE;
 	case IDM_SHOW_HIDDEN:
@@ -133,7 +134,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		::CheckMenuItem (GetFrameMenu(), IDM_SHOW_HIDDEN, (TRUE == m_bShowHidden)? MF_CHECKED : MF_UNCHECKED);
 
 		// Refresh the Listview display
-		GetListView().DoDisplay();
+		GetListView()->DoDisplay();
 		return TRUE;
 	case IDM_VIEWMENU:
 		// This Command is recieved if Comctl32.dll version is below 4.7

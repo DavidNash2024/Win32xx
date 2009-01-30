@@ -9,8 +9,9 @@
 
 #include "../Win32++/listview.h"
 #include <vector>
+#include "ShellWrapper.h"
 
-
+using namespace ShellWrapper;
 
 class CMyListView : public CListView
 {
@@ -46,7 +47,7 @@ private:
 		Cpidl        m_cpidlRel;	  //Relative PIDL
 		CShellFolder m_cParentFolder; //Parent IShellFolder
 
-	};  //class ListItemData (nested class)
+	};  //class ListItemData (nested class) 
 
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 	void DeleteItems();

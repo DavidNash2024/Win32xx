@@ -7,17 +7,19 @@
 
 
 #include "../Win32++/frame.h"
-#include "MainView.h"
+#include "SplitterPanes.h"
 
+#ifndef BTNS_WHOLEDROPDOWN
+  #define BTNS_WHOLEDROPDOWN  0x0080
+#endif
 
 class CMainFrame : public CFrame
 {
 public:
 	CMainFrame();
 	virtual ~CMainFrame();
-	CMainView& GetMainView() {return m_MainView;}
-	CMyListView& GetListView() {return m_MainView.GetListView();}
-	CMyTreeView& GetTreeView() {return m_MainView.GetTreeView();}
+	CMyListView* GetListView() const {return (CMyListView*)m_RightPane->GetView();}
+	CMyTreeView* GetTreeView() const {return (CMyTreeView*)m_LeftPane.GetView();}
 	BOOL GetShowHidden() {return m_bShowHidden;}
 
 protected:
@@ -32,7 +34,9 @@ protected:
 	void SetButtons();
 
 private:
-	CMainView m_MainView;
+//	CMainView m_MainView;
+	CLeftPane m_LeftPane;
+	CRightPane* m_RightPane;
 	BOOL m_bShowHidden;
 };
 

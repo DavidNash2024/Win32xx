@@ -93,15 +93,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\ExplorerApp.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\Mainfrm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MainView.cpp
 # End Source File
 # Begin Source File
 
@@ -113,11 +113,11 @@ SOURCE=.\MyTreeView.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ExplorerApp.cpp
+SOURCE=.\ShellWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ShellWrapper.cpp
+SOURCE=.\SplitterPanes.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -125,11 +125,11 @@ SOURCE=.\ShellWrapper.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\Mainfrm.h
+SOURCE=.\ExplorerApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainView.h
+SOURCE=.\Mainfrm.h
 # End Source File
 # Begin Source File
 
@@ -145,15 +145,11 @@ SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\resrc1.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ExplorerApp.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ShellWrapper.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SplitterPanes.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

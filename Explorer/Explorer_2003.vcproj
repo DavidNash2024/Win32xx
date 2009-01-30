@@ -143,6 +143,24 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
+				RelativePath="ExplorerApp.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						PreprocessorDefinitions=""/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						PreprocessorDefinitions=""
+						BasicRuntimeChecks="3"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="main.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -179,44 +197,26 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MainView.cpp">
-			</File>
-			<File
 				RelativePath=".\MyListView.cpp">
 			</File>
 			<File
 				RelativePath=".\MyTreeView.cpp">
 			</File>
 			<File
-				RelativePath="ExplorerApp.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
+				RelativePath=".\ShellWrapper.cpp">
 			</File>
 			<File
-				RelativePath=".\ShellWrapper.cpp">
+				RelativePath=".\SplitterPanes.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="Mainfrm.h">
+				RelativePath="ExplorerApp.h">
 			</File>
 			<File
-				RelativePath=".\MainView.h">
+				RelativePath="Mainfrm.h">
 			</File>
 			<File
 				RelativePath=".\MyListView.h">
@@ -228,16 +228,13 @@
 				RelativePath="resource.h">
 			</File>
 			<File
-				RelativePath="resrc1.h">
-			</File>
-			<File
 				RelativePath=".\RightView.h">
 			</File>
 			<File
-				RelativePath="ExplorerApp.h">
+				RelativePath=".\ShellWrapper.h">
 			</File>
 			<File
-				RelativePath=".\ShellWrapper.h">
+				RelativePath=".\SplitterPanes.h">
 			</File>
 		</Filter>
 		<Filter
@@ -255,6 +252,9 @@
 			</File>
 			<File
 				RelativePath="..\Win32++\Dialog.h">
+			</File>
+			<File
+				RelativePath="..\Win32++\dockable.h">
 			</File>
 			<File
 				RelativePath="..\Win32++\Frame.h">

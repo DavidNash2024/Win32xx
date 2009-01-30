@@ -13,7 +13,6 @@
 
 using namespace ShellWrapper;
 
-
 class CMyTreeView : public CTreeView
 {
 public:
@@ -61,7 +60,6 @@ private:
 	CContextMenu2 m_ccm2;
 	std::vector <TreeItemData*> m_pItems;
 public:
-	HANDLE m_hThread;
 	DWORD m_dwThreadID;
 
 };

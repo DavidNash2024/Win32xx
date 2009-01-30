@@ -5,14 +5,13 @@
 
 #include "ExplorerApp.h"
 #include "Mainfrm.h"
-#include "MainView.h"
 #include "MyTreeView.h"
 #include "MyListView.h"
 #include "Resource.h"
 
 ////////////////////////////////
 //CMyTreeView function definitions
-CMyTreeView::CMyTreeView() : m_hThread(0)
+CMyTreeView::CMyTreeView()
 {
 	try
 	{
@@ -43,7 +42,6 @@ CMyTreeView::~CMyTreeView()
 		delete (*Iter);
 	}
 
-	::CloseHandle(m_hThread);
 	::CoUninitialize(); // Shut down COM
 }
 
@@ -206,11 +204,12 @@ LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
 			LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
 			TreeItemData* pItem = (TreeItemData*)pnmtv->itemNew.lParam;
 
-			CMyListView& LeftView = GetExplorerApp().GetMainFrame().GetListView();
-			LeftView.DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
+			CMyListView* LeftView = GetExplorerApp().GetMainFrame().GetListView();
+			LeftView->DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
 		}
 		break;
 	} // switch(lpnmh->code)
+
 	return 0;
 }
 
@@ -462,9 +461,6 @@ LRESULT CMyTreeView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				m_ccm2.HandleMenuMsg(uMsg, wParam, lParam);
 		}
 		break;
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
 	}
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

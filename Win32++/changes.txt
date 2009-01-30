@@ -7,6 +7,7 @@ Major Changes
   - Added tabbed docking container with optional toolbar
   - Added close button to the caption of docked windows
   - Added outer docking.
+  - Added docking container sample
 * Added Region support to CDC class.
 * Docking sample enhancements:
   - Added save/restore dock layout to docking sample
@@ -26,10 +27,14 @@ Added CDC::CreateRectRgnIndirect
 Added CDC::DetachRegion
 Added CDC::ExtCreateRegion
 Added CFrame::AddToolbarButton
+Added CWnd::CheckDlgButton
+Added CWnd::GetDlgItem
 Added CWnd::GetParent
 Added CWnd::IsContainer
 Added CWnd::IsDockable
 Added CWnd::LockWindowUpdate
+Added CWnd::SendDlgItemMessage
+Added CWnd::SetDlgItemText
 Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
 Added CToolbar::SetImages
 Added CMDIFrame::SetActiveMDIChild 

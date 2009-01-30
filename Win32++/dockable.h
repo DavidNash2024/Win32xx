@@ -1393,7 +1393,9 @@ namespace Win32xx
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
 		m_hbrDithered = ::CreatePatternBrush (m_hbmHash);
-		m_pwndDockAncestor = 0;
+		
+		// Assume this dockable is the DockAncestor for now.
+		m_pwndDockAncestor = this;
 	}
 
 	inline CDockable::~CDockable()
@@ -1849,9 +1851,6 @@ namespace Win32xx
 		if (NULL == GetView())
 			throw CWinException(_T("CDockable::OnCreate... View window is not assigned!\nUse SetView to set the View Window"));
 		GetView()->Create(GetDockClient().GetHwnd());
-
-		// Assume this dockable is the DockAncestor for now.
-		m_pwndDockAncestor = this;
 		
 		// Now remove the WS_POPUP style. It was required to allow this window
 		// to be owned by the frame window.
