@@ -507,7 +507,7 @@ namespace Win32xx
 	inline CMDIChild::~CMDIChild()
 	{
 		if (IsWindow())
-			::SendMessage(m_hWndParent, WM_MDIDESTROY, (WPARAM)m_hWnd, 0);
+			::SendMessage(GetParent(), WM_MDIDESTROY, (WPARAM)m_hWnd, 0);
 
 		if (m_hChildMenu)
 			::DestroyMenu(m_hChildMenu);

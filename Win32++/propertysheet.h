@@ -147,7 +147,6 @@ namespace Win32xx
 
 		tString m_Title;
 		PROPSHEETPAGE* m_ppsp; // Array of PROPSHEETPAGE
-
 	};
 
 	//////////////////////////////////////////
@@ -223,7 +222,7 @@ namespace Win32xx
 				{
 					// Some controls (eg ListView) have child windows.
 					// Reflect those notifications too.
-					CWnd* WndFromParent = FromHandle(GetParent(hwndFrom));
+					CWnd* WndFromParent = FromHandle(::GetParent(hwndFrom));
 					if (WndFromParent != NULL)
 					{
 						BOOL bReturn = (BOOL)WndFromParent->OnNotifyReflect(wParam, lParam);
@@ -392,9 +391,9 @@ namespace Win32xx
 		if (m_hWnd != NULL)
 		{
 			if (bChanged)
-				::SendMessage(m_hWndParent, PSM_CHANGED, (WPARAM)m_hWnd, 0);
+				::SendMessage(GetParent(), PSM_CHANGED, (WPARAM)m_hWnd, 0);
 			else
-				::SendMessage(m_hWndParent, PSM_UNCHANGED, (WPARAM)m_hWnd, 0);
+				::SendMessage(GetParent(), PSM_UNCHANGED, (WPARAM)m_hWnd, 0);
 		}
 	}
 
@@ -466,7 +465,6 @@ namespace Win32xx
 
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
-			pPage->m_hWndParent = GetParent(hwndDlg);
 			pPage->AddToMap();
 			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
 		}
@@ -640,7 +638,6 @@ namespace Win32xx
 		if (hWndParent)
 		{
 			m_PSH.hwndParent = hWndParent;
-			m_hWndParent = hWndParent;
 		}
 
 		BuildPageArray();
@@ -673,22 +670,15 @@ namespace Win32xx
 			// Create the property sheet
 			ipResult = PropertySheet(ppsph);
 
-			// Set the parent for a modeless property sheet
-			if (ppsph->dwFlags & PSH_MODELESS)
-			{
-				m_hWndParent = ppsph->hwndParent;
-			}
 		}
 
 		catch (const CWinException &e)
 		{
-			m_hWndParent = NULL;
 			e.MessageBox();
 		}
 
 		catch (...)
 		{
-			m_hWndParent = NULL;
 			DebugErrMsg(_T("Exception in CPropertySheet::CreatePropertySheet"));
 			throw;	// Rethrow unknown exception
 		}

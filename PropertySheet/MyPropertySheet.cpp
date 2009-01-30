@@ -15,7 +15,7 @@ BOOL CButtonPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent(hWnd), hWnd);
+		PropSheet_Changed(GetParent(), hWnd);
 		break;
 
 	default:
@@ -65,7 +65,7 @@ void CButtonPage::OnSetActive()
 	TRACE("Button page is now active\n");
 
 	// Set the wizard buttons
-	PropSheet_SetWizButtons(m_hWndParent, PSWIZB_NEXT);
+	PropSheet_SetWizButtons(GetParent(), PSWIZB_NEXT);
 }
 
 int CButtonPage::Validate()
@@ -103,7 +103,7 @@ BOOL CComboPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent(hWnd), hWnd);
+		PropSheet_Changed(GetParent(), hWnd);
 		break;
 
 	default:
@@ -116,7 +116,7 @@ BOOL CComboPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CComboPage::OnSetActive()
 {
 	// Set the wizard buttons
-	PropSheet_SetWizButtons(m_hWndParent, PSWIZB_BACK | PSWIZB_FINISH);
+	PropSheet_SetWizButtons(GetParent(), PSWIZB_BACK | PSWIZB_FINISH);
 }
 
 

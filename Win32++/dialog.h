@@ -101,6 +101,7 @@ namespace Win32xx
 		BOOL IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
+		HWND m_hWndParent;				// Handle to the parent window
 
 	};
 

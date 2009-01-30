@@ -189,26 +189,19 @@ namespace Win32xx
 
 		if (SHCreateMenuBar(&mbi))
 		{
-			m_hWndParent = hParent;
 			m_hWnd = mbi.hwndMB;
 		}
 		else
 		{
 			DebugErrMsg(TEXT("Failed to create Menubar"));
-			m_hWndParent = NULL;
 			m_hWnd = NULL;
 		}
 #else
 		m_hWnd = CommandBar_Create(GetApp()->GetInstanceHandle(), hParent, IDW_MENUBAR);
 
-		if (m_hWnd)
-		{
-			m_hWndParent = hParent;
-		}
-		else
+		if (m_hWnd == NULL)
 		{
 			DebugErrMsg(TEXT("Failed to create CommandBar"));
-			m_hWndParent = NULL;
 		}
 
 		CommandBar_InsertMenubar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);

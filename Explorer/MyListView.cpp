@@ -79,7 +79,7 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 	if(m_csfCurFolder.GetIShellFolder())
 	{
 		CContextMenu ccm;
-		hr = m_csfCurFolder.CreateViewObject(m_hWndParent, IID_IContextMenu, ccm);
+		hr = m_csfCurFolder.CreateViewObject(GetParent(), IID_IContextMenu, ccm);
 
 		if(SUCCEEDED(hr))
 		{
@@ -111,7 +111,7 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 					{
 						CMINVOKECOMMANDINFO  cmi = {0};
 						cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-						cmi.hwnd = m_hWndParent;
+						cmi.hwnd = GetParent();
 						cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
 						cmi.nShow = SW_SHOWNORMAL;
 						ccm.InvokeCommand(cmi);

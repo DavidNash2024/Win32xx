@@ -737,7 +737,6 @@ namespace Win32xx
 
 		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
 		HWND m_hWnd;			// handle to this object's window
-		HWND m_hWndParent;		// handle to this object's window parent
 		WNDCLASS m_wc;			// defines initialisation parameters for RegisterClass
 		CWinApp* pWinApp;
 
@@ -1046,10 +1045,10 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd() : m_hWnd(NULL), m_hWndParent(NULL), pWinApp(NULL), m_hIconLarge(NULL),
+	inline CWnd::CWnd() : m_hWnd(NULL), pWinApp(NULL), m_hIconLarge(NULL),
 					m_hIconSmall(NULL), m_PrevWindowProc(NULL)
 	{
-		// Note: m_hWnd and m_hWndParent are set in CWnd::CreateEx(...)
+		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
 		::ZeroMemory(&m_wc, sizeof(WNDCLASS));
 	}
@@ -1085,7 +1084,6 @@ namespace Win32xx
 				throw CWinException(_T("Window already attached to this CWnd object"));
 
 			m_hWnd = hWnd;
-			m_hWndParent = GetParent();
 			Subclass();
 
 			if (m_PrevWindowProc)
@@ -1097,7 +1095,6 @@ namespace Win32xx
 			else
 			{
 				m_hWnd = NULL;
-				m_hWndParent = NULL;
 				throw CWinException(_T("CWnd::Attach .. Subclass failed"));
 			}
 		}
@@ -1144,7 +1141,7 @@ namespace Win32xx
 		int iHeight = rcDesktop.bottom;
 
 		// Get the parent window dimensions (parent could be the desktop)
-		if (GetParent() != NULL) ::GetWindowRect(m_hWndParent, &rcParent);
+		if (GetParent() != NULL) ::GetWindowRect(GetParent(), &rcParent);
 		else rcParent = rcDesktop;
 
 		// Calculate point to center the dialog on the parent window
@@ -1276,11 +1273,8 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			// Create window
-			m_hWndParent = hParent;
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 									hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
-
-			if (m_hWnd == 0) m_hWndParent = 0;
 
 			// Now handle window creation failure
 			if (!m_hWnd)
@@ -1351,7 +1345,6 @@ namespace Win32xx
 		m_hIconLarge = NULL;
 		m_hIconSmall = NULL;
 		m_hWnd = NULL;
-		m_hWndParent = NULL;
 		m_PrevWindowProc = NULL;
 	}
 
@@ -2087,9 +2080,7 @@ namespace Win32xx
 	inline HWND CWnd::SetParent(HWND hParent)
 	// The SetParent function changes the parent window of the child window.
 	{
-		HWND hWndOldParent = ::SetParent(m_hWnd, hParent);
-		m_hWndParent = ::GetParent(m_hWnd);
-		return hWndOldParent;
+		return ::SetParent(m_hWnd, hParent);
 	}
 
 	inline BOOL CWnd::SetRedraw(BOOL bRedraw /*= TRUE*/) const
