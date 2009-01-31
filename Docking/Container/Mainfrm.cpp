@@ -167,29 +167,27 @@ void CMainFrame::LoadRegistryDockables()
 
 			while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&di, &BufferSize))
 			{
-				CDockable* pDock = &m_DockView;
-
 				if (-1 == di.DockParentID)
 				{
 					switch(di.DockID)
 					{
 					case ID_CONTAINCLASSES1:
-						pDock->AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES1);
+						m_DockView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES1);
 						break;
 					case ID_CONTAINCLASSES2:
-						pDock->AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES2);					
+						m_DockView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES2);					
 						break;
 					case ID_CONTAINFILES1:
-						pDock->AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES1);
+						m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES1);
 						break;
 					case ID_CONTAINFILES2:
-						pDock->AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
+						m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
 						break;
 					case ID_OUTPUT:
-						pDock->AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT);
+						m_DockView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT);
 						break;
 					case ID_TEXT:
-						pDock->AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT);
+						m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT);
 						break;
 					default:
 						TRACE("Unknown Dock ID\n");
@@ -198,6 +196,8 @@ void CMainFrame::LoadRegistryDockables()
 				}
 				else
 				{
+					CDockable* pDock = &m_DockView;
+					
 					if (di.DockParentID)
 						pDock = m_DockView.GetDockFromID(di.DockParentID);
 					
@@ -224,7 +224,7 @@ void CMainFrame::LoadRegistryDockables()
 					default:
 						TRACE("Unknown Dock ID\n");
 						break;
-					}
+					}				
 				}
 
 				i++;

@@ -129,35 +129,33 @@ void CMainFrame::LoadRegistryDockables()
 
 			while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&di, &BufferSize))
 			{
-				CDockable* pDock = &m_DockView;
-
 				if (-1 == di.DockParentID)
 				{
 					switch(di.DockID)
 					{
 					case ID_CLASS1:
-						pDock->AddUndockedChild(new CDockClass, di.DockStyle, di.DockWidth, di.Rect, ID_CLASS1);
+						m_DockView.AddUndockedChild(new CDockClass, di.DockStyle, di.DockWidth, di.Rect, ID_CLASS1);
 						break;
 					case ID_CLASS2:
-						pDock->AddUndockedChild(new CDockClass, di.DockStyle, di.DockWidth, di.Rect, ID_CLASS2);					
+						m_DockView.AddUndockedChild(new CDockClass, di.DockStyle, di.DockWidth, di.Rect, ID_CLASS2);					
 						break;
 					case ID_FILES1:
-						pDock->AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES1);
+						m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES1);
 						break;
 					case ID_FILES2:
-						pDock->AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES2);
+						m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES2);
 						break;
 					case ID_SIMPLE1:
-						pDock->AddUndockedChild(new CDockSimple, di.DockStyle, di.DockWidth, di.Rect, ID_SIMPLE1);
+						m_DockView.AddUndockedChild(new CDockSimple, di.DockStyle, di.DockWidth, di.Rect, ID_SIMPLE1);
 						break;
 					case ID_SIMPLE2:
-						pDock->AddUndockedChild(new CDockSimple, di.DockStyle, di.DockWidth, di.Rect, ID_SIMPLE2);
+						m_DockView.AddUndockedChild(new CDockSimple, di.DockStyle, di.DockWidth, di.Rect, ID_SIMPLE2);
 						break;
 					case ID_TEXT1:
-						pDock->AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT1);
+						m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT1);
 						break;
 					case ID_TEXT2:
-						pDock->AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
+						m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
 						break;
 					default:
 						TRACE("Unknown Dock ID\n");
@@ -166,8 +164,11 @@ void CMainFrame::LoadRegistryDockables()
 				}
 				else
 				{
+					CDockable* pDock;	
 					if (di.DockParentID)
 						pDock = m_DockView.GetDockFromID(di.DockParentID);
+					else
+						pDock = &m_DockView;
 					
 					switch(di.DockID)
 					{
