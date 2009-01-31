@@ -296,7 +296,6 @@ namespace Win32xx
 			virtual void OnCreate();
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 			BOOL IsOverContainer() { return m_bIsOverContainer; }
-		//	virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
 			BOOL m_bIsOverContainer;
@@ -340,8 +339,8 @@ namespace Win32xx
 		// Operations
 		CDockable();
 		virtual ~CDockable();
-		virtual CDockable* AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, int nDockID = 0);
-		virtual CDockable* AddUndockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc, int nDockID = 0);
+		virtual CDockable* AddDockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, int nDockID = 0);
+		virtual CDockable* AddUndockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, RECT rc, int nDockID = 0);
 		virtual void CheckAllTargets(LPDRAGPOS pDragPos);
 		virtual void CloseAllDockables();
 		virtual void CloseAllTargets();
@@ -482,11 +481,15 @@ namespace Win32xx
 				{
 					if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
 					{
+						HCURSOR hCursor;
 						DWORD dwSide = GetDock()->GetDockStyle() & 0xF;
 						if ((dwSide == DS_DOCKED_LEFT) || (dwSide == DS_DOCKED_RIGHT))
-							SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITH)));
+							hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITH));
 						else
-							SetCursor(LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV)));
+							hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV));
+
+						if (hCursor) SetCursor(hCursor);
+						else TRACE(_T("Missing cursor resource for slider bar\n"));
 
 						return TRUE;
 					}
@@ -623,21 +626,39 @@ namespace Win32xx
 
 	inline void CDockable::CDockClient::DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus)
 	{
+		// Determine the close button's drawing position relative to the window
 		CRect rcClose = m_rcClose;
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
-		rcClose.OffsetRect(2, m_NCHeight+2);
-
-		// Correct for a a bug in the windows MapWindowPoints function!
+	
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 		{
+			rcClose.OffsetRect(2, m_NCHeight+2);
 			if (GetWindowRect().Height() < (m_NCHeight+4))
 				rcClose.OffsetRect(-2, -2);
 		}
+		else
+			rcClose.OffsetRect(0, m_NCHeight-2);
 
+		// Draw the outer highlight for the close button
 		if (!IsRectEmpty(&rcClose))
 		{
 			switch (uState)
 			{
+			case 0:
+				{
+					if (bFocus)
+						DrawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_ACTIVECAPTION));
+					else
+						DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+					
+					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+					break;
+				}
+
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
@@ -665,12 +686,12 @@ namespace Win32xx
 				break;
 			}
 
+			// Manually Draw Close Button
 			if (bFocus)
 				DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
 			else
 				DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-			// Manually Draw Close Button
 			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
 			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -3);
 
@@ -828,7 +849,7 @@ namespace Win32xx
 						{
 							CDockable* pDock = (CDockable*)FromHandle(GetParent());
 							pDock->Undock();
-						}
+						}						
 					}
 
 					hwndButtonDown = 0;
@@ -848,8 +869,7 @@ namespace Win32xx
 			case WM_MOUSEACTIVATE:
 				// Focus changed, so redraw the captions
 				{
-					m_pWndView->SetFocus();
-					
+					m_pWndView->SetFocus();					
 					m_pDock->RecalcDockLayout();
 				}
 				break;
@@ -1087,7 +1107,7 @@ namespace Win32xx
 
 	inline void CDockable::CTargetCentre::OnPaint(HDC hDC)
 	{
-		HBITMAP hbmCenter = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDCENTER),
+		HBITMAP hbmCentre = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDCENTER),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 		HBITMAP hbmLeft= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDLEFT),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
@@ -1098,13 +1118,22 @@ namespace Win32xx
 		HBITMAP hbmBottom= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDBOTTOM),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 
-		DrawBitmap(hDC, 0, 0, 88, 88, hbmCenter, RGB(255,0,255));
-		DrawBitmap(hDC, 0, 29, 31, 29, hbmLeft, RGB(255,0,255));
-		DrawBitmap(hDC, 29, 0, 29, 31, hbmTop, RGB(255,0,255));
-		DrawBitmap(hDC, 55, 29, 31, 29, hbmRight, RGB(255,0,255));
-		DrawBitmap(hDC, 29, 55, 29, 31, hbmBottom, RGB(255,0,255));
+		if (hbmCentre)	DrawBitmap(hDC, 0, 0, 88, 88, hbmCentre, RGB(255,0,255));
+		else TRACE(_T("Missing docking resource: Target Centre\n"));
 
-		::DeleteObject(hbmCenter);
+		if (hbmLeft) DrawBitmap(hDC, 0, 29, 31, 29, hbmLeft, RGB(255,0,255));
+		else TRACE(_T("Missing docking resource: Target Left\n"));
+		
+		if (hbmTop) DrawBitmap(hDC, 29, 0, 29, 31, hbmTop, RGB(255,0,255));
+		else TRACE(_T("Missing docking resource: Target Top\n"));
+
+		if (hbmRight) DrawBitmap(hDC, 55, 29, 31, 29, hbmRight, RGB(255,0,255));
+		else TRACE(_T("Missing docking resource: Target Right\n"));
+		
+		if (hbmBottom) DrawBitmap(hDC, 29, 55, 29, 31, hbmBottom, RGB(255,0,255));
+		else TRACE(_T("Missing docking resource: Target Bottom\n"));
+
+		::DeleteObject(hbmCentre);
 		::DeleteObject(hbmLeft);
 		::DeleteObject(hbmRight);
 		::DeleteObject(hbmTop);
@@ -1218,7 +1247,8 @@ namespace Win32xx
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 				
-		DrawBitmap(hDC, 0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
+		if (GetImage()) DrawBitmap(hDC, 0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
+		else TRACE(_T("Missing docking resource\n"));
 	}
 
 	inline void CDockable::CTarget::PreCreate(CREATESTRUCT &cs)
@@ -1385,8 +1415,8 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() : m_pWndDockParent(NULL), m_pWndDockAncestor(NULL), m_BlockMove(FALSE), 
-		            m_Undocking(FALSE), m_DockStartWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0),
+	inline CDockable::CDockable() : m_pWndDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE), 
+		            m_DockStartWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0),
 					m_DockWidthRatio(1.0), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -1427,38 +1457,39 @@ namespace Win32xx
 		}
 	}
 
-	inline CDockable* CDockable::AddDockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, int nDockID /* = 0*/)
+	inline CDockable* CDockable::AddDockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, int nDockID /* = 0*/)
+	// This function creates the dockable, and adds it to the dockable heirachy as docked
 	{
 		// Create the dockable window as a child of the frame window. 
 		// This pernamently sets the frame window as the dockable window's owner,
 		// even when its parent is subsequently changed.
 		pDockable->SetDockWidth(DockWidth);
-		pDockable->SetDockStyle(uDockStyle);
+		pDockable->SetDockStyle(dwDockStyle);
 		pDockable->m_nDockID = nDockID;
+		pDockable->m_pWndDockAncestor = GetDockAncestor();
 		HWND hwndFrame = GetAncestor();
 		pDockable->Create(hwndFrame);
 		pDockable->SetParent(m_hWnd);
-		pDockable->m_pWndDockAncestor = GetDockAncestor();
-
+		
 		// Dock the dockable window
-		if (uDockStyle & DS_DOCKED_CONTAINER)
-			DockInContainer(pDockable, uDockStyle);
+		if (dwDockStyle & DS_DOCKED_CONTAINER)
+			DockInContainer(pDockable, dwDockStyle);
 		else
-			Dock(pDockable, uDockStyle);
+			Dock(pDockable, dwDockStyle);
 
 		// Store the Dockable's pointer in the DockAncestor's vector for later deletion
 		GetDockAncestor()->m_vAllDockables.push_back(pDockable);
 
 		// Issue TRACE warnings for any missing resources
 		HMODULE hMod= GetApp()->GetInstanceHandle();
-		if (!(uDockStyle & DS_NO_RESIZE))
+		if (!(dwDockStyle & DS_NO_RESIZE))
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
 				TRACE(_T("\n**WARNING** Horizontal cursor resource missing\n"));
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
 				TRACE(_T("\n**WARNING** Vertical cursor resource missing\n"));
 		}
-		if (!(uDockStyle & DS_NO_UNDOCK))
+		if (!(dwDockStyle & DS_NO_UNDOCK))
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
 				TRACE(_T("\n**WARNING** Docking center bitmap resource missing\n"));
@@ -1471,7 +1502,7 @@ namespace Win32xx
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
 				TRACE(_T("\n**WARNING** Docking center bottom resource missing\n"));
 		}
-		if (uDockStyle & DS_DOCKED_CONTAINER)
+		if (dwDockStyle & DS_DOCKED_CONTAINER)
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDMIDDLE), RT_BITMAP))
 				TRACE(_T("\n**WARNING** Docking container bitmap resource missing\n"));
@@ -1480,18 +1511,19 @@ namespace Win32xx
 		return pDockable;
 	}
 
-	inline CDockable* CDockable::AddUndockedChild(CDockable* pDockable, UINT uDockStyle, int DockWidth, RECT rc, int nDockID /* = 0*/)
+	inline CDockable* CDockable::AddUndockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, RECT rc, int nDockID /* = 0*/)
+	// This function creates the dockable, and adds it to the dockable heirachy as undocked
 	{
 		pDockable->SetDockWidth(DockWidth);
-		pDockable->SetDockStyle(uDockStyle & 0XFFFFFF0);
+		pDockable->SetDockStyle(dwDockStyle & 0XFFFFFF0);
 		pDockable->m_nDockID = nDockID;
+		pDockable->m_pWndDockAncestor = GetDockAncestor();
 
 		// Initially create the as a child window of the frame
 		// This makes the frame window the owner of our dockable
 		HWND hwndFrame = GetAncestor();
 		pDockable->Create(hwndFrame);
 		pDockable->SetParent(m_hWnd);
-		pDockable->m_pWndDockAncestor = GetDockAncestor();
 
 		// Change the Dockable to a POPUP window
 		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
@@ -1843,19 +1875,22 @@ namespace Win32xx
 	inline void CDockable::OnCreate()
 	{
 		// Create the various child windows
-		GetDockBar().SetDock(this);
 		GetDockClient().SetDock(this);
-		GetDockBar().Create(GetParent());
 		GetDockClient().Create(m_hWnd);	
 		if (NULL == GetView())
 			throw CWinException(_T("CDockable::OnCreate... View window is not assigned!\nUse SetView to set the View Window"));
 		GetView()->Create(GetDockClient().GetHwnd());
-		
+
+		// Create the slider bar belonging to this dockable
+		GetDockBar().SetDock(this);
+		if (GetDockAncestor() != this)
+			GetDockBar().Create(GetParent());
+
 		// Now remove the WS_POPUP style. It was required to allow this window
 		// to be owned by the frame window.
 		HWND hwndParent = GetParent();
 		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
-		SetParent(hwndParent);
+		SetParent(hwndParent);	// Reinstate the window's parent
 	}
 
 	inline LRESULT CDockable::OnNotify(WPARAM /*wParam*/, LPARAM lParam)

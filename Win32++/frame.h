@@ -3011,9 +3011,6 @@ namespace Win32xx
 					nhdr.hwndFrom = m_hOldFocus;
 					nhdr.idFrom = idCtrl;
 					nhdr.code = UWM_FRAMELOSTFOCUS;
-				//	HWND hParent = ::GetParent(m_hOldFocus);
-				//	if (hParent)
-				//		::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 					GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				}
 				else
@@ -3027,9 +3024,6 @@ namespace Win32xx
 					nhdr.hwndFrom = m_hOldFocus;
 					nhdr.idFrom = idCtrl;
 					nhdr.code = NM_SETFOCUS;
-				//	HWND hParent = ::GetParent(m_hOldFocus);
-				//	if (hParent)
-				//		::SendMessage(hParent, WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 					GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				} 
 			}

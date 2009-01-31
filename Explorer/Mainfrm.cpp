@@ -80,8 +80,10 @@ void CMainFrame::DoPopupMenu()
 
 void CMainFrame::OnInitialUpdate()
 {
+	// Add the right window pane
 	int Width = (int) (GetWindowRect().Width() * 0.7);
-	m_RightPane = (CRightPane*)m_LeftPane.AddDockedChild(new CRightPane, DS_DOCKED_RIGHT, Width);
+	UINT uDockStyle = DS_DOCKED_RIGHT  | DS_NO_UNDOCK | DS_NO_CAPTION;
+	m_RightPane = (CRightPane*)m_LeftPane.AddDockedChild(new CRightPane, uDockStyle, Width);
 
 	// All windows are now created, so populate the treeview
 	GetTreeView()->GetRootItems();

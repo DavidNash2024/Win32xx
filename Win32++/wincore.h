@@ -677,7 +677,7 @@ namespace Win32xx
 		BOOL SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
-		HWND SetParent(HWND hParent);
+		HWND SetParent(HWND hParent) const;
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		int  SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
@@ -2077,7 +2077,7 @@ namespace Win32xx
 	}
 #endif
 
-	inline HWND CWnd::SetParent(HWND hParent)
+	inline HWND CWnd::SetParent(HWND hParent) const
 	// The SetParent function changes the parent window of the child window.
 	{
 		return ::SetParent(m_hWnd, hParent);

@@ -41,6 +41,7 @@ Added CMDIFrame::SetActiveMDIChild
 Changed CMDIFrame::GetActiveMDIChild (it now returns a CWnd* instead of a HWND)
 Removed CMDIFrame::GetActiveMDIChildCWnd
 Renamed CMDIFrame::GetMDIChildVect to CMDIFrame::GetAllMDIChildren
+Removed CWnd::m_hWndParent
 
 Added the following docking styles:
 DS_DOCKED_CONTAINER	
@@ -60,7 +61,14 @@ Various fixes to docking, including:
  - Added Win98 and WinME support for docking
  - Improved undocking
  - Reduced flicker
- - Better sizing of docked windows 
+ - Better sizing of docked windows
+ 
+Incompatibilities with previous versions
+----------------------------------------
+* CWnd::m_hWndParent has been removed. Use GetParent() in its place.
+* Some functions have been added to CWnd which have the same name as their 
+   Win32 counterparts. Prefix functions with the global scope specifier '::' 
+   to use the original Win32 API function instead of the Win32++ version.
 
 More About Docking Containers
 -----------------------------

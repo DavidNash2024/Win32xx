@@ -25,6 +25,7 @@ class CRightPane : public CDockable
 {
 public:
     CRightPane() { SetView(m_View); }
+	virtual void OnInitialUpdate();
 
 private:
 	CMyListView m_View;

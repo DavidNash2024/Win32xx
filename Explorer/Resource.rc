@@ -82,6 +82,14 @@ IDB_TOOLBAR_DIS          BITMAP                  "res\\toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Cursor
+//
+
+IDW_SPLITH              CURSOR                  "res/SplitH.cur"
+IDW_SPLITV              CURSOR                  "res/SplitV.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // Dialog
 //
 
