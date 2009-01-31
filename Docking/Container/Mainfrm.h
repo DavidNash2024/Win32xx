@@ -16,6 +16,14 @@
 class CMainFrame : public CFrame
 {
 public:
+	struct DockedInfo
+	{
+		DWORD DockStyle;
+		int DockWidth;
+		int DockID;
+		int DockParentID;
+		RECT Rect;
+	};
 
 	enum DockIDs
 	{
@@ -29,6 +37,10 @@ public:
 
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	void LoadDefaultDockables();
+	void LoadRegistryDockables();
+	void SaveDockables();
+	void SaveRegistrySettings();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);

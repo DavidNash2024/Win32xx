@@ -113,7 +113,7 @@ void CMainFrame::LoadRegistryDockables()
 {
 	if (0 != GetRegistryKeyName().size())
 	{
-		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\Docked Windows");
+		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\Dock Windows");
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 		if (hKey)
@@ -217,16 +217,16 @@ void CMainFrame::SaveDockables()
 
 	std::vector<DockedInfo> vDockList;
 	std::vector <CDockable*> & v1 = m_DockView.GetDockChildren();
-	std::vector <CDockable*>::iterator itor;
+	std::vector <CDockable*>::iterator iter;
 
 	// Add m_DockView's docked children to the DockList vector
-	for (itor = v1.begin(); itor !=  v1.end(); ++itor)
+	for (iter = v1.begin(); iter !=  v1.end(); ++iter)
 	{
 		DockedInfo di = {0};
 		di.DockParentID = 0;
-		di.DockID = (*itor)->GetDockID();
-		di.DockStyle = (*itor)->GetDockStyle();
-		di.DockWidth = (*itor)->GetDockWidth();
+		di.DockID = (*iter)->GetDockID();
+		di.DockStyle = (*iter)->GetDockStyle();
+		di.DockWidth = (*iter)->GetDockWidth();
 
 		if (0 != di.DockID)
 			vDockList.push_back(di);
@@ -240,20 +240,36 @@ void CMainFrame::SaveDockables()
 		CDockable* pDock = m_DockView.GetDockFromID(vDockList[u].DockID);
 		std::vector <CDockable*> & v2 = pDock->GetDockChildren();
 
-		for (itor = v2.begin(); itor != v2.end(); ++itor)
+		for (iter = v2.begin(); iter != v2.end(); ++iter)
 		{
 			DockedInfo di = {0};
-			di.DockParentID = (*itor)->GetDockParent()->GetDockID();
-			di.DockID = (*itor)->GetDockID();
-			di.DockID = (*itor)->GetDockID();
-			di.DockStyle = (*itor)->GetDockStyle();
-			di.DockWidth = (*itor)->GetDockWidth();
+			di.DockParentID = (*iter)->GetDockParent()->GetDockID();
+			di.DockID = (*iter)->GetDockID();
+			di.DockID = (*iter)->GetDockID();
+			di.DockStyle = (*iter)->GetDockStyle();
+			di.DockWidth = (*iter)->GetDockWidth();
 
 			if ((0 != di.DockID) && (0 != di.DockParentID))
 				vDockList.push_back(di);
 		}
 
 		++u;
+	}
+
+	// Add the Undocked windows information to the DockList vector
+	for (UINT v = 0; v <  m_DockView.GetAllDockables().size(); ++v)
+	{
+		CDockable* pDock = m_DockView.GetAllDockables()[v];
+		if (pDock->IsUndocked())
+		{
+			DockedInfo di = {0};
+			di.DockID = pDock->GetDockID();
+			di.DockParentID = -1;
+			di.DockStyle = pDock->GetDockStyle();
+			di.DockWidth = pDock->GetDockWidth();
+			di.Rect = pDock->GetWindowRect();
+			vDockList.push_back(di);
+		}
 	}
 
 	if (0 != GetRegistryKeyName().size())
@@ -265,7 +281,7 @@ void CMainFrame::SaveDockables()
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 		RegDeleteKey(hKey, _T("Docked Windows"));
-		if (RegCreateKeyEx(hKey, _T("Docked Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
+		if (RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 		// Add the Docked windows information to the registry
@@ -276,27 +292,6 @@ void CMainFrame::SaveDockables()
 			tString tsSubKey = _T("DockChild");
 			tsSubKey += _itot(u, szNumber, 10);
 			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
-		}
-
-		// Add the Undocked windows information to the registry
-		int nTotal = vDockList.size();
-		for (UINT v = 0; v <  m_DockView.GetAllDockables().size(); ++v)
-		{
-			CDockable* pDock = m_DockView.GetAllDockables()[v];
-			if (pDock->IsUndocked())
-			{
-				DockedInfo di = {0};
-				di.DockID = pDock->GetDockID();
-				di.DockParentID = -1;
-				di.DockStyle = pDock->GetDockStyle();
-				di.DockWidth = pDock->GetDockWidth();
-				di.Rect = pDock->GetWindowRect();
-				TCHAR szNumber[16];
-				tString tsSubKey = _T("DockChild");
-				tsSubKey += _itot(nTotal, szNumber, 10);
-				RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
-				++nTotal;
-			}
 		}
 
 		RegCloseKey(hKeyDock);

@@ -346,8 +346,8 @@ namespace Win32xx
 		virtual void CloseAllTargets();
 		virtual void DeleteDockable(CDockable* pDockable);
 		virtual void Dock(CDockable* hDockable, UINT uDockSide);
-		virtual void DockInContainer(CDockable* pDock, UINT DockStyle);
-		virtual void DockOuter(CDockable* pDockable, UINT DockStyle);
+		virtual void DockInContainer(CDockable* pDock, DWORD dwDockStyle);
+		virtual void DockOuter(CDockable* pDockable, DWORD dwDockStyle);
 		virtual void DrawHashBar(HWND hBar, POINT Pos);
 		virtual CDockable* GetDockFromPoint(POINT pt) const;
 		virtual CDockable* GetDockAncestor() const;
@@ -1670,9 +1670,9 @@ namespace Win32xx
 		RecalcDockLayout();
 	}
 
-	inline void CDockable::DockInContainer(CDockable* pDock, UINT DockStyle)
+	inline void CDockable::DockInContainer(CDockable* pDock, DWORD dwDockStyle)
 	{
-		if ((DockStyle & DS_DOCKED_CONTAINER) && (pDock->GetView()->IsContainer()))
+		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (pDock->GetView()->IsContainer()))
 		{
 			// Add a container to an existing docked container
 			pDock->m_BlockMove = FALSE;
@@ -1681,23 +1681,23 @@ namespace Win32xx
 			pDock->SetParent(m_hWnd);
 			CContainer* pContainer = (CContainer*)GetView();
 			pContainer->AddContainer((CContainer*)pDock->GetView());
-			pDock->SetDockStyle(DockStyle);
+			pDock->SetDockStyle(dwDockStyle);
 		}
 	}
 
-	inline void CDockable::DockOuter(CDockable* pDockable, UINT DockStyle)
+	inline void CDockable::DockOuter(CDockable* pDockable, DWORD dwDockStyle)
 	{
-		UINT OuterDocking = DockStyle & 0xF0000;
-		UINT DockSide = OuterDocking / 0x10000; 
-		DockStyle &= 0xFFF0FFFF;
-		DockStyle |= DockSide;	
+		DWORD OuterDocking = dwDockStyle & 0xF0000;
+		DWORD DockSide = OuterDocking / 0x10000; 
+		dwDockStyle &= 0xFFF0FFFF;
+		dwDockStyle |= DockSide;	
 
 		// Set the dock styles
 		GetDockAncestor()->SetRedraw(FALSE);
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		pDockable->m_BlockMove = FALSE;
 		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
-		pDockable->SetDockStyle(DockStyle);
+		pDockable->SetDockStyle(dwDockStyle);
 
 		// Set the docking relationships
 		std::vector<CDockable*>::iterator iter = GetDockAncestor()->m_vDockChildren.begin();
@@ -1707,7 +1707,7 @@ namespace Win32xx
 		pDockable->GetDockBar().SetParent(GetDockAncestor()->GetHwnd());
 
 		// Limit the docked size to half the parent's size if it won't fit inside parent
-		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
+		if (((dwDockStyle & 0xF)  == DS_DOCKED_LEFT) || ((dwDockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
 			int Width = GetDockAncestor()->GetDockClient().GetWindowRect().Width();
 			int BarWidth = pDockable->GetBarWidth();
@@ -1935,7 +1935,12 @@ namespace Win32xx
 					Dock(pDock, pDock->GetDockStyle() | DockZone);
 					break;
 				case DS_DOCKED_CONTAINER:
-					DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
+					{
+						DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
+						CContainer* pContainer = (CContainer*)GetView();
+						int iPage = pContainer->GetContainerIndex((CContainer*)pDock->GetView());
+						pContainer->SelectPage(iPage);
+					}
 					break;
 				case DS_DOCKED_LEFTMOST:
 				case DS_DOCKED_RIGHTMOST:
