@@ -46,9 +46,6 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
-	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CDockSimple m_DockView;

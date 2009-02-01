@@ -73,15 +73,16 @@ namespace Win32xx
 	class CDialog : public CWnd
 	{
 	public:
-		CDialog(UINT nResID, HWND hWndParent = NULL);
-		CDialog(LPCTSTR lpszResName, HWND hWndParent = NULL);
-		CDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent = NULL);
+		CDialog(UINT nResID, HWND hParent = NULL);
+		CDialog(LPCTSTR lpszResName, HWND hParent = NULL);
+		CDialog(LPCDLGTEMPLATE lpTemplate, HWND hParent = NULL);
 		virtual ~CDialog();
 
 		// You probably won't need to override these functions
-		virtual HWND Create(HWND hWndParent);
+		virtual HWND Create(HWND hParent);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
+		virtual void SetDlgParent(HWND hParent);
 
 	protected:
 		// These are the functions you might wish to override
@@ -101,29 +102,28 @@ namespace Win32xx
 		BOOL IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
-		HWND m_hWndParent;				// Handle to the parent window
-
+		HWND m_hDlgParent;				// handle to the dialogs's parent window
 	};
 
-	inline CDialog::CDialog(LPCTSTR lpszResName, HWND hWndParent/* = NULL*/)
+	inline CDialog::CDialog(LPCTSTR lpszResName, HWND hParent/* = NULL*/)
 		: IsIndirect(FALSE), IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
-		m_hWndParent = hWndParent;
+		m_hDlgParent = hParent;
 		::InitCommonControls();
 	}
 
-	inline CDialog::CDialog(UINT nResID, HWND hWndParent/* = NULL*/)
+	inline CDialog::CDialog(UINT nResID, HWND hParent/* = NULL*/)
 		: IsIndirect(FALSE), IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
 	{
-		m_hWndParent = hWndParent;
+		m_hDlgParent = hParent;
 		::InitCommonControls();
 	}
 
 	//For indirect dialogs - created from a dialog box template in memory.
-	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent/* = NULL*/)
+	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, HWND hParent/* = NULL*/)
 		: IsIndirect(TRUE), IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
 	{
-		m_hWndParent = hWndParent;
+		m_hDlgParent = hParent;
 		::InitCommonControls();
 	}
 
@@ -138,10 +138,10 @@ namespace Win32xx
 		}
 	}
 
-	inline HWND CDialog::Create(HWND hWndParent = 0)
+	inline HWND CDialog::Create(HWND hParent = 0)
 	{
 		// Allow a dialog to be used as a child window
-		SetParent(hWndParent);
+		SetDlgParent(hParent);
 		return DoModeless();
 	}
 
@@ -269,12 +269,12 @@ namespace Win32xx
 			// Create a modal dialog
 			INT_PTR nResult;
 			if (IsIndirect)
-				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
-				nResult = ::DialogBox(hInstance, m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBox(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 			// Tidy up
 			m_hWnd = NULL;
@@ -314,13 +314,13 @@ namespace Win32xx
 
 			// Create a modeless dialog
 			if (IsIndirect)
-				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
 
-				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up
@@ -382,6 +382,12 @@ namespace Win32xx
 		}
 
 		return CWnd::PreTranslateMessage(pMsg);
+	}
+
+	inline void CDialog::SetDlgParent(HWND hParent)
+	// Allows the parent of the dialog to be set before the dialog is created
+	{
+		m_hDlgParent = hParent;
 	}
 
 	inline BOOL CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

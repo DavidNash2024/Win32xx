@@ -185,8 +185,8 @@ BOOL CSvrDialog::OnInitDialog()
 	::MoveWindow(m_hWnd, rc.left-14, rc.top-14, rc.right - rc.left, rc.bottom - rc.top, TRUE);
 
 	// Set the initial state of the dialog
-	SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, _T("Server Stopped"));
-	SetDlgItemText(m_hWnd, IDC_EDIT_PORT, _T("3000"));
+	SetDlgItemText(IDC_EDIT_STATUS, _T("Server Stopped"));
+	SetDlgItemText(IDC_EDIT_PORT, _T("3000"));
 	::SendMessage(GetDlgItem(IDC_RADIO_TCP), BM_SETCHECK, BST_CHECKED, 0);
 
 	return true;

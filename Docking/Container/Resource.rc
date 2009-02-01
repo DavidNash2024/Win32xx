@@ -148,8 +148,21 @@ END
 
 STRINGTABLE
 BEGIN
+    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
+    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
+    IDM_EDIT_DELETE         "Erase the selected Contents"
+END
+
+STRINGTABLE
+BEGIN
     IDM_DOCK_DEFAULT        "Restore default dock layout"
     IDM_DOCK_CLOSEALL       "Close all docked and undocked windows"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_HELP_ABOUT          "Display Information about this program"
 END
 
 STRINGTABLE

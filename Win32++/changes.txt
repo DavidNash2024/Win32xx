@@ -6,18 +6,25 @@ Major Changes
 * Docking:
   - Added tabbed docking container with optional toolbar
   - Added close button to the caption of docked windows
-  - Added outer docking.
-  - Added docking container sample
+  - Added 'outer' docking  ie. docking at the side of the frame rather 
+      than inside another dockable.
+  - Added a second docking sample demonstrating containers
+  - Added save/restore dock layout to docking samples
+  - Added Close All Dockables and Default Dock Layout to docking samples
 * Added Region support to CDC class.
-* Docking sample enhancements:
-  - Added save/restore dock layout to docking sample
-  - Added Close all dockables and Default Dock layout to docking sample
 * Notepad sample enhancements:
   - Now capable of handling Unicode text
  
 All Changes
 -----------
-Added CDockable class
+Added CContainer class
+Added CTabPage class  (a nested class of CContainer)
+Added CTargetBottom   (a nested class of CDockable)
+Added CTargetCentre   (a nested class of CDockable)
+Added CTargetLeft     (a nested class of CDockable)
+Added CTargetRight    (a nested class of CDockable)
+Added CTargetTop      (a nested class of CDockable)
+Added CDialog::SetDlgParent
 Added CDC::CreateEllipticRegion
 Added CDC::CreateEllipticRegionIndirect
 Added CDC::CreatePolygonRgn
@@ -51,7 +58,7 @@ DS_DOCKED_TOPMOST
 DS_DOCKED_BOTTOMMOST
 
 Subclassed windows now call OnCommand and OnNotify
-Exceptions now genereate TRACE output to display the error.
+Exceptions now also genereate TRACE output to display the error.
 
 Fixes
 -----
@@ -69,7 +76,11 @@ Incompatibilities with previous versions
 * Some functions have been added to CWnd which have the same name as their 
    Win32 counterparts. Prefix functions with the global scope specifier '::' 
    to use the original Win32 API function instead of the Win32++ version.
-
+* CSplitter has been superceded by CDockable. Use a CDockable with the
+   DS_NO_UNDOCK and DS_NO_CAPTION styles to duplicate the behaviour of 
+   CSplitter. CSplitter will be retained for backwards compatiblity, as
+   well as for those who require its 'immediate' mode.
+   
 More About Docking Containers
 -----------------------------
 A container can be used is a view window for a frame, MDI child, dockable etc.
@@ -87,14 +98,16 @@ In Summary:
    contain other containers.   
 * Containers have a View window, just like Frames, MDI children and dockables.
 * Containers can set an icon and text for the tab, as well as text for the 
-  docking caption.
+   docking caption.
 * Containers can optionally include a toolbar.
 * When a container contains other containers, each container's view is displayed
    in a seperate tab.
-* Containers can be individually undocked from their parent container.
-* A Container with child containers can be undocked as a group.
-* An undocked container group (Container with children) can be docked as a
-  group inside another docked container.
+* When a container is the view  window for a dockable, any container children
+   can be individually undocked from their parent container.
+* When used a the view for a dcikable, a container with child containers can be
+   undocked as a group.
+* An undocked container group (container with children) can be docked as a
+   group inside another docked container. 
 
 
 Version 6.3

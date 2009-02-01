@@ -135,12 +135,12 @@ namespace Win32xx
 		std::vector<TabPageInfo>& GetAllContainers() const {return m_pWndContainerParent->m_vTabPageInfo;}
 		tString GetDockCaption() const	{ return m_tsCaption; }
 		HICON GetTabIcon()				{ return m_hTabIcon; }
-		LPCTSTR GetTabText() const		{ return m_stTabText.c_str(); }
+		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
 		CWnd* GetView() const			{ return GetTabPage().GetView(); }
 		BOOL IsContainer() const		{ return TRUE; }
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
-		void SetTabText(LPCTSTR szText) { m_stTabText = szText; }
+		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
 		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
 		void SetView(CWnd& Wnd);
 				
@@ -152,15 +152,16 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		HIMAGELIST m_himlTab;
+		CTabPage m_WndPage;
 		std::vector<UINT> m_vToolbarData;
 		std::vector<TabPageInfo> m_vTabPageInfo;
+		tString m_tsTabText;
+		tString m_tsCaption;
 		int m_iCurrentPage;
-		CTabPage m_WndPage;
-		std::string m_stTabText;
 		HICON m_hTabIcon;
+		HIMAGELIST m_himlTab;
 		CContainer* m_pWndContainerParent;
-		tString m_tsCaption;		
+		
 	};
 
 	typedef struct DRAGPOS
@@ -243,11 +244,11 @@ namespace Win32xx
 			void SetView(CWnd& Wnd)			{ m_pWndView = &Wnd; }
 
 		private:
+			CRect m_rcClose;
+			tString m_tsCaption;
 			CDockable* m_pDock;
 			CWnd* m_pWndView;
-			int m_NCHeight;
-			tString m_tsCaption;
-			CRect m_rcClose;
+			int m_NCHeight;			
 			BOOL m_bClosePressed;
 		};
 
@@ -412,7 +413,7 @@ namespace Win32xx
 		int m_DockStartWidth;
 		int m_nDockID;
 		int m_NCHeight;
-		UINT m_DockZone;
+		DWORD m_dwDockZone;
 		double m_DockWidthRatio;
 		DWORD m_DockStyle;
 		HBRUSH m_hbrDithered;
@@ -1197,35 +1198,35 @@ namespace Win32xx
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
-			pDockDrag->m_DockZone = DS_DOCKED_LEFT;
+			pDockDrag->m_dwDockZone = DS_DOCKED_LEFT;
 			return TRUE;
 		}
 		else if ((PtInRect(&rcTop, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
-			pDockDrag->m_DockZone = DS_DOCKED_TOP;
+			pDockDrag->m_dwDockZone = DS_DOCKED_TOP;
 			return TRUE;
 		}
 		else if ((PtInRect(&rcRight, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
-			pDockDrag->m_DockZone = DS_DOCKED_RIGHT;
+			pDockDrag->m_dwDockZone = DS_DOCKED_RIGHT;
 			return TRUE;
 		}
 		else if ((PtInRect(&rcBottom, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
-			pDockDrag->m_DockZone = DS_DOCKED_BOTTOM;
+			pDockDrag->m_dwDockZone = DS_DOCKED_BOTTOM;
 			return TRUE;
 		}
 		else if ((PtInRect(&rcMiddle, pt)) && (IsOverContainer()))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_CONTAINER);
-			pDockDrag->m_DockZone = DS_DOCKED_CONTAINER;
+			pDockDrag->m_dwDockZone = DS_DOCKED_CONTAINER;
 			return TRUE;
 		}
 		else
@@ -1293,7 +1294,7 @@ namespace Win32xx
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFTMOST);
-			pDockDrag->m_DockZone = DS_DOCKED_LEFTMOST;
+			pDockDrag->m_dwDockZone = DS_DOCKED_LEFTMOST;
 			return TRUE;
 		}
 
@@ -1331,7 +1332,7 @@ namespace Win32xx
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_TOPMOST);
-			pDockDrag->m_DockZone = DS_DOCKED_TOPMOST;
+			pDockDrag->m_dwDockZone = DS_DOCKED_TOPMOST;
 			return TRUE;
 		}
 
@@ -1368,7 +1369,7 @@ namespace Win32xx
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHTMOST);
-			pDockDrag->m_DockZone = DS_DOCKED_RIGHTMOST;
+			pDockDrag->m_dwDockZone = DS_DOCKED_RIGHTMOST;
 			return TRUE;
 		}
 
@@ -1404,7 +1405,7 @@ namespace Win32xx
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOMMOST);
-			pDockDrag->m_DockZone = DS_DOCKED_BOTTOMMOST;
+			pDockDrag->m_dwDockZone = DS_DOCKED_BOTTOMMOST;
 			return TRUE;
 		}
 
@@ -1416,7 +1417,7 @@ namespace Win32xx
 	// Definitions for the CDockable class
 	//
 	inline CDockable::CDockable() : m_pWndDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE), 
-		            m_DockStartWidth(0), m_nDockID(0), m_NCHeight(20), m_DockZone(0),
+		            m_DockStartWidth(0), m_nDockID(0), m_NCHeight(20), m_dwDockZone(0),
 					m_DockWidthRatio(1.0), m_DockStyle(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -1560,7 +1561,7 @@ namespace Win32xx
 								pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
 
 							GetDockHint().Destroy();
-							pDockDrag->m_DockZone = 0;
+							pDockDrag->m_dwDockZone = 0;
 							pDockDrag->m_BlockMove = FALSE;
 						}
 					}
@@ -2175,8 +2176,8 @@ namespace Win32xx
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
 		::GetCursorPos(&DragPos.ptPos);
-		DragPos.DockZone = m_DockZone;
-		m_DockZone = 0;
+		DragPos.DockZone = m_dwDockZone;
+		m_dwDockZone = 0;
 
 		CDockable* pDock = GetDockFromPoint(DragPos.ptPos);
 
@@ -2602,10 +2603,11 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class
-	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0), m_pWndContainerParent(NULL)
+	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
+		m_pWndContainerParent = this;
 
 		// Set the Resource IDs for the toolbar buttons
 	//	AddToolbarButton( IDM_FILE_NEW   );
@@ -2779,8 +2781,6 @@ namespace Win32xx
 			tie.pszText = m_vTabPageInfo[i].szTitle;
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
-
-		m_pWndContainerParent = this;
 	}
 
 	inline LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)

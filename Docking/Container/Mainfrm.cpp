@@ -78,42 +78,6 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 		
 }
-/*
-void CMainFrame::OnInitialUpdate()
-{
-	// Note: The  DockIDs are used for saving/restoring the dockables state in the registry
-
-	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each dockable
-	m_DockView.SetDockStyle(dwStyle);
-	
-	// Add the remaining dockables
-	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINCLASSES1);	
-	CDockable* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT);
-
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES1);
-	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINCLASSES2);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES2);
-
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT);
-}*/
-
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
-
-	// Some notifications should return a value when handled
-	return 0L;
-}
-
-void CMainFrame::PreCreate(CREATESTRUCT &cs)
-{
-	cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-	CFrame::PreCreate(cs);
-}
 
 void CMainFrame::OnInitialUpdate()
 {
@@ -196,10 +160,11 @@ void CMainFrame::LoadRegistryDockables()
 				}
 				else
 				{
-					CDockable* pDock = &m_DockView;
-					
+					CDockable* pDock;					
 					if (di.DockParentID)
 						pDock = m_DockView.GetDockFromID(di.DockParentID);
+					else
+						pDock = &m_DockView;
 					
 					switch(di.DockID)
 					{
@@ -355,14 +320,4 @@ void CMainFrame::SaveRegistrySettings()
 	SaveDockables();
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-//	switch (uMsg)
-//	{
-//
-//	}
-
-	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
-}
 

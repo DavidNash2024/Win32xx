@@ -325,8 +325,6 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 			DoContextMenu(ptScreen);
 		}
 		break;
-	case WM_INITMENUPOPUP:
-		break;
 	case LVN_GETDISPINFO:
 		{
 			NMLVDISPINFO*   pdi = (NMLVDISPINFO*)lParam;
@@ -409,9 +407,9 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 				//get the unselected image for this item
 				if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
 					pdi->item.iImage = sfi.iIcon;
-			}
+			} 
 		}
-		break;
+		break; 
 
  	case NM_DBLCLK:
 	case NM_RETURN:

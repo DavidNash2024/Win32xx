@@ -6,8 +6,8 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID, HWND hWndParent)
-	: CDialog(nResID, hWndParent)
+CMyDialog::CMyDialog(UINT nResID, HWND hParent)
+	: CDialog(nResID, hParent)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hInstRichEdit)
@@ -19,9 +19,9 @@ CMyDialog::~CMyDialog()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
-HWND CMyDialog::Create(HWND hWndParent = 0)
+HWND CMyDialog::Create(HWND hParent = 0)
 {
-	SetParent(hWndParent);
+	SetDlgParent(hParent);
 	return DoModeless();
 }
 

@@ -181,8 +181,8 @@ BOOL CClientDialog::OnInitDialog()
 	::MoveWindow(m_hWnd, rc.left+14, rc.top+14, rc.right - rc.left, rc.bottom - rc.top, TRUE);
 
 	// Set the initial state of the dialog
-	SetDlgItemText(m_hWnd, IDC_EDIT_STATUS, _T("Not Connected"));
-	SetDlgItemText(m_hWnd, IDC_EDIT_PORT, _T("3000"));
+	SetDlgItemText(IDC_EDIT_STATUS, _T("Not Connected"));
+	SetDlgItemText(IDC_EDIT_PORT, _T("3000"));
 	::SendMessage( GetDlgItem(IDC_RADIO_TCP), BM_SETCHECK, BST_CHECKED, 0);
 	::SendMessage( GetDlgItem(IDC_IPADDRESS1), IPM_SETADDRESS, 0, MAKEIPADDRESS(127, 0, 0, 1));
 

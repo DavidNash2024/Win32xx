@@ -12,9 +12,9 @@
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID, HWND hWndParent = NULL);
+	CMyDialog(UINT nResID, HWND hParent = NULL);
 	virtual ~CMyDialog();
-	virtual HWND Create(HWND hWndParent);
+	virtual HWND Create(HWND hParent);
 
 protected:
 	virtual void OnCancel();
