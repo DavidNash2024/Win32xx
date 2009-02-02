@@ -6,6 +6,7 @@
 
 #include "../Win32++/frame.h"
 #include "View.h"
+#include "ComboBoxEx.h"
 
 
 // Declaration of the CMainFrame class
@@ -14,6 +15,7 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	void AddCombo();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -27,6 +29,7 @@ private:
 	CView m_View;
 	CToolbar Arrows;
 	CToolbar Cards;
+	CComboBoxEx m_ComboBoxEx;
 };
 
 #endif //MAINFRM_H

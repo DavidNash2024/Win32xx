@@ -63,6 +63,7 @@ IDW_MAIN                ICON                    "res/enhanced.ico"
 IDI_CLASSVIEW           ICON                    "res/classview.ico"
 IDI_FILEVIEW            ICON                    "res/fileview.ico"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
@@ -71,6 +72,7 @@ IDI_FILEVIEW            ICON                    "res/fileview.ico"
 IDW_MAIN                BITMAP                  "res/toolbar.bmp"
 IDB_CLASSVIEW           BITMAP                  "res/classview.bmp"
 IDB_FILEVIEW            BITMAP                  "res/fileview.bmp"
+IDB_STATUS              BITMAP                  "res/Status.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

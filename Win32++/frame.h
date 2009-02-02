@@ -1330,9 +1330,11 @@ namespace Win32xx
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 
+        // Load the full set of common controls
 		INITCOMMONCONTROLSEX InitStruct;
 		InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-		InitStruct.dwICC = ICC_WIN95_CLASSES| ICC_COOL_CLASSES;
+		InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
+							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;
 
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls(InitStruct);
@@ -2339,7 +2341,7 @@ namespace Win32xx
 
 	inline void CFrame::OnFrameSysColorChange()
 	{
-		// Honor theme color changes
+		// Honour theme color changes
 		for (int nBand = 0; nBand <= GetRebar().GetBandCount(); ++nBand)
 		{
 			GetRebar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));

@@ -27,6 +27,7 @@
 #define IDI_FILEVIEW                    131
 #define IDB_CLASSVIEW                   132
 #define IDB_FILEVIEW                    133
+#define IDB_STATUS                      134
 
 
 

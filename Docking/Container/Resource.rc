@@ -74,6 +74,7 @@ IDW_SDRIGHT             BITMAP                  "res/SDright.bmp"
 IDW_SDTOP               BITMAP                  "res/SDtop.bmp"
 IDB_CLASSVIEW           BITMAP                  "res/classview.bmp"
 IDB_FILEVIEW            BITMAP                  "res/fileview.bmp"
+IDB_STATUS              BITMAP                  "res/status.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

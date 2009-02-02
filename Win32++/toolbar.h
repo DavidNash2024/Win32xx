@@ -251,7 +251,7 @@ namespace Win32xx
 		int xMaxSize = 0;
 		for (int i= 0 ; i < GetButtonCount(); ++i)
 		{
-			xMaxSize += GetItemRect(i).right - GetItemRect(i).left;
+			xMaxSize += GetItemRect(i).Width();
 		}
 
 		sz.cx = xMaxSize;
@@ -799,12 +799,12 @@ namespace Win32xx
 			// Set the button images
 			HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 			if (!hbm)
-				throw CWinException(_T("CToolbar::SetToolbarImages ... LoadBitmap failed "));
+				throw CWinException(_T("CToolbar::SetImages ... LoadBitmap failed "));
 
 			BITMAP bm = {0};
 
 			if (!::GetObject(hbm, sizeof(BITMAP), &bm))
-				throw CWinException(_T("CToolbar::SetToolbarImages ... GetObject failed "));
+				throw CWinException(_T("CToolbar::SetImages ... GetObject failed "));
 
 			int iImageWidth  = bm.bmWidth / iNumButtons;
 			int iImageHeight = bm.bmHeight;
@@ -827,11 +827,11 @@ namespace Win32xx
 
 			himlToolbar = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 			if (!himlToolbar)
-				throw CWinException(_T("CToolbar::SetToolbarImages ... Create himlToolbar failed "));
+				throw CWinException(_T("CToolbar::SetImages ... Create himlToolbar failed "));
 
 			ImageList_AddMasked(himlToolbar, hbm, crMask);
 			if(-1L == ::SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)himlToolbar) )
-				throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETIMAGELIST failed "));
+				throw CWinException(_T("CToolbar::SetImages ... TB_SETIMAGELIST failed "));
 
 			::DeleteObject(hbm);
 			hbm = NULL;
@@ -840,16 +840,16 @@ namespace Win32xx
 			{
 				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarHotID));
 				if (!hbm)
-					throw CWinException(_T("CToolbar::SetToolbarImages ... LoadBitmap failed "));
+					throw CWinException(_T("CToolbar::SetImages ... LoadBitmap failed "));
 
 				himlToolbarHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 				if (!himlToolbarHot)
-					throw CWinException(_T("CToolbar::SetToolbarImages ... Create himlToolbarHot failed "));
+					throw CWinException(_T("CToolbar::SetImages ... Create himlToolbarHot failed "));
 
 				ImageList_AddMasked(himlToolbarHot, hbm, crMask);
 
 				if(-1L == ::SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)himlToolbarHot) )
-					throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETHOTIMAGELIST failed "));
+					throw CWinException(_T("CToolbar::SetImages ... TB_SETHOTIMAGELIST failed "));
 
 				::DeleteObject(hbm);
 				hbm = NULL;
@@ -859,21 +859,21 @@ namespace Win32xx
 			{
 				hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarDisabledID));
 				if (!hbm)
-					throw CWinException(_T("CToolbar::SetToolbarImages ... LoadBitmap failed "));
+					throw CWinException(_T("CToolbar::SetImages ... LoadBitmap failed "));
 
 				himlToolbarDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 				if (!himlToolbarDis)
-					throw CWinException(_T("CToolbar::SetToolbarImages ... Create himlToolbarDis failed "));
+					throw CWinException(_T("CToolbar::SetImages ... Create himlToolbarDis failed "));
 
 				ImageList_AddMasked(himlToolbarDis, hbm, crMask);
 				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
-					throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
+					throw CWinException(_T("CToolbar::SetImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 			else
 			{
 				himlToolbarDis = CreateDisabledImageList(himlToolbar);
 				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
-					throw CWinException(_T("CToolbar::SetToolbarImages ... TB_SETDISABLEDIMAGELIST failed "));
+					throw CWinException(_T("CToolbar::SetImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 
 

@@ -29,7 +29,7 @@
 #define IDB_TOOLBAR_SML                 133
 #define IDB_ARROWS                      134
 #define IDB_CARDS                       135
-
+#define IDB_STATUS                      136
 
 #define IDM_ARROW_LEFT                  140
 #define IDM_ARROW_RIGHT                 141
@@ -49,7 +49,9 @@
 #define IDM_OCHRE                       167
 #define IDM_MAUVE                       168
 #define IDM_PINK                        169
-#define IDM_GOLD                      170
+#define IDM_GOLD                        170
+
+#define IDC_COMBOBOXEX                  171
 
 
 

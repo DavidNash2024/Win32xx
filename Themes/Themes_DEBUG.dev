@@ -1,7 +1,7 @@
 [Project]
 FileName=Themes_DEBUG.dev
 Name=Themes
-UnitCount=17
+UnitCount=19
 Type=0
 Ver=1
 ObjFiles=
@@ -217,9 +217,19 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\Win32++\GDI.h
+FileName=ComboBoxEx.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=ComboBoxEx.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

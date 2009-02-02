@@ -23,14 +23,15 @@
 #define IDM_EDIT_DELETE                 115
 #define IDM_HELP_ABOUT                  120
 
-// ClassView and ListView bitmaps
+// Bitmaps for the ClassView, FileFiew and ComboBoxEx ImageLists
 #define IDB_CLASSVIEW                   130
 #define IDB_FILEVIEW                    131
+#define IDB_STATUS                      132
 
 // Icons for container tabs
-#define IDI_CLASSVIEW                   132
-#define IDI_FILEVIEW                    133
-#define IDI_TEXT                        134
+#define IDI_CLASSVIEW                   135
+#define IDI_FILEVIEW                    136
+#define IDI_TEXT                        137
 
 // Menu Resource
 #define IDM_DOCK_DEFAULT                140

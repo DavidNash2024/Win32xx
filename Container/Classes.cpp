@@ -71,7 +71,7 @@ CViewClasses::~CViewClasses()
 void CViewClasses::OnInitialUpdate()
 {
 	//set the image lists
-	m_himlNormal = ImageList_Create(16, 15, ILC_COLORDDB | ILC_MASK, 1, 0);
+	m_himlNormal = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_CLASSVIEW));
 	ImageList_AddMasked(m_himlNormal, hbm, RGB(255, 0, 0));
 	SetImageList(m_himlNormal, LVSIL_NORMAL);

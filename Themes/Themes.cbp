@@ -138,6 +138,8 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
+		<Unit filename="ComboBoxEx.cpp" />
+		<Unit filename="ComboBoxEx.h" />
 		<Unit filename="Mainfrm.cpp" />
 		<Unit filename="Mainfrm.h" />
 		<Unit filename="Resource.rc">

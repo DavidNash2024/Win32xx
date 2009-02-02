@@ -87,6 +87,7 @@ IDB_TOOLBAR_DIS          BITMAP                  "res/toolbar24_d.bmp"
 IDB_TOOLBAR_SML          BITMAP                  "res/toolbar16_n.bmp"
 IDB_ARROWS               BITMAP                  "res/Arrows.bmp"
 IDB_CARDS                BITMAP                  "res/Cards.bmp"
+IDB_STATUS               BITMAP                  "res/Status.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

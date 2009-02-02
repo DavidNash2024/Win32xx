@@ -19,7 +19,7 @@ CViewList::~CViewList()
 void CViewList::OnInitialUpdate()
 {
 	// Set the image lists
-	m_himlSmall = ImageList_Create(16, 15, ILC_COLORDDB | ILC_MASK, 1, 0);
+	m_himlSmall = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
 	ImageList_AddMasked(m_himlSmall, hbm, RGB(255, 0, 255));
 	SetImageList(m_himlSmall, LVSIL_SMALL);
