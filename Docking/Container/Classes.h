@@ -9,6 +9,7 @@
 
 #include "../../Win32++/treeview.h"
 #include "../../Win32++/dockable.h"
+#include "ComboBoxEx.h"
 #include "resource.h"
 
 // Declaration of the CViewClasses class
@@ -30,12 +31,14 @@ class CContainClasses : public CContainer
 {
 public:
 	CContainClasses();
-	~CContainClasses() {}
+	virtual ~CContainClasses() {}
+	void AddCombo();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM /*lParam*/);
+	virtual void OnInitialUpdate();
 
 private:
 	CViewClasses m_ViewClasses;
-
+	CComboBoxEx m_ComboBoxEx;
 };
 
 // Declaration of the CDockClasses class

@@ -1665,7 +1665,6 @@ namespace Win32xx
 		} 
 
 		// Redraw the docked windows
-		::SetFocus(GetAncestor());
 		pDockable->GetView()->SetFocus();
 		GetDockAncestor()->SetRedraw(TRUE);
 		RecalcDockLayout();
@@ -2692,8 +2691,11 @@ namespace Win32xx
 	}
 
 	inline CWnd* CContainer::GetActiveView() const
-	{		
-		return m_pWndContainerParent->m_vTabPageInfo[m_iCurrentPage].pWndContainer->GetTabPage().GetView();
+	{	
+		if (m_vTabPageInfo.size() > 0)
+			return m_pWndContainerParent->m_vTabPageInfo[m_iCurrentPage].pWndContainer->GetTabPage().GetView();
+		else
+			return NULL;
 	}
 
 	inline CContainer* CContainer::GetContainerFromView(CWnd* pWndView) const

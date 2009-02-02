@@ -145,6 +145,9 @@
 				RelativePath=".\Classes.cpp">
 			</File>
 			<File
+				RelativePath=".\ComboBoxEx.cpp">
+			</File>
+			<File
 				RelativePath=".\ContainerApp.cpp">
 			</File>
 			<File
@@ -201,6 +204,9 @@
 			Filter="h;hpp;hxx;hm;inl">
 			<File
 				RelativePath=".\Classes.h">
+			</File>
+			<File
+				RelativePath=".\ComboBoxEx.h">
 			</File>
 			<File
 				RelativePath=".\ContainerApp.h">

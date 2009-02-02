@@ -78,6 +78,7 @@ CContainClasses::CContainClasses()
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
 	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_FILE_SAVE  );
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_EDIT_CUT   );
@@ -94,6 +95,28 @@ CContainClasses::CContainClasses()
 	SetView(m_ViewClasses);
 }
 
+void CContainClasses::AddCombo()
+{
+	int nComboWidth = 120; 
+	CToolbar& TB = GetToolbar(); 
+	 
+	// Adjust button width and convert to separator   
+	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
+	TB.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
+	 
+	// Determine the size and position of the ComboBox 
+	int nIndex = TB.CommandToIndex(IDM_FILE_SAVE); 
+	CRect rect = TB.GetItemRect(nIndex); 
+	 
+	// Create the ComboboxEx window 
+	m_ComboBoxEx.Create(TB.GetHwnd());
+	m_ComboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
+
+	// Set ComboBox Height
+	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)rect.Height()-6);
+
+	m_ComboBoxEx.AddItems();
+}
 
 BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
@@ -113,6 +136,11 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	}
 
 	return FALSE;
+}
+
+void CContainClasses::OnInitialUpdate()
+{
+	AddCombo();
 }
 
 

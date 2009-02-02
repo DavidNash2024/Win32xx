@@ -110,12 +110,12 @@ void CMainFrame::LoadDefaultDockables()
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT);
 }
 
-
 void CMainFrame::LoadRegistryDockables()
 {
 	if (0 != GetRegistryKeyName().size())
 	{
-		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\Dock Windows");
+		LPCTSTR szSubKeyDock = _T("Dock Windows");
+		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\") + szSubKeyDock;
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 		if (hKey)
@@ -160,36 +160,39 @@ void CMainFrame::LoadRegistryDockables()
 				}
 				else
 				{
-					CDockable* pDock;					
+					CDockable* pDock = 0;					
 					if (di.DockParentID)
 						pDock = m_DockView.GetDockFromID(di.DockParentID);
 					else
 						pDock = &m_DockView;
 					
-					switch(di.DockID)
+					if (pDock)
 					{
-					case ID_CONTAINCLASSES1:
-						pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES1);
-						break;
-					case ID_CONTAINCLASSES2:
-						pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES2);					
-						break;
-					case ID_CONTAINFILES1:
-						pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES1);
-						break;
-					case ID_CONTAINFILES2:
-						pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES2);
-						break;
-					case ID_OUTPUT:
-						pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT);
-						break;
-					case ID_TEXT:
-						pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT);
-						break;
-					default:
-						TRACE("Unknown Dock ID\n");
-						break;
-					}				
+						switch(di.DockID)
+						{
+						case ID_CONTAINCLASSES1:
+							pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES1);
+							break;
+						case ID_CONTAINCLASSES2:
+							pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES2);					
+							break;
+						case ID_CONTAINFILES1:
+							pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES1);
+							break;
+						case ID_CONTAINFILES2:
+							pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES2);
+							break;
+						case ID_OUTPUT:
+							pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT);
+							break;
+						case ID_TEXT:
+							pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT);
+							break;
+						default:
+							TRACE("Unknown Dock ID\n");
+							break;
+						}
+					}
 				}
 
 				i++;
@@ -295,8 +298,9 @@ void CMainFrame::SaveDockables()
 		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-		RegDeleteKey(hKey, _T("Docked Windows"));
-		if (RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
+		LPCTSTR szSubKeyDock = _T("Dock Windows");
+		RegDeleteKey(hKey, szSubKeyDock);
+		if (RegCreateKeyEx(hKey, szSubKeyDock, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 		// Add the Docked windows information to the registry
