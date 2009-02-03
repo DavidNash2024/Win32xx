@@ -635,6 +635,9 @@ namespace Win32xx
 
 	inline void CDockable::CDockClient::DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus)
 	{
+		// The close button isn't displayed on Win95 
+		if (GetWinVersion() == 1400)  return;
+		
 		// Determine the close button's drawing position relative to the window
 		CRect rcClose = m_rcClose;
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
@@ -791,8 +794,8 @@ namespace Win32xx
 				{
 					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 
-					// Indicate if the point is in the close button
-					if (m_rcClose.PtInRect(pt))
+					// Indicate if the point is in the close button (except for Win95)
+					if ((GetWinVersion() > 1400) && (m_rcClose.PtInRect(pt)))
 						return HTCLOSE;
 
 					MapWindowPoints(NULL, m_hWnd, &pt, 1);
@@ -3078,7 +3081,7 @@ namespace Win32xx
 				TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 				TrackMouseEventStruct.dwFlags = TME_LEAVE;
 				TrackMouseEventStruct.hwndTrack = m_hWnd;
-				TrackMouseEvent(&TrackMouseEventStruct);
+				_TrackMouseEvent(&TrackMouseEventStruct);
 				IsTracking = TRUE;
 			}
 			break; 
@@ -3089,7 +3092,7 @@ namespace Win32xx
 				TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 				TrackMouseEventStruct.dwFlags = TME_LEAVE;
 				TrackMouseEventStruct.hwndTrack = m_hWnd;
-				TrackMouseEvent(&TrackMouseEventStruct);
+				_TrackMouseEvent(&TrackMouseEventStruct);
 				IsTracking = TRUE;
 			}
 			break;

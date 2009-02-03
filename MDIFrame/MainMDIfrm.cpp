@@ -31,6 +31,48 @@ CMainMDIFrame::~CMainMDIFrame()
 {
 }
 
+void CMainMDIFrame::OnFileOpen()
+{
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
+	OPENFILENAME ofn = {0};
+	if (GetWinVersion() >= 2500)
+	{
+		// For Win2000 and above
+		ofn.lStructSize = sizeof(OPENFILENAME);
+	}
+	else
+	{
+		// For older operating systems
+		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
+	}
+
+	ofn.hwndOwner = m_hWnd;
+	ofn.lpstrFile = szFilePathName;
+	ofn.nMaxFile = _MAX_PATH;
+	ofn.lpstrTitle = _T("Open File");
+
+	// Bring up the dialog, and open the file
+	::GetOpenFileName(&ofn);
+
+	// TODO:
+	// Add your own code here. Refer to the tutorial for additional information 
+}
+
+void CMainMDIFrame::OnFilePrint()
+{
+	// Bring up a dialog to choose the printer
+	PRINTDLG pd = {0};
+	pd.lStructSize = sizeof( pd );
+	pd.Flags = PD_RETURNDC;
+
+	// Retrieve the printer DC
+	PrintDlg( &pd );
+	
+	// TODO:
+	// Add your own code here. Refer to the tutorial for additional information 
+}
+
+
 void CMainMDIFrame::OnInitialUpdate()
 {
 	TRACE(_T("MDI Frame started \n"));
@@ -47,6 +89,18 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_FILE_CLOSE:          // Close the active MDI window
 		GetActiveMDIChild()->SendMessage(WM_CLOSE, 0, 0);
+		return TRUE;
+	case IDM_FILE_OPEN:
+		OnFileOpen();
+		return TRUE;
+	case IDM_FILE_SAVE:
+		// Refer to the tutorial for an example of OnFileSave()
+		return TRUE;
+	case IDM_FILE_SAVEAS:
+		// Refer to the tutorial for an example of OnFileSaveAs()
+		return TRUE;
+	case IDM_FILE_PRINT:
+		OnFilePrint();
 		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);

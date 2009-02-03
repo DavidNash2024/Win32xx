@@ -11,6 +11,7 @@ Major Changes
   - Added a second docking sample demonstrating containers
   - Added save/restore dock layout to docking samples
   - Added Close All Dockables and Default Dock Layout to docking samples
+  - Added Win98 and WinME support for docking. 
 * Added Region support to CDC class.
 * Notepad sample enhancements:
   - Now capable of handling Unicode text
@@ -66,7 +67,6 @@ Fixes
 Various fixes to docking, including:
  - Fixed Z order of undocked windows
  - Fixed focus for child windows
- - Added Win98 and WinME support for docking
  - Improved undocking
  - Reduced flicker
  - Better sizing of docked windows

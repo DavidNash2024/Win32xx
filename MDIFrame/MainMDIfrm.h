@@ -18,6 +18,8 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileOpen();
+	virtual	void OnFilePrint();
 	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
