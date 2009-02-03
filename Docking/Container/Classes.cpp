@@ -138,8 +138,12 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
-void CContainClasses::OnInitialUpdate()
+void CContainClasses::OnCreate()
 {
+	// Call the base class first
+	CContainer::OnCreate();
+	
+	// Add the ComboBarEx control to the toolbar
 	AddCombo();
 }
 

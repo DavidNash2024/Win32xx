@@ -894,7 +894,8 @@ namespace Win32xx
 		m_Theme.clrPressed2 = Theme.clrPressed2;
 		m_Theme.clrOutline  = Theme.clrOutline;
 
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		if (IsWindow())
+			::InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 
 	inline LRESULT CToolbar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

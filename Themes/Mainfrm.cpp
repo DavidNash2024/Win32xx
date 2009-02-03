@@ -39,26 +39,25 @@ CMainFrame::~CMainFrame()
 }
 
 void CMainFrame::AddCombo()
-{
+{ 
+	// We'll be placing the ComboBoxEx control over the 'File Save' toolbar button
 	int nComboWidth = 120; 
 	CToolbar& TB = GetToolbar(); 
-	 
-	// Adjust button width and convert to separator   
-	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
+	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);	// Convert the button to a seperator
 	TB.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
 	 
 	// Determine the size and position of the ComboBox 
 	int nIndex = TB.CommandToIndex(IDM_FILE_SAVE); 
-	CRect rect = TB.GetItemRect(nIndex); 
+	CRect rc = TB.GetItemRect(nIndex); 
 	 
-	// Create the ComboboxEx window 
+	// Create and position the ComboboxEx window 
 	m_ComboBoxEx.Create(TB.GetHwnd());
-	m_ComboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
+	m_ComboBoxEx.SetWindowPos(NULL, rc, SWP_NOACTIVATE);
 
 	// Set ComboBox Height
-	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)rect.Height()-6);
+	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)rc.Height()-6);
 
-	// Resize rebar band
+	// Resize rebar band to accomodate the new width of the toolbar
 	CRebar& RB = GetRebar();
 	int iBand = RB.GetBand(TB.GetHwnd());
 	RB.ResizeBand(iBand, TB.GetMaxSize());
@@ -132,6 +131,7 @@ void CMainFrame::OnCreate()
 	// call the base class function
 	CFrame::OnCreate();
 
+	
 	CToolbar& TB = GetToolbar();
 	SetToolbarImages(TB, 8, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
@@ -164,6 +164,7 @@ void CMainFrame::OnCreate()
 
 	
 	}
+	
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -189,6 +190,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 
 void CMainFrame::ChooseTheme(UINT nStyle)
 {
+	
 	CRebar& RB = GetRebar();
 	CToolbar& TB = GetToolbar();
 	CMenubar& MB = GetMenubar();
@@ -212,7 +214,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_NONE, 0);
+			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_NONE, 0); 
 		}
 		break;
 
@@ -394,10 +396,8 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		}
 		break;
 
-	}
+	} 
 
-	::InvalidateRect(GetMenubar().GetHwnd(), NULL, TRUE);
-	RecalcLayout();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

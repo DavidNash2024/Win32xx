@@ -133,6 +133,7 @@ namespace Win32xx
 		CContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
 		CWnd* GetActiveView() const;
 		std::vector<TabPageInfo>& GetAllContainers() const {return m_pWndContainerParent->m_vTabPageInfo;}
+		CContainer* GetContainerParent() { return m_pWndContainerParent; }
 		tString GetDockCaption() const	{ return m_tsCaption; }
 		HICON GetTabIcon()				{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
@@ -202,6 +203,7 @@ namespace Win32xx
 			CDockBar();
 			virtual ~CDockBar();		
 			virtual void OnPaint(HDC hDC);
+			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
 			virtual void SetColor(COLORREF color);
@@ -444,6 +446,12 @@ namespace Win32xx
 		dcView.DetachBrush();
 	}
 
+	inline void CDockable::CDockBar::PreCreate(CREATESTRUCT &cs)
+	{
+		// Create a child window, initially hidden
+		cs.style = WS_CHILD;
+	}
+	
 	inline void CDockable::CDockBar::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ Bar");
@@ -1679,9 +1687,31 @@ namespace Win32xx
 			pDock->ShowWindow(SW_HIDE);
 			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
 			pDock->SetParent(m_hWnd);
-			CContainer* pContainer = (CContainer*)GetView();
+			CContainer* pContainer = (CContainer*)GetView();	
+			CContainer* pContainerSource = (CContainer*)pDock->GetView();
+			
+			if (pContainerSource->GetAllContainers().size() > 1)
+			{
+				// The container we're about to add has children, so transfer those first
+				std::vector<TabPageInfo>::reverse_iterator riter;
+				for ( riter = pContainerSource->GetAllContainers().rbegin() ; riter < pContainerSource->GetAllContainers().rend() -1; ++riter )
+				{
+					// Remove child container from pContainerSource
+					CContainer* pContainerChild = (*riter).pWndContainer;
+					pContainerChild->ShowWindow(SW_HIDE);
+					pContainerSource->RemoveContainer(pContainerChild);
+					
+					// Add child container to this container
+					pContainer->AddContainer(pContainerChild);
+
+					CDockable* pDockChild = GetDockFromView(pContainerChild);
+					pDockChild->SetParent(m_hWnd);
+				}
+			}
+
 			pContainer->AddContainer((CContainer*)pDock->GetView());
 			pDock->SetDockStyle(dwDockStyle);
+			pDock->SetParent(m_hWnd);
 		}
 	}
 
@@ -2631,22 +2661,6 @@ namespace Win32xx
 	{
 		if (this == m_pWndContainerParent)
 		{
-			if (pWndContainer->GetAllContainers().size() > 1)
-			{
-				// The container we're about to add has children, so transfer those first
-				std::vector<TabPageInfo>::reverse_iterator riter;
-				for ( riter = pWndContainer->GetAllContainers().rbegin() ; riter < pWndContainer->GetAllContainers().rend() -1; ++riter )
-				{
-					// Remove child container from pWndContainer
-					CContainer* pWndContainerChild = (*riter).pWndContainer;
-					pWndContainerChild->ShowWindow(SW_HIDE);
-					pWndContainer->RemoveContainer(pWndContainerChild);
-					
-					// Add child container to this container
-					AddContainer(pWndContainerChild);
-				}
-			}
-
 			TabPageInfo tbi = {0};
 			tbi.pWndContainer = pWndContainer;
 			lstrcpy(tbi.szTitle, pWndContainer->GetTabText());
@@ -2665,11 +2679,11 @@ namespace Win32xx
 				SetTabSize();
 			}
 
+			pWndContainer->m_pWndContainerParent = this;
 			if (pWndContainer->IsWindow())
 			{
 				// Set the parent container relationships
 				pWndContainer->GetTabPage().SetParent(m_hWnd);
-				pWndContainer->m_pWndContainerParent = this;
 				pWndContainer->GetTabPage().ShowWindow(SW_HIDE);
 			}
 		}

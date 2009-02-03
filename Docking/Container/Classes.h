@@ -34,7 +34,7 @@ public:
 	virtual ~CContainClasses() {}
 	void AddCombo();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM /*lParam*/);
-	virtual void OnInitialUpdate();
+	virtual void OnCreate();
 
 private:
 	CViewClasses m_ViewClasses;
