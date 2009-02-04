@@ -2383,6 +2383,10 @@ namespace Win32xx
 	{
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
+
+		// No undocking allowed from an undocked container group
+		CDockable* pDockParent = GetDockFromView(pContainer->GetContainerParent());
+		if (pDockParent->IsUndocked()) return;
 		
 		if (GetView() == pContainer)
 		{
