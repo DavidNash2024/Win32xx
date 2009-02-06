@@ -164,10 +164,11 @@ void CMainFrame::LoadRegistryDockables()
 				}
 				else
 				{
-					CDockable* pDock;	
+					CDockable* pDock = 0;	
 					if (di.DockParentID)
 						pDock = m_DockView.GetDockFromID(di.DockParentID);
-					else
+					
+					if (0 == pDock)
 						pDock = &m_DockView;
 					
 					switch(di.DockID)
@@ -214,6 +215,7 @@ void CMainFrame::LoadRegistryDockables()
 
 void CMainFrame::SaveDockables()
 {
+	m_DockView.CheckDockables();
 	// NOTE: This function assumes that each dockable has a unique DockID
 
 	std::vector<DockedInfo> vDockList;

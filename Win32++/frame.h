@@ -209,16 +209,16 @@ namespace Win32xx
 		// If you need to modify the default behaviour of the menubar, rebar, 
 		// statusbar or toolbar, inherrit from those classes, and override 
 		// the following attribute functions.
-		virtual CMenubar& GetMenubar() const		{return (CMenubar&)m_WndMenubar;}
-		virtual CRebar& GetRebar() const			{return (CRebar&)m_WndRebar;}
-		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_WndStatusbar;}
-		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_WndToolbar;}
+		virtual CMenubar& GetMenubar() const		{return (CMenubar&)m_Menubar;}
+		virtual CRebar& GetRebar() const			{return (CRebar&)m_Rebar;}
+		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
+		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
 
 		// These functions aren't intended to be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
-		CWnd* GetView() const		{return m_pWndView;}
+		CWnd* GetView() const		{return m_pView;}
 		tString GetMRUEntry(int nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
@@ -293,12 +293,12 @@ namespace Win32xx
 		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
 
 		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
-		CMenubar m_WndMenubar;				// CMenubar object
-		CRebar m_WndRebar;					// CRebar object
-		CStatusbar m_WndStatusbar;			// CStatusbar object
-		CToolbar m_WndToolbar;				// CToolbar object
+		CMenubar m_Menubar;					// CMenubar object
+		CRebar m_Rebar;						// CRebar object
+		CStatusbar m_Statusbar;				// CStatusbar object
+		CToolbar m_Toolbar;					// CToolbar object
 		HMENU m_hMenu;						// handle to the frame menu
-		CWnd* m_pWndView;					// pointer to the View CWnd object
+		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
 		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
@@ -1324,7 +1324,7 @@ namespace Win32xx
 	//
 	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_himlMenu(NULL),
-		                m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pWndView(NULL),
+		                m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL),
 		                m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0)
 	{
 
@@ -1986,9 +1986,9 @@ namespace Win32xx
 		GetStatusbar().Create(m_hWnd);
 
 		// Create the view window
-		if (NULL == m_pWndView)
+		if (NULL == m_pView)
 			throw CWinException(_T("CFrame::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
-		m_pWndView->Create(m_hWnd);
+		m_pView->Create(m_hWnd);
 
 		// Reposition the child windows
 		RecalcLayout();
@@ -2514,7 +2514,7 @@ namespace Win32xx
 
 	inline void CFrame::RecalcLayout()
 	{
-		if ((!m_pWndView) || (!m_pWndView->GetHwnd()))
+		if ((!m_pView) || (!m_pView->GetHwnd()))
 			return;
 
 		// Resize the status bar
@@ -2546,7 +2546,7 @@ namespace Win32xx
 			int cx = rClient.Width();
 			int cy = rClient.Height();
 
-			m_pWndView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
+			m_pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
 		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
@@ -2868,15 +2868,15 @@ namespace Win32xx
 	// Sets or changes the View window displayed within the frame
 	{
 		// Destroy the existing view window (if any)
-		if (m_pWndView) m_pWndView->Destroy();
+		if (m_pView) m_pView->Destroy();
 		
 		// Assign the view window
-		m_pWndView = &wndView;
+		m_pView = &wndView;
 		
 		if (m_hWnd)
 		{
 			// The frame is already created, so create and position the new view too
-			m_pWndView->Create(m_hWnd);
+			m_pView->Create(m_hWnd);
 			RecalcLayout();
 		}
 	}
@@ -3066,7 +3066,7 @@ namespace Win32xx
 			OnFrameSysColorChange();
 
 			// Forward the message to the view window
-			::PostMessage(m_pWndView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
+			::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
 			return 0L;
 		case WM_SYSCOMMAND:
 			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
