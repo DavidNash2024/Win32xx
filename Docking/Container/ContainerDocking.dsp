@@ -98,6 +98,10 @@ SOURCE=.\Classes.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ComboBoxEx.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ContainerApp.cpp
 # End Source File
 # Begin Source File
@@ -131,6 +135,10 @@ SOURCE=.\Text.cpp
 # Begin Source File
 
 SOURCE=.\Classes.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ComboBoxEx.h
 # End Source File
 # Begin Source File
 

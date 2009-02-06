@@ -142,6 +142,8 @@
 		</VirtualTargets>
 		<Unit filename="Classes.cpp" />
 		<Unit filename="Classes.h" />
+		<Unit filename="ComboBoxEx.cpp" />
+		<Unit filename="ComboBoxEx.h" />
 		<Unit filename="ContainerApp.cpp" />
 		<Unit filename="ContainerApp.h" />
 		<Unit filename="DockContainer.h" />

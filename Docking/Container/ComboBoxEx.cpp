@@ -16,16 +16,16 @@ CComboBoxEx::~CComboBoxEx()
 
 void CComboBoxEx::PreCreate(CREATESTRUCT &cs)
 {
-	cs.lpszClass = WC_COMBOBOXEX;  
-	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN; 
-	
-	// Set the hight of the combobox in order to see a dropdown list 
-	cs.cy = 100;  
+	cs.lpszClass = WC_COMBOBOXEX;
+	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
+
+	// Set the hight of the combobox in order to see a dropdown list
+	cs.cy = 100;
 }
 
 BOOL CComboBoxEx::AddItems()
 {
-    typedef struct 
+    typedef struct
 	{
         int iImage;
         int iSelectedImage;
@@ -33,9 +33,9 @@ BOOL CComboBoxEx::AddItems()
         LPTSTR pszText;
     } ITEMINFO, *PITEMINFO;
 
-    ITEMINFO IInf[ ] = 
+    ITEMINFO IInf[ ] =
 	{
-        { 0, 0,  0, "Item 1"}, 
+        { 0, 0,  0, "Item 1"},
         { 1, 1,  0, "Item 2"},
         { 2, 2,  0, "Item 3"},
     };
@@ -60,7 +60,7 @@ BOOL CComboBoxEx::AddItems()
 	// Assign the existing image list to the ComboBoxEx control
     SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)m_himlImages);
 
-    return TRUE;    
+    return TRUE;
 }
 
 void CComboBoxEx::SetImages(int nImages, UINT ImageID)
@@ -70,7 +70,7 @@ void CComboBoxEx::SetImages(int nImages, UINT ImageID)
 		ImageList_Destroy(m_himlImages);
 		m_himlImages = NULL;
 	}
-	
+
 	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ImageID));
 	BITMAP bm = {0};
 	::GetObject(hbm, sizeof(BITMAP), &bm);
@@ -78,5 +78,6 @@ void CComboBoxEx::SetImages(int nImages, UINT ImageID)
 	int iImageHeight = bm.bmHeight;
 	COLORREF crMask = RGB(255,0,255);
 	m_himlImages = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, nImages, 0);
-	ImageList_AddMasked(m_himlImages, hbm, crMask); 
+	ImageList_AddMasked(m_himlImages, hbm, crMask);
 }
+

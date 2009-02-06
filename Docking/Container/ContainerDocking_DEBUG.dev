@@ -1,7 +1,7 @@
 [Project]
 FileName=ContainerDocking_DEBUG.dev
 Name=ContainerDocking
-UnitCount=28
+UnitCount=30
 Type=0
 Ver=1
 ObjFiles=
@@ -318,6 +318,26 @@ BuildCmd=
 
 [Unit28]
 FileName=Output.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit29]
+FileName=..\..\Themes\ComboBoxEx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=..\..\Themes\ComboBoxEx.h
 CompileCpp=1
 Folder=Header
 Compile=1

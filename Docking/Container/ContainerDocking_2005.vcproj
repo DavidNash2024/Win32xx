@@ -210,6 +210,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ComboBoxEx.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ContainerApp.cpp"
 				>
 			</File>
@@ -244,6 +248,10 @@
 			>
 			<File
 				RelativePath=".\Classes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ComboBoxEx.h"
 				>
 			</File>
 			<File
