@@ -9,10 +9,6 @@
 #include "../Win32++/frame.h"
 #include "View.h"
 
-// required for Dev-C++
-#ifndef OPENFILENAME_SIZE_VERSION_400
-#define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
-#endif
 
 class CMainFrame : public CFrame
 {

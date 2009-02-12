@@ -1,5 +1,5 @@
-// Win32++  Version 6.4
-// Released: 6th February, 2009 by:
+// Win32++  Version 6.4.1
+// Released: 12th February, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2122,6 +2122,8 @@ namespace Win32xx
 		// Called in response to a WM_CLOSE message for the frame.
 		// It's called called OnFrameClose to avoid being accidently overriden
 		// by a user's possible OnClose function.
+		
+		ShowWindow(SW_HIDE);
 		SaveRegistrySettings();
 
 		GetMenubar().Destroy();

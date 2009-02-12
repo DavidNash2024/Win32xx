@@ -1,5 +1,5 @@
-// Win32++  Version 6.4
-// Released: 6th February, 2009 by:
+// Win32++  Version 6.4.1
+// Released: 12th February, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1754,7 +1754,8 @@ namespace Win32xx
 			{
 				// The container we're about to add has children, so transfer those first
 				std::vector<TabPageInfo>::reverse_iterator riter;
-				for ( riter = pContainerSource->GetAllContainers().rbegin() ; riter < pContainerSource->GetAllContainers().rend() -1; ++riter )
+				std::vector<TabPageInfo> AllContainers = pContainerSource->GetAllContainers();
+				for ( riter = AllContainers.rbegin() ; riter < AllContainers.rend() -1; ++riter )
 				{
 					// Remove child container from pContainerSource
 					CContainer* pContainerChild = (*riter).pContainer;
@@ -1766,7 +1767,7 @@ namespace Win32xx
 
 					CDockable* pDockChild = GetDockFromView(pContainerChild);
 					pDockChild->SetParent(m_hWnd);
-				}
+				} 
 			}
 
 			pContainer->AddContainer((CContainer*)pDock->GetView());
@@ -3037,6 +3038,7 @@ namespace Win32xx
 		pWnd->m_pContainerParent = pWnd;
 
 		// Display the first page
+		m_iCurrentPage = 0;
 		SelectPage(0);
 	}
 

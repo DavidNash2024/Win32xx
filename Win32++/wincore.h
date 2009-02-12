@@ -1,5 +1,5 @@
-// Win32++  Version 6.4
-// Released: 6th February, 2009 by:
+// Win32++  Version 6.4.1
+// Released: 12th February, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -140,6 +140,12 @@
   #define GCLP_MENUNAME      GCL_MENUNAME
   #define GCLP_WNDPROC       GCL_WNDPROC
 #endif
+
+// For Visual Studio 6 (without an updated platform SDK) and Dev-C++
+#ifndef OPENFILENAME_SIZE_VERSION_400
+  #define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
+#endif
+
 
 // Messages defined by Win32++
 #define UWM_REARRANGED		(WM_APP + 1)	// Notification - frame window rearranged message

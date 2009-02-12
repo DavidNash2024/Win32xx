@@ -1,3 +1,9 @@
+Version 6.4.1
+=============
+This release has the following bug fixes:
+- Assertions in CContainer reported by VS2005(express) and VS2008(express)
+- Definition of OPENFILENAME_SIZE_VERSION_400 added for VS6 
+
 Version 6.4
 ===========
 
