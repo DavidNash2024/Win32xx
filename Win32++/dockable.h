@@ -46,6 +46,7 @@
 #include "wincore.h"
 #include "gdi.h"
 #include "toolbar.h"
+#include "tab.h"
 #include "Default_Resource.h"
 
 
@@ -85,39 +86,20 @@ namespace Win32xx
 	};
 
 
+
 	///////////////////////////////////////
 	// Declaration of the CContainer class
-	//  A CContainer has a tab control, a view window, and optionally a toolbar control.
-	//  A top level CContainer can contain other CContainers. Each container (including the 
-	//  top level container) is displayed within a tab page.
-	class CContainer : public CWnd
+	//  A CContainer is a CTab window. A CTab has a view window, and optionally a toolbar control.
+	//  A top level CContainer can contain other CContainers. The view for each container
+	//  (including the top level container) along with possibly its toolbar, is displayed 
+	//  within the container parent's view page.
+	class CContainer : public CTab
 	{
 	public:
-		// Nested class. This is the Wnd for the window displayed on a tab page
-		// The toolbar and view window are child windows of the tabpage window.
-		class CTabPage : public CWnd
-		{
-		public:
-			CTabPage() : m_pView(NULL) {}
-			virtual ~CTabPage() {}
-			virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
-			virtual CWnd* GetView() const		{return m_pView;}
-			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-			virtual void OnCreate();
-			virtual void PreRegisterClass(WNDCLASS &wc);
-			virtual void RecalcLayout();
-			virtual void SetView(CWnd& wndView);
-			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		private:
-			CToolbar m_Toolbar;
-			CWnd* m_pView;
-		};
-
 		CContainer();
 		virtual ~CContainer();
 		virtual void AddContainer(CContainer* pContainer);
-		virtual void AddToolbarButton(UINT nID);
+	//	virtual void AddToolbarButton(UINT nID);
 		virtual CContainer* GetContainerFromIndex(int iPage);
 		virtual CContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CContainer* pContainer);
@@ -126,41 +108,27 @@ namespace Win32xx
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();	
 		
-		// Attributes
-		virtual CTabPage& GetTabPage() const	{return (CTabPage&)m_TabPage;}
-		virtual CToolbar& GetToolbar() const	{return m_TabPage.GetToolbar();}
-				
+		// Attributes				
 		CContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
 		CWnd* GetActiveView() const;
 		std::vector<TabPageInfo>& GetAllContainers() const {return m_pContainerParent->m_vTabPageInfo;}
 		CContainer* GetContainerParent() { return m_pContainerParent; }
 		tString GetDockCaption() const	{ return m_tsCaption; }
-		HICON GetTabIcon()				{ return m_hTabIcon; }
-		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
-		CWnd* GetView() const			{ return GetTabPage().GetView(); }
+		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		BOOL IsContainer() const		{ return TRUE; }
-		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
-		void SetTabIcon(UINT nID_Icon);
-		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
 		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
 		void SetView(CWnd& Wnd);
 				
 	protected:
 		virtual void OnCreate();
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void Paint();
-		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		CTabPage m_TabPage;
-		std::vector<UINT> m_vToolbarData;
+	//	std::vector<UINT> m_vToolbarData;
 		std::vector<TabPageInfo> m_vTabPageInfo;
-		tString m_tsTabText;
 		tString m_tsCaption;
 		int m_iCurrentPage;
-		HICON m_hTabIcon;
-		HIMAGELIST m_himlTab;
 		CContainer* m_pContainerParent;
 		
 	};
@@ -2344,7 +2312,7 @@ namespace Win32xx
 			if (GetDockStyle() & DS_DOCKED_CONTAINER)
 			{
 				CContainer* pContainer = (CContainer*)GetView();
-				pContainer->GetTabPage().SetParent(pContainer->GetHwnd());
+				pContainer->GetViewPage().SetParent(pContainer->GetHwnd());
 			}
 			else
 			{
@@ -2641,24 +2609,24 @@ namespace Win32xx
 	}
 
 	///////////////////////////////////////////
-	// Declaration of the nested CTabPage class
-	inline BOOL CContainer::CTabPage::OnCommand(WPARAM wParam, LPARAM lParam)
+	// Declaration of the nested CViewPage class
+	inline BOOL CTab::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 		return (BOOL)::SendMessage(GetParent(), WM_COMMAND, wParam, lParam);
 	}
 
-	inline void CContainer::CTabPage::OnCreate()
+	inline void CTab::CViewPage::OnCreate()
 	{
 		m_pView->Create(m_hWnd);
 	}
 
-	inline void CContainer::CTabPage::PreRegisterClass(WNDCLASS &wc)
+	inline void CTab::CViewPage::PreRegisterClass(WNDCLASS &wc)
 	{
 		wc.lpszClassName = _T("Win32++ TabPage");
 		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 	}
 
-	inline void CContainer::CTabPage::RecalcLayout()
+	inline void CTab::CViewPage::RecalcLayout()
 	{
 		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
 		CRect rc = GetClientRect();
@@ -2667,7 +2635,7 @@ namespace Win32xx
 		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 	}
 
-	inline void CContainer::CTabPage::SetView(CWnd& wndView)
+	inline void CTab::CViewPage::SetView(CWnd& wndView)
 	// Sets or changes the View window displayed within the frame
 	{
 		// Assign the view window
@@ -2681,7 +2649,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CContainer::CTabPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CTab::CViewPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -2708,10 +2676,8 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class
-	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0)
+	inline CContainer::CContainer() : m_iCurrentPage(0)
 	{
-		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
-		TabCtrl_SetImageList(m_hWnd, m_himlTab);
 		m_pContainerParent = this;
 
 		// Set the Resource IDs for the toolbar buttons
@@ -2730,7 +2696,6 @@ namespace Win32xx
 
 	inline CContainer::~CContainer()
 	{
-		ImageList_Destroy(m_himlTab);
 	}
 
 	inline void CContainer::AddContainer(CContainer* pContainer)
@@ -2740,7 +2705,7 @@ namespace Win32xx
 			TabPageInfo tbi = {0};
 			tbi.pContainer = pContainer;
 			lstrcpy(tbi.szTitle, pContainer->GetTabText());
-			tbi.iImage = ImageList_AddIcon(m_himlTab, pContainer->GetTabIcon());
+			tbi.iImage = ImageList_AddIcon(GetImageList(), pContainer->GetTabIcon());
 			int iNewPage = m_vTabPageInfo.size();
 			m_vTabPageInfo.push_back(tbi);		
 
@@ -2759,18 +2724,18 @@ namespace Win32xx
 			if (pContainer->IsWindow())
 			{
 				// Set the parent container relationships
-				pContainer->GetTabPage().SetParent(m_hWnd);
-				pContainer->GetTabPage().ShowWindow(SW_HIDE);
+				pContainer->GetViewPage().SetParent(m_hWnd);
+				pContainer->GetViewPage().ShowWindow(SW_HIDE);
 			}
 		}
 	}
 
-	inline void CContainer::AddToolbarButton(UINT nID)
-	// Adds Resource IDs to toolbar buttons.
-	// A resource ID of 0 is a separator
-	{
-		m_vToolbarData.push_back(nID);
-	}
+//	inline void CContainer::AddToolbarButton(UINT nID)
+//	// Adds Resource IDs to toolbar buttons.
+//	// A resource ID of 0 is a separator
+//	{
+//		GetToolbarData().push_back(nID);
+//	}
 
 	inline CContainer* CContainer::GetContainerFromIndex(int iPage)
 	{
@@ -2783,7 +2748,7 @@ namespace Win32xx
 	inline CWnd* CContainer::GetActiveView() const
 	{	
 		if (m_vTabPageInfo.size() > 0)
-			return m_pContainerParent->m_vTabPageInfo[m_iCurrentPage].pContainer->GetTabPage().GetView();
+			return m_pContainerParent->m_vTabPageInfo[m_iCurrentPage].pContainer->GetViewPage().GetView();
 		else
 			return NULL;
 	}
@@ -2843,20 +2808,20 @@ namespace Win32xx
 		TabPageInfo tbi = {0};
 		tbi.pContainer = this;
 		lstrcpy(tbi.szTitle, GetTabText());
-		tbi.iImage = ImageList_AddIcon(m_himlTab, GetTabIcon()); 
+		tbi.iImage = ImageList_AddIcon(GetImageList(), GetTabIcon()); 
 		m_vTabPageInfo.push_back(tbi);
 						
 		// Create the page window
-		m_TabPage.Create(m_hWnd);
+		GetViewPage().Create(m_hWnd);
 
 		// Create the toolbar
-		if (m_vToolbarData.size() > 0)
+		if (GetToolbarData().size() > 0)
 		{
-			GetToolbar().Create(m_TabPage.GetHwnd());
+			GetToolbar().Create(GetViewPage().GetHwnd());
 			DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
 			style |= CCS_NODIVIDER ;//| CCS_NORESIZE;
 			GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
-			int iButtons = GetToolbar().SetButtons(m_vToolbarData);
+			int iButtons = GetToolbar().SetButtons(GetToolbarData());
 
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
@@ -2891,117 +2856,6 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CContainer::Paint()
-	{	
-		// Microsoft's drawing for a tab control is rubbish, so we do our own.
-		// We use double buffering and regions to eliminate flicker
-
-		// Create the memory DC and bitmap
-		CDC dcMem = ::CreateCompatibleDC(NULL);
-		CRect rcClient = GetClientRect();
-		CDC dcView = GetDC();
-		dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
-
-		// Create a clipping region. Its the overall tab window's region,
-		//  less the region belonging to the individual tab view's client area
-		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
-		CRect rcTab = GetClientRect();
-		TabCtrl_AdjustRect(m_hWnd, FALSE, &rcTab);
-		if (rcTab.Height() < 0) rcTab.top = rcTab.bottom;
-		if (rcTab.Width() < 0) rcTab.left = rcTab.right;
-		
-		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
-		HRGN hrgnClip = ::CreateRectRgn(0, 0, 0, 0);
-		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF); 
-
-		// Use the region in the memory DC to paint the grey background
-		dcMem.AttachClipRegion(hrgnClip);
-		dcMem.CreateSolidBrush(RGB(230, 230, 230));
-		::PaintRgn(dcMem, hrgnClip);
-
-		// Draw the tab buttons:
-		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); ++i)
-		{
-			CRect rcItem;
-			TabCtrl_GetItemRect(m_hWnd, i, &rcItem);
-			if (i == TabCtrl_GetCurSel(m_hWnd))
-			{
-				dcMem.CreateSolidBrush(RGB(248,248,248));
-				SetBkColor(dcMem, RGB(248,248,248));
-			}
-			else
-			{
-				dcMem.CreateSolidBrush(RGB(200,200,200));
-				SetBkColor(dcMem, RGB(200,200,200));
-			}
-			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-			RoundRect(dcMem, rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
-
-			if (rcItem.Width() >= 24)
-			{
-				TCHAR szText[30];
-				TCITEM tcItem = {0};
-				tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
-				tcItem.cchTextMax = 30;
-				tcItem.pszText = szText;
-				TabCtrl_GetItem(m_hWnd, i, &tcItem);
-
-				// Draw the icon
-				ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+2, ILD_NORMAL);
-
-				// Draw the text
-				NONCLIENTMETRICS info = {0};
-				info.cbSize = sizeof(info);
-				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-				dcMem.CreateFontIndirect(&info.lfStatusFont);
-				CRect rcText = rcItem;
-				rcText.left += 24;
-				::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
-			}
-		}  
-
-		// Draw a lighter rectangle touching the tab buttons
-		CRect rcItem;
-		TabCtrl_GetItemRect(m_hWnd, 0, &rcItem);
-		int left = rcItem.left +1;
-		int right = rcTab.right -1;
-		int top = rcTab.bottom;
-		int bottom = top + 3;
-		dcMem.CreateSolidBrush(RGB(248,248,248));
-		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-		Rectangle(dcMem, left, top, right, bottom);
-
-		// Draw a darker line below the rectangle
-		dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-		MoveToEx(dcMem, left-1, bottom, NULL);
-		LineTo(dcMem, right, bottom);
-		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-
-		// Draw a lighter line below the rectangle for the selected tab
-		TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
-		OffsetRect(&rcItem, 1, 1);
-		MoveToEx(dcMem, rcItem.right, rcItem.top, NULL);
-		LineTo(dcMem, rcItem.left, rcItem.top);
-
-		// Now copy our from our memory DC to the window DC
-		dcMem.DetachClipRegion();
-		dcView.AttachClipRegion(hrgnClip);
-		BitBlt(dcView, 0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
-
-		// Cleanup
-		::DeleteObject(hrgnSrc1);
-		::DeleteObject(hrgnSrc2);
-		// hrgnClip is attached to dcView, so it will be deleted automatically
-	}
-
-	inline void CContainer::PreCreate(CREATESTRUCT& cs)
-	{
-		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM ;
-		cs.lpszClass = WC_TABCONTROL;
-
-	//	cs.dwExStyle = WS_EX_COMPOSITED;
-	}
-
 	inline void CContainer::RemoveContainer(CContainer* pWnd)
 	{
 		if (this == pWnd)
@@ -3034,7 +2888,7 @@ namespace Win32xx
 		}
 
 		// Set the parent container relationships
-		pWnd->GetTabPage().SetParent(pWnd->GetHwnd());
+		pWnd->GetViewPage().SetParent(pWnd->GetHwnd());
 		pWnd->m_pContainerParent = pWnd;
 
 		// Display the first page
@@ -3052,7 +2906,7 @@ namespace Win32xx
 			if (!m_vTabPageInfo[iPage].pContainer->IsWindow())
 			{
 				m_vTabPageInfo[iPage].pContainer->Create(GetParent());
-				m_vTabPageInfo[iPage].pContainer->GetTabPage().SetParent(m_hWnd);
+				m_vTabPageInfo[iPage].pContainer->GetViewPage().SetParent(m_hWnd);
 			}
 			
 			// Determine the size of the tab page's view area
@@ -3060,9 +2914,9 @@ namespace Win32xx
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 
 			// Swap the pages over
-			m_vTabPageInfo[m_iCurrentPage].pContainer->GetTabPage().ShowWindow(SW_HIDE);
-			m_vTabPageInfo[iPage].pContainer->GetTabPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-			m_vTabPageInfo[iPage].pContainer->GetTabPage().GetView()->SetFocus();
+			m_vTabPageInfo[m_iCurrentPage].pContainer->GetViewPage().ShowWindow(SW_HIDE);
+			m_vTabPageInfo[iPage].pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			m_vTabPageInfo[iPage].pContainer->GetViewPage().GetView()->SetFocus();
 
 			// Adjust the docking caption
 			if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0, 0))
@@ -3084,15 +2938,9 @@ namespace Win32xx
 		SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
 	}
 
-	inline void CContainer::SetTabIcon(UINT nID_Icon)
-	{
-		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
-		SetTabIcon(hIcon);
-	}
-
 	inline void CContainer::SetView(CWnd& Wnd)
 	{
-		GetTabPage().SetView(Wnd);
+		GetViewPage().SetView(Wnd);
 	}
 
 	inline LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -3127,7 +2975,7 @@ namespace Win32xx
 					// Position the View over the tab control's display area
 					CRect rc = GetClientRect();
 					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
-					m_vTabPageInfo[m_iCurrentPage].pContainer->GetTabPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+					m_vTabPageInfo[m_iCurrentPage].pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 				} 			
 			}
 			break;

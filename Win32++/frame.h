@@ -218,6 +218,7 @@ namespace Win32xx
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
+		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		CWnd* GetView() const		{return m_pView;}
 		tString GetMRUEntry(int nIndex);
 		void SetFrameMenu(INT ID_MENU);
@@ -276,9 +277,6 @@ namespace Win32xx
 			HMENU hSubMenu;
 		};
 
-		std::vector<UINT> m_ToolbarData;	// vector of resource IDs for toolbar buttons
-		std::vector<ItemData*> m_vpItemData;// vector of ItemData pointers
-		std::vector<UINT> m_MenuData;		// vector of menu icon resource IDs
 		BOOL m_bIsMDIFrame;					// TRUE if this is a MDI frame
         BOOL m_bShowIndicatorStatus;		// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
@@ -292,6 +290,9 @@ namespace Win32xx
 	private:
 		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
 
+		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers
+		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
+		std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
 		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
 		CMenubar m_Menubar;					// CMenubar object
 		CRebar m_Rebar;						// CRebar object
@@ -1365,10 +1366,10 @@ namespace Win32xx
 
 	inline CFrame::~CFrame()
 	{
-		for (UINT nItem = 0; nItem < m_vpItemData.size(); ++nItem)
+		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 		{
 			// These are normally deleted in OnFrameExitMenuLoop
-			delete m_vpItemData[nItem];
+			delete m_vMenuItemData[nItem];
 		}
 
 		if (m_hMenu) ::DestroyMenu(m_hMenu);
@@ -1388,12 +1389,12 @@ namespace Win32xx
 		{
 			if (m_himlMenu) ImageList_Destroy(m_himlMenu);
 			m_himlMenu = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 1, 0);
-			m_MenuData.clear();
+			m_vMenuIcons.clear();
 		}
 
         if (ImageList_AddIcon(m_himlMenu, hIcon) != -1)
 		{
-			m_MenuData.push_back(nID_MenuItem);
+			m_vMenuIcons.push_back(nID_MenuItem);
 
 			// Recreate the Disabled imagelist
 			if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
@@ -1425,7 +1426,7 @@ namespace Win32xx
 		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 
 		if ((0 == iImages) || (NULL == hbm))
-			return (int)m_MenuData.size();	// No valid images, so nothing to do!
+			return (int)m_vMenuIcons.size();	// No valid images, so nothing to do!
 
 		BITMAP bm = {0};
 		::GetObject(hbm, sizeof(BITMAP), &bm);
@@ -1436,7 +1437,7 @@ namespace Win32xx
 		if (NULL == m_himlMenu)
 		{
 			m_himlMenu = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
-			m_MenuData.clear();
+			m_vMenuIcons.clear();
 		}
 		else
 		{
@@ -1452,17 +1453,17 @@ namespace Win32xx
 				m_himlMenu = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 				ImageList_Destroy(m_himlMenuDis);
 				m_himlMenuDis = NULL;
-				m_MenuData.clear();
+				m_vMenuIcons.clear();
 				TRACE(_T("WARNING: Discarded old menu icons\n"));
 			}
 		}
 
-		// Add the resource IDs to the m_MenuData vector
+		// Add the resource IDs to the m_vMenuIcons vector
 		for (unsigned int j = 0 ; j < MenuData.size(); ++j)
 		{
 			if (MenuData[j] != 0)
 			{
-				m_MenuData.push_back(MenuData[j]);
+				m_vMenuIcons.push_back(MenuData[j]);
 			}
 		}
 
@@ -1503,7 +1504,7 @@ namespace Win32xx
 		}
 
 		// return the number of menu icons
-		return (int)m_MenuData.size();
+		return (int)m_vMenuIcons.size();
 	}
 
 	inline void CFrame::AddMenubarBand()
@@ -1584,7 +1585,7 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		m_ToolbarData.push_back(nID);
+		m_vToolbarData.push_back(nID);
 	}
 
 	inline void CFrame::AdjustFrameRect(RECT rcView) const
@@ -1693,9 +1694,9 @@ namespace Win32xx
 
 		// get the icon's location in the imagelist
 		int iImage = -1;
-		for (UINT i = 0 ; i < m_MenuData.size(); ++i)
+		for (UINT i = 0 ; i < m_vMenuIcons.size(); ++i)
 		{
-			if (pdis->itemID == m_MenuData[i])
+			if (pdis->itemID == m_vMenuIcons[i])
 				iImage = i;
 		}
 
@@ -1967,14 +1968,14 @@ namespace Win32xx
 		UpdateMRUMenu();
 
 		// Set the toolbar data
-		int iButtons = GetToolbar().SetButtons(m_ToolbarData);
+		int iButtons = GetToolbar().SetButtons(m_vToolbarData);
 
 		// Set the toolbar images
 		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 		SetToolbarImages(GetToolbar(), iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 
 		// Set the icons for popup menu items
-		SetMenuIcons(m_ToolbarData, RGB(192, 192, 192), IDW_MAIN, 0);
+		SetMenuIcons(m_vToolbarData, RGB(192, 192, 192), IDW_MAIN, 0);
 
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, m_hMenu);
@@ -2093,7 +2094,7 @@ namespace Win32xx
 
 	inline void CFrame::OnFrameExitMenuLoop()
 	{
-		for (UINT nItem = 0; nItem < m_vpItemData.size(); ++nItem)
+		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 		{
 			// Undo OwnerDraw and put the text back
 			MENUITEMINFO mii = {0};
@@ -2105,16 +2106,16 @@ namespace Win32xx
 				mii.cbSize = sizeof(MENUITEMINFO);
 
 			mii.fMask = MIIM_TYPE | MIIM_DATA;
-			mii.fType = m_vpItemData[nItem]->fType;
-			mii.dwTypeData = m_vpItemData[nItem]->Text;
-			mii.cch = lstrlen(m_vpItemData[nItem]->Text);
+			mii.fType = m_vMenuItemData[nItem]->fType;
+			mii.dwTypeData = m_vMenuItemData[nItem]->Text;
+			mii.cch = lstrlen(m_vMenuItemData[nItem]->Text);
 			mii.dwItemData = 0;
-			::SetMenuItemInfo(m_vpItemData[nItem]->hMenu, m_vpItemData[nItem]->nPos, TRUE, &mii);
+			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
 
 			// Delete the ItemData object, then erase the vector item
-			delete m_vpItemData[nItem];
+			delete m_vMenuItemData[nItem];
 		}
-		m_vpItemData.clear();
+		m_vMenuItemData.clear();
 	}
 
 	inline void CFrame::OnFrameClose()
@@ -2218,7 +2219,7 @@ namespace Win32xx
 					lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
 					mii.dwItemData = (DWORD_PTR)pItem;
 
-					m_vpItemData.push_back(pItem);			// Store pItem in m_vpItemData
+					m_vMenuItemData.push_back(pItem);		// Store pItem in m_vMenuItemData
 					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 				}
 			}
@@ -2651,7 +2652,7 @@ namespace Win32xx
 		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
 		m_himlMenu = NULL;
 		m_himlMenuDis = NULL;
-		m_MenuData.clear();
+		m_vMenuIcons.clear();
 
 		// Exit if no ToolbarID is specified
 		if (ToolbarID == 0) return 0;
