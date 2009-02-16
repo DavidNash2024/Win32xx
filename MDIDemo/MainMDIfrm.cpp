@@ -120,7 +120,7 @@ void CMainMDIFrame::OnCreate()
 	// call the base class function
 	CMDIFrame::OnCreate();
 
-	SetButtons(m_ToolbarData);
+	SetButtons(GetToolbarData());
 
 	// Configure the "New" toolbar button to bring up a menu
 	// Setting this style requires comctl32.dll version 4.72 or later

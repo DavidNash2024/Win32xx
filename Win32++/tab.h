@@ -76,19 +76,25 @@ namespace Win32xx
 		CTab();
 		virtual ~CTab();
 		virtual void AddToolbarButton(UINT nID);
+		virtual SIZE GetMaxTabTextSize();
 		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
 		virtual CToolbar& GetToolbar() const	{ return GetViewPage().GetToolbar(); }	
+		virtual void OnCreate();
 		virtual void Paint();
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void SetTabSize();
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
 		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
+		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
+		void SetView(CWnd& Wnd) 		{ GetViewPage().SetView(Wnd); }
 			
 	private:
 		std::vector<UINT> m_vToolbarData;
@@ -117,6 +123,63 @@ namespace Win32xx
 	{
 		GetToolbarData().push_back(nID);
 	}
+
+	inline SIZE CTab::GetMaxTabTextSize()
+	{
+		CSize Size;
+
+		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
+		{
+			CSize TempSize;
+			CDC dc = GetDC();
+			NONCLIENTMETRICS info = {0};
+			info.cbSize = sizeof(info);
+			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			dc.CreateFontIndirect(&info.lfStatusFont);
+			TCHAR szTitle[32];
+			TCITEM tcItem = {0};
+			tcItem.mask = TCIF_TEXT;
+			tcItem.cchTextMax = 32;
+			tcItem.pszText = szTitle;
+			TabCtrl_GetItem(m_hWnd, i, &tcItem);
+			GetTextExtentPoint32(dc, szTitle, lstrlen(szTitle), &TempSize);
+			if (TempSize.cx > Size.cx)
+				Size = TempSize;
+		}
+
+		return Size;
+	}
+
+	inline void CTab::OnCreate()
+	{		
+		if (NULL == GetView())
+			throw CWinException(_T("CTab::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
+
+		// Create the page window
+		GetViewPage().Create(m_hWnd);
+
+		// Create the toolbar
+		if (GetToolbarData().size() > 0)
+		{
+			GetToolbar().Create(GetViewPage().GetHwnd());
+			DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
+			style |= CCS_NODIVIDER ;//| CCS_NORESIZE;
+			GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
+			int iButtons = GetToolbar().SetButtons(GetToolbarData());
+
+			// Set the toolbar images
+			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
+			GetToolbar().SetImages(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
+			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+		}
+
+		TCITEM tie = {0};
+		tie.mask = TCIF_TEXT | TCIF_IMAGE;
+		tie.iImage = 0;
+		tie.pszText = (LPTSTR)m_tsTabText.c_str();
+		TabCtrl_InsertItem(m_hWnd, 0, &tie);
+	}
+
 
 	inline void CTab::Paint()
 	{	
@@ -231,6 +294,119 @@ namespace Win32xx
 	{
 		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
 		SetTabIcon(hIcon);
+	}
+
+	inline void CTab::SetTabSize()
+	{
+		CRect rc = GetClientRect();
+		TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+		int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/TabCtrl_GetItemCount(m_hWnd));
+		SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
+	}
+
+	inline LRESULT CTab::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch(uMsg)
+		{
+		case WM_PAINT:
+			{
+				// Remove all pending paint requests
+				PAINTSTRUCT ps;
+				::BeginPaint(hWnd, &ps);
+				::EndPaint(hWnd, &ps);
+
+				// Now call our local Paint
+				Paint();
+			}
+			return 0;
+		case WM_ERASEBKGND:
+			return 0;
+		case WM_SIZE:
+			{
+		//		if ((int)m_vTabPageInfo.size() > m_iCurrentPage)
+		//		{				
+					// Set the tab sizes
+					SetTabSize();
+
+					// Position the View over the tab control's display area
+					CRect rc = GetClientRect();
+					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
+		//			m_vTabPageInfo[m_iCurrentPage].pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+					GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+		//		} 			
+			}
+		//	break;
+			return 0;
+		}
+
+		// pass unhandled messages on for default processing
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
+	///////////////////////////////////////////
+	// Declaration of the nested CViewPage class
+	inline BOOL CTab::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
+	{
+		return (BOOL)::SendMessage(GetParent(), WM_COMMAND, wParam, lParam);
+	}
+
+	inline void CTab::CViewPage::OnCreate()
+	{
+		m_pView->Create(m_hWnd);
+	}
+
+	inline void CTab::CViewPage::PreRegisterClass(WNDCLASS &wc)
+	{
+		wc.lpszClassName = _T("Win32++ TabPage");
+		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+	}
+
+	inline void CTab::CViewPage::RecalcLayout()
+	{
+		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+		CRect rc = GetClientRect();
+		CRect rcToolbar = m_Toolbar.GetClientRect();
+		rc.top += rcToolbar.Height();
+		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+	}
+
+	inline void CTab::CViewPage::SetView(CWnd& wndView)
+	// Sets or changes the View window displayed within the frame
+	{
+		// Assign the view window
+		m_pView = &wndView;
+
+		if (m_hWnd)
+		{
+			// The container is already created, so create and position the new view too
+			GetView()->Create(m_hWnd);
+			RecalcLayout();
+		}
+	}
+
+	inline LRESULT CTab::CViewPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_SIZE:
+			RecalcLayout();
+			break;
+		case WM_NOTIFY:
+			switch (((LPNMHDR)lParam)->code)
+			{
+			// Send the focus change notifications to the grandparent
+			case NM_KILLFOCUS:
+			case NM_SETFOCUS:
+			case UWM_FRAMELOSTFOCUS:
+				::SendMessage(::GetParent(GetParent()), WM_NOTIFY, wParam, lParam);
+				break;
+			}
+
+			break;
+		}
+
+		// pass unhandled messages on for default processing
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 }

@@ -8,7 +8,7 @@
 
 
 #include "../Win32++/listview.h"
-#include "../Win32++/dockable.h"
+#include "../Win32++/tab.h"
 #include "resource.h"
 
 
@@ -28,7 +28,7 @@ private:
 
 };
 
-class CContainFiles : public CContainer
+class CContainFiles : public CTab
 {
 public:
 	CContainFiles(); 

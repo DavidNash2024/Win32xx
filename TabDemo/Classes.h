@@ -9,7 +9,7 @@
 
 #include "../Win32++/mdi.h"
 #include "../Win32++/treeview.h"
-#include "../Win32++/dockable.h"
+#include "../Win32++/tab.h"
 #include "resource.h"
 
 
@@ -26,7 +26,7 @@ private:
 	
 };
 
-class CContainClasses : public CContainer
+class CContainClasses : public CTab
 {
 public:
 	CContainClasses();

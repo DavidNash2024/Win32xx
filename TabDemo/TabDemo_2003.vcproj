@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="ContainerDemo"
+	Name="TabDemo"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -25,7 +25,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Debug/ContainerDemo.pch"
+				PrecompiledHeaderFile=".\Debug/TabDemo.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -37,10 +37,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Debug/ContainerDemo.exe"
+				OutputFile=".\Debug/TabDemo.exe"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/ContainerDemo.pdb"
+				ProgramDatabaseFile=".\Debug/TabDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -49,7 +49,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/ContainerDemo.tlb"
+				TypeLibraryName=".\Debug/TabDemo.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -88,7 +88,7 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\Release/ContainerDemo.pch"
+				PrecompiledHeaderFile=".\Release/TabDemo.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -99,10 +99,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Release/ContainerDemo.exe"
+				OutputFile=".\Release/TabDemo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/ContainerDemo.pdb"
+				ProgramDatabaseFile=".\Release/TabDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -111,7 +111,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/ContainerDemo.tlb"
+				TypeLibraryName=".\Release/TabDemo.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -253,7 +253,7 @@
 				RelativePath="..\Win32++\Statusbar.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\tabctrl.h">
+				RelativePath="..\Win32++\tab.h">
 			</File>
 			<File
 				RelativePath="..\Win32++\Toolbar.h">

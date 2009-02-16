@@ -610,6 +610,7 @@ namespace Win32xx
 	//
 	class CWnd
 	{
+	friend class CMDIChild;
 
 	public:
 		CWnd();				// Constructor
@@ -660,8 +661,8 @@ namespace Win32xx
 		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pWndParent) const;
-		virtual BOOL IsContainer() const;
-		virtual BOOL IsDockable() const;
+		virtual BOOL IsContainer() const { return FALSE; }
+		virtual BOOL IsDockable() const  { return FALSE; }
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;
@@ -740,11 +741,8 @@ namespace Win32xx
 		HICON SetIconLarge(int nIcon);
 		HICON SetIconSmall(int nIcon);
 
-
-		CREATESTRUCT m_cs;		// defines initialisation parameters for PreCreate and Create
-		HWND m_hWnd;			// handle to this object's window
-		WNDCLASS m_wc;			// defines initialisation parameters for RegisterClass
-		CWinApp* pWinApp;
+		
+		HWND m_hWnd;				// handle to this object's window
 
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
@@ -752,6 +750,8 @@ namespace Win32xx
 		BOOL RemoveFromMap();
 		void Subclass();
 
+		WNDCLASS m_wc;				// defines initialisation parameters for RegisterClass
+		CREATESTRUCT m_cs;			// defines initialisation parameters for PreCreate and Create
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
@@ -1051,7 +1051,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd() : m_hWnd(NULL), pWinApp(NULL), m_hIconLarge(NULL),
+	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL),
 					m_hIconSmall(NULL), m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
@@ -1589,16 +1589,6 @@ namespace Win32xx
 	// of a parent window's CWnd.
 	{
 		return ::IsChild(pWndParent->GetHwnd(), m_hWnd);
-	}
-
-	inline BOOL CWnd::IsContainer() const 
-	{
-		return (BOOL)SendMessage(UWM_IS_CONTAINER);
-	}
-
-	inline BOOL CWnd::IsDockable() const
-	{
-		return (BOOL)SendMessage(UWM_IS_DOCKABLE);
 	}
 
 	inline BOOL CWnd::IsEnabled() const

@@ -70,8 +70,6 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-
-	m_Classes.AddContainer(&m_Files);	
 }
 
 void CMainFrame::OnInitialUpdate()
