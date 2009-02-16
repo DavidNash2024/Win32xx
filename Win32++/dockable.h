@@ -476,6 +476,9 @@ namespace Win32xx
 				}
 				break;
 
+			case WM_ERASEBKGND:
+				return 0;
+
 			case WM_LBUTTONDOWN:
 				{
 					if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
@@ -2224,7 +2227,9 @@ namespace Win32xx
 	{
 		CRect rc = GetDockAncestor()->GetWindowRect();
 		MapWindowPoints(NULL, GetDockAncestor()->GetHwnd(), (LPPOINT)&rc, 2);
+		GetDockAncestor()->SetRedraw(FALSE);
 		GetDockAncestor()->RecalcDockChildLayout(rc);
+		GetDockAncestor()->SetRedraw(TRUE);
 		GetDockAncestor()->RedrawWindow();
 	}
 
@@ -2608,71 +2613,6 @@ namespace Win32xx
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
-	///////////////////////////////////////////
-	// Declaration of the nested CViewPage class
-	inline BOOL CTab::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
-	{
-		return (BOOL)::SendMessage(GetParent(), WM_COMMAND, wParam, lParam);
-	}
-
-	inline void CTab::CViewPage::OnCreate()
-	{
-		m_pView->Create(m_hWnd);
-	}
-
-	inline void CTab::CViewPage::PreRegisterClass(WNDCLASS &wc)
-	{
-		wc.lpszClassName = _T("Win32++ TabPage");
-		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
-	}
-
-	inline void CTab::CViewPage::RecalcLayout()
-	{
-		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
-		CRect rc = GetClientRect();
-		CRect rcToolbar = m_Toolbar.GetClientRect();
-		rc.top += rcToolbar.Height();
-		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-	}
-
-	inline void CTab::CViewPage::SetView(CWnd& wndView)
-	// Sets or changes the View window displayed within the frame
-	{
-		// Assign the view window
-		m_pView = &wndView;
-
-		if (m_hWnd)
-		{
-			// The container is already created, so create and position the new view too
-			GetView()->Create(m_hWnd);
-			RecalcLayout();
-		}
-	}
-
-	inline LRESULT CTab::CViewPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		switch (uMsg)
-		{
-		case WM_SIZE:
-			RecalcLayout();
-			break;
-		case WM_NOTIFY:
-			switch (((LPNMHDR)lParam)->code)
-			{
-			// Send the focus change notifications to the grandparent
-			case NM_KILLFOCUS:
-			case NM_SETFOCUS:
-			case UWM_FRAMELOSTFOCUS:
-				::SendMessage(::GetParent(GetParent()), WM_NOTIFY, wParam, lParam);
-				break;
-			}
-
-			break;
-		}
-
-		// pass unhandled messages on for default processing
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
-	}
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class

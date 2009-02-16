@@ -43,6 +43,7 @@
 #define TAB_H
 
 #include "wincore.h"
+#include "Default_Resource.h"
 
 namespace Win32xx
 {
