@@ -279,7 +279,7 @@ void CMainFrame::SaveDockables()
 			std::vector<TabPageInfo>::iterator iter3;
 			for (iter3 = v3.begin()+1; iter3 != v3.end(); ++iter3)
 			{
-				CDockable* pDockContainerChild = pDock->GetDockFromView((*iter3).pContainer);
+				CDockable* pDockContainerChild = pDock->GetDockFromView((*iter3).pWnd);
 				DockedInfo di = {0};
 				di.DockParentID = pDock->GetDockID();
 				di.DockID = pDockContainerChild->GetDockID();

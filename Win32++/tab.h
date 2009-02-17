@@ -47,6 +47,14 @@
 
 namespace Win32xx
 {
+
+	struct TabPageInfo
+	{
+		TCHAR szTitle[MAX_MENU_STRING];
+		int iImage;
+		CWnd* pWnd;
+	};
+
 	class CTab : public CWnd
 	{
 		// Nested class. This is the Wnd for the window displayed over the client area
@@ -96,6 +104,22 @@ namespace Win32xx
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
 		void SetView(CWnd& Wnd) 		{ GetViewPage().SetView(Wnd); }
+
+		// Wrappers for Win32 Macros
+		void AdjustRect(BOOL fLarger, RECT *prc);
+		BOOL DeleteAllItems();
+		BOOL DeleteItem(int iItem);
+		int  GetCurFocus();
+		int  GetCurSel();
+		BOOL GetItem(int iItem, LPTCITEM pitem);
+		int  GetItemCount();
+		int  InsertItem(int iItem, const LPTCITEM pitem);
+		int  SetCurFocus(int iItem);
+		int  SetCurSel(int iItem);
+		BOOL SetItem(int iItem, LPTCITEM pitem);
+		DWORD SetItemSize(int cx, int cy);
+		int  SetMinTabWidth(int cx);
+		void SetPadding(int cx, int cy);
 			
 	private:
 		std::vector<UINT> m_vToolbarData;
@@ -106,7 +130,9 @@ namespace Win32xx
 		
 	};
 
-
+	//////////////////////////////////////////////////////////
+	// Definitions for the CTab class
+	//
 	inline CTab::CTab() : m_hTabIcon(0)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
@@ -123,6 +149,41 @@ namespace Win32xx
 	// A resource ID of 0 is a separator
 	{
 		GetToolbarData().push_back(nID);
+	}
+
+	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
+	{
+		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
+	}
+
+	inline BOOL CTab::DeleteAllItems()
+	{
+		return TabCtrl_DeleteAllItems(m_hWnd);
+	}
+
+	inline BOOL CTab::DeleteItem(int iItem)
+	{
+		return TabCtrl_DeleteItem(m_hWnd, iItem);
+	}
+
+	inline int CTab::GetCurFocus()
+	{
+		return TabCtrl_GetCurFocus(m_hWnd);
+	}
+
+	inline int CTab::GetCurSel()
+	{
+		return TabCtrl_GetCurSel(m_hWnd);
+	}
+
+	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem)
+	{
+		return TabCtrl_GetItem(m_hWnd, iItem, pitem);
+	}
+
+	inline int CTab::GetItemCount()
+	{
+		return TabCtrl_GetItemCount(m_hWnd);
 	}
 
 	inline SIZE CTab::GetMaxTabTextSize()
@@ -149,6 +210,11 @@ namespace Win32xx
 		}
 
 		return Size;
+	}
+
+	inline int CTab::InsertItem(int iItem, const LPTCITEM pitem)
+	{
+		return TabCtrl_InsertItem(m_hWnd, iItem, pitem);
 	}
 
 	inline void CTab::OnCreate()
@@ -289,6 +355,36 @@ namespace Win32xx
 	{
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM ;
 		cs.lpszClass = WC_TABCONTROL;
+	}
+
+	inline int CTab::SetCurFocus(int iItem)
+	{
+		return TabCtrl_SetCurFocus(m_hWnd, iItem);
+	}
+	
+	inline int CTab::SetCurSel(int iItem)
+	{
+		return TabCtrl_SetCurSel(m_hWnd, iItem);
+	}
+
+	inline BOOL CTab::SetItem(int iItem, LPTCITEM pitem)
+	{
+		return TabCtrl_SetItem(m_hWnd, iItem, pitem);
+	}
+
+	inline DWORD CTab::SetItemSize(int cx, int cy)
+	{
+		return TabCtrl_SetItemSize(m_hWnd, cx, cy);
+	}
+
+	inline int CTab::SetMinTabWidth(int cx)
+	{
+		return TabCtrl_SetMinTabWidth(m_hWnd, cx);
+	}
+
+	inline void CTab::SetPadding(int cx, int cy)
+	{
+		TabCtrl_SetPadding(m_hWnd, cx, cy);
 	}
 
 	inline void CTab::SetTabIcon(UINT nID_Icon)
