@@ -7,12 +7,12 @@
 #include "Mainfrm.h"
 
 
-// Declaration of the CContainerApp class
-class CContainerApp : public CWinApp
+// Declaration of the CTabDemoApp class
+class CTabDemoApp : public CWinApp
 {
 public:
-	CContainerApp();
-	virtual ~CContainerApp();
+	CTabDemoApp();
+	virtual ~CTabDemoApp();
 	virtual BOOL InitInstance();
 	CMainFrame& GetMainFrame() { return m_Frame; }
 
@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CContainerApp object
-inline CContainerApp& GetContainerApp() { return *((CContainerApp*)GetApp()); }
+// returns a reference to the CTabDemoApp object
+inline CTabDemoApp& GetTabDemoApp() { return *((CTabDemoApp*)GetApp()); }
 
 
 #endif // CONTAINERAPP_H

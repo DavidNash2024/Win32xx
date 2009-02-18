@@ -3,7 +3,7 @@
 //  Definitions for CViewClasses
 
 
-#include "ContainerApp.h"
+#include "TabDemoApp.h"
 #include "Classes.h"
 #include "resource.h"
 

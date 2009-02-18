@@ -77,7 +77,12 @@ namespace Win32xx
 {
 
 	class CContainer;
-
+	struct ContainerInfo
+	{
+		TCHAR szTitle[MAX_MENU_STRING];
+		int iImage;
+		CContainer* pContainer;
+	};
 
 	///////////////////////////////////////
 	// Declaration of the CContainer class
@@ -103,7 +108,7 @@ namespace Win32xx
 		// Attributes				
 		CContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
 		CWnd* GetActiveView() const;
-		std::vector<TabPageInfo>& GetAllContainers() const {return m_pContainerParent->m_vTabPageInfo;}
+		std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
 		CContainer* GetContainerParent() { return m_pContainerParent; }
 		tString GetDockCaption() const	{ return m_tsCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
@@ -124,6 +129,7 @@ namespace Win32xx
 
 	private:
 		std::vector<UINT> m_vToolbarData;
+		std::vector<ContainerInfo> m_vContainerInfo;
 		tString m_tsTabText;
 		tString m_tsCaption;
 		int m_iCurrentPage;
@@ -1723,12 +1729,12 @@ namespace Win32xx
 			if (pContainerSource->GetAllContainers().size() > 1)
 			{
 				// The container we're about to add has children, so transfer those first
-				std::vector<TabPageInfo>::reverse_iterator riter;
-				std::vector<TabPageInfo> AllContainers = pContainerSource->GetAllContainers();
+				std::vector<ContainerInfo>::reverse_iterator riter;
+				std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
 				for ( riter = AllContainers.rbegin() ; riter < AllContainers.rend() -1; ++riter )
 				{
 					// Remove child container from pContainerSource
-					CContainer* pContainerChild = (CContainer*)(*riter).pWnd;
+					CContainer* pContainerChild = (*riter).pContainer;
 					pContainerChild->ShowWindow(SW_HIDE);
 					pContainerSource->RemoveContainer(pContainerChild);
 					
@@ -2427,13 +2433,13 @@ namespace Win32xx
 			// Choose a new dockable from among the dockables for child containers
 			CDockable* pDockOld = GetDockFromView(pContainer);
 			CDockable* pDockNew = 0;
-			std::vector<TabPageInfo>::iterator iter;
-			std::vector<TabPageInfo> AllContainers = pContainer->GetAllContainers();
+			std::vector<ContainerInfo>::iterator iter;
+			std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
 			for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
 			{
-				if ((*iter).pWnd != pContainer)
+				if ((*iter).pContainer != pContainer)
 				{
-					pDockNew = (CDockable*)FromHandle(::GetParent((*iter).pWnd->GetParent()));	
+					pDockNew = (CDockable*)FromHandle(::GetParent((*iter).pContainer->GetParent()));	
 					break;
 				}
 			}
@@ -2444,9 +2450,9 @@ namespace Win32xx
 				CContainer* pContainerNew = (CContainer*)pDockNew->GetView();
 				for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
 				{
-					if ((*iter).pWnd != pContainer)
+					if ((*iter).pContainer != pContainer)
 					{
-						CContainer* pChildContainer = (CContainer*)(*iter).pWnd;
+						CContainer* pChildContainer = (CContainer*)(*iter).pContainer;
 						pContainer->RemoveContainer(pChildContainer);
 						if (pContainerNew != pChildContainer)
 						{
@@ -2642,20 +2648,20 @@ namespace Win32xx
 	{
 		if (this == m_pContainerParent)
 		{
-			TabPageInfo tbi = {0};
-			tbi.pWnd = pContainer;
-			lstrcpy(tbi.szTitle, pContainer->GetTabText());
-			tbi.iImage = ImageList_AddIcon(GetImageList(), pContainer->GetTabIcon());
-			int iNewPage = m_vTabPageInfo.size();
-			m_vTabPageInfo.push_back(tbi);		
+			ContainerInfo ci = {0};
+			ci.pContainer = pContainer;
+			lstrcpy(ci.szTitle, pContainer->GetTabText());
+			ci.iImage = ImageList_AddIcon(GetImageList(), pContainer->GetTabIcon());
+			int iNewPage = m_vContainerInfo.size();
+			m_vContainerInfo.push_back(ci);		
 
 			if (m_hWnd)
 			{
 				TCITEM tie = {0};
 				tie.mask = TCIF_TEXT | TCIF_IMAGE;
-				tie.iImage = tbi.iImage;
-				tie.pszText = m_vTabPageInfo[iNewPage].szTitle;
-				TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
+				tie.iImage = ci.iImage;
+				tie.pszText = m_vContainerInfo[iNewPage].szTitle;
+				InsertItem(iNewPage, &tie);
 
 				SetTabSize();
 			}
@@ -2679,17 +2685,17 @@ namespace Win32xx
 
 	inline CContainer* CContainer::GetContainerFromIndex(int iPage)
 	{
-		if ((iPage >= 0) && (iPage < (int)m_vTabPageInfo.size()))
-			return (CContainer*)m_vTabPageInfo[iPage].pWnd;
+		if ((iPage >= 0) && (iPage < (int)m_vContainerInfo.size()))
+			return (CContainer*)m_vContainerInfo[iPage].pContainer;
 		else
 			return NULL;
 	}
 
 	inline CWnd* CContainer::GetActiveView() const
 	{	
-		if (m_vTabPageInfo.size() > 0)
+		if (m_vContainerInfo.size() > 0)
 		{
-			CContainer* pActiveContainer = (CContainer*)m_pContainerParent->m_vTabPageInfo[m_iCurrentPage].pWnd;
+			CContainer* pActiveContainer = m_pContainerParent->m_vContainerInfo[m_iCurrentPage].pContainer;
 			return pActiveContainer->GetViewPage().GetView();
 		}
 		else
@@ -2698,11 +2704,11 @@ namespace Win32xx
 
 	inline CContainer* CContainer::GetContainerFromView(CWnd* pView) const
 	{
-		std::vector<TabPageInfo>::iterator iter;
+		std::vector<ContainerInfo>::iterator iter;
 		CContainer* pViewContainer = 0;
 		for (iter = GetAllContainers().begin(); iter != GetAllContainers().end(); ++iter)
 		{
-			CContainer* pContainer = (CContainer*)(*iter).pWnd;
+			CContainer* pContainer = (*iter).pContainer;
 			if (pContainer->GetView() == pView)
 				pViewContainer = pContainer;
 		}
@@ -2712,9 +2718,9 @@ namespace Win32xx
 
 	inline int CContainer::GetContainerIndex(CContainer* pContainer)
 	{
-		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
+		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
 		{
-			if (m_vTabPageInfo[i].pWnd == pContainer)
+			if (m_vContainerInfo[i].pContainer == pContainer)
 				return i;
 		}
 
@@ -2725,10 +2731,10 @@ namespace Win32xx
 	{
 		CSize Size;
 
-		// Allocate an iterator for the TabPageInfo vector
-		std::vector<TabPageInfo>::iterator iter;
+		// Allocate an iterator for the ContainerInfo vector
+		std::vector<ContainerInfo>::iterator iter;
 
-		for (iter = m_vTabPageInfo.begin(); iter != m_vTabPageInfo.end(); ++iter)
+		for (iter = m_vContainerInfo.begin(); iter != m_vContainerInfo.end(); ++iter)
 		{
 			CSize TempSize;
 			CDC dc = GetDC();
@@ -2749,11 +2755,11 @@ namespace Win32xx
 		if (NULL == GetView())
 			throw CWinException(_T("CContainer::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
 
-		TabPageInfo tbi = {0};
-		tbi.pWnd = this;
-		lstrcpy(tbi.szTitle, GetTabText());
-		tbi.iImage = ImageList_AddIcon(GetImageList(), GetTabIcon()); 
-		m_vTabPageInfo.push_back(tbi);
+		ContainerInfo ci = {0};
+		ci.pContainer = this;
+		lstrcpy(ci.szTitle, GetTabText());
+		ci.iImage = ImageList_AddIcon(GetImageList(), GetTabIcon()); 
+		m_vContainerInfo.push_back(ci);
 						
 		// Create the page window
 		GetViewPage().Create(m_hWnd);
@@ -2773,14 +2779,14 @@ namespace Win32xx
 			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
 		}
 
-		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
+		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
 		{
 			// Add tabs for each view.
 			TCITEM tie = {0};
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = i;
-			tie.pszText = m_vTabPageInfo[i].szTitle;
-			TabCtrl_InsertItem(m_hWnd, i, &tie);
+			tie.pszText = m_vContainerInfo[i].szTitle;
+			InsertItem(i, &tie);
 		}
 	}
 
@@ -2791,7 +2797,7 @@ namespace Win32xx
 		case TCN_SELCHANGE:
 			{
 				// Display the newly selected tab page
-				int iPage = TabCtrl_GetCurSel(m_hWnd);
+				int iPage = GetCurSel();
 				SelectPage(iPage);
 			}
 			break;
@@ -2812,21 +2818,21 @@ namespace Win32xx
 		int iTab = GetContainerIndex(pWnd);
 		if (iTab > 0)
 		{
-			TabCtrl_DeleteItem(m_hWnd, iTab);
+			DeleteItem(iTab);
 		}
 	
-		// Remove the tabPageInfo entry
-		std::vector<TabPageInfo>::iterator iter;
+		// Remove the ContainerInfo entry
+		std::vector<ContainerInfo>::iterator iter;
 		int iImage = -1;
-		for (iter = m_vTabPageInfo.begin(); iter != m_vTabPageInfo.end(); ++iter)
+		for (iter = m_vContainerInfo.begin(); iter != m_vContainerInfo.end(); ++iter)
 		{
-			if (iter->pWnd == pWnd)
+			if (iter->pContainer == pWnd)
 			{
 				iImage = (*iter).iImage;
 				if (iImage >= 0) 
 					TabCtrl_RemoveImage(m_hWnd, iImage);
 				
-				m_vTabPageInfo.erase(iter);
+				m_vContainerInfo.erase(iter);
 				break;
 			}
 		}
@@ -2842,25 +2848,25 @@ namespace Win32xx
 
 	inline void CContainer::SelectPage(int iPage)
 	{
-		if ((iPage >= 0) && (iPage < (int)m_vTabPageInfo.size() ))
+		if ((iPage >= 0) && (iPage < (int)m_vContainerInfo.size() ))
 		{
-			TabCtrl_SetCurSel(m_hWnd, iPage);
+			SetCurSel(iPage);
 
 			// Create the new container window if required
-			if (!m_vTabPageInfo[iPage].pWnd->IsWindow())
+			if (!m_vContainerInfo[iPage].pContainer->IsWindow())
 			{
-				CContainer* pContainer = (CContainer*)m_vTabPageInfo[iPage].pWnd;
+				CContainer* pContainer = m_vContainerInfo[iPage].pContainer;
 				pContainer->Create(GetParent());
 				pContainer->GetViewPage().SetParent(m_hWnd);
 			}
 			
 			// Determine the size of the tab page's view area
 			CRect rc = GetClientRect();
-			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+			AdjustRect(FALSE, &rc);
 
 			// Swap the pages over
-			CContainer* pOldContainer = (CContainer*)m_vTabPageInfo[m_iCurrentPage].pWnd;
-			CContainer* pNewContainer = (CContainer*)m_vTabPageInfo[iPage].pWnd;
+			CContainer* pOldContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
+			CContainer* pNewContainer = m_vContainerInfo[iPage].pContainer;
 			pOldContainer->GetViewPage().ShowWindow(SW_HIDE);
 			pNewContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 			pNewContainer->GetViewPage().GetView()->SetFocus();
@@ -2886,8 +2892,8 @@ namespace Win32xx
 	inline void CContainer::SetTabSize()
 	{
 		CRect rc = GetClientRect();
-		TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-		int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vTabPageInfo.size());
+		AdjustRect(FALSE, &rc);
+		int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
 		SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
 	}
 
@@ -2920,15 +2926,15 @@ namespace Win32xx
 			return 0;
 		case WM_SIZE:
 			{
-				if ((int)m_vTabPageInfo.size() > m_iCurrentPage)
+				if ((int)m_vContainerInfo.size() > m_iCurrentPage)
 				{				
 					// Set the tab sizes
 					SetTabSize();
 
 					// Position the View over the tab control's display area
 					CRect rc = GetClientRect();
-					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-					CContainer* pContainer = (CContainer*)m_vTabPageInfo[m_iCurrentPage].pWnd;
+					AdjustRect(FALSE, &rc);
+					CContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 					pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 				} 			
 			}

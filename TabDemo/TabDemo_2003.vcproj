@@ -145,9 +145,6 @@
 				RelativePath=".\Classes.cpp">
 			</File>
 			<File
-				RelativePath=".\ContainerApp.cpp">
-			</File>
-			<File
 				RelativePath=".\Files.cpp">
 			</File>
 			<File
@@ -186,15 +183,15 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\TabDemoApp.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
 				RelativePath=".\Classes.h">
-			</File>
-			<File
-				RelativePath=".\ContainerApp.h">
 			</File>
 			<File
 				RelativePath=".\Files.h">
@@ -204,6 +201,9 @@
 			</File>
 			<File
 				RelativePath="resource.h">
+			</File>
+			<File
+				RelativePath=".\TabDemoApp.h">
 			</File>
 		</Filter>
 		<Filter

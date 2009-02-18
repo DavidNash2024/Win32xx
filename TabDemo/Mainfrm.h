@@ -5,7 +5,7 @@
 #define MAINFRM_H
 
 #include "../Win32++/frame.h"
-#include "../Win32++/dockable.h"
+#include "../Win32++/tab.h"
 #include "Classes.h"
 #include "Files.h"
 
@@ -25,8 +25,6 @@ protected:
 
 private:
 	CTab m_View;
-	CViewClasses m_Classes;
-	CViewFiles m_Files;
 
 };
 

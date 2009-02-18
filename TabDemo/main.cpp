@@ -1,13 +1,13 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "ContainerApp.h"
+#include "TabDemoApp.h"
 
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CContainerApp theApp;
+	CTabDemoApp theApp;
 
 	// Run the application
 	return theApp.Run();

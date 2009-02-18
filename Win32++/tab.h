@@ -64,6 +64,7 @@ namespace Win32xx
 		// a different tab is selected.
 		class CViewPage : public CWnd
 		{
+			friend class CTab;
 		public:
 			CViewPage() : m_pView(NULL) {}
 			virtual ~CViewPage() {}
@@ -76,9 +77,12 @@ namespace Win32xx
 			virtual void SetView(CWnd& wndView);
 			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+			CWnd* GetTabCtrl() const { return m_pTab;}
+
 		private:
 			CToolbar m_Toolbar;
 			CWnd* m_pView;
+			CWnd* m_pTab;
 		};
 
 	public:
@@ -113,12 +117,10 @@ namespace Win32xx
 		BOOL SetItem(int iItem, LPTCITEM pitem);
 		DWORD SetItemSize(int cx, int cy);
 		int  SetMinTabWidth(int cx);
-		void SetPadding(int cx, int cy);
-
-	protected:
-		std::vector<TabPageInfo> m_vTabPageInfo;
+		void SetPadding(int cx, int cy);	
 			
 	private:
+		std::vector<TabPageInfo> m_vTabPageInfo;
 		CViewPage m_ViewPage;
 		HIMAGELIST m_himlTab;
 		
@@ -131,11 +133,17 @@ namespace Win32xx
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
+		GetViewPage().m_pTab = this;
 	}
 		
 	inline CTab::~CTab()
 	{
 		ImageList_Destroy(m_himlTab);
+		std::vector<TabPageInfo>::iterator iter;
+		for (iter = m_vTabPageInfo.begin(); iter != m_vTabPageInfo.end(); ++iter)
+		{
+			delete (*iter).pWnd;
+		}
 	}
 
 	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
@@ -153,10 +161,12 @@ namespace Win32xx
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = tbi.iImage;
 			tie.pszText = m_vTabPageInfo[iNewPage].szTitle;
-			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
+			InsertItem(iNewPage, &tie);
 
 			SetTabSize();
 		}
+
+		GetViewPage().SetView(*pWnd);
 	}
 
 	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
@@ -227,33 +237,18 @@ namespace Win32xx
 
 	inline void CTab::OnCreate()
 	{		
-//		if (NULL == GetView())
-//			throw CWinException(_T("CTab::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
-
 		// Create the page window
 		GetViewPage().Create(m_hWnd);
-
-/*		// Create the toolbar
-		if (GetToolbarData().size() > 0)
+		
+		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
-			GetToolbar().Create(GetViewPage().GetHwnd());
-			DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
-			style |= CCS_NODIVIDER ;//| CCS_NORESIZE;
-			GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
-			int iButtons = GetToolbar().SetButtons(GetToolbarData());
-
-			// Set the toolbar images
-			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			GetToolbar().SetImages(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
-			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
-		} */
-
-/*
-		TCITEM tie = {0};
-		tie.mask = TCIF_TEXT | TCIF_IMAGE;
-		tie.iImage = 0;
-		tie.pszText = (LPTSTR)m_tsTabText.c_str();
-		TabCtrl_InsertItem(m_hWnd, 0, &tie); */
+			// Add tabs for each view.
+			TCITEM tie = {0};
+			tie.mask = TCIF_TEXT | TCIF_IMAGE;
+			tie.iImage = i;
+			tie.pszText = m_vTabPageInfo[i].szTitle;
+			TabCtrl_InsertItem(m_hWnd, i, &tie);
+		}
 	}
 
 
@@ -398,10 +393,13 @@ namespace Win32xx
 
 	inline void CTab::SetTabSize()
 	{
-		CRect rc = GetClientRect();
-		TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-		int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/TabCtrl_GetItemCount(m_hWnd));
-		SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
+		if (GetItemCount() > 0)
+		{
+			CRect rc = GetClientRect();
+			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+			int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/GetItemCount());
+			SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
+		}
 	}
 
 	inline LRESULT CTab::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

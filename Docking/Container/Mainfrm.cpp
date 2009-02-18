@@ -278,11 +278,11 @@ void CMainFrame::SaveDockables()
 		CDockable* pDock = m_DockView.GetDockFromID(vDockList[u].DockID);
 		if (pDock->GetView()->IsContainer())
 		{
-			std::vector<TabPageInfo>& v3 = ((CContainer*)pDock->GetView())->GetAllContainers();
-			std::vector<TabPageInfo>::iterator iter3;
+			std::vector<ContainerInfo>& v3 = ((CContainer*)pDock->GetView())->GetAllContainers();
+			std::vector<ContainerInfo>::iterator iter3;
 			for (iter3 = v3.begin()+1; iter3 != v3.end(); ++iter3)
 			{
-				CDockable* pDockContainerChild = pDock->GetDockFromView((*iter3).pWnd);
+				CDockable* pDockContainerChild = pDock->GetDockFromView((*iter3).pContainer);
 				DockedInfo di = {0};
 				di.DockParentID = pDock->GetDockID();
 				di.DockID = pDockContainerChild->GetDockID();

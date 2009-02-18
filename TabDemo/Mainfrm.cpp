@@ -3,7 +3,7 @@
 
 
 #include "resource.h"
-#include "ContainerApp.h"
+#include "TabDemoApp.h"
 #include "mainfrm.h"
 
 
@@ -14,7 +14,10 @@ CMainFrame::CMainFrame()
 
 	//Set m_View as the view window of the frame
 	SetView(m_View);
-	m_View.AddTabPage(&m_Classes, _T("Classes"), 0);
+	m_View.AddTabPage(new CViewClasses, _T("Classes"), 0);
+	m_View.AddTabPage(new CViewFiles, _T("Files"), 0);
+	m_View.AddTabPage(new CViewClasses, _T("Classes"), 0);
+	m_View.AddTabPage(new CViewFiles, _T("Files"), 0);
 
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

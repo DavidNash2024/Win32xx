@@ -1,19 +1,19 @@
 //////////////////////////////////////////////
 //TabDemoApp.cpp
 
-#include "ContainerApp.h"
+#include "TabDemoApp.h"
 
 
-// Definitions for the CContainerApp class
-CContainerApp::CContainerApp()
+// Definitions for the CTabDemoApp class
+CTabDemoApp::CTabDemoApp()
 {
 }
 
-CContainerApp::~CContainerApp()
+CTabDemoApp::~CTabDemoApp()
 {
 }
 
-BOOL CContainerApp::InitInstance()
+BOOL CTabDemoApp::InitInstance()
 {
 	//Create the Frame Window
 	if (!m_Frame.Create())	

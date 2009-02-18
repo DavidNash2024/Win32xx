@@ -2,7 +2,7 @@
 // Files.cpp
 //  Definitions for CViewFiles and CContainFiles
 
-#include "ContainerApp.h"
+#include "TabDemoApp.h"
 #include "Files.h"
 #include "resource.h"
 
