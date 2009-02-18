@@ -24,8 +24,9 @@ protected:
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CContainClasses m_Classes;
-	CContainFiles m_Files;
+	CTab m_View;
+	CViewClasses m_Classes;
+	CViewFiles m_Files;
 
 };
 

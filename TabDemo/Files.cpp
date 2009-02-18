@@ -94,12 +94,4 @@ void CViewFiles::InsertItems()
 }
 
 
-///////////////////////////////////////////////
-// CContainFiles functions
-CContainFiles::CContainFiles() 
-{
-	SetTabText(_T("FileView"));
-	SetTabIcon(IDI_FILEVIEW);
-	SetView(m_ViewFiles);
-}
 

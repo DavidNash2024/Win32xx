@@ -1,60 +1,11 @@
 //////////////////////////////////////////////
 // Classes.cpp
-//  Definitions for CViewClasses and CContainClasses
+//  Definitions for CViewClasses
 
 
 #include "ContainerApp.h"
 #include "Classes.h"
 #include "resource.h"
-
-
-///////////////////////////////////////////////
-// CContainClasses functions
-CContainClasses::CContainClasses() 
-{
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
-//	GetPage().SetView(m_ViewClasses);
-
-//	HICON hIcon = LoadIcon(GetContainerApp().GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW));
-//	AddContainer(this, _T("ClassView"), hIcon);
-
-	SetTabText(_T("ClassView"));
-	SetTabIcon(IDI_CLASSVIEW);
-	SetView(m_ViewClasses);
-}
-
-
-BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
-{
-	// OnCommand responds to menu and and toolbar input
-
-	switch(LOWORD(wParam))
-	{
-	case IDM_FILE_NEW:
-		TRACE(_T("File New\n"));
-		break;
-	case IDM_FILE_OPEN:
-		TRACE(_T("File Open\n"));
-		break;
-	case IDM_FILE_SAVE:
-		TRACE(_T("FILE Save\n"));
-		break;
-	}
-
-	return FALSE;
-}
 
 
 ///////////////////////////////////////////////

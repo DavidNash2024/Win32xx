@@ -26,17 +26,6 @@ private:
 	
 };
 
-class CContainClasses : public CTab
-{
-public:
-	CContainClasses();
-	~CContainClasses() {}
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM /*lParam*/);
-
-private:
-	CViewClasses m_ViewClasses;
-
-};
 
 
 #endif  //CLASSES_H

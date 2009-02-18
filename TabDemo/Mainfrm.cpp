@@ -13,7 +13,8 @@ CMainFrame::CMainFrame()
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
 	//Set m_View as the view window of the frame
-	SetView(m_Classes);
+	SetView(m_View);
+	m_View.AddTabPage(&m_Classes, _T("Classes"), 0);
 
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

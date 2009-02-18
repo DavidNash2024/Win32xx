@@ -28,19 +28,6 @@ private:
 
 };
 
-class CContainFiles : public CTab
-{
-public:
-	CContainFiles(); 
-	~CContainFiles() {}
-
-private:
-	CViewFiles m_ViewFiles;
-};
-
-
-
-
 
 #endif // FILES_H
 

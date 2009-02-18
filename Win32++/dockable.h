@@ -91,14 +91,14 @@ namespace Win32xx
 		CContainer();
 		virtual ~CContainer();
 		virtual void AddContainer(CContainer* pContainer);
-	//	virtual void AddToolbarButton(UINT nID);
+		virtual void AddToolbarButton(UINT nID);
 		virtual CContainer* GetContainerFromIndex(int iPage);
 		virtual CContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
-		virtual void SetTabSize();	
+		virtual void SetTabSize();
 		
 		// Attributes				
 		CContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
@@ -106,10 +106,16 @@ namespace Win32xx
 		std::vector<TabPageInfo>& GetAllContainers() const {return m_pContainerParent->m_vTabPageInfo;}
 		CContainer* GetContainerParent() { return m_pContainerParent; }
 		tString GetDockCaption() const	{ return m_tsCaption; }
+		HICON GetTabIcon() const		{ return m_hTabIcon; }
+		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
+		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		BOOL IsContainer() const		{ return TRUE; }
 		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
 		void SetView(CWnd& Wnd);
+		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
+		void SetTabIcon(UINT nID_Icon);
+		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
 				
 	protected:
 		virtual void OnCreate();
@@ -117,11 +123,12 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-	//	std::vector<UINT> m_vToolbarData;
-		std::vector<TabPageInfo> m_vTabPageInfo;
+		std::vector<UINT> m_vToolbarData;
+		tString m_tsTabText;
 		tString m_tsCaption;
 		int m_iCurrentPage;
 		CContainer* m_pContainerParent;
+		HICON m_hTabIcon;
 		
 	};
 
@@ -2609,7 +2616,7 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class
-	inline CContainer::CContainer() : m_iCurrentPage(0)
+	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0)
 	{
 		m_pContainerParent = this;
 
@@ -2663,12 +2670,12 @@ namespace Win32xx
 		}
 	}
 
-//	inline void CContainer::AddToolbarButton(UINT nID)
-//	// Adds Resource IDs to toolbar buttons.
-//	// A resource ID of 0 is a separator
-//	{
-//		GetToolbarData().push_back(nID);
-//	}
+	inline void CContainer::AddToolbarButton(UINT nID)
+	// Adds Resource IDs to toolbar buttons.
+	// A resource ID of 0 is a separator
+	{
+		GetToolbarData().push_back(nID);
+	}
 
 	inline CContainer* CContainer::GetContainerFromIndex(int iPage)
 	{
@@ -2868,6 +2875,12 @@ namespace Win32xx
 			
 			m_iCurrentPage = iPage;
 		}
+	}
+
+	inline void CContainer::SetTabIcon(UINT nID_Icon)
+	{
+		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
+		SetTabIcon(hIcon);
 	}
 
 	inline void CContainer::SetTabSize()

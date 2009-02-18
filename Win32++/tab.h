@@ -84,7 +84,7 @@ namespace Win32xx
 	public:
 		CTab();
 		virtual ~CTab();
-		virtual void AddToolbarButton(UINT nID);
+		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
 		virtual SIZE GetMaxTabTextSize();
 		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
 		virtual CToolbar& GetToolbar() const	{ return GetViewPage().GetToolbar(); }	
@@ -96,13 +96,7 @@ namespace Win32xx
 
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
-		HICON GetTabIcon() const		{ return m_hTabIcon; }
-		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
-		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
-		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
-		void SetTabIcon(UINT nID_Icon);
-		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
 		void SetView(CWnd& Wnd) 		{ GetViewPage().SetView(Wnd); }
 
 		// Wrappers for Win32 Macros
@@ -120,20 +114,20 @@ namespace Win32xx
 		DWORD SetItemSize(int cx, int cy);
 		int  SetMinTabWidth(int cx);
 		void SetPadding(int cx, int cy);
+
+	protected:
+		std::vector<TabPageInfo> m_vTabPageInfo;
 			
 	private:
-		std::vector<UINT> m_vToolbarData;
-		tString m_tsTabText;
 		CViewPage m_ViewPage;
 		HIMAGELIST m_himlTab;
-		HICON m_hTabIcon;
 		
 	};
 
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab() : m_hTabIcon(0)
+	inline CTab::CTab()
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
@@ -144,11 +138,25 @@ namespace Win32xx
 		ImageList_Destroy(m_himlTab);
 	}
 
-	inline void CTab::AddToolbarButton(UINT nID)
-	// Adds Resource IDs to toolbar buttons.
-	// A resource ID of 0 is a separator
+	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
 	{
-		GetToolbarData().push_back(nID);
+		TabPageInfo tbi = {0};
+		tbi.pWnd = pWnd;
+		lstrcpyn(tbi.szTitle, szTitle, MAX_MENU_STRING);
+		tbi.iImage = ImageList_AddIcon(GetImageList(), hIcon);
+		int iNewPage = m_vTabPageInfo.size();
+		m_vTabPageInfo.push_back(tbi);		
+
+		if (m_hWnd)
+		{
+			TCITEM tie = {0};
+			tie.mask = TCIF_TEXT | TCIF_IMAGE;
+			tie.iImage = tbi.iImage;
+			tie.pszText = m_vTabPageInfo[iNewPage].szTitle;
+			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
+
+			SetTabSize();
+		}
 	}
 
 	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
@@ -219,13 +227,13 @@ namespace Win32xx
 
 	inline void CTab::OnCreate()
 	{		
-		if (NULL == GetView())
-			throw CWinException(_T("CTab::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
+//		if (NULL == GetView())
+//			throw CWinException(_T("CTab::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
 
 		// Create the page window
 		GetViewPage().Create(m_hWnd);
 
-		// Create the toolbar
+/*		// Create the toolbar
 		if (GetToolbarData().size() > 0)
 		{
 			GetToolbar().Create(GetViewPage().GetHwnd());
@@ -238,13 +246,14 @@ namespace Win32xx
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			GetToolbar().SetImages(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
 			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
-		}
+		} */
 
+/*
 		TCITEM tie = {0};
 		tie.mask = TCIF_TEXT | TCIF_IMAGE;
 		tie.iImage = 0;
 		tie.pszText = (LPTSTR)m_tsTabText.c_str();
-		TabCtrl_InsertItem(m_hWnd, 0, &tie);
+		TabCtrl_InsertItem(m_hWnd, 0, &tie); */
 	}
 
 
@@ -385,12 +394,6 @@ namespace Win32xx
 	inline void CTab::SetPadding(int cx, int cy)
 	{
 		TabCtrl_SetPadding(m_hWnd, cx, cy);
-	}
-
-	inline void CTab::SetTabIcon(UINT nID_Icon)
-	{
-		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
-		SetTabIcon(hIcon);
 	}
 
 	inline void CTab::SetTabSize()
