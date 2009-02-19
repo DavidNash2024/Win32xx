@@ -154,6 +154,7 @@ namespace Win32xx
 				
 	protected:
 		virtual void OnCreate();
+		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -2835,6 +2836,13 @@ namespace Win32xx
 		}
 
 		return 0L;
+	}
+
+	inline void CContainer::PreCreate(CREATESTRUCT &cs)
+	{
+		// For Tabs on the bottom, add the TCS_BOTTOM style
+		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM;
+		cs.lpszClass = WC_TABCONTROL;
 	}
 
 	inline void CContainer::RemoveContainer(CContainer* pWnd)

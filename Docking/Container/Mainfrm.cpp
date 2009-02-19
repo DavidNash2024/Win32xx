@@ -48,11 +48,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
-		SetRedraw(FALSE);	// Suppress drawing to the frame window
 		m_DockView.CloseAllDockables();
 		LoadDefaultDockables();
-		SetRedraw(TRUE);	// Re-enable drawing to the frame window
-		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
 		return TRUE;
 	case IDM_DOCK_CLOSEALL:
 		m_DockView.CloseAllDockables();

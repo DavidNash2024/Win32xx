@@ -317,28 +317,53 @@ namespace Win32xx
 			}
 		}  
 
+		BOOL IsBottomTab = GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
+
 		// Draw a lighter rectangle touching the tab buttons
 		CRect rcItem;
 		TabCtrl_GetItemRect(m_hWnd, 0, &rcItem);
 		int left = rcItem.left +1;
-		int right = rcTab.right -1;
+		int right = rcTab.right;
 		int top = rcTab.bottom;
 		int bottom = top + 3;
+		
+		if (!IsBottomTab)
+		{
+			top = rcTab.top -3;
+			bottom = rcTab.top;
+		}
 		dcMem.CreateSolidBrush(RGB(248,248,248));
 		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 		Rectangle(dcMem, left, top, right, bottom);
 
 		// Draw a darker line below the rectangle
 		dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-		MoveToEx(dcMem, left-1, bottom, NULL);
-		LineTo(dcMem, right, bottom);
+		if (IsBottomTab)
+		{
+			MoveToEx(dcMem, left-1, bottom, NULL);
+			LineTo(dcMem, right, bottom);
+		}
+		else
+		{
+			MoveToEx(dcMem, left-1, top-1, NULL);
+			LineTo(dcMem, right, top-1);
+		}
 		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 
-		// Draw a lighter line below the rectangle for the selected tab
+		// Draw a lighter line over the darker line for the selected tab
 		TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
 		OffsetRect(&rcItem, 1, 1);
-		MoveToEx(dcMem, rcItem.right, rcItem.top, NULL);
-		LineTo(dcMem, rcItem.left, rcItem.top);
+
+		if (IsBottomTab)
+		{
+			MoveToEx(dcMem, rcItem.left, bottom, NULL);
+			LineTo(dcMem, rcItem.right, bottom);
+		}
+		else
+		{
+			MoveToEx(dcMem, rcItem.left, top-1, NULL);
+			LineTo(dcMem, rcItem.right, top-1);
+		} 
 
 		// Now copy our from our memory DC to the window DC
 		dcMem.DetachClipRegion();
@@ -353,7 +378,8 @@ namespace Win32xx
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
 	{
-		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM ;
+		// For Tabs on the bottom, add the TCS_BOTTOM style
+		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
 		cs.lpszClass = WC_TABCONTROL;
 	}
 
@@ -447,8 +473,6 @@ namespace Win32xx
 				// The tab control is already created, so create the new view too
 				GetView()->Create(m_hWnd);
 			}
-			
-		//	RecalcLayout();
 		}
 	}
 
