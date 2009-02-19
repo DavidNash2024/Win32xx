@@ -2,9 +2,9 @@ Version 6.5
 ===========
 Added CTab class.
  - CContainer now inherits from CTab
-Added CViewPage     (a nested class of CTab)  
+Added TabDemo Sample which demonstrates the use of CTab 
 Added CFrame::GetToolbarData
-Removed CTabPage    (it is replaced by CViewPage)
+
 
 Version 6.4.1
 =============

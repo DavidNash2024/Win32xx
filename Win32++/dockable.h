@@ -92,6 +92,34 @@ namespace Win32xx
 	//  within the container parent's view page.
 	class CContainer : public CTab
 	{
+		// Nested class. This is the Wnd for the window displayed over the client area
+		// of the tab control.  The toolbar and view window are child windows of the 
+		// viewpage window. Only the ViewPage of the parent CContainer is displayed. It's
+		// contents are updated with the view window of the relevant container whenever
+		// a different tab is selected.
+		class CViewPage : public CWnd
+		{
+			
+		public:
+			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
+			virtual ~CViewPage() {}
+			virtual CToolbar& GetToolbar() const {return (CToolbar&)m_Toolbar;}
+			virtual CWnd* GetView() const	{return m_pView;}
+			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+			virtual void OnCreate();
+			virtual void PreRegisterClass(WNDCLASS &wc);
+			virtual void RecalcLayout();
+			virtual void SetView(CWnd& wndView);
+			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+			CWnd* GetTabCtrl() const { return m_pTab;}
+
+		private:
+			CToolbar m_Toolbar;	
+			CWnd* m_pView;
+			CWnd* m_pTab;
+		};
+
 	public:
 		CContainer();
 		virtual ~CContainer();
@@ -104,6 +132,7 @@ namespace Win32xx
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
+		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
 		
 		// Attributes				
 		CContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
@@ -113,6 +142,7 @@ namespace Win32xx
 		tString GetDockCaption() const	{ return m_tsCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
+		virtual CToolbar& GetToolbar() const	{ return GetViewPage().GetToolbar(); }
 		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		BOOL IsContainer() const		{ return TRUE; }
@@ -132,6 +162,7 @@ namespace Win32xx
 		std::vector<ContainerInfo> m_vContainerInfo;
 		tString m_tsTabText;
 		tString m_tsCaption;
+		CViewPage m_ViewPage;
 		int m_iCurrentPage;
 		CContainer* m_pContainerParent;
 		HICON m_hTabIcon;
@@ -2989,6 +3020,79 @@ namespace Win32xx
 		// pass unhandled messages on for default processing
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
+
+
+	///////////////////////////////////////////
+	// Declaration of the nested CViewPage class
+	inline BOOL CContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
+	{
+		return (BOOL)::SendMessage(GetParent(), WM_COMMAND, wParam, lParam);
+	}
+
+	inline void CContainer::CViewPage::OnCreate()
+	{
+		if (m_pView)
+			m_pView->Create(m_hWnd);
+	}
+
+	inline void CContainer::CViewPage::PreRegisterClass(WNDCLASS &wc)
+	{
+		wc.lpszClassName = _T("Win32++ TabPage");
+		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+	}
+
+	inline void CContainer::CViewPage::RecalcLayout()
+	{
+		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+		CRect rc = GetClientRect();
+		CRect rcToolbar = m_Toolbar.GetClientRect();
+		rc.top += rcToolbar.Height();
+		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+	}
+
+	inline void CContainer::CViewPage::SetView(CWnd& wndView)
+	// Sets or changes the View window displayed within the frame
+	{
+		// Assign the view window
+		m_pView = &wndView;
+
+		if (m_hWnd)
+		{
+			if (!m_pView->IsWindow())
+			{
+				// The container is already created, so create and position the new view too
+				GetView()->Create(m_hWnd);
+			}
+			
+			RecalcLayout();
+		}
+	}
+
+	inline LRESULT CContainer::CViewPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_SIZE:
+			RecalcLayout();
+			break;
+		case WM_NOTIFY:
+			switch (((LPNMHDR)lParam)->code)
+			{
+			// Send the focus change notifications to the grandparent
+			case NM_KILLFOCUS:
+			case NM_SETFOCUS:
+			case UWM_FRAMELOSTFOCUS:
+				::SendMessage(::GetParent(GetParent()), WM_NOTIFY, wParam, lParam);
+				break;
+			}
+
+			break;
+		}
+
+		// pass unhandled messages on for default processing
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
 
 } // namespace Win32xx
 

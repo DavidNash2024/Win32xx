@@ -12,12 +12,14 @@ CMainFrame::CMainFrame()
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
-	//Set m_View as the view window of the frame
+	//Set the tab control as the fram's view window
 	SetView(m_View);
-	m_View.AddTabPage(new CViewClasses, _T("Classes"), 0);
-	m_View.AddTabPage(new CViewFiles, _T("Files"), 0);
-	m_View.AddTabPage(new CViewClasses, _T("Classes"), 0);
-	m_View.AddTabPage(new CViewFiles, _T("Files"), 0);
+
+	// Add some tabs to the tab control
+	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

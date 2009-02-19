@@ -57,51 +57,17 @@ namespace Win32xx
 
 	class CTab : public CWnd
 	{
-		// Nested class. This is the Wnd for the window displayed over the client area
-		// of the tab control.  The toolbar and view window are child windows of the 
-		// viewpage window. Only the ViewPage of the parent CContainer is displayed. It's
-		// contents are updated with the view window of the relevant container whenever
-		// a different tab is selected.
-		class CViewPage : public CWnd
-		{
-			friend class CTab;
-		public:
-			CViewPage() : m_pView(NULL) {}
-			virtual ~CViewPage() {}
-			virtual CToolbar& GetToolbar() const {return (CToolbar&)m_Toolbar;}
-			virtual CWnd* GetView() const	{return m_pView;}
-			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-			virtual void OnCreate();
-			virtual void PreRegisterClass(WNDCLASS &wc);
-			virtual void RecalcLayout();
-			virtual void SetView(CWnd& wndView);
-			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-			CWnd* GetTabCtrl() const { return m_pTab;}
-
-		private:
-			CToolbar m_Toolbar;
-			CWnd* m_pView;
-			CWnd* m_pTab;
-		};
-
 	public:
 		CTab();
 		virtual ~CTab();
 		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
-		virtual SIZE GetMaxTabTextSize();
-		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
-		virtual CToolbar& GetToolbar() const	{ return GetViewPage().GetToolbar(); }	
-		virtual void OnCreate();
-		virtual void Paint();
-		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetTabSize();
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
+		virtual void SelectPage(int iPage);
+		virtual void RemoveTabPage(int iPage);
 
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
-		CWnd* GetView() const			{ return GetViewPage().GetView(); }
-		void SetView(CWnd& Wnd) 		{ GetViewPage().SetView(Wnd); }
+		CWnd* GetView() const		{ return m_pView; }
 
 		// Wrappers for Win32 Macros
 		void AdjustRect(BOOL fLarger, RECT *prc);
@@ -117,23 +83,33 @@ namespace Win32xx
 		BOOL SetItem(int iItem, LPTCITEM pitem);
 		DWORD SetItemSize(int cx, int cy);
 		int  SetMinTabWidth(int cx);
-		void SetPadding(int cx, int cy);	
+		void SetPadding(int cx, int cy);
+
+	protected:
+		virtual SIZE GetMaxTabTextSize();
+		virtual void OnCreate();
+		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual void Paint();
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void SetTabSize();
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			
 	private:
+		void SetView(CWnd& Wnd);
+
 		std::vector<TabPageInfo> m_vTabPageInfo;
-		CViewPage m_ViewPage;
 		HIMAGELIST m_himlTab;
+		CWnd* m_pView;
 		
 	};
 
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab()
+	inline CTab::CTab() : m_pView(NULL)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
-		GetViewPage().m_pTab = this;
 	}
 		
 	inline CTab::~CTab()
@@ -166,7 +142,13 @@ namespace Win32xx
 			SetTabSize();
 		}
 
-		GetViewPage().SetView(*pWnd);
+		SetView(*pWnd);
+	}
+
+	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon)
+	{
+		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
+		AddTabPage(pWnd, szTitle, hIcon);
 	}
 
 	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
@@ -236,10 +218,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::OnCreate()
-	{		
-		// Create the page window
-		GetViewPage().Create(m_hWnd);
-		
+	{			
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
 			// Add tabs for each view.
@@ -249,8 +228,25 @@ namespace Win32xx
 			tie.pszText = m_vTabPageInfo[i].szTitle;
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
+
+		SelectPage(0);
 	}
 
+	inline LRESULT CTab::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		switch (((LPNMHDR)lParam)->code)
+		{
+		case TCN_SELCHANGE:
+			{
+				// Display the newly selected tab page
+				int iPage = GetCurSel();
+				SelectPage(iPage);
+			}
+			break;
+		}
+
+		return 0L;
+	}
 
 	inline void CTab::Paint()
 	{	
@@ -361,6 +357,42 @@ namespace Win32xx
 		cs.lpszClass = WC_TABCONTROL;
 	}
 
+	inline void CTab::RemoveTabPage(int iPage)
+	{
+		if ((iPage < 0) || (iPage > GetItemCount()-1) || (GetItemCount() <= 1))
+			return;
+
+		// Remove the tab
+		DeleteItem(iPage);		
+	
+		// Remove the TapPageInfo entry
+		std::vector<TabPageInfo>::iterator iter = m_vTabPageInfo.begin() + iPage;
+		int iImage = (*iter).iImage;
+		if (iImage >= 0) 
+			TabCtrl_RemoveImage(m_hWnd, iImage);
+		m_vTabPageInfo.erase(iter);
+
+		SetTabSize();
+		SelectPage(0);
+	}
+
+	inline void CTab::SelectPage(int iPage)
+	{
+		if ((iPage >= 0) && (iPage < GetItemCount()))
+		{
+			if (GetView()->IsWindow()) GetView()->ShowWindow(SW_HIDE);
+			SetCurSel(iPage);
+			SetView(*(m_vTabPageInfo[iPage].pWnd));
+
+			// Position the View over the tab control's display area
+			CRect rc = GetClientRect();
+			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
+			GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+
+			GetView()->SetFocus();
+		}
+	}
+
 	inline int CTab::SetCurFocus(int iItem)
 	{
 		return TabCtrl_SetCurFocus(m_hWnd, iItem);
@@ -402,6 +434,24 @@ namespace Win32xx
 		}
 	}
 
+	inline void CTab::SetView(CWnd& Wnd)  
+	// Sets or changes the View window displayed within the tab page
+	{
+		// Assign the view window
+		m_pView = &Wnd;
+
+		if (m_hWnd)
+		{
+			if (!m_pView->IsWindow())
+			{
+				// The tab control is already created, so create the new view too
+				GetView()->Create(m_hWnd);
+			}
+			
+		//	RecalcLayout();
+		}
+	}
+
 	inline LRESULT CTab::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
@@ -421,86 +471,16 @@ namespace Win32xx
 			return 0;
 		case WM_SIZE:
 			{
-		//		if ((int)m_vTabPageInfo.size() > m_iCurrentPage)
-		//		{				
-					// Set the tab sizes
-					SetTabSize();
+				// Set the tab sizes
+				SetTabSize();
 
-					// Position the View over the tab control's display area
-					CRect rc = GetClientRect();
-					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
-		//			m_vTabPageInfo[m_iCurrentPage].pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-					GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-		//		} 			
+				// Position the View over the tab control's display area
+				CRect rc = GetClientRect();
+				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
+				GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 			}
 		//	break;
 			return 0;
-		}
-
-		// pass unhandled messages on for default processing
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
-	}
-
-	///////////////////////////////////////////
-	// Declaration of the nested CViewPage class
-	inline BOOL CTab::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
-	{
-		return (BOOL)::SendMessage(GetParent(), WM_COMMAND, wParam, lParam);
-	}
-
-	inline void CTab::CViewPage::OnCreate()
-	{
-		m_pView->Create(m_hWnd);
-	}
-
-	inline void CTab::CViewPage::PreRegisterClass(WNDCLASS &wc)
-	{
-		wc.lpszClassName = _T("Win32++ TabPage");
-		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
-	}
-
-	inline void CTab::CViewPage::RecalcLayout()
-	{
-		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
-		CRect rc = GetClientRect();
-		CRect rcToolbar = m_Toolbar.GetClientRect();
-		rc.top += rcToolbar.Height();
-		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-	}
-
-	inline void CTab::CViewPage::SetView(CWnd& wndView)
-	// Sets or changes the View window displayed within the frame
-	{
-		// Assign the view window
-		m_pView = &wndView;
-
-		if (m_hWnd)
-		{
-			// The container is already created, so create and position the new view too
-			GetView()->Create(m_hWnd);
-			RecalcLayout();
-		}
-	}
-
-	inline LRESULT CTab::CViewPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		switch (uMsg)
-		{
-		case WM_SIZE:
-			RecalcLayout();
-			break;
-		case WM_NOTIFY:
-			switch (((LPNMHDR)lParam)->code)
-			{
-			// Send the focus change notifications to the grandparent
-			case NM_KILLFOCUS:
-			case NM_SETFOCUS:
-			case UWM_FRAMELOSTFOCUS:
-				::SendMessage(::GetParent(GetParent()), WM_NOTIFY, wParam, lParam);
-				break;
-			}
-
-			break;
 		}
 
 		// pass unhandled messages on for default processing
