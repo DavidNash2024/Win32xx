@@ -645,7 +645,7 @@ namespace Win32xx
 	// Ensures that a list-view item is either entirely or partially visible,
 	// scrolling the list-view control if necessary.
 	{
-		return SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK );
+		return (BOOL)SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK );
 	}
 
 	inline int CListView::FindItem( LVFINDINFO& FindInfo, int iStart /*= -1*/ ) const
@@ -680,10 +680,21 @@ namespace Win32xx
 	// Inserts a new column in a list-view control.
 	{
 		LVCOLUMN lvc = {0};
+		lvc.mask = LVCF_TEXT|LVCF_ORDER|LVCF_FMT;
+		if (-1 != iWidth)
+		{
+			lvc.mask |= LVCF_WIDTH; 
+			lvc.cx = iWidth; 
+		}
+		if (-1 !=  iSubItem)
+		{
+			lvc.mask |= LVCF_SUBITEM; 
+			lvc.cx = iSubItem;
+		}
+
 		lvc.iOrder = iCol;
 		lvc.pszText = (LPTSTR)pszColumnHeading;
 		lvc.fmt = iFormat;
-		lvc.cx = iWidth;
 		lvc.iSubItem = iSubItem;
 		return ListView_InsertColumn( m_hWnd, iCol, &lvc );
 	}
@@ -701,7 +712,7 @@ namespace Win32xx
 		lvi.iItem = iItem;
 		lvi.pszText = (LPTSTR)pszText;
 		lvi.mask = LVIF_TEXT;
-		return ListView_SetItem( m_hWnd, &lvi );
+		return ListView_InsertItem( m_hWnd, &lvi );
 	}
 
     inline int CListView::InsertItem( int iItem, LPCTSTR pszText, int iImage )
@@ -712,7 +723,7 @@ namespace Win32xx
 		lvi.pszText = (LPTSTR)pszText;
 		lvi.iImage = iImage;
 		lvi.mask = LVIF_TEXT | LVIF_IMAGE;
-		return ListView_SetItem( m_hWnd, &lvi );
+		return ListView_InsertItem( m_hWnd, &lvi );
 	}
 
 	inline BOOL CListView::RedrawItems( int iFirst, int iLast )

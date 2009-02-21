@@ -6,6 +6,8 @@ Added TabDemo Sample which demonstrates the use of CTab
 Added CFrame::GetToolbarData
 
 
+Renamed dockable.h to docking.h
+
 Version 6.4.1
 =============
 This release has the following bug fixes:

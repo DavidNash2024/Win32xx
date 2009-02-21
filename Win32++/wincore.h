@@ -389,7 +389,7 @@ namespace Win32xx
 		// Handy for converting char to TCHAR
 		tString tstr;
   #ifdef UNICODE
-		int len = 1 + strlen(s);
+		int len = 1 + (int)strlen(s);
 
 		TCHAR* t = new TCHAR[len];
 		if (NULL == t) throw std::bad_alloc();
