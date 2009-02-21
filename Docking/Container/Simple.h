@@ -6,7 +6,7 @@
 #ifndef SIMPLE_H
 #define SIMPLE_H
 
-#include "../../Win32++/dockable.h"
+#include "../../Win32++/docking.h"
 
 
 // Declaration of the CViewSimple class

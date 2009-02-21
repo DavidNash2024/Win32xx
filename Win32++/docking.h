@@ -36,11 +36,11 @@
 
 
 ///////////////////////////////////////////////////////
-// dockable.h
+// docking.h
 //  Declaration of the CDockable class
 
-#ifndef DOCKABLE_H
-#define DOCKABLE_H
+#ifndef DOCKING_H
+#define DOCKING_H
 
 
 #include "wincore.h"
@@ -869,7 +869,8 @@ namespace Win32xx
 						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (hWnd == hwndButtonDown))
 						{
 							CDockable* pDock = (CDockable*)FromHandle(GetParent());
-							pDock->Undock();
+							if (pDock)
+								pDock->Undock();
 						}						
 					}
 
@@ -1186,7 +1187,11 @@ namespace Win32xx
 	inline BOOL CDockable::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+		if (NULL == pDockDrag) return FALSE;
+		
 		CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
+		if (NULL == pDockTarget) return FALSE;
+
 		static CDockable* pOldDockTarget = 0;
 		
 		if (!IsWindow())	Create();
@@ -1291,7 +1296,10 @@ namespace Win32xx
 	inline BOOL CDockable::CTargetLeft::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+		if (NULL == pDockDrag) return FALSE;
+
 		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
+
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
@@ -1328,6 +1336,8 @@ namespace Win32xx
 	inline BOOL CDockable::CTargetTop::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+		if (NULL == pDockDrag) return FALSE;
+
 		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
@@ -1366,6 +1376,8 @@ namespace Win32xx
 	inline BOOL CDockable::CTargetRight::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+		if (NULL == pDockDrag) return FALSE;
+
 		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
@@ -1403,6 +1415,8 @@ namespace Win32xx
 	inline BOOL CDockable::CTargetBottom::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
+		if (NULL == pDockDrag) return FALSE;
+
 		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
@@ -1576,13 +1590,15 @@ namespace Win32xx
 							// Not in a docking zone, so clean up
 							NMHDR nmhdr = pDragPos->hdr;
 							CDockable* pDockDrag = (CDockable*)FromHandle(nmhdr.hwndFrom);
+							if (pDockDrag)
+							{
+								if (pDockDrag->m_BlockMove)
+									pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
 
-							if (pDockDrag->m_BlockMove)
-								pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
-
-							GetDockHint().Destroy();
-							pDockDrag->m_dwDockZone = 0;
-							pDockDrag->m_BlockMove = FALSE;
+								GetDockHint().Destroy();
+								pDockDrag->m_dwDockZone = 0;
+								pDockDrag->m_BlockMove = FALSE;
+							}
 						}
 					}
 				}
@@ -1837,6 +1853,8 @@ namespace Win32xx
 		// draws a hashed bar while the splitter bar is being dragged
 		{
 			CDockable* pDock = ((CDockBar*)FromHandle(hBar))->GetDock();
+			if (NULL == pDock) return;
+
 			BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
 
 			CDC BarDC = ::GetDC(m_hWnd);
@@ -2021,6 +2039,8 @@ namespace Win32xx
 		case UWM_DOCK_END:
 			{
 				CDockable* pDock = (CDockable*)FromHandle(pdp->hdr.hwndFrom);
+				if (NULL == pDock) break;
+
 				UINT DockZone = pdp->DockZone;
 				CRect rc = pDock->GetWindowRect();
 
@@ -2076,6 +2096,8 @@ namespace Win32xx
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 				CDockable* pDock = ((CDockBar*)FromHandle(pdp->hdr.hwndFrom))->GetDock();
+				if (NULL == pDock) break;
+
 				RECT rcDock = pDock->GetWindowRect();
 				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
 
@@ -2094,6 +2116,8 @@ namespace Win32xx
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 				CDockable* pDock = ((CDockBar*)FromHandle(pdp->hdr.hwndFrom))->GetDock();
+				if (NULL == pDock) break;
+
 				RECT rcDock = pDock->GetWindowRect();
 				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
 
@@ -2914,8 +2938,11 @@ namespace Win32xx
 			if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0, 0))
 			{
 				CDockable* pDock = (CDockable*)FromHandle(::GetParent(GetParent()));
-				pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
-				pDock->RedrawWindow();
+				if (pDock)
+				{
+					pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
+					pDock->RedrawWindow();
+				}
 			}
 			
 			m_iCurrentPage = iPage;
@@ -2950,19 +2977,6 @@ namespace Win32xx
 		case UWM_IS_CONTAINER:	// A message to test if this is a Container window
 			return TRUE;
 
-		case WM_PAINT:
-			{
-				// Remove all pending paint requests
-				PAINTSTRUCT ps;
-				::BeginPaint(hWnd, &ps);
-				::EndPaint(hWnd, &ps);
-
-				// Now call our local Paint
-				Paint();
-			}
-			return 0;
-		case WM_ERASEBKGND:
-			return 0;
 		case WM_SIZE:
 			{
 				if ((int)m_vContainerInfo.size() > m_iCurrentPage)
@@ -2977,7 +2991,7 @@ namespace Win32xx
 					pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 				} 			
 			}
-			break;
+			return 0;
 
 		case WM_MOUSELEAVE:
 			{
@@ -2989,7 +3003,8 @@ namespace Win32xx
 						CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
 
 						CDockable* pDock = (CDockable*) FromHandle(::GetParent(GetParent()));
-						pDock->UndockContainer(pContainer);
+						if (pDock)
+							pDock->UndockContainer(pContainer);
 					}
 				}
 			}
@@ -3025,8 +3040,8 @@ namespace Win32xx
 			break;
 		}
 
-		// pass unhandled messages on for default processing
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+		// pass unhandled messages on to CTab for processing
+		return CTab::WndProc(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -3104,5 +3119,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // DOCKABLE_H
+#endif // DOCKING_H
 

@@ -8,7 +8,7 @@
 
 
 #include "../../Win32++/treeview.h"
-#include "../../Win32++/dockable.h"
+#include "../../Win32++/docking.h"
 #include "ComboBoxEx.h"
 #include "resource.h"
 

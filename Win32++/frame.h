@@ -1953,7 +1953,7 @@ namespace Win32xx
 
 			// Create the menu inside rebar
 			GetMenubar().Create(GetRebar());
-			GetMenubar().SetMenu(m_hMenu);
+			GetMenubar().SetMenu(GetFrameMenu());
 			AddMenubarBand();
 
 			// Create the toolbar inside rebar
@@ -1968,7 +1968,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 
 		// Set the toolbar data
-		int iButtons = GetToolbar().SetButtons(m_vToolbarData);
+		int iButtons = GetToolbar().SetButtons(GetToolbarData());
 
 		// Set the toolbar images
 		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
@@ -1978,7 +1978,7 @@ namespace Win32xx
 		SetMenuIcons(m_vToolbarData, RGB(192, 192, 192), IDW_MAIN, 0);
 
 		if (!IsMenubarUsed())
-			::SetMenu(m_hWnd, m_hMenu);
+			::SetMenu(m_hWnd, GetFrameMenu());
 
 		if (m_bUseThemes)
 			SetTheme();
@@ -1987,9 +1987,9 @@ namespace Win32xx
 		GetStatusbar().Create(m_hWnd);
 
 		// Create the view window
-		if (NULL == m_pView)
+		if (NULL == GetView())
 			throw CWinException(_T("CFrame::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
-		m_pView->Create(m_hWnd);
+		GetView()->Create(m_hWnd);
 
 		// Reposition the child windows
 		RecalcLayout();
@@ -2463,14 +2463,14 @@ namespace Win32xx
 	{
 		if (::IsWindowVisible(GetToolbar()))
 		{
-			if (IsMenubarUsed())
+			if (IsRebarUsed())
 				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
 			else
 				::ShowWindow(GetToolbar(), SW_HIDE);
 		}
 		else
 		{
-			if (IsMenubarUsed())
+			if (IsRebarUsed())
 				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
 			else
 				::ShowWindow(GetToolbar(), SW_SHOW);

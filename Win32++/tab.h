@@ -89,12 +89,14 @@ namespace Win32xx
 		virtual SIZE GetMaxTabTextSize();
 		virtual void OnCreate();
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void Paint();
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void SetTabSize();
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			
 	private:
+		void DrawTabs(CDC& dcMem);
+		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
+		void Paint();
 		void SetView(CWnd& Wnd);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
@@ -151,39 +153,99 @@ namespace Win32xx
 		AddTabPage(pWnd, szTitle, hIcon);
 	}
 
-	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
+	inline void CTab::DrawTabs(CDC& dcMem)
 	{
-		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
+		// Draw the tab buttons:
+		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); ++i)
+		{
+			CRect rcItem;
+			TabCtrl_GetItemRect(m_hWnd, i, &rcItem);
+			if (i == TabCtrl_GetCurSel(m_hWnd))
+			{
+				dcMem.CreateSolidBrush(RGB(248,248,248));
+				SetBkColor(dcMem, RGB(248,248,248));
+			}
+			else
+			{
+				dcMem.CreateSolidBrush(RGB(200,200,200));
+				SetBkColor(dcMem, RGB(200,200,200));
+			}
+			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+			RoundRect(dcMem, rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
+
+			if (rcItem.Width() >= 24)
+			{
+				TCHAR szText[30];
+				TCITEM tcItem = {0};
+				tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
+				tcItem.cchTextMax = 30;
+				tcItem.pszText = szText;
+				TabCtrl_GetItem(m_hWnd, i, &tcItem);
+
+				// Draw the icon
+				ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+2, ILD_NORMAL);
+
+				// Draw the text
+				NONCLIENTMETRICS info = {0};
+				info.cbSize = sizeof(info);
+				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+				dcMem.CreateFontIndirect(&info.lfStatusFont);
+				CRect rcText = rcItem;
+				rcText.left += 24;
+				::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			}
+		}  
 	}
 
-	inline BOOL CTab::DeleteAllItems()
+	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
 	{
-		return TabCtrl_DeleteAllItems(m_hWnd);
-	}
+		BOOL IsBottomTab = GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
 
-	inline BOOL CTab::DeleteItem(int iItem)
-	{
-		return TabCtrl_DeleteItem(m_hWnd, iItem);
-	}
+		// Draw a lighter rectangle touching the tab buttons
+		CRect rcItem;
+		TabCtrl_GetItemRect(m_hWnd, 0, &rcItem);
+		int left = rcItem.left +1;
+		int right = rcTab.right;
+		int top = rcTab.bottom;
+		int bottom = top + 3;
+		
+		if (!IsBottomTab)
+		{
+			top = rcTab.top -3;
+			bottom = rcTab.top;
+		}
+		dcMem.CreateSolidBrush(RGB(248,248,248));
+		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
+		Rectangle(dcMem, left, top, right, bottom);
 
-	inline int CTab::GetCurFocus()
-	{
-		return TabCtrl_GetCurFocus(m_hWnd);
-	}
+		// Draw a darker line below the rectangle
+		dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+		if (IsBottomTab)
+		{
+			MoveToEx(dcMem, left-1, bottom, NULL);
+			LineTo(dcMem, right, bottom);
+		}
+		else
+		{
+			MoveToEx(dcMem, left-1, top-1, NULL);
+			LineTo(dcMem, right, top-1);
+		}
+		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 
-	inline int CTab::GetCurSel()
-	{
-		return TabCtrl_GetCurSel(m_hWnd);
-	}
+		// Draw a lighter line over the darker line for the selected tab
+		TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
+		OffsetRect(&rcItem, 1, 1);
 
-	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem)
-	{
-		return TabCtrl_GetItem(m_hWnd, iItem, pitem);
-	}
-
-	inline int CTab::GetItemCount()
-	{
-		return TabCtrl_GetItemCount(m_hWnd);
+		if (IsBottomTab)
+		{
+			MoveToEx(dcMem, rcItem.left, bottom, NULL);
+			LineTo(dcMem, rcItem.right, bottom);
+		}
+		else
+		{
+			MoveToEx(dcMem, rcItem.left, top-1, NULL);
+			LineTo(dcMem, rcItem.right, top-1);
+		}
 	}
 
 	inline SIZE CTab::GetMaxTabTextSize()
@@ -210,11 +272,6 @@ namespace Win32xx
 		}
 
 		return Size;
-	}
-
-	inline int CTab::InsertItem(int iItem, const LPTCITEM pitem)
-	{
-		return TabCtrl_InsertItem(m_hWnd, iItem, pitem);
 	}
 
 	inline void CTab::OnCreate()
@@ -276,94 +333,9 @@ namespace Win32xx
 		dcMem.CreateSolidBrush(RGB(230, 230, 230));
 		::PaintRgn(dcMem, hrgnClip);
 
-		// Draw the tab buttons:
-		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); ++i)
-		{
-			CRect rcItem;
-			TabCtrl_GetItemRect(m_hWnd, i, &rcItem);
-			if (i == TabCtrl_GetCurSel(m_hWnd))
-			{
-				dcMem.CreateSolidBrush(RGB(248,248,248));
-				SetBkColor(dcMem, RGB(248,248,248));
-			}
-			else
-			{
-				dcMem.CreateSolidBrush(RGB(200,200,200));
-				SetBkColor(dcMem, RGB(200,200,200));
-			}
-			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-			RoundRect(dcMem, rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
-
-			if (rcItem.Width() >= 24)
-			{
-				TCHAR szText[30];
-				TCITEM tcItem = {0};
-				tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
-				tcItem.cchTextMax = 30;
-				tcItem.pszText = szText;
-				TabCtrl_GetItem(m_hWnd, i, &tcItem);
-
-				// Draw the icon
-				ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+2, ILD_NORMAL);
-
-				// Draw the text
-				NONCLIENTMETRICS info = {0};
-				info.cbSize = sizeof(info);
-				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-				dcMem.CreateFontIndirect(&info.lfStatusFont);
-				CRect rcText = rcItem;
-				rcText.left += 24;
-				::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
-			}
-		}  
-
-		BOOL IsBottomTab = GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
-
-		// Draw a lighter rectangle touching the tab buttons
-		CRect rcItem;
-		TabCtrl_GetItemRect(m_hWnd, 0, &rcItem);
-		int left = rcItem.left +1;
-		int right = rcTab.right;
-		int top = rcTab.bottom;
-		int bottom = top + 3;
-		
-		if (!IsBottomTab)
-		{
-			top = rcTab.top -3;
-			bottom = rcTab.top;
-		}
-		dcMem.CreateSolidBrush(RGB(248,248,248));
-		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-		Rectangle(dcMem, left, top, right, bottom);
-
-		// Draw a darker line below the rectangle
-		dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-		if (IsBottomTab)
-		{
-			MoveToEx(dcMem, left-1, bottom, NULL);
-			LineTo(dcMem, right, bottom);
-		}
-		else
-		{
-			MoveToEx(dcMem, left-1, top-1, NULL);
-			LineTo(dcMem, right, top-1);
-		}
-		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-
-		// Draw a lighter line over the darker line for the selected tab
-		TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
-		OffsetRect(&rcItem, 1, 1);
-
-		if (IsBottomTab)
-		{
-			MoveToEx(dcMem, rcItem.left, bottom, NULL);
-			LineTo(dcMem, rcItem.right, bottom);
-		}
-		else
-		{
-			MoveToEx(dcMem, rcItem.left, top-1, NULL);
-			LineTo(dcMem, rcItem.right, top-1);
-		} 
+		// Draw the tab buttons on the memory DC:
+		DrawTabs(dcMem);
+		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
 		dcMem.DetachClipRegion();
@@ -417,36 +389,6 @@ namespace Win32xx
 
 			GetView()->SetFocus();
 		}
-	}
-
-	inline int CTab::SetCurFocus(int iItem)
-	{
-		return TabCtrl_SetCurFocus(m_hWnd, iItem);
-	}
-	
-	inline int CTab::SetCurSel(int iItem)
-	{
-		return TabCtrl_SetCurSel(m_hWnd, iItem);
-	}
-
-	inline BOOL CTab::SetItem(int iItem, LPTCITEM pitem)
-	{
-		return TabCtrl_SetItem(m_hWnd, iItem, pitem);
-	}
-
-	inline DWORD CTab::SetItemSize(int cx, int cy)
-	{
-		return TabCtrl_SetItemSize(m_hWnd, cx, cy);
-	}
-
-	inline int CTab::SetMinTabWidth(int cx)
-	{
-		return TabCtrl_SetMinTabWidth(m_hWnd, cx);
-	}
-
-	inline void CTab::SetPadding(int cx, int cy)
-	{
-		TabCtrl_SetPadding(m_hWnd, cx, cy);
 	}
 
 	inline void CTab::SetTabSize()
@@ -503,7 +445,6 @@ namespace Win32xx
 				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
 				GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 			}
-		//	break;
 			return 0;
 		}
 
@@ -511,6 +452,78 @@ namespace Win32xx
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
+	// Wrappers for Win32 Macros
+
+
+	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
+	{
+		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
+	}
+
+	inline BOOL CTab::DeleteAllItems()
+	{
+		return TabCtrl_DeleteAllItems(m_hWnd);
+	}
+
+	inline BOOL CTab::DeleteItem(int iItem)
+	{
+		return TabCtrl_DeleteItem(m_hWnd, iItem);
+	}
+
+	inline int CTab::GetCurFocus()
+	{
+		return TabCtrl_GetCurFocus(m_hWnd);
+	}
+
+	inline int CTab::GetCurSel()
+	{
+		return TabCtrl_GetCurSel(m_hWnd);
+	}
+
+	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem)
+	{
+		return TabCtrl_GetItem(m_hWnd, iItem, pitem);
+	}
+
+	inline int CTab::GetItemCount()
+	{
+		return TabCtrl_GetItemCount(m_hWnd);
+	}
+
+	inline int CTab::InsertItem(int iItem, const LPTCITEM pitem)
+	{
+		return TabCtrl_InsertItem(m_hWnd, iItem, pitem);
+	}
+	
+	inline int CTab::SetCurFocus(int iItem)
+	{
+		return TabCtrl_SetCurFocus(m_hWnd, iItem);
+	}
+	
+	inline int CTab::SetCurSel(int iItem)
+	{
+		return TabCtrl_SetCurSel(m_hWnd, iItem);
+	}
+
+	inline BOOL CTab::SetItem(int iItem, LPTCITEM pitem)
+	{
+		return TabCtrl_SetItem(m_hWnd, iItem, pitem);
+	}
+
+	inline DWORD CTab::SetItemSize(int cx, int cy)
+	{
+		return TabCtrl_SetItemSize(m_hWnd, cx, cy);
+	}
+
+	inline int CTab::SetMinTabWidth(int cx)
+	{
+		return TabCtrl_SetMinTabWidth(m_hWnd, cx);
+	}
+
+	inline void CTab::SetPadding(int cx, int cy)
+	{
+		TabCtrl_SetPadding(m_hWnd, cx, cy);
+	}
 }
 
 #endif

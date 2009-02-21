@@ -4,7 +4,7 @@
 #ifndef DOCKABLES_H
 #define DOCKABLES_H
 
-#include "../../Win32++/dockable.h"
+#include "../../Win32++/docking.h"
 #include "Views.h"
 
 // Declaration of the CDockSimple class
