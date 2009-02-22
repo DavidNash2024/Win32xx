@@ -25,7 +25,7 @@ void CViewTree::OnInitialUpdate()
 	SetImageList(m_himlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
-	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 	dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
 	SetWindowLongPtr(GWL_STYLE, dwStyle);
 

@@ -269,7 +269,7 @@ void CMainFrame::SaveDockables()
 
 	// Add container children to the DockList vector
 	u = 0;
-	UINT uMax = vDockList.size();
+	UINT uMax = (int)vDockList.size();
 	while (u < uMax)
 	{
 		CDockable* pDock = m_DockView.GetDockFromID(vDockList[u].DockID);

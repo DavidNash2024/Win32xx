@@ -78,7 +78,7 @@ namespace Win32xx
 		BOOL GetItem(int iItem, LPTCITEM pitem);
 		int  GetItemCount();
 		int  InsertItem(int iItem, const LPTCITEM pitem);
-		int  SetCurFocus(int iItem);
+		void SetCurFocus(int iItem);
 		int  SetCurSel(int iItem);
 		BOOL SetItem(int iItem, LPTCITEM pitem);
 		DWORD SetItemSize(int cx, int cy);
@@ -130,7 +130,7 @@ namespace Win32xx
 		tbi.pWnd = pWnd;
 		lstrcpyn(tbi.szTitle, szTitle, MAX_MENU_STRING);
 		tbi.iImage = ImageList_AddIcon(GetImageList(), hIcon);
-		int iNewPage = m_vTabPageInfo.size();
+		int iNewPage = (int)m_vTabPageInfo.size();
 		m_vTabPageInfo.push_back(tbi);		
 
 		if (m_hWnd)
@@ -495,9 +495,9 @@ namespace Win32xx
 		return TabCtrl_InsertItem(m_hWnd, iItem, pitem);
 	}
 	
-	inline int CTab::SetCurFocus(int iItem)
+	inline void CTab::SetCurFocus(int iItem)
 	{
-		return TabCtrl_SetCurFocus(m_hWnd, iItem);
+		TabCtrl_SetCurFocus(m_hWnd, iItem);
 	}
 	
 	inline int CTab::SetCurSel(int iItem)

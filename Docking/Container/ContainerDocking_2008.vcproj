@@ -351,6 +351,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Win32++\tab.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\toolbar.h"
 				>
 			</File>

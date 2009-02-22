@@ -26,7 +26,7 @@ void CViewFiles::OnInitialUpdate()
 	SetImageList(m_himlSmall, LVSIL_SMALL);
 
 	// Set the report style
-	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
 	SetColumns();

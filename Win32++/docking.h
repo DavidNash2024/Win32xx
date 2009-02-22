@@ -2322,13 +2322,13 @@ namespace Win32xx
 		{
 			if (dwDockStyle & DS_CLIENTEDGE)
 			{
-				DWORD dwExStyle = GetDockClient().GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
+				DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
 				GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
 				GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
 			}
 			else
 			{
-				DWORD dwExStyle = GetDockClient().GetWindowLongPtr(GWL_EXSTYLE);
+				DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE);
 				dwExStyle &= ~WS_EX_CLIENTEDGE;
 				GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
 				GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
@@ -2708,7 +2708,7 @@ namespace Win32xx
 			ci.pContainer = pContainer;
 			lstrcpy(ci.szTitle, pContainer->GetTabText());
 			ci.iImage = ImageList_AddIcon(GetImageList(), pContainer->GetTabIcon());
-			int iNewPage = m_vContainerInfo.size();
+			int iNewPage = (int)m_vContainerInfo.size();
 			m_vContainerInfo.push_back(ci);		
 
 			if (m_hWnd)
