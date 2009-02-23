@@ -445,11 +445,11 @@ namespace Win32xx
 		CLIENTCREATESTRUCT clientcreate ;
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
-		DWORD dword = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
 		if (!CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""),
-				dword, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
+				dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
 				throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
 
 		return m_hWnd;
@@ -539,6 +539,7 @@ namespace Win32xx
 		// Set the window style
 		DWORD dwStyle;
 		dwStyle = m_cs.style & ~WS_MAXIMIZE;
+		dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
 
 		// Set window size and position
 		int x = CW_USEDEFAULT;

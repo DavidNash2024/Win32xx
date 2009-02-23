@@ -124,12 +124,16 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
+	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon = 0)
 	{
 		TabPageInfo tbi = {0};
 		tbi.pWnd = pWnd;
 		lstrcpyn(tbi.szTitle, szTitle, MAX_MENU_STRING);
-		tbi.iImage = ImageList_AddIcon(GetImageList(), hIcon);
+		if (hIcon)
+			tbi.iImage = ImageList_AddIcon(GetImageList(), hIcon);
+		else
+			tbi.iImage = -1;
+		
 		int iNewPage = (int)m_vTabPageInfo.size();
 		m_vTabPageInfo.push_back(tbi);		
 

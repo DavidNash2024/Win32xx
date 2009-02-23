@@ -239,7 +239,7 @@ void CMainFrame::SaveDockables()
 	}
 
 	// Add remaining docked children of children to the DockList vector
-	UINT u = 0;
+	size_t u = 0;
 	while (u < vDockList.size())
 	{
 		//Add all the children of DockList[u]
@@ -263,7 +263,7 @@ void CMainFrame::SaveDockables()
 	}
 
 	// Add the Undocked windows information to the DockList vector
-	for (UINT v = 0; v <  m_DockView.GetAllDockables().size(); ++v)
+	for (size_t v = 0; v <  m_DockView.GetAllDockables().size(); ++v)
 	{
 		CDockable* pDock = m_DockView.GetAllDockables()[v];
 		if (pDock->IsUndocked())
@@ -291,7 +291,7 @@ void CMainFrame::SaveDockables()
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 		// Add the Docked windows information to the registry
-		for (UINT u = 0; u < vDockList.size(); ++u)
+		for (size_t u = 0; u < vDockList.size(); ++u)
 		{
 			DockedInfo di = vDockList[u];
 			TCHAR szNumber[16];

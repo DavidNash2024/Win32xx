@@ -389,7 +389,7 @@ namespace Win32xx
 		// Handy for converting char to TCHAR
 		tString tstr;
   #ifdef UNICODE
-		int len = 1 + (int)strlen(s);
+		size_t len = 1 + strlen(s);
 
 		TCHAR* t = new TCHAR[len];
 		if (NULL == t) throw std::bad_alloc();
@@ -412,7 +412,7 @@ namespace Win32xx
 		// calculate the size of the char string required
 		// Note: If wcstombs encounters a wide character it cannot convert
 		//       to a multibyte character, it returns –1.
-		int len = 1 + wcstombs(0, t, 0);
+		size_t len = 1 + wcstombs(0, t, 0);
 		if (0 == len) return str;
 
 		char* c = new char[len];
