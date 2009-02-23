@@ -18,7 +18,7 @@
 					<Add option="-D_DEBUG" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -36,7 +36,7 @@
 					<Add option="-w-par" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="import32" />
@@ -72,6 +72,7 @@
 					<Add library="user32" />
 					<Add library="kernel32" />
 					<Add library="Advapi32" />
+					<Add library="comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -100,6 +101,7 @@
 					<Add library="kernel32" />
 					<Add library="user32" />
 					<Add library="Advapi32" />
+					<Add library="comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>

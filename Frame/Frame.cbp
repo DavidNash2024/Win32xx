@@ -5,7 +5,7 @@
 		<Option title="Frame" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
-		<Option compiler="gcc" />
+		<Option compiler="bcc" />
 		<Build>
 			<Target title="Debug Borland">
 				<Option output="borland\debug\frame.exe" prefix_auto="0" extension_auto="0" />
@@ -18,7 +18,7 @@
 					<Add option="-D_DEBUG" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -36,7 +36,7 @@
 					<Add option="-w-par" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -72,6 +72,7 @@
 					<Add library="User32" />
 					<Add library="Kernel32" />
 					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -100,6 +101,7 @@
 					<Add library="Kernel32" />
 					<Add library="User32" />
 					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>

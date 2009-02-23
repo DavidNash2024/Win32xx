@@ -129,7 +129,7 @@ BOOL CView::FileSave(LPCTSTR szFilename)
 	}
 
 	BOOL bResult = TRUE;
-	for (int i = 0; i < (int)m_points.size(); ++i)
+	for (size_t i = 0; i < m_points.size(); ++i)
 	{
 		if ((!WriteFile(hFile, &m_points[i], sizeof(PlotPoint), &nBytesWritten, NULL))
 			|| (nBytesWritten != sizeof(PlotPoint)))

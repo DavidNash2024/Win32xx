@@ -187,7 +187,7 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
-		virtual size_t  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void AddToolbarButton(UINT nID);
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
@@ -197,7 +197,7 @@ namespace Win32xx
 		virtual void OnFrameExitMenuLoop();
 		virtual void OnFrameInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual void OnFrameMeasureItem(WPARAM wParam, LPARAM lParam);
-		virtual size_t  SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
@@ -304,7 +304,7 @@ namespace Win32xx
 		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
 		tString m_tsStatusText;				// TCHAR std::string for status text
-		size_t m_nMaxMRU;						// maximum number of MRU entries
+		size_t m_nMaxMRU;					// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
 
@@ -1414,7 +1414,7 @@ namespace Win32xx
 	{
 		// Count the MenuData entries excluding seperators
 		int iImages = 0;
-		for (unsigned int i = 0 ; i < MenuData.size(); ++i)
+		for (size_t i = 0 ; i < MenuData.size(); ++i)
 		{
 			if (MenuData[i] != 0)	// Don't count seperators
 			{
@@ -1459,7 +1459,7 @@ namespace Win32xx
 		}
 
 		// Add the resource IDs to the m_vMenuIcons vector
-		for (unsigned int j = 0 ; j < MenuData.size(); ++j)
+		for (size_t j = 0 ; j < MenuData.size(); ++j)
 		{
 			if (MenuData[j] != 0)
 			{
@@ -1541,11 +1541,7 @@ namespace Win32xx
 	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
 	{
 		// Erase duplicate entries from vector
-		for (size_t i = m_vMRUEntries.size() -1; i >= 0; --i)
-		{
-			if (m_vMRUEntries[i] == szMRUEntry)
-				m_vMRUEntries.erase(m_vMRUEntries.begin() + i);
-		}
+		RemoveMRUEntry(szMRUEntry);
 
 		// Insert the entry at the beginning of the vector
 		m_vMRUEntries.insert(m_vMRUEntries.begin(), szMRUEntry);
@@ -2249,7 +2245,7 @@ namespace Win32xx
 			nm.cbSize = sizeof(nm);
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(nm), &nm, 0);
 			// Default menu items are bold, so take this into account
-			if (::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
+			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
 				nm.lfMenuFont.lfWeight = FW_BOLD;
 
 			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
@@ -2563,10 +2559,11 @@ namespace Win32xx
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	{
-		for (size_t i = m_vMRUEntries.size() -1; i >= 0; --i)
+		std::vector<tString>::reverse_iterator rit;
+		for (rit = m_vMRUEntries.rbegin(); rit != m_vMRUEntries.rend(); ++rit)
 		{
-			if (m_vMRUEntries[i] == szMRUEntry)
-				m_vMRUEntries.erase(m_vMRUEntries.begin() + i);
+			if ((*rit) == szMRUEntry)
+				m_vMRUEntries.erase((rit+1).base());
 		}
 
 		UpdateMRUMenu();
@@ -2931,14 +2928,12 @@ namespace Win32xx
 			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
 		}
 
-		size_t nMaxMRUIndex = m_vMRUEntries.size()-1;
-		nMaxMRUIndex = min(nMaxMRUIndex, m_nMaxMRU);
-
 		// Set the text for the MRU Menu
 		tString tsMRUArray[16];
-		if (nMaxMRUIndex >= 0)
+		size_t MaxMRUArrayIndex = 0;
+		if (m_vMRUEntries.size() > 0)
 		{
-			for (size_t n = 0; n <= nMaxMRUIndex; ++n)
+			for (size_t n = 0; ((n < m_vMRUEntries.size()) && (n <= m_nMaxMRU)); ++n)
 			{
 				tsMRUArray[n] = m_vMRUEntries[n];
 				if (tsMRUArray[n].length() > MAX_MENU_STRING - 10)
@@ -2952,12 +2947,12 @@ namespace Win32xx
 				TCHAR tVal[5];
 				wsprintf(tVal, _T("%d "), n+1);
 				tsMRUArray[n] = tVal + tsMRUArray[n];
+				MaxMRUArrayIndex = n;
 			}
 		}
 		else
 		{
 			tsMRUArray[0] = _T("Recent Files");
-			nMaxMRUIndex = 0;
 		}
 
 		// Set MRU menu items
@@ -2969,7 +2964,9 @@ namespace Win32xx
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
 
-		for (UINT index = (UINT)nMaxMRUIndex; index >= 0; --index)
+		int MaxMRUIndex = min(MaxMRUArrayIndex, m_nMaxMRU);
+
+		for (int index = MaxMRUIndex; index >= 0; --index)
 		{
 			mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
 			mii.fState = (0 == m_vMRUEntries.size())? MFS_GRAYED : 0;
@@ -2978,7 +2975,7 @@ namespace Win32xx
 			mii.dwTypeData = (LPTSTR)tsMRUArray[index].c_str();
 
 			BOOL bResult;
-			if (index == nMaxMRUIndex)
+			if (index == MaxMRUIndex)
 				// Replace the last MRU entry first
 				bResult = SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
 			else

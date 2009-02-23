@@ -112,6 +112,9 @@ namespace Win32xx
 	public:
 		CMDIFrame();
 		virtual ~CMDIFrame();
+		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
+		virtual void RemoveMDIChild(HWND hWnd);
+		virtual BOOL RemoveAllMDIChildren();
 
 		// These functions aren't virtual, so don't override them
 		std::vector <CMDIChild*>& GetAllMDIChildren() {return m_vMDIChild;}
@@ -124,13 +127,10 @@ namespace Win32xx
 		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
-		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
 		virtual void OnFrameClose();
 		virtual	BOOL OnFrameCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnFrameWindowPosChanged();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
-		virtual void RemoveMDIChild(HWND hWnd);
-		virtual BOOL RemoveAllMDIChildren();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -142,7 +142,7 @@ namespace Win32xx
 			virtual HWND Create(HWND hWndParent = NULL);
 			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
-		
+
 
 		void AppendMDIMenu(HMENU hMenuWindow);
 		LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -398,7 +398,7 @@ namespace Win32xx
 			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Invalid MDI child"));
 
 		SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0);
-		
+
 		// Verify
 		if (m_hActiveMDIChild != pChild->GetHwnd())
 			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Failed"));
@@ -592,10 +592,10 @@ namespace Win32xx
 		// Create the view window
 		if (NULL == m_pwndView)
 			throw CWinException(_T("CMDIChild::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
-		
+
 		m_pwndView->Create(m_hWnd);
 	}
-	
+
 	inline BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)
 	{
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
@@ -617,10 +617,10 @@ namespace Win32xx
 	{
 		// Destroy the existing view window (if any)
 		if (m_pwndView) m_pwndView->Destroy();
-		
+
 		// Assign the view window
 		m_pwndView = &View;
-		
+
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 	}
 
