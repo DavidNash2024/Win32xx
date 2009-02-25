@@ -190,7 +190,7 @@ SOURCE="..\..\Win32++\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\dockable.h"
+SOURCE="..\..\Win32++\docking.h"
 # End Source File
 # Begin Source File
 
@@ -211,6 +211,10 @@ SOURCE="..\..\Win32++\rebar.h"
 # Begin Source File
 
 SOURCE="..\..\Win32++\statusbar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\tab.h"
 # End Source File
 # Begin Source File
 

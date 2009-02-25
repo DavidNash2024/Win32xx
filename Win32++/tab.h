@@ -146,6 +146,7 @@ namespace Win32xx
 			InsertItem(iNewPage, &tie);
 
 			SetTabSize();
+			SelectPage(iNewPage);
 		}
 
 		SetView(*pWnd);
@@ -382,7 +383,8 @@ namespace Win32xx
 	{
 		if ((iPage >= 0) && (iPage < GetItemCount()))
 		{
-			if (GetView()->IsWindow()) GetView()->ShowWindow(SW_HIDE);
+			if (GetView()->IsWindow()) 
+				GetView()->ShowWindow(SW_HIDE);
 			SetCurSel(iPage);
 			SetView(*(m_vTabPageInfo[iPage].pWnd));
 

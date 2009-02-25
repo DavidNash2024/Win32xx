@@ -277,11 +277,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Win32++\dialog.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Win32++\Dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dockable.h"
+				RelativePath="..\..\Win32++\docking.h"
 				>
 			</File>
 			<File
@@ -290,6 +294,10 @@
 			</File>
 			<File
 				RelativePath="..\Win32++\GDI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\listview.h"
 				>
 			</File>
 			<File
@@ -306,6 +314,10 @@
 			</File>
 			<File
 				RelativePath="..\Win32++\Toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\treeview.h"
 				>
 			</File>
 			<File

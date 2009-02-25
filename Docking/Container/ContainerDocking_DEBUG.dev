@@ -1,7 +1,7 @@
 [Project]
 FileName=ContainerDocking_DEBUG.dev
 Name=ContainerDocking
-UnitCount=30
+UnitCount=31
 Type=0
 Ver=1
 ObjFiles=
@@ -40,16 +40,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\..\Win32++\dockable.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit6]
 FileName=..\..\Win32++\frame.h
 CompileCpp=1
 Folder=Win32++
@@ -59,8 +49,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=..\..\Win32++\gdi.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=..\..\Win32++\listview.h
 Folder=Win32++
 Compile=1
 Link=1
@@ -70,16 +70,6 @@ BuildCmd=
 CompileCpp=1
 
 [Unit10]
-FileName=..\..\Win32++\statusbar.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
 FileName=..\..\Win32++\toolbar.h
 CompileCpp=1
 Folder=Win32++
@@ -89,17 +79,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
-FileName=Classes.h
+[Unit11]
+FileName=Classes.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit13]
 FileName=ContainerApp.cpp
 CompileCpp=1
 Folder=Source
@@ -109,8 +99,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit14]
 FileName=ContainerApp.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=DockContainer.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -138,16 +138,6 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=DockContainer.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
 FileName=Files.cpp
 CompileCpp=1
 Folder=Source
@@ -157,7 +147,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit17]
 FileName=Files.h
 CompileCpp=1
 Folder=Header
@@ -167,7 +157,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit18]
 FileName=main.cpp
 CompileCpp=1
 Folder=Source
@@ -177,7 +167,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit19]
 FileName=Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -187,7 +177,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit20]
 FileName=Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -197,7 +187,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit21]
 FileName=resource.h
 CompileCpp=1
 Folder=Header
@@ -207,7 +197,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit22]
 FileName=Simple.cpp
 CompileCpp=1
 Folder=Source
@@ -217,7 +207,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit23]
 FileName=Simple.h
 CompileCpp=1
 Folder=Header
@@ -227,7 +217,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit24]
 FileName=Text.cpp
 CompileCpp=1
 Folder=Source
@@ -237,10 +227,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit25]
 FileName=Text.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit26]
+FileName=Output.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -277,16 +277,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\..\Win32++\listview.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit9]
 FileName=..\..\Win32++\rebar.h
 CompileCpp=1
 Folder=Win32++
@@ -296,10 +286,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
-FileName=Classes.cpp
+[Unit9]
+FileName=..\..\Win32++\statusbar.h
 CompileCpp=1
-Folder=Source
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit12]
+FileName=Classes.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -307,16 +307,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=Output.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit28]
 FileName=Output.h
 CompileCpp=1
 Folder=Header
@@ -326,7 +316,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit29]
+[Unit28]
 FileName=..\..\Themes\ComboBoxEx.cpp
 CompileCpp=1
 Folder=Source
@@ -336,10 +326,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit30]
+[Unit29]
 FileName=..\..\Themes\ComboBoxEx.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=..\..\Win32++\docking.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit31]
+FileName=..\..\Win32++\tab.h
+CompileCpp=1
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

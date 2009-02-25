@@ -17,6 +17,7 @@ public:
 	CTabbedMDI() {}
 	virtual ~CTabbedMDI() {}
 	virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText);
+	virtual void RecalcLayout();
 
 protected:
 	virtual HWND Create(HWND hWndParent);

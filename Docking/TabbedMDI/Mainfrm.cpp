@@ -43,6 +43,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
 	{
+	case IDM_FILE_NEW:
+		{
+			CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockView.GetView();
+			pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));
+		}
+		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);

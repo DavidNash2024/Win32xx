@@ -18,7 +18,7 @@
 					<Add option="-D_DEBUG" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -36,7 +36,7 @@
 					<Add option="-w-par" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -153,15 +153,16 @@
 		<Unit filename="Views.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
-		<Unit filename="..\Win32++\Default_Resource.h" />
-		<Unit filename="..\Win32++\Dialog.h" />
-		<Unit filename="..\Win32++\Dockable.h" />
-		<Unit filename="..\Win32++\Frame.h" />
-		<Unit filename="..\Win32++\GDI.h" />
-		<Unit filename="..\Win32++\Rebar.h" />
-		<Unit filename="..\Win32++\Statusbar.h" />
-		<Unit filename="..\Win32++\Toolbar.h" />
-		<Unit filename="..\Win32++\WinCore.h" />
+		<Unit filename="..\..\Win32++\dialog.h" />
+		<Unit filename="..\..\Win32++\docking.h" />
+		<Unit filename="..\..\Win32++\frame.h" />
+		<Unit filename="..\..\Win32++\gdi.h" />
+		<Unit filename="..\..\Win32++\listview.h" />
+		<Unit filename="..\..\Win32++\rebar.h" />
+		<Unit filename="..\..\Win32++\statusbar.h" />
+		<Unit filename="..\..\Win32++\toolbar.h" />
+		<Unit filename="..\..\Win32++\treeview.h" />
+		<Unit filename="..\..\Win32++\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

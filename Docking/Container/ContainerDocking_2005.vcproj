@@ -344,7 +344,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\dockable.h"
+				RelativePath="..\..\Win32++\docking.h"
 				>
 			</File>
 			<File
@@ -365,6 +365,10 @@
 			</File>
 			<File
 				RelativePath="..\..\Win32++\statusbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\tab.h"
 				>
 			</File>
 			<File

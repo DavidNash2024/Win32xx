@@ -15,13 +15,14 @@ CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText)
 {
 	if (NULL == pWnd)
 		throw CWinException(_T("Cannot add Null MDI Child"));
-
-	// Set the extended style for a MDI child ????
-//	CREATESTRUCT cs = {0};
-//	cs.dwExStyle = WS_EX_MDICHILD;
-//	pWnd->PreCreate(cs);
 	
 	m_Tab.AddTabPage(pWnd, szTabText);
+	if (!m_Tab.IsWindow())
+	{
+		m_Tab.Create(m_hWnd);
+		RecalcLayout();
+	}
+
 	return pWnd;
 }
 
@@ -30,7 +31,7 @@ HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	CLIENTCREATESTRUCT clientcreate ;
 	clientcreate.hWindowMenu  = m_hWnd;
 	clientcreate.idFirstChild = IDW_FIRSTCHILD ;
-	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES;
 
 	// Create the view window
 	if (!CreateEx(0, _T("MDICLient"), _T(""),
@@ -40,13 +41,28 @@ HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	return m_hWnd;
 }
 
+void CTabbedMDI::RecalcLayout()
+{
+	if (m_Tab.GetItemCount() >0)
+	{
+		CRect rc = GetClientRect();
+		m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+	}
+	else
+		m_Tab.ShowWindow(SW_HIDE);
+}
+
 LRESULT CTabbedMDI::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
+	case WM_ERASEBKGND:
+		if (m_Tab.GetItemCount() >0)
+			return 0;
+		break;
 	case WM_WINDOWPOSCHANGED:
-	//	Invalidate();
-		break;  
+		RecalcLayout();
+		break;
 	}
 
 	return WndProcDefault(hWnd, uMsg, wParam, lParam);

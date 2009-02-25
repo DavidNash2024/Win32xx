@@ -2318,26 +2318,12 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* WndFrom = FromHandle(hwndFrom);
 				if (WndFrom != NULL)
-				{
-					if (m_PrevWindowProc) break; // Suppress for subclassed windows
+				{	
+					// Only reflect messages from the parent to avoid possible double handling
+					if (m_hWnd != ::GetParent(hwndFrom)) break;
 
 					lr = WndFrom->OnNotifyReflect(wParam, lParam);
 					if (lr) return lr;
-				}
-
-				if (m_hWnd != ::GetParent(hwndFrom))
-				{
-					// Some controls (eg ListView) have child windows.
-					// Reflect those notifications too.
-
-					if (m_PrevWindowProc) break; // Suppress for subclassed windows
-
-					CWnd* WndFromParent = FromHandle(::GetParent(hwndFrom));
-					if (WndFromParent != NULL)
-					{
-						lr = WndFromParent->OnNotifyReflect(wParam, lParam);
-						if (lr) return lr;
-					}
 				}
 
 				// Handle user notifications

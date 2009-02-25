@@ -18,7 +18,7 @@
 					<Add option="-D_DEBUG" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -36,7 +36,7 @@
 					<Add option="-w-par" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -151,7 +151,6 @@
 		<Unit filename="Files.h" />
 		<Unit filename="Mainfrm.cpp" />
 		<Unit filename="Mainfrm.h" />
-		<Unit filename="Makefile.win" />
 		<Unit filename="Output.cpp" />
 		<Unit filename="Output.h" />
 		<Unit filename="Resource.rc">

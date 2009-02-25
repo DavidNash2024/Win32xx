@@ -154,43 +154,43 @@ SOURCE=.\Resource.rc
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE="..\..\Win32++\default_resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\..\Win32++\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dockable.h"
+SOURCE="..\..\Win32++\docking.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\dockable.h"
+SOURCE="..\..\Win32++\frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Frame.h"
+SOURCE="..\..\Win32++\gdi.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\GDI.h"
+SOURCE="..\..\Win32++\listview.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Rebar.h"
+SOURCE="..\..\Win32++\rebar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Statusbar.h"
+SOURCE="..\..\Win32++\statusbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Toolbar.h"
+SOURCE="..\..\Win32++\toolbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\treeview.h"
 # End Source File
 # End Group
 # Begin Source File
