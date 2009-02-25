@@ -305,12 +305,12 @@ void CMainFrame::SaveDockables()
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 		// Add the Docked windows information to the registry
-		for (size_t u = 0; u < vDockList.size(); ++u)
+		for (int i = 0; i < (int)vDockList.size(); ++i)
 		{
-			DockedInfo di = vDockList[u];
+			DockedInfo di = vDockList[i];
 			TCHAR szNumber[16];
 			tString tsSubKey = _T("DockChild");
-			tsSubKey += _itot(u, szNumber, 10);
+			tsSubKey += _itot(i, szNumber, 10);
 			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
 		}
 

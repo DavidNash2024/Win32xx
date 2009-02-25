@@ -125,7 +125,7 @@ namespace Win32xx
 		virtual ~CContainer();
 		virtual void AddContainer(CContainer* pContainer);
 		virtual void AddToolbarButton(UINT nID);
-		virtual CContainer* GetContainerFromIndex(int iPage);
+		virtual CContainer* GetContainerFromIndex(size_t iPage);
 		virtual CContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
@@ -2739,9 +2739,9 @@ namespace Win32xx
 		GetToolbarData().push_back(nID);
 	}
 
-	inline CContainer* CContainer::GetContainerFromIndex(int iPage)
+	inline CContainer* CContainer::GetContainerFromIndex(size_t iPage)
 	{
-		if ((iPage >= 0) && (iPage < (int)m_vContainerInfo.size()))
+		if ((iPage >= 0) && (iPage < m_vContainerInfo.size()))
 			return (CContainer*)m_vContainerInfo[iPage].pContainer;
 		else
 			return NULL;

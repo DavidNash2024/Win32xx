@@ -1690,7 +1690,7 @@ namespace Win32xx
 
 		// get the icon's location in the imagelist
 		int iImage = -1;
-		for (size_t i = 0 ; i < m_vMenuIcons.size(); ++i)
+		for (int i = 0 ; i < (int)m_vMenuIcons.size(); ++i)
 		{
 			if (pdis->itemID == m_vMenuIcons[i])
 				iImage = i;
@@ -2964,7 +2964,7 @@ namespace Win32xx
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
 
-		int MaxMRUIndex = min(MaxMRUArrayIndex, m_nMaxMRU);
+		int MaxMRUIndex = (int)min(MaxMRUArrayIndex, m_nMaxMRU);
 
 		for (int index = MaxMRUIndex; index >= 0; --index)
 		{

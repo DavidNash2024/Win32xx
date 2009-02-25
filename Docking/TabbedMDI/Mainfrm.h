@@ -7,7 +7,7 @@
 #include "../../Win32++/frame.h"
 #include "Classes.h"
 #include "Files.h"
-#include "TabbedMDI.h"
+#include "DockTabbedMDI.h"
 #include "Text.h"
 #include "Output.h"
 

@@ -198,7 +198,6 @@ namespace Win32xx
 	typedef std::basic_string<TCHAR> tString;
 
 	// TRACE sends a string to the debug/output pane, or an external debugger
-	//  we use an inline instead of a macro for TRACE to avoid C4390 warnings
 	inline void TRACE(LPCTSTR str)
 	{
 	#ifdef _DEBUG

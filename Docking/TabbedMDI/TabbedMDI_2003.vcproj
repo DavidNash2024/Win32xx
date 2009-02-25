@@ -148,6 +148,9 @@
 				RelativePath=".\ComboBoxEx.cpp">
 			</File>
 			<File
+				RelativePath=".\DockTabbedMDI.cpp">
+			</File>
+			<File
 				RelativePath=".\Files.cpp">
 			</File>
 			<File
@@ -190,9 +193,6 @@
 				RelativePath=".\Output.cpp">
 			</File>
 			<File
-				RelativePath=".\TabbedMDI.cpp">
-			</File>
-			<File
 				RelativePath=".\TabbedMDIApp.cpp">
 			</File>
 			<File
@@ -209,6 +209,9 @@
 				RelativePath=".\ComboBoxEx.h">
 			</File>
 			<File
+				RelativePath=".\DockTabbedMDI.h">
+			</File>
+			<File
 				RelativePath=".\Files.h">
 			</File>
 			<File
@@ -219,9 +222,6 @@
 			</File>
 			<File
 				RelativePath="resource.h">
-			</File>
-			<File
-				RelativePath=".\TabbedMDI.h">
 			</File>
 			<File
 				RelativePath=".\TabbedMDIApp.h">
@@ -281,6 +281,9 @@
 			</File>
 			<File
 				RelativePath="..\..\Win32++\tab.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\tabbedMDI.h">
 			</File>
 			<File
 				RelativePath="..\..\Win32++\toolbar.h">
