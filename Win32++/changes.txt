@@ -1,11 +1,14 @@
 Version 6.5
 ===========
-Added CTab class.
- - CContainer now inherits from CTab
-Added TabDemo Sample which demonstrates the use of CTab 
+Added CTab class. This class can be used as a view window. It is also the base
+ class for CContainer and CMDItab.
+Added CMDITab class. A MDITab can be used as a view window for 
+ a Frame or a Dockable. 
+Added TabDemo Sample which demonstrates the use of CTab.
+Added Docking TabbedMDI sample demonstrating the use of a tabbed mdi window
+ in a docking application.
 Added CFrame::GetToolbarData
-
-
+CContainer now inherrits from CTab
 Renamed dockable.h to docking.h
 
 Version 6.4.1

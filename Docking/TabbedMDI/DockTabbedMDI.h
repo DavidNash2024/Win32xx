@@ -6,7 +6,6 @@
 #define DOCKTABBEDMDI_H
 
 #include "../../Win32++/tab.h"
-#include "../../Win32++/tabbedMDI.h"
 #include "../../Win32++/docking.h"
 
 

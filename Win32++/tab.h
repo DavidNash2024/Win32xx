@@ -37,7 +37,7 @@
 
 ///////////////////////////////////////////////////////
 // tab.h
-//  Declaration of the CTab class
+//  Declaration of the CTab and CMDITab classes
 
 #ifndef TAB_H
 #define TAB_H
@@ -103,6 +103,24 @@ namespace Win32xx
 		HIMAGELIST m_himlTab;
 		CWnd* m_pView;
 		
+	};
+	
+	////////////////////////////////////////
+	// Declaration of the CTabbedMDI class
+	class CTabbedMDI : public CWnd
+	{
+	public:
+		CTabbedMDI() {}
+		virtual ~CTabbedMDI() {}
+		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText);
+		virtual void RecalcLayout();
+	  
+	protected:
+		virtual HWND Create(HWND hWndParent);
+		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	  
+	private:
+		CTab m_Tab;
 	};
 
 	//////////////////////////////////////////////////////////
@@ -530,6 +548,66 @@ namespace Win32xx
 	{
 		TabCtrl_SetPadding(m_hWnd, cx, cy);
 	}
-}
+	
+	////////////////////////////////////////
+	// Definitions for the CTabbedMDI class
+	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText)
+	{
+		if (NULL == pWnd)
+			throw CWinException(_T("Cannot add Null MDI Child"));
+		
+		m_Tab.AddTabPage(pWnd, szTabText);
+		if (!m_Tab.IsWindow())
+		{
+			m_Tab.Create(m_hWnd);
+			RecalcLayout();
+		}
+
+		return pWnd;
+	}
+
+	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
+	{
+		CLIENTCREATESTRUCT clientcreate ;
+		clientcreate.hWindowMenu  = m_hWnd;
+		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES;
+
+		// Create the view window
+		if (!CreateEx(0, _T("MDICLient"), _T(""),
+			dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
+				throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
+
+		return m_hWnd;
+	}
+
+	inline void CTabbedMDI::RecalcLayout()
+	{
+		if (m_Tab.GetItemCount() >0)
+		{
+			CRect rc = GetClientRect();
+			m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+		}
+		else
+			m_Tab.ShowWindow(SW_HIDE);
+	}
+
+	inline LRESULT CTabbedMDI::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch(uMsg)
+		{
+		case WM_ERASEBKGND:
+			if (m_Tab.GetItemCount() >0)
+				return 0;
+			break;
+		case WM_WINDOWPOSCHANGED:
+			RecalcLayout();
+			break;
+		}
+
+		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	}
+
+} // namespace Win32xx
 
 #endif

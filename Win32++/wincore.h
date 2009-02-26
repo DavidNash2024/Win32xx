@@ -2319,10 +2319,11 @@ namespace Win32xx
 				if (WndFrom != NULL)
 				{	
 					// Only reflect messages from the parent to avoid possible double handling
-					if (m_hWnd != ::GetParent(hwndFrom)) break;
-
-					lr = WndFrom->OnNotifyReflect(wParam, lParam);
-					if (lr) return lr;
+					if (::GetParent(hwndFrom) == m_hWnd)
+					{
+						lr = WndFrom->OnNotifyReflect(wParam, lParam);
+						if (lr) return lr;
+					}
 				}
 
 				// Handle user notifications
