@@ -68,6 +68,7 @@ namespace Win32xx
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
 		CWnd* GetView() const		{ return m_pView; }
+		void SetShowClose(BOOL bShow)	{ m_bShowClose = bShow; }
 
 		// Wrappers for Win32 Macros
 		void AdjustRect(BOOL fLarger, RECT *prc);
@@ -86,7 +87,7 @@ namespace Win32xx
 		void SetPadding(int cx, int cy);
 
 	protected:
-		virtual SIZE GetMaxTabTextSize();
+		virtual SIZE GetMaxTabSize();
 		virtual void OnCreate();
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -94,14 +95,18 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			
 	private:
+		void DrawCloseButton(CDC& DrawDC, UINT uState);
 		void DrawTabs(CDC& dcMem);
 		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		void Paint();
 		void SetView(CWnd& Wnd);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
+		CRect m_rcClose;
 		HIMAGELIST m_himlTab;
 		CWnd* m_pView;
+		BOOL m_bShowClose;		// Show or hide the close button
+		int m_nTabHeight;
 		
 	};
 	
@@ -110,7 +115,7 @@ namespace Win32xx
 	class CTabbedMDI : public CWnd
 	{
 	public:
-		CTabbedMDI() {}
+		CTabbedMDI(); 
 		virtual ~CTabbedMDI() {}
 		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText);
 		virtual void RecalcLayout();
@@ -126,7 +131,7 @@ namespace Win32xx
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab() : m_pView(NULL)
+	inline CTab::CTab() : m_pView(NULL), m_bShowClose(FALSE), m_nTabHeight(20)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
@@ -176,6 +181,83 @@ namespace Win32xx
 		AddTabPage(pWnd, szTitle, hIcon);
 	}
 
+	inline void CTab::DrawCloseButton(CDC& DrawDC, UINT uState)
+	{
+		// The close button isn't displayed on Win95 
+		if (GetWinVersion() == 1400)  return;
+		
+		// Determine the close button's drawing position relative to the window
+		CRect rcClose = m_rcClose;
+	//	MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
+	//	rcClose.OffsetRect(0, m_nTabHeight-2);
+
+		// Draw the outer highlight for the close button
+		if (!IsRectEmpty(&rcClose))
+		{
+			switch (uState)
+			{
+			case 0:
+				{
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+					
+					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+					break;
+				}
+
+			case 1:
+				{
+					// Draw outline, white at top, black on bottom
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::LineTo(DrawDC, rcClose.left, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+				}
+
+				break;
+			case 2:
+				{
+					// Draw outline, black on top, white on bottom
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::LineTo(DrawDC, rcClose.left, rcClose.top);
+					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+				}
+				break;
+			}
+
+			// Manually Draw Close Button
+			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+
+			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.left + 4, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -4);
+
+			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +4, NULL);
+			::LineTo(DrawDC, rcClose.right - 4, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +4, NULL);
+			::LineTo(DrawDC, rcClose.left + 3, rcClose.bottom -3);
+
+			::MoveToEx(DrawDC, rcClose.right -5, rcClose.top +3, NULL);
+			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -4);
+		}
+	}
+
 	inline void CTab::DrawTabs(CDC& dcMem)
 	{
 		// Draw the tab buttons:
@@ -214,10 +296,16 @@ namespace Win32xx
 				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 				dcMem.CreateFontIndirect(&info.lfStatusFont);
 				CRect rcText = rcItem;
-				rcText.left += 24;
+				int iImageSize = 20;
+				int iPadding = 4;
+				if (tcItem.iImage >= 0)
+					rcText.left += iImageSize;
+				
+				rcText.left += iPadding;
 				::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 			}
-		}  
+		} 
+
 	}
 
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
@@ -237,6 +325,7 @@ namespace Win32xx
 			top = rcTab.top -3;
 			bottom = rcTab.top;
 		}
+
 		dcMem.CreateSolidBrush(RGB(248,248,248));
 		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 		Rectangle(dcMem, left, top, right, bottom);
@@ -253,9 +342,10 @@ namespace Win32xx
 			MoveToEx(dcMem, left-1, top-1, NULL);
 			LineTo(dcMem, right, top-1);
 		}
-		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
+		
 
 		// Draw a lighter line over the darker line for the selected tab
+		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 		TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
 		OffsetRect(&rcItem, 1, 1);
 
@@ -271,7 +361,7 @@ namespace Win32xx
 		}
 	}
 
-	inline SIZE CTab::GetMaxTabTextSize()
+	inline SIZE CTab::GetMaxTabSize()
 	{
 		CSize Size;
 
@@ -285,11 +375,18 @@ namespace Win32xx
 			dc.CreateFontIndirect(&info.lfStatusFont);
 			TCHAR szTitle[32];
 			TCITEM tcItem = {0};
-			tcItem.mask = TCIF_TEXT;
+			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
 			tcItem.cchTextMax = 32;
 			tcItem.pszText = szTitle;
 			TabCtrl_GetItem(m_hWnd, i, &tcItem);
 			GetTextExtentPoint32(dc, szTitle, lstrlen(szTitle), &TempSize);
+
+			int iImageSize = 0;
+			int iPadding = 6;
+			if (tcItem.iImage >= 0)
+				iImageSize = 20;
+			TempSize.cx += iImageSize + iPadding;
+
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;
 		}
@@ -304,7 +401,7 @@ namespace Win32xx
 			// Add tabs for each view.
 			TCITEM tie = {0};
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
-			tie.iImage = i;
+			tie.iImage = m_vTabPageInfo[i].iImage;
 			tie.pszText = m_vTabPageInfo[i].szTitle;
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
@@ -353,22 +450,38 @@ namespace Win32xx
 
 		// Use the region in the memory DC to paint the grey background
 		dcMem.AttachClipRegion(hrgnClip);
-		dcMem.CreateSolidBrush(RGB(230, 230, 230));
+		dcMem.CreateSolidBrush(RGB(232, 228, 220));
 		::PaintRgn(dcMem, hrgnClip);
 
 		// Draw the tab buttons on the memory DC:
 		DrawTabs(dcMem);
+		
+		// Draw the close button if required
+		if (m_bShowClose)
+		{
+			m_rcClose = GetClientRect();
+			m_rcClose.left = m_rcClose.right - 16;
+			m_rcClose.top = 2;
+			m_rcClose.bottom = m_rcClose.top + 16;
+
+			HRGN hrgnClip3 = ::CreateRectRgn(m_rcClose.left, m_rcClose.top, m_rcClose.right, m_rcClose.bottom);
+			CombineRgn(hrgnClip, hrgnClip, hrgnClip3, RGN_OR);
+			::DeleteObject(hrgnClip3);
+			DrawCloseButton(dcMem, 0);
+		}  
+
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
 		dcMem.DetachClipRegion();
 		dcView.AttachClipRegion(hrgnClip);
 		BitBlt(dcView, 0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
+		dcView.DetachClipRegion();
 
 		// Cleanup
 		::DeleteObject(hrgnSrc1);
 		::DeleteObject(hrgnSrc2);
-		// hrgnClip is attached to dcView, so it will be deleted automatically
+		::DeleteObject(hrgnClip);
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
@@ -421,8 +534,12 @@ namespace Win32xx
 		{
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-			int nItemWidth = min(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/GetItemCount());
-			SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
+			
+			int xGap = 2;
+			if (m_bShowClose) xGap += m_nTabHeight;
+
+			int nItemWidth = min( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
+			SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, m_nTabHeight));
 		}
 	}
 
@@ -551,6 +668,11 @@ namespace Win32xx
 	
 	////////////////////////////////////////
 	// Definitions for the CTabbedMDI class
+	inline CTabbedMDI::CTabbedMDI()
+	{
+		m_Tab.SetShowClose(TRUE);
+	}
+
 	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText)
 	{
 		if (NULL == pWnd)
