@@ -62,6 +62,7 @@ namespace Win32xx
 		virtual ~CTab();
 		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
 		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
+		virtual int  GetTabIndex(CWnd* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void RemoveTabPage(int iPage);
 
@@ -74,6 +75,8 @@ namespace Win32xx
 		void AdjustRect(BOOL fLarger, RECT *prc);
 		BOOL DeleteAllItems();
 		BOOL DeleteItem(int iItem);
+		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
+		CRect GetCloseRect() { return m_rcClose; }
 		int  GetCurFocus();
 		int  GetCurSel();
 		BOOL GetItem(int iItem, LPTCITEM pitem);
@@ -94,7 +97,7 @@ namespace Win32xx
 		virtual void SetTabSize();
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			
-	private:
+	public:
 		void DrawCloseButton(CDC& DrawDC, UINT uState);
 		void DrawTabs(CDC& dcMem);
 		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
@@ -118,7 +121,10 @@ namespace Win32xx
 		CTabbedMDI(); 
 		virtual ~CTabbedMDI() {}
 		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText);
+		virtual void CloseActiveMDI();
+		virtual CWnd* GetActiveMDIChild();
 		virtual void RecalcLayout();
+		virtual void SetActiveMDIChild(CWnd* pWnd);
 	  
 	protected:
 		virtual HWND Create(HWND hWndParent);
@@ -394,6 +400,17 @@ namespace Win32xx
 		return Size;
 	}
 
+	inline int CTab::GetTabIndex(CWnd* pWnd)
+	{
+		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
+		{
+			if (m_vTabPageInfo[i].pWnd == pWnd)
+				return i;
+		}
+
+		return -1;
+	}
+
 	inline void CTab::OnCreate()
 	{			
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
@@ -493,7 +510,7 @@ namespace Win32xx
 
 	inline void CTab::RemoveTabPage(int iPage)
 	{
-		if ((iPage < 0) || (iPage > GetItemCount()-1) || (GetItemCount() <= 1))
+		if ((iPage < 0) || (iPage > GetItemCount()-1))
 			return;
 
 		// Remove the tab
@@ -504,10 +521,14 @@ namespace Win32xx
 		int iImage = (*iter).iImage;
 		if (iImage >= 0) 
 			TabCtrl_RemoveImage(m_hWnd, iImage);
+		delete (*iter).pWnd;
 		m_vTabPageInfo.erase(iter);
 
-		SetTabSize();
-		SelectPage(0);
+		if (m_vTabPageInfo.size() > 0)
+		{
+			SetTabSize();
+			SelectPage(0);
+		}
 	}
 
 	inline void CTab::SelectPage(int iPage)
@@ -688,6 +709,13 @@ namespace Win32xx
 		return pWnd;
 	}
 
+	inline void CTabbedMDI::CloseActiveMDI()
+	{
+		int nTab = m_Tab.GetCurSel();
+		m_Tab.RemoveTabPage(nTab);
+		RecalcLayout();
+	}
+
 	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	{
 		CLIENTCREATESTRUCT clientcreate ;
@@ -703,6 +731,12 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
+	inline CWnd* CTabbedMDI::GetActiveMDIChild()
+	{
+		int nTab = m_Tab.GetCurSel();
+		return m_Tab.m_vTabPageInfo[nTab].pWnd;
+	}
+
 	inline void CTabbedMDI::RecalcLayout()
 	{
 		if (m_Tab.GetItemCount() >0)
@@ -712,6 +746,13 @@ namespace Win32xx
 		}
 		else
 			m_Tab.ShowWindow(SW_HIDE);
+	}
+
+	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
+	{
+		int iPage = m_Tab.GetTabIndex(pWnd);
+		if (iPage >= 0)
+			m_Tab.SelectPage(iPage);
 	}
 
 	inline LRESULT CTabbedMDI::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -724,6 +765,14 @@ namespace Win32xx
 			break;
 		case WM_WINDOWPOSCHANGED:
 			RecalcLayout();
+			break;
+		case WM_LBUTTONDOWN:
+			{
+				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				
+				if (m_Tab.GetCloseRect().PtInRect(pt))
+					CloseActiveMDI();
+			}
 			break;
 		}
 

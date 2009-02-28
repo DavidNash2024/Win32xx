@@ -103,9 +103,11 @@ how the framework might be used.
 
 Getting Started
 ---------------
-Each file download includes the project files for Dev-C++, CodeBlocks and the various
-compilers from Microsoft. CodeBlocks is an IDE (Integrated Development Environment)
-that supports GNU GCC, Borland Developer Studio 2006 and Microsoft C++ Toolkit 2003.
+Each file download includes the project files for Dev-C++, CodeBlocks and the
+various compilers from Microsoft. CodeBlocks is an IDE (Integrated Development
+Environment) that supports GNU GCC, Borland Developer Studio 2006 and Microsoft
+C++ Toolkit 2003.
+
 Start with one of the generic starters, and add your code.
 
 For additional information on getting started, refer to the tutorial at
