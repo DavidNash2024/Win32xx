@@ -37,10 +37,12 @@
 #define IDM_DOCK_DEFAULT                140
 #define IDM_DOCK_CLOSEALL               141
 
-
-
-
-
+#define IDM_NEWMENU                     142
+#define IDM_FILE_NEWSIMPLE              143
+#define IDM_FILE_NEWRECT                144
+#define IDM_FILE_NEWTEXT                145
+#define IDM_FILE_NEWTREE                146
+#define IDM_FILE_NEWLIST                147
 
 
 

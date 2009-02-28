@@ -5,6 +5,8 @@
 #define MAINFRM_H
 
 #include "../../Win32++/frame.h"
+#include "Simple.h"
+#include "Rect.h"
 #include "Classes.h"
 #include "Files.h"
 #include "DockTabbedMDI.h"
@@ -37,6 +39,7 @@ public:
 
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	void DoPopupMenu();
 	void LoadDefaultDockables();
 	void LoadRegistryDockables();
 	void SaveDockables();

@@ -38,16 +38,54 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
+void CMainFrame::DoPopupMenu()
+{
+	// Creates the popup menu when the "New" toolbar button is pressed
+
+	// Position the popup menu
+	CToolbar& TB = GetToolbar();
+	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
+	::MapWindowPoints(GetToolbar(), NULL, (LPPOINT)&rc, 2);
+
+	TPMPARAMS tpm;
+	tpm.cbSize = sizeof(TPMPARAMS);
+	tpm.rcExclude = rc;
+
+	// Load the popup menu
+	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_NEWMENU));
+	HMENU hPopupMenu = ::GetSubMenu(hTopMenu, 0);
+
+	// Start the popup menu
+	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
+
+	// Release the menu resource
+	::DestroyMenu(hTopMenu);
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockView.GetView();
+
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		{
-			CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockView.GetView();
-			pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));
-		}
+		DoPopupMenu();
+		return TRUE;
+	case IDM_FILE_NEWSIMPLE:
+		pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"));	
+		return TRUE;
+	case IDM_FILE_NEWRECT:
+		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"));	
+		return TRUE;
+	case IDM_FILE_NEWTEXT:
+		pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));	
+		return TRUE;
+	case IDM_FILE_NEWTREE:
+		pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"));	
+		return TRUE;
+	case IDM_FILE_NEWLIST:
+		pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"));
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application

@@ -193,6 +193,12 @@
 				RelativePath=".\Output.cpp">
 			</File>
 			<File
+				RelativePath=".\Rect.cpp">
+			</File>
+			<File
+				RelativePath=".\Simple.cpp">
+			</File>
+			<File
 				RelativePath=".\TabbedMDIApp.cpp">
 			</File>
 			<File
@@ -221,7 +227,13 @@
 				RelativePath=".\Output.h">
 			</File>
 			<File
+				RelativePath=".\Rect.h">
+			</File>
+			<File
 				RelativePath="resource.h">
+			</File>
+			<File
+				RelativePath=".\Simple.h">
 			</File>
 			<File
 				RelativePath=".\TabbedMDIApp.h">

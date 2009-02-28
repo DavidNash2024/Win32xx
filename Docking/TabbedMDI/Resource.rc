@@ -46,6 +46,18 @@ BEGIN
     END
 END
 
+IDM_NEWMENU MENU
+BEGIN
+    POPUP "New"
+    BEGIN
+        MENUITEM "New &Simple",                 IDM_FILE_NEWSIMPLE
+        MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
+        MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
+        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
+        MENUITEM "New ListView",                IDM_FILE_NEWLIST
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -149,6 +161,15 @@ END
 
 STRINGTABLE
 BEGIN
+    IDM_FILE_NEWSIMPLE      "Create Simple MDI Child"
+    IDM_FILE_NEWRECT        "Create Rect MDI Child"
+    IDM_FILE_NEWTEXT        "Create Text MDI Child"
+    IDM_FILE_NEWTREE        "Create Tree-View MDI Child"
+    IDM_FILE_NEWLIST        "Create List-View MDI Child"
+END
+
+STRINGTABLE
+BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
@@ -172,8 +193,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+  	SC_NEXTWINDOW           "Select Next Window"
+  	SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END
