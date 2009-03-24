@@ -125,6 +125,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 			else
 				RemoveMRUEntry(tsMRUText.c_str());
 
+			SetWindowTitle();
 			return TRUE;
 		}
 
@@ -305,9 +306,9 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		tStringStream buf;
-		buf << _T("Failed to load:  ") << szFileName;
-		::MessageBox(NULL, buf.str().c_str(), _T("Warning"), MB_ICONWARNING);
+		tString ts = _T("Failed to load:  ");
+		ts += szFileName;
+		::MessageBox(NULL, ts.c_str(), _T("Warning"), MB_ICONWARNING);
 		return FALSE;
 	}
 
@@ -339,9 +340,9 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		tStringStream buf;
-		buf << _T("Failed to load:   ") << szFileName;
-		::MessageBox(NULL, buf.str().c_str(), _T("Warning"), MB_ICONWARNING);
+		tString ts = _T("Failed to write:  ");
+		ts += szFileName;
+		::MessageBox(NULL, ts.c_str(), _T("Warning"), MB_ICONWARNING);
 		return FALSE;
 	}
 

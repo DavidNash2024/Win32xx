@@ -462,7 +462,7 @@ namespace Win32xx
 				if (lstrlen(szText) > 0)
 				{
 					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
-					CRect rcText(0, 0, min(TextSize.cx, iWidth), TextSize.cy);
+					CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
 
 					int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
 					int yOffset = yImage + cyImage +1;
@@ -471,7 +471,7 @@ namespace Win32xx
 					{
 						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
 						yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
-						rcText.right = min(rcText.right,  rcRect.right - xOffset);
+						rcText.right = MIN(rcText.right,  rcRect.right - xOffset);
 					}
 
 					OffsetRect(&rcText, xOffset, yOffset);

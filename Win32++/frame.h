@@ -1540,7 +1540,7 @@ namespace Win32xx
 
 	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
 	{
-		// Erase duplicate entries from vector
+		// Erase possible duplicate entries from vector
 		RemoveMRUEntry(szMRUEntry);
 
 		// Insert the entry at the beginning of the vector
@@ -1592,7 +1592,7 @@ namespace Win32xx
 		DWORD dwStyle = (DWORD)GetView()->GetWindowLongPtr(GWL_STYLE);
 		DWORD dwExStyle = (DWORD)GetView()->GetWindowLongPtr(GWL_EXSTYLE);
 		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
-		
+
 		// Calculate the new frame height
 		CRect rcFrameBefore = GetWindowRect();
 		CRect rcViewBefore = GetViewRect();
@@ -1814,7 +1814,7 @@ namespace Win32xx
 
 		CRect rcView(left, top, right, bottom);
 		return rcView;
-	} // CRect CFrame::GetViewRect()
+	} 
 
 	inline void CFrame::LoadCommonControls(INITCOMMONCONTROLSEX InitStruct)
 	{
@@ -1861,7 +1861,7 @@ namespace Win32xx
 				throw CWinException(_T("KeyName must be set before calling LoadRegistryMRUSettings"));
 
 			// Load the MRU from the registry
-			m_nMaxMRU = min(nMaxMRU, 16);
+			m_nMaxMRU = MIN(nMaxMRU, 16);
 			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
 			HKEY hKey = NULL;
 
@@ -1921,8 +1921,8 @@ namespace Win32xx
 			// Get current desktop size to ensure reasonable a window position
 			CRect rcDesktop;
 			SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-			m_rcPosition.top = min(dwTop, (UINT)rcDesktop.bottom - 30);
-			m_rcPosition.left = min(dwLeft, (UINT)rcDesktop.right - 90);
+			m_rcPosition.top = MIN(dwTop, (UINT)rcDesktop.bottom - 30);
+			m_rcPosition.left = MIN(dwLeft, (UINT)rcDesktop.right - 90);
 			m_rcPosition.bottom = m_rcPosition.top + dwHeight;
 			m_rcPosition.right = m_rcPosition.left + dwWidth;
 
@@ -2259,8 +2259,8 @@ namespace Win32xx
 			int Icony = 0;
 			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 
-			pmis->itemHeight = 2+max(max(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
-			pmis->itemWidth = size.cx + max(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
+			pmis->itemHeight = 2+ MAX(MAX(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
+			pmis->itemWidth = size.cx + MAX(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
 
 			// Allow extra width if the text includes a tab
 			if (_tcschr(pmd->Text, _T('\t')))
@@ -2559,11 +2559,14 @@ namespace Win32xx
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	{
-		std::vector<tString>::reverse_iterator rit;
-		for (rit = m_vMRUEntries.rbegin(); rit != m_vMRUEntries.rend(); ++rit)
+		std::vector<tString>::iterator it;
+		for (it = m_vMRUEntries.begin(); it != m_vMRUEntries.end(); ++it)
 		{
-			if ((*rit) == szMRUEntry)
-				m_vMRUEntries.erase((rit+1).base());
+			if ((*it) == szMRUEntry)
+			{
+				m_vMRUEntries.erase(it);
+				break;
+			}
 		}
 
 		UpdateMRUMenu();
@@ -2582,10 +2585,10 @@ namespace Win32xx
 				CRect rc = Wndpl.rcNormalPosition;
 				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Position");;
 				HKEY hKey = NULL;
-				DWORD dwTop = max(rc.top, 0);
-				DWORD dwLeft = max(rc.left, 0);
-				DWORD dwWidth = max(rc.Width(), 100);
-				DWORD dwHeight = max(rc.Height(), 50);
+				DWORD dwTop = MAX(rc.top, 0);
+				DWORD dwLeft = MAX(rc.left, 0);
+				DWORD dwWidth = MAX(rc.Width(), 100);
+				DWORD dwHeight = MAX(rc.Height(), 50);
 
 				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
@@ -2727,7 +2730,7 @@ namespace Win32xx
 			// Get the coordinates of the parent window's client area.
 			CRect rcClient = GetClientRect();
 
-			int width = max(300, rcClient.right);
+			int width = MAX(300, rcClient.right);
 
 			if (m_bShowIndicatorStatus)
 			{
@@ -2964,7 +2967,7 @@ namespace Win32xx
 		else
 			mii.cbSize = sizeof(MENUITEMINFO);
 
-		int MaxMRUIndex = (int)min(MaxMRUArrayIndex, m_nMaxMRU);
+		int MaxMRUIndex = (int)MIN(MaxMRUArrayIndex, m_nMaxMRU);
 
 		for (int index = MaxMRUIndex; index >= 0; --index)
 		{

@@ -15,8 +15,6 @@
 #define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
 #endif
 
-typedef std::basic_stringstream<TCHAR> tStringStream;
-
 DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 

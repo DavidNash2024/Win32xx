@@ -11,6 +11,8 @@ Added CFrame::GetToolbarData
 CContainer now inherrits from CTab
 Renamed dockable.h to docking.h
 
+min and max macros are no longer defined. MIN and MAX are defined instead
+
 Version 6.4.1
 =============
 This release has the following bug fixes:
@@ -79,7 +81,7 @@ DS_DOCKED_TOPMOST
 DS_DOCKED_BOTTOMMOST
 
 Subclassed windows now call OnCommand and OnNotify
-Exceptions now also genereate TRACE output to display the error.
+Exceptions now also generate TRACE output to display the error.
 
 Fixes
 -----

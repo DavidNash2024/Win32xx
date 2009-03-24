@@ -559,7 +559,7 @@ namespace Win32xx
 			int xGap = 2;
 			if (m_bShowClose) xGap += m_nTabHeight;
 
-			int nItemWidth = min( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
+			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, m_nTabHeight));
 		}
 	}

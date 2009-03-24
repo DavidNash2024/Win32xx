@@ -183,14 +183,13 @@ namespace Win32xx {}
   #define WM_PARENTNOTIFY 0x0210
 #endif
 
-// Define min and max for Dev-C++ compatibility
-#ifndef max
-  #define max(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
 
-#ifndef min
-  #define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
+// Define our own MIN and MAX macros 
+// this avoids inconcistancies with Dev-C++ and other compilers, and
+// avoids conflicts between typical min/max macros and std::min/std::max
+#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
+#define MIN(a,b)            (((a) < (b)) ? (a) : (b))
+
 
 namespace Win32xx
 {
@@ -376,7 +375,7 @@ namespace Win32xx
 	{
 		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
 			return NULL;
-		int nLen = min((int)lstrlen(lpstrSrc), nLength - 1);
+		int nLen = MIN((int)lstrlen(lpstrSrc), nLength - 1);
 		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
 		lpstrDest[nLen] = 0;
 		return lpstrRet;

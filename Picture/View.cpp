@@ -44,8 +44,8 @@ RECT CView::GetImageRect()
 	int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
 	
 	CRect rcImage;
-	rcImage.right = max(nWidth, 200);
-	rcImage.bottom = max(nHeight, 200);
+	rcImage.right = MAX(nWidth, 200);
+	rcImage.bottom = MAX(nHeight, 200);
 	return rcImage;
 }
 

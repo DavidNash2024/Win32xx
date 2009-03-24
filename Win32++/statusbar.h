@@ -207,7 +207,7 @@ namespace Win32xx
 
 				::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPartWidths);
 
-				int iNewParts = max(iPart+1, iParts);
+				int iNewParts = MAX(iPart+1, iParts);
 				iNewPartWidths = new int[iNewParts];
 				if (NULL == iNewPartWidths)
 					throw std::bad_alloc();

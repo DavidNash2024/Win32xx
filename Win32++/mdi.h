@@ -397,7 +397,7 @@ namespace Win32xx
 		if (!pChild->IsWindow())
 			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Invalid MDI child"));
 
-		SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0);
+		m_wndMDIClient.SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0);
 
 		// Verify
 		if (m_hActiveMDIChild != pChild->GetHwnd())

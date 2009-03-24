@@ -363,7 +363,7 @@ namespace Win32xx
 			for (int j = 0; j < GetBandCount()-1; ++j)
 			{
 				rcRebar = GetBandRect(j);
-				rcRebar.left = max(0, rcRebar.left - 4);
+				rcRebar.left = MAX(0, rcRebar.left - 4);
 				rcRebar.bottom +=2;
 				::DrawEdge(MemDC, &rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 			}

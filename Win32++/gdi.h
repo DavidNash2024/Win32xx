@@ -857,12 +857,12 @@ namespace Win32xx
 		UINT nWidthBytes = bi.biSizeImage/bi.biHeight;
 
 		// Ensure sane colour correction values
-		cBlue  = min(cBlue, 255);
-		cBlue  = max(cBlue, -255);
-		cRed   = min(cRed, 255);
-		cRed   = max(cRed, -255);
-		cGreen = min(cGreen, 255);
-		cGreen = max(cGreen, -255);
+		cBlue  = MIN(cBlue, 255);
+		cBlue  = MAX(cBlue, -255);
+		cRed   = MIN(cRed, 255);
+		cRed   = MAX(cRed, -255);
+		cGreen = MIN(cGreen, 255);
+		cGreen = MAX(cGreen, -255);
 
 		// Pre-calculate the RGB modification values
 		int b1 = 256 - cBlue;
