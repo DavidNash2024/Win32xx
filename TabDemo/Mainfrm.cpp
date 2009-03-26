@@ -10,16 +10,8 @@
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame()
 {
-	// Constructor for CMainFrame. Its called after CFrame's constructor
-
 	//Set the tab control as the fram's view window
 	SetView(m_View);
-
-	// Add some tabs to the tab control
-	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
@@ -80,10 +72,12 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnInitialUpdate()
 {
-	// The frame is now created.
-	// Place any additional startup code here.
-
-	TRACE(_T("Frame created\n"));
+	// Add some tabs to the tab control
+	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+	m_View.SelectPage(0);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

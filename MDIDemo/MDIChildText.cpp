@@ -16,7 +16,10 @@ CViewText::CViewText() : m_hFont(NULL)
 
 CViewText::~CViewText()
 {
+	// First destroy the window
 	Destroy();
+
+	// Now do the remaining cleanup
 	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
 	if (m_hFont) ::DeleteObject(m_hFont);
 }

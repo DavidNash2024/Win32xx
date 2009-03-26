@@ -18,6 +18,10 @@ CRichView::CRichView(void) : m_hFont(NULL), m_hInstRichEdit(NULL)
 
 CRichView::~CRichView(void)
 {
+	// Destroy the window first
+	Destroy();
+
+	// Now do remaining clean up
 	if (m_hInstRichEdit)
 		::FreeLibrary(m_hInstRichEdit);
 	if(m_hFont)

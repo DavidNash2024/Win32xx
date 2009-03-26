@@ -194,8 +194,6 @@ namespace Win32xx
 		
 		// Determine the close button's drawing position relative to the window
 		CRect rcClose = m_rcClose;
-	//	MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
-	//	rcClose.OffsetRect(0, m_nTabHeight-2);
 
 		// Draw the outer highlight for the close button
 		if (!IsRectEmpty(&rcClose))
@@ -446,12 +444,19 @@ namespace Win32xx
 	{	
 		// Microsoft's drawing for a tab control is rubbish, so we do our own.
 		// We use double buffering and regions to eliminate flicker
-
+		
 		// Create the memory DC and bitmap
 		CDC dcMem = ::CreateCompatibleDC(NULL);
 		CRect rcClient = GetClientRect();
 		CDC dcView = GetDC();
 		dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
+			
+		if (0 == GetItemCount())
+		{
+			// No tabs, so simply display a grey background and exit
+			SolidFill(dcView, RGB(232, 228, 220), &rcClient);
+			return;
+		}
 
 		// Create a clipping region. Its the overall tab window's region,
 		//  less the region belonging to the individual tab view's client area
@@ -521,6 +526,8 @@ namespace Win32xx
 		int iImage = (*iter).iImage;
 		if (iImage >= 0) 
 			TabCtrl_RemoveImage(m_hWnd, iImage);
+
+		(*iter).pWnd->Destroy();
 		delete (*iter).pWnd;
 		m_vTabPageInfo.erase(iter);
 
@@ -529,13 +536,15 @@ namespace Win32xx
 			SetTabSize();
 			SelectPage(0);
 		}
+		else
+			m_pView = NULL;
 	}
 
 	inline void CTab::SelectPage(int iPage)
 	{
 		if ((iPage >= 0) && (iPage < GetItemCount()))
 		{
-			if (GetView()->IsWindow()) 
+			if (GetView() && (GetView()->IsWindow())) 
 				GetView()->ShowWindow(SW_HIDE);
 			SetCurSel(iPage);
 			SetView(*(m_vTabPageInfo[iPage].pWnd));
@@ -597,15 +606,22 @@ namespace Win32xx
 			return 0;
 		case WM_ERASEBKGND:
 			return 0;
+		case WM_NCHITTEST:
+			// Ensure we have an arrow cursor
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			break;
 		case WM_SIZE:
 			{
-				// Set the tab sizes
-				SetTabSize();
+				if (GetView())
+				{
+					// Set the tab sizes
+					SetTabSize();
 
-				// Position the View over the tab control's display area
-				CRect rc = GetClientRect();
-				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
-				GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+					// Position the View over the tab control's display area
+					CRect rc = GetClientRect();
+					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
+					GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+				}
 			}
 			return 0;
 		}
@@ -706,9 +722,9 @@ namespace Win32xx
 		if (!m_Tab.IsWindow())
 		{
 			m_Tab.Create(m_hWnd);
-			RecalcLayout();
-		}		
+		}	
 
+		RecalcLayout();
 		return pWnd;
 	}
 
@@ -748,7 +764,9 @@ namespace Win32xx
 			m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
 		else
+		{
 			m_Tab.ShowWindow(SW_HIDE);
+		}
 	}
 
 	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)

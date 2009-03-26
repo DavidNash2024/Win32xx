@@ -21,6 +21,10 @@ CViewText::CViewText()
 
 CViewText::~CViewText(void)
 {
+	// Destroy the window first
+	Destroy();
+
+	// Now free the DLL
 	if (m_hRichEdit)
 		::FreeLibrary(m_hRichEdit);
 }

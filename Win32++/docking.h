@@ -2712,7 +2712,7 @@ namespace Win32xx
 		for (size_t u = 0; u < vChildren.size(); ++u)
 		{
 			RemoveContainer(vChildren[u]);
-		}
+		} 
 	}
 
 	inline void CContainer::AddContainer(CContainer* pContainer)
