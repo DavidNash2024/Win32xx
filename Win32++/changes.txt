@@ -11,7 +11,8 @@ Added CFrame::GetToolbarData
 CContainer now inherrits from CTab
 Renamed dockable.h to docking.h
 
-min and max macros are no longer defined. MIN and MAX are defined instead
+min and max macros are no longer defined by Win32++. MIN and MAX are 
+defined instead
 
 Version 6.4.1
 =============

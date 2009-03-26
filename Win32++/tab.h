@@ -325,12 +325,12 @@ namespace Win32xx
 		int right = rcTab.right;
 		int top = rcTab.bottom;
 		int bottom = top + 3;
-		
+
 		if (!IsBottomTab)
 		{
-			top = rcTab.top -3;
-			bottom = rcTab.top;
-		}
+			bottom = MAX(rcTab.top, m_nTabHeight +4);
+			top = bottom -3;
+		} 
 
 		dcMem.CreateSolidBrush(RGB(248,248,248));
 		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
@@ -699,12 +699,15 @@ namespace Win32xx
 		if (NULL == pWnd)
 			throw CWinException(_T("Cannot add Null MDI Child"));
 		
+		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockables
+		::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
+
 		m_Tab.AddTabPage(pWnd, szTabText);
 		if (!m_Tab.IsWindow())
 		{
 			m_Tab.Create(m_hWnd);
 			RecalcLayout();
-		}
+		}		
 
 		return pWnd;
 	}
