@@ -92,6 +92,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
+		m_DockView.CheckDockables();
 		m_DockView.CloseAllDockables();
 		LoadDefaultDockables();
 		return TRUE;
@@ -135,6 +136,8 @@ void CMainFrame::OnInitialUpdate()
 	// Ensure we have some docked/undocked windows
 	if (0 == m_DockView.GetAllDockables().size())
 		LoadDefaultDockables();
+
+	m_DockView.CheckDockables();
 }
 
 void CMainFrame::LoadDefaultDockables()

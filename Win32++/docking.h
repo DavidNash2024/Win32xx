@@ -2577,6 +2577,7 @@ namespace Win32xx
 		
 		case WM_SYSCOMMAND:
 			{
+				TRACE("WM_SYSCOMMAND\n");
 				// Test if the window is being moved
 				if ((wParam&0xFFF0) == SC_MOVE)
 				{
@@ -2651,6 +2652,7 @@ namespace Win32xx
 			break;
 		case WM_DESTROY:
 			{
+				TRACE("WM_DESTROY\n");
 				// Post a destroy dockable message
 				if (GetDockAncestor() != this)
 					::PostMessage(GetDockAncestor()->GetHwnd(), UWM_DOCK_DESTROYED, (WPARAM)this, 0);
@@ -3131,7 +3133,6 @@ namespace Win32xx
 		// pass unhandled messages on for default processing
 		return WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
-
 
 } // namespace Win32xx
 

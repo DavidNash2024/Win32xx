@@ -21,7 +21,7 @@ CViewText::CViewText()
 
 CViewText::~CViewText(void)
 {
-	// Destroy the window first
+	// Destroy the window before freeing the DLL
 	Destroy();
 
 	// Now free the DLL

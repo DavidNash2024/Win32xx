@@ -16,7 +16,7 @@ CViewText::CViewText() : m_hFont(NULL)
 
 CViewText::~CViewText()
 {
-	// First destroy the window
+	// Destroy the window before freeing the DLL
 	Destroy();
 
 	// Now do the remaining cleanup

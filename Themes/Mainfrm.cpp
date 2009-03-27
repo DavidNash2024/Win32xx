@@ -139,7 +139,7 @@ void CMainFrame::OnCreate()
 	if (IsRebarUsed())
 	{
 		// Set the icons for popup menu items
-		SetMenuIcons(m_ToolbarData, RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
+		SetMenuIcons(GetToolbarData(), RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
 
 		//Set our theme
 		ChooseTheme(IDM_BLUE);
@@ -160,11 +160,8 @@ void CMainFrame::OnCreate()
 		CardsData.push_back(IDM_CARD_SPADE);
 		AddToolbarBand(Cards);
 		iButtons = Cards.SetButtons(CardsData);
-		SetToolbarImages(Cards, iButtons, RGB(255,0,255), IDB_CARDS, 0, 0);
-
-	
+		SetToolbarImages(Cards, iButtons, RGB(255,0,255), IDB_CARDS, 0, 0);	
 	}
-	
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -395,9 +392,7 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_MAUVE, 0);
 		}
 		break;
-
 	} 
-
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

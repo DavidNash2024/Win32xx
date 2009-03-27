@@ -18,7 +18,7 @@ CRichView::CRichView(void) : m_hFont(NULL), m_hInstRichEdit(NULL)
 
 CRichView::~CRichView(void)
 {
-	// Destroy the window first
+	// Destroy the window before freeing the DLL
 	Destroy();
 
 	// Now do remaining clean up

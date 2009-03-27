@@ -134,7 +134,7 @@ void CMainFrame::OnCreate()
 	TB.DisableButton(IDM_FILE_SAVE);
 	TB.DisableButton(IDM_IMAGE_ADJUST);
 	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
-	SetMenuIcons(m_ToolbarData, RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
+	SetMenuIcons(GetToolbarData(), RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
 }
 
 void CMainFrame::OnFileOpen()
