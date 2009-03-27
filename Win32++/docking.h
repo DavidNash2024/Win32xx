@@ -418,6 +418,7 @@ namespace Win32xx
 
 		BOOL m_BlockMove;
 		BOOL m_Undocking;
+		BOOL m_bClosePressed;
 		int m_DockStartWidth;
 		int m_nDockID;
 		int m_NCHeight;
@@ -1450,9 +1451,9 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockable class
 	//
-	inline CDockable::CDockable() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE), 
+	inline CDockable::CDockable() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
 		            m_DockStartWidth(0), m_nDockID(0), m_NCHeight(20), m_dwDockZone(0),
-					m_DockWidthRatio(1.0), m_DockStyle(0)
+					m_DockWidthRatio(1.0), m_DockStyle(0), m_bClosePressed(FALSE)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1670,23 +1671,15 @@ namespace Win32xx
 		std::vector <CDockable*>::iterator v;
 
 		SetRedraw(FALSE);
-		for (v = m_vAllDockables.begin(); v != m_vAllDockables.end(); ++v)
+		std::vector<CDockable*> AllDockables = GetAllDockables();
+		for (v = AllDockables.begin(); v != AllDockables.end(); ++v)
 		{
-			// Destroy the window
-			if (*v)  (*v)->Destroy();
+			(*v)->Destroy();	// Destroy the window
+			delete (*v);		// Delete the CWnd object
 		}
 
 		m_vDockChildren.clear();
 
-		// Process any queued messages now. The UWM_DOCK_DESTROYED messages will be
-		//  processed at this point, deleting the dockables.
-		MSG msg;
-		while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}
-		
 		SetRedraw(TRUE);
 		RecalcDockLayout();
 	}
@@ -1712,7 +1705,6 @@ namespace Win32xx
 				if (*v == pDockable)
 				{
 					delete *v;
-					GetDockAncestor()->m_vAllDockables.erase(v);
 					break;
 				}
 			}
@@ -2577,24 +2569,31 @@ namespace Win32xx
 		
 		case WM_SYSCOMMAND:
 			{
-				TRACE("WM_SYSCOMMAND\n");
-				// Test if the window is being moved
-				if ((wParam&0xFFF0) == SC_MOVE)
+				switch(wParam&0xFFF0)
 				{
-					BOOL bResult = FALSE;
-
-					if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
+				case SC_MOVE:
+					// An undocked dockable is being moved
 					{
-						// Turn on DragFullWindows for this move
-						SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);			
-					
-						// Process this message
-						DefWindowProc(uMsg, wParam, lParam);
+						BOOL bResult = FALSE;
+
+						if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
+						{
+							// Turn on DragFullWindows for this move
+							SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);			
 						
-						// Return DragFullWindows to its previous state
-						SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, bResult, 0, 0);
-						return 0L;
+							// Process this message
+							DefWindowProc(uMsg, wParam, lParam);
+							
+							// Return DragFullWindows to its previous state
+							SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, bResult, 0, 0);
+							return 0L;
+						}
 					}
+					break;
+				case SC_CLOSE:
+					// The close button is pressed on an undocked dockable
+					m_bClosePressed = TRUE;
+					break;
 				}
 			}
 			break; 
@@ -2652,9 +2651,8 @@ namespace Win32xx
 			break;
 		case WM_DESTROY:
 			{
-				TRACE("WM_DESTROY\n");
 				// Post a destroy dockable message
-				if (GetDockAncestor() != this)
+				if ((GetDockAncestor() != this) && m_bClosePressed)
 					::PostMessage(GetDockAncestor()->GetHwnd(), UWM_DOCK_DESTROYED, (WPARAM)this, 0);
 			}
 			break;
