@@ -607,8 +607,9 @@ namespace Win32xx
 		case WM_ERASEBKGND:
 			return 0;
 		case WM_NCHITTEST:
-			// Ensure we have an arrow cursor
-			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			// Ensure we have an arrow cursor when the tab has no view window
+			if (0 == GetItemCount())
+				SetCursor(LoadCursor(NULL, IDC_ARROW));
 			break;
 		case WM_SIZE:
 			{

@@ -521,8 +521,8 @@ BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
 	FILETIME ftCreate, ftAccess, ftWrite;
 	SYSTEMTIME stLocal;
 	FILETIME ftLocal;
-	TCHAR szTime[16];
-	TCHAR szDate[16];
+	TCHAR szTime[32];
+	TCHAR szDate[32];
 
 	// Retrieve the file times for the file.
 	if (!::GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite))

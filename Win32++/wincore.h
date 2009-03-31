@@ -941,8 +941,8 @@ namespace Win32xx
 			BOOL Processed = FALSE;
 
 			// only pre-translate input events
-			if ((uMsg.message >= WM_KEYFIRST || uMsg.message <= WM_KEYLAST) &&
-				(uMsg.message >= WM_MOUSEFIRST || uMsg.message <= WM_MOUSELAST))
+			if ((uMsg.message >= WM_KEYFIRST && uMsg.message <= WM_KEYLAST) ||
+				(uMsg.message >= WM_MOUSEFIRST && uMsg.message <= WM_MOUSELAST))
 			{
 				// Also loop through the chain of parents
 				for (HWND hWnd = uMsg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
