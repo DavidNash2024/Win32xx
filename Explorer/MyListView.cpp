@@ -54,7 +54,7 @@ CMyListView::~CMyListView()
 void CMyListView::DeleteItems()
 {
 	std::vector<ListItemData*>::iterator Iter;
-	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); Iter++)
+	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); ++Iter)
 	{
 		//free up the ListItemData objects
 		delete (*Iter);
@@ -151,13 +151,13 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
 		//put the item clicked on first in the list
 		pItems[0] = lvhti.iItem;
 
-		for(i = 1, nCurItem = -1; i < nItems; i++)
+		for(i = 1, nCurItem = -1; i < nItems; ++i)
 		{
 			nCurItem = GetNextItem(nCurItem, LVNI_SELECTED);
 			if(nCurItem != lvhti.iItem)
 				pItems[i] = nCurItem;
 			else
-				i--;
+				--i;
 		}
 
 		DoItemMenu(pItems, nItems, ptScreen);
@@ -254,7 +254,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 {
 	Cpidl* cpidlArray = new Cpidl[cbItems];
 
-	for(UINT i = 0; i < cbItems; i++)
+	for(UINT i = 0; i < cbItems; ++i)
 	{
 		LVITEM lvItem = {0};
 		lvItem.mask = LVIF_PARAM;
@@ -533,8 +533,8 @@ BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
 	::FileTimeToSystemTime(&ftLocal, &stLocal);
 
 	// Build a string showing the date and time with regional settings.
-	::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &stLocal, NULL, szDate, 15);
-	::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &stLocal, NULL, szTime, 15);
+	::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &stLocal, NULL, szDate, 31);
+	::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &stLocal, NULL, szTime, 31);
 
 	::lstrcpy(lpszString, szDate);
 	::lstrcat(lpszString, _T(" "));

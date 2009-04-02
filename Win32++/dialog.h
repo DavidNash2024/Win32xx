@@ -276,7 +276,8 @@ namespace Win32xx
 					hInstance = GetApp()->GetResourceHandle();
 				nResult = ::DialogBox(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
-			// Tidy up
+			
+      // Tidy up
 			m_hWnd = NULL;
 			pTLSData->pCWnd = NULL;
 
@@ -405,7 +406,6 @@ namespace Win32xx
 			else
 			{
 				// The HWND wasn't in the map, so add it now
-
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 				if (NULL == pTLSData)
 					throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));

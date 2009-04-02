@@ -279,6 +279,7 @@ namespace Win32xx
 				dcMem.CreateSolidBrush(RGB(200,200,200));
 				SetBkColor(dcMem, RGB(200,200,200));
 			}
+			
 			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
 			RoundRect(dcMem, rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
 
@@ -309,7 +310,6 @@ namespace Win32xx
 				::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 			}
 		} 
-
 	}
 
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
@@ -347,7 +347,6 @@ namespace Win32xx
 			LineTo(dcMem, right, top-1);
 		}
 		
-
 		// Draw a lighter line over the darker line for the selected tab
 		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 		TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
@@ -632,8 +631,6 @@ namespace Win32xx
 	}
 
 	// Wrappers for Win32 Macros
-
-
 	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
 	{
 		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
@@ -743,8 +740,8 @@ namespace Win32xx
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES;
 
-		// Create the view window
-		if (!CreateEx(0, _T("MDICLient"), _T(""),
+		// Create the MDICLIENT view window
+		if (!CreateEx(0, _T("MDICLIENT"), _T(""),
 			dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
 				throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
 

@@ -36,7 +36,7 @@ CMyTreeView::CMyTreeView()
 CMyTreeView::~CMyTreeView()
 {
 	std::vector<TreeItemData*>::iterator Iter;
-	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); Iter++)
+	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); ++Iter)
 	{
 		//free up the TreeItemData objects
 		delete (*Iter);

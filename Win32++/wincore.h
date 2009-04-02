@@ -151,7 +151,7 @@
 #define UWM_REARRANGED		(WM_APP + 1)	// Notification - frame window rearranged message
 #define UWM_POPUPMENU		(WM_APP + 2)	// Message - creates the popup menu
 #define UWM_DOCK_START		(WM_APP + 3)	// Notification - about to start undocking
-#define UWM_DOCK_MOVE		(WM_APP + 4)	// Notification - undockable is being moved
+#define UWM_DOCK_MOVE		(WM_APP + 4)	// Notification - undocked dockable is being moved
 #define UWM_DOCK_END		(WM_APP + 5)	// Notification - dockable has been docked
 #define UWM_BAR_START		(WM_APP + 6)	// Notification - dockable bar selected for move
 #define UWM_BAR_MOVE		(WM_APP + 7)	// Notification - dockable bar moved
@@ -369,8 +369,8 @@ namespace Win32xx
 
   #endif // #ifndef _WIN32_WCE
 
-  #ifndef lstrcpyn
-	// Required for WinCE
+  // Required for WinCE  
+  #ifndef lstrcpyn	
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
 	{
 		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
@@ -738,7 +738,6 @@ namespace Win32xx
 		BOOL IsMDIChild() const {return FALSE;}
 		HICON SetIconLarge(int nIcon);
 		HICON SetIconSmall(int nIcon);
-
 		
 		HWND m_hWnd;				// handle to this object's window
 
@@ -1161,7 +1160,6 @@ namespace Win32xx
 			y = iHeight - rc.Height();
 
 		::SetWindowPos(m_hWnd, HWND_TOP, x, y, 0, 0,  SWP_NOSIZE);
-
 	}
 
 	inline BOOL CWnd::CheckDlgButton(int nIDButton, UINT uCheck) const
@@ -2274,11 +2272,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CWnd::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// All WndProc functions should pass unhandled window messages to this function
 	{
-		// All WndProc functions should pass unhandled window messages to this function
-
-		LRESULT lr;
-
     	switch (uMsg)
 		{
 		case WM_COMMAND:
@@ -2309,7 +2304,7 @@ namespace Win32xx
 		case WM_NOTIFY:
 			{
 				// Handle the Win32++ frame notifications
-				lr = OnFrameNotify(wParam, lParam);
+				LRESULT lr = OnFrameNotify(wParam, lParam);
 				if (lr) return lr;
 
 				// Do Notification reflection if it came from a CWnd object
@@ -2328,8 +2323,8 @@ namespace Win32xx
 				// Handle user notifications
 				lr = OnNotify(wParam, lParam);
 				if (lr) return lr;
-				break;
 			}
+			break;
 
 		case WM_PAINT:
 			{
@@ -2370,10 +2365,12 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			if (m_PrevWindowProc) break; // Suppress for subclassed windows
+			{
+				if (m_PrevWindowProc) break; // Suppress for subclassed windows
 
-			lr = MessageReflect(hWnd, uMsg, wParam, lParam);
-			if (lr) return lr;	// Message processed so return
+				LRESULT lr = MessageReflect(hWnd, uMsg, wParam, lParam);
+				if (lr) return lr;	// Message processed so return
+			}
 			break;				// Do default processing when message not already processed
 
 		} // switch (uMsg)
@@ -2385,7 +2382,6 @@ namespace Win32xx
 			return DefWndProc(hWnd, uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
-
 
 }; // namespace Win32xx
 
