@@ -373,6 +373,7 @@ namespace Win32xx
 		{
 			if ((*v)->GetHwnd() == hWnd)
 			{
+				(*v)->Destroy();
 				delete *v;
 				m_vMDIChild.erase(v);
 				break;

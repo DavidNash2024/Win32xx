@@ -149,7 +149,7 @@
 
 // Messages defined by Win32++
 #define UWM_REARRANGED		(WM_APP + 1)	// Notification - frame window rearranged message
-#define UWM_POPUPMENU		(WM_APP + 2)	// Message - creates the popup menu
+#define UWM_POPUPMENU		(WM_APP + 2)	// Message - creates the menubar popup menu
 #define UWM_DOCK_START		(WM_APP + 3)	// Notification - about to start undocking
 #define UWM_DOCK_MOVE		(WM_APP + 4)	// Notification - undocked dockable is being moved
 #define UWM_DOCK_END		(WM_APP + 5)	// Notification - dockable has been docked
@@ -160,7 +160,7 @@
 #define UWM_IS_DOCKABLE     (WM_APP + 10)   // Message - CDockable window returns TRUE for this message
 #define UWM_IS_CONTAINER	(WM_APP + 11)	// Message - CContainer window return TRUE for this message
 #define UWM_FRAMELOSTFOCUS	(WM_APP + 12)   // Notification sent by frame to view window when focus lost
-#define UWM_FRAMEGOTFOCUS	(WM_APP + 13)   // Notification sent by frame to view window
+#define UWM_FRAMEGOTFOCUS	(WM_APP + 13)   // Notification sent by frame to view window when focus acquired
 #define UWM_DOCK_DESTROYED	(WM_APP + 14)	// Message posted when dockable is destroyed   
 
 
@@ -1058,6 +1058,8 @@ namespace Win32xx
 
 	inline CWnd::~CWnd()
 	{
+		if (IsWindow()) TRACE("Window Destroyed in Destructor !!! \n");
+
 		// Destroy the window for this object
 		Destroy();
 	}

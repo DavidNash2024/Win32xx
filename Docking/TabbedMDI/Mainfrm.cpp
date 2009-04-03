@@ -92,7 +92,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
-		m_DockView.CheckDockables();
 		m_DockView.CloseAllDockables();
 		LoadDefaultDockables();
 		return TRUE;
@@ -137,7 +136,7 @@ void CMainFrame::OnInitialUpdate()
 	if (0 == m_DockView.GetAllDockables().size())
 		LoadDefaultDockables();
 
-	m_DockView.CheckDockables();
+	LoadDefaultMDITabs();
 }
 
 void CMainFrame::LoadDefaultDockables()
@@ -155,6 +154,16 @@ void CMainFrame::LoadDefaultDockables()
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES2);
 
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT);
+}
+
+void CMainFrame::LoadDefaultMDITabs()
+{
+	// Add some MDI tabs
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockView.GetView();
+	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"));
+	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"));
+	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));
+	pTabbedMDI->SetActiveTab(0);
 }
 
 void CMainFrame::LoadRegistryDockables()

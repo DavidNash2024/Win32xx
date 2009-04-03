@@ -41,6 +41,7 @@ public:
 	virtual ~CMainFrame();
 	void DoPopupMenu();
 	void LoadDefaultDockables();
+	void LoadDefaultMDITabs();
 	void LoadRegistryDockables();
 	void SaveDockables();
 	void SaveRegistrySettings();

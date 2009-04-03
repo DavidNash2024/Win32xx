@@ -147,6 +147,20 @@ END
 
 STRINGTABLE
 BEGIN
+    IDW_FIRSTCHILD          "Activate this window"
+    IDW_CHILD2              "Activate this window"
+    IDW_CHILD3              "Activate this window"
+    IDW_CHILD4              "Activate this window"
+    IDW_CHILD5              "Activate this window"
+    IDW_CHILD6              "Activate this window"
+    IDW_CHILD7              "Activate this window"
+    IDW_CHILD8              "Activate this window"
+    IDW_CHILD9              "Activate this window"
+    IDW_CHILD10             "Select a window"
+END
+
+STRINGTABLE
+BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"

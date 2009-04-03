@@ -288,7 +288,7 @@ namespace Win32xx
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
 
 	private:
-		void LoadCommonControls(INITCOMMONCONTROLSEX InitStruct);
+		void LoadCommonControls();
 
 		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
@@ -1331,14 +1331,10 @@ namespace Win32xx
 
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 
-        // Load the full set of common controls
-		INITCOMMONCONTROLSEX InitStruct;
-		InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-		InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
-							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;
+
 
 		// Do either InitCommonControls or InitCommonControlsEx
-		LoadCommonControls(InitStruct);
+		LoadCommonControls();
 
 		// By default, we use the rebar if we can
 		if (GetComCtlVersion() >= 470)
@@ -1816,7 +1812,7 @@ namespace Win32xx
 		return rcView;
 	} 
 
-	inline void CFrame::LoadCommonControls(INITCOMMONCONTROLSEX InitStruct)
+	inline void CFrame::LoadCommonControls()
 	{
 		HMODULE hComCtl;
 
@@ -1833,6 +1829,12 @@ namespace Win32xx
 				typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 				INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
 
+				// Load the full set of common controls
+				INITCOMMONCONTROLSEX InitStruct = {0};
+				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+				InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
+							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;
+				
 				// Call InitCommonControlsEx
 				if(!((*pfnInit)(&InitStruct)))
 					throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));

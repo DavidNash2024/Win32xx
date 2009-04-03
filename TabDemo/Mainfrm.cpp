@@ -68,16 +68,25 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+
+	m_View.SetShowButtons(TRUE);
 }
 
 void CMainFrame::OnInitialUpdate()
 {
+	// Stop window painting
+	SetRedraw(FALSE);
+	
 	// Add some tabs to the tab control
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 	m_View.SelectPage(0);
+	
+	// Repaint the window
+	SetRedraw(TRUE);
+	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN|RDW_UPDATENOW);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

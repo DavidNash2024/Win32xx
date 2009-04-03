@@ -16,10 +16,7 @@ CViewText::CViewText() : m_hFont(NULL)
 
 CViewText::~CViewText()
 {
-	// Destroy the window before freeing the DLL
-	Destroy();
-
-	// Now do the remaining cleanup
+	// Cleanup
 	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
 	if (m_hFont) ::DeleteObject(m_hFont);
 }
@@ -51,8 +48,7 @@ CMDIChildText::CMDIChildText()
 }
 
 CMDIChildText::~CMDIChildText()
-{
-	
+{	
 }
 
 void CMDIChildText::OnCreate()

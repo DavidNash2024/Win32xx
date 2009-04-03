@@ -63,13 +63,17 @@ namespace Win32xx
 		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
 		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
 		virtual int  GetTabIndex(CWnd* pWnd);
+		virtual TabPageInfo GetTabPageInfo(UINT nTab);
 		virtual void SelectPage(int iPage);
 		virtual void RemoveTabPage(int iPage);
+		virtual void ShowListMenu();
 
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
+		int GetTabHeight() const { return m_nTabHeight; }
 		CWnd* GetView() const		{ return m_pView; }
-		void SetShowClose(BOOL bShow)	{ m_bShowClose = bShow; }
+		void SetShowButtons(BOOL bShow)	{ m_bShowButtons = bShow; }
+		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; }
 
 		// Wrappers for Win32 Macros
 		void AdjustRect(BOOL fLarger, RECT *prc);
@@ -81,6 +85,7 @@ namespace Win32xx
 		int  GetCurSel();
 		BOOL GetItem(int iItem, LPTCITEM pitem);
 		int  GetItemCount();
+		CRect GetListRect() { return m_rcList; }
 		int  InsertItem(int iItem, const LPTCITEM pitem);
 		void SetCurFocus(int iItem);
 		int  SetCurSel(int iItem);
@@ -97,18 +102,20 @@ namespace Win32xx
 		virtual void SetTabSize();
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			
-	public:
+	private:
 		void DrawCloseButton(CDC& DrawDC, UINT uState);
+		void DrawListButton(CDC& DrawDC, UINT uState);
 		void DrawTabs(CDC& dcMem);
 		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		void Paint();
 		void SetView(CWnd& Wnd);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
+		CRect m_rcList;
 		CRect m_rcClose;
 		HIMAGELIST m_himlTab;
 		CWnd* m_pView;
-		BOOL m_bShowClose;		// Show or hide the close button
+		BOOL m_bShowButtons;	// Show or hide the close and list button
 		int m_nTabHeight;
 		
 	};
@@ -125,6 +132,8 @@ namespace Win32xx
 		virtual CWnd* GetActiveMDIChild();
 		virtual void RecalcLayout();
 		virtual void SetActiveMDIChild(CWnd* pWnd);
+		virtual void SetActiveTab(int iTab);
+		virtual void ShowListMenu();
 	  
 	protected:
 		virtual HWND Create(HWND hWndParent);
@@ -137,7 +146,7 @@ namespace Win32xx
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab() : m_pView(NULL), m_bShowClose(FALSE), m_nTabHeight(20)
+	inline CTab::CTab() : m_pView(NULL), m_bShowButtons(FALSE), m_nTabHeight(20)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
@@ -145,6 +154,7 @@ namespace Win32xx
 		
 	inline CTab::~CTab()
 	{
+		if (IsWindow()) TRACE("Tab Window destroyed in destructor\n !");
 		ImageList_Destroy(m_himlTab);
 		std::vector<TabPageInfo>::iterator iter;
 		for (iter = m_vTabPageInfo.begin(); iter != m_vTabPageInfo.end(); ++iter)
@@ -239,7 +249,7 @@ namespace Win32xx
 				break;
 			}
 
-			// Manually Draw Close Button
+			// Manually draw close button
 			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
 			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
@@ -259,6 +269,70 @@ namespace Win32xx
 
 			::MoveToEx(DrawDC, rcClose.right -5, rcClose.top +3, NULL);
 			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -4);
+		}
+	}
+
+	inline void CTab::DrawListButton(CDC& DrawDC, UINT uState)
+	{
+		// The list button isn't displayed on Win95 
+		if (GetWinVersion() == 1400)  return;
+		
+		// Determine the list button's drawing position relative to the window
+		CRect rcList = m_rcList;
+
+		// Draw the outer highlight for the list button
+		if (!IsRectEmpty(&rcList))
+		{
+			switch (uState)
+			{
+			case 0:
+				{
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+					
+					::MoveToEx(DrawDC, rcList.left, rcList.bottom, NULL);
+					::LineTo(DrawDC, rcList.right, rcList.bottom);
+					::LineTo(DrawDC, rcList.right, rcList.top);
+					::LineTo(DrawDC, rcList.left, rcList.top);
+					::LineTo(DrawDC, rcList.left, rcList.bottom);
+					break;
+				}
+
+			case 1:
+				{
+					// Draw outline, white at top, black on bottom
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::MoveToEx(DrawDC, rcList.left, rcList.bottom, NULL);
+					::LineTo(DrawDC, rcList.right, rcList.bottom);
+					::LineTo(DrawDC, rcList.right, rcList.top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::LineTo(DrawDC, rcList.left, rcList.top);
+					::LineTo(DrawDC, rcList.left, rcList.bottom);
+				}
+
+				break;
+			case 2:
+				{
+					// Draw outline, black on top, white on bottom
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					::MoveToEx(DrawDC, rcList.left, rcList.bottom, NULL);
+					::LineTo(DrawDC, rcList.right, rcList.bottom);
+					::LineTo(DrawDC, rcList.right, rcList.top);
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					::LineTo(DrawDC, rcList.left, rcList.top);
+					::LineTo(DrawDC, rcList.left, rcList.bottom);
+				}
+				break;
+			}
+
+			// Manually draw list button
+			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+
+			for (int i = 0; i <= 4; i++)
+			{
+				int Length = 9 - 2*i;
+				::MoveToEx(DrawDC, rcList.left + 3 + i, rcList.top +5 +i, NULL);
+				::LineTo(DrawDC, rcList.left + 3 + i + Length, rcList.top +5 +i);
+			}
 		}
 	}
 
@@ -408,6 +482,15 @@ namespace Win32xx
 		return -1;
 	}
 
+	inline TabPageInfo CTab::GetTabPageInfo(UINT nTab)
+	{
+		TabPageInfo tbi = {0};
+		if (nTab < m_vTabPageInfo.size())
+			tbi = m_vTabPageInfo[nTab];
+		
+		return tbi; 
+	}
+
 	inline void CTab::OnCreate()
 	{			
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
@@ -478,17 +561,21 @@ namespace Win32xx
 		DrawTabs(dcMem);
 		
 		// Draw the close button if required
-		if (m_bShowClose)
+		if (m_bShowButtons)
 		{
 			m_rcClose = GetClientRect();
 			m_rcClose.left = m_rcClose.right - 16;
 			m_rcClose.top = 2;
 			m_rcClose.bottom = m_rcClose.top + 16;
 
-			HRGN hrgnClip3 = ::CreateRectRgn(m_rcClose.left, m_rcClose.top, m_rcClose.right, m_rcClose.bottom);
-			CombineRgn(hrgnClip, hrgnClip, hrgnClip3, RGN_OR);
-			::DeleteObject(hrgnClip3);
+			m_rcList = m_rcClose;
+			m_rcList.OffsetRect(-20, 0);
+
+		//	HRGN hrgnClip3 = ::CreateRectRgn(m_rcClose.left, m_rcClose.top, m_rcClose.right, m_rcClose.bottom);
+		//	CombineRgn(hrgnClip, hrgnClip, hrgnClip3, RGN_OR);
+		//	::DeleteObject(hrgnClip3);
 			DrawCloseButton(dcMem, 0);
+			DrawListButton(dcMem, 0);
 		}  
 
 		DrawTabBorders(dcMem, rcTab);
@@ -565,7 +652,7 @@ namespace Win32xx
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 			
 			int xGap = 2;
-			if (m_bShowClose) xGap += m_nTabHeight;
+			if (m_bShowButtons) xGap += 30;
 
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, m_nTabHeight));
@@ -588,6 +675,28 @@ namespace Win32xx
 		}
 	}
 
+	inline void CTab::ShowListMenu()
+	{
+		// Displays the list of windows in a popup menu
+		HMENU hMenu = CreatePopupMenu();
+		
+		for(UINT u = 0; u < GetAllTabs().size(); ++u)
+		{
+			AppendMenu(hMenu, MF_STRING, u+IDW_FIRSTCHILD, GetAllTabs()[u].szTitle);
+		}
+
+		CPoint pt(GetListRect().left, GetTabHeight());
+		MapWindowPoints(m_hWnd, NULL, &pt, 1);
+
+		// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
+		HWND MenuHwnd = GetAncestor();
+
+		int iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
+		if (iPage >= 0) SelectPage(iPage);
+
+		::DestroyMenu(hMenu);
+	}
+
 	inline LRESULT CTab::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
@@ -606,9 +715,36 @@ namespace Win32xx
 		case WM_ERASEBKGND:
 			return 0;
 		case WM_NCHITTEST:
-			// Ensure we have an arrow cursor when the tab has no view window
-			if (0 == GetItemCount())
-				SetCursor(LoadCursor(NULL, IDC_ARROW));
+			{
+				// Ensure we have an arrow cursor when the tab has no view window
+				if (0 == GetAllTabs().size())
+					SetCursor(LoadCursor(NULL, IDC_ARROW));
+				
+				// Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
+				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				MapWindowPoints(NULL, m_hWnd, &pt, 1);				
+				if (GetCloseRect().PtInRect(pt)) return HTCLIENT;
+				if (GetListRect().PtInRect(pt))  return HTCLIENT;
+			}
+			break;
+		case WM_LBUTTONDOWN:
+			{
+				TRACE(_T("WM_LBUTTONDOWN\n"));
+				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				
+				if (GetCloseRect().PtInRect(pt))
+				{
+					RemoveTabPage(GetCurSel());
+				}
+
+				if (GetListRect().PtInRect(pt))
+				{
+					ShowListMenu();
+				}
+			}
+			break;
+		case WM_LBUTTONUP:
+			TRACE(_T("WM_LBUTTONUP\n"));
 			break;
 		case WM_SIZE:
 			{
@@ -705,7 +841,7 @@ namespace Win32xx
 	// Definitions for the CTabbedMDI class
 	inline CTabbedMDI::CTabbedMDI()
 	{
-		m_Tab.SetShowClose(TRUE);
+		m_Tab.SetShowButtons(TRUE);
 	}
 
 	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText)
@@ -751,7 +887,8 @@ namespace Win32xx
 	inline CWnd* CTabbedMDI::GetActiveMDIChild()
 	{
 		int nTab = m_Tab.GetCurSel();
-		return m_Tab.m_vTabPageInfo[nTab].pWnd;
+		TabPageInfo tbi = m_Tab.GetTabPageInfo(nTab);
+		return tbi.pWnd;
 	}
 
 	inline void CTabbedMDI::RecalcLayout()
@@ -774,6 +911,30 @@ namespace Win32xx
 			m_Tab.SelectPage(iPage);
 	}
 
+	inline void CTabbedMDI::SetActiveTab(int iTab)
+	{
+		m_Tab.SelectPage(iTab);
+	}
+
+	inline void CTabbedMDI::ShowListMenu()
+	{
+		// Displays the list of windows in a popup menu
+		HMENU hMenu = CreatePopupMenu();
+		
+		for(UINT u = 0; u < m_Tab.GetAllTabs().size(); ++u)
+		{
+			AppendMenu(hMenu, MF_STRING, u+1, m_Tab.GetAllTabs()[u].szTitle);
+		}
+
+		CPoint pt(m_Tab.GetListRect().left, m_Tab.GetTabHeight());
+		MapWindowPoints(m_hWnd, NULL, &pt, 1);
+
+		int iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD, pt.x, pt.y, m_hWnd, NULL) - 1;
+		if (iPage >= 0) m_Tab.SelectPage(iPage);
+
+		::DestroyMenu(hMenu);
+	}
+
 	inline LRESULT CTabbedMDI::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
@@ -789,8 +950,23 @@ namespace Win32xx
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				
+			//	if (m_Tab.GetCloseRect().PtInRect(pt))
+			//		CloseActiveMDI();
+
+			//	if (m_Tab.GetListRect().PtInRect(pt))
+			//		ShowListMenu();
+			}
+			break;
+		case WM_NCHITTEST:
+			{
+				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+				
 				if (m_Tab.GetCloseRect().PtInRect(pt))
-					CloseActiveMDI();
+					TRACE("Over Close Button\n");
+
+				if (m_Tab.GetListRect().PtInRect(pt))
+					TRACE("Over List Button\n");
 			}
 			break;
 		}

@@ -232,7 +232,7 @@ namespace Win32xx
 		{
 		public:
 			CDockClient();
-			virtual ~CDockClient() {}
+			virtual ~CDockClient() {if (IsWindow()) TRACE("DockClient window destroyed in Destructor !!!");}
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
 			virtual void DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus);
@@ -441,6 +441,7 @@ namespace Win32xx
 
 	inline CDockable::CDockBar::~CDockBar()
 	{
+		if (IsWindow()) TRACE("DockBar window destroyed in destructor !!!!!\n");
 		::DeleteObject(m_hbrBackground);
 	}
 
@@ -1465,6 +1466,10 @@ namespace Win32xx
 
 	inline CDockable::~CDockable()
 	{
+		if (IsWindow()) 
+			TRACE("Dockable window destroyed in destructor !!!");
+		
+		GetDockBar().Destroy();
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
 		
@@ -1475,6 +1480,7 @@ namespace Win32xx
 			iter = GetAllDockables().begin();
 			while (iter != GetAllDockables().end())
 			{
+				(*iter)->Destroy();
 				delete(*iter);
 				iter = GetAllDockables().begin();
 			} 
@@ -1704,6 +1710,7 @@ namespace Win32xx
 			{
 				if (*v == pDockable)
 				{
+					(*v)->Destroy();
 					delete *v;
 					break;
 				}
@@ -2667,6 +2674,7 @@ namespace Win32xx
 				CDockable* pDock = (CDockable*)wParam;
 				if (pDock != GetDockAncestor())
 				{
+					pDock->Destroy();
 					delete pDock;
 				}
 			}
@@ -2698,21 +2706,7 @@ namespace Win32xx
 
 	inline CContainer::~CContainer()
 	{
-		std::vector<ContainerInfo>::iterator it;
-		std::vector<CContainer*> vChildren;
-		
-		// Fill the vChildren vector
-		for (it = m_vContainerInfo.begin(); it < m_vContainerInfo.end(); ++it)
-		{
-			CContainer* pContainer = (*it).pContainer;
-			if (this != pContainer)
-				vChildren.push_back(pContainer);
-		}
-
-		for (size_t u = 0; u < vChildren.size(); ++u)
-		{
-			RemoveContainer(vChildren[u]);
-		} 
+		if (IsWindow()) TRACE("Container window destroyed in destructor !!!!\n");
 	}
 
 	inline void CContainer::AddContainer(CContainer* pContainer)
