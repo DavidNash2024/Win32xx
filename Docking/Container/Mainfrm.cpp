@@ -91,6 +91,9 @@ void CMainFrame::OnInitialUpdate()
 	// Ensure we have some docked/undocked windows
 	if (0 == m_DockView.GetAllDockables().size())
 		LoadDefaultDockables();
+
+	// PreCreate initially set the window as invisible, so show it now.
+	ShowWindow();
 }
 
 void CMainFrame::LoadDefaultDockables()
@@ -204,6 +207,15 @@ void CMainFrame::LoadRegistryDockables()
 
 		RegCloseKey(hKey);
 	}
+}
+
+void CMainFrame::PreCreate(CREATESTRUCT &cs)
+{
+	// Call the base class function first
+	CFrame::PreCreate(cs);
+	
+	// Hide the window initially by removing the WS_VISIBLE style
+	cs.style &= ~WS_VISIBLE;
 }
 
 void CMainFrame::SaveDockables()

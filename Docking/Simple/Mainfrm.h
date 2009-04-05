@@ -44,6 +44,7 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
+	virtual void PreCreate(CREATESTRUCT &cs);
 
 private:
 	CDockSimple m_DockView;

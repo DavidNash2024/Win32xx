@@ -2555,8 +2555,6 @@ namespace Win32xx
 
 		if (IsMenubarUsed())
 			SetMenubarBandSize();
-
-		::SendMessage(m_hWnd, UWM_REARRANGED, 0, 0);
 	}
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)

@@ -43,6 +43,7 @@
 #define TAB_H
 
 #include "wincore.h"
+#include "dialog.h"
 #include "Default_Resource.h"
 
 namespace Win32xx
@@ -57,6 +58,26 @@ namespace Win32xx
 
 	class CTab : public CWnd
 	{
+	protected:
+		// Declaration of the CSelectDialog class, a nested class of CTab
+		// It creates the dialog to choose which tab to activate
+		class CSelectDialog : public CDialog
+		{
+		public:
+			CSelectDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent = NULL);
+			virtual ~CSelectDialog() {}
+			virtual void AddItem(LPCTSTR szString);
+
+		protected:
+			virtual BOOL OnInitDialog();
+			virtual void OnOK(); 
+			virtual void OnCancel() { EndDialog(-2); }
+
+		private:
+			std::vector<tString> m_vItems;
+			int IDC_LIST;
+
+		};
 	public:
 		CTab();
 		virtual ~CTab();
@@ -67,13 +88,14 @@ namespace Win32xx
 		virtual void SelectPage(int iPage);
 		virtual void RemoveTabPage(int iPage);
 		virtual void ShowListMenu();
+		virtual void ShowListDialog();
 
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
 		int GetTabHeight() const { return m_nTabHeight; }
 		CWnd* GetView() const		{ return m_pView; }
 		void SetShowButtons(BOOL bShow)	{ m_bShowButtons = bShow; }
-		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; }
+		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
 		void AdjustRect(BOOL fLarger, RECT *prc);
@@ -108,6 +130,7 @@ namespace Win32xx
 		void DrawTabs(CDC& dcMem);
 		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		void Paint();
+		void NotifyChanged();
 		void SetView(CWnd& Wnd);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
@@ -137,11 +160,44 @@ namespace Win32xx
 	  
 	protected:
 		virtual HWND Create(HWND hWndParent);
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	  
 	private:
 		CTab m_Tab;
 	};
+
+	/////////////////////////////////////////////////////////////
+	// Definitions for the CSelectDialog class nested within CTab
+	//
+	inline CTab::CSelectDialog::CSelectDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent) : 
+					CDialog(lpTemplate, hWndParent), IDC_LIST(121)
+	{
+	}
+
+	inline BOOL CTab::CSelectDialog::OnInitDialog()
+	{
+		for (UINT u = 0; u < m_vItems.size(); ++u)
+		{
+			SendDlgItemMessage(IDC_LIST, LB_ADDSTRING, 0, (LPARAM) m_vItems[u].c_str());
+		}
+
+		return true;
+	}
+
+	inline void CTab::CSelectDialog::AddItem(LPCTSTR szString)
+	{
+		m_vItems.push_back(szString);
+	}
+
+	inline void CTab::CSelectDialog::OnOK()
+	{
+		int iSelect = (int)SendDlgItemMessage(IDC_LIST, LB_GETCURSEL, 0, 0);			
+		if (iSelect != LB_ERR) EndDialog(iSelect);
+
+		EndDialog(-2);
+	}
+
 
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
@@ -189,6 +245,7 @@ namespace Win32xx
 		}
 
 		SetView(*pWnd);
+		NotifyChanged();
 	}
 
 	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon)
@@ -491,6 +548,14 @@ namespace Win32xx
 		return tbi; 
 	}
 
+	inline void CTab::NotifyChanged()
+	{
+		NMHDR nmhdr = {0};
+		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.code = UWM_TAB_CHANGED;
+		::SendMessage(GetParent(), WM_NOTIFY, 0, (LPARAM)&nmhdr);
+	}
+
 	inline void CTab::OnCreate()
 	{			
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
@@ -624,6 +689,8 @@ namespace Win32xx
 		}
 		else
 			m_pView = NULL;
+
+		NotifyChanged();
 	}
 
 	inline void CTab::SelectPage(int iPage)
@@ -656,6 +723,7 @@ namespace Win32xx
 
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, m_nTabHeight));
+			NotifyChanged();
 		}
 	}
 
@@ -676,14 +744,26 @@ namespace Win32xx
 	}
 
 	inline void CTab::ShowListMenu()
-	{
-		// Displays the list of windows in a popup menu
+	// Displays the list of windows in a popup menu
+	{	
 		HMENU hMenu = CreatePopupMenu();
 		
-		for(UINT u = 0; u < GetAllTabs().size(); ++u)
+		// Add the menu items
+		for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
 		{
-			AppendMenu(hMenu, MF_STRING, u+IDW_FIRSTCHILD, GetAllTabs()[u].szTitle);
+			TCHAR szMenuString[MAX_MENU_STRING+1];
+			TCHAR szTitle[MAX_MENU_STRING];
+			lstrcpyn(szTitle, GetAllTabs()[u].szTitle, MAX_MENU_STRING -4);
+			wsprintf(szMenuString, _T("&%d %s"), u+1, szTitle);
+			AppendMenu(hMenu, MF_STRING, IDW_FIRSTCHILD +u, szMenuString);
 		}
+		if (GetAllTabs().size() >= 10)
+			AppendMenu(hMenu, MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
+
+		// Add a checkmark to the menu
+		int iSelected = GetCurSel();
+		if (iSelected < 9) 
+			CheckMenuItem(hMenu, iSelected, MF_BYPOSITION|MF_CHECKED);
 
 		CPoint pt(GetListRect().left, GetTabHeight());
 		MapWindowPoints(m_hWnd, NULL, &pt, 1);
@@ -692,9 +772,42 @@ namespace Win32xx
 		HWND MenuHwnd = GetAncestor();
 
 		int iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
-		if (iPage >= 0) SelectPage(iPage);
+		if ((iPage >= 0) && (iPage < 10)) SelectPage(iPage);
+		if (iPage == 10) ShowListDialog();
 
 		::DestroyMenu(hMenu);
+	}
+
+	inline void CTab::ShowListDialog()
+	{
+		// Definition of a dialog template which displays a List Box
+		unsigned char dlg_Template[] = 
+		{
+			0x01,0x00,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0xc8,0x00,0xc8,0x90,0x03,
+			0x00,0x00,0x00,0x00,0x00,0xdc,0x00,0x8e,0x00,0x00,0x00,0x00,0x00,0x53,0x00,0x65,
+			0x00,0x6c,0x00,0x65,0x00,0x63,0x00,0x74,0x00,0x20,0x00,0x57,0x00,0x69,0x00,0x6e,
+			0x00,0x64,0x00,0x6f,0x00,0x77,0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x00,0x01,0x4d,
+			0x00,0x53,0x00,0x20,0x00,0x53,0x00,0x68,0x00,0x65,0x00,0x6c,0x00,0x6c,0x00,0x20,
+			0x00,0x44,0x00,0x6c,0x00,0x67,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+			0x00,0x00,0x00,0x01,0x00,0x01,0x50,0x40,0x00,0x7a,0x00,0x25,0x00,0x0f,0x00,0x01,
+			0x00,0x00,0x00,0xff,0xff,0x80,0x00,0x4f,0x00,0x4b,0x00,0x00,0x00,0x00,0x00,0x00,
+			0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x50,0x7a,0x00,0x7a,0x00,0x25,
+			0x00,0x0f,0x00,0x02,0x00,0x00,0x00,0xff,0xff,0x80,0x00,0x43,0x00,0x61,0x00,0x6e,
+			0x00,0x63,0x00,0x65,0x00,0x6c,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+			0x00,0x02,0x00,0x01,0x01,0x21,0x50,0x06,0x00,0x06,0x00,0xcf,0x00,0x6d,0x00,0x79,
+			0x00,0x00,0x00,0xff,0xff,0x83,0x00,0x00,0x00,0x00,0x00
+		};
+
+		// Display the modal dialog. The dialog is defined in the dialog template rather
+		// than in the resource script (rc) file.
+		CSelectDialog MyDialog((LPCDLGTEMPLATE) dlg_Template);
+		for(UINT u = 0; u < GetAllTabs().size(); ++u)
+		{
+			MyDialog.AddItem(GetAllTabs()[u].szTitle);
+		}
+		
+		int iSelected = MyDialog.DoModal();	
+		if (iSelected >= 0) SelectPage(iSelected);
 	}
 
 	inline LRESULT CTab::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -889,6 +1002,15 @@ namespace Win32xx
 		int nTab = m_Tab.GetCurSel();
 		TabPageInfo tbi = m_Tab.GetTabPageInfo(nTab);
 		return tbi.pWnd;
+	}
+
+	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		LPNMHDR pnmhdr = (LPNMHDR)lParam;
+		if (pnmhdr->code == UWM_TAB_CHANGED)
+			RecalcLayout();
+
+		return 0L;
 	}
 
 	inline void CTabbedMDI::RecalcLayout()
