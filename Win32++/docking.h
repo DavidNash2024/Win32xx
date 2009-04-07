@@ -388,6 +388,7 @@ namespace Win32xx
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
 		BOOL IsDockable() const {return TRUE;}
+		BOOL IsDockRelated(HWND hWnd) const;
 		BOOL IsUndocked() const;
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
@@ -1876,38 +1877,57 @@ namespace Win32xx
 	}
 
 	inline CDockable* CDockable::GetDockFromPoint(POINT pt) const
-	// Retrieves the top level Dockable at the given point
+	// Retrieves the Dockable whose view window contains the specified point
 	{
-		CDockable* pDock = NULL;
-		CRect rc = GetDockAncestor()->GetDockClient().GetWindowRect();
-		if (PtInRect(&rc, pt))
-			pDock=GetDockAncestor();
-
-		HWND hAncestor = GetDockAncestor()->GetHwnd();
-		CPoint ptLocal = pt;
-		MapWindowPoints(NULL, hAncestor, &ptLocal, 1);
-		HWND hDockChild = ChildWindowFromPoint(hAncestor, ptLocal);
-
-		CDockable* pDockChild = 0;
-		while (::SendMessage(hDockChild, UWM_IS_DOCKABLE, 0, 0))
+		// Step 1: Find the top level Dockable the point is over
+		CDockable* pDockTop = NULL;		
+		
+		// Iterate through all top level windows, checking for undocked dockable
+		HWND hWnd = GetWindow(GW_HWNDFIRST);
+		while(hWnd)
 		{
-			pDockChild = (CDockable*)FromHandle(hDockChild);
-			ptLocal = pt;
-			MapWindowPoints(NULL, hDockChild, &ptLocal, 1);
-			HWND hDockChildNew = ChildWindowFromPoint(hDockChild, ptLocal);
-			if (hDockChildNew == hDockChild)
-				break;
-			hDockChild = hDockChildNew;
+			if (IsDockRelated(hWnd))
+			{
+				CDockable* pDockTest = (CDockable*)FromHandle(hWnd);
+				CRect rc = pDockTest->GetDockClient().GetWindowRect(); 
+				if ((this != pDockTest) && PtInRect(&rc, pt))	pDockTop = pDockTest;
+			}
+
+			hWnd = ::GetWindow(hWnd, GW_HWNDNEXT);
+		}
+		
+		if (!pDockTop)
+		{
+			// Point not over an undocked dockable. Perhaps over the DockAncestor?
+			CRect rc = GetDockAncestor()->GetWindowRect();
+			if (PtInRect(&rc, pt)) pDockTop = GetDockAncestor();
+		}
+		
+		// Step 2: Find the dockable child whose view window has the point
+		CDockable* pDockTarget = NULL;
+		if (pDockTop)
+		{
+			CDockable* pDockTest = pDockTop;
+			HWND hWndTest = pDockTest->GetHwnd();
+			
+			while (IsDockRelated(hWndTest))
+			{
+				pDockTest = (CDockable*)FromHandle(hWndTest);
+				CPoint ptLocal = pt;
+				MapWindowPoints(NULL, hWndTest, &ptLocal, 1);
+				HWND hTestNew = ChildWindowFromPoint(hWndTest, ptLocal);
+				if (hTestNew == hWndTest) break;
+				hWndTest = hTestNew;
+			}		
+
+			if (pDockTest)
+			{
+				CRect rc = pDockTest->GetDockClient().GetWindowRect();
+				if (PtInRect(&rc, pt)) pDockTarget = pDockTest;
+			}
 		}
 
-		if (pDockChild)
-		{
-			rc = pDockChild->GetDockClient().GetWindowRect();
-			if (PtInRect(&rc, pt))
-				pDock = pDockChild;
-		}
-
-		return pDock;
+		return pDockTarget;
 	}
 
 	inline CDockable* CDockable::GetDockAncestor() const
@@ -1981,6 +2001,20 @@ namespace Win32xx
 				break;
 
 			hwnd = ::GetParent(hwnd);
+		}
+
+		return FALSE;
+	}
+
+	inline BOOL CDockable::IsDockRelated(HWND hWnd) const
+	// Returns TRUE if the hWnd is a dockable within this dock family
+	{
+		if (GetDockAncestor()->GetHwnd() == hWnd) return TRUE;
+
+		std::vector<CDockable*>::iterator iter;
+		for (iter = GetAllDockables().begin(); iter < GetAllDockables().end(); ++iter)
+		{
+			if ((*iter)->GetHwnd() == hWnd) return TRUE;
 		}
 
 		return FALSE;
