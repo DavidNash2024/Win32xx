@@ -298,7 +298,7 @@ void CMainFrame::SaveDockables()
 		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-		RegDeleteKey(hKey, _T("Docked Windows"));
+		RegDeleteKey(hKey, _T("Dock Windows"));
 		if (RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 

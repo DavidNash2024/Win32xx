@@ -854,9 +854,10 @@ namespace Win32xx
 					}
 					else
 					{
-						m_pDock->Undock();
-						m_pDock->Destroy();
+						m_pDock->Undock();	
+						m_pDock->Destroy();  					
 					}
+					::PostMessage(m_pDock->GetDockAncestor()->GetHwnd(), UWM_DOCK_DESTROYED, (WPARAM)m_pDock, 0);
 					
 					return 0;
 				}
@@ -1355,7 +1356,6 @@ namespace Win32xx
 			SetWindowPos(HWND_TOPMOST, xMid, rc.top + 10, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 		
-
 		CRect rcTop(0, 0, cxImage, cyImage);
 		CPoint pt = pDragPos->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
@@ -1646,6 +1646,7 @@ namespace Win32xx
 	// A diagnostic routine which verifies the integrity of the docking layout
 	{
 		BOOL bResult = TRUE;
+		
 		// Check dock ancestor
 		std::vector<CDockable*>::iterator iter;
 		
@@ -1661,19 +1662,25 @@ namespace Win32xx
 		// Check presence of dock parent
 		for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
 		{
-			if ((*iter)->IsUndocked())
+			if ((*iter)->IsUndocked() && (*iter)->m_pDockParent != 0) 
 			{
-				if ((*iter)->m_pDockParent != 0)
-				{
-					TRACE("Error: Undocked dockables should not have a dock parent\n");
+				TRACE("Error: Undocked dockables should not have a dock parent\n");
 					bResult = FALSE;
-				}
-				if ((*iter)->GetDockChildren().size() != 0)
-				{
-					TRACE("Error: Undocked dockables should not have dock children\n");
-					bResult = FALSE;
-				}
 			}
+			
+			if ((*iter)->IsDocked() && (*iter)->m_pDockParent == 0)
+			{
+				TRACE("Error: Docked dockables should have a dock parent\n");
+					bResult = FALSE;
+			}
+		}
+
+		// Check dock parent chain
+		for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
+		{
+			CDockable* pDockTopLevel = (*iter)->GetDockTopLevel();
+			if (pDockTopLevel->IsDocked())
+				TRACE("Error: Top level parent should be undocked\n");
 		}
 		
 		// Check dock parent/child relationship
@@ -1751,10 +1758,12 @@ namespace Win32xx
 
 	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
 	{
+		TRACE("Docking begins \n");
+		CheckDockables();
+
 		pDockable->m_pDockParent = this;
 		
 		// Set the dock styles
-	//	GetDockAncestor()->SetRedraw(FALSE);
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		pDockable->m_BlockMove = FALSE;
 		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
@@ -1788,8 +1797,10 @@ namespace Win32xx
 
 		// Redraw the docked windows
 		pDockable->GetView()->SetFocus();
-	//	GetDockAncestor()->SetRedraw(TRUE);
 		RecalcDockLayout();
+
+		CheckDockables();
+		TRACE("Docking ends \n");
 	}
 
 	inline void CDockable::DockInContainer(CDockable* pDock, DWORD dwDockStyle)
@@ -1832,23 +1843,27 @@ namespace Win32xx
 
 	inline void CDockable::DockOuter(CDockable* pDockable, DWORD dwDockStyle)
 	{
+		TRACE("Dockouter begins \n");
+		CheckDockables();
+
+		pDockable->m_pDockParent = GetDockAncestor();
+
 		DWORD OuterDocking = dwDockStyle & 0xF0000;
 		DWORD DockSide = OuterDocking / 0x10000; 
 		dwDockStyle &= 0xFFF0FFFF;
 		dwDockStyle |= DockSide;	
 
 		// Set the dock styles
-		GetDockAncestor()->SetRedraw(FALSE);
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		pDockable->m_BlockMove = FALSE;
 		pDockable->SetWindowLongPtr(GWL_STYLE, dwStyle);
+		pDockable->ShowWindow(SW_HIDE);
 		pDockable->SetDockStyle(dwDockStyle);
 
 		// Set the docking relationships
 		std::vector<CDockable*>::iterator iter = GetDockAncestor()->m_vDockChildren.begin();
 		GetDockAncestor()->m_vDockChildren.insert(iter, pDockable);
 		pDockable->SetParent(GetDockAncestor()->GetHwnd());
-		pDockable->m_pDockParent = GetDockAncestor();
 		pDockable->GetDockBar().SetParent(GetDockAncestor()->GetHwnd());
 
 		// Limit the docked size to half the parent's size if it won't fit inside parent
@@ -1874,8 +1889,10 @@ namespace Win32xx
 		// Redraw the docked windows
 		::SetFocus(GetAncestor());
 		pDockable->GetView()->SetFocus();
-		GetDockAncestor()->SetRedraw(TRUE);
 		RecalcDockLayout();
+
+		CheckDockables();
+		TRACE("Dock outer ends \n");
 	}
 
 	inline void CDockable::DrawHashBar(HWND hBar, POINT Pos)
@@ -1919,7 +1936,6 @@ namespace Win32xx
 			if (IsRelated(hWnd))
 			{
 				CDockable* pDockTest = (CDockable*)FromHandle(hWnd);
-			//	CRect rc = pDockTest->GetDockClient().GetWindowRect();
 				CRect rc = pDockTest->GetClientRect();
 				MapWindowPoints(pDockTest->GetHwnd(), NULL, (LPPOINT)&rc, 2);
 				if ((this != pDockTest) && PtInRect(&rc, pt))
@@ -2354,16 +2370,12 @@ namespace Win32xx
 		else
 		{
 			// The TopLevelDockable is always 'undocked'.
-		//	if (this != GetDockTopLevel())
-		//		rc = GetClientRect();
-
 			GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		}
 	}
 
 	inline void CDockable::RecalcDockLayout()
 	{
-		TRACE("RecalcDockLayout \n");
 		if (GetDockAncestor()->IsWindow())
 		{
 			CRect rc = GetDockTopLevel()->GetClientRect();
@@ -2702,7 +2714,6 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			{
-			//	if ( IsUndocked() && ( hWnd != GetDockAncestor()->GetHwnd() ) )
 				if (m_bIsDragging)
 				{
 					// Send a Move notification to the parent
@@ -2717,12 +2728,7 @@ namespace Win32xx
 						CloseAllTargets();
 						m_BlockMove = FALSE;
 					}
-					
-				//	CRect rc = GetClientRect();
-				//	GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 				}
-
-			//	if (hWnd == GetDockAncestor()->GetHwnd())
 				else if (this == GetDockTopLevel())
 				{
 					if (IsDocked()) TRACE("Error should be undocked\n");
@@ -2753,7 +2759,7 @@ namespace Win32xx
 		case UWM_DOCK_DESTROYED:
 			{
 				CDockable* pDock = (CDockable*)wParam;
-				if (pDock != GetDockAncestor())
+				if (this == GetDockAncestor() && pDock != GetDockAncestor())
 				{
 					pDock->Destroy();
 					delete pDock;
