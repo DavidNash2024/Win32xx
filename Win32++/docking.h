@@ -366,12 +366,13 @@ namespace Win32xx
 		virtual int GetDockWidth() const;
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual void MoveDockChildren(CDockable* pDockTarget);
 		virtual void RecalcDockLayout();
 		virtual void RecalcDockChildLayout(CRect rc);
 		virtual void SendNotify(UINT nMessageID);
 		virtual void Undock();
 		virtual void UndockContainer(CContainer* pContainer);
-		virtual void UndockMove();
+		virtual void ConvertToPopup();
 
 		// Attributes
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
@@ -1808,15 +1809,19 @@ namespace Win32xx
 	{
 		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (pDock->GetView()->IsContainer()))
 		{
-			// Add a container to an existing docked container
+			// Add a container to an existing container
 			pDock->m_pDockParent = this;
 			pDock->m_BlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
 			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
 			pDock->SetParent(m_hWnd);
+	
+			// Transfer any dock children to this dockable
+			pDock->MoveDockChildren(this);
+
+			// Transfer container children to the target container
 			CContainer* pContainer = (CContainer*)GetView();	
 			CContainer* pContainerSource = (CContainer*)pDock->GetView();
-			
 			if (pContainerSource->GetAllContainers().size() > 1)
 			{
 				// The container we're about to add has children, so transfer those first
@@ -2086,6 +2091,20 @@ namespace Win32xx
 	inline BOOL CDockable::IsUndocked() const
 	{
 		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
+	}
+
+	inline void CDockable::MoveDockChildren(CDockable* pDockTarget)
+	{
+		// Transfer any dock children from the current dockable to the target dockable
+		std::vector<CDockable*>::iterator iter;
+		for (iter = GetDockChildren().begin(); iter < GetDockChildren().end(); ++iter)
+		{
+			pDockTarget->GetDockChildren().push_back(*iter);
+			(*iter)->m_pDockParent = pDockTarget;
+			(*iter)->SetParent(pDockTarget->GetHwnd());
+			(*iter)->GetDockBar().SetParent(pDockTarget->GetHwnd());
+		}
+		GetDockChildren().clear();
 	}
 
 	inline void CDockable::OnCreate()
@@ -2460,33 +2479,39 @@ namespace Win32xx
 	inline void CDockable::Undock()
 	{
 		// Return if we shouldn't undock
-		if (IsUndocked() || (GetDockStyle() & DS_NO_UNDOCK)) return;
+		if (GetDockStyle() & DS_NO_UNDOCK) return;
 		
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
 
 		// Promote the first child to replace this Dock parent
-		for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
+		if (m_pDockParent)
 		{
-			if (m_pDockParent->m_vDockChildren[u] == this)
+			for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
 			{
-				if (m_vDockChildren.size() > 0)
-					m_pDockParent->m_vDockChildren[u] = m_vDockChildren[0];
-				else				
-					m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
-				break;
+				if (m_pDockParent->m_vDockChildren[u] == this)
+				{
+					if (m_vDockChildren.size() > 0)
+						m_pDockParent->m_vDockChildren[u] = m_vDockChildren[0];
+					else				
+						m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
+					break;
+				}
 			}
 		}
 
-		CDockable* pDockParent = GetDockParent();
+		CDockable* pOldDockParent = GetDockParent();
 		if (m_vDockChildren.size() > 0)
 		{
 			m_vDockChildren[0]->m_DockStyle = (m_vDockChildren[0]->m_DockStyle & 0xFFFFFFF0 ) | (m_DockStyle & 0xF);
 			m_vDockChildren[0]->m_DockStartWidth = m_DockStartWidth;
 			m_vDockChildren[0]->m_DockWidthRatio = m_DockWidthRatio;
 			m_vDockChildren[0]->m_pDockParent = m_pDockParent;
-			m_vDockChildren[0]->SetParent(m_pDockParent->GetHwnd());
-			m_vDockChildren[0]->GetDockBar().SetParent(m_pDockParent->GetHwnd());
+			if (m_pDockParent)
+			{
+				m_vDockChildren[0]->SetParent(m_pDockParent->GetHwnd());
+				m_vDockChildren[0]->GetDockBar().SetParent(m_pDockParent->GetHwnd());
+			}
 		}
 
 		// Transfer the remaining dock children to the first dock child
@@ -2500,11 +2525,12 @@ namespace Win32xx
 
 		m_vDockChildren.clear();
 		m_pDockParent = 0;
-		UndockMove();
-		pDockParent->RecalcDockLayout();
+		ConvertToPopup();
+
+		if (pOldDockParent) pOldDockParent->RecalcDockLayout();
 	}
 
-	inline void CDockable::UndockMove()
+	inline void CDockable::ConvertToPopup()
 	{
 		m_Undocking = TRUE;
 
@@ -2558,7 +2584,130 @@ namespace Win32xx
 		m_Undocking = FALSE;
 	}
 
+	
 	inline void CDockable::UndockContainer(CContainer* pContainer)
+	{
+		TRACE("UndockContainer begins ...\n");
+
+		if (!CheckDockables())
+			TRACE("Check failed: UndockContainer begins\n");
+
+		// Return if we shouldn't undock
+		if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
+		
+		// Undocking isn't supported on Win95
+		if (1400 == GetWinVersion()) return;
+
+		// No undocking allowed from an undocked container group
+	//	CDockable* pDockTop = GetDockFromView(pContainer->GetContainerParent())->GetDockTopLevel();
+	//	if (pDockTop != GetDockAncestor()) return;
+	
+		CDockable* pDockParent = GetDockParent();
+		if (GetView() == pContainer)
+		{
+			// The parent container is being undocked, so we need
+			// to transfer our child containers to a different dockable
+			
+			// Choose a new dockable from among the dockables for child containers
+			CDockable* pDockOld = GetDockFromView(pContainer);
+			CDockable* pDockNew = 0;
+			std::vector<ContainerInfo>::iterator iter;
+			std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
+			for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
+			{
+				if ((*iter).pContainer != pContainer)
+				{
+					pDockNew = (CDockable*)FromHandle(::GetParent((*iter).pContainer->GetParent()));	
+					break;
+				}
+			}
+
+			if (pDockNew)
+			{
+				// Move containers from the old dockable to the new dockable
+				CContainer* pContainerNew = (CContainer*)pDockNew->GetView();
+				for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
+				{
+					if ((*iter).pContainer != pContainer)
+					{
+						CContainer* pChildContainer = (CContainer*)(*iter).pContainer;
+						pContainer->RemoveContainer(pChildContainer);
+						if (pContainerNew != pChildContainer)
+						{
+							pContainerNew->AddContainer(pChildContainer);
+							CDockable* pDock = GetDockFromView(pChildContainer);
+							pDock->SetParent(pDockNew->GetHwnd());
+						}
+					}
+				}
+
+				// Now transfer the old dockable's settings to the new one.
+				pDockNew->m_pDockParent		= pDockOld->m_pDockParent;
+				pDockNew->m_DockStyle		= pDockOld->m_DockStyle;
+				pDockNew->m_DockStartWidth	= pDockOld->m_DockStartWidth;
+				pDockNew->m_DockWidthRatio	= pDockOld->m_DockWidthRatio;
+				if (pDockOld->IsDocked())
+				{
+					pDockNew->SetParent(pDockOld->GetParent());
+				}
+				else
+				{
+					CRect rc = pDockOld->GetWindowRect();
+					pDockNew->ShowWindow(SW_HIDE);
+					DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+					pDockNew->SetWindowLongPtr(GWL_STYLE, dwStyle);
+					pDockNew->SetParent(0);
+					pDockNew->SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+				}
+				pDockNew->GetDockBar().SetParent(pDockOld->GetParent());
+				pDockNew->GetView()->SetFocus();
+
+				// Transfer the Dock children to the new dockable
+				pDockOld->MoveDockChildren(pDockNew);
+
+				// insert pDockNew into its DockParent's DockChildren vector
+				if (pDockNew->m_pDockParent)
+				{
+					std::vector<CDockable*>::iterator p;
+					for (p = pDockNew->m_pDockParent->m_vDockChildren.begin(); p != pDockNew->m_pDockParent->m_vDockChildren.end(); ++p)
+					{
+						if (*p == this)
+						{
+							pDockNew->m_pDockParent->m_vDockChildren.insert(p, pDockNew);
+							break;
+						}
+					}
+				}
+			}			
+		}
+		else
+		{
+			// This is a child container, so simply remove it from the parent
+			CContainer* pContainerParent = (CContainer*)GetView();
+			pContainerParent->RemoveContainer(pContainer);
+			pContainerParent->SetTabSize();
+			pContainerParent->SetFocus();
+			pContainerParent->GetViewPage().SetParent(pContainerParent->GetHwnd());
+		}
+		
+		// Finally do the actual undocking
+		CDockable* pDock = GetDockFromView(pContainer);
+		CRect rc = GetDockClient().GetWindowRect();
+		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+
+		pDock->Undock();
+		
+		if (pDockParent) pDockParent->RecalcDockLayout();
+		
+		if (!CheckDockables())
+			TRACE("Check failed: UndockContainer ends\n");
+
+		TRACE("UndockContainer ends ...\n");
+	}
+
+
+/*	inline void CDockable::UndockContainer(CContainer* pContainer)
 	{
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
@@ -2667,10 +2816,10 @@ namespace Win32xx
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);	
 		pDock->m_vDockChildren.clear();
 		pDock->m_pDockParent = 0;
-		pDock->UndockMove();
+		pDock->ConvertToPopup();
 		pDockParent->RecalcDockLayout();
 	}
-
+*/
 	inline LRESULT CDockable::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		static CPoint Oldpt;
