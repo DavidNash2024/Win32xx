@@ -1,5 +1,5 @@
-// Win32++  Version 6.4.1
-// Released: 12th February, 2009 by:
+// Win32++  Version 6.5 beta
+// Released: ??th May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -77,6 +77,7 @@ namespace Win32xx
 {
 
 	class CContainer;
+	class CDockable;
 	struct ContainerInfo
 	{
 		TCHAR szTitle[MAX_MENU_STRING];
@@ -850,19 +851,20 @@ namespace Win32xx
 					// Now destroy the dockable
 					if (m_pDock->GetView()->IsContainer())
 					{
-						CContainer* pContainer = ((CContainer*)m_pDock->GetView())->GetActiveContainer();				
+						CContainer* pContainer = ((CContainer*)m_pDock->GetView())->GetActiveContainer();
 						CDockable* pDock = m_pDock->GetDockFromView(pContainer);					
 						pDock->GetDockClient().SetClosePressed();
 						m_pDock->UndockContainer(pContainer);					
 						pDock->Destroy();
+						pDock->GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)pDock, 0);
 					}
 					else
 					{
 						m_pDock->Undock();	
-						m_pDock->Destroy();  					
+						m_pDock->Destroy();
+						m_pDock->GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)m_pDock, 0);
 					}
-					::PostMessage(m_pDock->GetDockAncestor()->GetHwnd(), UWM_DOCK_DESTROYED, (WPARAM)m_pDock, 0);
-					
+										
 					return 0;
 				}
 				m_bClosePressed = FALSE;
@@ -1612,6 +1614,7 @@ namespace Win32xx
 
 		// Store the Dockable's pointer in the DockAncestor's vector for later deletion
 		GetDockAncestor()->m_vAllDockables.push_back(pDockable);
+		
 		return pDockable;
 	}
 
@@ -1678,14 +1681,6 @@ namespace Win32xx
 					bResult = FALSE;
 			}
 		}
-
-		// Check dock parent chain
-		for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
-		{
-			CDockable* pDockTopLevel = (*iter)->GetDockTopLevel();
-			if (pDockTopLevel->IsDocked())
-				TRACE("Error: Top level parent should be undocked\n");
-		}
 		
 		// Check dock parent/child relationship
 		for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
@@ -1704,6 +1699,14 @@ namespace Win32xx
 					bResult = FALSE;
 				}
 			}
+		}
+
+		// Check dock parent chain
+		for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
+		{
+			CDockable* pDockTopLevel = (*iter)->GetDockTopLevel();
+			if (pDockTopLevel->IsDocked())
+				TRACE("Error: Top level parent should be undocked\n");
 		}
 
 		return bResult;
@@ -1739,7 +1742,7 @@ namespace Win32xx
 		GetDockAncestor()->m_TargetBottom.Destroy();
 	}
 
-	inline void CDockable::DeleteDockable(CDockable* pDockable)
+/*	inline void CDockable::DeleteDockable(CDockable* pDockable)
 	{
 		if ((this == GetDockAncestor()) && (this != pDockable))
 		{
@@ -1758,6 +1761,41 @@ namespace Win32xx
 		}
 		else
 			throw CWinException(_T("Must call RemoveDockable from the DockAncestor"));
+	} */
+
+	inline void CDockable::DeleteDockable(CDockable* pDockable)
+	{
+		if (this == pDockable)
+			throw CWinException(_T("CDockable::DeleteDockable ... Can't delete ourself\n"));
+
+		if (pDockable->GetDockChildren().size() > 0)
+			throw CWinException(_T("CDockable::DeleteDockable ... Delete the children first\n"));
+
+		std::vector<CDockable*>::iterator iter;
+	/*	if (pDockable->GetDockParent())
+		{
+			std::vector<CDockable*> Children = GetDockParent()->GetDockChildren();
+			for (iter = Children.begin(); iter < Children.end(); ++iter)
+			{
+				if(*iter == pDockable)
+				{
+					Children.erase(iter);
+					break;
+				}
+			}
+		} */
+
+		for (iter = GetAllDockables().begin(); iter < GetAllDockables().end(); ++iter)
+		{
+			if (*iter == pDockable)
+			{
+				GetAllDockables().erase(iter);
+				break;
+			}
+		}
+		
+		pDockable->Destroy();
+		delete pDockable;
 	}
 
 	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
@@ -1805,6 +1843,9 @@ namespace Win32xx
 		{
 			// Add a container to an existing container
 			pDock->m_pDockParent = this;
+		//	CContainer* pContainerParent = ((CContainer*)pDock->GetView())->GetContainerParent();
+		//	pDock->m_pDockParent = GetDockFromView(pContainerParent);
+			
 			pDock->m_BlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
 			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
@@ -2572,18 +2613,21 @@ namespace Win32xx
 
 	inline void CDockable::ConvertToPopup(RECT rc)
 	{
-		// Change the window to an "undocked" style
-		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;// | WS_VISIBLE;
-		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		if (GetWindowLongPtr(GWL_STYLE) & WS_CHILD)
+		{
+			// Change the window to an "undocked" style
+			DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
+			SetWindowLongPtr(GWL_STYLE, dwStyle);
 
-		// Hide the window while we reposition it
-		GetDockBar().ShowWindow(SW_HIDE);
-		ShowWindow(SW_HIDE);
-		SetParent(0);
-		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
-		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
-		
-		SetWindowText(GetCaption().c_str());
+			// Hide the window while we reposition it
+			GetDockBar().ShowWindow(SW_HIDE);
+			ShowWindow(SW_HIDE);
+			SetParent(0);
+			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+			GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
+			
+			SetWindowText(GetCaption().c_str());
+		}
 	}
 
 	inline void CDockable::UndockContainer(CContainer* pContainer)
@@ -2633,6 +2677,7 @@ namespace Win32xx
 							pContainerNew->AddContainer(pChildContainer);
 							CDockable* pDock = GetDockFromView(pChildContainer);
 							pDock->SetParent(pDockNew->GetHwnd());
+							pDock->m_pDockParent = pDockNew;
 						}
 					}
 				}
@@ -2684,7 +2729,7 @@ namespace Win32xx
 			pContainerParent->SetTabSize();
 			pContainerParent->SetFocus();
 			pContainerParent->GetViewPage().SetParent(pContainerParent->GetHwnd());
-		}
+		} 
 		
 		// Finally do the actual undocking
 		CDockable* pDock = GetDockFromView(pContainer);
@@ -2792,9 +2837,29 @@ namespace Win32xx
 			break;
 		case WM_DESTROY:
 			{
+				if (GetView()->IsContainer() && IsUndocked())
+				{
+					CContainer* pContainer = (CContainer*)GetView();
+					if (pContainer->GetAllContainers().size() > 1)
+					{
+						// This container has children, so destroy them first					
+						std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
+						std::vector<ContainerInfo>::iterator iter;
+						for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
+						{
+							if ((*iter).pContainer != pContainer)
+							{
+								CDockable* pDock = GetDockFromView((*iter).pContainer);
+								pDock->Destroy();
+								GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)pDock, 0);
+							}
+						}
+					}
+				}
+
 				// Post a destroy dockable message
 				if ((GetDockAncestor() != this) && m_bClosePressed)
-					::PostMessage(GetDockAncestor()->GetHwnd(), UWM_DOCK_DESTROYED, (WPARAM)this, 0);
+					GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0);
 			}
 			break;
 
@@ -2808,7 +2873,6 @@ namespace Win32xx
 				CDockable* pDock = (CDockable*)wParam;
 				if (this == GetDockAncestor() && pDock != GetDockAncestor())
 				{
-					pDock->Destroy();
 					delete pDock;
 				}
 			}
