@@ -1713,7 +1713,7 @@ namespace Win32xx
 		for (v = AllDockables.begin(); v != AllDockables.end(); ++v)
 		{
 			(*v)->Destroy();	// Destroy the window
-			delete (*v);		// Delete the CWnd object
+		//	delete (*v);		// Delete the CWnd object
 		}
 
 		GetAllDockables().clear();
