@@ -1305,7 +1305,13 @@ namespace Win32xx
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
 		if (NULL == pDockDrag) return FALSE;
 
-		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
+		CPoint pt = pDragPos->ptPos;
+		CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		if (pDockTarget != pDockDrag->GetDockAncestor())
+		{
+			Destroy();
+			return FALSE;
+		}		
 
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
@@ -1321,7 +1327,6 @@ namespace Win32xx
 		}
 
 		CRect rcLeft(0, 0, cxImage, cyImage);
-		CPoint pt = pDragPos->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 		// Test if our cursor is in one of the docking zones
@@ -1345,7 +1350,14 @@ namespace Win32xx
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
 		if (NULL == pDockDrag) return FALSE;
 
-		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
+		CPoint pt = pDragPos->ptPos;
+		CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		if (pDockTarget != pDockDrag->GetDockAncestor())
+		{
+			Destroy();
+			return FALSE;
+		}	
+		
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
@@ -1360,7 +1372,6 @@ namespace Win32xx
 		}
 
 		CRect rcTop(0, 0, cxImage, cyImage);
-		CPoint pt = pDragPos->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 		// Test if our cursor is in one of the docking zones
@@ -1384,7 +1395,14 @@ namespace Win32xx
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
 		if (NULL == pDockDrag) return FALSE;
 
-		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
+		CPoint pt = pDragPos->ptPos;
+		CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		if (pDockTarget != pDockDrag->GetDockAncestor())
+		{
+			Destroy();
+			return FALSE;
+		}	
+
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
@@ -1399,7 +1417,6 @@ namespace Win32xx
 		}
 
 		CRect rcRight(0, 0, cxImage, cyImage);
-		CPoint pt = pDragPos->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 		// Test if our cursor is in one of the docking zones
@@ -1423,7 +1440,14 @@ namespace Win32xx
 		CDockable* pDockDrag = (CDockable*)FromHandle(pDragPos->hdr.hwndFrom);
 		if (NULL == pDockDrag) return FALSE;
 
-		CDockable* pDockTarget = pDockDrag->GetDockAncestor();
+		CPoint pt = pDragPos->ptPos;
+		CDockable* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		if (pDockTarget != pDockDrag->GetDockAncestor())
+		{
+			Destroy();
+			return FALSE;
+		}
+
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
@@ -1437,7 +1461,6 @@ namespace Win32xx
 			SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - 10 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 		CRect rcBottom(0, 0, cxImage, cyImage);
-		CPoint pt = pDragPos->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
 		// Test if our cursor is in one of the docking zones
@@ -2547,21 +2570,18 @@ namespace Win32xx
 
 	inline void CDockable::ConvertToPopup(RECT rc)
 	{
-		if (GetWindowLongPtr(GWL_STYLE) & WS_CHILD)
-		{
-			// Change the window to an "undocked" style
-			DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
-			SetWindowLongPtr(GWL_STYLE, dwStyle);
+		// Change the window to an "undocked" style
+		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
+		SetWindowLongPtr(GWL_STYLE, dwStyle);
 
-			// Hide the window while we reposition it
-			GetDockBar().ShowWindow(SW_HIDE);
-			ShowWindow(SW_HIDE);
-			SetParent(0);
-			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
-			GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
+		// Hide the window while we reposition it
+		GetDockBar().ShowWindow(SW_HIDE);
+		ShowWindow(SW_HIDE);
+		SetParent(0);
+		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
 
-			SetWindowText(GetCaption().c_str());
-		}
+		SetWindowText(GetCaption().c_str());
 	}
 
 	inline void CDockable::UndockContainer(CContainer* pContainer)
@@ -2797,6 +2817,8 @@ namespace Win32xx
 						}
 					}
 				}
+
+				GetDockBar().Destroy();
 
 				// Post a destroy dockable message
 				GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0);
