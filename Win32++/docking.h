@@ -434,6 +434,7 @@ namespace Win32xx
 		DWORD m_DockStyle;
 		HBRUSH m_hbrDithered;
 		HBITMAP	m_hbmHash;
+		HWND m_hOldFocus;
 
 	}; // class CDockable
 
@@ -1481,7 +1482,7 @@ namespace Win32xx
 	//
 	inline CDockable::CDockable() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
 		            m_bClosePressed(FALSE), m_bIsDragging(FALSE), m_DockStartWidth(0), m_nDockID(0),
-		            m_NCHeight(20), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0)
+		            m_NCHeight(20), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1735,13 +1736,11 @@ namespace Win32xx
 		std::vector<CDockable*> AllDockables = GetAllDockables();
 		for (v = AllDockables.begin(); v != AllDockables.end(); ++v)
 		{
+			// The CDockable is destroyed when the window is destroyed
 			(*v)->Destroy();	// Destroy the window
-		//	delete (*v);		// Delete the CWnd object
 		}
 
-		GetAllDockables().clear();
 		GetDockChildren().clear();
-
 		SetRedraw(TRUE);
 		RecalcDockLayout();
 	}
@@ -1787,6 +1786,8 @@ namespace Win32xx
 		}
 
 		// Redraw the docked windows
+		::SetForegroundWindow(GetAncestor());
+		GetDockTopLevel()->m_hOldFocus = pDockable->GetView()->GetHwnd();
 		pDockable->GetView()->SetFocus();
 		RecalcDockLayout();
 
@@ -2056,7 +2057,7 @@ namespace Win32xx
 	inline BOOL CDockable::IsChildOfDockable(HWND hwnd) const
 	// returns true if the specified window is a child of this dockable
 	{
-		while (hwnd != NULL)
+		while ((hwnd != NULL) && (hwnd != GetDockAncestor()->GetHwnd()))
 		{
 			if (hwnd == m_hWnd) return TRUE;
 			if (IsRelated(hwnd)) break;
@@ -2533,7 +2534,11 @@ namespace Win32xx
 		if (!IsClosing())
 		{
 			m_Undocking = TRUE;
-			CRect rc = GetDockClient().GetWindowRect();
+			CRect rc;
+			if (GetWindowLongPtr(GWL_STYLE) & WS_CHILD)
+				rc = GetDockClient().GetWindowRect();
+			else
+				rc = GetWindowRect();
 			CRect rcTest = rc;
 			rcTest.bottom = MIN(rcTest.bottom, rcTest.top + m_NCHeight);
 			if ( !PtInRect(&rcTest, pt))
@@ -2556,6 +2561,7 @@ namespace Win32xx
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 
+		GetDockTopLevel()->m_hOldFocus = 0;
 		if (pOldDockParent) pOldDockParent->RecalcDockLayout();
 	}
 
@@ -2563,7 +2569,6 @@ namespace Win32xx
 	{
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		SetWindowLongPtr(GWL_STYLE, dwStyle);
-		ShowWindow(SW_HIDE);
 		SetParent(hWndParent);
 		GetDockBar().SetParent(hWndParent);
 	}
@@ -2571,14 +2576,15 @@ namespace Win32xx
 	inline void CDockable::ConvertToPopup(RECT rc)
 	{
 		// Change the window to an "undocked" style
+		ShowWindow(SW_HIDE);
 		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
 		SetWindowLongPtr(GWL_STYLE, dwStyle);
 
-		// Hide the window while we reposition it
+		// Change the window's parent and reposition it
 		GetDockBar().ShowWindow(SW_HIDE);
-		ShowWindow(SW_HIDE);
+		SetWindowPos(0, 0, 0, 0, 0, SWP_NOSENDCHANGING|SWP_HIDEWINDOW|SWP_NOREDRAW);
 		SetParent(0);
-		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOOWNERZORDER);
 		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
 
 		SetWindowText(GetCaption().c_str());
@@ -2708,6 +2714,33 @@ namespace Win32xx
 		case UWM_IS_DOCKABLE:	// A message to test if this is a Container window
 			return TRUE;
 
+		case WM_ACTIVATE:
+			{
+				// Only top level undocked dockables get this message
+				TRACE("Got a WM_ACTIVATE message\n");
+				if (LOWORD(wParam) == WA_INACTIVE)
+				{
+					std::vector<CDockable*>::iterator iter;
+					for (iter = GetDockChildren().begin(); iter != GetDockChildren().end(); ++iter)
+					{
+						m_hOldFocus = ::GetFocus();
+						TRACE("Looking for Focus\n");
+						if ((*iter)->IsChildOfDockable(::GetFocus()))
+						{
+							TRACE("Found focus\n");
+							(*iter)->GetDockClient().DrawCaption((WPARAM)1, FALSE);
+						}
+					}
+				}
+		/*		if (LOWORD(wParam) == WA_CLICKACTIVE)
+				{
+					TRACE("WA_CLICKACTIVE\n");
+					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
+				}
+				if (LOWORD(wParam) == WA_ACTIVE) TRACE("WA_ACTIVE\n"); */
+			}
+			break;
+
 		case WM_SYSCOMMAND:
 			{
 				switch(wParam&0xFFF0)
@@ -2827,7 +2860,20 @@ namespace Win32xx
 
 		case WM_SETFOCUS:
 			// Pass focus on the the view window
-			GetView()->SetFocus();
+			if (IsUndocked() && m_hOldFocus)
+			{
+				::SetFocus(m_hOldFocus);
+				std::vector<CDockable*>::iterator iter;
+				for (iter = GetDockChildren().begin(); iter != GetDockChildren().end(); ++iter)
+				{
+					if ((*iter)->IsChildOfDockable(::GetFocus()))
+					{
+						(*iter)->GetDockClient().DrawCaption((WPARAM)1, TRUE);
+					}
+				}
+			}
+			else
+				GetView()->SetFocus();
 			break;
 
 		case UWM_DOCK_DESTROYED:

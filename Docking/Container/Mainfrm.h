@@ -16,7 +16,7 @@
 class CMainFrame : public CFrame
 {
 public:
-	struct DockedInfo
+	struct DockInfo
 	{
 		DWORD DockStyle;
 		int DockWidth;
@@ -37,6 +37,8 @@ public:
 
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	void AddDocked(DockInfo di, CDockable* pDock);
+	void AddUndocked(DockInfo di);
 	void LoadDefaultDockables();
 	void LoadRegistryDockables();
 	void SaveDockables();

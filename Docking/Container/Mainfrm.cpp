@@ -38,6 +38,62 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
+void CMainFrame::AddDocked(DockInfo di, CDockable* pDock)
+{
+	switch(di.DockID)
+	{
+	case ID_CONTAINCLASSES1:
+		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES1);
+		break;
+	case ID_CONTAINCLASSES2:
+		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES2);					
+		break;
+	case ID_CONTAINFILES1:
+		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES1);
+		break;
+	case ID_CONTAINFILES2:
+		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES2);
+		break;
+	case ID_OUTPUT:
+		pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT);
+		break;
+	case ID_TEXT:
+		pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT);
+		break;
+	default:
+		TRACE("Unknown Dock ID\n");
+		break;
+	}
+}
+
+void CMainFrame::AddUndocked(DockInfo di)
+{
+	switch(di.DockID)
+	{
+	case ID_CONTAINCLASSES1:
+		m_DockView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES1);
+		break;
+	case ID_CONTAINCLASSES2:
+		m_DockView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES2);					
+		break;
+	case ID_CONTAINFILES1:
+		m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES1);
+		break;
+	case ID_CONTAINFILES2:
+		m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
+		break;
+	case ID_OUTPUT:
+		m_DockView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT);
+		break;
+	case ID_TEXT:
+		m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT);
+		break; 
+	default:
+		TRACE("Unknown Dock ID\n");
+		break; 
+	}
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	// OnCommand responds to menu and and toolbar input
@@ -113,102 +169,6 @@ void CMainFrame::LoadDefaultDockables()
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT);
 }
 
-void CMainFrame::LoadRegistryDockables()
-{
-	if (0 != GetRegistryKeyName().size())
-	{
-		LPCTSTR szSubKeyDock = _T("Dock Windows");
-		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\") + szSubKeyDock;
-		HKEY hKey = 0;
-		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
-		if (hKey)
-		{
-			DWORD dwType = REG_BINARY;
-			DWORD BufferSize = sizeof(DockedInfo);
-			DockedInfo di;
-
-			int i = 0;
-			TCHAR szNumber[16];
-			tString tsSubKey = _T("DockChild");
-			tsSubKey += _itot(i, szNumber, 10);
-
-			while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&di, &BufferSize))
-			{
-				if (-1 == di.DockParentID)
-				{
-					switch(di.DockID)
-					{
-					case ID_CONTAINCLASSES1:
-						m_DockView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES1);
-						break;
-					case ID_CONTAINCLASSES2:
-						m_DockView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES2);					
-						break;
-					case ID_CONTAINFILES1:
-						m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES1);
-						break;
-					case ID_CONTAINFILES2:
-						m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
-						break;
-					case ID_OUTPUT:
-						m_DockView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT);
-						break;
-					case ID_TEXT:
-						m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT);
-						break;
-					default:
-						TRACE("Unknown Dock ID\n");
-						break;
-					}
-				}
-				else
-				{
-					CDockable* pDock = 0;	
-					if (di.DockParentID)
-						pDock = m_DockView.GetDockFromID(di.DockParentID);
-					
-					if (0 == pDock)
-						pDock = &m_DockView;
-					
-					if (pDock)
-					{
-						switch(di.DockID)
-						{
-						case ID_CONTAINCLASSES1:
-							pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES1);
-							break;
-						case ID_CONTAINCLASSES2:
-							pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES2);					
-							break;
-						case ID_CONTAINFILES1:
-							pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES1);
-							break;
-						case ID_CONTAINFILES2:
-							pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES2);
-							break;
-						case ID_OUTPUT:
-							pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT);
-							break;
-						case ID_TEXT:
-							pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT);
-							break;
-						default:
-							TRACE("Unknown Dock ID\n");
-							break;
-						}
-					}
-				}
-
-				i++;
-				tsSubKey = _T("DockChild");
-				tsSubKey += _itot(i, szNumber, 10);
-			}
-		}
-
-		RegCloseKey(hKey);
-	}
-}
-
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
 {
 	// Call the base class function first
@@ -218,112 +178,118 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-void CMainFrame::SaveDockables()
+void CMainFrame::LoadRegistryDockables()
 {
-	// NOTE: This function assumes that each dockable has a unique DockID
-
-	std::vector<DockedInfo> vDockList;
-	std::vector <CDockable*> & v1 = m_DockView.GetDockChildren();
-	std::vector <CDockable*>::iterator iter;
-
-	// Add m_DockView's docked children to the DockList vector
-	for (iter = v1.begin(); iter !=  v1.end(); ++iter)
+	if (0 != GetRegistryKeyName().size())
 	{
-		DockedInfo di = {0};
-		di.DockParentID = 0;
-		di.DockID = (*iter)->GetDockID();
-		di.DockStyle = (*iter)->GetDockStyle();
-		di.DockWidth = (*iter)->GetDockWidth();
-
-		if (0 != di.DockID)
-			vDockList.push_back(di);
-	}
-
-	// Add remaining docked children of children to the DockList vector
-	size_t u = 0;
-	while (u < vDockList.size())
-	{
-		//Add all the children of DockList[u]
-		CDockable* pDock = m_DockView.GetDockFromID(vDockList[u].DockID);
-		std::vector <CDockable*> & v2 = pDock->GetDockChildren();
-
-		for (iter = v2.begin(); iter != v2.end(); ++iter)
+		std::vector<DockInfo> vDockList;
+		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\Dock Windows");
+		HKEY hKey = 0;
+		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
+		if (hKey)
 		{
-			DockedInfo di = {0};
-			di.DockParentID = (*iter)->GetDockParent()->GetDockID();
-			di.DockID = (*iter)->GetDockID();
-			di.DockID = (*iter)->GetDockID();
-			di.DockStyle = (*iter)->GetDockStyle();
-			di.DockWidth = (*iter)->GetDockWidth();
-
-			if ((0 != di.DockID) && (0 != di.DockParentID))
-				vDockList.push_back(di);
-		}
-
-		++u;
-	}
-
-	// Add the Undocked windows information to the DockList vector
-	for (size_t v = 0; v <  m_DockView.GetAllDockables().size(); ++v)
-	{
-		CDockable* pDock = m_DockView.GetAllDockables()[v];
-		if (pDock->IsUndocked())
-		{
-			DockedInfo di = {0};
-			di.DockID = pDock->GetDockID();
-			di.DockParentID = -1;
-			di.DockStyle = pDock->GetDockStyle();
-			di.DockWidth = pDock->GetDockWidth();
-			di.Rect = pDock->GetWindowRect();
-			vDockList.push_back(di);
-		}
-	}
-
-	// Add container children to the DockList vector
-	u = 0;
-	size_t uMax = vDockList.size();
-	while (u < uMax)
-	{
-		CDockable* pDock = m_DockView.GetDockFromID(vDockList[u].DockID);
-		if (pDock->GetView()->IsContainer())
-		{
-			std::vector<ContainerInfo>& v3 = ((CContainer*)pDock->GetView())->GetAllContainers();
-			std::vector<ContainerInfo>::iterator iter3;
-			for (iter3 = v3.begin()+1; iter3 != v3.end(); ++iter3)
+			DWORD dwType = REG_BINARY;
+			DWORD BufferSize = sizeof(DockInfo);
+			DockInfo di;
+			int i = 0;
+			TCHAR szNumber[16];
+			tString tsSubKey = _T("DockChild");
+			tsSubKey += _itot(i, szNumber, 10);
+			
+			// Fill the DockList vector from the registry
+			while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&di, &BufferSize))
 			{
-				CDockable* pDockContainerChild = pDock->GetDockFromView((*iter3).pContainer);
-				DockedInfo di = {0};
-				di.DockParentID = pDock->GetDockID();
-				di.DockID = pDockContainerChild->GetDockID();
-				di.DockStyle = pDockContainerChild->GetDockStyle();
-				di.DockWidth = pDockContainerChild->GetDockWidth();
 				vDockList.push_back(di);
+				i++;
+				tsSubKey = _T("DockChild");
+				tsSubKey += _itot(i, szNumber, 10);
+			}
+			
+			RegCloseKey(hKey);
+		}
+
+		// Add dockables without parents first
+		for (int i = vDockList.size() -1; i >= 0; --i)
+		{
+			DockInfo di = vDockList[i];
+			if (di.DockParentID == 0)
+			{
+				if (di.DockStyle & 0xF)
+					AddDocked(di, &m_DockView);
+				else
+					AddUndocked(di);
+
+				vDockList.erase(vDockList.begin() + i);
 			}
 		}
-		++u;
-	}
+
+		// Add remaining dockables
+		while (vDockList.size() > 0)
+		{
+			bool bFound = false;		
+			for (int i = vDockList.size() -1; i >= 0; --i)
+			{
+				DockInfo di = vDockList[i];
+				CDockable* pDock = m_DockView.GetDockFromID(di.DockParentID);
+				if (pDock != 0)
+				{
+					AddDocked(di, pDock);
+					bFound = true;
+					vDockList.erase(vDockList.begin() + i);
+					break;
+				}
+			}
+
+			if (!bFound)
+			{
+				TRACE("Orphaned dockables !!! \n");
+				break;
+			}
+		}	
+	}	
+}
+
+void CMainFrame::SaveDockables()
+{
+	m_DockView.CheckDockables();
+	// NOTE: This function assumes that each dockable has a unique DockID
+
+	std::vector<CDockable*>::iterator iter;
+	std::vector<DockInfo> vDockList;
 
 	if (0 != GetRegistryKeyName().size())
 	{
+		for (iter = m_DockView.GetAllDockables().begin(); iter <  m_DockView.GetAllDockables().end(); ++iter)
+		{
+			DockInfo di	 = {0};
+			di.DockID	 = (*iter)->GetDockID();
+			di.DockStyle = (*iter)->GetDockStyle();
+			di.DockWidth = (*iter)->GetDockWidth();
+			di.Rect		 = (*iter)->GetWindowRect();
+			if ((*iter)->GetDockParent())
+				di.DockParentID = (*iter)->GetDockParent()->GetDockID();
+			
+			vDockList.push_back(di);
+		}
+
 		tString tsKeyName = _T("Software\\") + GetRegistryKeyName();
 		HKEY hKey = NULL;
 		HKEY hKeyDock = NULL;
 		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-		LPCTSTR szSubKeyDock = _T("Dock Windows");
-		RegDeleteKey(hKey, szSubKeyDock);
-		if (RegCreateKeyEx(hKey, szSubKeyDock, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
+		RegDeleteKey(hKey, _T("Dock Windows"));
+		if (RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 			throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-		// Add the Docked windows information to the registry
-		for (int i = 0; i < (int)vDockList.size(); ++i)
+		// Add the Dock windows information to the registry
+		for (size_t u = 0; u < vDockList.size(); ++u)
 		{
-			DockedInfo di = vDockList[i];
+			DockInfo di = vDockList[u];
 			TCHAR szNumber[16];
 			tString tsSubKey = _T("DockChild");
-			tsSubKey += _itot(i, szNumber, 10);
-			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockedInfo));
+			tsSubKey += _itot(u, szNumber, 10);
+			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo));
 		}
 
 		RegCloseKey(hKeyDock);
@@ -336,5 +302,4 @@ void CMainFrame::SaveRegistrySettings()
 	CFrame::SaveRegistrySettings();
 	SaveDockables();
 }
-
 
