@@ -1801,9 +1801,6 @@ namespace Win32xx
 		{
 			// Add a container to an existing container
 			pDock->m_pDockParent = this;
-		//	CContainer* pContainerParent = ((CContainer*)pDock->GetView())->GetContainerParent();
-		//	pDock->m_pDockParent = GetDockFromView(pContainerParent);
-
 			pDock->m_BlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
 			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
@@ -1832,12 +1829,14 @@ namespace Win32xx
 
 					CDockable* pDockChild = GetDockFromView(pContainerChild);
 					pDockChild->SetParent(m_hWnd);
+					pDockChild->m_pDockParent = this;
 				}
 			}
 
 			pContainer->AddContainer((CContainer*)pDock->GetView());
 			pDock->SetDockStyle(dwDockStyle);
 			pDock->SetParent(m_hWnd);
+			CheckDockables();
 		}
 	}
 

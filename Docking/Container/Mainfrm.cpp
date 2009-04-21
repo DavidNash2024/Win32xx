@@ -242,7 +242,7 @@ void CMainFrame::LoadRegistryDockables()
 
 			if (!bFound)
 			{
-				TRACE("Orphaned dockables !!! \n");
+				TRACE(_T("Orphaned dockables !!! \n"));
 				break;
 			}
 		}	

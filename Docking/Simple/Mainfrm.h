@@ -35,12 +35,12 @@ public:
 
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	virtual void AddDocked(DockInfo di, CDockable* pDock);
-	virtual void AddUndocked(DockInfo di);
-	virtual void LoadDefaultDockables();
-	virtual void LoadRegistryDockables();
-	virtual void SaveDockables();
-	virtual void SaveRegistrySettings();
+	void AddDocked(DockInfo di, CDockable* pDock);
+	void AddUndocked(DockInfo di);
+	void LoadDefaultDockables();
+	void LoadRegistryDockables();
+	void SaveDockables();
+	void SaveRegistrySettings();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);

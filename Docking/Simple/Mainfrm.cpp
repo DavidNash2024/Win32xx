@@ -247,7 +247,7 @@ void CMainFrame::LoadRegistryDockables()
 
 			if (!bFound)
 			{
-				TRACE("Orphaned dockables !!! \n");
+				TRACE(_T("Orphaned dockables !!! \n"));
 				break;
 			}
 		}	
@@ -273,6 +273,7 @@ void CMainFrame::SaveDockables()
 
 	if (0 != GetRegistryKeyName().size())
 	{
+		// Add the docking information to the DockList vector
 		for (iter = m_DockView.GetAllDockables().begin(); iter <  m_DockView.GetAllDockables().end(); ++iter)
 		{
 			DockInfo di	 = {0};
