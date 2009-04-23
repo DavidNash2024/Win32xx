@@ -61,7 +61,7 @@ void CMainFrame::AddDocked(DockInfo di, CDockable* pDock)
 		pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT);
 		break;
 	default:
-		TRACE("Unknown Dock ID\n");
+		TRACE(_T("Unknown Dock ID\n"));
 		break;
 	}
 }
@@ -89,7 +89,7 @@ void CMainFrame::AddUndocked(DockInfo di)
 		m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT);
 		break; 
 	default:
-		TRACE("Unknown Dock ID\n");
+		TRACE(_T("Unknown Dock ID\n"));
 		break; 
 	}
 }
@@ -193,16 +193,16 @@ void CMainFrame::LoadRegistryDockables()
 		// Add remaining dockables
 		while (vDockList.size() > 0)
 		{
-			bool bFound = false;		
-			for (int i = vDockList.size() -1; i >= 0; --i)
+			bool bFound = false;
+			std::vector<DockInfo>::iterator iter;
+			for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
 			{
-				DockInfo di = vDockList[i];
-				CDockable* pDock = m_DockView.GetDockFromID(di.DockParentID);
+				CDockable* pDock = m_DockView.GetDockFromID((*iter).DockParentID);
 				if (pDock != 0)
 				{
-					AddDocked(di, pDock);
+					AddDocked(*iter, pDock);
 					bFound = true;
-					vDockList.erase(vDockList.begin() + i);
+					vDockList.erase(iter);
 					break;
 				}
 			}

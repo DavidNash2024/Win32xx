@@ -842,7 +842,6 @@ namespace Win32xx
 			break;
 		case WM_LBUTTONDOWN:
 			{
-				TRACE(_T("WM_LBUTTONDOWN\n"));
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				
 				if (GetCloseRect().PtInRect(pt))
@@ -857,7 +856,6 @@ namespace Win32xx
 			}
 			break;
 		case WM_LBUTTONUP:
-			TRACE(_T("WM_LBUTTONUP\n"));
 			break;
 		case WM_SIZE:
 			{
@@ -1071,24 +1069,12 @@ namespace Win32xx
 		case WM_LBUTTONDOWN:
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				
-			//	if (m_Tab.GetCloseRect().PtInRect(pt))
-			//		CloseActiveMDI();
-
-			//	if (m_Tab.GetListRect().PtInRect(pt))
-			//		ShowListMenu();
 			}
 			break;
 		case WM_NCHITTEST:
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
-				
-				if (m_Tab.GetCloseRect().PtInRect(pt))
-					TRACE("Over Close Button\n");
-
-				if (m_Tab.GetListRect().PtInRect(pt))
-					TRACE("Over List Button\n");
 			}
 			break;
 		}

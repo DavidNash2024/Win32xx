@@ -902,6 +902,7 @@ namespace Win32xx
 				// Focus changed, so redraw the captions
 				{
 					m_pView->SetFocus();
+					m_pDock->GetDockTopLevel()->m_hOldFocus = ::GetFocus();
 					m_pDock->RecalcDockLayout();
 				}
 				break;
@@ -1674,7 +1675,7 @@ namespace Win32xx
 		{
 			if (GetDockAncestor() != (*iter)->m_pDockAncestor)
 			{
-				TRACE("Invalid Dock Ancestor\n");
+				TRACE(_T("Invalid Dock Ancestor\n"));
 				bResult = FALSE;
 			}
 		}
@@ -1684,13 +1685,13 @@ namespace Win32xx
 		{
 			if ((*iter)->IsUndocked() && (*iter)->m_pDockParent != 0)
 			{
-				TRACE("Error: Undocked dockables should not have a dock parent\n");
+				TRACE(_T("Error: Undocked dockables should not have a dock parent\n"));
 					bResult = FALSE;
 			}
 
 			if ((*iter)->IsDocked() && (*iter)->m_pDockParent == 0)
 			{
-				TRACE("Error: Docked dockables should have a dock parent\n");
+				TRACE(_T("Error: Docked dockables should have a dock parent\n"));
 					bResult = FALSE;
 			}
 		}
@@ -1703,12 +1704,12 @@ namespace Win32xx
 			{
 				if ((*iterChild)->m_pDockParent != (*iter))
 				{
-					TRACE("Error: Docking parent/Child information mismatch\n");
+					TRACE(_T("Error: Docking parent/Child information mismatch\n"));
 					bResult = FALSE;
 				}
 				if ((*iterChild)->GetParent() != (*iter)->GetHwnd())
 				{
-					TRACE("Error: Incorrect windows child parent relationship\n");
+					TRACE(_T("Error: Incorrect windows child parent relationship\n"));
 					bResult = FALSE;
 				}
 			}
@@ -1719,7 +1720,7 @@ namespace Win32xx
 		{
 			CDockable* pDockTopLevel = (*iter)->GetDockTopLevel();
 			if (pDockTopLevel->IsDocked())
-				TRACE("Error: Top level parent should be undocked\n");
+				TRACE(_T("Error: Top level parent should be undocked\n"));
 		}
 
 		return bResult;
@@ -2266,14 +2267,15 @@ namespace Win32xx
 			break;
 		case NM_SETFOCUS:
 			{
-				if (this == GetDockAncestor())
+				if (this == GetDockTopLevel())
 				{
 					std::vector<CDockable*>::iterator iter;
-					for (iter = m_vAllDockables.begin(); iter != m_vAllDockables.end(); ++iter)
+					for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
 					{
 						if ((*iter)->IsChildOfDockable(::GetFocus()))
 						{
-							(*iter)->GetDockClient().DrawCaption((WPARAM)1, TRUE);
+							if ((*iter)->IsDocked())
+								(*iter)->GetDockClient().DrawCaption((WPARAM)1, TRUE);
 						}
 					}
 				}
@@ -2281,14 +2283,15 @@ namespace Win32xx
 			break;
 		case UWM_FRAMELOSTFOCUS:
 			{
-				if (this == GetDockAncestor())
+				if (this == GetDockTopLevel())
 				{
 					std::vector<CDockable*>::iterator iter;
-					for (iter = m_vAllDockables.begin(); iter != m_vAllDockables.end(); ++iter)
+					for (iter = GetAllDockables().begin(); iter != GetAllDockables().end(); ++iter)
 					{
 						if ((*iter)->IsChildOfDockable(::GetFocus()))
 						{
-							(*iter)->GetDockClient().DrawCaption((WPARAM)1, FALSE);
+							if ((*iter)->IsDocked())
+								(*iter)->GetDockClient().DrawCaption((WPARAM)1, FALSE);
 						}
 					}
 				}
@@ -2488,7 +2491,7 @@ namespace Win32xx
 			}
 		}
 
-		// Transfer styles and data and children to the first dock child
+		// Transfer styles and data and children to the child dockable
 		CDockable* pDockFirstChild = NULL;
 		if (m_vDockChildren.size() > 0)
 		{
@@ -2503,11 +2506,19 @@ namespace Win32xx
 				pDockFirstChild->GetDockBar().SetParent(m_pDockParent->GetHwnd());
 			}
 			else
+			{
+				std::vector<CDockable*>::iterator iter;
+				for (iter = GetDockChildren().begin() + 1; iter < GetDockChildren().end(); ++iter)
+					(*iter)->ShowWindow(SW_HIDE);
+				
 				pDockFirstChild->ConvertToPopup(GetWindowRect());
+				pDockFirstChild->GetDockBar().ShowWindow(SW_HIDE);
+			}
 
 			m_vDockChildren.erase(m_vDockChildren.begin());
 			MoveDockChildren(pDockFirstChild);
 		}
+		if (pDockFirstChild) pDockFirstChild->RecalcDockLayout();
 	}
 
 	inline void CDockable::Undock()
@@ -2562,6 +2573,8 @@ namespace Win32xx
 
 		GetDockTopLevel()->m_hOldFocus = 0;
 		if (pOldDockParent) pOldDockParent->RecalcDockLayout();
+
+		CheckDockables();
 	}
 
 	inline void CDockable::ConvertToChild(HWND hWndParent)
@@ -2716,27 +2729,16 @@ namespace Win32xx
 		case WM_ACTIVATE:
 			{
 				// Only top level undocked dockables get this message
-				TRACE("Got a WM_ACTIVATE message\n");
 				if (LOWORD(wParam) == WA_INACTIVE)
-				{
-					std::vector<CDockable*>::iterator iter;
-					for (iter = GetDockChildren().begin(); iter != GetDockChildren().end(); ++iter)
-					{
-						m_hOldFocus = ::GetFocus();
-						TRACE("Looking for Focus\n");
-						if ((*iter)->IsChildOfDockable(::GetFocus()))
-						{
-							TRACE("Found focus\n");
-							(*iter)->GetDockClient().DrawCaption((WPARAM)1, FALSE);
-						}
-					}
+				{				
+					// Send a notification of focus lost
+					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+					NMHDR nhdr={0};
+					nhdr.hwndFrom = m_hOldFocus;
+					nhdr.idFrom = idCtrl;
+					nhdr.code = UWM_FRAMELOSTFOCUS;
+					SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				}
-		/*		if (LOWORD(wParam) == WA_CLICKACTIVE)
-				{
-					TRACE("WA_CLICKACTIVE\n");
-					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
-				}
-				if (LOWORD(wParam) == WA_ACTIVE) TRACE("WA_ACTIVE\n"); */
 			}
 			break;
 
@@ -2858,21 +2860,24 @@ namespace Win32xx
 			break;
 
 		case WM_SETFOCUS:
-			// Pass focus on the the view window
-			if (IsUndocked() && m_hOldFocus)
 			{
-				::SetFocus(m_hOldFocus);
-				std::vector<CDockable*>::iterator iter;
-				for (iter = GetDockChildren().begin(); iter != GetDockChildren().end(); ++iter)
+				if (IsUndocked() && m_hOldFocus)
+					::SetFocus(m_hOldFocus);
+				else
+					// Pass focus on the the view window
+					GetView()->SetFocus();
+				
+				if ((this == GetDockTopLevel()) && (this != GetDockAncestor()))
 				{
-					if ((*iter)->IsChildOfDockable(::GetFocus()))
-					{
-						(*iter)->GetDockClient().DrawCaption((WPARAM)1, TRUE);
-					}
+					// Send a notification to top level window
+					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+					NMHDR nhdr={0};
+					nhdr.hwndFrom = m_hOldFocus;
+					nhdr.idFrom = idCtrl;
+					nhdr.code = NM_SETFOCUS;
+					SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				}
 			}
-			else
-				GetView()->SetFocus();
 			break;
 
 		case UWM_DOCK_DESTROYED:
