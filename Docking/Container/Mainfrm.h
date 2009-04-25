@@ -31,8 +31,10 @@ public:
 		ID_CONTAINFILES1 = 2,
 		ID_CONTAINCLASSES2 = 3,
 		ID_CONTAINFILES2 = 4,
-		ID_TEXT = 5,
-		ID_OUTPUT = 6
+		ID_TEXT1 = 5,
+		ID_OUTPUT1 = 6,
+		ID_TEXT2 = 7,
+		ID_OUTPUT2 = 8
 	};
 
 	CMainFrame(void);

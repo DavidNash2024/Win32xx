@@ -273,7 +273,7 @@ void CMainFrame::SaveDockables()
 
 	if (0 != GetRegistryKeyName().size())
 	{
-		// Add the docking information to the DockList vector
+		// Fill the DockList vector with the docking information
 		for (iter = m_DockView.GetAllDockables().begin(); iter <  m_DockView.GetAllDockables().end(); ++iter)
 		{
 			DockInfo di	 = {0};

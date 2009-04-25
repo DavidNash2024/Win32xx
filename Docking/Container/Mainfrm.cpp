@@ -54,11 +54,17 @@ void CMainFrame::AddDocked(DockInfo di, CDockable* pDock)
 	case ID_CONTAINFILES2:
 		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES2);
 		break;
-	case ID_OUTPUT:
-		pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT);
+	case ID_OUTPUT1:
+		pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT1);
 		break;
-	case ID_TEXT:
-		pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT);
+	case ID_OUTPUT2:
+		pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT2);
+		break;
+	case ID_TEXT1:
+		pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT1);
+		break;
+	case ID_TEXT2:
+		pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT2);
 		break;
 	default:
 		TRACE(_T("Unknown Dock ID\n"));
@@ -82,12 +88,17 @@ void CMainFrame::AddUndocked(DockInfo di)
 	case ID_CONTAINFILES2:
 		m_DockView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
 		break;
-	case ID_OUTPUT:
-		m_DockView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT);
+	case ID_OUTPUT1:
+		m_DockView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT1);
 		break;
-	case ID_TEXT:
-		m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT);
-		break; 
+	case ID_OUTPUT2:
+		m_DockView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT2);
+		break;
+	case ID_TEXT1:
+		m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT1);
+		break;
+	case ID_TEXT2:
+		m_DockView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
 	default:
 		TRACE(_T("Unknown Dock ID\n"));
 		break; 
@@ -160,13 +171,15 @@ void CMainFrame::LoadDefaultDockables()
 	
 	// Add the remaining dockables
 	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINCLASSES1);	
-	CDockable* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT);
+	CDockable* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT1);
 
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES1);
 	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINCLASSES2);
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES2);
 
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT);
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT1);
+	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_TEXT2);
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT2);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
@@ -259,6 +272,7 @@ void CMainFrame::SaveDockables()
 
 	if (0 != GetRegistryKeyName().size())
 	{
+		// Fill the DockList vector with the docking information
 		for (iter = m_DockView.GetAllDockables().begin(); iter <  m_DockView.GetAllDockables().end(); ++iter)
 		{
 			DockInfo di	 = {0};

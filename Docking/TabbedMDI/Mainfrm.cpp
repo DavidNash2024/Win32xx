@@ -142,6 +142,8 @@ void CMainFrame::LoadDefaultMDITabs()
 	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"));
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"));
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));
+	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"));
+	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"));
 	pTabbedMDI->SetActiveTab(0);
 }
 
@@ -314,6 +316,7 @@ void CMainFrame::SaveDockables()
 
 	if (0 != GetRegistryKeyName().size())
 	{
+		// Fill the DockList vector with the docking information
 		for (iter = m_DockView.GetAllDockables().begin(); iter <  m_DockView.GetAllDockables().end(); ++iter)
 		{
 			DockInfo di	 = {0};
