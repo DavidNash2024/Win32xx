@@ -67,6 +67,7 @@ namespace Win32xx
 		virtual ~CToolbar();
 
 	// Attributes
+		void AddToolbarButton(UINT nID);
 		virtual void Destroy();
 		int  CommandToIndex(int iButtonID) const;
 		int  GetButtonCount() const;
@@ -75,6 +76,7 @@ namespace Win32xx
 		int  GetCommandID(int iIndex) const;
 		CRect GetItemRect(int iIndex) const;
 		CSize GetMaxSize() const;
+		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
 		BOOL HasText() const;
 		int  HitTest() const;
@@ -87,7 +89,7 @@ namespace Win32xx
 		void SetButtonText(int iButtonID, LPCTSTR szText);
 		void SetButtonWidth(int iButtonID, int nWidth) const;
 		void SetCommandID(int iIndex, int iButtonID) const;
-		void SetImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
+		void SetImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	// Operations
@@ -106,6 +108,7 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
 		std::map<tString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ThemeToolbar m_Theme;				// The theme structure
@@ -141,6 +144,13 @@ namespace Win32xx
 		m_OldToolbarID = ToolbarID;
 	}
 
+	inline void CToolbar::AddToolbarButton(UINT nID)
+	// Adds Resource IDs to toolbar buttons.
+	// A resource ID of 0 is a separator
+	{
+		m_vToolbarData.push_back(nID);
+	}
+
 	inline int CToolbar::CommandToIndex(int iButtonID) const
 	// Retrieves the zero-based index for the button associated with the specified command identifier
 	{
@@ -154,7 +164,6 @@ namespace Win32xx
 		CWnd::Destroy();
 		m_StringMap.clear();
 	}
-
 
 	inline void CToolbar::DisableButton(int iButtonID) const
 	// Disables the specified button in a toolbar
@@ -789,11 +798,19 @@ namespace Win32xx
 			throw CWinException(_T("CToolbar::SetCommandID failed"));
 	}
 
-	inline void CToolbar::SetImages(int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
+	inline void CToolbar::SetImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = bitmap_size / buttons
+	// Assumes buttons have been already been added via AdddToolbarButton
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	{
+		SetButtons(GetToolbarData());
+
+		int iNumButtons = 0;
+		std::vector<UINT>::iterator iter;
+		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)
+			if ((*iter) != 0) ++iNumButtons;
+
 		if (iNumButtons > 0)
 		{
 			// Set the button images

@@ -14,20 +14,6 @@ CMainFrame::CMainFrame()
 	//Set m_View as the view window of the frame
 	SetView(m_View);
 
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\Themes Sample"));
@@ -66,128 +52,8 @@ void CMainFrame::AddCombo()
 	RecalcLayout();
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
-{
-	// OnCommand responds to menu and and toolbar input
-
-	switch(LOWORD(wParam))
-	{
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
-	case IDM_NONE:
-		ChooseTheme(IDM_NONE);
-		return TRUE;
-	case IDM_BLUE:
-		ChooseTheme(IDM_BLUE);
-		return TRUE;
-	case IDM_BLUE_LOCKED:
-		ChooseTheme(IDM_BLUE_LOCKED);
-		return TRUE;
-	case IDM_BLUE_BKGND:
-		ChooseTheme(IDM_BLUE_BKGND);
-		return TRUE;
-	case IDM_BLUE_FLAT:
-		ChooseTheme(IDM_BLUE_FLAT);
-		return TRUE;
-	case IDM_GREY:
-		ChooseTheme(IDM_GREY);
-		return TRUE;
-	case IDM_OLIVE:
-		ChooseTheme(IDM_OLIVE);
-		return TRUE;
-	case IDM_OCHRE:
-		ChooseTheme(IDM_OCHRE);
-		return TRUE;
-	case IDM_MAUVE:
-		ChooseTheme(IDM_MAUVE);
-		return TRUE;
-	case IDM_PINK:
-		ChooseTheme(IDM_PINK);
-		return TRUE;
-	case IDM_GOLD:
-		ChooseTheme(IDM_GOLD);
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-void CMainFrame::OnCreate()
-{
-	// OnCreate controls the way the frame is created.
-	// Overriding CFrame::Oncreate is optional.
-	// The default for the following variables is TRUE
-
-	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
-	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
-	// m_bUseRebar = FALSE;				// Don't use rebars
-
-	// call the base class function
-	CFrame::OnCreate();
-
-	
-	CToolbar& TB = GetToolbar();
-	SetToolbarImages(TB, 8, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Resize the Rebar band
-	if (IsRebarUsed())
-	{
-		// Set the icons for popup menu items
-		SetMenuIcons(GetToolbarData(), RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
-
-		//Set our theme
-		ChooseTheme(IDM_BLUE);
-
-		// Add the Arrows toolbar
-		std::vector<UINT> ArrowsData;
-		ArrowsData.push_back(IDM_ARROW_LEFT);
-		ArrowsData.push_back(IDM_ARROW_RIGHT);
-		AddToolbarBand(Arrows);
-		int iButtons = Arrows.SetButtons(ArrowsData);
-		SetToolbarImages(Arrows, iButtons, RGB(255,0,255), IDB_ARROWS, 0, 0);
-
-		// Add the Cards toolbar
-		std::vector<UINT> CardsData;
-		CardsData.push_back(IDM_CARD_CLUB);
-		CardsData.push_back(IDM_CARD_DIAMOND);
-		CardsData.push_back(IDM_CARD_HEART);
-		CardsData.push_back(IDM_CARD_SPADE);
-		AddToolbarBand(Cards);
-		iButtons = Cards.SetButtons(CardsData);
-		SetToolbarImages(Cards, iButtons, RGB(255,0,255), IDB_CARDS, 0, 0);	
-	}
-}
-
-void CMainFrame::OnInitialUpdate()
-{
-	// The frame is now created.
-	// Place any additional startup code here.
-
-	TRACE("Frame created\n");
-	AddCombo();
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
-
-	// Pass any unhandled messages on for default processing
-	return 0L;
-}
-
 void CMainFrame::ChooseTheme(UINT nStyle)
 {
-	
 	CRebar& RB = GetRebar();
 	CToolbar& TB = GetToolbar();
 	CMenubar& MB = GetMenubar();
@@ -393,6 +259,137 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 		}
 		break;
 	} 
+}
+
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+{
+	// OnCommand responds to menu and and toolbar input
+
+	switch(LOWORD(wParam))
+	{
+	case IDM_FILE_EXIT:
+		// End the application
+		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		return TRUE;
+	case IDM_HELP_ABOUT:
+		// Display the help dialog
+		OnHelp();
+		return TRUE;
+	case IDM_NONE:
+		ChooseTheme(IDM_NONE);
+		return TRUE;
+	case IDM_BLUE:
+		ChooseTheme(IDM_BLUE);
+		return TRUE;
+	case IDM_BLUE_LOCKED:
+		ChooseTheme(IDM_BLUE_LOCKED);
+		return TRUE;
+	case IDM_BLUE_BKGND:
+		ChooseTheme(IDM_BLUE_BKGND);
+		return TRUE;
+	case IDM_BLUE_FLAT:
+		ChooseTheme(IDM_BLUE_FLAT);
+		return TRUE;
+	case IDM_GREY:
+		ChooseTheme(IDM_GREY);
+		return TRUE;
+	case IDM_OLIVE:
+		ChooseTheme(IDM_OLIVE);
+		return TRUE;
+	case IDM_OCHRE:
+		ChooseTheme(IDM_OCHRE);
+		return TRUE;
+	case IDM_MAUVE:
+		ChooseTheme(IDM_MAUVE);
+		return TRUE;
+	case IDM_PINK:
+		ChooseTheme(IDM_PINK);
+		return TRUE;
+	case IDM_GOLD:
+		ChooseTheme(IDM_GOLD);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+void CMainFrame::OnCreate()
+{
+	// OnCreate controls the way the frame is created.
+	// Overriding CFrame::Oncreate is optional.
+	// The default for the following variables is TRUE
+
+	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
+	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
+	// m_bUseRebar = FALSE;				// Don't use rebars
+
+	// call the base class function
+	CFrame::OnCreate();
+}
+
+void CMainFrame::OnInitialUpdate()
+{
+	// The frame is now created.
+	// Place any additional startup code here.
+
+	TRACE("Frame created\n");
+	AddCombo();
+}
+
+LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
+{
+	// Process notification messages sent by child windows
+//	switch(((LPNMHDR)lParam)->code)
+//	{
+ 		//Add case statments for each notification message here
+//	}
+
+	// Pass any unhandled messages on for default processing
+	return 0L;
+}
+
+void CMainFrame::SetupToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT ); 
+
+	CToolbar& TB = GetToolbar();
+	SetToolbarImages(TB, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	// Resize the Rebar band
+	if (IsRebarUsed())
+	{
+		// Set the icons for popup menu items
+		SetMenuIcons(GetToolbar().GetToolbarData(), RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
+
+		//Set our theme
+		ChooseTheme(IDM_BLUE);
+
+		// Add the Arrows toolbar
+		Arrows.AddToolbarButton(IDM_ARROW_LEFT);
+		Arrows.AddToolbarButton(IDM_ARROW_RIGHT);
+		AddToolbarBand(Arrows);
+		SetToolbarImages(Arrows, RGB(255,0,255), IDB_ARROWS, 0, 0);
+
+		// Add the Cards toolbar
+		Cards.AddToolbarButton(IDM_CARD_CLUB);
+		Cards.AddToolbarButton(IDM_CARD_DIAMOND);
+		Cards.AddToolbarButton(IDM_CARD_HEART);
+		Cards.AddToolbarButton(IDM_CARD_SPADE);
+		AddToolbarBand(Cards);
+		SetToolbarImages(Cards, RGB(255,0,255), IDB_CARDS, 0, 0);	
+	}
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

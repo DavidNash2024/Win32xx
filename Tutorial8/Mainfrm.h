@@ -15,12 +15,13 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	void OnFileOpen();
+	void OnFileSave();
+	void OnFileSaveAs();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnFileOpen();
-	virtual void OnFileSave();
-	virtual void OnFileSaveAs();
+	virtual void SetupToolbar();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

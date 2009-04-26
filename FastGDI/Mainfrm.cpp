@@ -14,15 +14,6 @@ CMainFrame::CMainFrame()
 	//Set m_MyView as the view window of the frame
 	SetView(m_MyView);
 
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_IMAGE_ADJUST);
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\Fast GDI Demo"));
@@ -134,7 +125,7 @@ void CMainFrame::OnCreate()
 	TB.DisableButton(IDM_FILE_SAVE);
 	TB.DisableButton(IDM_IMAGE_ADJUST);
 	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
-	SetMenuIcons(GetToolbarData(), RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
+	SetMenuIcons(TB.GetToolbarData(), RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
 }
 
 void CMainFrame::OnFileOpen()
@@ -189,6 +180,18 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 	TRACE(_T("Frame created\n"));
+}
+
+void CMainFrame::SetupToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_IMAGE_ADJUST);
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

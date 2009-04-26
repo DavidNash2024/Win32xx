@@ -14,19 +14,6 @@
 
 CMainMDIFrame::CMainMDIFrame()
 {
-	// Define the resource IDs for the toolbar
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\MDI Frame Sample"));
@@ -120,7 +107,7 @@ void CMainMDIFrame::OnCreate()
 	// call the base class function
 	CMDIFrame::OnCreate();
 
-	SetButtons(GetToolbarData());
+	SetButtons(GetToolbar().GetToolbarData());
 
 	// Configure the "New" toolbar button to bring up a menu
 	// Setting this style requires comctl32.dll version 4.72 or later
@@ -153,7 +140,7 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
 	// Use larger buttons with seperate imagelists for normal, hot and disabled buttons.
 	CToolbar& TB = GetToolbar();
-	SetToolbarImages(TB, 8, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Disable some of the toolbar buttons
 	TB.DisableButton(IDM_FILE_OPEN);
@@ -176,6 +163,22 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	AddMenuIcon(IDM_FILE_NEWRECT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_RECT)));
 	AddMenuIcon(IDM_FILE_NEWMAX,  ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_MAX)));
 	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
+}
+
+void CMainMDIFrame::SetupToolbar()
+{
+	// Define the resource IDs for the toolbar
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

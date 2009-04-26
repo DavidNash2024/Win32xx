@@ -75,8 +75,8 @@
 #define WINCORE_H
 
 
-// Remove pointless warning messages
-#ifdef _MSC_VER
+// Remove pointless warning messages for MS compilers prior to VS 2008 
+#if defined (_MSC_VER) && _MSC_VER <= 1500
   #pragma warning (disable : 4511) // copy operator could not be generated
   #pragma warning (disable : 4512) // assignment operator could not be generated
   #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
@@ -584,7 +584,8 @@ namespace Win32xx
 			// Display Last Error information if it's useful
 			if (m_err != 0)
 			{
-				::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, m_err,
+				DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+				::FormatMessage(dwFlags, NULL, m_err,
 					MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf2, MAX_STRING_SIZE/2 -10, NULL);
 
 				::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);

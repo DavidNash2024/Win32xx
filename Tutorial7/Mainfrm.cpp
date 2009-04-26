@@ -10,22 +10,6 @@ CMainFrame::CMainFrame()
 {
 	//Set m_View as the view window of the frame
 	SetView(m_View);
-
-	// Define the resource IDs for the toolbar
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( IDM_PEN_RED    );	
-	AddToolbarButton( IDM_PEN_BLUE   );
-	AddToolbarButton( IDM_PEN_GREEN  );
-	AddToolbarButton( IDM_PEN_BLACK  );
-	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
 CMainFrame::~CMainFrame()
@@ -77,6 +61,24 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
+void CMainFrame::SetupToolbar()
+{
+	// Define the resource IDs for the toolbar
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( IDM_PEN_RED    );	
+	AddToolbarButton( IDM_PEN_BLUE   );
+	AddToolbarButton( IDM_PEN_GREEN  );
+	AddToolbarButton( IDM_PEN_BLACK  );
+	AddToolbarButton( IDM_HELP_ABOUT );
+}
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

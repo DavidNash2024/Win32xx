@@ -2568,6 +2568,7 @@ namespace Win32xx
 		if (!pDockUndockedFrom && (GetDockChildren().size() > 0))
 			pDockUndockedFrom = GetDockChildren()[0];
 		
+		GetDockTopLevel()->m_hOldFocus = 0;
 		PromoteFirstChild();
 		m_pDockParent = 0;
 
@@ -2609,12 +2610,8 @@ namespace Win32xx
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 		
-		m_hOldFocus = 0;
 		if (pDockUndockedFrom)
-		{
-			pDockUndockedFrom->GetDockTopLevel()->m_hOldFocus = 0;
 			pDockUndockedFrom->RecalcDockLayout();
-		}
 
 		if (!CheckDockables())
 			TRACE("CheckDockables failed after Undock\n");
@@ -2649,7 +2646,7 @@ namespace Win32xx
 
 	inline void CDockable::UndockContainer(CContainer* pContainer)
 	{
-		TRACE("UndockContainer begins ...\n");
+		TRACE("UndockContainer begins ...  ");
 
 		if (!CheckDockables())
 			TRACE("Check failed before UndockContainer\n");
@@ -2660,6 +2657,7 @@ namespace Win32xx
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
 
+		GetDockTopLevel()->m_hOldFocus = 0;
 		CDockable* pDockUndockedFrom = GetDockFromView(pContainer->GetContainerParent());
 		if (GetView() == pContainer)
 		{
@@ -2872,7 +2870,7 @@ namespace Win32xx
 			break;
 		case WM_DESTROY:
 			{
-				TRACE("Dockable Destroyed\n");
+				TRACE("Dock window destroyed\n");
 				// Destroy any dock children first
 				std::vector<CDockable*>::iterator iter;
 				for (iter = GetDockChildren().begin(); iter < GetDockChildren().end(); ++iter)
@@ -3093,11 +3091,10 @@ namespace Win32xx
 			DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
 			style |= CCS_NODIVIDER ;//| CCS_NORESIZE;
 			GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
-			int iButtons = GetToolbar().SetButtons(GetToolbarData());
 
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			GetToolbar().SetImages(iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
+			GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
 		}
 

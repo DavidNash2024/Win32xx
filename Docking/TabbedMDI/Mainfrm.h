@@ -44,15 +44,16 @@ public:
 	void DoPopupMenu();
 	void LoadDefaultDockables();
 	void LoadDefaultMDITabs();
-	void LoadRegistryDockables();
 	void SaveDockables();
-	void SaveRegistrySettings();
-
+	
 protected:
+	virtual void LoadRegistryDockables();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void SaveRegistrySettings();
+	virtual void SetupToolbar();
 
 private:
 	CDockTabbedMDI m_DockView;

@@ -11,6 +11,9 @@ Added CFrame::GetToolbarData
 CContainer now inherrits from CTab
 Renamed dockable.h to docking.h
 Docking in and undocking from undocked dockables and containers is now supported
+Added CFrame::SetupToolbar
+Modified CFrame::SetToolbarImages. Reduced arguements to 5.
+Modified CToolbar::SetImages. Reduced arguements to 4
 
 min and max macros are no longer defined by Win32++. MIN and MAX are 
 defined instead

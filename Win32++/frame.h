@@ -201,7 +201,8 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
-		virtual void SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
+		virtual void SetupToolbar();
+		virtual void SetToolbarImages(CToolbar& TB, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
 
@@ -218,7 +219,7 @@ namespace Win32xx
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
-		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
+//		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		CWnd* GetView() const		{return m_pView;}
 		tString GetMRUEntry(size_t nIndex);
 		void SetFrameMenu(INT ID_MENU);
@@ -292,7 +293,7 @@ namespace Win32xx
 
 		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
-		std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
+	//	std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
 		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
 		CMenubar m_Menubar;					// CMenubar object
 		CRebar m_Rebar;						// CRebar object
@@ -1342,22 +1343,6 @@ namespace Win32xx
 
 		for (int i = 0 ; i < 3 ; ++i)
 			m_OldStatus[i] = _T('\0');
-
-		// Place this code in CMainFrame's constructor
-/*
-		// Set the Resource IDs for the toolbar buttons
-		AddToolbarButton( IDM_FILE_NEW   );
-		AddToolbarButton( IDM_FILE_OPEN  );
-		AddToolbarButton( IDM_FILE_SAVE  );
-		AddToolbarButton( 0 );				// Separator
-		AddToolbarButton( IDM_EDIT_CUT   );
-		AddToolbarButton( IDM_EDIT_COPY  );
-		AddToolbarButton( IDM_EDIT_PASTE );
-		AddToolbarButton( 0 );				// Separator
-		AddToolbarButton( IDM_FILE_PRINT );
-		AddToolbarButton( 0 );				// Separator
-		AddToolbarButton( IDM_HELP_ABOUT );
-*/
 	}
 
 	inline CFrame::~CFrame()
@@ -1577,7 +1562,7 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		m_vToolbarData.push_back(nID);
+		GetToolbar().AddToolbarButton(nID);
 	}
 
 	inline void CFrame::AdjustFrameRect(RECT rcView) const
@@ -1962,18 +1947,16 @@ namespace Win32xx
 			// Create the toolbar without a rebar
 			GetToolbar().Create(m_hWnd);
 		}
-
+		
+		SetupToolbar();
 		UpdateMRUMenu();
-
-		// Set the toolbar data
-		int iButtons = GetToolbar().SetButtons(GetToolbarData());
 
 		// Set the toolbar images
 		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-		SetToolbarImages(GetToolbar(), iButtons, RGB(192,192,192), IDW_MAIN, 0, 0);
+		SetToolbarImages(GetToolbar(), RGB(192,192,192), IDW_MAIN, 0, 0);
 
 		// Set the icons for popup menu items
-		SetMenuIcons(m_vToolbarData, RGB(192, 192, 192), IDW_MAIN, 0);
+		SetMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
 
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, GetFrameMenu());
@@ -2858,13 +2841,33 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	inline void CFrame::SetToolbarImages(CToolbar& TB, int iNumButtons, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
+	inline void CFrame::SetToolbarImages(CToolbar& TB, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	{
-		TB.SetImages(iNumButtons, crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
+		TB.SetImages(crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
 
 		// Adjust the rebar band size
 		if (m_bUseRebar)
 				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
+	}
+
+	inline void CFrame::SetupToolbar()
+	{
+		// Use this function to set the Resource IDs for the toolbar(s). It can also be used
+		// to disable some toolbar buttons and load alternate images for the toolbar. 
+
+/*		// Set the Resource IDs for the toolbar buttons
+		AddToolbarButton( IDM_FILE_NEW   );
+		AddToolbarButton( IDM_FILE_OPEN  );
+		AddToolbarButton( IDM_FILE_SAVE  );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_EDIT_CUT   );
+		AddToolbarButton( IDM_EDIT_COPY  );
+		AddToolbarButton( IDM_EDIT_PASTE );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_FILE_PRINT );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_HELP_ABOUT );
+*/
 	}
 
 	inline void CFrame::SetView(CWnd& wndView)

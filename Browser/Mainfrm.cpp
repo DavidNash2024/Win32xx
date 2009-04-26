@@ -15,15 +15,6 @@ CMainFrame::CMainFrame()
 	//Set m_View as the view window of the frame
 	SetView(m_View);
 
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_BACK   );
-	AddToolbarButton( IDM_FORWARD );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_REFRESH );
-	AddToolbarButton( IDM_STOP );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HOME );
-
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\Browser Sample"));
@@ -175,10 +166,10 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 
 	// Get the reference to the CToolbar
-	CToolbar& TB = GetToolbar();
+/*	CToolbar& TB = GetToolbar();
 
 	// Set the image lists for normal, hot and disabled buttons
-	SetToolbarImages(TB, 5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+//	SetToolbarImages(TB, 5, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	std::vector<UINT> IconData;
 	if (IsRebarUsed())
@@ -197,9 +188,9 @@ void CMainFrame::OnCreate()
 		IconData.push_back ( IDM_EDIT_COPY );
 		IconData.push_back ( IDM_EDIT_PASTE);
 		IconData.push_back ( IDM_FILE_PRINT);
-		IconData.push_back ( IDM_HELP_ABOUT);
+		IconData.push_back ( IDM_HELP_ABOUT); 
 	}
-	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0);
+	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0); */
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
@@ -346,6 +337,31 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 		str << LoadString(IDW_MAIN);
 
 	::SetWindowText(m_hWnd, str.str().c_str());
+}
+
+void CMainFrame::SetupToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_BACK   );
+	AddToolbarButton( IDM_FORWARD );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_REFRESH );
+	AddToolbarButton( IDM_STOP );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HOME );
+
+	// Get the reference to the CToolbar
+	CToolbar& TB = GetToolbar();
+
+	// Set the image lists for normal, hot and disabled buttons
+	SetToolbarImages(TB, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	if (IsRebarUsed())
+	{
+		// Resize the Rebar band
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+	}
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

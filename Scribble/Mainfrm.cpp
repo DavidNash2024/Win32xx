@@ -11,23 +11,6 @@ CMainFrame::CMainFrame()
 	// Set m_View as the view window of the frame
 	SetView(m_View);
 
-	// Define our toolbar
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_PEN_RED    );
-	AddToolbarButton( IDM_PEN_BLUE   );
-	AddToolbarButton( IDM_PEN_GREEN  );
-	AddToolbarButton( IDM_PEN_BLACK  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\Scribble Sample"));
@@ -278,6 +261,26 @@ void CMainFrame::OnFilePrint()
 	// Cleanup
 	::DeleteObject(hbmView);
 	delete []pBits;
+}
+
+void CMainFrame::SetupToolbar()
+{
+	// Define our toolbar
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_PEN_RED    );
+	AddToolbarButton( IDM_PEN_BLUE   );
+	AddToolbarButton( IDM_PEN_GREEN  );
+	AddToolbarButton( IDM_PEN_BLACK  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

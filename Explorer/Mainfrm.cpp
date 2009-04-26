@@ -9,22 +9,7 @@
 CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
 {
 	// Set m_MainView as the view window of the frame
-//	SetView(m_MainView);
 	SetView(m_LeftPane);
-
-	// Define our toolbar data
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_VIEWMENU);
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -178,7 +163,7 @@ void CMainFrame::SetButtons()
 {
 	// Use larger buttons
 	CToolbar& TB = GetToolbar();
-	SetToolbarImages(TB, 9, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Disable some buttons
 	TB.DisableButton(IDM_FILE_NEW);
@@ -213,6 +198,23 @@ void CMainFrame::SetButtons()
 		CRebar& RB = GetRebar();
 		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
 	}
+}
+
+void CMainFrame::SetupToolbar()
+{
+	// Define our toolbar data
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_VIEWMENU);
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

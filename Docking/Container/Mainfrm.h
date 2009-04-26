@@ -42,15 +42,16 @@ public:
 	void AddDocked(DockInfo di, CDockable* pDock);
 	void AddUndocked(DockInfo di);
 	void LoadDefaultDockables();
-	void LoadRegistryDockables();
 	void SaveDockables();
-	void SaveRegistrySettings();
-
+	
 protected:
+	virtual void LoadRegistryDockables();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void SaveRegistrySettings();
+	virtual void SetupToolbar();
 
 private:
 	CDockSimple m_DockView;
