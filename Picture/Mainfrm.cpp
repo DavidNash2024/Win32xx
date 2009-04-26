@@ -137,7 +137,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	CFrame::PreCreate(cs);
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::LoadToolbar()
 {	
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

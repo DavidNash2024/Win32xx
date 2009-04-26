@@ -200,7 +200,7 @@ void CMainFrame::SetButtons()
 	}
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::LoadToolbar()
 {
 	// Define our toolbar data
 	AddToolbarButton( IDM_FILE_NEW   );

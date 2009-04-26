@@ -93,7 +93,7 @@ void CMainFrame::OnInitialUpdate()
 	TRACE(_T("Frame created\n"));
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::LoadToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

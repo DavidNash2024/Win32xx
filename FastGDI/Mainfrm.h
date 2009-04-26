@@ -29,7 +29,7 @@ protected:
 	virtual void OnCreate();
 	virtual void OnFileOpen();
 	virtual void OnInitialUpdate();
-	virtual void SetupToolbar();
+	virtual void LoadToolbar();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

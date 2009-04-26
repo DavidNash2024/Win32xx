@@ -22,7 +22,7 @@ protected:
 	virtual void OnFileSave();
 	virtual void OnFileSaveAs();
 	virtual void OnFilePrint();
-	virtual void SetupToolbar();
+	virtual void LoadToolbar();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

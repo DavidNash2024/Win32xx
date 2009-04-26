@@ -35,6 +35,7 @@ public:
 	void AddCombo();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM /*lParam*/);
 	virtual void OnCreate();
+	virtual void LoadToolbar();
 
 private:
 	CViewClasses m_ViewClasses;

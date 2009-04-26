@@ -76,7 +76,7 @@ void CMainFrame::OnInitialUpdate()
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN|RDW_UPDATENOW);
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::LoadToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

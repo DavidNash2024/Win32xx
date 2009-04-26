@@ -48,7 +48,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::LoadToolbar()
 {
 	// Define the resource IDs for the toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

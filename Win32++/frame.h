@@ -201,7 +201,7 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
-		virtual void SetupToolbar();
+		virtual void LoadToolbar();
 		virtual void SetToolbarImages(CToolbar& TB, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
@@ -1948,7 +1948,7 @@ namespace Win32xx
 			GetToolbar().Create(m_hWnd);
 		}
 		
-		SetupToolbar();
+		LoadToolbar();
 		UpdateMRUMenu();
 
 		// Set the toolbar images
@@ -2850,10 +2850,9 @@ namespace Win32xx
 				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
 	}
 
-	inline void CFrame::SetupToolbar()
+	inline void CFrame::LoadToolbar()
 	{
-		// Use this function to set the Resource IDs for the toolbar(s). It can also be used
-		// to disable some toolbar buttons and load alternate images for the toolbar. 
+		// Use this function to set the Resource IDs for the toolbar(s). 
 
 /*		// Set the Resource IDs for the toolbar buttons
 		AddToolbarButton( IDM_FILE_NEW   );

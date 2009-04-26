@@ -66,6 +66,16 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+
+	// Disable some toolbar buttons
+	CToolbar& TB = GetToolbar();
+	TB.DisableButton(IDM_FILE_NEW);
+	TB.DisableButton(IDM_FILE_OPEN);
+	TB.DisableButton(IDM_FILE_SAVE);
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE);
+	TB.DisableButton(IDM_FILE_PRINT);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -305,7 +315,7 @@ void CMainFrame::SaveRegistrySettings()
 	SaveDockables();
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::LoadToolbar()
 {
 		// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

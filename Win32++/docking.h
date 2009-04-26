@@ -130,6 +130,7 @@ namespace Win32xx
 		virtual CContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
+		virtual void LoadToolbar();
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
@@ -144,7 +145,6 @@ namespace Win32xx
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
 		virtual CToolbar& GetToolbar() const	{ return GetViewPage().GetToolbar(); }
-		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		BOOL IsContainer() const		{ return TRUE; }
 		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
@@ -160,7 +160,6 @@ namespace Win32xx
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		std::vector<UINT> m_vToolbarData;
 		std::vector<ContainerInfo> m_vContainerInfo;
 		tString m_tsTabText;
 		tString m_tsCaption;
@@ -3000,7 +2999,7 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		GetToolbarData().push_back(nID);
+		GetToolbar().AddToolbarButton(nID);
 	}
 
 	inline CContainer* CContainer::GetContainerFromIndex(size_t iPage)
@@ -3070,6 +3069,25 @@ namespace Win32xx
 		return Size;
 	}
 
+	inline void CContainer::LoadToolbar()
+	{
+		// Use this function to set the Resource IDs for the toolbar(s). 
+
+/*		// Set the Resource IDs for the toolbar buttons
+		AddToolbarButton( IDM_FILE_NEW   );
+		AddToolbarButton( IDM_FILE_OPEN  );
+		AddToolbarButton( IDM_FILE_SAVE  );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_EDIT_CUT   );
+		AddToolbarButton( IDM_EDIT_COPY  );
+		AddToolbarButton( IDM_EDIT_PASTE );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_FILE_PRINT );
+		AddToolbarButton( 0 );				// Separator
+		AddToolbarButton( IDM_HELP_ABOUT );
+*/
+	}
+
 	inline void CContainer::OnCreate()
 	{
 		if (NULL == GetView())
@@ -3085,7 +3103,8 @@ namespace Win32xx
 		GetViewPage().Create(m_hWnd);
 
 		// Create the toolbar
-		if (GetToolbarData().size() > 0)
+		LoadToolbar();
+		if (GetToolbar().GetToolbarData().size() > 0)
 		{
 			GetToolbar().Create(GetViewPage().GetHwnd());
 			DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);

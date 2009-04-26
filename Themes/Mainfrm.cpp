@@ -325,44 +325,6 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-}
-
-void CMainFrame::OnInitialUpdate()
-{
-	// The frame is now created.
-	// Place any additional startup code here.
-
-	TRACE("Frame created\n");
-	AddCombo();
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
-
-	// Pass any unhandled messages on for default processing
-	return 0L;
-}
-
-void CMainFrame::SetupToolbar()
-{
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT ); 
 
 	CToolbar& TB = GetToolbar();
 	SetToolbarImages(TB, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
@@ -390,6 +352,44 @@ void CMainFrame::SetupToolbar()
 		AddToolbarBand(Cards);
 		SetToolbarImages(Cards, RGB(255,0,255), IDB_CARDS, 0, 0);	
 	}
+}
+
+void CMainFrame::OnInitialUpdate()
+{
+	// The frame is now created.
+	// Place any additional startup code here.
+
+	TRACE("Frame created\n");
+	AddCombo();
+}
+
+LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
+{
+	// Process notification messages sent by child windows
+//	switch(((LPNMHDR)lParam)->code)
+//	{
+ 		//Add case statments for each notification message here
+//	}
+
+	// Pass any unhandled messages on for default processing
+	return 0L;
+}
+
+void CMainFrame::LoadToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_COPY  );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_HELP_ABOUT ); 
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
