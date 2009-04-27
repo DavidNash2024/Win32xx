@@ -52,7 +52,7 @@ void CMainFrame::OnInitialUpdate()
 
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {	
 	// Define the resource IDs for the toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

@@ -104,7 +104,7 @@ void CContainClasses::AddCombo()
 	m_ComboBoxEx.AddItems();
 }
 
-void CContainClasses::LoadToolbar()
+void CContainClasses::SetupToolbars()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

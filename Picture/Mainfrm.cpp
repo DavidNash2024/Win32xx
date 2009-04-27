@@ -56,23 +56,6 @@ void CMainFrame::OnCreate()
 {
 	CFrame::OnCreate();
 
-	// A reference to the CToolbar object
-	CToolbar& TB = GetToolbar();
-
-	// Set the image lists for normal, hot and disabled buttons
-	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
-
-	if (IsRebarUsed())
-	{
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-	}
 }
 
 void CMainFrame::OnFileNew()
@@ -137,7 +120,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	CFrame::PreCreate(cs);
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {	
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
@@ -151,6 +134,24 @@ void CMainFrame::LoadToolbar()
 	AddToolbarButton( IDM_FILE_PRINT );
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
+
+	// A reference to the CToolbar object
+	CToolbar& TB = GetToolbar();
+
+	// Set the image lists for normal, hot and disabled buttons
+	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	// Disable some of the toolbar buttons
+	TB.DisableButton(IDM_EDIT_CUT);
+	TB.DisableButton(IDM_EDIT_COPY);
+	TB.DisableButton(IDM_EDIT_PASTE);
+	TB.DisableButton(IDM_FILE_PRINT);
+
+	if (IsRebarUsed())
+	{
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+	}
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

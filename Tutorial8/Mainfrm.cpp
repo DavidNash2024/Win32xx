@@ -139,7 +139,7 @@ void CMainFrame::OnFileSaveAs()
 	m_View.FileSave(szFilePathName);
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {
 	// Define our toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

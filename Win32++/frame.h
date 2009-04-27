@@ -201,7 +201,7 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
-		virtual void LoadToolbar();
+		virtual void SetupToolbars();
 		virtual void SetToolbarImages(CToolbar& TB, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
 		virtual void UpdateCheckMarks();
@@ -256,6 +256,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void SaveRegistrySettings();
+		virtual void ShowToolbar();
 		virtual void UpdateMRUMenu();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -284,6 +285,7 @@ namespace Win32xx
 		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
+		BOOL m_bUseToolbar;					// set to TRUE if the toolbar is used
 		ThemeMenu m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
@@ -1325,14 +1327,11 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_himlMenu(NULL),
-		                m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), m_pView(NULL),
-		                m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0)
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE), 
+						m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), 
+						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0)
 	{
-
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
-
-
 
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls();
@@ -1928,6 +1927,7 @@ namespace Win32xx
 
 		// Set the menu
 		SetFrameMenu(IDW_MAIN);
+		UpdateMRUMenu();
 
 		if (IsRebarSupported() && m_bUseRebar)
 		{
@@ -1937,32 +1937,12 @@ namespace Win32xx
 			// Create the menu inside rebar
 			GetMenubar().Create(GetRebar());
 			GetMenubar().SetMenu(GetFrameMenu());
-			AddMenubarBand();
-
-			// Create the toolbar inside rebar
-			AddToolbarBand(GetToolbar());
-		}
-		else
-		{
-			// Create the toolbar without a rebar
-			GetToolbar().Create(m_hWnd);
+			AddMenubarBand();			
 		}
 		
-		LoadToolbar();
-		UpdateMRUMenu();
-
-		// Set the toolbar images
-		// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-		SetToolbarImages(GetToolbar(), RGB(192,192,192), IDW_MAIN, 0, 0);
-
-		// Set the icons for popup menu items
-		SetMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
-
-		if (!IsMenubarUsed())
-			::SetMenu(m_hWnd, GetFrameMenu());
-
-		if (m_bUseThemes)
-			SetTheme();
+		if (!IsMenubarUsed()) ::SetMenu(m_hWnd, GetFrameMenu());
+		if (m_bUseToolbar)	ShowToolbar();
+		if (m_bUseThemes)	SetTheme();
 
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
@@ -2159,6 +2139,8 @@ namespace Win32xx
 	{
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
+
+		if (0 ==ImageList_GetImageCount(m_himlMenu)) return;
 
 		HMENU hMenu = (HMENU)wParam;
 
@@ -2850,7 +2832,7 @@ namespace Win32xx
 				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
 	}
 
-	inline void CFrame::LoadToolbar()
+	inline void CFrame::SetupToolbars()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s). 
 
@@ -2883,6 +2865,32 @@ namespace Win32xx
 			// The frame is already created, so create and position the new view too
 			m_pView->Create(m_hWnd);
 			RecalcLayout();
+		}
+	}
+
+	inline void CFrame::ShowToolbar()
+	{
+		if (IsRebarSupported() && m_bUseRebar)				
+			AddToolbarBand(GetToolbar());	// Create the toolbar inside rebar
+		else	
+			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
+			
+		SetupToolbars();
+		
+		if (GetToolbar().GetToolbarData().size() > 0)
+		{
+			// Set the toolbar images (if not already set in SetupToolbars)
+			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
+			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
+				SetToolbarImages(GetToolbar(), RGB(192,192,192), IDW_MAIN, 0, 0);
+
+			// Set the icons for popup menu items (if not already set in SetupToolbars)
+			if (!m_himlMenu)
+				SetMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+		}
+		else
+		{
+			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
 		}
 	}
 

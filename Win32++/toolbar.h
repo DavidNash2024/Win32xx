@@ -149,6 +149,36 @@ namespace Win32xx
 	// A resource ID of 0 is a separator
 	{
 		m_vToolbarData.push_back(nID);
+
+		if(m_hWnd)
+		{
+			// TBBUTTON structure for each button in the toolbar
+			TBBUTTON tbb = {0};
+
+			std::vector<UINT>::iterator iter;
+			int iImages = 0;
+			for(iter = m_vToolbarData.begin(); iter < m_vToolbarData.end(); ++iter)
+				if (0 != *iter) iImages++;
+
+			ZeroMemory(&tbb, sizeof(TBBUTTON));
+
+			if (0 == nID)
+			{
+				tbb.fsStyle = TBSTYLE_SEP;
+			}
+			else
+			{
+				tbb.dwData  = iImages -1;
+				tbb.iBitmap = iImages -1;
+				tbb.idCommand = nID;
+				tbb.fsState = TBSTATE_ENABLED;
+				tbb.fsStyle = TBSTYLE_BUTTON;
+			}
+
+			// Add the button to the toolbar
+			if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1L, (LPARAM)&tbb))
+				throw CWinException(_T("CToolbar::SetButtons  .. TB_ADDBUTTONS failed "));
+		}
 	}
 
 	inline int CToolbar::CommandToIndex(int iButtonID) const
@@ -322,6 +352,11 @@ namespace Win32xx
 			style |= CCS_NODIVIDER | CCS_NORESIZE;
 			::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
 		}
+
+		SetButtons(m_vToolbarData);
+		
+		// Set rows of text to zero
+		::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0L, 0L);	
 	}
 
 	inline LRESULT CToolbar::OnCustomDraw(NMHDR* pNMHDR)
@@ -648,12 +683,7 @@ namespace Win32xx
 				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1L, (LPARAM)&tbb))
 					throw CWinException(_T("CToolbar::SetButtons  .. TB_ADDBUTTONS failed "));
 			}
-
-			// Set rows of text to zero
-			::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0L, 0L);
 		}
-		else
-			TRACE(_T("No Resource IDs for Toolbar\n"));
 
 		return iImages;
 	}
@@ -804,8 +834,6 @@ namespace Win32xx
 	// Assumes buttons have been already been added via AdddToolbarButton
 	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	{
-		SetButtons(GetToolbarData());
-
 		int iNumButtons = 0;
 		std::vector<UINT>::iterator iter;
 		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)

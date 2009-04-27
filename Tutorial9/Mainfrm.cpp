@@ -233,7 +233,7 @@ void CMainFrame::OnFilePrint()
 	delete []pBits;
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {	
 	// Define our toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

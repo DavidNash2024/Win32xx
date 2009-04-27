@@ -444,7 +444,7 @@ void CMainFrame::SetWindowTitle()
 	::SetWindowText(m_hWnd, Title.c_str());
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {
 	// Define the resource IDs for the toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

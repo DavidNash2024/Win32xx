@@ -51,7 +51,7 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void SaveRegistrySettings();
-	virtual void LoadToolbar();
+	virtual void SetupToolbars();
 
 private:
 	CDockSimple m_DockView;

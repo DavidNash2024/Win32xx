@@ -164,33 +164,6 @@ void CMainFrame::OnCreate()
 {
 	// Call the base function first
 	CFrame::OnCreate();
-
-	// Get the reference to the CToolbar
-	CToolbar& TB = GetToolbar();
-
-	// Set the image lists for normal, hot and disabled buttons
-	SetToolbarImages(TB, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	std::vector<UINT> IconData;
-	if (IsRebarUsed())
-	{
-		// Resize the Rebar band
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-
-		AddListboxBand(22);
-
-		// Set the icons for popup menu items
-		IconData.push_back ( IDM_FILE_NEW  );
-		IconData.push_back ( IDM_FILE_OPEN );
-		IconData.push_back ( IDM_FILE_SAVE );
-		IconData.push_back ( IDM_EDIT_CUT  );
-		IconData.push_back ( IDM_EDIT_COPY );
-		IconData.push_back ( IDM_EDIT_PASTE);
-		IconData.push_back ( IDM_FILE_PRINT);
-		IconData.push_back ( IDM_HELP_ABOUT); 
-	}
-	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0); 
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
@@ -339,7 +312,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	::SetWindowText(m_hWnd, str.str().c_str());
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_BACK   );
@@ -349,6 +322,33 @@ void CMainFrame::LoadToolbar()
 	AddToolbarButton( IDM_STOP );
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HOME );
+
+	// Get the reference to the CToolbar
+	CToolbar& TB = GetToolbar();
+
+	// Set the image lists for normal, hot and disabled buttons
+	SetToolbarImages(TB, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+
+	std::vector<UINT> IconData;
+	if (IsRebarUsed())
+	{
+		// Resize the Rebar band
+		CRebar& RB = GetRebar();
+		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
+
+		AddListboxBand(22);
+
+		// Set the icons for popup menu items
+		IconData.push_back ( IDM_FILE_NEW  );
+		IconData.push_back ( IDM_FILE_OPEN );
+		IconData.push_back ( IDM_FILE_SAVE );
+		IconData.push_back ( IDM_EDIT_CUT  );
+		IconData.push_back ( IDM_EDIT_COPY );
+		IconData.push_back ( IDM_EDIT_PASTE);
+		IconData.push_back ( IDM_FILE_PRINT);
+		IconData.push_back ( IDM_HELP_ABOUT); 
+	}
+	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0); 
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

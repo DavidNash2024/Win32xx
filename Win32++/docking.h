@@ -130,7 +130,7 @@ namespace Win32xx
 		virtual CContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
-		virtual void LoadToolbar();
+		virtual void SetupToolbars();
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
@@ -3070,7 +3070,7 @@ namespace Win32xx
 		return Size;
 	}
 
-	inline void CContainer::LoadToolbar()
+	inline void CContainer::SetupToolbars()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s). 
 
@@ -3104,7 +3104,7 @@ namespace Win32xx
 		GetViewPage().Create(m_hWnd);
 
 		// Create the toolbar
-		LoadToolbar();
+		SetupToolbars();
 		if (GetToolbar().GetToolbarData().size() > 0)
 		{
 			GetToolbar().Create(GetViewPage().GetHwnd());

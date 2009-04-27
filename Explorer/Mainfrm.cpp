@@ -138,7 +138,6 @@ void CMainFrame::OnCreate()
 	// call the base OnCreate function
 	CFrame::OnCreate();
 
-	SetButtons();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -200,7 +199,7 @@ void CMainFrame::SetButtons()
 	}
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {
 	// Define our toolbar data
 	AddToolbarButton( IDM_FILE_NEW   );
@@ -215,6 +214,8 @@ void CMainFrame::LoadToolbar()
 	AddToolbarButton( IDM_VIEWMENU);
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
+
+	SetButtons();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

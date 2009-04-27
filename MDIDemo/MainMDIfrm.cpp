@@ -103,6 +103,7 @@ void CMainMDIFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
 	// m_bUseThemes = FALSE;			// Don't use themes
+	// m_bUseToolbar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
 	CMDIFrame::OnCreate();
@@ -165,7 +166,7 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
 }
 
-void CMainMDIFrame::LoadToolbar()
+void CMainMDIFrame::SetupToolbars()
 {
 	// Define the resource IDs for the toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

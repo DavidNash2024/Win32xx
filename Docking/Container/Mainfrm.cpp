@@ -127,6 +127,7 @@ void CMainFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
 	// m_bUseThemes = FALSE;            // Don't use themes
+	// m_bUseToolbar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -261,7 +262,7 @@ void CMainFrame::LoadRegistryDockables()
 
 void CMainFrame::SaveDockables()
 {
-	m_DockView.CheckDockables();
+	m_DockView.VerifyDockables();
 	// NOTE: This function assumes that each dockable has a unique DockID
 
 	std::vector<CDockable*>::iterator iter;
@@ -314,7 +315,7 @@ void CMainFrame::SaveRegistrySettings()
 	SaveDockables();
 }
 
-void CMainFrame::LoadToolbar()
+void CMainFrame::SetupToolbars()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
