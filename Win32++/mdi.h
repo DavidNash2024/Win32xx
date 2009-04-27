@@ -269,7 +269,7 @@ namespace Win32xx
 	inline BOOL CMDIFrame::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
-		::SendMessage(m_wndMDIClient, WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+		::SendMessage(m_wndMDIClient, WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 
@@ -286,16 +286,16 @@ namespace Win32xx
 			::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 			break;
 		case IDW_WINDOW_ARRANGE:
-			::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0, 0) ;
+			::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
 			break;
 		case IDW_WINDOW_CASCADE:
-			::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0, 0) ;
+			::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0L, 0L) ;
 			break;
 		case IDW_WINDOW_CLOSEALL:
 			RemoveAllMDIChildren();
 			break;
 		case IDW_WINDOW_TILE:
-			::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0, 0) ;
+			::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0L, 0L) ;
 			break;
 		default:    // Pass to active child...
 			{
@@ -342,8 +342,7 @@ namespace Win32xx
 	inline void CMDIFrame::RecalcLayout()
 	{
 		CFrame::RecalcLayout();
-	//	::RedrawWindow(m_hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
-		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0, 0) ;
+		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
 	}
 
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
@@ -355,7 +354,7 @@ namespace Win32xx
 		{
 			v = m_vMDIChild.begin();
 			HWND hWnd = (*v)->GetHwnd();
-			::SendMessage(hWnd, WM_CLOSE, 0, 0);
+			::SendMessage(hWnd, WM_CLOSE, 0L, 0L);
 			if (::IsWindow(hWnd))
 				return FALSE;
 
@@ -398,7 +397,7 @@ namespace Win32xx
 		if (!pChild->IsWindow())
 			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Invalid MDI child"));
 
-		m_wndMDIClient.SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0);
+		m_wndMDIClient.SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0L);
 
 		// Verify
 		if (m_hActiveMDIChild != pChild->GetHwnd())
@@ -483,9 +482,9 @@ namespace Win32xx
 		case WM_MDIACTIVATE:
 			{
 				// Suppress redraw to avoid flicker when activating maximised MDI children
-				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0L);
 				LRESULT lr = CallPrevWindowProc(m_hWnd, WM_MDIACTIVATE, wParam, lParam);
-				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0L);
 				::RedrawWindow(m_hWnd, 0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 				return lr;
@@ -508,7 +507,7 @@ namespace Win32xx
 	inline CMDIChild::~CMDIChild()
 	{
 		if (IsWindow())
-			::SendMessage(GetParent(), WM_MDIDESTROY, (WPARAM)m_hWnd, 0);
+			::SendMessage(GetParent(), WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 
 		if (m_hChildMenu)
 			::DestroyMenu(m_hChildMenu);
@@ -525,7 +524,7 @@ namespace Win32xx
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
-		::SendMessage(hWndParent, WM_MDIGETACTIVE, 0, (LPARAM)&bMax);
+		::SendMessage(hWndParent, WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
 		bMax = bMax | (m_cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
@@ -559,7 +558,7 @@ namespace Win32xx
 		DWORD dwExStyle = m_cs.dwExStyle | WS_EX_MDICHILD;
 
 		// Turn off redraw while creating the window
-		::SendMessage(hWndParent, WM_SETREDRAW, FALSE, 0);
+		::SendMessage(hWndParent, WM_SETREDRAW, FALSE, 0L);
 
 		// Create the window
 		if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
@@ -570,7 +569,7 @@ namespace Win32xx
 			::ShowWindow(m_hWnd, SW_MAXIMIZE);
 
 		// Turn redraw back on
-		::SendMessage(hWndParent, WM_SETREDRAW, TRUE, 0);
+		::SendMessage(hWndParent, WM_SETREDRAW, TRUE, 0L);
 		::RedrawWindow(hWndParent, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Ensure bits revealed by round corners (XP themes) are redrawn
@@ -602,7 +601,7 @@ namespace Win32xx
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 		m_hChildMenu = ::LoadMenu (hInstance, MenuName);
 
-		HWND hWnd = (HWND)::SendMessage(GetParent(), WM_MDIGETACTIVE, 0, 0);
+		HWND hWnd = (HWND)::SendMessage(GetParent(), WM_MDIGETACTIVE, 0L, 0L);
 		if ((NULL != m_hWnd) &&(hWnd == m_hWnd) && (NULL != m_hChildMenu))
 		{
 			CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor());

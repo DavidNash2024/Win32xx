@@ -100,12 +100,12 @@ namespace Win32xx
 
 	inline int CStatusbar::GetParts()
 	{
-		return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
+		return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0L, 0L);
 	}
 
 	inline HICON CStatusbar::GetPartIcon(int iPart)
 	{
-		return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0);
+		return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0L);
 	}
 
 	inline CRect CStatusbar::GetPartRect(int iPart)
@@ -123,7 +123,7 @@ namespace Win32xx
 			if (::IsWindow(m_hWnd))
 			{
 				// Get size of Text array
-				int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPart, 0));
+				int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPart, 0L));
 
 				// Get the Text
 				TCHAR* szText = new TCHAR[iChars +1 ];
@@ -154,7 +154,7 @@ namespace Win32xx
 
 	inline BOOL CStatusbar::IsSimple()
 	{
-		return (BOOL)::SendMessage(m_hWnd, SB_ISSIMPLE, 0, 0);
+		return (BOOL)::SendMessage(m_hWnd, SB_ISSIMPLE, 0L, 0L);
 	}
 
 	inline void CStatusbar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
@@ -167,7 +167,7 @@ namespace Win32xx
 	{
 		if (::IsWindow(m_hWnd))
 		{
-			if (::SendMessage(m_hWnd, SB_GETPARTS, 0, 0) >= iPart)
+			if (::SendMessage(m_hWnd, SB_GETPARTS, 0L, 0L) >= iPart)
 			{
 				if (!::SendMessage(m_hWnd, SB_SETTEXT, iPart | Style, (LPARAM)szText))
 					throw CWinException(_T("Failed to set status bar text"));
@@ -197,7 +197,7 @@ namespace Win32xx
 
 				if (iPart < 0) iPart = 0;
 
-				int iParts = (int)::SendMessage(m_hWnd, SB_GETPARTS, 0, 0);
+				int iParts = (int)::SendMessage(m_hWnd, SB_GETPARTS, 0L, 0L);
 				iPartWidths = new int[iParts];
 
 				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
@@ -250,7 +250,7 @@ namespace Win32xx
 
 	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/)
 	{
-		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0);
+		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0L);
 	}
 
 } // namespace Win32xx

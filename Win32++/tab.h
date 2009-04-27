@@ -553,7 +553,7 @@ namespace Win32xx
 		NMHDR nmhdr = {0};
 		nmhdr.hwndFrom = m_hWnd;
 		nmhdr.code = UWM_TAB_CHANGED;
-		::SendMessage(GetParent(), WM_NOTIFY, 0, (LPARAM)&nmhdr);
+		::SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
 	inline void CTab::OnCreate()
@@ -722,7 +722,7 @@ namespace Win32xx
 			if (m_bShowButtons) xGap += 30;
 
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
-			SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, m_nTabHeight));
+			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
 		}
 	}

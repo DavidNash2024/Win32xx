@@ -80,7 +80,7 @@ void CMyDialog::AddToProgressBar()
 	HWND hwProgressBar = GetDlgItem(IDC_PROGRESS1);
 	
 	//set progress bar position
-	SendMessage(hwProgressBar, PBM_SETPOS, (WPARAM)m_nCounter * 10, 0);
+	SendMessage(hwProgressBar, PBM_SETPOS, (WPARAM)m_nCounter * 10, 0L);
 }
 
 void CMyDialog::AddToScrollBars()

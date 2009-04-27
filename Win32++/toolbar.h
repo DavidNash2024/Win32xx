@@ -155,7 +155,7 @@ namespace Win32xx
 	// Retrieves the zero-based index for the button associated with the specified command identifier
 	{
 		// returns -1 on fail
-		return (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0);
+		return (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0L);
 	}
 
 	inline void CToolbar::Destroy()
@@ -183,7 +183,7 @@ namespace Win32xx
 	inline int CToolbar::GetButtonCount() const
 	// Retrieves a count of the buttons currently in the toolbar
 	{
-		return (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
+		return (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0L, 0L);
 	}
 
 	inline UINT CToolbar::GetButtonState(int iButtonID) const
@@ -197,7 +197,7 @@ namespace Win32xx
 	//	TBSTATE_PRESSED		The button is being clicked.
 	//	TBSTATE_WRAP		The button is followed by a line break.
 	{
-		LRESULT lResult= ::SendMessage(m_hWnd, TB_GETSTATE, (WPARAM) iButtonID, 0);
+		LRESULT lResult= ::SendMessage(m_hWnd, TB_GETSTATE, (WPARAM) iButtonID, 0L);
 		if (-1L == lResult)
 			throw CWinException(_T("CToolbar::GetButtonState failed"));
 
@@ -242,7 +242,7 @@ namespace Win32xx
 	// Retrieves the bounding rectangle of a button in a toolbar
 	{
 		CRect rc;
-		int iCount = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
+		int iCount = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0L, 0L);
 
 		if (iCount >= iIndex)
 			::SendMessage(m_hWnd, TB_GETITEMRECT, (WPARAM)iIndex, (LPARAM)&rc);
@@ -254,7 +254,7 @@ namespace Win32xx
 	// Retrieves the total size of all of the visible buttons and separators in the toolbar
 	{
 		CSize sz;
-		::SendMessage(m_hWnd, TB_GETMAXSIZE, 0, (LPARAM)&sz);
+		::SendMessage(m_hWnd, TB_GETMAXSIZE, 0L, (LPARAM)&sz);
 
 		// This fixes a Windows bug calculating the size when TBSTYLE_DROPDOWN is used.
 		int xMaxSize = 0;
@@ -273,7 +273,7 @@ namespace Win32xx
 
 		for (int i = 0 ; i < GetButtonCount(); ++i)
 		{
-			if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, GetCommandID(i), 0) != -1)
+			if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, GetCommandID(i), 0L) != -1)
 				bReturn = TRUE;
 		}
 
@@ -291,7 +291,7 @@ namespace Win32xx
 		::GetCursorPos(&pt);
 		::ScreenToClient(m_hWnd, &pt);
 
-		int nButtons = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0, 0);
+		int nButtons = (int)::SendMessage(m_hWnd, TB_BUTTONCOUNT, 0L, 0L);
 		int iButton = -1;
 
 		for (int i = 0 ; i < nButtons; ++i)
@@ -307,11 +307,11 @@ namespace Win32xx
 	inline void CToolbar::OnCreate()
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
 		// allows buttons to have a separate dropdown arrow
 		// Note: TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
-		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
+		::SendMessage(m_hWnd, TB_SETEXTENDEDSTYLE, 0L, TBSTYLE_EX_DRAWDDARROWS);
 
 		// Add extra styles for toolbars inside a rebar
 		TCHAR ClassName[32];
@@ -343,10 +343,10 @@ namespace Win32xx
 				CRect rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
-				DWORD dwTBStyle = (DWORD)::SendMessage(m_hWnd, TB_GETSTYLE, 0, 0);
+				DWORD dwTBStyle = (DWORD)::SendMessage(m_hWnd, TB_GETSTYLE, 0L, 0L);
 				int nStyle = GetButtonStyle(dwItem);
 
-				int nButton = (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM) dwItem, 0);
+				int nButton = (int)::SendMessage(m_hWnd, TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
 				TBBUTTON tbb = {0};
 				::SendMessage(m_hWnd, TB_GETBUTTON, nButton, (LPARAM)&tbb);
 				int iImage = (int)tbb.dwData;
@@ -356,7 +356,7 @@ namespace Win32xx
 				CSize TextSize;
 				if (HasText())	// Does any button have text?
 				{
-					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0L, 0L));
 					if (::SendMessage(m_hWnd, TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
 					{
 						::GetTextExtentPoint32(DrawDC, szText, lstrlen(szText), &TextSize);
@@ -391,17 +391,17 @@ namespace Win32xx
 				HIMAGELIST himlToolbar;
 				if (nState & CDIS_DISABLED)
 				{
-					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0, 0);
+					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0L, 0L);
 				}
 				else if (nState & (CDIS_HOT | CDIS_SELECTED))
 				{
-					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0, 0);
+					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0L, 0L);
 					if (0 == himlToolbar)
-						himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST, 0, 0);
+						himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST, 0L, 0L);
 				}
 				else
 				{
-					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST, 0, 0);
+					himlToolbar = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST, 0L, 0L);
 				}
 
 				BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
@@ -486,7 +486,7 @@ namespace Win32xx
 					OffsetRect(&rcText, xOffset, yOffset);
 
 					int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
-					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0L, 0L));
 
 					if (nState & (CDIS_DISABLED))
 					{
@@ -517,9 +517,9 @@ namespace Win32xx
 
 	inline void CToolbar::OnDestroy()
 	{
-		HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST,    0, 0);
-		HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0, 0);
-		HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0, 0);
+		HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST,    0L, 0L);
+		HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0L, 0L);
+		HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0L, 0L);
 		ImageList_Destroy(himlToolbar);
 		ImageList_Destroy(himlToolbarHot);
 		ImageList_Destroy(himlToolbarDis);
@@ -605,7 +605,7 @@ namespace Win32xx
 	// Needs to be used when the image size is not the default 16 x 15
 	// Call this function before using AddBitmap or ReplaceBitmap
 	{
-		if (!::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELONG(cx, cy)))
+		if (!::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0L, MAKELONG(cx, cy)))
 			TRACE(_T("CToolbar::SetBitmapSize  failed\n"));
 	}
 
@@ -616,9 +616,9 @@ namespace Win32xx
 		size_t iNumButtons = vToolbarData.size();
 
 		// Remove any existing buttons
-		while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0, 0) > 0)
+		while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0L, 0L) > 0)
 		{
-			if(!::SendMessage(m_hWnd, TB_DELETEBUTTON, 0, 0))
+			if(!::SendMessage(m_hWnd, TB_DELETEBUTTON, 0L, 0L))
 				break;
 		}
 
@@ -645,12 +645,12 @@ namespace Win32xx
 				}
 
 				// Add the button to the toolbar
-				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (LPARAM)&tbb))
+				if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1L, (LPARAM)&tbb))
 					throw CWinException(_T("CToolbar::SetButtons  .. TB_ADDBUTTONS failed "));
 			}
 
 			// Set rows of text to zero
-			::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0, 0);
+			::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 0L, 0L);
 		}
 		else
 			TRACE(_T("No Resource IDs for Toolbar\n"));
@@ -663,7 +663,7 @@ namespace Win32xx
 	// The size can be set only before adding any buttons to the toolbar
 	{
 
-		if (!::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy)))
+		if (!::SendMessage(m_hWnd, TB_SETBUTTONSIZE, 0L, MAKELONG(cx, cy)))
 			TRACE(_T("CToolbar::SetButtonSize failed\n"));
 	}
 
@@ -728,7 +728,7 @@ namespace Win32xx
 				// buttons don't have text
 				TCHAR szString[3] = _T(" ");
 				szString[2] = _T('\0');		// Double-null terminate
-				::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szString);
+				::SendMessage(m_hWnd, TB_ADDSTRING, 0L, (LPARAM)szString);
 			}
 
 			// No index for this string exists, so create it now
@@ -736,7 +736,7 @@ namespace Win32xx
 			lstrcpyn(szBuf, szText, 79);
 			szBuf[lstrlen(szBuf)+1] = _T('\0');		// Double-null terminate
 
-			iString = (int)::SendMessage(m_hWnd, TB_ADDSTRING, 0, (LPARAM)szBuf);
+			iString = (int)::SendMessage(m_hWnd, TB_ADDSTRING, 0L, (LPARAM)szBuf);
 			if (-1 == iString )
 				throw CWinException(_T("CToolbar::SetButtonText  TB_ADDSTRING failed"));
 
@@ -756,20 +756,20 @@ namespace Win32xx
 		tbb.iString = iString;
 
 		// Turn off Toolbar drawing
-		::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+		::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0L);
 
-		if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0))
+		if (!::SendMessage(m_hWnd, TB_DELETEBUTTON, iIndex, 0L))
 			throw CWinException(_T("CToolbar::SetButtonText  TB_DELETEBUTTON failed"));
 
 		if (!::SendMessage(m_hWnd, TB_INSERTBUTTON, iIndex, (LPARAM)&tbb))
 			throw CWinException(_T("CToolbar::SetButtonText  TB_INSERTBUTTON failed"));
 
 		// Ensure the button now includes some text rows
-		if (0 == ::SendMessage(m_hWnd, TB_GETTEXTROWS, 0, 0))
-			::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 1, 0);
+		if (0 == ::SendMessage(m_hWnd, TB_GETTEXTROWS, 0L, 0L))
+			::SendMessage(m_hWnd, TB_SETMAXTEXTROWS, 1L, 0L);
 
 		// Turn on Toolbar drawing
-		::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+		::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0L);
 
 		// Redraw button
 		CRect r = GetItemRect(iIndex);
@@ -835,9 +835,9 @@ namespace Win32xx
 				return;
 			}
 
-			HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST,    0, 0);
-			HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0, 0);
-			HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0, 0);
+			HIMAGELIST himlToolbar    = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETIMAGELIST,    0L, 0L);
+			HIMAGELIST himlToolbarHot = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETHOTIMAGELIST, 0L, 0L);
+			HIMAGELIST himlToolbarDis = (HIMAGELIST)::SendMessage(m_hWnd, TB_GETDISABLEDIMAGELIST, 0L, 0L);
 			ImageList_Destroy(himlToolbar);
 			ImageList_Destroy(himlToolbarHot);
 			ImageList_Destroy(himlToolbarDis);
@@ -847,7 +847,7 @@ namespace Win32xx
 				throw CWinException(_T("CToolbar::SetImages ... Create himlToolbar failed "));
 
 			ImageList_AddMasked(himlToolbar, hbm, crMask);
-			if(-1L == ::SendMessage(m_hWnd, TB_SETIMAGELIST, 0, (LPARAM)himlToolbar) )
+			if(-1L == ::SendMessage(m_hWnd, TB_SETIMAGELIST, 0L, (LPARAM)himlToolbar) )
 				throw CWinException(_T("CToolbar::SetImages ... TB_SETIMAGELIST failed "));
 
 			::DeleteObject(hbm);
@@ -865,7 +865,7 @@ namespace Win32xx
 
 				ImageList_AddMasked(himlToolbarHot, hbm, crMask);
 
-				if(-1L == ::SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0, (LPARAM)himlToolbarHot) )
+				if(-1L == ::SendMessage(m_hWnd, TB_SETHOTIMAGELIST, 0L, (LPARAM)himlToolbarHot) )
 					throw CWinException(_T("CToolbar::SetImages ... TB_SETHOTIMAGELIST failed "));
 
 				::DeleteObject(hbm);
@@ -883,13 +883,13 @@ namespace Win32xx
 					throw CWinException(_T("CToolbar::SetImages ... Create himlToolbarDis failed "));
 
 				ImageList_AddMasked(himlToolbarDis, hbm, crMask);
-				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolbarDis) )
 					throw CWinException(_T("CToolbar::SetImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 			else
 			{
 				himlToolbarDis = CreateDisabledImageList(himlToolbar);
-				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)himlToolbarDis) )
+				if(-1L == ::SendMessage(m_hWnd, TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolbarDis) )
 					throw CWinException(_T("CToolbar::SetImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 

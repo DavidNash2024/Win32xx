@@ -55,7 +55,7 @@ void CMDIChildSimple::OnClose()
 	//Action to take when the window is about to close
 	int Result = MessageBox(_T("OK to close Window?"), _T("File Close"), MB_YESNO);
 	if (Result == IDYES)
-		::SendMessage(GetParent(), WM_MDIDESTROY, (WPARAM)m_hWnd, 0);
+		::SendMessage(GetParent(), WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 }
 
 BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM /*lParam*/)

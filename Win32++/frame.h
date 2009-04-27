@@ -345,7 +345,7 @@ namespace Win32xx
 			m_bKeyMode = TRUE;
 			SetHotItem(ID);
 			m_bMenuActive = TRUE;
-			::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
+			::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
 		}
 		else
 			::MessageBeep(MB_OK);
@@ -355,7 +355,7 @@ namespace Win32xx
 	{
 		if (m_bKeyMode)
 			// Simulate a down arrow key press
-			::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0);
+			::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0L);
 
 		m_bKeyMode = FALSE;
 		m_bExitAfter = FALSE;
@@ -383,7 +383,7 @@ namespace Win32xx
 		tpm.rcExclude = rc;
 
 		// Set the hot button
-		::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
+		::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
 		::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(TRUE, 0));
 
 		m_bSelPopup = FALSE;
@@ -419,7 +419,7 @@ namespace Win32xx
 			if (::GetSystemMenu(hMaxMDIChild, FALSE) == m_hPopupMenu )
 			{
 				if (nID)
-					::SendMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0);
+					::SendMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0L);
 			}
 		}
 
@@ -580,7 +580,7 @@ namespace Win32xx
 		::ScreenToClient(m_hWnd, &pt);
 
 		// Update mouse mouse position for hot tracking
-		::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, MAKELONG(pt.x, pt.y));
+		::SendMessage(m_hWnd, WM_MOUSEMOVE, 0L, MAKELONG(pt.x, pt.y));
 	}
 
 	inline HWND CMenubar::GetActiveMDIChild()
@@ -588,7 +588,7 @@ namespace Win32xx
 		HWND hwndMDIChild = NULL;
 		if (IsMDIFrame())
 		{
-			hwndMDIChild = (HWND)::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, 0);
+			hwndMDIChild = (HWND)::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0L, 0L);
 		}
 
 		return hwndMDIChild;
@@ -608,7 +608,7 @@ namespace Win32xx
 
 		if (IsMDIFrame())
 		{
-			::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0, (LPARAM)&bMaxed);
+			::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
 		}
 
 		return bMaxed;
@@ -628,7 +628,7 @@ namespace Win32xx
 	inline void CMenubar::OnCreate()
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
 		m_pFrame = (CFrame*)FromHandle(GetAncestor());
 	}
@@ -659,7 +659,7 @@ namespace Win32xx
 				if (IsMDIChildMaxed() && (0 == dwItem))
 				// Draw over MDI Max button
 				{
-					HICON hIcon = (HICON)::SendMessage(GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0);
+					HICON hIcon = (HICON)::SendMessage(GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0L);
 					if (NULL == hIcon)
 						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 
@@ -708,12 +708,12 @@ namespace Win32xx
 					}
 
 					TCHAR str[80] = _T("");
-					int nLength = (int)::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM) NULL);
+					int nLength = (int)::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
 					if ((nLength > 0) && (nLength < 80))
 						::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
 
 					// Draw highlight text
-					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0, 0));
+					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0L, 0L));
 					if (!m_ThemeMenu.UseThemes)
 						::SetTextColor(DrawDC, ::GetSysColor(COLOR_HIGHLIGHTTEXT));
 
@@ -764,7 +764,7 @@ namespace Win32xx
 		case VK_UP:
 		case VK_RETURN:
 			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
+			::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
 			break;
 
 		case VK_LEFT:
@@ -785,7 +785,7 @@ namespace Win32xx
 				if (::SendMessage(m_hWnd, TB_MAPACCELERATOR, wParam, (LPARAM) &ID))
 				{
 					m_nHotItem = ID;
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
 				}
 				else
 					::MessageBeep(MB_OK);
@@ -825,7 +825,7 @@ namespace Win32xx
 				if (0 == HitTest())
 				{
 					m_nHotItem = 0;
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
 				}
 			}
 		}
@@ -858,13 +858,13 @@ namespace Win32xx
 				if (PtInRect(&m_MDIRect[1], pt))
 				{
 					if (MDI_RESTORE == m_nMDIButton)
-					::PostMessage(MDIClient, WM_MDIRESTORE, (WPARAM)MDIChild, 0);
+					::PostMessage(MDIClient, WM_MDIRESTORE, (WPARAM)MDIChild, 0L);
 				}
 
 				if (PtInRect(&m_MDIRect[2], pt))
 				{
 					if (MDI_CLOSE == m_nMDIButton)
-						::PostMessage(MDIChild, WM_CLOSE, 0, 0);
+						::PostMessage(MDIChild, WM_CLOSE, 0L, 0L);
 				}
 			}
 		}
@@ -889,9 +889,9 @@ namespace Win32xx
 
 					m_bMenuActive = FALSE;
 					m_bKeyMode = TRUE;
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
+					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
 					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
-					::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
+					::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
 					break;
 
 				case VK_LEFT:
@@ -903,11 +903,11 @@ namespace Win32xx
 
 					// Move left to next topmenu item
 					(m_nHotItem > 0)? --m_nHotItem : m_nHotItem = GetButtonCount()-1;
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
+					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
-					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0L);
 					break;
 
 				case VK_RIGHT:
@@ -919,11 +919,11 @@ namespace Win32xx
 
 					// Move right to next topmenu item
 					(m_nHotItem < GetButtonCount()-1)? ++m_nHotItem : m_nHotItem = 0;
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
+					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
-					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0);
+					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0L);
 					break;
 
 				case VK_RETURN:
@@ -946,7 +946,7 @@ namespace Win32xx
 				if (HitTest() >= 0)
 				{
 					// Cancel popup when we hit a button a second time
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
+					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
 					return TRUE;
 				}
 			}
@@ -961,7 +961,7 @@ namespace Win32xx
 
 				UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
 				if (nID)
-					::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0);
+					::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0L);
 			}
 
 			m_bExitAfter = TRUE;
@@ -993,7 +993,7 @@ namespace Win32xx
 				::ScreenToClient(m_hWnd, &pt);
 
 				// Reflect messages back to the Menubar for hot tracking
-				::SendMessage(m_hWnd, WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
+				::SendMessage(m_hWnd, WM_MOUSEMOVE, 0L, MAKELPARAM(pt.x, pt.y));
 			}
 			break;
 
@@ -1078,7 +1078,7 @@ namespace Win32xx
 
 		case TBN_DROPDOWN:
 			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
+			::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
 			break;
 
 		case TBN_HOTITEMCHANGE:
@@ -1093,10 +1093,10 @@ namespace Win32xx
 					{
 						::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 						m_nHotItem = nButton;
-						::SendMessage(m_hWnd, WM_CANCELMODE, 0, 0);
+						::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
 
 						//Always use PostMessage for USER_POPUPMENU (not SendMessage)
-						::PostMessage(m_hWnd, UWM_POPUPMENU, 0, 0);
+						::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
 					}
 					m_nHotItem = nButton;
 				}
@@ -1105,7 +1105,7 @@ namespace Win32xx
 				if ((flag & HICF_LEAVING) && m_bKeyMode)
 				{
 					m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
-					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
+					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
 				}
 
 				break;
@@ -1144,7 +1144,7 @@ namespace Win32xx
 	inline void CMenubar::SetHotItem(int nHot)
 	{
 		m_nHotItem = nHot;
-		::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0);
+		::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
 	}
 
 	inline void CMenubar::SetMenu(HMENU hMenu)
@@ -1155,14 +1155,14 @@ namespace Win32xx
 		int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
 
 		// Remove any existing buttons
-		while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0, 0) > 0)
+		while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0L, 0L) > 0)
 		{
-			if(!::SendMessage(m_hWnd, TB_DELETEBUTTON, 0, 0))
+			if(!::SendMessage(m_hWnd, TB_DELETEBUTTON, 0L, 0L))
 				break;
 		}
 
 		// Set the Bitmap size to zero
-		::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0, MAKELPARAM(0, 0));
+		::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0L, MAKELPARAM(0, 0));
 
 		if (IsMDIChildMaxed())
 		{
@@ -2336,7 +2336,7 @@ namespace Win32xx
 		nm.cbSize = sizeof (NONCLIENTMETRICS);
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfStatusFont;
-		HFONT hFontOld = (HFONT)GetStatusbar().SendMessage(WM_GETFONT, 0, 0);
+		HFONT hFontOld = (HFONT)GetStatusbar().SendMessage(WM_GETFONT, 0L, 0L);
 		HFONT hFont = ::CreateFontIndirect(&lf);
 		GetStatusbar().SendMessage(WM_SETFONT, (WPARAM)hFont, TRUE);
 		::DeleteObject(hFontOld);
@@ -2350,7 +2350,7 @@ namespace Win32xx
 			nm.cbSize = sizeof (NONCLIENTMETRICS);
 			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 			LOGFONT lf = nm.lfMenuFont;
-			HFONT hFontOld = (HFONT)GetMenubar().SendMessage(WM_GETFONT, 0, 0);
+			HFONT hFontOld = (HFONT)GetMenubar().SendMessage(WM_GETFONT, 0L, 0L);
 			HFONT hFont = ::CreateFontIndirect(&lf);
 			GetMenubar().SendMessage(WM_SETFONT, (WPARAM)hFont, TRUE);
 			::DeleteObject(hFontOld);
@@ -2504,7 +2504,7 @@ namespace Win32xx
 		// Resize the status bar
 		if (GetStatusbar())
 		{
-			GetStatusbar().SendMessage(WM_SIZE, 0, 0);
+			GetStatusbar().SendMessage(WM_SIZE, 0L, 0L);
 			GetStatusbar().Invalidate();
 		}
 
@@ -2514,11 +2514,11 @@ namespace Win32xx
 		// Resize the rebar or toolbar
 		if (IsRebarUsed())
 		{
-			GetRebar().SendMessage(WM_SIZE, 0, 0);
+			GetRebar().SendMessage(WM_SIZE, 0L, 0L);
 			GetRebar().Invalidate();
 		}
 		else
-			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Resize the View window
 		CRect rClient = GetViewRect();
@@ -3071,7 +3071,7 @@ namespace Win32xx
 			OnFrameSysColorChange();
 
 			// Forward the message to the view window
-			::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0, 0);
+			::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0L, 0L);
 			return 0L;
 		case WM_SYSCOMMAND:
 			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())

@@ -24,7 +24,7 @@ BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd* pParent)
 	BOOL bSuccess = CWnd::AttachDlgItem(nID, pParent);;
 
 	LOGFONT lf;
-	m_hUrlFont = (HFONT)::SendMessage( m_hWnd, WM_GETFONT, 0, 0);
+	m_hUrlFont = (HFONT)::SendMessage( m_hWnd, WM_GETFONT, 0L, 0L);
 	::GetObject(m_hUrlFont, sizeof(LOGFONT), &lf);
 	lf.lfUnderline = TRUE;
 	m_hUrlFont = ::CreateFontIndirect(&lf);

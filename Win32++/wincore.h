@@ -673,12 +673,12 @@ namespace Win32xx
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const;
-		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
+		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
 		int  ReleaseDC(HDC hDC) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
-		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
+		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
@@ -718,7 +718,7 @@ namespace Win32xx
 		operator HWND() const {return m_hWnd;}
 
 		// Required by some macros
-		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const
+		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const
 			{return ::PostMessage(hWnd, uMsg, wParam, lParam);}
 		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
 			{ return ::SendMessage(hWnd, uMsg, wParam, lParam);}
@@ -1294,7 +1294,7 @@ namespace Win32xx
 				Subclass();
 
 				// Send a message to force the HWND to be added to the map
-				::SendMessage(m_hWnd, WM_NULL, 0, 0);
+				::SendMessage(m_hWnd, WM_NULL, 0L, 0L);
 
 				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
 			}
@@ -1845,7 +1845,7 @@ namespace Win32xx
 		// Override this function in your derived class to perform drawing tasks.
 	}
 
-	inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
+	inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const
 	// The PostMessage function places (posts) a message in the message queue
 	// associated with the thread that created the window and returns without
 	// waiting for the thread to process the message.
@@ -2004,7 +2004,7 @@ namespace Win32xx
 	}
 
 
-	inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
+	inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const
 	// The SendMessage function sends the specified message to a window or windows.
 	// It calls the window procedure for the window and does not return until the
 	// window procedure has processed the message.
@@ -2084,7 +2084,7 @@ namespace Win32xx
 	// This function allows changes in that window to be redrawn or prevents changes
 	// in that window from being redrawn.
 	{
-		return (BOOL)::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0);
+		return (BOOL)::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0L);
 	}
 
 #ifndef _WIN32_WCE

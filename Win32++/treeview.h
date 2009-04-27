@@ -234,7 +234,7 @@ namespace Win32xx
 		tvi.cchTextMax = 260;
 		TCHAR szText[261];
 		tvi.pszText = szText;
-		::SendMessage(m_hWnd, TVM_GETITEM, 0, (LPARAM)&tvi);
+		::SendMessage(m_hWnd, TVM_GETITEM, 0L, (LPARAM)&tvi);
 		tString t = tvi.pszText;
 		return t;
 	}

@@ -30,7 +30,7 @@ void CViewText::OnCreate()
 		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 	}
 	
-	SendMessage(WM_SETFONT, (WPARAM)m_hFont,0);
+	SendMessage(WM_SETFONT, (WPARAM)m_hFont, 0L);
 }
 
 void CViewText::PreCreate(CREATESTRUCT &cs)

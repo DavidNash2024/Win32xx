@@ -333,19 +333,19 @@ namespace Win32xx
 	inline UINT CListView::GetSelectedCount( ) const
 	// Determines the number of selected items in a list-view control.
 	{
-		return (UINT)::SendMessage( m_hWnd, LVM_GETSELECTEDCOUNT, 0, 0 );
+		return (UINT)::SendMessage( m_hWnd, LVM_GETSELECTEDCOUNT, 0L, 0L );
 	}
 
 	inline int CListView::GetSelectionMark( )
 	// Retrieves the selection mark from a list-view control.
 	{
-		return (int)::SendMessage( m_hWnd, LVM_GETSELECTIONMARK, 0, 0 );
+		return (int)::SendMessage( m_hWnd, LVM_GETSELECTIONMARK, 0L, 0L );
 	}
 
 	inline int CListView::GetStringWidth( LPCTSTR pszString ) const
 	// Determines the width of a specified string using the specified list-view control's current font.
 	{
-		return (int)::SendMessage( m_hWnd, LVM_GETSTRINGWIDTH, 0, (LPARAM)pszString );
+		return (int)::SendMessage( m_hWnd, LVM_GETSTRINGWIDTH, 0L, (LPARAM)pszString );
 	}
 
 	inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc )
@@ -588,7 +588,7 @@ namespace Win32xx
 	inline HWND CListView::SetToolTips( HWND hWndToolTip )
 	// Sets the ToolTip control that the list-view control will use to display ToolTips.
 	{
-		return (HWND)::SendMessage(m_hWnd, LVM_SETTOOLTIPS, (WPARAM)hWndToolTip, 0);
+		return (HWND)::SendMessage(m_hWnd, LVM_SETTOOLTIPS, (WPARAM)hWndToolTip, 0L);
 	}
 
 	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray )

@@ -1,22 +1,43 @@
 Version 6.5
 ===========
-Added CTab class. This class can be used as a view window. It is also the base
- class for CContainer and CMDItab.
-Added CMDITab class. A MDITab can be used as a view window for 
- a Frame or a Dockable. 
-Added TabDemo Sample which demonstrates the use of CTab.
-Added Docking TabbedMDI sample demonstrating the use of a tabbed mdi window
- in a docking application.
-Added CFrame::GetToolbarData
-CContainer now inherrits from CTab
-Renamed dockable.h to docking.h
-Docking in and undocking from undocked dockables and containers is now supported
-Added CFrame::LoadToolbar
-Modified CFrame::SetToolbarImages. Reduced arguements to 5.
-Modified CToolbar::SetImages. Reduced arguements to 4
-
-min and max macros are no longer defined by Win32++. MIN and MAX are 
-defined instead
+Major Changes
+-------------
+* Added CTab class. 
+   This class is used by CContainer and CTabbedMDI, and can also be used as a
+   view window. 
+* Added TabDemo sample.    
+   Refer to the TabDemo sample for a demonstration of how CTab class is
+   used as a view window in a frame.  
+* Added CTabbedMDI class. 
+   A MDITab can be used as a view window for a Frame or a Dockable. As the name
+   suggests, it provides tabs for a MDI window. 
+* Added TabbedMDI sample within docking.
+   Refer to the docking TabbedMDI sample for a demonstration of how CTabbedMDI
+   class is used.   
+* Enhancments to docking.
+   - Dockables can now be docked into, and undocked from all dockables, 
+     including those that are undocked. 
+   - Containers can also be docked into and undocked all from containers,
+      including those that are undocked.
+   - Containers can display their tabs at the top or bottom of the window.
+   - Containes can also display a tab list button.
+   - The close a list buttons now indicate mouse hover and button pressed state.
+   - The container tabs are gold tipped to indicate selected and hot tabs.
+   - Dockable and container objects are destroyed when their window is closed. 
+* Improvements to toolbars
+   The configuration of toolbars, particularly multiple toolbars has been 
+   simplified.   ???More on this???
+* MIN and MAX macros have been defined and can be used in place of min and max.
+   This avoids incompatibilities between the way different compliers support
+   these macros. It also avoids clashes between the macro definitions of 
+   min and max, and the STL definitions of min and max.
+   
+All Changes
+-----------
+Added CTab class
+Added CTabbedMDI class
+........          
+   
 
 Version 6.4.1
 =============

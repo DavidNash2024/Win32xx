@@ -64,7 +64,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 
 	// Respond to the accelerator key
 	case IDW_QUIT:
-		::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
+		::SendMessage(m_hWnd, WM_CLOSE, 0L, 0L);
 		break;
 	}
 

@@ -53,12 +53,12 @@ BOOL CComboBoxEx::AddItems()
         cbei.iIndent        = IInf[i].iIndent;
 
         // Add the items to the ComboBox's dropdown list
-        if(-1 == SendMessage(CBEM_INSERTITEM, 0, (LPARAM)&cbei))
+        if(-1 == SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)&cbei))
             return FALSE;
     }
 
 	// Assign the existing image list to the ComboBoxEx control
-    SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)m_himlImages);
+    SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)m_himlImages);
 
     return TRUE;
 }

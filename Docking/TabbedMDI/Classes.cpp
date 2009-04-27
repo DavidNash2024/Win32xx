@@ -113,7 +113,7 @@ void CContainClasses::AddCombo()
 	m_ComboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
 
 	// Set ComboBox Height
-	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)rect.Height()-6);
+	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)(rect.Height()-6));
 
 	m_ComboBoxEx.AddItems();
 }

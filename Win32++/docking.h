@@ -349,7 +349,7 @@ namespace Win32xx
 		virtual ~CDockable();
 		virtual CDockable* AddDockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, int nDockID = 0);
 		virtual CDockable* AddUndockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, RECT rc, int nDockID = 0);
-		virtual BOOL CheckDockables();
+		virtual BOOL VerifyDockables();
 		virtual void CheckAllTargets(LPDRAGPOS pDragPos);
 		virtual void CloseAllDockables();
 		virtual void CloseAllTargets();
@@ -481,7 +481,7 @@ namespace Win32xx
 		DragPos.hdr.hwndFrom = m_hWnd;
 		::GetCursorPos(&DragPos.ptPos);
 		DragPos.ptPos.x += 1;
-		SendMessage(GetParent(), WM_NOTIFY, 0, (LPARAM)&DragPos);
+		SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&DragPos);
 	}
 
 	inline void CDockable::CDockBar::SetColor(COLORREF color)
@@ -786,7 +786,7 @@ namespace Win32xx
 		::GetCursorPos(&DragPos.ptPos);
 
 		// Send a DragPos notification to the dockable
-		SendMessage(GetParent(), WM_NOTIFY, 0, (LPARAM)&DragPos);
+		SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&DragPos);
 	}
 
 	inline LRESULT CDockable::CDockClient::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1662,7 +1662,7 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CDockable::CheckDockables()
+	inline BOOL CDockable::VerifyDockables()
 	// A diagnostic routine which verifies the integrity of the docking layout
 	{
 		BOOL bResult = TRUE;
@@ -1757,8 +1757,8 @@ namespace Win32xx
 	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
 	{
 		TRACE("Docking begins ...  ");
-		if (!CheckDockables())
-			TRACE("CheckDockables failed before docking\n");
+		if (!VerifyDockables())
+			TRACE("VerifyDockables failed before docking\n");
 
 		pDockable->m_pDockParent = this;
 		pDockable->m_BlockMove = FALSE;
@@ -1792,8 +1792,8 @@ namespace Win32xx
 		pDockable->GetView()->SetFocus();
 		RecalcDockLayout();
 
-		if (!CheckDockables())
-			TRACE("CheckDockables failed after docking\n");
+		if (!VerifyDockables())
+			TRACE("VerifyDockables failed after docking\n");
 		TRACE("Docking ends\n");
 	}
 
@@ -1809,8 +1809,8 @@ namespace Win32xx
 			pDock->SetParent(m_hWnd); */
 
 			TRACE("DockInContainer begins ... \n");
-			if (!CheckDockables())
-				TRACE("CheckDockables failed before DockInContainer\n");
+			if (!VerifyDockables())
+				TRACE("VerifyDockables failed before DockInContainer\n");
 
 			// Transfer any dock children to this dockable
 			pDock->MoveDockChildren(this);
@@ -1848,8 +1848,8 @@ namespace Win32xx
 		//	pDock->SetParent(m_hWnd);
 			pDock->SetDockStyle(dwDockStyle);
 			pDock->SetParent(m_hWnd);
-			if (!CheckDockables())
-				TRACE("CheckDockables failed after DockInContainer\n");
+			if (!VerifyDockables())
+				TRACE("VerifyDockables failed after DockInContainer\n");
 
 			TRACE("DockInContainer ends\n");
 		}
@@ -1858,8 +1858,8 @@ namespace Win32xx
 	inline void CDockable::DockOuter(CDockable* pDockable, DWORD dwDockStyle)
 	{
 		TRACE("Dockouter begins ... ");
-		if (!CheckDockables())
-			TRACE("CheckDockables before DockOuter\n");
+		if (!VerifyDockables())
+			TRACE("VerifyDockables before DockOuter\n");
 
 		pDockable->m_pDockParent = GetDockAncestor();
 
@@ -1906,8 +1906,8 @@ namespace Win32xx
 		pDockable->GetView()->SetFocus();
 		RecalcDockLayout();
 
-		if (!CheckDockables())
-			TRACE("CheckDockables failed after DockOuter\n");
+		if (!VerifyDockables())
+			TRACE("VerifyDockables failed after DockOuter\n");
 		TRACE("Dock outer ends \n");
 	}
 
@@ -2420,7 +2420,7 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->IsWindow())
 		{
-		//	if (!CheckDockables())
+		//	if (!VerifyDockables())
 		//		TRACE("Check failed in RecalcDockLayout\n");
 			
 			CRect rc = GetDockTopLevel()->GetClientRect();
@@ -2444,7 +2444,7 @@ namespace Win32xx
 		CDockable* pDock = GetDockFromPoint(DragPos.ptPos);
 
 		if (pDock)
-			pDock->SendMessage(WM_NOTIFY, 0, (LPARAM)&DragPos);
+			pDock->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
 		else
 		{
 			if (GetDockHint().IsWindow())		GetDockHint().Destroy();
@@ -2548,14 +2548,39 @@ namespace Win32xx
 			m_vDockChildren.erase(m_vDockChildren.begin());
 			MoveDockChildren(pDockFirstChild);
 		}
-	//	if (pDockFirstChild) pDockFirstChild->RecalcDockLayout();
+	}
+
+	inline void CDockable::ConvertToChild(HWND hWndParent)
+	{
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		SetParent(hWndParent);
+		GetDockBar().SetParent(hWndParent);
+	}
+
+	inline void CDockable::ConvertToPopup(RECT rc)
+	{
+		// Change the window to an "undocked" style
+		ShowWindow(SW_HIDE);
+		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
+		SetWindowLongPtr(GWL_STYLE, dwStyle);
+
+		// Change the window's parent and reposition it
+		GetDockBar().ShowWindow(SW_HIDE);
+		SetWindowPos(0, 0, 0, 0, 0, SWP_NOSENDCHANGING|SWP_HIDEWINDOW|SWP_NOREDRAW);
+		m_pDockParent = 0;
+		SetParent(0);
+		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOOWNERZORDER);
+		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
+
+		SetWindowText(GetCaption().c_str());
 	}
 
 	inline void CDockable::Undock()
 	{
 		TRACE("Undock begins ... ");
-		if (!CheckDockables())
-			TRACE("CheckDockables failed before Undock\n");
+		if (!VerifyDockables())
+			TRACE("VerifyDockables failed before Undock\n");
 		
 		// Return if we shouldn't undock
 		if (GetDockStyle() & DS_NO_UNDOCK) return;
@@ -2609,45 +2634,20 @@ namespace Win32xx
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 		
-		if (pDockUndockedFrom)
+		RecalcDockLayout();
+        if ((pDockUndockedFrom) && (pDockUndockedFrom->GetDockTopLevel() != GetDockTopLevel()))
 			pDockUndockedFrom->RecalcDockLayout();
 
-		if (!CheckDockables())
-			TRACE("CheckDockables failed after Undock\n");
+		if (!VerifyDockables())
+			TRACE("VerifyDockables failed after Undock\n");
 		TRACE("Undock ends\n");
-	}
-
-	inline void CDockable::ConvertToChild(HWND hWndParent)
-	{
-		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
-		SetWindowLongPtr(GWL_STYLE, dwStyle);
-		SetParent(hWndParent);
-		GetDockBar().SetParent(hWndParent);
-	}
-
-	inline void CDockable::ConvertToPopup(RECT rc)
-	{
-		// Change the window to an "undocked" style
-		ShowWindow(SW_HIDE);
-		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
-		SetWindowLongPtr(GWL_STYLE, dwStyle);
-
-		// Change the window's parent and reposition it
-		GetDockBar().ShowWindow(SW_HIDE);
-		SetWindowPos(0, 0, 0, 0, 0, SWP_NOSENDCHANGING|SWP_HIDEWINDOW|SWP_NOREDRAW);
-		m_pDockParent = 0;
-		SetParent(0);
-		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOOWNERZORDER);
-		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
-
-		SetWindowText(GetCaption().c_str());
 	}
 
 	inline void CDockable::UndockContainer(CContainer* pContainer)
 	{
 		TRACE("UndockContainer begins ...  ");
 
-		if (!CheckDockables())
+		if (!VerifyDockables())
 			TRACE("Check failed before UndockContainer\n");
 
 		// Return if we shouldn't undock
@@ -2755,7 +2755,7 @@ namespace Win32xx
 		pDock->Undock();
 		pDockUndockedFrom->RecalcDockLayout();
 
-		if (!CheckDockables())
+		if (!VerifyDockables())
 			TRACE("Check failed after UndockContainer\n");
 
 		TRACE("UndockContainer ends ...\n");
@@ -2795,6 +2795,7 @@ namespace Win32xx
 					{
 						BOOL bResult = FALSE;
 						m_bIsDragging = TRUE;
+						SetCursor(LoadCursor(NULL, IDC_ARROW));
 
 						if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
 						{
@@ -2899,7 +2900,7 @@ namespace Win32xx
 				GetDockBar().Destroy();
 
 				// Post a destroy dockable message
-				GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0);
+				GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0L);
 			}
 			break;
 
@@ -3114,7 +3115,7 @@ namespace Win32xx
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-			GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		}
 
 		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
@@ -3218,7 +3219,7 @@ namespace Win32xx
 			pNewContainer->GetViewPage().GetView()->SetFocus();
 
 			// Adjust the docking caption
-			if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0, 0))
+			if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
 			{
 				CDockable* pDock = (CDockable*)FromHandle(::GetParent(GetParent()));
 				if (pDock)
@@ -3243,7 +3244,7 @@ namespace Win32xx
 		CRect rc = GetClientRect();
 		AdjustRect(FALSE, &rc);
 		int nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
-		SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, 20));
+		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, 20));
 	}
 
 	inline void CContainer::SetView(CWnd& Wnd)
@@ -3281,7 +3282,7 @@ namespace Win32xx
 				IsTracking = FALSE;
 				if (IsLeftButtonDown())
 				{
-					if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0, 0))
+					if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
 					{
 						CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
 
@@ -3349,7 +3350,7 @@ namespace Win32xx
 
 	inline void CContainer::CViewPage::RecalcLayout()
 	{
-		GetToolbar().SendMessage(TB_AUTOSIZE, 0, 0);
+		GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		CRect rc = GetClientRect();
 		CRect rcToolbar = m_Toolbar.GetClientRect();
 		rc.top += rcToolbar.Height();

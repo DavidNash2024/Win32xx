@@ -171,7 +171,7 @@ namespace Win32xx
 	{
 		// Disables the Cancel button and changes the text of the OK button to "Close."
 		if (m_hWnd)
-			::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0, 0);
+			::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0L, 0L);
 	}
 
 
@@ -379,7 +379,7 @@ namespace Win32xx
 		case PSN_WIZFINISH:
 			return !OnWizardFinish();
 		case PSN_HELP:
-			SendMessage(m_hWnd, WM_COMMAND, ID_HELP, 0);
+			SendMessage(m_hWnd, WM_COMMAND, ID_HELP, 0L);
 			return TRUE;
 
 		}
@@ -391,9 +391,9 @@ namespace Win32xx
 		if (m_hWnd != NULL)
 		{
 			if (bChanged)
-				::SendMessage(GetParent(), PSM_CHANGED, (WPARAM)m_hWnd, 0);
+				::SendMessage(GetParent(), PSM_CHANGED, (WPARAM)m_hWnd, 0L);
 			else
-				::SendMessage(GetParent(), PSM_UNCHANGED, (WPARAM)m_hWnd, 0);
+				::SendMessage(GetParent(), PSM_UNCHANGED, (WPARAM)m_hWnd, 0L);
 		}
 	}
 
@@ -731,7 +731,7 @@ namespace Win32xx
 		CPropertyPage* pPage = NULL;
 		if (m_hWnd != NULL)
 		{
-			HWND hPage = (HWND)::SendMessage(m_hWnd, PSM_GETCURRENTPAGEHWND, 0, 0);
+			HWND hPage = (HWND)::SendMessage(m_hWnd, PSM_GETCURRENTPAGEHWND, 0L, 0L);
 			pPage = (CPropertyPage*)FromHandle(hPage);
 		}
 
@@ -755,7 +755,7 @@ namespace Win32xx
 
 	inline HWND CPropertySheet::GetTabControl() const
 	{
-		return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0, 0);
+		return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0L, 0L);
 	}
 
 	inline BOOL CPropertySheet::IsModeless() const
@@ -806,7 +806,7 @@ namespace Win32xx
 	{
 		int nPage = GetPageIndex(pPage);
 		if (m_hWnd != NULL)
-			SendMessage(m_hWnd, PSM_REMOVEPAGE, nPage, 0);
+			SendMessage(m_hWnd, PSM_REMOVEPAGE, nPage, 0L);
 
 		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);
 		m_PSH.nPages = (int)m_vPages.size();
@@ -818,7 +818,7 @@ namespace Win32xx
 		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
 			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
 		{
-			if (SendMessage(PSM_ISDIALOGMESSAGE, 0, (LPARAM)pMsg))
+			if (SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
 				return TRUE;
 		}
 
@@ -843,7 +843,7 @@ namespace Win32xx
 	inline BOOL CPropertySheet::SetActivePage(int nPage)
 	{
 		if (m_hWnd != NULL)
-			return (BOOL)SendMessage(m_hWnd, PSM_SETCURSEL, nPage, 0);
+			return (BOOL)SendMessage(m_hWnd, PSM_SETCURSEL, nPage, 0L);
 
 		return FALSE;
 	}
