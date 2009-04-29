@@ -28,7 +28,9 @@ void CMainFrame::AddCombo()
 { 
 	// We'll be placing the ComboBoxEx control over the 'File Save' toolbar button
 	int nComboWidth = 120; 
-	CToolbar& TB = GetToolbar(); 
+	CToolbar& TB = GetToolbar();
+	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
+     
 	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);	// Convert the button to a seperator
 	TB.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
 	 
@@ -351,7 +353,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	return 0L;
 }
 
-void CMainFrame::SetupToolbars()
+void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the first toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

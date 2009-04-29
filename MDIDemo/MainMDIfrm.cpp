@@ -166,7 +166,7 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
 }
 
-void CMainMDIFrame::SetupToolbars()
+void CMainMDIFrame::SetupToolbar()
 {
 	// Define the resource IDs for the toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

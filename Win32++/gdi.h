@@ -75,8 +75,8 @@
 //  * Set the region's shape before selecting it into a DC.
 
 
-#ifndef GDI_H
-#define GDI_H
+#ifndef _GDI_H_
+#define _GDI_H_
 
 #include "wincore.h"
 
@@ -981,5 +981,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // GDI_H
+#endif // _GDI_H_
 

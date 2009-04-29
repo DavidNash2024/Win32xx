@@ -35,8 +35,8 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef STATUSBAR_H
-#define STATUSBAR_H
+#ifndef _STATUSBAR_H_
+#define _STATUSBAR_H_
 
 #include "wincore.h"
 
@@ -255,4 +255,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // #ifndef STATUSBAR_H
+#endif // #ifndef _STATUSBAR_H_

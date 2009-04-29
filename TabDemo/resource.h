@@ -21,6 +21,8 @@
 #define IDM_EDIT_COPY                   113
 #define IDM_EDIT_PASTE                  114
 #define IDM_EDIT_DELETE                 115
+#define IDM_TAB_TOP                     116
+#define IDM_TAB_BUTTONS                 117
 #define IDM_HELP_ABOUT                  120
 
 #define IDI_CLASSVIEW                   130

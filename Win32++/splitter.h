@@ -45,8 +45,8 @@
 // Refer to the Splitter sample for a demonstration of how to use CSplitter.
 
 
-#ifndef SPLITTER_H
-#define SPLITTER_H
+#ifndef _SPLITTER_H_
+#define _SPLITTER_H_
 
 #include "frame.h"
 
@@ -422,4 +422,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // SPLITTER_H
+#endif // _SPLITTER_H_

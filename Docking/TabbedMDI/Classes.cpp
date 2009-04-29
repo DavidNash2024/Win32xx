@@ -98,7 +98,8 @@ CContainClasses::CContainClasses()
 void CContainClasses::AddCombo()
 {
 	int nComboWidth = 120; 
-	CToolbar& TB = GetToolbar(); 
+	CToolbar& TB = GetToolbar();
+	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 	 
 	// Adjust button width and convert to separator   
 	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);

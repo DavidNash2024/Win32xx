@@ -35,8 +35,8 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef REBAR_H
-#define REBAR_H
+#ifndef _REBAR_H_
+#define _REBAR_H_
 
 #include "wincore.h"
 #include "gdi.h"
@@ -591,4 +591,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // #ifndef REBAR_H
+#endif // #ifndef _REBAR_H_

@@ -71,8 +71,8 @@
 
 
 
-#ifndef WINCORE_H
-#define WINCORE_H
+#ifndef _WINCORE_H_
+#define _WINCORE_H_
 
 
 // Remove pointless warning messages for MS compilers prior to VS 2008 
@@ -2391,5 +2391,5 @@ namespace Win32xx
 }; // namespace Win32xx
 
 
-#endif // WINCORE_H
+#endif // _WINCORE_H_
 

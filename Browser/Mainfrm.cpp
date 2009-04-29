@@ -312,7 +312,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	::SetWindowText(m_hWnd, str.str().c_str());
 }
 
-void CMainFrame::SetupToolbars()
+void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_BACK   );

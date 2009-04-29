@@ -62,8 +62,8 @@
 // create a MDI frame application with different types of MDI child windows.
 
 
-#ifndef MDI_H
-#define MDI_H
+#ifndef _MDI_H_
+#define _MDI_H_
 
 #include "frame.h"
 #include <vector>
@@ -115,6 +115,7 @@ namespace Win32xx
 		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
+		virtual void UpdateCheckMarks();
 
 		// These functions aren't virtual, so don't override them
 		std::vector <CMDIChild*>& GetAllMDIChildren() {return m_vMDIChild;}
@@ -279,10 +280,12 @@ namespace Win32xx
 		{
 		case IDW_VIEW_STATUSBAR:
 			OnViewStatusbar();
+			UpdateCheckMarks();
 			::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 			break;
 		case IDW_VIEW_TOOLBAR:
 			OnViewToolbar();
+			UpdateCheckMarks();
 			::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 			break;
 		case IDW_WINDOW_ARRANGE:
@@ -402,6 +405,20 @@ namespace Win32xx
 		// Verify
 		if (m_hActiveMDIChild != pChild->GetHwnd())
 			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Failed"));
+	}
+
+	inline void CMDIFrame::UpdateCheckMarks()
+	{
+		if ((GetActiveMDIChild()) && GetActiveMDIChild()->m_hChildMenu)
+		{
+			HMENU hMenu = GetActiveMDIChild()->m_hChildMenu;
+
+			UINT uCheck = GetToolbar().IsVisible()? MF_CHECKED : MF_UNCHECKED;
+			::CheckMenuItem(hMenu, IDW_VIEW_TOOLBAR, uCheck);
+
+			uCheck = GetStatusbar().IsVisible()? MF_CHECKED : MF_UNCHECKED;
+			::CheckMenuItem (hMenu, IDW_VIEW_STATUSBAR, uCheck);
+		}
 	}
 
 	inline void CMDIFrame::UpdateFrameMenu(HMENU hMenu)
@@ -664,5 +681,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // MDI_H
+#endif // _MDI_H_
 

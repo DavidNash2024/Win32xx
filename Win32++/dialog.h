@@ -61,8 +61,8 @@
 // the behaviour of common controls in a dialog.
 
 
-#ifndef DIALOG_H
-#define DIALOG_H
+#ifndef _DIALOG_H_
+#define _DIALOG_H_
 
 #include "wincore.h"
 
@@ -435,5 +435,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // DIALOG_H
+#endif // _DIALOG_H_
 

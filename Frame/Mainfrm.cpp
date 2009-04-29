@@ -132,7 +132,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	return 0L;
 }
 
-void CMainFrame::SetupToolbars()
+void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );

@@ -49,7 +49,7 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SetupToolbars();
+	virtual void SetupToolbar();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
 private:

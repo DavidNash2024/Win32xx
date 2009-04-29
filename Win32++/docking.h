@@ -39,8 +39,8 @@
 // docking.h
 //  Declaration of the CDockable class
 
-#ifndef DOCKING_H
-#define DOCKING_H
+#ifndef _DOCKING_H_
+#define _DOCKING_H_
 
 
 #include "wincore.h"
@@ -125,16 +125,16 @@ namespace Win32xx
 		CContainer();
 		virtual ~CContainer();
 		virtual void AddContainer(CContainer* pContainer);
-		virtual void AddToolbarButton(UINT nID);
+		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
 		virtual CContainer* GetContainerFromIndex(size_t iPage);
 		virtual CContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
-		virtual void SetupToolbars();
+		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
-		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
+		virtual void SetupToolbar();
 
 		// Attributes
 		CContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
@@ -148,10 +148,10 @@ namespace Win32xx
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		BOOL IsContainer() const		{ return TRUE; }
 		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
-		void SetView(CWnd& Wnd);
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
+		void SetView(CWnd& Wnd);
 
 	protected:
 		virtual void OnCreate();
@@ -200,6 +200,8 @@ namespace Win32xx
 	//  There is no theoretical limit to the number of CDockables within CDockables.
 	class CDockable : public CWnd
 	{
+		friend class CContainer;
+
 	protected:
 		//  A nested class for the splitter bar that seperates the docked panes.
 		class CDockBar : public CWnd
@@ -349,37 +351,21 @@ namespace Win32xx
 		virtual ~CDockable();
 		virtual CDockable* AddDockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, int nDockID = 0);
 		virtual CDockable* AddUndockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, RECT rc, int nDockID = 0);
-		virtual BOOL VerifyDockables();
-		virtual void CheckAllTargets(LPDRAGPOS pDragPos);
 		virtual void CloseAllDockables();
-		virtual void CloseAllTargets();
-		virtual void Dock(CDockable* hDockable, UINT uDockSide);
-		virtual void DockInContainer(CDockable* pDock, DWORD dwDockStyle);
-		virtual void DockOuter(CDockable* pDockable, DWORD dwDockStyle);
-		virtual void DrawHashBar(HWND hBar, POINT Pos);
 		virtual CDockable* GetDockFromPoint(POINT pt) const;
 		virtual CDockable* GetDockAncestor() const;
 		virtual CDockable* GetDockFromID(int n_DockID) const;
 		virtual CDockable* GetDockFromView(CWnd* pView) const;
 		virtual CDockable* GetDockTopLevel() const;
 		virtual int GetDockWidth() const;
-		virtual void OnCreate();
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual void MoveDockChildren(CDockable* pDockTarget);
 		virtual void RecalcDockLayout();
-		virtual void RecalcDockChildLayout(CRect rc);
-		virtual void SendNotify(UINT nMessageID);
-		virtual void Undock();
-		virtual void UndockContainer(CContainer* pContainer);
-		virtual void ConvertToChild(HWND hWndParent);
-		virtual void ConvertToPopup(RECT rc);
-		virtual void PromoteFirstChild();
+		virtual BOOL VerifyDockables();	
 
 		// Attributes
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_DockClient;}
 		virtual CDockHint& GetDockHint() const {return m_pDockAncestor->m_DockHint;}
-
+		
 		std::vector <CDockable*> & GetAllDockables() const {return GetDockAncestor()->m_vAllDockables;}
 		std::vector <CDockable*> & GetDockChildren() const {return (std::vector <CDockable*> &)m_vDockChildren;}
 		int GetBarWidth() const {return GetDockBar().GetWidth();}
@@ -402,11 +388,28 @@ namespace Win32xx
 		void SetView(CWnd& wndView);
 
 	protected:
+		virtual void OnCreate();
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);	
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		void CheckAllTargets(LPDRAGPOS pDragPos);
+		void CloseAllTargets();
+		void Dock(CDockable* hDockable, UINT uDockSide);
+		void DockInContainer(CDockable* pDock, DWORD dwDockStyle);
+		void DockOuter(CDockable* pDockable, DWORD dwDockStyle);
+		void DrawHashBar(HWND hBar, POINT Pos);
+		void ConvertToChild(HWND hWndParent);
+		void ConvertToPopup(RECT rc);
+		void MoveDockChildren(CDockable* pDockTarget);
+		void PromoteFirstChild();
+		void RecalcDockChildLayout(CRect rc);
+		void SendNotify(UINT nMessageID);
+		void Undock();
+		void UndockContainer(CContainer* pContainer);
+
 		CDockBar		m_DockBar;
 		CDockHint		m_DockHint;
 		CDockClient		m_DockClient;
@@ -2996,11 +2999,11 @@ namespace Win32xx
 		}
 	}
 
-	inline void CContainer::AddToolbarButton(UINT nID)
+	inline void CContainer::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE */)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		GetToolbar().AddToolbarButton(nID);
+		GetToolbar().AddToolbarButton(nID, bEnabled);
 	}
 
 	inline CContainer* CContainer::GetContainerFromIndex(size_t iPage)
@@ -3070,7 +3073,7 @@ namespace Win32xx
 		return Size;
 	}
 
-	inline void CContainer::SetupToolbars()
+	inline void CContainer::SetupToolbar()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s). 
 
@@ -3104,20 +3107,24 @@ namespace Win32xx
 		GetViewPage().Create(m_hWnd);
 
 		// Create the toolbar
-		SetupToolbars();
+		GetToolbar().Create(GetViewPage().GetHwnd());
+		DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
+		style |= CCS_NODIVIDER ;//| CCS_NORESIZE;
+		GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
+		SetupToolbar();
 		if (GetToolbar().GetToolbarData().size() > 0)
 		{
-			GetToolbar().Create(GetViewPage().GetHwnd());
-			DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
-			style |= CCS_NODIVIDER ;//| CCS_NORESIZE;
-			GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
-
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
+				GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+			
 			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		}
-
+		else
+			GetToolbar().Destroy();
+		
+		// Add tabs for each container.
 		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
 		{
 			// Add tabs for each view.
@@ -3402,5 +3409,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // DOCKING_H
+#endif // _DOCKING_H_
 

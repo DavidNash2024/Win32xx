@@ -37,8 +37,8 @@
 
 
 
-#ifndef TREEVIEW_H
-#define TREEVIEW_H
+#ifndef _TREEVIEW_H_
+#define _TREEVIEW_H_
 
 #include "wincore.h"
 #include "Commctrl.h"
@@ -536,5 +536,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // #ifndef TREEVIEW_H
+#endif // #ifndef _TREEVIEW_H_
 

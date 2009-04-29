@@ -64,8 +64,8 @@
 // http://support.microsoft.com/kb/182108/EN-US/
 
 
-#ifndef SOCKET_H
-#define SOCKET_H
+#ifndef _SOCKET_H_
+#define _SOCKET_H_
 
 
 
@@ -468,5 +468,5 @@ namespace Win32xx
 }
 
 
-#endif // #ifndef SOCKET_H
+#endif // #ifndef _SOCKET_H_
 

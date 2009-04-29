@@ -29,9 +29,21 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 
 	switch(LOWORD(wParam))
 	{
+	case IDM_FILE_NEW:
+		MessageBox("New", "", MB_OK);
+		return TRUE;
+	case IDM_FILE_CLOSE:
+		MessageBox("Close", "", MB_OK);
+		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		return TRUE;
+	case IDM_TAB_TOP:
+		OnTopTabs();
+		return TRUE;
+	case IDM_TAB_BUTTONS:
+		OnShowButtons();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -77,20 +89,47 @@ void CMainFrame::OnInitialUpdate()
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN|RDW_UPDATENOW);
 }
 
-void CMainFrame::SetupToolbars()
+void CMainFrame::OnShowButtons()
+{
+	BOOL bShow = m_View.GetShowButtons();
+	m_View.SetShowButtons(!bShow);
+	UINT uCheck = bShow? MF_UNCHECKED : MF_CHECKED;
+	::CheckMenuItem(GetFrameMenu(), IDM_TAB_BUTTONS, uCheck);
+	m_View.RedrawWindow();
+}
+
+void CMainFrame::OnTopTabs()
+{
+	DWORD dwStyle = m_View.GetWindowLongPtr(GWL_STYLE);
+	if (dwStyle & TCS_BOTTOM)
+		dwStyle &= ~TCS_BOTTOM;
+	else 
+		dwStyle |= TCS_BOTTOM;
+
+	m_View.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	
+	UINT uCheck = (dwStyle & TCS_BOTTOM)? MF_UNCHECKED : MF_CHECKED;
+	::CheckMenuItem(GetFrameMenu(), IDM_TAB_TOP, uCheck);
+	m_View.RecalcLayout();
+}
+
+void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	AddToolbarButton( IDM_FILE_NEW          );
+	AddToolbarButton( IDM_FILE_OPEN,  FALSE );
+	AddToolbarButton( IDM_FILE_SAVE,  FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_HELP_ABOUT        );
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

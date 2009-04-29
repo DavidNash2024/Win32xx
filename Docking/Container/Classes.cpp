@@ -84,7 +84,8 @@ CContainClasses::CContainClasses()
 void CContainClasses::AddCombo()
 {
 	int nComboWidth = 120; 
-	CToolbar& TB = GetToolbar(); 
+	CToolbar& TB = GetToolbar();
+ 	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;  
 	 
 	// Adjust button width and convert to separator   
 	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
@@ -104,15 +105,15 @@ void CContainClasses::AddCombo()
 	m_ComboBoxEx.AddItems();
 }
 
-void CContainClasses::SetupToolbars()
+void CContainClasses::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_OPEN , FALSE );
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_FILE_SAVE  );
 	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
+	AddToolbarButton( IDM_EDIT_CUT, FALSE   );
 	AddToolbarButton( IDM_EDIT_COPY  );
 	AddToolbarButton( IDM_EDIT_PASTE );
 	AddToolbarButton( 0 );				// Separator

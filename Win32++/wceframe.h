@@ -50,8 +50,8 @@
 // can be used.
 
 
-#ifndef WCEFRAME_H
-#define WCEFRAME_H
+#ifndef _WCEFRAME_H_
+#define _WCEFRAME_H_
 
 
 #include "wincore.h"
@@ -412,4 +412,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WCEFRAME_H
+#endif // _WCEFRAME_H_
+

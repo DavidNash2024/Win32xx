@@ -39,8 +39,8 @@
 // tab.h
 //  Declaration of the CTab and CMDITab classes
 
-#ifndef TAB_H
-#define TAB_H
+#ifndef _TAB_H_
+#define _TAB_H_
 
 #include "wincore.h"
 #include "dialog.h"
@@ -86,12 +86,14 @@ namespace Win32xx
 		virtual int  GetTabIndex(CWnd* pWnd);
 		virtual TabPageInfo GetTabPageInfo(UINT nTab);
 		virtual void SelectPage(int iPage);
+		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
 		virtual void ShowListMenu();
 		virtual void ShowListDialog();
 
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
+		BOOL GetShowButtons() const { return m_bShowButtons; }
 		int GetTabHeight() const { return m_nTabHeight; }
 		CWnd* GetView() const		{ return m_pView; }
 		void SetShowButtons(BOOL bShow)	{ m_bShowButtons = bShow; }
@@ -664,6 +666,20 @@ namespace Win32xx
 		cs.lpszClass = WC_TABCONTROL;
 	}
 
+	inline void CTab::RecalcLayout()
+	{
+		if (GetView())
+			{
+				// Set the tab sizes
+				SetTabSize();
+
+				// Position the View over the tab control's display area
+				CRect rc = GetClientRect();
+				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
+				GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			}
+	}
+
 	inline void CTab::RemoveTabPage(int iPage)
 	{
 		if ((iPage < 0) || (iPage > GetItemCount()-1))
@@ -857,19 +873,8 @@ namespace Win32xx
 			break;
 		case WM_LBUTTONUP:
 			break;
-		case WM_SIZE:
-			{
-				if (GetView())
-				{
-					// Set the tab sizes
-					SetTabSize();
-
-					// Position the View over the tab control's display area
-					CRect rc = GetClientRect();
-					TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
-					GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-				}
-			}
+		case WM_WINDOWPOSCHANGED:
+			RecalcLayout();
 			return 0;
 		}
 
@@ -1084,4 +1089,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif
+#endif  // _TAB_H_

@@ -50,8 +50,8 @@
 // can be used.
 
 
-#ifndef PROPERTYSHEET_H
-#define PROPERTYSHEET_H
+#ifndef _PROPERTYSHEET_H_
+#define _PROPERTYSHEET_H_
 
 #include "dialog.h"
 
@@ -910,4 +910,4 @@ namespace Win32xx
 
 }
 
-#endif // PROPERTYSHEET_H
+#endif // _PROPERTYSHEET_H_

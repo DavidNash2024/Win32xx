@@ -22,23 +22,14 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "New...",                      IDM_FILE_NEW
-        MENUITEM "&Open...",                    IDM_FILE_OPEN
-        MENUITEM "&Save",                       IDM_FILE_SAVE
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
-        MENUITEM SEPARATOR
-        MENUITEM "&Print",                      IDM_FILE_PRINT, GRAYED
+        MENUITEM "Close",                       IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-    POPUP "&Edit"
+    POPUP "&Options"
     BEGIN
-        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
-        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
-        MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
-        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
-        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
-        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
+        MENUITEM "Tabs on Top",                 IDM_TAB_TOP, CHECKED
+        MENUITEM "Show Buttons",                IDM_TAB_BUTTONS, CHECKED
     END
     POPUP "&View"
     BEGIN
@@ -131,6 +122,7 @@ BEGIN
     IDM_FILE_SAVE           "Save the Document"
     IDM_FILE_SAVEAS         "Save the Document with a new name"
     IDM_FILE_PRINT          "Print the Document"
+    IDM_FILE_CLOSE          "Close the Active Document"
     IDM_FILE_EXIT           "End the Program"
     IDM_EDIT_UNDO           "Undo the last action"
     IDM_EDIT_REDO           "Redo the previously undone action"
@@ -143,6 +135,12 @@ BEGIN
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
     IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_TAB_TOP             "Place tabs at the top of the control"
+    IDM_TAB_BUTTONS         "Show the list and close buttons"
 END
 
 STRINGTABLE
@@ -165,8 +163,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END

@@ -68,8 +68,8 @@
 // classes to create a frame application.
 
 
-#ifndef FRAME_H
-#define FRAME_H
+#ifndef _FRAME_H_
+#define _FRAME_H_
 
 #include "wincore.h"
 #include "dialog.h"
@@ -188,7 +188,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
-		virtual void AddToolbarButton(UINT nID);
+		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
@@ -201,10 +201,9 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void SetTheme();
-		virtual void SetupToolbars();
+		virtual void SetupToolbar();
 		virtual void SetToolbarImages(CToolbar& TB, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
-		virtual void UpdateCheckMarks();
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the menubar, rebar, 
@@ -1557,11 +1556,13 @@ namespace Win32xx
 		GetRebar().InsertBand(-1, rbbi);
 	}
 
-	inline void CFrame::AddToolbarButton(UINT nID)
+	inline void CFrame::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE*/)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		GetToolbar().AddToolbarButton(nID);
+		GetToolbar().AddToolbarButton(nID, bEnabled);
+
+		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolbar")); 
 	}
 
 	inline void CFrame::AdjustFrameRect(RECT rcView) const
@@ -2411,11 +2412,15 @@ namespace Win32xx
 	inline void CFrame::OnViewStatusbar()
 	{
 		if (::IsWindowVisible(GetStatusbar()))
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 			::ShowWindow(GetStatusbar(), SW_HIDE);
+		}
 		else
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
 			::ShowWindow(GetStatusbar(), SW_SHOW);
-
-		UpdateCheckMarks();
+		}
 
 		// Reposition the Windows
 		RecalcLayout();
@@ -2426,6 +2431,7 @@ namespace Win32xx
 	{
 		if (::IsWindowVisible(GetToolbar()))
 		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 			if (IsRebarUsed())
 				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
 			else
@@ -2433,13 +2439,12 @@ namespace Win32xx
 		}
 		else
 		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
 			if (IsRebarUsed())
 				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
 			else
 				::ShowWindow(GetToolbar(), SW_SHOW);
 		}
-
-		UpdateCheckMarks();
 
 		// Reposition the Windows
 		RecalcLayout();
@@ -2832,7 +2837,7 @@ namespace Win32xx
 				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
 	}
 
-	inline void CFrame::SetupToolbars()
+	inline void CFrame::SetupToolbar()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s). 
 
@@ -2875,55 +2880,22 @@ namespace Win32xx
 		else	
 			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
 			
-		SetupToolbars();
+		SetupToolbar();
 		
 		if (GetToolbar().GetToolbarData().size() > 0)
 		{
-			// Set the toolbar images (if not already set in SetupToolbars)
+			// Set the toolbar images (if not already set in SetupToolbar)
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
 				SetToolbarImages(GetToolbar(), RGB(192,192,192), IDW_MAIN, 0, 0);
 
-			// Set the icons for popup menu items (if not already set in SetupToolbars)
+			// Set the icons for popup menu items (if not already set in SetupToolbar)
 			if (!m_himlMenu)
 				SetMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
 		}
 		else
 		{
 			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
-		}
-	}
-
-	inline void CFrame::UpdateCheckMarks()
-	{
-		if (::IsWindowVisible(GetToolbar()))
-		// Show toolbar check mark
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
-			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_CHECKED);
-		}
-		else
-		// Hide toolbar check mark
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-		}
-
-		if (::IsWindowVisible(GetStatusbar()))
-		// Show status bar check mark
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
-			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_CHECKED);
-		}
-		else
-		// Hide status bar check mark
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-			if (IsMenubarUsed())
-				::CheckMenuItem(GetMenubar().GetMenu(), IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 		}
 	}
 
@@ -3128,4 +3100,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // FRAME_H
+#endif // _FRAME_H_

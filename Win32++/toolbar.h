@@ -35,8 +35,8 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef TOOLBAR_H
-#define TOOLBAR_H
+#ifndef _TOOLBAR_H_
+#define _TOOLBAR_H_
 
 #include "wincore.h"
 #include "gdi.h"
@@ -67,7 +67,7 @@ namespace Win32xx
 		virtual ~CToolbar();
 
 	// Attributes
-		void AddToolbarButton(UINT nID);
+		void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
 		virtual void Destroy();
 		int  CommandToIndex(int iButtonID) const;
 		int  GetButtonCount() const;
@@ -80,7 +80,7 @@ namespace Win32xx
 		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
 		BOOL HasText() const;
 		int  HitTest() const;
-		void SetBitmap(int iNumButtons, UINT nID);
+		void SetBitmap(UINT nID);
 		void SetBitmapSize(int cx, int cy) const;
 		int  SetButtons(const std::vector<UINT>& vToolbarData) const;
 		void SetButtonSize(int cx, int cy) const;
@@ -93,10 +93,10 @@ namespace Win32xx
 		void SetToolbarTheme(ThemeToolbar& Theme);
 
 	// Operations
-		void AddBitmap(int iNumButtons, UINT ToolbarID);
+		void AddBitmap(UINT ToolbarID);
 		void DisableButton(int iButtonID) const;
 		void EnableButton(int iButtonID) const;
-		void ReplaceBitmap(int iNumButtons, UINT NewToolbarID);
+		void ReplaceBitmap(UINT NewToolbarID);
 
 	protected:
 	// Overridables
@@ -128,12 +128,16 @@ namespace Win32xx
 	{
 	}
 
-	inline void CToolbar::AddBitmap(int iNumButtons, UINT ToolbarID)
+	inline void CToolbar::AddBitmap(UINT ToolbarID)
 	// Adds one or more images to the list of button images available for a toolbar.
 
 	// Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
 	{
+		int iNumButtons = 0;
+		std::vector<UINT>::iterator iter;
+		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)
+			if ((*iter) != 0) ++iNumButtons;
 
 		TBADDBITMAP tbab = {0};
 		tbab.hInst = GetApp()->GetResourceHandle();
@@ -144,7 +148,7 @@ namespace Win32xx
 		m_OldToolbarID = ToolbarID;
 	}
 
-	inline void CToolbar::AddToolbarButton(UINT nID)
+	inline void CToolbar::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE */)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
@@ -171,7 +175,7 @@ namespace Win32xx
 				tbb.dwData  = iImages -1;
 				tbb.iBitmap = iImages -1;
 				tbb.idCommand = nID;
-				tbb.fsState = TBSTATE_ENABLED;
+				tbb.fsState = bEnabled? TBSTATE_ENABLED : TBSTATE_INDETERMINATE;
 				tbb.fsStyle = TBSTYLE_BUTTON;
 			}
 
@@ -592,12 +596,17 @@ namespace Win32xx
 		cs.lpszClass = TOOLBARCLASSNAME;
 	}
 
-	inline void CToolbar::ReplaceBitmap(int iNumButtons, UINT NewToolbarID)
+	inline void CToolbar::ReplaceBitmap(UINT NewToolbarID)
 	// Replaces an existing bitmap with a new bitmap.
 
 	// Note: ReplaceBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
 	{
+		int iNumButtons = 0;
+		std::vector<UINT>::iterator iter;
+		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)
+			if ((*iter) != 0) ++iNumButtons;
+
 		TBREPLACEBITMAP tbrb = {0};
 		tbrb.hInstNew = GetApp()->GetResourceHandle();
 		tbrb.hInstOld = GetApp()->GetResourceHandle();
@@ -610,7 +619,7 @@ namespace Win32xx
 		m_OldToolbarID = NewToolbarID;
 	}
 
-	inline void CToolbar::SetBitmap(int iNumButtons, UINT nID)
+	inline void CToolbar::SetBitmap(UINT nID)
 	{
 		// Set the button images
 		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID));
@@ -622,6 +631,11 @@ namespace Win32xx
 		if (!::GetObject(hbm, sizeof(BITMAP), &bm))
 			throw CWinException(_T("CToolbar::SetBitmap ... GetObject failed "));
 
+		int iNumButtons = 0;
+		std::vector<UINT>::iterator iter;
+		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)
+			if ((*iter) != 0) ++iNumButtons;
+		
 		int iImageWidth  = bm.bmWidth / iNumButtons;
 		int iImageHeight = bm.bmHeight;
 
@@ -629,9 +643,9 @@ namespace Win32xx
 		SetBitmapSize(iImageWidth, iImageHeight);
 
 		if (m_OldToolbarID)
-			ReplaceBitmap(iNumButtons, nID);
+			ReplaceBitmap(nID);
 		else
-			AddBitmap(iNumButtons, nID);
+			AddBitmap(nID);
 	}
 
 	inline void CToolbar::SetBitmapSize(int cx, int cy) const
@@ -859,7 +873,7 @@ namespace Win32xx
 			{
 				// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
 				// Instead we simply set the bitmap.
-				SetBitmap(iNumButtons, ToolbarID);
+				SetBitmap(ToolbarID);
 				return;
 			}
 
@@ -1007,4 +1021,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // #ifndef TOOLBAR_H
+#endif // #ifndef _TOOLBAR_H_

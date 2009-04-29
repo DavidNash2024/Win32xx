@@ -115,7 +115,7 @@ void CMainMDIFrame::OnCreate()
 	CMDIFrame::OnCreate();
 }
 
-void CMainMDIFrame::SetupToolbars()
+void CMainMDIFrame::SetupToolbar()
 {
 	// Define the resource IDs for the toolbar
 	AddToolbarButton( IDM_FILE_NEW   );

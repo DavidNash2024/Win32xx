@@ -21,12 +21,23 @@ Major Changes
       including those that are undocked.
    - Containers can display their tabs at the top or bottom of the window.
    - Containes can also display a tab list button.
-   - The close a list buttons now indicate mouse hover and button pressed state.
-   - The container tabs are gold tipped to indicate selected and hot tabs.
-   - Dockable and container objects are destroyed when their window is closed. 
+   - Dockable and container objects are destroyed when their window is closed.
+   - CContainer::SetupToolbar can be used to specify the toolbar's resource IDs.    
 * Improvements to toolbars
-   The configuration of toolbars, particularly multiple toolbars has been 
-   simplified.   ???More on this???
+   - Resource IDs should be specified in SetupToolbar, rather than CMainFrame's
+      constructor.
+   - Other configurations for the toolbar such as disabled buttons and alternate
+      bitmaps should be specified in SetupToolbar, rather than in OnCreate.
+   - Configuration of additional toolbars if any should also be done in
+      SetupToolbar.  Refer to the Themes sample for a demonstration of this.
+   - CToolbar now holds the vector of Resource IDs, which can be retrieved
+      with the GetToolbarData function. There is no need to specify a vector
+      when adding additional toolbars.
+   - There is now no need to specify the number of toolbar buttons in the
+      AddBitmap, ReplaceBitmap, SetBitmap and SetImages functions.
+   - The AddToolbarButton can now add a toolbar button which is initially
+      disabled.
+   - There is no need to call SetButtons when adding additional toolbars.      
 * MIN and MAX macros have been defined and can be used in place of min and max.
    This avoids incompatibilities between the way different compliers support
    these macros. It also avoids clashes between the macro definitions of 
@@ -36,7 +47,19 @@ All Changes
 -----------
 Added CTab class
 Added CTabbedMDI class
-........          
+Added TabDemo sample
+Added Docking TabbedMDI sample
+Added CFrame::SetupToolbar
+Added CFrame::m_bUseToolbar
+Added CContainer::SetupToolbar
+Added CDockable::GetDockTopLevel
+Added CDockable::IsRelated
+Added CToolbar::GetToolbarData
+Changed CToolbar::SetImages
+Changed CToolbar::SetBitmap
+Changed CToolbar::AddBitmap
+Changed CToolbar::ReplaceBitmap
+Renamed CDockable::CheckDockables to CDockable::VerifyDockables
    
 
 Version 6.4.1
