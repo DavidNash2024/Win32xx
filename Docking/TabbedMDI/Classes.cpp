@@ -75,20 +75,6 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 // CContainClasses functions
 CContainClasses::CContainClasses() 
 {
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
 	SetTabText(_T("ClassView"));
 	SetTabIcon(IDI_CLASSVIEW);
 	SetDockCaption (_T("Class View - Docking container"));
@@ -146,6 +132,27 @@ void CContainClasses::OnCreate()
 	
 	// Add the ComboBarEx control to the toolbar
 	AddCombo();
+}
+
+void CContainClasses::SetupToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW         );
+	AddToolbarButton( IDM_FILE_OPEN, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_SAVE, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT         );
+	AddToolbarButton( IDM_EDIT_COPY        );
+	AddToolbarButton( IDM_EDIT_PASTE       );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_HELP_ABOUT       );
 }
 
 

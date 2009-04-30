@@ -55,6 +55,7 @@ Added CContainer::SetupToolbar
 Added CDockable::GetDockTopLevel
 Added CDockable::IsRelated
 Added CToolbar::GetToolbarData
+Added CWnd::GetClassString
 Changed CToolbar::SetImages
 Changed CToolbar::SetBitmap
 Changed CToolbar::AddBitmap

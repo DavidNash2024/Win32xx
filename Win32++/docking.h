@@ -60,11 +60,11 @@
 #define DS_NO_DOCKCHILD_TOP		0x0040  // Prevent a child docking at the top
 #define DS_NO_DOCKCHILD_BOTTOM	0x0080  // Prevent a child docking at the bottom
 #define DS_NO_RESIZE			0x0100  // Prevent resizing
-#define DS_NO_AUTO_RESIZE		0x0200	// Not Implemented yet
+#define DS_NO_AUTO_RESIZE		0x0200	// Reserved for future use
 #define DS_NO_CAPTION			0x0400  // No caption when docked
 #define DS_NO_UNDOCK			0x0800  // Prevent Undocking
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
-#define DS_FLATLOOK				0x2000	// Not Implemented yet
+#define DS_FLATLOOK				0x2000	// Reserved for future use
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
 #define DS_DOCKED_LEFTMOST      0x10000 // Leftmost outer docking
 #define DS_DOCKED_RIGHTMOST     0x20000 // Rightmost outer docking
@@ -2787,7 +2787,7 @@ namespace Win32xx
 					SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 				}
 			}
-			break; 
+			break;  
 
 		case WM_SYSCOMMAND:
 			{
@@ -2904,7 +2904,7 @@ namespace Win32xx
 
 				// Post a destroy dockable message
 				GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0L);
-			}
+			} 
 			break;
 
 		case WM_SETFOCUS:

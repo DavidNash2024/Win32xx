@@ -596,8 +596,9 @@ namespace Win32xx
 			TRACE(_T("*** ERROR: An Exception occured ***\n"));
 			TRACE(buf3);
 			TRACE(_T("\n\n"));
-
-			::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		
+		//	::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+			DebugErrMsg(buf3);
 		}
 
 	private:
@@ -644,6 +645,7 @@ namespace Win32xx
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
 		static CWnd* FromHandle(HWND hWnd);
 		HWND GetAncestor() const;
+		tString GetClassString() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		CRect GetClientRect() const;
 		HDC  GetDC() const;
@@ -1410,6 +1412,17 @@ namespace Win32xx
 		}
 
 		return hWnd;
+	}
+
+	inline tString CWnd::GetClassString() const
+	// Retrieves the name of the class to which the specified window belongs
+	{	
+		TCHAR szString[MAX_STRING_SIZE +1];
+		tString tstr;
+		::GetClassName(m_hWnd, szString, MAX_STRING_SIZE);
+		tstr = szString;
+
+		return tstr;
 	}
 
 	inline ULONG_PTR CWnd::GetClassLongPtr(int nIndex) const

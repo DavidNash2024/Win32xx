@@ -875,7 +875,7 @@ namespace Win32xx
 			break;
 		case WM_WINDOWPOSCHANGED:
 			RecalcLayout();
-			return 0;
+			break;
 		}
 
 		// pass unhandled messages on for default processing
