@@ -131,6 +131,7 @@ namespace Win32xx
 		virtual int GetContainerIndex(CContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
 		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
+		virtual void RecalcLayout();
 		virtual void RemoveContainer(CContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
@@ -3159,6 +3160,21 @@ namespace Win32xx
 		cs.lpszClass = WC_TABCONTROL;
 	}
 
+	inline void CContainer::RecalcLayout()
+	{
+		if ((int)m_vContainerInfo.size() > m_iCurrentPage)
+		{
+			// Set the tab sizes
+			SetTabSize();
+
+			// Position the View over the tab control's display area
+			CRect rc = GetClientRect();
+			AdjustRect(FALSE, &rc);
+			CContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
+			pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+		}
+	}
+
 	inline void CContainer::RemoveContainer(CContainer* pWnd)
 	{
 		if (this == pWnd)
@@ -3269,7 +3285,7 @@ namespace Win32xx
 			return TRUE;
 
 		case WM_SIZE:
-			{
+		/*	{
 				if ((int)m_vContainerInfo.size() > m_iCurrentPage)
 				{
 					// Set the tab sizes
@@ -3280,8 +3296,9 @@ namespace Win32xx
 					AdjustRect(FALSE, &rc);
 					CContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 					pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-				}
-			}
+				} 
+			}*/
+			RecalcLayout();
 			return 0;
 
 		case WM_MOUSELEAVE:

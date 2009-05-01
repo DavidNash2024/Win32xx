@@ -30,17 +30,23 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		MessageBox("New", "", MB_OK);
+		OnFileNew();
 		return TRUE;
 	case IDM_FILE_CLOSE:
-		MessageBox("Close", "", MB_OK);
+		OnFileClose();
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
+	case IDM_NEW_FILES:
+		m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+		return TRUE;
+	case IDM_NEW_CLASSES:
+		m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+		return TRUE;
 	case IDM_TAB_TOP:
-		OnTopTabs();
+		OnTabsAtTop();
 		return TRUE;
 	case IDM_TAB_BUTTONS:
 		OnShowButtons();
@@ -52,6 +58,38 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	}
 
 	return FALSE;
+}
+
+void CMainFrame::OnFileClose()
+{
+	int iTab = m_View.GetCurSel();
+
+	if (iTab >= 0)
+		m_View.RemoveTabPage(iTab);
+}
+
+void CMainFrame::OnFileNew()
+{
+	// Creates the popup menu when the "New" toolbar button is pressed
+
+	// Position the popup menu
+	CToolbar& TB = GetToolbar();
+	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
+	::MapWindowPoints(GetToolbar(), NULL, (LPPOINT)&rc, 2);
+
+	TPMPARAMS tpm;
+	tpm.cbSize = sizeof(TPMPARAMS);
+	tpm.rcExclude = rc;
+
+	// Load the popup menu
+	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_NEWMENU));
+	HMENU hPopupMenu = ::GetSubMenu(hTopMenu, 0);
+
+	// Start the popup menu
+	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
+
+	// Release the menu resource
+	::DestroyMenu(hTopMenu);
 }
 
 void CMainFrame::OnCreate()
@@ -73,20 +111,16 @@ void CMainFrame::OnCreate()
 }
 
 void CMainFrame::OnInitialUpdate()
-{
-	// Stop window painting
-	SetRedraw(FALSE);
-	
+{	
 	// Add some tabs to the tab control
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 	m_View.SelectPage(0);
-	
-	// Repaint the window
-	SetRedraw(TRUE);
-	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN|RDW_UPDATENOW);
+
+	// PreCreate initially set the window as invisible, so show it now.
+	ShowWindow();
 }
 
 void CMainFrame::OnShowButtons()
@@ -98,19 +132,22 @@ void CMainFrame::OnShowButtons()
 	m_View.RedrawWindow();
 }
 
-void CMainFrame::OnTopTabs()
+void CMainFrame::OnTabsAtTop()
 {
-	DWORD dwStyle = m_View.GetWindowLongPtr(GWL_STYLE);
-	if (dwStyle & TCS_BOTTOM)
-		dwStyle &= ~TCS_BOTTOM;
-	else 
-		dwStyle |= TCS_BOTTOM;
-
-	m_View.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	BOOL bTop = m_View.GetTabsAtTop();
+	m_View.SetTabsAtTop(!bTop);
 	
-	UINT uCheck = (dwStyle & TCS_BOTTOM)? MF_UNCHECKED : MF_CHECKED;
+	UINT uCheck = (bTop)? MF_UNCHECKED : MF_CHECKED;
 	::CheckMenuItem(GetFrameMenu(), IDM_TAB_TOP, uCheck);
-	m_View.RecalcLayout();
+}
+
+void CMainFrame::PreCreate(CREATESTRUCT &cs)
+{
+	// Call the base class function first
+	CFrame::PreCreate(cs);
+	
+	// Hide the window initially by removing the WS_VISIBLE style
+	cs.style &= ~WS_VISIBLE;
 }
 
 void CMainFrame::SetupToolbar()
@@ -130,6 +167,10 @@ void CMainFrame::SetupToolbar()
 	
 	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT        );
+
+	// Add some extra icons for menu items
+	AddMenuIcon(IDM_NEW_FILES, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW)));
+	AddMenuIcon(IDM_NEW_CLASSES, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW)));
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

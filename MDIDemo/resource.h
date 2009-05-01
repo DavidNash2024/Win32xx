@@ -27,6 +27,8 @@
 #define IDI_RECT                        122
 #define IDI_MAX                         123
 #define IDI_TEXT                        124
+#define IDI_FILES                       125
+#define IDI_CLASSES                     126
 
 // Menu Resources
 #define IDM_NEWMENU                     130

@@ -220,9 +220,9 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
+        MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -252,9 +252,9 @@ BEGIN
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Maxed",                  IDM_FILE_NEWMAX
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
+        MENUITEM "&Close",                      IDM_FILE_CLOSE      
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -266,13 +266,13 @@ BEGIN
         MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -288,6 +288,8 @@ IDI_VIEW                ICON                    "res/view.ico"
 IDI_RECT                ICON                    "res/rect.ico"
 IDI_MAX                 ICON                    "res/max.ico"
 IDI_TEXT                ICON                    "res/text.ico"
+IDI_FILES               ICON                    "res/fileview.ico"
+IDI_CLASSES             ICON                    "res/classview.ico" 
 
 /////////////////////////////////////////////////////////////////////////////
 //

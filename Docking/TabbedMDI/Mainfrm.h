@@ -43,7 +43,9 @@ public:
 	virtual ~CMainFrame();
 	void AddDocked(DockInfo di, CDockable* pDock);
 	void AddUndocked(DockInfo di);
-	void DoPopupMenu();
+	void OnFileNew();
+	void OnContainerTabsAtTop();
+	void OnMDITabsAtTop();
 	void LoadDefaultDockables();
 	void LoadDefaultMDITabs();
 	void SaveDockables();
@@ -58,7 +60,7 @@ protected:
 	virtual void SetupToolbar();
 
 private:
-	CDockTabbedMDI m_DockView;
+	CDockTabbedMDI m_TabbedMDIView;
 
 };
 

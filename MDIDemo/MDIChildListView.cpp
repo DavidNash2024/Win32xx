@@ -113,7 +113,7 @@ void CMDIChildListView::OnCreate()
 void CMDIChildListView::OnInitialUpdate()
 {
 	::SetWindowText(m_hWnd, _T("List-View Window"));
-//	SetIconLarge(IDI_TEXT);
-//	SetIconSmall(IDI_TEXT);
+	SetIconLarge(IDI_FILES);
+	SetIconSmall(IDI_FILES);
 }
 

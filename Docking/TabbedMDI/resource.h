@@ -34,15 +34,14 @@
 #define IDI_TEXT                        137
 
 // Menu Resource
-#define IDM_DOCK_DEFAULT                140
-#define IDM_DOCK_CLOSEALL               141
-
-#define IDM_NEWMENU                     142
-#define IDM_FILE_NEWSIMPLE              143
-#define IDM_FILE_NEWRECT                144
-#define IDM_FILE_NEWTEXT                145
-#define IDM_FILE_NEWTREE                146
-#define IDM_FILE_NEWLIST                147
-
-
+#define IDM_NEWMENU                     140
+#define IDM_FILE_NEWSIMPLE              141
+#define IDM_FILE_NEWRECT                142
+#define IDM_FILE_NEWTEXT                143
+#define IDM_FILE_NEWTREE                144
+#define IDM_FILE_NEWLIST                145
+#define IDM_CONTAINER_TOP               146
+#define IDM_TABBEDMDI_TOP               147
+#define IDM_DOCK_DEFAULT                148
+#define IDM_DOCK_CLOSEALL               149
 

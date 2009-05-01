@@ -88,7 +88,7 @@ void CMDIChildTreeView::OnCreate()
 void CMDIChildTreeView::OnInitialUpdate()
 {
 	::SetWindowText(m_hWnd, _T("Tree-View Window"));
-//	SetIconLarge(IDI_TEXT);
-//	SetIconSmall(IDI_TEXT);
+	SetIconLarge(IDI_CLASSES);
+	SetIconSmall(IDI_CLASSES);
 }
 

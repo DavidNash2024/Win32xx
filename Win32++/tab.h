@@ -83,11 +83,13 @@ namespace Win32xx
 		virtual ~CTab();
 		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
 		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
+		virtual BOOL GetTabsAtTop();
 		virtual int  GetTabIndex(CWnd* pWnd);
 		virtual TabPageInfo GetTabPageInfo(UINT nTab);
 		virtual void SelectPage(int iPage);
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
+		virtual void SetTabsAtTop(BOOL bTop);
 		virtual void ShowListMenu();
 		virtual void ShowListDialog();
 
@@ -155,6 +157,7 @@ namespace Win32xx
 		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText);
 		virtual void CloseActiveMDI();
 		virtual CWnd* GetActiveMDIChild();
+		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual void RecalcLayout();
 		virtual void SetActiveMDIChild(CWnd* pWnd);
 		virtual void SetActiveTab(int iTab);
@@ -530,6 +533,13 @@ namespace Win32xx
 		return Size;
 	}
 
+	inline BOOL CTab::GetTabsAtTop()
+	// Returns TRUE if the contol's tabs are placed at the top
+	{
+		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		return (!(dwStyle & TCS_BOTTOM));
+	}
+
 	inline int CTab::GetTabIndex(CWnd* pWnd)
 	{
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
@@ -632,15 +642,17 @@ namespace Win32xx
 		{
 			m_rcClose = GetClientRect();
 			m_rcClose.left = m_rcClose.right - 16;
-			m_rcClose.top = 2;
+			
+			if (GetTabsAtTop())	
+				m_rcClose.top = 2;
+			else
+				m_rcClose.top = MAX(2, m_rcClose.bottom - m_nTabHeight);
+
 			m_rcClose.bottom = m_rcClose.top + 16;
 
 			m_rcList = m_rcClose;
 			m_rcList.OffsetRect(-20, 0);
 
-		//	HRGN hrgnClip3 = ::CreateRectRgn(m_rcClose.left, m_rcClose.top, m_rcClose.right, m_rcClose.bottom);
-		//	CombineRgn(hrgnClip, hrgnClip, hrgnClip3, RGN_OR);
-		//	::DeleteObject(hrgnClip3);
 			DrawCloseButton(dcMem, 0);
 			DrawListButton(dcMem, 0);
 		}  
@@ -669,15 +681,15 @@ namespace Win32xx
 	inline void CTab::RecalcLayout()
 	{
 		if (GetView())
-			{
-				// Set the tab sizes
-				SetTabSize();
+		{
+			// Set the tab sizes
+			SetTabSize();
 
-				// Position the View over the tab control's display area
-				CRect rc = GetClientRect();
-				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
-				GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-			}
+			// Position the View over the tab control's display area
+			CRect rc = GetClientRect();
+			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);						
+			GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+		}
 	}
 
 	inline void CTab::RemoveTabPage(int iPage)
@@ -725,6 +737,20 @@ namespace Win32xx
 
 			GetView()->SetFocus();
 		}
+	}
+
+	inline void CTab::SetTabsAtTop(BOOL bTop)
+	// Positions the tabs at the top or botttom of the control
+	{
+		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+
+		if (bTop) 
+			dwStyle &= ~TCS_BOTTOM;
+		else 
+			dwStyle |= TCS_BOTTOM;
+
+		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		RecalcLayout();
 	}
 
 	inline void CTab::SetTabSize()
@@ -781,15 +807,15 @@ namespace Win32xx
 		if (iSelected < 9) 
 			CheckMenuItem(hMenu, iSelected, MF_BYPOSITION|MF_CHECKED);
 
-		CPoint pt(GetListRect().left, GetTabHeight());
+		CPoint pt(GetListRect().left, GetListRect().top + GetTabHeight());
 		MapWindowPoints(m_hWnd, NULL, &pt, 1);
 
 		// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
 		HWND MenuHwnd = GetAncestor();
 
 		int iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
-		if ((iPage >= 0) && (iPage < 10)) SelectPage(iPage);
-		if (iPage == 10) ShowListDialog();
+		if ((iPage >= 0) && (iPage < 9)) SelectPage(iPage);
+		if (iPage == 9) ShowListDialog();
 
 		::DestroyMenu(hMenu);
 	}

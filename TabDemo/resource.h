@@ -25,6 +25,10 @@
 #define IDM_TAB_BUTTONS                 117
 #define IDM_HELP_ABOUT                  120
 
+#define IDM_NEWMENU                     121
+#define IDM_NEW_FILES                   122
+#define IDM_NEW_CLASSES                 123
+
 #define IDI_CLASSVIEW                   130
 #define IDI_FILEVIEW                    131
 #define IDB_CLASSVIEW                   132
