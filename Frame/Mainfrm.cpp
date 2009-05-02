@@ -46,6 +46,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
 		OnHelp();
@@ -120,7 +126,7 @@ void CMainFrame::OnFilePrint()
 	// Add your own code here. Refer to the tutorial for additional information 
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Process notification messages sent by child windows
 //	switch(((LPNMHDR)lParam)->code)
@@ -129,7 +135,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 //	}
 
 	// Some notifications should return a value when handled
-	return 0L;
+	return CFrame::OnNotify(wParam, lParam);
 }
 
 void CMainFrame::SetupToolbar()

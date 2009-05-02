@@ -68,6 +68,7 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar();
+		virtual BOOL IsRebar() const {return TRUE;}
 
 	// Attributes
 		int  GetBand(const HWND hWnd) const;
@@ -92,6 +93,7 @@ namespace Win32xx
 	// Operations
 		void DeleteBand(const int nBand) const;
 		int  HitTest(RBHITTESTINFO& rbht);
+		HWND HitTest(POINT pt);
 		int  IDToIndex(UINT uBandID) const;
 		void InsertBand(const int nBand, REBARBANDINFO& rbbi) const;
 		BOOL IsBandVisible(int nBand) const;
@@ -223,6 +225,26 @@ namespace Win32xx
 	//  if a rebar band exists at that point.
 	{
 		return (int)::SendMessage(m_hWnd, RB_HITTEST, 0L, (LPARAM)&rbht);
+	}
+
+	inline HWND CRebar::HitTest(POINT pt)
+	// Return the child HWND at the given point
+	{
+		// Convert the point to client co-ordinates
+		MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		
+		// Get the rebar band with the point
+		RBHITTESTINFO rbhti = {0};
+		rbhti.pt = pt;
+		int iBand = HitTest(rbhti);
+					
+		// Get the rebar band's hWnd
+		REBARBANDINFO rbbi = {0};
+		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.fMask = RBBIM_CHILD;
+		GetBandInfo(iBand, rbbi);
+
+		return rbbi.hwndChild;
 	}
 
 	inline int CRebar::IDToIndex(UINT uBandID) const

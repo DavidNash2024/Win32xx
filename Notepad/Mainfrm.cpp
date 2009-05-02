@@ -37,7 +37,7 @@ void CMainFrame::OnInitialUpdate()
 	::SetFocus(m_RichView.GetHwnd());
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	NMHDR* pNMH;
 	pNMH = (LPNMHDR) lParam;
@@ -52,7 +52,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 		return TRUE;
 	}
 
-	return 0L;
+	return CFrame::OnNotify(wParam, lParam);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -94,6 +94,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
@@ -264,15 +270,13 @@ void CMainFrame::OnEditUndo()
 	::SendMessage(m_RichView.GetHwnd(), EM_UNDO, 0, 0);
 }
 
-BOOL CMainFrame::OnClose()
+void CMainFrame::OnClose()
 {
 	//Check for unsaved text
 	BOOL bChanged = (BOOL)::SendMessage(m_RichView.GetHwnd(), EM_GETMODIFY, 0, 0);
 	if (bChanged)
 		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
 			OnFileSave();
-
-	return FALSE;
 }
 
 void CMainFrame::OnDropFiles(HDROP hDropInfo)

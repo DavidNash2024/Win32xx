@@ -65,6 +65,7 @@ namespace Win32xx
 	public:
 		CToolbar();
 		virtual ~CToolbar();
+		virtual BOOL IsToolbar() const {return TRUE;}
 
 	// Attributes
 		void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
@@ -614,7 +615,6 @@ namespace Win32xx
 				m_bDrawArrowBkgrnd = (GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
 			}
 			break;
-
 		}
 		return 0L;
 	}

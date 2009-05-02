@@ -25,10 +25,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
 	case IDM_FILE_NEW:
 		::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
 		return TRUE;
@@ -55,6 +51,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	case IDM_PEN_BLACK:
 		m_View.SetPen(RGB(0,0,0));
+		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
+	case IDM_HELP_ABOUT:
+		// Display the help dialog
+		OnHelp();
 		return TRUE;
 	}
 

@@ -113,6 +113,7 @@ namespace Win32xx
 		CMDIFrame();
 		virtual ~CMDIFrame();
 		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
+		virtual BOOL IsMDIFrame() const	 { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual void UpdateCheckMarks();
@@ -128,9 +129,10 @@ namespace Win32xx
 		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
-		virtual void OnFrameClose();
-		virtual	BOOL OnFrameCommand(WPARAM wParam, LPARAM lParam);
-		virtual void OnFrameWindowPosChanged();
+		virtual void OnClose();
+		virtual void OnWindowPosChanged();
+		virtual void OnViewStatusbar();
+		virtual void OnViewToolbar();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -160,7 +162,6 @@ namespace Win32xx
 	//
 	inline CMDIFrame::CMDIFrame() : m_hActiveMDIChild(NULL)
 	{
-		m_bIsMDIFrame = TRUE;
 		SetView(m_wndMDIClient);
 	}
 
@@ -274,53 +275,30 @@ namespace Win32xx
 		return bMaxed;
 	}
 
-	inline BOOL CMDIFrame::OnFrameCommand(WPARAM wParam, LPARAM lParam)
-	{
-		switch (LOWORD(wParam))
-		{
-		case IDW_VIEW_STATUSBAR:
-			OnViewStatusbar();
-			UpdateCheckMarks();
-			::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
-			break;
-		case IDW_VIEW_TOOLBAR:
-			OnViewToolbar();
-			UpdateCheckMarks();
-			::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
-			break;
-		case IDW_WINDOW_ARRANGE:
-			::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
-			break;
-		case IDW_WINDOW_CASCADE:
-			::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0L, 0L) ;
-			break;
-		case IDW_WINDOW_CLOSEALL:
-			RemoveAllMDIChildren();
-			break;
-		case IDW_WINDOW_TILE:
-			::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0L, 0L) ;
-			break;
-		default:    // Pass to active child...
-			{
-				if (GetActiveMDIChild()->IsWindow())
-					GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
-			}
-			break ;
-		}
-		return 0;
-	}
-
-	inline void CMDIFrame::OnFrameClose()
+	inline void CMDIFrame::OnClose()
 	{
 		if (RemoveAllMDIChildren())
 		{
-			CFrame::OnFrameClose();
+			CFrame::OnClose();
 			::DestroyWindow(m_hWnd);
 		}
-
 	}
 
-	inline void CMDIFrame::OnFrameWindowPosChanged()
+	inline void CMDIFrame::OnViewStatusbar()
+	{
+		CFrame::OnViewStatusbar();
+		UpdateCheckMarks();
+		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+	}
+
+	inline void CMDIFrame::OnViewToolbar()
+	{
+		CFrame::OnViewToolbar();
+		UpdateCheckMarks();
+		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+	}
+
+	inline void CMDIFrame::OnWindowPosChanged()
 	{
 		if (IsMenubarUsed())
 		{
@@ -445,12 +423,12 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_CLOSE:
-			OnFrameClose();
+			OnClose();
 			return 0;
 
 		case WM_WINDOWPOSCHANGED:
 			// MDI Child or MDI frame has been resized
-			OnFrameWindowPosChanged();
+			OnWindowPosChanged();
 			break; // Continue with default processing
 
 		} // switch uMsg

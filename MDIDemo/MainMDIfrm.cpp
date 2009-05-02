@@ -53,7 +53,7 @@ void CMainMDIFrame::OnFileNew()
 	::DestroyMenu(hTopMenu);
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
@@ -85,6 +85,34 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0L, 0L);
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		UpdateCheckMarks();
+		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		break;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		UpdateCheckMarks();
+		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		break;
+	case IDW_WINDOW_ARRANGE:
+		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
+		break;
+	case IDW_WINDOW_CASCADE:
+		::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0L, 0L) ;
+		break;
+	case IDW_WINDOW_CLOSEALL:
+		RemoveAllMDIChildren();
+		break;
+	case IDW_WINDOW_TILE:
+		::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0L, 0L) ;
+		break;
+	default:    // Pass to active child...
+		{
+			if (GetActiveMDIChild()->IsWindow())
+				GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
+		}
+		break ;
 	case IDM_HELP_ABOUT:
 		OnHelp();
 		return TRUE;
@@ -107,13 +135,9 @@ void CMainMDIFrame::OnCreate()
 
 	// call the base class function
 	CMDIFrame::OnCreate();
-
-	SetButtons(GetToolbar().GetToolbarData());
-
-
 }
 
-LRESULT CMainMDIFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+LRESULT CMainMDIFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Notification from our dropdown button is recieved if Comctl32.dll version
 	// is 4.70 or later (IE v3 required).
@@ -129,12 +153,7 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 
 	} //switch LPNMHDR
 
-	return 0L;
-}
-
-void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
-{
-
+	return CMDIFrame::OnNotify(wParam, lParam);
 }
 
 void CMainMDIFrame::SetupToolbar()
@@ -156,8 +175,7 @@ void CMainMDIFrame::SetupToolbar()
 	AddToolbarButton( IDM_HELP_ABOUT );
 
 	// Use larger buttons with seperate imagelists for normal, hot and disabled buttons.
-	CToolbar& TB = GetToolbar();
-	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_FILE_NEWVIEW, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_VIEW)));

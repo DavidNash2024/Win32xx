@@ -60,6 +60,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		TRACE(_T("Black pen selected\n"));
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
 		return TRUE;

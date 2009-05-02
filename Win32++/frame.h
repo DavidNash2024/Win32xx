@@ -115,6 +115,7 @@ namespace Win32xx
 	public:
 		CMenubar();
 		virtual ~CMenubar();
+		virtual IsMenubar() const {return TRUE;}
 		void MenuChar(WPARAM wParam, LPARAM lParam);
 		void SysCommand(WPARAM wParam, LPARAM lParam);
 		HMENU GetMenu() const {return m_hTopMenu;}
@@ -224,7 +225,6 @@ namespace Win32xx
 		void SetView(CWnd& wndView);
 
 		BOOL IsFrame() const			{return TRUE;}
-		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
 		BOOL IsMenubarUsed() const		{return (GetMenubar() != 0);}
 		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
 		BOOL IsRebarUsed() const		{return (GetRebar() != 0);}
@@ -238,17 +238,16 @@ namespace Win32xx
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
 		virtual void OnCreate();
-		virtual void OnFrameActivate(WPARAM wParam, LPARAM lParam);
-		virtual void OnFrameClose();
-		virtual BOOL OnFrameCommand(WPARAM wPAram, LPARAM lParam);
-		virtual BOOL OnFrameDrawItem(WPARAM wParam, LPARAM lParam);
-		virtual void OnFrameExitMenuLoop();
-		virtual void OnFrameInitMenuPopup(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnFrameMeasureItem(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnFrameNotify(WPARAM wParam, LPARAM lParam);
-		virtual void OnFrameSetFocus();
-		virtual void OnFrameSysColorChange();
-		virtual	void OnFrameTimer(WPARAM wParam);
+		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
+		virtual void OnClose();
+		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnExitMenuLoop();
+		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual void OnSetFocus();
+		virtual void OnSysColorChange();
+		virtual	void OnTimer(WPARAM wParam);
 		virtual void OnHelp();
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual void OnViewStatusbar();
@@ -281,7 +280,6 @@ namespace Win32xx
 			HMENU hSubMenu;
 		};
 
-		BOOL m_bIsMDIFrame;					// TRUE if this is a MDI frame
         BOOL m_bShowIndicatorStatus;		// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
@@ -1259,15 +1257,15 @@ namespace Win32xx
 		case WM_CHAR:
 			return 0L;  // Discard these messages
 		case WM_DRAWITEM:
-			m_pFrame->OnFrameDrawItem(wParam, lParam);
+			m_pFrame->OnDrawItem(wParam, lParam);
 			return TRUE; // handled
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
-			m_pFrame->OnFrameExitMenuLoop();
+			m_pFrame->OnExitMenuLoop();
 			break;
 		case WM_INITMENUPOPUP:
-			m_pFrame->OnFrameInitMenuPopup(wParam, lParam);
+			m_pFrame->OnInitMenuPopup(wParam, lParam);
 			break;
 		case WM_KEYDOWN:
 			OnKeyDown(wParam, lParam);
@@ -1289,7 +1287,7 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			m_pFrame->OnFrameMeasureItem(wParam, lParam);
+			m_pFrame->OnMeasureItem(wParam, lParam);
 			return TRUE; // handled
 		case WM_MOUSELEAVE:
 			OnMouseLeave();
@@ -1328,7 +1326,7 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() :  m_bIsMDIFrame(FALSE), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
+	inline CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE), 
 						m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), 
 						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0)
@@ -1350,7 +1348,7 @@ namespace Win32xx
 	{
 		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 		{
-			// These are normally deleted in OnFrameExitMenuLoop
+			// These are normally deleted in OnExitMenuLoop
 			delete m_vMenuItemData[nItem];
 		}
 
@@ -1967,7 +1965,7 @@ namespace Win32xx
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
-	inline BOOL CFrame::OnFrameDrawItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline BOOL CFrame::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
@@ -2064,7 +2062,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline void CFrame::OnFrameExitMenuLoop()
+	inline void CFrame::OnExitMenuLoop()
 	{
 		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 		{
@@ -2090,7 +2088,7 @@ namespace Win32xx
 		m_vMenuItemData.clear();
 	}
 
-	inline void CFrame::OnFrameActivate(WPARAM wParam, LPARAM lParam)
+	inline void CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
 	{
 		// Do default processing first
 		DefWindowProc(WM_ACTIVATE, wParam, lParam);
@@ -2124,12 +2122,9 @@ namespace Win32xx
 		} 
 	}
 
-	inline void CFrame::OnFrameClose()
+	inline void CFrame::OnClose()
 	{
-		// Called in response to a WM_CLOSE message for the frame.
-		// It's called called OnFrameClose to avoid being accidently overriden
-		// by a user's possible OnClose function.
-		
+		// Called in response to a WM_CLOSE message for the frame.	
 		ShowWindow(SW_HIDE);
 		SaveRegistrySettings();
 
@@ -2138,22 +2133,6 @@ namespace Win32xx
 		GetRebar().Destroy();
 		GetStatusbar().Destroy();
 		GetView()->Destroy();
-	}
-
-	inline BOOL CFrame::OnFrameCommand(WPARAM wParam, LPARAM /*lParam*/)
-	{
-		// Handle the View Statusbar and Toolbar menu items
-		switch (LOWORD(wParam))
-		{
-		case IDW_VIEW_STATUSBAR:
-			OnViewStatusbar();
-			return TRUE;
-		case IDW_VIEW_TOOLBAR:
-			OnViewToolbar();
-			return TRUE;
-		} // switch cmd
-
-		return FALSE;
 	}
 
 	inline void CFrame::OnHelp()
@@ -2180,7 +2159,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::OnFrameInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	inline void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
@@ -2211,7 +2190,7 @@ namespace Win32xx
 			{
 				if (0 == mii.dwItemData)
 				{
-					ItemData* pItem = new ItemData;		// deleted in OnFrameExitMenuLoop
+					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
 
 					// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
 					//  an exception when new fails. We make sure an exception gets thrown!
@@ -2234,7 +2213,7 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CFrame::OnFrameMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline BOOL CFrame::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
@@ -2308,7 +2287,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CFrame::OnFrameNotify(WPARAM /*wParam*/, LPARAM lParam)
+	inline LRESULT CFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 
 		switch (((LPNMHDR)lParam)->code)
@@ -2332,27 +2311,36 @@ namespace Win32xx
 		// Display tooltips for the toolbar
 		case TTN_GETDISPINFO:
 			{
-				int iIndex =  GetToolbar().HitTest();
+				CToolbar* pToolbar = &GetToolbar();
+				if (IsRebarUsed())
+				{	
+					// Get the Toolbar's CWnd
+					CWnd* pWnd = FromHandle(GetRebar().HitTest(GetCursorPos()));
+					if (pWnd && (pWnd->IsToolbar()) && !(pWnd->IsMenubar()))
+						pToolbar = (CToolbar*)pWnd;
+				}
+				
+				int iIndex =  pToolbar->HitTest();
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
 				if (iIndex >= 0)
 				{
-					int nID = GetToolbar().GetCommandID(iIndex);
+					int nID = pToolbar->GetCommandID(iIndex);
 					if (nID > 0) lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
-				}
+				} 
 			}
-			break;
+			break; 
 		} // switch LPNMHDR
 
 		return 0L;
 
-	} // CFrame::OnFrameNotify(...)
+	} // CFrame::Onotify(...)
 
-	inline void CFrame::OnFrameSetFocus()
+	inline void CFrame::OnSetFocus()
 	{
 		SetStatusText();
 	}
 
-	inline void CFrame::OnFrameSysColorChange()
+	inline void CFrame::OnSysColorChange()
 	{
 		// Honour theme color changes
 		for (int nBand = 0; nBand <= GetRebar().GetBandCount(); ++nBand)
@@ -2410,7 +2398,7 @@ namespace Win32xx
 		::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0L, 0L);
 	}
 
-	inline void CFrame::OnFrameTimer(WPARAM wParam)
+	inline void CFrame::OnTimer(WPARAM wParam)
 	{
 		if (ID_STATUS_TIMER == wParam)
 		{
@@ -3027,10 +3015,10 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_ACTIVATE:
-			OnFrameActivate(wParam, lParam);
+			OnActivate(wParam, lParam);
 			return 0L;
 		case WM_CLOSE:
-			OnFrameClose();
+			OnClose();
 			break;
 		case WM_DESTROY:
 			::SetMenu(m_hWnd, NULL);
@@ -3054,14 +3042,14 @@ namespace Win32xx
 			OnMenuSelect(wParam, lParam);
 			return 0L;
 		case WM_SETFOCUS:
-			OnFrameSetFocus();
+			OnSetFocus();
 			break;
 		case WM_SIZE:
 			RecalcLayout();
 			return 0L;
 		case WM_SYSCOLORCHANGE:
 			// Changing themes trigger this
-			OnFrameSysColorChange();
+			OnSysColorChange();
 			return 0L;
 		case WM_SYSCOMMAND:
 			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
@@ -3074,22 +3062,22 @@ namespace Win32xx
 				m_hOldFocus = GetFocus();
 			break;
 		case WM_TIMER:
-			OnFrameTimer(wParam);
+			OnTimer(wParam);
 			return 0L;
 		case WM_DRAWITEM:
 			// Owner draw menu items
-			if (OnFrameDrawItem(wParam, lParam)) 
+			if (OnDrawItem(wParam, lParam)) 
 				return TRUE; // handled
 			break;
 		case WM_INITMENUPOPUP:
-			OnFrameInitMenuPopup(wParam, lParam);
+			OnInitMenuPopup(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			if (OnFrameMeasureItem(wParam, lParam))
+			if (OnMeasureItem(wParam, lParam))
 				return TRUE; // handled
 			break;
 		case WM_EXITMENULOOP:
-			OnFrameExitMenuLoop();
+			OnExitMenuLoop();
 			break;
 		} // switch uMsg
 

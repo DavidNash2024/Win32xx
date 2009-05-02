@@ -54,6 +54,7 @@ namespace Win32xx
 
 	// Overridables
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual BOOL IsStatusbar() const { return TRUE; }
 
 	// Attributes
 		int GetParts();

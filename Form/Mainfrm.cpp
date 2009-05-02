@@ -34,6 +34,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
 		OnHelp();

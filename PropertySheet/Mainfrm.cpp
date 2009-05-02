@@ -61,6 +61,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 			mps.DoModal();
 		}
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
 		OnHelp();

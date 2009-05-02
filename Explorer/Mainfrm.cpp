@@ -100,6 +100,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_HELP_ABOUT:
 		OnHelp();
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
 	case IDM_VIEW_LARGEICON:
 		GetListView()->ViewLargeIcons();
 		::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
@@ -137,10 +143,9 @@ void CMainFrame::OnCreate()
 {
 	// call the base OnCreate function
 	CFrame::OnCreate();
-
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Notification from our dropdown button is recieved if Comctl32.dll version
 	// is 4.70 or later (IE v3 required).
@@ -155,7 +160,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 
 	} //switch LPNMHDR
 
-	return 0L;
+	return CFrame::OnNotify(wParam, lParam);
 }
 
 void CMainFrame::SetupToolbar()
@@ -178,13 +183,13 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( IDM_HELP_ABOUT, TRUE,  _T("About") );
 
 	// Use larger buttons
-	CToolbar& TB = GetToolbar();
-	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Configure the ViewMenu button to bring up a menu
 	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{
+		CToolbar& TB = GetToolbar();
 		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 	}
 }

@@ -617,7 +617,7 @@ namespace Win32xx
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
 
-		// These are the functions you might wish to override
+		// These are the functions can be overridden
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void Destroy();
 		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -626,6 +626,17 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		virtual BOOL IsContainer() const { return FALSE; }
+		virtual BOOL IsDockable() const  { return FALSE; }
+		virtual BOOL IsFrame() const     { return FALSE; }
+		virtual BOOL IsMenubar() const   { return FALSE; }
+		virtual BOOL IsMDIChild() const  { return FALSE; }
+		virtual BOOL IsMDIFrame() const	 { return FALSE; }
+		virtual BOOL IsRebar() const     { return FALSE; }
+		virtual BOOL IsStatusbar() const { return FALSE; }
+		virtual BOOL IsTab() const       { return FALSE; }
+		virtual BOOL IsTabbedMDI() const { return FALSE; }
+		virtual BOOL IsToolbar() const	 { return FALSE; }
 
 		// These functions aren't intended to be overridden
 		BOOL Attach(HWND hWnd);
@@ -663,10 +674,6 @@ namespace Win32xx
 		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pWndParent) const;
-		virtual BOOL IsContainer() const { return FALSE; }
-		virtual BOOL IsDockable() const  { return FALSE; }
-		virtual BOOL IsFrame() const     { return FALSE; }
-		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;
@@ -729,10 +736,8 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnFrameCommand(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual	LRESULT OnFrameNotify(WPARAM /*wParam*/, LPARAM /*lParam*/) {return 0L;}
 		virtual void OnInitialUpdate();
 		virtual void OnPaint(HDC hDC);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -741,7 +746,6 @@ namespace Win32xx
 		// These functions aren't intended to be overridden
 		void AddToMap();
 		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		BOOL IsMDIChild() const {return FALSE;}
 		HICON SetIconLarge(int nIcon);
 		HICON SetIconSmall(int nIcon);
 		
@@ -2298,17 +2302,13 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Refelect this message if it's from a control
-				CWnd* Wnd = FromHandle((HWND)lParam);
-				if (Wnd != NULL)
-					if (Wnd->OnMessageReflect(uMsg, wParam, lParam))
+				CWnd* pWnd = FromHandle((HWND)lParam);
+				if (pWnd != NULL)
+					if (pWnd->OnMessageReflect(uMsg, wParam, lParam))
 						return TRUE;
 
 				// Handle user commands
 				if (OnCommand(wParam, lParam))
-					return TRUE;
-
-				// Handle Win32++ frame commands
-				if (OnFrameCommand(wParam, lParam))
 					return TRUE;
 			}
 			break;  // Note: Some MDI commands require default processing
@@ -2322,19 +2322,16 @@ namespace Win32xx
 	//		return 0L;
 		case WM_NOTIFY:
 			{
-				// Handle the Win32++ frame notifications
-				LRESULT lr = OnFrameNotify(wParam, lParam);
-				if (lr) return lr;
-
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* WndFrom = FromHandle(hwndFrom);
-				if (WndFrom != NULL)
+				CWnd* pWndFrom = FromHandle(hwndFrom);
+				LRESULT lr = 0L;
+				if (pWndFrom != NULL)
 				{	
 					// Only reflect messages from the parent to avoid possible double handling
 					if (::GetParent(hwndFrom) == m_hWnd)
 					{
-						lr = WndFrom->OnNotifyReflect(wParam, lParam);
+						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (lr) return lr;
 					}
 				}

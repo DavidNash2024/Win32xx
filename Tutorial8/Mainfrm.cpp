@@ -49,11 +49,18 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_PEN_BLACK:
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
-	case IDM_HELP_ABOUT:
-		OnHelp();
-		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
+	case IDM_HELP_ABOUT:
+		// Display the help dialog
+		OnHelp();
 		return TRUE;
 	}
 

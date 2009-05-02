@@ -268,10 +268,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
 	case IDM_NONE:
 		ChooseTheme(IDM_NONE);
 		return TRUE;
@@ -305,6 +301,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_GOLD:
 		ChooseTheme(IDM_GOLD);
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
+	case IDM_HELP_ABOUT:
+		// Display the help dialog
+		OnHelp();
+		return TRUE;
 	}
 
 	return FALSE;
@@ -333,7 +339,7 @@ void CMainFrame::OnInitialUpdate()
 	TRACE("Frame created\n");
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Process notification messages sent by child windows
 //	switch(((LPNMHDR)lParam)->code)
@@ -342,7 +348,7 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
 //	}
 
 	// Pass any unhandled messages on for default processing
-	return 0L;
+	return CFrame::OnNotify(wParam, lParam);
 }
 
 void CMainFrame::SetupToolbar()

@@ -69,6 +69,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_IMAGE_ADJUST:
 		OnAdjustImage();
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
 		OnHelp();

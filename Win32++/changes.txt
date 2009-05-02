@@ -59,7 +59,10 @@ Added CDockable::IsRelated
 Added CToolbar::GetToolbarData
 Added CWnd::GetClassString
 Added CWnd::IsFrame
+Added CWnd::IsMenubar
+Added CWnd::IsRebar
 Added CWnd::IsTabbedMDI
+Added CWnd::IsToolbar
 Changed CFrame::SetToolbarImages
 Changed CToolbar::SetImages
 Changed CToolbar::SetBitmap

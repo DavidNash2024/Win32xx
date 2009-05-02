@@ -109,6 +109,7 @@ namespace Win32xx
 			virtual CWnd* GetView() const	{return m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual void OnCreate();
+			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS &wc);
 			virtual void RecalcLayout();
 			virtual void SetView(CWnd& wndView);
@@ -157,8 +158,8 @@ namespace Win32xx
 
 	protected:
 		virtual void OnCreate();
-		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -3382,6 +3383,29 @@ namespace Win32xx
 		if (m_pView)
 			m_pView->Create(m_hWnd);
 	}
+
+	inline LRESULT CContainer::CViewPage::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+	{
+
+		switch (((LPNMHDR)lParam)->code)
+		{
+	
+		// Display tooltips for the toolbar
+		case TTN_GETDISPINFO:
+			{
+				int iIndex =  GetToolbar().HitTest();
+				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
+				if (iIndex >= 0)
+				{
+					int nID = GetToolbar().GetCommandID(iIndex);
+					if (nID > 0) lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
+				}
+			}
+			break;
+		} // switch LPNMHDR
+
+		return 0L;
+	} 
 
 	inline void CContainer::CViewPage::PreRegisterClass(WNDCLASS &wc)
 	{

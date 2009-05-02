@@ -125,6 +125,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_HOME:
 		m_View.GetIWebBrowser2()->GoHome();
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
 	}
 
 	// Handle notification WM_COMMAND from ComboboxEx
@@ -242,7 +248,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
-	return 0L;
+	return CFrame::OnNotify(wParam, lParam);
 }
 
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)

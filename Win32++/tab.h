@@ -67,6 +67,7 @@ namespace Win32xx
 			CSelectDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent = NULL);
 			virtual ~CSelectDialog() {}
 			virtual void AddItem(LPCTSTR szString);
+			virtual BOOL IsTab() const { return FALSE; }
 
 		protected:
 			virtual BOOL OnInitDialog();

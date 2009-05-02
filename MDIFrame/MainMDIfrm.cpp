@@ -67,7 +67,7 @@ void CMainMDIFrame::OnInitialUpdate()
 	//Place any additional startup code here.
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
@@ -89,6 +89,31 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_FILE_PRINT:
 		OnFilePrint();
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+
+		break;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		break;
+	case IDW_WINDOW_ARRANGE:
+		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
+		break;
+	case IDW_WINDOW_CASCADE:
+		::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0L, 0L) ;
+		break;
+	case IDW_WINDOW_CLOSEALL:
+		RemoveAllMDIChildren();
+		break;
+	case IDW_WINDOW_TILE:
+		::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0L, 0L) ;
+		break;
+	default:    // Pass to active child...
+		{
+			if (GetActiveMDIChild()->IsWindow())
+				GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
+		}
+		break ;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
