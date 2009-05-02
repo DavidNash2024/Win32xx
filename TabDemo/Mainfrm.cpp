@@ -106,8 +106,6 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-
-	m_View.SetShowButtons(TRUE);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -167,6 +165,9 @@ void CMainFrame::SetupToolbar()
 	
 	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT        );
+
+	// Set the Checkmarks in the menu
+	::CheckMenuItem(GetFrameMenu(), IDM_TAB_BUTTONS, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_NEW_FILES, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW)));

@@ -12,8 +12,8 @@ CMainFrame::CMainFrame()
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
-	//Set m_TabbedMDIView as the view window of the frame
-	SetView(m_TabbedMDIView);
+	//Set m_DockTabbedMDI as the view window of the frame
+	SetView(m_DockTabbedMDI);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -64,28 +64,28 @@ void CMainFrame::AddUndocked(DockInfo di)
 	switch(di.DockID)
 	{
 	case ID_CONTAINCLASSES1:
-		m_TabbedMDIView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES1);
+		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES1);
 		break;
 	case ID_CONTAINCLASSES2:
-		m_TabbedMDIView.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES2);					
+		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES2);					
 		break;
 	case ID_CONTAINFILES1:
-		m_TabbedMDIView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES1);
+		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES1);
 		break;
 	case ID_CONTAINFILES2:
-		m_TabbedMDIView.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
+		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
 		break;
 	case ID_OUTPUT1:
-		m_TabbedMDIView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT1);
+		m_DockTabbedMDI.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT1);
 		break;
 	case ID_OUTPUT2:
-		m_TabbedMDIView.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT2);
+		m_DockTabbedMDI.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT2);
 		break;
 	case ID_TEXT1:
-		m_TabbedMDIView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT1);
+		m_DockTabbedMDI.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT1);
 		break;
 	case ID_TEXT2:
-		m_TabbedMDIView.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
+		m_DockTabbedMDI.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
 		break;
 	default:
 		TRACE(_T("Unknown Dock ID\n"));
@@ -124,11 +124,14 @@ void CMainFrame::OnContainerTabsAtTop()
 	std::vector<CDockable*>::iterator iter;
 	
 	// Set the Tab position for each container
-	for (iter = m_TabbedMDIView.GetAllDockables().begin(); iter < m_TabbedMDIView.GetAllDockables().end(); ++iter)
+	for (iter = m_DockTabbedMDI.GetAllDockables().begin(); iter < m_DockTabbedMDI.GetAllDockables().end(); ++iter)
 	{
-		CContainer* pContainer = (CContainer*)(*iter)->GetView();
-		bTop = pContainer->GetTabsAtTop();
-		pContainer->SetTabsAtTop(!bTop);
+		CContainer* pContainer = (*iter)->GetContainer();
+		if (pContainer)
+		{
+			bTop = pContainer->GetTabsAtTop();
+			pContainer->SetTabsAtTop(!bTop);
+		}
 	}
 		
 	// Set the menu checkmark
@@ -139,7 +142,7 @@ void CMainFrame::OnContainerTabsAtTop()
 void CMainFrame::OnMDITabsAtTop()
 // Reposition TabbedMDI's tabs
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*) m_TabbedMDIView.GetView();
+	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
 
 	BOOL bTop = pTabbedMDI->GetTab().GetTabsAtTop();
 	pTabbedMDI->GetTab().SetTabsAtTop(!bTop);
@@ -156,8 +159,8 @@ void CMainFrame::LoadDefaultDockables()
 	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each dockable
 	
 	// Add the parent dockables
-	CDockable* pDockRight  = m_TabbedMDIView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINCLASSES1);	
-	CDockable* pDockBottom = m_TabbedMDIView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT1);
+	CDockable* pDockRight  = m_DockTabbedMDI.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINCLASSES1);	
+	CDockable* pDockBottom = m_DockTabbedMDI.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT1);
 
 	// Add the remaining dockables
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES1);
@@ -172,7 +175,7 @@ void CMainFrame::LoadDefaultDockables()
 void CMainFrame::LoadDefaultMDITabs()
 {
 	// Add some MDI tabs
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_TabbedMDIView.GetView();
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
 	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"));
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"));
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));
@@ -218,7 +221,7 @@ void CMainFrame::LoadRegistryDockables()
 			if (di.DockParentID == 0)
 			{
 				if (di.DockStyle & 0xF)
-					AddDocked(di, &m_TabbedMDIView);
+					AddDocked(di, &m_DockTabbedMDI);
 				else
 					AddUndocked(di);
 
@@ -233,7 +236,7 @@ void CMainFrame::LoadRegistryDockables()
 			std::vector<DockInfo>::iterator iter;
 			for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
 			{
-				CDockable* pDock = m_TabbedMDIView.GetDockFromID((*iter).DockParentID);
+				CDockable* pDock = m_DockTabbedMDI.GetDockFromID((*iter).DockParentID);
 				if (pDock != 0)
 				{
 					AddDocked(*iter, pDock);
@@ -254,7 +257,7 @@ void CMainFrame::LoadRegistryDockables()
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_TabbedMDIView.GetView();
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
 
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
@@ -288,11 +291,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnMDITabsAtTop();
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
-		m_TabbedMDIView.CloseAllDockables();
+		m_DockTabbedMDI.CloseAllDockables();
 		LoadDefaultDockables();
 		return TRUE;
 	case IDM_DOCK_CLOSEALL:
-		m_TabbedMDIView.CloseAllDockables();
+		m_DockTabbedMDI.CloseAllDockables();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -317,20 +320,11 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-
-	// Disable some toolbar buttons
-	CToolbar& TB = GetToolbar();
-	TB.DisableButton(IDM_FILE_OPEN);
-	TB.DisableButton(IDM_FILE_SAVE);
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
 }
 
 void CMainFrame::OnInitialUpdate()
 {
-	m_TabbedMDIView.SetDockStyle(DS_CLIENTEDGE);
+	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
 
 	if (0 == GetRegistryKeyName().size())
 		LoadDefaultDockables();
@@ -338,7 +332,7 @@ void CMainFrame::OnInitialUpdate()
 		LoadRegistryDockables();
 
 	// Ensure we have some docked/undocked windows
-	if (0 == m_TabbedMDIView.GetAllDockables().size())
+	if (0 == m_DockTabbedMDI.GetAllDockables().size())
 		LoadDefaultDockables();
 
 	LoadDefaultMDITabs();
@@ -358,7 +352,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 
 void CMainFrame::SaveDockables()
 {
-	m_TabbedMDIView.VerifyDockables();
+	m_DockTabbedMDI.VerifyDockables();
 	// NOTE: This function assumes that each dockable has a unique DockID
 
 	std::vector<CDockable*>::iterator iter;
@@ -367,7 +361,7 @@ void CMainFrame::SaveDockables()
 	if (0 != GetRegistryKeyName().size())
 	{
 		// Fill the DockList vector with the docking information
-		for (iter = m_TabbedMDIView.GetAllDockables().begin(); iter <  m_TabbedMDIView.GetAllDockables().end(); ++iter)
+		for (iter = m_DockTabbedMDI.GetAllDockables().begin(); iter <  m_DockTabbedMDI.GetAllDockables().end(); ++iter)
 		{
 			DockInfo di	 = {0};
 			di.DockID	 = (*iter)->GetDockID();
@@ -415,17 +409,21 @@ void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_OPEN,  FALSE );
+	AddToolbarButton( IDM_FILE_SAVE,  FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 
+	// Remove the checkmark for container tabs at top
 	::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
 }
 

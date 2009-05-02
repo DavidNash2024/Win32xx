@@ -131,16 +131,6 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-
-	// Disable some toolbar buttons
-	CToolbar& TB = GetToolbar();
-	TB.DisableButton(IDM_FILE_NEW);
-	TB.DisableButton(IDM_FILE_OPEN);
-	TB.DisableButton(IDM_FILE_SAVE);
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -318,15 +308,18 @@ void CMainFrame::SaveRegistrySettings()
 void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_NEW,   FALSE );
+	AddToolbarButton( IDM_FILE_OPEN,  FALSE );
+	AddToolbarButton( IDM_FILE_SAVE,  FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 }

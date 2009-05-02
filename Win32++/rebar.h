@@ -583,6 +583,13 @@ namespace Win32xx
 			if (OnEraseBkgnd((HDC)wParam))
 				return TRUE;
 			break;
+		case UWM_TOOLBAR_CHANGED:
+			{
+				HWND hToolbar = (HWND)wParam;
+				LPSIZE pToolbarSize = (LPSIZE)lParam;
+				ResizeBand(GetBand(hToolbar), *pToolbarSize);
+			}
+			break;
 		}
 
 		// pass unhandled messages on for default processing

@@ -353,12 +353,14 @@ namespace Win32xx
 		virtual CDockable* AddDockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, int nDockID = 0);
 		virtual CDockable* AddUndockedChild(CDockable* pDockable, DWORD dwDockStyle, int DockWidth, RECT rc, int nDockID = 0);
 		virtual void CloseAllDockables();
+		virtual CContainer* GetContainer() const;
 		virtual CDockable* GetDockFromPoint(POINT pt) const;
 		virtual CDockable* GetDockAncestor() const;
 		virtual CDockable* GetDockFromID(int n_DockID) const;
 		virtual CDockable* GetDockFromView(CWnd* pView) const;
 		virtual CDockable* GetDockTopLevel() const;
 		virtual int GetDockWidth() const;
+		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual void RecalcDockLayout();
 		virtual BOOL VerifyDockables();	
 
@@ -1943,6 +1945,15 @@ namespace Win32xx
 		}
 	}
 
+	inline CContainer* CDockable::GetContainer() const
+	{
+		CContainer* pContainer = NULL;
+		if (GetView() && GetView()->IsContainer())
+			pContainer = (CContainer*)GetView();
+
+		return pContainer;
+	}
+
 	inline CDockable* CDockable::GetDockFromPoint(POINT pt) const
 	// Retrieves the Dockable whose view window contains the specified point
 	{
@@ -2077,6 +2088,15 @@ namespace Win32xx
 			DockWidth = (double)(rcParent.Height()*m_DockWidthRatio);
 
 		return (int)DockWidth;
+	}
+
+	inline CTabbedMDI* CDockable::GetTabbedMDI() const
+	{
+		CTabbedMDI* pTabbedMDI = NULL;
+		if (GetView() && GetView()->IsTabbedMDI())
+			pTabbedMDI = (CTabbedMDI*)GetView();
+
+		return pTabbedMDI;
 	}
 
 	inline BOOL CDockable::IsDocked() const
@@ -2771,8 +2791,8 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-		case UWM_IS_DOCKABLE:	// A message to test if this is a Container window
-			return TRUE;
+	//	case UWM_IS_DOCKABLE:	// A message to test if this is a Container window
+	//		return TRUE;
 
 		case WM_ACTIVATE:
 			{
@@ -3242,7 +3262,9 @@ namespace Win32xx
 			pNewContainer->GetViewPage().GetView()->SetFocus();
 
 			// Adjust the docking caption
-			if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
+			CWnd* pParent = FromHandle(GetParent());
+		//	if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
+			if (pParent && pParent->IsDockable())
 			{
 				CDockable* pDock = (CDockable*)FromHandle(::GetParent(GetParent()));
 				if (pDock)
@@ -3281,8 +3303,8 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-		case UWM_IS_CONTAINER:	// A message to test if this is a Container window
-			return TRUE;
+	//	case UWM_IS_CONTAINER:	// A message to test if this is a Container window
+	//		return TRUE;
 
 		case WM_SIZE:
 		/*	{
@@ -3306,7 +3328,9 @@ namespace Win32xx
 				IsTracking = FALSE;
 				if (IsLeftButtonDown())
 				{
-					if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
+					CWnd* pParent = FromHandle(GetParent());
+					if (pParent && pParent->IsDockable())
+				//	if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
 					{
 						CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
 

@@ -21,7 +21,7 @@ public:
 	virtual ~CMainMDIFrame();
 
 protected:
-	virtual void DoPopupMenu();
+	virtual void OnFileNew();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();

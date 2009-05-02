@@ -370,8 +370,7 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( IDM_HELP_ABOUT );
 
 	// Set the three image lists for the first toolbar
-	CToolbar& TB = GetToolbar();
-	SetToolbarImages(TB, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Set the icons for popup menu items
 	SetMenuIcons(GetToolbar().GetToolbarData(), RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
@@ -383,18 +382,18 @@ void CMainFrame::SetupToolbar()
 		ChooseTheme(IDM_BLUE);
 
 		// Add the Arrows toolbar
+		AddToolbarBand(Arrows);
 		Arrows.AddToolbarButton(IDM_ARROW_LEFT);
 		Arrows.AddToolbarButton(IDM_ARROW_RIGHT);
-		AddToolbarBand(Arrows);
-		SetToolbarImages(Arrows, RGB(255,0,255), IDB_ARROWS, 0, 0);
-
+		Arrows.SetImages(RGB(255,0,255), IDB_ARROWS, 0, 0);
+		
 		// Add the Cards toolbar
+		AddToolbarBand(Cards);
 		Cards.AddToolbarButton(IDM_CARD_CLUB);
 		Cards.AddToolbarButton(IDM_CARD_DIAMOND);
 		Cards.AddToolbarButton(IDM_CARD_HEART);
 		Cards.AddToolbarButton(IDM_CARD_SPADE);
-		AddToolbarBand(Cards);
-		SetToolbarImages(Cards, RGB(255,0,255), IDB_CARDS, 0, 0);	
+		Cards.SetImages(RGB(255,0,255), IDB_CARDS, 0, 0);
 	}
 
 	AddCombo();

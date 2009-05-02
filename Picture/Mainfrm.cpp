@@ -126,13 +126,15 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( IDM_FILE_NEW   );
 	AddToolbarButton( IDM_FILE_OPEN  );
 	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
+
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 
 	// A reference to the CToolbar object
@@ -140,12 +142,6 @@ void CMainFrame::SetupToolbar()
 
 	// Set the image lists for normal, hot and disabled buttons
 	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
 
 	if (IsRebarUsed())
 	{

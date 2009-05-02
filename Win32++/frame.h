@@ -188,7 +188,7 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
-		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
+		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
@@ -202,7 +202,7 @@ namespace Win32xx
 		virtual void SetStatusText();
 		virtual void SetTheme();
 		virtual void SetupToolbar();
-		virtual void SetToolbarImages(CToolbar& TB, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
+		virtual void SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
 
 		// Virtual Attributes
@@ -218,7 +218,6 @@ namespace Win32xx
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
-//		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
 		CWnd* GetView() const		{return m_pView;}
 		tString GetMRUEntry(size_t nIndex);
 		void SetFrameMenu(INT ID_MENU);
@@ -1556,11 +1555,14 @@ namespace Win32xx
 		GetRebar().InsertBand(-1, rbbi);
 	}
 
-	inline void CFrame::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE*/)
+	inline void CFrame::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
 		GetToolbar().AddToolbarButton(nID, bEnabled);
+
+		if(0 != szText)
+			GetToolbar().SetButtonText(nID, szText);
 
 		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolbar")); 
 	}
@@ -2828,13 +2830,9 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	inline void CFrame::SetToolbarImages(CToolbar& TB, COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
+	inline void CFrame::SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	{
-		TB.SetImages(crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
-
-		// Adjust the rebar band size
-		if (m_bUseRebar)
-				GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
+		GetToolbar().SetImages(crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
 	}
 
 	inline void CFrame::SetupToolbar()
@@ -2887,7 +2885,7 @@ namespace Win32xx
 			// Set the toolbar images (if not already set in SetupToolbar)
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
-				SetToolbarImages(GetToolbar(), RGB(192,192,192), IDW_MAIN, 0, 0);
+				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
 			// Set the icons for popup menu items (if not already set in SetupToolbar)
 			if (!m_himlMenu)

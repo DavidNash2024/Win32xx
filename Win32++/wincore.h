@@ -155,13 +155,12 @@
 #define UWM_BAR_START		(WM_APP + 5)	// Notification - dockable bar selected for move
 #define UWM_BAR_MOVE		(WM_APP + 6)	// Notification - dockable bar moved
 #define UWM_BAR_END			(WM_APP + 7)	// Notification - end of dockable bar move
-#define UWM_UNDOCKED		(WM_APP + 8)	// Notification sent by dockable when undocked
-#define UWM_IS_DOCKABLE     (WM_APP + 9)	// Message - CDockable window returns TRUE for this message
-#define UWM_IS_CONTAINER	(WM_APP + 10)	// Message - CContainer window return TRUE for this message
-#define UWM_FRAMELOSTFOCUS	(WM_APP + 11)   // Notification - sent by frame to view window when focus lost
-#define UWM_FRAMEGOTFOCUS	(WM_APP + 12)   // Notification - sent by frame to view window when focus acquired
-#define UWM_DOCK_DESTROYED	(WM_APP + 13)	// Message - posted when dockable is destroyed
-#define UWM_TAB_CHANGED     (WM_APP + 14)	// Notification - tab layout changed
+#define UWM_UNDOCKED		(WM_APP + 8)	// Notification - sent by dockable when undocked
+#define UWM_FRAMELOSTFOCUS	(WM_APP + 9)    // Notification - sent by frame to view window when focus lost
+#define UWM_FRAMEGOTFOCUS	(WM_APP + 10)   // Notification - sent by frame to view window when focus acquired
+#define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when dockable is destroyed
+#define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
+#define UWM_TOOLBAR_CHANGED (WM_APP + 13)   // Message - sent by toolbar to parent when image changed
 
 
 // Automatically include the Win32xx namespace
@@ -666,6 +665,7 @@ namespace Win32xx
 		BOOL IsChild(const CWnd* pWndParent) const;
 		virtual BOOL IsContainer() const { return FALSE; }
 		virtual BOOL IsDockable() const  { return FALSE; }
+		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;

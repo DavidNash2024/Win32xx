@@ -935,10 +935,9 @@ namespace Win32xx
 					throw CWinException(_T("CToolbar::SetImages ... TB_SETDISABLEDIMAGELIST failed "));
 			}
 
-
-			// Adjust the rebar band size
-		//	if (m_bUseRebar)
-		//		GetRebar().ResizeBand(GetRebar().GetBand(TB), TB.GetMaxSize());
+			// Inform the parent of the change (rebar needs this)
+			SIZE MaxSize = GetMaxSize();
+			::SendMessage(GetParent(), UWM_TOOLBAR_CHANGED, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 			::DeleteObject(hbm);
 		}

@@ -60,7 +60,7 @@ protected:
 	virtual void SetupToolbar();
 
 private:
-	CDockTabbedMDI m_TabbedMDIView;
+	CDockTabbedMDI m_DockTabbedMDI;
 
 };
 

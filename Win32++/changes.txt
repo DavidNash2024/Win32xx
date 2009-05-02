@@ -53,14 +53,24 @@ Added CFrame::SetupToolbar
 Added CFrame::m_bUseToolbar
 Added CContainer::SetupToolbar
 Added CDockable::GetDockTopLevel
+Added CDockable::GetContainer
+Added CDockable::GetTabbedMDI
 Added CDockable::IsRelated
 Added CToolbar::GetToolbarData
 Added CWnd::GetClassString
+Added CWnd::IsTabbedMDI
+Changed CFrame::SetToolbarImages
 Changed CToolbar::SetImages
 Changed CToolbar::SetBitmap
 Changed CToolbar::AddBitmap
 Changed CToolbar::ReplaceBitmap
 Renamed CDockable::CheckDockables to CDockable::VerifyDockables
+
+Incompatiblities with previous versions
+---------------------------------------
+Many of the functions associated with adding toolbars to frames have changed.
+Refer to the Themes sample for a demonstration of how to add multiple toolbars
+to a frame.
    
 
 Version 6.4.1

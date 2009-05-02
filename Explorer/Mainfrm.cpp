@@ -158,20 +158,28 @@ LRESULT CMainFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	return 0L;
 }
 
-void CMainFrame::SetButtons()
+void CMainFrame::SetupToolbar()
 {
+	// Define our toolbar data
+	AddToolbarButton( IDM_FILE_NEW  , FALSE, _T("New") );
+	AddToolbarButton( IDM_FILE_OPEN , FALSE, _T("Open") );
+	AddToolbarButton( IDM_FILE_SAVE , FALSE, _T("Save") );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT  , FALSE, _T("Cut") );
+	AddToolbarButton( IDM_EDIT_COPY , FALSE, _T("Copy") );
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE, _T("Paste") );
+	AddToolbarButton( IDM_FILE_PRINT, FALSE, _T("Print") );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_VIEWMENU,   TRUE,  _T("View Menu"));
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_HELP_ABOUT, TRUE,  _T("About") );
+
 	// Use larger buttons
 	CToolbar& TB = GetToolbar();
 	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Disable some buttons
-	TB.DisableButton(IDM_FILE_NEW);
-	TB.DisableButton(IDM_FILE_OPEN);
-	TB.DisableButton(IDM_FILE_SAVE);
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
 
 	// Configure the ViewMenu button to bring up a menu
 	// Setting this style requires comctl32.dll version 4.72 or later
@@ -179,43 +187,6 @@ void CMainFrame::SetButtons()
 	{
 		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 	}
-
-	// Add some text to the buttons
- 	TB.SetButtonText(IDM_FILE_NEW,   _T("New"));
-	TB.SetButtonText(IDM_FILE_OPEN,  _T("Open"));
-	TB.SetButtonText(IDM_FILE_SAVE,  _T("Save"));
-	TB.SetButtonText(IDM_EDIT_CUT,   _T("Cut"));
-	TB.SetButtonText(IDM_EDIT_COPY,  _T("Copy"));
-	TB.SetButtonText(IDM_EDIT_PASTE, _T("Paste"));
-	TB.SetButtonText(IDM_FILE_PRINT, _T("Print"));
-	TB.SetButtonText(IDM_VIEWMENU,   _T("View Menu"));
-	TB.SetButtonText(IDM_HELP_ABOUT, _T("About"));
-
-	if (IsRebarUsed())
-	{
-		// Resize the Rebar band
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-	}
-}
-
-void CMainFrame::SetupToolbar()
-{
-	// Define our toolbar data
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_VIEWMENU);
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
-	SetButtons();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

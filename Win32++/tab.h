@@ -158,6 +158,7 @@ namespace Win32xx
 		virtual void CloseActiveMDI();
 		virtual CWnd* GetActiveMDIChild();
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
+		virtual BOOL IsTabbedMDI() const {return TRUE;}
 		virtual void RecalcLayout();
 		virtual void SetActiveMDIChild(CWnd* pWnd);
 		virtual void SetActiveTab(int iTab);

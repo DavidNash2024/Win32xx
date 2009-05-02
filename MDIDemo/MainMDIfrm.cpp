@@ -29,7 +29,7 @@ void CMainMDIFrame::OnInitialUpdate()
 	//Place any additional startup code here.
 }
 
-void CMainMDIFrame::DoPopupMenu()
+void CMainMDIFrame::OnFileNew()
 {
 	// Creates the popup menu when the "New" toolbar button is pressed
 
@@ -59,7 +59,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	{
 	case IDM_FILE_NEW:
 		// For ComCtl versions 4.71 and older
-		DoPopupMenu();
+		OnFileNew();
 		return TRUE;
 	case IDM_FILE_NEWVIEW:
 		AddMDIChild(new CMDIChildSimple);	// CMDIFrame::RemoveMDIChild deletes this pointer
@@ -110,12 +110,7 @@ void CMainMDIFrame::OnCreate()
 
 	SetButtons(GetToolbar().GetToolbarData());
 
-	// Configure the "New" toolbar button to bring up a menu
-	// Setting this style requires comctl32.dll version 4.72 or later
-	if (GetComCtlVersion() >= 472)
-	{
-		GetToolbar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
-	}
+
 }
 
 LRESULT CMainMDIFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -128,7 +123,7 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 		case TBN_DROPDOWN:
 		{
 			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar())
-				DoPopupMenu();
+				OnFileNew();
 		}
 		break;
 
@@ -139,25 +134,30 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 
 void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 {
+
+}
+
+void CMainMDIFrame::SetupToolbar()
+{
+	// Define the resource IDs for the toolbar
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN,  FALSE );
+	AddToolbarButton( IDM_FILE_SAVE,  FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_HELP_ABOUT );
+
 	// Use larger buttons with seperate imagelists for normal, hot and disabled buttons.
 	CToolbar& TB = GetToolbar();
 	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	// Disable some of the toolbar buttons
-	TB.DisableButton(IDM_FILE_OPEN);
-	TB.DisableButton(IDM_FILE_SAVE);
-	TB.DisableButton(IDM_EDIT_CUT);
-	TB.DisableButton(IDM_EDIT_COPY);
-	TB.DisableButton(IDM_EDIT_PASTE);
-	TB.DisableButton(IDM_FILE_PRINT);
-
-	// Resize the Rebar band
-	if (IsRebarUsed())
-	{
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB), TB.GetMaxSize());
-	}
-	RecalcLayout();
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_FILE_NEWVIEW, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_VIEW)));
@@ -166,22 +166,13 @@ void CMainMDIFrame::SetButtons(const std::vector<UINT> ToolbarData)
 	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
 	AddMenuIcon(IDM_FILE_NEWLIST, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILES)));
 	AddMenuIcon(IDM_FILE_NEWTREE, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_CLASSES)));
-}
 
-void CMainMDIFrame::SetupToolbar()
-{
-	// Define the resource IDs for the toolbar
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	// Configure the "New" toolbar button to bring up a menu
+	// Setting this style requires comctl32.dll version 4.72 or later
+	if (GetComCtlVersion() >= 472)
+	{
+		GetToolbar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
+	}
 }
 
 LRESULT CMainMDIFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

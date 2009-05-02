@@ -120,13 +120,6 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
-
-	// Disable a the Save toolbar button
-	CToolbar& TB = GetToolbar();
-	TB.DisableButton(IDM_FILE_SAVE);
-	TB.DisableButton(IDM_IMAGE_ADJUST);
-	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
-	SetMenuIcons(TB.GetToolbarData(), RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
 }
 
 void CMainFrame::OnFileOpen()
@@ -188,11 +181,17 @@ void CMainFrame::SetupToolbar()
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW   );
 	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_IMAGE_ADJUST);
-	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_SAVE, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_IMAGE_ADJUST, FALSE);
+	
+	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
+
+	// Specify a the icons used by the menu
+	CToolbar& TB = GetToolbar();
+	SetMenuIcons(TB.GetToolbarData(), RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
