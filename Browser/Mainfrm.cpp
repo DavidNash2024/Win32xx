@@ -323,20 +323,14 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HOME );
 
-	// Get the reference to the CToolbar
-	CToolbar& TB = GetToolbar();
-
 	// Set the image lists for normal, hot and disabled buttons
-	SetToolbarImages(TB, RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolbarImages(RGB(255,0,255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	std::vector<UINT> IconData;
 	if (IsRebarUsed())
 	{
-		// Resize the Rebar band
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-
-		AddListboxBand(22);
+		int Height = 22;
+		AddListboxBand(Height);
 
 		// Set the icons for popup menu items
 		IconData.push_back ( IDM_FILE_NEW  );

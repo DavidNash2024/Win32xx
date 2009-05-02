@@ -102,6 +102,8 @@ namespace Win32xx
 	// Overridables
 		virtual void OnCreate();
 		virtual void OnDestroy();
+		virtual void OnLButtonDblClk(WPARAM wParam, LPARAM lParam);
+		virtual void OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -564,6 +566,34 @@ namespace Win32xx
 		ImageList_Destroy(himlToolbarDis);
 	}
 
+	inline void CToolbar::OnLButtonDblClk(WPARAM /*wParam*/, LPARAM lParam)
+	// Doubleclicks on drop down buttons behave strangely because the popup
+	//  menu eats the LeftButtonUp messages, so we put them back.
+	{
+		int iButton = HitTest();
+		if (iButton >= 0)
+		{
+			DWORD nStyle = GetButtonStyle(GetCommandID(iButton));
+			if (((nStyle & 0x0080) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400)))
+			{
+				// DoubleClick on BTNS_WHOLEDROPDOWN button
+				::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+			}
+
+			if (nStyle & TBSTYLE_DROPDOWN)
+			{
+				CRect rcButton = GetItemRect(iButton);
+
+				int xPos = GET_X_LPARAM(lParam);
+				if (xPos >= rcButton.right -13)
+				{
+					// DoubleClick on dropdown part of TBSTYLE_DROPDOWN button
+					::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+				}
+			}
+		}
+	}
+
 	inline LRESULT CToolbar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
 	// Notifications sent to the parent window are reflected back here
 	{
@@ -587,6 +617,23 @@ namespace Win32xx
 
 		}
 		return 0L;
+	}
+
+	inline void CToolbar::OnWindowPosChanging(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		// Adjust size for toolbars inside a rebar
+		TCHAR ClassName[32];
+		::GetClassName(GetParent(), ClassName, 32);
+
+		if (0 == lstrcmp(ClassName, REBARCLASSNAME))
+		{
+			CRebar* pRebar = (CRebar*)FromHandle(GetParent());
+			if (pRebar && (pRebar->GetRebarTheme().ShortBands))
+			{
+				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+				pWinPos->cx = GetMaxSize().cx+2;
+			}
+		}
 	}
 
 	inline void CToolbar::PreCreate(CREATESTRUCT &cs)
@@ -830,6 +877,10 @@ namespace Win32xx
 		tbbi.dwMask = TBIF_SIZE;
 		tbbi.cx = (WORD)nWidth;
 		::SendMessage(m_hWnd, TB_SETBUTTONINFO, (WPARAM)iButtonID, (LPARAM)&tbbi);
+		
+		// Send a changed message to the parent (used by the rebar)
+		SIZE MaxSize = GetMaxSize();
+		::SendMessage(GetParent(), UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 		// Note:  TB_SETBUTTONINFO requires comctl32.dll version 4.71 or later
 		//        i.e. Win95 with IE4 / NT with IE4   or later
@@ -937,7 +988,7 @@ namespace Win32xx
 
 			// Inform the parent of the change (rebar needs this)
 			SIZE MaxSize = GetMaxSize();
-			::SendMessage(GetParent(), UWM_TOOLBAR_CHANGED, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
+			::SendMessage(GetParent(), UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 			::DeleteObject(hbm);
 		}
@@ -960,57 +1011,14 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_WINDOWPOSCHANGING:
-			{
-				// Adjust size for toolbars inside a rebar
-				TCHAR ClassName[32];
-				::GetClassName(GetParent(), ClassName, 32);
-
-				if (0 == lstrcmp(ClassName, REBARCLASSNAME))
-				{
-					CRebar* pRebar = (CRebar*)FromHandle(GetParent());
-					if (pRebar && (pRebar->GetRebarTheme().ShortBands))
-					{
-						LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-						pWinPos->cx = GetMaxSize().cx+2;
-					}
-				}
-			}
-			break;
-		case WM_LBUTTONDBLCLK:
-			// Doubleclicks on drop down buttons behave strangely because the popup
-			//  menu eats the LeftButtonUp messages, so we put them back.
-			{
-				int iButton = HitTest();
-				if (iButton >= 0)
-				{
-					DWORD nStyle = GetButtonStyle(GetCommandID(iButton));
-					if (((nStyle & 0x0080) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400)))
-					{
-						// DoubleClick on BTNS_WHOLEDROPDOWN button
-						::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-						return 0L;
-					}
-
-					if (nStyle & TBSTYLE_DROPDOWN)
-					{
-						CRect rcButton = GetItemRect(iButton);
-
-						int xPos = GET_X_LPARAM(lParam);
-						if (xPos >= rcButton.right -13)
-						{
-							// DoubleClick on dropdown part of TBSTYLE_DROPDOWN button
-							::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-							return 0L;
-						}
-					}
-				}
-			}
-
-			break;
-
 		case WM_DESTROY:
 			OnDestroy();
+			break;
+		case WM_LBUTTONDBLCLK:
+			OnLButtonDblClk(wParam, lParam);
+			return 0;
+		case WM_WINDOWPOSCHANGING:
+			OnWindowPosChanging(wParam, lParam);
 			break;
 		}
 

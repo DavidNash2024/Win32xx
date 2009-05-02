@@ -160,7 +160,7 @@
 #define UWM_FRAMEGOTFOCUS	(WM_APP + 10)   // Notification - sent by frame to view window when focus acquired
 #define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when dockable is destroyed
 #define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
-#define UWM_TOOLBAR_CHANGED (WM_APP + 13)   // Message - sent by toolbar to parent when image changed
+#define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
 
 
 // Automatically include the Win32xx namespace
@@ -665,6 +665,7 @@ namespace Win32xx
 		BOOL IsChild(const CWnd* pWndParent) const;
 		virtual BOOL IsContainer() const { return FALSE; }
 		virtual BOOL IsDockable() const  { return FALSE; }
+		virtual BOOL IsFrame() const     { return FALSE; }
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;

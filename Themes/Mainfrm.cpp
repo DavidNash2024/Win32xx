@@ -44,15 +44,7 @@ void CMainFrame::AddCombo()
 
 	// Set ComboBox Height
 	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)rc.Height()-6);
-
-	// Resize rebar band to accomodate the new width of the toolbar
-	if (IsRebarUsed())
-	{
-		CRebar& RB = GetRebar();
-		int iBand = RB.GetBand(TB.GetHwnd());
-		RB.ResizeBand(iBand, TB.GetMaxSize());
-	}
-
+	
 	m_ComboBoxEx.AddItems();
 	RecalcLayout();
 }

@@ -47,6 +47,7 @@
 #include "gdi.h"
 #include "toolbar.h"
 #include "tab.h"
+#include "frame.h"
 #include "Default_Resource.h"
 
 
@@ -168,6 +169,7 @@ namespace Win32xx
 		int m_iCurrentPage;
 		CContainer* m_pContainerParent;
 		HICON m_hTabIcon;
+		BOOL m_IsTracking;
 
 	};
 
@@ -2169,6 +2171,18 @@ namespace Win32xx
 		HWND hwndParent = GetParent();
 		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
 		SetParent(hwndParent);	// Reinstate the window's parent
+
+		// Set the default colour for the splitter bar
+		CFrame* pFrame = 0;
+		pFrame = (CFrame*)FromHandle(GetAncestor());
+		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE); 
+		if (pFrame && pFrame->IsFrame())
+		{
+			CRebar& RB = pFrame->GetRebar();
+			if (RB.GetRebarTheme().UseThemes)
+				rgbColour = RB.GetRebarTheme().clrBkgnd2;
+		}
+		SetBarColor(rgbColour);
 	}
 
 	inline LRESULT CDockable::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -2791,9 +2805,6 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-	//	case UWM_IS_DOCKABLE:	// A message to test if this is a Container window
-	//		return TRUE;
-
 		case WM_ACTIVATE:
 			{
 				// Only top level undocked dockables get this message
@@ -2957,6 +2968,30 @@ namespace Win32xx
 					delete pDock;
 				}
 			}
+			break;
+		case WM_SYSCOLORCHANGE:
+			{
+				if (this == GetDockAncestor())
+				{
+					CFrame* pFrame = 0;
+					pFrame = (CFrame*)FromHandle(GetAncestor());
+					COLORREF rgbColour = GetSysColor(COLOR_BTNFACE); 
+					if (pFrame && pFrame->IsFrame())
+					{
+						CRebar& RB = pFrame->GetRebar();
+						if (RB.GetRebarTheme().UseThemes)
+							rgbColour = RB.GetRebarTheme().clrBkgnd2;
+					}
+
+					// Set the splitter bar colour for each dockable decendant
+					std::vector<CDockable*>::iterator iter;
+					for (iter = GetAllDockables().begin(); iter < GetAllDockables().end(); ++iter)
+						(*iter)->SetBarColor(rgbColour);
+				
+					// Set the splitter bar colour for the dockable ancestor
+					SetBarColor(rgbColour);
+				}
+			}
 		}
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -2965,22 +3000,9 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class
-	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0)
+	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0), m_IsTracking(FALSE)
 	{
 		m_pContainerParent = this;
-
-		// Set the Resource IDs for the toolbar buttons
-	//	AddToolbarButton( IDM_FILE_NEW   );
-	//	AddToolbarButton( IDM_FILE_OPEN  );
-	//	AddToolbarButton( IDM_FILE_SAVE  );
-	//	AddToolbarButton( 0 );				// Separator
-	//	AddToolbarButton( IDM_EDIT_CUT   );
-	//	AddToolbarButton( IDM_EDIT_COPY  );
-	//	AddToolbarButton( IDM_EDIT_PASTE );
-	//	AddToolbarButton( 0 );				// Separator
-	//	AddToolbarButton( IDM_FILE_PRINT );
-	//	AddToolbarButton( 0 );				// Separator
-	//	AddToolbarButton( IDM_HELP_ABOUT );
 	}
 
 	inline CContainer::~CContainer()
@@ -3262,16 +3284,11 @@ namespace Win32xx
 			pNewContainer->GetViewPage().GetView()->SetFocus();
 
 			// Adjust the docking caption
-			CWnd* pParent = FromHandle(GetParent());
-		//	if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
-			if (pParent && pParent->IsDockable())
+			CDockable* pDock = (CDockable*)FromHandle(::GetParent(GetParent()));
+			if (pDock && pDock->IsDockable())
 			{
-				CDockable* pDock = (CDockable*)FromHandle(::GetParent(GetParent()));
-				if (pDock)
-				{
-					pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
-					pDock->RedrawWindow();
-				}
+				pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
+				pDock->RedrawWindow();
 			}
 
 			m_iCurrentPage = iPage;
@@ -3299,69 +3316,45 @@ namespace Win32xx
 
 	inline LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		static BOOL IsTracking = FALSE;
-
 		switch (uMsg)
 		{
-	//	case UWM_IS_CONTAINER:	// A message to test if this is a Container window
-	//		return TRUE;
-
 		case WM_SIZE:
-		/*	{
-				if ((int)m_vContainerInfo.size() > m_iCurrentPage)
-				{
-					// Set the tab sizes
-					SetTabSize();
-
-					// Position the View over the tab control's display area
-					CRect rc = GetClientRect();
-					AdjustRect(FALSE, &rc);
-					CContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
-					pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-				} 
-			}*/
 			RecalcLayout();
 			return 0;
-
 		case WM_MOUSELEAVE:
 			{
-				IsTracking = FALSE;
+				m_IsTracking = FALSE;
 				if (IsLeftButtonDown())
 				{
-					CWnd* pParent = FromHandle(GetParent());
-					if (pParent && pParent->IsDockable())
-				//	if (::SendMessage(::GetParent(GetParent()), UWM_IS_DOCKABLE, 0L, 0L))
+					CDockable* pDock = (CDockable*)FromHandle(::GetParent(GetParent()));
+					if (pDock && pDock->IsDockable())
 					{
 						CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
-
-						CDockable* pDock = (CDockable*) FromHandle(::GetParent(GetParent()));
-						if (pDock)
-							pDock->UndockContainer(pContainer);
+						pDock->UndockContainer(pContainer);
 					}
 				}
 			}
 			break;
-
 		case WM_LBUTTONDOWN:
-			if (!IsTracking)
+			if (!m_IsTracking)
 			{
 				TRACKMOUSEEVENT TrackMouseEventStruct = {0};
 				TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 				TrackMouseEventStruct.dwFlags = TME_LEAVE;
 				TrackMouseEventStruct.hwndTrack = m_hWnd;
 				_TrackMouseEvent(&TrackMouseEventStruct);
-				IsTracking = TRUE;
+				m_IsTracking = TRUE;
 			}
 			break;
 		case WM_MOUSEMOVE:
-			if (!IsTracking && !IsLeftButtonDown())
+			if (!m_IsTracking && !IsLeftButtonDown())
 			{
 				TRACKMOUSEEVENT TrackMouseEventStruct = {0};
 				TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 				TrackMouseEventStruct.dwFlags = TME_LEAVE;
 				TrackMouseEventStruct.hwndTrack = m_hWnd;
 				_TrackMouseEvent(&TrackMouseEventStruct);
-				IsTracking = TRUE;
+				m_IsTracking = TRUE;
 			}
 			break;
 		case WM_SETFOCUS:

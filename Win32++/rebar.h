@@ -583,7 +583,7 @@ namespace Win32xx
 			if (OnEraseBkgnd((HDC)wParam))
 				return TRUE;
 			break;
-		case UWM_TOOLBAR_CHANGED:
+		case UWM_TOOLBAR_RESIZE:
 			{
 				HWND hToolbar = (HWND)wParam;
 				LPSIZE pToolbarSize = (LPSIZE)lParam;

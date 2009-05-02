@@ -181,6 +181,8 @@ namespace Win32xx
 	//
 	class CFrame : public CWnd
 	{
+		friend class CMenubar;
+
 	public:
 		CFrame();
 		virtual ~CFrame();
@@ -193,10 +195,6 @@ namespace Win32xx
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
 		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
-		virtual void OnFrameDrawItem(WPARAM wParam, LPARAM lParam);
-		virtual void OnFrameExitMenuLoop();
-		virtual void OnFrameInitMenuPopup(WPARAM wParam, LPARAM lParam);
-		virtual void OnFrameMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
@@ -225,6 +223,7 @@ namespace Win32xx
 		void LoadRegistrySettings(LPCTSTR szKeyName);
 		void SetView(CWnd& wndView);
 
+		BOOL IsFrame() const			{return TRUE;}
 		BOOL IsMDIFrame() const			{return m_bIsMDIFrame;}
 		BOOL IsMenubarUsed() const		{return (GetMenubar() != 0);}
 		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
@@ -239,8 +238,13 @@ namespace Win32xx
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
 		virtual void OnCreate();
+		virtual void OnFrameActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnFrameClose();
 		virtual BOOL OnFrameCommand(WPARAM wPAram, LPARAM lParam);
+		virtual BOOL OnFrameDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual void OnFrameExitMenuLoop();
+		virtual void OnFrameInitMenuPopup(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnFrameMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnFrameNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnFrameSetFocus();
 		virtual void OnFrameSysColorChange();
@@ -1963,10 +1967,11 @@ namespace Win32xx
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
-	inline void CFrame::OnFrameDrawItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline BOOL CFrame::OnFrameDrawItem(WPARAM /*wParam*/, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
+		if (pdis->CtlType != ODT_MENU) return FALSE;
 
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
@@ -2051,9 +2056,12 @@ namespace Win32xx
 
 			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
 			::SetBkMode(DrawDC, iMode);
-		}
+			}
+		
 		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
+
+		return TRUE;
 	}
 
 	inline void CFrame::OnFrameExitMenuLoop()
@@ -2080,6 +2088,40 @@ namespace Win32xx
 			delete m_vMenuItemData[nItem];
 		}
 		m_vMenuItemData.clear();
+	}
+
+	inline void CFrame::OnFrameActivate(WPARAM wParam, LPARAM lParam)
+	{
+		// Do default processing first
+		DefWindowProc(WM_ACTIVATE, wParam, lParam);
+		
+		if (LOWORD(wParam) == WA_INACTIVE)
+		{
+			// Save the hwnd of the window which currently has focus
+			// (this must be CFrame window itself or a child window
+			if (!IsIconic()) m_hOldFocus = GetFocus();
+
+			// Send a notification to the view window
+			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+			NMHDR nhdr={0};
+			nhdr.hwndFrom = m_hOldFocus;
+			nhdr.idFrom = idCtrl;
+			nhdr.code = UWM_FRAMELOSTFOCUS;
+			GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+		}
+		else
+		{					
+			// Now set the focus to the appropriate child window
+			if (m_hOldFocus) ::SetFocus(m_hOldFocus);
+			
+			// Send a notification to the view window
+			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+			NMHDR nhdr={0};
+			nhdr.hwndFrom = m_hOldFocus;
+			nhdr.idFrom = idCtrl;
+			nhdr.code = NM_SETFOCUS;
+			GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+		} 
 	}
 
 	inline void CFrame::OnFrameClose()
@@ -2192,11 +2234,12 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::OnFrameMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline BOOL CFrame::OnFrameMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
 		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
+		if (pmis->CtlType != ODT_MENU) return FALSE;
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
 
@@ -2244,6 +2287,7 @@ namespace Win32xx
 			if (m_ThemeMenu.UseThemes)
 				pmis->itemWidth += 8;
 		}
+		 return TRUE;
 	}
 
 	inline void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
@@ -2361,6 +2405,9 @@ namespace Win32xx
 		// Reposition and redraw everything
 		RecalcLayout();
 		::RedrawWindow(m_hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+
+		// Forward the message to the view window
+		::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0L, 0L);
 	}
 
 	inline void CFrame::OnFrameTimer(WPARAM wParam)
@@ -2980,40 +3027,8 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_ACTIVATE:
-			{
-				// Do default processing first
-				DefWindowProc(uMsg, wParam, lParam);
-				
-				if (LOWORD(wParam) == WA_INACTIVE)
-				{
-					// Save the hwnd of the window which currently has focus
-					// (this must be CFrame window itself or a child window
-					if (!IsIconic()) m_hOldFocus = GetFocus();
-
-					// Send a notification to the view window
-					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-					NMHDR nhdr={0};
-					nhdr.hwndFrom = m_hOldFocus;
-					nhdr.idFrom = idCtrl;
-					nhdr.code = UWM_FRAMELOSTFOCUS;
-					GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-				}
-				else
-				{					
-					// Now set the focus to the appropriate child window
-					if (m_hOldFocus) ::SetFocus(m_hOldFocus);
-					
-					// Send a notification to the view window
-					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-					NMHDR nhdr={0};
-					nhdr.hwndFrom = m_hOldFocus;
-					nhdr.idFrom = idCtrl;
-					nhdr.code = NM_SETFOCUS;
-					GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-				} 
-			}
+			OnFrameActivate(wParam, lParam);
 			return 0L;
-
 		case WM_CLOSE:
 			OnFrameClose();
 			break;
@@ -3047,9 +3062,6 @@ namespace Win32xx
 		case WM_SYSCOLORCHANGE:
 			// Changing themes trigger this
 			OnFrameSysColorChange();
-
-			// Forward the message to the view window
-			::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0L, 0L);
 			return 0L;
 		case WM_SYSCOMMAND:
 			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
@@ -3066,27 +3078,16 @@ namespace Win32xx
 			return 0L;
 		case WM_DRAWITEM:
 			// Owner draw menu items
-			{
-				LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
-				if (pdis->CtlType == ODT_MENU)
-				{
-					OnFrameDrawItem(wParam, lParam);
-					return TRUE; // handled
-				}
-			}
+			if (OnFrameDrawItem(wParam, lParam)) 
+				return TRUE; // handled
 			break;
 		case WM_INITMENUPOPUP:
 			OnFrameInitMenuPopup(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			{
-				LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
-				if (pmis->CtlType == ODT_MENU)
-				{
-					OnFrameMeasureItem(wParam, lParam);
-					return TRUE; // handled
-				}
-			}
+			if (OnFrameMeasureItem(wParam, lParam))
+				return TRUE; // handled
+			break;
 		case WM_EXITMENULOOP:
 			OnFrameExitMenuLoop();
 			break;

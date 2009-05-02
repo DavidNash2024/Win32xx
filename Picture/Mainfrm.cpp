@@ -134,20 +134,12 @@ void CMainFrame::SetupToolbar()
 
 	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	
 	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 
-	// A reference to the CToolbar object
-	CToolbar& TB = GetToolbar();
-
 	// Set the image lists for normal, hot and disabled buttons
-	SetToolbarImages(TB, RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-	if (IsRebarUsed())
-	{
-		CRebar& RB = GetRebar();
-		RB.ResizeBand(RB.GetBand(TB.GetHwnd()), TB.GetMaxSize());
-	}
+	SetToolbarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

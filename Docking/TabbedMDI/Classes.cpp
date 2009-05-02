@@ -167,15 +167,6 @@ void CDockClasses::OnInitialUpdate()
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
-
-	// Set the color of the splitter bar
-	CMainFrame& MainFrame = GetTabbedMDIApp().GetMainFrame();
-	CRebar& RB = MainFrame.GetRebar();
-	if (RB.GetRebarTheme().UseThemes)
-		SetBarColor(RB.GetRebarTheme().clrBkgnd2);
-	else
-		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
-
 }
 
 

@@ -58,6 +58,7 @@ Added CDockable::GetTabbedMDI
 Added CDockable::IsRelated
 Added CToolbar::GetToolbarData
 Added CWnd::GetClassString
+Added CWnd::IsFrame
 Added CWnd::IsTabbedMDI
 Changed CFrame::SetToolbarImages
 Changed CToolbar::SetImages
