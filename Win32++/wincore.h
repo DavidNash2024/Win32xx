@@ -734,7 +734,7 @@ namespace Win32xx
 			{ return ::SendMessage(hWnd, uMsg, wParam, lParam);}
 
 	protected:
-		// These are the functions you might wish to override
+		// These can be overridden
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);

@@ -204,8 +204,6 @@ namespace Win32xx
 	//  There is no theoretical limit to the number of CDockables within CDockables.
 	class CDockable : public CWnd
 	{
-		friend class CContainer;
-
 	protected:
 		//  A nested class for the splitter bar that seperates the docked panes.
 		class CDockBar : public CWnd
@@ -348,6 +346,8 @@ namespace Win32xx
 		friend class CTargetTop;
 		friend class CTargetRight;
 		friend class CTargetBottom;
+		friend class CDockClient;
+		friend class CContainer;
 
 	public:
 		// Operations
@@ -2461,6 +2461,7 @@ namespace Win32xx
 		{
 		//	if (!VerifyDockables())
 		//		TRACE("Check failed in RecalcDockLayout\n");
+			TRACE("RecalcDockLayout\n");
 			
 			CRect rc = GetDockTopLevel()->GetClientRect();
 			GetDockTopLevel()->SetRedraw(FALSE);
@@ -2894,13 +2895,14 @@ namespace Win32xx
 				{
 					if (IsDocked()) TRACE("Error should be undocked\n");
 					// Reposition the dock children
-					if (IsUndocked()) RecalcDockLayout();
+					if (IsUndocked() && !m_bClosePressed) RecalcDockLayout();
 				}
 			}
 			break;
 
 		case WM_CLOSE:
 			{
+				TRACE("CDockable WM_CLOSE\n");
 				ShowWindow(SW_HIDE);
 			}
 			break;
@@ -2963,6 +2965,7 @@ namespace Win32xx
 
 		case UWM_DOCK_DESTROYED:
 			{
+				TRACE("CDockable  UWM_DOCK_DESTROYED\n");
 				CDockable* pDock = (CDockable*)wParam;
 				if (this == GetDockAncestor() && pDock != GetDockAncestor())
 				{

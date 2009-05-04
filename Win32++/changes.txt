@@ -37,7 +37,8 @@ Major Changes
       AddBitmap, ReplaceBitmap, SetBitmap and SetImages functions.
    - The AddToolbarButton can now add a toolbar button which is initially
       disabled.
-   - There is no need to call SetButtons when adding additional toolbars.      
+   - There is no need to call SetButtons when adding additional toolbars.
+   - Tooltips for all toolbars in the rebar are now displayed.      
 * MIN and MAX macros have been defined and can be used in place of min and max.
    This avoids incompatibilities between the way different compliers support
    these macros. It also avoids clashes between the macro definitions of 
@@ -68,13 +69,27 @@ Changed CToolbar::SetImages
 Changed CToolbar::SetBitmap
 Changed CToolbar::AddBitmap
 Changed CToolbar::ReplaceBitmap
-Renamed CDockable::CheckDockables to CDockable::VerifyDockables
+Renamed CDockable::CheckDockables     to CDockable::VerifyDockables
+Renamed CFrame::OnFrameDrawItem       to CFrame::OnDrawItem
+Renamed CFrame::OnFrameExitMenuLoop   to CFrame::OnExitMenuLoop
+Renamed CFrame::OnFrameInitMenuPopup  to CFrame::OnInitMenuPopup
+Renamed CFrame::OnFrameMeasureItem    to CFrame::OnMeasureItem
+Renamed CFrame::OnFrameClose          to CFrame::OnClose
+Renamed CFrame::OnFrameNotify         to CFrame::OnNotify
+Renamed CFrame::OnFrameSetFocus       to CFrame::OnSetFocus
+Renamed CFrame::OnFrameSysColorChange to CFrame::OnSysColorChange
+Renamed CFrame::OnFrameTimer          to CFrame::OnTimer
+Removed	OnFrameCommand
 
 Incompatiblities with previous versions
 ---------------------------------------
-Many of the functions associated with adding toolbars to frames have changed.
-Refer to the Themes sample for a demonstration of how to add multiple toolbars
-to a frame.
+- Many of the functions associated with adding toolbars to frames have changed.
+  Refer to the Themes sample for a demonstration of how to add multiple toolbars
+  to a frame.
+- The renaming of the CFrame::OnXXXX may affect overloading. Calling the base
+  function may now be required particularly for CFrame::OnNotify.
+- The OnCommand handlers for OnViewStatusbar and OnViewToolbar have been removed
+  from CFrame, and should be added to CMainFrame::OnCommand if required.    
    
 
 Version 6.4.1
