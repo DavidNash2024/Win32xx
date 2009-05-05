@@ -115,12 +115,13 @@ namespace Win32xx
 		ThemeRebar m_Theme;
 		BOOL m_bIsDragging;
 		HWND m_hMenubar;
+		LPARAM m_Orig_lParam;
 	};
 
 	///////////////////////////////////
 	// Definitions for the CRebar class
 	//
-	inline CRebar::CRebar() : m_bIsDragging(FALSE), m_hMenubar(0)
+	inline CRebar::CRebar() : m_bIsDragging(FALSE), m_hMenubar(0), m_Orig_lParam(0L)
 	{
 		ZeroMemory(&m_Theme, sizeof(ThemeRebar));
 	}
@@ -569,7 +570,6 @@ namespace Win32xx
 
 	inline LRESULT CRebar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		static LPARAM Orig_lParam;
 		switch (uMsg)
 		{
 		case WM_MOUSEMOVE:
@@ -584,7 +584,7 @@ namespace Win32xx
 			}
 			break; 
 		case WM_LBUTTONDOWN:
-			Orig_lParam = lParam;	// Store the x,y position
+			m_Orig_lParam = lParam;	// Store the x,y position
 			m_bIsDragging = TRUE;
 			break;
 		case WM_LBUTTONUP:
@@ -596,7 +596,7 @@ namespace Win32xx
 				if (y <= GetRowHeight(0))
 				{
 					// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
-					lParam = Orig_lParam;
+					lParam = m_Orig_lParam;
 				}
 			}
 			m_bIsDragging = FALSE;

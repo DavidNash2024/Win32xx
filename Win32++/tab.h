@@ -123,12 +123,13 @@ namespace Win32xx
 		void SetPadding(int cx, int cy);
 
 	protected:
-		virtual SIZE GetMaxTabSize();
-		virtual void OnCreate();
+		virtual SIZE    GetMaxTabSize();
+		virtual void    OnCreate();
+		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetTabSize();
+		virtual void    PreCreate(CREATESTRUCT& cs);
+		virtual void    SetTabSize();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			
 	private:
@@ -597,6 +598,21 @@ namespace Win32xx
 		SelectPage(0);
 	}
 
+	inline void CTab::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		
+		if (GetCloseRect().PtInRect(pt))
+		{
+			RemoveTabPage(GetCurSel());
+		}
+
+		if (GetListRect().PtInRect(pt))
+		{
+			ShowListMenu();
+		}
+	}
+
 	inline LRESULT CTab::OnNCHitTest(WPARAM wParam, LPARAM lParam)
 	{
 		// Ensure we have an arrow cursor when the tab has no view window
@@ -899,34 +915,10 @@ namespace Win32xx
 		case WM_ERASEBKGND:
 			return 0;
 		case WM_NCHITTEST:
-			{
-				// Ensure we have an arrow cursor when the tab has no view window
-				if (0 == GetAllTabs().size())
-					SetCursor(LoadCursor(NULL, IDC_ARROW));
-				
-				// Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				MapWindowPoints(NULL, m_hWnd, &pt, 1);				
-				if (GetCloseRect().PtInRect(pt)) return HTCLIENT;
-				if (GetListRect().PtInRect(pt))  return HTCLIENT;
+			return OnNCHitTest(wParam, lParam);
 
-				return CWnd::WndProcDefault(m_hWnd, WM_NCHITTEST, wParam, lParam);
-			}
-			break;
 		case WM_LBUTTONDOWN:
-			{
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				
-				if (GetCloseRect().PtInRect(pt))
-				{
-					RemoveTabPage(GetCurSel());
-				}
-
-				if (GetListRect().PtInRect(pt))
-				{
-					ShowListMenu();
-				}
-			}
+			OnLButtonDown(wParam, lParam);
 			break;
 		case WM_LBUTTONUP:
 			break;

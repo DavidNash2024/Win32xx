@@ -240,15 +240,17 @@ namespace Win32xx
 		virtual void OnCreate();
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
-		virtual BOOL OnDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
+		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual	void OnTimer(WPARAM wParam);
 		virtual void OnHelp();
+		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
 		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
@@ -310,6 +312,7 @@ namespace Win32xx
 		size_t m_nMaxMRU;					// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
+		int m_nOldID;
 
 	};  // class CFrame
 
@@ -1329,7 +1332,7 @@ namespace Win32xx
 	inline CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE), 
 						m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), 
-						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0)
+						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 
@@ -1965,11 +1968,12 @@ namespace Win32xx
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
-	inline BOOL CFrame::OnDrawItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline LRESULT CFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
-		if (pdis->CtlType != ODT_MENU) return FALSE;
+		if (pdis->CtlType != ODT_MENU) 
+			return CWnd::WndProcDefault(m_hWnd, WM_DRAWITEM, wParam, lParam);
 
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
@@ -2213,12 +2217,13 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CFrame::OnMeasureItem(WPARAM /*wParam*/, LPARAM lParam)
+	inline LRESULT CFrame::OnMeasureItem(WPARAM wParam, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
 		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
-		if (pmis->CtlType != ODT_MENU) return FALSE;
+		if (pmis->CtlType != ODT_MENU) 
+			return CWnd::WndProcDefault(m_hWnd, WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
 
@@ -2267,6 +2272,17 @@ namespace Win32xx
 				pmis->itemWidth += 8;
 		}
 		 return TRUE;
+	}
+
+	inline LRESULT CFrame::OnMenuChar(WPARAM wParam, LPARAM lParam)
+	{
+		if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
+		{
+			// Activate Menubar for key pressed with Alt key held down
+			GetMenubar().MenuChar(wParam, lParam);
+			return -1L;
+		}
+		return CWnd::WndProcDefault(m_hWnd, WM_MENUCHAR, wParam, lParam);
 	}
 
 	inline void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
@@ -2398,13 +2414,27 @@ namespace Win32xx
 		::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0L, 0L);
 	}
 
+	inline LRESULT CFrame::OnSysCommand(WPARAM wParam, LPARAM lParam)
+	{
+		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
+		{
+			GetMenubar().SysCommand(wParam, lParam);
+			return 0L;
+		}
+		
+		if (SC_MINIMIZE == wParam)
+			m_hOldFocus = GetFocus();
+		
+		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam);
+	}
+
 	inline void CFrame::OnTimer(WPARAM wParam)
 	{
 		if (ID_STATUS_TIMER == wParam)
 		{
 			if (m_bShowMenuStatus)
 			{
-				static int nOldID = -1;
+			//	static int nOldID = -1;
 				CToolbar& tb = GetToolbar();
 				CPoint pt;
 				::GetCursorPos(&pt);
@@ -2418,7 +2448,7 @@ namespace Win32xx
 					{
 						int nID = GetToolbar().GetCommandID(nButton);
 						// Only update the statusbar if things have changed
-						if (nID != nOldID)
+						if (nID != m_nOldID)
 						{
 							if (nID != 0)
 								m_tsStatusText = LoadString(nID);
@@ -2427,17 +2457,17 @@ namespace Win32xx
 
 							SetStatusText();
 						}
-						nOldID = nID;
+						m_nOldID = nID;
 					}
 				}
 				else
 				{
-					if (nOldID != -1)
+					if (m_nOldID != -1)
 					{
 						m_tsStatusText = _T("Ready");
 						SetStatusText();
 					}
-					nOldID = -1;
+					m_nOldID = -1;
 				}
 			}
 
@@ -3031,13 +3061,7 @@ namespace Win32xx
 			OnHelp();
 			return 0L;
 		case WM_MENUCHAR:
-			if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
-			{
-				// Activate Menubar for key pressed with Alt key held down
-				GetMenubar().MenuChar(wParam, lParam);
-				return -1L;
-			}
-			break;
+			return OnMenuChar(wParam, lParam);
 		case WM_MENUSELECT:
 			OnMenuSelect(wParam, lParam);
 			return 0L;
@@ -3052,30 +3076,18 @@ namespace Win32xx
 			OnSysColorChange();
 			return 0L;
 		case WM_SYSCOMMAND:
-			if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
-			{
-				GetMenubar().SysCommand(wParam, lParam);
-				return 0L;
-			}
-			
-			if (SC_MINIMIZE == wParam)
-				m_hOldFocus = GetFocus();
-			break;
+			return OnSysCommand(wParam, lParam);
 		case WM_TIMER:
 			OnTimer(wParam);
 			return 0L;
 		case WM_DRAWITEM:
 			// Owner draw menu items
-			if (OnDrawItem(wParam, lParam)) 
-				return TRUE; // handled
-			break;
+			return OnDrawItem(wParam, lParam);
 		case WM_INITMENUPOPUP:
 			OnInitMenuPopup(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			if (OnMeasureItem(wParam, lParam))
-				return TRUE; // handled
-			break;
+			return OnMeasureItem(wParam, lParam);
 		case WM_EXITMENULOOP:
 			OnExitMenuLoop();
 			break;

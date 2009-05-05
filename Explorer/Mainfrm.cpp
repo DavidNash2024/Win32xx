@@ -85,6 +85,8 @@ void CMainFrame::OnClose()
 {
 	// Destroying the TreeView triggers shutdown of the Treeview thread.
 	GetTreeView()->DestroyWindow();
+
+	CFrame::OnClose();
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
