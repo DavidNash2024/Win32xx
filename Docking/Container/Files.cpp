@@ -25,6 +25,7 @@ void CViewFiles::OnInitialUpdate()
 	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
 	ImageList_AddMasked(m_himlSmall, hbm, RGB(255, 0, 255));
 	SetImageList(m_himlSmall, LVSIL_SMALL);
+	::DeleteObject(hbm);
 
 	// Set the report style
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

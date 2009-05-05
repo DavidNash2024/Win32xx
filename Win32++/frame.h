@@ -1319,7 +1319,7 @@ namespace Win32xx
 		} // switch (uMsg)
 
 		return CToolbar::WndProcDefault(hWnd, uMsg, wParam, lParam);
-	} // LRESULT CMenubar::WndProc(...)
+	} // LRESULT CMenubar::WndProcDefault(...)
 
 
 
@@ -1551,7 +1551,7 @@ namespace Win32xx
 		rbbi.cx         = sz.cx +2;
 		rbbi.cxMinChild = sz.cx +2;
 
-		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+		rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 		rbbi.hwndChild  = TB;
 
 		GetRebar().InsertBand(-1, rbbi);

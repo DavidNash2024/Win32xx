@@ -109,7 +109,7 @@ namespace Win32xx
 	//Overridables
 		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		ThemeRebar m_Theme;
@@ -567,7 +567,7 @@ namespace Win32xx
 		SetBandInfo(nBand, rbbi);
 	}
 
-	inline LRESULT CRebar::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CRebar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		static LPARAM Orig_lParam;
 		switch (uMsg)
@@ -615,7 +615,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

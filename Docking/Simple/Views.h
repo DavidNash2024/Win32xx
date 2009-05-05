@@ -47,7 +47,6 @@ public:
 
 private:
 	HIMAGELIST m_himlNormal;
-	HBITMAP m_hbmImage;
 };
 
 class CViewList : public CListView
@@ -63,7 +62,6 @@ public:
 
 private:
 	HIMAGELIST m_himlSmall;
-	HBITMAP m_hbmImage;
 };
 
 

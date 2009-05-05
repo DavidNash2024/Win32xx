@@ -113,7 +113,7 @@ namespace Win32xx
 			virtual void PreRegisterClass(WNDCLASS &wc);
 			virtual void RecalcLayout();
 			virtual void SetView(CWnd& wndView);
-			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CWnd* GetTabCtrl() const { return m_pTab;}
 
@@ -160,7 +160,7 @@ namespace Win32xx
 		virtual void OnCreate();
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		std::vector<ContainerInfo> m_vContainerInfo;
@@ -257,6 +257,7 @@ namespace Win32xx
 		private:
 			CRect m_rcClose;
 			tString m_tsCaption;
+			CPoint m_Oldpt;
 			CDockable* m_pDock;
 			CWnd* m_pView;
 			int m_NCHeight;
@@ -394,8 +395,17 @@ namespace Win32xx
 		void SetView(CWnd& wndView);
 
 	protected:
+		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);	
+		virtual void OnDestroy(WPARAM wParam, LPARAM lParam);
+		virtual void OnDockDestroyed(WPARAM wParam, LPARAM lParam);
+		virtual void OnExitSizeMove(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual void OnSetFocus(WPARAM wParam, LPARAM lParam);
+		virtual void OnSysColorChange(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
+		virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -800,7 +810,6 @@ namespace Win32xx
 
 	inline LRESULT CDockable::CDockClient::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		static CPoint Oldpt;
 		static HWND hwndButtonDown = 0;
 
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
@@ -838,8 +847,8 @@ namespace Win32xx
 				else	m_bClosePressed = FALSE;
 
 				hwndButtonDown = hWnd;
-				Oldpt.x = GET_X_LPARAM(lParam);
-				Oldpt.y = GET_Y_LPARAM(lParam);
+				m_Oldpt.x = GET_X_LPARAM(lParam);
+				m_Oldpt.y = GET_Y_LPARAM(lParam);
 				if (m_pDock->IsDocked())
 				{
 					CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -881,7 +890,7 @@ namespace Win32xx
 					if (m_pDock->IsDocked())
 					{
 						// Discard phantom mouse move messages
-						if ( (Oldpt.x == GET_X_LPARAM(lParam) ) && (Oldpt.y == GET_Y_LPARAM(lParam)))
+						if ( (m_Oldpt.x == GET_X_LPARAM(lParam) ) && (m_Oldpt.y == GET_Y_LPARAM(lParam)))
 							return 0L;
 
 						if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (hWnd == hwndButtonDown))
@@ -2153,6 +2162,21 @@ namespace Win32xx
 		GetDockChildren().clear();
 	}
 
+	inline void CDockable::OnActivate(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		// Only top level undocked dockables get this message
+		if (LOWORD(wParam) == WA_INACTIVE)
+		{				
+			// Send a notification of focus lost
+			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+			NMHDR nhdr={0};
+			nhdr.hwndFrom = m_hOldFocus;
+			nhdr.idFrom = idCtrl;
+			nhdr.code = UWM_FRAMELOSTFOCUS;
+			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+		}
+	}
+
 	inline void CDockable::OnCreate()
 	{
 		// Create the various child windows
@@ -2175,7 +2199,7 @@ namespace Win32xx
 
 		// Set the default colour for the splitter bar
 		CFrame* pFrame = 0;
-		pFrame = (CFrame*)FromHandle(GetAncestor());
+		pFrame = (CFrame*)FromHandle(GetDockAncestor()->GetAncestor());
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE); 
 		if (pFrame && pFrame->IsFrame())
 		{
@@ -2183,7 +2207,60 @@ namespace Win32xx
 			if (RB.GetRebarTheme().UseThemes)
 				rgbColour = RB.GetRebarTheme().clrBkgnd2;
 		}
+		
 		SetBarColor(rgbColour);
+	}
+
+	inline void CDockable::OnDestroy(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		TRACE("Dock window destroyed\n");
+		// Destroy any dock children first
+		std::vector<CDockable*>::iterator iter;
+		for (iter = GetDockChildren().begin(); iter < GetDockChildren().end(); ++iter)
+		{
+			(*iter)->Destroy();
+		}
+
+		if (GetView()->IsContainer() && IsUndocked())
+		{
+			CContainer* pContainer = (CContainer*)GetView();
+			if (pContainer->GetAllContainers().size() > 1)
+			{
+				// This container has children, so destroy them now
+				std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
+				std::vector<ContainerInfo>::iterator iter;
+				for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
+				{
+					if ((*iter).pContainer != pContainer)
+					{
+						CDockable* pDock = GetDockFromView((*iter).pContainer);
+						pDock->Destroy();
+					}
+				}
+			}
+		}
+
+		GetDockBar().Destroy();
+
+		// Post a destroy dockable message
+		GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0L);
+	}
+
+	inline void CDockable::OnDockDestroyed(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		TRACE("CDockable  UWM_DOCK_DESTROYED\n");
+		CDockable* pDock = (CDockable*)wParam;
+		if (this == GetDockAncestor() && pDock != GetDockAncestor())
+		{
+			delete pDock;
+		}
+	}
+
+	inline void CDockable::OnExitSizeMove(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		m_BlockMove = FALSE;
+		m_bIsDragging = FALSE;
+		SendNotify(UWM_DOCK_END);
 	}
 
 	inline LRESULT CDockable::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -2363,6 +2440,121 @@ namespace Win32xx
 			}
 		}
 		return 0L;
+	}
+
+	inline void CDockable::OnSetFocus(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		if (IsUndocked() && m_hOldFocus)
+			::SetFocus(m_hOldFocus);
+		else
+			// Pass focus on the the view window
+			GetView()->SetFocus();
+		
+		if ((this == GetDockTopLevel()) && (this != GetDockAncestor()))
+		{
+			// Send a notification to top level window
+			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+			NMHDR nhdr={0};
+			nhdr.hwndFrom = m_hOldFocus;
+			nhdr.idFrom = idCtrl;
+			nhdr.code = NM_SETFOCUS;
+			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+		}
+	}
+
+	inline void CDockable::OnSysColorChange(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		if (this == GetDockAncestor())
+		{
+			CFrame* pFrame = 0;
+			pFrame = (CFrame*)FromHandle(GetAncestor());
+			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE); 
+			if (pFrame && pFrame->IsFrame())
+			{
+				CRebar& RB = pFrame->GetRebar();
+				if (RB.GetRebarTheme().UseThemes)
+					rgbColour = RB.GetRebarTheme().clrBkgnd2;
+			}
+
+			// Set the splitter bar colour for each dockable decendant
+			std::vector<CDockable*>::iterator iter;
+			for (iter = GetAllDockables().begin(); iter < GetAllDockables().end(); ++iter)
+				(*iter)->SetBarColor(rgbColour);
+		
+			// Set the splitter bar colour for the dockable ancestor
+			SetBarColor(rgbColour);
+		}
+	}
+
+	inline LRESULT CDockable::OnSysCommand(WPARAM wParam, LPARAM lParam) 
+	{
+		switch(wParam&0xFFF0)
+		{
+		case SC_MOVE:
+			// An undocked dockable is being moved
+			{
+				BOOL bResult = FALSE;
+				m_bIsDragging = TRUE;
+				SetCursor(LoadCursor(NULL, IDC_ARROW));
+
+				if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
+				{
+					// Turn on DragFullWindows for this move
+					SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
+
+					// Process this message
+					DefWindowProc(WM_SYSCOMMAND, wParam, lParam);
+
+					// Return DragFullWindows to its previous state
+					SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, bResult, 0, 0);
+					return 0L;
+				}
+			}
+			break;
+		case SC_CLOSE:
+			// The close button is pressed on an undocked dockable
+			m_bClosePressed = TRUE;
+			break;
+		}
+		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam); 
+	}
+
+	inline LRESULT CDockable::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+	{
+		// Suspend dock drag moving while over dock zone
+		if (m_BlockMove)
+		{
+        	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
+			pWndPos->flags |= SWP_NOMOVE|SWP_FRAMECHANGED;
+			return 0;
+		}
+		
+		return CWnd::WndProcDefault(m_hWnd, WM_WINDOWPOSCHANGING, wParam, lParam);
+	}
+
+	inline void CDockable::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		if (m_bIsDragging)
+		{
+			// Send a Move notification to the parent
+			if ( IsLeftButtonDown() )
+			{
+				LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
+				if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
+					SendNotify(UWM_DOCK_MOVE);
+			}
+			else
+			{
+				CloseAllTargets();
+				m_BlockMove = FALSE;
+			}
+		}
+		else if (this == GetDockTopLevel())
+		{
+			if (IsDocked()) TRACE("Error should be undocked\n");
+			// Reposition the dock children
+			if (IsUndocked() && !m_bClosePressed) RecalcDockLayout();
+		}
 	}
 
 	inline void CDockable::PreCreate(CREATESTRUCT &cs)
@@ -2803,199 +2995,33 @@ namespace Win32xx
 
 	inline LRESULT CDockable::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		static CPoint Oldpt;
-
 		switch (uMsg)
 		{
 		case WM_ACTIVATE:
-			{
-				// Only top level undocked dockables get this message
-				if (LOWORD(wParam) == WA_INACTIVE)
-				{				
-					// Send a notification of focus lost
-					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-					NMHDR nhdr={0};
-					nhdr.hwndFrom = m_hOldFocus;
-					nhdr.idFrom = idCtrl;
-					nhdr.code = UWM_FRAMELOSTFOCUS;
-					SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-				}
-			}
+			OnActivate(wParam, lParam);
 			break;  
-
 		case WM_SYSCOMMAND:
-			{
-				switch(wParam&0xFFF0)
-				{
-				case SC_MOVE:
-					// An undocked dockable is being moved
-					{
-						BOOL bResult = FALSE;
-						m_bIsDragging = TRUE;
-						SetCursor(LoadCursor(NULL, IDC_ARROW));
-
-						if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
-						{
-							// Turn on DragFullWindows for this move
-							SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
-
-							// Process this message
-							DefWindowProc(uMsg, wParam, lParam);
-
-							// Return DragFullWindows to its previous state
-							SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, bResult, 0, 0);
-							return 0L;
-						}
-					}
-					break;
-				case SC_CLOSE:
-					// The close button is pressed on an undocked dockable
-					m_bClosePressed = TRUE;
-					break;
-				}
-			}
-			break;
-
+			return OnSysCommand(wParam, lParam);
 		case WM_EXITSIZEMOVE:
-			m_BlockMove = FALSE;
-			m_bIsDragging = FALSE;
-			SendNotify(UWM_DOCK_END);
+			OnExitSizeMove(wParam, lParam);
 			break;
-
 		case WM_WINDOWPOSCHANGING:
-			{
-				// Suspend dock drag moving while over dock zone
-				if (m_BlockMove)
-				{
-                	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
-					pWndPos->flags |= SWP_NOMOVE|SWP_FRAMECHANGED;
-					return 0;
-				}
-				break;
-			}
-
+			return OnWindowPosChanging(wParam, lParam);
 		case WM_WINDOWPOSCHANGED:
-			{
-				if (m_bIsDragging)
-				{
-					// Send a Move notification to the parent
-					if ( IsLeftButtonDown() )
-					{
-						LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
-						if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
-							SendNotify(UWM_DOCK_MOVE);
-					}
-					else
-					{
-						CloseAllTargets();
-						m_BlockMove = FALSE;
-					}
-				}
-				else if (this == GetDockTopLevel())
-				{
-					if (IsDocked()) TRACE("Error should be undocked\n");
-					// Reposition the dock children
-					if (IsUndocked() && !m_bClosePressed) RecalcDockLayout();
-				}
-			}
-			break;
-
-		case WM_CLOSE:
-			{
-				TRACE("CDockable WM_CLOSE\n");
-				ShowWindow(SW_HIDE);
-			}
+			OnWindowPosChanged(wParam, lParam);
 			break;
 		case WM_DESTROY:
-			{
-				TRACE("Dock window destroyed\n");
-				// Destroy any dock children first
-				std::vector<CDockable*>::iterator iter;
-				for (iter = GetDockChildren().begin(); iter < GetDockChildren().end(); ++iter)
-				{
-					(*iter)->Destroy();
-				}
-
-				if (GetView()->IsContainer() && IsUndocked())
-				{
-					CContainer* pContainer = (CContainer*)GetView();
-					if (pContainer->GetAllContainers().size() > 1)
-					{
-						// This container has children, so destroy them now
-						std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
-						std::vector<ContainerInfo>::iterator iter;
-						for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
-						{
-							if ((*iter).pContainer != pContainer)
-							{
-								CDockable* pDock = GetDockFromView((*iter).pContainer);
-								pDock->Destroy();
-							}
-						}
-					}
-				}
-
-				GetDockBar().Destroy();
-
-				// Post a destroy dockable message
-				GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0L);
-			} 
+			OnDestroy(wParam, lParam);
 			break;
-
 		case WM_SETFOCUS:
-			{
-				if (IsUndocked() && m_hOldFocus)
-					::SetFocus(m_hOldFocus);
-				else
-					// Pass focus on the the view window
-					GetView()->SetFocus();
-				
-				if ((this == GetDockTopLevel()) && (this != GetDockAncestor()))
-				{
-					// Send a notification to top level window
-					int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-					NMHDR nhdr={0};
-					nhdr.hwndFrom = m_hOldFocus;
-					nhdr.idFrom = idCtrl;
-					nhdr.code = NM_SETFOCUS;
-					SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-				}
-			}
+			OnSetFocus(wParam, lParam);
 			break;
-
 		case UWM_DOCK_DESTROYED:
-			{
-				TRACE("CDockable  UWM_DOCK_DESTROYED\n");
-				CDockable* pDock = (CDockable*)wParam;
-				if (this == GetDockAncestor() && pDock != GetDockAncestor())
-				{
-					delete pDock;
-				}
-			}
+			OnDockDestroyed(wParam, lParam);
 			break;
 		case WM_SYSCOLORCHANGE:
-			{
-				if (this == GetDockAncestor())
-				{
-					CFrame* pFrame = 0;
-					pFrame = (CFrame*)FromHandle(GetAncestor());
-					COLORREF rgbColour = GetSysColor(COLOR_BTNFACE); 
-					if (pFrame && pFrame->IsFrame())
-					{
-						CRebar& RB = pFrame->GetRebar();
-						if (RB.GetRebarTheme().UseThemes)
-							rgbColour = RB.GetRebarTheme().clrBkgnd2;
-					}
-
-					// Set the splitter bar colour for each dockable decendant
-					std::vector<CDockable*>::iterator iter;
-					for (iter = GetAllDockables().begin(); iter < GetAllDockables().end(); ++iter)
-						(*iter)->SetBarColor(rgbColour);
-				
-					// Set the splitter bar colour for the dockable ancestor
-					SetBarColor(rgbColour);
-				}
-			}
+			OnSysColorChange(wParam, lParam);
+			break;
 		}
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
@@ -3318,7 +3344,7 @@ namespace Win32xx
 		GetViewPage().SetView(Wnd);
 	}
 
-	inline LRESULT CContainer::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CContainer::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -3370,7 +3396,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on to CTab for processing
-		return CTab::WndProc(hWnd, uMsg, wParam, lParam);
+		return CTab::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 
@@ -3443,7 +3469,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CContainer::CViewPage::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CContainer::CViewPage::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -3465,7 +3491,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

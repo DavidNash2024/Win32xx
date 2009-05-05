@@ -125,10 +125,11 @@ namespace Win32xx
 	protected:
 		virtual SIZE GetMaxTabSize();
 		virtual void OnCreate();
+		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void SetTabSize();
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			
 	private:
 		void DrawCloseButton(CDC& DrawDC, UINT uState);
@@ -145,8 +146,7 @@ namespace Win32xx
 		HIMAGELIST m_himlTab;
 		CWnd* m_pView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
-		int m_nTabHeight;
-		
+		int m_nTabHeight;	
 	};
 	
 	////////////////////////////////////////
@@ -169,7 +169,7 @@ namespace Win32xx
 	protected:
 		virtual HWND Create(HWND hWndParent);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	  
 	private:
 		CTab m_Tab;
@@ -250,6 +250,14 @@ namespace Win32xx
 
 			SetTabSize();
 			SelectPage(iNewPage);
+		}
+
+		// Adjust the window styles if needed
+		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		if (!(dwStyle & TCS_OWNERDRAWFIXED) || !(dwStyle & TCS_FIXEDWIDTH))
+		{
+			dwStyle |= TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
+			SetWindowLongPtr(GWL_STYLE, dwStyle);
 		}
 
 		SetView(*pWnd);
@@ -439,7 +447,10 @@ namespace Win32xx
 				info.cbSize = sizeof(info);
 				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 				dcMem.CreateFontIndirect(&info.lfStatusFont);
+				
+				// Calculate the size of the text
 				CRect rcText = rcItem;
+							
 				int iImageSize = 20;
 				int iPadding = 4;
 				if (tcItem.iImage >= 0)
@@ -584,6 +595,21 @@ namespace Win32xx
 		}
 
 		SelectPage(0);
+	}
+
+	inline LRESULT CTab::OnNCHitTest(WPARAM wParam, LPARAM lParam)
+	{
+		// Ensure we have an arrow cursor when the tab has no view window
+		if (0 == GetAllTabs().size())
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+		
+		// Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
+		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		MapWindowPoints(NULL, m_hWnd, &pt, 1);				
+		if (GetCloseRect().PtInRect(pt)) return HTCLIENT;
+		if (GetListRect().PtInRect(pt))  return HTCLIENT;
+
+		return CWnd::WndProcDefault(m_hWnd, WM_NCHITTEST, wParam, lParam);
 	}
 
 	inline LRESULT CTab::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
@@ -769,7 +795,7 @@ namespace Win32xx
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
-		}
+		}  
 	}
 
 	inline void CTab::SetView(CWnd& Wnd)  
@@ -855,7 +881,7 @@ namespace Win32xx
 		if (iSelected >= 0) SelectPage(iSelected);
 	}
 
-	inline LRESULT CTab::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CTab::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
@@ -883,6 +909,8 @@ namespace Win32xx
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);				
 				if (GetCloseRect().PtInRect(pt)) return HTCLIENT;
 				if (GetListRect().PtInRect(pt))  return HTCLIENT;
+
+				return CWnd::WndProcDefault(m_hWnd, WM_NCHITTEST, wParam, lParam);
 			}
 			break;
 		case WM_LBUTTONDOWN:
@@ -908,7 +936,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 	// Wrappers for Win32 Macros
@@ -1089,7 +1117,7 @@ namespace Win32xx
 		::DestroyMenu(hMenu);
 	}
 
-	inline LRESULT CTabbedMDI::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CTabbedMDI::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
@@ -1113,7 +1141,7 @@ namespace Win32xx
 			break;
 		}
 
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

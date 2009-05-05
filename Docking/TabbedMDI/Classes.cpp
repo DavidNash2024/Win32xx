@@ -26,6 +26,7 @@ void CViewClasses::OnInitialUpdate()
 	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_CLASSVIEW));
 	ImageList_AddMasked(m_himlNormal, hbm, RGB(255, 0, 0));
 	SetImageList(m_himlNormal, LVSIL_NORMAL);
+	::DeleteObject(hbm);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
