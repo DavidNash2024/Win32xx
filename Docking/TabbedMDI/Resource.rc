@@ -71,8 +71,10 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDW_MAIN                ICON                    "res/Docking.ico"
+IDI_SIMPLE              ICON                    "res/simple.ico"
 IDI_CLASSVIEW           ICON                    "res/classview.ico"
 IDI_FILEVIEW            ICON                    "res/fileview.ico"
+IDI_RECT                ICOn                    "res/rect.ico"
 IDI_TEXT                ICON                    "res/text.ico"
 
 

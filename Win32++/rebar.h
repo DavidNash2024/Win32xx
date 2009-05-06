@@ -238,14 +238,19 @@ namespace Win32xx
 		RBHITTESTINFO rbhti = {0};
 		rbhti.pt = pt;
 		int iBand = HitTest(rbhti);
-					
-		// Get the rebar band's hWnd
-		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
-		rbbi.fMask = RBBIM_CHILD;
-		GetBandInfo(iBand, rbbi);
+		
+		if (iBand >= 0)
+		{
+			// Get the rebar band's hWnd
+			REBARBANDINFO rbbi = {0};
+			rbbi.cbSize = sizeof(REBARBANDINFO);
+			rbbi.fMask = RBBIM_CHILD;
+			GetBandInfo(iBand, rbbi);
 
-		return rbbi.hwndChild;
+			return rbbi.hwndChild;
+		}
+		else 
+			return NULL;
 	}
 
 	inline int CRebar::IDToIndex(UINT uBandID) const

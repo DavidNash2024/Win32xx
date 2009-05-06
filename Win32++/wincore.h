@@ -1068,8 +1068,6 @@ namespace Win32xx
 
 	inline CWnd::~CWnd()
 	{
-		if (IsWindow()) TRACE("Window Destroyed in Destructor !!! \n");
-
 		// Destroy the window for this object
 		Destroy();
 	}

@@ -239,7 +239,7 @@ namespace Win32xx
 		{
 		public:
 			CDockClient();
-			virtual ~CDockClient() {if (IsWindow()) TRACE("DockClient window destroyed in Destructor !!!");}
+			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
 			virtual void DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus);
@@ -485,7 +485,6 @@ namespace Win32xx
 
 	inline CDockable::CDockBar::~CDockBar()
 	{
-		if (IsWindow()) TRACE("DockBar window destroyed in destructor !!!!!\n");
 		::DeleteObject(m_hbrBackground);
 	}
 
@@ -1579,11 +1578,6 @@ namespace Win32xx
 
 	inline CDockable::~CDockable()
 	{
-		if (IsWindow())
-			TRACE("Dockable window destroyed in destructor !!!");
-
-		TRACE("CDockable's Destructor\n");
-
 		GetDockBar().Destroy();
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
@@ -1840,10 +1834,6 @@ namespace Win32xx
 
 	inline void CDockable::Dock(CDockable* pDockable, UINT DockStyle)
 	{
-		TRACE("Docking begins ...  ");
-		if (!VerifyDockables())
-			TRACE("VerifyDockables failed before docking\n");
-
 		pDockable->m_pDockParent = this;
 		pDockable->m_BlockMove = FALSE;
 		pDockable->SetDockStyle(DockStyle);
@@ -1875,27 +1865,13 @@ namespace Win32xx
 		GetDockTopLevel()->m_hOldFocus = pDockable->GetView()->GetHwnd();
 		pDockable->GetView()->SetFocus();
 		RecalcDockLayout();
-
-		if (!VerifyDockables())
-			TRACE("VerifyDockables failed after docking\n");
-		TRACE("Docking ends\n");
 	}
 
 	inline void CDockable::DockInContainer(CDockable* pDock, DWORD dwDockStyle)
 	{
+		// Add a container to an existing container
 		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (pDock->GetView()->IsContainer()))
 		{
-			// Add a container to an existing container
-		/*	pDock->m_pDockParent = this;
-			pDock->m_BlockMove = FALSE;
-			pDock->ShowWindow(SW_HIDE);
-			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
-			pDock->SetParent(m_hWnd); */
-
-			TRACE("DockInContainer begins ... \n");
-			if (!VerifyDockables())
-				TRACE("VerifyDockables failed before DockInContainer\n");
-
 			// Transfer any dock children to this dockable
 			pDock->MoveDockChildren(this);
 
@@ -1929,22 +1905,13 @@ namespace Win32xx
 			pDock->m_BlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
 			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
-		//	pDock->SetParent(m_hWnd);
 			pDock->SetDockStyle(dwDockStyle);
 			pDock->SetParent(m_hWnd);
-			if (!VerifyDockables())
-				TRACE("VerifyDockables failed after DockInContainer\n");
-
-			TRACE("DockInContainer ends\n");
 		}
 	}
 
 	inline void CDockable::DockOuter(CDockable* pDockable, DWORD dwDockStyle)
 	{
-		TRACE("Dockouter begins ... ");
-		if (!VerifyDockables())
-			TRACE("VerifyDockables before DockOuter\n");
-
 		pDockable->m_pDockParent = GetDockAncestor();
 
 		DWORD OuterDocking = dwDockStyle & 0xF0000;
@@ -1989,10 +1956,6 @@ namespace Win32xx
 		::SetFocus(GetAncestor());
 		pDockable->GetView()->SetFocus();
 		RecalcDockLayout();
-
-		if (!VerifyDockables())
-			TRACE("VerifyDockables failed after DockOuter\n");
-		TRACE("Dock outer ends \n");
 	}
 
 	inline void CDockable::DrawHashBar(HWND hBar, POINT Pos)
@@ -2132,21 +2095,10 @@ namespace Win32xx
 	{
 		CDockable* pDockTopLevel = (CDockable* const)this;
 	
-		// For Debugging
-		int iCount = 0;
-
 		while(pDockTopLevel->GetDockParent())
 		{
 			pDockTopLevel = pDockTopLevel->GetDockParent();
-			if (++iCount > 10)
-			{
-				TRACE("Looping in GetDockTopLevel\n");
-				break;
-			}
 		}
-		
-		// For Debugging
-		if (pDockTopLevel->IsDocked()) TRACE("Should be UnDocked \n");
 
 		return pDockTopLevel;
 	}
@@ -2279,7 +2231,6 @@ namespace Win32xx
 
 	inline void CDockable::OnDestroy(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
-		TRACE("Dock window destroyed\n");
 		// Destroy any dock children first
 		std::vector<CDockable*>::iterator iter;
 		for (iter = GetDockChildren().begin(); iter < GetDockChildren().end(); ++iter)
@@ -2314,7 +2265,6 @@ namespace Win32xx
 
 	inline void CDockable::OnDockDestroyed(WPARAM wParam, LPARAM /*lParam*/)
 	{
-		TRACE("CDockable  UWM_DOCK_DESTROYED\n");
 		CDockable* pDock = (CDockable*)wParam;
 		if (this == GetDockAncestor() && pDock != GetDockAncestor())
 		{
@@ -2616,7 +2566,6 @@ namespace Win32xx
 		}
 		else if (this == GetDockTopLevel())
 		{
-			if (IsDocked()) TRACE("Error should be undocked\n");
 			// Reposition the dock children
 			if (IsUndocked() && !m_bClosePressed) RecalcDockLayout();
 		}
@@ -2716,10 +2665,6 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->IsWindow())
 		{
-		//	if (!VerifyDockables())
-		//		TRACE("Check failed in RecalcDockLayout\n");
-			TRACE("RecalcDockLayout\n");
-			
 			CRect rc = GetDockTopLevel()->GetClientRect();
 			GetDockTopLevel()->SetRedraw(FALSE);
 			GetDockTopLevel()->RecalcDockChildLayout(rc);
@@ -2874,11 +2819,7 @@ namespace Win32xx
 	}
 
 	inline void CDockable::Undock()
-	{
-		TRACE("Undock begins ... ");
-		if (!VerifyDockables())
-			TRACE("VerifyDockables failed before Undock\n");
-		
+	{	
 		// Return if we shouldn't undock
 		if (GetDockStyle() & DS_NO_UNDOCK) return;
 
@@ -2934,19 +2875,10 @@ namespace Win32xx
 		RecalcDockLayout();
         if ((pDockUndockedFrom) && (pDockUndockedFrom->GetDockTopLevel() != GetDockTopLevel()))
 			pDockUndockedFrom->RecalcDockLayout();
-
-		if (!VerifyDockables())
-			TRACE("VerifyDockables failed after Undock\n");
-		TRACE("Undock ends\n");
 	}
 
 	inline void CDockable::UndockContainer(CContainer* pContainer)
 	{
-		TRACE("UndockContainer begins ...  ");
-
-		if (!VerifyDockables())
-			TRACE("Check failed before UndockContainer\n");
-
 		// Return if we shouldn't undock
 		if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
 
@@ -3051,11 +2983,6 @@ namespace Win32xx
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		pDock->Undock();
 		pDockUndockedFrom->RecalcDockLayout();
-
-		if (!VerifyDockables())
-			TRACE("Check failed after UndockContainer\n");
-
-		TRACE("UndockContainer ends ...\n");
 	}
 
 	inline LRESULT CDockable::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -3103,7 +3030,6 @@ namespace Win32xx
 
 	inline CContainer::~CContainer()
 	{
-		if (IsWindow()) TRACE("Container window destroyed in destructor !!!!\n");
 	}
 
 	inline void CContainer::AddContainer(CContainer* pContainer)

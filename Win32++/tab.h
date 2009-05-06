@@ -219,7 +219,6 @@ namespace Win32xx
 		
 	inline CTab::~CTab()
 	{
-		if (IsWindow()) TRACE("Tab Window destroyed in destructor\n !");
 		ImageList_Destroy(m_himlTab);
 		std::vector<TabPageInfo>::iterator iter;
 		for (iter = m_vTabPageInfo.begin(); iter != m_vTabPageInfo.end(); ++iter)

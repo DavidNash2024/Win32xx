@@ -2434,19 +2434,29 @@ namespace Win32xx
 		{
 			if (m_bShowMenuStatus)
 			{
-			//	static int nOldID = -1;
-				CToolbar& tb = GetToolbar();
-				CPoint pt;
-				::GetCursorPos(&pt);
+				// Get the toolbar the point is over
+				CToolbar* pToolbar = 0;
+				if (IsRebarUsed())
+				{	
+					// Get the Toolbar's CWnd
+					CWnd* pWnd = FromHandle(GetRebar().HitTest(GetCursorPos()));
+					if (pWnd && (pWnd->IsToolbar()) && !(pWnd->IsMenubar()))
+						pToolbar = (CToolbar*)pWnd;
+				}
+				else
+				{
+					CPoint pt = GetCursorPos();
+					if (WindowFromPoint(pt) == GetToolbar())
+						pToolbar = &GetToolbar();
+				}
 
-				// Is the mouse hovering over the toolbar?
-				if (WindowFromPoint(pt) == tb)
+				if (pToolbar)
 				{
 					// Which toolbar button is the mouse cursor hovering over?
-					int nButton = tb.HitTest();
+					int nButton = pToolbar->HitTest();
 					if (nButton >= 0)
 					{
-						int nID = GetToolbar().GetCommandID(nButton);
+						int nID = pToolbar->GetCommandID(nButton);
 						// Only update the statusbar if things have changed
 						if (nID != m_nOldID)
 						{

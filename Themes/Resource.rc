@@ -167,16 +167,16 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_ARROW_LEFT          "Left"
-    IDM_ARROW_RIGHT         "Right"
+    IDM_ARROW_LEFT          "Left Arrow"
+    IDM_ARROW_RIGHT         "Right Arrow"
 END
 
 STRINGTABLE
 BEGIN
-    IDM_CARD_CLUB           "Clubs"
-    IDM_CARD_DIAMOND        "Diamonds"
-    IDM_CARD_HEART          "Hearts"
-    IDM_CARD_SPADE          "Spades"
+    IDM_CARD_CLUB           "Clubs Playing Card"
+    IDM_CARD_DIAMOND        "Diamond Playing Cards"
+    IDM_CARD_HEART          "Hearts Playing Card"
+    IDM_CARD_SPADE          "Spades Playing Card"
 END
 
 STRINGTABLE
@@ -185,8 +185,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+    SC_NEXTWINDOW           "Select Next Window"
+	  SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END
@@ -194,14 +194,14 @@ END
 STRINGTABLE
 BEGIN
     IDM_NONE                "No theme"
-	IDM_BLUE                "Blue theme"
-	IDM_BLUE_LOCKED         "Blue theme with locked menu"
-	IDM_BLUE_BKGND          "Bllue theme, background only"
-	IDM_BLUE_FLAT           "Blue flat theme"
-	IDM_GREY                "Grey theme"
+    IDM_BLUE                "Blue theme"
+    IDM_BLUE_LOCKED         "Blue theme with locked menu"
+    IDM_BLUE_BKGND          "Bllue theme, background only"
+    IDM_BLUE_FLAT           "Blue flat theme"
+    IDM_GREY                "Grey theme"
     IDM_OLIVE               "Olive theme"
     IDM_OCHRE               "Ochre theme"
     IDM_MAUVE               "Mauve theme"
-	IDM_PINK                "Pink theme"
+    IDM_PINK                "Pink theme"
     IDM_GOLD                "Gold theme"
 END

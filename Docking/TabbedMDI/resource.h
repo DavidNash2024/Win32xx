@@ -29,6 +29,8 @@
 #define IDB_STATUS                      132
 
 // Icons for container tabs
+#define IDI_SIMPLE                      133
+#define IDI_RECT                        134
 #define IDI_CLASSVIEW                   135
 #define IDI_FILEVIEW                    136
 #define IDI_TEXT                        137

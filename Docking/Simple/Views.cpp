@@ -133,7 +133,6 @@ CViewTree::CViewTree() : m_himlNormal(0)
 CViewTree::~CViewTree()
 {
 	if (IsWindow()) DeleteAllItems();
-	int iCount = ImageList_GetImageCount(m_himlNormal);
 	ImageList_Destroy(m_himlNormal);
 }
 

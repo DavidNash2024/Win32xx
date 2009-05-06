@@ -21,8 +21,6 @@ CViewText::CViewText()
 
 CViewText::~CViewText(void)
 {
-	if (IsWindow()) TRACE("TextView window destroyed in destructor\n !!!");
-
 	if (m_hRichEdit)
 		::FreeLibrary(m_hRichEdit);
 }

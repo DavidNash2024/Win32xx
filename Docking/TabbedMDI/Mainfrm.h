@@ -49,9 +49,11 @@ public:
 	void LoadDefaultDockables();
 	void LoadDefaultMDITabs();
 	void SaveDockables();
+	void SaveTabbedMDIs();
 	
 protected:
 	virtual void LoadRegistryDockables();
+	virtual void LoadRegistryTabbedMDIs();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();

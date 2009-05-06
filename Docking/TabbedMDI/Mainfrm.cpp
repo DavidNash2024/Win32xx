@@ -255,6 +255,11 @@ void CMainFrame::LoadRegistryDockables()
 	}	
 }
 
+void CMainFrame::LoadRegistryTabbedMDIs()
+{
+
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
@@ -405,6 +410,11 @@ void CMainFrame::SaveDockables()
 	}
 }
 
+void CMainFrame::SaveTabbedMDIs()
+{
+
+}
+
 void CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
@@ -431,5 +441,12 @@ void CMainFrame::SetupToolbar()
 
 	// Remove the checkmark for container tabs at top
 	::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
+
+	// Add some extra icons for menu items
+	AddMenuIcon(IDM_FILE_NEWSIMPLE, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_SIMPLE)));
+	AddMenuIcon(IDM_FILE_NEWRECT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_RECT)));
+	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
+	AddMenuIcon(IDM_FILE_NEWLIST, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW)));
+	AddMenuIcon(IDM_FILE_NEWTREE, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW)));
 }
 
