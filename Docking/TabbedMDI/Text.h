@@ -44,7 +44,7 @@ private:
 };
 
 // Declaration of the CDockText class
-class CDockText : public CDockable
+class CDockText : public CDocker
 {
 public:
 	CDockText();

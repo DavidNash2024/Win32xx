@@ -5,7 +5,7 @@
 #include "../Win32++/docking.h"
 #include "Views.h"
 
-class CPaneTopLeft : public CDockable
+class CPaneTopLeft : public CDocker
 {
 public:
 	CPaneTopLeft(); 
@@ -16,7 +16,7 @@ private:
 	CViewSimple m_View;
 };
 
-class CPaneTopRight : public CDockable
+class CPaneTopRight : public CDocker
 {
 public:
 	CPaneTopRight();
@@ -27,7 +27,7 @@ private:
 	CViewText m_View;
 };
 
-class CPaneBottomLeft : public CDockable
+class CPaneBottomLeft : public CDocker
 {
 public:
 	CPaneBottomLeft();
@@ -39,7 +39,7 @@ private:
 
 };
 
-class CPaneBottomRight : public CDockable
+class CPaneBottomRight : public CDocker
 {
 public:
 	CPaneBottomRight();

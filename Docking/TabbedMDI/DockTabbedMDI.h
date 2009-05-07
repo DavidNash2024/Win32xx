@@ -10,7 +10,7 @@
 
 
 // Declaration of the CDockTabbedMDI class
-class CDockTabbedMDI : public CDockable
+class CDockTabbedMDI : public CDocker
 {
 public:
 	CDockTabbedMDI();

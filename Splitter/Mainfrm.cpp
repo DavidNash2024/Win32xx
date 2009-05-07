@@ -48,7 +48,7 @@ void CMainFrame::OnInitialUpdate()
 	CRect rcView = GetViewRect();
 
 	// Add the bottom pane first. It is a child of the main pane.
-	CDockable* pDockBottom = m_MainView.AddDockedChild(new CPaneBottomLeft, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2);
+	CDocker* pDockBottom = m_MainView.AddDockedChild(new CPaneBottomLeft, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2);
 
 	// Add the bottom right pane. It is a child of the bottom pane 
 	pDockBottom->AddDockedChild(new CPaneBottomRight, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);

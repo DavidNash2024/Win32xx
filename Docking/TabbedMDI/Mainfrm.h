@@ -18,42 +18,34 @@
 class CMainFrame : public CFrame
 {
 public:
-	struct DockInfo
-	{
-		DWORD DockStyle;
-		int DockWidth;
-		int DockID;
-		int DockParentID;
-		RECT Rect;
-	};
-
 	enum DockIDs
 	{
-		ID_CONTAINCLASSES1 = 1,
-		ID_CONTAINFILES1 = 2,
-		ID_CONTAINCLASSES2 = 3,
-		ID_CONTAINFILES2 = 4,
-		ID_TEXT1 = 5,
-		ID_OUTPUT1 = 6,
-		ID_TEXT2 = 7,
-		ID_OUTPUT2 = 8
+		ID_CLASSES1 = 1,
+		ID_CLASSES2 = 2,
+		ID_FILES1 = 3,
+		ID_FILES2 = 4,
+		ID_OUTPUT1 = 5,
+		ID_OUTPUT2 = 6,
+		ID_TEXT1 = 7,
+		ID_TEXT2 = 8,
+		ID_SIMPLE = 9,
+		ID_RECT = 10
 	};
 
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void AddDocked(DockInfo di, CDockable* pDock);
+	void AddDocked(DockInfo di, CDocker* pDock);
 	void AddUndocked(DockInfo di);
 	void OnFileNew();
 	void OnContainerTabsAtTop();
 	void OnMDITabsAtTop();
-	void LoadDefaultDockables();
+	void LoadRegistryTabbedMDIs();
+	void LoadDefaultDockers();
 	void LoadDefaultMDITabs();
-	void SaveDockables();
+	void LoadDockers(tString tsRegistryKeyName);
 	void SaveTabbedMDIs();
 	
 protected:
-	virtual void LoadRegistryDockables();
-	virtual void LoadRegistryTabbedMDIs();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
@@ -63,7 +55,6 @@ protected:
 
 private:
 	CDockTabbedMDI m_DockTabbedMDI;
-
 };
 
 #endif //MAINFRM_H

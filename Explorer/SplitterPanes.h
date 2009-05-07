@@ -11,7 +11,7 @@
 #include "MyListView.h"
 #include "MyTreeView.h"
 
-class CLeftPane : public CDockable
+class CLeftPane : public CDocker
 {
 public:
     CLeftPane() { SetView(m_View); }
@@ -21,7 +21,7 @@ private:
 };
 
 
-class CRightPane : public CDockable
+class CRightPane : public CDocker
 {
 public:
     CRightPane() { SetView(m_View); }

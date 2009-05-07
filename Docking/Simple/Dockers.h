@@ -1,5 +1,5 @@
 /////////////////////////////////////////////
-// Dockables.h
+// Dockers.h
 
 #ifndef DOCKABLES_H
 #define DOCKABLES_H
@@ -8,7 +8,7 @@
 #include "Views.h"
 
 // Declaration of the CDockSimple class
-class CDockSimple : public CDockable
+class CDockSimple : public CDocker
 {
 public:
 	CDockSimple();
@@ -21,7 +21,7 @@ private:
 };
 
 // Declaration of the CDockClass class
-class CDockClass : public CDockable
+class CDockClass : public CDocker
 {
 public:
 	CDockClass();
@@ -34,7 +34,7 @@ private:
 };
 
 // Declaration of the CDockFiles class
-class CDockFiles : public CDockable
+class CDockFiles : public CDocker
 {
 public:
 	CDockFiles();
@@ -47,7 +47,7 @@ private:
 };
 
 // Declaration of the CDockText class
-class CDockText : public CDockable
+class CDockText : public CDocker
 {
 public:
 	CDockText();

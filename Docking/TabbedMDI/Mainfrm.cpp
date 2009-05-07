@@ -25,21 +25,21 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-void CMainFrame::AddDocked(DockInfo di, CDockable* pDock)
+void CMainFrame::AddDocked(DockInfo di, CDocker* pDock)
 {
 	switch(di.DockID)
 	{
-	case ID_CONTAINCLASSES1:
-		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES1);
+	case ID_CLASSES1:
+		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CLASSES1);
 		break;
-	case ID_CONTAINCLASSES2:
-		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CONTAINCLASSES2);					
+	case ID_CLASSES2:
+		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CLASSES2);					
 		break;
-	case ID_CONTAINFILES1:
-		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES1);
+	case ID_FILES1:
+		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES1);
 		break;
-	case ID_CONTAINFILES2:
-		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_CONTAINFILES2);
+	case ID_FILES2:
+		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES2);
 		break;
 	case ID_OUTPUT1:
 		pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT1);
@@ -63,17 +63,17 @@ void CMainFrame::AddUndocked(DockInfo di)
 {
 	switch(di.DockID)
 	{
-	case ID_CONTAINCLASSES1:
-		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES1);
+	case ID_CLASSES1:
+		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CLASSES1);
 		break;
-	case ID_CONTAINCLASSES2:
-		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINCLASSES2);					
+	case ID_CLASSES2:
+		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CLASSES2);					
 		break;
-	case ID_CONTAINFILES1:
-		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES1);
+	case ID_FILES1:
+		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES1);
 		break;
-	case ID_CONTAINFILES2:
-		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_CONTAINFILES2);
+	case ID_FILES2:
+		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES2);
 		break;
 	case ID_OUTPUT1:
 		m_DockTabbedMDI.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT1);
@@ -121,10 +121,10 @@ void CMainFrame::OnContainerTabsAtTop()
 // Reposition the tabs in the containers
 {
 	BOOL bTop = FALSE;
-	std::vector<CDockable*>::iterator iter;
+	std::vector<CDocker*>::iterator iter;
 	
 	// Set the Tab position for each container
-	for (iter = m_DockTabbedMDI.GetAllDockables().begin(); iter < m_DockTabbedMDI.GetAllDockables().end(); ++iter)
+	for (iter = m_DockTabbedMDI.GetAllDockers().begin(); iter < m_DockTabbedMDI.GetAllDockers().end(); ++iter)
 	{
 		CContainer* pContainer = (*iter)->GetContainer();
 		if (pContainer)
@@ -152,20 +152,20 @@ void CMainFrame::OnMDITabsAtTop()
 	::CheckMenuItem(GetFrameMenu(), IDM_TABBEDMDI_TOP, uCheck);
 }
 
-void CMainFrame::LoadDefaultDockables()
+void CMainFrame::LoadDefaultDockers()
 {
-	// Note: The  DockIDs are used for saving/restoring the dockables state in the registry
+	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each dockable
+	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 	
-	// Add the parent dockables
-	CDockable* pDockRight  = m_DockTabbedMDI.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CONTAINCLASSES1);	
-	CDockable* pDockBottom = m_DockTabbedMDI.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT1);
+	// Add the parent dockers
+	CDocker* pDockRight  = m_DockTabbedMDI.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CLASSES1);	
+	CDocker* pDockBottom = m_DockTabbedMDI.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT1);
 
-	// Add the remaining dockables
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES1);
-	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINCLASSES2);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CONTAINFILES2);
+	// Add the remaining dockers
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_FILES1);
+	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CLASSES2);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_FILES2);
 
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT1);
 	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_TEXT2);
@@ -184,12 +184,12 @@ void CMainFrame::LoadDefaultMDITabs()
 	pTabbedMDI->SetActiveTab(0);
 }
 
-void CMainFrame::LoadRegistryDockables()
+void CMainFrame::LoadDockers(tString tsRegistryKeyName)
 {
 	if (0 != GetRegistryKeyName().size())
 	{
 		std::vector<DockInfo> vDockList;
-		tString tsKey = _T("Software\\") + GetRegistryKeyName() + _T("\\Dock Windows");
+		tString tsKey = _T("Software\\") + tsRegistryKeyName + _T("\\Dock Windows");
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 		if (hKey)
@@ -214,7 +214,7 @@ void CMainFrame::LoadRegistryDockables()
 			RegCloseKey(hKey);
 		}
 
-		// Add dockables without parents first
+		// Add dockers without parents first
 		for (int i = vDockList.size() -1; i >= 0; --i)
 		{
 			DockInfo di = vDockList[i];
@@ -229,14 +229,14 @@ void CMainFrame::LoadRegistryDockables()
 			}
 		}
 
-		// Add remaining dockables
+		// Add remaining dockers
 		while (vDockList.size() > 0)
 		{
 			bool bFound = false;
 			std::vector<DockInfo>::iterator iter;
 			for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
 			{
-				CDockable* pDock = m_DockTabbedMDI.GetDockFromID((*iter).DockParentID);
+				CDocker* pDock = m_DockTabbedMDI.GetDockFromID((*iter).DockParentID);
 				if (pDock != 0)
 				{
 					AddDocked(*iter, pDock);
@@ -248,7 +248,7 @@ void CMainFrame::LoadRegistryDockables()
 
 			if (!bFound)
 			{
-				TRACE(_T("Orphaned dockables !!! \n"));
+				TRACE(_T("Orphaned dockers !!! \n"));
 				break;
 			}
 		}	
@@ -296,11 +296,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnMDITabsAtTop();
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
-		m_DockTabbedMDI.CloseAllDockables();
-		LoadDefaultDockables();
+		m_DockTabbedMDI.CloseAllDockers();
+		::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
+		LoadDefaultDockers();
 		return TRUE;
 	case IDM_DOCK_CLOSEALL:
-		m_DockTabbedMDI.CloseAllDockables();
+		m_DockTabbedMDI.CloseAllDockers();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
@@ -338,13 +339,13 @@ void CMainFrame::OnInitialUpdate()
 	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
 
 	if (0 == GetRegistryKeyName().size())
-		LoadDefaultDockables();
+		LoadDefaultDockers();
 	else
-		LoadRegistryDockables();
+		LoadDockers(GetRegistryKeyName());
 
 	// Ensure we have some docked/undocked windows
-	if (0 == m_DockTabbedMDI.GetAllDockables().size())
-		LoadDefaultDockables();
+	if (0 == m_DockTabbedMDI.GetAllDockers().size())
+		LoadDefaultDockers();
 
 	LoadDefaultMDITabs();
 
@@ -361,64 +362,25 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-void CMainFrame::SaveDockables()
-{
-	m_DockTabbedMDI.VerifyDockables();
-	// NOTE: This function assumes that each dockable has a unique DockID
-
-	std::vector<CDockable*>::iterator iter;
-	std::vector<DockInfo> vDockList;
-
-	if (0 != GetRegistryKeyName().size())
-	{
-		// Fill the DockList vector with the docking information
-		for (iter = m_DockTabbedMDI.GetAllDockables().begin(); iter <  m_DockTabbedMDI.GetAllDockables().end(); ++iter)
-		{
-			DockInfo di	 = {0};
-			di.DockID	 = (*iter)->GetDockID();
-			di.DockStyle = (*iter)->GetDockStyle();
-			di.DockWidth = (*iter)->GetDockWidth();
-			di.Rect		 = (*iter)->GetWindowRect();
-			if ((*iter)->GetDockParent())
-				di.DockParentID = (*iter)->GetDockParent()->GetDockID();
-			
-			vDockList.push_back(di);
-		}
-
-		tString tsKeyName = _T("Software\\") + GetRegistryKeyName();
-		HKEY hKey = NULL;
-		HKEY hKeyDock = NULL;
-		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-			throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-		RegDeleteKey(hKey, _T("Dock Windows"));
-		if (RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
-			throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-		// Add the Dock windows information to the registry
-		for (size_t u = 0; u < vDockList.size(); ++u)
-		{
-			DockInfo di = vDockList[u];
-			TCHAR szNumber[16];
-			tString tsSubKey = _T("DockChild");
-			tsSubKey += _itot(u, szNumber, 10);
-			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo));
-		}
-
-		RegCloseKey(hKeyDock);
-		RegCloseKey(hKey);
-	}
-}
-
 void CMainFrame::SaveTabbedMDIs()
 {
+	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
+	int nMDIChildren = pTabbedMDI->GetTab().GetItemCount();
 
+	if (0 != GetRegistryKeyName().size())
+	{	
+		for (int i = 0; i < nMDIChildren; ++i)
+		{
+			TRACE("GetTabbedMDI child\n");
+		}
+	}
 }
 
 void CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
-	SaveDockables();
+	m_DockTabbedMDI.SaveDockers(GetRegistryKeyName());
+	SaveTabbedMDIs();
 }
 
 void CMainFrame::SetupToolbar()
@@ -447,6 +409,6 @@ void CMainFrame::SetupToolbar()
 	AddMenuIcon(IDM_FILE_NEWRECT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_RECT)));
 	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
 	AddMenuIcon(IDM_FILE_NEWLIST, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW)));
-	AddMenuIcon(IDM_FILE_NEWTREE, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW)));
+	AddMenuIcon(IDM_FILE_NEWTREE, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW))); 
 }
 

@@ -150,15 +150,15 @@
 // Messages defined by Win32++
 #define UWM_POPUPMENU		(WM_APP + 1)	// Message - creates the menubar popup menu
 #define UWM_DOCK_START		(WM_APP + 2)	// Notification - about to start undocking
-#define UWM_DOCK_MOVE		(WM_APP + 3)	// Notification - undocked dockable is being moved
-#define UWM_DOCK_END		(WM_APP + 4)	// Notification - dockable has been docked
-#define UWM_BAR_START		(WM_APP + 5)	// Notification - dockable bar selected for move
-#define UWM_BAR_MOVE		(WM_APP + 6)	// Notification - dockable bar moved
-#define UWM_BAR_END			(WM_APP + 7)	// Notification - end of dockable bar move
-#define UWM_UNDOCKED		(WM_APP + 8)	// Notification - sent by dockable when undocked
+#define UWM_DOCK_MOVE		(WM_APP + 3)	// Notification - undocked docker is being moved
+#define UWM_DOCK_END		(WM_APP + 4)	// Notification - docker has been docked
+#define UWM_BAR_START		(WM_APP + 5)	// Notification - docker bar selected for move
+#define UWM_BAR_MOVE		(WM_APP + 6)	// Notification - docker bar moved
+#define UWM_BAR_END			(WM_APP + 7)	// Notification - end of docker bar move
+#define UWM_UNDOCKED		(WM_APP + 8)	// Notification - sent by docker when undocked
 #define UWM_FRAMELOSTFOCUS	(WM_APP + 9)    // Notification - sent by frame to view window when focus lost
 #define UWM_FRAMEGOTFOCUS	(WM_APP + 10)   // Notification - sent by frame to view window when focus acquired
-#define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when dockable is destroyed
+#define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when docker is destroyed
 #define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
 #define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
 
@@ -627,7 +627,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual BOOL IsContainer() const { return FALSE; }
-		virtual BOOL IsDockable() const  { return FALSE; }
+		virtual BOOL IsDocker() const  { return FALSE; }
 		virtual BOOL IsFrame() const     { return FALSE; }
 		virtual BOOL IsMenubar() const   { return FALSE; }
 		virtual BOOL IsMDIChild() const  { return FALSE; }

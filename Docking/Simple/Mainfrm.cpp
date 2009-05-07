@@ -36,13 +36,13 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
 		SetRedraw(FALSE);	// Suppress drawing to the frame window
-		m_DockView.CloseAllDockables();
-		LoadDefaultDockables();
+		m_DockView.CloseAllDockers();
+		LoadDefaultDockers();
 		SetRedraw(TRUE);	// Re-enable drawing to the frame window
 		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
 		return TRUE;
 	case IDM_DOCK_CLOSEALL:
-		m_DockView.CloseAllDockables();
+		m_DockView.CloseAllDockers();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
@@ -80,28 +80,28 @@ void CMainFrame::OnInitialUpdate()
 	m_DockView.SetDockStyle(DS_CLIENTEDGE);
 
 	if (0 == GetRegistryKeyName().size())
-		LoadDefaultDockables();
+		LoadDefaultDockers();
 	else
-		LoadRegistryDockables();
+		LoadRegistryDockers();
 
 	// Ensure we have some docked/undocked windows
-	if (0 == m_DockView.GetAllDockables().size())
-		LoadDefaultDockables();
+	if (0 == m_DockView.GetAllDockers().size())
+		LoadDefaultDockers();
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();
 }
 
-void CMainFrame::LoadDefaultDockables()
+void CMainFrame::LoadDefaultDockers()
 {
-	// Note: The  DockIDs are used for saving/restoring the dockables state in the registry
+	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each dockable
+	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 
-	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT | dwStyle, 200, ID_CLASS1);
-	CDockable* pDockRight  = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_RIGHT | dwStyle, 200, ID_CLASS2);
-	CDockable* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP | dwStyle, 100, ID_TEXT1);
-	CDockable* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT2);
+	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_LEFT | dwStyle, 200, ID_CLASS1);
+	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClass, DS_DOCKED_RIGHT | dwStyle, 200, ID_CLASS2);
+	CDocker* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP | dwStyle, 100, ID_TEXT1);
+	CDocker* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT2);
 
 	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_FILES1);
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_FILES2);
@@ -109,7 +109,7 @@ void CMainFrame::LoadDefaultDockables()
 	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_SIMPLE2);
 }
 
-void CMainFrame::AddDocked(DockInfo di, CDockable* pDock)
+void CMainFrame::AddDocked(DockInfo di, CDocker* pDock)
 {
 	switch(di.DockID)
 	{
@@ -177,7 +177,7 @@ void CMainFrame::AddUndocked(DockInfo di)
 	}
 }
 
-void CMainFrame::LoadRegistryDockables()
+void CMainFrame::LoadRegistryDockers()
 {
 	if (0 != GetRegistryKeyName().size())
 	{
@@ -207,7 +207,7 @@ void CMainFrame::LoadRegistryDockables()
 			RegCloseKey(hKey);
 		}
 
-		// Add dockables without parents first
+		// Add dockers without parents first
 		for (int i = vDockList.size() -1; i >= 0; --i)
 		{
 			DockInfo di = vDockList[i];
@@ -222,14 +222,14 @@ void CMainFrame::LoadRegistryDockables()
 			}
 		}
 
-		// Add remaining dockables
+		// Add remaining dockers
 		while (vDockList.size() > 0)
 		{
 			bool bFound = false;
 			std::vector<DockInfo>::iterator iter;
 			for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
 			{
-				CDockable* pDock = m_DockView.GetDockFromID((*iter).DockParentID);
+				CDocker* pDock = m_DockView.GetDockFromID((*iter).DockParentID);
 				if (pDock != 0)
 				{
 					AddDocked(*iter, pDock);
@@ -241,7 +241,7 @@ void CMainFrame::LoadRegistryDockables()
 
 			if (!bFound)
 			{
-				TRACE(_T("Orphaned dockables !!! \n"));
+				TRACE(_T("Orphaned dockers !!! \n"));
 				break;
 			}
 		}	
@@ -257,59 +257,10 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-void CMainFrame::SaveDockables()
-{
-	m_DockView.VerifyDockables();
-	// NOTE: This function assumes that each dockable has a unique DockID
-
-	std::vector<CDockable*>::iterator iter;
-	std::vector<DockInfo> vDockList;
-
-	if (0 != GetRegistryKeyName().size())
-	{
-		// Fill the DockList vector with the docking information
-		for (iter = m_DockView.GetAllDockables().begin(); iter <  m_DockView.GetAllDockables().end(); ++iter)
-		{
-			DockInfo di	 = {0};
-			di.DockID	 = (*iter)->GetDockID();
-			di.DockStyle = (*iter)->GetDockStyle();
-			di.DockWidth = (*iter)->GetDockWidth();
-			di.Rect		 = (*iter)->GetWindowRect();
-			if ((*iter)->GetDockParent())
-				di.DockParentID = (*iter)->GetDockParent()->GetDockID();
-			
-			vDockList.push_back(di);
-		}
-
-		tString tsKeyName = _T("Software\\") + GetRegistryKeyName();
-		HKEY hKey = NULL;
-		HKEY hKeyDock = NULL;
-		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-			throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-		RegDeleteKey(hKey, _T("Dock Windows"));
-		if (RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
-			throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-		// Add the Dock windows information to the registry
-		for (size_t u = 0; u < vDockList.size(); ++u)
-		{
-			DockInfo di = vDockList[u];
-			TCHAR szNumber[16];
-			tString tsSubKey = _T("DockChild");
-			tsSubKey += _itot(u, szNumber, 10);
-			RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo));
-		}
-
-		RegCloseKey(hKeyDock);
-		RegCloseKey(hKey);
-	}
-}
-
 void CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
-	SaveDockables();
+	m_DockView.SaveDockers(GetRegistryKeyName());
 }
 
 void CMainFrame::SetupToolbar()

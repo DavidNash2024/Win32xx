@@ -39,7 +39,7 @@ private:
 };
 
 // Declaration of the CDockFiles class
-class CDockFiles : public CDockable
+class CDockFiles : public CDocker
 {
 public:
 	CDockFiles(); 

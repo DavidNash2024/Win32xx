@@ -1,9 +1,9 @@
 /////////////////////////////////////////////
-// TextDockable.cpp
+// TextDocker.cpp
 
 #include "DockingApp.h"
 #include "Mainfrm.h"
-#include "Dockables.h"
+#include "Dockers.h"
 
 
 //////////////////////////////////////////////

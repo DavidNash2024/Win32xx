@@ -6,11 +6,11 @@ The classes which form Win32++ are located in the following files:
 dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
                   |                  | and WinCE         |
 ------------------+------------------+-------------------+---------------------
-docking.h         | CDockable        | Win32, Win64      | Adds support for
+docking.h         | CDocker          | Win32, Win64      | Adds support for
                   | CContainer       |                   | docking windows and
                   |                  |                   | splitter windows. 
 ------------------+------------------+-------------------+---------------------                   
-Frame.h           | CMenubar         | Win32, Win64      | Adds support for
+frame.h           | CMenubar         | Win32, Win64      | Adds support for
                   | CFrame           |                   | frames. Frames use a
                   |                  |                   | toolbar and menubar
                   |                  |                   | inside a rebar, and 

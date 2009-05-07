@@ -23,7 +23,7 @@ protected:
 
 
 // Declaration of the CDockSimple class
-class CDockSimple : public CDockable
+class CDockSimple : public CDocker
 {
 public:
 	CDockSimple();

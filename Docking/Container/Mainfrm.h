@@ -16,15 +16,6 @@
 class CMainFrame : public CFrame
 {
 public:
-	struct DockInfo
-	{
-		DWORD DockStyle;
-		int DockWidth;
-		int DockID;
-		int DockParentID;
-		RECT Rect;
-	};
-
 	enum DockIDs
 	{
 		ID_CONTAINCLASSES1 = 1,
@@ -39,13 +30,12 @@ public:
 
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void AddDocked(DockInfo di, CDockable* pDock);
+	void AddDocked(DockInfo di, CDocker* pDock);
 	void AddUndocked(DockInfo di);
-	void LoadDefaultDockables();
-	void SaveDockables();
+	void LoadDefaultDockers();
 	
 protected:
-	virtual void LoadRegistryDockables();
+	virtual void LoadRegistryDockers();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();

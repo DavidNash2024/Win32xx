@@ -69,7 +69,8 @@ Changed CToolbar::SetImages
 Changed CToolbar::SetBitmap
 Changed CToolbar::AddBitmap
 Changed CToolbar::ReplaceBitmap
-Renamed CDockable::CheckDockables     to CDockable::VerifyDockables
+Renamed CDockable to CDocker
+Renamed CDocker::CheckDockables       to CDocker::VerifyDockables
 Renamed CFrame::OnFrameDrawItem       to CFrame::OnDrawItem
 Renamed CFrame::OnFrameExitMenuLoop   to CFrame::OnExitMenuLoop
 Renamed CFrame::OnFrameInitMenuPopup  to CFrame::OnInitMenuPopup

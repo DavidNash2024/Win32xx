@@ -5,22 +5,13 @@
 #define MAINFRM_H
 
 #include "../../Win32++/frame.h"
-#include "Dockables.h"
+#include "Dockers.h"
 
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {
 public:
-	struct DockInfo
-	{
-		DWORD DockStyle;
-		int DockWidth;
-		int DockID;
-		int DockParentID;
-		RECT Rect;
-	};
-
 	enum DockIDs
 	{
 		ID_CLASS1 = 1,
@@ -35,13 +26,12 @@ public:
 
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void AddDocked(DockInfo di, CDockable* pDock);
+	void AddDocked(DockInfo di, CDocker* pDock);
 	void AddUndocked(DockInfo di);
-	void LoadDefaultDockables();
-	void SaveDockables();
+	void LoadDefaultDockers();
 
 protected:
-	virtual void LoadRegistryDockables();
+	virtual void LoadRegistryDockers();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();

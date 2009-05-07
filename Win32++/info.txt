@@ -131,7 +131,7 @@ listView.h        | CListView        | Win32, Win64      | Adds support for a
 treeView.h        | CTreeView        | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | TreeViewr control.
 ------------------+------------------+-------------------+--------------------- 
-Frame.h           | CMenubar         | Win32, Win64      | Adds support for
+frame.h           | CMenubar         | Win32, Win64      | Adds support for
                   | CFrame           |                   | frames. Includes a
                   |                  |                   | toolbar and menubar
                   |                  |                   | inside a rebar, and 
@@ -140,9 +140,9 @@ Frame.h           | CMenubar         | Win32, Win64      | Adds support for
 mdi.h             | CMDIFrame        | Win32, Win64      | Adds support for MDI
                   | CMDIChild        |                   | frames.
 ------------------+------------------+-------------------+---------------------
-dockable.h        | CDockable        | Win32, Win64      | Adds support for
+docking.h         | CDocker          | Win32, Win64      | Adds support for
                   | CContainer       |                   | docking windows and
-                  |                   |                   | splitter windows.
+                  |                  |                   | splitter windows.
 ------------------+------------------+-------------------+---------------------
 wceframe.h        | CWceFrame        | WinCE only        | Adds support for
                   | CCmdbar          |                   | frames in WinCE.

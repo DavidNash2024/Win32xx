@@ -1013,7 +1013,7 @@ namespace Win32xx
 		if (NULL == pWnd)
 			throw CWinException(_T("Cannot add Null MDI Child"));
 		
-		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockables
+		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
 		::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
 		m_Tab.AddTabPage(pWnd, szTabText);

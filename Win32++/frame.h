@@ -2450,7 +2450,7 @@ namespace Win32xx
 						pToolbar = &GetToolbar();
 				}
 
-				if (pToolbar)
+				if ((pToolbar) && (WindowFromPoint(GetCursorPos()) == pToolbar->GetHwnd()))
 				{
 					// Which toolbar button is the mouse cursor hovering over?
 					int nButton = pToolbar->HitTest();
@@ -2485,6 +2485,56 @@ namespace Win32xx
 				SetStatusIndicators();
 		}
 	}
+
+	/*
+		inline void CFrame::OnFrameTimer(WPARAM wParam)
+	{
+		if (ID_STATUS_TIMER == wParam)
+		{
+			if (m_bShowMenuStatus)
+			{
+				static int nOldID = -1;
+				CToolbar& tb = GetToolbar();
+				CPoint pt;
+				::GetCursorPos(&pt);
+
+				// Is the mouse hovering over the toolbar?
+				if (WindowFromPoint(pt) == tb)
+				{
+					// Which toolbar button is the mouse cursor hovering over?
+					int nButton = tb.HitTest();
+					if (nButton >= 0)
+					{
+						int nID = GetToolbar().GetCommandID(nButton);
+						// Only update the statusbar if things have changed
+						if (nID != nOldID)
+						{
+							if (nID != 0)
+								m_tsStatusText = LoadString(nID);
+							else
+								m_tsStatusText = _T("Ready");
+
+							SetStatusText();
+						}
+						nOldID = nID;
+					}
+				}
+				else
+				{
+					if (nOldID != -1)
+					{
+						m_tsStatusText = _T("Ready");
+						SetStatusText();
+					}
+					nOldID = -1;
+				}
+			}
+
+			if (m_bShowIndicatorStatus)
+				SetStatusIndicators();
+		}
+	}
+	*/
 
 	inline void CFrame::OnViewStatusbar()
 	{
@@ -2962,9 +3012,8 @@ namespace Win32xx
 			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
 				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
-			// Set the icons for popup menu items (if not already set in SetupToolbar)
-			if (!m_himlMenu)
-				SetMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+			// Add the icons for popup menu items
+			AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
 		}
 		else
 		{
