@@ -25,74 +25,6 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-void CMainFrame::AddDocked(DockInfo di, CDocker* pDock)
-{
-	switch(di.DockID)
-	{
-	case ID_CLASSES1:
-		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CLASSES1);
-		break;
-	case ID_CLASSES2:
-		pDock->AddDockedChild(new CDockClasses, di.DockStyle, di.DockWidth, ID_CLASSES2);					
-		break;
-	case ID_FILES1:
-		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES1);
-		break;
-	case ID_FILES2:
-		pDock->AddDockedChild(new CDockFiles, di.DockStyle, di.DockWidth, ID_FILES2);
-		break;
-	case ID_OUTPUT1:
-		pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT1);
-		break;
-	case ID_OUTPUT2:
-		pDock->AddDockedChild(new CDockOutput, di.DockStyle, di.DockWidth, ID_OUTPUT2);
-		break;
-	case ID_TEXT1:
-		pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT1);
-		break;
-	case ID_TEXT2:
-		pDock->AddDockedChild(new CDockText, di.DockStyle, di.DockWidth, ID_TEXT2);
-		break;
-	default:
-		TRACE(_T("Unknown Dock ID\n"));
-		break;
-	}
-}
-
-void CMainFrame::AddUndocked(DockInfo di)
-{
-	switch(di.DockID)
-	{
-	case ID_CLASSES1:
-		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CLASSES1);
-		break;
-	case ID_CLASSES2:
-		m_DockTabbedMDI.AddUndockedChild(new CDockClasses, di.DockStyle, di.DockWidth, di.Rect, ID_CLASSES2);					
-		break;
-	case ID_FILES1:
-		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES1);
-		break;
-	case ID_FILES2:
-		m_DockTabbedMDI.AddUndockedChild(new CDockFiles, di.DockStyle, di.DockWidth, di.Rect, ID_FILES2);
-		break;
-	case ID_OUTPUT1:
-		m_DockTabbedMDI.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT1);
-		break;
-	case ID_OUTPUT2:
-		m_DockTabbedMDI.AddUndockedChild(new CDockOutput, di.DockStyle, di.DockWidth, di.Rect, ID_OUTPUT2);
-		break;
-	case ID_TEXT1:
-		m_DockTabbedMDI.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT1);
-		break;
-	case ID_TEXT2:
-		m_DockTabbedMDI.AddUndockedChild(new CDockText, di.DockStyle, di.DockWidth, di.Rect, ID_TEXT2);
-		break;
-	default:
-		TRACE(_T("Unknown Dock ID\n"));
-		break; 
-	}
-}
-
 void CMainFrame::OnFileNew()
 {
 	// Creates the popup menu when the "New" toolbar button is pressed
@@ -184,77 +116,6 @@ void CMainFrame::LoadDefaultMDITabs()
 	pTabbedMDI->SetActiveTab(0);
 }
 
-void CMainFrame::LoadDockers(tString tsRegistryKeyName)
-{
-	if (0 != GetRegistryKeyName().size())
-	{
-		std::vector<DockInfo> vDockList;
-		tString tsKey = _T("Software\\") + tsRegistryKeyName + _T("\\Dock Windows");
-		HKEY hKey = 0;
-		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
-		if (hKey)
-		{
-			DWORD dwType = REG_BINARY;
-			DWORD BufferSize = sizeof(DockInfo);
-			DockInfo di;
-			int i = 0;
-			TCHAR szNumber[16];
-			tString tsSubKey = _T("DockChild");
-			tsSubKey += _itot(i, szNumber, 10);
-			
-			// Fill the DockList vector from the registry
-			while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&di, &BufferSize))
-			{
-				vDockList.push_back(di);
-				i++;
-				tsSubKey = _T("DockChild");
-				tsSubKey += _itot(i, szNumber, 10);
-			}
-			
-			RegCloseKey(hKey);
-		}
-
-		// Add dockers without parents first
-		for (int i = vDockList.size() -1; i >= 0; --i)
-		{
-			DockInfo di = vDockList[i];
-			if (di.DockParentID == 0)
-			{
-				if (di.DockStyle & 0xF)
-					AddDocked(di, &m_DockTabbedMDI);
-				else
-					AddUndocked(di);
-
-				vDockList.erase(vDockList.begin() + i);
-			}
-		}
-
-		// Add remaining dockers
-		while (vDockList.size() > 0)
-		{
-			bool bFound = false;
-			std::vector<DockInfo>::iterator iter;
-			for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
-			{
-				CDocker* pDock = m_DockTabbedMDI.GetDockFromID((*iter).DockParentID);
-				if (pDock != 0)
-				{
-					AddDocked(*iter, pDock);
-					bFound = true;
-					vDockList.erase(iter);
-					break;
-				}
-			}
-
-			if (!bFound)
-			{
-				TRACE(_T("Orphaned dockers !!! \n"));
-				break;
-			}
-		}	
-	}	
-}
-
 void CMainFrame::LoadRegistryTabbedMDIs()
 {
 
@@ -341,7 +202,7 @@ void CMainFrame::OnInitialUpdate()
 	if (0 == GetRegistryKeyName().size())
 		LoadDefaultDockers();
 	else
-		LoadDockers(GetRegistryKeyName());
+		m_DockTabbedMDI.LoadDockers(GetRegistryKeyName());
 
 	// Ensure we have some docked/undocked windows
 	if (0 == m_DockTabbedMDI.GetAllDockers().size())

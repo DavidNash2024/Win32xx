@@ -13,36 +13,32 @@
 #include "Text.h"
 #include "Output.h"
 
+enum DockIDs
+{
+	ID_CLASSES1 = 1,
+	ID_CLASSES2 = 2,
+	ID_FILES1 = 3,
+	ID_FILES2 = 4,
+	ID_OUTPUT1 = 5,
+	ID_OUTPUT2 = 6,
+	ID_TEXT1 = 7,
+	ID_TEXT2 = 8,
+	ID_SIMPLE = 9,
+	ID_RECT = 10
+};
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {
 public:
-	enum DockIDs
-	{
-		ID_CLASSES1 = 1,
-		ID_CLASSES2 = 2,
-		ID_FILES1 = 3,
-		ID_FILES2 = 4,
-		ID_OUTPUT1 = 5,
-		ID_OUTPUT2 = 6,
-		ID_TEXT1 = 7,
-		ID_TEXT2 = 8,
-		ID_SIMPLE = 9,
-		ID_RECT = 10
-	};
-
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void AddDocked(DockInfo di, CDocker* pDock);
-	void AddUndocked(DockInfo di);
 	void OnFileNew();
 	void OnContainerTabsAtTop();
 	void OnMDITabsAtTop();
 	void LoadRegistryTabbedMDIs();
 	void LoadDefaultDockers();
 	void LoadDefaultMDITabs();
-	void LoadDockers(tString tsRegistryKeyName);
 	void SaveTabbedMDIs();
 	
 protected:

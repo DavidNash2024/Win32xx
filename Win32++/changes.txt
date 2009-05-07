@@ -53,10 +53,13 @@ Added Docking TabbedMDI sample
 Added CFrame::SetupToolbar
 Added CFrame::m_bUseToolbar
 Added CContainer::SetupToolbar
-Added CDockable::GetDockTopLevel
-Added CDockable::GetContainer
-Added CDockable::GetTabbedMDI
-Added CDockable::IsRelated
+Added CDocker::GetDockTopLevel
+Added CDocker::GetContainer
+Added CDocker::GetTabbedMDI
+Added CDocker::IsRelated
+Added CDocker::LoadDockers
+Added CDocker::NewDockerFromID
+Added CDocker::SaveDockers
 Added CToolbar::GetToolbarData
 Added CWnd::GetClassString
 Added CWnd::IsFrame

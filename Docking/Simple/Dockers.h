@@ -13,6 +13,9 @@ class CDockSimple : public CDocker
 public:
 	CDockSimple();
 	virtual ~CDockSimple() {}
+
+protected:
+	virtual CDocker* NewDockerFromID(int nID);
 	virtual void OnInitialUpdate();
 
 private:
@@ -20,12 +23,12 @@ private:
 
 };
 
-// Declaration of the CDockClass class
-class CDockClass : public CDocker
+// Declaration of the CDockClasses class
+class CDockClasses : public CDocker
 {
 public:
-	CDockClass();
-	virtual ~CDockClass() {}
+	CDockClasses();
+	virtual ~CDockClasses() {}
 	virtual void OnInitialUpdate();
 
 private:

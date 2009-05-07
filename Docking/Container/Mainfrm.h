@@ -12,30 +12,27 @@
 #include "Output.h"
 
 
+enum DockIDs
+{
+	ID_CLASSES1 = 1,
+	ID_CLASSES2 = 2,
+	ID_FILES1 = 3,
+	ID_FILES2 = 4,
+	ID_TEXT1 = 5,
+	ID_OUTPUT1 = 6,
+	ID_TEXT2 = 7,
+	ID_OUTPUT2 = 8
+};
+
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {
 public:
-	enum DockIDs
-	{
-		ID_CONTAINCLASSES1 = 1,
-		ID_CONTAINFILES1 = 2,
-		ID_CONTAINCLASSES2 = 3,
-		ID_CONTAINFILES2 = 4,
-		ID_TEXT1 = 5,
-		ID_OUTPUT1 = 6,
-		ID_TEXT2 = 7,
-		ID_OUTPUT2 = 8
-	};
-
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void AddDocked(DockInfo di, CDocker* pDock);
-	void AddUndocked(DockInfo di);
 	void LoadDefaultDockers();
 	
 protected:
-	virtual void LoadRegistryDockers();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
