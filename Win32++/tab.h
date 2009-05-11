@@ -54,6 +54,7 @@ namespace Win32xx
 	{
 		TCHAR szTitle[MAX_MENU_STRING];
 		int iImage;
+		int nID;
 		CWnd* pWnd;
 	};
 
@@ -83,8 +84,9 @@ namespace Win32xx
 	public:
 		CTab();
 		virtual ~CTab();
-		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
-		virtual void AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
+		virtual int  AddTabPage(TabPageInfo& tbi);
+		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
+		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
 		virtual BOOL GetTabsAtTop();
 		virtual int  GetTabIndex(CWnd* pWnd);
 		virtual TabPageInfo GetTabPageInfo(UINT nTab);
@@ -157,14 +159,21 @@ namespace Win32xx
 	public:
 		CTabbedMDI(); 
 		virtual ~CTabbedMDI() {}
-		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText);
-		virtual void CloseActiveMDI();
+		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int nID = 0);
+		virtual void  CloseActiveMDI();
 		virtual CWnd* GetActiveMDIChild();
+		virtual CWnd* GetMDIChild(int nTab) {return GetTab().GetTabPageInfo(nTab).pWnd;}
+		virtual int   GetMDIChildCount() { return GetTab().GetItemCount(); }
+		virtual int   GetMDIChildID(int nTab) {return GetTab().GetTabPageInfo(nTab).nID;}
+		virtual LPCTSTR GetMDIChildTitle(int nTab) {return GetTab().GetTabPageInfo(nTab).szTitle;}
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual BOOL IsTabbedMDI() const {return TRUE;}
+		virtual void LoadRegistrySettings(tString tsRegistryKeyName);
+		virtual CWnd* NewMDIChildFromID(int nID);
 		virtual void RecalcLayout();
+		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
-		virtual void SetActiveTab(int iTab);
+		virtual void SetActiveTab(int nTab);
 		virtual void ShowListMenu();
 	  
 	protected:
@@ -227,7 +236,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon = 0)
+	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon = 0)
 	{
 		TabPageInfo tbi = {0};
 		tbi.pWnd = pWnd;
@@ -236,9 +245,9 @@ namespace Win32xx
 			tbi.iImage = ImageList_AddIcon(GetImageList(), hIcon);
 		else
 			tbi.iImage = -1;
-		
+
 		int iNewPage = (int)m_vTabPageInfo.size();
-		m_vTabPageInfo.push_back(tbi);		
+		m_vTabPageInfo.push_back(tbi);
 
 		if (m_hWnd)
 		{
@@ -262,12 +271,20 @@ namespace Win32xx
 
 		SetView(*pWnd);
 		NotifyChanged();
+		return iNewPage;
 	}
 
-	inline void CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon)
+	inline int CTab::AddTabPage(TabPageInfo& tbi)
+	{
+		int iNewPage = AddTabPage(tbi.pWnd, tbi.szTitle);
+		m_vTabPageInfo[iNewPage].nID = tbi.nID;
+		return iNewPage;
+	}
+
+	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon)
 	{
 		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
-		AddTabPage(pWnd, szTitle, hIcon);
+		return AddTabPage(pWnd, szTitle, hIcon);
 	}
 
 	inline void CTab::DrawCloseButton(CDC& DrawDC, UINT uState)
@@ -1008,7 +1025,7 @@ namespace Win32xx
 		m_Tab.SetShowButtons(TRUE);
 	}
 
-	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText)
+	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int nID /*= 0*/)
 	{
 		if (NULL == pWnd)
 			throw CWinException(_T("Cannot add Null MDI Child"));
@@ -1016,12 +1033,18 @@ namespace Win32xx
 		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
 		::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
-		m_Tab.AddTabPage(pWnd, szTabText);
+		TabPageInfo tpi = {0};
+		tpi.nID = nID;
+		tpi.pWnd = pWnd;
+		lstrcpyn(tpi.szTitle, szTabText, 79);
+		tpi.szTitle[79] = '\0';
+		
 		if (!m_Tab.IsWindow())
 		{
 			m_Tab.Create(m_hWnd);
-		}	
+		}
 
+		m_Tab.AddTabPage(tpi);
 		RecalcLayout();
 		return pWnd;
 	}
@@ -1055,6 +1078,66 @@ namespace Win32xx
 		return tbi.pWnd;
 	}
 
+	inline void CTabbedMDI::LoadRegistrySettings(tString tsRegistryKeyName)
+	{
+		if (0 != tsRegistryKeyName.size())
+		{
+			tString tsKey = _T("Software\\") + tsRegistryKeyName + _T("\\MDI Children");
+			HKEY hKey = 0;
+			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
+			if (hKey)
+			{
+				DWORD dwType = REG_BINARY;
+				DWORD BufferSize = sizeof(TabPageInfo);
+				TabPageInfo tbi = {0};
+				int i = 0;
+				TCHAR szNumber[16];
+				tString tsSubKey = _T("MDI Child ");
+				tsSubKey += _itot(i, szNumber, 10);
+				
+				// Fill the DockList vector from the registry
+				while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&tbi, &BufferSize))
+				{
+					CWnd* pWnd = NewMDIChildFromID(tbi.nID);
+					if (pWnd)
+					{
+						AddMDIChild(pWnd, tbi.szTitle, tbi.nID);
+						i++;
+						tsSubKey = _T("MDI Child ");
+						tsSubKey += _itot(i, szNumber, 10);
+					}
+					else
+					{
+						DebugErrMsg(_T("Failed to get TabbedMDI info from registry"));
+						break;
+					}
+				}
+				
+				RegCloseKey(hKey);
+			}
+		}
+	}
+
+	inline CWnd* CTabbedMDI::NewMDIChildFromID(int /*nID*/)
+	{
+		// Override this function to create new MDI children from IDs as shown below
+		CWnd* pView = NULL;
+	/*	switch(nID)
+		{
+		case ID_SIMPLE:
+			pView = new CViewSimple;
+			break;
+		case ID_RECT:
+			pView = new CViewRect;
+			break;
+		default:
+			TRACE(_T("Unknown MDI child ID\n"));
+			break;
+		} */
+
+		return pView;
+	}
+
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		LPNMHDR pnmhdr = (LPNMHDR)lParam;
@@ -1074,6 +1157,34 @@ namespace Win32xx
 		else
 		{
 			m_Tab.ShowWindow(SW_HIDE);
+		}
+	}
+
+	inline void CTabbedMDI::SaveRegistrySettings(tString tsRegistryKeyName)
+	{
+		if (0 != tsRegistryKeyName.size())
+		{
+			tString tsKeyName = _T("Software\\") + tsRegistryKeyName;
+			HKEY hKey = NULL;
+			HKEY hKeyMDIChild = NULL;
+			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+			RegDeleteKey(hKey, _T("MDI Children"));
+			if (RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
+				throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+			for (int i = 0; i < GetMDIChildCount(); ++i)
+			{
+				TCHAR szNumber[16];
+				tString tsSubKey = _T("MDI Child ");
+				tsSubKey += _itot(i, szNumber, 10);
+				TabPageInfo pdi = GetTab().GetTabPageInfo(i);
+				RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo));
+			}	
+
+			RegCloseKey(hKeyMDIChild);
+			RegCloseKey(hKey);
 		}
 	}
 

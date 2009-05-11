@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////
 // FrameApp.h
 
-#ifndef FORMEAPP_H
+#ifndef FORMAPP_H
 #define FORMAPP_H
 
 #include "Mainfrm.h"

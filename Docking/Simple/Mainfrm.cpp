@@ -82,7 +82,7 @@ void CMainFrame::OnInitialUpdate()
 	if (0 == GetRegistryKeyName().size())
 		LoadDefaultDockers();
 	else
-		m_DockView.LoadDockers(GetRegistryKeyName());
+		m_DockView.LoadRegistrySettings(GetRegistryKeyName());
 
 	// Ensure we have some docked/undocked windows
 	if (0 == m_DockView.GetAllDockers().size())
@@ -121,7 +121,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 void CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
-	m_DockView.SaveDockers(GetRegistryKeyName());
+	m_DockView.SaveRegistrySettings(GetRegistryKeyName());
 }
 
 void CMainFrame::SetupToolbar()

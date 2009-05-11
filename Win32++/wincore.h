@@ -243,6 +243,9 @@ namespace Win32xx
 	inline void DebugWarnMsg(LPCTSTR WarnMsg)
 	{
 	#ifdef _DEBUG
+		TRACE(_T("*** Warning:  "));
+		TRACE(WarnMsg);
+		TRACE(_T("\n"));
 		::MessageBox (0, WarnMsg, _T("Warning"), MB_ICONINFORMATION | MB_OK);
 	#else
 		UNREFERENCED_PARAMETER(WarnMsg); // no-op
@@ -253,6 +256,9 @@ namespace Win32xx
 	inline void DebugErrMsg(LPCTSTR ErrorMsg)
 	{
 	#ifdef _DEBUG
+		TRACE(_T("*** Error:  "));
+		TRACE(ErrorMsg);
+		TRACE(_T("\n"));
 		::MessageBox (0, ErrorMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 	#else
 		UNREFERENCED_PARAMETER(ErrorMsg); // no-op

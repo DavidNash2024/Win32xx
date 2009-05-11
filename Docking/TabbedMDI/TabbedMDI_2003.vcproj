@@ -190,6 +190,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\MyTabbedMDI.cpp">
+			</File>
+			<File
 				RelativePath=".\Output.cpp">
 			</File>
 			<File
@@ -222,6 +225,9 @@
 			</File>
 			<File
 				RelativePath="Mainfrm.h">
+			</File>
+			<File
+				RelativePath=".\MyTabbedMDI.h">
 			</File>
 			<File
 				RelativePath=".\Output.h">

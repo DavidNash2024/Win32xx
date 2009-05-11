@@ -195,7 +195,7 @@ namespace Win32xx
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
-		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
+		virtual void LoadMRUSettings(UINT nMaxMRU = 0);
 		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
@@ -1847,12 +1847,12 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
+	inline void CFrame::LoadMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
 		try
 		{
 			if (m_tsKeyName.empty())
-				throw CWinException(_T("KeyName must be set before calling LoadRegistryMRUSettings"));
+				throw CWinException(_T("KeyName must be set before calling LoadMRUSettings"));
 
 			// Load the MRU from the registry
 			m_nMaxMRU = MIN(nMaxMRU, 16);
@@ -1891,7 +1891,7 @@ namespace Win32xx
 
 		catch(std::bad_alloc)
 		{
-			::MessageBox(NULL, _T("Memory allocation error in LoadRegistryMRUSettings"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+			::MessageBox(NULL, _T("Memory allocation error in LoadMRUSettings"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 		}
 	}
 

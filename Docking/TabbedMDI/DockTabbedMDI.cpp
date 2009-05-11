@@ -52,6 +52,8 @@ CDocker* CDockTabbedMDI::NewDockerFromID(int nID)
 	return pDock;
 }
 
+
+
 void CDockTabbedMDI::OnInitialUpdate()
 {
 	// Set the width of the splitter bar

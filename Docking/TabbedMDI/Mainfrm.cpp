@@ -104,21 +104,16 @@ void CMainFrame::LoadDefaultDockers()
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT2);
 }
 
-void CMainFrame::LoadDefaultMDITabs()
+void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
-	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"));
-	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"));
-	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));
-	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"));
-	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"));
+	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_SIMPLE);
+	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_RECT);
+	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_TEXT1);
+	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_CLASSES1);
+	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"), ID_FILES1);
 	pTabbedMDI->SetActiveTab(0);
-}
-
-void CMainFrame::LoadRegistryTabbedMDIs()
-{
-
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -132,19 +127,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnFileNew();
 		return TRUE;
 	case IDM_FILE_NEWSIMPLE:
-		pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"));	
+		pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_SIMPLE);	
 		return TRUE;
 	case IDM_FILE_NEWRECT:
-		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"));	
+		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_RECT);	
 		return TRUE;
 	case IDM_FILE_NEWTEXT:
-		pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"));	
+		pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_TEXT1);	
 		return TRUE;
 	case IDM_FILE_NEWTREE:
-		pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"));	
+		pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_CLASSES1);	
 		return TRUE;
 	case IDM_FILE_NEWLIST:
-		pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"));
+		pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_FILES1);
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
@@ -156,13 +151,17 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_TABBEDMDI_TOP:
 		OnMDITabsAtTop();
 		return TRUE;
-	case IDM_DOCK_DEFAULT:
+	case IDM_LAYOUT_DEFAULT:
 		m_DockTabbedMDI.CloseAllDockers();
 		::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
 		LoadDefaultDockers();
+		LoadDefaultMDIs();
 		return TRUE;
-	case IDM_DOCK_CLOSEALL:
+	case IDM_LAYOUT_CLOSE_DOCKERS:
 		m_DockTabbedMDI.CloseAllDockers();
+		return TRUE;
+	case IDM_LAYOUT_CLOSE_MDIS:
+		TRACE("IDM_LAYOUT_CLOSEALL_MDIS\n");
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
@@ -199,16 +198,22 @@ void CMainFrame::OnInitialUpdate()
 {
 	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
 
-	if (0 == GetRegistryKeyName().size())
-		LoadDefaultDockers();
-	else
-		m_DockTabbedMDI.LoadDockers(GetRegistryKeyName());
+	if (0 != GetRegistryKeyName().size())
+	{
+		// Load dock settings from registry
+		m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName());
+
+		// Load MDI child settings from registry
+		m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName());
+	}
 
 	// Ensure we have some docked/undocked windows
 	if (0 == m_DockTabbedMDI.GetAllDockers().size())
 		LoadDefaultDockers();
 
-	LoadDefaultMDITabs();
+	// Ensure we have some tabbed MDI children
+	if (0 == m_DockTabbedMDI.GetTabbedMDI()->GetMDIChildCount())
+		LoadDefaultMDIs();
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();
@@ -223,25 +228,48 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-void CMainFrame::SaveTabbedMDIs()
+/*
+void CMainFrame::SaveTabbedMDIs(tString tsRegistryKeyName)
 {
-	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
-	int nMDIChildren = pTabbedMDI->GetTab().GetItemCount();
+	if (0 != tsRegistryKeyName.size())
+	{
+		CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
 
-	if (0 != GetRegistryKeyName().size())
-	{	
-		for (int i = 0; i < nMDIChildren; ++i)
+		tString tsKeyName = _T("Software\\") + tsRegistryKeyName;
+		HKEY hKey = NULL;
+		HKEY hKeyMDIChild = NULL;
+		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+			throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+		RegDeleteKey(hKey, _T("MDI Children"));
+		if (RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
+			throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+		for (int i = 0; i < pTabbedMDI->GetMDIChildCount(); ++i)
 		{
-			TRACE("GetTabbedMDI child\n");
-		}
+			TCHAR szNumber[16];
+			tString tsSubKey = _T("MDI Child ");
+			tsSubKey += _itot(i, szNumber, 10);
+			TabPageInfo pdi = m_DockTabbedMDI.GetTabbedMDI()->GetTab().GetTabPageInfo(i);
+			RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo));
+		}	
+
+		RegCloseKey(hKeyMDIChild);
+		RegCloseKey(hKey);
 	}
 }
+
+*/
 
 void CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
-	m_DockTabbedMDI.SaveDockers(GetRegistryKeyName());
-	SaveTabbedMDIs();
+
+	// Save the docker settings
+	m_DockTabbedMDI.SaveRegistrySettings(GetRegistryKeyName());
+	
+	// Save the tabbedMDI settings
+	m_DockTabbedMDI.GetTabbedMDI()->SaveRegistrySettings(GetRegistryKeyName());
 }
 
 void CMainFrame::SetupToolbar()

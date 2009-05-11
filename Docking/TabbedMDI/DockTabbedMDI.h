@@ -7,7 +7,7 @@
 
 #include "../../Win32++/tab.h"
 #include "../../Win32++/docking.h"
-
+#include "MyTabbedMDI.h"
 
 // Declaration of the CDockTabbedMDI class
 class CDockTabbedMDI : public CDocker
@@ -19,7 +19,7 @@ public:
 	virtual void OnInitialUpdate();
 
 private:
-	CTabbedMDI m_View;
+	CMyTabbedMDI m_View;
 
 };
 

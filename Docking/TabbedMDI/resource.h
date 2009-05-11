@@ -44,6 +44,7 @@
 #define IDM_FILE_NEWLIST                145
 #define IDM_CONTAINER_TOP               146
 #define IDM_TABBEDMDI_TOP               147
-#define IDM_DOCK_DEFAULT                148
-#define IDM_DOCK_CLOSEALL               149
+#define IDM_LAYOUT_DEFAULT              148      
+#define IDM_LAYOUT_CLOSE_DOCKERS        149
+#define IDM_LAYOUT_CLOSE_MDIS           150
 

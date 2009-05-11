@@ -382,9 +382,9 @@ namespace Win32xx
 		virtual CDocker* GetDockTopLevel() const;
 		virtual int GetDockWidth() const;
 		virtual CTabbedMDI* GetTabbedMDI() const;
-		virtual void LoadDockers(tString tsRegistryKeyName);
+		virtual void LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcDockLayout();
-		virtual void SaveDockers(tString tsRegistryKeyName);
+		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual BOOL VerifyDockers();	
 
 		// Attributes
@@ -1852,7 +1852,7 @@ namespace Win32xx
 
 	inline CDocker* CDocker::NewDockerFromID(int /*nID*/)
 	{
-		// Override this function to create the appropriate Docker object
+		// Override this function to create the Docker objects as shown below
 
 		CDocker* pDock = NULL;
 	/*	switch(nID)
@@ -2205,7 +2205,7 @@ namespace Win32xx
 		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-	inline void CDocker::LoadDockers(tString tsRegistryKeyName)
+	inline void CDocker::LoadRegistrySettings(tString tsRegistryKeyName)
 	{
 		if (0 != tsRegistryKeyName.size())
 		{
@@ -2241,10 +2241,19 @@ namespace Win32xx
 				DockInfo di = vDockList[i];
 				if (di.DockParentID == 0)
 				{
-					if (di.DockStyle & 0xF)
-						AddDockedChild(NewDockerFromID(di.DockID), di.DockStyle, di.DockWidth, di.DockID);
+					CDocker* pDocker = NewDockerFromID(di.DockID);
+					if (pDocker)
+					{
+						if (di.DockStyle & 0xF)
+							AddDockedChild(pDocker, di.DockStyle, di.DockWidth, di.DockID);
+						else
+							AddUndockedChild(pDocker, di.DockStyle, di.DockWidth, di.Rect, di.DockID);
+					}
 					else
-						AddUndockedChild(NewDockerFromID(di.DockID), di.DockStyle, di.DockWidth, di.Rect, di.DockID);
+					{
+						DebugErrMsg(_T("Failed to load dock information from registry"));
+						break;
+					}
 
 					vDockList.erase(vDockList.begin() + i);
 				}
@@ -2258,19 +2267,26 @@ namespace Win32xx
 				for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
 				{
 					DockInfo di = *iter;
-					CDocker* pDock = GetDockFromID(di.DockParentID);
-					if (pDock != 0)
+					CDocker* pDockParent = GetDockFromID(di.DockParentID);
+					CDocker* pDock = NewDockerFromID(di.DockID);
+					if (pDockParent != 0)
 					{
-						pDock->AddDockedChild(NewDockerFromID(di.DockID), di.DockStyle, di.DockWidth, di.DockID);
-						bFound = true;
-						vDockList.erase(iter);
+						if(pDock)
+						{
+							pDockParent->AddDockedChild(pDock, di.DockStyle, di.DockWidth, di.DockID);
+							bFound = true;
+							vDockList.erase(iter);
+						}
+						else
+							DebugErrMsg(_T("Failed to load dock information from registry"));
+						
 						break;
 					}
 				}
 
 				if (!bFound)
 				{
-					TRACE(_T("Orphaned dockers !!! \n"));
+					DebugErrMsg(_T("Orphaned dockers !!! "));
 					break;
 				}
 			}	
@@ -2785,7 +2801,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::SaveDockers(tString tsRegistryKeyName)
+	inline void CDocker::SaveRegistrySettings(tString tsRegistryKeyName)
 	{
 		VerifyDockers();
 		// NOTE: This function assumes that each docker has a unique DockID

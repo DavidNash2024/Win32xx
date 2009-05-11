@@ -15,14 +15,16 @@ Major Changes
    Refer to the docking TabbedMDI sample for a demonstration of how CTabbedMDI
    class is used.   
 * Enhancments to docking.
-   - Dockables can now be docked into, and undocked from all dockables, 
+   - Dockers can now be docked into, and undocked from all other dockers, 
      including those that are undocked. 
    - Containers can also be docked into and undocked all from containers,
       including those that are undocked.
    - Containers can display their tabs at the top or bottom of the window.
    - Containes can also display a tab list button.
-   - Dockable and container objects are destroyed when their window is closed.
-   - CContainer::SetupToolbar can be used to specify the toolbar's resource IDs.    
+   - Docker and container objects are destroyed when their window is closed.
+   - CContainer::SetupToolbar can be used to specify the toolbar's resource IDs.
+   - Dockers and containers can save their layout in and load their layout from
+      the registry.     
 * Improvements to toolbars
    - Resource IDs should be specified in SetupToolbar, rather than CMainFrame's
       constructor.
@@ -57,9 +59,9 @@ Added CDocker::GetDockTopLevel
 Added CDocker::GetContainer
 Added CDocker::GetTabbedMDI
 Added CDocker::IsRelated
-Added CDocker::LoadDockers
+Added CDocker::LoadRegistrySettings
 Added CDocker::NewDockerFromID
-Added CDocker::SaveDockers
+Added CDocker::SaveRegistrySettings
 Added CToolbar::GetToolbarData
 Added CWnd::GetClassString
 Added CWnd::IsFrame
@@ -73,7 +75,7 @@ Changed CToolbar::SetBitmap
 Changed CToolbar::AddBitmap
 Changed CToolbar::ReplaceBitmap
 Renamed CDockable to CDocker
-Renamed CDocker::CheckDockables       to CDocker::VerifyDockables
+Renamed CDocker::CheckDockables       to CDocker::VerifyDockers
 Renamed CFrame::OnFrameDrawItem       to CFrame::OnDrawItem
 Renamed CFrame::OnFrameExitMenuLoop   to CFrame::OnExitMenuLoop
 Renamed CFrame::OnFrameInitMenuPopup  to CFrame::OnInitMenuPopup
@@ -111,7 +113,7 @@ Major Changes
   - Added tabbed docking container with optional toolbar
   - Added close button to the caption of docked windows
   - Added 'outer' docking  ie. docking at the side of the frame rather 
-      than inside another dockable.
+      than inside another Docker.
   - Added a second docking sample demonstrating containers
   - Added save/restore dock layout to docking samples
   - Added Close All Dockables and Default Dock Layout to docking samples

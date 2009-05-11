@@ -36,10 +36,8 @@ public:
 	void OnFileNew();
 	void OnContainerTabsAtTop();
 	void OnMDITabsAtTop();
-	void LoadRegistryTabbedMDIs();
 	void LoadDefaultDockers();
-	void LoadDefaultMDITabs();
-	void SaveTabbedMDIs();
+	void LoadDefaultMDIs();
 	
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
