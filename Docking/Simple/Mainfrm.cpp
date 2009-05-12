@@ -79,10 +79,17 @@ void CMainFrame::OnInitialUpdate()
 {
 	m_DockView.SetDockStyle(DS_CLIENTEDGE);
 
-	if (0 == GetRegistryKeyName().size())
-		LoadDefaultDockers();
-	else
-		m_DockView.LoadRegistrySettings(GetRegistryKeyName());
+	try
+	{
+		if (0 != GetRegistryKeyName().size())
+			m_DockView.LoadRegistrySettings(GetRegistryKeyName());
+	}
+
+	catch (const CWinException &e)
+	{
+		// Handle possible exceptions from LoadRegistrySettings
+		e.MessageBox();
+	}
 
 	// Ensure we have some docked/undocked windows
 	if (0 == m_DockView.GetAllDockers().size())
@@ -98,15 +105,15 @@ void CMainFrame::LoadDefaultDockers()
 
 	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 
-	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_LEFT | dwStyle, 200, ID_CLASSES1);
-	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CLASSES2);
-	CDocker* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP | dwStyle, 100, ID_TEXT1);
-	CDocker* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT2);
+	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_LEFT | dwStyle, 200, ID_DOCK_CLASSES1);
+	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES2);
+	CDocker* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP | dwStyle, 100, ID_DOCK_TEXT1);
+	CDocker* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT2);
 
-	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_FILES1);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_FILES2);
-	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_SIMPLE1);
-	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_SIMPLE2);
+	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_DOCK_FILES1);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_DOCK_FILES2);
+	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_DOCK_SIMPLE1);
+	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_DOCK_SIMPLE2);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)

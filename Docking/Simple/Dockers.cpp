@@ -19,28 +19,28 @@ CDocker* CDockSimple::NewDockerFromID(int nID)
 	CDocker* pDock = NULL;
 	switch(nID)
 	{
-	case ID_CLASSES1:
+	case ID_DOCK_CLASSES1:
 		pDock = new CDockClasses;
 		break;
-	case ID_CLASSES2:
+	case ID_DOCK_CLASSES2:
 		pDock = new CDockClasses;					
 		break;
-	case ID_FILES1:
+	case ID_DOCK_FILES1:
 		pDock = new CDockFiles;
 		break;
-	case ID_FILES2:
+	case ID_DOCK_FILES2:
 		pDock = new CDockFiles;
 		break;
-	case ID_SIMPLE1:
+	case ID_DOCK_SIMPLE1:
 		pDock = new CDockSimple;
 		break;
-	case ID_SIMPLE2:
+	case ID_DOCK_SIMPLE2:
 		pDock = new CDockSimple;
 		break;
-	case ID_TEXT1:
+	case ID_DOCK_TEXT1:
 		pDock = new CDockText;
 		break;
-	case ID_TEXT2:
+	case ID_DOCK_TEXT2:
 		pDock = new CDockText;
 		break;
 	default:

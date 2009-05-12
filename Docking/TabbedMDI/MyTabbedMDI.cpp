@@ -6,22 +6,22 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int nID)
 	CWnd* pView = NULL;
 	switch(nID)
 	{
-	case ID_CLASSES1:
+	case ID_MDI_CLASSES:
 		pView = new CViewClasses;
 		break;
-	case ID_FILES1:
+	case ID_MDI_FILES:
 		pView = new CViewFiles;
 		break;
-	case ID_OUTPUT1:
+	case ID_MDI_OUTPUT:
 		pView = new CViewOutput;
 		break;
-	case ID_TEXT1:
+	case ID_MDI_TEXT:
 		pView = new CViewText;
 		break;
-	case ID_SIMPLE:
+	case ID_MDI_SIMPLE:
 		pView = new CViewSimple;
 		break;
-	case ID_RECT:
+	case ID_MDI_RECT:
 		pView = new CViewRect;
 		break;
 	default:
@@ -31,3 +31,4 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int nID)
 
 	return pView;
 }
+

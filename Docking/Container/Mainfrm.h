@@ -12,18 +12,6 @@
 #include "Output.h"
 
 
-enum DockIDs
-{
-	ID_CLASSES1 = 1,
-	ID_CLASSES2 = 2,
-	ID_FILES1 = 3,
-	ID_FILES2 = 4,
-	ID_TEXT1 = 5,
-	ID_OUTPUT1 = 6,
-	ID_TEXT2 = 7,
-	ID_OUTPUT2 = 8
-};
-
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {

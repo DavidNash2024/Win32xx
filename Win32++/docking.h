@@ -385,13 +385,13 @@ namespace Win32xx
 		virtual void LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcDockLayout();
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
-		virtual BOOL VerifyDockers();	
+		virtual BOOL VerifyDockers();
 
 		// Attributes
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_DockClient;}
 		virtual CDockHint& GetDockHint() const {return m_pDockAncestor->m_DockHint;}
-		
+
 		std::vector <CDocker*> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
 		std::vector <CDocker*> & GetDockChildren() const {return (std::vector <CDocker*> &)m_vDockChildren;}
 		int GetBarWidth() const {return GetDockBar().GetWidth();}
@@ -476,7 +476,7 @@ namespace Win32xx
 		HWND m_hOldFocus;
 
 	}; // class CDocker
-	
+
 	struct DockInfo
 	{
 		DWORD DockStyle;
@@ -645,7 +645,7 @@ namespace Win32xx
 		if (!(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			m_bOldFocus = FALSE;
-			
+
 			CDC dc;
 			if ((wParam != 1) && (bFocus == m_bOldFocus))
 				dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
@@ -882,8 +882,8 @@ namespace Win32xx
 
 				return 0;
 			}
-			
-			m_bClosePressed = FALSE;	
+
+			m_bClosePressed = FALSE;
 		}
 		return CWnd::WndProcDefault(m_hWnd, WM_NCLBUTTONUP, wParam, lParam);
 	}
@@ -1407,7 +1407,7 @@ namespace Win32xx
 		{
 			Destroy();
 			return FALSE;
-		}		
+		}
 
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
@@ -1452,8 +1452,8 @@ namespace Win32xx
 		{
 			Destroy();
 			return FALSE;
-		}	
-		
+		}
+
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
@@ -1497,7 +1497,7 @@ namespace Win32xx
 		{
 			Destroy();
 			return FALSE;
-		}	
+		}
 
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
@@ -1642,7 +1642,7 @@ namespace Win32xx
 		// Create the docker window as a child of the frame window.
 		// This pernamently sets the frame window as the docker window's owner,
 		// even when its parent is subsequently changed.
-		
+
 		if (pDocker)
 		{
 			pDocker->SetDockWidth(DockWidth);
@@ -1917,7 +1917,7 @@ namespace Win32xx
 			// Transfer container children to the target container
 			CContainer* pContainer = (CContainer*)GetView();
 			CContainer* pContainerSource = (CContainer*)pDock->GetView();
-			
+
 			if (pContainerSource->GetAllContainers().size() > 1)
 			{
 				// The container we're about to add has children, so transfer those first
@@ -2133,7 +2133,7 @@ namespace Win32xx
 	inline CDocker* CDocker::GetDockTopLevel() const
 	{
 		CDocker* pDockTopLevel = (CDocker* const)this;
-	
+
 		while(pDockTopLevel->GetDockParent())
 		{
 			pDockTopLevel = pDockTopLevel->GetDockParent();
@@ -2222,7 +2222,7 @@ namespace Win32xx
 				TCHAR szNumber[16];
 				tString tsSubKey = _T("DockChild");
 				tsSubKey += _itot(i, szNumber, 10);
-				
+
 				// Fill the DockList vector from the registry
 				while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&di, &BufferSize))
 				{
@@ -2231,7 +2231,7 @@ namespace Win32xx
 					tsSubKey = _T("DockChild");
 					tsSubKey += _itot(i, szNumber, 10);
 				}
-				
+
 				RegCloseKey(hKey);
 			}
 
@@ -2251,8 +2251,7 @@ namespace Win32xx
 					}
 					else
 					{
-						DebugErrMsg(_T("Failed to load dock information from registry"));
-						break;
+						throw CWinException(_T("Failed to load dock information from registry"));
 					}
 
 					vDockList.erase(vDockList.begin() + i);
@@ -2278,19 +2277,18 @@ namespace Win32xx
 							vDockList.erase(iter);
 						}
 						else
-							DebugErrMsg(_T("Failed to load dock information from registry"));
-						
+							throw CWinException(_T("Failed to load dock information from registry"));
+
 						break;
 					}
 				}
 
 				if (!bFound)
 				{
-					DebugErrMsg(_T("Orphaned dockers !!! "));
-					break;
+					throw CWinException(_T("Orphaned dockers stored in registry "));
 				}
-			}	
-		}	
+			}
+		}
 	}
 
 
@@ -2312,7 +2310,7 @@ namespace Win32xx
 	{
 		// Only top level undocked dockers get this message
 		if (LOWORD(wParam) == WA_INACTIVE)
-		{				
+		{
 			// Send a notification of focus lost
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
 			NMHDR nhdr={0};
@@ -2346,14 +2344,14 @@ namespace Win32xx
 		// Set the default colour for the splitter bar
 		CFrame* pFrame = 0;
 		pFrame = (CFrame*)FromHandle(GetDockAncestor()->GetAncestor());
-		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE); 
+		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 		if (pFrame && pFrame->IsFrame())
 		{
 			CRebar& RB = pFrame->GetRebar();
 			if (RB.GetRebarTheme().UseThemes)
 				rgbColour = RB.GetRebarTheme().clrBkgnd2;
 		}
-		
+
 		SetBarColor(rgbColour);
 	}
 
@@ -2592,7 +2590,7 @@ namespace Win32xx
 		else
 			// Pass focus on the the view window
 			GetView()->SetFocus();
-		
+
 		if ((this == GetDockTopLevel()) && (this != GetDockAncestor()))
 		{
 			// Send a notification to top level window
@@ -2611,7 +2609,7 @@ namespace Win32xx
 		{
 			CFrame* pFrame = 0;
 			pFrame = (CFrame*)FromHandle(GetAncestor());
-			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE); 
+			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 			if (pFrame && pFrame->IsFrame())
 			{
 				CRebar& RB = pFrame->GetRebar();
@@ -2623,13 +2621,13 @@ namespace Win32xx
 			std::vector<CDocker*>::iterator iter;
 			for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
 				(*iter)->SetBarColor(rgbColour);
-		
+
 			// Set the splitter bar colour for the docker ancestor
 			SetBarColor(rgbColour);
 		}
 	}
 
-	inline LRESULT CDocker::OnSysCommand(WPARAM wParam, LPARAM lParam) 
+	inline LRESULT CDocker::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	{
 		switch(wParam&0xFFF0)
 		{
@@ -2659,7 +2657,7 @@ namespace Win32xx
 			m_bClosePressed = TRUE;
 			break;
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam); 
+		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
@@ -2671,7 +2669,7 @@ namespace Win32xx
 			pWndPos->flags |= SWP_NOMOVE|SWP_FRAMECHANGED;
 			return 0;
 		}
-		
+
 		return CWnd::WndProcDefault(m_hWnd, WM_WINDOWPOSCHANGING, wParam, lParam);
 	}
 
@@ -2821,7 +2819,7 @@ namespace Win32xx
 				di.Rect		 = (*iter)->GetWindowRect();
 				if ((*iter)->GetDockParent())
 					di.DockParentID = (*iter)->GetDockParent()->GetDockID();
-				
+
 				vDockList.push_back(di);
 			}
 
@@ -2947,7 +2945,7 @@ namespace Win32xx
 			pDockFirstChild->m_DockStyle = (pDockFirstChild->m_DockStyle & 0xFFFFFFF0 ) | (m_DockStyle & 0xF);
 			pDockFirstChild->m_DockStartWidth = m_DockStartWidth;
 			pDockFirstChild->m_DockWidthRatio = m_DockWidthRatio;
-			
+
 			if (m_pDockParent)
 			{
 				pDockFirstChild->m_pDockParent = m_pDockParent;
@@ -2959,7 +2957,7 @@ namespace Win32xx
 				std::vector<CDocker*>::iterator iter;
 				for (iter = GetDockChildren().begin() + 1; iter < GetDockChildren().end(); ++iter)
 					(*iter)->ShowWindow(SW_HIDE);
-				
+
 				pDockFirstChild->ConvertToPopup(GetWindowRect());
 				pDockFirstChild->GetDockBar().ShowWindow(SW_HIDE);
 			}
@@ -2996,7 +2994,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::Undock()
-	{	
+	{
 		// Return if we shouldn't undock
 		if (GetDockStyle() & DS_NO_UNDOCK) return;
 
@@ -3006,7 +3004,7 @@ namespace Win32xx
 		CDocker* pDockUndockedFrom = GetDockParent();
 		if (!pDockUndockedFrom && (GetDockChildren().size() > 0))
 			pDockUndockedFrom = GetDockChildren()[0];
-		
+
 		GetDockTopLevel()->m_hOldFocus = 0;
 		PromoteFirstChild();
 		m_pDockParent = 0;
@@ -3048,7 +3046,7 @@ namespace Win32xx
 		SetCursorPos(pt.x, pt.y);
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
-		
+
 		RecalcDockLayout();
         if ((pDockUndockedFrom) && (pDockUndockedFrom->GetDockTopLevel() != GetDockTopLevel()))
 			pDockUndockedFrom->RecalcDockLayout();
@@ -3168,7 +3166,7 @@ namespace Win32xx
 		{
 		case WM_ACTIVATE:
 			OnActivate(wParam, lParam);
-			break;  
+			break;
 		case WM_SYSCOMMAND:
 			return OnSysCommand(wParam, lParam);
 
@@ -3317,7 +3315,7 @@ namespace Win32xx
 
 	inline void CContainer::SetupToolbar()
 	{
-		// Use this function to set the Resource IDs for the toolbar(s). 
+		// Use this function to set the Resource IDs for the toolbar(s).
 
 /*		// Set the Resource IDs for the toolbar buttons
 		AddToolbarButton( IDM_FILE_NEW   );
@@ -3360,12 +3358,12 @@ namespace Win32xx
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
 				GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-			
+
 			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		}
 		else
 			GetToolbar().Destroy();
-		
+
 		// Add tabs for each container.
 		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
 		{
@@ -3377,7 +3375,7 @@ namespace Win32xx
 			InsertItem(i, &tie);
 		}
 	}
-	
+
 	inline void CContainer::OnLButtonDown(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		if (!m_IsTracking)
@@ -3600,7 +3598,7 @@ namespace Win32xx
 
 		switch (((LPNMHDR)lParam)->code)
 		{
-	
+
 		// Display tooltips for the toolbar
 		case TTN_GETDISPINFO:
 			{
@@ -3616,7 +3614,7 @@ namespace Win32xx
 		} // switch LPNMHDR
 
 		return 0L;
-	} 
+	}
 
 	inline void CContainer::CViewPage::PreRegisterClass(WNDCLASS &wc)
 	{

@@ -91,28 +91,28 @@ void CMainFrame::LoadDefaultDockers()
 	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 	
 	// Add the parent dockers
-	CDocker* pDockRight  = m_DockTabbedMDI.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_CLASSES1);	
-	CDocker* pDockBottom = m_DockTabbedMDI.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_TEXT1);
+	CDocker* pDockRight  = m_DockTabbedMDI.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);	
+	CDocker* pDockBottom = m_DockTabbedMDI.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
 
 	// Add the remaining dockers
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_FILES1);
-	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_CLASSES2);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_FILES2);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES1);
+	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_CLASSES2);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES2);
 
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT1);
-	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_TEXT2);
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_OUTPUT2);
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
+	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
 }
 
 void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
-	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_SIMPLE);
-	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_RECT);
-	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_TEXT1);
-	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_CLASSES1);
-	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"), ID_FILES1);
+	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
+	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
+	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
+	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
+	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"), ID_MDI_FILES);
 	pTabbedMDI->SetActiveTab(0);
 }
 
@@ -127,19 +127,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnFileNew();
 		return TRUE;
 	case IDM_FILE_NEWSIMPLE:
-		pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_SIMPLE);	
+		pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);	
 		return TRUE;
 	case IDM_FILE_NEWRECT:
-		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_RECT);	
+		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);	
 		return TRUE;
 	case IDM_FILE_NEWTEXT:
-		pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_TEXT1);	
+		pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);	
 		return TRUE;
 	case IDM_FILE_NEWTREE:
-		pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_CLASSES1);	
+		pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);	
 		return TRUE;
 	case IDM_FILE_NEWLIST:
-		pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_FILES1);
+		pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
@@ -200,11 +200,20 @@ void CMainFrame::OnInitialUpdate()
 
 	if (0 != GetRegistryKeyName().size())
 	{
-		// Load dock settings from registry
-		m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName());
+		try
+		{
+			// Load dock settings from registry
+			m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName());
 
-		// Load MDI child settings from registry
-		m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName());
+			// Load MDI child settings from registry
+			m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName());
+		}
+
+		catch (const CWinException &e)
+		{
+			// Handle possible exceptions from LoadRegistrySettings
+			e.MessageBox();
+		}
 	}
 
 	// Ensure we have some docked/undocked windows

@@ -8,18 +8,6 @@
 #include "Dockers.h"
 
 
-enum DockIDs
-{
-	ID_CLASSES1 = 1,
-	ID_CLASSES2 = 2,
-	ID_FILES1 = 3,
-	ID_FILES2 = 4,
-	ID_SIMPLE1 = 5,
-	ID_SIMPLE2 = 6,
-	ID_TEXT1 = 7,
-	ID_TEXT2 = 8
-};
-
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {

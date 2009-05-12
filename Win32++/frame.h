@@ -115,7 +115,7 @@ namespace Win32xx
 	public:
 		CMenubar();
 		virtual ~CMenubar();
-		virtual IsMenubar() const {return TRUE;}
+		virtual BOOL IsMenubar() const {return TRUE;}
 		void MenuChar(WPARAM wParam, LPARAM lParam);
 		void SysCommand(WPARAM wParam, LPARAM lParam);
 		HMENU GetMenu() const {return m_hTopMenu;}
