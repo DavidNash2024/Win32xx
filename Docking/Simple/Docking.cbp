@@ -140,8 +140,8 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="Dockables.cpp" />
-		<Unit filename="Dockables.h" />
+		<Unit filename="Dockers.cpp" />
+		<Unit filename="Dockers.h" />
 		<Unit filename="DockingApp.cpp" />
 		<Unit filename="DockingApp.h" />
 		<Unit filename="Mainfrm.cpp" />

@@ -94,7 +94,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\Dockables.cpp
+SOURCE=.\Dockers.cpp
 # End Source File
 # Begin Source File
 
@@ -122,7 +122,7 @@ SOURCE=..\Windows\Default_Resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Dockables.h
+SOURCE=.\Dockers.h
 # End Source File
 # Begin Source File
 

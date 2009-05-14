@@ -178,7 +178,7 @@ namespace Win32xx
 				tbb.dwData  = iImages -1;
 				tbb.iBitmap = iImages -1;
 				tbb.idCommand = nID;
-				tbb.fsState = bEnabled? TBSTATE_ENABLED : TBSTATE_INDETERMINATE;
+				tbb.fsState = bEnabled? TBSTATE_ENABLED : 0;
 				tbb.fsStyle = TBSTYLE_BUTTON;
 			}
 

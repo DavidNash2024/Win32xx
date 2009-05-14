@@ -463,7 +463,7 @@ namespace Win32xx
 
 		BOOL m_BlockMove;
 		BOOL m_Undocking;
-		BOOL m_bClosePressed;
+		BOOL m_bIsClosing;
 		BOOL m_bIsDragging;
 		int m_DockStartWidth;
 		int m_nDockID;
@@ -1576,7 +1576,7 @@ namespace Win32xx
 	// Definitions for the CDocker class
 	//
 	inline CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
-		            m_bClosePressed(FALSE), m_bIsDragging(FALSE), m_DockStartWidth(0), m_nDockID(0),
+		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_DockStartWidth(0), m_nDockID(0),
 		            m_NCHeight(20), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -1585,7 +1585,6 @@ namespace Win32xx
 
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
-		m_bClosePressed = FALSE;
 	}
 
 	inline CDocker::~CDocker()
@@ -1833,6 +1832,7 @@ namespace Win32xx
 		for (v = AllDockers.begin(); v != AllDockers.end(); ++v)
 		{
 			// The CDocker is destroyed when the window is destroyed
+			(*v)->m_bIsClosing = TRUE;
 			(*v)->Destroy();	// Destroy the window
 		}
 
@@ -2378,6 +2378,14 @@ namespace Win32xx
 					{
 						CDocker* pDock = GetDockFromView((*iter).pContainer);
 						pDock->Destroy();
+
+						// Allow the UWM_DOCK_DESTROYED message to be processed
+						MSG msg;
+						while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+						{
+							::TranslateMessage(&msg);
+							::DispatchMessage(&msg);
+						} 
 					}
 				}
 			}
@@ -2391,6 +2399,14 @@ namespace Win32xx
 
 	inline void CDocker::OnDockDestroyed(WPARAM wParam, LPARAM /*lParam*/)
 	{
+		// Process any queued messages first
+		MSG msg;
+		while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		{
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+
 		CDocker* pDock = (CDocker*)wParam;
 		if (this == GetDockAncestor() && pDock != GetDockAncestor())
 		{
@@ -2654,7 +2670,7 @@ namespace Win32xx
 			break;
 		case SC_CLOSE:
 			// The close button is pressed on an undocked docker
-			m_bClosePressed = TRUE;
+			m_bIsClosing = TRUE;
 			break;
 		}
 		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam);
@@ -2693,7 +2709,7 @@ namespace Win32xx
 		else if (this == GetDockTopLevel())
 		{
 			// Reposition the dock children
-			if (IsUndocked() && !m_bClosePressed) RecalcDockLayout();
+			if (IsUndocked() && !m_bIsClosing) RecalcDockLayout();
 		}
 	}
 

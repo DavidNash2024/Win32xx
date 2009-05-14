@@ -169,7 +169,6 @@ namespace Win32xx
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual BOOL IsTabbedMDI() const {return TRUE;}
 		virtual void LoadRegistrySettings(tString tsRegistryKeyName);
-		virtual CWnd* NewMDIChildFromID(int nID);
 		virtual void RecalcLayout();
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
@@ -178,6 +177,7 @@ namespace Win32xx
 
 	protected:
 		virtual HWND Create(HWND hWndParent);
+		virtual CWnd* NewMDIChildFromID(int nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
