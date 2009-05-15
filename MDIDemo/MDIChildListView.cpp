@@ -14,6 +14,7 @@ CViewList::CViewList() : m_himlSmall(0)
 CViewList::~CViewList()
 {
 	if (IsWindow()) DeleteAllItems();
+	ImageList_Destroy(m_himlSmall);
 }
 
 void CViewList::OnInitialUpdate()

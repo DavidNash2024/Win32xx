@@ -17,6 +17,7 @@ CViewClasses::CViewClasses() : m_himlNormal(0)
 CViewClasses::~CViewClasses()
 {
 	if (IsWindow()) DeleteAllItems();
+	ImageList_Destroy(m_himlNormal);
 }
 
 void CViewClasses::OnInitialUpdate()
@@ -121,6 +122,9 @@ void CContainClasses::SetupToolbar()
 	AddToolbarButton( IDM_FILE_PRINT );
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
+
+	// Add the ComboBarEx control to the toolbar
+	AddCombo();
 }
 
 BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -141,15 +145,6 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	}
 
 	return FALSE;
-}
-
-void CContainClasses::OnCreate()
-{
-	// Call the base class first
-	CContainer::OnCreate();
-	
-	// Add the ComboBarEx control to the toolbar
-	AddCombo();
 }
 
 

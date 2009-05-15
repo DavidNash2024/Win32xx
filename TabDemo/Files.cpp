@@ -15,6 +15,7 @@ CViewFiles::CViewFiles() : m_himlSmall(0)
 CViewFiles::~CViewFiles()
 {
 	if (IsWindow()) DeleteAllItems();
+	ImageList_Destroy(m_himlSmall);
 }
 
 void CViewFiles::OnInitialUpdate()
@@ -24,6 +25,7 @@ void CViewFiles::OnInitialUpdate()
 	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
 	ImageList_AddMasked(m_himlSmall, hbm, RGB(255, 0, 255));
 	SetImageList(m_himlSmall, LVSIL_SMALL);
+	::DeleteObject(hbm);
 
 	// Set the report style
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

@@ -564,7 +564,7 @@ namespace Win32xx
 
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;
-		}
+		} 
 
 		return Size;
 	}
@@ -734,7 +734,7 @@ namespace Win32xx
 		// Cleanup
 		::DeleteObject(hrgnSrc1);
 		::DeleteObject(hrgnSrc2);
-		::DeleteObject(hrgnClip);
+		::DeleteObject(hrgnClip); 
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
@@ -779,6 +779,7 @@ namespace Win32xx
 		if (m_vTabPageInfo.size() > 0)
 		{
 			SetTabSize();
+			m_pView = GetAllTabs()[0].pWnd;
 			SelectPage(0);
 		}
 		else

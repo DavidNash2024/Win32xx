@@ -79,5 +79,6 @@ void CComboBoxEx::SetImages(int nImages, UINT ImageID)
 	COLORREF crMask = RGB(255,0,255);
 	m_himlImages = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, nImages, 0);
 	ImageList_AddMasked(m_himlImages, hbm, crMask);
+	::DeleteObject(hbm);
 }
 

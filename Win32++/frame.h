@@ -1363,8 +1363,8 @@ namespace Win32xx
 	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)
 	{
 		// Get ImageList image size
-		int cxOld;
-		int cyOld;
+		int cxOld = 0;
+		int cyOld = 0;
 		ImageList_GetIconSize(m_himlMenu, &cxOld, &cyOld );
 
 		// Create a new ImageList if required

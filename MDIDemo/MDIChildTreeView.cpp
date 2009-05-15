@@ -14,6 +14,7 @@ CViewTree::CViewTree() : m_himlNormal(0)
 CViewTree::~CViewTree()
 {
 	if (IsWindow()) DeleteAllItems();
+	ImageList_Destroy(m_himlNormal);
 }
 
 void CViewTree::OnInitialUpdate()
