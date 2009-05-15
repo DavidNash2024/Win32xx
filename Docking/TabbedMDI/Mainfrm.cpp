@@ -113,7 +113,7 @@ void CMainFrame::LoadDefaultMDIs()
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
 	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"), ID_MDI_FILES);
-	pTabbedMDI->SetActiveTab(0);
+	pTabbedMDI->SetActiveMDITab(0);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -152,16 +152,23 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnMDITabsAtTop();
 		return TRUE;
 	case IDM_LAYOUT_DEFAULT:
+		SetRedraw(FALSE);
+
 		m_DockTabbedMDI.CloseAllDockers();
+		m_DockTabbedMDI.GetTabbedMDI()->CloseAllMDIChildren();
 		::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
 		LoadDefaultDockers();
 		LoadDefaultMDIs();
+		
+		SetRedraw(TRUE);
+		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+
 		return TRUE;
 	case IDM_LAYOUT_CLOSE_DOCKERS:
 		m_DockTabbedMDI.CloseAllDockers();
 		return TRUE;
 	case IDM_LAYOUT_CLOSE_MDIS:
-		TRACE("IDM_LAYOUT_CLOSEALL_MDIS\n");
+		m_DockTabbedMDI.GetTabbedMDI()->CloseAllMDIChildren();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();

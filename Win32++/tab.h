@@ -158,12 +158,14 @@ namespace Win32xx
 	{
 	public:
 		CTabbedMDI();
-		virtual ~CTabbedMDI() {}
+		virtual ~CTabbedMDI();
 		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int nID = 0);
 		virtual void  CloseActiveMDI();
+		virtual void  CloseAllMDIChildren();
+		virtual void  CloseMDIChild(int nTab);
 		virtual CWnd* GetActiveMDIChild();
 		virtual CWnd* GetMDIChild(int nTab) {return GetTab().GetTabPageInfo(nTab).pWnd;}
-		virtual int   GetMDIChildCount() { return GetTab().GetItemCount(); }
+		virtual int   GetMDIChildCount();
 		virtual int   GetMDIChildID(int nTab) {return GetTab().GetTabPageInfo(nTab).nID;}
 		virtual LPCTSTR GetMDIChildTitle(int nTab) {return GetTab().GetTabPageInfo(nTab).szTitle;}
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
@@ -172,13 +174,16 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
-		virtual void SetActiveTab(int nTab);
+		virtual void SetActiveMDITab(int nTab);
 		virtual void ShowListMenu();
 
 	protected:
-		virtual HWND Create(HWND hWndParent);
-		virtual CWnd* NewMDIChildFromID(int nID);
+		virtual HWND    Create(HWND hWndParent);
+		virtual CWnd*   NewMDIChildFromID(int nID);
+		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnEraseBkGnd(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -1025,6 +1030,10 @@ namespace Win32xx
 		m_Tab.SetShowButtons(TRUE);
 	}
 
+	inline CTabbedMDI::~CTabbedMDI()
+	{
+	}
+
 	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int nID /*= 0*/)
 	{
 		if (NULL == pWnd)
@@ -1045,13 +1054,27 @@ namespace Win32xx
 		}
 
 		m_Tab.AddTabPage(tpi);
-		RecalcLayout();
+		RecalcLayout();		
 		return pWnd;
 	}
 
 	inline void CTabbedMDI::CloseActiveMDI()
 	{
 		int nTab = m_Tab.GetCurSel();
+		m_Tab.RemoveTabPage(nTab);
+		RecalcLayout();
+	}
+
+	inline void CTabbedMDI::CloseAllMDIChildren()
+	{
+		while (GetMDIChildCount() > 0)
+		{
+			m_Tab.RemoveTabPage(0);
+		}
+	}
+
+	inline void CTabbedMDI::CloseMDIChild(int nTab)
+	{
 		m_Tab.RemoveTabPage(nTab);
 		RecalcLayout();
 	}
@@ -1076,6 +1099,11 @@ namespace Win32xx
 		int nTab = m_Tab.GetCurSel();
 		TabPageInfo tbi = m_Tab.GetTabPageInfo(nTab);
 		return tbi.pWnd;
+	}
+
+	inline int CTabbedMDI::GetMDIChildCount()
+	{ 
+		return (int) GetTab().GetAllTabs().size(); 
 	}
 
 	inline void CTabbedMDI::LoadRegistrySettings(tString tsRegistryKeyName)
@@ -1113,6 +1141,7 @@ namespace Win32xx
 				}
 
 				RegCloseKey(hKey);
+				SetActiveMDITab(0);
 			}
 		}
 	}
@@ -1137,6 +1166,19 @@ namespace Win32xx
 		return pView;
 	}
 
+	inline void CTabbedMDI::OnDestroy(WPARAM /*wParam*/, LPARAM /*lParam*/ )
+	{
+		CloseAllMDIChildren();
+	}
+
+	inline LRESULT CTabbedMDI::OnEraseBkGnd(WPARAM wParam, LPARAM lParam)
+	{
+		if (m_Tab.GetItemCount() >0)
+			return 0;
+	
+		return CWnd::WndProcDefault(m_hWnd, WM_ERASEBKGND, wParam, lParam);
+	}
+
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		LPNMHDR pnmhdr = (LPNMHDR)lParam;
@@ -1144,6 +1186,11 @@ namespace Win32xx
 			RecalcLayout();
 
 		return 0L;
+	}
+
+	inline void CTabbedMDI::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		RecalcLayout();
 	}
 
 	inline void CTabbedMDI::RecalcLayout()
@@ -1194,7 +1241,7 @@ namespace Win32xx
 			m_Tab.SelectPage(iPage);
 	}
 
-	inline void CTabbedMDI::SetActiveTab(int iTab)
+	inline void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
 		m_Tab.SelectPage(iTab);
 	}
@@ -1222,25 +1269,16 @@ namespace Win32xx
 	{
 		switch(uMsg)
 		{
+		case WM_DESTROY:
+			OnDestroy(wParam, lParam);
+			break;
 		case WM_ERASEBKGND:
-			if (m_Tab.GetItemCount() >0)
-				return 0;
-			break;
+			return OnEraseBkGnd(wParam, lParam);
+		
 		case WM_WINDOWPOSCHANGED:
-			RecalcLayout();
+			OnWindowPosChanged(wParam, lParam);
 			break;
-		case WM_LBUTTONDOWN:
-			{
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_NCHITTEST:
-			{
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
-			}
-			break;
-		}
+		} 
 
 		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
 	}

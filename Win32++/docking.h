@@ -2374,19 +2374,15 @@ namespace Win32xx
 				std::vector<ContainerInfo>::iterator iter;
 				for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
 				{
+					
 					if ((*iter).pContainer != pContainer)
 					{
+						// Reset container parent before destroying the dock window
 						CDocker* pDock = GetDockFromView((*iter).pContainer);
-						pDock->Destroy();
-
-						// Allow the UWM_DOCK_DESTROYED message to be processed
-						MSG msg;
-						while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-						{
-							::TranslateMessage(&msg);
-							::DispatchMessage(&msg);
-						} 
-					}
+						pContainer->SetParent(pDock->GetDockClient().GetHwnd());
+						
+						pDock->Destroy();  
+					} 
 				}
 			}
 		}
@@ -2399,14 +2395,6 @@ namespace Win32xx
 
 	inline void CDocker::OnDockDestroyed(WPARAM wParam, LPARAM /*lParam*/)
 	{
-		// Process any queued messages first
-		MSG msg;
-		while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}
-
 		CDocker* pDock = (CDocker*)wParam;
 		if (this == GetDockAncestor() && pDock != GetDockAncestor())
 		{
