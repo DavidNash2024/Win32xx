@@ -12,6 +12,7 @@ CComboBoxEx::CComboBoxEx() : m_himlImages(NULL)
 
 CComboBoxEx::~CComboBoxEx()
 {
+	ImageList_Destroy(m_himlImages);
 }
 
 void CComboBoxEx::PreCreate(CREATESTRUCT &cs)

@@ -18,8 +18,8 @@ class CViewClasses : public CTreeView
 public:
 	CViewClasses();
 	virtual ~CViewClasses();
-	virtual void OnInitialUpdate();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+	virtual void OnInitialUpdate();
 
 private:
 	HIMAGELIST m_himlNormal;

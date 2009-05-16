@@ -40,6 +40,17 @@ void CViewOutput::PreCreate(CREATESTRUCT &cs)
 
 
 //////////////////////////////////////////////
+//  Definitions for the CContainOutput class
+CContainOutput::CContainOutput() 
+{
+	SetView(m_ViewOutput); 
+	SetDockCaption (_T("Output View - Docking container"));
+	SetTabText(_T("Output"));
+	SetTabIcon(IDI_TEXT);
+} 
+
+
+//////////////////////////////////////////////
 //  Definitions for the CDockOutput class
 CDockOutput::CDockOutput()
 {

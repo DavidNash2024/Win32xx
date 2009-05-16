@@ -29,13 +29,7 @@ private:
 class CContainOutput : public CContainer
 {
 public:
-	CContainOutput() 
-	{
-		SetView(m_ViewOutput); 
-		SetDockCaption (_T("Output View - Docking container"));
-		SetTabText(_T("Output"));
-		SetTabIcon(IDI_TEXT);
-	} 
+	CContainOutput();
 	~CContainOutput() {}
 
 private:

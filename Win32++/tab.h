@@ -170,7 +170,7 @@ namespace Win32xx
 		virtual LPCTSTR GetMDIChildTitle(int nTab) {return GetTab().GetTabPageInfo(nTab).szTitle;}
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual BOOL IsTabbedMDI() const {return TRUE;}
-		virtual void LoadRegistrySettings(tString tsRegistryKeyName);
+		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcLayout();
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
@@ -1107,8 +1107,10 @@ namespace Win32xx
 		return (int) GetTab().GetAllTabs().size(); 
 	}
 
-	inline void CTabbedMDI::LoadRegistrySettings(tString tsRegistryKeyName)
+	inline BOOL CTabbedMDI::LoadRegistrySettings(tString tsRegistryKeyName)
 	{
+		BOOL bResult = FALSE;
+
 		if (0 != tsRegistryKeyName.size())
 		{
 			tString tsKey = _T("Software\\") + tsRegistryKeyName + _T("\\MDI Children");
@@ -1134,10 +1136,13 @@ namespace Win32xx
 						i++;
 						tsSubKey = _T("MDI Child ");
 						tsSubKey += _itot(i, szNumber, 10);
+						bResult = TRUE;
 					}
 					else
 					{
-						throw CWinException(_T("Failed to get TabbedMDI info from registry"));
+						TRACE(_T("Failed to get TabbedMDI info from registry"));
+						bResult = FALSE;
+						break;
 					}
 				}
 
@@ -1145,6 +1150,9 @@ namespace Win32xx
 				SetActiveMDITab(0);
 			}
 		}
+
+		if (!bResult) CloseAllMDIChildren();
+		return bResult;
 	}
 
 	inline CWnd* CTabbedMDI::NewMDIChildFromID(int /*nID*/)

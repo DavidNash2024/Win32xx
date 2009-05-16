@@ -76,20 +76,8 @@ void CMainFrame::OnInitialUpdate()
 {
 	m_DockView.SetDockStyle(DS_CLIENTEDGE);
 
-	try
-	{
-		if (0 != GetRegistryKeyName().size())
-		m_DockView.LoadRegistrySettings(GetRegistryKeyName());
-	}
-
-	catch (const CWinException &e)
-	{
-		// Handle possible exceptions from LoadRegistrySettings
-		e.MessageBox();
-	}
-
-	// Ensure we have some docked/undocked windows
-	if (0 == m_DockView.GetAllDockers().size())
+	// Load dock settings
+	if (!m_DockView.LoadRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
 	// PreCreate initially set the window as invisible, so show it now.

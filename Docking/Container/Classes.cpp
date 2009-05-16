@@ -16,7 +16,6 @@ CViewClasses::CViewClasses() : m_himlNormal(0)
 
 CViewClasses::~CViewClasses()
 {
-	if (IsWindow()) DeleteAllItems();
 	ImageList_Destroy(m_himlNormal);
 }
 
@@ -54,7 +53,7 @@ void CViewClasses::OnInitialUpdate()
 
 	// Expand some tree-view items
 	Expand(htiRoot, TVE_EXPAND);
-	Expand(htiCTreeViewApp, TVE_EXPAND);
+	Expand(htiCTreeViewApp, TVE_EXPAND);  
 }
 
 HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
@@ -69,7 +68,7 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvis.hParent = hParent;
 	tvis.item = tvi;
 
-	return InsertItem(tvis);
+	return InsertItem(tvis);  
 }
 
 
@@ -104,7 +103,7 @@ void CContainClasses::AddCombo()
 	// Set ComboBox Height
 	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)rect.Height()-6);
 
-	m_ComboBoxEx.AddItems();
+	m_ComboBoxEx.AddItems(); 
 }
 
 void CContainClasses::SetupToolbar()
@@ -124,7 +123,7 @@ void CContainClasses::SetupToolbar()
 	AddToolbarButton( IDM_HELP_ABOUT );
 
 	// Add the ComboBarEx control to the toolbar
-	AddCombo();
+	AddCombo();  
 }
 
 BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)

@@ -205,30 +205,12 @@ void CMainFrame::OnInitialUpdate()
 {
 	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
 
-	if (0 != GetRegistryKeyName().size())
-	{
-		try
-		{
-			// Load dock settings from registry
-			m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName());
-
-			// Load MDI child settings from registry
-			m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName());
-		}
-
-		catch (const CWinException &e)
-		{
-			// Handle possible exceptions from LoadRegistrySettings
-			e.MessageBox();
-		}
-	}
-
-	// Ensure we have some docked/undocked windows
-	if (0 == m_DockTabbedMDI.GetAllDockers().size())
+	// Load dock settings
+	if (!m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
-	// Ensure we have some tabbed MDI children
-	if (0 == m_DockTabbedMDI.GetTabbedMDI()->GetMDIChildCount())
+	// Load MDI child settings
+	if (!m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultMDIs();
 
 	// PreCreate initially set the window as invisible, so show it now.
@@ -243,39 +225,6 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	// Hide the window initially by removing the WS_VISIBLE style
 	cs.style &= ~WS_VISIBLE;
 }
-
-/*
-void CMainFrame::SaveTabbedMDIs(tString tsRegistryKeyName)
-{
-	if (0 != tsRegistryKeyName.size())
-	{
-		CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
-
-		tString tsKeyName = _T("Software\\") + tsRegistryKeyName;
-		HKEY hKey = NULL;
-		HKEY hKeyMDIChild = NULL;
-		if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-			throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-		RegDeleteKey(hKey, _T("MDI Children"));
-		if (RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
-			throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-		for (int i = 0; i < pTabbedMDI->GetMDIChildCount(); ++i)
-		{
-			TCHAR szNumber[16];
-			tString tsSubKey = _T("MDI Child ");
-			tsSubKey += _itot(i, szNumber, 10);
-			TabPageInfo pdi = m_DockTabbedMDI.GetTabbedMDI()->GetTab().GetTabPageInfo(i);
-			RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo));
-		}	
-
-		RegCloseKey(hKeyMDIChild);
-		RegCloseKey(hKey);
-	}
-}
-
-*/
 
 void CMainFrame::SaveRegistrySettings()
 {

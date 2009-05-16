@@ -41,6 +41,17 @@ void CViewText::PreCreate(CREATESTRUCT &cs)
 
 
 //////////////////////////////////////////////
+//  Definitions for the CContainText class
+CContainText::CContainText() 
+{
+	SetDockCaption (_T("Text View - Docking container"));
+	SetTabText(_T("Text"));
+	SetTabIcon(IDI_TEXT);
+	SetView(m_ViewText);
+} 
+
+
+//////////////////////////////////////////////
 //  Definitions for the CDockText class
 CDockText::CDockText()
 {

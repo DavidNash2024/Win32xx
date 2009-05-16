@@ -382,7 +382,7 @@ namespace Win32xx
 		virtual CDocker* GetDockTopLevel() const;
 		virtual int GetDockWidth() const;
 		virtual CTabbedMDI* GetTabbedMDI() const;
-		virtual void LoadRegistrySettings(tString tsRegistryKeyName);
+		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcDockLayout();
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual BOOL VerifyDockers();
@@ -2205,8 +2205,10 @@ namespace Win32xx
 		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-	inline void CDocker::LoadRegistrySettings(tString tsRegistryKeyName)
+	inline BOOL CDocker::LoadRegistrySettings(tString tsRegistryKeyName)
 	{
+		BOOL bResult = FALSE;
+
 		if (0 != tsRegistryKeyName.size())
 		{
 			std::vector<DockInfo> vDockList;
@@ -2233,6 +2235,7 @@ namespace Win32xx
 				}
 
 				RegCloseKey(hKey);
+				if (vDockList.size() > 0) bResult = TRUE;
 			}
 
 			// Add dockers without parents first
@@ -2251,7 +2254,8 @@ namespace Win32xx
 					}
 					else
 					{
-						throw CWinException(_T("Failed to load dock information from registry"));
+						TRACE(_T("Failed to add dockers without parents from registry"));
+						bResult = FALSE;
 					}
 
 					vDockList.erase(vDockList.begin() + i);
@@ -2277,7 +2281,10 @@ namespace Win32xx
 							vDockList.erase(iter);
 						}
 						else
-							throw CWinException(_T("Failed to load dock information from registry"));
+						{
+							TRACE(_T("Failed to add dockers with parents from registry"));
+							bResult = FALSE;
+						}
 
 						break;
 					}
@@ -2285,10 +2292,14 @@ namespace Win32xx
 
 				if (!bFound)
 				{
-					throw CWinException(_T("Orphaned dockers stored in registry "));
+					TRACE(_T("Orphaned dockers stored in registry "));
+					bResult = FALSE;
 				}
 			}
 		}
+
+		if (!bResult) CloseAllDockers();
+		return bResult;
 	}
 
 
