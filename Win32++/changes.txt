@@ -9,8 +9,8 @@ Major Changes
    Refer to the TabDemo sample for a demonstration of how CTab class is
    used as a view window in a frame. TabDialogDemo also uses CTab. 
 * Added CTabbedMDI class. 
-   A MDITab can be used as a view window for a Frame or a Dockable. As the name
-   suggests, it provides tabs for a MDI window. 
+   A TabbedMDI can be used as a view window for a Frame or a Dockable. As the 
+   name suggests, it provides tabs for a MDI window. 
 * Added TabbedMDI sample within docking.
    Refer to the docking TabbedMDI sample for a demonstration of how CTabbedMDI
    class is used.   
@@ -96,7 +96,9 @@ Incompatiblities with previous versions
 - The renaming of the CFrame::OnXXXX may affect overloading. Calling the base
   function may now be required particularly for CFrame::OnNotify.
 - The OnCommand handlers for OnViewStatusbar and OnViewToolbar have been removed
-  from CFrame, and should be added to CMainFrame::OnCommand if required.    
+  from CFrame, and should be added to CMainFrame::OnCommand if required.
+- CDockable has been renamed to CDocker
+- dockable.h has been renamed to docking.h      
    
 Version 6.4.1
 =============

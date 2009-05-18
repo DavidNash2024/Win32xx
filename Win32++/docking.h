@@ -1649,7 +1649,7 @@ namespace Win32xx
 			pDocker->m_nDockID = nDockID;
 			pDocker->m_pDockAncestor = GetDockAncestor();
 			pDocker->m_pDockParent = this;
-			HWND hwndFrame = GetAncestor();
+			HWND hwndFrame = GetDockAncestor()->GetAncestor();
 			pDocker->Create(hwndFrame);
 			pDocker->SetParent(m_hWnd);
 
@@ -1706,7 +1706,7 @@ namespace Win32xx
 
 			// Initially create the as a child window of the frame
 			// This makes the frame window the owner of our docker
-			HWND hwndFrame = GetAncestor();
+			HWND hwndFrame = GetDockAncestor()->GetAncestor();
 			pDocker->Create(hwndFrame);
 			pDocker->SetParent(m_hWnd);
 
@@ -3036,10 +3036,7 @@ namespace Win32xx
 		{
 			m_Undocking = TRUE;
 			CRect rc;
-			if (GetWindowLongPtr(GWL_STYLE) & WS_CHILD)
-				rc = GetDockClient().GetWindowRect();
-			else
-				rc = GetWindowRect();
+			rc = GetDockClient().GetWindowRect();
 			CRect rcTest = rc;
 			rcTest.bottom = MIN(rcTest.bottom, rcTest.top + m_NCHeight);
 			if ( !PtInRect(&rcTest, pt))
