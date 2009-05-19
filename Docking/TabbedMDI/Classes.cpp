@@ -3,7 +3,6 @@
 //               and CDockClasses classes
 
 
-#include "TabbedMDIApp.h"
 #include "Classes.h"
 #include "resource.h"
 
@@ -70,6 +69,20 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvis.item = tvi;
 
 	return InsertItem(tvis);
+}
+
+LRESULT CViewClasses::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+	case WM_DESTROY:
+		{
+			SetImageList(NULL, LVSIL_SMALL);
+			break;
+		}
+	}
+
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
 

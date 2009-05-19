@@ -2,7 +2,6 @@
 // Files.cpp - Definitions for CViewFiles, CContainFiles
 //             and DockFiles classes
 
-#include "ContainerApp.h"
 #include "Files.h"
 #include "resource.h"
 
@@ -15,17 +14,8 @@ CViewFiles::CViewFiles() : m_himlSmall(0)
 
 CViewFiles::~CViewFiles()
 {
+	if (IsWindow()) DeleteAllItems();
 	ImageList_Destroy(m_himlSmall);
-}
-
-int CViewFiles::AddItem(LPCTSTR szText, int nImage)
-{
-	LVITEM lvi = {0};
-	lvi.mask = LVIF_TEXT|LVIF_IMAGE;
-	lvi.iImage = nImage;
-	lvi.pszText = (LPTSTR)szText;
-
-	return InsertItem(lvi);
 }
 
 void CViewFiles::OnInitialUpdate()
@@ -43,6 +33,44 @@ void CViewFiles::OnInitialUpdate()
 
 	SetColumns();
 	InsertItems();
+}
+
+int CViewFiles::AddItem(LPCTSTR szText, int nImage)
+{
+	LVITEM lvi = {0};
+	lvi.mask = LVIF_TEXT|LVIF_IMAGE;
+	lvi.iImage = nImage;
+	lvi.pszText = (LPTSTR)szText;
+
+	return InsertItem(lvi);
+}
+
+void CViewFiles::SetColumns()
+{
+	//empty the list
+	DeleteAllItems();
+
+	//initialise the columns
+	LV_COLUMN lvColumn = {0};
+	lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+	lvColumn.fmt = LVCFMT_LEFT;
+	lvColumn.cx = 120;
+	TCHAR szString[3][20] = {_T("Name"), TEXT("Size"), _T("Type")};
+	for(int i = 0; i < 3; ++i)
+	{
+		lvColumn.pszText = szString[i];
+		InsertColumn(i, lvColumn);
+	}
+}
+
+BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
+{
+	LVITEM lvi1 = {0};
+	lvi1.mask = LVIF_TEXT;
+	lvi1.iItem = nItem;
+	lvi1.iSubItem = nSubItem;
+	lvi1.pszText = (LPTSTR)szText;
+	return (BOOL)SendMessage(LVM_SETITEM, 0L, (LPARAM)&lvi1);
 }
 
 void CViewFiles::InsertItems()
@@ -67,33 +95,20 @@ void CViewFiles::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
-void CViewFiles::SetColumns()
+LRESULT CViewFiles::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	//empty the list
-	DeleteAllItems();
-
-	//initialise the columns
-	LV_COLUMN lvColumn = {0};
-	lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-	lvColumn.fmt = LVCFMT_LEFT;
-	lvColumn.cx = 120;
-	TCHAR szString[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
-	for(int i = 0; i < 3; ++i)
+	switch(uMsg)
 	{
-		lvColumn.pszText = szString[i];
-		InsertColumn(i, lvColumn);
-	} 
-}
+	case WM_DESTROY:
+		{
+			SetImageList(NULL, LVSIL_SMALL);
+			break;
+		}
+	}
 
-BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
-{
-	LVITEM lvi1 = {0};
-	lvi1.mask = LVIF_TEXT;
-	lvi1.iItem = nItem;
-	lvi1.iSubItem = nSubItem;
-	lvi1.pszText = (LPTSTR)szText;
-	return (BOOL)SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1);
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
+			
 
 
 ///////////////////////////////////////////////

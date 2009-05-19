@@ -69,6 +69,20 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	return InsertItem(tvis);
 }
 
+LRESULT CViewTree::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+	case WM_DESTROY:
+		{
+			SetImageList(NULL, LVSIL_SMALL);
+			break;
+		}
+	}
+
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+}
+
 
 ///////////////////////////////////////////////
 // CMDIChildTreeView functions

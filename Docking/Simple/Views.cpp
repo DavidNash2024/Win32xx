@@ -123,6 +123,19 @@ void CViewList::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
+LRESULT CViewList::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+	case WM_DESTROY:
+		{
+			SetImageList(NULL, LVSIL_SMALL);
+			break;
+		}
+	}
+
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+}
 
 ///////////////////////////////////////////////
 // CViewTree functions
@@ -188,6 +201,19 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	return InsertItem(tvis);
 }
 
+LRESULT CViewTree::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+	case WM_DESTROY:
+		{
+			SetImageList(NULL, LVSIL_SMALL);
+			break;
+		}
+	}
+
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+}
 
 ///////////////////////////////////////////////
 // CViewText functions

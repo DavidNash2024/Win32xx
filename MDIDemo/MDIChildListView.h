@@ -19,6 +19,7 @@ public:
 	virtual void OnInitialUpdate();
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HIMAGELIST m_himlSmall;

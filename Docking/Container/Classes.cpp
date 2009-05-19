@@ -3,7 +3,6 @@
 //               and CDockClasses classes
 
 
-#include "ContainerApp.h"
 #include "Classes.h"
 #include "resource.h"
 
@@ -16,6 +15,7 @@ CViewClasses::CViewClasses() : m_himlNormal(0)
 
 CViewClasses::~CViewClasses()
 {
+	if (IsWindow()) DeleteAllItems();
 	ImageList_Destroy(m_himlNormal);
 }
 
@@ -53,7 +53,7 @@ void CViewClasses::OnInitialUpdate()
 
 	// Expand some tree-view items
 	Expand(htiRoot, TVE_EXPAND);
-	Expand(htiCTreeViewApp, TVE_EXPAND);  
+	Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
 HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
@@ -68,7 +68,21 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvis.hParent = hParent;
 	tvis.item = tvi;
 
-	return InsertItem(tvis);  
+	return InsertItem(tvis);
+}
+
+LRESULT CViewClasses::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+	case WM_DESTROY:
+		{
+			SetImageList(NULL, LVSIL_SMALL);
+			break;
+		}
+	}
+
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
 
@@ -86,7 +100,7 @@ void CContainClasses::AddCombo()
 {
 	int nComboWidth = 120; 
 	CToolbar& TB = GetToolbar();
- 	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;  
+	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 	 
 	// Adjust button width and convert to separator   
 	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
@@ -101,29 +115,9 @@ void CContainClasses::AddCombo()
 	m_ComboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
 
 	// Set ComboBox Height
-	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)rect.Height()-6);
+	m_ComboBoxEx.SendMessage(CB_SETITEMHEIGHT, (WPARAM)-1, (LPARAM)(rect.Height()-6));
 
-	m_ComboBoxEx.AddItems(); 
-}
-
-void CContainClasses::SetupToolbar()
-{
-	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN , FALSE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT, FALSE   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
-
-	// Add the ComboBarEx control to the toolbar
-	AddCombo();  
+	m_ComboBoxEx.AddItems();
 }
 
 BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -144,6 +138,30 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	}
 
 	return FALSE;
+}
+
+void CContainClasses::SetupToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW         );
+	AddToolbarButton( IDM_FILE_OPEN, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_SAVE, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_EDIT_CUT         );
+	AddToolbarButton( IDM_EDIT_COPY        );
+	AddToolbarButton( IDM_EDIT_PASTE       );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	
+	AddToolbarButton( 0 );	// Separator
+	AddToolbarButton( IDM_HELP_ABOUT       );
+
+	// Add the ComboBarEx control to the toolbar
+	AddCombo();
 }
 
 

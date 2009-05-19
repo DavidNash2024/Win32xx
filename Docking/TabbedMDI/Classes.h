@@ -20,6 +20,7 @@ public:
 	virtual ~CViewClasses();
 	virtual void OnInitialUpdate();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HIMAGELIST m_himlNormal;

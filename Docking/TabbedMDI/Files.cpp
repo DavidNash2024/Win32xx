@@ -2,7 +2,6 @@
 // Files.cpp - Definitions for CViewFiles, CContainFiles
 //             and DockFiles classes
 
-#include "TabbedMDIApp.h"
 #include "Files.h"
 #include "resource.h"
 
@@ -95,6 +94,21 @@ void CViewFiles::InsertItems()
 	item = AddItem(_T("ListView"), 0);
 	SetSubItem(item, 2, _T("Folder"));
 }
+
+LRESULT CViewFiles::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+	case WM_DESTROY:
+		{
+			SetImageList(NULL, LVSIL_SMALL);
+			break;
+		}
+	}
+
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+}
+			
 
 
 ///////////////////////////////////////////////

@@ -44,6 +44,7 @@ public:
 	virtual ~CViewTree();
 	virtual void OnInitialUpdate();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HIMAGELIST m_himlNormal;
@@ -59,6 +60,7 @@ public:
 	virtual void OnInitialUpdate();
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
+	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HIMAGELIST m_himlSmall;

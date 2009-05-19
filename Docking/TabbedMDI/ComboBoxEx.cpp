@@ -83,3 +83,17 @@ void CComboBoxEx::SetImages(int nImages, UINT ImageID)
 	::DeleteObject(hbm);
 }
 
+LRESULT CComboBoxEx::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+	case WM_DESTROY:
+		{
+			SendMessage(CBEM_SETIMAGELIST, 0L, 0L);
+			break;
+		}
+	}
+
+	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+}
+			
