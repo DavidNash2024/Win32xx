@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -95,6 +95,15 @@ namespace Win32xx
 		bool m_bVertical;   // Vertical or horizontal splitter bar
 		bool m_bImmediate;	// Reposition immediately, or draw hashed reposition bar
 	};
+
+}
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+namespace Win32xx
+{
 
 	inline CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(10), m_bCapture(false),
 		                       m_bVertical(true), m_bImmediate(false)

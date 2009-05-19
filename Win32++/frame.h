@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -297,7 +297,6 @@ namespace Win32xx
 
 		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
-	//	std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
 		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
 		CMenubar m_Menubar;					// CMenubar object
 		CRebar m_Rebar;						// CRebar object
@@ -316,6 +315,14 @@ namespace Win32xx
 
 	};  // class CFrame
 
+}
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+namespace Win32xx
+{
 
 	/////////////////////////////////////
 	// Definitions for the CMenubar class

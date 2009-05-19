@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -117,6 +117,14 @@ namespace Win32xx
 		HWND m_hMenubar;
 		LPARAM m_Orig_lParam;
 	};
+
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+namespace Win32xx
+{
 
 	///////////////////////////////////
 	// Definitions for the CRebar class

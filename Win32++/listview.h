@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -143,6 +143,12 @@ namespace Win32xx
 		BOOL Update( int iItem );
 	};
 
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+namespace Win32xx
+{
 
 	inline void CListView::PreCreate( CREATESTRUCT &cs )
 	// Specify the class name for the window before its created. WC_LISTVIEW is a list-view control.
@@ -319,7 +325,7 @@ namespace Win32xx
 	inline UINT CListView::GetNumberOfWorkAreas( ) const
 	// Retrieves the working areas from a list-view control.
 	{
-		UINT nWorkAreas;
+		UINT nWorkAreas = 0;
 		ListView_GetWorkAreas( m_hWnd, nWorkAreas, NULL );
 		return nWorkAreas;
 	}

@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -83,6 +83,17 @@
 namespace Win32xx
 {
 
+	/////////////////////////////////////////////////////////////////
+	// Declarations for some global functions in the Win32xx namespace
+	//
+	
+	void DrawBitmap(HDC hDC, int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask);
+	void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
+	void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
+	void TintBitmap(HBITMAP hbmSource, int cRed, int cGreen, int cBlue);
+	HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal);
+
+	
 	///////////////////////////////////////////////
 	// Declarations for the CDC class
 	//
@@ -167,6 +178,13 @@ namespace Win32xx
 		BOOL m_IsCopy;
 		CDC* m_pCopiedFrom;
 	};
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+namespace Win32xx
+{
 
 	///////////////////////////////////////////////
 	// Definitions of the CDC class

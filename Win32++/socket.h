@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -131,6 +131,12 @@ namespace Win32xx
 		HANDLE m_Stopped;		// An event to signal the event thread is stopped
 
 	};
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+namespace Win32xx
+{
 
 	inline CSocket::CSocket() : m_Socket(0), m_hEventThread(0)
 	{

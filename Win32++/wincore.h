@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -90,9 +90,9 @@
   #pragma option -w-8027		   // function not expanded inline
 #endif
 
-// Required for VS 2008 (fails on XP and Win2000 without this fix)
+// VS 2008 requires _WIN32_WINNT to be set. (fails on XP and Win2000 without this fix)
 #ifndef _WIN32_WINNT
-  #define _WIN32_WINNT 0x0500
+  #define _WIN32_WINNT 0x0400
 #endif
 
 #ifdef _WIN32_WCE
@@ -195,21 +195,36 @@ namespace Win32xx
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
-	// TRACE sends a string to the debug/output pane, or an external debugger
-	inline void TRACE(LPCTSTR str)
-	{
-	#ifdef _DEBUG
-		OutputDebugString(str);
-	#else
-		UNREFERENCED_PARAMETER(str); // no-op
-	#endif
-	}
-
+	
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CWnd;
+
+
+	//////////////////////////////////////////////////
+	// Global functions	(within the Win32xx namespace)
+	
+	CWinApp* GetApp();
+	void DebugWarnMsg(LPCTSTR WarnMsg);
+	void DebugErrMsg(LPCTSTR ErrorMsg);
+	void TRACE(LPCTSTR str);
+
+  #ifndef _WIN32_WCE		// for Win32/64 operating systems
+	int GetWinVersion();
+	int GetComCtlVersion();
+	BOOL IsXPThemed();
+  #endif // #ifndef _WIN32_WCE
+
+  // Required for WinCE  
+  #ifndef lstrcpyn	
+	LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength);
+  #endif // !lstrcpyn
+
+	tString CharToTString(const char* s);
+	std::string TCharToString(LPCTSTR t);
+
 
 	enum Constants
 	{
@@ -231,205 +246,6 @@ namespace Win32xx
 		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
 		HHOOK hMenuHook;	// WH_MSGFILTER hook for CMenubar (used when popup menu is active)
 	};
-
-
-	//////////////////////////////////////////////////
-	// Global functions	(within the Win32xx namespace)
-
-	// Returns a pointer to CWinApp (defined later)
-	CWinApp* GetApp();
-
-	// Displays an error message in a message box. Debug mode only.
-	inline void DebugWarnMsg(LPCTSTR WarnMsg)
-	{
-	#ifdef _DEBUG
-		TRACE(_T("*** Warning:  "));
-		TRACE(WarnMsg);
-		TRACE(_T("\n"));
-		::MessageBox (0, WarnMsg, _T("Warning"), MB_ICONINFORMATION | MB_OK);
-	#else
-		UNREFERENCED_PARAMETER(WarnMsg); // no-op
-	#endif  //_DEBUG
-	}
-
-	// Displays a warning message in a messagebox. Debug mode only
-	inline void DebugErrMsg(LPCTSTR ErrorMsg)
-	{
-	#ifdef _DEBUG
-		TRACE(_T("*** Error:  "));
-		TRACE(ErrorMsg);
-		TRACE(_T("\n"));
-		::MessageBox (0, ErrorMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-	#else
-		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
-	#endif  //_DEBUG
-	}
-
-
-  #ifndef _WIN32_WCE		// for Win32/64 operating systems
-
-	inline int GetWinVersion()
-	{
-		DWORD dwVersion = GetVersion();
-		int Platform = (dwVersion < 0x80000000)? 2:1;
-		int MajorVer = LOBYTE(LOWORD(dwVersion));
-		int MinorVer = HIBYTE(LOWORD(dwVersion));
-
-		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
-
-		// Return values and window versions:
-		//  1400     Windows 95
-		//  1410     Windows 98
-		//  1490     Windows ME
-		//  2400     Windows NT
-		//  2500     Windows 2000
-		//  2501     Windows XP
-		//  2502     Windows Server 2003
-		//  2600     Windows Vista and Windows Server 2008
-
-		return nVersion;
-	}
-
-	inline int GetComCtlVersion()
-	{
-		// Load the Common Controls DLL
-		HMODULE hComCtl = ::LoadLibraryA("COMCTL32.DLL");
-		if (!hComCtl)
-			return 0;
-
-		int ComCtlVer = 400;
-
-		if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
-		{
-			// InitCommonControlsEx is unique to 4.7 and later
-			ComCtlVer = 470;
-
-			if (::GetProcAddress(hComCtl, "DllInstall"))
-			{
-				// DllInstall is unique to 4.71 and later
-				ComCtlVer = 471;
-
-				typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
-				DLLGETVERSION* pfnDLLGetVersion = NULL;
-
-				pfnDLLGetVersion = (DLLGETVERSION*)::GetProcAddress(hComCtl, "DllGetVersion");
-				if(pfnDLLGetVersion)
-				{
-					DLLVERSIONINFO dvi;
-					dvi.cbSize = sizeof dvi;
-					if(NOERROR == pfnDLLGetVersion(&dvi))
-					{
-						DWORD dwVerMajor = dvi.dwMajorVersion;
-						DWORD dwVerMinor = dvi.dwMinorVersion;
-						ComCtlVer = 100 * dwVerMajor + dwVerMinor;
-					}
-				}
-			}
-		}
-
-		::FreeLibrary(hComCtl);
-
-		// return values and DLL versions
-		// 400  dll ver 4.00	Windows 95/Windows NT 4.0
-		// 470  dll ver 4.70	Internet Explorer 3.x
-		// 471  dll ver 4.71	Internet Explorer 4.0
-		// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
-		// 580  dll ver 5.80	Internet Explorer 5
-		// 581  dll ver 5.81	Windows 2000 and Windows ME
-		// 582  dll ver 5.82	Windows XP or Vista without XP themes
-		// 600  dll ver 6.00	Windows XP with XP themes
-		// 610  dll ver 6.10	Windows Vista with XP themes
-
-		return ComCtlVer;
-	}
-
-	inline BOOL IsXPThemed()
-	{
-		BOOL bIsXPThemed = FALSE;
-
-		// Test if Windows version is XP or greater
-		if (GetWinVersion() >= 2501)
-		{
-			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
-			if(hMod)
-			{
-				// Declare pointers to functions
-				FARPROC pIsAppThemed   = ::GetProcAddress(hMod, "IsAppThemed");
-				FARPROC pIsThemeActive = ::GetProcAddress(hMod, "IsThemeActive");
-
-				if(pIsAppThemed && pIsThemeActive)
-				{
-					if(pIsAppThemed() && pIsThemeActive())
-					{
-						// Test if ComCtl32 dll used is version 6 or later
-						bIsXPThemed = (GetComCtlVersion() >= 600);
-					}
-				}
-				::FreeLibrary(hMod);
-			}
-		}
-
-		return bIsXPThemed;
-	}
-
-  #endif // #ifndef _WIN32_WCE
-
-  // Required for WinCE  
-  #ifndef lstrcpyn	
-	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
-	{
-		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
-			return NULL;
-		int nLen = MIN((int)lstrlen(lpstrSrc), nLength - 1);
-		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
-		lpstrDest[nLen] = 0;
-		return lpstrRet;
-	}
-  #endif // !lstrcpyn
-
-	inline tString CharToTString(const char* s)
-	{
-		// Handy for converting char to TCHAR
-		tString tstr;
-  #ifdef UNICODE
-		size_t len = 1 + strlen(s);
-
-		TCHAR* t = new TCHAR[len];
-		if (NULL == t) throw std::bad_alloc();
-
-		mbstowcs(t, s, len);
-		tstr = t;
-		delete []t;
-  #else
-		tstr = s;
-  #endif
-		return tstr;
-	}
-
-	inline std::string TCharToString(LPCTSTR t)
-	{
-		// Handy for converting TCHAR to char
-		// If the conversion fails, an empty string is returned.
-		std::string str;
-  #ifdef UNICODE
-		// calculate the size of the char string required
-		// Note: If wcstombs encounters a wide character it cannot convert
-		//       to a multibyte character, it returns –1.
-		size_t len = 1 + wcstombs(0, t, 0);
-		if (0 == len) return str;
-
-		char* c = new char[len];
-		if (NULL == c) throw std::bad_alloc();
-		c[0] = '\0';
-
-		wcstombs(c, t, len);
-		str = c;
-		delete []c;
-  #else
-		str = t;
-  #endif
-		return str;
-	}
 
 
 	/////////////////////////////////////////
@@ -578,33 +394,7 @@ namespace Win32xx
 	public:
 		CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg) {}
 		LPCTSTR What() const {return m_msg;}
-		void MessageBox() const
-		{
-			TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
-			TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
-			TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
-
-			lstrcpyn(buf1, m_msg, MAX_STRING_SIZE/2 -10);
-
-			// Display Last Error information if it's useful
-			if (m_err != 0)
-			{
-				DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-				::FormatMessage(dwFlags, NULL, m_err,
-					MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf2, MAX_STRING_SIZE/2 -10, NULL);
-
-				::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);
-			}
-			else
-				::wsprintf(buf3, _T("%s"), buf1);
-
-			TRACE(_T("*** ERROR: An Exception occured ***\n"));
-			TRACE(buf3);
-			TRACE(_T("\n\n"));
-		
-		//	::MessageBox (0, buf3, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-			DebugErrMsg(buf3);
-		}
+		void MessageBox() const;
 
 	private:
 		DWORD  m_err;
@@ -813,12 +603,249 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
+}	
 
 
-	// Global function, returns a pointer to the CWinApp derrived class
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+namespace Win32xx
+{
+
+	//////////////////////////////////////////////////
+	// Global functions	(within the Win32xx namespace)
+	
+	// Returns a pointer to the CWinApp derrived class
 	inline CWinApp* GetApp()
 	{
 		return CWinApp::SetnGetThis();
+	}
+
+	// Displays an error message in a message box. Debug mode only.
+	inline void DebugWarnMsg(LPCTSTR WarnMsg)
+	{
+	#ifdef _DEBUG
+		TRACE(_T("*** Warning:  "));
+		TRACE(WarnMsg);
+		TRACE(_T("\n"));
+		::MessageBox (0, WarnMsg, _T("Warning"), MB_ICONINFORMATION | MB_OK);
+	#else
+		UNREFERENCED_PARAMETER(WarnMsg); // no-op
+	#endif  //_DEBUG
+	}
+
+	// Displays a warning message in a messagebox. Debug mode only
+	inline void DebugErrMsg(LPCTSTR ErrorMsg)
+	{
+	#ifdef _DEBUG
+		TRACE(_T("*** Error:  "));
+		TRACE(ErrorMsg);
+		TRACE(_T("\n"));
+		::MessageBox (0, ErrorMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+	#else
+		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
+	#endif  //_DEBUG
+	}
+	
+	// TRACE sends a string to the debug/output pane, or an external debugger
+	inline void TRACE(LPCTSTR str)
+	{
+	#ifdef _DEBUG
+		OutputDebugString(str);
+	#else
+		UNREFERENCED_PARAMETER(str); // no-op
+	#endif
+	}
+
+  #ifndef _WIN32_WCE		// for Win32/64 operating systems
+
+	inline int GetWinVersion()
+	{
+		DWORD dwVersion = GetVersion();
+		int Platform = (dwVersion < 0x80000000)? 2:1;
+		int MajorVer = LOBYTE(LOWORD(dwVersion));
+		int MinorVer = HIBYTE(LOWORD(dwVersion));
+
+		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
+
+		// Return values and window versions:
+		//  1400     Windows 95
+		//  1410     Windows 98
+		//  1490     Windows ME
+		//  2400     Windows NT
+		//  2500     Windows 2000
+		//  2501     Windows XP
+		//  2502     Windows Server 2003
+		//  2600     Windows Vista and Windows Server 2008
+
+		return nVersion;
+	}
+
+	inline int GetComCtlVersion()
+	{
+		// Load the Common Controls DLL
+		HMODULE hComCtl = ::LoadLibraryA("COMCTL32.DLL");
+		if (!hComCtl)
+			return 0;
+
+		int ComCtlVer = 400;
+
+		if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
+		{
+			// InitCommonControlsEx is unique to 4.7 and later
+			ComCtlVer = 470;
+
+			if (::GetProcAddress(hComCtl, "DllInstall"))
+			{
+				// DllInstall is unique to 4.71 and later
+				ComCtlVer = 471;
+
+				typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
+				DLLGETVERSION* pfnDLLGetVersion = NULL;
+
+				pfnDLLGetVersion = (DLLGETVERSION*)::GetProcAddress(hComCtl, "DllGetVersion");
+				if(pfnDLLGetVersion)
+				{
+					DLLVERSIONINFO dvi;
+					dvi.cbSize = sizeof dvi;
+					if(NOERROR == pfnDLLGetVersion(&dvi))
+					{
+						DWORD dwVerMajor = dvi.dwMajorVersion;
+						DWORD dwVerMinor = dvi.dwMinorVersion;
+						ComCtlVer = 100 * dwVerMajor + dwVerMinor;
+					}
+				}
+			}
+		}
+
+		::FreeLibrary(hComCtl);
+
+		// return values and DLL versions
+		// 400  dll ver 4.00	Windows 95/Windows NT 4.0
+		// 470  dll ver 4.70	Internet Explorer 3.x
+		// 471  dll ver 4.71	Internet Explorer 4.0
+		// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
+		// 580  dll ver 5.80	Internet Explorer 5
+		// 581  dll ver 5.81	Windows 2000 and Windows ME
+		// 582  dll ver 5.82	Windows XP or Vista without XP themes
+		// 600  dll ver 6.00	Windows XP with XP themes
+		// 610  dll ver 6.10	Windows Vista with XP themes
+
+		return ComCtlVer;
+	}
+
+	inline BOOL IsXPThemed()
+	{
+		BOOL bIsXPThemed = FALSE;
+
+		// Test if Windows version is XP or greater
+		if (GetWinVersion() >= 2501)
+		{
+			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+			if(hMod)
+			{
+				// Declare pointers to functions
+				FARPROC pIsAppThemed   = ::GetProcAddress(hMod, "IsAppThemed");
+				FARPROC pIsThemeActive = ::GetProcAddress(hMod, "IsThemeActive");
+
+				if(pIsAppThemed && pIsThemeActive)
+				{
+					if(pIsAppThemed() && pIsThemeActive())
+					{
+						// Test if ComCtl32 dll used is version 6 or later
+						bIsXPThemed = (GetComCtlVersion() >= 600);
+					}
+				}
+				::FreeLibrary(hMod);
+			}
+		}
+
+		return bIsXPThemed;
+	}
+
+  #endif // #ifndef _WIN32_WCE
+
+  // Required for WinCE  
+  #ifndef lstrcpyn	
+	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
+	{
+		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
+			return NULL;
+		int nLen = MIN((int)lstrlen(lpstrSrc), nLength - 1);
+		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
+		lpstrDest[nLen] = 0;
+		return lpstrRet;
+	}
+  #endif // !lstrcpyn
+
+	inline tString CharToTString(const char* s)
+	{
+		// Handy for converting char to TCHAR
+		tString tstr;
+  #ifdef UNICODE
+		size_t len = 1 + strlen(s);
+
+		TCHAR* t = new TCHAR[len];
+		if (NULL == t) throw std::bad_alloc();
+
+		mbstowcs(t, s, len);
+		tstr = t;
+		delete []t;
+  #else
+		tstr = s;
+  #endif
+		return tstr;
+	}
+
+	inline std::string TCharToString(LPCTSTR t)
+	{
+		// Handy for converting TCHAR to char
+		// If the conversion fails, an empty string is returned.
+		std::string str;
+  #ifdef UNICODE
+		// calculate the size of the char string required
+		// Note: If wcstombs encounters a wide character it cannot convert
+		//       to a multibyte character, it returns –1.
+		size_t len = 1 + wcstombs(0, t, 0);
+		if (0 == len) return str;
+
+		char* c = new char[len];
+		if (NULL == c) throw std::bad_alloc();
+		c[0] = '\0';
+
+		wcstombs(c, t, len);
+		str = c;
+		delete []c;
+  #else
+		str = t;
+  #endif
+		return str;
+	}
+
+	inline void CWinException::MessageBox() const
+	{
+		TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
+		TCHAR buf2 [MAX_STRING_SIZE/2 -10] = _T("");
+		TCHAR buf3 [MAX_STRING_SIZE]       = _T("");
+
+		lstrcpyn(buf1, m_msg, MAX_STRING_SIZE/2 -10);
+
+		// Display Last Error information if it's useful
+		if (m_err != 0)
+		{
+			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+			::FormatMessage(dwFlags, NULL, m_err,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf2, MAX_STRING_SIZE/2 -10, NULL);
+
+			::wsprintf(buf3, _T("%s\n\n     %s\n\n"), buf1, buf2);
+		}
+		else
+			::wsprintf(buf3, _T("%s"), buf1);
+
+		TRACE(_T("*** ERROR: An Exception occured ***\n"));
+		TRACE(buf3);
+		TRACE(_T("\n\n"));
+	
+		DebugErrMsg(buf3);
 	}
 
 

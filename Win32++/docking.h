@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -76,10 +76,14 @@
 
 namespace Win32xx
 {
-
-	class CContainer;
+  // Global function
+  inline BOOL IsLeftButtonDown();
+	
+  // Class declarations
+  class CContainer;
 	class CDocker;
-	struct ContainerInfo
+	
+  struct ContainerInfo
 	{
 		TCHAR szTitle[MAX_MENU_STRING];
 		int iImage;
@@ -183,22 +187,6 @@ namespace Win32xx
 		POINT ptPos;
 		UINT DockZone;
 	} *LPDRAGPOS;
-
-
-	// A global function to report the state of the left mouse button
-	inline BOOL IsLeftButtonDown()
-	{
-		SHORT state;
-		if (GetSystemMetrics(SM_SWAPBUTTON))
-			// Mouse buttons are swapped
-			state = GetAsyncKeyState(VK_RBUTTON);
-		else
-			// Mouse buttons are not swapped
-			state = GetAsyncKeyState(VK_LBUTTON);
-
-		// returns true if the left mouse button is down
-		return (state & 0x8000);
-	}
 
 	/////////////////////////////////////////
 	// Declaration of the CDocker class
@@ -486,6 +474,27 @@ namespace Win32xx
 		RECT Rect;
 	};
 
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+namespace Win32xx
+{
+
+	// A global function to report the state of the left mouse button
+	inline BOOL IsLeftButtonDown()
+	{
+		SHORT state;
+		if (GetSystemMetrics(SM_SWAPBUTTON))
+			// Mouse buttons are swapped
+			state = GetAsyncKeyState(VK_RBUTTON);
+		else
+			// Mouse buttons are not swapped
+			state = GetAsyncKeyState(VK_LBUTTON);
+
+		// returns true if the left mouse button is down
+		return (state & 0x8000);
+	}
 
 	/////////////////////////////////////////////////////////////
 	// Definitions for the CDockBar class nested within CDocker

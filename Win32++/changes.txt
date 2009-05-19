@@ -2,6 +2,10 @@ Version 6.5
 ===========
 Major Changes
 -------------
+* Added Library download
+   This download has the code to build Win32++ into a a static library, and also
+   demonstrates the use of Precompiled Headers. More experienced users might
+   prefer this approach as it provides for much faster compile times.
 * Added CTab class. 
    This class is used by CContainer and CTabbedMDI, and can also be used as a
    view window. 

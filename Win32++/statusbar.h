@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -70,6 +70,15 @@ namespace Win32xx
 		void CreateParts(int iParts, const int iPaneWidths[]) const;
 		void SetSimple(BOOL fSimple = TRUE);
 	};
+
+}
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+namespace Win32xx
+{
 
 	//////////////////////////////////////
 	// Definitions for the CStatusbar class

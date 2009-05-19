@@ -1,5 +1,5 @@
-// Win32++  Version 6.5 beta
-// Released: ??th May, 2009 by:
+// Win32++  Version 6.5
+// Released: 22nd May, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -104,6 +104,13 @@ namespace Win32xx
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
 		HWND m_hDlgParent;				// handle to the dialogs's parent window
 	};
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+namespace Win32xx
+{
 
 	inline CDialog::CDialog(LPCTSTR lpszResName, HWND hParent/* = NULL*/)
 		: IsIndirect(FALSE), IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
