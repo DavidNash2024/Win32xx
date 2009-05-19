@@ -8,11 +8,11 @@ Major Changes
    prefer this approach as it provides for much faster compile times.
 * Added CTab class. 
    This class is used by CContainer and CTabbedMDI, and can also be used as a
-   view window. 
-* Added TabDemo sample.    
+   view window.
+* Added TabDemo sample.
    Refer to the TabDemo sample for a demonstration of how CTab class is
    used as a view window in a frame. TabDialogDemo also uses CTab. 
-* Added CTabbedMDI class. 
+* Added CTabbedMDI class.
    A TabbedMDI can be used as a view window for a Frame or a Dockable. As the 
    name suggests, it provides tabs for a MDI window. 
 * Added TabbedMDI sample within docking.

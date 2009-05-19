@@ -1438,13 +1438,8 @@ namespace Win32xx
 			if ((iImageWidth != Oldcx) || (iImageHeight != Oldcy))
 			{
 				// The new icons are a different size to the old ones in m_himlToolbar,
-				//  so we throw the old ones away.
-				ImageList_Destroy(m_himlMenu);
-				m_himlMenu = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
-				ImageList_Destroy(m_himlMenuDis);
-				m_himlMenuDis = NULL;
-				m_vMenuIcons.clear();
-				TRACE(_T("WARNING: Discarded old menu icons\n"));
+				TRACE(_T("WARNING: Unable to add new icons of a different size\n"));
+				return m_vMenuIcons.size();
 			}
 		}
 

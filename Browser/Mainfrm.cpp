@@ -348,7 +348,8 @@ void CMainFrame::SetupToolbar()
 		IconData.push_back ( IDM_FILE_PRINT);
 		IconData.push_back ( IDM_HELP_ABOUT); 
 	}
-	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0); 
+	
+	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0);  
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
