@@ -1783,7 +1783,7 @@ namespace Win32xx
 
 		// Get the statusbar's window area
 		CRect rcStatus;
-		if (GetStatusbar().IsVisible())
+		if (GetStatusbar().IsVisible() || !IsVisible())
 			rcStatus = GetStatusbar().GetWindowRect();
 
 		// Get the top rebar or toolbar's window area
