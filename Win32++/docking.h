@@ -2248,9 +2248,10 @@ namespace Win32xx
 			}
 
 			// Add dockers without parents first
-			for (int i = vDockList.size() -1; i >= 0; --i)
+			std::vector<DockInfo>::iterator iter;
+			for (iter = vDockList.begin(); iter < vDockList.end() ; ++iter)
 			{
-				DockInfo di = vDockList[i];
+				DockInfo di = (*iter);
 				if (di.DockParentID == 0)
 				{
 					CDocker* pDocker = NewDockerFromID(di.DockID);
@@ -2266,7 +2267,14 @@ namespace Win32xx
 						TRACE(_T("Failed to add dockers without parents from registry"));
 						bResult = FALSE;
 					}
+				}
+			}
 
+			for (int i = vDockList.size() -1; i >= 0; --i)
+			{
+				DockInfo di = vDockList[i];
+				if (di.DockParentID == 0)
+				{
 					vDockList.erase(vDockList.begin() + i);
 				}
 			}
@@ -2310,7 +2318,6 @@ namespace Win32xx
 		if (!bResult) CloseAllDockers();
 		return bResult;
 	}
-
 
 	inline void CDocker::MoveDockChildren(CDocker* pDockTarget)
 	{
