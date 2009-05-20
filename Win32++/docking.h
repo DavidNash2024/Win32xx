@@ -76,9 +76,6 @@
 
 namespace Win32xx
 {
-  // Global function
-  inline BOOL IsLeftButtonDown();
-	
   // Class declarations
   class CContainer;
 	class CDocker;
@@ -480,21 +477,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
-	// A global function to report the state of the left mouse button
-	inline BOOL IsLeftButtonDown()
-	{
-		SHORT state;
-		if (GetSystemMetrics(SM_SWAPBUTTON))
-			// Mouse buttons are swapped
-			state = GetAsyncKeyState(VK_RBUTTON);
-		else
-			// Mouse buttons are not swapped
-			state = GetAsyncKeyState(VK_LBUTTON);
-
-		// returns true if the left mouse button is down
-		return (state & 0x8000);
-	}
 
 	/////////////////////////////////////////////////////////////
 	// Definitions for the CDockBar class nested within CDocker

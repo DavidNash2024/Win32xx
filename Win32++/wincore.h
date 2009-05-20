@@ -224,6 +224,7 @@ namespace Win32xx
 
 	tString CharToTString(const char* s);
 	std::string TCharToString(LPCTSTR t);
+	BOOL IsLeftButtonDown();
 
 
 	enum Constants
@@ -283,12 +284,8 @@ namespace Win32xx
 		operator LPPOINT()			{ return this; }
 	};
 
-	inline CPoint GetCursorPos()
-	{
-		CPoint pt;
-		::GetCursorPos(&pt);
-		return pt;
-	}
+	CPoint GetCursorPos();
+
 
 	/////////////////////////////////////////
 	// Definition of the CRect class
@@ -606,7 +603,7 @@ namespace Win32xx
 }	
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 namespace Win32xx
 {
@@ -820,7 +817,33 @@ namespace Win32xx
   #endif
 		return str;
 	}
+	
+	inline CPoint GetCursorPos()
+	{
+		CPoint pt;
+		::GetCursorPos(&pt);
+		return pt;
+	}
+	
+	// A global function to report the state of the left mouse button
+	inline BOOL IsLeftButtonDown()
+	{
+		SHORT state;
+		if (GetSystemMetrics(SM_SWAPBUTTON))
+			// Mouse buttons are swapped
+			state = GetAsyncKeyState(VK_RBUTTON);
+		else
+			// Mouse buttons are not swapped
+			state = GetAsyncKeyState(VK_LBUTTON);
 
+		// returns true if the left mouse button is down
+		return (state & 0x8000);
+	}
+
+
+	///////////////////////////////////
+	// Definitions for the CWinException class
+	//
 	inline void CWinException::MessageBox() const
 	{
 		TCHAR buf1 [MAX_STRING_SIZE/2 -10] = _T("");
