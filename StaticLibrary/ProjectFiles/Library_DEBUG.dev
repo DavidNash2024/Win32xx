@@ -1,5 +1,5 @@
 [Project]
-FileName=Library_RELEASE.dev
+FileName=Library_DEBUG.dev
 Name=Frame
 UnitCount=30
 Type=2
@@ -11,12 +11,12 @@ PrivateResource=
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0400_@@__@@__@@_
-Linker=-lWin32xx -lComctl32_@@__@@__@@_
+CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@__@@_
+Linker=-lComctl32_@@__@@__@@_
 IsCpp=1
 Icon=
-ExeOutput=..\lib\Dev-C_Release
-ObjectOutput=.\Dev-C++\Debug
+ExeOutput=..\lib\Dev-C_Debug
+ObjectOutput=
 OverrideOutput=1
 OverrideOutputName=Win32xx.lib
 HostApplication=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000001000000000000000
+CompilerSettings=0000001000000001000000
 
 [Unit3]
 FileName=..\Win32++\docking.cpp
