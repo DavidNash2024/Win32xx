@@ -215,6 +215,7 @@ namespace Win32xx
 	int GetWinVersion();
 	int GetComCtlVersion();
 	BOOL IsXPThemed();
+	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
 
   // Required for WinCE  
@@ -224,7 +225,7 @@ namespace Win32xx
 
 	tString CharToTString(const char* s);
 	std::string TCharToString(LPCTSTR t);
-	BOOL IsLeftButtonDown();
+
 
 
 	enum Constants
@@ -730,6 +731,21 @@ namespace Win32xx
 		return ComCtlVer;
 	}
 
+	// A global function to report the state of the left mouse button
+	inline BOOL IsLeftButtonDown()
+	{
+		SHORT state;
+		if (GetSystemMetrics(SM_SWAPBUTTON))
+			// Mouse buttons are swapped
+			state = GetAsyncKeyState(VK_RBUTTON);
+		else
+			// Mouse buttons are not swapped
+			state = GetAsyncKeyState(VK_LBUTTON);
+
+		// returns true if the left mouse button is down
+		return (state & 0x8000);
+	}
+
 	inline BOOL IsXPThemed()
 	{
 		BOOL bIsXPThemed = FALSE;
@@ -823,21 +839,6 @@ namespace Win32xx
 		CPoint pt;
 		::GetCursorPos(&pt);
 		return pt;
-	}
-	
-	// A global function to report the state of the left mouse button
-	inline BOOL IsLeftButtonDown()
-	{
-		SHORT state;
-		if (GetSystemMetrics(SM_SWAPBUTTON))
-			// Mouse buttons are swapped
-			state = GetAsyncKeyState(VK_RBUTTON);
-		else
-			// Mouse buttons are not swapped
-			state = GetAsyncKeyState(VK_LBUTTON);
-
-		// returns true if the left mouse button is down
-		return (state & 0x8000);
 	}
 
 

@@ -41,4 +41,14 @@ FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vcb"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vco"
 
-
+::Remove library files
+RMDIR /S /Q lib\VS6_Debug
+RMDIR /S /Q lib\VS6_Release
+RMDIR /S /Q lib\VS2003_Debug
+RMDIR /S /Q lib\VS2003_Release
+RMDIR /S /Q lib\VS2005_Debug
+RMDIR /S /Q lib\VS2005_Release
+RMDIR /S /Q lib\VS2008_Debug
+RMDIR /S /Q lib\VS2008_Release
+RMDIR /S /Q lib\Dev-C_Debug
+RMDIR /S /Q lib\Dev-C_Release

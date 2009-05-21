@@ -1,9 +1,28 @@
+This sample has the code to build Win32++ into a a static library, and also
+   demonstrates the use of Precompiled Headers. More experienced users might
+   prefer this approach as it provides for much faster compile times.
+
 Instructions:
 
 1) Build one or more static libraries by choosing the appropriate project file
     from the ProjectFiles directory. Each project places the static library
     within a different subdirectory of lib.
 
-2) Build the included Frame sample. It uses the static library.
+2) Build the included Frame sample. Each project uses the appropriate 
+    static library.
 
-   
+3) To take advantage of Precompiled headers .... 
+   Depending on the version of Microsoft compiler being used, you may need to:
+    To Create the Precompiled headers, choose the following project properties:
+     -> Configuration Properties
+     --> C/C++
+     ---> Precompiled Headers
+     ----> Create/Use Precompiled Header = Create Precompiled Header (/Yc)
+     
+    To Use the Precompiled headers, choose the following project properties:
+     -> Configuration Properties
+     --> C/C++
+     ---> Precompiled Headers
+     ----> Create/Use Precompiled Header = Use Precompiled Header (/Yu)
+     
+     

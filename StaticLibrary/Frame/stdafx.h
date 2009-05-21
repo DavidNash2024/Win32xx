@@ -15,7 +15,8 @@
 #define _WIN32_WINNT 0x0400
 #endif
 
-#define VC_EXTRALEAN    // Exclude rarely-used stuff from Windows headers
+#define VC_EXTRALEAN      // Exclude rarely-used stuff from Windows headers
+#define _WINSOCKAPI_      // Prevent winsock.h #include's.
 
 // Remove pointless warning messages for MS compilers prior to VS 2008 
 #if defined (_MSC_VER) && _MSC_VER <= 1500
@@ -25,8 +26,6 @@
   #pragma warning (disable : 4786) // identifier was truncated
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
 #endif // _MSC_VER
-
-#define _WINSOCKAPI_            // Prevent winsock.h #include's.
 
 #include <vector>
 #include <map>

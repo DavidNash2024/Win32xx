@@ -215,6 +215,7 @@ namespace Win32xx
 	int GetWinVersion();
 	int GetComCtlVersion();
 	BOOL IsXPThemed();
+	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
 
   // Required for WinCE  
@@ -224,7 +225,7 @@ namespace Win32xx
 
 	tString CharToTString(const char* s);
 	std::string TCharToString(LPCTSTR t);
-	BOOL IsLeftButtonDown();
+
 
 
 	enum Constants
