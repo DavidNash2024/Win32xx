@@ -99,17 +99,7 @@ void CMainFrame::OnFileOpen()
 	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
 	OPENFILENAME ofn = {0};
-	if (GetWinVersion() >= 2500)
-	{
-		// For Win2000 and above
-		ofn.lStructSize = sizeof(OPENFILENAME);
-	}
-	else
-	{
-		// For older operating systems
-		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
-	}
-
+	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
@@ -143,17 +133,7 @@ void CMainFrame::OnFileSaveAs()
 	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
 	OPENFILENAME ofn = {0};
-	if (GetWinVersion() >= 2500)
-	{
-		// For Win2000 and above
-		ofn.lStructSize = sizeof(OPENFILENAME);
-	}
-	else
-	{
-		// For older operating systems
-		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
-	}
-
+	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFilter = szFilters;
 	ofn.lpstrFile = szFilePathName;
@@ -238,10 +218,10 @@ void CMainFrame::OnFilePrint()
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
   float fLogPelsX1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSX);
   float fLogPelsY1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSY);
-	float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
+  float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
   float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
-  float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / min(fLogPelsX1, fLogPelsX2);
-	float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / min(fLogPelsY1, fLogPelsY2);
+  float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
+	float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / MIN(fLogPelsY1, fLogPelsY2);
 
     // Compute the coordinates of the upper left corner of the centered bitmap.
 	int cWidthPels = GetDeviceCaps(pd.hDC, HORZRES);

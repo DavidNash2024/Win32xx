@@ -141,11 +141,6 @@
   #define GCLP_WNDPROC       GCL_WNDPROC
 #endif
 
-// For Visual Studio 6 (without an updated platform SDK) and Dev-C++
-#ifndef OPENFILENAME_SIZE_VERSION_400
-  #define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
-#endif
-
 
 // Messages defined by Win32++
 #define UWM_POPUPMENU		(WM_APP + 1)	// Message - creates the menubar popup menu

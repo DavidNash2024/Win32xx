@@ -60,6 +60,11 @@ void CRichView::SetFontDefaults()
 
 	::SendMessage(m_hWnd, WM_SETFONT, (WPARAM)(HFONT)m_hFont,0);
 
+// Required for Dev-C++
+#ifndef IMF_AUTOFONT
+  #define IMF_AUTOFONT			0x0002
+#endif
+
 	// Prevent Unicode characters from changing the font
 	LRESULT lres = SendMessage(EM_GETLANGOPTIONS, 0, 0);
 	lres &= ~IMF_AUTOFONT;

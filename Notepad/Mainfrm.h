@@ -6,14 +6,10 @@
 #define MAINFRM_H
 
 
-#include <sstream>
 #include "../Win32++/frame.h"
+#include <sstream>
 #include "RichView.h"
 
-// required for Dev-C++
-#ifndef OPENFILENAME_SIZE_VERSION_400
-#define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
-#endif
 
 DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);

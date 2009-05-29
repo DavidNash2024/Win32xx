@@ -1,5 +1,5 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6 alpha
+// Released: ?? June, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -189,19 +189,10 @@ namespace Win32xx
 		virtual ~CFrame();
 
 		// These are the functions you might wish to override
-		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
-		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
-		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void AdjustFrameRect(RECT rcView) const;
-		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
-		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
-		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
-		virtual void SetTheme();
-		virtual void SetupToolbar();
-		virtual void SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
 
 		// Virtual Attributes
@@ -221,9 +212,7 @@ namespace Win32xx
 		tString GetMRUEntry(size_t nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
-		void LoadRegistrySettings(LPCTSTR szKeyName);
 		void SetView(CWnd& wndView);
-
 		BOOL IsFrame() const			{return TRUE;}
 		BOOL IsMenubarUsed() const		{return (GetMenubar() != 0);}
 		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
@@ -231,27 +220,33 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
+		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
+		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolbarBand(CToolbar& TB);
+		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
-		virtual void OnCreate();
+		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
+		virtual void LoadRegistrySettings(LPCTSTR szKeyName);
+		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
+		virtual void OnCreate();
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
+		virtual void OnHelp();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
+		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual	void OnTimer(WPARAM wParam);
-		virtual void OnHelp();
-		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
-		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -259,6 +254,10 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void SaveRegistrySettings();
+		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual void SetupToolbar();
+		virtual void SetTheme();	
+		virtual void SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void ShowToolbar();
 		virtual void UpdateMRUMenu();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

@@ -1,5 +1,5 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6 alpha
+// Released: ?? June, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -139,11 +139,6 @@
   #define GCLP_HMODULE       GCL_HMODULE
   #define GCLP_MENUNAME      GCL_MENUNAME
   #define GCLP_WNDPROC       GCL_WNDPROC
-#endif
-
-// For Visual Studio 6 (without an updated platform SDK) and Dev-C++
-#ifndef OPENFILENAME_SIZE_VERSION_400
-  #define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
 #endif
 
 
@@ -1928,7 +1923,6 @@ namespace Win32xx
 
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters
-	//  Useful for setting the window to a predefined type (eg TOOLBARCLASSNAME)
 	{
 		m_cs.cx             = cs.cx;
 		m_cs.cy             = cs.cy;

@@ -8,10 +8,6 @@
 #include "View.h"
 #include "ColourDialog.h"
 
-// required for Dev-C++
-#ifndef OPENFILENAME_SIZE_VERSION_400
-  #define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
-#endif
 
 
 // Declaration of the CMainFrame class
