@@ -695,7 +695,7 @@ namespace Win32xx
 		if (-1 !=  iSubItem)
 		{
 			lvc.mask |= LVCF_SUBITEM; 
-			lvc.cx = iSubItem;
+			lvc.iSubItem = iSubItem;
 		}
 
 		lvc.iOrder = iCol;
