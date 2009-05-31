@@ -2536,25 +2536,25 @@ namespace Win32xx
 					DockWidth = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth )/((double)pDock->m_pDockParent->GetWindowRect().Width() - dBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
 					break;
 				case DS_DOCKED_RIGHT:
 					DockWidth = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width() - dBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
 					break;
 				case DS_DOCKED_TOP:
 					DockWidth = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - dBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
 					break;
 				case DS_DOCKED_BOTTOM:
 					DockWidth = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth + dBarWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height() - dBarWidth);
+					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
 					break;
 				}
 
@@ -2741,25 +2741,24 @@ namespace Win32xx
 		{
 			CRect rcChild = rc;
 			double DockWidth;
-			double BarWidth = m_vDockChildren[u]->GetBarWidth();
 
 			// Calculate the size of the Docker child
 			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width() - BarWidth), rcChild.Width());
+				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width()), rcChild.Width());
 				rcChild.right = rcChild.left + (int)DockWidth;
 				break;
 			case DS_DOCKED_RIGHT:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width() - BarWidth), rcChild.Width());
+				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width()), rcChild.Width());
 				rcChild.left = rcChild.right - (int)DockWidth;
 				break;
 			case DS_DOCKED_TOP:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height() - BarWidth), rcChild.Height());
+				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height()), rcChild.Height());
 				rcChild.bottom = rcChild.top + (int)DockWidth;
 				break;
 			case DS_DOCKED_BOTTOM:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height() - BarWidth), rcChild.Height());
+				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height()), rcChild.Height());
 				rcChild.top = rcChild.bottom - (int)DockWidth;
 				break;
 			}
