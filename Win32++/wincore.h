@@ -90,7 +90,8 @@
   #pragma option -w-8027		   // function not expanded inline
 #endif
 
-// VS 2008 requires _WIN32_WINNT to be set. (fails on XP and Win2000 without this fix)
+// Note: VS 2008 will set _WIN32_WINNT to 0x0600 unless it is set manually.
+// That can break existing code on older Operating Systems.
 #ifndef _WIN32_WINNT
   #define _WIN32_WINNT 0x0400
 #endif
