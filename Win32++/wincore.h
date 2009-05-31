@@ -1,4 +1,4 @@
-// Win32++  Version 6.6 alpha
+// Win32++  Version 6.51 alpha
 // Released: ?? June, 2009 by:
 //
 //      David Nash
@@ -1615,17 +1615,14 @@ namespace Win32xx
 	}
 
 	inline tString CWnd::GetWindowString() const
-	{
-		// Gets the window title for an ordinary window, or the text in an edit control
-
-		int nLength = ::GetWindowTextLength(m_hWnd);
-
+	// Gets the window title for an ordinary window, or the text in an edit control
+	{	
 		tString tstr;
-		if (nLength > 0)
+		if (::GetWindowTextLength(m_hWnd) > 0)
 		{
 			TCHAR szString[MAX_STRING_SIZE +1];
-			::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE);
-			tstr = szString;
+			if (0 != ::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE))
+				tstr = szString;
 		}
 		return tstr;
 	}

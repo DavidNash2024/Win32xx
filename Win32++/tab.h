@@ -1,4 +1,4 @@
-// Win32++  Version 6.6 alpha
+// Win32++  Version 6.51 alpha
 // Released: ?? June, 2009 by:
 //
 //      David Nash
@@ -1061,10 +1061,11 @@ namespace Win32xx
 		if (!m_Tab.IsWindow())
 		{
 			m_Tab.Create(m_hWnd);
+			CRect rc = GetClientRect();
+			m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
 
-		m_Tab.AddTabPage(tpi);
-		RecalcLayout();		
+		m_Tab.AddTabPage(tpi);	
 		return pWnd;
 	}
 

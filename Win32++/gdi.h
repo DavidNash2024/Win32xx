@@ -1,4 +1,4 @@
-// Win32++  Version 6.6 alpha
+// Win32++  Version 6.51 alpha
 // Released: ?? June, 2009 by:
 //
 //      David Nash
@@ -871,6 +871,7 @@ namespace Win32xx
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		GetDIBits(MemDC, hbmSource, 0, bi.biHeight, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 		byte* lpvBits = new byte[bi.biSizeImage];
+		if (NULL == lpvBits) throw std::bad_alloc();
 		GetDIBits(MemDC, hbmSource, 0, bi.biHeight, lpvBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 		UINT nWidthBytes = bi.biSizeImage/bi.biHeight;
 

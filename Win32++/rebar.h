@@ -1,4 +1,4 @@
-// Win32++  Version 6.6 alpha
+// Win32++  Version 6.51 alpha
 // Released: ?? June, 2009 by:
 //
 //      David Nash
@@ -82,6 +82,7 @@ namespace Win32xx
 		ThemeRebar& GetRebarTheme() {return m_Theme;}
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
+		UINT GetSizeofRBBI() const;
 		HWND GetToolTips() const;
 		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
@@ -154,6 +155,7 @@ namespace Win32xx
 		for (int nBand = 0; nBand < GetBandCount(); ++nBand)
 		{
 			REBARBANDINFO rbbi = {0};
+			rbbi.cbSize = GetSizeofRBBI();
 			rbbi.fMask = RBBIM_CHILD;
 			GetBandInfo(nBand, rbbi);
 			if (rbbi.hwndChild == hWnd)
@@ -183,7 +185,7 @@ namespace Win32xx
 			throw CWinException(_T("Invalid Rebar band number"));
 
 		// REBARBANDINFO describes individual BAND characteristics
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		if(!::SendMessage(m_hWnd, RB_GETBANDINFO, nBand, (LPARAM)&rbbi))
 			throw CWinException(_T("Failed to get rebar band info"));
 	}
@@ -206,7 +208,7 @@ namespace Win32xx
 	// Retrieves information about the rebar control and the image list it uses.
 	{
 		// REBARINFO describes overall rebar control characteristics
-		rbi.cbSize = sizeof(REBARINFO);
+		rbi.cbSize = GetSizeofRBBI();
 		if (!::SendMessage(m_hWnd, RB_GETBARINFO, 0L, (LPARAM)&rbi))
 			throw CWinException(_T("Failed to get rebar info"));
 	}
@@ -221,6 +223,19 @@ namespace Win32xx
 	// Retrieves the height of a specified row in a rebar control.
 	{
 		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0L);
+	}
+
+	inline UINT CRebar::GetSizeofRBBI() const
+	{
+
+#if defined (_WIN32_WINNT) && _WIN32_WINNT >= 0x0600
+
+		if (GetWinVersion() < 2600)
+			return REBARBANDINFOA_V6_SIZE;
+
+#endif
+
+		return sizeof(REBARBANDINFO);
 	}
 
 	inline HWND CRebar::GetToolTips() const
@@ -251,7 +266,7 @@ namespace Win32xx
 		{
 			// Get the rebar band's hWnd
 			REBARBANDINFO rbbi = {0};
-			rbbi.cbSize = sizeof(REBARBANDINFO);
+			rbbi.cbSize = GetSizeofRBBI();
 			rbbi.fMask = RBBIM_CHILD;
 			GetBandInfo(iBand, rbbi);
 
@@ -278,7 +293,7 @@ namespace Win32xx
 	// Returns true if the band is visible
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 
@@ -322,7 +337,7 @@ namespace Win32xx
 
 						// Determine the size of the child window
 						REBARBANDINFO rbbi = {0};
-						rbbi.cbSize = sizeof(REBARBANDINFO);
+						rbbi.cbSize = GetSizeofRBBI();
 						rbbi.fMask = RBBIM_CHILD ;
 						GetBandInfo(nBand, rbbi);
 						CRect rcChild;
@@ -461,7 +476,7 @@ namespace Win32xx
 	// Sets a band's size
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(rbbi);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 
 		GetBandInfo(nBand, rbbi);
@@ -476,7 +491,7 @@ namespace Win32xx
 	// Sets the band's bitmaps
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
@@ -491,7 +506,7 @@ namespace Win32xx
 	{
 
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_COLORS;
 		rbbi.clrFore = clrFore;
 		rbbi.clrBack = clrBack;
@@ -505,7 +520,7 @@ namespace Win32xx
 			throw CWinException(_T("Invalid Rebar band number"));
 
 		// REBARBANDINFO describes individual BAND characteristics
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		if(!::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi))
 			throw CWinException(_T("Failed to set rebar band info"));
 	}
@@ -514,7 +529,7 @@ namespace Win32xx
 	// REBARINFO associates an image list with the rebar
 	// A band will also need to set RBBIM_IMAGE
 	{
-		rbi.cbSize = sizeof(REBARINFO);
+		rbi.cbSize = GetSizeofRBBI();
 		if (!::SendMessage(m_hWnd, RB_SETBARINFO, 0L, (LPARAM)&rbi))
 			throw CWinException(_T("Failed to set rebar info"));
 	}
@@ -545,7 +560,7 @@ namespace Win32xx
 	// Show or hide a band
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		if (fShow)
@@ -565,7 +580,7 @@ namespace Win32xx
 	// Show or hide the band's gripper
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		if (fShow)
