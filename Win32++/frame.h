@@ -1508,7 +1508,6 @@ namespace Win32xx
 		::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
 		int Menubar_Height = csMenubar.cy + 8;
 
-		rbbi.cbSize     = GetRebar().GetSizeofRBBI();
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cxMinChild = sz.cx;
 		rbbi.cx         = sz.cx;
@@ -1517,6 +1516,7 @@ namespace Win32xx
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.hwndChild  = GetMenubar();
 
+		// Note: rbbi.cbSize is set inside the InsertBand function
 		GetRebar().InsertBand(-1, rbbi);
 		SetMenubarBandSize();
 		GetRebar().SetMenubar(GetMenubar());
@@ -1548,7 +1548,6 @@ namespace Win32xx
 		REBARBANDINFO rbbi = {0};
 		CSize sz = TB.GetMaxSize();
 
-		rbbi.cbSize     = GetRebar().GetSizeofRBBI();
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
@@ -1558,6 +1557,7 @@ namespace Win32xx
 		rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 		rbbi.hwndChild  = TB;
 
+		// Note: rbbi.cbSize is set inside the InsertBand function
 		GetRebar().InsertBand(-1, rbbi);
 	}
 

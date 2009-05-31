@@ -288,6 +288,7 @@ namespace Win32xx
 	inline void CRebar::InsertBand(int nBand, REBARBANDINFO& rbbi) const
 	// Inserts a new band in a rebar control.
 	{
+		rbbi.cbSize = GetSizeofRBBI();
 		if ( !::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)&rbbi))
 			throw CWinException(_T("Failed to insert rebar band"));
 	}
