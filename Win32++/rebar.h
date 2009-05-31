@@ -231,7 +231,7 @@ namespace Win32xx
 #if defined (_WIN32_WINNT) && _WIN32_WINNT >= 0x0600
 
 		if (GetWinVersion() < 2600)
-			return REBARBANDINFOA_V6_SIZE;
+			return REBARBANDINFO_V6_SIZE;
 
 #endif
 
