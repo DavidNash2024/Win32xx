@@ -1554,7 +1554,7 @@ namespace Win32xx
 		rbbi.cx         = sz.cx +2;
 		rbbi.cxMinChild = sz.cx +2;
 
-		rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+		rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT /*| RBBS_GRIPPERALWAYS*/;
 		rbbi.hwndChild  = TB;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
@@ -1950,7 +1950,7 @@ namespace Win32xx
 		}
 		
 		if (!IsMenubarUsed()) ::SetMenu(m_hWnd, GetFrameMenu());
-		if (m_bUseToolbar)	ShowToolbar();
+		if (m_bUseToolbar)	ShowToolbar();	
 		if (m_bUseThemes)	SetTheme();
 
 		// Create the status bar
@@ -2999,12 +2999,21 @@ namespace Win32xx
 
 	inline void CFrame::ShowToolbar()
 	{
-		if (IsRebarSupported() && m_bUseRebar)				
+		if (IsRebarSupported() && m_bUseRebar)
+		{
 			AddToolbarBand(GetToolbar());	// Create the toolbar inside rebar
+		}
 		else	
 			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
 			
 		SetupToolbar();
+		
+		if (IsRebarSupported() && m_bUseRebar)
+		{
+			// Hide gripper for single toolbar
+			if (GetRebar().GetBandCount() <= 2)
+				GetRebar().ShowGripper(GetRebar().GetBand(GetToolbar()), FALSE);
+		}
 		
 		if (GetToolbar().GetToolbarData().size() > 0)
 		{
@@ -3020,6 +3029,7 @@ namespace Win32xx
 		{
 			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
 		}
+
 	}
 
 	inline void CFrame::UpdateMRUMenu()

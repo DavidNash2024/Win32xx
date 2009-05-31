@@ -144,7 +144,7 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( IDM_FILE_PRINT );
 	
 	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT ); 
+	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
