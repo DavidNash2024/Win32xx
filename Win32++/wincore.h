@@ -1619,11 +1619,15 @@ namespace Win32xx
 	// Gets the window title for an ordinary window, or the text in an edit control
 	{	
 		tString tstr;
-		if (::GetWindowTextLength(m_hWnd) > 0)
+		int nLength = ::GetWindowTextLength(m_hWnd);
+		if (nLength > 0)
 		{
-			TCHAR szString[MAX_STRING_SIZE +1];
-			if (0 != ::GetWindowText(m_hWnd, szString, MAX_STRING_SIZE))
-				tstr = szString;
+			TCHAR* pszString = new TCHAR[nLength+1];
+			if (NULL == pszString) throw std::bad_alloc();
+			if (0 != ::GetWindowText(m_hWnd, pszString, nLength+1))
+				tstr = pszString;
+
+			delete[] pszString;
 		}
 		return tstr;
 	}

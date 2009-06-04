@@ -2533,25 +2533,25 @@ namespace Win32xx
 				switch (pDock->GetDockStyle() & 0xF)
 				{
 				case DS_DOCKED_LEFT:
-					DockWidth = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
 					break;
 				case DS_DOCKED_RIGHT:
-					DockWidth = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
 					break;
 				case DS_DOCKED_TOP:
-					DockWidth = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5* dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
 					break;
 				case DS_DOCKED_BOTTOM:
-					DockWidth = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5 + 1.5*dBarWidth);
+					DockWidth = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5* dBarWidth);
 					DockWidth = MAX(-iBarWidth, DockWidth);
 					pDock->SetDockWidth(DockWidth);
 					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
