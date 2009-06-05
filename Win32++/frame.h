@@ -2314,7 +2314,7 @@ namespace Win32xx
 			break;
 		case RBN_HEIGHTCHANGE:
 			RecalcLayout();
-			::InvalidateRect(m_hWnd, NULL, TRUE);
+			Invalidate();
 			break;
 		case RBN_LAYOUTCHANGED:
 			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
@@ -2409,10 +2409,10 @@ namespace Win32xx
 
 		// Reposition and redraw everything
 		RecalcLayout();
-		::RedrawWindow(m_hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+		RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Forward the message to the view window
-		::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0L, 0L);
+		m_pView->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
 	}
 
 	inline LRESULT CFrame::OnSysCommand(WPARAM wParam, LPARAM lParam)
@@ -2487,96 +2487,46 @@ namespace Win32xx
 		}
 	}
 
-	/*
-		inline void CFrame::OnFrameTimer(WPARAM wParam)
-	{
-		if (ID_STATUS_TIMER == wParam)
-		{
-			if (m_bShowMenuStatus)
-			{
-				static int nOldID = -1;
-				CToolbar& tb = GetToolbar();
-				CPoint pt;
-				::GetCursorPos(&pt);
-
-				// Is the mouse hovering over the toolbar?
-				if (WindowFromPoint(pt) == tb)
-				{
-					// Which toolbar button is the mouse cursor hovering over?
-					int nButton = tb.HitTest();
-					if (nButton >= 0)
-					{
-						int nID = GetToolbar().GetCommandID(nButton);
-						// Only update the statusbar if things have changed
-						if (nID != nOldID)
-						{
-							if (nID != 0)
-								m_tsStatusText = LoadString(nID);
-							else
-								m_tsStatusText = _T("Ready");
-
-							SetStatusText();
-						}
-						nOldID = nID;
-					}
-				}
-				else
-				{
-					if (nOldID != -1)
-					{
-						m_tsStatusText = _T("Ready");
-						SetStatusText();
-					}
-					nOldID = -1;
-				}
-			}
-
-			if (m_bShowIndicatorStatus)
-				SetStatusIndicators();
-		}
-	}
-	*/
-
 	inline void CFrame::OnViewStatusbar()
 	{
 		if (::IsWindowVisible(GetStatusbar()))
 		{
 			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-			::ShowWindow(GetStatusbar(), SW_HIDE);
+			GetStatusbar().ShowWindow(SW_HIDE);
 		}
 		else
 		{
 			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
-			::ShowWindow(GetStatusbar(), SW_SHOW);
+			GetStatusbar().ShowWindow(SW_SHOW);
 		}
 
 		// Reposition the Windows
 		RecalcLayout();
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 	}
 
 	inline void CFrame::OnViewToolbar()
 	{
-		if (::IsWindowVisible(GetToolbar()))
+		if (GetToolbar().IsVisible())
 		{
 			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 			if (IsRebarUsed())
-				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
+				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
 			else
-				::ShowWindow(GetToolbar(), SW_HIDE);
+				GetToolbar().ShowWindow(SW_HIDE);
 		}
 		else
 		{
 			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
 			if (IsRebarUsed())
-				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
+				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
 			else
-				::ShowWindow(GetToolbar(), SW_SHOW);
+				GetToolbar().ShowWindow(SW_SHOW);
 		}
 
 		// Reposition the Windows
 		RecalcLayout();
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 	}
 
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)

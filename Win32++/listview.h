@@ -75,7 +75,7 @@ namespace Win32xx
 		BOOL GetItemPosition( int iItem, CPoint& pt ) const;
 		BOOL GetItemRect( int iItem, CRect& rc, UINT nCode ) const;
 		UINT GetItemState( int iItem, UINT nMask ) const;
-		tString GetItemText( int iItem, int iSubItem ) const;
+		tString GetItemText( int iItem, int iSubItem, UINT nTextMax = 260 ) const;
 		int GetNextItem( int iItem, int iFlags ) const;
 		UINT GetNumberOfWorkAreas( ) const;
 		BOOL GetOrigin( CPoint& pt ) const;
@@ -271,7 +271,8 @@ namespace Win32xx
 		LVITEM lvi = {0};
 		lvi.iItem = iItem;
 		lvi.mask = LVIF_PARAM;
-		return ListView_GetItem(m_hWnd, &lvi);
+		ListView_GetItem(m_hWnd, &lvi);
+		return lvi.lParam;
 	}
 
 	inline BOOL CListView::GetItemPosition( int iItem, CPoint& pt ) const
@@ -300,18 +301,26 @@ namespace Win32xx
 		return  ListView_GetItemState( m_hWnd, iItem, nMask );
 	}
 
-	inline tString CListView::GetItemText( int iItem, int iSubItem ) const
+	inline tString CListView::GetItemText( int iItem, int iSubItem, UINT nTextMax /* = 260 */ ) const
 	// Retrieves the text of a list-view item.
+	// Note: Although the list-view control allows any length string to be stored
+	//       as item text, only the first 260 characters are displayed.
 	{
-		TCHAR szText[261];
-		LVITEM lvi = {0};
-		lvi.iItem = iItem;
-		lvi.iSubItem = iSubItem;
-		lvi.mask = LVIF_TEXT;
-		lvi.cchTextMax = 260;
-		lvi.pszText = szText;
-		ListView_GetItem( m_hWnd, &lvi );
-		tString t = lvi.pszText;
+		tString t;
+		if (nTextMax > 0)
+		{
+			TCHAR* pszText = new TCHAR[nTextMax +1];
+			if (NULL == pszText) throw std::bad_alloc();
+			LVITEM lvi = {0};
+			lvi.iItem = iItem;
+			lvi.iSubItem = iSubItem;
+			lvi.mask = LVIF_TEXT;
+			lvi.cchTextMax = nTextMax;
+			lvi.pszText = pszText;
+			ListView_GetItem( m_hWnd, &lvi );
+			t = lvi.pszText;
+			delete[] pszText;
+		}
 		return t;
 	}
 

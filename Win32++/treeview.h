@@ -70,7 +70,7 @@ namespace Win32xx
 		int  GetItemHeight() const;
 		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
 		BOOL GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const;
-		tString GetItemText(HTREEITEM hItem) const;
+		tString GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const;
 		HTREEITEM GetLastVisible() const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
@@ -205,7 +205,8 @@ namespace Win32xx
 		TVITEM tvi = {0};
 		tvi.mask = TVIF_PARAM;
 		tvi.hItem = hItem;
-		return TreeView_GetItem( m_hWnd, hItem );
+		TreeView_GetItem( m_hWnd, hItem );
+		return tvi.lParam;
 	}
 
 	inline int  CTreeView::GetItemHeight() const
@@ -232,17 +233,25 @@ namespace Win32xx
 		return TreeView_GetItemRect( m_hWnd, hItem, &rc, bTextOnly );
 	}
 
-	inline tString CTreeView::GetItemText(HTREEITEM hItem) const
+	inline tString CTreeView::GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const
 	// Retrieves the text for a tree-view item.
+	// Note: Although the tree-view control allows any length string to be stored 
+	//       as item text, only the first 260 characters are displayed.
 	{
-		TVITEM tvi = {0};
-		tvi.hItem = hItem;
-		tvi.mask = TVIF_TEXT;
-		tvi.cchTextMax = 260;
-		TCHAR szText[261];
-		tvi.pszText = szText;
-		::SendMessage(m_hWnd, TVM_GETITEM, 0L, (LPARAM)&tvi);
-		tString t = tvi.pszText;
+		tString t;
+		if (nTextMax > 0)
+		{
+			TVITEM tvi = {0};
+			tvi.hItem = hItem;
+			tvi.mask = TVIF_TEXT;
+			tvi.cchTextMax = nTextMax;
+			TCHAR* pszText = new TCHAR[nTextMax +1];
+			if (NULL == pszText) throw std::bad_alloc();
+			tvi.pszText = pszText;
+			::SendMessage(m_hWnd, TVM_GETITEM, 0L, (LPARAM)&tvi);
+			t = tvi.pszText;
+			delete[] pszText;
+		}
 		return t;
 	}
 
