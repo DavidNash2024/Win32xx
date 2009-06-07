@@ -64,7 +64,6 @@ namespace Win32xx
 		HIMAGELIST GetImageList(int iImageType) const;
 		UINT  GetIndent() const;
 		COLORREF GetInsertMarkColor() const;
-		BOOL GetISearchString(LPTSTR szString);
 		BOOL GetItem(TVITEM& Item) const;
 		DWORD_PTR GetItemData(HTREEITEM hItem) const;
 		int  GetItemHeight() const;
@@ -187,12 +186,6 @@ namespace Win32xx
 		return TreeView_GetInsertMarkColor( m_hWnd );
 	}
 
-	inline BOOL CTreeView::GetISearchString(LPTSTR szString)
-	// Retrieves the incremental search string for a tree-view control.
-	{
-		return TreeView_GetISearchString(m_hWnd, szString);
-	}
-
 	inline BOOL CTreeView::GetItem(TVITEM& Item) const
 	// Retrieves some or all of a tree-view item's attributes.
 	{
@@ -250,7 +243,7 @@ namespace Win32xx
 			tvi.pszText = pszText;
 			::SendMessage(m_hWnd, TVM_GETITEM, 0L, (LPARAM)&tvi);
 			t = tvi.pszText;
-			delete[] pszText;
+			delete [] pszText;
 		}
 		return t;
 	}

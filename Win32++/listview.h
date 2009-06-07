@@ -319,7 +319,7 @@ namespace Win32xx
 			lvi.pszText = pszText;
 			ListView_GetItem( m_hWnd, &lvi );
 			t = lvi.pszText;
-			delete[] pszText;
+			delete [] pszText;
 		}
 		return t;
 	}

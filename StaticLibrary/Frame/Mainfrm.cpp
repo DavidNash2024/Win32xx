@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////
 // Mainfrm.cpp
 
+
 #include "stdafx.h"
 #include "resource.h"
 #include "mainfrm.h"
@@ -88,7 +89,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnFileOpen()
 {
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
-  OPENFILENAME ofn = {0};
+	OPENFILENAME ofn = {0};
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = m_hWnd;
 	ofn.lpstrFile = szFilePathName;
@@ -134,19 +135,17 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( IDM_FILE_NEW   );
 	AddToolbarButton( IDM_FILE_OPEN  );
 	AddToolbarButton( IDM_FILE_SAVE  );
+	
 	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolbarButton( IDM_EDIT_CUT,   FALSE );	// disabled button
+	AddToolbarButton( IDM_EDIT_COPY,  FALSE );	// disabled button
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE );	// disabled button
+	
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_FILE_PRINT );
+	
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
-
-	// Disable some buttons
-	GetToolbar().DisableButton(IDM_EDIT_CUT);
-	GetToolbar().DisableButton(IDM_EDIT_COPY);
-	GetToolbar().DisableButton(IDM_EDIT_PASTE);   
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

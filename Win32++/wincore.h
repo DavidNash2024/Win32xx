@@ -781,7 +781,7 @@ namespace Win32xx
 			return NULL;
 		int nLen = MIN((int)lstrlen(lpstrSrc), nLength - 1);
 		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
-		lpstrDest[nLen] = 0;
+		lpstrDest[nLen] = _T('\0');
 		return lpstrRet;
 	}
   #endif // !lstrcpyn
@@ -791,9 +791,10 @@ namespace Win32xx
 		// Handy for converting char to TCHAR
 		tString tstr;
   #ifdef UNICODE
-		size_t len = 1 + strlen(s);
+		size_t len = strlen(s);
+		if (0 == len) return tstr;
 
-		TCHAR* t = new TCHAR[len];
+		TCHAR* t = new TCHAR[len +1];
 		if (NULL == t) throw std::bad_alloc();
 
 		mbstowcs(t, s, len);
@@ -814,14 +815,15 @@ namespace Win32xx
 		// calculate the size of the char string required
 		// Note: If wcstombs encounters a wide character it cannot convert
 		//       to a multibyte character, it returns –1.
-		size_t len = 1 + wcstombs(0, t, 0);
-		if (0 == len) return str;
+		size_t len = wcstombs(0, t, 0);
+		if (len <= 0) return str;
 
-		char* c = new char[len];
+		char* c = new char[len + 1];
 		if (NULL == c) throw std::bad_alloc();
 		c[0] = '\0';
 
 		wcstombs(c, t, len);
+		c[len] = '\0';
 		str = c;
 		delete []c;
   #else
@@ -1627,7 +1629,7 @@ namespace Win32xx
 			if (0 != ::GetWindowText(m_hWnd, pszString, nLength+1))
 				tstr = pszString;
 
-			delete[] pszString;
+			delete [] pszString;
 		}
 		return tstr;
 	}

@@ -2972,8 +2972,9 @@ namespace Win32xx
 			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
 				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
-			// Add the icons for popup menu items
-			AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+			// Add the icons for popup menu items unless the've been added already
+			if (0 == m_vMenuIcons.size())
+				AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
 		}
 		else
 		{
