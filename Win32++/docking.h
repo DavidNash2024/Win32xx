@@ -3233,7 +3233,8 @@ namespace Win32xx
 				tie.mask = TCIF_TEXT | TCIF_IMAGE;
 				tie.iImage = ci.iImage;
 				tie.pszText = m_vContainerInfo[iNewPage].szTitle;
-				InsertItem(iNewPage, &tie);
+			//	InsertItem(iNewPage, &tie);
+				TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
 
 				SetTabSize();
 			}
@@ -3381,7 +3382,8 @@ namespace Win32xx
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = i;
 			tie.pszText = m_vContainerInfo[i].szTitle;
-			InsertItem(i, &tie);
+		//	InsertItem(i, &tie);
+			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
 	}
 
@@ -3475,7 +3477,8 @@ namespace Win32xx
 		int iTab = GetContainerIndex(pWnd);
 		if (iTab > 0)
 		{
-			DeleteItem(iTab);
+		//	DeleteItem(iTab);
+			TabCtrl_DeleteItem(m_hWnd, iTab);
 		}
 
 		// Remove the ContainerInfo entry

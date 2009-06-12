@@ -107,8 +107,8 @@ namespace Win32xx
 
 		// Wrappers for Win32 Macros
 		void AdjustRect(BOOL fLarger, RECT *prc);
-		BOOL DeleteAllItems();
-		BOOL DeleteItem(int iItem);
+	//	BOOL DeleteAllItems();
+	//	BOOL DeleteItem(int iItem);
 		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
 		CRect GetCloseRect() { return m_rcClose; }
 		int  GetCurFocus();
@@ -116,10 +116,10 @@ namespace Win32xx
 		BOOL GetItem(int iItem, LPTCITEM pitem);
 		int  GetItemCount();
 		CRect GetListRect() { return m_rcList; }
-		int  InsertItem(int iItem, const LPTCITEM pitem);
+	//	int  InsertItem(int iItem, const LPTCITEM pitem);
 		void SetCurFocus(int iItem);
 		int  SetCurSel(int iItem);
-		BOOL SetItem(int iItem, LPTCITEM pitem);
+	//	BOOL SetItem(int iItem, LPTCITEM pitem);
 		DWORD SetItemSize(int cx, int cy);
 		int  SetMinTabWidth(int cx);
 		void SetPadding(int cx, int cy);
@@ -269,7 +269,8 @@ namespace Win32xx
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = tbi.iImage;
 			tie.pszText = m_vTabPageInfo[iNewPage].szTitle;
-			InsertItem(iNewPage, &tie);
+		//	InsertItem(iNewPage, &tie);
+			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
 
 			SetTabSize();
 			SelectPage(iNewPage);
@@ -773,7 +774,8 @@ namespace Win32xx
 			return;
 
 		// Remove the tab
-		DeleteItem(iPage);
+	//	DeleteItem(iPage);
+		TabCtrl_DeleteItem(m_hWnd, iPage);
 
 		// Remove the TapPageInfo entry
 		std::vector<TabPageInfo>::iterator iter = m_vTabPageInfo.begin() + iPage;
@@ -968,15 +970,15 @@ namespace Win32xx
 		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
 	}
 
-	inline BOOL CTab::DeleteAllItems()
-	{
-		return TabCtrl_DeleteAllItems(m_hWnd);
-	}
+//	inline BOOL CTab::DeleteAllItems()
+//	{
+//		return TabCtrl_DeleteAllItems(m_hWnd);
+//	}
 
-	inline BOOL CTab::DeleteItem(int iItem)
-	{
-		return TabCtrl_DeleteItem(m_hWnd, iItem);
-	}
+//	inline BOOL CTab::DeleteItem(int iItem)
+//	{
+//		return TabCtrl_DeleteItem(m_hWnd, iItem);
+//	}
 
 	inline int CTab::GetCurFocus()
 	{
@@ -998,10 +1000,10 @@ namespace Win32xx
 		return TabCtrl_GetItemCount(m_hWnd);
 	}
 
-	inline int CTab::InsertItem(int iItem, const LPTCITEM pitem)
-	{
-		return TabCtrl_InsertItem(m_hWnd, iItem, pitem);
-	}
+//	inline int CTab::InsertItem(int iItem, const LPTCITEM pitem)
+//	{
+//		return TabCtrl_InsertItem(m_hWnd, iItem, pitem);
+//	}
 
 	inline void CTab::SetCurFocus(int iItem)
 	{
@@ -1013,10 +1015,10 @@ namespace Win32xx
 		return TabCtrl_SetCurSel(m_hWnd, iItem);
 	}
 
-	inline BOOL CTab::SetItem(int iItem, LPTCITEM pitem)
-	{
-		return TabCtrl_SetItem(m_hWnd, iItem, pitem);
-	}
+//	inline BOOL CTab::SetItem(int iItem, LPTCITEM pitem)
+//	{
+//		return TabCtrl_SetItem(m_hWnd, iItem, pitem);
+//	}
 
 	inline DWORD CTab::SetItemSize(int cx, int cy)
 	{
