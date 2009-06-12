@@ -6,7 +6,7 @@
 #define MAINFRM_H
 
 
-#include "../Win32++/frame.h"
+#include "../../Win32++/frame.h"
 #include "SplitterPanes.h"
 
 #ifndef BTNS_WHOLEDROPDOWN

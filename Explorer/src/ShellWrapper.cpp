@@ -1,7 +1,7 @@
 //////////////////////////////////////
 // ShellWrapper.cpp
 
-#include "../Win32++/wincore.h"
+#include "../../Win32++/wincore.h"
 #include "ShellWrapper.h"
 
 

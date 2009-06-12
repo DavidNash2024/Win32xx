@@ -16,5 +16,6 @@ void CRightPane::OnInitialUpdate()
 	if (RB.GetRebarTheme().UseThemes)
 		SetBarColor(RB.GetRebarTheme().clrBkgnd2);
 	else
-		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
+		SetBarColor(GetSysColor(COLOR_BTNFACE));
 }
+

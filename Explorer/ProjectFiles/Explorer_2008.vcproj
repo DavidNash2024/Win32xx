@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="Explorer"
 	ProjectGUID="{382FD0A0-2437-41B0-B13D-AE0745269029}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -73,13 +74,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib Advapi32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib"
 				OutputFile=".\Release/Explorer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				ProgramDatabaseFile=".\Release/Explorer.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -101,9 +104,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -169,7 +169,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib Advapi32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib shell32.lib comctl32.lib ole32.lib"
 				OutputFile=".\Debug/Explorer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -177,6 +177,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Explorer.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -200,9 +202,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -215,95 +214,35 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="ExplorerApp.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="main.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Mainfrm.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MyListView.cpp"
+				RelativePath="..\src\ExplorerApp.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MyTreeView.cpp"
+				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="ShellWrapper.cpp"
+				RelativePath="..\src\Mainfrm.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\SplitterPanes.cpp"
+				RelativePath="..\src\MyListView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyTreeView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ShellWrapper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\SplitterPanes.cpp"
 				>
 			</File>
 		</Filter>
@@ -312,31 +251,31 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="ExplorerApp.h"
+				RelativePath="..\src\ExplorerApp.h"
 				>
 			</File>
 			<File
-				RelativePath="Mainfrm.h"
+				RelativePath="..\src\Mainfrm.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MyListView.h"
+				RelativePath="..\src\MyListView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MyTreeView.h"
+				RelativePath="..\src\MyTreeView.h"
 				>
 			</File>
 			<File
-				RelativePath="resource.h"
+				RelativePath="..\src\resource.h"
 				>
 			</File>
 			<File
-				RelativePath="ShellWrapper.h"
+				RelativePath="..\src\ShellWrapper.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SplitterPanes.h"
+				RelativePath="..\src\SplitterPanes.h"
 				>
 			</File>
 		</Filter>
@@ -344,72 +283,52 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath="Resource.rc"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\Default_Resource.h"
+				RelativePath="..\..\Win32++\default_resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\..\Win32++\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h"
+				RelativePath="..\..\Win32++\docking.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h"
+				RelativePath="..\..\Win32++\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\ListView.h"
+				RelativePath="..\..\Win32++\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Rebar.h"
+				RelativePath="..\..\Win32++\listview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Splitter.h"
+				RelativePath="..\..\Win32++\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Statusbar.h"
+				RelativePath="..\..\Win32++\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Toolbar.h"
+				RelativePath="..\..\Win32++\toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\TreeView.h"
+				RelativePath="..\..\Win32++\treeview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>
