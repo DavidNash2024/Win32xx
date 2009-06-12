@@ -6,7 +6,7 @@
 #ifndef MDICHILDRECT_H
 #define MDICHILDRECT_H
 
-#include "../Win32++/mdi.h"
+#include "../../Win32++/mdi.h"
 
 // Declaration of CViewRect
 class CViewRect : public CWnd

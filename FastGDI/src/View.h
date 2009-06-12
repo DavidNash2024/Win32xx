@@ -5,7 +5,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "../Win32++/wincore.h"
+#include "../../Win32++/wincore.h"
 #include "ColourDialog.h"
 
 

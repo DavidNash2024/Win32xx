@@ -132,26 +132,26 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU Compiler;Release MinGW GNU Compiler;" />
 		</VirtualTargets>
-		<Unit filename="FormApp.cpp" />
-		<Unit filename="FormApp.h" />
-		<Unit filename="Mainfrm.cpp" />
-		<Unit filename="Mainfrm.h" />
-		<Unit filename="MyDialog.cpp" />
-		<Unit filename="MyDialog.h" />
-		<Unit filename="Resource.rc">
+		<Unit filename="..\src\FormApp.cpp" />
+		<Unit filename="..\src\FormApp.h" />
+		<Unit filename="..\src\Mainfrm.cpp" />
+		<Unit filename="..\src\Mainfrm.h" />
+		<Unit filename="..\src\MyDialog.cpp" />
+		<Unit filename="..\src\MyDialog.h" />
+		<Unit filename="..\src\Readme.txt" />
+		<Unit filename="..\src\Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="main.cpp" />
-		<Unit filename="resource.h" />
-		<Unit filename="resrc1.h" />
-		<Unit filename="..\Win32++\Default_Resource.h" />
-		<Unit filename="..\Win32++\Dialog.h" />
-		<Unit filename="..\Win32++\Frame.h" />
-		<Unit filename="..\Win32++\GDI.h" />
-		<Unit filename="..\Win32++\Rebar.h" />
-		<Unit filename="..\Win32++\Statusbar.h" />
-		<Unit filename="..\Win32++\Toolbar.h" />
-		<Unit filename="..\Win32++\WinCore.h" />
+		<Unit filename="..\src\main.cpp" />
+		<Unit filename="..\src\resource.h" />
+		<Unit filename="..\..\Win32++\default_resource.h" />
+		<Unit filename="..\..\Win32++\dialog.h" />
+		<Unit filename="..\..\Win32++\frame.h" />
+		<Unit filename="..\..\Win32++\gdi.h" />
+		<Unit filename="..\..\Win32++\rebar.h" />
+		<Unit filename="..\..\Win32++\statusbar.h" />
+		<Unit filename="..\..\Win32++\toolbar.h" />
+		<Unit filename="..\..\Win32++\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

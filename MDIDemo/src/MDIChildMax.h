@@ -6,7 +6,7 @@
 #ifndef MDICHILDMAX_H
 #define MDICHILDMAX_H
 
-#include "../Win32++/mdi.h"
+#include "../../Win32++/mdi.h"
 
 // Declaration of CViewMax
 class CViewMax : public CWnd

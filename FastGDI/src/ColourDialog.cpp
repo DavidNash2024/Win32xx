@@ -1,5 +1,5 @@
 
-#include "../Win32++/gdi.h"
+#include "../../Win32++/gdi.h"
 #include "FastGDIApp.h"
 #include "Mainfrm.h"
 #include "ColourDialog.h"

@@ -92,39 +92,43 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\main.cpp
+SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainMDIfrm.cpp
+SOURCE=..\src\MainMDIfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildListView.cpp
+SOURCE=..\src\MDIChildListView.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildMax.cpp
+SOURCE=..\src\MDIChildMax.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildRect.cpp
+SOURCE=..\src\MDIChildRect.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildSimple.cpp
+SOURCE=..\src\MDIChildSimple.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildText.cpp
+SOURCE=..\src\MDIChildText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildTreeView.cpp
+SOURCE=..\src\MDIChildTreeView.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIDemoApp.cpp
+SOURCE=..\src\MDIDemoApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Resource.rc
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -132,75 +136,91 @@ SOURCE=.\MDIDemoApp.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\MainMDIfrm.h
+SOURCE=..\src\MainMDIfrm.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildListView.h
+SOURCE=..\src\MDIChildListView.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildMax.h
+SOURCE=..\src\MDIChildMax.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildRect.h
+SOURCE=..\src\MDIChildRect.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildSimple.h
+SOURCE=..\src\MDIChildSimple.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildText.h
+SOURCE=..\src\MDIChildText.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIChildTreeView.h
+SOURCE=..\src\MDIChildTreeView.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MDIDemoApp.h
+SOURCE=..\src\MDIDemoApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\resource.h
+SOURCE=..\src\resource.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-# Begin Source File
-
-SOURCE=.\Resource.rc
-# End Source File
 # End Group
 # Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE="..\..\Win32++\default_resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\..\Win32++\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Frame.h"
+SOURCE="..\..\Win32++\frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\GDI.h"
+SOURCE="..\..\Win32++\gdi.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\MDI.h"
+SOURCE="..\..\Win32++\listview.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\mdi.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\rebar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\statusbar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\toolbar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\treeview.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\wincore.h"
 # End Source File
 # End Group
 # End Target

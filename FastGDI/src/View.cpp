@@ -3,7 +3,7 @@
 //  Definitions for the CView class
 
 #include "view.h"
-#include "../Win32++/gdi.h"
+#include "../../Win32++/gdi.h"
 #include "resource.h"
 
 
