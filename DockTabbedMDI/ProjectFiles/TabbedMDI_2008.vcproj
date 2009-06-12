@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
-	Name="DX"
-	ProjectGUID="{DE22098F-244C-448F-BA35-CFB931E071E7}"
+	Version="9.00"
+	Name="TabbedMDI"
+	ProjectGUID="{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -21,7 +22,7 @@
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DX.tlb"
+				TypeLibraryName=".\Debug/TabbedMDI.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -50,12 +51,12 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\Debug/DX.pch"
+				RuntimeTypeInfo="true"
+				PrecompiledHeaderFile=".\Debug/TabbedMDI.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="3"
+				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 			/>
@@ -72,13 +73,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib Gdi32.lib d3d9.lib d3dx9.lib Winmm.lib"
-				OutputFile=".\Debug/DX.exe"
-				LinkIncremental="2"
+				AdditionalDependencies="comctl32.lib"
+				OutputFile=".\Debug/TabbedMDI.exe"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/DX.pdb"
+				ProgramDatabaseFile=".\Debug/TabbedMDI.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -100,9 +102,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -114,7 +113,7 @@
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -134,7 +133,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DX.tlb"
+				TypeLibraryName=".\Release/TabbedMDI.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -145,12 +144,11 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\Release/DX.pch"
+				PrecompiledHeaderFile=".\Release/TabbedMDI.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
-				WarningLevel="3"
+				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -166,12 +164,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib Gdi32.lib d3d9.lib d3dx9.lib Winmm.lib"
-				OutputFile=".\Release/DX.exe"
+				AdditionalDependencies="comctl32.lib"
+				OutputFile=".\Release/TabbedMDI.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile=".\Release/DX.pdb"
+				ProgramDatabaseFile=".\Release/TabbedMDI.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -193,9 +193,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -208,73 +205,56 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="DXApp.cpp"
+				RelativePath="..\src\Classes.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="main.cpp"
+				RelativePath="..\src\ComboBoxEx.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="View.cpp"
+				RelativePath="..\src\DockTabbedMDI.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\Files.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyTabbedMDI.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Output.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Rect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Simple.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TabbedMDIApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Text.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
@@ -282,11 +262,55 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="DXApp.h"
+				RelativePath="..\src\Classes.h"
 				>
 			</File>
 			<File
-				RelativePath="View.h"
+				RelativePath="..\src\ComboBoxEx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DockContainer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DockTabbedMDI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Files.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyTabbedMDI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Output.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Rect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Simple.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TabbedMDIApp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Text.h"
 				>
 			</File>
 		</Filter>
@@ -294,16 +318,52 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath=".\Resource.rc"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\dialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\frame.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\gdi.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\listview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\rebar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\statusbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\tab.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>
