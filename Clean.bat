@@ -17,7 +17,7 @@ FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\"ProjectFiles\__history"
 
 
 ::Remove files
-FOR /D %%f IN ("*.") DO DEL /Q %%f\"ProjectFiles\*.layout"
+FOR /D %%f IN ("*.") DO DEL /Q %%f\"src\*.layout"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"ProjectFiles\*.ncb"
 FOR /D %%f IN ("*.") DO DEL /Q /AH %%f\"ProjectFiles\*.suo"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"ProjectFiles\*.plg"
