@@ -119,7 +119,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\Win32++\WinCore.h
+FileName=..\..\Win32++\default_resource.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -129,7 +129,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\Win32++\Default_Resource.h
+FileName=..\..\Win32++\dialog.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -139,7 +139,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\Win32++\Dialog.h
+FileName=..\..\Win32++\frame.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -149,7 +149,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\Win32++\Frame.h
+FileName=..\..\Win32++\gdi.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -159,7 +159,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\Win32++\GDI.h
+FileName=..\..\Win32++\rebar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -169,7 +169,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\Win32++\Rebar.h
+FileName=..\..\Win32++\statusbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -197,7 +197,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=..\Win32++\Statusbar.h
+FileName=..\..\Win32++\toolbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -207,7 +207,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\Win32++\Toolbar.h
+FileName=..\..\Win32++\wincore.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

@@ -92,27 +92,27 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\main.cpp
+SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainWnd.cpp
+SOURCE=..\src\MainWnd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MyDialog.cpp
+SOURCE=..\src\MyDialog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\PerfApp.cpp
+SOURCE=..\src\PerfApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Performance.rc
+SOURCE=..\src\Performance.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\TestWnd.cpp
+SOURCE=..\src\TestWnd.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -120,23 +120,23 @@ SOURCE=.\TestWnd.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\MainWnd.h
+SOURCE=..\src\MainWnd.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MyDialog.h
+SOURCE=..\src\MyDialog.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\PerfApp.h
+SOURCE=..\src\PerfApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\resource.h
+SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\TestWnd.h
+SOURCE=..\src\TestWnd.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -148,11 +148,11 @@ SOURCE=.\TestWnd.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\..\Win32++\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\wincore.h"
 # End Source File
 # End Group
 # End Target

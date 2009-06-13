@@ -117,70 +117,67 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath=".\main.cpp">
+				RelativePath="..\src\main.cpp">
 			</File>
 			<File
-				RelativePath=".\Mainfrm.cpp">
+				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath=".\RichView.cpp">
+				RelativePath="..\src\RichView.cpp">
 			</File>
 			<File
-				RelativePath=".\TextApp.cpp">
+				RelativePath="..\src\TextApp.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath=".\Mainfrm.h">
+				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
-				RelativePath=".\resource.h">
+				RelativePath="..\src\resource.h">
 			</File>
 			<File
-				RelativePath=".\resrc1.h">
+				RelativePath="..\src\RichView.h">
 			</File>
 			<File
-				RelativePath=".\RichView.h">
-			</File>
-			<File
-				RelativePath=".\TextApp.h">
+				RelativePath="..\src\TextApp.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
-				RelativePath=".\Resource.rc">
+				RelativePath="..\src\Resource.rc">
 			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\Win32++\Default_Resource.h">
+				RelativePath="..\..\Win32++\default_resource.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h">
+				RelativePath="..\..\Win32++\dialog.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h">
+				RelativePath="..\..\Win32++\frame.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h">
+				RelativePath="..\..\Win32++\gdi.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Rebar.h">
+				RelativePath="..\..\Win32++\rebar.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Statusbar.h">
+				RelativePath="..\..\Win32++\statusbar.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\Toolbar.h">
+				RelativePath="..\..\Win32++\toolbar.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h">
+				RelativePath="..\..\Win32++\wincore.h">
 			</File>
 		</Filter>
 	</Files>

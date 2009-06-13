@@ -215,88 +215,28 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="main.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Mainfrm.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MyPropertySheet.cpp"
+				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="PropertySheetApp.cpp"
+				RelativePath="..\src\Mainfrm.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="View.cpp"
+				RelativePath="..\src\MyPropertySheet.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\PropertySheetApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\View.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
@@ -304,23 +244,23 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="Mainfrm.h"
+				RelativePath="..\src\Mainfrm.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MyPropertySheet.h"
+				RelativePath="..\src\MyPropertySheet.h"
 				>
 			</File>
 			<File
-				RelativePath="PropertySheetApp.h"
+				RelativePath="..\src\PropertySheetApp.h"
 				>
 			</File>
 			<File
-				RelativePath="resource.h"
+				RelativePath="..\src\resource.h"
 				>
 			</File>
 			<File
-				RelativePath="View.h"
+				RelativePath="..\src\View.h"
 				>
 			</File>
 		</Filter>
@@ -328,64 +268,44 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath="Resource.rc"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\Default_Resource.h"
+				RelativePath="..\..\Win32++\default_resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\..\Win32++\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h"
+				RelativePath="..\..\Win32++\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h"
+				RelativePath="..\..\Win32++\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\PropertySheet.h"
+				RelativePath="..\..\Win32++\propertysheet.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Rebar.h"
+				RelativePath="..\..\Win32++\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Statusbar.h"
+				RelativePath="..\..\Win32++\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Toolbar.h"
+				RelativePath="..\..\Win32++\toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>
