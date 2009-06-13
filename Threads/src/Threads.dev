@@ -60,16 +60,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\Win32++\WinCore.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
 FileName=MainWnd.cpp
 CompileCpp=1
 Folder=Source
@@ -79,7 +69,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=MainWnd.h
 CompileCpp=1
 Folder=Header
@@ -89,7 +79,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=TestWnd.cpp
 CompileCpp=1
 Folder=Source
@@ -99,7 +89,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=TestWnd.h
 CompileCpp=1
 Folder=Header
@@ -109,7 +99,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=Thread.cpp
 CompileCpp=1
 Folder=Source
@@ -119,7 +109,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=Thread.h
 CompileCpp=1
 Folder=Header
@@ -129,12 +119,22 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit10]
 FileName=resource.h
 CompileCpp=1
 Folder=Header
 Compile=1
 Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=Threads.rc
+CompileCpp=1
+Folder=Resource
+Compile=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -158,11 +158,11 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit12]
-FileName=Threads.rc
+FileName=..\..\Win32++\wincore.h
 CompileCpp=1
-Folder=Resource
+Folder=Win32++
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

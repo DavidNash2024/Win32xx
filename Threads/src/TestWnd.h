@@ -6,8 +6,9 @@
 #ifndef TESTWND_H
 #define TESTWND_H
 
+
+#include "../../Win32++/wincore.h"
 #include <sstream>
-#include "../Win32++/wincore.h"
 
 
 class CTestWindow : public CWnd

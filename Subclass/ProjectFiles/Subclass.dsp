@@ -92,19 +92,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\Button.cpp
+SOURCE=..\src\Button.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\main.cpp
+SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainWin.cpp
+SOURCE=..\src\MainWin.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\SubApp.cpp
+SOURCE=..\src\SubApp.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -112,15 +112,15 @@ SOURCE=.\SubApp.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\Button.h
+SOURCE=..\src\Button.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainWin.h
+SOURCE=..\src\MainWin.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\SubApp.h
+SOURCE=..\src\SubApp.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -132,7 +132,35 @@ SOURCE=.\SubApp.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\default_resource.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\dialog.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\frame.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\gdi.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\rebar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\statusbar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\toolbar.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\wincore.h"
 # End Source File
 # End Group
 # End Target

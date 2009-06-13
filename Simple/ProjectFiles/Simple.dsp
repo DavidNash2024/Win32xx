@@ -92,15 +92,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\main.cpp
+SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\SimpleApp.cpp
+SOURCE=..\src\Resource.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\View.cpp
+SOURCE=..\src\SimpleApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\View.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -108,31 +112,27 @@ SOURCE=.\View.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\resource.h
+SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\SimpleApp.h
+SOURCE=..\src\SimpleApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\View.h
+SOURCE=..\src\View.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-# Begin Source File
-
-SOURCE=.\Resource.rc
-# End Source File
 # End Group
 # Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\wincore.h"
 # End Source File
 # End Group
 # End Target

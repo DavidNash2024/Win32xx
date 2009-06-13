@@ -178,19 +178,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Button.cpp"
+				RelativePath="..\src\Button.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\main.cpp"
+				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MainWin.cpp"
+				RelativePath="..\src\MainWin.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SubApp.cpp"
+				RelativePath="..\src\SubApp.cpp"
 				>
 			</File>
 		</Filter>
@@ -200,15 +200,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Button.h"
+				RelativePath="..\src\Button.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MainWin.h"
+				RelativePath="..\src\MainWin.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SubApp.h"
+				RelativePath="..\src\SubApp.h"
 				>
 			</File>
 		</Filter>
@@ -222,7 +222,7 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>

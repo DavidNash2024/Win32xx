@@ -92,23 +92,27 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\main.cpp
+SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Mainfrm.cpp
+SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\SplitterApp.cpp
+SOURCE=..\src\Resource.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\SplitterPanes.cpp
+SOURCE=..\src\SplitterApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Views.cpp
+SOURCE=..\src\SplitterPanes.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Views.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -116,75 +120,63 @@ SOURCE=.\Views.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\Mainfrm.h
+SOURCE=..\src\Mainfrm.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\resource.h
+SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\resrc1.h
+SOURCE=..\src\SplitterApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\SplitterApp.h
+SOURCE=..\src\SplitterPanes.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\SplitterPanes.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Views.h
+SOURCE=..\src\Views.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-# Begin Source File
-
-SOURCE=.\Resource.rc
-# End Source File
 # End Group
 # Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE="..\..\Win32++\default_resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE="..\..\Win32++\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Frame.h"
+SOURCE="..\..\Win32++\docking.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\GDI.h"
+SOURCE="..\..\Win32++\frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Rebar.h"
+SOURCE="..\..\Win32++\gdi.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Splitter.h"
+SOURCE="..\..\Win32++\rebar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Statusbar.h"
+SOURCE="..\..\Win32++\statusbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Toolbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\toolbar.h"
 # End Source File
 # End Group
 # End Target

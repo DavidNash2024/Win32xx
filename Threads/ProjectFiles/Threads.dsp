@@ -92,23 +92,27 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\main.cpp
+SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainWnd.cpp
+SOURCE=..\src\MainWnd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\TestWnd.cpp
+SOURCE=..\src\TestWnd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Thread.cpp
+SOURCE=..\src\Thread.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadApp.cpp
+SOURCE=..\src\ThreadApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Threads.rc
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -116,39 +120,35 @@ SOURCE=.\ThreadApp.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\MainWnd.h
+SOURCE=..\src\MainWnd.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\resource.h
+SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\TestWnd.h
+SOURCE=..\src\TestWnd.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Thread.h
+SOURCE=..\src\Thread.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ThreadApp.h
+SOURCE=..\src\ThreadApp.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-# Begin Source File
-
-SOURCE=.\Threads.rc
-# End Source File
 # End Group
 # Begin Group "Win32++"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\Win32++\wincore.h"
 # End Source File
 # End Group
 # End Target

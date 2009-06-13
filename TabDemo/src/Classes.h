@@ -7,8 +7,8 @@
 #define CLASSES_H
 
 
-#include "../Win32++/treeview.h"
-#include "../Win32++/tab.h"
+#include "../../Win32++/treeview.h"
+#include "../../Win32++/tab.h"
 #include "resource.h"
 
 

@@ -1,7 +1,7 @@
 [Project]
 FileName=TabDemo_DEBUG.dev
 Name=TabDemo
-UnitCount=19
+UnitCount=22
 Type=0
 Ver=1
 ObjFiles=
@@ -99,9 +99,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\Win32++\WinCore.h
+FileName=Files.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -109,9 +109,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\Win32++\Default_Resource.h
+FileName=Classes.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -119,9 +119,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\Win32++\Dialog.h
+FileName=Classes.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -129,9 +129,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\Win32++\Frame.h
+FileName=Files.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -139,7 +139,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\Win32++\GDI.h
+FileName=..\..\Win32++\default_resource.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -149,7 +149,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\Win32++\Rebar.h
+FileName=..\..\Win32++\dialog.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -159,7 +159,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\Win32++\Statusbar.h
+FileName=..\..\Win32++\frame.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -169,7 +169,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\Win32++\Toolbar.h
+FileName=..\..\Win32++\gdi.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -197,9 +197,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=Files.cpp
+FileName=..\..\Win32++\listview.h
 CompileCpp=1
-Folder=Source
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -207,9 +207,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=Classes.cpp
+FileName=..\..\Win32++\rebar.h
 CompileCpp=1
-Folder=Source
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -217,9 +217,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=Classes.h
+FileName=..\..\Win32++\statusbar.h
 CompileCpp=1
-Folder=Header
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -227,9 +227,39 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=Files.h
+FileName=..\..\Win32++\tab.h
 CompileCpp=1
-Folder=Header
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit20]
+FileName=..\..\Win32++\toolbar.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=..\..\Win32++\treeview.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit22]
+FileName=..\..\Win32++\wincore.h
+CompileCpp=1
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

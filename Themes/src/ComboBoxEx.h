@@ -5,7 +5,7 @@
 #ifndef COMBOBOXEX_H
 #define COMBOBOXEX_H
 
-#include "../Win32++/wincore.h"
+#include "../../Win32++/wincore.h"
 
 
 // Declaration of the CComboBoxEx class

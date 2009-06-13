@@ -7,8 +7,8 @@
 #define FILES_H
 
 
-#include "../Win32++/listview.h"
-#include "../Win32++/tab.h"
+#include "../../Win32++/listview.h"
+#include "../../Win32++/tab.h"
 #include "resource.h"
 
 

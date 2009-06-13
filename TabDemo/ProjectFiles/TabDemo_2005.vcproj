@@ -206,61 +206,27 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\Classes.cpp"
+				RelativePath="..\src\Classes.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Files.cpp"
+				RelativePath="..\src\Files.cpp"
 				>
 			</File>
 			<File
-				RelativePath="main.cpp"
+				RelativePath="..\src\main.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Mainfrm.cpp"
+				RelativePath="..\src\Mainfrm.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\TabDemoApp.cpp"
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TabDemoApp.cpp"
 				>
 			</File>
 		</Filter>
@@ -269,23 +235,23 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\Classes.h"
+				RelativePath="..\src\Classes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Files.h"
+				RelativePath="..\src\Files.h"
 				>
 			</File>
 			<File
-				RelativePath="Mainfrm.h"
+				RelativePath="..\src\Mainfrm.h"
 				>
 			</File>
 			<File
-				RelativePath="resource.h"
+				RelativePath="..\src\resource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\TabDemoApp.h"
+				RelativePath="..\src\TabDemoApp.h"
 				>
 			</File>
 		</Filter>
@@ -293,88 +259,52 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath=".\res\Enhanced.ico"
-				>
-			</File>
-			<File
-				RelativePath="Resource.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\res\Toolbar.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\Toolbar24.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\Toolbar24_d.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\Toolbar24_h.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\Win32++.manifest"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\..\Win32++\default_resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\dockable.h"
+				RelativePath="..\..\Win32++\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h"
+				RelativePath="..\..\Win32++\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h"
+				RelativePath="..\..\Win32++\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Rebar.h"
+				RelativePath="..\..\Win32++\listview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Statusbar.h"
+				RelativePath="..\..\Win32++\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\tab.h"
+				RelativePath="..\..\Win32++\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Toolbar.h"
+				RelativePath="..\..\Win32++\tab.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>

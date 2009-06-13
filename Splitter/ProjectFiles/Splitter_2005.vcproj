@@ -209,80 +209,27 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="main.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Mainfrm.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="SplitterApp.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\SplitterPanes.cpp"
+				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Views.cpp"
+				RelativePath="..\src\Mainfrm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\SplitterApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\SplitterPanes.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Views.cpp"
 				>
 			</File>
 		</Filter>
@@ -291,31 +238,23 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="Mainfrm.h"
+				RelativePath="..\src\Mainfrm.h"
 				>
 			</File>
 			<File
-				RelativePath="Windows\Menubar.h"
+				RelativePath="..\src\resource.h"
 				>
 			</File>
 			<File
-				RelativePath="resource.h"
+				RelativePath="..\src\SplitterApp.h"
 				>
 			</File>
 			<File
-				RelativePath="resrc1.h"
+				RelativePath="..\src\SplitterPanes.h"
 				>
 			</File>
 			<File
-				RelativePath="SplitterApp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SplitterPanes.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Views.h"
+				RelativePath="..\src\Views.h"
 				>
 			</File>
 		</Filter>
@@ -323,48 +262,44 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath="Resource.rc"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\Default_Resource.h"
+				RelativePath="..\..\Win32++\default_resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\..\Win32++\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h"
+				RelativePath="..\..\Win32++\docking.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h"
+				RelativePath="..\..\Win32++\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Rebar.h"
+				RelativePath="..\..\Win32++\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Splitter.h"
+				RelativePath="..\..\Win32++\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Statusbar.h"
+				RelativePath="..\..\Win32++\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Toolbar.h"
+				RelativePath="..\..\Win32++\toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>

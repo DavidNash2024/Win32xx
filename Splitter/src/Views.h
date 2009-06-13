@@ -9,8 +9,8 @@
 
 #include <tchar.h>
 
-#include "../Win32++/listview.h"
-#include "../Win32++/treeview.h"
+#include "../../Win32++/listview.h"
+#include "../../Win32++/treeview.h"
 
 
 class CViewSimple : public CWnd
