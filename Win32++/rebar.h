@@ -591,13 +591,11 @@ namespace Win32xx
 		{
 			rbbi.fStyle |= RBBS_GRIPPERALWAYS;
 			rbbi.fStyle &= ~RBBS_NOGRIPPER;
-		//	rbbi.fStyle &= ~RBBS_FIXEDSIZE;
 		}
 		else
 		{
 			rbbi.fStyle &= ~RBBS_GRIPPERALWAYS;
 			rbbi.fStyle |= RBBS_NOGRIPPER;
-		//	rbbi.fStyle |= RBBS_FIXEDSIZE;
 		}
 		SetBandInfo(nBand, rbbi);
 	}

@@ -224,7 +224,7 @@ namespace Win32xx
 		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
-		virtual void AddToolbarBand(CToolbar& TB);
+		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle = 0);
 		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
@@ -1537,7 +1537,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	inline void CFrame::AddToolbarBand(CToolbar& TB)
+	inline void CFrame::AddToolbarBand(CToolbar& TB, DWORD dwStyle /* = 0 */)
 	{
 		// Adds a Toolbar to the rebar control
 
@@ -1554,7 +1554,7 @@ namespace Win32xx
 		rbbi.cx         = sz.cx +2;
 		rbbi.cxMinChild = sz.cx +2;
 
-		rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT /*| RBBS_GRIPPERALWAYS*/;
+		rbbi.fStyle     = dwStyle;
 		rbbi.hwndChild  = TB;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
@@ -1950,8 +1950,8 @@ namespace Win32xx
 		}
 		
 		if (!IsMenubarUsed()) ::SetMenu(m_hWnd, GetFrameMenu());
-		if (m_bUseToolbar)	ShowToolbar();	
 		if (m_bUseThemes)	SetTheme();
+		if (m_bUseToolbar)	ShowToolbar();	
 
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
@@ -2730,17 +2730,20 @@ namespace Win32xx
 		CRebar& RB = GetRebar();
 		int nBand = RB.GetBand(GetMenubar());
 		CRect rcBorder = RB.GetBandBorders(nBand);
-		int Width = rcClient.Width() - rcBorder.Width() - 2;
 
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, rbbi);
+
+		int Width;
 		if (GetRebar().GetRebarTheme().UseThemes)
-		{
-			rbbi.cxMinChild = Width;
-			rbbi.cx         = Width;
-		}
+			Width = rcClient.Width() - rcBorder.Width() - 2;
+		else
+			Width = GetMenubar().GetMaxSize().cx;
+
+		rbbi.cxMinChild = Width;
+		rbbi.cx         = Width;
 
 		RB.SetBandInfo(nBand, rbbi); 
 	}
@@ -2951,18 +2954,21 @@ namespace Win32xx
 	{
 		if (IsRebarSupported() && m_bUseRebar)
 		{
-			AddToolbarBand(GetToolbar());	// Create the toolbar inside rebar
+			AddToolbarBand(GetToolbar(), RBBS_BREAK);	// Create the toolbar inside rebar
 		}
 		else	
 			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
 			
 		SetupToolbar();
 		
-		if (IsRebarSupported() && m_bUseRebar)
+		if (IsRebarSupported() && m_bUseRebar && m_bUseThemes)
 		{
-			// Hide gripper for single toolbar
-			if (GetRebar().GetBandCount() <= 2)
-				GetRebar().ShowGripper(GetRebar().GetBand(GetToolbar()), FALSE);
+			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().LockMenuBand)
+			{
+				// Hide gripper for single toolbar
+				if (GetRebar().GetBandCount() <= 2)
+					GetRebar().ShowGripper(GetRebar().GetBand(GetToolbar()), FALSE);
+			}
 		}
 		
 		if (GetToolbar().GetToolbarData().size() > 0)

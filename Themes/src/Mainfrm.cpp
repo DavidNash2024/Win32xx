@@ -255,7 +255,9 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_MAUVE, 0);
 		}
 		break;
-	} 
+	}
+
+	RecalcLayout();
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
