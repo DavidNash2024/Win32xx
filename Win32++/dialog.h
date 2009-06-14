@@ -196,12 +196,15 @@ namespace Win32xx
 				return TRUE;
 			default:
 				{
-					OnCommand(wParam, lParam);
-
 					// Refelect this message if it's from a control
-					CWnd* Wnd = FromHandle((HWND)lParam);
-					if (Wnd != NULL)
-						Wnd->OnMessageReflect(uMsg, wParam, lParam);
+					CWnd* pWnd = FromHandle((HWND)lParam);
+					if (pWnd != NULL)
+						if (pWnd->OnMessageReflect(uMsg, wParam, lParam))
+							return TRUE;
+
+					// Handle user commands
+					if (OnCommand(wParam, lParam))
+						return TRUE;
 				}
 				break;  // Some commands require default processing
 	        }
@@ -210,26 +213,19 @@ namespace Win32xx
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* WndFrom = FromHandle(hwndFrom);
-				if (WndFrom != NULL)
-				{
-					BOOL bReturn = (BOOL)WndFrom->OnNotifyReflect(wParam, lParam);
-					if (bReturn) return TRUE;
-				}
+				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (m_hWnd != ::GetParent(hwndFrom))
-				{
-					// Some controls (eg ListView) have child windows.
-					// Reflect those notifications too.
-					CWnd* WndFromParent = FromHandle(::GetParent(hwndFrom));
-					if (WndFromParent != NULL)
+				if (pWndFrom != NULL)
+				{	
+					// Only reflect messages from the parent to avoid possible double handling
+					if (::GetParent(hwndFrom) == m_hWnd)
 					{
-						BOOL bReturn = (BOOL)WndFromParent->OnNotifyReflect(wParam, lParam);
+						BOOL bReturn = pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (bReturn) return TRUE;
 					}
 				}
 			}
-			return (TRUE == OnNotify(wParam, lParam) );
+			return OnNotify(wParam, lParam);
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:

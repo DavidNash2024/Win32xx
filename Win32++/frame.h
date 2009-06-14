@@ -2737,7 +2737,7 @@ namespace Win32xx
 		RB.GetBandInfo(nBand, rbbi);
 
 		int Width;
-		if (GetRebar().GetRebarTheme().UseThemes)
+		if ((GetRebar().GetRebarTheme().UseThemes) && (GetRebar().GetRebarTheme().LockMenuBand))
 			Width = rcClient.Width() - rcBorder.Width() - 2;
 		else
 			Width = GetMenubar().GetMaxSize().cx;
