@@ -387,7 +387,7 @@ namespace Win32xx
 
 		// convert rectangle to desktop coordinates
 		::MapWindowPoints(m_hWnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
-
+		
 		// Position popup above toolbar if it won't fit below
 		TPMPARAMS tpm;
 		tpm.cbSize = sizeof(TPMPARAMS);
@@ -1096,29 +1096,34 @@ namespace Win32xx
 			// This is the notification that a hot item change is about to occur
 			// This is used to bring up a new popup menu when required
 			{
-				DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
-				if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
+				CPoint pt = GetCursorPos();
+				if (m_hWnd == WindowFromPoint(pt))	// Menubar window must be on top
 				{
-					int nButton = HitTest();
-					if ((m_bMenuActive) && (nButton != m_nHotItem))
+					DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
+					if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
 					{
-						::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+						int nButton = HitTest();
+						if ((m_bMenuActive) && (nButton != m_nHotItem))
+						{
+							::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+							m_nHotItem = nButton;
+							::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
+
+							//Always use PostMessage for USER_POPUPMENU (not SendMessage)
+							::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+						}
 						m_nHotItem = nButton;
-						::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
-
-						//Always use PostMessage for USER_POPUPMENU (not SendMessage)
-						::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
 					}
-					m_nHotItem = nButton;
-				}
+					
 
-				// Handle escape from popup menu
-				if ((flag & HICF_LEAVING) && m_bKeyMode)
-				{
-					m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
-					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
+					// Handle escape from popup menu
+					if ((flag & HICF_LEAVING) && m_bKeyMode)
+					{
+						m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
+						::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
+					}
+				
 				}
-
 				break;
 			} //case TBN_HOTITEMCHANGE:
 
@@ -1606,8 +1611,8 @@ namespace Win32xx
 		// Draw the checkmark's background rectangle first
 		if (m_ThemeMenu.UseThemes)
 		{
-			int Iconx = 0, Icony = 0;
-			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+			int Iconx = 16, Icony = 16;
+			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 			int offset = -1 + (rc.bottom - rc.top - Icony)/2;
 			int height = rc.bottom - rc.top;
 			CRect rcBk;
@@ -1934,9 +1939,14 @@ namespace Win32xx
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
 
-		// Set the menu
+		// Setup the menu
 		SetFrameMenu(IDW_MAIN);
 		UpdateMRUMenu();
+		if (!m_bUseToolbar)
+		{
+			::CheckMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			::EnableMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_GRAYED);
+		}
 
 		if (IsRebarSupported() && m_bUseRebar)
 		{
@@ -1980,9 +1990,9 @@ namespace Win32xx
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		CDC DrawDC = pdis->hDC;
 
-		int Iconx = 0;
-		int Icony = 0;
-		ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+		int Iconx = 16;
+		int Icony = 16;
+		if (m_himlMenu)	ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 		int BarWidth = m_ThemeMenu.UseThemes? Iconx + 6 : 0;
 
 		// Draw the side bar
@@ -2169,8 +2179,6 @@ namespace Win32xx
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
 
-		if (0 ==ImageList_GetImageCount(m_himlMenu)) return;
-
 		HMENU hMenu = (HMENU)wParam;
 
 		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; ++i)
@@ -2253,9 +2261,9 @@ namespace Win32xx
 			GetTextExtentPoint32(DesktopDC, pmd->Text, lstrlen(pmd->Text), &size);
 
 			// Calculate the size of the icon
-			int Iconx = 0;
-			int Icony = 0;
-			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+			int Iconx = 16;
+			int Icony = 16;
+			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 
 			pmis->itemHeight = 2+ MAX(MAX(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
 			pmis->itemWidth = size.cx + MAX(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
@@ -2958,8 +2966,8 @@ namespace Win32xx
 		}
 		else	
 			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
-			
-		SetupToolbar();
+
+		SetupToolbar();	
 		
 		if (IsRebarSupported() && m_bUseRebar && m_bUseThemes)
 		{

@@ -10,3 +10,7 @@ In this demo CMyProptertySheet inherrits from CMyPropertySheet. It displays
 two property pages, namely CButtonPage and CComboPage. The demo shows how a
 Modal, Modeless or Wizard property sheet can be displayed.
  
+The files in the src directory are intended as templates for other programs.  
+The library files in the Win32++ directory are intended to be used without 
+modification.
+ 

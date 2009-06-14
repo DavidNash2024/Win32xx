@@ -9,9 +9,9 @@ Classes derived from CWnd are used to create the windows.  The files
 for this are located in the Win32++ directory, and the code
 is lcoated in the Win32xx namespace.
 
-The CMyDialog, CFormApp and CMainFrame classes are intended as 
-templates for other programs.  The classes within the Win32xx 
-namespace are intended to be used without modification.
+The files in the src directory are intended as templates for other programs.  
+The library files in the Win32++ directory are intended to be used without 
+modification.
 
 Dialogs are easy to create, provided we have access to a resource 
 editor to build the resource script file for us (often called
