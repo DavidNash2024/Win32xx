@@ -93,9 +93,12 @@ namespace Win32xx
 		virtual void SelectPage(int iPage);
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
+		virtual void SetTabImage(UINT nTab, int iImage);
 		virtual void SetTabsAtTop(BOOL bTop);
+		virtual void SetTabText(UINT nTab, LPCTSTR szText);
 		virtual void ShowListMenu();
 		virtual void ShowListDialog();
+		virtual void SwapTabs(UINT nTab1, UINT nTab2);
 
 		// Attributes
 		HIMAGELIST GetImageList() const { return m_himlTab; }
@@ -774,7 +777,6 @@ namespace Win32xx
 			return;
 
 		// Remove the tab
-	//	DeleteItem(iPage);
 		TabCtrl_DeleteItem(m_hWnd, iPage);
 
 		// Remove the TapPageInfo entry
@@ -817,6 +819,20 @@ namespace Win32xx
 		}
 	}
 
+	inline void CTab::SetTabImage(UINT nTab, int iImage)
+	{
+		// Allows the image to be changed on an existing tab
+		if (nTab < GetAllTabs().size())
+		{
+			TCITEM Item = {0};
+			Item.mask = TCIF_TEXT;
+			Item.iImage = iImage;
+
+			if (TabCtrl_SetItem(m_hWnd, nTab, &Item))
+				m_vTabPageInfo[nTab].iImage = iImage;
+		}
+	}
+
 	inline void CTab::SetTabsAtTop(BOOL bTop)
 	// Positions the tabs at the top or botttom of the control
 	{
@@ -844,6 +860,25 @@ namespace Win32xx
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
+		}
+	}
+
+	inline void CTab::SetTabText(UINT nTab, LPCTSTR szText)
+	{
+		// Allows the text to be changed on an existing tab
+		if (nTab < GetAllTabs().size())
+		{
+			TCITEM Item = {0};
+			TCHAR* Text = new TCHAR[MAX_MENU_STRING+1];
+			if (Text == NULL) throw std::bad_alloc();
+			lstrcpyn(Text, szText, MAX_MENU_STRING);
+			Item.mask = TCIF_TEXT;
+			Item.pszText = Text;
+
+			if (TabCtrl_SetItem(m_hWnd, nTab, &Item))
+				lstrcpyn(m_vTabPageInfo[nTab].szTitle, Text, MAX_MENU_STRING);
+				
+			delete [] Text;
 		}
 	}
 
@@ -928,6 +963,24 @@ namespace Win32xx
 
 		int iSelected = MyDialog.DoModal();
 		if (iSelected >= 0) SelectPage(iSelected);
+	}
+
+	inline void CTab::SwapTabs(UINT nTab1, UINT nTab2)
+	{
+		if ((nTab1 < GetAllTabs().size()) && (nTab2 < GetAllTabs().size()) && (nTab1 != nTab2))
+		{
+			int iPage = GetCurSel();
+			TabPageInfo T1 = GetTabPageInfo(nTab1);
+			TabPageInfo T2 = GetTabPageInfo(nTab2);
+
+			SetTabImage(nTab1, T2.iImage);
+			SetTabImage(nTab2, T1.iImage);
+			SetTabText(nTab1, T2.szTitle);
+			SetTabText(nTab2, T1.szTitle);
+			m_vTabPageInfo[nTab1] = T2;
+			m_vTabPageInfo[nTab2] = T1;
+			SelectPage(iPage);		
+		}
 	}
 
 	inline LRESULT CTab::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
