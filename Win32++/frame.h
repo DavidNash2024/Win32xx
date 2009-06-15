@@ -1441,8 +1441,7 @@ namespace Win32xx
 			ImageList_GetIconSize(m_himlMenu, &Oldcx, &Oldcy);
 			if ((iImageWidth != Oldcx) || (iImageHeight != Oldcy))
 			{
-				// The new icons are a different size to the old ones in m_himlToolbar,
-				TRACE(_T("WARNING: Unable to add new icons of a different size\n"));
+				TRACE(_T("Unable to add icons. The new icons are a different size to the old ones"));
 				return m_vMenuIcons.size();
 			}
 		}
@@ -2961,9 +2960,7 @@ namespace Win32xx
 	inline void CFrame::ShowToolbar()
 	{
 		if (IsRebarSupported() && m_bUseRebar)
-		{
 			AddToolbarBand(GetToolbar(), RBBS_BREAK);	// Create the toolbar inside rebar
-		}
 		else	
 			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
 
@@ -2986,15 +2983,13 @@ namespace Win32xx
 			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
 				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
-			// Add the icons for popup menu items unless the've been added already
-			if (0 == m_vMenuIcons.size())
-				AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+			// Add the icons for popup menu 
+			AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
 		}
 		else
 		{
 			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
 		}
-
 	}
 
 	inline void CFrame::UpdateMRUMenu()

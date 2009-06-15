@@ -372,9 +372,6 @@ void CMainFrame::SetupToolbar()
 	// Set the three image lists for the first toolbar
 	SetToolbarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
-	// Set the icons for popup menu items
-	SetMenuIcons(GetToolbar().GetToolbarData(), RGB(255, 0, 255), IDB_TOOLBAR_SML, 0);
-
 	// Add the two other toolbars if we use rebars
 	if (IsRebarUsed())
 	{

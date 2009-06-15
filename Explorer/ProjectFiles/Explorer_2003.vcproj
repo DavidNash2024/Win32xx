@@ -199,6 +199,39 @@
 		<Filter
 			Name="Win32++"
 			Filter="">
+			<File
+				RelativePath="..\..\Win32++\default_resource.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\dialog.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\docking.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\frame.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\gdi.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\listview.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\rebar.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\statusbar.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\toolbar.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\treeview.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\wincore.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

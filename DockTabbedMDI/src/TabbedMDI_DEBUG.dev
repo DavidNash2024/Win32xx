@@ -238,9 +238,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
-FileName=..\..\Themes\ComboBoxEx.cpp
+FileName=..\..\Win32++\docking.h
 CompileCpp=1
-Folder=Source
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -307,26 +307,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=..\..\Themes\ComboBoxEx.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit28]
-FileName=..\..\Win32++\docking.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit29]
 FileName=..\..\Win32++\tab.h
 CompileCpp=1
 Folder=Win32++
@@ -336,8 +316,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit32]
-FileName=MyTabbedMDI.cpp
+[Unit28]
+FileName=DockTabbedMDI.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -346,8 +326,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit33]
-FileName=MyTabbedMDI.h
+[Unit29]
+FileName=DockTabbedMDI.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -356,7 +336,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit34]
+[Unit32]
 FileName=Rect.cpp
 CompileCpp=1
 Folder=Source
@@ -366,7 +346,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit35]
+[Unit33]
 FileName=Rect.h
 CompileCpp=1
 Folder=Header
@@ -376,7 +356,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit36]
+[Unit34]
 FileName=TabbedMDIApp.cpp
 CompileCpp=1
 Folder=Source
@@ -386,10 +366,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit37]
+[Unit35]
 FileName=TabbedMDIApp.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit36]
+FileName=ComboBoxEx.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit37]
+FileName=ComboBoxEx.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -417,7 +417,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=DockTabbedMDI.cpp
+FileName=MyTabbedMDI.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -427,7 +427,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit31]
-FileName=DockTabbedMDI.h
+FileName=MyTabbedMDI.h
 CompileCpp=1
 Folder=Header
 Compile=1

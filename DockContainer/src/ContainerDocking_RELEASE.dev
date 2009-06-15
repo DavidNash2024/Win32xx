@@ -227,26 +227,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\..\Themes\ComboBoxEx.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit20]
-FileName=..\..\Themes\ComboBoxEx.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit21]
 FileName=..\..\Win32++\wincore.h
 CompileCpp=1
 Folder=Win32++
@@ -256,7 +236,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit20]
 FileName=..\..\Win32++\dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -266,7 +246,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit21]
 FileName=..\..\Win32++\frame.h
 CompileCpp=1
 Folder=Win32++
@@ -276,7 +256,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit22]
 FileName=..\..\Win32++\gdi.h
 CompileCpp=1
 Folder=Win32++
@@ -286,7 +266,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit23]
 FileName=..\..\Win32++\listview.h
 CompileCpp=1
 Folder=Win32++
@@ -296,7 +276,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit24]
 FileName=..\..\Win32++\rebar.h
 CompileCpp=1
 Folder=Win32++
@@ -306,7 +286,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit25]
 FileName=..\..\Win32++\statusbar.h
 CompileCpp=1
 Folder=Win32++
@@ -316,7 +296,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit28]
+[Unit26]
 FileName=..\..\Win32++\toolbar.h
 CompileCpp=1
 Folder=Win32++
@@ -326,7 +306,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit29]
+[Unit27]
 FileName=..\..\Win32++\treeview.h
 CompileCpp=1
 Folder=Win32++
@@ -336,7 +316,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit30]
+[Unit28]
 FileName=..\..\Win32++\tab.h
 CompileCpp=1
 Folder=Win32++
@@ -346,10 +326,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit31]
+[Unit29]
 FileName=..\..\Win32++\docking.h
 CompileCpp=1
 Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=ComboBoxEx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit31]
+FileName=ComboBoxEx.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
