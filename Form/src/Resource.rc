@@ -1,0 +1,204 @@
+// Microsoft Visual C++ generated resource script.
+//
+
+#include "resource.h"
+#include "windows.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       24      DISCARDABLE      "res/Win32++.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New...",                      IDM_FILE_NEW
+        MENUITEM "&Open...",                    IDM_FILE_OPEN
+        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
+        MENUITEM SEPARATOR
+        MENUITEM "&Print",                      IDM_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
+        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Select"
+    BEGIN
+        MENUITEM "Radio A",                     ID_RADIO_A
+        MENUITEM "Radio B",                     ID_RADIO_B
+        MENUITEM "Radio C",                     ID_RADIO_C
+        MENUITEM SEPARATOR
+        MENUITEM "Check A",                     ID_CHECK_A
+        MENUITEM "Check B",                     ID_CHECK_B
+        MENUITEM "Check C",                     ID_CHECK_C
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "res/Dialog.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDW_MAIN                BITMAP                  "res/toolbar.bmp"
+IDB_BITMAP1             BITMAP                  "res/Zapotec.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDW_ABOUT DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
+    CTEXT           "Form Application",IDC_STATIC,60,22,64,11
+    ICON            IDW_MAIN,0,4,4,20,20
+END
+
+IDD_DIALOG1 DIALOGEX 0, 0, 321, 199
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
+EXSTYLE WS_EX_CLIENTEDGE
+FONT 8, "MS Shell Dlg", 0, 0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,241,153,50,16
+    CONTROL         "Radio_A",ID_RADIO_A,"Button",BS_AUTORADIOBUTTON,30,24,38,
+                    10
+    CONTROL         "Radio_B",ID_RADIO_B,"Button",BS_AUTORADIOBUTTON,30,36,38,
+                    10
+    CONTROL         "Radio_C",ID_RADIO_C,"Button",BS_AUTORADIOBUTTON,30,48,38,
+                    10
+    EDITTEXT        IDC_EDIT1,120,82,84,35,ES_MULTILINE | ES_AUTOHSCROLL |
+                    NOT WS_BORDER,WS_EX_STATICEDGE
+    CONTROL         "Check Box A",ID_CHECK_A,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,30,114,55,10
+    CONTROL         "Check Box B",ID_CHECK_B,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,30,126,55,10
+    CONTROL         "Check Box C",ID_CHECK_C,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,30,139,55,10
+    LISTBOX         IDC_LIST1,120,23,84,35,LBS_SORT | LBS_NOINTEGRALHEIGHT |
+                    NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "Button",IDC_BUTTON1,30,82,49,11
+    CONTROL         "",IDC_RICHEDIT1,"RichEdit",ES_MULTILINE |
+                    ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP,120,142,84,35
+    CONTROL         250,IDC_STATIC1,"Static",SS_BITMAP,231,7,64,59
+    GROUPBOX        "Static Window",IDC_STATIC2,226,78,78,51,BS_CENTER
+    LTEXT           "Actions are displayed here",IDC_STATIC3,229,91,71,35
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDW_MAIN ACCELERATORS
+BEGIN
+    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,         VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "Form Window"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW            "Create a New Document"
+    IDM_FILE_OPEN           "Open Existing Document"
+    IDM_FILE_SAVE           "Save the Document"
+    IDM_FILE_SAVEAS         "Save the Document with a new name"
+    IDM_FILE_PRINT          "Print the Document"
+    IDM_FILE_EXIT           "End the Program"
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
+    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
+    IDM_EDIT_DELETE         "Erase the selected Contents"
+    IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    ID_CHECK_A              "Hint for CheckA"
+    ID_CHECK_B              "Hint for CheckB"
+    ID_CHECK_C              "Hint for CheckC"
+    ID_RADIO_A              "Radio Button A"
+    ID_RADIO_B              "Radio Button B"
+    ID_RADIO_C              "Radio Button C"
+END
+
+STRINGTABLE
+BEGIN
+    SC_CLOSE                "Close the Window"
+    SC_MAXIMIZE             "Maximize the Window"
+    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MOVE                 "Move the Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
+    SC_RESTORE              "Restore the Window"
+    SC_SIZE                 "Resize the Window"
+END
+
+
