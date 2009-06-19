@@ -226,6 +226,7 @@ namespace Win32xx
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle = 0);
 		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
+		virtual void CreateToolbar();
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
@@ -258,7 +259,8 @@ namespace Win32xx
 		virtual void SetupToolbar();
 		virtual void SetTheme();	
 		virtual void SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
-		virtual void ShowToolbar();
+		virtual void ShowStatusbar(BOOL bShow);
+		virtual void ShowToolbar(BOOL bShow);
 		virtual void UpdateMRUMenu();
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -287,6 +289,8 @@ namespace Win32xx
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		BOOL m_bUseToolbar;					// set to TRUE if the toolbar is used
+		BOOL m_bShowStatusbar;
+		BOOL m_bShowToolbar;
 		ThemeMenu m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
@@ -1341,7 +1345,8 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE), 
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE),
+						m_bShowStatusbar(TRUE), m_bShowToolbar(TRUE),
 						m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), 
 						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
@@ -1574,7 +1579,7 @@ namespace Win32xx
 		if(0 != szText)
 			GetToolbar().SetButtonText(nID, szText);
 
-		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolbar")); 
+		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolbar\n")); 
 	}
 
 	inline void CFrame::AdjustFrameRect(RECT rcView) const
@@ -1598,6 +1603,41 @@ namespace Win32xx
 
 		// Calculate final rect size, and reposition frame 
 		SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
+	}
+
+	inline void CFrame::CreateToolbar()
+	{
+		if (IsRebarSupported() && m_bUseRebar)
+			AddToolbarBand(GetToolbar(), RBBS_BREAK);	// Create the toolbar inside rebar
+		else	
+			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
+
+		SetupToolbar();	
+		
+		if (IsRebarSupported() && m_bUseRebar && m_bUseThemes)
+		{
+			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().LockMenuBand)
+			{
+				// Hide gripper for single toolbar
+				if (GetRebar().GetBandCount() <= 2)
+					GetRebar().ShowGripper(GetRebar().GetBand(GetToolbar()), FALSE);
+			}
+		}
+		
+		if (GetToolbar().GetToolbarData().size() > 0)
+		{
+			// Set the toolbar images (if not already set in SetupToolbar)
+			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
+			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
+				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+
+			// Add the icons for popup menu 
+			AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+		}
+		else
+		{
+			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
+		}
 	}
 
 	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
@@ -1904,27 +1944,27 @@ namespace Win32xx
 	{
 		m_tsKeyName = szKeyName;
 
-		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
+		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Settings");
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 		if (hKey)
 		{
 			DWORD dwType = REG_BINARY;
 			DWORD BufferSize = sizeof(DWORD);
-			DWORD dwTop, dwLeft, dwWidth, dwHeight;
+			DWORD dwTop, dwLeft, dwWidth, dwHeight, dwStatusbar, dwToolbar;
 			RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
 			RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
 			RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
 			RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
+			RegQueryValueEx(hKey, _T("Statusbar"), NULL, &dwType, (LPBYTE)&dwStatusbar, &BufferSize);
+			RegQueryValueEx(hKey, _T("Toolbar"), NULL, &dwType, (LPBYTE)&dwToolbar, &BufferSize);
 
-			// Get current desktop size to ensure reasonable a window position
-			CRect rcDesktop;
-			SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-			m_rcPosition.top = MIN(dwTop, (UINT)rcDesktop.bottom - 30);
-			m_rcPosition.left = MIN(dwLeft, (UINT)rcDesktop.right - 90);
+			m_rcPosition.top = dwTop;
+			m_rcPosition.left = dwLeft;
 			m_rcPosition.bottom = m_rcPosition.top + dwHeight;
 			m_rcPosition.right = m_rcPosition.left + dwWidth;
-
+			m_bShowStatusbar = dwStatusbar & 1;
+			m_bShowToolbar = dwToolbar & 1;
 			RegCloseKey(hKey);
 		}
 	}
@@ -1941,11 +1981,6 @@ namespace Win32xx
 		// Setup the menu
 		SetFrameMenu(IDW_MAIN);
 		UpdateMRUMenu();
-		if (!m_bUseToolbar)
-		{
-			::CheckMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-			::EnableMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_GRAYED);
-		}
 
 		if (IsRebarSupported() && m_bUseRebar)
 		{
@@ -1960,10 +1995,22 @@ namespace Win32xx
 		
 		if (!IsMenubarUsed()) ::SetMenu(m_hWnd, GetFrameMenu());
 		if (m_bUseThemes)	SetTheme();
-		if (m_bUseToolbar)	ShowToolbar();	
+		
+		// Create the Toolbar
+		if (m_bUseToolbar)
+		{
+			CreateToolbar();
+			if (!m_bShowToolbar) ShowToolbar(FALSE);
+		}
+		else
+		{
+			::CheckMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			::EnableMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_GRAYED);
+		}
 
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
+		if (!m_bShowStatusbar) ShowStatusbar(FALSE);
 
 		// Create the view window
 		if (NULL == GetView())
@@ -2197,6 +2244,10 @@ namespace Win32xx
 			mii.dwTypeData = szMenuItem;
 			mii.cch = MAX_MENU_STRING -1;
 
+			// Send message for menu updates
+			UINT menuItem = ::GetMenuItemID(hMenu, i);
+			SendMessage(UWM_UPDATE_COMMAND, (WPARAM)menuItem, 0);
+
 			// Specify owner-draw for the menu item type
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
 			{
@@ -2221,7 +2272,9 @@ namespace Win32xx
 					m_vMenuItemData.push_back(pItem);		// Store pItem in m_vMenuItemData
 					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 				}
-			}
+			} 
+			
+
 		}
 	}
 
@@ -2494,46 +2547,18 @@ namespace Win32xx
 		}
 	}
 
+
+
 	inline void CFrame::OnViewStatusbar()
 	{
-		if (::IsWindowVisible(GetStatusbar()))
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-			GetStatusbar().ShowWindow(SW_HIDE);
-		}
-		else
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
-			GetStatusbar().ShowWindow(SW_SHOW);
-		}
-
-		// Reposition the Windows
-		RecalcLayout();
-		Invalidate();
+		m_bShowStatusbar = !m_bShowStatusbar;
+		ShowStatusbar(m_bShowStatusbar);
 	}
 
 	inline void CFrame::OnViewToolbar()
 	{
-		if (GetToolbar().IsVisible())
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-			if (IsRebarUsed())
-				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
-			else
-				GetToolbar().ShowWindow(SW_HIDE);
-		}
-		else
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
-			if (IsRebarUsed())
-				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
-			else
-				GetToolbar().ShowWindow(SW_SHOW);
-		}
-
-		// Reposition the Windows
-		RecalcLayout();
-		Invalidate();
+		m_bShowToolbar = !m_bShowToolbar;
+		ShowToolbar(m_bShowToolbar);
 	}
 
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
@@ -2632,21 +2657,21 @@ namespace Win32xx
 		// Store the window position in the registry
 		if (!m_tsKeyName.empty())
 		{
+			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Settings");
+			HKEY hKey = NULL;
+			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				throw (CWinException(_T("RegCreateKeyEx Failed")));
+
 			WINDOWPLACEMENT Wndpl = {0};
 			Wndpl.length = sizeof(WINDOWPLACEMENT);
 			if (GetWindowPlacement(Wndpl))
 			{
 				// Get the Frame's window position
 				CRect rc = Wndpl.rcNormalPosition;
-				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Position");;
-				HKEY hKey = NULL;
 				DWORD dwTop = MAX(rc.top, 0);
 				DWORD dwLeft = MAX(rc.left, 0);
 				DWORD dwWidth = MAX(rc.Width(), 100);
 				DWORD dwHeight = MAX(rc.Height(), 50);
-
-				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 				if (RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
@@ -2659,9 +2684,19 @@ namespace Win32xx
 
 				if (RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
-
-				RegCloseKey(hKey);
 			}
+			
+			// Store the Toolbar and statusbar states
+			DWORD dwShowToolbar = m_bShowToolbar;
+			DWORD dwShowStatusbar = m_bShowStatusbar;
+
+			if (RegSetValueEx(hKey, _T("Toolbar"), 0, REG_DWORD, (LPBYTE)&dwShowToolbar, sizeof(DWORD)))
+				throw (CWinException(_T("RegSetValueEx Failed")));
+
+			if (RegSetValueEx(hKey, _T("Statusbar"), 0, REG_DWORD, (LPBYTE)&dwShowStatusbar, sizeof(DWORD)))
+				throw (CWinException(_T("RegSetValueEx Failed")));
+
+			RegCloseKey(hKey);
 
 			// Store the MRU entries in the registry
 			if (m_nMaxMRU > 0)
@@ -2957,39 +2992,45 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::ShowToolbar()
+	inline void CFrame::ShowStatusbar(BOOL bShow)
 	{
-		if (IsRebarSupported() && m_bUseRebar)
-			AddToolbarBand(GetToolbar(), RBBS_BREAK);	// Create the toolbar inside rebar
-		else	
-			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
-
-		SetupToolbar();	
-		
-		if (IsRebarSupported() && m_bUseRebar && m_bUseThemes)
+		if (bShow)
 		{
-			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().LockMenuBand)
-			{
-				// Hide gripper for single toolbar
-				if (GetRebar().GetBandCount() <= 2)
-					GetRebar().ShowGripper(GetRebar().GetBand(GetToolbar()), FALSE);
-			}
-		}
-		
-		if (GetToolbar().GetToolbarData().size() > 0)
-		{
-			// Set the toolbar images (if not already set in SetupToolbar)
-			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
-				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-
-			// Add the icons for popup menu 
-			AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
+			GetStatusbar().ShowWindow(SW_SHOW);
 		}
 		else
 		{
-			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
+			GetStatusbar().ShowWindow(SW_HIDE);
 		}
+
+		// Reposition the Windows
+		RecalcLayout();
+		Invalidate();
+	}
+
+	inline void CFrame::ShowToolbar(BOOL bShow)
+	{
+		if (bShow)	
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
+			if (IsRebarUsed())
+				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
+			else
+				GetToolbar().ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			if (IsRebarUsed())
+				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
+			else
+				GetToolbar().ShowWindow(SW_HIDE);
+		}
+
+		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+			GetRebar().MoveBandsLeft();
 	}
 
 	inline void CFrame::UpdateMRUMenu()

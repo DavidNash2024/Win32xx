@@ -469,9 +469,10 @@ namespace Win32xx
 			{
 				// Maximize the last band on each row
 				if (IsBandVisible(nBand))
+				{
 					::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0L);
-
-				OldrcTop = rc.top;
+					OldrcTop = rc.top;
+				}
 			}
 		}
 	}

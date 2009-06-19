@@ -52,6 +52,8 @@
 #define IDM_GOLD                        170
 
 #define IDC_COMBOBOXEX                  171
+#define IDM_VIEW_ARROWS                 172
+#define IDM_VIEW_CARDS                  173
 
 
 

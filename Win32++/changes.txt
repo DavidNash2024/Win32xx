@@ -1,3 +1,16 @@
+Version 6.6
+===========
+Major changes
+* Added SdiDocViewFrom
+   This sample demonstrates a form using a Doc/View architecture, much like the
+   traditional Doc/View of MFC. It also demonstrated OnUpdateMenu handling. 
+* Automated menu updating.
+   When a menu is about to be displayed, OnUpdateMenu is called to provide
+   an opportunity to modify the check state of the menu items.
+* The Frame's ShowToolbar and ShowStatusbar states are now saved in the
+   registry. 
+
+
 Version 6.5
 ===========
 Major Changes

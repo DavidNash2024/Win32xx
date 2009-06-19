@@ -40,12 +40,7 @@ BEGIN
         MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
         MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
     END
-    POPUP "&View"
-    BEGIN
-        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-    END
-	POPUP "&Theme"
+	  POPUP "&Theme"
     BEGIN
         MENUITEM "None",                        IDM_NONE
         MENUITEM "Blue",                        IDM_BLUE
@@ -58,6 +53,14 @@ BEGIN
         MENUITEM "Mauve",                       IDM_MAUVE
         MENUITEM "Pink",                        IDM_PINK
         MENUITEM "Gold",                        IDM_GOLD
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Arrows",                     IDM_VIEW_ARROWS, CHECKED
+        MENUITEM "&Cards",                      IDM_VIEW_CARDS, CHECKED
+        MENUITEM SEPARATOR
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED      
     END
     POPUP "&Help"
     BEGIN
@@ -204,4 +207,6 @@ BEGIN
     IDM_MAUVE               "Mauve theme"
     IDM_PINK                "Pink theme"
     IDM_GOLD                "Gold theme"
+    IDM_VIEW_ARROWS         "Show or Hide the Arrows Toolbar"
+    IDM_VIEW_CARDS          "Show or Hide the Cards Toolbar"
 END

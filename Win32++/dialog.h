@@ -180,7 +180,6 @@ namespace Win32xx
 	    {
 	    case WM_INITDIALOG:
 			{
-				m_hWnd = hWnd;
 				// Center the dialog
 				CenterWindow();
 			}

@@ -75,17 +75,20 @@
 #define _WINCORE_H_
 
 
-// Remove pointless warning messages for MS compilers prior to VS 2008 
-#if defined (_MSC_VER) && _MSC_VER <= 1500
-  #pragma warning (disable : 4511) // copy operator could not be generated
-  #pragma warning (disable : 4512) // assignment operator could not be generated
-  #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
-  #pragma warning (disable : 4786) // identifier was truncated
+// Remove annoying warning messages relating to bugs in MS compilers ...
+#ifdef _MSC_VER
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
   #ifndef _CRT_SECURE_NO_WARNINGS
-    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005
+    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
   #endif
-#endif // _MSC_VER
+  #if _MSC_VER < 1500 
+    #pragma warning (disable : 4511) // copy operator could not be generated
+    #pragma warning (disable : 4512) // assignment operator could not be generated
+    #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
+    #pragma warning (disable : 4786) // identifier was truncated
+  #endif
+#endif
+
 #ifdef __BORLANDC__
   #pragma option -w-8027		   // function not expanded inline
 #endif
@@ -157,6 +160,7 @@
 #define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when docker is destroyed
 #define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
 #define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
+#define UWM_UPDATE_COMMAND  (WM_APP + 14)
 
 
 // Automatically include the Win32xx namespace
@@ -530,6 +534,7 @@ namespace Win32xx
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnInitialUpdate();
 		virtual void OnPaint(HDC hDC);
+		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -1216,9 +1221,6 @@ namespace Win32xx
 		int x = rcParent.left + (rcParent.Width() - rc.Width())/2;
 		int y = rcParent.top + (rcParent.Height() - rc.Height())/2;
 
-		// Keep the dialog wholly on the desktop
-		if (x < 0) x = 0;
-		if (y < 0) y = 0;
 		if (x > iWidth - rc.Width())
 			x = iWidth - rc.Width();
 		if (y > iHeight - rc.Height())
@@ -1917,6 +1919,13 @@ namespace Win32xx
 		// Override this function in your derived class to perform drawing tasks.
 	}
 
+	inline void CWnd::OnMenuUpdate(UINT /*nID*/)
+	// Called when menu items are about to be displayed
+	{
+		// Override this function to modify the behaviour of menu items,
+		// such as adding or removing checkmarks
+	}
+
 	inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const
 	// The PostMessage function places (posts) a message in the message queue
 	// associated with the thread that created the window and returns without
@@ -2441,6 +2450,10 @@ namespace Win32xx
 				if (lr) return lr;	// Message processed so return
 			}
 			break;				// Do default processing when message not already processed
+
+		case UWM_UPDATE_COMMAND:
+			OnMenuUpdate((UINT)wParam); // Perform menu updates
+		break;	
 
 		} // switch (uMsg)
 

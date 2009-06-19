@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_bShowArrows(TRUE), m_bShowCards(TRUE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -56,7 +56,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 	CMenubar& MB = GetMenubar();
 	BOOL T = TRUE;
 	BOOL F = FALSE;
-	HMENU hTheme = ::GetSubMenu(GetFrameMenu(), 3);
 
 	switch (nStyle)
 	{
@@ -73,8 +72,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {0};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_NONE, 0); 
 		}
 		break;
 
@@ -91,8 +88,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE, 0);
 		}
 		break;
 
@@ -109,8 +104,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE_LOCKED, 0);
 		}
 		break;
 
@@ -127,8 +120,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE_BKGND, 0);
 		}
 		break;
 
@@ -145,8 +136,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_BLUE_FLAT, 0);
 		}
 		break;
 
@@ -163,8 +152,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_GREY, 0);
 		}
 		break;
 
@@ -181,8 +168,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_OLIVE, 0);
 		}
 		break;
 
@@ -199,8 +184,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_GOLD, 0);
 		}
 		break;
 
@@ -217,8 +200,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_OCHRE, 0);
 		}
 		break;
 	case IDM_PINK:
@@ -234,8 +215,6 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_PINK, 0);
 		}
 		break;
 	case IDM_MAUVE:
@@ -251,10 +230,19 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
-
-			::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, IDM_MAUVE, 0);
 		}
 		break;
+	default:
+		TRACE(_T("Invalid theme\n"));
+		return;
+	}
+
+	// Check the appropriate menu item
+	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Theme"));
+	if (nFileItem >= 0)
+	{
+		HMENU hTheme = ::GetSubMenu(GetFrameMenu(), nFileItem);
+		::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, nStyle, 0);
 	}
 
 	RecalcLayout();
@@ -303,6 +291,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_GOLD:
 		ChooseTheme(IDM_GOLD);
 		return TRUE;
+	case IDM_VIEW_ARROWS:
+		OnViewArrows();
+		break;
+	case IDM_VIEW_CARDS:
+		OnViewCards();
+		break;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
 		return TRUE;
@@ -328,6 +322,7 @@ void CMainFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
 	// m_bUseToolbar = FALSE;			// Don't use a toolbar
+	 m_bUseThemes = FALSE;
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -351,6 +346,18 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 	// Pass any unhandled messages on for default processing
 	return CFrame::OnNotify(wParam, lParam);
+}
+
+void CMainFrame::OnViewArrows()
+{
+	m_bShowArrows = !m_bShowArrows;
+	ShowArrows(m_bShowArrows);
+}
+
+void CMainFrame::OnViewCards()
+{
+	m_bShowCards = !m_bShowCards;
+	ShowCards(m_bShowCards);
 }
 
 void CMainFrame::SetupToolbar()
@@ -394,6 +401,28 @@ void CMainFrame::SetupToolbar()
 	}
 
 	AddCombo();
+}
+
+void CMainFrame::ShowArrows(BOOL bShow)
+{
+	UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
+	
+	::CheckMenuItem (GetFrameMenu(), IDM_VIEW_ARROWS, uCheck);
+	GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(Arrows), bShow);
+	
+	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+		GetRebar().MoveBandsLeft();
+}
+
+void CMainFrame::ShowCards(BOOL bShow)
+{
+	UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
+	
+	::CheckMenuItem (GetFrameMenu(), IDM_VIEW_CARDS, uCheck);
+	GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(Cards), bShow);
+
+	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+		GetRebar().MoveBandsLeft();
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
