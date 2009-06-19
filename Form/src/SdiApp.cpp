@@ -1,19 +1,30 @@
 //////////////////////////////////////////////
-//FrameApp.cpp
+//SdiApp.cpp
 
-#include "FormApp.h"
+#include "stdafx.h"
+#include "SdiApp.h"
+
+INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
+{
+	// Start Win32++
+	CSdiApp theApp;
+
+	// Run the application
+	return theApp.Run();
+}
 
 
-// Definitions for the CFrameApp class
-CFormApp::CFormApp()
+
+// Definitions for the CSdiApp class
+CSdiApp::CSdiApp()
 {
 }
 
-CFormApp::~CFormApp()
+CSdiApp::~CSdiApp()
 {
 }
 
-BOOL CFormApp::InitInstance()
+BOOL CSdiApp::InitInstance()
 {
 	//Create the Frame Window
 	m_Frame.Create();
