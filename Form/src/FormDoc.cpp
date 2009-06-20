@@ -1,20 +1,22 @@
 ///////////////////////////////////////
 // SdiDoc.cpp
 
+// Based on code provided by Lynn Allan
+
 #include "stdafx.h"
-#include "SdiDoc.h"
+#include "FormDoc.h"
 
 
-// Definitions for the CSdiDoc class
-CSdiDoc::CSdiDoc() 
+// Definitions for the CFormDoc class
+CFormDoc::CFormDoc() 
 {
 }
 
-CSdiDoc::~CSdiDoc()
+CFormDoc::~CFormDoc()
 {
 }
 
-DWORD CSdiDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
+DWORD CFormDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
 {
   DWORD   dwType;
   DWORD   dwCount = sizeof(DWORD);
@@ -25,7 +27,7 @@ DWORD CSdiDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
 	  return 0;
 }
 
-void CSdiDoc::LoadDocRegistry(LPCTSTR szKeyName)
+void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
 {
 	HKEY hKey;
 	tString tsKey = _T("Software\\");
@@ -41,7 +43,7 @@ void CSdiDoc::LoadDocRegistry(LPCTSTR szKeyName)
 	RegCloseKey(hKey);
 }
 
-void CSdiDoc::SaveDocRegistry(LPCTSTR szKeyName)
+void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
 {
 	HKEY hKey;
 	tString tsKey = _T("Software\\");

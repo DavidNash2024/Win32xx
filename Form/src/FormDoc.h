@@ -1,16 +1,19 @@
 ///////////////////////////////////////
 // SdiDoc.h
 
+// Based on code provided by Lynn Allan
+
+
 #ifndef SDI_DOC_H
 #define SDI_DOC_H
 
 
-// Declaration of the CSdiDoc class
-class CSdiDoc //: public CDocument
+// Declaration of the CFormDoc class
+class CFormDoc //: public CDocument
 {
 public:
-	CSdiDoc();
-	virtual ~CSdiDoc();
+	CFormDoc();
+	virtual ~CFormDoc();
 	void  LoadDocRegistry(LPCTSTR szKeyName);
 	void  SaveDocRegistry(LPCTSTR szKeyName);
 	DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);

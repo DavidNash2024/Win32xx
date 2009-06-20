@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="SdiDocViewForm" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="DocViewForm" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=SdiDocViewForm - Win32 Debug
+CFG=DocViewForm - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "SdiDocViewForm.mak".
+!MESSAGE NMAKE /f "DocViewForm.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "SdiDocViewForm.mak" CFG="SdiDocViewForm - Win32 Debug"
+!MESSAGE NMAKE /f "DocViewForm.mak" CFG="DocViewForm - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "SdiDocViewForm - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "SdiDocViewForm - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "DocViewForm - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "DocViewForm - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "SdiDocViewForm - Win32 Release"
+!IF  "$(CFG)" == "DocViewForm - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -56,7 +56,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "SdiDocViewForm - Win32 Debug"
+!ELSEIF  "$(CFG)" == "DocViewForm - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -88,56 +88,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "SdiDocViewForm - Win32 Release"
-# Name "SdiDocViewForm - Win32 Debug"
-# Begin Group "GuiSourceFiles"
-
-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-# Begin Source File
-
-SOURCE=..\GuiFiles\Mainfrm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\SdiApp.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\SdiDoc.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\SdiView.cpp
-# End Source File
-# End Group
-# Begin Group "GuiHeaderFiles"
-
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE="..\..\Win32++\default_resource.h"
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\Mainfrm.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\resource.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\SdiApp.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\SdiDoc.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\GuiFiles\SdiView.h
-# End Source File
-# End Group
+# Name "DocViewForm - Win32 Release"
+# Name "DocViewForm - Win32 Debug"
 # Begin Group "Win32++"
 
 # PROP Default_Filter ""
@@ -167,14 +119,6 @@ SOURCE="..\Win32++\Statusbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\StdAfx.cpp"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\Win32++\stdafx.h"
-# End Source File
-# Begin Source File
-
 SOURCE="..\Win32++\Toolbar.h"
 # End Source File
 # Begin Source File
@@ -187,23 +131,59 @@ SOURCE="..\Win32++\WinCore.h"
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=..\GuiFiles\Resource.rc
+SOURCE=..\src\Resource.rc
 # End Source File
 # End Group
-# Begin Group "NonGuiSourceFiles"
+# Begin Group "Source Files"
 
-# PROP Default_Filter ""
+# PROP Default_Filter ".cpp"
 # Begin Source File
 
-SOURCE=..\src\document.cpp
+SOURCE=..\src\FormApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\FormDoc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\FormView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Mainfrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\StdAfx.cpp
 # End Source File
 # End Group
-# Begin Group "NonGuiHeaderFiles"
+# Begin Group "Header Files"
 
-# PROP Default_Filter ""
+# PROP Default_Filter ".h"
 # Begin Source File
 
-SOURCE=..\include\document.h
+SOURCE=..\src\FormApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\FormDoc.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\FormView.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\stdafx.h
 # End Source File
 # End Group
 # End Target

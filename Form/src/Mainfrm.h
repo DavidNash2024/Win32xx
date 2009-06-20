@@ -5,9 +5,9 @@
 #define MAINFRM_H
 
 #include "frame.h"
-#include "SdiApp.h"
-#include "SdiView.h"
-#include "SdiDoc.h"
+#include "FormApp.h"
+#include "FormView.h"
+#include "FormDoc.h"
 
 
 // Declaration of the CMainFrame class
@@ -16,7 +16,7 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	CSdiDoc& GetDoc() {return m_Doc;} 
+	CFormDoc& GetDoc() {return m_Doc;} 
 
 protected:
 	virtual void LoadRegistrySettings(LPCTSTR szKeyName);
@@ -35,12 +35,12 @@ private:
 	void OnUpdateCheckC(UINT nID);
 	void OnUpdateRangeOfIds_Radio(UINT nID);
 
-	CSdiView m_SdiView;
-	CSdiDoc m_Doc;
+	CFormView m_SdiView;
+	CFormDoc m_Doc;
 };
 
-// A global function to provide access to the CSdiDoc class
-CSdiDoc& GetDoc(); 
+// A global function to provide access to the CFormDoc class
+CFormDoc& GetDoc(); 
 
 #endif //MAINFRM_H
 

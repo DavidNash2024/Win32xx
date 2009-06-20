@@ -1,16 +1,9 @@
 #ifndef STDAFX_H
 #define STDAFX_H
 
-/** @file    StdAfx.h
- *  @brief   Include file for standard system include files,
- *           or project specific include files that are used frequently, but
- *           are changed infrequently.
- *           Used as the 'landmark' for pre-compiled headers.
- *  @author  Lynn Allan
- *  @version 2.32
- *  @date    2009-May-08
- */
-#pragma once
+
+// Based on code provided by Lynn Allan
+
 
 #define WIN32_LEAN_AND_MEAN    // Exclude rarely-used stuff from Windows headers
 
@@ -24,12 +17,13 @@
 
 typedef  unsigned char  byte;
 
-#pragma warning (disable : 4786)
-#pragma warning (disable : 4702)
+#ifdef _MSC_VER
+  #pragma warning (disable : 4786)	// identifier was truncated
+  #pragma warning (disable : 4702)	// unreachable code (bugs in Microsoft's STL)
+#endif
+
 #include <vector>
-#pragma warning (default : 4702)
 #include <map>
-#pragma warning (default : 4786)
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,5 +48,10 @@ typedef  unsigned char  byte;
 #include <toolbar.h>
 #include <treeview.h>
 #include <wincore.h>
+
+#ifdef _MSC_VER
+  #pragma warning (default : 4786)	// identifier was truncated
+  #pragma warning (default : 4702)	// unreachable code (bugs in Microsoft's STL)
+#endif
 
 #endif

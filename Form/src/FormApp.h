@@ -7,11 +7,11 @@
 #include "Mainfrm.h"
 
 // Declaration of the CFrameApp class
-class CSdiApp : public CWinApp
+class CFormApp : public CWinApp
 {
 public:
-  CSdiApp();
-  virtual ~CSdiApp();
+  CFormApp();
+  virtual ~CFormApp();
   virtual BOOL InitInstance();
   CMainFrame& GetMainFrame() { return m_Frame; }
 
@@ -22,7 +22,7 @@ private:
 
 
 // Handy global functions
-inline CSdiApp& GetSdiApp() { return *((CSdiApp*)GetApp()); }
+inline CFormApp& GetSdiApp() { return *((CFormApp*)GetApp()); }
 
 
 #endif // define SDI_APP_H

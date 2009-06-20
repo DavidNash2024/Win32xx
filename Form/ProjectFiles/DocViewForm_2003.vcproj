@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="SdiDocViewForm"
+	Name="DocViewForm"
 	ProjectGUID="{D00E7E44-0581-42AF-B46F-17D17D6B09EF}"
 	SccProjectName=""
 	SccLocalPath="">
@@ -146,16 +146,16 @@
 			Name="Source Files"
 			Filter="">
 			<File
+				RelativePath="..\src\FormApp.cpp">
+			</File>
+			<File
+				RelativePath="..\src\FormDoc.cpp">
+			</File>
+			<File
+				RelativePath="..\src\FormView.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.cpp">
-			</File>
-			<File
-				RelativePath="..\src\SdiApp.cpp">
-			</File>
-			<File
-				RelativePath="..\src\SdiDoc.cpp">
-			</File>
-			<File
-				RelativePath="..\src\SdiView.cpp">
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
@@ -165,19 +165,19 @@
 			Name="Header Files"
 			Filter="">
 			<File
+				RelativePath="..\src\FormApp.h">
+			</File>
+			<File
+				RelativePath="..\src\FormDoc.h">
+			</File>
+			<File
+				RelativePath="..\src\FormView.h">
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
-			</File>
-			<File
-				RelativePath="..\src\SdiApp.h">
-			</File>
-			<File
-				RelativePath="..\src\SdiDoc.h">
-			</File>
-			<File
-				RelativePath="..\src\SdiView.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">

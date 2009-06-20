@@ -2,12 +2,12 @@
 //SdiApp.cpp
 
 #include "stdafx.h"
-#include "SdiApp.h"
+#include "FormApp.h"
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	// Start Win32++
-	CSdiApp theApp;
+	CFormApp theApp;
 
 	// Run the application
 	return theApp.Run();
@@ -15,16 +15,16 @@ INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 
 
 
-// Definitions for the CSdiApp class
-CSdiApp::CSdiApp()
+// Definitions for the CFormApp class
+CFormApp::CFormApp()
 {
 }
 
-CSdiApp::~CSdiApp()
+CFormApp::~CFormApp()
 {
 }
 
-BOOL CSdiApp::InitInstance()
+BOOL CFormApp::InitInstance()
 {
 	//Create the Frame Window
 	m_Frame.Create();

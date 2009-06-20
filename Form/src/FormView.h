@@ -8,12 +8,12 @@
 #include "resource.h"
 
 
-// Declaration of the CSdiView class
-class CSdiView : public CDialog
+// Declaration of the CFormView class
+class CFormView : public CDialog
 {
 public:
-  CSdiView(UINT nResID, HWND hParent = NULL);
-  virtual ~CSdiView();
+  CFormView(UINT nResID, HWND hParent = NULL);
+  virtual ~CFormView();
   virtual HWND Create(HWND hParent);
 
   void OnRangeOfIds_Radio(UINT nIdAdjust);

@@ -2,36 +2,36 @@
 // SdiView.cpp
 
 #include "stdafx.h"
-#include "SdiDoc.h"
-#include "SdiView.h"
-#include "SdiApp.h"
+#include "FormDoc.h"
+#include "FormView.h"
+#include "FormApp.h"
 #include "resource.h"
 
 
-// Definitions for the CSdiView class
-CSdiView::CSdiView(UINT nResID, HWND hParent)
+// Definitions for the CFormView class
+CFormView::CFormView(UINT nResID, HWND hParent)
 	: CDialog(nResID, hParent)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
 	if (!m_hInstRichEdit) 
 	{
-		::MessageBox(NULL, _T("CSdiView::CRichView  Failed to load RICHED32.DLL"), 
+		::MessageBox(NULL, _T("CFormView::CRichView  Failed to load RICHED32.DLL"), 
                  _T(""), MB_ICONWARNING);
 	}
 }
 
-CSdiView::~CSdiView()
+CFormView::~CFormView()
 {
 	::FreeLibrary(m_hInstRichEdit);
 }
 
-HWND CSdiView::Create(HWND hParent = 0)
+HWND CFormView::Create(HWND hParent = 0)
 {
 	SetDlgParent(hParent);
 	return DoModeless();
 }
 
-BOOL CSdiView::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CFormView::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //  switch (uMsg)
 //  {
@@ -41,12 +41,12 @@ BOOL CSdiView::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
 }
 
-void CSdiView::OnCancel()
+void CFormView::OnCancel()
 {
 	// Discard these messages
 }
 
-BOOL CSdiView::OnCommand(WPARAM wParam, LPARAM /* lParam */)
+BOOL CFormView::OnCommand(WPARAM wParam, LPARAM /* lParam */)
 {
   WORD wpLo = LOWORD(wParam);
 
@@ -76,7 +76,7 @@ BOOL CSdiView::OnCommand(WPARAM wParam, LPARAM /* lParam */)
 	return FALSE;
 }
 
-BOOL CSdiView::OnInitDialog()
+BOOL CFormView::OnInitDialog()
 {
 	// Set the Icon
 	SetIconLarge(IDW_MAIN);
@@ -107,19 +107,19 @@ BOOL CSdiView::OnInitDialog()
 	return true;
 }
 
-void CSdiView::OnOK()
+void CFormView::OnOK()
 {
 	SetDlgItemText(IDC_STATIC3, _T("OK Button Pressed."));
 	TRACE(_T("OK Button Pressed.\n"));
 }
 
-void CSdiView::OnButton()
+void CFormView::OnButton()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Button Pressed"));
 	TRACE(_T("Button Pressed\n"));
 }
 
-void CSdiView::OnCheckA()
+void CFormView::OnCheckA()
 {
 	TRACE(_T("Check Box A\n"));
 	BOOL bCheck = GetDoc().GetCheckA();
@@ -130,7 +130,7 @@ void CSdiView::OnCheckA()
 	SetDlgItemText(IDC_STATIC3, _T("Check Box A toggled"));
 }
 
-void CSdiView::OnCheckB()
+void CFormView::OnCheckB()
 {
 	TRACE(_T("Check Box B\n"));
 	BOOL bCheck = GetDoc().GetCheckB();
@@ -141,7 +141,7 @@ void CSdiView::OnCheckB()
 	SetDlgItemText(IDC_STATIC3, _T("Check Box B toggled"));
 }
 
-void CSdiView::OnCheckC()
+void CFormView::OnCheckC()
 {
 	TRACE(_T("Check Box C\n"));
 	BOOL bCheck = GetDoc().GetCheckC();
@@ -152,7 +152,7 @@ void CSdiView::OnCheckC()
 	SetDlgItemText(IDC_STATIC3, _T("Check Box C toggled"));
 }
 
-void CSdiView::OnRangeOfIds_Radio(UINT nIdAdjust)
+void CFormView::OnRangeOfIds_Radio(UINT nIdAdjust)
 {
 	SendDlgItemMessage(ID_RADIO_A, BM_SETCHECK, FALSE, 0);
 	SendDlgItemMessage(ID_RADIO_B, BM_SETCHECK, FALSE, 0);

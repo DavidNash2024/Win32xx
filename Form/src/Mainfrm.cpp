@@ -3,12 +3,12 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "SdiApp.h"
+#include "FormApp.h"
 #include "mainfrm.h"
 
 
-// A global function to provide access to the CSdiDoc class
-CSdiDoc& GetDoc()
+// A global function to provide access to the CFormDoc class
+CFormDoc& GetDoc()
 {
 	return GetSdiApp().GetMainFrame().GetDoc();
 }
