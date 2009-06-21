@@ -42,17 +42,22 @@ BEGIN
     END
 	  POPUP "&Theme"
     BEGIN
-        MENUITEM "None",                        IDM_NONE
         MENUITEM "Blue",                        IDM_BLUE
-        MENUITEM "Blue, Locked Menu",           IDM_BLUE_LOCKED
-        MENUITEM "Blue Background Only",        IDM_BLUE_BKGND
-        MENUITEM "Blue Flat Look",              IDM_BLUE_FLAT
         MENUITEM "Grey",                        IDM_GREY
         MENUITEM "Olive",                       IDM_OLIVE
         MENUITEM "Ochre",                       IDM_OCHRE
         MENUITEM "Mauve",                       IDM_MAUVE
         MENUITEM "Pink",                        IDM_PINK
         MENUITEM "Gold",                        IDM_GOLD
+        MENUITEM SEPARATOR
+        MENUITEM "Use Rebar Themes",            IDM_USE_THEMES, CHECKED
+        MENUITEM "Use Band Colors",             IDM_BAND_COLORS, CHECKED
+        MENUITEM "Flat Style",                  IDM_FLAT_STYLE, CHECKED
+        MENUITEM "Put Bands Left",              IDM_LEFT_BANDS, CHECKED
+        MENUITEM "Lock Menubar",                IDM_LOCK_MENUBAR, CHECKED
+        MENUITEM "Round Borders",               IDM_ROUND_BORDERS, CHECKED
+        MENUITEM "Short Bands",                 IDM_SHORT_BANDS, CHECKED
+        MENUITEM "Use Lines",                   IDM_USE_LINES, CHECKED 
     END
     POPUP "&View"
     BEGIN
@@ -189,18 +194,14 @@ BEGIN
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
     SC_NEXTWINDOW           "Select Next Window"
-	  SC_PREVWINDOW           "Select Previous Window"
+	SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END
 
 STRINGTABLE
 BEGIN
-    IDM_NONE                "No theme"
     IDM_BLUE                "Blue theme"
-    IDM_BLUE_LOCKED         "Blue theme with locked menu"
-    IDM_BLUE_BKGND          "Bllue theme, background only"
-    IDM_BLUE_FLAT           "Blue flat theme"
     IDM_GREY                "Grey theme"
     IDM_OLIVE               "Olive theme"
     IDM_OCHRE               "Ochre theme"
@@ -209,4 +210,12 @@ BEGIN
     IDM_GOLD                "Gold theme"
     IDM_VIEW_ARROWS         "Show or Hide the Arrows Toolbar"
     IDM_VIEW_CARDS          "Show or Hide the Cards Toolbar"
+    IDM_USE_THEMES          "Use Themes"
+    IDM_BAND_COLORS         "Show the bands in a seperate color"
+    IDM_FLAT_STYLE          "Show Bands with Flat Style"
+    IDM_LEFT_BANDS          "Place Bands Left when bands rearranged"
+    IDM_LOCK_MENUBAR        "Lock the Menubar's Position"
+    IDM_ROUND_BORDERS       "Use Round Borders for Bands"
+    IDM_SHORT_BANDS         "Use Short Bands"
+    IDM_USE_LINES           "Display Lines between band rows"
 END

@@ -9,6 +9,10 @@ Classes derived from CWnd are used to create the windows.  The files
 for this are located in the Win32++ directory, and the code
 is lcoated in the Win32xx namespace.
 
+This project uses an FormDoc class to store the various Form settings, and
+save these to the registry. This is much like the Doc/View approach used
+in many MFC applications. 
+
 The files in the src directory are intended as templates for other programs.  
 The library files in the Win32++ directory are intended to be used without 
 modification.

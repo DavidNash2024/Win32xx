@@ -53,7 +53,7 @@ namespace Win32xx
 		COLORREF clrBand1;		// Colour 1 for rebar band background. Use NULL if not required
 		COLORREF clrBand2;		// Colour 2 for rebar band background. Use NULL if not required
 		BOOL FlatStyle;			// Bands are rendered with flat rather than raised style
-		BOOL KeepBandsLeft;		// TRUE if we always keep bands left
+		BOOL BandsLeft;			// Position bands left on rearrange
 		BOOL LockMenuBand;		// Lock Menubar's band in dedicated top row, without gripper
 		BOOL RoundBorders;		// Use rounded band borders
 		BOOL ShortBands;        // Allows bands to be shorter than maximum available width
@@ -546,7 +546,7 @@ namespace Win32xx
 		m_Theme.clrBkgnd2    = Theme.clrBkgnd2;
 		m_Theme.clrBand1     = Theme.clrBand1;
 		m_Theme.clrBand2     = Theme.clrBand2;
-		m_Theme.KeepBandsLeft= Theme.KeepBandsLeft;
+		m_Theme.BandsLeft    = Theme.BandsLeft;
 		m_Theme.LockMenuBand = Theme.LockMenuBand;
 		m_Theme.ShortBands   = Theme.ShortBands;
 		m_Theme.UseLines     = Theme.UseLines;

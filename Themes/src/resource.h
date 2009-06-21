@@ -39,27 +39,24 @@
 #define IDM_CARD_HEART                  152
 #define IDM_CARD_SPADE                  153
 
-#define IDM_NONE                        160
-#define IDM_BLUE                        161
-#define IDM_BLUE_LOCKED                 162
-#define IDM_BLUE_BKGND                  163
-#define IDM_BLUE_FLAT                   164
-#define IDM_GREY                        165
-#define IDM_OLIVE                       166
-#define IDM_OCHRE                       167
-#define IDM_MAUVE                       168
-#define IDM_PINK                        169
-#define IDM_GOLD                        170
+#define IDC_COMBOBOXEX                  155
+#define IDM_VIEW_ARROWS                 156
+#define IDM_VIEW_CARDS                  157
 
-#define IDC_COMBOBOXEX                  171
-#define IDM_VIEW_ARROWS                 172
-#define IDM_VIEW_CARDS                  173
+#define IDM_BLUE                        160
+#define IDM_GREY                        161
+#define IDM_OLIVE                       162
+#define IDM_OCHRE                       163
+#define IDM_MAUVE                       164
+#define IDM_PINK                        165
+#define IDM_GOLD                        166
 
-
-
-
-
-
-
-
+#define IDM_USE_THEMES                  170
+#define IDM_BAND_COLORS                 171
+#define IDM_FLAT_STYLE                  172
+#define IDM_LEFT_BANDS                  173
+#define IDM_LOCK_MENUBAR                174
+#define IDM_ROUND_BORDERS               175
+#define IDM_SHORT_BANDS                 176
+#define IDM_USE_LINES                   177
 

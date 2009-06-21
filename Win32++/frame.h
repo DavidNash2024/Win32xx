@@ -95,10 +95,10 @@ namespace Win32xx
 	struct ThemeMenu
 	{
 		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrHot1;		// Colour 1 for hot button
-		COLORREF clrHot2;		// Colour 2 for hot button
-		COLORREF clrPressed1;	// Colour 1 for pressed button
-		COLORREF clrPressed2;	// Colour 2 for pressed button
+		COLORREF clrHot1;		// Colour 1 for top menu. Color of selected menu item
+		COLORREF clrHot2;		// Colour 2 for top menu. Color of checkbox
+		COLORREF clrPressed1;	// Colour 1 for pressed top menu and side bar
+		COLORREF clrPressed2;	// Colour 2 for pressed top menu and side bar
 		COLORREF clrOutline;	// Colour for border outline
 	};
 
@@ -2630,7 +2630,7 @@ namespace Win32xx
 			m_pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
-		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
 			GetRebar().MoveBandsLeft();
 
 		if (IsMenubarUsed())
@@ -3029,7 +3029,7 @@ namespace Win32xx
 				GetToolbar().ShowWindow(SW_HIDE);
 		}
 
-		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
 			GetRebar().MoveBandsLeft();
 	}
 

@@ -7,7 +7,9 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_bShowArrows(TRUE), m_bShowCards(TRUE)
+CMainFrame::CMainFrame() : m_nColor(IDM_BLUE), m_bUseThemes(TRUE), m_bBandColors(TRUE), m_bFlatStyle(FALSE),
+							m_bBandsLeft(TRUE), m_bLockMenuBand(TRUE), m_bRoundBorders(TRUE),
+                            m_bShortBands(TRUE), m_bUseLines(FALSE), m_bShowArrows(TRUE), m_bShowCards(TRUE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -49,192 +51,112 @@ void CMainFrame::AddCombo()
 	RecalcLayout();
 }
 
-void CMainFrame::ChooseTheme(UINT nStyle)
+void CMainFrame::ChooseColor(UINT nColor)
 {
-	CRebar& RB = GetRebar();
 	CToolbar& TB = GetToolbar();
 	CMenubar& MB = GetMenubar();
-	BOOL T = TRUE;
-	BOOL F = FALSE;
+	m_nColor = nColor;
 
-	switch (nStyle)
+	switch (nColor)
 	{
-	case IDM_NONE:	// Disable themes
-		{
-			ThemeRebar tr = {0};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
-
-			ThemeToolbar tt = {0};
-			TB.SetToolbarTheme(tt);
-			Arrows.SetToolbarTheme(tt);
-			Cards.SetToolbarTheme(tt);
-
-			ThemeMenu tm = {0};
-			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
-			SetMenuTheme(tm);
-		}
-		break;
-
 	case IDM_BLUE:	// ICY_BLUE Theme
 		{
-			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, F, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
+			SetRebarTheme( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
 
-			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
+			ThemeToolbar tt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+			ThemeMenu tm = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 		}
 		break;
-
-	case IDM_BLUE_LOCKED:	// ICY_BLUE Theme
-		{
-			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
-
-			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-			TB.SetToolbarTheme(tt);
-			Arrows.SetToolbarTheme(tt);
-			Cards.SetToolbarTheme(tt);
-
-			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
-			SetMenuTheme(tm);
-		}
-		break;
-
-	case IDM_BLUE_BKGND:	// ICY_BLUE background only
-		{
-			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), 0, 0, F, F, F, F, F, T };
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
-
-			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-			TB.SetToolbarTheme(tt);
-			Arrows.SetToolbarTheme(tt);
-			Cards.SetToolbarTheme(tt);
-
-			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
-			SetMenuTheme(tm);
-		}
-		break;
-
-	case IDM_BLUE_FLAT:	// ICY_BLUE Flat Theme
-		{
-			ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), T, T, F, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
-
-			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-			TB.SetToolbarTheme(tt);
-			Arrows.SetToolbarTheme(tt);
-			Cards.SetToolbarTheme(tt);
-
-			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
-			SetMenuTheme(tm);
-		}
-		break;
-
 	case IDM_GREY:	// Grey Theme
 		{
-			ThemeRebar tr = {T, RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172), F, T, T, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
+			SetRebarTheme( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
 
-			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
+			ThemeMenu tm = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 		}
 		break;
-
 	case IDM_OLIVE:
 		{
-			ThemeRebar tr = {T, RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78), F, T, T, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
+			SetRebarTheme( RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78) );
 
-			ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
+			ThemeToolbar tt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 160, 50), RGB(255, 210, 90), RGB(128, 128, 128)};
+			ThemeMenu tm = {TRUE, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 		}
 		break;
-
 	case IDM_GOLD:
 		{
-			ThemeRebar tr = {T, RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50), F, T, T, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
+			SetRebarTheme( RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50) );
 
-			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
+			ThemeMenu tm = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 		}
 		break;
-
 	case IDM_OCHRE:
 		{
-			ThemeRebar tr = {T, RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6), F, T, T, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
+			SetRebarTheme( RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6) );
 
-			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
+			ThemeMenu tm = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 		}
 		break;
 	case IDM_PINK:
 		{
-			ThemeRebar tr = {T, RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170), F, T, T, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
+			SetRebarTheme( RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170) );
 
-			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
+			ThemeToolbar tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
+			ThemeMenu tm = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 		}
 		break;
 	case IDM_MAUVE:
 		{
-			ThemeRebar tr = {T, RGB(210, 128, 155), RGB(230, 160, 190), RGB(230, 158, 188), RGB(110, 100, 125), F, T, T, T, T, F};
-			if (IsRebarUsed()) RB.SetRebarTheme(tr);
+			SetRebarTheme( RGB(210, 128, 155), RGB(230, 160, 190), RGB(230, 158, 188), RGB(110, 100, 125) );
 
-			ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			ThemeToolbar tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 			TB.SetToolbarTheme(tt);
 			Arrows.SetToolbarTheme(tt);
 			Cards.SetToolbarTheme(tt);
 
-			ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
+			ThemeMenu tm = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
 			SetMenuTheme(tm);
 		}
 		break;
-	default:
-		TRACE(_T("Invalid theme\n"));
-		return;
 	}
 
 	// Check the appropriate menu item
@@ -242,9 +164,17 @@ void CMainFrame::ChooseTheme(UINT nStyle)
 	if (nFileItem >= 0)
 	{
 		HMENU hTheme = ::GetSubMenu(GetFrameMenu(), nFileItem);
-		::CheckMenuRadioItem(hTheme, IDM_NONE, IDM_GOLD, nStyle, 0);
+		::CheckMenuRadioItem(hTheme, IDM_BLUE, IDM_GOLD, nColor, 0);
 	}
-
+  
+	CheckMenuItem(GetFrameMenu(), IDM_USE_THEMES,    m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(GetFrameMenu(), IDM_BAND_COLORS,   m_bBandColors? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(GetFrameMenu(), IDM_FLAT_STYLE,    m_bFlatStyle? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(GetFrameMenu(), IDM_LEFT_BANDS,    m_bBandsLeft? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(GetFrameMenu(), IDM_LOCK_MENUBAR,  m_bLockMenuBand? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(GetFrameMenu(), IDM_ROUND_BORDERS, m_bRoundBorders? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(GetFrameMenu(), IDM_SHORT_BANDS,   m_bShortBands? MF_CHECKED : MF_UNCHECKED);
+	CheckMenuItem(GetFrameMenu(), IDM_USE_LINES,     m_bUseLines? MF_CHECKED : MF_UNCHECKED);
 	RecalcLayout();
 }
 
@@ -258,38 +188,50 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
-	case IDM_NONE:
-		ChooseTheme(IDM_NONE);
-		return TRUE;
 	case IDM_BLUE:
-		ChooseTheme(IDM_BLUE);
-		return TRUE;
-	case IDM_BLUE_LOCKED:
-		ChooseTheme(IDM_BLUE_LOCKED);
-		return TRUE;
-	case IDM_BLUE_BKGND:
-		ChooseTheme(IDM_BLUE_BKGND);
-		return TRUE;
-	case IDM_BLUE_FLAT:
-		ChooseTheme(IDM_BLUE_FLAT);
+		ChooseColor(IDM_BLUE);
 		return TRUE;
 	case IDM_GREY:
-		ChooseTheme(IDM_GREY);
+		ChooseColor(IDM_GREY);
 		return TRUE;
 	case IDM_OLIVE:
-		ChooseTheme(IDM_OLIVE);
+		ChooseColor(IDM_OLIVE);
 		return TRUE;
 	case IDM_OCHRE:
-		ChooseTheme(IDM_OCHRE);
+		ChooseColor(IDM_OCHRE);
 		return TRUE;
 	case IDM_MAUVE:
-		ChooseTheme(IDM_MAUVE);
+		ChooseColor(IDM_MAUVE);
 		return TRUE;
 	case IDM_PINK:
-		ChooseTheme(IDM_PINK);
+		ChooseColor(IDM_PINK);
 		return TRUE;
 	case IDM_GOLD:
-		ChooseTheme(IDM_GOLD);
+		ChooseColor(IDM_GOLD);
+		return TRUE;
+	case IDM_USE_THEMES:
+		OnUseThemes();
+		return TRUE;
+	case IDM_BAND_COLORS:
+		OnBandColors();
+		return TRUE;
+	case IDM_FLAT_STYLE:
+		OnFlatStyle();
+		return TRUE;
+	case IDM_LEFT_BANDS:
+		OnLeftBands();
+		return TRUE;
+	case IDM_LOCK_MENUBAR:
+		OnLockMenubar();
+		return TRUE;
+	case IDM_ROUND_BORDERS:
+		OnRoundBorders();
+		return TRUE;
+	case IDM_SHORT_BANDS:
+		OnShortBands();
+		return TRUE;
+	case IDM_USE_LINES:
+		OnUseLines();
 		return TRUE;
 	case IDM_VIEW_ARROWS:
 		OnViewArrows();
@@ -322,7 +264,6 @@ void CMainFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseRebar = FALSE;				// Don't use rebars
 	// m_bUseToolbar = FALSE;			// Don't use a toolbar
-	 m_bUseThemes = FALSE;
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -348,6 +289,114 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
+void CMainFrame::OnUseThemes()
+{
+	m_bUseThemes = !m_bUseThemes;
+	BOOL bCheck = m_bUseThemes;
+	::CheckMenuItem(GetFrameMenu(), IDM_USE_THEMES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	ThemeRebar tr = GetRebar().GetRebarTheme();
+	tr.UseThemes = m_bUseThemes;
+	GetRebar().SetRebarTheme(tr);
+	
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+
+void CMainFrame::OnBandColors()
+{
+	m_bBandColors = !m_bBandColors;
+	BOOL bCheck = m_bBandColors;
+	::CheckMenuItem(GetFrameMenu(), IDM_BAND_COLORS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+
+	if (m_bBandColors)
+	{
+		ChooseColor(m_nColor);
+	}
+	else
+	{
+		ThemeRebar tr = GetRebar().GetRebarTheme();
+		tr.clrBand1 = 0;
+		tr.clrBand2 = 0;
+		GetRebar().SetRebarTheme(tr);
+	}
+
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+void CMainFrame::OnFlatStyle()
+{
+	m_bFlatStyle = !m_bFlatStyle;
+	BOOL bCheck = m_bFlatStyle;
+	::CheckMenuItem(GetFrameMenu(), IDM_FLAT_STYLE, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	ThemeRebar tr = GetRebar().GetRebarTheme();
+	tr.FlatStyle = m_bFlatStyle;
+	GetRebar().SetRebarTheme(tr);
+	
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+void CMainFrame::OnLeftBands()
+{
+	m_bBandsLeft = !m_bBandsLeft;
+	BOOL bCheck = m_bBandsLeft;
+	::CheckMenuItem(GetFrameMenu(), IDM_LEFT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	ThemeRebar tr = GetRebar().GetRebarTheme();
+	tr.BandsLeft = m_bBandsLeft;
+	GetRebar().SetRebarTheme(tr);
+	
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+void CMainFrame::OnLockMenubar()
+{
+	m_bLockMenuBand = !m_bLockMenuBand;
+	BOOL bCheck = m_bLockMenuBand;
+	::CheckMenuItem(GetFrameMenu(), IDM_LOCK_MENUBAR, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	ThemeRebar tr = GetRebar().GetRebarTheme();
+	tr.LockMenuBand = m_bLockMenuBand;
+	GetRebar().SetRebarTheme(tr);
+	GetRebar().MoveBand(GetRebar().GetBand(GetMenubar()), 0);	// Move the Menubar to band 0
+	
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+void CMainFrame::OnRoundBorders()
+{
+	m_bRoundBorders = !m_bRoundBorders;
+	BOOL bCheck = m_bRoundBorders;
+	::CheckMenuItem(GetFrameMenu(), IDM_ROUND_BORDERS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	ThemeRebar tr = GetRebar().GetRebarTheme();
+	tr.RoundBorders = m_bRoundBorders;
+	GetRebar().SetRebarTheme(tr);
+	
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+void CMainFrame::OnShortBands()
+{
+	m_bShortBands = !m_bShortBands;
+	BOOL bCheck = m_bShortBands;
+	::CheckMenuItem(GetFrameMenu(), IDM_SHORT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	ThemeRebar tr = GetRebar().GetRebarTheme();
+	tr.ShortBands = m_bShortBands;
+	GetRebar().SetRebarTheme(tr);
+	
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+void CMainFrame::OnUseLines()
+{
+	m_bUseLines = !m_bUseLines;
+	BOOL bCheck = m_bUseLines;
+	::CheckMenuItem(GetFrameMenu(), IDM_USE_LINES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	ThemeRebar tr = GetRebar().GetRebarTheme();
+	tr.UseLines = m_bUseLines;
+	GetRebar().SetRebarTheme(tr);
+	
+	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RecalcLayout();
+}
+
 void CMainFrame::OnViewArrows()
 {
 	m_bShowArrows = !m_bShowArrows;
@@ -358,6 +407,24 @@ void CMainFrame::OnViewCards()
 {
 	m_bShowCards = !m_bShowCards;
 	ShowCards(m_bShowCards);
+}
+
+void CMainFrame::SetRebarTheme(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2)
+{
+	ThemeRebar tr = {0};
+	tr.UseThemes = m_bUseThemes;
+	tr.clrBkgnd1 = clrBkGnd1;
+	tr.clrBkgnd2 = clrBkGnd2;
+	tr.clrBand1  = clrBand1;
+	tr.clrBand2  = clrBand2;
+	tr.FlatStyle = m_bFlatStyle;
+	tr.BandsLeft = m_bBandsLeft;		
+	tr.LockMenuBand = m_bLockMenuBand;
+	tr.RoundBorders = m_bRoundBorders;
+	tr.ShortBands = m_bShortBands;
+	tr.UseLines = m_bUseLines;
+
+	GetRebar().SetRebarTheme(tr);
 }
 
 void CMainFrame::SetupToolbar()
@@ -383,7 +450,7 @@ void CMainFrame::SetupToolbar()
 	if (IsRebarUsed())
 	{
 		//Set our theme
-		ChooseTheme(IDM_BLUE);
+		ChooseColor(IDM_BLUE);
 
 		// Add the Arrows toolbar
 		AddToolbarBand(Arrows);
@@ -410,7 +477,7 @@ void CMainFrame::ShowArrows(BOOL bShow)
 	::CheckMenuItem (GetFrameMenu(), IDM_VIEW_ARROWS, uCheck);
 	GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(Arrows), bShow);
 	
-	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
 		GetRebar().MoveBandsLeft();
 }
 
@@ -421,7 +488,7 @@ void CMainFrame::ShowCards(BOOL bShow)
 	::CheckMenuItem (GetFrameMenu(), IDM_VIEW_CARDS, uCheck);
 	GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(Cards), bShow);
 
-	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+	if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
 		GetRebar().MoveBandsLeft();
 }
 
