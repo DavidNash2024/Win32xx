@@ -2376,10 +2376,10 @@ namespace Win32xx
 			RecalcLayout();
 			Invalidate();
 			break;
-		case RBN_LAYOUTCHANGED:
-			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
-				GetRebar().MoveBandsLeft();
-			break;
+	//	case RBN_LAYOUTCHANGED:
+	//		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+	//			GetRebar().MoveBandsLeft();
+	//		break;
 		case RBN_MINMAX:
 			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().ShortBands)
 				return 1L;	// Supress maximise or minimise rebar band

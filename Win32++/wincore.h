@@ -75,13 +75,13 @@
 #define _WINCORE_H_
 
 
-// Remove annoying warning messages relating to bugs in MS compilers ...
+// Remove pointless warning messages
 #ifdef _MSC_VER
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
   #ifndef _CRT_SECURE_NO_WARNINGS
     #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
   #endif
-  #if _MSC_VER < 1500 
+  #if _MSC_VER < 1500
     #pragma warning (disable : 4511) // copy operator could not be generated
     #pragma warning (disable : 4512) // assignment operator could not be generated
     #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
@@ -91,20 +91,11 @@
 
 #ifdef __BORLANDC__
   #pragma option -w-8027		   // function not expanded inline
-#endif
-
-// Note: VS 2008 will set _WIN32_WINNT to 0x0600 unless it is set manually.
-// That can break existing code on older Operating Systems.
-#ifndef _WIN32_WINNT
-  #define _WIN32_WINNT 0x0400
+  #define STRICT 1
 #endif
 
 #ifdef _WIN32_WCE
   #include "wcestddef.h"
-#endif
-
-#ifndef STRICT
-  #define STRICT 1
 #endif
 
 #define _WINSOCKAPI_            // Prevent winsock.h #include's.
@@ -160,7 +151,7 @@
 #define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when docker is destroyed
 #define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
 #define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
-#define UWM_UPDATE_COMMAND  (WM_APP + 14)
+#define UWM_UPDATE_COMMAND  (WM_APP + 14)   // Message - sent before a menu is displayed. Used by OnUpdate
 
 
 // Automatically include the Win32xx namespace
@@ -183,7 +174,7 @@ namespace Win32xx {}
 #endif
 
 
-// Define our own MIN and MAX macros 
+// Define our own MIN and MAX macros
 // this avoids inconcistancies with Dev-C++ and other compilers, and
 // avoids conflicts between typical min/max macros and std::min/std::max
 #define MAX(a,b)            (((a) > (b)) ? (a) : (b))
@@ -195,7 +186,7 @@ namespace Win32xx
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
-	
+
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
@@ -205,7 +196,7 @@ namespace Win32xx
 
 	//////////////////////////////////////////////////
 	// Global functions	(within the Win32xx namespace)
-	
+
 	CWinApp* GetApp();
 	void DebugWarnMsg(LPCTSTR WarnMsg);
 	void DebugErrMsg(LPCTSTR ErrorMsg);
@@ -218,8 +209,8 @@ namespace Win32xx
 	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
 
-  // Required for WinCE  
-  #ifndef lstrcpyn	
+  // Required for WinCE
+  #ifndef lstrcpyn
 	LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength);
   #endif // !lstrcpyn
 
@@ -543,7 +534,7 @@ namespace Win32xx
 		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		HICON SetIconLarge(int nIcon);
 		HICON SetIconSmall(int nIcon);
-		
+
 		HWND m_hWnd;				// handle to this object's window
 
 	private:
@@ -602,7 +593,7 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
-}	
+}
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -612,7 +603,7 @@ namespace Win32xx
 
 	//////////////////////////////////////////////////
 	// Global functions	(within the Win32xx namespace)
-	
+
 	// Returns a pointer to the CWinApp derrived class
 	inline CWinApp* GetApp()
 	{
@@ -644,7 +635,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
 	#endif  //_DEBUG
 	}
-	
+
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	inline void TRACE(LPCTSTR str)
 	{
@@ -778,8 +769,8 @@ namespace Win32xx
 
   #endif // #ifndef _WIN32_WCE
 
-  // Required for WinCE  
-  #ifndef lstrcpyn	
+  // Required for WinCE
+  #ifndef lstrcpyn
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
 	{
 		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
@@ -836,7 +827,7 @@ namespace Win32xx
   #endif
 		return str;
 	}
-	
+
 	inline CPoint GetCursorPos()
 	{
 		CPoint pt;
@@ -871,7 +862,7 @@ namespace Win32xx
 		TRACE(_T("*** ERROR: An Exception occured ***\n"));
 		TRACE(buf3);
 		TRACE(_T("\n\n"));
-	
+
 		DebugErrMsg(buf3);
 	}
 
@@ -905,8 +896,8 @@ namespace Win32xx
  				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
 			}
 
-		    // Get store the instance handle		
-			m_hInstance = GetModuleHandle(0); 
+		    // Get store the instance handle
+			m_hInstance = GetModuleHandle(0);
 
 			m_hResource = m_hInstance;
 			DefaultClass();
@@ -1476,7 +1467,7 @@ namespace Win32xx
 
 	inline tString CWnd::GetClassString() const
 	// Retrieves the name of the class to which the specified window belongs
-	{	
+	{
 		TCHAR szString[MAX_STRING_SIZE +1];
 		tString tstr;
 		::GetClassName(m_hWnd, szString, MAX_STRING_SIZE);
@@ -1621,7 +1612,7 @@ namespace Win32xx
 
 	inline tString CWnd::GetWindowString() const
 	// Gets the window title for an ordinary window, or the text in an edit control
-	{	
+	{
 		tString tstr;
 		int nLength = ::GetWindowTextLength(m_hWnd);
 		if (nLength > 0)
@@ -1972,17 +1963,19 @@ namespace Win32xx
 		m_wc.lpszClassName  = wc.lpszClassName;
 
 		// Overide this function in your derived class to set the
-		// WNDCLASS values prior to window creation. 
-		
-		// ADDITIONAL NOTES:  
+		// WNDCLASS values prior to window creation.
+
+		// ADDITIONAL NOTES:
 		// 1) The lpszClassName must be set for this function to take effect.
 		// 2) The lpfnWndProc is always CWnd::StaticWindowProc.
 		// 3) No other defaults are set, so the following settings might prove useful
 		//     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 		//     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 		//     wc.hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
-		// 4) The styles that can be set here are WNDCLASS styles. These are a different 
+		// 4) The styles that can be set here are WNDCLASS styles. These are a different
 		//     set of styles to those set by CREATESTRUCT (used in PreCreate).
+		// 5) RegisterClassEx is not used because its not supported on WinCE.
+		//     To set a small icon for the window, use SetIconSmall.
 	}
 
 	inline BOOL CWnd::PreTranslateMessage(MSG* /*pMsg*/)
@@ -2078,7 +2071,7 @@ namespace Win32xx
 #endif
 
 	inline LRESULT CWnd::SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const
-	// The SendDlgItemMessage function sends a message to the specified control in a dialog box.	
+	// The SendDlgItemMessage function sends a message to the specified control in a dialog box.
 	{
 		return ::SendDlgItemMessage(m_hWnd, nIDDlgItem, Msg, wParam, lParam);
 	}
@@ -2227,7 +2220,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const
-	// The SetDlgItemText function sets the title or text of a control in a dialog box. 
+	// The SetDlgItemText function sets the title or text of a control in a dialog box.
 	{
 		return ::SetDlgItemText(m_hWnd, nIDDlgItem, lpString);
 	}
@@ -2389,7 +2382,7 @@ namespace Win32xx
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 				LRESULT lr = 0L;
 				if (pWndFrom != NULL)
-				{	
+				{
 					// Only reflect messages from the parent to avoid possible double handling
 					if (::GetParent(hwndFrom) == m_hWnd)
 					{
@@ -2453,7 +2446,7 @@ namespace Win32xx
 
 		case UWM_UPDATE_COMMAND:
 			OnMenuUpdate((UINT)wParam); // Perform menu updates
-		break;	
+		break;
 
 		} // switch (uMsg)
 

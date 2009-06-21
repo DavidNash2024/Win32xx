@@ -1,7 +1,7 @@
 Version 6.6
 ===========
 Major changes
-* Updated Form Sample
+* Replaced thr Form Sample with the DocViewForm sample.
    This sample now demonstrates a form using a Doc/View architecture, much like
    the traditional Doc/View of MFC. It also demonstrated OnUpdateMenu handling. 
 * Automated menu updating.
