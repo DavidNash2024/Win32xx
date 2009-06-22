@@ -224,7 +224,7 @@ namespace Win32xx
 		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
-		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle = 0);
+		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle, UINT nID);
 		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void CreateToolbar();
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
@@ -1517,13 +1517,14 @@ namespace Win32xx
 		::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
 		int Menubar_Height = csMenubar.cy + 8;
 
-		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
 		rbbi.cxMinChild = sz.cx;
 		rbbi.cx         = sz.cx;
 		rbbi.cyMinChild = Menubar_Height;
 		rbbi.cyMaxChild = Menubar_Height;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.hwndChild  = GetMenubar();
+		rbbi.wID        = IDW_MENUBAR;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
 		GetRebar().InsertBand(-1, rbbi);
@@ -1546,7 +1547,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	inline void CFrame::AddToolbarBand(CToolbar& TB, DWORD dwStyle /* = 0 */)
+	inline void CFrame::AddToolbarBand(CToolbar& TB, DWORD dwStyle, UINT nID)
 	{
 		// Adds a Toolbar to the rebar control
 
@@ -1557,7 +1558,7 @@ namespace Win32xx
 		REBARBANDINFO rbbi = {0};
 		CSize sz = TB.GetMaxSize();
 
-		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
 		rbbi.cx         = sz.cx +2;
@@ -1565,6 +1566,7 @@ namespace Win32xx
 
 		rbbi.fStyle     = dwStyle;
 		rbbi.hwndChild  = TB;
+		rbbi.wID        = nID;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
 		GetRebar().InsertBand(-1, rbbi);
@@ -1608,7 +1610,7 @@ namespace Win32xx
 	inline void CFrame::CreateToolbar()
 	{
 		if (IsRebarSupported() && m_bUseRebar)
-			AddToolbarBand(GetToolbar(), RBBS_BREAK);	// Create the toolbar inside rebar
+			AddToolbarBand(GetToolbar(), RBBS_BREAK, IDW_TOOLBAR);	// Create the toolbar inside rebar
 		else	
 			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
 
@@ -1944,7 +1946,7 @@ namespace Win32xx
 	{
 		m_tsKeyName = szKeyName;
 
-		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Settings");
+		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 		if (hKey)
@@ -2377,7 +2379,7 @@ namespace Win32xx
 			Invalidate();
 			break;
 	//	case RBN_LAYOUTCHANGED:
-	//		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+	//		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
 	//			GetRebar().MoveBandsLeft();
 	//		break;
 		case RBN_MINMAX:
@@ -2547,8 +2549,6 @@ namespace Win32xx
 		}
 	}
 
-
-
 	inline void CFrame::OnViewStatusbar()
 	{
 		m_bShowStatusbar = !m_bShowStatusbar;
@@ -2657,7 +2657,7 @@ namespace Win32xx
 		// Store the window position in the registry
 		if (!m_tsKeyName.empty())
 		{
-			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Settings");
+			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
 			HKEY hKey = NULL;
 			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 				throw (CWinException(_T("RegCreateKeyEx Failed")));

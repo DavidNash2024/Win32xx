@@ -21,14 +21,17 @@ public:
 	void ShowCards(BOOL bShow);
 
 protected:
+	virtual void LoadRegistrySettings(LPCTSTR szKeyName);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+	virtual void SaveRegistrySettings();
 	virtual void SetupToolbar();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
 	void OnUseThemes();
 	void OnBandColors();
 	void OnFlatStyle();
@@ -45,6 +48,8 @@ private:
 	CToolbar Arrows;
 	CToolbar Cards;
 	CComboBoxEx m_ComboBoxEx;
+	std::vector<UINT> m_vBandIDs;
+	std::vector<UINT> m_vBandStyles;
 	
 	UINT m_nColor;
 	BOOL m_bUseThemes;

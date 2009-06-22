@@ -1,14 +1,36 @@
 Version 6.6
 ===========
 Major changes
+-------------
 * Replaced the Form Sample with the DocViewForm sample.
    This sample now demonstrates a form using a Doc/View architecture, much like
    the traditional Doc/View of MFC. It also demonstrated OnUpdateMenu handling. 
 * Automated menu updating.
    When a menu is about to be displayed, OnUpdateMenu is called to provide
    an opportunity to modify the check state of the menu items.
-* The Frame's ShowToolbar and ShowStatusbar states are now saved in the
-   registry. 
+* Enhancements to frames
+  - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
+    registry.
+* Enhancements to the Themes sample
+  - Added check boxes for the various rebar theme option
+  - Added Hide/Show option for the additional toolbars
+  - Save/Load the theme options in the registry
+  - Save/Load the rebar band postions and styles in the registry
+  
+   
+   
+All Changes
+-----------
+Added CWnd::OnUpdate
+Changed CFrame::AddToolbarBand
+Extended the Themes sample
+Replaced FormSample with the DocViewForm sample
+Minor adjustment to the behaviour of Rebar themes
+
+
+Incompatibilities with previous versions
+----------------------------------------
+CFrame::AddToolbarBand
 
 
 Version 6.5

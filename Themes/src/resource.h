@@ -31,6 +31,9 @@
 #define IDB_CARDS                       135
 #define IDB_STATUS                      136
 
+#define IDC_ARROWS                      137
+#define IDC_CARDS                       138
+
 #define IDM_ARROW_LEFT                  140
 #define IDM_ARROW_RIGHT                 141
 
