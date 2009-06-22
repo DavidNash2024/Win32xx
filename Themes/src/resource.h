@@ -53,6 +53,7 @@
 #define IDM_MAUVE                       164
 #define IDM_PINK                        165
 #define IDM_GOLD                        166
+#define IDM_BLACK                       167
 
 #define IDM_USE_THEMES                  170
 #define IDM_BAND_COLORS                 171

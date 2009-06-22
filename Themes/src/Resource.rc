@@ -49,6 +49,7 @@ BEGIN
         MENUITEM "Mauve",                       IDM_MAUVE
         MENUITEM "Pink",                        IDM_PINK
         MENUITEM "Gold",                        IDM_GOLD
+        MENUITEM "Black",                       IDM_BLACK
         MENUITEM SEPARATOR
         MENUITEM "Use Rebar Themes",            IDM_USE_THEMES, CHECKED
         MENUITEM "Use Band Colors",             IDM_BAND_COLORS, CHECKED
@@ -194,7 +195,7 @@ BEGIN
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
     SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+	  SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END
@@ -208,6 +209,7 @@ BEGIN
     IDM_MAUVE               "Mauve theme"
     IDM_PINK                "Pink theme"
     IDM_GOLD                "Gold theme"
+    IDM_BLACK               "Black theme"
     IDM_VIEW_ARROWS         "Show or Hide the Arrows Toolbar"
     IDM_VIEW_CARDS          "Show or Hide the Cards Toolbar"
     IDM_USE_THEMES          "Use Themes"

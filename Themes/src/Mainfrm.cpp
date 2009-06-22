@@ -157,6 +157,19 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetMenuTheme(tm);
 		}
 		break;
+	case IDM_BLACK:
+		{
+			SetRebarTheme( RGB(128, 138 ,176), RGB(98, 108 ,136), RGB(97, 107, 117), RGB(17, 27, 37) );
+			
+			ThemeToolbar tt = {TRUE, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
+			TB.SetToolbarTheme(tt);
+			Arrows.SetToolbarTheme(tt);
+			Cards.SetToolbarTheme(tt);
+
+			ThemeMenu tm = {TRUE, RGB(84,197,240), RGB(89, 136, 217), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
+			if (IsRebarUsed()) MB.SetMenubarTheme(tm);
+			SetMenuTheme(tm);
+		}
 	}
 
 	// Check the appropriate menu item
@@ -164,7 +177,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 	if (nFileItem >= 0)
 	{
 		HMENU hTheme = ::GetSubMenu(GetFrameMenu(), nFileItem);
-		::CheckMenuRadioItem(hTheme, IDM_BLUE, IDM_GOLD, nColor, 0);
+		::CheckMenuRadioItem(hTheme, IDM_BLUE, IDM_BLACK, nColor, 0);
 	}
   
 	CheckMenuItem(GetFrameMenu(), IDM_USE_THEMES,    m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
@@ -262,6 +275,9 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_GOLD:
 		ChooseColor(IDM_GOLD);
 		return TRUE;
+	case IDM_BLACK:
+		ChooseColor(IDM_BLACK);
+		return TRUE;
 	case IDM_USE_THEMES:
 		OnUseThemes();
 		return TRUE;
@@ -324,7 +340,7 @@ void CMainFrame::OnCreate()
 	// Set the band styles and positions
 	for (int i = 0; i < GetRebar().GetBandCount(); ++i)
 	{
-		if (i < m_vBandStyles.size())
+		if (i < (int)m_vBandStyles.size())
 		{
 			// Move the band to the correct position
 			int iFrom = GetRebar().IDToIndex(m_vBandIDs[i]);
@@ -337,6 +353,9 @@ void CMainFrame::OnCreate()
 			GetRebar().SetBandInfo(i, rbbi);
 		}
 	}
+
+	ShowArrows(m_bShowArrows);
+	ShowCards(m_bShowCards);
 }
 
 void CMainFrame::OnInitialUpdate()
