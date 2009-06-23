@@ -32,6 +32,7 @@ void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
 	HKEY hKey;
 	tString tsKey = _T("Software\\");
 	tsKey += szKeyName;
+	tsKey += _T("\\Document Settings");
 	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "", 
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
@@ -48,6 +49,7 @@ void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
 	HKEY hKey;
 	tString tsKey = _T("Software\\");
 	tsKey += szKeyName;
+	tsKey += _T("\\Document Settings");
 
 	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "", 
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);

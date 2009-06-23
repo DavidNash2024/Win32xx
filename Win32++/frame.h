@@ -2002,7 +2002,7 @@ namespace Win32xx
 		if (m_bUseToolbar)
 		{
 			CreateToolbar();
-			if (!m_bShowToolbar) ShowToolbar(FALSE);
+			ShowToolbar(m_bShowToolbar);
 		}
 		else
 		{
@@ -2012,7 +2012,7 @@ namespace Win32xx
 
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
-		if (!m_bShowStatusbar) ShowStatusbar(FALSE);
+		ShowStatusbar(m_bShowStatusbar);
 
 		// Create the view window
 		if (NULL == GetView())
