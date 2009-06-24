@@ -1,4 +1,4 @@
-// Win32++  Version 6.51 alpha
+// Win32++  Version 6.6 alpha
 // Released: ?? June, 2009 by:
 //
 //      David Nash
@@ -397,22 +397,32 @@ namespace Win32xx
 	class CWnd
 	{
 	friend class CMDIChild;
+	friend class CDialog;
+	friend class CPropertyPage;
 
 	public:
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
 
 		// These are the functions can be overridden
+		virtual BOOL Attach(HWND hWnd);
+		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		virtual void CenterWindow() const;	
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);	
 		virtual void Destroy();
+		virtual HWND Detach();
 		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual HWND GetAncestor() const;
+		virtual tString GetClassString() const;
+		virtual tString GetDlgItemString(int nIDDlgItem) const;
+		virtual tString GetWindowString() const;
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual BOOL IsContainer() const { return FALSE; }
-		virtual BOOL IsDocker() const  { return FALSE; }
+		virtual BOOL IsDocker() const	 { return FALSE; }
 		virtual BOOL IsFrame() const     { return FALSE; }
 		virtual BOOL IsMenubar() const   { return FALSE; }
 		virtual BOOL IsMDIChild() const  { return FALSE; }
@@ -422,39 +432,34 @@ namespace Win32xx
 		virtual BOOL IsTab() const       { return FALSE; }
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		virtual BOOL IsToolbar() const	 { return FALSE; }
-
-		// These functions aren't intended to be overridden
-		BOOL Attach(HWND hWnd);
-		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		virtual LPCTSTR LoadString(UINT nID);	
+		virtual HICON SetIconLarge(int nIcon);
+		virtual HICON SetIconSmall(int nIcon);
+		
+		// Wrappers for Win32 API functions
+		// These functions aren't virtual, and shouldn't be overridden
 		BOOL BringWindowToTop() const;
-		void CenterWindow() const;
+		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
-		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags);
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, RECT rc, UINT uFlags);
 		void DestroyWindow();
-		HWND Detach();
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
 		static CWnd* FromHandle(HWND hWnd);
-		HWND GetAncestor() const;
-		tString GetClassString() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		CRect GetClientRect() const;
 		HDC  GetDC() const;
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
-		tString GetDlgItemString(int nIDDlgItem) const;
 		HWND GetHwnd() const {return m_hWnd;}
 		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
-		CRect GetWindowRect() const;
-		tString GetWindowString() const;
+		CRect GetWindowRect() const;	
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
@@ -462,18 +467,18 @@ namespace Win32xx
 		BOOL IsEnabled() const;
 		BOOL IsVisible() const;
 		BOOL IsWindow() const;
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
-		LPCTSTR LoadString(UINT nID);
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;		
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
-		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const;
 		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
+		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		BOOL RegisterClass(WNDCLASS& wc);
 		int  ReleaseDC(HDC hDC) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
+		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
@@ -508,38 +513,30 @@ namespace Win32xx
 		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
 #endif
-
+		
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		operator HWND() const {return m_hWnd;}
-
-		// Required by some macros
-		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const
-			{return ::PostMessage(hWnd, uMsg, wParam, lParam);}
-		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
-			{ return ::SendMessage(hWnd, uMsg, wParam, lParam);}
+		operator HWND() const {return m_hWnd;}		
 
 	protected:
-		// These can be overridden
+		// Override these functions as required
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnInitialUpdate();
+		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnPaint(HDC hDC);
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		// These functions aren't intended to be overridden
-		void AddToMap();
-		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		HICON SetIconLarge(int nIcon);
-		HICON SetIconSmall(int nIcon);
 
 		HWND m_hWnd;				// handle to this object's window
 
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
+		void AddToMap();
+		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RemoveFromMap();
 		void Subclass();
 
@@ -548,7 +545,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings
+		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings		
 
 	}; // class CWnd
 
@@ -559,6 +556,7 @@ namespace Win32xx
 	class CWinApp
 	{
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
+		friend class CDialog;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 
 	public:
@@ -568,21 +566,20 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL InitInstance();
 		virtual int  MessageLoop();
+		virtual int Run();
 
-		// These functions aren't intended to be overridden
-		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		CWnd* GetCWndFromMap(HWND hWnd);
+		DWORD GetTlsIndex() const {return m_dwTlsIndex;}		
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		int Run();
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
-		TLSData* SetTlsIndex();
-
+		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}	
+		
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
-		void DefaultClass();
+		CWnd* GetCWndFromMap(HWND hWnd);
+		void DefaultClass();	
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
+		TLSData* SetTlsIndex();
 
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		HINSTANCE m_hInstance;			// handle to the applications instance
@@ -1186,7 +1183,7 @@ namespace Win32xx
 		return ::BringWindowToTop(m_hWnd);
 	}
 
-	inline LRESULT CWnd::CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
 	{
 		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
 	}
@@ -1925,6 +1922,12 @@ namespace Win32xx
 		return ::PostMessage(m_hWnd, uMsg, wParam, lParam);
 	}
 
+	inline BOOL CWnd::PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+	// Required by by some macros
+	{
+		return ::PostMessage(hWnd, uMsg, wParam, lParam);
+	}
+
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters
 	{
@@ -2076,14 +2079,19 @@ namespace Win32xx
 		return ::SendDlgItemMessage(m_hWnd, nIDDlgItem, Msg, wParam, lParam);
 	}
 
-
 	inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const
 	// The SendMessage function sends the specified message to a window or windows.
 	// It calls the window procedure for the window and does not return until the
 	// window procedure has processed the message.
 	{
 		return ::SendMessage(m_hWnd, uMsg, wParam, lParam);
-	}
+	} 
+
+	inline LRESULT CWnd::SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+	// Required by by some macros
+	{ 
+		return ::SendMessage(hWnd, uMsg, wParam, lParam);
+	} 
 
 	inline HWND CWnd::SetActiveWindow() const
 	// The SetActiveWindow function activates the window, but

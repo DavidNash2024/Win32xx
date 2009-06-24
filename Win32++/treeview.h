@@ -1,4 +1,4 @@
-// Win32++  Version 6.51 alpha
+// Win32++  Version 6.6 alpha
 // Released: ?? June, 2009 by:
 //
 //      David Nash

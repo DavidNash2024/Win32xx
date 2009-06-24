@@ -30,7 +30,7 @@ Minor adjustment to the behaviour of Rebar themes
 
 Incompatibilities with previous versions
 ----------------------------------------
-CFrame::AddToolbarBand
+CFrame::AddToolbarBand now requires three arguements
 
 
 Version 6.5

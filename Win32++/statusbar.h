@@ -1,4 +1,4 @@
-// Win32++  Version 6.51 alpha
+// Win32++  Version 6.6 alpha
 // Released: ?? June, 2009 by:
 //
 //      David Nash
@@ -97,31 +97,31 @@ namespace Win32xx
 	{
 		// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
 		//  to the border of the window
-		if (::IsWindow(m_hWnd))
+		if (IsWindow())
 		{
 			if (iParts > 256)
 				throw CWinException (_T("CStatusbar::CreateParts ... Too many panes"));
 
 			// Create the statusbar panes
-			if (!::SendMessage(m_hWnd, SB_SETPARTS, iParts, (LPARAM)iPaneWidths))
+			if (!SendMessage(SB_SETPARTS, iParts, (LPARAM)iPaneWidths))
 				throw CWinException(_T("CStatusbar::CreateParts failed"));
 		}
 	}
 
 	inline int CStatusbar::GetParts()
 	{
-		return (int)::SendMessage(m_hWnd, SB_GETPARTS, 0L, 0L);
+		return (int)SendMessage(SB_GETPARTS, 0L, 0L);
 	}
 
 	inline HICON CStatusbar::GetPartIcon(int iPart)
 	{
-		return (HICON)::SendMessage(m_hWnd, SB_GETICON, (WPARAM)iPart, 0L);
+		return (HICON)SendMessage(SB_GETICON, (WPARAM)iPart, 0L);
 	}
 
 	inline CRect CStatusbar::GetPartRect(int iPart)
 	{
 		CRect rc;
-		::SendMessage(m_hWnd, SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
+		SendMessage(SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
 		return rc;
 	}
 
@@ -130,10 +130,10 @@ namespace Win32xx
 		tString PaneText;
 		try
 		{
-			if (::IsWindow(m_hWnd))
+			if (IsWindow())
 			{
 				// Get size of Text array
-				int iChars = LOWORD (::SendMessage(m_hWnd, SB_GETTEXTLENGTH, iPart, 0L));
+				int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));
 
 				// Get the Text
 				TCHAR* szText = new TCHAR[iChars +1 ];
@@ -144,7 +144,7 @@ namespace Win32xx
 					throw std::bad_alloc();
 
 				szText[0] = _T('\0');
-				::SendMessage(m_hWnd, SB_GETTEXT, iPart, (LPARAM)szText);
+				SendMessage(SB_GETTEXT, iPart, (LPARAM)szText);
 
 				//Store the text in the member variable
 				PaneText = szText;
@@ -164,7 +164,7 @@ namespace Win32xx
 
 	inline BOOL CStatusbar::IsSimple()
 	{
-		return (BOOL)::SendMessage(m_hWnd, SB_ISSIMPLE, 0L, 0L);
+		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
 	}
 
 	inline void CStatusbar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
@@ -175,11 +175,11 @@ namespace Win32xx
 	//SBT_POPOUT		The text is drawn with a border to appear higher than the plane of the window.
 	//SBT_RTLREADING	The text will be displayed in the opposite direction to the text in the parent window.
 	{
-		if (::IsWindow(m_hWnd))
+		if (IsWindow())
 		{
-			if (::SendMessage(m_hWnd, SB_GETPARTS, 0L, 0L) >= iPart)
+			if (SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
 			{
-				if (!::SendMessage(m_hWnd, SB_SETTEXT, iPart | Style, (LPARAM)szText))
+				if (!SendMessage(SB_SETTEXT, iPart | Style, (LPARAM)szText))
 					throw CWinException(_T("Failed to set status bar text"));
 			}
 		}
@@ -187,7 +187,7 @@ namespace Win32xx
 
 	inline BOOL CStatusbar::SetPartIcon(int iPart, HICON hIcon)
 	{
-		return (BOOL)::SendMessage(m_hWnd, SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon);
+		return (BOOL)SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon);
 	}
 
 	inline void CStatusbar::SetPartWidth(int iPart, int iWidth) const
@@ -200,14 +200,14 @@ namespace Win32xx
 
 		try
 		{
-			if (::IsWindow(m_hWnd))
+			if (IsWindow())
 			{
 				if ((iPart > 256) || (iWidth < 0))
 					throw CWinException (_T("CStatusbar::SetPartWidth ... Invalid parameters"));
 
 				if (iPart < 0) iPart = 0;
 
-				int iParts = (int)::SendMessage(m_hWnd, SB_GETPARTS, 0L, 0L);
+				int iParts = (int)SendMessage(SB_GETPARTS, 0L, 0L);
 				iPartWidths = new int[iParts];
 
 				// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
@@ -215,7 +215,7 @@ namespace Win32xx
 				if (NULL == iPartWidths)
 					throw std::bad_alloc();
 
-				::SendMessage(m_hWnd, SB_GETPARTS, iParts, (LPARAM)iPartWidths);
+				SendMessage(SB_GETPARTS, iParts, (LPARAM)iPartWidths);
 
 				int iNewParts = MAX(iPart+1, iParts);
 				iNewPartWidths = new int[iNewParts];
@@ -232,7 +232,7 @@ namespace Win32xx
 				else
 					iNewPartWidths[iPart] = iNewPartWidths[iPart -1] + iWidth;
 
-				if (!::SendMessage(m_hWnd, SB_SETPARTS, iNewParts, (LPARAM)iNewPartWidths))
+				if (!SendMessage(SB_SETPARTS, iNewParts, (LPARAM)iNewPartWidths))
 					throw CWinException(_T("CStatusbar::SetPartWidth failed"));
 
 				delete []iNewPartWidths;
@@ -260,7 +260,7 @@ namespace Win32xx
 
 	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/)
 	{
-		::SendMessage(m_hWnd, SB_SIMPLE, (WPARAM)fSimple, 0L);
+		SendMessage(SB_SIMPLE, (WPARAM)fSimple, 0L);
 	}
 
 } // namespace Win32xx
