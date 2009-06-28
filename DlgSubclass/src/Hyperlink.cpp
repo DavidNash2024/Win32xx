@@ -58,7 +58,7 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 
 void CHyperlink::OpenUrl()
 {
-	TCHAR szUrl[ MAX_PATH + 1 ] = _T("http://users.bigpond.net.au/programming/");
+	TCHAR szUrl[ MAX_PATH + 1 ] = _T("https://sourceforge.net/projects/win32-framework");
 
 	if( (int)(LRESULT)::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL ) > 32)
 	{

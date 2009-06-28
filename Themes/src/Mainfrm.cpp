@@ -159,7 +159,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 		break;
 	case IDM_BLACK:
 		{
-			SetRebarTheme( RGB(128, 138 ,176), RGB(98, 108 ,136), RGB(97, 107, 117), RGB(17, 27, 37) );
+			SetRebarTheme( RGB(128, 138 ,176), RGB(98, 108 ,136), RGB(77, 87, 97), RGB(7, 17, 27) );
 			
 			ThemeToolbar tt = {TRUE, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
 			TB.SetToolbarTheme(tt);

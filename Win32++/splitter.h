@@ -3,7 +3,7 @@
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash

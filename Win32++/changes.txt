@@ -16,6 +16,11 @@ Major changes
   - Added Hide/Show option for the additional toolbars
   - Save/Load the theme options in the registry
   - Save/Load the rebar band postions and styles in the registry
+* Enhancements to docking
+  - By default the dockers are immediately resized while the splitter bar is 
+    being dragged. To defer resizing until the splitter bar is released, use
+    SetDragAutoResize(FALSE).
+     
   
    
    

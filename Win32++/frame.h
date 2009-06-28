@@ -3,7 +3,7 @@
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -53,10 +53,11 @@
 // In each case these members are exposed by a GetXXX function, allowing
 // them to be accessed or sent messages.
 
-// CFrame is responsible for creating a window which includes a menu and
-// toolbar (usualy hosted within a rebar), and a status bar, and managing
-// the position of these windows and the "view" window. The "view" window
-// is a seperate CWnd object assigned to the frame with the SetView function.
+// CFrame is responsible for creating a "frame" window. This window has a
+// menu and and several child windows, including a toolbar (usualy hosted 
+// within a rebar), and a status bar and a view positioned over the frame
+// window's non-client area. The "view" window is a seperate CWnd object 
+// assigned to the frame with the SetView function.
 
 // When compiling an application with these classes, it will need to be linked
 // with Comctl32.lib.
@@ -188,7 +189,7 @@ namespace Win32xx
 		CFrame();
 		virtual ~CFrame();
 
-		// These are the functions you might wish to override
+		// Override these functions as required
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual CRect GetViewRect() const;
 		virtual void SetStatusIndicators();
@@ -204,7 +205,7 @@ namespace Win32xx
 		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
 		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
 
-		// These functions aren't intended to be overridden
+		// These functions aren't virtual, and shouldn't be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
@@ -219,7 +220,7 @@ namespace Win32xx
 		BOOL IsRebarUsed() const		{return (GetRebar() != 0);}
 
 	protected:
-		// These are the functions you might wish to override
+		// Override these functions as required
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
 		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void AddMenubarBand();
@@ -255,6 +256,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void SaveRegistrySettings();
+		virtual void SetMenubarBandSize();
 		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetupToolbar();
 		virtual void SetTheme();	
@@ -262,10 +264,7 @@ namespace Win32xx
 		virtual void ShowStatusbar(BOOL bShow);
 		virtual void ShowToolbar(BOOL bShow);
 		virtual void UpdateMRUMenu();
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		// Its unlikely you would need to override these functions
-		virtual void SetMenubarBandSize();
+		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	
 
 		enum Constants
 		{

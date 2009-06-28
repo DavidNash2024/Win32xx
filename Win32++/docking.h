@@ -3,7 +3,7 @@
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -61,9 +61,9 @@
 #define DS_NO_DOCKCHILD_TOP		0x0040  // Prevent a child docking at the top
 #define DS_NO_DOCKCHILD_BOTTOM	0x0080  // Prevent a child docking at the bottom
 #define DS_NO_RESIZE			0x0100  // Prevent resizing
-#define DS_NO_AUTO_RESIZE		0x0200	// Reserved for future use
-#define DS_NO_CAPTION			0x0400  // No caption when docked
-#define DS_NO_UNDOCK			0x0800  // Prevent Undocking
+//#define DS_NO_DRAG_AUTO_RESIZE	0x0200	// Reserved
+#define DS_NO_CAPTION			0x0200  // No caption when docked
+#define DS_NO_UNDOCK			0x0400  // Prevent Undocking
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
 #define DS_FLATLOOK				0x2000	// Reserved for future use
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
@@ -389,6 +389,7 @@ namespace Win32xx
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
 		BOOL IsDocker() const {return TRUE;}
+		BOOL IsDragAutoResize();
 		BOOL IsRelated(HWND hWnd) const;
 		BOOL IsUndocked() const;
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
@@ -396,6 +397,7 @@ namespace Win32xx
 		void SetCaption(LPCTSTR szCaption);
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockWidth(int DockWidth);
+		void SetDragAutoResize(BOOL bAutoResize);
 		void SetView(CWnd& wndView);
 
 	protected:
@@ -427,6 +429,7 @@ namespace Win32xx
 		void MoveDockChildren(CDocker* pDockTarget);
 		void PromoteFirstChild();
 		void RecalcDockChildLayout(CRect rc);
+		void ResizeDockers(LPDRAGPOS pdp);
 		void SendNotify(UINT nMessageID);
 		void Undock();
 		void UndockContainer(CContainer* pContainer);
@@ -450,6 +453,7 @@ namespace Win32xx
 		BOOL m_Undocking;
 		BOOL m_bIsClosing;
 		BOOL m_bIsDragging;
+		BOOL m_bDragAutoResize;
 		int m_DockStartWidth;
 		int m_nDockID;
 		int m_NCHeight;
@@ -1567,7 +1571,7 @@ namespace Win32xx
 	// Definitions for the CDocker class
 	//
 	inline CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
-		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_DockStartWidth(0), m_nDockID(0),
+		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartWidth(0), m_nDockID(0),
 		            m_NCHeight(20), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -2159,11 +2163,6 @@ namespace Win32xx
 		return pTabbedMDI;
 	}
 
-	inline BOOL CDocker::IsDocked() const
-	{
-		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
-	}
-
 	inline BOOL CDocker::IsChildOfDocker(HWND hwnd) const
 	// returns true if the specified window is a child of this docker
 	{
@@ -2175,6 +2174,16 @@ namespace Win32xx
 		}
 
 		return FALSE;
+	}
+
+	inline BOOL CDocker::IsDocked() const
+	{
+		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
+	}
+
+	inline BOOL CDocker::IsDragAutoResize()
+	{
+		return m_bDragAutoResize;
 	}
 
 	inline BOOL CDocker::IsRelated(HWND hWnd) const
@@ -2489,7 +2498,8 @@ namespace Win32xx
 			{
 				CPoint pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
-				DrawHashBar(pdp->hdr.hwndFrom, pt);
+				if (!IsDragAutoResize())
+					DrawHashBar(pdp->hdr.hwndFrom, pt);
 				m_OldPoint = pt;
 			}
 			break;
@@ -2499,16 +2509,16 @@ namespace Win32xx
 				CPoint pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
-				CDocker* pDock = ((CDockBar*)FromHandle(pdp->hdr.hwndFrom))->GetDock();
-				if (NULL == pDock) break;
-
-				RECT rcDock = pDock->GetWindowRect();
-				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
-
 				if (pt != m_OldPoint)
 				{
-					DrawHashBar(pdp->hdr.hwndFrom, m_OldPoint);
-					DrawHashBar(pdp->hdr.hwndFrom, pt);
+					if (IsDragAutoResize())
+						ResizeDockers(pdp);
+					else	
+					{
+						DrawHashBar(pdp->hdr.hwndFrom, m_OldPoint);
+						DrawHashBar(pdp->hdr.hwndFrom, pt);
+					}
+					
 					m_OldPoint = pt;
 				}
 			}
@@ -2519,46 +2529,10 @@ namespace Win32xx
 				POINT pt = pdp->ptPos;
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
-				CDocker* pDock = ((CDockBar*)FromHandle(pdp->hdr.hwndFrom))->GetDock();
-				if (NULL == pDock) break;
-
-				RECT rcDock = pDock->GetWindowRect();
-				MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
-
-				DrawHashBar(pdp->hdr.hwndFrom, pt);
-				double dBarWidth = pDock->GetDockBar().GetWidth();
-				int iBarWidth    = pDock->GetDockBar().GetWidth();
-				int DockWidth;
-
-				switch (pDock->GetDockStyle() & 0xF)
-				{
-				case DS_DOCKED_LEFT:
-					DockWidth = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
-					DockWidth = MAX(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
-					break;
-				case DS_DOCKED_RIGHT:
-					DockWidth = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
-					DockWidth = MAX(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
-					break;
-				case DS_DOCKED_TOP:
-					DockWidth = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5* dBarWidth);
-					DockWidth = MAX(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
-					break;
-				case DS_DOCKED_BOTTOM:
-					DockWidth = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5* dBarWidth);
-					DockWidth = MAX(-iBarWidth, DockWidth);
-					pDock->SetDockWidth(DockWidth);
-					pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
-					break;
-				}
-
-				RecalcDockLayout();
+				if (!IsDragAutoResize())
+					DrawHashBar(pdp->hdr.hwndFrom, pt);
+				
+				ResizeDockers(pdp);
 			}
 			break;
 		case NM_SETFOCUS:
@@ -2594,6 +2568,52 @@ namespace Win32xx
 			}
 		}
 		return 0L;
+	}
+
+	inline void CDocker::ResizeDockers(LPDRAGPOS pdp)
+	{
+		POINT pt = pdp->ptPos;
+		MapWindowPoints(NULL, m_hWnd, &pt, 1);
+
+		CDocker* pDock = ((CDockBar*)FromHandle(pdp->hdr.hwndFrom))->GetDock();
+		if (NULL == pDock) return;
+
+		RECT rcDock = pDock->GetWindowRect();
+		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
+
+		double dBarWidth = pDock->GetDockBar().GetWidth();
+		int iBarWidth    = pDock->GetDockBar().GetWidth();
+		int DockWidth;
+
+		switch (pDock->GetDockStyle() & 0xF)
+		{
+		case DS_DOCKED_LEFT:
+			DockWidth = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
+			DockWidth = MAX(-iBarWidth, DockWidth);
+			pDock->SetDockWidth(DockWidth);
+			pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
+			break;
+		case DS_DOCKED_RIGHT:
+			DockWidth = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
+			DockWidth = MAX(-iBarWidth, DockWidth);
+			pDock->SetDockWidth(DockWidth);
+			pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Width());
+			break;
+		case DS_DOCKED_TOP:
+			DockWidth = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5* dBarWidth);
+			DockWidth = MAX(-iBarWidth, DockWidth);
+			pDock->SetDockWidth(DockWidth);
+			pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
+			break;
+		case DS_DOCKED_BOTTOM:
+			DockWidth = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5* dBarWidth);
+			DockWidth = MAX(-iBarWidth, DockWidth);
+			pDock->SetDockWidth(DockWidth);
+			pDock->m_DockWidthRatio = ((double)pDock->m_DockStartWidth)/((double)pDock->m_pDockParent->GetWindowRect().Height());
+			break;
+		}
+
+		RecalcDockLayout();
 	}
 
 	inline void CDocker::OnSetFocus(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -2916,6 +2936,11 @@ namespace Win32xx
 	{
 		m_DockStartWidth = DockWidth;
 		m_DockWidthRatio = 1.0;
+	}
+
+	inline void CDocker::SetDragAutoResize(BOOL bAutoResize)
+	{
+		m_bDragAutoResize = bAutoResize;
 	}
 
 	inline void CDocker::SetView(CWnd& wndView)

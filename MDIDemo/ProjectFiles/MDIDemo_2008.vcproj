@@ -404,136 +404,44 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="main.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="MainMDIfrm.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MDIChildListView.cpp"
+				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildMax.cpp"
+				RelativePath="..\src\MainMDIfrm.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildRect.cpp"
+				RelativePath="..\src\MDIChildListView.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildSimple.cpp"
+				RelativePath="..\src\MDIChildMax.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildText.cpp"
+				RelativePath="..\src\MDIChildRect.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildTreeView.cpp"
+				RelativePath="..\src\MDIChildSimple.cpp"
 				>
 			</File>
 			<File
-				RelativePath="MDIDemoApp.cpp"
+				RelativePath="..\src\MDIChildText.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildTreeView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIDemoApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
 			</File>
 		</Filter>
 		<Filter
@@ -541,39 +449,39 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="MainMDIfrm.h"
+				RelativePath="..\src\MainMDIfrm.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildListView.h"
+				RelativePath="..\src\MDIChildListView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildMax.h"
+				RelativePath="..\src\MDIChildMax.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildRect.h"
+				RelativePath="..\src\MDIChildRect.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildSimple.h"
+				RelativePath="..\src\MDIChildSimple.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildText.h"
+				RelativePath="..\src\MDIChildText.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MDIChildTreeView.h"
+				RelativePath="..\src\MDIChildTreeView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RectMDIChild.h"
+				RelativePath="..\src\MDIDemoApp.h"
 				>
 			</File>
 			<File
-				RelativePath="resource.h"
+				RelativePath="..\src\resource.h"
 				>
 			</File>
 		</Filter>
@@ -581,80 +489,52 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath="Resource.rc"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\Default_Resource.h"
+				RelativePath="..\..\Win32++\default_resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\..\Win32++\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h"
+				RelativePath="..\..\Win32++\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h"
+				RelativePath="..\..\Win32++\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\MDI.h"
+				RelativePath="..\..\Win32++\listview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Rebar.h"
+				RelativePath="..\..\Win32++\mdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Statusbar.h"
+				RelativePath="..\..\Win32++\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Toolbar.h"
+				RelativePath="..\..\Win32++\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>

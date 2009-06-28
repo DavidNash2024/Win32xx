@@ -153,13 +153,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_LAYOUT_DEFAULT:
 		SetRedraw(FALSE);
-
+		
 		m_DockTabbedMDI.CloseAllDockers();
 		m_DockTabbedMDI.GetTabbedMDI()->CloseAllMDIChildren();
-		::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
 		LoadDefaultDockers();
 		LoadDefaultMDIs();
-		
+			
 		SetRedraw(TRUE);
 		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 

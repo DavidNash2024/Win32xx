@@ -114,5 +114,5 @@ C++ Toolkit 2003.
 
 Start with one of the generic starters, and add your code.
 
-For additional information on getting started, refer to the tutorial at
-http://users.bigpond.net.au/programming/tutorial.htm
+For additional information on getting started, refer to the tutorial included
+in the documentation.
