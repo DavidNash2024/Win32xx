@@ -61,8 +61,7 @@
 #define DS_NO_DOCKCHILD_TOP		0x0040  // Prevent a child docking at the top
 #define DS_NO_DOCKCHILD_BOTTOM	0x0080  // Prevent a child docking at the bottom
 #define DS_NO_RESIZE			0x0100  // Prevent resizing
-//#define DS_NO_DRAG_AUTO_RESIZE	0x0200	// Reserved
-#define DS_NO_CAPTION			0x0200  // No caption when docked
+#define DS_NO_CAPTION			0x0200  // Prevent display of caption when docked
 #define DS_NO_UNDOCK			0x0400  // Prevent Undocking
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
 #define DS_FLATLOOK				0x2000	// Reserved for future use
@@ -647,40 +646,45 @@ namespace Win32xx
 			else
 				dc 	= GetWindowDC();
 
-			m_bOldFocus = bFocus;
-
 			CRect rc = GetWindowRect();
+
+			// Create and set up our memory DC
+			CDC dcMem = ::CreateCompatibleDC(dc);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
+			int Width = MAX(rc.Width() -rcAdjust, 0);
+			int Height = m_NCHeight + rcAdjust;
+			dcMem.CreateCompatibleBitmap(dc, Width, Height);
+			m_bOldFocus = bFocus;
 
 			// Set the font for the title
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = sizeof(info);
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dc.CreateFontIndirect(&info.lfStatusFont);
+			dcMem.CreateFontIndirect(&info.lfStatusFont);
 
 			// Set the Colours
 			if (bFocus)
 			{
-				dc.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
-				::SetBkColor(dc, GetSysColor(COLOR_ACTIVECAPTION));
-				::SetTextColor(dc, RGB(255, 255, 255));
+				dcMem.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
+				::SetBkColor(dcMem, GetSysColor(COLOR_ACTIVECAPTION));
+				::SetTextColor(dcMem, RGB(255, 255, 255));
 			}
 			else
 			{
-				dc.CreateSolidBrush(RGB(232, 228, 220));
-				::SetBkColor(dc, RGB(232, 228, 220));
-				::SetTextColor(dc, RGB(0, 0, 0));
+				dcMem.CreateSolidBrush(RGB(232, 228, 220));
+				::SetBkColor(dcMem, RGB(232, 228, 220));
+				::SetTextColor(dcMem, RGB(0, 0, 0));
 			}
 
 			// Draw the rectangle
-			dc.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
-			Rectangle(dc, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
+			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
+			Rectangle(dcMem, rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
 
 			// Display the caption
 			int cx = GetSystemMetrics(SM_CXSMICON);
 			int cy = GetSystemMetrics(SM_CYSMICON);
 			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_NCHeight +rcAdjust);
-			::DrawText(dc, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			::DrawText(dcMem, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
 			int gap = 4;
@@ -688,11 +692,14 @@ namespace Win32xx
 			m_rcClose.left = m_rcClose.right - cx;
 			m_rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
 			m_rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
-			DrawCloseButton(dc, 0, bFocus);
+			DrawCloseButton(dcMem, 0, bFocus);
 
 			// Draw the 3D border
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 				Draw3DBorder(rc);
+
+			// Copy the Memory DC to the window's DC
+			::BitBlt(dc, rcAdjust, rcAdjust, Width, Height, dcMem, rcAdjust, rcAdjust, SRCCOPY);
 		}
 	}
 
