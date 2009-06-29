@@ -230,6 +230,7 @@ namespace Win32xx
 			virtual void SendNotify(UINT nMessageID);
 
 			tString GetCaption() const		{ return m_tsCaption; }
+			CRect GetCloseRect();
 			CWnd* GetView() const			{ return m_pView; }
 			BOOL IsClosing();
 			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
@@ -239,11 +240,12 @@ namespace Win32xx
 
 		protected:
 			virtual void    OnMouseActivate(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual void    OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
 			virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDown(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonUp(WPARAM wParam, LPARAM lParam);
+			virtual void    OnNCMouseLeave(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnNCMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCPaint(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
@@ -252,7 +254,6 @@ namespace Win32xx
 			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
-			CRect m_rcClose;
 			tString m_tsCaption;
 			CPoint m_Oldpt;
 			CDocker* m_pDock;
@@ -260,7 +261,8 @@ namespace Win32xx
 			int m_NCHeight;
 			BOOL m_bClosePressed;
 			BOOL m_bOldFocus;
-			BOOL m_bLButtonDown;
+			BOOL m_bCaptionPressed;
+			BOOL m_IsTracking;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -603,7 +605,8 @@ namespace Win32xx
 	// Definitions for the CDockClient class nested within CDocker
 	//
 	inline CDocker::CDockClient::CDockClient() : m_pView(0), m_NCHeight(20),
-						m_bClosePressed(FALSE), m_bOldFocus(FALSE), m_bLButtonDown(FALSE)
+						m_bClosePressed(FALSE), m_bOldFocus(FALSE), m_bCaptionPressed(FALSE),
+						m_IsTracking(FALSE)
 	{
 	}
 
@@ -631,12 +634,33 @@ namespace Win32xx
 		LineTo(dc, 1, rcw.Height()-2);
 	}
 
+	inline CRect CDocker::CDockClient::GetCloseRect()
+	{
+		// Calculate the close rect position in screen co-ordinates
+		CRect rcClose;
+		
+	//	if (m_pDock->IsDocked())
+		{
+			int gap = 4;
+			CRect rc = GetWindowRect();	
+			int cx = GetSystemMetrics(SM_CXSMICON);
+			int cy = GetSystemMetrics(SM_CYSMICON);
+
+			rcClose.right = rc.right - gap;
+			rcClose.left = rcClose.right - cx;
+			rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
+			rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
+		}
+
+		return rcClose;
+	}
+
 	inline void CDocker::CDockClient::DrawCaption(WPARAM wParam, BOOL bFocus)
 	{
 		// Acquire the DC for our NonClient painting
 		// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
 
-		if (!(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			m_bOldFocus = FALSE;
 
@@ -682,16 +706,10 @@ namespace Win32xx
 
 			// Display the caption
 			int cx = GetSystemMetrics(SM_CXSMICON);
-			int cy = GetSystemMetrics(SM_CYSMICON);
 			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_NCHeight +rcAdjust);
 			::DrawText(dcMem, m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
-			int gap = 4;
-			m_rcClose.right = rc.right - gap;
-			m_rcClose.left = m_rcClose.right - cx;
-			m_rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
-			m_rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
 			DrawCloseButton(dcMem, 0, bFocus);
 
 			// Draw the 3D border
@@ -708,89 +726,95 @@ namespace Win32xx
 		// The close button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
 
-		// Determine the close button's drawing position relative to the window
-		CRect rcClose = m_rcClose;
-		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
-
-		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+		if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			rcClose.OffsetRect(2, m_NCHeight+2);
-			if (GetWindowRect().Height() < (m_NCHeight+4))
-				rcClose.OffsetRect(-2, -2);
-		}
-		else
-			rcClose.OffsetRect(0, m_NCHeight-2);
+			// Determine the close button's drawing position relative to the window	
+			CRect rcClose = GetCloseRect();
+			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
 
-		// Draw the outer highlight for the close button
-		if (!IsRectEmpty(&rcClose))
-		{
-			switch (uState)
+			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			{
-			case 0:
-				{
-					if (bFocus)
-						DrawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_ACTIVECAPTION));
-					else
-						DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+				rcClose.OffsetRect(2, m_NCHeight+2);
+				if (GetWindowRect().Height() < (m_NCHeight+4))
+					rcClose.OffsetRect(-2, -2);
+			}
+			else
+				rcClose.OffsetRect(0, m_NCHeight-2); 
 
-					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
-					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
-					::LineTo(DrawDC, rcClose.right, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+			// Draw the outer highlight for the close button
+			if (!IsRectEmpty(&rcClose))
+			{
+				switch (uState)
+				{
+				case 0:
+					{
+						// Normal button
+						if (bFocus)
+							DrawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_ACTIVECAPTION));
+						else
+							DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+
+						::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+						::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+						::LineTo(DrawDC, rcClose.right, rcClose.top);
+						::LineTo(DrawDC, rcClose.left, rcClose.top);
+						::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+						break;
+					}
+
+				case 1:
+					{
+						// Popped up button
+						// Draw outline, white at top, black on bottom
+						DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+						::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+						::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+						::LineTo(DrawDC, rcClose.right, rcClose.top);
+						DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+						::LineTo(DrawDC, rcClose.left, rcClose.top);
+						::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+					}
+
+					break;
+				case 2:
+					{
+						// Pressed button
+						// Draw outline, black on top, white on bottom
+						DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+						::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
+						::LineTo(DrawDC, rcClose.right, rcClose.bottom);
+						::LineTo(DrawDC, rcClose.right, rcClose.top);
+						DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+						::LineTo(DrawDC, rcClose.left, rcClose.top);
+						::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+					}
 					break;
 				}
 
-			case 1:
-				{
-					// Draw outline, white at top, black on bottom
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
-					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
-					::LineTo(DrawDC, rcClose.right, rcClose.top);
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::LineTo(DrawDC, rcClose.left, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
-				}
+				// Manually Draw Close Button
+				if (bFocus)
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
+				else
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-				break;
-			case 2:
-				{
-					// Draw outline, black on top, white on bottom
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
-					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
-					::LineTo(DrawDC, rcClose.right, rcClose.top);
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::LineTo(DrawDC, rcClose.left, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
-				}
-				break;
+				::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
+				::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -3);
+
+				::MoveToEx(DrawDC, rcClose.left + 4, rcClose.top +3, NULL);
+				::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -4);
+
+				::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +4, NULL);
+				::LineTo(DrawDC, rcClose.right - 4, rcClose.bottom -3);
+
+				::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +3, NULL);
+				::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -3);
+
+				::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +4, NULL);
+				::LineTo(DrawDC, rcClose.left + 3, rcClose.bottom -3);
+
+				::MoveToEx(DrawDC, rcClose.right -5, rcClose.top +3, NULL);
+				::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -4);
 			}
-
-			// Manually Draw Close Button
-			if (bFocus)
-				DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
-			else
-				DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
-
-			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -3);
-
-			::MoveToEx(DrawDC, rcClose.left + 4, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -4);
-
-			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +4, NULL);
-			::LineTo(DrawDC, rcClose.right - 4, rcClose.bottom -3);
-
-			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -3);
-
-			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +4, NULL);
-			::LineTo(DrawDC, rcClose.left + 3, rcClose.bottom -3);
-
-			::MoveToEx(DrawDC, rcClose.right -5, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -4);
 		}
 	}
 
@@ -823,7 +847,7 @@ namespace Win32xx
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 
 				// Indicate if the point is in the close button (except for Win95)
-				if ((GetWinVersion() > 1400) && (m_rcClose.PtInRect(pt)))
+				if ((GetWinVersion() > 1400) && (GetCloseRect().PtInRect(pt)))
 					return HTCLOSE;
 
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
@@ -843,7 +867,7 @@ namespace Win32xx
 			if (HTCLOSE == wParam) m_bClosePressed = TRUE;
 			else	m_bClosePressed = FALSE;
 
-			m_bLButtonDown = TRUE;
+			m_bCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
 			if (m_pDock->IsDocked())
@@ -851,6 +875,12 @@ namespace Win32xx
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				MapWindowPoints(NULL, m_hWnd, &pt, 1);
 				m_pView->SetFocus();
+
+				// Update the close button
+				UINT uState = (wParam == HTCLOSE)? IsLeftButtonDown()? 2 : 1 : 0;
+				CDC dc = GetWindowDC();
+				DrawCloseButton(dc, uState, m_bOldFocus);
+				
 				return 0L;
 			}
 		}
@@ -861,8 +891,8 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			m_bLButtonDown = FALSE;
-			if ((HTCLOSE == wParam) && m_bClosePressed)
+			m_bCaptionPressed = FALSE;
+			if ((HTCLOSE == wParam) && m_bClosePressed && m_bOldFocus)
 			{
 				// Process this message first
 				DefWindowProc(WM_NCLBUTTONUP, wParam, lParam);
@@ -902,8 +932,28 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CDocker::CDockClient::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	inline void CDocker::CDockClient::OnNCMouseLeave(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
+		m_IsTracking = FALSE;
+		CDC dc = GetWindowDC();
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION) && m_pDock->IsDocked())
+			DrawCloseButton(dc, 0, m_bOldFocus);
+
+		m_IsTracking = FALSE;
+	}
+
+	inline LRESULT CDocker::CDockClient::OnNCMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		if (!m_IsTracking)
+		{
+			TRACKMOUSEEVENT TrackMouseEventStruct = {0};
+			TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
+			TrackMouseEventStruct.dwFlags = TME_LEAVE|TME_NONCLIENT;
+			TrackMouseEventStruct.hwndTrack = m_hWnd;
+			_TrackMouseEvent(&TrackMouseEventStruct);
+			m_IsTracking = TRUE;
+		}
+
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			if (m_pDock->IsDocked())
@@ -912,15 +962,20 @@ namespace Win32xx
 				if ( (m_Oldpt.x == GET_X_LPARAM(lParam) ) && (m_Oldpt.y == GET_Y_LPARAM(lParam)))
 					return 0L;
 
-				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_bLButtonDown))
+				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_bCaptionPressed))
 				{
 					CDocker* pDock = (CDocker*)FromHandle(GetParent());
 					if (pDock)
 						pDock->Undock();
 				}
+
+				// Update the close button
+				UINT uState = (wParam == HTCLOSE)? (IsLeftButtonDown() && m_bOldFocus)? 2 : 1 : 0;
+				CDC dc = GetWindowDC();
+				DrawCloseButton(dc, uState, m_bOldFocus);
 			}
 
-			m_bLButtonDown = FALSE;
+			m_bCaptionPressed = FALSE;
 		}
 		return CWnd::WndProcDefault(m_hWnd, WM_MOUSEMOVE, wParam, lParam);
 	}
@@ -993,9 +1048,14 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
+		case WM_MOUSEACTIVATE:
+			OnMouseActivate(wParam, lParam);
+			break;
+
 		case WM_NCCALCSIZE:
 			OnNCCalcSize(wParam, lParam);
 			break;
+		
 		case WM_NCHITTEST:
 			return OnNCHitTest(wParam, lParam);
 
@@ -1006,14 +1066,15 @@ namespace Win32xx
 			return OnNCLButtonUp(wParam, lParam);
 
 		case WM_NCMOUSEMOVE:
-			return OnMouseMove(wParam, lParam);
+			return OnNCMouseMove(wParam, lParam);
 
 		case WM_NCPAINT:
 			return OnNCPaint(wParam, lParam);
 
-		case WM_MOUSEACTIVATE:
-			OnMouseActivate(wParam, lParam);
+		case WM_NCMOUSELEAVE:
+			OnNCMouseLeave(wParam, lParam);
 			break;
+
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged(wParam, lParam);
 			break;
@@ -2551,7 +2612,7 @@ namespace Win32xx
 					{
 						if ((*iter)->IsChildOfDocker(::GetFocus()))
 						{
-							if ((*iter)->IsDocked())
+							if ((*iter)->IsDocked() && !((*iter)->GetDockStyle() & DS_NO_CAPTION))
 								(*iter)->GetDockClient().DrawCaption((WPARAM)1, TRUE);
 						}
 					}
@@ -2567,7 +2628,7 @@ namespace Win32xx
 					{
 						if ((*iter)->IsChildOfDocker(::GetFocus()))
 						{
-							if ((*iter)->IsDocked())
+							if ((*iter)->IsDocked() && !((*iter)->GetDockStyle() & DS_NO_CAPTION))
 								(*iter)->GetDockClient().DrawCaption((WPARAM)1, FALSE);
 						}
 					}
