@@ -1,5 +1,5 @@
 // Win32++  Version 6.6 alpha
-// Released: ?? June, 2009 by:
+// Released: ?? July, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -639,18 +639,15 @@ namespace Win32xx
 		// Calculate the close rect position in screen co-ordinates
 		CRect rcClose;
 		
-	//	if (m_pDock->IsDocked())
-		{
-			int gap = 4;
-			CRect rc = GetWindowRect();	
-			int cx = GetSystemMetrics(SM_CXSMICON);
-			int cy = GetSystemMetrics(SM_CYSMICON);
+		int gap = 4;
+		CRect rc = GetWindowRect();	
+		int cx = GetSystemMetrics(SM_CXSMICON);
+		int cy = GetSystemMetrics(SM_CYSMICON);
 
-			rcClose.right = rc.right - gap;
-			rcClose.left = rcClose.right - cx;
-			rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
-			rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
-		}
+		rcClose.right = rc.right - gap;
+		rcClose.left = rcClose.right - cx;
+		rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
+		rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
 
 		return rcClose;
 	}

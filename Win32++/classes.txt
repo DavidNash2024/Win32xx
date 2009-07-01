@@ -34,6 +34,9 @@ rebar.h           | CRebar           | Win32, Win64      | Adds support for a
 socket.h          | CSocket          | Win32, Win64      | Adds network  
                   |                  | and WinCE         | support.
 ------------------+------------------+-------------------+---------------------
+splitter.h        | CSplitter        | Win32, Win64      | Adds splitter support
+                  |                  |                   | (depreciated)
+------------------+------------------+-------------------+----------------------             
 statusbar.h       | CStatusbar       | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | Status bar control.
 ------------------+------------------+-------------------+---------------------
@@ -44,7 +47,7 @@ tab.h             | CTab             | Win32, Win64      | Adds support for tab
 toolbar.h         | CToolbar         | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | Toolbar control.
 ------------------+------------------+-------------------+---------------------
-treeView.h        | CTreeView        | Win32, Win64      | Adds support for a
+treeview.h        | CTreeView        | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | TreeView control.
 ------------------+------------------+-------------------+---------------------
 wceframe.h        | CWceFrame        | WinCE only        | Adds support for
