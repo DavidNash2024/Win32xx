@@ -235,7 +235,7 @@ namespace Win32xx
 			BOOL IsClosing();
 			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
 			void SetCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
-			void SetClosePressed()			{ m_bClosePressed = TRUE; }
+			void SetClosePressed()			{ m_IsClosePressed = TRUE; }
 			void SetView(CWnd& Wnd)			{ m_pView = &Wnd; }
 
 		protected:
@@ -259,7 +259,7 @@ namespace Win32xx
 			CDocker* m_pDock;
 			CWnd* m_pView;
 			int m_NCHeight;
-			BOOL m_bClosePressed;
+			BOOL m_IsClosePressed;
 			BOOL m_bOldFocus;
 			BOOL m_bCaptionPressed;
 			BOOL m_IsTracking;
@@ -605,7 +605,7 @@ namespace Win32xx
 	// Definitions for the CDockClient class nested within CDocker
 	//
 	inline CDocker::CDockClient::CDockClient() : m_pView(0), m_NCHeight(20),
-						m_bClosePressed(FALSE), m_bOldFocus(FALSE), m_bCaptionPressed(FALSE),
+						m_IsClosePressed(FALSE), m_bOldFocus(FALSE), m_bCaptionPressed(FALSE),
 						m_IsTracking(FALSE)
 	{
 	}
@@ -817,7 +817,7 @@ namespace Win32xx
 
 	inline BOOL CDocker::CDockClient::IsClosing()
 	{
-		return m_bClosePressed;
+		return m_IsClosePressed;
 	}
 
 	inline void CDocker::CDockClient::OnNCCalcSize(WPARAM& /*wParam*/, LPARAM& lParam)
@@ -861,8 +861,8 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (HTCLOSE == wParam) m_bClosePressed = TRUE;
-			else	m_bClosePressed = FALSE;
+			if (HTCLOSE == wParam) m_IsClosePressed = TRUE;
+			else	m_IsClosePressed = FALSE;
 
 			m_bCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
@@ -889,7 +889,7 @@ namespace Win32xx
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			m_bCaptionPressed = FALSE;
-			if ((HTCLOSE == wParam) && m_bClosePressed && m_bOldFocus)
+			if ((HTCLOSE == wParam) && m_IsClosePressed && m_bOldFocus)
 			{
 				// Process this message first
 				DefWindowProc(WM_NCLBUTTONUP, wParam, lParam);
@@ -912,7 +912,7 @@ namespace Win32xx
 				return 0;
 			}
 
-			m_bClosePressed = FALSE;
+			m_IsClosePressed = FALSE;
 		}
 		return CWnd::WndProcDefault(m_hWnd, WM_NCLBUTTONUP, wParam, lParam);
 	}

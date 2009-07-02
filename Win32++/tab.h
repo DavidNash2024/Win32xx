@@ -127,6 +127,7 @@ namespace Win32xx
 		virtual SIZE    GetMaxTabSize();
 		virtual void    OnCreate();
 		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
+		virtual void    OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
@@ -149,6 +150,7 @@ namespace Win32xx
 		CWnd* m_pView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
 		BOOL m_IsTracking;
+		BOOL m_IsClosePressed;
 		BOOL m_IsListPressed;
 		BOOL m_IsListMenuActive;
 		int m_nTabHeight;
@@ -236,7 +238,7 @@ namespace Win32xx
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab() : m_pView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), 
+	inline CTab::CTab() : m_pView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(20)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
@@ -309,12 +311,14 @@ namespace Win32xx
 		// The close button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
 
+		if (!m_bShowButtons) return;
+
 		// Determine the close button's drawing position relative to the window
 		CRect rcClose = GetCloseRect();
 
 		CPoint pt = GetCursorPos();
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
-		UINT uState = rcClose.PtInRect(pt)? 1: 0;
+		UINT uState = rcClose.PtInRect(pt)? m_IsClosePressed? 2: 1: 0;
 
 		// Draw the outer highlight for the close button
 		if (!IsRectEmpty(&rcClose))
@@ -388,6 +392,8 @@ namespace Win32xx
 		// The list button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
 
+		if (!m_bShowButtons) return;
+
 		// Determine the list button's drawing position relative to the window
 		CRect rcList = GetListRect();
 
@@ -459,50 +465,53 @@ namespace Win32xx
 		{
 			CRect rcItem;
 			TabCtrl_GetItemRect(m_hWnd, i, &rcItem);
-			if (i == TabCtrl_GetCurSel(m_hWnd))
+			if (!rcItem.IsRectEmpty())
 			{
-				dcMem.CreateSolidBrush(RGB(248,248,248));
-				SetBkColor(dcMem, RGB(248,248,248));
+				if (i == TabCtrl_GetCurSel(m_hWnd))
+				{
+					dcMem.CreateSolidBrush(RGB(248,248,248));
+					SetBkColor(dcMem, RGB(248,248,248));
+				}
+				else
+				{
+					dcMem.CreateSolidBrush(RGB(200,200,200));
+					SetBkColor(dcMem, RGB(200,200,200));
+				}
+
+				dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+				RoundRect(dcMem, rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
+
+				if (rcItem.Width() >= 24)
+				{
+					TCHAR szText[30];
+					TCITEM tcItem = {0};
+					tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
+					tcItem.cchTextMax = 30;
+					tcItem.pszText = szText;
+					TabCtrl_GetItem(m_hWnd, i, &tcItem);
+
+					// Draw the icon
+					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+2, ILD_NORMAL);
+
+					// Draw the text
+					NONCLIENTMETRICS info = {0};
+					info.cbSize = sizeof(info);
+					SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+					dcMem.CreateFontIndirect(&info.lfStatusFont);
+
+					// Calculate the size of the text
+					CRect rcText = rcItem;
+
+					int iImageSize = 20;
+					int iPadding = 4;
+					if (tcItem.iImage >= 0)
+						rcText.left += iImageSize;
+
+					rcText.left += iPadding;
+					::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+				}
 			}
-			else
-			{
-				dcMem.CreateSolidBrush(RGB(200,200,200));
-				SetBkColor(dcMem, RGB(200,200,200));
-			}
-
-			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-			RoundRect(dcMem, rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
-
-			if (rcItem.Width() >= 24)
-			{
-				TCHAR szText[30];
-				TCITEM tcItem = {0};
-				tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
-				tcItem.cchTextMax = 30;
-				tcItem.pszText = szText;
-				TabCtrl_GetItem(m_hWnd, i, &tcItem);
-
-				// Draw the icon
-				ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+2, ILD_NORMAL);
-
-				// Draw the text
-				NONCLIENTMETRICS info = {0};
-				info.cbSize = sizeof(info);
-				SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-				dcMem.CreateFontIndirect(&info.lfStatusFont);
-
-				// Calculate the size of the text
-				CRect rcText = rcItem;
-
-				int iImageSize = 20;
-				int iPadding = 4;
-				if (tcItem.iImage >= 0)
-					rcText.left += iImageSize;
-
-				rcText.left += iPadding;
-				::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
-			}
-		}
+		}  
 	}
 
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
@@ -525,35 +534,38 @@ namespace Win32xx
 
 		dcMem.CreateSolidBrush(RGB(248,248,248));
 		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-		Rectangle(dcMem, left, top, right, bottom);
+		if (!rcItem.IsRectEmpty())
+		{
+			Rectangle(dcMem, left, top, right, bottom);
 
-		// Draw a darker line below the rectangle
-		dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-		if (IsBottomTab)
-		{
-			MoveToEx(dcMem, left-1, bottom, NULL);
-			LineTo(dcMem, right, bottom);
-		}
-		else
-		{
-			MoveToEx(dcMem, left-1, top-1, NULL);
-			LineTo(dcMem, right, top-1);
-		}
+			// Draw a darker line below the rectangle
+			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+			if (IsBottomTab)
+			{
+				MoveToEx(dcMem, left-1, bottom, NULL);
+				LineTo(dcMem, right, bottom);
+			}
+			else
+			{
+				MoveToEx(dcMem, left-1, top-1, NULL);
+				LineTo(dcMem, right, top-1);
+			}
 
-		// Draw a lighter line over the darker line for the selected tab
-		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-		TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
-		OffsetRect(&rcItem, 1, 1);
+			// Draw a lighter line over the darker line for the selected tab
+			dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
+			TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
+			OffsetRect(&rcItem, 1, 1);
 
-		if (IsBottomTab)
-		{
-			MoveToEx(dcMem, rcItem.left, bottom, NULL);
-			LineTo(dcMem, rcItem.right, bottom);
-		}
-		else
-		{
-			MoveToEx(dcMem, rcItem.left, top-1, NULL);
-			LineTo(dcMem, rcItem.right, top-1);
+			if (IsBottomTab)
+			{
+				MoveToEx(dcMem, rcItem.left, bottom, NULL);
+				LineTo(dcMem, rcItem.right, bottom);
+			}
+			else
+			{
+				MoveToEx(dcMem, rcItem.left, top-1, NULL);
+				LineTo(dcMem, rcItem.right, top-1);
+			}
 		}
 	}
 
@@ -673,8 +685,11 @@ namespace Win32xx
 
 		if (GetCloseRect().PtInRect(pt))
 		{
-			RemoveTabPage(GetCurSel());
+			m_IsClosePressed = TRUE;
+		//	RemoveTabPage(GetCurSel());
 		}
+		else
+			m_IsClosePressed = FALSE;
 
 		if (GetListRect().PtInRect(pt))
 		{
@@ -682,11 +697,21 @@ namespace Win32xx
 		}
 	}
 
+	inline void CTab::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		if (m_IsClosePressed && GetCloseRect().PtInRect(pt))
+			RemoveTabPage(GetCurSel());
+		
+		m_IsClosePressed = FALSE;
+	}
+
 	inline void CTab::OnMouseLeave(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		CDC dc = GetDC();
 		DrawCloseButton(dc);
 		DrawListButton(dc);
+
 		m_IsTracking = FALSE;
 	}
 
@@ -696,6 +721,12 @@ namespace Win32xx
 		{
 			m_IsListPressed = FALSE;
 		}
+
+		if (!IsLeftButtonDown())
+		{
+			m_IsClosePressed = FALSE;
+			m_IsListPressed = FALSE;
+		}	
 		
 		if (!m_IsTracking)
 		{
@@ -781,12 +812,9 @@ namespace Win32xx
 		// Draw the tab buttons on the memory DC:
 		DrawTabs(dcMem);
 
-		// Draw the close button if required
-		if (m_bShowButtons)
-		{
-			DrawCloseButton(dcMem);
-			DrawListButton(dcMem);
-		}
+		// Draw the buttons if required
+		DrawCloseButton(dcMem);
+		DrawListButton(dcMem);
 
 		DrawTabBorders(dcMem, rcTab);
 
@@ -820,6 +848,7 @@ namespace Win32xx
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 			GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+
 		}
 	}
 
@@ -910,6 +939,7 @@ namespace Win32xx
 			if (m_bShowButtons) xGap += 30;
 
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
+			nItemWidth = MAX(nItemWidth, 0);
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
 		}
@@ -1061,13 +1091,16 @@ namespace Win32xx
 			return 0;
 		case WM_ERASEBKGND:
 			return 0;
-		
-		case WM_NCHITTEST:
-			return OnNCHitTest(wParam, lParam);
 
+		case WM_KILLFOCUS:
+			m_IsClosePressed = FALSE;
+			break;
 		case WM_LBUTTONDBLCLK:
 		case WM_LBUTTONDOWN:
 			OnLButtonDown(wParam, lParam);
+			break;
+		case WM_LBUTTONUP:
+			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MOUSEMOVE:
 			OnMouseMove(wParam, lParam);
@@ -1075,8 +1108,8 @@ namespace Win32xx
 		case WM_MOUSELEAVE:
 			OnMouseLeave(wParam, lParam);
 			break;
-		case WM_LBUTTONUP:
-			break;
+		case WM_NCHITTEST:
+			return OnNCHitTest(wParam, lParam);
 		
 		case WM_WINDOWPOSCHANGED:
 			RecalcLayout();

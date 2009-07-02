@@ -5,6 +5,7 @@
 
 #include "Classes.h"
 #include "resource.h"
+#include "ContainerApp.h"
 
 
 ///////////////////////////////////////////////
@@ -162,6 +163,10 @@ void CContainClasses::SetupToolbar()
 
 	// Add the ComboBarEx control to the toolbar
 	AddCombo();
+
+	// Match the Container's Toolbar theme to the MainFrame's toolbar theme
+	ThemeToolbar tt = GetContainerApp().GetMainFrame().GetToolbar().GetToolbarTheme();
+	GetToolbar().SetToolbarTheme(tt);
 }
 
 
