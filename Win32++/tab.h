@@ -95,6 +95,7 @@ namespace Win32xx
 		virtual void SelectPage(int iPage);
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
+		virtual void SetShowButtons(BOOL bShow);
 		virtual void SetTabImage(UINT nTab, int iImage);
 		virtual void SetTabsAtTop(BOOL bTop);
 		virtual void SetTabText(UINT nTab, LPCTSTR szText);
@@ -108,7 +109,6 @@ namespace Win32xx
 		BOOL GetShowButtons() const { return m_bShowButtons; }
 		int GetTabHeight() const { return m_nTabHeight; }
 		CWnd* GetView() const		{ return m_pView; }
-		void SetShowButtons(BOOL bShow)	{ m_bShowButtons = bShow; }
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
@@ -495,9 +495,9 @@ namespace Win32xx
 
 					// Draw the text
 					NONCLIENTMETRICS info = {0};
-					info.cbSize = sizeof(info);
+					info.cbSize = GetSizeofNonClientMetrics();					
 					SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-					dcMem.CreateFontIndirect(&info.lfStatusFont);
+					dcMem.CreateFontIndirect(&info.lfStatusFont);				
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -604,7 +604,7 @@ namespace Win32xx
 			CSize TempSize;
 			CDC dc = GetDC();
 			NONCLIENTMETRICS info = {0};
-			info.cbSize = sizeof(info);
+			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 			dc.CreateFontIndirect(&info.lfStatusFont);
 			TCHAR szTitle[32];
@@ -712,7 +712,7 @@ namespace Win32xx
 		DrawCloseButton(dc);
 		DrawListButton(dc);
 
-		m_IsTracking = FALSE;
+		m_IsTracking = FALSE; 
 	}
 
 	inline void CTab::OnMouseMove(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -764,6 +764,7 @@ namespace Win32xx
 		{
 		case TCN_SELCHANGE:
 			{
+				TRACE("TCN_SELCHANGE\n");
 				// Display the newly selected tab page
 				int iPage = GetCurSel();
 				SelectPage(iPage);
@@ -898,6 +899,12 @@ namespace Win32xx
 
 			GetView()->SetFocus();
 		}
+	}
+
+	inline void CTab::SetShowButtons(BOOL bShow)
+	{ 
+		m_bShowButtons = bShow;
+		RecalcLayout();
 	}
 
 	inline void CTab::SetTabImage(UINT nTab, int iImage)

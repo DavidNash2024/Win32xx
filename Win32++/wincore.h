@@ -203,8 +203,9 @@ namespace Win32xx
 	void TRACE(LPCTSTR str);
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
-	int GetWinVersion();
-	int GetComCtlVersion();
+	int  GetWinVersion();
+	int  GetComCtlVersion();
+	UINT GetSizeofNonClientMetrics();
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
@@ -720,6 +721,19 @@ namespace Win32xx
 		return ComCtlVer;
 	}
 
+	inline UINT GetSizeofNonClientMetrics()
+	{
+		// This function correctly determines the sizeof NONCLIENTMETRICS
+		UINT uSize = sizeof (NONCLIENTMETRICS);
+
+	#if (WINVER >= 0x0600)
+		if (GetWinVersion() < 2600)		// Is OS version less than Vista
+			uSize -= sizeof(int);		// Adjust size back to correct value
+	#endif
+
+		return uSize;
+	}
+
 	// A global function to report the state of the left mouse button
 	inline BOOL IsLeftButtonDown()
 	{
@@ -831,6 +845,7 @@ namespace Win32xx
 		::GetCursorPos(&pt);
 		return pt;
 	}
+
 
 
 	///////////////////////////////////

@@ -1508,7 +1508,7 @@ namespace Win32xx
 		// Calculate the Menubar height from the menu font
 		CSize csMenubar;
 		NONCLIENTMETRICS nm = {0};
-		nm.cbSize = sizeof (NONCLIENTMETRICS);
+		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfMenuFont;
 		CDC dcFrame = GetDC();
@@ -2301,7 +2301,7 @@ namespace Win32xx
 
 			// Get the font used in menu items
 			NONCLIENTMETRICS nm = {0};
-			nm.cbSize = sizeof(nm);
+			nm.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(nm), &nm, 0);
 			// Default menu items are bold, so take this into account
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
@@ -2428,7 +2428,7 @@ namespace Win32xx
 
 		// Update the status bar font and text
 		NONCLIENTMETRICS nm = {0};
-		nm.cbSize = sizeof (NONCLIENTMETRICS);
+		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfStatusFont;
 		HFONT hFontOld = (HFONT)GetStatusbar().SendMessage(WM_GETFONT, 0L, 0L);
@@ -2442,7 +2442,7 @@ namespace Win32xx
 		{
 			// Update the font
 			NONCLIENTMETRICS nm = {0};
-			nm.cbSize = sizeof (NONCLIENTMETRICS);
+			nm.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 			LOGFONT lf = nm.lfMenuFont;
 			HFONT hFontOld = (HFONT)GetMenubar().SendMessage(WM_GETFONT, 0L, 0L);

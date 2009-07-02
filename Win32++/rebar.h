@@ -231,13 +231,11 @@ namespace Win32xx
 	// Use this function to get a safe size for REBARBANDINFO.
 	{
 
-#if defined REBARBANDINFO_V6_SIZE	// only defined when _WIN32_WINNT >= 0x0600
-
+	#if defined REBARBANDINFO_V6_SIZE	// only defined when _WIN32_WINNT >= 0x0600
 		if (GetWinVersion() < 2600)  // Is OS version less than Vista
 			return REBARBANDINFO_V6_SIZE;
-
-#endif
-
+	#endif
+		
 		return sizeof(REBARBANDINFO);
 	}
 

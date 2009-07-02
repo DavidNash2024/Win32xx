@@ -158,9 +158,9 @@ namespace Win32xx
 
 	protected:
 		virtual void OnCreate();
-		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
+	//	virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseLeave(WPARAM wParam, LPARAM lParam);
-		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
+	//	virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -173,7 +173,7 @@ namespace Win32xx
 		int m_iCurrentPage;
 		CContainer* m_pContainerParent;
 		HICON m_hTabIcon;
-		BOOL m_IsTracking;
+	//	BOOL m_IsTracking;
 
 	};
 
@@ -679,7 +679,7 @@ namespace Win32xx
 
 			// Set the font for the title
 			NONCLIENTMETRICS info = {0};
-			info.cbSize = sizeof(info);
+			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 			dcMem.CreateFontIndirect(&info.lfStatusFont);
 
@@ -3297,7 +3297,7 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CContainer class
-	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0), m_IsTracking(FALSE)
+	inline CContainer::CContainer() : m_iCurrentPage(0), m_hTabIcon(0)//, m_IsTracking(FALSE)
 	{
 		m_pContainerParent = this;
 	}
@@ -3402,7 +3402,7 @@ namespace Win32xx
 			CSize TempSize;
 			CDC dc = GetDC();
 			NONCLIENTMETRICS info = {0};
-			info.cbSize = sizeof(info);
+			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 			dc.CreateFontIndirect(&info.lfStatusFont);
 			GetTextExtentPoint32(dc, iter->szTitle, lstrlen(iter->szTitle), &TempSize);
@@ -3472,13 +3472,12 @@ namespace Win32xx
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = i;
 			tie.pszText = m_vContainerInfo[i].szTitle;
-		//	InsertItem(i, &tie);
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
 	}
 
-	inline void CContainer::OnLButtonDown(WPARAM /*wParam*/, LPARAM /*lParam*/)
-	{
+//	inline void CContainer::OnLButtonDown(WPARAM /*wParam*/, LPARAM /*lParam*/)
+/*	{
 		if (!m_IsTracking)
 		{
 			TRACKMOUSEEVENT TrackMouseEventStruct = {0};
@@ -3488,11 +3487,11 @@ namespace Win32xx
 			_TrackMouseEvent(&TrackMouseEventStruct);
 			m_IsTracking = TRUE;
 		}
-	}
+	} */
 
-	inline void CContainer::OnMouseLeave(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline void CContainer::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
-		m_IsTracking = FALSE;
+	//	m_IsTracking = FALSE;
 		if (IsLeftButtonDown())
 		{
 			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()));
@@ -3502,10 +3501,12 @@ namespace Win32xx
 				pDock->UndockContainer(pContainer);
 			}
 		}
+
+		CTab::OnMouseLeave(wParam, lParam);
 	}
 
-	inline void CContainer::OnMouseMove(WPARAM /*wParam*/, LPARAM /*lParam*/)
-	{
+//	inline void CContainer::OnMouseMove(WPARAM /*wParam*/, LPARAM /*lParam*/)
+/*	{
 		if (!m_IsTracking && !IsLeftButtonDown())
 		{
 			TRACKMOUSEEVENT TrackMouseEventStruct = {0};
@@ -3515,7 +3516,7 @@ namespace Win32xx
 			_TrackMouseEvent(&TrackMouseEventStruct);
 			m_IsTracking = TRUE;
 		}
-	}
+	} */
 
 	inline LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
 	{
@@ -3660,15 +3661,15 @@ namespace Win32xx
 		case WM_SIZE:
 			RecalcLayout();
 			return 0;
-		case WM_MOUSELEAVE:
-			OnMouseLeave(wParam, lParam);
-			break;
-		case WM_LBUTTONDOWN:
-			OnLButtonDown(wParam, lParam);
-			break;
-		case WM_MOUSEMOVE:
-			OnMouseMove(wParam, lParam);
-			break;
+	//	case WM_MOUSELEAVE:
+	//		OnMouseLeave(wParam, lParam);
+	//		break;
+	//	case WM_LBUTTONDOWN:
+	//		OnLButtonDown(wParam, lParam);
+	//		break;
+	//	case WM_MOUSEMOVE:
+	//		OnMouseMove(wParam, lParam);
+	//		break;
 		case WM_SETFOCUS:
 			{
 				// Pass focus on to the current view
