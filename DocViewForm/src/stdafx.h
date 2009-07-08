@@ -5,15 +5,8 @@
 // Based on code provided by Lynn Allan
 
 
-#define WIN32_LEAN_AND_MEAN    // Exclude rarely-used stuff from Windows headers
-
-// This avoid warning from vc7.1 about targeting for IE 5
-// Change this to the appropriate value to target Windows 98 and Windows 2000 or later.
-#if _MSC_VER > 1200
-#define WINVER 0x0400
-#endif
-
-#define VC_EXTRALEAN    // Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define VC_EXTRALEAN			// Exclude rarely-used stuff from Windows headers
 
 typedef  unsigned char  byte;
 

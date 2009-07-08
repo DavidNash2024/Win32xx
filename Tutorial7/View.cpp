@@ -3,8 +3,8 @@
 //  Definitions for the CView class
 
 #include "../Win32++/gdi.h"
-#include "resource.h"
 #include "view.h"
+#include "resource.h"
 
 
 CView::CView() : m_PenColor(RGB(0,0,0))
@@ -19,33 +19,32 @@ CView::~CView()
 
 void CView::DrawLine(int x, int y)
 {
-	HDC hDC = ::GetDC(m_hWnd);
-	HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points.back().color);
-	HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-
-	::MoveToEx(hDC, m_points.back().x, m_points.back().y, NULL); ;
-	::LineTo(hDC, x, y);
-
-	::ReleaseDC(m_hWnd, hDC);
-	::SelectObject(hDC, hOldPen);
-	::DeleteObject(hPen);
+	CDC DrawDC = GetDC();
+	DrawDC.MoveTo(m_points.back().x, m_points.back().y);
+	DrawDC.CreatePen(PS_SOLID, 1, m_points.back().color);
+	DrawDC.LineTo(x, y);
 }
 
 void CView::OnPaint(HDC hDC)
 {
+	CDC PaintDC = hDC;
+
 	if (m_points.size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
-		{
-			CDC PaintDC = hDC;
+		{		
 			PaintDC.CreatePen(PS_SOLID, 1, m_points[i].color);
-			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
-			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
+			if (bDraw)
+				PaintDC.LineTo(m_points[i].x, m_points[i].y);
+			else 
+				PaintDC.MoveTo(m_points[i].x, m_points[i].y);
+			
 			bDraw = m_points[i].PenDown;
-			PaintDC.DetachDC();	// Otherwise the DC would be deleted
 		}
 	}
+
+	PaintDC.DetachDC();	// Otherwise the DC would be deleted
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)

@@ -4,7 +4,6 @@
 
 
 #include "view.h"
-#include <Windowsx.h>	// defines GET_X_LPARAM
 #include "resource.h"
 #include "../../Win32++/gdi.h"
 
@@ -29,27 +28,44 @@ void CView::ClearPoints()
 
 void CView::DrawLine(int x, int y)
 {
-	CDC DrawDC = ::GetDC(m_hWnd);
+	CDC DrawDC = GetDC();
 	DrawDC.CreatePen(PS_SOLID, 1, m_points.back().color);
-	::MoveToEx(DrawDC, m_points.back().x, m_points.back().y, NULL); ;
-	::LineTo(DrawDC, x, y);
+	DrawDC.MoveTo(m_points.back().x, m_points.back().y);
+	DrawDC.LineTo(x, y);
 }
 
 void CView::OnPaint(HDC hDC)
 {
+	CDC PaintDC = hDC;
+	
+	// Here we use double buffering (drawing to a memory DC) for smoother rendering
+	// Set up our Memory DC and bitmap
+	CDC MemDC = ::CreateCompatibleDC(PaintDC);
+	int Width = GetClientRect().Width();
+	int Height = GetClientRect().Height();
+	MemDC.CreateCompatibleBitmap(PaintDC, Width, Height);
+	MemDC.FillRect(GetClientRect(), m_hBrush);	
+
 	if (m_points.size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			CDC PaintDC = hDC;
-			PaintDC.CreatePen(PS_SOLID, 1, m_points[i].color);
-			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
-			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
-			bDraw = m_points[i].PenDown;
-			PaintDC.DetachDC();	// Otherwise the DC would be deleted
+		
+			MemDC.CreatePen(PS_SOLID, 1, m_points[i].color);
+			if (bDraw)
+				MemDC.LineTo(m_points[i].x, m_points[i].y);
+			else 
+				MemDC.MoveTo(m_points[i].x, m_points[i].y);
+			
+			bDraw = m_points[i].PenDown;			
 		}
 	}
+
+	// Copy from the memory DC to our painting dc
+	PaintDC.BitBlt(0, 0, Width, Height, MemDC, 0, 0, SRCCOPY);
+	
+	PaintDC.DetachDC();	// Otherwise the DC would be deleted
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)

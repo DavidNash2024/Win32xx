@@ -2,6 +2,7 @@
 // View.cpp
 //  Definitions for the CView class
 
+#include "../Win32++/gdi.h"
 #include "view.h"
 #include "resource.h"
 
@@ -12,27 +13,30 @@ CView::CView()
 
 void CView::DrawLine(int x, int y)
 {
-	HDC hDC = ::GetDC(m_hWnd);
-
-	::MoveToEx(hDC, m_points.back().x, m_points.back().y, NULL); ;
-	::LineTo(hDC, x, y);
-
-	::ReleaseDC(m_hWnd, hDC);
+	CDC DrawDC = GetDC();
+	DrawDC.MoveTo(m_points.back().x, m_points.back().y);
+	DrawDC.LineTo(x, y);
 }
 
 void CView::OnPaint(HDC hDC)
 {
+	CDC PaintDC = hDC;
+
 	if (m_points.size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
-
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
-		{
-			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
-			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
+		{		
+			if (bDraw)
+				PaintDC.LineTo(m_points[i].x, m_points[i].y);
+			else 
+				PaintDC.MoveTo(m_points[i].x, m_points[i].y);
+			
 			bDraw = m_points[i].PenDown;
 		}
 	}
+
+	PaintDC.DetachDC();	// Otherwise the DC would be deleted
 }
 
 void CView::StorePoint(int x, int y, bool PenDown)

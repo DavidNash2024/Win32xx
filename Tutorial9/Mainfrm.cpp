@@ -139,7 +139,7 @@ void CMainFrame::OnFilePrint()
 	CDC ViewDC = m_View.GetDC();
 	CDC MemDC = CreateCompatibleDC(ViewDC);
 	MemDC.CreateCompatibleBitmap(ViewDC, Width, Height);
-	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
+	MemDC.BitBlt(0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
 	HBITMAP hbmView = MemDC.DetachBitmap();
 
 	// Bring up a dialog to choose the printer
@@ -180,28 +180,28 @@ void CMainFrame::OnFilePrint()
 
 	// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
 	// Get the size of the image data
-	GetDIBits(MemDC, hbmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	MemDC.GetDIBits( hbmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Retrieve the image data
 	byte* pBits = new byte[bi.biSizeImage];
-	GetDIBits(MemDC, hbmView, 0, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	MemDC.GetDIBits( hbmView, 0, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
-  float fLogPelsX1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSX);
-  float fLogPelsY1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSY);
-  float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
-  float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
+	float fLogPelsX1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSX);
+	float fLogPelsY1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSY);
+	float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
+	float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
 	float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / min(fLogPelsX1, fLogPelsX2);
 	float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / min(fLogPelsY1, fLogPelsY2);
 
-  // Compute the coordinates of the upper left corner of the centered bitmap.
+	// Compute the coordinates of the upper left corner of the centered bitmap.
 	int cWidthPels = GetDeviceCaps(pd.hDC, HORZRES);
-  int xLeft = ((cWidthPels / 2) - ((int) (((float) Width) * fScaleX)) / 2);
-  int cHeightPels = GetDeviceCaps(pd.hDC, VERTRES);
-  int yTop = ((cHeightPels / 2) - ((int) (((float) Height) * fScaleY)) / 2);
+	int xLeft = ((cWidthPels / 2) - ((int) (((float) Width) * fScaleX)) / 2);
+	int cHeightPels = GetDeviceCaps(pd.hDC, VERTRES);
+	int yTop = ((cHeightPels / 2) - ((int) (((float) Height) * fScaleY)) / 2);
 
-  // Use StretchDIBits to scale the bitmap and maintain its original proportions
-  if (GDI_ERROR == StretchDIBits(pd.hDC, xLeft, yTop, (int) ((float) Width * fScaleX),
+	// Use StretchDIBits to scale the bitmap and maintain its original proportions
+	if (GDI_ERROR == ::StretchDIBits(pd.hDC, xLeft, yTop, (int) ((float) Width * fScaleX),
 		(int) ((float) Height * fScaleY), 0, 0, Width, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS, SRCCOPY))
 	{
 		throw CWinException(_T("Failed to resize image for printing"));

@@ -558,6 +558,8 @@ namespace Win32xx
 	{
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
 		friend class CDialog;
+		friend class CPropertyPage;
+		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 
 	public:

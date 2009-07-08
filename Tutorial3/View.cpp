@@ -2,6 +2,7 @@
 // View.cpp
 //  Definitions for the CView class
 
+#include "../Win32++/gdi.h"
 #include "view.h"
 
 
@@ -11,12 +12,9 @@ CView::CView()
 
 void CView::DrawLine(int x, int y)
 {
-	HDC hDC = ::GetDC(m_hWnd);
-
-	::MoveToEx(hDC, m_OldPt.x, m_OldPt.y, NULL); ;
-	::LineTo(hDC, x, y);
-
-	::ReleaseDC(m_hWnd, hDC);
+	CDC DrawDC = GetDC();
+	DrawDC.MoveTo(m_OldPt.x, m_OldPt.y);
+	DrawDC.LineTo(x, y);
 }
 
 void CView::OnLButtonDown(LPARAM lParam)
