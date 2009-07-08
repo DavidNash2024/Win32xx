@@ -117,6 +117,7 @@ namespace Win32xx
 		int  GetCurSel();
 		BOOL GetItem(int iItem, LPTCITEM pitem);
 		int  GetItemCount();
+		int  HitTest(TCHITTESTINFO& info);
 		void SetCurFocus(int iItem);
 		int  SetCurSel(int iItem);
 		DWORD SetItemSize(int cx, int cy);
@@ -329,11 +330,11 @@ namespace Win32xx
 				{
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
 
-					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
-					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
-					::LineTo(DrawDC, rcClose.right, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+					DrawDC.MoveTo(rcClose.left, rcClose.bottom);
+					DrawDC.LineTo(rcClose.right, rcClose.bottom);
+					DrawDC.LineTo(rcClose.right, rcClose.top);
+					DrawDC.LineTo(rcClose.left, rcClose.top);
+					DrawDC.LineTo(rcClose.left, rcClose.bottom);
 					break;
 				}
 
@@ -341,12 +342,12 @@ namespace Win32xx
 				{
 					// Draw outline, white at top, black on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
-					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
-					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					DrawDC.MoveTo(rcClose.left, rcClose.bottom);
+					DrawDC.LineTo(rcClose.right, rcClose.bottom);
+					DrawDC.LineTo(rcClose.right, rcClose.top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::LineTo(DrawDC, rcClose.left, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+					DrawDC.LineTo(rcClose.left, rcClose.top);
+					DrawDC.LineTo(rcClose.left, rcClose.bottom);
 				}
 
 				break;
@@ -354,12 +355,12 @@ namespace Win32xx
 				{
 					// Draw outline, black on top, white on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::MoveToEx(DrawDC, rcClose.left, rcClose.bottom, NULL);
-					::LineTo(DrawDC, rcClose.right, rcClose.bottom);
-					::LineTo(DrawDC, rcClose.right, rcClose.top);
+					DrawDC.MoveTo(rcClose.left, rcClose.bottom);
+					DrawDC.LineTo(rcClose.right, rcClose.bottom);
+					DrawDC.LineTo(rcClose.right, rcClose.top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::LineTo(DrawDC, rcClose.left, rcClose.top);
-					::LineTo(DrawDC, rcClose.left, rcClose.bottom);
+					DrawDC.LineTo(rcClose.left, rcClose.top);
+					DrawDC.LineTo(rcClose.left, rcClose.bottom);
 				}
 				break;
 			}
@@ -367,23 +368,23 @@ namespace Win32xx
 			// Manually draw close button
 			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -3);
+			DrawDC.MoveTo(rcClose.left + 3, rcClose.top +3);
+			DrawDC.LineTo(rcClose.right - 3, rcClose.bottom -3);
 
-			::MoveToEx(DrawDC, rcClose.left + 4, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.right - 3, rcClose.bottom -4);
+			DrawDC.MoveTo(rcClose.left + 4, rcClose.top +3);
+			DrawDC.LineTo(rcClose.right - 3, rcClose.bottom -4);
 
-			::MoveToEx(DrawDC, rcClose.left + 3, rcClose.top +4, NULL);
-			::LineTo(DrawDC, rcClose.right - 4, rcClose.bottom -3);
+			DrawDC.MoveTo(rcClose.left + 3, rcClose.top +4);
+			DrawDC.LineTo(rcClose.right - 4, rcClose.bottom -3);
 
-			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -3);
+			DrawDC.MoveTo(rcClose.right -4, rcClose.top +3);
+			DrawDC.LineTo(rcClose.left + 2, rcClose.bottom -3);
 
-			::MoveToEx(DrawDC, rcClose.right -4, rcClose.top +4, NULL);
-			::LineTo(DrawDC, rcClose.left + 3, rcClose.bottom -3);
+			DrawDC.MoveTo(rcClose.right -4, rcClose.top +4);
+			DrawDC.LineTo(rcClose.left + 3, rcClose.bottom -3);
 
-			::MoveToEx(DrawDC, rcClose.right -5, rcClose.top +3, NULL);
-			::LineTo(DrawDC, rcClose.left + 2, rcClose.bottom -4);
+			DrawDC.MoveTo(rcClose.right -5, rcClose.top +3);
+			DrawDC.LineTo(rcClose.left + 2, rcClose.bottom -4);
 		}
 	}
 
@@ -411,11 +412,11 @@ namespace Win32xx
 				{
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
 
-					::MoveToEx(DrawDC, rcList.left, rcList.bottom, NULL);
-					::LineTo(DrawDC, rcList.right, rcList.bottom);
-					::LineTo(DrawDC, rcList.right, rcList.top);
-					::LineTo(DrawDC, rcList.left, rcList.top);
-					::LineTo(DrawDC, rcList.left, rcList.bottom);
+					DrawDC.MoveTo(rcList.left, rcList.bottom);
+					DrawDC.LineTo(rcList.right, rcList.bottom);
+					DrawDC.LineTo(rcList.right, rcList.top);
+					DrawDC.LineTo(rcList.left, rcList.top);
+					DrawDC.LineTo(rcList.left, rcList.bottom);
 					break;
 				}
 
@@ -423,12 +424,12 @@ namespace Win32xx
 				{
 					// Draw outline, white at top, black on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::MoveToEx(DrawDC, rcList.left, rcList.bottom, NULL);
-					::LineTo(DrawDC, rcList.right, rcList.bottom);
-					::LineTo(DrawDC, rcList.right, rcList.top);
+					DrawDC.MoveTo(rcList.left, rcList.bottom);
+					DrawDC.LineTo(rcList.right, rcList.bottom);
+					DrawDC.LineTo(rcList.right, rcList.top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::LineTo(DrawDC, rcList.left, rcList.top);
-					::LineTo(DrawDC, rcList.left, rcList.bottom);
+					DrawDC.LineTo(rcList.left, rcList.top);
+					DrawDC.LineTo(rcList.left, rcList.bottom);
 				}
 
 				break;
@@ -436,12 +437,12 @@ namespace Win32xx
 				{
 					// Draw outline, black on top, white on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::MoveToEx(DrawDC, rcList.left, rcList.bottom, NULL);
-					::LineTo(DrawDC, rcList.right, rcList.bottom);
-					::LineTo(DrawDC, rcList.right, rcList.top);
+					DrawDC.MoveTo(rcList.left, rcList.bottom);
+					DrawDC.LineTo(rcList.right, rcList.bottom);
+					DrawDC.LineTo(rcList.right, rcList.top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::LineTo(DrawDC, rcList.left, rcList.top);
-					::LineTo(DrawDC, rcList.left, rcList.bottom);
+					DrawDC.LineTo(rcList.left, rcList.top);
+					DrawDC.LineTo(rcList.left, rcList.bottom);
 				}
 				break;
 			}
@@ -452,8 +453,8 @@ namespace Win32xx
 			for (int i = 0; i <= 4; i++)
 			{
 				int Length = 9 - 2*i;
-				::MoveToEx(DrawDC, rcList.left + 4 + i, rcList.top +6 +i, NULL);
-				::LineTo(DrawDC, rcList.left + 4 + i + Length, rcList.top +6 +i);
+				DrawDC.MoveTo(rcList.left + 4 + i, rcList.top +6 +i);
+				DrawDC.LineTo(rcList.left + 4 + i + Length, rcList.top +6 +i);
 			}
 		}
 	}
@@ -470,16 +471,16 @@ namespace Win32xx
 				if (i == TabCtrl_GetCurSel(m_hWnd))
 				{
 					dcMem.CreateSolidBrush(RGB(248,248,248));
-					SetBkColor(dcMem, RGB(248,248,248));
+					dcMem.SetBkColor(RGB(248,248,248));
 				}
 				else
 				{
 					dcMem.CreateSolidBrush(RGB(200,200,200));
-					SetBkColor(dcMem, RGB(200,200,200));
+					dcMem.SetBkColor(RGB(200,200,200));
 				}
 
 				dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-				RoundRect(dcMem, rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
+				dcMem.RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
 
 				if (rcItem.Width() >= 24)
 				{
@@ -508,10 +509,10 @@ namespace Win32xx
 						rcText.left += iImageSize;
 
 					rcText.left += iPadding;
-					::DrawText(dcMem, szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+					dcMem.DrawText(szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 				}
 			}
-		}  
+		}   
 	}
 
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
@@ -536,19 +537,19 @@ namespace Win32xx
 		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 		if (!rcItem.IsRectEmpty())
 		{
-			Rectangle(dcMem, left, top, right, bottom);
+			dcMem.Rectangle(left, top, right, bottom);
 
 			// Draw a darker line below the rectangle
 			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
 			if (IsBottomTab)
 			{
-				MoveToEx(dcMem, left-1, bottom, NULL);
-				LineTo(dcMem, right, bottom);
+				dcMem.MoveTo(left-1, bottom);
+				dcMem.LineTo(right, bottom);
 			}
 			else
 			{
-				MoveToEx(dcMem, left-1, top-1, NULL);
-				LineTo(dcMem, right, top-1);
+				dcMem.MoveTo(left-1, top-1);
+				dcMem.LineTo(right, top-1);
 			}
 
 			// Draw a lighter line over the darker line for the selected tab
@@ -558,13 +559,13 @@ namespace Win32xx
 
 			if (IsBottomTab)
 			{
-				MoveToEx(dcMem, rcItem.left, bottom, NULL);
-				LineTo(dcMem, rcItem.right, bottom);
+				dcMem.MoveTo(rcItem.left, bottom);
+				dcMem.LineTo(rcItem.right, bottom);
 			}
 			else
 			{
-				MoveToEx(dcMem, rcItem.left, top-1, NULL);
-				LineTo(dcMem, rcItem.right, top-1);
+				dcMem.MoveTo(rcItem.left, top-1);
+				dcMem.LineTo(rcItem.right, top-1);
 			}
 		}
 	}
@@ -601,7 +602,6 @@ namespace Win32xx
 
 		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
 		{
-			CSize TempSize;
 			CDC dc = GetDC();
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
@@ -613,7 +613,7 @@ namespace Win32xx
 			tcItem.cchTextMax = 32;
 			tcItem.pszText = szTitle;
 			TabCtrl_GetItem(m_hWnd, i, &tcItem);
-			GetTextExtentPoint32(dc, szTitle, lstrlen(szTitle), &TempSize);
+			CSize TempSize = dc.GetTextExtentPoint32(szTitle, lstrlen(szTitle));
 
 			int iImageSize = 0;
 			int iPadding = 6;
@@ -681,12 +681,10 @@ namespace Win32xx
 	inline void CTab::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		CDC dc = GetDC();
 
 		if (GetCloseRect().PtInRect(pt))
 		{
 			m_IsClosePressed = TRUE;
-		//	RemoveTabPage(GetCurSel());
 		}
 		else
 			m_IsClosePressed = FALSE;
@@ -808,27 +806,26 @@ namespace Win32xx
 		// Use the region in the memory DC to paint the grey background
 		dcMem.AttachClipRegion(hrgnClip);
 		dcMem.CreateSolidBrush(RGB(232, 228, 220));
-		::PaintRgn(dcMem, hrgnClip);
+		dcMem.PaintRgn(hrgnClip);
 
 		// Draw the tab buttons on the memory DC:
 		DrawTabs(dcMem);
 
-		// Draw the buttons if required
+		// Draw buttons and tab borders
 		DrawCloseButton(dcMem);
 		DrawListButton(dcMem);
-
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
 		dcMem.DetachClipRegion();
 		dcView.AttachClipRegion(hrgnClip);
-		BitBlt(dcView, 0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
+		dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
 		dcView.DetachClipRegion();
 
 		// Cleanup
 		::DeleteObject(hrgnSrc1);
 		::DeleteObject(hrgnSrc2);
-		::DeleteObject(hrgnClip); 
+		::DeleteObject(hrgnClip);
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
@@ -1151,6 +1148,11 @@ namespace Win32xx
 	inline int CTab::GetItemCount()
 	{
 		return TabCtrl_GetItemCount(m_hWnd);
+	}
+
+	inline int CTab::HitTest(TCHITTESTINFO& info)
+	{
+		return TabCtrl_HitTest(m_hWnd, &info);
 	}
 
 	inline void CTab::SetCurFocus(int iItem)

@@ -410,7 +410,7 @@ namespace Win32xx
 					DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
 					if (SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
 					{
-						::GetTextExtentPoint32(DrawDC, szText, lstrlen(szText), &TextSize);
+						TextSize = DrawDC.GetTextExtentPoint32(szText, lstrlen(szText));
 					}
 					// Detach the font so it doesn't get destroyed
 					DrawDC.DetachFont();
@@ -420,11 +420,11 @@ namespace Win32xx
 				if (nState & (CDIS_HOT | CDIS_SELECTED))
 				{
 					DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-					::MoveToEx(DrawDC, rcRect.left, rcRect.top, NULL);
-					::LineTo(DrawDC, rcRect.left, rcRect.bottom-1);
-					::LineTo(DrawDC, rcRect.right-1, rcRect.bottom-1);
-					::LineTo(DrawDC, rcRect.right-1, rcRect.top);
-					::LineTo(DrawDC, rcRect.left, rcRect.top);
+					DrawDC.MoveTo(rcRect.left, rcRect.top);
+					DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
+					DrawDC.LineTo(rcRect.right-1, rcRect.bottom-1);
+					DrawDC.LineTo(rcRect.right-1, rcRect.top);
+					DrawDC.LineTo(rcRect.left, rcRect.top);
 				}
 
 				// Draw filled gradient background
@@ -499,16 +499,16 @@ namespace Win32xx
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
 					for (int i = 2; i >= 0; --i)
 					{
-						::MoveToEx(DrawDC, xAPos -i-1, yAPos - i+1, NULL);
-						::LineTo  (DrawDC, xAPos +i,   yAPos - i+1);
+						DrawDC.MoveTo(xAPos -i-1, yAPos - i+1);
+						DrawDC.LineTo(xAPos +i,   yAPos - i+1);
 					}
 
 					// Draw line between icon and dropdown arrow
 					if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
 					{
 						DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-						::MoveToEx(DrawDC, rcRect.right - 13, rcRect.top, NULL);
-						::LineTo(DrawDC, rcRect.right - 13, rcRect.bottom);
+						DrawDC.MoveTo(rcRect.right - 13, rcRect.top);
+						DrawDC.LineTo(rcRect.right - 13, rcRect.bottom);
 					}
 				}
 
@@ -536,25 +536,25 @@ namespace Win32xx
 
 					OffsetRect(&rcText, xOffset, yOffset);
 
-					int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
+					int iMode = DrawDC.SetBkMode(TRANSPARENT);
 					DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
 
 					if (nState & (CDIS_DISABLED))
 					{
 						// Draw text twice for embossed look
 						::OffsetRect(&rcText, 1, 1);
-						::SetTextColor(DrawDC, RGB(255,255,255));
-						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
+						DrawDC.SetTextColor(RGB(255,255,255));
+						DrawDC.DrawTextEx(szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
 						::OffsetRect(&rcText, -1, -1);
-						::SetTextColor(DrawDC, GetSysColor(COLOR_GRAYTEXT));
-						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
+						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
+						DrawDC.DrawTextEx(szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
 					}
 					else
 					{
-						::SetTextColor(DrawDC, GetSysColor(COLOR_BTNTEXT));
-						::DrawTextEx(DrawDC, szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
+						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+						DrawDC.DrawTextEx(szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 					}
-					::SetBkMode(DrawDC, iMode);
+					DrawDC.SetBkMode(iMode);
 					// Detach the font so it doesn't get destroyed
 					DrawDC.DetachFont();
 				}

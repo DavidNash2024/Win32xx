@@ -102,6 +102,7 @@ namespace Win32xx
 	public:
 		CDC( );
 		CDC( HDC hDC );
+		CDC(const CDC& rhs);				// Copy constructor
 		void operator = ( const HDC hDC );
 		virtual ~CDC( );
 		HDC GetDC( ) const { return m_hDC; }
@@ -168,6 +169,13 @@ namespace Win32xx
 
 
 		// Wrappers for WinAPI functions
+
+		// Initialization
+		HDC CreateCompatibleDC( );
+		HDC CreateDC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE* lpInitData );
+		HDC CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE *lpdvmInit  );
+		int GetDeviceCaps( int nIndex );
+		CWnd* WindowFromDC( );
 		
 		// Point and Line Drawing Functions
 		CPoint GetCurrentPosition( ) const;
@@ -207,6 +215,8 @@ namespace Win32xx
 		BOOL PolyPolygon( LPPOINT lpPoints, LPINT lpPolyCounts, int nCount );
 		BOOL Rectangle( int x1, int y1, int x2, int y2 );
 		BOOL Rectangle( LPCRECT lpRect );
+		BOOL RoundRect( int x1, int y1, int x2, int y2, int nWidth, int nHeight );
+		BOOL RoundRect( LPRECT lpRect, int nWidth, int nHeight );
 
 		// Fill and 3D Drawing functions
 		BOOL FillRect( LPCRECT lpRect, HBRUSH hbr );
@@ -214,8 +224,11 @@ namespace Win32xx
 		BOOL InvertRect( LPCRECT lpRect );
 		BOOL DrawIcon( int x, int y, HICON hIcon );
 		BOOL DrawIcon( POINT point, HICON hIcon );
+		BOOL DrawIconEx( int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags );
 		BOOL DrawEdge( LPRECT lpRect, UINT nEdge, UINT nFlags );
 		BOOL DrawFrameControl( LPRECT lpRect, UINT nType, UINT nState );
+		BOOL FillRgn( HRGN hrgn, HBRUSH hbr );
+		BOOL PaintRgn( HRGN hrgn );
 
 		// Bitmap Functions
 		int GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage );
@@ -233,7 +246,8 @@ namespace Win32xx
 		BOOL TextOut( int x, int y, LPCTSTR lpszString, int nCount );
 		BOOL ExtTextOut( int x, int y, UINT nOptions, LPCRECT lpRect, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths );
 		CSize TabbedTextOut( int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin );	
-		int DrawText( LPCTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat );		
+		int DrawText( LPCTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat );
+		int DrawTextEx( LPTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams );
 		CSize GetTextExtentPoint32( LPCTSTR lpszString, int nCount ) const;			
 		CSize GetTabbedTextExtent( LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions ) const;			
 		BOOL GrayString( HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight );
@@ -244,10 +258,15 @@ namespace Win32xx
 		int SetTextJustification( int nBreakExtra, int nBreakCount );
 		int GetTextCharacterExtra( ) const;
 		int SetTextCharacterExtra( int nCharExtra );
+		COLORREF GetBkColor( );
+		COLORREF SetBkColor( COLORREF crColor );
+		COLORREF GetTextColor( );
+		COLORREF SetTextColor( COLORREF crColor );
+		int GetBkMode( );
+		int SetBkMode( int iBkMode );
 
 
 	private:
-		CDC(const CDC&);				// Disable copy construction
 		CDC& operator = (const CDC&);	// Disable assignment operator
 		HDC m_hDC;
 		HBITMAP m_hBitmapOld;
@@ -255,6 +274,8 @@ namespace Win32xx
 		HFONT m_hFontOld;
 		HPEN m_hPenOld;
 		HRGN m_hRgnOld;
+		BOOL m_IsCopy;
+		CDC* m_pCopiedFrom;
 	};
 }
 
@@ -267,13 +288,13 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Definitions of the CDC class
 	//
-	inline CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), 
-		            m_hPenOld(0), m_hRgnOld(0)
+	inline CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0),
+					m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0)
 	{
 	}
 
-	inline CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), 
-		            m_hPenOld(0), m_hRgnOld(0)
+	inline CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0),
+						m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0)
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
@@ -289,6 +310,24 @@ namespace Win32xx
 		// CDC MyCDC = ::GetDC(SomeHWND);
 	}
 
+	inline CDC::CDC(const CDC& rhs)	// Copy constructor
+	{
+		// The copy constructor is called when a temporary copy of the CDC needs to be created.
+		// Since we have two (or more) CDC objects looking after the same HDC, we need to
+		//  take account of this in the destructor
+		m_hBitmapOld = rhs.m_hBitmapOld;
+		m_hBrushOld  = rhs.m_hBrushOld;
+		m_hDC		 = rhs.m_hDC;
+		m_hFontOld	 = rhs.m_hFontOld;
+		m_hPenOld    = rhs.m_hPenOld;
+		m_hRgnOld    = rhs.m_hRgnOld;
+
+		// This CDC is a copy, so we won't need to delete GDI resources
+		//  in the destructor
+		m_IsCopy  = TRUE;
+		m_pCopiedFrom = (CDC*)&rhs;
+	}
+
 	inline void CDC::operator = (const HDC hDC)
 	{
 		AttachDC(hDC);
@@ -298,22 +337,35 @@ namespace Win32xx
 	{
 		if (m_hDC)
 		{
-			// Delete any GDI objects belonging to this CDC
-			if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
-			if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
-			if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
-			if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
-			if (m_hRgnOld)    ::DeleteObject(m_hRgnOld);
+			if (m_IsCopy)
+			{
+				// This CDC is just a temporary clone, created by the copy constructor
+                // so pass members back to the original
+				m_pCopiedFrom->m_hPenOld	= m_hPenOld;
+				m_pCopiedFrom->m_hBrushOld	= m_hBrushOld;
+				m_pCopiedFrom->m_hBitmapOld	= m_hBitmapOld;
+				m_pCopiedFrom->m_hFontOld	= m_hFontOld;
+				m_pCopiedFrom->m_hRgnOld    = m_hRgnOld;
+				m_pCopiedFrom->m_hDC		= m_hDC;
+			}
+			else
+			{
+				// Delete any GDI objects belonging to this CDC
+				if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
+				if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
+				if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
+				if (m_hFontOld)	  ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
+				if (m_hRgnOld)    ::DeleteObject(m_hRgnOld);
 
-			// We need to release a Window DC, and delete a memory DC
+				// We need to release a Window DC, and delete a memory DC
 	#ifndef _WIN32_WCE
-			HWND hwnd = ::WindowFromDC(m_hDC);
-			if (hwnd) ::ReleaseDC(hwnd, m_hDC);
-			else      ::DeleteDC(m_hDC);
+				HWND hwnd = ::WindowFromDC(m_hDC);
+				if (hwnd) ::ReleaseDC(hwnd, m_hDC);
+				else      ::DeleteDC(m_hDC);
 	#else
-			::DeleteDC(m_hDC);
+				::DeleteDC(m_hDC);
 	#endif
-			
+			}
 		}
 	}
 
@@ -1046,6 +1098,29 @@ namespace Win32xx
 	}
 
 	// Wrappers for WinAPI functions
+	
+	// Initialization
+	inline HDC CDC::CreateCompatibleDC( )
+	{
+		return ::CreateCompatibleDC( m_hDC );
+	}
+	inline HDC CDC::CreateDC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE* lpInitData )
+	{
+		return ::CreateDC( lpszDriver, lpszDevice, lpszOutput, lpInitData );
+	}
+	inline HDC CDC::CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE *lpdvmInit )
+	{
+		return ::CreateIC( lpszDriver, lpszDevice, lpszOutput, lpdvmInit );
+	}
+	inline int CDC::GetDeviceCaps( int nIndex )
+	{
+		return ::GetDeviceCaps(m_hDC, nIndex);
+	}
+	inline CWnd* CDC::WindowFromDC( )
+	{
+		return CWnd::FromHandle( ::WindowFromDC( m_hDC ) );
+	}
+
 	// Point and Line Drawing Functions
 	inline CPoint CDC::GetCurrentPosition( ) const
 	{
@@ -1060,7 +1135,7 @@ namespace Win32xx
 		// Updates the current position to the specified point
 		return ::MoveToEx( m_hDC, x, y, NULL ); 
 	}
-	inline CPoint CDC::MoveTo(POINT pt )
+	inline CPoint CDC::MoveTo( POINT pt )
 	{
 		// Updates the current position to the specified point
 		return ::MoveToEx( m_hDC, pt.x, pt.y, NULL );
@@ -1230,6 +1305,16 @@ namespace Win32xx
 		// Draws a rectangle. The rectangle is outlined by using the current pen and filled by using the current brush.
 		return ::Rectangle( m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom );
 	}
+	inline BOOL CDC::RoundRect( int x1, int y1, int x2, int y2, int nWidth, int nHeight )
+	{
+		// Draws a rectangle with rounded corners
+		return ::RoundRect( m_hDC, x1, y1, x2, y2, nWidth, nHeight );
+	}
+	inline BOOL CDC::RoundRect( LPRECT lpRect, int nWidth, int nHeight )
+	{
+		// Draws a rectangle with rounded corners
+		return ::RoundRect(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom, nWidth, nHeight );
+	}
 
 	// Fill and 3D Drawing functions
 	inline BOOL CDC::FillRect( LPCRECT lpRect, HBRUSH hbr )
@@ -1257,6 +1342,11 @@ namespace Win32xx
 		// Draws an icon or cursor
 		return ::DrawIcon( m_hDC, pt.x, pt.y, hIcon );
 	}
+	inline BOOL CDC::DrawIconEx( int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags )
+	{
+		// draws an icon or cursor, performing the specified raster operations, and stretching or compressing the icon or cursor as specified. 
+		return ::DrawIconEx( m_hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, hbrFlickerFreeDraw, diFlags );
+	}
 	inline BOOL CDC::DrawEdge( LPRECT lpRect, UINT nEdge, UINT nFlags )
 	{
 		// Draws one or more edges of rectangle
@@ -1266,6 +1356,16 @@ namespace Win32xx
 	{
 		// Draws a frame control of the specified type and style
 		return ::DrawFrameControl( m_hDC, lpRect, nType, nState );
+	}
+	inline BOOL CDC::FillRgn( HRGN hrgn, HBRUSH hbr )
+	{
+		// Fills a region by using the specified brush
+		return ::FillRgn( m_hDC, hrgn, hbr );
+	}
+	inline BOOL CDC::PaintRgn( HRGN hrgn )
+	{
+		// Paints the specified region by using the brush currently selected into the device context
+		return ::PaintRgn( m_hDC, hrgn);
 	}
 
 	// Bitmap Functions
@@ -1343,6 +1443,12 @@ namespace Win32xx
 		// Draws formatted text in the specified rectangle
 		return ::DrawText(m_hDC, lpszString, nCount, lpRect, nFormat );
 	}
+	inline int CDC::DrawTextEx( LPTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams )
+	{
+		// Draws formatted text in the specified rectangle with more formatting options
+		return ::DrawTextEx(m_hDC, lpszString, nCount, lpRect, nFormat, lpDTParams );
+	}
+
 	inline CSize CDC::GetTextExtentPoint32( LPCTSTR lpszString, int nCount ) const
 	{
 		// Computes the width and height of the specified string of text
@@ -1399,6 +1505,37 @@ namespace Win32xx
 		// Sets the intercharacter spacing
 		return ::SetTextCharacterExtra( m_hDC, nCharExtra );
 	}
+	inline COLORREF CDC::GetBkColor( )
+	{
+		// Returns the current background color 
+		return ::GetBkColor( m_hDC );
+	}
+	inline COLORREF CDC::SetBkColor( COLORREF crColor )
+	{
+		// Sets the current background color to the specified color value
+		return ::SetBkColor(m_hDC, crColor );
+	}
+	inline COLORREF CDC::GetTextColor( )
+	{
+		// Retrieves the current text color
+		return ::GetTextColor( m_hDC);
+	}
+	inline COLORREF CDC::SetTextColor( COLORREF crColor )
+	{
+		// Sets the current text color
+		return ::SetTextColor( m_hDC, crColor );
+	}
+	inline int CDC::GetBkMode( )
+	{
+		// returns the current background mix mode (OPAQUE or TRANSPARENT)
+		return ::GetBkMode( m_hDC );
+	}
+	inline int CDC::SetBkMode( int iBkMode )
+	{
+		// Sets the current background mix mode (OPAQUE or TRANSPARENT)
+		return ::SetBkMode( m_hDC, iBkMode);
+	}
+
 
 } // namespace Win32xx
 

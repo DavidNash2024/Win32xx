@@ -37,7 +37,7 @@ LRESULT CViewRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             int Top    = (yTop < yBottom) ? yTop  : yBottom;
             int Right  = (xLeft > xRight) ? xLeft : xRight;
             int Bottom = (yTop > yBottom) ? yTop  : yBottom;
-            ::Rectangle (RectDC, Left, Top, Right, Bottom);
+            RectDC.Rectangle(Left, Top, Right, Bottom);
 		}
 		break;
 

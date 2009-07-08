@@ -16,23 +16,17 @@ Major changes
   - Added Hide/Show option for the additional toolbars
   - Save/Load the theme options in the registry
   - Save/Load the rebar band postions and styles in the registry
-* Enhancements to docking
+* Enhancements to docking and containers
   - By default the dockers are immediately resized while the splitter bar is 
     being dragged. To defer resizing until the splitter bar is released, use
     SetDragAutoResize(FALSE).
-     
+  - The close and list buttons now indicate when they are hot and pressed.
+  - The samples now demonstrate how to theme a docker's toolbar
+* The CDC class has been extended. It now includes wrapper functions for the
+   Device Context related functions.    
   
    
    
-All Changes
------------
-Added CWnd::OnUpdate
-Changed CFrame::AddToolbarBand
-Extended the Themes sample
-Replaced FormSample with the DocViewForm sample
-Minor adjustment to the behaviour of Rebar themes
-
-
 Incompatibilities with previous versions
 ----------------------------------------
 CFrame::AddToolbarBand now requires three arguements

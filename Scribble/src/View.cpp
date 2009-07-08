@@ -40,7 +40,7 @@ void CView::OnPaint(HDC hDC)
 	
 	// Here we use double buffering (drawing to a memory DC) for smoother rendering
 	// Set up our Memory DC and bitmap
-	CDC MemDC = ::CreateCompatibleDC(PaintDC);
+	CDC MemDC = PaintDC.CreateCompatibleDC();
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
 	MemDC.CreateCompatibleBitmap(PaintDC, Width, Height);

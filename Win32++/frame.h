@@ -491,23 +491,23 @@ namespace Win32xx
 				{
 					// Draw a grey outline
 					DrawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
-					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 
 				break;
@@ -515,12 +515,12 @@ namespace Win32xx
 				{
 					// Draw outline, black on top, white on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			}
@@ -531,51 +531,51 @@ namespace Win32xx
 			{
 			case MDI_MIN:
 				// Manually Draw Minimise button
-				::MoveToEx(DrawDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
-				::LineTo(DrawDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
+				DrawDC.MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4);
+				DrawDC.LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
 
-				::MoveToEx(DrawDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
-				::LineTo(DrawDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
+				DrawDC.MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5);
+				DrawDC.LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
 				break;
 			case MDI_RESTORE:
 				// Manually Draw Restore Button
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
-				::LineTo(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				DrawDC.MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				DrawDC.LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
+				DrawDC.LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
 
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
+				DrawDC.MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 8);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
 
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
+				DrawDC.MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 7);
+				DrawDC.LineTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
+				DrawDC.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
+				DrawDC.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
 
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
+				DrawDC.MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 5);
+				DrawDC.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
 				break;
 			case MDI_CLOSE:
 				// Manually Draw Close Button
-				::MoveToEx(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].left + 5, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
+				DrawDC.MoveTo(m_MDIRect[2].left + 5, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +6, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +6);
+				DrawDC.LineTo(m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].right -5, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].right -5, m_MDIRect[2].top +6, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +6);
+				DrawDC.LineTo(m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].right -6, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
+				DrawDC.MoveTo(m_MDIRect[2].right -6, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
 				break;
 			}
 		}
@@ -589,8 +589,7 @@ namespace Win32xx
 		SendMessage(TB_PRESSBUTTON, m_nHotItem, (LPARAM) MAKELONG (FALSE, 0));
 		SetHotItem(-1);
 
-		CPoint pt;
-		::GetCursorPos(&pt);
+		CPoint pt = GetCursorPos();
 		::ScreenToClient(m_hWnd, &pt);
 
 		// Update mouse mouse position for hot tracking
@@ -681,7 +680,7 @@ namespace Win32xx
 					int cy = ::GetSystemMetrics (SM_CYSMICON);
 					int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
 					int x = 0;
-					::DrawIconEx(DrawDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+					DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
 					// Detach the DC so it doesn't get destroyed
 					DrawDC.DetachDC();
@@ -703,14 +702,14 @@ namespace Win32xx
 
 						// Draw border
 						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						::MoveToEx(DrawDC, rcRect.left, rcRect.bottom -1, NULL);
-						::LineTo(DrawDC, rcRect.left, rcRect.top);
-						::LineTo(DrawDC, rcRect.right-1, rcRect.top);
-						::LineTo(DrawDC, rcRect.right-1, rcRect.bottom);
+						DrawDC.MoveTo(rcRect.left, rcRect.bottom -1);
+						DrawDC.LineTo(rcRect.left, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
 						if (!(nState & CDIS_SELECTED))
 						{
-							::MoveToEx(DrawDC, rcRect.right-1, rcRect.bottom-1, NULL);
-							::LineTo(DrawDC, rcRect.left, rcRect.bottom-1);
+							DrawDC.MoveTo(rcRect.right-1, rcRect.bottom-1);
+							DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
 						}
 					}
 					else
@@ -718,7 +717,7 @@ namespace Win32xx
 						// Draw highlight rectangle
 						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-						::FillRect(DrawDC, &rcRect, hbHighlight);
+						DrawDC.FillRect(&rcRect, hbHighlight);
 					}
 
 					TCHAR str[80] = _T("");
@@ -729,13 +728,13 @@ namespace Win32xx
 					// Draw highlight text
 					DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
 					if (!m_ThemeMenu.UseThemes)
-						::SetTextColor(DrawDC, ::GetSysColor(COLOR_HIGHLIGHTTEXT));
+						DrawDC.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
 
 					rcRect.bottom += 1;
-					int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
-					::DrawText(DrawDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+					int iMode = DrawDC.SetBkMode(TRANSPARENT);
+					DrawDC.DrawText(str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-					::SetBkMode(DrawDC, iMode);
+					DrawDC.SetBkMode(iMode);
 					DrawDC.DetachFont();
 					DrawDC.DetachDC();
 					return CDRF_SKIPDEFAULT;  // No further drawing
@@ -1513,7 +1512,7 @@ namespace Win32xx
 		LOGFONT lf = nm.lfMenuFont;
 		CDC dcFrame = GetDC();
 		dcFrame.CreateFontIndirect(&lf);
-		::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
+		csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 		int Menubar_Height = csMenubar.cy + 8;
 
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
@@ -1662,7 +1661,7 @@ namespace Win32xx
 			DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 
 			// Draw the checkmark's background rectangle
-			::Rectangle(DrawDC, rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
+			DrawDC.Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 		}
 
 		CDC MemDC = ::CreateCompatibleDC(pdis->hDC);
@@ -1673,9 +1672,9 @@ namespace Win32xx
 
 		// Copy the check mark bitmap to hdcMem
 		if (MFT_RADIOCHECK == fType)
-			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUBULLET);
+			MemDC.DrawFrameControl(&rCheck, DFC_MENU, DFCS_MENUBULLET);
 		else
-			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUCHECK);
+			MemDC.DrawFrameControl(&rCheck, DFC_MENU, DFCS_MENUCHECK);
 
 		int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 		if (m_ThemeMenu.UseThemes)
@@ -1686,20 +1685,20 @@ namespace Win32xx
 		CDC MaskDC = ::CreateCompatibleDC(pdis->hDC);
 		MaskDC.CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
 
-		::BitBlt(MaskDC, 0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
+		MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
 		if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
 		{
 			// Draw a white checkmark
-			::BitBlt(MemDC, 0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
-			::BitBlt(MaskDC, 0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
+			MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
+			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+			DrawDC.BitBlt(rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
 		}
 		else
 		{
 			// Draw a black checkmark
 			int BullitOffset = ((MFT_RADIOCHECK == fType) && m_ThemeMenu.UseThemes)? 1 : 0;
-			::BitBlt(MaskDC, -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
+			MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+			DrawDC.BitBlt(rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
 		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
@@ -1756,12 +1755,12 @@ namespace Win32xx
 		}
 
 		// Draw the item text
-		::SetTextColor(DrawDC, colorText);
-		::DrawText(DrawDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+		DrawDC.SetTextColor(colorText);
+		DrawDC.DrawText(ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
 		// Draw text after tab, right aligned
 		if(nTab != -1)
-			::DrawText(DrawDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+			DrawDC.DrawText( &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
 	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
@@ -2061,7 +2060,7 @@ namespace Win32xx
 				SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
 			rcSep.left = BarWidth + 2;
-			::DrawEdge(DrawDC, &rcSep,  EDGE_ETCHED, BF_TOP);
+			DrawDC.DrawEdge(&rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
 		{
@@ -2078,7 +2077,7 @@ namespace Win32xx
 				{
 					DrawDC.CreateSolidBrush(m_ThemeMenu.clrHot1);
 					DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-					Rectangle(DrawDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+					DrawDC.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 				}
 				else
 					SolidFill(DrawDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
@@ -2104,7 +2103,7 @@ namespace Win32xx
 				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
 
 			// Draw the text
-			int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
+			int iMode = DrawDC.SetBkMode(TRANSPARENT);
 			COLORREF colorText;
 			if (m_ThemeMenu.UseThemes)
 			{
@@ -2115,7 +2114,7 @@ namespace Win32xx
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 
 			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
-			::SetBkMode(DrawDC, iMode);
+			DrawDC.SetBkMode(iMode);
 			}
 		
 		// Detach the DC so it doesn't get destroyed
@@ -2310,8 +2309,7 @@ namespace Win32xx
 			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
 
 			// Calculate the size of the text
-			CSize size;
-			GetTextExtentPoint32(DesktopDC, pmd->Text, lstrlen(pmd->Text), &size);
+			CSize size = DesktopDC.GetTextExtentPoint32(pmd->Text, lstrlen(pmd->Text));
 
 			// Calculate the size of the icon
 			int Iconx = 16;
@@ -2451,10 +2449,9 @@ namespace Win32xx
 			::DeleteObject(hFontOld);
 
 			// Update the band size
-			CSize csMenubar;
 			CDC dcFrame = GetDC();
 			dcFrame.CreateFontIndirect(&lf);
-			::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
+			CSize csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int Menubar_Height = csMenubar.cy + 8;
 			int nBand = GetRebar().GetBand(GetMenubar().GetHwnd());
 			REBARBANDINFO rbbi = {0};
@@ -2814,10 +2811,9 @@ namespace Win32xx
 		{
 			// Calculate the width of the text indicators
 			CDC dcStatus = GetStatusbar().GetDC();
-			CSize csCAP, csNUM, csSCRL;
-			::GetTextExtentPoint32(dcStatus, _T("\tCAP"), lstrlen(_T("\tCAP")), &csCAP);
-			::GetTextExtentPoint32(dcStatus, _T("\tNUM"), lstrlen(_T("\tNUM")), &csNUM);
-			::GetTextExtentPoint32(dcStatus, _T("\tSCRL"), lstrlen(_T("\tSCRL")), &csSCRL);
+			CSize csCAP  = dcStatus.GetTextExtentPoint32(_T("\tCAP"), lstrlen(_T("\tCAP")));
+			CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM"), lstrlen(_T("\tNUM")));
+			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL"), lstrlen(_T("\tSCRL")));
 
 			// Get the coordinates of the parent window's client area.
 			CRect rcClient = GetClientRect();
@@ -2847,7 +2843,7 @@ namespace Win32xx
 
 		// Avoid themes if using less than 16 bit colors
 		CDC DesktopDC = ::GetDC(NULL);
-		if (::GetDeviceCaps(DesktopDC, BITSPIXEL) < 16)
+		if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
 			return;
 
 		// Set a flag redo SetTheme when the theme changes

@@ -384,26 +384,26 @@ namespace Win32xx
 						if (m_Theme.FlatStyle)
 						{
 							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
-							::BitBlt(MaskDC, left, top, cx, cy, MaskDC, left, top, PATINVERT);
-							::RoundRect(MaskDC, left, top, right, bottom, Curve, Curve);
+							MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
+							MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 						}
 						else
 						{
 							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
-							::RoundRect(MaskDC, left, top, right, bottom, Curve, Curve);
-							::BitBlt(MaskDC, left, top, cx, cy, MaskDC, left, top, PATINVERT);
+							MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
+							MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
 						}
 
 						// Copy Source DC to Memory DC using the RoundRect mask
-						::BitBlt(MemDC, left, top, cx, cy, SourceDC, left, top, SRCINVERT);
-						::BitBlt(MemDC, left, top, cx, cy, MaskDC,   left, top, SRCAND);
-						::BitBlt(MemDC, left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+						MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+						MemDC.BitBlt(left, top, cx, cy, MaskDC,   left, top, SRCAND);
+						MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
 
 						// Extra drawing to prevent jagged edge while moving bands
 						if (m_bIsDragging)
 						{
 							CDC RebarDC = GetDC();
-							::BitBlt(RebarDC, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+							RebarDC.BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 						}
 					}
 				}
@@ -418,7 +418,7 @@ namespace Win32xx
 				rcRebar = GetBandRect(j);
 				rcRebar.left = MAX(0, rcRebar.left - 4);
 				rcRebar.bottom +=2;
-				::DrawEdge(MemDC, &rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+				MemDC.DrawEdge(&rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 			}
 		}
 
