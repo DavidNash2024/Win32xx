@@ -30,7 +30,7 @@ Major changes
 Incompatibilities with previous versions
 ----------------------------------------
 CFrame::AddToolbarBand now requires three arguements
-
+The various CRect functions use references to RECT rather than pointers
 
 Version 6.5
 ===========

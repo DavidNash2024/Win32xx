@@ -317,12 +317,12 @@ namespace Win32xx
 
 		// Draw to Rebar background to the memory DC
 		rcRebar.right = 600;
-		GradientFill(MemDC, m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, &rcRebar, TRUE);
+		MemDC.GradientFill(m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, rcRebar, TRUE);
 		if (BarWidth >= 600)
 		{
 			rcRebar.left = 600;
 			rcRebar.right = BarWidth;
-			SolidFill(MemDC, m_Theme.clrBkgnd2, &rcRebar);
+			MemDC.SolidFill(m_Theme.clrBkgnd2, rcRebar);
 		}
 
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
@@ -358,10 +358,10 @@ namespace Win32xx
 						SourceDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 						CRect rcBorder = GetBandBorders(nBand);
 						rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
-						SolidFill(SourceDC, m_Theme.clrBand1, &rcDraw);
+						SourceDC.SolidFill(m_Theme.clrBand1, rcDraw);
 						rcDraw.top = rcDraw.bottom;
 						rcDraw.bottom = rcBand.bottom;
-						GradientFill(SourceDC, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
+						SourceDC.GradientFill(m_Theme.clrBand1, m_Theme.clrBand2, rcDraw, FALSE);
 
 						// Set Curve amount for rounded edges
 						int Curve = m_Theme.RoundBorders? 12 : 0;
@@ -383,13 +383,13 @@ namespace Win32xx
 
 						if (m_Theme.FlatStyle)
 						{
-							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
+							MaskDC.SolidFill(RGB(0,0,0), rcDraw);
 							MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
 							MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 						}
 						else
 						{
-							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
+							MaskDC.SolidFill(RGB(0,0,0), rcDraw);
 							MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 							MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
 						}
@@ -418,7 +418,7 @@ namespace Win32xx
 				rcRebar = GetBandRect(j);
 				rcRebar.left = MAX(0, rcRebar.left - 4);
 				rcRebar.bottom +=2;
-				MemDC.DrawEdge(&rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+				MemDC.DrawEdge(rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 			}
 		}
 

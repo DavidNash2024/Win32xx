@@ -691,7 +691,7 @@ namespace Win32xx
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dcMem.CreateFontIndirect(&info.lfStatusFont);
+			dcMem.CreateFontIndirect(info.lfStatusFont);
 
 			// Set the Colours
 			if (bFocus)
@@ -714,7 +714,7 @@ namespace Win32xx
 			// Display the caption
 			int cx = GetSystemMetrics(SM_CXSMICON);
 			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_NCHeight +rcAdjust);
-			dcMem.DrawText(m_tsCaption.c_str(), -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			dcMem.DrawText(m_tsCaption.c_str(), -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
 			DrawCloseButton(dcMem, 0, bFocus);
@@ -1315,19 +1315,20 @@ namespace Win32xx
 		HBITMAP hbmBottom= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDBOTTOM),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 
-		if (hbmCentre)	DrawBitmap(hDC, 0, 0, 88, 88, hbmCentre, RGB(255,0,255));
+		CDC dcTarget = hDC;
+		if (hbmCentre)	dcTarget.DrawBitmap(0, 0, 88, 88, hbmCentre, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Centre\n"));
 
-		if (hbmLeft) DrawBitmap(hDC, 0, 29, 31, 29, hbmLeft, RGB(255,0,255));
+		if (hbmLeft) dcTarget.DrawBitmap(0, 29, 31, 29, hbmLeft, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Left\n"));
 
-		if (hbmTop) DrawBitmap(hDC, 29, 0, 29, 31, hbmTop, RGB(255,0,255));
+		if (hbmTop) dcTarget.DrawBitmap(29, 0, 29, 31, hbmTop, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Top\n"));
 
-		if (hbmRight) DrawBitmap(hDC, 55, 29, 31, 29, hbmRight, RGB(255,0,255));
+		if (hbmRight) dcTarget.DrawBitmap(55, 29, 31, 29, hbmRight, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Right\n"));
 
-		if (hbmBottom) DrawBitmap(hDC, 29, 55, 29, 31, hbmBottom, RGB(255,0,255));
+		if (hbmBottom) dcTarget.DrawBitmap(29, 55, 29, 31, hbmBottom, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Bottom\n"));
 
 		::DeleteObject(hbmCentre);
@@ -1340,9 +1341,11 @@ namespace Win32xx
 		{
 			HBITMAP hbmMiddle = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDMIDDLE),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-			DrawBitmap(hDC, 31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
+			dcTarget.DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
 			::DeleteObject(hbmMiddle);
 		}
+		
+		dcTarget.DetachDC();
 	}
 
 	inline void CDocker::CTargetCentre::OnCreate()
@@ -1445,9 +1448,12 @@ namespace Win32xx
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
+		CDC dcTarget = hDC;
 
-		if (GetImage()) DrawBitmap(hDC, 0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
+		if (GetImage()) dcTarget.DrawBitmap(0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
 		else TRACE(_T("Missing docking resource\n"));
+
+		dcTarget.DetachDC();
 	}
 
 	inline void CDocker::CTarget::PreCreate(CREATESTRUCT &cs)
@@ -3413,7 +3419,7 @@ namespace Win32xx
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dc.CreateFontIndirect(&info.lfStatusFont);
+			dc.CreateFontIndirect(info.lfStatusFont);
 			TempSize = dc.GetTextExtentPoint32(iter->szTitle, lstrlen(iter->szTitle));
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;
@@ -3504,9 +3510,7 @@ namespace Win32xx
 			if (pDock && pDock->IsDocker())
 			{
 				CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
-				TRACE("Calling pDock->UndockContainer\n");
 				pDock->UndockContainer(pContainer);
-				TRACE("Undocking complete\n");
 			}
 		}
 

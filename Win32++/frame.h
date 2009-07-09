@@ -693,11 +693,11 @@ namespace Win32xx
 					{
 						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							GradientFill(DrawDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcRect, FALSE);
+							DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							GradientFill(DrawDC, m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, &rcRect, FALSE);
+							DrawDC.GradientFill(m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, rcRect, FALSE);
 						}
 
 						// Draw border
@@ -717,7 +717,7 @@ namespace Win32xx
 						// Draw highlight rectangle
 						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-						DrawDC.FillRect(&rcRect, hbHighlight);
+						DrawDC.FillRect(rcRect, hbHighlight);
 					}
 
 					TCHAR str[80] = _T("");
@@ -732,7 +732,7 @@ namespace Win32xx
 
 					rcRect.bottom += 1;
 					int iMode = DrawDC.SetBkMode(TRANSPARENT);
-					DrawDC.DrawText(str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+					DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
 					DrawDC.SetBkMode(iMode);
 					DrawDC.DetachFont();
@@ -1511,7 +1511,7 @@ namespace Win32xx
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfMenuFont;
 		CDC dcFrame = GetDC();
-		dcFrame.CreateFontIndirect(&lf);
+		dcFrame.CreateFontIndirect(lf);
 		csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 		int Menubar_Height = csMenubar.cy + 8;
 
@@ -1672,9 +1672,9 @@ namespace Win32xx
 
 		// Copy the check mark bitmap to hdcMem
 		if (MFT_RADIOCHECK == fType)
-			MemDC.DrawFrameControl(&rCheck, DFC_MENU, DFCS_MENUBULLET);
+			MemDC.DrawFrameControl(rCheck, DFC_MENU, DFCS_MENUBULLET);
 		else
-			MemDC.DrawFrameControl(&rCheck, DFC_MENU, DFCS_MENUCHECK);
+			MemDC.DrawFrameControl(rCheck, DFC_MENU, DFCS_MENUCHECK);
 
 		int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 		if (m_ThemeMenu.UseThemes)
@@ -1756,11 +1756,11 @@ namespace Win32xx
 
 		// Draw the item text
 		DrawDC.SetTextColor(colorText);
-		DrawDC.DrawText(ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+		DrawDC.DrawText(ItemText, nTab, rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
 		// Draw text after tab, right aligned
 		if(nTab != -1)
-			DrawDC.DrawText( &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+			DrawDC.DrawText( &ItemText[nTab + 1], -1, rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
 	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
@@ -2046,7 +2046,7 @@ namespace Win32xx
 		{
 			CRect rcBar = rc;
 			rcBar.right = BarWidth;
-			GradientFill(DrawDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
+			DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcBar, TRUE);
 		}
 
 		if (pmd->fType & MFT_SEPARATOR)
@@ -2055,12 +2055,12 @@ namespace Win32xx
 			CRect rcSep = rc;
 			rcSep.left = BarWidth;
 			if (m_ThemeMenu.UseThemes)
-				SolidFill(DrawDC, RGB(255,255,255), &rcSep);
+				DrawDC.SolidFill(RGB(255,255,255), rcSep);
 			else
-				SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcSep);
+				DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
 			rcSep.left = BarWidth + 2;
-			DrawDC.DrawEdge(&rcSep,  EDGE_ETCHED, BF_TOP);
+			DrawDC.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
 		{
@@ -2080,16 +2080,16 @@ namespace Win32xx
 					DrawDC.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 				}
 				else
-					SolidFill(DrawDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
+					DrawDC.SolidFill(GetSysColor(COLOR_HIGHLIGHT), rcDraw);
 			}
 			else
 			{
 				// draw non-selected item background
 				rcDraw.left = BarWidth;
 				if (m_ThemeMenu.UseThemes)
-					SolidFill(DrawDC, RGB(255,255,255), &rcDraw);
+					DrawDC.SolidFill(RGB(255,255,255), rcDraw);
 				else
-					SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcDraw);
+					DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcDraw);
 			}  
 
 			if (bChecked)
@@ -2306,7 +2306,7 @@ namespace Win32xx
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
 				nm.lfMenuFont.lfWeight = FW_BOLD;
 
-			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
+			DesktopDC.CreateFontIndirect(nm.lfMenuFont);
 
 			// Calculate the size of the text
 			CSize size = DesktopDC.GetTextExtentPoint32(pmd->Text, lstrlen(pmd->Text));
@@ -2450,7 +2450,7 @@ namespace Win32xx
 
 			// Update the band size
 			CDC dcFrame = GetDC();
-			dcFrame.CreateFontIndirect(&lf);
+			dcFrame.CreateFontIndirect(lf);
 			CSize csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int Menubar_Height = csMenubar.cy + 8;
 			int nBand = GetRebar().GetBand(GetMenubar().GetHwnd());

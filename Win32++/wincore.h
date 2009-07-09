@@ -322,17 +322,17 @@ namespace Win32xx
 		int Width()
 		{ return right - left; }
 
-		void CopyRect(RECT* pRect)
-		{ ::CopyRect(pRect, this); }
+		void CopyRect(RECT& rc)
+		{ ::CopyRect(&rc, this); }
 
-		BOOL EqualRect(const RECT* pRect)
-		{ return ::EqualRect(pRect, this); }
+		BOOL EqualRect(RECT& rc)
+		{ return ::EqualRect(&rc, this); }
 
 		BOOL InflateRect(int dx, int dy)
 		{ return ::InflateRect(this, dx, dy); }
 
-		BOOL IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
-		{ return ::IntersectRect(this, lpRect1, lpRect2); }
+		BOOL IntersectRect(RECT& rc1, RECT& rc2)
+		{ return ::IntersectRect(this, &rc1, &rc2); }
 
 		BOOL IsRectEmpty()
 		{ return ::IsRectEmpty(this);}
@@ -349,11 +349,11 @@ namespace Win32xx
 		BOOL SetRectEmpty()
 		{ return ::SetRectEmpty(this); }
 
-		BOOL SubtractRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
-		{ return ::SubtractRect(this, pRcSrc1, pRcSrc2); }
+		BOOL SubtractRect(RECT& rc1, RECT& rc2)
+		{ return ::SubtractRect(this, &rc1, &rc2); }
 
-		BOOL UnionRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
-		{ return ::UnionRect(this, pRcSrc1, pRcSrc2); }
+		BOOL UnionRect(RECT& rc1, RECT& rc2)
+		{ return ::UnionRect(this, &rc1, &rc2); }
 	};
 
 

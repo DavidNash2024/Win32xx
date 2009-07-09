@@ -431,11 +431,11 @@ namespace Win32xx
 				::InflateRect(&rcRect, -1, -1);
 				if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 				{
-					GradientFill(DrawDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcRect, FALSE);
+					DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcRect, FALSE);
 				}
 				else if (nState & CDIS_HOT)
 				{
-					GradientFill(DrawDC, m_Theme.clrHot1, m_Theme.clrHot2, &rcRect, FALSE);
+					DrawDC.GradientFill(m_Theme.clrHot1, m_Theme.clrHot2, rcRect, FALSE);
 				}
 
 				// Get the appropriate image list depending on the button state
@@ -490,7 +490,7 @@ namespace Win32xx
 						CRect rcArrowBkgnd;
 						::CopyRect(&rcArrowBkgnd, &rcRect);
 						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
-						GradientFill(DrawDC, m_Theme.clrPressed1, m_Theme.clrPressed2, &rcArrowBkgnd, FALSE);
+						DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcArrowBkgnd, FALSE);
 					}
 
 					m_bDrawArrowBkgrnd = FALSE;
@@ -544,15 +544,18 @@ namespace Win32xx
 						// Draw text twice for embossed look
 						::OffsetRect(&rcText, 1, 1);
 						DrawDC.SetTextColor(RGB(255,255,255));
-						DrawDC.DrawTextEx(szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
+					//	DrawDC.DrawTextEx(szText, lstrlen(szText), rcText, DT_LEFT, NULL);
+						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT);
 						::OffsetRect(&rcText, -1, -1);
 						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-						DrawDC.DrawTextEx(szText, lstrlen(szText), &rcText, DT_LEFT, NULL);
+					//	DrawDC.DrawTextEx(szText, lstrlen(szText), rcText, DT_LEFT, NULL);
+						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT);
 					}
 					else
 					{
 						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-						DrawDC.DrawTextEx(szText, lstrlen(szText), &rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
+					//	DrawDC.DrawTextEx(szText, lstrlen(szText), rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
+						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT | DT_END_ELLIPSIS);
 					}
 					DrawDC.SetBkMode(iMode);
 					// Detach the font so it doesn't get destroyed

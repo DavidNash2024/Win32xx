@@ -498,7 +498,7 @@ namespace Win32xx
 					NONCLIENTMETRICS info = {0};
 					info.cbSize = GetSizeofNonClientMetrics();					
 					SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-					dcMem.CreateFontIndirect(&info.lfStatusFont);				
+					dcMem.CreateFontIndirect(info.lfStatusFont);				
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -509,7 +509,7 @@ namespace Win32xx
 						rcText.left += iImageSize;
 
 					rcText.left += iPadding;
-					dcMem.DrawText(szText, -1, &rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+					dcMem.DrawText(szText, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 				}
 			}
 		}   
@@ -606,7 +606,7 @@ namespace Win32xx
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dc.CreateFontIndirect(&info.lfStatusFont);
+			dc.CreateFontIndirect(info.lfStatusFont);
 			TCHAR szTitle[32];
 			TCITEM tcItem = {0};
 			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
@@ -762,7 +762,6 @@ namespace Win32xx
 		{
 		case TCN_SELCHANGE:
 			{
-				TRACE("TCN_SELCHANGE\n");
 				// Display the newly selected tab page
 				int iPage = GetCurSel();
 				SelectPage(iPage);
@@ -787,7 +786,7 @@ namespace Win32xx
 		if (0 == GetItemCount())
 		{
 			// No tabs, so simply display a grey background and exit
-			SolidFill(dcView, RGB(232, 228, 220), &rcClient);
+			dcView.SolidFill(RGB(232, 228, 220), rcClient);
 			return;
 		}
 

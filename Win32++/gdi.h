@@ -85,11 +85,7 @@ namespace Win32xx
 
 	/////////////////////////////////////////////////////////////////
 	// Declarations for some global functions in the Win32xx namespace
-	//
-	
-	void DrawBitmap(HDC hDC, int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask);
-	void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical);
-	void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc);
+	//	
 	void TintBitmap(HBITMAP hbmSource, int cRed, int cGreen, int cBlue);
 	HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal);
 
@@ -109,12 +105,15 @@ namespace Win32xx
 
 		virtual void AttachDC( HDC hDC );
 		virtual HDC  DetachDC( );
+		virtual void DrawBitmap( int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask );
+		virtual void GradientFill( COLORREF Color1, COLORREF Color2, RECT& rc, BOOL bVertical );
+		virtual void SolidFill( COLORREF Color, RECT& rc );
 
 		// Create and Select Bitmaps
 		virtual void AttachBitmap( HBITMAP hBitmap );
 		virtual void CreateBitmap( int cx, int cy, UINT Planes, UINT BitsPerPixel, CONST VOID *pvColors );
 		virtual void CreateCompatibleBitmap( HDC hDC, int cx, int cy );
-		virtual void CreateDIBSection( HDC hdc, CONST BITMAPINFO *pbmi, UINT iUsage, VOID **ppvBits,
+		virtual void CreateDIBSection( HDC hdc, BITMAPINFO& bmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset) ;
 		virtual HBITMAP DetachBitmap( );
 
@@ -127,36 +126,36 @@ namespace Win32xx
 
 		// Create and Select Fonts
 		virtual void AttachFont( HFONT hFont );
-		virtual void CreateFontIndirect( CONST LOGFONT* pLF );
+		virtual void CreateFontIndirect( LOGFONT& lf );
 		virtual HFONT DetachFont( );
 
 		// Create and Select Pens
 		virtual void AttachPen( HPEN hPen );
 		virtual void CreatePen( int nStyle, int nWidth, COLORREF rgb );
-		virtual void CreatePenIndirect( const LOGPEN *lplgpn );
+		virtual void CreatePenIndirect( LOGPEN& lgpn );
 		virtual HPEN DetachPen( );
 
 		// Create Select Regions
 		virtual void AttachClipRegion( HRGN hRegion );
 		virtual void CreateEllipticRgn( int left, int top, int right, int bottom );
-		virtual void CreateEllipticRgnIndirect( const RECT* prc );
+		virtual void CreateEllipticRgnIndirect( RECT& rc );
 		virtual void CreatePolygonRgn( const POINT* ppt, int cPoints, int fnPolyFillMode );
 		virtual void CreatePolyPolygonRgn( const POINT* ppt, const int* pPolyCounts, int nCount, int fnPolyFillMode );
 		virtual void CreateRectRgn( int left, int top, int right, int bottom );
-		virtual void CreateRectRgnIndirect( const RECT* prc );
+		virtual void CreateRectRgnIndirect( RECT& rc );
 		virtual HRGN DetachClipRegion( );
-		virtual void ExtCreateRegion( const XFORM *pXform, DWORD nCount, const RGNDATA *pRgnData );
+		virtual void ExtCreateRegion( XFORM& Xform, DWORD nCount, const RGNDATA *pRgnData );
 
 		// Cast the CDC object to a HDC
 		operator HDC( ) const { return m_hDC; }
 
 #ifndef _WIN32_WCE
 		// Create and Select Bitmaps
-		virtual void CreateBitmapIndirect( CONST BITMAP *lpbm );
-		virtual void CreateDIBitmap( HDC hdc, CONST BITMAPINFOHEADER *lpbmih, DWORD fdwInit, CONST VOID *lpbInit,
-										CONST BITMAPINFO *lpbmi,  UINT fuUsage );
+		virtual void CreateBitmapIndirect( BITMAP& bm );
+		virtual void CreateDIBitmap( HDC hdc, BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
+										BITMAPINFO& bmi, UINT fuUsage );
 		// Create and Select Brushes
-		virtual void CreateBrushIndirect( CONST LOGBRUSH *lplb );
+		virtual void CreateBrushIndirect( LOGBRUSH& lb );
 		virtual void CreateDIBPatternBrush( HGLOBAL hglbDIBPacked, UINT fuColorSpec );
 		virtual void CreateHatchBrush( int fnStyle, COLORREF rgb );
 
@@ -172,8 +171,8 @@ namespace Win32xx
 
 		// Initialization
 		HDC CreateCompatibleDC( );
-		HDC CreateDC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE* lpInitData );
-		HDC CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE *lpdvmInit  );
+		HDC CreateDC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, DEVMODE& dvmInit );
+		HDC CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, DEVMODE& dvmInit );
 		int GetDeviceCaps( int nIndex );
 		CWnd* WindowFromDC( );
 		
@@ -184,9 +183,9 @@ namespace Win32xx
 		BOOL LineTo( int x, int y );
 		BOOL LineTo( POINT pt );
 		BOOL Arc( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 );
-		BOOL Arc( LPCRECT lpRect, POINT ptStart, POINT ptEnd );
+		BOOL Arc( RECT& rc, POINT ptStart, POINT ptEnd );
 		BOOL ArcTo( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 );
-		BOOL ArcTo( LPCRECT lpRect, POINT ptStart, POINT ptEnd );
+		BOOL ArcTo( RECT& rc, POINT ptStart, POINT ptEnd );
 		BOOL AngleArc( int x, int y, int nRadius, float fStartAngle, float fSweepAngle );
 		int GetArcDirection( ) const;
 		int SetArcDirection( int nArcDirection );
@@ -205,35 +204,35 @@ namespace Win32xx
 
 		// Shape Drawing Functions
 		BOOL Chord( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 );
-		BOOL Chord( LPCRECT lpRect, POINT ptStart, POINT ptEnd );
-		void DrawFocusRect( LPCRECT lpRect );
+		BOOL Chord( RECT& rc, POINT ptStart, POINT ptEnd );
+		void DrawFocusRect( RECT& rc );
 		BOOL Ellipse( int x1, int y1, int x2, int y2 );
-		BOOL Ellipse( LPCRECT lpRect );
+		BOOL Ellipse( RECT& rc );
 		BOOL Pie( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 );
-		BOOL Pie( LPCRECT lpRect, POINT ptStart, POINT ptEnd );
+		BOOL Pie( RECT& rc, POINT ptStart, POINT ptEnd );
 		BOOL Polygon( LPPOINT lpPoints, int nCount );
 		BOOL PolyPolygon( LPPOINT lpPoints, LPINT lpPolyCounts, int nCount );
 		BOOL Rectangle( int x1, int y1, int x2, int y2 );
-		BOOL Rectangle( LPCRECT lpRect );
+		BOOL Rectangle( RECT& rc);
 		BOOL RoundRect( int x1, int y1, int x2, int y2, int nWidth, int nHeight );
-		BOOL RoundRect( LPRECT lpRect, int nWidth, int nHeight );
+		BOOL RoundRect( RECT& rc, int nWidth, int nHeight );
 
-		// Fill and 3D Drawing functions
-		BOOL FillRect( LPCRECT lpRect, HBRUSH hbr );
-		BOOL FrameRect( LPCRECT lpRect, HBRUSH hbr );
-		BOOL InvertRect( LPCRECT lpRect );
+		// Fill and Image Drawing functions
+		BOOL FillRect( RECT& rc, HBRUSH hbr );
+		BOOL FrameRect( RECT& rc, HBRUSH hbr );
+		BOOL InvertRect( RECT& rc );
 		BOOL DrawIcon( int x, int y, HICON hIcon );
 		BOOL DrawIcon( POINT point, HICON hIcon );
 		BOOL DrawIconEx( int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags );
-		BOOL DrawEdge( LPRECT lpRect, UINT nEdge, UINT nFlags );
-		BOOL DrawFrameControl( LPRECT lpRect, UINT nType, UINT nState );
+		BOOL DrawEdge( RECT& rc, UINT nEdge, UINT nFlags );
+		BOOL DrawFrameControl( RECT& rc, UINT nType, UINT nState );
 		BOOL FillRgn( HRGN hrgn, HBRUSH hbr );
 		BOOL PaintRgn( HRGN hrgn );
 
 		// Bitmap Functions
-		int GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage );
+		int GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, BITMAPINFO& bi, UINT uUsage );
 		int StretchDIBits( int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth, 
-			           int nSrcHeight, CONST VOID *lpBits, CONST BITMAPINFO *lpBitsInfo, UINT iUsage, DWORD dwRop );
+			           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop );
 		int GetStretchBltMode( );
 		int SetStretchBltMode( int iStretchMode );
 		BOOL PatBlt( int x, int y, int nWidth, int nHeight, DWORD dwRop );
@@ -244,17 +243,17 @@ namespace Win32xx
 
 		// Text Functions
 		BOOL TextOut( int x, int y, LPCTSTR lpszString, int nCount );
-		BOOL ExtTextOut( int x, int y, UINT nOptions, LPCRECT lpRect, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths );
+		BOOL ExtTextOut( int x, int y, UINT nOptions, RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths );
 		CSize TabbedTextOut( int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin );	
-		int DrawText( LPCTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat );
-		int DrawTextEx( LPTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams );
+		int DrawText( LPCTSTR lpszString, int nCount, RECT& rc, UINT nFormat );
+		int DrawTextEx( LPTSTR lpszString, int nCount, RECT& rc, UINT nFormat, DRAWTEXTPARAMS& DTParams );
 		CSize GetTextExtentPoint32( LPCTSTR lpszString, int nCount ) const;			
 		CSize GetTabbedTextExtent( LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions ) const;			
 		BOOL GrayString( HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight );
 		UINT GetTextAlign( ) const;
 		UINT SetTextAlign( UINT nFlags );
 		int GetTextFace( int nCount, LPTSTR lpszFacename ) const;
-		BOOL GetTextMetrics( LPTEXTMETRIC lpMetrics ) const;
+		BOOL GetTextMetrics( TEXTMETRIC& Metrics ) const;
 		int SetTextJustification( int nBreakExtra, int nBreakCount );
 		int GetTextCharacterExtra( ) const;
 		int SetTextCharacterExtra( int nCharExtra );
@@ -392,6 +391,82 @@ namespace Win32xx
 		return hDC;
 	}
 
+	inline void CDC::DrawBitmap( int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask )
+	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
+	// Suitable for use with a Window DC or a memory DC
+	{
+		// Create the Image memory DC
+		CDC dcImage = ::CreateCompatibleDC(m_hDC);
+		dcImage.AttachBitmap(hbmImage);
+			
+		// Create the Mask memory DC
+		HBITMAP hbmMask = ::CreateBitmap(cx, cy, 1, 1, NULL);
+		CDC dcMask = ::CreateCompatibleDC(m_hDC);
+		dcMask.AttachBitmap(hbmMask);
+		::SetBkColor(dcImage, clrMask);
+		::BitBlt(dcMask, 0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
+
+		// Mask the image to the DC provided
+		::BitBlt(m_hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+		::BitBlt(m_hDC, x, y, cx, cy, dcMask, 0, 0, SRCAND);
+		::BitBlt(m_hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+
+		// Detach the bitmap before the dcImage is destroyed
+		dcImage.DetachBitmap();
+	}
+
+	inline void CDC::GradientFill( COLORREF Color1, COLORREF Color2, RECT& rc, BOOL bVertical )
+	// A simple but efficient Gradient Filler compatible with all Windows operating systems
+	{
+		int Width = rc.right - rc.left;
+		int Height = rc.bottom - rc.top;
+
+		int r1 = GetRValue(Color1);
+		int g1 = GetGValue(Color1);
+		int b1 = GetBValue(Color1);
+
+		int r2 = GetRValue(Color2);
+		int g2 = GetGValue(Color2);
+		int b2 = GetBValue(Color2);
+
+		COLORREF OldBkColor = ::GetBkColor(m_hDC);
+
+		if (bVertical)
+		{
+			for(int i=0; i < Width; ++i)
+			{
+				int r = r1 + (i * (r2-r1) / Width);
+				int g = g1 + (i * (g2-g1) / Width);
+				int b = b1 + (i * (b2-b1) / Width);
+				SetBkColor(RGB(r, g, b));
+				CRect line( i + rc.left, rc.top, i + 1 + rc.left, rc.top+Height);
+				ExtTextOut(0, 0, ETO_OPAQUE, line, NULL, 0, 0);
+			}
+		}
+		else
+		{
+			for(int i=0; i < Height; ++i)
+			{
+				int r = r1 + (i * (r2-r1) / Height);
+				int g = g1 + (i * (g2-g1) / Height);
+				int b = b1 + (i * (b2-b1) / Height);
+				SetBkColor(RGB(r, g, b));
+				CRect line( rc.left, i + rc.top, rc.left+Width, i + 1 + rc.top);
+				ExtTextOut(0, 0, ETO_OPAQUE, line, NULL, 0, 0);
+			}
+		}
+
+		SetBkColor(OldBkColor);
+	}
+
+	inline void CDC::SolidFill( COLORREF Color, RECT& rc )
+	// Fills a rectangle with a solid color
+	{
+		COLORREF OldColor = SetBkColor(Color);
+		ExtTextOut(0, 0, ETO_OPAQUE, rc, NULL, 0, 0);
+		SetBkColor(OldColor);
+	}
+
 	// Bitmap functions
 	inline void CDC::AttachBitmap(HBITMAP hBitmap)
 	{
@@ -434,35 +509,35 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CDC::CreateBitmapIndirect(CONST BITMAP *lpbm)
+	inline void CDC::CreateBitmapIndirect(BITMAP& bm)
 	{
 		// Creates a bitmap and selects it into the device context
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
-		HBITMAP hBitmap = ::CreateBitmapIndirect(lpbm);
+		HBITMAP hBitmap = ::CreateBitmapIndirect(&bm);
 		if (!hBitmap) throw CWinException(_T("CreateBitmap failed"));
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
 
-	inline void CDC::CreateDIBitmap(HDC hdc, CONST BITMAPINFOHEADER *lpbmih, DWORD fdwInit, CONST VOID *lpbInit,
-										CONST BITMAPINFO *lpbmi,  UINT fuUsage)
+	inline void CDC::CreateDIBitmap(HDC hdc, BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
+										BITMAPINFO& bmi,  UINT fuUsage)
 	{
 		// Creates a bitmap and selects it into the device context
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
-		HBITMAP hBitmap = ::CreateDIBitmap(hdc, lpbmih, fdwInit, lpbInit, lpbmi, fuUsage);
+		HBITMAP hBitmap = ::CreateDIBitmap(hdc, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
 		if (!hBitmap) throw CWinException(_T("CreateDIBitmap failed"));
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
 #endif
 
-	inline void CDC::CreateDIBSection(HDC hdc, CONST BITMAPINFO *pbmi, UINT iUsage, VOID **ppvBits,
+	inline void CDC::CreateDIBSection(HDC hdc, BITMAPINFO& bmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset)
 	{
 		// Creates a bitmap and selects it into the device context
@@ -470,7 +545,7 @@ namespace Win32xx
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hBitmapOld)::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
-		HBITMAP hBitmap = ::CreateDIBSection(hdc, pbmi, iUsage, ppvBits, hSection, dwOffset);
+		HBITMAP hBitmap = ::CreateDIBSection(hdc, &bmi, iUsage, ppvBits, hSection, dwOffset);
 		if (!hBitmap) throw CWinException(_T("CreateDIBSection failed"));
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
@@ -502,14 +577,14 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CDC::CreateBrushIndirect(CONST LOGBRUSH *lplb)
+	inline void CDC::CreateBrushIndirect( LOGBRUSH& lb)
 	{
 		// Creates the brush and selects it into the device context
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
-		HBRUSH hBrush = ::CreateBrushIndirect(lplb);
+		HBRUSH hBrush = ::CreateBrushIndirect(&lb);
 		if (!hBrush) throw CWinException(_T("CreateBrusIndirect failed"));
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
@@ -639,12 +714,12 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::CreateFontIndirect(CONST LOGFONT* pLF)
+	inline void CDC::CreateFontIndirect( LOGFONT& lf)
 	{
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hFontOld) ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
 
-		HFONT hFont = ::CreateFontIndirect(pLF);
+		HFONT hFont = ::CreateFontIndirect(&lf);
 		if (!hFont) throw CWinException(_T("CreateFontIndirect failed"));
 
 		m_hFontOld = (HFONT)::SelectObject(m_hDC, hFont);
@@ -688,14 +763,14 @@ namespace Win32xx
 		m_hPenOld = (HPEN)::SelectObject(m_hDC, hPen);
 	}
 
-	inline void CDC::CreatePenIndirect(const LOGPEN *lplgpn)
+	inline void CDC::CreatePenIndirect( LOGPEN& lgpn)
 	{
 		// Creates the pen and selects it into the device context
 
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hPenOld) ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 
-		HPEN hPen = ::CreatePenIndirect(lplgpn);
+		HPEN hPen = ::CreatePenIndirect(&lgpn);
 		if (!hPen) throw CWinException(_T("CreatePenIndirect failed"));
 
 		m_hPenOld = (HPEN)::SelectObject(m_hDC, hPen);
@@ -746,7 +821,7 @@ namespace Win32xx
 		m_hRgnOld = hRgn;
 	}
 
-	inline void CDC::CreateEllipticRgnIndirect(const RECT* prc)
+	inline void CDC::CreateEllipticRgnIndirect( RECT& rc)
 	{
 		// Creates the ellyiptical region from the bounding rectangle co-ordinates
 		// and selects it into the device context
@@ -756,7 +831,7 @@ namespace Win32xx
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
-		HRGN hRgn = ::CreateEllipticRgnIndirect(prc);
+		HRGN hRgn = ::CreateEllipticRgnIndirect(&rc);
 		if (!hRgn) throw CWinException(_T("CreateEllipticRgnIndirect failed"));
 
 		::SelectClipRgn(m_hDC, hRgn);
@@ -812,7 +887,7 @@ namespace Win32xx
 		m_hRgnOld = hRgn;
 	}
 
-	inline void CDC::CreateRectRgnIndirect(const RECT* prc)
+	inline void CDC::CreateRectRgnIndirect( RECT& rc)
 	{
 		// Creates a rectangular region from the rectangle co-ordinates.
 		// The region will be deleted for you, unless its detached
@@ -821,14 +896,14 @@ namespace Win32xx
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
-		HRGN hRgn = ::CreateRectRgnIndirect(prc);
+		HRGN hRgn = ::CreateRectRgnIndirect(&rc);
 		if (!hRgn) throw CWinException(_T("CreateRectRgnIndirect failed"));
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
 	}
 
-	inline void CDC::ExtCreateRegion(const XFORM *pXform, DWORD nCount, const RGNDATA *pRgnData)
+	inline void CDC::ExtCreateRegion( XFORM& Xform, DWORD nCount, const RGNDATA *pRgnData)
 	{
 		// Creates a region from the specified region data and tranformation data.
 		// The region will be deleted for you, unless its detached
@@ -839,7 +914,7 @@ namespace Win32xx
 		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
-		HRGN hRgn = ::ExtCreateRegion(pXform, nCount, pRgnData);
+		HRGN hRgn = ::ExtCreateRegion(&Xform, nCount, pRgnData);
 		if (!hRgn) throw CWinException(_T("ExtCreateRegion failed"));
 
 		::SelectClipRgn(m_hDC, hRgn);
@@ -864,87 +939,453 @@ namespace Win32xx
 
 
 
+
+
+	// Wrappers for WinAPI functions
+	
+	// Initialization
+	inline HDC CDC::CreateCompatibleDC( )
+	{
+		return ::CreateCompatibleDC( m_hDC );
+	}
+	inline HDC CDC::CreateDC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, DEVMODE& dvmInit )
+	{
+		return ::CreateDC( lpszDriver, lpszDevice, lpszOutput, &dvmInit );
+	}
+	inline HDC CDC::CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, DEVMODE& dvmInit )
+	{
+		return ::CreateIC( lpszDriver, lpszDevice, lpszOutput, &dvmInit );
+	}
+	inline int CDC::GetDeviceCaps( int nIndex )
+	{
+		return ::GetDeviceCaps(m_hDC, nIndex);
+	}
+	inline CWnd* CDC::WindowFromDC( )
+	{
+		return CWnd::FromHandle( ::WindowFromDC( m_hDC ) );
+	}
+
+	// Point and Line Drawing Functions
+	inline CPoint CDC::GetCurrentPosition( ) const
+	{
+		//  returns the current "MoveToEx" position
+		CPoint pt;
+		::MoveToEx( m_hDC, 0, 0, &pt );
+		::MoveToEx( m_hDC, pt.x, pt.y, NULL);
+		return pt;
+	}
+	inline CPoint CDC::MoveTo( int x, int y )
+	{
+		// Updates the current position to the specified point
+		return ::MoveToEx( m_hDC, x, y, NULL ); 
+	}
+	inline CPoint CDC::MoveTo( POINT pt )
+	{
+		// Updates the current position to the specified point
+		return ::MoveToEx( m_hDC, pt.x, pt.y, NULL );
+	}
+	inline BOOL CDC::LineTo( int x, int y )
+	{
+		// Draws a line from the current position up to, but not including, the specified point
+		return ::LineTo( m_hDC, x, y );
+	}
+	inline BOOL CDC::LineTo( POINT pt )
+	{
+		// Draws a line from the current position up to, but not including, the specified point
+		return ::LineTo( m_hDC, pt.x, pt.y );
+	}
+	inline BOOL CDC::Arc( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
+	{
+		return ::Arc( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
+	}
+	inline BOOL CDC::Arc( RECT& rc, POINT ptStart, POINT ptEnd )
+	{
+		// Draws an elliptical arc
+		return ::Arc( m_hDC, rc.left, rc.top, rc.right, rc.bottom, 
+			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
+	}
+	inline BOOL CDC::ArcTo( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
+	{
+		// Draws an elliptical arc
+		return ::ArcTo( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4) ;
+	}
+	inline BOOL CDC::ArcTo( RECT& rc, POINT ptStart, POINT ptEnd )
+	{
+		// Draws an elliptical arc
+		return ::ArcTo(  m_hDC, rc.left, rc.top, rc.right, rc.bottom,
+			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
+	}
+	inline BOOL CDC::AngleArc( int x, int y, int nRadius, float fStartAngle, float fSweepAngle )
+	{
+		// Draws a line segment and an arc
+		return ::AngleArc( m_hDC, x, y, nRadius, fStartAngle, fSweepAngle); 
+	}
+	inline int CDC::GetArcDirection( ) const
+	{
+		// Retrieves the current arc direction ( AD_COUNTERCLOCKWISE or AD_CLOCKWISE )
+		return ::GetArcDirection( m_hDC );
+	}
+	inline int CDC::SetArcDirection( int nArcDirection )
+	{
+		// Sets the current arc direction ( AD_COUNTERCLOCKWISE or AD_CLOCKWISE )
+		return ::SetArcDirection( m_hDC, nArcDirection );
+	}
+	inline BOOL CDC::PolyDraw( const POINT* lpPoints, const BYTE* lpTypes, int nCount )
+	{
+		// Draws a set of line segments and Bzier curves
+		return ::PolyDraw( m_hDC, lpPoints, lpTypes, nCount );
+	}
+	inline BOOL CDC::Polyline( LPPOINT lpPoints, int nCount )
+	{
+		// Draws a series of line segments by connecting the points in the specified array
+		return ::Polyline( m_hDC, lpPoints, nCount );
+	}
+	inline BOOL CDC::PolyPolyline( const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount )
+	{
+		// Draws multiple series of connected line segments
+		return ::PolyPolyline( m_hDC, lpPoints, lpPolyPoints, nCount );
+	}
+	inline BOOL CDC::PolylineTo( const POINT* lpPoints, int nCount )
+	{
+		// Draws one or more straight lines
+		return ::PolylineTo( m_hDC, lpPoints, nCount );
+	}
+	inline BOOL CDC::PolyBezier( const POINT* lpPoints, int nCount )
+	{
+		// Draws one or more Bzier curves
+		return ::PolyBezier( m_hDC, lpPoints, nCount );
+	}
+	inline BOOL CDC::PolyBezierTo( const POINT* lpPoints, int nCount )
+	{
+		// Draws one or more Bzier curves
+		return ::PolyBezierTo(m_hDC, lpPoints, nCount );
+	}
+	inline COLORREF CDC::GetPixel( int x, int y ) const
+	{
+		// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates
+		return ::GetPixel( m_hDC, x, y );
+	}
+	inline COLORREF CDC::GetPixel( POINT pt ) const
+	{
+		// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates
+		return ::GetPixel( m_hDC, pt.x, pt.y );
+	}
+	inline COLORREF CDC::SetPixel( int x, int y, COLORREF crColor )
+	{
+		// Sets the pixel at the specified coordinates to the specified color
+		return ::SetPixel( m_hDC, x, y, crColor );
+	}
+	inline COLORREF CDC::SetPixel( POINT pt, COLORREF crColor )
+	{
+		// Sets the pixel at the specified coordinates to the specified color
+		return ::SetPixel( m_hDC, pt.x, pt.y, crColor );
+	}
+	inline BOOL CDC::SetPixelV( int x, int y, COLORREF crColor )
+	{
+		// Sets the pixel at the specified coordinates to the closest approximation of the specified color
+		return ::SetPixelV( m_hDC, x, y, crColor );
+	}
+	inline BOOL CDC::SetPixelV( POINT pt, COLORREF crColor )
+	{
+		// Sets the pixel at the specified coordinates to the closest approximation of the specified color
+		return ::SetPixelV( m_hDC, pt.x, pt.y, crColor );
+	}
+
+	// Shape Drawing Functions
+	inline BOOL CDC::Chord( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
+	{
+		// Draws a chord (a region bounded by the intersection of an ellipse and a line segment, called a secant)
+		return ::Chord( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
+	}
+	inline BOOL CDC::Chord( RECT& rc, POINT ptStart, POINT ptEnd )
+	{
+		// Draws a chord (a region bounded by the intersection of an ellipse and a line segment, called a secant)
+		return ::Chord( m_hDC, rc.left, rc.top, rc.right, rc.bottom,
+			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
+	}
+	inline void CDC::DrawFocusRect( RECT& rc )
+	{
+		// draws a rectangle in the style used to indicate that the rectangle has the focus
+		::DrawFocusRect( m_hDC, &rc );
+	}
+	inline BOOL CDC::Ellipse( int x1, int y1, int x2, int y2 )
+	{
+		// Draws an ellipse. The center of the ellipse is the center of the specified bounding rectangle.
+		return ::Ellipse( m_hDC, x1, y1, x2, y2 );
+	}
+	inline BOOL CDC::Ellipse( RECT& rc )
+	{
+		// Draws an ellipse. The center of the ellipse is the center of the specified bounding rectangle.
+		return ::Ellipse( m_hDC, rc.left, rc.top, rc.right, rc.bottom );
+	}
+	inline BOOL CDC::Pie( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
+	{
+		// Draws a pie-shaped wedge bounded by the intersection of an ellipse and two radials.
+		return ::Pie( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
+	}
+	inline BOOL CDC::Pie( RECT& rc, POINT ptStart, POINT ptEnd )
+	{
+		// Draws a pie-shaped wedge bounded by the intersection of an ellipse and two radials.
+		return ::Pie( m_hDC, rc.left, rc.top, rc.right, rc.bottom,
+			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
+	}
+	inline BOOL CDC::Polygon( LPPOINT lpPoints, int nCount )
+	{
+		// Draws a polygon consisting of two or more vertices connected by straight lines
+		return ::Polygon( m_hDC, lpPoints, nCount);
+	}
+	inline BOOL CDC::PolyPolygon( LPPOINT lpPoints, LPINT lpPolyCounts, int nCount )
+	{
+		// Draws a series of closed polygons
+		return ::PolyPolygon( m_hDC, lpPoints, lpPolyCounts, nCount );
+	}
+	inline BOOL CDC::Rectangle( int x1, int y1, int x2, int y2 )
+	{
+		// Draws a rectangle. The rectangle is outlined by using the current pen and filled by using the current brush.
+		return ::Rectangle( m_hDC, x1, y1, x2, y2 );
+	}
+	inline BOOL CDC::Rectangle( RECT& rc)
+	{
+		// Draws a rectangle. The rectangle is outlined by using the current pen and filled by using the current brush.
+		return ::Rectangle( m_hDC, rc.left, rc.top, rc.right, rc.bottom );
+	}
+	inline BOOL CDC::RoundRect( int x1, int y1, int x2, int y2, int nWidth, int nHeight )
+	{
+		// Draws a rectangle with rounded corners
+		return ::RoundRect( m_hDC, x1, y1, x2, y2, nWidth, nHeight );
+	}
+	inline BOOL CDC::RoundRect( RECT& rc, int nWidth, int nHeight )
+	{
+		// Draws a rectangle with rounded corners
+		return ::RoundRect(m_hDC, rc.left, rc.top, rc.right, rc.bottom, nWidth, nHeight );
+	}
+
+	// Fill and 3D Drawing functions
+	inline BOOL CDC::FillRect( RECT& rc, HBRUSH hbr )
+	{
+		// Fills a rectangle by using the specified brush
+		return (BOOL)::FillRect( m_hDC, &rc, hbr );
+	}
+	inline BOOL CDC::FrameRect( RECT& rc, HBRUSH hbr )
+	{
+		// Draws a border around the specified rectangle by using the specified brush
+		return (BOOL)::FrameRect( m_hDC, &rc, hbr );
+	}
+	inline BOOL CDC::InvertRect( RECT& rc )
+	{
+		// Inverts a rectangle in a window by performing a logical NOT operation on the color values for each pixel in the rectangle's interior
+		return ::InvertRect( m_hDC, &rc );
+	}
+	inline BOOL CDC::DrawIcon( int x, int y, HICON hIcon )
+	{
+		// Draws an icon or cursor
+		return ::DrawIcon( m_hDC, x, y, hIcon );
+	}
+	inline BOOL CDC::DrawIcon( POINT pt, HICON hIcon )
+	{
+		// Draws an icon or cursor
+		return ::DrawIcon( m_hDC, pt.x, pt.y, hIcon );
+	}
+	inline BOOL CDC::DrawIconEx( int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags )
+	{
+		// draws an icon or cursor, performing the specified raster operations, and stretching or compressing the icon or cursor as specified. 
+		return ::DrawIconEx( m_hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, hbrFlickerFreeDraw, diFlags );
+	}
+	inline BOOL CDC::DrawEdge( RECT& rc, UINT nEdge, UINT nFlags )
+	{
+		// Draws one or more edges of rectangle
+		return ::DrawEdge( m_hDC, &rc, nEdge, nFlags );
+	}
+	inline BOOL CDC::DrawFrameControl( RECT& rc, UINT nType, UINT nState )
+	{
+		// Draws a frame control of the specified type and style
+		return ::DrawFrameControl( m_hDC, &rc, nType, nState );
+	}
+	inline BOOL CDC::FillRgn( HRGN hrgn, HBRUSH hbr )
+	{
+		// Fills a region by using the specified brush
+		return ::FillRgn( m_hDC, hrgn, hbr );
+	}
+	inline BOOL CDC::PaintRgn( HRGN hrgn )
+	{
+		// Paints the specified region by using the brush currently selected into the device context
+		return ::PaintRgn( m_hDC, hrgn);
+	}
+
+	// Bitmap Functions
+	inline int CDC::GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, BITMAPINFO& bi, UINT uUsage )
+	{
+		// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format
+		return ::GetDIBits( m_hDC, hbmp, uStartScan, cScanLines, lpvBits, &bi, uUsage );
+	}
+	
+	inline int CDC::StretchDIBits( int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth, 
+		           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop )
+	{
+		// Copies the color data for a rectangle of pixels in a DIB to the specified destination rectangle
+		return ::StretchDIBits( m_hDC, XDest, YDest, nDestWidth, nDestHeight, XSrc, YSrc, nSrcWidth, nSrcHeight, lpBits, &bi, iUsage, dwRop );		           
+	}
+	inline int CDC::GetStretchBltMode( )
+	{
+		// Retrieves the current stretching mode 
+		// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK
+		return ::GetStretchBltMode( m_hDC );
+	}
+	inline int CDC::SetStretchBltMode( int iStretchMode )
+	{
+		// Sets the stretching mode 
+		// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK
+		return ::SetStretchBltMode( m_hDC, iStretchMode );
+	}
+	inline BOOL CDC::PatBlt( int x, int y, int nWidth, int nHeight, DWORD dwRop )
+	{
+		// Paints the specified rectangle using the brush that is currently selected into the device context
+		return ::PatBlt( m_hDC, x, y, nWidth, nHeight, dwRop );
+	}
+	inline BOOL CDC::BitBlt( int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop )
+	{
+		// Performs a bit-block transfer of the color data corresponding to a rectangle of pixels from the specified source device context into a destination device context
+		return ::BitBlt( m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, dwRop );
+	}
+	inline BOOL CDC::StretchBlt( int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop )
+	{
+		// Copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing the bitmap to fit the dimensions of the destination rectangle, if necessary
+		return ::StretchBlt( m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, dwRop );
+	}
+	inline BOOL CDC::FloodFill( int x, int y, COLORREF crColor )
+	{
+		// Fills an area of the display surface with the current brush
+		return ::FloodFill(m_hDC, x, y, crColor );
+	}
+	inline BOOL CDC::ExtFloodFill( int x, int y, COLORREF crColor, UINT nFillType )
+	{
+		// Fills an area of the display surface with the current brush
+		// Fill type: FLOODFILLBORDER or FLOODFILLSURFACE
+		return ::ExtFloodFill(m_hDC, x, y, crColor, nFillType );
+	}
+
+	// Text Functions
+	inline BOOL CDC::TextOut( int x, int y, LPCTSTR lpszString, int nCount )
+	{
+		// Writes a character string at the specified location
+		return ::TextOut( m_hDC, x, y, lpszString, nCount );
+	}
+	inline BOOL CDC::ExtTextOut( int x, int y, UINT nOptions, RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths )
+	{
+		// Draws text using the currently selected font, background color, and text color
+		return ::ExtTextOut(m_hDC, x, y, nOptions, &rc, lpszString, nCount, lpDxWidths );
+	}
+	inline CSize CDC::TabbedTextOut( int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin )
+	{
+		// Writes a character string at a specified location, expanding tabs to the values specified in an array of tab-stop positions
+		DWORD dwSize = ::TabbedTextOut(m_hDC, x, y, lpszString, nCount, nTabPositions, lpnTabStopPositions, nTabOrigin );
+		CSize sz(dwSize);
+		return sz;
+	}
+	inline int CDC::DrawText( LPCTSTR lpszString, int nCount, RECT& rc, UINT nFormat )
+	{
+		// Draws formatted text in the specified rectangle
+		return ::DrawText(m_hDC, lpszString, nCount, &rc, nFormat );
+	}
+	inline int CDC::DrawTextEx( LPTSTR lpszString, int nCount, RECT& rc, UINT nFormat, DRAWTEXTPARAMS& DTParams )
+	{
+		// Draws formatted text in the specified rectangle with more formatting options
+		return ::DrawTextEx(m_hDC, lpszString, nCount, &rc, nFormat, &DTParams );
+	}
+
+	inline CSize CDC::GetTextExtentPoint32( LPCTSTR lpszString, int nCount ) const
+	{
+		// Computes the width and height of the specified string of text
+		CSize sz;
+		::GetTextExtentPoint32(m_hDC, lpszString, nCount, &sz );
+		return sz;
+	}
+	inline CSize CDC::GetTabbedTextExtent( LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions ) const
+	{
+		// Computes the width and height of a character string
+		DWORD dwSize = ::GetTabbedTextExtent(m_hDC, lpszString, nCount, nTabPositions, lpnTabStopPositions );
+		CSize sz(dwSize);
+		return sz;
+	}
+	inline BOOL CDC::GrayString( HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight )
+	{
+		// Draws gray text at the specified location
+		return ::GrayString(m_hDC, hBrush, lpOutputFunc, lpData, nCount, x, y, nWidth, nHeight );
+	}
+	inline UINT CDC::GetTextAlign( ) const
+	{
+		// Retrieves the text-alignment setting
+		// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP
+		return ::GetTextAlign( m_hDC );
+	}
+	inline UINT CDC::SetTextAlign( UINT nFlags )
+	{
+		// Sets the text-alignment setting
+		// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP
+		return ::SetTextAlign( m_hDC, nFlags );
+	}
+	inline int CDC::GetTextFace( int nCount, LPTSTR lpszFacename ) const
+	{
+		// Retrieves the typeface name of the font that is selected into the device context
+		return ::GetTextFace( m_hDC, nCount, lpszFacename );
+	}
+	inline BOOL CDC::GetTextMetrics( TEXTMETRIC& Metrics ) const
+	{
+		// Fills the specified buffer with the metrics for the currently selected font
+		return ::GetTextMetrics( m_hDC, &Metrics );
+	}
+	inline int CDC::SetTextJustification( int nBreakExtra, int nBreakCount  )
+	{
+		// Specifies the amount of space the system should add to the break characters in a string of text
+		return ::SetTextJustification( m_hDC, nBreakExtra, nBreakCount  );
+	}
+	inline int CDC::GetTextCharacterExtra( ) const
+	{
+		// Retrieves the current intercharacter spacing for the device context
+		return ::GetTextCharacterExtra( m_hDC );
+	}
+	inline int CDC::SetTextCharacterExtra( int nCharExtra )
+	{
+		// Sets the intercharacter spacing
+		return ::SetTextCharacterExtra( m_hDC, nCharExtra );
+	}
+	inline COLORREF CDC::GetBkColor( )
+	{
+		// Returns the current background color 
+		return ::GetBkColor( m_hDC );
+	}
+	inline COLORREF CDC::SetBkColor( COLORREF crColor )
+	{
+		// Sets the current background color to the specified color value
+		return ::SetBkColor(m_hDC, crColor );
+	}
+	inline COLORREF CDC::GetTextColor( )
+	{
+		// Retrieves the current text color
+		return ::GetTextColor( m_hDC);
+	}
+	inline COLORREF CDC::SetTextColor( COLORREF crColor )
+	{
+		// Sets the current text color
+		return ::SetTextColor( m_hDC, crColor );
+	}
+	inline int CDC::GetBkMode( )
+	{
+		// returns the current background mix mode (OPAQUE or TRANSPARENT)
+		return ::GetBkMode( m_hDC );
+	}
+	inline int CDC::SetBkMode( int iBkMode )
+	{
+		// Sets the current background mix mode (OPAQUE or TRANSPARENT)
+		return ::SetBkMode( m_hDC, iBkMode);
+	}
+
+
 	/////////////////////////////////////////////////////////////////
 	// Definitions for some global functions in the Win32xx namespace
 	//
 
-	inline void DrawBitmap(HDC hDC, int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask)
-	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
-	// Suitable for use with a Window DC or a memory DC
-	{
-		// Create the Image memory DC
-		CDC dcImage = CreateCompatibleDC(hDC);
-		dcImage.AttachBitmap(hbmImage);
-			
-		// Create the Mask memory DC
-		HBITMAP hbmMask = CreateBitmap(cx, cy, 1, 1, NULL);
-		CDC dcMask = CreateCompatibleDC(hDC);
-		dcMask.AttachBitmap(hbmMask);
-		SetBkColor(dcImage, clrMask);
-		BitBlt(dcMask, 0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
-
-		// Mask the image to the DC provided
-		BitBlt(hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
-		BitBlt(hDC, x, y, cx, cy, dcMask, 0, 0, SRCAND);
-		BitBlt(hDC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
-
-		// Detach the bitmap before the dcImage is destroyed
-		dcImage.DetachBitmap();
-	}
-
-	inline void GradientFill(HDC hDC, COLORREF Color1, COLORREF Color2, LPRECT pRc, BOOL bVertical)
-	// A simple but efficient Gradient Filler compatible with all Windows operating systems
-	{
-		int Width = pRc->right - pRc->left;
-		int Height = pRc->bottom - pRc->top;
-
-		int r1 = GetRValue(Color1);
-		int g1 = GetGValue(Color1);
-		int b1 = GetBValue(Color1);
-
-		int r2 = GetRValue(Color2);
-		int g2 = GetGValue(Color2);
-		int b2 = GetBValue(Color2);
-
-		COLORREF OldBkColor = ::GetBkColor(hDC);
-
-		if (bVertical)
-		{
-			for(int i=0; i < Width; ++i)
-			{
-				int r = r1 + (i * (r2-r1) / Width);
-				int g = g1 + (i * (g2-g1) / Width);
-				int b = b1 + (i * (b2-b1) / Width);
-				::SetBkColor(hDC, RGB(r, g, b));
-				CRect line( i + pRc->left, pRc->top, i + 1 + pRc->left, pRc->top+Height);
-				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-			}
-		}
-		else
-		{
-			for(int i=0; i < Height; ++i)
-			{
-				int r = r1 + (i * (r2-r1) / Height);
-				int g = g1 + (i * (g2-g1) / Height);
-				int b = b1 + (i * (b2-b1) / Height);
-				::SetBkColor(hDC, RGB(r, g, b));
-				CRect line( pRc->left, i + pRc->top, pRc->left+Width, i + 1 +pRc->top);
-				::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, &line, NULL, 0, NULL);
-			}
-		}
-
-		::SetBkColor(hDC, OldBkColor);
-	}
-
-	inline void SolidFill(HDC hDC, COLORREF Color, LPRECT pRc)
-	// Fills a rectangle with a solid color
-	{
-		COLORREF OldColor = ::SetBkColor(hDC, Color);
-		::ExtTextOut(hDC, 0, 0, ETO_OPAQUE, pRc, NULL, 0, NULL);
-		::SetBkColor(hDC, OldColor);
-	}
-
-	inline void TintBitmap(HBITMAP hbmSource, int cRed, int cGreen, int cBlue)
+	inline void TintBitmap( HBITMAP hbmSource, int cRed, int cGreen, int cBlue )
 	// Modifies the colour of the supplied Device Dependant Bitmap, by the colour 
 	// correction values specified. The correction values can range from -255 to +255.
 	// This function gains its speed by accessing the bitmap colour information
@@ -1035,7 +1476,7 @@ namespace Win32xx
 		delete []lpvBits;
 	}
 	
-	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal)
+	inline HIMAGELIST CreateDisabledImageList( HIMAGELIST himlNormal )
 	// Returns a greyed image list, created from hImageList
 	{
 		int cx, cy;
@@ -1066,7 +1507,7 @@ namespace Win32xx
 				if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
 			}
  			
-			SolidFill(MemDC, crMask, &rc);
+			MemDC.SolidFill(crMask, rc);
 
 			// Draw the image on the memory DC
 			ImageList_SetBkColor(himlNormal, crMask);
@@ -1095,445 +1536,6 @@ namespace Win32xx
 		}
 
 		return himlDisabled; 
-	}
-
-	// Wrappers for WinAPI functions
-	
-	// Initialization
-	inline HDC CDC::CreateCompatibleDC( )
-	{
-		return ::CreateCompatibleDC( m_hDC );
-	}
-	inline HDC CDC::CreateDC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE* lpInitData )
-	{
-		return ::CreateDC( lpszDriver, lpszDevice, lpszOutput, lpInitData );
-	}
-	inline HDC CDC::CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, CONST DEVMODE *lpdvmInit )
-	{
-		return ::CreateIC( lpszDriver, lpszDevice, lpszOutput, lpdvmInit );
-	}
-	inline int CDC::GetDeviceCaps( int nIndex )
-	{
-		return ::GetDeviceCaps(m_hDC, nIndex);
-	}
-	inline CWnd* CDC::WindowFromDC( )
-	{
-		return CWnd::FromHandle( ::WindowFromDC( m_hDC ) );
-	}
-
-	// Point and Line Drawing Functions
-	inline CPoint CDC::GetCurrentPosition( ) const
-	{
-		//  returns the current "MoveToEx" position
-		CPoint pt;
-		::MoveToEx( m_hDC, 0, 0, &pt );
-		::MoveToEx( m_hDC, pt.x, pt.y, NULL);
-		return pt;
-	}
-	inline CPoint CDC::MoveTo( int x, int y )
-	{
-		// Updates the current position to the specified point
-		return ::MoveToEx( m_hDC, x, y, NULL ); 
-	}
-	inline CPoint CDC::MoveTo( POINT pt )
-	{
-		// Updates the current position to the specified point
-		return ::MoveToEx( m_hDC, pt.x, pt.y, NULL );
-	}
-	inline BOOL CDC::LineTo( int x, int y )
-	{
-		// Draws a line from the current position up to, but not including, the specified point
-		return ::LineTo( m_hDC, x, y );
-	}
-	inline BOOL CDC::LineTo( POINT pt )
-	{
-		// Draws a line from the current position up to, but not including, the specified point
-		return ::LineTo( m_hDC, pt.x, pt.y );
-	}
-	inline BOOL CDC::Arc( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
-	{
-		return ::Arc( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
-	}
-	inline BOOL CDC::Arc( LPCRECT lpRect, POINT ptStart, POINT ptEnd )
-	{
-		// Draws an elliptical arc
-		return ::Arc( m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom, 
-			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
-	}
-	inline BOOL CDC::ArcTo( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
-	{
-		// Draws an elliptical arc
-		return ::ArcTo( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4) ;
-	}
-	inline BOOL CDC::ArcTo( LPCRECT lpRect, POINT ptStart, POINT ptEnd )
-	{
-		// Draws an elliptical arc
-		return ::ArcTo(  m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom,
-			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
-	}
-	inline BOOL CDC::AngleArc( int x, int y, int nRadius, float fStartAngle, float fSweepAngle )
-	{
-		// Draws a line segment and an arc
-		return ::AngleArc( m_hDC, x, y, nRadius, fStartAngle, fSweepAngle); 
-	}
-	inline int CDC::GetArcDirection( ) const
-	{
-		// Retrieves the current arc direction ( AD_COUNTERCLOCKWISE or AD_CLOCKWISE )
-		return ::GetArcDirection( m_hDC );
-	}
-	inline int CDC::SetArcDirection( int nArcDirection )
-	{
-		// Sets the current arc direction ( AD_COUNTERCLOCKWISE or AD_CLOCKWISE )
-		return ::SetArcDirection( m_hDC, nArcDirection );
-	}
-	inline BOOL CDC::PolyDraw( const POINT* lpPoints, const BYTE* lpTypes, int nCount )
-	{
-		// Draws a set of line segments and Bzier curves
-		return ::PolyDraw( m_hDC, lpPoints, lpTypes, nCount );
-	}
-	inline BOOL CDC::Polyline( LPPOINT lpPoints, int nCount )
-	{
-		// Draws a series of line segments by connecting the points in the specified array
-		return ::Polyline( m_hDC, lpPoints, nCount );
-	}
-	inline BOOL CDC::PolyPolyline( const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount )
-	{
-		// Draws multiple series of connected line segments
-		return ::PolyPolyline( m_hDC, lpPoints, lpPolyPoints, nCount );
-	}
-	inline BOOL CDC::PolylineTo( const POINT* lpPoints, int nCount )
-	{
-		// Draws one or more straight lines
-		return ::PolylineTo( m_hDC, lpPoints, nCount );
-	}
-	inline BOOL CDC::PolyBezier( const POINT* lpPoints, int nCount )
-	{
-		// Draws one or more Bzier curves
-		return ::PolyBezier( m_hDC, lpPoints, nCount );
-	}
-	inline BOOL CDC::PolyBezierTo( const POINT* lpPoints, int nCount )
-	{
-		// Draws one or more Bzier curves
-		return ::PolyBezierTo(m_hDC, lpPoints, nCount );
-	}
-	inline COLORREF CDC::GetPixel( int x, int y ) const
-	{
-		// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates
-		return ::GetPixel( m_hDC, x, y );
-	}
-	inline COLORREF CDC::GetPixel( POINT pt ) const
-	{
-		// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates
-		return ::GetPixel( m_hDC, pt.x, pt.y );
-	}
-	inline COLORREF CDC::SetPixel( int x, int y, COLORREF crColor )
-	{
-		// Sets the pixel at the specified coordinates to the specified color
-		return ::SetPixel( m_hDC, x, y, crColor );
-	}
-	inline COLORREF CDC::SetPixel( POINT pt, COLORREF crColor )
-	{
-		// Sets the pixel at the specified coordinates to the specified color
-		return ::SetPixel( m_hDC, pt.x, pt.y, crColor );
-	}
-	inline BOOL CDC::SetPixelV( int x, int y, COLORREF crColor )
-	{
-		// Sets the pixel at the specified coordinates to the closest approximation of the specified color
-		return ::SetPixelV( m_hDC, x, y, crColor );
-	}
-	inline BOOL CDC::SetPixelV( POINT pt, COLORREF crColor )
-	{
-		// Sets the pixel at the specified coordinates to the closest approximation of the specified color
-		return ::SetPixelV( m_hDC, pt.x, pt.y, crColor );
-	}
-
-	// Shape Drawing Functions
-	inline BOOL CDC::Chord( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
-	{
-		// Draws a chord (a region bounded by the intersection of an ellipse and a line segment, called a secant)
-		return ::Chord( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
-	}
-	inline BOOL CDC::Chord( LPCRECT lpRect, POINT ptStart, POINT ptEnd )
-	{
-		// Draws a chord (a region bounded by the intersection of an ellipse and a line segment, called a secant)
-		return ::Chord( m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom,
-			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
-	}
-	inline void CDC::DrawFocusRect( LPCRECT lpRect )
-	{
-		// draws a rectangle in the style used to indicate that the rectangle has the focus
-		::DrawFocusRect( m_hDC, lpRect );
-	}
-	inline BOOL CDC::Ellipse( int x1, int y1, int x2, int y2 )
-	{
-		// Draws an ellipse. The center of the ellipse is the center of the specified bounding rectangle.
-		return ::Ellipse( m_hDC, x1, y1, x2, y2 );
-	}
-	inline BOOL CDC::Ellipse( LPCRECT lpRect )
-	{
-		// Draws an ellipse. The center of the ellipse is the center of the specified bounding rectangle.
-		return ::Ellipse( m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom );
-	}
-	inline BOOL CDC::Pie( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
-	{
-		// Draws a pie-shaped wedge bounded by the intersection of an ellipse and two radials.
-		return ::Pie( m_hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
-	}
-	inline BOOL CDC::Pie( LPCRECT lpRect, POINT ptStart, POINT ptEnd )
-	{
-		// Draws a pie-shaped wedge bounded by the intersection of an ellipse and two radials.
-		return ::Pie( m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom,
-			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
-	}
-	inline BOOL CDC::Polygon( LPPOINT lpPoints, int nCount )
-	{
-		// Draws a polygon consisting of two or more vertices connected by straight lines
-		return ::Polygon( m_hDC, lpPoints, nCount);
-	}
-	inline BOOL CDC::PolyPolygon( LPPOINT lpPoints, LPINT lpPolyCounts, int nCount )
-	{
-		// Draws a series of closed polygons
-		return ::PolyPolygon( m_hDC, lpPoints, lpPolyCounts, nCount );
-	}
-	inline BOOL CDC::Rectangle( int x1, int y1, int x2, int y2 )
-	{
-		// Draws a rectangle. The rectangle is outlined by using the current pen and filled by using the current brush.
-		return ::Rectangle( m_hDC, x1, y1, x2, y2 );
-	}
-	inline BOOL CDC::Rectangle( LPCRECT lpRect )
-	{
-		// Draws a rectangle. The rectangle is outlined by using the current pen and filled by using the current brush.
-		return ::Rectangle( m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom );
-	}
-	inline BOOL CDC::RoundRect( int x1, int y1, int x2, int y2, int nWidth, int nHeight )
-	{
-		// Draws a rectangle with rounded corners
-		return ::RoundRect( m_hDC, x1, y1, x2, y2, nWidth, nHeight );
-	}
-	inline BOOL CDC::RoundRect( LPRECT lpRect, int nWidth, int nHeight )
-	{
-		// Draws a rectangle with rounded corners
-		return ::RoundRect(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom, nWidth, nHeight );
-	}
-
-	// Fill and 3D Drawing functions
-	inline BOOL CDC::FillRect( LPCRECT lpRect, HBRUSH hbr )
-	{
-		// Fills a rectangle by using the specified brush
-		return (BOOL)::FillRect( m_hDC, lpRect, hbr );
-	}
-	inline BOOL CDC::FrameRect( LPCRECT lpRect, HBRUSH hbr )
-	{
-		// Draws a border around the specified rectangle by using the specified brush
-		return (BOOL)::FrameRect( m_hDC, lpRect, hbr );
-	}
-	inline BOOL CDC::InvertRect( LPCRECT lpRect )
-	{
-		// Inverts a rectangle in a window by performing a logical NOT operation on the color values for each pixel in the rectangle's interior
-		return ::InvertRect( m_hDC, lpRect );
-	}
-	inline BOOL CDC::DrawIcon( int x, int y, HICON hIcon )
-	{
-		// Draws an icon or cursor
-		return ::DrawIcon( m_hDC, x, y, hIcon );
-	}
-	inline BOOL CDC::DrawIcon( POINT pt, HICON hIcon )
-	{
-		// Draws an icon or cursor
-		return ::DrawIcon( m_hDC, pt.x, pt.y, hIcon );
-	}
-	inline BOOL CDC::DrawIconEx( int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags )
-	{
-		// draws an icon or cursor, performing the specified raster operations, and stretching or compressing the icon or cursor as specified. 
-		return ::DrawIconEx( m_hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, hbrFlickerFreeDraw, diFlags );
-	}
-	inline BOOL CDC::DrawEdge( LPRECT lpRect, UINT nEdge, UINT nFlags )
-	{
-		// Draws one or more edges of rectangle
-		return ::DrawEdge( m_hDC, lpRect, nEdge, nFlags );
-	}
-	inline BOOL CDC::DrawFrameControl( LPRECT lpRect, UINT nType, UINT nState )
-	{
-		// Draws a frame control of the specified type and style
-		return ::DrawFrameControl( m_hDC, lpRect, nType, nState );
-	}
-	inline BOOL CDC::FillRgn( HRGN hrgn, HBRUSH hbr )
-	{
-		// Fills a region by using the specified brush
-		return ::FillRgn( m_hDC, hrgn, hbr );
-	}
-	inline BOOL CDC::PaintRgn( HRGN hrgn )
-	{
-		// Paints the specified region by using the brush currently selected into the device context
-		return ::PaintRgn( m_hDC, hrgn);
-	}
-
-	// Bitmap Functions
-	inline int CDC::GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage )
-	{
-		// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format
-		return ::GetDIBits( m_hDC, hbmp, uStartScan, cScanLines, lpvBits, lpbi, uUsage );
-	}
-	
-	inline int CDC::StretchDIBits( int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth, 
-		           int nSrcHeight, CONST VOID *lpBits, CONST BITMAPINFO *lpBitsInfo, UINT iUsage, DWORD dwRop )
-	{
-		// Copies the color data for a rectangle of pixels in a DIB to the specified destination rectangle
-		return ::StretchDIBits( m_hDC, XDest, YDest, nDestWidth, nDestHeight, XSrc, YSrc, nSrcWidth, nSrcHeight, lpBits, lpBitsInfo, iUsage, dwRop );		           
-	}
-	inline int CDC::GetStretchBltMode( )
-	{
-		// Retrieves the current stretching mode 
-		// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK
-		return ::GetStretchBltMode( m_hDC );
-	}
-	inline int CDC::SetStretchBltMode( int iStretchMode )
-	{
-		// Sets the stretching mode 
-		// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK
-		return ::SetStretchBltMode( m_hDC, iStretchMode );
-	}
-	inline BOOL CDC::PatBlt( int x, int y, int nWidth, int nHeight, DWORD dwRop )
-	{
-		// Paints the specified rectangle using the brush that is currently selected into the device context
-		return ::PatBlt( m_hDC, x, y, nWidth, nHeight, dwRop );
-	}
-	inline BOOL CDC::BitBlt( int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop )
-	{
-		// Performs a bit-block transfer of the color data corresponding to a rectangle of pixels from the specified source device context into a destination device context
-		return ::BitBlt( m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, dwRop );
-	}
-	inline BOOL CDC::StretchBlt( int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop )
-	{
-		// Copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing the bitmap to fit the dimensions of the destination rectangle, if necessary
-		return ::StretchBlt( m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, dwRop );
-	}
-	inline BOOL CDC::FloodFill( int x, int y, COLORREF crColor )
-	{
-		// Fills an area of the display surface with the current brush
-		return ::FloodFill(m_hDC, x, y, crColor );
-	}
-	inline BOOL CDC::ExtFloodFill( int x, int y, COLORREF crColor, UINT nFillType )
-	{
-		// Fills an area of the display surface with the current brush
-		// Fill type: FLOODFILLBORDER or FLOODFILLSURFACE
-		return ::ExtFloodFill(m_hDC, x, y, crColor, nFillType );
-	}
-
-	// Text Functions
-	inline BOOL CDC::TextOut( int x, int y, LPCTSTR lpszString, int nCount )
-	{
-		// Writes a character string at the specified location
-		return ::TextOut( m_hDC, x, y, lpszString, nCount );
-	}
-	inline BOOL CDC::ExtTextOut( int x, int y, UINT nOptions, LPCRECT lpRect, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths )
-	{
-		// Draws text using the currently selected font, background color, and text color
-		return ::ExtTextOut(m_hDC, x, y, nOptions, lpRect, lpszString, nCount, lpDxWidths );
-	}
-	inline CSize CDC::TabbedTextOut( int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin )
-	{
-		// Writes a character string at a specified location, expanding tabs to the values specified in an array of tab-stop positions
-		DWORD dwSize = ::TabbedTextOut(m_hDC, x, y, lpszString, nCount, nTabPositions, lpnTabStopPositions, nTabOrigin );
-		CSize sz(dwSize);
-		return sz;
-	}
-	inline int CDC::DrawText( LPCTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat )
-	{
-		// Draws formatted text in the specified rectangle
-		return ::DrawText(m_hDC, lpszString, nCount, lpRect, nFormat );
-	}
-	inline int CDC::DrawTextEx( LPTSTR lpszString, int nCount, LPRECT lpRect, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams )
-	{
-		// Draws formatted text in the specified rectangle with more formatting options
-		return ::DrawTextEx(m_hDC, lpszString, nCount, lpRect, nFormat, lpDTParams );
-	}
-
-	inline CSize CDC::GetTextExtentPoint32( LPCTSTR lpszString, int nCount ) const
-	{
-		// Computes the width and height of the specified string of text
-		CSize sz;
-		::GetTextExtentPoint32(m_hDC, lpszString, nCount, &sz );
-		return sz;
-	}
-	inline CSize CDC::GetTabbedTextExtent( LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions ) const
-	{
-		// Computes the width and height of a character string
-		DWORD dwSize = ::GetTabbedTextExtent(m_hDC, lpszString, nCount, nTabPositions, lpnTabStopPositions );
-		CSize sz(dwSize);
-		return sz;
-	}
-	inline BOOL CDC::GrayString( HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight )
-	{
-		// Draws gray text at the specified location
-		return ::GrayString(m_hDC, hBrush, lpOutputFunc, lpData, nCount, x, y, nWidth, nHeight );
-	}
-	inline UINT CDC::GetTextAlign( ) const
-	{
-		// Retrieves the text-alignment setting
-		// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP
-		return ::GetTextAlign( m_hDC );
-	}
-	inline UINT CDC::SetTextAlign( UINT nFlags )
-	{
-		// Sets the text-alignment setting
-		// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP
-		return ::SetTextAlign( m_hDC, nFlags );
-	}
-	inline int CDC::GetTextFace( int nCount, LPTSTR lpszFacename ) const
-	{
-		// Retrieves the typeface name of the font that is selected into the device context
-		return ::GetTextFace( m_hDC, nCount, lpszFacename );
-	}
-	inline BOOL CDC::GetTextMetrics( LPTEXTMETRIC lpMetrics ) const
-	{
-		// Fills the specified buffer with the metrics for the currently selected font
-		return ::GetTextMetrics( m_hDC, lpMetrics );
-	}
-	inline int CDC::SetTextJustification( int nBreakExtra, int nBreakCount  )
-	{
-		// Specifies the amount of space the system should add to the break characters in a string of text
-		return ::SetTextJustification( m_hDC, nBreakExtra, nBreakCount  );
-	}
-	inline int CDC::GetTextCharacterExtra( ) const
-	{
-		// Retrieves the current intercharacter spacing for the device context
-		return ::GetTextCharacterExtra( m_hDC );
-	}
-	inline int CDC::SetTextCharacterExtra( int nCharExtra )
-	{
-		// Sets the intercharacter spacing
-		return ::SetTextCharacterExtra( m_hDC, nCharExtra );
-	}
-	inline COLORREF CDC::GetBkColor( )
-	{
-		// Returns the current background color 
-		return ::GetBkColor( m_hDC );
-	}
-	inline COLORREF CDC::SetBkColor( COLORREF crColor )
-	{
-		// Sets the current background color to the specified color value
-		return ::SetBkColor(m_hDC, crColor );
-	}
-	inline COLORREF CDC::GetTextColor( )
-	{
-		// Retrieves the current text color
-		return ::GetTextColor( m_hDC);
-	}
-	inline COLORREF CDC::SetTextColor( COLORREF crColor )
-	{
-		// Sets the current text color
-		return ::SetTextColor( m_hDC, crColor );
-	}
-	inline int CDC::GetBkMode( )
-	{
-		// returns the current background mix mode (OPAQUE or TRANSPARENT)
-		return ::GetBkMode( m_hDC );
-	}
-	inline int CDC::SetBkMode( int iBkMode )
-	{
-		// Sets the current background mix mode (OPAQUE or TRANSPARENT)
-		return ::SetBkMode( m_hDC, iBkMode);
 	}
 
 
