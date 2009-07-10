@@ -1205,34 +1205,65 @@ namespace Win32xx
 		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
 	}
 
-	inline void CWnd::CenterWindow() const
-	{
-		// Centers this window over it's parent
-
+	inline void CWnd::CenterWindow() const 
+	{ 
+		// Centers this window over it's parent 
+	
+	// required for Dev-C++
+	#ifndef MONITOR_DEFAULTTONEAREST
+      #define MONITOR_DEFAULTTONEAREST    0x00000002
+    #endif
+    		
 		CRect rc = GetWindowRect();
-		CRect rcParent;
+		CRect rcParent; 
 		CRect rcDesktop;
 
 		// Get screen dimensions excluding task bar
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-		int iWidth = rcDesktop.right;
-		int iHeight = rcDesktop.bottom;
 
 		// Get the parent window dimensions (parent could be the desktop)
 		if (GetParent() != NULL) ::GetWindowRect(GetParent(), &rcParent);
 		else rcParent = rcDesktop;
+		 
+		// Import the GetMonitorInfo and MonitorFromWindow functions
+		HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
+		typedef BOOL (WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
+		typedef HMONITOR (WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
+		LPMFW pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
+	#ifdef UNICODE
+		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
+	#else
+		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
+	#endif			
+		
+		// Take multi-monitor systems into account
+		if (pfnGetMonitorInfo && pfnMonitorFromWindow)
+		{
+			HMONITOR hActiveMonitor = pfnMonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST); 
+			MONITORINFO mi = { sizeof(mi), 0}; 
 
-		// Calculate point to center the dialog on the parent window
-		int x = rcParent.left + (rcParent.Width() - rc.Width())/2;
-		int y = rcParent.top + (rcParent.Height() - rc.Height())/2;
+			if(pfnGetMonitorInfo(hActiveMonitor, &mi))
+			{
+				rcDesktop = mi.rcWork; 
+				if (GetParent() == NULL) rcParent = mi.rcWork;
+			}
+		}
+		 
+		// Calculate point to center the dialog over the portion of parent window on this monitor
+		rcParent.IntersectRect(rcParent, rcDesktop);
+		int x = rcParent.left + (rcParent.Width() - rc.Width())/2; 
+		int y = rcParent.top + (rcParent.Height() - rc.Height())/2; 
+		 
+		// Keep the dialog wholly on the monitor display
+		x = (x < rcDesktop.left)? rcDesktop.right - rc.Width() : x;
+		x = (x > rcDesktop.right - rc.Width())? rcDesktop.right - rc.Width() : x;
+		y = (y < rcDesktop.top) ? rcDesktop.top: y;
+		y = (y > rcDesktop.bottom - rc.Height())? rcDesktop.bottom - rc.Height() : y;
+		 
+		SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
 
-		if (x > iWidth - rc.Width())
-			x = iWidth - rc.Width();
-		if (y > iHeight - rc.Height())
-			y = iHeight - rc.Height();
-
-		::SetWindowPos(m_hWnd, HWND_TOP, x, y, 0, 0,  SWP_NOSIZE);
-	}
+		FreeLibrary(hUser32);
+	} 
 
 	inline BOOL CWnd::CheckDlgButton(int nIDButton, UINT uCheck) const
 	// The CheckDlgButton function changes the check state of a button control.
