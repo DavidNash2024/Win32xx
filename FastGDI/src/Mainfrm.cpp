@@ -39,9 +39,11 @@ void CMainFrame::OnAdjustImage()
 		MessageBox(_T("Open a Bitmap file first!"), _T("Error"), MB_OK);
 }
 
-void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue)
+void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 {
 	TintBitmap(GetMyView().GetImage(), cRed, cGreen, cBlue);
+	if (bGray) 	GrayScaleBitmap(GetMyView().GetImage());
+	
 	GetMyView().Invalidate();
 }
 

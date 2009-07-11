@@ -37,7 +37,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		OnFileOpen();
 		return TRUE;
 	case IDM_FILE_SAVE:
-		OnFileSave();
+		OnFileSaveAs();
+		return TRUE;
+	case IDM_FILE_SAVEAS:
+		OnFileSaveAs();
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
@@ -96,7 +99,7 @@ void CMainFrame::OnFileOpen()
 	}
 }
 
-void CMainFrame::OnFileSave()
+void CMainFrame::OnFileSaveAs()
 {
 	TCHAR szFile[MAX_STRING_SIZE];
 	szFile[0] = '\0';

@@ -18,6 +18,41 @@ CColourDialog::~CColourDialog()
 	if (m_hbmPreviewOrig) ::DeleteObject(m_hbmPreviewOrig);
 }
 
+BOOL CColourDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+{
+	switch (LOWORD(wParam))
+	{
+	case IDC_CHECK1:
+		OnGrayScale();
+		TRUE;	// return TRUE for handled commands
+	}
+
+	// return FALSE for unhandled commands
+	return FALSE;
+}
+
+void CColourDialog::OnGrayScale()
+{
+	// Update the colour of the preview image
+	if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
+		GrayScaleBitmap(m_hbmPreview);
+	else
+	{
+		// Copy m_hbmPreviewOrig to m_hbmPreview
+		CDC Mem1DC = ::CreateCompatibleDC(NULL);
+		Mem1DC.AttachBitmap(m_hbmPreviewOrig);
+		CDC Mem2DC = ::CreateCompatibleDC(NULL);
+		Mem2DC.AttachBitmap(m_hbmPreview);
+		Mem2DC.BitBlt(0, 0, 239-16, 201-16, Mem1DC, 0, 0, SRCCOPY);
+		Mem1DC.DetachBitmap();
+		Mem2DC.DetachBitmap();
+			
+		TintBitmap(m_hbmPreview, m_cRed, m_cGreen, m_cBlue);
+	}
+
+	OnPaintPreview();	
+}
+
 BOOL CColourDialog::OnInitDialog()
 {
 	// Attach the Trackbar controls to CWnd objects
@@ -86,12 +121,16 @@ void CColourDialog::OnHScroll(WPARAM /*wParam*/, LPARAM lParam)
 	Mem1DC.AttachBitmap(m_hbmPreviewOrig);
 	CDC Mem2DC = ::CreateCompatibleDC(NULL);
 	Mem2DC.AttachBitmap(m_hbmPreview);
-	BitBlt(Mem2DC, 0, 0, 239-16, 201-16, Mem1DC, 0, 0, SRCCOPY);
+	Mem2DC.BitBlt(0, 0, 239-16, 201-16, Mem1DC, 0, 0, SRCCOPY);
 	Mem1DC.DetachBitmap();
 	Mem2DC.DetachBitmap();
 
 	// Update the colour of the preview image
 	TintBitmap(m_hbmPreview, m_cRed, m_cGreen, m_cBlue);
+
+	if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
+		GrayScaleBitmap(m_hbmPreview);
+	
 	OnPaintPreview();
 }
 
@@ -99,8 +138,8 @@ void CColourDialog::OnOK()
 {
 	// Get a reference to our CMainFrame object
 	CMainFrame& MainFrame = GetFrameApp().GetMainFrame();
-
-	MainFrame.ModifyBitmap(m_cRed, m_cGreen, m_cBlue);
+	BOOL bGray = SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0);
+	MainFrame.ModifyBitmap(m_cRed, m_cGreen, m_cBlue, bGray);
 
 	CDialog::OnOK();
 }
@@ -128,10 +167,10 @@ void CColourDialog::OnPaintPreview()
 		nTopDest = rcView.top + (rcView.Height() - bm.bmHeight)/2;
 	}
 
-	CDC PreviewDC = ::GetDC(m_hWnd);
-	CDC MemDC = ::CreateCompatibleDC(PreviewDC);
+	CDC PreviewDC = GetDC();
+	CDC MemDC = PreviewDC.CreateCompatibleDC();
 	MemDC.AttachBitmap(m_hbmPreview);
-	::BitBlt(PreviewDC, nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
+	PreviewDC.BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
 	MemDC.DetachBitmap();
 }
 
@@ -178,11 +217,11 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 	Dest2DC.AttachBitmap(m_hbmPreviewOrig);
 
 	// Stretch the bitmap to fit in the destination display area
-	SetStretchBltMode(Dest1DC, COLORONCOLOR);
-	::StretchBlt(Dest1DC, 0, 0, nWidthDest, nHeightDest, MemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+	Dest1DC.SetStretchBltMode(COLORONCOLOR);
+	Dest1DC.StretchBlt(0, 0, nWidthDest, nHeightDest, MemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 
 	// Make a second copy of the bitmap
-	::BitBlt(Dest2DC, 0, 0, nWidthDest, nHeightDest, Dest1DC, 0, 0, SRCCOPY);
+	Dest2DC.BitBlt(0, 0, nWidthDest, nHeightDest, Dest1DC, 0, 0, SRCCOPY);
 
 	// Release the bitmaps
 	MemDC.DetachBitmap();

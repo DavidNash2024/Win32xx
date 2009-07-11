@@ -13,14 +13,16 @@ class CColourDialog : public CDialog
 public:
     CColourDialog(UINT nResID);
     virtual ~CColourDialog();
-	virtual void CColourDialog::CreateImagePreviews(HBITMAP hbmImage);
-
+	void CreateImagePreviews(HBITMAP hbmImage);
+	
 protected:
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	void OnGrayScale();
 	void OnHScroll(WPARAM wParam, LPARAM lParam);
 	void OnPaintPreview();
 

@@ -37,7 +37,7 @@
 
 ////////////////////////////////////////////////////////
 // gdi.h
-//  Declaration of the CDC class
+//  Declaration of the CDC class, and CBitmapInfoPtr class
 
 // The CDC class provides a device context, along with the various associated
 //  objects such as Bitmaps, Brushes, Bitmaps, Fonts and Pens. This class
@@ -74,6 +74,17 @@
 //     device context at a time.
 //  * Set the region's shape before selecting it into a DC.
 
+// The CBitmapInfoPtr class is a convienient wrapper for the BITMAPINFO structure.
+// The size of the BITMAPINFO structure is dependant on the type of HBITMAP, and its
+// space needs to be allocated dynamically. CBitmapInfoPtr automatically allocates
+// and deallocates the memory for the structure. A CBitmapInfoPtr object can be 
+// used anywhere in place of a LPBITMAPINFO. LPBITMAPINFO is used in functions like
+// GetDIBits and SetDIBits.
+//
+// Coding example ...
+//  CDC MemDC = CreateCompatibleDC(NULL);
+//  CBitmapInfoPtr pbmi(hBitmap);   
+//  MemDC.GetDIBits(hBitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 
 #ifndef _GDI_H_
 #define _GDI_H_
@@ -86,8 +97,9 @@ namespace Win32xx
 	/////////////////////////////////////////////////////////////////
 	// Declarations for some global functions in the Win32xx namespace
 	//	
-	void TintBitmap(HBITMAP hbmSource, int cRed, int cGreen, int cBlue);
-	HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal);
+	void GrayScaleBitmap( HBITMAP hbmSource );
+  void TintBitmap( HBITMAP hbmSource, int cRed, int cGreen, int cBlue );
+	HIMAGELIST CreateDisabledImageList( HIMAGELIST himlNormal );
 
 	
 	///////////////////////////////////////////////
@@ -230,7 +242,8 @@ namespace Win32xx
 		BOOL PaintRgn( HRGN hrgn );
 
 		// Bitmap Functions
-		int GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, BITMAPINFO& bi, UINT uUsage );
+		int GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage );
+		int SetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse );
 		int StretchDIBits( int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth, 
 			           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop );
 		int GetStretchBltMode( );
@@ -276,6 +289,52 @@ namespace Win32xx
 		BOOL m_IsCopy;
 		CDC* m_pCopiedFrom;
 	};
+
+
+	class CBitmapInfoPtr
+	{
+	public:
+		CBitmapInfoPtr(HBITMAP hbm) : m_pbmi(0)
+		{
+			BITMAP bmSource;
+			::GetObject(hbm, sizeof(BITMAP), &bmSource);
+
+			// Convert the color format to a count of bits. 
+			WORD cClrBits = (WORD)(bmSource.bmPlanes * bmSource.bmBitsPixel); 
+			if (cClrBits == 1) 	     cClrBits = 1; 
+			else if (cClrBits <= 4)  cClrBits = 4; 
+			else if (cClrBits <= 8)  cClrBits = 8; 
+			else if (cClrBits <= 16) cClrBits = 16; 
+			else if (cClrBits <= 24) cClrBits = 24; 
+			else                     cClrBits = 32;
+
+			// Allocate memory for the BITMAPINFO structure.
+			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (1<< cClrBits);
+			m_pbmi = (LPBITMAPINFO)new byte[sizeof(BITMAPINFOHEADER) + uQuadSize];
+			ZeroMemory(m_pbmi, sizeof(BITMAPINFOHEADER) + uQuadSize);
+
+			m_pbmi->bmiHeader.biSize		= sizeof(BITMAPINFOHEADER);
+			m_pbmi->bmiHeader.biHeight		= bmSource.bmHeight;
+			m_pbmi->bmiHeader.biWidth		= bmSource.bmWidth;
+			m_pbmi->bmiHeader.biPlanes		= bmSource.bmPlanes;
+			m_pbmi->bmiHeader.biBitCount	= bmSource.bmBitsPixel;
+			m_pbmi->bmiHeader.biCompression = BI_RGB;
+			if (cClrBits < 24) 
+				m_pbmi->bmiHeader.biClrUsed = (1<<cClrBits); 
+		}
+		~CBitmapInfoPtr()
+		{
+			delete[] m_pbmi;
+		}
+		operator LPBITMAPINFO() const {return m_pbmi;}
+		LPBITMAPINFO operator->() const {return m_pbmi;}
+	
+	private:
+		CBitmapInfoPtr(const CBitmapInfoPtr&);				// Disable copy construction
+		CBitmapInfoPtr& operator = (const CBitmapInfoPtr&);	// Disable assignment operator
+		LPBITMAPINFO m_pbmi;
+	};
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -921,8 +980,6 @@ namespace Win32xx
 		m_hRgnOld = hRgn;
 	}
 
-
-
 	inline HRGN CDC::DetachClipRegion()
 	{
 		// Use this to detach the region from the HDC.
@@ -936,9 +993,6 @@ namespace Win32xx
 		m_hRgnOld = NULL;
 		return hRgn;
 	}
-
-
-
 
 
 	// Wrappers for WinAPI functions
@@ -1213,12 +1267,16 @@ namespace Win32xx
 	}
 
 	// Bitmap Functions
-	inline int CDC::GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, BITMAPINFO& bi, UINT uUsage )
+	inline int CDC::GetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage )
 	{
 		// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format
-		return ::GetDIBits( m_hDC, hbmp, uStartScan, cScanLines, lpvBits, &bi, uUsage );
+		return ::GetDIBits( m_hDC, hbmp, uStartScan, cScanLines, lpvBits, lpbi, uUsage );
 	}
-	
+	inline int CDC::SetDIBits( HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse )
+	{
+		// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB
+		return ::SetDIBits( m_hDC, hbmp, uStartScan, cScanLines, lpvBits, lpbi, fuColorUse );
+	}
 	inline int CDC::StretchDIBits( int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth, 
 		           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop )
 	{
@@ -1381,6 +1439,7 @@ namespace Win32xx
 	}
 
 
+
 	/////////////////////////////////////////////////////////////////
 	// Definitions for some global functions in the Win32xx namespace
 	//
@@ -1391,29 +1450,18 @@ namespace Win32xx
 	// This function gains its speed by accessing the bitmap colour information
 	// directly, rather than using GetPixel/SetPixel.
 	{
-		// Fill the BITMAP structure with the bitmap information
-		BITMAP bmSource;
-		::GetObject(hbmSource, sizeof(BITMAP), &bmSource);
-		
-		// Specify the BITMAPHEADER for the DIB that GetDIBits creates
-		BITMAPINFOHEADER bi = {0};
-		bi.biSize = sizeof(BITMAPINFOHEADER);
-		bi.biHeight = bmSource.bmHeight;
-		bi.biWidth = bmSource.bmWidth;
-		bi.biPlanes = 1;
-		bi.biBitCount =  24;
-		bi.biCompression = BI_RGB;
-		int bpPixel = bi.biBitCount >> 3;
-
+		// Create our LPBITMAPINFO object
+		CBitmapInfoPtr pbmi(hbmSource);
+			
 		// Create the reference DC for GetDIBits to use
 		CDC MemDC = CreateCompatibleDC(NULL);
-		
+
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-		GetDIBits(MemDC, hbmSource, 0, bi.biHeight, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
-		byte* lpvBits = new byte[bi.biSizeImage];
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+		byte* lpvBits = new byte[pbmi->bmiHeader.biSizeImage];
 		if (NULL == lpvBits) throw std::bad_alloc();
-		GetDIBits(MemDC, hbmSource, 0, bi.biHeight, lpvBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
-		UINT nWidthBytes = bi.biSizeImage/bi.biHeight;
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight; 
 
 		// Ensure sane colour correction values
 		cBlue  = MIN(cBlue, 255);
@@ -1436,11 +1484,11 @@ namespace Win32xx
 		int yOffset = 0;
 		int xOffset;
 		int Index;
-		for (int Row=0; Row<bmSource.bmHeight; Row++)
+		for (int Row=0; Row < pbmi->bmiHeader.biHeight; Row++)
 		{
 			xOffset = 0;
 
-			for (int Column=0; Column<bmSource.bmWidth; Column++)
+			for (int Column=0; Column < pbmi->bmiHeader.biWidth; Column++)
 			{
 				// Calculate Index
 				Index = yOffset + xOffset;
@@ -1462,7 +1510,7 @@ namespace Win32xx
 					lpvBits[Index+2] = (BYTE)((lpvBits[Index+2] *r2) >>8);
 
 				// Increment the horizontal offset
-				xOffset += bpPixel; 
+				xOffset += pbmi->bmiHeader.biBitCount >> 3; 
 			}
 
 			// Increment vertical offset
@@ -1470,11 +1518,60 @@ namespace Win32xx
 		}  
 
 		// Save the modified colour back into our source DDB
-		SetDIBits(MemDC, hbmSource, 0, bi.biHeight, lpvBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
 
 		// Cleanup
 		delete []lpvBits;
 	}
+
+	inline void GrayScaleBitmap( HBITMAP hbmSource )
+	{
+		// Create our LPBITMAPINFO object
+		CBitmapInfoPtr pbmi(hbmSource);
+			
+		// Create the reference DC for GetDIBits to use
+		CDC MemDC = CreateCompatibleDC(NULL);
+
+		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+		byte* lpvBits = new byte[pbmi->bmiHeader.biSizeImage];
+		if (NULL == lpvBits) throw std::bad_alloc();
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight; 
+
+		int yOffset = 0;
+		int xOffset;
+		int Index;
+		
+		for (int Row=0; Row < pbmi->bmiHeader.biHeight; Row++)
+		{
+			xOffset = 0;
+
+			for (int Column=0; Column < pbmi->bmiHeader.biWidth; Column++)
+			{
+				// Calculate Index
+				Index = yOffset + xOffset;
+
+				BYTE byGray = (BYTE) ((lpvBits[Index] + lpvBits[Index+1]*6 + lpvBits[Index+2] *3)/10);
+				lpvBits[Index]   = byGray;
+				lpvBits[Index+1] = byGray;
+				lpvBits[Index+2] = byGray;
+
+				// Increment the horizontal offset
+				xOffset += pbmi->bmiHeader.biBitCount >> 3; 
+			}
+
+			// Increment vertical offset
+			yOffset += nWidthBytes;
+		}  
+
+		// Save the modified colour back into our source DDB
+		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+
+		// Cleanup
+		delete []lpvBits;
+	}
+	
 	
 	inline HIMAGELIST CreateDisabledImageList( HIMAGELIST himlNormal )
 	// Returns a greyed image list, created from hImageList
@@ -1523,7 +1620,7 @@ namespace Win32xx
 					if (clr != crMask)
 					{
 						BYTE byGray = (BYTE) (95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20);
-						::SetPixel(MemDC, x, y, RGB(byGray, byGray, byGray));
+						MemDC.SetPixel(x, y, RGB(byGray, byGray, byGray));
 					}
 
 				}

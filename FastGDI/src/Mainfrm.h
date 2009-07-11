@@ -17,7 +17,7 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 	CView& GetMyView() {return m_MyView;}
-	void ModifyBitmap(int cRed, int cGreen, int cBlue);
+	void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray);
 
 protected:
 	virtual void OnAdjustImage();
