@@ -16,6 +16,7 @@ public:
 	CView();
 	virtual ~CView();
 	virtual BOOL FileOpen(LPCTSTR szFilename);
+	virtual BOOL FileSave(LPCTSTR pszFile);
 	HBITMAP GetImage() {return m_hbmImage;}
 	virtual RECT GetImageSize();
 

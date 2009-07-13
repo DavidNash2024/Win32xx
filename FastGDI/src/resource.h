@@ -24,7 +24,7 @@
 #define IDM_IMAGE_ADJUST                116
 #define IDM_HELP_ABOUT                  120
 
-#define IDB_TOOLBAR_SML                 130
+#define IDB_TOOLBAR_BIG                 130
 #define IDB_PICTURE                     131
 #define IDD_DIALOG1                     140
 #define IDC_SLIDER_RED                  141

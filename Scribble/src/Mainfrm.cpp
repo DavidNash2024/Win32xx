@@ -139,7 +139,7 @@ void CMainFrame::OnFileSaveAs()
 	ofn.lpstrFile = szFilePathName;
 	ofn.lpstrDefExt = _T("dat");
 	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Save File");
+	ofn.lpstrTitle = _T("SaveAs File");
 	ofn.Flags = OFN_OVERWRITEPROMPT;
 
 	// Open the file save dialog, and open the file

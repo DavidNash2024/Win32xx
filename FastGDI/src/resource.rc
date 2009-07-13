@@ -25,10 +25,10 @@ BEGIN
     BEGIN
         MENUITEM "New...",                      IDM_FILE_NEW
         MENUITEM "&Open...",                    IDM_FILE_OPEN
-        MENUITEM "&Save",                       IDM_FILE_SAVE, GRAYED
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS, GRAYED
+        MENUITEM "&Save",                       IDM_FILE_SAVE, 
+        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS,
         MENUITEM SEPARATOR
-        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
+        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1,
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -62,8 +62,8 @@ IDW_MAIN                ICON                    "res/enhanced.ico"
 // Bitmap
 //
 
-IDB_TOOLBAR_SML          BITMAP                  "res/toolbar.bmp"
-IDW_MAIN                 BITMAP                  "res/Toolbar24.bmp"
+IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
+IDB_TOOLBAR_BIG          BITMAP                  "res/Toolbar24.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

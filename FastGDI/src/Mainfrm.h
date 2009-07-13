@@ -23,7 +23,10 @@ protected:
 	virtual void OnAdjustImage();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileSave();
+	virtual void OnFileSaveAs();
 	virtual void OnFileOpen();
+	virtual BOOL OnFileOpenMRU(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
 	virtual void SetupToolbar();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

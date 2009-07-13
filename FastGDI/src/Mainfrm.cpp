@@ -44,10 +44,11 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 	TintBitmap(GetMyView().GetImage(), cRed, cGreen, cBlue);
 	if (bGray) 	GrayScaleBitmap(GetMyView().GetImage());
 	
+//	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 	GetMyView().Invalidate();
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// OnCommand responds to menu and and toolbar input
 
@@ -63,6 +64,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
+		return TRUE;
+	case IDM_FILE_SAVE:
+		OnFileSave();
+		return TRUE;
+	case IDM_FILE_SAVEAS:
+		OnFileSaveAs();
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
@@ -85,30 +92,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDW_FILE_MRU_FILE2:
 	case IDW_FILE_MRU_FILE3:
 	case IDW_FILE_MRU_FILE4:
-		{
-			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-			tString tsMRUText = GetMRUEntry(nMRUIndex);
-			CToolbar& TB = GetToolbar();
-
-			if (m_MyView.FileOpen(tsMRUText.c_str()))
-			{
-				m_PathName = tsMRUText;
-				TB.EnableButton(IDM_IMAGE_ADJUST);
-				EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
-
-				// Adjust the window size
-				CRect rcImage = GetMyView().GetImageSize();
-				AdjustFrameRect(rcImage);
-			}
-			else
-			{
-				RemoveMRUEntry(tsMRUText.c_str());
-				TB.DisableButton(IDM_IMAGE_ADJUST);
-				EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
-			}
-
-			return TRUE;
-		}
+		OnFileOpenMRU(wParam, lParam);
+		return TRUE;
 	}
 
 	return FALSE;
@@ -155,15 +140,90 @@ void CMainFrame::OnFileOpen()
 	m_PathName = szFilePathName;
 	AddMRUEntry(szFilePathName);
 
+	// Turn on the Toolbar adjust button
 	CToolbar& TB = GetToolbar();
 	TB.EnableButton(IDM_IMAGE_ADJUST);
 	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
+	// Resize the frame to match the bitmap
 	if (GetMyView().GetImage())
 	{
 		CRect rcImage = GetMyView().GetImageSize();
 		AdjustFrameRect(rcImage);
 	}
+		
+	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+
+	// Set the caption
+	tString ts = _T("FastGDI - ") + m_PathName; 
+	SetWindowText(ts.c_str());
+}
+
+BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
+{
+	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+	tString tsMRUText = GetMRUEntry(nMRUIndex);
+	CToolbar& TB = GetToolbar();
+
+	if (m_MyView.FileOpen(tsMRUText.c_str()))
+	{
+		m_PathName = tsMRUText;
+		TB.EnableButton(IDM_IMAGE_ADJUST);
+		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
+
+		// Adjust the window size
+		CRect rcImage = GetMyView().GetImageSize();
+		AdjustFrameRect(rcImage);
+	}
+	else
+	{
+		RemoveMRUEntry(tsMRUText.c_str());
+		TB.DisableButton(IDM_IMAGE_ADJUST);
+		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
+	}
+
+	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+	return TRUE;
+}
+
+void CMainFrame::OnFileSave()
+{
+	if (!m_PathName.empty())
+	{
+		tString ts = m_PathName + _T("  already exists.\nDo you want to replace it?");
+
+		if (IDYES == MessageBox(ts.c_str(), _T("FileSaveAs"), MB_YESNO | MB_ICONWARNING))
+			m_MyView.FileSave(m_PathName.c_str());
+	}
+}
+
+void CMainFrame::OnFileSaveAs()
+{
+	// Fill the OPENFILENAME structure
+	TCHAR szFilters[] = _T("Scribble Files (*.bmp)\0*.bmp\0\0");
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
+	OPENFILENAME ofn = {0};
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = m_hWnd;
+	ofn.lpstrFilter = szFilters;
+	ofn.lpstrFile = szFilePathName;
+	ofn.lpstrDefExt = _T("bmp");
+	ofn.nMaxFile = _MAX_PATH;
+	ofn.lpstrTitle = _T("SaveAs File");
+	ofn.Flags = OFN_OVERWRITEPROMPT;
+
+	// Open the file save dialog, and open the file
+	if (!::GetSaveFileName(&ofn))
+		return;
+
+	// Store the PLotPoint data in the file
+	m_PathName = szFilePathName;
+	tString ts = _T("FastGDI - ") + m_PathName; 
+	SetWindowText(ts.c_str());
+
+	// Save the file name
+	m_MyView.FileSave(szFilePathName);
+	AddMRUEntry(szFilePathName);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -177,19 +237,18 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE, FALSE );
+	AddToolbarButton( IDM_FILE_NEW  );
+	AddToolbarButton( IDM_FILE_OPEN );
+	AddToolbarButton( IDM_FILE_SAVE );
 	
 	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_IMAGE_ADJUST, FALSE);
+	AddToolbarButton( IDM_IMAGE_ADJUST, FALSE );
 	
 	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 
-	// Specify a the icons used by the menu
-	CToolbar& TB = GetToolbar();
-	SetMenuIcons(TB.GetToolbarData(), RGB(192, 192, 192), IDB_TOOLBAR_SML, 0);
+	// Use large toolbar buttons
+	SetToolbarImages(RGB(192, 192, 192), IDB_TOOLBAR_BIG, 0, 0);
 }
 
 LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

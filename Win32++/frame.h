@@ -1444,7 +1444,7 @@ namespace Win32xx
 			ImageList_GetIconSize(m_himlMenu, &Oldcx, &Oldcy);
 			if ((iImageWidth != Oldcx) || (iImageHeight != Oldcy))
 			{
-				TRACE(_T("Unable to add icons. The new icons are a different size to the old ones"));
+				TRACE(_T("Unable to add icons. The new icons are a different size to the old ones\n"));
 				return m_vMenuIcons.size();
 			}
 		}

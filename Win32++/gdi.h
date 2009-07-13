@@ -311,6 +311,7 @@ namespace Win32xx
 			// Allocate memory for the BITMAPINFO structure.
 			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (1<< cClrBits);
 			m_pbmi = (LPBITMAPINFO)new byte[sizeof(BITMAPINFOHEADER) + uQuadSize];
+			if (NULL == m_pbmi) throw std::bad_alloc();
 			ZeroMemory(m_pbmi, sizeof(BITMAPINFOHEADER) + uQuadSize);
 
 			m_pbmi->bmiHeader.biSize		= sizeof(BITMAPINFOHEADER);
@@ -322,12 +323,9 @@ namespace Win32xx
 			if (cClrBits < 24) 
 				m_pbmi->bmiHeader.biClrUsed = (1<<cClrBits); 
 		}
-		~CBitmapInfoPtr()
-		{
-			delete[] m_pbmi;
-		}
-		operator LPBITMAPINFO() const {return m_pbmi;}
-		LPBITMAPINFO operator->() const {return m_pbmi;}
+		~CBitmapInfoPtr() 	{ delete[] m_pbmi; }
+		operator LPBITMAPINFO() const { return m_pbmi; }
+		LPBITMAPINFO operator->() const { return m_pbmi; }
 	
 	private:
 		CBitmapInfoPtr(const CBitmapInfoPtr&);				// Disable copy construction
@@ -372,7 +370,10 @@ namespace Win32xx
 	{
 		// The copy constructor is called when a temporary copy of the CDC needs to be created.
 		// Since we have two (or more) CDC objects looking after the same HDC, we need to
-		//  take account of this in the destructor
+		//  take account of this in the destructor.
+
+		// Note: Were it not for the peculiarities of Dev-C++, the copy constructor would
+		//  simply have been disabled.
 		m_hBitmapOld = rhs.m_hBitmapOld;
 		m_hBrushOld  = rhs.m_hBrushOld;
 		m_hDC		 = rhs.m_hDC;
@@ -380,8 +381,7 @@ namespace Win32xx
 		m_hPenOld    = rhs.m_hPenOld;
 		m_hRgnOld    = rhs.m_hRgnOld;
 
-		// This CDC is a copy, so we won't need to delete GDI resources
-		//  in the destructor
+		// This CDC is a copy, so we won't need to delete GDI resources in the destructor
 		m_IsCopy  = TRUE;
 		m_pCopiedFrom = (CDC*)&rhs;
 	}

@@ -19,7 +19,6 @@ CView::~CView()
 
 BOOL CView::FileOpen(LPCTSTR szFilename)
 {
-	Invalidate();
 	if (szFilename)
 	{
 		m_hbmImage = (HBITMAP)::LoadImage(GetApp()->GetInstanceHandle(), 
@@ -29,6 +28,48 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 		m_hbmImage = NULL;
 
 	return (BOOL)m_hbmImage;
+}
+
+BOOL CView::FileSave(LPCTSTR pszFile) 
+ { 
+	 HANDLE hFile = CreateFile(pszFile, GENERIC_READ | GENERIC_WRITE, (DWORD) 0, NULL, 
+                   OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, (HANDLE) NULL);
+
+	 if (hFile)
+	 {
+		HBITMAP hbmSource = GetImage();
+
+		// Create our LPBITMAPINFO object
+		CBitmapInfoPtr pbmi(hbmSource);
+				
+		// Create the reference DC for GetDIBits to use
+		CDC MemDC = CreateCompatibleDC(NULL);
+
+		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+		byte* lpvBits = new byte[pbmi->bmiHeader.biSizeImage];
+		if (NULL == lpvBits) throw std::bad_alloc();
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);		 
+
+		LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
+		BITMAPFILEHEADER hdr = {0};
+		hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M" 
+		hdr.bfSize = (DWORD) (sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
+		hdr.bfOffBits = (DWORD) sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD); 
+
+		DWORD dwTmp;
+		DWORD cb = pbmi->bmiHeader.biSizeImage;                   // incremental count of bytes 
+		BOOL bRes = WriteFile(hFile, (LPVOID) &hdr, sizeof(BITMAPFILEHEADER),  (LPDWORD) &dwTmp,  NULL);
+		bRes = WriteFile(hFile, (LPVOID) pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD), (LPDWORD) &dwTmp, ( NULL));
+		bRes = WriteFile(hFile, (LPSTR) lpvBits, (int) cb, (LPDWORD) &dwTmp,NULL);
+
+		CloseHandle(hFile);
+		delete[] lpvBits;
+
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 RECT CView::GetImageSize()
@@ -67,7 +108,7 @@ void CView::OnPaint(HDC hDC)
 		CRect rcView = GetClientRect();
 		memDC.AttachBitmap(m_hbmImage);
 		::BitBlt(hDC, 0, 0, rcView.Width(), rcView.Height(), memDC, 0, 0, SRCCOPY);
-		memDC.DetachBitmap();
+		memDC.DetachBitmap(); 
 	}
 	else
 	{

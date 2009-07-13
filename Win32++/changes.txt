@@ -1,36 +1,49 @@
 Version 6.6
 ===========
-Major changes
--------------
-* Replaced the Form Sample with the DocViewForm sample.
-   This sample now demonstrates a form using a Doc/View architecture, much like
-   the traditional Doc/View of MFC. It also demonstrated OnUpdateMenu handling. 
+Changes
+-------
+* Enhancements to docking, containers and tabs.
+  - By default the dockers are immediately resized while the splitter bar is 
+     being dragged. To defer resizing until the splitter bar is released, use
+     SetDragAutoResize(FALSE).
+  - The close and list buttons now indicate when they are hot and pressed.
+  - Added SetTabText, SetTabImage and SwapTabs to the CTab class.
+  - Minor improvements to the painting of tabs, containers and dockers.
+* Enhancements to GDI graphics support.
+  - The CDC class has been extended. It now includes wrapper functions for 
+     the Device Context related functions.
+  - Added the CBitmapInfoPtr class. This simplifies the use of the BITMAPINFO
+     structure in functions like GetDIBits and SetDIBits.
+  - Added GrayScaleBitmap function to gdi.h. It converts a colored bitmap to
+     to grayscale.     
 * Automated menu updating.
-   When a menu is about to be displayed, OnUpdateMenu is called to provide
-   an opportunity to modify the check state of the menu items.
+  - When a menu is about to be displayed, OnUpdateMenu is called to provide
+     an opportunity to modify the check state of the menu items.
 * Enhancements to frames
   - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
-    registry.
-* Enhancements to the Themes sample
+     registry.
+* Modification to CRect class
+  - The various function now use references instead of naked pointers.    
+* Updated the Themes sample.
   - Added check boxes for the various rebar theme option
   - Added Hide/Show option for the additional toolbars
   - Save/Load the theme options in the registry
   - Save/Load the rebar band postions and styles in the registry
-* Enhancements to docking and containers
-  - By default the dockers are immediately resized while the splitter bar is 
-    being dragged. To defer resizing until the splitter bar is released, use
-    SetDragAutoResize(FALSE).
-  - The close and list buttons now indicate when they are hot and pressed.
-  - The samples now demonstrate how to theme a docker's toolbar
-* The CDC class has been extended. It now includes wrapper functions for the
-   Device Context related functions.    
-  
+* Replaced the Form Sample with the DocViewForm sample.
+  - This sample now demonstrates a form using a Doc/View architecture, much
+     like the traditional Doc/View of MFC. 
+  - Added OnUpdateMenu handling. 
+* Updated the FastGDI sample.
+  - Added grayscale transformation
+  - Added file save.
+* Updated the DockContainer and DockTabbedMDI samples    
+  - The samples now demonstrate how to theme a container's toolbar.   
    
-   
+      
 Incompatibilities with previous versions
 ----------------------------------------
-CFrame::AddToolbarBand now requires three arguements
-The various CRect functions use references to RECT rather than pointers
+- CFrame::AddToolbarBand now requires three arguements
+- The various CRect functions use references to RECT rather than pointers
 
 Version 6.5
 ===========
