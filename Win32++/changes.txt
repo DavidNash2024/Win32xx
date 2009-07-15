@@ -20,6 +20,9 @@ Changes
   - When a menu is about to be displayed, OnUpdateMenu is called to provide
      an opportunity to modify the check state of the menu items.
 * Enhancements to frames
+  - The style of the rebarband is now specified in AddToolbarBand. This 
+     facilites saving and restoring toolbar settings from registry (as 
+     demonstrated in the Themes sample.)  
   - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
      registry.
 * Modification to CRect class
@@ -36,6 +39,7 @@ Changes
 * Updated the FastGDI sample.
   - Added grayscale transformation
   - Added file save.
+  - Added Scroll bars.
 * Updated the DockContainer and DockTabbedMDI samples    
   - The samples now demonstrate how to theme a container's toolbar.   
    
@@ -299,14 +303,14 @@ Example of how to dock 8 dockables inside a dockable view:
 ----------------------------------------------------------
 void CMainFrame::OnInitialUpdate()
 {
-  // CTextDockable in inherrited from CDocker
+    // CTextDockable in inherrited from CDocker
 	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT, 100);
 	CDocker* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
 	CDocker* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP, 100);
 	CDocker* pDockBottom = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
 
 	// Dock 4 dockables inside other dockables
-  pDockLeft->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+    pDockLeft->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
 	pDockRight->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
 	pDockTop->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
 	pDockBottom->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);

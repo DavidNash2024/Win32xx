@@ -276,7 +276,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 	HCURSOR hCursor = ::SetCursor(LoadCursor(NULL, IDC_WAIT));
 
 	//turn redawing off in the TreeView. This will speed things up as we add items
-	::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+	SendMessage(WM_SETREDRAW, FALSE, 0);
 
 	TreeItemData* pItem = (TreeItemData*)tvItem.lParam;
 	CShellFolder cParentFolder;
@@ -303,9 +303,9 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 	SortChildrenCB(tvSort, 0);
 
 	//turn redawing back on in the TreeView
-	::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+	SendMessage(WM_SETREDRAW, TRUE, 0);
 
-	::UpdateWindow(m_hWnd);
+	UpdateWindow();
 	::SetCursor(hCursor);
 
 	return TRUE;
@@ -351,7 +351,7 @@ BOOL CMyTreeView::GetRootItems()
 		tvInsert.hInsertAfter = TVI_LAST;
 		tvInsert.hParent = TVI_ROOT;
 
-		::SetFocus(m_hWnd);
+		SetFocus();
 
 		//add the item
 		hParentItem = InsertItem(tvInsert);
@@ -380,7 +380,7 @@ BOOL CMyTreeView::GetRootItems()
 void CMyTreeView::OnInitialUpdate()
 {
 	//Set the image list
-	::SendMessage(m_hWnd, TVM_SETIMAGELIST, TVSIL_NORMAL, (LPARAM) GetImageList(FALSE));
+	SendMessage(TVM_SETIMAGELIST, TVSIL_NORMAL, (LPARAM) GetImageList(FALSE));
 }
 
 void CMyTreeView::PreCreate(CREATESTRUCT &cs)

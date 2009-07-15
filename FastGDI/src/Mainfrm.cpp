@@ -44,8 +44,7 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 	TintBitmap(GetMyView().GetImage(), cRed, cGreen, cBlue);
 	if (bGray) 	GrayScaleBitmap(GetMyView().GetImage());
 	
-//	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
-	GetMyView().Invalidate();
+	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -55,12 +54,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		{
-			CToolbar& TB = GetToolbar();
-			TB.DisableButton(IDM_IMAGE_ADJUST);
-			EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
-			m_MyView.FileOpen(NULL);
-		}
+		OnFileNew();
 		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
@@ -115,6 +109,19 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 }
 
+void CMainFrame::OnFileNew()
+{
+	CToolbar& TB = GetToolbar();
+	TB.DisableButton(IDM_FILE_SAVEAS);
+	TB.DisableButton(IDM_IMAGE_ADJUST);
+	m_MyView.FileOpen(NULL);
+	m_MyView.Invalidate();
+
+	// Set the caption
+	tString ts = _T("FastGDI"); 
+	SetWindowText(ts.c_str());
+}
+
 void CMainFrame::OnFileOpen()
 {
 	// Fill the OPENFILENAME structure
@@ -142,13 +149,14 @@ void CMainFrame::OnFileOpen()
 
 	// Turn on the Toolbar adjust button
 	CToolbar& TB = GetToolbar();
+	TB.EnableButton(IDM_FILE_SAVEAS);
 	TB.EnableButton(IDM_IMAGE_ADJUST);
 	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
 	// Resize the frame to match the bitmap
 	if (GetMyView().GetImage())
 	{
-		CRect rcImage = GetMyView().GetImageSize();
+		CRect rcImage = GetMyView().GetImageRect();
 		AdjustFrameRect(rcImage);
 	}
 		
@@ -159,7 +167,7 @@ void CMainFrame::OnFileOpen()
 	SetWindowText(ts.c_str());
 }
 
-BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM /*lParam*/)
 {
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	tString tsMRUText = GetMRUEntry(nMRUIndex);
@@ -168,21 +176,25 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	if (m_MyView.FileOpen(tsMRUText.c_str()))
 	{
 		m_PathName = tsMRUText;
+		TB.EnableButton(IDM_FILE_SAVEAS);
 		TB.EnableButton(IDM_IMAGE_ADJUST);
-		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
 		// Adjust the window size
-		CRect rcImage = GetMyView().GetImageSize();
+		CRect rcImage = GetMyView().GetImageRect();
 		AdjustFrameRect(rcImage);
 	}
 	else
 	{
 		RemoveMRUEntry(tsMRUText.c_str());
+		TB.DisableButton(IDM_FILE_SAVEAS);
 		TB.DisableButton(IDM_IMAGE_ADJUST);
-		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_GRAYED);
 	}
 
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+
+	// Set the caption
+	tString ts = _T("FastGDI - ") + m_PathName; 
+	SetWindowText(ts.c_str());
 	return TRUE;
 }
 
@@ -223,7 +235,6 @@ void CMainFrame::OnFileSaveAs()
 
 	// Save the file name
 	m_MyView.FileSave(szFilePathName);
-	AddMRUEntry(szFilePathName);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -234,12 +245,31 @@ void CMainFrame::OnInitialUpdate()
 	TRACE(_T("Frame created\n"));
 }
 
+inline void CMainFrame::OnMenuUpdate(UINT nID)
+// Called when menu items are about to be displayed
+{
+	BOOL IsImageLoaded = (BOOL)GetMyView().GetImage();
+
+	switch(nID)
+	{
+	case IDM_FILE_SAVE:
+		EnableMenuItem(GetFrameMenu(), IDM_FILE_SAVE, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		break;
+	case IDM_FILE_SAVEAS:
+		EnableMenuItem(GetFrameMenu(), IDM_FILE_SAVEAS, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		break;
+	case IDM_IMAGE_ADJUST:
+		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		break;
+	}
+}
+
 void CMainFrame::SetupToolbar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW  );
 	AddToolbarButton( IDM_FILE_OPEN );
-	AddToolbarButton( IDM_FILE_SAVE );
+	AddToolbarButton( IDM_FILE_SAVEAS, FALSE );
 	
 	AddToolbarButton( 0 );	// Separator
 	AddToolbarButton( IDM_IMAGE_ADJUST, FALSE );

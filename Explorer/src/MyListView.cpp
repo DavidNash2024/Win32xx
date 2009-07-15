@@ -239,13 +239,13 @@ void CMyListView::DoDisplay()
 		hCur = ::SetCursor(hCur);
 
 		//turn redawing off in the ListView. This will speed things up as we add items
-		::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+		SendMessage(WM_SETREDRAW, FALSE, 0);
 
 		EnumObjects(m_csfCurFolder, m_cpidlCurFull);
 		SortItems(CompareProc, 0);
 
 		//turn redawing back on
-		::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+		SendMessage(WM_SETREDRAW, TRUE, 0);
 		::SetCursor(hCur);
 	}
 }
@@ -554,8 +554,8 @@ HIMAGELIST CMyListView::GetImageList(BOOL bLarge)
 void CMyListView::OnInitialUpdate()
 {
 	//Set the image lists
-	::SendMessage(m_hWnd, LVM_SETIMAGELIST, LVSIL_NORMAL, (LPARAM) GetImageList(TRUE));
-	::SendMessage(m_hWnd, LVM_SETIMAGELIST, LVSIL_SMALL, (LPARAM) GetImageList(FALSE));
+	SendMessage(LVM_SETIMAGELIST, LVSIL_NORMAL, (LPARAM) GetImageList(TRUE));
+	SendMessage(LVM_SETIMAGELIST, LVSIL_SMALL, (LPARAM) GetImageList(FALSE));
 
 	//Set up the colmns for report mode
 	TCHAR szText[256];
@@ -605,26 +605,26 @@ void CMyListView::SetImageLists()
 
 void CMyListView::ViewLargeIcons()
 {
-	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
-	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
+	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
 }
 
 void CMyListView::ViewSmallIcons()
 {
-	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
-	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
+	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
 }
 
 void CMyListView::ViewList()
 {
-	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
-	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
+	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
 }
 
 void CMyListView::ViewReport()
 {
-	DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
-	::SetWindowLongPtr(m_hWnd, GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 }
 
 LRESULT CMyListView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

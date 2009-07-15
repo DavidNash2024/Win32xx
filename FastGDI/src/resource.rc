@@ -25,10 +25,10 @@ BEGIN
     BEGIN
         MENUITEM "New...",                      IDM_FILE_NEW
         MENUITEM "&Open...",                    IDM_FILE_OPEN
-        MENUITEM "&Save",                       IDM_FILE_SAVE, 
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS,
+        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "Save &As...",                  IDM_FILE_SAVEAS  
         MENUITEM SEPARATOR
-        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1,
+        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
