@@ -21,7 +21,7 @@ Changes
      an opportunity to modify the check state of the menu items.
 * Enhancements to frames
   - The style of the rebarband is now specified in AddToolbarBand. This 
-     facilites saving and restoring toolbar settings from registry (as 
+     facilites saving and restoring toolbar settings from the registry (as 
      demonstrated in the Themes sample.)  
   - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
      registry.

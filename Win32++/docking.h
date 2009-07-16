@@ -169,6 +169,7 @@ namespace Win32xx
 	protected:
 		virtual void OnCreate();
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
+		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -3499,7 +3500,12 @@ namespace Win32xx
 		m_nTabPressed = HitTest(info);
 
 		CTab::OnLButtonDown(wParam, lParam);
-	} 
+	}
+
+	inline void CContainer::OnLButtonUp(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		// Override CTab::OnLButtonUp and take no action
+	}
 
 	inline void CContainer::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{

@@ -156,6 +156,8 @@ void CMainFrame::OnFileOpen()
 	// Resize the frame to match the bitmap
 	if (GetMyView().GetImage())
 	{
+		GetMyView().ShowScrollBar(SB_HORZ, FALSE);
+		GetMyView().ShowScrollBar(SB_VERT, FALSE);
 		CRect rcImage = GetMyView().GetImageRect();
 		AdjustFrameRect(rcImage);
 	}
@@ -190,6 +192,15 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM /*lParam*/)
 		TB.DisableButton(IDM_IMAGE_ADJUST);
 	}
 
+	// Resize the frame to match the bitmap
+	if (GetMyView().GetImage())
+	{
+		GetMyView().ShowScrollBar(SB_HORZ, FALSE);
+		GetMyView().ShowScrollBar(SB_VERT, FALSE);
+		CRect rcImage = GetMyView().GetImageRect();
+		AdjustFrameRect(rcImage);
+	}
+
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
 	// Set the caption
@@ -212,7 +223,7 @@ void CMainFrame::OnFileSave()
 void CMainFrame::OnFileSaveAs()
 {
 	// Fill the OPENFILENAME structure
-	TCHAR szFilters[] = _T("Scribble Files (*.bmp)\0*.bmp\0\0");
+	TCHAR szFilters[] = _T("Bitmap Files (*.bmp)\0*.bmp\0\0");
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
 	OPENFILENAME ofn = {0};
 	ofn.lStructSize = sizeof(OPENFILENAME);
@@ -228,7 +239,7 @@ void CMainFrame::OnFileSaveAs()
 	if (!::GetSaveFileName(&ofn))
 		return;
 
-	// Store the PLotPoint data in the file
+	// Set the caption
 	m_PathName = szFilePathName;
 	tString ts = _T("FastGDI - ") + m_PathName; 
 	SetWindowText(ts.c_str());

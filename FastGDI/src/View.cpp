@@ -24,12 +24,8 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 					szFilename, 0, 0, IMAGE_BITMAP, LR_LOADFROMFILE);
 	}
 	else
-	{
 		m_hbmImage = NULL;
-		ShowScrollBar(SB_HORZ, FALSE);
-		ShowScrollBar(SB_VERT, FALSE);
-	}
-
+	
 	return (BOOL)m_hbmImage;
 }
 
@@ -74,7 +70,7 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 	return FALSE;
 }
 
-RECT CView::GetImageRect()
+CRect CView::GetImageRect()
 {
 	BITMAP bm;
 	::GetObject(m_hbmImage, sizeof(BITMAP), &bm);
@@ -129,7 +125,8 @@ void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
 	} 
 
 	// Scroll the window.   
-	xNewPos = max(0, xNewPos);  
+	xNewPos = MAX(0, xNewPos);
+	xNewPos = MIN( xNewPos, GetImageRect().Width() - GetClientRect().Width() );
 	int xDelta = xNewPos - m_xCurrentScroll;  
 	m_xCurrentScroll = xNewPos; 
 	ScrollWindowEx(-xDelta, 0,  NULL, NULL, NULL, NULL, SW_INVALIDATE); 
@@ -198,7 +195,8 @@ void CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
 	} 
 
 	// Scroll the window.
-	yNewPos = max(0, yNewPos); 
+	yNewPos = MAX(0, yNewPos);
+	yNewPos = MIN( yNewPos, GetImageRect().Height() - GetClientRect().Height() );
 	int yDelta = yNewPos - m_yCurrentScroll;   
 	m_yCurrentScroll = yNewPos; 	
 	ScrollWindowEx(0, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE); 
@@ -222,24 +220,13 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 		DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
 		AdjustWindowRectEx(&rcImage, dwStyle, FALSE, dwExStyle);
 
-		CRect rcView = GetWindowRect();
-		dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
-		dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
+		CRect rcView = GetClientRect();
 		AdjustWindowRectEx(&rcView, dwStyle, FALSE, dwExStyle);
 		
 		SCROLLINFO si = {0};
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 		si.nMin   = 0;
-		si.nMax   = rcImage.Width();
-		si.nPage  = rcView.Width();
-		si.nPos   = m_xCurrentScroll;
-		SetScrollInfo(SB_HORZ, si, TRUE);
-
-		si.nMax   = rcImage.Height();
-		si.nPage  = rcView.Height();
-		si.nPos   = m_yCurrentScroll;
-		SetScrollInfo(SB_VERT, si, TRUE);
 
 		if (rcView.Width()  >= rcImage.Width())
 		{
@@ -247,7 +234,13 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 			ShowScrollBar(SB_HORZ, FALSE);
 		}
 		else
+		{
+			si.nMax   = rcImage.Width();
+			si.nPage  = rcView.Width();
+			si.nPos   = m_xCurrentScroll;
+			SetScrollInfo(SB_HORZ, si, TRUE);
 			ShowScrollBar(SB_HORZ, TRUE);
+		}
 		
 		if (rcView.Height() >= rcImage.Height())
 		{
@@ -255,7 +248,13 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 			ShowScrollBar(SB_VERT, FALSE);
 		}
 		else
+		{
+			si.nMax   = rcImage.Height();
+			si.nPage  = rcView.Height();
+			si.nPos   = m_yCurrentScroll;
+			SetScrollInfo(SB_VERT, si, TRUE);
 			ShowScrollBar(SB_VERT, TRUE);
+		}
 		
 		int xNewPos = MIN(m_xCurrentScroll, rcImage.Width() - rcView.Width());
 		xNewPos = MAX(xNewPos, 0);

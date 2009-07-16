@@ -13,4 +13,3 @@ INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 	return theApp.Run();
 }
 
-

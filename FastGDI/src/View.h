@@ -18,7 +18,7 @@ public:
 	virtual BOOL FileOpen(LPCTSTR szFilename);
 	virtual BOOL FileSave(LPCTSTR pszFile);
 	HBITMAP GetImage() {return m_hbmImage;}
-	virtual RECT GetImageRect();
+	virtual CRect GetImageRect();
 
 protected:
 	virtual void OnHScroll(WPARAM wParam, LPARAM lParam);

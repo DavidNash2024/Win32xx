@@ -487,8 +487,7 @@ namespace Win32xx
 					// Draw separate background for dropdown arrow
 					if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
 					{
-						CRect rcArrowBkgnd;
-						::CopyRect(&rcArrowBkgnd, &rcRect);
+						CRect rcArrowBkgnd = rcRect;
 						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
 						DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcArrowBkgnd, FALSE);
 					}

@@ -347,8 +347,7 @@ namespace Win32xx
 						int ChildWidth = rcChild.right - rcChild.left;
 
 						// Determine our drawing rectangle
-						CRect rcDraw;
-						CopyRect(&rcDraw, &rcBand);
+						CRect rcDraw = rcBand;
 						rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
 						int xPad = IsXPThemed()? 2: 0;
 						rcDraw.left -= xPad;

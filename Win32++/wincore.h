@@ -307,13 +307,13 @@ namespace Win32xx
 		operator LPCRECT() const
 		{ return this; }
 
-		BOOL operator == (RECT& rc)
+		BOOL operator == (const RECT& rc)
 		{ return ::EqualRect(this, &rc); }
 
-		BOOL operator != (RECT& rc)
+		BOOL operator != (const RECT& rc)
 		{ return !::EqualRect(this, &rc); }
 
-		void  operator=( RECT& srcRect)
+		void  operator=(const RECT& srcRect)
 		{ ::CopyRect(this, &srcRect); }
 
 		int Height()
@@ -322,16 +322,16 @@ namespace Win32xx
 		int Width()
 		{ return right - left; }
 
-		void CopyRect(RECT& rc)
-		{ ::CopyRect(&rc, this); }
+		void CopyRect(const RECT& rc)
+		{ ::CopyRect(this, &rc); }
 
-		BOOL EqualRect(RECT& rc)
+		BOOL EqualRect(const RECT& rc)
 		{ return ::EqualRect(&rc, this); }
 
 		BOOL InflateRect(int dx, int dy)
 		{ return ::InflateRect(this, dx, dy); }
 
-		BOOL IntersectRect(RECT& rc1, RECT& rc2)
+		BOOL IntersectRect(const RECT& rc1, const RECT& rc2)
 		{ return ::IntersectRect(this, &rc1, &rc2); }
 
 		BOOL IsRectEmpty()
@@ -349,10 +349,10 @@ namespace Win32xx
 		BOOL SetRectEmpty()
 		{ return ::SetRectEmpty(this); }
 
-		BOOL SubtractRect(RECT& rc1, RECT& rc2)
+		BOOL SubtractRect(const RECT& rc1, const RECT& rc2)
 		{ return ::SubtractRect(this, &rc1, &rc2); }
 
-		BOOL UnionRect(RECT& rc1, RECT& rc2)
+		BOOL UnionRect(const RECT& rc1, const RECT& rc2)
 		{ return ::UnionRect(this, &rc1, &rc2); }
 	};
 
@@ -445,7 +445,7 @@ namespace Win32xx
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
-		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, RECT& rc, UINT uFlags) const;
+		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		void DestroyWindow() const;
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
@@ -463,7 +463,7 @@ namespace Win32xx
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;	
 		void Invalidate(BOOL bErase = TRUE) const;
-		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
+		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pWndParent) const;
 		BOOL IsEnabled() const;
@@ -475,7 +475,7 @@ namespace Win32xx
 		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const;
 		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;	
+		BOOL RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;	
 		int  ReleaseDC(HDC hDC) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
@@ -488,15 +488,15 @@ namespace Win32xx
 		BOOL SetForegroundWindow() const;
 		HWND SetParent(HWND hParent) const;
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
-		int  SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const;
+		int  SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
-		BOOL SetWindowPos(HWND hWndInsertAfter, RECT& rc, UINT uFlags) const;
+		BOOL SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
 		BOOL SetWindowText(LPCTSTR lpString) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
-		BOOL ValidateRect(LPRECT prc) const;
+		BOOL ValidateRect(LPCRECT prc) const;
 		BOOL ValidateRgn(HRGN hRgn) const;
 
 #ifndef _WIN32_WCE
@@ -510,8 +510,8 @@ namespace Win32xx
 		BOOL IsZoomed() const;
 		BOOL LockWindowUpdate(HWND hWndLock) const;
 		BOOL SetMenu(HMENU hMenu) const;
-		BOOL ScrollWindow(int XAmount, int YAmount, const LPRECT prcScroll, const LPRECT prcClip) const;
-		int  ScrollWindowEx(int dx, int dy, const LPRECT prcScroll, const LPRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const;
+		BOOL ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const;
+		int  ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const;
 		int  SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
 		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
@@ -2078,7 +2078,7 @@ namespace Win32xx
 		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 
-	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, RECT& rc, UINT uFlags) const
+	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
 	{
 		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
@@ -2203,7 +2203,7 @@ namespace Win32xx
 		::InvalidateRect(m_hWnd, NULL, bErase);
 	}
 
-	inline BOOL CWnd::InvalidateRect(CONST RECT* lpRect, BOOL bErase /*= TRUE*/) const
+	inline BOOL CWnd::InvalidateRect(LPCRECT lpRect, BOOL bErase /*= TRUE*/) const
 	// The InvalidateRect function adds a rectangle to the window's update region.
 	// The update region represents the portion of the window's client area that must be redrawn.
 	{
@@ -2292,7 +2292,7 @@ namespace Win32xx
 		return ::PostMessage(hWnd, uMsg, wParam, lParam);
 	}
 
-	inline BOOL CWnd::RedrawWindow(CRect* lpRectUpdate, HRGN hRgn, UINT flags) const
+	inline BOOL CWnd::RedrawWindow(LPCRECT lpRectUpdate, HRGN hRgn, UINT flags) const
 	// The RedrawWindow function updates the specified rectangle or region in a window's client area.
 	{
 		return ::RedrawWindow(m_hWnd, lpRectUpdate, hRgn, flags);
@@ -2387,7 +2387,7 @@ namespace Win32xx
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 
-	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, RECT& rc, UINT uFlags) const
+	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
 	// or top-level window.
 	{
@@ -2427,7 +2427,7 @@ namespace Win32xx
 		return ::UpdateWindow(m_hWnd);
 	}
 
-	inline BOOL CWnd::ValidateRect(LPRECT prc) const
+	inline BOOL CWnd::ValidateRect(LPCRECT prc) const
 	// The ValidateRect function validates the client area within a rectangle by
 	// removing the rectangle from the update region of the window.
 	{
@@ -2485,12 +2485,12 @@ namespace Win32xx
 		return ::IsIconic(m_hWnd);
 	}
 
-	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, const LPRECT prcScroll, const LPRECT prcClip) const
+	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const
 	{
 		return ::ScrollWindow(m_hWnd, XAmount, YAmount, prcScroll, prcClip);
 	}
 	
-	inline int CWnd::ScrollWindowEx(int dx, int dy, const LPRECT prcScroll, const LPRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const
+	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const
 	// The ScrollWindow function scrolls the contents of the window's client area.
 	{
 		return ::ScrollWindowEx(m_hWnd, dx, dy, prcScroll, prcClip, hrgnUpdate, prcUpdate, flags);
@@ -2502,7 +2502,7 @@ namespace Win32xx
 		return ::SetMenu(m_hWnd, hMenu);
 	}
 
-	inline int CWnd::SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const
+	inline int CWnd::SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const
 	// The SetScrollInfo function sets the parameters of a scroll bar, including
 	// the minimum and maximum scrolling positions, the page size, and the
 	// position of the scroll box (thumb).

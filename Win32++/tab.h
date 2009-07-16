@@ -572,27 +572,34 @@ namespace Win32xx
 
 	inline CRect CTab::GetCloseRect()
 	{
-		CRect rcClose = GetClientRect();
-		int Gap = 2;
-		int cx = GetSystemMetrics(SM_CXSMICON);
-		int cy = GetSystemMetrics(SM_CYSMICON);
-		rcClose.right -= Gap;
-		rcClose.left = rcClose.right - cx;
+		CRect rcClose;
+		if (GetShowButtons())
+		{
+			rcClose= GetClientRect();
+			int Gap = 2;
+			int cx = GetSystemMetrics(SM_CXSMICON);
+			int cy = GetSystemMetrics(SM_CYSMICON);
+			rcClose.right -= Gap;
+			rcClose.left = rcClose.right - cx;
 
-		if (GetTabsAtTop())
-			rcClose.top = Gap;
-		else
-			rcClose.top = MAX(Gap, rcClose.bottom - m_nTabHeight);
+			if (GetTabsAtTop())
+				rcClose.top = Gap;
+			else
+				rcClose.top = MAX(Gap, rcClose.bottom - m_nTabHeight);
 
-		rcClose.bottom = rcClose.top + cy;	
+			rcClose.bottom = rcClose.top + cy;	
+		}
 		return rcClose;
 	}
 
 	inline CRect CTab::GetListRect()
 	{
-		CRect rcList = GetCloseRect();		
-		rcList.OffsetRect(-18, 0);
-	
+		CRect rcList;
+		if (GetShowButtons())
+		{
+			rcList = GetCloseRect();		
+			rcList.OffsetRect(-18, 0);
+		}
 		return rcList;
 	}
 
