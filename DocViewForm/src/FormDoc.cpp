@@ -59,7 +59,6 @@ void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
 	RegSetValueEx(hKey, _T("CheckC"), NULL, REG_DWORD, (LPBYTE)&m_bCheckC, sizeof(DWORD));
 	RegSetValueEx(hKey, _T("Radio"), NULL, REG_DWORD, (LPBYTE)&m_radio, sizeof(DWORD));
 	
-
 	RegCloseKey(hKey);
 }
 

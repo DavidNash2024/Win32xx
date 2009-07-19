@@ -1199,23 +1199,6 @@ namespace Win32xx
 	inline void CWnd::CenterWindow() const 
 	{ 
 		// Centers this window over it's parent 
-	
-	// required for Dev-C++ and VC6
-    #ifndef MONITOR_DEFAULTTONEAREST
-      #define MONITOR_DEFAULTTONEAREST    0x00000002
-    #endif
-    #ifndef HMONITOR
-      DECLARE_HANDLE(HMONITOR);
-    #endif
-    #ifndef MONITORINFO
-	  typedef struct tagMONITORINFO
-	  {
-		DWORD   cbSize;
-		RECT    rcMonitor;
-		RECT    rcWork;
-		DWORD   dwFlags;
-	  } MONITORINFO, *LPMONITORINFO;
-	#endif
     		
 		CRect rc = GetWindowRect();
 		CRect rcParent; 
@@ -1227,13 +1210,30 @@ namespace Win32xx
 		// Get the parent window dimensions (parent could be the desktop)
 		if (GetParent() != NULL) ::GetWindowRect(GetParent(), &rcParent);
 		else rcParent = rcDesktop;
-		 
+	
+  #ifndef _WIN32_WCE
+	// required for Dev-C++ and VC6
+    #ifndef MONITOR_DEFAULTTONEAREST
+		#define MONITOR_DEFAULTTONEAREST    0x00000002
+    #endif
+    #ifndef HMONITOR
+		DECLARE_HANDLE(HMONITOR);
+    #endif
+    #ifndef MONITORINFO
+		typedef struct tagMONITORINFO
+		{
+			DWORD   cbSize;
+			RECT    rcMonitor;
+			RECT    rcWork;
+			DWORD   dwFlags;
+		} MONITORINFO, *LPMONITORINFO;
+    #endif
 		// Import the GetMonitorInfo and MonitorFromWindow functions
 		HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
 		typedef BOOL (WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
 		typedef HMONITOR (WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
 		LPMFW pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
-	#ifdef UNICODE
+    #ifdef UNICODE
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
 	#else
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
@@ -1251,6 +1251,8 @@ namespace Win32xx
 				if (GetParent() == NULL) rcParent = mi.rcWork;
 			}
 		}
+		FreeLibrary(hUser32);
+  #endif
 		 
 		// Calculate point to center the dialog over the portion of parent window on this monitor
 		rcParent.IntersectRect(rcParent, rcDesktop);
@@ -1264,8 +1266,6 @@ namespace Win32xx
 		y = (y > rcDesktop.bottom - rc.Height())? rcDesktop.bottom - rc.Height() : y;
 		 
 		SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
-
-		FreeLibrary(hUser32);
 	} 
 
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
@@ -2101,11 +2101,6 @@ namespace Win32xx
 		return ::DrawMenuBar(m_hWnd);
 	}
 
-	inline BOOL CWnd::EnableScrollBar(UINT uSBflags, UINT uArrows) const
-	{
-		return ::EnableScrollBar(m_hWnd, uSBflags, uArrows);
-	}
-
 	inline BOOL CWnd::EnableWindow(BOOL bEnable /*= TRUE*/) const
 	// The EnableWindow function enables or disables mouse and
 	// keyboard input to the window.
@@ -2243,19 +2238,6 @@ namespace Win32xx
 	// The IsWindow function determines whether the window exists.
 	{
 		return ::IsWindow(m_hWnd);
-	}
-
-	inline BOOL CWnd::IsZoomed() const
-	// The IsZoomed function determines whether the window is maximized.
-	{
-		return ::IsZoomed(m_hWnd);
-	}
-
-	inline BOOL CWnd::LockWindowUpdate(HWND hWndLock) const
-	// Disables or enables drawing in the specified window. Only one window can be locked at a time.
-	// Use a hWndLock of NULL to re-enable drawing in the window
-	{
-		return ::LockWindowUpdate(hWndLock);
 	}
 
 	inline int CWnd::MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const
@@ -2452,6 +2434,11 @@ namespace Win32xx
 		return ::CloseWindow(m_hWnd);
 	}
 
+	inline BOOL CWnd::EnableScrollBar(UINT uSBflags, UINT uArrows) const
+	{
+		return ::EnableScrollBar(m_hWnd, uSBflags, uArrows);
+	}
+
 	inline HMENU CWnd::GetMenu() const
 	// The GetMenu function retrieves a handle to the menu assigned to the window.
 	{
@@ -2483,6 +2470,19 @@ namespace Win32xx
 	// The IsIconic function determines whether the window is minimized (iconic).
 	{
 		return ::IsIconic(m_hWnd);
+	}
+
+	inline BOOL CWnd::IsZoomed() const
+	// The IsZoomed function determines whether the window is maximized.
+	{
+		return ::IsZoomed(m_hWnd);
+	}
+
+	inline BOOL CWnd::LockWindowUpdate(HWND hWndLock) const
+	// Disables or enables drawing in the specified window. Only one window can be locked at a time.
+	// Use a hWndLock of NULL to re-enable drawing in the window
+	{
+		return ::LockWindowUpdate(hWndLock);
 	}
 
 	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const

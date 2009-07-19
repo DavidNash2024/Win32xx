@@ -34,7 +34,6 @@ protected:
 	void DoPopupMenu();
 
 private:
-//	CMainView m_MainView;
 	CLeftPane m_LeftPane;
 	CRightPane* m_RightPane;
 	BOOL m_bShowHidden;

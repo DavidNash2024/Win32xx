@@ -277,6 +277,8 @@ void CMainFrame::OnClose()
 	if (bChanged)
 		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
 			OnFileSave();
+
+	CFrame::OnClose();
 }
 
 void CMainFrame::OnDropFiles(HDROP hDropInfo)

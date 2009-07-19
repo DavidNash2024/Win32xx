@@ -15,7 +15,7 @@ public:
 	CView();
 	virtual ~CView();
 	virtual CRect GetImageRect();
-	virtual void LoadPictureFile(LPCTSTR szFile);
+	virtual BOOL LoadPictureFile(LPCTSTR szFile);
 	virtual void SavePicture(LPCTSTR szFile);
 	void Paint(HDC hDC);
 

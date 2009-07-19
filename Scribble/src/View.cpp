@@ -112,7 +112,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 
 		} while (nBytesRead == sizeof(PlotPoint));
 
-		if (0 != nBytesRead)
+		if ((0 != nBytesRead) || (m_points.empty()))
 		{
 			// Failed to read all of the file
 			m_points.clear();

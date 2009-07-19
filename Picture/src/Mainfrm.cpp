@@ -119,16 +119,6 @@ void CMainFrame::OnFileSaveAs()
 	}
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT &cs)
-{
-	cs.x = CW_USEDEFAULT;
-	cs.y = CW_USEDEFAULT;
-	cs.cx = 652;
-	cs.cy = 595;
-
-	CFrame::PreCreate(cs);
-}
-
 void CMainFrame::SetupToolbar()
 {	
 	// Set the Resource IDs for the toolbar buttons

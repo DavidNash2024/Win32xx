@@ -112,11 +112,15 @@ void CMainFrame::OnFileOpen()
 		return;
 
 	// Retrieve the PlotPoint data
-	m_View.FileOpen(szFilePathName);
+	if (m_View.FileOpen(szFilePathName))
+	{
 
-	// Save the filename
-	m_PathName = szFilePathName;
-	AddMRUEntry(szFilePathName);
+		// Save the filename
+		m_PathName = szFilePathName;
+		AddMRUEntry(szFilePathName);
+	}
+	else
+		m_PathName=_T("");
 }
 
 void CMainFrame::OnFileSave()

@@ -50,7 +50,7 @@ CRect CView::GetImageRect()
 	return rcImage;
 }
 
-void CView::LoadPictureFile(LPCTSTR szFile)
+BOOL CView::LoadPictureFile(LPCTSTR szFile)
 {
 	if (m_pPicture)
 	{
@@ -60,26 +60,29 @@ void CView::LoadPictureFile(LPCTSTR szFile)
 
 	TRACE(szFile);
 	TRACE(_T("\n"));
+	
+	m_xCurrentScroll = 0;
+	m_yCurrentScroll = 0;
+	ShowScrollBar(SB_HORZ, FALSE);
+	ShowScrollBar(SB_VERT, FALSE);
 
 	// Create IPicture from image file
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
+	{
 		::SetWindowText(GetParent(), szFile);
-	
+		CMainFrame& Frame = GetPicApp().GetMainFrame();
+		Frame.AdjustFrameRect(GetImageRect());	
+		Invalidate();
+		return TRUE;
+	}
 	else
 	{
 		TRACE(_T("Failed to load picture\n"));
 
 		// Set Frame title back to default
 		::SetWindowText(GetParent(), LoadString(IDW_MAIN));
+		return FALSE;
 	}
-
-	CMainFrame& Frame = GetPicApp().GetMainFrame();
-	m_xCurrentScroll = 0;
-	m_yCurrentScroll = 0;
-	ShowScrollBar(SB_HORZ, FALSE);
-	ShowScrollBar(SB_VERT, FALSE);
-	Frame.AdjustFrameRect(GetImageRect());	
-	Invalidate();
 }
 
 void CView::OnInitialUpdate()
@@ -93,11 +96,13 @@ void CView::OnInitialUpdate()
 	TCHAR szFile[] = _T("/PongaFern.jpg");
 	GetCurrentDirectory(MAX_STRING_SIZE - lstrlen(szFile) , szPath);
 	lstrcat(szPath, _T("./PongaFern.jpg"));
-	LoadPictureFile(szPath);
-
-	CMainFrame& Frame = GetPicApp().GetMainFrame();
-	CRect rcImage = GetImageRect();
-	Frame.AdjustFrameRect(rcImage);
+	
+	if (LoadPictureFile(szPath))
+	{
+		CMainFrame& Frame = GetPicApp().GetMainFrame();
+		CRect rcImage = GetImageRect();
+		Frame.AdjustFrameRect(rcImage);
+	}
 }
 
 void CView::OnPaint(HDC hDC)

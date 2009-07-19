@@ -40,8 +40,10 @@ Changes
   - Added grayscale transformation
   - Added file save.
   - Added Scroll bars.
+* Updated the picture sample.
+  - Added Scroll bars.  
 * Updated the DockContainer and DockTabbedMDI samples    
-  - The samples now demonstrate how to theme a container's toolbar.   
+  - These samples now demonstrate how to theme a container's toolbar.   
    
       
 Incompatibilities with previous versions

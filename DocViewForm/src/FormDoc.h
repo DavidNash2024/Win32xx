@@ -9,7 +9,7 @@
 
 
 // Declaration of the CFormDoc class
-class CFormDoc //: public CDocument
+class CFormDoc
 {
 public:
 	CFormDoc();
@@ -34,10 +34,7 @@ private:
 	BOOL  m_bCheckA;
 	BOOL  m_bCheckB;
 	BOOL  m_bCheckC;
-
 	UINT  m_radio;
-
-
 };
 
 #endif //SDI_DOC_H

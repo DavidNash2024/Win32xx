@@ -79,6 +79,9 @@ void CMainFrame::OnInitialUpdate()
 	// Place Radio button in view menu
 	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1);
 	::CheckMenuRadioItem(hView, IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+
+	// Defer resizing until the splitter bar is released
+	m_LeftPane.SetDragAutoResize(FALSE);
 }
 
 void CMainFrame::OnClose()

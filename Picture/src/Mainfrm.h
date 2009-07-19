@@ -21,7 +21,6 @@ protected:
 	virtual void OnFileNew();
 	virtual void OnFileOpen();
 	virtual void OnFileSaveAs();
-	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void SetupToolbar();
 	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
