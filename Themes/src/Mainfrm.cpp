@@ -623,7 +623,7 @@ void CMainFrame::ShowCards(BOOL bShow)
 		GetRebar().MoveBandsLeft();
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -631,7 +631,7 @@ LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 //	pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 

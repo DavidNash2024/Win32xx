@@ -20,7 +20,7 @@ void CButton::PreCreate(CREATESTRUCT &cs)
 	cs.lpszName = TEXT("OK");
 }
 
-LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -46,5 +46,5 @@ LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unhandled messages on for default processing
-	return CWnd::WndProc(hwnd, uMsg, wParam, lParam);
+	return CWnd::WndProc(uMsg, wParam, lParam);
 }

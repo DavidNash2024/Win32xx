@@ -16,7 +16,7 @@ public:
 	~CMainWin() {}
 
 protected:
-	LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void OnCreate();
 
 private:

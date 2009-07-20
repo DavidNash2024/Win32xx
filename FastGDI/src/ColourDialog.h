@@ -19,7 +19,7 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
-	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	void OnGrayScale();

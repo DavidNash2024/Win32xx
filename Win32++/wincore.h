@@ -392,6 +392,7 @@ namespace Win32xx
 
 	};
 
+
 	////////////////////////////////
 	// Declaration of the CWnd class
 	//
@@ -414,10 +415,10 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);	
 		virtual void Destroy();
 		virtual HWND Detach();
-		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual HWND GetAncestor() const;
 		virtual tString GetClassString() const;
 		virtual tString GetDlgItemString(int nIDDlgItem) const;
+		virtual WNDPROC GetPrevWindowProc() {return m_PrevWindowProc;}
 		virtual tString GetWindowString() const;
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
@@ -441,7 +442,8 @@ namespace Win32xx
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
 		BOOL BringWindowToTop() const;
-		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+	//	LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
@@ -531,8 +533,8 @@ namespace Win32xx
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnPaint(HDC hDC);
 		virtual void OnMenuUpdate(UINT nID);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HWND m_hWnd;				// handle to this object's window
 
@@ -540,6 +542,7 @@ namespace Win32xx
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
 		void AddToMap();
+		virtual LRESULT MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam); // overridden by friends
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RemoveFromMap();
 		void Subclass();
@@ -1402,11 +1405,11 @@ namespace Win32xx
 
 
 
-	inline LRESULT CWnd::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
-		return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
 	inline void CWnd::Destroy()
@@ -1860,7 +1863,7 @@ namespace Win32xx
 			if (0 != w)
 			{
 				// CWnd pointer found, so call the CWnd's WndProc
-				return w->WndProc(hWnd, uMsg, wParam, lParam);
+				return w->WndProc(uMsg, wParam, lParam);
 			}
 			else
 			{
@@ -1882,7 +1885,7 @@ namespace Win32xx
 				w->m_hWnd = hWnd;
 				w->AddToMap();
 
-				return w->WndProc(hWnd, uMsg, wParam, lParam);
+				return w->WndProc(uMsg, wParam, lParam);
 			}
 		}
 
@@ -1920,7 +1923,7 @@ namespace Win32xx
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 	}
 
-	inline LRESULT CWnd::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CWnd to handle
 		//  window messages. A typical function might look like this:
@@ -1937,10 +1940,10 @@ namespace Win32xx
 		//	}
 
 		// Always pass unhandled messages on to WndProcDefault
-		return WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return WndProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CWnd::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// All WndProc functions should pass unhandled window messages to this function
 	{
     	switch (uMsg)
@@ -1992,21 +1995,21 @@ namespace Win32xx
 			{
 				if (m_PrevWindowProc) break; // Allow normal painting for subclassed windows
 
-				if (::GetUpdateRect(hWnd, NULL, FALSE))
+				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					::PAINTSTRUCT ps;
-					HDC hDC = ::BeginPaint(hWnd, &ps);
+					HDC hDC = ::BeginPaint(m_hWnd, &ps);
 
 					OnPaint(hDC);
-					::EndPaint(hWnd, &ps);
+					::EndPaint(m_hWnd, &ps);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					HDC hDC = ::GetDC(hWnd);
+					HDC hDC = ::GetDC(m_hWnd);
 
 					OnPaint(hDC);
-					::ReleaseDC(hWnd, hDC);
+					::ReleaseDC(m_hWnd, hDC);
 				}
 			}
 			return 0L;
@@ -2030,7 +2033,7 @@ namespace Win32xx
 			{
 				if (m_PrevWindowProc) break; // Suppress for subclassed windows
 
-				LRESULT lr = MessageReflect(hWnd, uMsg, wParam, lParam);
+				LRESULT lr = MessageReflect(m_hWnd, uMsg, wParam, lParam);
 				if (lr) return lr;	// Message processed so return
 			}
 			break;				// Do default processing when message not already processed
@@ -2043,9 +2046,9 @@ namespace Win32xx
 
 		// Now hand all messages to the default procedure
 		if (m_PrevWindowProc)
-			return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
+			return CallWindowProc(m_PrevWindowProc, uMsg, wParam, lParam);
 		else
-			return DefWndProc(hWnd, uMsg, wParam, lParam);
+			return MyDefWndProc(uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
 
@@ -2061,9 +2064,14 @@ namespace Win32xx
 		return ::BringWindowToTop(m_hWnd);
 	}
 
-	inline LRESULT CWnd::CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+/*	inline LRESULT CWnd::CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
 	{
 		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
+	} */
+
+	inline LRESULT CWnd::CallWindowProc(WNDPROC lpPrevWndFunc, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return ::CallWindowProc(lpPrevWndFunc, m_hWnd, uMsg, wParam, lParam);
 	}
 
 	inline BOOL CWnd::CheckDlgButton(int nIDButton, UINT uCheck) const
@@ -2233,7 +2241,7 @@ namespace Win32xx
 	{
 		return ::IsWindowVisible(m_hWnd);
 	}
-
+	
 	inline BOOL CWnd::IsWindow() const
 	// The IsWindow function determines whether the window exists.
 	{

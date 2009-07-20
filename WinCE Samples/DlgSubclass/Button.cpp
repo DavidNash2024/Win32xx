@@ -4,7 +4,7 @@
 #include "DlgSubclassApp.h"
 #include "Button.h"
 
-LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	CMyDialog& dialog = ((CDlgSubclassApp*) GetApp())->GetDialog();
 	switch (uMsg)
@@ -32,5 +32,5 @@ LRESULT CButton::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unhandled messages on for default processing
-	return WndProcDefault(hwnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

@@ -29,7 +29,7 @@ void CButton::OnInitialUpdate()
 {
 }
 
-LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Run this application in Debug mode so you can see the text displayed
 	//  in the Trace window when the mouse is over the button.
@@ -63,5 +63,5 @@ LRESULT CButton::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unhandled messages on to parent WndProc
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

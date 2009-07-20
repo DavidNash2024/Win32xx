@@ -14,7 +14,7 @@ void CMainWin::OnCreate()
 	m_Button.Create(m_hWnd);
 }
 
-LRESULT CMainWin::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWin::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -24,5 +24,5 @@ LRESULT CMainWin::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 	}
 	
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

@@ -73,7 +73,7 @@ void CMainFrame::OnPaint(HDC hDC)
 	DrawText(hDC, szHello, lstrlen(szHello), &rt, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
-LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 
 //	switch (uMsg)
@@ -82,5 +82,5 @@ LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// Pass unhandled messages on for default processing
-	return WndProcDefault(hwnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

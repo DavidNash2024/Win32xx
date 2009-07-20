@@ -137,7 +137,7 @@ namespace Win32xx
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnWindowPosChanged();
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		void DoAltKey(WORD KeyCode);
@@ -264,7 +264,7 @@ namespace Win32xx
 		virtual void ShowStatusbar(BOOL bShow);
 		virtual void ShowToolbar(BOOL bShow);
 		virtual void UpdateMRUMenu();
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);	
 
 		enum Constants
 		{
@@ -1266,7 +1266,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CMenubar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMenubar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -1295,7 +1295,8 @@ namespace Win32xx
 			return 0L;	// Discard these messages
 		case WM_LBUTTONDOWN:
 			// Do default processing first
-			CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
+		//	CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
+			CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
 
 			OnLButtonDown(wParam, lParam);
 			return 0L;
@@ -1330,11 +1331,11 @@ namespace Win32xx
 			break;
 		case WM_WINDOWPOSCHANGING:
 			// Bypass CToolbar::WndProcDefault for this message
-			return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+			return CWnd::WndProcDefault(uMsg, wParam, lParam);
 
 		} // switch (uMsg)
 
-		return CToolbar::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CToolbar::WndProcDefault(uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProcDefault(...)
 
 
@@ -2030,7 +2031,7 @@ namespace Win32xx
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
 		if (pdis->CtlType != ODT_MENU) 
-			return CWnd::WndProcDefault(m_hWnd, WM_DRAWITEM, wParam, lParam);
+			return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
 
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
@@ -2284,7 +2285,7 @@ namespace Win32xx
 	{
 		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
 		if (pmis->CtlType != ODT_MENU) 
-			return CWnd::WndProcDefault(m_hWnd, WM_MEASUREITEM, wParam, lParam);
+			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
 
@@ -2342,7 +2343,7 @@ namespace Win32xx
 			GetMenubar().MenuChar(wParam, lParam);
 			return -1L;
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_MENUCHAR, wParam, lParam);
+		return CWnd::WndProcDefault(WM_MENUCHAR, wParam, lParam);
 	}
 
 	inline void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
@@ -2484,7 +2485,7 @@ namespace Win32xx
 		if (SC_MINIMIZE == wParam)
 			m_hOldFocus = GetFocus();
 		
-		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam);
+		return CWnd::WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
 	}
 
 	inline void CFrame::OnTimer(WPARAM wParam)
@@ -3106,7 +3107,7 @@ namespace Win32xx
 		DrawMenuBar();
 	}
 
-	inline LRESULT CFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -3159,7 +3160,7 @@ namespace Win32xx
 			break;
 		} // switch uMsg
 
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	} // LRESULT CFrame::WndProcDefault(...)
 
 

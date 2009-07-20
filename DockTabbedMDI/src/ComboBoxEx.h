@@ -16,7 +16,7 @@ public:
 	virtual ~CComboBoxEx();
 	BOOL AddItems();
 	void SetImages(int nImages, UINT ImageID);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 protected:
 	virtual void PreCreate(CREATESTRUCT &cs);

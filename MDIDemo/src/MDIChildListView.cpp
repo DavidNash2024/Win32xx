@@ -94,7 +94,7 @@ void CViewList::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
-LRESULT CViewList::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -105,7 +105,7 @@ LRESULT CViewList::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 ///////////////////////////////////////////////

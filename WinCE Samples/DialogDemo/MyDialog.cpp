@@ -125,7 +125,7 @@ void CMyDialog::OnOK()
 	CDialog::OnOK();
 }
 
-BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
@@ -142,7 +142,7 @@ BOOL CMyDialog::DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     } // switch(uMsg)
 	
-	return DialogProcDefault(hwnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 	
 } // BOOL CALLBACK DialogProc(...)
 

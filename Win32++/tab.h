@@ -135,7 +135,7 @@ namespace Win32xx
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual void    SetTabSize();
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		void DrawCloseButton(CDC& DrawDC);
@@ -189,7 +189,7 @@ namespace Win32xx
 		virtual LRESULT OnEraseBkGnd(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CTab m_Tab;
@@ -760,7 +760,7 @@ namespace Win32xx
 		if (GetCloseRect().PtInRect(pt)) return HTCLIENT;
 		if (GetListRect().PtInRect(pt))  return HTCLIENT;
 
-		return CWnd::WndProcDefault(m_hWnd, WM_NCHITTEST, wParam, lParam);
+		return CWnd::WndProcDefault(WM_NCHITTEST, wParam, lParam);
 	}
 
 	inline LRESULT CTab::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
@@ -1084,7 +1084,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CTab::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CTab::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
@@ -1092,8 +1092,8 @@ namespace Win32xx
 			{
 				// Remove all pending paint requests
 				PAINTSTRUCT ps;
-				::BeginPaint(hWnd, &ps);
-				::EndPaint(hWnd, &ps);
+				::BeginPaint(m_hWnd, &ps);
+				::EndPaint(m_hWnd, &ps);
 
 				// Now call our local Paint
 				Paint();
@@ -1127,7 +1127,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 	// Wrappers for Win32 Macros
@@ -1348,7 +1348,7 @@ namespace Win32xx
 		if (m_Tab.GetItemCount() >0)
 			return 0;
 	
-		return CWnd::WndProcDefault(m_hWnd, WM_ERASEBKGND, wParam, lParam);
+		return CWnd::WndProcDefault(WM_ERASEBKGND, wParam, lParam);
 	}
 
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -1437,7 +1437,7 @@ namespace Win32xx
 		::DestroyMenu(hMenu);
 	}
 
-	inline LRESULT CTabbedMDI::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
@@ -1452,7 +1452,7 @@ namespace Win32xx
 			break;
 		} 
 
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

@@ -15,7 +15,7 @@ public:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
 	virtual void OnPaint(HDC hDC);
-	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 #endif   // MAINFRM_H

@@ -72,7 +72,7 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	return InsertItem(tvis);
 }
 
-LRESULT CViewClasses::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewClasses::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -83,7 +83,7 @@ LRESULT CViewClasses::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		}
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 

@@ -28,19 +28,6 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-	case WM_SIZE:
-		::InvalidateRect(hWnd, NULL, TRUE);
-		break;	// Also do default processing
-	}
-
-	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
-}
-
 void CView::OnPaint(HDC hDC)
 {
 	CRect r = GetClientRect();
@@ -49,3 +36,15 @@ void CView::OnPaint(HDC hDC)
 	::DrawText(hDC, _T("Choose a Property Sheet from the menu"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
+LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_SIZE:
+		::InvalidateRect(m_hWnd, NULL, TRUE);
+		break;	// Also do default processing
+	}
+
+	// pass unhandled messages on for default processing
+	return WndProcDefault(uMsg, wParam, lParam);
+}

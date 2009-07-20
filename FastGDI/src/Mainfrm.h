@@ -31,7 +31,7 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual void SetupToolbar();
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CView m_MyView;

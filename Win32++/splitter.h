@@ -76,7 +76,7 @@ namespace Win32xx
 		virtual void OnSize();
 		virtual void OnSysColorChange();
 		virtual void SetPanes(CWnd& Pane0, CWnd& Pane1);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		CWnd m_Bar;			// Splitter bar
 		CWnd* m_pPane0;		// Left or top CWnd object
@@ -388,7 +388,7 @@ namespace Win32xx
 			RecalcLayout();
 	}
 
-	inline LRESULT CSplitter::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CSplitter::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		// Child windows are positioned over this window, so we don't see any
@@ -426,7 +426,7 @@ namespace Win32xx
 		}
 
 		// Use the frame default message handling for remaining messages
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

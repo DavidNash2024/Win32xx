@@ -141,7 +141,7 @@ void CMainFrame::StorePoint(int x, int y, bool PenDown)
 	m_points.push_back(P1); //Add the point to the vector
 }
 
-LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// handle left mouse button up/down and mouse move messages
 	// a seperate function for each case keeps the code tidy.
@@ -161,7 +161,7 @@ LRESULT CMainFrame::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unhandled messages on to WndProcDefault
-	return WndProcDefault(hwnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 

@@ -122,7 +122,7 @@ namespace Win32xx
 			virtual void PreRegisterClass(WNDCLASS &wc);
 			virtual void RecalcLayout();
 			virtual void SetView(CWnd& wndView);
-			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CWnd* GetTabCtrl() const { return m_pTab;}
 
@@ -174,7 +174,7 @@ namespace Win32xx
 		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		std::vector<ContainerInfo> m_vContainerInfo;
@@ -214,7 +214,7 @@ namespace Win32xx
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
 			virtual void SetColor(COLORREF color);
-			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CDocker* GetDock()			{return m_pDock;}
 			int GetWidth()					{return m_DockBarWidth;}
@@ -262,7 +262,7 @@ namespace Win32xx
 			virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 			virtual void    PreRegisterClass(WNDCLASS& wc);
 			virtual void    PreCreate(CREATESTRUCT& cs);
-			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
 			tString m_tsCaption;
@@ -427,7 +427,7 @@ namespace Win32xx
 		virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		void CheckAllTargets(LPDRAGPOS pDragPos);
@@ -551,7 +551,7 @@ namespace Win32xx
 		m_hbrBackground = ::CreateSolidBrush(color);
 	}
 
-	inline LRESULT CDocker::CDockBar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::CDockBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		{
 			switch (uMsg)
@@ -591,7 +591,7 @@ namespace Win32xx
 				break;
 
 			case WM_LBUTTONUP:
-				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == hWnd))
+				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == m_hWnd))
 				{
 					SendNotify(UWM_BAR_END);
 					ReleaseCapture();
@@ -599,7 +599,7 @@ namespace Win32xx
 				break;
 
 			case WM_MOUSEMOVE:
-				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == hWnd))
+				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == m_hWnd))
 				{
 					SendNotify(UWM_BAR_MOVE);
 				}
@@ -608,7 +608,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
@@ -865,7 +865,7 @@ namespace Win32xx
 					return HTCAPTION;
 			}
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_NCHITTEST, wParam, lParam);
+		return CWnd::WndProcDefault(WM_NCHITTEST, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCLButtonDown(WPARAM wParam, LPARAM lParam)
@@ -892,7 +892,7 @@ namespace Win32xx
 				return 0L;
 			}
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_NCLBUTTONDOWN, wParam, lParam);
+		return CWnd::WndProcDefault(WM_NCLBUTTONDOWN, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCLButtonUp(WPARAM wParam, LPARAM lParam)
@@ -925,7 +925,7 @@ namespace Win32xx
 
 			m_IsClosePressed = FALSE;
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_NCLBUTTONUP, wParam, lParam);
+		return CWnd::WndProcDefault(WM_NCLBUTTONUP, wParam, lParam);
 	}
 
 
@@ -985,7 +985,7 @@ namespace Win32xx
 
 			m_bCaptionPressed = FALSE;
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_MOUSEMOVE, wParam, lParam);
+		return CWnd::WndProcDefault(WM_MOUSEMOVE, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCPaint(WPARAM wParam, LPARAM lParam)
@@ -1000,7 +1000,7 @@ namespace Win32xx
 				return 0;
 			}
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_NCPAINT, wParam, lParam);
+		return CWnd::WndProcDefault(WM_NCPAINT, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -1052,7 +1052,7 @@ namespace Win32xx
 		SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&DragPos);
 	}
 
-	inline LRESULT CDocker::CDockClient::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::CDockClient::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -1088,7 +1088,7 @@ namespace Win32xx
 			break;
 		}
 
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
@@ -2771,7 +2771,7 @@ namespace Win32xx
 			m_bIsClosing = TRUE;
 			break;
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam);
+		return CWnd::WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
@@ -2784,7 +2784,7 @@ namespace Win32xx
 			return 0;
 		}
 
-		return CWnd::WndProcDefault(m_hWnd, WM_WINDOWPOSCHANGING, wParam, lParam);
+		return CWnd::WndProcDefault(WM_WINDOWPOSCHANGING, wParam, lParam);
 	}
 
 	inline void CDocker::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM lParam)
@@ -3275,7 +3275,7 @@ namespace Win32xx
 		pDockUndockedFrom->RecalcDockLayout();
 	}
 
-	inline LRESULT CDocker::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -3307,7 +3307,7 @@ namespace Win32xx
 			break;
 		}
 
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
@@ -3676,7 +3676,7 @@ namespace Win32xx
 		GetViewPage().SetView(Wnd);
 	}
 
-	inline LRESULT CContainer::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CContainer::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -3692,7 +3692,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on to CTab for processing
-		return CTab::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CTab::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
@@ -3765,7 +3765,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CContainer::CViewPage::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CContainer::CViewPage::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -3787,7 +3787,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

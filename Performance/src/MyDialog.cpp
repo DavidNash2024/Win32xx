@@ -17,14 +17,14 @@ CMyDialog::~CMyDialog()
 {
 }
 
-BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
 		//Additional messages to be handled go here
 //	}
 
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 

@@ -23,7 +23,7 @@ protected:
 	virtual void OnPaint(HDC hDC);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void PreRegisterClass(WNDCLASS &wc);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	struct PlotPoint

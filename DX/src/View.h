@@ -34,7 +34,7 @@ public:
 protected:
 	virtual	void OnCreate();
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	LPDIRECT3D9       m_pD3D;			// Used to create the D3DDevice

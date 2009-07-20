@@ -24,7 +24,7 @@ public:
 protected:
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CViewMax m_MaxView;

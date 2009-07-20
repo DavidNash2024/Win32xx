@@ -63,7 +63,7 @@ void CMDIChildText::OnInitialUpdate()
 	SetIconSmall(IDI_TEXT);
 }
 
-LRESULT CMDIChildText::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildText::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -73,5 +73,5 @@ LRESULT CMDIChildText::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 
 	// Do default processing for other messages
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

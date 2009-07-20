@@ -27,7 +27,7 @@ protected:
 	virtual void OnMenuUpdate(UINT nID);
 	virtual void SaveRegistrySettings();
 	virtual void SetupToolbar();
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	void OnUpdateCheckA(UINT nID);

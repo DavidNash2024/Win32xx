@@ -7,15 +7,15 @@
 #include "resource.h"
 
 // CViewRect definitions
-LRESULT CViewRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_CREATE:
-		SetTimer (hWnd, 1, 250, NULL) ;
+		SetTimer (m_hWnd, 1, 250, NULL) ;
 		break;
 	case WM_CLOSE:
-		KillTimer(hWnd, 1);
+		KillTimer(m_hWnd, 1);
 		break;
 
 	case WM_TIMER:            // Display a random rectangle
@@ -52,7 +52,7 @@ LRESULT CViewRect::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           break ;        // WM_SIZE must be processed by DefMDIChildProc
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 

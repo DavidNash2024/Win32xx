@@ -48,6 +48,14 @@ Changes
       
 Incompatibilities with previous versions
 ----------------------------------------
+- WndProc now takes 3 arguements, not 4:
+   WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+- WndProcDefault now takes 3 arguements, not 4:
+   WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+- DialogProc now takes 3 arguements, not 4:
+   DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+- DialogProcDefault now takes 3 arguements, not 4:
+   DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 - CFrame::AddToolbarBand now requires three arguements
 - The various CRect functions use references to RECT rather than pointers
 

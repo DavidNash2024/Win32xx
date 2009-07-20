@@ -17,7 +17,7 @@ public:
 
 protected:
 	virtual void OnPaint(HDC hDC);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 

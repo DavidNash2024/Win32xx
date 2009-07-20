@@ -19,7 +19,7 @@ public:
 	virtual ~CView(){}
 
 protected:
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	void DrawLine(int x, int y);

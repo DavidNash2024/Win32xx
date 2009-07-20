@@ -178,7 +178,7 @@
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\..\Win32++\docking.h">
+				RelativePath="..\..\Win32++\dialog.h">
 			</File>
 			<File
 				RelativePath="..\..\Win32++\wincore.h">

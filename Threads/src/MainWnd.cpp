@@ -54,7 +54,7 @@ void CMainWindow::OnAllWindowsCreated()
 	TRACE(str.str().c_str());
 }
 
-LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static int nWindowsCreated = 0;
 
@@ -90,6 +90,6 @@ LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 

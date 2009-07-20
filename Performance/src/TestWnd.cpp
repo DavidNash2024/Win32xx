@@ -28,7 +28,7 @@ void CTestWindow::OnInitialUpdate()
 	::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
 }
 
-LRESULT CTestWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static LRESULT nMessages = 0;
 	switch (uMsg)
@@ -46,6 +46,6 @@ LRESULT CTestWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return ++nMessages;
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 

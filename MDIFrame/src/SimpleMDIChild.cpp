@@ -18,18 +18,18 @@ void CSimpleView::OnPaint(HDC hDC)
 	::DrawText(hDC, _T("View Window"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CSimpleView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CSimpleView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_SIZE:
 		// Force the window to be repainted
-		::InvalidateRect(hWnd, NULL, TRUE);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		break;		// Also do default processing
 	}
 
 	// Do default processing for other messages
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 // CSimpleMDIChild definitions
@@ -86,7 +86,7 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
-LRESULT CSimpleMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CSimpleMDIChild::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -94,5 +94,5 @@ LRESULT CSimpleMDIChild::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 //	}
 
 	// Do default processing for other messages
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

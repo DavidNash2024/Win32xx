@@ -283,7 +283,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -301,6 +301,6 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 

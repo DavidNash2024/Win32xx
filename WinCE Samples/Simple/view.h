@@ -10,7 +10,7 @@ public:
 	CView() {}
 	virtual ~CView() {}
 	virtual void OnPaint(HDC hDC);
-	virtual	LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 #endif   //VIEW_H

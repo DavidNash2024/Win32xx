@@ -108,7 +108,7 @@ namespace Win32xx
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
@@ -1018,7 +1018,7 @@ namespace Win32xx
 			Invalidate();
 	}
 
-	inline LRESULT CToolbar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CToolbar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -1034,7 +1034,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx

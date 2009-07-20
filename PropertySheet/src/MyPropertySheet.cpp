@@ -9,20 +9,20 @@ CButtonPage::CButtonPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPrope
 {
 }
 
-BOOL CButtonPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent(), hWnd);
+		PropSheet_Changed(GetParent(), m_hWnd);
 		break;
 
 	default:
 		break;
 	}
 
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 void CButtonPage::OnApply()
@@ -96,21 +96,21 @@ CComboPage::CComboPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPropert
 {
 }
 
-BOOL CComboPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (uMsg)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent(), hWnd);
+		PropSheet_Changed(GetParent(), m_hWnd);
 		break;
 
 	default:
 		break;
 	}
 
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 void CComboPage::OnSetActive()
@@ -126,7 +126,7 @@ CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hwndParent
 	m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USEICONID  | PSH_USECALLBACK;
 }
 
-LRESULT CMyPropertySheet::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyPropertySheet::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -134,6 +134,6 @@ LRESULT CMyPropertySheet::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 //	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);	
+	return WndProcDefault(uMsg, wParam, lParam);	
 }
 

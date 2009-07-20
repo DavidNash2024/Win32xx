@@ -38,7 +38,7 @@ void CClientDialog::Append(int nID, LPCTSTR buf)
 	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
-BOOL CClientDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -53,12 +53,12 @@ BOOL CClientDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		break;
 	case WM_ACTIVATE:
 		// Give focus to the Send Edit box
-		SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE);
+		SendMessage(WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE);
 		break;
 	}
 
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 void CClientDialog::OnClientDisconnect()

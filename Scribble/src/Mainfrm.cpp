@@ -273,13 +273,13 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
 
 //	} // switch (uMsg)
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 } // LRESULT CMainFrame::WndProc(...)
 

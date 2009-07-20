@@ -14,7 +14,7 @@ class CViewSimple : public CWnd
 public:
 	CViewSimple();
 	virtual void OnPaint(HDC hDC);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
 	COLORREF GetColor() {return m_Color;}
 	void SetColor(COLORREF color) { m_Color = color; }
@@ -35,7 +35,7 @@ protected:
 	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CViewSimple m_View;

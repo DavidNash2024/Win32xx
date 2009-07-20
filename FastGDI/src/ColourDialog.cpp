@@ -81,7 +81,7 @@ BOOL CColourDialog::OnInitDialog()
 	return TRUE;
 }
 
-BOOL CColourDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CColourDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -94,7 +94,7 @@ BOOL CColourDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		return 0;
 	}
 
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 void CColourDialog::OnHScroll(WPARAM /*wParam*/, LPARAM lParam)

@@ -86,7 +86,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-LRESULT CHyperlink::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -106,7 +106,7 @@ LRESULT CHyperlink::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return HTCLIENT;  // Claim that the mouse is in a client area
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 

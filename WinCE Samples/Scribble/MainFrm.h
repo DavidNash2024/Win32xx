@@ -24,7 +24,7 @@ protected:
 	virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 	virtual void OnPaint(HDC hDC);
 	virtual void StorePoint(int x, int y, bool PenDown);
-	virtual LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	struct PlotPoint

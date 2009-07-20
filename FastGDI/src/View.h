@@ -27,7 +27,7 @@ protected:
 	virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
 	virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HBITMAP m_hbmImage;

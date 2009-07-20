@@ -95,7 +95,7 @@ void CViewFiles::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
-LRESULT CViewFiles::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -106,7 +106,7 @@ LRESULT CViewFiles::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 			
 

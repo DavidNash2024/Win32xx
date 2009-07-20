@@ -28,7 +28,7 @@ CMyDialog::~CMyDialog()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
-BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
@@ -36,7 +36,7 @@ BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam); 
+	return DialogProcDefault(uMsg, wParam, lParam); 
 }
 
 BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)

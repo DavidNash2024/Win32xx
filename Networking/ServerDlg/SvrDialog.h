@@ -18,7 +18,7 @@ class CTCPClientDlg : public CDialog
 public:
 	CTCPClientDlg(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CTCPClientDlg() {}
-	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL DialogProc (UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
 	void Append(int nID, LPCTSTR buf);
@@ -46,7 +46,7 @@ public:
 
 protected:
 	virtual BOOL OnInitDialog();
-	virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 private:

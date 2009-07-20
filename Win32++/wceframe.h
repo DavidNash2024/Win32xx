@@ -119,7 +119,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RecalcLayout();
 		virtual void SetButtons(const std::vector<UINT> ToolbarData);
-		virtual	LRESULT WndProcDefault(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual	LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
 		std::vector<UINT> m_ToolbarData;
@@ -387,7 +387,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CWceFrame::WndProcDefault(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWceFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -401,12 +401,12 @@ namespace Win32xx
 #ifdef SHELL_AYGSHELL
 
 			case WM_SETTINGCHANGE:
-				SHHandleWMSettingChange(hwnd, wParam, lParam, &m_sai);
+				SHHandleWMSettingChange(m_hwnd, wParam, lParam, &m_sai);
      			break;
 #endif
 
 		}
-		return CWnd::WndProcDefault(hwnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 

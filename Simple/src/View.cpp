@@ -68,7 +68,7 @@ void CView::OnSize()
 	Invalidate();
 }
 
-LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// This function is our message procedure. We process the messages for
 	// the view window here.  Unprocessed messages are passed on for
@@ -86,5 +86,5 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

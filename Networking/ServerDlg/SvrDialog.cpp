@@ -33,7 +33,7 @@ void CTCPClientDlg::Append(int nID, LPCTSTR buf)
 	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
-BOOL CTCPClientDlg::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CTCPClientDlg::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -44,7 +44,7 @@ BOOL CTCPClientDlg::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 	
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 
@@ -118,7 +118,7 @@ void CSvrDialog::Append(int nID, LPCTSTR buf)
 	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
-BOOL CSvrDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// respond to the user defined message posted to the dialog
 	switch (uMsg)
@@ -135,7 +135,7 @@ BOOL CSvrDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
  	}
 
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)

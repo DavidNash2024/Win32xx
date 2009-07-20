@@ -95,7 +95,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-LRESULT CHyperlink::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -114,7 +114,7 @@ LRESULT CHyperlink::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unhandled messages on for default processing
-	return WndProcDefault( hwnd, uMsg, wParam, lParam );
+	return WndProcDefault( uMsg, wParam, lParam );
 }
 
 

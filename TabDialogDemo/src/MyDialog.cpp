@@ -18,7 +18,7 @@ CButtonDialog::~CButtonDialog()
 	::DeleteObject(m_hBrush);
 }
 
-BOOL CButtonDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CButtonDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -34,7 +34,7 @@ BOOL CButtonDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	
 	}
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -80,7 +80,7 @@ CComboBoxDialog::~CComboBoxDialog()
 	::DeleteObject(m_hBrush);
 }
 
-BOOL CComboBoxDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CComboBoxDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -96,7 +96,7 @@ BOOL CComboBoxDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	
 	}
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 BOOL CComboBoxDialog::OnInitDialog()
@@ -123,14 +123,14 @@ CMyDialog::~CMyDialog()
 {
 }
 
-BOOL CMyDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
 //	}
 
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 BOOL CMyDialog::OnInitDialog()

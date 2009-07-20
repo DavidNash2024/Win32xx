@@ -93,9 +93,9 @@ namespace Win32xx
 
 	protected:
 		// Its unlikely you would need to override these functions
-		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CWnd* m_pwndView;				// pointer to the View CWnd object
@@ -134,7 +134,7 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		class CMDIClient : public CWnd  // a nested class within CMDIFrame
@@ -143,12 +143,12 @@ namespace Win32xx
 			CMDIClient() {}
 			virtual ~CMDIClient() {}
 			virtual HWND Create(HWND hWndParent = NULL);
-			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
 
 
 		void AppendMDIMenu(HMENU hMenuWindow);
-		LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(HMENU hMenu);
 
 		CMDIClient m_wndMDIClient;
@@ -266,9 +266,9 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CMDIFrame::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefFrameProc(hWnd, m_wndMDIClient, uMsg, wParam, lParam);
+		return ::DefFrameProc(m_hWnd, m_wndMDIClient, uMsg, wParam, lParam);
 	}
 
 	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
@@ -426,7 +426,7 @@ namespace Win32xx
 		UpdateCheckMarks();
 	}
 
-	inline LRESULT CMDIFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -440,7 +440,7 @@ namespace Win32xx
 			break; // Continue with default processing
 
 		} // switch uMsg
-		return CFrame::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CFrame::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 	inline HWND CMDIFrame::CMDIClient::Create(HWND hWndParent /* = NULL*/)
@@ -458,7 +458,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline LRESULT CMDIFrame::CMDIClient::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
 		switch (uMsg)
@@ -466,7 +466,7 @@ namespace Win32xx
 		case WM_MDIDESTROY:
 			{
 				// Do default processing first
-				CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
+				CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
 
 				// Now remove MDI child
 				pMDIFrame->RemoveMDIChild((HWND) wParam);
@@ -486,14 +486,14 @@ namespace Win32xx
 			{
 				// Suppress redraw to avoid flicker when activating maximised MDI children
 				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0L);
-				LRESULT lr = CallPrevWindowProc(m_hWnd, WM_MDIACTIVATE, wParam, lParam);
+				LRESULT lr = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
 				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0L);
 				::RedrawWindow(m_hWnd, 0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 				return lr;
 			}
 		}
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
@@ -585,9 +585,9 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline LRESULT CMDIChild::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIChild::MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefMDIChildProc(hWnd, uMsg, wParam, lParam);
+		return ::DefMDIChildProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
 	inline void CMDIChild::OnCreate()
@@ -627,7 +627,7 @@ namespace Win32xx
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 	}
 
-	inline LRESULT CMDIChild::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -661,7 +661,7 @@ namespace Win32xx
 				m_pwndView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 			}
 		}
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 

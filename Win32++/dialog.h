@@ -86,8 +86,8 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
@@ -152,7 +152,7 @@ namespace Win32xx
 		return DoModeless();
 	}
 
-	inline BOOL CDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline BOOL CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CDialog if you wish to handle messages
 		// A typical function might look like this:
@@ -169,10 +169,10 @@ namespace Win32xx
 		//	}
 
 		// Always pass unhandled messages on to DialogProcDefault
-		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline BOOL CDialog::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline BOOL CDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// All unhandled dialog messages end up here
 
@@ -242,7 +242,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			return (BOOL) MessageReflect(hWnd, uMsg, wParam, lParam);
+			return (BOOL) MessageReflect(m_hWnd, uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
 	    return FALSE;
@@ -402,7 +402,7 @@ namespace Win32xx
 			if (0 != w)
 			{
 				// CDialog pointer found, so call the CDialog's DialogProc
-				return w->DialogProc(hWnd, uMsg, wParam, lParam);
+				return w->DialogProc(uMsg, wParam, lParam);
 			}
 
 			else
@@ -423,7 +423,7 @@ namespace Win32xx
 				w->m_hWnd = hWnd;
 				w->AddToMap();
 
-				return w->DialogProc(hWnd, uMsg, wParam, lParam);
+				return w->DialogProc(uMsg, wParam, lParam);
 			}
 		}
 

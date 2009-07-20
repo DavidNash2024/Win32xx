@@ -73,8 +73,8 @@ namespace Win32xx
 	public:
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
-		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		virtual void OnApply();
 		virtual void OnCancel();
@@ -127,7 +127,7 @@ namespace Win32xx
 		virtual BOOL SetActivePage(CPropertyPage* pPage);
 		virtual void SetTitle(LPCTSTR szTitle);
 		virtual void SetWizardMode(BOOL bWizard);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);
 
@@ -182,7 +182,7 @@ namespace Win32xx
 	}
 
 
-	inline BOOL CPropertyPage::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline BOOL CPropertyPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CPropertyPage if you wish to handle messages
 		// A typical function might look like this:
@@ -199,10 +199,10 @@ namespace Win32xx
 		//	}
 
 		// Always pass unhandled messages on to DialogProcDefault
-		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline BOOL CPropertyPage::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline BOOL CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// All unhandled property page messages end up here
 
@@ -262,7 +262,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			return (BOOL) MessageReflect(hWnd, uMsg, wParam, lParam);
+			return (BOOL) MessageReflect(m_hWnd, uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
 	    return 0L;
@@ -469,7 +469,7 @@ namespace Win32xx
 		if (pPage != 0)
 		{
 			// matching CWnd pointer found for this HWND, so call DialogProc
-			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
+			return pPage->DialogProc(uMsg, wParam, lParam);
 		}
 		else
 		{
@@ -480,7 +480,7 @@ namespace Win32xx
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
 			pPage->AddToMap();
-			return pPage->DialogProc(hwndDlg, uMsg, wParam, lParam);
+			return pPage->DialogProc(uMsg, wParam, lParam);
 		}
 
 	}
@@ -889,7 +889,7 @@ namespace Win32xx
 			m_PSH.dwFlags &= ~PSH_WIZARD;
 	}
 
-	inline LRESULT CPropertySheet::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CPropertySheet::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		static BOOL bFirstTime = TRUE;
 		switch (uMsg)
@@ -914,7 +914,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 }

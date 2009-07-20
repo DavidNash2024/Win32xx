@@ -14,7 +14,7 @@ void CMainWin::OnCreate()
 	m_Button.Create(m_hWnd);
 }
 
-LRESULT CMainWin::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWin::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -25,5 +25,5 @@ LRESULT CMainWin::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	// Pass unhandled messages on for default processing
-	return WndProcDefault(hwnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }

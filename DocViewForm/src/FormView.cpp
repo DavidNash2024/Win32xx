@@ -31,14 +31,14 @@ HWND CFormView::Create(HWND hParent = 0)
 	return DoModeless();
 }
 
-BOOL CFormView::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+BOOL CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //  switch (uMsg)
 //  {
 //  }
 
 	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
 void CFormView::OnCancel()
