@@ -435,20 +435,17 @@ namespace Win32xx
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		virtual BOOL IsToolbar() const	 { return FALSE; }
 		virtual LPCTSTR LoadString(UINT nID);
-		virtual BOOL RegisterClass(WNDCLASS& wc);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 		
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
 		BOOL BringWindowToTop() const;
-	//	LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
-		void DestroyWindow() const;
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
 		static CWnd* FromHandle(HWND hWnd);
@@ -468,9 +465,9 @@ namespace Win32xx
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pWndParent) const;
-		BOOL IsEnabled() const;
-		BOOL IsVisible() const;
 		BOOL IsWindow() const;
+		BOOL IsWindowEnabled() const;
+		BOOL IsWindowVisible() const;
 		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;		
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
@@ -544,6 +541,7 @@ namespace Win32xx
 		void AddToMap();
 		virtual LRESULT MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam); // overridden by friends
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
 		void Subclass();
 
@@ -1230,7 +1228,7 @@ namespace Win32xx
 			RECT    rcWork;
 			DWORD   dwFlags;
 		} MONITORINFO, *LPMONITORINFO;
-    #endif
+    #endif 
 		// Import the GetMonitorInfo and MonitorFromWindow functions
 		HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
 		typedef BOOL (WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
@@ -1263,9 +1261,9 @@ namespace Win32xx
 		int y = rcParent.top + (rcParent.Height() - rc.Height())/2; 
 		 
 		// Keep the dialog wholly on the monitor display
-		x = (x < rcDesktop.left)? rcDesktop.right - rc.Width() : x;
+		x = (x < rcDesktop.left)? rcDesktop.left : x;
 		x = (x > rcDesktop.right - rc.Width())? rcDesktop.right - rc.Width() : x;
-		y = (y < rcDesktop.top) ? rcDesktop.top: y;
+		y = (y < rcDesktop.top) ? rcDesktop.top : y;
 		y = (y > rcDesktop.bottom - rc.Height())? rcDesktop.bottom - rc.Height() : y;
 		 
 		SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
@@ -1414,7 +1412,7 @@ namespace Win32xx
 
 	inline void CWnd::Destroy()
 	{
-		if (IsWindow()) DestroyWindow();
+		if (IsWindow()) ::DestroyWindow(m_hWnd);
 
 		// Return the CWnd to its default state
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
@@ -1427,8 +1425,6 @@ namespace Win32xx
 		m_PrevWindowProc = NULL;
 	}
 
-
-
 	inline HWND CWnd::Detach()
 	// Reverse an Attach
 	{
@@ -1436,7 +1432,7 @@ namespace Win32xx
 		if (0 == m_PrevWindowProc)
 			throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
 
-		::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
+		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 
 		// Clear member variables
 		HWND hWnd = m_hWnd;
@@ -1459,11 +1455,11 @@ namespace Win32xx
 	{
 		// Returns the root parent.  Supports Win95
 		HWND hWnd = m_hWnd;
-		HWND hWndParent = ::GetParent(hWnd);
+		HWND hWndParent = GetParent();
 		while (::IsChild(hWndParent, hWnd))
 		{
 			hWnd = hWndParent;
-			hWndParent = ::GetParent(hWnd);
+			hWndParent = GetParent();
 		}
 
 		return hWnd;
@@ -2064,12 +2060,7 @@ namespace Win32xx
 		return ::BringWindowToTop(m_hWnd);
 	}
 
-/*	inline LRESULT CWnd::CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
-	{
-		return ::CallWindowProc(m_PrevWindowProc, hWnd, uMsg, wParam, lParam);
-	} */
-
-	inline LRESULT CWnd::CallWindowProc(WNDPROC lpPrevWndFunc, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::CallWindowProc(WNDPROC lpPrevWndFunc, UINT uMsg, WPARAM wParam, LPARAM lParam) const
 	{
 		return ::CallWindowProc(lpPrevWndFunc, m_hWnd, uMsg, wParam, lParam);
 	}
@@ -2096,12 +2087,6 @@ namespace Win32xx
 	// This function provides default processing for any window messages that an application does not process.
 	{
 		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
-	}
-
-	inline void CWnd::DestroyWindow() const
-	// The DestroyWindow function destroys the window.
-	{
-		::DestroyWindow(m_hWnd);
 	}
 
 	inline BOOL CWnd::DrawMenuBar() const
@@ -2229,23 +2214,23 @@ namespace Win32xx
 		return ::IsChild(pWndParent->GetHwnd(), m_hWnd);
 	}
 
-	inline BOOL CWnd::IsEnabled() const
+	inline BOOL CWnd::IsWindow() const
+	// The IsWindow function determines whether the window exists.
+	{
+		return ::IsWindow(m_hWnd);
+	}
+
+	inline BOOL CWnd::IsWindowEnabled() const
 	// The IsEnabled function determines whether the window is enabled
 	// for mouse and keyboard input.
 	{
 		return ::IsWindowEnabled(m_hWnd);
 	}
 
-	inline BOOL CWnd::IsVisible() const
+	inline BOOL CWnd::IsWindowVisible() const
 	// The IsVisible function retrieves the visibility state of the window.
 	{
 		return ::IsWindowVisible(m_hWnd);
-	}
-	
-	inline BOOL CWnd::IsWindow() const
-	// The IsWindow function determines whether the window exists.
-	{
-		return ::IsWindow(m_hWnd);
 	}
 
 	inline int CWnd::MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const
@@ -2358,7 +2343,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetRedraw(BOOL bRedraw /*= TRUE*/) const
-	// This function allows changes in that window to be redrawn or prevents changes
+	// This function allows changes in the window to be redrawn or prevents changes
 	// in that window from being redrawn.
 	{
 		return (BOOL)::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0L);

@@ -1827,7 +1827,7 @@ namespace Win32xx
 
 		// Get the statusbar's window area
 		CRect rcStatus;
-		if (GetStatusbar().IsVisible() || !IsVisible())
+		if (GetStatusbar().IsWindowVisible() || !IsWindowVisible())
 			rcStatus = GetStatusbar().GetWindowRect();
 
 		// Get the top rebar or toolbar's window area
@@ -1835,7 +1835,7 @@ namespace Win32xx
 		if (IsRebarSupported() && m_bUseRebar)
 			rcTop = GetRebar().GetWindowRect();
 		else
-			if (GetToolbar().IsVisible())
+			if (GetToolbar().IsWindowVisible())
 				rcTop = GetToolbar().GetWindowRect();
 
 		// Return client size less the rebar and status windows
