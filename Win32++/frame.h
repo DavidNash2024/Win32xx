@@ -1115,8 +1115,7 @@ namespace Win32xx
 							PostMessage(UWM_POPUPMENU, 0L, 0L);
 						}
 						m_nHotItem = nButton;
-					}
-					
+					}					
 
 					// Handle escape from popup menu
 					if ((flag & HICF_LEAVING) && m_bKeyMode)
@@ -1295,7 +1294,6 @@ namespace Win32xx
 			return 0L;	// Discard these messages
 		case WM_LBUTTONDOWN:
 			// Do default processing first
-		//	CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
 			CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
 
 			OnLButtonDown(wParam, lParam);
