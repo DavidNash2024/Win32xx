@@ -304,6 +304,7 @@ namespace Win32xx
 		HPEN m_hPenOld;
 		HRGN m_hRgnOld;
 		BOOL m_IsCopy;
+		UINT m_nCopies;
 		CDC* m_pCopiedFrom;
 	};
 
@@ -362,12 +363,12 @@ namespace Win32xx
 	// Definitions of the CDC class
 	//
 	inline CDC::CDC() : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0),
-					m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0)
+					m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0), m_nCopies(0)
 	{
 	}
 
 	inline CDC::CDC(HDC hDC) : m_hDC(0), m_hBitmapOld(0), m_hBrushOld(0), m_hFontOld(0), m_hPenOld(0),
-						m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0)
+						m_hRgnOld(0), m_IsCopy(FALSE), m_pCopiedFrom(0), m_nCopies(0)
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
@@ -397,10 +398,12 @@ namespace Win32xx
 		m_hFontOld	 = rhs.m_hFontOld;
 		m_hPenOld    = rhs.m_hPenOld;
 		m_hRgnOld    = rhs.m_hRgnOld;
+		m_nCopies    = 0;
 
 		// This CDC is a copy, so we won't need to delete GDI resources in the destructor
 		m_IsCopy  = TRUE;
 		m_pCopiedFrom = (CDC*)&rhs;
+		m_pCopiedFrom->m_nCopies++;
 	}
 
 	inline void CDC::operator = (const HDC hDC)
@@ -422,9 +425,14 @@ namespace Win32xx
 				m_pCopiedFrom->m_hFontOld	= m_hFontOld;
 				m_pCopiedFrom->m_hRgnOld    = m_hRgnOld;
 				m_pCopiedFrom->m_hDC		= m_hDC;
+				m_pCopiedFrom->m_nCopies--;
 			}
 			else
 			{
+				// Assert that all CDC copies have been destroyed before destroying primary.
+				// An assert here indicates a bug in user code! (somehow destroying the primary CDC before its copies)
+				assert(m_nCopies == 0);
+				
 				// Delete any GDI objects belonging to this CDC
 				if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 				if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));

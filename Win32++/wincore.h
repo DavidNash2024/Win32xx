@@ -107,6 +107,7 @@
 #include <commctrl.h>
 #include <tchar.h>
 #include <shlwapi.h>
+#include <assert.h>
 
 
 // For compilers lacking Win64 support
@@ -162,8 +163,12 @@ namespace Win32xx {}
 #endif
 
 // define useful macros from WindowsX.h
-#define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
-#define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
+#ifndef GET_X_LPARAM
+  #define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
+#endif
+#ifndef GET_Y_LPARAM
+  #define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
+#endif
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES

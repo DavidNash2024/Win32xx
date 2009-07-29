@@ -227,12 +227,12 @@ namespace Win32xx
 
 	inline BOOL CCmdbar::IsVisible()
 	{
-		return CommandBar_IsVisible(m_hWnd);
+		return ::CommandBar_IsVisible(m_hWnd);
 	}
 
 	inline BOOL CCmdbar::Show(BOOL fShow)
 	{
-		return CommandBar_Show(m_hWnd, fShow);
+		return ::CommandBar_Show(m_hWnd, fShow);
 	}
 
 
@@ -401,7 +401,7 @@ namespace Win32xx
 #ifdef SHELL_AYGSHELL
 
 			case WM_SETTINGCHANGE:
-				SHHandleWMSettingChange(m_hwnd, wParam, lParam, &m_sai);
+				SHHandleWMSettingChange(m_hWnd, wParam, lParam, &m_sai);
      			break;
 #endif
 

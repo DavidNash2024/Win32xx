@@ -3656,7 +3656,7 @@ namespace Win32xx
 	{
 		CRect rc = GetClientRect();
 		AdjustRect(FALSE, &rc);
-		if ((rc.Width() < 0 ) || (rc.Height() < 0))
+		if (rc.Width() < 0 )
 			rc.SetRectEmpty();
 		
 		int nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());

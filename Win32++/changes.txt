@@ -5,13 +5,13 @@ Changes
 * The number of arguments have changed for WndProc and WndProcDefault.
   - The HWND paramater has been dropped in both of these functions. It's
     presence was redundant and possibly confusing. Users will need to modify
-    their WndProc and WndProc functions accordingly. The m_hWnd member variable
-    can be used in place of hwnd in the WndProc function.
+    their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
+    member variable can be used in place of hwnd within the WndProc function.
 * The number of arguments have changed for DialogProc and DialogProcDefault.
   - The HWND paramater has been dropped in both of these functions. It's
     presence was redundant and possibly confusing. Users will need to modify
-    their WndProc and WndProc functions accordingly. The m_hWnd member variable
-    can be used in place of hwnd in the WndProc function.  
+    their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
+    member variable can be used in place of hwnd in the WndProc function.  
 * Enhancements to docking, containers and tabs.
   - By default the dockers are immediately resized while the splitter bar is 
      being dragged. To defer resizing until the splitter bar is released, use
@@ -68,6 +68,8 @@ Incompatibilities with previous versions
    DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 - CFrame::AddToolbarBand now requires three arguements
 - The various CRect functions use references to RECT rather than pointers
+- CWnd::IsVisable has been renamed to CWnd::IsWindowVisible
+- CWnd::IsEnabled has been renamed to CWnd::IsWindowEnabled
 
 Version 6.5
 ===========
