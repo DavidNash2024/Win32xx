@@ -230,13 +230,16 @@ namespace Win32xx
 	// sizeof(REBARBANDINFO) can report an incorrect size for older Window versions.
 	// Use this function to get a safe size for REBARBANDINFO.
 	{
+		UINT uSizeof = sizeof(REBARBANDINFO);
 
-	#if defined REBARBANDINFO_V6_SIZE	// only defined when _WIN32_WINNT >= 0x0600
-		if (GetWinVersion() < 2600)  // Is OS version less than Vista
-			return REBARBANDINFO_V6_SIZE;
+	#if defined REBARBANDINFO_V6_SIZE	// only defined for VS2008 or higher
+	  #if !defined (_WIN32_WINNT) || _WIN32_WINNT >= 0x0600
+		if ((GetWinVersion() < 2600) || (GetComCtlVersion() < 610)) // Vista and Vista themes?
+			uSizeof = REBARBANDINFO_V6_SIZE;
+	  #endif
 	#endif
-		
-		return sizeof(REBARBANDINFO);
+
+		return uSizeof;
 	}
 
 	inline HWND CRebar::GetToolTips() const

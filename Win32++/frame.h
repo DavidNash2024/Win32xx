@@ -2454,7 +2454,6 @@ namespace Win32xx
 			int Menubar_Height = csMenubar.cy + 8;
 			int nBand = GetRebar().GetBand(GetMenubar().GetHwnd());
 			REBARBANDINFO rbbi = {0};
-			rbbi.cbSize = sizeof(REBARBANDINFO);
 			rbbi.fMask = RBBIM_CHILDSIZE;
 			GetRebar().GetBandInfo(nBand, rbbi);
 			rbbi.cyMinChild = Menubar_Height;
@@ -2769,7 +2768,6 @@ namespace Win32xx
 		CRect rcBorder = RB.GetBandBorders(nBand);
 
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, rbbi);
 
@@ -2866,9 +2864,12 @@ namespace Win32xx
 		enum Themetype{ Grey, Blue, Silver, Olive };
 
 		int Theme = Grey;
-		if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
-		if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
-		if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
+		if (GetWinVersion() < 2600) // Not for Vista and above
+		{
+			if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
+			if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
+			if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
+		}
 
 		BOOL T = TRUE;
 		BOOL F = FALSE;
