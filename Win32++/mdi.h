@@ -1,5 +1,5 @@
-// Win32++  Version 6.6 alpha
-// Released: ?? July, 2009 by:
+// Win32++  Version 6.6 beta
+// Released: ?? August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -399,10 +399,10 @@ namespace Win32xx
 		{
 			HMENU hMenu = GetActiveMDIChild()->m_hChildMenu;
 
-			UINT uCheck = GetToolbar().IsVisible()? MF_CHECKED : MF_UNCHECKED;
+			UINT uCheck = GetToolbar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
 			::CheckMenuItem(hMenu, IDW_VIEW_TOOLBAR, uCheck);
 
-			uCheck = GetStatusbar().IsVisible()? MF_CHECKED : MF_UNCHECKED;
+			uCheck = GetStatusbar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
 			::CheckMenuItem (hMenu, IDW_VIEW_STATUSBAR, uCheck);
 		}
 	}

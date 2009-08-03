@@ -1,5 +1,5 @@
-// Win32++  Version 6.6 alpha
-// Released: ?? July, 2009 by:
+// Win32++  Version 6.6 beta
+// Released: ?? August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -405,6 +405,7 @@ namespace Win32xx
 	friend class CMDIChild;
 	friend class CDialog;
 	friend class CPropertyPage;
+	friend class CSplitter;
 
 	public:
 		CWnd();				// Constructor
@@ -416,7 +417,7 @@ namespace Win32xx
 		virtual void CenterWindow() const;	
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);	
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);	
 		virtual void Destroy();
 		virtual HWND Detach();
 		virtual HWND GetAncestor() const;
@@ -476,7 +477,7 @@ namespace Win32xx
 		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;		
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
-		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const;
+		void MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		BOOL RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;	
@@ -1325,12 +1326,12 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
 	{
 		int x = rc.left;
 		int y = rc.top;
-		int cx = rc.Width();
-		int cy = rc.Height();
+		int cx = rc.right - rc.left;
+		int cy = rc.bottom - rc.top;
 		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hParent, hMenu, lpParam);
 	}
 
@@ -2248,10 +2249,10 @@ namespace Win32xx
 		::MoveWindow(m_hWnd, x, y, nWidth, nHeight, bRepaint = TRUE);
 	}
 
-	inline void CWnd::MoveWindow(CRect& rc, BOOL bRepaint /* = TRUE*/) const
+	inline void CWnd::MoveWindow(const RECT& rc, BOOL bRepaint /* = TRUE*/) const
 	// The MoveWindow function changes the position and dimensions of the window.
 	{
-		::MoveWindow(m_hWnd, rc.left, rc.top, rc.Width(), rc.Height(), bRepaint);
+		::MoveWindow(m_hWnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, bRepaint);
 	}
 
 	inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const

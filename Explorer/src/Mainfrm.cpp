@@ -87,7 +87,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnClose()
 {
 	// Destroying the TreeView triggers shutdown of the Treeview thread.
-	GetTreeView()->DestroyWindow();
+	GetTreeView()->Destroy();
 
 	CFrame::OnClose();
 }

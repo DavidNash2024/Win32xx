@@ -1,5 +1,5 @@
-// Win32++  Version 6.51 alpha
-// Released: ?? July, 2009 by:
+// Win32++  Version 6.6 beta
+// Released: ?? August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
