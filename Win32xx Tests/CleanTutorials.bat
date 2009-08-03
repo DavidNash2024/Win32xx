@@ -2,6 +2,9 @@
 ::A batch file to remove unnecessary files from
 :: each Visual Studio project
 
+pushd ..
+
+
 ::Remove directories
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Borland
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Debug
@@ -42,3 +45,4 @@ FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vco"
 
 
+popd

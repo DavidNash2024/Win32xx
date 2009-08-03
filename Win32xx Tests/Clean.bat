@@ -1,6 +1,9 @@
 
-::A batch file to remove unnecessary files from
-:: each Visual Studio project
+REM:A batch file to remove unnecessary files from
+REM: each Visual Studio project
+
+REM: Change the directory to the parent
+pushd ..
 
 ::Remove directories
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Borland"
@@ -41,4 +44,4 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcb"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vco"
 
-
+popd
