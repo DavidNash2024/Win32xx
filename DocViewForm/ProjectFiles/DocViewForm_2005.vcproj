@@ -76,7 +76,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib advapi32.lib comdlg32.lib"
-				OutputFile=".\Debug/Frame.exe"
+				OutputFile=".\Debug/DocViewForm.exe"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
@@ -171,7 +171,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib advapi32.lib comdlg32.lib"
-				OutputFile=".\Release/Frame.exe"
+				OutputFile=".\Release/DocViewForm.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

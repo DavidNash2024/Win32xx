@@ -76,6 +76,7 @@ devenv /build Debug Threads\ProjectFiles\Threads_2008.sln /projectconfig Debug		
 devenv /build Release Threads\ProjectFiles\Threads_2008.sln /projectconfig Release			>>"Win32xx Tests\VS2008.log"
 
 
+if exist "Win32xx Tests\VS2008" rmdir /s /q "Win32xx Tests\VS2008"
 mkdir "Win32xx Tests\VS2008"
 mkdir "Win32xx Tests\VS2008\Debug"
 

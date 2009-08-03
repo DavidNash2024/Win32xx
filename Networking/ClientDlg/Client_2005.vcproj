@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib ws2_32"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib ws2_32.lib"
 				OutputFile=".\Release/Client.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

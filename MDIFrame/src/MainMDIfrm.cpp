@@ -100,7 +100,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		break;
 	default:    // Pass to active child...
 		{
-			if (GetActiveMDIChild()->IsWindow())
+			if (GetActiveMDIChild())
 				GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
 		}
 		break ;
