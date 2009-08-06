@@ -174,7 +174,7 @@ namespace Win32xx
 	inline void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
 	{
 		rClientSock.m_Socket = ::accept(m_Socket, addr, addrlen);
-		if (SOCKET_ERROR == rClientSock.GetSocket())
+		if (INVALID_SOCKET == rClientSock.GetSocket())
 			TRACE(_T("Accept failed\n"));
 	}
 
@@ -270,7 +270,7 @@ namespace Win32xx
 		CSocket* pSocket = (CSocket*)thread_data;
 		SOCKET sClient = pSocket->m_Socket;
 
-		HANDLE hNetworkEvent = ::WSACreateEvent();
+		WSAEVENT hNetworkEvent = ::WSACreateEvent();
 		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE |
 			          FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 

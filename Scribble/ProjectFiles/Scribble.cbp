@@ -9,7 +9,7 @@
 			<Target title="Debug Borland">
 				<Option output="Borland\Debug\Scribble" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="Borland\Debug" />
-				<Option object_output="Borland\Debug\.objs" />
+				<Option object_output="Borland\Debug" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
@@ -26,9 +26,9 @@
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\Scribble" prefix_auto="1" extension_auto="1" />
+				<Option output="Borland\Release\Scribble.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Release" />
-				<Option object_output="Borland\Release\.objs" />
+				<Option object_output="Borland\Release" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>

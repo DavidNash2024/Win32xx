@@ -8,9 +8,9 @@
 		<Option compiler="msvctk" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="borland\debug\ControlBars.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Debug\ControlBars.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Debug" />
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\ControlBars\Borland\Debug" />
+				<Option object_output="Borland\Debug" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
@@ -29,7 +29,7 @@
 			<Target title="Release Borland">
 				<Option output="Borland\Release\ControlBars.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Release" />
-				<Option object_output="C:\Documents and Settings\David\My Documents\Visual Studio Projects\Current\ControlBars\Borland\Release" />
+				<Option object_output="Borland\Release" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>

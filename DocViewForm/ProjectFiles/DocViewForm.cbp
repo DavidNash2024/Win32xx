@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Docking" />
+		<Option title="DockViewForm" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
-		<Option compiler="gcc" />
+		<Option compiler="bcc" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="Borland\Debug\Docking.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Debug\DocViewForm.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Debug" />
 				<Option object_output="Borland\Debug" />
 				<Option type="0" />
@@ -16,9 +16,11 @@
 				<Compiler>
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
+					<Add directory="..\..\Win32++" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\Win32++" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -27,16 +29,18 @@
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\Docking.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Release\DocViewForm.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Release" />
 				<Option object_output="Borland\Release" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-w-par" />
+					<Add directory="..\..\Win32++" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\Win32++" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -45,7 +49,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\Docking.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft\Debug\DocViewForm.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft\Debug" />
 				<Option object_output="Microsoft\Debug" />
 				<Option type="0" />
@@ -61,9 +65,11 @@
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -72,11 +78,12 @@
 					<Add library="User32" />
 					<Add library="Kernel32" />
 					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\Docking.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft\Release\DocViewForm.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft\Release" />
 				<Option object_output="Microsoft\Release" />
 				<Option type="0" />
@@ -90,9 +97,11 @@
 					<Add option="/DNDEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="ComCtl32" />
@@ -100,68 +109,78 @@
 					<Add library="Kernel32" />
 					<Add library="User32" />
 					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\Docking.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU\Debug\DocViewForm.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU\Debug" />
 				<Option object_output="GNU\Debug" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-g3" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D_WIN32_IE=0x0400" />
+					<Add directory="..\..\Win32++" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Win32++" />
+				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
+					<Add library="WS2_32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\Docking.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU\Release\DocViewForm.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU\Release" />
 				<Option object_output="GNU\Release" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-D_WIN32_IE=0x0400" />
+					<Add directory="..\..\Win32++" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Win32++" />
+				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
+					<Add library="WS2_32" />
 				</Linker>
 			</Target>
 		</Build>
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="..\src\Dockers.cpp" />
-		<Unit filename="..\src\Dockers.h" />
-		<Unit filename="..\src\DockingApp.cpp" />
-		<Unit filename="..\src\DockingApp.h" />
+		<Compiler>
+			<Add directory="..\..\Win32++" />
+		</Compiler>
+		<Unit filename="..\src\FormApp.cpp" />
+		<Unit filename="..\src\FormApp.h" />
+		<Unit filename="..\src\FormDoc.cpp" />
+		<Unit filename="..\src\FormDoc.h" />
+		<Unit filename="..\src\FormView.cpp" />
+		<Unit filename="..\src\FormView.h" />
 		<Unit filename="..\src\Mainfrm.cpp" />
 		<Unit filename="..\src\Mainfrm.h" />
 		<Unit filename="..\src\Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="..\src\Views.cpp" />
-		<Unit filename="..\src\Views.h" />
-		<Unit filename="..\src\main.cpp" />
+		<Unit filename="..\src\StdAfx.cpp" />
 		<Unit filename="..\src\resource.h" />
+		<Unit filename="..\..\Win32++\default_resource.h" />
 		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\docking.h" />
 		<Unit filename="..\..\Win32++\frame.h" />
 		<Unit filename="..\..\Win32++\gdi.h" />
-		<Unit filename="..\..\Win32++\listview.h" />
 		<Unit filename="..\..\Win32++\rebar.h" />
 		<Unit filename="..\..\Win32++\statusbar.h" />
 		<Unit filename="..\..\Win32++\toolbar.h" />
-		<Unit filename="..\..\Win32++\treeview.h" />
 		<Unit filename="..\..\Win32++\wincore.h" />
 		<Extensions>
 			<code_completion />

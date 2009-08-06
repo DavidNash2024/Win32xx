@@ -24,7 +24,7 @@ BOOL CColourDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	{
 	case IDC_CHECK1:
 		OnGrayScale();
-		TRUE;	// return TRUE for handled commands
+		return TRUE;	// return TRUE for handled commands
 	}
 
 	// return FALSE for unhandled commands
@@ -46,11 +46,11 @@ void CColourDialog::OnGrayScale()
 		Mem2DC.BitBlt(0, 0, 239-16, 201-16, Mem1DC, 0, 0, SRCCOPY);
 		Mem1DC.DetachBitmap();
 		Mem2DC.DetachBitmap();
-			
+
 		TintBitmap(m_hbmPreview, m_cRed, m_cGreen, m_cBlue);
 	}
 
-	OnPaintPreview();	
+	OnPaintPreview();
 }
 
 BOOL CColourDialog::OnInitDialog()
@@ -130,7 +130,7 @@ void CColourDialog::OnHScroll(WPARAM /*wParam*/, LPARAM lParam)
 
 	if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
 		GrayScaleBitmap(m_hbmPreview);
-	
+
 	OnPaintPreview();
 }
 

@@ -8,7 +8,7 @@
 
 
 // Definitions for the CFormDoc class
-CFormDoc::CFormDoc() 
+CFormDoc::CFormDoc()
 {
 }
 
@@ -23,7 +23,7 @@ DWORD CFormDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
   DWORD   dwValue = 0;
   if (ERROR_SUCCESS == RegQueryValueEx(hKey, pName, NULL, &dwType, (LPBYTE)&dwValue, &dwCount))
 	  return dwValue;
-  else 
+  else
 	  return 0;
 }
 
@@ -33,7 +33,7 @@ void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
 	tString tsKey = _T("Software\\");
 	tsKey += szKeyName;
 	tsKey += _T("\\Document Settings");
-	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "", 
+	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "",
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 	m_bCheckA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
@@ -51,14 +51,14 @@ void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
 	tsKey += szKeyName;
 	tsKey += _T("\\Document Settings");
 
-	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "", 
+	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "",
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
-	RegSetValueEx(hKey, _T("CheckA"), NULL, REG_DWORD, (LPBYTE)&m_bCheckA, sizeof(DWORD));
-	RegSetValueEx(hKey, _T("CheckB"), NULL, REG_DWORD, (LPBYTE)&m_bCheckB, sizeof(DWORD));
-	RegSetValueEx(hKey, _T("CheckC"), NULL, REG_DWORD, (LPBYTE)&m_bCheckC, sizeof(DWORD));
-	RegSetValueEx(hKey, _T("Radio"), NULL, REG_DWORD, (LPBYTE)&m_radio, sizeof(DWORD));
-	
+	RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_bCheckA, sizeof(DWORD));
+	RegSetValueEx(hKey, _T("CheckB"), 0, REG_DWORD, (LPBYTE)&m_bCheckB, sizeof(DWORD));
+	RegSetValueEx(hKey, _T("CheckC"), 0, REG_DWORD, (LPBYTE)&m_bCheckC, sizeof(DWORD));
+	RegSetValueEx(hKey, _T("Radio"), 0, REG_DWORD, (LPBYTE)&m_radio, sizeof(DWORD));
+
 	RegCloseKey(hKey);
 }
 

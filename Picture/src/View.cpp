@@ -10,7 +10,7 @@
 
 #define HIMETRIC_INCH	2540
 
-CView::CView() : m_hBrush(NULL), m_pPicture(NULL), m_BStrString(NULL), 
+CView::CView() : m_pPicture(NULL), m_hBrush(NULL), m_BStrString(NULL),
 					m_xCurrentScroll(0), m_yCurrentScroll(0)
 {
 	::CoInitialize(NULL);
@@ -32,7 +32,7 @@ CRect CView::GetImageRect()
 	// get width and height of picture
 	long hmWidth = 0;
 	long hmHeight = 0;
-	
+
 	if (m_pPicture)
 	{
 		m_pPicture->get_Width(&hmWidth);
@@ -43,7 +43,7 @@ CRect CView::GetImageRect()
 	CDC hDC = GetDC();
 	int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
 	int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
-	
+
 	CRect rcImage;
 	rcImage.right = MAX(nWidth, 200);
 	rcImage.bottom = MAX(nHeight, 200);
@@ -60,7 +60,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 
 	TRACE(szFile);
 	TRACE(_T("\n"));
-	
+
 	m_xCurrentScroll = 0;
 	m_yCurrentScroll = 0;
 	ShowScrollBar(SB_HORZ, FALSE);
@@ -71,7 +71,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	{
 		::SetWindowText(GetParent(), szFile);
 		CMainFrame& Frame = GetPicApp().GetMainFrame();
-		Frame.AdjustFrameRect(GetImageRect());	
+		Frame.AdjustFrameRect(GetImageRect());
 		Invalidate();
 		return TRUE;
 	}
@@ -96,7 +96,7 @@ void CView::OnInitialUpdate()
 	TCHAR szFile[] = _T("/PongaFern.jpg");
 	GetCurrentDirectory(MAX_STRING_SIZE - lstrlen(szFile) , szPath);
 	lstrcat(szPath, _T("./PongaFern.jpg"));
-	
+
 	if (LoadPictureFile(szPath))
 	{
 		CMainFrame& Frame = GetPicApp().GetMainFrame();
@@ -120,10 +120,10 @@ void CView::Paint(HDC hDC)
 		m_pPicture->get_Width(&hmWidth);
 		m_pPicture->get_Height(&hmHeight);
 
-		// convert himetric to pixels	
+		// convert himetric to pixels
 		int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
 		int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
-		
+
 		// calculate himetric start pos
 		int xStart = MulDiv(m_xCurrentScroll, HIMETRIC_INCH, GetDeviceCaps(hDC, LOGPIXELSX));
 		int yStart = MulDiv(m_yCurrentScroll, HIMETRIC_INCH, GetDeviceCaps(hDC, LOGPIXELSY));
@@ -134,110 +134,110 @@ void CView::Paint(HDC hDC)
 }
 
 void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
-{ 
-	int xNewPos; 
+{
+	int xNewPos;
 
-	switch (LOWORD(wParam)) 
-	{ 			
-		case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box. 
-			xNewPos = m_xCurrentScroll - 50; 
+	switch (LOWORD(wParam))
+	{
+		case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box.
+			xNewPos = m_xCurrentScroll - 50;
 			break;
 
-		case SB_PAGEDOWN: // User clicked the scroll bar shaft right of the scroll box.  
-			xNewPos = m_xCurrentScroll + 50; 
+		case SB_PAGEDOWN: // User clicked the scroll bar shaft right of the scroll box.
+			xNewPos = m_xCurrentScroll + 50;
 			break;
-		
-		case SB_LINEUP: // User clicked the left arrow. 
-			xNewPos = m_xCurrentScroll - 5; 
-			break;  
-		
-		case SB_LINEDOWN: // User clicked the right arrow. 
-			xNewPos = m_xCurrentScroll + 5; 
-			break; 
 
-		case SB_THUMBPOSITION: // User dragged the scroll box. 
-			xNewPos = HIWORD(wParam);
-			break; 
-	
-		case SB_THUMBTRACK: // User dragging the scroll box. 
+		case SB_LINEUP: // User clicked the left arrow.
+			xNewPos = m_xCurrentScroll - 5;
+			break;
+
+		case SB_LINEDOWN: // User clicked the right arrow.
+			xNewPos = m_xCurrentScroll + 5;
+			break;
+
+		case SB_THUMBPOSITION: // User dragged the scroll box.
 			xNewPos = HIWORD(wParam);
 			break;
 
-		default: 
-			xNewPos = m_xCurrentScroll; 
-	} 
+		case SB_THUMBTRACK: // User dragging the scroll box.
+			xNewPos = HIWORD(wParam);
+			break;
 
-	// Scroll the window.   
+		default:
+			xNewPos = m_xCurrentScroll;
+	}
+
+	// Scroll the window.
 	xNewPos = MAX(0, xNewPos);
 	xNewPos = MIN( xNewPos, GetImageRect().Width() - GetClientRect().Width() );
-	int xDelta = xNewPos - m_xCurrentScroll;  
-	m_xCurrentScroll = xNewPos; 
-	ScrollWindowEx(-xDelta, 0,  NULL, NULL, NULL, NULL, SW_INVALIDATE); 
+	int xDelta = xNewPos - m_xCurrentScroll;
+	m_xCurrentScroll = xNewPos;
+	ScrollWindowEx(-xDelta, 0,  NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
 	// Reset the scroll bar.
 	SCROLLINFO si = {0};
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
-	si.cbSize = sizeof(si); 
-	si.fMask  = SIF_POS; 
-	si.nPos   = m_xCurrentScroll; 
-	SetScrollInfo(SB_HORZ, si, TRUE); 
-} 
+	si.cbSize = sizeof(si);
+	si.fMask  = SIF_POS;
+	si.nPos   = m_xCurrentScroll;
+	SetScrollInfo(SB_HORZ, si, TRUE);
+}
 
 void CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
-{  
-	int yNewPos;    
+{
+	int yNewPos;
 
-	switch (LOWORD(wParam)) 
-	{ 				
-		case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box. 
-			yNewPos = m_yCurrentScroll - 50; 
-			break; 
-		 
-		case SB_PAGEDOWN: // User clicked the scroll bar shaft below the scroll box.
-			yNewPos = m_yCurrentScroll + 50; 
-			break; 
-		
-		case SB_LINEUP: // User clicked the top arrow. 
-			yNewPos = m_yCurrentScroll - 5; 
-			break;  
-		
-		case SB_LINEDOWN: // User clicked the bottom arrow. 
-			yNewPos = m_yCurrentScroll + 5; 
-			break;  
-		
-		case SB_THUMBPOSITION: // User dragged the scroll box. 
-			yNewPos = HIWORD(wParam); 
+	switch (LOWORD(wParam))
+	{
+		case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box.
+			yNewPos = m_yCurrentScroll - 50;
 			break;
-	
-		case SB_THUMBTRACK: // User dragging the scroll box. 
+
+		case SB_PAGEDOWN: // User clicked the scroll bar shaft below the scroll box.
+			yNewPos = m_yCurrentScroll + 50;
+			break;
+
+		case SB_LINEUP: // User clicked the top arrow.
+			yNewPos = m_yCurrentScroll - 5;
+			break;
+
+		case SB_LINEDOWN: // User clicked the bottom arrow.
+			yNewPos = m_yCurrentScroll + 5;
+			break;
+
+		case SB_THUMBPOSITION: // User dragged the scroll box.
 			yNewPos = HIWORD(wParam);
 			break;
 
-		default: 
-			yNewPos = m_yCurrentScroll; 
-	} 
+		case SB_THUMBTRACK: // User dragging the scroll box.
+			yNewPos = HIWORD(wParam);
+			break;
+
+		default:
+			yNewPos = m_yCurrentScroll;
+	}
 
 	// Scroll the window.
 	yNewPos = MAX(0, yNewPos);
 	yNewPos = MIN( yNewPos, GetImageRect().Height() - GetClientRect().Height() );
-	int yDelta = yNewPos - m_yCurrentScroll;   
-	m_yCurrentScroll = yNewPos; 	
-	ScrollWindowEx(0, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE); 
+	int yDelta = yNewPos - m_yCurrentScroll;
+	m_yCurrentScroll = yNewPos;
+	ScrollWindowEx(0, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
-	// Reset the scroll bar. 
+	// Reset the scroll bar.
 	SCROLLINFO si = {0};
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
-	si.cbSize = sizeof(si); 
-	si.fMask  = SIF_POS; 
-	si.nPos   = m_yCurrentScroll; 
-	SetScrollInfo(SB_VERT, si, TRUE);  
-} 
+	si.cbSize = sizeof(si);
+	si.fMask  = SIF_POS;
+	si.nPos   = m_yCurrentScroll;
+	SetScrollInfo(SB_VERT, si, TRUE);
+}
 
 void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
-	if (m_pPicture) 
+	if (m_pPicture)
 	{
 		CRect rcImage = GetImageRect();
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -246,7 +246,7 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 
 		CRect rcView = GetClientRect();
 		AdjustWindowRectEx(&rcView, dwStyle, FALSE, dwExStyle);
-		
+
 		SCROLLINFO si = {0};
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
@@ -265,7 +265,7 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 			SetScrollInfo(SB_HORZ, si, TRUE);
 			ShowScrollBar(SB_HORZ, TRUE);
 		}
-		
+
 		if (rcView.Height() >= rcImage.Height())
 		{
 			m_yCurrentScroll = 0;
@@ -279,12 +279,12 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 			SetScrollInfo(SB_VERT, si, TRUE);
 			ShowScrollBar(SB_VERT, TRUE);
 		}
-		
+
 		int xNewPos = MIN(m_xCurrentScroll, rcImage.Width() - rcView.Width());
 		m_xCurrentScroll = MAX(xNewPos, 0);
 		int yNewPos = MIN(m_yCurrentScroll, rcImage.Height() - rcView.Height());
 		m_yCurrentScroll = MAX(yNewPos, 0);
-		
+
 		// Paint the window directly to eliminate flicker
 		CDC dcView = GetDC();
 		Paint(dcView);
@@ -339,14 +339,14 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_WINDOWPOSCHANGED:
-		OnWindowPosChanged(wParam, lParam);	
+		OnWindowPosChanged(wParam, lParam);
 		break;
-		    
-	case WM_HSCROLL: 
+
+	case WM_HSCROLL:
 		OnHScroll(wParam, lParam);
-		break; 
-	 
-	case WM_VSCROLL: 
+		break;
+
+	case WM_VSCROLL:
 		OnVScroll(wParam, lParam);
         break;
 	}

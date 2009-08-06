@@ -1,12 +1,12 @@
 REM: A batch program to rebuild the Win32++ samples using VS2008 (Express).
 REM: The contents of the log file is erased 
 
-::SetPaths
+REM: Set the Paths
 @set PATH=c:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE;c:\Program Files\Microsoft Visual Studio 9.0\VC\BIN;c:\Program Files\Microsoft Visual Studio 9.0\Common7\Tools;c:\WINDOWS\Microsoft.NET\Framework\v3.5;c:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;c:\Program Files\Microsoft Visual Studio 9.0\VC\VCPackages;%PATH%
 
 
 
-::Cleanup
+REM: Remove old files before we start
 call clean
 pushd "..\Networking"
 call clean
@@ -17,7 +17,7 @@ REM: Change the directory to the parent
 pushd ..
 
 
-::Compile code
+REM: Compile the code
 devenv /build Debug Browser\ProjectFiles\Browser_2008.sln /projectconfig Debug 				> "Win32xx Tests\VS2008.log"
 devenv /build Release Browser\ProjectFiles\Browser_2008.sln /projectconfig Release			>>"Win32xx Tests\VS2008.log"
 devenv /build Debug ControlBars\ProjectFiles\ControlBars_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
@@ -76,6 +76,7 @@ devenv /build Debug Threads\ProjectFiles\Threads_2008.sln /projectconfig Debug		
 devenv /build Release Threads\ProjectFiles\Threads_2008.sln /projectconfig Release			>>"Win32xx Tests\VS2008.log"
 
 
+REM: Copy the executables to the testing directories
 if exist "Win32xx Tests\VS2008" rmdir /s /q "Win32xx Tests\VS2008"
 mkdir "Win32xx Tests\VS2008"
 mkdir "Win32xx Tests\VS2008\Debug"
@@ -140,6 +141,7 @@ copy TabDialogDemo\ProjectFiles\Release\TabDialogDemo.exe     "Win32xx Tests\VS2
 copy Themes\ProjectFiles\Release\Themes.exe                   "Win32xx Tests\VS2008\Release"    >>"Win32xx Tests\VS2008.log"
 copy Threads\ProjectFiles\Release\Threads.exe                 "Win32xx Tests\VS2008\Release"    >>"Win32xx Tests\VS2008.log"
 
+REM: Pop the directory change off the stack
 popd
 
                                           
