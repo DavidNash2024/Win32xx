@@ -8,7 +8,7 @@
 		<Option compiler="msvctk" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="Borland\Bebug\Themes.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Debug\Themes.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Debug" />
 				<Option object_output="Borland\Debug" />
 				<Option type="0" />
