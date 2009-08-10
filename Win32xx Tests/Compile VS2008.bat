@@ -141,6 +141,25 @@ copy TabDialogDemo\ProjectFiles\Release\TabDialogDemo.exe     "Win32xx Tests\VS2
 copy Themes\ProjectFiles\Release\Themes.exe                   "Win32xx Tests\VS2008\Release"    >>"Win32xx Tests\VS2008.log"
 copy Threads\ProjectFiles\Release\Threads.exe                 "Win32xx Tests\VS2008\Release"    >>"Win32xx Tests\VS2008.log"
 
+
+REM:  Build the VS2008 static Library
+devenv /build Debug StaticLibrary\ProjectFiles\Library_2008.sln /projectconfig Debug		>>"Win32xx Tests\VS2008.log"
+devenv /build Release StaticLibrary\ProjectFiles\Library_2008.sln /projectconfig Release	>>"Win32xx Tests\VS2008.log"
+
+REM:  Build the VS2008 test file
+devenv /build Debug StaticLibrary\Frame\Frame_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release StaticLibrary\Frame\Frame_2008.sln /projectconfig Release			>>"Win32xx Tests\VS2008.log"
+
+if exist "Win32xx Tests\StaticLib\VS2008" rmdir /s /q "Win32xx Tests\StaticLib\VS2008"
+mkdir "Win32xx Tests\StaticLib"
+mkdir "Win32xx Tests\StaticLib\VS2008"
+mkdir "Win32xx Tests\StaticLib\VS2008\Debug"
+mkdir "Win32xx Tests\StaticLib\VS2008\Release"
+
+copy StaticLibrary\Frame\Debug\Frame.exe      	"Win32xx Tests\StaticLib\VS2008\Debug"    	>>"Win32xx Tests\VS2008.log"
+copy StaticLibrary\Frame\Release\Frame.exe     	"Win32xx Tests\StaticLib\VS2008\Release"    	>>"Win32xx Tests\VS2008.log"
+
+
 REM: Pop the directory change off the stack
 popd
 

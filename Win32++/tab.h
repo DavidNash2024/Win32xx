@@ -92,15 +92,13 @@ namespace Win32xx
 		virtual BOOL GetTabsAtTop();
 		virtual int  GetTabIndex(CWnd* pWnd);
 		virtual TabPageInfo GetTabPageInfo(UINT nTab);
-		virtual void SelectPage(int iPage);
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
+		virtual void SelectPage(int iPage);
 		virtual void SetShowButtons(BOOL bShow);
 		virtual void SetTabImage(UINT nTab, int iImage);
 		virtual void SetTabsAtTop(BOOL bTop);
 		virtual void SetTabText(UINT nTab, LPCTSTR szText);
-		virtual void ShowListMenu();
-		virtual void ShowListDialog();
 		virtual void SwapTabs(UINT nTab1, UINT nTab2);
 
 		// Attributes
@@ -145,6 +143,8 @@ namespace Win32xx
 		void Paint();
 		void NotifyChanged();
 		void SetView(CWnd& Wnd);
+		void ShowListDialog();
+		void ShowListMenu();
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		HIMAGELIST m_himlTab;
@@ -180,7 +180,6 @@ namespace Win32xx
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
 		virtual void SetActiveMDITab(int nTab);
-		virtual void ShowListMenu();
 
 	protected:
 		virtual HWND    Create(HWND hWndParent);
@@ -1416,25 +1415,6 @@ namespace Win32xx
 	inline void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
 		m_Tab.SelectPage(iTab);
-	}
-
-	inline void CTabbedMDI::ShowListMenu()
-	{
-		// Displays the list of windows in a popup menu
-		HMENU hMenu = CreatePopupMenu();
-
-		for(UINT u = 0; u < m_Tab.GetAllTabs().size(); ++u)
-		{
-			AppendMenu(hMenu, MF_STRING, u+1, m_Tab.GetAllTabs()[u].szTitle);
-		}
-
-		CPoint pt(m_Tab.GetListRect().left, m_Tab.GetTabHeight());
-		MapWindowPoints(m_hWnd, NULL, &pt, 1);
-
-		int iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD, pt.x, pt.y, m_hWnd, NULL) - 1;
-		if (iPage >= 0) m_Tab.SelectPage(iPage);
-
-		::DestroyMenu(hMenu);
 	}
 
 	inline LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

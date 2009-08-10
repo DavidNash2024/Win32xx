@@ -140,5 +140,22 @@ copy TabDialogDemo\ProjectFiles\Release\TabDialogDemo.exe     "Win32xx Tests\VS2
 copy Themes\ProjectFiles\Release\Themes.exe                   "Win32xx Tests\VS2005\Release"    >>"Win32xx Tests\VS2005.log"
 copy Threads\ProjectFiles\Release\Threads.exe                 "Win32xx Tests\VS2005\Release"    >>"Win32xx Tests\VS2005.log"
 
+REM:  Build the VS2005 static Library
+devenv /build Debug StaticLibrary\ProjectFiles\Library_2005.sln /projectconfig Debug		>>"Win32xx Tests\VS2005.log"
+devenv /build Release StaticLibrary\ProjectFiles\Library_2005.sln /projectconfig Release	>>"Win32xx Tests\VS2005.log"
+
+REM:  Build the VS2005 test file
+devenv /build Debug StaticLibrary\Frame\Frame_2005.sln /projectconfig Debug			>>"Win32xx Tests\VS2005.log"
+devenv /build Release StaticLibrary\Frame\Frame_2005.sln /projectconfig Release			>>"Win32xx Tests\VS2005.log"
+
+if exist "Win32xx Tests\StaticLib\VS2008" rmdir /s /q "Win32xx Tests\StaticLib\VS2005"
+mkdir "Win32xx Tests\StaticLib"
+mkdir "Win32xx Tests\StaticLib\VS2005"
+mkdir "Win32xx Tests\StaticLib\VS2005\Debug"
+mkdir "Win32xx Tests\StaticLib\VS2005\Release"
+
+copy StaticLibrary\Frame\Debug\Frame.exe      	"Win32xx Tests\StaticLib\VS2005\Debug"    	>>"Win32xx Tests\VS2005.log"
+copy StaticLibrary\Frame\Release\Frame.exe     	"Win32xx Tests\StaticLib\VS2005\Release"    	>>"Win32xx Tests\VS2005.log"
+
 
 popd

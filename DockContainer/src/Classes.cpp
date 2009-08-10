@@ -143,6 +143,9 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 
 void CContainClasses::SetupToolbar()
 {
+	// Set the Bitmap resource for the toolbar
+	GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+	
 	// Set the Resource IDs for the toolbar buttons
 	AddToolbarButton( IDM_FILE_NEW         );
 	AddToolbarButton( IDM_FILE_OPEN, FALSE );
