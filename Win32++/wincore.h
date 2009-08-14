@@ -461,6 +461,7 @@ namespace Win32xx
 		HDC  GetDC() const;
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
+		int  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
@@ -528,6 +529,7 @@ namespace Win32xx
 
 	protected:
 		// Override these functions as required
+		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -546,7 +548,6 @@ namespace Win32xx
 		CWnd& operator = (const CWnd&); // Disable assignment operator
 		void AddToMap();
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam); // overridden by friends
 		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
 		void Subclass();
@@ -1407,7 +1408,7 @@ namespace Win32xx
 
 	} // HWND CWnd::CreateEx()
 
-	inline LRESULT CWnd::MyDefWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
@@ -2046,7 +2047,7 @@ namespace Win32xx
 		if (m_PrevWindowProc)
 			return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
 		else
-			return MyDefWndProc(uMsg, wParam, lParam);
+			return FinalWindowProc(uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
 
@@ -2139,6 +2140,11 @@ namespace Win32xx
 	// The GetDlgItem function retrieves a handle to a control in the dialog box.
 	{
 		return ::GetDlgItem(m_hWnd, nIDDlgItem);
+	}
+
+	inline int CWnd::GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const
+	{
+		return ::GetDlgItemInt(m_hWnd, nIDDlgItem, lpTranslated, bSigned);
 	}
 
 	inline HWND CWnd::GetParent() const

@@ -16,6 +16,13 @@ CMainWindow::CMainWindow()
 {
 	// Set the number of threads
 	m_nThreads = 20;
+
+	// A couple of notes in case you're tempted to test how many threads with test windows can be created ...
+
+	// Note 1: A Windows limit of 10000 handles per process imposes a practical limit of aprox 1000 test windows.
+	//         Refer to: http://support.microsoft.com/kb/327699
+	// Note 2: All our threads belong to the one process.
+	// Note 3: Creating (or destroying) more than say 200 windows may temporarily stress the Explorer process.
 }
 
 CMainWindow::~CMainWindow()

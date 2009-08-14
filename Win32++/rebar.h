@@ -227,7 +227,8 @@ namespace Win32xx
 
 	inline UINT CRebar::GetSizeofRBBI() const
 	// The size of the REBARBANDINFO struct changes according to _WIN32_WINNT
-	// sizeof(REBARBANDINFO) can report an incorrect size for older Window versions.
+	// sizeof(REBARBANDINFO) can report an incorrect size for older Window versions,
+	// or newer Window version without XP themes enabled.
 	// Use this function to get a safe size for REBARBANDINFO.
 	{
 		UINT uSizeof = sizeof(REBARBANDINFO);
