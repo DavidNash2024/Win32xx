@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -93,9 +93,9 @@ namespace Win32xx
 
 	protected:
 		// Its unlikely you would need to override these functions
-		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CWnd* m_pwndView;				// pointer to the View CWnd object
@@ -134,7 +134,7 @@ namespace Win32xx
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		class CMDIClient : public CWnd  // a nested class within CMDIFrame
@@ -143,12 +143,12 @@ namespace Win32xx
 			CMDIClient() {}
 			virtual ~CMDIClient() {}
 			virtual HWND Create(HWND hWndParent = NULL);
-			virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
 
 
 		void AppendMDIMenu(HMENU hMenuWindow);
-		LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(HMENU hMenu);
 
 		CMDIClient m_wndMDIClient;
@@ -157,6 +157,7 @@ namespace Win32xx
 	};
 
 }
+
 
 
 #endif // _MDI_H_

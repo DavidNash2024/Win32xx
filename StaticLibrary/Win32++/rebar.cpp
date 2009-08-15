@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -44,23 +44,23 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CRebar class
 	//
-	 CRebar::CRebar() : m_bIsDragging(FALSE), m_hMenubar(0), m_Orig_lParam(0L)
+	CRebar::CRebar() : m_bIsDragging(FALSE), m_hMenubar(0), m_Orig_lParam(0L)
 	{
 		ZeroMemory(&m_Theme, sizeof(ThemeRebar));
 	}
 
-	 CRebar::~CRebar()
+	CRebar::~CRebar()
 	{
 	}
 
-	 void CRebar::DeleteBand(int nBand) const
+	void CRebar::DeleteBand(int nBand) const
 	// Deletes a band from a rebar control.
 	{
-		if (!::SendMessage(m_hWnd, RB_DELETEBAND, nBand, 0L))
+		if (!SendMessage(RB_DELETEBAND, nBand, 0L))
 			throw CWinException(_T("Failed to delete rebar band"));
 	}
 
-	 int CRebar::GetBand(HWND hWnd) const
+	int CRebar::GetBand(HWND hWnd) const
 	// Returns the zero based band number for this window handle
 	{
 		int nResult = -1;
@@ -69,6 +69,7 @@ namespace Win32xx
 		for (int nBand = 0; nBand < GetBandCount(); ++nBand)
 		{
 			REBARBANDINFO rbbi = {0};
+			rbbi.cbSize = GetSizeofRBBI();
 			rbbi.fMask = RBBIM_CHILD;
 			GetBandInfo(nBand, rbbi);
 			if (rbbi.hwndChild == hWnd)
@@ -77,81 +78,99 @@ namespace Win32xx
 		return nResult;
 	}
 
-	 CRect CRebar::GetBandBorders(int nBand) const
+	CRect CRebar::GetBandBorders(int nBand) const
 	// Retrieves the borders of a band.
 	{
 		CRect rc;
-		::SendMessage(m_hWnd, RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
+		SendMessage(RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
 		return rc;
 	}
 
-	 int  CRebar::GetBandCount() const
+	int  CRebar::GetBandCount() const
 	// Retrieves the count of bands currently in the rebar control.
 	{
-		return (int)::SendMessage(m_hWnd, RB_GETBANDCOUNT, 0L, 0L);
+		return (int)SendMessage(RB_GETBANDCOUNT, 0L, 0L);
 	}
 
-	 void CRebar::GetBandInfo(int nBand, REBARBANDINFO& rbbi) const
+	void CRebar::GetBandInfo(int nBand, REBARBANDINFO& rbbi) const
 	// Retrieves information about a specified band in a rebar control.
 	{
 		if (nBand < 0)
 			throw CWinException(_T("Invalid Rebar band number"));
 
 		// REBARBANDINFO describes individual BAND characteristics
-		rbbi.cbSize = sizeof(REBARBANDINFO);
-		if(!::SendMessage(m_hWnd, RB_GETBANDINFO, nBand, (LPARAM)&rbbi))
+		rbbi.cbSize = GetSizeofRBBI();
+		if(!SendMessage(RB_GETBANDINFO, nBand, (LPARAM)&rbbi))
 			throw CWinException(_T("Failed to get rebar band info"));
 	}
 
-	 CRect CRebar::GetBandRect(int i) const
+	CRect CRebar::GetBandRect(int i) const
 	// Retrieves the bounding rectangle for a given band in a rebar control.
 	{
 		CRect rc;
-		::SendMessage(m_hWnd, RB_GETRECT, i, (LPARAM)&rc);
+		SendMessage(RB_GETRECT, i, (LPARAM)&rc);
 		return rc;
 	}
 
-	 UINT CRebar::GetBarHeight() const
+	UINT CRebar::GetBarHeight() const
 	// Retrieves the height of the rebar control.
 	{
-		return (UINT)::SendMessage(m_hWnd, RB_GETBARHEIGHT, 0L, 0L);
+		return (UINT)SendMessage(RB_GETBARHEIGHT, 0L, 0L);
 	}
 
-	 void CRebar::GetBarInfo(REBARINFO& rbi) const
+	void CRebar::GetBarInfo(REBARINFO& rbi) const
 	// Retrieves information about the rebar control and the image list it uses.
 	{
 		// REBARINFO describes overall rebar control characteristics
-		rbi.cbSize = sizeof(REBARINFO);
-		if (!::SendMessage(m_hWnd, RB_GETBARINFO, 0L, (LPARAM)&rbi))
+		rbi.cbSize = GetSizeofRBBI();
+		if (!SendMessage(RB_GETBARINFO, 0L, (LPARAM)&rbi))
 			throw CWinException(_T("Failed to get rebar info"));
 	}
 
-	 UINT CRebar::GetRowCount() const
+	UINT CRebar::GetRowCount() const
 	// Retrieves the number of rows of bands in a rebar control.
 	{
-		return (UINT)::SendMessage(m_hWnd, RB_GETROWCOUNT, 0L, 0L);
+		return (UINT)SendMessage(RB_GETROWCOUNT, 0L, 0L);
 	}
 
-	 int CRebar::GetRowHeight(int nRow) const
+	int CRebar::GetRowHeight(int nRow) const
 	// Retrieves the height of a specified row in a rebar control.
 	{
-		return (int)::SendMessage(m_hWnd, RB_GETROWHEIGHT, nRow, 0L);
+		return (int)SendMessage(RB_GETROWHEIGHT, nRow, 0L);
 	}
 
-	 HWND CRebar::GetToolTips() const
+	UINT CRebar::GetSizeofRBBI() const
+	// The size of the REBARBANDINFO struct changes according to _WIN32_WINNT
+	// sizeof(REBARBANDINFO) can report an incorrect size for older Window versions,
+	// or newer Window version without XP themes enabled.
+	// Use this function to get a safe size for REBARBANDINFO.
+	{
+		UINT uSizeof = sizeof(REBARBANDINFO);
+
+	#if defined REBARBANDINFO_V6_SIZE	// only defined for VS2008 or higher
+	  #if !defined (_WIN32_WINNT) || _WIN32_WINNT >= 0x0600
+		if ((GetWinVersion() < 2600) || (GetComCtlVersion() < 610)) // Vista and Vista themes?
+			uSizeof = REBARBANDINFO_V6_SIZE;
+	  #endif
+	#endif
+
+		return uSizeof;
+	}
+
+	HWND CRebar::GetToolTips() const
 	// Retrieves the handle to any ToolTip control associated with the rebar control.
 	{
-		return (HWND)::SendMessage(m_hWnd, RB_GETTOOLTIPS, 0L, 0L);
+		return (HWND)SendMessage(RB_GETTOOLTIPS, 0L, 0L);
 	}
 
-	 int CRebar::HitTest(RBHITTESTINFO& rbht)
+	int CRebar::HitTest(RBHITTESTINFO& rbht)
 	// Determines which portion of a rebar band is at a given point on the screen,
 	//  if a rebar band exists at that point.
 	{
-		return (int)::SendMessage(m_hWnd, RB_HITTEST, 0L, (LPARAM)&rbht);
+		return (int)SendMessage(RB_HITTEST, 0L, (LPARAM)&rbht);
 	}
 
-	 HWND CRebar::HitTest(POINT pt)
+	HWND CRebar::HitTest(POINT pt)
 	// Return the child HWND at the given point
 	{
 		// Convert the point to client co-ordinates
@@ -166,7 +185,7 @@ namespace Win32xx
 		{
 			// Get the rebar band's hWnd
 			REBARBANDINFO rbbi = {0};
-			rbbi.cbSize = sizeof(REBARBANDINFO);
+			rbbi.cbSize = GetSizeofRBBI();
 			rbbi.fMask = RBBIM_CHILD;
 			GetBandInfo(iBand, rbbi);
 
@@ -176,31 +195,32 @@ namespace Win32xx
 			return NULL;
 	}
 
-	 int CRebar::IDToIndex(UINT uBandID) const
+	int CRebar::IDToIndex(UINT uBandID) const
 	// Converts a band identifier to a band index in a rebar control.
 	{
-		return (int)::SendMessage(m_hWnd, RB_IDTOINDEX, (WPARAM)uBandID, 0L);
+		return (int)SendMessage(RB_IDTOINDEX, (WPARAM)uBandID, 0L);
 	}
 
-	 void CRebar::InsertBand(int nBand, REBARBANDINFO& rbbi) const
+	void CRebar::InsertBand(int nBand, REBARBANDINFO& rbbi) const
 	// Inserts a new band in a rebar control.
 	{
-		if ( !::SendMessage(m_hWnd, RB_INSERTBAND, nBand, (LPARAM)&rbbi))
+		rbbi.cbSize = GetSizeofRBBI();
+		if ( !SendMessage(RB_INSERTBAND, nBand, (LPARAM)&rbbi))
 			throw CWinException(_T("Failed to insert rebar band"));
 	}
 
-	 BOOL CRebar::IsBandVisible(int nBand) const
+	BOOL CRebar::IsBandVisible(int nBand) const
 	// Returns true if the band is visible
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 
 		return !(rbbi.fStyle & RBBS_HIDDEN);
 	}
 
-	 BOOL CRebar::OnEraseBkgnd(HDC hDC)
+	BOOL CRebar::OnEraseBkgnd(HDC hDC)
 	{
 		if (!m_Theme.UseThemes)
 			return FALSE;
@@ -215,12 +235,12 @@ namespace Win32xx
 
 		// Draw to Rebar background to the memory DC
 		rcRebar.right = 600;
-		GradientFill(MemDC, m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, &rcRebar, TRUE);
+		MemDC.GradientFill(m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, rcRebar, TRUE);
 		if (BarWidth >= 600)
 		{
 			rcRebar.left = 600;
 			rcRebar.right = BarWidth;
-			SolidFill(MemDC, m_Theme.clrBkgnd2, &rcRebar);
+			MemDC.SolidFill(m_Theme.clrBkgnd2, rcRebar);
 		}
 
 		if (m_Theme.clrBand1 || m_Theme.clrBand2)
@@ -237,7 +257,7 @@ namespace Win32xx
 
 						// Determine the size of the child window
 						REBARBANDINFO rbbi = {0};
-						rbbi.cbSize = sizeof(REBARBANDINFO);
+						rbbi.cbSize = GetSizeofRBBI();
 						rbbi.fMask = RBBIM_CHILD ;
 						GetBandInfo(nBand, rbbi);
 						CRect rcChild;
@@ -245,8 +265,7 @@ namespace Win32xx
 						int ChildWidth = rcChild.right - rcChild.left;
 
 						// Determine our drawing rectangle
-						CRect rcDraw;
-						CopyRect(&rcDraw, &rcBand);
+						CRect rcDraw = rcBand;
 						rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
 						int xPad = IsXPThemed()? 2: 0;
 						rcDraw.left -= xPad;
@@ -256,10 +275,10 @@ namespace Win32xx
 						SourceDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
 						CRect rcBorder = GetBandBorders(nBand);
 						rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
-						SolidFill(SourceDC, m_Theme.clrBand1, &rcDraw);
+						SourceDC.SolidFill(m_Theme.clrBand1, rcDraw);
 						rcDraw.top = rcDraw.bottom;
 						rcDraw.bottom = rcBand.bottom;
-						GradientFill(SourceDC, m_Theme.clrBand1, m_Theme.clrBand2, &rcDraw, FALSE);
+						SourceDC.GradientFill(m_Theme.clrBand1, m_Theme.clrBand2, rcDraw, FALSE);
 
 						// Set Curve amount for rounded edges
 						int Curve = m_Theme.RoundBorders? 12 : 0;
@@ -281,27 +300,27 @@ namespace Win32xx
 
 						if (m_Theme.FlatStyle)
 						{
-							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
-							::BitBlt(MaskDC, left, top, cx, cy, MaskDC, left, top, PATINVERT);
-							::RoundRect(MaskDC, left, top, right, bottom, Curve, Curve);
+							MaskDC.SolidFill(RGB(0,0,0), rcDraw);
+							MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
+							MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 						}
 						else
 						{
-							SolidFill(MaskDC, RGB(0,0,0), &rcDraw);
-							::RoundRect(MaskDC, left, top, right, bottom, Curve, Curve);
-							::BitBlt(MaskDC, left, top, cx, cy, MaskDC, left, top, PATINVERT);
+							MaskDC.SolidFill(RGB(0,0,0), rcDraw);
+							MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
+							MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
 						}
 
 						// Copy Source DC to Memory DC using the RoundRect mask
-						::BitBlt(MemDC, left, top, cx, cy, SourceDC, left, top, SRCINVERT);
-						::BitBlt(MemDC, left, top, cx, cy, MaskDC,   left, top, SRCAND);
-						::BitBlt(MemDC, left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+						MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+						MemDC.BitBlt(left, top, cx, cy, MaskDC,   left, top, SRCAND);
+						MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
 
 						// Extra drawing to prevent jagged edge while moving bands
 						if (m_bIsDragging)
 						{
-							CDC RebarDC = ::GetDC(m_hWnd);
-							::BitBlt(RebarDC, rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+							CDC RebarDC = GetDC();
+							RebarDC.BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 						}
 					}
 				}
@@ -316,7 +335,7 @@ namespace Win32xx
 				rcRebar = GetBandRect(j);
 				rcRebar.left = MAX(0, rcRebar.left - 4);
 				rcRebar.bottom +=2;
-				::DrawEdge(MemDC, &rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+				MemDC.DrawEdge(rcRebar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 			}
 		}
 
@@ -326,7 +345,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	 void CRebar::PreCreate(CREATESTRUCT &cs)
+	void CRebar::PreCreate(CREATESTRUCT &cs)
 	// Sets the CREATESTRUCT paramaters prior to window creation
 	{
 		cs.style = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
@@ -336,25 +355,25 @@ namespace Win32xx
 		cs.lpszClass = REBARCLASSNAME;
 	}
 
-	 void CRebar::MaximizeBand(UINT uBand, BOOL fIdeal /*= FALSE*/)
+	void CRebar::MaximizeBand(UINT uBand, BOOL fIdeal /*= FALSE*/)
 	// Resizes a band in a rebar control to either its ideal or largest size.
 	{
-		::SendMessage(m_hWnd, RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)fIdeal);
+		SendMessage(RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)fIdeal);
 	}
 
-	 void CRebar::MinimizeBand(UINT uBand)
+	void CRebar::MinimizeBand(UINT uBand)
 	// Resizes a band in a rebar control to its smallest size.
 	{
-		::SendMessage(m_hWnd, RB_MINIMIZEBAND, (WPARAM)uBand, 0L);
+		SendMessage(RB_MINIMIZEBAND, (WPARAM)uBand, 0L);
 	}
 
-	 BOOL CRebar::MoveBand(UINT uFrom, UINT uTo)
+	BOOL CRebar::MoveBand(UINT uFrom, UINT uTo)
 	// Moves a band from one index to another.
 	{
-		return (BOOL)::SendMessage(m_hWnd, RB_MOVEBAND, (WPARAM)uFrom, (LPARAM)uTo);
+		return (BOOL)SendMessage(RB_MOVEBAND, (WPARAM)uFrom, (LPARAM)uTo);
 	}
 
-	 void CRebar::MoveBandsLeft()
+	void CRebar::MoveBandsLeft()
 	// Repositions the bands so they are left justified
 	{
 		int OldrcTop = -1;
@@ -365,18 +384,19 @@ namespace Win32xx
 			{
 				// Maximize the last band on each row
 				if (IsBandVisible(nBand))
+				{
 					::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0L);
-
-				OldrcTop = rc.top;
+					OldrcTop = rc.top;
+				}
 			}
 		}
 	}
 
-	 void CRebar::ResizeBand(int nBand, const CSize& sz) const
+	void CRebar::ResizeBand(int nBand, const CSize& sz) const
 	// Sets a band's size
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(rbbi);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 
 		GetBandInfo(nBand, rbbi);
@@ -387,61 +407,61 @@ namespace Win32xx
 		SetBandInfo(nBand, rbbi );
 	}
 
-	 void CRebar::SetBandBitmap(int nBand, HBITMAP hBackground) const
+	void CRebar::SetBandBitmap(int nBand, HBITMAP hBackground) const
 	// Sets the band's bitmaps
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
 		rbbi.hbmBack = hBackground;
-		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
+		SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	 void CRebar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack) const
+	void CRebar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack) const
 	// Sets the band's color
 	// Note:	No effect with XP themes enabled
 	//			No effect if a bitmap has been set
 	{
 
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_COLORS;
 		rbbi.clrFore = clrFore;
 		rbbi.clrBack = clrBack;
-		::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
+		SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
-	 void CRebar::SetBandInfo(int nBand, REBARBANDINFO& rbbi) const
+	void CRebar::SetBandInfo(int nBand, REBARBANDINFO& rbbi) const
 	// Sets the characteristics of a rebar control.
 	{
 		if (nBand < 0)
 			throw CWinException(_T("Invalid Rebar band number"));
 
 		// REBARBANDINFO describes individual BAND characteristics
-		rbbi.cbSize = sizeof(REBARBANDINFO);
-		if(!::SendMessage(m_hWnd, RB_SETBANDINFO, nBand, (LPARAM)&rbbi))
+		rbbi.cbSize = GetSizeofRBBI();
+		if(!SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi))
 			throw CWinException(_T("Failed to set rebar band info"));
 	}
 
-	 void CRebar::SetBarInfo(REBARINFO& rbi) const
+	void CRebar::SetBarInfo(REBARINFO& rbi) const
 	// REBARINFO associates an image list with the rebar
 	// A band will also need to set RBBIM_IMAGE
 	{
-		rbi.cbSize = sizeof(REBARINFO);
-		if (!::SendMessage(m_hWnd, RB_SETBARINFO, 0L, (LPARAM)&rbi))
+		rbi.cbSize = GetSizeofRBBI();
+		if (!SendMessage(RB_SETBARINFO, 0L, (LPARAM)&rbi))
 			throw CWinException(_T("Failed to set rebar info"));
 	}
 
-	 void CRebar::SetRebarTheme(ThemeRebar& Theme)
+	void CRebar::SetRebarTheme(ThemeRebar& Theme)
 	{
 		m_Theme.UseThemes    = Theme.UseThemes;
 		m_Theme.clrBkgnd1    = Theme.clrBkgnd1;
 		m_Theme.clrBkgnd2    = Theme.clrBkgnd2;
 		m_Theme.clrBand1     = Theme.clrBand1;
 		m_Theme.clrBand2     = Theme.clrBand2;
-		m_Theme.KeepBandsLeft= Theme.KeepBandsLeft;
+		m_Theme.BandsLeft    = Theme.BandsLeft;
 		m_Theme.LockMenuBand = Theme.LockMenuBand;
 		m_Theme.ShortBands   = Theme.ShortBands;
 		m_Theme.UseLines     = Theme.UseLines;
@@ -453,14 +473,14 @@ namespace Win32xx
 		else
 			ShowGripper(GetBand(m_hMenubar), TRUE);
 
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 	}
 
-	 BOOL CRebar::ShowBand(int nBand, BOOL fShow) const
+	BOOL CRebar::ShowBand(int nBand, BOOL fShow) const
 	// Show or hide a band
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		if (fShow)
@@ -476,27 +496,27 @@ namespace Win32xx
 		return fShow;
 	}
 
-	 void CRebar::ShowGripper(int nBand, BOOL fShow) const
+	void CRebar::ShowGripper(int nBand, BOOL fShow) const
 	// Show or hide the band's gripper
 	{
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
+		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		if (fShow)
 		{
 			rbbi.fStyle |= RBBS_GRIPPERALWAYS;
-			rbbi.fStyle &= ~RBBS_FIXEDSIZE;
+			rbbi.fStyle &= ~RBBS_NOGRIPPER;
 		}
 		else
 		{
 			rbbi.fStyle &= ~RBBS_GRIPPERALWAYS;
-			rbbi.fStyle |= RBBS_FIXEDSIZE;
+			rbbi.fStyle |= RBBS_NOGRIPPER;
 		}
 		SetBandInfo(nBand, rbbi);
 	}
 
-	 LRESULT CRebar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CRebar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -543,9 +563,7 @@ namespace Win32xx
 		}
 
 		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx
-
-

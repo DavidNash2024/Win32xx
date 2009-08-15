@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -75,7 +75,7 @@ namespace Win32xx
 		BOOL GetItemPosition( int iItem, CPoint& pt ) const;
 		BOOL GetItemRect( int iItem, CRect& rc, UINT nCode ) const;
 		UINT GetItemState( int iItem, UINT nMask ) const;
-		tString GetItemText( int iItem, int iSubItem ) const;
+		tString GetItemText( int iItem, int iSubItem, UINT nTextMax = 260 ) const;
 		int GetNextItem( int iItem, int iFlags ) const;
 		UINT GetNumberOfWorkAreas( ) const;
 		BOOL GetOrigin( CPoint& pt ) const;

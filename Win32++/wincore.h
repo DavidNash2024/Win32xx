@@ -1,5 +1,5 @@
-// Win32++  Version 6.6 beta
-// Released: ?? August, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -424,6 +424,7 @@ namespace Win32xx
 		virtual tString GetClassString() const;
 		virtual tString GetDlgItemString(int nIDDlgItem) const;
 		virtual tString GetWindowString() const;
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;	
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -472,10 +473,9 @@ namespace Win32xx
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pWndParent) const;
+		BOOL IsWindow() const;	
 		BOOL IsWindowEnabled() const;
 		BOOL IsWindowVisible() const;
-		BOOL IsWindow() const;
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;		
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		void MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
@@ -489,6 +489,7 @@ namespace Win32xx
 		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
+		BOOL SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
@@ -2382,6 +2383,11 @@ namespace Win32xx
 	// The window region determines the area within the window where the system permits drawing.
 	{
 		return ::SetWindowRgn(m_hWnd, hRgn, bRedraw);
+	}
+
+	inline BOOL CWnd::SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const
+	{
+		return ::SetDlgItemInt(m_hWnd, nIDDlgItem, uValue, bSigned);
 	}
 
 	inline BOOL CWnd::SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const

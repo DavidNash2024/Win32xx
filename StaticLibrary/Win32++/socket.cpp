@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -40,7 +40,7 @@
 namespace Win32xx
 {
 
-	 CSocket::CSocket() : m_Socket(0), m_hEventThread(0)
+	CSocket::CSocket() : m_Socket(0), m_hEventThread(0)
 	{
 		try
 		{
@@ -61,7 +61,7 @@ namespace Win32xx
 		}
 	}
 
-	 CSocket::~CSocket()
+	CSocket::~CSocket()
 	{
 		Disconnect();
 
@@ -73,14 +73,14 @@ namespace Win32xx
 		::WSACleanup();
 	}
 
-	 void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
+	void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
 	{
 		rClientSock.m_Socket = ::accept(m_Socket, addr, addrlen);
-		if (SOCKET_ERROR == rClientSock.GetSocket())
+		if (INVALID_SOCKET == rClientSock.GetSocket())
 			TRACE(_T("Accept failed\n"));
 	}
 
-	 int CSocket::Bind(const char* addr, int remotePort)
+	int CSocket::Bind(const char* addr, int remotePort)
 	{
 		sockaddr_in clientService;
 		clientService.sin_family = AF_INET;
@@ -93,7 +93,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::Bind(const struct sockaddr* name, int namelen)
+	int CSocket::Bind(const struct sockaddr* name, int namelen)
 	{
 		int Result = ::bind (m_Socket, name, namelen);
 		if ( 0 != Result )
@@ -101,7 +101,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::Connect(const char* addr, int remotePort)
+	int CSocket::Connect(const char* addr, int remotePort)
 	{
 		sockaddr_in clientService;
 		clientService.sin_family = AF_INET;
@@ -115,7 +115,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::Connect(const struct sockaddr* name, int namelen)
+	int CSocket::Connect(const struct sockaddr* name, int namelen)
 	{
 		int Result = ::connect( m_Socket, (SOCKADDR*) &name, sizeof(namelen) );
 		if ( 0 != Result )
@@ -123,7 +123,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 BOOL CSocket::Create( int nSocketType /*= SOCK_STREAM*/)
+	BOOL CSocket::Create( int nSocketType /*= SOCK_STREAM*/)
 	{
 		switch(nSocketType)
 		{
@@ -147,7 +147,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	 void CSocket::Disconnect()
+	void CSocket::Disconnect()
 	{
 		::shutdown(m_Socket, SD_BOTH);
 		StopEvents();
@@ -155,7 +155,7 @@ namespace Win32xx
 		m_Socket = 0;
 	}
 
-	 DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
+	DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
 	{
 		// These are the possible network event notifications:
 		//	FD_READ 	Notification of readiness for reading.
@@ -172,7 +172,7 @@ namespace Win32xx
 		CSocket* pSocket = (CSocket*)thread_data;
 		SOCKET sClient = pSocket->m_Socket;
 
-		HANDLE hNetworkEvent = ::WSACreateEvent();
+		WSAEVENT hNetworkEvent = ::WSACreateEvent();
 		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE |
 			          FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
@@ -257,7 +257,7 @@ namespace Win32xx
 		}
 	}
 
-	 int  CSocket::GetPeerName(struct sockaddr* name, int* namelen)
+	int  CSocket::GetPeerName(struct sockaddr* name, int* namelen)
 	{
 		int Result = ::getpeername(m_Socket, name, namelen);
 		if (0 != Result)
@@ -265,7 +265,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int  CSocket::GetSockName(struct sockaddr* name, int* namelen)
+	int  CSocket::GetSockName(struct sockaddr* name, int* namelen)
 	{
 		int Result = ::getsockname(m_Socket, name, namelen);
 		if (0 != Result)
@@ -273,7 +273,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int  CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen)
+	int  CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen)
 	{
 		int Result = ::getsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
@@ -281,7 +281,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::ioCtlSocket(long cmd, u_long* argp)
+	int CSocket::ioCtlSocket(long cmd, u_long* argp)
 	{
 		int Result = ::ioctlsocket(m_Socket, cmd, argp);
 		if (0 != Result)
@@ -289,7 +289,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::Listen(int backlog /*= SOMAXCONN*/)
+	int CSocket::Listen(int backlog /*= SOMAXCONN*/)
 	{
 		int Result = ::listen(m_Socket, backlog);
 		if (0 != Result)
@@ -297,7 +297,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::Receive(char* buf, int len, int flags)
+	int CSocket::Receive(char* buf, int len, int flags)
 	{
 		int Result = ::recv(m_Socket, buf, len, flags);
 		if (SOCKET_ERROR == Result)
@@ -305,7 +305,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
+	int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
 	{
 		int Result = ::recvfrom(m_Socket, buf, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)
@@ -313,7 +313,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::Send(const char* buf, int len, int flags)
+	int CSocket::Send(const char* buf, int len, int flags)
 	{
 		int Result = ::send(m_Socket, buf, len, flags);
 		if (SOCKET_ERROR == Result)
@@ -321,7 +321,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
+	int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
 	{
 		int Result =  ::sendto(m_Socket, buf, len, flags, to, tolen);
 		if (SOCKET_ERROR == Result)
@@ -329,7 +329,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen)
+	int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen)
 	{
 		int Result = ::setsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
@@ -337,7 +337,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	 void CSocket::StartEvents()
+	void CSocket::StartEvents()
 	{
 		// This function starts the thread which monitors the socket for events.
 		StopEvents();	// Ensure the thread isn't already running
@@ -345,7 +345,7 @@ namespace Win32xx
 		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
 	}
 
-	 void CSocket::StopEvents()
+	void CSocket::StopEvents()
 	{
 		// Terminates the event thread gracefully (if possible)
 		if (m_hEventThread)
@@ -374,6 +374,4 @@ namespace Win32xx
 	}
 
 }
-
-
 

@@ -11,7 +11,7 @@ PrivateResource=
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@_
+CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@_
 Linker=-lComctl32_@@__@@_
 IsCpp=1
 Icon=

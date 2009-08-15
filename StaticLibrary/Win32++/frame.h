@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -53,10 +53,11 @@
 // In each case these members are exposed by a GetXXX function, allowing
 // them to be accessed or sent messages.
 
-// CFrame is responsible for creating a window which includes a menu and
-// toolbar (usualy hosted within a rebar), and a status bar, and managing
-// the position of these windows and the "view" window. The "view" window
-// is a seperate CWnd object assigned to the frame with the SetView function.
+// CFrame is responsible for creating a "frame" window. This window has a
+// menu and and several child windows, including a toolbar (usualy hosted 
+// within a rebar), and a status bar and a view positioned over the frame
+// window's non-client area. The "view" window is a seperate CWnd object 
+// assigned to the frame with the SetView function.
 
 // When compiling an application with these classes, it will need to be linked
 // with Comctl32.lib.
@@ -95,10 +96,10 @@ namespace Win32xx
 	struct ThemeMenu
 	{
 		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrHot1;		// Colour 1 for hot button
-		COLORREF clrHot2;		// Colour 2 for hot button
-		COLORREF clrPressed1;	// Colour 1 for pressed button
-		COLORREF clrPressed2;	// Colour 2 for pressed button
+		COLORREF clrHot1;		// Colour 1 for top menu. Color of selected menu item
+		COLORREF clrHot2;		// Colour 2 for top menu. Color of checkbox
+		COLORREF clrPressed1;	// Colour 1 for pressed top menu and side bar
+		COLORREF clrPressed2;	// Colour 2 for pressed top menu and side bar
 		COLORREF clrOutline;	// Colour for border outline
 	};
 
@@ -136,7 +137,7 @@ namespace Win32xx
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnWindowPosChanged();
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		void DoAltKey(WORD KeyCode);
@@ -188,20 +189,11 @@ namespace Win32xx
 		CFrame();
 		virtual ~CFrame();
 
-		// These are the functions you might wish to override
-		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
-		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
-		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
+		// Override these functions as required
 		virtual void AdjustFrameRect(RECT rcView) const;
-		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual CRect GetViewRect() const;
-		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
-		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
-		virtual void SetTheme();
-		virtual void SetupToolbar();
-		virtual void SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual void RecalcLayout();
 
 		// Virtual Attributes
@@ -213,7 +205,7 @@ namespace Win32xx
 		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
 		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
 
-		// These functions aren't intended to be overridden
+		// These functions aren't virtual, and shouldn't be overridden
 		HMENU GetFrameMenu() const	{return m_hMenu;}
 		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
 		tString GetRegistryKeyName(){return m_tsKeyName;}
@@ -221,37 +213,42 @@ namespace Win32xx
 		tString GetMRUEntry(size_t nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
-		void LoadRegistrySettings(LPCTSTR szKeyName);
 		void SetView(CWnd& wndView);
-
 		BOOL IsFrame() const			{return TRUE;}
 		BOOL IsMenubarUsed() const		{return (GetMenubar() != 0);}
 		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
 		BOOL IsRebarUsed() const		{return (GetRebar() != 0);}
 
 	protected:
-		// These are the functions you might wish to override
+		// Override these functions as required
+		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
+		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
-		virtual void AddToolbarBand(CToolbar& TB);
+		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle, UINT nID);
+		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
+		virtual void CreateToolbar();
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
-		virtual void OnCreate();
+		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
+		virtual void LoadRegistrySettings(LPCTSTR szKeyName);
+		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
+		virtual void OnCreate();
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
+		virtual void OnHelp();
 		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
+		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnSetFocus();
 		virtual void OnSysColorChange();
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual	void OnTimer(WPARAM wParam);
-		virtual void OnHelp();
-		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
-		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -259,12 +256,15 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void SaveRegistrySettings();
-		virtual void ShowToolbar();
-		virtual void UpdateMRUMenu();
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		// Its unlikely you would need to override these functions
 		virtual void SetMenubarBandSize();
+		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual void SetupToolbar();
+		virtual void SetTheme();	
+		virtual void SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
+		virtual void ShowStatusbar(BOOL bShow);
+		virtual void ShowToolbar(BOOL bShow);
+		virtual void UpdateMRUMenu();
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);	
 
 		enum Constants
 		{
@@ -288,6 +288,8 @@ namespace Win32xx
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		BOOL m_bUseToolbar;					// set to TRUE if the toolbar is used
+		BOOL m_bShowStatusbar;
+		BOOL m_bShowToolbar;
 		ThemeMenu m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
@@ -316,6 +318,8 @@ namespace Win32xx
 	};  // class CFrame
 
 }
+
+
 
 
 #endif // _FRAME_H_

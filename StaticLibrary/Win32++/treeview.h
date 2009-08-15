@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -64,13 +64,12 @@ namespace Win32xx
 		HIMAGELIST GetImageList(int iImageType) const;
 		UINT  GetIndent() const;
 		COLORREF GetInsertMarkColor() const;
-		BOOL GetISearchString(LPTSTR szString);
 		BOOL GetItem(TVITEM& Item) const;
 		DWORD_PTR GetItemData(HTREEITEM hItem) const;
 		int  GetItemHeight() const;
 		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
 		BOOL GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const;
-		tString GetItemText(HTREEITEM hItem) const;
+		tString GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const;
 		HTREEITEM GetLastVisible() const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
@@ -120,7 +119,6 @@ namespace Win32xx
 	};
 	
 }
-
 
 #endif // #ifndef _TREEVIEW_H_
 

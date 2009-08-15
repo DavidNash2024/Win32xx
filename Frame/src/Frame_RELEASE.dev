@@ -11,7 +11,7 @@ PrivateResource=Frame_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0400_@@_
+CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@_
 Linker=-lComctl32_@@__@@_
 IsCpp=1
 Icon=

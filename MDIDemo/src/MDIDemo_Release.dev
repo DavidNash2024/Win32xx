@@ -1,7 +1,7 @@
 [Project]
 FileName=MDIDemo_Release.dev
 Name=MDIDemo
-UnitCount=31
+UnitCount=30
 Type=0
 Ver=1
 ObjFiles=
@@ -11,7 +11,7 @@ PrivateResource=MDIDemo_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0500_@@__@@_
+CppCompiler=-D _WIN32_IE=0x0500_@@_-D NDEBUG_@@__@@_
 Linker=-lComctl32_@@__@@_
 IsCpp=1
 Icon=
@@ -218,16 +218,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=MDIDemo_private.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit19]
 FileName=MDIChildListView.h
 CompileCpp=1
 Folder=Header
@@ -237,7 +227,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit19]
 FileName=MDIChildSimple.h
 CompileCpp=1
 Folder=Header
@@ -247,7 +237,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit20]
 FileName=..\..\Win32++\default_resource.h
 CompileCpp=1
 Folder=Win32++
@@ -257,7 +247,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit21]
 FileName=..\..\Win32++\dialog.h
 CompileCpp=1
 Folder=Win32++
@@ -267,7 +257,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit22]
 FileName=..\..\Win32++\frame.h
 CompileCpp=1
 Folder=Win32++
@@ -277,7 +267,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit23]
 FileName=..\..\Win32++\gdi.h
 CompileCpp=1
 Folder=Win32++
@@ -287,7 +277,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit24]
 FileName=..\..\Win32++\listview.h
 CompileCpp=1
 Folder=Win32++
@@ -297,7 +287,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit25]
 FileName=..\..\Win32++\mdi.h
 CompileCpp=1
 Folder=Win32++
@@ -307,7 +297,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit26]
 FileName=..\..\Win32++\rebar.h
 CompileCpp=1
 Folder=Win32++
@@ -317,7 +307,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit28]
+[Unit27]
 FileName=..\..\Win32++\statusbar.h
 CompileCpp=1
 Folder=Win32++
@@ -327,7 +317,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit29]
+[Unit28]
 FileName=..\..\Win32++\toolbar.h
 CompileCpp=1
 Folder=Win32++
@@ -337,8 +327,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit30]
+[Unit29]
 FileName=..\..\Win32++\treeview.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=..\..\Win32++\wincore.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

@@ -29,17 +29,17 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_SIZE:
-		::InvalidateRect(hWnd, NULL, TRUE);
+		::InvalidateRect(m_hWnd, NULL, TRUE);
 		break;	// Also do default processing
 	}
 
 	// pass unhandled messages on for default processing
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 
 void CView::OnPaint(HDC hDC)

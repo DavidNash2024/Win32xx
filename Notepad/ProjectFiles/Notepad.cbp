@@ -34,6 +34,7 @@
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-w-par" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
@@ -132,6 +133,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-D_WIN32_IE=0x0400" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add library="comctl32" />

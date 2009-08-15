@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -73,8 +73,8 @@ namespace Win32xx
 	public:
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
-		virtual BOOL DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		virtual void OnApply();
 		virtual void OnCancel();
@@ -127,7 +127,7 @@ namespace Win32xx
 		virtual BOOL SetActivePage(CPropertyPage* pPage);
 		virtual void SetTitle(LPCTSTR szTitle);
 		virtual void SetWizardMode(BOOL bWizard);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);
 

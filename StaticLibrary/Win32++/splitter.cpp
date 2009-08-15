@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -37,10 +37,11 @@
 
 #include "splitter.h"
 
+
 namespace Win32xx
 {
 
-	 CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(10), m_bCapture(false),
+	CSplitter::CSplitter() : m_pPane0(NULL), m_pPane1(NULL), m_nBarPos(10), m_bCapture(false),
 		                       m_bVertical(true), m_bImmediate(false)
 	{
 		m_nWidth = 5;
@@ -52,14 +53,14 @@ namespace Win32xx
 		m_nBarpreMove = m_nBarPos;
 	}
 
-	 CSplitter::~CSplitter()
+	CSplitter::~CSplitter()
 	{
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbm);
 		::DeleteObject(m_hbrBackground);
 	}
 
-	 void CSplitter::DrawBar(int Pos)
+	void CSplitter::DrawBar(int Pos)
 	{
 		// draws a hashed bar while the splitter bar is being dragged
 		if (m_bCapture)
@@ -80,12 +81,12 @@ namespace Win32xx
 		}
 	}
 
-	 int CSplitter::GetBarPos()
+	int CSplitter::GetBarPos()
 	{
 		return m_nBarPos;
 	}
 
-	 void CSplitter::OnCancelMode()
+	void CSplitter::OnCancelMode()
 	{
 		// Handle unexpected loss of capture (application losing focus)
 		if (m_bCapture)
@@ -101,7 +102,7 @@ namespace Win32xx
 		}
 	}
 
-	 void CSplitter::OnCreate()
+	void CSplitter::OnCreate()
 	{
 		// Set the color of the splitter bar
 		CFrame* pFrame = (CFrame*)FromHandle(GetAncestor());
@@ -140,7 +141,7 @@ namespace Win32xx
 		m_pPane1->Create(m_hWnd);
 	}
 
-	 void CSplitter::OnLButtonDown()
+	void CSplitter::OnLButtonDown()
 	{
 		::SetCapture(m_hWnd);
 		m_bCapture = true;
@@ -151,7 +152,7 @@ namespace Win32xx
 		m_nBarpreMove = m_nBarPos;
 	}
 
-	 void CSplitter::OnLButtonUp()
+	void CSplitter::OnLButtonUp()
 	{
 		if (!m_bImmediate)
 			DrawBar(m_nBarPos);
@@ -162,7 +163,7 @@ namespace Win32xx
 		m_bCapture = false;
 	}
 
-	 void CSplitter::OnMouseMove()
+	void CSplitter::OnMouseMove()
 	{
 		if (m_bCapture)
 		{
@@ -212,12 +213,12 @@ namespace Win32xx
 		}
 	}
 
-	 void CSplitter::OnSize()
+	void CSplitter::OnSize()
 	{
 		RecalcLayout();
 	}
 
-	 void CSplitter::OnSysColorChange()
+	void CSplitter::OnSysColorChange()
 	{
 		// Set the color of the splitter bar
 		CFrame* pFrame = (CFrame*)FromHandle(GetAncestor());
@@ -226,7 +227,7 @@ namespace Win32xx
 			SetBarColor(RB.GetRebarTheme().clrBkgnd2);
 	}
 
-	 void CSplitter::RecalcLayout()
+	void CSplitter::RecalcLayout()
 	{
 		CRect r;
 		::GetClientRect(m_hWnd, &r);
@@ -252,7 +253,7 @@ namespace Win32xx
 		InvalidateRect(NULL, TRUE);
 	}
 
-	 void CSplitter::SetBarPos(int nBarPos)
+	void CSplitter::SetBarPos(int nBarPos)
 	{
 		if (nBarPos < 0) return;
 
@@ -271,7 +272,7 @@ namespace Win32xx
 		if (m_hWnd)	RecalcLayout();
 	}
 
-	 void CSplitter::SetBarColor(COLORREF color)
+	void CSplitter::SetBarColor(COLORREF color)
 	{
 		// Useful colors:
 		// GetSysColor(COLOR_BTNFACE)	// Default Grey
@@ -288,13 +289,13 @@ namespace Win32xx
 		}
 	}
 
-	 void CSplitter::SetPanes(CWnd& Pane0, CWnd& Pane1)
+	void CSplitter::SetPanes(CWnd& Pane0, CWnd& Pane1)
 	{
 		m_pPane0 = &Pane0;
 		m_pPane1 = &Pane1;
 	}
 
-	 void CSplitter::SetWidth(int nWidth)
+	void CSplitter::SetWidth(int nWidth)
 	{
 		// Sets the width of the splitter bar in pixels (default = 5)
 		if (nWidth > 0)
@@ -306,7 +307,7 @@ namespace Win32xx
 			RecalcLayout();
 	}
 
-	 void CSplitter::SetImmediate(bool bImmediate)
+	void CSplitter::SetImmediate(bool bImmediate)
 	{
 		// Set to true to resize the panes while the splitter bar is moving
 		// Set to false to resize the panse after the splitter bar has moved
@@ -315,7 +316,7 @@ namespace Win32xx
 			RecalcLayout();
 	}
 
-	 void CSplitter::SetVertical(bool bVertical)
+	void CSplitter::SetVertical(bool bVertical)
 	{
 		// Set to true for a vertical splitter bar, and false for a horizintal one
 		m_bVertical = bVertical;
@@ -323,7 +324,7 @@ namespace Win32xx
 			RecalcLayout();
 	}
 
-	 LRESULT CSplitter::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CSplitter::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		// Child windows are positioned over this window, so we don't see any
@@ -361,9 +362,7 @@ namespace Win32xx
 		}
 
 		// Use the frame default message handling for remaining messages
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 } // namespace Win32xx
-
-

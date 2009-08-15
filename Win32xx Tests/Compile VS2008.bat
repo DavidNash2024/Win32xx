@@ -11,6 +11,8 @@ call clean
 pushd "..\Networking"
 call clean
 popd
+RMDIR /S /Q "..\StaticLibrary\Frame\Debug"
+RMDIR /S /Q "..\StaticLibrary\Frame\Release"
 
 
 REM: Change the directory to the parent

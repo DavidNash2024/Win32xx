@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -37,17 +37,18 @@
 
 #include "dialog.h"
 
+
 namespace Win32xx
 {
 
-	 CDialog::CDialog(LPCTSTR lpszResName, HWND hParent/* = NULL*/)
+	CDialog::CDialog(LPCTSTR lpszResName, HWND hParent/* = NULL*/)
 		: IsIndirect(FALSE), IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
 		m_hDlgParent = hParent;
 		::InitCommonControls();
 	}
 
-	 CDialog::CDialog(UINT nResID, HWND hParent/* = NULL*/)
+	CDialog::CDialog(UINT nResID, HWND hParent/* = NULL*/)
 		: IsIndirect(FALSE), IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
 	{
 		m_hDlgParent = hParent;
@@ -55,14 +56,14 @@ namespace Win32xx
 	}
 
 	//For indirect dialogs - created from a dialog box template in memory.
-	 CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, HWND hParent/* = NULL*/)
+	CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, HWND hParent/* = NULL*/)
 		: IsIndirect(TRUE), IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
 	{
 		m_hDlgParent = hParent;
 		::InitCommonControls();
 	}
 
-	 CDialog::~CDialog()
+	CDialog::~CDialog()
 	{
 		if (m_hWnd != NULL)
 		{
@@ -73,14 +74,14 @@ namespace Win32xx
 		}
 	}
 
-	 HWND CDialog::Create(HWND hParent = 0)
+	HWND CDialog::Create(HWND hParent = 0)
 	{
 		// Allow a dialog to be used as a child window
 		SetDlgParent(hParent);
 		return DoModeless();
 	}
 
-	 BOOL CDialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CDialog if you wish to handle messages
 		// A typical function might look like this:
@@ -97,10 +98,10 @@ namespace Win32xx
 		//	}
 
 		// Always pass unhandled messages on to DialogProcDefault
-		return DialogProcDefault(hWnd, uMsg, wParam, lParam);
+		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	 BOOL CDialog::DialogProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// All unhandled dialog messages end up here
 
@@ -108,7 +109,6 @@ namespace Win32xx
 	    {
 	    case WM_INITDIALOG:
 			{
-				m_hWnd = hWnd;
 				// Center the dialog
 				CenterWindow();
 			}
@@ -124,12 +124,15 @@ namespace Win32xx
 				return TRUE;
 			default:
 				{
-					OnCommand(wParam, lParam);
-
 					// Refelect this message if it's from a control
-					CWnd* Wnd = FromHandle((HWND)lParam);
-					if (Wnd != NULL)
-						Wnd->OnMessageReflect(uMsg, wParam, lParam);
+					CWnd* pWnd = FromHandle((HWND)lParam);
+					if (pWnd != NULL)
+						if (pWnd->OnMessageReflect(uMsg, wParam, lParam))
+							return TRUE;
+
+					// Handle user commands
+					if (OnCommand(wParam, lParam))
+						return TRUE;
 				}
 				break;  // Some commands require default processing
 	        }
@@ -138,26 +141,19 @@ namespace Win32xx
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* WndFrom = FromHandle(hwndFrom);
-				if (WndFrom != NULL)
-				{
-					BOOL bReturn = (BOOL)WndFrom->OnNotifyReflect(wParam, lParam);
-					if (bReturn) return TRUE;
-				}
+				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (m_hWnd != ::GetParent(hwndFrom))
-				{
-					// Some controls (eg ListView) have child windows.
-					// Reflect those notifications too.
-					CWnd* WndFromParent = FromHandle(::GetParent(hwndFrom));
-					if (WndFromParent != NULL)
+				if (pWndFrom != NULL)
+				{	
+					// Only reflect messages from the parent to avoid possible double handling
+					if (::GetParent(hwndFrom) == m_hWnd)
 					{
-						BOOL bReturn = (BOOL)WndFromParent->OnNotifyReflect(wParam, lParam);
+						BOOL bReturn = pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (bReturn) return TRUE;
 					}
 				}
 			}
-			return (TRUE == OnNotify(wParam, lParam) );
+			return OnNotify(wParam, lParam);
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -175,14 +171,14 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			return (BOOL) MessageReflect(hWnd, uMsg, wParam, lParam);
+			return (BOOL) MessageReflect(m_hWnd, uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
 	    return FALSE;
 
 	} // LRESULT CALLBACK CDialog::DialogProc(...)
 
-	 INT_PTR CDialog::DoModal()
+	INT_PTR CDialog::DoModal()
 	{
 		// Create a modal dialog
 		// A modal dialog box must be closed by the user before the application continues
@@ -230,7 +226,7 @@ namespace Win32xx
 
 	}
 
-	 HWND CDialog::DoModeless()
+	HWND CDialog::DoModeless()
 	{
 		// Modeless dialog
 		try
@@ -275,7 +271,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	 void CDialog::EndDialog(INT_PTR nResult)
+	void CDialog::EndDialog(INT_PTR nResult)
 	{
 		if (::IsWindow(m_hWnd))
 		{
@@ -287,13 +283,13 @@ namespace Win32xx
 		m_hWnd = NULL;
 	}
 
-	 void CDialog::OnCancel()
+	void CDialog::OnCancel()
 	{
 		// Override to customize OnCancel behaviour
 		EndDialog(IDCANCEL);
 	}
 
-	 BOOL CDialog::OnInitDialog()
+	BOOL CDialog::OnInitDialog()
 	{
 		// Called when the dialog is initialized
 		// Override it in your derived class to automatically perform tasks
@@ -302,13 +298,13 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	 void CDialog::OnOK()
+	void CDialog::OnOK()
 	{
 		// Override to customize OnOK behaviour
 		EndDialog(IDOK);
 	}
 
-	 BOOL CDialog::PreTranslateMessage(MSG* pMsg)
+	BOOL CDialog::PreTranslateMessage(MSG* pMsg)
 	{
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
@@ -320,13 +316,13 @@ namespace Win32xx
 		return CWnd::PreTranslateMessage(pMsg);
 	}
 
-	 void CDialog::SetDlgParent(HWND hParent)
+	void CDialog::SetDlgParent(HWND hParent)
 	// Allows the parent of the dialog to be set before the dialog is created
 	{
 		m_hDlgParent = hParent;
 	}
 
-	 BOOL CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
@@ -335,7 +331,7 @@ namespace Win32xx
 			if (0 != w)
 			{
 				// CDialog pointer found, so call the CDialog's DialogProc
-				return w->DialogProc(hWnd, uMsg, wParam, lParam);
+				return w->DialogProc(uMsg, wParam, lParam);
 			}
 
 			else
@@ -356,7 +352,7 @@ namespace Win32xx
 				w->m_hWnd = hWnd;
 				w->AddToMap();
 
-				return w->DialogProc(hWnd, uMsg, wParam, lParam);
+				return w->DialogProc(uMsg, wParam, lParam);
 			}
 		}
 
@@ -369,6 +365,3 @@ namespace Win32xx
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
 
 } // namespace Win32xx
-
-
-

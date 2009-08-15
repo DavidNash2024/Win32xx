@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -44,7 +44,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	// Definitions for the CMenubar class
 	//
-	 CMenubar::CMenubar()
+	CMenubar::CMenubar()
 	{
 		m_bExitAfter	= FALSE;
 		m_hTopMenu		= NULL;
@@ -60,31 +60,31 @@ namespace Win32xx
 		ZeroMemory(&m_ThemeMenu, sizeof(ThemeMenu));
 	}
 
-	 CMenubar::~CMenubar()
+	CMenubar::~CMenubar()
 	{
 	}
 
-	 void CMenubar::DoAltKey(WORD KeyCode)
+	void CMenubar::DoAltKey(WORD KeyCode)
 	{
 		//Handle key pressed with Alt held down
 		UINT ID;
-		if (::SendMessage(m_hWnd, TB_MAPACCELERATOR, KeyCode, (LPARAM) &ID))
+		if (SendMessage(TB_MAPACCELERATOR, KeyCode, (LPARAM) &ID))
 		{
 			GrabFocus();
 			m_bKeyMode = TRUE;
 			SetHotItem(ID);
 			m_bMenuActive = TRUE;
-			::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+			PostMessage(UWM_POPUPMENU, 0L, 0L);
 		}
 		else
 			::MessageBeep(MB_OK);
 	}
 
-	 void CMenubar::DoPopupMenu()
+	void CMenubar::DoPopupMenu()
 	{
 		if (m_bKeyMode)
 			// Simulate a down arrow key press
-			::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0L);
+			PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
 
 		m_bKeyMode = FALSE;
 		m_bExitAfter = FALSE;
@@ -105,15 +105,15 @@ namespace Win32xx
 
 		// convert rectangle to desktop coordinates
 		::MapWindowPoints(m_hWnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
-
+		
 		// Position popup above toolbar if it won't fit below
 		TPMPARAMS tpm;
 		tpm.cbSize = sizeof(TPMPARAMS);
 		tpm.rcExclude = rc;
 
 		// Set the hot button
-		::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
-		::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(TRUE, 0));
+		SendMessage(TB_SETHOTITEM, m_nHotItem, 0L);
+		SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(TRUE, 0));
 
 		m_bSelPopup = FALSE;
 		m_hSelMenu = NULL;
@@ -157,7 +157,7 @@ namespace Win32xx
 			GrabFocus();
 	}
 
-	 void CMenubar::DrawAllMDIButtons(CDC& DrawDC)
+	void CMenubar::DrawAllMDIButtons(CDC& DrawDC)
 	{
 		if (!IsMDIFrame())
 			return;
@@ -196,7 +196,7 @@ namespace Win32xx
 		}
 	}
 
-	 void CMenubar::DrawMDIButton(CDC& DrawDC, int iButton, UINT uState)
+	void CMenubar::DrawMDIButton(CDC& DrawDC, int iButton, UINT uState)
 	{
 		if (!IsRectEmpty(&m_MDIRect[iButton]))
 		{
@@ -206,23 +206,23 @@ namespace Win32xx
 				{
 					// Draw a grey outline
 					DrawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
-					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 
 				break;
@@ -230,12 +230,12 @@ namespace Win32xx
 				{
 					// Draw outline, black on top, white on bottom
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					::MoveToEx(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom, NULL);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					::LineTo(DrawDC, m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					DrawDC.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
 					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					::LineTo(DrawDC, m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					DrawDC.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			}
@@ -246,73 +246,72 @@ namespace Win32xx
 			{
 			case MDI_MIN:
 				// Manually Draw Minimise button
-				::MoveToEx(DrawDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4, NULL);
-				::LineTo(DrawDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
+				DrawDC.MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4);
+				DrawDC.LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
 
-				::MoveToEx(DrawDC, m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5, NULL);
-				::LineTo(DrawDC, m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
+				DrawDC.MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5);
+				DrawDC.LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
 				break;
 			case MDI_RESTORE:
 				// Manually Draw Restore Button
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
-				::LineTo(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				DrawDC.MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				DrawDC.LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
+				DrawDC.LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
 
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 3, m_MDIRect[1].top + 8, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
+				DrawDC.MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 8);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
 
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 7, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
-				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
-				::LineTo(DrawDC, m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
+				DrawDC.MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 7);
+				DrawDC.LineTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
+				DrawDC.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
+				DrawDC.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
+				DrawDC.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
 
-				::MoveToEx(DrawDC, m_MDIRect[1].left + 5, m_MDIRect[1].top + 5, NULL);
-				::LineTo(DrawDC, m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
+				DrawDC.MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 5);
+				DrawDC.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
 				break;
 			case MDI_CLOSE:
 				// Manually Draw Close Button
-				::MoveToEx(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].left + 5, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
+				DrawDC.MoveTo(m_MDIRect[2].left + 5, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].top +6, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +6);
+				DrawDC.LineTo(m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].right -5, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].right -5, m_MDIRect[2].top +6, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
+				DrawDC.MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +6);
+				DrawDC.LineTo(m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
 
-				::MoveToEx(DrawDC, m_MDIRect[2].right -6, m_MDIRect[2].top +5, NULL);
-				::LineTo(DrawDC, m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
+				DrawDC.MoveTo(m_MDIRect[2].right -6, m_MDIRect[2].top +5);
+				DrawDC.LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
 				break;
 			}
 		}
 	}
 
-	 void CMenubar::ExitMenu()
+	void CMenubar::ExitMenu()
 	{
 		ReleaseFocus();
 		m_bKeyMode = FALSE;
 		m_bMenuActive = FALSE;
-		::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, (LPARAM) MAKELONG (FALSE, 0));
+		SendMessage(TB_PRESSBUTTON, m_nHotItem, (LPARAM) MAKELONG (FALSE, 0));
 		SetHotItem(-1);
 
-		CPoint pt;
-		::GetCursorPos(&pt);
+		CPoint pt = GetCursorPos();
 		::ScreenToClient(m_hWnd, &pt);
 
 		// Update mouse mouse position for hot tracking
-		::SendMessage(m_hWnd, WM_MOUSEMOVE, 0L, MAKELONG(pt.x, pt.y));
+		SendMessage(WM_MOUSEMOVE, 0L, MAKELONG(pt.x, pt.y));
 	}
 
-	 HWND CMenubar::GetActiveMDIChild()
+	HWND CMenubar::GetActiveMDIChild()
 	{
 		HWND hwndMDIChild = NULL;
 		if (IsMDIFrame())
@@ -323,7 +322,7 @@ namespace Win32xx
 		return hwndMDIChild;
 	}
 
-	 void CMenubar::GrabFocus()
+	void CMenubar::GrabFocus()
 	{
 		if (::GetFocus() != m_hWnd)
 			m_hPrevFocus = ::SetFocus(m_hWnd);
@@ -331,7 +330,7 @@ namespace Win32xx
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
 
-	 BOOL CMenubar::IsMDIChildMaxed() const
+	BOOL CMenubar::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
 
@@ -343,26 +342,26 @@ namespace Win32xx
 		return bMaxed;
 	}
 
-	 BOOL CMenubar::IsMDIFrame() const
+	BOOL CMenubar::IsMDIFrame() const
 	{
 		return m_pFrame->IsMDIFrame();
 	}
 
-	 void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
+	void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
 	{
 		if (!m_bMenuActive)
 			DoAltKey(LOWORD(wParam));
 	}
 
-	 void CMenubar::OnCreate()
+	void CMenubar::OnCreate()
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-		::SendMessage(m_hWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
+		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
 		m_pFrame = (CFrame*)FromHandle(GetAncestor());
 	}
 
-	 LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
+	LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
 	// CustomDraw is used to render the Menubar's toolbar buttons
 	{
 		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
@@ -396,7 +395,7 @@ namespace Win32xx
 					int cy = ::GetSystemMetrics (SM_CYSMICON);
 					int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
 					int x = 0;
-					::DrawIconEx(DrawDC, x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+					DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
 					// Detach the DC so it doesn't get destroyed
 					DrawDC.DetachDC();
@@ -409,23 +408,23 @@ namespace Win32xx
 					{
 						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							GradientFill(DrawDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcRect, FALSE);
+							DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							GradientFill(DrawDC, m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, &rcRect, FALSE);
+							DrawDC.GradientFill(m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, rcRect, FALSE);
 						}
 
 						// Draw border
 						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						::MoveToEx(DrawDC, rcRect.left, rcRect.bottom -1, NULL);
-						::LineTo(DrawDC, rcRect.left, rcRect.top);
-						::LineTo(DrawDC, rcRect.right-1, rcRect.top);
-						::LineTo(DrawDC, rcRect.right-1, rcRect.bottom);
+						DrawDC.MoveTo(rcRect.left, rcRect.bottom -1);
+						DrawDC.LineTo(rcRect.left, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
 						if (!(nState & CDIS_SELECTED))
 						{
-							::MoveToEx(DrawDC, rcRect.right-1, rcRect.bottom-1, NULL);
-							::LineTo(DrawDC, rcRect.left, rcRect.bottom-1);
+							DrawDC.MoveTo(rcRect.right-1, rcRect.bottom-1);
+							DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
 						}
 					}
 					else
@@ -433,24 +432,24 @@ namespace Win32xx
 						// Draw highlight rectangle
 						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-						::FillRect(DrawDC, &rcRect, hbHighlight);
+						DrawDC.FillRect(rcRect, hbHighlight);
 					}
 
 					TCHAR str[80] = _T("");
-					int nLength = (int)::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
+					int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
 					if ((nLength > 0) && (nLength < 80))
-						::SendMessage(m_hWnd, TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
+						SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
 
 					// Draw highlight text
-					DrawDC.AttachFont((HFONT)::SendMessage(m_hWnd, WM_GETFONT, 0L, 0L));
+					DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
 					if (!m_ThemeMenu.UseThemes)
-						::SetTextColor(DrawDC, ::GetSysColor(COLOR_HIGHLIGHTTEXT));
+						DrawDC.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
 
 					rcRect.bottom += 1;
-					int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
-					::DrawText(DrawDC, str, lstrlen(str), &rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+					int iMode = DrawDC.SetBkMode(TRANSPARENT);
+					DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-					::SetBkMode(DrawDC, iMode);
+					DrawDC.SetBkMode(iMode);
 					DrawDC.DetachFont();
 					DrawDC.DetachDC();
 					return CDRF_SKIPDEFAULT;  // No further drawing
@@ -474,7 +473,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	 void CMenubar::OnKeyDown(WPARAM wParam, LPARAM /*lParam*/)
+	void CMenubar::OnKeyDown(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		switch (wParam)
 		{
@@ -493,7 +492,7 @@ namespace Win32xx
 		case VK_UP:
 		case VK_RETURN:
 			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+			PostMessage(UWM_POPUPMENU, 0L, 0L);
 			break;
 
 		case VK_LEFT:
@@ -511,10 +510,10 @@ namespace Win32xx
 			if (m_bKeyMode)
 			{
 				UINT ID;
-				if (::SendMessage(m_hWnd, TB_MAPACCELERATOR, wParam, (LPARAM) &ID))
+				if (SendMessage(TB_MAPACCELERATOR, wParam, (LPARAM) &ID))
 				{
 					m_nHotItem = ID;
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+					PostMessage(UWM_POPUPMENU, 0L, 0L);
 				}
 				else
 					::MessageBeep(MB_OK);
@@ -523,7 +522,7 @@ namespace Win32xx
 		} // switch (wParam)
 	}
 
-	 void CMenubar::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
+	void CMenubar::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		GrabFocus();
 		m_nMDIButton = 0;
@@ -536,7 +535,7 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CDC MenubarDC = ::GetDC(m_hWnd);
+				CDC MenubarDC = GetDC();
 				m_nMDIButton = -1;
 
 				if (PtInRect(&m_MDIRect[0], pt)) m_nMDIButton = 0;
@@ -554,13 +553,13 @@ namespace Win32xx
 				if (0 == HitTest())
 				{
 					m_nHotItem = 0;
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+					PostMessage(UWM_POPUPMENU, 0L, 0L);
 				}
 			}
 		}
 	}
 
-	 void CMenubar::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
+	void CMenubar::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);
@@ -601,7 +600,7 @@ namespace Win32xx
 		ExitMenu();
 	}
 
-	 BOOL CMenubar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	BOOL CMenubar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// When a popup menu is active, StaticMsgHook directs all menu messages here
 	{
 		switch(uMsg)
@@ -618,9 +617,9 @@ namespace Win32xx
 
 					m_bMenuActive = FALSE;
 					m_bKeyMode = TRUE;
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
-					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
-					::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
+					SendMessage(WM_CANCELMODE, 0L, 0L);
+					SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+					SendMessage(TB_SETHOTITEM, m_nHotItem, 0L);
 					break;
 
 				case VK_LEFT:
@@ -628,15 +627,15 @@ namespace Win32xx
 				    if ((m_hSelMenu) &&(m_hSelMenu != m_hPopupMenu))
 						return FALSE;
 
-					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+					SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 
 					// Move left to next topmenu item
 					(m_nHotItem > 0)? --m_nHotItem : m_nHotItem = GetButtonCount()-1;
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
+					SendMessage(WM_CANCELMODE, 0L, 0L);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
-					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0L);
+					PostMessage(UWM_POPUPMENU, 0L, 0L);
+					PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
 					break;
 
 				case VK_RIGHT:
@@ -644,15 +643,15 @@ namespace Win32xx
 					if (m_bSelPopup)
 						return FALSE;
 
-					::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+					SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 
 					// Move right to next topmenu item
 					(m_nHotItem < GetButtonCount()-1)? ++m_nHotItem : m_nHotItem = 0;
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
+					SendMessage(WM_CANCELMODE, 0L, 0L);
 
 					// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-					::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
-					::PostMessage(m_hWnd, WM_KEYDOWN, VK_DOWN, 0L);
+					PostMessage(UWM_POPUPMENU, 0L, 0L);
+					PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
 					break;
 
 				case VK_RETURN:
@@ -675,7 +674,7 @@ namespace Win32xx
 				if (HitTest() >= 0)
 				{
 					// Cancel popup when we hit a button a second time
-					::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
+					SendMessage(WM_CANCELMODE, 0L, 0L);
 					return TRUE;
 				}
 			}
@@ -722,7 +721,7 @@ namespace Win32xx
 				::ScreenToClient(m_hWnd, &pt);
 
 				// Reflect messages back to the Menubar for hot tracking
-				::SendMessage(m_hWnd, WM_MOUSEMOVE, 0L, MAKELPARAM(pt.x, pt.y));
+				SendMessage(WM_MOUSEMOVE, 0L, MAKELPARAM(pt.x, pt.y));
 			}
 			break;
 
@@ -730,13 +729,13 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	 void CMenubar::OnMouseLeave()
+	void CMenubar::OnMouseLeave()
 	{
 		if (IsMDIFrame())
 		{
 			if (IsMDIChildMaxed())
 			{
-				CDC MenubarDC = ::GetDC(m_hWnd);
+				CDC MenubarDC = GetDC();
 
 				DrawMDIButton(MenubarDC, MDI_MIN,     0);
 				DrawMDIButton(MenubarDC, MDI_RESTORE, 0);
@@ -745,7 +744,7 @@ namespace Win32xx
 		}
 	}
 
-	 void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	void CMenubar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);
@@ -755,7 +754,7 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CDC MenubarDC = ::GetDC(m_hWnd);
+				CDC MenubarDC = GetDC();
 				int MDIButton = -1;
 				if (PtInRect(&m_MDIRect[0], pt)) MDIButton = 0;
 				if (PtInRect(&m_MDIRect[1], pt)) MDIButton = 1;
@@ -796,7 +795,7 @@ namespace Win32xx
 		}
 	}
 
-	 LRESULT CMenubar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
+	LRESULT CMenubar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
 	{
 		switch (((LPNMHDR)lParam)->code)
 		{
@@ -807,36 +806,40 @@ namespace Win32xx
 
 		case TBN_DROPDOWN:
 			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+			PostMessage(UWM_POPUPMENU, 0L, 0L);
 			break;
 
 		case TBN_HOTITEMCHANGE:
 			// This is the notification that a hot item change is about to occur
 			// This is used to bring up a new popup menu when required
 			{
-				DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
-				if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
+				CPoint pt = GetCursorPos();
+				if (m_hWnd == WindowFromPoint(pt))	// Menubar window must be on top
 				{
-					int nButton = HitTest();
-					if ((m_bMenuActive) && (nButton != m_nHotItem))
+					DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
+					if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
 					{
-						::SendMessage(m_hWnd, TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+						int nButton = HitTest();
+						if ((m_bMenuActive) && (nButton != m_nHotItem))
+						{
+							SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+							m_nHotItem = nButton;
+							SendMessage(WM_CANCELMODE, 0L, 0L);
+
+							//Always use PostMessage for USER_POPUPMENU (not SendMessage)
+							PostMessage(UWM_POPUPMENU, 0L, 0L);
+						}
 						m_nHotItem = nButton;
-						::SendMessage(m_hWnd, WM_CANCELMODE, 0L, 0L);
+					}					
 
-						//Always use PostMessage for USER_POPUPMENU (not SendMessage)
-						::PostMessage(m_hWnd, UWM_POPUPMENU, 0L, 0L);
+					// Handle escape from popup menu
+					if ((flag & HICF_LEAVING) && m_bKeyMode)
+					{
+						m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
+						PostMessage(TB_SETHOTITEM, m_nHotItem, 0L);
 					}
-					m_nHotItem = nButton;
+				
 				}
-
-				// Handle escape from popup menu
-				if ((flag & HICF_LEAVING) && m_bKeyMode)
-				{
-					m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
-					::PostMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
-				}
-
 				break;
 			} //case TBN_HOTITEMCHANGE:
 
@@ -844,24 +847,24 @@ namespace Win32xx
 		return 0L;
 	} // CMenubar::OnNotify(...)
 
-	 void CMenubar::OnWindowPosChanged()
+	void CMenubar::OnWindowPosChanged()
 	{
-		::InvalidateRect(m_hWnd, &m_MDIRect[0], TRUE);
-		::InvalidateRect(m_hWnd, &m_MDIRect[1], TRUE);
-		::InvalidateRect(m_hWnd, &m_MDIRect[2], TRUE);
+		InvalidateRect(&m_MDIRect[0], TRUE);
+		InvalidateRect(&m_MDIRect[1], TRUE);
+		InvalidateRect(&m_MDIRect[2], TRUE);
 		{
-			CDC MenubarDC = ::GetDC(m_hWnd);
+			CDC MenubarDC = GetDC();
 			DrawAllMDIButtons(MenubarDC);
 		}
 	}
 
-	 void CMenubar::PreCreate(CREATESTRUCT &cs)
+	void CMenubar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;
 		cs.lpszClass = TOOLBARCLASSNAME;
 	}
 
-	 void CMenubar::ReleaseFocus()
+	void CMenubar::ReleaseFocus()
 	{
 		if (m_hPrevFocus)
 			::SetFocus(m_hPrevFocus);
@@ -870,13 +873,13 @@ namespace Win32xx
 		::ReleaseCapture();
 	}
 
-	 void CMenubar::SetHotItem(int nHot)
+	void CMenubar::SetHotItem(int nHot)
 	{
 		m_nHotItem = nHot;
-		::SendMessage(m_hWnd, TB_SETHOTITEM, m_nHotItem, 0L);
+		SendMessage(TB_SETHOTITEM, m_nHotItem, 0L);
 	}
 
-	 void CMenubar::SetMenu(HMENU hMenu)
+	void CMenubar::SetMenu(HMENU hMenu)
 	{
 		if (!IsWindow()) return;
 
@@ -884,14 +887,14 @@ namespace Win32xx
 		int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
 
 		// Remove any existing buttons
-		while (::SendMessage(m_hWnd, TB_BUTTONCOUNT,  0L, 0L) > 0)
+		while (SendMessage(TB_BUTTONCOUNT,  0L, 0L) > 0)
 		{
-			if(!::SendMessage(m_hWnd, TB_DELETEBUTTON, 0L, 0L))
+			if(!SendMessage(TB_DELETEBUTTON, 0L, 0L))
 				break;
 		}
 
 		// Set the Bitmap size to zero
-		::SendMessage(m_hWnd, TB_SETBITMAPSIZE, 0L, MAKELPARAM(0, 0));
+		SendMessage(TB_SETBITMAPSIZE, 0L, MAKELPARAM(0, 0));
 
 		if (IsMDIChildMaxed())
 		{
@@ -901,7 +904,7 @@ namespace Win32xx
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
 			tbb.iString = (INT_PTR)_T(" ");
-			if(!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
+			if(!SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb))
 				throw CWinException(_T("Menubar::SetMenu  TB_ADDBUTTONS failed"));
 
 			SetButtonText(0, _T("    "));
@@ -915,7 +918,7 @@ namespace Win32xx
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
 			tbb.iString = (INT_PTR)_T(" ");
-			if (!::SendMessage(m_hWnd, TB_ADDBUTTONS, 1, (WPARAM)&tbb))
+			if (!SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb))
 				throw CWinException(_T("Menubar::SetMenu  TB_ADDBUTTONS failed"));
 
 			// Add the menu title to the string table
@@ -929,7 +932,7 @@ namespace Win32xx
 
 	}
 
-	 void CMenubar::SetMenubarTheme(ThemeMenu& Theme)
+	void CMenubar::SetMenubarTheme(ThemeMenu& Theme)
 	{
 		m_ThemeMenu.UseThemes   = Theme.UseThemes;
 		m_ThemeMenu.clrHot1     = Theme.clrHot1;
@@ -938,10 +941,10 @@ namespace Win32xx
 		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
 		m_ThemeMenu.clrOutline  = Theme.clrOutline;
 
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 	}
 
-	 LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
+	LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		MSG* pMsg = (MSG*)lParam;
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
@@ -959,7 +962,7 @@ namespace Win32xx
 		return CallNextHookEx(pTLSData->hMenuHook, nCode, wParam, lParam);
 	}
 
-	 void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
+	void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
 	{
 		if (SC_KEYMENU == wParam)
 		{
@@ -977,7 +980,7 @@ namespace Win32xx
 		}
 	}
 
-	 LRESULT CMenubar::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CMenubar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -1006,7 +1009,7 @@ namespace Win32xx
 			return 0L;	// Discard these messages
 		case WM_LBUTTONDOWN:
 			// Do default processing first
-			CallPrevWindowProc(hWnd, uMsg, wParam, lParam);
+			CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
 
 			OnLButtonDown(wParam, lParam);
 			return 0L;
@@ -1041,11 +1044,11 @@ namespace Win32xx
 			break;
 		case WM_WINDOWPOSCHANGING:
 			// Bypass CToolbar::WndProcDefault for this message
-			return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+			return CWnd::WndProcDefault(uMsg, wParam, lParam);
 
 		} // switch (uMsg)
 
-		return CToolbar::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CToolbar::WndProcDefault(uMsg, wParam, lParam);
 	} // LRESULT CMenubar::WndProcDefault(...)
 
 
@@ -1053,8 +1056,9 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	 CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE), 
+	CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
+		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE),
+						m_bShowStatusbar(TRUE), m_bShowToolbar(TRUE),
 						m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), 
 						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
@@ -1071,7 +1075,7 @@ namespace Win32xx
 			m_OldStatus[i] = _T('\0');
 	}
 
-	 CFrame::~CFrame()
+	CFrame::~CFrame()
 	{
 		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 		{
@@ -1084,7 +1088,7 @@ namespace Win32xx
 		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
 	}
 
-	 BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)
+	BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)
 	{
 		// Get ImageList image size
 		int cxOld = 0;
@@ -1114,7 +1118,7 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	 size_t CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
+	size_t CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
 	// Adds the icons from a bitmap resouce to an internal ImageList for use with popup menu items.
 	// Note:  If existing are a different size to the new ones, the old ones will be removed!
 	//        The ToolbarDisabledID is ignored unless ToolbarID and ToolbarDisabledID bitmaps are the same size.
@@ -1154,8 +1158,7 @@ namespace Win32xx
 			ImageList_GetIconSize(m_himlMenu, &Oldcx, &Oldcy);
 			if ((iImageWidth != Oldcx) || (iImageHeight != Oldcy))
 			{
-				// The new icons are a different size to the old ones in m_himlToolbar,
-				TRACE(_T("WARNING: Unable to add new icons of a different size\n"));
+				TRACE(_T("Unable to add icons. The new icons are a different size to the old ones\n"));
 				return m_vMenuIcons.size();
 			}
 		}
@@ -1209,7 +1212,7 @@ namespace Win32xx
 		return m_vMenuIcons.size();
 	}
 
-	 void CFrame::AddMenubarBand()
+	void CFrame::AddMenubarBand()
 	{
 		// Adds a Menubar to the rebar control
 		REBARBANDINFO rbbi = {0};
@@ -1218,29 +1221,30 @@ namespace Win32xx
 		// Calculate the Menubar height from the menu font
 		CSize csMenubar;
 		NONCLIENTMETRICS nm = {0};
-		nm.cbSize = sizeof (NONCLIENTMETRICS);
+		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfMenuFont;
 		CDC dcFrame = GetDC();
-		dcFrame.CreateFontIndirect(&lf);
-		::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
+		dcFrame.CreateFontIndirect(lf);
+		csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 		int Menubar_Height = csMenubar.cy + 8;
 
-		rbbi.cbSize     = sizeof(REBARBANDINFO);
-		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
 		rbbi.cxMinChild = sz.cx;
 		rbbi.cx         = sz.cx;
 		rbbi.cyMinChild = Menubar_Height;
 		rbbi.cyMaxChild = Menubar_Height;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
 		rbbi.hwndChild  = GetMenubar();
+		rbbi.wID        = IDW_MENUBAR;
 
+		// Note: rbbi.cbSize is set inside the InsertBand function
 		GetRebar().InsertBand(-1, rbbi);
 		SetMenubarBandSize();
 		GetRebar().SetMenubar(GetMenubar());
 	}
 
-	 void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
+	void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
 	{
 		// Erase possible duplicate entries from vector
 		RemoveMRUEntry(szMRUEntry);
@@ -1255,7 +1259,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	 void CFrame::AddToolbarBand(CToolbar& TB)
+	void CFrame::AddToolbarBand(CToolbar& TB, DWORD dwStyle, UINT nID)
 	{
 		// Adds a Toolbar to the rebar control
 
@@ -1266,20 +1270,21 @@ namespace Win32xx
 		REBARBANDINFO rbbi = {0};
 		CSize sz = TB.GetMaxSize();
 
-		rbbi.cbSize     = sizeof(REBARBANDINFO);
-		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE;
+		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
 		rbbi.cx         = sz.cx +2;
 		rbbi.cxMinChild = sz.cx +2;
 
-		rbbi.fStyle     = /*RBBS_BREAK |*/ RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+		rbbi.fStyle     = dwStyle;
 		rbbi.hwndChild  = TB;
+		rbbi.wID        = nID;
 
+		// Note: rbbi.cbSize is set inside the InsertBand function
 		GetRebar().InsertBand(-1, rbbi);
 	}
 
-	 void CFrame::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText)
+	void CFrame::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
@@ -1288,10 +1293,10 @@ namespace Win32xx
 		if(0 != szText)
 			GetToolbar().SetButtonText(nID, szText);
 
-		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolbar")); 
+		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolbar\n")); 
 	}
 
-	 void CFrame::AdjustFrameRect(RECT rcView) const
+	void CFrame::AdjustFrameRect(RECT rcView) const
 	// Adjust the size of the frame to accommodate the View window's dimensions
 	{
 		// Adjust for the view styles
@@ -1314,7 +1319,42 @@ namespace Win32xx
 		SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
 	}
 
-	 void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
+	void CFrame::CreateToolbar()
+	{
+		if (IsRebarSupported() && m_bUseRebar)
+			AddToolbarBand(GetToolbar(), RBBS_BREAK, IDW_TOOLBAR);	// Create the toolbar inside rebar
+		else	
+			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
+
+		SetupToolbar();	
+		
+		if (IsRebarSupported() && m_bUseRebar && m_bUseThemes)
+		{
+			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().LockMenuBand)
+			{
+				// Hide gripper for single toolbar
+				if (GetRebar().GetBandCount() <= 2)
+					GetRebar().ShowGripper(GetRebar().GetBand(GetToolbar()), FALSE);
+			}
+		}
+		
+		if (GetToolbar().GetToolbarData().size() > 0)
+		{
+			// Set the toolbar images (if not already set in SetupToolbar)
+			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
+			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
+				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+
+			// Add the icons for popup menu 
+			AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+		}
+		else
+		{
+			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
+		}
+	}
+
+	void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
 		CDC DrawDC = pdis->hDC;
@@ -1324,8 +1364,8 @@ namespace Win32xx
 		// Draw the checkmark's background rectangle first
 		if (m_ThemeMenu.UseThemes)
 		{
-			int Iconx = 0, Icony = 0;
-			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+			int Iconx = 16, Icony = 16;
+			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 			int offset = -1 + (rc.bottom - rc.top - Icony)/2;
 			int height = rc.bottom - rc.top;
 			CRect rcBk;
@@ -1335,7 +1375,7 @@ namespace Win32xx
 			DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
 
 			// Draw the checkmark's background rectangle
-			::Rectangle(DrawDC, rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
+			DrawDC.Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 		}
 
 		CDC MemDC = ::CreateCompatibleDC(pdis->hDC);
@@ -1346,9 +1386,9 @@ namespace Win32xx
 
 		// Copy the check mark bitmap to hdcMem
 		if (MFT_RADIOCHECK == fType)
-			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUBULLET);
+			MemDC.DrawFrameControl(rCheck, DFC_MENU, DFCS_MENUBULLET);
 		else
-			::DrawFrameControl(MemDC, &rCheck, DFC_MENU, DFCS_MENUCHECK);
+			MemDC.DrawFrameControl(rCheck, DFC_MENU, DFCS_MENUCHECK);
 
 		int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
 		if (m_ThemeMenu.UseThemes)
@@ -1359,26 +1399,26 @@ namespace Win32xx
 		CDC MaskDC = ::CreateCompatibleDC(pdis->hDC);
 		MaskDC.CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
 
-		::BitBlt(MaskDC, 0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
+		MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
 		if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
 		{
 			// Draw a white checkmark
-			::BitBlt(MemDC, 0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
-			::BitBlt(MaskDC, 0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
+			MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
+			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+			DrawDC.BitBlt(rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
 		}
 		else
 		{
 			// Draw a black checkmark
 			int BullitOffset = ((MFT_RADIOCHECK == fType) && m_ThemeMenu.UseThemes)? 1 : 0;
-			::BitBlt(MaskDC, -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			::BitBlt(DrawDC, rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
+			MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+			DrawDC.BitBlt(rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
 		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
 	}
 
-	 void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
+	void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
 	{
 		if (!m_himlMenu)
 			return;
@@ -1415,7 +1455,7 @@ namespace Win32xx
 		DrawDC.DetachDC();
 	}
 
-	 void CFrame::DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText)
+	void CFrame::DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText)
 	{
 		// find the position of tab character
 		int nTab = -1;
@@ -1429,15 +1469,15 @@ namespace Win32xx
 		}
 
 		// Draw the item text
-		::SetTextColor(DrawDC, colorText);
-		::DrawText(DrawDC, ItemText, nTab, &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+		DrawDC.SetTextColor(colorText);
+		DrawDC.DrawText(ItemText, nTab, rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
 		// Draw text after tab, right aligned
 		if(nTab != -1)
-			::DrawText(DrawDC, &ItemText[nTab + 1], -1, &rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+			DrawDC.DrawText( &ItemText[nTab + 1], -1, rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 	}
 
-	 int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
+	int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
 	// Returns the position of the menu item, given it's name
 	{
 		int nMenuItemCount = GetMenuItemCount(hMenu);
@@ -1480,7 +1520,7 @@ namespace Win32xx
 		return -1;
 	}
 
-	 tString CFrame::GetMRUEntry(size_t nIndex)
+	tString CFrame::GetMRUEntry(size_t nIndex)
 	{
 		tString tsPathName;
 		if (nIndex < m_vMRUEntries.size())
@@ -1493,14 +1533,14 @@ namespace Win32xx
 		return tsPathName;
 	}
 
-	 CRect CFrame::GetViewRect() const
+	CRect CFrame::GetViewRect() const
 	{
 		// Get the frame's client area
 		CRect rcFrame = GetClientRect();
 
 		// Get the statusbar's window area
 		CRect rcStatus;
-		if (GetStatusbar().IsVisible() || !IsVisible())
+		if (GetStatusbar().IsWindowVisible() || !IsWindowVisible())
 			rcStatus = GetStatusbar().GetWindowRect();
 
 		// Get the top rebar or toolbar's window area
@@ -1508,7 +1548,7 @@ namespace Win32xx
 		if (IsRebarSupported() && m_bUseRebar)
 			rcTop = GetRebar().GetWindowRect();
 		else
-			if (GetToolbar().IsVisible())
+			if (GetToolbar().IsWindowVisible())
 				rcTop = GetToolbar().GetWindowRect();
 
 		// Return client size less the rebar and status windows
@@ -1523,7 +1563,7 @@ namespace Win32xx
 		return rcView;
 	} 
 
-	 void CFrame::LoadCommonControls()
+	void CFrame::LoadCommonControls()
 	{
 		HMODULE hComCtl;
 
@@ -1566,7 +1606,7 @@ namespace Win32xx
 		}
 	}
 
-	 void CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
+	void CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
 		try
 		{
@@ -1614,36 +1654,36 @@ namespace Win32xx
 		}
 	}
 
-	 void CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+	void CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
 		m_tsKeyName = szKeyName;
 
-		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Position");
+		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
 		HKEY hKey = 0;
 		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
 		if (hKey)
 		{
 			DWORD dwType = REG_BINARY;
 			DWORD BufferSize = sizeof(DWORD);
-			DWORD dwTop, dwLeft, dwWidth, dwHeight;
+			DWORD dwTop, dwLeft, dwWidth, dwHeight, dwStatusbar, dwToolbar;
 			RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
 			RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
 			RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
 			RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
+			RegQueryValueEx(hKey, _T("Statusbar"), NULL, &dwType, (LPBYTE)&dwStatusbar, &BufferSize);
+			RegQueryValueEx(hKey, _T("Toolbar"), NULL, &dwType, (LPBYTE)&dwToolbar, &BufferSize);
 
-			// Get current desktop size to ensure reasonable a window position
-			CRect rcDesktop;
-			SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
-			m_rcPosition.top = MIN(dwTop, (UINT)rcDesktop.bottom - 30);
-			m_rcPosition.left = MIN(dwLeft, (UINT)rcDesktop.right - 90);
+			m_rcPosition.top = dwTop;
+			m_rcPosition.left = dwLeft;
 			m_rcPosition.bottom = m_rcPosition.top + dwHeight;
 			m_rcPosition.right = m_rcPosition.left + dwWidth;
-
+			m_bShowStatusbar = dwStatusbar & 1;
+			m_bShowToolbar = dwToolbar & 1;
 			RegCloseKey(hKey);
 		}
 	}
 
-	 void CFrame::OnCreate()
+	void CFrame::OnCreate()
 	{
 		// This is called when the frame window is being created.
 		// Override this in CMainFrame if you wish to modify what happens here
@@ -1652,7 +1692,7 @@ namespace Win32xx
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
 
-		// Set the menu
+		// Setup the menu
 		SetFrameMenu(IDW_MAIN);
 		UpdateMRUMenu();
 
@@ -1668,11 +1708,23 @@ namespace Win32xx
 		}
 		
 		if (!IsMenubarUsed()) ::SetMenu(m_hWnd, GetFrameMenu());
-		if (m_bUseToolbar)	ShowToolbar();
 		if (m_bUseThemes)	SetTheme();
+		
+		// Create the Toolbar
+		if (m_bUseToolbar)
+		{
+			CreateToolbar();
+			ShowToolbar(m_bShowToolbar);
+		}
+		else
+		{
+			::CheckMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			::EnableMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_GRAYED);
+		}
 
 		// Create the status bar
 		GetStatusbar().Create(m_hWnd);
+		ShowStatusbar(m_bShowStatusbar);
 
 		// Create the view window
 		if (NULL == GetView())
@@ -1687,20 +1739,20 @@ namespace Win32xx
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
 	}
 
-	 LRESULT CFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
 		if (pdis->CtlType != ODT_MENU) 
-			return CWnd::WndProcDefault(m_hWnd, WM_DRAWITEM, wParam, lParam);
+			return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
 
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		CDC DrawDC = pdis->hDC;
 
-		int Iconx = 0;
-		int Icony = 0;
-		ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+		int Iconx = 16;
+		int Icony = 16;
+		if (m_himlMenu)	ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 		int BarWidth = m_ThemeMenu.UseThemes? Iconx + 6 : 0;
 
 		// Draw the side bar
@@ -1708,7 +1760,7 @@ namespace Win32xx
 		{
 			CRect rcBar = rc;
 			rcBar.right = BarWidth;
-			GradientFill(DrawDC, m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, &rcBar, TRUE);
+			DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcBar, TRUE);
 		}
 
 		if (pmd->fType & MFT_SEPARATOR)
@@ -1717,12 +1769,12 @@ namespace Win32xx
 			CRect rcSep = rc;
 			rcSep.left = BarWidth;
 			if (m_ThemeMenu.UseThemes)
-				SolidFill(DrawDC, RGB(255,255,255), &rcSep);
+				DrawDC.SolidFill(RGB(255,255,255), rcSep);
 			else
-				SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcSep);
+				DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
 			rcSep.left = BarWidth + 2;
-			::DrawEdge(DrawDC, &rcSep,  EDGE_ETCHED, BF_TOP);
+			DrawDC.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
 		{
@@ -1739,19 +1791,19 @@ namespace Win32xx
 				{
 					DrawDC.CreateSolidBrush(m_ThemeMenu.clrHot1);
 					DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-					Rectangle(DrawDC, rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+					DrawDC.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 				}
 				else
-					SolidFill(DrawDC, GetSysColor(COLOR_HIGHLIGHT), &rcDraw);
+					DrawDC.SolidFill(GetSysColor(COLOR_HIGHLIGHT), rcDraw);
 			}
 			else
 			{
 				// draw non-selected item background
 				rcDraw.left = BarWidth;
 				if (m_ThemeMenu.UseThemes)
-					SolidFill(DrawDC, RGB(255,255,255), &rcDraw);
+					DrawDC.SolidFill(RGB(255,255,255), rcDraw);
 				else
-					SolidFill(DrawDC, GetSysColor(COLOR_MENU), &rcDraw);
+					DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcDraw);
 			}  
 
 			if (bChecked)
@@ -1765,7 +1817,7 @@ namespace Win32xx
 				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
 
 			// Draw the text
-			int iMode = ::SetBkMode(DrawDC, TRANSPARENT);
+			int iMode = DrawDC.SetBkMode(TRANSPARENT);
 			COLORREF colorText;
 			if (m_ThemeMenu.UseThemes)
 			{
@@ -1776,7 +1828,7 @@ namespace Win32xx
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 
 			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
-			::SetBkMode(DrawDC, iMode);
+			DrawDC.SetBkMode(iMode);
 			}
 		
 		// Detach the DC so it doesn't get destroyed
@@ -1785,7 +1837,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	 void CFrame::OnExitMenuLoop()
+	void CFrame::OnExitMenuLoop()
 	{
 		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 		{
@@ -1811,7 +1863,7 @@ namespace Win32xx
 		m_vMenuItemData.clear();
 	}
 
-	 void CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
+	void CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
 	{
 		// Do default processing first
 		DefWindowProc(WM_ACTIVATE, wParam, lParam);
@@ -1845,7 +1897,7 @@ namespace Win32xx
 		} 
 	}
 
-	 void CFrame::OnClose()
+	void CFrame::OnClose()
 	{
 		// Called in response to a WM_CLOSE message for the frame.	
 		ShowWindow(SW_HIDE);
@@ -1858,7 +1910,7 @@ namespace Win32xx
 		GetView()->Destroy();
 	}
 
-	 void CFrame::OnHelp()
+	void CFrame::OnHelp()
 	{
 		if (NULL == m_pAboutDialog)
 		{
@@ -1882,12 +1934,10 @@ namespace Win32xx
 		}
 	}
 
-	 void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
-
-		if (0 ==ImageList_GetImageCount(m_himlMenu)) return;
 
 		HMENU hMenu = (HMENU)wParam;
 
@@ -1907,6 +1957,10 @@ namespace Win32xx
 			mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;
 			mii.dwTypeData = szMenuItem;
 			mii.cch = MAX_MENU_STRING -1;
+
+			// Send message for menu updates
+			UINT menuItem = ::GetMenuItemID(hMenu, i);
+			SendMessage(UWM_UPDATE_COMMAND, (WPARAM)menuItem, 0);
 
 			// Specify owner-draw for the menu item type
 			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
@@ -1932,17 +1986,19 @@ namespace Win32xx
 					m_vMenuItemData.push_back(pItem);		// Store pItem in m_vMenuItemData
 					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 				}
-			}
+			} 
+			
+
 		}
 	}
 
-	 LRESULT CFrame::OnMeasureItem(WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::OnMeasureItem(WPARAM wParam, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
 		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
 		if (pmis->CtlType != ODT_MENU) 
-			return CWnd::WndProcDefault(m_hWnd, WM_MEASUREITEM, wParam, lParam);
+			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
 
@@ -1958,22 +2014,21 @@ namespace Win32xx
 
 			// Get the font used in menu items
 			NONCLIENTMETRICS nm = {0};
-			nm.cbSize = sizeof(nm);
+			nm.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(nm), &nm, 0);
 			// Default menu items are bold, so take this into account
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
 				nm.lfMenuFont.lfWeight = FW_BOLD;
 
-			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
+			DesktopDC.CreateFontIndirect(nm.lfMenuFont);
 
 			// Calculate the size of the text
-			CSize size;
-			GetTextExtentPoint32(DesktopDC, pmd->Text, lstrlen(pmd->Text), &size);
+			CSize size = DesktopDC.GetTextExtentPoint32(pmd->Text, lstrlen(pmd->Text));
 
 			// Calculate the size of the icon
-			int Iconx = 0;
-			int Icony = 0;
-			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+			int Iconx = 16;
+			int Icony = 16;
+			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 
 			pmis->itemHeight = 2+ MAX(MAX(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
 			pmis->itemWidth = size.cx + MAX(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
@@ -1993,7 +2048,7 @@ namespace Win32xx
 		 return TRUE;
 	}
 
-	 LRESULT CFrame::OnMenuChar(WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::OnMenuChar(WPARAM wParam, LPARAM lParam)
 	{
 		if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 		{
@@ -2001,10 +2056,10 @@ namespace Win32xx
 			GetMenubar().MenuChar(wParam, lParam);
 			return -1L;
 		}
-		return CWnd::WndProcDefault(m_hWnd, WM_MENUCHAR, wParam, lParam);
+		return CWnd::WndProcDefault(WM_MENUCHAR, wParam, lParam);
 	}
 
-	 void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
+	void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
 	{
 		// Set the Statusbar text when we hover over a menu
 		// Only popup submenus have status strings
@@ -2013,7 +2068,7 @@ namespace Win32xx
 			int nID = LOWORD (wParam);
 			HMENU hMenu = (HMENU) lParam;
 
-			if ((hMenu != ::GetMenu(m_hWnd)) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
+			if ((hMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				m_tsStatusText = LoadString(nID);
 			else
 				m_tsStatusText = _T("Ready");
@@ -2022,7 +2077,7 @@ namespace Win32xx
 		}
 	}
 
-	 LRESULT CFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+	LRESULT CFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 
 		switch (((LPNMHDR)lParam)->code)
@@ -2032,12 +2087,12 @@ namespace Win32xx
 			break;
 		case RBN_HEIGHTCHANGE:
 			RecalcLayout();
-			::InvalidateRect(m_hWnd, NULL, TRUE);
+			Invalidate();
 			break;
-		case RBN_LAYOUTCHANGED:
-			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
-				GetRebar().MoveBandsLeft();
-			break;
+	//	case RBN_LAYOUTCHANGED:
+	//		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
+	//			GetRebar().MoveBandsLeft();
+	//		break;
 		case RBN_MINMAX:
 			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().ShortBands)
 				return 1L;	// Supress maximise or minimise rebar band
@@ -2070,12 +2125,12 @@ namespace Win32xx
 
 	} // CFrame::Onotify(...)
 
-	 void CFrame::OnSetFocus()
+	void CFrame::OnSetFocus()
 	{
 		SetStatusText();
 	}
 
-	 void CFrame::OnSysColorChange()
+	void CFrame::OnSysColorChange()
 	{
 		// Honour theme color changes
 		for (int nBand = 0; nBand <= GetRebar().GetBandCount(); ++nBand)
@@ -2085,7 +2140,7 @@ namespace Win32xx
 
 		// Update the status bar font and text
 		NONCLIENTMETRICS nm = {0};
-		nm.cbSize = sizeof (NONCLIENTMETRICS);
+		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfStatusFont;
 		HFONT hFontOld = (HFONT)GetStatusbar().SendMessage(WM_GETFONT, 0L, 0L);
@@ -2099,7 +2154,7 @@ namespace Win32xx
 		{
 			// Update the font
 			NONCLIENTMETRICS nm = {0};
-			nm.cbSize = sizeof (NONCLIENTMETRICS);
+			nm.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 			LOGFONT lf = nm.lfMenuFont;
 			HFONT hFontOld = (HFONT)GetMenubar().SendMessage(WM_GETFONT, 0L, 0L);
@@ -2108,14 +2163,12 @@ namespace Win32xx
 			::DeleteObject(hFontOld);
 
 			// Update the band size
-			CSize csMenubar;
 			CDC dcFrame = GetDC();
-			dcFrame.CreateFontIndirect(&lf);
-			::GetTextExtentPoint32(dcFrame, _T("\tSomeText"), lstrlen(_T("\tSomeText")), &csMenubar);
+			dcFrame.CreateFontIndirect(lf);
+			CSize csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int Menubar_Height = csMenubar.cy + 8;
 			int nBand = GetRebar().GetBand(GetMenubar().GetHwnd());
 			REBARBANDINFO rbbi = {0};
-			rbbi.cbSize = sizeof(REBARBANDINFO);
 			rbbi.fMask = RBBIM_CHILDSIZE;
 			GetRebar().GetBandInfo(nBand, rbbi);
 			rbbi.cyMinChild = Menubar_Height;
@@ -2127,13 +2180,13 @@ namespace Win32xx
 
 		// Reposition and redraw everything
 		RecalcLayout();
-		::RedrawWindow(m_hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+		RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Forward the message to the view window
-		::PostMessage(m_pView->GetHwnd(), WM_SYSCOLORCHANGE, 0L, 0L);
+		m_pView->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
 	}
 
-	 LRESULT CFrame::OnSysCommand(WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	{
 		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
 		{
@@ -2144,10 +2197,10 @@ namespace Win32xx
 		if (SC_MINIMIZE == wParam)
 			m_hOldFocus = GetFocus();
 		
-		return CWnd::WndProcDefault(m_hWnd, WM_SYSCOMMAND, wParam, lParam);
+		return CWnd::WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
 	}
 
-	 void CFrame::OnTimer(WPARAM wParam)
+	void CFrame::OnTimer(WPARAM wParam)
 	{
 		if (ID_STATUS_TIMER == wParam)
 		{
@@ -2205,99 +2258,19 @@ namespace Win32xx
 		}
 	}
 
-	/*
-		 void CFrame::OnFrameTimer(WPARAM wParam)
+	void CFrame::OnViewStatusbar()
 	{
-		if (ID_STATUS_TIMER == wParam)
-		{
-			if (m_bShowMenuStatus)
-			{
-				static int nOldID = -1;
-				CToolbar& tb = GetToolbar();
-				CPoint pt;
-				::GetCursorPos(&pt);
-
-				// Is the mouse hovering over the toolbar?
-				if (WindowFromPoint(pt) == tb)
-				{
-					// Which toolbar button is the mouse cursor hovering over?
-					int nButton = tb.HitTest();
-					if (nButton >= 0)
-					{
-						int nID = GetToolbar().GetCommandID(nButton);
-						// Only update the statusbar if things have changed
-						if (nID != nOldID)
-						{
-							if (nID != 0)
-								m_tsStatusText = LoadString(nID);
-							else
-								m_tsStatusText = _T("Ready");
-
-							SetStatusText();
-						}
-						nOldID = nID;
-					}
-				}
-				else
-				{
-					if (nOldID != -1)
-					{
-						m_tsStatusText = _T("Ready");
-						SetStatusText();
-					}
-					nOldID = -1;
-				}
-			}
-
-			if (m_bShowIndicatorStatus)
-				SetStatusIndicators();
-		}
-	}
-	*/
-
-	 void CFrame::OnViewStatusbar()
-	{
-		if (::IsWindowVisible(GetStatusbar()))
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
-			::ShowWindow(GetStatusbar(), SW_HIDE);
-		}
-		else
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
-			::ShowWindow(GetStatusbar(), SW_SHOW);
-		}
-
-		// Reposition the Windows
-		RecalcLayout();
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		m_bShowStatusbar = !m_bShowStatusbar;
+		ShowStatusbar(m_bShowStatusbar);
 	}
 
-	 void CFrame::OnViewToolbar()
+	void CFrame::OnViewToolbar()
 	{
-		if (::IsWindowVisible(GetToolbar()))
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-			if (IsRebarUsed())
-				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
-			else
-				::ShowWindow(GetToolbar(), SW_HIDE);
-		}
-		else
-		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
-			if (IsRebarUsed())
-				::SendMessage(GetRebar(), RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
-			else
-				::ShowWindow(GetToolbar(), SW_SHOW);
-		}
-
-		// Reposition the Windows
-		RecalcLayout();
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		m_bShowToolbar = !m_bShowToolbar;
+		ShowToolbar(m_bShowToolbar);
 	}
 
-  	 void CFrame::PreCreate(CREATESTRUCT& cs)
+  	void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
 		// Set the caption from the string resource
 		cs.lpszName = LoadString(IDW_MAIN);
@@ -2312,13 +2285,13 @@ namespace Win32xx
 		cs.cy = m_rcPosition.Height();
 	}
 
-	 void CFrame::PreRegisterClass(WNDCLASS &wc)
+	void CFrame::PreRegisterClass(WNDCLASS &wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("Win32++ Frame");
 	}
 
-	 BOOL CFrame::PreTranslateMessage(MSG* pMsg)
+	BOOL CFrame::PreTranslateMessage(MSG* pMsg)
 	{
 		HACCEL hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
@@ -2329,7 +2302,7 @@ namespace Win32xx
 		return CWnd::PreTranslateMessage(pMsg);
 	}
 
-	 void CFrame::RecalcLayout()
+	void CFrame::RecalcLayout()
 	{
 		if ((!m_pView) || (!m_pView->GetHwnd()))
 			return;
@@ -2366,14 +2339,14 @@ namespace Win32xx
 			m_pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
-		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().KeepBandsLeft)
+		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
 			GetRebar().MoveBandsLeft();
 
 		if (IsMenubarUsed())
 			SetMenubarBandSize();
 	}
 
-	 void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
+	void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	{
 		std::vector<tString>::iterator it;
 		for (it = m_vMRUEntries.begin(); it != m_vMRUEntries.end(); ++it)
@@ -2388,26 +2361,26 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	 void CFrame::SaveRegistrySettings()
+	void CFrame::SaveRegistrySettings()
 	{
 		// Store the window position in the registry
 		if (!m_tsKeyName.empty())
 		{
+			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
+			HKEY hKey = NULL;
+			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				throw (CWinException(_T("RegCreateKeyEx Failed")));
+
 			WINDOWPLACEMENT Wndpl = {0};
 			Wndpl.length = sizeof(WINDOWPLACEMENT);
 			if (GetWindowPlacement(Wndpl))
 			{
 				// Get the Frame's window position
 				CRect rc = Wndpl.rcNormalPosition;
-				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Position");;
-				HKEY hKey = NULL;
 				DWORD dwTop = MAX(rc.top, 0);
 				DWORD dwLeft = MAX(rc.left, 0);
 				DWORD dwWidth = MAX(rc.Width(), 100);
 				DWORD dwHeight = MAX(rc.Height(), 50);
-
-				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 				if (RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
@@ -2420,9 +2393,19 @@ namespace Win32xx
 
 				if (RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
 					throw (CWinException(_T("RegSetValueEx Failed")));
-
-				RegCloseKey(hKey);
 			}
+			
+			// Store the Toolbar and statusbar states
+			DWORD dwShowToolbar = m_bShowToolbar;
+			DWORD dwShowStatusbar = m_bShowStatusbar;
+
+			if (RegSetValueEx(hKey, _T("Toolbar"), 0, REG_DWORD, (LPBYTE)&dwShowToolbar, sizeof(DWORD)))
+				throw (CWinException(_T("RegSetValueEx Failed")));
+
+			if (RegSetValueEx(hKey, _T("Statusbar"), 0, REG_DWORD, (LPBYTE)&dwShowStatusbar, sizeof(DWORD)))
+				throw (CWinException(_T("RegSetValueEx Failed")));
+
+			RegCloseKey(hKey);
 
 			// Store the MRU entries in the registry
 			if (m_nMaxMRU > 0)
@@ -2450,7 +2433,7 @@ namespace Win32xx
 		}
 	}
 
-	 void CFrame::SetFrameMenu(INT ID_MENU)
+	void CFrame::SetFrameMenu(INT ID_MENU)
 	{
 		if (m_hMenu)
 			::DestroyMenu(m_hMenu);
@@ -2461,7 +2444,7 @@ namespace Win32xx
 			TRACE(_T("Load Menu failed\n"));
  	}
 
-	 size_t CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
+	size_t CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
 	{
 		// Remove any existing menu icons
 		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
@@ -2477,7 +2460,7 @@ namespace Win32xx
 		return AddMenuIcons(MenuData, crMask, ToolbarID, ToolbarDisabledID);
 	}
 
-	 void CFrame::SetMenuTheme(ThemeMenu& Theme)
+	void CFrame::SetMenuTheme(ThemeMenu& Theme)
 	{
 		m_ThemeMenu.UseThemes   = Theme.UseThemes;
 		m_ThemeMenu.clrHot1     = Theme.clrHot1;
@@ -2486,10 +2469,10 @@ namespace Win32xx
 		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
 		m_ThemeMenu.clrOutline  = Theme.clrOutline;
 
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 	}
 
-	 void CFrame::SetMenubarBandSize()
+	void CFrame::SetMenubarBandSize()
 	{
 		// Sets the minimum width of the Menubar band to the width of the rebar
 		// This prevents other bands from moving to this Menubar's row.
@@ -2498,22 +2481,24 @@ namespace Win32xx
 		CRebar& RB = GetRebar();
 		int nBand = RB.GetBand(GetMenubar());
 		CRect rcBorder = RB.GetBandBorders(nBand);
-		int Width = rcClient.Width() - rcBorder.Width() - 2;
 
 		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = sizeof(REBARBANDINFO);
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB.GetBandInfo(nBand, rbbi);
-		if (GetRebar().GetRebarTheme().UseThemes)
-		{
-			rbbi.cxMinChild = Width;
-			rbbi.cx         = Width;
-		}
+
+		int Width;
+		if ((GetRebar().GetRebarTheme().UseThemes) && (GetRebar().GetRebarTheme().LockMenuBand))
+			Width = rcClient.Width() - rcBorder.Width() - 2;
+		else
+			Width = GetMenubar().GetMaxSize().cx;
+
+		rbbi.cxMinChild = Width;
+		rbbi.cx         = Width;
 
 		RB.SetBandInfo(nBand, rbbi); 
 	}
 
-	 void CFrame::SetStatusIndicators()
+	void CFrame::SetStatusIndicators()
 	{
 		if (::IsWindow(GetStatusbar()))
 		{
@@ -2532,16 +2517,15 @@ namespace Win32xx
 		}
 	}
 
-	 void CFrame::SetStatusText()
+	void CFrame::SetStatusText()
 	{
 		if (::IsWindow(GetStatusbar()))
 		{
 			// Calculate the width of the text indicators
 			CDC dcStatus = GetStatusbar().GetDC();
-			CSize csCAP, csNUM, csSCRL;
-			::GetTextExtentPoint32(dcStatus, _T("\tCAP"), lstrlen(_T("\tCAP")), &csCAP);
-			::GetTextExtentPoint32(dcStatus, _T("\tNUM"), lstrlen(_T("\tNUM")), &csNUM);
-			::GetTextExtentPoint32(dcStatus, _T("\tSCRL"), lstrlen(_T("\tSCRL")), &csSCRL);
+			CSize csCAP  = dcStatus.GetTextExtentPoint32(_T("\tCAP"), lstrlen(_T("\tCAP")));
+			CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM"), lstrlen(_T("\tNUM")));
+			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL"), lstrlen(_T("\tSCRL")));
 
 			// Get the coordinates of the parent window's client area.
 			CRect rcClient = GetClientRect();
@@ -2564,14 +2548,14 @@ namespace Win32xx
 		}
 	}
 
-	 void CFrame::SetTheme()
+	void CFrame::SetTheme()
 	{
 		// Note: To modify theme colors, override this function in CMainframe,
 		//        and make any modifications there.
 
 		// Avoid themes if using less than 16 bit colors
 		CDC DesktopDC = ::GetDC(NULL);
-		if (::GetDeviceCaps(DesktopDC, BITSPIXEL) < 16)
+		if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
 			return;
 
 		// Set a flag redo SetTheme when the theme changes
@@ -2595,9 +2579,12 @@ namespace Win32xx
 		enum Themetype{ Grey, Blue, Silver, Olive };
 
 		int Theme = Grey;
-		if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
-		if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
-		if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
+		if (GetWinVersion() < 2600) // Not for Vista and above
+		{
+			if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
+			if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
+			if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
+		}
 
 		BOOL T = TRUE;
 		BOOL F = FALSE;
@@ -2674,12 +2661,12 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	 void CFrame::SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
+	void CFrame::SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
 	{
 		GetToolbar().SetImages(crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
 	}
 
-	 void CFrame::SetupToolbar()
+	void CFrame::SetupToolbar()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s). 
 
@@ -2698,7 +2685,7 @@ namespace Win32xx
 */
 	}
 
-	 void CFrame::SetView(CWnd& wndView)
+	void CFrame::SetView(CWnd& wndView)
 	// Sets or changes the View window displayed within the frame
 	{
 		// Destroy the existing view window (if any)
@@ -2715,32 +2702,48 @@ namespace Win32xx
 		}
 	}
 
-	 void CFrame::ShowToolbar()
+	void CFrame::ShowStatusbar(BOOL bShow)
 	{
-		if (IsRebarSupported() && m_bUseRebar)				
-			AddToolbarBand(GetToolbar());	// Create the toolbar inside rebar
-		else	
-			GetToolbar().Create(m_hWnd);	// Create the toolbar without a rebar
-			
-		SetupToolbar();
-		
-		if (GetToolbar().GetToolbarData().size() > 0)
+		if (bShow)
 		{
-			// Set the toolbar images (if not already set in SetupToolbar)
-			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
-				SetToolbarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-
-			// Add the icons for popup menu items
-			AddMenuIcons(GetToolbar().GetToolbarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
+			GetStatusbar().ShowWindow(SW_SHOW);
 		}
 		else
 		{
-			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
+			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
+			GetStatusbar().ShowWindow(SW_HIDE);
 		}
+
+		// Reposition the Windows
+		RecalcLayout();
+		Invalidate();
 	}
 
-	 void CFrame::UpdateMRUMenu()
+	void CFrame::ShowToolbar(BOOL bShow)
+	{
+		if (bShow)	
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
+			if (IsRebarUsed())
+				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), TRUE);
+			else
+				GetToolbar().ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			if (IsRebarUsed())
+				GetRebar().SendMessage(RB_SHOWBAND, GetRebar().GetBand(GetToolbar()), FALSE);
+			else
+				GetToolbar().ShowWindow(SW_HIDE);
+		}
+
+		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
+			GetRebar().MoveBandsLeft();
+	}
+
+	void CFrame::UpdateMRUMenu()
 	{
 		if (0 >= m_nMaxMRU) return;
 
@@ -2818,7 +2821,7 @@ namespace Win32xx
 		DrawMenuBar();
 	}
 
-	 LRESULT CFrame::WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -2871,10 +2874,8 @@ namespace Win32xx
 			break;
 		} // switch uMsg
 
-		return CWnd::WndProcDefault(hWnd, uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	} // LRESULT CFrame::WndProcDefault(...)
 
 
 } // namespace Win32xx
-
-

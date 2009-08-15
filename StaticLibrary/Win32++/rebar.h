@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -53,8 +53,8 @@ namespace Win32xx
 		COLORREF clrBand1;		// Colour 1 for rebar band background. Use NULL if not required
 		COLORREF clrBand2;		// Colour 2 for rebar band background. Use NULL if not required
 		BOOL FlatStyle;			// Bands are rendered with flat rather than raised style
-		BOOL KeepBandsLeft;		// TRUE if we always keep bands left
-		BOOL LockMenuBand;		// Lock Menubar's band up top, without gripper
+		BOOL BandsLeft;			// Position bands left on rearrange
+		BOOL LockMenuBand;		// Lock Menubar's band in dedicated top row, without gripper
 		BOOL RoundBorders;		// Use rounded band borders
 		BOOL ShortBands;        // Allows bands to be shorter than maximum available width
 		BOOL UseLines;			// Displays horizontal lines between bands
@@ -82,6 +82,7 @@ namespace Win32xx
 		ThemeRebar& GetRebarTheme() {return m_Theme;}
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
+		UINT GetSizeofRBBI() const;
 		HWND GetToolTips() const;
 		void SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		void SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
@@ -109,7 +110,7 @@ namespace Win32xx
 	//Overridables
 		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		ThemeRebar m_Theme;

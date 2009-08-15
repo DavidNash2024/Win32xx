@@ -1,3 +1,76 @@
+Version 6.6
+===========
+Changes
+-------
+* The number of arguments have changed for WndProc and WndProcDefault.
+  - The HWND paramater has been dropped in both of these functions. It's
+    presence was redundant and possibly confusing. Users will need to modify
+    their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
+    member variable can be used in place of hwnd within the WndProc function.
+* The number of arguments have changed for DialogProc and DialogProcDefault.
+  - The HWND paramater has been dropped in both of these functions. It's
+    presence was redundant and possibly confusing. Users will need to modify
+    their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
+    member variable can be used in place of hwnd in the WndProc function.  
+* Enhancements to docking, containers and tabs.
+  - By default the dockers are immediately resized while the splitter bar is 
+     being dragged. To defer resizing until the splitter bar is released, use
+     SetDragAutoResize(FALSE).
+  - The close and list buttons now indicate when they are hot and pressed.
+  - Added SetTabText, SetTabImage and SwapTabs to the CTab class.
+  - Minor improvements to the painting of tabs, containers and dockers.
+* Enhancements to GDI graphics support.
+  - The CDC class has been extended. It now includes wrapper functions for 
+     the Device Context related functions.
+  - Added the CBitmapInfoPtr class. This simplifies the use of the BITMAPINFO
+     structure in functions like GetDIBits and SetDIBits.
+  - Added GrayScaleBitmap function to gdi.h. It converts a colored bitmap to
+     to grayscale.     
+* Automated menu updating.
+  - When a menu is about to be displayed, OnUpdateMenu is called to provide
+     an opportunity to modify the check state of the menu items.
+* Enhancements to frames
+  - The style of the rebarband is now specified in AddToolbarBand. This 
+     facilites saving and restoring toolbar settings from the registry (as 
+     demonstrated in the Themes sample.)  
+  - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
+     registry.
+* Modification to CRect class
+  - The various function now use references instead of naked pointers.    
+* Updated the Themes sample.
+  - Added check boxes for the various rebar theme option
+  - Added Hide/Show option for the additional toolbars
+  - Save/Load the theme options in the registry
+  - Save/Load the rebar band postions and styles in the registry
+* Replaced the Form Sample with the DocViewForm sample.
+  - This sample now demonstrates a form using a Doc/View architecture, much
+     like the traditional Doc/View of MFC. 
+  - Added OnUpdateMenu handling. 
+* Updated the FastGDI sample.
+  - Added grayscale transformation
+  - Added file save.
+  - Added Scroll bars.
+* Updated the picture sample.
+  - Added Scroll bars.  
+* Updated the DockContainer and DockTabbedMDI samples    
+  - These samples now demonstrate how to theme a container's toolbar.   
+   
+      
+Incompatibilities with previous versions
+----------------------------------------
+- WndProc now takes 3 arguements, not 4:
+   WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+- WndProcDefault now takes 3 arguements, not 4:
+   WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+- DialogProc now takes 3 arguements, not 4:
+   DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+- DialogProcDefault now takes 3 arguements, not 4:
+   DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+- CFrame::AddToolbarBand now requires three arguements
+- The various CRect functions use references to RECT rather than pointers
+- CWnd::IsVisable has been renamed to CWnd::IsWindowVisible
+- CWnd::IsEnabled has been renamed to CWnd::IsWindowEnabled
+
 Version 6.5
 ===========
 Major Changes
@@ -101,7 +174,7 @@ Incompatiblities with previous versions
   function may now be required particularly for CFrame::OnNotify.
 - The OnCommand handlers for OnViewStatusbar and OnViewToolbar have been removed
   from CFrame, and should be added to CMainFrame::OnCommand if required.
-- CDockable has been renamed to CDocker
+- CDocker has been renamed to CDocker
 - dockable.h has been renamed to docking.h      
    
 Version 6.4.1
@@ -129,50 +202,6 @@ Major Changes
   - Now capable of handling Unicode text
 * Themes sample now demonstrates a ComboBoxEx control in its toolbar  
  
-All Changes
------------
-Added CContainer class
-Added CTabPage class  (a nested class of CContainer)
-Added CTargetBottom   (a nested class of CDockable)
-Added CTargetCentre   (a nested class of CDockable)
-Added CTargetLeft     (a nested class of CDockable)
-Added CTargetRight    (a nested class of CDockable)
-Added CTargetTop      (a nested class of CDockable)
-Added CDialog::SetDlgParent
-Added CDC::CreateEllipticRegion
-Added CDC::CreateEllipticRegionIndirect
-Added CDC::CreatePolygonRgn
-Added CDC::CreatePolyPolygonRgn
-Added CDC::CreateRectRgn
-Added CDC::CreateRectRgnIndirect
-Added CDC::DetachRegion
-Added CDC::ExtCreateRegion
-Added CFrame::AddToolbarButton
-Added CWnd::CheckDlgButton
-Added CWnd::GetDlgItem
-Added CWnd::GetParent
-Added CWnd::IsContainer
-Added CWnd::IsDockable
-Added CWnd::LockWindowUpdate
-Added CWnd::SendDlgItemMessage
-Added CWnd::SetDlgItemText
-Added CToolbar::SetButtonWidth (useful for adding a ComboBox to a toolbar)
-Added CToolbar::SetImages
-Added CMDIFrame::SetActiveMDIChild 
-Changed CMDIFrame::GetActiveMDIChild (it now returns a CWnd* instead of a HWND)
-Removed CMDIFrame::GetActiveMDIChildCWnd
-Renamed CMDIFrame::GetMDIChildVect to CMDIFrame::GetAllMDIChildren
-Removed CWnd::m_hWndParent
-
-Added the following docking styles:
-DS_DOCKED_CONTAINER	
-DS_DOCKED_LEFTMOST  
-DS_DOCKED_RIGHTMOST 
-DS_DOCKED_TOPMOST	
-DS_DOCKED_BOTTOMMOST
-
-Subclassed windows now call OnCommand and OnNotify
-Exceptions now also generate TRACE output to display the error.
 
 Fixes
 -----
@@ -189,7 +218,7 @@ Incompatibilities with previous versions
 * Some functions have been added to CWnd which have the same name as their 
    Win32 counterparts. Prefix functions with the global scope specifier '::' 
    to use the original Win32 API function instead of the Win32++ version.
-* CSplitter has been superceded by CDockable. Use a CDockable with the
+* CSplitter has been superceded by CDocker. Use a CDocker with the
    DS_NO_UNDOCK and DS_NO_CAPTION styles to duplicate the behaviour of 
    CSplitter. CSplitter will be retained for backwards compatiblity, as
    well as for those who require its 'immediate' mode.
@@ -229,7 +258,7 @@ Version 6.3
 Major Changes
 -------------
 * Added support for docking. See below for more information on Docking  
-   - Note: CDockable is now recommended over CSplitter for splitter apps.     
+   - Note: CDocker is now recommended over CSplitter for splitter apps.     
 * Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
 * MDI child windows now require a view window. The use of a view window is 
    now the same for Frames, MDI children, and dockables. The MDI demo sample
@@ -264,8 +293,8 @@ Incompatibilities with previous versions
 
 More About Docking
 ------------------
-* Any CWnd object inherrited from CDockable is capable of docking other CWnd
-    objects inherrited from CDockable.
+* Any CWnd object inherrited from CDocker is capable of docking other CWnd
+    objects inherrited from CDocker.
 * Dockables can be docked in any of the 4 sides. Any number of windows can be 
    docked on a side.
 * A dockable could be docked inside another dockable which in turn is docked
@@ -288,7 +317,7 @@ More About Docking
   - DS_NO_RESIZE				 
   - DS_NO_CAPTION		 
   - DS_NO_UNDOCK
-* CDockable is now the recommended alternative to CSplitter (being much simpler
+* CDocker is now the recommended alternative to CSplitter (being much simpler
     to implement - see the example below). The DS_NO_CAPTION and DS_NO_UNDOCK
     styles should be specified if docking and undocking are not required.
 
@@ -296,11 +325,11 @@ Example of how to dock 8 dockables inside a dockable view:
 ----------------------------------------------------------
 void CMainFrame::OnInitialUpdate()
 {
-    // CTextDockable in inherrited from CDockable
-	CDockable* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT, 100);
-	CDockable* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
-	CDockable* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP, 100);
-	CDockable* pDockBottom = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
+    // CTextDockable in inherrited from CDocker
+	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT, 100);
+	CDocker* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
+	CDocker* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP, 100);
+	CDocker* pDockBottom = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
 
 	// Dock 4 dockables inside other dockables
     pDockLeft->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
@@ -309,43 +338,7 @@ void CMainFrame::OnInitialUpdate()
 	pDockBottom->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
 }      			   
 
-(Refer to the Docking sample for an example of to use CDockable.)    
-
-All Changes
--------
-* Added CDockable class to support docking
-* Added CDockBar class (a nested class of CDockable)
-* Added CDockClient class (a nested class of CDockable)
-* Added CDockHint class (a nested class of CDockable)
-* Added CDockTarget class (a nested class of CDockable)
-* Added Docking demo
-* Added FastGDI demo
-* Added DrawBitmap (global function in gdi.h)
-* Added TintBitmap (global function in gdi.h)
-* Added IsLeftButtonDown (global function in dockable.h)
-* Added CWnd::BringWindowToTop
-* Added CWnd::Destroy 
-* Added CWnd::DrawMenuBar
-* Added CWnd::GetDC
-* Added CWnd::GetDCEx
-* Added CWnd::GetMenu
-* Added CWnd::GetScrollInfo
-* Added CWnd::GetScrollPos
-* Added CWnd::GetScrollRange
-* Added CWnd::GetWindow
-* Added CWnd::GetWindowDC
-* Added CWnd::MessageBox
-* Added CWnd::PreTranslateMessage
-* Added CWnd::ReleaseDC
-* Added CWnd::ScrollWindow
-* Added CWnd::SetMenu
-* Added CWnd::SetScrollInfo
-* Added CWnd::SetScrollPos
-* Added CWnd::SetScrollRange
-* Removed CWinApp::GetFrame
-* Removed CWinApp::SetFrame
-* Changed CFrame::SetView 
- 
+(Refer to the Docking sample for an example of to use CDocker.)    
 
 
 Version 6.2

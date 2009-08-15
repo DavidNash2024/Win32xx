@@ -1,5 +1,5 @@
-// Win32++  Version 6.6 beta
-// Released: ?? August, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -106,7 +106,7 @@ namespace Win32xx
 		HIMAGELIST GetImageList() const { return m_himlTab; }
 		BOOL GetShowButtons() const { return m_bShowButtons; }
 		int GetTabHeight() const { return m_nTabHeight; }
-		CWnd* GetView() const		{ return m_pView; }
+		CWnd* GetActiveView() const		{ return m_pView; }
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
@@ -142,7 +142,7 @@ namespace Win32xx
 		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		void Paint();
 		void NotifyChanged();
-		void SetView(CWnd& Wnd);
+		void SetActiveView(CWnd& Wnd);
 		void ShowListDialog();
 		void ShowListMenu();
 
@@ -288,7 +288,7 @@ namespace Win32xx
 			SetWindowLongPtr(GWL_STYLE, dwStyle);
 		}
 
-		SetView(*pWnd);
+		SetActiveView(*pWnd);
 		NotifyChanged();
 		return iNewPage;
 	}
@@ -842,7 +842,7 @@ namespace Win32xx
 
 	inline void CTab::RecalcLayout()
 	{
-		if (GetView())
+		if (GetActiveView())
 		{
 			// Set the tab sizes
 			SetTabSize();
@@ -850,7 +850,7 @@ namespace Win32xx
 			// Position the View over the tab control's display area
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-			GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 
 		}
 	}
@@ -889,17 +889,17 @@ namespace Win32xx
 	{
 		if ((iPage >= 0) && (iPage < GetItemCount()))
 		{
-			if (GetView() && (GetView()->IsWindow()))
-				GetView()->ShowWindow(SW_HIDE);
+			if (GetActiveView() && (GetActiveView()->IsWindow()))
+				GetActiveView()->ShowWindow(SW_HIDE);
 			SetCurSel(iPage);
-			SetView(*(m_vTabPageInfo[iPage].pWnd));
+			SetActiveView(*(m_vTabPageInfo[iPage].pWnd));
 
 			// Position the View over the tab control's display area
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-			GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 
-			GetView()->SetFocus();
+			GetActiveView()->SetFocus();
 		}
 	}
 
@@ -973,7 +973,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTab::SetView(CWnd& Wnd)
+	inline void CTab::SetActiveView(CWnd& Wnd)
 	// Sets or changes the View window displayed within the tab page
 	{
 		// Assign the view window
@@ -984,7 +984,7 @@ namespace Win32xx
 			if (!m_pView->IsWindow())
 			{
 				// The tab control is already created, so create the new view too
-				GetView()->Create(m_hWnd);
+				GetActiveView()->Create(m_hWnd);
 			}
 		}
 	}

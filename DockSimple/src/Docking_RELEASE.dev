@@ -11,7 +11,7 @@ PrivateResource=Docking_RELEASE_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0X0400_@@_
+CppCompiler=-D _WIN32_IE=0X0400_@@_-D NDEBUG_@@_
 Linker=-lComctl32_@@_
 IsCpp=1
 Icon=

@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -61,9 +61,8 @@
 #define DS_NO_DOCKCHILD_TOP		0x0040  // Prevent a child docking at the top
 #define DS_NO_DOCKCHILD_BOTTOM	0x0080  // Prevent a child docking at the bottom
 #define DS_NO_RESIZE			0x0100  // Prevent resizing
-#define DS_NO_AUTO_RESIZE		0x0200	// Reserved for future use
-#define DS_NO_CAPTION			0x0400  // No caption when docked
-#define DS_NO_UNDOCK			0x0800  // Prevent Undocking
+#define DS_NO_CAPTION			0x0200  // Prevent display of caption when docked
+#define DS_NO_UNDOCK			0x0400  // Prevent Undocking
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
 #define DS_FLATLOOK				0x2000	// Reserved for future use
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
@@ -72,7 +71,16 @@
 #define DS_DOCKED_TOPMOST		0x40000 // Topmost outer docking
 #define DS_DOCKED_BOTTOMMOST	0x80000 // Bottommost outer docking
 
-
+// Required for Dev-C++
+#ifndef TME_NONCLIENT
+  #define TME_NONCLIENT 0x00000010
+#endif
+#ifndef TME_LEAVE
+  #define TME_LEAVE 0x000000002
+#endif
+#ifndef WM_NCMOUSELEAVE
+  #define WM_NCMOUSELEAVE 0x000002A2
+#endif
 
 namespace Win32xx
 {
@@ -114,7 +122,7 @@ namespace Win32xx
 			virtual void PreRegisterClass(WNDCLASS &wc);
 			virtual void RecalcLayout();
 			virtual void SetView(CWnd& wndView);
-			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CWnd* GetTabCtrl() const { return m_pTab;}
 
@@ -155,16 +163,18 @@ namespace Win32xx
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
+		void SetTabText(UINT nTab, LPCTSTR szText);
 		void SetView(CWnd& Wnd);
 
 	protected:
 		virtual void OnCreate();
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
+		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		std::vector<ContainerInfo> m_vContainerInfo;
@@ -174,7 +184,7 @@ namespace Win32xx
 		int m_iCurrentPage;
 		CContainer* m_pContainerParent;
 		HICON m_hTabIcon;
-		BOOL m_IsTracking;
+		int m_nTabPressed;
 
 	};
 
@@ -204,7 +214,7 @@ namespace Win32xx
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
 			virtual void SetColor(COLORREF color);
-			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CDocker* GetDock()			{return m_pDock;}
 			int GetWidth()					{return m_DockBarWidth;}
@@ -231,37 +241,39 @@ namespace Win32xx
 			virtual void SendNotify(UINT nMessageID);
 
 			tString GetCaption() const		{ return m_tsCaption; }
+			CRect GetCloseRect();
 			CWnd* GetView() const			{ return m_pView; }
 			BOOL IsClosing();
 			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
 			void SetCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
-			void SetClosePressed()			{ m_bClosePressed = TRUE; }
+			void SetClosePressed()			{ m_IsClosePressed = TRUE; }
 			void SetView(CWnd& Wnd)			{ m_pView = &Wnd; }
 
 		protected:
 			virtual void    OnMouseActivate(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual void    OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
 			virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDown(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonUp(WPARAM wParam, LPARAM lParam);
+			virtual void    OnNCMouseLeave(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnNCMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCPaint(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 			virtual void    PreRegisterClass(WNDCLASS& wc);
 			virtual void    PreCreate(CREATESTRUCT& cs);
-			virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
-			CRect m_rcClose;
 			tString m_tsCaption;
 			CPoint m_Oldpt;
 			CDocker* m_pDock;
 			CWnd* m_pView;
 			int m_NCHeight;
-			BOOL m_bClosePressed;
+			BOOL m_IsClosePressed;
 			BOOL m_bOldFocus;
-			BOOL m_bLButtonDown;
+			BOOL m_bCaptionPressed;
+			BOOL m_IsTracking;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -389,6 +401,7 @@ namespace Win32xx
 		BOOL IsClosing() const {return GetDockClient().IsClosing();}
 		BOOL IsDocked() const;
 		BOOL IsDocker() const {return TRUE;}
+		BOOL IsDragAutoResize();
 		BOOL IsRelated(HWND hWnd) const;
 		BOOL IsUndocked() const;
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
@@ -396,6 +409,7 @@ namespace Win32xx
 		void SetCaption(LPCTSTR szCaption);
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockWidth(int DockWidth);
+		void SetDragAutoResize(BOOL bAutoResize);
 		void SetView(CWnd& wndView);
 
 	protected:
@@ -413,7 +427,7 @@ namespace Win32xx
 		virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		void CheckAllTargets(LPDRAGPOS pDragPos);
@@ -427,6 +441,7 @@ namespace Win32xx
 		void MoveDockChildren(CDocker* pDockTarget);
 		void PromoteFirstChild();
 		void RecalcDockChildLayout(CRect rc);
+		void ResizeDockers(LPDRAGPOS pdp);
 		void SendNotify(UINT nMessageID);
 		void Undock();
 		void UndockContainer(CContainer* pContainer);
@@ -450,6 +465,7 @@ namespace Win32xx
 		BOOL m_Undocking;
 		BOOL m_bIsClosing;
 		BOOL m_bIsDragging;
+		BOOL m_bDragAutoResize;
 		int m_DockStartWidth;
 		int m_nDockID;
 		int m_NCHeight;

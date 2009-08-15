@@ -3,8 +3,8 @@
 
 #include "stdafx.h"
 #include "FrameApp.h"
-   
-  
+
+
 // Definitions for the CFrameApp class
 CFrameApp::CFrameApp()
 {

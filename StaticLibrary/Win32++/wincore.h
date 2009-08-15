@@ -1,9 +1,9 @@
-// Win32++  Version 6.5
-// Released: 22nd May, 2009 by:
+// Win32++  Version 6.6
+// Released: 17th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
-//      url: http://users.bigpond.net.au/programming/
+//      url: https://sourceforge.net/projects/win32-framework
 //
 //
 // Copyright (c) 2005-2009  David Nash
@@ -75,32 +75,27 @@
 #define _WINCORE_H_
 
 
-// Remove pointless warning messages for MS compilers prior to VS 2008 
-#if defined (_MSC_VER) && _MSC_VER <= 1500
-  #pragma warning (disable : 4511) // copy operator could not be generated
-  #pragma warning (disable : 4512) // assignment operator could not be generated
-  #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
-  #pragma warning (disable : 4786) // identifier was truncated
+// Remove pointless warning messages
+#ifdef _MSC_VER
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
   #ifndef _CRT_SECURE_NO_WARNINGS
-    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005
+    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
   #endif
-#endif // _MSC_VER
-#ifdef __BORLANDC__
-  #pragma option -w-8027		   // function not expanded inline
+  #if _MSC_VER < 1500
+    #pragma warning (disable : 4511) // copy operator could not be generated
+    #pragma warning (disable : 4512) // assignment operator could not be generated
+    #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
+    #pragma warning (disable : 4786) // identifier was truncated
+  #endif
 #endif
 
-// VS 2008 requires _WIN32_WINNT to be set. (fails on XP and Win2000 without this fix)
-#ifndef _WIN32_WINNT
-  #define _WIN32_WINNT 0x0400
+#ifdef __BORLANDC__
+  #pragma option -w-8027		   // function not expanded inline
+  #define STRICT 1
 #endif
 
 #ifdef _WIN32_WCE
   #include "wcestddef.h"
-#endif
-
-#ifndef STRICT
-  #define STRICT 1
 #endif
 
 #define _WINSOCKAPI_            // Prevent winsock.h #include's.
@@ -112,6 +107,7 @@
 #include <commctrl.h>
 #include <tchar.h>
 #include <shlwapi.h>
+#include <assert.h>
 
 
 // For compilers lacking Win64 support
@@ -156,6 +152,7 @@
 #define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when docker is destroyed
 #define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
 #define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
+#define UWM_UPDATE_COMMAND  (WM_APP + 14)   // Message - sent before a menu is displayed. Used by OnUpdate
 
 
 // Automatically include the Win32xx namespace
@@ -166,8 +163,12 @@ namespace Win32xx {}
 #endif
 
 // define useful macros from WindowsX.h
-#define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
-#define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
+#ifndef GET_X_LPARAM
+  #define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
+#endif
+#ifndef GET_Y_LPARAM
+  #define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
+#endif
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
@@ -178,7 +179,7 @@ namespace Win32xx {}
 #endif
 
 
-// Define our own MIN and MAX macros 
+// Define our own MIN and MAX macros
 // this avoids inconcistancies with Dev-C++ and other compilers, and
 // avoids conflicts between typical min/max macros and std::min/std::max
 #define MAX(a,b)            (((a) > (b)) ? (a) : (b))
@@ -190,7 +191,7 @@ namespace Win32xx
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
-	
+
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
@@ -200,21 +201,22 @@ namespace Win32xx
 
 	//////////////////////////////////////////////////
 	// Global functions	(within the Win32xx namespace)
-	
+
 	CWinApp* GetApp();
 	void DebugWarnMsg(LPCTSTR WarnMsg);
 	void DebugErrMsg(LPCTSTR ErrorMsg);
 	void TRACE(LPCTSTR str);
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
-	int GetWinVersion();
-	int GetComCtlVersion();
+	int  GetWinVersion();
+	int  GetComCtlVersion();
+	UINT GetSizeofNonClientMetrics();
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
 
-  // Required for WinCE  
-  #ifndef lstrcpyn	
+  // Required for WinCE
+  #ifndef lstrcpyn
 	LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength);
   #endif // !lstrcpyn
 
@@ -310,13 +312,13 @@ namespace Win32xx
 		operator LPCRECT() const
 		{ return this; }
 
-		BOOL operator == (RECT& rc)
+		BOOL operator == (const RECT& rc)
 		{ return ::EqualRect(this, &rc); }
 
-		BOOL operator != (RECT& rc)
+		BOOL operator != (const RECT& rc)
 		{ return !::EqualRect(this, &rc); }
 
-		void  operator=( RECT& srcRect)
+		void  operator=(const RECT& srcRect)
 		{ ::CopyRect(this, &srcRect); }
 
 		int Height()
@@ -325,17 +327,17 @@ namespace Win32xx
 		int Width()
 		{ return right - left; }
 
-		void CopyRect(RECT* pRect)
-		{ ::CopyRect(pRect, this); }
+		void CopyRect(const RECT& rc)
+		{ ::CopyRect(this, &rc); }
 
-		BOOL EqualRect(const RECT* pRect)
-		{ return ::EqualRect(pRect, this); }
+		BOOL EqualRect(const RECT& rc)
+		{ return ::EqualRect(&rc, this); }
 
 		BOOL InflateRect(int dx, int dy)
 		{ return ::InflateRect(this, dx, dy); }
 
-		BOOL IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
-		{ return ::IntersectRect(this, lpRect1, lpRect2); }
+		BOOL IntersectRect(const RECT& rc1, const RECT& rc2)
+		{ return ::IntersectRect(this, &rc1, &rc2); }
 
 		BOOL IsRectEmpty()
 		{ return ::IsRectEmpty(this);}
@@ -352,11 +354,11 @@ namespace Win32xx
 		BOOL SetRectEmpty()
 		{ return ::SetRectEmpty(this); }
 
-		BOOL SubtractRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
-		{ return ::SubtractRect(this, pRcSrc1, pRcSrc2); }
+		BOOL SubtractRect(const RECT& rc1, const RECT& rc2)
+		{ return ::SubtractRect(this, &rc1, &rc2); }
 
-		BOOL UnionRect(const RECT* pRcSrc1, const RECT* pRcSrc2)
-		{ return ::UnionRect(this, pRcSrc1, pRcSrc2); }
+		BOOL UnionRect(const RECT& rc1, const RECT& rc2)
+		{ return ::UnionRect(this, &rc1, &rc2); }
 	};
 
 
@@ -401,22 +403,33 @@ namespace Win32xx
 	class CWnd
 	{
 	friend class CMDIChild;
+	friend class CDialog;
+	friend class CPropertyPage;
+	friend class CSplitter;
 
 	public:
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
 
 		// These are the functions can be overridden
+		virtual BOOL Attach(HWND hWnd);
+		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		virtual void CenterWindow() const;	
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);	
 		virtual void Destroy();
-		virtual LRESULT DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual HWND Detach();
+		virtual HWND GetAncestor() const;
+		virtual tString GetClassString() const;
+		virtual tString GetDlgItemString(int nIDDlgItem) const;
+		virtual tString GetWindowString() const;
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;	
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual BOOL IsContainer() const { return FALSE; }
-		virtual BOOL IsDocker() const  { return FALSE; }
+		virtual BOOL IsDocker() const	 { return FALSE; }
 		virtual BOOL IsFrame() const     { return FALSE; }
 		virtual BOOL IsMenubar() const   { return FALSE; }
 		virtual BOOL IsMDIChild() const  { return FALSE; }
@@ -426,79 +439,76 @@ namespace Win32xx
 		virtual BOOL IsTab() const       { return FALSE; }
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		virtual BOOL IsToolbar() const	 { return FALSE; }
+		virtual LPCTSTR LoadString(UINT nID);
+		virtual HICON SetIconLarge(int nIcon);
+		virtual HICON SetIconSmall(int nIcon);
 
-		// These functions aren't intended to be overridden
-		BOOL Attach(HWND hWnd);
-		BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+		HWND GetHwnd() const				{ return m_hWnd; }
+		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
+		
+		// Wrappers for Win32 API functions
+		// These functions aren't virtual, and shouldn't be overridden
 		BOOL BringWindowToTop() const;
-		void CenterWindow() const;
+		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
-		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, CRect& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags);
-		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, RECT rc, UINT uFlags);
-		void DestroyWindow();
-		HWND Detach();
+		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
+		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
 		static CWnd* FromHandle(HWND hWnd);
-		HWND GetAncestor() const;
-		tString GetClassString() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		CRect GetClientRect() const;
 		HDC  GetDC() const;
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
-		tString GetDlgItemString(int nIDDlgItem) const;
-		HWND GetHwnd() const {return m_hWnd;}
+		int  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
-		CRect GetWindowRect() const;
-		tString GetWindowString() const;
+		CRect GetWindowRect() const;	
 		void Invalidate(BOOL bErase = TRUE) const;
-		BOOL InvalidateRect(CONST RECT* lpRect, BOOL bErase = TRUE) const;
+		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(const CWnd* pWndParent) const;
-		BOOL IsEnabled() const;
-		BOOL IsVisible() const;
-		BOOL IsWindow() const;
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
-		LPCTSTR LoadString(UINT nID);
+		BOOL IsWindow() const;	
+		BOOL IsWindowEnabled() const;
+		BOOL IsWindowVisible() const;
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
-		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
-		void MoveWindow(CRect& rc, BOOL bRepaint = TRUE) const;
+		void MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
-		BOOL RedrawWindow(CRect* lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
-		BOOL RegisterClass(WNDCLASS& wc);
+		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+		BOOL RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;	
 		int  ReleaseDC(HDC hDC) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
+		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HWND SetActiveWindow() const;
 		HWND SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
+		BOOL SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		HWND SetFocus() const;
 		BOOL SetForegroundWindow() const;
 		HWND SetParent(HWND hParent) const;
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
-		int  SetScrollInfo(int fnBar, SCROLLINFO& si, BOOL fRedraw) const;
+		int  SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
-		BOOL SetWindowPos(HWND hWndInsertAfter, RECT rc, UINT uFlags) const;
+		BOOL SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
 		BOOL SetWindowText(LPCTSTR lpString) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
-		BOOL ValidateRect(CRect& rc) const;
+		BOOL ValidateRect(LPCRECT prc) const;
 		BOOL ValidateRgn(HRGN hRgn) const;
 
 #ifndef _WIN32_WCE
 		BOOL CloseWindow() const;
+		BOOL EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		HMENU GetMenu() const;
 		int  GetScrollPos(int nBar) const;
 		BOOL GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
@@ -507,42 +517,39 @@ namespace Win32xx
 		BOOL IsZoomed() const;
 		BOOL LockWindowUpdate(HWND hWndLock) const;
 		BOOL SetMenu(HMENU hMenu) const;
-		BOOL ScrollWindow(int XAmount, int YAmount, RECT& Rect, RECT& ClipRect) const;
+		BOOL ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const;
+		int  ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const;
 		int  SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
 		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
+		BOOL ShowScrollBar(int nBar, BOOL bShow) const;
 #endif
-
+		
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		operator HWND() const {return m_hWnd;}
-
-		// Required by some macros
-		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const
-			{return ::PostMessage(hWnd, uMsg, wParam, lParam);}
-		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
-			{ return ::SendMessage(hWnd, uMsg, wParam, lParam);}
+		operator HWND() const {return m_hWnd;}		
 
 	protected:
-		// These can be overridden
+		// Override these functions as required
+		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnInitialUpdate();
+		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnPaint(HDC hDC);
-		virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcDefault(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual void OnMenuUpdate(UINT nID);
+		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		// These functions aren't intended to be overridden
-		void AddToMap();
-		LRESULT CallPrevWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		HICON SetIconLarge(int nIcon);
-		HICON SetIconSmall(int nIcon);
-		
 		HWND m_hWnd;				// handle to this object's window
 
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
+		void AddToMap();
+		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
 		void Subclass();
 
@@ -551,7 +558,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings
+		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings		
 
 	}; // class CWnd
 
@@ -562,6 +569,9 @@ namespace Win32xx
 	class CWinApp
 	{
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
+		friend class CDialog;
+		friend class CPropertyPage;
+		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 
 	public:
@@ -571,21 +581,20 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL InitInstance();
 		virtual int  MessageLoop();
+		virtual int Run();
 
-		// These functions aren't intended to be overridden
-		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		CWnd* GetCWndFromMap(HWND hWnd);
+		DWORD GetTlsIndex() const {return m_dwTlsIndex;}		
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		int Run();
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
-		TLSData* SetTlsIndex();
-
+		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}	
+		
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
-		void DefaultClass();
+		CWnd* GetCWndFromMap(HWND hWnd);
+		void DefaultClass();	
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
+		TLSData* SetTlsIndex();
 
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		HINSTANCE m_hInstance;			// handle to the applications instance
@@ -596,7 +605,9 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
-}	
+}
+
+
 
 
 #endif // _WINCORE_H_

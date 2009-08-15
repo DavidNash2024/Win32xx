@@ -33,7 +33,7 @@ void CMainFrame::AddCombo()
 	CToolbar& TB = GetToolbar();
 	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
-	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);	// Convert the button to a seperator
+	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);	// Convert the button to a separator
 	TB.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
 
 	// Determine the size and position of the ComboBox
