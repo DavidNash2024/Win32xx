@@ -211,8 +211,8 @@ void CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	tsKey += szKeyName;
 	tsKey += (_T("\\Theme Settings"));
 
-	if (ERROR_SUCCESS ==RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "",
-		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+	if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0,
+		KEY_READ, &hKey))
 	{
 		m_nColor = GetRegDwordFromOpenKey(hKey, _T("ColorStyle"));
 		m_bUseThemes = GetRegDwordFromOpenKey(hKey, _T("UseThemes")) & 1;
@@ -241,6 +241,21 @@ void CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 		}
 
 		RegCloseKey(hKey);
+	}
+	else
+	{
+		// Choose reasonable default values
+		m_nColor = IDM_OLIVE;
+		m_bUseThemes = TRUE;
+		m_bBandColors = TRUE;
+		m_bFlatStyle = FALSE;
+		m_bBandsLeft = TRUE;
+		m_bLockMenuBand = TRUE;
+		m_bRoundBorders = TRUE;
+		m_bShortBands = TRUE;
+		m_bUseLines = FALSE;;
+		m_bShowArrows = TRUE;
+		m_bShowCards = TRUE;
 	}
 }
 

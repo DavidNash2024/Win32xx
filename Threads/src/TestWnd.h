@@ -8,7 +8,6 @@
 
 
 #include "../../Win32++/wincore.h"
-#include <sstream>
 
 
 class CTestWindow : public CWnd

@@ -33,15 +33,16 @@ void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
 	tString tsKey = _T("Software\\");
 	tsKey += szKeyName;
 	tsKey += _T("\\Document Settings");
-	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "",
-		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
+	if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0,
+		KEY_READ, &hKey))
+	{
+		m_bCheckA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
+		m_bCheckB = GetRegDwordFromOpenKey(hKey, _T("CheckB")) & 1;
+		m_bCheckC = GetRegDwordFromOpenKey(hKey, _T("CheckC")) & 1;
+		m_radio = GetRegDwordFromOpenKey(hKey, _T("Radio"));
 
-	m_bCheckA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
-	m_bCheckB = GetRegDwordFromOpenKey(hKey, _T("CheckB")) & 1;
-	m_bCheckC = GetRegDwordFromOpenKey(hKey, _T("CheckC")) & 1;
-	m_radio = GetRegDwordFromOpenKey(hKey, _T("Radio"));
-
-	RegCloseKey(hKey);
+		RegCloseKey(hKey);
+	}
 }
 
 void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)

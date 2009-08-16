@@ -6,7 +6,6 @@
 
 
 #include "../../Win32++/dialog.h"
-#include <sstream>
 #include "resource.h"
 
 

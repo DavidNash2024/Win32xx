@@ -14,11 +14,11 @@ CTestWindow::CTestWindow()
 
 void CTestWindow::CreateWin(int i)
 {
-	tStringStream str;
+	TCHAR str[80];
 
 	m_nThread = i + 1;
-	str << _T("Thread ") << m_nThread;
-	CreateEx(0L, NULL, str.str().c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+	wsprintf(str, _T("Thread %d"), m_nThread);
+	CreateEx(0L, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		70 + 20*i, 120 + 20*i, 300, 200, NULL, NULL);
 }
 
@@ -40,9 +40,9 @@ LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CLOSE:
 		{
-			tStringStream str;
-			str << _T("Closing test Window ") << m_nThread << _T("\n");
-			TRACE(str.str().c_str());
+			TCHAR str[80];
+			wsprintf(str, _T("Closing test Window %d\n"), m_nThread);
+			TRACE(str);
 		}
 		break;
 

@@ -9,7 +9,6 @@
 
 #include "TestWnd.h"
 #include "MyDialog.h"
-#include <vector>
 
 
 class CMainWindow : public CWnd

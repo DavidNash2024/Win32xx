@@ -2,13 +2,10 @@
 // TestWnd.h
 //  Declaration of the CTestWindow class
 
-
 #ifndef TESTWND_H
 #define TESTWND_H
 
-
 #include "../../Win32++/wincore.h"
-#include <sstream>
 
 
 class CTestWindow : public CWnd

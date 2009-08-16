@@ -7,10 +7,7 @@
 #define THREADAPP_H
 
 #include "MainWnd.h"
-#include <string>
 
-
-typedef std::basic_stringstream<TCHAR> tStringStream;
 
 class CThreadApp : public CWinApp
 {

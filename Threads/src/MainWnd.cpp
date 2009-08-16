@@ -9,7 +9,6 @@
 #include "Thread.h"
 #include "resource.h"
 #include <string>
-#include <sstream>
 
 
 CMainWindow::CMainWindow()
@@ -56,9 +55,9 @@ void CMainWindow::OnCreate()
 
 void CMainWindow::OnAllWindowsCreated()
 {
-	tStringStream str;
-	str << m_nThreads << _T(" Threads with windows created\n");
-	TRACE(str.str().c_str());
+	TCHAR str[80];
+	wsprintf(str, _T("%d Threads with windows created\n"), m_nThreads);
+	TRACE(str);
 }
 
 LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

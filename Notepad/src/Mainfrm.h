@@ -7,7 +7,6 @@
 
 
 #include "../../Win32++/frame.h"
-#include <sstream>
 #include "RichView.h"
 
 

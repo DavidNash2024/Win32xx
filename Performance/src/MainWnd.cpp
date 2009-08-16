@@ -75,9 +75,9 @@ void CMainWindow::OnSize()
 
 void CMainWindow::OnAllWindowsCreated()
 {
-	tStringStream str;
-	str << m_nTestWindows << _T("  Windows Created");
-	SendText(str.str().c_str());
+	TCHAR str[80];
+	wsprintf(str, _T("%d  Windows Created"), m_nTestWindows);
+	SendText(str);
 	SendText(_T("Ready to run performance test"));
 
 	int nResult = ::MessageBox(m_hWnd, _T("Start the Performance Test?"), _T("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);
@@ -103,9 +103,9 @@ void CMainWindow::PerformanceTest()
 	int nMessages = 0;
 
 	SendText(_T(""));
-	tStringStream str;
-	str << _T("Sending ") << m_nTestMessages <<  _T(" Messages");
-	SendText(str.str().c_str());
+	TCHAR str[80];
+	wsprintf(str, _T("Sending %d  Messages"), m_nTestMessages);
+	SendText(str);
 
 	// Choose a Window handle(HWND) to send the messages to
 	HWND hWnd = m_pCTestWindows[(m_nTestWindows-1)/2]->GetHwnd();
@@ -122,15 +122,13 @@ void CMainWindow::PerformanceTest()
 	DWORD mSeconds = tEnd - tStart;
 
 	// Display the results
-	str.str(tString()); // erase the stream
-	str << mSeconds << _T("  milliseconds to process ") << m_nTestMessages << _T(" messages");
-	SendText(str.str().c_str());
+	wsprintf(str, _T("%d milliseconds to process %d messages"), mSeconds, m_nTestMessages);
+	SendText(str);
 
-	str.str(tString()); // erase the stream
-	str << lr << _T(" total messages sent\n");
-	TRACE(str.str().c_str());
+	wsprintf(str, _T("%d total messages sent\n"), lr);
+	TRACE(str);
 
-	MessageBox(str.str().c_str(), _T("Info"), MB_OK);
+	MessageBox(str, _T("Info"), MB_OK);
 }
 
 void CMainWindow::SendText(LPCTSTR str)

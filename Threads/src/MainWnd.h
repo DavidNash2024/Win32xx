@@ -8,7 +8,6 @@
 
 
 #include "../../Win32++/wincore.h"
-#include <sstream>
 
 
 // Forward declaration of the CThread class

@@ -43,10 +43,9 @@ DWORD WINAPI CThread::ThreadCallback(LPVOID pCThread)
 	CThread* pThread = (CThread*)pCThread;
 	
 	int i = pThread->m_nValue;
-	tStringStream str;
-
-	str << _T("Thread ") << i + 1 << _T(" started\n");
-	TRACE(str.str().c_str());
+	TCHAR str[80];
+	wsprintf(str, _T("Thread %d started\n"), i + 1);
+	TRACE(str);
 
 	// Create a test window for this thread
 	pThread->m_TestWindow.CreateWin(i);
