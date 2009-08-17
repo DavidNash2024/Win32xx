@@ -87,7 +87,7 @@ namespace Win32xx
   // Class declarations
   class CContainer;
 	class CDocker;
-	
+
   struct ContainerInfo
 	{
 		TCHAR szTitle[MAX_MENU_STRING];
@@ -467,8 +467,8 @@ namespace Win32xx
 		BOOL m_bDragAutoResize;
 		int m_DockStartWidth;
 		int m_nDockID;
-		int m_NCHeight;
 		int m_nTimerCount;
+		int m_NCHeight;
 		DWORD m_dwDockZone;
 		double m_DockWidthRatio;
 		DWORD m_DockStyle;
@@ -649,9 +649,9 @@ namespace Win32xx
 	{
 		// Calculate the close rect position in screen co-ordinates
 		CRect rcClose;
-		
+
 		int gap = 4;
-		CRect rc = GetWindowRect();	
+		CRect rc = GetWindowRect();
 		int cx = GetSystemMetrics(SM_CXSMICON);
 		int cy = GetSystemMetrics(SM_CYSMICON);
 
@@ -736,7 +736,7 @@ namespace Win32xx
 
 		if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			// Determine the close button's drawing position relative to the window	
+			// Determine the close button's drawing position relative to the window
 			CRect rcClose = GetCloseRect();
 			UINT uState = rcClose.PtInRect(GetCursorPos())? IsLeftButtonDown()? 2 : 1 : 0;
 			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
@@ -748,7 +748,7 @@ namespace Win32xx
 					rcClose.OffsetRect(-2, -2);
 			}
 			else
-				rcClose.OffsetRect(0, m_NCHeight-2); 
+				rcClose.OffsetRect(0, m_NCHeight-2);
 
 			// Draw the outer highlight for the close button
 			if (!IsRectEmpty(&rcClose))
@@ -888,7 +888,7 @@ namespace Win32xx
 				// Update the close button
 				CDC dc = GetWindowDC();
 				DrawCloseButton(dc, m_bOldFocus);
-				
+
 				return 0L;
 			}
 		}
@@ -1042,7 +1042,7 @@ namespace Win32xx
 		case WM_NCCALCSIZE:
 			OnNCCalcSize(wParam, lParam);
 			break;
-		
+
 		case WM_NCHITTEST:
 			return OnNCHitTest(wParam, lParam);
 
@@ -1324,7 +1324,7 @@ namespace Win32xx
 			dcTarget.DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
 			::DeleteObject(hbmMiddle);
 		}
-		
+
 		dcTarget.DetachDC();
 	}
 
@@ -2464,15 +2464,15 @@ namespace Win32xx
 				std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
 				std::vector<ContainerInfo>::iterator iter;
 				for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
-				{				
+				{
 					if ((*iter).pContainer != pContainer)
 					{
 						// Reset container parent before destroying the dock window
 						CDocker* pDock = GetDockFromView((*iter).pContainer);
 						pContainer->SetParent(pDock->GetDockClient().GetHwnd());
-						
-						pDock->Destroy();  
-					} 
+
+						pDock->Destroy();
+					}
 				}
 			}
 		}
@@ -2585,12 +2585,12 @@ namespace Win32xx
 				{
 					if (IsDragAutoResize())
 						ResizeDockers(pdp);
-					else	
+					else
 					{
 						DrawHashBar(pdp->hdr.hwndFrom, m_OldPoint);
 						DrawHashBar(pdp->hdr.hwndFrom, pt);
 					}
-					
+
 					m_OldPoint = pt;
 				}
 			}
@@ -2603,7 +2603,7 @@ namespace Win32xx
 
 				if (!IsDragAutoResize())
 					DrawHashBar(pdp->hdr.hwndFrom, pt);
-				
+
 				ResizeDockers(pdp);
 			}
 			break;
@@ -3270,7 +3270,7 @@ namespace Win32xx
 			break;
 		case WM_TIMER:
 			{
-				if (this == GetDockAncestor())				
+				if (this == GetDockAncestor())
 				{
 					if (wParam == 1)
 					{
@@ -3518,7 +3518,7 @@ namespace Win32xx
 	inline void CContainer::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		CTab::OnMouseMove(wParam, lParam);
-	} 
+	}
 
 	inline LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
 	{
@@ -3649,7 +3649,7 @@ namespace Win32xx
 		AdjustRect(FALSE, &rc);
 		if (rc.Width() < 0 )
 			rc.SetRectEmpty();
-		
+
 		int nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
 		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, 20));
 	}
@@ -3658,7 +3658,7 @@ namespace Win32xx
 	{
 		CContainer* pContainer = GetContainerParent()->GetContainerFromIndex(nTab);
 		pContainer->SetTabText(szText);
-		
+
 		CTab::SetTabText(nTab, szText);
 	}
 
