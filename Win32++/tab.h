@@ -691,6 +691,8 @@ namespace Win32xx
 		if (GetCloseRect().PtInRect(pt))
 		{
 			m_IsClosePressed = TRUE;
+			CDC dc = GetDC();
+			DrawCloseButton(dc);
 		}
 		else
 			m_IsClosePressed = FALSE;

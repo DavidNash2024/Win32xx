@@ -2177,7 +2177,7 @@ namespace Win32xx
 			NMHDR nhdr={0};
 			nhdr.hwndFrom = m_hOldFocus;
 			nhdr.idFrom = idCtrl;
-			nhdr.code = NM_SETFOCUS;
+			nhdr.code = UWM_FRAMEGOTFOCUS;
 			GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		} 
 	}
