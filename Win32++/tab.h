@@ -130,7 +130,6 @@ namespace Win32xx
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual void    SetTabSize();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -701,6 +700,12 @@ namespace Win32xx
 		{
 			ShowListMenu();
 		}
+
+		TCHITTESTINFO tchti = {0};
+		tchti.pt = pt;
+		int nPage = HitTest(tchti);
+		if (nPage >= 0)
+			SelectPage(nPage);
 	}
 
 	inline void CTab::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
@@ -762,22 +767,6 @@ namespace Win32xx
 		if (GetListRect().PtInRect(pt))  return HTCLIENT;
 
 		return CWnd::WndProcDefault(WM_NCHITTEST, wParam, lParam);
-	}
-
-	inline LRESULT CTab::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
-	{
-		switch (((LPNMHDR)lParam)->code)
-		{
-		case TCN_SELCHANGE:
-			{
-				// Display the newly selected tab page
-				int iPage = GetCurSel();
-				SelectPage(iPage);
-			}
-			break;
-		}
-
-		return 0L;
 	}
 
 	inline void CTab::Paint()

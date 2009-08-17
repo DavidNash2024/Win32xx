@@ -413,6 +413,7 @@ namespace Win32xx
 	protected:
 		virtual CDocker* NewDockerFromID(int nID);
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
+		virtual void OnCaptionTimer(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual void OnDestroy(WPARAM wParam, LPARAM lParam);
 		virtual void OnDockDestroyed(WPARAM wParam, LPARAM lParam);
@@ -738,7 +739,7 @@ namespace Win32xx
 		{
 			// Determine the close button's drawing position relative to the window
 			CRect rcClose = GetCloseRect();
-			UINT uState = rcClose.PtInRect(GetCursorPos())? IsLeftButtonDown()? 2 : 1 : 0;
+			UINT uState = GetCloseRect().PtInRect(GetCursorPos())? m_IsClosePressed && IsLeftButtonDown()? 2 : 1 : 0;
 			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
 
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
@@ -873,8 +874,10 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (HTCLOSE == wParam) m_IsClosePressed = TRUE;
-			else	m_IsClosePressed = FALSE;
+			if (HTCLOSE == wParam) 
+				m_IsClosePressed = TRUE;
+			else	
+				m_IsClosePressed = FALSE;
 
 			m_bCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
@@ -2412,6 +2415,23 @@ namespace Win32xx
 		}
 	}
 
+	inline void CDocker::OnCaptionTimer(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		if (this == GetDockAncestor())
+		{
+			if (wParam == 1)
+			{
+				DrawAllCaptions();
+				m_nTimerCount++;
+				if (m_nTimerCount == 10)
+				{
+					KillTimer(m_hWnd, wParam);
+					m_nTimerCount = 0;
+				}
+			}
+		}
+	}
+
 	inline void CDocker::OnCreate()
 	{
 		// Create the various child windows
@@ -3269,22 +3289,7 @@ namespace Win32xx
 			OnSetFocus(wParam, lParam);
 			break;
 		case WM_TIMER:
-			{
-				if (this == GetDockAncestor())
-				{
-					if (wParam == 1)
-					{
-						DrawAllCaptions();
-						m_nTimerCount++;
-						if (m_nTimerCount == 10)
-						{
-							KillTimer(m_hWnd, wParam);
-							m_nTimerCount = 0;
-						}
-					}
-					return 0L;
-				}
-			}
+			OnCaptionTimer(wParam, lParam);
 			break;
 		case UWM_DOCK_DESTROYED:
 			OnDockDestroyed(wParam, lParam);
