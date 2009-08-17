@@ -460,7 +460,6 @@ namespace Win32xx
 		m_hDC = hDC;
 	}
 
-
 	inline HDC CDC::DetachDC()
 	{
 		if (!m_hDC) throw CWinException(_T("No HDC assigned to this CDC"));

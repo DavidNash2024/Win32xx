@@ -1108,8 +1108,12 @@ namespace Win32xx
 			break;
 		case WM_LBUTTONDBLCLK:
 		case WM_LBUTTONDOWN:
+			// Do default processing first
+			CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
+			
+			// Now do our processing
 			OnLButtonDown(wParam, lParam);
-			break;
+			return 0L;
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);
 			break;

@@ -665,7 +665,7 @@ namespace Win32xx
 
 	inline void CDocker::CDockClient::DrawCaption(WPARAM wParam)
 	{
-		if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			BOOL bFocus = m_pDock->IsChildOfDocker(GetFocus());
 			m_bOldFocus = FALSE;
@@ -934,12 +934,7 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-	/*		m_pView->SetFocus();
-			m_pDock->GetDockTopLevel()->m_hOldFocus = ::GetFocus();
-			m_pDock->RecalcDockLayout(); 
-			TRACE("Focus Changed!\n"); */
 			m_pDock->GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
-			TRACE("GotMouseActivate\n");
 		}
 	}
 
@@ -2405,6 +2400,8 @@ namespace Win32xx
 		// Only top level undocked dockers get this message
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
+			GetDockTopLevel()->m_hOldFocus = GetFocus();
+
 			// Send a notification of focus lost
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
 			NMHDR nhdr={0};
@@ -2609,6 +2606,9 @@ namespace Win32xx
 				
 				ResizeDockers(pdp);
 			}
+			break;
+		case NM_SETFOCUS:
+			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 			break;
 		case UWM_FRAMEGOTFOCUS:
 			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
@@ -3278,7 +3278,6 @@ namespace Win32xx
 						m_nTimerCount++;
 						if (m_nTimerCount == 10)
 						{
-							TRACE("Timer Killed\n");
 							KillTimer(m_hWnd, wParam);
 							m_nTimerCount = 0;
 						}
