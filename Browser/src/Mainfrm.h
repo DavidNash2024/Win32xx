@@ -15,6 +15,7 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	virtual void Navigate();
 	virtual void OnBeforeNavigate(DISPPARAMS* pDispParams);
 	virtual void OnCommandStateChange(DISPPARAMS* pDispParams);
 	virtual void OnDocumentBegin(DISPPARAMS* pDispParams);
@@ -38,7 +39,6 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
-	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetupToolbar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

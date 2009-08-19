@@ -50,6 +50,24 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	RB.InsertBand(-1, rbbi);
 }
 
+void CMainFrame::Navigate()
+{
+	TCHAR szString[256];
+
+	// Get text from edit box
+	m_ComboBoxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
+
+	// Insert text into the list box.
+	COMBOBOXEXITEM CBXitem = {0};
+	CBXitem.mask = CBEIF_TEXT;
+	CBXitem.pszText = szString;
+	m_ComboBoxEx.SendMessage(CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
+
+	// Navigate to the web page
+	m_View.Navigate(szString);
+
+}
+
 void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
 {
 	// Update the URL in the ComboboxEx edit box.
@@ -243,42 +261,6 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
 	TRACE(_T("NewWindow2\n"));
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
-{
-	USES_CONVERSION;
-
-	switch (((LPNMHDR)lParam)->code)
-	{
-	case CBEN_ENDEDIT:
-		{
-			switch (((PNMCBEENDEDIT)lParam)->iWhy)
-			{
-			case CBENF_RETURN:
-				// User hit return in edit box
-				{
-					TCHAR szString[256];
-
-					// Get text from edit box
-					m_ComboBoxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
-
-					// Insert text into the list box.
-					COMBOBOXEXITEM CBXitem = {0};
-					CBXitem.mask = CBEIF_TEXT;
-					CBXitem.pszText = szString;
-					m_ComboBoxEx.SendMessage(CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
-
-					// Navigate to the web page
-					m_View.Navigate(szString);
-
-					return FALSE;
-				}
-			}
-		}
-	}
-
-	return CFrame::OnNotify(wParam, lParam);
 }
 
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)

@@ -1,5 +1,19 @@
+
+#include "BrowserApp.h"
 #include "ComboBoxEx.h"
 
+
+BOOL CComboBoxEx::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	switch(LOWORD(wParam))
+	{
+	case IDOK: // Return hit in edit control
+		GetBrowserApp().GetMainFrame().Navigate();
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 void CComboBoxEx::PreCreate(CREATESTRUCT &cs)
 {

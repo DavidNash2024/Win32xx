@@ -1,5 +1,5 @@
-#ifndef _COMBOBOXEX_H_
-#define _COMBOBOXEX_H_
+#ifndef COMBOBOXEX_H
+#define COMBOBOXEX_H
 
 #include "../../Win32++/wincore.h"
 #include "resource.h"
@@ -11,6 +11,7 @@ public:
 	virtual ~CComboBoxEx() {}
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 };
 
