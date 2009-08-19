@@ -161,7 +161,7 @@ copy StaticLibrary\Frame\Release\Frame.exe     	"Win32xx Tests\VS2005\StaticLib\
 
 REM: Compile Tutorials
 ::Compile code
-devenv /build Debug Tutorial1\Tutorial1_2005.sln /projectconfig Debug 			> "Win32xx Tests\VS2005.log"
+devenv /build Debug Tutorial1\Tutorial1_2005.sln /projectconfig Debug 			>>"Win32xx Tests\VS2005.log"
 devenv /build Release Tutorial1\Tutorial1_2005.sln /projectconfig Release		>>"Win32xx Tests\VS2005.log"
 devenv /build Debug Tutorial2\Tutorial2_2005.sln /projectconfig Debug			>>"Win32xx Tests\VS2005.log"
 devenv /build Release Tutorial2\Tutorial2_2005.sln /projectconfig Release		>>"Win32xx Tests\VS2005.log"

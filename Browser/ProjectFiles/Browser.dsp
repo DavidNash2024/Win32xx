@@ -96,6 +96,10 @@ SOURCE=..\src\BrowserApp.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\ComboBoxEx.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
@@ -117,6 +121,10 @@ SOURCE=..\src\View.cpp
 # Begin Source File
 
 SOURCE=..\src\BrowserApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ComboBoxEx.h
 # End Source File
 # Begin Source File
 

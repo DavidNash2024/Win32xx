@@ -11,9 +11,11 @@ pushd "..\Networking"
 call clean
 popd
 
-
 REM: Change the directory to the parent (Pushes the directory change on to the stack)
 pushd ..
+if exist "Win32xx Tests\Borland" rmdir /s /q "Win32xx Tests\Borland"
+if exist "Win32xx Tests\VS2003" rmdir /s /q "Win32xx Tests\VS2003"
+if exist "Win32xx Tests\MinGW" rmdir /s /q "Win32xx Tests\MinGW"
 
 
 REM: Compile the code
@@ -46,12 +48,11 @@ codeblocks.exe --rebuild Themes\ProjectFiles\Themes.cbp				>>"Win32xx Tests\Code
 codeblocks.exe --rebuild Threads\ProjectFiles\Threads.cbp			>>"Win32xx Tests\CodeBlocks.log"
 
 REM: Copy the executables to the testing directories
-if exist "Win32xx Tests\VS2003" rmdir /s /q "Win32xx Tests\VS2003"
 mkdir "Win32xx Tests\VS2003"
 mkdir "Win32xx Tests\VS2003\Debug"
 
 ECHO "Copying VS2003 Debug files" >>"Win32xx Tests\CodeBlocks.log"
-REM copy Browser\ProjectFiles\Microsoft\Debug\Browser.exe                 "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
+REM copy Browser\ProjectFiles\Microsoft\Debug\Browser.exe             "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy ControlBars\ProjectFiles\Microsoft\Debug\ControlBars.exe         "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy Dialog\ProjectFiles\Microsoft\Debug\Dialog.exe                   "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy DlgSubclass\ProjectFiles\Microsoft\Debug\DlgSubClass.exe         "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
@@ -59,7 +60,7 @@ copy DockContainer\ProjectFiles\Microsoft\Debug\ContainerDocking.exe  "Win32xx T
 copy DockSimple\ProjectFiles\Microsoft\Debug\Docking.exe              "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy DockTabbedMDI\ProjectFiles\Microsoft\Debug\TabbedMDI.exe         "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy DocViewForm\ProjectFiles\Microsoft\Debug\DocViewForm.exe         "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
-REM copy DX\ProjectFiles\Microsoft\Debug\DX.exe                           "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
+REM copy DX\ProjectFiles\Microsoft\Debug\DX.exe                       "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy Explorer\ProjectFiles\Microsoft\Debug\Explorer.exe               "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy FastGDI\ProjectFiles\Microsoft\Debug\FastGDI.exe                 "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
 copy Frame\ProjectFiles\Microsoft\Debug\Frame.exe                     "Win32xx Tests\VS2003\Debug"    >>"Win32xx Tests\CodeBlocks.log"
@@ -83,7 +84,7 @@ copy Threads\ProjectFiles\Microsoft\Debug\Threads.exe                 "Win32xx T
 mkdir "Win32xx Tests\VS2003\Release"
 
 ECHO "Copying VS2003 Release files" >>"Win32xx Tests\CodeBlocks.log"
-REM copy Browser\ProjectFiles\Microsoft\Release\Browser.exe                 "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
+REM copy Browser\ProjectFiles\Microsoft\Release\Browser.exe             "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy ControlBars\ProjectFiles\Microsoft\Release\ControlBars.exe         "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy Dialog\ProjectFiles\Microsoft\Release\Dialog.exe                   "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy DlgSubclass\ProjectFiles\Microsoft\Release\DlgSubClass.exe         "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
@@ -91,7 +92,7 @@ copy DockContainer\ProjectFiles\Microsoft\Release\ContainerDocking.exe  "Win32xx
 copy DockSimple\ProjectFiles\Microsoft\Release\Docking.exe              "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy DockTabbedMDI\ProjectFiles\Microsoft\Release\TabbedMDI.exe         "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy DocViewForm\ProjectFiles\Microsoft\Release\DocViewForm.exe         "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
-REM copy DX\ProjectFiles\Microsoft\Release\DX.exe                           "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
+REM copy DX\ProjectFiles\Microsoft\Release\DX.exe                       "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy Explorer\ProjectFiles\Microsoft\Release\Explorer.exe               "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy FastGDI\ProjectFiles\Microsoft\Release\FastGDI.exe                 "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
 copy Frame\ProjectFiles\Microsoft\Release\Frame.exe                     "Win32xx Tests\VS2003\Release"    >>"Win32xx Tests\CodeBlocks.log"
@@ -114,7 +115,6 @@ copy Threads\ProjectFiles\Microsoft\Release\Threads.exe                 "Win32xx
 
 
 REM: Copy the executables to the testing directories
-if exist "Win32xx Tests\Borland" rmdir /s /q "Win32xx Tests\Borland"
 mkdir "Win32xx Tests\Borland"
 mkdir "Win32xx Tests\Borland\Debug"
 
@@ -182,7 +182,6 @@ copy Threads\ProjectFiles\Borland\Release\Threads.exe                 "Win32xx T
 
 
 REM: Copy the executables to the testing directories
-if exist "Win32xx Tests\MinGW" rmdir /s /q "Win32xx Tests\MinGW"
 mkdir "Win32xx Tests\MinGW"
 mkdir "Win32xx Tests\MinGW\Debug"
 

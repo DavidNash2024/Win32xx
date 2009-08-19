@@ -163,7 +163,7 @@ copy StaticLibrary\Frame\Release\Frame.exe     	"Win32xx Tests\VS2008\StaticLib\
 
 REM: Compile Tutorials
 ::Compile code
-devenv /build Debug Tutorial1\Tutorial1_2008.sln /projectconfig Debug 			> "Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial1\Tutorial1_2008.sln /projectconfig Debug 			>>"Win32xx Tests\VS2008.log"
 devenv /build Release Tutorial1\Tutorial1_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
 devenv /build Debug Tutorial2\Tutorial2_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
 devenv /build Release Tutorial2\Tutorial2_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"

@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ComboBoxEx.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
@@ -241,6 +245,10 @@
 			>
 			<File
 				RelativePath="..\src\BrowserApp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ComboBoxEx.h"
 				>
 			</File>
 			<File
