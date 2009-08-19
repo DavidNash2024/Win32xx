@@ -10,6 +10,8 @@ public:
 	CComboBoxEx() {}
 	virtual ~CComboBoxEx() {}
 	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
 };
 
 class CComboEdit : public CWnd
@@ -17,6 +19,7 @@ class CComboEdit : public CWnd
 public:
 	CComboEdit() {}
 	virtual ~CComboEdit() {}
+
 };
 
 

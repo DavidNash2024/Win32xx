@@ -21,6 +21,10 @@ public:
 	virtual void OnDocumentComplete(DISPPARAMS* pDispParams);
 	virtual void OnDownloadBegin(DISPPARAMS* pDispParams);
 	virtual void OnDownloadComplete(DISPPARAMS* pDispParams);
+	virtual void OnEditCopy();
+	virtual void OnEditCut();
+	virtual void OnEditDelete();
+	virtual void OnEditPaste();
 	virtual void OnNavigateComplete2(DISPPARAMS* pDispParams);
 	virtual void OnNewWindow2(DISPPARAMS* pDispParams);
 	virtual void OnProgressChange(DISPPARAMS* pDispParams);
@@ -40,7 +44,6 @@ protected:
 
 private:
 	CView m_View;
-//	CWnd m_ComboBoxEx;
 	CComboBoxEx m_ComboBoxEx;
 	CComboEdit m_ComboEdit;
 };

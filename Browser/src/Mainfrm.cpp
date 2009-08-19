@@ -63,32 +63,6 @@ void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
 	}
 }
 
-void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
-{
-	CToolbar& TB = GetToolbar();
-
-	if ((pDispParams) && (pDispParams->cArgs == 2))
-	{
-		if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
-		{
-			VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
-			int nCommand = pDispParams->rgvarg[1].intVal;
-			{
-				switch (nCommand)
-				{
-				case 1: // Navigate forward:
-					bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
-
-					break;
-				case 2: // Navigate back:
-					bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
-					break;
-				}
-			}
-		}
-	}
-}
-
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to menu and and toolbar input
@@ -118,16 +92,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		m_View.GetIWebBrowser2()->GoHome();
 		return TRUE;
 	case IDM_EDIT_COPY:
-		m_ComboEdit.SendMessage(WM_COPY, 0, 0);
+		OnEditCopy();
 		return TRUE;
 	case IDM_EDIT_CUT:
-		m_ComboEdit.SendMessage(WM_CUT, 0, 0);
+		OnEditCut();
 		return TRUE;
 	case IDM_EDIT_DELETE:
-		m_ComboEdit.SendMessage(WM_CLEAR, 0, 0);
+		OnEditDelete();
 		return TRUE;
 	case IDM_EDIT_PASTE:
-		m_ComboEdit.SendMessage(WM_PASTE, 0, 0);
+		OnEditPaste();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
@@ -165,6 +139,32 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
+void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
+{
+	CToolbar& TB = GetToolbar();
+
+	if ((pDispParams) && (pDispParams->cArgs == 2))
+	{
+		if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
+		{
+			VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
+			int nCommand = pDispParams->rgvarg[1].intVal;
+			{
+				switch (nCommand)
+				{
+				case 1: // Navigate forward:
+					bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
+
+					break;
+				case 2: // Navigate back:
+					bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
+					break;
+				}
+			}
+		}
+	}
+}
+
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 {
 	TRACE(_T("OnDocumentBegin\n"));
@@ -175,7 +175,7 @@ void CMainFrame::OnCreate()
 	// Call the base function first
 	CFrame::OnCreate();
 
-	// Now attach the Combo's edit window to CComboEdit
+	// Attach the Combo's edit window to CComboEdit
 	HWND hEdit = (HWND)m_ComboBoxEx.SendMessage(CBEM_GETEDITCONTROL, 0, 0);
 	m_ComboEdit.Attach(hEdit);
 }
@@ -191,6 +191,29 @@ void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnDownloadComplete(DISPPARAMS* pDispParams)
 {
+}
+
+void CMainFrame::OnEditCopy()
+{
+	if (m_ComboEdit == GetFocus())
+	m_ComboEdit.SendMessage(WM_COPY, 0, 0);
+}
+
+void CMainFrame::OnEditCut()
+{
+	if (m_ComboEdit == GetFocus())
+	m_ComboEdit.SendMessage(WM_CUT, 0, 0);
+}
+
+void CMainFrame::OnEditDelete()
+{
+	if (m_ComboEdit == GetFocus())
+	m_ComboEdit.SendMessage(WM_CLEAR, 0, 0);
+}
+void CMainFrame::OnEditPaste()
+{
+	if (m_ComboEdit == GetFocus())
+	m_ComboEdit.SendMessage(WM_PASTE, 0, 0);
 }
 
 void CMainFrame::OnInitialUpdate()
