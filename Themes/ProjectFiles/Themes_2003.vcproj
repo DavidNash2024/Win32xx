@@ -182,6 +182,30 @@
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\src\res\Arrows.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\Cards.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\Enhanced.ico">
+			</File>
+			<File
+				RelativePath="..\src\res\Status.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\Toolbar16_n.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\Toolbar24_d.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\Toolbar24_h.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\Toolbar24_n.bmp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
@@ -211,6 +235,9 @@
 				RelativePath="..\..\Win32++\wincore.h">
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\src\res\Win32++.manifest">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -1,5 +1,5 @@
 // Win32++  Version 6.6
-// Released: 17th August, 2009 by:
+// Released: 20th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -130,7 +130,6 @@ namespace Win32xx
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual void    SetTabSize();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -195,6 +194,7 @@ namespace Win32xx
 	};
 	
 }
+
 
 
 #endif  // _TAB_H_

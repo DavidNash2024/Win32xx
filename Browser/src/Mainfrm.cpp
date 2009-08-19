@@ -25,20 +25,14 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-void CMainFrame::AddListboxBand(int Listbox_Height)
+void CMainFrame::AddComboBoxBand(int Listbox_Height)
 {
 	// Get the reference to the rebar object
 	CRebar& RB = GetRebar();
 	ThemeRebar RBTheme = RB.GetRebarTheme();
 
 	// Create the ComboboxEx window
-	CREATESTRUCT cs = {0};
-	cs.lpszClass = _T("COMBOBOXEX32");
-	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
-	cs.cy = 100;	// required to display list
-	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
-	m_ComboboxEx.PreCreate(cs);
-	m_ComboboxEx.Create(GetRebar().GetHwnd());
+	m_ComboBoxEx.Create(RB.GetHwnd());
 
 	// Put the window in a new rebar band
 	REBARBANDINFO rbbi = {0};
@@ -50,7 +44,7 @@ void CMainFrame::AddListboxBand(int Listbox_Height)
 	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 	rbbi.clrBack    = RBTheme.clrBand1;
-	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
+	rbbi.hwndChild  = m_ComboBoxEx.GetHwnd();
 	rbbi.lpText     = _T("Address");
 
 	RB.InsertBand(-1, rbbi);
@@ -64,10 +58,8 @@ void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
 		CComVariant vtURL(*pDispParams->rgvarg[5].pvarVal);
 		vtURL.ChangeType(VT_BSTR);
 
-		HWND hwnd = m_ComboboxEx.GetHwnd();
-
 		USES_CONVERSION;
-		::SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));
+		m_ComboBoxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));
 	}
 }
 
@@ -125,6 +117,18 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_HOME:
 		m_View.GetIWebBrowser2()->GoHome();
 		return TRUE;
+	case IDM_EDIT_COPY:
+		m_ComboEdit.SendMessage(WM_COPY, 0, 0);
+		return TRUE;
+	case IDM_EDIT_CUT:
+		m_ComboEdit.SendMessage(WM_CUT, 0, 0);
+		return TRUE;
+	case IDM_EDIT_DELETE:
+		m_ComboEdit.SendMessage(WM_CLEAR, 0, 0);
+		return TRUE;
+	case IDM_EDIT_PASTE:
+		m_ComboEdit.SendMessage(WM_PASTE, 0, 0);
+		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
 		return TRUE;
@@ -134,7 +138,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	}
 
 	// Handle notification WM_COMMAND from ComboboxEx
-	if((HWND)lParam == m_ComboboxEx.GetHwnd())
+	if((HWND)lParam == m_ComboBoxEx.GetHwnd())
 	{
 		switch(HIWORD(wParam))
 		{
@@ -144,7 +148,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 				TCHAR szString[256];
 
 				// Get text from edit box
-				::SendMessage(m_ComboboxEx.GetHwnd(), WM_GETTEXT, 256, (LPARAM)szString);
+				m_ComboBoxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
 
 				// Navigate to web page
 				m_View.Navigate(szString);
@@ -170,6 +174,10 @@ void CMainFrame::OnCreate()
 {
 	// Call the base function first
 	CFrame::OnCreate();
+
+	// Now attach the Combo's edit window to CComboEdit
+	HWND hEdit = (HWND)m_ComboBoxEx.SendMessage(CBEM_GETEDITCONTROL, 0, 0);
+	m_ComboEdit.Attach(hEdit);
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
@@ -216,7 +224,6 @@ void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
-	HWND hwnd = m_ComboboxEx.GetHwnd();
 	USES_CONVERSION;
 
 	switch (((LPNMHDR)lParam)->code)
@@ -231,13 +238,13 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 					TCHAR szString[256];
 
 					// Get text from edit box
-					::SendMessage(hwnd, WM_GETTEXT, 256, (LPARAM)szString);
+					m_ComboBoxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
 
 					// Insert text into the list box.
 					COMBOBOXEXITEM CBXitem = {0};
 					CBXitem.mask = CBEIF_TEXT;
 					CBXitem.pszText = szString;
-					::SendMessage(hwnd, CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
+					m_ComboBoxEx.SendMessage(CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
 
 					// Navigate to the web page
 					m_View.Navigate(szString);
@@ -315,7 +322,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	else
 		str << LoadString(IDW_MAIN);
 
-	::SetWindowText(m_hWnd, str.str().c_str());
+	SetWindowText(str.str().c_str());
 }
 
 void CMainFrame::SetupToolbar()
@@ -336,7 +343,7 @@ void CMainFrame::SetupToolbar()
 	if (IsRebarUsed())
 	{
 		int Height = 22;
-		AddListboxBand(Height);
+		AddComboBoxBand(Height);
 
 		// Set the icons for popup menu items
 		IconData.push_back ( IDM_FILE_NEW  );

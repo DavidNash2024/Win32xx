@@ -186,6 +186,24 @@
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\src\res\classview.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\fileview.bmp">
+			</File>
+			<File
+				RelativePath="..\src\res\SplitH.cur">
+			</File>
+			<File
+				RelativePath="..\src\res\Splitter.ico">
+			</File>
+			<File
+				RelativePath="..\src\res\SplitV.cur">
+			</File>
+			<File
+				RelativePath="..\src\res\toolbar.bmp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
@@ -215,6 +233,9 @@
 				RelativePath="..\..\Win32++\wincore.h">
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\src\res\Win32++.manifest">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

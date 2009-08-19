@@ -1,5 +1,5 @@
 // Win32++  Version 6.6
-// Released: 17th August, 2009 by:
+// Released: 20th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -153,6 +153,7 @@
 #define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
 #define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
 #define UWM_UPDATE_COMMAND  (WM_APP + 14)   // Message - sent before a menu is displayed. Used by OnUpdate
+#define UWM_DOCK_ACTIVATED  (WM_APP + 15)   // Message - sent to dock ancestor when a docker is activated or deactivated.
 
 
 // Automatically include the Win32xx namespace

@@ -1,5 +1,5 @@
 // Win32++  Version 6.6
-// Released: 17th August, 2009 by:
+// Released: 20th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -352,6 +352,7 @@ namespace Win32xx
 	};
 
 }
+
 
 #endif // _GDI_H_
 

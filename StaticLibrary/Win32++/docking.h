@@ -1,5 +1,5 @@
 // Win32++  Version 6.6
-// Released: 17th August, 2009 by:
+// Released: 20th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -87,7 +87,7 @@ namespace Win32xx
   // Class declarations
   class CContainer;
 	class CDocker;
-	
+
   struct ContainerInfo
 	{
 		TCHAR szTitle[MAX_MENU_STRING];
@@ -236,8 +236,8 @@ namespace Win32xx
 			CDockClient();
 			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
-			virtual void DrawCaption(WPARAM wParam, BOOL bFocus);
-			virtual void DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus);
+			virtual void DrawCaption(WPARAM wParam);
+			virtual void DrawCloseButton(CDC& DrawDC, BOOL bFocus);
 			virtual void SendNotify(UINT nMessageID);
 
 			tString GetCaption() const		{ return m_tsCaption; }
@@ -250,7 +250,9 @@ namespace Win32xx
 			void SetView(CWnd& Wnd)			{ m_pView = &Wnd; }
 
 		protected:
+			virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 			virtual void    OnMouseActivate(WPARAM wParam, LPARAM lParam);
+			virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual void    OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
 			virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -258,7 +260,6 @@ namespace Win32xx
 			virtual void    OnNCMouseLeave(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCPaint(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 			virtual void    PreRegisterClass(WNDCLASS& wc);
 			virtual void    PreCreate(CREATESTRUCT& cs);
@@ -289,9 +290,8 @@ namespace Win32xx
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual void OnPaint(HDC hDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
+			virtual void SetBitmap(HBITMAP hbmBlueTint);
 			virtual void ShowHintWindow(CDocker* pDockTarget, CRect rcHint);
-
-			void SetBitmap(HBITMAP hbmBlueTint);
 
 		private:
 			HBITMAP m_hbmBlueTint;
@@ -415,6 +415,7 @@ namespace Win32xx
 	protected:
 		virtual CDocker* NewDockerFromID(int nID);
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
+		virtual void OnCaptionTimer(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual void OnDestroy(WPARAM wParam, LPARAM lParam);
 		virtual void OnDockDestroyed(WPARAM wParam, LPARAM lParam);
@@ -435,6 +436,7 @@ namespace Win32xx
 		void Dock(CDocker* hDocker, UINT uDockSide);
 		void DockInContainer(CDocker* pDock, DWORD dwDockStyle);
 		void DockOuter(CDocker* pDocker, DWORD dwDockStyle);
+		void DrawAllCaptions();
 		void DrawHashBar(HWND hBar, POINT Pos);
 		void ConvertToChild(HWND hWndParent);
 		void ConvertToPopup(RECT rc);
@@ -468,6 +470,7 @@ namespace Win32xx
 		BOOL m_bDragAutoResize;
 		int m_DockStartWidth;
 		int m_nDockID;
+		int m_nTimerCount;
 		int m_NCHeight;
 		DWORD m_dwDockZone;
 		double m_DockWidthRatio;
@@ -489,6 +492,4 @@ namespace Win32xx
 
 }
 
-
 #endif // _DOCKING_H_
-

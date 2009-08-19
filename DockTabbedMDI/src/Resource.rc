@@ -4,20 +4,19 @@
 #include "windows.h"
 #include "resource.h"
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       24             "res/Win32++.manifest"
+1                       RT_MANIFEST             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDW_MAIN MENU
+IDW_MAIN MENU 
 BEGIN
     POPUP "&File"
     BEGIN
@@ -51,7 +50,7 @@ BEGIN
     END
 END
 
-IDM_NEWMENU MENU
+IDM_NEWMENU MENU 
 BEGIN
     POPUP "New"
     BEGIN
@@ -75,9 +74,8 @@ IDW_MAIN                ICON                    "res/Docking.ico"
 IDI_SIMPLE              ICON                    "res/simple.ico"
 IDI_CLASSVIEW           ICON                    "res/classview.ico"
 IDI_FILEVIEW            ICON                    "res/fileview.ico"
-IDI_RECT                ICOn                    "res/rect.ico"
+IDI_RECT                ICON                    "res/rect.ico"
 IDI_TEXT                ICON                    "res/text.ico"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -95,7 +93,6 @@ IDB_CLASSVIEW           BITMAP                  "res/classview.bmp"
 IDB_FILEVIEW            BITMAP                  "res/fileview.bmp"
 IDB_STATUS              BITMAP                  "res/status.bmp"
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Cursor
@@ -104,20 +101,19 @@ IDB_STATUS              BITMAP                  "res/status.bmp"
 IDW_SPLITH              CURSOR                  "res/SplitH.cur"
 IDW_SPLITV              CURSOR                  "res/SplitV.cur"
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Frame Application",IDC_STATIC,60,22,64,11
+    CTEXT           "Docking Tabbed MDI Application",IDC_STATIC,60,22,64,17
     ICON            IDW_MAIN,0,4,4,20,20
 END
 
@@ -127,19 +123,23 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS
+IDW_MAIN ACCELERATORS 
 BEGIN
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
-    "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
-    "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_DELETE,         VIRTKEY, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, 
+                                                    NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
 END
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -147,14 +147,14 @@ END
 // String Table
 //
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDW_MAIN                "Tabbed MDI"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
@@ -166,39 +166,34 @@ BEGIN
     IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDM_FILE_NEWSIMPLE      "Create Simple MDI Child"
     IDM_FILE_NEWRECT        "Create Rect MDI Child"
     IDM_FILE_NEWTEXT        "Create Text MDI Child"
-    IDM_FILE_NEWTREE        "Create Tree-View MDI Child"
-    IDM_FILE_NEWLIST        "Create List-View MDI Child"
 END
 
-STRINGTABLE
+STRINGTABLE 
+BEGIN
+    IDM_FILE_NEWTREE        "Create Tree-View MDI Child"
+    IDM_FILE_NEWLIST        "Create List-View MDI Child"
+    IDM_CONTAINER_TOP       "Place Tabs at the top of the containers"
+    IDM_TABBEDMDI_TOP       "Place Tabs at the top of the MDITab"
+    IDM_LAYOUT_DEFAULT      "Restore default dock layout"
+    IDM_LAYOUT_CLOSE_DOCKERS "Close all docked and undocked windows"
+    IDM_LAYOUT_CLOSE_MDIS   "Close all MDI Children"
+END
+
+STRINGTABLE 
 BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
-END
-
-STRINGTABLE
-BEGIN
-    IDM_CONTAINER_TOP       "Place Tabs at the top of the containers"
-    IDM_TABBEDMDI_TOP       "Place Tabs at the top of the MDITab"
-    IDM_LAYOUT_DEFAULT       "Restore default dock layout"
-    IDM_LAYOUT_CLOSE_DOCKERS "Close all docked and undocked windows"
-    IDM_LAYOUT_CLOSE_MDIS    "Close all MDI Children"
-    
-END
-
-STRINGTABLE
-BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDW_FIRSTCHILD          "Activate this window"
     IDW_CHILD2              "Activate this window"
@@ -212,16 +207,45 @@ BEGIN
     IDW_CHILD10             "Select a window"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
-    SC_CLOSE                "Close the Window"
-    SC_MAXIMIZE             "Maximize the Window"
-    SC_MINIMIZE             "Minimize the WIndow"
-    SC_MOVE                 "Move the Window"
-  	SC_NEXTWINDOW           "Select Next Window"
-  	SC_PREVWINDOW           "Select Previous Window"
-    SC_RESTORE              "Restore the Window"
-    SC_SIZE                 "Resize the Window"
+    61536                   "Close the Window"
 END
+
+STRINGTABLE 
+BEGIN
+    61488                   "Maximize the Window"
+END
+
+STRINGTABLE 
+BEGIN
+    61472                   "Minimize the WIndow"
+END
+
+STRINGTABLE 
+BEGIN
+    61456                   "Move the Window"
+END
+
+STRINGTABLE 
+BEGIN
+    61504                   "Select Next Window"
+END
+
+STRINGTABLE 
+BEGIN
+    61520                   "Select Previous Window"
+END
+
+STRINGTABLE 
+BEGIN
+    61728                   "Restore the Window"
+END
+
+STRINGTABLE 
+BEGIN
+    61440                   "Resize the Window"
+END
+
 
 

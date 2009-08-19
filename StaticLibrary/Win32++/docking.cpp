@@ -1,5 +1,5 @@
 // Win32++  Version 6.6
-// Released: 17th August, 2009 by:
+// Released: 20th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -195,9 +195,9 @@ namespace Win32xx
 	{
 		// Calculate the close rect position in screen co-ordinates
 		CRect rcClose;
-		
+
 		int gap = 4;
-		CRect rc = GetWindowRect();	
+		CRect rc = GetWindowRect();
 		int cx = GetSystemMetrics(SM_CXSMICON);
 		int cy = GetSystemMetrics(SM_CYSMICON);
 
@@ -209,15 +209,15 @@ namespace Win32xx
 		return rcClose;
 	}
 
-	void CDocker::CDockClient::DrawCaption(WPARAM wParam, BOOL bFocus)
+	void CDocker::CDockClient::DrawCaption(WPARAM wParam)
 	{
-		// Acquire the DC for our NonClient painting
-		// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
-
-		if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
+			BOOL bFocus = m_pDock->IsChildOfDocker(GetFocus());
 			m_bOldFocus = FALSE;
 
+			// Acquire the DC for our NonClient painting
+			// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
 			CDC dc;
 			if ((wParam != 1) && (bFocus == m_bOldFocus))
 				dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
@@ -264,7 +264,7 @@ namespace Win32xx
 			dcMem.DrawText(m_tsCaption.c_str(), -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
-			DrawCloseButton(dcMem, 0, bFocus);
+			DrawCloseButton(dcMem, bFocus);
 
 			// Draw the 3D border
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
@@ -275,15 +275,16 @@ namespace Win32xx
 		}
 	}
 
-	void CDocker::CDockClient::DrawCloseButton(CDC& DrawDC, UINT uState, BOOL bFocus)
+	void CDocker::CDockClient::DrawCloseButton(CDC& DrawDC, BOOL bFocus)
 	{
 		// The close button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
 
 		if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			// Determine the close button's drawing position relative to the window	
+			// Determine the close button's drawing position relative to the window
 			CRect rcClose = GetCloseRect();
+			UINT uState = GetCloseRect().PtInRect(GetCursorPos())? m_IsClosePressed && IsLeftButtonDown()? 2 : 1 : 0;
 			MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
 
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
@@ -293,7 +294,7 @@ namespace Win32xx
 					rcClose.OffsetRect(-2, -2);
 			}
 			else
-				rcClose.OffsetRect(0, m_NCHeight-2); 
+				rcClose.OffsetRect(0, m_NCHeight-2);
 
 			// Draw the outer highlight for the close button
 			if (!IsRectEmpty(&rcClose))
@@ -418,8 +419,11 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (HTCLOSE == wParam) m_IsClosePressed = TRUE;
-			else	m_IsClosePressed = FALSE;
+			if (HTCLOSE == wParam) 
+			{
+				m_IsClosePressed = TRUE;
+				SetCapture();
+			}
 
 			m_bCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
@@ -431,10 +435,9 @@ namespace Win32xx
 				m_pView->SetFocus();
 
 				// Update the close button
-				UINT uState = (wParam == HTCLOSE)? IsLeftButtonDown()? 2 : 1 : 0;
 				CDC dc = GetWindowDC();
-				DrawCloseButton(dc, uState, m_bOldFocus);
-				
+				DrawCloseButton(dc, m_bOldFocus);
+
 				return 0L;
 			}
 		}
@@ -474,16 +477,26 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_NCLBUTTONUP, wParam, lParam);
 	}
 
+	void CDocker::CDockClient::OnLButtonDown(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		m_IsClosePressed = FALSE;
+		ReleaseCapture();
+		CDC dc = GetWindowDC();
+		DrawCloseButton(dc, m_bOldFocus);
+	}
 
 	void CDocker::CDockClient::OnMouseActivate(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	// Focus changed, so redraw the captions
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			m_pView->SetFocus();
-			m_pDock->GetDockTopLevel()->m_hOldFocus = ::GetFocus();
-			m_pDock->RecalcDockLayout();
+			m_pDock->GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 		}
+	}
+
+	void CDocker::CDockClient::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		OnNCMouseMove(wParam, lParam);
 	}
 
 	void CDocker::CDockClient::OnNCMouseLeave(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -491,7 +504,7 @@ namespace Win32xx
 		m_IsTracking = FALSE;
 		CDC dc = GetWindowDC();
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION) && m_pDock->IsDocked())
-			DrawCloseButton(dc, 0, m_bOldFocus);
+			DrawCloseButton(dc, m_bOldFocus);
 
 		m_IsTracking = FALSE;
 	}
@@ -524,9 +537,8 @@ namespace Win32xx
 				}
 
 				// Update the close button
-				UINT uState = (wParam == HTCLOSE)? (IsLeftButtonDown() && m_bOldFocus)? 2 : 1 : 0;
 				CDC dc = GetWindowDC();
-				DrawCloseButton(dc, uState, m_bOldFocus);
+				DrawCloseButton(dc, m_bOldFocus);
 			}
 
 			m_bCaptionPressed = FALSE;
@@ -541,29 +553,11 @@ namespace Win32xx
 			if (m_pDock->IsDocked())
 			{
 				DefWindowProc(WM_NCPAINT, wParam, lParam);
-				BOOL bFocus = m_pDock->IsChildOfDocker(GetFocus());
-				DrawCaption(wParam, bFocus);
+				DrawCaption(wParam);
 				return 0;
 			}
 		}
 		return CWnd::WndProcDefault(WM_NCPAINT, wParam, lParam);
-	}
-
-	LRESULT CDocker::CDockClient::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
-	{
-		switch (((LPNMHDR)lParam)->code)
-		{
-		case NM_SETFOCUS:
-			if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
-				DrawCaption((WPARAM)1, TRUE);
-			break;
-		case UWM_FRAMELOSTFOCUS:
-			if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
-				DrawCaption((WPARAM)1, FALSE);
-			break;
-		}
-
-		return 0;
 	}
 
 	void CDocker::CDockClient::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -602,14 +596,27 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
+		case WM_LBUTTONUP:
+			{
+				m_IsClosePressed = FALSE;
+				ReleaseCapture();
+				CDC dc = GetWindowDC();
+				DrawCloseButton(dc, m_bOldFocus);
+			}
+			break;
+
 		case WM_MOUSEACTIVATE:
 			OnMouseActivate(wParam, lParam);
+			break;
+
+		case WM_MOUSEMOVE:
+			OnMouseMove(wParam, lParam);
 			break;
 
 		case WM_NCCALCSIZE:
 			OnNCCalcSize(wParam, lParam);
 			break;
-		
+
 		case WM_NCHITTEST:
 			return OnNCHitTest(wParam, lParam);
 
@@ -891,7 +898,7 @@ namespace Win32xx
 			dcTarget.DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
 			::DeleteObject(hbmMiddle);
 		}
-		
+
 		dcTarget.DetachDC();
 	}
 
@@ -1200,7 +1207,7 @@ namespace Win32xx
 	//
 	CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
 		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartWidth(0), m_nDockID(0),
-		            m_NCHeight(20), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
+		            m_nTimerCount(0), m_NCHeight(20), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -1620,6 +1627,16 @@ namespace Win32xx
 		RecalcDockLayout();
 	}
 
+	void CDocker::DrawAllCaptions()
+	{
+		std::vector<CDocker*>::iterator iter;
+		for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); iter++)
+		{
+			if ((*iter)->IsDocked())
+				(*iter)->GetDockClient().DrawCaption((WPARAM)1);
+		}
+	}
+
 	void CDocker::DrawHashBar(HWND hBar, POINT Pos)
 	{
 		// draws a hashed bar while the splitter bar is being dragged
@@ -1957,6 +1974,8 @@ namespace Win32xx
 		// Only top level undocked dockers get this message
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
+			GetDockTopLevel()->m_hOldFocus = GetFocus();
+
 			// Send a notification of focus lost
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
 			NMHDR nhdr={0};
@@ -1964,6 +1983,23 @@ namespace Win32xx
 			nhdr.idFrom = idCtrl;
 			nhdr.code = UWM_FRAMELOSTFOCUS;
 			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+		}
+	}
+
+	void CDocker::OnCaptionTimer(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		if (this == GetDockAncestor())
+		{
+			if (wParam == 1)
+			{
+				DrawAllCaptions();
+				m_nTimerCount++;
+				if (m_nTimerCount == 10)
+				{
+					KillTimer(m_hWnd, wParam);
+					m_nTimerCount = 0;
+				}
+			}
 		}
 	}
 
@@ -2019,15 +2055,15 @@ namespace Win32xx
 				std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
 				std::vector<ContainerInfo>::iterator iter;
 				for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
-				{				
+				{
 					if ((*iter).pContainer != pContainer)
 					{
 						// Reset container parent before destroying the dock window
 						CDocker* pDock = GetDockFromView((*iter).pContainer);
 						pContainer->SetParent(pDock->GetDockClient().GetHwnd());
-						
-						pDock->Destroy();  
-					} 
+
+						pDock->Destroy();
+					}
 				}
 			}
 		}
@@ -2140,12 +2176,12 @@ namespace Win32xx
 				{
 					if (IsDragAutoResize())
 						ResizeDockers(pdp);
-					else	
+					else
 					{
 						DrawHashBar(pdp->hdr.hwndFrom, m_OldPoint);
 						DrawHashBar(pdp->hdr.hwndFrom, pt);
 					}
-					
+
 					m_OldPoint = pt;
 				}
 			}
@@ -2158,41 +2194,19 @@ namespace Win32xx
 
 				if (!IsDragAutoResize())
 					DrawHashBar(pdp->hdr.hwndFrom, pt);
-				
+
 				ResizeDockers(pdp);
 			}
 			break;
 		case NM_SETFOCUS:
-			{
-				if (this == GetDockTopLevel())
-				{
-					std::vector<CDocker*>::iterator iter;
-					for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
-					{
-						if ((*iter)->IsChildOfDocker(::GetFocus()))
-						{
-							if ((*iter)->IsDocked() && !((*iter)->GetDockStyle() & DS_NO_CAPTION))
-								(*iter)->GetDockClient().DrawCaption((WPARAM)1, TRUE);
-						}
-					}
-				}
-			}
+			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
+			break;
+		case UWM_FRAMEGOTFOCUS:
+			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 			break;
 		case UWM_FRAMELOSTFOCUS:
-			{
-				if (this == GetDockTopLevel())
-				{
-					std::vector<CDocker*>::iterator iter;
-					for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
-					{
-						if ((*iter)->IsChildOfDocker(::GetFocus()))
-						{
-							if ((*iter)->IsDocked() && !((*iter)->GetDockStyle() & DS_NO_CAPTION))
-								(*iter)->GetDockClient().DrawCaption((WPARAM)1, FALSE);
-						}
-					}
-				}
-			}
+			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
+			break;
 		}
 		return 0L;
 	}
@@ -2845,8 +2859,15 @@ namespace Win32xx
 		case WM_SETFOCUS:
 			OnSetFocus(wParam, lParam);
 			break;
+		case WM_TIMER:
+			OnCaptionTimer(wParam, lParam);
+			break;
 		case UWM_DOCK_DESTROYED:
 			OnDockDestroyed(wParam, lParam);
+			break;
+		case UWM_DOCK_ACTIVATED:
+			DrawAllCaptions();
+			SetTimer(m_hWnd, 1, 100, NULL);
 			break;
 		case WM_SYSCOLORCHANGE:
 			OnSysColorChange(wParam, lParam);
@@ -3073,7 +3094,7 @@ namespace Win32xx
 	void CContainer::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		CTab::OnMouseMove(wParam, lParam);
-	} 
+	}
 
 	LRESULT CContainer::OnNotifyReflect(WPARAM /*wParam*/, LPARAM lParam)
 	{
@@ -3204,7 +3225,7 @@ namespace Win32xx
 		AdjustRect(FALSE, &rc);
 		if (rc.Width() < 0 )
 			rc.SetRectEmpty();
-		
+
 		int nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
 		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, 20));
 	}
@@ -3213,7 +3234,7 @@ namespace Win32xx
 	{
 		CContainer* pContainer = GetContainerParent()->GetContainerFromIndex(nTab);
 		pContainer->SetTabText(szText);
-		
+
 		CTab::SetTabText(nTab, szText);
 	}
 
@@ -3337,3 +3358,5 @@ namespace Win32xx
 	}
 
 } // namespace Win32xx
+
+

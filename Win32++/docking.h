@@ -1,5 +1,5 @@
 // Win32++  Version 6.6
-// Released: 17th August, 2009 by:
+// Released: 20th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -250,7 +250,9 @@ namespace Win32xx
 			void SetView(CWnd& Wnd)			{ m_pView = &Wnd; }
 
 		protected:
+			virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 			virtual void    OnMouseActivate(WPARAM wParam, LPARAM lParam);
+			virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual void    OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
 			virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -875,9 +877,10 @@ namespace Win32xx
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			if (HTCLOSE == wParam) 
+			{
 				m_IsClosePressed = TRUE;
-			else	
-				m_IsClosePressed = FALSE;
+				SetCapture();
+			}
 
 			m_bCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
@@ -931,6 +934,13 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_NCLBUTTONUP, wParam, lParam);
 	}
 
+	inline void CDocker::CDockClient::OnLButtonDown(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		m_IsClosePressed = FALSE;
+		ReleaseCapture();
+		CDC dc = GetWindowDC();
+		DrawCloseButton(dc, m_bOldFocus);
+	}
 
 	inline void CDocker::CDockClient::OnMouseActivate(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	// Focus changed, so redraw the captions
@@ -939,6 +949,11 @@ namespace Win32xx
 		{
 			m_pDock->GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 		}
+	}
+
+	inline void CDocker::CDockClient::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		OnNCMouseMove(wParam, lParam);
 	}
 
 	inline void CDocker::CDockClient::OnNCMouseLeave(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -1038,8 +1053,21 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
+		case WM_LBUTTONUP:
+			{
+				m_IsClosePressed = FALSE;
+				ReleaseCapture();
+				CDC dc = GetWindowDC();
+				DrawCloseButton(dc, m_bOldFocus);
+			}
+			break;
+
 		case WM_MOUSEACTIVATE:
 			OnMouseActivate(wParam, lParam);
+			break;
+
+		case WM_MOUSEMOVE:
+			OnMouseMove(wParam, lParam);
 			break;
 
 		case WM_NCCALCSIZE:

@@ -1,23 +1,23 @@
 // Microsoft Visual C++ generated resource script.
 //
 
-
-#include "resource.h"
 #include "windows.h"
+#include "resource.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       24      DISCARDABLE      "res/Win32++.manifest"
+1                       RT_MANIFEST             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDW_MAIN MENU
+IDW_MAIN MENU 
 BEGIN
     POPUP "&File"
     BEGIN
@@ -40,7 +40,7 @@ BEGIN
         MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
         MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
     END
-	  POPUP "&Theme"
+    POPUP "&Theme"
     BEGIN
         MENUITEM "Blue",                        IDM_BLUE
         MENUITEM "Grey",                        IDM_GREY
@@ -58,7 +58,7 @@ BEGIN
         MENUITEM "Lock Menubar",                IDM_LOCK_MENUBAR, CHECKED
         MENUITEM "Round Borders",               IDM_ROUND_BORDERS, CHECKED
         MENUITEM "Short Bands",                 IDM_SHORT_BANDS, CHECKED
-        MENUITEM "Use Lines",                   IDM_USE_LINES, CHECKED 
+        MENUITEM "Use Lines",                   IDM_USE_LINES, CHECKED
     END
     POPUP "&View"
     BEGIN
@@ -66,7 +66,7 @@ BEGIN
         MENUITEM "&Cards",                      IDM_VIEW_CARDS, CHECKED
         MENUITEM SEPARATOR
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED      
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
     POPUP "&Help"
     BEGIN
@@ -82,21 +82,21 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                 ICON                    "res/enhanced.ico"
+IDW_MAIN                ICON                    "res/enhanced.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "res/toolbar16_n.bmp"
-IDB_TOOLBAR_NORM         BITMAP                  "res/toolbar24_n.bmp"
-IDB_TOOLBAR_HOT          BITMAP                  "res/toolbar24_h.bmp"
-IDB_TOOLBAR_DIS          BITMAP                  "res/toolbar24_d.bmp"
-IDB_TOOLBAR_SML          BITMAP                  "res/toolbar16_n.bmp"
-IDB_ARROWS               BITMAP                  "res/Arrows.bmp"
-IDB_CARDS                BITMAP                  "res/Cards.bmp"
-IDB_STATUS               BITMAP                  "res/Status.bmp"
+IDW_MAIN                BITMAP                  "res/toolbar16_n.bmp"
+IDB_TOOLBAR_NORM        BITMAP                  "res/toolbar24_n.bmp"
+IDB_TOOLBAR_HOT         BITMAP                  "res/toolbar24_h.bmp"
+IDB_TOOLBAR_DIS         BITMAP                  "res/toolbar24_d.bmp"
+IDB_TOOLBAR_SML         BITMAP                  "res/toolbar16_n.bmp"
+IDB_ARROWS              BITMAP                  "res/Arrows.bmp"
+IDB_CARDS               BITMAP                  "res/Cards.bmp"
+IDB_STATUS              BITMAP                  "res/Status.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -104,14 +104,13 @@ IDB_STATUS               BITMAP                  "res/Status.bmp"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
-//FONT 8, "MS Shell Dlg", 400, 0, 0x1
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Frame Application",IDC_STATIC,60,22,64,11
+    CTEXT           "Themes Demonstration",IDC_STATIC,60,22,64,19
     ICON            IDW_MAIN,0,4,4,20,20
 END
 
@@ -121,20 +120,20 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS
+IDW_MAIN ACCELERATORS 
 BEGIN
-    "N",            IDM_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
-    "O",            IDM_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
-    "S",            IDM_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
-    "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
-    "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_DELETE,         VIRTKEY, NOINVERT
+    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, 
+                                                    NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
 END
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -142,12 +141,14 @@ END
 // String Table
 //
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
-    IDW_MAIN                 "Themes Sample"
+    IDW_MAIN                "Themes Sample"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
@@ -155,52 +156,48 @@ BEGIN
     IDM_FILE_SAVEAS         "Save the Document with a new name"
     IDM_FILE_PRINT          "Print the Document"
     IDM_FILE_EXIT           "End the Program"
-END
-
-STRINGTABLE
-BEGIN
     IDM_EDIT_UNDO           "Undo the last action"
     IDM_EDIT_REDO           "Redo the previously undone action"
+END
+
+STRINGTABLE 
+BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
-    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
-    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
-END
-
-STRINGTABLE
-BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDM_ARROW_LEFT          "Left Arrow"
     IDM_ARROW_RIGHT         "Right Arrow"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDM_CARD_CLUB           "Clubs Playing Card"
     IDM_CARD_DIAMOND        "Diamond Playing Cards"
     IDM_CARD_HEART          "Hearts Playing Card"
     IDM_CARD_SPADE          "Spades Playing Card"
+    IDM_VIEW_ARROWS         "Show or Hide the Arrows Toolbar"
+    IDM_VIEW_CARDS          "Show or Hide the Cards Toolbar"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
-    SC_CLOSE                "Close the Window"
-    SC_MAXIMIZE             "Maximize the Window"
-    SC_MINIMIZE             "Minimize the WIndow"
-    SC_MOVE                 "Move the Window"
-    SC_NEXTWINDOW           "Select Next Window"
-	  SC_PREVWINDOW           "Select Previous Window"
-    SC_RESTORE              "Restore the Window"
-    SC_SIZE                 "Resize the Window"
+    61536                   "Close the Window"
+    61488                   "Maximize the Window"
+    61472                   "Minimize the WIndow"
+    61456                   "Move the Window"
+    61504                   "Select Next Window"
+    61520                   "Select Previous Window"
+    61728                   "Restore the Window"
+    61440                   "Resize the Window"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDM_BLUE                "Blue theme"
     IDM_GREY                "Grey theme"
@@ -210,14 +207,18 @@ BEGIN
     IDM_PINK                "Pink theme"
     IDM_GOLD                "Gold theme"
     IDM_BLACK               "Black theme"
-    IDM_VIEW_ARROWS         "Show or Hide the Arrows Toolbar"
-    IDM_VIEW_CARDS          "Show or Hide the Cards Toolbar"
     IDM_USE_THEMES          "Use Themes"
     IDM_BAND_COLORS         "Show the bands in a seperate color"
     IDM_FLAT_STYLE          "Show Bands with Flat Style"
     IDM_LEFT_BANDS          "Place Bands Left when bands rearranged"
     IDM_LOCK_MENUBAR        "Lock the Menubar's Position"
     IDM_ROUND_BORDERS       "Use Round Borders for Bands"
+END
+
+STRINGTABLE 
+BEGIN
     IDM_SHORT_BANDS         "Use Short Bands"
     IDM_USE_LINES           "Display Lines between band rows"
 END
+
+

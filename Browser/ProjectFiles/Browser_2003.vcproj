@@ -119,6 +119,9 @@
 				RelativePath="..\src\BrowserApp.cpp">
 			</File>
 			<File
+				RelativePath="..\src\ComboBoxEx.cpp">
+			</File>
+			<File
 				RelativePath="..\src\main.cpp">
 			</File>
 			<File
@@ -137,6 +140,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\src\BrowserApp.h">
+			</File>
+			<File
+				RelativePath="..\src\ComboBoxEx.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">

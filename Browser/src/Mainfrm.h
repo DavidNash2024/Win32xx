@@ -6,6 +6,7 @@
 
 #include "../../Win32++/frame.h"
 #include "View.h"
+#include "ComboBoxEx.h"
 
 
 // Declaration of the CMainFrame class
@@ -29,7 +30,7 @@ public:
 	virtual void OnTitleChange(DISPPARAMS* pDispParams);
 
 protected:
-	void AddListboxBand(int Listbox_Height);
+	void AddComboBoxBand(int Listbox_Height);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
@@ -39,7 +40,9 @@ protected:
 
 private:
 	CView m_View;
-	CWnd m_ComboboxEx;
+//	CWnd m_ComboBoxEx;
+	CComboBoxEx m_ComboBoxEx;
+	CComboEdit m_ComboEdit;
 };
 
 #endif //MAINFRM_H

@@ -1,5 +1,5 @@
 // Win32++  Version 6.6
-// Released: 17th August, 2009 by:
+// Released: 20th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -690,6 +690,7 @@ namespace Win32xx
 		if (GetCloseRect().PtInRect(pt))
 		{
 			m_IsClosePressed = TRUE;
+			SetCapture();
 			CDC dc = GetDC();
 			DrawCloseButton(dc);
 		}
@@ -710,6 +711,7 @@ namespace Win32xx
 
 	inline void CTab::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 	{
+		ReleaseCapture();
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		if (m_IsClosePressed && GetCloseRect().PtInRect(pt))
 			RemoveTabPage(GetCurSel());

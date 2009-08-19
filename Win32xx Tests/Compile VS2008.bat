@@ -8,6 +8,7 @@ REM: Set the Paths
 
 REM: Remove old files before we start
 call clean
+call CleanTutorials
 pushd "..\Networking"
 call clean
 popd
@@ -17,6 +18,7 @@ RMDIR /S /Q "..\StaticLibrary\Frame\Release"
 
 REM: Change the directory to the parent
 pushd ..
+if exist "Win32xx Tests\VS2008" rmdir /s /q "Win32xx Tests\VS2008"
 
 
 REM: Compile the code
@@ -79,7 +81,6 @@ devenv /build Release Threads\ProjectFiles\Threads_2008.sln /projectconfig Relea
 
 
 REM: Copy the executables to the testing directories
-if exist "Win32xx Tests\VS2008" rmdir /s /q "Win32xx Tests\VS2008"
 mkdir "Win32xx Tests\VS2008"
 mkdir "Win32xx Tests\VS2008\Debug"
 
@@ -153,13 +154,58 @@ devenv /build Debug StaticLibrary\Frame\Frame_2008.sln /projectconfig Debug			>>
 devenv /build Release StaticLibrary\Frame\Frame_2008.sln /projectconfig Release			>>"Win32xx Tests\VS2008.log"
 
 if exist "Win32xx Tests\StaticLib\VS2008" rmdir /s /q "Win32xx Tests\StaticLib\VS2008"
-mkdir "Win32xx Tests\StaticLib"
-mkdir "Win32xx Tests\StaticLib\VS2008"
-mkdir "Win32xx Tests\StaticLib\VS2008\Debug"
-mkdir "Win32xx Tests\StaticLib\VS2008\Release"
+mkdir "Win32xx Tests\VS2008\StaticLib"
+mkdir "Win32xx Tests\VS2008\StaticLib\Debug"
+mkdir "Win32xx Tests\VS2008\StaticLib\Release"
 
-copy StaticLibrary\Frame\Debug\Frame.exe      	"Win32xx Tests\StaticLib\VS2008\Debug"    	>>"Win32xx Tests\VS2008.log"
-copy StaticLibrary\Frame\Release\Frame.exe     	"Win32xx Tests\StaticLib\VS2008\Release"    	>>"Win32xx Tests\VS2008.log"
+copy StaticLibrary\Frame\Debug\Frame.exe      	"Win32xx Tests\VS2008\StaticLib\Debug"    	>>"Win32xx Tests\VS2008.log"
+copy StaticLibrary\Frame\Release\Frame.exe     	"Win32xx Tests\VS2008\StaticLib\Release"    	>>"Win32xx Tests\VS2008.log"
+
+REM: Compile Tutorials
+::Compile code
+devenv /build Debug Tutorial1\Tutorial1_2008.sln /projectconfig Debug 			> "Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial1\Tutorial1_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial2\Tutorial2_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial2\Tutorial2_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial3\Tutorial3_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial3\Tutorial3_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial4\Tutorial4_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial4\Tutorial4_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial5\Tutorial5_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial5\Tutorial5_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial6\Tutorial6_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial6\Tutorial6_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial7\Tutorial7_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial7\Tutorial7_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial8\Tutorial8_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial8\Tutorial8_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+devenv /build Debug Tutorial9\Tutorial9_2008.sln /projectconfig Debug			>>"Win32xx Tests\VS2008.log"
+devenv /build Release Tutorial9\Tutorial9_2008.sln /projectconfig Release		>>"Win32xx Tests\VS2008.log"
+
+mkdir "Win32xx Tests\VS2008\Tutorials"
+mkdir "Win32xx Tests\VS2008\Tutorials\Debug"
+
+copy Tutorial1\Debug\Tutorial1.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial2\Debug\Tutorial2.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial3\Debug\Tutorial3.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial4\Debug\Tutorial4.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial5\Debug\Tutorial5.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial6\Debug\Tutorial6.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial7\Debug\Tutorial7.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial8\Debug\Tutorial8.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial9\Debug\Tutorial9.exe         "Win32xx Tests\VS2008\Tutorials\Debug"    >>"Win32xx Tests\VS2008.log"
+
+mkdir "Win32xx Tests\VS2008\Tutorials\Release"
+
+copy Tutorial1\Release\Tutorial1.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial2\Release\Tutorial2.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial3\Release\Tutorial3.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial4\Release\Tutorial4.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial5\Release\Tutorial5.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial6\Release\Tutorial6.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial7\Release\Tutorial7.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial8\Release\Tutorial8.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
+copy Tutorial9\Release\Tutorial9.exe         "Win32xx Tests\VS2008\Tutorials\Release"    >>"Win32xx Tests\VS2008.log"
 
 
 REM: Pop the directory change off the stack
