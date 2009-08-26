@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: ??th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -330,7 +330,10 @@ namespace Win32xx
 	inline BOOL CTreeView::ItemHasChildren(HTREEITEM hItem) const
 	// Returns true of the tree-view item has one or more children
 	{
-		return (BOOL)TreeView_GetChild( m_hWnd, hItem );
+		if (TreeView_GetChild( m_hWnd, hItem ))
+			return TRUE;
+
+		return FALSE;
 	}
 
 	inline COLORREF CTreeView::SetBkColor(COLORREF clrBk)

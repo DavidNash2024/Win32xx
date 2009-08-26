@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: ??th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -944,7 +944,7 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
 		{
-			::DestroyWindow((*m).first);
+			(*m).second->Destroy();
 		}
 		m_mapHWND.clear();
 
@@ -2437,7 +2437,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline BOOL CWnd::CloseWindow() const
 	// The CloseWindow function minimizes (but does not destroy) the window.
-	// To destroy a window, an application must use the DestroyWindow function.
+	// To destroy a window, an application can use the Destroy function.
 	{
 		return ::CloseWindow(m_hWnd);
 	}

@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: ??th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -280,7 +280,7 @@ namespace Win32xx
 		}
 
 		// Adjust the window styles if needed
-		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (!(dwStyle & TCS_OWNERDRAWFIXED) || !(dwStyle & TCS_FIXEDWIDTH))
 		{
 			dwStyle |= TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
@@ -515,7 +515,7 @@ namespace Win32xx
 
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
 	{
-		BOOL IsBottomTab = GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
+		BOOL IsBottomTab = (BOOL)GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
 
 		// Draw a lighter rectangle touching the tab buttons
 		CRect rcItem;
@@ -636,7 +636,7 @@ namespace Win32xx
 	inline BOOL CTab::GetTabsAtTop()
 	// Returns TRUE if the contol's tabs are placed at the top
 	{
-		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		return (!(dwStyle & TCS_BOTTOM));
 	}
 
@@ -919,7 +919,7 @@ namespace Win32xx
 	inline void CTab::SetTabsAtTop(BOOL bTop)
 	// Positions the tabs at the top or botttom of the control
 	{
-		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 
 		if (bTop)
 			dwStyle &= ~TCS_BOTTOM;
@@ -1054,7 +1054,7 @@ namespace Win32xx
 			MyDialog.AddItem(GetAllTabs()[u].szTitle);
 		}
 
-		int iSelected = MyDialog.DoModal();
+		int iSelected = (int)MyDialog.DoModal();
 		if (iSelected >= 0) SelectPage(iSelected);
 	}
 

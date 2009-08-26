@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: ??th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -288,7 +288,7 @@ namespace Win32xx
 		if (RemoveAllMDIChildren())
 		{
 			CFrame::OnClose();
-			::DestroyWindow(m_hWnd);
+			Destroy();
 		}
 	}
 
