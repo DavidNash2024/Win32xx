@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -67,6 +67,9 @@ namespace Win32xx
 		void SetPartWidth(int iPart, int iWidth) const;
 
 	// Operations
+		CStatusbar(const CStatusbar&);				// Disable copy construction
+		CStatusbar& operator = (const CStatusbar&); // Disable assignment operator
+
 		void CreateParts(int iParts, const int iPaneWidths[]) const;
 		void SetSimple(BOOL fSimple = TRUE);
 	};

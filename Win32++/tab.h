@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -77,6 +77,9 @@ namespace Win32xx
 			virtual void OnCancel() { EndDialog(-2); }
 
 		private:
+			CSelectDialog(const CSelectDialog&);				// Disable copy construction
+			CSelectDialog& operator = (const CSelectDialog&); // Disable assignment operator
+
 			std::vector<tString> m_vItems;
 			int IDC_LIST;
 
@@ -135,6 +138,9 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CTab(const CTab&);				// Disable copy construction
+		CTab& operator = (const CTab&); // Disable assignment operator
+
 		void DrawCloseButton(CDC& DrawDC);
 		void DrawListButton(CDC& DrawDC);
 		void DrawTabs(CDC& dcMem);
@@ -190,6 +196,9 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CTabbedMDI(const CTabbedMDI&);				// Disable copy construction
+		CTabbedMDI& operator = (const CTabbedMDI&); // Disable assignment operator
+
 		CTab m_Tab;
 	};
 	

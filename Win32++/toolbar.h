@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -111,6 +111,9 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CToolbar(const CToolbar&);				// Disable copy construction
+		CToolbar& operator = (const CToolbar&); // Disable assignment operator
+
 		std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
 		std::map<tString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap

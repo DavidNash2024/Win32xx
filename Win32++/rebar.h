@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -113,6 +113,9 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CRebar(const CRebar&);				// Disable copy construction
+		CRebar& operator = (const CRebar&); // Disable assignment operator
+
 		ThemeRebar m_Theme;
 		BOOL m_bIsDragging;
 		HWND m_hMenubar;

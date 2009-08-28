@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -98,6 +98,9 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CMDIChild(const CMDIChild&);				// Disable copy construction
+		CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
+		
 		CWnd* m_pwndView;				// pointer to the View CWnd object
 		HMENU m_hChildMenu;
 	};
@@ -144,9 +147,15 @@ namespace Win32xx
 			virtual ~CMDIClient() {}
 			virtual HWND Create(HWND hWndParent = NULL);
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		private:
+			CMDIClient(const CMDIClient&);				// Disable copy construction
+			CMDIClient& operator = (const CMDIClient&); // Disable assignment operator
 		};
 
 
+		CMDIFrame(const CMDIFrame&);				// Disable copy construction
+		CMDIFrame& operator = (const CMDIFrame&); // Disable assignment operator
 		void AppendMDIMenu(HMENU hMenuWindow);
 		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(HMENU hMenu);

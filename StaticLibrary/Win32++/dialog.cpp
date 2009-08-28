@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -148,12 +148,12 @@ namespace Win32xx
 					// Only reflect messages from the parent to avoid possible double handling
 					if (::GetParent(hwndFrom) == m_hWnd)
 					{
-						BOOL bReturn = pWndFrom->OnNotifyReflect(wParam, lParam);
+						BOOL bReturn = (BOOL)pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (bReturn) return TRUE;
 					}
 				}
 			}
-			return OnNotify(wParam, lParam);
+			return (BOOL)OnNotify(wParam, lParam);
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -365,5 +365,3 @@ namespace Win32xx
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
 
 } // namespace Win32xx
-
-

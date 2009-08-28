@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -327,7 +327,7 @@ namespace Win32xx
 			else                     cClrBits = 32;
 
 			// Allocate memory for the BITMAPINFO structure.
-			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (1<< cClrBits);
+			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((size_t)1<< cClrBits);
 			m_pbmi = (LPBITMAPINFO)new byte[sizeof(BITMAPINFOHEADER) + uQuadSize];
 			if (NULL == m_pbmi) throw std::bad_alloc();
 			ZeroMemory(m_pbmi, sizeof(BITMAPINFOHEADER) + uQuadSize);

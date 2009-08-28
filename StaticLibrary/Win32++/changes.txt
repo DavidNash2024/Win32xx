@@ -1,3 +1,8 @@
+Version 6.61
+============
+Bug fix:
+The close button on docked dockers now works.
+
 Version 6.6
 ===========
 Changes

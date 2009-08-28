@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -83,6 +83,8 @@ namespace Win32xx
 		CWnd* m_pPane1;		// Right or botton CWnd Object
 
 	private:
+		CSplitter(const CSplitter&);				// Disable copy construction
+		CSplitter& operator = (const CSplitter&); // Disable assignment operator
 
 		HBRUSH m_hbrDithered; // Brush for the splitter bar during dragging
 		HBRUSH m_hbrBackground; // Brush for the splitter bar background

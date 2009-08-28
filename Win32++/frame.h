@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -140,6 +140,8 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CMenubar(const CMenubar&);				// Disable copy construction
+		CMenubar& operator = (const CMenubar&); // Disable assignment operator
 		void DoAltKey(WORD KeyCode);
 		void DoPopupMenu();
 		void DrawAllMDIButtons(CDC& DrawDC);
@@ -295,6 +297,8 @@ namespace Win32xx
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
 
 	private:
+		CFrame(const CFrame&);				// Disable copy construction
+		CFrame& operator = (const CFrame&); // Disable assignment operator
 		void LoadCommonControls();
 
 		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers

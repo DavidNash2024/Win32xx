@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -98,6 +98,9 @@ namespace Win32xx
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CDialog(const CDialog&);				// Disable copy construction
+		CDialog& operator = (const CDialog&); // Disable assignment operator
+
 		BOOL IsIndirect;				// a flag for Indirect dialogs
 		BOOL IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog

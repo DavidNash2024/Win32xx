@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -141,9 +141,14 @@ namespace Win32xx
 		BOOL Scroll( CSize sz );
 		BOOL SortItems( PFNLVCOMPARE pfnCompare, DWORD_PTR dwData );
 		BOOL Update( int iItem );
+
+	private:
+		CListView(const CListView&);				// Disable copy construction
+		CListView& operator = (const CListView&); // Disable assignment operator
 	};
 
 }
+
 
 #endif // #ifndef _LISTVIEW_H_
 

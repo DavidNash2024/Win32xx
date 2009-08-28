@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -103,6 +103,9 @@ namespace Win32xx
 		PROPSHEETPAGE m_PSP;
 
 	private:
+		CPropertyPage(const CPropertyPage&);				// Disable copy construction
+		CPropertyPage& operator = (const CPropertyPage&); // Disable assignment operator
+		
 		tString m_Title;
 	};
 
@@ -139,6 +142,9 @@ namespace Win32xx
 		BOOL IsWizard() const;
 
 	protected:
+		CPropertySheet(const CPropertySheet&);				// Disable copy construction
+		CPropertySheet& operator = (const CPropertySheet&); // Disable assignment operator
+
 		PROPSHEETHEADER m_PSH;
 		std::vector<CPropertyPage*> m_vPages;
 
@@ -150,5 +156,6 @@ namespace Win32xx
 	};
 	
 }
+
 
 #endif // _PROPERTYSHEET_H_

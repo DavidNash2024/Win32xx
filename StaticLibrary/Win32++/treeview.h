@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -115,6 +115,10 @@ namespace Win32xx
 		BOOL SelectSetFirstVisible(HTREEITEM hItem);
 		BOOL SortChildren(HTREEITEM hItem, BOOL fRecurse);
 		BOOL SortChildrenCB(TVSORTCB& sort, BOOL fRecurse);
+
+	private:
+		CTreeView(const CTreeView&);				// Disable copy construction
+		CTreeView& operator = (const CTreeView&); // Disable assignment operator
 
 	};
 	

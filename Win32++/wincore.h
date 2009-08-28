@@ -1,5 +1,5 @@
 // Win32++  Version 6.61
-// Released: ??th August, 2009 by:
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -944,7 +944,8 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
 		{
-			(*m).second->Destroy();
+			CWnd* pWnd = (*m).second;
+			pWnd->Destroy();
 		}
 		m_mapHWND.clear();
 
@@ -1424,8 +1425,8 @@ namespace Win32xx
 		// Return the CWnd to its default state
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-		if (m_hWnd) RemoveFromMap();
-
+		
+		RemoveFromMap();
 		m_hIconLarge = NULL;
 		m_hIconSmall = NULL;
 		m_hWnd = NULL;

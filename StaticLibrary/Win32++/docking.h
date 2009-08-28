@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -222,6 +222,9 @@ namespace Win32xx
 			void SetWidth(int nWidth)		{m_DockBarWidth = nWidth;}
 
 		private:
+			CDockBar(const CDockBar&);				// Disable copy construction
+			CDockBar& operator = (const CDockBar&); // Disable assignment operator
+
 			CDocker* m_pDock;
 			HBRUSH m_hbrBackground;
 			int m_DockBarWidth;
@@ -251,12 +254,12 @@ namespace Win32xx
 
 		protected:
 			virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
+			virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 			virtual void    OnMouseActivate(WPARAM wParam, LPARAM lParam);
 			virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual void    OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
 			virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDown(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnNCLButtonUp(WPARAM wParam, LPARAM lParam);
 			virtual void    OnNCMouseLeave(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCPaint(WPARAM wParam, LPARAM lParam);
@@ -266,6 +269,9 @@ namespace Win32xx
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
+			CDockClient(const CDockClient&);				// Disable copy construction
+			CDockClient& operator = (const CDockClient&); // Disable assignment operator
+			
 			tString m_tsCaption;
 			CPoint m_Oldpt;
 			CDocker* m_pDock;
@@ -294,6 +300,9 @@ namespace Win32xx
 			virtual void ShowHintWindow(CDocker* pDockTarget, CRect rcHint);
 
 		private:
+			CDockHint(const CDockHint&);				// Disable copy construction
+			CDockHint& operator = (const CDockHint&); // Disable assignment operator
+
 			HBITMAP m_hbmBlueTint;
 			UINT m_uDockSideOld;
 		};
@@ -310,6 +319,9 @@ namespace Win32xx
 			void SetImage(UINT nID);
 
 		private:
+			CTarget(const CTarget&);				// Disable copy construction
+			CTarget& operator = (const CTarget&); // Disable assignment operator
+
 			HBITMAP m_hbmImage;
 		};
 
@@ -324,6 +336,9 @@ namespace Win32xx
 			BOOL IsOverContainer() { return m_bIsOverContainer; }
 
 		private:
+			CTargetCentre(const CTargetCentre&);				// Disable copy construction
+			CTargetCentre& operator = (const CTargetCentre&); // Disable assignment operator
+
 			BOOL m_bIsOverContainer;
 			CDocker* m_pOldDockTarget;
 		};
@@ -333,6 +348,10 @@ namespace Win32xx
 		public:
 			CTargetLeft() {SetImage(IDW_SDLEFT);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
+		
+		private:
+			CTargetLeft(const CTargetLeft&);				// Disable copy construction
+			CTargetLeft& operator = (const CTargetLeft&); // Disable assignment operator
 		};
 
 		class CTargetTop : public CTarget
@@ -340,6 +359,9 @@ namespace Win32xx
 		public:
 			CTargetTop() {SetImage(IDW_SDTOP);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
+		private:
+			CTargetTop(const CTargetTop&);				// Disable copy construction
+			CTargetTop& operator = (const CTargetTop&); // Disable assignment operator
 		};
 
 		class CTargetRight : public CTarget
@@ -347,6 +369,10 @@ namespace Win32xx
 		public:
 			CTargetRight() {SetImage(IDW_SDRIGHT);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
+
+		private:
+			CTargetRight(const CTargetRight&);				// Disable copy construction
+			CTargetRight& operator = (const CTargetRight&); // Disable assignment operator
 		};
 
 		class CTargetBottom : public CTarget
@@ -431,6 +457,8 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		CDocker(const CDocker&);				// Disable copy construction
+		CDocker& operator = (const CDocker&); // Disable assignment operator
 		void CheckAllTargets(LPDRAGPOS pDragPos);
 		void CloseAllTargets();
 		void Dock(CDocker* hDocker, UINT uDockSide);
@@ -492,4 +520,6 @@ namespace Win32xx
 
 }
 
+
 #endif // _DOCKING_H_
+

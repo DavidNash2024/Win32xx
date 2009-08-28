@@ -1,5 +1,5 @@
-// Win32++  Version 6.6
-// Released: 20th August, 2009 by:
+// Win32++  Version 6.61
+// Released: 30th August, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -444,17 +444,14 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_NCLBUTTONDOWN, wParam, lParam);
 	}
 
-	LRESULT CDocker::CDockClient::OnNCLButtonUp(WPARAM wParam, LPARAM lParam)
+	void CDocker::CDockClient::OnLButtonUp(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			m_bCaptionPressed = FALSE;
-			if ((HTCLOSE == wParam) && m_IsClosePressed && m_bOldFocus)
+			if (m_IsClosePressed)
 			{
-				// Process this message first
-				DefWindowProc(WM_NCLBUTTONUP, wParam, lParam);
-
-				// Now destroy the docker
+				// Destroy the docker
 				if (m_pDock->GetView()->IsContainer())
 				{
 					CContainer* pContainer = ((CContainer*)m_pDock->GetView())->GetActiveContainer();
@@ -468,13 +465,8 @@ namespace Win32xx
 					m_pDock->Undock();
 					m_pDock->Destroy();
 				}
-
-				return 0;
 			}
-
-			m_IsClosePressed = FALSE;
 		}
-		return CWnd::WndProcDefault(WM_NCLBUTTONUP, wParam, lParam);
 	}
 
 	void CDocker::CDockClient::OnLButtonDown(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -598,10 +590,10 @@ namespace Win32xx
 		{
 		case WM_LBUTTONUP:
 			{
-				m_IsClosePressed = FALSE;
 				ReleaseCapture();
 				CDC dc = GetWindowDC();
 				DrawCloseButton(dc, m_bOldFocus);
+				OnLButtonUp(wParam, lParam);
 			}
 			break;
 
@@ -623,8 +615,8 @@ namespace Win32xx
 		case WM_NCLBUTTONDOWN:
 			return OnNCLButtonDown(wParam, lParam);
 
-		case WM_NCLBUTTONUP:
-			return OnNCLButtonUp(wParam, lParam);
+	//	case WM_NCLBUTTONUP:
+	//		return OnNCLButtonUp(wParam, lParam);
 
 		case WM_NCMOUSEMOVE:
 			return OnNCMouseMove(wParam, lParam);
@@ -1906,14 +1898,13 @@ namespace Win32xx
 				}
 			}
 
-			for (int i = vDockList.size() -1; i >= 0; --i)
+			// Remove dockers without parents from vDockList
+			for (size_t n = vDockList.size(); n > 0; --n)
 			{
-				DockInfo di = vDockList[i];
-				if (di.DockParentID == 0)
-				{
-					vDockList.erase(vDockList.begin() + i);
-				}
-			}
+				iter = vDockList.begin() + n-1;
+				if ((*iter).DockParentID == 0)
+					vDockList.erase(iter);
+			}  
 
 			// Add remaining dockers
 			while (vDockList.size() > 0)
@@ -1924,9 +1915,10 @@ namespace Win32xx
 				{
 					DockInfo di = *iter;
 					CDocker* pDockParent = GetDockFromID(di.DockParentID);
-					CDocker* pDock = NewDockerFromID(di.DockID);
+					
 					if (pDockParent != 0)
 					{
+						CDocker* pDock = NewDockerFromID(di.DockID);
 						if(pDock)
 						{
 							pDockParent->AddDockedChild(pDock, di.DockStyle, di.DockWidth, di.DockID);
@@ -2512,7 +2504,7 @@ namespace Win32xx
 				DockInfo di = vDockList[u];
 				TCHAR szNumber[16];
 				tString tsSubKey = _T("DockChild");
-				tsSubKey += _itot(u, szNumber, 10);
+				tsSubKey += _itot((int)u, szNumber, 10);
 				RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo));
 			}
 
@@ -2707,24 +2699,26 @@ namespace Win32xx
 
 			ConvertToPopup(rc);
 			m_Undocking = FALSE;
+		
+
+			// Send the undock notification to the frame
+			NMHDR nmhdr = {0};
+			nmhdr.hwndFrom = m_hWnd;
+			nmhdr.code = UWM_UNDOCKED;
+			nmhdr.idFrom = m_nDockID;
+			HWND hwndFrame = GetDockAncestor()->GetAncestor();
+			::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
+
+			// Initiate the window move
+			SetCursorPos(pt.x, pt.y);
+			MapWindowPoints(NULL, m_hWnd, &pt, 1);
+			PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 		}
-
-		// Send the undock notification to the frame
-		NMHDR nmhdr = {0};
-		nmhdr.hwndFrom = m_hWnd;
-		nmhdr.code = UWM_UNDOCKED;
-		nmhdr.idFrom = m_nDockID;
-		HWND hwndFrame = GetDockAncestor()->GetAncestor();
-		::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
-
-		// Initiate the window move
-		SetCursorPos(pt.x, pt.y);
-		MapWindowPoints(NULL, m_hWnd, &pt, 1);
-		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 
 		RecalcDockLayout();
         if ((pDockUndockedFrom) && (pDockUndockedFrom->GetDockTopLevel() != GetDockTopLevel()))
 			pDockUndockedFrom->RecalcDockLayout();
+		
 	}
 
 	void CDocker::UndockContainer(CContainer* pContainer)
@@ -2850,6 +2844,7 @@ namespace Win32xx
 			break;
 		case WM_WINDOWPOSCHANGING:
 			return OnWindowPosChanging(wParam, lParam);
+
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged(wParam, lParam);
 			break;
@@ -3061,7 +3056,7 @@ namespace Win32xx
 
 	void CContainer::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	{
-		CPoint pt(lParam);
+		CPoint pt((DWORD)lParam);
 		TCHITTESTINFO info = {0};
 		info.pt = pt;
 		m_nTabPressed = HitTest(info);
@@ -3358,5 +3353,3 @@ namespace Win32xx
 	}
 
 } // namespace Win32xx
-
-
