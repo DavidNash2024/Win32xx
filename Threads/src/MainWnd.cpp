@@ -50,6 +50,10 @@ void CMainWindow::OnCreate()
 	{
 		// Create the thread and store the CThread pointer
 		m_pCThreads.push_back(new CThread(i));
+
+		TCHAR str[80];
+		wsprintf(str, _T("Thread %d started\n"), i + 1);
+		TRACE(str);
 	}
 }
 

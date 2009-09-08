@@ -67,7 +67,6 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
-				Culture="3081"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"

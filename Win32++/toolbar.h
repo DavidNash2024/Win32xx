@@ -363,14 +363,13 @@ namespace Win32xx
 		SendMessage(TB_SETEXTENDEDSTYLE, 0L, TBSTYLE_EX_DRAWDDARROWS);
 
 		// Add extra styles for toolbars inside a rebar
-		TCHAR ClassName[32];
-		::GetClassName(GetParent(), ClassName, 32);
-		if (0 == lstrcmp(ClassName, REBARCLASSNAME))
+		CWnd* pWnd = FromHandle(GetParent());
+		if (pWnd && pWnd->IsRebar())
 		{
 			DWORD style = (DWORD)GetWindowLongPtr(GWL_STYLE);
 			style |= CCS_NODIVIDER | CCS_NORESIZE;
 			SetWindowLongPtr(GWL_STYLE, style);
-		}
+		} 
 
 		SetButtons(m_vToolbarData);
 		
@@ -546,17 +545,14 @@ namespace Win32xx
 						// Draw text twice for embossed look
 						::OffsetRect(&rcText, 1, 1);
 						DrawDC.SetTextColor(RGB(255,255,255));
-					//	DrawDC.DrawTextEx(szText, lstrlen(szText), rcText, DT_LEFT, NULL);
 						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT);
 						::OffsetRect(&rcText, -1, -1);
 						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-					//	DrawDC.DrawTextEx(szText, lstrlen(szText), rcText, DT_LEFT, NULL);
 						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT);
 					}
 					else
 					{
 						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-					//	DrawDC.DrawTextEx(szText, lstrlen(szText), rcText, DT_LEFT | DT_END_ELLIPSIS, NULL);
 						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT | DT_END_ELLIPSIS);
 					}
 					DrawDC.SetBkMode(iMode);
@@ -636,12 +632,10 @@ namespace Win32xx
 	inline void CToolbar::OnWindowPosChanging(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		// Adjust size for toolbars inside a rebar
-		TCHAR ClassName[32];
-		::GetClassName(GetParent(), ClassName, 32);
-
-		if (0 == lstrcmp(ClassName, REBARCLASSNAME))
+		CWnd* pWnd = FromHandle(GetParent());
+		if (pWnd && pWnd->IsRebar())
 		{
-			CRebar* pRebar = (CRebar*)FromHandle(GetParent());
+			CRebar* pRebar = (CRebar*)pWnd;
 			if (pRebar && (pRebar->GetRebarTheme().ShortBands))
 			{
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;

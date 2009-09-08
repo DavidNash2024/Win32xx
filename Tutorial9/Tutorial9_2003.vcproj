@@ -62,8 +62,7 @@
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
+				PreprocessorDefinitions="_DEBUG"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -125,8 +124,7 @@
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
+				PreprocessorDefinitions="NDEBUG"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
