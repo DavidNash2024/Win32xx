@@ -20,11 +20,7 @@ typedef  unsigned char  byte;
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
-#include <winsock2.h>
 #include <assert.h>
-
-#include <windows.h>
-#include <commctrl.h>
 #include <tchar.h>
 
 #include <dialog.h>
