@@ -17,7 +17,7 @@
 					<Add option="-D_DEBUG" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -36,7 +36,7 @@
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Borland\BDS\4.0\include" />
+					<Add directory="C:\Borland\BCC55\Include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />

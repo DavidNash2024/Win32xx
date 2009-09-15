@@ -30,7 +30,7 @@ void CView::OnDestroy()
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called after the window is created.
-	// Tasks which are to done after the window is created go here.
+	// Tasks which are to be done after the window is created go here.
 
 	TRACE("OnInitialUpdate\n");
 }
