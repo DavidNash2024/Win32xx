@@ -7,8 +7,7 @@
 #include "ThreadApp.h"
 #include "MainWnd.h"
 #include "Thread.h"
-#include "resource.h"
-#include <string>
+
 
 
 CMainWindow::CMainWindow()
@@ -22,15 +21,17 @@ CMainWindow::CMainWindow()
 	//         Refer to: http://support.microsoft.com/kb/327699
 	// Note 2: All our threads belong to the one process.
 	// Note 3: Creating (or destroying) more than say 200 windows may temporarily stress the Explorer process.
+	// Note 4: This sample is intended as "proof of concept" only. A well written program should not require 20 GUI threads!
 }
 
 CMainWindow::~CMainWindow()
 {
 	// m_pCThreads is a vector of CThread pointers
 	// Delete each CThread object
-	for (int i = 0 ; i < m_nThreads; i++)
+	std::vector<CThread*>::iterator iter;
+	for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
 	{
-		delete m_pCThreads[i];
+		delete (*iter);
 	}
 }
 
@@ -45,22 +46,44 @@ HWND CMainWindow::Create(HWND hParent)
 
 void CMainWindow::OnCreate()
 {
-	// Create each CThread object
-	for (int i = 0 ; i < m_nThreads ; i++)
+	try
 	{
-		// Create the thread and store the CThread pointer
-		m_pCThreads.push_back(new CThread(i));
+		// Create each CThread object
+		for (int i = 0 ; i < m_nThreads ; i++)
+		{
+			// Create the thread and store the CThread pointer
+			CThread* pThread = new CThread(i);
+			
+			TCHAR str[80];
+			wsprintf(str, _T("Thread %d started\n"), i + 1);
+			TRACE(str);
 
-		TCHAR str[80];
-		wsprintf(str, _T("Thread %d started\n"), i + 1);
-		TRACE(str);
+			m_pCThreads.push_back(pThread);
+		}
+	
+		std::vector<CThread*>::iterator iter;
+		for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
+		{
+			ResumeThread((*iter)->GetHandle());
+		}
+	}
+
+	catch (const CWinException &e)
+	{
+		e.MessageBox();
+		DebugErrMsg(_T("Exception in CMainWindow::OnCreate"));
+	}
+
+	catch (...)
+	{
+		DebugErrMsg(_T("Exception in CMainWindow::OnCreate"));
 	}
 }
 
 void CMainWindow::OnAllWindowsCreated()
 {
 	TCHAR str[80];
-	wsprintf(str, _T("%d Threads with windows created\n"), m_nThreads);
+	wsprintf(str, _T("%d Test windows created in seperate threads\n"), m_nThreads);
 	TRACE(str);
 }
 
@@ -78,25 +101,39 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		{
 			//Close the thread windows
-			for (int i = 0 ; i < m_nThreads ; i++)
+			std::vector<CThread*>::iterator iter;
+			for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
 			{
-				::SendMessage(m_pCThreads[i]->GetTestWindow().GetHwnd(), WM_CLOSE, 0, 0);
+				::SendMessage((*iter)->GetTestWindow().GetHwnd(), WM_CLOSE, 0, 0);
 			}
 		}
 		break;
 	
 	case WM_DESTROY:	
-		// Pause this thread to allow the others to complete
-		Sleep(500);
+		{
+			std::vector<CThread*>::iterator iter;
+			for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
+			{
+				PostThreadMessage((*iter)->GetThreadID(), WM_QUIT,0,0);
+				
+				// Pause this thread and wait for the specified thread to end
+				::WaitForSingleObject((*iter)->GetHandle(), 100);
+			}
 		
-		// Post the WM_QUIT message to terminate the primary thread.
-		::PostQuitMessage(0);
+			// Post the WM_QUIT message to terminate the primary thread.
+			::PostQuitMessage(0);
+		}
 		break;
 	
 	case WM_WINDOWCREATED:
-		// Message recieved when a test window is created
-		if (++nWindowsCreated == m_nThreads)
-			OnAllWindowsCreated();
+		{
+			// Message recieved when a test window is created
+			TCHAR str[80];
+			wsprintf(str, _T("Created Window %d\n"), ++nWindowsCreated);
+			TRACE(str);
+			if (nWindowsCreated == m_nThreads)
+				OnAllWindowsCreated();
+		}
 		break;
 	}
 

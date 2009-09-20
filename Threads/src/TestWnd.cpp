@@ -8,18 +8,16 @@
 #include "ThreadApp.h"
 
 
-CTestWindow::CTestWindow()
+CTestWindow::CTestWindow() : m_nWindow(-1)
 {
 }
 
-void CTestWindow::CreateWin(int i)
+void CTestWindow::CreateWin(int nWindow)
 {
-	TCHAR str[80];
+	CreateEx(0L, NULL, _T("Test Window"), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+		70 + 20*nWindow, 120 + 20*nWindow, 300, 200, NULL, NULL);
 
-	m_nThread = i + 1;
-	wsprintf(str, _T("Thread %d"), m_nThread);
-	CreateEx(0L, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		70 + 20*i, 120 + 20*i, 300, 200, NULL, NULL);
+	m_nWindow = nWindow +1;
 }
 
 void CTestWindow::OnInitialUpdate()
@@ -35,13 +33,12 @@ void CTestWindow::OnInitialUpdate()
 
 LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	static LRESULT nMessages = 0;
 	switch (uMsg)
 	{
 	case WM_CLOSE:
 		{
 			TCHAR str[80];
-			wsprintf(str, _T("Closing test Window %d\n"), m_nThread);
+			wsprintf(str, _T("Closing test Window %d\n"), m_nWindow);
 			TRACE(str);
 		}
 		break;
@@ -51,9 +48,6 @@ LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		::PostQuitMessage(0);
 		break;
 
-	case WM_TESTMESSAGE:
-		// return the number of WM_TESTMESSAGE messages processsed by this thread so far
-		return ++nMessages;
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

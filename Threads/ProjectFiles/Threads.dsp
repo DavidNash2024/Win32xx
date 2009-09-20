@@ -110,10 +110,6 @@ SOURCE=..\src\Thread.cpp
 
 SOURCE=..\src\ThreadApp.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\src\Threads.rc
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -121,10 +117,6 @@ SOURCE=..\src\Threads.rc
 # Begin Source File
 
 SOURCE=..\src\MainWnd.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 

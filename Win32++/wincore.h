@@ -598,6 +598,7 @@ namespace Win32xx
 		TLSData* SetTlsIndex();
 
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
+		CCriticalSection m_csTlsData;	// thread synchronisation for m_ csvTlsData
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
@@ -944,8 +945,9 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
 		{
-			CWnd* pWnd = (*m).second;
-			pWnd->Destroy();
+			HWND hWnd = (*m).first;
+			if (::IsWindow(hWnd))
+				::DestroyWindow(hWnd);
 		}
 		m_mapHWND.clear();
 
@@ -1121,7 +1123,9 @@ namespace Win32xx
 				::TlsSetValue(GetTlsIndex(), pTLSData);
 
 				// Store pointer in vector for deletion in destructor
+				m_csTlsData.Lock();
 				m_vTLSData.push_back(pTLSData);
+				m_csTlsData.Release();
 			}
 			return pTLSData;
 		}
@@ -1284,6 +1288,10 @@ namespace Win32xx
 	{
 		try
 		{
+			// Test if Win32++ has been started
+			if (0 == GetApp())
+				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+
 			// Set the WNDCLASS parameters
 			PreRegisterClass(m_wc);
 			if (m_wc.lpszClassName)
@@ -1714,6 +1722,10 @@ namespace Win32xx
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters
 	{
+		// Test if Win32++ has been started
+		if (0 == GetApp())
+			throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+
 		m_cs.cx             = cs.cx;
 		m_cs.cy             = cs.cy;
 		m_cs.dwExStyle      = cs.dwExStyle;
@@ -1737,6 +1749,10 @@ namespace Win32xx
 	// Called by CWnd::Create to set some window parameters
 	//  Useful for setting the background brush and cursor
 	{
+		// Test if Win32++ has been started
+		if (0 == GetApp())
+			throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+
 		m_wc.style			= wc.style;
 		m_wc.lpfnWndProc	= CWnd::StaticWindowProc;
 		m_wc.cbClsExtra		= wc.cbClsExtra;
@@ -1780,6 +1796,10 @@ namespace Win32xx
 	{
 		try
 		{
+			// Test if Win32++ has been started
+			if (0 == GetApp())
+				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+
 			if (0 == (lstrlen(wc.lpszClassName) ) || (lstrlen(wc.lpszClassName) >  MAX_STRING_SIZE))
 				throw CWinException(_T("CWnd::RegisterClass   Invalid class name"));
 

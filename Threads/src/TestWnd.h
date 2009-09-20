@@ -17,6 +17,7 @@ public:
 	virtual ~CTestWindow(){}
 	virtual void CreateWin(int i);
 	virtual void OnInitialUpdate();
+	virtual int  GetWindowNumber() {return m_nWindow;}
 
 private:
 	enum Constants
@@ -27,7 +28,7 @@ private:
 
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	int m_nThread;
+	int m_nWindow;
 };
 
 

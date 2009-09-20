@@ -1,7 +1,7 @@
 [Project]
 FileName=Threads.dev
 Name=Threads
-UnitCount=12
+UnitCount=10
 Type=0
 Ver=1
 ObjFiles=
@@ -120,9 +120,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=resource.h
+FileName=..\..\Win32++\wincore.h
 CompileCpp=1
-Folder=Header
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000

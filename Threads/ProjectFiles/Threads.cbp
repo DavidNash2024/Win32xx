@@ -152,11 +152,7 @@
 		<Unit filename="..\src\Thread.h" />
 		<Unit filename="..\src\ThreadApp.cpp" />
 		<Unit filename="..\src\ThreadApp.h" />
-		<Unit filename="..\src\Threads.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="..\src\main.cpp" />
-		<Unit filename="..\src\resource.h" />
 		<Unit filename="..\..\Win32++\default_resource.h" />
 		<Unit filename="..\..\Win32++\dialog.h" />
 		<Unit filename="..\..\Win32++\frame.h" />

@@ -11,7 +11,9 @@ INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 	CThreadApp theApp;
 
 	// Run the application
-	return theApp.Run();
+	theApp.Run();
+	
+	return 0;
 }
 
 

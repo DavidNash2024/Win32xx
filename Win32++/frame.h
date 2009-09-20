@@ -1276,15 +1276,18 @@ namespace Win32xx
 		case WM_CHAR:
 			return 0L;  // Discard these messages
 		case WM_DRAWITEM:
-			m_pFrame->OnDrawItem(wParam, lParam);
+		//	m_pFrame->OnDrawItem(wParam, lParam);
+			m_pFrame->SendMessage(WM_DRAWITEM, wParam, lParam);
 			return TRUE; // handled
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
-			m_pFrame->OnExitMenuLoop();
+		//	m_pFrame->OnExitMenuLoop();
+			m_pFrame->SendMessage(WM_EXITMENULOOP, wParam, lParam);
 			break;
 		case WM_INITMENUPOPUP:
-			m_pFrame->OnInitMenuPopup(wParam, lParam);
+		//	m_pFrame->OnInitMenuPopup(wParam, lParam);
+			m_pFrame->SendMessage(WM_INITMENUPOPUP, wParam, lParam);
 			break;
 		case WM_KEYDOWN:
 			OnKeyDown(wParam, lParam);
@@ -1306,7 +1309,8 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-			m_pFrame->OnMeasureItem(wParam, lParam);
+		//	m_pFrame->OnMeasureItem(wParam, lParam);
+			m_pFrame->SendMessage(WM_MEASUREITEM, wParam, lParam);
 			return TRUE; // handled
 		case WM_MOUSELEAVE:
 			OnMouseLeave();

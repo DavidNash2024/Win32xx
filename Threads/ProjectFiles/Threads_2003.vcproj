@@ -158,18 +158,12 @@
 			<File
 				RelativePath="..\src\ThreadApp.cpp">
 			</File>
-			<File
-				RelativePath="..\src\Threads.rc">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
 				RelativePath="..\src\MainWnd.h">
-			</File>
-			<File
-				RelativePath="..\src\resource.h">
 			</File>
 			<File
 				RelativePath="..\src\TestWnd.h">

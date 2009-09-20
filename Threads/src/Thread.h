@@ -15,11 +15,13 @@ class CThread
 public:
 	CThread(int nValue);
 	virtual ~CThread();
-	static DWORD WINAPI ThreadCallback(LPVOID pCThread);
+	virtual HANDLE GetHandle() { return m_hThread; }
+	virtual UINT GetThreadID() { return m_ThreadID; }
 	virtual CTestWindow& GetTestWindow() {return m_TestWindow;}
+	static UINT WINAPI ThreadCallback(LPVOID pCThread);
 
 private:
-	DWORD m_dwThreadID;			// ID of this thread
+	UINT m_ThreadID;			// ID of this thread
 	int m_nValue;				// a value associated with this thread
 	HANDLE m_hThread;			// Handle of this thread
 	CTestWindow m_TestWindow;	// The CWnd object for this thread
