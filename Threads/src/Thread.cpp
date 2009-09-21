@@ -8,46 +8,39 @@
 
 CThread::CThread(int nValue) : m_ThreadID(0), m_hThread(0)
 {
-	try
-	{		
-		m_nValue = nValue;
+	m_nValue = nValue;
 
-		// Create the thread.
-		m_hThread = (HANDLE)_beginthreadex(NULL, 0, CThread::ThreadCallback, (LPVOID) this, CREATE_SUSPENDED, &m_ThreadID);
-		if (!m_hThread)
-			throw CWinException(_T("Failed to create thread in CThread::CThread"));
-	}
-
-	catch (const CWinException &e)
-	{
-		::PostThreadMessage(m_ThreadID, WM_QUIT,0,0);
-		::CloseHandle(m_hThread);
-		
-		e.MessageBox();
-		throw;
-	}
-
-	catch (...)
-	{
-		::PostThreadMessage(m_ThreadID, WM_QUIT,0,0);
-		::CloseHandle(m_hThread);
-
-		DebugErrMsg(_T("Exception in CThread::CThread"));
-		throw;	// Rethrow unknown exception
-	}
+	// Create the thread. It is created in a suspended stated.
+	// Note: _beginthreadex will be undefined if a single-threaded run-time library is used. Use a Multithreaded run-time. 
+	m_hThread = (HANDLE)_beginthreadex(NULL, 0, CThread::ThreadCallback, (LPVOID) this, CREATE_SUSPENDED, &m_ThreadID);
+	if (!m_hThread)
+		throw CWinException(_T("Failed to create thread in CThread::CThread"));
 }
 
 CThread::~CThread()
 {
 	// Post a quite message to end the thread
-	::PostThreadMessage(m_ThreadID, WM_QUIT, 0, 0);
+	Stop();
 	
 	// Close the thread's handle
 	::CloseHandle(m_hThread);
 }
 
+void CThread::Start()
+{
+	// This starts the thread running. It was suspended when created.
+	ResumeThread(m_hThread);
+}
+
+void CThread::Stop()
+{
+	// Posts a quit message to the thread to end it.
+	if (m_ThreadID)
+		::PostThreadMessage(m_ThreadID, WM_QUIT,0,0);
+}
+
 UINT WINAPI CThread::ThreadCallback(LPVOID pCThread)
-// This function is called automatically when the thread is started
+// This function is the function that the thread runs 
 {
 	try
 	{

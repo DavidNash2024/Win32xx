@@ -139,9 +139,12 @@ namespace Win32xx
 
 	inline CDialog::~CDialog()
 	{
-		if ((m_hWnd != NULL) && IsModal)
+		if (m_hWnd != NULL)
 		{
-			::EndDialog(m_hWnd, 0);
+			if (IsModal)
+				::EndDialog(m_hWnd, 0);
+			else
+				Destroy();
 		}
 	}
 

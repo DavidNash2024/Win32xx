@@ -563,9 +563,7 @@ namespace Win32xx
 
 	inline CPropertySheet::~CPropertySheet()
 	{
-		for (int i = 0 ; i < (int)m_vPages.size(); i++)
-			delete m_vPages[i];
-
+		Destroy();
 		delete []m_ppsp;
 	}
 

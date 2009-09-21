@@ -18,6 +18,8 @@ public:
 	virtual HANDLE GetHandle() { return m_hThread; }
 	virtual UINT GetThreadID() { return m_ThreadID; }
 	virtual CTestWindow& GetTestWindow() {return m_TestWindow;}
+	virtual void Start();
+	virtual void Stop();
 	static UINT WINAPI ThreadCallback(LPVOID pCThread);
 
 private:

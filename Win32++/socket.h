@@ -71,6 +71,7 @@
 
 #include "wincore.h"
 #include <Winsock2.h>
+#include <Process.h>
 
 #define THREAD_TIMEOUT 100
 
@@ -123,7 +124,7 @@ namespace Win32xx
 	private:
 		CSocket(const CSocket&);				// Disable copy construction
 		CSocket& operator = (const CSocket&);	// Disable assignment operator
-		static DWORD WINAPI EventThread(LPVOID thread_data);
+		static UINT WINAPI EventThread(LPVOID thread_data);
 
 		SOCKET m_Socket;
 		HANDLE m_hEventThread;	// Handle to the thread
@@ -253,7 +254,7 @@ namespace Win32xx
 		m_Socket = 0;
 	}
 
-	inline DWORD WINAPI CSocket::EventThread(LPVOID thread_data)
+	inline UINT WINAPI CSocket::EventThread(LPVOID thread_data)
 	{
 		// These are the possible network event notifications:
 		//	FD_READ 	Notification of readiness for reading.
@@ -439,8 +440,8 @@ namespace Win32xx
 	{
 		// This function starts the thread which monitors the socket for events.
 		StopEvents();	// Ensure the thread isn't already running
-		DWORD ThreadID;	// a return variable required for Win95, Win98, WinME
-		m_hEventThread = ::CreateThread(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
+		UINT ThreadID;	// a return variable required for Win95, Win98, WinME
+		m_hEventThread = (HANDLE)::_beginthreadex(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
 	}
 
 	inline void CSocket::StopEvents()

@@ -14,6 +14,7 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
 				</Compiler>
@@ -33,6 +34,7 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
