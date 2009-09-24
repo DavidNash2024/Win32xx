@@ -240,13 +240,23 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (pWndFrom != NULL)
-				{	
-					// Only reflect messages from the parent to avoid possible double handling
-					if (::GetParent(hwndFrom) == m_hWnd)
-					{
+				if (!(IsRebar()))	// Skip notification reflection for rebars to avoid double handling
+				{
+					if (pWndFrom != NULL)
+					{	
 						BOOL bReturn = (BOOL)pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (bReturn) return TRUE;
+					}
+					else
+					{
+						// Some controls (eg ListView) have child windows.
+						// Reflect those notifications too.
+						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
+						if (pWndFromParent != NULL)
+						{	
+							BOOL bReturn = (BOOL)pWndFromParent->OnNotifyReflect(wParam, lParam);
+							if (bReturn) return TRUE;
+						}
 					}
 				}
 			}

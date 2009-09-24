@@ -14,7 +14,9 @@ CTestWindow::CTestWindow() : m_nWindow(-1)
 
 void CTestWindow::CreateWin(int nWindow)
 {
-	CreateEx(0L, NULL, _T("Test Window"), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+	TCHAR szTitle[80];
+	wsprintf(szTitle, _T("Test Window %d"), nWindow +1);
+	CreateEx(0L, NULL, szTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		70 + 20*nWindow, 120 + 20*nWindow, 300, 200, NULL, NULL);
 
 	m_nWindow = nWindow +1;

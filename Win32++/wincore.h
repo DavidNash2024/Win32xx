@@ -473,7 +473,7 @@ namespace Win32xx
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
-		BOOL IsChild(const CWnd* pWndParent) const;
+		BOOL IsChild(HWND hWndParent) const;
 		BOOL IsWindow() const;	
 		BOOL IsWindowEnabled() const;
 		BOOL IsWindowVisible() const;
@@ -552,7 +552,7 @@ namespace Win32xx
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
-		void Subclass();
+		void Subclass(HWND hWnd);
 
 		WNDCLASS m_wc;				// defines initialisation parameters for RegisterClass
 		CREATESTRUCT m_cs;			// defines initialisation parameters for PreCreate and Create
@@ -1179,20 +1179,12 @@ namespace Win32xx
 			if (0 != GetApp()->GetCWndFromMap(hWnd))
 				throw CWinException(_T("Window already attached to this CWnd object"));
 
-			m_hWnd = hWnd;
-			Subclass();
+			Subclass(hWnd);
 
-			if (m_PrevWindowProc)
-			{
-				// Store the CWnd pointer in the HWND map
-				AddToMap();
-				return TRUE;
-			}
-			else
-			{
-				m_hWnd = NULL;
-				throw CWinException(_T("CWnd::Attach .. Subclass failed"));
-			}
+			// Store the CWnd pointer in the HWND map
+			AddToMap();
+			OnInitialUpdate();
+			return TRUE;
 		}
 
 		catch (const CWinException &e)
@@ -1200,7 +1192,6 @@ namespace Win32xx
 			e.MessageBox();
 			throw;
 		}
-
 	}
 
 	inline BOOL CWnd::AttachDlgItem(UINT nID, CWnd* pParent)
@@ -1395,7 +1386,7 @@ namespace Win32xx
 			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
 			if (wc.lpfnWndProc != GetApp()->m_Callback)
 			{
-				Subclass();
+				Subclass(m_hWnd);
 
 				// Send a message to force the HWND to be added to the map
 				::SendMessage(m_hWnd, WM_NULL, 0L, 0L);
@@ -1932,17 +1923,21 @@ namespace Win32xx
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
 
-	inline void CWnd::Subclass()
+	inline void CWnd::Subclass(HWND hWnd)
 	// A private function used by CreateEx, Attach and AttachDlgItem
 	{
 		if (m_PrevWindowProc)
 			throw CWinException(_T("Subclass failed.  Already Subclassed"));
 
 		// Subclass the window to pass messages to WndProc
-		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
+		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(hWnd, GWLP_WNDPROC);
 		if (WndProc == GetApp()->m_Callback)
 			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
-		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+		if (NULL == m_PrevWindowProc)
+			throw CWinException(_T("Subclass failed."));
+
+		m_hWnd = hWnd;
 	}
 
 	inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1997,13 +1992,24 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 				LRESULT lr = 0L;
-				if (pWndFrom != NULL)
+				
+				if (!(IsRebar()))	// Skip notification reflection for rebars to avoid double handling
 				{
-					// Only reflect messages from the parent to avoid possible double handling
-					if (::GetParent(hwndFrom) == m_hWnd)
-					{
+					if (pWndFrom != NULL)
+					{				
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (lr) return lr;
+					}
+					else 
+					{
+						// Some controls (eg ListView) have child windows.
+						// Reflect those notifications too.
+						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
+						if (pWndFromParent != NULL)
+						{	
+							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
+							if (lr) return lr;
+						}
 					}
 				}
 
@@ -2238,11 +2244,11 @@ namespace Win32xx
 		return ::InvalidateRgn(m_hWnd, hRgn, bErase);
 	}
 
-	inline BOOL CWnd::IsChild(const CWnd* pWndParent) const
+	inline BOOL CWnd::IsChild(HWND hWndParent) const
 	// The IsChild function tests whether a window is a child window or descendant window
 	// of a parent window's CWnd.
 	{
-		return ::IsChild(pWndParent->GetHwnd(), m_hWnd);
+		return ::IsChild(hWndParent, m_hWnd);
 	}
 
 	inline BOOL CWnd::IsWindowEnabled() const

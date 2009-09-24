@@ -211,19 +211,30 @@ namespace Win32xx
 				break;  // Some commands require default processing
 	        }
 	        break;
+		
 		case WM_NOTIFY:
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (pWndFrom != NULL)
-				{	
-					// Only reflect messages from the parent to avoid possible double handling
-					if (::GetParent(hwndFrom) == m_hWnd)
-					{
+				if (!(IsRebar()))	// Skip notification reflection for rebars to avoid double handling
+				{
+					if (pWndFrom != NULL)
+					{	
 						BOOL bReturn = (BOOL)pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (bReturn) return TRUE;
+					}
+					else
+					{
+						// Some controls (eg ListView) have child windows.
+						// Reflect those notifications too.
+						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
+						if (pWndFromParent != NULL)
+						{	
+							BOOL bReturn = (BOOL)pWndFromParent->OnNotifyReflect(wParam, lParam);
+							if (bReturn) return TRUE;
+						}
 					}
 				}
 			}

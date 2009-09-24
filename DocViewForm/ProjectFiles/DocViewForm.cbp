@@ -14,6 +14,7 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
 					<Add directory="..\..\Win32++" />
@@ -35,6 +36,7 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
 					<Add directory="..\..\Win32++" />
@@ -56,7 +58,7 @@
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
-					<Add option="/MLd" />
+					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/W3" />
