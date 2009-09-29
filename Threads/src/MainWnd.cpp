@@ -64,7 +64,6 @@ void CMainWindow::OnCreate()
 		std::vector<CThread*>::iterator iter;
 		for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
 		{
-		//	ResumeThread((*iter)->GetHandle());
 			(*iter)->Start();
 		}
 	}

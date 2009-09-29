@@ -202,7 +202,7 @@ namespace Win32xx
 		TVITEM tvi = {0};
 		tvi.mask = TVIF_PARAM;
 		tvi.hItem = hItem;
-		TreeView_GetItem( m_hWnd, hItem );
+		TreeView_GetItem( m_hWnd, &tvi );
 		return tvi.lParam;
 	}
 
