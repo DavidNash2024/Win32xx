@@ -4,6 +4,7 @@ REM: The contents of the log file is erased
 
 REM: Set the paths
 @set PATH=c:\Program Files\CodeBlocks;%PATH%
+@set PATH=c:\Program Files (x86)\CodeBlocks;%PATH%
 
 REM: Remove old files before we start
 call clean

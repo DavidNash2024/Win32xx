@@ -421,8 +421,10 @@ namespace Win32xx
 		pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
 		// Display the shortcut menu
+		BOOL bRightToLeft = (::GetWindowLongPtr(GetAncestor(), GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+		int xPos = bRightToLeft? rc.right : rc.left;
 		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
-			rc.left, rc.bottom, m_hWnd, &tpm);
+			/*rc.left*/xPos, rc.bottom, m_hWnd, &tpm);
 
 		// We get here once the TrackPopupMenuEx has ended
 		m_bMenuActive = FALSE;
