@@ -2871,7 +2871,7 @@ namespace Win32xx
 			::FreeLibrary(hMod);
 		}
 
-		enum Themetype{ Grey, Blue, Silver, Olive };
+		enum Themetype{ Modern, Grey, Blue, Silver, Olive };
 
 		int Theme = Grey;
 		if (GetWinVersion() < 2600) // Not for Vista and above
@@ -2880,12 +2880,30 @@ namespace Win32xx
 			if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
 			if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
 		}
+		else
+			Theme = Modern;
 
 		BOOL T = TRUE;
 		BOOL F = FALSE;
 
 		switch (Theme)
 		{
+		case Modern:
+			{
+				ThemeToolbar tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+				ThemeRebar tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
+				ThemeMenu tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+
+				GetToolbar().SetToolbarTheme(tt);
+				SetMenuTheme(tm); // Sets the theme for popup menus
+				if (IsRebarUsed())
+				{
+					GetRebar().SetRebarTheme(tr);
+					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
+				}
+			}
+			break; 
+
 		case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 			{
 				ThemeToolbar tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};

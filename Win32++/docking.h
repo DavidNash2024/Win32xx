@@ -730,13 +730,13 @@ namespace Win32xx
 			{
 				dcMem.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
 				dcMem.SetBkColor(GetSysColor(COLOR_ACTIVECAPTION));
-				dcMem.SetTextColor(RGB(255, 255, 255));
+				dcMem.SetTextColor(GetSysColor(COLOR_HIGHLIGHTTEXT));
 			}
 			else
 			{
-				dcMem.CreateSolidBrush(RGB(232, 228, 220));
-				dcMem.SetBkColor(RGB(232, 228, 220));
-				dcMem.SetTextColor(RGB(0, 0, 0));
+				dcMem.CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+				dcMem.SetBkColor(GetSysColor(COLOR_BTNFACE));
+				dcMem.SetTextColor(GetSysColor(COLOR_BTNTEXT));
 			}
 
 			// Draw the rectangle

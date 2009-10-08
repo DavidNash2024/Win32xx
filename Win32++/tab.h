@@ -794,7 +794,8 @@ namespace Win32xx
 		if (0 == GetItemCount())
 		{
 			// No tabs, so simply display a grey background and exit
-			dcView.SolidFill(RGB(232, 228, 220), rcClient);
+			COLORREF rgbDialog = GetSysColor(COLOR_BTNFACE);
+			dcView.SolidFill(rgbDialog, rcClient);
 			return;
 		}
 
@@ -812,7 +813,10 @@ namespace Win32xx
 
 		// Use the region in the memory DC to paint the grey background
 		dcMem.AttachClipRegion(hrgnClip);
-		dcMem.CreateSolidBrush(RGB(232, 228, 220));
+		HWND hWndParent = GetParent();
+		HDC hDCParent = ::GetDC(hWndParent);
+		HBRUSH hBrush = (HBRUSH)::SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)hDCParent, (LPARAM)hWndParent);
+		dcMem.AttachBrush(hBrush);
 		dcMem.PaintRgn(hrgnClip);
 
 		// Draw the tab buttons on the memory DC:
@@ -830,6 +834,7 @@ namespace Win32xx
 		dcView.DetachClipRegion();
 
 		// Cleanup
+		dcMem.DetachBrush();
 		::DeleteObject(hrgnSrc1);
 		::DeleteObject(hrgnSrc2);
 		::DeleteObject(hrgnClip);
