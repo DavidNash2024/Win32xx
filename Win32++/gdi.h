@@ -1503,6 +1503,7 @@ namespace Win32xx
 	{
 		// Create our LPBITMAPINFO object
 		CBitmapInfoPtr pbmi(hbmSource);
+		pbmi->bmiHeader.biBitCount = 24;
 
 		// Create the reference DC for GetDIBits to use
 		CDC MemDC = CreateCompatibleDC(NULL);
