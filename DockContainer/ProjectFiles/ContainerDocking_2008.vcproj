@@ -78,6 +78,7 @@
 				AdditionalDependencies="comctl32.lib"
 				OutputFile=".\Debug/ContainerDocking.exe"
 				SuppressStartupBanner="true"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/ContainerDocking.pdb"
 				SubSystem="2"

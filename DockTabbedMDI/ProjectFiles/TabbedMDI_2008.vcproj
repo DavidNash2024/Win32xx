@@ -75,6 +75,7 @@
 				AdditionalDependencies="comctl32.lib"
 				OutputFile=".\Debug/TabbedMDI.exe"
 				SuppressStartupBanner="true"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/TabbedMDI.pdb"
 				SubSystem="2"

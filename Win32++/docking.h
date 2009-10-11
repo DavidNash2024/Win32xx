@@ -3597,6 +3597,7 @@ namespace Win32xx
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM;
 		cs.lpszClass = WC_TABCONTROL;
+	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
 	}
 
 	inline void CContainer::RecalcLayout()

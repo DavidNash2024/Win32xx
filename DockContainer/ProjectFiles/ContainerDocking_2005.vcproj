@@ -74,6 +74,7 @@
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib advapi32.lib"
 				OutputFile=".\Debug/ContainerDocking.exe"
 				SuppressStartupBanner="true"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/ContainerDocking.pdb"
 				SubSystem="2"

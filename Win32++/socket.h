@@ -216,7 +216,7 @@ namespace Win32xx
 
 	inline int CSocket::Connect(const struct sockaddr* name, int namelen)
 	{
-		int Result = ::connect( m_Socket, (SOCKADDR*) &name, sizeof(namelen) );
+		int Result = ::connect( m_Socket, name, namelen );
 		if ( 0 != Result )
 			TRACE(_T("Connect failed\n"));
 		return Result;

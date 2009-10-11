@@ -500,7 +500,7 @@ namespace Win32xx
 
 					// Draw the icon
 					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+2, ILD_NORMAL);
-
+					
 					// Draw the text
 					NONCLIENTMETRICS info = {0};
 					info.cbSize = GetSizeofNonClientMetrics();					
@@ -787,6 +787,9 @@ namespace Win32xx
 
 		// Create the memory DC and bitmap
 		CDC dcMem = ::CreateCompatibleDC(NULL);
+		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+			dcMem.SetLayout(LAYOUT_RTL);
+		
 		CRect rcClient = GetClientRect();
 		CDC dcView = GetDC();
 		dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
@@ -845,6 +848,7 @@ namespace Win32xx
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
 		cs.lpszClass = WC_TABCONTROL;
+	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
 	}
 
 	inline void CTab::RecalcLayout()

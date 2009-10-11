@@ -10,6 +10,8 @@ Changes:
 --------
 - OnInitailUpdate is now called after Attach or AttachDlgItem
 - IsChild now takes a HWND arguement.
+- Added CDC::GetLayout
+- Added CDC::SetLayout
 
 Version 6.6
 ===========
