@@ -934,7 +934,7 @@ namespace Win32xx
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			m_bCaptionPressed = FALSE;
-			if (m_IsClosePressed)
+			if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
 			{
 				// Destroy the docker
 				if (m_pDock->GetView()->IsContainer())
@@ -1099,9 +1099,6 @@ namespace Win32xx
 
 		case WM_NCLBUTTONDOWN:
 			return OnNCLButtonDown(wParam, lParam);
-
-	//	case WM_NCLBUTTONUP:
-	//		return OnNCLButtonUp(wParam, lParam);
 
 		case WM_NCMOUSEMOVE:
 			return OnNCMouseMove(wParam, lParam);
