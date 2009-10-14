@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="TabDialogDemo"
+	Name="DialogTabDemo"
 	ProjectGUID="{AD09440A-E5F6-419C-BE86-8047C2DF3E08}"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/TabDialogDemo.tlb"
+				TypeLibraryName=".\Release/DialogTabDemo.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -53,7 +53,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/TabDialogDemo.pch"
+				PrecompiledHeaderFile=".\Release/DialogTabDemo.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -73,11 +73,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
-				OutputFile=".\Release/TabDialogDemo.exe"
+				OutputFile=".\Release/DialogTabDemo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/TabDialogDemo.pdb"
+				ProgramDatabaseFile=".\Release/DialogTabDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -93,7 +93,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/TabDialogDemo.bsc"
+				OutputFile=".\Release/DialogTabDemo.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -136,7 +136,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/TabDialogDemo.tlb"
+				TypeLibraryName=".\Debug/DialogTabDemo.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -147,7 +147,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/TabDialogDemo.pch"
+				PrecompiledHeaderFile=".\Debug/DialogTabDemo.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -168,12 +168,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
-				OutputFile=".\Debug/TabDialogDemo.exe"
+				OutputFile=".\Debug/DialogTabDemo.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/TabDialogDemo.pdb"
+				ProgramDatabaseFile=".\Debug/DialogTabDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -189,7 +189,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/TabDialogDemo.bsc"
+				OutputFile=".\Debug/DialogTabDemo.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

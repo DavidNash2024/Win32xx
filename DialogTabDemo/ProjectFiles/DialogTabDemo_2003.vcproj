@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="TabDialogDemo"
+	Name="DialogTabDemo"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -28,7 +28,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/TabDialogDemo.pch"
+				PrecompiledHeaderFile=".\Release/DialogTabDemo.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -39,10 +39,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Release/TabDialogDemo.exe"
+				OutputFile=".\Release/DialogTabDemo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/TabDialogDemo.pdb"
+				ProgramDatabaseFile=".\Release/DialogTabDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -51,7 +51,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/TabDialogDemo.tlb"
+				TypeLibraryName=".\Release/DialogTabDemo.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -88,7 +88,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/TabDialogDemo.pch"
+				PrecompiledHeaderFile=".\Debug/DialogTabDemo.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -101,10 +101,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Debug/TabDialogDemo.exe"
+				OutputFile=".\Debug/DialogTabDemo.exe"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/TabDialogDemo.pdb"
+				ProgramDatabaseFile=".\Debug/DialogTabDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -113,7 +113,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/TabDialogDemo.tlb"
+				TypeLibraryName=".\Debug/DialogTabDemo.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>

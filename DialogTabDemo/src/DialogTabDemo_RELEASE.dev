@@ -1,24 +1,24 @@
 [Project]
-FileName=TabDialogDemo_DEBUG.dev
-Name=TabDialogDemo
+FileName=DialogTabDemo_RELEASE.dev
+Name=DialogTabDemo
 UnitCount=11
 Type=0
 Ver=1
 ObjFiles=
 Includes=
 Libs=
-PrivateResource=TabDialogDemo_private.rc
+PrivateResource=DialogTabDemo_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0400_@@_-D _DEBUG_@@_
+CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@_
 Linker=-lComctl32_@@_
 IsCpp=1
 Icon=
-ExeOutput=.\Dev-C++\Debug
-ObjectOutput=.\Dev-C++\Debug
+ExeOutput=.\Dev-C++\Release
+ObjectOutput=.\Dev-C++\Release
 OverrideOutput=0
-OverrideOutputName=TabDialogDemo.exe
+OverrideOutputName=DialogTabDemo.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000001000000001000000
+CompilerSettings=0000001000000000000000
 
 [VersionInfo]
 Major=0

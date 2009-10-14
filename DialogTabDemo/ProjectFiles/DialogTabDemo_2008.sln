@@ -1,6 +1,6 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TabDialogDemo", "TabDialogDemo_2005.vcproj", "{AD09440A-E5F6-419C-BE86-8047C2DF3E08}"
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DialogTabDemo", "DialogTabDemo_2008.vcproj", "{AD09440A-E5F6-419C-BE86-8047C2DF3E08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
