@@ -1,24 +1,24 @@
 [Project]
-FileName=ControlBars_RELEASE.dev
-Name=ControlBars
-UnitCount=13
+FileName=DialogBarsDemo_DEBUG.dev
+Name=DialogBarsDemo
+UnitCount=15
 Type=0
 Ver=1
 ObjFiles=
 Includes=
 Libs=
-PrivateResource=ControlBars_private.rc
-ResourceIncludes=
+PrivateResource=DialogBarsDemo_DEBUG_private.rc
+ResourceIncludes=c:\Dev-C++\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@_
-Linker=-lComctl32_@@_
+CppCompiler=-D_DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@_
+Linker=-lComctl32_@@__@@_
 IsCpp=1
 Icon=
-ExeOutput=.\Dev-C++\Release
-ObjectOutput=.\Dev-C++\Release
+ExeOutput=.\Dev-C++\Debug
+ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=0
-OverrideOutputName=ControlBars.exe
+OverrideOutputName=DialogBarsDemo.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -27,10 +27,10 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000001000000000000000
+CompilerSettings=0000001000000001000000
 
 [Unit1]
-FileName=DialogApp.cpp
+FileName=..\src\DialogApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=DialogApp.h
+FileName=..\src\DialogApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -50,7 +50,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=main.cpp
+FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -60,7 +60,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=MyDialog.cpp
+FileName=..\src\MyDialog.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -70,9 +70,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=MyDialog.h
+FileName=..\src\MyDialog.h
 CompileCpp=1
-Folder=Resource
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -80,9 +80,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=resource.h
+FileName=..\src\Progressbar.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -90,38 +90,19 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=Resource.rc
-Folder=Resource
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit8]
-FileName=Progressbar.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit9]
-FileName=Progressbar.h
-CompileCpp=1
+FileName=..\src\Progressbar.h
 Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-
-[Unit10]
-FileName=Scrollbar.cpp
 CompileCpp=1
-Folder=Source
+
+[Unit8]
+FileName=..\src\resource.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -146,10 +127,20 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 
-[Unit11]
-FileName=Scrollbar.h
+[Unit10]
+FileName=..\src\Scrollbar.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=..\src\Slider.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -157,9 +148,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=Slider.cpp
+FileName=..\src\Slider.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -167,9 +158,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=Slider.h
+FileName=..\..\Win32++\dialog.h
 CompileCpp=1
-Folder=Header
+Folder=Win32++
 Compile=1
 Link=1
 Priority=1000
@@ -177,7 +168,27 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=Slider.cpp
+FileName=..\..\Win32++\wincore.h
+CompileCpp=1
+Folder=Win32++
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=..\src\Resource.rc
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=..\src\Scrollbar.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -186,12 +197,11 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
-FileName=Slider.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
+[Unit17]
+FileName=..\src\res\Zapotec.bmp
+Folder=Resource
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
