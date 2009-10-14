@@ -2,7 +2,7 @@
 // DlgSubclassApp.cpp
 
 #include "resource.h"
-#include "DlgSubclassApp.h"
+#include "DialogDemoApp.h"
 
 
 // Definitions for the CDialogApp class

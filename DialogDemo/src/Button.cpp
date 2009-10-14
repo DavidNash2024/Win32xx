@@ -1,7 +1,7 @@
 /////////////////////////////
 // Button.cpp
 
-#include "DlgSubclassApp.h"
+#include "DialogDemoApp.h"
 #include "Button.h"
 
 LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

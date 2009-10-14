@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "DlgSubclassApp.h"
+#include "DialogDemoApp.h"
 
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)

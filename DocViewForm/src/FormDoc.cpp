@@ -8,7 +8,8 @@
 
 
 // Definitions for the CFormDoc class
-CFormDoc::CFormDoc()
+CFormDoc::CFormDoc() : m_bCheckA(FALSE), m_bCheckB(FALSE), 
+                       m_bCheckC(FALSE), m_Radio(0)
 {
 }
 
@@ -39,7 +40,7 @@ void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
 		m_bCheckA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
 		m_bCheckB = GetRegDwordFromOpenKey(hKey, _T("CheckB")) & 1;
 		m_bCheckC = GetRegDwordFromOpenKey(hKey, _T("CheckC")) & 1;
-		m_radio = GetRegDwordFromOpenKey(hKey, _T("Radio"));
+		m_Radio = GetRegDwordFromOpenKey(hKey, _T("Radio"));
 
 		RegCloseKey(hKey);
 	}
@@ -58,7 +59,7 @@ void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
 	RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_bCheckA, sizeof(DWORD));
 	RegSetValueEx(hKey, _T("CheckB"), 0, REG_DWORD, (LPBYTE)&m_bCheckB, sizeof(DWORD));
 	RegSetValueEx(hKey, _T("CheckC"), 0, REG_DWORD, (LPBYTE)&m_bCheckC, sizeof(DWORD));
-	RegSetValueEx(hKey, _T("Radio"), 0, REG_DWORD, (LPBYTE)&m_radio, sizeof(DWORD));
+	RegSetValueEx(hKey, _T("Radio"), 0, REG_DWORD, (LPBYTE)&m_Radio, sizeof(DWORD));
 
 	RegCloseKey(hKey);
 }

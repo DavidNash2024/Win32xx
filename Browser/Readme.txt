@@ -1,12 +1,23 @@
-This sample requires ATL in order to run.  ATL is not available for 
-Dev-C++. It is included with all commercial copies of Microsoft 
-compilers. These compilers will be able to compile this sample, as is.
+About this sample
+=================
+This sample demonstrates how to implement a simple web browser as a view
+window for a frame. It uses the IWebBrowser2 interface to implement
+the WebBrowser control (Microsoft ActiveX control).
 
-In order for users of either VS2005 Express or VS2008 express to
-compile this program you will need to use the copy of ATL which 
-ships with the latest "Platform Software Development Kit". Note that
-the "Windows Software Development Kit" does NOT include ATL, but
-VS2008 is compatible with the latest Platform SDK.
+This sample also demonstrates how to use ATL to display an ActiveX control.
+
+Note: This sample requires ATL in order to run.  ATL is not available for 
+Dev-C++.    
+
+Instructions for Visual Studio 2005 Express
+===========================================
+ATL is not included with VS2005 Express, but is included with
+the other versions of Microsoft compilers, including VS2008 Express.
+
+In order to use VS2005 Express to compile this program, you will 
+need to use the copy of ATL which ships with the latest 
+"Platform Software Development Kit". Note that the "Windows Software 
+Development Kit" does NOT include ATL. 
 
 The latest Platform SDK can be downloaded from:
 http://www.microsoft.com/msdownload/platformsdk/sdkupdate/

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="DlgSubclass"
+	Name="DialogDemo"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -27,7 +27,7 @@
 				RuntimeLibrary="4"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/DlgSubclass.pch"
+				PrecompiledHeaderFile=".\Release/DialogDemo.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -38,10 +38,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
-				OutputFile=".\Release/DlgSubclass.exe"
+				OutputFile=".\Release/DialogDemo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/DlgSubclass.pdb"
+				ProgramDatabaseFile=".\Release/DialogDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -50,7 +50,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DlgSubclass.tlb"
+				TypeLibraryName=".\Release/DialogDemo.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -87,7 +87,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/DlgSubclass.pch"
+				PrecompiledHeaderFile=".\Debug/DialogDemo.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -99,10 +99,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
-				OutputFile=".\Debug/DlgSubclass.exe"
+				OutputFile=".\Debug/DialogDemo.exe"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/DlgSubclass.pdb"
+				ProgramDatabaseFile=".\Debug/DialogDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -111,7 +111,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DlgSubclass.tlb"
+				TypeLibraryName=".\Debug/DialogDemo.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -144,7 +144,7 @@
 				RelativePath="..\src\Button.cpp">
 			</File>
 			<File
-				RelativePath="..\src\DlgSubclassApp.cpp">
+				RelativePath="..\src\DialogDemoApp.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Hyperlink.cpp">
@@ -166,7 +166,7 @@
 				RelativePath="..\src\Button.h">
 			</File>
 			<File
-				RelativePath="..\src\DlgSubclassApp.h">
+				RelativePath="..\src\DialogDemoApp.h">
 			</File>
 			<File
 				RelativePath="..\src\Hyperlink.h">

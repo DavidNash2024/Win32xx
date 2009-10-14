@@ -27,14 +27,14 @@ public:
 	BOOL  GetCheckC(void) { return m_bCheckC; }
 	void  SetCheckC(BOOL bCheck) { m_bCheckC = bCheck; }
 
-	UINT  GetRadio(void) { return m_radio; }
-	void  SetRadio(UINT radio) { m_radio = radio; }
+	UINT  GetRadio(void) { return m_Radio; }
+	void  SetRadio(UINT radio) { m_Radio = radio; }
 
 private:
 	BOOL  m_bCheckA;
 	BOOL  m_bCheckB;
 	BOOL  m_bCheckC;
-	UINT  m_radio;
+	UINT  m_Radio;
 };
 
 #endif //SDI_DOC_H

@@ -1,13 +1,13 @@
 [Project]
-FileName=DlgSubclass_DEBUG.dev
-Name=DlgSubclass
+FileName=DialogDemo_DEBUG.dev
+Name=DialogDemo
 UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
 Includes=
 Libs=
-PrivateResource=DlgSubclass_private.rc
+PrivateResource=DialogDemo_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Debug
 ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=0
-OverrideOutputName=DlgSubclass.exe
+OverrideOutputName=DialogDemo.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -30,7 +30,7 @@ CompilerSet=0
 CompilerSettings=0000001000000001000000
 
 [Unit1]
-FileName=DlgSubclassApp.cpp
+FileName=DialogDemoApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=DlgSubclassApp.h
+FileName=DialogDemoApp.h
 CompileCpp=1
 Folder=Header
 Compile=1

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<PersonalityInfo>
 		<Option>
@@ -10,7 +10,7 @@
 	</PersonalityInfo>
 	<CPlusPlusBuilder.Personality>
 		<Source>
-			<Source Name="MainSource">DlgSubclass.bpf</Source>
+			<Source Name="MainSource">DialogDemo.bpf</Source>
 		</Source>
 		<BCBPROJECT>
       <project version="10.0">
@@ -28,7 +28,7 @@
         <property category="build.config.1" name="settings.win32b" value="default"/>
         <property category="build.config.1" name="type" value="Toolset"/>
         <property category="build.config.1" name="win32.win32b.builddir" value="Release_Build"/>
-        <property category="build.node" name="name" value="DlgSubclass.exe"/>
+        <property category="build.node" name="name" value="DialogDemo.exe"/>
         <property category="build.node" name="packages" value="vclx;vcl;rtl;dbrtl;vcldb;adortl;dbxcds;dbexpress;xmlrtl;vclie;inet;inetdbbde;inetdbxpress;soaprtl;dsnap;bdertl;vcldbx"/>
         <property category="build.node" name="sparelibs" value="rtl.lib"/>
         <property category="build.node" name="use_packages" value="1"/>
@@ -188,7 +188,7 @@
         </optionset>
       </project>
       <FILELIST>
-        <FILE FILENAME="..\src\DlgSubclassApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="DlgSubclassApp" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\src\DialogDemoApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="DialogDemoApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Hyperlink.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Hyperlink" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\MyDialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyDialog" FORMNAME="" DESIGNCLASS=""/>

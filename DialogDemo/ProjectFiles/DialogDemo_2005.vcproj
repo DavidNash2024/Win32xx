@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="DlgSubclass"
+	Name="DialogDemo"
 	ProjectGUID="{A2D7F5AA-B200-4DD8-8FAE-8D5A8C8D896C}"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DlgSubclass.tlb"
+				TypeLibraryName=".\Release/DialogDemo.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -52,7 +52,7 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/DlgSubclass.pch"
+				PrecompiledHeaderFile=".\Release/DialogDemo.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -72,11 +72,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib shell32.lib"
-				OutputFile=".\Release/DlgSubclass.exe"
+				OutputFile=".\Release/DialogDemo.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/DlgSubclass.pdb"
+				ProgramDatabaseFile=".\Release/DialogDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -92,7 +92,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/DlgSubclass.bsc"
+				OutputFile=".\Release/DialogDemo.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -135,7 +135,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DlgSubclass.tlb"
+				TypeLibraryName=".\Debug/DialogDemo.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -145,7 +145,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/DlgSubclass.pch"
+				PrecompiledHeaderFile=".\Debug/DialogDemo.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -166,12 +166,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib shell32.lib"
-				OutputFile=".\Debug/DlgSubclass.exe"
+				OutputFile=".\Debug/DialogDemo.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/DlgSubclass.pdb"
+				ProgramDatabaseFile=".\Debug/DialogDemo.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -187,7 +187,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/DlgSubclass.bsc"
+				OutputFile=".\Debug/DialogDemo.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\DlgSubclassApp.cpp"
+				RelativePath="..\src\DialogDemoApp.cpp"
 				>
 			</File>
 			<File
@@ -244,7 +244,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\DlgSubclassApp.h"
+				RelativePath="..\src\DialogDemoApp.h"
 				>
 			</File>
 			<File

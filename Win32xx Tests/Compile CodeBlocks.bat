@@ -22,7 +22,7 @@ if exist "Win32xx Tests\MinGW" rmdir /s /q "Win32xx Tests\MinGW"
 REM: Compile the code
 codeblocks.exe --rebuild ControlBars\ProjectFiles\ControlBars.cbp 		> "Win32xx Tests\CodeBlocks.log"
 codeblocks.exe --rebuild Dialog\ProjectFiles\Dialog.cbp				>>"Win32xx Tests\CodeBlocks.log"
-codeblocks.exe --rebuild DlgSubclass\ProjectFiles\DlgSubClass.cbp		>>"Win32xx Tests\CodeBlocks.log"
+codeblocks.exe --rebuild DialogDemo\ProjectFiles\DialogDemo.cbp			>>"Win32xx Tests\CodeBlocks.log"
 codeblocks.exe --rebuild DockContainer\ProjectFiles\ContainerDocking.cbp	>>"Win32xx Tests\CodeBlocks.log"
 codeblocks.exe --rebuild DockSimple\ProjectFiles\Docking.cbp			>>"Win32xx Tests\CodeBlocks.log"
 codeblocks.exe --rebuild DockTabbedMDI\ProjectFiles\TabbedMDI.cbp		>>"Win32xx Tests\CodeBlocks.log"
