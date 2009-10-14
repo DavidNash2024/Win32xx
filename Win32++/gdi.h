@@ -268,9 +268,11 @@ namespace Win32xx
 		BOOL ExtFloodFill( int x, int y, COLORREF crColor, UINT nFillType ) const;
 #endif
 
-		// Layout Functions
+        // Layout Functions
+#if defined(WINVER) && (WINVER >= 0x0500)
 		DWORD GetLayout() const;
 		DWORD SetLayout(DWORD dwLayout) const;
+#endif
 
 		// Text Functions
 		BOOL ExtTextOut( int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths ) const;
@@ -1367,6 +1369,7 @@ namespace Win32xx
 #endif
 
 	// Layout Functions
+#if defined(WINVER) && (WINVER >= 0x0500)
 	inline DWORD CDC::GetLayout() const
 	{
 		// Returns the layout of a device context (LAYOUT_RTL and LAYOUT_BITMAPORIENTATIONPRESERVED)
@@ -1374,10 +1377,10 @@ namespace Win32xx
 	}
 	inline DWORD CDC::SetLayout(DWORD dwLayout) const
 	{
-		// Sets the layout of a device context 
+		// Sets the layout of a device context
 		return ::SetLayout(m_hDC, dwLayout);
 	}
-
+#endif
 
 	// Text Functions
 	inline BOOL CDC::ExtTextOut( int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths ) const

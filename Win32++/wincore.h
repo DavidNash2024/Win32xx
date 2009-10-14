@@ -415,17 +415,17 @@ namespace Win32xx
 		// These are the functions can be overridden
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
-		virtual void CenterWindow() const;	
+		virtual void CenterWindow() const;
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);	
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
 		virtual HWND GetAncestor() const;
 		virtual tString GetClassString() const;
 		virtual tString GetDlgItemString(int nIDDlgItem) const;
 		virtual tString GetWindowString() const;
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;	
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -446,7 +446,7 @@ namespace Win32xx
 
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
-		
+
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
 		BOOL BringWindowToTop() const;
@@ -469,12 +469,12 @@ namespace Win32xx
 		HWND GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
-		CRect GetWindowRect() const;	
+		CRect GetWindowRect() const;
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(HWND hWndParent) const;
-		BOOL IsWindow() const;	
+		BOOL IsWindow() const;
 		BOOL IsWindowEnabled() const;
 		BOOL IsWindowVisible() const;
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
@@ -482,7 +482,7 @@ namespace Win32xx
 		void MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		BOOL RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;	
+		BOOL RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ) const;
 		int  ReleaseDC(HDC hDC) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
@@ -525,9 +525,9 @@ namespace Win32xx
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
 		BOOL ShowScrollBar(int nBar, BOOL bShow) const;
 #endif
-		
+
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		operator HWND() const {return m_hWnd;}		
+		operator HWND() const {return m_hWnd;}
 
 	protected:
 		// Override these functions as required
@@ -559,7 +559,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings		
+		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings
 
 	}; // class CWnd
 
@@ -584,16 +584,16 @@ namespace Win32xx
 		virtual int  MessageLoop();
 		virtual int Run();
 
-		DWORD GetTlsIndex() const {return m_dwTlsIndex;}		
+		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
 		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
 		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}	
-		
+		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
+
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		CWnd* GetCWndFromMap(HWND hWnd);
-		void DefaultClass();	
+		void DefaultClass();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 		TLSData* SetTlsIndex();
 
@@ -1202,12 +1202,12 @@ namespace Win32xx
 		return Attach(hWnd);
 	}
 
-	inline void CWnd::CenterWindow() const 
-	{ 
-		// Centers this window over it's parent 
-    		
+	inline void CWnd::CenterWindow() const
+	{
+		// Centers this window over it's parent
+
 		CRect rc = GetWindowRect();
-		CRect rcParent; 
+		CRect rcParent;
 		CRect rcDesktop;
 
 		// Get screen dimensions excluding task bar
@@ -1216,7 +1216,7 @@ namespace Win32xx
 		// Get the parent window dimensions (parent could be the desktop)
 		if (GetParent() != NULL) ::GetWindowRect(GetParent(), &rcParent);
 		else rcParent = rcDesktop;
-	
+
   #ifndef _WIN32_WCE
 	// required for Dev-C++ and VC6
     #ifndef MONITOR_DEFAULTTONEAREST
@@ -1243,36 +1243,36 @@ namespace Win32xx
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
 	#else
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
-	#endif			
-		
+	#endif
+
 		// Take multi-monitor systems into account
 		if (pfnGetMonitorInfo && pfnMonitorFromWindow)
 		{
-			HMONITOR hActiveMonitor = pfnMonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST); 
-			MONITORINFO mi = { sizeof(mi), 0}; 
+			HMONITOR hActiveMonitor = pfnMonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+			MONITORINFO mi = { sizeof(mi), 0};
 
 			if(pfnGetMonitorInfo(hActiveMonitor, &mi))
 			{
-				rcDesktop = mi.rcWork; 
+				rcDesktop = mi.rcWork;
 				if (GetParent() == NULL) rcParent = mi.rcWork;
 			}
 		}
 		FreeLibrary(hUser32);
   #endif
-		 
+
 		// Calculate point to center the dialog over the portion of parent window on this monitor
 		rcParent.IntersectRect(rcParent, rcDesktop);
-		int x = rcParent.left + (rcParent.Width() - rc.Width())/2; 
-		int y = rcParent.top + (rcParent.Height() - rc.Height())/2; 
-		 
+		int x = rcParent.left + (rcParent.Width() - rc.Width())/2;
+		int y = rcParent.top + (rcParent.Height() - rc.Height())/2;
+
 		// Keep the dialog wholly on the monitor display
 		x = (x < rcDesktop.left)? rcDesktop.left : x;
 		x = (x > rcDesktop.right - rc.Width())? rcDesktop.right - rc.Width() : x;
 		y = (y < rcDesktop.top) ? rcDesktop.top: y;
 		y = (y > rcDesktop.bottom - rc.Height())? rcDesktop.bottom - rc.Height() : y;
-		 
+
 		SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
-	} 
+	}
 
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
@@ -1424,7 +1424,7 @@ namespace Win32xx
 		// Return the CWnd to its default state
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-		
+
 		RemoveFromMap();
 		m_hIconLarge = NULL;
 		m_hIconSmall = NULL;
@@ -1782,7 +1782,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
-	// A private function used by the PreRegisterClass function to register a 
+	// A private function used by the PreRegisterClass function to register a
 	//  window class prior to window creation
 	{
 		try
@@ -1992,21 +1992,21 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 				LRESULT lr = 0L;
-				
+
 				if (!(IsRebar()))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
-					{				
+					{
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (lr) return lr;
 					}
-					else 
+					else
 					{
 						// Some controls (eg ListView) have child windows.
 						// Reflect those notifications too.
 						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
 						if (pWndFromParent != NULL)
-						{	
+						{
 							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 							if (lr) return lr;
 						}
@@ -2080,7 +2080,7 @@ namespace Win32xx
 
 	} // LRESULT CWnd::WindowProc(...)
 
-	
+
 	//
 	// Wrappers for Win32 API functions
 	//
@@ -2329,13 +2329,13 @@ namespace Win32xx
 	// window procedure has processed the message.
 	{
 		return ::SendMessage(m_hWnd, uMsg, wParam, lParam);
-	} 
+	}
 
 	inline LRESULT CWnd::SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
 	// Required by by some macros
-	{ 
+	{
 		return ::SendMessage(hWnd, uMsg, wParam, lParam);
-	} 
+	}
 
 	inline HWND CWnd::SetActiveWindow() const
 	// The SetActiveWindow function activates the window, but
@@ -2524,7 +2524,7 @@ namespace Win32xx
 	{
 		return ::ScrollWindow(m_hWnd, XAmount, YAmount, prcScroll, prcClip);
 	}
-	
+
 	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const
 	// The ScrollWindow function scrolls the contents of the window's client area.
 	{

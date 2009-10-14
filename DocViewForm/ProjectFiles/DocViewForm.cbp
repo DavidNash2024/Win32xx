@@ -136,6 +136,7 @@
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="WS2_32" />
+					<Add library="GDI32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -178,6 +179,7 @@
 		</Unit>
 		<Unit filename="..\src\StdAfx.cpp" />
 		<Unit filename="..\src\resource.h" />
+		<Unit filename="..\src\stdafx.h" />
 		<Unit filename="..\..\Win32++\default_resource.h" />
 		<Unit filename="..\..\Win32++\dialog.h" />
 		<Unit filename="..\..\Win32++\frame.h" />

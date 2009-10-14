@@ -787,9 +787,12 @@ namespace Win32xx
 
 		// Create the memory DC and bitmap
 		CDC dcMem = ::CreateCompatibleDC(NULL);
+
+#if WINVER >= 0x0500
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 			dcMem.SetLayout(LAYOUT_RTL);
-		
+#endif
+
 		CRect rcClient = GetClientRect();
 		CDC dcView = GetDC();
 		dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
