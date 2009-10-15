@@ -1,10 +1,11 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "../Win32++/wincore.h"
+#include "../Win32++/Wincore.h"
 
 // Note:  This application doesn't end when the window is closed
-//        Refer to the tutorial documentation
+// Refer to the tutorial at http://users.bigpond.net.au/programming/tutorial.htm
+
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
