@@ -6,13 +6,19 @@ EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
+		Debug Static Library = Debug Static Library
 		Release = Release
+		Release Static Library = Release Static Library
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Debug.ActiveCfg = Debug|Win32
 		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Debug.Build.0 = Debug|Win32
+		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Debug Static Library.ActiveCfg = Debug Static Library|Win32
+		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Debug Static Library.Build.0 = Debug Static Library|Win32
 		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Release.ActiveCfg = Release|Win32
 		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Release.Build.0 = Release|Win32
+		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Release Static Library.ActiveCfg = Release Static Library|Win32
+		{2E438A7F-6B71-46A9-9F59-DDB1DDCD8907}.Release Static Library.Build.0 = Release Static Library|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

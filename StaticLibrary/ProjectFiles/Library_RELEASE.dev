@@ -15,8 +15,8 @@ CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@__@@_
 Linker=_@@__@@__@@_
 IsCpp=1
 Icon=
-ExeOutput=..\lib\Dev-C_Release
-ObjectOutput=
+ExeOutput=..\..\Win32++\lib\Dev-C_Release
+ObjectOutput=.\Dev-C_Release
 OverrideOutput=1
 OverrideOutputName=Win32xx.lib
 HostApplication=
@@ -30,7 +30,7 @@ CompilerSet=0
 CompilerSettings=0000001000000000000000
 
 [Unit3]
-FileName=..\Win32++\docking.cpp
+FileName=..\..\Win32++\src\docking.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\Win32++\docking.h
+FileName=..\..\Win32++\src\docking.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -50,7 +50,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\Win32++\frame.cpp
+FileName=..\..\Win32++\src\frame.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -60,7 +60,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\Win32++\frame.h
+FileName=..\..\Win32++\src\frame.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -70,7 +70,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\Win32++\gdi.cpp
+FileName=..\..\Win32++\src\gdi.cpp
 Folder=Source
 Compile=1
 Link=1
@@ -80,7 +80,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=..\Win32++\gdi.h
+FileName=..\..\Win32++\src\gdi.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -89,18 +89,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
-FileName=..\Win32++\listview.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit10]
-FileName=..\Win32++\listview.h
+FileName=..\..\Win32++\src\listview.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -110,7 +100,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\Win32++\mdi.cpp
+FileName=..\..\Win32++\src\mdi.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -120,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\Win32++\mdi.h
+FileName=..\..\Win32++\src\mdi.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -130,7 +120,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\Win32++\propertysheet.cpp
+FileName=..\..\Win32++\src\propertysheet.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -140,7 +130,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\Win32++\propertysheet.h
+FileName=..\..\Win32++\src\propertysheet.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -150,7 +140,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\Win32++\rebar.cpp
+FileName=..\..\Win32++\src\rebar.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -178,7 +168,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=..\Win32++\rebar.h
+FileName=..\..\Win32++\src\rebar.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -187,18 +177,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
-FileName=..\Win32++\socket.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit18]
-FileName=..\Win32++\socket.h
+FileName=..\..\Win32++\src\socket.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -208,7 +188,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit1]
-FileName=..\Win32++\dialog.cpp
+FileName=..\..\Win32++\src\dialog.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -218,7 +198,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\Win32++\dialog.h
+FileName=..\..\Win32++\src\dialog.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -228,7 +208,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\Win32++\splitter.cpp
+FileName=..\..\Win32++\src\splitter.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -238,7 +218,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\Win32++\splitter.h
+FileName=..\..\Win32++\src\splitter.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -248,7 +228,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=..\Win32++\statusbar.cpp
+FileName=..\..\Win32++\src\statusbar.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -258,7 +238,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=..\Win32++\statusbar.h
+FileName=..\..\Win32++\src\statusbar.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -268,7 +248,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit23]
-FileName=..\Win32++\tab.cpp
+FileName=..\..\Win32++\src\tab.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -278,7 +258,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit24]
-FileName=..\Win32++\tab.h
+FileName=..\..\Win32++\src\tab.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -288,7 +268,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit25]
-FileName=..\Win32++\toolbar.cpp
+FileName=..\..\Win32++\src\toolbar.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -298,7 +278,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
-FileName=..\Win32++\toolbar.h
+FileName=..\..\Win32++\src\toolbar.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -308,7 +288,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=..\Win32++\treeview.cpp
+FileName=..\..\Win32++\src\treeview.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -318,7 +298,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=..\Win32++\treeview.h
+FileName=..\..\Win32++\src\treeview.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -328,7 +308,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=..\Win32++\wincore.cpp
+FileName=..\..\Win32++\src\wincore.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -338,9 +318,29 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=..\Win32++\wincore.h
+FileName=..\..\Win32++\src\wincore.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=..\..\Win32++\src\listview.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=..\..\Win32++\src\socket.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

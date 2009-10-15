@@ -109,7 +109,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source"
+			Name="Source Files"
 			Filter="">
 			<File
 				RelativePath="..\..\Win32++\src\dialog.cpp">
@@ -158,7 +158,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Header"
+			Name="Header Files"
 			Filter="">
 			<File
 				RelativePath="..\..\Win32++\src\dialog.h">
