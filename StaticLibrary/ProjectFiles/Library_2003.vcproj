@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\VS2003_Debug\Win32xx.lib"
+				OutputFile="../../Win32++/lib/VS2003_Debug/Win32xx.lib"
 				SuppressStartupBanner="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\VS2003_Release\Win32xx.lib"
+				OutputFile="../../Win32++/lib/VS2003_Release/Win32xx.lib"
 				SuppressStartupBanner="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -109,206 +109,101 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			Name="Source"
+			Filter="">
 			<File
-				RelativePath="..\Win32++\dialog.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\..\Win32++\src\dialog.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\docking.cpp">
+				RelativePath="..\..\Win32++\src\docking.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\frame.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\..\Win32++\src\frame.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\gdi.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\..\Win32++\src\gdi.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\listview.cpp">
+				RelativePath="..\..\Win32++\src\listview.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\mdi.cpp">
+				RelativePath="..\..\Win32++\src\mdi.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\propertysheet.cpp">
+				RelativePath="..\..\Win32++\src\propertysheet.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\rebar.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\..\Win32++\src\rebar.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\socket.cpp">
+				RelativePath="..\..\Win32++\src\socket.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\splitter.cpp">
+				RelativePath="..\..\Win32++\src\splitter.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\statusbar.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\..\Win32++\src\statusbar.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\tab.cpp">
+				RelativePath="..\..\Win32++\src\tab.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\toolbar.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\..\Win32++\src\toolbar.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\treeview.cpp">
+				RelativePath="..\..\Win32++\src\treeview.cpp">
 			</File>
 			<File
-				RelativePath="..\Win32++\wincore.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\..\Win32++\src\wincore.cpp">
 			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl">
+			Name="Header"
+			Filter="">
 			<File
-				RelativePath="..\Win32++\dialog.h">
+				RelativePath="..\..\Win32++\src\dialog.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\docking.h">
+				RelativePath="..\..\Win32++\src\docking.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\frame.h">
+				RelativePath="..\..\Win32++\src\frame.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\gdi.h">
+				RelativePath="..\..\Win32++\src\gdi.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\listview.h">
+				RelativePath="..\..\Win32++\src\listview.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\mdi.h">
+				RelativePath="..\..\Win32++\src\mdi.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\propertysheet.h">
+				RelativePath="..\..\Win32++\src\propertysheet.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\rebar.h">
+				RelativePath="..\..\Win32++\src\rebar.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\socket.h">
+				RelativePath="..\..\Win32++\src\socket.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\splitter.h">
+				RelativePath="..\..\Win32++\src\splitter.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\statusbar.h">
+				RelativePath="..\..\Win32++\src\statusbar.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\tab.h">
+				RelativePath="..\..\Win32++\src\tab.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\toolbar.h">
+				RelativePath="..\..\Win32++\src\toolbar.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\treeview.h">
+				RelativePath="..\..\Win32++\src\treeview.h">
 			</File>
 			<File
-				RelativePath="..\Win32++\wincore.h">
+				RelativePath="..\..\Win32++\src\wincore.h">
 			</File>
 		</Filter>
 	</Files>

@@ -16,9 +16,11 @@
 				<Compiler>
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -35,9 +37,11 @@
 				<Compiler>
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -62,9 +66,11 @@
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -92,9 +98,11 @@
 					<Add option="/DNDEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="ComCtl32" />
@@ -112,14 +120,17 @@
 				<Option object_output="GNU\Debug" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-g3" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D_WIN32_IE=0x0400" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Win32++\include" />
+				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
 				</Linker>
@@ -130,12 +141,15 @@
 				<Option object_output="GNU\Release" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-D_WIN32_IE=0x0400" />
 					<Add option="-DNDEBUG" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Win32++\include" />
+				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
 				</Linker>
@@ -148,7 +162,6 @@
 		<Unit filename="..\src\FrameApp.h" />
 		<Unit filename="..\src\Mainfrm.cpp" />
 		<Unit filename="..\src\Mainfrm.h" />
-		<Unit filename="..\src\Readme.txt" />
 		<Unit filename="..\src\Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -156,14 +169,6 @@
 		<Unit filename="..\src\View.h" />
 		<Unit filename="..\src\main.cpp" />
 		<Unit filename="..\src\resource.h" />
-		<Unit filename="..\..\Win32++\default_resource.h" />
-		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\frame.h" />
-		<Unit filename="..\..\Win32++\gdi.h" />
-		<Unit filename="..\..\Win32++\rebar.h" />
-		<Unit filename="..\..\Win32++\statusbar.h" />
-		<Unit filename="..\..\Win32++\toolbar.h" />
-		<Unit filename="..\..\Win32++\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

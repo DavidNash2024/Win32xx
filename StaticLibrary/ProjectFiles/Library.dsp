@@ -50,7 +50,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\lib\VS6_Release\Win32xx.lib"
+# ADD LIB32 /nologo /out:"../../Win32++/lib/VS6_Release/Win32xx.lib"
 
 !ELSEIF  "$(CFG)" == "Library - Win32 Debug"
 
@@ -74,7 +74,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\lib\VS6_Debug\Win32xx.lib"
+# ADD LIB32 /nologo /out:"../../Win32++/lib\VS6_Debug/Win32xx.lib"
 
 !ENDIF 
 
@@ -87,63 +87,63 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE="..\Win32++\dialog.cpp"
+SOURCE="..\..\Win32++\src\dialog.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\docking.cpp"
+SOURCE="..\..\Win32++\src\docking.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\frame.cpp"
+SOURCE="..\..\Win32++\src\frame.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\gdi.cpp"
+SOURCE="..\..\Win32++\src\gdi.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\listview.cpp"
+SOURCE="..\..\Win32++\src\listview.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\mdi.cpp"
+SOURCE="..\..\Win32++\src\mdi.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\propertysheet.cpp"
+SOURCE="..\..\Win32++\src\propertysheet.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\rebar.cpp"
+SOURCE="..\..\Win32++\src\rebar.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\socket.cpp"
+SOURCE="..\..\Win32++\src\socket.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\splitter.cpp"
+SOURCE="..\..\Win32++\src\splitter.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\statusbar.cpp"
+SOURCE="..\..\Win32++\src\statusbar.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\tab.cpp"
+SOURCE="..\..\Win32++\src\tab.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\toolbar.cpp"
+SOURCE="..\..\Win32++\src\toolbar.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\treeview.cpp"
+SOURCE="..\..\Win32++\src\treeview.cpp"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\wincore.cpp"
+SOURCE="..\..\Win32++\src\wincore.cpp"
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -151,63 +151,63 @@ SOURCE="..\Win32++\wincore.cpp"
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE="..\Win32++\dialog.h"
+SOURCE="..\..\Win32++\src\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\docking.h"
+SOURCE="..\..\Win32++\src\docking.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\frame.h"
+SOURCE="..\..\Win32++\src\frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\gdi.h"
+SOURCE="..\..\Win32++\src\gdi.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\listview.h"
+SOURCE="..\..\Win32++\src\listview.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\mdi.h"
+SOURCE="..\..\Win32++\src\mdi.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\propertysheet.h"
+SOURCE="..\..\Win32++\src\propertysheet.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\rebar.h"
+SOURCE="..\..\Win32++\src\rebar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\socket.h"
+SOURCE="..\..\Win32++\src\socket.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\splitter.h"
+SOURCE="..\..\Win32++\src\splitter.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\statusbar.h"
+SOURCE="..\..\Win32++\src\statusbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\tab.h"
+SOURCE="..\..\Win32++\src\tab.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\toolbar.h"
+SOURCE="..\..\Win32++\src\toolbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\treeview.h"
+SOURCE="..\..\Win32++\src\treeview.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\wincore.h"
+SOURCE="..\..\Win32++\src\wincore.h"
 # End Source File
 # End Group
 # End Target
