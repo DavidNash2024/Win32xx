@@ -1,0 +1,1888 @@
+-------------- Build: Debug Borland in Dialog ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\DialogApp.cpp
+..\src\DialogApp.cpp:
+Linking executable: Borland\Debug\Dialog.exe
+Output size is 122.50 KB
+-------------- Build: Release Borland in Dialog ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\DialogApp.cpp
+..\src\DialogApp.cpp:
+Linking executable: Borland\Release\Dialog.exe
+Output size is 121.50 KB
+-------------- Build: Debug Microsoft Visual C++ in Dialog ---------------
+MyDialog.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Debug\Dialog.exe
+Output size is 188.00 KB
+-------------- Build: Release Microsoft Visual C++ in Dialog ---------------
+MyDialog.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Release\Dialog.exe
+Output size is 84.00 KB
+-------------- Build: Debug MinGW GNU compiler in Dialog ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Compiling: ..\src\DialogApp.cpp
+Linking executable: GNU\Debug\Dialog.exe
+Output size is 1.34 MB
+-------------- Build: Release MinGW GNU compiler in Dialog ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Compiling: ..\src\DialogApp.cpp
+Linking executable: GNU\Release\Dialog.exe
+Output size is 219.79 KB
+Process terminated with status 0 (0 minutes, 14 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in DialogBarsDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Progressbar.cpp
+..\src\Progressbar.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Scrollbar.cpp
+..\src\Scrollbar.cpp:
+Compiling: ..\src\Slider.cpp
+..\src\Slider.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\DialogApp.cpp
+..\src\DialogApp.cpp:
+Linking executable: Borland\Debug\DialogBarsDemo.exe
+Output size is 124.50 KB
+-------------- Build: Release Borland in DialogBarsDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Progressbar.cpp
+..\src\Progressbar.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Scrollbar.cpp
+..\src\Scrollbar.cpp:
+Compiling: ..\src\Slider.cpp
+..\src\Slider.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\DialogApp.cpp
+..\src\DialogApp.cpp:
+Linking executable: Borland\Release\DialogBarsDemo.exe
+Output size is 124.50 KB
+-------------- Build: Debug Microsoft Visual C++ in DialogBarsDemo ---------------
+MyDialog.cpp
+Progressbar.cpp
+Scrollbar.cpp
+Slider.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Debug\DialogBarsDemo.exe
+Output size is 188.00 KB
+-------------- Build: Release Microsoft Visual C++ in DialogBarsDemo ---------------
+MyDialog.cpp
+Progressbar.cpp
+Scrollbar.cpp
+Slider.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Release\DialogBarsDemo.exe
+Output size is 84.00 KB
+-------------- Build: Debug MinGW GNU compiler in DialogBarsDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Progressbar.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Scrollbar.cpp
+Compiling: ..\src\Slider.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\DialogApp.cpp
+Linking executable: GNU\Debug\DialogBarsDemo.exe
+Output size is 2.29 MB
+-------------- Build: Release MinGW GNU compiler in DialogBarsDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Progressbar.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Scrollbar.cpp
+Compiling: ..\src\Slider.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\DialogApp.cpp
+Linking executable: GNU\Release\DialogBarsDemo.exe
+Output size is 239.73 KB
+Process terminated with status 0 (0 minutes, 17 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in DialogDemo ---------------
+Compiling: ..\src\DialogDemoApp.cpp
+..\src\DialogDemoApp.cpp:
+Compiling: ..\src\Hyperlink.cpp
+..\src\Hyperlink.cpp:
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Button.cpp
+..\src\Button.cpp:
+Linking executable: Borland\Debug\DialogDemo.exe
+Output size is 115.50 KB
+-------------- Build: Release Borland in DialogDemo ---------------
+Compiling: ..\src\DialogDemoApp.cpp
+..\src\DialogDemoApp.cpp:
+Compiling: ..\src\Hyperlink.cpp
+..\src\Hyperlink.cpp:
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Button.cpp
+..\src\Button.cpp:
+Linking executable: Borland\Release\DialogDemo.exe
+Output size is 115.50 KB
+-------------- Build: Debug Microsoft Visual C++ in DialogDemo ---------------
+DialogDemoApp.cpp
+Hyperlink.cpp
+MyDialog.cpp
+main.cpp
+Button.cpp
+Linking executable: Microsoft\Debug\DialogDemo.exe
+Output size is 180.00 KB
+-------------- Build: Release Microsoft Visual C++ in DialogDemo ---------------
+DialogDemoApp.cpp
+Hyperlink.cpp
+MyDialog.cpp
+main.cpp
+Button.cpp
+Linking executable: Microsoft\Release\DialogDemo.exe
+Output size is 76.00 KB
+-------------- Build: Debug MinGW GNU compiler in DialogDemo ---------------
+Compiling: ..\src\DialogDemoApp.cpp
+Compiling: ..\src\Hyperlink.cpp
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Button.cpp
+Linking executable: GNU\Debug\DialogDemo.exe
+Output size is 1.46 MB
+-------------- Build: Release MinGW GNU compiler in DialogDemo ---------------
+Compiling: ..\src\DialogDemoApp.cpp
+Compiling: ..\src\Hyperlink.cpp
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Button.cpp
+Linking executable: GNU\Release\DialogDemo.exe
+Output size is 231.76 KB
+Process terminated with status 0 (0 minutes, 14 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in DialogTabDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\DialogApp.cpp
+..\src\DialogApp.cpp:
+Linking executable: Borland\Debug\DialogTabDemo.exe
+Output size is 174.50 KB
+-------------- Build: Release Borland in DialogTabDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\DialogApp.cpp
+..\src\DialogApp.cpp:
+Linking executable: Borland\Release\DialogTabDemo.exe
+Output size is 172.00 KB
+-------------- Build: Debug Microsoft Visual C++ in DialogTabDemo ---------------
+MyDialog.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Debug\DialogTabDemo.exe
+Output size is 236.00 KB
+-------------- Build: Release Microsoft Visual C++ in DialogTabDemo ---------------
+MyDialog.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Release\DialogTabDemo.exe
+Output size is 108.00 KB
+-------------- Build: Debug MinGW GNU compiler in DialogTabDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Compiling: ..\src\DialogApp.cpp
+Linking executable: GNU\Debug\DialogTabDemo.exe
+Output size is 2.57 MB
+-------------- Build: Release MinGW GNU compiler in DialogTabDemo ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Compiling: ..\src\DialogApp.cpp
+Linking executable: GNU\Release\DialogTabDemo.exe
+Output size is 373.96 KB
+Process terminated with status 0 (0 minutes, 12 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in ContainerDocking ---------------
+Compiling: ..\src\Classes.cpp
+..\src\Classes.cpp:
+Compiling: ..\src\ComboBoxEx.cpp
+..\src\ComboBoxEx.cpp:
+Compiling: ..\src\ContainerApp.cpp
+..\src\ContainerApp.cpp:
+Compiling: ..\src\Files.cpp
+..\src\Files.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Output.cpp
+..\src\Output.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Simple.cpp
+..\src\Simple.cpp:
+Compiling: ..\src\Text.cpp
+..\src\Text.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Linking executable: Borland\Debug\ContainerDocking.exe
+Output size is 572.00 KB
+-------------- Build: Release Borland in ContainerDocking ---------------
+Compiling: ..\src\Classes.cpp
+..\src\Classes.cpp:
+Compiling: ..\src\ComboBoxEx.cpp
+..\src\ComboBoxEx.cpp:
+Compiling: ..\src\ContainerApp.cpp
+..\src\ContainerApp.cpp:
+Compiling: ..\src\Files.cpp
+..\src\Files.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Output.cpp
+..\src\Output.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Simple.cpp
+..\src\Simple.cpp:
+Compiling: ..\src\Text.cpp
+..\src\Text.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Linking executable: Borland\Release\ContainerDocking.exe
+Output size is 553.00 KB
+-------------- Build: Debug Microsoft Visual C++ in ContainerDocking ---------------
+Classes.cpp
+ComboBoxEx.cpp
+ContainerApp.cpp
+Files.cpp
+Mainfrm.cpp
+Output.cpp
+Simple.cpp
+Text.cpp
+main.cpp
+Linking executable: Microsoft\Debug\ContainerDocking.exe
+Output size is 512.00 KB
+-------------- Build: Release Microsoft Visual C++ in ContainerDocking ---------------
+Classes.cpp
+ComboBoxEx.cpp
+ContainerApp.cpp
+Files.cpp
+Mainfrm.cpp
+Output.cpp
+Simple.cpp
+Text.cpp
+main.cpp
+Linking executable: Microsoft\Release\ContainerDocking.exe
+Output size is 284.00 KB
+-------------- Build: Debug MinGW GNU compiler in ContainerDocking ---------------
+Compiling: ..\src\Classes.cpp
+Compiling: ..\src\ComboBoxEx.cpp
+Compiling: ..\src\ContainerApp.cpp
+Compiling: ..\src\Files.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Output.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Simple.cpp
+Compiling: ..\src\Text.cpp
+Compiling: ..\src\main.cpp
+Linking executable: GNU\Debug\ContainerDocking.exe
+Output size is 5.20 MB
+-------------- Build: Release MinGW GNU compiler in ContainerDocking ---------------
+Compiling: ..\src\Classes.cpp
+Compiling: ..\src\ComboBoxEx.cpp
+Compiling: ..\src\ContainerApp.cpp
+Compiling: ..\src\Files.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Output.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Simple.cpp
+Compiling: ..\src\Text.cpp
+Compiling: ..\src\main.cpp
+Linking executable: GNU\Release\ContainerDocking.exe
+Output size is 1007.81 KB
+Process terminated with status 0 (1 minutes, 3 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Docking ---------------
+Compiling: ..\src\DockingApp.cpp
+..\src\DockingApp.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Views.cpp
+..\src\Views.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Dockers.cpp
+..\src\Dockers.cpp:
+Linking executable: Borland\Debug\Docking.exe
+Output size is 435.00 KB
+-------------- Build: Release Borland in Docking ---------------
+Compiling: ..\src\DockingApp.cpp
+..\src\DockingApp.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Views.cpp
+..\src\Views.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Dockers.cpp
+..\src\Dockers.cpp:
+Linking executable: Borland\Release\Docking.exe
+Output size is 425.50 KB
+-------------- Build: Debug Microsoft Visual C++ in Docking ---------------
+DockingApp.cpp
+Mainfrm.cpp
+Views.cpp
+main.cpp
+Dockers.cpp
+Linking executable: Microsoft\Debug\Docking.exe
+Output size is 460.00 KB
+-------------- Build: Release Microsoft Visual C++ in Docking ---------------
+DockingApp.cpp
+Mainfrm.cpp
+Views.cpp
+main.cpp
+Dockers.cpp
+Linking executable: Microsoft\Release\Docking.exe
+Output size is 248.00 KB
+-------------- Build: Debug MinGW GNU compiler in Docking ---------------
+Compiling: ..\src\DockingApp.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Views.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Dockers.cpp
+Linking executable: GNU\Debug\Docking.exe
+Output size is 4.23 MB
+-------------- Build: Release MinGW GNU compiler in Docking ---------------
+Compiling: ..\src\DockingApp.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Views.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Dockers.cpp
+Linking executable: GNU\Release\Docking.exe
+Output size is 874.34 KB
+Process terminated with status 0 (0 minutes, 36 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in TabbedMDI ---------------
+Compiling: ..\src\Classes.cpp
+..\src\Classes.cpp:
+Compiling: ..\src\ComboBoxEx.cpp
+..\src\ComboBoxEx.cpp:
+Compiling: ..\src\DockTabbedMDI.cpp
+..\src\DockTabbedMDI.cpp:
+Compiling: ..\src\Files.cpp
+..\src\Files.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\MyTabbedMDI.cpp
+..\src\MyTabbedMDI.cpp:
+Compiling: ..\src\Output.cpp
+..\src\Output.cpp:
+Compiling: ..\src\Rect.cpp
+..\src\Rect.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Simple.cpp
+..\src\Simple.cpp:
+Compiling: ..\src\TabbedMDIApp.cpp
+..\src\TabbedMDIApp.cpp:
+Compiling: ..\src\Text.cpp
+..\src\Text.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Linking executable: Borland\Debug\TabbedMDI.exe
+Output size is 597.50 KB
+-------------- Build: Release Borland in TabbedMDI ---------------
+Compiling: ..\src\Classes.cpp
+..\src\Classes.cpp:
+Compiling: ..\src\ComboBoxEx.cpp
+..\src\ComboBoxEx.cpp:
+Compiling: ..\src\DockTabbedMDI.cpp
+..\src\DockTabbedMDI.cpp:
+Compiling: ..\src\Files.cpp
+..\src\Files.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\MyTabbedMDI.cpp
+..\src\MyTabbedMDI.cpp:
+Compiling: ..\src\Output.cpp
+..\src\Output.cpp:
+Compiling: ..\src\Rect.cpp
+..\src\Rect.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\Simple.cpp
+..\src\Simple.cpp:
+Compiling: ..\src\TabbedMDIApp.cpp
+..\src\TabbedMDIApp.cpp:
+Compiling: ..\src\Text.cpp
+..\src\Text.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Linking executable: Borland\Release\TabbedMDI.exe
+Output size is 575.50 KB
+-------------- Build: Debug Microsoft Visual C++ in TabbedMDI ---------------
+Classes.cpp
+ComboBoxEx.cpp
+DockTabbedMDI.cpp
+Files.cpp
+Mainfrm.cpp
+MyTabbedMDI.cpp
+Output.cpp
+Rect.cpp
+Simple.cpp
+TabbedMDIApp.cpp
+Text.cpp
+main.cpp
+Linking executable: Microsoft\Debug\TabbedMDI.exe
+Output size is 536.00 KB
+-------------- Build: Release Microsoft Visual C++ in TabbedMDI ---------------
+Classes.cpp
+ComboBoxEx.cpp
+DockTabbedMDI.cpp
+Files.cpp
+Mainfrm.cpp
+MyTabbedMDI.cpp
+Output.cpp
+Rect.cpp
+Simple.cpp
+TabbedMDIApp.cpp
+Text.cpp
+main.cpp
+Linking executable: Microsoft\Release\TabbedMDI.exe
+Output size is 292.00 KB
+-------------- Build: Debug MinGW GNU compiler in TabbedMDI ---------------
+Compiling: ..\src\Classes.cpp
+Compiling: ..\src\ComboBoxEx.cpp
+Compiling: ..\src\DockTabbedMDI.cpp
+Compiling: ..\src\Files.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\MyTabbedMDI.cpp
+Compiling: ..\src\Output.cpp
+Compiling: ..\src\Rect.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Simple.cpp
+Compiling: ..\src\TabbedMDIApp.cpp
+Compiling: ..\src\Text.cpp
+Compiling: ..\src\main.cpp
+Linking executable: GNU\Debug\TabbedMDI.exe
+Output size is 6.14 MB
+-------------- Build: Release MinGW GNU compiler in TabbedMDI ---------------
+Compiling: ..\src\Classes.cpp
+Compiling: ..\src\ComboBoxEx.cpp
+Compiling: ..\src\DockTabbedMDI.cpp
+Compiling: ..\src\Files.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\MyTabbedMDI.cpp
+Compiling: ..\src\Output.cpp
+Compiling: ..\src\Rect.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\Simple.cpp
+Compiling: ..\src\TabbedMDIApp.cpp
+Compiling: ..\src\Text.cpp
+Compiling: ..\src\main.cpp
+Linking executable: GNU\Release\TabbedMDI.exe
+Output size is 1.06 MB
+Process terminated with status 0 (1 minutes, 17 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in DockViewForm ---------------
+Compiling: ..\src\FormDoc.cpp
+..\src\FormDoc.cpp:
+Compiling: ..\src\FormView.cpp
+..\src\FormView.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\StdAfx.cpp
+..\src\StdAfx.cpp:
+Compiling: ..\src\FormApp.cpp
+..\src\FormApp.cpp:
+Linking executable: Borland\Debug\DocViewForm.exe
+Output size is 279.00 KB
+-------------- Build: Release Borland in DockViewForm ---------------
+Compiling: ..\src\FormDoc.cpp
+..\src\FormDoc.cpp:
+Compiling: ..\src\FormView.cpp
+..\src\FormView.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\StdAfx.cpp
+..\src\StdAfx.cpp:
+Compiling: ..\src\FormApp.cpp
+..\src\FormApp.cpp:
+Linking executable: Borland\Release\DocViewForm.exe
+Output size is 275.00 KB
+-------------- Build: Debug Microsoft Visual C++ in DockViewForm ---------------
+FormDoc.cpp
+FormView.cpp
+Mainfrm.cpp
+StdAfx.cpp
+FormApp.cpp
+Linking executable: Microsoft\Debug\DocViewForm.exe
+Output size is 380.00 KB
+-------------- Build: Release Microsoft Visual C++ in DockViewForm ---------------
+FormDoc.cpp
+FormView.cpp
+Mainfrm.cpp
+StdAfx.cpp
+FormApp.cpp
+Linking executable: Microsoft\Release\DocViewForm.exe
+Output size is 156.00 KB
+-------------- Build: Debug MinGW GNU compiler in DockViewForm ---------------
+Compiling: ..\src\FormDoc.cpp
+Compiling: ..\src\FormView.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\StdAfx.cpp
+Compiling: ..\src\FormApp.cpp
+Linking executable: GNU\Debug\DocViewForm.exe
+Output size is 4.06 MB
+-------------- Build: Release MinGW GNU compiler in DockViewForm ---------------
+Compiling: ..\src\FormDoc.cpp
+Compiling: ..\src\FormView.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\StdAfx.cpp
+Compiling: ..\src\FormApp.cpp
+Linking executable: GNU\Release\DocViewForm.exe
+Output size is 922.23 KB
+Process terminated with status 0 (0 minutes, 36 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Explorer ---------------
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\MyListView.cpp
+..\src\MyListView.cpp:
+Compiling: ..\src\MyTreeView.cpp
+..\src\MyTreeView.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ShellWrapper.cpp
+..\src\ShellWrapper.cpp:
+Compiling: ..\src\SplitterPanes.cpp
+..\src\SplitterPanes.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\ExplorerApp.cpp
+..\src\ExplorerApp.cpp:
+Linking executable: Borland\Debug\Explorer.exe
+Output size is 444.00 KB
+-------------- Build: Release Borland in Explorer ---------------
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\MyListView.cpp
+..\src\MyListView.cpp:
+Compiling: ..\src\MyTreeView.cpp
+..\src\MyTreeView.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ShellWrapper.cpp
+..\src\ShellWrapper.cpp:
+Compiling: ..\src\SplitterPanes.cpp
+..\src\SplitterPanes.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\ExplorerApp.cpp
+..\src\ExplorerApp.cpp:
+Linking executable: Borland\Release\Explorer.exe
+Output size is 433.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Explorer ---------------
+Mainfrm.cpp
+MyListView.cpp
+MyTreeView.cpp
+ShellWrapper.cpp
+SplitterPanes.cpp
+main.cpp
+ExplorerApp.cpp
+Linking executable: Microsoft\Debug\Explorer.exe
+Output size is 468.00 KB
+-------------- Build: Release Microsoft Visual C++ in Explorer ---------------
+Mainfrm.cpp
+MyListView.cpp
+MyTreeView.cpp
+ShellWrapper.cpp
+SplitterPanes.cpp
+main.cpp
+ExplorerApp.cpp
+Linking executable: Microsoft\Release\Explorer.exe
+Output size is 236.00 KB
+-------------- Build: Debug MinGW GNU compiler in Explorer ---------------
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\MyListView.cpp
+Compiling: ..\src\MyTreeView.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\ShellWrapper.cpp
+Compiling: ..\src\SplitterPanes.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\ExplorerApp.cpp
+Linking executable: GNU\Debug\Explorer.exe
+Output size is 4.50 MB
+-------------- Build: Release MinGW GNU compiler in Explorer ---------------
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\MyListView.cpp
+Compiling: ..\src\MyTreeView.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\ShellWrapper.cpp
+Compiling: ..\src\SplitterPanes.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\ExplorerApp.cpp
+Linking executable: GNU\Release\Explorer.exe
+Output size is 962.50 KB
+Process terminated with status 0 (0 minutes, 46 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in FastGDI ---------------
+Compiling: ..\src\FastGDIApp.cpp
+..\src\FastGDIApp.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ColourDialog.cpp
+..\src\ColourDialog.cpp:
+Linking executable: Borland\Debug\FastGDI.exe
+Output size is 300.50 KB
+-------------- Build: Release Borland in FastGDI ---------------
+Compiling: ..\src\FastGDIApp.cpp
+..\src\FastGDIApp.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ColourDialog.cpp
+..\src\ColourDialog.cpp:
+Linking executable: Borland\Release\FastGDI.exe
+Output size is 295.00 KB
+-------------- Build: Debug Microsoft Visual C++ in FastGDI ---------------
+FastGDIApp.cpp
+Mainfrm.cpp
+View.cpp
+main.cpp
+ColourDialog.cpp
+Linking executable: Microsoft\Debug\FastGDI.exe
+Output size is 340.00 KB
+-------------- Build: Release Microsoft Visual C++ in FastGDI ---------------
+FastGDIApp.cpp
+Mainfrm.cpp
+View.cpp
+main.cpp
+ColourDialog.cpp
+Linking executable: Microsoft\Release\FastGDI.exe
+Output size is 164.00 KB
+-------------- Build: Debug MinGW GNU compiler in FastGDI ---------------
+Compiling: ..\src\FastGDIApp.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\resource.rc
+Compiling: ..\src\ColourDialog.cpp
+Linking executable: GNU\Debug\FastGDI.exe
+Output size is 2.52 MB
+-------------- Build: Release MinGW GNU compiler in FastGDI ---------------
+Compiling: ..\src\FastGDIApp.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\resource.rc
+Compiling: ..\src\ColourDialog.cpp
+Linking executable: GNU\Release\FastGDI.exe
+Output size is 555.87 KB
+Process terminated with status 0 (0 minutes, 23 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Frame ---------------
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\FrameApp.cpp
+..\src\FrameApp.cpp:
+Linking executable: Borland\Debug\Frame.exe
+Output size is 280.00 KB
+-------------- Build: Release Borland in Frame ---------------
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\FrameApp.cpp
+..\src\FrameApp.cpp:
+Linking executable: Borland\Release\Frame.exe
+Output size is 274.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Frame ---------------
+Mainfrm.cpp
+View.cpp
+main.cpp
+FrameApp.cpp
+Linking executable: Microsoft\Debug\Frame.exe
+Output size is 296.00 KB
+-------------- Build: Release Microsoft Visual C++ in Frame ---------------
+Mainfrm.cpp
+View.cpp
+main.cpp
+FrameApp.cpp
+Linking executable: Microsoft\Release\Frame.exe
+Output size is 144.00 KB
+-------------- Build: Debug MinGW GNU compiler in Frame ---------------
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\FrameApp.cpp
+Linking executable: GNU\Debug\Frame.exe
+Output size is 2.22 MB
+-------------- Build: Release MinGW GNU compiler in Frame ---------------
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\FrameApp.cpp
+Linking executable: GNU\Release\Frame.exe
+Output size is 501.76 KB
+Process terminated with status 0 (0 minutes, 18 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in MDIDemo ---------------
+Compiling: ..\src\MDIChildListView.cpp
+..\src\MDIChildListView.cpp:
+Compiling: ..\src\MDIChildMax.cpp
+..\src\MDIChildMax.cpp:
+Compiling: ..\src\MDIChildRect.cpp
+..\src\MDIChildRect.cpp:
+Compiling: ..\src\MDIChildSimple.cpp
+..\src\MDIChildSimple.cpp:
+Compiling: ..\src\MDIChildText.cpp
+..\src\MDIChildText.cpp:
+Compiling: ..\src\MDIChildTreeView.cpp
+..\src\MDIChildTreeView.cpp:
+Compiling: ..\src\MDIDemoApp.cpp
+..\src\MDIDemoApp.cpp:
+Compiling: ..\src\MainMDIfrm.cpp
+..\src\MainMDIfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Linking executable: Borland\Debug\MDIDemo.exe
+Output size is 356.50 KB
+-------------- Build: Release Borland in MDIDemo ---------------
+Compiling: ..\src\MDIChildListView.cpp
+..\src\MDIChildListView.cpp:
+Compiling: ..\src\MDIChildMax.cpp
+..\src\MDIChildMax.cpp:
+Compiling: ..\src\MDIChildRect.cpp
+..\src\MDIChildRect.cpp:
+Compiling: ..\src\MDIChildSimple.cpp
+..\src\MDIChildSimple.cpp:
+Compiling: ..\src\MDIChildText.cpp
+..\src\MDIChildText.cpp:
+Compiling: ..\src\MDIChildTreeView.cpp
+..\src\MDIChildTreeView.cpp:
+Compiling: ..\src\MDIDemoApp.cpp
+..\src\MDIDemoApp.cpp:
+Compiling: ..\src\MainMDIfrm.cpp
+..\src\MainMDIfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Linking executable: Borland\Release\MDIDemo.exe
+Output size is 352.00 KB
+-------------- Build: Debug Microsoft Visual C++ in MDIDemo ---------------
+MDIChildListView.cpp
+MDIChildMax.cpp
+MDIChildRect.cpp
+MDIChildSimple.cpp
+MDIChildText.cpp
+MDIChildTreeView.cpp
+MDIDemoApp.cpp
+MainMDIfrm.cpp
+main.cpp
+Linking executable: Microsoft\Debug\MDIDemo.exe
+Output size is 376.00 KB
+-------------- Build: Release Microsoft Visual C++ in MDIDemo ---------------
+MDIChildListView.cpp
+MDIChildMax.cpp
+MDIChildRect.cpp
+MDIChildSimple.cpp
+MDIChildText.cpp
+MDIChildTreeView.cpp
+MDIDemoApp.cpp
+MainMDIfrm.cpp
+main.cpp
+Linking executable: Microsoft\Release\MDIDemo.exe
+Output size is 200.00 KB
+-------------- Build: Debug MinGW GNU compiler in MDIDemo ---------------
+Compiling: ..\src\MDIChildListView.cpp
+Compiling: ..\src\MDIChildMax.cpp
+Compiling: ..\src\MDIChildRect.cpp
+Compiling: ..\src\MDIChildSimple.cpp
+Compiling: ..\src\MDIChildText.cpp
+Compiling: ..\src\MDIChildTreeView.cpp
+Compiling: ..\src\MDIDemoApp.cpp
+Compiling: ..\src\MainMDIfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Linking executable: GNU\Debug\MDIDemo.exe
+Output size is 3.79 MB
+-------------- Build: Release MinGW GNU compiler in MDIDemo ---------------
+Compiling: ..\src\MDIChildListView.cpp
+Compiling: ..\src\MDIChildMax.cpp
+Compiling: ..\src\MDIChildRect.cpp
+Compiling: ..\src\MDIChildSimple.cpp
+Compiling: ..\src\MDIChildText.cpp
+Compiling: ..\src\MDIChildTreeView.cpp
+Compiling: ..\src\MDIDemoApp.cpp
+Compiling: ..\src\MainMDIfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\main.cpp
+Linking executable: GNU\Release\MDIDemo.exe
+Output size is 722.76 KB
+Process terminated with status 0 (0 minutes, 45 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in MDIFrame ---------------
+Compiling: ..\src\MainMDIfrm.cpp
+..\src\MainMDIfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\SimpleMDIChild.cpp
+..\src\SimpleMDIChild.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\MDIFrameApp.cpp
+..\src\MDIFrameApp.cpp:
+Linking executable: Borland\Debug\MDIFrame.exe
+Output size is 298.00 KB
+-------------- Build: Release Borland in MDIFrame ---------------
+Compiling: ..\src\MainMDIfrm.cpp
+..\src\MainMDIfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\SimpleMDIChild.cpp
+..\src\SimpleMDIChild.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\MDIFrameApp.cpp
+..\src\MDIFrameApp.cpp:
+Linking executable: Borland\Release\MDIFrame.exe
+Output size is 292.50 KB
+-------------- Build: Debug Microsoft Visual C++ in MDIFrame ---------------
+MainMDIfrm.cpp
+SimpleMDIChild.cpp
+main.cpp
+MDIFrameApp.cpp
+Linking executable: Microsoft\Debug\MDIFrame.exe
+Output size is 320.00 KB
+-------------- Build: Release Microsoft Visual C++ in MDIFrame ---------------
+MainMDIfrm.cpp
+SimpleMDIChild.cpp
+main.cpp
+MDIFrameApp.cpp
+Linking executable: Microsoft\Release\MDIFrame.exe
+Output size is 152.00 KB
+-------------- Build: Debug MinGW GNU compiler in MDIFrame ---------------
+Compiling: ..\src\MainMDIfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\SimpleMDIChild.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\MDIFrameApp.cpp
+Linking executable: GNU\Debug\MDIFrame.exe
+Output size is 2.52 MB
+-------------- Build: Release MinGW GNU compiler in MDIFrame ---------------
+Compiling: ..\src\MainMDIfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\SimpleMDIChild.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\MDIFrameApp.cpp
+Linking executable: GNU\Release\MDIFrame.exe
+Output size is 559.06 KB
+Process terminated with status 0 (0 minutes, 22 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Client ---------------
+Compiling: ClientDialog.cpp
+ClientDialog.cpp:
+Compiling: DialogApp.cpp
+DialogApp.cpp:
+Compiling: Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: main.cpp
+main.cpp:
+Compiling: Client.cpp
+Client.cpp:
+Linking executable: Borland\Debug\Client.exe
+Output size is 121.50 KB
+-------------- Build: Release Borland in Client ---------------
+Compiling: ClientDialog.cpp
+ClientDialog.cpp:
+Compiling: DialogApp.cpp
+DialogApp.cpp:
+Compiling: Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: main.cpp
+main.cpp:
+Compiling: Client.cpp
+Client.cpp:
+Linking executable: Borland\Release\Client.exe
+Output size is 121.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Client ---------------
+ClientDialog.cpp
+DialogApp.cpp
+main.cpp
+Client.cpp
+Linking executable: Microsoft\Debug\Client.exe
+Output size is 240.00 KB
+-------------- Build: Release Microsoft Visual C++ in Client ---------------
+ClientDialog.cpp
+DialogApp.cpp
+main.cpp
+Client.cpp
+Linking executable: Microsoft\Release\Client.exe
+Output size is 80.00 KB
+-------------- Build: Debug MinGW GNU compiler in Client ---------------
+Compiling: ClientDialog.cpp
+Compiling: DialogApp.cpp
+Compiling: Resource.rc
+Compiling: main.cpp
+Compiling: Client.cpp
+Linking executable: GNU\Debug\Client.exe
+Output size is 2.24 MB
+-------------- Build: Release MinGW GNU compiler in Client ---------------
+Compiling: ClientDialog.cpp
+Compiling: DialogApp.cpp
+Compiling: Resource.rc
+Compiling: main.cpp
+Compiling: Client.cpp
+Linking executable: GNU\Release\Client.exe
+Output size is 268.41 KB
+Process terminated with status 0 (0 minutes, 13 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Server ---------------
+Compiling: Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: Server.cpp
+Server.cpp:
+Compiling: SvrDialog.cpp
+SvrDialog.cpp:
+Compiling: main.cpp
+main.cpp:
+Compiling: DialogApp.cpp
+DialogApp.cpp:
+Linking executable: Borland\Debug\Server.exe
+Output size is 134.00 KB
+-------------- Build: Release Borland in Server ---------------
+Compiling: Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: Server.cpp
+Server.cpp:
+Compiling: SvrDialog.cpp
+SvrDialog.cpp:
+Compiling: main.cpp
+main.cpp:
+Compiling: DialogApp.cpp
+DialogApp.cpp:
+Linking executable: Borland\Release\Server.exe
+Output size is 133.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Server ---------------
+Server.cpp
+SvrDialog.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Debug\Server.exe
+Output size is 252.00 KB
+-------------- Build: Release Microsoft Visual C++ in Server ---------------
+Server.cpp
+SvrDialog.cpp
+main.cpp
+DialogApp.cpp
+Linking executable: Microsoft\Release\Server.exe
+Output size is 80.00 KB
+-------------- Build: Debug MinGW GNU compiler in Server ---------------
+Compiling: Resource.rc
+Compiling: Server.cpp
+Compiling: SvrDialog.cpp
+Compiling: main.cpp
+Compiling: DialogApp.cpp
+Linking executable: GNU\Debug\Server.exe
+Output size is 2.28 MB
+-------------- Build: Release MinGW GNU compiler in Server ---------------
+Compiling: Resource.rc
+Compiling: Server.cpp
+Compiling: SvrDialog.cpp
+Compiling: main.cpp
+Compiling: DialogApp.cpp
+Linking executable: GNU\Release\Server.exe
+Output size is 264.88 KB
+Process terminated with status 0 (0 minutes, 13 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Notepad ---------------
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\RichView.cpp
+..\src\RichView.cpp:
+Compiling: ..\src\TextApp.cpp
+..\src\TextApp.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Debug\Notepad.exe
+Output size is 267.00 KB
+-------------- Build: Release Borland in Notepad ---------------
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\RichView.cpp
+..\src\RichView.cpp:
+Compiling: ..\src\TextApp.cpp
+..\src\TextApp.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Release\Notepad.exe
+Output size is 263.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Notepad ---------------
+RichView.cpp
+TextApp.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Debug\Notepad.exe
+Output size is 308.00 KB
+-------------- Build: Release Microsoft Visual C++ in Notepad ---------------
+RichView.cpp
+TextApp.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Release\Notepad.exe
+Output size is 148.00 KB
+-------------- Build: Debug MinGW GNU compiler in Notepad ---------------
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\RichView.cpp
+Compiling: ..\src\TextApp.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Debug\Notepad.exe
+Output size is 2.40 MB
+-------------- Build: Release MinGW GNU compiler in Notepad ---------------
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\RichView.cpp
+Compiling: ..\src\TextApp.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Release\Notepad.exe
+Output size is 524.60 KB
+Process terminated with status 0 (0 minutes, 20 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Performance ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\PerfApp.cpp
+..\src\PerfApp.cpp:
+Compiling: ..\src\Performance.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\TestWnd.cpp
+..\src\TestWnd.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\MainWnd.cpp
+..\src\MainWnd.cpp:
+Linking executable: Borland\Debug\Performance.exe
+Output size is 116.00 KB
+-------------- Build: Release Borland in Performance ---------------
+Compiling: ..\src\MyDialog.cpp
+..\src\MyDialog.cpp:
+Compiling: ..\src\PerfApp.cpp
+..\src\PerfApp.cpp:
+Compiling: ..\src\Performance.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\TestWnd.cpp
+..\src\TestWnd.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\MainWnd.cpp
+..\src\MainWnd.cpp:
+Linking executable: Borland\Release\Performance.exe
+Output size is 115.50 KB
+-------------- Build: Debug Microsoft Visual C++ in Performance ---------------
+MyDialog.cpp
+PerfApp.cpp
+TestWnd.cpp
+main.cpp
+MainWnd.cpp
+Linking executable: Microsoft\Debug\Performance.exe
+Output size is 180.00 KB
+-------------- Build: Release Microsoft Visual C++ in Performance ---------------
+MyDialog.cpp
+PerfApp.cpp
+TestWnd.cpp
+main.cpp
+MainWnd.cpp
+Linking executable: Microsoft\Release\Performance.exe
+Output size is 72.00 KB
+-------------- Build: Debug MinGW GNU compiler in Performance ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\PerfApp.cpp
+Compiling: ..\src\Performance.rc
+Compiling: ..\src\TestWnd.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\MainWnd.cpp
+Linking executable: GNU\Debug\Performance.exe
+Output size is 1.53 MB
+-------------- Build: Release MinGW GNU compiler in Performance ---------------
+Compiling: ..\src\MyDialog.cpp
+Compiling: ..\src\PerfApp.cpp
+Compiling: ..\src\Performance.rc
+Compiling: ..\src\TestWnd.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\MainWnd.cpp
+Linking executable: GNU\Release\Performance.exe
+Output size is 261.47 KB
+Process terminated with status 0 (0 minutes, 15 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Picture ---------------
+Compiling: ..\src\PictureApp.cpp
+..\src\PictureApp.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Debug\Picture.exe
+Output size is 286.50 KB
+-------------- Build: Release Borland in Picture ---------------
+Compiling: ..\src\PictureApp.cpp
+..\src\PictureApp.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Release\Picture.exe
+Output size is 282.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Picture ---------------
+PictureApp.cpp
+View.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Debug\Picture.exe
+Output size is 332.00 KB
+-------------- Build: Release Microsoft Visual C++ in Picture ---------------
+PictureApp.cpp
+View.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Release\Picture.exe
+Output size is 164.00 KB
+-------------- Build: Debug MinGW GNU compiler in Picture ---------------
+Compiling: ..\src\PictureApp.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Debug\Picture.exe
+Output size is 2.44 MB
+-------------- Build: Release MinGW GNU compiler in Picture ---------------
+Compiling: ..\src\PictureApp.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Release\Picture.exe
+Output size is 545.73 KB
+Process terminated with status 0 (0 minutes, 21 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in PropertySheet ---------------
+Compiling: ..\src\MyPropertySheet.cpp
+..\src\MyPropertySheet.cpp:
+Compiling: ..\src\PropertySheetApp.cpp
+..\src\PropertySheetApp.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Debug\PropertySheet.exe
+Output size is 286.50 KB
+-------------- Build: Release Borland in PropertySheet ---------------
+Compiling: ..\src\MyPropertySheet.cpp
+..\src\MyPropertySheet.cpp:
+Compiling: ..\src\PropertySheetApp.cpp
+..\src\PropertySheetApp.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Release\PropertySheet.exe
+Output size is 282.00 KB
+-------------- Build: Debug Microsoft Visual C++ in PropertySheet ---------------
+MyPropertySheet.cpp
+PropertySheetApp.cpp
+View.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Debug\PropertySheet.exe
+Output size is 320.00 KB
+-------------- Build: Release Microsoft Visual C++ in PropertySheet ---------------
+MyPropertySheet.cpp
+PropertySheetApp.cpp
+View.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Release\PropertySheet.exe
+Output size is 152.00 KB
+-------------- Build: Debug MinGW GNU compiler in PropertySheet ---------------
+Compiling: ..\src\MyPropertySheet.cpp
+Compiling: ..\src\PropertySheetApp.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Debug\PropertySheet.exe
+Output size is 2.60 MB
+-------------- Build: Release MinGW GNU compiler in PropertySheet ---------------
+Compiling: ..\src\MyPropertySheet.cpp
+Compiling: ..\src\PropertySheetApp.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Release\PropertySheet.exe
+Output size is 568.15 KB
+Process terminated with status 0 (0 minutes, 23 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Scribble ---------------
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ScribbleApp.cpp
+..\src\ScribbleApp.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Debug\Scribble.exe
+Output size is 279.50 KB
+-------------- Build: Release Borland in Scribble ---------------
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ScribbleApp.cpp
+..\src\ScribbleApp.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Release\Scribble.exe
+Output size is 274.50 KB
+-------------- Build: Debug Microsoft Visual C++ in Scribble ---------------
+ScribbleApp.cpp
+View.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Debug\Scribble.exe
+Output size is 344.00 KB
+-------------- Build: Release Microsoft Visual C++ in Scribble ---------------
+ScribbleApp.cpp
+View.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Release\Scribble.exe
+Output size is 168.00 KB
+-------------- Build: Debug MinGW GNU compiler in Scribble ---------------
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\ScribbleApp.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Debug\Scribble.exe
+Output size is 2.32 MB
+-------------- Build: Release MinGW GNU compiler in Scribble ---------------
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\ScribbleApp.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Release\Scribble.exe
+Output size is 545.40 KB
+Process terminated with status 0 (0 minutes, 18 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Simple ---------------
+Compiling: ..\src\SimpleApp.cpp
+..\src\SimpleApp.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Linking executable: Borland\Debug\Simple.exe
+Output size is 99.50 KB
+-------------- Build: Release Borland in Simple ---------------
+Compiling: ..\src\SimpleApp.cpp
+..\src\SimpleApp.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Linking executable: Borland\Release\Simple.exe
+Output size is 99.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Simple ---------------
+SimpleApp.cpp
+View.cpp
+main.cpp
+Linking executable: Microsoft\Debug\Simple.exe
+Output size is 164.00 KB
+-------------- Build: Release Microsoft Visual C++ in Simple ---------------
+SimpleApp.cpp
+View.cpp
+main.cpp
+Linking executable: Microsoft\Release\Simple.exe
+Output size is 64.00 KB
+-------------- Build: Debug MinGW GNU compiler in Simple ---------------
+Compiling: ..\src\SimpleApp.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Resource.rc
+Linking executable: GNU\Debug\Simple.exe
+Output size is 1.30 MB
+-------------- Build: Release MinGW GNU compiler in Simple ---------------
+Compiling: ..\src\SimpleApp.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Resource.rc
+Linking executable: GNU\Release\Simple.exe
+Output size is 195.87 KB
+Process terminated with status 0 (0 minutes, 8 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Splitter ---------------
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\SplitterApp.cpp
+..\src\SplitterApp.cpp:
+Compiling: ..\src\SplitterPanes.cpp
+..\src\SplitterPanes.cpp:
+Compiling: ..\src\Views.cpp
+..\src\Views.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Debug\Splitter.exe
+Output size is 393.50 KB
+-------------- Build: Release Borland in Splitter ---------------
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\SplitterApp.cpp
+..\src\SplitterApp.cpp:
+Compiling: ..\src\SplitterPanes.cpp
+..\src\SplitterPanes.cpp:
+Compiling: ..\src\Views.cpp
+..\src\Views.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Linking executable: Borland\Release\Splitter.exe
+Output size is 384.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Splitter ---------------
+SplitterApp.cpp
+SplitterPanes.cpp
+Views.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Debug\Splitter.exe
+Output size is 412.00 KB
+-------------- Build: Release Microsoft Visual C++ in Splitter ---------------
+SplitterApp.cpp
+SplitterPanes.cpp
+Views.cpp
+main.cpp
+Mainfrm.cpp
+Linking executable: Microsoft\Release\Splitter.exe
+Output size is 204.00 KB
+-------------- Build: Debug MinGW GNU compiler in Splitter ---------------
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\SplitterApp.cpp
+Compiling: ..\src\SplitterPanes.cpp
+Compiling: ..\src\Views.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Debug\Splitter.exe
+Output size is 3.85 MB
+-------------- Build: Release MinGW GNU compiler in Splitter ---------------
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\SplitterApp.cpp
+Compiling: ..\src\SplitterPanes.cpp
+Compiling: ..\src\Views.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Mainfrm.cpp
+Linking executable: GNU\Release\Splitter.exe
+Output size is 833.30 KB
+Process terminated with status 0 (0 minutes, 35 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in TabDemo ---------------
+Compiling: ..\src\Files.cpp
+..\src\Files.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\TabDemoApp.cpp
+..\src\TabDemoApp.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Classes.cpp
+..\src\Classes.cpp:
+Linking executable: Borland\debug\TabDemo.exe
+Output size is 311.50 KB
+-------------- Build: Release Borland in TabDemo ---------------
+Compiling: ..\src\Files.cpp
+..\src\Files.cpp:
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\TabDemoApp.cpp
+..\src\TabDemoApp.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\Classes.cpp
+..\src\Classes.cpp:
+Linking executable: Borland\Release\TabDemo.exe
+Output size is 306.50 KB
+-------------- Build: Debug Microsoft Visual C++ in TabDemo ---------------
+Files.cpp
+Mainfrm.cpp
+TabDemoApp.cpp
+main.cpp
+Classes.cpp
+Linking executable: Microsoft\Debug\TabDemo.exe
+Output size is 348.00 KB
+-------------- Build: Release Microsoft Visual C++ in TabDemo ---------------
+Files.cpp
+Mainfrm.cpp
+TabDemoApp.cpp
+main.cpp
+Classes.cpp
+Linking executable: Microsoft\Release\TabDemo.exe
+Output size is 180.00 KB
+-------------- Build: Debug MinGW GNU compiler in TabDemo ---------------
+Compiling: ..\src\Files.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\TabDemoApp.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Classes.cpp
+Linking executable: GNU\Debug\TabDemo.exe
+Output size is 2.92 MB
+-------------- Build: Release MinGW GNU compiler in TabDemo ---------------
+Compiling: ..\src\Files.cpp
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\TabDemoApp.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\Classes.cpp
+Linking executable: GNU\Release\TabDemo.exe
+Output size is 624.33 KB
+Process terminated with status 0 (0 minutes, 26 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Themes ---------------
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ThemesApp.cpp
+..\src\ThemesApp.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\ComboBoxEx.cpp
+..\src\ComboBoxEx.cpp:
+Linking executable: Borland\Debug\Themes.exe
+Output size is 350.50 KB
+-------------- Build: Release Borland in Themes ---------------
+Compiling: ..\src\Mainfrm.cpp
+..\src\Mainfrm.cpp:
+Compiling: ..\src\Resource.rc
+Borland Resource Compiler  Version 5.40
+Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.
+Compiling: ..\src\ThemesApp.cpp
+..\src\ThemesApp.cpp:
+Compiling: ..\src\View.cpp
+..\src\View.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\ComboBoxEx.cpp
+..\src\ComboBoxEx.cpp:
+Linking executable: Borland\Release\Themes.exe
+Output size is 346.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Themes ---------------
+Mainfrm.cpp
+ThemesApp.cpp
+View.cpp
+main.cpp
+ComboBoxEx.cpp
+Linking executable: Microsoft\Debug\Themes.exe
+Output size is 392.00 KB
+-------------- Build: Release Microsoft Visual C++ in Themes ---------------
+Mainfrm.cpp
+ThemesApp.cpp
+View.cpp
+main.cpp
+ComboBoxEx.cpp
+Linking executable: Microsoft\Release\Themes.exe
+Output size is 220.00 KB
+-------------- Build: Debug MinGW GNU compiler in Themes ---------------
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\ThemesApp.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\ComboBoxEx.cpp
+Linking executable: GNU\Debug\Themes.exe
+Output size is 2.36 MB
+-------------- Build: Release MinGW GNU compiler in Themes ---------------
+Compiling: ..\src\Mainfrm.cpp
+Compiling: ..\src\Resource.rc
+Compiling: ..\src\ThemesApp.cpp
+Compiling: ..\src\View.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\ComboBoxEx.cpp
+Linking executable: GNU\Release\Themes.exe
+Output size is 591.19 KB
+Process terminated with status 0 (0 minutes, 20 seconds)
+0 errors, 0 warnings
+-------------- Build: Debug Borland in Threads ---------------
+Compiling: ..\src\TestWnd.cpp
+..\src\TestWnd.cpp:
+Compiling: ..\src\Thread.cpp
+..\src\Thread.cpp:
+Compiling: ..\src\ThreadApp.cpp
+..\src\ThreadApp.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\MainWnd.cpp
+..\src\MainWnd.cpp:
+Linking executable: Borland\Debug\Threads.exe
+Output size is 111.00 KB
+-------------- Build: Release Borland in Threads ---------------
+Compiling: ..\src\TestWnd.cpp
+..\src\TestWnd.cpp:
+Compiling: ..\src\Thread.cpp
+..\src\Thread.cpp:
+Compiling: ..\src\ThreadApp.cpp
+..\src\ThreadApp.cpp:
+Compiling: ..\src\main.cpp
+..\src\main.cpp:
+Compiling: ..\src\MainWnd.cpp
+..\src\MainWnd.cpp:
+Linking executable: Borland\Release\Threads.exe
+Output size is 110.00 KB
+-------------- Build: Debug Microsoft Visual C++ in Threads ---------------
+TestWnd.cpp
+Thread.cpp
+ThreadApp.cpp
+main.cpp
+MainWnd.cpp
+Linking executable: Microsoft\Debug\Threads.exe
+Output size is 228.00 KB
+-------------- Build: Release Microsoft Visual C++ in Threads ---------------
+TestWnd.cpp
+Thread.cpp
+ThreadApp.cpp
+main.cpp
+MainWnd.cpp
+Linking executable: Microsoft\Release\Threads.exe
+Output size is 68.00 KB
+-------------- Build: Debug MinGW GNU compiler in Threads ---------------
+Compiling: ..\src\TestWnd.cpp
+Compiling: ..\src\Thread.cpp
+Compiling: ..\src\ThreadApp.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\MainWnd.cpp
+Linking executable: GNU\Debug\Threads.exe
+Output size is 1.47 MB
+-------------- Build: Release MinGW GNU compiler in Threads ---------------
+Compiling: ..\src\TestWnd.cpp
+Compiling: ..\src\Thread.cpp
+Compiling: ..\src\ThreadApp.cpp
+Compiling: ..\src\main.cpp
+Compiling: ..\src\MainWnd.cpp
+Linking executable: GNU\Release\Threads.exe
+Output size is 246.82 KB
+Process terminated with status 0 (0 minutes, 14 seconds)
+0 errors, 0 warnings
+"Copying VS2003 Debug files" 
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+"Copying VS2003 Release files" 
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+"Copying Borland Debug files" 
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+"Copying Borland Release files" 
+        1 file(s) copied.
+        1 file(s) copied.
+The system cannot find the file specified.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+"Copying MinGW Debug files" 
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+"Copying MinGW Release files" 
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
