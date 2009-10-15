@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
-	Name="Frame"
+	Version="9.00"
+	Name="NewProject"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -76,12 +77,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
 				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -101,9 +104,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -171,12 +171,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -196,9 +198,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -266,11 +265,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -290,9 +291,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -361,11 +359,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -387,9 +387,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -401,109 +398,73 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
-			<File
-				RelativePath="..\src\FrameApp.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Mainfrm.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Resource.rc"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath="..\src\FrameApp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Mainfrm.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\resource.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\Win32++\include\dialog.h"
+				RelativePath="..\src\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\docking.h"
+				RelativePath="..\src\docking.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\frame.h"
+				RelativePath="..\src\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\gdi.h"
+				RelativePath="..\src\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\listview.h"
+				RelativePath="..\src\listview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\mdi.h"
+				RelativePath="..\src\mdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\propertysheet.h"
+				RelativePath="..\src\propertysheet.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\rebar.h"
+				RelativePath="..\src\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\socket.h"
+				RelativePath="..\src\socket.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\splitter.h"
+				RelativePath="..\src\splitter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\statusbar.h"
+				RelativePath="..\src\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\tab.h"
+				RelativePath="..\src\tab.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\toolbar.h"
+				RelativePath="..\src\toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\treeview.h"
+				RelativePath="..\src\treeview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\wincore.h"
+				RelativePath="..\src\wincore.h"
 				>
 			</File>
 		</Filter>

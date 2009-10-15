@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Frame"
+	Name="NewProject"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	SccProjectName=""
 	SccLocalPath="">
@@ -29,7 +29,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Release/Frame_2003.pch"
+				PrecompiledHeaderFile=".\Release/NewProject_2003.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -44,7 +44,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Release"
-				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Release/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -53,7 +53,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Frame_2003.tlb"
+				TypeLibraryName=".\Release/NewProject_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -93,7 +93,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Debug/Frame_2003.pch"
+				PrecompiledHeaderFile=".\Debug/NewProject_2003.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -109,7 +109,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -118,7 +118,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Frame_2003.tlb"
+				TypeLibraryName=".\Debug/NewProject_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -158,7 +158,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Debug/Frame_2003.pch"
+				PrecompiledHeaderFile=".\Debug/NewProject_2003.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -173,7 +173,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -182,7 +182,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Frame_2003.tlb"
+				TypeLibraryName=".\Debug/NewProject_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -224,7 +224,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Release/Frame_2003.pch"
+				PrecompiledHeaderFile=".\Release/NewProject_2003.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -238,7 +238,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Release/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -247,7 +247,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Frame_2003.tlb"
+				TypeLibraryName=".\Release/NewProject_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -278,85 +278,58 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File
-				RelativePath="..\src\FrameApp.cpp">
-			</File>
-			<File
-				RelativePath="..\src\main.cpp">
-			</File>
-			<File
-				RelativePath="..\src\Mainfrm.cpp">
-			</File>
-			<File
-				RelativePath="..\src\Resource.rc">
-			</File>
-			<File
-				RelativePath="..\src\View.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
-			<File
-				RelativePath="..\src\FrameApp.h">
-			</File>
-			<File
-				RelativePath="..\src\Mainfrm.h">
-			</File>
-			<File
-				RelativePath="..\src\resource.h">
-			</File>
-			<File
-				RelativePath="..\src\View.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\..\Win32++\include\dialog.h">
+				RelativePath="..\..\Win32++\src\dialog.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\docking.h">
+				RelativePath="..\..\Win32++\src\docking.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\frame.h">
+				RelativePath="..\..\Win32++\src\frame.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\gdi.h">
+				RelativePath="..\..\Win32++\src\gdi.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\listview.h">
+				RelativePath="..\..\Win32++\src\listview.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\mdi.h">
+				RelativePath="..\..\Win32++\src\mdi.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\propertysheet.h">
+				RelativePath="..\..\Win32++\src\propertysheet.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\rebar.h">
+				RelativePath="..\..\Win32++\src\rebar.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\socket.h">
+				RelativePath="..\..\Win32++\src\socket.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\splitter.h">
+				RelativePath="..\..\Win32++\src\splitter.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\statusbar.h">
+				RelativePath="..\..\Win32++\src\statusbar.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\tab.h">
+				RelativePath="..\..\Win32++\src\tab.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\toolbar.h">
+				RelativePath="..\..\Win32++\src\toolbar.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\treeview.h">
+				RelativePath="..\..\Win32++\src\treeview.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\wincore.h">
+				RelativePath="..\..\Win32++\src\wincore.h">
 			</File>
 		</Filter>
 		<Filter

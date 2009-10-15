@@ -3,7 +3,7 @@ REM:A batch file to remove unnecessary files from
 REM: each Visual Studio project
 
 REM: Change the directory to the parent
-pushd ..
+pushd ..\..
 
 ::Remove directories
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Borland"
@@ -40,9 +40,11 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.local"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.dat"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\src\Makefile.win"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.bak"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.sdf"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcb"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vco"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.filters"
 
 REM: Clean the Networking directory
 pushd Networking
