@@ -1,6 +1,7 @@
 //////////////////////////////////////////////
 //FrameApp.cpp
 
+#include "stdafx.h"
 #include "FrameApp.h"
 
 

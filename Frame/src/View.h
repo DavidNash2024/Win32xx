@@ -5,7 +5,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "wincore.h"
 
 
 // Declaration of the CView class

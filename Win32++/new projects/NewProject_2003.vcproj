@@ -29,7 +29,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Release/NewProject_2003.pch"
+				UsePrecompiledHeader="2"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -93,7 +93,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Debug/NewProject_2003.pch"
+				UsePrecompiledHeader="2"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -158,7 +158,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Debug/NewProject_2003.pch"
+				UsePrecompiledHeader="2"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -224,7 +224,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\Release/NewProject_2003.pch"
+				UsePrecompiledHeader="2"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -287,49 +287,49 @@
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\..\Win32++\src\dialog.h">
+				RelativePath="..\..\Win32++\include\dialog.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\docking.h">
+				RelativePath="..\..\Win32++\include\docking.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\frame.h">
+				RelativePath="..\..\Win32++\include\frame.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\gdi.h">
+				RelativePath="..\..\Win32++\include\gdi.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\listview.h">
+				RelativePath="..\..\Win32++\include\listview.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\mdi.h">
+				RelativePath="..\..\Win32++\include\mdi.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\propertysheet.h">
+				RelativePath="..\..\Win32++\include\propertysheet.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\rebar.h">
+				RelativePath="..\..\Win32++\include\rebar.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\socket.h">
+				RelativePath="..\..\Win32++\include\socket.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\splitter.h">
+				RelativePath="..\..\Win32++\include\splitter.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\statusbar.h">
+				RelativePath="..\..\Win32++\include\statusbar.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\tab.h">
+				RelativePath="..\..\Win32++\include\tab.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\toolbar.h">
+				RelativePath="..\..\Win32++\include\toolbar.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\treeview.h">
+				RelativePath="..\..\Win32++\include\treeview.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\src\wincore.h">
+				RelativePath="..\..\Win32++\include\wincore.h">
 			</File>
 		</Filter>
 		<Filter

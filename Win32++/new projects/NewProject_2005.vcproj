@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="Frame"
+	Name="NewProject"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Frame_2003.tlb"
+				TypeLibraryName=".\Release/NewProject_2003.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -54,7 +54,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -80,7 +80,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
-				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Release/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -137,7 +137,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Frame_2003.tlb"
+				TypeLibraryName=".\Debug/NewProject_2003.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -148,7 +148,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -175,7 +175,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -232,7 +232,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Frame_2003.tlb"
+				TypeLibraryName=".\Debug/NewProject_2003.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -243,7 +243,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -269,7 +269,7 @@
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -326,7 +326,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Frame_2003.tlb"
+				TypeLibraryName=".\Release/NewProject_2003.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -339,7 +339,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -364,7 +364,7 @@
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Release/NewProject_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -411,55 +411,63 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\src\dialog.h"
+				RelativePath="..\..\Win32++\include\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\docking.h"
+				RelativePath="..\..\Win32++\include\docking.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\frame.h"
+				RelativePath="..\..\Win32++\include\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\gdi.h"
+				RelativePath="..\..\Win32++\include\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\listview.h"
+				RelativePath="..\..\Win32++\include\listview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\mdi.h"
+				RelativePath="..\..\Win32++\include\mdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\rebar.h"
+				RelativePath="..\..\Win32++\include\propertysheet.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\socket.h"
+				RelativePath="..\..\Win32++\include\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\splitter.h"
+				RelativePath="..\..\Win32++\include\socket.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\statusbar.h"
+				RelativePath="..\..\Win32++\include\splitter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\tab.h"
+				RelativePath="..\..\Win32++\include\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\treeview.h"
+				RelativePath="..\..\Win32++\include\tab.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\wincore.h"
+				RelativePath="..\..\Win32++\include\toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\wincore.h"
 				>
 			</File>
 		</Filter>

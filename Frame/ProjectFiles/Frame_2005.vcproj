@@ -54,7 +54,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -148,7 +148,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -243,7 +243,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -339,7 +339,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/Frame_2003.pch"
+				UsePrecompiledHeader="1"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -418,6 +418,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\StdAfx.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\View.cpp"
 				>
 			</File>
@@ -436,6 +440,10 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\stdafx.h"
 				>
 			</File>
 			<File

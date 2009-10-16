@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "NDEBUG"
@@ -72,7 +72,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "_DEBUG"
@@ -100,7 +100,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
-# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -129,7 +129,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i "../../Win32++/include" /d "_DEBUG"
@@ -168,63 +168,71 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\src\dialog.h
+SOURCE="..\..\Win32++\include\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\docking.h
+SOURCE="..\..\Win32++\include\docking.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\frame.h
+SOURCE="..\..\Win32++\include\frame.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\gdi.h
+SOURCE="..\..\Win32++\include\gdi.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\listview.h
+SOURCE="..\..\Win32++\include\listview.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\mdi.h
+SOURCE="..\..\Win32++\include\mdi.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\propertysheet.h
+SOURCE="..\..\Win32++\include\propertysheet.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\rebar.h
+SOURCE="..\..\Win32++\include\rebar.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\socket.h
+SOURCE="..\..\Win32++\include\socket.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\splitter.h
+SOURCE="..\..\Win32++\include\splitter.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\statusbar.h
+SOURCE="..\..\Win32++\include\statusbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\tab.h
+SOURCE="..\..\Win32++\include\tab.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\toolbar.h
+SOURCE="..\..\Win32++\include\toolbar.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\treeview.h
+SOURCE="..\..\Win32++\include\treeview.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\wincore.h
+SOURCE="..\..\Win32++\include\wceframe.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\include\wcestddef.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Win32++\include\wincore.h"
 # End Source File
 # End Group
 # End Target

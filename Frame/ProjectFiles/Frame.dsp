@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "NDEBUG"
@@ -72,7 +72,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "_DEBUG"
@@ -100,7 +100,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
-# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -129,7 +129,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i "../../Win32++/include" /d "_DEBUG"
@@ -172,6 +172,10 @@ SOURCE=..\src\Resource.rc
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\StdAfx.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\View.cpp
 # End Source File
 # End Group
@@ -184,19 +188,7 @@ SOURCE="..\..\Win32++\default_resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\Win32++\frame.h"
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\FrameApp.h
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\Win32++\gdi.h"
 # End Source File
 # Begin Source File
 
@@ -204,27 +196,15 @@ SOURCE=..\src\Mainfrm.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\rebar.h"
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\statusbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\Win32++\toolbar.h"
+SOURCE=..\src\stdafx.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\View.h
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\Win32++\wincore.h"
 # End Source File
 # End Group
 # Begin Group "Resource Files"
