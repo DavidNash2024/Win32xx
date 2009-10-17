@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Browser_2003.tlb"
+				TypeLibraryName=".\Release/Browser_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -76,11 +76,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib Win32xx.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
-				ProgramDatabaseFile=".\Release/Browser_2003.pdb"
+				GenerateManifest="false"
+				ProgramDatabaseFile=".\Release/Browser_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -137,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Browser_2003.tlb"
+				TypeLibraryName=".\Debug/Browser_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -171,11 +172,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib Win32xx.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Browser_2003.pdb"
+				ProgramDatabaseFile=".\Debug/Browser_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -232,7 +234,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Browser_2003.tlb"
+				TypeLibraryName=".\Debug/Browser_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -266,10 +268,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib"
 				SuppressStartupBanner="true"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Browser_2003.pdb"
+				ProgramDatabaseFile=".\Debug/Browser_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -326,7 +329,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Browser_2003.tlb"
+				TypeLibraryName=".\Release/Browser_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -361,10 +364,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile=".\Release/Browser_2003.pdb"
+				GenerateManifest="false"
+				ProgramDatabaseFile=".\Release/Browser_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -401,11 +405,63 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
+			<File
+				RelativePath="..\src\BrowserApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ComboBoxEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\StdAfx.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\View.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath="..\src\BrowserApp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ComboBoxEx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\View.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"

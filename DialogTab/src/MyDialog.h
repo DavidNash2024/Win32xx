@@ -4,8 +4,7 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-#include "../../Win32++/dialog.h"
-#include "../../Win32++/tab.h"
+
 #include "resource.h"
 
 // Declaration of the CButtonDialog class

@@ -278,10 +278,49 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			<File
+				RelativePath="..\src\BrowserApp.cpp">
+			</File>
+			<File
+				RelativePath="..\src\ComboBoxEx.cpp">
+			</File>
+			<File
+				RelativePath="..\src\main.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc">
+			</File>
+			<File
+				RelativePath="..\src\StdAfx.cpp">
+			</File>
+			<File
+				RelativePath="..\src\View.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
+			<File
+				RelativePath="..\src\BrowserApp.h">
+			</File>
+			<File
+				RelativePath="..\src\ComboBoxEx.h">
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.h">
+			</File>
+			<File
+				RelativePath="..\src\resource.h">
+			</File>
+			<File
+				RelativePath="..\src\stdafx.h">
+			</File>
+			<File
+				RelativePath="..\src\View.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"

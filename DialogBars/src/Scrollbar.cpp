@@ -1,3 +1,6 @@
+
+
+#include "stdafx.h"
 #include "Scrollbar.h"
 #include "DialogApp.h"
 

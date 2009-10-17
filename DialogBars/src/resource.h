@@ -1,8 +1,11 @@
-#ifndef IDC_STATIC
-  #define IDC_STATIC                            -1
-#endif
+///////////////////////////////////////////
+// Resource.h
+// This file contains the resource ID definitions.
 
-#define IDW_MAIN                                100
+
+// include the Resource IDs defined by Win32++
+#include "Default_Resource.h"
+
 #define IDD_DIALOG1                             101
 #define IDC_STATIC1                             131
 #define IDC_STATIC2                             132

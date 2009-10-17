@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/NewProject_2003.tlb"
+				TypeLibraryName=".\Release/NewProject_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -81,7 +81,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
-				ProgramDatabaseFile=".\Release/NewProject_2003.pdb"
+				GenerateManifest="false"
+				ProgramDatabaseFile=".\Release/NewProject_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -137,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/NewProject_2003.tlb"
+				TypeLibraryName=".\Debug/NewProject_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -174,8 +175,9 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/NewProject_2003.pdb"
+				ProgramDatabaseFile=".\Debug/NewProject_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -231,7 +233,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Frame_2003.tlb"
+				TypeLibraryName=".\Debug/NewProject_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -267,8 +269,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="true"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/NewProject_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -324,7 +327,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Frame_2003.tlb"
+				TypeLibraryName=".\Release/NewProject_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -362,7 +365,8 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
+				GenerateManifest="false"
+				ProgramDatabaseFile=".\Release/NewProject_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"

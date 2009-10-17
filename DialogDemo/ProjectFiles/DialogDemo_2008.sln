@@ -1,18 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DialogDemo_2008", "DialogDemo_2008.vcproj", "{A2D7F5AA-B200-4DD8-8FAE-8D5A8C8D896C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DialogDemo", "DialogDemo_2008.vcproj", "{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Static Library|Win32 = Debug Static Library|Win32
 		Debug|Win32 = Debug|Win32
+		Release Static Library|Win32 = Release Static Library|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A2D7F5AA-B200-4DD8-8FAE-8D5A8C8D896C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A2D7F5AA-B200-4DD8-8FAE-8D5A8C8D896C}.Debug|Win32.Build.0 = Debug|Win32
-		{A2D7F5AA-B200-4DD8-8FAE-8D5A8C8D896C}.Release|Win32.ActiveCfg = Release|Win32
-		{A2D7F5AA-B200-4DD8-8FAE-8D5A8C8D896C}.Release|Win32.Build.0 = Release|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug Static Library|Win32.ActiveCfg = Debug Static Library|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug Static Library|Win32.Build.0 = Debug Static Library|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug|Win32.Build.0 = Debug|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release Static Library|Win32.ActiveCfg = Release Static Library|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release Static Library|Win32.Build.0 = Release Static Library|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release|Win32.ActiveCfg = Release|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

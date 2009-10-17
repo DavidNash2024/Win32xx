@@ -1,3 +1,6 @@
+
+
+#include "stdafx.h"
 #include "Progressbar.h"
 #include "DialogApp.h"
 

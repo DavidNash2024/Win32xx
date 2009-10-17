@@ -154,10 +154,62 @@ LINK32=link.exe
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=..\src\BrowserApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ComboBoxEx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\main.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Mainfrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Resource.rc
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\StdAfx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\View.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\src\BrowserApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ComboBoxEx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\stdafx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\View.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 

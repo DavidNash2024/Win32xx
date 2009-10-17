@@ -1,6 +1,7 @@
 /////////////////////////////
 // Hyperlink.cpp
 
+#include "stdafx.h"
 #include "Hyperlink.h"
 
 CHyperlink::CHyperlink() : m_bUrlVisited(FALSE), m_bClicked(FALSE), m_crVisited(RGB(128, 0, 128)),

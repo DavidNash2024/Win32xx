@@ -1,6 +1,7 @@
 /////////////////////////////
 // Button.cpp
 
+#include "stdafx.h"
 #include "DialogDemoApp.h"
 #include "Button.h"
 

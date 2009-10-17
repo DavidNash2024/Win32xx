@@ -1,6 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
+#include "stdafx.h"
 #include "DialogDemoApp.h"
 
 

@@ -4,7 +4,7 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-#include "../../Win32++/dialog.h"
+
 #include "resource.h"
 #include "button.h"
 #include "Hyperlink.h"

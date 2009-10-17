@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Frame_2003.tlb"
+				TypeLibraryName=".\Release/Frame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -81,7 +81,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
-				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
+				GenerateManifest="false"
+				ProgramDatabaseFile=".\Release/Frame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -137,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Frame_2003.tlb"
+				TypeLibraryName=".\Debug/Frame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -174,8 +175,9 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/Frame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -231,7 +233,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Frame_2003.tlb"
+				TypeLibraryName=".\Debug/Frame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -267,8 +269,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="true"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/Frame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/Frame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -324,7 +327,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Frame_2003.tlb"
+				TypeLibraryName=".\Release/Frame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -362,7 +365,8 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile=".\Release/Frame_2003.pdb"
+				GenerateManifest="false"
+				ProgramDatabaseFile=".\Release/Frame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -401,226 +405,26 @@
 			<File
 				RelativePath="..\src\FrameApp.cpp"
 				>
-				<FileConfiguration
-					Name="Release Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\main.cpp"
 				>
-				<FileConfiguration
-					Name="Release Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.cpp"
 				>
-				<FileConfiguration
-					Name="Release Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\Resource.rc"
 				>
-				<FileConfiguration
-					Name="Release Static Library|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="\Users\David\Documents\Visual Studio Projects\Win32++\Frame\src"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static Library|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="\Users\David\Documents\Visual Studio Projects\Win32++\Frame\src"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="\Users\David\Documents\Visual Studio Projects\Win32++\Frame\src"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="\Users\David\Documents\Visual Studio Projects\Win32++\Frame\src"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\StdAfx.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\src\View.cpp"
 				>
-				<FileConfiguration
-					Name="Release Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static Library|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -628,23 +432,7 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\Win32++\default_resource.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\frame.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\FrameApp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\gdi.h"
 				>
 			</File>
 			<File
@@ -652,27 +440,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\rebar.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\statusbar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\toolbar.h"
+				RelativePath="..\src\stdafx.h"
 				>
 			</File>
 			<File
 				RelativePath="..\src\View.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\wincore.h"
 				>
 			</File>
 		</Filter>

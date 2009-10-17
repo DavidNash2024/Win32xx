@@ -1,7 +1,6 @@
 #ifndef SCROLLBAR_H
 #define SCROLLBAR_H
 
-#include "../../Win32++/wincore.h"
 
 class CScrollbar : public CWnd
 {
