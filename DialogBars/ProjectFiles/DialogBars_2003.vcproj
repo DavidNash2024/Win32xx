@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="DialogBarsDemo"
+	Name="DialogBars"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -28,7 +28,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/DialogBarsDemo.pch"
+				PrecompiledHeaderFile=".\Release/DialogBars.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -39,10 +39,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Release/DialogBarsDemo.exe"
+				OutputFile=".\Release/DialogBars.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/DialogBarsDemo.pdb"
+				ProgramDatabaseFile=".\Release/DialogBars.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -51,7 +51,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DialogBarsDemo.tlb"
+				TypeLibraryName=".\Release/DialogBars.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -88,7 +88,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/DialogBarsDemo.pch"
+				PrecompiledHeaderFile=".\Debug/DialogBars.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -101,10 +101,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Debug/DialogBarsDemo.exe"
+				OutputFile=".\Debug/DialogBars.exe"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/DialogBarsDemo.pdb"
+				ProgramDatabaseFile=".\Debug/DialogBars.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -113,7 +113,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DialogBarsDemo.tlb"
+				TypeLibraryName=".\Debug/DialogBars.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>

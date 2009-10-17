@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="DialogBarsDemo" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="DialogBars" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=DialogBarsDemo - Win32 Debug
+CFG=DialogBars - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "DialogBarsDemo.mak".
+!MESSAGE NMAKE /f "DialogBars.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "DialogBarsDemo.mak" CFG="DialogBarsDemo - Win32 Debug"
+!MESSAGE NMAKE /f "DialogBars.mak" CFG="DialogBars - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "DialogBarsDemo - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "DialogBarsDemo - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "DialogBars - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "DialogBars - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "DialogBarsDemo - Win32 Debug"
+!IF  "$(CFG)" == "DialogBars - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -55,7 +55,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
-!ELSEIF  "$(CFG)" == "DialogBarsDemo - Win32 Release"
+!ELSEIF  "$(CFG)" == "DialogBars - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -85,8 +85,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "DialogBarsDemo - Win32 Debug"
-# Name "DialogBarsDemo - Win32 Release"
+# Name "DialogBars - Win32 Debug"
+# Name "DialogBars - Win32 Release"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

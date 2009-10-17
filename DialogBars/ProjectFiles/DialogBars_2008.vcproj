@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="DialogBarsDemo"
+	Name="DialogBars"
 	ProjectGUID="{AD09440A-E5F6-419C-BE86-8047C2DF3E08}"
 	TargetFrameworkVersion="131072"
 	>
@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DialogBarsDemo.tlb"
+				TypeLibraryName=".\Release/DialogBars.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -54,7 +54,7 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Release/DialogBarsDemo.pch"
+				PrecompiledHeaderFile=".\Release/DialogBars.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -74,11 +74,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
-				OutputFile=".\Release/DialogBarsDemo.exe"
+				OutputFile=".\Release/DialogBars.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/DialogBarsDemo.pdb"
+				ProgramDatabaseFile=".\Release/DialogBars.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -96,7 +96,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/DialogBarsDemo.bsc"
+				OutputFile=".\Release/DialogBars.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -136,7 +136,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DialogBarsDemo.tlb"
+				TypeLibraryName=".\Debug/DialogBars.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -147,7 +147,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/DialogBarsDemo.pch"
+				PrecompiledHeaderFile=".\Debug/DialogBars.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -169,12 +169,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib"
-				OutputFile=".\Debug/DialogBarsDemo.exe"
+				OutputFile=".\Debug/DialogBars.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/DialogBarsDemo.pdb"
+				ProgramDatabaseFile=".\Debug/DialogBars.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -192,7 +192,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/DialogBarsDemo.bsc"
+				OutputFile=".\Debug/DialogBars.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
