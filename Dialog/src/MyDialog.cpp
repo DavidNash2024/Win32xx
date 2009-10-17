@@ -1,6 +1,8 @@
 ///////////////////////////////////////
 // MyDialog.cpp
 
+
+#include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 

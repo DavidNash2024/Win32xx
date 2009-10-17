@@ -4,8 +4,6 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-#include "../../Win32++/dialog.h"
-#include "resource.h"
 
 
 // Declaration of the CMyDialog class
