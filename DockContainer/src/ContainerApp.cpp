@@ -1,6 +1,8 @@
 //////////////////////////////////////////////
 //TabDemoApp.cpp
 
+
+#include "stdafx.h"
 #include "ContainerApp.h"
 
 

@@ -3,6 +3,7 @@
 //                and CDockSimple classes
 
 
+#include "stdafx.h"
 #include "ContainerApp.h"
 #include "Simple.h"
 #include "resource.h"

@@ -7,10 +7,6 @@
 #define FILES_H
 
 
-#include "../../Win32++/docking.h"
-#include "../../Win32++/listview.h"
-#include "resource.h"
-
 // Declaration of the CViewFiles class
 class CViewFiles : public CListView
 {

@@ -6,7 +6,6 @@
 #ifndef SIMPLE_H
 #define SIMPLE_H
 
-#include "../../Win32++/docking.h"
 
 enum DockIDs
 {

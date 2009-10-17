@@ -1,6 +1,7 @@
 //////////////////////////////////////////////
 // DXApp.cpp
 
+#include "stdafx.h"
 #include "DXApp.h"
 
 

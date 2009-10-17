@@ -2,6 +2,7 @@
 // Mainfrm.cpp
 
 
+#include "stdafx.h"
 #include "resource.h"
 #include "ContainerApp.h"
 #include "mainfrm.h"

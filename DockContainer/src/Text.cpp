@@ -3,6 +3,7 @@
 //              and CDockText classes
 
 
+#include "stdafx.h"
 #include "ContainerApp.h"
 #include "Text.h"
 #include "resource.h"
