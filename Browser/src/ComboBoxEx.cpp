@@ -1,4 +1,6 @@
 
+
+#include "stdafx.h"
 #include "BrowserApp.h"
 #include "ComboBoxEx.h"
 

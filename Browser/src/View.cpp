@@ -1,6 +1,7 @@
 ///////////////////////////////
 // View.cpp
 
+#include "stdafx.h"
 #include "resource.h"
 #include "BrowserApp.h"
 #include "Mainfrm.h"

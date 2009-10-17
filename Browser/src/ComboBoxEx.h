@@ -1,7 +1,7 @@
 #ifndef COMBOBOXEX_H
 #define COMBOBOXEX_H
 
-#include "../../Win32++/wincore.h"
+
 #include "resource.h"
 
 class CComboBoxEx : public CWnd
