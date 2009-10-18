@@ -4,6 +4,7 @@
 #ifndef PICTUREAPP_H
 #define PICTUREAPP_H
 
+
 #include "Mainfrm.h"
 
 

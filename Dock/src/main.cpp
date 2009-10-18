@@ -1,7 +1,10 @@
 ///////////////////////////////////////
 // main.cpp
 
+
+#include "stdafx.h"
 #include "DockingApp.h"
+
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

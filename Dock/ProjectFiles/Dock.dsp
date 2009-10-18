@@ -1,26 +1,26 @@
-# Microsoft Developer Studio Project File - Name="Picture" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="Dock" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=Picture - Win32 Debug Static Library
+CFG=Dock - Win32 Debug Static Library
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Picture.mak".
+!MESSAGE NMAKE /f "Dock.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Picture.mak" CFG="Picture - Win32 Debug Static Library"
+!MESSAGE NMAKE /f "Dock.mak" CFG="Dock - Win32 Debug Static Library"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Picture - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "Picture - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "Picture - Win32 Release Static Library" (based on "Win32 (x86) Application")
-!MESSAGE "Picture - Win32 Debug Static Library" (based on "Win32 (x86) Application")
+!MESSAGE "Dock - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "Dock - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "Dock - Win32 Release Static Library" (based on "Win32 (x86) Application")
+!MESSAGE "Dock - Win32 Debug Static Library" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -31,7 +31,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "Picture - Win32 Release"
+!IF  "$(CFG)" == "Dock - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -58,7 +58,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "Picture - Win32 Debug"
+!ELSEIF  "$(CFG)" == "Dock - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -85,12 +85,12 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "Picture - Win32 Release Static Library"
+!ELSEIF  "$(CFG)" == "Dock - Win32 Release Static Library"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "Picture___Win32_Release_Static_Library"
-# PROP BASE Intermediate_Dir "Picture___Win32_Release_Static_Library"
+# PROP BASE Output_Dir "Dock___Win32_Release_Static_Library"
+# PROP BASE Intermediate_Dir "Dock___Win32_Release_Static_Library"
 # PROP BASE Ignore_Export_Lib 0
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -114,12 +114,12 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib /nologo /subsystem:windows /machine:I386 /libpath:"../../Win32++/lib/VS6_Release"
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "Picture - Win32 Debug Static Library"
+!ELSEIF  "$(CFG)" == "Dock - Win32 Debug Static Library"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "Picture___Win32_Debug_Static_Library"
-# PROP BASE Intermediate_Dir "Picture___Win32_Debug_Static_Library"
+# PROP BASE Output_Dir "Dock___Win32_Debug_Static_Library"
+# PROP BASE Intermediate_Dir "Dock___Win32_Debug_Static_Library"
 # PROP BASE Ignore_Export_Lib 0
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -147,13 +147,21 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "Picture - Win32 Release"
-# Name "Picture - Win32 Debug"
-# Name "Picture - Win32 Release Static Library"
-# Name "Picture - Win32 Debug Static Library"
+# Name "Dock - Win32 Release"
+# Name "Dock - Win32 Debug"
+# Name "Dock - Win32 Release Static Library"
+# Name "Dock - Win32 Debug Static Library"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=..\src\Dockers.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\DockingApp.cpp
+# End Source File
 # Begin Source File
 
 SOURCE=..\src\main.cpp
@@ -161,10 +169,6 @@ SOURCE=..\src\main.cpp
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\PictureApp.cpp
 # End Source File
 # Begin Source File
 
@@ -176,7 +180,7 @@ SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\View.cpp
+SOURCE=..\src\Views.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -184,11 +188,15 @@ SOURCE=..\src\View.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\src\Mainfrm.h
+SOURCE=..\src\Dockers.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\PictureApp.h
+SOURCE=..\src\DockingApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Mainfrm.h
 # End Source File
 # Begin Source File
 
@@ -200,7 +208,7 @@ SOURCE=..\src\stdafx.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\View.h
+SOURCE=..\src\Views.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

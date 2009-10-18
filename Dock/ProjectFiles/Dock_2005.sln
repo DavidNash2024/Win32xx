@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Browser", "Browser_2005.vcproj", "{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dock", "Dock_2005.vcproj", "{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

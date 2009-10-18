@@ -3,6 +3,7 @@
 //              CViewTree and CViewText classes
 
 
+#include "stdafx.h"
 #include "Views.h"
 #include "resource.h"
 

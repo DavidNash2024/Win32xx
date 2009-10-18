@@ -5,8 +5,9 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "../../Win32++/wincore.h"
+
 #include <olectl.h>
+
 
 // Declaration of the CView class
 class CView : public CWnd

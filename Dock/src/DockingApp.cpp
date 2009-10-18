@@ -2,7 +2,7 @@
 // MDIFrameApp.cpp
 
 
-#include "resource.h"
+#include "stdafx.h"
 #include "DockingApp.h"
 
 

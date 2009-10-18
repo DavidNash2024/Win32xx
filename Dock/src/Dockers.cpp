@@ -1,6 +1,8 @@
 /////////////////////////////////////////////
 // TextDocker.cpp
 
+
+#include "stdafx.h"
 #include "DockingApp.h"
 #include "Mainfrm.h"
 #include "Dockers.h"

@@ -2,7 +2,8 @@
 // View.cpp
 //  Definitions for the CView class
 
-#include "../../Win32++/gdi.h"
+
+#include "stdafx.h"
 #include "PictureApp.h"
 #include "Mainfrm.h"
 #include "view.h"
