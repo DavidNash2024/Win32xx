@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="MDIFrame"
+	Name="MIDIFrame"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	TargetFrameworkVersion="131072"
 	>
@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/MDIFrame_2008.tlb"
+				TypeLibraryName=".\Release/MIDIFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -82,7 +82,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/MDIFrame_2008.pdb"
+				ProgramDatabaseFile=".\Release/MIDIFrame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/MDIFrame_2008.tlb"
+				TypeLibraryName=".\Debug/MIDIFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -177,7 +177,7 @@
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/MDIFrame_2008.pdb"
+				ProgramDatabaseFile=".\Debug/MIDIFrame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -233,7 +233,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/MDIFrame_2008.tlb"
+				TypeLibraryName=".\Debug/MIDIFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -271,7 +271,7 @@
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/MDIFrame_2008.pdb"
+				ProgramDatabaseFile=".\Debug/MIDIFrame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -327,7 +327,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/MDIFrame_2008.tlb"
+				TypeLibraryName=".\Release/MIDIFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -366,7 +366,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/MDIFrame_2008.pdb"
+				ProgramDatabaseFile=".\Release/MIDIFrame_2008.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"

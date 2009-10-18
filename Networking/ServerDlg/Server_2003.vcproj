@@ -307,6 +307,9 @@
 				RelativePath=".\resource.h">
 			</File>
 			<File
+				RelativePath=".\Server.h">
+			</File>
+			<File
 				RelativePath=".\stdafx.h">
 			</File>
 			<File
