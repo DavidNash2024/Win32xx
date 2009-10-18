@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="FastGDI"
+	Name="FormDemo"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2005.tlb"
+				TypeLibraryName=".\Release/FormDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -81,7 +81,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Release/FormDemo_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2005.tlb"
+				TypeLibraryName=".\Debug/FormDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -177,7 +177,7 @@
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Debug/FormDemo_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -234,7 +234,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2005.tlb"
+				TypeLibraryName=".\Debug/FormDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -272,7 +272,7 @@
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Debug/FormDemo_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -329,7 +329,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2005.tlb"
+				TypeLibraryName=".\Release/FormDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -368,7 +368,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Release/FormDemo_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -406,15 +406,15 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\src\ColourDialog.cpp"
+				RelativePath="..\src\FormApp.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.cpp"
+				RelativePath="..\src\FormDoc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\main.cpp"
+				RelativePath="..\src\FormView.cpp"
 				>
 			</File>
 			<File
@@ -422,15 +422,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\resource.rc"
+				RelativePath="..\src\Resource.rc"
 				>
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.cpp"
 				>
 			</File>
 		</Filter>
@@ -439,11 +435,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\src\ColourDialog.h"
+				RelativePath="..\src\FormApp.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.h"
+				RelativePath="..\src\FormDoc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\FormView.h"
 				>
 			</File>
 			<File
@@ -456,10 +456,6 @@
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.h"
 				>
 			</File>
 		</Filter>

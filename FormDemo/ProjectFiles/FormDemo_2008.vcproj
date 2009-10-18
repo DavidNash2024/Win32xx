@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
-	Name="FastGDI"
+	Version="9.00"
+	Name="FormDemo"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -41,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2005.tlb"
+				TypeLibraryName=".\Release/FormDemo_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -76,13 +77,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Release/FormDemo_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -102,9 +105,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2005.tlb"
+				TypeLibraryName=".\Debug/FormDemo_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -172,13 +172,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Debug/FormDemo_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -198,9 +200,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -234,7 +233,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2005.tlb"
+				TypeLibraryName=".\Debug/FormDemo_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -268,12 +267,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Debug/FormDemo_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -293,9 +294,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -329,7 +327,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2005.tlb"
+				TypeLibraryName=".\Release/FormDemo_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -364,12 +362,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Release/FormDemo_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -391,9 +391,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -406,15 +403,15 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\src\ColourDialog.cpp"
+				RelativePath="..\src\FormApp.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.cpp"
+				RelativePath="..\src\FormDoc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\main.cpp"
+				RelativePath="..\src\FormView.cpp"
 				>
 			</File>
 			<File
@@ -422,15 +419,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\resource.rc"
+				RelativePath="..\src\Resource.rc"
 				>
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.cpp"
 				>
 			</File>
 		</Filter>
@@ -439,11 +432,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\src\ColourDialog.h"
+				RelativePath="..\src\FormApp.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.h"
+				RelativePath="..\src\FormDoc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\FormView.h"
 				>
 			</File>
 			<File
@@ -456,10 +453,6 @@
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.h"
 				>
 			</File>
 		</Filter>
@@ -520,6 +513,14 @@
 			</File>
 			<File
 				RelativePath="..\..\Win32++\include\treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\wceframe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\wcestddef.h"
 				>
 			</File>
 			<File

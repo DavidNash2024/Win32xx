@@ -1,26 +1,26 @@
-# Microsoft Developer Studio Project File - Name="Explorer" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="DockTabbedMDI" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=Explorer - Win32 Debug Static Library
+CFG=DockTabbedMDI - Win32 Debug Static Library
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Explorer.mak".
+!MESSAGE NMAKE /f "DockTabbedMDI.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Explorer.mak" CFG="Explorer - Win32 Debug Static Library"
+!MESSAGE NMAKE /f "DockTabbedMDI.mak" CFG="DockTabbedMDI - Win32 Debug Static Library"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Explorer - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "Explorer - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "Explorer - Win32 Release Static Library" (based on "Win32 (x86) Application")
-!MESSAGE "Explorer - Win32 Debug Static Library" (based on "Win32 (x86) Application")
+!MESSAGE "DockTabbedMDI - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "DockTabbedMDI - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "DockTabbedMDI - Win32 Release Static Library" (based on "Win32 (x86) Application")
+!MESSAGE "DockTabbedMDI - Win32 Debug Static Library" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -31,7 +31,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "Explorer - Win32 Release"
+!IF  "$(CFG)" == "DockTabbedMDI - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -58,7 +58,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "Explorer - Win32 Debug"
+!ELSEIF  "$(CFG)" == "DockTabbedMDI - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -85,12 +85,12 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "Explorer - Win32 Release Static Library"
+!ELSEIF  "$(CFG)" == "DockTabbedMDI - Win32 Release Static Library"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "Explorer___Win32_Release_Static_Library"
-# PROP BASE Intermediate_Dir "Explorer___Win32_Release_Static_Library"
+# PROP BASE Output_Dir "DockTabbedMDI___Win32_Release_Static_Library"
+# PROP BASE Intermediate_Dir "DockTabbedMDI___Win32_Release_Static_Library"
 # PROP BASE Ignore_Export_Lib 0
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -114,12 +114,12 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib /nologo /subsystem:windows /machine:I386 /libpath:"../../Win32++/lib/VS6_Release"
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "Explorer - Win32 Debug Static Library"
+!ELSEIF  "$(CFG)" == "DockTabbedMDI - Win32 Debug Static Library"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "Explorer___Win32_Debug_Static_Library"
-# PROP BASE Intermediate_Dir "Explorer___Win32_Debug_Static_Library"
+# PROP BASE Output_Dir "DockTabbedMDI___Win32_Debug_Static_Library"
+# PROP BASE Intermediate_Dir "DockTabbedMDI___Win32_Debug_Static_Library"
 # PROP BASE Ignore_Export_Lib 0
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -147,16 +147,28 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "Explorer - Win32 Release"
-# Name "Explorer - Win32 Debug"
-# Name "Explorer - Win32 Release Static Library"
-# Name "Explorer - Win32 Debug Static Library"
+# Name "DockTabbedMDI - Win32 Release"
+# Name "DockTabbedMDI - Win32 Debug"
+# Name "DockTabbedMDI - Win32 Release Static Library"
+# Name "DockTabbedMDI - Win32 Debug Static Library"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\src\ExplorerApp.cpp
+SOURCE=..\src\Classes.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ComboBoxEx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\DockTabbedMDI.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Files.cpp
 # End Source File
 # Begin Source File
 
@@ -168,11 +180,15 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyListView.cpp
+SOURCE=..\src\MyTabbedMDI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyTreeView.cpp
+SOURCE=..\src\Output.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Rect.cpp
 # End Source File
 # Begin Source File
 
@@ -180,15 +196,19 @@ SOURCE=..\src\Resource.rc
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ShellWrapper.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\SplitterPanes.cpp
+SOURCE=..\src\Simple.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\StdAfx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\TabbedMDIApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Text.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -196,7 +216,23 @@ SOURCE=..\src\StdAfx.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\src\ExplorerApp.h
+SOURCE=..\src\Classes.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ComboBoxEx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\DockContainer.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\DockTabbedMDI.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Files.h
 # End Source File
 # Begin Source File
 
@@ -204,11 +240,15 @@ SOURCE=..\src\Mainfrm.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyListView.h
+SOURCE=..\src\MyTabbedMDI.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyTreeView.h
+SOURCE=..\src\Output.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Rect.h
 # End Source File
 # Begin Source File
 
@@ -216,15 +256,19 @@ SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ShellWrapper.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\SplitterPanes.h
+SOURCE=..\src\Simple.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\stdafx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\TabbedMDIApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Text.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

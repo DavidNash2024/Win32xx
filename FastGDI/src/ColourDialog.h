@@ -4,9 +4,6 @@
 #ifndef COLOURDIALOG_H
 #define COLOURDIALOG_H
 
-#include "../../Win32++/dialog.h"
-#include "resource.h"
-
 
 class CColourDialog : public CDialog
 {

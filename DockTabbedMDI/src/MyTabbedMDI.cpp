@@ -1,3 +1,7 @@
+
+
+
+#include "stdafx.h"
 #include "MyTabbedMDI.h"
 #include "Mainfrm.h"
 

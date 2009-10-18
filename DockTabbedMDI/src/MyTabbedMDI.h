@@ -1,7 +1,6 @@
 #ifndef MYTABBEDMDI_H
 #define MYTABBEDMDI_H
 
-#include "../../Win32++/tab.h"
 
 enum MDIChildIDs
 {

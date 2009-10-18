@@ -1,8 +1,10 @@
 //////////////////////////////////////////////
 //SdiApp.cpp
 
+
 #include "stdafx.h"
 #include "FormApp.h"
+
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

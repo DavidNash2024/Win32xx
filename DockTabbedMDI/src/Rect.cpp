@@ -2,7 +2,9 @@
 // Rect.cpp
 //  Definitions for the CViewRect class
 
-#include "../../Win32++/gdi.h"
+
+
+#include "stdafx.h"
 #include "Rect.h"
 #include "resource.h"
 

@@ -5,8 +5,7 @@
 #ifndef DOCKTABBEDMDI_H
 #define DOCKTABBEDMDI_H
 
-#include "../../Win32++/tab.h"
-#include "../../Win32++/docking.h"
+
 #include "MyTabbedMDI.h"
 
 

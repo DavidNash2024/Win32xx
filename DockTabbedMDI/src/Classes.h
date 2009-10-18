@@ -7,10 +7,8 @@
 #define CLASSES_H
 
 
-#include "../../Win32++/treeview.h"
-#include "../../Win32++/docking.h"
 #include "ComboBoxEx.h"
-#include "resource.h"
+
 
 // Declaration of the CViewClasses class
 class CViewClasses : public CTreeView

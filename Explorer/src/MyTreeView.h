@@ -7,11 +7,10 @@
 #define MYTREEVIEW_H
 
 
-#include "../../Win32++/treeview.h"
-#include <vector>
 #include "ShellWrapper.h"
 
 using namespace ShellWrapper;
+
 
 class CMyTreeView : public CTreeView
 {

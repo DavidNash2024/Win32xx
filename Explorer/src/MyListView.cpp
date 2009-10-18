@@ -2,6 +2,8 @@
 // RightView.cpp
 //  Definitions for the CMyListView and ListItemData classes
 
+
+#include "stdafx.h"
 #include "ExplorerApp.h"
 #include "MyListView.h"
 #include "resource.h"

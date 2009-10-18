@@ -3,6 +3,7 @@
 //              and CDockOutput classes
 
 
+#include "stdafx.h"
 #include "TabbedMDIApp.h"
 #include "Output.h"
 #include "resource.h"

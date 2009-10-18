@@ -2,6 +2,7 @@
 // TabbedMDI.cpp -  Definitions for the CDockTabbedMDI class
 
 
+#include "stdafx.h"
 #include "TabbedMDIApp.h"
 #include "DockTabbedMDI.h"
 #include "resource.h"

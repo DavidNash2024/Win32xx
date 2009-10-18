@@ -4,7 +4,9 @@
 #ifndef SDI_APP_H
 #define SDI_APP_H
 
+
 #include "Mainfrm.h"
+
 
 // Declaration of the CFrameApp class
 class CFormApp : public CWinApp

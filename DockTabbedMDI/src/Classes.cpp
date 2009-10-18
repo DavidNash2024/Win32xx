@@ -3,6 +3,7 @@
 //               and CDockClasses classes
 
 
+#include "stdafx.h"
 #include "Classes.h"
 #include "resource.h"
 #include "TabbedMDIApp.h"

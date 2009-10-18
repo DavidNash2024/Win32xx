@@ -4,7 +4,7 @@
 #ifndef DOCKCONTAINER_H
 #define DOCKCONTAINER_H
 
-#include "../../Win32++/docker.h"
+
 #include "Classes.h"
 #include "Files.h"
 

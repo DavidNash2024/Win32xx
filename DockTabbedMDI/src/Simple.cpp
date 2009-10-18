@@ -2,6 +2,7 @@
 // Simple.cpp -  Definitions for the CViewSimple class
 
 
+#include "stdafx.h"
 #include "Simple.h"
 #include "resource.h"
 

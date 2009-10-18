@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
-	Name="FastGDI"
+	Version="9.00"
+	Name="DockTabbedMDI"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -41,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2005.tlb"
+				TypeLibraryName=".\Release/DockTabbedMDI_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -76,13 +77,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Release/DockTabbedMDI_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -102,9 +105,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2005.tlb"
+				TypeLibraryName=".\Debug/DockTabbedMDI_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -172,13 +172,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Debug/DockTabbedMDI_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -198,9 +200,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -234,7 +233,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2005.tlb"
+				TypeLibraryName=".\Debug/DockTabbedMDI_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -268,12 +267,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Debug/DockTabbedMDI_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -293,9 +294,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -329,7 +327,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2005.tlb"
+				TypeLibraryName=".\Release/DockTabbedMDI_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -364,12 +362,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/FastGDI_2005.pdb"
+				ProgramDatabaseFile=".\Release/DockTabbedMDI_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -391,9 +391,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -406,11 +403,19 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\src\ColourDialog.cpp"
+				RelativePath="..\src\Classes.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.cpp"
+				RelativePath="..\src\ComboBoxEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DockTabbedMDI.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Files.cpp"
 				>
 			</File>
 			<File
@@ -422,7 +427,23 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\resource.rc"
+				RelativePath="..\src\MyTabbedMDI.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Output.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Rect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Simple.cpp"
 				>
 			</File>
 			<File
@@ -430,7 +451,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\View.cpp"
+				RelativePath="..\src\TabbedMDIApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Text.cpp"
 				>
 			</File>
 		</Filter>
@@ -439,11 +464,23 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\src\ColourDialog.h"
+				RelativePath="..\src\Classes.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.h"
+				RelativePath="..\src\ComboBoxEx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DockContainer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DockTabbedMDI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Files.h"
 				>
 			</File>
 			<File
@@ -451,7 +488,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MyTabbedMDI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Output.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Rect.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Simple.h"
 				>
 			</File>
 			<File
@@ -459,7 +512,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\View.h"
+				RelativePath="..\src\TabbedMDIApp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Text.h"
 				>
 			</File>
 		</Filter>
@@ -520,6 +577,14 @@
 			</File>
 			<File
 				RelativePath="..\..\Win32++\include\treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\wceframe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\wcestddef.h"
 				>
 			</File>
 			<File

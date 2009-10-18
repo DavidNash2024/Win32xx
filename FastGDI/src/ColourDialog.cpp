@@ -1,8 +1,11 @@
 
-#include "../../Win32++/gdi.h"
+
+
+#include "stdafx.h"
 #include "FastGDIApp.h"
 #include "Mainfrm.h"
 #include "ColourDialog.h"
+#include "resource.h"
 
 
 CColourDialog::CColourDialog(UINT nResID) : CDialog(nResID), m_hbmPreview(0), m_hbmPreviewOrig(0)

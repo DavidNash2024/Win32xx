@@ -7,7 +7,6 @@
 #define SPLITTERPANES_H
 
 
-#include "../../Win32++/docking.h"
 #include "MyListView.h"
 #include "MyTreeView.h"
 

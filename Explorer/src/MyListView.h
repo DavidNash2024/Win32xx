@@ -7,8 +7,6 @@
 #define MYLISTVIEW_H
 
 
-#include "../../Win32++/listview.h"
-#include <vector>
 #include "ShellWrapper.h"
 
 using namespace ShellWrapper;

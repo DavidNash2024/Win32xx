@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="FastGDI"
+	Name="DockTabbedMDI"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	SccProjectName=""
 	SccLocalPath="">
@@ -44,7 +44,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Release"
-				ProgramDatabaseFile=".\Release/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Release/DockTabbedMDI_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -53,7 +53,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2003.tlb"
+				TypeLibraryName=".\Release/DockTabbedMDI_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -109,7 +109,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Debug/DockTabbedMDI_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -118,7 +118,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2003.tlb"
+				TypeLibraryName=".\Debug/DockTabbedMDI_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -173,7 +173,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Debug/DockTabbedMDI_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -182,7 +182,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2003.tlb"
+				TypeLibraryName=".\Debug/DockTabbedMDI_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -238,7 +238,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Release/DockTabbedMDI_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -247,7 +247,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2003.tlb"
+				TypeLibraryName=".\Release/DockTabbedMDI_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -279,10 +279,16 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\src\ColourDialog.cpp">
+				RelativePath="..\src\Classes.cpp">
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.cpp">
+				RelativePath="..\src\ComboBoxEx.cpp">
+			</File>
+			<File
+				RelativePath="..\src\DockTabbedMDI.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Files.cpp">
 			</File>
 			<File
 				RelativePath="..\src\main.cpp">
@@ -291,35 +297,74 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\resource.rc">
+				RelativePath="..\src\MyTabbedMDI.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Output.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Rect.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Resource.rc">
+			</File>
+			<File
+				RelativePath="..\src\Simple.cpp">
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
-				RelativePath="..\src\View.cpp">
+				RelativePath="..\src\TabbedMDIApp.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Text.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\src\ColourDialog.h">
+				RelativePath="..\src\Classes.h">
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.h">
+				RelativePath="..\src\ComboBoxEx.h">
+			</File>
+			<File
+				RelativePath="..\src\DockContainer.h">
+			</File>
+			<File
+				RelativePath="..\src\DockTabbedMDI.h">
+			</File>
+			<File
+				RelativePath="..\src\Files.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
+				RelativePath="..\src\MyTabbedMDI.h">
+			</File>
+			<File
+				RelativePath="..\src\Output.h">
+			</File>
+			<File
+				RelativePath="..\src\Rect.h">
+			</File>
+			<File
 				RelativePath="..\src\resource.h">
+			</File>
+			<File
+				RelativePath="..\src\Simple.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">
 			</File>
 			<File
-				RelativePath="..\src\View.h">
+				RelativePath="..\src\TabbedMDIApp.h">
+			</File>
+			<File
+				RelativePath="..\src\Text.h">
 			</File>
 		</Filter>
 		<Filter

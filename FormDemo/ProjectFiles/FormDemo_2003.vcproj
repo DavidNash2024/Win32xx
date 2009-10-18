@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="FastGDI"
+	Name="FormDemo"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	SccProjectName=""
 	SccLocalPath="">
@@ -44,7 +44,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Release"
-				ProgramDatabaseFile=".\Release/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Release/FormDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -53,7 +53,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2003.tlb"
+				TypeLibraryName=".\Release/FormDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -109,7 +109,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Debug/FormDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -118,7 +118,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2003.tlb"
+				TypeLibraryName=".\Debug/FormDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -173,7 +173,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Debug/FormDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -182,7 +182,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/FastGDI_2003.tlb"
+				TypeLibraryName=".\Debug/FormDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -238,7 +238,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/FastGDI_2003.pdb"
+				ProgramDatabaseFile=".\Release/FormDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -247,7 +247,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/FastGDI_2003.tlb"
+				TypeLibraryName=".\Release/FormDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -279,35 +279,35 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\src\ColourDialog.cpp">
+				RelativePath="..\src\FormApp.cpp">
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.cpp">
+				RelativePath="..\src\FormDoc.cpp">
 			</File>
 			<File
-				RelativePath="..\src\main.cpp">
+				RelativePath="..\src\FormView.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\resource.rc">
+				RelativePath="..\src\Resource.rc">
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
-			</File>
-			<File
-				RelativePath="..\src\View.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\src\ColourDialog.h">
+				RelativePath="..\src\FormApp.h">
 			</File>
 			<File
-				RelativePath="..\src\FastGDIApp.h">
+				RelativePath="..\src\FormDoc.h">
+			</File>
+			<File
+				RelativePath="..\src\FormView.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
@@ -317,9 +317,6 @@
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">
-			</File>
-			<File
-				RelativePath="..\src\View.h">
 			</File>
 		</Filter>
 		<Filter

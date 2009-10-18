@@ -6,7 +6,7 @@
 #ifndef RECT_H
 #define RECT_H
 
-#include "../../Win32++/wincore.h"
+
 
 // Declaration of CViewRect
 class CViewRect : public CWnd

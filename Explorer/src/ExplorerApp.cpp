@@ -1,8 +1,10 @@
 ///////////////////////////////////////////////
 //ExplorerApp.cpp -  Definitions for the CExplorerApp class
 
-#include "resource.h"
+
+#include "stdafx.h"
 #include "ExplorerApp.h"
+#include "resource.h"
 
 
 CExplorerApp::CExplorerApp()
