@@ -2,9 +2,12 @@
 // Files.cpp
 //  Definitions for CViewFiles and CContainFiles
 
+
+#include "stdafx.h"
 #include "TabDemoApp.h"
 #include "Files.h"
 #include "resource.h"
+
 
 ///////////////////////////////////////////////
 // CViewFiles functions

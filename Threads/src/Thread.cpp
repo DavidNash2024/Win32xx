@@ -2,6 +2,8 @@
 // Thread.cpp
 //  Definitions for the CThread class
 
+
+#include "stdafx.h"
 #include <process.h>
 #include "Thread.h"
 

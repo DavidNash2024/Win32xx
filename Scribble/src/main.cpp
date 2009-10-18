@@ -2,6 +2,7 @@
 // Main.cpp
 
 
+#include "stdafx.h"
 #include "ScribbleApp.h"
 
 

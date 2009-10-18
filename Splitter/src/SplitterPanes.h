@@ -2,8 +2,8 @@
 #define SPLITTERPANES_H
 
 
-#include "../../Win32++/docking.h"
 #include "Views.h"
+
 
 class CPaneTopLeft : public CDocker
 {

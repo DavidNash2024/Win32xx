@@ -1,6 +1,8 @@
 ///////////////////////////////////////////////////////
 //ThreadApp.cpp -  Definitions for the CThreadApp class
 
+
+#include "stdafx.h"
 #include "ThreadApp.h"
 
 

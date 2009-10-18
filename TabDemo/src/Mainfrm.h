@@ -4,8 +4,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "../../Win32++/frame.h"
-#include "../../Win32++/tab.h"
+
 #include "Classes.h"
 #include "Files.h"
 

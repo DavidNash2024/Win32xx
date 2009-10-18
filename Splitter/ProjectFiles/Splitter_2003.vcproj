@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="Splitter"
+	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -11,38 +12,39 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Release|Win32"
+			Name="Release Static Library|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="0">
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="../../Win32++/src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/Splitter.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Release/Splitter.exe"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/Splitter.pdb"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Release"
+				ProgramDatabaseFile=".\Release/Splitter_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -51,7 +53,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Splitter.tlb"
+				TypeLibraryName=".\Release/Splitter_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -61,7 +63,74 @@
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"/>
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="../../Win32++/src"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug Static Library|Win32"
+			OutputDirectory=".\Debug"
+			IntermediateDirectory=".\Debug"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../../Win32++/src"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="2"
+				AssemblerListingLocation=".\Debug/"
+				ObjectFile=".\Debug/"
+				ProgramDataBaseFileName=".\Debug/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="4"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Debug"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\Debug/Splitter_2003.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Debug/Splitter_2003.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="../../Win32++/src"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -80,32 +149,31 @@
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="0">
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../../Win32++/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/Splitter.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="4"
+				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib"
-				OutputFile=".\Debug/Splitter.exe"
-				LinkIncremental="2"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Splitter.pdb"
+				ProgramDatabaseFile=".\Debug/Splitter_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -114,7 +182,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Splitter.tlb"
+				TypeLibraryName=".\Debug/Splitter_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -124,7 +192,74 @@
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"/>
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="../../Win32++/include"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory=".\Release"
+			IntermediateDirectory=".\Release"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="../../Win32++/include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				StringPooling="TRUE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="2"
+				AssemblerListingLocation=".\Release/"
+				ObjectFile=".\Release/"
+				ProgramDataBaseFileName=".\Release/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				ProgramDatabaseFile=".\Release/Splitter_2003.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release/Splitter_2003.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="../../Win32++/include"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -159,6 +294,9 @@
 				RelativePath="..\src\SplitterPanes.cpp">
 			</File>
 			<File
+				RelativePath="..\src\StdAfx.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Views.cpp">
 			</File>
 		</Filter>
@@ -178,62 +316,65 @@
 				RelativePath="..\src\SplitterPanes.h">
 			</File>
 			<File
+				RelativePath="..\src\stdafx.h">
+			</File>
+			<File
 				RelativePath="..\src\Views.h">
-			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
-			<File
-				RelativePath="..\src\res\classview.bmp">
-			</File>
-			<File
-				RelativePath="..\src\res\fileview.bmp">
-			</File>
-			<File
-				RelativePath="..\src\res\SplitH.cur">
-			</File>
-			<File
-				RelativePath="..\src\res\Splitter.ico">
-			</File>
-			<File
-				RelativePath="..\src\res\SplitV.cur">
-			</File>
-			<File
-				RelativePath="..\src\res\toolbar.bmp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
 			Filter="">
 			<File
-				RelativePath="..\..\Win32++\default_resource.h">
+				RelativePath="..\..\Win32++\include\dialog.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\dialog.h">
+				RelativePath="..\..\Win32++\include\docking.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\frame.h">
+				RelativePath="..\..\Win32++\include\frame.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\gdi.h">
+				RelativePath="..\..\Win32++\include\gdi.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\rebar.h">
+				RelativePath="..\..\Win32++\include\listview.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\statusbar.h">
+				RelativePath="..\..\Win32++\include\mdi.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\toolbar.h">
+				RelativePath="..\..\Win32++\include\propertysheet.h">
 			</File>
 			<File
-				RelativePath="..\..\Win32++\wincore.h">
+				RelativePath="..\..\Win32++\include\rebar.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\socket.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\splitter.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\statusbar.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\tab.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\toolbar.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\treeview.h">
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\wincore.h">
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\src\res\Win32++.manifest">
-		</File>
+		<Filter
+			Name="Resource Files"
+			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

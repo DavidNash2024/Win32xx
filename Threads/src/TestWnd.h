@@ -7,8 +7,6 @@
 #define TESTWND_H
 
 
-#include "../../Win32++/wincore.h"
-
 
 class CTestWindow : public CWnd
 {

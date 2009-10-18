@@ -2,8 +2,9 @@
 //SplitterApp.cpp -  Definitions for the CSplitterApp class
 
 
-#include "resource.h"
+#include "stdafx.h"
 #include "SplitterApp.h"
+#include "resource.h"
 
 
 CSplitterApp::CSplitterApp()

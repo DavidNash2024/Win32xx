@@ -1,5 +1,6 @@
 
 
+#include "stdafx.h"
 #include "Mainfrm.h"
 #include "MyPropertySheet.h"
 #include "resource.h"

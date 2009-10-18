@@ -3,9 +3,9 @@
 //  Definitions for the CView class
 
 
+#include "stdafx.h"
 #include "view.h"
 #include "resource.h"
-#include "../../Win32++/gdi.h"
 
 
 using namespace std;

@@ -3,6 +3,7 @@
 //  Definitions for CViewClasses
 
 
+#include "stdafx.h"
 #include "TabDemoApp.h"
 #include "Classes.h"
 #include "resource.h"

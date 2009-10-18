@@ -2,9 +2,10 @@
 // Mainfrm.cpp
 
 
-#include "resource.h"
+#include "stdafx.h"
 #include "TabDemoApp.h"
 #include "mainfrm.h"
+#include "resource.h"
 
 
 // Definitions for the CMainFrame class

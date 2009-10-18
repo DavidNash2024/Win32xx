@@ -1,8 +1,9 @@
 ///////////////////////////////
 // View.cpp
 
-#include "resource.h"
+
 #include "View.h"
+#include "resource.h"
 
 
 // Definitions for the CView class

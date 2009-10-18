@@ -6,6 +6,7 @@
 #ifndef THREAD_H
 #define THREAD_H
 
+
 #include "ThreadApp.h"
 #include "TestWnd.h"
 

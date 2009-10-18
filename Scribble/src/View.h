@@ -6,11 +6,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "../../Win32++/wincore.h"
-#include <vector>
-
-
-using std::vector;
 
 
 class CView : public CWnd
@@ -45,7 +40,7 @@ private:
 	void StorePoint(int x, int y, bool PenDown);
 
 	HBRUSH m_hBrush;
-	vector<PlotPoint> m_points;	// Points of lines to draw
+	std::vector<PlotPoint> m_points;	// Points of lines to draw
 	COLORREF m_PenColor;
 };
 

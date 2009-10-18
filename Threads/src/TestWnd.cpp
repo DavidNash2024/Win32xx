@@ -3,7 +3,7 @@
 //  Definitions for the CTestWindow class
 
 
-
+#include "stdafx.h"
 #include "TestWnd.h"
 #include "ThreadApp.h"
 

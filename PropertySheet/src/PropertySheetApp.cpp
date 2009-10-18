@@ -1,6 +1,8 @@
 //////////////////////////////////////////////
 //PropertySheetApp.cpp
 
+
+#include "stdafx.h"
 #include "PropertySheetApp.h"
 
 
