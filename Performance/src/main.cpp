@@ -1,6 +1,8 @@
 ///////////////////////////////////////
 // main.cpp
 
+
+#include "stdafx.h"
 #include "PerfApp.h"
 
 

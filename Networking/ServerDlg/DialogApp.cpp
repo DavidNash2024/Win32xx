@@ -1,8 +1,10 @@
 //////////////////////////////////////
 // DialogApp.cpp
 
-#include "resource.h"
+
+#include "stdafx.h"
 #include "DialogApp.h"
+#include "resource.h"
 
 
 // Definitions for the CDialogApp class

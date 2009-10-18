@@ -2,8 +2,9 @@
 // MDIDemoApp.h
 
 
-#include "resource.h"
+#include "stdafx.h"
 #include "MDIDemoApp.h"
+#include "resource.h"
 
 
 CMDIDemoApp::CMDIDemoApp()

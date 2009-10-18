@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include <tchar.h>
+#include "stdafx.h"
 #include "DialogApp.h"
 
 

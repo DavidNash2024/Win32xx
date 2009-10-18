@@ -2,8 +2,11 @@
 // MDIChildSimple.cpp
 //  Definitions for the CViewSimple and CMDIChildSimple classes
 
+
+#include "stdafx.h"
 #include "MDIChildSimple.h"
 #include "resource.h"
+
 
 // CViewSimple definitions
 CViewSimple::CViewSimple() : m_Color(RGB(0,0,255))

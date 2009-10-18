@@ -3,9 +3,8 @@
 // This file contains the resource ID definitions.
 
 
-//The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,
-//  and Window Caption
-#define IDW_MAIN                        100
+#include "default_resource.h"
+
 
 //Resource IDs for the dialog
 #define IDD_DIALOG1                     101
@@ -23,4 +22,4 @@
 #define IDC_RADIO_TCP                   140
 #define IDC_RADIO_UDP                   141
 
-#define IDC_STATIC                      -1
+

@@ -1,8 +1,10 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include <tchar.h>
+
+#include "stdafx.h"
 #include "DialogApp.h"
+#include "resource.h"
 
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)

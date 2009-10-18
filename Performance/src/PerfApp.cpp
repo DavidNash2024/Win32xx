@@ -1,6 +1,8 @@
 //////////////////////////////////////////////////////////
 //PerfApp.cpp -  Definitions for the CPerformanceApp class
 
+
+#include "stdafx.h"
 #include "PerfApp.h"
 
 

@@ -2,8 +2,11 @@
 // MDIChildTreeView.cpp
 //  Definitions for the CViewTree and CMDIChildTreeView classes
 
+
+#include "stdafx.h"
 #include "MDIChildTreeView.h"
 #include "resource.h"
+
 
 ///////////////////////////////////////////////
 // CViewTree functions

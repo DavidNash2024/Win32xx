@@ -6,7 +6,6 @@
 #define MAINMDIFRM_H
 
 
-#include "../../Win32++/mdi.h"
 
 // Define BTNS_WHOLEDROPDOWN
 #ifndef BTNS_WHOLEDROPDOWN

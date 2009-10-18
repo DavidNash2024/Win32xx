@@ -4,9 +4,8 @@
 #ifndef CLIENTDIALOG_H
 #define CLIENTDIALOG_H
 
-#include "../../Win32++/dialog.h"
+
 #include "Client.h"
-#include "resource.h"
 
 
 // Declaration of the CClientDialog class

@@ -1,4 +1,6 @@
 
+
+#include "stdafx.h"
 #include "DialogApp.h"
 #include "Client.h"
 

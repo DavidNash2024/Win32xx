@@ -4,6 +4,7 @@
 #ifndef DIALOGAPP_H
 #define DIALOGAPP_H
 
+
 #include "SvrDialog.h"
 
 

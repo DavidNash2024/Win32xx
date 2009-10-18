@@ -2,7 +2,6 @@
 #define SERVER_H
 
 
-#include "../../Win32++/socket.h"
 
 // User defined message
 #define USER_ACCEPT     WM_APP+1

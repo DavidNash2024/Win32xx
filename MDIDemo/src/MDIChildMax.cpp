@@ -2,6 +2,8 @@
 // MDIChildMax.cpp
 //  Definitions for the CViewMax and CMDIChildMax classes
 
+
+#include "stdafx.h"
 #include "MDIChildMax.h"
 #include "resource.h"
 

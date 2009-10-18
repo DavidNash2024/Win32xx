@@ -6,8 +6,7 @@
 #ifndef MDICHILDTREEVIEW_H
 #define MDICHILDTREEVIEW_H
 
-#include "../../Win32++/mdi.h"
-#include "../../Win32++/treeview.h"
+
 
 class CViewTree : public CTreeView
 {

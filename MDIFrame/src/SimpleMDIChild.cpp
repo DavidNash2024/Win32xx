@@ -2,8 +2,11 @@
 // MDIChildView.cpp
 //  Definitions for the CSimpleView and CSimpleMDIChild classes
 
+
+#include "stdafx.h"
 #include "SimpleMDIChild.h"
 #include "resource.h"
+
 
 // CSimpleView definitions
 CSimpleView::CSimpleView() : m_Color(RGB(0,0,255))

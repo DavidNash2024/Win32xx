@@ -1,6 +1,8 @@
 ///////////////////////////////////////
 // ClientDialog.cpp
 
+
+#include "stdafx.h"
 #include "ClientDialog.h"
 #include "resource.h"
 

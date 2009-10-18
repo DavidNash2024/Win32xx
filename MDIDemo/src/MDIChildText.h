@@ -6,7 +6,6 @@
 #ifndef MDICHILDTEXT_H
 #define MDICHILDTEXT_H
 
-#include "../../Win32++/mdi.h"
 
 
 class CViewText : public CWnd

@@ -2,7 +2,9 @@
 // main.cpp
 
 
+#include "stdafx.h"
 #include "MDIDemoApp.h"
+
 
 INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

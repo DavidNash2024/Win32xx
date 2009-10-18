@@ -6,7 +6,6 @@
 #define MAINMDIFRM_H
 
 
-#include "../../Win32++/mdi.h"
 
 // MDI frames are inherrited from CMDIFrame
 class CMainMDIFrame : public CMDIFrame

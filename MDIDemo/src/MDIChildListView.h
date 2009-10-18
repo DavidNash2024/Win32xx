@@ -6,8 +6,7 @@
 #ifndef MDICHILDLISTVIEW_H
 #define MDICHILDLISTVIEW_H
 
-#include "../../Win32++/mdi.h"
-#include "../../Win32++/listview.h"
+
 
 class CViewList : public CListView
 {

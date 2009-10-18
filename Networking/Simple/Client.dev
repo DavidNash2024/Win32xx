@@ -1,11 +1,11 @@
 [Project]
 FileName=Client.dev
 Name=Client
-UnitCount=2
+UnitCount=1
 Type=1
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=
 ResourceIncludes=

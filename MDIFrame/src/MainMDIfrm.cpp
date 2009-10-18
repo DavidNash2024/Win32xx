@@ -2,9 +2,10 @@
 // MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
 
 
-#include "resource.h"
+#include "stdafx.h"
 #include "mainMDIfrm.h"
 #include "SimpleMDIChild.h"
+#include "resource.h"
 
 
 CMainMDIFrame::CMainMDIFrame()
