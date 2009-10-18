@@ -1,18 +1,24 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastGDI", "FastGDI_2003.vcproj", "{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastGDI", "FastGDI_2003.vcproj", "{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
+		Debug Static Library = Debug Static Library
 		Release = Release
+		Release Static Library = Release Static Library
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Debug.ActiveCfg = Debug|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Debug.Build.0 = Debug|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Release.ActiveCfg = Release|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Release.Build.0 = Release|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug.ActiveCfg = Debug|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug.Build.0 = Debug|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug Static Library.ActiveCfg = Debug Static Library|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Debug Static Library.Build.0 = Debug Static Library|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release.ActiveCfg = Release|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release.Build.0 = Release|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release Static Library.ActiveCfg = Release Static Library|Win32
+		{81273105-D0E0-40EF-AF16-1F17A12E69BC}.Release Static Library.Build.0 = Release Static Library|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

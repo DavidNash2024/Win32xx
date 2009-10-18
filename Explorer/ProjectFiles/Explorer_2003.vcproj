@@ -325,6 +325,9 @@
 				RelativePath="..\src\resource.h">
 			</File>
 			<File
+				RelativePath="..\src\ShellWrapper.h">
+			</File>
+			<File
 				RelativePath="..\src\SplitterPanes.h">
 			</File>
 			<File
