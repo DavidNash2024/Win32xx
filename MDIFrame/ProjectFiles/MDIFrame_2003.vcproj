@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="MIDIFrame"
+	Name="MDIFrame"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	SccProjectName=""
 	SccLocalPath="">
@@ -44,7 +44,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Release"
-				ProgramDatabaseFile=".\Release/MIDIFrame_2003.pdb"
+				ProgramDatabaseFile=".\Release/MDIFrame_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -53,7 +53,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/MIDIFrame_2003.tlb"
+				TypeLibraryName=".\Release/MDIFrame_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -109,7 +109,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/MIDIFrame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/MDIFrame_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -118,7 +118,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/MIDIFrame_2003.tlb"
+				TypeLibraryName=".\Debug/MDIFrame_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -173,7 +173,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/MIDIFrame_2003.pdb"
+				ProgramDatabaseFile=".\Debug/MDIFrame_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -182,7 +182,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/MIDIFrame_2003.tlb"
+				TypeLibraryName=".\Debug/MDIFrame_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -238,7 +238,7 @@
 				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/MIDIFrame_2003.pdb"
+				ProgramDatabaseFile=".\Release/MDIFrame_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -247,7 +247,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/MIDIFrame_2003.tlb"
+				TypeLibraryName=".\Release/MDIFrame_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>

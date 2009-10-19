@@ -1,18 +1,18 @@
 [Project]
 FileName=DialogDemo_DEBUG.dev
 Name=DialogDemo
-UnitCount=13
+UnitCount=11
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=DialogDemo_private.rc
-ResourceIncludes=
+ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _WIN32_IE=0x0400_@@_-D _DEBUG_@@__@@_
-Linker=-lComctl32_@@_
+Linker=-lComctl32_@@_-lWs2_32_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug

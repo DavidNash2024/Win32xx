@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../../Win32++/lib/VS2003_Debug/Win32xx.lib"
+				OutputFile="../lib/VS2003_Debug/Win32xx.lib"
 				SuppressStartupBanner="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../../Win32++/lib/VS2003_Release/Win32xx.lib"
+				OutputFile="../lib/VS2003_Release/Win32xx.lib"
 				SuppressStartupBanner="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"/>

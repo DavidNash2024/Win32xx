@@ -1,14 +1,14 @@
 [Project]
 FileName=Simple_RELEASE.dev
 Name=Simple
-UnitCount=8
+UnitCount=7
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=Simple_private.rc
-ResourceIncludes=
+ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@_

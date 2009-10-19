@@ -1,24 +1,24 @@
 [Project]
-FileName=Notepad_DEBUG.dev
-Name=Notepad
-UnitCount=9
+FileName=FormDemo_DEBUG.dev
+Name=FormDemo
+UnitCount=12
 Type=0
 Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=R1Win32_private.rc
+PrivateResource=FormDemo_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@_
-Linker=-lComctl32_@@_-lWs2_32_@@_
+CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@__@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lws2_32_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug
 ObjectOutput=.\Dev-C++\Debug
-OverrideOutput=0
-OverrideOutputName=Notepad.exe
+OverrideOutput=1
+OverrideOutputName=FormDemo.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000
+CompilerSettings=0000001000000001000000
 
 [VersionInfo]
 Major=0
@@ -48,7 +48,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit1]
-FileName=main.cpp
+FileName=FormApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -58,17 +58,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=Mainfrm.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
-FileName=Mainfrm.h
+FileName=FormApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -77,8 +67,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit3]
+FileName=FormDoc.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit4]
-FileName=resource.h
+FileName=FormDoc.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -88,18 +88,19 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=Resource.rc
-Folder=Resource
+FileName=FormView.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=RichView.cpp
+FileName=FormView.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -107,17 +108,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=RichView.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit8]
-FileName=TextApp.cpp
+FileName=Mainfrm.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -126,8 +117,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
-FileName=TextApp.h
+[Unit8]
+FileName=Mainfrm.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -136,20 +127,10 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
-FileName=..\..\Win32++\default_resource.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit11]
-FileName=..\..\Win32++\dialog.h
+FileName=StdAfx.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -157,19 +138,19 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\..\Win32++\frame.h
-CompileCpp=1
-Folder=Win32++
+FileName=stdafx.h
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit13]
-FileName=..\..\Win32++\gdi.h
+FileName=StdAfx.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=FormDemo
 Compile=1
 Link=1
 Priority=1000
@@ -177,61 +158,30 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\..\Win32++\rebar.h
+FileName=stdafx.h
 CompileCpp=1
-Folder=Win32++
+Folder=FormDemo
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
-FileName=..\..\Win32++\toolbar.h
+[Unit9]
+FileName=resource.h
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
-FileName=..\..\Win32++\wincore.h
-CompileCpp=1
-Folder=Win32++
+[Unit10]
+FileName=Resource.rc
+Folder=Resource
 Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit15]
-FileName=..\..\Win32++\statusbar.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit18]
-FileName=..\Win32++\GDI.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit19]
-FileName=..\Win32++\GDI.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

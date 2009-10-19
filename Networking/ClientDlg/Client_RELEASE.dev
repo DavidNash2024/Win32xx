@@ -1,14 +1,14 @@
 [Project]
 FileName=Client_RELEASE.dev
 Name=Server
-UnitCount=13
+UnitCount=9
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=Server_private.rc
-ResourceIncludes=
+ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@_
@@ -30,7 +30,7 @@ CompilerSet=0
 CompilerSettings=0000001000000000000000
 
 [Unit5]
-FileName=Client.cpp
+FileName=DialogApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=ClientDialog.cpp
+FileName=main.cpp
 Folder=Source
 Compile=1
 Link=1
@@ -50,7 +50,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=ClientDialog.h
+FileName=resource.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -60,11 +60,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=DialogApp.cpp
+FileName=Resource.rc
 CompileCpp=1
-Folder=Source
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -118,9 +118,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit1]
-FileName=..\..\Win32++\Default_Resource.h
+FileName=Client.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -128,9 +128,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\..\Win32++\Dialog.h
+FileName=Client.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -138,9 +138,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\..\Win32++\Socket.h
+FileName=ClientDialog.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -148,9 +148,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\..\Win32++\WinCore.h
+FileName=ClientDialog.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -158,7 +158,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=Client.h
+FileName=DialogApp.h
 CompileCpp=1
 Folder=Header
 Compile=1

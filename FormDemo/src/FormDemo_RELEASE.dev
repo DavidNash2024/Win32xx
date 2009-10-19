@@ -1,24 +1,24 @@
 [Project]
-FileName=DialogTabDemo_DEBUG.dev
-Name=DialogTabDemo
-UnitCount=7
+FileName=FormDemo_RELEASE.dev
+Name=FormDemo
+UnitCount=12
 Type=0
 Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=DialogTabDemo_private.rc
+PrivateResource=FormDemo_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0400_@@_-D _DEBUG_@@_
-Linker=-lComctl32_@@_-lWs2_32_@@_
+CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@__@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lws2_32_@@_
 IsCpp=1
 Icon=
-ExeOutput=.\Dev-C++\Debug
-ObjectOutput=.\Dev-C++\Debug
-OverrideOutput=0
-OverrideOutputName=DialogTabDemo.exe
+ExeOutput=.\Dev-C++\Release
+ObjectOutput=.\Dev-C++\Release
+OverrideOutput=1
+OverrideOutputName=FormDemo.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -48,9 +48,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit1]
-FileName=resource.h
+FileName=FormApp.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -58,7 +58,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=DialogApp.h
+FileName=FormApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -68,7 +68,17 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=MyDialog.h
+FileName=FormDoc.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit4]
+FileName=FormDoc.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -77,17 +87,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
-FileName=Resource.rc
-Folder=Resource
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit5]
-FileName=MyDialog.cpp
+FileName=FormView.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -97,9 +98,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=DialogApp.cpp
+FileName=FormView.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -107,7 +108,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=main.cpp
+FileName=Mainfrm.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -117,9 +118,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\..\Win32++\default_resource.h
+FileName=Mainfrm.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -127,9 +128,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\..\Win32++\dialog.h
+FileName=resource.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -137,19 +138,28 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\..\Win32++\tab.h
+FileName=Resource.rc
+Folder=Resource
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=StdAfx.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
-FileName=..\..\Win32++\wincore.h
+[Unit12]
+FileName=stdafx.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

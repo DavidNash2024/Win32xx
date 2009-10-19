@@ -1,18 +1,18 @@
 [Project]
 FileName=Explorer_DEBUG.dev
 Name=Explorer
-UnitCount=26
+UnitCount=15
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=Explorer_DEBUG_private.rc
-ResourceIncludes=
+ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0500_@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lShlwapi_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lShlwapi_@@_-lWs2_32_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug
@@ -248,9 +248,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\..\Win32++\default_resource.h
+FileName=SplitterPanes.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -258,9 +258,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\..\Win32++\dialog.h
+FileName=SplitterPanes.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

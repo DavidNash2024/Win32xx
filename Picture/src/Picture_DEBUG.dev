@@ -1,18 +1,18 @@
 [Project]
 FileName=Picture_DEBUG.dev
 Name=Picture
-UnitCount=17
+UnitCount=9
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=Picture_private.rc
-ResourceIncludes=
+ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lws2_32_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug

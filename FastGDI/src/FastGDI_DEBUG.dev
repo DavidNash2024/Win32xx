@@ -1,18 +1,18 @@
 [Project]
 FileName=FastGDI_DEBUG.dev
 Name=FastGDI
-UnitCount=19
+UnitCount=11
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=FastGDI_private.rc
-ResourceIncludes=
+ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@__@@_
-Linker=-lComctl32_@@__@@__@@_
+Linker=-lComctl32_@@_-lWs2_32_@@__@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug
