@@ -14,6 +14,7 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
 					<Add directory="..\..\Win32++\include" />
@@ -35,6 +36,7 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
 					<Add directory="..\..\Win32++\include" />
@@ -56,7 +58,7 @@
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
-					<Add option="/MLd" />
+					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/W3" />
@@ -133,6 +135,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
+					<Add library="Ws2_32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -152,6 +155,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
+					<Add library="Ws2_32" />
 				</Linker>
 			</Target>
 		</Build>

@@ -90,3 +90,5 @@ FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vco"
 
 popd
 popd
+
+call "CleanTutorials"

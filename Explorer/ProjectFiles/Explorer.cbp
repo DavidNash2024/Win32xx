@@ -14,11 +14,14 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -34,11 +37,14 @@
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
+					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="import32" />
@@ -54,7 +60,7 @@
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
-					<Add option="/MLd" />
+					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/W3" />
@@ -64,9 +70,11 @@
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -95,9 +103,11 @@
 					<Add option="/DNDEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -122,10 +132,15 @@
 					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D_WIN32_IE=0x0500" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Win32++\include" />
+				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="ole32" />
+					<Add library="Ws2_32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -138,10 +153,15 @@
 					<Add option="-Wall" />
 					<Add option="-D_WIN32_IE=0x0500" />
 					<Add option="-DNDEBUG" />
+					<Add directory="..\..\Win32++\include" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Win32++\include" />
+				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="ole32" />
+					<Add library="Ws2_32" />
 				</Linker>
 			</Target>
 		</Build>

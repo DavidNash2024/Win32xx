@@ -1,8 +1,9 @@
 
 ::A batch file to remove unnecessary files from
-:: each Visual Studio project
+:: each Visual Studio project in Tutorials
 
-pushd ..
+REM: Change the directory to the parent
+pushd ..\..\Tutorials
 
 
 ::Remove directories
