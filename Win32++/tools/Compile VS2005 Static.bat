@@ -13,11 +13,11 @@ pushd ..\..
 if exist "Win32++\tools\VS2005\static" rmdir /s /q "Win32++\tools\VS2005\static"
 
 REM:  Build the VS2005 static Library
-devenv /rebuild Debug Win32++\"Library Projects"\Library_2005.sln 		>>"Win32++\tools\VS2005_static.log"
-devenv /rebuild Release Win32++\"Library Projects"\Library_2005.sln 		>>"Win32++\tools\VS2005_static.log"
+devenv /rebuild Debug "Win32++\Library Projects\Library_2005.sln" 		>"Win32++\tools\VS2005_static.log"
+devenv /rebuild Release "Win32++\Library Projects\Library_2005.sln" 		>>"Win32++\tools\VS2005_static.log"
 
 ::Compile code
-devenv /rebuild "Debug Static Library" Browser\ProjectFiles\Browser_2005.sln  			> "Win32++\tools\VS2005_static.log"
+devenv /rebuild "Debug Static Library" Browser\ProjectFiles\Browser_2005.sln  			>>"Win32++\tools\VS2005_static.log"
 devenv /rebuild "Release Static Library" Browser\ProjectFiles\Browser_2005.sln 			>>"Win32++\tools\VS2005_static.log"
 devenv /rebuild "Debug Static Library" Dialog\ProjectFiles\Dialog_2005.sln 			>>"Win32++\tools\VS2005_static.log"
 devenv /rebuild "Release Static Library" Dialog\ProjectFiles\Dialog_2005.sln 			>>"Win32++\tools\VS2005_static.log"
@@ -139,4 +139,5 @@ copy Themes\ProjectFiles\Release\Themes.exe                   "Win32++\tools\VS2
 copy Threads\ProjectFiles\Release\Threads.exe                 "Win32++\tools\VS2005\static\Release"    >>"Win32++\tools\VS2005_static.log"
 
 REM: Pop the directory change off the stack
-pop
+popd
+

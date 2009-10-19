@@ -190,3 +190,4 @@ copy Tutorial9\Release\Tutorial9.exe         "Win32++\tools\VS2005\Tutorials\Rel
 REM: Pop the directory change off the stack
 popd
 popd
+

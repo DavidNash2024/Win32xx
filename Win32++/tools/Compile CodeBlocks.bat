@@ -14,9 +14,9 @@ popd
 
 REM: Change the directory to the parent (Pushes the directory change on to the stack)
 pushd ..\..
-if exist "Win32++\tools\Borland" rmdir /s /q "Borland"
-if exist "Win32++\tools\VS2003" rmdir /s /q "VS2003"
-if exist "Win32++\tools\MinGW" rmdir /s /q "MinGW"
+if exist "Win32++\tools\Borland" rmdir /s /q "Win32++\tools\Borland"
+if exist "Win32++\tools\VS2003" rmdir /s /q "Win32++\tools\VS2003"
+if exist "Win32++\tools\MinGW" rmdir /s /q "Win32++\tools\MinGW"
 
 
 REM: Compile the code
@@ -246,3 +246,4 @@ copy Threads\ProjectFiles\GNU\Release\Threads.exe                 "Win32++\tools
 
 REM: Pop the directory change off the stack
 popd
+

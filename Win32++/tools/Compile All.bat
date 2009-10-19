@@ -5,3 +5,4 @@ call "Compile VS2005"
 call "Compile VS2005 Static"
 call "Compile VS2008"
 call "Compile VS2008 Static"
+

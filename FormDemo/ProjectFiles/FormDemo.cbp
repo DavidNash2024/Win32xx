@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="DockViewForm" />
+		<Option title="FormDemo" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
 		<Option compiler="bcc" />
