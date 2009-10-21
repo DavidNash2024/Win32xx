@@ -1,35 +1,45 @@
-Frame Window
+Frame Sample
 ============
+This project demonstrates the use of the CFrame class to display a frame
+window. A frame uses a seperate view window which is displayed over its 
+client area.
 
-This program has a frame window which includes a Tool Bar and 
-Status Bar.  A child view window is super-imposed over the client
-area of the frame window.
+CFrame provides a set of features include:
+- a toolbar 
+- a Menubar
+- a rebar to hold the frame's toolbar and menubar
+- a statusbar, displaying toolbar/menubar status and indicators
+- support for a seperate view window
+- tooltips for toolbars
+- themes support to set colours for the rebar, menubar and toolbar
+- Most Recently Used (MRU) list support
+- The ability to save its settings in the registry 
 
-The files in the src directory are intended as templates for other programs.  
-The library files in the Win32++ directory are intended to be used without 
-modification.
+
+This is a very simple project whoch could be used as a starting point for your
+own frame based applications.
+
+
+Features demonstrated in this sample
+====================================
+* Toolbar configuration
+* Enabling/Disabling various frame features in OnCreate, namely:
+   - show/hide toolbar and menu status in the status bar.
+   - show/hide indicators in the status bar.
+   - Use/don't use a rebar in the frame.
+   - Use/don't use themes.
+   - Use/don't use a toolbar in the frame.
+* Setting the view window of the frame.
+* Responding to toolbar and menu commands in OnCommand
+* Responding to notifications in OnNotify.
+* Use of OpenFile and print dialogs.
+* Responding to frame window messages in CFrame::WndProc
+* Responding to view window messages in CView::WndProc
+* Using the TRACE command to ouput debug text
+* Saving the frame settings in the registry
 
 
 
-Generic Information about Win32++ Projects
-==========================================
-
-The various directories may contain the following types of files:
-
-Extension | Description
-----------|------------
-cbp       | A project file used by CodeBlocks
-dsp       | A project file used by Visual Studio 6
-dsw       | A project file used by Visual Studio 6
-sln       | A project file used by Visual Studio 2003, VS2005 or VS2008
-vcproj    | A project file used by Visual Studio 2003, VS2005 or VS2008
-bdsproj   | A project file used by Borland Developer Studio 2006 
-bpf       | A project file used by Borland Developer Studio 2006 
-dev       | A project file used by Dev-C++
-cpp       | A C++ source file 
-h         | A C++ header file
-rc        | A C++ resource file 
-txt       | A text file
 
 
 

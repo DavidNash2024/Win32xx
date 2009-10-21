@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="DirectX"
+	Version="8.00"
+	Name="MDIDemo"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -42,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DirectX_2008.tlb"
+				TypeLibraryName=".\Release/MDIDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -77,15 +76,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib Win32xx.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/DirectX_2008.pdb"
+				ProgramDatabaseFile=".\Release/MDIDemo_2005.pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -105,6 +102,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DirectX_2008.tlb"
+				TypeLibraryName=".\Debug/MDIDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -172,15 +172,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib Win32xx.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/DirectX_2008.pdb"
+				ProgramDatabaseFile=".\Debug/MDIDemo_2005.pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -200,6 +198,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -233,7 +234,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DirectX_2008.tlb"
+				TypeLibraryName=".\Debug/MDIDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -267,14 +268,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/DirectX_2008.pdb"
+				ProgramDatabaseFile=".\Debug/MDIDemo_2005.pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -294,6 +293,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -327,7 +329,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DirectX_2008.tlb"
+				TypeLibraryName=".\Release/MDIDemo_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -362,14 +364,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/DirectX_2008.pdb"
+				ProgramDatabaseFile=".\Release/MDIDemo_2005.pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -391,6 +391,9 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -403,11 +406,39 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\src\DXApp.cpp"
+				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\main.cpp"
+				RelativePath="..\src\MainMDIfrm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildListView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildMax.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildRect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildSimple.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildText.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildTreeView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIDemoApp.cpp"
 				>
 			</File>
 			<File
@@ -418,17 +449,41 @@
 				RelativePath="..\src\StdAfx.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\src\View.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\src\DXApp.h"
+				RelativePath="..\src\MainMDIfrm.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildListView.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildMax.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildRect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildSimple.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildText.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIChildTreeView.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MDIDemoApp.h"
 				>
 			</File>
 			<File
@@ -437,10 +492,6 @@
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.h"
 				>
 			</File>
 		</Filter>
@@ -501,14 +552,6 @@
 			</File>
 			<File
 				RelativePath="..\..\Win32++\include\treeview.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\include\wceframe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\include\wcestddef.h"
 				>
 			</File>
 			<File

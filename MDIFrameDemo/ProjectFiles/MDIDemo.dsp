@@ -1,26 +1,26 @@
-# Microsoft Developer Studio Project File - Name="DirectX" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="MDIDemo" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=DirectX - Win32 Debug Static Library
+CFG=MDIDemo - Win32 Debug Static Library
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "DirectX.mak".
+!MESSAGE NMAKE /f "MDIDemo.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "DirectX.mak" CFG="DirectX - Win32 Debug Static Library"
+!MESSAGE NMAKE /f "MDIDemo.mak" CFG="MDIDemo - Win32 Debug Static Library"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "DirectX - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "DirectX - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "DirectX - Win32 Release Static Library" (based on "Win32 (x86) Application")
-!MESSAGE "DirectX - Win32 Debug Static Library" (based on "Win32 (x86) Application")
+!MESSAGE "MDIDemo - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "MDIDemo - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "MDIDemo - Win32 Release Static Library" (based on "Win32 (x86) Application")
+!MESSAGE "MDIDemo - Win32 Debug Static Library" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -31,7 +31,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "DirectX - Win32 Release"
+!IF  "$(CFG)" == "MDIDemo - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -55,10 +55,10 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib /nologo /subsystem:windows /machine:I386
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "DirectX - Win32 Debug"
+!ELSEIF  "$(CFG)" == "MDIDemo - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -82,15 +82,15 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "DirectX - Win32 Release Static Library"
+!ELSEIF  "$(CFG)" == "MDIDemo - Win32 Release Static Library"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "DirectX___Win32_Release_Static_Library"
-# PROP BASE Intermediate_Dir "DirectX___Win32_Release_Static_Library"
+# PROP BASE Output_Dir "MDIDemo___Win32_Release_Static_Library"
+# PROP BASE Intermediate_Dir "MDIDemo___Win32_Release_Static_Library"
 # PROP BASE Ignore_Export_Lib 0
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -111,15 +111,15 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 # SUBTRACT BASE LINK32 /map
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib Win32xx.lib /nologo /subsystem:windows /machine:I386 /libpath:"../../Win32++/lib/VS6_Release"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib /nologo /subsystem:windows /machine:I386 /libpath:"../../Win32++/lib/VS6_Release"
 # SUBTRACT LINK32 /map
 
-!ELSEIF  "$(CFG)" == "DirectX - Win32 Debug Static Library"
+!ELSEIF  "$(CFG)" == "MDIDemo - Win32 Debug Static Library"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "DirectX___Win32_Debug_Static_Library"
-# PROP BASE Intermediate_Dir "DirectX___Win32_Debug_Static_Library"
+# PROP BASE Output_Dir "MDIDemo___Win32_Debug_Static_Library"
+# PROP BASE Intermediate_Dir "MDIDemo___Win32_Debug_Static_Library"
 # PROP BASE Ignore_Export_Lib 0
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -140,27 +140,55 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # SUBTRACT BASE LINK32 /map
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib Win32xx.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"../../Win32++/lib/VS6_Debug"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"../../Win32++/lib/VS6_Debug"
 # SUBTRACT LINK32 /map
 
 !ENDIF 
 
 # Begin Target
 
-# Name "DirectX - Win32 Release"
-# Name "DirectX - Win32 Debug"
-# Name "DirectX - Win32 Release Static Library"
-# Name "DirectX - Win32 Debug Static Library"
+# Name "MDIDemo - Win32 Release"
+# Name "MDIDemo - Win32 Debug"
+# Name "MDIDemo - Win32 Release Static Library"
+# Name "MDIDemo - Win32 Debug Static Library"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\src\DXApp.cpp
+SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\main.cpp
+SOURCE=..\src\MainMDIfrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildListView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildMax.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildRect.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildSimple.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildText.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildTreeView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIDemoApp.cpp
 # End Source File
 # Begin Source File
 
@@ -170,17 +198,41 @@ SOURCE=..\src\Resource.rc
 
 SOURCE=..\src\StdAfx.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\src\View.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\src\DXApp.h
+SOURCE=..\src\MainMDIfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildListView.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildMax.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildRect.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildSimple.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildText.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIChildTreeView.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MDIDemoApp.h
 # End Source File
 # Begin Source File
 
@@ -189,10 +241,6 @@ SOURCE=..\src\resource.h
 # Begin Source File
 
 SOURCE=..\src\stdafx.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\View.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

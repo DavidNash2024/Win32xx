@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="DirectX"
+	Name="MDIDemo"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	SccProjectName=""
 	SccLocalPath="">
@@ -40,11 +40,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Release"
-				ProgramDatabaseFile=".\Release/DirectX_2003.pdb"
+				ProgramDatabaseFile=".\Release/MDIDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -53,7 +53,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DirectX_2003.tlb"
+				TypeLibraryName=".\Release/MDIDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -105,11 +105,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/DirectX_2003.pdb"
+				ProgramDatabaseFile=".\Debug/MDIDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -118,7 +118,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DirectX_2003.tlb"
+				TypeLibraryName=".\Debug/MDIDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -170,10 +170,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/DirectX_2003.pdb"
+				ProgramDatabaseFile=".\Debug/MDIDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -182,7 +182,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DirectX_2003.tlb"
+				TypeLibraryName=".\Debug/MDIDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -235,10 +235,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/DirectX_2003.pdb"
+				ProgramDatabaseFile=".\Release/MDIDemo_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -247,7 +247,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DirectX_2003.tlb"
+				TypeLibraryName=".\Release/MDIDemo_2003.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -279,10 +279,31 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\src\DXApp.cpp">
+				RelativePath="..\src\main.cpp">
 			</File>
 			<File
-				RelativePath="..\src\main.cpp">
+				RelativePath="..\src\MainMDIfrm.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildListView.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildMax.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildRect.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildSimple.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildText.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildTreeView.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MDIDemoApp.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Resource.rc">
@@ -290,24 +311,39 @@
 			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
-			<File
-				RelativePath="..\src\View.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\src\DXApp.h">
+				RelativePath="..\src\MainMDIfrm.h">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildListView.h">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildMax.h">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildRect.h">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildSimple.h">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildText.h">
+			</File>
+			<File
+				RelativePath="..\src\MDIChildTreeView.h">
+			</File>
+			<File
+				RelativePath="..\src\MDIDemoApp.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">
-			</File>
-			<File
-				RelativePath="..\src\View.h">
 			</File>
 		</Filter>
 		<Filter
