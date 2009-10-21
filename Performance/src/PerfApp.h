@@ -2,7 +2,6 @@
 // PerfApp.h
 //  Declaration of the CPerformanceApp class
 
-
 #ifndef PERFAPP_H
 #define PERFAPP_H
 

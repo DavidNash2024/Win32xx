@@ -1,7 +1,6 @@
 //////////////////////////////////////
 // ShellWrapper.cpp
 
-
 #include "stdafx.h"
 #include "ShellWrapper.h"
 

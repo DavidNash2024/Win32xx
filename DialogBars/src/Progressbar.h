@@ -1,3 +1,6 @@
+//////////////////////////////////////////////
+// Progressbar.h
+
 #ifndef PROGRESSBAR_H
 #define PROGRESSBAR_H
 

@@ -1,7 +1,6 @@
 //////////////////////////////////////////////////
-// App.h
-//  Declaration of the CApp class
-
+// TextApp.h
+//  Declaration of the CTextApp class
 
 #ifndef TEXTAPP_H
 #define TEXTAPP_H

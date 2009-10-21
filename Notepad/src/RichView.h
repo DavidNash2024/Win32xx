@@ -1,6 +1,8 @@
+//////////////////////////////////////////////
+// RichView.h
+
 #ifndef RICHVIEW_H
 #define RICHVIEW_H
-
 
 
 class CRichView : public CWnd

@@ -2,7 +2,6 @@
 // ExplorerApp.h
 //  Declaration of the CExplorerApp class
 
-
 #ifndef EXPLORERAPP_H
 #define EXPLORERAPP_H
 

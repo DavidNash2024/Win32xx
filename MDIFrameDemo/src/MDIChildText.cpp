@@ -2,7 +2,6 @@
 // MDIChildText.cpp
 //  Definitions for the CMDIChildText class
 
-
 #include "stdafx.h"
 #include "MDIChildText.h"
 #include "resource.h"

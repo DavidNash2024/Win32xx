@@ -1,7 +1,6 @@
 //////////////////////////////////////
 // MDIDemoApp.h
 
-
 #include "stdafx.h"
 #include "MDIDemoApp.h"
 #include "resource.h"

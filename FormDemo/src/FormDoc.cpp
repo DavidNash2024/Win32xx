@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-// SdiDoc.cpp
+// FormDoc.cpp
 
 // Based on code provided by Lynn Allan
 

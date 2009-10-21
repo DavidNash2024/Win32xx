@@ -2,7 +2,6 @@
 // MyTreeView.h
 //  Declaration of the CMyTreeView class
 
-
 #ifndef MYTREEVIEW_H
 #define MYTREEVIEW_H
 

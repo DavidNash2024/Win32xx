@@ -1,7 +1,6 @@
 //////////////////////////////////////
 // MDIDemoApp.h
 
-
 #ifndef MDIDEMOAPP_H
 #define MDIDEMOAPP_H
 

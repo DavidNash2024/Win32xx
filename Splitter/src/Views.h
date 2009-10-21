@@ -1,8 +1,7 @@
 /////////////////////////////////////////////////
 // Views.h
-//  Declaration of the CPaneTopLeft, CPaneBottomLeft
-//   and CView classes
-
+//  Declaration of the CViewSimple, CViewText,
+//   CViewTree, and CViewList classes
 
 #ifndef VIEWS_H
 #define VIEWS_H

@@ -1,7 +1,6 @@
 //////////////////////////////////////////////////////////
 // Files.h
-//  Declaration of CContainFiles and CViewFiles
-
+//  Declaration of  CViewFiles
 
 #ifndef FILES_H
 #define FILES_H

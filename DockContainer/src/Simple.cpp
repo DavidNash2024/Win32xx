@@ -2,7 +2,6 @@
 // Simple.cpp -  Definitions for the CViewSimple, 
 //                and CDockSimple classes
 
-
 #include "stdafx.h"
 #include "ContainerApp.h"
 #include "Simple.h"

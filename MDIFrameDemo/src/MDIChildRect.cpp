@@ -2,7 +2,6 @@
 // MDIChildRect.cpp
 //  Definitions for the CViewRect and CMDIChildRect class
 
-
 #include "stdafx.h"
 #include "MDIChildRect.h"
 #include "resource.h"

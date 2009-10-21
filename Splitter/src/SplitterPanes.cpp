@@ -1,4 +1,5 @@
-
+//////////////////////////////////////////////
+// SplitterPanes.cpp
 
 #include "stdafx.h"
 #include "SplitterApp.h"

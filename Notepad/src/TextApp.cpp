@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////
 // TextApp.cpp -  Definitions for the CTextApp class
 
-
 #include "stdafx.h"
 #include "TextApp.h"
 #include "resource.h"

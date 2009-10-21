@@ -2,7 +2,6 @@
 // Simple.h - Declaration of the CViewSimple 
 //            and CDockSimple classes
 
-
 #ifndef SIMPLE_H
 #define SIMPLE_H
 

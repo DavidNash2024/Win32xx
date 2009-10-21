@@ -1,7 +1,6 @@
 //////////////////////////////////////
 // ScribbleApp.h
 
-
 #include "ScribbleApp.h"
 
 CScribbleApp::CScribbleApp()

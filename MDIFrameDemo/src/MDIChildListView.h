@@ -2,10 +2,8 @@
 // MDIChildListView.h
 //  Declaration of the CViewList and CMDIChildListView classes
 
-
 #ifndef MDICHILDLISTVIEW_H
 #define MDICHILDLISTVIEW_H
-
 
 
 class CViewList : public CListView

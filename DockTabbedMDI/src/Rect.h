@@ -2,10 +2,8 @@
 // Rect.h
 //  Declaration of the CViewRect class
 
-
 #ifndef RECT_H
 #define RECT_H
-
 
 
 // Declaration of CViewRect

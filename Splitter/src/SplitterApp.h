@@ -2,7 +2,6 @@
 // SplitterApp.h
 //  Declaration of the CApp class
 
-
 #ifndef SPLITTERAPP_H
 #define SPLITTERAPP_H
 

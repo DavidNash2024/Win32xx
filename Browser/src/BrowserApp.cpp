@@ -1,6 +1,5 @@
 //////////////////////////////////////////////
-//BrowserApp.cpp
-
+// BrowserApp.cpp
 
 #include "stdafx.h"
 #include "BrowserApp.h"

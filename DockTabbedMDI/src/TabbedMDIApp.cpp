@@ -1,7 +1,6 @@
 //////////////////////////////////////////////
 // TabbedMDIApp.cpp
 
-
 #include "stdafx.h"
 #include "TabbedMDIApp.h"
 

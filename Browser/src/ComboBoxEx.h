@@ -1,3 +1,6 @@
+//////////////////////////////////////////////
+// ComboBoxEx.h
+
 #ifndef COMBOBOXEX_H
 #define COMBOBOXEX_H
 

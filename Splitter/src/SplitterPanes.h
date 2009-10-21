@@ -1,3 +1,6 @@
+//////////////////////////////////////////////
+// SplitterPanes.h
+
 #ifndef SPLITTERPANES_H
 #define SPLITTERPANES_H
 

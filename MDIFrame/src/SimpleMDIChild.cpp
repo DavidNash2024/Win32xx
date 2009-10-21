@@ -1,7 +1,6 @@
 //////////////////////////////////////////////
-// MDIChildView.cpp
+// SimpleMDIChild.cpp
 //  Definitions for the CSimpleView and CSimpleMDIChild classes
-
 
 #include "stdafx.h"
 #include "SimpleMDIChild.h"

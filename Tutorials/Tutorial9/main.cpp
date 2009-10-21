@@ -1,7 +1,6 @@
 ////////////////////////////////
 // Main.cpp
 
-
 #include "ScribbleApp.h"
 
 

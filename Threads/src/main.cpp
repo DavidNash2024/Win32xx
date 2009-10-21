@@ -1,7 +1,6 @@
 ///////////////////////////////////////
 // main.cpp
 
-
 #include "stdafx.h"
 #include "ThreadApp.h"
 

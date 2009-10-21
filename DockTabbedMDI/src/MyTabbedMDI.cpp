@@ -1,5 +1,5 @@
-
-
+//////////////////////////////////////////////
+// MyTabbedMDI.cpp
 
 #include "stdafx.h"
 #include "MyTabbedMDI.h"

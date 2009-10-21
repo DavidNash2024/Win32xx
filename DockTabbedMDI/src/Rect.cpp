@@ -2,8 +2,6 @@
 // Rect.cpp
 //  Definitions for the CViewRect class
 
-
-
 #include "stdafx.h"
 #include "Rect.h"
 #include "resource.h"

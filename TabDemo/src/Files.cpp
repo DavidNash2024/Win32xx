@@ -1,7 +1,6 @@
 //////////////////////////////////////////////
 // Files.cpp
-//  Definitions for CViewFiles and CContainFiles
-
+//  Definitions for CViewFiles 
 
 #include "stdafx.h"
 #include "TabDemoApp.h"

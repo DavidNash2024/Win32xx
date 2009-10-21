@@ -1,7 +1,6 @@
 //////////////////////////////////////////////////////////
-// LeftView.cpp
+// MyTreeView.cpp
 //  Definitions for the CMyTreeView and TreeItemData classes
-
 
 #include "stdafx.h"
 #include "ExplorerApp.h"

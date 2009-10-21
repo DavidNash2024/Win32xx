@@ -1,11 +1,9 @@
 //////////////////////////////////////////////////////////
 // Classes.h
-//  Declaration of CViewClasses and CContainClasses
-
+//  Declaration of CViewClasses 
 
 #ifndef CLASSES_H
 #define CLASSES_H
-
 
 
 class CViewClasses : public CTreeView

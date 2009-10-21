@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////////////
 //SplitterApp.cpp -  Definitions for the CSplitterApp class
 
-
 #include "stdafx.h"
 #include "SplitterApp.h"
 #include "resource.h"

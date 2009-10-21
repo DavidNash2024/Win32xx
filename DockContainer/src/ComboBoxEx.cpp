@@ -2,7 +2,6 @@
 // ComboBoxEx.cpp
 //  Definitions for the CComboBoxEx class
 
-
 #include "stdafx.h"
 #include "ComboBoxEx.h"
 #include "resource.h"

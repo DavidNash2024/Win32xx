@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////
-// Text.cpp -  Definitions for the CViewOutput, CContainOutput
+// Output.cpp -  Definitions for the CViewOutput, CContainOutput
 //              and CDockOutput classes
 
 

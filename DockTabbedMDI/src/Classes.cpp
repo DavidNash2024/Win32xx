@@ -2,7 +2,6 @@
 // Classes.cpp - Definitions for the CViewClasses, CContainClasses
 //               and CDockClasses classes
 
-
 #include "stdafx.h"
 #include "Classes.h"
 #include "resource.h"

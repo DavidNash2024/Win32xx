@@ -1,7 +1,6 @@
 ///////////////////////////////
 // View.cpp
 
-
 #include "View.h"
 #include "resource.h"
 

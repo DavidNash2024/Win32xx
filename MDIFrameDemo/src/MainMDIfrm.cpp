@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////
 // MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
 
-
 #include "stdafx.h"
 #include "resource.h"
 #include "mainMDIfrm.h"

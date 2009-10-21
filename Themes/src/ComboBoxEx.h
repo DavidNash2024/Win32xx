@@ -1,10 +1,8 @@
 //////////////////////////////////////////////////////
 // ComboBoxEx.h
 
-
 #ifndef COMBOBOXEX_H
 #define COMBOBOXEX_H
-
 
 
 // Declaration of the CComboBoxEx class

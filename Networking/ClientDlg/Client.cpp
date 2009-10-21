@@ -1,4 +1,5 @@
-
+//////////////////////////////////////////////
+// Client.cpp
 
 #include "stdafx.h"
 #include "DialogApp.h"

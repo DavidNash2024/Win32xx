@@ -2,12 +2,10 @@
 // MainWnd.cpp
 //  Definitions for the CMainWindow class
 
-
 #include "stdafx.h"
 #include "ThreadApp.h"
 #include "MainWnd.h"
 #include "Thread.h"
-
 
 
 CMainWindow::CMainWindow()

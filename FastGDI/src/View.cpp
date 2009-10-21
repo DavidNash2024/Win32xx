@@ -2,7 +2,6 @@
 // View.cpp
 //  Definitions for the CView class
 
-
 #include "stdafx.h"
 #include "view.h"
 #include "resource.h"

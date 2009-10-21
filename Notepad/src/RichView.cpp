@@ -1,7 +1,6 @@
 /////////////////////////////////////////////
 // RichView.cpp
 
-
 #include "stdafx.h"
 #include "richview.h"
 #include <richedit.h>

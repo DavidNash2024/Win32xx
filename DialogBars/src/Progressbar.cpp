@@ -1,4 +1,5 @@
-
+//////////////////////////////////////////////
+// Progressbar.cpp
 
 #include "stdafx.h"
 #include "Progressbar.h"

@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////
 // Mainfrm.cpp
 
-
 #include "stdafx.h"
 #include "TabDemoApp.h"
 #include "mainfrm.h"

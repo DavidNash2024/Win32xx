@@ -2,7 +2,6 @@
 // ThreadApp.h
 //  Declaration of the CThreadApp class
 
-
 #ifndef THREADAPP_H
 #define THREADAPP_H
 

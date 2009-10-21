@@ -2,7 +2,6 @@
 // MyListView.h
 //  Declaration of the CMyListView class
 
-
 #ifndef MYLISTVIEW_H
 #define MYLISTVIEW_H
 

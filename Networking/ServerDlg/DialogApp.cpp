@@ -1,7 +1,6 @@
 //////////////////////////////////////
 // DialogApp.cpp
 
-
 #include "stdafx.h"
 #include "DialogApp.h"
 #include "resource.h"

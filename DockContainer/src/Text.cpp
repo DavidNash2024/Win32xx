@@ -2,7 +2,6 @@
 // Text.cpp -  Definitions for the CViewText, 
 //              and CDockText classes
 
-
 #include "stdafx.h"
 #include "ContainerApp.h"
 #include "Text.h"

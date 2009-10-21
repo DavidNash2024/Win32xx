@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//TabDemoApp.cpp
+// ContainerApp.cpp
 
 
 #include "stdafx.h"

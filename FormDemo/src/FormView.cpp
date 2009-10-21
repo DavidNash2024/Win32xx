@@ -1,6 +1,5 @@
 ///////////////////////////////////////
-// SdiView.cpp
-
+// FormView.cpp
 
 #include "stdafx.h"
 #include "FormDoc.h"

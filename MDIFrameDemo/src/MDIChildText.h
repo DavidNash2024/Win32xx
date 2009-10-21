@@ -2,10 +2,8 @@
 // MDIChildText.h
 //  Declaration of the CViewText and CMDIChildText classes
 
-
 #ifndef MDICHILDTEXT_H
 #define MDICHILDTEXT_H
-
 
 
 class CViewText : public CWnd

@@ -1,3 +1,6 @@
+//////////////////////////////////////////////
+// MyTabbedMDI.h
+
 #ifndef MYTABBEDMDI_H
 #define MYTABBEDMDI_H
 

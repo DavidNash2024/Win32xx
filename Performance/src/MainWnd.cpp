@@ -2,7 +2,6 @@
 // MainWnd.cpp
 //  Definitions for the CMainWindow class
 
-
 #include "stdafx.h"
 #include "PerfApp.h"
 #include "MainWnd.h"

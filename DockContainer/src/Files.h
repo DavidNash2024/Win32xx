@@ -2,7 +2,6 @@
 // Files.h - Declaration of the CViewFiles, CContainFiles 
 //           and CDockFiles classes
 
-
 #ifndef FILES_H
 #define FILES_H
 

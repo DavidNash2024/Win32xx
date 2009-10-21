@@ -1,4 +1,5 @@
-
+//////////////////////////////////////////////
+// MyPropertySheet.cpp
 
 #include "stdafx.h"
 #include "Mainfrm.h"

@@ -1,5 +1,5 @@
-
-
+//////////////////////////////////////////////
+// ColourDialog.h
 
 #ifndef COLOURDIALOG_H
 #define COLOURDIALOG_H

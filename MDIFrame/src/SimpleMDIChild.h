@@ -1,7 +1,6 @@
 //////////////////////////////////////////////////////
-// MDIChildView.h
+// SimpleMDIChild.h
 //  Declaration of the CSimpleView and CSimpleMDIChild class
-
 
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H

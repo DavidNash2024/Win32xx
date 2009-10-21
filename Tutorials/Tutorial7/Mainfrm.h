@@ -2,7 +2,6 @@
 // Mainfrm.h
 //  Declaration of the CMainFrame class
 
-
 #ifndef MAINFRM_H
 #define MAINFRM_H
 

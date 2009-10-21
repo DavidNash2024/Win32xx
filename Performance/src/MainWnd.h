@@ -2,7 +2,6 @@
 // MainWnd.h
 //  Declaration of the CMainWindow class
 
-
 #ifndef MAINWND_H
 #define MAINWND_H
 

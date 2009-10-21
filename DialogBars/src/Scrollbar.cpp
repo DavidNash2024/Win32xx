@@ -1,4 +1,5 @@
-
+//////////////////////////////////////////////
+// Scrollbar.cpp
 
 #include "stdafx.h"
 #include "Scrollbar.h"

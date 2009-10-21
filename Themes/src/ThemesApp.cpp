@@ -1,6 +1,5 @@
 //////////////////////////////////////////////
-//FrameApp.cpp
-
+// ThemesApp.cpp
 
 #include "stdafx.h"
 #include "ThemesApp.h"

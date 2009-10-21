@@ -1,7 +1,6 @@
 ////////////////////////////////////////
 // ScribbleApp.h
 
-
 #ifndef SCRIBBLEAPP_H
 #define SCRIBBLEAPP_H
 

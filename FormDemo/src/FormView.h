@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-// SdiView.h
+// FormView.h
 
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H

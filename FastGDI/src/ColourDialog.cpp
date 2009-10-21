@@ -1,5 +1,5 @@
-
-
+//////////////////////////////////////////////
+// ColourDialog.cpp
 
 #include "stdafx.h"
 #include "FastGDIApp.h"

@@ -3,7 +3,6 @@
 //  Declaration of the CContextMenu, CContextMenu2,
 //    CEnumIDList, Cpidl, and CShellFolder classes
 
-
 #ifndef SHELLWRAPPER_H
 #define SHELLWRAPPER_H
 

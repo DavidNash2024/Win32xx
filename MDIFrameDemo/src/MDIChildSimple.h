@@ -2,10 +2,8 @@
 // MDIChildSimple.h
 //  Declaration of the CViewSimple and CMDIChildSimple class
 
-
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
-
 
 
 // Declaration of CViewSimple

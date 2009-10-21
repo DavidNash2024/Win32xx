@@ -2,7 +2,6 @@
 // Classes.h - Declaration of CViewClasses, CContainClasses,
 //              and CDockClasses classes
 
-
 #ifndef CLASSES_H
 #define CLASSES_H
 

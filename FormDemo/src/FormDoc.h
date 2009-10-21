@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-// SdiDoc.h
+// FormDoc.h
 
 // Based on code provided by Lynn Allan
 

@@ -2,10 +2,8 @@
 // MDIChildRect.h
 //  Declaration of the CViewRect and CMDIChildRect classes
 
-
 #ifndef MDICHILDRECT_H
 #define MDICHILDRECT_H
-
 
 
 // Declaration of CViewRect

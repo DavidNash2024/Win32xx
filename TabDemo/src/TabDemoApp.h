@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////
-// ContainerApp.h
+// TabDemoApp.h
 
 #ifndef CONTAINERAPP_H
 #define CONTAINERAPP_H

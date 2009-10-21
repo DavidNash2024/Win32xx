@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////
 //ExplorerApp.cpp -  Definitions for the CExplorerApp class
 
-
 #include "stdafx.h"
 #include "ExplorerApp.h"
 #include "resource.h"

@@ -1,7 +1,6 @@
 //////////////////////////////////////
 // MDIFrameApp.h
 
-
 #ifndef MDIFRAMEAPP_H
 #define MDIFRAMEAPP_H
 

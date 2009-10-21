@@ -2,7 +2,6 @@
 // MDIChildSimple.cpp
 //  Definitions for the CViewSimple and CMDIChildSimple classes
 
-
 #include "stdafx.h"
 #include "MDIChildSimple.h"
 #include "resource.h"

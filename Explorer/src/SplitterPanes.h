@@ -2,7 +2,6 @@
 // SplitterPanes.h
 //  Declaration of the CLeftPane and CRightPane classes
 
-
 #ifndef SPLITTERPANES_H
 #define SPLITTERPANES_H
 

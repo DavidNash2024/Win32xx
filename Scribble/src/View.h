@@ -2,10 +2,8 @@
 // View.h
 //  Declaration of the CView class
 
-
 #ifndef VIEW_H
 #define VIEW_H
-
 
 
 class CView : public CWnd

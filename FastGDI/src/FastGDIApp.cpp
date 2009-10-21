@@ -1,6 +1,5 @@
 //////////////////////////////////////////////
-//FrameApp.cpp
-
+// FastGDIApp.cpp
 
 #include "stdafx.h"
 #include "FastGDIApp.h"

@@ -1,5 +1,5 @@
 //////////////////////////////////////
-// MDIFrameApp.cpp
+// DockingApp.cpp
 
 
 #include "stdafx.h"

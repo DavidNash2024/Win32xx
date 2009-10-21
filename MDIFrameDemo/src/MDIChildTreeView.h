@@ -2,10 +2,8 @@
 // MDIChildTreeView.h
 //  Declaration of the CViewTree and CMDIChildTreeView classes
 
-
 #ifndef MDICHILDTREEVIEW_H
 #define MDICHILDTREEVIEW_H
-
 
 
 class CViewTree : public CTreeView

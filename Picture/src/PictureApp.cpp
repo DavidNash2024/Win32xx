@@ -1,7 +1,6 @@
 //////////////////////////////////////////////
 //PictureApp.cpp
 
-
 #include "stdafx.h"
 #include "PictureApp.h"
 

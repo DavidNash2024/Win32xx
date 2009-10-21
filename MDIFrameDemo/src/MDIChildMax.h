@@ -2,10 +2,8 @@
 // MDIChildMax.h
 //  Declaration of the CViewMax and CMDIChildMax classes
 
-
 #ifndef MDICHILDMAX_H
 #define MDICHILDMAX_H
-
 
 
 // Declaration of CViewMax

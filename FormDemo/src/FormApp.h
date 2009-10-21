@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////
-// SdiApp.h
+// FormApp.h
 
 #ifndef SDI_APP_H
 #define SDI_APP_H

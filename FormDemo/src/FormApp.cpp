@@ -1,6 +1,5 @@
 //////////////////////////////////////////////
-//SdiApp.cpp
-
+// FormApp.cpp
 
 #include "stdafx.h"
 #include "FormApp.h"

@@ -1,7 +1,6 @@
 //////////////////////////////////////////////////
 // Simple.h - Declaration of the CViewSimple class
 
-
 #ifndef SIMPLE_H
 #define SIMPLE_H
 
