@@ -16,12 +16,13 @@ CFrame provides a set of features include:
 - The ability to save its settings in the registry 
 
 
-This is a very simple project whoch could be used as a starting point for your
+This is a very simple project which could be used as a starting point for your
 own frame based applications.
 
 
 Features demonstrated in this sample
 ====================================
+* Use of CFrame to display the window frame
 * Toolbar configuration
 * Enabling/Disabling various frame features in OnCreate, namely:
    - show/hide toolbar and menu status in the status bar.

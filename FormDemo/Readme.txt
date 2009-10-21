@@ -1,5 +1,5 @@
-FormDemo Sample
-===============
+FormDemo Example
+================
 This program has a frame window which includes a Tool Bar and 
 Status Bar.  A modeless dialog is used as the view window of our frame.
 
@@ -8,8 +8,8 @@ save these to the registry. This is much like the Doc/View approach used
 in many MFC applications. 
 
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Use of CFrame to provide a frame window
 * Using a modeless dialog as a view window for the frame.
 * Implementing a Doc/View architecture much like MFC.

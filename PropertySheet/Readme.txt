@@ -1,5 +1,5 @@
-
-CPropertyPage and CPropertySheet
+PropertySheet Example
+=====================
 
 A property sheet will have one or more property pages. These pages are much 
 like dialogs which are presented within a tabbed dialog or within a wizard. 
@@ -10,7 +10,7 @@ In this demo CMyProptertySheet inherrits from CPropertySheet. It displays
 two property pages, namely CButtonPage and CComboPage. The demo shows how a
 Modal, Modeless or Wizard property sheet can be displayed.
  
-The files in the src directory are intended as templates for other programs.  
-The library files in the Win32++ directory are intended to be used without 
-modification.
+
+Features demonstrated in this example
+=====================================
  
