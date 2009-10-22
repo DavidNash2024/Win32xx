@@ -111,7 +111,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 # SUBTRACT BASE LINK32 /map
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib /nologo /subsystem:windows /machine:I386 /libpath:"../../Win32++/lib/VS6_Release"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xxR.lib /nologo /subsystem:windows /machine:I386 /libpath:"../../Win32++/lib/VS6"
 # SUBTRACT LINK32 /map
 
 !ELSEIF  "$(CFG)" == "DialogTab - Win32 Debug Static Library"
@@ -140,7 +140,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # SUBTRACT BASE LINK32 /map
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"../../Win32++/lib/VS6_Debug"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib Win32xxD.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"../../Win32++/lib/VS6"
 # SUBTRACT LINK32 /map
 
 !ENDIF 

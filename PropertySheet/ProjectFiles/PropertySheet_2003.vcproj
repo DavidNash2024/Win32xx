@@ -40,10 +40,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xxR.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2003"
 				ProgramDatabaseFile=".\Release/PropertySheet_2003.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
@@ -105,9 +105,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xxD.lib"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2003_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2003"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/PropertySheet_2003.pdb"
 				SubSystem="2"

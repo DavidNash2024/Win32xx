@@ -1,0 +1,35 @@
+The contents of the folders within Win32++
+==========================================
+
+help             The help for Win32++
+include          The Win32++ library for typical use
+lib              The static library files when they are build
+Library Projects The project files used to build the static library
+new projects     A set of projects to be used in your new projects 
+src              The Win32++ library for building the static library
+tests            A directory which contains the output of some tools
+tools            A set of useful batch files for Win32++
+
+
+About the Win32++ files
+=======================
+The Win32++ library is now available in two flavours - one for typical use, 
+and one for static libraries.  
+
+The "include" folder contains the files that would be included in a typical 
+project. In this folder, the Win32++ library files are provided purely as a 
+set of header files. There are no source files, as all the source code is 
+included inlined in the header files. This makes Win32++ simpler to use, as
+we simply need to include header files to add the library to our projects. 
+
+The "src" folder contains the Win32++ library files suitable for creating a
+static library. This folder contains both source files and header files. The
+header files in this folder are smaller, as they do not include the inlined
+code. More experienced programmers might prefer using Win32++ as a static 
+library as it allows projects to be compiled more quickly.
+
+Apart from the differences mentioned above, the two libraries are identical
+in the officially released versions. Users of the "work in progress" code
+available via Tortoise SVN should note that the static library code is updated
+less frequently than the code in the "include" folder.
+   

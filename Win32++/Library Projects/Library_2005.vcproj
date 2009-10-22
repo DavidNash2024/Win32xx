@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../lib/VS2005_Debug/Win32xx.lib"
+				OutputFile="../lib/VS2005/Win32xxD.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -133,7 +133,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../lib/VS2005_Release/Win32xx.lib"
+				OutputFile="../lib/VS2005/Win32xxR.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

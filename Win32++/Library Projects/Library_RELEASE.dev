@@ -15,10 +15,10 @@ CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@__@@_
 Linker=_@@__@@__@@_
 IsCpp=1
 Icon=
-ExeOutput=..\lib\Dev-C_Release
+ExeOutput=..\lib\Dev-C
 ObjectOutput=.\Dev-C_Release
 OverrideOutput=1
-OverrideOutputName=Win32xx.lib
+OverrideOutputName=Win32xxR.lib
 HostApplication=
 Folders=Header,Resource,Source
 CommandLine=

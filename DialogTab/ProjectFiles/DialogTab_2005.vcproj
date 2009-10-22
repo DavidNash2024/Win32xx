@@ -76,10 +76,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib Win32xx.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib Win32xxR.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2005"
 				GenerateManifest="false"
 				ProgramDatabaseFile=".\Release/DialogTab_2005.pdb"
 				SubSystem="2"
@@ -172,9 +172,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib Win32xx.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib Win32xxD.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2005"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/DialogTab_2005.pdb"

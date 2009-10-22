@@ -50,7 +50,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\lib\VS6_Release\Win32xx.lib"
+# ADD LIB32 /nologo /out:"..\lib\VS6\Win32xxR.lib"
 
 !ELSEIF  "$(CFG)" == "Library - Win32 Debug"
 
@@ -74,7 +74,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\lib\VS6_Debug\Win32xx.lib"
+# ADD LIB32 /nologo /out:"..\lib\VS6\Win32xxD.lib"
 
 !ENDIF 
 

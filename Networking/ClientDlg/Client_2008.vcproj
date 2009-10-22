@@ -77,10 +77,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib ws2_32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib ws2_32.lib Win32xxR.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008"
 				GenerateManifest="false"
 				ProgramDatabaseFile=".\Release/Client_2008.pdb"
 				SubSystem="2"
@@ -172,9 +172,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib ws2_32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib ws2_32.lib Win32xxD.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Client_2008.pdb"
