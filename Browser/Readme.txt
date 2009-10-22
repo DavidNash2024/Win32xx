@@ -1,12 +1,12 @@
-Browser Exampel
+Browser Example
 ===============
 This project demonstrates how to implement a simple web browser as a view
 window for a frame. It uses the IWebBrowser2 interface to implement
 the WebBrowser control (Microsoft ActiveX control).
 
-This sample also demonstrates how to use ATL to display an ActiveX control.
+This example also demonstrates how to use ATL to display an ActiveX control.
 
-Note: This sample requires ATL in order to run.  ATL is not available for 
+Note: This example requires ATL in order to run.  ATL is not available for 
 Dev-C++.
 
 

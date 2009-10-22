@@ -11,8 +11,8 @@ Microsoft make the the DirectX Software Development Kit available for download
 without charge.
 
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Displaying a moving DirectX picture in a window.  
 * Overriding CWinApp::MessageLoop for graphics rendering. This technique would
    also be required for other graphic libraries like OpenGL.

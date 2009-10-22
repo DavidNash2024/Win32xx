@@ -9,8 +9,8 @@ This is a very simple project which could be used as a starting point for your
 own MDI frame based applications.
 
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Use of CMDIFrame and CMDIChild classes to implement a MDI frame
 * Enabling/Disabling various frame features in OnCreate, namely:
    - show/hide toolbar and menu status in the status bar.

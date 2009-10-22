@@ -4,8 +4,8 @@ This program simply displays a modal dialog. It might prove a useful
 starting point for your own dialog based projects. 
 
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Using a dialog as an application
 * Using CDialog to display a dialog defined a resource script (resource.rc)
 

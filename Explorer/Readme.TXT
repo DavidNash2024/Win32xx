@@ -1,6 +1,6 @@
-Explorer Sample
-===============
-This sample demonstrates how to work directly with the Shell Namespace to 
+Explorer Example
+================
+This example demonstrates how to work directly with the Shell Namespace to 
 produce an explorer-like utility. The Shell namespace organizes the file system
 and other objects managed by the Shell into a single tree-structured hierarchy. 
 Conceptually, it is a larger and more inclusive version of the file system.
@@ -14,8 +14,8 @@ to walk through the file system. The various functions used to work with the
 PIDLs are wrapped up in the Cpidl class.
 
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Displaying large toolbar buttons with text.
 * Using a drop down menu with a toolbar button.
 * Implementing splitter windows using CDocker.

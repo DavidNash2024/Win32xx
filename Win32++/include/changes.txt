@@ -47,28 +47,28 @@ Changes
 * Enhancements to frames
   - The style of the rebarband is now specified in AddToolbarBand. This 
      facilites saving and restoring toolbar settings from the registry (as 
-     demonstrated in the Themes sample.)  
+     demonstrated in the Themes example.)  
   - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
      registry.
 * Modification to CRect class
   - The various function now use references instead of naked pointers.    
-* Updated the Themes sample.
+* Updated the Themes example.
   - Added check boxes for the various rebar theme option
   - Added Hide/Show option for the additional toolbars
   - Save/Load the theme options in the registry
   - Save/Load the rebar band postions and styles in the registry
-* Replaced the Form Sample with the DocViewForm sample.
-  - This sample now demonstrates a form using a Doc/View architecture, much
+* Replaced the Form example with the DocViewForm example.
+  - This example now demonstrates a form using a Doc/View architecture, much
      like the traditional Doc/View of MFC. 
   - Added OnUpdateMenu handling. 
-* Updated the FastGDI sample.
+* Updated the FastGDI example.
   - Added grayscale transformation
   - Added file save.
   - Added Scroll bars.
-* Updated the picture sample.
+* Updated the picture example.
   - Added Scroll bars.  
-* Updated the DockContainer and DockTabbedMDI samples    
-  - These samples now demonstrate how to theme a container's toolbar.   
+* Updated the DockContainer and DockTabbedMDI examples    
+  - These examples now demonstrate how to theme a container's toolbar.   
    
       
 Incompatibilities with previous versions
@@ -90,21 +90,21 @@ Version 6.5
 ===========
 Major Changes
 -------------
-* Added StaticLibrary sample
-   This sample has the code to build Win32++ into a a static library, and also
+* Added StaticLibrary example
+   This example has the code to build Win32++ into a a static library, and also
    demonstrates the use of Precompiled Headers. More experienced users might
    prefer this approach as it provides for much faster compile times.
 * Added CTab class. 
    This class is used by CContainer and CTabbedMDI, and can also be used as a
    view window.
-* Added TabDemo sample.
-   Refer to the TabDemo sample for a demonstration of how CTab class is
+* Added TabDemo example.
+   Refer to the TabDemo example for a demonstration of how CTab class is
    used as a view window in a frame. TabDialogDemo also uses CTab. 
 * Added CTabbedMDI class.
    A TabbedMDI can be used as a view window for a Frame or a Dockable. As the 
    name suggests, it provides tabs for a MDI window. 
-* Added TabbedMDI sample within docking.
-   Refer to the docking TabbedMDI sample for a demonstration of how CTabbedMDI
+* Added TabbedMDI example within docking.
+   Refer to the docking TabbedMDI example for a demonstration of how CTabbedMDI
    class is used.   
 * Enhancments to docking.
    - Dockers can now be docked into, and undocked from all other dockers, 
@@ -123,7 +123,7 @@ Major Changes
    - Other configurations for the toolbar such as disabled buttons and alternate
       bitmaps should be specified in SetupToolbar, rather than in OnCreate.
    - Configuration of additional toolbars if any should also be done in
-      SetupToolbar.  Refer to the Themes sample for a demonstration of this.
+      SetupToolbar.  Refer to the Themes example for a demonstration of this.
    - CToolbar now holds the vector of Resource IDs, which can be retrieved
       with the GetToolbarData function. There is no need to specify a vector
       when adding additional toolbars.
@@ -142,8 +142,8 @@ All Changes
 -----------
 Added CTab class
 Added CTabbedMDI class
-Added TabDemo sample
-Added Docking TabbedMDI sample
+Added TabDemo example
+Added Docking TabbedMDI example
 Added CFrame::SetupToolbar
 Added CFrame::m_bUseToolbar
 Added CContainer::SetupToolbar
@@ -183,7 +183,7 @@ Incompatiblities with previous versions
 ---------------------------------------
 - Many of the functions associated with adding toolbars to frames have changed.
   CFrame::SetupToolbar should be overridden to perform toolbar configuration.
-  Refer to the Themes sample for a demonstration of how to add multiple toolbars
+  Refer to the Themes example for a demonstration of how to add multiple toolbars
   to a frame.
 - The renaming of the CFrame::OnXXXX may affect overloading. Calling the base
   function may now be required particularly for CFrame::OnNotify.
@@ -208,14 +208,14 @@ Major Changes
   - Added close button to the caption of docked windows
   - Added 'outer' docking  ie. docking at the side of the frame rather 
       than inside another Docker.
-  - Added a second docking sample demonstrating containers
-  - Added save/restore dock layout to docking samples
-  - Added Close All Dockables and Default Dock Layout to docking samples
+  - Added a second docking example demonstrating containers
+  - Added save/restore dock layout to docking examples
+  - Added Close All Dockables and Default Dock Layout to docking examples
   - Added Win98 and WinME support for docking. 
 * Added Region support to CDC class.
-* Notepad sample enhancements:
+* Notepad example enhancements:
   - Now capable of handling Unicode text
-* Themes sample now demonstrates a ComboBoxEx control in its toolbar  
+* Themes example now demonstrates a ComboBoxEx control in its toolbar  
  
 
 Fixes
@@ -276,7 +276,7 @@ Major Changes
    - Note: CDocker is now recommended over CSplitter for splitter apps.     
 * Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
 * MDI child windows now require a view window. The use of a view window is 
-   now the same for Frames, MDI children, and dockables. The MDI demo sample
+   now the same for Frames, MDI children, and dockables. The MDI demo example
    has been extended to include ListView and TreeView views.
 * Added message translation. This allows modeless dialogs and propertysheets
     to process the tab (and other) keys.
@@ -299,7 +299,7 @@ Fixes
 
 Incompatibilities with previous versions
 ----------------------------------------
-* MDI Child windows now require a view. Refer to the MDI Demo sample for an
+* MDI Child windows now require a view. Refer to the MDI Demo example for an
    example of how to add views to a MDI child.
 * Some functions have been added to CWnd which have the same name as their 
    Win32 counterparts. Prefix functions with the global scope specifier '::' 
@@ -353,7 +353,7 @@ void CMainFrame::OnInitialUpdate()
 	pDockBottom->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
 }      			   
 
-(Refer to the Docking sample for an example of to use CDocker.)    
+(Refer to the Docking example for an example of to use CDocker.)    
 
 
 Version 6.2
@@ -466,7 +466,7 @@ New Features
    encapsulates much of the Winsock API. This class is capable of monitoring
    network events, such as connection requests from clients, and notification
    that the socket has data ready to be received. Command line and dialog
-   samples are provide to demonstrate how the class can be used to create
+   examples are provide to demonstrate how the class can be used to create
    TCP/IP (and UDP/IP) servers and clients.
   
 * Added a CDC class. This class simplifies the drawing to device contexts. 
@@ -535,8 +535,8 @@ Version 5.4
   - Gradient background for pressed buttons (any two colors)
   - Colored outline for hot and pressed buttons (any color)
 * Built in support for multiple toolbars (in rebars) with AddToolbarBand
-* Added Forms Sample
-* Added Themes Sample
+* Added Forms example
+* Added Themes example
 
 
 Version 5.3
@@ -556,9 +556,9 @@ Version 5.2
 ===========
 * Added a separate HINSTANCE for resources. This provides for multilingual
    support, when resources are loaded via a DLL.
-* Added the Internet Browser Sample. It demonstrates how to host an ActiveX
+* Added the Internet Browser example. It demonstrates how to host an ActiveX
    control in a Win32++ window. It requires ATL.
-* Added the Performance sample. This program now also conducts a simple 
+* Added the Performance example. This program now also conducts a simple 
    performance test to measure the efficiency of the message handling. 
 
    

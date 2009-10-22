@@ -19,4 +19,11 @@ Each CDocker has a view window. The view windows used by the dockers are:
  CViewText
  CViewTree
 
+
+Features demonstrated in this example
+=====================================
+* Use of CFrame to provide a frame window
+* Use of a CDocker as the view window for the frame
+* Use of docker styles to treat dockers as splitter windows
+* Use of ListView, TreeView and Edit controls as view windows
  

@@ -1,8 +1,16 @@
+Simple Example
+==============
 This project demonstrates how to use Win32++ to create a simple window.  The
 CView class controls the view window. The CSimpleApp starts Win32++ and runs
 the message loop.
 
-The files in the src directory are intended as templates for other programs.  
-The library files in the Win32++ directory are intended to be used without 
-modification.
 
+Features demonstrated in this example
+=====================================
+* Inheriting from CWinApp to start Win32++
+* Inheriting from CWnd to create a view window
+* Using a resource script (resource.rc) to add an icon and window caption
+* Processing window messages in CView::WndProc
+* Overriding PreCreate to set the initial window parameters
+* Overriding OnPaint to draw text on the window's device context
+* Using TRACE to ouput debug text

@@ -1,5 +1,5 @@
-Frame Sample
-============
+Frame Example
+=============
 This project demonstrates the use of the CFrame class to display a frame
 window. A frame uses a seperate view window which is displayed over its 
 client area.
@@ -20,8 +20,8 @@ This is a very simple project which could be used as a starting point for your
 own frame based applications.
 
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Use of CFrame to display the window frame
 * Toolbar configuration
 * Enabling/Disabling various frame features in OnCreate, namely:

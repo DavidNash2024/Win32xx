@@ -4,8 +4,8 @@ This program displays a modal dialog containing a slider control, a Scrollbar
 control and a progressbar control. These controls are attached to CWnd objects.
  
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Using a dialog as an application.
 * Using a slider, scrollbar and progressbar control in a dialog. 
 * Use of AttachDlgItem to attach a dialog control to a CWnd.

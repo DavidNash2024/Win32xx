@@ -8,8 +8,8 @@ Also, refer to the FormDemo example for demonstration of additional features
 such as saving the dialog's state in the registry.
   
 
-Features demonstrated in this sample
-====================================
+Features demonstrated in this example
+=====================================
 * Using a dialog as an application.
 * Use of AttachDlgItem to attach a dialog control to a CWnd.
 * Use of OnMessageReflect to handle notifications in the object that 
