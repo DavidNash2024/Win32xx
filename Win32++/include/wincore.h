@@ -1041,7 +1041,7 @@ namespace Win32xx
 					if (pWnd && pWnd->PreTranslateMessage(&uMsg))
 					{
 						Processed = TRUE;
-						continue;
+						break;
 					}
 				}
 			}
