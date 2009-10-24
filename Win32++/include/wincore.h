@@ -1365,6 +1365,7 @@ namespace Win32xx
 			wc.lpszClassName = ClassName;
 			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
+			wc.style 		 = CS_DBLCLKS;
 			if (!RegisterClass(wc))	// Register the window class (if not already registered)
 				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
