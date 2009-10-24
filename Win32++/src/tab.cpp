@@ -56,7 +56,7 @@ namespace Win32xx
 		}
 	}
 
-	int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon = 0)
+	int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
 	{
 		TabPageInfo tbi = {0};
 		tbi.pWnd = pWnd;

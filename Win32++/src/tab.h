@@ -89,7 +89,7 @@ namespace Win32xx
 		virtual ~CTab();
 		virtual int  AddTabPage(TabPageInfo& tbi);
 		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
-		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
+		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon = 0);
 		virtual CRect GetCloseRect();
 		virtual CRect GetListRect();
 		virtual BOOL GetTabsAtTop();

@@ -89,7 +89,7 @@ namespace Win32xx
 		virtual ~CTab();
 		virtual int  AddTabPage(TabPageInfo& tbi);
 		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
-		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon);
+		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon = 0);
 		virtual CRect GetCloseRect();
 		virtual CRect GetListRect();
 		virtual BOOL GetTabsAtTop();
@@ -263,7 +263,7 @@ namespace Win32xx
 		}
 	}
 
-	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon = 0)
+	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
 	{
 		TabPageInfo tbi = {0};
 		tbi.pWnd = pWnd;

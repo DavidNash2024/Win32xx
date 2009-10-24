@@ -34,7 +34,7 @@ devenv /rebuild "Release Static Library" Dock\ProjectFiles\Dock_2005.sln 			>>"W
 devenv /rebuild "Debug Static Library" DockContainer\ProjectFiles\DockContainer_2005.sln 	>>"Win32++\tests\VS2005_static.log"
 devenv /rebuild "Release Static Library" DockContainer\ProjectFiles\DockContainer_2005.sln 	>>"Win32++\tests\VS2005_static.log"
 devenv /rebuild "Debug Static Library" DockTabbedMDI\ProjectFiles\DockTabbedMDI_2005.sln 	>>"Win32++\tests\VS2005_static.log"
-devenv /rebuild "Release Static Library" DockTabbedMDI\ProjectFiles\DOckTabbedMDI_2005.sln 	>>"Win32++\tests\VS2005_static.log"
+devenv /rebuild "Release Static Library" DockTabbedMDI\ProjectFiles\DockTabbedMDI_2005.sln 	>>"Win32++\tests\VS2005_static.log"
 devenv /rebuild "Debug Static Library" Explorer\ProjectFiles\Explorer_2005.sln 			>>"Win32++\tests\VS2005_static.log"
 devenv /rebuild "Release Static Library" Explorer\ProjectFiles\Explorer_2005.sln 		>>"Win32++\tests\VS2005_static.log"
 devenv /rebuild "Debug Static Library" FastGDI\ProjectFiles\FastGDI_2005.sln 			>>"Win32++\tests\VS2005_static.log"
