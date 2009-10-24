@@ -6,7 +6,7 @@
 #define VIEW_H
 
 
-#include "../Win32++/WinCore.h"
+#include "WinCore.h"
 #include <vector>
 
 using std::vector;
@@ -26,7 +26,7 @@ protected:
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual void OnPaint(HDC hDC);
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	struct PlotPoint

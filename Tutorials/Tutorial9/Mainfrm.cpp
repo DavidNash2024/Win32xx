@@ -9,24 +9,6 @@ CMainFrame::CMainFrame()
 {
 	// Set m_View as the view window of the frame
 	SetView(m_View);
-
-	// Define our toolbar
-	m_ToolbarData.clear();
-	m_ToolbarData.push_back ( IDM_FILE_NEW   );
-	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
-	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
-	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
-	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
-	m_ToolbarData.push_back ( IDM_FILE_PRINT );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_PEN_RED    );
-	m_ToolbarData.push_back ( IDM_PEN_BLUE   );
-	m_ToolbarData.push_back ( IDM_PEN_GREEN  );
-	m_ToolbarData.push_back ( IDM_PEN_BLACK  );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 }
 
 CMainFrame::~CMainFrame()
@@ -166,7 +148,7 @@ void CMainFrame::OnFilePrint()
 	int Height = rcView.Height();
 
 	// Extract the bitmap from the View window
-	CDC ViewDC = GetDC(m_View.GetHwnd());
+	CDC ViewDC = m_View.GetDC();
 	CDC MemDC = CreateCompatibleDC(ViewDC);
 	MemDC.CreateCompatibleBitmap(ViewDC, Width, Height);
 	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
@@ -221,8 +203,8 @@ void CMainFrame::OnFilePrint()
     float fLogPelsY1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSY);
 	float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
     float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
-	float fScaleX = max(fLogPelsX1, fLogPelsX2) / min(fLogPelsX1, fLogPelsX2);
-	float fScaleY = max(fLogPelsY1, fLogPelsY2) / min(fLogPelsY1, fLogPelsY2);
+	float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
+	float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / MIN(fLogPelsY1, fLogPelsY2);
 
     // Compute the coordinates of the upper left corner of the centered bitmap.
 	int cWidthPels = GetDeviceCaps(pd.hDC, HORZRES);
@@ -250,13 +232,36 @@ void CMainFrame::OnFilePrint()
 	delete []pBits;
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void CMainFrame::SetupToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT );
+	AddToolbarButton( IDM_EDIT_COPY );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_PRINT );
+	
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton ( IDM_PEN_RED    );	
+	AddToolbarButton ( IDM_PEN_BLUE   );
+	AddToolbarButton ( IDM_PEN_GREEN  );
+	AddToolbarButton ( IDM_PEN_BLACK  );
+	AddToolbarButton ( IDM_HELP_ABOUT );
+}
+
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
 
 //	} // switch (uMsg)
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 } // LRESULT CMainFrame::WndProc(...)
 

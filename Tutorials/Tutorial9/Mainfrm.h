@@ -5,7 +5,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "../Win32++/Frame.h"
+#include "Frame.h"
 #include "View.h"
 
 // required for Dev-C++
@@ -25,7 +25,8 @@ protected:
 	virtual void OnFileSave();
 	virtual void OnFileSaveAs();
 	virtual void OnFilePrint();
-	virtual LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual void SetupToolbar();
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	enum Pens

@@ -1,7 +1,8 @@
 ///////////////////////////////////
 // main.cpp
 
-#include "../Win32++/Wincore.h"
+// Add the Win32++\include  directory to project's additional include directories
+#include "Wincore.h"
 
 
 class CView : public CWnd
@@ -32,7 +33,6 @@ BOOL CSimpleApp::InitInstance()
 }
 
 // Note:  This application doesn't end when the window is closed
-// Refer to the tutorial at http://users.bigpond.net.au/programming/tutorial.htm
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

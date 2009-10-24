@@ -1,0 +1,434 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "Browser"="..\..\Browser\ProjectFiles\Browser.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Client"="..\..\Networking\ClientDlg\Client.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Dialog"="..\..\Dialog\ProjectFiles\Dialog.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DialogBars"="..\..\DialogBars\ProjectFiles\DialogBars.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DialogDemo"="..\..\DialogDemo\ProjectFiles\DialogDemo.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DialogTab"="..\..\DialogTab\ProjectFiles\DialogTab.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DirectX"="..\..\DirectX\ProjectFiles\DirectX.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Dock"="..\..\Dock\ProjectFiles\Dock.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DockContainer"="..\..\DockContainer\ProjectFiles\DockContainer.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "DockTabbedMDI"="..\..\DockTabbedMDI\ProjectFiles\DockTabbedMDI.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Explorer"="..\..\Explorer\ProjectFiles\Explorer.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "FastGDI"="..\..\FastGDI\ProjectFiles\FastGDI.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "FormDemo"="..\..\FormDemo\ProjectFiles\FormDemo.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Frame"="..\..\Frame\ProjectFiles\Frame.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Library"="..\..\Win32++\Library Projects\Library.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "MDIDemo"="..\..\MDIFrameDemo\ProjectFiles\MDIDemo.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "MDIFrame"="..\..\MDIFrame\ProjectFiles\MDIFrame.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Notepad"="..\..\Notepad\ProjectFiles\Notepad.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Performance"="..\..\Performance\ProjectFiles\Performance.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Picture"="..\..\Picture\ProjectFiles\Picture.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "PropertySheet"="..\..\PropertySheet\ProjectFiles\PropertySheet.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Scribble"="..\..\Scribble\ProjectFiles\Scribble.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Server"="..\..\Networking\ServerDlg\Server.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Simple"="..\..\Simple\ProjectFiles\Simple.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Splitter"="..\..\Splitter\ProjectFiles\Splitter.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "TabDemo"="..\..\TabDemo\ProjectFiles\TabDemo.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Themes"="..\..\Themes\ProjectFiles\Themes.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Threads"="..\..\Threads\ProjectFiles\Threads.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Library
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

@@ -40,7 +40,7 @@ BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam); 
 }
 
-BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (LOWORD(wParam))
     {

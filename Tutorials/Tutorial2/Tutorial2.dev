@@ -1,11 +1,11 @@
 [Project]
 FileName=Tutorial2.dev
 Name=Tutorial2
-UnitCount=2
+UnitCount=1
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=
 ResourceIncludes=

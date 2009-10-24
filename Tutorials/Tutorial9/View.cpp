@@ -5,7 +5,7 @@
 #include <Windowsx.h>	// defines GET_X_LPARAM
 #include "resource.h"
 #include "view.h"
-#include "../Win32++/GDI.h"
+#include "GDI.h"
 
 using namespace std;
 
@@ -168,7 +168,7 @@ void CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -186,6 +186,6 @@ LRESULT CView::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	//Use the default message handling for remaining messages
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 

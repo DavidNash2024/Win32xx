@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="Browser"
-	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
+	ProjectGUID="{B6FA69C8-3608-4E54-B7CE-BB247D97E53E}"
 	>
 	<Platforms>
 		<Platform
@@ -249,7 +249,7 @@
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="3"
+				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 				CompileAs="0"

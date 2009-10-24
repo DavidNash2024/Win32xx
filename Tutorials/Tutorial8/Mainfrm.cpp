@@ -9,24 +9,6 @@ CMainFrame::CMainFrame()
 {
 	// Set m_View as the view window of the frame
 	SetView(m_View);
-
-	// Define our toolbar
-	m_ToolbarData.clear();
-	m_ToolbarData.push_back ( IDM_FILE_NEW   );
-	m_ToolbarData.push_back ( IDM_FILE_OPEN  );
-	m_ToolbarData.push_back ( IDM_FILE_SAVE  );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_EDIT_CUT   );
-	m_ToolbarData.push_back ( IDM_EDIT_COPY  );
-	m_ToolbarData.push_back ( IDM_EDIT_PASTE );
-	m_ToolbarData.push_back ( IDM_FILE_PRINT );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_PEN_RED    );
-	m_ToolbarData.push_back ( IDM_PEN_BLUE   );
-	m_ToolbarData.push_back ( IDM_PEN_GREEN  );
-	m_ToolbarData.push_back ( IDM_PEN_BLACK  );
-	m_ToolbarData.push_back ( 0 );				// Separator
-	m_ToolbarData.push_back ( IDM_HELP_ABOUT );
 }
 
 CMainFrame::~CMainFrame()
@@ -156,13 +138,36 @@ void CMainFrame::OnFileSaveAs()
 	m_View.FileSave(szFilePathName);
 }
 
-LRESULT CMainFrame::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void CMainFrame::SetupToolbar()
+{
+	// Set the Resource IDs for the toolbar buttons
+	AddToolbarButton( IDM_FILE_NEW   );
+	AddToolbarButton( IDM_FILE_OPEN  );
+	AddToolbarButton( IDM_FILE_SAVE  );
+	
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT );
+	AddToolbarButton( IDM_EDIT_COPY );
+	AddToolbarButton( IDM_EDIT_PASTE );
+	
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_FILE_PRINT );
+	
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton ( IDM_PEN_RED    );	
+	AddToolbarButton ( IDM_PEN_BLUE   );
+	AddToolbarButton ( IDM_PEN_GREEN  );
+	AddToolbarButton ( IDM_PEN_BLACK  );
+	AddToolbarButton ( IDM_HELP_ABOUT );
+}
+
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
 
 //	} // switch (uMsg)
 
-	return WndProcDefault(hWnd, uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 } // LRESULT CMainFrame::WndProc(...)
 

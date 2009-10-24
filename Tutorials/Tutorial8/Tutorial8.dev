@@ -1,14 +1,14 @@
 [Project]
 FileName=Tutorial8.dev
 Name=Tutorial8
-UnitCount=14
+UnitCount=9
 Type=0
 Ver=1
 ObjFiles=
-Includes=
+Includes=..\..\Win32++\include
 Libs=
 PrivateResource=Tutorial8_private.rc
-ResourceIncludes=
+ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@_

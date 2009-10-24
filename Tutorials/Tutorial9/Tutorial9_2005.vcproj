@@ -47,6 +47,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\..\Win32++\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -66,14 +67,14 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
+				AdditionalIncludeDirectories="..\..\Win32++\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib Advapi32.lib"
 				OutputFile=".\Debug/Tutorial9.exe"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -142,6 +143,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\Win32++\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -160,14 +162,14 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"
+				AdditionalIncludeDirectories="..\..\Win32++\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib Comdlg32.lib Advapi32.lib"
 				OutputFile=".\Release/Tutorial9.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
