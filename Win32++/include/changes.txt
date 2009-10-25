@@ -4,7 +4,8 @@ Bug fixes:
 - Fixed dialog destruction              
 - Fixed multithreaded window creation
 - Fixed TintBitmap for 16 bit colours
-- The close button on docked dockers now works. 
+- The close button on docked dockers now works.
+- Fixed PreTranslateMessage 
 
 Changes:
 --------

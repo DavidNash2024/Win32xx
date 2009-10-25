@@ -1021,26 +1021,26 @@ namespace Win32xx
 	inline int CWinApp::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.
-		MSG uMsg;
+		MSG Msg;
 		int status;
 
-		while((status = ::GetMessage(&uMsg, NULL, 0, 0))!= 0)
+		while((status = ::GetMessage(&Msg, NULL, 0, 0))!= 0)
 		{
 			if (-1 == status) return -1;
 
 			BOOL Processed = FALSE;
 
 			// only pre-translate input events
-			if ((uMsg.message >= WM_KEYFIRST && uMsg.message <= WM_KEYLAST) ||
-				(uMsg.message >= WM_MOUSEFIRST && uMsg.message <= WM_MOUSELAST))
+			if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
+				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
 			{
-				// Also loop through the chain of parents
-				for (HWND hWnd = uMsg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+				// search through the chain of parents for a valid CWnd
+				for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{
 					CWnd* pWnd = GetCWndFromMap(hWnd);
-					if (pWnd && pWnd->PreTranslateMessage(&uMsg))
+					if (pWnd)
 					{
-						Processed = TRUE;
+						Processed = pWnd->PreTranslateMessage(&Msg);
 						break;
 					}
 				}
@@ -1048,11 +1048,11 @@ namespace Win32xx
 
 			if (!Processed)
 			{
-				::TranslateMessage(&uMsg);
-				::DispatchMessage(&uMsg);
+				::TranslateMessage(&Msg);
+				::DispatchMessage(&Msg);
 			}
 		}
-		return LOWORD(uMsg.wParam);
+		return LOWORD(Msg.wParam);
 	}
 
 	inline int CWinApp::Run()
@@ -1365,7 +1365,8 @@ namespace Win32xx
 			wc.lpszClassName = ClassName;
 			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
-			wc.style 		 = CS_DBLCLKS;
+			wc.style 		 = CS_DBLCLKS;	// generate left button double click messages
+			
 			if (!RegisterClass(wc))	// Register the window class (if not already registered)
 				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 

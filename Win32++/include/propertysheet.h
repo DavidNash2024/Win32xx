@@ -88,6 +88,7 @@ namespace Win32xx
 		virtual void OnWizardBack();
 		virtual BOOL OnWizardFinish();
 		virtual void OnWizardNext();
+		virtual	BOOL PreTranslateMessage(MSG* pMsg);
 		virtual int Validate();
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
@@ -376,6 +377,18 @@ namespace Win32xx
 	{
 		// This function is called when the Next button is pressed on a wizard page
 		// Override this function in your derived class if required.
+	}
+
+	inline BOOL CPropertyPage::PreTranslateMessage(MSG* pMsg)
+	{
+		// allow the dialog to translate keyboard input
+		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
+		{
+			if (IsDialogMessage(m_hWnd, pMsg))
+				return TRUE;
+		}
+
+		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline LRESULT CPropertyPage::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -852,9 +865,8 @@ namespace Win32xx
 
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
-		{
-			if (IsDialogMessage(m_hWnd, pMsg))
-				return TRUE;
+		{ 
+			return GetActivePage()->PreTranslateMessage(pMsg);
 		}
 
 		return CWnd::PreTranslateMessage(pMsg);

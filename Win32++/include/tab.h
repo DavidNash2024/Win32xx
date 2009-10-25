@@ -134,6 +134,7 @@ namespace Win32xx
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 		virtual void    PreCreate(CREATESTRUCT& cs);
+		virtual BOOL	PreTranslateMessage(MSG* pMsg);
 		virtual void    SetTabSize();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -852,6 +853,18 @@ namespace Win32xx
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
 		cs.lpszClass = WC_TABCONTROL;
 	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
+	}
+
+	inline BOOL CTab::PreTranslateMessage(MSG* pMsg)
+	{
+		// allow the tab control to translate keyboard input
+		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
+		{
+			if (IsDialogMessage(m_hWnd, pMsg))
+				return TRUE;
+		}
+
+		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline void CTab::RecalcLayout()
