@@ -126,9 +126,12 @@ CMyDialog::~CMyDialog()
 
 BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-//	}
+	switch (uMsg)
+	{
+	case WM_DESTROY:
+		::PostQuitMessage(0);
+		break;
+	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
@@ -155,6 +158,4 @@ void CMyDialog::OnOK()
 	// Do default action (i.e. close the dialog)
 	CDialog::OnOK();
 }
-
-
 
