@@ -271,8 +271,8 @@ namespace Win32xx
         // Co-ordinate Functions
 		BOOL DPtoLP(LPPOINT lpPoints, int nCount )  const;
 		BOOL DPtoLP(LPRECT lpRect)  const;
-		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const
-		BOOL LPtoDP(LPRECT lpRect)  const
+		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const;
+		BOOL LPtoDP(LPRECT lpRect)  const;
 	
 		// Layout Functions
 		DWORD GetLayout() const;
@@ -1443,6 +1443,7 @@ namespace Win32xx
 		// Sets the layout of a device context
 		return ::SetLayout(m_hDC, dwLayout);
 #else
+		UNREFERENCED_PARAMETER(dwLayout); // no-op
 		return 0;
 #endif
 	}

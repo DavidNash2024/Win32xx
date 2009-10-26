@@ -33,7 +33,7 @@ class CComboPage : public CPropertyPage
 public:
 	CComboPage(UINT nIDTemplate, LPCTSTR szTitle  = NULL);
 	virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
+	virtual BOOL OnInitDialog();
 	virtual void OnSetActive();
 };
 
