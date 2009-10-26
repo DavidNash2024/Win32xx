@@ -2,7 +2,7 @@
 
 
 // include the Resource IDs defined by Win32++
-#include "../Win32++/Default_Resource.h"
+#include "Default_Resource.h"
 
 
 //Resource IDs for the dialog

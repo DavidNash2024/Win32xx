@@ -1,7 +1,7 @@
 #ifndef SIMPLEAPP_H
 #define SIMPLEAPP_H
 
-#include "../Win32++/wincore.h"
+#include "wincore.h"
 #include "view.h"
 
 

@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "../Win32++/wincore.h"
+#include "wincore.h"
 #include "resource.h"
 #include "FrameApp.h"
 

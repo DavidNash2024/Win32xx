@@ -4,7 +4,7 @@
 #ifndef HYPERLINK_H
 #define HYPERLINK_H
 
-#include "../Win32++/wincore.h"
+#include "wincore.h"
 
 #ifndef IDC_HAND
 #define IDC_HAND  MAKEINTRESOURCE(32649)
