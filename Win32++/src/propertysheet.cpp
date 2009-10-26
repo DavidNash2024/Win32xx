@@ -1,5 +1,6 @@
 #include "propertysheet.h"
 
+
 namespace Win32xx
 {
 
@@ -217,6 +218,27 @@ namespace Win32xx
 	{
 		// This function is called when the Next button is pressed on a wizard page
 		// Override this function in your derived class if required.
+	}
+
+	BOOL CPropertyPage::PreTranslateMessage(MSG* pMsg)
+	{
+		// allow the tab control to translate keyboard input
+		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
+			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
+		{
+			HWND hWndTab = GetParent();
+			if (SendMessage(hWndTab, PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
+				return TRUE;
+		}
+
+		// allow the dialog to translate keyboard input
+		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
+		{
+			if (IsDialogMessage(m_hWnd, pMsg))
+				return TRUE;
+		}
+
+		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	LRESULT CPropertyPage::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -693,9 +715,8 @@ namespace Win32xx
 
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
-		{
-			if (IsDialogMessage(m_hWnd, pMsg))
-				return TRUE;
+		{ 
+			return GetActivePage()->PreTranslateMessage(pMsg);
 		}
 
 		return CWnd::PreTranslateMessage(pMsg);

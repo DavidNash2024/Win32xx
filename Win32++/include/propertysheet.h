@@ -381,6 +381,15 @@ namespace Win32xx
 
 	inline BOOL CPropertyPage::PreTranslateMessage(MSG* pMsg)
 	{
+		// allow the tab control to translate keyboard input
+		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
+			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
+		{
+			HWND hWndTab = GetParent();
+			if (SendMessage(hWndTab, PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
+				return TRUE;
+		}
+
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
 		{

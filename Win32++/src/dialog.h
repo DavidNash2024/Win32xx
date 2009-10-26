@@ -79,7 +79,7 @@ namespace Win32xx
 		virtual ~CDialog();
 
 		// You probably won't need to override these functions
-		virtual HWND Create(HWND hParent);
+		virtual HWND Create(HWND hParent = 0);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
 		virtual void SetDlgParent(HWND hParent);

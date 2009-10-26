@@ -1,5 +1,6 @@
 #include "dialog.h"
 
+
 namespace Win32xx
 {
 
@@ -36,7 +37,7 @@ namespace Win32xx
 		}
 	}
 
-	HWND CDialog::Create(HWND hParent = 0)
+	HWND CDialog::Create(HWND hParent /*= 0*/)
 	{
 		// Allow a dialog to be used as a child window
 		SetDlgParent(hParent);

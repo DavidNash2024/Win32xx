@@ -610,5 +610,6 @@ namespace Win32xx
 }
 
 
+
 #endif // _WINCORE_H_
 

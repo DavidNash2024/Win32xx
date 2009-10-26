@@ -79,7 +79,7 @@ namespace Win32xx
 		virtual ~CDialog();
 
 		// You probably won't need to override these functions
-		virtual HWND Create(HWND hParent);
+		virtual HWND Create(HWND hParent = 0);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
 		virtual void SetDlgParent(HWND hParent);
@@ -148,7 +148,7 @@ namespace Win32xx
 		}
 	}
 
-	inline HWND CDialog::Create(HWND hParent = 0)
+	inline HWND CDialog::Create(HWND hParent /*= 0*/)
 	{
 		// Allow a dialog to be used as a child window
 		SetDlgParent(hParent);

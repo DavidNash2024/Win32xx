@@ -1034,7 +1034,9 @@ namespace Win32xx
 			if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
 				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
 			{
-				// search through the chain of parents for a valid CWnd
+				// search through the chain of parents for first valid CWnd.
+				// Some pretranslatable messages come from non-CWnd windows,
+				// such as the tab control within propertysheets.
 				for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{
 					CWnd* pWnd = GetCWndFromMap(hWnd);

@@ -18,6 +18,7 @@ CDialogApp::~CDialogApp()
 BOOL CDialogApp::InitInstance()
 {
 	//Display the Modeless Dialog
+	// A modeless dialog gives us an opportunity to pretranslatate messages 
 	m_MyDialog.Create();
 
 	return TRUE;

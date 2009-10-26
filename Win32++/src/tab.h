@@ -134,6 +134,7 @@ namespace Win32xx
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 		virtual void    PreCreate(CREATESTRUCT& cs);
+		virtual BOOL	PreTranslateMessage(MSG* pMsg);
 		virtual void    SetTabSize();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

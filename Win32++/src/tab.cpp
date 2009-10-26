@@ -647,6 +647,18 @@ namespace Win32xx
 	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
 	}
 
+	BOOL CTab::PreTranslateMessage(MSG* pMsg)
+	{
+		// allow the tab control to translate keyboard input
+		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
+		{
+			if (IsDialogMessage(m_hWnd, pMsg))
+				return TRUE;
+		}
+
+		return CWnd::PreTranslateMessage(pMsg);
+	}
+
 	void CTab::RecalcLayout()
 	{
 		if (GetActiveView())

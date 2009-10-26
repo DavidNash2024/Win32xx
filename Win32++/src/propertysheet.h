@@ -88,6 +88,7 @@ namespace Win32xx
 		virtual void OnWizardBack();
 		virtual BOOL OnWizardFinish();
 		virtual void OnWizardNext();
+		virtual	BOOL PreTranslateMessage(MSG* pMsg);
 		virtual int Validate();
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
