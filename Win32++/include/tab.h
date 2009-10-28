@@ -821,8 +821,8 @@ namespace Win32xx
 		// Use the region in the memory DC to paint the grey background
 		dcMem.AttachClipRegion(hrgnClip);
 		HWND hWndParent = GetParent();
-		HDC hDCParent = ::GetDC(hWndParent);
-		HBRUSH hBrush = (HBRUSH)::SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)hDCParent, (LPARAM)hWndParent);
+		CDC dcParent = ::GetDC(hWndParent);
+		HBRUSH hBrush = (HBRUSH)::SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
 		dcMem.AttachBrush(hBrush);
 		dcMem.PaintRgn(hrgnClip);
 
@@ -841,10 +841,9 @@ namespace Win32xx
 		dcView.DetachClipRegion();
 
 		// Cleanup
-		dcMem.DetachBrush();
 		::DeleteObject(hrgnSrc1);
 		::DeleteObject(hrgnSrc2);
-		::DeleteObject(hrgnClip);
+		::DeleteObject(hrgnClip); 
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
