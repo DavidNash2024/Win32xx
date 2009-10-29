@@ -429,7 +429,7 @@ namespace Win32xx
 		
 		int xPos = bRightToLeft? rc.right : rc.left;
 		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
-			/*rc.left*/xPos, rc.bottom, m_hWnd, &tpm);
+			xPos, rc.bottom, m_hWnd, &tpm);
 
 		// We get here once the TrackPopupMenuEx has ended
 		m_bMenuActive = FALSE;

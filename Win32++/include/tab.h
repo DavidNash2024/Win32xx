@@ -788,10 +788,12 @@ namespace Win32xx
 
 		// Create the memory DC and bitmap
 		CDC dcMem = ::CreateCompatibleDC(NULL);
+		int xAdjust = 0;
 
 #if WINVER >= 0x0500
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
-			dcMem.SetLayout(LAYOUT_RTL);
+		dcMem.SetLayout(LAYOUT_RTL);
+		xAdjust = -2;	// Fudge factor for WS_EX_LAYOUTRTL exstyle
 #endif
 
 		CRect rcClient = GetClientRect();
@@ -808,13 +810,15 @@ namespace Win32xx
 
 		// Create a clipping region. Its the overall tab window's region,
 		//  less the region belonging to the individual tab view's client area
-		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
+		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left + xAdjust, rcClient.top, rcClient.right, rcClient.bottom);
 		CRect rcTab = GetClientRect();
 		TabCtrl_AdjustRect(m_hWnd, FALSE, &rcTab);
-		if (rcTab.Height() < 0) rcTab.top = rcTab.bottom;
-		if (rcTab.Width() < 0) rcTab.left = rcTab.right;
+		if (rcTab.Height() < 0) 
+			rcTab.top = rcTab.bottom;
+		if (rcTab.Width() < 0) 
+			rcTab.left = rcTab.right;
 
-		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
+		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + xAdjust, rcTab.bottom);
 		HRGN hrgnClip = ::CreateRectRgn(0, 0, 0, 0);
 		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF);
 
@@ -851,7 +855,6 @@ namespace Win32xx
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
 		cs.lpszClass = WC_TABCONTROL;
-	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
 	}
 
 	inline BOOL CTab::PreTranslateMessage(MSG* pMsg)
@@ -1047,7 +1050,7 @@ namespace Win32xx
 			HWND MenuHwnd = GetAncestor();
 			int iPage = 0;
 			m_IsListMenuActive = TRUE;
-			iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
+			iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
 			if ((iPage >= 0) && (iPage < 9)) SelectPage(iPage);
 			if (iPage == 9) ShowListDialog();
 			m_IsListMenuActive = FALSE;

@@ -686,10 +686,19 @@ namespace Win32xx
 		int cx = GetSystemMetrics(SM_CXSMICON);
 		int cy = GetSystemMetrics(SM_CYSMICON);
 
-		rcClose.right = rc.right - gap;
-		rcClose.left = rcClose.right - cx;
 		rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
 		rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
+		rcClose.right = rc.right - gap;
+		rcClose.left = rcClose.right - cx;
+
+#if WINVER >= 0x0500
+		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		{
+			rcClose.left = rc.left + gap;
+			rcClose.right = rcClose.left + cx; 
+		}
+#endif
+
 
 		return rcClose;
 	}
@@ -1055,6 +1064,11 @@ namespace Win32xx
 		DWORD dwStyle = m_pDock->GetDockStyle();
 		if ((dwStyle & DS_CLIENTEDGE) || (dwStyle & DS_FLATLOOK))
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
+
+#if WINVER >= 0x0500
+		if (m_pDock->GetWindowLongA(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+			cs.dwExStyle |= WS_EX_LAYOUTRTL;
+#endif
 	}
 
 	inline void CDocker::CDockClient::SendNotify(UINT nMessageID)
@@ -3594,7 +3608,6 @@ namespace Win32xx
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM;
 		cs.lpszClass = WC_TABCONTROL;
-	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
 	}
 
 	inline void CContainer::RecalcLayout()
