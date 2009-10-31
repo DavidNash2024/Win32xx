@@ -1,5 +1,5 @@
-// Win32++  Version 6.61
-// Released: 30th August, 2009 by:
+// Win32++  Version 6.7
+// Released: 6th November, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -115,7 +115,7 @@ namespace Win32xx
 		CDC(const CDC& rhs);				// Copy constructor
 		void operator = ( const HDC hDC );
 		virtual ~CDC( );
-		HDC GetDC( ) const { return m_hDC; }
+		HDC GetHDC( ) const { return m_hDC; }
 
 		virtual void AttachDC( HDC hDC );
 		virtual HDC  DetachDC( );
@@ -268,12 +268,45 @@ namespace Win32xx
 		BOOL ExtFloodFill( int x, int y, COLORREF crColor, UINT nFillType ) const;
 #endif
 
-        // Layout Functions
-#if defined(WINVER) && (WINVER >= 0x0500)
+                // Co-ordinate Functions
+		BOOL DPtoLP(LPPOINT lpPoints, int nCount )  const;
+		BOOL DPtoLP(LPRECT lpRect)  const;
+		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const;
+		BOOL LPtoDP(LPRECT lpRect)  const;
+	
+		// Layout Functions
 		DWORD GetLayout() const;
 		DWORD SetLayout(DWORD dwLayout) const;
-#endif
 
+		// Mapping functions
+		int GetMapMode()  const;
+		int SetMapMode(int nMapMode) const;
+		BOOL GetViewportOrgEx(LPPOINT lpPoint)  const;
+		BOOL SetViewportOrgEx(int x, int y, LPPOINT lpPoint) const;
+		BOOL SetViewportOrgEx(POINT point, LPPOINT lpPointRet ) const;
+		BOOL OffsetViewportOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const;
+		BOOL GetViewportExtEx(LPSIZE lpSize)  const;
+		BOOL SetViewportExtEx(int x, int y, LPSIZE lpSize ) const;
+		BOOL SetViewportExtEx(SIZE size, LPSIZE lpSizeRet ) const;
+		BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const;
+		BOOL OffsetWindowOrg(int nWidth, int nHeight, LPPOINT lpPoint ) const;
+		BOOL GetWindowExtEx(LPSIZE lpSize)  const;
+		BOOL SetWindowExtEx(int x, int y, LPSIZE lpSize ) const;
+		BOOL SetWindowExtEx(SIZE size, LPSIZE lpSizeRet) const;
+		BOOL ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const;
+		BOOL GetWindowOrgEx(LPPOINT lpPoint)  const;
+		BOOL SetWindowOrgEx(int x, int y, LPPOINT lpPoint ) const;
+		BOOL SetWindowOrgEx(POINT point, LPPOINT lpPointRet ) const;
+		BOOL OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const;
+
+		// Printer Functions
+		int StartDoc(LPDOCINFO lpDocInfo) const;
+		int EndDoc() const;
+		int StartPage() const;
+		int EndPage() const;
+		int AbortDoc() const;
+		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
+		
 		// Text Functions
 		BOOL ExtTextOut( int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths ) const;
 		int DrawText( LPCTSTR lpszString, int nCount, const RECT& rc, UINT nFormat ) const;

@@ -1,3 +1,40 @@
+// Win32++  Version 6.7
+// Released: 6th November, 2009 by:
+//
+//      David Nash
+//      email: dnash@bigpond.net.au
+//      url: https://sourceforge.net/projects/win32-framework
+//
+//
+// Copyright (c) 2005-2009  David Nash
+//
+// Permission is hereby granted, free of charge, to
+// any person obtaining a copy of this software and
+// associated documentation files (the "Software"),
+// to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice
+// shall be included in all copies or substantial portions
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+// ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+// PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+// SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+// ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////////////////////////////////////////////////////////
+
+
 #include "tab.h"
 
 
@@ -580,10 +617,12 @@ namespace Win32xx
 
 		// Create the memory DC and bitmap
 		CDC dcMem = ::CreateCompatibleDC(NULL);
+		int xAdjust = 0;
 
 #if WINVER >= 0x0500
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
-			dcMem.SetLayout(LAYOUT_RTL);
+		dcMem.SetLayout(LAYOUT_RTL);
+		xAdjust = -2;	// Fudge factor for WS_EX_LAYOUTRTL exstyle
 #endif
 
 		CRect rcClient = GetClientRect();
@@ -600,21 +639,23 @@ namespace Win32xx
 
 		// Create a clipping region. Its the overall tab window's region,
 		//  less the region belonging to the individual tab view's client area
-		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
+		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left + xAdjust, rcClient.top, rcClient.right, rcClient.bottom);
 		CRect rcTab = GetClientRect();
 		TabCtrl_AdjustRect(m_hWnd, FALSE, &rcTab);
-		if (rcTab.Height() < 0) rcTab.top = rcTab.bottom;
-		if (rcTab.Width() < 0) rcTab.left = rcTab.right;
+		if (rcTab.Height() < 0) 
+			rcTab.top = rcTab.bottom;
+		if (rcTab.Width() < 0) 
+			rcTab.left = rcTab.right;
 
-		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
+		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + xAdjust, rcTab.bottom);
 		HRGN hrgnClip = ::CreateRectRgn(0, 0, 0, 0);
 		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF);
 
 		// Use the region in the memory DC to paint the grey background
 		dcMem.AttachClipRegion(hrgnClip);
 		HWND hWndParent = GetParent();
-		HDC hDCParent = ::GetDC(hWndParent);
-		HBRUSH hBrush = (HBRUSH)::SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)hDCParent, (LPARAM)hWndParent);
+		CDC dcParent = ::GetDC(hWndParent);
+		HBRUSH hBrush = (HBRUSH)::SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
 		dcMem.AttachBrush(hBrush);
 		dcMem.PaintRgn(hrgnClip);
 
@@ -633,10 +674,9 @@ namespace Win32xx
 		dcView.DetachClipRegion();
 
 		// Cleanup
-		dcMem.DetachBrush();
 		::DeleteObject(hrgnSrc1);
 		::DeleteObject(hrgnSrc2);
-		::DeleteObject(hrgnClip);
+		::DeleteObject(hrgnClip); 
 	}
 
 	void CTab::PreCreate(CREATESTRUCT &cs)
@@ -644,7 +684,6 @@ namespace Win32xx
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
 		cs.lpszClass = WC_TABCONTROL;
-	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
 	}
 
 	BOOL CTab::PreTranslateMessage(MSG* pMsg)
@@ -840,7 +879,7 @@ namespace Win32xx
 			HWND MenuHwnd = GetAncestor();
 			int iPage = 0;
 			m_IsListMenuActive = TRUE;
-			iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
+			iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
 			if ((iPage >= 0) && (iPage < 9)) SelectPage(iPage);
 			if (iPage == 9) ShowListDialog();
 			m_IsListMenuActive = FALSE;

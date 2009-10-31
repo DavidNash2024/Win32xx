@@ -1,5 +1,5 @@
-// Win32++  Version 6.61
-// Released: 30th August, 2009 by:
+// Win32++  Version 6.7
+// Released: 6th November, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1066,7 +1066,7 @@ namespace Win32xx
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
 
 #if WINVER >= 0x0500
-		if (m_pDock->GetWindowLongA(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		if (m_pDock->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 			cs.dwExStyle |= WS_EX_LAYOUTRTL;
 #endif
 	}

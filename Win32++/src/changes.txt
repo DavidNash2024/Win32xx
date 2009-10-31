@@ -4,14 +4,18 @@ Bug fixes:
 - Fixed dialog destruction              
 - Fixed multithreaded window creation
 - Fixed TintBitmap for 16 bit colours
-- The close button on docked dockers now works. 
+- The close button on docked dockers now works.
+- Fixed PreTranslateMessage 
 
-Changes:
---------
+Changes
+-------
 - OnInitailUpdate is now called after Attach or AttachDlgItem
 - IsChild now takes a HWND arguement.
+- Extended CDC class
+    - also renamed CDC::GetDC to CDC::GetHDC
 - Added CDC::GetLayout
 - Added CDC::SetLayout
+
 
 Version 6.6
 ===========

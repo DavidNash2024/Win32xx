@@ -1,4 +1,42 @@
+// Win32++  Version 6.7
+// Released: 6th November, 2009 by:
+//
+//      David Nash
+//      email: dnash@bigpond.net.au
+//      url: https://sourceforge.net/projects/win32-framework
+//
+//
+// Copyright (c) 2005-2009  David Nash
+//
+// Permission is hereby granted, free of charge, to
+// any person obtaining a copy of this software and
+// associated documentation files (the "Software"),
+// to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice
+// shall be included in all copies or substantial portions
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+// ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+// PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+// SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+// ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////////////////////////////////////////////////////////
+
+
 #include "docking.h"
+
 
 namespace Win32xx
 {
@@ -164,10 +202,19 @@ namespace Win32xx
 		int cx = GetSystemMetrics(SM_CXSMICON);
 		int cy = GetSystemMetrics(SM_CYSMICON);
 
-		rcClose.right = rc.right - gap;
-		rcClose.left = rcClose.right - cx;
 		rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
 		rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
+		rcClose.right = rc.right - gap;
+		rcClose.left = rcClose.right - cx;
+
+#if WINVER >= 0x0500
+		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		{
+			rcClose.left = rc.left + gap;
+			rcClose.right = rcClose.left + cx; 
+		}
+#endif
+
 
 		return rcClose;
 	}
@@ -533,6 +580,11 @@ namespace Win32xx
 		DWORD dwStyle = m_pDock->GetDockStyle();
 		if ((dwStyle & DS_CLIENTEDGE) || (dwStyle & DS_FLATLOOK))
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
+
+#if WINVER >= 0x0500
+		if (m_pDock->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+			cs.dwExStyle |= WS_EX_LAYOUTRTL;
+#endif
 	}
 
 	void CDocker::CDockClient::SendNotify(UINT nMessageID)
@@ -3072,7 +3124,6 @@ namespace Win32xx
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM;
 		cs.lpszClass = WC_TABCONTROL;
-	//	cs.dwExStyle = WS_EX_LAYOUTRTL;
 	}
 
 	void CContainer::RecalcLayout()

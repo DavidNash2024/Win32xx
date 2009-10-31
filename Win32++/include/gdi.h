@@ -1,5 +1,5 @@
-// Win32++  Version 6.61
-// Released: 30th August, 2009 by:
+// Win32++  Version 6.7
+// Released: 6th November, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -268,7 +268,7 @@ namespace Win32xx
 		BOOL ExtFloodFill( int x, int y, COLORREF crColor, UINT nFillType ) const;
 #endif
 
-        // Co-ordinate Functions
+                // Co-ordinate Functions
 		BOOL DPtoLP(LPPOINT lpPoints, int nCount )  const;
 		BOOL DPtoLP(LPRECT lpRect)  const;
 		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const;
@@ -280,32 +280,33 @@ namespace Win32xx
 
 		// Mapping functions
 		int GetMapMode()  const;
-		BOOL GetViewportOrg(LPPOINT lpPoint)  const;
 		int SetMapMode(int nMapMode) const;
-		BOOL SetViewportOrg(int x, int y, LPPOINT lpPoint) const;
-		BOOL SetViewportOrg(POINT point, LPPOINT lpPointRet ) const;
-		BOOL OffsetViewportOrg(int nWidth, int nHeight, LPPOINT lpPoint ) const;
-		BOOL GetViewportExt(LPSIZE lpSize)  const;
-		BOOL SetViewportExt(int x, int y, LPSIZE lpSize ) const;
-		BOOL SetViewportExt(SIZE size, LPSIZE lpSizeRet ) const;
-		BOOL ScaleViewportExt(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const;
-		BOOL GetWindowOrg(LPPOINT lpPoint)  const;
-		BOOL SetWindowOrg(int x, int y, LPPOINT lpPoint ) const;
-		BOOL SetWindowOrg(POINT point, LPPOINT lpPointRet ) const;
+		BOOL GetViewportOrgEx(LPPOINT lpPoint)  const;
+		BOOL SetViewportOrgEx(int x, int y, LPPOINT lpPoint) const;
+		BOOL SetViewportOrgEx(POINT point, LPPOINT lpPointRet ) const;
+		BOOL OffsetViewportOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const;
+		BOOL GetViewportExtEx(LPSIZE lpSize)  const;
+		BOOL SetViewportExtEx(int x, int y, LPSIZE lpSize ) const;
+		BOOL SetViewportExtEx(SIZE size, LPSIZE lpSizeRet ) const;
+		BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const;
 		BOOL OffsetWindowOrg(int nWidth, int nHeight, LPPOINT lpPoint ) const;
-		BOOL GetWindowExt(LPSIZE lpSize)  const;
-		BOOL SetWindowExt(int x, int y, LPSIZE lpSize ) const;
-		BOOL SetWindowExt(SIZE size, LPSIZE lpSizeRet) const;
-		BOOL ScaleWindowExt(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const;
+		BOOL GetWindowExtEx(LPSIZE lpSize)  const;
+		BOOL SetWindowExtEx(int x, int y, LPSIZE lpSize ) const;
+		BOOL SetWindowExtEx(SIZE size, LPSIZE lpSizeRet) const;
+		BOOL ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const;
+		BOOL GetWindowOrgEx(LPPOINT lpPoint)  const;
+		BOOL SetWindowOrgEx(int x, int y, LPPOINT lpPoint ) const;
+		BOOL SetWindowOrgEx(POINT point, LPPOINT lpPointRet ) const;
+		BOOL OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const;
 
 		// Printer Functions
 		int StartDoc(LPDOCINFO lpDocInfo) const;
+		int EndDoc() const;
 		int StartPage() const;
 		int EndPage() const;
-		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
 		int AbortDoc() const;
-		int EndDoc() const;
-
+		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
+		
 		// Text Functions
 		BOOL ExtTextOut( int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths ) const;
 		int DrawText( LPCTSTR lpszString, int nCount, const RECT& rc, UINT nFormat ) const;
@@ -1455,7 +1456,7 @@ namespace Win32xx
 			return ::GetMapMode(m_hDC);
 		return 0;
 	}
-	inline BOOL CDC::GetViewportOrg(LPPOINT lpPoint)  const
+	inline BOOL CDC::GetViewportOrgEx(LPPOINT lpPoint)  const
 	{
 		if (m_hDC != NULL)
 			return ::GetViewportOrgEx(m_hDC, lpPoint);
@@ -1467,91 +1468,91 @@ namespace Win32xx
 			return ::SetMapMode(m_hDC, nMapMode);
 		return 0;
 	}	
-	inline BOOL CDC::SetViewportOrg(int x, int y, LPPOINT lpPoint) const
+	inline BOOL CDC::SetViewportOrgEx(int x, int y, LPPOINT lpPoint) const
 	{
 		if (m_hDC != NULL)
 			return ::SetViewportOrgEx(m_hDC, x, y, lpPoint);
 		return FALSE;
 	}
-	inline BOOL CDC::SetViewportOrg(POINT point, LPPOINT lpPointRet ) const
+	inline BOOL CDC::SetViewportOrgEx(POINT point, LPPOINT lpPointRet ) const
 	{
 		if (m_hDC != NULL)
-			return SetViewportOrg(point.x, point.y, lpPointRet);
+			return SetViewportOrgEx(point.x, point.y, lpPointRet);
 		return FALSE;
 	}	
-	inline BOOL CDC::OffsetViewportOrg(int nWidth, int nHeight, LPPOINT lpPoint ) const
+	inline BOOL CDC::OffsetViewportOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const
 	{
 		if (m_hDC != NULL)
 			return ::OffsetViewportOrgEx(m_hDC, nWidth, nHeight, lpPoint);
 		return FALSE;
 	}
-	inline BOOL CDC::GetViewportExt(LPSIZE lpSize)  const
+	inline BOOL CDC::GetViewportExtEx(LPSIZE lpSize)  const
 	{
 		if (m_hDC != NULL)
 			return ::GetViewportExtEx(m_hDC, lpSize);
 		return FALSE;
 	}
-	inline BOOL CDC::SetViewportExt(int x, int y, LPSIZE lpSize ) const
+	inline BOOL CDC::SetViewportExtEx(int x, int y, LPSIZE lpSize ) const
 	{
 		if (m_hDC != NULL)
 			return ::SetViewportExtEx(m_hDC, x, y, lpSize);
 		return FALSE;
 	}	
-	inline BOOL CDC::SetViewportExt(SIZE size, LPSIZE lpSizeRet ) const
+	inline BOOL CDC::SetViewportExtEx(SIZE size, LPSIZE lpSizeRet ) const
 	{
 		if (m_hDC != NULL)
-			return SetViewportExt(size.cx, size.cy, lpSizeRet);
+			return SetViewportExtEx(size.cx, size.cy, lpSizeRet);
 		return FALSE;
 	}
-	inline BOOL CDC::ScaleViewportExt(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const
+	inline BOOL CDC::ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const
 	{
 		if (m_hDC != NULL)
 			return ::ScaleViewportExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);
 		return FALSE;
 	}	
-	inline BOOL CDC::GetWindowOrg(LPPOINT lpPoint)  const
+	inline BOOL CDC::GetWindowOrgEx(LPPOINT lpPoint)  const
 	{
 		if (m_hDC != NULL)
 			return ::GetWindowOrgEx(m_hDC, lpPoint);
 		return FALSE;
 	}	
-	inline BOOL CDC::SetWindowOrg(int x, int y, LPPOINT lpPoint ) const
+	inline BOOL CDC::SetWindowOrgEx(int x, int y, LPPOINT lpPoint ) const
 	{
 		if (m_hDC != NULL)
 			return ::SetWindowOrgEx(m_hDC, x, y, lpPoint);
 		return FALSE;
 	}
-	inline BOOL CDC::SetWindowOrg(POINT point, LPPOINT lpPointRet ) const
+	inline BOOL CDC::SetWindowOrgEx(POINT point, LPPOINT lpPointRet ) const
 	{
 		if (m_hDC != NULL)
-			return SetWindowOrg(point.x, point.y, lpPointRet);
+			return SetWindowOrgEx(point.x, point.y, lpPointRet);
 		return FALSE;
 	}
-	inline BOOL CDC::OffsetWindowOrg(int nWidth, int nHeight, LPPOINT lpPoint ) const
+	inline BOOL CDC::OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const
 	{
 		if (m_hDC != NULL)
 			return ::OffsetWindowOrgEx(m_hDC, nWidth, nHeight, lpPoint);
 		return FALSE;
 	}
-	inline BOOL CDC::GetWindowExt(LPSIZE lpSize)  const
+	inline BOOL CDC::GetWindowExtEx(LPSIZE lpSize)  const
 	{
 		if (m_hDC != NULL)
 			return ::GetWindowExtEx(m_hDC, lpSize);
 		return FALSE;
 	}	
-	inline BOOL CDC::SetWindowExt(int x, int y, LPSIZE lpSize ) const
+	inline BOOL CDC::SetWindowExtEx(int x, int y, LPSIZE lpSize ) const
 	{
 		if (m_hDC != NULL)
 			return ::SetWindowExtEx(m_hDC, x, y, lpSize);
 		return FALSE;
 	}
-	inline BOOL CDC::SetWindowExt(SIZE size, LPSIZE lpSizeRet) const
+	inline BOOL CDC::SetWindowExtEx(SIZE size, LPSIZE lpSizeRet) const
 	{
 		if (m_hDC != NULL)
-			return SetWindowExt(size.cx, size.cy, lpSizeRet);
+			return SetWindowExtEx(size.cx, size.cy, lpSizeRet);
 		return FALSE;
 	}
-	inline BOOL CDC::ScaleWindowExt(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const
+	inline BOOL CDC::ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const
 	{
 		if (m_hDC != NULL)
 			return ::ScaleWindowExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);

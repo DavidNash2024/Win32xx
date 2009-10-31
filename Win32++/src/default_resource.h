@@ -72,6 +72,11 @@
   #define IDC_STATIC                     -1
 #endif
 
+// For older compilers including Visual Studio 6
+#ifndef RT_MANIFEST
+  #define RT_MANIFEST                    24
+#endif
+
 
 // Notes about Resource IDs
 // * In general, resource IDs can have values from 1 to 65535. Programs with

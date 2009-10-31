@@ -1,3 +1,40 @@
+// Win32++  Version 6.7
+// Released: 6th November, 2009 by:
+//
+//      David Nash
+//      email: dnash@bigpond.net.au
+//      url: https://sourceforge.net/projects/win32-framework
+//
+//
+// Copyright (c) 2005-2009  David Nash
+//
+// Permission is hereby granted, free of charge, to
+// any person obtaining a copy of this software and
+// associated documentation files (the "Software"),
+// to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice
+// shall be included in all copies or substantial portions
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+// ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+// PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+// SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+// ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////////////////////////////////////////////////////////
+
+
 #include "gdi.h"
 
 
@@ -1007,19 +1044,163 @@ namespace Win32xx
 	}
 #endif
 
+	// co-ordingate functions
+	BOOL CDC::DPtoLP(LPPOINT lpPoints, int nCount )  const
+	{
+		if (m_hDC != NULL)
+			return ::DPtoLP(m_hDC, lpPoints, nCount);
+		return FALSE;
+	}
+	BOOL CDC::DPtoLP(LPRECT lpRect)  const
+	{
+		if (m_hDC != NULL)
+			return ::DPtoLP(m_hDC, (LPPOINT)lpRect, 2);
+		return FALSE;
+	}
+	
+	BOOL CDC::LPtoDP(LPPOINT lpPoints, int nCount )  const
+	{
+		if (m_hDC != NULL)
+			return ::LPtoDP(m_hDC, lpPoints, nCount);
+		return FALSE;
+	}
+	BOOL CDC::LPtoDP(LPRECT lpRect)  const
+	{
+		if (m_hDC != NULL)
+			return ::LPtoDP(m_hDC, (LPPOINT)lpRect, 2);
+		return FALSE;
+	}
+
 	// Layout Functions
-#if defined(WINVER) && (WINVER >= 0x0500)
 	DWORD CDC::GetLayout() const
 	{
 		// Returns the layout of a device context (LAYOUT_RTL and LAYOUT_BITMAPORIENTATIONPRESERVED)
+#if defined(WINVER) && (WINVER >= 0x0500)
 		return ::GetLayout(m_hDC);
+#else
+		return 0;
+#endif
 	}
 	DWORD CDC::SetLayout(DWORD dwLayout) const
 	{
+#if defined(WINVER) && (WINVER >= 0x0500)
 		// Sets the layout of a device context
 		return ::SetLayout(m_hDC, dwLayout);
-	}
+#else
+		UNREFERENCED_PARAMETER(dwLayout); // no-op
+		return 0;
 #endif
+	}
+
+	// Mapping Functions
+	int CDC::GetMapMode()  const
+	{
+		if (m_hDC != NULL)
+			return ::GetMapMode(m_hDC);
+		return 0;
+	}
+	BOOL CDC::GetViewportOrgEx(LPPOINT lpPoint)  const
+	{
+		if (m_hDC != NULL)
+			return ::GetViewportOrgEx(m_hDC, lpPoint);
+		return 0;
+	}
+	int CDC::SetMapMode(int nMapMode) const
+	{
+		if (m_hDC != NULL)
+			return ::SetMapMode(m_hDC, nMapMode);
+		return 0;
+	}	
+	BOOL CDC::SetViewportOrgEx(int x, int y, LPPOINT lpPoint) const
+	{
+		if (m_hDC != NULL)
+			return ::SetViewportOrgEx(m_hDC, x, y, lpPoint);
+		return FALSE;
+	}
+	BOOL CDC::SetViewportOrgEx(POINT point, LPPOINT lpPointRet ) const
+	{
+		if (m_hDC != NULL)
+			return SetViewportOrgEx(point.x, point.y, lpPointRet);
+		return FALSE;
+	}	
+	BOOL CDC::OffsetViewportOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const
+	{
+		if (m_hDC != NULL)
+			return ::OffsetViewportOrgEx(m_hDC, nWidth, nHeight, lpPoint);
+		return FALSE;
+	}
+	BOOL CDC::GetViewportExtEx(LPSIZE lpSize)  const
+	{
+		if (m_hDC != NULL)
+			return ::GetViewportExtEx(m_hDC, lpSize);
+		return FALSE;
+	}
+	BOOL CDC::SetViewportExtEx(int x, int y, LPSIZE lpSize ) const
+	{
+		if (m_hDC != NULL)
+			return ::SetViewportExtEx(m_hDC, x, y, lpSize);
+		return FALSE;
+	}	
+	BOOL CDC::SetViewportExtEx(SIZE size, LPSIZE lpSizeRet ) const
+	{
+		if (m_hDC != NULL)
+			return SetViewportExtEx(size.cx, size.cy, lpSizeRet);
+		return FALSE;
+	}
+	BOOL CDC::ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const
+	{
+		if (m_hDC != NULL)
+			return ::ScaleViewportExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);
+		return FALSE;
+	}	
+	BOOL CDC::GetWindowOrgEx(LPPOINT lpPoint)  const
+	{
+		if (m_hDC != NULL)
+			return ::GetWindowOrgEx(m_hDC, lpPoint);
+		return FALSE;
+	}	
+	BOOL CDC::SetWindowOrgEx(int x, int y, LPPOINT lpPoint ) const
+	{
+		if (m_hDC != NULL)
+			return ::SetWindowOrgEx(m_hDC, x, y, lpPoint);
+		return FALSE;
+	}
+	BOOL CDC::SetWindowOrgEx(POINT point, LPPOINT lpPointRet ) const
+	{
+		if (m_hDC != NULL)
+			return SetWindowOrgEx(point.x, point.y, lpPointRet);
+		return FALSE;
+	}
+	BOOL CDC::OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const
+	{
+		if (m_hDC != NULL)
+			return ::OffsetWindowOrgEx(m_hDC, nWidth, nHeight, lpPoint);
+		return FALSE;
+	}
+	BOOL CDC::GetWindowExtEx(LPSIZE lpSize)  const
+	{
+		if (m_hDC != NULL)
+			return ::GetWindowExtEx(m_hDC, lpSize);
+		return FALSE;
+	}	
+	BOOL CDC::SetWindowExtEx(int x, int y, LPSIZE lpSize ) const
+	{
+		if (m_hDC != NULL)
+			return ::SetWindowExtEx(m_hDC, x, y, lpSize);
+		return FALSE;
+	}
+	BOOL CDC::SetWindowExtEx(SIZE size, LPSIZE lpSizeRet) const
+	{
+		if (m_hDC != NULL)
+			return SetWindowExtEx(size.cx, size.cy, lpSizeRet);
+		return FALSE;
+	}
+	BOOL CDC::ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const
+	{
+		if (m_hDC != NULL)
+			return ::ScaleWindowExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);
+		return FALSE;
+	}
 
 	// Text Functions
 	BOOL CDC::ExtTextOut( int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths ) const
