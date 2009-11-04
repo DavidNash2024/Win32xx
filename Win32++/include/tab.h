@@ -126,6 +126,10 @@ namespace Win32xx
 		void SetPadding(int cx, int cy);
 
 	protected:
+		virtual void	DrawCloseButton(CDC& DrawDC);
+		virtual void	DrawListButton(CDC& DrawDC);
+		virtual void	DrawTabs(CDC& dcMem);
+		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual SIZE    GetMaxTabSize();
 		virtual void    OnCreate();
 		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -133,24 +137,19 @@ namespace Win32xx
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
+		virtual void	NotifyChanged();
+		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual BOOL	PreTranslateMessage(MSG* pMsg);
 		virtual void    SetTabSize();
+		virtual void	SetActiveView(CWnd& Wnd);
+		virtual void	ShowListDialog();
+		virtual void	ShowListMenu();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CTab(const CTab&);				// Disable copy construction
 		CTab& operator = (const CTab&); // Disable assignment operator
-
-		void DrawCloseButton(CDC& DrawDC);
-		void DrawListButton(CDC& DrawDC);
-		void DrawTabs(CDC& dcMem);
-		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
-		void Paint();
-		void NotifyChanged();
-		void SetActiveView(CWnd& Wnd);
-		void ShowListDialog();
-		void ShowListMenu();
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		HIMAGELIST m_himlTab;
@@ -1222,7 +1221,7 @@ namespace Win32xx
 	// Definitions for the CTabbedMDI class
 	inline CTabbedMDI::CTabbedMDI()
 	{
-		m_Tab.SetShowButtons(TRUE);
+		GetTab().SetShowButtons(TRUE);
 	}
 
 	inline CTabbedMDI::~CTabbedMDI()
@@ -1243,21 +1242,21 @@ namespace Win32xx
 		lstrcpyn(tpi.szTitle, szTabText, 79);
 		tpi.szTitle[79] = '\0';
 
-		if (!m_Tab.IsWindow())
+		if (!GetTab().IsWindow())
 		{
-			m_Tab.Create(m_hWnd);
+			GetTab().Create(m_hWnd);
 			CRect rc = GetClientRect();
-			m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			GetTab().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
 
-		m_Tab.AddTabPage(tpi);	
+		GetTab().AddTabPage(tpi);	
 		return pWnd;
 	}
 
 	inline void CTabbedMDI::CloseActiveMDI()
 	{
-		int nTab = m_Tab.GetCurSel();
-		m_Tab.RemoveTabPage(nTab);
+		int nTab = GetTab().GetCurSel();
+		GetTab().RemoveTabPage(nTab);
 		RecalcLayout();
 	}
 
@@ -1265,13 +1264,13 @@ namespace Win32xx
 	{
 		while (GetMDIChildCount() > 0)
 		{
-			m_Tab.RemoveTabPage(0);
+			GetTab().RemoveTabPage(0);
 		}
 	}
 
 	inline void CTabbedMDI::CloseMDIChild(int nTab)
 	{
-		m_Tab.RemoveTabPage(nTab);
+		GetTab().RemoveTabPage(nTab);
 		RecalcLayout();
 	}
 
@@ -1292,8 +1291,8 @@ namespace Win32xx
 
 	inline CWnd* CTabbedMDI::GetActiveMDIChild()
 	{
-		int nTab = m_Tab.GetCurSel();
-		TabPageInfo tbi = m_Tab.GetTabPageInfo(nTab);
+		int nTab = GetTab().GetCurSel();
+		TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
 		return tbi.pWnd;
 	}
 
@@ -1377,7 +1376,7 @@ namespace Win32xx
 
 	inline LRESULT CTabbedMDI::OnEraseBkGnd(WPARAM wParam, LPARAM lParam)
 	{
-		if (m_Tab.GetItemCount() >0)
+		if (GetTab().GetItemCount() >0)
 			return 0;
 	
 		return CWnd::WndProcDefault(WM_ERASEBKGND, wParam, lParam);
@@ -1399,14 +1398,14 @@ namespace Win32xx
 
 	inline void CTabbedMDI::RecalcLayout()
 	{
-		if (m_Tab.GetItemCount() >0)
+		if (GetTab().GetItemCount() >0)
 		{
 			CRect rc = GetClientRect();
-			m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			GetTab().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
 		else
 		{
-			m_Tab.ShowWindow(SW_HIDE);
+			GetTab().ShowWindow(SW_HIDE);
 		}
 	}
 
@@ -1440,14 +1439,14 @@ namespace Win32xx
 
 	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
 	{
-		int iPage = m_Tab.GetTabIndex(pWnd);
+		int iPage = GetTab().GetTabIndex(pWnd);
 		if (iPage >= 0)
-			m_Tab.SelectPage(iPage);
+			GetTab().SelectPage(iPage);
 	}
 
 	inline void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
-		m_Tab.SelectPage(iTab);
+		GetTab().SelectPage(iTab);
 	}
 
 	inline LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
