@@ -1051,7 +1051,7 @@ namespace Win32xx
 	// Definitions for the CTabbedMDI class
 	CTabbedMDI::CTabbedMDI()
 	{
-		m_Tab.SetShowButtons(TRUE);
+		GetTab().SetShowButtons(TRUE);
 	}
 
 	CTabbedMDI::~CTabbedMDI()
@@ -1072,21 +1072,21 @@ namespace Win32xx
 		lstrcpyn(tpi.szTitle, szTabText, 79);
 		tpi.szTitle[79] = '\0';
 
-		if (!m_Tab.IsWindow())
+		if (!GetTab().IsWindow())
 		{
-			m_Tab.Create(m_hWnd);
+			GetTab().Create(m_hWnd);
 			CRect rc = GetClientRect();
-			m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			GetTab().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
 
-		m_Tab.AddTabPage(tpi);	
+		GetTab().AddTabPage(tpi);	
 		return pWnd;
 	}
 
 	void CTabbedMDI::CloseActiveMDI()
 	{
-		int nTab = m_Tab.GetCurSel();
-		m_Tab.RemoveTabPage(nTab);
+		int nTab = GetTab().GetCurSel();
+		GetTab().RemoveTabPage(nTab);
 		RecalcLayout();
 	}
 
@@ -1094,13 +1094,13 @@ namespace Win32xx
 	{
 		while (GetMDIChildCount() > 0)
 		{
-			m_Tab.RemoveTabPage(0);
+			GetTab().RemoveTabPage(0);
 		}
 	}
 
 	void CTabbedMDI::CloseMDIChild(int nTab)
 	{
-		m_Tab.RemoveTabPage(nTab);
+		GetTab().RemoveTabPage(nTab);
 		RecalcLayout();
 	}
 
@@ -1121,8 +1121,8 @@ namespace Win32xx
 
 	CWnd* CTabbedMDI::GetActiveMDIChild()
 	{
-		int nTab = m_Tab.GetCurSel();
-		TabPageInfo tbi = m_Tab.GetTabPageInfo(nTab);
+		int nTab = GetTab().GetCurSel();
+		TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
 		return tbi.pWnd;
 	}
 
@@ -1206,7 +1206,7 @@ namespace Win32xx
 
 	LRESULT CTabbedMDI::OnEraseBkGnd(WPARAM wParam, LPARAM lParam)
 	{
-		if (m_Tab.GetItemCount() >0)
+		if (GetTab().GetItemCount() >0)
 			return 0;
 	
 		return CWnd::WndProcDefault(WM_ERASEBKGND, wParam, lParam);
@@ -1228,14 +1228,14 @@ namespace Win32xx
 
 	void CTabbedMDI::RecalcLayout()
 	{
-		if (m_Tab.GetItemCount() >0)
+		if (GetTab().GetItemCount() >0)
 		{
 			CRect rc = GetClientRect();
-			m_Tab.SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			GetTab().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
 		else
 		{
-			m_Tab.ShowWindow(SW_HIDE);
+			GetTab().ShowWindow(SW_HIDE);
 		}
 	}
 
@@ -1269,14 +1269,14 @@ namespace Win32xx
 
 	void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
 	{
-		int iPage = m_Tab.GetTabIndex(pWnd);
+		int iPage = GetTab().GetTabIndex(pWnd);
 		if (iPage >= 0)
-			m_Tab.SelectPage(iPage);
+			GetTab().SelectPage(iPage);
 	}
 
 	void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
-		m_Tab.SelectPage(iTab);
+		GetTab().SelectPage(iTab);
 	}
 
 	LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -1,20 +1,61 @@
-Version 6.62
-============
+Version 6.7
+===========
 Bug fixes:
 - Fixed dialog destruction              
-- Fixed multithreaded window creation
+- Fixed thread safety when creating multithreaded windows simultaneously
 - Fixed TintBitmap for 16 bit colours
 - The close button on docked dockers now works.
 - Fixed PreTranslateMessage 
 
 Changes
 -------
-- OnInitailUpdate is now called after Attach or AttachDlgItem
-- IsChild now takes a HWND arguement.
-- Extended CDC class
-    - also renamed CDC::GetDC to CDC::GetHDC
-- Added CDC::GetLayout
-- Added CDC::SetLayout
+* The directory layout of Win32++ has changed. It now contains the following
+  folders:
+   help             The help for Win32++
+   include          The Win32++ library for typical use
+   lib              The static library files when they are build
+   Library Projects The project files used to build the static library
+   new projects     A set of projects to be used in your new projects 
+   src              The Win32++ library for building the static library
+   tests            A directory which contains the output of some tools
+   tools            A set of useful batch files for Win32++ 
+
+* The Win32++ include directory is specified within the project rather than
+   hard coded into the source files. To specify a different location for the
+   Win32++ files in a project, specify the "Additional Include Directories" for
+   both "C/C++" and "Resources". 
+
+* The projects now provide the option of compiling with a static library or
+   directly from the file in Win32++\include. To build the static libraries,
+   see below. 
+   
+* A set of projects have been supplied to build the Win32++ into a static 
+   library. These projects are contained within the Win32++\Library Projects 
+   folder. The lib file created is placed within the lib directory.
+
+* The projects are now configured to take advantage of precompiled headers.
+   
+* A set of tools is now provided in the tools folder. They include a set of 
+   batch files for compiling the examples and batch files to "clean" them.
+     
+* The CDC class has been extended. Several functions have been added, and
+  CDC::GetDC has been renamed to CDC::GetHDC.
+             
+* Support has been added for Right to Left languages which include Hebrew and 
+   Arabic. The CFrame and CDocker classes now honour the WS_EX_LAYOUTRTL 
+   extended style used by these languages. To take advantage of this feature,
+   use PreCreate to set this extended when using CFrame, CMDIFrame, CTab, 
+   CTabbedMDI, and CDocker.
+   
+* OnInitailUpdate is now called after Attach or AttachDlgItem.
+
+* IsChild now takes a HWND arguement.
+ 
+* Win32++ is now available as a single download, rather than a collection of
+   files.
+
+* Each program example now has a Readme.txt file which describes what it does,
+   and the features it demonstrates.   
 
 
 Version 6.6

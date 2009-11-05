@@ -126,6 +126,10 @@ namespace Win32xx
 		void SetPadding(int cx, int cy);
 
 	protected:
+		virtual void	DrawCloseButton(CDC& DrawDC);
+		virtual void	DrawListButton(CDC& DrawDC);
+		virtual void	DrawTabs(CDC& dcMem);
+		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual SIZE    GetMaxTabSize();
 		virtual void    OnCreate();
 		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -133,24 +137,19 @@ namespace Win32xx
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
+		virtual void	NotifyChanged();
+		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual BOOL	PreTranslateMessage(MSG* pMsg);
 		virtual void    SetTabSize();
+		virtual void	SetActiveView(CWnd& Wnd);
+		virtual void	ShowListDialog();
+		virtual void	ShowListMenu();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CTab(const CTab&);				// Disable copy construction
 		CTab& operator = (const CTab&); // Disable assignment operator
-
-		void DrawCloseButton(CDC& DrawDC);
-		void DrawListButton(CDC& DrawDC);
-		void DrawTabs(CDC& dcMem);
-		void DrawTabBorders(CDC& dcMem, CRect& rcTab);
-		void Paint();
-		void NotifyChanged();
-		void SetActiveView(CWnd& Wnd);
-		void ShowListDialog();
-		void ShowListMenu();
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		HIMAGELIST m_himlTab;
@@ -204,6 +203,5 @@ namespace Win32xx
 	};
 	
 }
-
 
 #endif  // _TAB_H_
