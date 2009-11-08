@@ -1,5 +1,5 @@
-// Win32++  Version 6.7
-// Released: 6th November, 2009 by:
+// Win32++  Version 6.7a
+// Released: 8th November, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1200,6 +1200,32 @@ namespace Win32xx
 		if (m_hDC != NULL)
 			return ::ScaleWindowExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);
 		return FALSE;
+	}
+
+	// Printer Functions
+	int CDC::StartDoc(LPDOCINFO lpDocInfo) const
+	{
+		return ::StartDoc(m_hDC, lpDocInfo);
+	}
+	int CDC::EndDoc() const
+	{
+		return ::EndDoc(m_hDC);
+	}
+	int CDC::StartPage() const
+	{
+		return ::StartPage(m_hDC);
+	}
+	int CDC::EndPage() const
+	{
+		return ::EndPage(m_hDC);
+	}
+	int CDC::AbortDoc() const
+	{
+		return ::AbortDoc(m_hDC);
+	}
+	int CDC::SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const
+	{
+		return ::SetAbortProc(m_hDC, lpfn);
 	}
 
 	// Text Functions

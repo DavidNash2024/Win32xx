@@ -1,5 +1,5 @@
-// Win32++  Version 6.7
-// Released: 6th November, 2009 by:
+// Win32++  Version 6.7a
+// Released: 8th November, 2009 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -268,7 +268,7 @@ namespace Win32xx
 		BOOL ExtFloodFill( int x, int y, COLORREF crColor, UINT nFillType ) const;
 #endif
 
-                // Co-ordinate Functions
+        // Co-ordinate Functions
 		BOOL DPtoLP(LPPOINT lpPoints, int nCount )  const;
 		BOOL DPtoLP(LPRECT lpRect)  const;
 		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const;

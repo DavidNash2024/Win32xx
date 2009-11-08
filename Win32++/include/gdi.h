@@ -268,7 +268,7 @@ namespace Win32xx
 		BOOL ExtFloodFill( int x, int y, COLORREF crColor, UINT nFillType ) const;
 #endif
 
-                // Co-ordinate Functions
+        // Co-ordinate Functions
 		BOOL DPtoLP(LPPOINT lpPoints, int nCount )  const;
 		BOOL DPtoLP(LPRECT lpRect)  const;
 		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const;
@@ -1557,6 +1557,32 @@ namespace Win32xx
 		if (m_hDC != NULL)
 			return ::ScaleWindowExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);
 		return FALSE;
+	}
+
+	// Printer Functions
+	inline int CDC::StartDoc(LPDOCINFO lpDocInfo) const
+	{
+		return ::StartDoc(m_hDC, lpDocInfo);
+	}
+	inline int CDC::EndDoc() const
+	{
+		return ::EndDoc(m_hDC);
+	}
+	inline int CDC::StartPage() const
+	{
+		return ::StartPage(m_hDC);
+	}
+	inline int CDC::EndPage() const
+	{
+		return ::EndPage(m_hDC);
+	}
+	inline int CDC::AbortDoc() const
+	{
+		return ::AbortDoc(m_hDC);
+	}
+	inline int CDC::SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const
+	{
+		return ::SetAbortProc(m_hDC, lpfn);
 	}
 
 	// Text Functions
