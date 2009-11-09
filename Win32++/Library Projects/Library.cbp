@@ -2,19 +2,20 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="PropertySheet" />
+		<Option title="Library" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
-		<Option compiler="msvctk" />
+		<Option compiler="bcc" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="Borland\Debug\PropertySheet.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland\Debug" />
+				<Option output="..\lib\Borland\Win32xxD.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
 				<Option object_output="Borland\Debug" />
-				<Option type="0" />
+				<Option type="2" />
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
+					<Add option="-Od" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
 					<Add directory="..\..\Win32++\include" />
@@ -23,20 +24,16 @@
 					<Add directory="C:\Borland\BCC55\Include" />
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
-				<Linker>
-					<Add library="cw32mt" />
-					<Add library="comctl32" />
-					<Add library="import32" />
-				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\PropertySheet.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland\Release" />
+				<Option output="..\lib\Borland\Win32xxR.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
 				<Option object_output="Borland\Release" />
-				<Option type="0" />
+				<Option type="2" />
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
+					<Add option="-Od" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
 					<Add directory="..\..\Win32++\include" />
@@ -45,17 +42,12 @@
 					<Add directory="C:\Borland\BCC55\Include" />
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
-				<Linker>
-					<Add library="comctl32" />
-					<Add library="import32" />
-					<Add library="cw32mt" />
-				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\PropertySheet.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Microsoft\Debug" />
+				<Option output="..\lib\VS2003\Win32xxD.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
 				<Option object_output="Microsoft\Debug" />
-				<Option type="0" />
+				<Option type="2" />
 				<Option compiler="msvctk" />
 				<Compiler>
 					<Add option="/MTd" />
@@ -75,20 +67,14 @@
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="/DEBUG" />
-					<Add library="ComCtl32" />
-					<Add library="Gdi32" />
-					<Add library="User32" />
-					<Add library="Kernel32" />
-					<Add library="Advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\PropertySheet.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Microsoft\Release" />
+				<Option output="..\lib\VS2003\Win32xxR.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
 				<Option object_output="Microsoft\Release" />
-				<Option type="0" />
+				<Option type="2" />
 				<Option compiler="msvctk" />
 				<Compiler>
 					<Add option="/MT" />
@@ -106,19 +92,14 @@
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="ComCtl32" />
-					<Add library="Gdi32" />
-					<Add library="Kernel32" />
-					<Add library="User32" />
-					<Add library="Advapi32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\PropertySheet.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="GNU\Debug" />
+				<Option output="..\lib\MinGW\Win32xxD.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
 				<Option object_output="GNU\Debug" />
-				<Option type="0" />
+				<Option type="2" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -132,16 +113,12 @@
 				<ResourceCompiler>
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
-				<Linker>
-					<Add library="comctl32" />
-					<Add library="Ws2_32" />
-				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\PropertySheet.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="GNU\Release" />
+				<Option output="..\lib\MinGW\Win32xxR.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
 				<Option object_output="GNU\Release" />
-				<Option type="0" />
+				<Option type="2" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -152,38 +129,42 @@
 				<ResourceCompiler>
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
-				<Linker>
-					<Add library="comctl32" />
-					<Add library="Ws2_32" />
-				</Linker>
 			</Target>
 		</Build>
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="..\src\Mainfrm.cpp" />
-		<Unit filename="..\src\Mainfrm.h" />
-		<Unit filename="..\src\MyPropertySheet.cpp" />
-		<Unit filename="..\src\MyPropertySheet.h" />
-		<Unit filename="..\src\PropertySheetApp.cpp" />
-		<Unit filename="..\src\PropertySheetApp.h" />
-		<Unit filename="..\src\Readme.txt" />
-		<Unit filename="..\src\Resource.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
-		<Unit filename="..\src\View.cpp" />
-		<Unit filename="..\src\View.h" />
-		<Unit filename="..\src\main.cpp" />
-		<Unit filename="..\src\resource.h" />
-		<Unit filename="..\..\Win32++\default_resource.h" />
-		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\frame.h" />
-		<Unit filename="..\..\Win32++\gdi.h" />
-		<Unit filename="..\..\Win32++\propertysheet.h" />
-		<Unit filename="..\..\Win32++\rebar.h" />
-		<Unit filename="..\..\Win32++\statusbar.h" />
-		<Unit filename="..\..\Win32++\toolbar.h" />
-		<Unit filename="..\..\Win32++\wincore.h" />
+		<Unit filename="..\src\dialog.cpp" />
+		<Unit filename="..\src\dialog.h" />
+		<Unit filename="..\src\docking.cpp" />
+		<Unit filename="..\src\docking.h" />
+		<Unit filename="..\src\frame.cpp" />
+		<Unit filename="..\src\frame.h" />
+		<Unit filename="..\src\gdi.cpp" />
+		<Unit filename="..\src\gdi.h" />
+		<Unit filename="..\src\info.txt" />
+		<Unit filename="..\src\listview.cpp" />
+		<Unit filename="..\src\listview.h" />
+		<Unit filename="..\src\mdi.cpp" />
+		<Unit filename="..\src\mdi.h" />
+		<Unit filename="..\src\propertysheet.cpp" />
+		<Unit filename="..\src\propertysheet.h" />
+		<Unit filename="..\src\rebar.cpp" />
+		<Unit filename="..\src\rebar.h" />
+		<Unit filename="..\src\socket.cpp" />
+		<Unit filename="..\src\socket.h" />
+		<Unit filename="..\src\splitter.cpp" />
+		<Unit filename="..\src\splitter.h" />
+		<Unit filename="..\src\statusbar.cpp" />
+		<Unit filename="..\src\statusbar.h" />
+		<Unit filename="..\src\tab.cpp" />
+		<Unit filename="..\src\tab.h" />
+		<Unit filename="..\src\toolbar.cpp" />
+		<Unit filename="..\src\toolbar.h" />
+		<Unit filename="..\src\treeview.cpp" />
+		<Unit filename="..\src\treeview.h" />
+		<Unit filename="..\src\wincore.cpp" />
+		<Unit filename="..\src\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

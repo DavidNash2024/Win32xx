@@ -122,6 +122,7 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-g3" />
 					<Add option="-D__DEBUG__" />
@@ -144,6 +145,7 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-D_WIN32_IE=0x0400" />
 					<Add option="-DNDEBUG" />
 					<Add directory="..\..\Win32++\include" />

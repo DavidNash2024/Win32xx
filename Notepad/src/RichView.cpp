@@ -6,8 +6,8 @@
 #include <richedit.h>
 
 
-CRichView::CRichView(void) : m_hFont(NULL), m_hInstRichEdit(NULL)
-{ 
+CRichView::CRichView(void) : m_hInstRichEdit(NULL), m_hFont(NULL)
+{
 	// Changed from RichEdit v1.0 to RichEdit v2.0 for Unicode support!
 
 	m_hInstRichEdit = ::LoadLibrary(_T("Riched20.dll")); // RichEdit ver 2.0
@@ -31,7 +31,7 @@ CRichView::~CRichView(void)
 
 void CRichView::PreCreate(CREATESTRUCT &cs)
 {
-	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
+	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
 				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 
 	cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
