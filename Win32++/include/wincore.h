@@ -843,11 +843,10 @@ namespace Win32xx
 
 		char* c = new char[len + 1];
 		if (NULL == c) throw std::bad_alloc();
-		c[0] = '\0';
-
+		
+		ZeroMemory(c, len +1)
 		wcstombs(c, t, len);
-		c[len] = '\0';
-		str = c;
+		str = c;	
 		delete []c;
   #else
 		str = t;
