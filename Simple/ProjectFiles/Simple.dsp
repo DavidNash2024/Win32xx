@@ -100,11 +100,11 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
-# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../Win32++/src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "../../StaticLibrary/src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /i "../../Win32++/src" /d "NDEBUG"
+# ADD RSC /l 0x409 /i "../../StaticLibrary/src" /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -129,11 +129,11 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../Win32++/src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "../../StaticLibrary/src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i "../../Win32++/include" /d "_DEBUG"
-# ADD RSC /l 0x409 /i "../../Win32++/src" /d "_DEBUG"
+# ADD RSC /l 0x409 /i "../../StaticLibrary/src" /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo

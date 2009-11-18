@@ -234,7 +234,7 @@ void CMainFrame::OnFilePrint()
 	int yTop = ((cHeightPels / 2) - ((int) (((float) Height) * fScaleY)) / 2);
 
     // Use StretchDIBits to scale the bitmap and maintain its original proportions
-	if (GDI_ERROR == StretchDIBits(pd.hDC, xLeft, yTop, (int) ((float) Width * fScaleX),
+	if (GDI_ERROR == (UINT)StretchDIBits(pd.hDC, xLeft, yTop, (int) ((float) Width * fScaleX),
 		(int) ((float) Height * fScaleY), 0, 0, Width, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS, SRCCOPY))
 	{
 		throw CWinException(_T("Failed to resize image for printing"));
