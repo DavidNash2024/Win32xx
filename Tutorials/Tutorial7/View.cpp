@@ -3,8 +3,8 @@
 //  Definitions for the CView class
 
 #include <Windowsx.h>	// defines GET_X_LPARAM
-#include "resource.h"
 #include "view.h"
+#include "resource.h"
 
 
 CView::CView() : m_PenColor(RGB(0,0,0))

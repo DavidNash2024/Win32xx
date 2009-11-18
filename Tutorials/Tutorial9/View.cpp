@@ -3,9 +3,9 @@
 //  Definitions for the CView class
 
 #include <Windowsx.h>	// defines GET_X_LPARAM
-#include "resource.h"
 #include "view.h"
 #include "GDI.h"
+#include "resource.h"
 
 using namespace std;
 
