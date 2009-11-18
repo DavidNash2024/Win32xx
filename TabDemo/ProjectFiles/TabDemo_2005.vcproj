@@ -48,7 +48,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../../Win32++/src"
+				AdditionalIncludeDirectories="../../StaticLibrary/src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -69,7 +69,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="../../Win32++/src"
+				AdditionalIncludeDirectories="../../StaticLibrary/src"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -144,7 +144,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../Win32++/src"
+				AdditionalIncludeDirectories="../../StaticLibrary/src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -165,7 +165,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="../../Win32++/src"
+				AdditionalIncludeDirectories="../../StaticLibrary/src"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
