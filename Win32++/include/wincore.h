@@ -585,9 +585,9 @@ namespace Win32xx
 		virtual int Run();
 
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
-		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
+		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
+		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
+		void SetResourceHandle(HINSTANCE hResource);
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
@@ -1106,6 +1106,18 @@ namespace Win32xx
 			pWinApp = pThis;
 
 		return pWinApp;
+	}
+
+	inline void CWinApp::SetResourceHandle(HINSTANCE hResource)
+	{
+		// This function can be used to load a resource dll.
+		// A resource dll can be used to define resources in different languages.
+		// To use this function, place code like this in InitInstance
+		//
+		// HINSTANCE hResource = LoadLibrary(_T("MyResourceDLL.dll"));
+		// SetResourceHandle(hResource);
+	
+		m_hResource = hResource;
 	}
 
 	inline TLSData* CWinApp::SetTlsIndex()

@@ -391,6 +391,9 @@ namespace Win32xx
 
 	inline BOOL CDialog::PreTranslateMessage(MSG* pMsg)
 	{
+		// Note: This function is only used by modeless dialogs.
+		//       Modal dialogs run their own internal message loop.  
+
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
 		{
