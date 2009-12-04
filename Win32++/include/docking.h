@@ -103,6 +103,8 @@ namespace Win32xx
 	//  within the container parent's view page.
 	class CContainer : public CTab
 	{
+	public:
+
 		// Nested class. This is the Wnd for the window displayed over the client area
 		// of the tab control.  The toolbar and view window are child windows of the
 		// viewpage window. Only the ViewPage of the parent CContainer is displayed. It's
@@ -202,7 +204,7 @@ namespace Win32xx
 	//  There is no theoretical limit to the number of CDockers within CDockers.
 	class CDocker : public CWnd
 	{
-	protected:
+	public:
 		//  A nested class for the splitter bar that seperates the docked panes.
 		class CDockBar : public CWnd
 		{

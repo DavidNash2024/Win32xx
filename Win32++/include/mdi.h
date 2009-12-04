@@ -139,7 +139,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	private:
+	public:
 		class CMDIClient : public CWnd  // a nested class within CMDIFrame
 		{
 		public:
