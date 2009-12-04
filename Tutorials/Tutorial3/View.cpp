@@ -42,7 +42,7 @@ void CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	// hold down the left mouse button and move mouse to draw lines.
 	if (wParam & MK_LBUTTON)
 	{
-		DrawLine(LOWORD(lParam), HIWORD(lParam));
+		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		m_OldPt.x = GET_X_LPARAM(lParam);
 		m_OldPt.y = GET_Y_LPARAM(lParam);
 	}
