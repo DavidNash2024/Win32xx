@@ -7,7 +7,7 @@ Additional software is required to run this example.
 For MS compilers you will need the DirectX SDK v9
 For Dev-C++ you will need the DirecX v9.0c DevPak
 
-Microsoft make the the DirectX Software Development Kit available for download
+Microsoft makes the the DirectX Software Development Kit available for download
 without charge.
 
 

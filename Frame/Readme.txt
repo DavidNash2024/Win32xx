@@ -4,7 +4,7 @@ This project demonstrates the use of the CFrame class to display a frame
 window. A frame uses a seperate view window which is displayed over its 
 client area.
 
-CFrame provides a set of features include:
+CFrame provides a set of features including:
 - a toolbar 
 - a Menubar
 - a rebar to hold the frame's toolbar and menubar

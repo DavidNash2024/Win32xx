@@ -6,6 +6,9 @@ tab undocking, and "container within container docking" where docking the
 container adds a tab to the container. They also provide an optional toolbar.
 Containers in turn have their own "view window"
 
+The containers are the view window for dockers, allowing them to be undocked
+and docked as required.
+
 Classes titled CDockXXXX are inherited from CDocker. Classes titled 
 CContainerXXXX are inherited from CContainer. Classes titled CViewXXXX
 are the various view windows inherited from CWnd.
