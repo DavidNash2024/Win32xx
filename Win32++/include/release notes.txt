@@ -56,54 +56,39 @@ Frames produced by Win32++ include the following:
 
 About the file downloads
 ------------------------
-Each of the files available for download contain an identical copy of the 
-Win32++ framework. The generic downloads are intended as the starting points
-for your own applications. The sample downloads provide simple examples of 
-how the framework might be used.
- 
-* Generics.zip
-  This file contains generic startups. These can be used as the starting 
-  point when creating you own applications. The startups included are:
-   * Simple Window
-   * Dialog
-   * Form
-   * Frame
-   * MDI Frame  
- 
-* Samples.zip
-  A collection of sample applications which use Win32++. It includes:
-   * Browser           An internet browser sample, based on ActiveX controls
-   * ControlBars       Demonstrates slider, scrollbar and progress bar controls
-   * DlgSubclass       A dialog application which demonstrates subclassing
-   * Container Docking Demonstrates docking with container view windows
-   * Simple Docking    Demonstrates docking windows with simple view windows   
-   * DX                A simple DirectX application
-   * Explorer          A windows explorer-like application
-   * FastGDI           A demonstration of rapid GDI techniques   
-   * MDIDemo           Demonstrates some of the features of MDI frames
-   * Network           Demonstrates a TCP and UDP client and server
-   * Notepad           A simple text editor with printing
-   * Performance       Measures the speed of the message handling of Win32++
-   * Picture           A simple picture rendering application
-   * PropertySheet     Demonstrates modal + modeless property sheets and wizards
-   * Scribble          A simple drawing application
-   * Splitter          A demonstration of splitter windows using CDockable
-   * Subclass          Demonstrates subclassing
-   * TabDemo           Demonstrates a tab control in a frame.
-   * TabDialog         Demonstrates a tab control in a dialog
-   * TabbedMDI         Demonstrates docking containers and TabbedMDI
-   * Themes            Demonstrates how to customise colors frames and MDIFrames 
-   * Threads           Demonstrates multi-threaded windows
-   
-* Tutorials.zip
-  Contains the set of tutorials which demonstrate how to put Win32++ to use.
-  The file contains the tutorial itself (a set of htm files) and the tutorial
-  downloads.
-  
-* WCE_Samples.zip
-  A collection of sample applications which demonstrate how Win32++ can be used 
-  to develop applications for Windows CE based devices such as the Pocket PC.
-  
+The file download from Sourceforge includes the following:
+ * The Win32++ library itself
+ * Help for the library
+ * A set of tutorials
+ * A collection of sample applications
+
+The sample applications include:
+ * Browser - An Internet browser application based on ActiveX controls.
+ * Dialog - An example of a simple dialog application.
+ * DialogDemo - An interative dialog application demonstrating slider controls and progress bars.
+ * DialogTab - A dialog application with a tab control.
+ * DirectX - A simple DirectX application.
+ * Dock - An example of a simple docking application.
+ * DockContainer - An example of a docking application which incorporates containers.
+ * DockTabbedMDI - An example of a docking application with containers and a tabbed MDI.
+ * Explorer - A Windows Explorer-like application.
+ * FastGDI - An application which demonstrates direct manipulation of a bitmap's colour.
+ * FormDemo - An example of a modeless dialog within a frame.
+ * MDIFrame - A simple MDI frame applications
+ * MDIFrameDemo - Demonstrates some additional features of MDI frames.
+ * Networking - Demonstrates the use of networking.
+ * Notepad - A simple text editor with printing.
+ * Performance - Measures Win32++'s message handling speed.
+ * Picture - A simple picture rendering application.
+ * PropertySheets - A demonstration of property sheets.
+ * Scribble - A simple drawing application.
+ * Simple - Creates a simple window.
+ * Splitter - A demo of the CSplitter class.
+ * StaticLibrary - Builds the Win32++ framework into a static library.
+ * TabDemo - Demonstrates the use of a CTab control in a frame.
+ * Themes - Demonstrates how to customise the colours for rebar and toolbar controls.
+ * Threads - Demonstrates multi-threaded Windows.
+ * WinCE samples - A small collection of samples for Windows CE
 
 Getting Started
 ---------------
