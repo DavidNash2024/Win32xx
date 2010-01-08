@@ -1,6 +1,5 @@
 Splitter Window
----------------
-
+===============
 This program uses the CDocker class to create several splitter windows
 inside a window frame.  The four CDocker objects are as follows:
  CPaneBottomLeft
