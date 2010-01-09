@@ -680,8 +680,9 @@ namespace Win32xx
 		//  2501     Windows XP
 		//  2502     Windows Server 2003
 		//  2600     Windows Vista and Windows Server 2008
+		//  2610     Windows 7
 
-		return nVersion;
+		return nVersion; 
 	}
 
 	inline int GetComCtlVersion()
@@ -844,7 +845,7 @@ namespace Win32xx
 		char* c = new char[len + 1];
 		if (NULL == c) throw std::bad_alloc();
 		
-		ZeroMemory(c, len +1)
+		ZeroMemory(c, len +1);
 		wcstombs(c, t, len);
 		str = c;	
 		delete []c;
