@@ -1,3 +1,11 @@
+Version 6.8
+===========
+* Added CButton class
+* Added CEdit class
+* Added CListBox class
+* Added CStatic Class
+
+
 Version 6.7
 ===========
 Bug fixes:

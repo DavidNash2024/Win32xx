@@ -260,6 +260,10 @@ SOURCE="..\..\Win32++\include\statusbar.h"
 # End Source File
 # Begin Source File
 
+SOURCE="..\..\Win32++\include\stdcontrols.h"
+# End Source File
+# Begin Source File
+
 SOURCE="..\..\Win32++\include\tab.h"
 # End Source File
 # Begin Source File

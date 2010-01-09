@@ -500,6 +500,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Win32++\include\stdcontrols.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\tab.h"
 				>
 			</File>

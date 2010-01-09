@@ -1,12 +1,12 @@
-// Win32++  Version 6.7
-// Released: 6th November, 2009 by:
+// Win32++  Version 6.8 alpha
+// Released: ?th November, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2009  David Nash
+// Copyright (c) 2005-2010  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and

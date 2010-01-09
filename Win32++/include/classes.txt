@@ -40,6 +40,12 @@ splitter.h        | CSplitter        | Win32, Win64      | Adds splitter support
 statusbar.h       | CStatusbar       | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | Status bar control.
 ------------------+------------------+-------------------+---------------------
+stdcontrols.h     | CButton          | Win32, Win64      | Adds support for
+                  | CEdit            | and WinCE         | Button, Edit, 
+                  | CListBox         |                   | ListBox and Static    
+                  | CStatic          |                   | controls.                                                        
+------------------+------------------+-------------------+---------------------
+
 tab.h             | CTab             | Win32, Win64      | Adds support for tab
                   | CMDITab          |                   | controls, and MDI
                   |                  |                   | tab windows.                   
