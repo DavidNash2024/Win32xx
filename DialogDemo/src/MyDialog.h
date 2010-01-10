@@ -6,7 +6,6 @@
 
 
 #include "resource.h"
-#include "button.h"
 #include "Hyperlink.h"
 
 
