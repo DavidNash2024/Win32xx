@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// StdAfx.cpp
+// StdAfx.h
 
 // This file is used for precompiled headers
 // Rarely modified header files should be included.
@@ -41,8 +41,8 @@ typedef  unsigned char  byte;
 #include <propertysheet.h>
 #include <rebar.h>
 #include <socket.h>
-#include <splitter.h>
 #include <statusbar.h>
+#include <stdcontrols.h>
 #include <toolbar.h>
 #include <treeview.h>
 #include <wincore.h>

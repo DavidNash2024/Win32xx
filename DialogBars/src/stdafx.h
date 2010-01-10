@@ -41,8 +41,8 @@ typedef  unsigned char  byte;
 #include <propertysheet.h>
 #include <rebar.h>
 #include <socket.h>
-#include <splitter.h>
 #include <statusbar.h>
+#include <stdcontrols.h>
 #include <toolbar.h>
 #include <treeview.h>
 #include <wincore.h>
