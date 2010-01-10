@@ -9,7 +9,7 @@
 #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
 
-class CHyperlink :	public CWnd
+class CHyperlink :	public CStatic
 {
 public:
 	CHyperlink();

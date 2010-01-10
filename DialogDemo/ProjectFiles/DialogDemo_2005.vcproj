@@ -406,10 +406,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\src\Button.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\DialogDemoApp.cpp"
 				>
 			</File>
@@ -419,6 +415,10 @@
 			</File>
 			<File
 				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyButton.cpp"
 				>
 			</File>
 			<File
@@ -439,15 +439,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\src\Button.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\DialogDemoApp.h"
 				>
 			</File>
 			<File
 				RelativePath="..\src\Hyperlink.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyButton.h"
 				>
 			</File>
 			<File

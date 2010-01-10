@@ -279,9 +279,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\src\Button.cpp">
-			</File>
-			<File
 				RelativePath="..\src\DialogDemoApp.cpp">
 			</File>
 			<File
@@ -289,6 +286,9 @@
 			</File>
 			<File
 				RelativePath="..\src\main.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MyButton.cpp">
 			</File>
 			<File
 				RelativePath="..\src\MyDialog.cpp">
@@ -304,13 +304,13 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\src\Button.h">
-			</File>
-			<File
 				RelativePath="..\src\DialogDemoApp.h">
 			</File>
 			<File
 				RelativePath="..\src\Hyperlink.h">
+			</File>
+			<File
+				RelativePath="..\src\MyButton.h">
 			</File>
 			<File
 				RelativePath="..\src\MyDialog.h">

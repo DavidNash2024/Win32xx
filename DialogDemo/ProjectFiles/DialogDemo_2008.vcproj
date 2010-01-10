@@ -415,6 +415,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MyButton.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MyDialog.cpp"
 				>
 			</File>
@@ -437,6 +441,10 @@
 			</File>
 			<File
 				RelativePath="..\src\Hyperlink.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyButton.h"
 				>
 			</File>
 			<File
@@ -528,7 +536,15 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath="..\src\res\Dialog.ico"
+				>
+			</File>
 		</Filter>
+		<File
+			RelativePath="..\src\res\Win32++.manifest"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

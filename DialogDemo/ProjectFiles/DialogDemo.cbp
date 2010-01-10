@@ -163,12 +163,12 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="..\src\Button.cpp" />
-		<Unit filename="..\src\Button.h" />
 		<Unit filename="..\src\DialogDemoApp.cpp" />
 		<Unit filename="..\src\DialogDemoApp.h" />
 		<Unit filename="..\src\Hyperlink.cpp" />
 		<Unit filename="..\src\Hyperlink.h" />
+		<Unit filename="..\src\MyButton.cpp" />
+		<Unit filename="..\src\MyButton.h" />
 		<Unit filename="..\src\MyDialog.cpp" />
 		<Unit filename="..\src\MyDialog.h" />
 		<Unit filename="..\src\Resource.rc">

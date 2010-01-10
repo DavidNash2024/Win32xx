@@ -1,13 +1,8 @@
 // Microsoft Visual C++ generated resource script.
 //
 
-#ifndef __BORLANDC__
-  #include "windows.h"
-  #include "commctrl.h"
-#endif
 #include "resource.h"
-
-
+#include "windows.h"
 
 
 /////////////////////////////////////////////////////////////////////////////

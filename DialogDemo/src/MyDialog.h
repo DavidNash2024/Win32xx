@@ -6,6 +6,7 @@
 
 
 #include "resource.h"
+#include "MyButton.h"
 #include "Hyperlink.h"
 
 
@@ -34,7 +35,7 @@ private:
 	void OnCheck3();
 
 	HMODULE m_hInstRichEdit;
-	CButton m_Button;
+	CMyButton m_Button;
 	CHyperlink m_Hyperlink;
 };
 
