@@ -3,7 +3,8 @@ Version 6.8
 * Added CButton class
 * Added CEdit class
 * Added CListBox class
-* Added CStatic Class
+* Added CStatic class
+* Removed CSplitter class
 
 Added CFrame::GetRebarTheme
 Added CFrame::GetToolbarTheme
