@@ -154,6 +154,9 @@
 #define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
 #define UWM_UPDATE_COMMAND  (WM_APP + 14)   // Message - sent before a menu is displayed. Used by OnUpdate
 #define UWM_DOCK_ACTIVATED  (WM_APP + 15)   // Message - sent to dock ancestor when a docker is activated or deactivated.
+#define UWM_GETMENUTHEME    (WM_APP + 16)	// Message - returns a pointer to ThemeMenu
+#define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to ThemeRebar
+#define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ThemeToolbar
 
 
 // Automatically include the Win32xx namespace

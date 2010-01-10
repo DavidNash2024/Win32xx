@@ -5,6 +5,12 @@ Version 6.8
 * Added CListBox class
 * Added CStatic Class
 
+Added CFrame::GetRebarTheme
+Added CFrame::GetToolbarTheme
+
+Added UWM_GETMENUTHEME     message
+Added UWM_GETREBARTHEME    message 
+Added UWM_GETTOOLBARTHEME  message
 
 Version 6.7
 ===========

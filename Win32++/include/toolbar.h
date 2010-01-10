@@ -632,15 +632,13 @@ namespace Win32xx
 	inline void CToolbar::OnWindowPosChanging(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		// Adjust size for toolbars inside a rebar
-		CWnd* pWnd = FromHandle(GetParent());
-		if (pWnd && pWnd->IsRebar())
+		HWND hWndParent = GetParent();
+		ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndParent, UWM_GETREBARTHEME, 0, 0);
+		
+		if (pTheme && pTheme->UseThemes && pTheme->ShortBands)
 		{
-			CRebar* pRebar = (CRebar*)pWnd;
-			if (pRebar && (pRebar->GetRebarTheme().ShortBands))
-			{
-				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-				pWinPos->cx = GetMaxSize().cx+2;
-			}
+			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+			pWinPos->cx = GetMaxSize().cx+2;		
 		}
 	}
 
@@ -1025,6 +1023,11 @@ namespace Win32xx
 		case WM_LBUTTONDBLCLK:
 			OnLButtonDblClk(wParam, lParam);
 			return 0;
+		case UWM_GETTOOLBARTHEME:
+			{
+				ThemeToolbar& tt = GetToolbarTheme();
+				return (LRESULT)&tt;
+			}
 		case WM_WINDOWPOSCHANGING:
 			OnWindowPosChanging(wParam, lParam);
 			break;

@@ -642,6 +642,11 @@ namespace Win32xx
 			if (OnEraseBkgnd((HDC)wParam))
 				return TRUE;
 			break;
+		case UWM_GETREBARTHEME:
+			{
+				ThemeRebar& rm = GetRebarTheme();
+				return (LRESULT)&rm;
+			}
 		case UWM_TOOLBAR_RESIZE:
 			{
 				HWND hToolbar = (HWND)wParam;

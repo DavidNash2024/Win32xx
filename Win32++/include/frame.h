@@ -197,29 +197,31 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void RecalcLayout();
+		virtual ThemeMenu& GetMenuTheme() const			{ return (ThemeMenu&) m_ThemeMenu; }
+		virtual ThemeRebar& GetRebarTheme()	const		{ return (ThemeRebar&)GetRebar().GetRebarTheme(); }
+		virtual ThemeToolbar& GetToolbarTheme() const	{ return (ThemeToolbar&)GetToolbar().GetToolbarTheme(); }
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the menubar, rebar, 
 		// statusbar or toolbar, inherrit from those classes, and override 
 		// the following attribute functions.
-		virtual CMenubar& GetMenubar() const		{return (CMenubar&)m_Menubar;}
-		virtual CRebar& GetRebar() const			{return (CRebar&)m_Rebar;}
-		virtual CStatusbar& GetStatusbar() const	{return (CStatusbar&)m_Statusbar;}
-		virtual CToolbar& GetToolbar() const		{return (CToolbar&)m_Toolbar;}
+		virtual CMenubar& GetMenubar() const		{ return (CMenubar&)m_Menubar; }
+		virtual CRebar& GetRebar() const			{ return (CRebar&)m_Rebar; }
+		virtual CStatusbar& GetStatusbar() const	{ return (CStatusbar&)m_Statusbar; }
+		virtual CToolbar& GetToolbar() const		{ return (CToolbar&)m_Toolbar; }
 
 		// These functions aren't virtual, and shouldn't be overridden
-		HMENU GetFrameMenu() const	{return m_hMenu;}
-		const ThemeMenu& GetMenuTheme()	const {return m_ThemeMenu;}
-		tString GetRegistryKeyName(){return m_tsKeyName;}
-		CWnd* GetView() const		{return m_pView;}
+		HMENU GetFrameMenu() const			{ return m_hMenu; }
+		tString GetRegistryKeyName()		{ return m_tsKeyName; }
+		CWnd* GetView() const				{ return m_pView; }
 		tString GetMRUEntry(size_t nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(ThemeMenu& Theme);
 		void SetView(CWnd& wndView);
-		BOOL IsFrame() const			{return TRUE;}
-		BOOL IsMenubarUsed() const		{return (GetMenubar() != 0);}
-		BOOL IsRebarSupported() const	{return (GetComCtlVersion() >= 470);}
-		BOOL IsRebarUsed() const		{return (GetRebar() != 0);}
+		BOOL IsFrame() const			{ return TRUE; }
+		BOOL IsMenubarUsed() const		{ return (GetMenubar() != 0); }
+		BOOL IsRebarSupported() const	{ return (GetComCtlVersion() >= 470); }
+		BOOL IsRebarUsed() const		{ return (GetRebar() != 0); }
 
 	protected:
 		// Override these functions as required
@@ -1339,6 +1341,11 @@ namespace Win32xx
 				return 0L;
 			}
 			break;
+		case UWM_GETMENUTHEME:
+			{
+				ThemeMenu& tm = GetMenubarTheme();
+				return (LRESULT)&tm; 
+			}
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged();
 			break;
@@ -1660,9 +1667,10 @@ namespace Win32xx
 		CDC DrawDC = pdis->hDC;
 		CRect rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
+		ThemeMenu tm = GetMenuTheme();
 
 		// Draw the checkmark's background rectangle first
-		if (m_ThemeMenu.UseThemes)
+		if (tm.UseThemes)
 		{
 			int Iconx = 16, Icony = 16;
 			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
@@ -1671,8 +1679,8 @@ namespace Win32xx
 			CRect rcBk;
 			rcBk.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
 			rcBk.InflateRect( -offset, -offset );
-			DrawDC.CreateSolidBrush(m_ThemeMenu.clrHot2);
-			DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+			DrawDC.CreateSolidBrush(tm.clrHot2);
+			DrawDC.CreatePen(PS_SOLID, 1, tm.clrOutline);
 
 			// Draw the checkmark's background rectangle
 			DrawDC.Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
@@ -1691,7 +1699,7 @@ namespace Win32xx
 			MemDC.DrawFrameControl(rCheck, DFC_MENU, DFCS_MENUCHECK);
 
 		int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
-		if (m_ThemeMenu.UseThemes)
+		if (tm.UseThemes)
 			rc.left += 2;
 
 		// Draw a white or black check mark as required
@@ -1700,7 +1708,7 @@ namespace Win32xx
 		MaskDC.CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
 
 		MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
-		if ((pdis->itemState & ODS_SELECTED) && (!m_ThemeMenu.UseThemes))
+		if ((pdis->itemState & ODS_SELECTED) && (!tm.UseThemes))
 		{
 			// Draw a white checkmark
 			MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
@@ -1710,7 +1718,7 @@ namespace Win32xx
 		else
 		{
 			// Draw a black checkmark
-			int BullitOffset = ((MFT_RADIOCHECK == fType) && m_ThemeMenu.UseThemes)? 1 : 0;
+			int BullitOffset = ((MFT_RADIOCHECK == fType) && tm.UseThemes)? 1 : 0;
 			MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
 			DrawDC.BitBlt(rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
@@ -2049,18 +2057,19 @@ namespace Win32xx
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		CDC DrawDC = pdis->hDC;
+		ThemeMenu tm = GetMenuTheme();
 
 		int Iconx = 16;
 		int Icony = 16;
 		if (m_himlMenu)	ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		int BarWidth = m_ThemeMenu.UseThemes? Iconx + 6 : 0;
+		int BarWidth = tm.UseThemes? Iconx + 6 : 0;
 
 		// Draw the side bar
-		if (m_ThemeMenu.UseThemes)
+		if (tm.UseThemes)
 		{
 			CRect rcBar = rc;
 			rcBar.right = BarWidth;
-			DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcBar, TRUE);
+			DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
 		}
 
 		if (pmd->fType & MFT_SEPARATOR)
@@ -2068,7 +2077,7 @@ namespace Win32xx
 			// draw separator
 			CRect rcSep = rc;
 			rcSep.left = BarWidth;
-			if (m_ThemeMenu.UseThemes)
+			if (tm.UseThemes)
 				DrawDC.SolidFill(RGB(255,255,255), rcSep);
 			else
 				DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcSep);
@@ -2087,10 +2096,10 @@ namespace Win32xx
 			if ((bSelected) && (!bDisabled))
 			{
 				// draw selected item background
-				if (m_ThemeMenu.UseThemes)
+				if (tm.UseThemes)
 				{
-					DrawDC.CreateSolidBrush(m_ThemeMenu.clrHot1);
-					DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+					DrawDC.CreateSolidBrush(tm.clrHot1);
+					DrawDC.CreatePen(PS_SOLID, 1, tm.clrOutline);
 					DrawDC.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 				}
 				else
@@ -2100,7 +2109,7 @@ namespace Win32xx
 			{
 				// draw non-selected item background
 				rcDraw.left = BarWidth;
-				if (m_ThemeMenu.UseThemes)
+				if (tm.UseThemes)
 					DrawDC.SolidFill(RGB(255,255,255), rcDraw);
 				else
 					DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcDraw);
@@ -2119,7 +2128,7 @@ namespace Win32xx
 			// Draw the text
 			int iMode = DrawDC.SetBkMode(TRANSPARENT);
 			COLORREF colorText;
-			if (m_ThemeMenu.UseThemes)
+			if (tm.UseThemes)
 			{
 				rc.left += 8;
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
@@ -2301,6 +2310,7 @@ namespace Win32xx
 			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
+		ThemeMenu tm = GetMenuTheme();
 
 		if (pmd->fType & MFT_SEPARATOR)
 		{
@@ -2342,7 +2352,7 @@ namespace Win32xx
 				pmis->itemWidth += 10;
 
 			// Allow extra width for themed menu
-			if (m_ThemeMenu.UseThemes)
+			if (tm.UseThemes)
 				pmis->itemWidth += 8;
 		}
 		 return TRUE;
@@ -2760,18 +2770,6 @@ namespace Win32xx
 		return AddMenuIcons(MenuData, crMask, ToolbarID, ToolbarDisabledID);
 	}
 
-	inline void CFrame::SetMenuTheme(ThemeMenu& Theme)
-	{
-		m_ThemeMenu.UseThemes   = Theme.UseThemes;
-		m_ThemeMenu.clrHot1     = Theme.clrHot1;
-		m_ThemeMenu.clrHot2     = Theme.clrHot2;
-		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
-		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
-		m_ThemeMenu.clrOutline  = Theme.clrOutline;
-
-		Invalidate();
-	}
-
 	inline void CFrame::SetMenubarBandSize()
 	{
 		// Sets the minimum width of the Menubar band to the width of the rebar
@@ -2796,6 +2794,23 @@ namespace Win32xx
 		rbbi.cx         = Width;
 
 		RB.SetBandInfo(nBand, rbbi); 
+	}
+
+	inline void CFrame::SetMenuTheme(ThemeMenu& Theme)
+	{
+		m_ThemeMenu.UseThemes   = Theme.UseThemes;
+		m_ThemeMenu.clrHot1     = Theme.clrHot1;
+		m_ThemeMenu.clrHot2     = Theme.clrHot2;
+		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
+		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
+		m_ThemeMenu.clrOutline  = Theme.clrOutline;
+
+		if (IsRebarUsed())
+		{
+			GetMenubar().SetMenubarTheme(Theme); // Sets the theme for Menubar buttons
+		}
+		
+		Invalidate();
 	}
 
 	inline void CFrame::SetStatusIndicators()
@@ -2900,12 +2915,10 @@ namespace Win32xx
 				ThemeMenu tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
 				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus
+				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+				
 				if (IsRebarUsed())
-				{
 					GetRebar().SetRebarTheme(tr);
-					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
-				}
 			}
 			break; 
 
@@ -2916,12 +2929,10 @@ namespace Win32xx
 				ThemeMenu tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 
 				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus
+				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+				
 				if (IsRebarUsed())
-				{
 					GetRebar().SetRebarTheme(tr);
-					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
-				}
 			}
 			break;
 		case Blue:
@@ -2932,12 +2943,10 @@ namespace Win32xx
 				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
 
 				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus
+				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+
 				if (IsRebarUsed())
-				{
 					GetRebar().SetRebarTheme(tr);
-					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
-				}
 			}
 			break;
 
@@ -2949,12 +2958,10 @@ namespace Win32xx
 				ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
 
 				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus
+				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+
 				if (IsRebarUsed())
-				{
 					GetRebar().SetRebarTheme(tr);
-					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
-				}
 			}
 			break;
 
@@ -2966,12 +2973,10 @@ namespace Win32xx
 				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
 
 				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus
+				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+				
 				if (IsRebarUsed())
-				{
 					GetRebar().SetRebarTheme(tr);
-					GetMenubar().SetMenubarTheme(tm); // Sets the theme for Menubar buttons
-				}
 			}
 			break;
 		}
@@ -3190,6 +3195,21 @@ namespace Win32xx
 		case WM_EXITMENULOOP:
 			OnExitMenuLoop();
 			break;
+		case UWM_GETMENUTHEME:
+			{
+				ThemeMenu& tm = GetMenuTheme();
+				return (LRESULT)&tm; 
+			}
+		case UWM_GETREBARTHEME:
+			{
+				ThemeRebar& rm = GetRebarTheme();
+				return (LRESULT)&rm;
+			}
+		case UWM_GETTOOLBARTHEME:
+			{
+				ThemeToolbar& tt = GetToolbarTheme();
+				return (LRESULT)&tt;
+			}
 		} // switch uMsg
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);

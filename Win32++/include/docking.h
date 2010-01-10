@@ -2514,16 +2514,13 @@ namespace Win32xx
 		SetParent(hwndParent);	// Reinstate the window's parent
 
 		// Set the default colour for the splitter bar
-		CFrame* pFrame = 0;
-		pFrame = (CFrame*)FromHandle(GetDockAncestor()->GetAncestor());
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-		if (pFrame && pFrame->IsFrame())
-		{
-			CRebar& RB = pFrame->GetRebar();
-			if (RB.GetRebarTheme().UseThemes)
-				rgbColour = RB.GetRebarTheme().clrBkgnd2;
-		}
-
+		HWND hWndFrame = GetDockAncestor()->GetAncestor();
+		ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+		
+		if (pTheme && pTheme->UseThemes)
+				rgbColour =pTheme->clrBkgnd2;
+		
 		SetBarColor(rgbColour);
 	}
 
@@ -2771,15 +2768,12 @@ namespace Win32xx
 	{
 		if (this == GetDockAncestor())
 		{
-			CFrame* pFrame = 0;
-			pFrame = (CFrame*)FromHandle(GetAncestor());
 			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-			if (pFrame && pFrame->IsFrame())
-			{
-				CRebar& RB = pFrame->GetRebar();
-				if (RB.GetRebarTheme().UseThemes)
-					rgbColour = RB.GetRebarTheme().clrBkgnd2;
-			}
+			HWND hWndFrame = GetDockAncestor()->GetAncestor();
+			ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+			
+			if (pTheme && pTheme->UseThemes)
+				rgbColour = pTheme->clrBkgnd2;
 
 			// Set the splitter bar colour for each docker decendant
 			std::vector<CDocker*>::iterator iter;
