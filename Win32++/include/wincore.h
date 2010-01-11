@@ -247,7 +247,7 @@ namespace Win32xx
 	{
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
-		HHOOK hMenuHook;	// WH_MSGFILTER hook for CMenubar (used when popup menu is active)
+		HHOOK hHook;		// WH_MSGFILTER hook for CMenubar and Modeless Dialogs
 	};
 
 

@@ -633,12 +633,19 @@ namespace Win32xx
 	{
 		// Adjust size for toolbars inside a rebar
 		HWND hWndParent = GetParent();
-		ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndParent, UWM_GETREBARTHEME, 0, 0);
-		
-		if (pTheme && pTheme->UseThemes && pTheme->ShortBands)
+
+		TCHAR szString[7];
+		::GetClassName(hWndParent, szString, 6);
+
+		if (lstrcmp(szString, _T("ReBar")) == 0)
 		{
-			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-			pWinPos->cx = GetMaxSize().cx+2;		
+			ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndParent, UWM_GETREBARTHEME, 0, 0);
+			
+			if (pTheme && pTheme->UseThemes && pTheme->ShortBands)
+			{
+				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+				pWinPos->cx = GetMaxSize().cx+2;		
+			}
 		}
 	}
 

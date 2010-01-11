@@ -94,8 +94,9 @@ namespace Win32xx
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
 
-		// Can't override this function
+		// Can't override these functions
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CDialog(const CDialog&);				// Disable copy construction
@@ -279,6 +280,7 @@ namespace Win32xx
 
 			// Store the CWnd pointer in Thread Local Storage
 			pTLSData->pCWnd = this;
+			pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 
@@ -293,8 +295,9 @@ namespace Win32xx
 				nResult = ::DialogBox(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 			
-      // Tidy up
+			// Tidy up
 			m_hWnd = NULL;
+			::UnhookWindowsHookEx(pTLSData->hHook);
 			pTLSData->pCWnd = NULL;
 
 			if (nResult == -1)
@@ -391,13 +394,11 @@ namespace Win32xx
 
 	inline BOOL CDialog::PreTranslateMessage(MSG* pMsg)
 	{
-		// Note: This function is only used by modeless dialogs.
-		//       Modal dialogs run their own internal message loop.  
-
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
 		{
-			if (IsDialogMessage(m_hWnd, pMsg))
+			// Process dialog keystrokes for modeless dialogs
+			if (!IsModal && IsDialogMessage(m_hWnd, pMsg))
 				return TRUE;
 		}
 
@@ -451,6 +452,32 @@ namespace Win32xx
 		}
 
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
+
+	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
+	{
+		// Used by Modal Dialogs to PreTranslate Messages
+
+		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+
+		if (nCode == MSGF_DIALOGBOX)
+		{
+			MSG *lpMsg = (MSG *) lParam;
+
+			// only pre-translate input events
+			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST) ||
+			(lpMsg->message >= WM_MOUSEFIRST && lpMsg->message <= WM_MOUSELAST))
+			{
+				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+				{
+					CWnd* pWnd = CWnd::FromHandle(hWnd);
+					if (pWnd && pWnd->PreTranslateMessage(lpMsg))
+						break; 
+				}
+			}
+		}
+		
+		return ::CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
+	}
 
 } // namespace Win32xx
 

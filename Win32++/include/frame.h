@@ -416,11 +416,11 @@ namespace Win32xx
 		// Remove any remaining hook first
 		TLSData* pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
 		pTLSData->pMenubar = this;
-		if (pTLSData->hMenuHook != NULL)
-			::UnhookWindowsHookEx(pTLSData->hMenuHook);
+		if (pTLSData->hHook != NULL)
+			::UnhookWindowsHookEx(pTLSData->hHook);
 
 		// Hook messages about to be processed by the shortcut menu
-		pTLSData->hMenuHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+		pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
 		// Display the shortcut menu
 		BOOL bRightToLeft = FALSE;
@@ -437,8 +437,8 @@ namespace Win32xx
 		m_bMenuActive = FALSE;
 
 		// Remove the message hook
-		::UnhookWindowsHookEx(pTLSData->hMenuHook);
-		pTLSData->hMenuHook = NULL;
+		::UnhookWindowsHookEx(pTLSData->hHook);
+		pTLSData->hHook = NULL;
 
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
@@ -1257,7 +1257,7 @@ namespace Win32xx
 			}
 		}
 
-		return CallNextHookEx(pTLSData->hMenuHook, nCode, wParam, lParam);
+		return CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
 	}
 
 	inline void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
