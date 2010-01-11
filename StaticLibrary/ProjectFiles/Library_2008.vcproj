@@ -199,10 +199,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\splitter.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\statusbar.cpp"
 				>
 			</File>
@@ -268,11 +264,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\splitter.h"
+				RelativePath="..\src\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\statusbar.h"
+				RelativePath="..\src\stdcontrols.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\stdcontrols.h"
 				>
 			</File>
 			<File
@@ -300,26 +300,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\src\changes.txt"
-			>
-		</File>
-		<File
-			RelativePath="..\src\classes.txt"
-			>
-		</File>
-		<File
-			RelativePath="..\src\copyright.txt"
-			>
-		</File>
-		<File
-			RelativePath="..\src\info.txt"
-			>
-		</File>
-		<File
-			RelativePath="..\src\release notes.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

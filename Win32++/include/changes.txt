@@ -15,6 +15,10 @@ Added UWM_GETTOOLBARTHEME  message
 
 Added PreTranslate Message support for modeless dialogs
 
+Bug Fixes
+- Fixed TCharToString
+
+
 Version 6.7
 ===========
 Bug fixes:

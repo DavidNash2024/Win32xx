@@ -136,9 +136,6 @@
 				RelativePath="..\src\rebar.cpp">
 			</File>
 			<File
-				RelativePath="..\src\splitter.cpp">
-			</File>
-			<File
 				RelativePath="..\src\statusbar.cpp">
 			</File>
 			<File
@@ -191,9 +188,6 @@
 				RelativePath="..\src\socket.h">
 			</File>
 			<File
-				RelativePath="..\src\splitter.h">
-			</File>
-			<File
 				RelativePath="..\src\statusbar.h">
 			</File>
 			<File
@@ -206,15 +200,18 @@
 				RelativePath="..\src\treeview.h">
 			</File>
 			<File
-				RelativePath="..\src\wceframe.h">
-			</File>
-			<File
 				RelativePath="..\src\wcestddef.h">
 			</File>
 			<File
 				RelativePath="..\src\wincore.h">
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\src\stdcontrols.cpp">
+		</File>
+		<File
+			RelativePath="..\src\stdcontrols.h">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

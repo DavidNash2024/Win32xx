@@ -197,11 +197,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\splitter.cpp"
+				RelativePath="..\src\statusbar.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\statusbar.cpp"
+				RelativePath="..\src\stdcontrols.cpp"
 				>
 			</File>
 			<File
@@ -266,11 +266,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\splitter.h"
+				RelativePath="..\src\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\statusbar.h"
+				RelativePath="..\src\stdcontrols.h"
 				>
 			</File>
 			<File

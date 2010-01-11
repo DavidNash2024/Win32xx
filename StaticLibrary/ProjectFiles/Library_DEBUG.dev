@@ -208,26 +208,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\src\splitter.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit20]
-FileName=..\src\splitter.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit21]
 FileName=..\src\statusbar.cpp
 CompileCpp=1
 Folder=Source
@@ -237,7 +217,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit20]
 FileName=..\src\statusbar.h
 CompileCpp=1
 Folder=Header
@@ -247,7 +227,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit21]
 FileName=..\src\tab.cpp
 CompileCpp=1
 Folder=Source
@@ -257,7 +237,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit22]
 FileName=..\src\tab.h
 CompileCpp=1
 Folder=Header
@@ -267,7 +247,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit23]
 FileName=..\src\toolbar.cpp
 CompileCpp=1
 Folder=Source
@@ -277,7 +257,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit24]
 FileName=..\src\toolbar.h
 CompileCpp=1
 Folder=Header
@@ -287,7 +267,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit25]
 FileName=..\src\treeview.cpp
 CompileCpp=1
 Folder=Source
@@ -297,7 +277,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit28]
+[Unit26]
 FileName=..\src\treeview.h
 CompileCpp=1
 Folder=Header
@@ -307,7 +287,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit29]
+[Unit27]
 FileName=..\src\wincore.cpp
 CompileCpp=1
 Folder=Source
@@ -317,8 +297,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit30]
+[Unit28]
 FileName=..\src\wincore.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit29]
+FileName=..\src\stdcontrols.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=..\src\stdcontrols.h
 CompileCpp=1
 Folder=Header
 Compile=1

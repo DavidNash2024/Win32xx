@@ -123,11 +123,11 @@ SOURCE=..\src\socket.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\splitter.cpp
+SOURCE=..\src\statusbar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\statusbar.cpp
+SOURCE=..\src\stdcontrols.cpp
 # End Source File
 # Begin Source File
 
@@ -191,11 +191,11 @@ SOURCE=..\src\socket.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\splitter.h
+SOURCE=..\src\statusbar.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\statusbar.h
+SOURCE=..\src\stdcontrols.h
 # End Source File
 # Begin Source File
 
