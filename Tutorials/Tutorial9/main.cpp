@@ -6,7 +6,7 @@
 #include "ScribbleApp.h"
 
 
-INT WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
+int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++
     CScribbleApp MyApp;

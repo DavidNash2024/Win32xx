@@ -34,7 +34,7 @@ BOOL CSimpleApp::InitInstance()
 
 // Note:  This application doesn't end when the window is closed
 
-INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
+int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++
     CSimpleApp MyApp;

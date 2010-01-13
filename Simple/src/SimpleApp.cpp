@@ -1,5 +1,5 @@
 ////////////////////////////////////////
-// SimpleApp.h
+// SimpleApp.cpp
 
 #include "SimpleApp.h"
 
