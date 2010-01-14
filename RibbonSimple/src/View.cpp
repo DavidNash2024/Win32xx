@@ -49,41 +49,26 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.y = 50;								// top y
 	cs.cx = 400;							// width
 	cs.cy = 300;							// height
-//	cs.lpszName = LoadString(IDW_MAIN);		// Window title
+	cs.lpszName = LoadString(IDS_APP_TITLE);// Window title
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-
 {
-    //int wmId, wmEvent;    
-    PAINTSTRUCT ps;
-    HDC hdc;
-    bool initSuccess;
-
     switch (uMsg)
     {
     case WM_CREATE:
-        // Initializes the Ribbon framework.
-    //    initSuccess = InitializeFramework(m_hWnd);
-		initSuccess = m_Ribbon.InitializeFramework(m_hWnd);
-        if (!initSuccess) 
-        {
+        if (!m_Ribbon.InitializeFramework(m_hWnd)) 
             return -1;
-        }
-        break;
-    case WM_PAINT:
-        hdc = BeginPaint(m_hWnd, &ps);
-        EndPaint(m_hWnd, &ps);
+
         break;
     case WM_DESTROY:
-        // Tears down the Ribbon framework.
-     //   DestroyFramework();
 		m_Ribbon.DestroyFramework();
         PostQuitMessage(0);
         break;
     default:
 		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
     }
+	
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 

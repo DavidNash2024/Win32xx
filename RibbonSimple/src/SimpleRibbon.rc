@@ -27,7 +27,6 @@ STRINGTABLE
 BEGIN
    IDC_SIMPLERIBBON   "SimpleRibbon"
    IDS_APP_TITLE      "SimpleRibbon"
-   IDW_MAIN           "Simple Window"
 END
 
 
