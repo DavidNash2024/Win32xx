@@ -5,7 +5,7 @@
 #define APPLICATION_H
 
 #include <wincore.h>
-
+#include <UIRibbon.h>
 
 //
 //  CLASS: CApplication : IUIApplication
@@ -42,6 +42,8 @@ public:
     STDMETHOD(OnDestroyUICommand)(UINT32 commandId, __in UI_COMMANDTYPE typeID,
         __in_opt IUICommandHandler* commandHandler);
 
+	bool InitializeRibbon(HWND hWnd);
+	void CApplication::DestroyRibbon();
 
 private:
     CApplication() : m_cRef(1) , m_pCommandHandler(NULL) {}
@@ -57,6 +59,8 @@ private:
 
     LONG m_cRef;                            // Reference count.
     IUICommandHandler * m_pCommandHandler;  // Generic Command Handler
+	IUIFramework* m_pFramework;
+	IUIApplication* m_pApplication;
 };
 
 

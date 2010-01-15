@@ -6,7 +6,7 @@
 
 
 #include "wincore.h"
-#include "Ribbon.h"
+#include "Application.h"
 
 class CView : public CWnd
 {
@@ -22,7 +22,8 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CRibbon m_Ribbon;
+	CApplication* m_pApplication;
+	IUIFramework* m_pFramework;
 };
 
 #endif

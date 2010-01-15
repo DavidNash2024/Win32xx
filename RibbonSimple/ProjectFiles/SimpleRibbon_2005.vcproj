@@ -362,10 +362,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Ribbon.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\SimpleApp.cpp"
 				>
 			</File>
@@ -389,10 +385,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Resource.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Ribbon.h"
 				>
 			</File>
 			<File
@@ -423,7 +415,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Building SimpleRibbon.xml"
-					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc"
+					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc&#x0D;&#x0A;"
 					Outputs="SimpleRibbon.bml;SimpleRibbonUI.rc;SimpleRibbonUI.h"
 				/>
 			</FileConfiguration>
@@ -433,7 +425,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Building SimpleRibbon.xml"
-					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc"
+					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc&#x0D;&#x0A;"
 					Outputs="SimpleRibbon.bml;SimpleRibbonUI.rc;SimpleRibbonUI.h"
 				/>
 			</FileConfiguration>
