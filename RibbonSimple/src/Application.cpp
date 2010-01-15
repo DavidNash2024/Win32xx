@@ -54,7 +54,7 @@ STDMETHODIMP CApplication::QueryInterface(REFIID iid, void** ppv)
 {
     if (iid == __uuidof(IUnknown))
     {
-        *ppv = static_cast<IUnknown*>(this);
+		*ppv = static_cast<IUnknown*>(static_cast<IUIApplication*>(this));
     }
     else if (iid == __uuidof(IUIApplication))
     {
@@ -175,4 +175,23 @@ STDMETHODIMP CApplication::OnDestroyUICommand(
     UNREFERENCED_PARAMETER(nCmdID);
 
     return E_NOTIMPL;
+}
+
+STDMETHODIMP CApplication::Execute(UINT /*nCmdID*/,
+    UI_EXECUTIONVERB /*verb*/, 
+    __in_opt const PROPERTYKEY* /*key*/,
+    __in_opt const PROPVARIANT* /*ppropvarValue*/,
+    __in_opt IUISimplePropertySet* /*pCommandExecutionProperties*/)
+{       
+    HRESULT hr = S_OK;
+	return hr;
+}
+
+STDMETHODIMP CApplication::UpdateProperty(UINT32 /*nCmdID*/, 
+    __in REFPROPERTYKEY /*key*/,
+    __in_opt  const PROPVARIANT* /*currentValue*/,
+    __out PROPVARIANT* /*newValue*/) 
+{   
+    HRESULT hr = E_NOTIMPL;
+	return hr;
 }

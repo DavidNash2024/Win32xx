@@ -17,7 +17,8 @@
 //    during various updates like command creation/destruction and view state changes.
 //
 
-class CApplication : public IUIApplication // Applications must implement IUIApplication.
+class CApplication : public IUIApplication
+				   , public IUICommandHandler
 {
 public:
 
@@ -43,6 +44,19 @@ public:
     STDMETHOD(OnDestroyUICommand)(UINT32 commandId, 
         __in UI_COMMANDTYPE typeID,
         __in_opt IUICommandHandler* commandHandler);
+
+	STDMETHODIMP Execute(UINT nCmdID,
+        UI_EXECUTIONVERB verb, 
+        __in_opt const PROPERTYKEY* key,
+        __in_opt const PROPVARIANT* ppropvarValue,
+        __in_opt IUISimplePropertySet* pCommandExecutionProperties);
+
+
+	STDMETHODIMP UpdateProperty(UINT32 nCmdID, 
+        __in REFPROPERTYKEY key,
+        __in_opt  const PROPVARIANT* currentValue,
+        __out PROPVARIANT* newValue); 
+
 
 private:
     CApplication() 

@@ -1,10 +1,11 @@
 ///////////////////////////////
 // CommandHandler.cpp
 
+#include <wincore.h>
 #include <UIRibbon.h>
-
 #include "CommandHandler.h"
 #include "Ribbon.h"
+#include "SimpleRibbonUI.h"
 
 // Static method to create an instance of the object.
 __checkReturn HRESULT CCommandHandler::CreateInstance(__deref_out IUICommandHandler **ppCommandHandler)
@@ -112,7 +113,41 @@ STDMETHODIMP CCommandHandler::Execute(
     UNREFERENCED_PARAMETER(ppropvarValue);
     UNREFERENCED_PARAMETER(key);
     UNREFERENCED_PARAMETER(verb);
-    UNREFERENCED_PARAMETER(nCmdID);
 
-    return S_OK;
+    HRESULT hr = S_OK;
+	switch(nCmdID)
+	{
+	case cmdButton1:
+		TRACE(_T("Button 1\n"));
+		break;
+	case cmdButton2:
+		TRACE(_T("Button 2\n"));
+		break;
+	case cmdButton3:
+		TRACE(_T("Button 3\n"));
+		break;
+	case cmdButton4:
+		TRACE(_T("Button 4\n"));
+		break;
+	case cmdButton5:
+		TRACE(_T("Button 5\n"));
+		break;
+	case cmdButton6:
+		TRACE(_T("Button 6\n"));
+		break;
+	case cmdToggleButton1:
+		TRACE(_T("Toggle Button 1\n"));
+		break;
+	case cmdToggleButton2:
+		TRACE(_T("Toggle Button 2\n"));
+		break;
+	case IDC_CMD_EXIT:
+		TRACE(_T("Exit button\n"));
+		break;
+	default:
+		TRACE(_T("Unknown button\n"));
+		break;
+	}
+
+	return hr;
 }
