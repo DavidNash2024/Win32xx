@@ -30,12 +30,12 @@ public:
         __in_opt const PROPVARIANT* ppropvarValue,
         __in_opt IUISimplePropertySet* pCommandExecutionProperties);
 
-private:
-    CCommandHandler()
-        : m_cRef(1) 
-    {
-    }
+	CWnd* GetFrame() const {return m_pFrame;}
+	void SetFrame(CWnd* pFrame) {m_pFrame = pFrame;}
 
+private:
+    CCommandHandler() : m_cRef(1) {}
+	CWnd* m_pFrame;
     LONG m_cRef;                        // Reference count.
 };
 

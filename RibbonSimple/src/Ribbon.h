@@ -2,16 +2,17 @@
 #pragma once
 
 #include <UIRibbon.h>
+#include "Application.h"
 
 class CRibbon
 {
 public:
-	CRibbon() {}
-	virtual ~CRibbon() {}
-	bool InitializeFramework(HWND hWnd);
-	void DestroyFramework();
+	CRibbon(); 
+	virtual ~CRibbon();
+	bool InitializeRibbon(HWND hWnd);
+	void DestroyRibbon();
 
 private:
 	IUIFramework* m_pFramework;
-	IUIApplication* m_pApplication;
+	CApplication* m_pApplication;
 };

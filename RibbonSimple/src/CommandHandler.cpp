@@ -82,11 +82,8 @@ STDMETHODIMP CCommandHandler::QueryInterface(REFIID iid, void** ppv)
 //    
 //    In this SimpleRibbon sample, the method is not implemented.  
 //
-STDMETHODIMP CCommandHandler::UpdateProperty(
-    UINT nCmdID,
-    __in REFPROPERTYKEY key,
-    __in_opt const PROPVARIANT* ppropvarCurrentValue,
-    __out PROPVARIANT* ppropvarNewValue)
+STDMETHODIMP CCommandHandler::UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue, 
+											 __out PROPVARIANT* ppropvarNewValue)
 {
     UNREFERENCED_PARAMETER(nCmdID);
     UNREFERENCED_PARAMETER(key);
@@ -102,12 +99,8 @@ STDMETHODIMP CCommandHandler::UpdateProperty(
 //  PURPOSE: Called by the Ribbon framework when a command is executed by the user.  For example, when
 //           a button is pressed.
 //
-STDMETHODIMP CCommandHandler::Execute(
-    UINT nCmdID,
-    UI_EXECUTIONVERB verb,
-    __in_opt const PROPERTYKEY* key,
-    __in_opt const PROPVARIANT* ppropvarValue,
-    __in_opt IUISimplePropertySet* pCommandExecutionProperties)
+STDMETHODIMP CCommandHandler::Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+									  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
 {
     UNREFERENCED_PARAMETER(pCommandExecutionProperties);
     UNREFERENCED_PARAMETER(ppropvarValue);

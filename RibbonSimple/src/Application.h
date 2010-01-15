@@ -4,6 +4,9 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <wincore.h>
+
+
 //
 //  CLASS: CApplication : IUIApplication
 //
@@ -18,7 +21,6 @@
 //
 
 class CApplication : public IUIApplication
-				   , public IUICommandHandler
 {
 public:
 
@@ -31,39 +33,18 @@ public:
     STDMETHOD(QueryInterface(REFIID iid, void** ppv));
 
     // IUIApplication methods
-    STDMETHOD(OnCreateUICommand)(UINT nCmdID,
-        __in UI_COMMANDTYPE typeID,
-        __deref_out IUICommandHandler** ppCommandHandler);
+    STDMETHOD(OnCreateUICommand)(UINT nCmdID, __in UI_COMMANDTYPE typeID, 
+		__deref_out IUICommandHandler** ppCommandHandler);
 
-    STDMETHOD(OnViewChanged)(UINT viewId,
-        __in UI_VIEWTYPE typeId,
-        __in IUnknown* pView,
-        UI_VIEWVERB verb,
-        INT uReasonCode);
+    STDMETHOD(OnViewChanged)(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView,
+        UI_VIEWVERB verb, INT uReasonCode);
 
-    STDMETHOD(OnDestroyUICommand)(UINT32 commandId, 
-        __in UI_COMMANDTYPE typeID,
+    STDMETHOD(OnDestroyUICommand)(UINT32 commandId, __in UI_COMMANDTYPE typeID,
         __in_opt IUICommandHandler* commandHandler);
-
-	STDMETHODIMP Execute(UINT nCmdID,
-        UI_EXECUTIONVERB verb, 
-        __in_opt const PROPERTYKEY* key,
-        __in_opt const PROPVARIANT* ppropvarValue,
-        __in_opt IUISimplePropertySet* pCommandExecutionProperties);
-
-
-	STDMETHODIMP UpdateProperty(UINT32 nCmdID, 
-        __in REFPROPERTYKEY key,
-        __in_opt  const PROPVARIANT* currentValue,
-        __out PROPVARIANT* newValue); 
 
 
 private:
-    CApplication() 
-        : m_cRef(1)
-        , m_pCommandHandler(NULL)
-    {
-    }
+    CApplication() : m_cRef(1) , m_pCommandHandler(NULL) {}
 
     ~CApplication() 
     {

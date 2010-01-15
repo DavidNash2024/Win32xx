@@ -81,13 +81,9 @@ STDMETHODIMP CApplication::QueryInterface(REFIID iid, void** ppv)
 //    In this SimpleRibbon sample, the same command handler is returned for all commands
 //    specified in the SimpleRibbon.xml file.
 //    
-//    To view the OnCreateUICommand callbacks, uncomment the _cwprintf call.
-//
-//
-STDMETHODIMP CApplication::OnCreateUICommand(
-    UINT nCmdID,
-    __in UI_COMMANDTYPE typeID,
-    __deref_out IUICommandHandler** ppCommandHandler)
+
+STDMETHODIMP CApplication::OnCreateUICommand(UINT nCmdID, __in UI_COMMANDTYPE typeID, 
+											 __deref_out IUICommandHandler** ppCommandHandler)
 {
     UNREFERENCED_PARAMETER(typeID);
     UNREFERENCED_PARAMETER(nCmdID);
@@ -110,12 +106,8 @@ STDMETHODIMP CApplication::OnCreateUICommand(
 //  PURPOSE: Called when the state of a View (Ribbon is a view) changes, for example, created, destroyed, or resized.
 //
 //
-STDMETHODIMP CApplication::OnViewChanged(
-    UINT viewId,
-    __in UI_VIEWTYPE typeId,
-    __in IUnknown* pView,
-    UI_VIEWVERB verb,
-    INT uReasonCode)
+STDMETHODIMP CApplication::OnViewChanged(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView, 
+										 UI_VIEWVERB verb, INT uReasonCode)
 {
     UNREFERENCED_PARAMETER(uReasonCode);
     UNREFERENCED_PARAMETER(viewId);
@@ -165,10 +157,8 @@ STDMETHODIMP CApplication::OnViewChanged(
 //
 //  PURPOSE: Called by the Ribbon framework for each command at the time of ribbon destruction.
 //
-STDMETHODIMP CApplication::OnDestroyUICommand(
-    UINT32 nCmdID,
-    __in UI_COMMANDTYPE typeID,
-    __in_opt IUICommandHandler* commandHandler)
+STDMETHODIMP CApplication::OnDestroyUICommand(UINT32 nCmdID, __in UI_COMMANDTYPE typeID,
+											  __in_opt IUICommandHandler* commandHandler)
 {
     UNREFERENCED_PARAMETER(commandHandler);
     UNREFERENCED_PARAMETER(typeID);
@@ -177,21 +167,4 @@ STDMETHODIMP CApplication::OnDestroyUICommand(
     return E_NOTIMPL;
 }
 
-STDMETHODIMP CApplication::Execute(UINT /*nCmdID*/,
-    UI_EXECUTIONVERB /*verb*/, 
-    __in_opt const PROPERTYKEY* /*key*/,
-    __in_opt const PROPVARIANT* /*ppropvarValue*/,
-    __in_opt IUISimplePropertySet* /*pCommandExecutionProperties*/)
-{       
-    HRESULT hr = S_OK;
-	return hr;
-}
 
-STDMETHODIMP CApplication::UpdateProperty(UINT32 /*nCmdID*/, 
-    __in REFPROPERTYKEY /*key*/,
-    __in_opt  const PROPVARIANT* /*currentValue*/,
-    __out PROPVARIANT* /*newValue*/) 
-{   
-    HRESULT hr = E_NOTIMPL;
-	return hr;
-}

@@ -12,18 +12,11 @@ CSimpleApp::CSimpleApp()
 
 CSimpleApp::~CSimpleApp()
 { 
-	CoUninitialize();
 }
 
 BOOL CSimpleApp::InitInstance()
 {
     // This function is called automatically when the application starts
-
-	HRESULT hr = CoInitialize(NULL);
-    if (FAILED(hr))
-    {
-        return FALSE;
-    }
 
     // Create the Window
     m_View.Create();

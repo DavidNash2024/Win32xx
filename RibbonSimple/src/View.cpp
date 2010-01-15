@@ -57,12 +57,12 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (uMsg)
     {
     case WM_CREATE:
-        if (!m_Ribbon.InitializeFramework(m_hWnd)) 
+        if (!m_Ribbon.InitializeRibbon(m_hWnd)) 
             return -1;
 
         break;
     case WM_DESTROY:
-		m_Ribbon.DestroyFramework();
+		m_Ribbon.DestroyRibbon();
         PostQuitMessage(0);
         break;
     default:
