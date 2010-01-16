@@ -5,8 +5,8 @@
 #define COMMANDHANDLER_H
 
 
-class CCommandHandler
-    : public IUICommandHandler // Command handlers must implement IUICommandHandler.
+// Defines the methods for gathering Command information and handling Command events from the Ribbon framework.
+class CRibbonCommands : public IUICommandHandler
 {
 public:
 
@@ -34,7 +34,7 @@ public:
 	void SetFrame(CWnd* pFrame) {m_pFrame = pFrame;}
 
 private:
-    CCommandHandler() : m_cRef(1) {}
+    CRibbonCommands() : m_cRef(1) {}
 	CWnd* m_pFrame;
     LONG m_cRef;                        // Reference count.
 };

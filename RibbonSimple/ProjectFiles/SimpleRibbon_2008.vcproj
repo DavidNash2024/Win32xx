@@ -406,16 +406,16 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\src\SimpleRibbon.xml"
+			RelativePath="..\src\Ribbon.xml"
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Building SimpleRibbon.xml"
-					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc&#x0D;&#x0A;"
-					Outputs="SimpleRibbon.bml;SimpleRibbonUI.rc;SimpleRibbonUI.h"
+					Description="Building Ribbon.xml"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
 			<FileConfiguration
@@ -423,9 +423,9 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Building SimpleRibbon.xml"
-					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc&#x0D;&#x0A;"
-					Outputs="SimpleRibbon.bml;SimpleRibbonUI.rc;SimpleRibbonUI.h"
+					Description="Building Ribbon.xml"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
 		</File>

@@ -145,6 +145,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib uuid.lib propsys.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -407,16 +408,16 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\src\SimpleRibbon.xml"
+			RelativePath="..\src\Ribbon.xml"
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Building SimpleRibbon.xml"
-					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc&#x0D;&#x0A;"
-					Outputs="SimpleRibbon.bml;SimpleRibbonUI.rc;SimpleRibbonUI.h"
+					Description="Building Ribbon.xml"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
 			<FileConfiguration
@@ -424,9 +425,9 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Building SimpleRibbon.xml"
-					CommandLine="uicc.exe ..\src\SimpleRibbon.xml $(IntDir)\SimpleRibbon.bml /header:$(IntDir)\SimpleRibbonUI.h /res:$(IntDir)\SimpleRibbonUI.rc&#x0D;&#x0A;"
-					Outputs="SimpleRibbon.bml;SimpleRibbonUI.rc;SimpleRibbonUI.h"
+					Description="Building Ribbon.xml"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
 		</File>

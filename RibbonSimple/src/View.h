@@ -22,8 +22,8 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CApplication* m_pApplication;
-	IUIFramework* m_pFramework;
+	CRibbonManager* m_pRibbon;
+	IUIFramework* m_pRibbonFramework;
 };
 
 #endif

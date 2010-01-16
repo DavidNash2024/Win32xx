@@ -4,10 +4,10 @@
 #include <wincore.h>
 #include <UIRibbon.h>
 #include "CommandHandler.h"
-#include "SimpleRibbonUI.h"
+#include "RibbonUI.h"
 
 // Static method to create an instance of the object.
-__checkReturn HRESULT CCommandHandler::CreateInstance(__deref_out IUICommandHandler **ppCommandHandler)
+__checkReturn HRESULT CRibbonCommands::CreateInstance(__deref_out IUICommandHandler **ppCommandHandler)
 {
     if (!ppCommandHandler)
     {
@@ -18,7 +18,7 @@ __checkReturn HRESULT CCommandHandler::CreateInstance(__deref_out IUICommandHand
 
     HRESULT hr = S_OK;
    
-    CCommandHandler* pCommandHandler = new CCommandHandler();
+    CRibbonCommands* pCommandHandler = new CRibbonCommands();
 
     if (pCommandHandler != NULL)
     {
@@ -33,12 +33,12 @@ __checkReturn HRESULT CCommandHandler::CreateInstance(__deref_out IUICommandHand
 }
 
 // IUnknown method implementations.
-STDMETHODIMP_(ULONG) CCommandHandler::AddRef()
+STDMETHODIMP_(ULONG) CRibbonCommands::AddRef()
 {
     return InterlockedIncrement(&m_cRef);
 }
 
-STDMETHODIMP_(ULONG) CCommandHandler::Release()
+STDMETHODIMP_(ULONG) CRibbonCommands::Release()
 {
     LONG cRef = InterlockedDecrement(&m_cRef);
     if (cRef == 0)
@@ -49,7 +49,7 @@ STDMETHODIMP_(ULONG) CCommandHandler::Release()
     return cRef;
 }
 
-STDMETHODIMP CCommandHandler::QueryInterface(REFIID iid, void** ppv)
+STDMETHODIMP CRibbonCommands::QueryInterface(REFIID iid, void** ppv)
 {
     if (iid == __uuidof(IUnknown))
     {
@@ -81,7 +81,7 @@ STDMETHODIMP CCommandHandler::QueryInterface(REFIID iid, void** ppv)
 //    
 //    In this SimpleRibbon sample, the method is not implemented.  
 //
-STDMETHODIMP CCommandHandler::UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue, 
+STDMETHODIMP CRibbonCommands::UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue, 
 											 __out PROPVARIANT* ppropvarNewValue)
 {
     UNREFERENCED_PARAMETER(nCmdID);
@@ -98,7 +98,7 @@ STDMETHODIMP CCommandHandler::UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY ke
 //  PURPOSE: Called by the Ribbon framework when a command is executed by the user.  For example, when
 //           a button is pressed.
 //
-STDMETHODIMP CCommandHandler::Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+STDMETHODIMP CRibbonCommands::Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 									  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
 {
     UNREFERENCED_PARAMETER(pCommandExecutionProperties);

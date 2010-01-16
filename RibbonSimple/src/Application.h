@@ -7,20 +7,8 @@
 #include <wincore.h>
 #include <UIRibbon.h>
 
-//
-//  CLASS: CApplication : IUIApplication
-//
-//  PURPOSE: Implements interface IUIApplication that defines methods
-//           required to manage Framework events.
-//
-//  COMMENTS:
-//
-//    CApplication implements the IUIApplication interface which is required for any ribbon application.
-//    IUIApplication contains callbacks made by the ribbon framework to the application
-//    during various updates like command creation/destruction and view state changes.
-//
-
-class CApplication : public IUIApplication
+// Defines the callback entry-point methods for the Ribbon framework.
+class CRibbonManager : public IUIApplication
 {
 public:
 
@@ -42,13 +30,13 @@ public:
     STDMETHOD(OnDestroyUICommand)(UINT32 commandId, __in UI_COMMANDTYPE typeID,
         __in_opt IUICommandHandler* commandHandler);
 
-	bool InitializeRibbon(HWND hWnd);
-	void CApplication::DestroyRibbon();
+	CWnd* GetFrame() const { return m_pFrame; }
+	void SetFrame(CWnd* pFrame) { m_pFrame = pFrame; }
 
 private:
-    CApplication() : m_cRef(1) , m_pCommandHandler(NULL) {}
+    CRibbonManager() : m_cRef(1) , m_pCommandHandler(NULL) {}
 
-    ~CApplication() 
+    ~CRibbonManager() 
     {
         if (m_pCommandHandler)
         {
@@ -58,9 +46,9 @@ private:
     }
 
     LONG m_cRef;                            // Reference count.
+	CWnd* m_pFrame;
     IUICommandHandler * m_pCommandHandler;  // Generic Command Handler
-	IUIFramework* m_pFramework;
-	IUIApplication* m_pApplication;
+
 };
 
 
