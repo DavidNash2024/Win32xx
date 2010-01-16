@@ -1,11 +1,12 @@
 /////////////////////////////////
-// Application.h
+// RibbonMgr.h
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#ifndef RIBBONMGR_H
+#define RIBBONMGR_H
 
 #include <wincore.h>
 #include <UIRibbon.h>
+#include "RibbonCmd.h"
 
 // Defines the callback entry-point methods for the Ribbon framework.
 class CRibbonManager : public IUIApplication
@@ -47,10 +48,9 @@ private:
 
     LONG m_cRef;                            // Reference count.
 	CWnd* m_pFrame;
-    IUICommandHandler * m_pCommandHandler;  // Generic Command Handler
-
+	CRibbonCommands* m_pCommandHandler;
 };
 
 
-#endif  // APPLICATION_H
+#endif  // RIBBONMGR_H
 

@@ -90,11 +90,13 @@ STDMETHODIMP CRibbonManager::OnCreateUICommand(UINT nCmdID, __in UI_COMMANDTYPE 
 
     if (NULL == m_pCommandHandler)
     {
-        HRESULT hr = CRibbonCommands::CreateInstance(&m_pCommandHandler);
+        HRESULT hr = CRibbonCommands::CreateInstance((IUICommandHandler**)&m_pCommandHandler);
         if (FAILED(hr))
         {
             return hr;
         }
+		
+		m_pCommandHandler->SetFrame(m_pFrame);
     }
 
     return m_pCommandHandler->QueryInterface(IID_PPV_ARGS(ppCommandHandler));

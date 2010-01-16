@@ -13,6 +13,8 @@ class CView : public CWnd
 public:
 	CView() {}
 	virtual ~CView() {}
+	void DestroyRibbon();
+	bool InitializeRibbon();
 
 protected:
 	virtual void OnCreate();

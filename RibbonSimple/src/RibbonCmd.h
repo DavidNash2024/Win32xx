@@ -1,8 +1,8 @@
 /////////////////////////////////
-// CommandHandler.h
+// RibbonCmd.h
 
-#ifndef COMMANDHANDLER_H
-#define COMMANDHANDLER_H
+#ifndef RIBBONCMD_H
+#define RIBBONCMD_H
 
 
 // Defines the methods for gathering Command information and handling Command events from the Ribbon framework.
@@ -30,8 +30,8 @@ public:
         __in_opt const PROPVARIANT* ppropvarValue,
         __in_opt IUISimplePropertySet* pCommandExecutionProperties);
 
-	CWnd* GetFrame() const {return m_pFrame;}
-	void SetFrame(CWnd* pFrame) {m_pFrame = pFrame;}
+	CWnd* GetFrame() const { return m_pFrame; }
+	void SetFrame(CWnd* pFrame) { m_pFrame = pFrame; }
 
 private:
     CRibbonCommands() : m_cRef(1) {}
@@ -39,4 +39,4 @@ private:
     LONG m_cRef;                        // Reference count.
 };
 
-#endif  // COMMANDHANDLER_H
+#endif  // RIBBONCMD_H
