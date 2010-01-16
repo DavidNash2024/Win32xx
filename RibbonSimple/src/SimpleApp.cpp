@@ -4,17 +4,17 @@
 #include "SimpleApp.h"
 
 
-// Definitions for the CSimpleApp class
-CSimpleApp::CSimpleApp()
+// Definitions for the CSimpleRibbonApp class
+CSimpleRibbonApp::CSimpleRibbonApp()
 {
-    // Constructor for CSimpleApp
+    // Constructor for CSimpleRibbonApp
 }
 
-CSimpleApp::~CSimpleApp()
+CSimpleRibbonApp::~CSimpleRibbonApp()
 { 
 }
 
-BOOL CSimpleApp::InitInstance()
+BOOL CSimpleRibbonApp::InitInstance()
 {
     // This function is called automatically when the application starts
 

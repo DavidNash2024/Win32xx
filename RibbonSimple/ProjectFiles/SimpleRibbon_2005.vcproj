@@ -351,15 +351,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\Application.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CommandHandler.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RibbonCmd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RibbonMgr.cpp"
 				>
 			</File>
 			<File
@@ -377,15 +377,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\src\Application.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CommandHandler.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RibbonCmd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RibbonMgr.h"
 				>
 			</File>
 			<File
@@ -416,7 +416,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Building Ribbon.xml"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
@@ -426,7 +426,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Building Ribbon.xml"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>

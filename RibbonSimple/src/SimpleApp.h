@@ -8,11 +8,11 @@
 
 
 // Declaration of the CWinApp class
-class CSimpleApp : public CWinApp
+class CSimpleRibbonApp : public CWinApp
 {
 public:
-    CSimpleApp();
-    virtual ~CSimpleApp();
+    CSimpleRibbonApp();
+    virtual ~CSimpleRibbonApp();
 	virtual BOOL InitInstance();
 	CView& GetView() { return m_View; }
 
@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CSimpleApp object
-inline CSimpleApp& GetSimpleApp() { return *((CSimpleApp*)GetApp()); }
+// returns a reference to the CSimpleRibbonApp object
+inline CSimpleRibbonApp& GetSimpleApp() { return *((CSimpleRibbonApp*)GetApp()); }
 
 
 #endif

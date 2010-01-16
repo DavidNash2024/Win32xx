@@ -6,7 +6,7 @@
 
 
 #include "wincore.h"
-#include "Application.h"
+#include "RibbonMgr.h"
 
 class CView : public CWnd
 {

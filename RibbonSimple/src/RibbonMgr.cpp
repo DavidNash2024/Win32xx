@@ -4,8 +4,8 @@
 #include <UIRibbon.h>
 #include <UIRibbonPropertyHelpers.h>
 
-#include "Application.h"
-#include "CommandHandler.h"
+#include "RibbonMgr.h"
+#include "RibbonCmd.h"
 
 // Static method to create an instance of the object.
 __checkReturn HRESULT CRibbonManager::CreateInstance(__deref_out IUIApplication **ppApplication)

@@ -3,7 +3,7 @@
 
 #include <wincore.h>
 #include <UIRibbon.h>
-#include "CommandHandler.h"
+#include "RibbonCmd.h"
 #include "RibbonUI.h"
 
 // Static method to create an instance of the object.
