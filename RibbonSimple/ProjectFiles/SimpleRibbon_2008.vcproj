@@ -47,7 +47,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(IntDir);../../Win32++/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USE_RIBBON_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -126,7 +126,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../../Win32++/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USE_RIBBON_"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -353,11 +353,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\RibbonCmd.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\RibbonMgr.cpp"
+				RelativePath="..\src\Ribbon.cpp"
 				>
 			</File>
 			<File
@@ -379,11 +375,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\RibbonCmd.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\RibbonMgr.h"
+				RelativePath="..\src\Ribbon.h"
 				>
 			</File>
 			<File
@@ -402,6 +394,14 @@
 			>
 			<File
 				RelativePath="..\src\SimpleRibbon.rc"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Win32++"
+			>
+			<File
+				RelativePath="..\..\Win32++\include\wincore.h"
 				>
 			</File>
 		</Filter>

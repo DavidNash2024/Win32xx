@@ -3,7 +3,7 @@
 
 #include "View.h"
 #include "resource.h"
-
+#include "RibbonUI.h"
 
 // Definitions for the CView class
 void CView::DestroyRibbon()
@@ -15,19 +15,20 @@ void CView::DestroyRibbon()
 		m_pRibbonFramework = NULL;
 	}
 
-	if (m_pRibbon)
+	if (m_pRibbonApp)
 	{
-		m_pRibbon->Release();
-		m_pRibbon = NULL;
+		m_pRibbonApp->Release();
+		m_pRibbonApp = NULL;
 	}
 }
-bool CView::InitializeRibbon()
+bool CView::CreateRibbon()
 {
+	
 	HRESULT hr = CoInitialize(NULL);
 	if (FAILED(hr))
 	{
 		return false;
-	} 
+	}
 
 	// Instantiate the Ribbon framework object.
 	hr = CoCreateInstance(CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pRibbonFramework));
@@ -37,14 +38,16 @@ bool CView::InitializeRibbon()
 	}   
 
 	// Create the IUIApplication object.
-	hr = CRibbonManager::CreateInstance((IUIApplication**)&m_pRibbon);
+	hr = CRibbonApplication::CreateInstance((IUIApplication**)&m_pRibbonApp);
 	if (FAILED(hr))
 	{
 		return false;
-	} 
+	}
+
+	m_pRibbonApp->SetFrame(this);
 
 	// Connect the host application to the Ribbon framework.
-	hr = m_pRibbonFramework->Initialize(m_hWnd, m_pRibbon);
+	hr = m_pRibbonFramework->Initialize(m_hWnd, m_pRibbonApp);
 	if (FAILED(hr))
 	{
 		return false;
@@ -56,8 +59,6 @@ bool CView::InitializeRibbon()
 	{
 		return false;
 	}
-
-	m_pRibbon->SetFrame(this);
 
 	return true;
 }
@@ -74,11 +75,15 @@ void CView::OnCreate()
 	SetIconSmall(IDI_SMALL);
 	SetIconLarge(IDI_SIMPLERIBBON);
 
+	CreateRibbon();
+
 	TRACE(_T("OnCreate\n"));
 }
 
 void CView::OnDestroy()
 {
+	DestroyRibbon();
+
 	// End the application when the window is destroyed
 	::PostQuitMessage(0);
 }
@@ -89,6 +94,52 @@ void CView::OnInitialUpdate()
 	// Tasks which are to be done after the window is created go here.
 
 	TRACE(_T("OnInitialUpdate\n"));
+}
+
+STDMETHODIMP CView::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+											  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
+{
+	UNREFERENCED_PARAMETER(pCommandExecutionProperties);
+	UNREFERENCED_PARAMETER(ppropvarValue);
+	UNREFERENCED_PARAMETER(key);
+	UNREFERENCED_PARAMETER(verb);
+
+	HRESULT hr = S_OK;
+	switch(nCmdID)
+	{
+	case cmdButton1:
+		TRACE(_T("Button 1\n"));
+		break;
+	case cmdButton2:
+		TRACE(_T("Button 2\n"));
+		break;
+	case cmdButton3:
+		TRACE(_T("Button 3\n"));
+		break;
+	case cmdButton4:
+		TRACE(_T("Button 4\n"));
+		break;
+	case cmdButton5:
+		TRACE(_T("Button 5\n"));
+		break;
+	case cmdButton6:
+		TRACE(_T("Button 6\n"));
+		break;
+	case cmdToggleButton1:
+		TRACE(_T("Toggle Button 1\n"));
+		break;
+	case cmdToggleButton2:
+		TRACE(_T("Toggle Button 2\n"));
+		break;
+	case IDC_CMD_EXIT:
+		TRACE(_T("Exit button\n"));
+		break;
+	default:
+		TRACE(_T("Unknown button\n"));
+		break;
+	}
+
+	return hr; 
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -110,17 +161,14 @@ void CView::PreCreate(CREATESTRUCT& cs)
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    switch (uMsg)
-    {
-    case WM_CREATE:
-		InitializeRibbon();
-        break;
-    case WM_DESTROY:
-		DestroyRibbon();
-        PostQuitMessage(0);
-        break;
-    }
-	
+	switch (uMsg)
+	{
+	case WM_DESTROY:
+		OnDestroy();
+		break;
+	}
+
+	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 

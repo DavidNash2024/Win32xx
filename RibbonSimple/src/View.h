@@ -4,9 +4,9 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-
 #include "wincore.h"
-#include "RibbonMgr.h"
+#include "Ribbon.h"
+
 
 class CView : public CWnd
 {
@@ -14,7 +14,10 @@ public:
 	CView() {}
 	virtual ~CView() {}
 	void DestroyRibbon();
-	bool InitializeRibbon();
+	bool CreateRibbon();
+
+	virtual STDMETHODIMP OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+											  __in_opt IUISimplePropertySet* pCommandExecutionProperties);
 
 protected:
 	virtual void OnCreate();
@@ -24,7 +27,7 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CRibbonManager* m_pRibbon;
+	CRibbonApplication* m_pRibbonApp;
 	IUIFramework* m_pRibbonFramework;
 };
 

@@ -96,7 +96,10 @@ namespace Win32xx
 
 		// Can't override these functions
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		
+	#ifndef _WIN32_WCE
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
+	#endif
 
 	private:
 		CDialog(const CDialog&);				// Disable copy construction
@@ -280,7 +283,10 @@ namespace Win32xx
 
 			// Store the CWnd pointer in Thread Local Storage
 			pTLSData->pCWnd = this;
+
+	#ifndef _WIN32_WCE
 			pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+    #endif
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 
@@ -297,7 +303,11 @@ namespace Win32xx
 			
 			// Tidy up
 			m_hWnd = NULL;
+			
+	#ifndef _WIN32_WCE
 			::UnhookWindowsHookEx(pTLSData->hHook);
+	#endif
+
 			pTLSData->pCWnd = NULL;
 
 			if (nResult == -1)
@@ -453,6 +463,7 @@ namespace Win32xx
 
 	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
 
+#ifndef _WIN32_WCE
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		// Used by Modal Dialogs to PreTranslate Messages
@@ -478,6 +489,7 @@ namespace Win32xx
 		
 		return ::CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
 	}
+#endif
 
 } // namespace Win32xx
 

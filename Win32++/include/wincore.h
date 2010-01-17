@@ -109,6 +109,9 @@
 #include <shlwapi.h>
 #include <assert.h>
 
+#ifdef _USE_RIBBON_
+  #include <UIRibbon.h>
+#endif  
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -444,6 +447,12 @@ namespace Win32xx
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		virtual BOOL IsToolbar() const	 { return FALSE; }
 		virtual LPCTSTR LoadString(UINT nID);
+
+#ifdef _USE_RIBBON_
+		virtual STDMETHODIMP OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+											  __in_opt IUISimplePropertySet* pCommandExecutionProperties);
+#endif
+
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -1728,6 +1737,22 @@ namespace Win32xx
 		// Override this function to modify the behaviour of menu items,
 		// such as adding or removing checkmarks
 	}
+
+#ifdef _USE_RIBBON_
+
+	inline STDMETHODIMP CWnd::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+			  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
+	{
+	    UNREFERENCED_PARAMETER(nCmdID);
+		UNREFERENCED_PARAMETER(pCommandExecutionProperties);
+		UNREFERENCED_PARAMETER(ppropvarValue);
+		UNREFERENCED_PARAMETER(key);
+		UNREFERENCED_PARAMETER(verb);
+
+		return S_OK; 
+	}
+
+#endif
 
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters

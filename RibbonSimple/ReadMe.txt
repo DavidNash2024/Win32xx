@@ -16,4 +16,4 @@ To compile Ribbon.xml, specify it's custom build as follows:
 Command Line  uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc
 Outputs       Ribbon.bml;RibbonUI.rc;RibbonUI.h 
 
-
+The _USE_RIBBON_ macro must be defined.
