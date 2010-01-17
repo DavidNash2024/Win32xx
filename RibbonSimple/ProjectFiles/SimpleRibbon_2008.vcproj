@@ -353,10 +353,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Ribbon.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\SimpleApp.cpp"
 				>
 			</File>
@@ -400,6 +396,10 @@
 		<Filter
 			Name="Win32++"
 			>
+			<File
+				RelativePath="..\..\Win32++\include\ribbon.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\Win32++\include\wincore.h"
 				>

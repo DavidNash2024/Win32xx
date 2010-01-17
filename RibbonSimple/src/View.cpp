@@ -17,37 +17,23 @@ void CView::DestroyRibbon()
 
 	if (m_pRibbonApp)
 	{
-		m_pRibbonApp->Release();
-		m_pRibbonApp = NULL;
+	//	m_pRibbonApp->Release();
+	//	m_pRibbonApp = NULL;
+		delete m_pRibbonApp;
 	}
 }
 bool CView::CreateRibbon()
 {
 	
-	HRESULT hr = CoInitialize(NULL);
-	if (FAILED(hr))
-	{
-		return false;
-	}
+	::CoInitialize(NULL);
 
 	// Instantiate the Ribbon framework object.
-	hr = CoCreateInstance(CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pRibbonFramework));
-	if (FAILED(hr))
-	{
-		return false;
-	}   
-
-	// Create the IUIApplication object.
-	hr = CRibbonApplication::CreateInstance((IUIApplication**)&m_pRibbonApp);
-	if (FAILED(hr))
-	{
-		return false;
-	}
-
+	::CoCreateInstance(CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pRibbonFramework));
+	m_pRibbonApp = new CRibbonApplication();
 	m_pRibbonApp->SetFrame(this);
 
 	// Connect the host application to the Ribbon framework.
-	hr = m_pRibbonFramework->Initialize(m_hWnd, m_pRibbonApp);
+	HRESULT hr = m_pRibbonFramework->Initialize(m_hWnd, m_pRibbonApp);
 	if (FAILED(hr))
 	{
 		return false;
@@ -96,7 +82,7 @@ void CView::OnInitialUpdate()
 	TRACE(_T("OnInitialUpdate\n"));
 }
 
-STDMETHODIMP CView::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+HRESULT CView::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 											  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
 {
 	UNREFERENCED_PARAMETER(pCommandExecutionProperties);

@@ -1,5 +1,5 @@
 // Win32++  Version 6.8 alpha
-// Released: ?th November, 2010 by:
+// Released: ?th February, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

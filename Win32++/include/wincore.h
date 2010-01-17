@@ -1,5 +1,5 @@
 // Win32++  Version 6.8 alpha
-// Released: ?th November, 2010 by:
+// Released: ?th February, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -449,7 +449,7 @@ namespace Win32xx
 		virtual LPCTSTR LoadString(UINT nID);
 
 #ifdef _USE_RIBBON_
-		virtual STDMETHODIMP OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+		virtual HRESULT OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 											  __in_opt IUISimplePropertySet* pCommandExecutionProperties);
 #endif
 
@@ -1740,7 +1740,7 @@ namespace Win32xx
 
 #ifdef _USE_RIBBON_
 
-	inline STDMETHODIMP CWnd::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+	inline HRESULT CWnd::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 			  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
 	{
 	    UNREFERENCED_PARAMETER(nCmdID);

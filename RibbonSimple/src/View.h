@@ -4,8 +4,8 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "wincore.h"
-#include "Ribbon.h"
+#include <wincore.h>
+#include <ribbon.h>
 
 
 class CView : public CWnd
@@ -16,7 +16,7 @@ public:
 	void DestroyRibbon();
 	bool CreateRibbon();
 
-	virtual STDMETHODIMP OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
+	virtual HRESULT OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 											  __in_opt IUISimplePropertySet* pCommandExecutionProperties);
 
 protected:

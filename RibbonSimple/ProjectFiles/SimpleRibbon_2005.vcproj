@@ -355,10 +355,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Ribbon.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\SimpleApp.cpp"
 				>
 			</File>
