@@ -109,10 +109,6 @@
 #include <shlwapi.h>
 #include <assert.h>
 
-#ifdef _USE_RIBBON_
-  #include <UIRibbon.h>
-#endif  
-
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
   #define GetWindowLongPtr   GetWindowLong
@@ -185,7 +181,6 @@ namespace Win32xx {}
   #define WM_PARENTNOTIFY 0x0210
 #endif
 
-
 // Define our own MIN and MAX macros
 // this avoids inconcistancies with Dev-C++ and other compilers, and
 // avoids conflicts between typical min/max macros and std::min/std::max
@@ -221,32 +216,27 @@ namespace Win32xx
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
-
-  // Required for WinCE
-  #ifndef lstrcpyn
+	
+  #ifndef lstrcpyn			// Required for WinCE
 	LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength);
   #endif // !lstrcpyn
 
 	tString CharToTString(const char* s);
 	std::string TCharToString(LPCTSTR t);
 
-
-
-	enum Constants
+	enum Constants			// Defines the maximum size for TCHAR strings
 	{
 		MAX_MENU_STRING = 80,
 		MAX_STRING_SIZE = 255,
 	};
-
-	// The comparison function object used by CWinApp::m_mapHWND
-	struct CompareHWND
+	
+	struct CompareHWND		// The comparison function object used by CWinApp::m_mapHWND
 	{
 		bool operator()(HWND const a, const HWND b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	// Used for Thread Local Storage (TLS)
-	struct TLSData
+	struct TLSData			// Used for Thread Local Storage (TLS)
 	{
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
@@ -371,8 +361,6 @@ namespace Win32xx
 
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
-	//
-
 	// This class is used for thread synchronisation
 	class CCriticalSection
 	{
@@ -418,7 +406,7 @@ namespace Win32xx
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
 
-		// These are the functions can be overridden
+		// These virtual functions can be overridden
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		virtual void CenterWindow() const;
@@ -447,12 +435,7 @@ namespace Win32xx
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		virtual BOOL IsToolbar() const	 { return FALSE; }
 		virtual LPCTSTR LoadString(UINT nID);
-
-#ifdef _USE_RIBBON_
-		virtual HRESULT OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
-											  __in_opt IUISimplePropertySet* pCommandExecutionProperties);
-#endif
-
+		virtual HRESULT RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -1738,11 +1721,18 @@ namespace Win32xx
 		// such as adding or removing checkmarks
 	}
 
-#ifdef _USE_RIBBON_
-
-	inline HRESULT CWnd::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
-			  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
+	inline HRESULT CWnd::RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties)
 	{
+		// Use the following casts for void pointers:
+		//   const PROPERTYKEY* key
+		//   const PROPVARIANT* ppropvarValue
+		//   IUISimplePropertySet* pCommandExecutionProperties
+
+		// Possible values for verb
+		//   UI_EXECUTIONVERB_EXECUTE
+		//   UI_EXECUTIONVERB_PREVIEW
+		//   UI_EXECUTIONVERB_CANCELPREVIEW
+
 	    UNREFERENCED_PARAMETER(nCmdID);
 		UNREFERENCED_PARAMETER(pCommandExecutionProperties);
 		UNREFERENCED_PARAMETER(ppropvarValue);
@@ -1751,8 +1741,6 @@ namespace Win32xx
 
 		return S_OK; 
 	}
-
-#endif
 
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters

@@ -15,9 +15,7 @@ public:
 	virtual ~CView() {}
 	void DestroyRibbon();
 	bool CreateRibbon();
-
-	virtual HRESULT OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
-											  __in_opt IUISimplePropertySet* pCommandExecutionProperties);
+	virtual HRESULT RibbonExecute(UINT nCmdID, UINT verb, LPCVOID key, LPCVOID ppropvarValue, LPVOID pCommandExecutionProperties);
 
 protected:
 	virtual void OnCreate();

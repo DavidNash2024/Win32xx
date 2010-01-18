@@ -299,8 +299,7 @@ namespace Win32xx
 	inline STDMETHODIMP CRibbonCommandHandler::Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 										  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
 	{
-		// Note: _USE_RIBBON_ must be defined to use this function
-		return m_pFrame->OnRibbonExecute(nCmdID, verb, key, ppropvarValue, pCommandExecutionProperties);
+		return m_pFrame->RibbonExecute(nCmdID, verb, key, ppropvarValue, pCommandExecutionProperties);
 	}
 
 }

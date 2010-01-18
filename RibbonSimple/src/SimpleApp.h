@@ -7,7 +7,7 @@
 #include "View.h"
 
 
-// Declaration of the CWinApp class
+// Declaration of the CSimpleRibbonApp class
 class CSimpleRibbonApp : public CWinApp
 {
 public:
