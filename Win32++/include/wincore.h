@@ -436,6 +436,8 @@ namespace Win32xx
 		virtual BOOL IsToolbar() const	 { return FALSE; }
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual HRESULT RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties);
+		virtual HRESULT RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode);
+		virtual HRESULT RibbonUpdateProperty(UINT nCmdID, UINT key, const void* ppropvarCurrentValue, void* ppropvarNewValue);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -1719,6 +1721,64 @@ namespace Win32xx
 	{
 		// Override this function to modify the behaviour of menu items,
 		// such as adding or removing checkmarks
+	}
+
+	inline HRESULT CWnd::RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode)
+	{
+		UNREFERENCED_PARAMETER(viewId);
+		UNREFERENCED_PARAMETER(typeId);
+		UNREFERENCED_PARAMETER(pView);
+		UNREFERENCED_PARAMETER(verb);
+		UNREFERENCED_PARAMETER(uReasonCode);
+
+		HRESULT hr = E_NOTIMPL;
+
+/*		// Checks to see if the view that was changed was a Ribbon view.
+		if (UI_VIEWTYPE_RIBBON == typeId)
+		{
+			switch (verb)
+			{           
+				// The view was newly created.
+			case UI_VIEWVERB_CREATE:
+				hr = S_OK;
+				break;
+
+				// The view has been resized.  For the Ribbon view, the application should
+				// call GetHeight to determine the height of the ribbon.
+			case UI_VIEWVERB_SIZE:
+				{
+					IUIRibbon* pRibbon = NULL;
+					UINT uRibbonHeight;
+
+					hr = pView->QueryInterface(IID_PPV_ARGS(&pRibbon));
+					if (SUCCEEDED(hr))
+					{
+						// Call to the framework to determine the desired height of the Ribbon.
+						hr = pRibbon->GetHeight(&uRibbonHeight);
+						pRibbon->Release();
+						// Use the ribbon height to position controls in the client area of the window.
+					}
+				}
+				break;
+				// The view was destroyed.
+			case UI_VIEWVERB_DESTROY:
+				hr = S_OK;
+				break;
+			}
+		} */ 
+
+		return hr; 
+	}
+
+		// Called by the Ribbon framework when a command property (PKEY) needs to be updated.
+	inline HRESULT CWnd::RibbonUpdateProperty(UINT nCmdID, UINT key, const void* ppropvarCurrentValue, void* ppropvarNewValue)
+	{
+		UNREFERENCED_PARAMETER(nCmdID);
+		UNREFERENCED_PARAMETER(key);
+		UNREFERENCED_PARAMETER(ppropvarCurrentValue);
+		UNREFERENCED_PARAMETER(ppropvarNewValue);
+
+		return E_NOTIMPL;
 	}
 
 	inline HRESULT CWnd::RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties)

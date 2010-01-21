@@ -55,11 +55,7 @@ namespace Win32xx
 	{
 	public:
 		CRibbonCommandHandler() : m_cRef(1), m_pFrame(NULL) {}
-		~CRibbonCommandHandler() 
-		{
-			// Reference count must be 1 or we have a leak!
-			assert(m_cRef == 1);
-		}
+		~CRibbonCommandHandler(); 
 
 		// IUnknown methods.
 		STDMETHODIMP_(ULONG) AddRef();
@@ -91,17 +87,7 @@ namespace Win32xx
 	{
 	public:
 		CRibbon() : m_cRef(1), m_pCommandHandler(NULL), m_pRibbonFramework(NULL), m_pFrame(NULL) {}
-
-		~CRibbon() 
-		{
-			// Reference count must be 1 or we have a leak!
-			assert(m_cRef == 1);
-			
-			if (m_pCommandHandler)
-			{
-				delete m_pCommandHandler;
-			}
-		}
+		~CRibbon(); 
 
 		// IUnknown methods.
 		STDMETHOD_(ULONG, AddRef());
@@ -140,8 +126,19 @@ namespace Win32xx
 namespace Win32xx
 {
 	//////////////////////////////////////////////
-	// Declaration of the CRibbon class
+	// Definitions for the CRibbon class
 	//
+
+	inline CRibbon::~CRibbon() 
+		{
+			// Reference count must be 1 or we have a leak!
+			assert(m_cRef == 1);
+			
+			if (m_pCommandHandler)
+			{
+				delete m_pCommandHandler;
+			}
+		}
 
 	// IUnknown method implementations.
 	inline STDMETHODIMP_(ULONG) CRibbon::AddRef()
@@ -195,46 +192,13 @@ namespace Win32xx
 	inline STDMETHODIMP CRibbon::OnViewChanged(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView, 
 											 UI_VIEWVERB verb, INT uReasonCode)
 	{
-		UNREFERENCED_PARAMETER(uReasonCode);
-		UNREFERENCED_PARAMETER(viewId);
-
-		HRESULT hr = E_NOTIMPL;
-
-		// Checks to see if the view that was changed was a Ribbon view.
-		if (UI_VIEWTYPE_RIBBON == typeId)
+		if (!m_pFrame)
 		{
-			switch (verb)
-			{           
-				// The view was newly created.
-			case UI_VIEWVERB_CREATE:
-				hr = S_OK;
-				break;
-
-				// The view has been resized.  For the Ribbon view, the application should
-				// call GetHeight to determine the height of the ribbon.
-			case UI_VIEWVERB_SIZE:
-				{
-					IUIRibbon* pRibbon = NULL;
-					UINT uRibbonHeight;
-
-					hr = pView->QueryInterface(IID_PPV_ARGS(&pRibbon));
-					if (SUCCEEDED(hr))
-					{
-						// Call to the framework to determine the desired height of the Ribbon.
-						hr = pRibbon->GetHeight(&uRibbonHeight);
-						pRibbon->Release();
-						// Use the ribbon height to position controls in the client area of the window.
-					}
-				}
-				break;
-				// The view was destroyed.
-			case UI_VIEWVERB_DESTROY:
-				hr = S_OK;
-				break;
-			}
+			TRACE(_T("CRibbonCommandHandler m_pFrame not set\n"));
+			return E_NOTIMPL;
 		}
 
-		return hr;
+		return GetFrame()->RibbonOnViewChanged(viewId, typeId, pView, verb, uReasonCode);
 	}
 
 	// Called by the Ribbon framework for each command at the time of ribbon destruction.
@@ -287,12 +251,24 @@ namespace Win32xx
 
 	
 	/////////////////////////////////////////////////
-	// Declaration of the CRibbonCommandHandler class
+	// Definitions for the CRibbonCommandHandler class
 	//
+
+	inline CRibbonCommandHandler::~CRibbonCommandHandler()
+	{
+		// Reference count must be 1 or we have a leak!
+		assert(m_cRef == 1);
+	}
 
 	// IUnknown method implementations.
 	inline STDMETHODIMP_(ULONG) CRibbonCommandHandler::AddRef()
 	{
+		if (!m_pFrame)
+		{
+			TRACE(_T("CRibbonCommandHandler m_pFrame not set\n"));
+			return 0L;
+		}
+		
 		return InterlockedIncrement(&m_cRef);
 	}
 

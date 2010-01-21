@@ -21,7 +21,7 @@ void CView::OnCreate()
 	SetIconSmall(IDI_SMALL);
 	SetIconLarge(IDI_SIMPLERIBBON);
 
-	if (m_RibbonApp.CreateRibbon(this))
+	if (m_Ribbon.CreateRibbon(this))
 		TRACE(_T("Ribbon Created Succesfully\n"));
 	else
 		TRACE(_T("Failed to create ribbon\n"));
@@ -30,7 +30,7 @@ void CView::OnCreate()
 
 void CView::OnDestroy()
 {
-	m_RibbonApp.DestroyRibbon();
+	m_Ribbon.DestroyRibbon();
 
 	// End the application when the window is destroyed
 	::PostQuitMessage(0);
@@ -42,6 +42,24 @@ void CView::OnInitialUpdate()
 	// Tasks which are to be done after the window is created go here.
 
 	TRACE(_T("OnInitialUpdate\n"));
+}
+
+void CView::OnPaint(HDC hDC)
+{
+	// OnPaint is called automatically whenever a part of the
+	// window needs to be repainted.
+
+	// Centre some text in our view window
+	CRect r = GetClientRect();
+	r.top += GetRibbonHeight();
+	::DrawText(hDC, _T("Simple Ribon Demo"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+}
+
+void CView::OnSize()
+{
+	CRect r = GetClientRect();
+	r.top += GetRibbonHeight();
+	InvalidateRect(&r);
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -61,8 +79,6 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.lpszName = LoadString(IDS_APP_TITLE);// Window title
 }
 
-//HRESULT CView::OnRibbonExecute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
-//											  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
 HRESULT CView::RibbonExecute(UINT nCmdID, UINT verb, LPCVOID key, LPCVOID ppropvarValue, LPVOID pCommandExecutionProperties)
 {
 	UNREFERENCED_PARAMETER(pCommandExecutionProperties);
@@ -113,6 +129,51 @@ HRESULT CView::RibbonExecute(UINT nCmdID, UINT verb, LPCVOID key, LPCVOID ppropv
 	return hr; 
 }
 
+HRESULT CView::RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode)
+{
+		UNREFERENCED_PARAMETER(viewId);
+		UNREFERENCED_PARAMETER(uReasonCode);
+
+		HRESULT hr = E_NOTIMPL;
+
+		// Checks to see if the view that was changed was a Ribbon view.
+		if (UI_VIEWTYPE_RIBBON == typeId)
+		{
+			switch (verb)
+			{           
+				// The view was newly created.
+			case UI_VIEWVERB_CREATE:
+				hr = S_OK;
+				break;
+
+				// The view has been resized.  For the Ribbon view, the application should
+				// call GetHeight to determine the height of the ribbon.
+			case UI_VIEWVERB_SIZE:
+				{
+					IUIRibbon* pRibbon = NULL;
+					UINT uRibbonHeight;
+
+					hr = ((IUnknown*)pView)->QueryInterface(IID_PPV_ARGS(&pRibbon));
+					if (SUCCEEDED(hr))
+					{
+						// Call to the framework to determine the desired height of the Ribbon.
+						hr = pRibbon->GetHeight(&uRibbonHeight);
+						m_uRibbonHeight = uRibbonHeight;
+						pRibbon->Release();
+						// Use the ribbon height to position controls in the client area of the window.
+					}
+				}
+				break;
+				// The view was destroyed.
+			case UI_VIEWVERB_DESTROY:
+				hr = S_OK;
+				break;
+			}
+		}  
+
+		return hr; 
+}
+
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
@@ -120,6 +181,9 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		OnDestroy();
 		break;
+	case WM_SIZE:
+		OnSize();
+		break;	// and also do default processing for this message
 	}
 
 	// pass unhandled messages on for default processing
