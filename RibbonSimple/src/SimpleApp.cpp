@@ -1,6 +1,7 @@
 ////////////////////////////////////////
 // SimpleApp.cpp
 
+#include "stdafx.h"
 #include "SimpleApp.h"
 
 

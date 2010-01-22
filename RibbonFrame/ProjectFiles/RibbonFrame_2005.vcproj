@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="SimpleRibbon"
+	Name="RibbonFrame"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Release/RibbonFrame_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -81,7 +81,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Release/RibbonFrame_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Debug/RibbonFrame_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -177,7 +177,7 @@
 				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Debug/RibbonFrame_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -234,7 +234,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Debug/RibbonFrame_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -272,7 +272,7 @@
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Debug/RibbonFrame_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -329,7 +329,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Release/RibbonFrame_2005.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -368,7 +368,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Release/RibbonFrame_2005.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -410,11 +410,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleApp.cpp"
+				RelativePath="..\src\Mainfrm.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleRibbon.rc"
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RibbonApp.cpp"
 				>
 			</File>
 			<File
@@ -431,11 +435,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath="..\src\Mainfrm.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleApp.h"
+				RelativePath="..\src\RibbonApp.h"
 				>
 			</File>
 			<File
@@ -524,7 +532,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
@@ -533,7 +541,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
@@ -542,7 +550,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
@@ -551,7 +559,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>

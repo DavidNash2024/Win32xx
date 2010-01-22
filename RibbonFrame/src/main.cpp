@@ -1,12 +1,12 @@
 
 #include "stdafx.h"
-#include "SimpleApp.h"
+#include "RibbonApp.h"
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// Start Win32++
-    CSimpleRibbonApp MyApp;
+    CRibbonFrameApp MyApp;
 
 	// Run the application
     return MyApp.Run();

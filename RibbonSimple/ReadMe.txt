@@ -2,8 +2,8 @@ SimpleRibbon Example
 ====================
 This project demonstrates how to add a ribbon to a simple window. The 
 application uses TRACE to send text to the output window when a ribbon button
-is pressed. It also detects changes to the ribbon height and adjusts the view
-window accordingly.
+is pressed. It also detects changes to the ribbon height and adjusts the 
+view window accordingly.
 
 The ribbon buttons are defined in the Ribbon.xml. This file must be compiled 
 using uuic. To compile Ribbon.xml, add it to the set of files to be compiled,

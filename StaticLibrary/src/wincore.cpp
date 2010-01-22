@@ -1,12 +1,12 @@
-// Win32++  Version 6.7
-// Released: 6th November, 2009 by:
+// Win32++  Version 6.8 alpha
+// Released: ?th February, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2009  David Nash
+// Copyright (c) 2005-2010  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -34,9 +34,7 @@
 //
 ////////////////////////////////////////////////////////
 
-
 #include "wincore.h"
-
 
 namespace Win32xx
 {
@@ -106,8 +104,9 @@ namespace Win32xx
 		//  2501     Windows XP
 		//  2502     Windows Server 2003
 		//  2600     Windows Vista and Windows Server 2008
+		//  2601     Windows 7
 
-		return nVersion;
+		return nVersion; 
 	}
 
 	int GetComCtlVersion()
@@ -269,11 +268,10 @@ namespace Win32xx
 
 		char* c = new char[len + 1];
 		if (NULL == c) throw std::bad_alloc();
-		c[0] = '\0';
-
+		
+		ZeroMemory(c, len +1);
 		wcstombs(c, t, len);
-		c[len] = '\0';
-		str = c;
+		str = c;	
 		delete []c;
   #else
 		str = t;
@@ -533,6 +531,18 @@ namespace Win32xx
 			pWinApp = pThis;
 
 		return pWinApp;
+	}
+
+	void CWinApp::SetResourceHandle(HINSTANCE hResource)
+	{
+		// This function can be used to load a resource dll.
+		// A resource dll can be used to define resources in different languages.
+		// To use this function, place code like this in InitInstance
+		//
+		// HINSTANCE hResource = LoadLibrary(_T("MyResourceDLL.dll"));
+		// SetResourceHandle(hResource);
+	
+		m_hResource = hResource;
 	}
 
 	TLSData* CWinApp::SetTlsIndex()
@@ -1138,6 +1148,85 @@ namespace Win32xx
 	{
 		// Override this function to modify the behaviour of menu items,
 		// such as adding or removing checkmarks
+	}
+
+	HRESULT CWnd::RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode)
+	{
+		UNREFERENCED_PARAMETER(viewId);
+		UNREFERENCED_PARAMETER(typeId);
+		UNREFERENCED_PARAMETER(pView);
+		UNREFERENCED_PARAMETER(verb);
+		UNREFERENCED_PARAMETER(uReasonCode);
+
+		HRESULT hr = E_NOTIMPL;
+
+/*		// Checks to see if the view that was changed was a Ribbon view.
+		if (UI_VIEWTYPE_RIBBON == typeId)
+		{
+			switch (verb)
+			{           
+				// The view was newly created.
+			case UI_VIEWVERB_CREATE:
+				hr = S_OK;
+				break;
+
+				// The view has been resized.  For the Ribbon view, the application should
+				// call GetHeight to determine the height of the ribbon.
+			case UI_VIEWVERB_SIZE:
+				{
+					IUIRibbon* pRibbon = NULL;
+					UINT uRibbonHeight;
+
+					hr = pView->QueryInterface(IID_PPV_ARGS(&pRibbon));
+					if (SUCCEEDED(hr))
+					{
+						// Call to the framework to determine the desired height of the Ribbon.
+						hr = pRibbon->GetHeight(&uRibbonHeight);
+						pRibbon->Release();
+						// Use the ribbon height to position controls in the client area of the window.
+					}
+				}
+				break;
+				// The view was destroyed.
+			case UI_VIEWVERB_DESTROY:
+				hr = S_OK;
+				break;
+			}
+		} */ 
+
+		return hr; 
+	}
+
+		// Called by the Ribbon framework when a command property (PKEY) needs to be updated.
+	HRESULT CWnd::RibbonUpdateProperty(UINT nCmdID, UINT key, const void* ppropvarCurrentValue, void* ppropvarNewValue)
+	{
+		UNREFERENCED_PARAMETER(nCmdID);
+		UNREFERENCED_PARAMETER(key);
+		UNREFERENCED_PARAMETER(ppropvarCurrentValue);
+		UNREFERENCED_PARAMETER(ppropvarNewValue);
+
+		return E_NOTIMPL;
+	}
+
+	HRESULT CWnd::RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties)
+	{
+		// Use the following casts for void pointers:
+		//   const PROPERTYKEY* key
+		//   const PROPVARIANT* ppropvarValue
+		//   IUISimplePropertySet* pCommandExecutionProperties
+
+		// Possible values for verb
+		//   UI_EXECUTIONVERB_EXECUTE
+		//   UI_EXECUTIONVERB_PREVIEW
+		//   UI_EXECUTIONVERB_CANCELPREVIEW
+
+	    UNREFERENCED_PARAMETER(nCmdID);
+		UNREFERENCED_PARAMETER(pCommandExecutionProperties);
+		UNREFERENCED_PARAMETER(ppropvarValue);
+		UNREFERENCED_PARAMETER(key);
+		UNREFERENCED_PARAMETER(verb);
+
+		return S_OK; 
 	}
 
 	void CWnd::PreCreate(CREATESTRUCT& cs)

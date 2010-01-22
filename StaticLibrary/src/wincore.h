@@ -1,12 +1,12 @@
-// Win32++  Version 6.7
-// Released: 6th November, 2009 by:
+// Win32++  Version 6.8 alpha
+// Released: ?th February, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2009  David Nash
+// Copyright (c) 2005-2010  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -109,7 +109,6 @@
 #include <shlwapi.h>
 #include <assert.h>
 
-
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
   #define GetWindowLongPtr   GetWindowLong
@@ -154,6 +153,9 @@
 #define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
 #define UWM_UPDATE_COMMAND  (WM_APP + 14)   // Message - sent before a menu is displayed. Used by OnUpdate
 #define UWM_DOCK_ACTIVATED  (WM_APP + 15)   // Message - sent to dock ancestor when a docker is activated or deactivated.
+#define UWM_GETMENUTHEME    (WM_APP + 16)	// Message - returns a pointer to ThemeMenu
+#define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to ThemeRebar
+#define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ThemeToolbar
 
 
 // Automatically include the Win32xx namespace
@@ -178,7 +180,6 @@ namespace Win32xx {}
 #ifndef WM_PARENTNOTIFY
   #define WM_PARENTNOTIFY 0x0210
 #endif
-
 
 // Define our own MIN and MAX macros
 // this avoids inconcistancies with Dev-C++ and other compilers, and
@@ -215,36 +216,31 @@ namespace Win32xx
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
-
-  // Required for WinCE
-  #ifndef lstrcpyn
+	
+  #ifndef lstrcpyn			// Required for WinCE
 	LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength);
   #endif // !lstrcpyn
 
 	tString CharToTString(const char* s);
 	std::string TCharToString(LPCTSTR t);
 
-
-
-	enum Constants
+	enum Constants			// Defines the maximum size for TCHAR strings
 	{
 		MAX_MENU_STRING = 80,
 		MAX_STRING_SIZE = 255,
 	};
-
-	// The comparison function object used by CWinApp::m_mapHWND
-	struct CompareHWND
+	
+	struct CompareHWND		// The comparison function object used by CWinApp::m_mapHWND
 	{
 		bool operator()(HWND const a, const HWND b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	// Used for Thread Local Storage (TLS)
-	struct TLSData
+	struct TLSData			// Used for Thread Local Storage (TLS)
 	{
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
-		HHOOK hMenuHook;	// WH_MSGFILTER hook for CMenubar (used when popup menu is active)
+		HHOOK hHook;		// WH_MSGFILTER hook for CMenubar and Modeless Dialogs
 	};
 
 
@@ -365,8 +361,6 @@ namespace Win32xx
 
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
-	//
-
 	// This class is used for thread synchronisation
 	class CCriticalSection
 	{
@@ -412,7 +406,7 @@ namespace Win32xx
 		CWnd();				// Constructor
 		virtual ~CWnd();	// Destructor
 
-		// These are the functions can be overridden
+		// These virtual functions can be overridden
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		virtual void CenterWindow() const;
@@ -441,6 +435,9 @@ namespace Win32xx
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		virtual BOOL IsToolbar() const	 { return FALSE; }
 		virtual LPCTSTR LoadString(UINT nID);
+		virtual HRESULT RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties);
+		virtual HRESULT RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode);
+		virtual HRESULT RibbonUpdateProperty(UINT nCmdID, UINT key, const void* ppropvarCurrentValue, void* ppropvarNewValue);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -585,9 +582,9 @@ namespace Win32xx
 		virtual int Run();
 
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		HINSTANCE GetInstanceHandle() const {return m_hInstance;}
-		HINSTANCE GetResourceHandle() const {return (m_hResource ? m_hResource : m_hInstance);}
-		void SetResourceHandle(HINSTANCE hResource) {m_hResource = hResource;}
+		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
+		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
+		void SetResourceHandle(HINSTANCE hResource);
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
@@ -608,6 +605,7 @@ namespace Win32xx
 
 	};
 }
+
 
 
 #endif // _WINCORE_H_

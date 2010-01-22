@@ -400,7 +400,6 @@ namespace Win32xx
 	friend class CMDIChild;
 	friend class CDialog;
 	friend class CPropertyPage;
-	friend class CSplitter;
 
 	public:
 		CWnd();				// Constructor
@@ -677,7 +676,7 @@ namespace Win32xx
 		//  2501     Windows XP
 		//  2502     Windows Server 2003
 		//  2600     Windows Vista and Windows Server 2008
-		//  2610     Windows 7
+		//  2601     Windows 7
 
 		return nVersion; 
 	}

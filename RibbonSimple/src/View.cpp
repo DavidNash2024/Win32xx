@@ -1,6 +1,7 @@
 ///////////////////////////////
 // View.cpp
 
+#include "stdafx.h"
 #include "View.h"
 #include "resource.h"
 #include "RibbonUI.h"
@@ -21,16 +22,22 @@ void CView::OnCreate()
 	SetIconSmall(IDI_SMALL);
 	SetIconLarge(IDI_SIMPLERIBBON);
 
-	if (m_Ribbon.CreateRibbon(this))
-		TRACE(_T("Ribbon Created Succesfully\n"));
-	else
-		TRACE(_T("Failed to create ribbon\n"));
+	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
+	{
+		if (m_Ribbon.CreateRibbon(this))
+			TRACE(_T("Ribbon Created Succesfully\n"));
+		else
+			TRACE(_T("Failed to create ribbon\n"));
+	}
 
 }
 
 void CView::OnDestroy()
 {
-	m_Ribbon.DestroyRibbon();
+	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
+	{
+		m_Ribbon.DestroyRibbon();
+	}
 
 	// End the application when the window is destroyed
 	::PostQuitMessage(0);

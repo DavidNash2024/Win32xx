@@ -195,6 +195,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ribbon.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\socket.cpp"
 				>
 			</File>
@@ -257,6 +261,10 @@
 			</File>
 			<File
 				RelativePath="..\src\rebar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ribbon.h"
 				>
 			</File>
 			<File

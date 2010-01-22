@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="SimpleRibbon"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -41,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Release/RibbonFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -76,13 +77,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Release"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Release"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Release/RibbonFrame_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -102,9 +105,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Debug/RibbonFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -172,13 +172,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib Win32xx.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib Win32xx.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Win32++/lib/VS2005_Debug"
+				AdditionalLibraryDirectories="../../Win32++/lib/VS2008_Debug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Debug/RibbonFrame_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -198,9 +200,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -234,7 +233,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Debug/RibbonFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -268,12 +267,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Debug/RibbonFrame_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -293,9 +294,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -329,7 +327,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/SimpleRibbon_2005.tlb"
+				TypeLibraryName=".\Release/RibbonFrame_2008.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -364,12 +362,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
-				ProgramDatabaseFile=".\Release/SimpleRibbon_2005.pdb"
+				ProgramDatabaseFile=".\Release/RibbonFrame_2008.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -391,9 +391,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -410,11 +407,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleApp.cpp"
+				RelativePath="..\src\Mainfrm.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleRibbon.rc"
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RibbonApp.cpp"
 				>
 			</File>
 			<File
@@ -431,11 +432,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath="..\src\Mainfrm.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleApp.h"
+				RelativePath="..\src\RibbonApp.h"
 				>
 			</File>
 			<File
@@ -483,6 +488,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Win32++\include\ribbon.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\socket.h"
 				>
 			</File>
@@ -507,6 +516,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Win32++\include\wceframe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\wcestddef.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\wincore.h"
 				>
 			</File>
@@ -520,29 +537,11 @@
 			RelativePath="..\src\Ribbon.xml"
 			>
 			<FileConfiguration
-				Name="Release Static Library|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug Static Library|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
 				Name="Debug|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>
@@ -551,7 +550,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
 					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
 				/>
 			</FileConfiguration>

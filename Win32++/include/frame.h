@@ -241,6 +241,7 @@ namespace Win32xx
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual void OnCreate();
+		virtual void OnDestroy();
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitMenuLoop();
 		virtual void OnHelp();
@@ -320,6 +321,7 @@ namespace Win32xx
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
 		int m_nOldID;
+		UINT m_uRibbonHeight;
 
 	};  // class CFrame
 
@@ -1367,7 +1369,8 @@ namespace Win32xx
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE),
 						m_bShowStatusbar(TRUE), m_bShowToolbar(TRUE),
 						m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), 
-						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
+						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), 
+						m_nOldID(-1), m_uRibbonHeight(0)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 
@@ -2045,6 +2048,13 @@ namespace Win32xx
 		// Start timer for Status updates
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
+	}
+
+	inline void CFrame::OnDestroy()
+	{
+		::SetMenu(m_hWnd, NULL);
+		::KillTimer(m_hWnd, ID_STATUS_TIMER);
+		::PostQuitMessage(0);	// Terminates the application
 	}
 
 	inline LRESULT CFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
@@ -3155,9 +3165,7 @@ namespace Win32xx
 			OnClose();
 			break;
 		case WM_DESTROY:
-			::SetMenu(m_hWnd, NULL);
-			::KillTimer(m_hWnd, ID_STATUS_TIMER);
-			::PostQuitMessage(0);	// Terminates the application
+			OnDestroy();
 			return 0L;
 		case WM_ERASEBKGND:
 			return 0L;
