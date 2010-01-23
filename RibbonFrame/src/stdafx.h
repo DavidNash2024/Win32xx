@@ -16,6 +16,9 @@
 #define VC_EXTRALEAN			// Exclude rarely-used stuff from Windows headers
 #define WINVER 0x0400			// Support window features compatible with Win95
 
+// Add ribbon support
+#define USE_RIBBON				// Requires Windows 7 SDK and VS2005 Express Edition or above 
+
 typedef  unsigned char  byte;
 
 #if defined(_MSC_VER) && _MSC_VER == 1200 	// For Visual Studio 6
@@ -24,14 +27,6 @@ typedef  unsigned char  byte;
 #endif
 
 // Rarely modified header files should be included here
-#include <vector>
-#include <map>
-#include <string>
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <tchar.h>
-
 #include <dialog.h>
 #include <docking.h>
 #include <frame.h>

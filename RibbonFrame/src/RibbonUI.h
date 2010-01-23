@@ -46,3 +46,6 @@
 #define IDC_CMD_EXIT 17 
 #define IDC_CMD_EXIT_LabelTitle_RESID 290
 #define IDC_CMD_EXIT_LargeImages_RESID 291
+#define IDC_CMD_EXIT1 18 
+#define IDC_CMD_EXIT1_LabelTitle_RESID 292
+#define IDC_CMD_EXIT1_LargeImages_RESID 293

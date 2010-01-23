@@ -16,30 +16,8 @@ void CView::OnCreate()
 	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
 
-	TRACE(_T("OnCreate\n"));
+	TRACE(_T("CView::OnCreate\n"));
 	
-/*
-	int ver = GetWinVersion();
-
-	if (GetWinVersion() >= 2601)
-	{
-		if (m_Ribbon.CreateRibbon(this))
-			TRACE(_T("Ribbon Created Succesfully\n"));
-		else
-			TRACE(_T("Failed to create ribbon\n"));
-	}
-*/
-}
-
-void CView::OnDestroy()
-{
-/*	if (GetWinVersion() >= 2601)
-	{
-		m_Ribbon.DestroyRibbon();
-	}
-
-	// End the application when the window is destroyed */
-	::PostQuitMessage(0);
 }
 
 void CView::OnInitialUpdate()
@@ -47,7 +25,7 @@ void CView::OnInitialUpdate()
 	// OnInitialUpdate is called after the window is created.
 	// Tasks which are to be done after the window is created go here.
 
-	TRACE(_T("OnInitialUpdate\n"));
+	TRACE(_T("CView::OnInitialUpdate\n"));
 }
 
 void CView::OnPaint(HDC hDC)
@@ -77,17 +55,12 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;		// Extended style
 }
 
-
-
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_DESTROY:
-		OnDestroy();
-		break;
-//	case WM_WINDOWPOSCHANGING:
-	case WM_SIZE:
+	case WM_WINDOWPOSCHANGING:
+//	case WM_SIZE:
 		OnSize();
 		break;	// and also do default processing for this message
 	}

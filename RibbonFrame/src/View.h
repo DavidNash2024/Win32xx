@@ -4,9 +4,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <wincore.h>
-#include <ribbon.h>
-
 
 class CView : public CWnd
 {
@@ -16,7 +13,6 @@ public:
 
 protected:
 	virtual void OnCreate();
-	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
 	virtual void OnPaint(HDC hDC);
 	virtual void OnSize();

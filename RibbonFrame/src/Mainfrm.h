@@ -4,7 +4,6 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include <ribbon.h>
 #include "View.h"
 
 // Declaration of the CMainFrame class
@@ -13,11 +12,12 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	HRESULT RibbonExecute(UINT nCmdID, UINT verb, LPCVOID key, LPCVOID ppropvarValue, LPVOID pCommandExecutionProperties);
-	HRESULT RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode);
+
+#if defined __IUIRibbon_INTERFACE_DEFINED__
+	HRESULT RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
+#endif
 
 protected:
-	virtual CRect GetViewRect() const;
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnDestroy();
@@ -30,8 +30,6 @@ protected:
 
 private:
 	CView m_View;
-	UINT m_uRibbonHeight;
-	CRibbon m_Ribbon;
 };
 
 #endif //MAINFRM_H

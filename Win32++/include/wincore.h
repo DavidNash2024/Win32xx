@@ -109,6 +109,14 @@
 #include <shlwapi.h>
 #include <assert.h>
 
+#if defined USE_RIBBON
+  #if defined(_MSC_VER) && _MSC_VER >= 1400 
+    #include <UIRibbon.h>		// Contained within the Windows 7 SDK
+  #else
+    TRACE(_T("MS compiler VS2005 Express or above required for ribbon support\n"));
+  #endif
+#endif
+
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
   #define GetWindowLongPtr   GetWindowLong
@@ -434,14 +442,17 @@ namespace Win32xx
 		virtual BOOL IsTabbedMDI() const { return FALSE; }
 		virtual BOOL IsToolbar() const	 { return FALSE; }
 		virtual LPCTSTR LoadString(UINT nID);
-		virtual HRESULT RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties);
-		virtual HRESULT RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode);
-		virtual HRESULT RibbonUpdateProperty(UINT nCmdID, UINT key, const void* ppropvarCurrentValue, void* ppropvarNewValue);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
+
+#if defined __IUIRibbon_INTERFACE_DEFINED__
+		virtual HRESULT RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
+		virtual HRESULT RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
+		virtual HRESULT RibbonUpdateProperty(UINT32 nCmdID, REFPROPERTYKEY key, const PROPVARIANT* ppropvarCurrentValue, PROPVARIANT* ppropvarNewValue);
+#endif
 
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
@@ -1722,7 +1733,9 @@ namespace Win32xx
 		// such as adding or removing checkmarks
 	}
 
-	inline HRESULT CWnd::RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode)
+#if defined __IUIRibbon_INTERFACE_DEFINED__
+
+	inline HRESULT CWnd::RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 	{
 		UNREFERENCED_PARAMETER(viewId);
 		UNREFERENCED_PARAMETER(typeId);
@@ -1770,7 +1783,7 @@ namespace Win32xx
 	}
 
 		// Called by the Ribbon framework when a command property (PKEY) needs to be updated.
-	inline HRESULT CWnd::RibbonUpdateProperty(UINT nCmdID, UINT key, const void* ppropvarCurrentValue, void* ppropvarNewValue)
+	inline HRESULT CWnd::RibbonUpdateProperty(UINT32 nCmdID, REFPROPERTYKEY key, const PROPVARIANT* ppropvarCurrentValue, PROPVARIANT* ppropvarNewValue)
 	{
 		UNREFERENCED_PARAMETER(nCmdID);
 		UNREFERENCED_PARAMETER(key);
@@ -1780,13 +1793,8 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HRESULT CWnd::RibbonExecute(UINT nCmdID, UINT verb, const void* key, const void* ppropvarValue, void* pCommandExecutionProperties)
+	inline HRESULT CWnd::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 	{
-		// Use the following casts for void pointers:
-		//   const PROPERTYKEY* key
-		//   const PROPVARIANT* ppropvarValue
-		//   IUISimplePropertySet* pCommandExecutionProperties
-
 		// Possible values for verb
 		//   UI_EXECUTIONVERB_EXECUTE
 		//   UI_EXECUTIONVERB_PREVIEW
@@ -1800,6 +1808,8 @@ namespace Win32xx
 
 		return S_OK; 
 	}
+
+#endif
 
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters

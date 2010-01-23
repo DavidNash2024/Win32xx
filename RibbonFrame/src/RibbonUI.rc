@@ -69,4 +69,10 @@ BEGIN
 END
 
 IDC_CMD_EXIT_LargeImages_RESID    BITMAP    "res\\ExitL.bmp" /* LargeImages IDC_CMD_EXIT_LargeImages_RESID: (null) */
+STRINGTABLE 
+BEGIN
+    IDC_CMD_EXIT1_LabelTitle_RESID L"Exit Button" /* LabelTitle IDC_CMD_EXIT1_LabelTitle_RESID: (null) */
+END
+
+IDC_CMD_EXIT1_LargeImages_RESID    BITMAP    "res\\ExitL.bmp" /* LargeImages IDC_CMD_EXIT1_LargeImages_RESID: (null) */
 APPLICATION_RIBBON    UIFILE    "..\\src\\Ribbon.bml"
