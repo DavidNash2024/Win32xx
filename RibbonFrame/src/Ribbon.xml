@@ -105,7 +105,7 @@
         <String Id ="270">ToggleButton 2</String>
       </Command.LabelTitle>
       <Command.SmallImages>
-        <Image Id="271">res/Copy.bmp</Image>
+        <Image Id="271">res/CopyS.bmp</Image>
       </Command.SmallImages>
     </Command>
     <Command Name="cmdQat"/>
@@ -115,20 +115,60 @@
         <String Id ="280">MRU List</String>
       </Command.LabelTitle>
     </Command>
-    <Command Name="cmdExit" Symbol="IDC_CMD_EXIT">
+    <Command Name="cmdNew" Symbol="IDC_CMD_NEW">
       <Command.LabelTitle>
-        <String Id ="290">Exit Button</String>
+        <String Id ="290">New</String>
       </Command.LabelTitle>
       <Command.LargeImages>
-        <Image Id ="291">res/ExitL.bmp</Image>
+        <Image Id ="291">res/FileNew.bmp</Image>
       </Command.LargeImages>
     </Command>
-    <Command Name="cmdExit1" Symbol="IDC_CMD_EXIT1">
+    <Command Name="cmdOpen" Symbol="IDC_CMD_OPEN">
       <Command.LabelTitle>
-        <String Id ="292">Exit Button</String>
+        <String Id ="292">Open</String>
       </Command.LabelTitle>
       <Command.LargeImages>
-        <Image Id ="293">res/ExitL.bmp</Image>
+        <Image Id ="293">res/FileOpen.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdSave" Symbol="IDC_CMD_SAVE">
+      <Command.LabelTitle>
+        <String Id ="294">Save</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="295">res/FileSave.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdSaveAs" Symbol="IDC_CMD_SAVE_AS">
+      <Command.LabelTitle>
+        <String Id ="296">Save As</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="297">res/FileSaveAs.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdPrint" Symbol="IDC_CMD_PRINT">
+      <Command.LabelTitle>
+        <String Id ="298">Print</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="299">res/Print.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdAbout" Symbol="IDC_CMD_ABOUT">
+      <Command.LabelTitle>
+        <String Id ="300">About</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="301">res/Info.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdExit" Symbol="IDC_CMD_EXIT">
+      <Command.LabelTitle>
+        <String Id ="308">Exit</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="309">res/ExitL.bmp</Image>
       </Command.LargeImages>
     </Command>
   </Application.Commands>
@@ -140,8 +180,19 @@
             <RecentItems CommandName="cmdMRUList" MaxCount="1" />
           </ApplicationMenu.RecentItems>
           <MenuGroup Class="MajorItems">
+            <Button CommandName="cmdNew" />
+            <Button CommandName="cmdOpen" />
+            <Button CommandName="cmdSave" />
+            <Button CommandName="cmdSaveAs" />
+            </MenuGroup>
+            <MenuGroup>
+            <Button CommandName="cmdPrint" />
+            </MenuGroup>
+            <MenuGroup>
+            <Button CommandName="cmdAbout" />
+            </MenuGroup>
+            <MenuGroup>
             <Button CommandName="cmdExit" />
-            <Button CommandName="cmdExit1" />
           </MenuGroup>
         </ApplicationMenu>
       </Ribbon.ApplicationMenu>

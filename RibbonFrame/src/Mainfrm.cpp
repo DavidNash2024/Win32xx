@@ -209,8 +209,26 @@ HRESULT CMainFrame::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PR
 	case cmdToggleButton2:
 		TRACE(_T("Toggle Button 2\n"));
 		break;
+	case IDC_CMD_NEW:
+		TRACE (_T("New\n"));
+		break;
+	case IDC_CMD_OPEN:
+		TRACE (_T("Open\n"));
+		break;
+	case IDC_CMD_SAVE:
+		TRACE (_T("Save\n"));
+		break;
+	case IDC_CMD_SAVE_AS:
+		TRACE (_T("Save As\n"));
+		break;
+	case IDC_CMD_PRINT:
+		TRACE (_T("Print\n"));
+		break;
+	case IDC_CMD_ABOUT:
+		TRACE (_T("About\n"));
+		break;
 	case IDC_CMD_EXIT:
-		TRACE(_T("Exit button\n"));
+		TRACE(_T("Exit\n"));
 		break;
 	default:
 		TRACE(_T("Unknown button\n"));
