@@ -86,17 +86,12 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.lpszName = LoadString(IDS_APP_TITLE);// Window title
 }
 
-HRESULT CView::RibbonExecute(UINT nCmdID, UINT verb, LPCVOID key, LPCVOID ppropvarValue, LPVOID pCommandExecutionProperties)
+HRESULT CView::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
 	UNREFERENCED_PARAMETER(pCommandExecutionProperties);
 	UNREFERENCED_PARAMETER(ppropvarValue);
 	UNREFERENCED_PARAMETER(key);
 	UNREFERENCED_PARAMETER(verb);
-
-	// Use the following casts for void pointers:
-	//   const PROPERTYKEY* key
-	//   const PROPVARIANT* ppropvarValue
-	//   IUISimplePropertySet* pCommandExecutionProperties
 
 	HRESULT hr = S_OK;
 	switch(nCmdID)
@@ -136,7 +131,7 @@ HRESULT CView::RibbonExecute(UINT nCmdID, UINT verb, LPCVOID key, LPCVOID ppropv
 	return hr; 
 }
 
-HRESULT CView::RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode)
+HRESULT CView::RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 {
 		UNREFERENCED_PARAMETER(viewId);
 		UNREFERENCED_PARAMETER(uReasonCode);

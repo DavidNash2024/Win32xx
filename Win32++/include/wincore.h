@@ -109,6 +109,7 @@
 #include <shlwapi.h>
 #include <assert.h>
 
+
 #if defined USE_RIBBON
   #if defined(_MSC_VER) && _MSC_VER >= 1400 
     #include <UIRibbon.h>		// Contained within the Windows 7 SDK
@@ -116,6 +117,7 @@
     TRACE(_T("MS compiler VS2005 Express or above required for ribbon support\n"));
   #endif
 #endif
+
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -448,7 +450,7 @@ namespace Win32xx
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 		virtual HRESULT RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
 		virtual HRESULT RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 		virtual HRESULT RibbonUpdateProperty(UINT32 nCmdID, REFPROPERTYKEY key, const PROPVARIANT* ppropvarCurrentValue, PROPVARIANT* ppropvarNewValue);
@@ -1733,7 +1735,7 @@ namespace Win32xx
 		// such as adding or removing checkmarks
 	}
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 
 	inline HRESULT CWnd::RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 	{
@@ -1809,7 +1811,7 @@ namespace Win32xx
 		return S_OK; 
 	}
 
-#endif
+#endif // defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters

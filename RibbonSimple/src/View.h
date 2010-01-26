@@ -13,8 +13,8 @@ class CView : public CWnd
 public:
 	CView() : m_uRibbonHeight(0) {}
 	virtual ~CView() {}
-	virtual HRESULT RibbonExecute(UINT nCmdID, UINT verb, LPCVOID key, LPCVOID ppropvarValue, LPVOID pCommandExecutionProperties);
-	virtual HRESULT RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode);
+	virtual HRESULT RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
+	virtual HRESULT RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 
 	UINT GetRibbonHeight() { return m_uRibbonHeight; }
 

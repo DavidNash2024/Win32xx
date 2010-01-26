@@ -105,7 +105,7 @@ namespace Win32xx
 
 	private:
 		CPropertyPage(const CPropertyPage&);				// Disable copy construction
-		CPropertyPage& operator = (const CPropertyPage&); // Disable assignment operator
+		CPropertyPage& operator = (const CPropertyPage&);	// Disable assignment operator
 		
 		tString m_Title;
 	};
@@ -122,8 +122,6 @@ namespace Win32xx
 		virtual void DestroyButton(int iButton);
 		virtual void Destroy();
 		virtual int DoModal();
-		virtual void OnCreate();
-		virtual void OnInitialUpdate();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void RemovePage(CPropertyPage* pPage);
@@ -154,6 +152,7 @@ namespace Win32xx
 
 		tString m_Title;
 		PROPSHEETPAGE* m_ppsp; // Array of PROPSHEETPAGE
+		BOOL m_bInitialUpdate;
 	};
 	
 }
@@ -556,6 +555,7 @@ namespace Win32xx
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
 		SetTitle(LoadString(nIDCaption));
+		m_bInitialUpdate = FALSE;
 
 #ifdef _WIN32_WCE
 		m_PSH.dwSize = sizeof(PROPSHEETHEADER);
@@ -577,6 +577,7 @@ namespace Win32xx
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		m_ppsp = NULL;
 		SetTitle(pszCaption);
+		m_bInitialUpdate = FALSE;
 
 #ifdef _WIN32_WCE
 		m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
@@ -818,40 +819,6 @@ namespace Win32xx
 		return (m_PSH.dwFlags & PSH_WIZARD);
 	}
 
-	inline void CPropertySheet::OnCreate()
-	{
-		// Adjust layout for modeless property sheet
-		if ((IsModeless()) && !(IsWizard()))
-		{
-			// Reposition windows
-			RECT rc;
-			::GetWindowRect(m_hWnd, &rc);
-			RECT rcButton;
-			HWND hwndOKButton = ::GetDlgItem(m_hWnd, IDOK);
-			::GetWindowRect(hwndOKButton, &rcButton);
-			::SetWindowPos(m_hWnd, NULL, 0, 0, rc.right - rc.left, rcButton.top - rc.top, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-
-			// Remove buttons
-			DestroyButton(IDOK);
-			DestroyButton(IDCANCEL);
-			DestroyButton(ID_APPLY_NOW);
-			DestroyButton(IDHELP);
-		}
-
-		// Remove system menu for wizards
-		if (IsWizard())
-		{
-			DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
-			dwStyle &= ~WS_SYSMENU;
-			::SetWindowLongPtr(m_hWnd, GWL_STYLE, dwStyle);
-		}
-	}
-
-	inline void CPropertySheet::OnInitialUpdate()
-	{
-		CenterWindow();
-	}
-
 	inline void CPropertySheet::RemovePage(CPropertyPage* pPage)
 	{
 		int nPage = GetPageIndex(pPage);
@@ -926,17 +893,24 @@ namespace Win32xx
 
 	inline LRESULT CPropertySheet::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		static BOOL bFirstTime = TRUE;
 		switch (uMsg)
 		{
-		case WM_ACTIVATE:
-			if (bFirstTime)
-				OnInitialUpdate();
-			bFirstTime = FALSE;
+
+		case WM_WINDOWPOSCHANGED:
+			{
+				LPWINDOWPOS lpWinPos = (LPWINDOWPOS)lParam;
+				if (lpWinPos->flags & SWP_SHOWWINDOW)
+				{
+					if (!m_bInitialUpdate)
+						// The first window positioning with the window visible
+						OnInitialUpdate();
+					m_bInitialUpdate = TRUE;
+				}
+			}
 			break;
 
 		case WM_DESTROY:
-			bFirstTime = TRUE;
+			m_bInitialUpdate = FALSE;
 			break;
 
 		case WM_SYSCOMMAND:

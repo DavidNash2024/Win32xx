@@ -87,7 +87,7 @@ void CMainFrame::OnCreate()
 	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 	TRACE(_T("CMainFrame::OnCreate\n"));
 	if (GetWinVersion() >= 2601)
 	{
@@ -99,25 +99,25 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 	int ver = GetWinVersion();
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 	if (GetWinVersion() >= 2601)
 	{
 		if (m_Ribbon.CreateRibbon(this))
 			TRACE(_T("Ribbon Created Succesfully\n"));
 		else
 			TRACE(_T("Failed to create ribbon\n"));
-	}
+	} 
 #endif
 }
 
 void CMainFrame::OnDestroy()
 {
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 	if (GetWinVersion() >= 2601)
 	{
 		m_Ribbon.DestroyRibbon();
-	}
+	} 
 #endif
 
 	CFrame::OnDestroy();
@@ -174,7 +174,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 HRESULT CMainFrame::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
 	UNREFERENCED_PARAMETER(pCommandExecutionProperties);

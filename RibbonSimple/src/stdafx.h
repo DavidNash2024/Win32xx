@@ -16,6 +16,8 @@
 #define VC_EXTRALEAN			// Exclude rarely-used stuff from Windows headers
 #define WINVER 0x0400			// Support window features compatible with Win95
 
+#define USE_RIBBON
+
 typedef  unsigned char  byte;
 
 #if defined(_MSC_VER) && _MSC_VER == 1200 	// For Visual Studio 6

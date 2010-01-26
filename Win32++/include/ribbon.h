@@ -44,10 +44,9 @@
 #ifndef _RIBBON_H_
 #define _RIBBON_H_
 
-#ifdef USE_RIBBON		// USE_RIBBON must be defined before this header is included
 
+#include <UIRibbon.h>		// Contained within the Windows 7 SDK	
 #include "wincore.h"
-
 
 namespace Win32xx
 {
@@ -327,6 +326,5 @@ namespace Win32xx
 
 }
 
-#endif	// USE_RIBBON
 #endif  // RIBBON_H
 

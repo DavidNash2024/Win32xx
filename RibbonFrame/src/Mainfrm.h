@@ -13,7 +13,7 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 	HRESULT RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
 #endif
 

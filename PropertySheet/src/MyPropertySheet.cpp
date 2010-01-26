@@ -141,6 +141,40 @@ CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hwndParent
 	m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USEICONID  | PSH_USECALLBACK;
 }
 
+inline void CMyPropertySheet::OnCreate()
+{
+	// Adjust layout for modeless property sheet
+	if ((IsModeless()) && !(IsWizard()))
+	{
+		// Reposition windows
+		RECT rc;
+		::GetWindowRect(m_hWnd, &rc);
+		RECT rcButton;
+		HWND hwndOKButton = ::GetDlgItem(m_hWnd, IDOK);
+		::GetWindowRect(hwndOKButton, &rcButton);
+		::SetWindowPos(m_hWnd, NULL, 0, 0, rc.right - rc.left, rcButton.top - rc.top, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+
+		// Remove buttons
+		DestroyButton(IDOK);
+		DestroyButton(IDCANCEL);
+		DestroyButton(ID_APPLY_NOW);
+		DestroyButton(IDHELP);
+	}
+
+	// Remove system menu for wizards
+	if (IsWizard())
+	{
+		DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+		dwStyle &= ~WS_SYSMENU;
+		::SetWindowLongPtr(m_hWnd, GWL_STYLE, dwStyle);
+	}
+}
+
+void CMyPropertySheet::OnInitialUpdate()
+{
+	CenterWindow();
+}
+
 LRESULT CMyPropertySheet::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)

@@ -85,10 +85,15 @@
   #define RBN_MINMAX (RBN_FIRST - 21)
 #endif
 
-// wincore.h loads UIRibbon.h when USE_RIBBON is defined (VS2005 Express or above also required) 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
-  #include "ribbon.h"
+
+#if defined USE_RIBBON
+  #if defined __IUIRibbon_INTERFACE_DEFINED__ // gets defined by UIRibbon.h in wincore.h
+    #include "ribbon.h"
+  #else
+    TRACE(_T("MS compiler VS2005 Express or above required for ribbon support\n"));
+  #endif
 #endif
+
 
 
 namespace Win32xx
@@ -205,7 +210,7 @@ namespace Win32xx
 		virtual ThemeRebar& GetRebarTheme()	const		{ return (ThemeRebar&)GetRebar().GetRebarTheme(); }
 		virtual ThemeToolbar& GetToolbarTheme() const	{ return (ThemeToolbar&)GetToolbar().GetToolbarTheme(); }
 
-	#if defined __IUIRibbon_INTERFACE_DEFINED__
+	#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 		virtual HRESULT RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 	#endif
 
@@ -331,7 +336,7 @@ namespace Win32xx
 		int m_nOldID;
 		UINT m_uRibbonHeight;
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 	public:
 		CRibbon m_Ribbon;
 #endif
@@ -2694,7 +2699,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-#if defined __IUIRibbon_INTERFACE_DEFINED__
+#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 	inline HRESULT CFrame::RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 	{
 		UNREFERENCED_PARAMETER(viewId);
