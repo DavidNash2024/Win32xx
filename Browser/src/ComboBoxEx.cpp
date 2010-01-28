@@ -8,6 +8,7 @@
 
 BOOL CComboBoxEx::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
 	switch(LOWORD(wParam))
 	{
 	case IDOK: // Return hit in edit control

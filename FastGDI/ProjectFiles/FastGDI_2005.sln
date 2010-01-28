@@ -1,24 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastGDI", "FastGDI_2005.vcproj", "{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastGDI", "FastGDI_2005.vcproj", "{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug Static Library|Win32 = Debug Static Library|Win32
 		Debug|Win32 = Debug|Win32
-		Release Static Library|Win32 = Release Static Library|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Debug Static Library|Win32.ActiveCfg = Debug Static Library|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Debug Static Library|Win32.Build.0 = Debug Static Library|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Debug|Win32.Build.0 = Debug|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Release Static Library|Win32.ActiveCfg = Release Static Library|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Release Static Library|Win32.Build.0 = Release Static Library|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Release|Win32.ActiveCfg = Release|Win32
-		{2D0E8DF4-9F13-4F16-8073-A1894E5101A5}.Release|Win32.Build.0 = Release|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Debug|Win32.Build.0 = Debug|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Release|Win32.ActiveCfg = Release|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

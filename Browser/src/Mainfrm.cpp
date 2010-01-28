@@ -185,6 +185,7 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 {
+	UNREFERENCED_PARAMETER(pDispParams);
 	TRACE(_T("OnDocumentBegin\n"));
 }
 
@@ -200,15 +201,18 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
+	UNREFERENCED_PARAMETER(pDispParams);
 	GetStatusbar().SetPartText(0, _T("Done"));
 }
 
 void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
 {
+	UNREFERENCED_PARAMETER(pDispParams);
 }
 
 void CMainFrame::OnDownloadComplete(DISPPARAMS* pDispParams)
 {
+	UNREFERENCED_PARAMETER(pDispParams);
 }
 
 void CMainFrame::OnEditCopy()
@@ -260,6 +264,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
+	UNREFERENCED_PARAMETER(pDispParams);
 	TRACE(_T("NewWindow2\n"));
 }
 
@@ -310,6 +315,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnTimer(WPARAM wParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
 	GetStatusbar().SetPartText(0, _T("Done"));
 }
 

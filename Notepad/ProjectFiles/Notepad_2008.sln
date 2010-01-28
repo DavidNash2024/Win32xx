@@ -1,24 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Notepad", "Notepad_2008.vcproj", "{83948024-5DDD-4800-A629-A7873D14267C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Notepad", "Notepad_2008.vcproj", "{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug Static Library|Win32 = Debug Static Library|Win32
 		Debug|Win32 = Debug|Win32
-		Release Static Library|Win32 = Release Static Library|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{83948024-5DDD-4800-A629-A7873D14267C}.Debug Static Library|Win32.ActiveCfg = Debug Static Library|Win32
-		{83948024-5DDD-4800-A629-A7873D14267C}.Debug Static Library|Win32.Build.0 = Debug Static Library|Win32
-		{83948024-5DDD-4800-A629-A7873D14267C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{83948024-5DDD-4800-A629-A7873D14267C}.Debug|Win32.Build.0 = Debug|Win32
-		{83948024-5DDD-4800-A629-A7873D14267C}.Release Static Library|Win32.ActiveCfg = Release Static Library|Win32
-		{83948024-5DDD-4800-A629-A7873D14267C}.Release Static Library|Win32.Build.0 = Release Static Library|Win32
-		{83948024-5DDD-4800-A629-A7873D14267C}.Release|Win32.ActiveCfg = Release|Win32
-		{83948024-5DDD-4800-A629-A7873D14267C}.Release|Win32.Build.0 = Release|Win32
+		{065CE64C-E36E-4097-9CF6-F97CAF864DDA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{065CE64C-E36E-4097-9CF6-F97CAF864DDA}.Debug|Win32.Build.0 = Debug|Win32
+		{065CE64C-E36E-4097-9CF6-F97CAF864DDA}.Release|Win32.ActiveCfg = Release|Win32
+		{065CE64C-E36E-4097-9CF6-F97CAF864DDA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

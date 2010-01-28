@@ -119,7 +119,6 @@ namespace Win32xx
 		virtual BOOL IsMDIFrame() const	 { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
-		virtual	HRESULT RibbonOnViewChanged(UINT viewId, UINT typeId, void* pView, UINT verb, INT uReasonCode);
 		virtual void UpdateCheckMarks();
 
 		// These functions aren't virtual, so don't override them

@@ -64,7 +64,7 @@ BOOL CButtonPage::OnQueryCancel()
 
 void CButtonPage::OnSetActive()
 {
-	TRACE("Button page is now active\n");
+	TRACE(_T("Button page is now active\n"));
 
 	// Set the wizard buttons
 	PropSheet_SetWizButtons(GetParent(), PSWIZB_NEXT);

@@ -240,7 +240,7 @@ namespace Win32xx
 
 	inline int CButton::GetCheck() const
 	{
-		return SendMessage(BM_GETCHECK, 0, 0);
+		return (int)SendMessage(BM_GETCHECK, 0, 0);
 	}
 
 	inline HCURSOR CButton::GetCursor() const
@@ -255,7 +255,7 @@ namespace Win32xx
 
 	inline UINT CButton::GetState() const
 	{
-		return SendMessage(BM_GETSTATE, 0, 0);
+		return (UINT)SendMessage(BM_GETSTATE, 0, 0);
 	}
 
 	inline HBITMAP CButton::SetBitmap(HBITMAP hBitmap)
@@ -304,7 +304,7 @@ namespace Win32xx
 
 	inline int CEdit::CharFromPos(CPoint pt) const
 	{
-		return SendMessage(EM_CHARFROMPOS, 0, MAKELPARAM(pt.x, pt.y));
+		return (int)SendMessage(EM_CHARFROMPOS, 0, MAKELPARAM(pt.x, pt.y));
 	}
 
 	inline int CEdit::GetFirstVisibleLine() const
@@ -365,7 +365,7 @@ namespace Win32xx
 
 	inline DWORD CEdit::GetSel() const
 	{
-		return SendMessage(EM_GETSEL, 0, 0);
+		return (DWORD)SendMessage(EM_GETSEL, 0, 0);
 	}
 
 	inline CPoint CEdit::PosFromChar(UINT nChar) const
@@ -528,7 +528,7 @@ namespace Win32xx
 
 	inline DWORD CListBox::GetItemData(int nIndex) const
 	{
-		return SendMessage(LB_GETITEMDATA, nIndex, 0);
+		return (DWORD)SendMessage(LB_GETITEMDATA, nIndex, 0);
 	}
 
 	inline void* CListBox::GetItemDataPtr(int nIndex) const
@@ -595,7 +595,7 @@ namespace Win32xx
 
 	inline int CListBox::SetItemDataPtr(int nIndex, void* pData)
 	{
-		return SetItemData(nIndex, (DWORD)(LPVOID)pData);
+		return SetItemData(nIndex, (DWORD)pData);
 	}
 
 	inline int CListBox::SetItemHeight(int nIndex, UINT cyItemHeight)

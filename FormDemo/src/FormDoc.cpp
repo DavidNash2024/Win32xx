@@ -54,7 +54,7 @@ void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
 	tsKey += szKeyName;
 	tsKey += _T("\\Document Settings");
 
-	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "",
+	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, _T(""),
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 	RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_bCheckA, sizeof(DWORD));

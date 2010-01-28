@@ -14,6 +14,4 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 }
 
 
-// Note:  For the purpose of simplicity, this sample is not Unicode compliant.
-//        (If you're not sure what Unicode means, then it doesn't matter.)
 

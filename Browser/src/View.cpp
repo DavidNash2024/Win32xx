@@ -45,7 +45,7 @@ void CView::Navigate(LPCTSTR str)
 	VARIANT vars[4];
 	memset(vars,0,sizeof(vars));
 	CComBSTR BStrURL(str);
-	HRESULT hrie = m_pInetExplorer->Navigate(BStrURL,vars,vars+1,vars+2,vars+3);
+	m_pInetExplorer->Navigate(BStrURL,vars,vars+1,vars+2,vars+3);
 	SysFreeString(BStrURL);
 }
 
@@ -101,6 +101,14 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
                                DISPPARAMS* pDispParams, VARIANT* pvarResult,
                                EXCEPINFO*  pExcepInfo,  UINT* puArgErr)
 {
+	UNREFERENCED_PARAMETER(riid);
+	UNREFERENCED_PARAMETER(lcid);
+	UNREFERENCED_PARAMETER(wFlags);
+	UNREFERENCED_PARAMETER(pDispParams);
+	UNREFERENCED_PARAMETER(pvarResult);
+	UNREFERENCED_PARAMETER(pExcepInfo);
+	UNREFERENCED_PARAMETER(puArgErr);
+
 	if (!pDispParams)
 		return E_INVALIDARG;
 

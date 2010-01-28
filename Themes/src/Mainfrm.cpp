@@ -378,7 +378,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	TRACE("Frame created\n");
+	TRACE(_T("Frame created\n"));
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -512,7 +512,7 @@ void CMainFrame::SaveRegistrySettings()
 	tsKey += szKeyName + (_T("\\Theme Settings"));
 	int nBands = GetRebar().GetBandCount();
 
-	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, "",
+	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, _T(""),
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 	// Save the theme settings

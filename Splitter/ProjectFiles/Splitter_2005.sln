@@ -1,24 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Splitter", "Splitter_2005.vcproj", "{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Splitter", "Splitter_2005.vcproj", "{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug Static Library|Win32 = Debug Static Library|Win32
 		Debug|Win32 = Debug|Win32
-		Release Static Library|Win32 = Release Static Library|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Debug Static Library|Win32.ActiveCfg = Debug Static Library|Win32
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Debug Static Library|Win32.Build.0 = Debug Static Library|Win32
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Debug|Win32.Build.0 = Debug|Win32
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Release Static Library|Win32.ActiveCfg = Release Static Library|Win32
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Release Static Library|Win32.Build.0 = Release Static Library|Win32
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Release|Win32.ActiveCfg = Release|Win32
-		{F02EC9A8-48EE-450A-BB4E-22B9ECC728E2}.Release|Win32.Build.0 = Release|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Debug|Win32.Build.0 = Debug|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Release|Win32.ActiveCfg = Release|Win32
+		{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
