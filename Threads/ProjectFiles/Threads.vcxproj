@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\dialog.h" />
     <ClInclude Include="..\..\Win32++\include\wincore.h" />
     <ClInclude Include="..\src\MainWnd.h" />
     <ClInclude Include="..\src\stdafx.h" />

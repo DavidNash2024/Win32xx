@@ -23,6 +23,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Win32++\include\docking.h" />
+    <ClInclude Include="..\..\Win32++\include\wincore.h" />
     <ClInclude Include="..\src\DialogApp.h" />
     <ClInclude Include="..\src\MyDialog.h" />
     <ClInclude Include="..\src\Progressbar.h" />

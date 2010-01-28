@@ -45,7 +45,6 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.sdf"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcb"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vco"
-FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.filters"
 
 REM: Clean the Networking directory
 pushd Networking
