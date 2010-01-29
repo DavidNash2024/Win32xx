@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Explorer_2008"
+	Name="Explorer"
 	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
-	RootNamespace="Explorer_2008"
+	RootNamespace="Explorer"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
