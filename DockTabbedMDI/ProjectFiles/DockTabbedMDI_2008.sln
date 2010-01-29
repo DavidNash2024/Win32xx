@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DockTabbedMDI", "DockTabbedMDI_2008.vcproj", "{67A3DFAB-2C80-4F47-AE94-35660C4DB014}"
 EndProject
 Global

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Browser", "Browser_2008.vcproj", "{350180BC-D4EE-4C4B-ACE3-554DB3AA07EC}"
 EndProject
 Global

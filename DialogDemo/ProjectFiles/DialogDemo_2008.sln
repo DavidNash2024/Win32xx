@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DialogDemo", "DialogDemo_2008.vcproj", "{88B3950F-38BA-4787-B0E5-9C71844ADE3D}"
 EndProject
 Global

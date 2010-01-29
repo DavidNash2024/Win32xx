@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DockContainer", "DockContainer_2008.vcproj", "{23C99F36-B2C3-427F-8E91-2F8F7739DC3A}"
 EndProject
 Global
