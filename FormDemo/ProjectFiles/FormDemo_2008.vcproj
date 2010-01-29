@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="FormDemo"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{1EF60D7B-44DC-4B5C-850A-27592CF15F88}"
 	RootNamespace="FormDemo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

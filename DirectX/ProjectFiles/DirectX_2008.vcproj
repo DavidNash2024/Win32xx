@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="DirectX"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{26EE2813-09DB-4601-86D0-55B84F2E6B9E}"
 	RootNamespace="DirectX"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

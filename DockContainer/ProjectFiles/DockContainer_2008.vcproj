@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="DockContainer"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{23C99F36-B2C3-427F-8E91-2F8F7739DC3A}"
 	RootNamespace="DockContainer"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

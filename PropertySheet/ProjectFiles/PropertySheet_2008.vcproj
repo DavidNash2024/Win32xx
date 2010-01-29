@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="PropertySheet"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{64A1267D-D668-44D7-A062-7FC45292C298}"
 	RootNamespace="PropertySheet"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

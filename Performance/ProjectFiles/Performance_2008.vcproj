@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Performance"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{07D4AD10-99FB-4B73-ABA4-A2202859BCC6}"
 	RootNamespace="Performance"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

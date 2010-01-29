@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="MDIDemo"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{4AA09752-7B2C-48CA-A490-AF8AE45B509C}"
 	RootNamespace="MDIDemo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

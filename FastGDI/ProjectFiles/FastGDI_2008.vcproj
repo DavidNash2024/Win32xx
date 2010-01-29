@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="FastGDI"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{C7A11685-3B81-467A-AE4B-7A3D209577F5}"
 	RootNamespace="FastGDI"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

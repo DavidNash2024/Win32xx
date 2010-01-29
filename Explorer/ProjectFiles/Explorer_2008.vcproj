@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Explorer"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{50FB2A58-359B-4C30-BE66-EFF35F645C7C}"
 	RootNamespace="Explorer"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

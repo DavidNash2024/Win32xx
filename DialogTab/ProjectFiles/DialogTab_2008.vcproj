@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="DialogTab"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{51363D97-50F9-4186-A96D-8111F959C176}"
 	RootNamespace="DialogTab"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

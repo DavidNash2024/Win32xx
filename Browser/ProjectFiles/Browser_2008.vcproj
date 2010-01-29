@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Browser"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{350180BC-D4EE-4C4B-ACE3-554DB3AA07EC}"
 	RootNamespace="Browser"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Simple"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{3D293109-3DE8-41B8-B6AB-3648A13617D7}"
 	RootNamespace="Simple"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

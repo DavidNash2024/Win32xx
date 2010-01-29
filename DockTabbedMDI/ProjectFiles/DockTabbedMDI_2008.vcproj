@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="DockTabbedMDI"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{67A3DFAB-2C80-4F47-AE94-35660C4DB014}"
 	RootNamespace="DockTabbedMDI"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

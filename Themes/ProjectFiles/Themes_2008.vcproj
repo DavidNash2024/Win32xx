@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Themes"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{76779E14-006F-4CC9-B1CF-94279D82C5B6}"
 	RootNamespace="Themes"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Notepad"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{83948024-5DDD-4800-A629-A7873D14267C}"
 	RootNamespace="Notepad"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

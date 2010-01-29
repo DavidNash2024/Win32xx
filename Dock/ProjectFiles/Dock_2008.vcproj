@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Dock"
-	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	ProjectGUID="{EDBF1BDC-4C8E-4619-A945-B866EFAAFDB8}"
 	RootNamespace="Dock"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
