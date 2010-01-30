@@ -55,7 +55,7 @@ namespace Win32xx
 	class CRibbonCommandHandler : public IUICommandHandler
 	{
 	public:
-		CRibbonCommandHandler() : m_cRef(1), m_pFrame(NULL) {}
+		CRibbonCommandHandler(CWnd* pFrame) : m_cRef(1), m_pFrame(pFrame) {}
 		~CRibbonCommandHandler(); 
 
 		// IUnknown methods.
@@ -76,11 +76,11 @@ namespace Win32xx
 			__in_opt IUISimplePropertySet* pCommandExecutionProperties);
 
 		CWnd* GetFrame() const { return m_pFrame; }
-		void SetFrame(CWnd* pFrame) { m_pFrame = pFrame; }
 
 	private:
 		CWnd* m_pFrame;
 		LONG m_cRef;                        // Reference count.
+	
 	};
 
 	// Defines the callback entry-point methods for the Ribbon framework.
@@ -105,13 +105,14 @@ namespace Win32xx
 		STDMETHOD(OnDestroyUICommand)(UINT32 commandId, __in UI_COMMANDTYPE typeID,
 			__in_opt IUICommandHandler* commandHandler);
 
-		CWnd* GetFrame() const { return m_pFrame; }
-		void SetFrame(CWnd* pFrame) { m_pFrame = pFrame; }
+		CWnd* GetFrame() const { return m_pFrame; }		
 
 		bool CreateRibbon(CWnd* pWnd);
 		void DestroyRibbon();
 
 	private:
+		void SetFrame(CWnd* pFrame) { m_pFrame = pFrame; }
+
 		LONG m_cRef;                            // Reference count.
 		CWnd* m_pFrame;
 		CRibbonCommandHandler* m_pCommandHandler;
@@ -135,10 +136,7 @@ namespace Win32xx
 			// Reference count must be 1 or we have a leak!
 			assert(m_cRef == 1);
 			
-			if (m_pCommandHandler)
-			{
-				delete m_pCommandHandler;
-			}
+			delete m_pCommandHandler;
 		}
 
 	// IUnknown method implementations.
@@ -182,8 +180,7 @@ namespace Win32xx
 
 		if (NULL == m_pCommandHandler)
 		{
-			m_pCommandHandler = new CRibbonCommandHandler();		
-			m_pCommandHandler->SetFrame(m_pFrame);
+			m_pCommandHandler = new CRibbonCommandHandler(m_pFrame);		
 		}
 
 		return m_pCommandHandler->QueryInterface(IID_PPV_ARGS(ppCommandHandler));
@@ -214,8 +211,7 @@ namespace Win32xx
 	}
 
 	inline bool CRibbon::CreateRibbon(CWnd* pWnd)
-	{
-		
+	{	
 		::CoInitialize(NULL);
 
 		// Instantiate the Ribbon framework object.

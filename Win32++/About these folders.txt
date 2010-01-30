@@ -3,7 +3,7 @@ The contents of the folders within Win32++
 help             The help for Win32++
 include          The Win32++ library for typical use
 new projects     A set of projects to be used in your new projects 
-tests            A directory which contains the output of some tools
+output           A directory which contains the output of some tools
 tools            A set of useful batch files for Win32++
 
 
