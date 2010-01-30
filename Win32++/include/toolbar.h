@@ -103,7 +103,6 @@ namespace Win32xx
 	// Overridables
 		virtual void OnCreate();
 		virtual void OnDestroy();
-		virtual void OnLButtonDblClk(WPARAM wParam, LPARAM lParam);
 		virtual void OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -362,6 +361,11 @@ namespace Win32xx
 		// Note: TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
 		SendMessage(TB_SETEXTENDEDSTYLE, 0L, TBSTYLE_EX_DRAWDDARROWS);
 
+		// Turn of Double click processing (i.e. treat a double click as two single clicks)
+		DWORD dwStyle = GetClassLongPtr(GCL_STYLE);
+		dwStyle &= 	~CS_DBLCLKS;
+		SetClassLongPtr(GCL_STYLE, dwStyle);
+
 		// Add extra styles for toolbars inside a rebar
 		CWnd* pWnd = FromHandle(GetParent());
 		if (pWnd && pWnd->IsRebar())
@@ -575,36 +579,6 @@ namespace Win32xx
 		ImageList_Destroy(himlToolbar);
 		ImageList_Destroy(himlToolbarHot);
 		ImageList_Destroy(himlToolbarDis);
-	}
-
-	inline void CToolbar::OnLButtonDblClk(WPARAM wParam, LPARAM lParam)
-	// Doubleclicks on drop down buttons behave strangely because the popup
-	//  menu eats the LeftButtonUp messages, so we put them back.
-	{
-		UNREFERENCED_PARAMETER(wParam);
-
-		int iButton = HitTest();
-		if (iButton >= 0)
-		{
-			DWORD nStyle = GetButtonStyle(GetCommandID(iButton));
-			if (((nStyle & 0x0080) && (GetWinVersion() != 1400) && (GetWinVersion() != 2400)))
-			{
-				// DoubleClick on BTNS_WHOLEDROPDOWN button
-				::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-			}
-
-			if (nStyle & TBSTYLE_DROPDOWN)
-			{
-				CRect rcButton = GetItemRect(iButton);
-
-				int xPos = GET_X_LPARAM(lParam);
-				if (xPos >= rcButton.right -13)
-				{
-					// DoubleClick on dropdown part of TBSTYLE_DROPDOWN button
-					::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-				}
-			}
-		}
 	}
 
 	inline LRESULT CToolbar::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
@@ -1033,9 +1007,6 @@ namespace Win32xx
 		case WM_DESTROY:
 			OnDestroy();
 			break;
-		case WM_LBUTTONDBLCLK:
-			OnLButtonDblClk(wParam, lParam);
-			return 0;
 		case UWM_GETTOOLBARTHEME:
 			{
 				ThemeToolbar& tt = GetToolbarTheme();

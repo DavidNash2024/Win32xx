@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="Tutorial8"
 	ProjectGUID="{9E62AAB0-CF82-4A1D-A448-13B2D487BC0F}"
+	RootNamespace="Tutorial8"
 	>
 	<Platforms>
 		<Platform
@@ -57,7 +58,7 @@
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 			/>

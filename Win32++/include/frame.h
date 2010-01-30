@@ -1314,17 +1314,14 @@ namespace Win32xx
 		case WM_CHAR:
 			return 0L;  // Discard these messages
 		case WM_DRAWITEM:
-		//	m_pFrame->OnDrawItem(wParam, lParam);
 			m_pFrame->SendMessage(WM_DRAWITEM, wParam, lParam);
 			return TRUE; // handled
 		case WM_EXITMENULOOP:
 			if (m_bExitAfter)
 				ExitMenu();
-		//	m_pFrame->OnExitMenuLoop();
 			m_pFrame->SendMessage(WM_EXITMENULOOP, wParam, lParam);
 			break;
 		case WM_INITMENUPOPUP:
-		//	m_pFrame->OnInitMenuPopup(wParam, lParam);
 			m_pFrame->SendMessage(WM_INITMENUPOPUP, wParam, lParam);
 			break;
 		case WM_KEYDOWN:
@@ -1333,10 +1330,6 @@ namespace Win32xx
 		case WM_KILLFOCUS:
 			ExitMenu();
 			return 0L;
-		case WM_LBUTTONDBLCLK:
-			// Convert double left click to single left click
-			::mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-			return 0L;	// Discard these messages
 		case WM_LBUTTONDOWN:
 			// Do default processing first
 			CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
@@ -1347,7 +1340,6 @@ namespace Win32xx
 			OnLButtonUp(wParam, lParam);
 			break;
 		case WM_MEASUREITEM:
-		//	m_pFrame->OnMeasureItem(wParam, lParam);
 			m_pFrame->SendMessage(WM_MEASUREITEM, wParam, lParam);
 			return TRUE; // handled
 		case WM_MOUSELEAVE:
