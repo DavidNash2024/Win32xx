@@ -100,8 +100,10 @@ BOOL CColourDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-void CColourDialog::OnHScroll(WPARAM /*wParam*/, LPARAM lParam)
+void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
+
 	// Update the text for the colour's edit control
 	int nPos = SendMessage((HWND)lParam, TBM_GETPOS, 0, 0);
 	TCHAR Text[5];

@@ -17,8 +17,10 @@ void CScrollbar::OnInitDialog()
 	SetScroll(0);
 }
 
-LRESULT CScrollbar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CScrollbar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (uMsg)
 	{
 	case WM_HSCROLL:

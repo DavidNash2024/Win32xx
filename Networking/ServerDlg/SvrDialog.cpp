@@ -49,9 +49,12 @@ BOOL CTCPClientDlg::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-BOOL CTCPClientDlg::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CTCPClientDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to the various dialog buttons
+
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (LOWORD(wParam))
     {
 	case IDC_BUTTON_SEND2:
@@ -158,8 +161,10 @@ void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
 	}  
 }
 
-BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	// Respond to the various dialog buttons
 	switch (LOWORD(wParam))
     {

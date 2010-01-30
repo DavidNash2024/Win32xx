@@ -152,9 +152,12 @@ int CClientDialog::OnClientReceive()
 	return size;
 }
 
-BOOL CClientDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CClientDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to the dialog buttons
+
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (LOWORD(wParam))
     {
 	case IDC_BUTTON_CONNECT:

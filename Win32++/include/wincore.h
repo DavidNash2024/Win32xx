@@ -1591,8 +1591,11 @@ namespace Win32xx
 		return m_tsLoadString.c_str();
 	}
 
-	inline BOOL CWnd::OnCommand(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		// Override this to handle WM_COMMAND messages, for example
 
 		//	switch (LOWORD(wParam))
@@ -1667,8 +1670,11 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CWnd::OnMessageReflect(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline LRESULT CWnd::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(uMsg);
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
 		// This function processes those special messages (see above) sent
 		// by some older controls, and reflects them back to the originating CWnd object.
 		// Override this function in your derrived class to handle these special messages.
@@ -1684,8 +1690,11 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CWnd::OnNotify(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline LRESULT CWnd::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		// You can use either OnNotifyReflect or OnNotify to handle notifications
 		// Override OnNotifyReflect to handle notifications in the CWnd class that
 		//   generated the notification.   OR
@@ -1705,8 +1714,11 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CWnd::OnNotifyReflect(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline LRESULT CWnd::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		// Override OnNotifyReflect to handle notifications in the CWnd class that
 		//   generated the notification.
 
@@ -1728,9 +1740,11 @@ namespace Win32xx
 		// Override this function in your derived class to perform drawing tasks.
 	}
 
-	inline void CWnd::OnMenuUpdate(UINT /*nID*/)
+	inline void CWnd::OnMenuUpdate(UINT nID)
 	// Called when menu items are about to be displayed
 	{
+		UNREFERENCED_PARAMETER(nID);
+
 		// Override this function to modify the behaviour of menu items,
 		// such as adding or removing checkmarks
 	}
@@ -1874,8 +1888,10 @@ namespace Win32xx
 		//     To set a small icon for the window, use SetIconSmall.
 	}
 
-	inline BOOL CWnd::PreTranslateMessage(MSG* /*pMsg*/)
+	inline BOOL CWnd::PreTranslateMessage(MSG* pMsg)
 	{
+		UNREFERENCED_PARAMETER(pMsg);
+
 		// Override this function if your class requires input messages to be
 		// translated before normal processing. Function which translate messages
 		// include TranslateAccelerator, TranslateMDISysAccel and IsDialogMessage.

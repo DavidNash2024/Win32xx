@@ -56,8 +56,10 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:

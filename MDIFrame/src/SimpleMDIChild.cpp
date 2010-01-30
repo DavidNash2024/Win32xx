@@ -58,9 +58,12 @@ void CSimpleMDIChild::OnInitialUpdate()
 	SetIconSmall(IDI_VIEW);
 }
 
-BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 {
     // Respond to menu and toolbar input
+
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (LOWORD(wParam))
 	{
 	case IDM_COLOR_BLACK:

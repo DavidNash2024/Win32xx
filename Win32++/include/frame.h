@@ -665,8 +665,10 @@ namespace Win32xx
 		return m_pFrame->IsMDIFrame();
 	}
 
-	inline void CMenubar::MenuChar(WPARAM wParam, LPARAM /* lParam */)
+	inline void CMenubar::MenuChar(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(lParam);
+
 		if (!m_bMenuActive)
 			DoAltKey(LOWORD(wParam));
 	}
@@ -791,8 +793,10 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CMenubar::OnKeyDown(WPARAM wParam, LPARAM /*lParam*/)
+	inline void CMenubar::OnKeyDown(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(lParam);
+
 		switch (wParam)
 		{
 		case VK_ESCAPE:
@@ -840,8 +844,10 @@ namespace Win32xx
 		} // switch (wParam)
 	}
 
-	inline void CMenubar::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
+	inline void CMenubar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+
 		GrabFocus();
 		m_nMDIButton = 0;
 		CPoint pt;
@@ -877,8 +883,9 @@ namespace Win32xx
 		}
 	}
 
-	inline void CMenubar::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
+	inline void CMenubar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
 		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
@@ -1113,8 +1120,10 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CMenubar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
+	inline LRESULT CMenubar::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+
 		switch (((LPNMHDR)lParam)->code)
 		{
 		case NM_CUSTOMDRAW:
@@ -2415,8 +2424,9 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CFrame::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+	inline LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
 
 		switch (((LPNMHDR)lParam)->code)
 		{

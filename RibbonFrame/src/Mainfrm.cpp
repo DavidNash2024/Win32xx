@@ -25,9 +25,11 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// OnCommand responds to menu and and toolbar input
+
+	UNREFERENCED_PARAMETER(lParam);
 
 	switch(LOWORD(wParam))
 	{

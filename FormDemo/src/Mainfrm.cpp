@@ -58,8 +58,9 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		OnUpdateRangeOfIds_Radio(nID);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
 	WORD wpLo = LOWORD(wParam);
     
 	switch(LOWORD(wParam))

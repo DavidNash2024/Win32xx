@@ -577,10 +577,12 @@ namespace Win32xx
 		ImageList_Destroy(himlToolbarDis);
 	}
 
-	inline void CToolbar::OnLButtonDblClk(WPARAM /*wParam*/, LPARAM lParam)
+	inline void CToolbar::OnLButtonDblClk(WPARAM wParam, LPARAM lParam)
 	// Doubleclicks on drop down buttons behave strangely because the popup
 	//  menu eats the LeftButtonUp messages, so we put them back.
 	{
+		UNREFERENCED_PARAMETER(wParam);
+
 		int iButton = HitTest();
 		if (iButton >= 0)
 		{
@@ -605,9 +607,11 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CToolbar::OnNotifyReflect(WPARAM /* wParam */, LPARAM lParam)
+	inline LRESULT CToolbar::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
 	// Notifications sent to the parent window are reflected back here
 	{
+		UNREFERENCED_PARAMETER(wParam);
+
 		switch (((LPNMHDR)lParam)->code)
 		{
 			case NM_CUSTOMDRAW:
@@ -629,8 +633,10 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CToolbar::OnWindowPosChanging(WPARAM /*wParam*/, LPARAM lParam)
+	inline void CToolbar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+
 		// Adjust size for toolbars inside a rebar
 		HWND hWndParent = GetParent();
 

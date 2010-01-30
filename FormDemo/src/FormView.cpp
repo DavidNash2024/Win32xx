@@ -46,9 +46,11 @@ void CFormView::OnCancel()
 	// Discard these messages
 }
 
-BOOL CFormView::OnCommand(WPARAM wParam, LPARAM /* lParam */)
+BOOL CFormView::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-  WORD wpLo = LOWORD(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+  
+	WORD wpLo = LOWORD(wParam);
 
 	switch (wpLo)
 	{

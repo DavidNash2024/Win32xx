@@ -169,8 +169,10 @@ void CMainFrame::OnFileOpen()
 	SetWindowText(ts.c_str());
 }
 
-BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	tString tsMRUText = GetMRUEntry(nMRUIndex);
 	CToolbar& TB = GetToolbar();

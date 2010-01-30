@@ -90,8 +90,9 @@ void CView::OnInitialUpdate()
 	ShowScrollBar(SB_BOTH, FALSE);
 }
 
-void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
+void CView::OnHScroll(WPARAM wParam, LPARAM lParam)
 { 
+	UNREFERENCED_PARAMETER(lParam);
 	int xNewPos; 
 
 	switch (LOWORD(wParam)) 
@@ -160,8 +161,9 @@ void CView::OnPaint(HDC hDC)
 	}
 }
 
-void CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
+void CView::OnVScroll(WPARAM wParam, LPARAM lParam)
 {  
+	UNREFERENCED_PARAMETER(lParam);
 	int yNewPos;    
 
 	switch (LOWORD(wParam)) 
@@ -211,8 +213,11 @@ void CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
 	SetScrollInfo(SB_VERT, si, TRUE);  
 } 
 
-void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
+void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
 	if (m_hbmImage) 
 	{
 		CRect rcImage = GetImageRect();

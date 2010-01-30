@@ -92,8 +92,10 @@ void CMainFrame::OnClose()
 	CFrame::OnClose();
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	// Handle the the View submenu
 	HMENU hView = ::GetSubMenu(GetFrameMenu(), 1);
 

@@ -313,8 +313,11 @@ namespace Win32xx
 		return TRUE;    // Allow cancel to proceed
 	}
 
-	inline BOOL CPropertyPage::OnQuerySiblings(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline BOOL CPropertyPage::OnQuerySiblings(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		// Responds to a query request from the Property Sheet.
 		// The values for wParam and lParam are the ones set by
 		// the CPropertySheet::QuerySiblings call
@@ -399,8 +402,10 @@ namespace Win32xx
 		return CWnd::PreTranslateMessage(pMsg);
 	}
 
-	inline LRESULT CPropertyPage::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+	inline LRESULT CPropertyPage::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+
 		LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
 		switch(pNotify->hdr.code)
 		{
@@ -464,8 +469,10 @@ namespace Win32xx
 		m_PSP.pszTitle = m_Title.c_str();
 	}
 
-	inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND /*hwnd*/, UINT uMsg, LPPROPSHEETPAGE ppsp)
+	inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp)
 	{
+		UNREFERENCED_PARAMETER(hwnd);
+
 		// Note: the hwnd is always NULL
 		try
 		{

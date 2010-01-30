@@ -122,8 +122,10 @@ void CContainClasses::AddCombo()
 	m_ComboBoxEx.AddItems();
 }
 
-BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	// OnCommand responds to menu and and toolbar input
 
 	switch(LOWORD(wParam))

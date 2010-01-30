@@ -31,8 +31,10 @@ BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (LOWORD(wParam))
     {
 	case IDC_BUTTON1:

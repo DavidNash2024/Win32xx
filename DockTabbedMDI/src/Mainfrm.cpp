@@ -116,8 +116,10 @@ void CMainFrame::LoadDefaultMDIs()
 	pTabbedMDI->SetActiveMDITab(0);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
 
 	// OnCommand responds to menu and and toolbar input

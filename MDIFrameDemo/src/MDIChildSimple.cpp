@@ -60,8 +60,10 @@ void CMDIChildSimple::OnClose()
 		::SendMessage(GetParent(), WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 }
 
-BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (LOWORD(wParam))
 	{
 	case IDM_COLOR_BLACK:

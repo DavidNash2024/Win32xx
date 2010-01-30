@@ -11,8 +11,11 @@ void CSlider::OnInitDialog()
 	::SendMessage(m_hWnd, TBM_SETTICFREQ,  (WPARAM)10, 0);
 }
 
-LRESULT CSlider::OnMessageReflect(UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CSlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (uMsg)
 	{
 	case WM_HSCROLL:

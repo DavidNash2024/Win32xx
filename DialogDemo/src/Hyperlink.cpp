@@ -72,8 +72,10 @@ void CHyperlink::OpenUrl()
 		DebugWarnMsg(_T("ShellExecute Failed"));
 }
 
-LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	// Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
 	if (uMsg ==  WM_CTLCOLORSTATIC)
 	{
