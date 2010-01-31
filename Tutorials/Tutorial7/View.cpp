@@ -59,7 +59,7 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 {
 	// Set the background brush and cursor
 	wc.hbrBackground = m_hBrush;
-	wc.lpszClassName = "Scribble Window";
+	wc.lpszClassName = _T("Scribble Window");
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 

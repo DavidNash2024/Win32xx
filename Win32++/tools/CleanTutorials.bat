@@ -18,6 +18,7 @@ FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Release_Build
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\x64
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\_UpgradeReport_Files
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\__history
+FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\ipch
 
 
 ::Remove files
@@ -44,6 +45,8 @@ FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.bak"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vcb"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vco"
+FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.log"
+FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.sdf"
 
 
 popd
