@@ -89,38 +89,28 @@ void CMainFrame::OnCreate()
 	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
 
-#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
-	TRACE(_T("CMainFrame::OnCreate\n"));
-	if (GetWinVersion() >= 2601)
+	if (IsRibbonUsed())
 	{
-		m_bUseRebar = FALSE;				// Don't use rebars
+		m_bUseRebar = FALSE;			// Don't use rebars
 		m_bUseToolbar = FALSE;			// Don't use a toolbar
-	}
-#endif
+	
+		CFrame::OnCreate();
 
-	CFrame::OnCreate();
-	int ver = GetWinVersion();
-
-#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
-	if (GetWinVersion() >= 2601)
-	{
 		if (m_Ribbon.CreateRibbon(this))
 			TRACE(_T("Ribbon Created Succesfully\n"));
 		else
-			TRACE(_T("Failed to create ribbon\n"));
-	} 
-#endif
+			throw CWinException(_T("Failed to create ribbon"));
+	}
+	else
+		CFrame::OnCreate();
 }
 
 void CMainFrame::OnDestroy()
 {
-
-#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
-	if (GetWinVersion() >= 2601)
+	if (IsRibbonUsed())
 	{
 		m_Ribbon.DestroyRibbon();
 	} 
-#endif
 
 	CFrame::OnDestroy();
 }
@@ -187,30 +177,6 @@ HRESULT CMainFrame::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PR
 	HRESULT hr = S_OK;
 	switch(nCmdID)
 	{
-	case cmdButton1:
-		TRACE(_T("Button 1\n"));
-		break;
-	case cmdButton2:
-		TRACE(_T("Button 2\n"));
-		break;
-	case cmdButton3:
-		TRACE(_T("Button 3\n"));
-		break;
-	case cmdButton4:
-		TRACE(_T("Button 4\n"));
-		break;
-	case cmdButton5:
-		TRACE(_T("Button 5\n"));
-		break;
-	case cmdButton6:
-		TRACE(_T("Button 6\n"));
-		break;
-	case cmdToggleButton1:
-		TRACE(_T("Toggle Button 1\n"));
-		break;
-	case cmdToggleButton2:
-		TRACE(_T("Toggle Button 2\n"));
-		break;
 	case IDC_CMD_NEW:
 		TRACE (_T("New\n"));
 		break;

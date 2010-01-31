@@ -235,6 +235,7 @@ namespace Win32xx
 		BOOL IsMenubarUsed() const		{ return (GetMenubar() != 0); }
 		BOOL IsRebarSupported() const	{ return (GetComCtlVersion() >= 470); }
 		BOOL IsRebarUsed() const		{ return (GetRebar() != 0); }
+		BOOL IsRibbonUsed() const;
 
 	protected:
 		// Override these functions as required
@@ -1891,7 +1892,20 @@ namespace Win32xx
 
 		CRect rcView(left, top, right, bottom);
 		return rcView;
-	} 
+	}
+
+	inline BOOL CFrame::IsRibbonUsed() const
+	{
+
+	#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
+		if (GetWinVersion() >= 2601)
+		{
+			return TRUE;
+		} 
+	#endif
+
+		return FALSE;
+	}
 
 	inline void CFrame::LoadCommonControls()
 	{
