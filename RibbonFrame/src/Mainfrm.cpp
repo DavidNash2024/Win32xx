@@ -23,6 +23,7 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 	// Destructor for CMainFrame.
+	m_Ribbon.DestroyRibbon();
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -178,25 +179,35 @@ HRESULT CMainFrame::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PR
 	switch(nCmdID)
 	{
 	case IDC_CMD_NEW:
-		TRACE (_T("New\n"));
+//		OnFileNew();
 		break;
 	case IDC_CMD_OPEN:
-		TRACE (_T("Open\n"));
+		OnFileOpen();
 		break;
 	case IDC_CMD_SAVE:
-		TRACE (_T("Save\n"));
+//		OnFileSave();
 		break;
 	case IDC_CMD_SAVE_AS:
-		TRACE (_T("Save As\n"));
+//		OnFileSaveAs();
 		break;
 	case IDC_CMD_PRINT:
-		TRACE (_T("Print\n"));
+		OnFilePrint();
+		 break;
+	case IDC_CMD_COPY:
+		TRACE(_T("Copy\n"));
+		break;
+	case IDC_CMD_CUT:
+		TRACE(_T("Cut\n"));
+		break;
+	case IDC_CMD_PASTE:
+		TRACE(_T("Paste\n"));
 		break;
 	case IDC_CMD_ABOUT:
-		TRACE (_T("About\n"));
+		TRACE(_T("About\n"));
 		break;
 	case IDC_CMD_EXIT:
-		TRACE(_T("Exit\n"));
+	//	m_Ribbon.DestroyRibbon();
+		PostQuitMessage(0);
 		break;
 	default:
 		TRACE(_T("Unknown button\n"));

@@ -1,22 +1,64 @@
 Version 6.8
 ===========
-* Added CButton class
-* Added CEdit class
-* Added CListBox class
-* Added CStatic class
-* Removed CSplitter class
+
+Changes Summary
+---------------
+* Added Ribbon UI support to the framework. 
+* Added wrappers for the standard controls (i.e. Button, Edit, Listbox, and Static controls).
+* Added PreTranslate Message support for modeless dialogs.
+* Added project files for Visual Studio 2010 Express.
+* Removed the Win32++ static library from the framework. It provided few advantages over
+   precompiled headers, and added to the complexity of project files.
+
+
+Changes Details
+---------------
+Added CButton class
+Added CEdit class
+Added CListBox class
+Added CStatic class
+Added CRibbon
+Added CRibbonCommandHandler
+Removed CSplitter class
 
 Added CFrame::GetRebarTheme
 Added CFrame::GetToolbarTheme
+Added CWnd::RibbonExecute
+Added CWnd::RibbonOnViewChanged
+Added CWnd::RibbonUpdateProperty
+
+Added RibbonFrame    sample
+Added SimpleRibbon   sample
 
 Added UWM_GETMENUTHEME     message
 Added UWM_GETREBARTHEME    message 
 Added UWM_GETTOOLBARTHEME  message
 
-Added PreTranslate Message support for modeless dialogs
+Added 'Compile VS2005 Express'  tool
+Added 'Compile VS2008 Express'  tool
+Added 'Compile VS2010 Express'  tool
 
 Bug Fixes
 - Fixed TCharToString
+- Delayed CPropertySheet::OnInitalUpdate to allow the property sheet to be centered over its parent.
+ 
+
+Notes about Ribbon UI support
+-----------------------------
+In order to compile the Ribbon UI you will need the following
+- VS2005 or later Microsoft compiler (Express versions are fine)
+- The Windows 7 SDK installed and configured into the IDE/Project
+- Turn on RibbonUI support by defining the USE_RIBBON macro (typically in StdAfx.h)
+- The ribbon itself defined in an xml file
+- Project options correctly set to compile the ribbon xml file using uicc.exe
+
+To run a program with a ribbon you will need the following
+- Windows 7 operating system
+
+Note:
+If a frame application with ribbon support turned on is run on an Operating System
+which doesn't support the RibbonUI (i.e. Vista or below), the normal toolbar and
+menu is displayed.  
 
 
 Version 6.7
