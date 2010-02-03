@@ -110,15 +110,6 @@
 #include <assert.h>
 
 
-#if defined USE_RIBBON
-  #if defined(_MSC_VER) && _MSC_VER >= 1400 
-    #include <UIRibbon.h>		// Contained within the Windows 7 SDK
-  #else
-    TRACE(_T("MS compiler VS2005 Express or above required for ribbon support\n"));
-  #endif
-#endif
-
-
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
   #define GetWindowLongPtr   GetWindowLong
@@ -449,12 +440,6 @@ namespace Win32xx
 
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
-
-#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
-		virtual HRESULT RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
-		virtual HRESULT RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
-		virtual HRESULT RibbonUpdateProperty(UINT32 nCmdID, REFPROPERTYKEY key, const PROPVARIANT* ppropvarCurrentValue, PROPVARIANT* ppropvarNewValue);
-#endif
 
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
@@ -1748,84 +1733,6 @@ namespace Win32xx
 		// Override this function to modify the behaviour of menu items,
 		// such as adding or removing checkmarks
 	}
-
-#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
-
-	inline HRESULT CWnd::RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
-	{
-		UNREFERENCED_PARAMETER(viewId);
-		UNREFERENCED_PARAMETER(typeId);
-		UNREFERENCED_PARAMETER(pView);
-		UNREFERENCED_PARAMETER(verb);
-		UNREFERENCED_PARAMETER(uReasonCode);
-
-		HRESULT hr = E_NOTIMPL;
-
-/*		// Checks to see if the view that was changed was a Ribbon view.
-		if (UI_VIEWTYPE_RIBBON == typeId)
-		{
-			switch (verb)
-			{           
-				// The view was newly created.
-			case UI_VIEWVERB_CREATE:
-				hr = S_OK;
-				break;
-
-				// The view has been resized.  For the Ribbon view, the application should
-				// call GetHeight to determine the height of the ribbon.
-			case UI_VIEWVERB_SIZE:
-				{
-					IUIRibbon* pRibbon = NULL;
-					UINT uRibbonHeight;
-
-					hr = pView->QueryInterface(IID_PPV_ARGS(&pRibbon));
-					if (SUCCEEDED(hr))
-					{
-						// Call to the framework to determine the desired height of the Ribbon.
-						hr = pRibbon->GetHeight(&uRibbonHeight);
-						pRibbon->Release();
-						// Use the ribbon height to position controls in the client area of the window.
-					}
-				}
-				break;
-				// The view was destroyed.
-			case UI_VIEWVERB_DESTROY:
-				hr = S_OK;
-				break;
-			}
-		} */ 
-
-		return hr; 
-	}
-
-		// Called by the Ribbon framework when a command property (PKEY) needs to be updated.
-	inline HRESULT CWnd::RibbonUpdateProperty(UINT32 nCmdID, REFPROPERTYKEY key, const PROPVARIANT* ppropvarCurrentValue, PROPVARIANT* ppropvarNewValue)
-	{
-		UNREFERENCED_PARAMETER(nCmdID);
-		UNREFERENCED_PARAMETER(key);
-		UNREFERENCED_PARAMETER(ppropvarCurrentValue);
-		UNREFERENCED_PARAMETER(ppropvarNewValue);
-
-		return E_NOTIMPL;
-	}
-
-	inline HRESULT CWnd::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
-	{
-		// Possible values for verb
-		//   UI_EXECUTIONVERB_EXECUTE
-		//   UI_EXECUTIONVERB_PREVIEW
-		//   UI_EXECUTIONVERB_CANCELPREVIEW
-
-	    UNREFERENCED_PARAMETER(nCmdID);
-		UNREFERENCED_PARAMETER(pCommandExecutionProperties);
-		UNREFERENCED_PARAMETER(ppropvarValue);
-		UNREFERENCED_PARAMETER(key);
-		UNREFERENCED_PARAMETER(verb);
-
-		return S_OK; 
-	}
-
-#endif // defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
 
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters

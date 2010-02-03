@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="SimpleRibbon"
 	ProjectGUID="{81273105-D0E0-40EF-AF16-1F17A12E69BC}"
+	RootNamespace="SimpleRibbon"
 	>
 	<Platforms>
 		<Platform
@@ -221,10 +222,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleRibbon.rc"
-				>
-			</File>
-			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 			</File>
@@ -322,28 +319,14 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\src\Ribbon.xml"
 			>
-			<FileConfiguration
-				Name="Release Static Library|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug Static Library|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
 			<FileConfiguration
 				Name="Debug|Win32"
 				>
@@ -355,6 +338,24 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Static Library|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Static Library|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

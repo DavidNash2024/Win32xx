@@ -23,7 +23,7 @@
              Symbol="IDC_CMD_IMAGE" 
              Id="10002" >
       <Command.LabelTitle>
-        <String Id ="201">Image</String>
+        <String Id ="202">Image</String>
       </Command.LabelTitle>
     </Command>
     

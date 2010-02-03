@@ -24,7 +24,7 @@ void CView::OnCreate()
 
 	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
 	{
-		if (m_Ribbon.CreateRibbon(this))
+		if (CreateRibbon(this))
 			TRACE(_T("Ribbon Created Succesfully\n"));
 		else
 			TRACE(_T("Failed to create ribbon\n"));
@@ -36,7 +36,7 @@ void CView::OnDestroy()
 {
 	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
 	{
-		m_Ribbon.DestroyRibbon();
+		DestroyRibbon();
 	}
 
 	// End the application when the window is destroyed
@@ -86,7 +86,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.lpszName = LoadString(IDS_APP_TITLE);// Window title
 }
 
-HRESULT CView::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
+STDMETHODIMP CView::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
 	UNREFERENCED_PARAMETER(pCommandExecutionProperties);
 	UNREFERENCED_PARAMETER(ppropvarValue);
@@ -131,7 +131,7 @@ HRESULT CView::RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERT
 	return hr; 
 }
 
-HRESULT CView::RibbonOnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
+STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 {
 		UNREFERENCED_PARAMETER(viewId);
 		UNREFERENCED_PARAMETER(uReasonCode);

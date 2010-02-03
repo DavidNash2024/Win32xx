@@ -5,22 +5,21 @@
 #define MAINFRM_H
 
 #include "View.h"
+#include "Ribbon.h"
+
 
 // Declaration of the CMainFrame class
-class CMainFrame : public CFrame
+class CMainFrame : public CRibbonFrame
 {
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
-#if defined (USE_RIBBON) && defined(__IUIRibbon_INTERFACE_DEFINED__)
-	HRESULT RibbonExecute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
-#endif
+	STDMETHODIMP Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
+	STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnCreate();
-	virtual void OnDestroy();
 	virtual void OnFileOpen();
 	virtual void OnFilePrint();
 	virtual void OnInitialUpdate();
