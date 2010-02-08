@@ -1041,7 +1041,7 @@ namespace Win32xx
 						break;
 					}
 				}
-			}
+			} 
 
 			if (!Processed)
 			{

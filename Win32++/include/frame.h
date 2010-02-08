@@ -2623,13 +2623,15 @@ namespace Win32xx
 
 	inline void CFrame::RecalcLayout()
 	{
-		if ((!m_pView) || (!m_pView->GetHwnd()))
+		CWnd* pView = GetView();
+		if ((!pView) || (!pView->GetHwnd()))
 			return;
 
 		// Resize the status bar
 		if (GetStatusbar())
 		{
-			GetStatusbar().SendMessage(WM_SIZE, 0L, 0L);
+		//	GetStatusbar().SendMessage(WM_SIZE, 0L, 0L);
+			GetStatusbar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusbar().Invalidate();
 		}
 
@@ -2655,7 +2657,7 @@ namespace Win32xx
 			int cx = rClient.Width();
 			int cy = rClient.Height();
 
-			m_pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
+			pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
 		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)

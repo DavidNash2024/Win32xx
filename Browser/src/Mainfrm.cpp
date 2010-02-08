@@ -32,7 +32,13 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	ThemeRebar RBTheme = RB.GetRebarTheme();
 
 	// Create the ComboboxEx window
-	m_ComboBoxEx.Create(RB.GetHwnd());
+	CREATESTRUCT cs = {0};
+	cs.lpszClass = _T("COMBOBOXEX32");
+	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
+	cs.cy = 100;	// required to display list
+	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
+	m_ComboboxEx.PreCreate(cs);
+	m_ComboboxEx.Create(GetRebar().GetHwnd());
 
 	// Put the window in a new rebar band
 	REBARBANDINFO rbbi = {0};
@@ -44,28 +50,10 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 	rbbi.clrBack    = RBTheme.clrBand1;
-	rbbi.hwndChild  = m_ComboBoxEx.GetHwnd();
+	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
 	rbbi.lpText     = _T("Address");
 
 	RB.InsertBand(-1, rbbi);
-}
-
-void CMainFrame::Navigate()
-{
-	TCHAR szString[256];
-
-	// Get text from edit box
-	m_ComboBoxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
-
-	// Insert text into the list box.
-	COMBOBOXEXITEM CBXitem = {0};
-	CBXitem.mask = CBEIF_TEXT;
-	CBXitem.pszText = szString;
-	m_ComboBoxEx.SendMessage(CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
-
-	// Navigate to the web page
-	m_View.Navigate(szString);
-
 }
 
 void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
@@ -76,8 +64,36 @@ void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
 		CComVariant vtURL(*pDispParams->rgvarg[5].pvarVal);
 		vtURL.ChangeType(VT_BSTR);
 
+		HWND hwnd = m_ComboboxEx.GetHwnd();
+
 		USES_CONVERSION;
-		m_ComboBoxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));
+		::SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));
+	}
+}
+
+void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
+{
+	CToolbar& TB = GetToolbar();
+
+	if ((pDispParams) && (pDispParams->cArgs == 2))
+	{
+		if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
+		{
+			VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
+			int nCommand = pDispParams->rgvarg[1].intVal;
+			{
+				switch (nCommand)
+				{
+				case 1: // Navigate forward:
+					bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
+
+					break;
+				case 2: // Navigate back:
+					bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -109,18 +125,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_HOME:
 		m_View.GetIWebBrowser2()->GoHome();
 		return TRUE;
-	case IDM_EDIT_COPY:
-		OnEditCopy();
-		return TRUE;
-	case IDM_EDIT_CUT:
-		OnEditCut();
-		return TRUE;
-	case IDM_EDIT_DELETE:
-		OnEditDelete();
-		return TRUE;
-	case IDM_EDIT_PASTE:
-		OnEditPaste();
-		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
 		return TRUE;
@@ -130,7 +134,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	}
 
 	// Handle notification WM_COMMAND from ComboboxEx
-	if((HWND)lParam == m_ComboBoxEx.GetHwnd())
+	if((HWND)lParam == m_ComboboxEx.GetHwnd())
 	{
 		switch(HIWORD(wParam))
 		{
@@ -140,7 +144,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 				TCHAR szString[256];
 
 				// Get text from edit box
-				m_ComboBoxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
+				::SendMessage(m_ComboboxEx.GetHwnd(), WM_GETTEXT, 256, (LPARAM)szString);
 
 				// Navigate to web page
 				m_View.Navigate(szString);
@@ -157,35 +161,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
-{
-	CToolbar& TB = GetToolbar();
-
-	if ((pDispParams) && (pDispParams->cArgs == 2))
-	{
-		if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
-		{
-			VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
-			int nCommand = pDispParams->rgvarg[1].intVal;
-			{
-				switch (nCommand)
-				{
-				case 1: // Navigate forward:
-					bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
-
-					break;
-				case 2: // Navigate back:
-					bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
-					break;
-				}
-			}
-		}
-	}
-}
-
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 {
-	UNREFERENCED_PARAMETER(pDispParams);
 	TRACE(_T("OnDocumentBegin\n"));
 }
 
@@ -193,49 +170,19 @@ void CMainFrame::OnCreate()
 {
 	// Call the base function first
 	CFrame::OnCreate();
-
-	// Attach the Combo's edit window to CComboEdit
-	HWND hEdit = (HWND)m_ComboBoxEx.SendMessage(CBEM_GETEDITCONTROL, 0, 0);
-	m_ComboEdit.Attach(hEdit);
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
-	UNREFERENCED_PARAMETER(pDispParams);
 	GetStatusbar().SetPartText(0, _T("Done"));
 }
 
 void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
 {
-	UNREFERENCED_PARAMETER(pDispParams);
 }
 
 void CMainFrame::OnDownloadComplete(DISPPARAMS* pDispParams)
 {
-	UNREFERENCED_PARAMETER(pDispParams);
-}
-
-void CMainFrame::OnEditCopy()
-{
-	if (m_ComboEdit == GetFocus())
-	m_ComboEdit.SendMessage(WM_COPY, 0, 0);
-}
-
-void CMainFrame::OnEditCut()
-{
-	if (m_ComboEdit == GetFocus())
-	m_ComboEdit.SendMessage(WM_CUT, 0, 0);
-}
-
-void CMainFrame::OnEditDelete()
-{
-	if (m_ComboEdit == GetFocus())
-	m_ComboEdit.SendMessage(WM_CLEAR, 0, 0);
-}
-void CMainFrame::OnEditPaste()
-{
-	if (m_ComboEdit == GetFocus())
-	m_ComboEdit.SendMessage(WM_PASTE, 0, 0);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -264,8 +211,44 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
-	UNREFERENCED_PARAMETER(pDispParams);
 	TRACE(_T("NewWindow2\n"));
+}
+
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+{
+	HWND hwnd = m_ComboboxEx.GetHwnd();
+	USES_CONVERSION;
+
+	switch (((LPNMHDR)lParam)->code)
+	{
+	case CBEN_ENDEDIT:
+		{
+			switch (((PNMCBEENDEDIT)lParam)->iWhy)
+			{
+			case CBENF_RETURN:
+				// User hit return in edit box
+				{
+					TCHAR szString[256];
+
+					// Get text from edit box
+					::SendMessage(hwnd, WM_GETTEXT, 256, (LPARAM)szString);
+
+					// Insert text into the list box.
+					COMBOBOXEXITEM CBXitem = {0};
+					CBXitem.mask = CBEIF_TEXT;
+					CBXitem.pszText = szString;
+					::SendMessage(hwnd, CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
+
+					// Navigate to the web page
+					m_View.Navigate(szString);
+
+					return FALSE;
+				}
+			}
+		}
+	}
+
+	return CFrame::OnNotify(wParam, lParam);
 }
 
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
@@ -315,7 +298,6 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnTimer(WPARAM wParam)
 {
-	UNREFERENCED_PARAMETER(wParam);
 	GetStatusbar().SetPartText(0, _T("Done"));
 }
 
@@ -333,7 +315,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	else
 		str << LoadString(IDW_MAIN);
 
-	SetWindowText(str.str().c_str());
+	::SetWindowText(m_hWnd, str.str().c_str());
 }
 
 void CMainFrame::SetupToolbar()

@@ -6,19 +6,6 @@
 #include "ComboBoxEx.h"
 
 
-BOOL CComboBoxEx::OnCommand(WPARAM wParam, LPARAM lParam)
-{
-	UNREFERENCED_PARAMETER(lParam);
-	switch(LOWORD(wParam))
-	{
-	case IDOK: // Return hit in edit control
-		GetBrowserApp().GetMainFrame().Navigate();
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 void CComboBoxEx::PreCreate(CREATESTRUCT &cs)
 {
 	cs.lpszClass = _T("COMBOBOXEX32");
@@ -27,15 +14,5 @@ void CComboBoxEx::PreCreate(CREATESTRUCT &cs)
 	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
 }
 
-BOOL CComboBoxEx::PreTranslateMessage(MSG* pMsg)
-{
-	// translate keyboard input for the edit control
-	if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
-	{
-		if (IsDialogMessage(m_hWnd, pMsg))
-			return TRUE;
-	}
 
-	return CWnd::PreTranslateMessage(pMsg);
-}
 

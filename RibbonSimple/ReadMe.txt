@@ -18,9 +18,37 @@ Prerequisites:
 
 Compiling Instructions
 ======================
-To compile Ribbon.xml, specify it's custom build as follows:
+To compile Ribbon.xml, specify it's custom build properties as follows:
 
 Command Line  uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc
 Outputs       Ribbon.bml;RibbonUI.rc;RibbonUI.h 
 
 
+How it works
+============
+Microsoft's RibbonUI framework uses COM to implement the ribbon. The COM 
+interfaces involved are IUIApplication and IUICommandHandler. The Win32++ 
+CRibbon class inherits from both IUIApplication and IUICommandHandler. 
+
+To add a ribbon to a simple window, inherit CView from both CWnd and CRibbon. We
+also need to add the Ribbon.xml file containing the definitions for our ribbon
+to the project. To create and interact with the ribbon, we override the relevant
+functions from both IUIApplication and IUICommandHandler.
+
+The functions you may wish to override are:
+IUIApplication::OnCreateUICommand 
+  Called for each Command specified in the Ribbon markup to bind the Command 
+  to an IUICommandHandler.  
+IUIApplication::OnDestroyUICommand 
+  Called for each Command specified in the Ribbon markup when the Ribbon host 
+  application window is destroyed.  
+IUIApplication::OnViewChanged 
+  Called when the state of a View changes.
+IUICommandHandler::Execute 
+  Executes or previews the Commands bound to the Command handler.  
+IUICommandHandler::UpdateProperty
+  Sets a property value for a bound Command, for example, setting a Command to 
+  enabled or disabled depending on the state of a View.
+  
+This example demonstratues how to override IUICommandHandler::Execute to respond
+to button clicks on the ribbon.    

@@ -45,7 +45,11 @@
 #define _RIBBON_H_
 
 
+// Notes: 1) The Windows 7 SDK must be installed and its directories added to the IDE
+//        2) The ribbon only works on OS Windows 7 and above
+
 #include <UIRibbon.h>		// Contained within the Windows 7 SDK	
+
 
 namespace Win32xx
 {
@@ -78,13 +82,14 @@ namespace Win32xx
 		STDMETHODIMP UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue, 
 												 __out PROPVARIANT* ppropvarNewValue);	
 
-		bool CreateRibbon(CWnd* pWnd);
-		void DestroyRibbon();
+		bool virtual CreateRibbon(CWnd* pWnd);
+		void virtual DestroyRibbon();
 
 	private:
-		LONG m_cRef;                            // Reference count.
 		IUIFramework* m_pRibbonFramework;
+		LONG m_cRef;                            // Reference count.
 	};
+
 
 	class CRibbonFrame : public CFrame, public CRibbon
 	{
@@ -94,7 +99,8 @@ namespace Win32xx
 		virtual CRect GetViewRect() const;
 		virtual void OnCreate();
 		virtual void OnDestroy();
-
+		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
+		
 		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
 		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
 
@@ -296,7 +302,55 @@ namespace Win32xx
 		DestroyRibbon();
 		CFrame::OnDestroy();
 	}
-}
+
+	inline STDMETHODIMP CRibbonFrame::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
+	{
+		UNREFERENCED_PARAMETER(viewId);
+		UNREFERENCED_PARAMETER(uReasonCode);
+
+		HRESULT hr = E_NOTIMPL;
+
+		// Checks to see if the view that was changed was a Ribbon view.
+		if (UI_VIEWTYPE_RIBBON == typeId)
+		{
+			switch (verb)
+			{           
+				// The view was newly created.
+			case UI_VIEWVERB_CREATE:
+				hr = S_OK;
+				break;
+
+				// The view has been resized.  For the Ribbon view, the application should
+				// call GetHeight to determine the height of the ribbon.
+			case UI_VIEWVERB_SIZE:
+				{
+					IUIRibbon* pRibbon = NULL;
+					UINT uRibbonHeight;
+
+					hr = pView->QueryInterface(IID_PPV_ARGS(&pRibbon));
+					if (SUCCEEDED(hr))
+					{
+						// Call to the framework to determine the desired height of the Ribbon.
+						hr = pRibbon->GetHeight(&uRibbonHeight);
+						SetRibbonHeight(uRibbonHeight);
+						pRibbon->Release();
+
+						RecalcLayout();
+						// Use the ribbon height to position controls in the client area of the window.
+					}
+				}
+				break;
+				// The view was destroyed.
+			case UI_VIEWVERB_DESTROY:
+				hr = S_OK;
+				break;
+			}
+		}  
+
+		return hr; 
+	}
+
+} 
 
 #endif  // RIBBON_H
 

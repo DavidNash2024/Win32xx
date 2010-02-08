@@ -18,14 +18,11 @@ Added CEdit class
 Added CListBox class
 Added CStatic class
 Added CRibbon
-Added CRibbonCommandHandler
+Added CRibbonFrame
 Removed CSplitter class
 
 Added CFrame::GetRebarTheme
 Added CFrame::GetToolbarTheme
-Added CWnd::RibbonExecute
-Added CWnd::RibbonOnViewChanged
-Added CWnd::RibbonUpdateProperty
 
 Added RibbonFrame    sample
 Added SimpleRibbon   sample
@@ -48,8 +45,7 @@ Notes about Ribbon UI support
 In order to compile the Ribbon UI you will need the following
 - VS2005 or later Microsoft compiler (Express versions are fine)
 - The Windows 7 SDK installed and configured into the IDE/Project
-- Turn on RibbonUI support by defining the USE_RIBBON macro (typically in StdAfx.h)
-- The ribbon itself defined in an xml file
+- The ribbon xml file which contains the definition of the ribbon
 - Project options correctly set to compile the ribbon xml file using uicc.exe
 
 To run a program with a ribbon you will need the following
