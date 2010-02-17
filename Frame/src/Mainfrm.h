@@ -18,6 +18,7 @@ protected:
 	virtual void OnCreate();
 	virtual void OnFileOpen();
 	virtual void OnFilePrint();
+	virtual void OnFileSave();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetupToolbar();

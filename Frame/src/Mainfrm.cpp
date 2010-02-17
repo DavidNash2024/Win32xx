@@ -33,13 +33,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_OPEN:
+		// Refer to the tutorial for an example of OnFileOpen
 		OnFileOpen();
 		return TRUE;
 	case IDM_FILE_SAVE:
-		// Refer to the tutorial for an example of OnFileSave()
+		// Refer to the tutorial for an example of OnFileSave
+		OnFileSave();
 		return TRUE;
 	case IDM_FILE_SAVEAS:
-		// Refer to the tutorial for an example of OnFileSaveAs()
+		// Refer to the tutorial for an example of OnFileSaveAs
+		OnFileSave();
 		return TRUE;
 	case IDM_FILE_PRINT:
 		OnFilePrint();
@@ -99,6 +102,24 @@ void CMainFrame::OnFileOpen()
 
 	// Bring up the dialog, and open the file
 	::GetOpenFileName(&ofn);
+
+	// TODO:
+	// Add your own code here. Refer to the tutorial for additional information 
+}
+
+void CMainFrame::OnFileSave()
+{
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
+	OPENFILENAME ofn = {0};
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = m_hWnd;
+	ofn.lpstrFile = szFilePathName;
+	ofn.nMaxFile = _MAX_PATH;
+	ofn.lpstrTitle = _T("Save File");
+	ofn.Flags = OFN_OVERWRITEPROMPT;
+
+	// Bring up the dialog, and save the file
+	::GetSaveFileName(&ofn);
 
 	// TODO:
 	// Add your own code here. Refer to the tutorial for additional information 

@@ -84,6 +84,7 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
 		virtual BOOL IsMDIChild() const {return TRUE;}
@@ -606,6 +607,15 @@ namespace Win32xx
 			throw CWinException(_T("CMDIChild::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
 
 		m_pwndView->Create(m_hWnd);
+		
+		RecalcLayout();
+	}
+
+	inline void CMDIChild::RecalcLayout()
+	{
+		// Resize the View window
+		CRect rc = GetClientRect();
+		m_pwndView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 	}
 
 	inline BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)
@@ -665,9 +675,8 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			{
-				// Resize the View window
-				CRect rc = GetClientRect();
-				m_pwndView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+				RecalcLayout();
+				break;
 			}
 		}
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);

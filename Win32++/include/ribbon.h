@@ -285,15 +285,22 @@ namespace Win32xx
 		// Tasks such as setting the icon, creating child windows, or anything
 		// associated with creating windows are normally performed here.
 
-		m_bUseRebar = FALSE;			// Don't use rebars
-		m_bUseToolbar = FALSE;			// Don't use a toolbar
-		
-		CFrame::OnCreate();
+		if (GetWinVersion() >= 2601)
+		{		
+			m_bUseRebar = FALSE;			// Don't use rebars
+			m_bUseToolbar = FALSE;			// Don't use a toolbar
+			
+			CFrame::OnCreate();
 
-		if (CreateRibbon(this))
-			TRACE(_T("Ribbon Created Succesfully\n"));
+			if (CreateRibbon(this))
+				TRACE(_T("Ribbon Created Succesfully\n"));
+			else
+				throw CWinException(_T("Failed to create ribbon"));
+		}
 		else
-			throw CWinException(_T("Failed to create ribbon"));
+		{
+			CFrame::OnCreate();
+		}
 
 	}
 

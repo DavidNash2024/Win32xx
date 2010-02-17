@@ -38,10 +38,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnFileOpen();
 		return TRUE;
 	case IDM_FILE_SAVE:
-		// Refer to the tutorial for an example of OnFileSave()
+		// Refer to the tutorial for an example of OnFileSave
+		OnFileSave();
 		return TRUE;
 	case IDM_FILE_SAVEAS:
-		// Refer to the tutorial for an example of OnFileSaveAs()
+		// Refer to the tutorial for an example of OnFileSaveAs
+		OnFileSave();
 		return TRUE;
 	case IDM_FILE_PRINT:
 		OnFilePrint();
@@ -121,6 +123,24 @@ void CMainFrame::OnFilePrint()
 	// Add your own code here. Refer to the tutorial for additional information 
 }
 
+void CMainFrame::OnFileSave()
+{
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
+	OPENFILENAME ofn = {0};
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = m_hWnd;
+	ofn.lpstrFile = szFilePathName;
+	ofn.nMaxFile = _MAX_PATH;
+	ofn.lpstrTitle = _T("Save File");
+	ofn.Flags = OFN_OVERWRITEPROMPT;
+
+	// Bring up the dialog, and save the file
+	::GetSaveFileName(&ofn);
+
+	// TODO:
+	// Add your own code here. Refer to the tutorial for additional information 
+}
+
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Process notification messages sent by child windows
@@ -152,10 +172,10 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 		OnFileOpen();
 		break;
 	case IDC_CMD_SAVE:
-//		OnFileSave();
+		OnFileSave();
 		break;
 	case IDC_CMD_SAVE_AS:
-//		OnFileSaveAs();
+		OnFileSave();
 		break;
 	case IDC_CMD_PRINT:
 		OnFilePrint();
@@ -173,7 +193,6 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 		TRACE(_T("About\n"));
 		break;
 	case IDC_CMD_EXIT:
-	//	m_Ribbon.DestroyRibbon();
 		PostQuitMessage(0);
 		break;
 	default:

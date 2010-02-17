@@ -693,7 +693,7 @@ namespace Win32xx
 		rcClose.right = rc.right - gap;
 		rcClose.left = rcClose.right - cx;
 
-#if WINVER >= 0x0500
+#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 		{
 			rcClose.left = rc.left + gap;
@@ -1085,7 +1085,7 @@ namespace Win32xx
 		if ((dwStyle & DS_CLIENTEDGE) || (dwStyle & DS_FLATLOOK))
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
 
-#if WINVER >= 0x0500
+#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		if (m_pDock->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 			cs.dwExStyle |= WS_EX_LAYOUTRTL;
 #endif
@@ -2898,7 +2898,7 @@ namespace Win32xx
 
 	inline void CDocker::PreCreate(CREATESTRUCT &cs)
 	{
-		cs.style = WS_POPUP | WS_CHILD;
+		cs.style = WS_CHILD;
 		cs.dwExStyle = WS_EX_TOOLWINDOW;
 	}
 

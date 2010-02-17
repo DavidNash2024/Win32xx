@@ -789,7 +789,7 @@ namespace Win32xx
 		CDC dcMem = ::CreateCompatibleDC(NULL);
 		int xAdjust = 0;
 
-#if WINVER >= 0x0500
+#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 		dcMem.SetLayout(LAYOUT_RTL);
 		xAdjust = -2;	// Fudge factor for WS_EX_LAYOUTRTL exstyle

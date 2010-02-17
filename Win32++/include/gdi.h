@@ -1432,7 +1432,7 @@ namespace Win32xx
 	inline DWORD CDC::GetLayout() const
 	{
 		// Returns the layout of a device context (LAYOUT_RTL and LAYOUT_BITMAPORIENTATIONPRESERVED)
-#if defined(WINVER) && (WINVER >= 0x0500)
+#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		return ::GetLayout(m_hDC);
 #else
 		return 0;
@@ -1440,7 +1440,7 @@ namespace Win32xx
 	}
 	inline DWORD CDC::SetLayout(DWORD dwLayout) const
 	{
-#if defined(WINVER) && (WINVER >= 0x0500)
+#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		// Sets the layout of a device context
 		return ::SetLayout(m_hDC, dwLayout);
 #else
