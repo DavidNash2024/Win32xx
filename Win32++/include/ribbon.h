@@ -48,8 +48,9 @@
 // Notes: 1) The Windows 7 SDK must be installed and its directories added to the IDE
 //        2) The ribbon only works on OS Windows 7 and above
 
-#include <UIRibbon.h>		// Contained within the Windows 7 SDK	
-
+//#include <strsafe.h>
+#include <UIRibbon.h>					// Contained within the Windows 7 SDK	
+#include <UIRibbonPropertyHelpers.h>
 
 namespace Win32xx
 {
@@ -81,25 +82,53 @@ namespace Win32xx
 
 		STDMETHODIMP UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue, 
 												 __out PROPVARIANT* ppropvarNewValue);	
-
+		
 		bool virtual CreateRibbon(CWnd* pWnd);
 		void virtual DestroyRibbon();
 
 	private:
 		IUIFramework* m_pRibbonFramework;
 		LONG m_cRef;                            // Reference count.
+
+		TCHAR m_wszDisplayName[MAX_PATH];
+		TCHAR m_wszFullPath[MAX_PATH];		
 	};
 
 
 	class CRibbonFrame : public CFrame, public CRibbon
 	{
 	public:
+		// A nested class for the MRU item properties
+		class CRecentFileProperties : public IUISimplePropertySet
+		{
+		public:
+			// Static method to create an instance of the object.
+			__checkReturn static HRESULT CreateInstance(__in PWSTR wszFullPath, __deref_out_opt CRecentFileProperties **ppProperties);
+
+			// IUnknown methods.
+			STDMETHODIMP_(ULONG) AddRef();
+			STDMETHODIMP_(ULONG) Release();
+			STDMETHODIMP QueryInterface(REFIID iid, void** ppv);
+			
+			// IUISimplePropertySet methods 
+			STDMETHODIMP GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *value);
+
+		private:
+			CRecentFileProperties();
+			~CRecentFileProperties() {TRACE(_T("CRecentFileProperties destructor\n"));}
+
+			LONG m_cRef;                        // Reference count.
+			WCHAR m_wszDisplayName[MAX_PATH];
+			WCHAR m_wszFullPath[MAX_PATH];
+		};
+
 		CRibbonFrame() : m_uRibbonHeight(0) {}
 		virtual ~CRibbonFrame() {}
 		virtual CRect GetViewRect() const;
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
+		virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
 		
 		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
 		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
@@ -355,6 +384,157 @@ namespace Win32xx
 		}  
 
 		return hr; 
+	}
+
+	inline HRESULT CRibbonFrame::PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue)
+	{
+		LONG iCurrentFile = 0;
+		std::vector<tString> FileNames = GetMRUEntries();
+		std::vector<tString>::iterator iter;
+		int iFileCount = FileNames.size();
+		HRESULT hr = E_FAIL;
+		SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);
+		
+		if (psa != NULL)
+		{
+			for (iter = FileNames.begin(); iter < FileNames.end(); ++iter)
+			{
+				tString strCurrentFile = (*iter);
+				WCHAR wszCurrentFile[MAX_PATH] = {0};
+
+				if (TCharToWide(strCurrentFile.c_str(), wszCurrentFile, MAX_PATH))
+				{
+					CRecentFileProperties* pPropertiesObj;
+					hr = CRecentFileProperties::CreateInstance(wszCurrentFile, &pPropertiesObj);
+
+					if (SUCCEEDED(hr))
+					{
+						IUnknown* pUnk = NULL;
+						hr = pPropertiesObj->QueryInterface(__uuidof(IUnknown), reinterpret_cast<void**>(&pUnk));
+						if (SUCCEEDED(hr))
+						{
+							hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pUnk));
+							pUnk->Release();
+							++iCurrentFile;
+						}
+						
+						pPropertiesObj->Release();
+					}               
+				}
+			}
+
+			SAFEARRAYBOUND sab = {iCurrentFile,0};
+			SafeArrayRedim(psa, &sab);
+			hr = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
+
+			SafeArrayDestroy(psa);	// Calls release for each element in the array
+		}
+
+		return hr;
+	}
+
+
+	////////////////////////////////////////////////////////
+	// Declaration of the nested CRecentFileProperties class
+	inline CRibbonFrame::CRecentFileProperties::CRecentFileProperties() : m_cRef(1)
+	{
+		m_wszFullPath[0] = L'\0';
+		m_wszDisplayName[0] = L'\0';
+	}
+
+	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFileProperties::AddRef()
+	{
+		return InterlockedIncrement(&m_cRef);
+	}
+
+	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFileProperties::Release()
+	{
+		LONG cRef = InterlockedDecrement(&m_cRef);
+		if (cRef == 0)
+		{
+			delete this;
+		}
+
+		return cRef;
+	}
+
+	// Static method to create an instance of the object.
+	inline __checkReturn HRESULT CRibbonFrame::CRecentFileProperties::CreateInstance(__in PWSTR wszFullPath, __deref_out_opt CRecentFileProperties **ppProperties)
+	{
+		if (!wszFullPath || !ppProperties)
+		{
+			return E_POINTER;
+		}
+
+		*ppProperties = NULL;
+		HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
+		CRecentFileProperties* pProperties = new CRecentFileProperties();
+
+        if (NULL == pProperties) throw std::bad_alloc();
+	
+		SHFILEINFOW sfi;
+		DWORD_PTR dwPtr = NULL;
+
+		if (NULL != lstrcpynW(pProperties->m_wszFullPath, wszFullPath, MAX_PATH))
+		{    
+			dwPtr = ::SHGetFileInfoW(wszFullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
+		
+			if (dwPtr != NULL)
+			{
+				lstrcpynW(pProperties->m_wszDisplayName, sfi.szDisplayName, MAX_PATH);
+			}
+			else // Provide a reasonable fallback.
+			{
+				lstrcpynW(pProperties->m_wszDisplayName, pProperties->m_wszFullPath, MAX_PATH);
+			}
+
+			*ppProperties = pProperties;
+			hr = S_OK;
+		}
+
+		return hr;
+	}
+
+	inline STDMETHODIMP CRibbonFrame::CRecentFileProperties::QueryInterface(REFIID iid, void** ppv)
+	{
+		if (!ppv)
+		{
+			return E_POINTER;
+		}
+
+		if (iid == __uuidof(IUnknown))
+		{
+			*ppv = static_cast<IUnknown*>(this);
+		}
+		else if (iid == __uuidof(IUISimplePropertySet))
+		{
+			*ppv = static_cast<IUISimplePropertySet*>(this);
+		}
+		else 
+		{
+			*ppv = NULL;
+			return E_NOINTERFACE;
+		}
+
+		AddRef();
+		return S_OK;
+	}
+
+	// IUISimplePropertySet methods.
+	inline STDMETHODIMP CRibbonFrame::CRecentFileProperties::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
+	{
+		HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
+
+		if (key == UI_PKEY_Label)
+		{
+			hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
+		}
+		else if (key == UI_PKEY_LabelDescription)
+		{
+			hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
+		}
+
+		return hr;
 	}
 
 } 

@@ -224,6 +224,7 @@ namespace Win32xx
 
 	tString CharToTString(const char* s);
 	std::string TCharToString(LPCTSTR t);
+	BOOL TCharToWide (LPCTSTR pTChar, PWCHAR pWChar, int length);
 
 	enum Constants			// Defines the maximum size for TCHAR strings
 	{
@@ -848,6 +849,18 @@ namespace Win32xx
   #endif
 		return str;
 	}
+
+	inline BOOL TCharToWide (LPCTSTR pTChar, PWCHAR pWChar, int length)
+	{
+	  BOOL bReturn = FALSE;
+  #ifdef UNICODE
+	  bReturn = (BOOL)lstrcpyn(pWChar, pTChar, length);
+  #else
+	  bReturn = (BOOL)MultiByteToWideChar(CP_THREAD_ACP, MB_ERR_INVALID_CHARS | MB_PRECOMPOSED, pTChar, length, pWChar, length);
+  #endif
+
+	return bReturn;
+	}  
 
 	inline CPoint GetCursorPos()
 	{

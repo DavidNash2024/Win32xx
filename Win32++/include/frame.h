@@ -211,6 +211,7 @@ namespace Win32xx
 
 		// These functions aren't virtual, and shouldn't be overridden
 		HMENU GetFrameMenu() const			{ return m_hMenu; }
+		std::vector<tString>& GetMRUEntries() { return m_vMRUEntries; }
 		tString GetRegistryKeyName()		{ return m_tsKeyName; }
 		CWnd* GetView() const				{ return m_pView; }
 		tString GetMRUEntry(size_t nIndex);
