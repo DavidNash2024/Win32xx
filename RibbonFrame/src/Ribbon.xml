@@ -150,6 +150,7 @@
 
     
     <!-- Definitions of miscellaneous items -->
+    <Command Name="MRUList" Symbol="IDC_MRULIST" Id = "75"/>
     <Command Name="cmdQAT"/>
     <Command Name="cmdCustomizeQAT"/>
     <Command Name="cmdFileMenu"/>
@@ -163,12 +164,12 @@
   <!-- Views section -->
   <Application.Views>
     <Ribbon>
-    
+
       <!-- Application Menu -->
       <Ribbon.ApplicationMenu>
         <ApplicationMenu CommandName="cmdFileMenu">
           <ApplicationMenu.RecentItems>
-            <RecentItems CommandName="cmdMRUList" MaxCount="1" />
+            <RecentItems CommandName="MRUList" MaxCount="16" EnablePinning="false"/>   
           </ApplicationMenu.RecentItems>
           <MenuGroup Class="MajorItems">
             <Button CommandName="cmdNew" />

@@ -1,5 +1,6 @@
-/////////////////////////////////
+//////////////////////////////////////////////////////
 // View.h
+//  Declaration of the CView class
 
 #ifndef VIEW_H
 #define VIEW_H
@@ -8,17 +9,38 @@
 class CView : public CWnd
 {
 public:
-	CView() {}
-	virtual ~CView() {}
+	CView();
+	virtual ~CView();
+	virtual void ClearPoints();
+	virtual BOOL FileOpen(LPCTSTR szFilename);
+	virtual BOOL FileSave(LPCTSTR szFilename);
+	virtual void SetPen(COLORREF Color);
 
 protected:
-	virtual void OnCreate();
-	virtual void OnInitialUpdate();
+	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual void OnPaint(HDC hDC);
-	virtual void OnSize();
-	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+private:
+	struct PlotPoint
+	{
+		int x;
+		int y;
+		bool PenDown;
+		COLORREF color;
+	};
+
+	void DrawLine(int x, int y);
+	void OnLButtonDown(LPARAM lParam);
+	void OnLButtonUp(LPARAM lParam);
+	void OnMouseMove(WPARAM wParam, LPARAM lParam);
+	void StorePoint(int x, int y, bool PenDown);
+
+	HBRUSH m_hBrush;
+	std::vector<PlotPoint> m_points;	// Points of lines to draw
+	COLORREF m_PenColor;
 };
 
-#endif
+
+#endif // CVIEW_H

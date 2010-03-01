@@ -85,13 +85,12 @@ namespace Win32xx
 		
 		bool virtual CreateRibbon(CWnd* pWnd);
 		void virtual DestroyRibbon();
+		IUIFramework* GetRibbonFramework() { return m_pRibbonFramework; }
 
 	private:
 		IUIFramework* m_pRibbonFramework;
 		LONG m_cRef;                            // Reference count.
 
-		TCHAR m_wszDisplayName[MAX_PATH];
-		TCHAR m_wszFullPath[MAX_PATH];		
 	};
 
 
@@ -129,6 +128,8 @@ namespace Win32xx
 		virtual void OnDestroy();
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 		virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
+		virtual void UpdateMRUMenu();
+		virtual STDMETHODIMP UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) ;
 		
 		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
 		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
@@ -400,7 +401,7 @@ namespace Win32xx
 			for (iter = FileNames.begin(); iter < FileNames.end(); ++iter)
 			{
 				tString strCurrentFile = (*iter);
-				WCHAR wszCurrentFile[MAX_PATH] = {0};
+				WCHAR wszCurrentFile[MAX_PATH] = {0L};
 
 				if (TCharToWide(strCurrentFile.c_str(), wszCurrentFile, MAX_PATH))
 				{
@@ -433,6 +434,39 @@ namespace Win32xx
 		return hr;
 	}
 
+	inline void CRibbonFrame::UpdateMRUMenu()
+	{
+		// Suppress UpdateMRUMenu when ribbon is used
+		if (0 != GetRibbonFramework()) return;
+
+		CFrame::UpdateMRUMenu();
+	}
+
+	inline STDMETHODIMP CRibbonFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
+	{   
+		HRESULT hr = E_NOTIMPL;
+		if(UI_PKEY_Enabled == key)
+		{
+			return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);
+		}
+
+	   switch(nCmdID)
+		{
+	   case IDW_FILE_MRU_FILE1:
+			if (UI_PKEY_Label == key)
+			{
+				WCHAR label[MAX_PATH] = L"Most Recently Used List";
+				hr = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
+			}
+			else if (UI_PKEY_RecentItems == key)
+			{
+				hr = PopulateRibbonRecentItems(newValue);
+			}
+			break;
+		} 
+
+		return hr;
+	}
 
 	////////////////////////////////////////////////////////
 	// Declaration of the nested CRecentFileProperties class

@@ -856,7 +856,7 @@ namespace Win32xx
   #ifdef UNICODE
 	  bReturn = (BOOL)lstrcpyn(pWChar, pTChar, length);
   #else
-	  bReturn = (BOOL)MultiByteToWideChar(CP_THREAD_ACP, MB_ERR_INVALID_CHARS | MB_PRECOMPOSED, pTChar, length, pWChar, length);
+	  bReturn = (BOOL)MultiByteToWideChar(CP_THREAD_ACP, 0, pTChar, -1, pWChar, length);
   #endif
 
 	return bReturn;

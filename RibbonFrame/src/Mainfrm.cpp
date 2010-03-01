@@ -2,8 +2,10 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "resource.h"
+
+#include <UIRibbonPropertyHelpers.h>
 #include "RibbonUI.h"
+#include "resource.h"
 #include "mainfrm.h"
 
 
@@ -18,6 +20,9 @@ CMainFrame::CMainFrame()
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\Frame"));
+
+	// Load the settings from the registry with 4 MRU entries
+	LoadRegistryMRUSettings(4);
 }
 
 CMainFrame::~CMainFrame()
@@ -25,135 +30,6 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 	DestroyRibbon();
 }
-
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
-{
-	// OnCommand responds to menu and and toolbar input
-
-	UNREFERENCED_PARAMETER(lParam);
-
-	switch(LOWORD(wParam))
-	{
-	case IDM_FILE_OPEN:
-		OnFileOpen();
-		return TRUE;
-	case IDM_FILE_SAVE:
-		// Refer to the tutorial for an example of OnFileSave
-		OnFileSave();
-		return TRUE;
-	case IDM_FILE_SAVEAS:
-		// Refer to the tutorial for an example of OnFileSaveAs
-		OnFileSave();
-		return TRUE;
-	case IDM_FILE_PRINT:
-		OnFilePrint();
-		return TRUE;
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-/*void CMainFrame::OnCreate()
-{
-	// OnCreate controls the way the frame is created.
-	// Overriding CFrame::Oncreate is optional.
-	// The default for the following variables is TRUE
-
-	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
-	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
-	// m_bUseRebar = FALSE;				// Don't use rebars
-	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolbar = FALSE;			// Don't use a toolbar
-
-	// call the base class function
-	CFrame::OnCreate();
-}
-*/
-
-void CMainFrame::OnInitialUpdate()
-{
-	// The frame is now created.
-	// Place any additional startup code here.
-
-	TRACE(_T("CMainFrame::OnInitialUpdate\n"));
-}
-
-void CMainFrame::OnFileOpen()
-{
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Open File");
-
-	// Bring up the dialog, and open the file
-	::GetOpenFileName(&ofn);
-
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
-}
-
-void CMainFrame::OnFilePrint()
-{
-	// Bring up a dialog to choose the printer
-	PRINTDLG pd = {0};
-	pd.lStructSize = sizeof( pd );
-	pd.Flags = PD_RETURNDC;
-
-	// Retrieve the printer DC
-	PrintDlg( &pd );
-	
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
-}
-
-void CMainFrame::OnFileSave()
-{
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Save File");
-	ofn.Flags = OFN_OVERWRITEPROMPT;
-
-	// Bring up the dialog, and save the file
-	::GetSaveFileName(&ofn);
-
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
-{
-	// Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
-//	{
- 		//Add case statments for each notification message here
-//	}
-
-	// Some notifications should return a value when handled
-	return CFrame::OnNotify(wParam, lParam);
-}
-
-
 
 STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
@@ -166,7 +42,7 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 	switch(nCmdID)
 	{
 	case IDC_CMD_NEW:
-//		OnFileNew();
+		OnFileNew();
 		break;
 	case IDC_CMD_OPEN:
 		OnFileOpen();
@@ -195,6 +71,18 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 	case IDC_CMD_EXIT:
 		PostQuitMessage(0);
 		break;
+	case IDC_MRULIST:
+        {
+            if (key != NULL && UI_PKEY_SelectedItem == *key)
+            {
+                UINT uSelectedMRUItem = 0xffffffff;
+                if (ppropvarValue != NULL && SUCCEEDED(UIPropertyToUInt32(*key, *ppropvarValue, &uSelectedMRUItem)))
+                {
+                    SendMessage(WM_COMMAND, uSelectedMRUItem + IDW_FILE_MRU_FILE1, 0);
+                }
+            }
+            break;
+        }
 	default:
 		TRACE(_T("Unknown button\n"));
 		break;
@@ -202,6 +90,280 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 
 	return hr; 
 }
+
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	// Process the messages from the Menu and Tool Bar
+
+	UNREFERENCED_PARAMETER(lParam);
+
+	switch (LOWORD(wParam))
+	{
+	case IDM_FILE_NEW:
+		OnFileNew();
+		return TRUE;
+	case IDM_FILE_OPEN:
+		OnFileOpen();
+		return TRUE;
+	case IDM_FILE_SAVE:
+		OnFileSave();
+		return TRUE;
+	case IDM_FILE_SAVEAS:
+		OnFileSaveAs();
+		return TRUE;
+	case IDM_FILE_PRINT:
+		OnFilePrint();
+		return TRUE;
+	case IDM_PEN_RED:
+		TRACE(_T("Red pen selected\n"));
+		m_View.SetPen(RGB(255,0,0));
+		return TRUE;
+	case IDM_PEN_BLUE:
+		TRACE(_T("Blue pen selected\n"));
+		m_View.SetPen(RGB(0,0,255));
+		return TRUE;
+	case IDM_PEN_GREEN:
+		TRACE(_T("Green pen selected\n"));
+		m_View.SetPen(RGB(0,196,0));
+		return TRUE;
+	case IDM_PEN_BLACK:
+		TRACE(_T("Black pen selected\n"));
+		m_View.SetPen(RGB(0,0,0));
+		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusbar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolbar();
+		return TRUE;
+	case IDM_HELP_ABOUT:
+		OnHelp();
+		return TRUE;
+	case IDM_FILE_EXIT:
+		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		return TRUE;
+	case IDW_FILE_MRU_FILE1:
+	case IDW_FILE_MRU_FILE2:
+	case IDW_FILE_MRU_FILE3:
+	case IDW_FILE_MRU_FILE4:
+	case IDW_FILE_MRU_FILE5:
+		{
+			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+			tString tsMRUText = GetMRUEntry(nMRUIndex);
+
+			if (m_View.FileOpen(tsMRUText.c_str()))
+				m_PathName = tsMRUText;
+			else
+				RemoveMRUEntry(tsMRUText.c_str());
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+void CMainFrame::OnFileOpen()
+{
+	// Fill the OPENFILENAME structure
+	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
+	OPENFILENAME ofn = {0};
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = m_hWnd;
+	ofn.lpstrFilter = szFilters;
+	ofn.lpstrFile = szFilePathName;
+	ofn.nMaxFile = _MAX_PATH;
+	ofn.lpstrTitle = _T("Open File");
+	ofn.Flags = OFN_FILEMUSTEXIST;
+
+	// Bring up the dialog, and open the file
+	if (!::GetOpenFileName(&ofn))
+		return;
+
+	// Retrieve the PlotPoint data
+	if (m_View.FileOpen(szFilePathName))
+	{
+
+		// Save the filename
+		m_PathName = szFilePathName;
+		AddMRUEntry(szFilePathName);
+	}
+	else
+		m_PathName=_T("");
+}
+
+void CMainFrame::OnFileNew()
+{
+	m_View.ClearPoints();
+	m_PathName = _T("");
+}
+
+void CMainFrame::OnFileSave()
+{
+	if (m_PathName == _T(""))
+		OnFileSaveAs();
+	else
+		m_View.FileSave(m_PathName.c_str());
+}
+
+void CMainFrame::OnFileSaveAs()
+{
+	// Fill the OPENFILENAME structure
+	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
+	TCHAR szFilePathName[_MAX_PATH] = _T("");
+	OPENFILENAME ofn = {0};
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = m_hWnd;
+	ofn.lpstrFilter = szFilters;
+	ofn.lpstrFile = szFilePathName;
+	ofn.lpstrDefExt = _T("dat");
+	ofn.nMaxFile = _MAX_PATH;
+	ofn.lpstrTitle = _T("SaveAs File");
+	ofn.Flags = OFN_OVERWRITEPROMPT;
+
+	// Open the file save dialog, and open the file
+	if (!::GetSaveFileName(&ofn))
+		return;
+
+	// Store the PLotPoint data in the file
+	m_PathName = szFilePathName;
+
+	// Save the file name
+	m_View.FileSave(szFilePathName);
+	AddMRUEntry(szFilePathName);
+}
+
+// Sends the bitmap extracted from the View window to a printer of your choice
+// This function provides a useful reference for printing bitmaps in general
+void CMainFrame::OnFilePrint()
+{
+	// Get the dimensions of the View window
+	CRect rcView = m_View.GetClientRect();
+	int Width = rcView.Width();
+	int Height = rcView.Height();
+
+	// Extract the bitmap from the View window
+	CDC ViewDC = m_View.GetDC();
+	CDC MemDC = CreateCompatibleDC(ViewDC);
+	MemDC.CreateCompatibleBitmap(ViewDC, Width, Height);
+	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
+	HBITMAP hbmView = MemDC.DetachBitmap();
+
+	// Bring up a dialog to choose the printer
+	PRINTDLG pd = {0};
+	pd.lStructSize = sizeof( pd );
+	pd.Flags = PD_RETURNDC;
+
+	// Retrieve the printer DC
+	if( !PrintDlg( &pd ) )
+	{
+		TRACE(_T("PrintDlg canceled"));
+		return;
+	}
+
+	// Zero and then initialize the members of a DOCINFO structure.
+	DOCINFO di;
+	memset( &di, 0, sizeof(DOCINFO) );
+	di.cbSize = sizeof(DOCINFO);
+	di.lpszDocName = _T("Scribble Printout");
+	di.lpszOutput = (LPTSTR) NULL;
+	di.lpszDatatype = (LPTSTR) NULL;
+	di.fwType = 0;
+
+	// Begin a print job by calling the StartDoc function.
+	if (SP_ERROR == StartDoc(pd.hDC, &di))
+		throw CWinException(_T("Failed to start print job"));
+
+	// Inform the driver that the application is about to begin sending data.
+	if (0 > StartPage(pd.hDC))
+		throw CWinException(_T("StartPage failed"));
+
+	BITMAPINFOHEADER bi = {0};
+	bi.biSize = sizeof(BITMAPINFOHEADER);
+	bi.biHeight = Height;
+	bi.biWidth = Width;
+	bi.biPlanes = 1;
+	bi.biBitCount =  24;
+	bi.biCompression = BI_RGB;
+
+	// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
+	// Get the size of the image data
+	GetDIBits(MemDC, hbmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+
+	// Retrieve the image data
+	byte* pBits = new byte[bi.biSizeImage];
+	GetDIBits(MemDC, hbmView, 0, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+
+	// Determine the scaling factors required to print the bitmap and retain its original proportions.
+	float fLogPelsX1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSX);
+	float fLogPelsY1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSY);
+	float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
+	float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
+	float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
+	float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / MIN(fLogPelsY1, fLogPelsY2);
+
+    // Compute the coordinates of the upper left corner of the centered bitmap.
+	int cWidthPels = GetDeviceCaps(pd.hDC, HORZRES);
+	int xLeft = ((cWidthPels / 2) - ((int) (((float) Width) * fScaleX)) / 2);
+	int cHeightPels = GetDeviceCaps(pd.hDC, VERTRES);
+	int yTop = ((cHeightPels / 2) - ((int) (((float) Height) * fScaleY)) / 2);
+
+    // Use StretchDIBits to scale the bitmap and maintain its original proportions
+	if (GDI_ERROR == (UINT)StretchDIBits(pd.hDC, xLeft, yTop, (int) ((float) Width * fScaleX),
+		(int) ((float) Height * fScaleY), 0, 0, Width, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS, SRCCOPY))
+	{
+		throw CWinException(_T("Failed to resize image for printing"));
+	}
+
+	// Inform the driver that the page is finished.
+	if (0 > EndPage(pd.hDC))
+		throw CWinException(_T("EndPage failed"));
+
+	// Inform the driver that document has ended.
+	if(0 > EndDoc(pd.hDC))
+		throw CWinException(_T("EndDoc failed"));
+
+	// Cleanup
+	::DeleteObject(hbmView);
+	delete []pBits;
+}
+
+void CMainFrame::OnInitialUpdate()
+{
+	// The frame is now created.
+	// Place any additional startup code here.
+
+	TRACE(_T("Frame created\n"));
+}
+
+/*
+STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
+{   
+    HRESULT hr = E_NOTIMPL;
+    if(UI_PKEY_Enabled == key)
+    {
+        return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);
+    }
+
+   switch(nCmdID)
+    {
+    case IDC_MRULIST:
+        if (UI_PKEY_Label == key)
+        {
+            WCHAR label[MAX_PATH] = L"Most Recently Used List";
+            hr = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
+        }
+        else if (UI_PKEY_RecentItems == key)
+        {
+            hr = PopulateRibbonRecentItems(newValue);
+        }
+        break;
+	} 
+
+	return hr;
+}
+*/
 
 void CMainFrame::SetupToolbar()
 {

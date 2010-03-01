@@ -3082,16 +3082,6 @@ namespace Win32xx
 	{
 		if (0 >= m_nMaxMRU) return;
 
-		// Get the handle to the Menu entry titled "File"
-		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
-		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
-
-		// Remove all but the first MRU Menu entry
-		for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
-		{
-			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
-		}
-
 		// Set the text for the MRU Menu
 		tString tsMRUArray[16];
 		size_t MaxMRUArrayIndex = 0;
@@ -3121,6 +3111,16 @@ namespace Win32xx
 
 		// Set MRU menu items
 		MENUITEMINFO mii = {0};
+
+		// Get the handle to the Menu entry titled "File"
+		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
+		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
+
+		// Remove all but the first MRU Menu entry
+		for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
+		{
+			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
+		}
 
 		// For Win95 and NT, cbSize needs to be 44
 		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))

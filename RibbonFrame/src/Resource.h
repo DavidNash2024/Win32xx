@@ -24,7 +24,13 @@
 #define IDM_HELP_ABOUT                  120
 
 
+#define IDM_PEN_RED                     130
+#define IDM_PEN_BLUE                    131
+#define IDM_PEN_GREEN                   132
+#define IDM_PEN_BLACK                   133
 
+//Resource ID for the cursor
+#define IDC_CURSOR1                     140
 
 
 

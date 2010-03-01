@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib oleaut32.lib shlwapi.lib propsys.lib"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
@@ -171,7 +171,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib oleaut32.lib shlwapi.lib propsys.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -335,24 +335,6 @@
 			RelativePath="..\src\Ribbon.xml"
 			>
 			<FileConfiguration
-				Name="Release Static Library|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug Static Library|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
 				Name="Debug|Win32"
 				>
 				<Tool
@@ -363,6 +345,24 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Static Library|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Static Library|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

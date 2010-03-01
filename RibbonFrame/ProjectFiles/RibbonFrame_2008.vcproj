@@ -76,7 +76,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib shlwapi.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ole32.lib comctl32.lib shlwapi.lib propsys.lib"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
@@ -116,7 +116,7 @@
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -171,7 +171,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib shlwapi.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ole32.lib comctl32.lib shlwapi.lib propsys.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
