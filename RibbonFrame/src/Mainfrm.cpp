@@ -102,7 +102,7 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 		default:
 			{
 				TCHAR t[256];
-				wsprintf(t, "Unknown Button %d",nCmdID);
+				wsprintf(t, _T("Unknown Button %d"),nCmdID);
 				TRACE(t);
 			}
 			break;
@@ -229,7 +229,6 @@ void CMainFrame::OnFileNew()
 
 void CMainFrame::OnFileSave()
 {
-	TRACE("OnFileSave\n");
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
@@ -238,7 +237,6 @@ void CMainFrame::OnFileSave()
 
 void CMainFrame::OnFileSaveAs()
 {
-	TRACE("OnFileSaveAs\n");
 	// Fill the OPENFILENAME structure
 	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
