@@ -33,62 +33,94 @@ CMainFrame::~CMainFrame()
 
 STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
+	// This function is called when a ribbon button is pressed. 
+	// Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation 
 	UNREFERENCED_PARAMETER(pCommandExecutionProperties);
-	UNREFERENCED_PARAMETER(ppropvarValue);
-	UNREFERENCED_PARAMETER(key);
-	UNREFERENCED_PARAMETER(verb);
 
-	HRESULT hr = S_OK;
-	switch(nCmdID)
+	if (UI_EXECUTIONVERB_EXECUTE == verb)
 	{
-	case IDC_CMD_NEW:
-		OnFileNew();
-		break;
-	case IDC_CMD_OPEN:
-		OnFileOpen();
-		break;
-	case IDC_CMD_SAVE:
-		OnFileSave();
-		break;
-	case IDC_CMD_SAVE_AS:
-		OnFileSave();
-		break;
-	case IDC_CMD_PRINT:
-		OnFilePrint();
-		 break;
-	case IDC_CMD_COPY:
-		TRACE(_T("Copy\n"));
-		break;
-	case IDC_CMD_CUT:
-		TRACE(_T("Cut\n"));
-		break;
-	case IDC_CMD_PASTE:
-		TRACE(_T("Paste\n"));
-		break;
-	case IDC_CMD_ABOUT:
-		TRACE(_T("About\n"));
-		break;
-	case IDC_CMD_EXIT:
-		PostQuitMessage(0);
-		break;
-	case IDC_MRULIST:
-        {
-            if (key != NULL && UI_PKEY_SelectedItem == *key)
-            {
-                UINT uSelectedMRUItem = 0xffffffff;
-                if (ppropvarValue != NULL && SUCCEEDED(UIPropertyToUInt32(*key, *ppropvarValue, &uSelectedMRUItem)))
-                {
-                    SendMessage(WM_COMMAND, uSelectedMRUItem + IDW_FILE_MRU_FILE1, 0);
-                }
-            }
-            break;
-        }
-	default:
-		TRACE(_T("Unknown button\n"));
-		break;
+		switch(nCmdID)
+		{
+		case IDC_CMD_NEW:
+			OnFileNew();
+			break;
+		case IDC_CMD_OPEN:
+			OnFileOpen();
+			break;
+		case IDC_CMD_SAVE:
+			OnFileSave();
+			break;
+		case IDC_CMD_SAVE_AS:
+			OnFileSaveAs();
+			break;
+		case IDC_CMD_PRINT:
+			OnFilePrint();
+			 break;
+		case IDC_CMD_COPY:
+			TRACE(_T("Copy\n"));
+			break;
+		case IDC_CMD_CUT:
+			TRACE(_T("Cut\n"));
+			break;
+		case IDC_CMD_PASTE:
+			TRACE(_T("Paste\n"));
+			break;
+		case IDC_CMD_ABOUT:
+			TRACE(_T("About\n"));
+			break;
+		case IDC_CMD_EXIT:
+			PostQuitMessage(0);
+			break;
+		case IDC_MRULIST:
+			if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
+			{	
+				UINT uSelectedMRUItem = ppropvarValue->ulVal;
+				MRUFileOpen(uSelectedMRUItem);
+			}
+			break;
+		case IDC_PEN_COLOR:  // DropdownColorPicker button pressed
+			{			
+				if (ppropvarValue != NULL)
+				{
+					// Retrieve color type.	
+					UINT type = ppropvarValue->uintVal;	
+				
+					// The Ribbon framework passes color as additional property if the color type is RGB.
+					if (type == UI_SWATCHCOLORTYPE_RGB && pCommandExecutionProperties != NULL)
+					{
+						// Retrieve color.
+						PROPVARIANT var;
+						if (0 <= pCommandExecutionProperties->GetValue(UI_PKEY_Color, &var))
+						{	
+							UINT color = var.uintVal;
+							m_View.SetPen((COLORREF)color);
+						}
+					}
+				}
+			}
+			break;
+		default:
+			{
+				TCHAR t[256];
+				wsprintf(t, "Unknown Button %d",nCmdID);
+				TRACE(t);
+			}
+			break;
+		}
 	}
 
-	return hr; 
+	return S_OK;
+}
+
+void CMainFrame::MRUFileOpen(UINT nMRUIndex)
+{
+	tString tsMRUText = GetMRUEntry(nMRUIndex);
+	TRACE(tsMRUText.c_str());
+
+	if (m_View.FileOpen(tsMRUText.c_str()))
+		m_PathName = tsMRUText;
+	else
+		RemoveMRUEntry(tsMRUText.c_str());
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -148,20 +180,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_FILE_MRU_FILE4:
 	case IDW_FILE_MRU_FILE5:
 		{
-			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-			tString tsMRUText = GetMRUEntry(nMRUIndex);
-
-			if (m_View.FileOpen(tsMRUText.c_str()))
-				m_PathName = tsMRUText;
-			else
-				RemoveMRUEntry(tsMRUText.c_str());
-
-			return TRUE;
+			UINT uMRUEntry = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+			MRUFileOpen(uMRUEntry);
 		}
+		return TRUE;
 	}
 
 	return FALSE;
 }
+
+
 
 void CMainFrame::OnFileOpen()
 {
@@ -201,6 +229,7 @@ void CMainFrame::OnFileNew()
 
 void CMainFrame::OnFileSave()
 {
+	TRACE("OnFileSave\n");
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
@@ -209,6 +238,7 @@ void CMainFrame::OnFileSave()
 
 void CMainFrame::OnFileSaveAs()
 {
+	TRACE("OnFileSaveAs\n");
 	// Fill the OPENFILENAME structure
 	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
 	TCHAR szFilePathName[_MAX_PATH] = _T("");
@@ -337,21 +367,25 @@ void CMainFrame::OnInitialUpdate()
 	TRACE(_T("Frame created\n"));
 }
 
-/*
+
 STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
 {   
+	// This function is called when a ribbon button is updated. 
+	// Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
+	UNREFERENCED_PARAMETER(currentValue);
+
     HRESULT hr = E_NOTIMPL;
     if(UI_PKEY_Enabled == key)
     {
         return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);
     }
 
-   switch(nCmdID)
+	switch(nCmdID)
     {
     case IDC_MRULIST:
         if (UI_PKEY_Label == key)
         {
-            WCHAR label[MAX_PATH] = L"Most Recently Used List";
+            WCHAR label[MAX_PATH] = L"Recent Files";
             hr = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
         }
         else if (UI_PKEY_RecentItems == key)
@@ -363,7 +397,7 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, 
 
 	return hr;
 }
-*/
+
 
 void CMainFrame::SetupToolbar()
 {

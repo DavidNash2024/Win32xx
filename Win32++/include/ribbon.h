@@ -129,7 +129,6 @@ namespace Win32xx
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 		virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
 		virtual void UpdateMRUMenu();
-		virtual STDMETHODIMP UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) ;
 		
 		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
 		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
@@ -171,6 +170,12 @@ namespace Win32xx
 	inline STDMETHODIMP CRibbon::Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 										  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
 	{
+		UNREFERENCED_PARAMETER (nCmdID);
+		UNREFERENCED_PARAMETER (verb);
+		UNREFERENCED_PARAMETER (key);
+		UNREFERENCED_PARAMETER (ppropvarValue);
+		UNREFERENCED_PARAMETER (pCommandExecutionProperties);
+
 		return E_NOTIMPL;
 	}
 
@@ -212,6 +217,13 @@ namespace Win32xx
 	inline STDMETHODIMP CRibbon::OnViewChanged(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView, 
 											 UI_VIEWVERB verb, INT uReasonCode)
 	{
+		UNREFERENCED_PARAMETER(viewId);
+		UNREFERENCED_PARAMETER(typeId);
+		UNREFERENCED_PARAMETER(pView);
+		UNREFERENCED_PARAMETER(verb);
+		UNREFERENCED_PARAMETER(uReasonCode);
+
+
 		return E_NOTIMPL;
 	}
 
@@ -442,31 +454,6 @@ namespace Win32xx
 		CFrame::UpdateMRUMenu();
 	}
 
-	inline STDMETHODIMP CRibbonFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
-	{   
-		HRESULT hr = E_NOTIMPL;
-		if(UI_PKEY_Enabled == key)
-		{
-			return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);
-		}
-
-	   switch(nCmdID)
-		{
-	   case IDW_FILE_MRU_FILE1:
-			if (UI_PKEY_Label == key)
-			{
-				WCHAR label[MAX_PATH] = L"Most Recently Used List";
-				hr = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
-			}
-			else if (UI_PKEY_RecentItems == key)
-			{
-				hr = PopulateRibbonRecentItems(newValue);
-			}
-			break;
-		} 
-
-		return hr;
-	}
 
 	////////////////////////////////////////////////////////
 	// Declaration of the nested CRecentFileProperties class

@@ -5,158 +5,152 @@
     
     <!-- Tab Definitions -->
     <Command Name="cmdHome"
-             Comment="These comments are optional and are inserted into the header file."
-             Symbol="IDC_CMD_HOME" 
+             Comment="These comments are optional and are inserted into the header file." 
              Id="10000" >
       <Command.LabelTitle>
-        <String Id ="200">Home</String>
+        <String Id ="10001">Home</String>
       </Command.LabelTitle>
     </Command>
-    <Command Name="cmdText"
-             Symbol="IDC_CMD_TEXT" 
-             Id="10001" >
+    <Command Name="cmdText" Id="10010" >
       <Command.LabelTitle>
-        <String Id ="201">Text</String>
-      </Command.LabelTitle>
-    </Command>
-      <Command Name="cmdImage"
-             Symbol="IDC_CMD_IMAGE" 
-             Id="10002" >
-      <Command.LabelTitle>
-        <String Id ="202">Image</String>
+        <String Id ="10011">Sample Tab</String>
       </Command.LabelTitle>
     </Command>
     
     <!-- Group Definitions -->
-    <Command Name="cmdGroup1">
+    <Command Name="cmdGroup1" Id ="11000">
       <Command.LabelTitle>
-        <String Id ="250">File</String>
+        <String Id ="11001">Document</String>
       </Command.LabelTitle>
     </Command>
-    <Command Name="cmdGroup2">
+    <Command Name="cmdGroup2" Id ="11010">
       <Command.LabelTitle>
-        <String Id ="260">Clipboard</String>
-      </Command.LabelTitle>
-      <Command.SmallImages>
-        <Image Id="251">res/PasteL.bmp</Image>
-      </Command.SmallImages>
-    </Command>
-    
-    <Command Name="cmdGroupRichFont" Id="1002" LabelTitle="Rich Font" />
-    <Command Name="cmdRichFont" Id="1003" Keytip="F" />
-    
-    <!-- Button Definitions -->
-    <Command Name="cmdNew" Symbol="IDC_CMD_NEW">
-      <Command.LabelTitle>
-        <String Id ="290">New</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="291">res/FileNewL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <Command Name="cmdOpen" Symbol="IDC_CMD_OPEN">
-      <Command.LabelTitle>
-        <String Id ="300">Open</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="301">res/FileOpenL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <Command Name="cmdSave" Symbol="IDC_CMD_SAVE">
-      <Command.LabelTitle>
-        <String Id ="310">Save</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="311">res/FileSaveL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <Command Name="cmdSaveAs" Symbol="IDC_CMD_SAVE_AS">
-      <Command.LabelTitle>
-        <String Id ="320">Save As</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="321">res/FileSaveAsL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <Command Name="cmdPrint" Symbol="IDC_CMD_PRINT">
-      <Command.LabelTitle>
-        <String Id ="330">Print</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="331">res/PrintL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <Command Name="cmdCopy" Symbol="IDC_CMD_COPY">
-      <Command.LabelTitle>
-        <String Id ="340">Copy</String>
+        <String Id ="11011">Clipboard</String>
       </Command.LabelTitle>
       <Command.SmallImages>
-        <Image Id ="341">res/CopyS.bmp</Image>
+        <Image Id="11012">res/PasteL.bmp</Image>
       </Command.SmallImages>
     </Command>
-    <Command Name="cmdCut" Symbol="IDC_CMD_CUT">
-      <Command.LabelTitle>
-        <String Id ="350">Cut</String>
-      </Command.LabelTitle>
-      <Command.SmallImages>
-        <Image Id ="351">res/CutS.bmp</Image>
-      </Command.SmallImages>
-    </Command>
-    <Command Name="cmdPaste" Symbol="IDC_CMD_PASTE">
-      <Command.LabelTitle>
-        <String Id ="360">Paste</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="361">res/PasteL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <Command Name="cmdAbout" Symbol="IDC_CMD_ABOUT">
-      <Command.LabelTitle>
-        <String Id ="370">About</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="371">res/InfoL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <Command Name="cmdExit" Symbol="IDC_CMD_EXIT">
-      <Command.LabelTitle>
-        <String Id ="380">Exit</String>
-      </Command.LabelTitle>
-      <Command.LargeImages>
-        <Image Id ="381">res/ExitL.bmp</Image>
-      </Command.LargeImages>
-    </Command>
-    <!-- DropDownColorPickers -->
-<Command Name="cmdDropDownColorPickerGroup"
+    <Command Name="cmdDropDownColorPickerGroup"
          Symbol="cmdDropDownColorPickerGroup"
          Comment="DropDownColorPicker Group"
-         Id="55000"/>
-<Command Name="cmdDropDownColorPickerThemeColors"
-         Symbol="cmdDropDownColorPickerThemeColors"
+         Id="11020">
+      <Command.LabelTitle>
+        <String Id ="11021">Drawing</String>
+      </Command.LabelTitle>  
+    </Command>
+    <Command Name="cmdGroupRichFont" Id="11030">
+      <Command.LabelTitle>
+        <String Id ="11031">Rich Font</String>
+      </Command.LabelTitle>
+    </Command>
+
+    <!-- Button Definitions -->
+    <Command Name="cmdNew" Symbol="IDC_CMD_NEW" Id ="12000">
+      <Command.LabelTitle>
+        <String Id ="12001">New</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12002">res/FileNewL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdOpen" Symbol="IDC_CMD_OPEN" Id ="12010">
+      <Command.LabelTitle>
+        <String Id ="12011">Open</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12012">res/FileOpenL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdSave" Symbol="IDC_CMD_SAVE" Id ="12020">
+      <Command.LabelTitle>
+        <String Id ="12021">Save</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12022">res/FileSaveL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdSaveAs" Symbol="IDC_CMD_SAVE_AS" Id ="12030">
+      <Command.LabelTitle>
+        <String Id ="12031">Save As</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12032">res/FileSaveAsL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdPrint" Symbol="IDC_CMD_PRINT" Id ="12040">
+      <Command.LabelTitle>
+        <String Id ="12041">Print</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12042">res/PrintL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdCopy" Symbol="IDC_CMD_COPY" Id ="12050">
+      <Command.LabelTitle>
+        <String Id ="12051">Copy</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12052">res/CopyS.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+    <Command Name="cmdCut" Symbol="IDC_CMD_CUT" Id =" 12060">
+      <Command.LabelTitle>
+        <String Id ="12061">Cut</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12062">res/CutS.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+    <Command Name="cmdPaste" Symbol="IDC_CMD_PASTE" Id ="12070">
+      <Command.LabelTitle>
+        <String Id ="12071">Paste</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12072">res/PasteL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdAbout" Symbol="IDC_CMD_ABOUT" Id="12080">
+      <Command.LabelTitle>
+        <String Id ="12081">About</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12082">res/InfoL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdExit" Symbol="IDC_CMD_EXIT" Id="12090">
+      <Command.LabelTitle>
+        <String Id ="12091">Exit</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12092">res/ExitL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+
+    <!-- DropDownColorPickers -->     
+    <Command Name="cmdDropDownColorPickerThemeColors"
+         Symbol="IDC_PEN_COLOR"
          Comment="DropDownColorPicker ThemeColors"
-         Id="55010"
-         LabelTitle="ThemeColors"
-         LabelDescription="ThemeColors\ndescription."/>
-<Command Name="cmdDropDownColorPickerStandardColors"
-         Symbol="cmdDropDownColorPickerStandardColors"
-         Comment="DropDownColorPicker StandardColors"
-         Id="55011"
-         LabelTitle="StandardColors"/>
-<Command Name="cmdDropDownColorPickerHighlightColors"
-         Symbol="cmdDropDownColorPickerHighlightColors"
-         Comment="DropDownColorPicker HighlightColors"
-         Id="55012"
-         LabelTitle="HighlightColors"/>
+         Id="13000"
+         LabelTitle="PenColor"
+         LabelDescription="ThemeColors\ndescription.">
+           <Command.LargeImages>
+             <Image Id="13001">res/LineColorL.bmp</Image>
+           </Command.LargeImages>
+         </Command>
 
     
+    <!-- Font -->
+    <Command Name="cmdRichFont" Id="14000" Keytip="F" />
+    
     <!-- Definitions of miscellaneous items -->
-    <Command Name="MRUList" Symbol="IDC_MRULIST" Id = "75"/>
-    <Command Name="cmdQAT"/>
-    <Command Name="cmdCustomizeQAT"/>
-    <Command Name="cmdFileMenu"/>
-    <Command Name="cmdMRUList">
+    <Command Name="MRUList" Symbol="IDC_MRULIST" Id="14010"/>
+    <Command Name="cmdQAT" Id="14020"/>
+    <Command Name="cmdCustomizeQAT" Id="14030"/>
+    <Command Name="cmdFileMenu" Id="14040"/>
+    <Command Name="cmdMRUList" Id="14050">
       <Command.LabelTitle>
-        <String Id ="280">MRU List</String>
+        <String Id ="14051">MRU List</String>
       </Command.LabelTitle>
     </Command>
   </Application.Commands>
@@ -215,32 +209,14 @@
             <Button CommandName="cmdCopy" />
             <Button CommandName="cmdCut" />
           </Group>
-          <Group CommandName="cmdGroupRichFont" SizeDefinition="OneFontControl">
-            <FontControl CommandName="cmdRichFont" FontType="RichFont" />
-          </Group> 
-
-
-
+           <Group CommandName="cmdDropDownColorPickerGroup" SizeDefinition="OneButton">
+            <DropDownColorPicker CommandName="cmdDropDownColorPickerThemeColors" ColorTemplate="ThemeColors"/>
+          </Group>
         </Tab>
         <Tab CommandName="cmdText">
           <Group CommandName="cmdGroupRichFont" SizeDefinition="OneFontControl">
             <FontControl CommandName="cmdRichFont" FontType="RichFont" />
           </Group>     
-        </Tab>
-        <Tab CommandName="cmdImage">
-          <Group CommandName="cmdDropDownColorPickerGroup"
-             SizeDefinition="ThreeButtons">
-            <DropDownColorPicker
-               CommandName="cmdDropDownColorPickerThemeColors"
-               ColorTemplate="ThemeColors"/>
-            <DropDownColorPicker
-               CommandName="cmdDropDownColorPickerStandardColors"
-               ColorTemplate="StandardColors"/>
-            <DropDownColorPicker
-               CommandName="cmdDropDownColorPickerHighlightColors"
-               ColorTemplate="HighlightColors"
-               StandardColorGridRows="1"/>
-          </Group>    
         </Tab>
       </Ribbon.Tabs>
       

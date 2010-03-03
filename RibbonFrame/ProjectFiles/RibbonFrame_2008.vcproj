@@ -57,7 +57,7 @@
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="3"
+				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 				CompileAs="0"
@@ -76,7 +76,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ole32.lib comctl32.lib shlwapi.lib propsys.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ole32.lib comctl32.lib shlwapi.lib"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
@@ -171,7 +171,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ole32.lib comctl32.lib shlwapi.lib propsys.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ole32.lib comctl32.lib shlwapi.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
