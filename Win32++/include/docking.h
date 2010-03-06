@@ -475,7 +475,7 @@ namespace Win32xx
 		void PromoteFirstChild();
 		void RecalcDockChildLayout(CRect rc);
 		void ResizeDockers(LPDRAGPOS pdp);
-		void SeparateFromDock();
+		CDocker* SeparateFromDock();
 		void SendNotify(UINT nMessageID);
 		void SetUndockPosition(CPoint pt);
 
@@ -2321,7 +2321,8 @@ namespace Win32xx
 
 		if (IsDocked())
 		{
-			SeparateFromDock();
+			CDocker* pDockUndockedFrom = SeparateFromDock();
+			pDockUndockedFrom->RecalcDockLayout();
 		}
 
 		ShowWindow(SW_HIDE);
@@ -3205,7 +3206,7 @@ namespace Win32xx
 		SetWindowText(GetCaption().c_str());
 	}
 
-	inline void CDocker::SeparateFromDock()
+	inline CDocker* CDocker::SeparateFromDock()
 	{
 		CDocker* pDockUndockedFrom = GetDockParent();
 		if (!pDockUndockedFrom && (GetDockChildren().size() > 0))
@@ -3219,9 +3220,7 @@ namespace Win32xx
 		m_DockStyle = m_DockStyle & 0xFFFFFFF0;
 		m_DockStyle &= ~DS_DOCKED_CONTAINER;
 
-		RecalcDockLayout();
-        if ((pDockUndockedFrom) && (pDockUndockedFrom->GetDockTopLevel() != GetDockTopLevel()))
-			pDockUndockedFrom->RecalcDockLayout();
+		return pDockUndockedFrom;
 	}
 
 	inline void CDocker::SetUndockPosition(CPoint pt)
@@ -3263,13 +3262,17 @@ namespace Win32xx
 		// Get the current mouse position
 		CPoint pt = GetCursorPos();
 		
-		SeparateFromDock();
+		CDocker* pDockUndockedFrom = SeparateFromDock();
 
 		// Position and draw the undocked window, unless it is about to be closed
 		if (bShowUndocked)
 		{
 			SetUndockPosition(pt);
-		}		
+		}
+
+		RecalcDockLayout();
+        if ((pDockUndockedFrom) && (pDockUndockedFrom->GetDockTopLevel() != GetDockTopLevel()))
+			pDockUndockedFrom->RecalcDockLayout();
 	}
 
 	inline void CDocker::UndockContainer(CContainer* pContainer)

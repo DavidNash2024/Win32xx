@@ -1,10 +1,38 @@
 Version 6.8
 ===========
+
+New Features
+------------
+* Support has been added for the Windows Ribbon Framework available on 
+   Windows 7 operating systems. The RibbonFrame and RibbonSimple samples 
+   demonstrates how to implelement the ribbon. RibbonFrame reverts back to 
+   using the traditional Toolbar and Menubar if the operating system doesn't
+   support the ribbon framework.
+   
+* Helper classes have been added for the standard controls, namely the Button,
+   Edit, Listbox, and Static controls.
+   
+* Dockers can now be hidden and unhidden. Refer to the Splitter sample for a
+   demonstration of this feature.
+   
+* Modal dialogs now support pretranslated messages.          
+
+
+Changes
+-------
 * Added CButton class
 * Added CEdit class
 * Added CListBox class
+* Added CRibbon class
+* Added CRibbonFrame class
 * Added CStatic class
 * Removed CSplitter class
+
+Added CDocker::Dock
+Added CDocker::DockInContainer
+Added CDocker::Hide
+Added CDocker::Undock
+Added CDocker::UndockContainer
 
 Added CFrame::GetRebarTheme
 Added CFrame::GetToolbarTheme
@@ -14,11 +42,15 @@ Added UWM_GETMENUTHEME     message
 Added UWM_GETREBARTHEME    message 
 Added UWM_GETTOOLBARTHEME  message
 
-Added PreTranslate Message support for modeless dialogs
+Added RibbonFrame sample
+Added RibbonSimple sample
+
+Added PreTranslate Message support for modal dialogs
 
 Bug Fixes
+---------
 - Fixed TCharToString
-
+- Dockers can now be used as the view for CMDIChild
 
 Version 6.7
 ===========
