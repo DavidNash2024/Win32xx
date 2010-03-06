@@ -1,7 +1,10 @@
 RibbonFrame Example
 ===================
 This project demonstrates how to add a ribbon to a Frame window. The ribbon
-buttons are defined in an Ribbon.xml. 
+buttons are defined in an Ribbon.xml. This application adds a ribbon to the
+Scribble sample. The ribbon is only supported on Windows 7 OS (and above). If
+the ribbon isn't supported by the operating system, the traditional menu and 
+toolbar are displayed instead. 
 
 How it works
 ============
@@ -31,7 +34,8 @@ IUICommandHandler::UpdateProperty
   enabled or disabled depending on the state of a View.  
 
 This example demonstratues how to override IUICommandHandler::Execute to respond
-to button clicks on the ribbon.
+to button clicks on the ribbon, and IUICommandHandler::UpdateProperty to
+configure parts of the ribbon.
   
 Prerequisites:
 ==============

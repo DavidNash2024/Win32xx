@@ -114,7 +114,7 @@ namespace Win32xx
 
 		private:
 			CRecentFileProperties();
-			~CRecentFileProperties() {TRACE(_T("CRecentFileProperties destructor\n"));}
+			~CRecentFileProperties() {}
 
 			LONG m_cRef;                        // Reference count.
 			WCHAR m_wszDisplayName[MAX_PATH];
@@ -339,7 +339,7 @@ namespace Win32xx
 			else
 				throw CWinException(_T("Failed to create ribbon"));
 		}
-		else
+		else 
 		{
 			CFrame::OnCreate();
 		}

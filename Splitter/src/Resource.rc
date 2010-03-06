@@ -42,6 +42,9 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
+        MENUITEM "Text Pane"                    IDM_VIEW_TEXT, CHECKED
+        MENUITEM "List Pane"                    IDM_VIEW_LIST, CHECKED
+        MENUITEM SEPARATOR
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
@@ -147,6 +150,12 @@ BEGIN
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
     IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE 
+BEGIN
+    IDM_VIEW_TEXT           "Show or hide the text pane"
+    IDM_VIEW_LIST           "Show or hide the list pane"
 END
 
 STRINGTABLE 

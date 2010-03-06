@@ -28,6 +28,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
+	case IDM_VIEW_TEXT:
+		OnViewText();
+		break;
+	case IDM_VIEW_LIST:
+		OnViewList();
+		break;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusbar();
 		return TRUE;
@@ -50,14 +56,45 @@ void CMainFrame::OnInitialUpdate()
 	CRect rcView = GetViewRect();
 
 	// Add the bottom pane first. It is a child of the main pane.
-	CDocker* pDockBottom = m_MainView.AddDockedChild(new CPaneBottomLeft, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2);
+	m_pDockTree = (CDockTree*)m_MainView.AddDockedChild(new CDockTree, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2);
 
 	// Add the bottom right pane. It is a child of the bottom pane 
-	pDockBottom->AddDockedChild(new CPaneBottomRight, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
+	m_pDockList = (CDockList*)m_pDockTree->AddDockedChild(new CDockList, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
 
 	// Add the top right pane. It is a child of the main pane.
-	m_MainView.AddDockedChild(new CPaneTopRight, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
+	m_pDockText = (CDockText*)m_MainView.AddDockedChild(new CDockText, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
 
+}
+
+void CMainFrame::OnViewList()
+{
+	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
+	if (m_pDockList->IsDocked())
+	{
+		m_pDockList->Hide();
+		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_LIST, MF_UNCHECKED);
+	}
+	else
+	{
+		m_pDockTree->Dock(m_pDockList, dwStyle | DS_DOCKED_RIGHT);
+		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_LIST, MF_CHECKED);
+	}
+}
+
+void CMainFrame::OnViewText()
+{
+	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
+
+	if (m_pDockText->IsDocked())
+	{
+		m_pDockText->Hide();
+		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_TEXT, MF_UNCHECKED);
+	}
+	else
+	{
+		m_MainView.Dock(m_pDockText, dwStyle | DS_DOCKED_RIGHT);
+		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_TEXT, MF_CHECKED);
+	}
 }
 
 void CMainFrame::SetupToolbar()

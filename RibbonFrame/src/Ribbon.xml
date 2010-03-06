@@ -4,21 +4,19 @@
   <Application.Commands>
     
     <!-- Tab Definitions -->
-    <Command Name="cmdHome"
-             Comment="These comments are optional and are inserted into the header file." 
-             Id="10000" >
+    <Command Name="cmdTabHome" Comment="Tab Definitions" Id="10000" >
       <Command.LabelTitle>
         <String Id ="10001">Home</String>
       </Command.LabelTitle>
     </Command>
-    <Command Name="cmdText" Id="10010" >
+    <Command Name="cmdTabText" Id="10010" >
       <Command.LabelTitle>
         <String Id ="10011">Sample Tab</String>
       </Command.LabelTitle>
     </Command>
     
     <!-- Group Definitions -->
-    <Command Name="cmdGroup1" Id ="11000">
+    <Command Name="cmdGroup1" Comment ="Group Definitions" Id ="11000">
       <Command.LabelTitle>
         <String Id ="11001">Document</String>
       </Command.LabelTitle>
@@ -31,10 +29,7 @@
         <Image Id="11012">res/PasteL.bmp</Image>
       </Command.SmallImages>
     </Command>
-    <Command Name="cmdDropDownColorPickerGroup"
-         Symbol="cmdDropDownColorPickerGroup"
-         Comment="DropDownColorPicker Group"
-         Id="11020">
+    <Command Name="cmdDropDownColorPickerGroup" Id="11020">
       <Command.LabelTitle>
         <String Id ="11021">Drawing</String>
       </Command.LabelTitle>  
@@ -46,7 +41,7 @@
     </Command>
 
     <!-- Button Definitions -->
-    <Command Name="cmdNew" Symbol="IDC_CMD_NEW" Id ="12000">
+    <Command Name="cmdNew" Symbol="IDC_CMD_NEW" Comment="Button Definitions" Id ="12000">
       <Command.LabelTitle>
         <String Id ="12001">New</String>
       </Command.LabelTitle>
@@ -138,21 +133,20 @@
              <Image Id="13001">res/LineColorL.bmp</Image>
            </Command.LargeImages>
          </Command>
-
     
     <!-- Font -->
-    <Command Name="cmdRichFont" Id="14000" Keytip="F" />
+    <Command Name="cmdRichFont" 
+         Symbol="IDC_RICHFONT"
+         Comment="Font Picker"    
+         Id="14000" 
+         Keytip="F" />
     
     <!-- Definitions of miscellaneous items -->
-    <Command Name="MRUList" Symbol="IDC_MRULIST" Id="14010"/>
-    <Command Name="cmdQAT" Id="14020"/>
-    <Command Name="cmdCustomizeQAT" Id="14030"/>
-    <Command Name="cmdFileMenu" Id="14040"/>
-    <Command Name="cmdMRUList" Id="14050">
-      <Command.LabelTitle>
-        <String Id ="14051">MRU List</String>
-      </Command.LabelTitle>
-    </Command>
+    <Command Name="cmdMRUFileMenu" Symbol="IDC_MRUMENU" Id="14010"/>
+    <Command Name="cmdMRUList" Symbol="IDC_MRULIST" Id="14020"/>
+    <Command Name="cmdQAT" Symbol="IDC_QAT" Id="14030"/>
+    <Command Name="cmdCustomizeQAT" Symbol="IDC_CUSTOMIZE_QAT" Id="14040"/>
+    <Command Name="cmdHelp" Symbol="IDC_RIBBONHELP" Id="14050" />
   </Application.Commands>
   
   <!-- Views section -->
@@ -161,9 +155,9 @@
 
       <!-- Application Menu -->
       <Ribbon.ApplicationMenu>
-        <ApplicationMenu CommandName="cmdFileMenu">
+        <ApplicationMenu CommandName="cmdMRUFileMenu">
           <ApplicationMenu.RecentItems>
-            <RecentItems CommandName="MRUList" MaxCount="16" EnablePinning="false"/>   
+            <RecentItems CommandName="cmdMRUList" MaxCount="16" EnablePinning="false"/>   
           </ApplicationMenu.RecentItems>
           <MenuGroup Class="MajorItems">
             <Button CommandName="cmdNew" />
@@ -185,7 +179,7 @@
       
       <!-- Tabs -->
       <Ribbon.Tabs>
-        <Tab CommandName="cmdHome">
+        <Tab CommandName="cmdTabHome">
           <Tab.ScalingPolicy>
             <ScalingPolicy>
               <ScalingPolicy.IdealSizes>
@@ -199,10 +193,11 @@
               <Scale Group="cmdGroup2" Size="Popup" />
             </ScalingPolicy>
           </Tab.ScalingPolicy>
-          <Group CommandName="cmdGroup1" SizeDefinition="ThreeButtons">
+          <Group CommandName="cmdGroup1" SizeDefinition="FourButtons">
             <Button CommandName="cmdNew" />
             <Button CommandName="cmdOpen" />
             <Button CommandName="cmdSave" />
+            <Button CommandName="cmdSaveAs" />
           </Group>
           <Group CommandName="cmdGroup2" SizeDefinition="ThreeButtons-OneBigAndTwoSmall">
             <Button CommandName="cmdPaste" />
@@ -210,15 +205,23 @@
             <Button CommandName="cmdCut" />
           </Group>
            <Group CommandName="cmdDropDownColorPickerGroup" SizeDefinition="OneButton">
-            <DropDownColorPicker CommandName="cmdDropDownColorPickerThemeColors" ColorTemplate="ThemeColors"/>
+             <DropDownColorPicker 
+               CommandName="cmdDropDownColorPickerThemeColors"
+               ColorTemplate="ThemeColors"
+               IsNoColorButtonVisible = "false"/>
           </Group>
         </Tab>
-        <Tab CommandName="cmdText">
+        <Tab CommandName="cmdTabText">
           <Group CommandName="cmdGroupRichFont" SizeDefinition="OneFontControl">
             <FontControl CommandName="cmdRichFont" FontType="RichFont" />
           </Group>     
         </Tab>
       </Ribbon.Tabs>
+      
+      <!-- Help button -->
+      <Ribbon.HelpButton>
+        <HelpButton CommandName="cmdHelp" />
+      </Ribbon.HelpButton>
       
       <!-- Quick Access toolbar -->
       <Ribbon.QuickAccessToolbar>

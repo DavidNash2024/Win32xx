@@ -35,7 +35,6 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 {
 	// This function is called when a ribbon button is pressed. 
 	// Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation 
-	UNREFERENCED_PARAMETER(pCommandExecutionProperties);
 
 	if (UI_EXECUTIONVERB_EXECUTE == verb)
 	{
@@ -99,10 +98,19 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 				}
 			}
 			break;
+		case IDC_RICHFONT:
+			TRACE(_T("Font dialog button\n"));
+			break;
+		case IDC_RIBBONHELP:
+			OnHelp();
+			break;
+		case IDC_CUSTOMIZE_QAT:
+			TRACE(_T("Customize Quick Access Toolbar\n"));
+			break;
 		default:
 			{
 				TCHAR t[256];
-				wsprintf(t, _T("Unknown Button %d"),nCmdID);
+				wsprintf(t, _T("Unknown Button %d\n"),nCmdID);
 				TRACE(t);
 			}
 			break;
@@ -115,7 +123,6 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 void CMainFrame::MRUFileOpen(UINT nMRUIndex)
 {
 	tString tsMRUText = GetMRUEntry(nMRUIndex);
-	TRACE(tsMRUText.c_str());
 
 	if (m_View.FileOpen(tsMRUText.c_str()))
 		m_PathName = tsMRUText;
@@ -125,7 +132,7 @@ void CMainFrame::MRUFileOpen(UINT nMRUIndex)
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	// Process the messages from the Menu and Tool Bar
+	// Process the messages from the (non-ribbon) Menu and Tool Bar
 
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -189,8 +196,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-
-
 void CMainFrame::OnFileOpen()
 {
 	// Fill the OPENFILENAME structure
@@ -212,7 +217,6 @@ void CMainFrame::OnFileOpen()
 	// Retrieve the PlotPoint data
 	if (m_View.FileOpen(szFilePathName))
 	{
-
 		// Save the filename
 		m_PathName = szFilePathName;
 		AddMRUEntry(szFilePathName);
@@ -365,7 +369,6 @@ void CMainFrame::OnInitialUpdate()
 	TRACE(_T("Frame created\n"));
 }
 
-
 STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
 {   
 	// This function is called when a ribbon button is updated. 
@@ -381,7 +384,8 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, 
 	switch(nCmdID)
     {
     case IDC_MRULIST:
-        if (UI_PKEY_Label == key)
+        // Set up the Most Recently Used (MRU) menu
+		if (UI_PKEY_Label == key)
         {
             WCHAR label[MAX_PATH] = L"Recent Files";
             hr = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
@@ -391,27 +395,32 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, 
             hr = PopulateRibbonRecentItems(newValue);
         }
         break;
+
+	case IDC_PEN_COLOR:
+		// Set the initial pen color
+		hr = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
+		break;
 	} 
 
 	return hr;
 }
 
-
 void CMainFrame::SetupToolbar()
 {
-	// Set the Resource IDs for the toolbar buttons
+	// Define our toolbar
 	AddToolbarButton( IDM_FILE_NEW   );
 	AddToolbarButton( IDM_FILE_OPEN  );
 	AddToolbarButton( IDM_FILE_SAVE  );
-	
 	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT,   FALSE );	// disabled button
-	AddToolbarButton( IDM_EDIT_COPY,  FALSE );	// disabled button
-	AddToolbarButton( IDM_EDIT_PASTE, FALSE );	// disabled button
-	
-	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
 	AddToolbarButton( IDM_FILE_PRINT );
-	
+	AddToolbarButton( 0 );				// Separator
+	AddToolbarButton( IDM_PEN_RED    );
+	AddToolbarButton( IDM_PEN_BLUE   );
+	AddToolbarButton( IDM_PEN_GREEN  );
+	AddToolbarButton( IDM_PEN_BLACK  );
 	AddToolbarButton( 0 );				// Separator
 	AddToolbarButton( IDM_HELP_ABOUT );
 }

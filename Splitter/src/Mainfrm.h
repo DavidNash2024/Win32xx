@@ -14,6 +14,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	void OnViewList();
+	void OnViewText();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -22,7 +24,10 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CPaneTopLeft m_MainView;
+	CDockSimple m_MainView;
+	CDockText* m_pDockText;
+	CDockTree* m_pDockTree;
+	CDockList* m_pDockList;
 };
 
 #endif //MAINFRM_H

@@ -7,21 +7,21 @@
 #include "SplitterPanes.h"
 
 
-CPaneTopLeft::CPaneTopLeft() 
+CDockSimple::CDockSimple() 
 {
 	SetView(m_View);
 }
 
-void CPaneTopLeft::OnInitialUpdate()
+void CDockSimple::OnInitialUpdate()
 {
 }
 
-CPaneTopRight::CPaneTopRight() 
+CDockText::CDockText() 
 {
 	SetView(m_View);
 }
 
-void CPaneTopRight::OnInitialUpdate()
+void CDockText::OnInitialUpdate()
 {
 	// Set the width of the splitter bar
 	SetBarWidth(6);
@@ -36,12 +36,12 @@ void CPaneTopRight::OnInitialUpdate()
 }
 
 
-CPaneBottomLeft::CPaneBottomLeft() 
+CDockTree::CDockTree() 
 {
 	SetView(m_View);
 }
 
-void CPaneBottomLeft::OnInitialUpdate() 
+void CDockTree::OnInitialUpdate() 
 {
 	// Set the width of the splitter bar
 	SetBarWidth(12);
@@ -55,12 +55,12 @@ void CPaneBottomLeft::OnInitialUpdate()
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 }
 
-CPaneBottomRight::CPaneBottomRight() 
+CDockList::CDockList() 
 {
 	SetView(m_View);
 }
 
-void CPaneBottomRight::OnInitialUpdate()
+void CDockList::OnInitialUpdate()
 {
 	// Set the width of the splitter bar
 	SetBarWidth(6);

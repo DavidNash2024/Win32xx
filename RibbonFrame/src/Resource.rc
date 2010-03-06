@@ -1,16 +1,16 @@
 // Microsoft Visual C++ generated resource script.
 //
 
-#include "windows.h"
-#include "resource.h"
 
+#include "resource.h"
+#include "windows.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       24             "res/Win32++.manifest"
+1                       24      DISCARDABLE      "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -28,17 +28,9 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",                       IDM_FILE_EXIT
-    END
-    POPUP "&Edit"
-    BEGIN
-        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
-        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO, GRAYED
+        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT, GRAYED
-        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
-        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
-        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&View"
     BEGIN
@@ -59,14 +51,14 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "res/enhanced.ico"
+IDW_MAIN                 ICON                    "res/pen.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "res/toolbar.bmp"
+IDW_MAIN                 BITMAP                  "res/toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -77,10 +69,11 @@ IDW_ABOUT DIALOGEX 0, 0, 186, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
+//FONT 8, "MS Shell Dlg", 400, 0, 0x1
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Frame Application",IDC_STATIC,60,22,64,11
+    CTEXT           "Scribble Application",IDC_STATIC,60,22,64,11
     ICON            IDW_MAIN,0,4,4,20,20
 END
 
@@ -92,16 +85,19 @@ END
 
 IDW_MAIN ACCELERATORS
 BEGIN
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_CUT,           VIRTKEY, SHIFT, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      IDM_EDIT_PASTE,         VIRTKEY, SHIFT, NOINVERT
+    VK_BACK,        IDM_EDIT_UNDO,          VIRTKEY, ALT, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
-    "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
-    "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_DELETE,         VIRTKEY, NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
 END
 
 /////////////////////////////////////////////////////////////////////////////
@@ -111,6 +107,8 @@ END
 
 IDC_CURSOR1             CURSOR                  "res/Cursor.cur"
 
+
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
@@ -118,9 +116,7 @@ IDC_CURSOR1             CURSOR                  "res/Cursor.cur"
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                "Frame Window"
-    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
-    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_MAIN                 "Scribble Application"
 END
 
 STRINGTABLE
@@ -131,16 +127,30 @@ BEGIN
     IDM_FILE_SAVEAS         "Save the Document with a new name"
     IDM_FILE_PRINT          "Print the Document"
     IDM_FILE_EXIT           "End the Program"
-    IDM_EDIT_UNDO           "Undo the last action"
-    IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
 STRINGTABLE
 BEGIN
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_PEN_RED              "Red Pen"
+    IDM_PEN_BLUE             "Blue Pen"
+    IDM_PEN_GREEN            "Green Pen"
+    IDM_PEN_BLACK            "Black Pen"
+END
+
+STRINGTABLE
+BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
@@ -156,7 +166,15 @@ BEGIN
     SC_SIZE                 "Resize the Window"
 END
 
-////////////////////////////////////////////////////////////////////
+STRINGTABLE
+BEGIN
+    IDW_FILE_MRU_FILE1       "Open this document"
+    IDW_FILE_MRU_FILE2       "Open this document"
+    IDW_FILE_MRU_FILE3       "Open this document"
+    IDW_FILE_MRU_FILE4       "Open this document"
+    IDW_FILE_MRU_FILE5       "Open this document"
+END
+
+//////////////////////////////////////////////////////
 // Ribbon
 #include "RibbonUI.rc"
-

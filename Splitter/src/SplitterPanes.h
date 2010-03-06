@@ -8,33 +8,33 @@
 #include "Views.h"
 
 
-class CPaneTopLeft : public CDocker
+class CDockSimple : public CDocker
 {
 public:
-	CPaneTopLeft(); 
-	virtual ~CPaneTopLeft() {}
+	CDockSimple(); 
+	virtual ~CDockSimple() {}
 	virtual void OnInitialUpdate(); 
 
 private:
 	CViewSimple m_View;
 };
 
-class CPaneTopRight : public CDocker
+class CDockText : public CDocker
 {
 public:
-	CPaneTopRight();
-	virtual ~CPaneTopRight() {}
+	CDockText();
+	virtual ~CDockText() {}
 	virtual void OnInitialUpdate(); 
 
 private:
 	CViewText m_View;
 };
 
-class CPaneBottomLeft : public CDocker
+class CDockTree : public CDocker
 {
 public:
-	CPaneBottomLeft();
-	virtual ~CPaneBottomLeft() {}
+	CDockTree();
+	virtual ~CDockTree() {}
 	virtual void OnInitialUpdate(); 
 
 private:
@@ -42,11 +42,11 @@ private:
 
 };
 
-class CPaneBottomRight : public CDocker
+class CDockList : public CDocker
 {
 public:
-	CPaneBottomRight();
-	virtual ~CPaneBottomRight() {}
+	CDockList();
+	virtual ~CDockList() {}
 	virtual void OnInitialUpdate(); 
 
 private:
