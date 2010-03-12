@@ -407,7 +407,7 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, 
 
 void CMainFrame::SetupToolbar()
 {
-	// Define our toolbar
+	// Define our toolbar (used when the ribbon is not displayed)
 	AddToolbarButton( IDM_FILE_NEW   );
 	AddToolbarButton( IDM_FILE_OPEN  );
 	AddToolbarButton( IDM_FILE_SAVE  );

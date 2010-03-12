@@ -1,7 +1,7 @@
 [Project]
-FileName=MDIFrame_Debug.dev
+FileName=MDIFrameSplitter_Debug.dev
 Name=MDIFrame
-UnitCount=9
+UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
@@ -138,9 +138,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\..\Win32++\default_resource.h
+FileName=Files.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -148,9 +148,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\..\Win32++\dialog.h
+FileName=Files.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -158,9 +158,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\..\Win32++\frame.h
+FileName=Output.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -168,9 +168,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\..\Win32++\gdi.h
+FileName=Output.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

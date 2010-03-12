@@ -131,9 +131,9 @@ namespace Win32xx
 		virtual void UpdateMRUMenu();
 		
 		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
-		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
 
 	private:
+		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
 		UINT m_uRibbonHeight;
 	};
 
@@ -203,12 +203,15 @@ namespace Win32xx
 		return S_OK;
 	}
 
-	// Called by the Ribbon framework for each command specified in markup, to allow
+	// Called by the Ribbon framework for each command specified in markup, to bind the Command to an IUICommandHandler.
 	inline STDMETHODIMP CRibbon::OnCreateUICommand(UINT nCmdID, __in UI_COMMANDTYPE typeID, 
 												 __deref_out IUICommandHandler** ppCommandHandler)
 	{
 		UNREFERENCED_PARAMETER(typeID);
 		UNREFERENCED_PARAMETER(nCmdID);
+
+		// By default we use the single command handler provided as part of CRibbon.
+		// Override this function to account for multiple command handlers.		
 
 		return QueryInterface(IID_PPV_ARGS(ppCommandHandler));
 	}

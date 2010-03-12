@@ -362,7 +362,7 @@ namespace Win32xx
 		SendMessage(TB_SETEXTENDEDSTYLE, 0L, TBSTYLE_EX_DRAWDDARROWS);
 
 		// Turn of Double click processing (i.e. treat a double click as two single clicks)
-		DWORD dwStyle = GetClassLongPtr(GCL_STYLE);
+		DWORD dwStyle = (DWORD)GetClassLongPtr(GCL_STYLE);
 		dwStyle &= 	~CS_DBLCLKS;
 		SetClassLongPtr(GCL_STYLE, dwStyle);
 
