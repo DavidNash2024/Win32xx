@@ -45,6 +45,10 @@ Added UWM_GETTOOLBARTHEME  message
 Added RibbonFrame sample
 Added RibbonSimple sample
 
+Added 'Compile VS2005 Express'  tool
+Added 'Compile VS2008 Express'  tool
+Added 'Compile VS2010 Express'  tool
+
 Added PreTranslate Message support for modal dialogs
 
 Bug Fixes
