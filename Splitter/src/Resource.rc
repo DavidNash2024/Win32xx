@@ -17,7 +17,7 @@
 // Menu
 //
 
-IDW_MAIN MENU 
+IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -42,8 +42,8 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
-        MENUITEM "Text Pane"                    IDM_VIEW_TEXT, CHECKED
-        MENUITEM "List Pane"                    IDM_VIEW_LIST, CHECKED
+        MENUITEM "Text Pane",                   IDM_VIEW_TEXT, CHECKED
+        MENUITEM "List Pane",                   IDM_VIEW_LIST, CHECKED
         MENUITEM SEPARATOR
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
@@ -87,7 +87,7 @@ IDB_FILEVIEW            BITMAP                  "res/fileview.bmp"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
@@ -103,7 +103,7 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS 
+IDW_MAIN ACCELERATORS
 BEGIN
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
@@ -113,7 +113,7 @@ BEGIN
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, 
+    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL,
                                                     NOINVERT
     VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
 END
@@ -124,14 +124,14 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_MAIN                "Splitter Example"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
@@ -143,7 +143,7 @@ BEGIN
     IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
@@ -152,13 +152,13 @@ BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_VIEW_TEXT           "Show or hide the text pane"
     IDM_VIEW_LIST           "Show or hide the list pane"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     61536                   "Close the Window"
     61488                   "Maximize the Window"

@@ -129,7 +129,10 @@ propertysheet.h   | CPropertySheet   | Win32, Win64      | Adds property sheet
                   | CPropertyPage    | and WinCE         | support.
 ------------------+------------------+-------------------+---------------------
 rebar.h           | CRebar           | Win32, Win64      | Adds support for a 
-                  |                  | and WinCE         | Rebar control.                  
+                  |                  | and WinCE         | Rebar control.
+------------------+------------------+-------------------+---------------------
+ribbon.h          | CRibbon          | Win32, Win64      | Adds support for the
+                  | CRibbonFrame     |                   | Windows 7 ribbon.     
 ------------------+------------------+-------------------+---------------------
 socket.h          | CSocket          | Win32, Win64      | Adds network  
                   |                  | and WinCE         | support.

@@ -173,6 +173,9 @@
 				RelativePath="..\..\Win32++\include\dialog.h">
 			</File>
 			<File
+				RelativePath="..\..\Win32++\include\stdcontrols.h">
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\wincore.h">
 			</File>
 		</Filter>
