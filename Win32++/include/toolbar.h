@@ -46,7 +46,7 @@
 namespace Win32xx
 {
 
-	struct ThemeToolbar
+	struct ToolbarTheme
 	{
 		BOOL UseThemes;			// TRUE if themes are used
 		COLORREF clrHot1;		// Colour 1 for hot button
@@ -78,7 +78,7 @@ namespace Win32xx
 		CRect GetItemRect(int iIndex) const;
 		CSize GetMaxSize() const;
 		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
-		ThemeToolbar& GetToolbarTheme() {return m_Theme;}
+		ToolbarTheme& GetToolbarTheme() {return m_Theme;}
 		BOOL HasText() const;
 		int  HitTest() const;
 		void SetBitmap(UINT nID);
@@ -91,7 +91,7 @@ namespace Win32xx
 		void SetButtonWidth(int iButtonID, int nWidth) const;
 		void SetCommandID(int iIndex, int iButtonID) const;
 		void SetImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
-		void SetToolbarTheme(ThemeToolbar& Theme);
+		void SetToolbarTheme(ToolbarTheme& Theme);
 
 	// Operations
 		void AddBitmap(UINT ToolbarID);
@@ -116,7 +116,7 @@ namespace Win32xx
 		std::vector<UINT> m_vToolbarData;	// vector of resource IDs for toolbar buttons
 		std::map<tString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
-		ThemeToolbar m_Theme;				// The theme structure
+		ToolbarTheme m_Theme;				// The theme structure
 		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn
 
 	};  // class CToolbar
@@ -135,7 +135,7 @@ namespace Win32xx
 	//
 	inline CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
-		ZeroMemory(&m_Theme, sizeof(ThemeToolbar));
+		ZeroMemory(&m_Theme, sizeof(ToolbarTheme));
 	}
 
 	inline CToolbar::~CToolbar()
@@ -619,7 +619,7 @@ namespace Win32xx
 
 		if (lstrcmp(szString, _T("ReBar")) == 0)
 		{
-			ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndParent, UWM_GETREBARTHEME, 0, 0);
+			RebarTheme* pTheme = (RebarTheme*)SendMessage(hWndParent, UWM_GETREBARTHEME, 0, 0);
 			
 			if (pTheme && pTheme->UseThemes && pTheme->ShortBands)
 			{
@@ -987,7 +987,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CToolbar::SetToolbarTheme(ThemeToolbar& Theme)
+	inline void CToolbar::SetToolbarTheme(ToolbarTheme& Theme)
 	{
 		m_Theme.UseThemes   = Theme.UseThemes;
 		m_Theme.clrHot1     = Theme.clrHot1;
@@ -1009,7 +1009,7 @@ namespace Win32xx
 			break;
 		case UWM_GETTOOLBARTHEME:
 			{
-				ThemeToolbar& tt = GetToolbarTheme();
+				ToolbarTheme& tt = GetToolbarTheme();
 				return (LRESULT)&tt;
 			}
 		case WM_WINDOWPOSCHANGING:

@@ -29,7 +29,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 {
 	// Get the reference to the rebar object
 	CRebar& RB = GetRebar();
-	ThemeRebar RBTheme = RB.GetRebarTheme();
+	RebarTheme RBTheme = RB.GetRebarTheme();
 
 	// Create the ComboboxEx window
 	CREATESTRUCT cs = {0};

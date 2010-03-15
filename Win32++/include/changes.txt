@@ -20,13 +20,16 @@ New Features
 
 Changes
 -------
-* Added CButton class
-* Added CEdit class
-* Added CListBox class
-* Added CRibbon class
-* Added CRibbonFrame class
-* Added CStatic class
-* Removed CSplitter class
+Added CButton class
+Added CEdit class
+Added CListBox class
+Added CRibbon class
+Added CRibbonFrame class
+Added CStatic class
+Removed CSplitter class
+Renamed ThemeMenu to MenuTheme
+Renamed ThemeRebar to RebarTheme
+Renamed ThemeToolbar to ToolbarTheme
 
 Added CDocker::Dock
 Added CDocker::DockInContainer
@@ -37,6 +40,7 @@ Added CDocker::UndockContainer
 Added CFrame::GetRebarTheme
 Added CFrame::GetToolbarTheme
 Added CFrame::GetMRUEntries
+Renamed CFrame::GetThemeMenu to CFrame::GetMenuTheme
 
 Added UWM_GETMENUTHEME     message
 Added UWM_GETREBARTHEME    message 

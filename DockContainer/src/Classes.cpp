@@ -171,7 +171,7 @@ void CContainClasses::SetupToolbar()
 	AddCombo();
 
 	// Match the Container's Toolbar theme to the MainFrame's toolbar theme
-	ThemeToolbar tt = GetContainerApp().GetMainFrame().GetToolbar().GetToolbarTheme();
+	ToolbarTheme tt = GetContainerApp().GetMainFrame().GetToolbar().GetToolbarTheme();
 	GetToolbar().SetToolbarTheme(tt);
 }
 

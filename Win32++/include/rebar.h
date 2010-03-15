@@ -45,7 +45,7 @@
 namespace Win32xx
 {
 
-	struct ThemeRebar
+	struct RebarTheme
 	{
 		BOOL UseThemes;			// TRUE if themes are used
 		COLORREF clrBkgnd1;		// Colour 1 for rebar background
@@ -79,7 +79,7 @@ namespace Win32xx
 		UINT GetBarHeight() const;
 		void GetBarInfo(REBARINFO& rbi) const;
 		HWND GetMenubar() {return m_hMenubar;}
-		ThemeRebar& GetRebarTheme() {return m_Theme;}
+		RebarTheme& GetRebarTheme() {return m_Theme;}
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
 		UINT GetSizeofRBBI() const;
@@ -89,7 +89,7 @@ namespace Win32xx
 		void SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
 		void SetBarInfo(REBARINFO& rbi) const;
 		void SetMenubar(HWND hMenubar) {m_hMenubar = hMenubar;}
-		void SetRebarTheme(ThemeRebar& Theme);
+		void SetRebarTheme(RebarTheme& Theme);
 
 	// Operations
 		void DeleteBand(const int nBand) const;
@@ -116,7 +116,7 @@ namespace Win32xx
 		CRebar(const CRebar&);				// Disable copy construction
 		CRebar& operator = (const CRebar&); // Disable assignment operator
 
-		ThemeRebar m_Theme;
+		RebarTheme m_Theme;
 		BOOL m_bIsDragging;
 		HWND m_hMenubar;
 		LPARAM m_Orig_lParam;
@@ -135,7 +135,7 @@ namespace Win32xx
 	//
 	inline CRebar::CRebar() : m_bIsDragging(FALSE), m_hMenubar(0), m_Orig_lParam(0L)
 	{
-		ZeroMemory(&m_Theme, sizeof(ThemeRebar));
+		ZeroMemory(&m_Theme, sizeof(RebarTheme));
 	}
 
 	inline CRebar::~CRebar()
@@ -543,7 +543,7 @@ namespace Win32xx
 			throw CWinException(_T("Failed to set rebar info"));
 	}
 
-	inline void CRebar::SetRebarTheme(ThemeRebar& Theme)
+	inline void CRebar::SetRebarTheme(RebarTheme& Theme)
 	{
 		m_Theme.UseThemes    = Theme.UseThemes;
 		m_Theme.clrBkgnd1    = Theme.clrBkgnd1;
@@ -644,7 +644,7 @@ namespace Win32xx
 			break;
 		case UWM_GETREBARTHEME:
 			{
-				ThemeRebar& rm = GetRebarTheme();
+				RebarTheme& rm = GetRebarTheme();
 				return (LRESULT)&rm;
 			}
 		case UWM_TOOLBAR_RESIZE:

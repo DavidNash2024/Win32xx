@@ -413,8 +413,8 @@ namespace Win32xx
 		virtual void RecalcDockLayout();
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual BOOL VerifyDockers();
-		virtual void Undock(BOOL bShowUndocked = TRUE);
-		virtual void UndockContainer(CContainer* pContainer);
+		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
+		virtual void UndockContainer(CContainer* pContainer, CPoint pt);
 
 		// Attributes
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
@@ -955,12 +955,12 @@ namespace Win32xx
 					CContainer* pContainer = ((CContainer*)m_pDock->GetView())->GetActiveContainer();
 					CDocker* pDock = m_pDock->GetDockFromView(pContainer);
 					pDock->GetDockClient().SetClosePressed();
-					m_pDock->UndockContainer(pContainer);
+					m_pDock->UndockContainer(pContainer, GetCursorPos());
 					pDock->Destroy();
 				}
 				else
 				{
-					m_pDock->Undock(FALSE);
+					m_pDock->Undock(GetCursorPos(), FALSE);
 					m_pDock->Destroy();
 				}
 			}
@@ -1032,7 +1032,7 @@ namespace Win32xx
 				{
 					CDocker* pDock = (CDocker*)FromHandle(GetParent());
 					if (pDock)
-						pDock->Undock();
+						pDock->Undock(GetCursorPos());
 				}
 
 				// Update the close button
@@ -2550,7 +2550,7 @@ namespace Win32xx
 		// Set the default colour for the splitter bar
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 		HWND hWndFrame = GetDockAncestor()->GetAncestor();
-		ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+		RebarTheme* pTheme = (RebarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
 		
 		if (pTheme && pTheme->UseThemes)
 				rgbColour =pTheme->clrBkgnd2;
@@ -2630,7 +2630,7 @@ namespace Win32xx
 			{
 				if (IsDocked())
 				{
-					Undock();
+					Undock(GetCursorPos());
 					SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
 				}
 			}
@@ -2819,7 +2819,7 @@ namespace Win32xx
 		{
 			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 			HWND hWndFrame = GetDockAncestor()->GetAncestor();
-			ThemeRebar* pTheme = (ThemeRebar*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+			RebarTheme* pTheme = (RebarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
 			
 			if (pTheme && pTheme->UseThemes)
 				rgbColour = pTheme->clrBkgnd2;
@@ -3251,16 +3251,13 @@ namespace Win32xx
 	}
 
 
-	inline void CDocker::Undock(BOOL bShowUndocked)
+	inline void CDocker::Undock(CPoint pt, BOOL bShowUndocked)
 	{
 		// Return if we shouldn't undock
 		if (GetDockStyle() & DS_NO_UNDOCK) return;
 
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
-
-		// Get the current mouse position
-		CPoint pt = GetCursorPos();
 		
 		CDocker* pDockUndockedFrom = SeparateFromDock();
 
@@ -3275,7 +3272,7 @@ namespace Win32xx
 			pDockUndockedFrom->RecalcDockLayout();
 	}
 
-	inline void CDocker::UndockContainer(CContainer* pContainer)
+	inline void CDocker::UndockContainer(CContainer* pContainer, CPoint pt)
 	{
 		// Return if we shouldn't undock
 		if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
@@ -3379,7 +3376,7 @@ namespace Win32xx
 		CRect rc = GetDockClient().GetWindowRect();
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-		pDock->Undock();
+		pDock->Undock(pt);
 		pDockUndockedFrom->RecalcDockLayout();
 	}
 
@@ -3635,7 +3632,7 @@ namespace Win32xx
 			if (pDock && pDock->IsDocker())
 			{
 				CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
-				pDock->UndockContainer(pContainer);
+				pDock->UndockContainer(pContainer, GetCursorPos());
 			}
 		}
 

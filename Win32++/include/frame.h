@@ -92,7 +92,7 @@ namespace Win32xx
 	////////////////////////////////////////////////
 	// Declarations for structures for themes
 	//
-	struct ThemeMenu
+	struct MenuTheme
 	{
 		BOOL UseThemes;			// TRUE if themes are used
 		COLORREF clrHot1;		// Colour 1 for top menu. Color of selected menu item
@@ -120,8 +120,8 @@ namespace Win32xx
 		void SysCommand(WPARAM wParam, LPARAM lParam);
 		HMENU GetMenu() const {return m_hTopMenu;}
 		void SetMenu(HMENU hMenu);
-		ThemeMenu& GetMenubarTheme() {return m_ThemeMenu;}
-		void SetMenubarTheme(ThemeMenu& Theme);
+		MenuTheme& GetMenubarTheme() {return m_ThemeMenu;}
+		void SetMenubarTheme(MenuTheme& Theme);
 
 	protected:
 	//Overridables
@@ -173,7 +173,7 @@ namespace Win32xx
 		int   m_nHotItem;		// hot item
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
 		CPoint m_OldMousePos;	// old Mouse position
-		ThemeMenu m_ThemeMenu;	// Theme structure
+		MenuTheme m_ThemeMenu;	// Theme structure
 		CFrame* m_pFrame;       // Pointer to the frame.
 
 
@@ -196,9 +196,9 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void RecalcLayout();	
-		virtual ThemeMenu& GetMenuTheme() const			{ return (ThemeMenu&) m_ThemeMenu; }
-		virtual ThemeRebar& GetRebarTheme()	const		{ return (ThemeRebar&)GetRebar().GetRebarTheme(); }
-		virtual ThemeToolbar& GetToolbarTheme() const	{ return (ThemeToolbar&)GetToolbar().GetToolbarTheme(); }
+		virtual MenuTheme& GetMenuTheme() const			{ return (MenuTheme&) m_ThemeMenu; }
+		virtual RebarTheme& GetRebarTheme()	const		{ return (RebarTheme&)GetRebar().GetRebarTheme(); }
+		virtual ToolbarTheme& GetToolbarTheme() const	{ return (ToolbarTheme&)GetToolbar().GetToolbarTheme(); }
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the menubar, rebar, 
@@ -216,7 +216,7 @@ namespace Win32xx
 		CWnd* GetView() const				{ return m_pView; }
 		tString GetMRUEntry(size_t nIndex);
 		void SetFrameMenu(INT ID_MENU);
-		void SetMenuTheme(ThemeMenu& Theme);
+		void SetMenuTheme(MenuTheme& Theme);
 		void SetView(CWnd& wndView);
 		BOOL IsFrame() const			{ return TRUE; }
 		BOOL IsMenubarUsed() const		{ return (GetMenubar() != 0); }
@@ -295,7 +295,7 @@ namespace Win32xx
 		BOOL m_bUseToolbar;					// set to TRUE if the toolbar is used
 		BOOL m_bShowStatusbar;
 		BOOL m_bShowToolbar;
-		ThemeMenu m_ThemeMenu;				// Theme structure
+		MenuTheme m_ThemeMenu;				// Theme structure
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
 
@@ -349,7 +349,7 @@ namespace Win32xx
 		m_nMDIButton    = 0;
 		m_hPopupMenu	= 0;
 
-		ZeroMemory(&m_ThemeMenu, sizeof(ThemeMenu));
+		ZeroMemory(&m_ThemeMenu, sizeof(MenuTheme));
 	}
 
 	inline CMenubar::~CMenubar()
@@ -1240,7 +1240,7 @@ namespace Win32xx
 
 	}
 
-	inline void CMenubar::SetMenubarTheme(ThemeMenu& Theme)
+	inline void CMenubar::SetMenubarTheme(MenuTheme& Theme)
 	{
 		m_ThemeMenu.UseThemes   = Theme.UseThemes;
 		m_ThemeMenu.clrHot1     = Theme.clrHot1;
@@ -1345,7 +1345,7 @@ namespace Win32xx
 			break;
 		case UWM_GETMENUTHEME:
 			{
-				ThemeMenu& tm = GetMenubarTheme();
+				MenuTheme& tm = GetMenubarTheme();
 				return (LRESULT)&tm; 
 			}
 		case WM_WINDOWPOSCHANGED:
@@ -1669,7 +1669,7 @@ namespace Win32xx
 		CDC DrawDC = pdis->hDC;
 		CRect rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
-		ThemeMenu tm = GetMenuTheme();
+		MenuTheme tm = GetMenuTheme();
 
 		// Draw the checkmark's background rectangle first
 		if (tm.UseThemes)
@@ -2066,7 +2066,7 @@ namespace Win32xx
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
 		CDC DrawDC = pdis->hDC;
-		ThemeMenu tm = GetMenuTheme();
+		MenuTheme tm = GetMenuTheme();
 
 		int Iconx = 16;
 		int Icony = 16;
@@ -2319,7 +2319,7 @@ namespace Win32xx
 			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
-		ThemeMenu tm = GetMenuTheme();
+		MenuTheme tm = GetMenuTheme();
 
 		if (pmd->fType & MFT_SEPARATOR)
 		{
@@ -2808,7 +2808,7 @@ namespace Win32xx
 		RB.SetBandInfo(nBand, rbbi); 
 	}
 
-	inline void CFrame::SetMenuTheme(ThemeMenu& Theme)
+	inline void CFrame::SetMenuTheme(MenuTheme& Theme)
 	{
 		m_ThemeMenu.UseThemes   = Theme.UseThemes;
 		m_ThemeMenu.clrHot1     = Theme.clrHot1;
@@ -2922,9 +2922,9 @@ namespace Win32xx
 		{
 		case Modern:
 			{
-				ThemeToolbar tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-				ThemeRebar tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
-				ThemeMenu tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+				ToolbarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+				RebarTheme tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
+				MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
@@ -2936,9 +2936,9 @@ namespace Win32xx
 
 		case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 			{
-				ThemeToolbar tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
-				ThemeRebar tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
-				ThemeMenu tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+				ToolbarTheme tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
+				RebarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
+				MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
@@ -2950,9 +2950,9 @@ namespace Win32xx
 		case Blue:
 			{
 				// Used for XP default (blue) color scheme
-				ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-				ThemeRebar tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
-				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
+				ToolbarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+				RebarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+				MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
@@ -2965,9 +2965,9 @@ namespace Win32xx
 		case Silver:
 			{
 				// Used for XP Silver color scheme
-				ThemeToolbar tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-				ThemeRebar tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
-				ThemeMenu tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
+				ToolbarTheme tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+				RebarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
+				MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
@@ -2980,9 +2980,9 @@ namespace Win32xx
 		case Olive:
 			{
 				// Used for XP Olive color scheme
-				ThemeRebar tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, T, T, T, T, F};
-				ThemeToolbar tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
-				ThemeMenu tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
+				RebarTheme tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, T, T, T, T, F};
+				ToolbarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
+				MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
 
 				GetToolbar().SetToolbarTheme(tt);
 				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
@@ -3207,17 +3207,17 @@ namespace Win32xx
 			break;
 		case UWM_GETMENUTHEME:
 			{
-				ThemeMenu& tm = GetMenuTheme();
+				MenuTheme& tm = GetMenuTheme();
 				return (LRESULT)&tm; 
 			}
 		case UWM_GETREBARTHEME:
 			{
-				ThemeRebar& rm = GetRebarTheme();
+				RebarTheme& rm = GetRebarTheme();
 				return (LRESULT)&rm;
 			}
 		case UWM_GETTOOLBARTHEME:
 			{
-				ThemeToolbar& tt = GetToolbarTheme();
+				ToolbarTheme& tt = GetToolbarTheme();
 				return (LRESULT)&tt;
 			}
 		} // switch uMsg
