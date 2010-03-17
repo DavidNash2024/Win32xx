@@ -85,6 +85,7 @@ vcbuild /rebuild Threads\ProjectFiles\Threads_2008.vcproj release		>>"Win32++\ou
 mkdir "Win32++\output\VS2008"
 mkdir "Win32++\output\VS2008\Debug"
 
+ECHO "Copying Debug Samples" >>"Win32++\output\VS2008.log"
 copy Browser\ProjectFiles\Debug\Browser.exe                 "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy Dialog\ProjectFiles\Debug\Dialog.exe                   "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy DialogBars\ProjectFiles\Debug\DialogBars.exe           "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
@@ -117,6 +118,7 @@ copy Threads\ProjectFiles\Debug\Threads.exe                 "Win32++\output\VS20
 
 mkdir "Win32++\output\VS2008\Release"
 
+ECHO "Copying Release Samples" >>"Win32++\output\VS2008.log"
 copy Browser\ProjectFiles\Release\Browser.exe                 "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy Dialog\ProjectFiles\Release\Dialog.exe                   "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy DialogBars\ProjectFiles\Release\DialogBars.exe           "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
