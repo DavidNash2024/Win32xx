@@ -5,7 +5,6 @@
 #define MYDIALOG_H
 
 
-#include "resource.h"
 #include "MyButton.h"
 #include "Hyperlink.h"
 

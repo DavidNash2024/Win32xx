@@ -2,6 +2,8 @@
 // Resource.h
 // This file contains the resource ID definitions.
 
+// include the Resource IDs defined by Win32++
+#include "Default_Resource.h"
 
 //The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,
 //  and Window Caption
