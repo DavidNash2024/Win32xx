@@ -58,17 +58,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 
 void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
 {
-	// Update the URL in the ComboboxEx edit box.
-	if (pDispParams->cArgs >= 5 && pDispParams->rgvarg[5].vt == (VT_BYREF|VT_VARIANT))
-	{
-		CComVariant vtURL(*pDispParams->rgvarg[5].pvarVal);
-		vtURL.ChangeType(VT_BSTR);
-
-		HWND hwnd = m_ComboboxEx.GetHwnd();
-
-		USES_CONVERSION;
-		::SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)OLE2T(vtURL.bstrVal));
-	}
+	UNREFERENCED_PARAMETER(pDispParams);
 }
 
 void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
@@ -211,6 +201,16 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		szString += _T("\n");
 		TRACE(szString.c_str());
 	}
+
+	BSTR bstrUrlName;
+
+	CView* pView = (CView*)GetView();
+	HRESULT hr = pView->GetIWebBrowser2()->get_LocationURL(&bstrUrlName);
+	if (FAILED(hr))
+		return;
+
+	// Update the URL in the ComboboxEx edit box.
+	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)OLE2T(bstrUrlName));
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
