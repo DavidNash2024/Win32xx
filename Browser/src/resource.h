@@ -29,9 +29,12 @@
 #define IDM_STOP                        124
 #define IDM_HOME                        125
 
-#define IDB_TOOLBAR_NORM                130
-#define IDB_TOOLBAR_HOT                 131
-#define IDB_TOOLBAR_DIS                 132
+#define IDB_TOOLBAR24_NORM              130
+#define IDB_TOOLBAR24_HOT               131
+#define IDB_TOOLBAR24_DIS               132
+#define IDB_TOOLBAR32_NORM              133
+#define IDB_TOOLBAR32_HOT               134
+#define IDB_TOOLBAR32_DIS               135
 
 #define IDC_COMBOBOXEX                  140
 

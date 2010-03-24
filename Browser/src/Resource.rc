@@ -67,9 +67,12 @@ IDW_MAIN                ICON                    "res/Globe.ico"
 //
 
 IDW_MAIN                BITMAP                  "res/toolbar.bmp"
-IDB_TOOLBAR_NORM        BITMAP                  "res/Internet24_n.bmp"
-IDB_TOOLBAR_HOT         BITMAP                  "res/Internet24_h.bmp"
-IDB_TOOLBAR_DIS         BITMAP                  "res/Internet24_d.bmp"
+IDB_TOOLBAR24_NORM      BITMAP                  "res/Internet24_n.bmp"
+IDB_TOOLBAR32_NORM      BITMAP                  "res/Browser_n.bmp"
+IDB_TOOLBAR24_HOT       BITMAP                  "res/Internet24_h.bmp"
+IDB_TOOLBAR32_HOT       BITMAP                  "res/Browser_h.bmp"
+IDB_TOOLBAR24_DIS       BITMAP                  "res/Internet24_d.bmp"
+IDB_TOOLBAR32_DIS       BITMAP                  "res/Browser_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

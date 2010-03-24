@@ -137,7 +137,7 @@ void CComboPage::OnSetActive()
 
 CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hwndParent /* = NULL*/) : CPropertySheet(pszCaption, hwndParent)
 {
-	m_PSH.pszIcon          = MAKEINTRESOURCE(IDI_BACKCOLOR);
+	m_PSH.pszIcon          = MAKEINTRESOURCE(IDI_DIALOG);
 	m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USEICONID  | PSH_USECALLBACK;
 }
 

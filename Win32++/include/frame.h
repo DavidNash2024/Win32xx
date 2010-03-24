@@ -2997,6 +2997,13 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID)
+	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
+	// Assumes the width of the button image = bitmap_size / buttons
+	// Assumes buttons have been already been added via AdddToolbarButton
+	// The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
+	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
+	// The color mask is ignored for 32bit bitmap resources
+	// The Hot and disabled bitmap resources can be 0
 	{
 		GetToolbar().SetImages(crMask, ToolbarID, ToolbarHotID, ToolbarDisabledID);
 	}

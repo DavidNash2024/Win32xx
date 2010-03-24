@@ -890,7 +890,9 @@ namespace Win32xx
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = bitmap_size / buttons
 	// Assumes buttons have been already been added via AdddToolbarButton
-	// This colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
+	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
+	// The color mask is ignored for 32bit bitmap resources
+	// The Hot and disiabled bitmap resources can be 0
 	{
 		int iNumButtons = 0;
 		std::vector<UINT>::iterator iter;
