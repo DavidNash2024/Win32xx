@@ -7,7 +7,7 @@ Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=NewProject_private.rc
+PrivateResource=
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000001000000001000000
+CompilerSettings=0000001000000000000000
 
 [VersionInfo]
 Major=0
@@ -46,5 +46,4 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
-
 
