@@ -1,3 +1,27 @@
+Version 6.9
+===========
+
+Changes
+Added CAXContainer
+Added CWebBrowser
+Added CWnd::CharToWide
+Added CWnd::WideToChar
+Added CWnd::TCharToWide
+Added CWnd::WideToTChar
+Added CWnd::CharToTChar
+Added CWnd::TCharToChar
+Added CWnd::GetClassName
+Added CWnd::GetDlgItemText
+Added CWnd::GetWindowText
+
+Removed
+CharToTString
+TCharToString
+TCharToWide
+CWnd::GetWindowString
+CWnd::GetClassString
+CWnd::GetDlgItemString
+
 Version 6.8
 ===========
 

@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -83,6 +83,9 @@ namespace Win32xx
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
 		virtual void SetDlgParent(HWND hParent);
+		BOOL IsDialog() const { return TRUE; }
+		BOOL IsModal() const { return m_IsModal; }
+		BOOL IsIndirect() const { return m_IsIndirect; }
 
 	protected:
 		// These are the functions you might wish to override
@@ -105,8 +108,8 @@ namespace Win32xx
 		CDialog(const CDialog&);				// Disable copy construction
 		CDialog& operator = (const CDialog&); // Disable assignment operator
 
-		BOOL IsIndirect;				// a flag for Indirect dialogs
-		BOOL IsModal;					// a flag for modal dialogs
+		BOOL m_IsIndirect;				// a flag for Indirect dialogs
+		BOOL m_IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
 		HWND m_hDlgParent;				// handle to the dialogs's parent window
@@ -120,14 +123,14 @@ namespace Win32xx
 {
 
 	inline CDialog::CDialog(LPCTSTR lpszResName, HWND hParent/* = NULL*/)
-		: IsIndirect(FALSE), IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
+		: m_IsIndirect(FALSE), m_IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
 		m_hDlgParent = hParent;
 		::InitCommonControls();
 	}
 
 	inline CDialog::CDialog(UINT nResID, HWND hParent/* = NULL*/)
-		: IsIndirect(FALSE), IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
+		: m_IsIndirect(FALSE), m_IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
 	{
 		m_hDlgParent = hParent;
 		::InitCommonControls();
@@ -135,7 +138,7 @@ namespace Win32xx
 
 	//For indirect dialogs - created from a dialog box template in memory.
 	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, HWND hParent/* = NULL*/)
-		: IsIndirect(TRUE), IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
+		: m_IsIndirect(TRUE), m_IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
 	{
 		m_hDlgParent = hParent;
 		::InitCommonControls();
@@ -145,7 +148,7 @@ namespace Win32xx
 	{
 		if (m_hWnd != NULL)
 		{
-			if (IsModal)
+			if (IsModal())
 				::EndDialog(m_hWnd, 0);
 			else
 				Destroy();
@@ -276,7 +279,7 @@ namespace Win32xx
 			if (IsWindow())
 				throw CWinException(_T("CDialog::DoModal ... Window already exists"));
 
-			IsModal=TRUE;
+			m_IsModal=TRUE;
 
 			// Ensure this thread has the TLS index set
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -292,7 +295,7 @@ namespace Win32xx
 
 			// Create a modal dialog
 			INT_PTR nResult;
-			if (IsIndirect)
+			if (IsIndirect())
 				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
@@ -332,7 +335,7 @@ namespace Win32xx
 			if (IsWindow())
 				throw CWinException(_T("CDialog::DoModeless ... Window already exists"));
 
-			IsModal=FALSE;
+			m_IsModal=FALSE;
 
 			// Ensure this thread has the TLS index set
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -343,7 +346,7 @@ namespace Win32xx
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 
 			// Create a modeless dialog
-			if (IsIndirect)
+			if (IsIndirect())
 				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
@@ -373,7 +376,7 @@ namespace Win32xx
 	{
 		if (::IsWindow(m_hWnd))
 		{
-			if (IsModal)
+			if (IsModal())
 				::EndDialog(m_hWnd, nResult);
 			else
 				Destroy();
@@ -408,11 +411,11 @@ namespace Win32xx
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
 		{
 			// Process dialog keystrokes for modeless dialogs
-			if (!IsModal && IsDialogMessage(m_hWnd, pMsg))
+			if (!IsModal() && IsDialogMessage(m_hWnd, pMsg))
 				return TRUE;
 		}
 
-		return CWnd::PreTranslateMessage(pMsg);
+		return CWnd::PreTranslateMessage(pMsg); 
 	}
 
 	inline void CDialog::SetDlgParent(HWND hParent)
@@ -472,17 +475,23 @@ namespace Win32xx
 
 		if (nCode == MSGF_DIALOGBOX)
 		{
-			MSG *lpMsg = (MSG *) lParam;
+			MSG* lpMsg = (MSG*) lParam;
 
-			// only pre-translate input events
+			// only pre-translate keyboard events
 			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST) ||
 			(lpMsg->message >= WM_MOUSEFIRST && lpMsg->message <= WM_MOUSELAST))
 			{
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
-				{
-					CWnd* pWnd = CWnd::FromHandle(hWnd);
-					if (pWnd && pWnd->PreTranslateMessage(lpMsg))
-						break; 
+				{				
+					CDialog* pDialog = (CDialog*)CWnd::FromHandle(hWnd);
+					if (pDialog && pDialog->IsDialog())
+					{
+						if (pDialog->IsModal())
+						{
+							pDialog->PreTranslateMessage(lpMsg);
+						}
+						break;
+					}
 				}
 			}
 		}

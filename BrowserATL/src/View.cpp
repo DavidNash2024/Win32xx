@@ -116,7 +116,6 @@ STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, 
 
 	switch (dispidMember)
 	{
-
 	case DISPID_BEFORENAVIGATE2:
 		MainFrame.OnBeforeNavigate(pDispParams);
 		break;

@@ -147,8 +147,7 @@ int CClientDialog::OnClientReceive()
 	// Called when the socket has data to receive
 	char buf[1025] = {0};	// assign 1025 array elements to NULL
 	int size = m_Client.Receive(buf, 1024, 0); // receive at most 1024 chars
-	tString t = CharToTString(buf);
-	Append(IDC_EDIT_RECEIVE, t.c_str());
+	Append(IDC_EDIT_RECEIVE, CharToTChar(buf));
 	return size;
 }
 
@@ -214,9 +213,8 @@ void CClientDialog::OnStartClient()
 				}
 
 				// Get the port number
-				tString tPort = GetDlgItemString(IDC_EDIT_PORT);
-				std::string sPort = TCharToString(tPort.c_str());
-				int RemotePort = atoi(sPort.c_str());
+				LPCTSTR szPort = GetDlgItemText(IDC_EDIT_PORT);
+				int RemotePort = atoi(TCharToChar(szPort));
 
 				// Get the IP Address from the IP Address control
 				DWORD dwAddr = 0;
@@ -291,17 +289,15 @@ void CClientDialog::OnSend()
 	{
 	case SOCK_STREAM:	// for TCP client
 		{
-			tString t = GetDlgItemString(IDC_EDIT_SEND);
-			std::string s = TCharToString(t.c_str());
-			m_Client.Send(s.c_str(), s.length(), 0);
+			LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND);
+			m_Client.Send(TCharToChar(szSend), lstrlen(szSend), 0);
 		}
 		break;
 	case SOCK_DGRAM:	// for UDP client
 		{
 			// Get the port number
-			tString tPort = GetDlgItemString(IDC_EDIT_PORT);
-			std::string sPort = TCharToString(tPort.c_str());
-			int RemotePort = atoi(sPort.c_str());
+			LPCTSTR szPort = GetDlgItemText(IDC_EDIT_PORT);
+			int RemotePort = atoi(TCharToChar(szPort));
 
 			// Get the IP Address from the IP Address control
 			DWORD dwAddr = 0;
@@ -312,9 +308,8 @@ void CClientDialog::OnSend()
 			peer.sin_port   = htons((u_short)RemotePort);
 			peer.sin_addr.S_un.S_addr = htonl(dwAddr);
 
-			tString t = GetDlgItemString(IDC_EDIT_SEND);
-			std::string s = TCharToString(t.c_str());
-			m_Client.SendTo(s.c_str(), s.length(), 0, (SOCKADDR*)&peer, sizeof(peer));
+			LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND);
+			m_Client.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, (SOCKADDR*)&peer, sizeof(peer));
 		}
 		break;
 	}

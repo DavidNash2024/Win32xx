@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -217,21 +217,17 @@ namespace Win32xx
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
-	
+
   #ifndef lstrcpyn			// Required for WinCE
 	LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength);
   #endif // !lstrcpyn
-
-	tString CharToTString(const char* s);
-	std::string TCharToString(LPCTSTR t);
-	BOOL TCharToWide (LPCTSTR pTChar, PWCHAR pWChar, int length);
 
 	enum Constants			// Defines the maximum size for TCHAR strings
 	{
 		MAX_MENU_STRING = 80,
 		MAX_STRING_SIZE = 255,
 	};
-	
+
 	struct CompareHWND		// The comparison function object used by CWinApp::m_mapHWND
 	{
 		bool operator()(HWND const a, const HWND b) const
@@ -417,14 +413,12 @@ namespace Win32xx
 		virtual void Destroy();
 		virtual HWND Detach();
 		virtual HWND GetAncestor() const;
-		virtual tString GetClassString() const;
-		virtual tString GetDlgItemString(int nIDDlgItem) const;
-		virtual tString GetWindowString() const;
 		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual BOOL IsContainer() const { return FALSE; }
+		virtual BOOL IsDialog() const    { return FALSE; }
 		virtual BOOL IsDocker() const	 { return FALSE; }
 		virtual BOOL IsFrame() const     { return FALSE; }
 		virtual BOOL IsMenubar() const   { return FALSE; }
@@ -447,6 +441,7 @@ namespace Win32xx
 		BOOL BringWindowToTop() const;
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
+		LPCTSTR GetClassName();
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
@@ -459,12 +454,15 @@ namespace Win32xx
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
 		int  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
+		LPCTSTR GetDlgItemText(int nIDDlgItem);
 		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
+		LPCTSTR GetWindowClass() const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
+		LPCTSTR GetWindowText();
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
@@ -502,7 +500,7 @@ namespace Win32xx
 		BOOL ValidateRect(LPCRECT prc) const;
 		BOOL ValidateRgn(HRGN hRgn) const;
 
-#ifndef _WIN32_WCE
+  #ifndef _WIN32_WCE
 		BOOL CloseWindow() const;
 		BOOL EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		HMENU GetMenu() const;
@@ -519,7 +517,7 @@ namespace Win32xx
 		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
 		BOOL ShowScrollBar(int nBar, BOOL bShow) const;
-#endif
+  #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const {return m_hWnd;}
@@ -538,6 +536,14 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		// String conversion functions
+		virtual LPCWSTR CharToWide(LPCSTR pChar);
+		virtual LPCSTR  WideToChar(LPCWSTR pWChar);
+		virtual LPCTSTR CharToTChar(LPCSTR pChar);
+		virtual LPCSTR  TCharToChar(LPCTSTR pTChar);
+		virtual LPCWSTR TCharToWide(LPCTSTR pTChar);
+		virtual LPCTSTR WideToTChar(LPWSTR pWChar);
+
 		HWND m_hWnd;				// handle to this object's window
 
 	private:
@@ -554,7 +560,9 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		tString m_tsLoadString;		// a TCHAR std::string, temporary storage for strings
+		CHAR*  m_pChar;             // Used in string conversions
+		TCHAR* m_pTChar;            // Used in string functions
+		WCHAR* m_pWChar;			// Used in string conversions
 
 	}; // class CWnd
 
@@ -622,37 +630,37 @@ namespace Win32xx
 	// Displays an error message in a message box. Debug mode only.
 	inline void DebugWarnMsg(LPCTSTR WarnMsg)
 	{
-	#ifdef _DEBUG
+  #ifdef _DEBUG
 		TRACE(_T("*** Warning:  "));
 		TRACE(WarnMsg);
 		TRACE(_T("\n"));
 		::MessageBox (0, WarnMsg, _T("Warning"), MB_ICONINFORMATION | MB_OK);
-	#else
+  #else
 		UNREFERENCED_PARAMETER(WarnMsg); // no-op
-	#endif  //_DEBUG
+  #endif  //_DEBUG
 	}
 
 	// Displays a warning message in a messagebox. Debug mode only
 	inline void DebugErrMsg(LPCTSTR ErrorMsg)
 	{
-	#ifdef _DEBUG
+  #ifdef _DEBUG
 		TRACE(_T("*** Error:  "));
 		TRACE(ErrorMsg);
 		TRACE(_T("\n"));
 		::MessageBox (0, ErrorMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-	#else
+  #else
 		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
-	#endif  //_DEBUG
+  #endif  //_DEBUG
 	}
 
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	inline void TRACE(LPCTSTR str)
 	{
-	#ifdef _DEBUG
+  #ifdef _DEBUG
 		OutputDebugString(str);
-	#else
+  #else
 		UNREFERENCED_PARAMETER(str); // no-op
-	#endif
+  #endif
 	}
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
@@ -677,7 +685,7 @@ namespace Win32xx
 		//  2600     Windows Vista and Windows Server 2008
 		//  2601     Windows 7
 
-		return nVersion; 
+		return nVersion;
 	}
 
 	inline int GetComCtlVersion()
@@ -738,10 +746,10 @@ namespace Win32xx
 		// This function correctly determines the sizeof NONCLIENTMETRICS
 		UINT uSize = sizeof (NONCLIENTMETRICS);
 
-	#if (WINVER >= 0x0600)
+  #if (WINVER >= 0x0600)
 		if (GetWinVersion() < 2600)		// Is OS version less than Vista
 			uSize -= sizeof(int);		// Adjust size back to correct value
-	#endif
+  #endif
 
 		return uSize;
 	}
@@ -805,71 +813,12 @@ namespace Win32xx
 	}
   #endif // !lstrcpyn
 
-	inline tString CharToTString(const char* s)
-	{
-		// Handy for converting char to TCHAR
-		tString tstr;
-  #ifdef UNICODE
-		size_t len = strlen(s);
-		if (0 == len) return tstr;
-
-		TCHAR* t = new TCHAR[len +1];
-		if (NULL == t) throw std::bad_alloc();
-
-		mbstowcs(t, s, len);
-		tstr = t;
-		delete []t;
-  #else
-		tstr = s;
-  #endif
-		return tstr;
-	}
-
-	inline std::string TCharToString(LPCTSTR t)
-	{
-		// Handy for converting TCHAR to char
-		// If the conversion fails, an empty string is returned.
-		std::string str;
-  #ifdef UNICODE
-		// calculate the size of the char string required
-		// Note: If wcstombs encounters a wide character it cannot convert
-		//       to a multibyte character, it returns –1.
-		size_t len = wcstombs(0, t, 0);
-		if (len <= 0) return str;
-
-		char* c = new char[len + 1];
-		if (NULL == c) throw std::bad_alloc();
-		
-		ZeroMemory(c, len +1);
-		wcstombs(c, t, len);
-		str = c;	
-		delete []c;
-  #else
-		str = t;
-  #endif
-		return str;
-	}
-
-	inline BOOL TCharToWide (LPCTSTR pTChar, PWCHAR pWChar, int length)
-	{
-	  BOOL bReturn = FALSE;
-  #ifdef UNICODE
-	  bReturn = (BOOL)lstrcpyn(pWChar, pTChar, length);
-  #else
-	  bReturn = (BOOL)MultiByteToWideChar(CP_THREAD_ACP, 0, pTChar, -1, pWChar, length);
-  #endif
-
-	return bReturn;
-	}  
-
 	inline CPoint GetCursorPos()
 	{
 		CPoint pt;
 		::GetCursorPos(&pt);
 		return pt;
 	}
-
-
 
 	///////////////////////////////////
 	// Definitions for the CWinException class
@@ -1054,7 +1003,7 @@ namespace Win32xx
 						break;
 					}
 				}
-			} 
+			}
 
 			if (!Processed)
 			{
@@ -1124,7 +1073,7 @@ namespace Win32xx
 		//
 		// HINSTANCE hResource = LoadLibrary(_T("MyResourceDLL.dll"));
 		// SetResourceHandle(hResource);
-	
+
 		m_hResource = hResource;
 	}
 
@@ -1163,8 +1112,8 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL),
-					m_hIconSmall(NULL), m_PrevWindowProc(NULL)
+	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
+						m_PrevWindowProc(NULL), m_pChar(NULL), m_pTChar(NULL), m_pWChar(NULL)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
@@ -1175,6 +1124,9 @@ namespace Win32xx
 	{
 		// Destroy the window for this object
 		Destroy();
+		delete[] m_pChar;
+		delete[] m_pTChar;
+		delete[] m_pWChar;
 	}
 
 	inline void CWnd::AddToMap()
@@ -1387,7 +1339,7 @@ namespace Win32xx
 			wc.lpszClassName = ClassName;
 			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
-			
+
 			if (!RegisterClass(wc))	// Register the window class (if not already registered)
 				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
 
@@ -1493,49 +1445,50 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	inline tString CWnd::GetClassString() const
-	// Retrieves the name of the class to which the specified window belongs
+	inline LPCTSTR CWnd::GetClassName()
 	{
-		TCHAR szString[MAX_STRING_SIZE +1];
-		tString tstr;
-		::GetClassName(m_hWnd, szString, MAX_STRING_SIZE);
-		tstr = szString;
+		delete[] m_pTChar;
+		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
+		if (0 == m_pTChar) throw std::bad_alloc();
+		memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
+		::GetClassName(m_hWnd, m_pTChar, MAX_STRING_SIZE);
 
-		return tstr;
+		return m_pTChar;
 	}
 
-	inline tString CWnd::GetDlgItemString(int nIDDlgItem) const
-	// The GetDlgItemString function retrieves the title or text associated
-	// with a control in a dialog box.
-	{
+	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem)
+	{	
+		delete[] m_pTChar;
+		m_pTChar = NULL;
+		
 		int nLength = ::GetWindowTextLength(GetDlgItem(nIDDlgItem));
-
-		tString tstr;
 		if (nLength > 0)
 		{
-			TCHAR szString[MAX_STRING_SIZE +1];
-			::GetDlgItemText(m_hWnd, nIDDlgItem, szString, MAX_STRING_SIZE);
-			tstr = szString;
+			m_pTChar = new TCHAR[nLength +1];
+			if (0 == m_pTChar)
+				throw std::bad_alloc();
+			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
+			::GetDlgItemText(m_hWnd, nIDDlgItem, m_pTChar, nLength+1);
 		}
 
-		return tstr;
+		return m_pTChar;
 	}
-
-	inline tString CWnd::GetWindowString() const
-	// Gets the window title for an ordinary window, or the text in an edit control
+	
+	inline LPCTSTR CWnd::GetWindowText()
 	{
-		tString tstr;
+		delete[] m_pTChar;
+		m_pTChar = NULL;
+		
 		int nLength = ::GetWindowTextLength(m_hWnd);
 		if (nLength > 0)
 		{
-			TCHAR* pszString = new TCHAR[nLength+1];
-			if (NULL == pszString) throw std::bad_alloc();
-			if (0 != ::GetWindowText(m_hWnd, pszString, nLength+1))
-				tstr = pszString;
-
-			delete [] pszString;
+			m_pTChar = new TCHAR[nLength+1];
+			if (NULL == m_pTChar) throw std::bad_alloc();
+			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
+			::GetWindowText(m_hWnd, m_pTChar, nLength+1);
 		}
-		return tstr;
+
+		return m_pTChar;
 	}
 
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
@@ -1565,16 +1518,19 @@ namespace Win32xx
 
 		if (0 == GetApp())
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
-
-		m_tsLoadString = _T("");
-		TCHAR szString[MAX_STRING_SIZE +1] = _T("");
-		if (!::LoadString (GetApp()->GetResourceHandle(), nID, szString, MAX_STRING_SIZE))
+		
+		delete[] m_pTChar;
+		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
+		if (0 == m_pTChar) 
+			throw std::bad_alloc();
+		memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
+		
+		if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_pTChar, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
-			if (::LoadString (GetApp()->GetInstanceHandle(), nID, szString, MAX_STRING_SIZE))
+			if (::LoadString (GetApp()->GetInstanceHandle(), nID, m_pTChar, MAX_STRING_SIZE))
 			{
-				m_tsLoadString = szString;
-				return (LPCTSTR) m_tsLoadString.c_str();
+				return m_pTChar;
 			}
 
 			TCHAR msg[80] = _T("");
@@ -1582,11 +1538,9 @@ namespace Win32xx
 			TRACE(msg);
 		}
 
-		m_tsLoadString = szString;
-
 		// Never return a pointer to a local variable, it is out of scope when the function returns.
 		// We return a pointer to a member variable so it remains in scope.
-		return m_tsLoadString.c_str();
+		return m_pTChar;
 	}
 
 	inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -1894,7 +1848,7 @@ namespace Win32xx
 			::SendMessage (m_hWnd, WM_SETICON, WPARAM (ICON_BIG), LPARAM (m_hIconLarge));
 		else
 			TRACE(_T("SetIconLarge Failed\n"));
-		
+
 		return m_hIconLarge;
 	}
 
@@ -1985,6 +1939,76 @@ namespace Win32xx
 			throw CWinException(_T("Subclass failed."));
 
 		m_hWnd = hWnd;
+	}
+
+	inline LPCWSTR CWnd::CharToWide(LPCSTR pChar)
+	{
+		delete[] m_pWChar;
+		int length = strlen(pChar)+1;
+		m_pWChar = new WCHAR[length];
+		if (NULL == m_pWChar)
+			throw std::bad_alloc();
+		
+		memset(m_pWChar, 0, length * sizeof(WCHAR));
+		MultiByteToWideChar(CP_ACP, 0, pChar, -1, m_pWChar, length);
+		return m_pWChar;
+	}
+
+	inline LPCSTR CWnd::WideToChar(LPCWSTR pWChar)
+	{
+		delete[] m_pChar;
+		int length = wcslen(pWChar)+1;
+		m_pChar = new CHAR[length];
+		if (NULL == m_pChar)
+			throw std::bad_alloc();
+
+		memset(m_pChar, 0, length);
+		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, m_pChar, length, NULL,NULL);
+		return m_pChar;
+	}
+
+	inline LPCTSTR CWnd::CharToTChar(LPCSTR pChar)
+	{
+
+#ifdef UNICODE
+		return CharToWide(pChar);
+#else
+		return pChar;
+#endif
+
+	}
+
+	inline LPCSTR CWnd::TCharToChar(LPCTSTR pTChar)
+	{
+
+#ifdef UNICODE
+		return WideToChar(pTChar);
+#else
+		return pTChar;
+#endif
+
+	}
+
+	inline LPCWSTR CWnd::TCharToWide(LPCTSTR pTChar)
+	{
+
+  #ifdef UNICODE
+		return pTChar;
+  #else
+		return CharToWide(pTChar);
+  #endif
+
+	}
+
+	inline LPCTSTR CWnd::WideToTChar(LPWSTR pWChar)
+	{
+
+  #ifdef UNICODE
+		return pWChar;
+  #else
+		return WideToChar(pWChar);
+  #endif
+
 	}
 
 	inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -2505,10 +2529,10 @@ namespace Win32xx
 		return ::ValidateRgn(m_hWnd, hRgn);
 	}
 
-//
-// These functions aren't supported on WinCE
-//
-#ifndef _WIN32_WCE
+	//
+	// These functions aren't supported on WinCE
+	//
+  #ifndef _WIN32_WCE
 	inline BOOL CWnd::CloseWindow() const
 	// The CloseWindow function minimizes (but does not destroy) the window.
 	// To destroy a window, an application can use the Destroy function.
@@ -2616,7 +2640,7 @@ namespace Win32xx
 	{
 		return ::ShowScrollBar(m_hWnd, nBar, bShow);
 	}
-#endif
+  #endif
 
 }; // namespace Win32xx
 

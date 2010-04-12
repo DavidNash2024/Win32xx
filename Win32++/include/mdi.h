@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -247,7 +247,7 @@ namespace Win32xx
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
 				{
-					tString tsMenuItem = (*v)->GetWindowString();
+					tString tsMenuItem = (*v)->GetWindowText();
 
 					if (tsMenuItem.length() > MAX_MENU_STRING -10)
 					{

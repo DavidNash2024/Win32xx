@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -417,26 +417,24 @@ namespace Win32xx
 			{
 				tString strCurrentFile = (*iter);
 				WCHAR wszCurrentFile[MAX_PATH] = {0L};
+				lstrcpynW(wszCurrentFile, TCharToWide(strCurrentFile.c_str()), MAX_PATH);
+				
+				CRecentFileProperties* pPropertiesObj;
+				hr = CRecentFileProperties::CreateInstance(wszCurrentFile, &pPropertiesObj);
 
-				if (TCharToWide(strCurrentFile.c_str(), wszCurrentFile, MAX_PATH))
+				if (SUCCEEDED(hr))
 				{
-					CRecentFileProperties* pPropertiesObj;
-					hr = CRecentFileProperties::CreateInstance(wszCurrentFile, &pPropertiesObj);
-
+					IUnknown* pUnk = NULL;
+					hr = pPropertiesObj->QueryInterface(__uuidof(IUnknown), reinterpret_cast<void**>(&pUnk));
 					if (SUCCEEDED(hr))
 					{
-						IUnknown* pUnk = NULL;
-						hr = pPropertiesObj->QueryInterface(__uuidof(IUnknown), reinterpret_cast<void**>(&pUnk));
-						if (SUCCEEDED(hr))
-						{
-							hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pUnk));
-							pUnk->Release();
-							++iCurrentFile;
-						}
-						
-						pPropertiesObj->Release();
-					}               
-				}
+						hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pUnk));
+						pUnk->Release();
+						++iCurrentFile;
+					}
+					
+					pPropertiesObj->Release();
+				}               
 			}
 
 			SAFEARRAYBOUND sab = {iCurrentFile,0};

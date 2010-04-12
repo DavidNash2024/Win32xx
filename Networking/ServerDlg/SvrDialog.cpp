@@ -77,15 +77,14 @@ void CTCPClientDlg::Receive()
 {
 	char str[1025] = {0};			// Assign all 1025 elements to NULL
 	m_pSocket->Receive(str, 1024, 0);
-	tString t = CharToTString(str);
-	Append(IDC_EDIT_RECEIVE2, t.c_str());
+	Append(IDC_EDIT_RECEIVE2, CharToTChar(str));
 }
 
 void CTCPClientDlg::Send()
 {
-	tString t = GetDlgItemString(IDC_EDIT_SEND2);
-	std::string s = TCharToString(t.c_str());
-	m_pSocket->Send(s.c_str(), s.length(), 0);
+//	tString t = GetDlgItemString(IDC_EDIT_SEND2);
+	LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND2);
+	m_pSocket->Send(TCharToChar(szSend), lstrlen(szSend), 0);
 }
 
 
@@ -251,9 +250,8 @@ void CSvrDialog::OnSend()
 			// TCP connections have a seperate chat dialog for sending/receiving data
 			break;
 		case SOCK_DGRAM:
-			tString t = GetDlgItemString(IDC_EDIT_SEND);
-			std::string s = TCharToString(t.c_str());
-			m_MainSocket.SendTo(s.c_str(), s.length(), 0, (SOCKADDR*)&m_ClientAddr, sizeof(m_ClientAddr));
+			LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND);
+			m_MainSocket.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, (SOCKADDR*)&m_ClientAddr, sizeof(m_ClientAddr));
 			break;
 	}
 }
@@ -289,6 +287,7 @@ void CSvrDialog::OnSocketAccept()
 
 	// Update the dialog
 	Append(IDC_EDIT_STATUS, _T("Client Connected"));
+
 }
 
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
@@ -310,16 +309,14 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		{
 			int addrlen = sizeof(m_ClientAddr);
 			m_MainSocket.ReceiveFrom(str, 1024, 0, (SOCKADDR*)&m_ClientAddr, &addrlen); 
-			tString t = CharToTString(str);
-			TRACE(_T("[Received:] ")); TRACE(t.c_str()); TRACE(_T("\n"));
+			TRACE(_T("[Received:] ")); TRACE(CharToTChar(str)); TRACE(_T("\n"));
 			::EnableWindow(GetDlgItem(IDC_BUTTON_SEND), TRUE);
 			::EnableWindow(GetDlgItem(IDC_EDIT_SEND), TRUE);
 			::SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE);
 		}
 		break;
 	}
-	tString t = CharToTString(str);
-	Append(IDC_EDIT_RECEIVE, t.c_str());
+	Append(IDC_EDIT_RECEIVE, CharToTChar(str));
 }
 
 BOOL CSvrDialog::StartServer()
@@ -335,9 +332,8 @@ BOOL CSvrDialog::StartServer()
 	}
 	
 	// Retrieve the local port number
-	tString tPort = GetDlgItemString(IDC_EDIT_PORT);
-	std::string sPort = TCharToString(tPort.c_str());
-	int LocalPort = atoi(sPort.c_str());
+	LPCTSTR szPort = GetDlgItemText(IDC_EDIT_PORT);
+	int LocalPort = atoi(TCharToChar(szPort));
 
 	// Bind the socket.
 	sockaddr_in service;
