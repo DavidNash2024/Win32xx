@@ -353,11 +353,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Win32++\include\tab.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\toolbar.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\Win32++\include\treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\webbrowser.h"
 				>
 			</File>
 			<File

@@ -1000,7 +1000,8 @@ namespace Win32xx
 					if (pWnd)
 					{
 						Processed = pWnd->PreTranslateMessage(&Msg);
-						break;
+						if(Processed)
+							break;
 					}
 				}
 			}
@@ -1470,8 +1471,8 @@ namespace Win32xx
 			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
 			::GetDlgItemText(m_hWnd, nIDDlgItem, m_pTChar, nLength+1);
 		}
-
-		return m_pTChar;
+		else
+			return _T("");
 	}
 	
 	inline LPCTSTR CWnd::GetWindowText()
@@ -1486,9 +1487,10 @@ namespace Win32xx
 			if (NULL == m_pTChar) throw std::bad_alloc();
 			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
 			::GetWindowText(m_hWnd, m_pTChar, nLength+1);
+			return m_pTChar;
 		}
-
-		return m_pTChar;
+		else
+			return _T("");
 	}
 
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const

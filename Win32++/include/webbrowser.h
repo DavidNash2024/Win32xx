@@ -148,7 +148,7 @@ namespace Win32xx
 	protected:
 		virtual void OnCreate();
 		virtual void OnSize(int width, int height);
-		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CAXContainer	m_AXContainer;		// The ActiveX Container
@@ -737,20 +737,16 @@ namespace Win32xx
 		GetAXContainer().SetLocation(0, 0, width, height);
 	}
 
-	inline LRESULT CWebBrowser::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CWebBrowser::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
-		case WM_DESTROY:
-			::PostQuitMessage(0);
-			break;
 		case WM_SIZE:
 			OnSize(LOWORD(lParam), HIWORD(lParam));
 			break;
 		}
 
-		// pass unhandled messages on for default processing
-		return WndProcDefault(uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 }

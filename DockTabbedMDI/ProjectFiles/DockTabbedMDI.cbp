@@ -81,6 +81,8 @@
 					<Add library="User32" />
 					<Add library="Kernel32" />
 					<Add library="Advapi32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -111,6 +113,8 @@
 					<Add library="Kernel32" />
 					<Add library="User32" />
 					<Add library="Advapi32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -135,6 +139,9 @@
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -155,6 +162,9 @@
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
 				</Linker>
 			</Target>
 		</Build>

@@ -45,6 +45,7 @@ typedef  unsigned char  byte;
 #include <stdcontrols.h>
 #include <toolbar.h>
 #include <treeview.h>
+#include <webbrowser.h>
 #include <wincore.h>
 
 

@@ -13,14 +13,14 @@ Added CWnd::TCharToChar
 Added CWnd::GetClassName
 Added CWnd::GetDlgItemText
 Added CWnd::GetWindowText
+Removed CharToTString
+Removed TCharToString
+Removed TCharToWide
+Removed CWnd::GetWindowString
+Removed CWnd::GetClassString
+Removed CWnd::GetDlgItemString
 
-Removed
-CharToTString
-TCharToString
-TCharToWide
-CWnd::GetWindowString
-CWnd::GetClassString
-CWnd::GetDlgItemString
+Modified Browser Sample
 
 Version 6.8
 ===========

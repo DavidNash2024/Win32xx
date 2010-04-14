@@ -1,20 +1,24 @@
 //////////////////////////////////////////////////
-// Simple.h - Declaration of the CViewSimple class
+// Simple.h - Declaration of the CViewWeb class
 
 #ifndef SIMPLE_H
 #define SIMPLE_H
 
 
 
-// Declaration of the CViewSimple class
-class CViewSimple : public CWnd
+// Declaration of the CViewWeb class
+class CViewWeb : public CWebBrowser
 {
 public:
-	CViewSimple() {}
-	virtual ~CViewSimple() {}
+	CViewWeb() {}
+	virtual ~CViewWeb() {}
+
+	virtual void OnInitialUpdate() 
+	{
+		GetIWebBrowser2()->GoHome();
+	}
 
 protected:
-	virtual void OnPaint(HDC hDC);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
