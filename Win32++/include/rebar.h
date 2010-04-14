@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -68,7 +68,7 @@ namespace Win32xx
 	public:
 		CRebar();
 		virtual ~CRebar();
-		virtual BOOL IsRebar() const {return TRUE;}
+		virtual tString GetWindowType() const { return _T("CRebar"); }
 
 	// Attributes
 		int  GetBand(const HWND hWnd) const;

@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -74,8 +74,8 @@ namespace Win32xx
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
 		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
+		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);   
+    virtual tString GetWindowType() const { return _T("CPropertyPage"); }
 		virtual void OnApply();
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
@@ -122,6 +122,7 @@ namespace Win32xx
 		virtual void DestroyButton(int iButton);
 		virtual void Destroy();
 		virtual int DoModal();
+    virtual tString GetWindowType() const { return _T("CPropertySheet"); }
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void RemovePage(CPropertyPage* pPage);
@@ -240,7 +241,7 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (!(IsRebar()))	// Skip notification reflection for rebars to avoid double handling
+				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
 					{	

@@ -82,8 +82,8 @@ namespace Win32xx
 		virtual HWND Create(HWND hParent = 0);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
+		virtual tString GetWindowType() const { return _T("CDialog"); }
 		virtual void SetDlgParent(HWND hParent);
-		BOOL IsDialog() const { return TRUE; }
 		BOOL IsModal() const { return m_IsModal; }
 		BOOL IsIndirect() const { return m_IsIndirect; }
 
@@ -225,7 +225,7 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (!(IsRebar()))	// Skip notification reflection for rebars to avoid double handling
+				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
 					{	
@@ -484,7 +484,7 @@ namespace Win32xx
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{				
 					CDialog* pDialog = (CDialog*)CWnd::FromHandle(hWnd);
-					if (pDialog && pDialog->IsDialog())
+					if (pDialog && (pDialog->GetWindowType() == _T("CDialog")))
 					{
 						if (pDialog->IsModal())
 						{

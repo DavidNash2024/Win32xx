@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -65,7 +65,7 @@ namespace Win32xx
 	public:
 		CToolbar();
 		virtual ~CToolbar();
-		virtual BOOL IsToolbar() const {return TRUE;}
+		virtual tString GetWindowType() const { return _T("CToolbar"); }
 
 	// Attributes
 		void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
@@ -368,7 +368,7 @@ namespace Win32xx
 
 		// Add extra styles for toolbars inside a rebar
 		CWnd* pWnd = FromHandle(GetParent());
-		if (pWnd && pWnd->IsRebar())
+		if (pWnd && (pWnd->GetWindowType() == _T("CRebar")))
 		{
 			DWORD style = (DWORD)GetWindowLongPtr(GWL_STYLE);
 			style |= CCS_NODIVIDER | CCS_NORESIZE;

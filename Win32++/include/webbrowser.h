@@ -143,6 +143,7 @@ namespace Win32xx
 		virtual void AddWebBrowserControl(void);
 		virtual CAXContainer& GetAXContainer() const { return (CAXContainer&)m_AXContainer; }
 		virtual IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
+		virtual tString GetWindowType() const { return _T("CWebBrowser"); }
 		virtual void Navigate(LPCTSTR str);
 
 	protected:

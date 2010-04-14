@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -179,7 +179,7 @@ namespace Win32xx
 		virtual int   GetMDIChildID(int nTab) {return GetTab().GetTabPageInfo(nTab).nID;}
 		virtual LPCTSTR GetMDIChildTitle(int nTab) {return GetTab().GetTabPageInfo(nTab).szTitle;}
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
-		virtual BOOL IsTabbedMDI() const {return TRUE;}
+		virtual tString GetWindowType() const { return _T("CTabbedMDI"); }
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcLayout();
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);

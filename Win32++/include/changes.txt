@@ -13,12 +13,24 @@ Added CWnd::TCharToChar
 Added CWnd::GetClassName
 Added CWnd::GetDlgItemText
 Added CWnd::GetWindowText
+Added CWnd::GetWindowType
 Removed CharToTString
 Removed TCharToString
 Removed TCharToWide
 Removed CWnd::GetWindowString
 Removed CWnd::GetClassString
 Removed CWnd::GetDlgItemString
+Removed CWnd::IsContainer
+Removed CWnd::IsDocker
+Removed CWnd::IsFrame
+Removed CWnd::IsMenubar
+Removed CWnd::IsMDIChild
+Removed CWnd::IsMDIFrame
+Removed CWnd::IsRebar
+Removed CWnd::IsStatusbar
+Removed CWnd::IsTab
+Removed CWnd::IsTabbedMDI
+Removed CWnd::IsToolbar
 
 Modified Browser Sample
 

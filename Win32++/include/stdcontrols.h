@@ -1,5 +1,5 @@
-// Win32++  Version 6.8 alpha
-// Released: ?th February, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -56,6 +56,7 @@ namespace Win32xx
 	public:
 		CButton() {}
 		virtual ~CButton() {}
+    virtual tString GetWindowType() const { return _T("CButton"); }
 
 		// Attributes
 		HBITMAP GetBitmap() const;
@@ -82,6 +83,7 @@ namespace Win32xx
 		// Construction
 		CEdit() {}
 		virtual ~CEdit() {}
+    virtual tString GetWindowType() const { return _T("CEdit"); }
 
 		// Attributes
 		BOOL CanUndo() const;
@@ -140,6 +142,7 @@ namespace Win32xx
 	public:
 		CListBox() {}
 		virtual ~CListBox() {}
+    virtual tString GetWindowType() const { return _T("CListBox"); }
 
 		// General Operations
 		int  GetCount() const;
@@ -199,6 +202,7 @@ namespace Win32xx
 	public:
 		CStatic() {}
 		virtual ~CStatic() {}
+    virtual tString GetWindowType() const { return _T("CStatic"); }
 
 		// Operations
 		HBITMAP  GetBitmap() const;

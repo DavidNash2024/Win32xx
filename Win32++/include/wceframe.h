@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -89,6 +89,7 @@ namespace Win32xx
 		virtual BOOL AddButtons(int nButtons, TBBUTTON* pTBButton);
 		virtual HWND Create(HWND hwndParent);
 		virtual int  GetHeight() const;
+    virtual tString GetWindowType() const { return _T("CCmdbar"); }
 		virtual HWND InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton);
 		virtual BOOL IsVisible();
 		virtual BOOL Show(BOOL fShow);
@@ -113,6 +114,7 @@ namespace Win32xx
 		virtual void AddToolbarButton(UINT nID);
 		CRect GetViewRect() const;
 		CCmdbar& GetMenubar() const {return (CCmdbar&)m_Menubar;}
+    virtual tString GetWindowType() const { return _T("CWceFrame"); }
 		virtual void OnCreate();
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);

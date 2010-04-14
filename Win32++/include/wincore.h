@@ -413,22 +413,12 @@ namespace Win32xx
 		virtual void Destroy();
 		virtual HWND Detach();
 		virtual HWND GetAncestor() const;
+		virtual tString GetWindowType() const { return _T("CWnd"); }
+
 		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
-		virtual BOOL IsContainer() const { return FALSE; }
-		virtual BOOL IsDialog() const    { return FALSE; }
-		virtual BOOL IsDocker() const	 { return FALSE; }
-		virtual BOOL IsFrame() const     { return FALSE; }
-		virtual BOOL IsMenubar() const   { return FALSE; }
-		virtual BOOL IsMDIChild() const  { return FALSE; }
-		virtual BOOL IsMDIFrame() const	 { return FALSE; }
-		virtual BOOL IsRebar() const     { return FALSE; }
-		virtual BOOL IsStatusbar() const { return FALSE; }
-		virtual BOOL IsTab() const       { return FALSE; }
-		virtual BOOL IsTabbedMDI() const { return FALSE; }
-		virtual BOOL IsToolbar() const	 { return FALSE; }
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
@@ -2066,7 +2056,7 @@ namespace Win32xx
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 				LRESULT lr = 0L;
 
-				if (!(IsRebar()))	// Skip notification reflection for rebars to avoid double handling
+				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
 					{

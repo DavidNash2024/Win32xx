@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -53,6 +53,7 @@ namespace Win32xx
 		virtual ~CStatusbar() {}
 
 	// Overridables
+		virtual tString GetWindowType() const { return _T("CStatusbar"); }
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual BOOL IsStatusbar() const { return TRUE; }
 

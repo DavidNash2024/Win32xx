@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -52,6 +52,7 @@ namespace Win32xx
 	public:
 		CTreeView() {}
 		virtual ~CTreeView() {}
+		virtual tString GetWindowType() const { return _T("CTreeView"); }
 		virtual void PreCreate(CREATESTRUCT &cs);
 
 // Attributes

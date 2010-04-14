@@ -62,6 +62,9 @@ treeview.h        | CTreeView        | Win32, Win64      | Adds support for a
 wceframe.h        | CWceFrame        | WinCE only        | Adds support for
                   | CCmdbar          |                   | frames in WinCE.
 ------------------+------------------+-------------------+---------------------
+webbrowser.h      | CAXContainer     | Win32, Win64      | Adds support for
+                  | CWebBrowser      | and WinCE         | web browser windows.
+------------------+------------------+-------------------+---------------------
 wincore.h         | CCriticalSection | Win32, Win64,     | The core set of 
                   | CPoint           | and WinCE         | classes required for
                   | CRect            |                   | all Win32++ 

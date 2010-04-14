@@ -1,5 +1,5 @@
-// Win32++  Version 6.8
-// Released: 18th March, 2010 by:
+// Win32++  Version 6.9 alpha
+// Released: ??? May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -115,6 +115,7 @@ namespace Win32xx
 	public:
 		CMenubar();
 		virtual ~CMenubar();
+		virtual tString GetWindowType() const { return _T("CMenubar"); }
 		virtual BOOL IsMenubar() const {return TRUE;}
 		void MenuChar(WPARAM wParam, LPARAM lParam);
 		void SysCommand(WPARAM wParam, LPARAM lParam);
@@ -193,6 +194,7 @@ namespace Win32xx
 		// Override these functions as required
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual CRect GetViewRect() const;
+		virtual tString GetWindowType() const { return _T("CFrame"); }
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void RecalcLayout();	
@@ -643,7 +645,7 @@ namespace Win32xx
 
 	inline BOOL CMenubar::IsMDIFrame() const
 	{
-		return m_pFrame->IsMDIFrame();
+		return (m_pFrame->GetWindowType() == _T("CMDIFrame"));	// boolean expression
 	}
 
 	inline void CMenubar::MenuChar(WPARAM wParam, LPARAM lParam)
@@ -2426,7 +2428,7 @@ namespace Win32xx
 				{	
 					// Get the Toolbar's CWnd
 					CWnd* pWnd = FromHandle(GetRebar().HitTest(GetCursorPos()));
-					if (pWnd && (pWnd->IsToolbar()) && !(pWnd->IsMenubar()))
+					if (pWnd && (pWnd->GetWindowType() == _T("CToolbar")))
 						pToolbar = (CToolbar*)pWnd;
 				}
 				
@@ -2532,7 +2534,7 @@ namespace Win32xx
 				{	
 					// Get the Toolbar's CWnd
 					CWnd* pWnd = FromHandle(GetRebar().HitTest(GetCursorPos()));
-					if (pWnd && (pWnd->IsToolbar()) && !(pWnd->IsMenubar()))
+					if (pWnd && (pWnd->GetWindowType() == _T("CToolbar")))
 						pToolbar = (CToolbar*)pWnd;
 				}
 				else
