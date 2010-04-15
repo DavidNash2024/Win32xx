@@ -3629,7 +3629,7 @@ namespace Win32xx
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
 			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()));
-			if (pDock && (GetWindowType() == _T("CDocker")))
+			if (pDock && (pDock->GetWindowType() == _T("CDocker")))
 			{
 				CContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
 				pDock->UndockContainer(pContainer, GetCursorPos());
