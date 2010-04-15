@@ -14,10 +14,7 @@ CDialogApp::CDialogApp() : m_ClientDialog(IDD_DIALOG1)
 BOOL CDialogApp::InitInstance()
 {
 	//Display the Modal Dialog
-	m_ClientDialog.DoModal();
-
-	//End the program
-	::PostQuitMessage(0);
+	m_ClientDialog.DoModeless();
 
 	return TRUE;
 }

@@ -21,6 +21,7 @@ if exist "Win32++\output\MinGW" rmdir /s /q "Win32++\output\MinGW"
 
 REM: Compile the code
 
+codeblocks.exe --rebuild Browser\ProjectFiles\Browser.cbp				>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild Dialog\ProjectFiles\Dialog.cbp				>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild DialogBars\ProjectFiles\DialogBars.cbp			>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild DialogDemo\ProjectFiles\DialogDemo.cbp			>>"Win32++\output\CodeBlocks.log"
@@ -53,7 +54,7 @@ mkdir "Win32++\output\VS2003"
 mkdir "Win32++\output\VS2003\Debug"
 
 ECHO "Copying VS2003 Debug files" >>"Win32++\output\CodeBlocks.log"
-REM copy Browser\ProjectFiles\Microsoft\Debug\Browser.exe             "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy Browser\ProjectFiles\Microsoft\Debug\Browser.exe             "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Dialog\ProjectFiles\Microsoft\Debug\Dialog.exe                   "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy DialogBars\ProjectFiles\Microsoft\Debug\DialogBars.exe           "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy DialogDemo\ProjectFiles\Microsoft\Debug\DialogDemo.exe           "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
@@ -84,7 +85,7 @@ copy Threads\ProjectFiles\Microsoft\Debug\Threads.exe                 "Win32++\o
 mkdir "Win32++\output\VS2003\Release"
 
 ECHO "Copying VS2003 Release files" >>"Win32++\output\CodeBlocks.log"
-REM copy Browser\ProjectFiles\Microsoft\Release\Browser.exe             "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
+copy Browser\ProjectFiles\Microsoft\Release\Browser.exe             "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Dialog\ProjectFiles\Microsoft\Release\Dialog.exe                   "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy DialogBars\ProjectFiles\Microsoft\Release\DialogBars.exe           "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy DialogDemo\ProjectFiles\Microsoft\Release\DialogDemo.exe           "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
@@ -118,7 +119,7 @@ mkdir "Win32++\output\Borland"
 mkdir "Win32++\output\Borland\Debug"
 
 ECHO "Copying Borland Debug files" >>"Win32++\output\CodeBlocks.log"
-REM copy Browser\ProjectFiles\Borland\Debug\Browser.exe             "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy Browser\ProjectFiles\Borland\Debug\Browser.exe             "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Dialog\ProjectFiles\Borland\Debug\Dialog.exe                   "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy DialogBars\ProjectFiles\Borland\Debug\DialogBars.exe           "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy DialogDemo\ProjectFiles\Borland\Debug\DialogDemo.exe           "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
@@ -149,7 +150,7 @@ copy Threads\ProjectFiles\Borland\Debug\Threads.exe                 "Win32++\out
 mkdir "Win32++\output\Borland\Release"
 
 ECHO "Copying Borland Release files" >>"Win32++\output\CodeBlocks.log"
-REM copy Browser\ProjectFiles\Borland\Release\Browser.exe             "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
+copy Browser\ProjectFiles\Borland\Release\Browser.exe             "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Dialog\ProjectFiles\Borland\Release\Dialog.exe                   "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy DialogBars\ProjectFiles\Borland\Release\DialogBars.exe           "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy DialogDemo\ProjectFiles\Borland\Release\DialogDemo.exe           "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
@@ -183,7 +184,7 @@ mkdir "Win32++\output\MinGW"
 mkdir "Win32++\output\MinGW\Debug"
 
 ECHO "Copying MinGW Debug files" >>"Win32++\output\CodeBlocks.log"
-REM copy Browser\ProjectFiles\GNU\Debug\Browser.exe             "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy Browser\ProjectFiles\GNU\Debug\Browser.exe             "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Dialog\ProjectFiles\GNU\Debug\Dialog.exe                   "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy DialogBars\ProjectFiles\GNU\Debug\DialogBars.exe           "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy DialogDemo\ProjectFiles\GNU\Debug\DialogDemo.exe           "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
@@ -214,7 +215,7 @@ copy Threads\ProjectFiles\GNU\Debug\Threads.exe                 "Win32++\output\
 mkdir "Win32++\output\MinGW\Release"
 
 ECHO "Copying MinGW Release files" >>"Win32++\output\CodeBlocks.log"
-REM copy Browser\ProjectFiles\GNU\Release\Browser.exe             "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
+copy Browser\ProjectFiles\GNU\Release\Browser.exe             "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Dialog\ProjectFiles\GNU\Release\Dialog.exe                   "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy DialogBars\ProjectFiles\GNU\Release\DialogBars.exe           "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy DialogDemo\ProjectFiles\GNU\Release\DialogDemo.exe           "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"

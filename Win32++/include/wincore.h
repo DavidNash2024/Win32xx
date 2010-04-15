@@ -1460,6 +1460,7 @@ namespace Win32xx
 				throw std::bad_alloc();
 			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
 			::GetDlgItemText(m_hWnd, nIDDlgItem, m_pTChar, nLength+1);
+			return m_pTChar;
 		}
 		else
 			return _T("");

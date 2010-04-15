@@ -56,6 +56,9 @@ BOOL CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// Give focus to the Send Edit box
 		SendMessage(WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE);
 		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
 	}
 
 	// Pass unhandled messages on to parent DialogProc

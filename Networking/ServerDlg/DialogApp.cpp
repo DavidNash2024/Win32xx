@@ -14,10 +14,7 @@ CDialogApp::CDialogApp() : m_SvrDialog(IDD_DIALOG1)
 BOOL CDialogApp::InitInstance()
 {
 	//Display the Modal Dialog
-	m_SvrDialog.DoModal();
-
-	//End the program
-	::PostQuitMessage(0);
+	m_SvrDialog.DoModeless();
 
 	return TRUE;
 }

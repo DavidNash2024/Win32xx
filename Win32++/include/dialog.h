@@ -66,7 +66,6 @@
 
 #include "wincore.h"
 
-
 namespace Win32xx
 {
 
@@ -109,7 +108,7 @@ namespace Win32xx
 		CDialog& operator = (const CDialog&); // Disable assignment operator
 
 		BOOL m_IsIndirect;				// a flag for Indirect dialogs
-		BOOL m_IsModal;					// a flag for modal dialogs
+		BOOL m_IsModal;					// a flag for modal dialogs     
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
 		HWND m_hDlgParent;				// handle to the dialogs's parent window
@@ -284,14 +283,18 @@ namespace Win32xx
 			// Ensure this thread has the TLS index set
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-			// Store the CWnd pointer in Thread Local Storage
-			pTLSData->pCWnd = this;
-
+			BOOL IsHookedHere = FALSE;
+			
 	#ifndef _WIN32_WCE
-			pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+			if (NULL == pTLSData->hHook )
+			{
+				pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+				IsHookedHere = TRUE;
+			}
     #endif
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+			pTLSData->pCWnd = this;
 
 			// Create a modal dialog
 			INT_PTR nResult;
@@ -306,12 +309,15 @@ namespace Win32xx
 			
 			// Tidy up
 			m_hWnd = NULL;
+			pTLSData->pCWnd = NULL;
 			
 	#ifndef _WIN32_WCE
-			::UnhookWindowsHookEx(pTLSData->hHook);
-	#endif
-
-			pTLSData->pCWnd = NULL;
+			if (IsHookedHere)
+			{
+				::UnhookWindowsHookEx(pTLSData->hHook);
+				pTLSData->hHook = NULL;
+			}
+	#endif		
 
 			if (nResult == -1)
 				throw CWinException(_T("Failed to create modal dialog box"));
@@ -411,11 +417,24 @@ namespace Win32xx
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
 		{
 			// Process dialog keystrokes for modeless dialogs
-			if (!IsModal() && IsDialogMessage(m_hWnd, pMsg))
-				return TRUE;
+			if (!IsModal())
+			{
+				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				if (NULL == pTLSData->hHook)
+				{
+					if (IsDialogMessage(m_hWnd, pMsg))
+						return TRUE;
+				}
+				else
+				{
+					// A modal message loop is running so we can't do IsDialogMessage.
+					// Avoid having a modeless dialog created by a modal dialog to allow
+          // normal keyboard processing.
+				}
+			}
 		}
 
-		return CWnd::PreTranslateMessage(pMsg); 
+		return FALSE; 
 	}
 
 	inline void CDialog::SetDlgParent(HWND hParent)
@@ -470,7 +489,6 @@ namespace Win32xx
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		// Used by Modal Dialogs to PreTranslate Messages
-
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 
 		if (nCode == MSGF_DIALOGBOX)
@@ -478,18 +496,14 @@ namespace Win32xx
 			MSG* lpMsg = (MSG*) lParam;
 
 			// only pre-translate keyboard events
-			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST) ||
-			(lpMsg->message >= WM_MOUSEFIRST && lpMsg->message <= WM_MOUSELAST))
+			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST)) 
 			{
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{				
 					CDialog* pDialog = (CDialog*)CWnd::FromHandle(hWnd);
 					if (pDialog && (pDialog->GetWindowType() == _T("CDialog")))
 					{
-						if (pDialog->IsModal())
-						{
-							pDialog->PreTranslateMessage(lpMsg);
-						}
+						pDialog->PreTranslateMessage(lpMsg);
 						break;
 					}
 				}

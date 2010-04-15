@@ -59,8 +59,6 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wParam, LPARAM lParam)
     {
 	case IDC_BUTTON_SEND2:
 		Send();
-		// Give keyboard focus to the Send Edit box
-		SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND2), TRUE);
 		return TRUE;
 	}
 
@@ -134,6 +132,9 @@ BOOL CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case USER_RECEIVE:
 		OnSocketReceive((CServerSocket*)wParam);
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
 		break;
  	}
 
