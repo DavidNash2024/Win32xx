@@ -4,7 +4,7 @@
 #ifndef BROWSERAPP_H
 #define BROWSERAPP_H
 
-#include "MyBrowser.h"
+#include "Mainfrm.h"
 
 
 // Declaration of the CWinApp class
@@ -14,10 +14,10 @@ public:
     CBrowserApp();
     virtual ~CBrowserApp() {}
 	virtual BOOL InitInstance();
-	CMyBrowser& GetView() { return m_View; }
+	CMainFrame& GetFrame() { return m_Frame; }
 
 private:
-    CMyBrowser m_View;
+    CMainFrame m_Frame;
 };
 
 

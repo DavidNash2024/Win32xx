@@ -4,9 +4,12 @@
     <ClCompile Include="..\src\BrowserApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ComboBoxEx.cpp" />
+    <ClCompile Include="..\src\EventSink.cpp" />
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MyBrowser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -24,9 +27,13 @@
     <ClInclude Include="..\src\BrowserApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\ComboBoxEx.h" />
+    <ClInclude Include="..\src\EventSink.h" />
+    <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MyBrowser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -44,5 +51,8 @@
     <Filter Include="Win32++">
       <UniqueIdentifier>{fd27cd5c-18f4-4943-8ae2-d68632a7abaa}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
 </Project>

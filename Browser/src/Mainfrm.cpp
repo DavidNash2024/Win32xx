@@ -6,14 +6,15 @@
 #include "mainfrm.h"
 #include <sstream>
 
-typedef std::basic_stringstream<TCHAR> tStringStream;
-
 
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame()
 {
 	//Set m_View as the view window of the frame
 	SetView(m_View);
+
+	// Set CMainFrame as our event sink
+	m_EventSink.SetSink(this); 
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -56,7 +57,44 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	RB.InsertBand(-1, rbbi);
 }
 
-void CMainFrame::OnBeforeNavigate(DISPPARAMS* pDispParams)
+void CMainFrame::ConnectEvents()
+{
+	IUnknown* pUnk = GetBrowser().GetAXContainer().GetUnknown();
+	if(!pUnk)
+		return;
+
+	IConnectionPoint* pcp;
+	pcp = GetConnectionPoint(DIID_DWebBrowserEvents2);
+	if(!pcp)
+		return;
+
+	pcp->Advise(&m_EventSink, &m_eventCookie);
+	pcp->Release();
+	pUnk->Release();
+}
+
+IConnectionPoint* CMainFrame::GetConnectionPoint(REFIID riid)
+{
+	IUnknown *pUnk = GetBrowser().GetAXContainer().GetUnknown();
+	if(!pUnk)
+		return NULL;
+
+	IConnectionPointContainer* pcpc;
+	IConnectionPoint* pcp = NULL;
+
+	HRESULT hr = pUnk->QueryInterface(IID_IConnectionPointContainer, (void**)&pcpc);
+	if(SUCCEEDED(hr))
+	{
+		pcpc->FindConnectionPoint(riid, &pcp);
+		pcpc->Release();
+	}
+
+	pUnk->Release();
+
+	return pcp;
+}
+
+void CMainFrame::OnBeforeNavigate2(DISPPARAMS* pDispParams)
 {
 	UNREFERENCED_PARAMETER(pDispParams);
 }
@@ -161,6 +199,8 @@ void CMainFrame::OnCreate()
 {
 	// Call the base function first
 	CFrame::OnCreate();
+
+	ConnectEvents();
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
@@ -189,28 +229,27 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
-	USES_CONVERSION;
 	tString szString = _T("NavigateComplete2: ");
 
 	if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
 	{
-		CComVariant vtURL(*pDispParams->rgvarg[0].pvarVal);
-		vtURL.ChangeType(VT_BSTR);
+		VARIANT vtURL;
+		vtURL = *pDispParams->rgvarg[0].pvarVal;
+		vtURL.vt = VT_BSTR;
 
-		szString += OLE2T(vtURL.bstrVal);
+		szString += WideToTChar(vtURL.bstrVal);
 		szString += _T("\n");
-		TRACE(szString.c_str());
+		TRACE(szString.c_str()); 
 	}
 
 	BSTR bstrUrlName;
 
-	CView* pView = (CView*)GetView();
-	HRESULT hr = pView->GetIWebBrowser2()->get_LocationURL(&bstrUrlName);
+	HRESULT hr = GetBrowser().GetIWebBrowser2()->get_LocationURL(&bstrUrlName);
 	if (FAILED(hr))
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)OLE2T(bstrUrlName));
+	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)WideToTChar(bstrUrlName)); 
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
@@ -222,7 +261,6 @@ void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	HWND hwnd = m_ComboboxEx.GetHwnd();
-	USES_CONVERSION;
 
 	switch (((LPNMHDR)lParam)->code)
 	{
@@ -263,10 +301,14 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 	if (pDispParams->cArgs != 0)
 	{
 		if (pDispParams->cArgs > 1 && pDispParams->rgvarg[1].vt == VT_I4)
+		{
 			szString << _T("Progress = ") << pDispParams->rgvarg[1].lVal ;
+		}
 
 		if (pDispParams->rgvarg[0].vt == VT_I4)
+		{
 			szString << _T(", ProgressMax = ") << pDispParams->rgvarg[0].lVal;
+		}
 
 		szString << _T("\n");
 		TRACE(szString.str().c_str());
@@ -275,30 +317,29 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 {
-	USES_CONVERSION;
 	tStringStream str;
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		str << _T("Property Change:") << OLE2T(pDispParams->rgvarg[0].bstrVal);
+		str << _T("Property Change:") << WideToTChar(pDispParams->rgvarg[0].bstrVal);
 
 	str << _T("\n");
-	TRACE(str.str().c_str());
+	TRACE(str.str().c_str()); 
 }
 
 void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 {
-	USES_CONVERSION;
 	LPOLESTR lpStatusText = pDispParams->rgvarg->bstrVal;
 
 
 	if (lpStatusText)
 	{
-		if (lstrcmp(OLE2T(lpStatusText), _T("")))
+		if (lstrcmp(WideToTChar(lpStatusText), _T("")))
 		{
-			GetStatusbar().SetPartText(0, OLE2T(lpStatusText));
+			GetStatusbar().SetPartText(0, WideToTChar(lpStatusText));
 		}
 		else
 			GetStatusbar().SetPartText(0, _T("Done"));
 	}
+	
 }
 
 void CMainFrame::OnTimer(WPARAM wParam)
@@ -310,18 +351,17 @@ void CMainFrame::OnTimer(WPARAM wParam)
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
 	TRACE(_T("TitleChange: \n"));
-	USES_CONVERSION;
 	tStringStream str;
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-		str << OLE2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << LoadString(IDW_MAIN);
-		TRACE(OLE2T(pDispParams->rgvarg[0].bstrVal));
+		str << WideToTChar(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << LoadString(IDW_MAIN);
+		TRACE(WideToTChar(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
 		str << LoadString(IDW_MAIN);
 
-	::SetWindowText(m_hWnd, str.str().c_str());
+	::SetWindowText(m_hWnd, str.str().c_str()); 
 }
 
 void CMainFrame::SetupToolbar()

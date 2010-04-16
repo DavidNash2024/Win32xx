@@ -175,10 +175,20 @@
 		</VirtualTargets>
 		<Unit filename="..\src\BrowserApp.cpp" />
 		<Unit filename="..\src\BrowserApp.h" />
+		<Unit filename="..\src\ComboBoxEx.cpp" />
+		<Unit filename="..\src\ComboBoxEx.h" />
+		<Unit filename="..\src\EventSink.cpp" />
+		<Unit filename="..\src\EventSink.h" />
+		<Unit filename="..\src\Mainfrm.cpp" />
+		<Unit filename="..\src\Mainfrm.h" />
 		<Unit filename="..\src\MyBrowser.cpp" />
 		<Unit filename="..\src\MyBrowser.h" />
+		<Unit filename="..\src\Resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Unit filename="..\src\StdAfx.cpp" />
 		<Unit filename="..\src\main.cpp" />
+		<Unit filename="..\src\resource.h" />
 		<Unit filename="..\src\stdafx.h" />
 		<Extensions>
 			<code_completion />

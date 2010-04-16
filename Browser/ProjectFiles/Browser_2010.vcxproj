@@ -12,7 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BrowserApp.cpp" />
+    <ClCompile Include="..\src\ComboBoxEx.cpp" />
+    <ClCompile Include="..\src\EventSink.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MyBrowser.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp" />
   </ItemGroup>
@@ -20,8 +23,15 @@
     <ClInclude Include="..\..\Win32++\include\webbrowser.h" />
     <ClInclude Include="..\..\Win32++\include\wincore.h" />
     <ClInclude Include="..\src\BrowserApp.h" />
+    <ClInclude Include="..\src\ComboBoxEx.h" />
+    <ClInclude Include="..\src\EventSink.h" />
+    <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MyBrowser.h" />
+    <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

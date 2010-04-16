@@ -15,8 +15,8 @@ BOOL CBrowserApp::InitInstance()
 {
     // This function is called automatically when the application starts
 
-    // Create the Window
-    m_View.Create();
+    // Create the Frame
+    m_Frame.Create();
 
 	return TRUE;
 }

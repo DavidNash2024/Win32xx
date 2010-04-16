@@ -5,9 +5,11 @@
 #define MAINFRM_H
 
 
-#include "View.h"
+#include "MyBrowser.h"
 #include "ComboBoxEx.h"
+#include "EventSink.h"
 
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
@@ -15,7 +17,10 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	virtual void OnBeforeNavigate(DISPPARAMS* pDispParams);
+	virtual void ConnectEvents();
+	virtual CMyBrowser& GetBrowser() const { return (CMyBrowser&)m_View; }
+	virtual IConnectionPoint* GetConnectionPoint(REFIID riid);
+	virtual void OnBeforeNavigate2(DISPPARAMS* pDispParams);
 	virtual void OnCommandStateChange(DISPPARAMS* pDispParams);
 	virtual void OnDocumentBegin(DISPPARAMS* pDispParams);
 	virtual void OnDocumentComplete(DISPPARAMS* pDispParams);
@@ -39,9 +44,12 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CView m_View;
+	CMyBrowser m_View;
+	CEventSink		m_EventSink;		// Routes event notifications from IWebBrowser
 	CComboBoxEx m_ComboboxEx;
+	DWORD			m_eventCookie;		// Token that uniquely identifies this connection
 };
+
 
 #endif //MAINFRM_H
 
