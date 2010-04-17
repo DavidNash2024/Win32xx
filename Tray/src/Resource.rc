@@ -1,0 +1,69 @@
+// Resource Script.
+//
+
+#include "resource.h"
+#include "windows.h"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       24             "res/Win32++.manifest"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+
+IDW_MAIN                 ICON                    "res/star.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+	POPUP "&Options"
+	BEGIN
+		MENUITEM "Minimize to Tray",            IDM_MINTOTRAY
+	END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
+IDM_MINIMIZED MENU
+BEGIN
+	POPUP "MIN"
+	BEGIN
+		MENUITEM "&Restore",						IDM_MIN_RESTORE
+		MENUITEM SEPARATOR
+		MENUITEM "&About",							IDM_MIN_ABOUT
+		MENUITEM "&Exit",							IDM_MIN_EXIT
+	END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                 "Minimize from the Option menu"
+END
+
+
