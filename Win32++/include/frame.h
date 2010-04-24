@@ -2631,9 +2631,8 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		if (GetStatusbar())
+		if (GetStatusbar() && m_bShowStatusbar)
 		{
-		//	GetStatusbar().SendMessage(WM_SIZE, 0L, 0L);
 			GetStatusbar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusbar().Invalidate();
 		}
@@ -2647,7 +2646,7 @@ namespace Win32xx
 			GetRebar().SendMessage(WM_SIZE, 0L, 0L);
 			GetRebar().Invalidate();
 		}
-		else
+		else if (m_bShowToolbar)
 			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Resize the View window
@@ -3061,7 +3060,6 @@ namespace Win32xx
 
 		// Reposition the Windows
 		RecalcLayout();
-		Invalidate();
 	}
 
 	inline void CFrame::ShowToolbar(BOOL bShow)
@@ -3085,6 +3083,9 @@ namespace Win32xx
 
 		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
 			GetRebar().MoveBandsLeft();
+
+		// Reposition the Windows
+		RecalcLayout();
 	}
 
 	inline void CFrame::UpdateMRUMenu()
