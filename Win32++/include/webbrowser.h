@@ -171,7 +171,6 @@ namespace Win32xx
 
 	inline CAXContainer::~CAXContainer()
 	{
-		Remove();
 	}
 
 	inline void CAXContainer::Add(BSTR bstrClsid)
@@ -744,6 +743,9 @@ namespace Win32xx
 		{
 		case WM_SIZE:
 			OnSize(LOWORD(lParam), HIWORD(lParam));
+			break;
+		case WM_DESTROY:
+			GetAXContainer().Remove();
 			break;
 		}
 
