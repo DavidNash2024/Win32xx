@@ -2975,7 +2975,7 @@ namespace Win32xx
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_vDockChildren[u]->GetBarWidth();
 
 				// Draw the splitter bar
-				m_vDockChildren[u]->GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED );
+				m_vDockChildren[u]->GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS );
 				rc.SubtractRect(rc, rcBar);
 			}
 		}
@@ -3000,10 +3000,11 @@ namespace Win32xx
 		if (GetDockAncestor()->IsWindow())
 		{
 			CRect rc = GetDockTopLevel()->GetClientRect();
-			GetDockTopLevel()->SetRedraw(FALSE);
+		//	GetDockTopLevel()->SetRedraw(FALSE);
 			GetDockTopLevel()->RecalcDockChildLayout(rc);
-			GetDockTopLevel()->SetRedraw(TRUE);
-			GetDockTopLevel()->RedrawWindow();
+		//	GetDockTopLevel()->SetRedraw(TRUE);
+		//	GetDockTopLevel()->RedrawWindow();
+			GetDockTopLevel()->RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
 		}
 	}
 
