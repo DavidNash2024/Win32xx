@@ -51,6 +51,18 @@ CRect CView::GetImageRect()
 	return rcImage;
 }
 
+void CView::NewPictureFile()
+{
+	if (m_pPicture)
+	{
+		m_pPicture->Release();
+		m_pPicture = NULL;
+	}
+
+	::SetWindowText(GetParent(), LoadString(IDW_MAIN));
+	Invalidate();
+}
+
 BOOL CView::LoadPictureFile(LPCTSTR szFile)
 {
 	if (m_pPicture)

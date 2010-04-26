@@ -66,19 +66,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnCreate()
 {
 	CFrame::OnCreate();
-
 }
 
 void CMainFrame::OnFileNew()
 {
-	if (m_View.m_pPicture)
-		m_View.m_pPicture->Release();
-
-	// Set a default title
-	::SetWindowText(m_hWnd, LoadString(IDW_MAIN));
-
-	m_View.m_pPicture = NULL;
-	::InvalidateRect(m_View.GetHwnd(), NULL, TRUE);
+	m_View.NewPictureFile();
 }
 
 void CMainFrame::OnFileOpen()
@@ -103,21 +95,24 @@ void CMainFrame::OnFileOpen()
 
 void CMainFrame::OnFileSaveAs()
 {
-	TCHAR szFile[MAX_STRING_SIZE];
-	szFile[0] = '\0';
-
-	OPENFILENAME Ofn = {0};
-	::GetSaveFileName(&Ofn);
-	Ofn.lStructSize = sizeof(OPENFILENAME);
-	Ofn.lpstrFilter = _T("*.bmp\0");
-	Ofn.lpstrFile= szFile;
-	Ofn.nMaxFile = MAX_STRING_SIZE;
-	Ofn.lpstrDefExt = _T("bmp");
-	Ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-	if (GetSaveFileName(&Ofn))
+	if (m_View.GetPicture())
 	{
-		m_View.SavePicture(szFile);
+		TCHAR szFile[MAX_STRING_SIZE];
+		szFile[0] = '\0';
+
+		OPENFILENAME Ofn = {0};
+		::GetSaveFileName(&Ofn);
+		Ofn.lStructSize = sizeof(OPENFILENAME);
+		Ofn.lpstrFilter = _T("*.bmp\0");
+		Ofn.lpstrFile= szFile;
+		Ofn.nMaxFile = MAX_STRING_SIZE;
+		Ofn.lpstrDefExt = _T("bmp");
+		Ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+
+		if (GetSaveFileName(&Ofn))
+		{
+			m_View.SavePicture(szFile);
+		}
 	}
 }
 

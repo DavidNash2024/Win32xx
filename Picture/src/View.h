@@ -16,10 +16,11 @@ public:
 	virtual ~CView();
 	virtual CRect GetImageRect();
 	virtual BOOL LoadPictureFile(LPCTSTR szFile);
+	virtual void NewPictureFile();
 	virtual void SavePicture(LPCTSTR szFile);
 	void Paint(HDC hDC);
 
-	LPPICTURE m_pPicture;
+	LPPICTURE GetPicture() { return m_pPicture; }
 
 protected:
 	virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
@@ -33,6 +34,7 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	LPPICTURE m_pPicture;
 	HBRUSH m_hBrush;
 	OLECHAR m_OleString[MAX_STRING_SIZE];
 	BSTR    m_BStrString;
