@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib oleaut32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib oleaut32.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -219,10 +219,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Simple.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -248,6 +244,10 @@
 			</File>
 			<File
 				RelativePath="..\src\Text.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Web.cpp"
 				>
 			</File>
 		</Filter>
@@ -297,10 +297,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Simple.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\stdafx.h"
 				>
 			</File>
@@ -310,6 +306,10 @@
 			</File>
 			<File
 				RelativePath="..\src\Text.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Web.h"
 				>
 			</File>
 		</Filter>
@@ -352,6 +352,10 @@
 			</File>
 			<File
 				RelativePath="..\..\Win32++\include\statusbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\tab.h"
 				>
 			</File>
 			<File

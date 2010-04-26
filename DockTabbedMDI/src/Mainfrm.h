@@ -5,7 +5,7 @@
 #define MAINFRM_H
 
 
-#include "Simple.h"
+#include "Web.h"
 #include "Rect.h"
 #include "Classes.h"
 #include "Files.h"

@@ -1266,8 +1266,9 @@ namespace Win32xx
 		if (uDockSide != m_uDockSideOld)
 		{
 			Destroy();
-			pDockTarget->RedrawWindow();
-			pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
+	//		pDockTarget->RedrawWindow();
+			pDockTarget->RedrawWindow( NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
+			pDockDrag->RedrawWindow( 0, 0, RDW_FRAME|RDW_INVALIDATE );
 		}
 		m_uDockSideOld = uDockSide;
 
@@ -1289,7 +1290,7 @@ namespace Win32xx
 			// Put the dragged window back on top (for Vista AERO)
 			pDockDrag->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 			pDockDrag->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW);
-		}
+		}  
 	}
 
 	inline void CDocker::CDockHint::OnPaint(HDC hDC)
@@ -3004,7 +3005,9 @@ namespace Win32xx
 			GetDockTopLevel()->RecalcDockChildLayout(rc);
 		//	GetDockTopLevel()->SetRedraw(TRUE);
 		//	GetDockTopLevel()->RedrawWindow();
-			GetDockTopLevel()->RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
+						
+			// Redraw window without flicker
+      GetDockTopLevel()->RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
 		}
 	}
 
@@ -3667,8 +3670,8 @@ namespace Win32xx
 	inline void CContainer::PreCreate(CREATESTRUCT &cs)
 	{
 		// For Tabs on the bottom, add the TCS_BOTTOM style
-		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH | TCS_BOTTOM;
-		cs.lpszClass = WC_TABCONTROL;
+		CTab::PreCreate(cs);
+		cs.style |= TCS_BOTTOM;
 	}
 
 	inline void CContainer::RecalcLayout()

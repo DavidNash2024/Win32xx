@@ -127,10 +127,6 @@ SOURCE=..\src\Rect.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\Simple.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -140,6 +136,10 @@ SOURCE=..\src\TabbedMDIApp.cpp
 # Begin Source File
 
 SOURCE=..\src\Text.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Web.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -187,10 +187,6 @@ SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\Simple.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\stdafx.h
 # End Source File
 # Begin Source File
@@ -200,6 +196,10 @@ SOURCE=..\src\TabbedMDIApp.h
 # Begin Source File
 
 SOURCE=..\src\Text.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Web.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

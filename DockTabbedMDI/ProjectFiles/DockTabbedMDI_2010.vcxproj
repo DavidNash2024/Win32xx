@@ -31,10 +31,10 @@
     <ClInclude Include="..\src\Output.h" />
     <ClInclude Include="..\src\Rect.h" />
     <ClInclude Include="..\src\resource.h" />
-    <ClInclude Include="..\src\Simple.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TabbedMDIApp.h" />
     <ClInclude Include="..\src\Text.h" />
+    <ClInclude Include="..\src\Web.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
@@ -49,13 +49,13 @@
     <ClCompile Include="..\src\MyTabbedMDI.cpp" />
     <ClCompile Include="..\src\Output.cpp" />
     <ClCompile Include="..\src\Rect.cpp" />
-    <ClCompile Include="..\src\Simple.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\TabbedMDIApp.cpp" />
     <ClCompile Include="..\src\Text.cpp" />
+    <ClCompile Include="..\src\Web.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

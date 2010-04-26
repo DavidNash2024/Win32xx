@@ -144,9 +144,6 @@
 				RelativePath="..\src\Rect.cpp">
 			</File>
 			<File
-				RelativePath="..\src\Simple.cpp">
-			</File>
-			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
@@ -154,6 +151,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Text.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Web.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -191,9 +191,6 @@
 				RelativePath="..\src\resource.h">
 			</File>
 			<File
-				RelativePath="..\src\Simple.h">
-			</File>
-			<File
 				RelativePath="..\src\stdafx.h">
 			</File>
 			<File
@@ -201,6 +198,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Text.h">
+			</File>
+			<File
+				RelativePath="..\src\Web.h">
 			</File>
 		</Filter>
 		<Filter

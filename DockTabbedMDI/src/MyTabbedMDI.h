@@ -19,6 +19,7 @@ enum MDIChildIDs
 class CMyTabbedMDI : public CTabbedMDI
 {
 public:
+	CMyTabbedMDI();
 	virtual ~CMyTabbedMDI() {}
 	virtual CWnd* NewMDIChildFromID(int nID);
 };

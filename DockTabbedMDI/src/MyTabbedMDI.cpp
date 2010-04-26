@@ -5,6 +5,12 @@
 #include "MyTabbedMDI.h"
 #include "Mainfrm.h"
 
+CMyTabbedMDI::CMyTabbedMDI()
+{
+	// Turn on double buffering to reduce flicker
+	DoubleBuffer();
+}
+
 CWnd* CMyTabbedMDI::NewMDIChildFromID(int nID)
 {
 	CWnd* pView = NULL;
