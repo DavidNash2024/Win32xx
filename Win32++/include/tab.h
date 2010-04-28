@@ -176,7 +176,6 @@ namespace Win32xx
 		virtual void  CloseActiveMDI();
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
-		virtual void  DoubleBuffer();
 		virtual CWnd* GetActiveMDIChild();
 		virtual CWnd* GetMDIChild(int nTab) { return GetTab().GetTabPageInfo(nTab).pWnd; }
 		virtual int   GetMDIChildCount();
@@ -1328,14 +1327,6 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline void CTabbedMDI::DoubleBuffer()
-    // Turns on double buffering for the tab control used by the yabbed MDI.
-	// This can signifantly reduce flicker, but can interfere with drawing
-	// directly to the window (as in a DirectX view for example). 
-	{
-		GetTab().DoubleBuffer(); 
-	}
-
 	inline CWnd* CTabbedMDI::GetActiveMDIChild()
 	{
 		int nTab = GetTab().GetCurSel();
@@ -1448,7 +1439,17 @@ namespace Win32xx
 		if (GetTab().GetItemCount() >0)
 		{
 			CRect rc = GetClientRect();
-			GetTab().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			if (rc.Width() > 4 && rc.Height() > GetTab().GetTabHeight()+4)
+			{
+				SetRedraw(FALSE);
+				CRect rcClient = GetClientRect();
+				GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
+			}
+			
+			// Redraw without flicker
+			SetRedraw(TRUE);
+			GetTab().RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME );
+			RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME );
 		}
 		else
 		{

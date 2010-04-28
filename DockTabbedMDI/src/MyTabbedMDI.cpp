@@ -7,8 +7,6 @@
 
 CMyTabbedMDI::CMyTabbedMDI()
 {
-	// Turn on double buffering to reduce flicker
-	DoubleBuffer();
 }
 
 CWnd* CMyTabbedMDI::NewMDIChildFromID(int nID)
