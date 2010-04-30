@@ -748,7 +748,11 @@ namespace Win32xx
 		ReleaseCapture();
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		if (m_IsClosePressed && GetCloseRect().PtInRect(pt))
+		{
 			RemoveTabPage(GetCurSel());
+			if (GetActiveView())
+				GetActiveView()->RedrawWindow();
+		}
 		
 		m_IsClosePressed = FALSE;
 	}
@@ -1309,7 +1313,9 @@ namespace Win32xx
 	inline void CTabbedMDI::CloseMDIChild(int nTab)
 	{
 		GetTab().RemoveTabPage(nTab);
-		RecalcLayout();
+		
+		if (GetActiveMDIChild())
+			GetActiveMDIChild()->RedrawWindow();
 	}
 
 	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)

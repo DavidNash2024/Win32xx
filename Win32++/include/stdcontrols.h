@@ -56,7 +56,7 @@ namespace Win32xx
 	public:
 		CButton() {}
 		virtual ~CButton() {}
-    virtual tString GetWindowType() const { return _T("CButton"); }
+		virtual tString GetWindowType() const { return _T("CButton"); }
 
 		// Attributes
 		HBITMAP GetBitmap() const;
@@ -83,7 +83,7 @@ namespace Win32xx
 		// Construction
 		CEdit() {}
 		virtual ~CEdit() {}
-    virtual tString GetWindowType() const { return _T("CEdit"); }
+		virtual tString GetWindowType() const { return _T("CEdit"); }
 
 		// Attributes
 		BOOL CanUndo() const;
@@ -142,7 +142,7 @@ namespace Win32xx
 	public:
 		CListBox() {}
 		virtual ~CListBox() {}
-    virtual tString GetWindowType() const { return _T("CListBox"); }
+		virtual tString GetWindowType() const { return _T("CListBox"); }
 
 		// General Operations
 		int  GetCount() const;
@@ -194,7 +194,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		void PreCreate(CREATESTRUCT& cs);
+		virtual void PreCreate(CREATESTRUCT& cs);
 	};
 
 	class CStatic : public CWnd
@@ -202,7 +202,7 @@ namespace Win32xx
 	public:
 		CStatic() {}
 		virtual ~CStatic() {}
-    virtual tString GetWindowType() const { return _T("CStatic"); }
+		virtual tString GetWindowType() const { return _T("CStatic"); }
 
 		// Operations
 		HBITMAP  GetBitmap() const;
