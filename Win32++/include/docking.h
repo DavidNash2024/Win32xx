@@ -2186,14 +2186,20 @@ namespace Win32xx
 	{
 		// Step 1: Find the top level Docker the point is over
 		CDocker* pDockTop = NULL;
+		HWND hAncestor = GetDockAncestor()->GetAncestor();
 
-		// Iterate through all top level windows, checking for undocked docker
+		// Iterate through all top level windows
 		HWND hWnd = GetWindow(GW_HWNDFIRST);
 		while(hWnd)
 		{
-			if (IsRelated(hWnd))
+			if (IsRelated(hWnd) || hWnd == hAncestor)
 			{
-				CDocker* pDockTest = (CDocker*)FromHandle(hWnd);
+				CDocker* pDockTest;
+				if (hWnd == hAncestor)
+					pDockTest = GetDockAncestor();
+				else
+					pDockTest = (CDocker*)FromHandle(hWnd);
+				
 				CRect rc = pDockTest->GetClientRect();
 				MapWindowPoints(pDockTest->GetHwnd(), NULL, (LPPOINT)&rc, 2);
 				if ((this != pDockTest) && PtInRect(&rc, pt))
@@ -2204,13 +2210,6 @@ namespace Win32xx
 			}
 
 			hWnd = ::GetWindow(hWnd, GW_HWNDNEXT);
-		}
-
-		if (!pDockTop)
-		{
-			// Point not over an undocked docker. Perhaps over the DockAncestor?
-			CRect rc = GetDockAncestor()->GetWindowRect();
-			if (PtInRect(&rc, pt)) pDockTop = GetDockAncestor();
 		}
 
 		// Step 2: Find the docker child whose view window has the point
