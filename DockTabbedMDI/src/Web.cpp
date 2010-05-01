@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////
-// Web.cpp -  Definitions for the CViewWeb class
+// Web.cpp -  Definitions for the CViewBrowser class
 
 #include "stdafx.h"
 #include "Web.h"
@@ -8,8 +8,8 @@
 
 
 ///////////////////////////////////////////////
-// CViewWeb functions
-LRESULT CViewWeb::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// CViewBrowser functions
+LRESULT CViewBrowser::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch(uMsg)
 //	{
@@ -19,8 +19,8 @@ LRESULT CViewWeb::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 //////////////////////////////////////////////
-//  Definitions for the CContainWeb class
-CContainWeb::CContainWeb()
+//  Definitions for the CContainBrowser class
+CContainBrowser::CContainBrowser()
 {
 	SetView(m_ViewWeb);
 	SetDockCaption (_T("Web View - Docking container"));
@@ -30,14 +30,14 @@ CContainWeb::CContainWeb()
 
 
 //////////////////////////////////////////////
-//  Definitions for the CDockWeb class
-CDockWeb::CDockWeb()
+//  Definitions for the CDockBrowser class
+CDockBrowser::CDockBrowser()
 {
 	// Set the view window to our edit control
 	SetView(m_View);
 }
 
-void CDockWeb::OnInitialUpdate()
+void CDockBrowser::OnInitialUpdate()
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);

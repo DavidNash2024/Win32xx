@@ -90,7 +90,6 @@ namespace Win32xx
 		virtual int  AddTabPage(TabPageInfo& tbi);
 		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
 		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon = 0);
-		virtual void DoubleBuffer();
 		virtual CRect GetCloseRect();
 		virtual CRect GetListRect();
 		virtual BOOL GetTabsAtTop();
@@ -161,7 +160,6 @@ namespace Win32xx
 		BOOL m_IsClosePressed;
 		BOOL m_IsListPressed;
 		BOOL m_IsListMenuActive;
-		BOOL m_bDoubleBuffer;
 		int m_nTabHeight;
 	};
 
@@ -251,8 +249,7 @@ namespace Win32xx
 	// Definitions for the CTab class
 	//
 	inline CTab::CTab() : m_pView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
-							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_bDoubleBuffer(FALSE), 
-							m_nTabHeight(20)
+							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(20)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
@@ -317,27 +314,6 @@ namespace Win32xx
 	{
 		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
 		return AddTabPage(pWnd, szTitle, hIcon);
-	}
-
-	inline void CTab::DoubleBuffer()
-	{
-		// Turns on double buffering for the tab control.
-		// This can signifantly reduce flicker, but can interfere with drawing
-		// directly to the window (as in a DirectX view for example). 
-		m_bDoubleBuffer = TRUE;
-
-#ifdef WS_EX_COMPOSITED		// defined when _WIN32_WINNT >= 0x0501
-		
-		// Double buffering is only supported on WinXP and above.
-		if (IsWindow() && GetWinVersion() >= 2501)
-		{
-			DWORD dwExStyle = GetWindowLongPtr(GWL_EXSTYLE);
-			dwExStyle |= WS_EX_COMPOSITED | WS_EX_TRANSPARENT;
-			SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
-		}
-
-#endif
-	
 	}
 
 	inline void CTab::DrawCloseButton(CDC& DrawDC)
@@ -882,16 +858,7 @@ namespace Win32xx
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
 	{
 		// For Tabs on the bottom, add the TCS_BOTTOM style
-		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
-
-	#ifdef WS_EX_COMPOSITED		// defined when _WIN32_WINNT >= 0x0501
-	
-		// Turn on double buffering
-		if (m_bDoubleBuffer && GetWinVersion() >= 2501)
-			cs.dwExStyle = WS_EX_COMPOSITED | WS_EX_TRANSPARENT;		
-
-	#endif
-
+		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
 	}
 
 	inline BOOL CTab::PreTranslateMessage(MSG* pMsg)

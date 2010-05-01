@@ -108,7 +108,7 @@ void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
-	pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_BROWSER);
+	pTabbedMDI->AddMDIChild(new CViewBrowser, _T("Browser"), ID_MDI_BROWSER);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
@@ -129,7 +129,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnFileNew();
 		return TRUE;
 	case IDM_FILE_NEWBROWSER:
-		pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_BROWSER);	
+		pTabbedMDI->AddMDIChild(new CViewBrowser, _T("Browser"), ID_MDI_BROWSER);	
 		return TRUE;
 	case IDM_FILE_NEWRECT:
 		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);	

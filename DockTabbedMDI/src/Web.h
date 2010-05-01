@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////
-// Web.h - Declaration of the CViewWeb class
+// Web.h - Declaration of the CViewBrowser class
 
 #ifndef WEB_H
 #define WEB_H
 
 
 
-// Declaration of the CViewWeb class
-class CViewWeb : public CWebBrowser
+// Declaration of the CViewBrowser class
+class CViewBrowser : public CWebBrowser
 {
 public:
-	CViewWeb() {}
-	virtual ~CViewWeb() {}
+	CViewBrowser() {}
+	virtual ~CViewBrowser() {}
 
 	virtual void OnInitialUpdate() 
 	{
@@ -22,27 +22,27 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
-// Declaration of the CContainWeb class
-class CContainWeb : public CContainer
+// Declaration of the CContainBrowser class
+class CContainBrowser : public CContainer
 {
 public:
-	CContainWeb();
-	~CContainWeb() {}
+	CContainBrowser();
+	~CContainBrowser() {}
 
 private:
-	CViewWeb m_ViewWeb;
+	CViewBrowser m_ViewWeb;
 };
 
-// Declaration of the CDockWeb class
-class CDockWeb : public CDocker
+// Declaration of the CDockBrowser class
+class CDockBrowser : public CDocker
 {
 public:
-	CDockWeb();
-	virtual ~CDockWeb() {}
+	CDockBrowser();
+	virtual ~CDockBrowser() {}
 	virtual void OnInitialUpdate();
 
 private:
-	CContainWeb m_View;
+	CContainBrowser m_View;
 
 };
 
