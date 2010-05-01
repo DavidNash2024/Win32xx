@@ -1289,8 +1289,8 @@ namespace Win32xx
 			ShowHintWindow(pDockTarget, rcHint);
 
 			// Put the dragged window back on top (for Vista AERO)
-			pDockDrag->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
-			pDockDrag->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW);
+		//	pDockDrag->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
+		//	pDockDrag->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW);
 		}  
 	}
 
@@ -1337,7 +1337,7 @@ namespace Win32xx
 		dcMem.CreateCompatibleBitmap(dcTarget, rcBitmap.Width(), rcBitmap.Height());
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcTarget, rcBitmap.left, rcBitmap.top, SRCCOPY);
 		HBITMAP hbmDock = dcMem.DetachBitmap();
-		TintBitmap(hbmDock, -80, -64, 0);
+		TintBitmap(hbmDock, -64, -24, +128);
 		SetBitmap(hbmDock);
 
 		// Create the Hint window
@@ -3039,8 +3039,8 @@ namespace Win32xx
 		//	GetDockTopLevel()->SetRedraw(TRUE);
 		//	GetDockTopLevel()->RedrawWindow();
 						
-			// Redraw window without flicker
-      GetDockTopLevel()->RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
+		// Redraw window without flicker
+			GetDockTopLevel()->RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
 		}
 	}
 

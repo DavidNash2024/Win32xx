@@ -203,6 +203,7 @@ namespace Win32xx
 		CTabbedMDI& operator = (const CTabbedMDI&); // Disable assignment operator
 
 		CTab m_Tab;
+		BOOL m_bRedraw;
 	};
 	
 }
@@ -1261,7 +1262,7 @@ namespace Win32xx
 
 	////////////////////////////////////////
 	// Definitions for the CTabbedMDI class
-	inline CTabbedMDI::CTabbedMDI()
+	inline CTabbedMDI::CTabbedMDI() : m_bRedraw(FALSE)
 	{
 		GetTab().SetShowButtons(TRUE);
 	}
@@ -1443,19 +1444,23 @@ namespace Win32xx
 	inline void CTabbedMDI::RecalcLayout()
 	{
 		if (GetTab().GetItemCount() >0)
-		{
+		{		
 			CRect rc = GetClientRect();
 			if (rc.Width() > 4 && rc.Height() > GetTab().GetTabHeight()+4)
 			{
-				SetRedraw(FALSE);
+				if (!m_bRedraw) 
+					SetRedraw(FALSE);
+				
 				CRect rcClient = GetClientRect();
 				GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
+				m_bRedraw = FALSE;
 			}
-			
+			else
+				m_bRedraw = TRUE;
+					
 			// Redraw without flicker
 			SetRedraw(TRUE);
-			GetTab().RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME );
-			RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME );
+			GetTab().RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME | RDW_ALLCHILDREN);
 		}
 		else
 		{
