@@ -1331,11 +1331,13 @@ namespace Win32xx
 		}
 
 		// Save the Dock window's blue tinted bitmap
-		CDC dcTarget = pDockTarget->GetDC();
-		CDC dcMem = dcTarget.CreateCompatibleDC();
+		CDC dcDesktop = ::GetDC(HWND_DESKTOP);
+		CDC dcMem = dcDesktop.CreateCompatibleDC();
 		CRect rcBitmap = rcHint;
-		dcMem.CreateCompatibleBitmap(dcTarget, rcBitmap.Width(), rcBitmap.Height());
-		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcTarget, rcBitmap.left, rcBitmap.top, SRCCOPY);
+		CRect rcTarget = rcHint;
+		MapWindowPoints(pDockTarget->GetHwnd(), HWND_DESKTOP, (LPPOINT)&rcTarget, 2);
+		dcMem.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 		HBITMAP hbmDock = dcMem.DetachBitmap();
 		TintBitmap(hbmDock, -64, -24, +128);
 		SetBitmap(hbmDock);

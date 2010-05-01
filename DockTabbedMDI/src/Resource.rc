@@ -20,7 +20,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &Simple",                 IDM_FILE_NEWSIMPLE
+        MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
@@ -54,7 +54,7 @@ IDM_NEWMENU MENU
 BEGIN
     POPUP "New"
     BEGIN
-        MENUITEM "New &Simple",                 IDM_FILE_NEWSIMPLE
+        MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
@@ -71,7 +71,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDW_MAIN                ICON                    "res/Docking.ico"
-IDI_SIMPLE              ICON                    "res/simple.ico"
+IDI_BROWSER             ICON                    "res/simple.ico"
 IDI_CLASSVIEW           ICON                    "res/classview.ico"
 IDI_FILEVIEW            ICON                    "res/fileview.ico"
 IDI_RECT                ICON                    "res/rect.ico"
@@ -168,7 +168,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDM_FILE_NEWSIMPLE      "Create Simple MDI Child"
+    IDM_FILE_NEWBROWSER     "Create Browser MDI Child"
     IDM_FILE_NEWRECT        "Create Rect MDI Child"
     IDM_FILE_NEWTEXT        "Create Text MDI Child"
 END

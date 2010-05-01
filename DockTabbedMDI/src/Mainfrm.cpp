@@ -108,7 +108,7 @@ void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
-	pTabbedMDI->AddMDIChild(new CViewWeb, _T("Simple View"), ID_MDI_SIMPLE);
+	pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_BROWSER);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
@@ -128,8 +128,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_NEW:
 		OnFileNew();
 		return TRUE;
-	case IDM_FILE_NEWSIMPLE:
-		pTabbedMDI->AddMDIChild(new CViewWeb, _T("Simple View"), ID_MDI_SIMPLE);	
+	case IDM_FILE_NEWBROWSER:
+		pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_BROWSER);	
 		return TRUE;
 	case IDM_FILE_NEWRECT:
 		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);	
@@ -260,7 +260,7 @@ void CMainFrame::SetupToolbar()
 	::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_FILE_NEWSIMPLE, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_SIMPLE)));
+	AddMenuIcon(IDM_FILE_NEWBROWSER, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_BROWSER)));
 	AddMenuIcon(IDM_FILE_NEWRECT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_RECT)));
 	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
 	AddMenuIcon(IDM_FILE_NEWLIST, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW)));
