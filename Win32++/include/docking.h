@@ -2961,6 +2961,7 @@ namespace Win32xx
 		if (IsDocked())
 		{
 			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME | RDW_ALLCHILDREN);
 			MapWindowPoints(GetDockParent()->GetHwnd(), GetHwnd(), (LPPOINT)&rc, 2);
 		}
 

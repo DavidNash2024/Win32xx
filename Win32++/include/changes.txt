@@ -2,7 +2,7 @@ Version 6.9
 ===========
 
 Changes
-Added CAXContainer
+Added CAXWindow
 Added CWebBrowser
 Added CWnd::CharToWide
 Added CWnd::WideToChar
