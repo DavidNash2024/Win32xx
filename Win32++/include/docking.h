@@ -1287,10 +1287,6 @@ namespace Win32xx
 				return;
 
 			ShowHintWindow(pDockTarget, rcHint);
-
-			// Put the dragged window back on top (for Vista AERO)
-		//	pDockDrag->SetWindowPos(HWND_TOP, 0,0,0,0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
-		//	pDockDrag->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW);
 		}  
 	}
 

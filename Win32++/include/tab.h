@@ -888,7 +888,6 @@ namespace Win32xx
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 			GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-
 		}
 	}
 
@@ -1161,6 +1160,14 @@ namespace Win32xx
 		case WM_NCHITTEST:
 			return OnNCHitTest(wParam, lParam);
 		
+		case WM_WINDOWPOSCHANGING:
+			{
+				// A little hack to reduce tab flicker
+				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+				pWinPos->flags |= SWP_NOREDRAW;
+			}
+			break;
+		
 		case WM_WINDOWPOSCHANGED:
 			RecalcLayout();
 			break;
@@ -1412,7 +1419,7 @@ namespace Win32xx
 		if (GetTab().GetItemCount() >0)
 		{				
 			CRect rcClient = GetClientRect();
-			GetTab().SetWindowPos(NULL, rcClient, SWP_NOREDRAW|SWP_SHOWWINDOW);
+			GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
 			GetTab().RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME | RDW_ALLCHILDREN);
 		}
 		else

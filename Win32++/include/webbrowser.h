@@ -44,16 +44,16 @@
 namespace Win32xx
 {
 	///////////////////////////////////////////////////
-	// Declaration of the CAXContainer class
+	// Declaration of the CAXWindow class
 	// This class implements an ActiveX control container
-	class CAXContainer : public IOleClientSite, public IOleInPlaceSite, public IOleInPlaceFrame,
+	class CAXWindow : public IOleClientSite, public IOleInPlaceSite, public IOleInPlaceFrame,
 							public IOleControlSite, public IDispatch
 	{
 	public:
-		CAXContainer();
-		virtual ~CAXContainer();
-		virtual void Add(BSTR bstrClsid);
-		virtual void Add(CLSID clsid);
+		CAXWindow();
+		virtual ~CAXWindow();
+		virtual void CreateControl(BSTR bstrClsid);
+		virtual void CreateControl(CLSID clsid);
 		virtual void Remove();
 		virtual void SetParent(HWND hWndParent);
 		virtual void SetLocation(int x, int y, int width, int height);
@@ -134,14 +134,14 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Declaration of the CWebBrowser class
 	// This class uses an AciveX Container provided by
-	// CAXContainer to host the IWebBrower2 interface.
+	// CAXWindow to host the IWebBrower2 interface.
 	class CWebBrowser : public CWnd
 	{
 	public:
 		CWebBrowser();
 		virtual ~CWebBrowser();
 		virtual void AddWebBrowserControl(void);
-		virtual CAXContainer& GetAXContainer() const { return (CAXContainer&)m_AXContainer; }
+		virtual CAXWindow& GetAXContainer() const { return (CAXWindow&)m_AXContainer; }
 		virtual IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
 		virtual tString GetWindowType() const { return _T("CWebBrowser"); }
 		virtual void Navigate(LPCTSTR str);
@@ -152,7 +152,7 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		CAXContainer	m_AXContainer;		// The ActiveX Container
+		CAXWindow	m_AXContainer;		// The ActiveX Container
 		IWebBrowser2*	m_pIWebBrowser2;	// Interface to the ActiveX web browser control
 	};
 
@@ -163,24 +163,24 @@ namespace Win32xx
 namespace Win32xx
 {
 	/////////////////////////////////////////
-	// Definitions for the CAXContainer class
+	// Definitions for the CAXWindow class
 	//
-	inline CAXContainer::CAXContainer() : m_cRefs(1), m_hWnd(NULL), m_pUnk(NULL)
+	inline CAXWindow::CAXWindow() : m_cRefs(1), m_hWnd(NULL), m_pUnk(NULL)
 	{
 	}
 
-	inline CAXContainer::~CAXContainer()
+	inline CAXWindow::~CAXWindow()
 	{
 	}
 
-	inline void CAXContainer::Add(BSTR bstrClsid)
+	inline void CAXWindow::CreateControl(BSTR bstrClsid)
 	{
 		CLSID   clsid;
 		CLSIDFromString(bstrClsid, &clsid);
-		Add(clsid);
+		CreateControl(clsid);
 	}
 
-	inline void CAXContainer::Add(CLSID clsid)
+	inline void CAXWindow::CreateControl(CLSID clsid)
 	{
 		CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void**)&m_pUnk);
 
@@ -204,51 +204,51 @@ namespace Win32xx
 		}
 	}
 
-	inline STDMETHODIMP_(ULONG) CAXContainer::AddRef()
+	inline STDMETHODIMP_(ULONG) CAXWindow::AddRef()
 	{
 		return ++m_cRefs;
 	}
 
-	inline STDMETHODIMP CAXContainer::CanInPlaceActivate()
+	inline STDMETHODIMP CAXWindow::CanInPlaceActivate()
 	{
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::ContextSensitiveHelp(BOOL fEnterMode)
+	inline STDMETHODIMP CAXWindow::ContextSensitiveHelp(BOOL fEnterMode)
 	{
 		UNREFERENCED_PARAMETER(fEnterMode);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::DeactivateAndUndo()
+	inline STDMETHODIMP CAXWindow::DeactivateAndUndo()
 	{
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::DiscardUndoState()
+	inline STDMETHODIMP CAXWindow::DiscardUndoState()
 	{
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::EnableModeless(BOOL fEnable)
+	inline STDMETHODIMP CAXWindow::EnableModeless(BOOL fEnable)
 	{
 		UNREFERENCED_PARAMETER(fEnable);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetBorder(LPRECT lprectBorder)
+	inline STDMETHODIMP CAXWindow::GetBorder(LPRECT lprectBorder)
 	{
 		UNREFERENCED_PARAMETER(lprectBorder);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetContainer(LPOLECONTAINER* ppContainer)
+	inline STDMETHODIMP CAXWindow::GetContainer(LPOLECONTAINER* ppContainer)
 	{
 		UNREFERENCED_PARAMETER(ppContainer);
 		return E_NOINTERFACE;
 	}
 
-	inline IDispatch* CAXContainer::GetDispatch()
+	inline IDispatch* CAXWindow::GetDispatch()
 	{
 		if (!m_pUnk)
 			return NULL;
@@ -260,7 +260,7 @@ namespace Win32xx
 		return pdisp;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetExtendedControl(IDispatch** ppDisp)
+	inline STDMETHODIMP CAXWindow::GetExtendedControl(IDispatch** ppDisp)
 	{
 		if (ppDisp == NULL)
 			return E_INVALIDARG;
@@ -271,7 +271,7 @@ namespace Win32xx
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid)
+	inline STDMETHODIMP CAXWindow::GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid)
 	{
 		UNREFERENCED_PARAMETER((IID)riid);		// IID cast required for the MinGW compiler
 		UNREFERENCED_PARAMETER(rgszNames);
@@ -282,7 +282,7 @@ namespace Win32xx
 		return DISP_E_UNKNOWNNAME;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, LPMONIKER* ppMk)
+	inline STDMETHODIMP CAXWindow::GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, LPMONIKER* ppMk)
 	{
 		UNREFERENCED_PARAMETER(dwAssign);
 		UNREFERENCED_PARAMETER(dwWhichMoniker);
@@ -290,7 +290,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
+	inline STDMETHODIMP CAXWindow::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
 	{
 		UNREFERENCED_PARAMETER(itinfo);
 		UNREFERENCED_PARAMETER(lcid);
@@ -298,13 +298,13 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetTypeInfoCount(unsigned int* pctinfo)
+	inline STDMETHODIMP CAXWindow::GetTypeInfoCount(unsigned int* pctinfo)
 	{
 		UNREFERENCED_PARAMETER(pctinfo);
 		return E_NOTIMPL;
 	}
 
-	inline IUnknown* CAXContainer::GetUnknown()
+	inline IUnknown* CAXWindow::GetUnknown()
 	{
 		if (!m_pUnk)
 			return NULL;
@@ -313,7 +313,7 @@ namespace Win32xx
 		return m_pUnk;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetWindow(HWND* lphwnd)
+	inline STDMETHODIMP CAXWindow::GetWindow(HWND* lphwnd)
 	{
 		if (!IsWindow(m_hWnd))
 			return S_FALSE;
@@ -322,7 +322,7 @@ namespace Win32xx
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::GetWindowContext (IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppIIPUIWin,
+	inline STDMETHODIMP CAXWindow::GetWindowContext (IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppIIPUIWin,
 									  LPRECT lprcPosRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo)
 	{
 		*ppFrame = (IOleInPlaceFrame*)this;
@@ -347,14 +347,14 @@ namespace Win32xx
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS lpMenuWidths)
+	inline STDMETHODIMP CAXWindow::InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS lpMenuWidths)
 	{
 		UNREFERENCED_PARAMETER(hmenuShared);
 		UNREFERENCED_PARAMETER(lpMenuWidths);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
+	inline STDMETHODIMP CAXWindow::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
 	{
 		UNREFERENCED_PARAMETER(dispid);
 		UNREFERENCED_PARAMETER((IID)riid);		// IID cast required for the MinGW compiler
@@ -367,57 +367,57 @@ namespace Win32xx
 		return DISP_E_MEMBERNOTFOUND;
 	}
 
-	inline STDMETHODIMP CAXContainer::LockInPlaceActive(BOOL fLock)
+	inline STDMETHODIMP CAXWindow::LockInPlaceActive(BOOL fLock)
 	{
 		UNREFERENCED_PARAMETER(fLock);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnControlInfoChanged()
+	inline STDMETHODIMP CAXWindow::OnControlInfoChanged()
 	{
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnFocus(BOOL fGotFocus)
+	inline STDMETHODIMP CAXWindow::OnFocus(BOOL fGotFocus)
 	{
 		UNREFERENCED_PARAMETER(fGotFocus);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnInPlaceActivate()
+	inline STDMETHODIMP CAXWindow::OnInPlaceActivate()
 	{
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnInPlaceDeactivate()
+	inline STDMETHODIMP CAXWindow::OnInPlaceDeactivate()
 	{
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnPosRectChange(LPCRECT lprcPosRect)
+	inline STDMETHODIMP CAXWindow::OnPosRectChange(LPCRECT lprcPosRect)
 	{
 		UNREFERENCED_PARAMETER(lprcPosRect);
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnShowWindow(BOOL fShow)
+	inline STDMETHODIMP CAXWindow::OnShowWindow(BOOL fShow)
 	{
 		UNREFERENCED_PARAMETER(fShow);
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnUIActivate()
+	inline STDMETHODIMP CAXWindow::OnUIActivate()
 	{
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::OnUIDeactivate(BOOL fUndoable)
+	inline STDMETHODIMP CAXWindow::OnUIDeactivate(BOOL fUndoable)
 	{
 		UNREFERENCED_PARAMETER(fUndoable);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::QueryInterface(REFIID riid, void** ppvObject)
+	inline STDMETHODIMP CAXWindow::QueryInterface(REFIID riid, void** ppvObject)
 	{
 		if (!ppvObject)
 			return E_POINTER;
@@ -448,12 +448,12 @@ namespace Win32xx
 		return S_OK;
 	}
 
-	inline STDMETHODIMP_(ULONG) CAXContainer::Release()
+	inline STDMETHODIMP_(ULONG) CAXWindow::Release()
 	{
 		return --m_cRefs;
 	}
 
-	inline void CAXContainer::Remove()
+	inline void CAXWindow::Remove()
 	{
 		if (!m_pUnk)
 			return;
@@ -480,48 +480,48 @@ namespace Win32xx
 		m_pUnk = NULL;
 	}
 
-	inline STDMETHODIMP CAXContainer::RemoveMenus(HMENU hmenuShared)
+	inline STDMETHODIMP CAXWindow::RemoveMenus(HMENU hmenuShared)
 	{
 		UNREFERENCED_PARAMETER(hmenuShared);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::RequestBorderSpace(LPCBORDERWIDTHS lpborderwidths)
+	inline STDMETHODIMP CAXWindow::RequestBorderSpace(LPCBORDERWIDTHS lpborderwidths)
 	{
 		UNREFERENCED_PARAMETER(lpborderwidths);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::RequestNewObjectLayout()
+	inline STDMETHODIMP CAXWindow::RequestNewObjectLayout()
 	{
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::SaveObject()
+	inline STDMETHODIMP CAXWindow::SaveObject()
 	{
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::Scroll(SIZE scrollExtent)
+	inline STDMETHODIMP CAXWindow::Scroll(SIZE scrollExtent)
 	{
 		UNREFERENCED_PARAMETER(scrollExtent);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR lpszObjName)
+	inline STDMETHODIMP CAXWindow::SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR lpszObjName)
 	{
 		UNREFERENCED_PARAMETER(pActiveObject);
 		UNREFERENCED_PARAMETER(lpszObjName);
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::SetBorderSpace(LPCBORDERWIDTHS lpborderwidths)
+	inline STDMETHODIMP CAXWindow::SetBorderSpace(LPCBORDERWIDTHS lpborderwidths)
 	{
 		UNREFERENCED_PARAMETER(lpborderwidths);
 		return E_NOTIMPL;
 	}
 
-	inline void CAXContainer::SetFocus(BOOL fFocus)
+	inline void CAXWindow::SetFocus(BOOL fFocus)
 	{
 		if (!m_pUnk)
 			return;
@@ -538,7 +538,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CAXContainer::SetLocation(int x, int y, int width, int height)
+	inline void CAXWindow::SetLocation(int x, int y, int width, int height)
 	{
 		m_rcControl.SetRect(x, y, x + width, y + height);
 
@@ -554,7 +554,7 @@ namespace Win32xx
 		pipo->Release();
 	}
 
-	inline STDMETHODIMP CAXContainer::SetMenu(HMENU hmenuShared, HOLEMENU holemenu, HWND hwndActiveObject)
+	inline STDMETHODIMP CAXWindow::SetMenu(HMENU hmenuShared, HOLEMENU holemenu, HWND hwndActiveObject)
 	{
 		UNREFERENCED_PARAMETER(hmenuShared);
 		UNREFERENCED_PARAMETER(holemenu);
@@ -562,12 +562,12 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline void CAXContainer::SetParent(HWND hWndParent)
+	inline void CAXWindow::SetParent(HWND hWndParent)
 	{
 		m_hWnd = hWndParent;
 	}
 
-	inline STDMETHODIMP CAXContainer::SetStatusText(LPCOLESTR pszStatusText)
+	inline STDMETHODIMP CAXWindow::SetStatusText(LPCOLESTR pszStatusText)
 	{
 		if (NULL == pszStatusText)
 			return E_POINTER;
@@ -587,12 +587,12 @@ namespace Win32xx
 		return (S_OK);
 	}
 
-	inline void CAXContainer::SetStatusWindow(HWND hWndStatus)
+	inline void CAXWindow::SetStatusWindow(HWND hWndStatus)
 	{
 		m_hWndStatus = hWndStatus;
 	}
 
-	inline void CAXContainer::SetVisible(BOOL fVisible)
+	inline void CAXWindow::SetVisible(BOOL fVisible)
 	{
 		if (!m_pUnk)
 			return;
@@ -613,17 +613,17 @@ namespace Win32xx
 		pioo->Release();
 	}
 
-	inline STDMETHODIMP CAXContainer::ShowObject()
+	inline STDMETHODIMP CAXWindow::ShowObject()
 	{
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::ShowPropertyFrame()
+	inline STDMETHODIMP CAXWindow::ShowPropertyFrame()
 	{
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD dwFlags)
+	inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD dwFlags)
 	{
 		UNREFERENCED_PARAMETER(pptlHimetric);
 		UNREFERENCED_PARAMETER(pptfContainer);
@@ -631,21 +631,21 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline STDMETHODIMP CAXContainer::TranslateAccelerator(LPMSG lpmsg, WORD wID)
+	inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG lpmsg, WORD wID)
 	{
 		UNREFERENCED_PARAMETER(lpmsg);
 		UNREFERENCED_PARAMETER(wID);
 		return S_OK;
 	}
 
-	inline STDMETHODIMP CAXContainer::TranslateAccelerator(LPMSG pMsg, DWORD grfModifiers)
+	inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, DWORD grfModifiers)
 	{
 		UNREFERENCED_PARAMETER(pMsg);
 		UNREFERENCED_PARAMETER(grfModifiers);
 		return S_FALSE;
 	}
 
-	inline void CAXContainer::TranslateKey(MSG msg)
+	inline void CAXWindow::TranslateKey(MSG msg)
 	{
 		if (!m_pUnk)
 			return;
@@ -678,7 +678,7 @@ namespace Win32xx
 
 	inline void CWebBrowser::AddWebBrowserControl()
 	{
-		GetAXContainer().Add(CLSID_WebBrowser);
+		GetAXContainer().CreateControl(CLSID_WebBrowser);
 		GetAXContainer().SetParent(m_hWnd);
 		GetAXContainer().SetVisible(TRUE);
 		GetAXContainer().SetFocus(TRUE);
