@@ -201,7 +201,6 @@ namespace Win32xx
 		CTabbedMDI& operator = (const CTabbedMDI&); // Disable assignment operator
 
 		CTab m_Tab;
-		BOOL m_bRedraw;
 	};
 	
 }
@@ -888,7 +887,7 @@ namespace Win32xx
 			// Position the View over the tab control's display area
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-			GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 
 		}
 	}
@@ -1229,7 +1228,7 @@ namespace Win32xx
 
 	////////////////////////////////////////
 	// Definitions for the CTabbedMDI class
-	inline CTabbedMDI::CTabbedMDI() : m_bRedraw(FALSE)
+	inline CTabbedMDI::CTabbedMDI()
 	{
 		GetTab().SetShowButtons(TRUE);
 	}
@@ -1411,22 +1410,9 @@ namespace Win32xx
 	inline void CTabbedMDI::RecalcLayout()
 	{
 		if (GetTab().GetItemCount() >0)
-		{		
-			CRect rc = GetClientRect();
-			if (rc.Width() > 4 && rc.Height() > GetTab().GetTabHeight()+4)
-			{
-				if (!m_bRedraw) 
-					SetRedraw(FALSE);
-				
-				CRect rcClient = GetClientRect();
-				GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
-				m_bRedraw = FALSE;
-			}
-			else
-				m_bRedraw = TRUE;
-					
-			// Redraw without flicker
-			SetRedraw(TRUE);
+		{				
+			CRect rcClient = GetClientRect();
+			GetTab().SetWindowPos(NULL, rcClient, SWP_NOREDRAW|SWP_SHOWWINDOW);
 			GetTab().RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME | RDW_ALLCHILDREN);
 		}
 		else
