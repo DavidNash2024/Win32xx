@@ -1420,11 +1420,13 @@ namespace Win32xx
 		{				
 			CRect rcClient = GetClientRect();
 			GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
-			GetTab().RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME | RDW_ALLCHILDREN);
+		//	GetTab().RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME | RDW_ALLCHILDREN);
+			GetTab().UpdateWindow();
 		}
 		else
 		{
 			GetTab().ShowWindow(SW_HIDE);
+			Invalidate();
 		}
 	}
 
