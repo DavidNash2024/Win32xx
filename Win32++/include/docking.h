@@ -2070,8 +2070,12 @@ namespace Win32xx
 		// Redraw the docked windows
 		::SetForegroundWindow(GetAncestor());
 		GetDockTopLevel()->m_hOldFocus = pDocker->GetView()->GetHwnd();
-		pDocker->GetView()->SetFocus();
+		pDocker->GetView()->SetFocus();	
+		
+		GetDockTopLevel()->SetRedraw(FALSE);	
 		RecalcDockLayout();
+		GetDockTopLevel()->SetRedraw(TRUE);	
+		GetDockTopLevel()->RedrawWindow();
 	}
 
 	inline void CDocker::DockInContainer(CDocker* pDock, DWORD dwDockStyle)
@@ -2954,14 +2958,17 @@ namespace Win32xx
 	{
 		// This function positions the Docker window, along with the Docker's
 		// dock children, and draws the splitter bars.
-		// Note: This function is used recursively.
+		// Notes:
+		//  1) This function is used recursively.
+		//  2) The window heirachy is to complex for DeferWindowPos (they don't have a common parent).
+		//  3) An UpdateWindow follows each SetWindowPos for tidy error free drawing
 
 		// Step 1: Set this Docker's position	(unless it's a top level docker).
 		// Note: All top level dockers are undocked, including the dock ancestor.
 		if (IsDocked())
 		{
 			SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-			RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_FRAME | RDW_ALLCHILDREN);
+			UpdateWindow();
 			MapWindowPoints(GetDockParent()->GetHwnd(), GetHwnd(), (LPPOINT)&rc, 2);
 		}
 
@@ -3009,6 +3016,7 @@ namespace Win32xx
 
 				// Draw the splitter bar
 				m_vDockChildren[u]->GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS );
+				m_vDockChildren[u]->GetDockBar().UpdateWindow();
 				rc.SubtractRect(rc, rcBar);
 			}
 		}
@@ -3020,11 +3028,13 @@ namespace Win32xx
 			// that remains after the after the Docker children and splitter bars have
 			// been taken into account.
 			GetDockClient().SetWindowPos(NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			GetDockClient().UpdateWindow();
 		}
 		else
 		{
 			// The TopLevelDocker is always 'undocked'.
 			GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+			GetDockClient().UpdateWindow();
 		}
 	}
 
@@ -3033,13 +3043,7 @@ namespace Win32xx
 		if (GetDockAncestor()->IsWindow())
 		{
 			CRect rc = GetDockTopLevel()->GetClientRect();
-		//	GetDockTopLevel()->SetRedraw(FALSE);
 			GetDockTopLevel()->RecalcDockChildLayout(rc);
-		//	GetDockTopLevel()->SetRedraw(TRUE);
-		//	GetDockTopLevel()->RedrawWindow();
-						
-		// Redraw window without flicker
-			GetDockTopLevel()->RedrawWindow(NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
 		}
 	}
 
