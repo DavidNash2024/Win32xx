@@ -228,6 +228,7 @@ namespace Win32xx
 			CDockBar& operator = (const CDockBar&); // Disable assignment operator
 
 			CDocker* m_pDock;
+			DRAGPOS m_DragPos;
 			HBRUSH m_hbrBackground;
 			int m_DockBarWidth;
 		};
@@ -566,12 +567,11 @@ namespace Win32xx
 	inline void CDocker::CDockBar::SendNotify(UINT nMessageID)
 	{
 		// Send a splitter bar notification to the parent
-		DRAGPOS DragPos;
-		DragPos.hdr.code = nMessageID;
-		DragPos.hdr.hwndFrom = m_hWnd;
-		::GetCursorPos(&DragPos.ptPos);
-		DragPos.ptPos.x += 1;
-		SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&DragPos);
+		m_DragPos.hdr.code = nMessageID;
+		m_DragPos.hdr.hwndFrom = m_hWnd;
+		::GetCursorPos(&m_DragPos.ptPos);
+		m_DragPos.ptPos.x += 1;
+		SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&m_DragPos);
 	}
 
 	inline void CDocker::CDockBar::SetColor(COLORREF color)
