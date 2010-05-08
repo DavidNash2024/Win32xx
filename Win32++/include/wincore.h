@@ -101,6 +101,7 @@
 #define _WINSOCKAPI_            // Prevent winsock.h #include's.
 
 #include <vector>
+#include <algorithm>
 #include <string>
 #include <map>
 #include <windows.h>

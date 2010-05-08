@@ -34,6 +34,12 @@ Removed CWnd::IsToolbar
 
 Modified Browser Sample
 
+New Features
+------------
+* CWnd objects can now report their type with GetWindowType
+* CWebBrowser and CAXWindow 
+* Tray demo
+
 Version 6.8
 ===========
 

@@ -464,7 +464,7 @@ namespace Win32xx
 
 	private:
 		CDocker(const CDocker&);				// Disable copy construction
-		CDocker& operator = (const CDocker&); // Disable assignment operator
+		CDocker& operator = (const CDocker&);	// Disable assignment operator
 		void BringDockersToTop();
 		void CheckAllTargets(LPDRAGPOS pDragPos);
 		void CloseAllTargets();
@@ -495,6 +495,10 @@ namespace Win32xx
 
 		std::vector <CDocker*> m_vDockChildren;
 		std::vector <CDocker*> m_vAllDockers;	// Only used in DockAncestor
+		std::vector <CDocker*> m_vRecalcDockers;
+
+		CRect m_rcBar;
+		CRect m_rcClient;
 
 		BOOL m_BlockMove;
 		BOOL m_Undocking;
@@ -3015,35 +3019,56 @@ namespace Win32xx
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_vDockChildren[u]->GetBarWidth();
 
 				// Draw the splitter bar
-				m_vDockChildren[u]->GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS );
-				m_vDockChildren[u]->GetDockBar().UpdateWindow();
+			//	m_vDockChildren[u]->GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS );
+			//	m_vDockChildren[u]->GetDockBar().UpdateWindow();
+				m_vDockChildren[u]->m_rcBar = rcBar;
 				rc.SubtractRect(rc, rcBar);
 			}
 		}
 
 		// Step 3: Set the client window position for this Docker
-		if (IsDocked())
-		{
-			// This docker's client window occupies the area of the Docker window
-			// that remains after the after the Docker children and splitter bars have
-			// been taken into account.
-			GetDockClient().SetWindowPos(NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-			GetDockClient().UpdateWindow();
-		}
-		else
+	//	if (IsDocked())
+	//	{
+		// This docker's client window occupies the area of the Docker window
+		// that remains after the after the Docker children and splitter bars have
+		// been taken into account.
+	//	GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+	//	GetDockClient().UpdateWindow();
+		m_rcClient = rc;
+	//	}
+	/*	else
 		{
 			// The TopLevelDocker is always 'undocked'.
 			GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 			GetDockClient().UpdateWindow();
-		}
+		} */
+
+		GetDockAncestor()->m_vRecalcDockers.push_back(this);
 	}
 
 	inline void CDocker::RecalcDockLayout()
 	{
 		if (GetDockAncestor()->IsWindow())
 		{
+			GetDockAncestor()->m_vRecalcDockers.clear();
 			CRect rc = GetDockTopLevel()->GetClientRect();
 			GetDockTopLevel()->RecalcDockChildLayout(rc);
+			
+			// Position the dock clients
+			std::vector<CDocker*>::iterator iter;
+			std::vector<CDocker*> vRecalcDockers = GetDockAncestor()->m_vRecalcDockers;
+			for (iter = vRecalcDockers.begin(); iter < vRecalcDockers.end(); ++iter)
+			{
+				(*iter)->GetDockClient().SetWindowPos(NULL, (*iter)->m_rcClient, SWP_SHOWWINDOW|SWP_NOSENDCHANGING/*|SWP_FRAMECHANGED*/);
+				(*iter)->GetDockClient().UpdateWindow();
+			}
+
+			// Position the dock bars
+			for (iter = vRecalcDockers.begin(); iter < vRecalcDockers.end(); ++iter)
+			{
+				(*iter)->GetDockBar().SetWindowPos(NULL, (*iter)->m_rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS|SWP_SHOWWINDOW );
+				(*iter)->GetDockBar().UpdateWindow();
+			}
 		}
 	}
 
