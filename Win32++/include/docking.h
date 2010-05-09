@@ -1090,6 +1090,7 @@ namespace Win32xx
 		if (m_pDock->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 			cs.dwExStyle |= WS_EX_LAYOUTRTL;
 #endif
+
 	}
 
 	inline void CDocker::CDockClient::SendNotify(UINT nMessageID)
@@ -2964,10 +2965,9 @@ namespace Win32xx
 		// dock children, and draws the splitter bars.
 		// Notes:
 		//  1) This function is used recursively.
-		//  2) The window heirachy is to complex for DeferWindowPos (they don't have a common parent).
-		//  3) An UpdateWindow follows each SetWindowPos for tidy error free drawing
+		//  2) The window heirachy is too complex for DeferWindowPos (they don't have a common parent).
 
-		// Step 1: Set this Docker's position	(unless it's a top level docker).
+		// Step 1: Set this Docker's position (unless it's a top level docker).
 		// Note: All top level dockers are undocked, including the dock ancestor.
 		if (IsDocked())
 		{
@@ -2976,13 +2976,13 @@ namespace Win32xx
 			MapWindowPoints(GetDockParent()->GetHwnd(), GetHwnd(), (LPPOINT)&rc, 2);
 		}
 
-		// Step 2: Set the position of each Docker child
+		// Step 2: Calculate the position of each Docker child
 		for (UINT u = 0; u < m_vDockChildren.size(); ++u)
 		{
 			CRect rcChild = rc;
 			double DockWidth;
 
-			// Calculate the size of the Docker child
+			// Calculate the size of the Docker children
 			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
@@ -3005,7 +3005,7 @@ namespace Win32xx
 
 			if (m_vDockChildren[u]->IsDocked())
 			{
-				// Position the Docker child recursively (as it might also have Docker children)
+				// Calculate the Docker children's positions recursively (as it might also have Docker children)
 				m_vDockChildren[u]->RecalcDockChildLayout(rcChild);
 				rc.SubtractRect(rc, rcChild);
 
@@ -3018,30 +3018,14 @@ namespace Win32xx
 				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + m_vDockChildren[u]->GetBarWidth();
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_vDockChildren[u]->GetBarWidth();
 
-				// Draw the splitter bar
-			//	m_vDockChildren[u]->GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS );
-			//	m_vDockChildren[u]->GetDockBar().UpdateWindow();
-				m_vDockChildren[u]->m_rcBar = rcBar;
+				// Save the splitter bar position
+ 				m_vDockChildren[u]->m_rcBar = rcBar;
 				rc.SubtractRect(rc, rcBar);
 			}
 		}
 
-		// Step 3: Set the client window position for this Docker
-	//	if (IsDocked())
-	//	{
-		// This docker's client window occupies the area of the Docker window
-		// that remains after the after the Docker children and splitter bars have
-		// been taken into account.
-	//	GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-	//	GetDockClient().UpdateWindow();
+		// Step 3: Save the client window position for this Docker
 		m_rcClient = rc;
-	//	}
-	/*	else
-		{
-			// The TopLevelDocker is always 'undocked'.
-			GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-			GetDockClient().UpdateWindow();
-		} */
 
 		GetDockAncestor()->m_vRecalcDockers.push_back(this);
 	}
@@ -3060,6 +3044,7 @@ namespace Win32xx
 			for (iter = vRecalcDockers.begin(); iter < vRecalcDockers.end(); ++iter)
 			{
 				(*iter)->GetDockClient().SetWindowPos(NULL, (*iter)->m_rcClient, SWP_SHOWWINDOW|SWP_NOSENDCHANGING/*|SWP_FRAMECHANGED*/);
+				(*iter)->GetDockClient().Invalidate();
 				(*iter)->GetDockClient().UpdateWindow();
 			}
 
