@@ -7,7 +7,7 @@ dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
                   |                  | and WinCE         |
 ------------------+------------------+-------------------+---------------------
 docking.h         | CDocker          | Win32, Win64      | Adds support for
-                  | CContainer       |                   | docking windows and
+                  | CDockContainer   |                   | docking windows and
                   |                  |                   | splitter windows. 
 ------------------+------------------+-------------------+---------------------                   
 frame.h           | CMenubar         | Win32, Win64      | Adds support for
@@ -62,8 +62,9 @@ treeview.h        | CTreeView        | Win32, Win64      | Adds support for a
 wceframe.h        | CWceFrame        | WinCE only        | Adds support for
                   | CCmdbar          |                   | frames in WinCE.
 ------------------+------------------+-------------------+---------------------
-webbrowser.h      | CAXWindow        | Win32, Win64      | Adds support for
-                  | CWebBrowser      | and WinCE         | web browser windows.
+webbrowser.h      | CAXWindow        | Win32, Win64      | Adds support for a
+                  | CWebBrowser      | and WinCE         | ActiveX container and
+                  |                  |                   | a WebBrowser window.
 ------------------+------------------+-------------------+---------------------
 wincore.h         | CCriticalSection | Win32, Win64,     | The core set of 
                   | CPoint           | and WinCE         | classes required for
