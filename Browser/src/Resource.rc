@@ -68,11 +68,14 @@ IDW_MAIN                ICON                    "res/Globe.ico"
 
 IDW_MAIN                BITMAP                  "res/toolbar.bmp"
 IDB_TOOLBAR24_NORM      BITMAP                  "res/Internet24_n.bmp"
-IDB_TOOLBAR32_NORM      BITMAP                  "res/Browser_n.bmp"
 IDB_TOOLBAR24_HOT       BITMAP                  "res/Internet24_h.bmp"
-IDB_TOOLBAR32_HOT       BITMAP                  "res/Browser_h.bmp"
 IDB_TOOLBAR24_DIS       BITMAP                  "res/Internet24_d.bmp"
+
+#ifndef __BORLANDC__
+IDB_TOOLBAR32_NORM      BITMAP                  "res/Browser_n.bmp"
+IDB_TOOLBAR32_HOT       BITMAP                  "res/Browser_h.bmp"
 IDB_TOOLBAR32_DIS       BITMAP                  "res/Browser_d.bmp"
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -83,7 +86,7 @@ IDW_ABOUT DIALOGEX 0, 0, 186, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
+FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
     CTEXT           "Win32++ Internet Browser",IDC_STATIC,45,23,94,11

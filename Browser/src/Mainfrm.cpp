@@ -14,7 +14,7 @@ CMainFrame::CMainFrame()
 	SetView(m_View);
 
 	// Set CMainFrame as our event sink
-	m_EventSink.SetSink(this); 
+	m_EventSink.SetSink(this);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -239,7 +239,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 
 		szString += WideToTChar(vtURL.bstrVal);
 		szString += _T("\n");
-		TRACE(szString.c_str()); 
+		TRACE(szString.c_str());
 	}
 
 	BSTR bstrUrlName;
@@ -249,7 +249,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)WideToTChar(bstrUrlName)); 
+	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)WideToTChar(bstrUrlName));
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
@@ -322,7 +322,7 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 		str << _T("Property Change:") << WideToTChar(pDispParams->rgvarg[0].bstrVal);
 
 	str << _T("\n");
-	TRACE(str.str().c_str()); 
+	TRACE(str.str().c_str());
 }
 
 void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
@@ -339,7 +339,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 		else
 			GetStatusbar().SetPartText(0, _T("Done"));
 	}
-	
+
 }
 
 void CMainFrame::OnTimer(WPARAM wParam)
@@ -361,7 +361,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	else
 		str << LoadString(IDW_MAIN);
 
-	::SetWindowText(m_hWnd, str.str().c_str()); 
+	::SetWindowText(m_hWnd, str.str().c_str());
 }
 
 void CMainFrame::SetupToolbar()
@@ -376,7 +376,7 @@ void CMainFrame::SetupToolbar()
 	AddToolbarButton( IDM_HOME );
 
 	// Set the image lists for normal, hot and disabled buttons
-	if (GetWinVersion() >= 2501)
+	if (GetWinVersion() >= 2501 && LoadBitmap(MAKEINTRESOURCE(IDB_TOOLBAR32_NORM)))
 	{
 		// Use 32bit bitmaps for XP and above (support for 32bit bitmaps began with XP)
 		SetToolbarImages(RGB(0,0,0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
@@ -401,10 +401,10 @@ void CMainFrame::SetupToolbar()
 		IconData.push_back ( IDM_EDIT_COPY );
 		IconData.push_back ( IDM_EDIT_PASTE);
 		IconData.push_back ( IDM_FILE_PRINT);
-		IconData.push_back ( IDM_HELP_ABOUT); 
+		IconData.push_back ( IDM_HELP_ABOUT);
 	}
-	
-	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0);  
+
+	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0);
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

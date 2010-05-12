@@ -3040,9 +3040,9 @@ namespace Win32xx
 		}
 
 		// Step 3: Now recurse through the docker's children. They might have children of their own.
-		for (UINT u = 0; u < m_vDockChildren.size(); ++u)
+		for (UINT v = 0; v < m_vDockChildren.size(); ++v)
 		{
-			m_vDockChildren[u]->RecalcDockChildLayout(m_vDockChildren[u]->m_rcChild);
+			m_vDockChildren[v]->RecalcDockChildLayout(m_vDockChildren[v]->m_rcChild);
 		}		
 	}
 
