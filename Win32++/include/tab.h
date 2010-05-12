@@ -140,7 +140,6 @@ namespace Win32xx
 		virtual void	NotifyChanged();
 		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
-		virtual BOOL	PreTranslateMessage(MSG* pMsg);
 		virtual void	PreRegisterClass(WNDCLASS &wc);
 		virtual void    SetTabSize();
 		virtual void	SetActiveView(CWnd& Wnd);
@@ -858,18 +857,6 @@ namespace Win32xx
 	{
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
-	}
-
-	inline BOOL CTab::PreTranslateMessage(MSG* pMsg)
-	{
-		// allow the tab control to translate keyboard input
-		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
-		{
-			if (IsDialogMessage(m_hWnd, pMsg))
-				return TRUE;
-		}
-
-		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline void CTab::PreRegisterClass(WNDCLASS &wc)
