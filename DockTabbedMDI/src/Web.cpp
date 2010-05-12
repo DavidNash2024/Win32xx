@@ -23,9 +23,9 @@ LRESULT CViewBrowser::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 CContainBrowser::CContainBrowser()
 {
 	SetView(m_ViewWeb);
-	SetDockCaption (_T("Web View - Docking container"));
-	SetTabText(_T("Web"));
-	SetTabIcon(IDI_TEXT);
+	SetDockCaption (_T("Browser View - Docking container"));
+	SetTabText(_T("Browser"));
+	SetTabIcon(IDI_BROWSER);
 }
 
 

@@ -26,7 +26,7 @@ private:
 };
 
 // Declaration of the CContainFiles class
-class CContainFiles : public CContainer
+class CContainFiles : public CDockContainer
 {
 public:
 	CContainFiles(); 

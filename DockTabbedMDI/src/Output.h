@@ -26,7 +26,7 @@ private:
 };
 
 // Declaration of the CContainText class
-class CContainOutput : public CContainer
+class CContainOutput : public CDockContainer
 {
 public:
 	CContainOutput();

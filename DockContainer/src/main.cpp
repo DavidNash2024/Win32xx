@@ -8,7 +8,7 @@
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// Start Win32++
-	CContainerApp theApp;
+	CDockContainerApp theApp;
 
 	// Run the application
 	return theApp.Run();

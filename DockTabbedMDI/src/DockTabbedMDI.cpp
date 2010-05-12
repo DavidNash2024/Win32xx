@@ -20,6 +20,9 @@ CDocker* CDockTabbedMDI::NewDockerFromID(int nID)
 	CDocker* pDock = NULL;
 	switch(nID)
 	{
+	case ID_DOCK_BROWSER1:
+		pDock = new CDockBrowser;
+		break;
 	case ID_DOCK_CLASSES1:
 		pDock = new CDockClasses;
 		break;
@@ -33,9 +36,6 @@ CDocker* CDockTabbedMDI::NewDockerFromID(int nID)
 		pDock = new CDockFiles;
 		break;
 	case ID_DOCK_OUTPUT1:
-		pDock = new CDockOutput;
-		break;
-	case ID_DOCK_OUTPUT2:
 		pDock = new CDockOutput;
 		break;
 	case ID_DOCK_TEXT1:

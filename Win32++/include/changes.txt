@@ -1,7 +1,28 @@
 Version 6.9
 ===========
 
-Changes
+New Features and Enhancements
+-----------------------------
+* Added a WebBrowser class called CWebBrowser. This class can be used as a view
+   window in frames, dockers, MDI Children, Tabbed MDIs etc.  It removes the
+   any dependance on ATL, thereby greatly simplifies the approach to adding
+   a browser window to any application.  It can be compiled by any of the
+   supported compilers including Dev-C++, MinGW and the Borland compilers as
+   well as the compilers from Microsoft.  
+* Added an ActiveX host class called CAXWindow.
+* The CTab, CMDITab, CDocker and CDockContainer classes are now flicker free,
+   providing a more professional look during resizing and docker moving.
+* Improved the dock targeting and dock hinting.   
+* Introduced a new set of text conversion fucntions to convert between Ansi, 
+   Unicode and Wide characters.
+* CWnd objects can now report their type with GetWindowType.
+* Modified the Browser sample to use the new CWebBrowser class. It also 
+   demonstrates how to use an event sink to get notification of browser events.
+* Added a Tray sample which demonstrates how to create an application 
+   which can be minimised to the system tray, and restored.
+
+Changes in detail
+-----------------
 Added CAXWindow
 Added CWebBrowser
 Added CWnd::CharToWide
@@ -31,14 +52,19 @@ Removed CWnd::IsStatusbar
 Removed CWnd::IsTab
 Removed CWnd::IsTabbedMDI
 Removed CWnd::IsToolbar
+Renamed CContainer to CDockContainer
 
 Modified Browser Sample
+Added Tray demo
 
-New Features
-------------
-* CWnd objects can now report their type with GetWindowType
-* CWebBrowser and CAXWindow 
-* Tray demo
+
+Incompatibilities with previous versions
+----------------------------------------
+* CContainer has been renamed to CDockContainer
+* The global string functions CharToTString, TCharToString and TCharToWide have
+   been replaced with CWnd::CharToWide, CWnd::WideToChar, CWnd::TCharToWide,
+   CWnd::WideToTChar, CWnd::CharToTChar and CWnd::TCharToChar.
+
 
 Version 6.8
 ===========

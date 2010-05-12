@@ -26,7 +26,7 @@ private:
 };
 
 // Declaration of the CContainClasses class
-class CContainClasses : public CContainer
+class CContainClasses : public CDockContainer
 {
 public:
 	CContainClasses();

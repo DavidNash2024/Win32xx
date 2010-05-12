@@ -6,16 +6,16 @@
 #include "ContainerApp.h"
 
 
-// Definitions for the CContainerApp class
-CContainerApp::CContainerApp()
+// Definitions for the CDockContainerApp class
+CDockContainerApp::CDockContainerApp()
 {
 }
 
-CContainerApp::~CContainerApp()
+CDockContainerApp::~CDockContainerApp()
 {
 }
 
-BOOL CContainerApp::InitInstance()
+BOOL CDockContainerApp::InitInstance()
 {
 	//Create the Frame Window
 	if (!m_Frame.Create())	

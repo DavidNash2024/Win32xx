@@ -1,7 +1,7 @@
 Tray Example
 ==============
-This project demonstrates how to use to create an application which can be
-minimised to the tray icon, and restored.
+This project demonstrates how to create an application which can be minimised
+to the system tray, and restored.
 
 
 Features demonstrated in this example

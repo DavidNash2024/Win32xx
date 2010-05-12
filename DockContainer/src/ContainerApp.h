@@ -7,12 +7,12 @@
 #include "Mainfrm.h"
 
 
-// Declaration of the CContainerApp class
-class CContainerApp : public CWinApp
+// Declaration of the CDockContainerApp class
+class CDockContainerApp : public CWinApp
 {
 public:
-	CContainerApp();
-	virtual ~CContainerApp();
+	CDockContainerApp();
+	virtual ~CDockContainerApp();
 	virtual BOOL InitInstance();
 	CMainFrame& GetMainFrame() { return m_Frame; }
 
@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CContainerApp object
-inline CContainerApp& GetContainerApp() { return *((CContainerApp*)GetApp()); }
+// returns a reference to the CDockContainerApp object
+inline CDockContainerApp& GetContainerApp() { return *((CDockContainerApp*)GetApp()); }
 
 
 #endif // CONTAINERAPP_H

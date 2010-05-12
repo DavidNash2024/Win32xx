@@ -23,7 +23,7 @@ protected:
 };
 
 // Declaration of the CContainBrowser class
-class CContainBrowser : public CContainer
+class CContainBrowser : public CDockContainer
 {
 public:
 	CContainBrowser();

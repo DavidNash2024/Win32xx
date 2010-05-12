@@ -7,7 +7,7 @@
 #include "Mainfrm.h"
 
 
-// Declaration of the CContainerApp class
+// Declaration of the CDockContainerApp class
 class CTabbedMDIApp : public CWinApp
 {
 public:

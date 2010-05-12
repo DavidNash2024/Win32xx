@@ -26,7 +26,7 @@ private:
 };
 
 // Declaration of the CContainText class
-class CContainText : public CContainer
+class CContainText : public CDockContainer
 {
 public:
 	CContainText();

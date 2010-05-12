@@ -5,7 +5,7 @@
 #include "TabbedMDIApp.h"
 
 
-// Definitions for the CContainerApp class
+// Definitions for the CDockContainerApp class
 CTabbedMDIApp::CTabbedMDIApp()
 {
 }

@@ -58,7 +58,7 @@ void CMainFrame::OnContainerTabsAtTop()
 	// Set the Tab position for each container
 	for (iter = m_DockTabbedMDI.GetAllDockers().begin(); iter < m_DockTabbedMDI.GetAllDockers().end(); ++iter)
 	{
-		CContainer* pContainer = (*iter)->GetContainer();
+		CDockContainer* pContainer = (*iter)->GetContainer();
 		if (pContainer)
 		{
 			bTop = pContainer->GetTabsAtTop();
@@ -101,7 +101,7 @@ void CMainFrame::LoadDefaultDockers()
 
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
 	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
+	pDockBottom->AddDockedChild(new CDockBrowser, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_BROWSER1);
 }
 
 void CMainFrame::LoadDefaultMDIs()
