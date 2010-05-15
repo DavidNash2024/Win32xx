@@ -6,11 +6,18 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+
+/////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       24      DISCARDABLE      "res/Win32++.manifest"
+1                       24            "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -133,10 +140,10 @@ END
 
 IDW_MAIN ACCELERATORS
 BEGIN
-    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
-    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
-    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "N",            IDM_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
@@ -144,6 +151,34 @@ BEGIN
     "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
     VK_DELETE,      IDM_EDIT_DELETE,         VIRTKEY, NOINVERT
 END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -201,4 +236,6 @@ BEGIN
     SC_SIZE                 "Resize the Window"
 END
 
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 

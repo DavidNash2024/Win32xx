@@ -4,12 +4,20 @@
 #include "windows.h"
 #include "resource.h"
 
+
 /////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+
+////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       24             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -139,7 +147,32 @@ BEGIN
 END
 
 
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
 
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -209,43 +242,17 @@ END
 
 STRINGTABLE 
 BEGIN
-    61536                   "Close the Window"
+    SC_CLOSE                "Close the Window"
+    SC_MAXIMIZE             "Maximize the Window"
+    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MOVE                 "Move the Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
+    SC_RESTORE              "Restore the Window"
+    SC_SIZE                 "Resize the Window"
 END
 
-STRINGTABLE 
-BEGIN
-    61488                   "Maximize the Window"
-END
-
-STRINGTABLE 
-BEGIN
-    61472                   "Minimize the WIndow"
-END
-
-STRINGTABLE 
-BEGIN
-    61456                   "Move the Window"
-END
-
-STRINGTABLE 
-BEGIN
-    61504                   "Select Next Window"
-END
-
-STRINGTABLE 
-BEGIN
-    61520                   "Select Previous Window"
-END
-
-STRINGTABLE 
-BEGIN
-    61728                   "Restore the Window"
-END
-
-STRINGTABLE 
-BEGIN
-    61440                   "Resize the Window"
-END
-
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 
 

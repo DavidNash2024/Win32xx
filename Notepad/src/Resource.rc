@@ -1,16 +1,23 @@
 // Microsoft Visual C++ generated resource script.
 //
 
-
 #include "resource.h"
 #include "windows.h"
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                       24      DISCARDABLE      "res/Win32++.manifest"
+1                       24            "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -107,6 +114,34 @@ BEGIN
 END
 
 
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
@@ -165,6 +200,8 @@ BEGIN
     IDW_FILE_MRU_FILE5       "Open this document"
 END
 
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 
 
 
