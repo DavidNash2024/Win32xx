@@ -12,8 +12,8 @@ caption of the docked window is dragged and dropped.
 
 Every Docker has a view window.  These views can be any child window, and are 
 set in the same way as views for Frames and MDI children.  Containers 
-(provided by the CContainer class) are a specialized view which add additional
-docking features when used as the view window for a Docker.
+(provided by the CDockContainer class) are a specialized view which add 
+additional docking features when used as the view window for a Docker.
 
 Classes titled CDockXXXX are inherited from CDocker. Classes titled CViewXXXX
 are the various view windows inherited from CWnd.
