@@ -20,6 +20,8 @@ New Features and Enhancements
    demonstrates how to use an event sink to get notification of browser events.
 * Added a Tray sample which demonstrates how to create an application 
    which can be minimised to the system tray, and restored.
+* The visual editor that ships with VS2008 and VS2010 can now be used to
+   modify the resouce files (Resource.rc and resource.h) without mangling them.   
 
 Changes in detail
 -----------------

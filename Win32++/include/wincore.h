@@ -432,7 +432,7 @@ namespace Win32xx
 		BOOL BringWindowToTop() const;
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
-		LPCTSTR GetClassName();
+		LPCTSTR GetClassName() const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
@@ -445,7 +445,7 @@ namespace Win32xx
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
 		int  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
-		LPCTSTR GetDlgItemText(int nIDDlgItem);
+		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
 		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
@@ -453,7 +453,7 @@ namespace Win32xx
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
-		LPCTSTR GetWindowText();
+		LPCTSTR GetWindowText() const;
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
@@ -551,9 +551,9 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		CHAR*  m_pChar;             // Used in string conversions
-		TCHAR* m_pTChar;            // Used in string functions
-		WCHAR* m_pWChar;			// Used in string conversions
+		mutable CHAR*  m_pChar;     // Used in string conversions
+		mutable TCHAR* m_pTChar;    // Used in string functions
+		mutable WCHAR* m_pWChar;	// Used in string conversions
 
 	}; // class CWnd
 
@@ -1437,7 +1437,7 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	inline LPCTSTR CWnd::GetClassName()
+	inline LPCTSTR CWnd::GetClassName() const
 	{
 		delete[] m_pTChar;
 		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
@@ -1448,11 +1448,11 @@ namespace Win32xx
 		return m_pTChar;
 	}
 
-	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem)
-	{	
+	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem) const
+	{
 		delete[] m_pTChar;
 		m_pTChar = NULL;
-		
+
 		int nLength = ::GetWindowTextLength(GetDlgItem(nIDDlgItem));
 		if (nLength > 0)
 		{
@@ -1466,12 +1466,12 @@ namespace Win32xx
 		else
 			return _T("");
 	}
-	
-	inline LPCTSTR CWnd::GetWindowText()
+
+	inline LPCTSTR CWnd::GetWindowText() const
 	{
 		delete[] m_pTChar;
 		m_pTChar = NULL;
-		
+
 		int nLength = ::GetWindowTextLength(m_hWnd);
 		if (nLength > 0)
 		{
@@ -1512,13 +1512,13 @@ namespace Win32xx
 
 		if (0 == GetApp())
 			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
-		
+
 		delete[] m_pTChar;
 		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
-		if (0 == m_pTChar) 
+		if (0 == m_pTChar)
 			throw std::bad_alloc();
 		memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
-		
+
 		if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_pTChar, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
@@ -1942,7 +1942,7 @@ namespace Win32xx
 		m_pWChar = new WCHAR[length];
 		if (NULL == m_pWChar)
 			throw std::bad_alloc();
-		
+
 		memset(m_pWChar, 0, length * sizeof(WCHAR));
 		MultiByteToWideChar(CP_ACP, 0, pChar, -1, m_pWChar, length);
 		return m_pWChar;
