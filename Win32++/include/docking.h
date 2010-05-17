@@ -3425,7 +3425,7 @@ namespace Win32xx
 		CRect rc = GetDockClient().GetWindowRect();
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-		pDock->Undock(pt);
+		pDock->Undock(pt, FALSE);
 		pDockUndockedFrom->RecalcDockLayout();
 	}
 

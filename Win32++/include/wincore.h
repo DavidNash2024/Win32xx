@@ -528,12 +528,12 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// String conversion functions
-		virtual LPCWSTR CharToWide(LPCSTR pChar);
-		virtual LPCSTR  WideToChar(LPCWSTR pWChar);
-		virtual LPCTSTR CharToTChar(LPCSTR pChar);
-		virtual LPCSTR  TCharToChar(LPCTSTR pTChar);
-		virtual LPCWSTR TCharToWide(LPCTSTR pTChar);
-		virtual LPCTSTR WideToTChar(LPWSTR pWChar);
+		virtual LPCWSTR CharToWide(LPCSTR pChar) const;
+		virtual LPCSTR  WideToChar(LPCWSTR pWChar) const;
+		virtual LPCTSTR CharToTChar(LPCSTR pChar) const;
+		virtual LPCSTR  TCharToChar(LPCTSTR pTChar) const;
+		virtual LPCWSTR TCharToWide(LPCTSTR pTChar) const;
+		virtual LPCTSTR WideToTChar(LPWSTR pWChar) const;
 
 		HWND m_hWnd;				// handle to this object's window
 
@@ -1935,7 +1935,7 @@ namespace Win32xx
 		m_hWnd = hWnd;
 	}
 
-	inline LPCWSTR CWnd::CharToWide(LPCSTR pChar)
+	inline LPCWSTR CWnd::CharToWide(LPCSTR pChar) const
 	{
 		delete[] m_pWChar;
 		int length = strlen(pChar)+1;
@@ -1948,7 +1948,7 @@ namespace Win32xx
 		return m_pWChar;
 	}
 
-	inline LPCSTR CWnd::WideToChar(LPCWSTR pWChar)
+	inline LPCSTR CWnd::WideToChar(LPCWSTR pWChar) const
 	{
 		delete[] m_pChar;
 		int length = wcslen(pWChar)+1;
@@ -1961,7 +1961,7 @@ namespace Win32xx
 		return m_pChar;
 	}
 
-	inline LPCTSTR CWnd::CharToTChar(LPCSTR pChar)
+	inline LPCTSTR CWnd::CharToTChar(LPCSTR pChar) const
 	{
 
 #ifdef UNICODE
@@ -1972,7 +1972,7 @@ namespace Win32xx
 
 	}
 
-	inline LPCSTR CWnd::TCharToChar(LPCTSTR pTChar)
+	inline LPCSTR CWnd::TCharToChar(LPCTSTR pTChar) const
 	{
 
 #ifdef UNICODE
@@ -1983,7 +1983,7 @@ namespace Win32xx
 
 	}
 
-	inline LPCWSTR CWnd::TCharToWide(LPCTSTR pTChar)
+	inline LPCWSTR CWnd::TCharToWide(LPCTSTR pTChar) const
 	{
 
   #ifdef UNICODE
@@ -1994,7 +1994,7 @@ namespace Win32xx
 
 	}
 
-	inline LPCTSTR CWnd::WideToTChar(LPWSTR pWChar)
+	inline LPCTSTR CWnd::WideToTChar(LPWSTR pWChar) const
 	{
 
   #ifdef UNICODE
