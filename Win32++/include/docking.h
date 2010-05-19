@@ -3331,6 +3331,7 @@ namespace Win32xx
 
 		GetDockTopLevel()->m_hOldFocus = 0;
 		CDocker* pDockUndockedFrom = GetDockFromView(pContainer->GetContainerParent());
+		pDockUndockedFrom->ShowWindow(SW_HIDE);
 		if (GetView() == pContainer)
 		{
 			// The parent container is being undocked, so we need
