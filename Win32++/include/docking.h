@@ -416,7 +416,7 @@ namespace Win32xx
 		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual BOOL VerifyDockers();
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
-		virtual void UndockContainer(CDockContainer* pContainer, CPoint pt);
+		virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked);
 
 		// Attributes
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
@@ -959,7 +959,7 @@ namespace Win32xx
 					CDockContainer* pContainer = ((CDockContainer*)m_pDock->GetView())->GetActiveContainer();
 					CDocker* pDock = m_pDock->GetDockFromView(pContainer);
 					pDock->GetDockClient().SetClosePressed();
-					m_pDock->UndockContainer(pContainer, GetCursorPos());
+					m_pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
 					pDock->Destroy();
 				}
 				else
@@ -3321,7 +3321,7 @@ namespace Win32xx
 			pDockUndockedFrom->RecalcDockLayout();
 	}
 
-	inline void CDocker::UndockContainer(CDockContainer* pContainer, CPoint pt)
+	inline void CDocker::UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked)
 	{
 		// Return if we shouldn't undock
 		if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
@@ -3425,7 +3425,7 @@ namespace Win32xx
 		CRect rc = GetDockClient().GetWindowRect();
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-		pDock->Undock(pt, FALSE);
+		pDock->Undock(pt, bShowUndocked);
 		pDockUndockedFrom->RecalcDockLayout();
 	}
 
@@ -3681,7 +3681,7 @@ namespace Win32xx
 			if (pDock && (pDock->GetWindowType() == _T("CDocker")))
 			{
 				CDockContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
-				pDock->UndockContainer(pContainer, GetCursorPos());
+				pDock->UndockContainer(pContainer, GetCursorPos(), TRUE);
 			}
 		}
 
