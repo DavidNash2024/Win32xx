@@ -190,6 +190,14 @@
 		<Unit filename="..\src\main.cpp" />
 		<Unit filename="..\src\resource.h" />
 		<Unit filename="..\src\stdafx.h" />
+		<Unit filename="..\..\Win32++\include\dialog.h" />
+		<Unit filename="..\..\Win32++\include\frame.h" />
+		<Unit filename="..\..\Win32++\include\gdi.h" />
+		<Unit filename="..\..\Win32++\include\rebar.h" />
+		<Unit filename="..\..\Win32++\include\statusbar.h" />
+		<Unit filename="..\..\Win32++\include\toolbar.h" />
+		<Unit filename="..\..\Win32++\include\webbrowser.h" />
+		<Unit filename="..\..\Win32++\include\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

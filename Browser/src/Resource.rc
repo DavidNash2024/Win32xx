@@ -78,7 +78,7 @@ IDB_TOOLBAR24_NORM      BITMAP                  "res/Internet24_n.bmp"
 IDB_TOOLBAR24_HOT       BITMAP                  "res/Internet24_h.bmp"
 IDB_TOOLBAR24_DIS       BITMAP                  "res/Internet24_d.bmp"
 
-#ifndef __BORLANDC__
+#if !defined(__BORLANDC__) || (__BORLANDC__>0x550)
 IDB_TOOLBAR32_NORM      BITMAP                  "res/Browser_n.bmp"
 IDB_TOOLBAR32_HOT       BITMAP                  "res/Browser_h.bmp"
 IDB_TOOLBAR32_DIS       BITMAP                  "res/Browser_d.bmp"
@@ -127,12 +127,12 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
@@ -140,7 +140,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
