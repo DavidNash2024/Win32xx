@@ -1271,7 +1271,6 @@ namespace Win32xx
 		if (uDockSide != m_uDockSideOld)
 		{
 			Destroy();
-	//		pDockTarget->RedrawWindow();
 			pDockTarget->RedrawWindow( NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
 			pDockDrag->RedrawWindow( 0, 0, RDW_FRAME|RDW_INVALIDATE );
 		}
@@ -3427,6 +3426,7 @@ namespace Win32xx
 		MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		pDock->Undock(pt, bShowUndocked);
+		pDockUndockedFrom->ShowWindow();
 		pDockUndockedFrom->RecalcDockLayout();
 	}
 
