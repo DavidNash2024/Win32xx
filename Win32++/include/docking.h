@@ -3502,7 +3502,6 @@ namespace Win32xx
 				tie.mask = TCIF_TEXT | TCIF_IMAGE;
 				tie.iImage = ci.iImage;
 				tie.pszText = m_vContainerInfo[iNewPage].szTitle;
-			//	InsertItem(iNewPage, &tie);
 				TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
 
 				SetTabSize();
@@ -3628,7 +3627,7 @@ namespace Win32xx
 		// Create the toolbar
 		GetToolbar().Create(GetViewPage().GetHwnd());
 		DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
-		style |= CCS_NODIVIDER ;//| CCS_NORESIZE;
+		style |= CCS_NODIVIDER ;
 		GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
 		SetupToolbar();
 		if (GetToolbar().GetToolbarData().size() > 0)
