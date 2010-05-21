@@ -3721,7 +3721,7 @@ namespace Win32xx
 
 	inline void CDockContainer::RecalcLayout()
 	{
-		if ((int)m_vContainerInfo.size() > m_iCurrentPage)
+		if (GetContainerParent() == this)
 		{
 			// Set the tab sizes
 			SetTabSize();

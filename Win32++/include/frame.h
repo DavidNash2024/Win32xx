@@ -3122,44 +3122,46 @@ namespace Win32xx
 		// Set MRU menu items
 		MENUITEMINFO mii = {0};
 
-		// Get the handle to the Menu entry titled "File"
-		int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("File"));
+		int nFileItem = 0;  // We place the MRU items under the left most menu item
 		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
 
-		// Remove all but the first MRU Menu entry
-		for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
+		if (hFileMenu)
 		{
-			DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
-		}
-
-		// For Win95 and NT, cbSize needs to be 44
-		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
-			mii.cbSize = 44;
-		else
-			mii.cbSize = sizeof(MENUITEMINFO);
-
-		int MaxMRUIndex = (int)MIN(MaxMRUArrayIndex, m_nMaxMRU);
-
-		for (int index = MaxMRUIndex; index >= 0; --index)
-		{
-			mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
-			mii.fState = (0 == m_vMRUEntries.size())? MFS_GRAYED : 0;
-			mii.fType = MFT_STRING;
-			mii.wID = IDW_FILE_MRU_FILE1 + index;
-			mii.dwTypeData = (LPTSTR)tsMRUArray[index].c_str();
-
-			BOOL bResult;
-			if (index == MaxMRUIndex)
-				// Replace the last MRU entry first
-				bResult = SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
-			else
-				// Insert the other MRU entries next
-				bResult = InsertMenuItem(hFileMenu, IDW_FILE_MRU_FILE1 + index + 1, FALSE, &mii);
-
-			if (!bResult)
+			// Remove all but the first MRU Menu entry
+			for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
 			{
-				TRACE(_T("Failed to set MRU menu item\n"));
-				break;
+				DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
+			}
+
+			// For Win95 and NT, cbSize needs to be 44
+			if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
+				mii.cbSize = 44;
+			else
+				mii.cbSize = sizeof(MENUITEMINFO);
+
+			int MaxMRUIndex = (int)MIN(MaxMRUArrayIndex, m_nMaxMRU);
+
+			for (int index = MaxMRUIndex; index >= 0; --index)
+			{
+				mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
+				mii.fState = (0 == m_vMRUEntries.size())? MFS_GRAYED : 0;
+				mii.fType = MFT_STRING;
+				mii.wID = IDW_FILE_MRU_FILE1 + index;
+				mii.dwTypeData = (LPTSTR)tsMRUArray[index].c_str();
+
+				BOOL bResult;
+				if (index == MaxMRUIndex)
+					// Replace the last MRU entry first
+					bResult = SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
+				else
+					// Insert the other MRU entries next
+					bResult = InsertMenuItem(hFileMenu, IDW_FILE_MRU_FILE1 + index + 1, FALSE, &mii);
+
+				if (!bResult)
+				{
+					TRACE(_T("Failed to set MRU menu item\n"));
+					break;
+				}
 			}
 		}
 

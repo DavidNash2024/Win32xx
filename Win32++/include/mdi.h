@@ -421,20 +421,24 @@ namespace Win32xx
 
 	inline void CMDIFrame::UpdateFrameMenu(HMENU hMenu)
 	{
-		int nWindowItem = GetMenuItemPos(hMenu, _T("Window"));
-		HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
-
-		if (IsMenubarUsed())
+		int nMenuItems = GetMenuItemCount(hMenu);
+		if (nMenuItems > 0)
 		{
-			AppendMDIMenu(hMenuWindow);
-			GetMenubar().SetMenu(hMenu);
-		}
-		else
-		{
-			::SendMessage (GetView()->GetHwnd(), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
-			::DrawMenuBar(GetHwnd());
-		}
+			// The Window menu is typically second from the right
+			int nWindowItem = MAX (nMenuItems -2, 0);
+			HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
 
+			if (IsMenubarUsed())
+			{
+				AppendMDIMenu(hMenuWindow);
+				GetMenubar().SetMenu(hMenu);
+			}
+			else
+			{
+				::SendMessage (GetView()->GetHwnd(), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
+				::DrawMenuBar(GetHwnd());
+			}
+		}
 		UpdateCheckMarks();
 	}
 

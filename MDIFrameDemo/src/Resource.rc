@@ -137,18 +137,18 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-    POPUP "&Window"
+    POPUP "&View"
+	BEGIN
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+	END
+	POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
         MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
         MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
     END
-    POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
 	POPUP "&Help"
 	BEGIN
 	    MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -169,18 +169,18 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-    POPUP "&Window"
+    POPUP "&View"
+	BEGIN
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+	END
+	POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
         MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
         MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
     END
-    POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
 	POPUP "&Help"
 	BEGIN
 	    MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -201,18 +201,18 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-    POPUP "&Window"
+    POPUP "&View"
+	BEGIN
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+	END
+	POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
         MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
         MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
     END
-    POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
 	POPUP "&Help"
 	BEGIN
 	    MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -233,18 +233,18 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-    POPUP "&Window"
+    POPUP "&View"
+	BEGIN
+	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+	END
+	POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
         MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
         MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
     END
-    POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
 	POPUP "&Help"
 	BEGIN
 	    MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -265,17 +265,17 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
     POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
         MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
         MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
-    END
-    POPUP "&View"
-    BEGIN
-        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
     POPUP "&Help"
     BEGIN

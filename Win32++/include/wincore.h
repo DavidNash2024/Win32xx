@@ -728,6 +728,7 @@ namespace Win32xx
 		// 582  dll ver 5.82	Windows XP or Vista without XP themes
 		// 600  dll ver 6.00	Windows XP with XP themes
 		// 610  dll ver 6.10	Windows Vista with XP themes
+		// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
 
 		return ComCtlVer;
 	}
