@@ -1794,12 +1794,7 @@ namespace Win32xx
 	{
 		int nMenuItemCount = GetMenuItemCount(hMenu);
 		MENUITEMINFO mii = {0};
-
-		// For Win95 and NT, cbSize needs to be 44
-		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
-			mii.cbSize = 44;
-		else
-			mii.cbSize = sizeof(MENUITEMINFO);
+		mii.cbSize = GetSizeofMenuItemInfo();
 
 		for (int nItem = 0 ; nItem < nMenuItemCount; ++nItem)
 		{
@@ -2163,12 +2158,7 @@ namespace Win32xx
 		{
 			// Undo OwnerDraw and put the text back
 			MENUITEMINFO mii = {0};
-
-			// For Win95 and NT, cbSize needs to be 44
-			if ((1400 == GetWinVersion()) || (2400 == GetWinVersion()))
-				mii.cbSize = 44;
-			else
-				mii.cbSize = sizeof(MENUITEMINFO);
+			mii.cbSize = GetSizeofMenuItemInfo();
 
 			mii.fMask = MIIM_TYPE | MIIM_DATA;
 			mii.fType = m_vMenuItemData[nItem]->fType;
@@ -2264,12 +2254,7 @@ namespace Win32xx
 		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; ++i)
 		{
 			MENUITEMINFO mii = {0};
-
-			// For Win95 and NT, cbSize needs to be 44
-			if ((1400 == GetWinVersion()) || (2400 == GetWinVersion()))
-				mii.cbSize = 44;
-			else
-				mii.cbSize = sizeof(MENUITEMINFO);
+			mii.cbSize = GetSizeofMenuItemInfo();
 
 			TCHAR szMenuItem[MAX_MENU_STRING] = _T("");
 
@@ -3121,6 +3106,7 @@ namespace Win32xx
 
 		// Set MRU menu items
 		MENUITEMINFO mii = {0};
+		mii.cbSize = GetSizeofMenuItemInfo();
 
 		int nFileItem = 0;  // We place the MRU items under the left most menu item
 		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
@@ -3132,12 +3118,6 @@ namespace Win32xx
 			{
 				DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
 			}
-
-			// For Win95 and NT, cbSize needs to be 44
-			if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
-				mii.cbSize = 44;
-			else
-				mii.cbSize = sizeof(MENUITEMINFO);
 
 			int MaxMRUIndex = (int)MIN(MaxMRUArrayIndex, m_nMaxMRU);
 

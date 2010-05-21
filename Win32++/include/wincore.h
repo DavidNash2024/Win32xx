@@ -214,6 +214,7 @@ namespace Win32xx
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
 	int  GetWinVersion();
 	int  GetComCtlVersion();
+	UINT GetSizeofMenuItemInfo();
 	UINT GetSizeofNonClientMetrics();
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
@@ -731,6 +732,16 @@ namespace Win32xx
 		// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
 
 		return ComCtlVer;
+	}
+
+	inline UINT GetSizeofMenuItemInfo()
+	{
+		UINT uSize = sizeof(MENUITEMINFO);
+		// For Win95 and NT, cbSize needs to be 44
+		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
+			uSize = 44;
+		
+		return uSize;
 	}
 
 	inline UINT GetSizeofNonClientMetrics()

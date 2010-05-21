@@ -41,14 +41,8 @@ void CMainFrame::DoPopupMenu()
 	MENUITEMINFO mii = {0};
 	for (int i = 3 ; i < 7 ; i++)
 	{
-		ZeroMemory(&mii, sizeof(MENUITEMINFO));
-
-		// Fix for an undocumented bug in the Windows API
-		// For Win95 and NT, cbSize needs to be 44
-		if ((1400 == GetWinVersion()) || (2400 == GetWinVersion()))
-			mii.cbSize = 44;
-		else
-			mii.cbSize = sizeof(MENUITEMINFO);
+		ZeroMemory(&mii, GetSizeofMenuItemInfo());
+		mii.cbSize = GetSizeofMenuItemInfo();
 
 		mii.fMask  = MIIM_STATE | MIIM_ID;
 		GetMenuItemInfo(GetSubMenu(GetFrameMenu(), 1), i, TRUE,  &mii );

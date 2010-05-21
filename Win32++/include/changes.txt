@@ -37,6 +37,7 @@ Added CWnd::GetClassName
 Added CWnd::GetDlgItemText
 Added CWnd::GetWindowText
 Added CWnd::GetWindowType
+Added GetSizeofMenuItemInfo
 Removed CharToTString
 Removed TCharToString
 Removed TCharToWide
