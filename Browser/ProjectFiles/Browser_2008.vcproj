@@ -273,7 +273,23 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\Win32++\include\dialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\frame.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\gdi.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\statusbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\toolbar.h"
 				>
 			</File>
 			<File

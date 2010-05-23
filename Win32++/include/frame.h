@@ -216,7 +216,7 @@ namespace Win32xx
 		std::vector<tString>& GetMRUEntries() { return m_vMRUEntries; }
 		tString GetRegistryKeyName()		{ return m_tsKeyName; }
 		CWnd* GetView() const				{ return m_pView; }
-		tString GetMRUEntry(size_t nIndex);
+		tString GetMRUEntry(UINT nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetMenuTheme(MenuTheme& Theme);
 		void SetView(CWnd& wndView);
@@ -228,7 +228,7 @@ namespace Win32xx
 	protected:
 		// Override these functions as required
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
-		virtual size_t AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void AddMenubarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle, UINT nID);
@@ -264,7 +264,7 @@ namespace Win32xx
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void SaveRegistrySettings();
 		virtual void SetMenubarBandSize();
-		virtual size_t SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
+		virtual UINT SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetupToolbar();
 		virtual void SetTheme();	
 		virtual void SetToolbarImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
@@ -319,7 +319,7 @@ namespace Win32xx
 		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
 		tString m_tsStatusText;				// TCHAR std::string for status text
-		size_t m_nMaxMRU;					// maximum number of MRU entries
+		UINT m_nMaxMRU;					// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
 		int m_nOldID;
@@ -1429,14 +1429,14 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline size_t CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
+	inline UINT CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
 	// Adds the icons from a bitmap resouce to an internal ImageList for use with popup menu items.
 	// Note:  If existing are a different size to the new ones, the old ones will be removed!
 	//        The ToolbarDisabledID is ignored unless ToolbarID and ToolbarDisabledID bitmaps are the same size.
 	{
 		// Count the MenuData entries excluding seperators
 		int iImages = 0;
-		for (size_t i = 0 ; i < MenuData.size(); ++i)
+		for (UINT i = 0 ; i < MenuData.size(); ++i)
 		{
 			if (MenuData[i] != 0)	// Don't count seperators
 			{
@@ -1467,7 +1467,7 @@ namespace Win32xx
 			int Oldcy;
 
 			ImageList_GetIconSize(m_himlMenu, &Oldcx, &Oldcy);
-			if ((iImageWidth != Oldcx) || (iImageHeight != Oldcy))
+			if (iImageHeight != Oldcy)
 			{
 				TRACE(_T("Unable to add icons. The new icons are a different size to the old ones\n"));
 				return m_vMenuIcons.size();
@@ -1475,7 +1475,7 @@ namespace Win32xx
 		}
 
 		// Add the resource IDs to the m_vMenuIcons vector
-		for (size_t j = 0 ; j < MenuData.size(); ++j)
+		for (UINT j = 0 ; j < MenuData.size(); ++j)
 		{
 			if (MenuData[j] != 0)
 			{
@@ -1827,7 +1827,7 @@ namespace Win32xx
 		return -1;
 	}
 
-	inline tString CFrame::GetMRUEntry(size_t nIndex)
+	inline tString CFrame::GetMRUEntry(UINT nIndex)
 	{
 		tString tsPathName;
 		if (nIndex < m_vMRUEntries.size())
@@ -1927,7 +1927,7 @@ namespace Win32xx
 
 			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
 			{
-				for (size_t i = 0; i < m_nMaxMRU; ++i)
+				for (UINT i = 0; i < m_nMaxMRU; ++i)
 				{
 					DWORD dwType = REG_SZ;
 					DWORD dwBufferSize = 0;
@@ -2724,7 +2724,7 @@ namespace Win32xx
 				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-				for (size_t i = 0; i < m_nMaxMRU; ++i)
+				for (UINT i = 0; i < m_nMaxMRU; ++i)
 				{
 					TCHAR szSubKey[10];
 					wsprintf(szSubKey, _T("File %d\0"), i+1);
@@ -2752,7 +2752,7 @@ namespace Win32xx
 			TRACE(_T("Load Menu failed\n"));
  	}
 
-	inline size_t CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
+	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)
 	{
 		// Remove any existing menu icons
 		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
@@ -3079,10 +3079,10 @@ namespace Win32xx
 
 		// Set the text for the MRU Menu
 		tString tsMRUArray[16];
-		size_t MaxMRUArrayIndex = 0;
+		UINT MaxMRUArrayIndex = 0;
 		if (m_vMRUEntries.size() > 0)
 		{
-			for (size_t n = 0; ((n < m_vMRUEntries.size()) && (n <= m_nMaxMRU)); ++n)
+			for (UINT n = 0; ((n < m_vMRUEntries.size()) && (n <= m_nMaxMRU)); ++n)
 			{
 				tsMRUArray[n] = m_vMRUEntries[n];
 				if (tsMRUArray[n].length() > MAX_MENU_STRING - 10)

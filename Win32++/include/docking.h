@@ -139,7 +139,7 @@ namespace Win32xx
 		virtual ~CDockContainer();
 		virtual void AddContainer(CDockContainer* pContainer);
 		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
-		virtual CDockContainer* GetContainerFromIndex(size_t iPage);
+		virtual CDockContainer* GetContainerFromIndex(UINT iPage);
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CDockContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
@@ -2465,7 +2465,7 @@ namespace Win32xx
 			}
 
 			// Remove dockers without parents from vDockList
-			for (size_t n = vDockList.size(); n > 0; --n)
+			for (UINT n = vDockList.size(); n > 0; --n)
 			{
 				iter = vDockList.begin() + n-1;
 				if ((*iter).DockParentID == 0)
@@ -3090,7 +3090,7 @@ namespace Win32xx
 				throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 			// Add the Dock windows information to the registry
-			for (size_t u = 0; u < vDockList.size(); ++u)
+			for (UINT u = 0; u < vDockList.size(); ++u)
 			{
 				DockInfo di = vDockList[u];
 				TCHAR szNumber[16];
@@ -3524,7 +3524,7 @@ namespace Win32xx
 		GetToolbar().AddToolbarButton(nID, bEnabled);
 	}
 
-	inline CDockContainer* CDockContainer::GetContainerFromIndex(size_t iPage)
+	inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT iPage)
 	{
 		if (iPage < m_vContainerInfo.size())
 			return (CDockContainer*)m_vContainerInfo[iPage].pContainer;

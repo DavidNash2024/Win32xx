@@ -702,7 +702,7 @@ namespace Win32xx
 	// Assigns a resource ID to each toolbar button
 	{
 		int iImages = 0;
-		size_t iNumButtons = vToolbarData.size();
+		UINT iNumButtons = vToolbarData.size();
 
 		// Remove any existing buttons
 		while (SendMessage(TB_BUTTONCOUNT,  0L, 0L) > 0)
@@ -716,7 +716,7 @@ namespace Win32xx
 			// TBBUTTON structure for each button in the toolbar
 			TBBUTTON tbb = {0};
 
-			for (size_t j = 0 ; j < iNumButtons; ++j)
+			for (UINT j = 0 ; j < iNumButtons; ++j)
 			{
 				ZeroMemory(&tbb, sizeof(TBBUTTON));
 
