@@ -83,7 +83,7 @@ devenv /build Release Themes\ProjectFiles\Themes_2008.sln 			>>"Win32++\output\V
 devenv /build Debug Threads\ProjectFiles\Threads_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Release Threads\ProjectFiles\Threads_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Debug Tray\ProjectFiles\Tray_2008.sln 			>>"Win32++\output\VS2008.log"
-devenv /build Release Trat\ProjectFiles\Tray_2008.sln 			>>"Win32++\output\VS2008.log"
+devenv /build Release Tray\ProjectFiles\Tray_2008.sln 			>>"Win32++\output\VS2008.log"
 
 mkdir "Win32++\output\VS2008"
 mkdir "Win32++\output\VS2008\Debug"
