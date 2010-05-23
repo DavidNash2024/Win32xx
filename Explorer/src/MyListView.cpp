@@ -48,6 +48,7 @@ CMyListView::CMyListView()
 CMyListView::~CMyListView()
 {
 	DeleteItems();
+	m_csfCurFolder.Delete();
 
 	::CoUninitialize(); // Shut down COM
 }

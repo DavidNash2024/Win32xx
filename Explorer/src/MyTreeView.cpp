@@ -40,7 +40,7 @@ CMyTreeView::~CMyTreeView()
 	{
 		//free up the TreeItemData objects
 		delete (*Iter);
-	}
+	}	
 
 	::CoUninitialize(); // Shut down COM
 }

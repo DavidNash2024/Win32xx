@@ -117,7 +117,7 @@ namespace ShellWrapper
 		CShellFolder(const CShellFolder& csfSource);
 		void operator=(const CShellFolder& csfSource);
 		virtual ~CShellFolder();
-
+		virtual void Delete();
 		virtual HRESULT BindToObject(const Cpidl& pidl, LPBC pbc, REFIID riid, CShellFolder& NewFolder);
 		virtual HRESULT CompareIDs(LPARAM lParam, const Cpidl& cpidl1, const Cpidl& cpidl2);
 		virtual void Copy(const CShellFolder& Source);
@@ -132,7 +132,7 @@ namespace ShellWrapper
 	private:
 		HRESULT AddRef() {return m_IShellFolder->AddRef();}
 		void Attach(LPSHELLFOLDER ShellFolder);
-		void Delete();
+
 		LPSHELLFOLDER m_IShellFolder;
 	}; //class CShellFolder
 
