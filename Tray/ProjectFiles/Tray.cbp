@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Simple" />
+		<Option title="Tray" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
 		<Option compiler="msvctk" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="Borland\Debug\Simple.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Debug\Tray.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Debug" />
 				<Option object_output="Borland\Debug" />
 				<Option type="0" />
@@ -30,7 +30,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\Simple.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Release\Tray.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Release" />
 				<Option object_output="Borland\Release" />
 				<Option type="0" />
@@ -52,7 +52,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\Simple.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft\Debug\Tray.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft\Debug" />
 				<Option object_output="Microsoft\Debug" />
 				<Option type="0" />
@@ -85,7 +85,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\Simple.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft\Release\Tray.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft\Release" />
 				<Option object_output="Microsoft\Release" />
 				<Option type="0" />
@@ -115,7 +115,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\Simple.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU\Debug\Tray.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU\Debug" />
 				<Option object_output="GNU\Debug" />
 				<Option type="0" />
@@ -138,7 +138,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\Simple.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU\Release\Tray.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU\Release" />
 				<Option object_output="GNU\Release" />
 				<Option type="0" />

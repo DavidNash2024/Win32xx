@@ -1,13 +1,13 @@
 [Project]
-FileName=MDIFrame_Release.dev
-Name=MDIFrame
-UnitCount=9
+FileName=MDIFrameSplitter_Release.dev
+Name=MDIFrameSplitter
+UnitCount=15
 Type=0
 Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=MDIFrame_private.rc
+PrivateResource=MDIFrameSplitter_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Release
 ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
-OverrideOutputName=MDIFrame.exe
+OverrideOutputName=MDIFrameSplitter.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -80,7 +80,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=MDIFrameApp.h
+FileName=MDIFrameSplitterApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -90,7 +90,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=MDIFrameApp.cpp
+FileName=MDIFrameSplitterApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -120,9 +120,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\..\Win32++\default_resource.h
+FileName=Files.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -130,8 +130,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\..\Win32++\dialog.h
-Folder=Win32++
+FileName=Files.h
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -140,9 +140,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit12]
-FileName=..\..\Win32++\frame.h
+FileName=Output.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -150,9 +150,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\..\Win32++\gdi.h
+FileName=Output.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -160,9 +160,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\..\Win32++\mdi.h
+FileName=StdAfx.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -170,9 +170,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\..\Win32++\rebar.h
+FileName=stdafx.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -210,7 +210,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=MDIFrameApp.h
+FileName=MDIFrameSplitterApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -220,7 +220,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit23]
-FileName=MDIFrameApp.cpp
+FileName=MDIFrameSplitterApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

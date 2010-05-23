@@ -4,7 +4,7 @@
 	Version="8.00"
 	Name="Tray"
 	ProjectGUID="{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}"
-	RootNamespace="Simple"
+	RootNamespace="Tray"
 	Keyword="Win32Proj"
 	>
 	<Platforms>

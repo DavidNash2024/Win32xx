@@ -52,6 +52,8 @@ devenv /build Debug MDIFrame\ProjectFiles\MDIFrame_2008.sln 			>>"Win32++\output
 devenv /build Release MDIFrame\ProjectFiles\MDIFrame_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Debug MDIFrameDemo\ProjectFiles\MDIDemo_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Release MDIFrameDemo\ProjectFiles\MDIDemo_2008.sln 		>>"Win32++\output\VS2008.log"
+devenv /build Debug MDIFrameSplitter\ProjectFiles\MDIFrame_2008.sln 	>>"Win32++\output\VS2008.log"
+devenv /build Release MDIFrameSplitter\ProjectFiles\MDIFrame_2008.sln 	>>"Win32++\output\VS2008.log"
 devenv /build Debug Networking\ClientDlg\Client_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Release Networking\ClientDlg\Client_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Debug Networking\ServerDlg\Server_2008.sln 			>>"Win32++\output\VS2008.log"
@@ -80,6 +82,8 @@ devenv /build Debug Themes\ProjectFiles\Themes_2008.sln 			>>"Win32++\output\VS2
 devenv /build Release Themes\ProjectFiles\Themes_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Debug Threads\ProjectFiles\Threads_2008.sln 			>>"Win32++\output\VS2008.log"
 devenv /build Release Threads\ProjectFiles\Threads_2008.sln 			>>"Win32++\output\VS2008.log"
+devenv /build Debug Tray\ProjectFiles\Tray_2008.sln 			>>"Win32++\output\VS2008.log"
+devenv /build Release Trat\ProjectFiles\Tray_2008.sln 			>>"Win32++\output\VS2008.log"
 
 mkdir "Win32++\output\VS2008"
 mkdir "Win32++\output\VS2008\Debug"
@@ -100,6 +104,7 @@ copy FormDemo\ProjectFiles\Debug\FormDemo.exe               "Win32++\output\VS20
 copy Frame\ProjectFiles\Debug\Frame.exe                     "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy MDIFrame\ProjectFiles\Debug\MDIFrame.exe               "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy MDIFrameDemo\ProjectFiles\Debug\MDIDemo.exe            "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
+copy MDIFrameSplitter\ProjectFiles\Debug\MDIFrame.exe       "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy Networking\ClientDlg\Debug\Client.exe                  "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy Networking\ServerDlg\Debug\Server.exe                  "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy NotePad\ProjectFiles\Debug\Notepad.exe                 "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
@@ -114,6 +119,7 @@ copy Splitter\ProjectFiles\Debug\Splitter.exe               "Win32++\output\VS20
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                 "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                   "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                 "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
+copy Tray\ProjectFiles\Debug\Tray.exe                 "Win32++\output\VS2008\Debug"    >>"Win32++\output\VS2008.log"
 
 mkdir "Win32++\output\VS2008\Release"
 
@@ -133,6 +139,7 @@ copy FormDemo\ProjectFiles\Release\FormDemo.exe               "Win32++\output\VS
 copy Frame\ProjectFiles\Release\Frame.exe                     "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy MDIFrame\ProjectFiles\Release\MDIFrame.exe               "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy MDIFrameDemo\ProjectFiles\Release\MDIDemo.exe            "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
+copy MDIFrameSplitter\ProjectFiles\Release\MDIFrame.exe               "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy Networking\ClientDlg\Release\Client.exe                  "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy Networking\ServerDlg\Release\Server.exe                  "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy NotePad\ProjectFiles\Release\Notepad.exe                 "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
@@ -147,6 +154,7 @@ copy Splitter\ProjectFiles\Release\Splitter.exe               "Win32++\output\VS
 copy TabDemo\ProjectFiles\Release\TabDemo.exe                 "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy Themes\ProjectFiles\Release\Themes.exe                   "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 copy Threads\ProjectFiles\Release\Threads.exe                 "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
+copy Tray\ProjectFiles\Release\Tray.exe                       "Win32++\output\VS2008\Release"    >>"Win32++\output\VS2008.log"
 
 
 REM: Compile Tutorials

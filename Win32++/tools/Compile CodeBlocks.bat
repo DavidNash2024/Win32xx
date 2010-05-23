@@ -36,6 +36,7 @@ codeblocks.exe --rebuild FormDemo\ProjectFiles\FormDemo.cbp			>>"Win32++\output\
 codeblocks.exe --rebuild Frame\ProjectFiles\Frame.cbp				>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild MDIFrame\ProjectFiles\MDIFrame.cbp			>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild MDIFrameDemo\ProjectFiles\MDIDemo.cbp			>>"Win32++\output\CodeBlocks.log"
+codeblocks.exe --rebuild MDIFrameSplitter\ProjectFiles\MDIFrame.cbp		>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild Networking\ClientDlg\Client.cbp			>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild Networking\ServerDlg\Server.cbp			>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild NotePad\ProjectFiles\Notepad.cbp			>>"Win32++\output\CodeBlocks.log"
@@ -48,6 +49,7 @@ codeblocks.exe --rebuild Splitter\ProjectFiles\Splitter.cbp			>>"Win32++\output\
 codeblocks.exe --rebuild TabDemo\ProjectFiles\TabDemo.cbp			>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild Themes\ProjectFiles\Themes.cbp				>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild Threads\ProjectFiles\Threads.cbp			>>"Win32++\output\CodeBlocks.log"
+codeblocks.exe --rebuild Tray\ProjectFiles\Tray.cbp				>>"Win32++\output\CodeBlocks.log"
 
 REM: Copy the executables to the testing directories
 mkdir "Win32++\output\VS2003"
@@ -69,6 +71,7 @@ copy FastGDI\ProjectFiles\Microsoft\Debug\FastGDI.exe                 "Win32++\o
 copy Frame\ProjectFiles\Microsoft\Debug\Frame.exe                     "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrame\ProjectFiles\Microsoft\Debug\MDIFrame.exe               "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrameDemo\ProjectFiles\Microsoft\Debug\MDIDemo.exe            "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy MDIFrameSplitter\ProjectFiles\Microsoft\Debug\MDIFrame.exe       "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ClientDlg\Microsoft\Debug\Client.exe                  "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ServerDlg\Microsoft\Debug\Server.exe                  "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\Microsoft\Debug\Notepad.exe                 "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
@@ -81,6 +84,7 @@ copy Splitter\ProjectFiles\Microsoft\Debug\Splitter.exe               "Win32++\o
 copy TabDemo\ProjectFiles\Microsoft\Debug\TabDemo.exe                 "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Microsoft\Debug\Themes.exe                   "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Microsoft\Debug\Threads.exe                 "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy Tray\ProjectFiles\Microsoft\Debug\Tray.exe                 "Win32++\output\VS2003\Debug"    >>"Win32++\output\CodeBlocks.log"
 
 mkdir "Win32++\output\VS2003\Release"
 
@@ -100,6 +104,7 @@ copy FormDemo\ProjectFiles\Microsoft\Release\FormDemo.exe               "Win32++
 copy Frame\ProjectFiles\Microsoft\Release\Frame.exe                     "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrame\ProjectFiles\Microsoft\Release\MDIFrame.exe               "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrameDemo\ProjectFiles\Microsoft\Release\MDIDemo.exe            "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
+copy MDIFrameSplitter\ProjectFiles\Microsoft\Release\MDIFrame.exe       "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ClientDlg\Microsoft\Release\Client.exe                  "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ServerDlg\Microsoft\Release\Server.exe                  "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\Microsoft\Release\Notepad.exe                 "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
@@ -112,6 +117,7 @@ copy Splitter\ProjectFiles\Microsoft\Release\Splitter.exe               "Win32++
 copy TabDemo\ProjectFiles\Microsoft\Release\TabDemo.exe                 "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Microsoft\Release\Themes.exe                   "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Microsoft\Release\Threads.exe                 "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
+copy Tray\ProjectFiles\Microsoft\Release\Tray.exe                 "Win32++\output\VS2003\Release"    >>"Win32++\output\CodeBlocks.log"
 
 
 REM: Copy the executables to the testing directories
@@ -134,6 +140,7 @@ copy FormDemo\ProjectFiles\Borland\Debug\FormDemo.exe               "Win32++\out
 copy Frame\ProjectFiles\Borland\Debug\Frame.exe                     "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrame\ProjectFiles\Borland\Debug\MDIFrame.exe               "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrameDemo\ProjectFiles\Borland\Debug\MDIDemo.exe            "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy MDIFrameSplitter\ProjectFiles\Borland\Debug\MDIFrame.exe       "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ClientDlg\Borland\Debug\Client.exe                  "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ServerDlg\Borland\Debug\Server.exe                  "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\Borland\Debug\Notepad.exe                 "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
@@ -146,6 +153,7 @@ copy Splitter\ProjectFiles\Borland\Debug\Splitter.exe               "Win32++\out
 copy TabDemo\ProjectFiles\Borland\Debug\TabDemo.exe                 "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Borland\Debug\Themes.exe                   "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Borland\Debug\Threads.exe                 "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy Tray\ProjectFiles\Borland\Debug\Tray.exe                       "Win32++\output\Borland\Debug"    >>"Win32++\output\CodeBlocks.log"
 
 mkdir "Win32++\output\Borland\Release"
 
@@ -165,6 +173,7 @@ copy FormDemo\ProjectFiles\Borland\Release\FormDemo.exe               "Win32++\o
 copy Frame\ProjectFiles\Borland\Release\Frame.exe                     "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrame\ProjectFiles\Borland\Release\MDIFrame.exe               "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrameDemo\ProjectFiles\Borland\Release\MDIDemo.exe            "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
+copy MDIFrameSplitter\ProjectFiles\Borland\Release\MDIFrame.exe       "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ClientDlg\Borland\Release\Client.exe                  "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ServerDlg\Borland\Release\Server.exe                  "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\Borland\Release\Notepad.exe                 "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
@@ -177,6 +186,7 @@ copy Splitter\ProjectFiles\Borland\Release\Splitter.exe               "Win32++\o
 copy TabDemo\ProjectFiles\Borland\Release\TabDemo.exe                 "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Borland\Release\Themes.exe                   "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Borland\Release\Threads.exe                 "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
+copy Tray\ProjectFiles\Borland\Release\Tray.exe                       "Win32++\output\Borland\Release"    >>"Win32++\output\CodeBlocks.log"
 
 
 REM: Copy the executables to the testing directories
@@ -199,6 +209,7 @@ copy FormDemo\ProjectFiles\GNU\Debug\FormDemo.exe               "Win32++\output\
 copy Frame\ProjectFiles\GNU\Debug\Frame.exe                     "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrame\ProjectFiles\GNU\Debug\MDIFrame.exe               "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrameDemo\ProjectFiles\GNU\Debug\MDIDemo.exe            "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy MDIFrameSplitter\ProjectFiles\GNU\Debug\MDIFrame.exe       "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ClientDlg\GNU\Debug\Client.exe                  "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ServerDlg\GNU\Debug\Server.exe                  "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\GNU\Debug\Notepad.exe                 "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
@@ -211,6 +222,7 @@ copy Splitter\ProjectFiles\GNU\Debug\Splitter.exe               "Win32++\output\
 copy TabDemo\ProjectFiles\GNU\Debug\TabDemo.exe                 "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Themes\ProjectFiles\GNU\Debug\Themes.exe                   "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Threads\ProjectFiles\GNU\Debug\Threads.exe                 "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy Tray\ProjectFiles\GNU\Debug\Tray.exe                       "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 
 mkdir "Win32++\output\MinGW\Release"
 
@@ -230,6 +242,7 @@ copy FormDemo\ProjectFiles\GNU\Release\FormDemo.exe               "Win32++\outpu
 copy Frame\ProjectFiles\GNU\Release\Frame.exe                     "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrame\ProjectFiles\GNU\Release\MDIFrame.exe               "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy MDIFrameDemo\ProjectFiles\GNU\Release\MDIDemo.exe            "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
+copy MDIFrameSplitter\ProjectFiles\GNU\Release\MDIFrame.exe       "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ClientDlg\GNU\Release\Client.exe                  "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ServerDlg\GNU\Release\Server.exe                  "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\GNU\Release\Notepad.exe                 "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"

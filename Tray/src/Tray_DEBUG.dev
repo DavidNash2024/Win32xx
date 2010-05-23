@@ -1,13 +1,13 @@
 [Project]
 FileName=Tray_DEBUG.dev
-Name=Simple
+Name=Tray
 UnitCount=9
 Type=0
 Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=Simple_private.rc
+PrivateResource=Tray_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Debug
 ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=1
-OverrideOutputName=Simple.exe
+OverrideOutputName=Tray.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=

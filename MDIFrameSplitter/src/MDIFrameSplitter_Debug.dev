@@ -1,13 +1,13 @@
 [Project]
 FileName=MDIFrameSplitter_Debug.dev
-Name=MDIFrame
+Name=MDIFrameSplitter
 UnitCount=13
 Type=0
 Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=MDIFrame_private.rc
+PrivateResource=MDIFrameSplitter_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Debug
 ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=1
-OverrideOutputName=MDIFrame.exe
+OverrideOutputName=MDIFrameSplitter.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -68,7 +68,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=MDIFrameApp.h
+FileName=MDIFrameSplitterApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -88,7 +88,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=MDIFrameApp.cpp
+FileName=MDIFrameSplitterApp.cpp
 Folder=Source
 Compile=1
 Link=1

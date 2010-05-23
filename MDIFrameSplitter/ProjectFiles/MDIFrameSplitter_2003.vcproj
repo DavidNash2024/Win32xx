@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="MDIFrame"
+	Name="MDIFrameSplitter"
 	ProjectGUID="{42A74E33-A355-4D57-AB80-B920B5BE84A2}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -32,10 +32,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile="$(OutDir)/MDIFrame.exe"
+				OutputFile="$(OutDir)/MDIFrameSplitter.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/MDIFrame.pdb"
+				ProgramDatabaseFile="$(OutDir)/MDIFrameSplitter.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -79,7 +79,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile="$(OutDir)/MDIFrame.exe"
+				OutputFile="$(OutDir)/MDIFrameSplitter.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
@@ -126,7 +126,7 @@
 				RelativePath="..\src\MainMDIfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\MDIFrameApp.cpp">
+				RelativePath="..\src\MDIFrameSplitterApp.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Output.cpp">
@@ -149,7 +149,7 @@
 				RelativePath="..\src\MainMDIfrm.h">
 			</File>
 			<File
-				RelativePath="..\src\MDIFrameApp.h">
+				RelativePath="..\src\MDIFrameSplitterApp.h">
 			</File>
 			<File
 				RelativePath="..\src\Output.h">

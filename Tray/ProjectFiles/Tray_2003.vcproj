@@ -32,10 +32,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile="$(OutDir)/Simple.exe"
+				OutputFile="$(OutDir)/Tray.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/Simple.pdb"
+				ProgramDatabaseFile="$(OutDir)/Tray.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -79,7 +79,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile="$(OutDir)/Simple.exe"
+				OutputFile="$(OutDir)/Tray.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"

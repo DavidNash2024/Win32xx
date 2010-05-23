@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="MDIFrame" />
+		<Option title="MDIFrameSplitter" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
 		<Option compiler="msvctk" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="Borland\Debug\MDIFrame.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Debug\MDIFrameSplitter.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Debug" />
 				<Option object_output="Borland\Debug" />
 				<Option type="0" />
@@ -30,7 +30,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\MDIFrame.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland\Release\MDIFrameSplitter.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland\Release" />
 				<Option object_output="Borland\Release" />
 				<Option type="0" />
@@ -52,7 +52,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\MDIFrame.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft\Debug\MDIFrameSplitter.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft\Debug" />
 				<Option object_output="Microsoft\Debug" />
 				<Option type="0" />
@@ -86,7 +86,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\MDIFrame.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft\Release\MDIFrameSplitter.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft\Release" />
 				<Option object_output="Microsoft\Release" />
 				<Option type="0" />
@@ -117,7 +117,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\MDIFrame.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU\Debug\MDIFrameSplitter.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU\Debug" />
 				<Option object_output="GNU\Debug" />
 				<Option type="0" />
@@ -140,7 +140,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\MDIFrame.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU\Release\MDIFrameSplitter.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU\Release" />
 				<Option object_output="GNU\Release" />
 				<Option type="0" />
@@ -165,8 +165,8 @@
 		</VirtualTargets>
 		<Unit filename="..\src\Files.cpp" />
 		<Unit filename="..\src\Files.h" />
-		<Unit filename="..\src\MDIFrameApp.cpp" />
-		<Unit filename="..\src\MDIFrameApp.h" />
+		<Unit filename="..\src\MDIFrameSplitterApp.cpp" />
+		<Unit filename="..\src\MDIFrameSplitterApp.h" />
 		<Unit filename="..\src\MainMDIfrm.cpp" />
 		<Unit filename="..\src\MainMDIfrm.h" />
 		<Unit filename="..\src\Output.cpp" />

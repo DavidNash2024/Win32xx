@@ -7,7 +7,7 @@
 
 
 
-// MDI frames are inherrited from CMDIFrame
+// MDI frames are inherited from CMDIFrame
 class CMainMDIFrame : public CMDIFrame
 {
 public:

@@ -204,7 +204,7 @@ namespace Win32xx
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the menubar, rebar, 
-		// statusbar or toolbar, inherrit from those classes, and override 
+		// statusbar or toolbar, inherit from those classes, and override 
 		// the following attribute functions.
 		virtual CMenubar& GetMenubar() const		{ return (CMenubar&)m_Menubar; }
 		virtual CRebar& GetRebar() const			{ return (CRebar&)m_Rebar; }

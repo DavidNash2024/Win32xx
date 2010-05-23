@@ -2,13 +2,13 @@
 // main.cpp
 
 #include "stdafx.h"
-#include "MDIFrameApp.h"
+#include "MDIFrameSplitterApp.h"
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// Start Win32++
-    CMDIFrameApp MyApp;
+    CMDIFrameSplitterApp MyApp;
 
 	// Run the application
 	return MyApp.Run();

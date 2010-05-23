@@ -2,14 +2,14 @@
 // MDIFrameApp.cpp
 
 #include "stdafx.h"
-#include "MDIFrameApp.h"
+#include "MDIFrameSplitterApp.h"
 
 
-CMDIFrameApp::CMDIFrameApp()
+CMDIFrameSplitterApp::CMDIFrameSplitterApp()
 {
 }
 
-BOOL CMDIFrameApp::InitInstance()
+BOOL CMDIFrameSplitterApp::InitInstance()
 {
     //Create the Window
 	if (!m_MainMDIFrame.Create())

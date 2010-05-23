@@ -55,6 +55,8 @@ vcbuild /rebuild MDIFrame\ProjectFiles\MDIFrame_2005.vcproj debug		>>"Win32++\ou
 vcbuild /rebuild MDIFrame\ProjectFiles\MDIFrame_2005.vcproj release		>>"Win32++\output\VS2005.log"
 vcbuild /rebuild MDIFrameDemo\ProjectFiles\MDIDemo_2005.vcproj debug		>>"Win32++\output\VS2005.log"
 vcbuild /rebuild MDIFrameDemo\ProjectFiles\MDIDemo_2005.vcproj release		>>"Win32++\output\VS2005.log"
+vcbuild /rebuild MDIFrameSplitter\ProjectFiles\MDIFrame_2005.vcproj debug	>>"Win32++\output\VS2005.log"
+vcbuild /rebuild MDIFrameSplitter\ProjectFiles\MDIFrame_2005.vcproj release	>>"Win32++\output\VS2005.log"
 vcbuild /rebuild Networking\ClientDlg\Client_2005.vcproj debug			>>"Win32++\output\VS2005.log"
 vcbuild /rebuild Networking\ClientDlg\Client_2005.vcproj release		>>"Win32++\output\VS2005.log"
 vcbuild /rebuild Networking\ServerDlg\Server_2005.vcproj debug			>>"Win32++\output\VS2005.log"
@@ -83,6 +85,8 @@ vcbuild /rebuild Themes\ProjectFiles\Themes_2005.vcproj debug			>>"Win32++\outpu
 vcbuild /rebuild Themes\ProjectFiles\Themes_2005.vcproj release			>>"Win32++\output\VS2005.log"
 vcbuild /rebuild Threads\ProjectFiles\Threads_2005.vcproj debug			>>"Win32++\output\VS2005.log"
 vcbuild /rebuild Threads\ProjectFiles\Threads_2005.vcproj release		>>"Win32++\output\VS2005.log"
+vcbuild /rebuild Tray\ProjectFiles\Tray_2005.vcproj debug			    >>"Win32++\output\VS2005.log"
+vcbuild /rebuild Tray\ProjectFiles\Tray_2005.vcproj release	            >>"Win32++\output\VS2005.log"
 
 mkdir "Win32++\output\VS2005"
 mkdir "Win32++\output\VS2005\Debug"
@@ -103,6 +107,7 @@ copy FormDemo\ProjectFiles\Debug\FormDemo.exe               "Win32++\output\VS20
 copy Frame\ProjectFiles\Debug\Frame.exe                     "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy MDIFrame\ProjectFiles\Debug\MDIFrame.exe               "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy MDIFrameDemo\ProjectFiles\Debug\MDIDemo.exe            "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
+copy MDIFrameSplitter\ProjectFiles\Debug\MDIFrame.exe       "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy Networking\ClientDlg\Debug\Client.exe                  "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy Networking\ServerDlg\Debug\Server.exe                  "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy NotePad\ProjectFiles\Debug\Notepad.exe                 "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
@@ -117,6 +122,7 @@ copy Splitter\ProjectFiles\Debug\Splitter.exe               "Win32++\output\VS20
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                 "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                   "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                 "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
+copy Tray\ProjectFiles\Debug\Tray.exe                       "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 
 mkdir "Win32++\output\VS2005\Release"
 
@@ -136,6 +142,7 @@ copy FormDemo\ProjectFiles\Release\FormDemo.exe               "Win32++\output\VS
 copy Frame\ProjectFiles\Release\Frame.exe                     "Win32++\output\VS2005\Release"    >>"Win32++\output\VS2005.log"
 copy MDIFrame\ProjectFiles\Release\MDIFrame.exe               "Win32++\output\VS2005\Release"    >>"Win32++\output\VS2005.log"
 copy MDIFrameDemo\ProjectFiles\Release\MDIDemo.exe            "Win32++\output\VS2005\Release"    >>"Win32++\output\VS2005.log"
+copy MDIFrameSplitter\ProjectFiles\Release\MDIFrame.exe       "Win32++\output\VS2005\Release"    >>"Win32++\output\VS2005.log"
 copy Networking\ClientDlg\Release\Client.exe                  "Win32++\output\VS2005\Release"    >>"Win32++\output\VS2005.log"
 copy Networking\ServerDlg\Release\Server.exe                  "Win32++\output\VS2005\Release"    >>"Win32++\output\VS2005.log"
 copy NotePad\ProjectFiles\Release\Notepad.exe                 "Win32++\output\VS2005\Release"    >>"Win32++\output\VS2005.log"

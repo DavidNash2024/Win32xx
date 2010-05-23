@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="MDIFrame"
-	ProjectGUID="{559A59AB-A07A-4F51-8040-26364FC302EE}"
-	RootNamespace="MDIFrame_2008"
+	Version="8.00"
+	Name="MDIFrameSplitter"
+	ProjectGUID="{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}"
+	RootNamespace="MDIFrameSplitter"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
@@ -48,6 +47,7 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -62,9 +62,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
 				LinkIncremental="2"
-				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -87,6 +86,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -117,14 +119,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\Win32++\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -139,9 +139,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib"
+				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
 				LinkIncremental="1"
-				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -166,6 +165,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -193,7 +195,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MDIFrameApp.cpp"
+				RelativePath="..\src\MDIFrameSplitterApp.cpp"
 				>
 			</File>
 			<File
@@ -239,7 +241,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MDIFrameApp.h"
+				RelativePath="..\src\MDIFrameSplitterApp.h"
 				>
 			</File>
 			<File
@@ -298,6 +300,10 @@
 			</File>
 			<File
 				RelativePath="..\..\Win32++\include\statusbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Win32++\include\tab.h"
 				>
 			</File>
 			<File

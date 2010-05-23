@@ -1,13 +1,13 @@
 [Project]
 FileName=Tray_RELEASE.dev
-Name=Simple
+Name=Tray
 UnitCount=7
 Type=0
 Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=Simple_private.rc
+PrivateResource=Tray_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Release
 ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
-OverrideOutputName=Simple.exe
+OverrideOutputName=Tray.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=

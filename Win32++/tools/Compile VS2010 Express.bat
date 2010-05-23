@@ -52,6 +52,8 @@ MSBuild MDIFrame\ProjectFiles\MDIFrame_2010.sln /p:Configuration=Debug		        
 MSBuild MDIFrame\ProjectFiles\MDIFrame_2010.sln /p:Configuration=Release		>>"Win32++\output\VS2010.log"
 MSBuild MDIFrameDemo\ProjectFiles\MDIDemo_2010.sln /p:Configuration=Debug		>>"Win32++\output\VS2010.log"
 MSBuild MDIFrameDemo\ProjectFiles\MDIDemo_2010.sln /p:Configuration=Release		>>"Win32++\output\VS2010.log"
+MSBuild MDIFrameSplitter\ProjectFiles\MDIFrame_2010.sln /p:Configuration=Debug		>>"Win32++\output\VS2010.log"
+MSBuild MDIFrameSplitter\ProjectFiles\MDIFrame_2010.sln /p:Configuration=Release	>>"Win32++\output\VS2010.log"
 MSBuild Networking\ClientDlg\Client_2010.sln /p:Configuration=Debug			>>"Win32++\output\VS2010.log"
 MSBuild Networking\ClientDlg\Client_2010.sln /p:Configuration=Release		        >>"Win32++\output\VS2010.log"
 MSBuild Networking\ServerDlg\Server_2010.sln /p:Configuration=Debug			>>"Win32++\output\VS2010.log"
@@ -79,7 +81,9 @@ MSBuild TabDemo\ProjectFiles\TabDemo_2010.sln /p:Configuration=Release		        
 MSBuild Themes\ProjectFiles\Themes_2010.sln /p:Configuration=Debug			>>"Win32++\output\VS2010.log"
 MSBuild Themes\ProjectFiles\Themes_2010.sln /p:Configuration=Release			>>"Win32++\output\VS2010.log"
 MSBuild Threads\ProjectFiles\Threads_2010.sln /p:Configuration=Debug			>>"Win32++\output\VS2010.log"
-MSBuild Threads\ProjectFiles\Threads_2010.sln /p:Configuration=Release		        >>"Win32++\output\VS2010.log"
+MSBuild Threads\ProjectFiles\Threads_2010.sln /p:Configuration=Release		    >>"Win32++\output\VS2010.log"
+MSBuild Tray\ProjectFiles\Tray_2010.sln /p:Configuration=Debug			        >>"Win32++\output\VS2010.log"
+MSBuild Tray\ProjectFiles\Tray_2010.sln /p:Configuration=Release		        >>"Win32++\output\VS2010.log"
 
 mkdir "Win32++\output\VS2010"
 mkdir "Win32++\output\VS2010\Debug"
@@ -100,6 +104,7 @@ copy FormDemo\ProjectFiles\Debug\FormDemo.exe               "Win32++\output\VS20
 copy Frame\ProjectFiles\Debug\Frame.exe                     "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 copy MDIFrame\ProjectFiles\Debug\MDIFrame.exe               "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 copy MDIFrameDemo\ProjectFiles\Debug\MDIDemo.exe            "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
+copy MDIFrameSplitter\ProjectFiles\Debug\MDIFrame.exe       "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 copy Networking\ClientDlg\Debug\Client.exe                  "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 copy Networking\ServerDlg\Debug\Server.exe                  "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 copy NotePad\ProjectFiles\Debug\Notepad.exe                 "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
@@ -114,6 +119,7 @@ copy Splitter\ProjectFiles\Debug\Splitter.exe               "Win32++\output\VS20
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                 "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                   "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                 "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
+copy Tray\ProjectFiles\Debug\Tray.exe                       "Win32++\output\VS2010\Debug"    >>"Win32++\output\VS2010.log"
 
 mkdir "Win32++\output\VS2010\Release"
 
@@ -133,6 +139,7 @@ copy FormDemo\ProjectFiles\Release\FormDemo.exe               "Win32++\output\VS
 copy Frame\ProjectFiles\Release\Frame.exe                     "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 copy MDIFrame\ProjectFiles\Release\MDIFrame.exe               "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 copy MDIFrameDemo\ProjectFiles\Release\MDIDemo.exe            "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
+copy MDIFrameSplitter\ProjectFiles\Release\MDIFrame.exe       "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 copy Networking\ClientDlg\Release\Client.exe                  "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 copy Networking\ServerDlg\Release\Server.exe                  "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 copy NotePad\ProjectFiles\Release\Notepad.exe                 "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
@@ -147,6 +154,7 @@ copy Splitter\ProjectFiles\Release\Splitter.exe               "Win32++\output\VS
 copy TabDemo\ProjectFiles\Release\TabDemo.exe                 "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 copy Themes\ProjectFiles\Release\Themes.exe                   "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 copy Threads\ProjectFiles\Release\Threads.exe                 "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
+copy Tray\ProjectFiles\Release\Tray.exe                       "Win32++\output\VS2010\Release"    >>"Win32++\output\VS2010.log"
 
 
 REM: Compile Tutorials
