@@ -12,10 +12,18 @@ CExplorerApp::CExplorerApp()
 
 CExplorerApp::~CExplorerApp()
 {
+	::CoUninitialize(); // Shut down COM
 }
 
 BOOL CExplorerApp::InitInstance()
 {
+	// Initialise COM
+	if (FAILED(CoInitialize(NULL)))
+	{
+		::MessageBox(NULL, _T("Failed to initialize COM"), _T("ERROR"), MB_ICONERROR);
+		return FALSE;
+	}
+	
 	//Create the Frame Window
 	if (!m_Frame.Create())
 	{

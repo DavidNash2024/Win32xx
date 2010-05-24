@@ -25,32 +25,13 @@ int CALLBACK CMyListView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPa
 
 CMyListView::CMyListView()
 {
-	try
-	{
-		HRESULT hr = ::CoInitialize(NULL);
-		if (!((S_OK == hr) || (S_FALSE == hr)))
-			throw CWinException(_T("Problem Initializing COM"));;
-
-		SetImageLists();
-	}
-
-	catch (CWinException &e)
-	{
-		e.MessageBox();
-	}
-
-	catch (...)
-	{
-		DebugErrMsg(_T("Exception in CShellWin construction"));
-	}
+	SetImageLists();
 }
 
 CMyListView::~CMyListView()
 {
 	DeleteItems();
 	m_csfCurFolder.Delete();
-
-	::CoUninitialize(); // Shut down COM
 }
 
 void CMyListView::DeleteItems()
@@ -655,7 +636,6 @@ CMyListView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CSh
 	m_cpidlFull     = cpidlParent + cpidlRel;
 	m_cpidlRel      = cpidlRel;
 }
-
 
 CMyListView::ListItemData::~ListItemData()
 {

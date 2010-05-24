@@ -13,24 +13,7 @@
 //CMyTreeView function definitions
 CMyTreeView::CMyTreeView()
 {
-	try
-	{
-		HRESULT hr = ::CoInitialize(NULL);
-		if (!((S_OK == hr) || (S_FALSE == hr)))
-			throw CWinException(_T("Problem Initializing COM"));;
-
-		SetImageLists();
-	}
-
-	catch (CWinException &e)
-	{
-		e.MessageBox();
-	}
-
-	catch (...)
-	{
-		DebugErrMsg(_T("Exception in CShellWin construction"));
-	}
+	SetImageLists();
 }
 
 CMyTreeView::~CMyTreeView()
@@ -41,8 +24,6 @@ CMyTreeView::~CMyTreeView()
 		//free up the TreeItemData objects
 		delete (*Iter);
 	}	
-
-	::CoUninitialize(); // Shut down COM
 }
 
 int CALLBACK CMyTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
