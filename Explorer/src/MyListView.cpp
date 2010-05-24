@@ -31,7 +31,6 @@ CMyListView::CMyListView()
 CMyListView::~CMyListView()
 {
 	DeleteItems();
-	m_csfCurFolder.Delete();
 }
 
 void CMyListView::DeleteItems()

@@ -46,6 +46,7 @@ private:
 	};  //class TreeItemData
 
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
+	void DeleteItems();
 	void DoItemMenu(HTREEITEM hItem, CPoint& ptScreen);
 	void DoContextMenu(CPoint& ptScreen);
 	void EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent);
