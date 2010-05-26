@@ -100,6 +100,7 @@ namespace ShellWrapper
 		return hr;
 	}
 
+
 	////////////////////////////////////
 	//CContextMenu2 function definitions
 	CContextMenu2::CContextMenu2() : m_pIContextMenu2(NULL)
@@ -137,6 +138,7 @@ namespace ShellWrapper
 		m_pIContextMenu2 = 0;
 	}
 
+
 	///////////////////////////////////
 	//CShellFolder function definitions
 	CShellFolder::CShellFolder() : m_IShellFolder(NULL)
@@ -166,7 +168,6 @@ namespace ShellWrapper
 		Delete();
 		m_IShellFolder = IShellFolder;
 	}
-
 
 	HRESULT CShellFolder::BindToObject(const Cpidl& cpidl, LPBC pbc, REFIID riid, CShellFolder& NewFolder)
 	{
@@ -221,7 +222,6 @@ namespace ShellWrapper
 		}
 		return hr;
 	}
-
 
 	HRESULT CShellFolder::EnumObjects(HWND hwndOwner, int grfFlags, CEnumIDList& cenumIDList)
 	{
@@ -296,6 +296,7 @@ namespace ShellWrapper
 		m_IShellFolder = NULL;
 	}
 
+
 	//////////////////////////////////
 	//CEnumIDList function definitions
 	CEnumIDList::CEnumIDList() : m_pEnumIDList(NULL)
@@ -308,14 +309,12 @@ namespace ShellWrapper
 			m_pEnumIDList->Release();
 	}
 
-
 	//Converts a LPENUMIDLIST to a CEnumIDList object.
 	//  The destructor will release memory allocated for the LPENUMIDLIST
 	void CEnumIDList::Attach(LPENUMIDLIST EnumList)
 	{
 		m_pEnumIDList = EnumList;
 	}
-
 
 	HRESULT CEnumIDList::Next(ULONG Elements, Cpidl& cpidl, ULONG& ulFetched)
 	{
@@ -358,7 +357,6 @@ namespace ShellWrapper
 		return IsEqual(cpidl);
 	}
 
-
 	const Cpidl operator+ (const Cpidl& cpidlFull, const Cpidl& cpidlRel)
 	{
 		//Appends cpidlRel to cpidlFull.
@@ -378,7 +376,6 @@ namespace ShellWrapper
 		m_pMalloc->Release();
 	}
 
-
 	void Cpidl::Attach(LPCITEMIDLIST pidl)
 	//Converts a ITEMIDLIST pointer to a Cpidl object
 	//The memory allocated for the original pidl will be released
@@ -387,7 +384,6 @@ namespace ShellWrapper
 		Delete();  //Release the memory for m_pidl
 		m_pidl = (LPITEMIDLIST)pidl;
 	}
-
 
 	void Cpidl::Delete()
 	{
@@ -472,7 +468,6 @@ namespace ShellWrapper
 		return m_pidlParent;
 	}
 
-
 	LPITEMIDLIST Cpidl::GetRelative()
 	//Stores a copy of the relative pidl obtained from a fully qualified pidl source.
 	{
@@ -491,7 +486,6 @@ namespace ShellWrapper
 		UINT nPos = GetSize(m_pidl) - GetSize(pidlRel);
 		return (LPITEMIDLIST)((LPBYTE)m_pidl + nPos);
 	}
-
 
 	void Cpidl::Concatenate(const Cpidl& cpidlParent, const Cpidl& cpidlRel)
 	//Creates a new Cpidl object by concatenating (chain together)
