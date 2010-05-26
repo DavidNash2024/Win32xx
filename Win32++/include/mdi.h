@@ -189,8 +189,18 @@ namespace Win32xx
 
 	inline CMDIFrame::~CMDIFrame()
 	{
-		assert(0 == m_vMDIChild.size());
+		// Ensure all MDI child objects are destroyed
+		std::vector <CMDIChild*>::iterator v;
+
+		while(m_vMDIChild.size() > 0)
+		{
+			v = m_vMDIChild.begin();
+			(*v)->Destroy();
+			delete *v;
+			m_vMDIChild.erase(v);
+		}
 	}
+
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
 	{

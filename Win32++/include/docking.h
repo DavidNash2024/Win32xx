@@ -765,7 +765,8 @@ namespace Win32xx
 			dcMem.DrawText(m_tsCaption.c_str(), -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
-			DrawCloseButton(dcMem, bFocus);
+			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+				DrawCloseButton(dcMem, bFocus);
 
 			// Draw the 3D border
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
@@ -918,7 +919,7 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (HTCLOSE == wParam) 
+			if ((HTCLOSE == wParam) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
 			{
 				m_IsClosePressed = TRUE;
 				SetCapture();
@@ -934,8 +935,11 @@ namespace Win32xx
 				m_pView->SetFocus();
 
 				// Update the close button
-				CDC dc = GetWindowDC();
-				DrawCloseButton(dc, m_bOldFocus);
+				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+				{
+					CDC dc = GetWindowDC();
+					DrawCloseButton(dc, m_bOldFocus);
+				}
 
 				return 0L;
 			}
@@ -948,7 +952,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION|DS_NO_UNDOCK))
 		{
 			m_bCaptionPressed = FALSE;
 			if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
@@ -1006,7 +1010,7 @@ namespace Win32xx
 
 		m_IsTracking = FALSE;
 		CDC dc = GetWindowDC();
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION) && m_pDock->IsDocked())
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION|DS_NO_UNDOCK) && m_pDock->IsDocked())
 			DrawCloseButton(dc, m_bOldFocus);
 
 		m_IsTracking = FALSE;
@@ -1040,8 +1044,11 @@ namespace Win32xx
 				}
 
 				// Update the close button
-				CDC dc = GetWindowDC();
-				DrawCloseButton(dc, m_bOldFocus);
+				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+				{
+					CDC dc = GetWindowDC();
+					DrawCloseButton(dc, m_bOldFocus);
+				}
 			}
 
 			m_bCaptionPressed = FALSE;
@@ -1111,9 +1118,12 @@ namespace Win32xx
 		case WM_LBUTTONUP:
 			{
 				ReleaseCapture();
-				CDC dc = GetWindowDC();
-				DrawCloseButton(dc, m_bOldFocus);
-				OnLButtonUp(wParam, lParam);
+				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+				{
+					CDC dc = GetWindowDC();
+					DrawCloseButton(dc, m_bOldFocus);
+					OnLButtonUp(wParam, lParam);
+				}
 			}
 			break;
 
