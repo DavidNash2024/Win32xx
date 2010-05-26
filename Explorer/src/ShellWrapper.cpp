@@ -196,7 +196,8 @@ namespace ShellWrapper
 	{
 		Delete(); //Release the current m_IShellFolder
 		m_IShellFolder = Source;
-		if (Source) AddRef();
+		if (Source) 
+			AddRef();
 	}
 
 	void CShellFolder::Copy(const CShellFolder& Source)

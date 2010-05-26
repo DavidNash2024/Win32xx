@@ -145,7 +145,7 @@ namespace Win32xx
 		class CMDIClient : public CWnd  // a nested class within CMDIFrame
 		{
 		public:
-			CMDIClient() {}
+			CMDIClient() : m_pMDIFrame(0) {}
 			virtual ~CMDIClient() {}
 			virtual HWND Create(HWND hWndParent = NULL);
 			virtual tString GetWindowType() const { return _T("CMDIClient"); }
@@ -154,6 +154,8 @@ namespace Win32xx
 		private:
 			CMDIClient(const CMDIClient&);				// Disable copy construction
 			CMDIClient& operator = (const CMDIClient&); // Disable assignment operator
+
+			CMDIFrame* m_pMDIFrame;
 		};
 
 
@@ -187,16 +189,7 @@ namespace Win32xx
 
 	inline CMDIFrame::~CMDIFrame()
 	{
-		// Ensure all MDI child objects are destroyed
-		std::vector <CMDIChild*>::iterator v;
-
-		while(m_vMDIChild.size() > 0)
-		{
-			v = m_vMDIChild.begin();
-			(*v)->Destroy();
-			delete *v;
-			m_vMDIChild.erase(v);
-		}
+		assert(0 == m_vMDIChild.size());
 	}
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
@@ -239,8 +232,8 @@ namespace Win32xx
 
 		for (v = GetAllMDIChildren().begin(); v < GetAllMDIChildren().end(); ++v)
 		{
-			HWND hwndMDIChild = (*v)->GetHwnd();
-			if (::GetWindowLong(hwndMDIChild, GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
+		//	HWND hwndMDIChild = (*v)->GetHwnd();
+			if ((*v)->GetWindowLongPtr(GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
 			{
 				// Add Separator
 				if (0 == nWindow)
@@ -263,7 +256,7 @@ namespace Win32xx
 
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szMenuString);
 
-					if (GetActiveMDIChild()->GetHwnd() == hwndMDIChild)
+					if (GetActiveMDIChild() == (*v))
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					++nWindow;
@@ -291,7 +284,7 @@ namespace Win32xx
 	inline BOOL CMDIFrame::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
-		::SendMessage(m_wndMDIClient, WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
+		m_wndMDIClient.SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 
@@ -308,14 +301,14 @@ namespace Win32xx
 	{
 		CFrame::OnViewStatusbar();
 		UpdateCheckMarks();
-		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 	}
 
 	inline void CMDIFrame::OnViewToolbar()
 	{
 		CFrame::OnViewToolbar();
 		UpdateCheckMarks();
-		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 	}
 
 	inline void CMDIFrame::OnWindowPosChanged()
@@ -343,7 +336,7 @@ namespace Win32xx
 	inline void CMDIFrame::RecalcLayout()
 	{
 		CFrame::RecalcLayout();
-		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
+		GetView()->PostMessage(WM_MDIICONARRANGE, 0L, 0L) ;
 	}
 
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
@@ -354,12 +347,7 @@ namespace Win32xx
 		while(m_vMDIChild.size() > 0)
 		{
 			v = m_vMDIChild.begin();
-			HWND hWnd = (*v)->GetHwnd();
-			::SendMessage(hWnd, WM_CLOSE, 0L, 0L);
-			if (::IsWindow(hWnd))
-				return FALSE;
-
-			RemoveMDIChild(hWnd);
+			(*v)->SendMessage(WM_CLOSE, 0L, 0L);	// Also removes the MDI child
 		}
 		return TRUE;
 	}
@@ -435,8 +423,8 @@ namespace Win32xx
 			}
 			else
 			{
-				::SendMessage (GetView()->GetHwnd(), WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
-				::DrawMenuBar(GetHwnd());
+				GetView()->SendMessage (WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
+				DrawMenuBar();
 			}
 		}
 		UpdateCheckMarks();
@@ -459,24 +447,27 @@ namespace Win32xx
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline HWND CMDIFrame::CMDIClient::Create(HWND hWndParent /* = NULL*/)
+	inline HWND CMDIFrame::CMDIClient::Create(HWND hWndParent)
 	{
+		assert(hWndParent != 0);
+		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(hWndParent);
+		assert(pMDIFrame->GetWindowType() == _T("CMDIFrame"));
+		m_pMDIFrame = pMDIFrame;
+		
 		CLIENTCREATESTRUCT clientcreate ;
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
-		if (!CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""),
-				dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
-				throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
+		if (!CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
+			throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
 
 		return m_hWnd;
 	}
 
 	inline LRESULT CMDIFrame::CMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
 		switch (uMsg)
 		{
 		case WM_MDIDESTROY:
@@ -485,13 +476,13 @@ namespace Win32xx
 				CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
 
 				// Now remove MDI child
-				pMDIFrame->RemoveMDIChild((HWND) wParam);
+				m_pMDIFrame->RemoveMDIChild((HWND) wParam);
 			}
 			return 0; // Discard message
 
 		case WM_MDISETMENU:
 			{
-				if (pMDIFrame->IsMenubarUsed())
+				if (m_pMDIFrame->IsMenubarUsed())
 				{
 					return 0L;
 				}
@@ -501,10 +492,10 @@ namespace Win32xx
 		case WM_MDIACTIVATE:
 			{
 				// Suppress redraw to avoid flicker when activating maximised MDI children
-				::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0L);
+				SendMessage(WM_SETREDRAW, FALSE, 0L);
 				LRESULT lr = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
-				::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0L);
-				::RedrawWindow(m_hWnd, 0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+				SendMessage(WM_SETREDRAW, TRUE, 0L);
+				RedrawWindow(0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 				return lr;
 			}
