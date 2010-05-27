@@ -952,7 +952,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION|DS_NO_UNDOCK))
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_UNDOCK)))
 		{
 			m_bCaptionPressed = FALSE;
 			if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
@@ -968,7 +968,8 @@ namespace Win32xx
 				}
 				else
 				{
-					m_pDock->Undock(GetCursorPos(), FALSE);
+				//	m_pDock->Undock(GetCursorPos(), FALSE);
+					m_pDock->Hide();
 					m_pDock->Destroy();
 				}
 			}
@@ -1010,7 +1011,7 @@ namespace Win32xx
 
 		m_IsTracking = FALSE;
 		CDC dc = GetWindowDC();
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION|DS_NO_UNDOCK) && m_pDock->IsDocked())
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_UNDOCK)) && m_pDock->IsDocked())
 			DrawCloseButton(dc, m_bOldFocus);
 
 		m_IsTracking = FALSE;
@@ -3067,8 +3068,9 @@ namespace Win32xx
 
 	inline void CDocker::SaveRegistrySettings(tString tsRegistryKeyName)
 	{
-		VerifyDockers();
 		// NOTE: This function assumes that each docker has a unique DockID
+		
+		assert(VerifyDockers());	
 
 		std::vector<CDocker*>::iterator iter;
 		std::vector<DockInfo> vDockList;
@@ -3266,6 +3268,8 @@ namespace Win32xx
 
 	inline CDocker* CDocker::SeparateFromDock()
 	{
+		// This performs some of the tasks required for undocking.
+		// It is also used when a docker is hidden.
 		CDocker* pDockUndockedFrom = GetDockParent();
 		if (!pDockUndockedFrom && (GetDockChildren().size() > 0))
 			pDockUndockedFrom = GetDockChildren()[0];
