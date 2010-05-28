@@ -22,7 +22,7 @@ if exist "Win32++\output\MinGW" rmdir /s /q "Win32++\output\MinGW"
 REM: Compile the code
 
 codeblocks.exe --rebuild Browser\ProjectFiles\Browser.cbp				>"Win32++\output\CodeBlocks.log"
-codeblocks.exe --rebuild Dialog\ProjectFiles\Dialog.cbp				>"Win32++\output\CodeBlocks.log"
+codeblocks.exe --rebuild Dialog\ProjectFiles\Dialog.cbp				>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild DialogBars\ProjectFiles\DialogBars.cbp			>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild DialogDemo\ProjectFiles\DialogDemo.cbp			>>"Win32++\output\CodeBlocks.log"
 codeblocks.exe --rebuild DialogTab\ProjectFiles\DialogTab.cbp			>>"Win32++\output\CodeBlocks.log"

@@ -59,7 +59,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 
 void CMainFrame::ConnectEvents()
 {
-	IUnknown* pUnk = GetBrowser().GetAXContainer().GetUnknown();
+	IUnknown* pUnk = GetBrowser().GetAXWindow().GetUnknown();
 	if(!pUnk)
 		return;
 
@@ -75,7 +75,7 @@ void CMainFrame::ConnectEvents()
 
 IConnectionPoint* CMainFrame::GetConnectionPoint(REFIID riid)
 {
-	IUnknown *pUnk = GetBrowser().GetAXContainer().GetUnknown();
+	IUnknown *pUnk = GetBrowser().GetAXWindow().GetUnknown();
 	if(!pUnk)
 		return NULL;
 

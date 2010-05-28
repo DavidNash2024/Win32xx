@@ -1,5 +1,5 @@
 // Win32++  Version 6.9 alpha
-// Released: ??? May, 2010 by:
+// Released: 30th May, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -141,7 +141,7 @@ namespace Win32xx
 		CWebBrowser();
 		virtual ~CWebBrowser();
 		virtual void AddWebBrowserControl(void);
-		virtual CAXWindow& GetAXContainer() const { return (CAXWindow&)m_AXContainer; }
+		virtual CAXWindow& GetAXWindow() const { return (CAXWindow&)m_AXContainer; }
 		virtual IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
 		virtual tString GetWindowType() const { return _T("CWebBrowser"); }
 		virtual void Navigate(LPCTSTR str);
@@ -678,12 +678,12 @@ namespace Win32xx
 
 	inline void CWebBrowser::AddWebBrowserControl()
 	{
-		GetAXContainer().CreateControl(CLSID_WebBrowser);
-		GetAXContainer().SetParent(m_hWnd);
-		GetAXContainer().SetVisible(TRUE);
-		GetAXContainer().SetFocus(TRUE);
+		GetAXWindow().CreateControl(CLSID_WebBrowser);
+		GetAXWindow().SetParent(m_hWnd);
+		GetAXWindow().SetVisible(TRUE);
+		GetAXWindow().SetFocus(TRUE);
 
-		IUnknown* pUnk = GetAXContainer().GetUnknown();
+		IUnknown* pUnk = GetAXWindow().GetUnknown();
 		if(pUnk)
 		{
 			// Store the pointer to the WebBrowser control
@@ -734,7 +734,7 @@ namespace Win32xx
 	inline void CWebBrowser::OnSize(int width, int height)
 	{
 		// position the container
-		GetAXContainer().SetLocation(0, 0, width, height);
+		GetAXWindow().SetLocation(0, 0, width, height);
 	}
 
 	inline LRESULT CWebBrowser::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -745,7 +745,7 @@ namespace Win32xx
 			OnSize(LOWORD(lParam), HIWORD(lParam));
 			break;
 		case WM_DESTROY:
-			GetAXContainer().Remove();
+			GetAXWindow().Remove();
 			break;
 		}
 

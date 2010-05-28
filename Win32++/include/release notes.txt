@@ -66,7 +66,7 @@ The file download from Sourceforge includes the following:
  * A collection of sample applications
 
 The sample applications include:
- * Browser - An Internet browser application based on ActiveX controls.
+ * Browser - An Internet browser application with an event sink.
  * Dialog - An example of a simple dialog application.
  * DialogDemo - An interative dialog application demonstrating slider controls and progress bars.
  * DialogTab - A dialog application with a tab control.
@@ -79,6 +79,7 @@ The sample applications include:
  * FormDemo - An example of a modeless dialog within a frame.
  * MDIFrame - A simple MDI frame applications
  * MDIFrameDemo - Demonstrates some additional features of MDI frames.
+ * MDIFrameSplitter - Demonstrates how to implement splitter windows in MDI Child windows. 
  * Networking - Demonstrates the use of networking.
  * Notepad - A simple text editor with printing.
  * Performance - Measures Win32++'s message handling speed.
@@ -86,11 +87,12 @@ The sample applications include:
  * PropertySheets - A demonstration of property sheets.
  * Scribble - A simple drawing application.
  * Simple - Creates a simple window.
- * Splitter - A demo of the CSplitter class.
+ * Splitter - Demonstrates how to use dockers to create splitter windows.
  * StaticLibrary - Builds the Win32++ framework into a static library.
  * TabDemo - Demonstrates the use of a CTab control in a frame.
  * Themes - Demonstrates how to customise the colours for rebar and toolbar controls.
  * Threads - Demonstrates multi-threaded Windows.
+ * Tray - Demonstrates how to "minimise" an application to the system tray.  
  * WinCE samples - A small collection of samples for Windows CE
 
 Getting Started
