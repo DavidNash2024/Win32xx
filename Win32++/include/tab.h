@@ -95,6 +95,7 @@ namespace Win32xx
 		virtual BOOL GetTabsAtTop();
 		virtual int  GetTabIndex(CWnd* pWnd);
 		virtual TabPageInfo GetTabPageInfo(UINT nTab);
+		virtual int GetTextHeight();
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
 		virtual void SelectPage(int iPage);
@@ -247,7 +248,7 @@ namespace Win32xx
 	// Definitions for the CTab class
 	//
 	inline CTab::CTab() : m_pView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
-							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(20)
+							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
@@ -457,11 +458,13 @@ namespace Win32xx
 			// Manually draw list button
 			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-			for (int i = 0; i <= 4; i++)
+			int MaxLength = (int)(0.65 * rcList.Width());
+			int topGap = 1 + rcList.Height()/3;
+			for (int i = 0; i <= MaxLength/2; i++)
 			{
-				int Length = 9 - 2*i;
-				DrawDC.MoveTo(rcList.left + 4 + i, rcList.top +6 +i);
-				DrawDC.LineTo(rcList.left + 4 + i + Length, rcList.top +6 +i);
+				int Length = MaxLength - 2*i;
+				DrawDC.MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
+				DrawDC.LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
 			}
 		}
 	}
@@ -604,8 +607,10 @@ namespace Win32xx
 		CRect rcList;
 		if (GetShowButtons())
 		{
-			rcList = GetCloseRect();		
-			rcList.OffsetRect(-18, 0);
+			CRect rcClose = GetCloseRect();
+			rcList = rcClose;
+			rcList.OffsetRect( -(rcClose.Width() + 4), 0);
+			rcList.InflateRect(-1, 0);
 		}
 		return rcList;
 	}
@@ -649,6 +654,19 @@ namespace Win32xx
 		return (!(dwStyle & TCS_BOTTOM));
 	}
 
+	inline int CTab::GetTextHeight()
+	{
+			NONCLIENTMETRICS nm = {0};
+			nm.cbSize = GetSizeofNonClientMetrics();
+			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+			LOGFONT lf = nm.lfStatusFont;
+
+			CDC dc = GetDC();
+			dc.CreateFontIndirect(lf);
+			CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+			return szText.cy;
+	}
+
 	inline int CTab::GetTabIndex(CWnd* pWnd)
 	{
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
@@ -689,6 +707,8 @@ namespace Win32xx
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
 
+		int HeightGap = 5;
+		SetTabHeight(GetTextHeight() + HeightGap);
 		SelectPage(0);
 	}
 
@@ -968,7 +988,7 @@ namespace Win32xx
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 
 			int xGap = 2;
-			if (m_bShowButtons) xGap += 30;
+			if (m_bShowButtons) xGap += GetCloseRect().Width() + GetListRect().Width() +2;
 
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			nItemWidth = MAX(nItemWidth, 0);

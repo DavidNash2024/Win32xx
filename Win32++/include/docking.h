@@ -278,7 +278,6 @@ namespace Win32xx
 			CPoint m_Oldpt;
 			CDocker* m_pDock;
 			CWnd* m_pView;
-			int m_NCHeight;
 			BOOL m_IsClosePressed;
 			BOOL m_bOldFocus;
 			BOOL m_bCaptionPressed;
@@ -409,6 +408,7 @@ namespace Win32xx
 		virtual CDocker* GetDockTopLevel() const;
 		virtual int GetDockWidth() const;
 		virtual CTabbedMDI* GetTabbedMDI() const;
+		virtual int GetTextHeight();
 		virtual tString GetWindowType() const { return _T("CDocker"); }
 		virtual void Hide();
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
@@ -653,9 +653,8 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 	// Definitions for the CDockClient class nested within CDocker
 	//
-	inline CDocker::CDockClient::CDockClient() : m_pView(0), m_NCHeight(20),
-						m_IsClosePressed(FALSE), m_bOldFocus(FALSE), m_bCaptionPressed(FALSE),
-						m_IsTracking(FALSE)
+	inline CDocker::CDockClient::CDockClient() : m_pView(0), m_IsClosePressed(FALSE), 
+						m_bOldFocus(FALSE), m_bCaptionPressed(FALSE), m_IsTracking(FALSE)
 	{
 	}
 
@@ -693,8 +692,8 @@ namespace Win32xx
 		int cx = GetSystemMetrics(SM_CXSMICON);
 		int cy = GetSystemMetrics(SM_CYSMICON);
 
-		rcClose.top = 2 + rc.top + m_NCHeight/2 - cy/2;
-		rcClose.bottom = 2 + rc.top + m_NCHeight/2 + cy/2;
+		rcClose.top = 2 + rc.top + m_pDock->m_NCHeight/2 - cy/2;
+		rcClose.bottom = 2 + rc.top + m_pDock->m_NCHeight/2 + cy/2;
 		rcClose.right = rc.right - gap;
 		rcClose.left = rcClose.right - cx;
 
@@ -709,6 +708,8 @@ namespace Win32xx
 
 		return rcClose;
 	}
+
+
 
 	inline void CDocker::CDockClient::DrawCaption(WPARAM wParam)
 	{
@@ -731,7 +732,7 @@ namespace Win32xx
 			CDC dcMem = dc.CreateCompatibleDC();
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
-			int Height = m_NCHeight + rcAdjust;
+			int Height = m_pDock->m_NCHeight + rcAdjust;
 			dcMem.CreateCompatibleBitmap(dc, Width, Height);
 			m_bOldFocus = bFocus;
 
@@ -757,11 +758,11 @@ namespace Win32xx
 
 			// Draw the rectangle
 			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
-			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_NCHeight +rcAdjust);
+			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
 
 			// Display the caption
 			int cx = GetSystemMetrics(SM_CXSMICON);
-			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_NCHeight +rcAdjust);
+			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
 			dcMem.DrawText(m_tsCaption.c_str(), -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
@@ -791,12 +792,12 @@ namespace Win32xx
 
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			{
-				rcClose.OffsetRect(2, m_NCHeight+2);
-				if (GetWindowRect().Height() < (m_NCHeight+4))
+				rcClose.OffsetRect(2, m_pDock->m_NCHeight+2);
+				if (GetWindowRect().Height() < (m_pDock->m_NCHeight+4))
 					rcClose.OffsetRect(-2, -2);
 			}
 			else
-				rcClose.OffsetRect(0, m_NCHeight-2);
+				rcClose.OffsetRect(0, m_pDock->m_NCHeight-2);
 
 			// Draw the outer highlight for the close button
 			if (!IsRectEmpty(&rcClose))
@@ -887,7 +888,7 @@ namespace Win32xx
 			if (m_pDock->IsDocked())
 			{
 				LPRECT rc = (LPRECT)lParam;
-				rc->top += m_NCHeight;
+				rc->top += m_pDock->m_NCHeight;
 			}
 		}
 	}
@@ -1725,7 +1726,7 @@ namespace Win32xx
 	//
 	inline CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
 		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartWidth(0), m_nDockID(0),
-		            m_nTimerCount(0), m_NCHeight(20), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
+		            m_nTimerCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockWidthRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
@@ -2363,6 +2364,19 @@ namespace Win32xx
 		return pTabbedMDI;
 	}
 
+	inline int CDocker::GetTextHeight()
+	{
+			NONCLIENTMETRICS nm = {0};
+			nm.cbSize = GetSizeofNonClientMetrics();
+			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+			LOGFONT lf = nm.lfStatusFont;
+
+			CDC dc = GetDC();
+			dc.CreateFontIndirect(lf);
+			CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+			return szText.cy;
+	}
+
 	inline void CDocker::Hide()
 	{
 		// Undocks a docker (if needed) and hides it.
@@ -2605,6 +2619,9 @@ namespace Win32xx
 				rgbColour =pTheme->clrBkgnd2;
 		
 		SetBarColor(rgbColour);
+		
+		// Set the caption height based on text height
+		m_NCHeight = GetTextHeight() + 5;
 	}
 
 	inline void CDocker::OnDestroy(WPARAM wParam, LPARAM lParam)
@@ -3841,7 +3858,8 @@ namespace Win32xx
 			rc.SetRectEmpty();
 
 		int nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
-		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, 20));
+		int nItemHeight = GetTextHeight() + 5;
+		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, nItemHeight));
 	}
 
 	inline void CDockContainer::SetTabText(UINT nTab, LPCTSTR szText)
