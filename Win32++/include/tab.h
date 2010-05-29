@@ -609,7 +609,7 @@ namespace Win32xx
 		{
 			CRect rcClose = GetCloseRect();
 			rcList = rcClose;
-			rcList.OffsetRect( -(rcClose.Width() + 4), 0);
+			rcList.OffsetRect( -(rcClose.Width() + 2), 0);
 			rcList.InflateRect(-1, 0);
 		}
 		return rcList;
@@ -708,7 +708,7 @@ namespace Win32xx
 		}
 
 		int HeightGap = 5;
-		SetTabHeight(GetTextHeight() + HeightGap);
+		SetTabHeight(MAX(20, (GetTextHeight() + HeightGap)));
 		SelectPage(0);
 	}
 

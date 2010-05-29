@@ -2621,7 +2621,7 @@ namespace Win32xx
 		SetBarColor(rgbColour);
 		
 		// Set the caption height based on text height
-		m_NCHeight = GetTextHeight() + 5;
+		m_NCHeight = MAX(20, GetTextHeight() + 5);
 	}
 
 	inline void CDocker::OnDestroy(WPARAM wParam, LPARAM lParam)
@@ -3858,7 +3858,7 @@ namespace Win32xx
 			rc.SetRectEmpty();
 
 		int nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
-		int nItemHeight = GetTextHeight() + 5;
+		int nItemHeight = MAX(20, GetTextHeight() + 5);
 		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, nItemHeight));
 	}
 
