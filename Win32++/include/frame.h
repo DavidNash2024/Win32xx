@@ -1531,13 +1531,11 @@ namespace Win32xx
 
 		// Calculate the Menubar height from the menu font
 		CSize csMenubar;
-		NONCLIENTMETRICS nm = {0};
-		nm.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-		LOGFONT lf = nm.lfMenuFont;
-		CDC dcFrame = GetDC();
-		dcFrame.CreateFontIndirect(lf);
-		csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
+		HFONT hFont = (HFONT)GetMenubar().SendMessage(WM_GETFONT, 0, 0);
+		CDC dcMenubar = GetMenubar().GetDC();
+		dcMenubar.AttachFont(hFont);
+		csMenubar = dcMenubar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
+		dcMenubar.DetachFont();
 		int Menubar_Height = csMenubar.cy + 8;
 
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
@@ -2456,23 +2454,24 @@ namespace Win32xx
 		::DeleteObject(hFontOld);
 		SetStatusText();
 
+		/*
 		// Update the menubar font and band size
 		if(IsMenubarUsed())
 		{
 			// Update the font
-			NONCLIENTMETRICS nm = {0};
-			nm.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-			LOGFONT lf = nm.lfMenuFont;
+			ICONMETRICS im = {0};
+			im.cbSize = sizeof(ICONMETRICS);
+			SystemParametersInfo(SPI_GETICONMETRICS, 0, &im, 0);
+			HFONT hFont = ::CreateFontIndirect(&im.lfFont);
 			HFONT hFontOld = (HFONT)GetMenubar().SendMessage(WM_GETFONT, 0L, 0L);
-			HFONT hFont = ::CreateFontIndirect(&lf);
 			GetMenubar().SendMessage(WM_SETFONT, (WPARAM)hFont, TRUE);
+			CDC dcMenubar = GetMenubar().GetDC();
+			dcMenubar.AttachFont(hFont);
+			CSize csMenubar = dcMenubar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
+			dcMenubar.DetachFont();
 			::DeleteObject(hFontOld);
 
 			// Update the band size
-			CDC dcFrame = GetDC();
-			dcFrame.CreateFontIndirect(lf);
-			CSize csMenubar = dcFrame.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int Menubar_Height = csMenubar.cy + 8;
 			int nBand = GetRebar().GetBand(GetMenubar().GetHwnd());
 			REBARBANDINFO rbbi = {0};
@@ -2482,6 +2481,7 @@ namespace Win32xx
 			rbbi.cyMaxChild = Menubar_Height;
 			GetRebar().SetBandInfo(nBand, rbbi);
 		}
+		*/
 
 		if ((m_bUpdateTheme) && (m_bUseThemes)) SetTheme();
 
