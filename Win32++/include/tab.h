@@ -96,6 +96,7 @@ namespace Win32xx
 		virtual int  GetTabIndex(CWnd* pWnd);
 		virtual TabPageInfo GetTabPageInfo(UINT nTab);
 		virtual int GetTextHeight();
+		virtual tString GetWindowType() const { return _T("CTab"); }
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
 		virtual void SelectPage(int iPage);

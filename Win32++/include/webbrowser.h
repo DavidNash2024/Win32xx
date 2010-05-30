@@ -153,7 +153,7 @@ namespace Win32xx
 
 	private:
 		CAXWindow	m_AXContainer;		// The ActiveX Container
-		IWebBrowser2*	m_pIWebBrowser2;	// Interface to the ActiveX web browser control
+		IWebBrowser2*	m_pIWebBrowser2;// Interface to the ActiveX web browser control
 	};
 
 }

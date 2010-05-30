@@ -63,7 +63,7 @@
 // with Comctl32.lib.
 
 // To create a SDI frame application, inherit a CMainFrame class from CFrame.
-// Use the Frame generic application as the starting point for your own frame
+// Use the Frame sample application as the starting point for your own frame
 // applications.
 // Refer to the Notepad and Scribble samples for examples on how to use these
 // classes to create a frame application.
@@ -295,9 +295,9 @@ namespace Win32xx
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		BOOL m_bUseToolbar;					// set to TRUE if the toolbar is used
-		BOOL m_bShowStatusbar;
-		BOOL m_bShowToolbar;
-		MenuTheme m_ThemeMenu;				// Theme structure
+		BOOL m_bShowStatusbar;				// A flag to indicate if the Statusbar should be displayed
+		BOOL m_bShowToolbar;				// A flag to indicate if the Toolbar should be displayed
+		MenuTheme m_ThemeMenu;				// Theme structure for popup menus
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
 
@@ -319,10 +319,10 @@ namespace Win32xx
 		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
 		tString m_tsStatusText;				// TCHAR std::string for status text
-		UINT m_nMaxMRU;					// maximum number of MRU entries
+		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
-		int m_nOldID;
+		int m_nOldID;						// The previous Toolbar ID displayed in the statusbar
 
 	};  // class CFrame
 

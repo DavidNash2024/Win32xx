@@ -12,4 +12,6 @@ Features demonstrated in this example
 * Processing window messages in CView::WndProc
 * Overriding PreCreate to set the initial window parameters
 * Overriding OnPaint to draw text on the window's device context
+* Adding a menu to a simple window
 * Using TRACE to ouput debug text
+* Use of Shell_NotifyIcon to add an icon to the system tray
