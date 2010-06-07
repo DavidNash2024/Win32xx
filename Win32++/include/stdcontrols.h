@@ -1,5 +1,4 @@
-// Win32++  Version 6.9 alpha
-// Released: 30th May, 2010 by:
+// Win32++  Version 7.0 (Prerelease version)
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

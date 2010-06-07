@@ -31,7 +31,6 @@ public:
 	virtual void OnProgressChange(DISPPARAMS* pDispParams);
 	virtual void OnPropertyChange(DISPPARAMS* pDispParams);
 	virtual void OnStatusTextChange(DISPPARAMS* pDispParams);
-	virtual void OnTimer(WPARAM wParam);
 	virtual void OnTitleChange(DISPPARAMS* pDispParams);
 
 protected:

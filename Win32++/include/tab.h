@@ -1,5 +1,4 @@
-// Win32++  Version 6.9 alpha
-// Released: 30th May, 2010 by:
+// Win32++  Version 7.0 (Prerelease version)
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -322,6 +321,7 @@ namespace Win32xx
 		if (GetWinVersion() == 1400)  return;
 
 		if (!m_bShowButtons) return;
+		if (!GetActiveView()) return;
 
 		// Determine the close button's drawing position relative to the window
 		CRect rcClose = GetCloseRect();
@@ -403,6 +403,7 @@ namespace Win32xx
 		if (GetWinVersion() == 1400)  return;
 
 		if (!m_bShowButtons) return;
+		if (!GetActiveView()) return;
 
 		// Determine the list button's drawing position relative to the window
 		CRect rcList = GetListRect();
@@ -897,6 +898,8 @@ namespace Win32xx
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
 			GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
+		else
+			RedrawWindow();
 	}
 
 	inline void CTab::RemoveTabPage(int iPage)

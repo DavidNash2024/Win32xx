@@ -14,7 +14,7 @@ New Features and Enhancements
 * The CTab, CMDITab, CDocker and CDockContainer classes are now flicker free,
    providing a more professional look during resizing and docker moving.
 * Improved the dock targeting and dock hinting.   
-* Introduced a new set of text conversion fucntions to convert between Ansi, 
+* Introduced a new set of text conversion functions to convert between Ansi, 
    Unicode and Wide characters.
 * CWnd objects can now report their type with GetWindowType.
 * Modified the Browser sample to use the new CWebBrowser class. It also 

@@ -342,12 +342,6 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 }
 
-void CMainFrame::OnTimer(WPARAM wParam)
-{
-	UNREFERENCED_PARAMETER(wParam);
-	GetStatusbar().SetPartText(0, _T("Done"));
-}
-
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
 	TRACE(_T("TitleChange: \n"));
