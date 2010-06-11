@@ -701,7 +701,7 @@ namespace Win32xx
 	// Assigns a resource ID to each toolbar button
 	{
 		int iImages = 0;
-		UINT iNumButtons = vToolbarData.size();
+		UINT iNumButtons = (UINT)vToolbarData.size();
 
 		// Remove any existing buttons
 		while (SendMessage(TB_BUTTONCOUNT,  0L, 0L) > 0)

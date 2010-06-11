@@ -1949,7 +1949,7 @@ namespace Win32xx
 	inline LPCWSTR CWnd::CharToWide(LPCSTR pChar) const
 	{
 		delete[] m_pWChar;
-		int length = strlen(pChar)+1;
+		int length = (int)strlen(pChar)+1;
 		m_pWChar = new WCHAR[length];
 		if (NULL == m_pWChar)
 			throw std::bad_alloc();
@@ -1962,7 +1962,7 @@ namespace Win32xx
 	inline LPCSTR CWnd::WideToChar(LPCWSTR pWChar) const
 	{
 		delete[] m_pChar;
-		int length = wcslen(pWChar)+1;
+		int length = (int)wcslen(pWChar)+1;
 		m_pChar = new CHAR[length];
 		if (NULL == m_pChar)
 			throw std::bad_alloc();

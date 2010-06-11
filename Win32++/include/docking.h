@@ -2489,7 +2489,7 @@ namespace Win32xx
 			}
 
 			// Remove dockers without parents from vDockList
-			for (UINT n = vDockList.size(); n > 0; --n)
+			for (UINT n = (UINT)vDockList.size(); n > 0; --n)
 			{
 				iter = vDockList.begin() + n-1;
 				if ((*iter).DockParentID == 0)
@@ -3001,7 +3001,7 @@ namespace Win32xx
 			rc.OffsetRect(-rc.left, -rc.top);
 		}
 
-		HDWP hdwp = BeginDeferWindowPos(m_vDockChildren.size() +2);
+		HDWP hdwp = BeginDeferWindowPos((int)m_vDockChildren.size() +2);
 
 		// Step 1: Calculate the position of each Docker child, DockBar, and Client window.
 		//   The Client area = the docker rect minus the area of dock children and the dock bar (splitter bar).

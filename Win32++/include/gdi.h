@@ -365,7 +365,7 @@ namespace Win32xx
 			else                     cClrBits = 32;
 
 			// Allocate memory for the BITMAPINFO structure.
-			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((UINT)1<< cClrBits);
+			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (1i64<< cClrBits);
 			m_pbmi = (LPBITMAPINFO)new byte[sizeof(BITMAPINFOHEADER) + uQuadSize];
 			if (NULL == m_pbmi) throw std::bad_alloc();
 			ZeroMemory(m_pbmi, sizeof(BITMAPINFOHEADER) + uQuadSize);

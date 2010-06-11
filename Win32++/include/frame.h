@@ -1447,7 +1447,7 @@ namespace Win32xx
 		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolbarID));
 
 		if ((0 == iImages) || (NULL == hbm))
-			return m_vMenuIcons.size();	// No valid images, so nothing to do!
+			return (UINT)m_vMenuIcons.size();	// No valid images, so nothing to do!
 
 		BITMAP bm = {0};
 		::GetObject(hbm, sizeof(BITMAP), &bm);
@@ -1469,7 +1469,7 @@ namespace Win32xx
 			if (iImageHeight != Oldcy)
 			{
 				TRACE(_T("Unable to add icons. The new icons are a different size to the old ones\n"));
-				return m_vMenuIcons.size();
+				return (UINT)m_vMenuIcons.size();
 			}
 		}
 
@@ -1519,7 +1519,7 @@ namespace Win32xx
 		}
 
 		// return the number of menu icons
-		return m_vMenuIcons.size();
+		return (UINT)m_vMenuIcons.size();
 	}
 
 	inline void CFrame::AddMenubarBand()

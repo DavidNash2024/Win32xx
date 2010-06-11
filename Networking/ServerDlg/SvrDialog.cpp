@@ -279,7 +279,7 @@ void CSvrDialog::OnSocketAccept()
 	// Reposition the chat dialog
 	RECT r = {0};
 	::GetWindowRect(pDialog->GetHwnd(), &r);
-	int offset  = 4 * (m_ConnectedClients.size() - 1);
+	int offset  = 4 * ((int)m_ConnectedClients.size() - 1);
 	::MoveWindow(pDialog->GetHwnd(), r.left + offset, r.top + offset + 80, r.right - r.left, r.bottom - r.top, TRUE);
 	::ShowWindow(pDialog->GetHwnd(), SW_SHOW);
 
