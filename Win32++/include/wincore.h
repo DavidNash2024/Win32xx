@@ -252,8 +252,8 @@ namespace Win32xx
 		CSize()						{ cx = 0; cy = 0; }
 		CSize(int CX, int CY)		{ cx = CX; cy = CY; }
 		CSize(SIZE sz)				{ cx = sz.cx; cy = sz.cy; }
-		CSize(POINT pt)				{ cx = pt.x;  cx = pt.y; }
-		CSize(DWORD dw)				{ cx = (short)LOWORD(dw); cx = (short)HIWORD(dw); }
+		CSize(POINT pt)				{ cx = pt.x;  cy = pt.y; }
+		CSize(DWORD dw)				{ cx = (short)LOWORD(dw); cy = (short)HIWORD(dw); }
 		void SetSize(int CX, int CY){ cx = CX; cy = CY; }
 		BOOL operator == (SIZE sz)	{ return (cx == sz.cx && cy == sz.cy); }
 		BOOL operator != (SIZE sz)	{ return (cx != sz.cx || cy != sz.cy); }
