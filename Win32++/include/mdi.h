@@ -628,7 +628,7 @@ namespace Win32xx
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 		m_hChildMenu = ::LoadMenu (hInstance, MenuName);
 		
-		// It is valid to call SetChildMenu before the window is created
+		// Note: It is valid to call SetChildMenu before the window is created
 		if (IsWindow())
 		{
 			HWND hWnd = (HWND)::SendMessage(GetParent(), WM_MDIGETACTIVE, 0L, 0L);
