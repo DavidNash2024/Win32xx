@@ -9,6 +9,8 @@ dsp       | A project file used by Visual Studio 6
 dsw       | A project file used by Visual Studio 6
 sln       | A project file used by Visual Studio 2003, VS2005 or VS2008
 vcproj    | A project file used by Visual Studio 2003, VS2005 or VS2008
+vcxproj   | A project file used by Visual Studio 2010
+filters   | A supplementary project file used by Visual Studio 2010
 bdsproj   | A project file used by Borland Developer Studio 2006 
 bpf       | A project file used by Borland Developer Studio 2006 
 vcp       | A project file used by eMbedded Visual C++

@@ -88,7 +88,7 @@ namespace Win32xx
 
 		// Its unlikely you would need to override these functions
 		virtual BOOL IsMDIChild() const {return TRUE;}
-		virtual BOOL SetChildMenu(LPCTSTR MenuName);
+		virtual void SetChildMenu(LPCTSTR MenuName);
 		virtual CWnd* GetView() const	{return m_pwndView;}
 		virtual void SetView(CWnd& pView);
 
@@ -425,15 +425,18 @@ namespace Win32xx
 			int nWindowItem = MAX (nMenuItems -2, 0);
 			HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
 
-			if (IsMenubarUsed())
+			if (hMenuWindow)
 			{
-				AppendMDIMenu(hMenuWindow);
-				GetMenubar().SetMenu(hMenu);
-			}
-			else
-			{
-				GetView()->SendMessage (WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
-				DrawMenuBar();
+				if (IsMenubarUsed())
+				{
+					AppendMDIMenu(hMenuWindow);
+					GetMenubar().SetMenu(hMenu);
+				}
+				else
+				{
+					GetView()->SendMessage (WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
+					DrawMenuBar();
+				}
 			}
 		}
 		UpdateCheckMarks();
@@ -594,10 +597,6 @@ namespace Win32xx
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
-		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
-		if (m_hChildMenu)
-			pMDIFrame->UpdateFrameMenu(m_hChildMenu);
-
 		return m_hWnd;
 	}
 
@@ -624,20 +623,21 @@ namespace Win32xx
 		m_pwndView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 	}
 
-	inline BOOL CMDIChild::SetChildMenu(LPCTSTR MenuName)
+	inline void CMDIChild::SetChildMenu(LPCTSTR MenuName)
 	{
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 		m_hChildMenu = ::LoadMenu (hInstance, MenuName);
-
-		HWND hWnd = (HWND)::SendMessage(GetParent(), WM_MDIGETACTIVE, 0L, 0L);
-		if ((NULL != m_hWnd) &&(hWnd == m_hWnd) && (NULL != m_hChildMenu))
+		
+		// It is valid to call SetChildMenu before the window is created
+		if (IsWindow())
 		{
-			CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor());
-			if (m_hChildMenu)
+			HWND hWnd = (HWND)::SendMessage(GetParent(), WM_MDIGETACTIVE, 0L, 0L);
+			if ((m_hChildMenu) && (hWnd == m_hWnd))
+			{
+				CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor());
 				pFrame->UpdateFrameMenu(m_hChildMenu);
-		}
-
-		return (m_hChildMenu != NULL);
+			}
+		} 
 	}
 
 	inline void CMDIChild::SetView(CWnd& View)
