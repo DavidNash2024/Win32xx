@@ -311,7 +311,7 @@ namespace Win32xx
 
 	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon)
 	{
-		HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
+		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon), IMAGE_ICON, 0,0,0);
 		return AddTabPage(pWnd, szTitle, hIcon);
 	}
 

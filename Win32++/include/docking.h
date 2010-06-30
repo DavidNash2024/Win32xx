@@ -3845,7 +3845,6 @@ namespace Win32xx
 
 	inline void CDockContainer::SetTabIcon(UINT nID_Icon)
 	{
-	//	HICON hIcon = LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon));
 		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon), IMAGE_ICON, 0,0,0);
 		SetTabIcon(hIcon);
 	}
