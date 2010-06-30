@@ -106,10 +106,13 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 
 LRESULT CSimpleMDIChild::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-
-//	}
+	switch (uMsg)
+	{
+	case WM_SIZE:
+		CDocker* pDock = (CDocker*)GetView();
+		pDock->RecalcDockLayout();
+		break;
+	}
 
 	// Do default processing for other messages
 	return WndProcDefault(uMsg, wParam, lParam);
