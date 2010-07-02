@@ -2,9 +2,9 @@ REM: A batch program to rebuild the Win32++ samples using VS2005.
 REM: The contents of the log file is erased
 REM: The contents of the VS2005 directory will be erased
 
-::SetPaths
-@set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE;C:\Program Files\Microsoft Visual Studio 8\VC\BIN;C:\Program Files\Microsoft Visual Studio 8\Common7\output;C:\Program Files\Microsoft Visual Studio 8\Common7\output\bin;C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\bin;C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\bin;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Microsoft Visual Studio 8\VC\VCPackages;%PATH%
-@set PATH=C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\IDE;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\BIN;C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\output;C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\output\bin;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\PlatformSDK\bin;C:\Program Files (x86)\Microsoft Visual Studio 8\SDK\v2.0\bin;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\VCPackages;%PATH%
+REM: Set the paths and environment variables
+call "C:\Program Files (x86)\Microsoft Visual Studio 8\VC\vcvarsall.bat" x86
+@set PATH=%PATH%;%CD%
 
 
 ::Cleanup
@@ -14,6 +14,7 @@ pushd "..\..\Networking"
 call clean
 popd
 
+@echo on
 
 REM: Change the directory to the parent
 pushd ..\..

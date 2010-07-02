@@ -1,10 +1,9 @@
 REM: A batch program to rebuild the Win32++ samples using VS2010.
 REM: The contents of the log file is erased 
 
-REM: Set the Paths
-@Path=C:\Program Files\Microsoft Visual Studio 10.0\VSTSDB\Deploy;C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\;C:\Program Files\Microsoft Visual Studio 10.0\VC\BIN;C:\Program Files\Microsoft Visual Studio 10.0\Common7\Tools;C:\Windows\Microsoft.NET\Framework\v4.0.21006;C:\Windows\Microsoft.NET\Framework\v3.5;C:\Program Files\Microsoft Visual Studio 10.0\VC\VCPackages;%PATH%
-@Path=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VSTSDB\Deploy;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools;C:\Windows\Microsoft.NET\Framework\v4.0.21006;C:\Windows\Microsoft.NET\Framework\v3.5;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\VCPackages;%PATH%
-
+REM: Set the paths and environment variables
+call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+@set PATH=%PATH%;%CD%
 
 ::Cleanup
 call clean
@@ -13,6 +12,7 @@ pushd "..\..\Networking"
 call clean
 popd
 
+@echo on
 
 REM: Change the directory to the parent
 pushd ..\..

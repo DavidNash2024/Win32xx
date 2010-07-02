@@ -1,9 +1,9 @@
 REM: A batch program to rebuild the Win32++ samples using VS2008.
 REM: The contents of the log file is erased 
 
-REM: Set the Paths
-@set PATH=c:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE;c:\Program Files\Microsoft Visual Studio 9.0\VC\BIN;c:\Program Files\Microsoft Visual Studio 9.0\Common7\output;c:\WINDOWS\Microsoft.NET\Framework\v3.5;c:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;c:\Program Files\Microsoft Visual Studio 9.0\VC\VCPackages;%PATH%
-@set PATH=c:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE;c:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\BIN;c:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\output;c:\WINDOWS\Microsoft.NET\Framework\v3.5;c:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;c:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\VCPackages;%PATH%
+REM: Set the paths and environment variables
+call "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86
+@set PATH=%PATH%;%CD%
 
 
 ::Cleanup
@@ -20,6 +20,7 @@ if exist "Win32++\output\VS2008\Debug" rmdir /s /q "Win32++\output\VS2008\Debug"
 if exist "Win32++\output\VS2008\Release" rmdir /s /q "Win32++\output\VS2008\Release"
 if exist "Win32++\output\VS2008\Tutorials" rmdir /s /q "Win32++\output\VS2008\Tutorials"
 
+@echo on
 
 ::Compile code
 devenv /build Debug Browser\ProjectFiles\Browser_2008.sln  			> "Win32++\output\VS2008.log"
