@@ -19,46 +19,19 @@ CGDIPlusView::~CGDIPlusView()
 	GdiplusShutdown(m_gdiplusToken);
 }
 
-void CGDIPlusView::DrawLines(HDC hdc) 
+void CGDIPlusView::DrawCappedLine(HDC hdc) 
 {
 	Graphics graphics(hdc);
-	
-	// Draw solid line
-	Pen      penLine(Color(255, 0, 0, 255));
-	graphics.DrawLine(&penLine, 10, 70, 200, 70);
-
 	// Draw capped line, width 8
 	Pen penCapped(Color(255, 0, 0, 255), 8);
 	Status stat = penCapped.SetStartCap(LineCapArrowAnchor);
 	stat = penCapped.SetEndCap(LineCapRoundAnchor);
 	stat = graphics.DrawLine(&penCapped, 10, 175, 300, 175);
 }
-void CGDIPlusView::DrawShapes(HDC hdc)
+
+void CGDIPlusView::DrawGamaShapes(HDC hdc)
 {
 	Graphics graphics(hdc);
-
-	// Draw Solid Shapes
-	SolidBrush solidBrush(Color(255, 255, 0, 0));
-	Status stat = graphics.FillEllipse(&solidBrush, 160, 84, 100, 60);
-
-	// Draw some Gradient Shapes
-	// Create a path that consists of a single ellipse.
-	GraphicsPath path;
-	path.AddEllipse(0, 80, 140, 70);
-
-	// Use the path to construct a brush.
-	PathGradientBrush pthGrBrush(&path);
-
-	// Set the color at the center of the path to blue.
-	pthGrBrush.SetCenterColor(Color(255, 0, 0, 255));
-
-	// Set the color along the entire boundary of the path to aqua.
-	Color colors[] = {Color(255, 0, 255, 255)};
-	int count = 1;
-	pthGrBrush.SetSurroundColors(colors, &count);
-
-	stat = graphics.FillEllipse(&pthGrBrush, 0, 80, 140, 70);
-
 
 	// Draw Plygons with Gama Corrections
 	// Put the points of a polygon in an array.
@@ -86,15 +59,55 @@ void CGDIPlusView::DrawShapes(HDC hdc)
 					  Color(255, 0, 0, 255), Color(255, 255, 255, 255),
 					  Color(255, 0, 0, 0),   Color(255, 0, 255, 0)};
 
-	count = 10;
+	int count = 10;
 	pthGrBrushGama.SetSurroundColors(colorsGama, &count);
 
 	// Fill the path with the path gradient brush.
-	stat = graphics.FillPath(&pthGrBrushGama, &pathGama);
+	graphics.FillPath(&pthGrBrushGama, &pathGama);
 	pthGrBrushGama.SetGammaCorrection(TRUE);
-	stat = graphics.TranslateTransform(200.0f, 0.0f);
-	stat = graphics.FillPath(&pthGrBrushGama, &pathGama);
+	graphics.TranslateTransform(200.0f, 0.0f);
+	graphics.FillPath(&pthGrBrushGama, &pathGama);
 }
+
+void CGDIPlusView::DrawGradientElipse(HDC hdc)
+{
+	Graphics graphics(hdc);
+
+	// Create a path that consists of a single ellipse.
+	GraphicsPath path;
+	path.AddEllipse(0, 80, 140, 70);
+
+	// Use the path to construct a brush.
+	PathGradientBrush pthGrBrush(&path);
+
+	// Set the color at the center of the path to blue.
+	pthGrBrush.SetCenterColor(Color(255, 0, 0, 255));
+
+	// Set the color along the entire boundary of the path to aqua.
+	Color colors[] = {Color(255, 0, 255, 255)};
+	int count = 1;
+	pthGrBrush.SetSurroundColors(colors, &count);
+
+	graphics.FillEllipse(&pthGrBrush, 0, 80, 140, 70);
+}
+
+void CGDIPlusView::DrawSolidElipse(HDC hdc)
+{
+	Graphics graphics(hdc);
+
+	SolidBrush solidBrush(Color(255, 255, 0, 0));
+	graphics.FillEllipse(&solidBrush, 160, 84, 100, 60);
+}
+
+void CGDIPlusView::DrawSolidLine(HDC hdc) 
+{
+	Graphics graphics(hdc);
+	
+	// Draw solid line
+	Pen      penLine(Color(255, 0, 0, 255));
+	graphics.DrawLine(&penLine, 10, 70, 200, 70);
+}
+
 void CGDIPlusView::DrawText(HDC hdc) 
 {
 	Graphics graphics(hdc);
@@ -116,10 +129,12 @@ void CGDIPlusView::OnInitialUpdate()
 
 void CGDIPlusView::OnPaint(HDC hDC)
 {
-	Graphics graphics(hDC);
-	DrawLines(hDC);
+	DrawSolidLine(hDC);
 	DrawText(hDC);
-	DrawShapes(hDC);
+	DrawCappedLine(hDC);
+	DrawGradientElipse(hDC);
+	DrawSolidElipse(hDC);
+	DrawGamaShapes(hDC); 
 }
 
 void CGDIPlusView::PreCreate(CREATESTRUCT &cs)
@@ -149,7 +164,7 @@ LRESULT CGDIPlusView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-//
+
 //	}
 
 	// pass unhandled messages on for default processing
