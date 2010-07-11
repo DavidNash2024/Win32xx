@@ -80,7 +80,6 @@ void CTCPClientDlg::Receive()
 
 void CTCPClientDlg::Send()
 {
-//	tString t = GetDlgItemString(IDC_EDIT_SEND2);
 	LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND2);
 	m_pSocket->Send(TCharToChar(szSend), lstrlen(szSend), 0);
 }
@@ -186,9 +185,8 @@ BOOL CSvrDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 
 	// reposition dialog
-	RECT rc;
-	::GetWindowRect(m_hWnd, &rc);
-	::MoveWindow(m_hWnd, rc.left-14, rc.top-14, rc.right - rc.left, rc.bottom - rc.top, TRUE);
+	CRect rc = GetWindowRect();
+	MoveWindow( rc.left-14, rc.top-14, rc.Width(), rc.Height(), TRUE);
 
 	// Set the initial state of the dialog
 	SetDlgItemText(IDC_EDIT_STATUS, _T("Server Stopped"));
@@ -265,7 +263,8 @@ void CSvrDialog::OnSocketAccept()
 	if (INVALID_SOCKET == m_MainSocket.GetSocket())
 	{
 		delete pClient;
-		TRACE(_T("Failed to accept connection from client"));
+		TRACE(_T("Failed to accept connection from client\n"));
+		TRACE(m_MainSocket.GetLastError());
 		return;
 	} 
 	
@@ -277,18 +276,16 @@ void CSvrDialog::OnSocketAccept()
 	pDialog->DoModeless();
 
 	// Reposition the chat dialog
-	RECT r = {0};
-	::GetWindowRect(pDialog->GetHwnd(), &r);
-	int offset  = 4 * ((int)m_ConnectedClients.size() - 1);
-	::MoveWindow(pDialog->GetHwnd(), r.left + offset, r.top + offset + 80, r.right - r.left, r.bottom - r.top, TRUE);
-	::ShowWindow(pDialog->GetHwnd(), SW_SHOW);
+	CRect rc = pDialog->GetWindowRect();
+	int offset = 4 * ((int)m_ConnectedClients.size() - 1);
+	pDialog->MoveWindow(rc.left + offset, rc.top + offset + 80, rc.Width(), rc.Height(), TRUE);
+	pDialog->ShowWindow();
 
 	// Add the socket and dialog to the map
 	m_ConnectedClients.insert(std::make_pair(pClient, pDialog));
 
 	// Update the dialog
 	Append(IDC_EDIT_STATUS, _T("Client Connected"));
-
 }
 
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
@@ -328,9 +325,9 @@ BOOL CSvrDialog::StartServer()
 	// Create the main socket
 	if (!m_MainSocket.Create(PF_INET, m_SocketType))
 //	if (!m_MainSocket.Create(PF_INET6, m_SocketType))
-//	if (!m_MainSocket.Create())
 	{
 		Append(IDC_EDIT_STATUS, _T("Create Socket Failed"));
+		Append(IDC_EDIT_STATUS, m_MainSocket.GetLastError());
 		return FALSE;
 	}
 
@@ -343,6 +340,7 @@ BOOL CSvrDialog::StartServer()
 	if ( RetVal != 0 )
 	{
 		Append(IDC_EDIT_STATUS, _T("Bind failed"));
+		Append(IDC_EDIT_STATUS, m_MainSocket.GetLastError());
 		return FALSE;
 	}
 
@@ -350,6 +348,7 @@ BOOL CSvrDialog::StartServer()
 	if ( RetVal != 0 )
 	{
 		Append(IDC_EDIT_STATUS, _T("Listen failed"));
+		Append(IDC_EDIT_STATUS, m_MainSocket.GetLastError());
 		return FALSE;
 	}
 

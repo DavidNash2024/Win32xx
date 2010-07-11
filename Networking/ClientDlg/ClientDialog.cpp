@@ -92,7 +92,7 @@ void CClientDialog::LoadCommonControlsEx()
 		// Load the Common Controls DLL
 		hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
 		if (!hComCtl)
-			throw CWinException(_T("CFrame::LoadCommonControls ... Failed to load COMCTL32.DLL"));
+			throw CWinException(_T("CClientDialog::LoadCommonControls ... Failed to load COMCTL32.DLL"));
 
 		if (GetComCtlVersion() > 470)
 		{
@@ -105,7 +105,7 @@ void CClientDialog::LoadCommonControlsEx()
 			InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 			InitStruct.dwICC = ICC_INTERNET_CLASSES;
 			if((!(*pfnInit)(&InitStruct)))
-				throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));
+				throw CWinException(_T("CClientDialog::LoadCommonControls ... InitCommonControlsEx failed"));
 		}
 		else
 		{
@@ -182,9 +182,8 @@ BOOL CClientDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 
 	// reposition dialog
-	RECT rc;
-	::GetWindowRect(m_hWnd, &rc);
-	::MoveWindow(m_hWnd, rc.left+14, rc.top+14, rc.right - rc.left, rc.bottom - rc.top, TRUE);
+	CRect rc = GetWindowRect();
+	MoveWindow( rc.left+14, rc.top+14, rc.Width(), rc.Height(), TRUE);
 
 	// Set the initial state of the dialog
 	SetDlgItemText(IDC_EDIT_STATUS, _T("Not Connected"));

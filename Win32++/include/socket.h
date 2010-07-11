@@ -130,6 +130,7 @@ namespace Win32xx
 		virtual int  Connect(const struct sockaddr* name, int namelen);
 		virtual BOOL Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
+		virtual LPCTSTR GetLastError();
 		virtual int  GetPeerName(struct sockaddr* name, int* namelen);
 		virtual int  GetSockName(struct sockaddr* name, int* namelen);
 		virtual int  GetSockOpt(int level, int optname, char* optval, int* optlen);
@@ -152,6 +153,7 @@ namespace Win32xx
 		CSocket& operator = (const CSocket&);	// Disable assignment operator
 		static UINT WINAPI EventThread(LPVOID thread_data);
 
+		tString m_tsErrorMessage;
 		SOCKET m_Socket;
 		HANDLE m_hEventThread;	// Handle to the thread
 		HANDLE m_StopRequest;	// An event to signal the event thread should stop
@@ -495,6 +497,24 @@ namespace Win32xx
 				}
 			}
 		}
+	}
+
+	inline LPCTSTR CSocket::GetLastError()
+	{
+		// Retrieves the most recent network error.
+
+		int ErrorCode = WSAGetLastError();
+		LPTSTR Message = NULL;
+
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS |
+					  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK, 
+					  NULL, ErrorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+					  (LPTSTR)&Message, 1024, NULL);
+		
+		m_tsErrorMessage = Message;
+		::LocalFree(Message);
+		
+		return m_tsErrorMessage.c_str();
 	}
 
 	inline int  CSocket::GetPeerName(struct sockaddr* name, int* namelen)
