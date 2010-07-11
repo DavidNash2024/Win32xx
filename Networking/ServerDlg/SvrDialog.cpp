@@ -326,38 +326,31 @@ BOOL CSvrDialog::StartServer()
 	m_SocketType = (lr == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
 
 	// Create the main socket
-	if (!m_MainSocket.Create(m_SocketType))
+	if (!m_MainSocket.Create(PF_INET, m_SocketType))
+//	if (!m_MainSocket.Create(PF_INET6, m_SocketType))
+//	if (!m_MainSocket.Create())
 	{
 		Append(IDC_EDIT_STATUS, _T("Create Socket Failed"));
 		return FALSE;
 	}
-	
+
 	// Retrieve the local port number
 	LPCTSTR szPort = GetDlgItemText(IDC_EDIT_PORT);
-	int LocalPort = atoi(TCharToChar(szPort));
-
-	// Bind the socket.
-	sockaddr_in service;
-
-	service.sin_family = AF_INET;
-	service.sin_addr.s_addr = htonl(INADDR_ANY);
-	service.sin_port = htons( (u_short)LocalPort );
 
 	// Bind the IP address to the listening socket
-	if ( m_MainSocket.Bind( (SOCKADDR*) &service, sizeof(service) ) == SOCKET_ERROR )
+	int RetVal = m_MainSocket.Bind("127.0.0.1", TCharToChar(szPort) );
+//	int RetVal = m_MainSocket.Bind("::1", TCharToChar(szPort) );
+	if ( RetVal != 0 )
 	{
 		Append(IDC_EDIT_STATUS, _T("Bind failed"));
 		return FALSE;
 	}
 
-	if (m_SocketType == SOCK_STREAM)
+	RetVal = m_MainSocket.Listen();
+	if ( RetVal != 0 )
 	{
-		// Listen for connections from clients (TCP server only)
-		if ( SOCKET_ERROR == m_MainSocket.Listen() )
-		{
-			Append(IDC_EDIT_STATUS, _T("Error listening on socket"));
-			return FALSE;
-		}
+		Append(IDC_EDIT_STATUS, _T("Listen failed"));
+		return FALSE;
 	}
 
 	m_MainSocket.StartEvents();

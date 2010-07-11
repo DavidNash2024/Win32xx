@@ -29,14 +29,14 @@ int main()
 	CClientSocket Client;
 
 	// Create the socket to communicate with the Server
-	if (!Client.Create(SOCK_STREAM))
+	if (!Client.Create(AF_INET, SOCK_STREAM))
 	{
 		cout << "Failed to create socket\n" ;
 		return 0;
 	}
 
 	// Connect to the server
-	if (SOCKET_ERROR == Client.Connect("127.0.0.1", 3000))
+	if (SOCKET_ERROR == Client.Connect("127.0.0.1", "3000"))
 	{
 		cout << "Failed to connect to server. Was it running?\n";
 		return 0;

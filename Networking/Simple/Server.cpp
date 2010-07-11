@@ -29,14 +29,14 @@ int main()
 	// Create the main server socket.
 	// It is used to listen for clients
 	CServerSocket Server;
-	if (!Server.Create(SOCK_STREAM))
+	if (!Server.Create(AF_INET, SOCK_STREAM))
 	{
 		cout << "Failed to create socket\n" ;
 		return 0;
 	}
 
 	// Bind the IP address and port# to the main socket
-	if (SOCKET_ERROR == Server.Bind("127.0.0.1", 3000))
+	if (SOCKET_ERROR == Server.Bind("127.0.0.1", "3000"))
 	{
 		cout << "Failed to bind IP address to socket\n" ;
 		return 0;

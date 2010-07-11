@@ -209,7 +209,8 @@ void CClientDialog::OnStartClient()
 		case SOCK_STREAM:
 			{
 				// Create the socket
-				if (!m_Client.Create())
+				if (!m_Client.Create(AF_INET, SOCK_STREAM))
+			//	if (!m_Client.Create(AF_INET6, SOCK_STREAM))
 				{
 					::MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
 					return;
@@ -217,7 +218,6 @@ void CClientDialog::OnStartClient()
 
 				// Get the port number
 				LPCTSTR szPort = GetDlgItemText(IDC_EDIT_PORT);
-				int RemotePort = atoi(TCharToChar(szPort));
 
 				// Get the IP Address from the IP Address control
 				DWORD dwAddr = 0;
@@ -230,7 +230,8 @@ void CClientDialog::OnStartClient()
 				::EnableWindow(GetDlgItem(IDC_BUTTON_CONNECT), FALSE);
 
 				// Connect to the server
-				if (0 != m_Client.Connect(sAddr.c_str(), RemotePort))
+				if (0 != m_Client.Connect(sAddr.c_str(), TCharToChar(szPort)))
+			//	if (0 != m_Client.Connect("::1", TCharToChar(szPort)))
 				{
 					MessageBox(_T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING);
 					m_Client.Disconnect();
@@ -245,7 +246,7 @@ void CClientDialog::OnStartClient()
 		case SOCK_DGRAM:
 			{
 				// Create the socket
-				if (!m_Client.Create(SOCK_DGRAM))
+				if (!m_Client.Create(AF_INET, SOCK_DGRAM))
 				{
 					::MessageBox(m_hWnd, _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING);
 					return;
