@@ -68,6 +68,11 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 BOOL CTCPClientDlg::OnInitDialog()
 {
 	SetForegroundWindow();
+
+	m_EditSend.AttachDlgItem(IDC_EDIT_SEND2, this);
+	m_EditReceive.AttachDlgItem(IDC_EDIT_RECEIVE2, this);
+	m_ButtonSend.AttachDlgItem(IDC_BUTTON_SEND2, this);
+
 	return TRUE;
 }
 
@@ -80,7 +85,7 @@ void CTCPClientDlg::Receive()
 
 void CTCPClientDlg::Send()
 {
-	LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND2);
+	LPCTSTR szSend = m_EditSend.GetWindowText();
 	m_pSocket->Send(TCharToChar(szSend), lstrlen(szSend), 0);
 }
 
@@ -181,17 +186,27 @@ BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 BOOL CSvrDialog::OnInitDialog()
 {
 	// Set the Icon
-	SetIconLarge(IDW_MAIN);
-	SetIconSmall(IDW_MAIN);
+	SetIconLarge( IDW_MAIN );
+	SetIconSmall( IDW_MAIN );
 
 	// reposition dialog
 	CRect rc = GetWindowRect();
-	MoveWindow( rc.left-14, rc.top-14, rc.Width(), rc.Height(), TRUE);
+	MoveWindow( rc.left-14, rc.top-14, rc.Width(), rc.Height(), TRUE );
+
+	// Attach CWnd objects to the dialog's children
+	m_EditStatus.AttachDlgItem( IDC_EDIT_STATUS, this );
+	m_EditPort.AttachDlgItem( IDC_EDIT_PORT, this );
+	m_EditSend.AttachDlgItem( IDC_EDIT_SEND, this );
+	m_EditReceive.AttachDlgItem( IDC_EDIT_RECEIVE, this );
+	m_ButtonStart.AttachDlgItem( IDC_BUTTON_START, this );
+	m_ButtonSend.AttachDlgItem( IDC_BUTTON_SEND, this );
+	m_RadioTCP.AttachDlgItem( IDC_RADIO_TCP, this );
+	m_RadioUDP.AttachDlgItem( IDC_RADIO_UDP, this );
 
 	// Set the initial state of the dialog
-	SetDlgItemText(IDC_EDIT_STATUS, _T("Server Stopped"));
-	SetDlgItemText(IDC_EDIT_PORT, _T("3000"));
-	::SendMessage(GetDlgItem(IDC_RADIO_TCP), BM_SETCHECK, BST_CHECKED, 0);
+	m_EditStatus.SetWindowText( _T("Server Stopped") );
+	m_EditPort.SetWindowText( _T("3000") );
+	m_RadioTCP.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
 
 	return true;
 }
@@ -199,7 +214,7 @@ BOOL CSvrDialog::OnInitDialog()
 void CSvrDialog::OnStartServer()
 {
 	// Respond to the Start/Stop Button press
-	TRACE(_T("Start/Stop Button Pressed\n"));
+	TRACE( _T("Start/Stop Button Pressed\n") );
 
 	if (!m_bServerStarted)
 	{
@@ -208,10 +223,11 @@ void CSvrDialog::OnStartServer()
 			return;
 
 		// Update the dialog
-		::SetDlgItemText(m_hWnd, IDC_BUTTON_START, _T("Stop Server"));
-		::EnableWindow(GetDlgItem(IDC_EDIT_PORT), FALSE);
-		::EnableWindow(GetDlgItem(IDC_RADIO_TCP), FALSE);
-		::EnableWindow(GetDlgItem(IDC_RADIO_UDP), FALSE);
+		m_ButtonStart.SetWindowText( _T("Stop Server") ); 
+		m_EditPort.EnableWindow(FALSE);
+		m_RadioTCP.EnableWindow(FALSE);
+		m_RadioTCP.EnableWindow(FALSE);
+		
 		if (m_SocketType == SOCK_STREAM)
 		{
 			Append(IDC_EDIT_STATUS, _T("TCP Server Started"));
@@ -229,12 +245,12 @@ void CSvrDialog::OnStartServer()
 
 		// Update the dialog
 		Append(IDC_EDIT_STATUS, _T("Server Stopped"));
-		::SetDlgItemText(m_hWnd, IDC_BUTTON_START, _T("Start Server"));
-		::EnableWindow(GetDlgItem(IDC_EDIT_PORT), TRUE);
-		::EnableWindow(GetDlgItem(IDC_RADIO_TCP), TRUE);
-		::EnableWindow(GetDlgItem(IDC_RADIO_UDP), TRUE);
-		::EnableWindow(GetDlgItem(IDC_BUTTON_SEND), FALSE);
-		::EnableWindow(GetDlgItem(IDC_EDIT_SEND), FALSE);
+		m_ButtonStart.SetWindowText( _T("Start Server") );
+		m_EditPort.EnableWindow(TRUE);
+		m_RadioTCP.EnableWindow(TRUE);
+		m_RadioUDP.EnableWindow(TRUE);
+		m_ButtonSend.EnableWindow(FALSE);
+		m_EditSend.EnableWindow(FALSE);
 	}
 	m_bServerStarted = !m_bServerStarted;
 }
@@ -249,7 +265,7 @@ void CSvrDialog::OnSend()
 			// TCP connections have a seperate chat dialog for sending/receiving data
 			break;
 		case SOCK_DGRAM:
-			LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND);
+			LPCTSTR szSend = m_EditSend.GetWindowText();
 			m_MainSocket.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, (SOCKADDR*)&m_ClientAddr, sizeof(m_ClientAddr));
 			break;
 	}
@@ -308,9 +324,9 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 			int addrlen = sizeof(m_ClientAddr);
 			m_MainSocket.ReceiveFrom(str, 1024, 0, (SOCKADDR*)&m_ClientAddr, &addrlen); 
 			TRACE(_T("[Received:] ")); TRACE(CharToTChar(str)); TRACE(_T("\n"));
-			::EnableWindow(GetDlgItem(IDC_BUTTON_SEND), TRUE);
-			::EnableWindow(GetDlgItem(IDC_EDIT_SEND), TRUE);
-			::SendMessage(m_hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE);
+			m_ButtonSend.EnableWindow(TRUE);
+			m_EditSend.EnableWindow(TRUE);
+			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE );
 		}
 		break;
 	}
@@ -319,7 +335,7 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 
 BOOL CSvrDialog::StartServer()
 {
-	LRESULT lr = ::SendMessage(GetDlgItem(IDC_RADIO_TCP), BM_GETCHECK, 0, 0);
+	LRESULT lr = m_RadioTCP.SendMessage( BM_GETCHECK, 0, 0 );
 	m_SocketType = (lr == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
 
 	// Create the main socket
@@ -332,7 +348,7 @@ BOOL CSvrDialog::StartServer()
 	}
 
 	// Retrieve the local port number
-	LPCTSTR szPort = GetDlgItemText(IDC_EDIT_PORT);
+	LPCTSTR szPort = m_EditPort.GetWindowText();
 
 	// Bind the IP address to the listening socket
 	int RetVal = m_MainSocket.Bind("127.0.0.1", TCharToChar(szPort) );
@@ -344,12 +360,17 @@ BOOL CSvrDialog::StartServer()
 		return FALSE;
 	}
 
-	RetVal = m_MainSocket.Listen();
-	if ( RetVal != 0 )
+
+	if (m_SocketType == SOCK_STREAM)
 	{
-		Append(IDC_EDIT_STATUS, _T("Listen failed"));
-		Append(IDC_EDIT_STATUS, m_MainSocket.GetLastError());
-		return FALSE;
+		// Listen for connections from clients (TCP server only)
+		RetVal = m_MainSocket.Listen();
+		if	( SOCKET_ERROR == RetVal )
+		{
+			Append(IDC_EDIT_STATUS, _T("Error listening on socket"));
+			Append(IDC_EDIT_STATUS, m_MainSocket.GetLastError());
+			return FALSE;
+		}
 	}
 
 	m_MainSocket.StartEvents();

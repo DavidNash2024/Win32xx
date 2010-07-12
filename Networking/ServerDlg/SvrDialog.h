@@ -24,6 +24,17 @@ public:
 	void Send();
 
 	CServerSocket* m_pSocket;
+
+private:
+	// Nested classes for this dialog's child windows
+	// Nesting is optional. Its done to keep the IDE's class view tidy.
+	class CEditSend : public CEdit {};
+	class CEditReceive : public CEdit {};
+	class CButtonSend : public CButton {};
+
+	CEditSend	m_EditSend;
+	CEditReceive m_EditReceive;
+	CButtonSend	m_ButtonSend;
 };
 
 
@@ -53,6 +64,27 @@ private:
 	BOOL m_bServerStarted;
 	int  m_SocketType;			// either SOCK_STREAM or SOCK_DGRAM
 	sockaddr_in m_ClientAddr;	// Stores connect address from UDP client
+
+	// Nested classes for this dialog's child windows
+	// Nesting is optional. Its done to keep the IDE's class view tidy.
+	class CEditStatus : public CEdit {};
+	class CEditPort : public CEdit {};
+	class CEditSend : public CEdit {};
+	class CEditReceive : public CEdit {};
+	class CButtonStart : public CButton {};
+	class CButtonSend : public CButton {};
+	class CRadioTCP : public CButton {};
+	class CRadioUDP : public CButton {};
+
+	CEditStatus m_EditStatus;
+	CEditPort	m_EditPort;
+	CEditSend	m_EditSend;
+	CEditReceive m_EditReceive;
+	CButtonStart m_ButtonStart;
+	CButtonSend	m_ButtonSend;
+	CRadioTCP	m_RadioTCP;
+	CRadioUDP	m_RadioUDP;
+
 };
 
 #endif //SVRDIALOG_H
