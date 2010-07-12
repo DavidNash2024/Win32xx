@@ -268,7 +268,7 @@ namespace Win32xx
 			nPort = atoi(port);
 			if (-1 == nPort)
 			{
-				TRACE(_T("Invalid port number"));
+				TRACE(_T("Invalid port number\n"));
 				return SOCKET_ERROR;
 			}
 			clientService.sin_port = htons( (u_short)nPort );
@@ -319,7 +319,7 @@ namespace Win32xx
 			RetVal = (*pfnGetAddrInfo)(addr, port, &Hints, &AddrInfo);
 			if (RetVal != 0) 
 			{
-				TRACE( _T("getaddrinfo failed"));
+				TRACE( _T("getaddrinfo failed\n"));
 				return SOCKET_ERROR;
 			}
 
@@ -327,7 +327,7 @@ namespace Win32xx
 			RetVal = Connect( AddrInfo->ai_addr, AddrInfo->ai_addrlen );
 			if ( RetVal == SOCKET_ERROR )
 			{
-				TRACE(_T("Bind failed"));
+				TRACE(_T("Bind failed\n"));
 				return RetVal;
 			}
 
@@ -347,7 +347,7 @@ namespace Win32xx
 			nPort = atoi(port);
 			if (-1 == nPort)
 			{
-				TRACE(_T("Invalid port number"));
+				TRACE(_T("Invalid port number\n"));
 				return SOCKET_ERROR;
 			}
 			clientService.sin_port = htons( (u_short)nPort );
@@ -385,7 +385,7 @@ namespace Win32xx
 		m_Socket = socket(family, type, protocol);
 		if(m_Socket == INVALID_SOCKET)
 		{
-			TRACE(_T("Failed to create socket"));
+			TRACE(_T("Failed to create socket\n"));
 			return FALSE;
 		}
 

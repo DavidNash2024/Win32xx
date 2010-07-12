@@ -51,10 +51,13 @@ For the listening socket, we do the following:
  3) Listen on the socket for incoming connection requests.
  4) Use StartNotifyRevents to receive notification of network events.
  5) Override OnAccept and Accept requests on a newly created data CSocket object.
+ 6) Create a new data socket for each client connection accepted.
+ 7) The server socket uses the 'accept' function to accept an incoming connection 
+     from this new data socket.
 
 The purpose of the data socket is to send data to, and recieve data from the client.
 There will be one data socket for each client accepted by the server.
-It is already set up ready for use by Accept. To use it we do the following:
+To use it we do the following:
  * To recieve data from the client, override OnReceive and use Receive.
  * To send data to use Send.
  * OnDisconnect can be used to detect when the client is disconnected.
