@@ -1172,11 +1172,13 @@ namespace Win32xx
 			return OnNCHitTest(wParam, lParam);
 		
 		case WM_WINDOWPOSCHANGING:
+			// A little hack to reduce tab flicker
+			if (IsWindowVisible())
 			{
-				// A little hack to reduce tab flicker
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 				pWinPos->flags |= SWP_NOREDRAW;
 			}
+			
 			break;
 		
 		case WM_WINDOWPOSCHANGED:
