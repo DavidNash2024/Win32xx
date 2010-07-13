@@ -8,11 +8,11 @@
 
 
 // Declaration of the CDialogApp class
-class CDlgSubclassApp : public CWinApp
+class CDialogDemoApp : public CWinApp
 {
 public:
-	CDlgSubclassApp();
-	virtual ~CDlgSubclassApp();
+	CDialogDemoApp();
+	virtual ~CDialogDemoApp();
 	CMyDialog& GetDialog() {return m_MyDialog;}
 	virtual BOOL InitInstance();
 
@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CDlgSubclassApp object
-inline CDlgSubclassApp& GetDlgApp() { return *((CDlgSubclassApp*)GetApp()); }
+// returns a reference to the CDialogDemoApp object
+inline CDialogDemoApp& GetDlgApp() { return *((CDialogDemoApp*)GetApp()); }
 
 
 #endif // define DLGSUBCLASSAPP_H

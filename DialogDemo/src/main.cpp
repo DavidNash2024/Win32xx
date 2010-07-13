@@ -8,7 +8,7 @@
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// Start Win32++
-	CDlgSubclassApp theApp;
+	CDialogDemoApp theApp;
 
 	// Run the application
 	return theApp.Run();

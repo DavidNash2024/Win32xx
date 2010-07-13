@@ -7,15 +7,15 @@
 
 
 // Definitions for the CDialogApp class
-CDlgSubclassApp::CDlgSubclassApp() : m_MyDialog(IDD_DIALOG1)
+CDialogDemoApp::CDialogDemoApp() : m_MyDialog(IDD_DIALOG1)
 {
 }
 
-CDlgSubclassApp::~CDlgSubclassApp()
+CDialogDemoApp::~CDialogDemoApp()
 {
 }
 
-BOOL CDlgSubclassApp::InitInstance()
+BOOL CDialogDemoApp::InitInstance()
 {
 	//Display the Modal Dialog
 	m_MyDialog.DoModal();

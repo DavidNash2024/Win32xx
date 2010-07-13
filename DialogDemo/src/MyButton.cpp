@@ -7,7 +7,7 @@
 
 LRESULT CMyButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	CMyDialog& dialog = ((CDlgSubclassApp*) GetApp())->GetDialog();
+	CMyDialog& dialog = ((CDialogDemoApp*) GetApp())->GetDialog();
 	switch (uMsg)
 	{
 	case WM_MOUSEMOVE:
