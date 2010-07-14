@@ -1,13 +1,13 @@
 [Project]
 FileName=Client_RELEASE.dev
-Name=Server
+Name=Client
 UnitCount=9
 Type=0
 Ver=1
 ObjFiles=
 Includes=..\..\Win32++\include
 Libs=
-PrivateResource=Server_private.rc
+PrivateResource=Client_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Release
 ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
-OverrideOutputName=Server.exe
+OverrideOutputName=Client.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=

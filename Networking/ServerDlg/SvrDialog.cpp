@@ -208,12 +208,17 @@ BOOL CSvrDialog::OnInitDialog()
 	m_RadioUDP.AttachDlgItem( IDC_RADIO_UDP, this );
 
 	// Set the initial state of the dialog
-	m_EditIP6Address.SetWindowTextW( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
+	m_EditIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
 	m_RadioIP4.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
 	m_IP4Address.SendMessage( IPM_SETADDRESS, 0, MAKEIPADDRESS(127, 0, 0, 1) );
 	m_EditStatus.SetWindowText( _T("Server Stopped") );
 	m_EditPort.SetWindowText( _T("3000") );
 	m_RadioTCP.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
+	if (!m_MainSocket.IsIPV6Supported())
+	{
+		m_RadioIP6.EnableWindow(FALSE);
+		m_EditIP6Address.EnableWindow(FALSE);
+	}
 
 	return true;
 }
@@ -259,14 +264,17 @@ void CSvrDialog::OnStartServer()
 		Append(IDC_EDIT_STATUS, _T("Server Stopped"));
 		m_ButtonStart.SetWindowText( _T("Start Server") );
 		m_IP4Address.EnableWindow(TRUE);
-		m_EditIP6Address.EnableWindow(TRUE);
 		m_EditPort.EnableWindow(TRUE);
 		m_RadioIP4.EnableWindow(TRUE);
-		m_RadioIP6.EnableWindow(TRUE);
 		m_RadioTCP.EnableWindow(TRUE);
 		m_RadioUDP.EnableWindow(TRUE);
 		m_ButtonSend.EnableWindow(FALSE);
 		m_EditSend.EnableWindow(FALSE);
+		if (m_MainSocket.IsIPV6Supported())
+		{
+			m_RadioIP6.EnableWindow(TRUE);
+			m_EditIP6Address.EnableWindow(TRUE);
+		}
 	}
 	m_bServerStarted = !m_bServerStarted;
 }

@@ -79,7 +79,13 @@ void CClientDialog::OnClientDisconnect()
 	m_IP4Address.EnableWindow( TRUE );
 	m_RadioTCP.EnableWindow( TRUE );
 	m_RadioUDP.EnableWindow( TRUE );
+	m_RadioIP4.EnableWindow( TRUE );
 	m_ButtonConnect.SetWindowText( _T("Connect") );
+	if ( m_Client.IsIPV6Supported() )
+	{
+		m_EditIP6Address.EnableWindow( TRUE );
+		m_RadioIP6.EnableWindow( TRUE );
+	}
 }
 
 void CClientDialog::LoadCommonControlsEx()
@@ -153,6 +159,12 @@ int CClientDialog::OnClientReceive()
 	// Called when the socket has data to receive
 	char buf[1025] = {0};	// assign 1025 array elements to NULL
 	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
+	if (SOCKET_ERROR == size)
+	{
+		Append( IDC_EDIT_STATUS, _T("Receive failed.") );
+		return size;
+	}
+
 	Append( IDC_EDIT_RECEIVE, CharToTChar(buf) );
 	return size;
 }
@@ -209,6 +221,12 @@ BOOL CClientDialog::OnInitDialog()
 	m_EditPort.SetWindowText( _T("3000") );
 	m_RadioTCP.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
 	m_IP4Address.SendMessage( IPM_SETADDRESS, 0, MAKEIPADDRESS(127, 0, 0, 1) );
+
+	if (!m_Client.IsIPV6Supported())
+	{
+		m_RadioIP6.EnableWindow(FALSE);
+		m_EditIP6Address.EnableWindow(FALSE);
+	}
 
 	return true;
 }
@@ -310,16 +328,20 @@ void CClientDialog::OnStartClient()
 
 		// Update the dialog
 		m_IP4Address.EnableWindow( TRUE );
-		m_EditIP6Address.EnableWindow( TRUE );
 		m_ButtonSend.EnableWindow( FALSE );
 		m_EditSend.EnableWindow( FALSE );
 		m_EditPort.EnableWindow( TRUE );
 		m_RadioIP4.EnableWindow( TRUE );
-		m_RadioIP6.EnableWindow( TRUE );
 		m_RadioTCP.EnableWindow( TRUE );
 		m_RadioUDP.EnableWindow( TRUE );
 		m_ButtonConnect.SetWindowText( _T("Connect") );
 		m_EditStatus.SetWindowText( _T("Not Connected") );
+
+		if (m_Client.IsIPV6Supported())
+		{
+			m_RadioIP6.EnableWindow(TRUE);
+			m_EditIP6Address.EnableWindow(TRUE);
+		}
 		m_bClientConnected = FALSE;
 	}
 }
