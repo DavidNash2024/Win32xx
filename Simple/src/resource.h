@@ -4,8 +4,8 @@
 //
 
 
-//The resource ID for ICON and Window Caption
-#define IDW_MAIN                         101
+// include the Resource IDs defined by Win32++
+#include "Default_Resource.h"
 
 
 // Next default values for new objects

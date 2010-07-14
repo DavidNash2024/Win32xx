@@ -131,13 +131,14 @@ namespace Win32xx
 		virtual int  Bind(const struct sockaddr* name, int namelen);
 		virtual int  Connect(const char* addr, const char* port);
 		virtual int  Connect(const struct sockaddr* name, int namelen);
-		virtual BOOL Create( int family, int type, int protocol = IPPROTO_IP);
+		virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
 		virtual LPCTSTR GetLastError();
 		virtual int  GetPeerName(struct sockaddr* name, int* namelen);
 		virtual int  GetSockName(struct sockaddr* name, int* namelen);
 		virtual int  GetSockOpt(int level, int optname, char* optval, int* optlen);
 		virtual int  ioCtlSocket(long cmd, u_long* argp);
+		virtual bool IsIPV6Supported();
 		virtual int  Listen(int backlog = SOMAXCONN);
 		virtual int  Receive(char* buf, int len, int flags);
 		virtual int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen);
@@ -373,7 +374,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline BOOL CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
+	inline bool CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
 	{
 		// Creates the socket
 
@@ -554,6 +555,32 @@ namespace Win32xx
 			TRACE(_T("ioCtlSocket Failed\n"));
 		
 		return Result;
+	}
+
+	inline bool CSocket::IsIPV6Supported()
+	{
+		bool IsIPV6Supported = FALSE;
+
+// Test if IPV6 is supported by this development environment
+#ifdef GetAddrInfo
+
+		HMODULE hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
+		
+		// Attempt to assign pointers to the getaddrinfo and freeaddrinfo functions.
+		// This allows us to test if IPV6 is supported on this operating system.	
+		typedef int  WINAPI GETADDRINFO(LPCSTR, LPCSTR, const struct addrinfo*, struct addrinfo**);
+		typedef void WINAPI FREEADDRINFO(struct addrinfo*);
+		GETADDRINFO* pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(hWS2_32, "getaddrinfo");
+		FREEADDRINFO* pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(hWS2_32, "freeaddrinfo");		
+		
+		if (pfnGetAddrInfo != 0 && pfnFreeAddrInfo != 0)
+			IsIPV6Supported = TRUE;	
+		
+		::FreeLibrary(hWS2_32);
+
+#endif
+
+		return IsIPV6Supported;
 	}
 
 	inline int CSocket::Listen(int backlog /*= SOMAXCONN*/)

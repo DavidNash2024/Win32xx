@@ -76,7 +76,7 @@ void CClientDialog::OnClientDisconnect()
 	m_ButtonSend.EnableWindow( FALSE );
 	m_EditSend.EnableWindow( FALSE );
 	m_EditPort.EnableWindow( TRUE );
-	m_IPAddress.EnableWindow( TRUE );
+	m_IP4Address.EnableWindow( TRUE );
 	m_RadioTCP.EnableWindow( TRUE );
 	m_RadioUDP.EnableWindow( TRUE );
 	m_ButtonConnect.SetWindowText( _T("Connect") );
@@ -135,13 +135,16 @@ void CClientDialog::OnClientConnect()
 	SetForegroundWindow();
 
 	// Update the dialog
-	m_EditStatus.SetWindowText( _T("Connected to server") );
+	m_IP4Address.EnableWindow( FALSE );
+	m_EditIP6Address.EnableWindow( FALSE );
 	m_ButtonSend.EnableWindow( TRUE );
 	m_EditSend.EnableWindow( TRUE );
 	m_EditPort.EnableWindow( FALSE );
-	m_IPAddress.EnableWindow( FALSE );
+	m_RadioIP4.EnableWindow( FALSE );
+	m_RadioIP6.EnableWindow( FALSE );
 	m_RadioTCP.EnableWindow( FALSE );
-	m_RadioUDP.EnableWindow( FALSE);
+	m_RadioUDP.EnableWindow( FALSE );
+	m_EditStatus.SetWindowText( _T("Connected to server") );
 	m_ButtonConnect.SetWindowText( _T("Disconnect") );
 }
 
@@ -185,21 +188,27 @@ BOOL CClientDialog::OnInitDialog()
 	CRect rc = GetWindowRect();
 	MoveWindow( rc.left+14, rc.top+14, rc.Width(), rc.Height(), TRUE);
 
+	// Attach CWnd objects to the dialog's children
+	m_IP4Address.AttachDlgItem( IDC_IPADDRESS, this );
+	m_EditIP6Address.AttachDlgItem( IDC_EDIT_IPV6ADDRESS, this );
 	m_EditStatus.AttachDlgItem( IDC_EDIT_STATUS, this );
 	m_EditPort.AttachDlgItem( IDC_EDIT_PORT, this );
 	m_EditSend.AttachDlgItem( IDC_EDIT_SEND, this );
 	m_EditReceive.AttachDlgItem( IDC_EDIT_RECEIVE, this );
 	m_ButtonConnect.AttachDlgItem( IDC_BUTTON_CONNECT, this );
 	m_ButtonSend.AttachDlgItem( IDC_BUTTON_SEND, this );
-	m_IPAddress.AttachDlgItem( IDC_IPADDRESS1, this );
+	m_RadioIP4.AttachDlgItem( IDC_RADIO_IPV4, this );
+	m_RadioIP6.AttachDlgItem( IDC_RADIO_IPV6, this );
 	m_RadioTCP.AttachDlgItem( IDC_RADIO_TCP, this );
 	m_RadioUDP.AttachDlgItem( IDC_RADIO_UDP, this );
 
 	// Set the initial state of the dialog
+	m_EditIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
+	m_RadioIP4.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
 	m_EditStatus.SetWindowText( _T("Not Connected") );
 	m_EditPort.SetWindowText( _T("3000") );
 	m_RadioTCP.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
-	m_IPAddress.SendMessage( IPM_SETADDRESS, 0, MAKEIPADDRESS(127, 0, 0, 1) );
+	m_IP4Address.SendMessage( IPM_SETADDRESS, 0, MAKEIPADDRESS(127, 0, 0, 1) );
 
 	return true;
 }
@@ -211,6 +220,9 @@ void CClientDialog::OnStartClient()
 	LRESULT lr = m_RadioTCP.SendMessage( BM_GETCHECK, 0, 0 );
 	m_SocketType = (lr == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
 
+	lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
+	int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
+
 	if (!m_bClientConnected)
 	{
 		switch(m_SocketType)
@@ -218,30 +230,39 @@ void CClientDialog::OnStartClient()
 		case SOCK_STREAM:
 			{
 				// Create the socket
-				if (!m_Client.Create(AF_INET, SOCK_STREAM))
-			//	if (!m_Client.Create(AF_INET6, SOCK_STREAM))
+
+				if (!m_Client.Create(IPfamily, SOCK_STREAM))
 				{
+					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING );
 					return;
 				}
 
-				// Get the port number
-				LPCTSTR szPort = m_EditPort.GetWindowTextW();
+				// Retrieve the IP Address
+				std::string sAddr;
+				if (PF_INET6 == IPfamily)
+				{
+					sAddr = TCharToChar( m_EditIP6Address.GetWindowText() );
+				}
+				else
+				{
+					DWORD dwAddr = 0;
+					m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
+					in_addr addr = {0};
+					addr.S_un.S_addr = htonl(dwAddr);
+					sAddr = inet_ntoa(addr);
+				}
 
-				// Get the IP Address from the IP Address control
-				DWORD dwAddr = 0;
-				m_IPAddress.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
-				in_addr addr = {0};
-				addr.S_un.S_addr = htonl(dwAddr);
-				std::string sAddr =  inet_ntoa(addr);
+				// Retrieve the local port number
+				std::string sPort = TCharToChar( m_EditPort.GetWindowText() );
 
 				// Temporarily disable the Connect/Disconnect button
 				m_ButtonConnect.EnableWindow( FALSE);
 
 				// Connect to the server
-				if (0 != m_Client.Connect(sAddr.c_str(), TCharToChar(szPort)))
-			//	if (0 != m_Client.Connect("::1", TCharToChar(szPort)))
+				if (0 != m_Client.Connect(sAddr.c_str(), sPort.c_str()) )
 				{
+					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING );
 					m_Client.Disconnect();
 					m_ButtonConnect.EnableWindow( TRUE );
@@ -255,8 +276,9 @@ void CClientDialog::OnStartClient()
 		case SOCK_DGRAM:
 			{
 				// Create the socket
-				if (!m_Client.Create(AF_INET, SOCK_DGRAM))
+				if (!m_Client.Create(IPfamily, SOCK_DGRAM))
 				{
+					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING );
 					return;
 				}
@@ -264,10 +286,13 @@ void CClientDialog::OnStartClient()
 				m_Client.StartEvents();
 
 				//Update the dialog
+				m_IP4Address.EnableWindow( FALSE );
+				m_EditIP6Address.EnableWindow( FALSE );
 				m_ButtonSend.EnableWindow( TRUE );
 				m_EditSend.EnableWindow( TRUE );
 				m_EditPort.EnableWindow( FALSE );
-				m_IPAddress.EnableWindow( FALSE );
+				m_RadioIP4.EnableWindow( FALSE );
+				m_RadioIP6.EnableWindow( FALSE );
 				m_RadioTCP.EnableWindow( FALSE );
 				m_RadioUDP.EnableWindow( FALSE );
 				m_ButtonConnect.SetWindowText( _T("Disconnect") );
@@ -284,10 +309,13 @@ void CClientDialog::OnStartClient()
 		m_Client.Disconnect();
 
 		// Update the dialog
+		m_IP4Address.EnableWindow( TRUE );
+		m_EditIP6Address.EnableWindow( TRUE );
 		m_ButtonSend.EnableWindow( FALSE );
 		m_EditSend.EnableWindow( FALSE );
 		m_EditPort.EnableWindow( TRUE );
-		m_IPAddress.EnableWindow( TRUE );
+		m_RadioIP4.EnableWindow( TRUE );
+		m_RadioIP6.EnableWindow( TRUE );
 		m_RadioTCP.EnableWindow( TRUE );
 		m_RadioUDP.EnableWindow( TRUE );
 		m_ButtonConnect.SetWindowText( _T("Connect") );
@@ -314,7 +342,7 @@ void CClientDialog::OnSend()
 
 			// Get the IP Address from the IP Address control
 			DWORD dwAddr = 0;
-			m_IPAddress.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
+			m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 
 			sockaddr_in peer = {0};
 			peer.sin_family = AF_INET;

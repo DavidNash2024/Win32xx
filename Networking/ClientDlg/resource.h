@@ -3,24 +3,26 @@
 // Used by Resource.rc
 //
 
-#include "default_resource.h"
+// include the Resource IDs defined by Win32++
+#include "Default_Resource.h"
 
 
 //Resource IDs for the dialog
-#define IDD_DIALOG1                     101
-#define IDC_EDIT_STATUS                 111
-#define IDC_EDIT_PORT                   112
+#define IDD_CLIENT						110
+#define IDC_EDIT_STATUS					111
+#define IDC_EDIT_PORT					112
 #define IDC_EDIT_SEND                   113
 #define IDC_EDIT_RECEIVE                114
-#define IDC_STATIC1                     120
-#define IDC_STATIC2                     121
-#define IDC_STATIC3                     122
-#define IDC_STATIC4                     123
-#define IDC_BUTTON_SEND                 130
-#define IDC_BUTTON_CONNECT              131
-#define IDC_IPADDRESS1                  135
-#define IDC_RADIO_TCP                   140
-#define IDC_RADIO_UDP                   141
+#define IDC_BUTTON_START                115
+#define IDC_BUTTON_SEND                 116
+#define IDC_BUTTON_CONNECT              117
+#define IDC_IPADDRESS                   118
+#define IDC_RADIO_TCP                   119
+#define IDC_RADIO_UDP                   120
+#define IDC_EDIT_IPV6ADDRESS			121
+#define IDC_RADIO_IPV4					122
+#define IDC_RADIO_IPV6					123
+#define IDC_RADIO_GROUP                 124
 
 // Next default values for new objects
 // 

@@ -5,6 +5,10 @@
 // Microsoft Visual C++ generated include file.
 // Used by Performance.rc
 //
+
+// include the Resource IDs defined by Win32++
+#include "Default_Resource.h"
+
 #define IDC_STATIC                      -1
 #define IDD_DIALOG1                     101
 #define IDC_WINDOWS                     1001
