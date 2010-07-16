@@ -112,6 +112,51 @@ namespace Win32xx
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
 		HWND m_hDlgParent;				// handle to the dialogs's parent window
 	};
+    
+    enum alignment      // used by CResizer
+    {
+        topleft,
+        topright,
+        bottomleft,
+        bottomright    
+    };
+    
+    struct ResizeData   // used by CResizer
+    {
+        CRect rcInit;
+        alignment corner;
+        BOOL bFixedWidth;
+        BOOL bFixedHeight;
+    	CWnd* pWnd;
+    };
+
+    //////////////////////////////////////
+    // Declaration of the CResizer class
+    //
+    // The CResizer class can be used to rearrange a dialog's child
+    // windows when the dialog is resized.
+    
+    // To use CResizer, follow the following steps:
+    // 1) Use Initialize to specify the dialog's CWnd, and min and max size.
+    // 3) Use AddChild for each child window
+    // 4) Call RecalcLayout when the dialog is resized.
+    //
+    class CResizer
+    {
+    public:
+        void AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
+        void RecalcLayout();
+    	void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
+    
+    private:
+        CWnd* m_pParent;
+    	std::vector<ResizeData> m_vResizeData;
+    
+    	CRect m_rcInit;
+    	CRect m_rcMin;
+    	CRect m_rcMax;
+    };
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,7 +164,9 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
+    ////////////////////////////////////
+	// Definitions for the CDialog class
+	//
 	inline CDialog::CDialog(LPCTSTR lpszResName, HWND hParent/* = NULL*/)
 		: m_IsIndirect(FALSE), m_IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
@@ -512,6 +559,97 @@ namespace Win32xx
 		return ::CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
 	}
 #endif
+
+    ////////////////////////////////////
+	// Definitions for the CDialog class
+	//
+    void inline CResizer::AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
+    {
+    	assert (NULL != pWnd);
+    	
+    	ResizeData rd;
+    	rd.corner = corner;
+    	rd.bFixedWidth  = bFixedWidth;
+    	rd.bFixedHeight = bFixedHeight;
+    	rd.rcInit = pWnd->GetClientRect();
+    	::MapWindowPoints(*pWnd, *m_pParent, (LPPOINT)&rd.rcInit, 2);
+    	rd.pWnd = pWnd;
+    
+    	m_vResizeData.push_back(rd);
+    }
+    
+    void inline CResizer::Initialize(CWnd* pParent, RECT rcMin, RECT rcMax)
+    { 
+    	assert (NULL != pParent);
+    
+    	m_pParent = pParent; 
+    	m_rcInit = pParent->GetClientRect(); 
+    	m_rcMin = rcMin;
+    	m_rcMax = rcMax;
+    }
+
+    void inline CResizer::RecalcLayout()
+    {
+    	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
+    	assert (NULL != m_pParent);
+    
+    	CRect rcCurrent = m_pParent->GetClientRect();
+    	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
+    	rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );
+    	if (!m_rcMax.IsRectEmpty())
+    	{
+    		rcCurrent.right  = MIN( rcCurrent.Width(),  m_rcMax.Width() );
+    		rcCurrent.bottom = MIN( rcCurrent.Height(), m_rcMax.Height() );
+    	}
+    
+    	double xRatio = (double)rcCurrent.Width()  / (double)m_rcInit.Width();
+    	double yRatio = (double)rcCurrent.Height() / (double)m_rcInit.Height();
+    	std::vector<ResizeData>::iterator iter;
+    	
+    	for (iter = m_vResizeData.begin(); iter < m_vResizeData.end(); ++iter)
+    	{
+    		int left   = 0;
+    		int top    = 0;
+    		int width  = 0;
+    		int height = 0;
+    
+    		switch( (*iter).corner )
+    		{
+    		case topleft:
+    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
+    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
+    			left   = (int)((*iter).rcInit.left * xRatio);
+    			top    = (int)((*iter).rcInit.top * yRatio);
+    
+    			break;
+    		case topright:
+    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
+    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
+    			left   = (int)((*iter).rcInit.right * xRatio)  - width;
+    			top    = (int)((*iter).rcInit.top * yRatio);
+    			
+    			break;
+    		case bottomleft:
+    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
+    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
+    			left   = (int)((*iter).rcInit.left * xRatio);
+    			top    = (int)((*iter).rcInit.bottom * yRatio) - height;
+    
+    			break;
+    		case bottomright:
+    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
+    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
+    			left   = (int)((*iter).rcInit.right * xRatio)  - width;
+    			top    = (int)((*iter).rcInit.bottom * yRatio) - height;
+    
+    			break;
+    		}
+    
+    		(*iter).pWnd->SetWindowPos(NULL, left, top, width, height, NULL);
+    	}
+    	
+    	m_pParent->Invalidate();
+    }
 
 } // namespace Win32xx
 

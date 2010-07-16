@@ -117,15 +117,14 @@ void CMainFrame::OnInitialUpdate()
 {
 	// The frame is now created.
 	// Place any additional startup code here.
-
-	TRACE(_T("Frame created\n"));
+	
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	CFrame::PreCreate(cs);
-	cs.cx = 500;
-	cs.cy = 420;
+//	cs.cx = 500;
+//	cs.cy = 420;
 }
 
 void CMainFrame::SaveRegistrySettings()
@@ -152,7 +151,7 @@ void CMainFrame::SetupToolbar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
+/*	switch (uMsg)
 	{
 	// Suppress resizing
 	case WM_SIZING:
@@ -161,8 +160,9 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			pRect->right = pRect->left + 500;
 			pRect->bottom = pRect->top + 420;
 		}
-		return TRUE;
-	}
+		return TRUE; 
+	} */
+
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
 }

@@ -33,9 +33,13 @@ HWND CFormView::Create(HWND hParent = 0)
 
 BOOL CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//  switch (uMsg)
-//  {
-//  }
+	switch (uMsg)
+	{
+	case WM_SIZE:
+		m_Resizer.RecalcLayout();
+
+		break;	
+	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
@@ -84,6 +88,22 @@ BOOL CFormView::OnInitDialog()
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 
+	// Attach CWnd objects to the dialog's children
+	m_Button.AttachDlgItem( IDC_BUTTON1, this );
+	m_CheckA.AttachDlgItem( ID_CHECK_A, this );
+	m_CheckB.AttachDlgItem( ID_CHECK_B, this );
+	m_CheckC.AttachDlgItem( ID_CHECK_C, this );
+	m_Edit.AttachDlgItem( IDC_EDIT1, this );
+	m_ListBox.AttachDlgItem( IDC_LIST1, this );
+	m_OK.AttachDlgItem( IDOK, this );
+	m_RadioA.AttachDlgItem( ID_RADIO_A, this );
+	m_RadioB.AttachDlgItem( ID_RADIO_B, this );
+	m_RadioC.AttachDlgItem( ID_RADIO_C, this );
+	m_RichEdit.AttachDlgItem( IDC_RICHEDIT1, this );
+	m_Group.AttachDlgItem( IDC_GROUP1, this );
+	m_Status.AttachDlgItem( IDC_STATUS, this );
+	m_Bitmap.AttachDlgItem( IDC_BITMAP1, this );
+	
 	// Put some text in the edit boxes
 	SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
 	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
@@ -91,33 +111,51 @@ BOOL CFormView::OnInitDialog()
 	// Put some text in the list box
 	for (int i = 0 ; i < 8 ; i++) 
 	{
-		SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
+		m_ListBox.SendMessage(LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
 	}
 
+	// Set initial button states
 	BOOL bCheck = GetDoc().GetCheckA();
-	SendDlgItemMessage(ID_CHECK_A, BM_SETCHECK, bCheck, 0);
+	m_CheckA.SendMessage(BM_SETCHECK, bCheck, 0);
 
 	bCheck = GetDoc().GetCheckB();
-	SendDlgItemMessage(ID_CHECK_B, BM_SETCHECK, bCheck, 0);
+	m_CheckB.SendMessage(BM_SETCHECK, bCheck, 0);
 
 	bCheck = GetDoc().GetCheckC();
-	SendDlgItemMessage(ID_CHECK_C, BM_SETCHECK, bCheck, 0);
+	m_CheckC.SendMessage(BM_SETCHECK, bCheck, 0);
 
 	UINT curRadio = GetDoc().GetRadio();
 	OnRangeOfIds_Radio(curRadio);
-
+	
+	// Initialize dialog resizing
+	m_Resizer.Initialize( this, CRect(0, 0, 300, 270) );
+	m_Resizer.AddChild(&m_RadioA,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(&m_RadioB,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(&m_RadioC,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(&m_CheckA,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(&m_CheckB,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(&m_CheckC,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(&m_Button,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(&m_Edit,     topleft, FALSE, FALSE);
+	m_Resizer.AddChild(&m_ListBox,  topleft, FALSE, FALSE);
+	m_Resizer.AddChild(&m_RichEdit, topleft, FALSE, FALSE);
+	m_Resizer.AddChild(&m_Bitmap,   topright, TRUE, TRUE);
+	m_Resizer.AddChild(&m_OK,       bottomright, TRUE, TRUE);
+	m_Resizer.AddChild(&m_Group,    bottomright, FALSE, FALSE);
+	m_Resizer.AddChild(&m_Status,   bottomright, FALSE, FALSE);
+	
 	return true;
 }
 
 void CFormView::OnOK()
 {
-	SetDlgItemText(IDC_STATIC3, _T("OK Button Pressed."));
+	SetDlgItemText(IDC_STATUS, _T("OK Button Pressed."));
 	TRACE(_T("OK Button Pressed.\n"));
 }
 
 void CFormView::OnButton()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Button Pressed"));
+	SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
 	TRACE(_T("Button Pressed\n"));
 }
 
@@ -129,7 +167,7 @@ void CFormView::OnCheckA()
 	SendDlgItemMessage(ID_CHECK_A, BM_SETCHECK, bCheck, 0);
 	GetDoc().SetCheckA(bCheck);
 
-	SetDlgItemText(IDC_STATIC3, _T("Check Box A toggled"));
+	SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
 }
 
 void CFormView::OnCheckB()
@@ -140,7 +178,7 @@ void CFormView::OnCheckB()
 	SendDlgItemMessage(ID_CHECK_B, BM_SETCHECK, bCheck, 0);
 	GetDoc().SetCheckB(bCheck);
 
-	SetDlgItemText(IDC_STATIC3, _T("Check Box B toggled"));
+	SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
 }
 
 void CFormView::OnCheckC()
@@ -151,7 +189,7 @@ void CFormView::OnCheckC()
 	SendDlgItemMessage(ID_CHECK_C, BM_SETCHECK, bCheck, 0);
 	GetDoc().SetCheckC(bCheck);
 
-	SetDlgItemText(IDC_STATIC3, _T("Check Box C toggled"));
+	SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
 }
 
 void CFormView::OnRangeOfIds_Radio(UINT nIdAdjust)
@@ -162,7 +200,7 @@ void CFormView::OnRangeOfIds_Radio(UINT nIdAdjust)
 	SendDlgItemMessage(ID_RADIO_A + nIdAdjust, BM_SETCHECK, TRUE, 0);
 	GetDoc().SetRadio(nIdAdjust);
 
-	SetDlgItemText(IDC_STATIC3, _T("Radio changed"));
+	SetDlgItemText(IDC_STATUS, _T("Radio changed"));
 	TRACE(_T("Radio changed\n"));
 }
 

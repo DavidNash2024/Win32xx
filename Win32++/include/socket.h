@@ -92,6 +92,16 @@
 // * Override OnReceive and use Recieve to receive data from the server
 // * OnDisconnect can be used to detect when the client is disconnected from the server.
 
+// Notes regarding IPv6 support
+// * IPv6 is supported on Windows Vista and above. Windows XP with SP2 provides
+//    "experimental" support, which can be enabled by entering "ipv6 install"
+//    at a command prompt.
+// * IPv6 is not supported by all compilters and devlopment environments. In 
+//    particular, it is not supported by Dev-C++ or Borland 5.5. A modern 
+//    Platform SDK needs to be added to Visual Studio 6 for it to support IPv6.
+// * IsIPV6Supported returns false if either the operating system or the
+//    development environment fails to support IPv6.
+//
 
 #ifndef _SOCKET_H_
 #define _SOCKET_H_

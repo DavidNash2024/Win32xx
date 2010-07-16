@@ -37,9 +37,9 @@
 #define IDC_LIST1                       321
 #define IDC_BUTTON1                     322
 #define IDC_RICHEDIT1                   323
-#define IDC_STATIC1                     330
-#define IDC_STATIC2                     331
-#define IDC_STATIC3                     332
+#define IDC_BITMAP1                     330
+#define IDC_GROUP1                      331
+#define IDC_STATUS                      332
 #define IDC_HOTKEY1                     340
 #define IDB_BITMAP1                     350
 

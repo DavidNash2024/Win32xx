@@ -127,9 +127,9 @@ BEGIN
     PUSHBUTTON      "Button",IDC_BUTTON1,30,82,49,11
     CONTROL         "",IDC_RICHEDIT1,"RichEdit",ES_MULTILINE |
                     ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP,120,142,84,35
-    CONTROL         250,IDC_STATIC1,"Static",SS_BITMAP,231,7,64,59
-    GROUPBOX        "Static Window",IDC_STATIC2,226,78,78,51,BS_CENTER
-    LTEXT           "Actions are displayed here",IDC_STATIC3,229,91,71,35
+    CONTROL         IDB_BITMAP1,IDC_BITMAP1,"Static",SS_BITMAP,231,7,64,59
+    GROUPBOX        "Static Window",IDC_GROUP1,226,78,78,51,BS_CENTER
+    LTEXT           "Actions are displayed here",IDC_STATUS,229,91,71,35
 END
 
 
