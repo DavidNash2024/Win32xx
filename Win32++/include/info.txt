@@ -106,7 +106,7 @@ Components of Win32++
  Files            |  Classes         | Operating Systems | Description
 ==================+==================+===================+=====================
 dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
-                  |                  | and WinCE         |
+                  | CResizer         | and WinCE         |
 ------------------+------------------+-------------------+---------------------
 docking.h         | CDocker          | Win32, Win64      | Adds support for
                   | CDockContainer   |                   | docking windows and

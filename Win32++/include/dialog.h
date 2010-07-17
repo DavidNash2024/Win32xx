@@ -144,9 +144,12 @@ namespace Win32xx
     class CResizer
     {
     public:
-        void AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
-        void RecalcLayout();
-    	void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
+		CResizer() : m_pParent(0) {}
+		virtual ~CResizer() {}
+
+        virtual void AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
+        virtual void RecalcLayout();
+    	virtual void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
 
     private:
         CWnd* m_pParent;
@@ -564,11 +567,19 @@ namespace Win32xx
 	}
 #endif
 
-    ////////////////////////////////////
-	// Definitions for the CDialog class
+    /////////////////////////////////////
+	// Definitions for the CResizer class
 	//
-    void inline CResizer::AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
-    {
+    
+	void inline CResizer::AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
+    // Adds a child window (usually a dialog control) to the set of windows managed by
+	// the Resizer.
+	//
+	// The alignment corner should be set to the closest corner of the dialog. Allowed
+	// values are topleft, topright, bottomleft, and bottomright.
+	// Set bFixedWidth to TRUE if the width should be fixed instead of proportional.
+	// Set bFixedHeight to TRUE if the height should be fixed instead of proportional.
+	{
     	assert (NULL != pWnd);
 
     	ResizeData rd;
@@ -583,7 +594,9 @@ namespace Win32xx
     }
 
     void inline CResizer::Initialize(CWnd* pParent, RECT rcMin, RECT rcMax)
-    {
+	// Sets up the Resizer by specifying the parent window (usually a dialog),
+	//  and the minimum and maximum allowed rectangle sizes.
+    {	
     	assert (NULL != pParent);
 
     	m_pParent = pParent;
@@ -593,7 +606,9 @@ namespace Win32xx
     }
 
     void inline CResizer::RecalcLayout()
-    {
+    // Repositions the child windows. Call this function when handling
+	// the WM_SIZE message in the parent window.
+	{
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
     	assert (NULL != m_pParent);
 
@@ -606,9 +621,12 @@ namespace Win32xx
     		rcCurrent.bottom = MIN( rcCurrent.Height(), m_rcMax.Height() );
     	}
 
+		// Determine the x and y ratios
     	double xRatio = (double)rcCurrent.Width()  / (double)m_rcInit.Width();
     	double yRatio = (double)rcCurrent.Height() / (double)m_rcInit.Height();
-    	std::vector<ResizeData>::iterator iter;
+    	
+		// Declare an iterator to step through the vector
+		std::vector<ResizeData>::iterator iter;
 
     	for (iter = m_vResizeData.begin(); iter < m_vResizeData.end(); ++iter)
     	{
@@ -617,7 +635,8 @@ namespace Win32xx
     		int width  = 0;
     		int height = 0;
 
-    		switch( (*iter).corner )
+    		// Calculate the new size and position of the child window
+			switch( (*iter).corner )
     		{
     		case topleft:
     			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
@@ -649,10 +668,12 @@ namespace Win32xx
     			break;
     		}
 
+			// Position the child window.
     		(*iter).pWnd->SetWindowPos(NULL, left, top, width, height, 0);
     	}
 
-    	m_pParent->Invalidate();
+    	// Redraw the parent window
+		m_pParent->Invalidate();
     }
 
 } // namespace Win32xx
