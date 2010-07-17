@@ -345,7 +345,8 @@ namespace Win32xx
 	inline void CMDIFrame::RecalcLayout()
 	{
 		CFrame::RecalcLayout();
-		GetView()->PostMessage(WM_MDIICONARRANGE, 0L, 0L) ;
+		if (GetView()->IsWindow())
+			GetView()->PostMessage(WM_MDIICONARRANGE, 0L, 0L) ;
 	}
 
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
@@ -652,8 +653,6 @@ namespace Win32xx
 
 		// Assign the view window
 		m_pwndView = &View;
-
-		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 	}
 
 	inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

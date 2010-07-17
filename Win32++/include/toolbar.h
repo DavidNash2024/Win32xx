@@ -147,6 +147,8 @@ namespace Win32xx
 	// Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
 	{
+		assert(::IsWindow(m_hWnd));
+
 		int iNumButtons = 0;
 		std::vector<UINT>::iterator iter;
 		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)
@@ -165,6 +167,8 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
+		assert(::IsWindow(m_hWnd));
+
 		m_vToolbarData.push_back(nID);
 
 		if(m_hWnd)
@@ -201,6 +205,7 @@ namespace Win32xx
 	inline int CToolbar::CommandToIndex(int iButtonID) const
 	// Retrieves the zero-based index for the button associated with the specified command identifier
 	{
+		assert(::IsWindow(m_hWnd));
 		// returns -1 on fail
 		return (int)SendMessage(TB_COMMANDTOINDEX, (WPARAM)iButtonID, 0L);
 	}
@@ -214,8 +219,9 @@ namespace Win32xx
 
 	inline void CToolbar::DisableButton(int iButtonID) const
 	// Disables the specified button in a toolbar
+	// An example of iButtonID would be IDM_FILE_OPEN
 	{
-		// An example of iButtonID would be IDM_FILE_OPEN
+		assert(::IsWindow(m_hWnd));
 		if (!SendMessage(TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(FALSE, 0)))
 			TRACE(_T("Disable button failed\n"));
 	}
@@ -223,6 +229,7 @@ namespace Win32xx
 	inline void CToolbar::EnableButton(int iButtonID) const
 	// Enables the specified button in a toolbar
 	{
+		assert(::IsWindow(m_hWnd));
 		if (!SendMessage(TB_ENABLEBUTTON, (WPARAM)iButtonID, (LPARAM) MAKELONG(TRUE,0 )))
 			TRACE(_T("Enable button failed\n"));
 	}
@@ -230,6 +237,7 @@ namespace Win32xx
 	inline int CToolbar::GetButtonCount() const
 	// Retrieves a count of the buttons currently in the toolbar
 	{
+		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(TB_BUTTONCOUNT, 0L, 0L);
 	}
 
@@ -244,6 +252,7 @@ namespace Win32xx
 	//	TBSTATE_PRESSED		The button is being clicked.
 	//	TBSTATE_WRAP		The button is followed by a line break.
 	{
+		assert(::IsWindow(m_hWnd));
 		LRESULT lResult= SendMessage(TB_GETSTATE, (WPARAM) iButtonID, 0L);
 		if (-1L == lResult)
 			throw CWinException(_T("CToolbar::GetButtonState failed"));
@@ -262,6 +271,7 @@ namespace Win32xx
 	//	TBSTYLE_AUTOSIZE	The button's width will be calculated based on the text of the button, not on the size of the image
 	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it
 	{
+		assert(::IsWindow(m_hWnd));
 		int iIndex = CommandToIndex(iButtonID);
 		if (-1 == iIndex)
 			throw CWinException(_T("CToolbar::GetButtonStyle failed to get command ID"));
@@ -278,6 +288,7 @@ namespace Win32xx
 	inline int CToolbar::GetCommandID(int iIndex) const
 	// Retrieves information about the specified button in a toolbar
 	{
+		assert(::IsWindow(m_hWnd));
 		TBBUTTON tbb = {0};
 		SendMessage(TB_GETBUTTON, iIndex, (WPARAM) &tbb);
 
@@ -288,6 +299,7 @@ namespace Win32xx
 	inline CRect CToolbar::GetItemRect(int iIndex) const
 	// Retrieves the bounding rectangle of a button in a toolbar
 	{
+		assert(::IsWindow(m_hWnd));
 		CRect rc;
 		int iCount = (int)SendMessage(TB_BUTTONCOUNT, 0L, 0L);
 
@@ -300,6 +312,7 @@ namespace Win32xx
 	inline CSize CToolbar::GetMaxSize() const
 	// Retrieves the total size of all of the visible buttons and separators in the toolbar
 	{
+		assert(::IsWindow(m_hWnd));
 		CSize sz;
 		SendMessage(TB_GETMAXSIZE, 0L, (LPARAM)&sz);
 
@@ -316,6 +329,7 @@ namespace Win32xx
 
 	inline BOOL CToolbar::HasText() const
 	{
+		assert(::IsWindow(m_hWnd));
 		BOOL bReturn = FALSE;
 
 		for (int i = 0 ; i < GetButtonCount(); ++i)
@@ -334,6 +348,7 @@ namespace Win32xx
 	// We do our own hit test since TB_HITTEST is a bit buggy,
 	// and also doesn't work at all on earliest versions of Win95
 	{
+		assert(::IsWindow(m_hWnd));
 		CPoint pt;
 		::GetCursorPos(&pt);
 		::ScreenToClient(m_hWnd, &pt);
@@ -641,6 +656,8 @@ namespace Win32xx
 	// Note: ReplaceBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
 	{
+		assert(::IsWindow(m_hWnd));
+
 		int iNumButtons = 0;
 		std::vector<UINT>::iterator iter;
 		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)
@@ -659,8 +676,10 @@ namespace Win32xx
 	}
 
 	inline void CToolbar::SetBitmap(UINT nID)
+	// Set the button images
 	{
-		// Set the button images
+		assert(::IsWindow(m_hWnd));
+		
 		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID));
 		if (!hbm)
 			throw CWinException(_T("CToolbar::SetBitmap ... LoadBitmap failed "));
@@ -693,6 +712,7 @@ namespace Win32xx
 	// Needs to be used when the image size is not the default 16 x 15
 	// Call this function before using AddBitmap or ReplaceBitmap
 	{
+		assert(::IsWindow(m_hWnd));
 		if (!SendMessage(TB_SETBITMAPSIZE, 0L, MAKELONG(cx, cy)))
 			TRACE(_T("CToolbar::SetBitmapSize  failed\n"));
 	}
@@ -700,6 +720,8 @@ namespace Win32xx
 	inline int CToolbar::SetButtons(const std::vector<UINT>& vToolbarData) const
 	// Assigns a resource ID to each toolbar button
 	{
+		assert(::IsWindow(m_hWnd));
+
 		int iImages = 0;
 		UINT iNumButtons = (UINT)vToolbarData.size();
 
@@ -745,7 +767,7 @@ namespace Win32xx
 	// Sets the size of the buttons to be added to a toolbar
 	// The size can be set only before adding any buttons to the toolbar
 	{
-
+		assert(::IsWindow(m_hWnd));
 		if (!SendMessage(TB_SETBUTTONSIZE, 0L, MAKELONG(cx, cy)))
 			TRACE(_T("CToolbar::SetButtonSize failed\n"));
 	}
@@ -762,6 +784,7 @@ namespace Win32xx
 	//	TBSTATE_PRESSED		The button is being clicked.
 	//	TBSTATE_WRAP		The button is followed by a line break.
 
+		assert(::IsWindow(m_hWnd));
 		if (!SendMessage(TB_SETSTATE, (WPARAM) iButtonID, (LPARAM)MAKELONG (State, 0)))
 			TRACE(_T("CToolbar::SetButtonState failed\n"));
  	}
@@ -777,6 +800,8 @@ namespace Win32xx
 	//	TBSTYLE_AUTOSIZE	The button's width will be calculated based on the text of the button, not on the size of the image
 	//	TBSTYLE_NOPREFIX	The button text will not have an accelerator prefix associated with it
 	{
+		assert(::IsWindow(m_hWnd));
+
 		TBBUTTONINFO tbbi = {0};
 		tbbi.cbSize = sizeof(TBBUTTONINFO);
 		tbbi.dwMask = TBIF_STYLE;
@@ -793,6 +818,8 @@ namespace Win32xx
 	// This rather convoluted approach to setting toolbar button text supports
 	// all versions of Windows, including Win95 with COMCTL32.DLL version 4.0
 	{
+		assert(::IsWindow(m_hWnd));
+
 		int iIndex = CommandToIndex(iButtonID);
 		if (-1 == iIndex)
 			throw CWinException(_T("CToolbar::SetButtonText  failed to get Command ID"));
@@ -860,10 +887,11 @@ namespace Win32xx
 	}
 
 	inline void CToolbar::SetButtonWidth(int iButtonID, int nWidth) const
+	// The set button width can adjust the width of the button after it is created.
+	// This is useful when replacing a button with a ComboBox or other control.
 	{
-		// The set button width can adjust the width of the button after it is created.
-		// This is useful when replacing a button with a ComboBox or other control.
-
+		assert(::IsWindow(m_hWnd));
+		
 		TBBUTTONINFO tbbi = {0};
 		tbbi.cbSize = sizeof(TBBUTTONINFO);
 		tbbi.dwMask = TBIF_SIZE;
@@ -881,6 +909,7 @@ namespace Win32xx
 	inline void CToolbar::SetCommandID(int iIndex, int iButtonID) const
 	// Sets the command identifier of a toolbar button
 	{
+		assert(::IsWindow(m_hWnd));
 		if (!SendMessage(TB_SETCMDID, iIndex, iButtonID))
 			throw CWinException(_T("CToolbar::SetCommandID failed"));
 	}
@@ -893,6 +922,8 @@ namespace Win32xx
 	// The color mask is ignored for 32bit bitmap resources
 	// The Hot and disiabled bitmap resources can be 0
 	{
+		assert(::IsWindow(m_hWnd));
+
 		int iNumButtons = 0;
 		std::vector<UINT>::iterator iter;
 		for (iter = GetToolbarData().begin(); iter < GetToolbarData().end(); ++iter)

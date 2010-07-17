@@ -224,8 +224,12 @@ namespace Win32xx
 	}
 
 	inline int CSocket::Bind(const char* addr, const char* port)
-	{
-		// The bind function associates a local address with the socket.
+	// The bind function associates a local address with the socket.
+	{		
+		int RetVal = 0;
+		bool IsIP6Bind = false;
+
+	#ifdef GetAddrInfo // Skip the following code block for older development environments 
 
 		HMODULE hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
 		
@@ -236,13 +240,10 @@ namespace Win32xx
 		GETADDRINFO* pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(hWS2_32, "getaddrinfo");
 		FREEADDRINFO* pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(hWS2_32, "freeaddrinfo");		
 		
-		int RetVal = 0;	
-
-	#ifdef GetAddrInfo // Skip the following code block for older development environments 
-
 		if (pfnGetAddrInfo && pfnFreeAddrInfo)
 		// getaddrinfo and freeaddrinfo are supported, so use them for IPV6 suppport 
 		{
+			IsIP6Bind = true;
 			ADDRINFO Hints= {0};
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 		    
@@ -266,12 +267,14 @@ namespace Win32xx
 			// Free the address information allocated by getaddrinfo
 			(*pfnFreeAddrInfo)(AddrInfo);
 		}
-		else
+
+		::FreeLibrary(hWS2_32);
 		
 	#endif	// GetAddrInfo
 		
+		// Support IPV4 only
+		if (!IsIP6Bind)
 		{
-			// Support IPV4 only
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr( addr );
@@ -286,10 +289,9 @@ namespace Win32xx
 
 			RetVal = ::bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( 0 != RetVal )
-				TRACE(_T("Bind failed\n"));
+				TRACE(_T("Bind failed\n"));	
 		}
-		
-		::FreeLibrary(hWS2_32);
+
 		return RetVal;
 	}
 
@@ -304,8 +306,13 @@ namespace Win32xx
 	}
 
 	inline int CSocket::Connect(const char* addr, const char* port)
+	// The Connect function establishes a connection to the socket.
 	{
-		// The Connect function establishes a connection to the socket.
+
+		int RetVal = 0;
+		bool IsIP6Connect = false;
+
+	#ifdef GetAddrInfo	// Skip the following code block for older development environments
 
 		HMODULE hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
 
@@ -316,13 +323,10 @@ namespace Win32xx
 		GETADDRINFO* pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(hWS2_32, "getaddrinfo");
 		FREEADDRINFO* pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(hWS2_32, "freeaddrinfo");
 
-		int RetVal;
-
-	#ifdef GetAddrInfo	// Skip the following code block for older development environments
-
 		if (pfnGetAddrInfo && pfnFreeAddrInfo)
 		// getaddrinfo and freeaddrinfo are supported, so use them for IPV6 suppport 
 		{
+			IsIP6Connect = true;
 			ADDRINFO Hints= {0};
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 		    
@@ -346,10 +350,12 @@ namespace Win32xx
 			(*pfnFreeAddrInfo)(AddrInfo);
 
 		}
-		else
+		
+		::FreeLibrary(hWS2_32);
 
 	#endif	// GetAddrInfo
 		
+		if(!IsIP6Connect)
 		{
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
@@ -367,10 +373,8 @@ namespace Win32xx
 			if ( 0 != RetVal )
 				TRACE(_T("Connect failed\n"));
 		}
-
-		::FreeLibrary(hWS2_32);
 		
-		return RetVal;
+		return RetVal;	
 	}
 
 	inline int CSocket::Connect(const struct sockaddr* name, int namelen)

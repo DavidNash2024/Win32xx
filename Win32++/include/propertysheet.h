@@ -181,10 +181,10 @@ namespace Win32xx
 	}
 
 	inline void CPropertyPage::CancelToClose() const
+	// Disables the Cancel button and changes the text of the OK button to "Close."
 	{
-		// Disables the Cancel button and changes the text of the OK button to "Close."
-		if (m_hWnd)
-			::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0L, 0L);
+		assert(::IsWindow(m_hWnd));
+		::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0L, 0L);
 	}
 
 
@@ -211,6 +211,8 @@ namespace Win32xx
 	inline BOOL CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// All unhandled property page messages end up here
+
+		assert( GetApp() );
 
 		switch (uMsg)
 	    {
@@ -287,6 +289,7 @@ namespace Win32xx
 
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
+		assert(::IsWindow(m_hWnd));
 		HWND hWnd = ::GetDlgItem(::GetParent(m_hWnd), iButton);
 		return ::IsWindowEnabled(hWnd);
 	}
@@ -444,13 +447,12 @@ namespace Win32xx
 
 	inline void CPropertyPage::SetModified(BOOL bChanged) const
 	{
-		if (m_hWnd != NULL)
-		{
-			if (bChanged)
-				::SendMessage(GetParent(), PSM_CHANGED, (WPARAM)m_hWnd, 0L);
-			else
-				::SendMessage(GetParent(), PSM_UNCHANGED, (WPARAM)m_hWnd, 0L);
-		}
+		assert(::IsWindow(m_hWnd));
+
+		if (bChanged)
+			::SendMessage(GetParent(), PSM_CHANGED, (WPARAM)m_hWnd, 0L);
+		else
+			::SendMessage(GetParent(), PSM_UNCHANGED, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CPropertyPage::SetTitle(LPCTSTR szTitle)
@@ -471,6 +473,7 @@ namespace Win32xx
 
 	inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp)
 	{
+		assert( GetApp() );
 		UNREFERENCED_PARAMETER(hwnd);
 
 		// Note: the hwnd is always NULL
@@ -508,6 +511,8 @@ namespace Win32xx
 
 	inline BOOL CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		assert( GetApp() );
+
 		// Find matching CWnd pointer for this HWND
 		CPropertyPage* pPage = (CPropertyPage*)GetApp()->GetCWndFromMap(hwndDlg);
 		if (pPage != 0)
@@ -609,8 +614,7 @@ namespace Win32xx
 
 	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
 	{
-		if (NULL == pPage)
-			throw CWinException(_T("Cannot add NULL Property Page"));
+		assert(NULL != pPage);
 
 		m_vPages.push_back(pPage);
 
@@ -643,6 +647,8 @@ namespace Win32xx
 
 	inline void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT uMsg, LPARAM lParam)
 	{
+		assert( GetApp() );
+
 		switch(uMsg)
 		{
 		//called before the dialog is created, hwnd = NULL, lParam points to dialog resource
@@ -693,6 +699,8 @@ namespace Win32xx
 	inline HWND CPropertySheet::Create(HWND hWndParent /*= 0*/)
 	// Creates a modeless Property sheet
 	{
+		assert( GetApp() );
+
 		if (hWndParent)
 		{
 			m_PSH.hwndParent = hWndParent;
@@ -711,6 +719,8 @@ namespace Win32xx
 
 	inline INT_PTR CPropertySheet::CreatePropertySheet(LPCPROPSHEETHEADER ppsph)
 	{
+		assert( GetApp() );
+
 		INT_PTR ipResult = 0;
 
 		try
@@ -746,14 +756,13 @@ namespace Win32xx
 
 	inline void CPropertySheet::DestroyButton(int IDButton)
 	{
-		if (m_hWnd != NULL)
+		assert(::IsWindow(m_hWnd));
+		
+		HWND hwndButton = ::GetDlgItem(m_hWnd, IDButton);
+		if (hwndButton != NULL)
 		{
-			HWND hwndButton = ::GetDlgItem(m_hWnd, IDButton);
-			if (hwndButton != NULL)
-			{
-				::ShowWindow(hwndButton, SW_HIDE);
-				::EnableWindow(hwndButton, FALSE);
-			}
+			::ShowWindow(hwndButton, SW_HIDE);
+			::EnableWindow(hwndButton, FALSE);
 		}
 	}
 
@@ -769,6 +778,8 @@ namespace Win32xx
 
 	inline int CPropertySheet::DoModal()
 	{
+		assert( GetApp() );
+
 		BuildPageArray();
 		m_PSH.ppsp = m_ppsp;
 
@@ -786,6 +797,8 @@ namespace Win32xx
 
 	inline CPropertyPage* CPropertySheet::GetActivePage() const
 	{
+		assert(::IsWindow(m_hWnd));
+
 		CPropertyPage* pPage = NULL;
 		if (m_hWnd != NULL)
 		{
@@ -798,11 +811,14 @@ namespace Win32xx
 
 	inline int CPropertySheet::GetPageCount() const
 	{
+		assert(::IsWindow(m_hWnd));
 		return (int)m_vPages.size();
 	}
 
 	inline int CPropertySheet::GetPageIndex(CPropertyPage* pPage) const
 	{
+		assert(::IsWindow(m_hWnd));
+
 		for (int i = 0; i < GetPageCount(); i++)
 		{
 			if (m_vPages[i] == pPage)
@@ -813,6 +829,7 @@ namespace Win32xx
 
 	inline HWND CPropertySheet::GetTabControl() const
 	{
+		assert(::IsWindow(m_hWnd));
 		return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0L, 0L);
 	}
 
@@ -828,6 +845,8 @@ namespace Win32xx
 
 	inline void CPropertySheet::RemovePage(CPropertyPage* pPage)
 	{
+		assert(::IsWindow(m_hWnd));
+
 		int nPage = GetPageIndex(pPage);
 		if (m_hWnd != NULL)
 			SendMessage(m_hWnd, PSM_REMOVEPAGE, nPage, 0L);
@@ -860,21 +879,21 @@ namespace Win32xx
 		// Set wParam and lParam to values you want passed to the
 		// property pages in CPropertyPage::OnQuerySiblings.
 
+		assert(::IsWindow(m_hWnd));
 		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
 	inline BOOL CPropertySheet::SetActivePage(int nPage)
 	{
-		if (m_hWnd != NULL)
-			return (BOOL)SendMessage(m_hWnd, PSM_SETCURSEL, nPage, 0L);
-
-		return FALSE;
+		assert(::IsWindow(m_hWnd));
+		return (BOOL)SendMessage(m_hWnd, PSM_SETCURSEL, nPage, 0L);
 	}
 
 	inline BOOL CPropertySheet::SetActivePage(CPropertyPage* pPage)
 	{
+		assert(::IsWindow(m_hWnd));
 		int nPage = GetPageIndex(pPage);
-		if ((m_hWnd != NULL) && (nPage >= 0))
+		if ((nPage >= 0))
 			return SetActivePage(nPage);
 
 		return FALSE;

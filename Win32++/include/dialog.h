@@ -203,6 +203,8 @@ namespace Win32xx
 	inline HWND CDialog::Create(HWND hParent /*= 0*/)
 	{
 		// Allow a dialog to be used as a child window
+
+		assert(GetApp());
 		SetDlgParent(hParent);
 		return DoModeless();
 	}
@@ -381,6 +383,8 @@ namespace Win32xx
 
 	inline HWND CDialog::DoModeless()
 	{
+		assert(GetApp());
+
 		// Modeless dialog
 		try
 		{
@@ -426,13 +430,13 @@ namespace Win32xx
 
 	inline void CDialog::EndDialog(INT_PTR nResult)
 	{
-		if (::IsWindow(m_hWnd))
-		{
-			if (IsModal())
-				::EndDialog(m_hWnd, nResult);
-			else
-				Destroy();
-		}
+		assert(::IsWindow(m_hWnd));
+
+		if (IsModal())
+			::EndDialog(m_hWnd, nResult);
+		else
+			Destroy();
+	
 		m_hWnd = NULL;
 	}
 

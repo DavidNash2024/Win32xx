@@ -266,6 +266,8 @@ namespace Win32xx
 
 	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
 	{
+		assert(pWnd);
+
 		TabPageInfo tbi = {0};
 		tbi.pWnd = pWnd;
 		lstrcpyn(tbi.szTitle, szTitle, MAX_MENU_STRING);
@@ -671,6 +673,8 @@ namespace Win32xx
 
 	inline int CTab::GetTabIndex(CWnd* pWnd)
 	{
+		assert(pWnd);
+
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
 			if (m_vTabPageInfo[i].pWnd == pWnd)
@@ -888,18 +892,21 @@ namespace Win32xx
 
 	inline void CTab::RecalcLayout()
 	{
-		if (GetActiveView())
+		if (IsWindow())
 		{
-			// Set the tab sizes
-			SetTabSize();
+			if (GetActiveView())
+			{
+				// Set the tab sizes
+				SetTabSize();
 
-			// Position the View over the tab control's display area
-			CRect rc = GetClientRect();
-			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-			GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+				// Position the View over the tab control's display area
+				CRect rc = GetClientRect();
+				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+				GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			}
+			else
+				RedrawWindow();
 		}
-		else
-			RedrawWindow();
 	}
 
 	inline void CTab::RemoveTabPage(int iPage)
@@ -1193,56 +1200,67 @@ namespace Win32xx
 	// Wrappers for Win32 Macros
 	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
 	{
+		assert(::IsWindow(m_hWnd));
 		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
 	}
 
 	inline int CTab::GetCurFocus()
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetCurFocus(m_hWnd);
 	}
 
 	inline int CTab::GetCurSel()
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetCurSel(m_hWnd);
 	}
 
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem)
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetItem(m_hWnd, iItem, pitem);
 	}
 
 	inline int CTab::GetItemCount()
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetItemCount(m_hWnd);
 	}
 
 	inline int CTab::HitTest(TCHITTESTINFO& info)
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_HitTest(m_hWnd, &info);
 	}
 
 	inline void CTab::SetCurFocus(int iItem)
 	{
+		assert(::IsWindow(m_hWnd));
 		TabCtrl_SetCurFocus(m_hWnd, iItem);
 	}
 
 	inline int CTab::SetCurSel(int iItem)
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetCurSel(m_hWnd, iItem);
 	}
 
 	inline DWORD CTab::SetItemSize(int cx, int cy)
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetItemSize(m_hWnd, cx, cy);
 	}
 
 	inline int CTab::SetMinTabWidth(int cx)
 	{
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetMinTabWidth(m_hWnd, cx);
 	}
 
 	inline void CTab::SetPadding(int cx, int cy)
 	{
+		assert(::IsWindow(m_hWnd));
 		TabCtrl_SetPadding(m_hWnd, cx, cy);
 	}
 
@@ -1259,8 +1277,7 @@ namespace Win32xx
 
 	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int nID /*= 0*/)
 	{
-		if (NULL == pWnd)
-			throw CWinException(_T("Cannot add Null MDI Child"));
+		assert(pWnd);
 
 		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
 		::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
@@ -1429,16 +1446,19 @@ namespace Win32xx
 
 	inline void CTabbedMDI::RecalcLayout()
 	{
-		if (GetTab().GetItemCount() >0)
-		{				
-			CRect rcClient = GetClientRect();
-			GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
-			GetTab().UpdateWindow();
-		}
-		else
+		if (GetTab().IsWindow())
 		{
-			GetTab().ShowWindow(SW_HIDE);
-			Invalidate();
+			if (GetTab().GetItemCount() >0)
+			{				
+				CRect rcClient = GetClientRect();
+				GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
+				GetTab().UpdateWindow();
+			}
+			else
+			{
+				GetTab().ShowWindow(SW_HIDE);
+				Invalidate();
+			}
 		}
 	}
 
@@ -1472,6 +1492,7 @@ namespace Win32xx
 
 	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
 	{
+		assert(pWnd);
 		int iPage = GetTab().GetTabIndex(pWnd);
 		if (iPage >= 0)
 			GetTab().SelectPage(iPage);
@@ -1479,6 +1500,7 @@ namespace Win32xx
 
 	inline void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
+		assert(::IsWindow(m_hWnd));
 		GetTab().SelectPage(iTab);
 	}
 

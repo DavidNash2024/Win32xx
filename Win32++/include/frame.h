@@ -2543,7 +2543,8 @@ namespace Win32xx
 							else
 								m_tsStatusText = _T("Ready");
 
-							SetStatusText();
+							if (GetStatusbar().IsWindow())
+								SetStatusText();
 						}
 						m_nOldID = nID;
 					}

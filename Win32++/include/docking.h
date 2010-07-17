@@ -3156,32 +3156,37 @@ namespace Win32xx
 
 	inline void CDocker::SetDockStyle(DWORD dwDockStyle)
 	{
-		if ((dwDockStyle & DS_CLIENTEDGE) != (m_DockStyle & DS_CLIENTEDGE))
+		if (IsWindow())
 		{
-			if (dwDockStyle & DS_CLIENTEDGE)
+			if ((dwDockStyle & DS_CLIENTEDGE) != (m_DockStyle & DS_CLIENTEDGE))
 			{
-				DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
-				GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
-				GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+				if (dwDockStyle & DS_CLIENTEDGE)
+				{
+					DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
+					GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
+					GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+				}
+				else
+				{
+					DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE);
+					dwExStyle &= ~WS_EX_CLIENTEDGE;
+					GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
+					GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+				}
 			}
-			else
-			{
-				DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE);
-				dwExStyle &= ~WS_EX_CLIENTEDGE;
-				GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
-				GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
-			}
+
+			RecalcDockLayout();
 		}
 
-		if (IsWindow())
-			RecalcDockLayout();
 		m_DockStyle = dwDockStyle;
 	}
 
 	inline void CDocker::SetCaption(LPCTSTR szCaption)
 	{
 		GetDockClient().SetCaption(szCaption);
-		SetWindowText(szCaption);
+		
+		if (IsWindow())
+			SetWindowText(szCaption);
 	}
 
 	inline void CDocker::SetDockWidth(int DockWidth)
@@ -3939,10 +3944,14 @@ namespace Win32xx
 
 	inline void CDockContainer::CViewPage::RecalcLayout()
 	{
-		GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		CRect rc = GetClientRect();
-		CRect rcToolbar = m_Toolbar.GetClientRect();
-		rc.top += rcToolbar.Height();
+		if (GetToolbar().IsWindow())
+		{
+			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+			CRect rcToolbar = m_Toolbar.GetClientRect();
+			rc.top += rcToolbar.Height();
+		}
+		
 		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 	}
 

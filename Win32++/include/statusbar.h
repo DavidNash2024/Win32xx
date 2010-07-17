@@ -98,6 +98,8 @@ namespace Win32xx
 
 	inline void CStatusbar::CreateParts(int iParts, const int iPaneWidths[]) const
 	{
+		assert(::IsWindow(m_hWnd));
+
 		// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
 		//  to the border of the window
 		if (IsWindow())
@@ -113,16 +115,19 @@ namespace Win32xx
 
 	inline int CStatusbar::GetParts()
 	{
+		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(SB_GETPARTS, 0L, 0L);
 	}
 
 	inline HICON CStatusbar::GetPartIcon(int iPart)
 	{
+		assert(::IsWindow(m_hWnd));
 		return (HICON)SendMessage(SB_GETICON, (WPARAM)iPart, 0L);
 	}
 
 	inline CRect CStatusbar::GetPartRect(int iPart)
 	{
+		assert(::IsWindow(m_hWnd));
 		CRect rc;
 		SendMessage(SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
 		return rc;
@@ -130,6 +135,7 @@ namespace Win32xx
 
 	inline tString CStatusbar::GetPartText(int iPart) const
 	{
+		assert(::IsWindow(m_hWnd));
 		tString PaneText;
 		try
 		{
@@ -167,6 +173,7 @@ namespace Win32xx
 
 	inline BOOL CStatusbar::IsSimple()
 	{
+		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
 	}
 
@@ -178,18 +185,18 @@ namespace Win32xx
 	//SBT_POPOUT		The text is drawn with a border to appear higher than the plane of the window.
 	//SBT_RTLREADING	The text will be displayed in the opposite direction to the text in the parent window.
 	{
-		if (IsWindow())
+		assert(::IsWindow(m_hWnd));
+		
+		if (SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
 		{
-			if (SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
-			{
-				if (!SendMessage(SB_SETTEXT, iPart | Style, (LPARAM)szText))
-					throw CWinException(_T("Failed to set status bar text"));
-			}
+			if (!SendMessage(SB_SETTEXT, iPart | Style, (LPARAM)szText))
+				TRACE(_T("Failed to set status bar text"));
 		}
 	}
 
 	inline BOOL CStatusbar::SetPartIcon(int iPart, HICON hIcon)
 	{
+		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon);
 	}
 
@@ -197,6 +204,8 @@ namespace Win32xx
 	{
 		// This changes the width of an existing pane, or creates a new pane
 		// with the specified width
+
+		assert(::IsWindow(m_hWnd));
 
 		int* iPartWidths = NULL;
 		int* iNewPartWidths = NULL;
@@ -263,6 +272,7 @@ namespace Win32xx
 
 	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/)
 	{
+		assert(::IsWindow(m_hWnd));
 		SendMessage(SB_SIMPLE, (WPARAM)fSimple, 0L);
 	}
 
