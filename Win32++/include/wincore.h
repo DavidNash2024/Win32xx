@@ -1399,7 +1399,6 @@ namespace Win32xx
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
-		assert(::IsWindow(m_hWnd));
 		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
@@ -2063,9 +2062,6 @@ namespace Win32xx
 	inline LRESULT CWnd::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// All WndProc functions should pass unhandled window messages to this function
 	{
-		assert( GetApp() );
-		assert(::IsWindow(m_hWnd));
-
     	switch (uMsg)
 		{
 		case WM_COMMAND:
