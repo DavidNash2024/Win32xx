@@ -863,25 +863,17 @@ namespace Win32xx
 	{
 		try
 		{
-			// Test if this is the first instance of CWinApp
-			if (0 == SetnGetThis() )
-			{
-				m_dwTlsIndex = ::TlsAlloc();
-				if (m_dwTlsIndex == TLS_OUT_OF_INDEXES)
-				{
-					// We only get here in the unlikely event that all TLS indexes are already allocated by this app
-					// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-					throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
-				}
-				SetnGetThis(this);
-			}
-			else
-			{
-				// We get here if Win32++ is used incorrectly, i.e. more than one instance
-				// of a CWinApp derived class is started.
- 				throw CWinException(_T("Error!  An instance of CWinApp (or a class derived from CWinApp) is already running"));
-			}
+			assert(0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
 
+			m_dwTlsIndex = ::TlsAlloc();
+			if (m_dwTlsIndex == TLS_OUT_OF_INDEXES)
+			{
+				// We only get here in the unlikely event that all TLS indexes are already allocated by this app
+				// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
+				throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
+			}
+			SetnGetThis(this);
+			
 		    // Get store the instance handle
 			m_hInstance = GetModuleHandle(0);
 
@@ -941,13 +933,17 @@ namespace Win32xx
 		wcDefault.style			= CS_DBLCLKS;
 
 		if (!::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault))
-			if (0 == ::RegisterClass(&wcDefault))
-				throw CWinException(_T("CWinApp::DefaultClass ... Failed to set Default class"));
+		{
+			ATOM atom = ::RegisterClass(&wcDefault);
+			assert(atom);					// RegisterClass succeeded?
+			UNREFERENCED_PARAMETER(atom);	// assert is ignored in Release mode
+		}
 
 		// Retrieve the class information
 		ZeroMemory(&wcDefault, sizeof(wcDefault));
-		if (!::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault))
-			throw CWinException(_T("CWinApp::DefaultClass ... Failed to get Default class info"));
+		BOOL bVal = ::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault);
+		assert(bVal);					// GetClassInfo succeeded?
+		UNREFERENCED_PARAMETER(bVal);	// assert is ignored in Release mode
 
 		// Save the callback address of CWnd::StaticWindowProc
 		m_Callback = wcDefault.lpfnWndProc;
@@ -1135,13 +1131,10 @@ namespace Win32xx
 	inline void CWnd::AddToMap()
 	// Store the window handle and CWnd pointer in the HWND map
 	{	
-		assert(::IsWindow(m_hWnd));
-
 		GetApp()->m_csMapLock.Lock();
-		if (m_hWnd == 0)
-			throw CWinException(_T("CWnd::AddToMap  can't add a NULL HWND"));
-		if (GetApp()->GetCWndFromMap(m_hWnd))
-			throw CWinException(_T("CWnd::AddToMap  HWND already in map"));
+
+		assert(::IsWindow(m_hWnd));
+		assert(!GetApp()->GetCWndFromMap(m_hWnd));
 
 		GetApp()->m_mapHWND.insert(std::make_pair(m_hWnd, this));
 		GetApp()->m_csMapLock.Release();
@@ -1155,12 +1148,6 @@ namespace Win32xx
 
 		try
 		{
-			if (!::IsWindow(hWnd))
-				throw CWinException(_T("Attach failed, not a valid hwnd"));
-
-			if (0 != GetApp()->GetCWndFromMap(hWnd))
-				throw CWinException(_T("Window already attached to this CWnd object"));
-
 			Subclass(hWnd);
 
 			// Store the CWnd pointer in the HWND map
@@ -1264,8 +1251,7 @@ namespace Win32xx
 		try
 		{
 			// Test if Win32++ has been started
-			if (0 == GetApp())
-				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+			assert( GetApp() );
 
 			// Set the WNDCLASS parameters
 			PreRegisterClass(m_wc);
@@ -1325,14 +1311,9 @@ namespace Win32xx
 	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
 	{
 		try
-		{
-			// Test if Win32++ has been started
-			if (0 == GetApp())
-				throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
-
-			// Only one window per CWnd instance allowed
-			if (::IsWindow(m_hWnd))
-				throw CWinException(_T("CWnd::CreateEx ... Window already exists"));
+		{			
+			assert( GetApp() );		// Test if Win32++ has been started
+			assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed	
 
 			// Prepare the CWnd if it has been reused
 			Destroy();
@@ -1350,8 +1331,7 @@ namespace Win32xx
 			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
-			if (!RegisterClass(wc))	// Register the window class (if not already registered)
-				throw CWinException(_T("CWnd::CreateEx  Failed to register window class"));
+			RegisterClass(wc);	// Register the window class (if not already registered)
 
 			// Ensure this thread has the TLS index set
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -1421,10 +1401,7 @@ namespace Win32xx
 	// Reverse an Attach
 	{
 		assert(::IsWindow(m_hWnd));
-
-		//Only a subclassed window can be detached
-		if (0 == m_PrevWindowProc)
-			throw CWinException(_T("CWnd::Detach  Unable to detach this window"));
+		assert(0 != m_PrevWindowProc);	// Only a subclassed window can be detached
 
 		::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 
@@ -1537,9 +1514,6 @@ namespace Win32xx
 	// Returns the string associated with a Resource ID
 	{
 		assert(GetApp());
-
-		if (0 == GetApp())
-			throw CWinException(_T("LoadString ... Win32++ has not been initialised successfully."));
 
 		delete[] m_pTChar;
 		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
@@ -1727,8 +1701,7 @@ namespace Win32xx
 	// Called by CWnd::Create to set some window parameters
 	{
 		// Test if Win32++ has been started
-		if (0 == GetApp())
-			throw CWinException(_T("Win32++ has not been initialised properly.\n Start the Win32++ by inheriting from CWinApp."));
+		assert(GetApp());	// Test if Win32++ has been started
 
 		m_cs.cx             = cs.cx;
 		m_cs.cy             = cs.cy;
@@ -1911,13 +1884,11 @@ namespace Win32xx
 
 				// Retrieve the pointer to the TLS Data
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				if (NULL == pTLSData)
-					throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
+				assert(pTLSData);	// Able to get TLS?
 
 				// Retrieve pointer to CWnd object from Thread Local Storage TLS
 				w = pTLSData->pCWnd;
-				if (NULL == w)
-					throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
+				assert(w);		// Able to route message
 
 				pTLSData->pCWnd = NULL;
 
@@ -1954,17 +1925,10 @@ namespace Win32xx
 	// A private function used by CreateEx, Attach and AttachDlgItem
 	{
 		assert(::IsWindow(hWnd));
+		assert(0 == m_PrevWindowProc);	
+		assert((WNDPROC)::GetWindowLongPtr(hWnd, GWLP_WNDPROC) != GetApp()->m_Callback);	// Already subclassed?
 
-		if (m_PrevWindowProc)
-			throw CWinException(_T("Subclass failed.  Already Subclassed"));
-
-		// Subclass the window to pass messages to WndProc
-		WNDPROC WndProc = (WNDPROC)::GetWindowLongPtr(hWnd, GWLP_WNDPROC);
-		if (WndProc == GetApp()->m_Callback)
-			throw CWinException(_T("Subclass failed.  Already sending messages to StaticWindowProc"));
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
-		if (NULL == m_PrevWindowProc)
-			throw CWinException(_T("Subclass failed."));
 
 		m_hWnd = hWnd;
 	}

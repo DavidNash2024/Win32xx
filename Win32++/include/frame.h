@@ -2631,7 +2631,7 @@ namespace Win32xx
 			GetRebar().SendMessage(WM_SIZE, 0L, 0L);
 			GetRebar().Invalidate();
 		}
-		else if (m_bShowToolbar)
+		else if (m_bUseToolbar && m_bShowToolbar)
 			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Resize the View window

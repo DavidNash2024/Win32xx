@@ -306,7 +306,7 @@ namespace Win32xx
 		if (IsRebarSupported() && m_bUseRebar)
 			rcTop = GetRebar().GetWindowRect();
 		else
-			if (GetToolbar().IsWindowVisible())
+			if (m_bUseToolbar && GetToolbar().IsWindowVisible())
 				rcTop = GetToolbar().GetWindowRect();
 
 		// Return client size less the rebar and status windows

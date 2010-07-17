@@ -1790,54 +1790,54 @@ namespace Win32xx
 		// This pernamently sets the frame window as the docker window's owner,
 		// even when its parent is subsequently changed.
 
-		if (pDocker)
+		assert(pDocker);
+				
+		pDocker->SetDockWidth(DockWidth);
+		pDocker->SetDockStyle(dwDockStyle);
+		pDocker->m_nDockID = nDockID;
+		pDocker->m_pDockAncestor = GetDockAncestor();
+		pDocker->m_pDockParent = this;
+		HWND hwndFrame = GetDockAncestor()->GetAncestor();
+		pDocker->Create(hwndFrame);
+		pDocker->SetParent(m_hWnd);
+
+		// Store the Docker's pointer in the DockAncestor's vector for later deletion
+		GetDockAncestor()->m_vAllDockers.push_back(pDocker);
+
+		// Dock the docker window
+		if (dwDockStyle & DS_DOCKED_CONTAINER)
+			DockInContainer(pDocker, dwDockStyle);
+		else
+			Dock(pDocker, dwDockStyle);
+
+		// Issue TRACE warnings for any missing resources
+		HMODULE hMod= GetApp()->GetInstanceHandle();
+		if (!(dwDockStyle & DS_NO_RESIZE))
 		{
-			pDocker->SetDockWidth(DockWidth);
-			pDocker->SetDockStyle(dwDockStyle);
-			pDocker->m_nDockID = nDockID;
-			pDocker->m_pDockAncestor = GetDockAncestor();
-			pDocker->m_pDockParent = this;
-			HWND hwndFrame = GetDockAncestor()->GetAncestor();
-			pDocker->Create(hwndFrame);
-			pDocker->SetParent(m_hWnd);
-
-			// Store the Docker's pointer in the DockAncestor's vector for later deletion
-			GetDockAncestor()->m_vAllDockers.push_back(pDocker);
-
-			// Dock the docker window
-			if (dwDockStyle & DS_DOCKED_CONTAINER)
-				DockInContainer(pDocker, dwDockStyle);
-			else
-				Dock(pDocker, dwDockStyle);
-
-			// Issue TRACE warnings for any missing resources
-			HMODULE hMod= GetApp()->GetInstanceHandle();
-			if (!(dwDockStyle & DS_NO_RESIZE))
-			{
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
-					TRACE(_T("\n**WARNING** Horizontal cursor resource missing\n"));
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
-					TRACE(_T("\n**WARNING** Vertical cursor resource missing\n"));
-			}
-			if (!(dwDockStyle & DS_NO_UNDOCK))
-			{
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
-					TRACE(_T("\n**WARNING** Docking center bitmap resource missing\n"));
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDLEFT), RT_BITMAP))
-					TRACE(_T("\n**WARNING** Docking left bitmap resource missing\n"));
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDRIGHT), RT_BITMAP))
-					TRACE(_T("\n**WARNING** Docking right bitmap resource missing\n"));
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDTOP), RT_BITMAP))
-					TRACE(_T("\n**WARNING** Docking top bitmap resource missing\n"));
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
-					TRACE(_T("\n**WARNING** Docking center bottom resource missing\n"));
-			}
-			if (dwDockStyle & DS_DOCKED_CONTAINER)
-			{
-				if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDMIDDLE), RT_BITMAP))
-					TRACE(_T("\n**WARNING** Docking container bitmap resource missing\n"));
-			}
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
+				TRACE(_T("\n**WARNING** Horizontal cursor resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
+				TRACE(_T("\n**WARNING** Vertical cursor resource missing\n"));
 		}
+		if (!(dwDockStyle & DS_NO_UNDOCK))
+		{
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking center bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDLEFT), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking left bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDRIGHT), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking right bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDTOP), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking top bitmap resource missing\n"));
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking center bottom resource missing\n"));
+		}
+		if (dwDockStyle & DS_DOCKED_CONTAINER)
+		{
+			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDMIDDLE), RT_BITMAP))
+				TRACE(_T("\n**WARNING** Docking container bitmap resource missing\n"));
+		}
+		
 
 		return pDocker;
 	}
@@ -1845,32 +1845,32 @@ namespace Win32xx
 	inline CDocker* CDocker::AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockWidth, RECT rc, int nDockID /* = 0*/)
 	// This function creates the docker, and adds it to the docker heirachy as undocked
 	{
-		if (pDocker)
-		{
-			pDocker->SetDockWidth(DockWidth);
-			pDocker->SetDockStyle(dwDockStyle & 0XFFFFFF0);
-			pDocker->m_nDockID = nDockID;
-			pDocker->m_pDockAncestor = GetDockAncestor();
+		assert(pDocker);
 
-			// Initially create the as a child window of the frame
-			// This makes the frame window the owner of our docker
-			HWND hwndFrame = GetDockAncestor()->GetAncestor();
-			pDocker->Create(hwndFrame);
-			pDocker->SetParent(m_hWnd);
+		pDocker->SetDockWidth(DockWidth);
+		pDocker->SetDockStyle(dwDockStyle & 0XFFFFFF0);
+		pDocker->m_nDockID = nDockID;
+		pDocker->m_pDockAncestor = GetDockAncestor();
 
-			// Change the Docker to a POPUP window
-			DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-			pDocker->SetWindowLongPtr(GWL_STYLE, dwStyle);
-			pDocker->SetRedraw(FALSE);
-			pDocker->SetParent(0);
-			pDocker->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-			pDocker->SetRedraw(TRUE);
-			pDocker->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-			pDocker->SetWindowText(pDocker->GetCaption().c_str());
+		// Initially create the as a child window of the frame
+		// This makes the frame window the owner of our docker
+		HWND hwndFrame = GetDockAncestor()->GetAncestor();
+		pDocker->Create(hwndFrame);
+		pDocker->SetParent(m_hWnd);
 
-			// Store the Docker's pointer in the DockAncestor's vector for later deletion
-			GetDockAncestor()->m_vAllDockers.push_back(pDocker);
-		}
+		// Change the Docker to a POPUP window
+		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+		pDocker->SetWindowLongPtr(GWL_STYLE, dwStyle);
+		pDocker->SetRedraw(FALSE);
+		pDocker->SetParent(0);
+		pDocker->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+		pDocker->SetRedraw(TRUE);
+		pDocker->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		pDocker->SetWindowText(pDocker->GetCaption().c_str());
+
+		// Store the Docker's pointer in the DockAncestor's vector for later deletion
+		GetDockAncestor()->m_vAllDockers.push_back(pDocker);
+		
 		return pDocker;
 	}
 
@@ -2002,8 +2002,7 @@ namespace Win32xx
 
 	inline void CDocker::CloseAllDockers()
 	{
-		if (this != GetDockAncestor())
-			throw CWinException(_T("Must call CloseAllDockers from the DockAncestor"));
+		assert(this == GetDockAncestor());	// Must call CloseAllDockers from the DockAncestor
 
 		std::vector <CDocker*>::iterator v;
 
@@ -2055,6 +2054,8 @@ namespace Win32xx
 
 	inline void CDocker::Dock(CDocker* pDocker, UINT DockStyle)
 	{
+		assert(pDocker);
+
 		pDocker->m_pDockParent = this;
 		pDocker->m_BlockMove = FALSE;
 		pDocker->SetDockStyle(DockStyle);
@@ -2137,6 +2138,8 @@ namespace Win32xx
 
 	inline void CDocker::DockOuter(CDocker* pDocker, DWORD dwDockStyle)
 	{
+		assert(pDocker);
+
 		pDocker->m_pDockParent = GetDockAncestor();
 
 		DWORD OuterDocking = dwDockStyle & 0xF0000;
@@ -2365,15 +2368,15 @@ namespace Win32xx
 
 	inline int CDocker::GetTextHeight()
 	{
-			NONCLIENTMETRICS nm = {0};
-			nm.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-			LOGFONT lf = nm.lfStatusFont;
+		NONCLIENTMETRICS nm = {0};
+		nm.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		LOGFONT lf = nm.lfStatusFont;
 
-			CDC dc = GetDC();
-			dc.CreateFontIndirect(lf);
-			CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
-			return szText.cy;
+		CDC dc = GetDC();
+		dc.CreateFontIndirect(lf);
+		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+		return szText.cy;
 	}
 
 	inline void CDocker::Hide()
@@ -2539,6 +2542,8 @@ namespace Win32xx
 
 	inline void CDocker::MoveDockChildren(CDocker* pDockTarget)
 	{
+		assert(pDockTarget);
+
 		// Transfer any dock children from the current docker to the target docker
 		std::vector<CDocker*>::iterator iter;
 		for (iter = GetDockChildren().begin(); iter < GetDockChildren().end(); ++iter)
@@ -2808,6 +2813,8 @@ namespace Win32xx
 
 	inline void CDocker::ResizeDockers(LPDRAGPOS pdp)
 	{
+		assert(pdp);
+
 		POINT pt = pdp->ptPos;
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
 
@@ -3357,6 +3364,8 @@ namespace Win32xx
 
 	inline void CDocker::UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked)
 	{
+		assert(pContainer);
+
 		// Return if we shouldn't undock
 		if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
 
@@ -3522,6 +3531,8 @@ namespace Win32xx
 
 	inline void CDockContainer::AddContainer(CDockContainer* pContainer)
 	{
+		assert(pContainer);
+
 		if (this == m_pContainerParent)
 		{
 			ContainerInfo ci = {0};
@@ -3580,6 +3591,8 @@ namespace Win32xx
 
 	inline CDockContainer* CDockContainer::GetContainerFromView(CWnd* pView) const
 	{
+		assert(pView);
+
 		std::vector<ContainerInfo>::iterator iter;
 		CDockContainer* pViewContainer = 0;
 		for (iter = GetAllContainers().begin(); iter != GetAllContainers().end(); ++iter)
@@ -3594,6 +3607,8 @@ namespace Win32xx
 
 	inline int CDockContainer::GetContainerIndex(CDockContainer* pContainer)
 	{
+		assert(pContainer);
+
 		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
 		{
 			if (m_vContainerInfo[i].pContainer == pContainer)
@@ -3771,6 +3786,8 @@ namespace Win32xx
 
 	inline void CDockContainer::RemoveContainer(CDockContainer* pWnd)
 	{
+		assert(pWnd);
+
 		if (this == pWnd)
 			throw CWinException(_T("CDockContainer::RemoveContainer... Can't remove ourself"));
 
