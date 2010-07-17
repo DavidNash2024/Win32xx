@@ -97,7 +97,7 @@ namespace Win32xx
 
 		// Can't override these functions
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 	#ifndef _WIN32_WCE
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
 	#endif
@@ -107,20 +107,20 @@ namespace Win32xx
 		CDialog& operator = (const CDialog&); // Disable assignment operator
 
 		BOOL m_IsIndirect;				// a flag for Indirect dialogs
-		BOOL m_IsModal;					// a flag for modal dialogs     
+		BOOL m_IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
 		HWND m_hDlgParent;				// handle to the dialogs's parent window
 	};
-    
+
     enum alignment      // used by CResizer
     {
         topleft,
         topright,
         bottomleft,
-        bottomright    
+        bottomright
     };
-    
+
     struct ResizeData   // used by CResizer
     {
         CRect rcInit;
@@ -135,7 +135,7 @@ namespace Win32xx
     //
     // The CResizer class can be used to rearrange a dialog's child
     // windows when the dialog is resized.
-    
+
     // To use CResizer, follow the following steps:
     // 1) Use Initialize to specify the dialog's CWnd, and min and max size.
     // 3) Use AddChild for each child window
@@ -147,11 +147,11 @@ namespace Win32xx
         void AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
         void RecalcLayout();
     	void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
-    
+
     private:
         CWnd* m_pParent;
     	std::vector<ResizeData> m_vResizeData;
-    
+
     	CRect m_rcInit;
     	CRect m_rcMin;
     	CRect m_rcMax;
@@ -265,7 +265,7 @@ namespace Win32xx
 				break;  // Some commands require default processing
 	        }
 	        break;
-		
+
 		case WM_NOTIFY:
 			{
 				// Do Notification reflection if it came from a CWnd object
@@ -275,7 +275,7 @@ namespace Win32xx
 				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
-					{	
+					{
 						BOOL bReturn = (BOOL)pWndFrom->OnNotifyReflect(wParam, lParam);
 						if (bReturn) return TRUE;
 					}
@@ -285,7 +285,7 @@ namespace Win32xx
 						// Reflect those notifications too.
 						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
 						if (pWndFromParent != NULL)
-						{	
+						{
 							BOOL bReturn = (BOOL)pWndFromParent->OnNotifyReflect(wParam, lParam);
 							if (bReturn) return TRUE;
 						}
@@ -324,7 +324,7 @@ namespace Win32xx
 		try
 		{
 			if (IsWindow())
-				throw CWinException(_T("CDialog::DoModal ... Window already exists"));
+				throw CWinException(_T("Window already exists"));
 
 			m_IsModal=TRUE;
 
@@ -332,7 +332,7 @@ namespace Win32xx
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 			BOOL IsHookedHere = FALSE;
-			
+
 	#ifndef _WIN32_WCE
 			if (NULL == pTLSData->hHook )
 			{
@@ -354,18 +354,18 @@ namespace Win32xx
 					hInstance = GetApp()->GetResourceHandle();
 				nResult = ::DialogBox(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
-			
+
 			// Tidy up
 			m_hWnd = NULL;
 			pTLSData->pCWnd = NULL;
-			
+
 	#ifndef _WIN32_WCE
 			if (IsHookedHere)
 			{
 				::UnhookWindowsHookEx(pTLSData->hHook);
 				pTLSData->hHook = NULL;
 			}
-	#endif		
+	#endif
 
 			if (nResult == -1)
 				throw CWinException(_T("Failed to create modal dialog box"));
@@ -389,7 +389,7 @@ namespace Win32xx
 		try
 		{
 			if (IsWindow())
-				throw CWinException(_T("CDialog::DoModeless ... Window already exists"));
+				throw CWinException(_T("Window already exists"));
 
 			m_IsModal=FALSE;
 
@@ -417,7 +417,7 @@ namespace Win32xx
 
 			// Now handle dialog creation failure
 			if (!m_hWnd)
-				throw CWinException(_T("CDialog::DoModeless ... Failed to create dialog"));
+				throw CWinException(_T("Failed to create dialog"));
 		}
 
 		catch (const CWinException &e )
@@ -436,7 +436,7 @@ namespace Win32xx
 			::EndDialog(m_hWnd, nResult);
 		else
 			Destroy();
-	
+
 		m_hWnd = NULL;
 	}
 
@@ -484,7 +484,7 @@ namespace Win32xx
 			}
 		}
 
-		return FALSE; 
+		return FALSE;
 	}
 
 	inline void CDialog::SetDlgParent(HWND hParent)
@@ -510,12 +510,12 @@ namespace Win32xx
 				// The HWND wasn't in the map, so add it now
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 				if (NULL == pTLSData)
-					throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
+					throw CWinException(_T("Unable to get TLS"));
 
 				// Retrieve pointer to CWnd object from Thread Local Storage TLS
 				w = (CDialog*)pTLSData->pCWnd;
 				if (NULL == w)
-					throw CWinException(_T("CWnd::StaticWindowProc .. Failed to route message"));
+					throw CWinException(_T("Failed to route message"));
 
 				pTLSData->pCWnd = NULL;
 
@@ -546,10 +546,10 @@ namespace Win32xx
 			MSG* lpMsg = (MSG*) lParam;
 
 			// only pre-translate keyboard events
-			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST)) 
+			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST))
 			{
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
-				{				
+				{
 					CDialog* pDialog = (CDialog*)CWnd::FromHandle(hWnd);
 					if (pDialog && (pDialog->GetWindowType() == _T("CDialog")))
 					{
@@ -559,7 +559,7 @@ namespace Win32xx
 				}
 			}
 		}
-		
+
 		return ::CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
 	}
 #endif
@@ -570,7 +570,7 @@ namespace Win32xx
     void inline CResizer::AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
     {
     	assert (NULL != pWnd);
-    	
+
     	ResizeData rd;
     	rd.corner = corner;
     	rd.bFixedWidth  = bFixedWidth;
@@ -578,16 +578,16 @@ namespace Win32xx
     	rd.rcInit = pWnd->GetClientRect();
     	::MapWindowPoints(*pWnd, *m_pParent, (LPPOINT)&rd.rcInit, 2);
     	rd.pWnd = pWnd;
-    
+
     	m_vResizeData.push_back(rd);
     }
-    
+
     void inline CResizer::Initialize(CWnd* pParent, RECT rcMin, RECT rcMax)
-    { 
+    {
     	assert (NULL != pParent);
-    
-    	m_pParent = pParent; 
-    	m_rcInit = pParent->GetClientRect(); 
+
+    	m_pParent = pParent;
+    	m_rcInit = pParent->GetClientRect();
     	m_rcMin = rcMin;
     	m_rcMax = rcMax;
     }
@@ -596,7 +596,7 @@ namespace Win32xx
     {
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
     	assert (NULL != m_pParent);
-    
+
     	CRect rcCurrent = m_pParent->GetClientRect();
     	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
     	rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );
@@ -605,18 +605,18 @@ namespace Win32xx
     		rcCurrent.right  = MIN( rcCurrent.Width(),  m_rcMax.Width() );
     		rcCurrent.bottom = MIN( rcCurrent.Height(), m_rcMax.Height() );
     	}
-    
+
     	double xRatio = (double)rcCurrent.Width()  / (double)m_rcInit.Width();
     	double yRatio = (double)rcCurrent.Height() / (double)m_rcInit.Height();
     	std::vector<ResizeData>::iterator iter;
-    	
+
     	for (iter = m_vResizeData.begin(); iter < m_vResizeData.end(); ++iter)
     	{
     		int left   = 0;
     		int top    = 0;
     		int width  = 0;
     		int height = 0;
-    
+
     		switch( (*iter).corner )
     		{
     		case topleft:
@@ -624,34 +624,34 @@ namespace Win32xx
     			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
     			left   = (int)((*iter).rcInit.left * xRatio);
     			top    = (int)((*iter).rcInit.top * yRatio);
-    
+
     			break;
     		case topright:
     			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
     			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
     			left   = (int)((*iter).rcInit.right * xRatio)  - width;
     			top    = (int)((*iter).rcInit.top * yRatio);
-    			
+
     			break;
     		case bottomleft:
     			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
     			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
     			left   = (int)((*iter).rcInit.left * xRatio);
     			top    = (int)((*iter).rcInit.bottom * yRatio) - height;
-    
+
     			break;
     		case bottomright:
     			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
     			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
     			left   = (int)((*iter).rcInit.right * xRatio)  - width;
     			top    = (int)((*iter).rcInit.bottom * yRatio) - height;
-    
+
     			break;
     		}
-    
-    		(*iter).pWnd->SetWindowPos(NULL, left, top, width, height, NULL);
+
+    		(*iter).pWnd->SetWindowPos(NULL, left, top, width, height, 0);
     	}
-    	
+
     	m_pParent->Invalidate();
     }
 

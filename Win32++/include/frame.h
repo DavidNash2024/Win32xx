@@ -1214,7 +1214,7 @@ namespace Win32xx
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
 			tbb.iString = (INT_PTR)_T(" ");
 			if(!SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb))
-				throw CWinException(_T("Menubar::SetMenu  TB_ADDBUTTONS failed"));
+				throw CWinException(_T("TB_ADDBUTTONS failed"));
 
 			SetButtonText(0, _T("    "));
 		}
@@ -1228,13 +1228,13 @@ namespace Win32xx
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
 			tbb.iString = (INT_PTR)_T(" ");
 			if (!SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb))
-				throw CWinException(_T("Menubar::SetMenu  TB_ADDBUTTONS failed"));
+				throw CWinException(_T("TB_ADDBUTTONS failed"));
 
 			// Add the menu title to the string table
 			TCHAR szMenuName[MAX_MENU_STRING +1] = _T("");
 
 			if (0 == ::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) )
-				throw CWinException(_T("Menubar::SetMenu  GetMenuString failed"));
+				throw CWinException(_T("GetMenuString failed"));
 
 			SetButtonText(i  + nMaxedOffset, szMenuName);
 		}
@@ -1876,7 +1876,7 @@ namespace Win32xx
 			// Load the Common Controls DLL
 			hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
 			if (!hComCtl)
-				throw CWinException(_T("CFrame::LoadCommonControls ... Failed to load COMCTL32.DLL"));
+				throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
 			if (GetComCtlVersion() > 470)
 			{
@@ -1892,7 +1892,7 @@ namespace Win32xx
 				
 				// Call InitCommonControlsEx
 				if(!((*pfnInit)(&InitStruct)))
-					throw CWinException(_T("CFrame::LoadCommonControls ... InitCommonControlsEx failed"));
+					throw CWinException(_T("InitCommonControlsEx failed"));
 			}
 			else
 			{
@@ -1914,8 +1914,7 @@ namespace Win32xx
 	{
 		try
 		{
-			if (m_tsKeyName.empty())
-				throw CWinException(_T("KeyName must be set before calling LoadRegistryMRUSettings"));
+			assert(!m_tsKeyName.empty()); // KeyName must be set before calling LoadRegistryMRUSettings
 
 			// Load the MRU from the registry
 			m_nMaxMRU = MIN(nMaxMRU, 16);
@@ -2032,7 +2031,8 @@ namespace Win32xx
 
 		// Create the view window
 		if (NULL == GetView())
-			throw CWinException(_T("CFrame::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
+			throw CWinException(_T("Frame's view window is not assigned"));
+		
 		GetView()->Create(m_hWnd);
 
 		// Reposition the child windows

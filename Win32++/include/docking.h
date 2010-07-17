@@ -2600,7 +2600,8 @@ namespace Win32xx
 		GetDockClient().SetDock(this);
 		GetDockClient().Create(m_hWnd);
 		if (NULL == GetView())
-			throw CWinException(_T("CDocker::OnCreate... View window is not assigned!\nUse SetView to set the View Window"));
+			throw CWinException(_T("CDocker's view window is not assigned"));
+		
 		GetView()->Create(GetDockClient().GetHwnd());
 
 		// Create the slider bar belonging to this docker
@@ -3663,7 +3664,7 @@ namespace Win32xx
 	inline void CDockContainer::OnCreate()
 	{
 		if (NULL == GetView())
-			throw CWinException(_T("CDockContainer::OnCreate... View window not assigned!\nUse SetView to set the View Window"));
+			throw CWinException(_T("CDockContainer's view window not assigned"));
 
 		ContainerInfo ci = {0};
 		ci.pContainer = this;
@@ -3787,12 +3788,6 @@ namespace Win32xx
 	inline void CDockContainer::RemoveContainer(CDockContainer* pWnd)
 	{
 		assert(pWnd);
-
-		if (this == pWnd)
-			throw CWinException(_T("CDockContainer::RemoveContainer... Can't remove ourself"));
-
-		if (0 == pWnd)
-			throw CWinException(_T("CDockContainer::RemoveContainer... Can't remove NULL container"));
 
 		// Remove the tab
 		int iTab = GetContainerIndex(pWnd);

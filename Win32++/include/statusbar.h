@@ -105,11 +105,11 @@ namespace Win32xx
 		if (IsWindow())
 		{
 			if (iParts > 256)
-				throw CWinException (_T("CStatusbar::CreateParts ... Too many panes"));
+				throw CWinException (_T("Too many statusbar panes"));
 
 			// Create the statusbar panes
 			if (!SendMessage(SB_SETPARTS, iParts, (LPARAM)iPaneWidths))
-				throw CWinException(_T("CStatusbar::CreateParts failed"));
+				throw CWinException(_T("CreateParts failed"));
 		}
 	}
 
@@ -206,6 +206,8 @@ namespace Win32xx
 		// with the specified width
 
 		assert(::IsWindow(m_hWnd));
+		assert(iPart <= 255);
+		assert(iWidth >= 0);
 
 		int* iPartWidths = NULL;
 		int* iNewPartWidths = NULL;
@@ -214,9 +216,6 @@ namespace Win32xx
 		{
 			if (IsWindow())
 			{
-				if ((iPart > 256) || (iWidth < 0))
-					throw CWinException (_T("CStatusbar::SetPartWidth ... Invalid parameters"));
-
 				if (iPart < 0) iPart = 0;
 
 				int iParts = (int)SendMessage(SB_GETPARTS, 0L, 0L);
@@ -245,7 +244,7 @@ namespace Win32xx
 					iNewPartWidths[iPart] = iNewPartWidths[iPart -1] + iWidth;
 
 				if (!SendMessage(SB_SETPARTS, iNewParts, (LPARAM)iNewPartWidths))
-					throw CWinException(_T("CStatusbar::SetPartWidth failed"));
+					throw CWinException(_T("SetPartWidth failed"));
 
 				delete []iNewPartWidths;
 				delete []iPartWidths;

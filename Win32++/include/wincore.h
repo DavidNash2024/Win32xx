@@ -933,17 +933,12 @@ namespace Win32xx
 		wcDefault.style			= CS_DBLCLKS;
 
 		if (!::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault))
-		{
-			ATOM atom = ::RegisterClass(&wcDefault);
-			assert(atom);					// RegisterClass succeeded?
-			UNREFERENCED_PARAMETER(atom);	// assert is ignored in Release mode
-		}
+			::RegisterClass(&wcDefault);
 
 		// Retrieve the class information
 		ZeroMemory(&wcDefault, sizeof(wcDefault));
-		BOOL bVal = ::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault);
-		assert(bVal);					// GetClassInfo succeeded?
-		UNREFERENCED_PARAMETER(bVal);	// assert is ignored in Release mode
+		if (!::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault))
+			throw CWinException(_T("Failed to get Default class info"));
 
 		// Save the callback address of CWnd::StaticWindowProc
 		m_Callback = wcDefault.lpfnWndProc;
@@ -1146,21 +1141,13 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(::IsWindow(hWnd));
 
-		try
-		{
-			Subclass(hWnd);
+		Subclass(hWnd);
 
-			// Store the CWnd pointer in the HWND map
-			AddToMap();
-			OnInitialUpdate();
-			return TRUE;
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			throw;
-		}
+		// Store the CWnd pointer in the HWND map
+		AddToMap();
+		OnInitialUpdate();
+		
+		return TRUE;
 	}
 
 	inline BOOL CWnd::AttachDlgItem(UINT nID, CWnd* pParent)
@@ -1248,53 +1235,46 @@ namespace Win32xx
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Default Window Creation.
 	{
-		try
+
+		// Test if Win32++ has been started
+		assert( GetApp() );
+
+		// Set the WNDCLASS parameters
+		PreRegisterClass(m_wc);
+		if (m_wc.lpszClassName)
 		{
-			// Test if Win32++ has been started
-			assert( GetApp() );
+			RegisterClass(m_wc);
+			m_cs.lpszClass = m_wc.lpszClassName;
+		}
 
-			// Set the WNDCLASS parameters
-			PreRegisterClass(m_wc);
-			if (m_wc.lpszClassName)
-			{
-				RegisterClass(m_wc);
-				m_cs.lpszClass = m_wc.lpszClassName;
-			}
+		// Set the CREATESTRUCT parameters
+		PreCreate(m_cs);
 
-			// Set the CREATESTRUCT parameters
-			PreCreate(m_cs);
+		// Set the Window Class Name
+		if (!m_cs.lpszClass)
+			m_cs.lpszClass = _T("Win32++ Window");
 
-			// Set the Window Class Name
-			if (!m_cs.lpszClass)
-				m_cs.lpszClass = _T("Win32++ Window");
+		// Set Parent
+		if (!hWndParent && m_cs.hwndParent)
+			hWndParent = m_cs.hwndParent;
 
-			// Set Parent
-			if (!hWndParent && m_cs.hwndParent)
-				hWndParent = m_cs.hwndParent;
+		// Set the window style
+		DWORD dwStyle;
+		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+		if (m_cs.style)
+			dwStyle = m_cs.style;
+		else
+			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
 
-			// Set the window style
-			DWORD dwStyle;
-			DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-			if (m_cs.style)
-				dwStyle = m_cs.style;
-			else
-				dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+		// Set window size and position
+		int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
+		int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
+		int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
+		int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
 
-			// Set window size and position
-			int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
-			int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
-			int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
-			int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
-
-			// Create the window
-			CreateEx(m_cs.dwExStyle, m_cs.lpszClass, m_cs.lpszName, dwStyle, x, y,
+		// Create the window
+		CreateEx(m_cs.dwExStyle, m_cs.lpszClass, m_cs.lpszName, dwStyle, x, y,
 				cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams);
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
 
 		return m_hWnd;
 	}
@@ -1345,7 +1325,7 @@ namespace Win32xx
 
 			// Now handle window creation failure
 			if (!m_hWnd)
-				throw CWinException(_T("CWnd::CreateEx ... Failed to Create Window"));
+				throw CWinException(_T("Failed to Create Window"));
 
 			// Automatically subclass predefined window class types
 			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
@@ -1442,11 +1422,14 @@ namespace Win32xx
 
 		delete[] m_pTChar;
 		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
-		if (0 == m_pTChar) throw std::bad_alloc();
+		if (0 == m_pTChar) 
+			throw std::bad_alloc();
+		
 		memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
-		::GetClassName(m_hWnd, m_pTChar, MAX_STRING_SIZE);
+		if (0 != ::GetClassName(m_hWnd, m_pTChar, MAX_STRING_SIZE))
+			return m_pTChar;
 
-		return m_pTChar;
+		return _T("");
 	}
 
 	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem) const
@@ -1463,11 +1446,11 @@ namespace Win32xx
 			if (0 == m_pTChar)
 				throw std::bad_alloc();
 			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
-			::GetDlgItemText(m_hWnd, nIDDlgItem, m_pTChar, nLength+1);
-			return m_pTChar;
+			if (0 != ::GetDlgItemText(m_hWnd, nIDDlgItem, m_pTChar, nLength+1))
+				return m_pTChar;
 		}
-		else
-			return _T("");
+				
+		return _T("");
 	}
 
 	inline LPCTSTR CWnd::GetWindowText() const
@@ -1481,13 +1464,15 @@ namespace Win32xx
 		if (nLength > 0)
 		{
 			m_pTChar = new TCHAR[nLength+1];
-			if (NULL == m_pTChar) throw std::bad_alloc();
+			if (NULL == m_pTChar) 
+				throw std::bad_alloc();
+			
 			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
-			::GetWindowText(m_hWnd, m_pTChar, nLength+1);
-			return m_pTChar;
+			if (0 != ::GetWindowText(m_hWnd, m_pTChar, nLength+1))
+				return m_pTChar;
 		}
-		else
-			return _T("");
+		
+		return _T("");
 	}
 
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
@@ -1884,11 +1869,13 @@ namespace Win32xx
 
 				// Retrieve the pointer to the TLS Data
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				assert(pTLSData);	// Able to get TLS?
+				if (NULL == pTLSData)
+					throw CWinException(_T("Unable to get TLS"));
 
 				// Retrieve pointer to CWnd object from Thread Local Storage TLS
 				w = pTLSData->pCWnd;
-				assert(w);		// Able to route message
+				if (NULL == w)
+					throw CWinException(_T("Failed to route message"));
 
 				pTLSData->pCWnd = NULL;
 
@@ -1926,10 +1913,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(hWnd));
 		assert(0 == m_PrevWindowProc);	
-		assert((WNDPROC)::GetWindowLongPtr(hWnd, GWLP_WNDPROC) != GetApp()->m_Callback);	// Already subclassed?
 
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
-
 		m_hWnd = hWnd;
 	}
 
