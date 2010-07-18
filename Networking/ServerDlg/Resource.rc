@@ -1,11 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
-
-// Microsoft Visual C++ generated resource script.
-//
-
-#include "resource.h"
 #include "windows.h"
 
 
@@ -21,7 +16,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       24             "res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -41,7 +36,7 @@ IDD_SERVER DIALOGEX 0, 0, 283, 231
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "Server Dialog"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0
 BEGIN
     GROUPBOX        "Server Configuration",IDC_STATIC,16,7,249,121,BS_LEFT
     CONTROL         "IP6 Address",IDC_RADIO_IPV6,"Button",BS_AUTORADIOBUTTON | WS_GROUP,24,22,49,8
@@ -67,7 +62,7 @@ END
 IDD_CHAT DIALOGEX 0, 0, 186, 86
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Server TCP Chat"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
+FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     EDITTEXT        IDC_EDIT_SEND2,7,37,79,42,ES_MULTILINE | ES_AUTOHSCROLL
     EDITTEXT        IDC_EDIT_RECEIVE2,98,37,81,42,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL

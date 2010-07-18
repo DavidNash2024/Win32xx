@@ -98,7 +98,7 @@ void CClientDialog::LoadCommonControlsEx()
 		// Load the Common Controls DLL
 		hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
 		if (!hComCtl)
-			throw CWinException(_T("CClientDialog::LoadCommonControls ... Failed to load COMCTL32.DLL"));
+			throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
 		if (GetComCtlVersion() > 470)
 		{
@@ -111,7 +111,7 @@ void CClientDialog::LoadCommonControlsEx()
 			InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 			InitStruct.dwICC = ICC_INTERNET_CLASSES;
 			if((!(*pfnInit)(&InitStruct)))
-				throw CWinException(_T("CClientDialog::LoadCommonControls ... InitCommonControlsEx failed"));
+				throw CWinException(_T("InitCommonControlsEx failed"));
 		}
 		else
 		{

@@ -45,6 +45,7 @@ public:
 	CSvrDialog(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CSvrDialog();
 	void Append(int nID, LPCTSTR buf);
+	void LoadCommonControlsEx();
 	void OnSocketDisconnect(CServerSocket* pClient);
 	void OnSocketReceive(CServerSocket* pClient);
 	void OnSocketAccept();

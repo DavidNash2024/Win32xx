@@ -523,14 +523,18 @@ namespace Win32xx
 
 		int ErrorCode = WSAGetLastError();
 		LPTSTR Message = NULL;
+		m_tsErrorMessage = _T("");
 
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS |
 					  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK, 
 					  NULL, ErrorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 					  (LPTSTR)&Message, 1024, NULL);
 		
-		m_tsErrorMessage = Message;
-		::LocalFree(Message);
+		if (Message)
+		{
+			m_tsErrorMessage = Message;
+			::LocalFree(Message);
+		}
 		
 		return m_tsErrorMessage.c_str();
 	}

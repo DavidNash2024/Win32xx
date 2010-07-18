@@ -96,6 +96,9 @@ void CTCPClientDlg::Send()
 CSvrDialog::CSvrDialog(UINT nResID, HWND hWndParent) : CDialog(nResID, hWndParent), 
               m_bServerStarted(FALSE), m_SocketType(SOCK_STREAM)
 {
+	// Add support for the IP Address control
+	// It requires Win95 with IE4 intergrated or a later version of Windows OS.
+	LoadCommonControlsEx();
 }
 
 CSvrDialog::~CSvrDialog()
@@ -163,6 +166,47 @@ void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
 		delete Iter->second;
 		m_ConnectedClients.erase(Iter);
 	}  
+}
+
+void CSvrDialog::LoadCommonControlsEx()
+{
+	// This function adds support for the IP address control in the dialog.
+	HMODULE hComCtl;
+
+	try
+	{
+		// Load the Common Controls DLL
+		hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+		if (!hComCtl)
+			throw CWinException(_T("Failed to load COMCTL32.DLL"));
+
+		if (GetComCtlVersion() > 470)
+		{
+			// Declare a pointer to the InItCommonControlsEx function
+			typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
+			INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+
+			// Call InitCommonControlsEx
+			INITCOMMONCONTROLSEX InitStruct;
+			InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+			InitStruct.dwICC = ICC_INTERNET_CLASSES;
+			if((!(*pfnInit)(&InitStruct)))
+				throw CWinException(_T("InitCommonControlsEx failed"));
+		}
+		else
+		{
+			MessageBox( _T("Common Control Version 4.71 or later required (IE 4)"), _T("NOT SUPPORTED"), MB_ICONSTOP );
+		}
+
+		::FreeLibrary(hComCtl);
+	}
+	
+	catch (const CWinException &e)
+	{
+		e.MessageBox();
+		if (hComCtl)
+			::FreeLibrary(hComCtl);
+	}
 }
 
 BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM lParam)
