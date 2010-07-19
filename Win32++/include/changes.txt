@@ -9,7 +9,9 @@ New Features and Enhancements
 * Added IPv6 support to CSocket. The network samples have been updated to
    take advantage of IPv6 support.
 * Added the GDIPlus sample to demonstrate how to use the GDIplus library 
-   provided with modern Windows operating systems (XP and above).      
+   provided with modern Windows operating systems (XP and above).
+* Moved the text conversion functions from CWnd to the global (Win32++) 
+   namespace.       
 
 Changes in detail
 -----------------

@@ -115,8 +115,12 @@
 #define THREAD_TIMEOUT 100
 
 
+
 namespace Win32xx
 {
+
+	typedef int  WINAPI GETADDRINFO(LPCSTR, LPCSTR, const struct addrinfo*, struct addrinfo**);
+	typedef void WINAPI FREEADDRINFO(struct addrinfo*);
 
 	class CSocket
 	{
@@ -143,6 +147,8 @@ namespace Win32xx
 		virtual int  Connect(const struct sockaddr* name, int namelen);
 		virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
+		virtual void freeaddrinfo( struct addrinfo* ai );
+		virtual int  getaddrinfo( LPCSTR nodename, LPCSTR servname, const struct addrinfo* hints, struct addrinfo** res);
 		virtual LPCTSTR GetLastError();
 		virtual int  GetPeerName(struct sockaddr* name, int* namelen);
 		virtual int  GetSockName(struct sockaddr* name, int* namelen);
@@ -169,10 +175,13 @@ namespace Win32xx
 
 		tString m_tsErrorMessage;
 		SOCKET m_Socket;
+		HMODULE m_hWS2_32;
 		HANDLE m_hEventThread;	// Handle to the thread
 		HANDLE m_StopRequest;	// An event to signal the event thread should stop
 		HANDLE m_Stopped;		// An event to signal the event thread is stopped
 
+		GETADDRINFO* m_pfnGetAddrInfo;		// pointer for the getaddrinfo function
+		FREEADDRINFO* m_pfnFreeAddrInfo;	// pointer for the freeaddrinfo function
 	};
 }
 
@@ -191,6 +200,18 @@ namespace Win32xx
 			if (0 != ::WSAStartup(MAKEWORD(2,2), &wsaData))
 				throw CWinException(_T("WSAStartup failed"));
 
+			m_hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
+			if (0 == m_hWS2_32)
+				throw CWinException(_T("Failed to load WS2_2.dll"));
+
+//#ifdef UNICODE
+//			m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "GetAddrInfoW");
+//			m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "FreeAddrInfoW");
+//#else
+			m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "getaddrinfo");
+			m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "freeaddrinfo");
+//#endif
+			
 			m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
 			m_Stopped = ::CreateEvent(0, TRUE, FALSE, 0);
 		}
@@ -212,6 +233,8 @@ namespace Win32xx
 
 		// Terminate the  Windows Socket services
 		::WSACleanup();
+
+		::FreeLibrary(m_hWS2_32);
 	}
 
 	inline void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen)
@@ -231,44 +254,31 @@ namespace Win32xx
 
 	#ifdef GetAddrInfo // Skip the following code block for older development environments 
 
-		HMODULE hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
-		
-		// Assign pointers to the getaddrinfo and freeaddrinfo functions.
-		// This allows the code to run on older operating systems that don't support these functions		
-		typedef int  WINAPI GETADDRINFO(LPCSTR, LPCSTR, const struct addrinfo*, struct addrinfo**);
-		typedef void WINAPI FREEADDRINFO(struct addrinfo*);
-		GETADDRINFO* pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(hWS2_32, "getaddrinfo");
-		FREEADDRINFO* pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(hWS2_32, "freeaddrinfo");		
-		
-		if (pfnGetAddrInfo && pfnFreeAddrInfo)
-		// getaddrinfo and freeaddrinfo are supported, so use them for IPV6 suppport 
+		IsIP6Bind = true;
+		ADDRINFO Hints= {0};
+		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
+	    
+		ADDRINFO *AddrInfo;
+
+		RetVal = getaddrinfo(addr, port, &Hints, &AddrInfo);
+
+		if (RetVal != 0) 
 		{
-			IsIP6Bind = true;
-			ADDRINFO Hints= {0};
-			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-		    
-			ADDRINFO *AddrInfo;
-			RetVal = (*pfnGetAddrInfo)(addr, port, &Hints, &AddrInfo);
-
-			if (RetVal != 0) 
-			{
-				TRACE( _T("getaddrinfo failed\n"));
-				return RetVal;
-			}
-
-			// Bind the IP address to the listening socket
-			RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, AddrInfo->ai_addrlen );
-			if ( RetVal == SOCKET_ERROR )
-			{
-				TRACE(_T("Bind failed\n"));
-				return RetVal;
-			}
-
-			// Free the address information allocated by getaddrinfo
-			(*pfnFreeAddrInfo)(AddrInfo);
+			TRACE( _T("getaddrinfo failed\n"));
+			return RetVal;
 		}
 
-		::FreeLibrary(hWS2_32);
+		// Bind the IP address to the listening socket
+		RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, AddrInfo->ai_addrlen );
+		if ( RetVal == SOCKET_ERROR )
+		{
+			TRACE(_T("Bind failed\n"));
+			return RetVal;
+		}
+
+		// Free the address information allocated by getaddrinfo
+		freeaddrinfo(AddrInfo);
+
 		
 	#endif	// GetAddrInfo
 		
@@ -308,51 +318,34 @@ namespace Win32xx
 	inline int CSocket::Connect(const char* addr, const char* port)
 	// The Connect function establishes a connection to the socket.
 	{
-
 		int RetVal = 0;
 		bool IsIP6Connect = false;
 
 	#ifdef GetAddrInfo	// Skip the following code block for older development environments
 
-		HMODULE hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
-
-		// Assign pointers to the getaddrinfo and freeaddrinfo functions.
-		// This allows the code to run on older operating systems that don't support these functions
-		typedef int  WINAPI GETADDRINFO(LPCSTR, LPCSTR, const struct addrinfo*, struct addrinfo**);
-		typedef void WINAPI FREEADDRINFO(struct addrinfo*);
-		GETADDRINFO* pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(hWS2_32, "getaddrinfo");
-		FREEADDRINFO* pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(hWS2_32, "freeaddrinfo");
-
-		if (pfnGetAddrInfo && pfnFreeAddrInfo)
-		// getaddrinfo and freeaddrinfo are supported, so use them for IPV6 suppport 
+		IsIP6Connect = true;
+		ADDRINFO Hints= {0};
+		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
+	    
+		ADDRINFO *AddrInfo;
+		RetVal = getaddrinfo(addr, port, &Hints, &AddrInfo);
+		if (RetVal != 0) 
 		{
-			IsIP6Connect = true;
-			ADDRINFO Hints= {0};
-			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-		    
-			ADDRINFO *AddrInfo;
-			RetVal = (*pfnGetAddrInfo)(addr, port, &Hints, &AddrInfo);
-			if (RetVal != 0) 
-			{
-				TRACE( _T("getaddrinfo failed\n"));
-				return SOCKET_ERROR;
-			}
-
-			// Bind the IP address to the listening socket
-			RetVal = Connect( AddrInfo->ai_addr, AddrInfo->ai_addrlen );
-			if ( RetVal == SOCKET_ERROR )
-			{
-				TRACE(_T("Bind failed\n"));
-				return RetVal;
-			}
-
-			// Free the address information allocatied by getaddrinfo
-			(*pfnFreeAddrInfo)(AddrInfo);
-
+			TRACE( _T("getaddrinfo failed\n"));
+			return SOCKET_ERROR;
 		}
-		
-		::FreeLibrary(hWS2_32);
 
+		// Bind the IP address to the listening socket
+		RetVal = Connect( AddrInfo->ai_addr, AddrInfo->ai_addrlen );
+		if ( RetVal == SOCKET_ERROR )
+		{
+			TRACE(_T("Bind failed\n"));
+			return RetVal;
+		}
+
+		// Free the address information allocatied by getaddrinfo
+		freeaddrinfo(AddrInfo);
+		
 	#endif	// GetAddrInfo
 		
 		if(!IsIP6Connect)
@@ -517,6 +510,27 @@ namespace Win32xx
 		}
 	}
 
+	inline int CSocket::getaddrinfo( LPCSTR nodename, LPCSTR servname, const struct addrinfo* hints, struct addrinfo** res)
+	{
+
+#ifdef GetAddrInfo
+
+		return (*m_pfnGetAddrInfo)(nodename, servname, hints, res);	
+
+#else
+
+		UNREFERENCED_PARAMETER(nodename);
+		UNREFERENCED_PARAMETER(servname);
+		UNREFERENCED_PARAMETER(hints);
+		UNREFERENCED_PARAMETER(res);
+
+		throw CWinException(_T("getaddrinfo is not supported"));
+		return -1;
+
+#endif
+
+	}
+
 	inline LPCTSTR CSocket::GetLastError()
 	{
 		// Retrieves the most recent network error.
@@ -564,6 +578,27 @@ namespace Win32xx
 			TRACE(_T("GetSockOpt Failed\n"));
 		
 		return Result;
+	}
+
+	inline void CSocket::freeaddrinfo( struct addrinfo* ai )
+	{
+
+#ifdef GetAddrInfo
+
+		(*m_pfnFreeAddrInfo)(ai);	
+
+#else
+
+		UNREFERENCED_PARAMETER(nodename);
+		UNREFERENCED_PARAMETER(servname);
+		UNREFERENCED_PARAMETER(hints);
+		UNREFERENCED_PARAMETER(res);
+
+		throw CWinException(_T("getaddrinfo is not supported"));
+		return -1;
+
+#endif
+
 	}
 
 	inline int CSocket::ioCtlSocket(long cmd, u_long* argp)

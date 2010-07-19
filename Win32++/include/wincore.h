@@ -240,7 +240,20 @@ namespace Win32xx
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenubar and Modeless Dialogs
+		CHAR*  pChar;     // Used in string conversions
+		TCHAR* pTChar;    // Used in string functions
+		WCHAR* pWChar;	// Used in string conversions
 	};
+
+	////////////////////////////////////////
+	// Global functions for text conversions
+	//
+	inline LPCWSTR CharToWide(LPCSTR pChar);
+	inline LPCSTR WideToChar(LPCWSTR pWChar);
+	inline LPCTSTR CharToTChar(LPCSTR pChar);
+	inline LPCSTR TCharToChar(LPCTSTR pTChar);
+	inline LPCWSTR TCharToWide(LPCTSTR pTChar);
+
 
 
 	/////////////////////////////////////////
@@ -527,14 +540,6 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		// String conversion functions
-		virtual LPCWSTR CharToWide(LPCSTR pChar) const;
-		virtual LPCSTR  WideToChar(LPCWSTR pWChar) const;
-		virtual LPCTSTR CharToTChar(LPCSTR pChar) const;
-		virtual LPCSTR  TCharToChar(LPCTSTR pTChar) const;
-		virtual LPCWSTR TCharToWide(LPCTSTR pTChar) const;
-		virtual LPCTSTR WideToTChar(LPWSTR pWChar) const;
-
 		HWND m_hWnd;				// handle to this object's window
 
 	private:
@@ -601,8 +606,8 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
-}
 
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -821,6 +826,91 @@ namespace Win32xx
 		::GetCursorPos(&pt);
 		return pt;
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// Global functions for text conversions
+	// Note:  The pointers returned should be be used immediately. Otherwise, copy the
+	//        array pointed to a local array or std::string. Subsequent calls to these
+	//        functions will change the text array the returned pointer points to.
+	//		 
+	//        Using TLS instead of global variables keeps these functions thread safe.
+	//
+	inline LPCWSTR CharToWide(LPCSTR pChar)
+	{
+		assert( GetApp() );
+		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+
+		delete[] pTLSData->pWChar;
+		int length = (int)strlen(pChar)+1;
+		pTLSData->pWChar = new WCHAR[length];
+		if (NULL == pTLSData->pWChar)
+			throw std::bad_alloc();
+
+		memset(pTLSData->pWChar, 0, length * sizeof(WCHAR));
+		MultiByteToWideChar(CP_ACP, 0, pChar, -1, pTLSData->pWChar, length);
+		return pTLSData->pWChar;
+	}
+
+	inline LPCSTR WideToChar(LPCWSTR pWChar)
+	{
+		assert( GetApp() );
+		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+
+		delete[] pTLSData->pChar;
+		int length = (int)wcslen(pWChar)+1;
+		pTLSData->pChar = new CHAR[length];
+		if (NULL == pTLSData->pChar)
+			throw std::bad_alloc();
+
+		memset(pTLSData->pChar, 0, length);
+		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, pTLSData->pChar, length, NULL,NULL);
+		return pTLSData->pChar;
+	}
+
+	inline LPCTSTR CharToTChar(LPCSTR pChar)
+	{
+
+#ifdef UNICODE
+		return CharToWide(pChar);
+#else
+		return pChar;
+#endif
+
+	}
+
+	inline LPCSTR TCharToChar(LPCTSTR pTChar)
+	{
+
+#ifdef UNICODE
+		return WideToChar(pTChar);
+#else
+		return pTChar;
+#endif
+
+	}
+
+	inline LPCWSTR TCharToWide(LPCTSTR pTChar)
+	{
+
+  #ifdef UNICODE
+		return pTChar;
+  #else
+		return CharToWide(pTChar);
+  #endif
+
+	}
+
+	inline LPCTSTR WideToTChar(LPWSTR pWChar)
+	{
+
+  #ifdef UNICODE
+		return pWChar;
+  #else
+		return WideToChar(pWChar);
+  #endif
+
+	}
+
 
 	///////////////////////////////////
 	// Definitions for the CWinException class
@@ -1916,76 +2006,6 @@ namespace Win32xx
 
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 		m_hWnd = hWnd;
-	}
-
-	inline LPCWSTR CWnd::CharToWide(LPCSTR pChar) const
-	{
-		delete[] m_pWChar;
-		int length = (int)strlen(pChar)+1;
-		m_pWChar = new WCHAR[length];
-		if (NULL == m_pWChar)
-			throw std::bad_alloc();
-
-		memset(m_pWChar, 0, length * sizeof(WCHAR));
-		MultiByteToWideChar(CP_ACP, 0, pChar, -1, m_pWChar, length);
-		return m_pWChar;
-	}
-
-	inline LPCSTR CWnd::WideToChar(LPCWSTR pWChar) const
-	{
-		delete[] m_pChar;
-		int length = (int)wcslen(pWChar)+1;
-		m_pChar = new CHAR[length];
-		if (NULL == m_pChar)
-			throw std::bad_alloc();
-
-		memset(m_pChar, 0, length);
-		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, m_pChar, length, NULL,NULL);
-		return m_pChar;
-	}
-
-	inline LPCTSTR CWnd::CharToTChar(LPCSTR pChar) const
-	{
-
-#ifdef UNICODE
-		return CharToWide(pChar);
-#else
-		return pChar;
-#endif
-
-	}
-
-	inline LPCSTR CWnd::TCharToChar(LPCTSTR pTChar) const
-	{
-
-#ifdef UNICODE
-		return WideToChar(pTChar);
-#else
-		return pTChar;
-#endif
-
-	}
-
-	inline LPCWSTR CWnd::TCharToWide(LPCTSTR pTChar) const
-	{
-
-  #ifdef UNICODE
-		return pTChar;
-  #else
-		return CharToWide(pTChar);
-  #endif
-
-	}
-
-	inline LPCTSTR CWnd::WideToTChar(LPWSTR pWChar) const
-	{
-
-  #ifdef UNICODE
-		return pWChar;
-  #else
-		return WideToChar(pWChar);
-  #endif
-
 	}
 
 	inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
