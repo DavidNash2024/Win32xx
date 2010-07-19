@@ -257,10 +257,10 @@ void CClientDialog::OnStartClient()
 				}
 
 				// Retrieve the IP Address
-				std::string sAddr;
+				tString tAddr;
 				if (PF_INET6 == IPfamily)
 				{
-					sAddr = TCharToChar( m_EditIP6Address.GetWindowText() );
+					tAddr = m_EditIP6Address.GetWindowText();
 				}
 				else
 				{
@@ -268,17 +268,17 @@ void CClientDialog::OnStartClient()
 					m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 					in_addr addr = {0};
 					addr.S_un.S_addr = htonl(dwAddr);
-					sAddr = inet_ntoa(addr);
+					tAddr = CharToTChar( inet_ntoa(addr) );
 				}
 
 				// Retrieve the local port number
-				std::string sPort = TCharToChar( m_EditPort.GetWindowText() );
+				tString tPort = m_EditPort.GetWindowText();
 
 				// Temporarily disable the Connect/Disconnect button
 				m_ButtonConnect.EnableWindow( FALSE);
 
 				// Connect to the server
-				if (0 != m_Client.Connect(sAddr.c_str(), sPort.c_str()) )
+				if (0 != m_Client.Connect(tAddr.c_str(), tPort.c_str()) )
 				{
 					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING );
@@ -358,7 +358,7 @@ void CClientDialog::OnSend()
 		break;
 	case SOCK_DGRAM:	// for UDP client
 		{
-			// Get the port number
+/*			// Get the port number
 			LPCTSTR szPort = m_EditPort.GetWindowText();
 			int RemotePort = atoi(TCharToChar(szPort));
 
@@ -372,7 +372,30 @@ void CClientDialog::OnSend()
 			peer.sin_addr.S_un.S_addr = htonl(dwAddr);
 
 			LPCTSTR szSend = m_EditSend.GetWindowText();
-			m_Client.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, (SOCKADDR*)&peer, sizeof(peer));
+			m_Client.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, (SOCKADDR*)&peer, sizeof(peer)); */
+
+			LRESULT lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
+			int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
+
+			tString tPort = m_EditPort.GetWindowText();
+			tString tSend = m_EditSend.GetWindowText();
+			
+			// Retrieve the IP Address
+			tString tAddr;
+			if (PF_INET6 == IPfamily)
+			{
+				tAddr = m_EditIP6Address.GetWindowText();
+			}
+			else
+			{
+				DWORD dwAddr = 0;
+				m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
+				in_addr addr = {0};
+				addr.S_un.S_addr = htonl(dwAddr);
+				tAddr = CharToTChar( inet_ntoa(addr) );
+			}
+
+			m_Client.SendTo( tSend.c_str(), tAddr.c_str(), tPort.c_str() );
 		}
 		break;
 	}

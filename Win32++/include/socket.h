@@ -112,8 +112,8 @@
 #include <ws2tcpip.h>
 #include <Process.h>
 
-#define THREAD_TIMEOUT 100
 
+#define THREAD_TIMEOUT 100
 
 
 namespace Win32xx
@@ -141,9 +141,9 @@ namespace Win32xx
 
 		// Its unlikely you would need to override these functions
 		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
-		virtual int  Bind(const char* addr, const char* port);
+		virtual int  Bind(LPCTSTR addr, LPCTSTR port);
 		virtual int  Bind(const struct sockaddr* name, int namelen);
-		virtual int  Connect(const char* addr, const char* port);
+		virtual int  Connect(LPCTSTR addr, LPCTSTR port);
 		virtual int  Connect(const struct sockaddr* name, int namelen);
 		virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
@@ -159,6 +159,7 @@ namespace Win32xx
 		virtual int  Receive(char* buf, int len, int flags);
 		virtual int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen);
 		virtual int  Send(const char* buf, int len, int flags);
+		virtual int  SendTo(LPCTSTR send, LPCTSTR addr, LPCTSTR port);
 		virtual int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen);
 		virtual int  SetSockOpt(int level, int optname, const char* optval, int optlen);
 		virtual void StartEvents();
@@ -204,13 +205,8 @@ namespace Win32xx
 			if (0 == m_hWS2_32)
 				throw CWinException(_T("Failed to load WS2_2.dll"));
 
-//#ifdef UNICODE
-//			m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "GetAddrInfoW");
-//			m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "FreeAddrInfoW");
-//#else
 			m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "getaddrinfo");
 			m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "freeaddrinfo");
-//#endif
 			
 			m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
 			m_Stopped = ::CreateEvent(0, TRUE, FALSE, 0);
@@ -246,11 +242,13 @@ namespace Win32xx
 			TRACE(_T("Accept failed\n"));
 	}
 
-	inline int CSocket::Bind(const char* addr, const char* port)
+	inline int CSocket::Bind(LPCTSTR addr, LPCTSTR port)
 	// The bind function associates a local address with the socket.
 	{		
 		int RetVal = 0;
 		bool IsIP6Bind = false;
+		std::string sAddr = TCharToChar(addr);
+		std::string sPort = TCharToChar(port);
 
 	#ifdef GetAddrInfo // Skip the following code block for older development environments 
 
@@ -260,7 +258,7 @@ namespace Win32xx
 	    
 		ADDRINFO *AddrInfo;
 
-		RetVal = getaddrinfo(addr, port, &Hints, &AddrInfo);
+		RetVal = getaddrinfo(sAddr.c_str(), sPort.c_str(), &Hints, &AddrInfo);
 
 		if (RetVal != 0) 
 		{
@@ -287,9 +285,9 @@ namespace Win32xx
 		{
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( addr );
+			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
 			int nPort = -1;
-			nPort = atoi(port);
+			nPort = atoi( sPort.c_str() );
 			if (-1 == nPort)
 			{
 				TRACE(_T("Invalid port number\n"));
@@ -315,11 +313,13 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline int CSocket::Connect(const char* addr, const char* port)
+	inline int CSocket::Connect(LPCTSTR addr, LPCTSTR port)
 	// The Connect function establishes a connection to the socket.
 	{
 		int RetVal = 0;
 		bool IsIP6Connect = false;
+		std::string sAddr = TCharToChar(addr);
+		std::string sPort = TCharToChar(port);
 
 	#ifdef GetAddrInfo	// Skip the following code block for older development environments
 
@@ -328,7 +328,7 @@ namespace Win32xx
 		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 	    
 		ADDRINFO *AddrInfo;
-		RetVal = getaddrinfo(addr, port, &Hints, &AddrInfo);
+		RetVal = getaddrinfo(sAddr.c_str(), sPort.c_str(), &Hints, &AddrInfo);
 		if (RetVal != 0) 
 		{
 			TRACE( _T("getaddrinfo failed\n"));
@@ -339,7 +339,7 @@ namespace Win32xx
 		RetVal = Connect( AddrInfo->ai_addr, AddrInfo->ai_addrlen );
 		if ( RetVal == SOCKET_ERROR )
 		{
-			TRACE(_T("Bind failed\n"));
+			TRACE(_T("Connect failed\n"));
 			return RetVal;
 		}
 
@@ -352,9 +352,9 @@ namespace Win32xx
 		{
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( addr );
+			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
 			int nPort = -1;
-			nPort = atoi(port);
+			nPort = atoi( sPort.c_str() );
 			if (-1 == nPort)
 			{
 				TRACE(_T("Invalid port number\n"));
@@ -589,13 +589,9 @@ namespace Win32xx
 
 #else
 
-		UNREFERENCED_PARAMETER(nodename);
-		UNREFERENCED_PARAMETER(servname);
-		UNREFERENCED_PARAMETER(hints);
-		UNREFERENCED_PARAMETER(res);
+		UNREFERENCED_PARAMETER(ai);
 
 		throw CWinException(_T("getaddrinfo is not supported"));
-		return -1;
 
 #endif
 
@@ -614,22 +610,10 @@ namespace Win32xx
 	{
 		bool IsIPV6Supported = FALSE;
 
-// Test if IPV6 is supported by this development environment
 #ifdef GetAddrInfo
 
-		HMODULE hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
-		
-		// Attempt to assign pointers to the getaddrinfo and freeaddrinfo functions.
-		// This allows us to test if IPV6 is supported on this operating system.	
-		typedef int  WINAPI GETADDRINFO(LPCSTR, LPCSTR, const struct addrinfo*, struct addrinfo**);
-		typedef void WINAPI FREEADDRINFO(struct addrinfo*);
-		GETADDRINFO* pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(hWS2_32, "getaddrinfo");
-		FREEADDRINFO* pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(hWS2_32, "freeaddrinfo");		
-		
-		if (pfnGetAddrInfo != 0 && pfnFreeAddrInfo != 0)
+		if (m_pfnGetAddrInfo != 0 && m_pfnFreeAddrInfo != 0)
 			IsIPV6Supported = TRUE;	
-		
-		::FreeLibrary(hWS2_32);
 
 #endif
 
@@ -655,6 +639,7 @@ namespace Win32xx
 	}
 
 	inline int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
+	//The ReceiveFrom function receives a datagram and stores the source address.
 	{
 		int Result = ::recvfrom(m_Socket, buf, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)
@@ -672,7 +657,66 @@ namespace Win32xx
 		return Result;
 	}
 
+	inline int CSocket::SendTo(LPCTSTR send, LPCTSTR addr, LPCTSTR port)
+	// The sendto function sends data to a specific destination.
+	{
+		int RetVal = 0;
+		bool IsIP6SendTo = false;
+		std::string sAddr = TCharToChar(addr);
+		std::string sPort = TCharToChar(port);
+		std::string sSend = TCharToChar(send);
+
+	#ifdef GetAddrInfo	// Skip the following code block for older development environments
+
+		IsIP6SendTo = true;
+		ADDRINFO Hints= {0};
+		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
+	    
+		ADDRINFO *AddrInfo;
+		RetVal = getaddrinfo(sAddr.c_str(), sPort.c_str(), &Hints, &AddrInfo);
+		if (RetVal != 0) 
+		{
+			TRACE( _T("getaddrinfo failed\n"));
+			return SOCKET_ERROR;
+		}
+
+		// Bind the IP address to the listening socket
+		RetVal = ::sendto(m_Socket, sSend.c_str(), strlen(sSend.c_str()), 0, AddrInfo->ai_addr, AddrInfo->ai_addrlen );
+		if ( RetVal == SOCKET_ERROR )
+		{
+			TRACE(_T("SendTo failed\n"));
+			return RetVal;
+		}
+
+		// Free the address information allocatied by getaddrinfo
+		freeaddrinfo(AddrInfo);
+		
+	#endif	// GetAddrInfo
+		
+		if(!IsIP6SendTo)
+		{
+			sockaddr_in clientService;
+			clientService.sin_family = AF_INET;
+			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
+			int nPort = -1;
+			nPort = atoi( sPort.c_str() );
+			if (-1 == nPort)
+			{
+				TRACE(_T("Invalid port number\n"));
+				return SOCKET_ERROR;
+			}
+			clientService.sin_port = htons( (u_short)nPort );
+
+			RetVal = ::sendto( m_Socket, sSend.c_str(), strlen( sSend.c_str() ), 0, (SOCKADDR*) &clientService, sizeof(clientService) );
+			if ( SOCKET_ERROR != RetVal )
+				TRACE(_T("SendTo failed\n"));
+		}
+		
+		return RetVal;	
+	}
+	
 	inline int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
+	// The sendto function sends data to a specific destination.
 	{
 		int Result =  ::sendto(m_Socket, buf, len, flags, to, tolen);
 		if (SOCKET_ERROR == Result)

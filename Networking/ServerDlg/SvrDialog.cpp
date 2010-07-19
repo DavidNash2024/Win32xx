@@ -417,10 +417,10 @@ BOOL CSvrDialog::StartServer()
 	}
 
 	// Retrieve the IP Address
-	std::string sAddr;
+	tString tAddr;
 	if (PF_INET6 == IPfamily)
 	{
-		sAddr = TCharToChar( m_EditIP6Address.GetWindowText() );
+		tAddr = m_EditIP6Address.GetWindowText();
 	}
 	else
 	{
@@ -428,19 +428,19 @@ BOOL CSvrDialog::StartServer()
 		m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 		in_addr addr = {0};
 		addr.S_un.S_addr = htonl(dwAddr);
-		sAddr = inet_ntoa(addr);
+		tAddr = CharToTChar( inet_ntoa(addr) );
 	}
 
 	// Retrieve the local port number
-	std::string sPort = TCharToChar( m_EditPort.GetWindowText() );
+	tString tPort = m_EditPort.GetWindowText();
 
 	// Bind to the socket
 	Append(IDC_EDIT_STATUS, _T("Binding to socket"));
 	char szText[80];
-	wsprintfA(szText, "Addr %s, Port %s, type %s", sAddr.c_str(), sPort.c_str(), (m_SocketType == SOCK_STREAM)?"TCP":"UDP" );
+	wsprintfA(szText, "Addr %s, Port %s, type %s", tAddr.c_str(), tPort.c_str(), (m_SocketType == SOCK_STREAM)?"TCP":"UDP" );
 	Append(IDC_EDIT_STATUS, CharToTChar(szText));
 	
-	int RetVal = m_MainSocket.Bind(sAddr.c_str(), sPort.c_str() );
+	int RetVal = m_MainSocket.Bind(tAddr.c_str(), tPort.c_str() );
 	if ( RetVal != 0 )
 	{
 		Append(IDC_EDIT_STATUS, _T("Bind failed"));
