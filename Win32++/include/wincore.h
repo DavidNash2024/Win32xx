@@ -241,7 +241,6 @@ namespace Win32xx
 		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenubar and Modeless Dialogs
 		CHAR*  pChar;     // Used in string conversions
-		TCHAR* pTChar;    // Used in string functions
 		WCHAR* pWChar;	// Used in string conversions
 	};
 
@@ -556,9 +555,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		mutable CHAR*  m_pChar;     // Used in string conversions
 		mutable TCHAR* m_pTChar;    // Used in string functions
-		mutable WCHAR* m_pWChar;	// Used in string conversions
 
 	}; // class CWnd
 
@@ -587,6 +584,7 @@ namespace Win32xx
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		void SetResourceHandle(HINSTANCE hResource);
+		TLSData* SetTlsIndex();
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
@@ -594,7 +592,6 @@ namespace Win32xx
 		CWnd* GetCWndFromMap(HWND hWnd);
 		void DefaultClass();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
-		TLSData* SetTlsIndex();
 
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTlsData;	// thread synchronisation for m_ csvTlsData
@@ -838,7 +835,9 @@ namespace Win32xx
 	inline LPCWSTR CharToWide(LPCSTR pChar)
 	{
 		assert( GetApp() );
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 		delete[] pTLSData->pWChar;
 		int length = (int)strlen(pChar)+1;
@@ -854,7 +853,9 @@ namespace Win32xx
 	inline LPCSTR WideToChar(LPCWSTR pWChar)
 	{
 		assert( GetApp() );
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+		
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 		delete[] pTLSData->pChar;
 		int length = (int)wcslen(pWChar)+1;
@@ -1197,7 +1198,7 @@ namespace Win32xx
 	// Definitions for the CWnd class
 	//
 	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
-						m_PrevWindowProc(NULL), m_pChar(NULL), m_pTChar(NULL), m_pWChar(NULL)
+						m_PrevWindowProc(NULL), m_pTChar(NULL)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
@@ -1208,9 +1209,7 @@ namespace Win32xx
 	{
 		// Destroy the window for this object
 		Destroy();
-		delete[] m_pChar;
 		delete[] m_pTChar;
-		delete[] m_pWChar;
 	}
 
 	inline void CWnd::AddToMap()

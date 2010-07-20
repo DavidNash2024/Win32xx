@@ -334,7 +334,8 @@ void CSvrDialog::OnSend()
 			break;
 		case SOCK_DGRAM:
 			LPCTSTR szSend = m_EditSend.GetWindowText();
-			m_MainSocket.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, (SOCKADDR*)&m_ClientAddr, sizeof(m_ClientAddr));
+		//	m_MainSocket.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, NULL, NULL);
+			m_MainSocket.SendTo(szSend, _T("127.0.0.1"), _T("3000"));
 			break;
 	}
 }
@@ -389,8 +390,7 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		break;
 	case SOCK_DGRAM:
 		{
-			int addrlen = sizeof(m_ClientAddr);
-			m_MainSocket.ReceiveFrom(str, 1024, 0, (SOCKADDR*)&m_ClientAddr, &addrlen); 
+			m_MainSocket.ReceiveFrom(str, 1024, 0, NULL, NULL);
 			TRACE(_T("[Received:] ")); TRACE(CharToTChar(str)); TRACE(_T("\n"));
 			m_ButtonSend.EnableWindow(TRUE);
 			m_EditSend.EnableWindow(TRUE);

@@ -64,8 +64,6 @@ private:
 	std::map<CServerSocket*, CTCPClientDlg*> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
 	BOOL m_bServerStarted;
 	int  m_SocketType;			// either SOCK_STREAM or SOCK_DGRAM
-//	sockaddr_in m_ClientAddr;	// Stores connect address from UDP client
-	addrinfo m_ClientAddr;		// Stores connect address from UDP client
 
 	// Nested classes for this dialog's child windows
 	// Nesting is optional. Its done to keep the IDE's class view tidy.
@@ -81,7 +79,7 @@ private:
 	class CRadioIP6 : public CButton {};
 	class CRadioTCP : public CButton {};
 	class CRadioUDP : public CButton {};
-	
+
 	CIP4Address	m_IP4Address;
 	CEditIP6Address	m_EditIP6Address;
 	CEditStatus m_EditStatus;
