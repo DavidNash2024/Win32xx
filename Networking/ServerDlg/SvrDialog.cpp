@@ -78,9 +78,9 @@ BOOL CTCPClientDlg::OnInitDialog()
 
 void CTCPClientDlg::Receive()
 {
-	char str[1025] = {0};			// Assign all 1025 elements to NULL
-	m_pSocket->Receive(str, 1024, 0);
-	Append(IDC_EDIT_RECEIVE2, CharToTChar(str));
+	char buf[1025] = {0};			// Assign all 1025 elements to NULL
+	m_pSocket->Receive(buf, 1024, 0);
+	Append(IDC_EDIT_RECEIVE2, CharToTChar(buf));
 }
 
 void CTCPClientDlg::Send()
@@ -149,25 +149,6 @@ BOOL CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
-{
-	// Respond to a socket disconnect notification
-	Append(IDC_EDIT_STATUS, _T("Client disconnected"));
-
-
-	// Allocate an iterator for our CServerSocket map
-	std::map< CServerSocket*, CTCPClientDlg* >::iterator Iter;
-	Iter = m_ConnectedClients.find(pClient);
-
-	// delete the CServerSocket, and remove its pointer
-	if (Iter != m_ConnectedClients.end())
-	{
-		delete pClient;
-		delete Iter->second;
-		m_ConnectedClients.erase(Iter);
-	}  
-}
-
 void CSvrDialog::LoadCommonControlsEx()
 {
 	// This function adds support for the IP address control in the dialog.
@@ -207,6 +188,25 @@ void CSvrDialog::LoadCommonControlsEx()
 		if (hComCtl)
 			::FreeLibrary(hComCtl);
 	}
+}
+
+void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
+{
+	// Respond to a socket disconnect notification
+	Append(IDC_EDIT_STATUS, _T("Client disconnected"));
+
+
+	// Allocate an iterator for our CServerSocket map
+	std::map< CServerSocket*, CTCPClientDlg* >::iterator Iter;
+	Iter = m_ConnectedClients.find(pClient);
+
+	// delete the CServerSocket, and remove its pointer
+	if (Iter != m_ConnectedClients.end())
+	{
+		delete pClient;
+		delete Iter->second;
+		m_ConnectedClients.erase(Iter);
+	}  
 }
 
 BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -334,8 +334,7 @@ void CSvrDialog::OnSend()
 			break;
 		case SOCK_DGRAM:
 			LPCTSTR szSend = m_EditSend.GetWindowText();
-		//	m_MainSocket.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, NULL, NULL);
-			m_MainSocket.SendTo(szSend, _T("127.0.0.1"), _T("3000"));
+			m_MainSocket.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, NULL, NULL);
 			break;
 	}
 }
@@ -376,7 +375,7 @@ void CSvrDialog::OnSocketAccept()
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 {
 	// This trick ensures our char array is NULL terminated
-	char str[1025] = {0};			// Assign all 1025 elements to NULL
+	char buf[1025] = {0};			// Assign all 1025 elements to NULL
 	
 	switch (m_SocketType)
 	{
@@ -390,15 +389,15 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		break;
 	case SOCK_DGRAM:
 		{
-			m_MainSocket.ReceiveFrom(str, 1024, 0, NULL, NULL);
-			TRACE(_T("[Received:] ")); TRACE(CharToTChar(str)); TRACE(_T("\n"));
+			m_MainSocket.ReceiveFrom(buf, 1024, 0, NULL, NULL);
+			TRACE(_T("[Received:] ")); TRACE(CharToTChar(buf)); TRACE(_T("\n"));
 			m_ButtonSend.EnableWindow(TRUE);
 			m_EditSend.EnableWindow(TRUE);
 			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE );
 		}
 		break;
 	}
-	Append(IDC_EDIT_RECEIVE, CharToTChar(str));
+	Append(IDC_EDIT_RECEIVE, CharToTChar(buf));
 }
 
 BOOL CSvrDialog::StartServer()
@@ -440,7 +439,7 @@ BOOL CSvrDialog::StartServer()
 	wsprintfA(szText, "Addr %s, Port %s, type %s", tAddr.c_str(), tPort.c_str(), (m_SocketType == SOCK_STREAM)?"TCP":"UDP" );
 	Append(IDC_EDIT_STATUS, CharToTChar(szText));
 	
-	int RetVal = m_MainSocket.Bind(tAddr.c_str(), tPort.c_str() );
+	int RetVal = m_MainSocket.Bind( tAddr.c_str(), tPort.c_str() );
 	if ( RetVal != 0 )
 	{
 		Append(IDC_EDIT_STATUS, _T("Bind failed"));

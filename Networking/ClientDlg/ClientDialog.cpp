@@ -358,22 +358,6 @@ void CClientDialog::OnSend()
 		break;
 	case SOCK_DGRAM:	// for UDP client
 		{
-/*			// Get the port number
-			LPCTSTR szPort = m_EditPort.GetWindowText();
-			int RemotePort = atoi(TCharToChar(szPort));
-
-			// Get the IP Address from the IP Address control
-			DWORD dwAddr = 0;
-			m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
-
-			sockaddr_in peer = {0};
-			peer.sin_family = AF_INET;
-			peer.sin_port   = htons((u_short)RemotePort);
-			peer.sin_addr.S_un.S_addr = htonl(dwAddr);
-
-			LPCTSTR szSend = m_EditSend.GetWindowText();
-			m_Client.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, (SOCKADDR*)&peer, sizeof(peer)); */
-
 			LRESULT lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
 			int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
