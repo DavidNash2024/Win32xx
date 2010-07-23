@@ -157,7 +157,7 @@ void CClientDialog::OnClientConnect()
 int CClientDialog::OnClientReceive()
 {
 	// Called when the socket has data to receive
-	char buf[1025] = {0};	// assign 1025 array elements to NULL
+	TCHAR buf[1025] = {0};	// assign 1025 array elements to NULL
 	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
 	if (SOCKET_ERROR == size)
 	{
@@ -165,7 +165,7 @@ int CClientDialog::OnClientReceive()
 		return size;
 	}
 
-	Append( IDC_EDIT_RECEIVE, CharToTChar(buf) );
+	Append( IDC_EDIT_RECEIVE, buf );
 	return size;
 }
 
@@ -353,7 +353,7 @@ void CClientDialog::OnSend()
 	case SOCK_STREAM:	// for TCP client
 		{
 			LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND);
-			m_Client.Send(TCharToChar(szSend), lstrlen(szSend), 0);
+			m_Client.Send(szSend, lstrlen(szSend), 0);
 		}
 		break;
 	case SOCK_DGRAM:	// for UDP client
@@ -379,7 +379,7 @@ void CClientDialog::OnSend()
 				tAddr = CharToTChar( inet_ntoa(addr) );
 			}
 
-			m_Client.SendTo( tSend.c_str(), tAddr.c_str(), tPort.c_str() );
+			m_Client.SendTo( tSend.c_str(), sizeof(tSend.c_str()), 0, tAddr.c_str(), tPort.c_str() );
 		}
 		break;
 	}

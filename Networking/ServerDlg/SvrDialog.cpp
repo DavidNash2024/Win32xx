@@ -78,15 +78,15 @@ BOOL CTCPClientDlg::OnInitDialog()
 
 void CTCPClientDlg::Receive()
 {
-	char buf[1025] = {0};			// Assign all 1025 elements to NULL
+	TCHAR buf[1025] = {0};			// Assign all 1025 elements to NULL
 	m_pSocket->Receive(buf, 1024, 0);
-	Append(IDC_EDIT_RECEIVE2, CharToTChar(buf));
+	Append(IDC_EDIT_RECEIVE2, buf);
 }
 
 void CTCPClientDlg::Send()
 {
 	LPCTSTR szSend = m_EditSend.GetWindowText();
-	m_pSocket->Send(TCharToChar(szSend), lstrlen(szSend), 0);
+	m_pSocket->Send(szSend, lstrlen(szSend), 0);
 }
 
 
@@ -334,7 +334,7 @@ void CSvrDialog::OnSend()
 			break;
 		case SOCK_DGRAM:
 			LPCTSTR szSend = m_EditSend.GetWindowText();
-			m_MainSocket.SendTo(TCharToChar(szSend), lstrlen(szSend), 0, NULL, NULL);
+			m_MainSocket.SendTo(szSend, lstrlen(szSend), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
 			break;
 	}
 }
@@ -375,7 +375,7 @@ void CSvrDialog::OnSocketAccept()
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 {
 	// This trick ensures our char array is NULL terminated
-	char buf[1025] = {0};			// Assign all 1025 elements to NULL
+	TCHAR buf[1025] = {0};			// Assign all 1025 elements to NULL
 	
 	switch (m_SocketType)
 	{
@@ -389,15 +389,16 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		break;
 	case SOCK_DGRAM:
 		{
-			m_MainSocket.ReceiveFrom(buf, 1024, 0, NULL, NULL);
-			TRACE(_T("[Received:] ")); TRACE(CharToTChar(buf)); TRACE(_T("\n"));
+			int addrlen = sizeof(m_saUDPClient);
+			m_MainSocket.ReceiveFrom(buf, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen);
+			TRACE(_T("[Received:] ")); TRACE(buf); TRACE(_T("\n"));
 			m_ButtonSend.EnableWindow(TRUE);
 			m_EditSend.EnableWindow(TRUE);
 			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE );
 		}
 		break;
 	}
-	Append(IDC_EDIT_RECEIVE, CharToTChar(buf));
+	Append(IDC_EDIT_RECEIVE, buf);
 }
 
 BOOL CSvrDialog::StartServer()
@@ -435,9 +436,9 @@ BOOL CSvrDialog::StartServer()
 
 	// Bind to the socket
 	Append(IDC_EDIT_STATUS, _T("Binding to socket"));
-	char szText[80];
-	wsprintfA(szText, "Addr %s, Port %s, type %s", tAddr.c_str(), tPort.c_str(), (m_SocketType == SOCK_STREAM)?"TCP":"UDP" );
-	Append(IDC_EDIT_STATUS, CharToTChar(szText));
+	TCHAR Text[80];
+	wsprintf(Text, _T("Addr %s, Port %s, type %s"), tAddr.c_str(), tPort.c_str(), (m_SocketType == SOCK_STREAM)?_T("TCP"):_T("UDP") );
+	Append(IDC_EDIT_STATUS, Text);
 	
 	int RetVal = m_MainSocket.Bind( tAddr.c_str(), tPort.c_str() );
 	if ( RetVal != 0 )
