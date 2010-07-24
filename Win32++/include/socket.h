@@ -145,7 +145,7 @@ namespace Win32xx
 		virtual int  Bind(const struct sockaddr* name, int namelen);
 		virtual int  Connect(LPCTSTR addr, LPCTSTR port);
 		virtual int  Connect(const struct sockaddr* name, int namelen);
-		virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
+		virtual BOOL Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
 		virtual void FreeAddrInfo( struct addrinfo* ai );
 		virtual int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res);
@@ -154,7 +154,7 @@ namespace Win32xx
 		virtual int  GetSockName(struct sockaddr* name, int* namelen);
 		virtual int  GetSockOpt(int level, int optname, char* optval, int* optlen);
 		virtual int  ioCtlSocket(long cmd, u_long* argp);
-		virtual bool IsIPV6Supported();
+		virtual BOOL IsIPV6Supported();
 		virtual int  Listen(int backlog = SOMAXCONN);
 		virtual int  Receive(TCHAR* buf, int len, int flags);
 		virtual int  ReceiveFrom(TCHAR* buf, int len, int flags, struct sockaddr* from, int* fromlen);
@@ -381,7 +381,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline bool CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
+	inline BOOL CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
 	{
 		// Creates the socket
 
@@ -439,11 +439,16 @@ namespace Win32xx
 			return 0;
 		}
 
+		HANDLE AllEvents[2];
+		AllEvents[0] = hNetworkEvent;
+		AllEvents[1] = pSocket->m_StopRequest;
+
 		// loop until the stop event is set
 		for (;;) // infinite loop
 		{
 			// Wait 100 ms for a network event
-			DWORD dwResult = ::WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, THREAD_TIMEOUT, FALSE);
+		//	DWORD dwResult = ::WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, THREAD_TIMEOUT, FALSE);
+			DWORD dwResult = ::WSAWaitForMultipleEvents(1, AllEvents, FALSE, THREAD_TIMEOUT, FALSE);
 
 			// Check event for stop thread
 			if(::WaitForSingleObject(pSocket->m_StopRequest, 0) == WAIT_OBJECT_0)
@@ -608,9 +613,9 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline bool CSocket::IsIPV6Supported()
+	inline BOOL CSocket::IsIPV6Supported()
 	{
-		bool IsIPV6Supported = FALSE;
+		BOOL IsIPV6Supported = FALSE;
 
 #ifdef GetAddrInfo
 
