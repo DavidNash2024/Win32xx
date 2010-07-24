@@ -147,8 +147,8 @@ namespace Win32xx
 		virtual int  Connect(const struct sockaddr* name, int namelen);
 		virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
-		virtual void freeaddrinfo( struct addrinfo* ai );
-		virtual int  getaddrinfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res);
+		virtual void FreeAddrInfo( struct addrinfo* ai );
+		virtual int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res);
 		virtual LPCTSTR GetLastError();
 		virtual int  GetPeerName(struct sockaddr* name, int* namelen);
 		virtual int  GetSockName(struct sockaddr* name, int* namelen);
@@ -181,8 +181,8 @@ namespace Win32xx
 		HANDLE m_StopRequest;	// An event to signal the event thread should stop
 		HANDLE m_Stopped;		// An event to signal the event thread is stopped
 
-		GETADDRINFO* m_pfnGetAddrInfo;		// pointer for the getaddrinfo function
-		FREEADDRINFO* m_pfnFreeAddrInfo;	// pointer for the freeaddrinfo function
+		GETADDRINFO* m_pfnGetAddrInfo;		// pointer for the GetAddrInfo function
+		FREEADDRINFO* m_pfnFreeAddrInfo;	// pointer for the FreeAddrInfo function
 	};
 }
 
@@ -256,11 +256,11 @@ namespace Win32xx
 	    
 		ADDRINFO *AddrInfo;
 
-		RetVal = getaddrinfo(addr, port, &Hints, &AddrInfo);
+		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 
 		if (RetVal != 0) 
 		{
-			TRACE( _T("getaddrinfo failed\n"));
+			TRACE( _T("GetAddrInfo failed\n"));
 			return RetVal;
 		}
 
@@ -272,8 +272,8 @@ namespace Win32xx
 			return RetVal;
 		}
 
-		// Free the address information allocated by getaddrinfo
-		freeaddrinfo(AddrInfo);
+		// Free the address information allocated by GetAddrInfo
+		FreeAddrInfo(AddrInfo);
 
 		
 	#endif	// GetAddrInfo
@@ -326,7 +326,7 @@ namespace Win32xx
 		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 	    
 		ADDRINFO *AddrInfo;
-		RetVal = getaddrinfo(addr, port, &Hints, &AddrInfo);
+		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 		if (RetVal != 0) 
 		{
 			TRACE( _T("getaddrinfo failed\n"));
@@ -341,8 +341,8 @@ namespace Win32xx
 			return RetVal;
 		}
 
-		// Free the address information allocatied by getaddrinfo
-		freeaddrinfo(AddrInfo);
+		// Free the address information allocatied by GetAddrInfo
+		FreeAddrInfo(AddrInfo);
 		
 	#endif	// GetAddrInfo
 		
@@ -510,7 +510,7 @@ namespace Win32xx
 		}
 	}
 
-	inline int CSocket::getaddrinfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res)
+	inline int CSocket::GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res)
 	{
 
 #ifdef GetAddrInfo
@@ -582,7 +582,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline void CSocket::freeaddrinfo( struct addrinfo* ai )
+	inline void CSocket::FreeAddrInfo( struct addrinfo* ai )
 	{
 
 #ifdef GetAddrInfo
@@ -683,10 +683,10 @@ namespace Win32xx
 		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 	    
 		ADDRINFO *AddrInfo;
-		RetVal = getaddrinfo(addr, port, &Hints, &AddrInfo);
+		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 		if (RetVal != 0) 
 		{
-			TRACE( _T("getaddrinfo failed\n"));
+			TRACE( _T("GetAddrInfo failed\n"));
 			return SOCKET_ERROR;
 		}
 
@@ -698,8 +698,8 @@ namespace Win32xx
 			return RetVal;
 		}
 
-		// Free the address information allocatied by getaddrinfo
-		freeaddrinfo(AddrInfo);
+		// Free the address information allocatied by GetAddrInfo
+		FreeAddrInfo(AddrInfo);
 		
 	#endif	// GetAddrInfo
 		
