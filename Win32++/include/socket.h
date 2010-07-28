@@ -72,7 +72,7 @@
 // 4) Use StartNotifyRevents to receive notification of network events.
 // 5) Override OnAccept to accept requests on a newly created data CSocket object.
 // 6) Create a new data socket for each client connection accepted.
-// 7) The server socket uses the 'accept' function to accept an incoming connection 
+// 7) The server socket uses the 'accept' function to accept an incoming connection
 //     from this new data socket.
 
 // The purpose of the data socket is to send data to, and recieve data from the client.
@@ -96,8 +96,8 @@
 // * IPv6 is supported on Windows Vista and above. Windows XP with SP2 provides
 //    "experimental" support, which can be enabled by entering "ipv6 install"
 //    at a command prompt.
-// * IPv6 is not supported by all compilters and devlopment environments. In 
-//    particular, it is not supported by Dev-C++ or Borland 5.5. A modern 
+// * IPv6 is not supported by all compilters and devlopment environments. In
+//    particular, it is not supported by Dev-C++ or Borland 5.5. A modern
 //    Platform SDK needs to be added to Visual Studio 6 for it to support IPv6.
 // * IsIPV6Supported returns false if either the operating system or the
 //    development environment fails to support IPv6.
@@ -207,7 +207,7 @@ namespace Win32xx
 
 			m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "getaddrinfo");
 			m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "freeaddrinfo");
-			
+
 			m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
 			m_Stopped = ::CreateEvent(0, TRUE, FALSE, 0);
 		}
@@ -244,21 +244,21 @@ namespace Win32xx
 
 	inline int CSocket::Bind(LPCTSTR addr, LPCTSTR port)
 	// The bind function associates a local address with the socket.
-	{		
+	{
 		int RetVal = 0;
 		bool IsIP6Bind = false;
 
-	#ifdef GetAddrInfo // Skip the following code block for older development environments 
+	#ifdef GetAddrInfo // Skip the following code block for older development environments
 
 		IsIP6Bind = true;
 		ADDRINFO Hints= {0};
 		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-	    
+
 		ADDRINFO *AddrInfo;
 
 		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 
-		if (RetVal != 0) 
+		if (RetVal != 0)
 		{
 			TRACE( _T("GetAddrInfo failed\n"));
 			return RetVal;
@@ -275,9 +275,9 @@ namespace Win32xx
 		// Free the address information allocated by GetAddrInfo
 		FreeAddrInfo(AddrInfo);
 
-		
+
 	#endif	// GetAddrInfo
-		
+
 		// Support IPV4 only
 		if (!IsIP6Bind)
 		{
@@ -297,7 +297,7 @@ namespace Win32xx
 
 			RetVal = ::bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( 0 != RetVal )
-				TRACE(_T("Bind failed\n"));	
+				TRACE(_T("Bind failed\n"));
 		}
 
 		return RetVal;
@@ -324,10 +324,10 @@ namespace Win32xx
 		IsIP6Connect = true;
 		ADDRINFO Hints= {0};
 		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-	    
+
 		ADDRINFO *AddrInfo;
 		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
-		if (RetVal != 0) 
+		if (RetVal != 0)
 		{
 			TRACE( _T("getaddrinfo failed\n"));
 			return SOCKET_ERROR;
@@ -343,9 +343,9 @@ namespace Win32xx
 
 		// Free the address information allocatied by GetAddrInfo
 		FreeAddrInfo(AddrInfo);
-		
+
 	#endif	// GetAddrInfo
-		
+
 		if(!IsIP6Connect)
 		{
 			std::string sAddr = TCharToChar(addr);
@@ -366,18 +366,18 @@ namespace Win32xx
 			if ( 0 != RetVal )
 				TRACE(_T("Connect failed\n"));
 		}
-		
-		return RetVal;	
+
+		return RetVal;
 	}
 
 	inline int CSocket::Connect(const struct sockaddr* name, int namelen)
 	{
 		// The Connect function establishes a connection to the socket.
-		
+
 		int Result = ::connect( m_Socket, name, namelen );
 		if ( 0 != Result )
 			TRACE(_T("Connect failed\n"));
-		
+
 		return Result;
 	}
 
@@ -425,35 +425,32 @@ namespace Win32xx
 		CSocket* pSocket = (CSocket*)thread_data;
 		SOCKET sClient = pSocket->m_Socket;
 
-		WSAEVENT hNetworkEvent = ::WSACreateEvent();
+        WSAEVENT AllEvents[2];
+		AllEvents[0] = ::WSACreateEvent();
+		AllEvents[1] = (WSAEVENT)pSocket->m_StopRequest;
 		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE |
 			          FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
 		// Associate the network event object (hNetworkEvents) with the
 		// specified network events (Events) on socket sClient.
-		if(	SOCKET_ERROR == WSAEventSelect(sClient, hNetworkEvent, Events))
+		if(	SOCKET_ERROR == WSAEventSelect(sClient, AllEvents[0], Events))
 		{
 			TRACE(_T("Error in Event Select\n"));
 			::SetEvent(pSocket->m_Stopped);
-			::WSACloseEvent(hNetworkEvent);
+			::WSACloseEvent(AllEvents[0]);
 			return 0;
 		}
-
-		HANDLE AllEvents[2];
-		AllEvents[0] = hNetworkEvent;
-		AllEvents[1] = pSocket->m_StopRequest;
 
 		// loop until the stop event is set
 		for (;;) // infinite loop
 		{
 			// Wait 100 ms for a network event
-		//	DWORD dwResult = ::WSAWaitForMultipleEvents(1, &hNetworkEvent, FALSE, THREAD_TIMEOUT, FALSE);
 			DWORD dwResult = ::WSAWaitForMultipleEvents(1, AllEvents, FALSE, THREAD_TIMEOUT, FALSE);
 
 			// Check event for stop thread
 			if(::WaitForSingleObject(pSocket->m_StopRequest, 0) == WAIT_OBJECT_0)
 			{
-				::WSACloseEvent(hNetworkEvent);
+				::WSACloseEvent(AllEvents[0]);
 				::SetEvent(pSocket->m_Stopped);
 				return 0;
 			}
@@ -461,7 +458,7 @@ namespace Win32xx
 			if (WSA_WAIT_FAILED == dwResult)
 			{
 				TRACE(_T("WSAWaitForMultipleEvents failed\n"));
-				::WSACloseEvent(hNetworkEvent);
+				::WSACloseEvent(AllEvents[0]);
 				::SetEvent(pSocket->m_Stopped);
 				return 0;
 			}
@@ -470,10 +467,10 @@ namespace Win32xx
 			if (WSA_WAIT_TIMEOUT != dwResult)
 			{
 
-				if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(sClient, hNetworkEvent, &NetworkEvents) )
+				if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(sClient, AllEvents[0], &NetworkEvents) )
 				{
 					TRACE(_T("WSAEnumNetworkEvents failed\n"));
-					::WSACloseEvent(hNetworkEvent);
+					::WSACloseEvent(AllEvents[0]);
 					::SetEvent(pSocket->m_Stopped);
 					return 0;
 				}
@@ -507,7 +504,7 @@ namespace Win32xx
 					::shutdown(sClient, SD_BOTH);
 					::closesocket(sClient);
 					pSocket->OnDisconnect();
-					::WSACloseEvent(hNetworkEvent);
+					::WSACloseEvent(AllEvents[0]);
 					::SetEvent(pSocket->m_Stopped);
 					return 0;
 				}
@@ -522,7 +519,7 @@ namespace Win32xx
 
 		std::string sNodeName = TCharToChar(nodename);
 		std::string sServName = TCharToChar(servname);
-		return (*m_pfnGetAddrInfo)(sNodeName.c_str(), sServName.c_str(), hints, res);	
+		return (*m_pfnGetAddrInfo)(sNodeName.c_str(), sServName.c_str(), hints, res);
 
 #else
 
@@ -547,16 +544,16 @@ namespace Win32xx
 		m_tsErrorMessage = _T("");
 
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS |
-					  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK, 
+					  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK,
 					  NULL, ErrorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 					  (LPTSTR)&Message, 1024, NULL);
-		
+
 		if (Message)
 		{
 			m_tsErrorMessage = Message;
 			::LocalFree(Message);
 		}
-		
+
 		return m_tsErrorMessage.c_str();
 	}
 
@@ -565,7 +562,7 @@ namespace Win32xx
 		int Result = ::getpeername(m_Socket, name, namelen);
 		if (0 != Result)
 			TRACE(_T("GetPeerName failed\n"));
-		
+
 		return Result;
 	}
 
@@ -574,7 +571,7 @@ namespace Win32xx
 		int Result = ::getsockname(m_Socket, name, namelen);
 		if (0 != Result)
 			TRACE(_T("GetSockName Failed\n"));
-		
+
 		return Result;
 	}
 
@@ -583,7 +580,7 @@ namespace Win32xx
 		int Result = ::getsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
 			TRACE(_T("GetSockOpt Failed\n"));
-		
+
 		return Result;
 	}
 
@@ -592,7 +589,7 @@ namespace Win32xx
 
 #ifdef GetAddrInfo
 
-		(*m_pfnFreeAddrInfo)(ai);	
+		(*m_pfnFreeAddrInfo)(ai);
 
 #else
 
@@ -609,7 +606,7 @@ namespace Win32xx
 		int Result = ::ioctlsocket(m_Socket, cmd, argp);
 		if (0 != Result)
 			TRACE(_T("ioCtlSocket Failed\n"));
-		
+
 		return Result;
 	}
 
@@ -620,7 +617,7 @@ namespace Win32xx
 #ifdef GetAddrInfo
 
 		if (m_pfnGetAddrInfo != 0 && m_pfnFreeAddrInfo != 0)
-			IsIPV6Supported = TRUE;	
+			IsIPV6Supported = TRUE;
 
 #endif
 
@@ -632,7 +629,7 @@ namespace Win32xx
 		int Result = ::listen(m_Socket, backlog);
 		if (0 != Result)
 			TRACE(_T("Listen Failed\n"));
-		
+
 		return Result;
 	}
 
@@ -645,7 +642,7 @@ namespace Win32xx
 			TRACE(_T("Receive failed\n"));
 
 		lstrcpyn(buf, CharToTChar(szBuf), len);
-		
+
 		return Result;
 	}
 
@@ -657,7 +654,7 @@ namespace Win32xx
 		int Result = ::recvfrom(m_Socket, szBuf, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("ReceiveFrom failed\n"));
-		
+
 		lstrcpyn(buf, CharToTChar(szBuf), len);
 
 		return Result;
@@ -668,7 +665,7 @@ namespace Win32xx
 		int Result = ::send(m_Socket, TCharToChar(buf), len, flags);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("Send failed\n"));
-		
+
 		return Result;
 	}
 
@@ -686,16 +683,16 @@ namespace Win32xx
 		IsIP6SendTo = true;
 		ADDRINFO Hints= {0};
 		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-	    
+
 		ADDRINFO *AddrInfo;
 		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
-		if (RetVal != 0) 
+		if (RetVal != 0)
 		{
 			TRACE( _T("GetAddrInfo failed\n"));
 			return SOCKET_ERROR;
 		}
 
-	
+
 		RetVal = ::sendto(m_Socket, sSend.c_str(), len, flags, AddrInfo->ai_addr, AddrInfo->ai_addrlen );
 		if ( RetVal == SOCKET_ERROR )
 		{
@@ -705,9 +702,9 @@ namespace Win32xx
 
 		// Free the address information allocatied by GetAddrInfo
 		FreeAddrInfo(AddrInfo);
-		
+
 	#endif	// GetAddrInfo
-		
+
 		if(!IsIP6SendTo)
 		{
 			std::string sAddr = TCharToChar(addr);
@@ -729,17 +726,17 @@ namespace Win32xx
 			if ( SOCKET_ERROR != RetVal )
 				TRACE(_T("SendTo failed\n"));
 		}
-		
-		return RetVal;	
+
+		return RetVal;
 	}
-	
+
 	inline int CSocket::SendTo(LPCTSTR buf, int len, int flags, const struct sockaddr* to, int tolen)
 	// The sendto function sends data to a specific destination.
 	{
 		int Result =  ::sendto(m_Socket, TCharToChar(buf), len, flags, to, tolen);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("SendTo failed\n"));
-		
+
 		return Result;
 	}
 
@@ -748,7 +745,7 @@ namespace Win32xx
 		int Result = ::setsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
 			TRACE(_T("SetSockOpt failed\n"));
-		
+
 		return Result;
 	}
 
