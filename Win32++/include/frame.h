@@ -2288,9 +2288,7 @@ namespace Win32xx
 					m_vMenuItemData.push_back(pItem);		// Store pItem in m_vMenuItemData
 					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 				}
-			} 
-			
-
+			}
 		}
 	}
 

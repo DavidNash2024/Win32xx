@@ -1183,6 +1183,7 @@ namespace Win32xx
 				m_vTLSData.push_back(pTLSData);
 				m_csTlsData.Release();
 			}
+			
 			return pTLSData;
 		}
 

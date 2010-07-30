@@ -410,7 +410,7 @@ namespace Win32xx
 	{
 		// This constructor assigns an existing HDC to the CDC
 		// The HDC WILL be released or deleted when the CDC object is destroyed
-		if (!hDC) throw CWinException(_T("Can't assign a NULL hDC"));
+		assert(hDC);
 
 		m_hDC = hDC;
 
@@ -492,15 +492,16 @@ namespace Win32xx
 
 	inline void CDC::AttachDC(HDC hDC)
 	{
-		if (m_hDC) throw CWinException(_T("Device Context ALREADY assigned"));
-		if (!hDC) throw CWinException(_T("Can't attach a NULL hDC"));
+		assert (0 == m_hDC);
+		assert(hDC);
 
 		m_hDC = hDC;
 	}
 
 	inline HDC CDC::DetachDC()
 	{
-		if (!m_hDC) throw CWinException(_T("No HDC assigned to this CDC"));
+		assert(m_hDC);
+
 		if (m_hPenOld)    ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 		if (m_hBrushOld)  ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
@@ -594,8 +595,8 @@ namespace Win32xx
 		// Use this to attach an existing bitmap.
 		// The bitmap will be deleted for you, unless its detached
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (!hBitmap) throw CWinException(_T("Can't attach a NULL HBITMAP"));
+		assert(m_hDC);
+		assert(hBitmap);
 
 		// Delete any existing bitmap
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
@@ -607,11 +608,12 @@ namespace Win32xx
 	{
 		// Creates a compatible bitmap and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
+
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
 		HBITMAP hBitmap = ::CreateCompatibleBitmap(hDC, cx, cy);
-		if (!hBitmap) throw CWinException(_T("CreateCompatibleBitmap failed"));
+		assert(hBitmap);
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
@@ -620,11 +622,11 @@ namespace Win32xx
 	{
 		// Creates a bitmap and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
 		HBITMAP hBitmap = ::CreateBitmap(cx, cy, Planes, BitsPerPixel, pvColors);
-		if (!hBitmap) throw CWinException(_T("CreateBitmap failed"));
+		assert(hBitmap);
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
@@ -634,11 +636,11 @@ namespace Win32xx
 	{
 		// Creates a bitmap and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
 		HBITMAP hBitmap = ::CreateBitmapIndirect(&bm);
-		if (!hBitmap) throw CWinException(_T("CreateBitmap failed"));
+		assert(hBitmap);
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
@@ -648,11 +650,11 @@ namespace Win32xx
 	{
 		// Creates a bitmap and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBitmapOld) ::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
 		HBITMAP hBitmap = ::CreateDIBitmap(hdc, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
-		if (!hBitmap) throw CWinException(_T("CreateDIBitmap failed"));
+		assert(hBitmap);
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
@@ -663,11 +665,11 @@ namespace Win32xx
 	{
 		// Creates a bitmap and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBitmapOld)::DeleteObject(::SelectObject(m_hDC, m_hBitmapOld));
 
 		HBITMAP hBitmap = ::CreateDIBSection(hdc, &bmi, iUsage, ppvBits, hSection, dwOffset);
-		if (!hBitmap) throw CWinException(_T("CreateDIBSection failed"));
+		assert(hBitmap);
 
 		m_hBitmapOld = (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
@@ -677,7 +679,7 @@ namespace Win32xx
 		// Use this to detach the bitmap from the HDC.
 		// You are then responible for deleting the detached bitmap
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (!m_hBitmapOld) throw CWinException(_T("No Bitmap to detach"));
 
 		HBITMAP hBitmap = (HBITMAP)::SelectObject(m_hDC, m_hBitmapOld);
@@ -691,8 +693,8 @@ namespace Win32xx
 		// Use this to attach an existing brush.
 		// The brush will be deleted for you, unless its detached
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (!hBrush) throw CWinException(_T("Can't attach a NULL HBRUSH"));
+		assert(m_hDC);
+		assert(hBrush);
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -702,11 +704,11 @@ namespace Win32xx
 	{
 		// Creates the brush and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
 		HBRUSH hBrush = ::CreateBrushIndirect(&lb);
-		if (!hBrush) throw CWinException(_T("CreateBrusIndirect failed"));
+		assert(hBrush);
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -715,11 +717,11 @@ namespace Win32xx
 	{
 		// Creates the brush and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
 		HBRUSH hBrush = ::CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
-		if (!hBrush) throw CWinException(_T("CreateDIBPatternBrush failed"));
+		assert(hBrush);
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -728,11 +730,11 @@ namespace Win32xx
 	{
 		// Creates the brush and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
 		HBRUSH hBrush = ::CreateHatchBrush(fnStyle, rgb);
-		if (!hBrush) throw CWinException(_T("CreateHatchBrush failed"));
+		assert(hBrush);
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -742,11 +744,11 @@ namespace Win32xx
 	{
 		// Creates the brush and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
 		HBRUSH hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, iUsage);
-		if (!hBrush) throw CWinException(_T("CreateDIBPatternPrushPt failed"));
+		assert(hBrush);
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -755,11 +757,11 @@ namespace Win32xx
 	{
 		// Creates the brush and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
 		HBRUSH hBrush = ::CreatePatternBrush(hbmp);
-		if (!hBrush) throw CWinException(_T("CreatePatternBrush failed"));
+		assert(hBrush);
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -768,11 +770,11 @@ namespace Win32xx
 	{
 		// Creates the brush and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hBrushOld) ::DeleteObject(::SelectObject(m_hDC, m_hBrushOld));
 
 		HBRUSH hBrush = ::CreateSolidBrush(rgb);
-		if (!hBrush) throw CWinException(_T("CreateSolidBrush failed"));
+		assert(hBrush);
 
 		m_hBrushOld = (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
@@ -782,7 +784,7 @@ namespace Win32xx
 		// Use this to detach the brush from the HDC.
 		// You are then responible for deleting the detached brush
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (!m_hBrushOld) throw CWinException(_T("No Brush to detach"));
 
 		HBRUSH hBrush = (HBRUSH)::SelectObject(m_hDC, m_hBrushOld);
@@ -796,8 +798,8 @@ namespace Win32xx
 		// Use this to attach an existing font.
 		// The font will be deleted for you, unless its detached
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (!hFont) throw CWinException(_T("Can't attach a NULL HFONT"));
+		assert(m_hDC);
+		assert(hFont);
 		if (m_hFontOld) ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
 		m_hFontOld = (HFONT)::SelectObject(m_hDC, hFont);
 	}
@@ -821,7 +823,7 @@ namespace Win32xx
  					)
 
 	{
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hFontOld) ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
 
 		HFONT hFont = ::CreateFont(nHeight, nWidth, nEscapement, nOrientation, fnWeight,
@@ -829,7 +831,7 @@ namespace Win32xx
 								fdwOutputPrecision, fdwClipPrecision, fdwQuality,
 								fdwPitchAndFamily, lpszFace);
 
-		if (!hFont) throw CWinException(_T("CreateFont failed"));
+		assert(hFont);
 
 		m_hFontOld = (HFONT)::SelectObject(m_hDC, hFont);
 	}
@@ -837,11 +839,11 @@ namespace Win32xx
 
 	inline void CDC::CreateFontIndirect( const LOGFONT& lf)
 	{
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hFontOld) ::DeleteObject(::SelectObject(m_hDC, m_hFontOld));
 
 		HFONT hFont = ::CreateFontIndirect(&lf);
-		if (!hFont) throw CWinException(_T("CreateFontIndirect failed"));
+		assert(hFont);
 
 		m_hFontOld = (HFONT)::SelectObject(m_hDC, hFont);
 	}
@@ -851,7 +853,7 @@ namespace Win32xx
 		// Use this to detach the font from the HDC.
 		// You are then responible for deleting the detached font
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (!m_hFontOld) throw CWinException(_T("No Font to detach"));
 
 		HFONT hFont = (HFONT)::SelectObject(m_hDC, m_hFontOld);
@@ -865,8 +867,8 @@ namespace Win32xx
 		// Use this to attach an existing pen.
 		// The pen will be deleted for you, unless its detached
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (!hPen) throw CWinException(_T("Can't attach a NULL HPEN"));
+		assert(m_hDC);
+		assert(hPen);
 		if (m_hPenOld) ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 		m_hPenOld = (HPEN)::SelectObject(m_hDC, hPen);
 	}
@@ -875,11 +877,11 @@ namespace Win32xx
 	{
 		// Creates the pen and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hPenOld) ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 
 		HPEN hPen = ::CreatePen(nStyle, nWidth, rgb);
-		if (!hPen) throw CWinException(_T("CreatePen failed"));
+		assert(hPen);
 
 		m_hPenOld = (HPEN)::SelectObject(m_hDC, hPen);
 	}
@@ -888,11 +890,11 @@ namespace Win32xx
 	{
 		// Creates the pen and selects it into the device context
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hPenOld) ::DeleteObject(::SelectObject(m_hDC, m_hPenOld));
 
 		HPEN hPen = ::CreatePenIndirect(&lgpn);
-		if (!hPen) throw CWinException(_T("CreatePenIndirect failed"));
+		assert(hPen);
 
 		m_hPenOld = (HPEN)::SelectObject(m_hDC, hPen);
 	}
@@ -902,8 +904,8 @@ namespace Win32xx
 		// Use this to detach the pen from the HDC.
 		// You are then responible for deleting the detached pen
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (!m_hPenOld) throw CWinException(_T("No Pen to detach"));
+		assert(m_hDC);
+		assert(m_hPenOld);
 
 		HPEN hPen = (HPEN)::SelectObject(m_hDC, m_hPenOld);
 		m_hPenOld = NULL;
@@ -917,8 +919,9 @@ namespace Win32xx
 		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (!hRegion) throw CWinException(_T("Can't attach a NULL HRGN"));
+		assert(m_hDC);
+		assert(hRegion);
+
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		::SelectClipRgn(m_hDC, hRegion);
@@ -930,11 +933,11 @@ namespace Win32xx
 		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		HRGN hRgn = ::CreateRectRgn(left, top, right, bottom);
-		if (!hRgn) throw CWinException(_T("CreateRectRgn failed"));
+		assert(hRgn);
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
@@ -946,11 +949,11 @@ namespace Win32xx
 		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		HRGN hRgn = ::CreateRectRgnIndirect(&rc);
-		if (!hRgn) throw CWinException(_T("CreateRectRgnIndirect failed"));
+		assert(hRgn);
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
@@ -964,11 +967,11 @@ namespace Win32xx
 		//        GetRegionData can be used to get a region's data
 		//        If the XFROM pointer is NULL, the identity transformation is used.
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		HRGN hRgn = ::ExtCreateRegion(&Xform, nCount, pRgnData);
-		if (!hRgn) throw CWinException(_T("ExtCreateRegion failed"));
+		assert(hRgn);
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
@@ -979,8 +982,8 @@ namespace Win32xx
 		// Use this to detach the region from the HDC.
 		// You are then responible for deleting the detached region
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
-		if (!m_hRgnOld) throw CWinException(_T("No Region to detach"));
+		assert(m_hDC);
+		assert(m_hRgnOld);
 
 		::SelectClipRgn(m_hDC, NULL);
 		HRGN hRgn = m_hRgnOld;
@@ -996,11 +999,11 @@ namespace Win32xx
 		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		HRGN hRgn = ::CreateEllipticRgn(left, top, right, bottom);
-		if (!hRgn) throw CWinException(_T("CreateEllipticRgn failed"));
+		assert(hRgn);
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
@@ -1013,11 +1016,11 @@ namespace Win32xx
 		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		HRGN hRgn = ::CreateEllipticRgnIndirect(&rc);
-		if (!hRgn) throw CWinException(_T("CreateEllipticRgnIndirect failed"));
+		assert(hRgn);
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
@@ -1030,11 +1033,11 @@ namespace Win32xx
 		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		HRGN hRgn = ::CreatePolygonRgn(ppt, cPoints, fnPolyFillMode);
-		if (!hRgn) throw CWinException(_T("CreatePolygonRgn failed"));
+		assert(hRgn);
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
@@ -1046,11 +1049,11 @@ namespace Win32xx
 		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
-		if (!m_hDC) throw CWinException(_T("Device Context not assigned"));
+		assert(m_hDC);
 		if (m_hRgnOld) ::DeleteObject(m_hRgnOld);
 
 		HRGN hRgn = ::CreatePolyPolygonRgn(ppt, pPolyCounts, nCount, fnPolyFillMode);
-		if (!hRgn) throw CWinException(_T("CreatePolyPolygonRgn failed"));
+		assert(hRgn);
 
 		::SelectClipRgn(m_hDC, hRgn);
 		m_hRgnOld = hRgn;
