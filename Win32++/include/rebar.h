@@ -104,6 +104,7 @@ namespace Win32xx
 		BOOL ResizeBand(const int nBand, const CSize& sz) const;
 		BOOL ShowGripper(int nBand, BOOL fShow) const;
 		BOOL ShowBand(int nBand, BOOL fShow) const;
+		BOOL SizeToRect(CRect& rect) const;
 
 	protected:
 	//Overridables
@@ -601,23 +602,7 @@ namespace Win32xx
 	// Show or hide a band
 	{
 		assert(::IsWindow(m_hWnd));
-
-		REBARBANDINFO rbbi = {0};
-		rbbi.cbSize = GetSizeofRBBI();
-		rbbi.fMask = RBBIM_STYLE;
-		GetBandInfo(nBand, rbbi);
-		if (fShow)
-		{
-			rbbi.fStyle &=  ~RBBS_HIDDEN;
-			SetBandInfo(nBand, rbbi);
-		}
-		else
-		{
-			rbbi.fStyle |= RBBS_HIDDEN;
-			SetBandInfo(nBand, rbbi);
-		}
-		
-		return fShow;
+		return (BOOL)SendMessage(RB_SHOWBAND, (WPARAM)nBand, (LPARAM)fShow);  
 	}
 
 	inline BOOL CRebar::ShowGripper(int nBand, BOOL fShow) const
@@ -641,6 +626,14 @@ namespace Win32xx
 		}
 		
 		return SetBandInfo(nBand, rbbi);
+	}
+
+	inline BOOL CRebar::SizeToRect(CRect& rect) const
+	// Attempts to find the best layout of the bands for the given rectangle.
+	// The rebar bands will be arranged and wrapped as necessary to fit the rectangle. 
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(RB_SIZETORECT, 0, (LPARAM) (LPRECT)rect);  
 	}
 
 	inline LRESULT CRebar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -1002,7 +1002,9 @@ namespace Win32xx
 		std::vector<TLSData*>::iterator iter;
 		for(iter = m_vTLSData.begin(); iter != m_vTLSData.end(); ++iter)
 		{
-			delete *(iter);
+			delete (*iter)->pChar;
+			delete (*iter)->pWChar;
+			delete *iter;
 		}
 
 		SetnGetThis((CWinApp*)-1);
@@ -1216,6 +1218,7 @@ namespace Win32xx
 	inline void CWnd::AddToMap()
 	// Store the window handle and CWnd pointer in the HWND map
 	{	
+		assert( GetApp() );
 		GetApp()->m_csMapLock.Lock();
 
 		assert(::IsWindow(m_hWnd));

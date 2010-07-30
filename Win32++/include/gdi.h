@@ -680,7 +680,7 @@ namespace Win32xx
 		// You are then responible for deleting the detached bitmap
 
 		assert(m_hDC);
-		if (!m_hBitmapOld) throw CWinException(_T("No Bitmap to detach"));
+		assert(m_hBitmapOld);
 
 		HBITMAP hBitmap = (HBITMAP)::SelectObject(m_hDC, m_hBitmapOld);
 		m_hBitmapOld = NULL;
@@ -785,7 +785,7 @@ namespace Win32xx
 		// You are then responible for deleting the detached brush
 
 		assert(m_hDC);
-		if (!m_hBrushOld) throw CWinException(_T("No Brush to detach"));
+		assert(m_hBrushOld);
 
 		HBRUSH hBrush = (HBRUSH)::SelectObject(m_hDC, m_hBrushOld);
 		m_hBrushOld = NULL;
@@ -854,7 +854,7 @@ namespace Win32xx
 		// You are then responible for deleting the detached font
 
 		assert(m_hDC);
-		if (!m_hFontOld) throw CWinException(_T("No Font to detach"));
+		assert(m_hFontOld);
 
 		HFONT hFont = (HFONT)::SelectObject(m_hDC, m_hFontOld);
 		m_hFontOld = NULL;

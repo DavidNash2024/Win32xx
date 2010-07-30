@@ -195,37 +195,48 @@ namespace Win32xx
 		int* iPartWidths = NULL;
 		int* iNewPartWidths = NULL;
 
-		int iParts = (int)SendMessage(SB_GETPARTS, 0L, 0L);
-		iPartWidths = new int[iParts];
+		try
+		{
 
-		// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
-		//  an exception when new fails. We make sure an exception gets thrown!
-		if (NULL == iPartWidths)
-			throw std::bad_alloc();
+			int iParts = (int)SendMessage(SB_GETPARTS, 0L, 0L);
+			iPartWidths = new int[iParts];
 
-		SendMessage(SB_GETPARTS, iParts, (LPARAM)iPartWidths);
+			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
+			//  an exception when new fails. We make sure an exception gets thrown!
+			if (NULL == iPartWidths)
+				throw std::bad_alloc();
 
-		int iNewParts = MAX(iPart+1, iParts);
-		iNewPartWidths = new int[iNewParts];
-		if (NULL == iNewPartWidths)
-			throw std::bad_alloc();
+			SendMessage(SB_GETPARTS, iParts, (LPARAM)iPartWidths);
 
-		ZeroMemory(iNewPartWidths, iNewParts*sizeof(int));
+			int iNewParts = MAX(iPart+1, iParts);
+			iNewPartWidths = new int[iNewParts];
+			if (NULL == iNewPartWidths)
+				throw std::bad_alloc();
 
-		for (int i = 0; i < iParts; ++i)
-			iNewPartWidths[i] = iPartWidths[i];
+			ZeroMemory(iNewPartWidths, iNewParts*sizeof(int));
 
-		if (0 == iPart)
-			iNewPartWidths[iPart] = iWidth;
-		else
-			iNewPartWidths[iPart] = iNewPartWidths[iPart -1] + iWidth;
+			for (int i = 0; i < iParts; ++i)
+				iNewPartWidths[i] = iPartWidths[i];
 
-		BOOL bResult = SendMessage(SB_SETPARTS, iNewParts, (LPARAM)iNewPartWidths);
+			if (0 == iPart)
+				iNewPartWidths[iPart] = iWidth;
+			else
+				iNewPartWidths[iPart] = iNewPartWidths[iPart -1] + iWidth;
 
-		delete []iNewPartWidths;
-		delete []iPartWidths;
+			BOOL bResult = SendMessage(SB_SETPARTS, iNewParts, (LPARAM)iNewPartWidths);
 
-		return bResult;
+			delete []iNewPartWidths;
+			delete []iPartWidths;
+
+			return bResult;
+		}
+
+		catch(std::bad_alloc)
+		{
+			delete []iNewPartWidths;
+			delete []iPartWidths;
+			return FALSE;
+		}
 	}
 
 	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/)
