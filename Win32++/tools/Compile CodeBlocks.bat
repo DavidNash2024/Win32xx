@@ -213,7 +213,7 @@ copy MDIFrameSplitter\ProjectFiles\GNU\Debug\MDIFrameSplitter.exe "Win32++\outpu
 copy Networking\ClientDlg\GNU\Debug\Client.exe                    "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Networking\ServerDlg\GNU\Debug\Server.exe                    "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\GNU\Debug\Notepad.exe                   "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
-copy Performance\ProjectFiles\GNU\Debug\Performance.ex  e         "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
+copy Performance\ProjectFiles\GNU\Debug\Performance.exe           "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Picture\ProjectFiles\GNU\Debug\Picture.exe                   "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy PropertySheet\ProjectFiles\GNU\Debug\PropertySheet.exe       "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
 copy Scribble\ProjectFiles\GNU\Debug\Scribble.exe                 "Win32++\output\MinGW\Debug"    >>"Win32++\output\CodeBlocks.log"
