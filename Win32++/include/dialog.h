@@ -326,8 +326,8 @@ namespace Win32xx
 		// A modal dialog box must be closed by the user before the application continues
 		try
 		{
-			if (IsWindow())
-				throw CWinException(_T("Window already exists"));
+			assert( GetApp() );		// Test if Win32++ has been started
+			assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
 			m_IsModal=TRUE;
 
@@ -386,13 +386,12 @@ namespace Win32xx
 
 	inline HWND CDialog::DoModeless()
 	{
-		assert(GetApp());
 
 		// Modeless dialog
 		try
 		{
-			if (IsWindow())
-				throw CWinException(_T("Window already exists"));
+			assert( GetApp() );		// Test if Win32++ has been started
+			assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
 			m_IsModal=FALSE;
 

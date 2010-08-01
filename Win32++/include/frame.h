@@ -661,6 +661,7 @@ namespace Win32xx
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
 		m_pFrame = (CFrame*)FromHandle(GetAncestor());
+		assert(m_pFrame);
 	}
 
 	inline LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
@@ -1190,7 +1191,7 @@ namespace Win32xx
 
 	inline void CMenubar::SetMenu(HMENU hMenu)
 	{
-		if (!IsWindow()) return;
+		assert(::IsWindow(m_hWnd));
 
 		m_hTopMenu = hMenu;
 		int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
@@ -1213,9 +1214,7 @@ namespace Win32xx
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
 			tbb.iString = (INT_PTR)_T(" ");
-			if(!SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb))
-				throw CWinException(_T("TB_ADDBUTTONS failed"));
-
+			SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb);
 			SetButtonText(0, _T("    "));
 		}
 
@@ -1227,18 +1226,13 @@ namespace Win32xx
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
 			tbb.iString = (INT_PTR)_T(" ");
-			if (!SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb))
-				throw CWinException(_T("TB_ADDBUTTONS failed"));
+			SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb);
 
 			// Add the menu title to the string table
 			TCHAR szMenuName[MAX_MENU_STRING +1] = _T("");
-
-			if (0 == ::GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION) )
-				throw CWinException(_T("GetMenuString failed"));
-
+			GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
 			SetButtonText(i  + nMaxedOffset, szMenuName);
 		}
-
 	}
 
 	inline void CMenubar::SetMenubarTheme(MenuTheme& Theme)
@@ -1255,8 +1249,10 @@ namespace Win32xx
 
 	inline LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
+		assert(GetApp());
 		MSG* pMsg = (MSG*)lParam;
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+		assert(pTLSData);
 		CMenubar* pMenubar = (CMenubar*)pTLSData->pMenubar;
 
 		if (pMenubar && (MSGF_MENU == nCode))
@@ -2030,9 +2026,7 @@ namespace Win32xx
 		ShowStatusbar(m_bShowStatusbar);
 
 		// Create the view window
-		if (NULL == GetView())
-			throw CWinException(_T("Frame's view window is not assigned"));
-		
+		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
 		GetView()->Create(m_hWnd);
 
 		// Reposition the child windows
@@ -2674,44 +2668,39 @@ namespace Win32xx
 		{
 			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
 			HKEY hKey = NULL;
-			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-				throw (CWinException(_T("RegCreateKeyEx Failed")));
+			BOOL Succeeded = TRUE;
+			Succeeded = !RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
+			assert(Succeeded);
 
-			WINDOWPLACEMENT Wndpl = {0};
-			Wndpl.length = sizeof(WINDOWPLACEMENT);
-			if (GetWindowPlacement(Wndpl))
+			if (hKey)
 			{
-				// Get the Frame's window position
-				CRect rc = Wndpl.rcNormalPosition;
-				DWORD dwTop = MAX(rc.top, 0);
-				DWORD dwLeft = MAX(rc.left, 0);
-				DWORD dwWidth = MAX(rc.Width(), 100);
-				DWORD dwHeight = MAX(rc.Height(), 50);
+				WINDOWPLACEMENT Wndpl = {0};
+				Wndpl.length = sizeof(WINDOWPLACEMENT);
 
-				if (RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
+				if (GetWindowPlacement(Wndpl))
+				{
+					// Get the Frame's window position
+					CRect rc = Wndpl.rcNormalPosition;
+					DWORD dwTop = MAX(rc.top, 0);
+					DWORD dwLeft = MAX(rc.left, 0);
+					DWORD dwWidth = MAX(rc.Width(), 100);
+					DWORD dwHeight = MAX(rc.Height(), 50);
 
-				if (RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
+					RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD));
+					RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD));
+					RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD));
+					RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD));
+				}
+				
+				// Store the Toolbar and statusbar states
+				DWORD dwShowToolbar = m_bShowToolbar;
+				DWORD dwShowStatusbar = m_bShowStatusbar;
 
-				if (RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
+				RegSetValueEx(hKey, _T("Toolbar"), 0, REG_DWORD, (LPBYTE)&dwShowToolbar, sizeof(DWORD));
+				RegSetValueEx(hKey, _T("Statusbar"), 0, REG_DWORD, (LPBYTE)&dwShowStatusbar, sizeof(DWORD));
 
-				if (RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
-					throw (CWinException(_T("RegSetValueEx Failed")));
+				RegCloseKey(hKey);
 			}
-			
-			// Store the Toolbar and statusbar states
-			DWORD dwShowToolbar = m_bShowToolbar;
-			DWORD dwShowStatusbar = m_bShowStatusbar;
-
-			if (RegSetValueEx(hKey, _T("Toolbar"), 0, REG_DWORD, (LPBYTE)&dwShowToolbar, sizeof(DWORD)))
-				throw (CWinException(_T("RegSetValueEx Failed")));
-
-			if (RegSetValueEx(hKey, _T("Statusbar"), 0, REG_DWORD, (LPBYTE)&dwShowStatusbar, sizeof(DWORD)))
-				throw (CWinException(_T("RegSetValueEx Failed")));
-
-			RegCloseKey(hKey);
 
 			// Store the MRU entries in the registry
 			if (m_nMaxMRU > 0)
@@ -2719,22 +2708,24 @@ namespace Win32xx
 				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
 				HKEY hKey = NULL;
 
-				if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
+				Succeeded = !RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
+				assert(Succeeded);
 
-				for (UINT i = 0; i < m_nMaxMRU; ++i)
+				if(hKey)
 				{
-					TCHAR szSubKey[10];
-					wsprintf(szSubKey, _T("File %d\0"), i+1);
-					tString tsPathName;
-					if (i < m_vMRUEntries.size())
-						tsPathName = m_vMRUEntries[i];
+					for (UINT i = 0; i < m_nMaxMRU; ++i)
+					{
+						TCHAR szSubKey[10];
+						wsprintf(szSubKey, _T("File %d\0"), i+1);
+						tString tsPathName;
+						if (i < m_vMRUEntries.size())
+							tsPathName = m_vMRUEntries[i];
 
-					if (RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
-						throw (CWinException(_T("RegSetValueEx Failed")));
+						RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR));
+					}
+
+					RegCloseKey(hKey);
 				}
-
-				RegCloseKey(hKey);
 			}
 		}
 	}
