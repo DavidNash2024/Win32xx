@@ -2607,14 +2607,12 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		if (GetStatusbar() && m_bShowStatusbar)
+		if (GetStatusbar().IsWindow() && m_bShowStatusbar)
 		{
 			GetStatusbar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusbar().Invalidate();
-		}
-
-		// Reposition the text
-		SetStatusText();
+			SetStatusText();
+		}	
 
 		// Resize the rebar or toolbar
 		if (IsRebarUsed())
@@ -2627,7 +2625,6 @@ namespace Win32xx
 
 		// Resize the View window
 		CRect rClient = GetViewRect();
-
 		if ((rClient.bottom - rClient.top) >= 0)
 		{
 			int x  = rClient.left;
