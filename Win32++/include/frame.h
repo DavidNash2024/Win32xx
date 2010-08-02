@@ -2394,6 +2394,7 @@ namespace Win32xx
 
 		// Display tooltips for the toolbar
 		case TTN_GETDISPINFO:
+			if (GetToolbar().IsWindow())
 			{
 				CToolbar* pToolbar = &GetToolbar();
 				if (IsRebarUsed())
@@ -2404,13 +2405,13 @@ namespace Win32xx
 						pToolbar = (CToolbar*)pWnd;
 				}
 				
-				int iIndex =  pToolbar->HitTest();
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
+				int iIndex =  pToolbar->HitTest();
 				if (iIndex >= 0)
 				{
 					int nID = pToolbar->GetCommandID(iIndex);
 					if (nID > 0) lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
-				} 
+				}
 			}
 			break; 
 		} // switch LPNMHDR
