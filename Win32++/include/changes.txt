@@ -17,10 +17,12 @@ Changes in detail
 -----------------
 Added CResizer
 Updated CSocket to support IPv6
+Added CRebar::SizeToRect
 Added CSocket::IsIPV6Supported
 Added CSocket::FreeAdddrInfo
 Added CSocket::GetAddrInfo
 Added CSocket::GetLastError
+Added CWnd::SetWindowTheme
 Modified CSocket::Bind
 Modified CSoeckt::Connect
 Modified CSocket::Receive
@@ -28,17 +30,15 @@ Modified CSocket::ReceiveFrom
 Modified CSocket::Send
 Modified CSocket::SentTo
 Renamed CWnd::CharToTChar to ::CharToTChar
-Renamed CWnd::CharToWide to ::CharToWide
-Renamed CWnd::TCharToChar to CWnd::TCharToChar
+Renamed CWnd::CharToWide  to ::CharToWide
+Renamed CWnd::TCharToChar to ::TCharToChar
 Renamed CWnd::TCharToWide to ::TCharToWide
-Renamed CWnd::WideToChar to ::WideToChar
+Renamed CWnd::WideToChar  to ::WideToChar
 Renamed CWnd::WideToTChar to ::WideToTChar
 
 Added GDIPlus sample
 Updated Network samples
 Update  FormDemo sample
-
-
 
 
 Version 6.9

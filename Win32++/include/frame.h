@@ -634,9 +634,9 @@ namespace Win32xx
 	{
 		BOOL bMaxed = FALSE;
 
-		if (IsMDIFrame())
+		if (IsMDIFrame() && m_pFrame->GetView()->IsWindow())
 		{
-			::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
+			m_pFrame->GetView()->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
 		}
 
 		return bMaxed;
@@ -1494,7 +1494,6 @@ namespace Win32xx
 			{
 				ImageList_Destroy(m_himlMenuDis);
 				m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
-				TRACE(_T("WARNING:  Using default disabled menu icons\n"));
 			}
 			::DeleteObject(hbmDis);
 		}
