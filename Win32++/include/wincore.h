@@ -497,6 +497,7 @@ namespace Win32xx
 		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
+		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
 		BOOL SetWindowText(LPCTSTR lpString) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
@@ -2550,6 +2551,29 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return ::SetWindowText(m_hWnd, lpString);
 	}
+
+	inline HRESULT CWnd::SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const
+	// Set the XP Theme for a window.
+	// Exampes:
+	//  SetWindowTheme(NULL, NULL);		// Reverts the window's XP theme back to default
+	//  SetWindowTheme(L" ", L" ");		// Disables XP theme for the window
+	{
+		HRESULT hr = E_NOTIMPL;
+
+		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+		if(hMod)
+		{
+			typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND hWnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList);
+			PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(hMod, "SetWindowTheme");
+
+			hr = (*pfn)(m_hWnd, pszSubAppName, pszSubIdList);
+
+			::FreeLibrary(hMod);
+		}
+
+		return hr;
+	}
+
 
 	inline BOOL CWnd::ShowWindow(int nCmdShow /*= SW_SHOWNORMAL*/) const
 	// The ShowWindow function sets the window's show state.

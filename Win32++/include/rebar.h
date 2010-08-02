@@ -166,7 +166,7 @@ namespace Win32xx
 			if (rbbi.hwndChild == hWnd)
 				nResult = nBand;
 		}
-		
+
 		return nResult;
 	}
 
@@ -280,12 +280,12 @@ namespace Win32xx
 
 		// Convert the point to client co-ordinates
 		MapWindowPoints(NULL, m_hWnd, &pt, 1);
-		
+
 		// Get the rebar band with the point
 		RBHITTESTINFO rbhti = {0};
 		rbhti.pt = pt;
 		int iBand = HitTest(rbhti);
-		
+
 		if (iBand >= 0)
 		{
 			// Get the rebar band's hWnd
@@ -296,7 +296,7 @@ namespace Win32xx
 
 			return rbbi.hwndChild;
 		}
-		else 
+		else
 			return NULL;
 	}
 
@@ -520,7 +520,7 @@ namespace Win32xx
 		rbbi.cxMinChild = sz.cx + 2;
 		rbbi.cyMinChild = sz.cy;
 		rbbi.cyMaxChild = sz.cy;
-		
+
 		return SetBandInfo(nBand, rbbi );
 	}
 
@@ -535,7 +535,7 @@ namespace Win32xx
 		GetBandInfo(nBand, rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
 		rbbi.hbmBack = hBackground;
-		
+
 		return (BOOL)SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
@@ -551,7 +551,7 @@ namespace Win32xx
 		rbbi.fMask = RBBIM_COLORS;
 		rbbi.clrFore = clrFore;
 		rbbi.clrBack = clrBack;
-		
+
 		return (BOOL)SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}
 
@@ -602,7 +602,7 @@ namespace Win32xx
 	// Show or hide a band
 	{
 		assert(::IsWindow(m_hWnd));
-		return (BOOL)SendMessage(RB_SHOWBAND, (WPARAM)nBand, (LPARAM)fShow);  
+		return (BOOL)SendMessage(RB_SHOWBAND, (WPARAM)nBand, (LPARAM)fShow);
 	}
 
 	inline BOOL CRebar::ShowGripper(int nBand, BOOL fShow) const
@@ -624,16 +624,16 @@ namespace Win32xx
 			rbbi.fStyle &= ~RBBS_GRIPPERALWAYS;
 			rbbi.fStyle |= RBBS_NOGRIPPER;
 		}
-		
+
 		return SetBandInfo(nBand, rbbi);
 	}
 
 	inline BOOL CRebar::SizeToRect(CRect& rect) const
 	// Attempts to find the best layout of the bands for the given rectangle.
-	// The rebar bands will be arranged and wrapped as necessary to fit the rectangle. 
+	// The rebar bands will be arranged and wrapped as necessary to fit the rectangle.
 	{
 		assert(::IsWindow(m_hWnd));
-		SendMessage(RB_SIZETORECT, 0, (LPARAM) (LPRECT)rect);  
+		return (BOOL)SendMessage(RB_SIZETORECT, 0, (LPARAM) (LPRECT)rect);
 	}
 
 	inline LRESULT CRebar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -650,7 +650,7 @@ namespace Win32xx
 				if (y <= GetRowHeight(0))
 					return 0L;	// throw this message away
 			}
-			break; 
+			break;
 		case WM_LBUTTONDOWN:
 			m_Orig_lParam = lParam;	// Store the x,y position
 			m_bIsDragging = TRUE;
@@ -668,7 +668,7 @@ namespace Win32xx
 				}
 			}
 			m_bIsDragging = FALSE;
-			break; 
+			break;
 		case WM_ERASEBKGND:
 			if (OnEraseBkgnd((HDC)wParam))
 				return TRUE;

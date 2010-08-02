@@ -667,47 +667,47 @@ namespace Win32xx
 	inline LRESULT CMenubar::OnCustomDraw(NMHDR* pNMHDR)
 	// CustomDraw is used to render the Menubar's toolbar buttons
 	{
-		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-
-		switch (lpNMCustomDraw->nmcd.dwDrawStage)
+		if (m_ThemeMenu.UseThemes)
 		{
-		// Begin paint cycle
-		case CDDS_PREPAINT:
-			// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
-			return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
+			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
 
-		// An item is about to be drawn
-		case CDDS_ITEMPREPAINT:
+			switch (lpNMCustomDraw->nmcd.dwDrawStage)
 			{
-				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
-				CRect rcRect = lpNMCustomDraw->nmcd.rc;
-				int nState = lpNMCustomDraw->nmcd.uItemState;
-				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
+			// Begin paint cycle
+			case CDDS_PREPAINT:
+				// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
+				return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
 
-				// Leave a 2 pixel gap above the drawn rectangle
-				rcRect.top = 2;
-
-				if (IsMDIChildMaxed() && (0 == dwItem))
-				// Draw over MDI Max button
+			// An item is about to be drawn
+			case CDDS_ITEMPREPAINT:
 				{
-					HICON hIcon = (HICON)::SendMessage(GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0L);
-					if (NULL == hIcon)
-						hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+					CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
+					CRect rcRect = lpNMCustomDraw->nmcd.rc;
+					int nState = lpNMCustomDraw->nmcd.uItemState;
+					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
 
-					int cx = ::GetSystemMetrics (SM_CXSMICON);
-					int cy = ::GetSystemMetrics (SM_CYSMICON);
-					int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
-					int x = 0;
-					DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+					// Leave a 2 pixel gap above the drawn rectangle
+					rcRect.top = 2;
 
-					// Detach the DC so it doesn't get destroyed
-					DrawDC.DetachDC();
-					return CDRF_SKIPDEFAULT;  // No further drawing
-				}
+					if (IsMDIChildMaxed() && (0 == dwItem))
+					// Draw over MDI Max button
+					{
+						HICON hIcon = (HICON)::SendMessage(GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0L);
+						if (NULL == hIcon)
+							hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 
-				else if (nState & (CDIS_HOT | CDIS_SELECTED))
-				{
-					if (m_ThemeMenu.UseThemes)
+						int cx = ::GetSystemMetrics (SM_CXSMICON);
+						int cy = ::GetSystemMetrics (SM_CYSMICON);
+						int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
+						int x = 0;
+						DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+
+						// Detach the DC so it doesn't get destroyed
+						DrawDC.DetachDC();
+						return CDRF_SKIPDEFAULT;  // No further drawing
+					}
+
+					else if (nState & (CDIS_HOT | CDIS_SELECTED))
 					{
 						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
@@ -728,50 +728,40 @@ namespace Win32xx
 						{
 							DrawDC.MoveTo(rcRect.right-1, rcRect.bottom-1);
 							DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
-						}
+						}					
+
+						TCHAR str[80] = _T("");
+						int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
+						if ((nLength > 0) && (nLength < 80))
+							SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
+
+						// Draw highlight text
+						DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
+						rcRect.bottom += 1;
+						int iMode = DrawDC.SetBkMode(TRANSPARENT);
+						DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+
+						DrawDC.SetBkMode(iMode);
+						DrawDC.DetachFont();
+						DrawDC.DetachDC();
+						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
-					else
-					{
-						// Draw highlight rectangle
-						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						HBRUSH hbHighlight = ::GetSysColorBrush(COLOR_HIGHLIGHT);
-						DrawDC.FillRect(rcRect, hbHighlight);
-					}
-
-					TCHAR str[80] = _T("");
-					int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
-					if ((nLength > 0) && (nLength < 80))
-						SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
-
-					// Draw highlight text
-					DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
-					if (!m_ThemeMenu.UseThemes)
-						DrawDC.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
-
-					rcRect.bottom += 1;
-					int iMode = DrawDC.SetBkMode(TRANSPARENT);
-					DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-
-					DrawDC.SetBkMode(iMode);
-					DrawDC.DetachFont();
+					// Detach the DC so it doesn't get destroyed
 					DrawDC.DetachDC();
-					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
-				// Detach the DC so it doesn't get destroyed
-				DrawDC.DetachDC();
-			}
-			return CDRF_DODEFAULT ;   // Do default drawing
+				return CDRF_DODEFAULT ;   // Do default drawing
 
-		// Painting cycle has completed
-		case CDDS_POSTPAINT:
-			// Draw MDI Minimise, Restore and Close buttons
-			{
-				CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
-				DrawAllMDIButtons(DrawDC);
-				// Detach the DC so it doesn't get destroyed
-				DrawDC.DetachDC();
+			// Painting cycle has completed
+			case CDDS_POSTPAINT:
+				// Draw MDI Minimise, Restore and Close buttons
+				{
+					CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
+					DrawAllMDIButtons(DrawDC);
+					// Detach the DC so it doesn't get destroyed
+					DrawDC.DetachDC();
+				}
+				break;
 			}
-			break;
 		}
 		return 0L;
 	}
@@ -2006,8 +1996,8 @@ namespace Win32xx
 			AddMenubarBand();			
 		}
 		
-		if (!IsMenubarUsed()) ::SetMenu(m_hWnd, GetFrameMenu());
-		if (m_bUseThemes)	SetTheme();
+		if (!IsMenubarUsed())
+			::SetMenu(m_hWnd, GetFrameMenu());		
 		
 		// Create the Toolbar
 		if (m_bUseToolbar)
@@ -2029,6 +2019,15 @@ namespace Win32xx
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
 		GetView()->Create(m_hWnd);
 
+		// Set the theme for the frame elements
+		if (m_bUseThemes)
+			SetTheme();
+		else
+		{
+			GetMenubar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Menubar
+			GetToolbar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Toolbar
+		}
+		
 		// Reposition the child windows
 		RecalcLayout();
 
