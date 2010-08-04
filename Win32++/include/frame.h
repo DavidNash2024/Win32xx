@@ -393,7 +393,7 @@ namespace Win32xx
 		if (IsMDIChildMaxed() && (0 == m_nHotItem) )
 			m_hPopupMenu = ::GetSystemMenu(hMaxMDIChild, FALSE);
 
-                // Retrieve the bounding rectangle for the toolbar button
+        // Retrieve the bounding rectangle for the toolbar button
 		CRect rc = GetItemRect(m_nHotItem);
 
 		// convert rectangle to desktop coordinates
@@ -725,12 +725,9 @@ namespace Win32xx
 						DrawDC.LineTo(rcRect.left, rcRect.top);
 						DrawDC.LineTo(rcRect.right-1, rcRect.top);
 						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
-						if (!(nState & CDIS_SELECTED))
-						{
-							DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
-							DrawDC.LineTo(rcRect.left, rcRect.bottom);
-						}					
-
+						DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
+						DrawDC.LineTo(rcRect.left, rcRect.bottom);
+					
 						TCHAR str[80] = _T("");
 						int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
 						if ((nLength > 0) && (nLength < 80))
