@@ -688,6 +688,7 @@ namespace Win32xx
 
 					// Leave a 2 pixel gap above the drawn rectangle
 					rcRect.top = 2;
+					rcRect.bottom -=2;
 
 					if (IsMDIChildMaxed() && (0 == dwItem))
 					// Draw over MDI Max button
@@ -720,14 +721,14 @@ namespace Win32xx
 
 						// Draw border
 						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						DrawDC.MoveTo(rcRect.left, rcRect.bottom -1);
+						DrawDC.MoveTo(rcRect.left, rcRect.bottom);
 						DrawDC.LineTo(rcRect.left, rcRect.top);
 						DrawDC.LineTo(rcRect.right-1, rcRect.top);
 						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
 						if (!(nState & CDIS_SELECTED))
 						{
-							DrawDC.MoveTo(rcRect.right-1, rcRect.bottom-1);
-							DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
+							DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
+							DrawDC.LineTo(rcRect.left, rcRect.bottom);
 						}					
 
 						TCHAR str[80] = _T("");
@@ -1160,7 +1161,7 @@ namespace Win32xx
 
 	inline void CMenubar::PreCreate(CREATESTRUCT &cs)
 	{
-		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;
+		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;
 		cs.lpszClass = TOOLBARCLASSNAME;
 	}
 
@@ -1234,7 +1235,8 @@ namespace Win32xx
 		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
 		m_ThemeMenu.clrOutline  = Theme.clrOutline;
 
-		Invalidate();
+		if (IsWindow())
+			Invalidate();
 	}
 
 	inline LRESULT CALLBACK CMenubar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
@@ -1520,7 +1522,8 @@ namespace Win32xx
 		dcMenubar.AttachFont(hFont);
 		csMenubar = dcMenubar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 		dcMenubar.DetachFont();
-		int Menubar_Height = csMenubar.cy + 8;
+		int Menubar_Height = csMenubar.cy + 6;
+
 
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
 		rbbi.cxMinChild = sz.cx;
@@ -1535,6 +1538,9 @@ namespace Win32xx
 		GetRebar().InsertBand(-1, rbbi);
 		SetMenubarBandSize();
 		GetRebar().SetMenubar(GetMenubar());
+
+		if (GetRebar().GetRebarTheme().LockMenuBand)
+			GetRebar().ShowGripper(GetRebar().GetBand(GetMenubar()), FALSE);
 	}
 
 	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
@@ -1621,7 +1627,7 @@ namespace Win32xx
 
 		SetupToolbar();	
 		
-		if (IsRebarSupported() && m_bUseRebar && m_bUseThemes)
+		if (IsRebarSupported() && m_bUseRebar)
 		{
 			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().LockMenuBand)
 			{
@@ -1984,6 +1990,9 @@ namespace Win32xx
 		SetFrameMenu(IDW_MAIN);
 		UpdateMRUMenu();
 
+		// Set the theme for the frame elements
+		SetTheme();	
+
 		if (IsRebarSupported() && m_bUseRebar)
 		{
 			// Create the rebar
@@ -1994,7 +2003,7 @@ namespace Win32xx
 			GetMenubar().SetMenu(GetFrameMenu());
 			AddMenubarBand();			
 		}
-		
+
 		if (!IsMenubarUsed())
 			::SetMenu(m_hWnd, GetFrameMenu());		
 		
@@ -2018,10 +2027,8 @@ namespace Win32xx
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
 		GetView()->Create(m_hWnd);
 
-		// Set the theme for the frame elements
+		// Disable XP themes for toolbar and menubar
 		if (m_bUseThemes)
-			SetTheme();
-		else
 		{
 			GetMenubar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Menubar
 			GetToolbar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Toolbar
@@ -2788,11 +2795,7 @@ namespace Win32xx
 		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
 		m_ThemeMenu.clrOutline  = Theme.clrOutline;
 
-		if (IsRebarUsed())
-		{
-			GetMenubar().SetMenubarTheme(Theme); // Sets the theme for Menubar buttons
-		}
-		
+		GetMenubar().SetMenubarTheme(Theme); // Sets the theme for Menubar buttons
 		Invalidate();
 	}
 
@@ -2854,114 +2857,123 @@ namespace Win32xx
 		// Avoid themes if using less than 16 bit colors
 		CDC DesktopDC = ::GetDC(NULL);
 		if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
-			return;
-
-		// Set a flag redo SetTheme when the theme changes
-		m_bUpdateTheme = TRUE;
-
-		// Detect the XP theme name
-		WCHAR Name[30] = L"";
-		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
-		if(hMod)
-		{
-			typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pszThemeFileName, int cchMaxNameChars,
-				LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
-
-			PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
-
-			(*pfn)(0, 0, Name, 30, 0, 0);
-
-			::FreeLibrary(hMod);
-		}
-
-		enum Themetype{ Modern, Grey, Blue, Silver, Olive };
-
-		int Theme = Grey;
-		if (GetWinVersion() < 2600) // Not for Vista and above
-		{
-			if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
-			if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
-			if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
-		}
-		else
-			Theme = Modern;
+			m_bUseThemes = FALSE;
 
 		BOOL T = TRUE;
 		BOOL F = FALSE;
 
-		switch (Theme)
+		if (m_bUseThemes)
 		{
-		case Modern:
+			// Set a flag redo SetTheme when the theme changes
+			m_bUpdateTheme = TRUE;
+
+			// Detect the XP theme name
+			WCHAR Name[30] = L"";
+			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+			if(hMod)
 			{
-				ToolbarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-				RebarTheme tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
-				MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+				typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pszThemeFileName, int cchMaxNameChars,
+					LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
 
-				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
-				
-				if (IsRebarUsed())
-					GetRebar().SetRebarTheme(tr);
+				PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
+
+				(*pfn)(0, 0, Name, 30, 0, 0);
+
+				::FreeLibrary(hMod);
 			}
-			break; 
 
-		case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
+			enum Themetype{ Modern, Grey, Blue, Silver, Olive };
+
+			int Theme = Grey;
+			if (GetWinVersion() < 2600) // Not for Vista and above
 			{
-				ToolbarTheme tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
-				RebarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
-				MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
-
-				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
-				
-				if (IsRebarUsed())
-					GetRebar().SetRebarTheme(tr);
+				if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
+				if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
+				if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
 			}
-			break;
-		case Blue:
+			else
+				Theme = Modern;
+
+			switch (Theme)
 			{
-				// Used for XP default (blue) color scheme
-				ToolbarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-				RebarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
-				MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
+			case Modern:
+				{
+					ToolbarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+					RebarTheme tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
+					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
-				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+					GetToolbar().SetToolbarTheme(tt);
+					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+					
+				//	if (IsRebarUsed())
+						GetRebar().SetRebarTheme(tr);
+				}
+				break; 
 
-				if (IsRebarUsed())
-					GetRebar().SetRebarTheme(tr);
+			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
+				{
+					ToolbarTheme tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
+					RebarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
+					MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+
+					GetToolbar().SetToolbarTheme(tt);
+					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+					
+				//	if (IsRebarUsed())
+						GetRebar().SetRebarTheme(tr);
+				}
+				break;
+			case Blue:
+				{
+					// Used for XP default (blue) color scheme
+					ToolbarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+					RebarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
+
+					GetToolbar().SetToolbarTheme(tt);
+					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+
+				//	if (IsRebarUsed())
+						GetRebar().SetRebarTheme(tr);
+				}
+				break;
+
+			case Silver:
+				{
+					// Used for XP Silver color scheme
+					ToolbarTheme tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+					RebarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
+					MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
+
+					GetToolbar().SetToolbarTheme(tt);
+					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+
+				//	if (IsRebarUsed())
+						GetRebar().SetRebarTheme(tr);
+				}
+				break;
+
+			case Olive:
+				{
+					// Used for XP Olive color scheme
+					RebarTheme tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, T, T, T, T, F};
+					ToolbarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
+					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
+
+					GetToolbar().SetToolbarTheme(tt);
+					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
+					
+				//	if (IsRebarUsed())
+						GetRebar().SetRebarTheme(tr);
+				}
+				break;
 			}
-			break;
-
-		case Silver:
-			{
-				// Used for XP Silver color scheme
-				ToolbarTheme tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-				RebarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
-				MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
-
-				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
-
-				if (IsRebarUsed())
-					GetRebar().SetRebarTheme(tr);
-			}
-			break;
-
-		case Olive:
-			{
-				// Used for XP Olive color scheme
-				RebarTheme tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, T, T, T, T, F};
-				ToolbarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
-				MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
-
-				GetToolbar().SetToolbarTheme(tt);
-				SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
-				
-				if (IsRebarUsed())
-					GetRebar().SetRebarTheme(tr);
-			}
-			break;
+		}
+		else
+		{
+			// Use a classic style by default
+			RebarTheme tr = {T, 0, 0, 0, 0, F, T, T, F, F, F};
+			GetRebar().SetRebarTheme(tr);
 		}
 
 		RecalcLayout();

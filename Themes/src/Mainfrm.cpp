@@ -369,7 +369,7 @@ void CMainFrame::OnCreate()
 			rbbi.fStyle = m_vBandStyles[i];
 			GetRebar().SetBandInfo(i, rbbi);
 		}
-	}
+	} 
 
 	ShowArrows(m_bShowArrows);
 	ShowCards(m_bShowCards);
@@ -403,6 +403,8 @@ void CMainFrame::OnUseThemes()
 	RebarTheme rt = GetRebar().GetRebarTheme();
 	rt.UseThemes = m_bUseThemes;
 	GetRebar().SetRebarTheme(rt);
+	int nBand = GetRebar().GetBand(GetMenubar());
+	GetRebar().ShowGripper(nBand, !m_bUseThemes);
 
 	GetRebar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 	RecalcLayout();
