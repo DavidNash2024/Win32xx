@@ -2642,11 +2642,14 @@ namespace Win32xx
 			pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
 		}
 
-		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
-			GetRebar().MoveBandsLeft();
+		if (IsRebarUsed())
+		{
+			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
+				GetRebar().MoveBandsLeft();
 
-		if (IsMenubarUsed())
-			SetMenubarBandSize();
+			if (IsMenubarUsed())
+				SetMenubarBandSize();
+		}
 	}
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
@@ -3063,8 +3066,11 @@ namespace Win32xx
 				GetToolbar().ShowWindow(SW_HIDE);
 		}
 
-		if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
-			GetRebar().MoveBandsLeft();
+		if (GetRebar().IsWindow())
+		{
+			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)
+				GetRebar().MoveBandsLeft();
+		}
 
 		// Reposition the Windows
 		RecalcLayout();
