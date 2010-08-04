@@ -2620,7 +2620,7 @@ namespace Win32xx
 		HWND hWndFrame = GetDockAncestor()->GetAncestor();
 		RebarTheme* pTheme = (RebarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
 		
-		if (pTheme && pTheme->UseThemes)
+		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
 				rgbColour =pTheme->clrBkgnd2;
 		
 		SetBarColor(rgbColour);
@@ -2894,8 +2894,10 @@ namespace Win32xx
 			HWND hWndFrame = GetDockAncestor()->GetAncestor();
 			RebarTheme* pTheme = (RebarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
 			
-			if (pTheme && pTheme->UseThemes)
+			if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
 				rgbColour = pTheme->clrBkgnd2;
+			else
+				rgbColour = GetSysColor(COLOR_BTNFACE);
 
 			// Set the splitter bar colour for each docker decendant
 			std::vector<CDocker*>::iterator iter;

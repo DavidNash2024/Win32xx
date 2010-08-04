@@ -11,7 +11,22 @@ New Features and Enhancements
 * Added the GDIPlus sample to demonstrate how to use the GDIplus library 
    provided with modern Windows operating systems (XP and above).
 * Moved the text conversion functions from CWnd to the global (Win32++) 
-   namespace.       
+   namespace.
+* Improved the appearance of frames without themes.
+* Asserts are used more liberally to test for programming errors. Any message
+   sent to a non-existant window, for example, will now assert. More asserts are
+   intended to help users write code that is more robust. Note that asserts are
+   only evaluated in Debug mode, and have no effect in Release mode.
+* Exceptions are used less often. They are now thrown to indicate a critical
+   problem, outside the programmer's control. Throwing fewer exceptions results 
+   in slightly smaller executables, and gives users more flexibility and control
+   over their own exception methodology. They are thrown by Win32++ when:
+   - a memory allocation fails. (All compilers should do this anyway, but some
+      older Microsoft compilers don't.)
+   - a window creation fails.
+   - a critical dll cannot be loaded.
+   - a window message cannot be routed to a CWnd object.
+            
 
 Changes in detail
 -----------------
@@ -40,6 +55,9 @@ Added GDIPlus sample
 Updated Network samples
 Update  FormDemo sample
 
+Incompatibilities with previous versions
+----------------------------------------
+The stricter testing with asserts might reveal previously hidden errors in code.
 
 Version 6.9
 ===========
