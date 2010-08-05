@@ -26,6 +26,7 @@ New Features and Enhancements
    - a window creation fails.
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
+* Extended the CToolbar class.   
             
 
 Changes in detail
@@ -37,13 +38,53 @@ Added CSocket::IsIPV6Supported
 Added CSocket::FreeAdddrInfo
 Added CSocket::GetAddrInfo
 Added CSocket::GetLastError
+Added CToolbar::AddButtons
+Added CToolbar::AddString
+Added CToolbar::AutoSize
+Added CToolbar::CheckButton 
+Added CToolbar::DeleteButton   
+Added CToolbar::GetButton
+Added CToolbar::GetButtonSize
+Added CToolbar::GetButtonText
+Added CToolbar::GetDisabledImageList
+Added CToolbar::GetHotItem
+Added CToolbar::GetImageList
+Added CToolbar::GetPadding
+Added CToolbar::GetRect
+Added CToolbar::GetRows
+Added CToolbar::GetTextRows
+Added CToolbar::GetToolTips
+Added CToolbar::HideButton
+Added CToolbar::Indeterminate
+Added CToolbar::InsertButton
+Added CToolbar::IsButtonHidden
+Added CToolbar::IsButtonHighlighted
+Added CToolbar::IsButtonIndeterminate
+Added CToolbar::IsButtonPressed
+Added CToolbar::MapAccelerator
+Added CToolbar::MarkButton
+Added CToolbar::MoveButton
+Added CToolbar::PressButton
+Added CToolbar::SaveRestore
+Added CToolbar::SetDisabledImageList
+Added CToolbar::SetDrawTextFlags
+Added CToolbar::SetExtendedStyle
+Added CToolbar::SetHotImageList
+Added CToolbar::SetHotItem
+Added CToolbar::SetImageList
+Added CToolbar::SetIndent
+Added CToolbar::SetMaxTextRows
+Added CToolbar::SetPadding
+Added CToolbar::SetToolTips
 Added CWnd::SetWindowTheme
+Added ::IsAeroThemed
 Modified CSocket::Bind
 Modified CSoeckt::Connect
 Modified CSocket::Receive
 Modified CSocket::ReceiveFrom
 Modified CSocket::Send
 Modified CSocket::SentTo
+Renamed CToolbar::AddToolbarButton to CToolbar::AddButton
 Renamed CWnd::CharToTChar to ::CharToTChar
 Renamed CWnd::CharToWide  to ::CharToWide
 Renamed CWnd::TCharToChar to ::TCharToChar

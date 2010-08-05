@@ -686,9 +686,11 @@ namespace Win32xx
 					int nState = lpNMCustomDraw->nmcd.uItemState;
 					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
 
-					// Leave a 2 pixel gap above the drawn rectangle
-					rcRect.top = 2;
-					rcRect.bottom -=2;
+					// Leave a pixel gap above and below the drawn rectangle
+					if (IsAeroThemed())
+						rcRect.InflateRect(0, -2);
+					else
+						rcRect.InflateRect(0, -1);
 
 					if (IsMDIChildMaxed() && (0 == dwItem))
 					// Draw over MDI Max button
@@ -1584,7 +1586,7 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		GetToolbar().AddToolbarButton(nID, bEnabled);
+		GetToolbar().AddButton(nID, bEnabled);
 
 		if(0 != szText)
 			GetToolbar().SetButtonText(nID, szText);
@@ -2030,6 +2032,8 @@ namespace Win32xx
 			GetMenubar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Menubar
 			GetToolbar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Toolbar
 		}
+		else if (!IsAeroThemed())
+			GetMenubar().SetWindowTheme(L" ", L" ");
 		
 		// Reposition the child windows
 		RecalcLayout();

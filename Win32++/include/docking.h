@@ -3570,7 +3570,7 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		GetToolbar().AddToolbarButton(nID, bEnabled);
+		GetToolbar().AddButton(nID, bEnabled);
 	}
 
 	inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT iPage)

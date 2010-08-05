@@ -215,6 +215,7 @@ namespace Win32xx
 	int  GetComCtlVersion();
 	UINT GetSizeofMenuItemInfo();
 	UINT GetSizeofNonClientMetrics();
+	BOOL IsAeroThemed();
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
   #endif // #ifndef _WIN32_WCE
@@ -772,6 +773,33 @@ namespace Win32xx
 
 		// returns true if the left mouse button is down
 		return (state & 0x8000);
+	}
+
+	inline BOOL IsAeroThemed()
+	{
+		BOOL bIsAeroThemed = FALSE;
+
+		// Test if Windows version is XP or greater
+		if (GetWinVersion() >= 2501)
+		{
+			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+			if(hMod)
+			{
+				// Declare pointers to functions
+				FARPROC pIsCompositionActive    = ::GetProcAddress(hMod, "IsCompositionActive");
+
+				if(pIsCompositionActive)
+				{
+					if(pIsCompositionActive())
+					{
+						bIsAeroThemed = TRUE;
+					}
+				}
+				::FreeLibrary(hMod);
+			}
+		}
+
+		return bIsAeroThemed;
 	}
 
 	inline BOOL IsXPThemed()
