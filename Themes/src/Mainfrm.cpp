@@ -59,6 +59,20 @@ void CMainFrame::ChooseColor(UINT nColor)
 
 	switch (nColor)
 	{
+	case IDM_MODERN:
+		{
+			SetRebarTheme( RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230) );
+			
+			ToolbarTheme tt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+			TB.SetToolbarTheme(tt);
+			Arrows.SetToolbarTheme(tt);
+			Cards.SetToolbarTheme(tt);			
+			
+			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+			MB.SetMenubarTheme(mt);
+			SetMenuTheme(mt);
+		}
+		break; 
 	case IDM_BLUE:	// ICY_BLUE Theme
 		{
 			SetRebarTheme( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
@@ -69,7 +83,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -83,7 +97,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -97,7 +111,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -111,7 +125,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -125,7 +139,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -139,7 +153,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -153,7 +167,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -167,7 +181,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			Cards.SetToolbarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(84,197,240), RGB(89, 136, 217), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
-			if (IsRebarUsed()) MB.SetMenubarTheme(mt);
+			MB.SetMenubarTheme(mt);
 			SetMenuTheme(mt);
 		}
 	}
@@ -177,7 +191,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 	if (nFileItem >= 0)
 	{
 		HMENU hTheme = ::GetSubMenu(GetFrameMenu(), nFileItem);
-		::CheckMenuRadioItem(hTheme, IDM_BLUE, IDM_BLACK, nColor, 0);
+		::CheckMenuRadioItem(hTheme, IDM_BLUE, IDM_MODERN, nColor, 0);
 	}
 
 	CheckMenuItem(GetFrameMenu(), IDM_USE_THEMES,    m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
@@ -270,6 +284,9 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_EXIT:
 		// End the application
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		return TRUE;
+	case IDM_MODERN:
+		ChooseColor(IDM_MODERN);
 		return TRUE;
 	case IDM_BLUE:
 		ChooseColor(IDM_BLUE);
@@ -604,16 +621,16 @@ void CMainFrame::SetupToolbar()
 
 		// Add the Arrows toolbar
 		AddToolbarBand(Arrows, 0, IDC_ARROWS);
-		Arrows.AddToolbarButton(IDM_ARROW_LEFT);
-		Arrows.AddToolbarButton(IDM_ARROW_RIGHT);
+		Arrows.AddButton(IDM_ARROW_LEFT);
+		Arrows.AddButton(IDM_ARROW_RIGHT);
 		Arrows.SetImages(RGB(255,0,255), IDB_ARROWS, 0, 0);
 
 		// Add the Cards toolbar
 		AddToolbarBand(Cards, 0, IDC_CARDS);
-		Cards.AddToolbarButton(IDM_CARD_CLUB);
-		Cards.AddToolbarButton(IDM_CARD_DIAMOND);
-		Cards.AddToolbarButton(IDM_CARD_HEART);
-		Cards.AddToolbarButton(IDM_CARD_SPADE);
+		Cards.AddButton(IDM_CARD_CLUB);
+		Cards.AddButton(IDM_CARD_DIAMOND);
+		Cards.AddButton(IDM_CARD_HEART);
+		Cards.AddButton(IDM_CARD_SPADE);
 		Cards.SetImages(RGB(255,0,255), IDB_CARDS, 0, 0);
 	}
 

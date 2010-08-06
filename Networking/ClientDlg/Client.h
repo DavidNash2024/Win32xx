@@ -14,6 +14,7 @@
 
 class CClientSocket : public CSocket
 {
+public:
 	virtual void OnDisconnect();
 	virtual void OnConnect();
 	virtual void OnReceive();

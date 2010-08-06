@@ -2026,14 +2026,9 @@ namespace Win32xx
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
 		GetView()->Create(m_hWnd);
 
-		// Disable XP themes for toolbar and menubar
-		if (m_bUseThemes)
-		{
-			GetMenubar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Menubar
-			GetToolbar().SetWindowTheme(L" ", L" ");	// Disable XP themes for the Toolbar
-		}
-		else if (!IsAeroThemed())
-			GetMenubar().SetWindowTheme(L" ", L" ");
+		// Disable XP themes for the menubar
+		if ( m_bUseThemes || !IsAeroThemed() )
+			GetMenubar().SetWindowTheme(L" ", L" ");	
 		
 		// Reposition the child windows
 		RecalcLayout();
@@ -2909,8 +2904,7 @@ namespace Win32xx
 					GetToolbar().SetToolbarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
 					
-				//	if (IsRebarUsed())
-						GetRebar().SetRebarTheme(tr);
+					GetRebar().SetRebarTheme(tr);
 				}
 				break; 
 
@@ -2923,8 +2917,7 @@ namespace Win32xx
 					GetToolbar().SetToolbarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
 					
-				//	if (IsRebarUsed())
-						GetRebar().SetRebarTheme(tr);
+					GetRebar().SetRebarTheme(tr);
 				}
 				break;
 			case Blue:
@@ -2937,8 +2930,7 @@ namespace Win32xx
 					GetToolbar().SetToolbarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
 
-				//	if (IsRebarUsed())
-						GetRebar().SetRebarTheme(tr);
+					GetRebar().SetRebarTheme(tr);
 				}
 				break;
 
@@ -2952,8 +2944,7 @@ namespace Win32xx
 					GetToolbar().SetToolbarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
 
-				//	if (IsRebarUsed())
-						GetRebar().SetRebarTheme(tr);
+					GetRebar().SetRebarTheme(tr);
 				}
 				break;
 
@@ -2967,8 +2958,7 @@ namespace Win32xx
 					GetToolbar().SetToolbarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and Menubar
 					
-				//	if (IsRebarUsed())
-						GetRebar().SetRebarTheme(tr);
+					GetRebar().SetRebarTheme(tr);
 				}
 				break;
 			}

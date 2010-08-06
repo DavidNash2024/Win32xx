@@ -49,6 +49,7 @@ BEGIN
     END
     POPUP "&Theme"
     BEGIN
+        MENUITEM "Modern",                      IDM_MODERN
         MENUITEM "Blue",                        IDM_BLUE
         MENUITEM "Grey",                        IDM_GREY
         MENUITEM "Olive",                       IDM_OLIVE
@@ -242,6 +243,7 @@ BEGIN
     IDM_PINK                "Pink theme"
     IDM_GOLD                "Gold theme"
     IDM_BLACK               "Black theme"
+	IDM_MODERN              "Vista & Windows 7 theme"
     IDM_USE_THEMES          "Use Themes"
     IDM_BAND_COLORS         "Show the bands in a seperate color"
     IDM_FLAT_STYLE          "Show Bands with Flat Style"

@@ -24,7 +24,8 @@ protected:
 	virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
-private:
+//private:
+public:
 	void Append(int nID, LPCTSTR buf);
 	void LoadCommonControlsEx();
 	void OnStartClient();
