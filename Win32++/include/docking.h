@@ -2655,7 +2655,8 @@ namespace Win32xx
 					{
 						// Reset container parent before destroying the dock window
 						CDocker* pDock = GetDockFromView((*iter).pContainer);
-						pContainer->SetParent(pDock->GetDockClient().GetHwnd());
+						if (pContainer->IsWindow())
+							pContainer->SetParent(pDock->GetDockClient().GetHwnd());
 
 						pDock->Destroy();
 					}
@@ -2666,7 +2667,8 @@ namespace Win32xx
 		GetDockBar().Destroy();
 
 		// Post a destroy docker message
-		GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0L);
+		if ( GetDockAncestor()->IsWindow() )
+			GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0L);
 	}
 
 	inline void CDocker::OnDockDestroyed(WPARAM wParam, LPARAM lParam)
@@ -2800,13 +2802,16 @@ namespace Win32xx
 			}
 			break;
 		case NM_SETFOCUS:
-			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
+			if (GetDockAncestor()->IsWindow())
+				GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 			break;
 		case UWM_FRAMEGOTFOCUS:
-			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
+			if (GetDockAncestor()->IsWindow())
+				GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 			break;
 		case UWM_FRAMELOSTFOCUS:
-			GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
+			if (GetDockAncestor()->IsWindow())
+				GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 			break;
 		}
 		return 0L;

@@ -2027,8 +2027,8 @@ namespace Win32xx
 		GetView()->Create(m_hWnd);
 
 		// Disable XP themes for the menubar
-		if ( m_bUseThemes || !IsAeroThemed() )
-			GetMenubar().SetWindowTheme(L" ", L" ");	
+		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or < Vista
+			GetMenubar().SetWindowTheme(L" ", L" ");
 		
 		// Reposition the child windows
 		RecalcLayout();
@@ -2182,7 +2182,8 @@ namespace Win32xx
 			nhdr.hwndFrom = m_hOldFocus;
 			nhdr.idFrom = idCtrl;
 			nhdr.code = UWM_FRAMELOSTFOCUS;
-			GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+			if (GetView()->IsWindow())
+				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		}
 		else
 		{					
@@ -2195,7 +2196,8 @@ namespace Win32xx
 			nhdr.hwndFrom = m_hOldFocus;
 			nhdr.idFrom = idCtrl;
 			nhdr.code = UWM_FRAMEGOTFOCUS;
-			GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+			if (GetView()->IsWindow())
+				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		} 
 	}
 
