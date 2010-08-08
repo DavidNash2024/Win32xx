@@ -385,6 +385,8 @@ namespace Win32xx
 
 			// Add the buttons
 			GetMenubar().AddButtons(iNumButtons, tbb);
+            
+            delete []tbb;
 		}
 	}
 

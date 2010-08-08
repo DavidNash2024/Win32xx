@@ -191,7 +191,7 @@ namespace Win32xx
 namespace Win32xx
 {
 
-	inline CSocket::CSocket() : m_Socket(0), m_hEventThread(0)
+	inline CSocket::CSocket() : m_Socket(INVALID_SOCKET), m_hEventThread(0)
 	{
 		try
 		{
@@ -405,7 +405,7 @@ namespace Win32xx
 		::shutdown(m_Socket, SD_BOTH);
 		StopEvents();
 		::closesocket(m_Socket);
-		m_Socket = 0;
+		m_Socket = INVALID_SOCKET;
 	}
 
 	inline UINT WINAPI CSocket::EventThread(LPVOID thread_data)

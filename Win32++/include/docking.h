@@ -1744,32 +1744,15 @@ namespace Win32xx
 		std::vector <CDocker*>::iterator iter;
 		if (GetDockAncestor() == this)
 		{
-			// Destroy top level dockers with children first
-			iter = GetAllDockers().begin();
-			while(iter < GetAllDockers().end())
+			// Destroy all dock descendants of this dock ancestor
+			while (GetAllDockers().size() > 0)
 			{
-				// top level dockers are always undocked!
-				if ((*iter)->IsUndocked() && ((*iter)->GetDockChildren().size() > 0))
-				{
-					(*iter)->Destroy();
-					delete (*iter);
-					// A bunch of dockers may have been removed
-					iter = GetAllDockers().begin();
-				}
-				else ++iter;
-			}
-
-			// Destroy all remaining related dockers
-			// Contents of m_vAllDockers changes in this loop, so use a local copy
-			std::vector<CDocker*> vAllDockers = GetAllDockers();
-			for (iter = vAllDockers.begin(); iter < vAllDockers.end(); ++iter)
-			{
+				iter = GetAllDockers().begin();
 				(*iter)->Destroy();
-				delete(*iter);
+				delete(*iter); // calls the destructor for each dock descendant
 			}
 		}
-
-		if (GetDockAncestor() != this)
+		else
 		{
 			for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
 			{
@@ -3595,8 +3578,8 @@ namespace Win32xx
 			CDockContainer* pActiveContainer = m_pContainerParent->m_vContainerInfo[m_iCurrentPage].pContainer;
 			return pActiveContainer->GetViewPage().GetView();
 		}
-		else
-			return NULL;
+		
+		return NULL;
 	}
 
 	inline CDockContainer* CDockContainer::GetContainerFromView(CWnd* pView) const
