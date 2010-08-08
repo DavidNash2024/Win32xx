@@ -21,6 +21,21 @@ CViewClasses::~CViewClasses()
 	ImageList_Destroy(m_himlNormal);
 }
 
+HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
+{
+	TVITEM tvi = {0};
+	tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+	tvi.iImage = iImage;
+	tvi.iSelectedImage = iImage;
+	tvi.pszText = (LPTSTR)szText;
+
+	TVINSERTSTRUCT tvis = {0};
+	tvis.hParent = hParent;
+	tvis.item = tvi;
+
+	return InsertItem(tvis);
+}
+
 void CViewClasses::OnInitialUpdate()
 {
 	//set the image lists
@@ -58,19 +73,10 @@ void CViewClasses::OnInitialUpdate()
 	Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
+void CViewClasses::PreCreate(CREATESTRUCT &cs)
 {
-	TVITEM tvi = {0};
-	tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-	tvi.iImage = iImage;
-	tvi.iSelectedImage = iImage;
-	tvi.pszText = (LPTSTR)szText;
-
-	TVINSERTSTRUCT tvis = {0};
-	tvis.hParent = hParent;
-	tvis.item = tvi;
-
-	return InsertItem(tvis);
+	cs.style = TVS_NOTOOLTIPS|WS_CHILD;
+	cs.lpszClass = WC_TREEVIEW;
 }
 
 LRESULT CViewClasses::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

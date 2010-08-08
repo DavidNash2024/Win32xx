@@ -15,8 +15,11 @@ class CViewClasses : public CTreeView
 public:
 	CViewClasses();
 	virtual ~CViewClasses();
-	virtual void OnInitialUpdate();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+
+protected:
+	virtual void OnInitialUpdate();
+	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

@@ -38,8 +38,11 @@ class CViewTree : public CTreeView
 public:
 	CViewTree();
 	virtual ~CViewTree();
-	virtual void OnInitialUpdate();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+
+protected:
+	virtual void OnInitialUpdate();
+	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
