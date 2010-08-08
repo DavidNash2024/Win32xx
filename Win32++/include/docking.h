@@ -1880,12 +1880,14 @@ namespace Win32xx
 		std::vector<HWND> vWindows;
 		
 		// Fill vWindows vector with dockers
+		vWindows.push_back(GetHwnd());
 		HWND hWnd = GetWindow(GW_HWNDFIRST);
 		while(hWnd)
 		{
 			if (IsRelated(hWnd) || hWnd == hAncestor)
 			{
-				vWindows.push_back(hWnd);				
+				if (hWnd != GetHwnd())
+					vWindows.push_back(hWnd);				
 			}
 
 			hWnd = ::GetWindow(hWnd, GW_HWNDNEXT);
