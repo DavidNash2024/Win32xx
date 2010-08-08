@@ -376,14 +376,17 @@ namespace Win32xx
 	// This class is used for thread synchronisation
 	class CCriticalSection
 	{
-		public:
+	public:
 		CCriticalSection()	{ ::InitializeCriticalSection(&m_cs); }
 		~CCriticalSection()	{ ::DeleteCriticalSection(&m_cs); }
 
 		void Lock() 	{ ::EnterCriticalSection(&m_cs); }
 		void Release()	{ ::LeaveCriticalSection(&m_cs); }
 
-		private:
+	private:
+		CCriticalSection ( const CCriticalSection& );
+		void operator = ( const CCriticalSection& );
+		
 		CRITICAL_SECTION m_cs;
 	};
 

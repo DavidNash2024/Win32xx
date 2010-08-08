@@ -445,7 +445,7 @@ namespace Win32xx
 		for (;;) // infinite loop
 		{
 			// Wait 100 ms for a network event
-			DWORD dwResult = ::WSAWaitForMultipleEvents(1, AllEvents, FALSE, THREAD_TIMEOUT, FALSE);
+			DWORD dwResult = ::WSAWaitForMultipleEvents(2, AllEvents, FALSE, THREAD_TIMEOUT, FALSE);
 
 			// Check event for stop thread
 			if(::WaitForSingleObject(pSocket->m_StopRequest, 0) == WAIT_OBJECT_0)
@@ -643,6 +643,7 @@ namespace Win32xx
 
 		lstrcpyn(buf, CharToTChar(szBuf), len);
 
+		delete []szBuf;
 		return Result;
 	}
 
@@ -657,6 +658,7 @@ namespace Win32xx
 
 		lstrcpyn(buf, CharToTChar(szBuf), len);
 
+		delete []szBuf;
 		return Result;
 	}
 
