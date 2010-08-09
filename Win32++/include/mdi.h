@@ -203,8 +203,7 @@ namespace Win32xx
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
 	{
-		if (NULL == pMDIChild)
-			throw CWinException(_T("Cannot add Null MDI Child"));
+		assert(NULL != pMDIChild); // Cannot add Null MDI Child
 
 		m_vMDIChild.push_back(pMDIChild);
 		pMDIChild->Create(GetView()->GetHwnd());
@@ -393,14 +392,12 @@ namespace Win32xx
 
 	inline void CMDIFrame::SetActiveMDIChild(CMDIChild* pChild)
 	{
-		if (!pChild->IsWindow())
-			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Invalid MDI child"));
+		assert ( pChild->IsWindow() );
 
 		m_wndMDIClient.SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0L);
 
 		// Verify
-		if (m_hActiveMDIChild != pChild->GetHwnd())
-			throw CWinException(_T("CMDIFrame::SetActiveMDIChild  ... Failed"));
+		assert ( m_hActiveMDIChild == pChild->GetHwnd() );
 	}
 
 	inline void CMDIFrame::UpdateCheckMarks()
@@ -473,8 +470,7 @@ namespace Win32xx
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
-		if (!CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
-			throw CWinException(TEXT("CMDIClient::Create ... CreateEx failed"));
+		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
 
 		return m_hWnd;
 	}
@@ -613,11 +609,9 @@ namespace Win32xx
 	inline void CMDIChild::OnCreate()
 	{
 		// Create the view window
-		if (NULL == m_pwndView)
-			throw CWinException(_T("CMDIChild::OnCreate ... View window is not assigned!\nUse SetView to set the View Window"));
+		assert (NULL != m_pwndView);  // View window is not assigned
 
-		m_pwndView->Create(m_hWnd);
-		
+		m_pwndView->Create(m_hWnd);	
 		RecalcLayout();
 	}
 

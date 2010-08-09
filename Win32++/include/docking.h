@@ -1740,6 +1740,7 @@ namespace Win32xx
 		GetDockBar().Destroy();
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
+        Destroy();   // Destroy this window (and its child windows) early
 
 		std::vector <CDocker*>::iterator iter;
 		if (GetDockAncestor() == this)
@@ -1748,7 +1749,6 @@ namespace Win32xx
 			while (GetAllDockers().size() > 0)
 			{
 				iter = GetAllDockers().begin();
-				(*iter)->Destroy();
 				delete(*iter); // calls the destructor for each dock descendant
 			}
 		}
@@ -2584,9 +2584,8 @@ namespace Win32xx
 		// Create the various child windows
 		GetDockClient().SetDock(this);
 		GetDockClient().Create(m_hWnd);
-		if (NULL == GetView())
-			throw CWinException(_T("CDocker's view window is not assigned"));
-		
+			
+		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
 		GetView()->Create(GetDockClient().GetHwnd());
 
 		// Create the slider bar belonging to this docker
@@ -3655,8 +3654,7 @@ namespace Win32xx
 
 	inline void CDockContainer::OnCreate()
 	{
-		if (NULL == GetView())
-			throw CWinException(_T("CDockContainer's view window not assigned"));
+		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
 
 		ContainerInfo ci = {0};
 		ci.pContainer = this;
