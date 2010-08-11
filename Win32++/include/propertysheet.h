@@ -485,7 +485,7 @@ namespace Win32xx
 				{
 					TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 					if (NULL == pTLSData)
-						throw CWinException(_T("CWnd::StaticCBTProc ... Unable to get TLS"));
+						throw CWinException(_T("Unable to get TLS"));
 
 					// Store the CPropertyPage pointer in Thread Local Storage
 					pTLSData->pCWnd = (CWnd*)ppsp->lParam;
@@ -497,13 +497,9 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			e.MessageBox();
-		}
+			e.Output()TRACE( e.What() );
 
-		catch (...)
-		{
-			DebugErrMsg(_T("CPropertyPage::StaticPropSheetPageProc"));
-			throw;	// Rethrow unknown exception
+			return FALSE;
 		}
 
 		return TRUE;
@@ -665,7 +661,6 @@ namespace Win32xx
 
 		//called after the dialog is created
 		case PSCB_INITIALIZED:
-			try
 			{
 				// Retrieve pointer to CWnd object from Thread Local Storage
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
@@ -679,18 +674,6 @@ namespace Win32xx
 				w->Attach(hwnd);
 				w->OnCreate();
 			}
-
-			catch (const CWinException &e)
-			{
-				e.MessageBox();
-			}
-
-			catch (...)
-			{
-				DebugErrMsg(_T("Exception in CPropertySheet::Callback"));
-				throw;	// Rethrow unknown exception
-			}
-
 			break;
 		}
 	}
@@ -723,34 +706,19 @@ namespace Win32xx
 
 		INT_PTR ipResult = 0;
 
-		try
-		{
-			// Only one window per CWnd instance allowed
-			if (::IsWindow(m_hWnd))
-				throw CWinException(_T("CreatePropertySheet ... Window already exists"));
+		// Only one window per CWnd instance allowed
+		if (::IsWindow(m_hWnd))
+			throw CWinException(_T("CreatePropertySheet ... Window already exists"));
 
-			// Ensure this thread has the TLS index set
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-			// Store the 'this' pointer in Thread Local Storage
-			pTLSData->pCWnd = this;
+		// Store the 'this' pointer in Thread Local Storage
+		pTLSData->pCWnd = this;
 
-			// Create the property sheet
-			ipResult = PropertySheet(ppsph);
-
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-		}
-
-		catch (...)
-		{
-			DebugErrMsg(_T("Exception in CPropertySheet::CreatePropertySheet"));
-			throw;	// Rethrow unknown exception
-		}
-
+		// Create the property sheet
+		ipResult = PropertySheet(ppsph);
+		
 		return ipResult;
 	}
 

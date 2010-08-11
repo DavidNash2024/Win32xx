@@ -1894,7 +1894,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			e.MessageBox();
+			e.Output();
 			if (hComCtl)
 				::FreeLibrary(hComCtl);
 		}
@@ -1938,12 +1938,7 @@ namespace Win32xx
 
 		catch(const CWinException& e)
 		{
-			e.MessageBox();
-		}
-
-		catch(std::bad_alloc)
-		{
-			::MessageBox(NULL, _T("Memory allocation error in LoadRegistryMRUSettings"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+			e.Output();
 		}
 	}
 

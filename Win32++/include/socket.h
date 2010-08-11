@@ -193,30 +193,21 @@ namespace Win32xx
 
 	inline CSocket::CSocket() : m_Socket(INVALID_SOCKET), m_hEventThread(0)
 	{
-		try
-		{
-			// Initialise the Windows Socket services
-			WSADATA wsaData;
+		// Initialise the Windows Socket services
+		WSADATA wsaData;
 
-			if (0 != ::WSAStartup(MAKEWORD(2,2), &wsaData))
-				throw CWinException(_T("WSAStartup failed"));
+		if (0 != ::WSAStartup(MAKEWORD(2,2), &wsaData))
+			throw CWinException(_T("WSAStartup failed"));
 
-			m_hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
-			if (0 == m_hWS2_32)
-				throw CWinException(_T("Failed to load WS2_2.dll"));
+		m_hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
+		if (0 == m_hWS2_32)
+			throw CWinException(_T("Failed to load WS2_2.dll"));
 
-			m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "getaddrinfo");
-			m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "freeaddrinfo");
+		m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "getaddrinfo");
+		m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "freeaddrinfo");
 
-			m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
-			m_Stopped = ::CreateEvent(0, TRUE, FALSE, 0);
-		}
-
-		catch (const CWinException &e)
-		{
-			e.MessageBox();
-			throw;
-		}
+		m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
+		m_Stopped = ::CreateEvent(0, TRUE, FALSE, 0);
 	}
 
 	inline CSocket::~CSocket()
