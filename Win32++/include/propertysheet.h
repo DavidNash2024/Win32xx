@@ -497,8 +497,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			e.Output()TRACE( e.What() );
-
+			e.Output();
 			return FALSE;
 		}
 

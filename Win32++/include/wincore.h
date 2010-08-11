@@ -393,16 +393,16 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Declaration of the CWinException class
 	//
-	class CWinException
+	class CWinException : public std::exception
 	{
 	public:
 		CWinException (LPCTSTR msg);
 		virtual ~CWinException() {}
 		virtual void Output() const;
 		
-		LPCTSTR GetErrorString() const {return m_ErrorString;}
-		LPCTSTR What() const {return m_msg;}
-
+		virtual LPCTSTR GetErrorString() const { return m_ErrorString; }
+		virtual LPCTSTR What() const { return m_msg; }
+		virtual const char * what () const throw () { return "CWinException thrown"; }
 	private:
 		DWORD  m_err;
 		LPCTSTR m_msg;
