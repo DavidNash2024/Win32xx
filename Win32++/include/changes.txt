@@ -76,10 +76,12 @@ Added CToolbar::SetIndent
 Added CToolbar::SetMaxTextRows
 Added CToolbar::SetPadding
 Added CToolbar::SetToolTips
+Added CWinException::Output
+Added CWinException::what
 Added CWnd::SetWindowTheme
 Added ::IsAeroThemed
 Modified CSocket::Bind
-Modified CSoeckt::Connect
+Modified CSocket::Connect
 Modified CSocket::Receive
 Modified CSocket::ReceiveFrom
 Modified CSocket::Send
@@ -91,6 +93,7 @@ Renamed CWnd::TCharToChar to ::TCharToChar
 Renamed CWnd::TCharToWide to ::TCharToWide
 Renamed CWnd::WideToChar  to ::WideToChar
 Renamed CWnd::WideToTChar to ::WideToTChar
+Removed CWinException::MessageBox
 
 Added GDIPlus sample
 Updated Network samples

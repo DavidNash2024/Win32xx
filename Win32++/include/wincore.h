@@ -89,6 +89,7 @@
 #endif
 
 #ifdef __BORLANDC__
+  #pragma option -w-8026            // Functioms with exception specifiations are not expanded inline
   #pragma option -w-8027		   // function not expanded inline
   #define STRICT 1
 #endif
@@ -385,7 +386,7 @@ namespace Win32xx
 	private:
 		CCriticalSection ( const CCriticalSection& );
 		void operator = ( const CCriticalSection& );
-		
+
 		CRITICAL_SECTION m_cs;
 	};
 
@@ -397,9 +398,9 @@ namespace Win32xx
 	{
 	public:
 		CWinException (LPCTSTR msg);
-		virtual ~CWinException() {}
+		virtual ~CWinException() throw() {}
 		virtual void Output() const;
-		
+
 		virtual LPCTSTR GetErrorString() const { return m_ErrorString; }
 		virtual LPCTSTR What() const { return m_msg; }
 		virtual const char * what () const throw () { return "CWinException thrown"; }
@@ -748,7 +749,7 @@ namespace Win32xx
 		// For Win95 and NT, cbSize needs to be 44
 		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
 			uSize = 44;
-		
+
 		return uSize;
 	}
 
@@ -863,7 +864,7 @@ namespace Win32xx
 	// Note:  The pointers returned should be be used immediately. Otherwise, copy the
 	//        array pointed to a local array or std::string. Subsequent calls to these
 	//        functions will change the text array the returned pointer points to.
-	//		 
+	//
 	//        Using TLS instead of global variables keeps these functions thread safe.
 	//
 	inline LPCWSTR CharToWide(LPCSTR pChar)
@@ -888,7 +889,7 @@ namespace Win32xx
 	inline LPCSTR WideToChar(LPCWSTR pWChar)
 	{
 		assert( GetApp() );
-		
+
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
@@ -958,9 +959,9 @@ namespace Win32xx
 
 		if (m_err != 0)
 		{
-			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;	
+			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 			::FormatMessage(dwFlags, NULL, m_err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_ErrorString, MAX_STRING_SIZE, NULL);
-		}		
+		}
 	}
 
 	inline void CWinException::Output() const
@@ -984,22 +985,32 @@ namespace Win32xx
 	// You must run only one instance of the class inherited from this.
 	inline CWinApp::CWinApp() : m_Callback(NULL)
 	{
-		assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
-
-		m_dwTlsIndex = ::TlsAlloc();
-		if (m_dwTlsIndex == TLS_OUT_OF_INDEXES)
+		try
 		{
-			// We only get here in the unlikely event that all TLS indexes are already allocated by this app
-			// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-			throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
-		}
-		SetnGetThis(this);
-		
-	    // Get store the instance handle
-		m_hInstance = GetModuleHandle(0);
+			assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
 
-		m_hResource = m_hInstance;
-		DefaultClass();
+			m_dwTlsIndex = ::TlsAlloc();
+			if (m_dwTlsIndex == TLS_OUT_OF_INDEXES)
+			{
+				// We only get here in the unlikely event that all TLS indexes are already allocated by this app
+				// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
+				throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
+			}
+			
+			SetnGetThis(this);
+
+			// Get store the instance handle
+			m_hInstance = GetModuleHandle(0);
+
+			m_hResource = m_hInstance;
+			DefaultClass();
+		}
+
+		catch (const CWinException &e)
+		{
+			e.Output();
+			throw;
+		}
 	}
 
 	inline CWinApp::~CWinApp()
@@ -1125,16 +1136,24 @@ namespace Win32xx
 
 	inline int CWinApp::Run()
 	{
-
-		// InitInstance runs the App's initialization code
-		if (InitInstance())
+		try
 		{
-			// Dispatch the window messages
-			return MessageLoop();
+			// InitInstance runs the App's initialization code
+			if (InitInstance())
+			{
+				// Dispatch the window messages
+				return MessageLoop();
+			}
+			else
+			{
+				::PostQuitMessage(-1);
+				return -1;
+			}
 		}
-		else
+
+		catch (const CWinException &e)
 		{
-			::PostQuitMessage(-1);
+			e.Output();
 			return -1;
 		}
 	}
@@ -1185,7 +1204,7 @@ namespace Win32xx
 			m_vTLSData.push_back(pTLSData);
 			m_csTlsData.Release();
 		}
-		
+
 		return pTLSData;
 	}
 
@@ -1210,7 +1229,7 @@ namespace Win32xx
 
 	inline void CWnd::AddToMap()
 	// Store the window handle and CWnd pointer in the HWND map
-	{	
+	{
 		assert( GetApp() );
 		GetApp()->m_csMapLock.Lock();
 
@@ -1232,7 +1251,7 @@ namespace Win32xx
 		// Store the CWnd pointer in the HWND map
 		AddToMap();
 		OnInitialUpdate();
-		
+
 		return TRUE;
 	}
 
@@ -1240,7 +1259,7 @@ namespace Win32xx
 	// Use to convert a dialog item to a CWnd object
 	{
 		assert(pParent->IsWindow());
-		
+
 		HWND hWnd = ::GetDlgItem(pParent->GetHwnd(), nID);
 		return Attach(hWnd);
 	}
@@ -1376,62 +1395,70 @@ namespace Win32xx
 
 	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
 	{
-		
+
 		assert( GetApp() );		// Test if Win32++ has been started
-		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed	
+		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
-		// Prepare the CWnd if it has been reused
-		Destroy();
-
-		// Ensure a window class is registered
-		TCHAR ClassName[MAX_STRING_SIZE +1] = _T("");
-		if (0 == lstrlen(lpszClassName) )
-			lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
-		else
-			// Create our own local copy of szClassName.
-			lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
-
-		WNDCLASS wc = {0};
-		wc.lpszClassName = ClassName;
-		wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
-		wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
-
-		RegisterClass(wc);	// Register the window class (if not already registered)
-
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		// Store the CWnd pointer in thread local storage
-		pTLSData->pCWnd = this;
-
-		// Create window
-		m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-								hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
-
-		// Now handle window creation failure
-		if (!m_hWnd)
-			throw CWinException(_T("Failed to Create Window"));
-
-		// Automatically subclass predefined window class types
-		::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
-		if (wc.lpfnWndProc != GetApp()->m_Callback)
+		try
 		{
-			Subclass(m_hWnd);
+			// Prepare the CWnd if it has been reused
+			Destroy();
 
-			// Send a message to force the HWND to be added to the map
-			::SendMessage(m_hWnd, WM_NULL, 0L, 0L);
+			// Ensure a window class is registered
+			TCHAR ClassName[MAX_STRING_SIZE +1] = _T("");
+			if (0 == lstrlen(lpszClassName) )
+				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
+			else
+				// Create our own local copy of szClassName.
+				lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
 
-			OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
-		}
+			WNDCLASS wc = {0};
+			wc.lpszClassName = ClassName;
+			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
-		// Clear the CWnd pointer from TLS
-		pTLSData->pCWnd = NULL;
+			RegisterClass(wc);	// Register the window class (if not already registered)
 
-		// Window creation is complete. Now call OnInitialUpdate
-		OnInitialUpdate();
-	
-		return m_hWnd;
-	} 
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+
+			// Store the CWnd pointer in thread local storage
+			pTLSData->pCWnd = this;
+
+			// Create window
+			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
+									hParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+
+			// Now handle window creation failure
+			if (!m_hWnd)
+				throw CWinException(_T("Failed to Create Window"));
+
+			// Automatically subclass predefined window class types
+			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
+			if (wc.lpfnWndProc != GetApp()->m_Callback)
+			{
+				Subclass(m_hWnd);
+
+				// Send a message to force the HWND to be added to the map
+				::SendMessage(m_hWnd, WM_NULL, 0L, 0L);
+
+				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
+			}
+
+			// Clear the CWnd pointer from TLS
+			pTLSData->pCWnd = NULL;
+
+			// Window creation is complete. Now call OnInitialUpdate
+			OnInitialUpdate();
+			}
+
+			catch (const CWinException &e)
+			{
+				e.Output();
+			}
+
+			return m_hWnd;
+	}
 
 	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
@@ -1473,7 +1500,7 @@ namespace Win32xx
 	inline CWnd* CWnd::FromHandle(HWND hWnd)
 	// Returns the CWnd object associated with the window handle
 	{
-		assert( GetApp() );		
+		assert( GetApp() );
 		return GetApp()->GetCWndFromMap(hWnd);
 	}
 
@@ -1501,9 +1528,9 @@ namespace Win32xx
 		delete[] m_pTChar;
 		m_pTChar = NULL;
 		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
-		if (0 == m_pTChar) 
+		if (0 == m_pTChar)
 			throw std::bad_alloc();
-		
+
 		memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
 		if (0 != ::GetClassName(m_hWnd, m_pTChar, MAX_STRING_SIZE))
 			return m_pTChar;
@@ -1528,7 +1555,7 @@ namespace Win32xx
 			if (0 != ::GetDlgItemText(m_hWnd, nIDDlgItem, m_pTChar, nLength+1))
 				return m_pTChar;
 		}
-				
+
 		return _T("");
 	}
 
@@ -1543,14 +1570,14 @@ namespace Win32xx
 		if (nLength > 0)
 		{
 			m_pTChar = new TCHAR[nLength+1];
-			if (NULL == m_pTChar) 
+			if (NULL == m_pTChar)
 				throw std::bad_alloc();
-			
+
 			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
 			if (0 != ::GetWindowText(m_hWnd, m_pTChar, nLength+1))
 				return m_pTChar;
 		}
-		
+
 		return _T("");
 	}
 
@@ -1837,7 +1864,7 @@ namespace Win32xx
 	// A private function used by the PreRegisterClass function to register a
 	//  window class prior to window creation
 	{
-		assert( GetApp() );	
+		assert( GetApp() );
 		assert( (0 != lstrlen(wc.lpszClassName) && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
 
 		// Check to see if this classname is already registered
@@ -1967,6 +1994,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
+			// Should never get here. Failed to forward a message on to a window procedure.
 			e.Output();
 		}
 
@@ -1978,7 +2006,7 @@ namespace Win32xx
 	// A private function used by CreateEx, Attach and AttachDlgItem
 	{
 		assert(::IsWindow(hWnd));
-		assert(0 == m_PrevWindowProc);	
+		assert(0 == m_PrevWindowProc);
 
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 		m_hWnd = hWnd;

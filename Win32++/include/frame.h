@@ -1922,7 +1922,8 @@ namespace Win32xx
 
 					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
 					TCHAR* szPathName = new TCHAR[dwBufferSize];
-					if (NULL == szPathName) throw std::bad_alloc();
+					if (NULL == szPathName) 
+						throw std::bad_alloc();
 
 					// load the entry from the registry
 					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
