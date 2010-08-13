@@ -123,7 +123,7 @@ void CClientDialog::LoadCommonControlsEx()
 	
 	catch (const CWinException &e)
 	{
-		e.MessageBox();
+		e.Output();
 		if (hComCtl)
 			::FreeLibrary(hComCtl);
 	}

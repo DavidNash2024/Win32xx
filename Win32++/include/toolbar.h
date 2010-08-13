@@ -390,6 +390,7 @@ namespace Win32xx
 				throw std::bad_alloc();
 
 			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
+
 			if (0 != SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)m_pTChar))
 				return m_pTChar;
 		}

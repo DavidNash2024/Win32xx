@@ -44,8 +44,10 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(m_hbmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		byte* lpvBits = new byte[pbmi->bmiHeader.biSizeImage];
-		if (NULL == lpvBits) throw std::bad_alloc();
+		std::vector<byte> vBits;
+		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
+		byte* lpvBits = &vBits.front();
+
 		MemDC.GetDIBits(m_hbmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);		 
 
 		LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
@@ -62,8 +64,6 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 			bResult = WriteFile(hFile, (LPCVOID) lpvBits, (int) pbmih->biSizeImage, (LPDWORD) &dwBytesWritten, NULL);
 
 		CloseHandle(hFile);
-		delete[] lpvBits;
-
 		return bResult;
 	}
 

@@ -307,7 +307,8 @@ namespace Win32xx
 
 		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
-		CDialog* m_pAboutDialog;			// Pointer to the about dialog object
+	//	CDialog* m_pAboutDialog;			// Pointer to the about dialog object
+		CDialog m_AboutDialog;				// Help about dialog
 		CMenubar m_Menubar;					// CMenubar object
 		CRebar m_Rebar;						// CRebar object
 		CStatusbar m_Statusbar;				// CStatusbar object
@@ -1356,7 +1357,7 @@ namespace Win32xx
 	inline CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseRebar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolbar(TRUE),
 						m_bShowStatusbar(TRUE), m_bShowToolbar(TRUE),
-						m_himlMenu(NULL), m_himlMenuDis(NULL), m_pAboutDialog(NULL), m_hMenu(NULL), 
+						m_himlMenu(NULL), m_himlMenuDis(NULL), m_AboutDialog(IDW_ABOUT)/*m_pAboutDialog(NULL)*/, m_hMenu(NULL), 
 						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -1921,18 +1922,15 @@ namespace Win32xx
 					wsprintf(szSubKey, _T("File %d\0"), i+1);
 
 					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
-					TCHAR* szPathName = new TCHAR[dwBufferSize];
-					if (NULL == szPathName) 
-						throw std::bad_alloc();
+					std::vector<TCHAR> PathName;
+					PathName.assign( dwBufferSize, _T('\0') );
 
 					// load the entry from the registry
-					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)szPathName, &dwBufferSize))
+					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)&PathName.front(), &dwBufferSize))
 					{
-						if (lstrlen(szPathName))
-							m_vMRUEntries.push_back(szPathName);
+						if ( lstrlen( &PathName.front() ) )
+							m_vMRUEntries.push_back( &PathName.front() );
 					}
-
-					delete []szPathName;
 				}
 			}
 		}
@@ -2212,24 +2210,17 @@ namespace Win32xx
 
 	inline void CFrame::OnHelp()
 	{
-		if (NULL == m_pAboutDialog)
+		// Ensure only one dialog displayed even for multiple hits of the F1 button
+		if (!m_AboutDialog.IsWindow())
 		{
 			// Store the window handle that currently has keyboard focus
 			HWND hPrevFocus = ::GetFocus();
 			if (hPrevFocus == GetMenubar())
 				hPrevFocus = m_hWnd;
 
-			m_pAboutDialog = new CDialog(IDW_ABOUT, m_hWnd);
-			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
-			//  an exception when new fails. We make sure an exception gets thrown!
-			if (NULL == m_pAboutDialog)
-				throw std::bad_alloc();
+			m_AboutDialog.SetDlgParent(m_hWnd);
+			m_AboutDialog.DoModal();
 
-			m_pAboutDialog->DoModal();
-
-			// Clean up
-			delete m_pAboutDialog;
-			m_pAboutDialog = NULL;
 			::SetFocus(hPrevFocus);
 		}
 	}

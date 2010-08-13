@@ -242,8 +242,8 @@ namespace Win32xx
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenubar and Modeless Dialogs
-		CHAR*  pChar;     // Used in string conversions
-		WCHAR* pWChar;	// Used in string conversions
+		std::vector<char>  vChar;	// A vector used as a char array for text conversions
+		std::vector<WCHAR> vWChar;	// A vector used as a WCHAR array for text conversions
 	};
 
 	////////////////////////////////////////
@@ -873,17 +873,17 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		delete[] pTLSData->pWChar;
-		pTLSData->pWChar = 0;
+		
+		
+		// Resize the vector and assign null WCHAR to each element
 		int length = (int)strlen(pChar)+1;
-		pTLSData->pWChar = new WCHAR[length];
-		if (NULL == pTLSData->pWChar)
-			throw std::bad_alloc();
+		pTLSData->vWChar.assign(length, L'\0');
 
-		memset(pTLSData->pWChar, 0, length * sizeof(WCHAR));
-		MultiByteToWideChar(CP_ACP, 0, pChar, -1, pTLSData->pWChar, length);
-		return pTLSData->pWChar;
+		// Fill our vector with the converted WCHAR array
+		MultiByteToWideChar(CP_ACP, 0, pChar, -1, &pTLSData->vWChar.front(), length);
+		
+		// return a pointer to the first element in the vector
+		return &pTLSData->vWChar.front();
 	}
 
 	inline LPCSTR WideToChar(LPCWSTR pWChar)
@@ -892,18 +892,17 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		delete[] pTLSData->pChar;
-		pTLSData->pChar = NULL;
+		
+		// Resize the vector and assign null char to each element
 		int length = (int)wcslen(pWChar)+1;
-		pTLSData->pChar = new CHAR[length];
-		if (NULL == pTLSData->pChar)
-			throw std::bad_alloc();
-
-		memset(pTLSData->pChar, 0, length);
-		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, pTLSData->pChar, length, NULL,NULL);
-		return pTLSData->pChar;
-	}
+		pTLSData->vChar.assign(length, '\0');
+		
+		// Fill our vector with the converted char array
+		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, &pTLSData->vChar.front(), length, NULL,NULL);
+		
+		// return a pointer to the first element in the vector
+		return &pTLSData->vChar.front();
+	} 
 
 	inline LPCTSTR CharToTChar(LPCSTR pChar)
 	{
@@ -1035,8 +1034,6 @@ namespace Win32xx
 		std::vector<TLSData*>::iterator iter;
 		for(iter = m_vTLSData.begin(); iter != m_vTLSData.end(); ++iter)
 		{
-			delete (*iter)->pChar;
-			delete (*iter)->pWChar;
 			delete *iter;
 		}
 
@@ -1224,7 +1221,7 @@ namespace Win32xx
 	{
 		// Destroy the window for this object
 		Destroy();
-		delete[] m_pTChar;
+	//	delete[] m_pTChar;
 	}
 
 	inline void CWnd::AddToMap()
@@ -1525,13 +1522,14 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		delete[] m_pTChar;
-		m_pTChar = NULL;
-		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
-		if (0 == m_pTChar)
-			throw std::bad_alloc();
+	//	delete[] m_pTChar;
+	//	m_pTChar = NULL;
+	//	m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
+	//	if (0 == m_pTChar)
+	//		throw std::bad_alloc();
 
-		memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
+	//	memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
+
 		if (0 != ::GetClassName(m_hWnd, m_pTChar, MAX_STRING_SIZE))
 			return m_pTChar;
 

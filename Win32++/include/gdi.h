@@ -350,7 +350,7 @@ namespace Win32xx
 	class CBitmapInfoPtr
 	{
 	public:
-		CBitmapInfoPtr(HBITMAP hbm) : m_pbmi(0)
+		CBitmapInfoPtr(HBITMAP hbm)
 		{
 			BITMAP bmSource;
 			::GetObject(hbm, sizeof(BITMAP), &bmSource);
@@ -365,12 +365,10 @@ namespace Win32xx
 			else                     cClrBits = 32;
 
 			// Allocate memory for the BITMAPINFO structure.
-			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((__int64)1 << cClrBits);
-			m_pbmi = (LPBITMAPINFO)new byte[sizeof(BITMAPINFOHEADER) + uQuadSize];
-			if (NULL == m_pbmi) 
-				throw std::bad_alloc();
-			
-			ZeroMemory(m_pbmi, sizeof(BITMAPINFOHEADER) + uQuadSize);
+			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((__int64)1 << cClrBits);		
+			m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
+			m_pbmi = (LPBITMAPINFO) &m_bmi.front();
+
 			m_pbmi->bmiHeader.biSize		= sizeof(BITMAPINFOHEADER);
 			m_pbmi->bmiHeader.biHeight		= bmSource.bmHeight;
 			m_pbmi->bmiHeader.biWidth		= bmSource.bmWidth;
@@ -380,7 +378,7 @@ namespace Win32xx
 			if (cClrBits < 24)
 				m_pbmi->bmiHeader.biClrUsed = (1<<cClrBits);
 		}
-		~CBitmapInfoPtr() 	{ delete[] m_pbmi; }
+		LPBITMAPINFO get() const { return m_pbmi; }
 		operator LPBITMAPINFO() const { return m_pbmi; }
 		LPBITMAPINFO operator->() const { return m_pbmi; }
 
@@ -388,6 +386,7 @@ namespace Win32xx
 		CBitmapInfoPtr(const CBitmapInfoPtr&);				// Disable copy construction
 		CBitmapInfoPtr& operator = (const CBitmapInfoPtr&);	// Disable assignment operator
 		LPBITMAPINFO m_pbmi;
+		std::vector<byte> m_bmi;
 	};
 
 }
@@ -1735,9 +1734,9 @@ namespace Win32xx
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		byte* lpvBits = new byte[pbmi->bmiHeader.biSizeImage];
-		if (NULL == lpvBits) 
-			throw std::bad_alloc();
+		std::vector<byte> vBits;
+		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
+		byte* lpvBits = &vBits.front();
 		
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
 		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
@@ -1798,9 +1797,6 @@ namespace Win32xx
 
 		// Save the modified colour back into our source DDB
 		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
-
-		// Cleanup
-		delete []lpvBits;
 	}
 
 	inline void GrayScaleBitmap( HBITMAP hbmSource )
@@ -1813,9 +1809,9 @@ namespace Win32xx
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		byte* lpvBits = new byte[pbmi->bmiHeader.biSizeImage];
-		if (NULL == lpvBits) 
-			throw std::bad_alloc();
+		std::vector<byte> vBits;
+		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
+		byte* lpvBits = &vBits.front();
 
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
 		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
@@ -1848,11 +1844,7 @@ namespace Win32xx
 
 		// Save the modified colour back into our source DDB
 		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
-
-		// Cleanup
-		delete []lpvBits;
 	}
-
 
 	inline HIMAGELIST CreateDisabledImageList( HIMAGELIST himlNormal )
 	// Returns a greyed image list, created from hImageList

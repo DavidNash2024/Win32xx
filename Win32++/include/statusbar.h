@@ -136,21 +136,12 @@ namespace Win32xx
 		// Get size of Text array
 		int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));
 
-		// Get the Text
-		TCHAR* szText = new TCHAR[iChars +1 ];
+		std::vector<TCHAR> Text;
+		Text.assign( iChars +1, _T('\0') );
+		TCHAR* pText = &Text.front();
 
-		// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
-		//  an exception when new fails. We make sure an exception gets thrown!
-		if (NULL == szText)
-			throw std::bad_alloc();
-
-		szText[0] = _T('\0');
-		SendMessage(SB_GETTEXT, iPart, (LPARAM)szText);
-
-		//Store the text in the member variable
-		PaneText = szText;
-		delete []szText;			
-
+		SendMessage(SB_GETTEXT, iPart, (LPARAM)pText);
+		PaneText = pText;			
 		return PaneText;
 	}
 
@@ -192,51 +183,29 @@ namespace Win32xx
 		assert(iPart >= 0 && iPart <= 255);
 		assert(iWidth >= 0);
 
-		int* iPartWidths = NULL;
-		int* iNewPartWidths = NULL;
+		// Fill the PartWidths vector with the current width of the statusbar parts
+		int PartsCount = (int)SendMessage(SB_GETPARTS, 0L, 0L);
+		std::vector<int> PartWidths;
+		PartWidths.assign(PartsCount, 0);
+		int* pPartWidths = &PartWidths.front();
+		SendMessage(SB_GETPARTS, PartsCount, (LPARAM)pPartWidths);
 
-		try
-		{
+		// Fill the NewPartWidths vector with the new width of the statusbar parts
+		int NewPartsCount = MAX(iPart+1, PartsCount);	
+		std::vector<int> NewPartWidths;
+		NewPartWidths.assign(NewPartsCount, 0);
+		NewPartWidths = PartWidths;
+		int* pNewPartWidths = &NewPartWidths.front();
 
-			int iParts = (int)SendMessage(SB_GETPARTS, 0L, 0L);
-			iPartWidths = new int[iParts];
+		if (0 == iPart)
+			pNewPartWidths[iPart] = iWidth;
+		else
+			pNewPartWidths[iPart] = pNewPartWidths[iPart -1] + iWidth;
 
-			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
-			//  an exception when new fails. We make sure an exception gets thrown!
-			if (NULL == iPartWidths)
-				throw std::bad_alloc();
+		// Set the statusbar parts with our new parts count and part widths
+		BOOL bResult = SendMessage(SB_SETPARTS, NewPartsCount, (LPARAM)pNewPartWidths);
 
-			SendMessage(SB_GETPARTS, iParts, (LPARAM)iPartWidths);
-
-			int iNewParts = MAX(iPart+1, iParts);
-			iNewPartWidths = new int[iNewParts];
-			if (NULL == iNewPartWidths)
-				throw std::bad_alloc();
-
-			ZeroMemory(iNewPartWidths, iNewParts*sizeof(int));
-
-			for (int i = 0; i < iParts; ++i)
-				iNewPartWidths[i] = iPartWidths[i];
-
-			if (0 == iPart)
-				iNewPartWidths[iPart] = iWidth;
-			else
-				iNewPartWidths[iPart] = iNewPartWidths[iPart -1] + iWidth;
-
-			BOOL bResult = SendMessage(SB_SETPARTS, iNewParts, (LPARAM)iNewPartWidths);
-
-			delete []iNewPartWidths;
-			delete []iPartWidths;
-
-			return bResult;
-		}
-
-		catch(std::bad_alloc)
-		{
-			delete []iNewPartWidths;
-			delete []iPartWidths;
-			return FALSE;
-		}
+		return bResult;
 	}
 
 	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/)
