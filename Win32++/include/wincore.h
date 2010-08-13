@@ -563,7 +563,8 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		mutable TCHAR* m_pTChar;    // Used in string functions
+	//	mutable TCHAR* m_pTChar;    // Used in string functions
+		mutable std::vector<TCHAR> m_vTChar;	// Used in string functions
 
 	}; // class CWnd
 
@@ -1210,7 +1211,7 @@ namespace Win32xx
 	// Definitions for the CWnd class
 	//
 	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
-						m_PrevWindowProc(NULL), m_pTChar(NULL)
+						m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
@@ -1221,7 +1222,6 @@ namespace Win32xx
 	{
 		// Destroy the window for this object
 		Destroy();
-	//	delete[] m_pTChar;
 	}
 
 	inline void CWnd::AddToMap()
@@ -1522,61 +1522,36 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-	//	delete[] m_pTChar;
-	//	m_pTChar = NULL;
-	//	m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
-	//	if (0 == m_pTChar)
-	//		throw std::bad_alloc();
-
-	//	memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
-
-		if (0 != ::GetClassName(m_hWnd, m_pTChar, MAX_STRING_SIZE))
-			return m_pTChar;
-
-		return _T("");
+		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
+		TCHAR* pTChar = &m_vTChar.front();
+		::GetClassName(m_hWnd, pTChar, MAX_STRING_SIZE);
+		
+		return pTChar;
 	}
 
 	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem) const
 	{
 		assert(::IsWindow(m_hWnd));
 
-		delete[] m_pTChar;
-		m_pTChar = NULL;
-
 		int nLength = ::GetWindowTextLength(GetDlgItem(nIDDlgItem));
-		if (nLength > 0)
-		{
-			m_pTChar = new TCHAR[nLength +1];
-			if (0 == m_pTChar)
-				throw std::bad_alloc();
-			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
-			if (0 != ::GetDlgItemText(m_hWnd, nIDDlgItem, m_pTChar, nLength+1))
-				return m_pTChar;
-		}
+		m_vTChar.assign(nLength +1, _T('\0'));
+		TCHAR* pTChar = &m_vTChar.front();
 
-		return _T("");
+		::GetDlgItemText(m_hWnd, nIDDlgItem, pTChar, nLength+1);
+				
+		return pTChar;
 	}
 
 	inline LPCTSTR CWnd::GetWindowText() const
 	{
 		assert(::IsWindow(m_hWnd));
-
-		delete[] m_pTChar;
-		m_pTChar = NULL;
-
 		int nLength = ::GetWindowTextLength(m_hWnd);
-		if (nLength > 0)
-		{
-			m_pTChar = new TCHAR[nLength+1];
-			if (NULL == m_pTChar)
-				throw std::bad_alloc();
 
-			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
-			if (0 != ::GetWindowText(m_hWnd, m_pTChar, nLength+1))
-				return m_pTChar;
-		}
-
-		return _T("");
+		m_vTChar.assign(nLength+1, _T('\0'));
+		TCHAR* pTChar = &m_vTChar.front();
+		::GetWindowText(m_hWnd, pTChar, nLength+1);
+		
+		return pTChar;
 	}
 
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
@@ -1604,29 +1579,23 @@ namespace Win32xx
 	{
 		assert(GetApp());
 
-		delete[] m_pTChar;
-		m_pTChar = NULL;
-		m_pTChar = new TCHAR[MAX_STRING_SIZE +1];
-		if (0 == m_pTChar)
-			throw std::bad_alloc();
-		memset(m_pTChar, 0, (MAX_STRING_SIZE +1)*sizeof(TCHAR));
+		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
+		TCHAR* pTChar = &m_vTChar.front();
 
-		if (!::LoadString (GetApp()->GetResourceHandle(), nID, m_pTChar, MAX_STRING_SIZE))
+		if (!::LoadString (GetApp()->GetResourceHandle(), nID, pTChar, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
-			if (::LoadString (GetApp()->GetInstanceHandle(), nID, m_pTChar, MAX_STRING_SIZE))
+			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, pTChar, MAX_STRING_SIZE))
 			{
-				return m_pTChar;
+				TCHAR msg[80] = _T("");
+				::wsprintf(msg, _T("LoadString - No string resource for %d\n"), nID);
+				TRACE(msg);
 			}
-
-			TCHAR msg[80] = _T("");
-			::wsprintf(msg, _T("LoadString - No string resource for %d\n"), nID);
-			TRACE(msg);
 		}
 
 		// Never return a pointer to a local variable, it is out of scope when the function returns.
 		// We return a pointer to a member variable so it remains in scope.
-		return m_pTChar;
+		return pTChar;
 	}
 
 	inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)

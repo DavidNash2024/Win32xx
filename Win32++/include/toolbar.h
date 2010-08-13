@@ -157,7 +157,7 @@ namespace Win32xx
 		UINT m_OldToolbarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ToolbarTheme m_Theme;				// The theme structure
 		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn
-		mutable TCHAR* m_pTChar;			// Used in string functions
+		mutable std::vector<TCHAR> m_vTChar;// Used in string functions
 
 	};  // class CToolbar
 
@@ -173,7 +173,7 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolbar class
 	//
-	inline CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE), m_pTChar(0)
+	inline CToolbar::CToolbar() : m_OldToolbarID(0), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_Theme, sizeof(ToolbarTheme));
 	}
@@ -379,23 +379,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		delete[] m_pTChar;
-		m_pTChar = NULL;
+		int Length = SendMessage(TB_GETBUTTONTEXT, idButton, 0);
+		m_vTChar.assign(Length+1, _T('\0'));
+		TCHAR* pTChar = &m_vTChar.front();
 
-		int nLength = SendMessage(TB_GETBUTTONTEXT, idButton, 0);
-		if (nLength > 0)
-		{
-			m_pTChar = new TCHAR[nLength+1];
-			if (NULL == m_pTChar)
-				throw std::bad_alloc();
-
-			memset(m_pTChar, 0, (nLength+1)*sizeof(TCHAR));
-
-			if (0 != SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)m_pTChar))
-				return m_pTChar;
-		}
-
-		return _T("");
+		SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)pTChar);
+		return pTChar;
 	}
 
 	inline int CToolbar::GetCommandID(int iIndex) const
