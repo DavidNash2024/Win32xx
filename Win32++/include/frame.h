@@ -77,7 +77,7 @@
 #include "statusbar.h"
 #include "toolbar.h"
 #include "rebar.h"
-#include <shlwapi.h>
+#include "shared_ptr.h"
 #include "Default_Resource.h"
 
 #ifndef RBN_MINMAX
@@ -307,7 +307,6 @@ namespace Win32xx
 
 		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
-	//	CDialog* m_pAboutDialog;			// Pointer to the about dialog object
 		CDialog m_AboutDialog;				// Help about dialog
 		CMenubar m_Menubar;					// CMenubar object
 		CRebar m_Rebar;						// CRebar object

@@ -17,21 +17,27 @@ New Features and Enhancements
    sent to a non-existant window, for example, will now assert. More asserts are
    intended to help users write code that is more robust. Note that asserts are
    only evaluated in Debug mode, and have no effect in Release mode.
-* Exceptions are used less often. They are now thrown to indicate a critical
+* Exceptions are thrown less often. They are now thrown to indicate a critical
    problem, outside the programmer's control. Throwing fewer exceptions results 
    in slightly smaller executables, and gives users more flexibility and control
    over their own exception methodology. They are thrown by Win32++ when:
-   - a memory allocation fails. (All compilers should do this anyway, but some
-      older Microsoft compilers don't.)
    - a window creation fails.
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
-* Extended the CToolbar class.   
+   - an attempt to read from or write to the registry fails.
+* Extended the CToolbar class.
+* Added Shared_Ptr class. Note that a "shared_ptr" will be available for the
+   updated C++ standard. It is already available with some modern compilers,
+   and also for users of the Boost library. The "Shared_Ptr" class is intended
+   as an alternative for those users who would like to use a "shared_ptr", but
+   don't have access to one yet.
+* Vectors are now used to replace all dynamically allocated arrays.       
             
 
 Changes in detail
 -----------------
 Added CResizer
+Added Shared_Ptr
 Updated CSocket to support IPv6
 Added CRebar::SizeToRect
 Added CSocket::IsIPV6Supported
@@ -80,12 +86,12 @@ Added CWinException::Output
 Added CWinException::what
 Added CWnd::SetWindowTheme
 Added ::IsAeroThemed
-Modified CSocket::Bind
-Modified CSocket::Connect
-Modified CSocket::Receive
-Modified CSocket::ReceiveFrom
-Modified CSocket::Send
-Modified CSocket::SentTo
+Modified CSocket::Bind          now uses TCHAR instead of char
+Modified CSocket::Connect       now uses TCHAR instead of char
+Modified CSocket::Receive       now uses TCHAR instead of char
+Modified CSocket::ReceiveFrom   now uses TCHAR instead of char
+Modified CSocket::Send          now uses TCHAR instead of char
+Modified CSocket::SentTo        now uses TCHAR instead of char
 Renamed CToolbar::AddToolbarButton to CToolbar::AddButton
 Renamed CWnd::CharToTChar to ::CharToTChar
 Renamed CWnd::CharToWide  to ::CharToWide
@@ -101,7 +107,9 @@ Update  FormDemo sample
 
 Incompatibilities with previous versions
 ----------------------------------------
-The stricter testing with asserts might reveal previously hidden errors in code.
+* The stricter testing with asserts might reveal previously hidden errors in 
+   user's code.
+* Some CSocket functions take TCHAR as an arguement instead of char.   
 
 Version 6.9
 ===========

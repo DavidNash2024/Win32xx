@@ -563,8 +563,7 @@ namespace Win32xx
 		HICON m_hIconLarge;			// handle to the window's large icon
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-	//	mutable TCHAR* m_pTChar;    // Used in string functions
-		mutable std::vector<TCHAR> m_vTChar;	// Used in string functions
+		mutable std::vector<TCHAR> m_vTChar;	// A vector used as a TCHAR array for string functions
 
 	}; // class CWnd
 
