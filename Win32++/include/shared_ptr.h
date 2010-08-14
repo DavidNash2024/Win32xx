@@ -42,14 +42,19 @@
 // memory leaks when exception occur. 
 
 // Examples:
-//  Shared_Ptr<CWnd*> w1(new CWnd);
+//  Shared_Ptr<CWnd> w1(new CWnd);
 //   or
-//  Shared_Ptr<CWnd*> w1 = new CWnd;
+//  Shared_Ptr<CWnd> w1 = new CWnd;
 //
 //  And with a vector
-//  typedef Shared_Ptr<CWnd*> CWndPtr
+//  typedef Shared_Ptr<CWnd> CWndPtr;
 //  std::vector<CWndPtr> MyVector;
 //  MyVector.push_back(CWndPtr(new CWnd));
+//   or
+//  CWnd* pWnd = new CWnd;
+//  std::vector< <Shared_Ptr <CWnd> > MyVector;
+//  MyVector.push_back(pWnd);
+//
 
 // How to handle dynamically allocated arrays:
 // While we could create a smart pointer for arrays, we don't need to because
@@ -63,7 +68,7 @@
 //
 // This can be improved by using a vector instead of an array
 //    int nLength = ::GetWindowTextLength(m_hWnd);
-//    std::vector<TCHAR> vTChar;
+//    std::vector<TCHAR*> vTChar;
 //    vTChar.assign(nLength+1, _T('\0'));
 //    TCHAR* pTChar = vTChar.front();
 //    ::GetWindowText(m_hWnd, pTChar, nLength+1);
@@ -107,7 +112,7 @@ namespace Win32xx
 
 		void swap(Shared_Ptr& rhs)
 		{
-		   std::swap(p, rhs.p);
+		   std::swap(m_ptr, rhs.m_ptr);
 		   std::swap(m_count, rhs.m_count);
 		}
 

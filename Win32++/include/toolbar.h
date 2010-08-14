@@ -379,7 +379,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		int Length = SendMessage(TB_GETBUTTONTEXT, idButton, 0);
+		int Length = (int)SendMessage(TB_GETBUTTONTEXT, idButton, 0);
 		m_vTChar.assign(Length+1, _T('\0'));
 		TCHAR* pTChar = &m_vTChar.front();
 
@@ -1109,7 +1109,7 @@ namespace Win32xx
 		if (Succeeded)
 		{
 			TBBUTTON tbb = {0};
-			Succeeded = SendMessage(TB_GETBUTTON, iIndex, (LPARAM)&tbb);
+			Succeeded = (BOOL)SendMessage(TB_GETBUTTON, iIndex, (LPARAM)&tbb);
 
 			tbb.iString = iString;
 
@@ -1148,7 +1148,7 @@ namespace Win32xx
 		tbbi.cbSize = sizeof(TBBUTTONINFO);
 		tbbi.dwMask = TBIF_SIZE;
 		tbbi.cx = (WORD)nWidth;
-		BOOL bResult = SendMessage(TB_SETBUTTONINFO, (WPARAM)idButton, (LPARAM)&tbbi);
+		BOOL bResult = (BOOL)SendMessage(TB_SETBUTTONINFO, (WPARAM)idButton, (LPARAM)&tbbi);
 
 		// Send a changed message to the parent (used by the rebar)
 		SIZE MaxSize = GetMaxSize();

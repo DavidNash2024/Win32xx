@@ -109,6 +109,7 @@
 #include <tchar.h>
 #include <shlwapi.h>
 #include <assert.h>
+#include "shared_ptr.h"
 
 
 // For compilers lacking Win64 support
@@ -244,6 +245,8 @@ namespace Win32xx
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenubar and Modeless Dialogs
 		std::vector<char>  vChar;	// A vector used as a char array for text conversions
 		std::vector<WCHAR> vWChar;	// A vector used as a WCHAR array for text conversions
+
+		TLSData() : pCWnd(0), pMenubar(0), hHook(0) {}
 	};
 
 	////////////////////////////////////////
@@ -606,7 +609,7 @@ namespace Win32xx
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
-		std::vector<TLSData*> m_vTLSData;	// vector of TLSData pointers, one for each thread
+		std::vector< Shared_Ptr <TLSData> > m_vTLSData;	// vector of TLSData smart pointers, one for each thread
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
@@ -1031,12 +1034,6 @@ namespace Win32xx
 			::TlsFree(m_dwTlsIndex);
 		}
 
-		std::vector<TLSData*>::iterator iter;
-		for(iter = m_vTLSData.begin(); iter != m_vTLSData.end(); ++iter)
-		{
-			delete *iter;
-		}
-
 		SetnGetThis((CWinApp*)-1);
 	}
 
@@ -1188,18 +1185,12 @@ namespace Win32xx
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;
-			// Some MS compilers (including VS2003 under some circumstances) return NULL instead of throwing
-			//  an exception when new fails. We make sure an exception gets thrown!
-			if (NULL == pTLSData)
-				throw std::bad_alloc();
 
-			ZeroMemory(pTLSData, sizeof(TLSData));
-			::TlsSetValue(GetTlsIndex(), pTLSData);
-
-			// Store pointer in vector for deletion in destructor
 			m_csTlsData.Lock();
-			m_vTLSData.push_back(pTLSData);
+			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
 			m_csTlsData.Release();
+ 		
+			::TlsSetValue(GetTlsIndex(), pTLSData);
 		}
 
 		return pTLSData;

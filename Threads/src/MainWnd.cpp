@@ -68,7 +68,7 @@ void CMainWindow::OnCreate()
 
 	catch (const CWinException &e)
 	{
-		e.MessageBox();
+		e.Output();
 		DebugErrMsg(_T("Exception in CMainWindow::OnCreate"));
 	}
 

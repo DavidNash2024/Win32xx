@@ -338,8 +338,9 @@ namespace Win32xx
 		tString t;
 		if (nTextMax > 0)
 		{
-			TCHAR* pszText = new TCHAR[nTextMax +1];
-			if (NULL == pszText) throw std::bad_alloc();
+			std::vector<TCHAR*> vTChar;
+			vTChar.assign(nTextMax +1, _T('\0'));
+			TCHAR* pszText = vTChar.front();
 			LVITEM lvi = {0};
 			lvi.iItem = iItem;
 			lvi.iSubItem = iSubItem;
@@ -348,7 +349,6 @@ namespace Win32xx
 			lvi.pszText = pszText;
 			ListView_GetItem( m_hWnd, &lvi );
 			t = lvi.pszText;
-			delete [] pszText;
 		}
 		return t;
 	}

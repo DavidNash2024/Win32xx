@@ -77,7 +77,6 @@
 #include "statusbar.h"
 #include "toolbar.h"
 #include "rebar.h"
-#include "shared_ptr.h"
 #include "Default_Resource.h"
 
 #ifndef RBN_MINMAX
@@ -178,6 +177,8 @@ namespace Win32xx
 
 
 	};  // class CMenubar
+
+	
 
 	//////////////////////////////////
 	// Declaration of the CFrame class
@@ -305,8 +306,9 @@ namespace Win32xx
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		void LoadCommonControls();
 
-		std::vector<ItemData*> m_vMenuItemData;// vector of ItemData pointers
+		std::vector<Shared_Ptr<ItemData> > m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
+		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		CDialog m_AboutDialog;				// Help about dialog
 		CMenubar m_Menubar;					// CMenubar object
 		CRebar m_Rebar;						// CRebar object
@@ -315,7 +317,6 @@ namespace Win32xx
 		HMENU m_hMenu;						// handle to the frame menu
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
-		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
 		tString m_tsStatusText;				// TCHAR std::string for status text
 		UINT m_nMaxMRU;						// maximum number of MRU entries
@@ -1374,12 +1375,6 @@ namespace Win32xx
 
 	inline CFrame::~CFrame()
 	{
-		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
-		{
-			// These are normally deleted in OnExitMenuLoop
-			delete m_vMenuItemData[nItem];
-		}
-
 		if (m_hMenu) ::DestroyMenu(m_hMenu);
 		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
 		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
@@ -2151,10 +2146,8 @@ namespace Win32xx
 			mii.cch = lstrlen(m_vMenuItemData[nItem]->Text);
 			mii.dwItemData = 0;
 			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
-
-			// Delete the ItemData object, then erase the vector item
-			delete m_vMenuItemData[nItem];
 		}
+		
 		m_vMenuItemData.clear();
 	}
 
@@ -2267,6 +2260,27 @@ namespace Win32xx
 					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 				}
 			}
+
+		/*	// Specify owner-draw for the menu item type
+			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
+			{
+				if (0 == mii.dwItemData)
+				{
+					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
+
+					ZeroMemory(pItem, sizeof(ItemData));
+					pItem->hMenu = hMenu;
+					pItem->nPos = i;
+					pItem->fType = mii.fType;
+					pItem->hSubMenu = mii.hSubMenu;
+					mii.fType |= MFT_OWNERDRAW;
+					lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
+					mii.dwItemData = (DWORD_PTR)pItem;
+
+					m_vMenuItemData.push_back(pItem);		// Store pItem in m_vMenuItemData
+					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
+				}
+			} */
 		}
 	}
 

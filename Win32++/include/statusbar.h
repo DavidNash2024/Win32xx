@@ -163,7 +163,7 @@ namespace Win32xx
 		
 		BOOL bResult = FALSE;
 		if (SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
-			bResult = SendMessage(SB_SETTEXT, iPart | Style, (LPARAM)szText);
+			bResult = (BOOL)SendMessage(SB_SETTEXT, iPart | Style, (LPARAM)szText);
 
 		return bResult;
 	}
@@ -203,7 +203,7 @@ namespace Win32xx
 			pNewPartWidths[iPart] = pNewPartWidths[iPart -1] + iWidth;
 
 		// Set the statusbar parts with our new parts count and part widths
-		BOOL bResult = SendMessage(SB_SETPARTS, NewPartsCount, (LPARAM)pNewPartWidths);
+		BOOL bResult = (BOOL)SendMessage(SB_SETPARTS, NewPartsCount, (LPARAM)pNewPartWidths);
 
 		return bResult;
 	}

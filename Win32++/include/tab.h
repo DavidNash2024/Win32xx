@@ -1014,16 +1014,15 @@ namespace Win32xx
 		if (nTab < GetAllTabs().size())
 		{
 			TCITEM Item = {0};
-			TCHAR* Text = new TCHAR[MAX_MENU_STRING+1];
-			if (Text == NULL) throw std::bad_alloc();
-			lstrcpyn(Text, szText, MAX_MENU_STRING);
+			std::vector<TCHAR*> vTChar;
+			vTChar.assign(MAX_MENU_STRING+1, _T('\0'));
+			TCHAR* pTChar = vTChar.front();
+			lstrcpyn(pTChar, szText, MAX_MENU_STRING);
 			Item.mask = TCIF_TEXT;
-			Item.pszText = Text;
+			Item.pszText = pTChar;
 
 			if (TabCtrl_SetItem(m_hWnd, nTab, &Item))
-				lstrcpyn(m_vTabPageInfo[nTab].szTitle, Text, MAX_MENU_STRING);
-				
-			delete [] Text;
+				lstrcpyn(m_vTabPageInfo[nTab].szTitle, pTChar, MAX_MENU_STRING);
 		}
 	}
 

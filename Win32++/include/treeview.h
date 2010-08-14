@@ -260,12 +260,12 @@ namespace Win32xx
 			tvi.hItem = hItem;
 			tvi.mask = TVIF_TEXT;
 			tvi.cchTextMax = nTextMax;
-			TCHAR* pszText = new TCHAR[nTextMax +1];
-			if (NULL == pszText) throw std::bad_alloc();
-			tvi.pszText = pszText;
+			std::vector<TCHAR*> vTChar;
+			vTChar.assign(nTextMax +1, _T('\0'));
+			TCHAR* pTChar = vTChar.front();
+			tvi.pszText = pTChar;
 			::SendMessage(m_hWnd, TVM_GETITEM, 0L, (LPARAM)&tvi);
 			t = tvi.pszText;
-			delete [] pszText;
 		}
 		return t;
 	}

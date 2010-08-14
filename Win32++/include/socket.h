@@ -256,7 +256,7 @@ namespace Win32xx
 		}
 
 		// Bind the IP address to the listening socket
-		RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, AddrInfo->ai_addrlen );
+		RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 		if ( RetVal == SOCKET_ERROR )
 		{
 			TRACE(_T("Bind failed\n"));
@@ -325,7 +325,7 @@ namespace Win32xx
 		}
 
 		// Bind the IP address to the listening socket
-		RetVal = Connect( AddrInfo->ai_addr, AddrInfo->ai_addrlen );
+		RetVal = Connect( AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 		if ( RetVal == SOCKET_ERROR )
 		{
 			TRACE(_T("Connect failed\n"));
@@ -686,7 +686,7 @@ namespace Win32xx
 		}
 
 
-		RetVal = ::sendto(m_Socket, sSend.c_str(), len, flags, AddrInfo->ai_addr, AddrInfo->ai_addrlen );
+		RetVal = ::sendto(m_Socket, sSend.c_str(), len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 		if ( RetVal == SOCKET_ERROR )
 		{
 			TRACE(_T("SendTo failed\n"));
@@ -715,7 +715,7 @@ namespace Win32xx
 			}
 			clientService.sin_port = htons( (u_short)nPort );
 
-			RetVal = ::sendto( m_Socket, sSend.c_str(), strlen( sSend.c_str() ), 0, (SOCKADDR*) &clientService, sizeof(clientService) );
+			RetVal = ::sendto( m_Socket, sSend.c_str(), (int)strlen( sSend.c_str() ), 0, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( SOCKET_ERROR != RetVal )
 				TRACE(_T("SendTo failed\n"));
 		}
