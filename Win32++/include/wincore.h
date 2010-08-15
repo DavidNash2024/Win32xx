@@ -581,6 +581,7 @@ namespace Win32xx
 		friend class CPropertyPage;
 		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
+		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
 	public:
 		CWinApp();
@@ -605,7 +606,7 @@ namespace Win32xx
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
-		std::vector< Shared_Ptr <TLSData> > m_vTLSData;	// vector of TLSData smart pointers, one for each thread
+		std::vector<TLSDataPtr> m_vTLSData;	// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTlsData;	// thread synchronisation for m_ csvTlsData
 		HINSTANCE m_hInstance;			// handle to the applications instance

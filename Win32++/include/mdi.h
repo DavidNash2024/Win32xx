@@ -112,10 +112,12 @@ namespace Win32xx
 	class CMDIFrame : public CFrame
 	{
 		friend class CMDIChild;     // CMDIChild uses m_hOrigMenu
+		typedef Shared_Ptr<CMDIChild> MDIChildPtr;
 
 	public:
 		CMDIFrame();
-		virtual ~CMDIFrame();
+		virtual ~CMDIFrame() {}
+
 		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
 		virtual tString GetWindowType() const { return _T("CMDIFrame"); } 
 		virtual void RemoveMDIChild(HWND hWnd);
@@ -123,7 +125,7 @@ namespace Win32xx
 		virtual void UpdateCheckMarks();
 
 		// These functions aren't virtual, so don't override them
-		std::vector <CMDIChild*>& GetAllMDIChildren() {return m_vMDIChild;}
+		std::vector <MDIChildPtr>& GetAllMDIChildren() {return m_vMDIChild;}
 		CMDIChild* GetActiveMDIChild() const;
 		BOOL IsMDIChildMaxed() const;
 		void SetActiveMDIChild(CMDIChild* pChild);
@@ -165,7 +167,7 @@ namespace Win32xx
 		void UpdateFrameMenu(HMENU hMenu);
 
 		CMDIClient m_wndMDIClient;
-		std::vector <CMDIChild*> m_vMDIChild;
+		std::vector <MDIChildPtr> m_vMDIChild;
 		HWND m_hActiveMDIChild;
 	};
 
@@ -185,21 +187,6 @@ namespace Win32xx
 	{
 		SetView(m_wndMDIClient);
 	}
-
-	inline CMDIFrame::~CMDIFrame()
-	{
-		// Ensure all MDI child objects are destroyed
-		std::vector <CMDIChild*>::iterator v;
-
-		while(m_vMDIChild.size() > 0)
-		{
-			v = m_vMDIChild.begin();
-			(*v)->Destroy();
-			delete *v;
-			m_vMDIChild.erase(v);
-		}
-	}
-
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
 	{
@@ -236,7 +223,7 @@ namespace Win32xx
 		int nWindow = 0;
 
 		// Allocate an iterator for our MDIChild vector
-		std::vector <CMDIChild*>::iterator v;
+		std::vector <MDIChildPtr>::iterator v;
 
 		for (v = GetAllMDIChildren().begin(); v < GetAllMDIChildren().end(); ++v)
 		{
@@ -264,7 +251,7 @@ namespace Win32xx
 
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szMenuString);
 
-					if (GetActiveMDIChild() == (*v))
+					if (GetActiveMDIChild() == (*v).get())
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					++nWindow;
@@ -351,27 +338,26 @@ namespace Win32xx
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
 	{
 		// Allocate an iterator for our MDIChild vector
-		std::vector <CMDIChild*>::iterator v;
+		std::vector <MDIChildPtr>::iterator v;
 
 		while(m_vMDIChild.size() > 0)
 		{
 			v = m_vMDIChild.begin();
 			(*v)->SendMessage(WM_CLOSE, 0L, 0L);	// Also removes the MDI child
 		}
+
 		return TRUE;
 	}
 
 	inline void CMDIFrame::RemoveMDIChild(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
-		std::vector <CMDIChild*>::iterator v;
+		std::vector <MDIChildPtr>::iterator v;
 
 		for (v = m_vMDIChild.begin(); v!= m_vMDIChild.end(); ++v)
 		{
 			if ((*v)->GetHwnd() == hWnd)
 			{
-				(*v)->Destroy();
-				delete *v;
 				m_vMDIChild.erase(v);
 				break;
 			}
@@ -536,7 +522,6 @@ namespace Win32xx
 	// A bug in MS Windows prevents us from creating maximized MDI children.
 	// We can work around that by creating the MDI child window
 	// and then maximizing if required.
-
 	{
 		//Call PreCreate in case its overloaded
 		PreCreate(m_cs);

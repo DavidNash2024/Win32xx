@@ -186,6 +186,18 @@ namespace Win32xx
 	class CFrame : public CWnd
 	{
 		friend class CMenubar;
+		
+		struct ItemData
+		// Each Dropdown menu item has this data
+		{
+			HMENU hMenu;
+			UINT  nPos;
+			UINT  fType;
+			TCHAR Text[MAX_MENU_STRING];
+			HMENU hSubMenu;
+		};
+		
+		typedef Shared_Ptr<ItemData> ItemDataPtr;
 
 	public:
 		CFrame();
@@ -279,16 +291,6 @@ namespace Win32xx
 			POST_TEXT_GAP   = 16,			// for owner draw menu item
 		};
 
-		struct ItemData
-		// Each Dropdown menu item has this data
-		{
-			HMENU hMenu;
-			UINT  nPos;
-			UINT  fType;
-			TCHAR Text[MAX_MENU_STRING];
-			HMENU hSubMenu;
-		};
-
         BOOL m_bShowIndicatorStatus;		// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseRebar;					// set to TRUE if Rebars are to be used
@@ -306,7 +308,7 @@ namespace Win32xx
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		void LoadCommonControls();
 
-		std::vector<Shared_Ptr<ItemData> > m_vMenuItemData;// vector of ItemData pointers
+		std::vector<ItemDataPtr> m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
 		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
 		CDialog m_AboutDialog;				// Help about dialog
