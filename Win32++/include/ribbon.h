@@ -329,7 +329,7 @@ namespace Win32xx
 		// Tasks such as setting the icon, creating child windows, or anything
 		// associated with creating windows are normally performed here.
 
-		if (GetWinVersion() >= 2601)
+		if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
 		{		
 			m_bUseRebar = FALSE;			// Don't use rebars
 			m_bUseToolbar = FALSE;			// Don't use a toolbar

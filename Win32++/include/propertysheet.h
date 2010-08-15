@@ -72,9 +72,10 @@ namespace Win32xx
 	public:
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
+
 		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);   
-    virtual tString GetWindowType() const { return _T("CPropertyPage"); }
+		virtual tString GetWindowType() const { return _T("CPropertyPage"); }
 		virtual void OnApply();
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
@@ -114,19 +115,21 @@ namespace Win32xx
 	public:
 		CPropertySheet(UINT nIDCaption, HWND hwndParent = NULL);
 		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
-		virtual ~CPropertySheet();
+		virtual ~CPropertySheet() {}
+		
 		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
 		virtual HWND Create(HWND hWndParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void DestroyButton(int iButton);
 		virtual void Destroy();
 		virtual int DoModal();
-    virtual tString GetWindowType() const { return _T("CPropertySheet"); }
+		virtual tString GetWindowType() const { return _T("CPropertySheet"); }
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void RemovePage(CPropertyPage* pPage);
 		virtual BOOL SetActivePage(int nPage);
 		virtual BOOL SetActivePage(CPropertyPage* pPage);
+		virtual void SetIcon(UINT idIcon);
 		virtual void SetTitle(LPCTSTR szTitle);
 		virtual void SetWizardMode(BOOL bWizard);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -140,19 +143,16 @@ namespace Win32xx
 		BOOL IsModeless() const;
 		BOOL IsWizard() const;
 
-	protected:
+	private:
 		CPropertySheet(const CPropertySheet&);				// Disable copy construction
 		CPropertySheet& operator = (const CPropertySheet&); // Disable assignment operator
-
-		PROPSHEETHEADER m_PSH;
-		std::vector<CPropertyPage*> m_vPages;
-
-	private:
 		void BuildPageArray();
 
 		tString m_Title;
-		PROPSHEETPAGE* m_ppsp; // Array of PROPSHEETPAGE
+		std::vector<Shared_Ptr<CPropertyPage> > m_vPages;	// vector of CPropertyPage
+		std::vector<PROPSHEETPAGE> m_vPSP;					// vector of PROPSHEETPAGE
 		BOOL m_bInitialUpdate;
+		PROPSHEETHEADER m_PSH;
 	};
 	
 }
@@ -560,7 +560,6 @@ namespace Win32xx
 	inline CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hwndParent /* = NULL*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
-		m_ppsp = NULL;
 		SetTitle(LoadString(nIDCaption));
 		m_bInitialUpdate = FALSE;
 
@@ -582,7 +581,6 @@ namespace Win32xx
 	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hwndParent /* = NULL*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
-		m_ppsp = NULL;
 		SetTitle(pszCaption);
 		m_bInitialUpdate = FALSE;
 
@@ -599,12 +597,6 @@ namespace Win32xx
 		m_PSH.hwndParent       = hwndParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
-	}
-
-	inline CPropertySheet::~CPropertySheet()
-	{
-		Destroy();
-		delete []m_ppsp;
 	}
 
 	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
@@ -628,16 +620,14 @@ namespace Win32xx
 
 	inline void CPropertySheet::BuildPageArray()
 	{
-		delete []m_ppsp;
-		m_ppsp = NULL;
-		m_ppsp = new PROPSHEETPAGE[m_vPages.size()];
+		m_vPSP.clear();
+		
+		std::vector<Shared_Ptr<CPropertyPage> >::iterator iter;	
+		for (iter = m_vPages.begin(); iter < m_vPages.end(); ++iter)
+			m_vPSP.push_back((*iter)->GetPSP());
 
-		for (int i = 0 ; i < (int)m_vPages.size(); i++)
-		{
-			m_ppsp[i] = m_vPages[i]->GetPSP();
-		}
-
-		m_PSH.ppsp = (LPCPROPSHEETPAGE) m_ppsp;
+		PROPSHEETPAGE* pPSP = &m_vPSP.front();	// Array of PROPSHEETPAGE
+		m_PSH.ppsp = pPSP;
 	}
 
 	inline void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT uMsg, LPARAM lParam)
@@ -689,7 +679,7 @@ namespace Win32xx
 		}
 
 		BuildPageArray();
-		m_PSH.ppsp = m_ppsp;
+		m_PSH.ppsp = &m_vPSP.front();
 
 		// Create a modeless Property Sheet
 		m_PSH.dwFlags &= ~PSH_WIZARD;
@@ -736,10 +726,6 @@ namespace Win32xx
 	inline void CPropertySheet::Destroy()
 	{
 		CWnd::Destroy();
-
-		for (int i = 0 ; i < (int)m_vPages.size(); i++)
-			delete m_vPages[i];
-
 		m_vPages.clear();
 	}
 
@@ -748,17 +734,12 @@ namespace Win32xx
 		assert( GetApp() );
 
 		BuildPageArray();
-		m_PSH.ppsp = m_ppsp;
+		m_PSH.ppsp = &m_vPSP.front();
 
 		// Create the Property Sheet
 		int nResult = (int)CreatePropertySheet(&m_PSH);
-
-		for (int j = 0 ; j < (int)m_vPages.size(); j++)
-		{
-			delete m_vPages[j];
-		}
+		
 		m_vPages.clear();
-
 		return nResult;
 	}
 
@@ -788,7 +769,7 @@ namespace Win32xx
 
 		for (int i = 0; i < GetPageCount(); i++)
 		{
-			if (m_vPages[i] == pPage)
+			if (m_vPages[i].get() == pPage)
 				return i;
 		}
 		return -1;
@@ -864,6 +845,12 @@ namespace Win32xx
 			return SetActivePage(nPage);
 
 		return FALSE;
+	}
+
+	inline void CPropertySheet::SetIcon(UINT idIcon)
+	{
+		m_PSH.pszIcon = MAKEINTRESOURCE(idIcon);
+		m_PSH.dwFlags |= PSH_USEICONID;
 	}
 
 	inline void CPropertySheet::SetTitle(LPCTSTR szTitle)

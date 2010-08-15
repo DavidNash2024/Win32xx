@@ -39,6 +39,7 @@ Changes in detail
 Added CResizer
 Added Shared_Ptr
 Updated CSocket to support IPv6
+Added CPropertySheet::SetIcon
 Added CRebar::SizeToRect
 Added CSocket::IsIPV6Supported
 Added CSocket::FreeAdddrInfo
@@ -109,7 +110,8 @@ Incompatibilities with previous versions
 ----------------------------------------
 * The stricter testing with asserts might reveal previously hidden errors in 
    user's code.
-* Some CSocket functions take TCHAR as an arguement instead of char.   
+* Some CSocket functions take TCHAR as an arguement instead of char.
+* CPropertySheet.m_PSH is now private. Use SetIcon to set the icon.
 
 Version 6.9
 ===========

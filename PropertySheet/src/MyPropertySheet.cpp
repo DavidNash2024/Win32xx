@@ -134,11 +134,9 @@ void CComboPage::OnSetActive()
 	PropSheet_SetWizButtons(GetParent(), PSWIZB_BACK | PSWIZB_FINISH);
 }
 
-
 CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hwndParent /* = NULL*/) : CPropertySheet(pszCaption, hwndParent)
 {
-	m_PSH.pszIcon          = MAKEINTRESOURCE(IDI_DIALOG);
-	m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USEICONID  | PSH_USECALLBACK;
+	SetIcon(IDI_DIALOG);
 }
 
 inline void CMyPropertySheet::OnCreate()

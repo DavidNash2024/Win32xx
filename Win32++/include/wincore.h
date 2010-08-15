@@ -604,12 +604,12 @@ namespace Win32xx
 		void DefaultClass();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
+		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
+		std::vector< Shared_Ptr <TLSData> > m_vTLSData;	// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTlsData;	// thread synchronisation for m_ csvTlsData
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
-		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
-		std::vector< Shared_Ptr <TLSData> > m_vTLSData;	// vector of TLSData smart pointers, one for each thread
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
