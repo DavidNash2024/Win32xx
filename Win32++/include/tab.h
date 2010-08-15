@@ -1388,7 +1388,6 @@ namespace Win32xx
 				}
 
 				RegCloseKey(hKey);
-				SetActiveMDITab(0);
 			}
 		}
 
@@ -1500,6 +1499,7 @@ namespace Win32xx
 	inline void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
 		assert(::IsWindow(m_hWnd));
+		assert(GetTab().IsWindow());
 		GetTab().SelectPage(iTab);
 	}
 
