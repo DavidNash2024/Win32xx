@@ -1391,7 +1391,10 @@ namespace Win32xx
 			}
 		}
 
-		if (!bResult) CloseAllMDIChildren();
+		if (!bResult) 
+			CloseAllMDIChildren();
+		
+		SetActiveMDITab(0);
 		return bResult;
 	}
 
