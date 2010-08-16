@@ -773,12 +773,6 @@ namespace Win32xx
 		{
 			m_IsListPressed = FALSE;
 		}
-
-	//	if (!IsLeftButtonDown())
-	//	{
-	//		m_IsClosePressed = FALSE;
-	//		m_IsListPressed = FALSE;
-	//	}	
 		
 		if (!m_IsTracking)
 		{

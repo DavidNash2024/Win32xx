@@ -1560,7 +1560,7 @@ namespace Win32xx
 
 		// No bitmap found, so display warning message
 		if (!hBitmap)
-			TRACE(_T("Unable to load bitmap\n"));
+			TRACE(_T("**WARNING** Unable to load bitmap\n"));
 
 		return hBitmap;
 	}
@@ -1579,7 +1579,7 @@ namespace Win32xx
 			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, pTChar, MAX_STRING_SIZE))
 			{
 				TCHAR msg[80] = _T("");
-				::wsprintf(msg, _T("LoadString - No string resource for %d\n"), nID);
+				::wsprintf(msg, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
 				TRACE(msg);
 			}
 		}
@@ -1891,7 +1891,7 @@ namespace Win32xx
 		if (m_hIconLarge)
 			::SendMessage (m_hWnd, WM_SETICON, WPARAM (ICON_BIG), LPARAM (m_hIconLarge));
 		else
-			TRACE(_T("SetIconLarge Failed\n"));
+			TRACE(_T("**WARNING** SetIconLarge Failed\n"));
 
 		return m_hIconLarge;
 	}
@@ -1907,7 +1907,7 @@ namespace Win32xx
 		if (m_hIconSmall)
 			::SendMessage (m_hWnd, WM_SETICON, WPARAM (ICON_SMALL), LPARAM (m_hIconSmall));
 		else
-			TRACE(_T("SetIconSmall Failed\n"));
+			TRACE(_T("**WARNING** SetIconSmall Failed\n"));
 
 		return m_hIconSmall;
 	}

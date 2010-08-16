@@ -196,6 +196,8 @@ namespace Win32xx
 		UINT DockZone;
 	} *LPDRAGPOS;
 
+	typedef Shared_Ptr<CDocker> DockPtr;
+
 	/////////////////////////////////////////
 	// Declaration of the CDocker class
 	//  A CDocker window allows other CDocker windows to be "docked" inside it.
@@ -422,7 +424,8 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const {return (CDockClient&)m_DockClient;}
 		virtual CDockHint& GetDockHint() const {return m_pDockAncestor->m_DockHint;}
 
-		std::vector <CDocker*> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
+	
+		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllSmartDockers;}
 		std::vector <CDocker*> & GetDockChildren() const {return (std::vector <CDocker*> &)m_vDockChildren;}
 		int GetBarWidth() const {return GetDockBar().GetWidth();}
 		tString GetCaption() const {return GetDockClient().GetCaption();}
@@ -493,7 +496,7 @@ namespace Win32xx
 		CDocker*		m_pDockAncestor;
 
 		std::vector <CDocker*> m_vDockChildren;
-		std::vector <CDocker*> m_vAllDockers;	// Only used in DockAncestor
+		std::vector <DockPtr> m_vAllSmartDockers;	// Only used in DockAncestor
 
 		CRect m_rcBar;
 		CRect m_rcChild;
@@ -605,7 +608,7 @@ namespace Win32xx
 							hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV));
 
 						if (hCursor) SetCursor(hCursor);
-						else TRACE(_T("Missing cursor resource for slider bar\n"));
+						else TRACE(_T("**WARNING** Missing cursor resource for slider bar\n"));
 
 						return TRUE;
 					}
@@ -1740,30 +1743,6 @@ namespace Win32xx
 		GetDockBar().Destroy();
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
-        Destroy();   // Destroy this window (and its child windows) early
-
-		std::vector <CDocker*>::iterator iter;
-		if (GetDockAncestor() == this)
-		{
-			// Destroy all dock descendants of this dock ancestor
-			while (GetAllDockers().size() > 0)
-			{
-				iter = GetAllDockers().begin();
-				delete(*iter); // calls the destructor for each dock descendant
-			}
-		}
-		else
-		{
-			for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
-			{
-				// Remove this child entry from the DockAncestor's m_vAllDockers vector
-				if ((*iter) == this)
-				{
-					GetAllDockers().erase(iter);
-					break;
-				}
-			}
-		}
 	}
 
 	inline CDocker* CDocker::AddDockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockWidth, int nDockID /* = 0*/)
@@ -1774,6 +1753,9 @@ namespace Win32xx
 		// even when its parent is subsequently changed.
 
 		assert(pDocker);
+
+		// Store the Docker's pointer in the DockAncestor's vector for later deletion
+		GetDockAncestor()->m_vAllSmartDockers.push_back(pDocker);
 				
 		pDocker->SetDockWidth(DockWidth);
 		pDocker->SetDockStyle(dwDockStyle);
@@ -1784,9 +1766,6 @@ namespace Win32xx
 		pDocker->Create(hwndFrame);
 		pDocker->SetParent(m_hWnd);
 
-		// Store the Docker's pointer in the DockAncestor's vector for later deletion
-		GetDockAncestor()->m_vAllDockers.push_back(pDocker);
-
 		// Dock the docker window
 		if (dwDockStyle & DS_DOCKED_CONTAINER)
 			DockInContainer(pDocker, dwDockStyle);
@@ -1795,33 +1774,35 @@ namespace Win32xx
 
 		// Issue TRACE warnings for any missing resources
 		HMODULE hMod= GetApp()->GetInstanceHandle();
+		
 		if (!(dwDockStyle & DS_NO_RESIZE))
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
-				TRACE(_T("\n**WARNING** Horizontal cursor resource missing\n"));
+				TRACE(_T("**WARNING** Horizontal cursor resource missing\n"));
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
-				TRACE(_T("\n**WARNING** Vertical cursor resource missing\n"));
+				TRACE(_T("**WARNING** Vertical cursor resource missing\n"));
 		}
+		
 		if (!(dwDockStyle & DS_NO_UNDOCK))
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
-				TRACE(_T("\n**WARNING** Docking center bitmap resource missing\n"));
+				TRACE(_T("**WARNING** Docking center bitmap resource missing\n"));
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDLEFT), RT_BITMAP))
-				TRACE(_T("\n**WARNING** Docking left bitmap resource missing\n"));
+				TRACE(_T("**WARNING** Docking left bitmap resource missing\n"));
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDRIGHT), RT_BITMAP))
-				TRACE(_T("\n**WARNING** Docking right bitmap resource missing\n"));
+				TRACE(_T("**WARNING** Docking right bitmap resource missing\n"));
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDTOP), RT_BITMAP))
-				TRACE(_T("\n**WARNING** Docking top bitmap resource missing\n"));
+				TRACE(_T("**WARNING** Docking top bitmap resource missing\n"));
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
-				TRACE(_T("\n**WARNING** Docking center bottom resource missing\n"));
+				TRACE(_T("**WARNING** Docking center bottom resource missing\n"));
 		}
+		
 		if (dwDockStyle & DS_DOCKED_CONTAINER)
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDMIDDLE), RT_BITMAP))
-				TRACE(_T("\n**WARNING** Docking container bitmap resource missing\n"));
+				TRACE(_T("**WARNING** Docking container bitmap resource missing\n"));
 		}
 		
-
 		return pDocker;
 	}
 
@@ -1852,7 +1833,7 @@ namespace Win32xx
 		pDocker->SetWindowText(pDocker->GetCaption().c_str());
 
 		// Store the Docker's pointer in the DockAncestor's vector for later deletion
-		GetDockAncestor()->m_vAllDockers.push_back(pDocker);
+		GetDockAncestor()->m_vAllSmartDockers.push_back(pDocker);
 		
 		return pDocker;
 	}
@@ -1928,7 +1909,7 @@ namespace Win32xx
 		BOOL bResult = TRUE;
 
 		// Check dock ancestor
-		std::vector<CDocker*>::iterator iter;
+		std::vector<DockPtr>::iterator iter;
 
 		for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
 		{
@@ -1961,7 +1942,7 @@ namespace Win32xx
 			std::vector<CDocker*>::iterator iterChild;
 			for (iterChild = (*iter)->GetDockChildren().begin(); iterChild != (*iter)->GetDockChildren().end(); ++iterChild)
 			{
-				if ((*iterChild)->m_pDockParent != (*iter))
+				if ((*iterChild)->m_pDockParent != (*iter).get())
 				{
 					TRACE(_T("Error: Docking parent/Child information mismatch\n"));
 					bResult = FALSE;
@@ -1989,10 +1970,10 @@ namespace Win32xx
 	{
 		assert(this == GetDockAncestor());	// Must call CloseAllDockers from the DockAncestor
 
-		std::vector <CDocker*>::iterator v;
+		std::vector <DockPtr>::iterator v;
 
 		SetRedraw(FALSE);
-		std::vector<CDocker*> AllDockers = GetAllDockers();
+		std::vector<DockPtr> AllDockers = GetAllDockers();
 		for (v = AllDockers.begin(); v != AllDockers.end(); ++v)
 		{
 			// The CDocker is destroyed when the window is destroyed
@@ -2173,7 +2154,7 @@ namespace Win32xx
 
 	inline void CDocker::DrawAllCaptions()
 	{
-		std::vector<CDocker*>::iterator iter;
+		std::vector<DockPtr>::iterator iter;
 		for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); iter++)
 		{
 			if ((*iter)->IsDocked())
@@ -2285,14 +2266,14 @@ namespace Win32xx
 
 	inline CDocker* CDocker::GetDockFromID(int n_DockID) const
 	{
-		std::vector <CDocker*>::iterator v;
+		std::vector <DockPtr>::iterator v;
 
 		if (GetDockAncestor())
 		{
-			for (v = GetDockAncestor()->m_vAllDockers.begin(); v != GetDockAncestor()->m_vAllDockers.end(); v++)
+			for (v = GetDockAncestor()->m_vAllSmartDockers.begin(); v != GetDockAncestor()->m_vAllSmartDockers.end(); v++)
 			{
 				if (n_DockID == (*v)->GetDockID())
-					return *v;
+					return (*v).get();
 			}
 		}
 
@@ -2302,12 +2283,12 @@ namespace Win32xx
 	inline CDocker* CDocker::GetDockFromView(CWnd* pView) const
 	{
 		CDocker* pDock = 0;
-		std::vector<CDocker*>::iterator iter;
-		std::vector<CDocker*> AllDockers = GetAllDockers();
+		std::vector<DockPtr>::iterator iter;
+		std::vector<DockPtr> AllDockers = GetAllDockers();
 		for (iter = AllDockers.begin(); iter != AllDockers.end(); ++iter)
 		{
 			if ((*iter)->GetView() == pView)
-				pDock = (*iter);
+				pDock = (*iter).get();
 		}
 
 		return pDock;
@@ -2406,7 +2387,7 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->GetHwnd() == hWnd) return TRUE;
 
-		std::vector<CDocker*>::iterator iter;
+		std::vector<DockPtr>::iterator iter;
 		for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
 		{
 			if ((*iter)->GetHwnd() == hWnd) return TRUE;
@@ -2660,9 +2641,16 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 
 		CDocker* pDock = (CDocker*)wParam;
-		if (this == GetDockAncestor() && pDock != GetDockAncestor())
+
+		assert( this == GetDockAncestor() );
+		std::vector<DockPtr>::iterator iter;
+		for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
 		{
-			delete pDock;
+			if ((*iter).get() == pDock)
+			{
+				GetAllDockers().erase(iter);
+				break;
+			}
 		}
 	}
 
@@ -2889,7 +2877,7 @@ namespace Win32xx
 				rgbColour = GetSysColor(COLOR_BTNFACE);
 
 			// Set the splitter bar colour for each docker decendant
-			std::vector<CDocker*>::iterator iter;
+			std::vector<DockPtr>::iterator iter;
 			for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
 				(*iter)->SetBarColor(rgbColour);
 
@@ -3087,7 +3075,7 @@ namespace Win32xx
 		
 		assert(VerifyDockers());	
 
-		std::vector<CDocker*>::iterator iter;
+		std::vector<DockPtr>::iterator iter;
 		std::vector<DockInfo> vDockList;
 
 		if (0 != tsRegistryKeyName.size())

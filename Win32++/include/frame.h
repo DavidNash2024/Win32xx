@@ -2739,7 +2739,7 @@ namespace Win32xx
 		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
 
 		if(!m_hMenu)
-			TRACE(_T("Load Menu failed\n"));
+			TRACE(_T("**WARNING** Load Menu failed\n"));
  	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)

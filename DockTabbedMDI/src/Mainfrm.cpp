@@ -53,7 +53,7 @@ void CMainFrame::OnContainerTabsAtTop()
 // Reposition the tabs in the containers
 {
 	BOOL bTop = FALSE;
-	std::vector<CDocker*>::iterator iter;
+	std::vector<DockPtr>::iterator iter;
 	
 	// Set the Tab position for each container
 	for (iter = m_DockTabbedMDI.GetAllDockers().begin(); iter < m_DockTabbedMDI.GetAllDockers().end(); ++iter)
