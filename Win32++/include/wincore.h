@@ -402,11 +402,9 @@ namespace Win32xx
 	public:
 		CWinException (LPCTSTR msg);
 		virtual ~CWinException() throw() {}
-		virtual void Output() const;
 
 		virtual LPCTSTR GetErrorString() const { return m_ErrorString; }
-		virtual LPCTSTR What() const { return m_msg; }
-		virtual const char * what () const throw () { return "CWinException thrown"; }
+		virtual const char * what () const throw ();
 	private:
 		DWORD  m_err;
 		LPCTSTR m_msg;
@@ -967,16 +965,18 @@ namespace Win32xx
 		}
 	}
 
-	inline void CWinException::Output() const
+	inline const char * CWinException::what () const throw ()
 	{
 		// This sends text to the debugger (typically displayed in the IDE's output window).
 
 		OutputDebugString( _T("*** An exception occurred ***\n") );
-		OutputDebugString( What() );
+		OutputDebugString( m_msg );
 		OutputDebugString( _T("\n") );
 		OutputDebugString( GetErrorString() );
 		OutputDebugString( _T("\n") );
 		OutputDebugString( _T("*** End of exception report ***\n") );
+		
+		return "CWinException thrown";
 	}
 
 
@@ -1011,7 +1011,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			e.Output();
+			e.what();
 			throw;
 		}
 	}
@@ -1148,7 +1148,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			e.Output();
+			e.what();
 			return -1;
 		}
 	}
@@ -1442,7 +1442,7 @@ namespace Win32xx
 
 			catch (const CWinException &e)
 			{
-				e.Output();
+				e.what();
 			}
 
 			return m_hWnd;
@@ -1953,7 +1953,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			// Should never get here. Failed to forward a message on to a window procedure.
-			e.Output();
+			e.what();
 		}
 
 		return 0L;
