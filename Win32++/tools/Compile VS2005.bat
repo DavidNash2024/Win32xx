@@ -121,6 +121,7 @@ copy Splitter\ProjectFiles\Debug\Splitter.exe                 "Win32++\output\VS
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
+copy Tray\ProjectFiles\Debug\Tray.exe                         "Win32++\output\VS2005\Debug"    >>"Win32++\output\VS2005.log"
 
 mkdir "Win32++\output\VS2005\Release"
 

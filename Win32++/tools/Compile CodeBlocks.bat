@@ -255,7 +255,7 @@ copy Splitter\ProjectFiles\GNU\Release\Splitter.exe                 "Win32++\out
 copy TabDemo\ProjectFiles\GNU\Release\TabDemo.exe                   "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Themes\ProjectFiles\GNU\Release\Themes.exe                     "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 copy Threads\ProjectFiles\GNU\Release\Threads.exe                   "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
-
+copy Tray\ProjectFiles\GNU\Debug\Tray.exe                           "Win32++\output\MinGW\Release"    >>"Win32++\output\CodeBlocks.log"
 
 
 REM: Pop the directory change off the stack
