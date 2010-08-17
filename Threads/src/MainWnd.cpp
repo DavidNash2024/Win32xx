@@ -3,9 +3,7 @@
 //  Definitions for the CMainWindow class
 
 #include "stdafx.h"
-#include "ThreadApp.h"
 #include "MainWnd.h"
-#include "Thread.h"
 
 
 CMainWindow::CMainWindow()
@@ -20,17 +18,6 @@ CMainWindow::CMainWindow()
 	// Note 2: All our threads belong to the one process.
 	// Note 3: Creating (or destroying) more than say 200 windows may temporarily stress the Explorer process.
 	// Note 4: This sample is intended as "proof of concept" only. A well written program should not require 20 GUI threads!
-}
-
-CMainWindow::~CMainWindow()
-{
-	// m_pCThreads is a vector of CThread pointers
-	// Delete each CThread object
-	std::vector<CThread*>::iterator iter;
-	for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
-	{
-		delete (*iter);
-	}
 }
 
 HWND CMainWindow::Create(HWND hParent)
@@ -56,11 +43,11 @@ void CMainWindow::OnCreate()
 			wsprintf(str, _T("Thread %d started\n"), i + 1);
 			TRACE(str);
 
-			m_pCThreads.push_back(pThread);
+			m_vThreads.push_back(pThread);
 		}
 	
-		std::vector<CThread*>::iterator iter;
-		for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
+		std::vector<ThreadPtr>::iterator iter;
+		for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
 		{
 			(*iter)->Start();
 		}
@@ -68,7 +55,7 @@ void CMainWindow::OnCreate()
 
 	catch (const CWinException &e)
 	{
-		e.Output();
+		e.what();
 		DebugErrMsg(_T("Exception in CMainWindow::OnCreate"));
 	}
 
@@ -99,8 +86,8 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		{
 			//Close the thread windows
-			std::vector<CThread*>::iterator iter;
-			for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
+			std::vector<ThreadPtr>::iterator iter;
+			for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
 			{
 				::SendMessage((*iter)->GetTestWindow().GetHwnd(), WM_CLOSE, 0, 0);
 			}
@@ -109,8 +96,8 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	
 	case WM_DESTROY:	
 		{
-			std::vector<CThread*>::iterator iter;
-			for (iter = m_pCThreads.begin(); iter < m_pCThreads.end(); ++iter)
+			std::vector<ThreadPtr>::iterator iter;
+			for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
 			{
 				PostThreadMessage((*iter)->GetThreadID(), WM_QUIT,0,0);
 				

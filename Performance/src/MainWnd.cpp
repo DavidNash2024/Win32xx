@@ -16,11 +16,6 @@ CMainWindow::~CMainWindow()
 {
 	if (m_hFont)
 		::DeleteObject(m_hFont);
-
-	for (int i = 0 ; i < m_nTestWindows; i++)
-	{
-		delete m_pCTestWindows[i];
-	}
 }
 
 HWND CMainWindow::Create(HWND hParent /*= 0*/)

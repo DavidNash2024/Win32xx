@@ -360,7 +360,10 @@ namespace Win32xx
 		if (iNumButtons > 0)
 		{
 			// Create the TBBUTTON array for each button
-			TBBUTTON* tbb =  new TBBUTTON[iNumButtons];
+		//	TBBUTTON* tbb =  new TBBUTTON[iNumButtons];
+			std::vector<TBBUTTON> vTBB;
+			vTBB.resize(iNumButtons);
+			TBBUTTON* tbb = &vTBB.front();
 
 			for (int j = 0 ; j < iNumButtons; j++)
 			{
@@ -385,8 +388,6 @@ namespace Win32xx
 
 			// Add the buttons
 			GetMenubar().AddButtons(iNumButtons, tbb);
-            
-            delete []tbb;
 		}
 	}
 

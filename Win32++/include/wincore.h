@@ -2518,6 +2518,8 @@ namespace Win32xx
 	{
 		HRESULT hr = E_NOTIMPL;
 
+#ifndef	_WIN32_WCE
+		
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 		if(hMod)
 		{
@@ -2528,6 +2530,8 @@ namespace Win32xx
 
 			::FreeLibrary(hMod);
 		}
+
+#endif
 
 		return hr;
 	}

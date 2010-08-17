@@ -743,19 +743,15 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\..\Win32++\include\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WCEframe.h"
+				RelativePath="..\..\Win32++\include\wceframe.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WCEstddef.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\Win32++\include\wincore.h"
 				>
 			</File>
 		</Filter>

@@ -9,6 +9,7 @@
 #include "TestWnd.h"
 #include "MyDialog.h"
 
+typedef Shared_Ptr<CTestWindow> TestWindowPtr;
 
 class CMainWindow : public CWnd
 {
@@ -35,7 +36,7 @@ private:
 		WM_TESTMESSAGE       = WM_USER+2    // the test message 
 	};
 
-	std::vector<CTestWindow*> m_pCTestWindows;	// A vector CTestWindow pointers
+	std::vector<TestWindowPtr> m_pCTestWindows;	// A vector CTestWindow smart pointers
 	HWND  m_hEdit;			// Handle to the edit window
 	HFONT m_hFont;			// A font for the edit window
 	int m_nTestMessages;	// Number of test messages to be sent

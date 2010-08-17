@@ -5,15 +5,15 @@
 #ifndef MAINWND_H
 #define MAINWND_H
 
+#include "Thread.h"
 
-// Forward declaration of the CThread class
-class CThread;
+typedef Shared_Ptr<CThread> ThreadPtr;
 
 class CMainWindow : public CWnd
 {
 public:
 	CMainWindow();
-	virtual ~CMainWindow();
+	virtual ~CMainWindow() {}
 	virtual HWND Create(HWND hParent = 0);
 	virtual void OnAllWindowsCreated();
 
@@ -28,7 +28,7 @@ private:
 		WM_TESTMESSAGE   = WM_USER+2	// the test message
 	};
 
-	std::vector<CThread*> m_pCThreads;	// A vector of CThread pointers
+	std::vector<ThreadPtr> m_vThreads;	// A vector of CThread smart pointers
 	int m_nThreads;						// Number of additional threads to be created
 };
 

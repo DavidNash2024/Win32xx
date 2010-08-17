@@ -324,7 +324,9 @@ void CMainFrame::OnFilePrint()
 	GetDIBits(MemDC, hbmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Retrieve the image data
-	byte* pBits = new byte[bi.biSizeImage];
+	std::vector<byte> vBits;	// a vector to hold the byte array
+	vBits.assign(bi.biSizeImage, 0);
+	byte* pBits = &vBits.front();
 	GetDIBits(MemDC, hbmView, 0, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
@@ -358,7 +360,6 @@ void CMainFrame::OnFilePrint()
 
 	// Cleanup
 	::DeleteObject(hbmView);
-	delete []pBits;
 }
 
 void CMainFrame::OnInitialUpdate()

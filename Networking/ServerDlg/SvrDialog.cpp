@@ -184,7 +184,7 @@ void CSvrDialog::LoadCommonControlsEx()
 	
 	catch (const CWinException &e)
 	{
-		e.Output();
+		e.what();
 		if (hComCtl)
 			::FreeLibrary(hComCtl);
 	}

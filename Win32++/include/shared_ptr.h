@@ -72,7 +72,7 @@
 //    int nLength = ::GetWindowTextLength(m_hWnd);
 //    std::vector<TCHAR> vTChar;
 //    vTChar.assign(nLength+1, _T('\0'));
-//    TCHAR* pTChar = vTChar.front();
+//    TCHAR* pTChar = &vTChar.front();
 //    ::GetWindowText(m_hWnd, pTChar, nLength+1);
 //
 // This works because the memory in a vector is always contiguous. Note that
@@ -104,7 +104,7 @@ namespace Win32xx
 				inc_ref();
 			}
 			// catch the unlikely event of 'new long(0)' throwing an exception
-			catch (std::bad_alloc)
+			catch (const std::bad_alloc&)
 			{
 				delete m_ptr;
 				throw;
