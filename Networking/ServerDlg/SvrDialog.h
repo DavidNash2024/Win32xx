@@ -9,6 +9,10 @@
 
 
 class CServerSocket;
+class CTCPClientDlg;
+
+typedef Shared_Ptr<CServerSocket> ServerSocketPtr;
+typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 
 // Declaration of the CTCPClientDlg class
 class CTCPClientDlg : public CDialog
@@ -23,7 +27,8 @@ public:
 	void Receive();
 	void Send();
 
-	CServerSocket* m_pSocket;
+//	CServerSocket* m_pSocket;
+	ServerSocketPtr m_pSocket;
 
 private:
 	// Nested classes for this dialog's child windows
@@ -61,7 +66,8 @@ protected:
 
 private:
 	CServerSocket m_MainSocket;
-	std::map<CServerSocket*, CTCPClientDlg*> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
+//	std::map<CServerSocket*, CTCPClientDlg*> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
+	std::map<ServerSocketPtr, TCPClientDlgPtr> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
 	BOOL m_bServerStarted;
 	int  m_SocketType;			// either SOCK_STREAM or SOCK_DGRAM
 	sockaddr_in6  m_saUDPClient;	// connected UPD client's sockaddr	

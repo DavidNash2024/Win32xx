@@ -48,7 +48,6 @@ BOOL CTCPClientDlg::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-
 BOOL CTCPClientDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to the various dialog buttons
@@ -197,14 +196,17 @@ void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
 
 
 	// Allocate an iterator for our CServerSocket map
-	std::map< CServerSocket*, CTCPClientDlg* >::iterator Iter;
-	Iter = m_ConnectedClients.find(pClient);
+	std::map< ServerSocketPtr, TCPClientDlgPtr >::iterator Iter;
+
+	for (Iter = m_ConnectedClients.begin(); Iter != m_ConnectedClients.end(); ++Iter)
+	{
+		if (Iter->first.get() == pClient)
+			break;
+	}
 
 	// delete the CServerSocket, and remove its pointer
 	if (Iter != m_ConnectedClients.end())
 	{
-		delete pClient;
-		delete Iter->second;
 		m_ConnectedClients.erase(Iter);
 	}  
 }
@@ -342,11 +344,10 @@ void CSvrDialog::OnSend()
 void CSvrDialog::OnSocketAccept()
 {
 	// Accept the connection from the client
-	CServerSocket* pClient = new CServerSocket;
+	ServerSocketPtr pClient = new CServerSocket;
 	m_MainSocket.Accept(*pClient, NULL, NULL);
 	if (INVALID_SOCKET == m_MainSocket.GetSocket())
 	{
-		delete pClient;
 		TRACE(_T("Failed to accept connection from client\n"));
 		TRACE(m_MainSocket.GetLastError());
 		return;
@@ -355,7 +356,7 @@ void CSvrDialog::OnSocketAccept()
 	pClient->StartEvents();
 
 	// Create the new chat dialog
-	CTCPClientDlg* pDialog = new CTCPClientDlg(IDD_CHAT, m_hWnd);
+	TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT, m_hWnd);
 	pDialog->m_pSocket = pClient;
 	pDialog->DoModeless();
 
@@ -374,31 +375,39 @@ void CSvrDialog::OnSocketAccept()
 
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 {
-	// This trick ensures our char array is NULL terminated
-	TCHAR buf[1025] = {0};			// Assign all 1025 elements to NULL
+	std::vector<TCHAR> vTChar;
+	vTChar.assign(1025, _T('\0'));
+	TCHAR* bufArray = &vTChar.front(); // TCHAR array with 1025 elements
 	
 	switch (m_SocketType)
 	{
 	case SOCK_STREAM:
 		{
 			// Pass this on to the TCP chat dialog
-			std::map< CServerSocket*, CTCPClientDlg* >::iterator Iter;
-			Iter = m_ConnectedClients.find(pClient);
-			Iter->second->Receive();
+			std::map< ServerSocketPtr, TCPClientDlgPtr >::iterator Iter;
+
+			for (Iter = m_ConnectedClients.begin(); Iter != m_ConnectedClients.end(); ++Iter)
+			{
+				if (Iter->first.get() == pClient)
+				break;
+			}
+			
+			if (Iter !=  m_ConnectedClients.end() )
+				Iter->second->Receive();
 		}
 		break;
 	case SOCK_DGRAM:
 		{
 			int addrlen = sizeof(m_saUDPClient);
-			m_MainSocket.ReceiveFrom(buf, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen);
-			TRACE(_T("[Received:] ")); TRACE(buf); TRACE(_T("\n"));
+			m_MainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen);
+			TRACE(_T("[Received:] ")); TRACE(bufArray); TRACE(_T("\n"));
 			m_ButtonSend.EnableWindow(TRUE);
 			m_EditSend.EnableWindow(TRUE);
 			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE );
 		}
 		break;
 	}
-	Append(IDC_EDIT_RECEIVE, buf);
+	Append(IDC_EDIT_RECEIVE, bufArray);
 }
 
 BOOL CSvrDialog::StartServer()
@@ -467,15 +476,6 @@ BOOL CSvrDialog::StartServer()
 
 void CSvrDialog::StopServer()
 {
-	m_MainSocket.Disconnect();
-	
-	// Delete the client connections
-	std::map<CServerSocket*, CTCPClientDlg*>::iterator iter;
-	for (iter = m_ConnectedClients.begin(); iter != m_ConnectedClients.end(); iter++)
-	{
-		delete (*iter).first;
-		delete (*iter).second;
-	}
-	
+	m_MainSocket.Disconnect();	
 	m_ConnectedClients.clear();
 }
