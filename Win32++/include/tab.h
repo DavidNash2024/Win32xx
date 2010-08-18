@@ -54,7 +54,7 @@ namespace Win32xx
 		TCHAR szTitle[MAX_MENU_STRING];
 		int iImage;
 		int nID;
-		Shared_Ptr<CWnd> pWnd;
+		CWnd* pWnd;
 	};
 
 	class CTab : public CWnd
@@ -175,7 +175,7 @@ namespace Win32xx
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
 		virtual CWnd* GetActiveMDIChild();
-		virtual CWnd* GetMDIChild(int nTab) { return GetTab().GetTabPageInfo(nTab).pWnd.get(); }
+		virtual CWnd* GetMDIChild(int nTab) { return GetTab().GetTabPageInfo(nTab).pWnd; }
 		virtual int   GetMDIChildCount();
 		virtual int   GetMDIChildID(int nTab) { return GetTab().GetTabPageInfo(nTab).nID; }
 		virtual LPCTSTR GetMDIChildTitle(int nTab) { return GetTab().GetTabPageInfo(nTab).szTitle; }
@@ -257,6 +257,11 @@ namespace Win32xx
 	inline CTab::~CTab()
 	{
 		ImageList_Destroy(m_himlTab);
+		std::vector<TabPageInfo>::iterator iter;
+		for (iter = m_vTabPageInfo.begin(); iter != m_vTabPageInfo.end(); ++iter)
+		{
+			delete (*iter).pWnd;
+		}
 	}
 
 	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
@@ -301,7 +306,7 @@ namespace Win32xx
 
 	inline int CTab::AddTabPage(TabPageInfo& tbi)
 	{
-		int iNewPage = AddTabPage(tbi.pWnd.get(), tbi.szTitle);
+		int iNewPage = AddTabPage(tbi.pWnd, tbi.szTitle);
 		m_vTabPageInfo[iNewPage].nID = tbi.nID;
 		return iNewPage;
 	}
@@ -672,7 +677,7 @@ namespace Win32xx
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
-			if (m_vTabPageInfo[i].pWnd.get() == pWnd)
+			if (m_vTabPageInfo[i].pWnd == pWnd)
 				return i;
 		}
 
@@ -681,11 +686,10 @@ namespace Win32xx
 
 	inline TabPageInfo CTab::GetTabPageInfo(UINT nTab)
 	{
-		TabPageInfo tbi = {0};
-		if (nTab < m_vTabPageInfo.size())
-			tbi = m_vTabPageInfo[nTab];
+		assert (nTab < m_vTabPageInfo.size());
+		assert (nTab >= 0);
 
-		return tbi;
+		return m_vTabPageInfo[nTab];
 	}
 
 	inline void CTab::NotifyChanged()
@@ -913,12 +917,13 @@ namespace Win32xx
 			TabCtrl_RemoveImage(m_hWnd, iImage);
 
 		(*iter).pWnd->Destroy();
+		delete (*iter).pWnd;
 		m_vTabPageInfo.erase(iter);
 
 		if (m_vTabPageInfo.size() > 0)
 		{
 			SetTabSize();
-			m_pView = GetAllTabs()[0].pWnd.get();
+			m_pView = GetAllTabs()[0].pWnd;
 			SelectPage(0);
 		}
 		else
@@ -1328,7 +1333,7 @@ namespace Win32xx
 	{
 		int nTab = GetTab().GetCurSel();
 		TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
-		return tbi.pWnd.get();
+		return tbi.pWnd;
 	}
 
 	inline int CTabbedMDI::GetMDIChildCount()
@@ -1379,10 +1384,11 @@ namespace Win32xx
 			}
 		}
 
-		if (!bResult) 
+		if (bResult)
+			SetActiveMDITab(0);
+		else 
 			CloseAllMDIChildren();
 		
-		SetActiveMDITab(0);
 		return bResult;
 	}
 
