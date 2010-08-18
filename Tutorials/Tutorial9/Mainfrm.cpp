@@ -197,9 +197,9 @@ void CMainFrame::OnFilePrint()
 	// Retrieve the image data
 	std::vector<byte> vBits;	// a vector to hold the byte array
 	vBits.assign(bi.biSizeImage, 0);
-	byte* pBits = &vBits.front();
+	byte* pByteArray = &vBits.front();
 
-	GetDIBits(MemDC, hbmView, 0, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	GetDIBits(MemDC, hbmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
     float fLogPelsX1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSX);
@@ -217,7 +217,7 @@ void CMainFrame::OnFilePrint()
 
     // Use StretchDIBits to scale the bitmap and maintain its original proportions
     if (GDI_ERROR == StretchDIBits(pd.hDC, xLeft, yTop, (int) ((float) Width * fScaleX),
-		(int) ((float) Height * fScaleY), 0, 0, Width, Height, pBits, (BITMAPINFO*)&bi, DIB_RGB_COLORS, SRCCOPY))
+		(int) ((float) Height * fScaleY), 0, 0, Width, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS, SRCCOPY))
 	{
 		throw CWinException(_T("Failed to resize image for printing"));
 	}

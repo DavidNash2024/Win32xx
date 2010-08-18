@@ -880,12 +880,13 @@ namespace Win32xx
 		// Resize the vector and assign null WCHAR to each element
 		int length = (int)strlen(pChar)+1;
 		pTLSData->vWChar.assign(length, L'\0');
+		WCHAR* pWCharArray = &pTLSData->vWChar.front();
 
 		// Fill our vector with the converted WCHAR array
-		MultiByteToWideChar(CP_ACP, 0, pChar, -1, &pTLSData->vWChar.front(), length);
+		MultiByteToWideChar(CP_ACP, 0, pChar, -1, pWCharArray, length);
 		
 		// return a pointer to the first element in the vector
-		return &pTLSData->vWChar.front();
+		return pWCharArray;
 	}
 
 	inline LPCSTR WideToChar(LPCWSTR pWChar)
@@ -898,12 +899,13 @@ namespace Win32xx
 		// Resize the vector and assign null char to each element
 		int length = (int)wcslen(pWChar)+1;
 		pTLSData->vChar.assign(length, '\0');
+		char* pCharArray = &pTLSData->vChar.front();
 		
 		// Fill our vector with the converted char array
-		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, &pTLSData->vChar.front(), length, NULL,NULL);
+		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, pCharArray, length, NULL,NULL);
 		
 		// return a pointer to the first element in the vector
-		return &pTLSData->vChar.front();
+		return pCharArray;
 	} 
 
 	inline LPCTSTR CharToTChar(LPCSTR pChar)
@@ -1514,10 +1516,10 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
-		TCHAR* pTChar = &m_vTChar.front();
-		::GetClassName(m_hWnd, pTChar, MAX_STRING_SIZE);
+		TCHAR* pTCharArray = &m_vTChar.front();
+		::GetClassName(m_hWnd, pTCharArray, MAX_STRING_SIZE);
 		
-		return pTChar;
+		return pTCharArray;
 	}
 
 	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem) const
@@ -1526,11 +1528,11 @@ namespace Win32xx
 
 		int nLength = ::GetWindowTextLength(GetDlgItem(nIDDlgItem));
 		m_vTChar.assign(nLength +1, _T('\0'));
-		TCHAR* pTChar = &m_vTChar.front();
+		TCHAR* pTCharArray = &m_vTChar.front();
 
-		::GetDlgItemText(m_hWnd, nIDDlgItem, pTChar, nLength+1);
+		::GetDlgItemText(m_hWnd, nIDDlgItem, pTCharArray, nLength+1);
 				
-		return pTChar;
+		return pTCharArray;
 	}
 
 	inline LPCTSTR CWnd::GetWindowText() const
@@ -1539,10 +1541,10 @@ namespace Win32xx
 		int nLength = ::GetWindowTextLength(m_hWnd);
 
 		m_vTChar.assign(nLength+1, _T('\0'));
-		TCHAR* pTChar = &m_vTChar.front();
-		::GetWindowText(m_hWnd, pTChar, nLength+1);
+		TCHAR* pTCharArray = &m_vTChar.front();
+		::GetWindowText(m_hWnd, pTCharArray, nLength+1);
 		
-		return pTChar;
+		return pTCharArray;
 	}
 
 	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
@@ -1571,12 +1573,12 @@ namespace Win32xx
 		assert(GetApp());
 
 		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
-		TCHAR* pTChar = &m_vTChar.front();
+		TCHAR* pTCharArray = &m_vTChar.front();
 
-		if (!::LoadString (GetApp()->GetResourceHandle(), nID, pTChar, MAX_STRING_SIZE))
+		if (!::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
 		{
 			// The string resource might be in the application's resources instead
-			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, pTChar, MAX_STRING_SIZE))
+			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
 			{
 				TCHAR msg[80] = _T("");
 				::wsprintf(msg, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
@@ -1586,7 +1588,7 @@ namespace Win32xx
 
 		// Never return a pointer to a local variable, it is out of scope when the function returns.
 		// We return a pointer to a member variable so it remains in scope.
-		return pTChar;
+		return pTCharArray;
 	}
 
 	inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)

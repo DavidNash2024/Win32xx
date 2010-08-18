@@ -93,6 +93,7 @@ Modified CSocket::Receive       now uses TCHAR instead of char
 Modified CSocket::ReceiveFrom   now uses TCHAR instead of char
 Modified CSocket::Send          now uses TCHAR instead of char
 Modified CSocket::SentTo        now uses TCHAR instead of char
+Modidified CWinException::what  now outputs text to debugger
 Renamed CToolbar::AddToolbarButton to CToolbar::AddButton
 Renamed CWnd::CharToTChar to ::CharToTChar
 Renamed CWnd::CharToWide  to ::CharToWide

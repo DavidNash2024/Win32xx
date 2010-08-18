@@ -44,7 +44,9 @@ private:
 		Cpidl        m_cpidlRel;	  //Relative PIDL
 		CShellFolder m_cParentFolder; //Parent IShellFolder
 
-	};  //class ListItemData (nested class) 
+	};  //class ListItemData (nested class)
+
+	typedef Shared_Ptr<ListItemData> ListItemDataPtr;
 
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 	void DeleteItems();
@@ -61,7 +63,7 @@ private:
 	Cpidl		  m_cpidlCurFull;  //Fully Qualified pidl
 	CShellFolder  m_csfCurFolder;  //Current Folder
 	CContextMenu2 m_ccm2;
-	std::vector <ListItemData*> m_pItems;
+	std::vector <ListItemDataPtr> m_pItems;
 	HIMAGELIST m_hLargeImageList;
 	HIMAGELIST m_hSmallImageList;
 

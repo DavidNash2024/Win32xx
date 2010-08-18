@@ -138,10 +138,10 @@ namespace Win32xx
 
 		std::vector<TCHAR> Text;
 		Text.assign( iChars +1, _T('\0') );
-		TCHAR* pText = &Text.front();
+		TCHAR* pTextArray = &Text.front();
 
-		SendMessage(SB_GETTEXT, iPart, (LPARAM)pText);
-		PaneText = pText;			
+		SendMessage(SB_GETTEXT, iPart, (LPARAM)pTextArray);
+		PaneText = pTextArray;			
 		return PaneText;
 	}
 
@@ -187,23 +187,23 @@ namespace Win32xx
 		int PartsCount = (int)SendMessage(SB_GETPARTS, 0L, 0L);
 		std::vector<int> PartWidths;
 		PartWidths.assign(PartsCount, 0);
-		int* pPartWidths = &PartWidths.front();
-		SendMessage(SB_GETPARTS, PartsCount, (LPARAM)pPartWidths);
+		int* pPartWidthArray = &PartWidths.front();
+		SendMessage(SB_GETPARTS, PartsCount, (LPARAM)pPartWidthArray);
 
 		// Fill the NewPartWidths vector with the new width of the statusbar parts
 		int NewPartsCount = MAX(iPart+1, PartsCount);	
 		std::vector<int> NewPartWidths;
 		NewPartWidths.assign(NewPartsCount, 0);
 		NewPartWidths = PartWidths;
-		int* pNewPartWidths = &NewPartWidths.front();
+		int* pNewPartWidthArray = &NewPartWidths.front();
 
 		if (0 == iPart)
-			pNewPartWidths[iPart] = iWidth;
+			pNewPartWidthArray[iPart] = iWidth;
 		else
-			pNewPartWidths[iPart] = pNewPartWidths[iPart -1] + iWidth;
+			pNewPartWidthArray[iPart] = pNewPartWidthArray[iPart -1] + iWidth;
 
 		// Set the statusbar parts with our new parts count and part widths
-		BOOL bResult = (BOOL)SendMessage(SB_SETPARTS, NewPartsCount, (LPARAM)pNewPartWidths);
+		BOOL bResult = (BOOL)SendMessage(SB_SETPARTS, NewPartsCount, (LPARAM)pNewPartWidthArray);
 
 		return bResult;
 	}

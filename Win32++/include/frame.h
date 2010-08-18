@@ -1920,12 +1920,13 @@ namespace Win32xx
 					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
 					std::vector<TCHAR> PathName;
 					PathName.assign( dwBufferSize, _T('\0') );
+					TCHAR* pTCharArray = &PathName.front();
 
 					// load the entry from the registry
-					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)&PathName.front(), &dwBufferSize))
+					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
 					{
-						if ( lstrlen( &PathName.front() ) )
-							m_vMRUEntries.push_back( &PathName.front() );
+						if ( lstrlen( pTCharArray ) )
+							m_vMRUEntries.push_back( pTCharArray );
 					}
 				}
 			}

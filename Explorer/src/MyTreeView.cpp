@@ -37,12 +37,7 @@ int CALLBACK CMyTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPa
 
 void CMyTreeView::DeleteItems()
 {
-	std::vector<TreeItemData*>::iterator Iter;
-	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); ++Iter)
-	{
-		//free up the TreeItemData objects
-		delete (*Iter);
-	}	
+	m_pItems.clear();
 }
 
 void CMyTreeView::DoContextMenu(CPoint& ptScreen)

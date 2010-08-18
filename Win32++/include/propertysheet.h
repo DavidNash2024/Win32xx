@@ -626,8 +626,8 @@ namespace Win32xx
 		for (iter = m_vPages.begin(); iter < m_vPages.end(); ++iter)
 			m_vPSP.push_back((*iter)->GetPSP());
 
-		PROPSHEETPAGE* pPSP = &m_vPSP.front();	// Array of PROPSHEETPAGE
-		m_PSH.ppsp = pPSP;
+		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();	// Array of PROPSHEETPAGE
+		m_PSH.ppsp = pPSPArray;
 	}
 
 	inline void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT uMsg, LPARAM lParam)
@@ -679,7 +679,8 @@ namespace Win32xx
 		}
 
 		BuildPageArray();
-		m_PSH.ppsp = &m_vPSP.front();
+		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();
+		m_PSH.ppsp = pPSPArray;
 
 		// Create a modeless Property Sheet
 		m_PSH.dwFlags &= ~PSH_WIZARD;
@@ -734,7 +735,8 @@ namespace Win32xx
 		assert( GetApp() );
 
 		BuildPageArray();
-		m_PSH.ppsp = &m_vPSP.front();
+		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();
+		m_PSH.ppsp = pPSPArray;
 
 		// Create the Property Sheet
 		int nResult = (int)CreatePropertySheet(&m_PSH);

@@ -34,6 +34,9 @@ rebar.h           | CRebar           | Win32, Win64      | Adds support for a
 ribbon.h          | CRibbon          | Win32, Win64      | Adds support for the 
                   | CRibbonFrame     |                   | Windows 7 ribbon.                  
 ------------------+------------------+-------------------+---------------------
+shared_ptr.h      | Shared_Ptr       | Win32, Win64,     | Add a smart pointer
+                  |                  | and WinCE         | for use in vectors.
+------------------+------------------+-------------------+---------------------
 socket.h          | CSocket          | Win32, Win64      | Adds network  
                   |                  | and WinCE         | support.
 ------------------+------------------+-------------------+---------------------

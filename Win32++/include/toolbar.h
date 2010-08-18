@@ -381,10 +381,10 @@ namespace Win32xx
 
 		int Length = (int)SendMessage(TB_GETBUTTONTEXT, idButton, 0);
 		m_vTChar.assign(Length+1, _T('\0'));
-		TCHAR* pTChar = &m_vTChar.front();
+		TCHAR* pTCharArray = &m_vTChar.front();
 
-		SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)pTChar);
-		return pTChar;
+		SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)pTCharArray);
+		return pTCharArray;
 	}
 
 	inline int CToolbar::GetCommandID(int iIndex) const

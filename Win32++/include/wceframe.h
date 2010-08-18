@@ -363,23 +363,23 @@ namespace Win32xx
 		//	TBBUTTON* tbb =  new TBBUTTON[iNumButtons];
 			std::vector<TBBUTTON> vTBB;
 			vTBB.resize(iNumButtons);
-			TBBUTTON* tbb = &vTBB.front();
+			TBBUTTON* tbbArray = &vTBB.front();
 
 			for (int j = 0 ; j < iNumButtons; j++)
 			{
-				ZeroMemory(&tbb[j], sizeof(TBBUTTON));
+				ZeroMemory(&tbbArray[j], sizeof(TBBUTTON));
 
 				if (ToolbarData[j] == 0)
 				{
-					tbb[j].fsStyle = TBSTYLE_SEP;
+					tbbArray[j].fsStyle = TBSTYLE_SEP;
 				}
 				else
 				{
-					tbb[j].iBitmap = iImages++;
-					tbb[j].idCommand = ToolbarData[j];
-					tbb[j].fsState = TBSTATE_ENABLED;
-					tbb[j].fsStyle = TBSTYLE_BUTTON;
-					tbb[j].iString = -1;
+					tbbArray[j].iBitmap = iImages++;
+					tbbArray[j].idCommand = ToolbarData[j];
+					tbbArray[j].fsState = TBSTATE_ENABLED;
+					tbbArray[j].fsStyle = TBSTYLE_BUTTON;
+					tbbArray[j].iString = -1;
 				}
 			}
 
@@ -387,7 +387,7 @@ namespace Win32xx
 			GetMenubar().AddBitmap(IDW_MAIN, iImages , 16, 16);
 
 			// Add the buttons
-			GetMenubar().AddButtons(iNumButtons, tbb);
+			GetMenubar().AddButtons(iNumButtons, tbbArray);
 		}
 	}
 

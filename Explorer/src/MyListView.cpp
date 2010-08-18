@@ -35,12 +35,6 @@ CMyListView::~CMyListView()
 
 void CMyListView::DeleteItems()
 {
-	std::vector<ListItemData*>::iterator Iter;
-	for (Iter = m_pItems.begin(); Iter != m_pItems.end(); ++Iter)
-	{
-		//free up the ListItemData objects
-		delete (*Iter);
-	}
 	m_pItems.clear();
 }
 
@@ -123,27 +117,28 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
 	{
 		//get the selected items
 		UINT  nItems = GetSelectedCount();
-		LPINT pItems = new int[nItems];
+		std::vector<int> vItems;
+		vItems.assign(nItems, 0);
+		int* pItemArray = &vItems.front();
 
-		if(pItems)
+		if(pItemArray)
 		{
-		UINT  i;
-		int   nCurItem;
+			UINT  i;
+			int   nCurItem;
 
-		//put the item clicked on first in the list
-		pItems[0] = lvhti.iItem;
+			//put the item clicked on first in the list
+			pItemArray[0] = lvhti.iItem;
 
-		for(i = 1, nCurItem = -1; i < nItems; ++i)
-		{
-			nCurItem = GetNextItem(nCurItem, LVNI_SELECTED);
-			if(nCurItem != lvhti.iItem)
-				pItems[i] = nCurItem;
-			else
-				--i;
-		}
+			for(i = 1, nCurItem = -1; i < nItems; ++i)
+			{
+				nCurItem = GetNextItem(nCurItem, LVNI_SELECTED);
+				if(nCurItem != lvhti.iItem)
+					pItemArray[i] = nCurItem;
+				else
+					--i;
+			}
 
-		DoItemMenu(pItems, nItems, ptScreen);
-		delete []pItems;
+			DoItemMenu(pItemArray, nItems, ptScreen);
 		}
 	}
 	else
@@ -234,7 +229,9 @@ void CMyListView::DoDisplay()
 
 void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 {
-	Cpidl* cpidlArray = new Cpidl[cbItems];
+	std::vector<Cpidl> vpidl;
+	vpidl.resize(cbItems);
+	Cpidl* pidlArray = &vpidl.front();
 
 	for(UINT i = 0; i < cbItems; ++i)
 	{
@@ -244,18 +241,18 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 		if(GetItem(lvItem))
 		{
 			ListItemData*  pInfo = (ListItemData*)lvItem.lParam;
-			cpidlArray[i] = pInfo->GetRelPidl();
+			pidlArray[i] = pInfo->GetRelPidl();
 		}
 	}
 
-	if(cpidlArray[0].GetPidl())
+	if(pidlArray[0].GetPidl())
 	{
 		HRESULT        hr;
 		CContextMenu ccm;
 
 		if(m_csfCurFolder.GetIShellFolder())
 		{
-			hr = m_csfCurFolder.GetUIObjectOf(m_hWnd, cbItems, cpidlArray, IID_IContextMenu, 0, ccm);
+			hr = m_csfCurFolder.GetUIObjectOf(m_hWnd, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
 
 			if(SUCCEEDED(hr))
 			{
@@ -291,7 +288,6 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 			}
 		}
 	}
-	delete []cpidlArray;
 }
 
 LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)

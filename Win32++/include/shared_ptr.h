@@ -46,11 +46,17 @@
 //  Shared_Ptr<CWnd> w1(new CWnd);
 //   or
 //  Shared_Ptr<CWnd> w1 = new CWnd;
+//   or
+//  typedef Shared_Ptr<CWnd> CWndPtr;
+//  CWndPtr w1 = new CWnd;
+//   or
+//  typedef Shared_Ptr<CWnd> CWndPtr;
+//  CWndPtr w1(new CWnd);
 //
 //  And with a vector
 //  typedef Shared_Ptr<CWnd> CWndPtr;
 //  std::vector<CWndPtr> MyVector;
-//  MyVector.push_back(CWndPtr(new CWnd));
+//  MyVector.push_back(new CWnd);
 //   or
 //  typedef Shared_Ptr<CWnd> CWndPtr;
 //  CWnd* pWnd = new CWnd;
@@ -72,8 +78,8 @@
 //    int nLength = ::GetWindowTextLength(m_hWnd);
 //    std::vector<TCHAR> vTChar;
 //    vTChar.assign(nLength+1, _T('\0'));
-//    TCHAR* pTChar = &vTChar.front();
-//    ::GetWindowText(m_hWnd, pTChar, nLength+1);
+//    TCHAR* pTCharArray = &vTChar.front();
+//    ::GetWindowText(m_hWnd, pTCharArray, nLength+1);
 //
 // This works because the memory in a vector is always contiguous. Note that
 // this is NOT always true of std::string.
@@ -149,6 +155,26 @@ namespace Win32xx
 		{
 			assert (m_ptr);
 			return *m_ptr;
+		}
+
+		bool operator== (const Shared_Ptr& rhs) const
+		{
+			return ( *m_ptr == *rhs.m_ptr);
+		}
+
+		bool operator!= (const Shared_Ptr& rhs) const
+		{
+			return ( *m_ptr != *rhs.m_ptr);
+		}
+
+		bool operator< (const Shared_Ptr& rhs) const
+		{	
+			return ( *m_ptr < *rhs.m_ptr );
+		}
+
+		bool operator> (const Shared_Ptr& rhs) const
+		{	
+			return ( *m_ptr > *rhs.m_ptr );
 		}
 
 	private:

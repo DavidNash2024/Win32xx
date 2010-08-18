@@ -45,6 +45,8 @@ private:
 
 	};  //class TreeItemData
 
+	typedef Shared_Ptr<TreeItemData> TreeItemDataPtr;
+
 	static int CALLBACK CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 	void DeleteItems();
 	void DoItemMenu(HTREEITEM hItem, CPoint& ptScreen);
@@ -57,7 +59,7 @@ private:
 	HIMAGELIST m_hLargeImageList;
 	HIMAGELIST m_hSmallImageList;
 	CContextMenu2 m_ccm2;
-	std::vector <TreeItemData*> m_pItems;
+	std::vector <TreeItemDataPtr> m_pItems;
 public:
 	DWORD m_dwThreadID;
 

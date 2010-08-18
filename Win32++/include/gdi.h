@@ -367,25 +367,25 @@ namespace Win32xx
 			// Allocate memory for the BITMAPINFO structure.
 			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((__int64)1 << cClrBits);		
 			m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
-			m_pbmi = (LPBITMAPINFO) &m_bmi.front();
+			m_pbmiArray = (LPBITMAPINFO) &m_bmi.front();
 
-			m_pbmi->bmiHeader.biSize		= sizeof(BITMAPINFOHEADER);
-			m_pbmi->bmiHeader.biHeight		= bmSource.bmHeight;
-			m_pbmi->bmiHeader.biWidth		= bmSource.bmWidth;
-			m_pbmi->bmiHeader.biPlanes		= bmSource.bmPlanes;
-			m_pbmi->bmiHeader.biBitCount	= bmSource.bmBitsPixel;
-			m_pbmi->bmiHeader.biCompression = BI_RGB;
+			m_pbmiArray->bmiHeader.biSize		= sizeof(BITMAPINFOHEADER);
+			m_pbmiArray->bmiHeader.biHeight		= bmSource.bmHeight;
+			m_pbmiArray->bmiHeader.biWidth		= bmSource.bmWidth;
+			m_pbmiArray->bmiHeader.biPlanes		= bmSource.bmPlanes;
+			m_pbmiArray->bmiHeader.biBitCount	= bmSource.bmBitsPixel;
+			m_pbmiArray->bmiHeader.biCompression = BI_RGB;
 			if (cClrBits < 24)
-				m_pbmi->bmiHeader.biClrUsed = (1<<cClrBits);
+				m_pbmiArray->bmiHeader.biClrUsed = (1<<cClrBits);
 		}
-		LPBITMAPINFO get() const { return m_pbmi; }
-		operator LPBITMAPINFO() const { return m_pbmi; }
-		LPBITMAPINFO operator->() const { return m_pbmi; }
+		LPBITMAPINFO get() const { return m_pbmiArray; }
+		operator LPBITMAPINFO() const { return m_pbmiArray; }
+		LPBITMAPINFO operator->() const { return m_pbmiArray; }
 
 	private:
 		CBitmapInfoPtr(const CBitmapInfoPtr&);				// Disable copy construction
 		CBitmapInfoPtr& operator = (const CBitmapInfoPtr&);	// Disable assignment operator
-		LPBITMAPINFO m_pbmi;
+		LPBITMAPINFO m_pbmiArray;
 		std::vector<byte> m_bmi;
 	};
 
@@ -1736,9 +1736,9 @@ namespace Win32xx
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 		std::vector<byte> vBits;
 		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
-		byte* lpvBits = &vBits.front();
+		byte* pByteArray = &vBits.front();
 		
-		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
 
 		// Ensure sane colour correction values
@@ -1773,19 +1773,19 @@ namespace Win32xx
 
 				// Adjust the colour values
 				if (cBlue > 0)
-					lpvBits[Index]   = (BYTE)(cBlue + (((lpvBits[Index] *b1)) >>8));
+					pByteArray[Index]   = (BYTE)(cBlue + (((pByteArray[Index] *b1)) >>8));
 				else if (cBlue < 0)
-					lpvBits[Index]   = (BYTE)((lpvBits[Index] *b2) >>8);
+					pByteArray[Index]   = (BYTE)((pByteArray[Index] *b2) >>8);
 
 				if (cGreen > 0)
-					lpvBits[Index+1] = (BYTE)(cGreen + (((lpvBits[Index+1] *g1)) >>8));
+					pByteArray[Index+1] = (BYTE)(cGreen + (((pByteArray[Index+1] *g1)) >>8));
 				else if (cGreen < 0)
-					lpvBits[Index+1] = (BYTE)((lpvBits[Index+1] *g2) >>8);
+					pByteArray[Index+1] = (BYTE)((pByteArray[Index+1] *g2) >>8);
 
 				if (cRed > 0)
-					lpvBits[Index+2] = (BYTE)(cRed + (((lpvBits[Index+2] *r1)) >>8));
+					pByteArray[Index+2] = (BYTE)(cRed + (((pByteArray[Index+2] *r1)) >>8));
 				else if (cRed < 0)
-					lpvBits[Index+2] = (BYTE)((lpvBits[Index+2] *r2) >>8);
+					pByteArray[Index+2] = (BYTE)((pByteArray[Index+2] *r2) >>8);
 
 				// Increment the horizontal offset
 				xOffset += pbmi->bmiHeader.biBitCount >> 3;
@@ -1796,7 +1796,7 @@ namespace Win32xx
 		}
 
 		// Save the modified colour back into our source DDB
-		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 	}
 
 	inline void GrayScaleBitmap( HBITMAP hbmSource )
@@ -1811,9 +1811,9 @@ namespace Win32xx
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 		std::vector<byte> vBits;
 		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
-		byte* lpvBits = &vBits.front();
+		byte* pByteArray = &vBits.front();
 
-		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
 
 		int yOffset = 0;
@@ -1829,10 +1829,10 @@ namespace Win32xx
 				// Calculate Index
 				Index = yOffset + xOffset;
 
-				BYTE byGray = (BYTE) ((lpvBits[Index] + lpvBits[Index+1]*6 + lpvBits[Index+2] *3)/10);
-				lpvBits[Index]   = byGray;
-				lpvBits[Index+1] = byGray;
-				lpvBits[Index+2] = byGray;
+				BYTE byGray = (BYTE) ((pByteArray[Index] + pByteArray[Index+1]*6 + pByteArray[Index+2] *3)/10);
+				pByteArray[Index]   = byGray;
+				pByteArray[Index+1] = byGray;
+				pByteArray[Index+2] = byGray;
 
 				// Increment the horizontal offset
 				xOffset += pbmi->bmiHeader.biBitCount >> 3;
@@ -1843,7 +1843,7 @@ namespace Win32xx
 		}
 
 		// Save the modified colour back into our source DDB
-		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 	}
 
 	inline HIMAGELIST CreateDisabledImageList( HIMAGELIST himlNormal )

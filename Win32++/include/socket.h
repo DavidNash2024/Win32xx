@@ -628,12 +628,12 @@ namespace Win32xx
 	{
 		std::vector<char> vChar;
 		vChar.assign(len+1, '\0');
-		char* szBuf = &vChar.front(); 
-		int Result = ::recv(m_Socket, szBuf, len, flags);
+		char* pCharArray = &vChar.front(); 
+		int Result = ::recv(m_Socket, pCharArray, len, flags);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("Receive failed\n"));
 
-		lstrcpyn(buf, CharToTChar(szBuf), len);
+		lstrcpyn(buf, CharToTChar(pCharArray), len);
 
 		return Result;
 	}
@@ -643,12 +643,12 @@ namespace Win32xx
 	{
 		std::vector<char> vChar;
 		vChar.assign(len+1, '\0');
-		char* szBuf = &vChar.front();
-		int Result = ::recvfrom(m_Socket, szBuf, len, flags, from, fromlen);
+		char* pCharArray = &vChar.front();
+		int Result = ::recvfrom(m_Socket, pCharArray, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("ReceiveFrom failed\n"));
 
-		lstrcpyn(buf, CharToTChar(szBuf), len);
+		lstrcpyn(buf, CharToTChar(pCharArray), len);
 
 		return Result;
 	}

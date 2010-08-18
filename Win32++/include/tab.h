@@ -54,7 +54,7 @@ namespace Win32xx
 		TCHAR szTitle[MAX_MENU_STRING];
 		int iImage;
 		int nID;
-		CWnd* pWnd;
+		Shared_Ptr<CWnd> pWnd;
 	};
 
 	class CTab : public CWnd
@@ -175,7 +175,7 @@ namespace Win32xx
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
 		virtual CWnd* GetActiveMDIChild();
-		virtual CWnd* GetMDIChild(int nTab) { return GetTab().GetTabPageInfo(nTab).pWnd; }
+		virtual CWnd* GetMDIChild(int nTab) { return GetTab().GetTabPageInfo(nTab).pWnd.get(); }
 		virtual int   GetMDIChildCount();
 		virtual int   GetMDIChildID(int nTab) { return GetTab().GetTabPageInfo(nTab).nID; }
 		virtual LPCTSTR GetMDIChildTitle(int nTab) { return GetTab().GetTabPageInfo(nTab).szTitle; }
@@ -257,11 +257,6 @@ namespace Win32xx
 	inline CTab::~CTab()
 	{
 		ImageList_Destroy(m_himlTab);
-		std::vector<TabPageInfo>::iterator iter;
-		for (iter = m_vTabPageInfo.begin(); iter != m_vTabPageInfo.end(); ++iter)
-		{
-			delete (*iter).pWnd;
-		}
 	}
 
 	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon)
@@ -306,7 +301,7 @@ namespace Win32xx
 
 	inline int CTab::AddTabPage(TabPageInfo& tbi)
 	{
-		int iNewPage = AddTabPage(tbi.pWnd, tbi.szTitle);
+		int iNewPage = AddTabPage(tbi.pWnd.get(), tbi.szTitle);
 		m_vTabPageInfo[iNewPage].nID = tbi.nID;
 		return iNewPage;
 	}
@@ -677,7 +672,7 @@ namespace Win32xx
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
-			if (m_vTabPageInfo[i].pWnd == pWnd)
+			if (m_vTabPageInfo[i].pWnd.get() == pWnd)
 				return i;
 		}
 
@@ -918,13 +913,12 @@ namespace Win32xx
 			TabCtrl_RemoveImage(m_hWnd, iImage);
 
 		(*iter).pWnd->Destroy();
-		delete (*iter).pWnd;
 		m_vTabPageInfo.erase(iter);
 
 		if (m_vTabPageInfo.size() > 0)
 		{
 			SetTabSize();
-			m_pView = GetAllTabs()[0].pWnd;
+			m_pView = GetAllTabs()[0].pWnd.get();
 			SelectPage(0);
 		}
 		else
@@ -1334,7 +1328,7 @@ namespace Win32xx
 	{
 		int nTab = GetTab().GetCurSel();
 		TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
-		return tbi.pWnd;
+		return tbi.pWnd.get();
 	}
 
 	inline int CTabbedMDI::GetMDIChildCount()
