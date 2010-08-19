@@ -113,7 +113,7 @@ namespace Win32xx
 		HWND m_hDlgParent;				// handle to the dialogs's parent window
 	};
 
-    enum alignment      // used by CResizer
+    enum Alignment      // used by CResizer
     {
         topleft,
         topright,
@@ -124,7 +124,7 @@ namespace Win32xx
     struct ResizeData   // used by CResizer
     {
         CRect rcInit;
-        alignment corner;
+        Alignment corner;
         BOOL bFixedWidth;
         BOOL bFixedHeight;
     	CWnd* pWnd;
@@ -147,7 +147,7 @@ namespace Win32xx
 		CResizer() : m_pParent(0) {}
 		virtual ~CResizer() {}
 
-        virtual void AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
+        virtual void AddChild(CWnd* pWnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
         virtual void RecalcLayout();
     	virtual void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
 
@@ -551,7 +551,7 @@ namespace Win32xx
 	// Definitions for the CResizer class
 	//
     
-	void inline CResizer::AddChild(CWnd* pWnd, alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
+	void inline CResizer::AddChild(CWnd* pWnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.
 	//
