@@ -204,8 +204,6 @@ namespace Win32xx
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
-	// A smart pointer for CWnd
-	typedef Shared_Ptr<CWnd> CWndPtr;
 
 
 	//////////////////////////////////////////////////

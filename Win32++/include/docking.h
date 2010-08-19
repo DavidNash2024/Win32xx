@@ -83,11 +83,11 @@
 
 namespace Win32xx
 {
-  // Class declarations
-  class CDockContainer;
+	// Class declarations
+	class CDockContainer;
 	class CDocker;
 
-  struct ContainerInfo
+	struct ContainerInfo
 	{
 		TCHAR szTitle[MAX_MENU_STRING];
 		int iImage;
@@ -1743,6 +1743,16 @@ namespace Win32xx
 		GetDockBar().Destroy();
 		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
+
+		std::vector <DockPtr>::iterator iter;
+		if (GetDockAncestor() == this)
+		{
+			// Destroy all dock descendants of this dock ancestor
+			for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
+			{
+				(*iter)->Destroy();
+			}
+		}
 	}
 
 	inline CDocker* CDocker::AddDockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockWidth, int nDockID /* = 0*/)
