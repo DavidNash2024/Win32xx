@@ -193,8 +193,6 @@ namespace Win32xx {}
 
 namespace Win32xx
 {
-	// tString is a TCHAR std::string
-	typedef std::basic_string<TCHAR> tString;
 
 
 	////////////////////////////////////////////////
@@ -202,6 +200,12 @@ namespace Win32xx
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CWnd;
+
+	// tString is a TCHAR std::string
+	typedef std::basic_string<TCHAR> tString;
+
+	// A smart pointer for CWnd
+	typedef Shared_Ptr<CWnd> CWndPtr;
 
 
 	//////////////////////////////////////////////////

@@ -9,10 +9,10 @@ CMyTabbedMDI::CMyTabbedMDI()
 {
 }
 
-CWnd* CMyTabbedMDI::NewMDIChildFromID(int nID)
+CWnd* CMyTabbedMDI::NewMDIChildFromID(int idMDIChild)
 {
 	CWnd* pView = NULL;
-	switch(nID)
+	switch(idMDIChild)
 	{
 	case ID_MDI_CLASSES:
 		pView = new CViewClasses;
@@ -33,7 +33,7 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int nID)
 		pView = new CViewRect;
 		break;
 	default:
-		TRACE(_T("Unknown TabbedMDI ID\n"));
+		TRACE(_T("Unknown TabbedMDI id\n"));
 		break;
 	}
 

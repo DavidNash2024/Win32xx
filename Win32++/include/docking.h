@@ -447,7 +447,7 @@ namespace Win32xx
 		void SetView(CWnd& wndView);
 
 	protected:
-		virtual CDocker* NewDockerFromID(int nID);
+		virtual CDocker* NewDockerFromID(int idDock);
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCaptionTimer(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();

@@ -15,10 +15,10 @@ CDockTabbedMDI::CDockTabbedMDI()
 	SetView(m_View);
 }
 
-CDocker* CDockTabbedMDI::NewDockerFromID(int nID)
+CDocker* CDockTabbedMDI::NewDockerFromID(int idDock)
 {
 	CDocker* pDock = NULL;
-	switch(nID)
+	switch(idDock)
 	{
 	case ID_DOCK_BROWSER1:
 		pDock = new CDockBrowser;

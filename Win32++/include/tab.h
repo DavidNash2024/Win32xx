@@ -53,7 +53,7 @@ namespace Win32xx
 	{
 		TCHAR szTabText[MAX_MENU_STRING];
 		int iImage;
-		int nID;
+		int idTab;
 		CWnd* pWnd;
 	};
 
@@ -86,8 +86,8 @@ namespace Win32xx
 	public:
 		CTab();
 		virtual ~CTab();
-		virtual int  AddTabPage(TabPageInfo& tbi);
-		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon);
+	//	virtual int  AddTabPage(TabPageInfo& tbi);
+		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, HICON hIcon, UINT idTab);
 		virtual int  AddTabPage(CWnd* pWnd, LPCTSTR szTitle, UINT nID_Icon = 0);
 		virtual CRect GetCloseRect();
 		virtual CRect GetListRect();
@@ -170,14 +170,14 @@ namespace Win32xx
 	public:
 		CTabbedMDI();
 		virtual ~CTabbedMDI();
-		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int nID = 0);
+		virtual CWnd* AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int idTab = 0);
 		virtual void  CloseActiveMDI();
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
 		virtual CWnd* GetActiveMDIChild();
 		virtual CWnd* GetMDIChild(int nTab) { return GetTab().GetTabPageInfo(nTab).pWnd; }
 		virtual int   GetMDIChildCount();
-		virtual int   GetMDIChildID(int nTab) { return GetTab().GetTabPageInfo(nTab).nID; }
+		virtual int   GetMDIChildID(int nTab) { return GetTab().GetTabPageInfo(nTab).idTab; }
 		virtual LPCTSTR GetMDIChildTitle(int nTab) { return GetTab().GetTabPageInfo(nTab).szTabText; }
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual tString GetWindowType() const { return _T("CTabbedMDI"); }
@@ -189,7 +189,7 @@ namespace Win32xx
 
 	protected:
 		virtual HWND    Create(HWND hWndParent);
-		virtual CWnd*   NewMDIChildFromID(int nID);
+		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnEraseBkGnd(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -264,26 +264,22 @@ namespace Win32xx
 		}
 	}
 
-	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTabText, HICON hIcon)
+	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTabText, HICON hIcon, UINT idTab)
 	{
 		assert(pWnd);
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
 
 		TabPageInfo tpi = {0};
 		tpi.pWnd = pWnd;
+		tpi.idTab = idTab;
 		lstrcpyn(tpi.szTabText, szTabText, MAX_MENU_STRING);
 		if (hIcon)
 			tpi.iImage = ImageList_AddIcon(GetImageList(), hIcon);
 		else
 			tpi.iImage = -1;
 
-		return AddTabPage(tpi);
-	}
-
-	inline int CTab::AddTabPage(TabPageInfo& tpi)
-	{	
+		int iNewPage = (int)m_vTabPageInfo.size();
 		m_vTabPageInfo.push_back(tpi);
-		int iNewPage = (int)m_vTabPageInfo.size() - 1;
 
 		if (m_hWnd)
 		{
@@ -293,27 +289,26 @@ namespace Win32xx
 			tie.pszText = tpi.szTabText;
 			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
 
+			// Adjust the window styles if needed
+			DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+			if (!(dwStyle & TCS_OWNERDRAWFIXED) || !(dwStyle & TCS_FIXEDWIDTH))
+			{
+				dwStyle |= TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
+				SetWindowLongPtr(GWL_STYLE, dwStyle);
+			}
+
 			SetTabSize();
 			SelectPage(iNewPage);
+			NotifyChanged();	
 		}
-
-		// Adjust the window styles if needed
-		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
-		if (!(dwStyle & TCS_OWNERDRAWFIXED) || !(dwStyle & TCS_FIXEDWIDTH))
-		{
-			dwStyle |= TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
-			SetWindowLongPtr(GWL_STYLE, dwStyle);
-		}
-
-		SetActiveView(*tpi.pWnd);
-		NotifyChanged();
+		
 		return iNewPage;
 	}
 
-	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTabText, UINT nID_Icon /* = 0*/)
+	inline int CTab::AddTabPage(CWnd* pWnd, LPCTSTR szTabText, UINT idIcon /* = 0*/ )
 	{
-		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon), IMAGE_ICON, 0,0,0);
-		return AddTabPage(pWnd, szTabText, hIcon);
+		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0,0,0);
+		return AddTabPage(pWnd, szTabText, hIcon, 0);
 	}
 
 	inline void CTab::DrawCloseButton(CDC& DrawDC)
@@ -1266,7 +1261,7 @@ namespace Win32xx
 	{
 	}
 
-	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int nID /*= 0*/)
+	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pWnd, LPCTSTR szTabText, int idTab /*= 0*/)
 	{
 		assert(pWnd);
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
@@ -1275,7 +1270,7 @@ namespace Win32xx
 		::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
 		TabPageInfo tpi = {0};
-		tpi.nID = nID;
+		tpi.idTab = idTab;
 		tpi.iImage = -1;
 		tpi.pWnd = pWnd;
 		lstrcpyn(tpi.szTabText, szTabText, MAX_MENU_STRING -1);
@@ -1287,7 +1282,7 @@ namespace Win32xx
 			GetTab().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		}
 
-		GetTab().AddTabPage(tpi);	
+		GetTab().AddTabPage(pWnd, szTabText, 0, idTab);	
 		return pWnd;
 	}
 
@@ -1363,10 +1358,10 @@ namespace Win32xx
 				// Fill the DockList vector from the registry
 				while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&tbi, &BufferSize))
 				{
-					CWnd* pWnd = NewMDIChildFromID(tbi.nID);
+					CWnd* pWnd = NewMDIChildFromID(tbi.idTab);
 					if (pWnd)
 					{
-						AddMDIChild(pWnd, tbi.szTabText, tbi.nID);
+						AddMDIChild(pWnd, tbi.szTabText, tbi.idTab);
 						i++;
 						tsSubKey = _T("MDI Child ");
 						tsSubKey += _itot(i, szNumber, 10);
@@ -1392,11 +1387,11 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline CWnd* CTabbedMDI::NewMDIChildFromID(int /*nID*/)
+	inline CWnd* CTabbedMDI::NewMDIChildFromID(int /*idMDIChild*/)
 	{
 		// Override this function to create new MDI children from IDs as shown below
 		CWnd* pView = NULL;
-	/*	switch(nID)
+	/*	switch(idTab)
 		{
 		case ID_SIMPLE:
 			pView = new CViewSimple;

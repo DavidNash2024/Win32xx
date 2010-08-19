@@ -29,7 +29,7 @@ class CDockTabbedMDI : public CDocker
 public:
 	CDockTabbedMDI();
 	virtual ~CDockTabbedMDI() {}
-	virtual CDocker* NewDockerFromID(int nID);
+	virtual CDocker* NewDockerFromID(int idDock);
 	virtual void OnInitialUpdate();
 
 private:

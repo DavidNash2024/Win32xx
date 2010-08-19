@@ -30,7 +30,7 @@ BEGIN
     BEGIN
         MENUITEM "New Files Tab",               IDM_NEW_FILES
         MENUITEM "New Classes Tab",             IDM_NEW_CLASSES
-        MENUITEM "Close",                       IDM_FILE_CLOSE
+        MENUITEM "Close Tab",                   IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
