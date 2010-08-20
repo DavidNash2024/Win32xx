@@ -1,4 +1,4 @@
-/////////////////////////////////////////////
+//////////////////////////////////////////////
 // StdAfx.h
 
 // This file is used for precompiled headers
@@ -15,6 +15,9 @@
 //#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #define VC_EXTRALEAN			// Exclude rarely-used stuff from Windows headers
 #define WINVER 0x0400			// Support window features compatible with Win95
+
+// Specify Win32xx specific predifinitions here
+//#define NO_USING_NAMESPACE		// Don't use Win32xx namespace
 
 typedef  unsigned char  byte;
 
@@ -40,6 +43,7 @@ typedef  unsigned char  byte;
 #include <mdi.h>
 #include <propertysheet.h>
 #include <rebar.h>
+#include <ribbon.h>
 #include <socket.h>
 #include <statusbar.h>
 #include <stdcontrols.h>

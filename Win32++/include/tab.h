@@ -89,7 +89,7 @@ namespace Win32xx
 		CTab();
 		virtual ~CTab();
 		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
-		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText, UINT nID_Icon, UINT idTab/* = 0*/);
+		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText, UINT nID_Icon, UINT idTab = 0);
 		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect();
 		virtual CRect GetListRect();
@@ -306,7 +306,7 @@ namespace Win32xx
 		return iNewPage;
 	}
 
-	inline int CTab::AddTabPage(ViewPtr pView, LPCTSTR szTabText, UINT idIcon, UINT idTab)
+	inline int CTab::AddTabPage(ViewPtr pView, LPCTSTR szTabText, UINT idIcon, UINT idTab /* = 0*/)
 	{
 		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0,0,0);
 		return AddTabPage(pView, szTabText, hIcon, idTab);
