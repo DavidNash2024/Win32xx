@@ -67,6 +67,8 @@
 namespace Win32xx
 {
 
+	typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
+
 	class CPropertyPage : public CWnd
 	{
 	public:
@@ -149,8 +151,8 @@ namespace Win32xx
 		void BuildPageArray();
 
 		tString m_Title;
-		std::vector<Shared_Ptr<CPropertyPage> > m_vPages;	// vector of CPropertyPage
-		std::vector<PROPSHEETPAGE> m_vPSP;					// vector of PROPSHEETPAGE
+		std::vector<PropertyPagePtr> m_vPages;	// vector of CPropertyPage
+		std::vector<PROPSHEETPAGE> m_vPSP;		// vector of PROPSHEETPAGE
 		BOOL m_bInitialUpdate;
 		PROPSHEETHEADER m_PSH;
 	};
@@ -603,7 +605,7 @@ namespace Win32xx
 	{
 		assert(NULL != pPage);
 
-		m_vPages.push_back(pPage);
+		m_vPages.push_back(PropertyPagePtr(pPage));
 
 		if (m_hWnd)
 		{
@@ -622,7 +624,8 @@ namespace Win32xx
 	{
 		m_vPSP.clear();
 		
-		std::vector<Shared_Ptr<CPropertyPage> >::iterator iter;	
+	//	std::vector<Shared_Ptr<CPropertyPage> >::iterator iter;	
+		std::vector<PropertyPagePtr>::iterator iter;
 		for (iter = m_vPages.begin(); iter < m_vPages.end(); ++iter)
 			m_vPSP.push_back((*iter)->GetPSP());
 

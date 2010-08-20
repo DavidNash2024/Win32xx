@@ -581,6 +581,7 @@ namespace Win32xx
 		friend class CPropertyPage;
 		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
+		
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
 	public:
@@ -1192,7 +1193,7 @@ namespace Win32xx
 			pTLSData = new TLSData;
 
 			m_csTlsData.Lock();
-			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
+			m_vTLSData.push_back(TLSDataPtr(pTLSData));	// store as a Shared_Ptr
 			m_csTlsData.Release();
  		
 			::TlsSetValue(GetTlsIndex(), pTLSData);

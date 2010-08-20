@@ -71,6 +71,9 @@
 
 namespace Win32xx
 {
+
+	typedef Shared_Ptr<CMDIChild> MDIChildPtr;
+
 	/////////////////////////////////////
 	// Declaration of the CMDIChild class
 	//
@@ -118,7 +121,7 @@ namespace Win32xx
 		CMDIFrame();
 		virtual ~CMDIFrame() {}
 
-		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
+		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
 		virtual tString GetWindowType() const { return _T("CMDIFrame"); } 
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
@@ -188,14 +191,14 @@ namespace Win32xx
 		SetView(m_wndMDIClient);
 	}
 
-	inline CMDIChild* CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
+	inline CMDIChild* CMDIFrame::AddMDIChild(MDIChildPtr pMDIChild)
 	{
-		assert(NULL != pMDIChild); // Cannot add Null MDI Child
+		assert(NULL != pMDIChild.get()); // Cannot add Null MDI Child
 
 		m_vMDIChild.push_back(pMDIChild);
 		pMDIChild->Create(GetView()->GetHwnd());
 
-		return pMDIChild;
+		return pMDIChild.get();
 	}
 
 	inline void CMDIFrame::AppendMDIMenu(HMENU hMenuWindow)

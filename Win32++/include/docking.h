@@ -86,6 +86,8 @@ namespace Win32xx
 	// Class declarations
 	class CDockContainer;
 	class CDocker;
+	
+	typedef Shared_Ptr<CDocker> DockPtr;
 
 	struct ContainerInfo
 	{
@@ -196,7 +198,6 @@ namespace Win32xx
 		UINT DockZone;
 	} *LPDRAGPOS;
 
-	typedef Shared_Ptr<CDocker> DockPtr;
 
 	/////////////////////////////////////////
 	// Declaration of the CDocker class
@@ -425,7 +426,7 @@ namespace Win32xx
 		virtual CDockHint& GetDockHint() const {return m_pDockAncestor->m_DockHint;}
 
 	
-		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllSmartDockers;}
+		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
 		std::vector <CDocker*> & GetDockChildren() const {return (std::vector <CDocker*> &)m_vDockChildren;}
 		int GetBarWidth() const {return GetDockBar().GetWidth();}
 		tString GetCaption() const {return GetDockClient().GetCaption();}
@@ -496,7 +497,7 @@ namespace Win32xx
 		CDocker*		m_pDockAncestor;
 
 		std::vector <CDocker*> m_vDockChildren;
-		std::vector <DockPtr> m_vAllSmartDockers;	// Only used in DockAncestor
+		std::vector <DockPtr> m_vAllDockers;	// Only used in DockAncestor
 
 		CRect m_rcBar;
 		CRect m_rcChild;
@@ -1765,7 +1766,7 @@ namespace Win32xx
 		assert(pDocker);
 
 		// Store the Docker's pointer in the DockAncestor's vector for later deletion
-		GetDockAncestor()->m_vAllSmartDockers.push_back(pDocker);
+		GetDockAncestor()->m_vAllDockers.push_back(DockPtr(pDocker));
 				
 		pDocker->SetDockWidth(DockWidth);
 		pDocker->SetDockStyle(dwDockStyle);
@@ -1821,6 +1822,9 @@ namespace Win32xx
 	{
 		assert(pDocker);
 
+		// Store the Docker's pointer in the DockAncestor's vector for later deletion
+		GetDockAncestor()->m_vAllDockers.push_back(DockPtr(pDocker));
+
 		pDocker->SetDockWidth(DockWidth);
 		pDocker->SetDockStyle(dwDockStyle & 0XFFFFFF0);
 		pDocker->m_nDockID = nDockID;
@@ -1841,9 +1845,6 @@ namespace Win32xx
 		pDocker->SetRedraw(TRUE);
 		pDocker->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		pDocker->SetWindowText(pDocker->GetCaption().c_str());
-
-		// Store the Docker's pointer in the DockAncestor's vector for later deletion
-		GetDockAncestor()->m_vAllSmartDockers.push_back(pDocker);
 		
 		return pDocker;
 	}
@@ -2280,7 +2281,7 @@ namespace Win32xx
 
 		if (GetDockAncestor())
 		{
-			for (v = GetDockAncestor()->m_vAllSmartDockers.begin(); v != GetDockAncestor()->m_vAllSmartDockers.end(); v++)
+			for (v = GetDockAncestor()->m_vAllDockers.begin(); v != GetDockAncestor()->m_vAllDockers.end(); v++)
 			{
 				if (n_DockID == (*v)->GetDockID())
 					return (*v).get();

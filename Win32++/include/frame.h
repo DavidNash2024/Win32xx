@@ -2259,7 +2259,7 @@ namespace Win32xx
 					lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
 					mii.dwItemData = (DWORD_PTR)pItem;
 
-					m_vMenuItemData.push_back(pItem);		// Store pItem in m_vMenuItemData
+					m_vMenuItemData.push_back(ItemDataPtr(pItem));		// Store pItem in m_vMenuItemData
 					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 				}
 			}
