@@ -129,8 +129,8 @@ namespace Win32xx
 		}
 
 		T1* get() const { return m_ptr; }
-		long use_count() const { return *m_count; }
-		bool unique() const { return (*m_count == 1); }
+		long use_count() const { return m_count? *m_count : NULL; }
+		bool unique() const { return (m_count && (*m_count == 1)); }
 
 		void swap(Shared_Ptr& rhs)
 		{

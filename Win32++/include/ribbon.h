@@ -97,11 +97,11 @@ namespace Win32xx
 	{
 	public:
 		// A nested class for the MRU item properties
-		class CRecentFileProperties : public IUISimplePropertySet
+		class CRecentFiles : public IUISimplePropertySet
 		{
 		public:
-			// Static method to create an instance of the object.
-			__checkReturn static HRESULT CreateInstance(__in PWSTR wszFullPath, __deref_out_opt CRecentFileProperties **ppProperties);
+			CRecentFiles(PWSTR wszFullPath);
+			~CRecentFiles() {}		
 
 			// IUnknown methods.
 			STDMETHODIMP_(ULONG) AddRef();
@@ -112,9 +112,6 @@ namespace Win32xx
 			STDMETHODIMP GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *value);
 
 		private:
-			CRecentFileProperties();
-			~CRecentFileProperties() {}
-
 			LONG m_cRef;                        // Reference count.
 			WCHAR m_wszDisplayName[MAX_PATH];
 			WCHAR m_wszFullPath[MAX_PATH];
@@ -132,6 +129,7 @@ namespace Win32xx
 		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
 
 	private:
+		std::vector<Shared_Ptr<CRecentFiles> > m_vRecentFiles;
 		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
 		UINT m_uRibbonHeight;
 	};
@@ -345,7 +343,6 @@ namespace Win32xx
 		{
 			CFrame::OnCreate();
 		}
-
 	}
 
 	inline void CRibbonFrame::OnDestroy()
@@ -409,6 +406,7 @@ namespace Win32xx
 		int iFileCount = FileNames.size();
 		HRESULT hr = E_FAIL;
 		SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);
+		m_vRecentFiles.clear();
 		
 		if (psa != NULL)
 		{
@@ -418,22 +416,10 @@ namespace Win32xx
 				WCHAR wszCurrentFile[MAX_PATH] = {0L};
 				lstrcpynW(wszCurrentFile, TCharToWide(strCurrentFile.c_str()), MAX_PATH);
 				
-				CRecentFileProperties* pPropertiesObj;
-				hr = CRecentFileProperties::CreateInstance(wszCurrentFile, &pPropertiesObj);
-
-				if (SUCCEEDED(hr))
-				{
-					IUnknown* pUnk = NULL;
-					hr = pPropertiesObj->QueryInterface(__uuidof(IUnknown), reinterpret_cast<void**>(&pUnk));
-					if (SUCCEEDED(hr))
-					{
-						hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pUnk));
-						pUnk->Release();
-						++iCurrentFile;
-					}
-					
-					pPropertiesObj->Release();
-				}               
+				CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
+				m_vRecentFiles.push_back(pRecentFiles);
+				hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pRecentFiles));
+				++iCurrentFile;
 			}
 
 			SAFEARRAYBOUND sab = {iCurrentFile,0};
@@ -456,67 +442,41 @@ namespace Win32xx
 
 
 	////////////////////////////////////////////////////////
-	// Declaration of the nested CRecentFileProperties class
-	inline CRibbonFrame::CRecentFileProperties::CRecentFileProperties() : m_cRef(1)
+	// Declaration of the nested CRecentFiles class
+	//
+	inline CRibbonFrame::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(1)
 	{
-		m_wszFullPath[0] = L'\0';
-		m_wszDisplayName[0] = L'\0';
-	}
-
-	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFileProperties::AddRef()
-	{
-		return InterlockedIncrement(&m_cRef);
-	}
-
-	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFileProperties::Release()
-	{
-		LONG cRef = InterlockedDecrement(&m_cRef);
-		if (cRef == 0)
-		{
-			delete this;
-		}
-
-		return cRef;
-	}
-
-	// Static method to create an instance of the object.
-	inline __checkReturn HRESULT CRibbonFrame::CRecentFileProperties::CreateInstance(__in PWSTR wszFullPath, __deref_out_opt CRecentFileProperties **ppProperties)
-	{
-		if (!wszFullPath || !ppProperties)
-		{
-			return E_POINTER;
-		}
-
-		*ppProperties = NULL;
-		HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
-		CRecentFileProperties* pProperties = new CRecentFileProperties();
-
-        if (NULL == pProperties) throw std::bad_alloc();
-	
 		SHFILEINFOW sfi;
 		DWORD_PTR dwPtr = NULL;
+		m_wszFullPath[0] = L'\0';
+		m_wszDisplayName[0] = L'\0';
 
-		if (NULL != lstrcpynW(pProperties->m_wszFullPath, wszFullPath, MAX_PATH))
+		if (NULL != lstrcpynW(m_wszFullPath, wszFullPath, MAX_PATH))
 		{    
 			dwPtr = ::SHGetFileInfoW(wszFullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
 		
 			if (dwPtr != NULL)
 			{
-				lstrcpynW(pProperties->m_wszDisplayName, sfi.szDisplayName, MAX_PATH);
+				lstrcpynW(m_wszDisplayName, sfi.szDisplayName, MAX_PATH);
 			}
 			else // Provide a reasonable fallback.
 			{
-				lstrcpynW(pProperties->m_wszDisplayName, pProperties->m_wszFullPath, MAX_PATH);
+				lstrcpynW(m_wszDisplayName, m_wszFullPath, MAX_PATH);
 			}
-
-			*ppProperties = pProperties;
-			hr = S_OK;
 		}
-
-		return hr;
 	}
 
-	inline STDMETHODIMP CRibbonFrame::CRecentFileProperties::QueryInterface(REFIID iid, void** ppv)
+	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFiles::AddRef()
+	{
+		return InterlockedIncrement(&m_cRef);
+	}
+
+	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFiles::Release()
+	{
+		return InterlockedDecrement(&m_cRef);
+	}
+
+	inline STDMETHODIMP CRibbonFrame::CRecentFiles::QueryInterface(REFIID iid, void** ppv)
 	{
 		if (!ppv)
 		{
@@ -542,7 +502,7 @@ namespace Win32xx
 	}
 
 	// IUISimplePropertySet methods.
-	inline STDMETHODIMP CRibbonFrame::CRecentFileProperties::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
+	inline STDMETHODIMP CRibbonFrame::CRecentFiles::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
 	{
 		HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
 
@@ -558,7 +518,7 @@ namespace Win32xx
 		return hr;
 	}
 
-} 
+} // namespace Win32xx
 
 #endif  // RIBBON_H
 
