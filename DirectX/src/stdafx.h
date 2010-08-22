@@ -43,7 +43,7 @@ typedef  unsigned char  byte;
 #include <mdi.h>
 #include <propertysheet.h>
 #include <rebar.h>
-#include <ribbon.h>
+//#include <ribbon.h>
 #include <socket.h>
 #include <statusbar.h>
 #include <stdcontrols.h>

@@ -106,11 +106,8 @@ namespace Win32xx
 		{
 			try
 			{
-				if (m_ptr)
-				{
-					m_count = new long(0);
-					inc_ref();
-				}
+				if (m_ptr) m_count = new long(0);
+                inc_ref();
 			}
 			// catch the unlikely event of 'new long(0)' throwing an exception
 			catch (const std::bad_alloc&)
@@ -132,7 +129,7 @@ namespace Win32xx
 		}
 
 		T1* get() const { return m_ptr; }
-		long use_count() const { return m_count? *m_count : NULL; }
+		long use_count() const { return m_count? *m_count : 0; }
 		bool unique() const { return (m_count && (*m_count == 1)); }
 
 		void swap(Shared_Ptr& rhs)
@@ -171,12 +168,12 @@ namespace Win32xx
 		}
 
 		bool operator< (const Shared_Ptr& rhs) const
-		{	
+		{
 			return ( *m_ptr < *rhs.m_ptr );
 		}
 
 		bool operator> (const Shared_Ptr& rhs) const
-		{	
+		{
 			return ( *m_ptr > *rhs.m_ptr );
 		}
 
