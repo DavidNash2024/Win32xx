@@ -623,8 +623,6 @@ namespace Win32xx
 	inline void CPropertySheet::BuildPageArray()
 	{
 		m_vPSP.clear();
-		
-	//	std::vector<Shared_Ptr<CPropertyPage> >::iterator iter;	
 		std::vector<PropertyPagePtr>::iterator iter;
 		for (iter = m_vPages.begin(); iter < m_vPages.end(); ++iter)
 			m_vPSP.push_back((*iter)->GetPSP());

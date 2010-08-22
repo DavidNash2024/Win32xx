@@ -117,6 +117,8 @@ namespace Win32xx
 			WCHAR m_wszFullPath[MAX_PATH];
 		};
 
+		typedef Shared_Ptr<CRecentFiles> RecentFilesPtr;
+
 		CRibbonFrame() : m_uRibbonHeight(0) {}
 		virtual ~CRibbonFrame() {}
 		virtual CRect GetViewRect() const;
@@ -129,7 +131,7 @@ namespace Win32xx
 		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
 
 	private:
-		std::vector<Shared_Ptr<CRecentFiles> > m_vRecentFiles;
+		std::vector<RecentFilesPtr> m_vRecentFiles;
 		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
 		UINT m_uRibbonHeight;
 	};
@@ -417,7 +419,7 @@ namespace Win32xx
 				lstrcpynW(wszCurrentFile, TCharToWide(strCurrentFile.c_str()), MAX_PATH);
 				
 				CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
-				m_vRecentFiles.push_back(pRecentFiles);
+				m_vRecentFiles.push_back(RecentFilesPtr(pRecentFiles));
 				hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pRecentFiles));
 				++iCurrentFile;
 			}

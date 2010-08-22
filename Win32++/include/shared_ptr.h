@@ -106,8 +106,11 @@ namespace Win32xx
 		{
 			try
 			{
-				if (m_ptr) m_count = new long(0);
-				inc_ref();
+				if (m_ptr)
+				{
+					m_count = new long(0);
+					inc_ref();
+				}
 			}
 			// catch the unlikely event of 'new long(0)' throwing an exception
 			catch (const std::bad_alloc&)
