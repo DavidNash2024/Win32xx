@@ -197,10 +197,10 @@
         <FILE FILENAME="..\src\MyTabbedMDI.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyTabbedMDI" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Output.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Output" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Rect.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Rect" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\src\Simple.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Simple" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\TabbedMDIApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="TabbedMDIApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Text.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Text" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>
+	    <FILE FILENAME="..\src\Web.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Web" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>
         <VersionInfo>
