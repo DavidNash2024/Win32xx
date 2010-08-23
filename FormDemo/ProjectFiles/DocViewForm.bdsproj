@@ -116,7 +116,7 @@
           <property category="win32.*.win32b.bcc32" name="option.He.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.Hs.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.1" value="..\src"/>
-          <property category="win32.*.win32b.bcc32" name="option.I.arg.2" value="..\..\..\Win32++\include"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.2" value="..\..\Win32++\include"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.3" value="$(BDS)\include"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.4" value="$(BDS)\include\dinkumware"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.5" value="$(BDS)\include\vcl"/>
