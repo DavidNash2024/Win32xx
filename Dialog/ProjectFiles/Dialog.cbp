@@ -105,10 +105,11 @@
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="ComCtl32" />
-					<Add library="Gdi32" />
-					<Add library="Kernel32" />
-					<Add library="User32" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -132,6 +133,9 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
 					<Add library="Ws2_32" />
 				</Linker>
 			</Target>

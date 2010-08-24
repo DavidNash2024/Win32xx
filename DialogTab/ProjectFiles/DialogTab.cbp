@@ -132,6 +132,9 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
 					<Add library="Ws2_32" />
 				</Linker>
 			</Target>
@@ -152,6 +155,9 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
 					<Add library="Ws2_32" />
 				</Linker>
 			</Target>
