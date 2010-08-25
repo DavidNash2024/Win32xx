@@ -137,6 +137,9 @@
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
+					<Add library="ole32" />
+					<Add library="oleaut32" />
+					<Add library="uuid" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -157,6 +160,9 @@
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
+					<Add library="ole32" />
+					<Add library="oleaut32" />
+					<Add library="uuid" />
 				</Linker>
 			</Target>
 		</Build>
