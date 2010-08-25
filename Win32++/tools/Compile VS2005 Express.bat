@@ -4,7 +4,6 @@ REM: The contents of the output\VS2005 directory will be erased
 
 REM: Set the paths and environment variables
 call "C:\Program Files (x86)\Microsoft Visual Studio 8\VC\vcvarsall.bat" x86
-@set PATH=%PATH%;%CD%
 
 
 ::Cleanup
