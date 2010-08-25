@@ -194,6 +194,7 @@ namespace Win32xx
 	protected:
 		virtual HWND    Create(HWND hWndParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
+		virtual void	OnCreate() { GetTab().Create(m_hWnd); }
 		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnEraseBkGnd(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -903,7 +904,7 @@ namespace Win32xx
 
 	inline void CTab::RemoveTabPage(int iPage)
 	{
-		if ((iPage < 0) || (iPage > GetItemCount()-1))
+		if ((iPage < 0) || (iPage > (int)m_vTabPageInfo.size() -1))
 			return;
 
 		// Remove the tab
@@ -929,15 +930,18 @@ namespace Win32xx
 			}
 		}
 
-		if (m_vTabPageInfo.size() > 0)
+		if (IsWindow())
 		{
-			SetTabSize();
-			SelectPage(0);
+			if (m_vTabPageInfo.size() > 0)
+			{
+				SetTabSize();
+				SelectPage(0);
+			}
+			else
+				SetActiveView(NULL);
+		
+			NotifyChanged();
 		}
-		else
-			SetActiveView(NULL);
-
-		NotifyChanged();
 	}
 
 	inline void CTab::SelectPage(int iPage)
@@ -1283,20 +1287,8 @@ namespace Win32xx
 		GetTab().AddTabPage(ViewPtr(pView), szTabText, (HICON)0, idMDIChild);
 
 		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
-		::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
-
-		TabPageInfo tpi = {0};
-		tpi.idTab = idMDIChild;
-		tpi.iImage = -1;
-		tpi.pView = pView;
-		lstrcpyn(tpi.szTabText, szTabText, MAX_MENU_STRING -1);
-
-		if (!GetTab().IsWindow())
-		{
-			GetTab().Create(m_hWnd);
-			CRect rc = GetClientRect();
-			GetTab().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-		}
+		if (IsWindow())
+			::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
 		return pView;
 	}
@@ -1394,9 +1386,10 @@ namespace Win32xx
 			}
 		}
 
-		if (bResult)
+		if (IsWindow())
 			SetActiveMDITab(0);
-		else
+
+		if (!bResult)
 			CloseAllMDIChildren();
 
 		return bResult;
@@ -1461,7 +1454,8 @@ namespace Win32xx
 			}
 			else
 			{
-				GetTab().ShowWindow(SW_HIDE);
+				CRect rcClient = GetClientRect();
+				GetTab().SetWindowPos(NULL, rcClient, SWP_HIDEWINDOW);
 				Invalidate();
 			}
 		}
