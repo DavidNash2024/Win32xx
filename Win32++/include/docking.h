@@ -2493,7 +2493,6 @@ namespace Win32xx
 						{
 							pDockParent->AddDockedChild(pDock, di.DockStyle, di.DockWidth, di.DockID);
 							bFound = true;
-							vDockList.erase(iter);
 						}
 						else
 						{
@@ -2501,14 +2500,16 @@ namespace Win32xx
 							bResult = FALSE;
 						}
 
+						vDockList.erase(iter);
 						break;
-					}
+					}				
 				}
 
 				if (!bFound)
 				{
 					TRACE(_T("Orphaned dockers stored in registry "));
 					bResult = FALSE;
+					break;
 				}
 			}
 		}
