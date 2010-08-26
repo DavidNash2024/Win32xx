@@ -1850,6 +1850,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::BringDockersToTop()
+	// Adjusts the Z order of dockers
 	{
 		HWND hAncestor = GetDockAncestor()->GetAncestor();
 		std::vector<HWND> vWindows;
@@ -1884,6 +1885,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::CheckAllTargets(LPDRAGPOS pDragPos)
+	// Calls CheckTarget for each possible target zone
 	{
 		if (!GetDockAncestor()->m_TargetCentre.CheckTarget(pDragPos))
 		{
@@ -2006,30 +2008,8 @@ namespace Win32xx
 		GetDockAncestor()->m_TargetBottom.Destroy();
 	}
 
-	inline CDocker* CDocker::NewDockerFromID(int nID)
-	{
-		UNREFERENCED_PARAMETER(nID);
-
-		// Override this function to create the Docker objects as shown below
-		
-		CDocker* pDock = NULL;
-	/*	switch(nID)
-		{
-		case ID_CLASSES:
-			pDock = new CDockClasses;
-			break;
-		case ID_FILES:
-			pDock = new CDockFiles;
-			break;
-		default:
-			TRACE(_T("Unknown Dock ID\n"));
-			break;
-		} */
-
-		return pDock;
-	}
-
 	inline void CDocker::Dock(CDocker* pDocker, UINT DockStyle)
+	// Docks the specified docker inside this docker
 	{
 		assert(pDocker);
 
@@ -2071,8 +2051,8 @@ namespace Win32xx
 	}
 
 	inline void CDocker::DockInContainer(CDocker* pDock, DWORD dwDockStyle)
+	// Add a container to an existing container
 	{
-		// Add a container to an existing container
 		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (pDock->GetView()->GetWindowType() == _T("CDockContainer")))
 		{
 			// Transfer any dock children to this docker
@@ -2114,6 +2094,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::DockOuter(CDocker* pDocker, DWORD dwDockStyle)
+	// Docks the specified docker inside the dock ancestor
 	{
 		assert(pDocker);
 
@@ -2174,8 +2155,8 @@ namespace Win32xx
 	}
 
 	inline void CDocker::DrawHashBar(HWND hBar, POINT Pos)
+	// Draws a hashed bar while the splitter bar is being dragged
 	{
-		// draws a hashed bar while the splitter bar is being dragged
 		{
 			CDocker* pDock = ((CDockBar*)FromHandle(hBar))->GetDock();
 			if (NULL == pDock) return;
@@ -2306,6 +2287,8 @@ namespace Win32xx
 	}
 
 	inline CDocker* CDocker::GetDockTopLevel() const
+	// Returns the docker's parent at the top of the Z order.
+	// Could be the dock ancestor or an undocked docker.
 	{
 		CDocker* pDockTopLevel = (CDocker* const)this;
 
@@ -2413,6 +2396,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CDocker::LoadRegistrySettings(tString tsRegistryKeyName)
+	// Recreates the docker layout based on information stored in the registry.
+	// Assumes the DockAncestor window is already created.
 	{
 		BOOL bResult = FALSE;
 
@@ -2519,6 +2504,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::MoveDockChildren(CDocker* pDockTarget)
+	// Used internally by Dock and Undock
 	{
 		assert(pDockTarget);
 
@@ -2532,6 +2518,30 @@ namespace Win32xx
 			(*iter)->GetDockBar().SetParent(pDockTarget->GetHwnd());
 		}
 		GetDockChildren().clear();
+	}
+
+	inline CDocker* CDocker::NewDockerFromID(int nID)
+	// Used in LoadRegistrySettings. Creates a new Docker from the specified ID
+	{
+		UNREFERENCED_PARAMETER(nID);
+
+		// Override this function to create the Docker objects as shown below
+		
+		CDocker* pDock = NULL;
+	/*	switch(nID)
+		{
+		case ID_CLASSES:
+			pDock = new CDockClasses;
+			break;
+		case ID_FILES:
+			pDock = new CDockFiles;
+			break;
+		default:
+			TRACE(_T("Unknown Dock ID\n"));
+			break;
+		} */
+
+		return pDock;
 	}
 
 	inline void CDocker::OnActivate(WPARAM wParam, LPARAM lParam)
@@ -2802,6 +2812,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::ResizeDockers(LPDRAGPOS pdp)
+	// Called when the docker's splitter bar is dragged
 	{
 		assert(pdp);
 
@@ -3072,6 +3083,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::RecalcDockLayout()
+	// Repositions the dock children of a top level docker
 	{
 		if (GetDockAncestor()->IsWindow())
 		{
@@ -3082,9 +3094,9 @@ namespace Win32xx
 	}
 
 	inline void CDocker::SaveRegistrySettings(tString tsRegistryKeyName)
-	{
-		// NOTE: This function assumes that each docker has a unique DockID
-		
+	// Stores the docking configuration in the registry
+	// NOTE: This function assumes that each docker has a unique DockID
+	{	
 		assert(VerifyDockers());	
 
 		std::vector<DockPtr>::iterator iter;
@@ -3132,8 +3144,8 @@ namespace Win32xx
 	}
 
 	inline void CDocker::SendNotify(UINT nMessageID)
+	// Sends a docking notification to the docker below the cursor
 	{
-		// Send a docking notification to the docker below the cursor
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
@@ -3200,6 +3212,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::SetView(CWnd& wndView)
+	// Assigns the view window to the docker
 	{
 		CWnd* pWnd = &wndView;
 		GetDockClient().SetView(wndView);
@@ -3211,6 +3224,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::PromoteFirstChild()
+	// One of the steps required for undocking
 	{
 		// Promote our first child to replace ourself
 		if (m_pDockParent)
