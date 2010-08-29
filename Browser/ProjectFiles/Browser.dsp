@@ -95,10 +95,6 @@ SOURCE=..\src\BrowserApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ComboBoxEx.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\EventSink.cpp
 # End Source File
 # Begin Source File
@@ -112,6 +108,10 @@ SOURCE=..\src\Mainfrm.cpp
 # Begin Source File
 
 SOURCE=..\src\MyBrowser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyCombo.cpp
 # End Source File
 # Begin Source File
 
@@ -131,10 +131,6 @@ SOURCE=..\src\BrowserApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ComboBoxEx.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\EventSink.h
 # End Source File
 # Begin Source File
@@ -144,6 +140,10 @@ SOURCE=..\src\Mainfrm.h
 # Begin Source File
 
 SOURCE=..\src\MyBrowser.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyCombo.h
 # End Source File
 # Begin Source File
 

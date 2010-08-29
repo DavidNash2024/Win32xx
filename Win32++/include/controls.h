@@ -241,7 +241,7 @@ namespace Win32xx
 		int  GetBase() const;
 		HWND GetBuddy() const;
 		int  GetPos() const;
-		DWORD GetRange(int nLower, int nUpper) const;
+		DWORD GetRange() const;
 		BOOL SetAccel(int cAccels, LPUDACCEL paAccels) const;
 		int  SetBase(int nBase) const;
 		HWND SetBuddy(HWND hwndBuddy) const;
@@ -890,7 +890,7 @@ namespace Win32xx
 		return (int)SendMessage(UDM_GETPOS, 0, 0);
 	}
 
-	inline DWORD CSpinButton::GetRange(int nLower, int nUpper) const
+	inline DWORD CSpinButton::GetRange() const
 	{
 		assert(IsWindow());
 		return (DWORD)SendMessage(UDM_GETRANGE, 0, 0);

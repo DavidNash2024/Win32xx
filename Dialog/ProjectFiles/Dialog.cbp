@@ -106,10 +106,9 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
-					<Add library="Ole32" />
-					<Add library="Oleaut32" />
-					<Add library="Uuid" />
-					<Add library="Ws2_32" />
+					<Add library="gdi32" />
+					<Add library="user32" />
+					<Add library="kernel32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -157,6 +156,9 @@
 				<Linker>
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
+					<Add library="ole32" />
+					<Add library="oleaut32" />
+					<Add library="uuid" />
 				</Linker>
 			</Target>
 		</Build>
@@ -170,8 +172,10 @@
 		<Unit filename="..\src\Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="..\src\StdAfx.cpp" />
 		<Unit filename="..\src\main.cpp" />
 		<Unit filename="..\src\resource.h" />
+		<Unit filename="..\src\stdafx.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

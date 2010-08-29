@@ -187,10 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ComboBoxEx.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\EventSink.cpp"
 				>
 			</File>
@@ -204,6 +200,10 @@
 			</File>
 			<File
 				RelativePath="..\src\MyBrowser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyCombo.cpp"
 				>
 			</File>
 			<File
@@ -237,10 +237,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ComboBoxEx.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\EventSink.h"
 				>
 			</File>
@@ -250,6 +246,10 @@
 			</File>
 			<File
 				RelativePath="..\src\MyBrowser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyCombo.h"
 				>
 			</File>
 			<File

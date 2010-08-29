@@ -40,7 +40,7 @@ public:
 
 private:
 	CViewClasses m_ViewClasses;
-	CComboBoxEx m_ComboBoxEx;
+	CMyCombo m_ComboBoxEx;
 };
 
 // Declaration of the CDockClasses class

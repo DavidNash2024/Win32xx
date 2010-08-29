@@ -6,7 +6,7 @@
 
 
 #include "MyBrowser.h"
-#include "ComboBoxEx.h"
+#include "MyCombo.h"
 #include "EventSink.h"
 
 typedef std::basic_stringstream<TCHAR> tStringStream;
@@ -45,7 +45,7 @@ protected:
 private:
 	CMyBrowser m_View;
 	CEventSink		m_EventSink;		// Routes event notifications from IWebBrowser
-	CComboBoxEx m_ComboboxEx;
+	CMyCombo m_ComboboxEx;
 	DWORD			m_eventCookie;		// Token that uniquely identifies this connection
 };
 
