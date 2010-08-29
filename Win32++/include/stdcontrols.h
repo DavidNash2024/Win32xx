@@ -38,8 +38,11 @@
 // stdcontrols.h
 //  Declaration of the CButton, CEdit, CListBox and CStatic classes
 
-// Standard controls send notifications via WM_COMMAND
-// Other controls send notifications via WM_NOTIFY
+// The Button, Edit, ListBox and Static controls are often referred to 
+// as "standard controls". These set of older controls were originally 
+// developed for Win16 operating systems (Windows 3.1 and 3.11). They use an
+// older form of notification, and send their notifications via a WM_COMMAND
+// message. Newer controls send their notifications via a WM_NOTIFY message.
 
 
 #ifndef _STDCONTROLS_H_
