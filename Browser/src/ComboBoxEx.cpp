@@ -3,10 +3,10 @@
 
 #include "stdafx.h"
 #include "BrowserApp.h"
-#include "ComboBoxEx.h"
+#include "MyCombo.h"
 
 
-void CComboBoxEx::PreCreate(CREATESTRUCT &cs)
+void CMyCombo::PreCreate(CREATESTRUCT &cs)
 {
 	cs.lpszClass = _T("COMBOBOXEX32");
 	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;

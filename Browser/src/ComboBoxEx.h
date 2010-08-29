@@ -1,17 +1,17 @@
 //////////////////////////////////////////////
-// ComboBoxEx.h
+// MyCombo.h
 
-#ifndef COMBOBOXEX_H
-#define COMBOBOXEX_H
+#ifndef MYCOMBO_H
+#define MYCOMBO_H
 
 
 #include "resource.h"
 
-class CComboBoxEx : public CWnd
+class CMyCombo : public CWnd
 {
 public:
-	CComboBoxEx() {}
-	virtual ~CComboBoxEx() {}
+	CMyCombo() {}
+	virtual ~CMyCombo() {}
 	virtual void PreCreate(CREATESTRUCT &cs);
 };
 
