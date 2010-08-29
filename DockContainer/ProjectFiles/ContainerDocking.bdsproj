@@ -189,11 +189,12 @@
       </project>
       <FILELIST>
         <FILE FILENAME="..\src\Classes.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Classes" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\src\ComboBoxEx.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ComboBoxEx" FORMNAME="" DESIGNCLASS=""/>
+        
         <FILE FILENAME="..\src\ContainerApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ContainerApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Files.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Files" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Mainfrm.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Mainfrm" FORMNAME="" DESIGNCLASS=""/>
+		<FILE FILENAME="..\src\MyCombo.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyCombo" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Output.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Output" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Simple.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Simple" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Text.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Text" FORMNAME="" DESIGNCLASS=""/>

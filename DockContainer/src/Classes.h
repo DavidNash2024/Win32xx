@@ -7,7 +7,7 @@
 #define CLASSES_H
 
 
-#include "ComboBoxEx.h"
+#include "MyCombo.h"
 
 
 // Declaration of the CViewClasses class

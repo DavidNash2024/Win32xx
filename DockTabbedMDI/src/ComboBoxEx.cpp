@@ -1,22 +1,22 @@
 //////////////////////////////////////////////
-// ComboBoxEx.cpp
-//  Definitions for the CComboBoxEx class
+// MyCombo.cpp
+//  Definitions for the CMyCombo class
 
 #include "stdafx.h"
-#include "ComboBoxEx.h"
+#include "MyCombo.h"
 #include "resource.h"
 
-CComboBoxEx::CComboBoxEx() : m_himlImages(NULL)
+CMyCombo::CMyCombo() : m_himlImages(NULL)
 {
 	SetImages(3, IDB_STATUS);
 }
 
-CComboBoxEx::~CComboBoxEx()
+CMyCombo::~CMyCombo()
 {
 	ImageList_Destroy(m_himlImages);
 }
 
-void CComboBoxEx::PreCreate(CREATESTRUCT &cs)
+void CMyCombo::PreCreate(CREATESTRUCT &cs)
 {
 	cs.lpszClass = WC_COMBOBOXEX;
 	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
@@ -25,7 +25,7 @@ void CComboBoxEx::PreCreate(CREATESTRUCT &cs)
 	cs.cy = 100;
 }
 
-BOOL CComboBoxEx::AddItems()
+BOOL CMyCombo::AddItems()
 {
     typedef struct
 	{
@@ -65,7 +65,7 @@ BOOL CComboBoxEx::AddItems()
     return TRUE;
 }
 
-void CComboBoxEx::SetImages(int nImages, UINT ImageID)
+void CMyCombo::SetImages(int nImages, UINT ImageID)
 {
 	if (m_himlImages)
 	{
@@ -84,7 +84,7 @@ void CComboBoxEx::SetImages(int nImages, UINT ImageID)
 	::DeleteObject(hbm);
 }
 
-LRESULT CComboBoxEx::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyCombo::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{

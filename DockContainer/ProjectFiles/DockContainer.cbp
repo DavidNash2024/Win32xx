@@ -169,8 +169,6 @@
 		</VirtualTargets>
 		<Unit filename="..\src\Classes.cpp" />
 		<Unit filename="..\src\Classes.h" />
-		<Unit filename="..\src\ComboBoxEx.cpp" />
-		<Unit filename="..\src\ComboBoxEx.h" />
 		<Unit filename="..\src\ContainerApp.cpp" />
 		<Unit filename="..\src\ContainerApp.h" />
 		<Unit filename="..\src\DockContainer.h" />
@@ -178,6 +176,8 @@
 		<Unit filename="..\src\Files.h" />
 		<Unit filename="..\src\Mainfrm.cpp" />
 		<Unit filename="..\src\Mainfrm.h" />
+		<Unit filename="..\src\MyCombo.cpp" />
+		<Unit filename="..\src\MyCombo.h" />
 		<Unit filename="..\src\Output.cpp" />
 		<Unit filename="..\src\Output.h" />
 		<Unit filename="..\src\Resource.rc">
