@@ -35,6 +35,7 @@ typedef  unsigned char  byte;
 #include <assert.h>
 #include <tchar.h>
 
+#include <controls.h>
 #include <dialog.h>
 #include <docking.h>
 #include <frame.h>

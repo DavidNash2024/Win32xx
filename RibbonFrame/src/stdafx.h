@@ -28,6 +28,7 @@ typedef  unsigned char  byte;
 #endif
 
 // Rarely modified header files should be included here
+#include <controls.h>
 #include <dialog.h>
 #include <docking.h>
 #include <frame.h>
