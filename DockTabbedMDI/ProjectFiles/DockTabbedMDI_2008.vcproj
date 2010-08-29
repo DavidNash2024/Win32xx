@@ -185,10 +185,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ComboBoxEx.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\DockTabbedMDI.cpp"
 				>
 			</File>
@@ -202,6 +198,10 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyCombo.cpp"
 				>
 			</File>
 			<File
@@ -259,10 +259,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ComboBoxEx.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\DockContainer.h"
 				>
 			</File>
@@ -276,6 +272,10 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyCombo.h"
 				>
 			</File>
 			<File

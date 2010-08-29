@@ -6,7 +6,7 @@
 #define CLASSES_H
 
 
-#include "ComboBoxEx.h"
+#include "MyCombo.h"
 
 
 // Declaration of the CViewClasses class
@@ -39,7 +39,7 @@ public:
 
 private:
 	CViewClasses m_ViewClasses;
-	CComboBoxEx m_ComboBoxEx;
+	CMyCombo m_ComboBoxEx;
 };
 
 // Declaration of the CDockClasses class

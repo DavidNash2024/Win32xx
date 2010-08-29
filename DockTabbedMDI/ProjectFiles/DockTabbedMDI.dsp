@@ -95,10 +95,6 @@ SOURCE=..\src\Classes.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ComboBoxEx.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\DockTabbedMDI.cpp
 # End Source File
 # Begin Source File
@@ -112,6 +108,10 @@ SOURCE=..\src\main.cpp
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyCombo.cpp
 # End Source File
 # Begin Source File
 
@@ -151,10 +151,6 @@ SOURCE=..\src\Classes.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ComboBoxEx.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\DockContainer.h
 # End Source File
 # Begin Source File
@@ -168,6 +164,10 @@ SOURCE=..\src\Files.h
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyCombo.h
 # End Source File
 # Begin Source File
 
