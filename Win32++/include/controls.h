@@ -63,7 +63,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs) { cs.lpszClass = ANIMATE_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = ANIMATE_CLASS; }
 	};
 
 
@@ -115,7 +115,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs) { cs.lpszClass = _T("ComboBox"); }
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = _T("ComboBox"); }
 	};
 
 
@@ -140,7 +140,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs) { cs.lpszClass = WC_COMBOBOXEX; }
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_COMBOBOXEX; }
 	};
 
 
@@ -160,7 +160,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs) { cs.lpszClass = PROGRESS_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = PROGRESS_CLASS; }
 	};
 
 	class CScrollbar : public CWnd
@@ -182,7 +182,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs) { cs.lpszClass = _T("SCROLLBAR"); ; }
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = _T("SCROLLBAR"); ; }
 	};
 
 
@@ -225,7 +225,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs) { cs.lpszClass = TRACKBAR_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = TRACKBAR_CLASS; }
 	};
 
 
@@ -250,7 +250,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs) { cs.lpszClass = UPDOWN_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = UPDOWN_CLASS; }
 	};
 
 } // namespace Win32xx

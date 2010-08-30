@@ -28,9 +28,9 @@ protected:
 	virtual void OnOK();
 
 private:
-	CProgressbar m_Progressbar;
-	CScrollbar m_Scrollbar;
-	CSlider m_Slider;
+	CMyProgressbar m_Progressbar;
+	CMyScrollbar m_Scrollbar;
+	CMySlider m_Slider;
 };
 
 #endif //MYDIALOG_H

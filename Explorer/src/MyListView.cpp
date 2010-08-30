@@ -566,7 +566,6 @@ void CMyListView::PreCreate(CREATESTRUCT &cs)
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | LVS_AUTOARRANGE |
             LVS_ICON | LVS_SHAREIMAGELISTS | LVS_SHOWSELALWAYS;
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
-	cs.lpszClass = WC_LISTVIEW;
 }
 
 void CMyListView::SetImageLists()

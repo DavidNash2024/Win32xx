@@ -136,7 +136,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 	};
 
 	class CListBox : public CWnd
@@ -196,7 +196,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 	};
 
 	class CStatic : public CWnd
@@ -218,7 +218,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 
 	};
 
@@ -628,9 +628,10 @@ namespace Win32xx
 		SendMessage(EM_UNDO,  0, 0);
 	}
 
-	inline void CEdit::PreCreate(CREATESTRUCT& cs)
+	inline void CEdit::PreRegisterClass(WNDCLASS &wc)
 	{
-		cs.lpszClass = _T("Edit");
+		// Set the Window Class
+		wc.lpszClassName =  _T("Edit");
 	}
 
 
@@ -924,9 +925,10 @@ namespace Win32xx
 		return (int)::SendMessage(m_hWnd, LB_SELECTSTRING, nStartAfter, (LPARAM)lpszItem);
 	}
 
-	inline void CListBox::PreCreate(CREATESTRUCT& cs)
+	inline void CListBox::PreRegisterClass(WNDCLASS &wc)
 	{
-		cs.lpszClass = _T("ListBox");
+		// Set the Window Class
+		wc.lpszClassName =  _T("ListBox");
 	}
 
 
@@ -989,9 +991,10 @@ namespace Win32xx
 		return (HICON)SendMessage(STM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
 	}
 
-	inline void CStatic::PreCreate(CREATESTRUCT& cs)
+	inline void CStatic::PreRegisterClass(WNDCLASS &wc)
 	{
-		cs.lpszClass = _T("Static");
+		// Set the Window Class
+		wc.lpszClassName =  _T("Static");
 	}
 
 }

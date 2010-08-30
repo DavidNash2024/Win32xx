@@ -1,16 +1,16 @@
 //////////////////////////////////////////////////////
-// ComboBoxEx.h
+// MyCombo.h
 
-#ifndef COMBOBOXEX_H
-#define COMBOBOXEX_H
+#ifndef MYCOMBO_H
+#define MYCOMBO_H
 
 
-// Declaration of the CComboBoxEx class
-class CComboBoxEx : public CWnd
+// Declaration of the CMyCombo class
+class CMyCombo : public CWnd
 {
 public:
-	CComboBoxEx();
-	virtual ~CComboBoxEx();
+	CMyCombo();
+	virtual ~CMyCombo();
 	BOOL AddItems();
 	void SetImages(int nImages, UINT ImageID);
 
@@ -22,4 +22,4 @@ private:
 };
 
 
-#endif // COMBOBOXEX_H
+#endif // MYCOMBO_H

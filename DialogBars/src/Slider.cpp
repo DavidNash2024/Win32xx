@@ -1,17 +1,17 @@
 //////////////////////////////////////////////
-// Slider.cpp
+// MySlider.cpp
 
 #include "stdafx.h"
 #include "Slider.h"
 #include "DialogApp.h"
 
-void CSlider::OnInitDialog()
+void CMySlider::OnInitDialog()
 {
 	// Set a tic mark every ten units for the slider control
 	::SendMessage(m_hWnd, TBM_SETTICFREQ,  (WPARAM)10, 0);
 }
 
-LRESULT CSlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
@@ -36,7 +36,7 @@ LRESULT CSlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void CSlider::SetSlider(int nPos)
+void CMySlider::SetSlider(int nPos)
 {
 	// Set the slider position
 	::SendMessage(m_hWnd, TBM_SETPOS, TRUE, nPos);

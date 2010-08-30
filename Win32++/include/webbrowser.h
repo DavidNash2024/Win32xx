@@ -670,7 +670,10 @@ namespace Win32xx
 	inline CWebBrowser::~CWebBrowser()
 	{
 		if (m_pIWebBrowser2)
+		{
+			m_pIWebBrowser2->Stop();
 			m_pIWebBrowser2->Release();
+		}
 
 		OleUninitialize();
 	}

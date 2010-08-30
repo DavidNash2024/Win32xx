@@ -110,6 +110,7 @@ namespace Win32xx
 	//Overridables
 		virtual BOOL OnEraseBkgnd(HDC hDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -468,7 +469,12 @@ namespace Win32xx
                          CCS_NODIVIDER | RBS_VARHEIGHT | RBS_BANDBORDERS ;
 
 		cs.cy = 100;
-		cs.lpszClass = REBARCLASSNAME;
+	}
+
+	inline void CRebar::PreRegisterClass(WNDCLASS &wc)
+	{
+		// Set the Window Class
+		wc.lpszClassName =  REBARCLASSNAME;
 	}
 
 	inline void CRebar::MaximizeBand(UINT uBand, BOOL fIdeal /*= FALSE*/)

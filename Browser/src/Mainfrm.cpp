@@ -103,22 +103,25 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 {
 	CToolbar& TB = GetToolbar();
 
-	if ((pDispParams) && (pDispParams->cArgs == 2))
+	if (GetToolbar().IsWindow())
 	{
-		if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
+		if ((pDispParams) && (pDispParams->cArgs == 2))
 		{
-			VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
-			int nCommand = pDispParams->rgvarg[1].intVal;
+			if (pDispParams->rgvarg[1].vt == (VT_I4) && pDispParams->rgvarg[0].vt == (VT_BOOL))
 			{
-				switch (nCommand)
+				VARIANT_BOOL bEnable = pDispParams->rgvarg[0].boolVal;
+				int nCommand = pDispParams->rgvarg[1].intVal;
 				{
-				case 1: // Navigate forward:
-					bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
+					switch (nCommand)
+					{
+					case 1: // Navigate forward:
+						bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
 
-					break;
-				case 2: // Navigate back:
-					bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
-					break;
+						break;
+					case 2: // Navigate back:
+						bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
+						break;
+					}
 				}
 			}
 		}
@@ -330,7 +333,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 	LPOLESTR lpStatusText = pDispParams->rgvarg->bstrVal;
 
 
-	if (lpStatusText)
+	if (GetStatusbar().IsWindow() && lpStatusText)
 	{
 		if (lstrcmp(WideToTChar(lpStatusText), _T("")))
 		{

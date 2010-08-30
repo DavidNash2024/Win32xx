@@ -146,6 +146,7 @@ namespace Win32xx
 		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -880,7 +881,12 @@ namespace Win32xx
 	{
 		// Sets the CREATESTRUCT parameters prior to window creation
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
-		cs.lpszClass = TOOLBARCLASSNAME;
+	}
+
+	inline void CToolbar::PreRegisterClass(WNDCLASS &wc)
+	{
+		// Set the Window Class
+		wc.lpszClassName =  TOOLBARCLASSNAME;
 	}
 
 	inline BOOL CToolbar::PressButton(int idButton, BOOL fPress) const

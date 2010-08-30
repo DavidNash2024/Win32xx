@@ -7,7 +7,7 @@
 
 #include "resource.h"
 
-class CMyCombo : public CWnd
+class CMyCombo : public CComboBoxEx
 {
 public:
 	CMyCombo() {}

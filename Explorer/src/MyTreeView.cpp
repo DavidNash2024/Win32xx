@@ -369,8 +369,6 @@ void CMyTreeView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |
 					TVS_HASBUTTONS | TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS ;
-
-	CTreeView::PreCreate(cs);
 }
 
 BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)

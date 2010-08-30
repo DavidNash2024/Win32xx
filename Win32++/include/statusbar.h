@@ -54,6 +54,7 @@ namespace Win32xx
 	// Overridables
 		virtual tString GetWindowType() const { return _T("CStatusbar"); }
 		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual BOOL IsStatusbar() const { return TRUE; }
 
 	// Attributes
@@ -88,12 +89,6 @@ namespace Win32xx
 	//
 	inline CStatusbar::CStatusbar()
 	{
-	}
-
-	inline void CStatusbar::PreCreate(CREATESTRUCT &cs)
-	{
-		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
-		cs.lpszClass = STATUSCLASSNAME;
 	}
 
 	inline BOOL CStatusbar::CreateParts(int iParts, const int iPaneWidths[]) const
@@ -149,6 +144,17 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
+	}
+
+	inline void CStatusbar::PreCreate(CREATESTRUCT &cs)
+	{
+		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
+	}
+
+	inline void CStatusbar::PreRegisterClass(WNDCLASS &wc)
+	{
+		// Set the Window Class
+		wc.lpszClassName =  STATUSCLASSNAME;
 	}
 
 	inline BOOL CStatusbar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const

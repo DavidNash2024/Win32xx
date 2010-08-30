@@ -1,15 +1,15 @@
 //////////////////////////////////////////////
-// Slider.h
+// MySlider.h
 
-#ifndef SLIDER_H
-#define SLIDER_H
+#ifndef MYSLIDER_H
+#define MYSLIDER_H
 
 
-class CSlider : public CWnd
+class CMySlider : public CWnd
 {
 public:
-	CSlider() {}
-	virtual ~CSlider() {}
+	CMySlider() {}
+	virtual ~CMySlider() {}
 
 	virtual void OnInitDialog();
 	virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);

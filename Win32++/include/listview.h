@@ -50,7 +50,7 @@ namespace Win32xx
 		CListView() {}
 		virtual ~CListView() {}
 		virtual tString GetWindowType() const { return _T("CListView"); }
-		virtual void PreCreate( CREATESTRUCT &cs );
+		virtual void PreRegisterClass(WNDCLASS &wc);
 
 		// Attributes
 		CSize ApproximateViewRect(CSize sz = CSize(-1, -1), int iCount = -1) const;
@@ -154,10 +154,10 @@ namespace Win32xx
 namespace Win32xx
 {
 
-	inline void CListView::PreCreate( CREATESTRUCT &cs )
-	// Specify the class name for the window before its created. WC_LISTVIEW is a list-view control.
+	inline void CListView::PreRegisterClass(WNDCLASS &wc)
 	{
-		cs.lpszClass = WC_LISTVIEW;
+		// Set the Window Class
+		wc.lpszClassName =  WC_LISTVIEW;
 	}
 
 	inline CSize CListView::ApproximateViewRect(CSize sz /*= CSize(-1, -1)*/, int iCount /* = -1*/) const

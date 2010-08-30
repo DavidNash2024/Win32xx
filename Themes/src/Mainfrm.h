@@ -46,7 +46,7 @@ private:
 	CView m_View;
 	CToolbar Arrows;
 	CToolbar Cards;
-	CComboBoxEx m_ComboBoxEx;
+	CMyCombo m_ComboBoxEx;
 	std::vector<UINT> m_vBandIDs;
 	std::vector<UINT> m_vBandStyles;
 	

@@ -52,7 +52,7 @@ namespace Win32xx
 		CTreeView() {}
 		virtual ~CTreeView() {}
 		virtual tString GetWindowType() const { return _T("CTreeView"); }
-		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 
 // Attributes
 		COLORREF GetBkColor() const;
@@ -129,10 +129,10 @@ namespace Win32xx
 namespace Win32xx
 {
 
-
-	inline void CTreeView::PreCreate(CREATESTRUCT &cs)
+	inline void CTreeView::PreRegisterClass(WNDCLASS &wc)
 	{
-		cs.lpszClass = WC_TREEVIEW;
+		// Set the Window Class
+		wc.lpszClassName =  WC_TREEVIEW;
 	}
 
 // Attributes
