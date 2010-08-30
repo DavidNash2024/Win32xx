@@ -6,7 +6,7 @@
 
 
 
-class CMyProgressbar : public CWnd
+class CMyProgressbar : public CProgressbar
 {
 public:
 	CMyProgressbar() {}

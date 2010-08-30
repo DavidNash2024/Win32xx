@@ -37,7 +37,7 @@
 ////////////////////////////////////////////////////////
 // controls.h
 //  Declaration of the following classes:
-//  CAnimation, CComboBox, CComboBoxEx, CProgress,
+//  CAnimation, CComboBox, CComboBoxEx, CProgressbar,
 //  CScrollbar, CSlider, CSpinbutton
 
 
@@ -144,12 +144,12 @@ namespace Win32xx
 	};
 
 
-	class CProgress : public CWnd
+	class CProgressbar : public CWnd
 	{
 	public:
-		CProgress() {}
-		virtual ~CProgress() {}
-		virtual tString GetWindowType() const { return _T("CProgress"); }
+		CProgressbar() {}
+		virtual ~CProgressbar() {}
+		virtual tString GetWindowType() const { return _T("CProgressbar"); }
 
 		int  GetPos() const;
 		int  GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const;
@@ -599,39 +599,39 @@ namespace Win32xx
 
 
 	////////////////////////////////////////
-	// Definitions for the CProgress class
+	// Definitions for the CProgressbar class
 	//
-	inline int CProgress::GetPos() const
+	inline int CProgressbar::GetPos() const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_GETPOS, 0, 0);
 	}
 
-	inline int CProgress::GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const
+	inline int CProgressbar::GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) (PPBRANGE) ppBRange);
 	}
 
-	inline int CProgress::OffsetPos(int nIncrement) const
+	inline int CProgressbar::OffsetPos(int nIncrement) const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_DELTAPOS, (WPARAM)nIncrement, 0);
 	}
 
-	inline int CProgress::SetPos(int nNewPos) const
+	inline int CProgressbar::SetPos(int nNewPos) const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_SETPOS, (WPARAM)nNewPos, 0);
 	}
 
-	inline int CProgress::SetRange(short nMinRange, short nMaxRange) const
+	inline int CProgressbar::SetRange(short nMinRange, short nMaxRange) const
 	{
 		assert(IsWindow());
 		return SendMessage(PBM_SETRANGE, 0, (LPARAM) MAKELPARAM (nMinRange, nMaxRange));
 	}
 
-	inline int CProgress::SetStep(int nStepInc) const
+	inline int CProgressbar::SetStep(int nStepInc) const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_SETSTEP, (WPARAM)nStepInc, 0);

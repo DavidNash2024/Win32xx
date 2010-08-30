@@ -5,7 +5,7 @@
 #define MYSLIDER_H
 
 
-class CMySlider : public CWnd
+class CMySlider : public CSlider
 {
 public:
 	CMySlider() {}

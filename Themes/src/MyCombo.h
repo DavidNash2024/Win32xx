@@ -6,7 +6,7 @@
 
 
 // Declaration of the CMyCombo class
-class CMyCombo : public CWnd
+class CMyCombo : public CComboBoxEx
 {
 public:
 	CMyCombo();

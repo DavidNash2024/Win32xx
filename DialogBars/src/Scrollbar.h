@@ -5,7 +5,7 @@
 #define MYSCROLLBAR_H
 
 
-class CMyScrollbar : public CWnd
+class CMyScrollbar : public CScrollbar
 {
 public:
 	CMyScrollbar();
