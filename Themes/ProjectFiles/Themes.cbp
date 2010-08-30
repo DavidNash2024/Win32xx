@@ -167,10 +167,11 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="..\src\ComboBoxEx.cpp" />
 		<Unit filename="..\src\ComboBoxEx.h" />
 		<Unit filename="..\src\Mainfrm.cpp" />
 		<Unit filename="..\src\Mainfrm.h" />
+		<Unit filename="..\src\MyCombo.cpp" />
+		<Unit filename="..\src\MyCombo.h" />
 		<Unit filename="..\src\Readme.txt" />
 		<Unit filename="..\src\Resource.rc">
 			<Option compilerVar="WINDRES" />
@@ -181,14 +182,13 @@
 		<Unit filename="..\src\View.h" />
 		<Unit filename="..\src\main.cpp" />
 		<Unit filename="..\src\resource.h" />
-		<Unit filename="..\..\Win32++\default_resource.h" />
-		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\frame.h" />
-		<Unit filename="..\..\Win32++\gdi.h" />
-		<Unit filename="..\..\Win32++\rebar.h" />
-		<Unit filename="..\..\Win32++\statusbar.h" />
-		<Unit filename="..\..\Win32++\toolbar.h" />
-		<Unit filename="..\..\Win32++\wincore.h" />
+		<Unit filename="..\..\Win32++\include\dialog.h" />
+		<Unit filename="..\..\Win32++\include\frame.h" />
+		<Unit filename="..\..\Win32++\include\gdi.h" />
+		<Unit filename="..\..\Win32++\include\rebar.h" />
+		<Unit filename="..\..\Win32++\include\statusbar.h" />
+		<Unit filename="..\..\Win32++\include\toolbar.h" />
+		<Unit filename="..\..\Win32++\include\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

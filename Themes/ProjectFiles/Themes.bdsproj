@@ -176,9 +176,9 @@
         </optionset>
       </project>
       <FILELIST>
-        <FILE FILENAME="..\src\ComboBoxEx.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ComboBoxEx" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Mainfrm.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Mainfrm" FORMNAME="" DESIGNCLASS=""/>
+		<FILE FILENAME="..\src\MyCombo.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MyCombo" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\ThemesApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ThemesApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\View.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="View" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>

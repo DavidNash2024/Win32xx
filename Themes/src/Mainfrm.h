@@ -5,7 +5,7 @@
 #define MAINFRM_H
 
 #include "View.h"
-#include "ComboBoxEx.h"
+#include "MyCombo.h"
 
 
 // Declaration of the CMainFrame class
@@ -49,7 +49,7 @@ private:
 	CMyCombo m_ComboBoxEx;
 	std::vector<UINT> m_vBandIDs;
 	std::vector<UINT> m_vBandStyles;
-	
+
 	UINT m_nColor;
 	BOOL m_bUseThemes;
 	BOOL m_bBandColors;

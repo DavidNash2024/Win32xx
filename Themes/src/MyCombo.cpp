@@ -3,7 +3,7 @@
 //  Definitions for the CMyCombo class
 
 #include "stdafx.h"
-#include "ComboBoxEx.h"
+#include "MyCombo.h"
 #include "resource.h"
 
 
