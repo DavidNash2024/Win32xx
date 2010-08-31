@@ -870,7 +870,7 @@ namespace Win32xx
 	//        array pointed to a local array or std::string. Subsequent calls to these
 	//        functions will change the text array the returned pointer points to.
 	//
-	//        Using TLS instead of global variables keeps these functions thread safe.
+	//        Using TLS (Thread Local Storage) allows these functions to be thread safe.
 	//
 	inline LPCWSTR CharToWide(LPCSTR pChar)
 	{
