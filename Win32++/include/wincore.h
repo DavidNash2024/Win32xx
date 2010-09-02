@@ -591,7 +591,7 @@ namespace Win32xx
 		friend class CPropertyPage;
 		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
-		
+
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
 	public:
@@ -888,8 +888,8 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-		
-		
+
+
 		// Resize the vector and assign null WCHAR to each element
 		int length = (int)strlen(pChar)+1;
 		pTLSData->vWChar.assign(length, L'\0');
@@ -897,7 +897,7 @@ namespace Win32xx
 
 		// Fill our vector with the converted WCHAR array
 		MultiByteToWideChar(CP_ACP, 0, pChar, -1, pWCharArray, length);
-		
+
 		// return a pointer to the first element in the vector
 		return pWCharArray;
 	}
@@ -908,18 +908,18 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-		
+
 		// Resize the vector and assign null char to each element
 		int length = (int)wcslen(pWChar)+1;
 		pTLSData->vChar.assign(length, '\0');
 		char* pCharArray = &pTLSData->vChar.front();
-		
+
 		// Fill our vector with the converted char array
 		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, pCharArray, length, NULL,NULL);
-		
+
 		// return a pointer to the first element in the vector
 		return pCharArray;
-	} 
+	}
 
 	inline LPCTSTR CharToTChar(LPCSTR pChar)
 	{
@@ -990,7 +990,7 @@ namespace Win32xx
 		OutputDebugString( GetErrorString() );
 		OutputDebugString( _T("\n") );
 		OutputDebugString( _T("*** End of exception report ***\n") );
-		
+
 		return "CWinException thrown";
 	}
 
@@ -1014,7 +1014,7 @@ namespace Win32xx
 				// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
 				throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 			}
-			
+
 			SetnGetThis(this);
 
 			// Get store the instance handle
@@ -1205,7 +1205,7 @@ namespace Win32xx
 			m_csTlsData.Lock();
 			m_vTLSData.push_back(TLSDataPtr(pTLSData));	// store as a Shared_Ptr
 			m_csTlsData.Release();
- 		
+
 			::TlsSetValue(GetTlsIndex(), pTLSData);
 		}
 
@@ -1531,7 +1531,7 @@ namespace Win32xx
 		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
 		TCHAR* pTCharArray = &m_vTChar.front();
 		::GetClassName(m_hWnd, pTCharArray, MAX_STRING_SIZE);
-		
+
 		return pTCharArray;
 	}
 
@@ -1544,7 +1544,7 @@ namespace Win32xx
 		TCHAR* pTCharArray = &m_vTChar.front();
 
 		::GetDlgItemText(m_hWnd, nIDDlgItem, pTCharArray, nLength+1);
-				
+
 		return pTCharArray;
 	}
 
@@ -1556,7 +1556,7 @@ namespace Win32xx
 		m_vTChar.assign(nLength+1, _T('\0'));
 		TCHAR* pTCharArray = &m_vTChar.front();
 		::GetWindowText(m_hWnd, pTCharArray, nLength+1);
-		
+
 		return pTCharArray;
 	}
 
@@ -2482,7 +2482,7 @@ namespace Win32xx
 	// Associates a new large or small icon with a window.
 	{
 		assert(::IsWindow(m_hWnd));
-		SendMessage(WM_SETICON, (WPARAM)bBigIcon, (LPARAM)hIcon);
+		return (HICON)SendMessage(WM_SETICON, (WPARAM)bBigIcon, (LPARAM)hIcon);
 	}
 
 	inline BOOL CWnd::SetForegroundWindow() const
@@ -2568,7 +2568,7 @@ namespace Win32xx
 		HRESULT hr = E_NOTIMPL;
 
 #ifndef	_WIN32_WCE
-		
+
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 		if(hMod)
 		{
@@ -2634,7 +2634,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return ::EnableScrollBar(m_hWnd, uSBflags, uArrows);
 	}
-	
+
 	inline HWND CWnd::GetLastActivePopup() const
 	{
 		assert(::IsWindow(m_hWnd));

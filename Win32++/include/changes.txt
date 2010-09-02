@@ -10,6 +10,9 @@ New Features and Enhancements
    take advantage of IPv6 support.
 * Added the GDIPlus sample to demonstrate how to use the GDIplus library 
    provided with modern Windows operating systems (XP and above).
+* Add the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
+   CProgressbar, CScrollbar, and CSpinButton.
+* Extended the CToolbar class.   
 * Moved the text conversion functions from CWnd to the global (Win32++) 
    namespace.
 * Improved the appearance of frames without themes.
@@ -25,7 +28,6 @@ New Features and Enhancements
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
    - an attempt to read from or write to the registry fails.
-* Extended the CToolbar class.
 * Added Shared_Ptr class. Note that a "shared_ptr" will be available for the
    updated C++ standard. It is already available with some modern compilers,
    and also for users of the Boost library. The "Shared_Ptr" class is intended
@@ -36,8 +38,15 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Added CResizer
-Added Shared_Ptr
+Added CAnimation
+Added CComboBox  
+Added CComboBoxEx
+Added CProgressbar 
+Added CResizer 
+Added CScrollbar 
+Added CSlider 
+Added CSpinButton
+Added Shared_Ptr 
 Updated CSocket to support IPv6
 Added CPropertySheet::SetIcon
 Added CRebar::SizeToRect
