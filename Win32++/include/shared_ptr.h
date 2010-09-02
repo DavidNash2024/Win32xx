@@ -76,8 +76,7 @@
 //
 // This can be improved by using a vector instead of an array
 //    int nLength = ::GetWindowTextLength(m_hWnd);
-//    std::vector<TCHAR> vTChar;
-//    vTChar.assign(nLength+1, _T('\0'));
+//    std::vector<TCHAR> vTChar( nLength+1, _T('\0') );
 //    TCHAR* pTCharArray = &vTChar.front();
 //    ::GetWindowText(m_hWnd, pTCharArray, nLength+1);
 //

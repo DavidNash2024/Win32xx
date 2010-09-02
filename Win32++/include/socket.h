@@ -626,8 +626,7 @@ namespace Win32xx
 
 	inline int CSocket::Receive(TCHAR* buf, int len, int flags)
 	{
-		std::vector<char> vChar;
-		vChar.assign(len+1, '\0');
+		std::vector<char> vChar(len+1, '\0');
 		char* pCharArray = &vChar.front(); 
 		int Result = ::recv(m_Socket, pCharArray, len, flags);
 		if (SOCKET_ERROR == Result)
@@ -641,8 +640,7 @@ namespace Win32xx
 	inline int CSocket::ReceiveFrom(TCHAR* buf, int len, int flags, struct sockaddr* from, int* fromlen)
 	//The ReceiveFrom function receives a datagram and stores the source address.
 	{
-		std::vector<char> vChar;
-		vChar.assign(len+1, '\0');
+		std::vector<char> vChar(len+1, '\0');
 		char* pCharArray = &vChar.front();
 		int Result = ::recvfrom(m_Socket, pCharArray, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)

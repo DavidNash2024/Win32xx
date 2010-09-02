@@ -324,8 +324,7 @@ void CMainFrame::OnFilePrint()
 	GetDIBits(MemDC, hbmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Retrieve the image data
-	std::vector<byte> vBits;	// a vector to hold the byte array
-	vBits.assign(bi.biSizeImage, 0);
+	std::vector<byte> vBits(bi.biSizeImage, 0);	// a vector to hold the byte array
 	byte* pByteArray = &vBits.front();
 	GetDIBits(MemDC, hbmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 

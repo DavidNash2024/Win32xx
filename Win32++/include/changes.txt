@@ -85,7 +85,17 @@ Added CToolbar::SetPadding
 Added CToolbar::SetToolTips
 Added CWinException::Output
 Added CWinException::what
+Added CWnd::GetFont
+Added CWnd::GetIcon
+Added CWnd::GetLastActivePopup
+Added CWnd::GetTopWindow
+Added CWnd::GetWindowTextLength
+Added CWnd::OpenIcon
+Added CWnd::SetFont
+Added CWnd::SetIcon
 Added CWnd::SetWindowTheme
+Added CWnd::ShowOwnedPopups
+Added CWnd::ShowWindowAsync
 Added ::IsAeroThemed
 Modified CSocket::Bind          now uses TCHAR instead of char
 Modified CSocket::Connect       now uses TCHAR instead of char

@@ -338,8 +338,7 @@ namespace Win32xx
 		tString t;
 		if (nTextMax > 0)
 		{
-			std::vector<TCHAR> vTChar;
-			vTChar.assign(nTextMax +1, _T('\0'));
+			std::vector<TCHAR> vTChar(nTextMax +1, _T('\0'));
 			TCHAR* pszText = &vTChar.front();
 			LVITEM lvi = {0};
 			lvi.iItem = iItem;

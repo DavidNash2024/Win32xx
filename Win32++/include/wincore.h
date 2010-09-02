@@ -468,6 +468,8 @@ namespace Win32xx
 		HWND GetDlgItem(int nIDDlgItem) const;
 		int  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
+		HFONT GetFont() const;
+		HICON GetIcon(BOOL bBigIcon) const;
 		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
@@ -476,6 +478,7 @@ namespace Win32xx
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
 		LPCTSTR GetWindowText() const;
+		int GetWindowTextLength() const;
 		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
@@ -499,7 +502,9 @@ namespace Win32xx
 		BOOL SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		HWND SetFocus() const;
+		void SetFont(HFONT hFont, BOOL bRedraw) const;
 		BOOL SetForegroundWindow() const;
+		HICON SetIcon(HICON hIcon, BOOL bBigIcon) const;
 		HWND SetParent(HWND hParent) const;
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		int  SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
@@ -517,20 +522,25 @@ namespace Win32xx
   #ifndef _WIN32_WCE
 		BOOL CloseWindow() const;
 		BOOL EnableScrollBar(UINT uSBflags, UINT uArrows) const;
+		HWND GetLastActivePopup() const;
 		HMENU GetMenu() const;
 		int  GetScrollPos(int nBar) const;
 		BOOL GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
+		HWND GetTopWindow() const;
 		BOOL GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
 		BOOL IsIconic() const;
 		BOOL IsZoomed() const;
 		BOOL LockWindowUpdate(HWND hWndLock) const;
+		BOOL OpenIcon() const;
 		BOOL SetMenu(HMENU hMenu) const;
 		BOOL ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const;
 		int  ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const;
 		int  SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
 		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
+		BOOL ShowOwnedPopups(BOOL fShow) const;
 		BOOL ShowScrollBar(int nBar, BOOL bShow) const;
+		BOOL ShowWindowAsync(int nCmdShow) const;
   #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1894,7 +1904,7 @@ namespace Win32xx
 		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), 0));
 
 		if (m_hIconLarge)
-			::SendMessage (m_hWnd, WM_SETICON, WPARAM (ICON_BIG), LPARAM (m_hIconLarge));
+			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (m_hIconLarge));
 		else
 			TRACE(_T("**WARNING** SetIconLarge Failed\n"));
 
@@ -1910,7 +1920,7 @@ namespace Win32xx
 		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
 		if (m_hIconSmall)
-			::SendMessage (m_hWnd, WM_SETICON, WPARAM (ICON_SMALL), LPARAM (m_hIconSmall));
+			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (m_hIconSmall));
 		else
 			TRACE(_T("**WARNING** SetIconSmall Failed\n"));
 
@@ -2225,6 +2235,20 @@ namespace Win32xx
 		return ::GetDlgItemInt(m_hWnd, nIDDlgItem, lpTranslated, bSigned);
 	}
 
+	inline HFONT CWnd::GetFont() const
+	// Retrieves the font with which the window is currently drawing its text.
+	{
+		assert(::IsWindow(m_hWnd));
+		return (HFONT)SendMessage(WM_GETFONT, 0, 0);
+	}
+
+	inline HICON CWnd::GetIcon(BOOL bBigIcon) const
+	// Retrieves a handle to the large or small icon associated with a window.
+	{
+		assert(::IsWindow(m_hWnd));
+		return (HICON)SendMessage(WM_GETICON, (WPARAM)bBigIcon, 0);
+	}
+
 	inline HWND CWnd::GetParent() const
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2274,6 +2298,12 @@ namespace Win32xx
 		CRect rc;
 		::GetWindowRect(m_hWnd, &rc);
 		return rc;
+	}
+
+	inline int CWnd::GetWindowTextLength() const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::GetWindowTextLength(m_hWnd);
 	}
 
 	inline void CWnd::Invalidate(BOOL bErase /*= TRUE*/) const
@@ -2441,6 +2471,20 @@ namespace Win32xx
 		return ::SetFocus(m_hWnd);
 	}
 
+	inline void CWnd::SetFont(HFONT hFont, BOOL bRedraw) const
+	// Specifies the font that the window will use when drawing text.
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(WM_SETFONT, (WPARAM)hFont, (LPARAM)bRedraw);
+	}
+
+	inline HICON CWnd::SetIcon(HICON hIcon, BOOL bBigIcon) const
+	// Associates a new large or small icon with a window.
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(WM_SETICON, (WPARAM)bBigIcon, (LPARAM)hIcon);
+	}
+
 	inline BOOL CWnd::SetForegroundWindow() const
 	// The SetForegroundWindow function puts the thread that created the window into the
 	// foreground and activates the window.
@@ -2541,7 +2585,6 @@ namespace Win32xx
 		return hr;
 	}
 
-
 	inline BOOL CWnd::ShowWindow(int nCmdShow /*= SW_SHOWNORMAL*/) const
 	// The ShowWindow function sets the window's show state.
 	{
@@ -2591,6 +2634,12 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return ::EnableScrollBar(m_hWnd, uSBflags, uArrows);
 	}
+	
+	inline HWND CWnd::GetLastActivePopup() const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::GetLastActivePopup(m_hWnd);
+	}
 
 	inline HMENU CWnd::GetMenu() const
 	// The GetMenu function retrieves a handle to the menu assigned to the window.
@@ -2613,6 +2662,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::GetScrollRange(m_hWnd, nBar, &MinPos, &MaxPos );
+	}
+
+	inline HWND CWnd::GetTopWindow() const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::GetTopWindow(m_hWnd);
 	}
 
 	inline BOOL CWnd::GetWindowPlacement(WINDOWPLACEMENT& wndpl) const
@@ -2643,6 +2698,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::LockWindowUpdate(hWndLock);
+	}
+
+	inline BOOL CWnd::OpenIcon() const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::OpenIcon(m_hWnd);
 	}
 
 	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const
@@ -2697,11 +2758,24 @@ namespace Win32xx
 		return ::SetWindowPlacement(m_hWnd, &wndpl);
 	}
 
+	inline BOOL CWnd::ShowOwnedPopups(BOOL fShow) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::ShowOwnedPopups(m_hWnd, fShow);
+	}
+
 	inline BOOL CWnd::ShowScrollBar(int nBar, BOOL bShow) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::ShowScrollBar(m_hWnd, nBar, bShow);
 	}
+
+	inline BOOL CWnd::ShowWindowAsync(int nCmdShow) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::ShowWindowAsync(m_hWnd, nCmdShow);
+	}
+
   #endif
 
 }; // namespace Win32xx

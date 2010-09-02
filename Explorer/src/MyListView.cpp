@@ -117,8 +117,7 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
 	{
 		//get the selected items
 		UINT  nItems = GetSelectedCount();
-		std::vector<int> vItems;
-		vItems.assign(nItems, 0);
+		std::vector<int> vItems(nItems, 0);
 		int* pItemArray = &vItems.front();
 
 		if(pItemArray)
@@ -229,8 +228,7 @@ void CMyListView::DoDisplay()
 
 void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 {
-	std::vector<Cpidl> vpidl;
-	vpidl.resize(cbItems);
+	std::vector<Cpidl> vpidl(cbItems);
 	Cpidl* pidlArray = &vpidl.front();
 
 	for(UINT i = 0; i < cbItems; ++i)

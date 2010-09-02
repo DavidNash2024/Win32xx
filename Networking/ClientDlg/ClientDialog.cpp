@@ -157,7 +157,8 @@ void CClientDialog::OnClientConnect()
 int CClientDialog::OnClientReceive()
 {
 	// Called when the socket has data to receive
-	TCHAR buf[1025] = {0};	// assign 1025 array elements to NULL
+	std::vector<TCHAR> vTChar( 1025, _T('\0') );
+	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0') 
 	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
 	if (SOCKET_ERROR == size)
 	{

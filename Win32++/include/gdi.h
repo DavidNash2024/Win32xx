@@ -1734,8 +1734,7 @@ namespace Win32xx
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		std::vector<byte> vBits;
-		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
+		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
 		byte* pByteArray = &vBits.front();
 		
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
@@ -1809,8 +1808,7 @@ namespace Win32xx
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		std::vector<byte> vBits;
-		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
+		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
 		byte* pByteArray = &vBits.front();
 
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);

@@ -260,8 +260,7 @@ namespace Win32xx
 			tvi.hItem = hItem;
 			tvi.mask = TVIF_TEXT;
 			tvi.cchTextMax = nTextMax;
-			std::vector<TCHAR> vTChar;
-			vTChar.assign(nTextMax +1, _T('\0'));
+			std::vector<TCHAR> vTChar(nTextMax +1, _T('\0'));
 			TCHAR* pTCharArray = &vTChar.front();
 			tvi.pszText = pTCharArray;
 			::SendMessage(m_hWnd, TVM_GETITEM, 0L, (LPARAM)&tvi);

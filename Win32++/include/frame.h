@@ -1924,8 +1924,7 @@ namespace Win32xx
 					wsprintf(szSubKey, _T("File %d\0"), i+1);
 
 					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
-					std::vector<TCHAR> PathName;
-					PathName.assign( dwBufferSize, _T('\0') );
+					std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
 					TCHAR* pTCharArray = &PathName.front();
 
 					// load the entry from the registry

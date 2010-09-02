@@ -77,7 +77,8 @@ BOOL CTCPClientDlg::OnInitDialog()
 
 void CTCPClientDlg::Receive()
 {
-	TCHAR buf[1025] = {0};			// Assign all 1025 elements to NULL
+	std::vector<TCHAR> vTChar( 1025, _T('\0') );
+	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0') 
 	m_pSocket->Receive(buf, 1024, 0);
 	Append(IDC_EDIT_RECEIVE2, buf);
 }
@@ -375,8 +376,7 @@ void CSvrDialog::OnSocketAccept()
 
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 {
-	std::vector<TCHAR> vTChar;
-	vTChar.assign(1025, _T('\0'));
+	std::vector<TCHAR> vTChar(1025, _T('\0'));
 	TCHAR* bufArray = &vTChar.front(); // TCHAR array with 1025 elements
 	
 	switch (m_SocketType)

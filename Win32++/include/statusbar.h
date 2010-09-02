@@ -131,8 +131,7 @@ namespace Win32xx
 		// Get size of Text array
 		int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));
 
-		std::vector<TCHAR> Text;
-		Text.assign( iChars +1, _T('\0') );
+		std::vector<TCHAR> Text( iChars +1, _T('\0') );
 		TCHAR* pTextArray = &Text.front();
 
 		SendMessage(SB_GETTEXT, iPart, (LPARAM)pTextArray);
@@ -191,15 +190,13 @@ namespace Win32xx
 
 		// Fill the PartWidths vector with the current width of the statusbar parts
 		int PartsCount = (int)SendMessage(SB_GETPARTS, 0L, 0L);
-		std::vector<int> PartWidths;
-		PartWidths.assign(PartsCount, 0);
+		std::vector<int> PartWidths(PartsCount, 0);
 		int* pPartWidthArray = &PartWidths.front();
 		SendMessage(SB_GETPARTS, PartsCount, (LPARAM)pPartWidthArray);
 
 		// Fill the NewPartWidths vector with the new width of the statusbar parts
 		int NewPartsCount = MAX(iPart+1, PartsCount);	
-		std::vector<int> NewPartWidths;
-		NewPartWidths.assign(NewPartsCount, 0);
+		std::vector<int> NewPartWidths(NewPartsCount, 0);;
 		NewPartWidths = PartWidths;
 		int* pNewPartWidthArray = &NewPartWidths.front();
 

@@ -44,8 +44,7 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(m_hbmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		std::vector<byte> vBits;
-		vBits.assign(pbmi->bmiHeader.biSizeImage, 0);
+		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
 		byte* lpvBits = &vBits.front();
 
 		MemDC.GetDIBits(m_hbmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);		 

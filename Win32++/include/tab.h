@@ -1019,8 +1019,7 @@ namespace Win32xx
 		if (nTab < GetAllTabs().size())
 		{
 			TCITEM Item = {0};
-			std::vector<TCHAR> vTChar;
-			vTChar.assign(MAX_MENU_STRING+1, _T('\0'));
+			std::vector<TCHAR> vTChar(MAX_MENU_STRING+1, _T('\0'));
 			TCHAR* pTChar = &vTChar.front();
 			lstrcpyn(pTChar, szText, MAX_MENU_STRING);
 			Item.mask = TCIF_TEXT;

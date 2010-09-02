@@ -361,8 +361,7 @@ namespace Win32xx
 		{
 			// Create the TBBUTTON array for each button
 		//	TBBUTTON* tbb =  new TBBUTTON[iNumButtons];
-			std::vector<TBBUTTON> vTBB;
-			vTBB.resize(iNumButtons);
+			std::vector<TBBUTTON> vTBB(iNumButtons);
 			TBBUTTON* tbbArray = &vTBB.front();
 
 			for (int j = 0 ; j < iNumButtons; j++)
