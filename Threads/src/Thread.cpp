@@ -41,7 +41,7 @@ void CThread::Stop()
 }
 
 UINT WINAPI CThread::ThreadCallback(LPVOID pCThread)
-// This function is the function that the thread runs 
+// When the thread starts, it runs this function. 
 {
 	try
 	{

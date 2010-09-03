@@ -1339,7 +1339,7 @@ namespace Win32xx
 	// Associates a ToolTip control with a toolbar.
 	{
 		assert(::IsWindow(m_hWnd));
-		SendMessage(TB_SETPADDING, (WPARAM)hwndToolTip, 0L);
+		SendMessage(TB_SETTOOLTIPS, (WPARAM)hwndToolTip, 0L);
 	}
 
 	inline LRESULT CToolbar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
