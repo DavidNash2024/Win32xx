@@ -7,7 +7,7 @@
 
 #include "Thread.h"
 
-typedef Shared_Ptr<CThread> ThreadPtr;
+typedef Shared_Ptr<CMyThread> ThreadPtr;
 
 class CMainWindow : public CWnd
 {
@@ -28,7 +28,7 @@ private:
 		WM_TESTMESSAGE   = WM_USER+2	// the test message
 	};
 
-	std::vector<ThreadPtr> m_vThreads;	// A vector of CThread smart pointers
+	std::vector<ThreadPtr> m_vThreads;	// A vector of CMyThread smart pointers
 	int m_nThreads;						// Number of additional threads to be created
 };
 

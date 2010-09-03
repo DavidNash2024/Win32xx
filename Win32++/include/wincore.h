@@ -100,15 +100,16 @@
 
 #define _WINSOCKAPI_            // Prevent winsock.h #include's.
 
+#include <assert.h>
 #include <vector>
 #include <algorithm>
 #include <string>
 #include <map>
 #include <windows.h>
 #include <commctrl.h>
+#include <process.h>
 #include <tchar.h>
 #include <shlwapi.h>
-#include <assert.h>
 #include "shared_ptr.h"
 
 
@@ -581,7 +582,7 @@ namespace Win32xx
 	}; // class CWnd
 
 
-	///////////////////////////////
+	///////////////////////////////////
 	// Declaration of the CWinApp class
 	//
 	class CWinApp
@@ -625,6 +626,36 @@ namespace Win32xx
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
+	};
+	
+	
+	//////////////////////////////////////
+	// Declaration of the CWinThread class
+	//
+	class CWinThread
+	{
+	public:
+		CWinThread();
+		virtual ~CWinThread();
+
+		virtual BOOL InitInstance();
+		virtual int MessageLoop();
+		virtual void PreCreateThread(DWORD &dwCreateFlags, UINT &nStackSize, LPSECURITY_ATTRIBUTES &lpSecurityAttrs);
+
+		HANDLE	GetThread()			{ return m_hThread; }
+		int		GetThreadID()		{ return m_nThreadID; }
+		int		GetThreadPriority() { return ::GetThreadPriority(m_hThread); }
+		DWORD	ResumeThread()		{ return ::ResumeThread(m_hThread); }
+		DWORD	SuspendThread()		{ return ::SuspendThread(m_hThread); }
+		BOOL	SetThreadPriority(int nPriority) { return ::SetThreadPriority(m_hThread, nPriority); }
+		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
+
+	private:
+		HANDLE m_hThread;			// Handle of this thread
+		UINT m_nThreadID;			// ID of this thread
+		DWORD m_dwCreateFlags;		// CREATE_SUSPENDED or 0
+		UINT m_nStackSize;			// Stack size for new thread or 0
+		LPSECURITY_ATTRIBUTES m_pSecurityAttributes;	// pointer to a SECURITY_ATTRIBUTES structure
 	};
 
 }
@@ -966,7 +997,7 @@ namespace Win32xx
 	}
 
 
-	///////////////////////////////////
+	//////////////////////////////////////////
 	// Definitions for the CWinException class
 	//
 	inline CWinException::CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg)
@@ -995,7 +1026,7 @@ namespace Win32xx
 	}
 
 
-	///////////////////////////////////
+	////////////////////////////////////
 	// Definitions for the CWinApp class
 	//
 
@@ -2774,6 +2805,71 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::ShowWindowAsync(m_hWnd, nCmdShow);
+	}
+	
+	
+	///////////////////////////////////////
+	// Definitions for the CWinThread class
+	//
+	inline CWinThread::CWinThread() : m_hThread(0), m_nThreadID(0), m_dwCreateFlags(CREATE_SUSPENDED),
+										m_nStackSize(0), m_pSecurityAttributes(0)
+	{
+		// Provide an opportunity to set the thread parameters.
+		PreCreateThread(m_dwCreateFlags, m_nStackSize, m_pSecurityAttributes);
+
+		// NOTE:  By default, the thread is created in the default state.
+		//		  _beginthreadex will be undefined if a single-threaded run-time library is used. Use a Multithreaded run-time.
+		m_hThread = (HANDLE)_beginthreadex(m_pSecurityAttributes, m_nStackSize, CWinThread::StaticThreadCallback, (LPVOID) this, m_dwCreateFlags, &m_nThreadID);
+
+		if (0 == m_hThread)
+			throw CWinException(_T("Failed to create thread"));
+	}
+
+	inline CWinThread::~CWinThread()
+	{
+
+		if (0 != WaitForSingleObject(m_hThread, 0))
+			TRACE(_T("*** Error *** Ending CWinThread before ending its thread\n"));
+
+		// Close the thread's handle
+		::CloseHandle(m_hThread);
+	}
+
+
+	inline BOOL CWinThread::InitInstance()
+	{
+		// Override this function to perform tasks when the thread starts.
+
+		// return TRUE to run a message loop, otherwise return FALSE.
+		// A thread with a window must run a message loop.
+		return FALSE;
+	}
+
+	inline int CWinThread::MessageLoop()
+	{
+		// Override this function if your thread needs a different message loop
+		return GetApp()->MessageLoop();
+	}
+
+	inline void CWinThread::PreCreateThread(DWORD &dwCreateFlags, UINT &nStackSize, LPSECURITY_ATTRIBUTES &lpSecurityAttrs)
+	{
+		// Override this function to set these pareameters before the thread is created
+
+		m_dwCreateFlags = dwCreateFlags;			// default is CREATE_SUSPENDED
+		m_nStackSize = nStackSize;					// default is 0
+		m_pSecurityAttributes = lpSecurityAttrs;	// default is 0
+	}
+
+	inline UINT WINAPI CWinThread::StaticThreadCallback(LPVOID pCThread)
+	// When the thread starts, it runs this function.
+	{
+		// Get the pointer for this CMyThread object
+		CWinThread* pThread = (CWinThread*)pCThread;
+
+		if (pThread->InitInstance())
+			return pThread->MessageLoop();
+
+		return 0;
 	}
 
   #endif

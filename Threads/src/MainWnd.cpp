@@ -33,11 +33,11 @@ void CMainWindow::OnCreate()
 {
 	try
 	{
-		// Create each CThread object
+		// Create each CMyThread object
 		for (int i = 0 ; i < m_nThreads ; i++)
 		{
-			// Create the thread and store the CThread pointer
-			CThread* pThread = new CThread(i);
+			// Create the thread and store the CMyThread pointer
+			CMyThread* pThread = new CMyThread(i);
 			
 			TCHAR str[80];
 			wsprintf(str, _T("Thread %d started\n"), i + 1);
@@ -49,7 +49,7 @@ void CMainWindow::OnCreate()
 		std::vector<ThreadPtr>::iterator iter;
 		for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
 		{
-			(*iter)->Start();
+			(*iter)->ResumeThread();
 		}
 	}
 
@@ -85,28 +85,20 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	
 	case WM_CLOSE:
 		{
-			//Close the thread windows
+			// Close each thread window. 
+			// The thread is then terminated with a WM_QUIT when its window is destroyed.
 			std::vector<ThreadPtr>::iterator iter;
 			for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
 			{
 				::SendMessage((*iter)->GetTestWindow().GetHwnd(), WM_CLOSE, 0, 0);
-			}
+			} 
 		}
 		break;
 	
 	case WM_DESTROY:	
-		{
-			std::vector<ThreadPtr>::iterator iter;
-			for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
-			{
-				PostThreadMessage((*iter)->GetThreadID(), WM_QUIT,0,0);
-				
-				// Pause this thread and wait for the specified thread to end
-				::WaitForSingleObject((*iter)->GetHandle(), 100);
-			}
-		
+		{	
 			// Post the WM_QUIT message to terminate the primary thread.
-			::PostQuitMessage(0);
+			::PostQuitMessage(0); 
 		}
 		break;
 	

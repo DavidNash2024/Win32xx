@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 // Thread.h
-//  Declaration of the CThread class
+//  Declaration of the CMyThread class
 
 #ifndef THREAD_H
 #define THREAD_H
@@ -8,22 +8,17 @@
 #include "TestWnd.h"
 
 
-class CThread
+class CMyThread : public CWinThread
 {
 public:
-	CThread(int nValue);
-	virtual ~CThread();
-	virtual HANDLE GetHandle() { return m_hThread; }
-	virtual UINT GetThreadID() { return m_ThreadID; }
+	CMyThread(int nValue);
+	virtual ~CMyThread() {};
+	virtual BOOL InitInstance();
+	virtual void PreCreateThread(DWORD &dwCreateFlags, UINT &nStackSize, LPSECURITY_ATTRIBUTES &pSecurityAttrs);
 	virtual CTestWindow& GetTestWindow() { return m_TestWindow; }
-	virtual void Start();
-	virtual void Stop();
-	static UINT WINAPI ThreadCallback(LPVOID pCThread);
 
 private:
-	UINT m_ThreadID;			// ID of this thread
 	int m_nValue;				// a value associated with this thread
-	HANDLE m_hThread;			// Handle of this thread
 	CTestWindow m_TestWindow;	// The CWnd object for this thread
 };
 
