@@ -636,11 +636,11 @@ namespace Win32xx
 	{
 	public:
 		CWinThread();
+		CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
 		virtual ~CWinThread();
-
+		
 		virtual BOOL InitInstance();
 		virtual int MessageLoop();
-		virtual void PreCreateThread(DWORD &dwCreateFlags, UINT &nStackSize, LPSECURITY_ATTRIBUTES &lpSecurityAttrs);
 
 		HANDLE	GetThread()			{ return m_hThread; }
 		int		GetThreadID()		{ return m_nThreadID; }
@@ -651,11 +651,10 @@ namespace Win32xx
 		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
 
 	private:
+		void CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
+
 		HANDLE m_hThread;			// Handle of this thread
 		UINT m_nThreadID;			// ID of this thread
-		DWORD m_dwCreateFlags;		// CREATE_SUSPENDED or 0
-		UINT m_nStackSize;			// Stack size for new thread or 0
-		LPSECURITY_ATTRIBUTES m_pSecurityAttributes;	// pointer to a SECURITY_ATTRIBUTES structure
 	};
 
 }
@@ -2811,18 +2810,15 @@ namespace Win32xx
 	///////////////////////////////////////
 	// Definitions for the CWinThread class
 	//
-	inline CWinThread::CWinThread() : m_hThread(0), m_nThreadID(0), m_dwCreateFlags(CREATE_SUSPENDED),
-										m_nStackSize(0), m_pSecurityAttributes(0)
+	inline CWinThread::CWinThread() : m_hThread(0), m_nThreadID(0)
 	{
-		// Provide an opportunity to set the thread parameters.
-		PreCreateThread(m_dwCreateFlags, m_nStackSize, m_pSecurityAttributes);
+		CreateThread(0, 0, CREATE_SUSPENDED);
+	}
 
-		// NOTE:  By default, the thread is created in the default state.
-		//		  _beginthreadex will be undefined if a single-threaded run-time library is used. Use a Multithreaded run-time.
-		m_hThread = (HANDLE)_beginthreadex(m_pSecurityAttributes, m_nStackSize, CWinThread::StaticThreadCallback, (LPVOID) this, m_dwCreateFlags, &m_nThreadID);
-
-		if (0 == m_hThread)
-			throw CWinException(_T("Failed to create thread"));
+	inline CWinThread::CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag) : m_hThread(0), m_nThreadID(0)
+										
+	{
+		CreateThread(pSecurityAttributes, stack_size, initflag);
 	}
 
 	inline CWinThread::~CWinThread()
@@ -2833,6 +2829,16 @@ namespace Win32xx
 
 		// Close the thread's handle
 		::CloseHandle(m_hThread);
+	}
+
+	inline void CWinThread::CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
+	{
+		// NOTE:  By default, the thread is created in the default state.
+		//		  _beginthreadex will be undefined if a single-threaded run-time library is used. Use a Multithreaded run-time.
+		m_hThread = (HANDLE)_beginthreadex(pSecurityAttributes, stack_size, CWinThread::StaticThreadCallback, (LPVOID) this, initflag, &m_nThreadID);
+
+		if (0 == m_hThread)
+			throw CWinException(_T("Failed to create thread"));
 	}
 
 
@@ -2849,15 +2855,6 @@ namespace Win32xx
 	{
 		// Override this function if your thread needs a different message loop
 		return GetApp()->MessageLoop();
-	}
-
-	inline void CWinThread::PreCreateThread(DWORD &dwCreateFlags, UINT &nStackSize, LPSECURITY_ATTRIBUTES &lpSecurityAttrs)
-	{
-		// Override this function to set these pareameters before the thread is created
-
-		m_dwCreateFlags = dwCreateFlags;			// default is CREATE_SUSPENDED
-		m_nStackSize = nStackSize;					// default is 0
-		m_pSecurityAttributes = lpSecurityAttrs;	// default is 0
 	}
 
 	inline UINT WINAPI CWinThread::StaticThreadCallback(LPVOID pCThread)

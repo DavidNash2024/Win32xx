@@ -14,7 +14,6 @@ public:
 	CMyThread(int nValue);
 	virtual ~CMyThread() {};
 	virtual BOOL InitInstance();
-	virtual void PreCreateThread(DWORD &dwCreateFlags, UINT &nStackSize, LPSECURITY_ATTRIBUTES &pSecurityAttrs);
 	virtual CTestWindow& GetTestWindow() { return m_TestWindow; }
 
 private:

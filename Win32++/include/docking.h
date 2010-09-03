@@ -2934,12 +2934,12 @@ namespace Win32xx
 					return 0L;
 				}
 			}
-			break;
+			break; 
 		case SC_CLOSE:
 			// The close button is pressed on an undocked docker
 			m_bIsClosing = TRUE;
 			break;
-		}
+		} 
 		return CWnd::WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
 	}
 
@@ -3517,6 +3517,9 @@ namespace Win32xx
 			break;
 		case WM_SYSCOLORCHANGE:
 			OnSysColorChange(wParam, lParam);
+			break;
+		case WM_NCLBUTTONDBLCLK :
+			m_bIsDragging = FALSE;
 			break;
 		}
 
