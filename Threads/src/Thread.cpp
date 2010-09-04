@@ -3,7 +3,6 @@
 //  Definitions for the CMyThread class
 
 #include "stdafx.h"
-#include <process.h>
 #include "Thread.h"
 
 

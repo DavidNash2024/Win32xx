@@ -642,15 +642,17 @@ namespace Win32xx
 		virtual BOOL InitInstance();
 		virtual int MessageLoop();
 
-		HANDLE	GetThread()			{ return m_hThread; }
-		int		GetThreadID()		{ return m_nThreadID; }
-		int		GetThreadPriority() { return ::GetThreadPriority(m_hThread); }
-		DWORD	ResumeThread()		{ return ::ResumeThread(m_hThread); }
-		DWORD	SuspendThread()		{ return ::SuspendThread(m_hThread); }
-		BOOL	SetThreadPriority(int nPriority) { return ::SetThreadPriority(m_hThread, nPriority); }
+		HANDLE	GetThread()	const			{ return m_hThread; }
+		int		GetThreadID() const			{ return m_nThreadID; }
+		int		GetThreadPriority() const	{ return ::GetThreadPriority(m_hThread); }
+		DWORD	ResumeThread() const		{ return ::ResumeThread(m_hThread); }
+		DWORD	SuspendThread() const		{ return ::SuspendThread(m_hThread); }
+		BOOL	SetThreadPriority(int nPriority) const { return ::SetThreadPriority(m_hThread, nPriority); }
 		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
 
 	private:
+		CWinThread(const CWinThread&);				// Disable copy construction
+		CWinThread& operator = (const CWinThread&);	// Disable assignment operator
 		void CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
 
 		HANDLE m_hThread;			// Handle of this thread
@@ -2818,12 +2820,25 @@ namespace Win32xx
 	inline CWinThread::CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag) : m_hThread(0), m_nThreadID(0)
 										
 	{
+		// Valid argument values:
+		// pSecurityAttributes		Either a pointer to SECURITY_ATTRIBUTES or 0
+		// stack_size				Either the stack size or 0
+		// initflag					Either CREATE_SUSPENDED or 0
+		
 		CreateThread(pSecurityAttributes, stack_size, initflag);
 	}
 
 	inline CWinThread::~CWinThread()
 	{
+		// Note: It is your job to end the thread before CWinThread ends
+		//       To end a thread with a message loop, post a WM_QUIT message to the thread.
+		//       To end a thread without a message loop, set an event, and end 
+		//        the thread when the event is received.
 
+		// Note: Don't use things like TerminateThread or ExitThread. These represent
+		//       poor programming techniques, and are likely to leak memory and resources.
+		
+		// A thread's state is set to signalled when the thread terminates.
 		if (0 != WaitForSingleObject(m_hThread, 0))
 			TRACE(_T("*** Error *** Ending CWinThread before ending its thread\n"));
 
