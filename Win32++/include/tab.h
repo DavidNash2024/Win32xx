@@ -153,7 +153,7 @@ namespace Win32xx
 		CTab(const CTab&);				// Disable copy construction
 		CTab& operator = (const CTab&); // Disable assignment operator
 
-		void	SetActiveView(CWnd* pView);
+		void SetActiveView(CWnd* pView);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		std::vector<ViewPtr> m_vTabViews;
@@ -1295,7 +1295,9 @@ namespace Win32xx
 	inline void CTabbedMDI::CloseActiveMDI()
 	{
 		int nTab = GetTab().GetCurSel();
-		GetTab().RemoveTabPage(nTab);
+		if (nTab >= 0)
+			GetTab().RemoveTabPage(nTab);
+		
 		RecalcLayout();
 	}
 
@@ -1331,10 +1333,16 @@ namespace Win32xx
 	}
 
 	inline CWnd* CTabbedMDI::GetActiveMDIChild()
-	{
+	{		
+		CWnd* pView = NULL;
 		int nTab = GetTab().GetCurSel();
-		TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
-		return tbi.pView;
+		if (nTab >= 0)
+		{
+			TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
+			pView = tbi.pView;
+		}
+
+		return pView;
 	}
 
 	inline int CTabbedMDI::GetMDIChildCount()
