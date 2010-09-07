@@ -156,7 +156,7 @@ namespace Win32xx
 		CDockContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
 		CWnd* GetActiveView() const;
 		std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
-		CDockContainer* GetContainerParent() { return m_pContainerParent; }
+		CDockContainer* GetContainerParent() const { return m_pContainerParent; }
 		tString GetDockCaption() const	{ return m_tsCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }

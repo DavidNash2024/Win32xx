@@ -91,12 +91,12 @@ namespace Win32xx
 		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
 		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText, UINT nID_Icon, UINT idTab = 0);
 		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText);
-		virtual CRect GetCloseRect();
-		virtual CRect GetListRect();
-		virtual BOOL GetTabsAtTop();
-		virtual int  GetTabIndex(CWnd* pWnd);
-		virtual TabPageInfo GetTabPageInfo(UINT nTab);
-		virtual int GetTextHeight();
+		virtual CRect GetCloseRect() const;
+		virtual CRect GetListRect() const;
+		virtual BOOL GetTabsAtTop() const;
+		virtual int  GetTabIndex(CWnd* pWnd) const;
+		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
+		virtual int GetTextHeight() const;
 		virtual tString GetWindowType() const { return _T("CTab"); }
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
@@ -116,24 +116,24 @@ namespace Win32xx
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
-		void AdjustRect(BOOL fLarger, RECT *prc);
-		int  GetCurFocus();
-		int  GetCurSel();
-		BOOL GetItem(int iItem, LPTCITEM pitem);
-		int  GetItemCount();
-		int  HitTest(TCHITTESTINFO& info);
-		void SetCurFocus(int iItem);
-		int  SetCurSel(int iItem);
-		DWORD SetItemSize(int cx, int cy);
-		int  SetMinTabWidth(int cx);
-		void SetPadding(int cx, int cy);
+		void AdjustRect(BOOL fLarger, RECT *prc) const;
+		int  GetCurFocus() const;
+		int  GetCurSel() const;
+		BOOL GetItem(int iItem, LPTCITEM pitem) const;
+		int  GetItemCount() const;
+		int  HitTest(TCHITTESTINFO& info) const;
+		void SetCurFocus(int iItem) const;
+		int  SetCurSel(int iItem) const;
+		DWORD SetItemSize(int cx, int cy) const;
+		int  SetMinTabWidth(int cx) const;
+		void SetPadding(int cx, int cy) const;
 
 	protected:
 		virtual void	DrawCloseButton(CDC& DrawDC);
 		virtual void	DrawListButton(CDC& DrawDC);
 		virtual void	DrawTabs(CDC& dcMem);
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
-		virtual SIZE    GetMaxTabSize();
+		virtual SIZE    GetMaxTabSize() const;
 		virtual void    OnCreate();
 		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void    OnLButtonUp(WPARAM wParam, LPARAM lParam);
@@ -178,11 +178,11 @@ namespace Win32xx
 		virtual void  CloseActiveMDI();
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
-		virtual CWnd* GetActiveMDIChild();
-		virtual CWnd* GetMDIChild(int nTab) { return GetTab().GetTabPageInfo(nTab).pView; }
-		virtual int   GetMDIChildCount();
-		virtual int   GetMDIChildID(int nTab) { return GetTab().GetTabPageInfo(nTab).idTab; }
-		virtual LPCTSTR GetMDIChildTitle(int nTab) { return GetTab().GetTabPageInfo(nTab).szTabText; }
+		virtual CWnd* GetActiveMDIChild() const;
+		virtual CWnd* GetMDIChild(int nTab) const;
+		virtual int   GetMDIChildCount() const;
+		virtual int   GetMDIChildID(int nTab) const;
+		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual tString GetWindowType() const { return _T("CTabbedMDI"); }
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
@@ -585,7 +585,7 @@ namespace Win32xx
 		}
 	}
 
-	inline CRect CTab::GetCloseRect()
+	inline CRect CTab::GetCloseRect() const
 	{
 		CRect rcClose;
 		if (GetShowButtons())
@@ -607,7 +607,7 @@ namespace Win32xx
 		return rcClose;
 	}
 
-	inline CRect CTab::GetListRect()
+	inline CRect CTab::GetListRect() const
 	{
 		CRect rcList;
 		if (GetShowButtons())
@@ -620,7 +620,7 @@ namespace Win32xx
 		return rcList;
 	}
 
-	inline SIZE CTab::GetMaxTabSize()
+	inline SIZE CTab::GetMaxTabSize() const
 	{
 		CSize Size;
 
@@ -652,14 +652,14 @@ namespace Win32xx
 		return Size;
 	}
 
-	inline BOOL CTab::GetTabsAtTop()
+	inline BOOL CTab::GetTabsAtTop() const
 	// Returns TRUE if the contol's tabs are placed at the top
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		return (!(dwStyle & TCS_BOTTOM));
 	}
 
-	inline int CTab::GetTextHeight()
+	inline int CTab::GetTextHeight() const
 	{
 			NONCLIENTMETRICS nm = {0};
 			nm.cbSize = GetSizeofNonClientMetrics();
@@ -672,7 +672,7 @@ namespace Win32xx
 			return szText.cy;
 	}
 
-	inline int CTab::GetTabIndex(CWnd* pWnd)
+	inline int CTab::GetTabIndex(CWnd* pWnd) const
 	{
 		assert(pWnd);
 
@@ -685,7 +685,7 @@ namespace Win32xx
 		return -1;
 	}
 
-	inline TabPageInfo CTab::GetTabPageInfo(UINT nTab)
+	inline TabPageInfo CTab::GetTabPageInfo(UINT nTab) const
 	{
 		assert (nTab < m_vTabPageInfo.size());
 
@@ -1201,67 +1201,67 @@ namespace Win32xx
 	}
 
 	// Wrappers for Win32 Macros
-	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc)
+	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc) const
 	{
 		assert(::IsWindow(m_hWnd));
 		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
 	}
 
-	inline int CTab::GetCurFocus()
+	inline int CTab::GetCurFocus() const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetCurFocus(m_hWnd);
 	}
 
-	inline int CTab::GetCurSel()
+	inline int CTab::GetCurSel() const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetCurSel(m_hWnd);
 	}
 
-	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem)
+	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetItem(m_hWnd, iItem, pitem);
 	}
 
-	inline int CTab::GetItemCount()
+	inline int CTab::GetItemCount() const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetItemCount(m_hWnd);
 	}
 
-	inline int CTab::HitTest(TCHITTESTINFO& info)
+	inline int CTab::HitTest(TCHITTESTINFO& info) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_HitTest(m_hWnd, &info);
 	}
 
-	inline void CTab::SetCurFocus(int iItem)
+	inline void CTab::SetCurFocus(int iItem) const
 	{
 		assert(::IsWindow(m_hWnd));
 		TabCtrl_SetCurFocus(m_hWnd, iItem);
 	}
 
-	inline int CTab::SetCurSel(int iItem)
+	inline int CTab::SetCurSel(int iItem) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetCurSel(m_hWnd, iItem);
 	}
 
-	inline DWORD CTab::SetItemSize(int cx, int cy)
+	inline DWORD CTab::SetItemSize(int cx, int cy) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetItemSize(m_hWnd, cx, cy);
 	}
 
-	inline int CTab::SetMinTabWidth(int cx)
+	inline int CTab::SetMinTabWidth(int cx) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetMinTabWidth(m_hWnd, cx);
 	}
 
-	inline void CTab::SetPadding(int cx, int cy)
+	inline void CTab::SetPadding(int cx, int cy) const
 	{
 		assert(::IsWindow(m_hWnd));
 		TabCtrl_SetPadding(m_hWnd, cx, cy);
@@ -1332,7 +1332,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline CWnd* CTabbedMDI::GetActiveMDIChild()
+	inline CWnd* CTabbedMDI::GetActiveMDIChild() const
 	{		
 		CWnd* pView = NULL;
 		int nTab = GetTab().GetCurSel();
@@ -1345,9 +1345,30 @@ namespace Win32xx
 		return pView;
 	}
 
-	inline int CTabbedMDI::GetMDIChildCount()
+	inline CWnd* CTabbedMDI::GetMDIChild(int nTab) const
+	{
+		assert(nTab >= 0);
+		assert(nTab < GetMDIChildCount());
+		return GetTab().GetTabPageInfo(nTab).pView;
+	}
+
+	inline int CTabbedMDI::GetMDIChildCount() const
 	{
 		return (int) GetTab().GetAllTabs().size();
+	}
+
+	inline int   CTabbedMDI::GetMDIChildID(int nTab) const
+	{
+		assert(nTab >= 0);
+		assert(nTab < GetMDIChildCount());
+		return GetTab().GetTabPageInfo(nTab).idTab;
+	}
+
+	inline LPCTSTR CTabbedMDI::GetMDIChildTitle(int nTab) const
+	{
+		assert(nTab >= 0);
+		assert(nTab < GetMDIChildCount());
+		return GetTab().GetTabPageInfo(nTab).szTabText; 
 	}
 
 	inline BOOL CTabbedMDI::LoadRegistrySettings(tString tsRegistryKeyName)
