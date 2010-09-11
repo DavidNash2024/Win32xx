@@ -639,21 +639,23 @@ namespace Win32xx
 		CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
 		virtual ~CWinThread();
 		
+		// Overridables
 		virtual BOOL InitInstance();
 		virtual int MessageLoop();
 
+		// Operations
 		HANDLE	GetThread()	const			{ return m_hThread; }
 		int		GetThreadID() const			{ return m_nThreadID; }
 		int		GetThreadPriority() const	{ return ::GetThreadPriority(m_hThread); }
 		DWORD	ResumeThread() const		{ return ::ResumeThread(m_hThread); }
 		DWORD	SuspendThread() const		{ return ::SuspendThread(m_hThread); }
 		BOOL	SetThreadPriority(int nPriority) const { return ::SetThreadPriority(m_hThread, nPriority); }
-		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
 
 	private:
 		CWinThread(const CWinThread&);				// Disable copy construction
 		CWinThread& operator = (const CWinThread&);	// Disable assignment operator
 		void CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
+		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
 
 		HANDLE m_hThread;			// Handle of this thread
 		UINT m_nThreadID;			// ID of this thread

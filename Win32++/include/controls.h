@@ -98,8 +98,8 @@ namespace Win32xx
 		int   GetTopIndex() const;
 		int   InitStorage(int nItems, int nBytes) const;
 		int   InsertString(int nIndex, LPCTSTR lpszString) const;
-		void  Paste() const;
 		void  LimitText(int nMaxChars) const;
+		void  Paste() const;		
 		void  ResetContent() const;
 		int   SelectString(int nStartAfter, LPCTSTR lpszString) const;
 		int   SetCurSel(int nIndex) const;
@@ -206,7 +206,7 @@ namespace Win32xx
 		int  GetRangeMax() const;
 		int  GetRangeMin() const;
 		int  GetSelEnd() const;
-		int  GetSetStart() const;
+		int  GetSelStart() const;
 		int  GetThumbLength() const;
 		CRect GetThumbRect() const;
 		int  GetTic(int nTic ) const;
@@ -820,7 +820,7 @@ namespace Win32xx
 
 	inline int  CSlider::GetLineSize() const
 	// Retrieves the number of logical positions the trackbar's slider moves in response
-	// to keyboard input from the arrow keys, such as the or keys.
+	// to keyboard input from the arrow keys.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TBM_GETLINESIZE, 0, 0);
@@ -835,7 +835,7 @@ namespace Win32xx
 
 	inline int  CSlider::GetPageSize() const
 	// Retrieves the number of logical positions the trackbar's slider moves in response to 
-	// keyboard input, such as the or keys, or mouse input, such as clicks in the trackbar's channel.
+	// keyboard input, or mouse input, such as clicks in the trackbar's channel.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TBM_GETPAGESIZE, 0, 0);
@@ -869,7 +869,7 @@ namespace Win32xx
 		return (int)SendMessage(TBM_GETSELEND, 0, 0);
 	}
 
-	inline int  CSlider::GetSetStart() const
+	inline int  CSlider::GetSelStart() const
 	// Retrieves the starting position of the current selection range in the trackbar.
 	{
 		assert(IsWindow());
@@ -921,7 +921,7 @@ namespace Win32xx
 
 	inline int  CSlider::SetLineSize(int nSize) const
 	// Sets the number of logical positions the trackbar's slider moves in response to 
-	// keyboard input from the arrow keys, such as the or keys.
+	// keyboard input from the arrow keys.
 	{
 		assert(IsWindow());
 		return(int)SendMessage(TBM_SETLINESIZE, 0, (LPARAM)nSize);
@@ -929,7 +929,7 @@ namespace Win32xx
 
 	inline int  CSlider::SetPageSize(int nSize) const
 	// Sets the number of logical positions the trackbar's slider moves in response to 
-	// keyboard input, such as the or keys, or mouse input, such as clicks in the trackbar's channel.
+	// keyboard input, or mouse input such as clicks in the trackbar's channel.
 	{
 		assert(IsWindow());
 		return(int)SendMessage(TBM_SETPAGESIZE, 0, (LPARAM)nSize);
