@@ -128,6 +128,36 @@ namespace Win32xx
 		CSocket();
 		virtual ~CSocket();
 
+		// Operations
+		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
+		virtual int  Bind(LPCTSTR addr, LPCTSTR port);
+		virtual int  Bind(const struct sockaddr* name, int namelen);
+		virtual int  Connect(LPCTSTR addr, LPCTSTR port);
+		virtual int  Connect(const struct sockaddr* name, int namelen);
+		virtual BOOL Create( int family, int type, int protocol = IPPROTO_IP);
+		virtual void Disconnect();
+		virtual void FreeAddrInfo( struct addrinfo* ai );
+		virtual int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res);
+		virtual LPCTSTR GetLastError();
+		virtual int  ioCtlSocket(long cmd, u_long* argp);
+		virtual BOOL IsIPV6Supported();
+		virtual int  Listen(int backlog = SOMAXCONN);
+		virtual int  Receive(TCHAR* buf, int len, int flags);
+		virtual int  ReceiveFrom(TCHAR* buf, int len, int flags, struct sockaddr* from, int* fromlen);
+		virtual int  Send(LPCTSTR buf, int len, int flags);
+		virtual int  SendTo(LPCTSTR send, int len, int flags, LPCTSTR addr, LPCTSTR port);
+		virtual int  SendTo(LPCTSTR buf, int len, int flags, const struct sockaddr* to, int tolen);
+
+		virtual void StartEvents();
+		virtual void StopEvents();
+
+		// Attributes
+		virtual int  GetPeerName(struct sockaddr* name, int* namelen);
+		virtual int  GetSockName(struct sockaddr* name, int* namelen);
+		SOCKET& GetSocket() { return m_Socket; }
+		virtual int  GetSockOpt(int level, int optname, char* optval, int* optlen);
+		virtual int  SetSockOpt(int level, int optname, const char* optval, int optlen);
+
 		// Override these functions to monitor events
 		virtual void OnAccept()		{}
 		virtual void OnAddresListChange() {}
@@ -139,32 +169,7 @@ namespace Win32xx
 		virtual void OnRoutingChange() {}
 		virtual void OnSend()		{}
 
-		// Its unlikely you would need to override these functions
-		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
-		virtual int  Bind(LPCTSTR addr, LPCTSTR port);
-		virtual int  Bind(const struct sockaddr* name, int namelen);
-		virtual int  Connect(LPCTSTR addr, LPCTSTR port);
-		virtual int  Connect(const struct sockaddr* name, int namelen);
-		virtual BOOL Create( int family, int type, int protocol = IPPROTO_IP);
-		virtual void Disconnect();
-		virtual void FreeAddrInfo( struct addrinfo* ai );
-		virtual int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res);
-		virtual LPCTSTR GetLastError();
-		virtual int  GetPeerName(struct sockaddr* name, int* namelen);
-		virtual int  GetSockName(struct sockaddr* name, int* namelen);
-		virtual int  GetSockOpt(int level, int optname, char* optval, int* optlen);
-		virtual int  ioCtlSocket(long cmd, u_long* argp);
-		virtual BOOL IsIPV6Supported();
-		virtual int  Listen(int backlog = SOMAXCONN);
-		virtual int  Receive(TCHAR* buf, int len, int flags);
-		virtual int  ReceiveFrom(TCHAR* buf, int len, int flags, struct sockaddr* from, int* fromlen);
-		virtual int  Send(LPCTSTR buf, int len, int flags);
-		virtual int  SendTo(LPCTSTR send, int len, int flags, LPCTSTR addr, LPCTSTR port);
-		virtual int  SendTo(LPCTSTR buf, int len, int flags, const struct sockaddr* to, int tolen);
-		virtual int  SetSockOpt(int level, int optname, const char* optval, int optlen);
-		virtual void StartEvents();
-		virtual void StopEvents();
-		SOCKET& GetSocket() {return m_Socket;}
+
 
 		// Allow CSocket to be used as a SOCKET
 		operator SOCKET() const {return m_Socket;}

@@ -47,12 +47,13 @@ Added CResizer
 Added CScrollbar 
 Added CSlider 
 Added CSpinButton
-Added Shared_Ptr 
+Added Shared_Ptr
+Added CWinThread 
 Updated CSocket to support IPv6
 Added CPropertySheet::SetIcon
 Added CRebar::SizeToRect
 Added CSocket::IsIPV6Supported
-Added CSocket::FreeAdddrInfo
+Added CSocket::FreeAddrInfo
 Added CSocket::GetAddrInfo
 Added CSocket::GetLastError
 Added CToolbar::AddButtons
@@ -93,7 +94,6 @@ Added CToolbar::SetIndent
 Added CToolbar::SetMaxTextRows
 Added CToolbar::SetPadding
 Added CToolbar::SetToolTips
-Added CWinException::Output
 Added CWinException::what
 Added CWnd::GetFont
 Added CWnd::GetIcon

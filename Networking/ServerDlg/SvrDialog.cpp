@@ -18,20 +18,19 @@ void CTCPClientDlg::Append(int nID, LPCTSTR buf)
 {
 	// This function appends some text to an edit control
 
-	HWND hEdit = GetDlgItem(nID);
-
 	// Append Line Feed
-	int ndx = GetWindowTextLength (hEdit);
+	int ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
 	if (ndx)
 	{
-		SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-		SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) (_T( "\r\n")));
+
+		SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+		SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) (_T( "\r\n")));
 	}
 
 	// Append text
-	ndx = GetWindowTextLength(hEdit);
-	SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) buf);
+	ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
 BOOL CTCPClientDlg::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -110,20 +109,19 @@ void CSvrDialog::Append(int nID, LPCTSTR buf)
 {
 	// This function appends some text to an edit control
 
-	HWND hEdit = GetDlgItem(nID);
-
 	// Append Line Feed
-	int ndx = GetWindowTextLength (hEdit);
+	int ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
 	if (ndx)
 	{
-		SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-		SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) ((LPCTSTR)_T("\r\n")));
+
+		SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+		SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) (_T( "\r\n")));
 	}
 
 	// Append text
-	ndx = GetWindowTextLength(hEdit);
-	SendMessage (hEdit, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-	SendMessage (hEdit, EM_REPLACESEL, 0, (LPARAM) buf);
+	ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
 BOOL CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

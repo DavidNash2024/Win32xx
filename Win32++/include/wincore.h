@@ -422,6 +422,7 @@ namespace Win32xx
 	friend class CMDIChild;
 	friend class CDialog;
 	friend class CPropertyPage;
+	friend class CWinApp;
 
 	public:
 		CWnd();				// Constructor
@@ -437,16 +438,17 @@ namespace Win32xx
 		virtual void Destroy();
 		virtual HWND Detach();
 		virtual HWND GetAncestor() const;
+		virtual	LPCTSTR GetDlgItemText(int nIDDlgItem) const;
+		virtual	LPCTSTR GetWindowText() const;
 		virtual tString GetWindowType() const { return _T("CWnd"); }
-
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
-		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void PreRegisterClass(WNDCLASS& wc);
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		virtual void Invalidate(BOOL bErase = TRUE) const;
+		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
 		virtual LPCTSTR LoadString(UINT nID);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
+		// Attributes
+		static CWnd* FromHandle(HWND hWnd);
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
 
@@ -455,32 +457,27 @@ namespace Win32xx
 		BOOL BringWindowToTop() const;
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
-		LPCTSTR GetClassName() const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
-		static CWnd* FromHandle(HWND hWnd);
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
+		LPCTSTR GetClassName() const;
 		CRect GetClientRect() const;
 		HDC  GetDC() const;
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
 		int  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
-		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
 		HFONT GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
 		HWND GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		HWND GetWindow(UINT uCmd) const;
-		LPCTSTR GetWindowClass() const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
-		LPCTSTR GetWindowText() const;
 		int GetWindowTextLength() const;
-		void Invalidate(BOOL bErase = TRUE) const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL IsChild(HWND hWndParent) const;
@@ -558,6 +555,9 @@ namespace Win32xx
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnPaint(HDC hDC);
 		virtual void OnMenuUpdate(UINT nID);
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS& wc);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

@@ -69,7 +69,23 @@ namespace Win32xx
 		virtual ~CRebar();
 		virtual tString GetWindowType() const { return _T("CRebar"); }
 
-	// Attributes
+		// Operations
+		BOOL DeleteBand(const int nBand) const;
+		int  HitTest(RBHITTESTINFO& rbht);
+		HWND HitTest(POINT pt);
+		int  IDToIndex(UINT uBandID) const;
+		BOOL InsertBand(const int nBand, REBARBANDINFO& rbbi) const;
+		BOOL IsBandVisible(int nBand) const;
+		void MaximizeBand(UINT uBand, BOOL fIdeal = FALSE);
+		void MinimizeBand(UINT uBand);
+		BOOL MoveBand(UINT uFrom, UINT uTo);
+		void MoveBandsLeft();
+		BOOL ResizeBand(const int nBand, const CSize& sz) const;
+		BOOL ShowGripper(int nBand, BOOL fShow) const;
+		BOOL ShowBand(int nBand, BOOL fShow) const;
+		BOOL SizeToRect(CRect& rect) const;
+		
+		// Attributes
 		int  GetBand(const HWND hWnd) const;
 		CRect GetBandBorders(int nBand) const;
 		int  GetBandCount() const;
@@ -89,22 +105,6 @@ namespace Win32xx
 		BOOL SetBarInfo(REBARINFO& rbi) const;
 		void SetMenubar(HWND hMenubar) {m_hMenubar = hMenubar;}
 		void SetRebarTheme(RebarTheme& Theme);
-
-	// Operations
-		BOOL DeleteBand(const int nBand) const;
-		int  HitTest(RBHITTESTINFO& rbht);
-		HWND HitTest(POINT pt);
-		int  IDToIndex(UINT uBandID) const;
-		BOOL InsertBand(const int nBand, REBARBANDINFO& rbbi) const;
-		BOOL IsBandVisible(int nBand) const;
-		void MaximizeBand(UINT uBand, BOOL fIdeal = FALSE);
-		void MinimizeBand(UINT uBand);
-		BOOL MoveBand(UINT uFrom, UINT uTo);
-		void MoveBandsLeft();
-		BOOL ResizeBand(const int nBand, const CSize& sz) const;
-		BOOL ShowGripper(int nBand, BOOL fShow) const;
-		BOOL ShowBand(int nBand, BOOL fShow) const;
-		BOOL SizeToRect(CRect& rect) const;
 
 	protected:
 	//Overridables

@@ -119,6 +119,7 @@ namespace Win32xx
 		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
 		virtual ~CPropertySheet() {}
 		
+		// Operations
 		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
 		virtual HWND Create(HWND hWndParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
@@ -126,29 +127,33 @@ namespace Win32xx
 		virtual void Destroy();
 		virtual int DoModal();
 		virtual tString GetWindowType() const { return _T("CPropertySheet"); }
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void RemovePage(CPropertyPage* pPage);
+
+		// State functions
+		BOOL IsModeless() const;
+		BOOL IsWizard() const;
+		
+		//Attributes
+		CPropertyPage* GetActivePage() const;
+		int GetPageCount() const;
+		int GetPageIndex(CPropertyPage* pPage) const;
+		HWND GetTabControl() const;
 		virtual BOOL SetActivePage(int nPage);
 		virtual BOOL SetActivePage(CPropertyPage* pPage);
 		virtual void SetIcon(UINT idIcon);
 		virtual void SetTitle(LPCTSTR szTitle);
 		virtual void SetWizardMode(BOOL bWizard);
+
+	protected:
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);
-
-		CPropertyPage* GetActivePage() const;
-		int GetPageCount() const;
-		int GetPageIndex(CPropertyPage* pPage) const;
-		HWND GetTabControl()const;
-		BOOL IsModeless() const;
-		BOOL IsWizard() const;
 
 	private:
 		CPropertySheet(const CPropertySheet&);				// Disable copy construction
 		CPropertySheet& operator = (const CPropertySheet&); // Disable assignment operator
 		void BuildPageArray();
+		static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);
 
 		tString m_Title;
 		std::vector<PropertyPagePtr> m_vPages;	// vector of CPropertyPage
