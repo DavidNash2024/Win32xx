@@ -627,39 +627,6 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
-	
-	
-	//////////////////////////////////////
-	// Declaration of the CWinThread class
-	//
-	class CWinThread
-	{
-	public:
-		CWinThread();
-		CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
-		virtual ~CWinThread();
-		
-		// Overridables
-		virtual BOOL InitInstance();
-		virtual int MessageLoop();
-
-		// Operations
-		HANDLE	GetThread()	const			{ return m_hThread; }
-		int		GetThreadID() const			{ return m_nThreadID; }
-		int		GetThreadPriority() const	{ return ::GetThreadPriority(m_hThread); }
-		DWORD	ResumeThread() const		{ return ::ResumeThread(m_hThread); }
-		DWORD	SuspendThread() const		{ return ::SuspendThread(m_hThread); }
-		BOOL	SetThreadPriority(int nPriority) const { return ::SetThreadPriority(m_hThread, nPriority); }
-
-	private:
-		CWinThread(const CWinThread&);				// Disable copy construction
-		CWinThread& operator = (const CWinThread&);	// Disable assignment operator
-		void CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
-		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
-
-		HANDLE m_hThread;			// Handle of this thread
-		UINT m_nThreadID;			// ID of this thread
-	};
 
 }
 
@@ -2811,81 +2778,6 @@ namespace Win32xx
 	}
 	
 	
-	///////////////////////////////////////
-	// Definitions for the CWinThread class
-	//
-	inline CWinThread::CWinThread() : m_hThread(0), m_nThreadID(0)
-	{
-		CreateThread(0, 0, CREATE_SUSPENDED);
-	}
-
-	inline CWinThread::CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag) : m_hThread(0), m_nThreadID(0)
-										
-	{
-		// Valid argument values:
-		// pSecurityAttributes		Either a pointer to SECURITY_ATTRIBUTES or 0
-		// stack_size				Either the stack size or 0
-		// initflag					Either CREATE_SUSPENDED or 0
-		
-		CreateThread(pSecurityAttributes, stack_size, initflag);
-	}
-
-	inline CWinThread::~CWinThread()
-	{
-		// Note: It is your job to end the thread before CWinThread ends
-		//       To end a thread with a message loop, post a WM_QUIT message to the thread.
-		//       To end a thread without a message loop, set an event, and end 
-		//        the thread when the event is received.
-
-		// Note: Don't use things like TerminateThread or ExitThread. These represent
-		//       poor programming techniques, and are likely to leak memory and resources.
-		
-		// A thread's state is set to signalled when the thread terminates.
-		if (0 != WaitForSingleObject(m_hThread, 0))
-			TRACE(_T("*** Error *** Ending CWinThread before ending its thread\n"));
-
-		// Close the thread's handle
-		::CloseHandle(m_hThread);
-	}
-
-	inline void CWinThread::CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
-	{
-		// NOTE:  By default, the thread is created in the default state.
-		//		  _beginthreadex will be undefined if a single-threaded run-time library is used. Use a Multithreaded run-time.
-		m_hThread = (HANDLE)_beginthreadex(pSecurityAttributes, stack_size, CWinThread::StaticThreadCallback, (LPVOID) this, initflag, &m_nThreadID);
-
-		if (0 == m_hThread)
-			throw CWinException(_T("Failed to create thread"));
-	}
-
-
-	inline BOOL CWinThread::InitInstance()
-	{
-		// Override this function to perform tasks when the thread starts.
-
-		// return TRUE to run a message loop, otherwise return FALSE.
-		// A thread with a window must run a message loop.
-		return FALSE;
-	}
-
-	inline int CWinThread::MessageLoop()
-	{
-		// Override this function if your thread needs a different message loop
-		return GetApp()->MessageLoop();
-	}
-
-	inline UINT WINAPI CWinThread::StaticThreadCallback(LPVOID pCThread)
-	// When the thread starts, it runs this function.
-	{
-		// Get the pointer for this CMyThread object
-		CWinThread* pThread = (CWinThread*)pCThread;
-
-		if (pThread->InitInstance())
-			return pThread->MessageLoop();
-
-		return 0;
-	}
-
   #endif
 
 }; // namespace Win32xx
