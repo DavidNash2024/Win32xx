@@ -65,7 +65,7 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 			TRACE(_T("Paste\n"));
 			break;
 		case IDC_CMD_ABOUT:
-			TRACE(_T("About\n"));
+			OnHelp();
 			break;
 		case IDC_CMD_EXIT:
 			PostQuitMessage(0);

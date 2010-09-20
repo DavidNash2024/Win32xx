@@ -107,11 +107,9 @@
 #include <map>
 #include <windows.h>
 #include <commctrl.h>
-#include <process.h>
 #include <tchar.h>
 #include <shlwapi.h>
 #include "shared_ptr.h"
-
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr

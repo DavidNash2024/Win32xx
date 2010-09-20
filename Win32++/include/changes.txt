@@ -12,7 +12,7 @@ New Features and Enhancements
    provided with modern Windows operating systems (XP and above).
 * Add the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
    CProgressbar, CScrollbar, and CSpinButton.
-* Add the CWinThread class to simplify the use if threads.  
+* Add the CWinThread class to simplify the use of threads.  
 * Extended the CToolbar class.   
 * Moved the text conversion functions from CWnd to the global (Win32++) 
    namespace.

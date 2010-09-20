@@ -2802,10 +2802,14 @@ namespace Win32xx
 		case UWM_FRAMEGOTFOCUS:
 			if (GetDockAncestor()->IsWindow())
 				GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
+			if (GetView()->IsWindow())
+				GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
 			break;
 		case UWM_FRAMELOSTFOCUS:
 			if (GetDockAncestor()->IsWindow())
 				GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
+			if (GetView()->IsWindow())
+				GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
 			break;
 		}
 		return 0L;
