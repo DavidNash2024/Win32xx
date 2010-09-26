@@ -123,6 +123,12 @@
 				RelativePath="..\src\main.cpp">
 			</File>
 			<File
+				RelativePath="..\src\Mainfrm.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MyThread.cpp">
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
@@ -135,6 +141,12 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\src\DXApp.h">
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.h">
+			</File>
+			<File
+				RelativePath="..\src\MyThread.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">

@@ -169,7 +169,8 @@ VOID CView::SetupMatrices()
 VOID CView::Render()
 {
     // Clear the backbuffer to a black color
-    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
+    if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
+		TRACE(_T("Woops\n"));
 
     // Begin the scene
     if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
@@ -188,6 +189,8 @@ VOID CView::Render()
 
     // Present the backbuffer contents to the display
     m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+
+	Sleep(1);
 }
 
 
@@ -200,12 +203,12 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_SIZING:
-		Render();
+	//	Render();
 		break;
 
 	case WM_PAINT:
-		Render();
-		::ValidateRect( m_hWnd, NULL );
+	//	Render();
+	//	::ValidateRect( m_hWnd, NULL );
 		break;
 	}
 

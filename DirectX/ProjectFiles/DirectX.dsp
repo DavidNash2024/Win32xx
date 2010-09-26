@@ -100,6 +100,14 @@ SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\Mainfrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyThread.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -113,6 +121,14 @@ SOURCE=..\src\View.cpp
 # Begin Source File
 
 SOURCE=..\src\DXApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyThread.h
 # End Source File
 # Begin Source File
 

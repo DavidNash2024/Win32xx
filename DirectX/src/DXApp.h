@@ -5,7 +5,7 @@
 #ifndef DXAPP_H
 #define DXAPP_H
 
-#include "View.h"
+#include "MainFrm.h"
 
 
 class CDXApp : public CWinApp
@@ -14,11 +14,9 @@ public:
     CDXApp();
     virtual ~CDXApp() {}
 	virtual BOOL InitInstance();
-	virtual int MessageLoop();
-	CView& GetView() { return m_View; }
 
 private:
-    CView m_View;
+    CMainFrame m_Frame;
 };
 
 

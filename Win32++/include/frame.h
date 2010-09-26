@@ -247,6 +247,7 @@ namespace Win32xx
 		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle, UINT nID);
 		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void CreateToolbar();
+		virtual void CreateView();
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
@@ -1655,6 +1656,12 @@ namespace Win32xx
 		}
 	}
 
+	inline void CFrame::CreateView()
+	{
+		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
+		GetView()->Create(m_hWnd);
+	}
+
 	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
@@ -2019,8 +2026,7 @@ namespace Win32xx
 		ShowStatusbar(m_bShowStatusbar);
 
 		// Create the view window
-		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
-		GetView()->Create(m_hWnd);
+		CreateView();
 
 		// Disable XP themes for the menubar
 		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or < Vista
@@ -2640,7 +2646,7 @@ namespace Win32xx
 			int cx = rClient.Width();
 			int cy = rClient.Height();
 
-			pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW );
+			pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW|SWP_ASYNCWINDOWPOS );
 		}
 
 		if (IsRebarUsed())
@@ -2650,7 +2656,7 @@ namespace Win32xx
 
 			if (IsMenubarUsed())
 				SetMenubarBandSize();
-		}
+		} 
 	}
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
@@ -3012,17 +3018,20 @@ namespace Win32xx
 	inline void CFrame::SetView(CWnd& wndView)
 	// Sets or changes the View window displayed within the frame
 	{
-		// Destroy the existing view window (if any)
-		if (m_pView) m_pView->Destroy();
-		
-		// Assign the view window
-		m_pView = &wndView;
-		
-		if (m_hWnd)
+		if (m_pView != &wndView)
 		{
-			// The frame is already created, so create and position the new view too
-			m_pView->Create(m_hWnd);
-			RecalcLayout();
+			// Destroy the existing view window (if any)
+			if (m_pView) m_pView->Destroy();
+			
+			// Assign the view window
+			m_pView = &wndView;
+			
+			if (m_hWnd)
+			{
+				// The frame is already created, so create and position the new view too
+				CreateView();
+				RecalcLayout();
+			}
 		}
 	}
 
