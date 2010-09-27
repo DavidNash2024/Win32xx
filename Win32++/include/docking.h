@@ -712,8 +712,6 @@ namespace Win32xx
 		return rcClose;
 	}
 
-
-
 	inline void CDocker::CDockClient::DrawCaption(WPARAM wParam)
 	{
 		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
@@ -972,7 +970,6 @@ namespace Win32xx
 				}
 				else
 				{
-				//	m_pDock->Undock(GetCursorPos(), FALSE);
 					m_pDock->Hide();
 					m_pDock->Destroy();
 				}

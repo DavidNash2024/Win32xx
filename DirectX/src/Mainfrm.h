@@ -7,6 +7,9 @@
 #include "View.h"
 #include "MyThread.h"
 
+
+#define UWM_VIEWCREATED		(WM_APP + 1)	// Message - posted when view window is created
+
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {
@@ -17,7 +20,7 @@ public:
 protected:
 	virtual void CreateView()
 	{
-		// Starting our thread creates the view window
+		// Start the thread which creates the view window
 		m_MyThread.StartThread(m_hWnd);
 	}
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);

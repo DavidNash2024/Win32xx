@@ -86,14 +86,15 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
+		virtual void CreateView();
 		virtual tString GetWindowType() const { return _T("CMDIChild"); }
 		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
 		virtual BOOL IsMDIChild() const {return TRUE;}
 		virtual void SetChildMenu(LPCTSTR MenuName);
-		virtual CWnd* GetView() const	{return m_pwndView;}
-		virtual void SetView(CWnd& pView);
+		virtual CWnd* GetView() const	{return m_pView;}
+		virtual void SetView(CWnd& pwndView);
 
 	protected:
 		// Its unlikely you would need to override these functions
@@ -105,7 +106,7 @@ namespace Win32xx
 		CMDIChild(const CMDIChild&);				// Disable copy construction
 		CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
 		
-		CWnd* m_pwndView;				// pointer to the View CWnd object
+		CWnd* m_pView;				// pointer to the View CWnd object
 		HMENU m_hChildMenu;
 	};
 
@@ -505,7 +506,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CMDIChild class
 	//
-	inline CMDIChild::CMDIChild() : m_pwndView(NULL), m_hChildMenu(NULL)
+	inline CMDIChild::CMDIChild() : m_pView(NULL), m_hChildMenu(NULL)
 	{
 		// Set the MDI Child's menu in the constructor, like this ...
 
@@ -589,6 +590,12 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
+	inline void CMDIChild::CreateView()
+	{
+		assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
+		GetView()->Create(m_hWnd);
+	}
+
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefMDIChildProc(m_hWnd, uMsg, wParam, lParam);
@@ -597,9 +604,7 @@ namespace Win32xx
 	inline void CMDIChild::OnCreate()
 	{
 		// Create the view window
-		assert (NULL != m_pwndView);  // View window is not assigned
-
-		m_pwndView->Create(m_hWnd);	
+		CreateView();
 		RecalcLayout();
 	}
 
@@ -607,7 +612,7 @@ namespace Win32xx
 	{
 		// Resize the View window
 		CRect rc = GetClientRect();
-		m_pwndView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+		m_pView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 	}
 
 	inline void CMDIChild::SetChildMenu(LPCTSTR MenuName)
@@ -627,14 +632,24 @@ namespace Win32xx
 		} 
 	}
 
-	inline void CMDIChild::SetView(CWnd& View)
+	inline void CMDIChild::SetView(CWnd& wndView)
 	// Sets or changes the View window displayed within the frame
 	{
-		// Destroy the existing view window (if any)
-		if (m_pwndView) m_pwndView->Destroy();
-
-		// Assign the view window
-		m_pwndView = &View;
+		if (m_pView != &wndView)
+		{
+			// Destroy the existing view window (if any)
+			if (m_pView) m_pView->Destroy();
+			
+			// Assign the view window
+			m_pView = &wndView;
+			
+			if (m_hWnd)
+			{
+				// The frame is already created, so create and position the new view too
+				CreateView();
+				RecalcLayout();
+			}
+		}
 	}
 
 	inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -378,7 +378,7 @@ void CClientDialog::OnSend()
 				tAddr = CharToTChar( inet_ntoa(addr) );
 			}
 
-			m_Client.SendTo( tSend.c_str(), sizeof(tSend.c_str()), 0, tAddr.c_str(), tPort.c_str() );
+			m_Client.SendTo( tSend.c_str(), lstrlen(tSend.c_str()), 0, tAddr.c_str(), tPort.c_str() );
 		}
 		break;
 	}

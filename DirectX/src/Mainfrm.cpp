@@ -178,6 +178,9 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostThreadMessage(m_MyThread.GetThreadID(), WM_QUIT, 0, 0);
 		::WaitForSingleObject(m_MyThread.GetThread(), INFINITE);
 		break;
+	case UWM_VIEWCREATED:
+		RecalcLayout();
+		break;
 	}
 
 	// pass unhandled messages on for default processing

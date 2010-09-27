@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "MyThread.h"
+#include "Mainfrm.h"
 
 
 CMyThread::CMyThread() : m_hwndParent(0)
@@ -22,6 +23,8 @@ BOOL CMyThread::InitInstance()
 
 	// Create a test window for this thread
 	m_View.Create(m_hwndParent);
+
+	PostMessage(m_hwndParent, UWM_VIEWCREATED, 0, 0);
 
 	return TRUE;	// return TRUE to run the message loop
 }
