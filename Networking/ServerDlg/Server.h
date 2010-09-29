@@ -48,8 +48,8 @@
 class CServerSocket : public CSocket
 {
 public:
-	CServerSocket() { TRACE (_T("CServerSocket constructor\n")); }
-	~CServerSocket() { TRACE (_T("CServerSocket destructor\n")); }
+	CServerSocket() { }
+	virtual ~CServerSocket() { }
 	virtual void OnAccept();
 	virtual void OnDisconnect();
 	virtual void OnReceive();

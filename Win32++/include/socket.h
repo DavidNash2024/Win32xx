@@ -242,40 +242,38 @@ namespace Win32xx
 	// The bind function associates a local address with the socket.
 	{
 		int RetVal = 0;
-		bool IsIP6Bind = false;
 
-	#ifdef GetAddrInfo // Skip the following code block for older development environments
-
-		IsIP6Bind = true;
-		ADDRINFO Hints= {0};
-		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-
-		ADDRINFO *AddrInfo;
-
-		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
-
-		if (RetVal != 0)
+		if (IsIPV6Supported())	
 		{
-			TRACE( _T("GetAddrInfo failed\n"));
-			return RetVal;
+
+#ifdef GetAddrInfo	// Skip the following code block for older development environments
+
+			ADDRINFO Hints= {0};
+			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
+			ADDRINFO *AddrInfo;
+			
+			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
+			if (RetVal != 0)
+			{
+				TRACE( _T("GetAddrInfo failed\n"));
+				return RetVal;
+			}
+
+			// Bind the IP address to the listening socket
+			RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			if ( RetVal == SOCKET_ERROR )
+			{
+				TRACE(_T("Bind failed\n"));
+				return RetVal;
+			}
+
+			// Free the address information allocated by GetAddrInfo
+			FreeAddrInfo(AddrInfo);
+
+#endif
+
 		}
-
-		// Bind the IP address to the listening socket
-		RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
-		if ( RetVal == SOCKET_ERROR )
-		{
-			TRACE(_T("Bind failed\n"));
-			return RetVal;
-		}
-
-		// Free the address information allocated by GetAddrInfo
-		FreeAddrInfo(AddrInfo);
-
-
-	#endif	// GetAddrInfo
-
-		// Support IPV4 only
-		if (!IsIP6Bind)
+		else
 		{
 			std::string sAddr = TCharToChar(addr);
 			std::string sPort = TCharToChar(port);
@@ -313,36 +311,38 @@ namespace Win32xx
 	// The Connect function establishes a connection to the socket.
 	{
 		int RetVal = 0;
-		bool IsIP6Connect = false;
 
-	#ifdef GetAddrInfo	// Skip the following code block for older development environments
-
-		IsIP6Connect = true;
-		ADDRINFO Hints= {0};
-		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-
-		ADDRINFO *AddrInfo;
-		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
-		if (RetVal != 0)
+		if (IsIPV6Supported())	
 		{
-			TRACE( _T("getaddrinfo failed\n"));
-			return SOCKET_ERROR;
+
+#ifdef GetAddrInfo	// Skip the following code block for older development environments
+
+			ADDRINFO Hints= {0};
+			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
+			ADDRINFO *AddrInfo;
+
+			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
+			if (RetVal != 0)
+			{
+				TRACE( _T("getaddrinfo failed\n"));
+				return SOCKET_ERROR;
+			}
+
+			// Bind the IP address to the listening socket
+			RetVal = Connect( AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			if ( RetVal == SOCKET_ERROR )
+			{
+				TRACE(_T("Connect failed\n"));
+				return RetVal;
+			}
+
+			// Free the address information allocatied by GetAddrInfo
+			FreeAddrInfo(AddrInfo);
+
+#endif
+
 		}
-
-		// Bind the IP address to the listening socket
-		RetVal = Connect( AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
-		if ( RetVal == SOCKET_ERROR )
-		{
-			TRACE(_T("Connect failed\n"));
-			return RetVal;
-		}
-
-		// Free the address information allocatied by GetAddrInfo
-		FreeAddrInfo(AddrInfo);
-
-	#endif	// GetAddrInfo
-
-		if(!IsIP6Connect)
+		else
 		{
 			std::string sAddr = TCharToChar(addr);
 			std::string sPort = TCharToChar(port);
@@ -669,39 +669,40 @@ namespace Win32xx
 	// The sendto function sends data to a specific destination.
 	{
 		int RetVal = 0;
-		bool IsIP6SendTo = false;
 		std::string sAddr = TCharToChar(addr);
 		std::string sPort = TCharToChar(port);
 		std::string sSend = TCharToChar(send);
 
-	#ifdef GetAddrInfo	// Skip the following code block for older development environments
-
-		IsIP6SendTo = true;
-		ADDRINFO Hints= {0};
-		Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-
-		ADDRINFO *AddrInfo;
-		RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
-		if (RetVal != 0)
+		if (IsIPV6Supported())
 		{
-			TRACE( _T("GetAddrInfo failed\n"));
-			return SOCKET_ERROR;
+
+#ifdef GetAddrInfo	// Skip the following code block for older development environments
+
+			ADDRINFO Hints= {0};
+			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
+			ADDRINFO *AddrInfo;
+			
+			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
+			if (RetVal != 0)
+			{
+				TRACE( _T("GetAddrInfo failed\n"));
+				return SOCKET_ERROR;
+			}
+
+			RetVal = ::sendto(m_Socket, sSend.c_str(), len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			if ( RetVal == SOCKET_ERROR )
+			{
+				TRACE(_T("SendTo failed\n"));
+				return RetVal;
+			}
+
+			// Free the address information allocatied by GetAddrInfo
+			FreeAddrInfo(AddrInfo);
+
+#endif
+
 		}
-
-
-		RetVal = ::sendto(m_Socket, sSend.c_str(), len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
-		if ( RetVal == SOCKET_ERROR )
-		{
-			TRACE(_T("SendTo failed\n"));
-			return RetVal;
-		}
-
-		// Free the address information allocatied by GetAddrInfo
-		FreeAddrInfo(AddrInfo);
-
-	#endif	// GetAddrInfo
-
-		if(!IsIP6SendTo)
+		else
 		{
 			std::string sAddr = TCharToChar(addr);
 			std::string sPort = TCharToChar(port);
