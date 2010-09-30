@@ -6,14 +6,21 @@
 #define TESTWND_H
 
 
-class CTestWindow : public CWnd
+class CTestWindow : public CWnd, public CThread
 {
 public:
-	CTestWindow();
-	virtual ~CTestWindow(){}
-	virtual void CreateWin(int i);
+	CTestWindow(int nWindow);
+	virtual ~CTestWindow() {}
+	virtual HWND Create(HWND hWndParent = 0);
 	virtual void OnInitialUpdate();
 	virtual int  GetWindowNumber() {return m_nWindow;}
+
+protected:
+	// Override CThread member functions
+	virtual BOOL InitInstance();
+
+	// Override CWnd member functions
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	enum Constants
@@ -21,8 +28,6 @@ private:
 		WM_WINDOWCREATED     = WM_USER+1,
 		WM_TESTMESSAGE       = WM_USER+2
 	};
-
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	int m_nWindow;
 };

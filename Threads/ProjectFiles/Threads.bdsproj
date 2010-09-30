@@ -160,7 +160,6 @@
         <FILE FILENAME="..\src\main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\MainWnd.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="MainWnd" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\TestWnd.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="TestWnd" FORMNAME="" DESIGNCLASS=""/>
-        <FILE FILENAME="..\src\Thread.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Thread" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\ThreadApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ThreadApp" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>

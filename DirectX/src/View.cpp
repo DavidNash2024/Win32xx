@@ -26,6 +26,8 @@ CView::~CView()
 
 HWND CView::Create(HWND hWndParent)
 {
+	// Called by CFrame::OnCreate. 
+	// The window is created when the thread resumes.
 	StartThread(hWndParent);
 	return 0;
 }
@@ -167,8 +169,6 @@ VOID CView::SetupMatrices()
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matProj );
 }
 
-
-
 //-----------------------------------------------------------------------------
 // Name: Render()
 // Desc: Draws the scene
@@ -210,7 +210,7 @@ BOOL CView::InitInstance()
 {
 	// This function runs when the thread starts
 
-	// Create a test window for this thread
+	// Create the view window
 	CWnd::Create(m_hwndParent);
 
 	PostMessage(m_hwndParent, UWM_VIEWCREATED, 0, 0);
@@ -219,7 +219,7 @@ BOOL CView::InitInstance()
 }
 
 int CView::MessageLoop()
-// Override CWinApp::MessageLoop to accommodate the needs of DirectX
+// Here we override CThread::MessageLoop to accommodate the special needs of DirectX
 {
 	MSG Msg = {0};
 	while( Msg.message!=WM_QUIT )

@@ -18,11 +18,6 @@ public:
 	virtual ~CMainFrame();
 
 protected:
-//	virtual void CreateView()
-//	{
-//		// Start the thread which creates the view window
-//		m_View.StartThread(m_hWnd);
-//	}
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnFileOpen();
@@ -34,7 +29,6 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-//	CMyThread m_MyThread;
 	CView m_View;
 };
 

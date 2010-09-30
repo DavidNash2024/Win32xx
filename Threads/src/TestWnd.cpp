@@ -7,18 +7,28 @@
 #include "ThreadApp.h"
 
 
-CTestWindow::CTestWindow() : m_nWindow(-1)
+CTestWindow::CTestWindow(int nWindow) : m_nWindow(nWindow)
 {
 }
 
-void CTestWindow::CreateWin(int nWindow)
+HWND CTestWindow::Create(HWND hWndParent)
 {
-	TCHAR szTitle[80];
-	wsprintf(szTitle, _T("Test Window %d"), nWindow +1);
-	CreateEx(0L, NULL, szTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		70 + 20*nWindow, 120 + 20*nWindow, 300, 200, NULL, NULL);
+	UNREFERENCED_PARAMETER(hWndParent);
 
-	m_nWindow = nWindow +1;
+	TCHAR szTitle[80];
+	wsprintf(szTitle, _T("Test Window %d"), m_nWindow);
+	return CreateEx(0L, NULL, szTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+		70 + 20*m_nWindow, 120 + 20*m_nWindow, 300, 200, NULL, NULL);
+}
+
+BOOL CTestWindow::InitInstance()
+{
+	// This function runs when the thread starts
+
+	// Create a test window for this thread
+	Create();
+
+	return TRUE;	// return TRUE to run the message loop
 }
 
 void CTestWindow::OnInitialUpdate()

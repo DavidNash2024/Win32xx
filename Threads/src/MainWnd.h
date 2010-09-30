@@ -5,9 +5,9 @@
 #ifndef MAINWND_H
 #define MAINWND_H
 
-#include "Thread.h"
+#include "TestWnd.h"
 
-typedef Shared_Ptr<CMyThread> ThreadPtr;
+typedef Shared_Ptr<CTestWindow> TestWndPtr;
 
 class CMainWindow : public CWnd
 {
@@ -28,8 +28,9 @@ private:
 		WM_TESTMESSAGE   = WM_USER+2	// the test message
 	};
 
-	std::vector<ThreadPtr> m_vThreads;	// A vector of CMyThread smart pointers
-	int m_nThreads;						// Number of additional threads to be created
+	std::vector<TestWndPtr> m_vTestWnd;	// A vector of CTestWin smart pointers
+	int m_nTestWin;						// Number of additional test windows to be created
+	int m_nWindowsCreated;				// Count of windows actually created
 };
 
 

@@ -129,9 +129,6 @@
 				RelativePath="..\src\TestWnd.cpp">
 			</File>
 			<File
-				RelativePath="..\src\Thread.cpp">
-			</File>
-			<File
 				RelativePath="..\src\ThreadApp.cpp">
 			</File>
 		</Filter>
@@ -147,9 +144,6 @@
 			</File>
 			<File
 				RelativePath="..\src\TestWnd.h">
-			</File>
-			<File
-				RelativePath="..\src\Thread.h">
 			</File>
 			<File
 				RelativePath="..\src\ThreadApp.h">

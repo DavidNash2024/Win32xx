@@ -213,10 +213,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Thread.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\ThreadApp.cpp"
 				>
 			</File>
@@ -236,10 +232,6 @@
 			</File>
 			<File
 				RelativePath="..\src\TestWnd.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Thread.h"
 				>
 			</File>
 			<File

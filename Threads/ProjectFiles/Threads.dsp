@@ -103,10 +103,6 @@ SOURCE=..\src\TestWnd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\Thread.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\ThreadApp.cpp
 # End Source File
 # End Group
@@ -124,10 +120,6 @@ SOURCE=..\src\stdafx.h
 # Begin Source File
 
 SOURCE=..\src\TestWnd.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Thread.h
 # End Source File
 # Begin Source File
 

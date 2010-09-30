@@ -30,12 +30,14 @@ public:
 	virtual void Render();
 	virtual VOID SetupMatrices();
 
-	virtual HWND Create(HWND hWndParent = 0);
+protected:
+	// CThread member function overrides
 	virtual void StartThread(HWND hwndParent);
 	virtual BOOL InitInstance();
 	virtual int MessageLoop();
 
-protected:
+	// CWnd member function overrides
+	virtual HWND Create(HWND hWndParent = 0);
 	virtual	void OnCreate();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

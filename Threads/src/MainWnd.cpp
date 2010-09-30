@@ -6,10 +6,10 @@
 #include "MainWnd.h"
 
 
-CMainWindow::CMainWindow()
+CMainWindow::CMainWindow() : m_nWindowsCreated(0)
 {
 	// Set the number of threads
-	m_nThreads = 20;
+	m_nTestWin = 20;
 
 	// A couple of notes in case you're tempted to test how many threads with test windows can be created ...
 
@@ -34,20 +34,20 @@ void CMainWindow::OnCreate()
 	try
 	{
 		// Create each CMyThread object
-		for (int i = 0 ; i < m_nThreads ; i++)
+		for (int i = 1 ; i <= m_nTestWin ; i++)
 		{
-			// Create the thread and store the CMyThread pointer
-			CMyThread* pThread = new CMyThread(i);
+			// Create the Test Window and store the CTestWindow pointer
+			CTestWindow* pTestWin = new CTestWindow(i);
 			
 			TCHAR str[80];
-			wsprintf(str, _T("Thread %d started\n"), i + 1);
+			wsprintf(str, _T("Thread %d started\n"), i);
 			TRACE(str);
 
-			m_vThreads.push_back(pThread);
+			m_vTestWnd.push_back(pTestWin);
 		}
 	
-		std::vector<ThreadPtr>::iterator iter;
-		for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
+		std::vector<TestWndPtr>::iterator iter;
+		for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 		{
 			(*iter)->ResumeThread();
 		}
@@ -68,14 +68,12 @@ void CMainWindow::OnCreate()
 void CMainWindow::OnAllWindowsCreated()
 {
 	TCHAR str[80];
-	wsprintf(str, _T("%d Test windows created in seperate threads\n"), m_nThreads);
+	wsprintf(str, _T("%d Test windows created in seperate threads\n"), m_nTestWin);
 	TRACE(str);
 }
 
 LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	static int nWindowsCreated = 0;
-
 	switch (uMsg)
 	{
 	case WM_COMMAND:
@@ -87,10 +85,10 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			// Close each thread window. 
 			// The thread is then terminated with a WM_QUIT when its window is destroyed.
-			std::vector<ThreadPtr>::iterator iter;
-			for (iter = m_vThreads.begin(); iter < m_vThreads.end(); ++iter)
+			std::vector<TestWndPtr>::iterator iter;
+			for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 			{
-				::SendMessage((*iter)->GetTestWindow().GetHwnd(), WM_CLOSE, 0, 0);
+				::SendMessage((*iter)->GetHwnd(), WM_CLOSE, 0, 0);
 			} 
 		}
 		break;
@@ -106,9 +104,10 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			// Message recieved when a test window is created
 			TCHAR str[80];
-			wsprintf(str, _T("Created Window %d\n"), ++nWindowsCreated);
+			++m_nWindowsCreated;
+			wsprintf(str, _T("Created Window %d\n"), m_nWindowsCreated);
 			TRACE(str);
-			if (nWindowsCreated == m_nThreads)
+			if (m_nWindowsCreated == m_nTestWin)
 				OnAllWindowsCreated();
 		}
 		break;
