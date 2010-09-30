@@ -34,9 +34,9 @@
 ////////////////////////////////////////////////////////
 
 
-// The CWinThread class simplifies the use of threads with Win32++.
+// The CThread class simplifies the use of threads with Win32++.
 // To use threads in your Win32++ application, inherit a class from
-// CWinThread, and override InitInstance. When your class is instanciated,
+// CThread, and override InitInstance. When your class is instanciated,
 // a new thread is started, and the InitInstance function is called to
 // run in the new thread.
 
@@ -45,7 +45,7 @@
 // thread doesn't require a MessageLoop, it should return FALSE. Threads
 // which don't run a message loop as sometimes referred to as "worker" threads.
 
-// Note: It is your job to end the thread before CWinThread ends!
+// Note: It is your job to end the thread before CThread ends!
 //       To end a thread with a message loop, post a WM_QUIT message to the thread.
 //       To end a thread without a message loop, set an event, and end the thread 
 //       when the event is received.
@@ -82,22 +82,22 @@
 // will run the function provided to it, and end when that function ends.
 
 
-#ifndef _WINTHREAD_H_
-#define _WINTHREAD_H_
+#ifndef _THREAD_H_
+#define _THREAD_H_
 
 
 namespace Win32xx
 {
 
 	//////////////////////////////////////
-	// Declaration of the CWinThread class
+	// Declaration of the CThread class
 	//
-	class CWinThread
+	class CThread
 	{
 	public:
-		CWinThread();
-		CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
-		virtual ~CWinThread();
+		CThread();
+		CThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
+		virtual ~CThread();
 		
 		// Overridables
 		virtual BOOL InitInstance();
@@ -112,8 +112,8 @@ namespace Win32xx
 		DWORD	SuspendThread() const;
 
 	private:
-		CWinThread(const CWinThread&);				// Disable copy construction
-		CWinThread& operator = (const CWinThread&);	// Disable assignment operator
+		CThread(const CThread&);				// Disable copy construction
+		CThread& operator = (const CThread&);	// Disable assignment operator
 		void CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
 		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
 
@@ -129,14 +129,14 @@ namespace Win32xx
 {
 
 	///////////////////////////////////////
-	// Definitions for the CWinThread class
+	// Definitions for the CThread class
 	//
-	inline CWinThread::CWinThread() : m_hThread(0), m_nThreadID(0)
+	inline CThread::CThread() : m_hThread(0), m_nThreadID(0)
 	{
 		CreateThread(0, 0, CREATE_SUSPENDED);
 	}
 
-	inline CWinThread::CWinThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
+	inline CThread::CThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
 		: m_hThread(0), m_nThreadID(0)
 										
 	{
@@ -148,46 +148,46 @@ namespace Win32xx
 		CreateThread(pSecurityAttributes, stack_size, initflag);
 	}
 
-	inline CWinThread::~CWinThread()
+	inline CThread::~CThread()
 	{	
 		// A thread's state is set to signalled when the thread terminates.
 		// If your thread is still running at this point, you have a bug.
 		if (0 != WaitForSingleObject(m_hThread, 0))
-			TRACE(_T("*** Error *** Ending CWinThread before ending its thread\n"));
+			TRACE(_T("*** Error *** Ending CThread before ending its thread\n"));
 
 		// Close the thread's handle
 		::CloseHandle(m_hThread);
 	}
 
-	inline void CWinThread::CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
+	inline void CThread::CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
 	{
 		// NOTE:  By default, the thread is created in the default state.
 		//		  _beginthreadex will be undefined if a single-threaded run-time library is used. Use a Multithreaded run-time.
-		m_hThread = (HANDLE)_beginthreadex(pSecurityAttributes, stack_size, CWinThread::StaticThreadCallback, (LPVOID) this, initflag, &m_nThreadID);
+		m_hThread = (HANDLE)_beginthreadex(pSecurityAttributes, stack_size, CThread::StaticThreadCallback, (LPVOID) this, initflag, &m_nThreadID);
 
 		if (0 == m_hThread)
 			throw CWinException(_T("Failed to create thread"));
 	}
 
-	inline HANDLE CWinThread::GetThread() const
+	inline HANDLE CThread::GetThread() const
 	{
 		assert(m_hThread);
 		return m_hThread;
 	}
 
-	inline int CWinThread::GetThreadID() const 
+	inline int CThread::GetThreadID() const 
 	{
 		assert(m_hThread);
 		return m_nThreadID;
 	}
 
-	inline int CWinThread::GetThreadPriority() const
+	inline int CThread::GetThreadPriority() const
 	{
 		assert(m_hThread);
 		return ::GetThreadPriority(m_hThread);
 	}
 
-	inline BOOL CWinThread::InitInstance()
+	inline BOOL CThread::InitInstance()
 	{
 		// Override this function to perform tasks when the thread starts.
 
@@ -196,35 +196,35 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline int CWinThread::MessageLoop()
+	inline int CThread::MessageLoop()
 	{
 		// Override this function if your thread needs a different message loop
 		return GetApp()->MessageLoop();
 	}
 
-	inline DWORD CWinThread::ResumeThread() const
+	inline DWORD CThread::ResumeThread() const
 	{
 		assert(m_hThread);
 		return ::ResumeThread(m_hThread);
 	}
 
-	inline DWORD CWinThread::SuspendThread() const
+	inline DWORD CThread::SuspendThread() const
 	{
 		assert(m_hThread);
 		return ::SuspendThread(m_hThread); 
 	}
 	
-	inline BOOL CWinThread::SetThreadPriority(int nPriority) const
+	inline BOOL CThread::SetThreadPriority(int nPriority) const
 	{
 		assert(m_hThread);
 		return ::SetThreadPriority(m_hThread, nPriority);
 	}
 
-	inline UINT WINAPI CWinThread::StaticThreadCallback(LPVOID pCThread)
+	inline UINT WINAPI CThread::StaticThreadCallback(LPVOID pCThread)
 	// When the thread starts, it runs this function.
 	{
 		// Get the pointer for this CMyThread object
-		CWinThread* pThread = (CWinThread*)pCThread;
+		CThread* pThread = (CThread*)pCThread;
 
 		if (pThread->InitInstance())
 			return pThread->MessageLoop();
@@ -234,5 +234,5 @@ namespace Win32xx
 	
 }
 
-#endif // #define _WINTHREAD_H_
+#endif // #define _THREAD_H_
 
