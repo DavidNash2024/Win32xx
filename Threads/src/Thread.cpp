@@ -6,7 +6,7 @@
 #include "Thread.h"
 
 
-CMyThread::CMyThread(int nValue) : m_nValue(nValue)
+CMyThread::CMyThread(int nValue) : m_nValue(nValue), m_TestWindow(nValue)
 {
 }
 
