@@ -12,7 +12,7 @@ ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@_
-Linker=-lComCtl32_@@_-lWs2_32_@@__@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release

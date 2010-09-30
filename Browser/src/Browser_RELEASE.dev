@@ -78,26 +78,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=ComboBoxEx.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
-FileName=ComboBoxEx.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit8]
 FileName=EventSink.cpp
 CompileCpp=1
 Folder=Source
@@ -107,8 +87,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=EventSink.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit8]
+FileName=Mainfrm.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=Mainfrm.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -138,26 +138,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=Mainfrm.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
-FileName=Mainfrm.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
 FileName=MyBrowser.cpp
 CompileCpp=1
 Folder=Source
@@ -167,7 +147,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit11]
 FileName=MyBrowser.h
 CompileCpp=1
 Folder=Header
@@ -177,7 +157,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit12]
 FileName=resource.h
 CompileCpp=1
 Folder=Header
@@ -187,12 +167,33 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit13]
 FileName=Resource.rc
+CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+
+[Unit14]
+FileName=MyCombo.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=MyCombo.cpp
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
 
