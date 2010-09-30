@@ -34,7 +34,9 @@ New Features and Enhancements
    and also for users of the Boost library. The "Shared_Ptr" class is intended
    as an alternative for those users who would like to use a "shared_ptr", but
    don't have access to one yet.
-* Vectors are now used to replace all dynamically allocated arrays.       
+* Vectors are now used to replace all dynamically allocated arrays.
+* Added CThread class to simplify the task of using threads and creating
+  windows in different threads.       
             
 
 Changes in detail
@@ -48,7 +50,7 @@ Added CScrollbar
 Added CSlider 
 Added CSpinButton
 Added Shared_Ptr
-Added CWinThread 
+Added CThread 
 Updated CSocket to support IPv6
 Added CPropertySheet::SetIcon
 Added CRebar::SizeToRect

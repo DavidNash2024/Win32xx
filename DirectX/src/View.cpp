@@ -9,6 +9,7 @@
 #include <d3dx9.h>	// see the note above
 #include <mmsystem.h>
 #include "View.h"
+#include "MainFrm.h"
 #include "Resource.h"
 
 CView::~CView()
@@ -21,6 +22,12 @@ CView::~CView()
 
     if( m_pD3D != NULL)
         m_pD3D->Release();
+}
+
+HWND CView::Create(HWND hWndParent)
+{
+	StartThread(hWndParent);
+	return 0;
 }
 
 void CView::OnCreate()
@@ -193,22 +200,48 @@ VOID CView::Render()
 	Sleep(1);
 }
 
+void CView::StartThread(HWND hwndParent)
+{
+	m_hwndParent = hwndParent;
+	ResumeThread();
+}
+
+BOOL CView::InitInstance()
+{
+	// This function runs when the thread starts
+
+	// Create a test window for this thread
+	CWnd::Create(m_hwndParent);
+
+	PostMessage(m_hwndParent, UWM_VIEWCREATED, 0, 0);
+
+	return TRUE;	// return TRUE to run the message loop
+}
+
+int CView::MessageLoop()
+// Override CWinApp::MessageLoop to accommodate the needs of DirectX
+{
+	MSG Msg = {0};
+	while( Msg.message!=WM_QUIT )
+	{
+		if( PeekMessage(&Msg, NULL, 0U, 0U, PM_REMOVE))
+		{
+			::TranslateMessage(&Msg);
+			::DispatchMessage(&Msg);
+		}
+		else
+			Render();
+	}
+	return LOWORD(Msg.wParam);
+} 
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
 	case WM_DESTROY:
+		// End this thread
 		::PostQuitMessage( 0 );
-		break;
-
-	case WM_SIZING:
-	//	Render();
-		break;
-
-	case WM_PAINT:
-	//	Render();
-	//	::ValidateRect( m_hWnd, NULL );
 		break;
 	}
 

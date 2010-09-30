@@ -8,7 +8,7 @@
 #include "TestWnd.h"
 
 
-class CMyThread : public CWinThread
+class CMyThread : public CThread
 {
 public:
 	CMyThread(int nValue);

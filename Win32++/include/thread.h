@@ -82,8 +82,8 @@
 // will run the function provided to it, and end when that function ends.
 
 
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _WINTHREAD_H_
+#define _WINTHREAD_H_
 
 
 namespace Win32xx
@@ -234,5 +234,5 @@ namespace Win32xx
 	
 }
 
-#endif // #define _THREAD_H_
+#endif // #define _WINTHREAD_H_
 

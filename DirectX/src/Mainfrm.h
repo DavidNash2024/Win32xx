@@ -5,7 +5,7 @@
 #define MAINFRM_H
 
 #include "View.h"
-#include "MyThread.h"
+//#include "MyThread.h"
 
 
 #define UWM_VIEWCREATED		(WM_APP + 1)	// Message - posted when view window is created
@@ -18,11 +18,11 @@ public:
 	virtual ~CMainFrame();
 
 protected:
-	virtual void CreateView()
-	{
-		// Start the thread which creates the view window
-		m_MyThread.StartThread(m_hWnd);
-	}
+//	virtual void CreateView()
+//	{
+//		// Start the thread which creates the view window
+//		m_View.StartThread(m_hWnd);
+//	}
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnFileOpen();
@@ -34,7 +34,8 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CMyThread m_MyThread;
+//	CMyThread m_MyThread;
+	CView m_View;
 };
 
 #endif //MAINFRM_H

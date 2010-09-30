@@ -52,7 +52,7 @@ typedef  unsigned char  byte;
 #include <treeview.h>
 #include <webbrowser.h>
 #include <wincore.h>
-#include <winthread.h>
+#include <thread.h>
 
 
 #endif

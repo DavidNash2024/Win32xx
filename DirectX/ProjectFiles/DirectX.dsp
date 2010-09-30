@@ -104,10 +104,6 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyThread.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -125,10 +121,6 @@ SOURCE=..\src\DXApp.h
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MyThread.h
 # End Source File
 # Begin Source File
 

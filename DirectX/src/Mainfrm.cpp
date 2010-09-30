@@ -12,7 +12,7 @@ CMainFrame::CMainFrame()
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
 	//Set m_View as the view window of the frame
-	SetView(m_MyThread.GetView());
+	SetView(m_View);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -175,8 +175,8 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_DESTROY:
-		PostThreadMessage(m_MyThread.GetThreadID(), WM_QUIT, 0, 0);
-		::WaitForSingleObject(m_MyThread.GetThread(), INFINITE);
+		PostThreadMessage(m_View.GetThreadID(), WM_QUIT, 0, 0);
+		::WaitForSingleObject(m_View.GetThread(), INFINITE);
 		break;
 	case UWM_VIEWCREATED:
 		RecalcLayout();

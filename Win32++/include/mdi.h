@@ -86,7 +86,6 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
-		virtual void CreateView();
 		virtual tString GetWindowType() const { return _T("CMDIChild"); }
 		virtual void RecalcLayout();
 
@@ -590,12 +589,6 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline void CMDIChild::CreateView()
-	{
-		assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
-		GetView()->Create(m_hWnd);
-	}
-
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefMDIChildProc(m_hWnd, uMsg, wParam, lParam);
@@ -604,7 +597,8 @@ namespace Win32xx
 	inline void CMDIChild::OnCreate()
 	{
 		// Create the view window
-		CreateView();
+		assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
+		GetView()->Create(m_hWnd);
 		RecalcLayout();
 	}
 
@@ -646,7 +640,8 @@ namespace Win32xx
 			if (m_hWnd)
 			{
 				// The frame is already created, so create and position the new view too
-				CreateView();
+				assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
+				GetView()->Create(m_hWnd);
 				RecalcLayout();
 			}
 		}

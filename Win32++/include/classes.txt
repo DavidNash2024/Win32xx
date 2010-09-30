@@ -56,6 +56,9 @@ tab.h             | CTab             | Win32, Win64      | Adds support for tab
                   | CMDITab          |                   | controls, and MDI
                   |                  |                   | tab windows.                   
 ------------------+------------------+-------------------+---------------------
+thread.h          | CThread          | Win32, Win64      | Adds support for
+                  |                  | and WinCE         | threads.
+------------------+------------------+-------------------+---------------------
 toolbar.h         | CToolbar         | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | Toolbar control.
 ------------------+------------------+-------------------+---------------------

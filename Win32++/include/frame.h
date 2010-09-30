@@ -247,7 +247,6 @@ namespace Win32xx
 		virtual void AddToolbarBand(CToolbar& TB, DWORD dwStyle, UINT nID);
 		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void CreateToolbar();
-		virtual void CreateView();
 		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
@@ -1656,12 +1655,6 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::CreateView()
-	{
-		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
-		GetView()->Create(m_hWnd);
-	}
-
 	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
@@ -2026,7 +2019,8 @@ namespace Win32xx
 		ShowStatusbar(m_bShowStatusbar);
 
 		// Create the view window
-		CreateView();
+		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
+		GetView()->Create(m_hWnd);
 
 		// Disable XP themes for the menubar
 		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or < Vista
@@ -3029,7 +3023,8 @@ namespace Win32xx
 			if (m_hWnd)
 			{
 				// The frame is already created, so create and position the new view too
-				CreateView();
+				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
+				GetView()->Create(m_hWnd);
 				RecalcLayout();
 			}
 		}

@@ -126,9 +126,6 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\MyThread.cpp">
-			</File>
-			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
@@ -144,9 +141,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
-			</File>
-			<File
-				RelativePath="..\src\MyThread.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
