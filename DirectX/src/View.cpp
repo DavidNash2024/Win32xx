@@ -175,27 +175,30 @@ VOID CView::SetupMatrices()
 //-----------------------------------------------------------------------------
 VOID CView::Render()
 {
-    // Clear the backbuffer to a black color
-    if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
-		TRACE(_T("Woops\n"));
+	if (m_pd3dDevice)
+	{
+		// Clear the backbuffer to a black color
+		if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
+			TRACE(_T("Woops\n"));
 
-    // Begin the scene
-    if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
-    {
-        // Setup the world, view, and projection Matrices
-        SetupMatrices();
+		// Begin the scene
+		if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
+		{
+			// Setup the world, view, and projection Matrices
+			SetupMatrices();
 
-        // Render the vertex buffer contents
-        m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(CUSTOMVERTEX) );
-        m_pd3dDevice->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
-        m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 1 );
+			// Render the vertex buffer contents
+			m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(CUSTOMVERTEX) );
+			m_pd3dDevice->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
+			m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 1 );
 
-        // End the scene
-        m_pd3dDevice->EndScene();
-    }
+			// End the scene
+			m_pd3dDevice->EndScene();
+		}
 
-    // Present the backbuffer contents to the display
-    m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+		// Present the backbuffer contents to the display
+		m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+	}
 
 	Sleep(1);
 }
