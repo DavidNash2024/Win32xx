@@ -113,6 +113,7 @@ namespace Win32xx
 		CDC( HDC hDC );
 		CDC(const CDC& rhs);				// Copy constructor
 		void operator = ( const HDC hDC );
+		CDC& operator = ( const CDC& rhs );
 		virtual ~CDC( );
 		HDC GetHDC( ) const { return *m_DC; }
 
@@ -333,7 +334,6 @@ namespace Win32xx
 #endif
 
 	private:
-		CDC& operator = (const CDC&);	// Disable assignment operator
 		HDC* m_DC;
 		HBITMAP* m_BitmapOld;
 		HBRUSH* m_BrushOld;
@@ -498,6 +498,22 @@ namespace Win32xx
 	inline void CDC::operator = (const HDC hDC)
 	{
 		AttachDC(hDC);
+	}
+
+	inline CDC& CDC::operator = ( const CDC& rhs )
+	{
+		if (&rhs != this)
+		{
+			m_BitmapOld = rhs.m_BitmapOld;
+			m_BrushOld  = rhs.m_BrushOld;
+			m_DC		= rhs.m_DC;
+			m_FontOld	= rhs.m_FontOld;
+			m_PenOld    = rhs.m_PenOld;
+			m_RgnOld    = rhs.m_RgnOld; 
+			m_Count		= rhs.m_Count; 
+
+			*m_Count++;
+		}
 	}
 
 	inline CDC::~CDC()
