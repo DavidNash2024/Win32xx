@@ -85,9 +85,9 @@
 
 
 // Summing up:
-// In my opinion, there should be no "naked" pointers for dynamically created
-// objects in modern C++ code. That's to say that every call to "new" should
-// be wrapped in some sort of smart pointer. This eliminates the possibility
+// In my opinion, "naked" pointers for dynamically created objects should be 
+// avoided in modern C++ code. That's to say that calls to "new" should be 
+// wrapped in some sort of smart pointer. This eliminates the possibility
 // of memory leaks (particularly in the event of exceptions). It also
 // elminiates the need for delete in user's code.
 
