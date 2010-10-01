@@ -11,15 +11,14 @@ class CTestWindow : public CWnd, public CThread
 public:
 	CTestWindow(int nWindow);
 	virtual ~CTestWindow() {}
-	virtual HWND Create(HWND hWndParent = 0);
-	virtual void OnInitialUpdate();
-	virtual int  GetWindowNumber() {return m_nWindow;}
 
 protected:
 	// Override CThread member functions
 	virtual BOOL InitInstance();
 
 	// Override CWnd member functions
+	virtual HWND Create(HWND hWndParent = 0);
+	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

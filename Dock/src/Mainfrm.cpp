@@ -116,10 +116,12 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-void CMainFrame::SaveRegistrySettings()
+BOOL CMainFrame::SaveRegistrySettings()
 {
-	CFrame::SaveRegistrySettings();
-	m_DockView.SaveRegistrySettings(GetRegistryKeyName());
+	if (CFrame::SaveRegistrySettings())
+		return m_DockView.SaveRegistrySettings(GetRegistryKeyName());
+	else
+		return FALSE;
 }
 
 void CMainFrame::SetupToolbar()

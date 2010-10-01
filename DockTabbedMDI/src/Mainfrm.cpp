@@ -233,7 +233,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-void CMainFrame::SaveRegistrySettings()
+BOOL CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
 
@@ -242,6 +242,8 @@ void CMainFrame::SaveRegistrySettings()
 	
 	// Save the tabbedMDI settings
 	m_DockTabbedMDI.GetTabbedMDI()->SaveRegistrySettings(GetRegistryKeyName());
+
+	return TRUE;
 }
 
 void CMainFrame::SetupToolbar()

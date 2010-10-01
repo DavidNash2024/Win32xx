@@ -135,6 +135,8 @@ Incompatibilities with previous versions
    user's code.
 * Some CSocket functions take TCHAR as an arguement instead of char.
 * CPropertySheet.m_PSH is now private. Use SetIcon to set the icon.
+* CFrame::LoadRegistrySettings, CFrame::LoadRegistryMRUSettings and 
+   CFrame::SaveRegistrySettings return BOOL.
 
 Version 6.9
 ===========

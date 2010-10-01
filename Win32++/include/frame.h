@@ -251,8 +251,8 @@ namespace Win32xx
 		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
-		virtual void LoadRegistrySettings(LPCTSTR szKeyName);
-		virtual void LoadRegistryMRUSettings(UINT nMaxMRU = 0);
+		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
+		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual void OnCreate();
@@ -275,7 +275,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
-		virtual void SaveRegistrySettings();
+		virtual BOOL SaveRegistrySettings();
 		virtual void SetMenubarBandSize();
 		virtual UINT SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID);
 		virtual void SetupToolbar();
@@ -1903,7 +1903,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
+	inline BOOL CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
 		try
 		{
@@ -1940,10 +1940,13 @@ namespace Win32xx
 		catch(const CWinException& e)
 		{
 			e.what();
+			return FALSE;
 		}
+
+		return TRUE;
 	}
 
-	inline void CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+	inline BOOL CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
 		m_tsKeyName = szKeyName;
 
@@ -1970,6 +1973,8 @@ namespace Win32xx
 			m_bShowToolbar = dwToolbar & 1;
 			RegCloseKey(hKey);
 		}
+
+		return TRUE;
 	}
 
 	inline void CFrame::OnCreate()
@@ -2668,7 +2673,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	inline void CFrame::SaveRegistrySettings()
+	inline BOOL CFrame::SaveRegistrySettings()
 	{
 		// Store the window position in the registry
 		if (!m_tsKeyName.empty())
@@ -2735,6 +2740,8 @@ namespace Win32xx
 				}
 			}
 		}
+
+		return TRUE;
 	}
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)

@@ -5,9 +5,8 @@
 #define MAINFRM_H
 
 #include "View.h"
-//#include "MyThread.h"
 
-
+// User defined window message
 #define UWM_VIEWCREATED		(WM_APP + 1)	// Message - posted when view window is created
 
 // Declaration of the CMainFrame class

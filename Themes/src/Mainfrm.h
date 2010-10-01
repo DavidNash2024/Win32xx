@@ -20,12 +20,12 @@ public:
 	void ShowCards(BOOL bShow);
 
 protected:
-	virtual void LoadRegistrySettings(LPCTSTR szKeyName);
+	virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SaveRegistrySettings();
+	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolbar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

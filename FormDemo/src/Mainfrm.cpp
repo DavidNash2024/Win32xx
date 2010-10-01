@@ -32,10 +32,12 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-void CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 {
 	CFrame::LoadRegistrySettings(szKeyName);
 	GetDoc().LoadDocRegistry(GetRegistryKeyName().c_str());
+
+	return TRUE;
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)
@@ -127,10 +129,12 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 //	cs.cy = 420;
 }
 
-void CMainFrame::SaveRegistrySettings()
+BOOL CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
 	GetDoc().SaveDocRegistry(GetRegistryKeyName().c_str());
+
+	return TRUE;
 }
 
 void CMainFrame::SetupToolbar()

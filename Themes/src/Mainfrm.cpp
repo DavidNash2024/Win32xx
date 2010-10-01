@@ -216,7 +216,7 @@ DWORD CMainFrame::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
 	  return 0;
 }
 
-void CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 {
 	CFrame::LoadRegistrySettings(szKeyName);
 
@@ -271,6 +271,8 @@ void CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 		m_bShowArrows = TRUE;
 		m_bShowCards = TRUE;
 	}
+
+	return TRUE;
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -523,7 +525,7 @@ void CMainFrame::OnViewCards()
 	ShowCards(m_bShowCards);
 }
 
-void CMainFrame::SaveRegistrySettings()
+BOOL CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
 
@@ -568,6 +570,8 @@ void CMainFrame::SaveRegistrySettings()
 	}
 
 	RegCloseKey(hKey);
+
+	return TRUE;
 }
 
 void CMainFrame::SetRebarTheme(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2)

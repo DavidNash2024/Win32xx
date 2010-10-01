@@ -25,7 +25,7 @@ protected:
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual void SaveRegistrySettings();
+	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolbar();
 
 private:

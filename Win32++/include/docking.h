@@ -415,7 +415,7 @@ namespace Win32xx
 		virtual void Hide();
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcDockLayout();
-		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
+		virtual BOOL SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual BOOL VerifyDockers();
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
 		virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked);
@@ -3094,7 +3094,7 @@ namespace Win32xx
 		} 
 	}
 
-	inline void CDocker::SaveRegistrySettings(tString tsRegistryKeyName)
+	inline BOOL CDocker::SaveRegistrySettings(tString tsRegistryKeyName)
 	// Stores the docking configuration in the registry
 	// NOTE: This function assumes that each docker has a unique DockID
 	{	
@@ -3142,6 +3142,8 @@ namespace Win32xx
 			RegCloseKey(hKeyDock);
 			RegCloseKey(hKey);
 		}
+
+		return TRUE;
 	}
 
 	inline void CDocker::SendNotify(UINT nMessageID)
