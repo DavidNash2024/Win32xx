@@ -273,7 +273,7 @@ namespace Win32xx
 		BOOL DPtoLP(LPRECT lpRect)  const;
 		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const;
 		BOOL LPtoDP(LPRECT lpRect)  const;
-	
+
 		// Layout Functions
 		DWORD GetLayout() const;
 		DWORD SetLayout(DWORD dwLayout) const;
@@ -306,7 +306,7 @@ namespace Win32xx
 		int EndPage() const;
 		int AbortDoc() const;
 		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
-		
+
 		// Text Functions
 		BOOL ExtTextOut( int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, UINT nCount, LPINT lpDxWidths ) const;
 		int DrawText( LPCTSTR lpszString, int nCount, const RECT& rc, UINT nFormat ) const;
@@ -362,7 +362,7 @@ namespace Win32xx
 			else                     cClrBits = 32;
 
 			// Allocate memory for the BITMAPINFO structure.
-			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((__int64)1 << cClrBits);		
+			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((__int64)1 << cClrBits);
 			m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
 			m_pbmiArray = (LPBITMAPINFO) &m_bmi.front();
 
@@ -409,7 +409,7 @@ namespace Win32xx
 			m_PenOld = new HPEN;
 			m_RgnOld = new HRGN;
 			m_Count = new long;
-			
+
 			*m_DC = 0;
 			*m_BitmapOld = 0;
 			*m_BrushOld = 0;
@@ -421,13 +421,13 @@ namespace Win32xx
 		catch (const std::bad_alloc&)
 		{
 			if (m_DC)			delete m_DC;
-			if (m_BitmapOld)	delete m_BitmapOld; 
+			if (m_BitmapOld)	delete m_BitmapOld;
 			if (m_BrushOld)		delete m_BrushOld;
 			if (m_FontOld)		delete m_FontOld;
 			if (m_PenOld)		delete m_PenOld;
 			if (m_RgnOld)		delete m_RgnOld;
 			if (m_Count)		delete m_Count;
-			
+
 			throw;
 		}
 	}
@@ -444,7 +444,7 @@ namespace Win32xx
 		// CDC MyCDC = ::CreateCompatibleDC(SomeHDC);
 		//  or
 		// CDC MyCDC = ::GetDC(SomeHWND);
-		
+
 		try
 		{
 			assert(hDC);
@@ -456,7 +456,7 @@ namespace Win32xx
 			m_PenOld = new HPEN;
 			m_RgnOld = new HRGN;
 			m_Count = new long;
-			
+
 			*m_DC = hDC;
 			*m_BitmapOld = 0;
 			*m_BrushOld = 0;
@@ -468,12 +468,12 @@ namespace Win32xx
 		catch (const std::bad_alloc&)
 		{
 			if (m_DC)			delete m_DC;
-			if (m_BitmapOld)	delete m_BitmapOld; 
+			if (m_BitmapOld)	delete m_BitmapOld;
 			if (m_BrushOld)		delete m_BrushOld;
 			if (m_FontOld)		delete m_FontOld;
 			if (m_PenOld)		delete m_PenOld;
 			if (m_RgnOld)		delete m_RgnOld;
-			
+
 			throw;
 		}
 	}
@@ -489,10 +489,10 @@ namespace Win32xx
 		m_DC		= rhs.m_DC;
 		m_FontOld	= rhs.m_FontOld;
 		m_PenOld    = rhs.m_PenOld;
-		m_RgnOld    = rhs.m_RgnOld; 
-		m_Count		= rhs.m_Count; 
+		m_RgnOld    = rhs.m_RgnOld;
+		m_Count		= rhs.m_Count;
 
-		*m_Count++;
+		(*m_Count)++;
 	}
 
 	inline void CDC::operator = (const HDC hDC)
@@ -509,16 +509,18 @@ namespace Win32xx
 			m_DC		= rhs.m_DC;
 			m_FontOld	= rhs.m_FontOld;
 			m_PenOld    = rhs.m_PenOld;
-			m_RgnOld    = rhs.m_RgnOld; 
-			m_Count		= rhs.m_Count; 
+			m_RgnOld    = rhs.m_RgnOld;
+			m_Count		= rhs.m_Count;
 
-			*m_Count++;
+			(*m_Count)++;
 		}
+
+		return *this;
 	}
 
 	inline CDC::~CDC()
 	{
-		if (--*m_Count == 0)
+		if (--(*m_Count) == 0)
 		{
 			if (*m_DC)
 			{
@@ -1479,7 +1481,7 @@ namespace Win32xx
 			return ::DPtoLP(*m_DC, (LPPOINT)lpRect, 2);
 		return FALSE;
 	}
-	
+
 	inline BOOL CDC::LPtoDP(LPPOINT lpPoints, int nCount )  const
 	{
 		if (*m_DC != NULL)
@@ -1532,7 +1534,7 @@ namespace Win32xx
 		if (*m_DC != NULL)
 			return ::SetMapMode(*m_DC, nMapMode);
 		return 0;
-	}	
+	}
 	inline BOOL CDC::SetViewportOrgEx(int x, int y, LPPOINT lpPoint) const
 	{
 		if (*m_DC != NULL)
@@ -1544,7 +1546,7 @@ namespace Win32xx
 		if (*m_DC != NULL)
 			return SetViewportOrgEx(point.x, point.y, lpPointRet);
 		return FALSE;
-	}	
+	}
 	inline BOOL CDC::OffsetViewportOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const
 	{
 		if (*m_DC != NULL)
@@ -1562,7 +1564,7 @@ namespace Win32xx
 		if (*m_DC != NULL)
 			return ::SetViewportExtEx(*m_DC, x, y, lpSize);
 		return FALSE;
-	}	
+	}
 	inline BOOL CDC::SetViewportExtEx(SIZE size, LPSIZE lpSizeRet ) const
 	{
 		if (*m_DC != NULL)
@@ -1574,13 +1576,13 @@ namespace Win32xx
 		if (*m_DC != NULL)
 			return ::ScaleViewportExtEx(*m_DC, xNum, xDenom, yNum, yDenom, lpSize);
 		return FALSE;
-	}	
+	}
 	inline BOOL CDC::GetWindowOrgEx(LPPOINT lpPoint)  const
 	{
 		if (*m_DC != NULL)
 			return ::GetWindowOrgEx(*m_DC, lpPoint);
 		return FALSE;
-	}	
+	}
 	inline BOOL CDC::SetWindowOrgEx(int x, int y, LPPOINT lpPoint ) const
 	{
 		if (*m_DC != NULL)
@@ -1604,7 +1606,7 @@ namespace Win32xx
 		if (*m_DC != NULL)
 			return ::GetWindowExtEx(*m_DC, lpSize);
 		return FALSE;
-	}	
+	}
 	inline BOOL CDC::SetWindowExtEx(int x, int y, LPSIZE lpSize ) const
 	{
 		if (*m_DC != NULL)
@@ -1799,7 +1801,7 @@ namespace Win32xx
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
 		byte* pByteArray = &vBits.front();
-		
+
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
 
