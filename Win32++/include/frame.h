@@ -1905,41 +1905,54 @@ namespace Win32xx
 
 	inline BOOL CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
+		// Load the MRU from the registry
+
+		assert(!m_tsKeyName.empty()); // KeyName must be set before calling LoadRegistryMRUSettings
+		HKEY hKey = NULL;
+
 		try
 		{
-			assert(!m_tsKeyName.empty()); // KeyName must be set before calling LoadRegistryMRUSettings
-
-			// Load the MRU from the registry
 			m_nMaxMRU = MIN(nMaxMRU, 16);
+			std::vector<tString> vMRUEntries;
 			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
-			HKEY hKey = NULL;
-
-			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+			
+			if (ERROR_SUCCESS != RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+				throw CWinException(_T("RegOpenKeyEx failed\n"));
+						
+			for (UINT i = 0; i < m_nMaxMRU; ++i)
 			{
-				for (UINT i = 0; i < m_nMaxMRU; ++i)
-				{
-					DWORD dwType = REG_SZ;
-					DWORD dwBufferSize = 0;
-					TCHAR szSubKey[10] = _T("");
-					wsprintf(szSubKey, _T("File %d\0"), i+1);
+				DWORD dwType = REG_SZ;
+				DWORD dwBufferSize = 0;
+				TCHAR szSubKey[10] = _T("");
+				wsprintf(szSubKey, _T("File %d\0"), i+1);
 
-					RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize);
-					std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
-					TCHAR* pTCharArray = &PathName.front();
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize))
+					throw CWinException(_T("RegQueryValueEx failed\n"));
+				
+				std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
+				TCHAR* pTCharArray = &PathName.front();
 
-					// load the entry from the registry
-					if (ERROR_SUCCESS == RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
-					{
-						if ( lstrlen( pTCharArray ) )
-							m_vMRUEntries.push_back( pTCharArray );
-					}
-				}
+				// load the entry from the registry
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
+					throw CWinException(_T("RegQueryValueEx failed\n"));
+				
+				if ( lstrlen( pTCharArray ) )
+					vMRUEntries.push_back( pTCharArray );
 			}
+			
+			// successfully loaded all MRU values, so store them 
+			m_vMRUEntries = vMRUEntries;
+			RegCloseKey(hKey);
 		}
 
 		catch(const CWinException& e)
 		{
+			TRACE(_T("Failed to load MRU values from registry\n"));
 			e.what();
+			
+			if (hKey)
+				RegCloseKey(hKey);
+
 			return FALSE;
 		}
 
@@ -1948,22 +1961,32 @@ namespace Win32xx
 
 	inline BOOL CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
+		assert (NULL != szKeyName);
 		m_tsKeyName = szKeyName;
 
 		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
 		HKEY hKey = 0;
-		RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
-		if (hKey)
+
+		try
 		{
+			if (ERROR_SUCCESS != RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey)) 
+				throw CWinException(_T("RegOpenKeyEx Failed"));
+
 			DWORD dwType = REG_BINARY;
 			DWORD BufferSize = sizeof(DWORD);
 			DWORD dwTop, dwLeft, dwWidth, dwHeight, dwStatusbar, dwToolbar;
-			RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize);
-			RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize);
-			RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize);
-			RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize);
-			RegQueryValueEx(hKey, _T("Statusbar"), NULL, &dwType, (LPBYTE)&dwStatusbar, &BufferSize);
-			RegQueryValueEx(hKey, _T("Toolbar"), NULL, &dwType, (LPBYTE)&dwToolbar, &BufferSize);
+			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize)) 
+				throw CWinException(_T("RegQueryValueEx Failed"));
+			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize)) 
+				throw CWinException(_T("RegQueryValueEx Failed"));
+			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize)) 
+				throw CWinException(_T("RegQueryValueEx Failed"));
+			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize)) 
+				throw CWinException(_T("RegQueryValueEx Failed"));
+			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Statusbar"), NULL, &dwType, (LPBYTE)&dwStatusbar, &BufferSize)) 
+				throw CWinException(_T("RegQueryValueEx Failed"));
+			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Toolbar"), NULL, &dwType, (LPBYTE)&dwToolbar, &BufferSize)) 
+				throw CWinException(_T("RegQueryValueEx Failed"));
 
 			m_rcPosition.top = dwTop;
 			m_rcPosition.left = dwLeft;
@@ -1971,7 +1994,18 @@ namespace Win32xx
 			m_rcPosition.right = m_rcPosition.left + dwWidth;
 			m_bShowStatusbar = dwStatusbar & 1;
 			m_bShowToolbar = dwToolbar & 1;
-			RegCloseKey(hKey);
+
+			RegCloseKey(hKey);	
+		}
+		catch (const CWinException& e)
+		{
+			TRACE(_T("Failed to load values from registry, using defaults!\n"));
+			e.what();
+			
+			if (hKey) 
+				RegCloseKey(hKey);
+			
+			return FALSE;
 		}
 
 		return TRUE;
@@ -2680,12 +2714,12 @@ namespace Win32xx
 		{
 			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
 			HKEY hKey = NULL;
-			BOOL Succeeded = TRUE;
-			Succeeded = !RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
-			assert(Succeeded);
 
-			if (hKey)
+			try
 			{
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					throw CWinException(_T("RegCreateKeyEx failed"));
+
 				WINDOWPLACEMENT Wndpl = {0};
 				Wndpl.length = sizeof(WINDOWPLACEMENT);
 
@@ -2698,20 +2732,41 @@ namespace Win32xx
 					DWORD dwWidth = MAX(rc.Width(), 100);
 					DWORD dwHeight = MAX(rc.Height(), 50);
 
-					RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD));
-					RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD));
-					RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD));
-					RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD));
+					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
+						throw CWinException(_T("RegSetValueEx failed"));
+					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
+						throw CWinException(_T("RegSetValueEx failed"));
+					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
+						throw CWinException(_T("RegSetValueEx failed"));
+					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
+						throw CWinException(_T("RegSetValueEx failed"));
 				}
 				
 				// Store the Toolbar and statusbar states
 				DWORD dwShowToolbar = m_bShowToolbar;
 				DWORD dwShowStatusbar = m_bShowStatusbar;
 
-				RegSetValueEx(hKey, _T("Toolbar"), 0, REG_DWORD, (LPBYTE)&dwShowToolbar, sizeof(DWORD));
-				RegSetValueEx(hKey, _T("Statusbar"), 0, REG_DWORD, (LPBYTE)&dwShowStatusbar, sizeof(DWORD));
+				if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Toolbar"), 0, REG_DWORD, (LPBYTE)&dwShowToolbar, sizeof(DWORD)))
+					throw CWinException(_T("RegSetValueEx failed"));
+				if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Statusbar"), 0, REG_DWORD, (LPBYTE)&dwShowStatusbar, sizeof(DWORD)))
+					throw CWinException(_T("RegSetValueEx failed"));
 
 				RegCloseKey(hKey);
+			}
+
+			catch (const CWinException& e)
+			{
+				TRACE(_T("Failed to save registry settings\n"));
+
+				if (hKey)
+				{
+					// Roll back the registry changes by deleting this subkey
+					RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+					RegCloseKey(hKey);
+				}
+				
+				e.what();
+				return FALSE;
 			}
 
 			// Store the MRU entries in the registry
@@ -2720,11 +2775,11 @@ namespace Win32xx
 				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
 				HKEY hKey = NULL;
 
-				Succeeded = !RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
-				assert(Succeeded);
-
-				if(hKey)
+				try
 				{
+					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+						throw CWinException(_T("RegCreateKeyEx failed"));
+
 					for (UINT i = 0; i < m_nMaxMRU; ++i)
 					{
 						TCHAR szSubKey[10];
@@ -2733,10 +2788,26 @@ namespace Win32xx
 						if (i < m_vMRUEntries.size())
 							tsPathName = m_vMRUEntries[i];
 
-						RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR));
+						if (ERROR_SUCCESS != RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
+							throw CWinException(_T("RegSetValueEx failed"));
 					}
 
 					RegCloseKey(hKey);
+				}
+
+				catch (const CWinException& e)
+				{
+					TRACE(_T("Failed to save registry MRU settings\n"));
+
+					if (hKey)
+					{
+						// Roll back the registry changes by deleting this subkey
+						RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+						RegCloseKey(hKey);
+					}
+					
+					e.what();
+					return FALSE;
 				}
 			}
 		}

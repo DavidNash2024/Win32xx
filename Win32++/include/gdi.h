@@ -113,7 +113,6 @@ namespace Win32xx
 		CDC( HDC hDC );
 		CDC(const CDC& rhs);				// Copy constructor
 		void operator = ( const HDC hDC );
-		CDC& operator = ( const CDC& rhs );
 		virtual ~CDC( );
 		HDC GetHDC( ) const { return *m_DC; }
 
@@ -334,6 +333,8 @@ namespace Win32xx
 #endif
 
 	private:
+		CDC& operator = ( const CDC& rhs );
+
 		HDC* m_DC;
 		HBITMAP* m_BitmapOld;
 		HBRUSH* m_BrushOld;
@@ -481,8 +482,8 @@ namespace Win32xx
 	inline CDC::CDC(const CDC& rhs)	// Copy constructor
 	{
 		// The copy constructor is called when a temporary copy of the CDC needs to be created.
-		// Since we have two (or more) CDC objects looking after the same HDC, we need to
-		//  take account of this in the destructor.
+		// This can happen when a CDC is passed by value in a function call. Each CDC copy manages
+		// the same Device Context and GDI objects.
 
 		m_BitmapOld = rhs.m_BitmapOld;
 		m_BrushOld  = rhs.m_BrushOld;
@@ -492,7 +493,7 @@ namespace Win32xx
 		m_RgnOld    = rhs.m_RgnOld;
 		m_Count		= rhs.m_Count;
 
-		(*m_Count)++;
+		InterlockedIncrement(m_Count);
 	}
 
 	inline void CDC::operator = (const HDC hDC)
@@ -500,27 +501,9 @@ namespace Win32xx
 		AttachDC(hDC);
 	}
 
-	inline CDC& CDC::operator = ( const CDC& rhs )
-	{
-		if (&rhs != this)
-		{
-			m_BitmapOld = rhs.m_BitmapOld;
-			m_BrushOld  = rhs.m_BrushOld;
-			m_DC		= rhs.m_DC;
-			m_FontOld	= rhs.m_FontOld;
-			m_PenOld    = rhs.m_PenOld;
-			m_RgnOld    = rhs.m_RgnOld;
-			m_Count		= rhs.m_Count;
-
-			(*m_Count)++;
-		}
-
-		return *this;
-	}
-
 	inline CDC::~CDC()
-	{
-		if (--(*m_Count) == 0)
+	{	
+		if (InterlockedDecrement(m_Count) == 0)
 		{
 			if (*m_DC)
 			{
