@@ -231,6 +231,7 @@ namespace Win32xx
 		CWnd* GetView() const				{ return m_pView; }
 		tString GetMRUEntry(UINT nIndex);
 		void SetFrameMenu(INT ID_MENU);
+		void SetFrameMenu(HMENU hMenu);
 		void SetMenuTheme(MenuTheme& Theme);
 		void SetView(CWnd& wndView);
 		BOOL IsFrame() const			{ return TRUE; }
@@ -2020,13 +2021,10 @@ namespace Win32xx
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
 
-		// Setup the menu
-		SetFrameMenu(IDW_MAIN);
-		UpdateMRUMenu();
-
 		// Set the theme for the frame elements
 		SetTheme();	
 
+		// Create the rebar and menubar
 		if (IsRebarSupported() && m_bUseRebar)
 		{
 			// Create the rebar
@@ -2034,12 +2032,12 @@ namespace Win32xx
 
 			// Create the menu inside rebar
 			GetMenubar().Create(GetRebar());
-			GetMenubar().SetMenu(GetFrameMenu());
 			AddMenubarBand();			
 		}
 
-		if (!IsMenubarUsed())
-			::SetMenu(m_hWnd, GetFrameMenu());		
+		// Setup the menu
+		SetFrameMenu(IDW_MAIN);
+		UpdateMRUMenu();	
 		
 		// Create the Toolbar
 		if (m_bUseToolbar)
@@ -2817,13 +2815,26 @@ namespace Win32xx
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)
 	{
+		// Sets the frame's menu from a resource ID.
+		HMENU hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
+		assert (hMenu);
+		SetFrameMenu(hMenu);
+ 	}
+
+	inline void CFrame::SetFrameMenu(HMENU hMenu)
+	{
+		// Sets the frame's menu from a HMENU.
+		assert (hMenu);
+
 		if (m_hMenu)
 			::DestroyMenu(m_hMenu);
 
-		m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
+		m_hMenu = hMenu;
 
-		if(!m_hMenu)
-			TRACE(_T("**WARNING** Load Menu failed\n"));
+		if (IsMenubarUsed())
+			GetMenubar().SetMenu(GetFrameMenu());
+		else
+			::SetMenu(m_hWnd, GetFrameMenu());
  	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolbarID, UINT ToolbarDisabledID)

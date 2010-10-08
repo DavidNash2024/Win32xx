@@ -187,7 +187,7 @@ namespace Win32xx
 		virtual tString GetWindowType() const { return _T("CTabbedMDI"); }
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcLayout();
-		virtual void SaveRegistrySettings(tString tsRegistryKeyName);
+		virtual BOOL SaveRegistrySettings(tString tsRegistryKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
 		virtual void SetActiveMDITab(int nTab);
 
@@ -1489,7 +1489,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTabbedMDI::SaveRegistrySettings(tString tsRegistryKeyName)
+	inline BOOL CTabbedMDI::SaveRegistrySettings(tString tsRegistryKeyName)
 	{
 		if (0 != tsRegistryKeyName.size())
 		{
@@ -1515,6 +1515,8 @@ namespace Win32xx
 			RegCloseKey(hKeyMDIChild);
 			RegCloseKey(hKey);
 		}
+
+		return TRUE;
 	}
 
 	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
