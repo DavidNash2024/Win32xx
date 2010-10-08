@@ -110,17 +110,17 @@ namespace Win32xx
 	//
 	class CMenubar : public CToolbar
 	{
+		friend class CFrame;
+
 	public:
 		CMenubar();
 		virtual ~CMenubar();
 		virtual tString GetWindowType() const { return _T("CMenubar"); }
-		virtual BOOL IsMenubar() const {return TRUE;}
-		void MenuChar(WPARAM wParam, LPARAM lParam);
-		void SysCommand(WPARAM wParam, LPARAM lParam);
+		virtual void SetMenu(HMENU hMenu);
+		virtual void SetMenubarTheme(MenuTheme& Theme);
+
 		HMENU GetMenu() const {return m_hTopMenu;}
-		void SetMenu(HMENU hMenu);
 		MenuTheme& GetMenubarTheme() {return m_ThemeMenu;}
-		void SetMenubarTheme(MenuTheme& Theme);
 
 	protected:
 	//Overridables
@@ -129,10 +129,12 @@ namespace Win32xx
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
+		virtual void OnMenuChar(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseLeave();
 		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual void OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnWindowPosChanged();
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
@@ -234,7 +236,6 @@ namespace Win32xx
 		void SetFrameMenu(HMENU hMenu);
 		void SetMenuTheme(MenuTheme& Theme);
 		void SetView(CWnd& wndView);
-		BOOL IsFrame() const			{ return TRUE; }
 		BOOL IsMenubarUsed() const		{ return (GetMenubar() != 0); }
 		BOOL IsRebarSupported() const	{ return (GetComCtlVersion() >= 470); }
 		BOOL IsRebarUsed() const		{ return (GetRebar() != 0); }
@@ -652,7 +653,7 @@ namespace Win32xx
 		return (m_pFrame->GetWindowType() == _T("CMDIFrame"));	// boolean expression
 	}
 
-	inline void CMenubar::MenuChar(WPARAM wParam, LPARAM lParam)
+	inline void CMenubar::OnMenuChar(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
 
@@ -1268,7 +1269,7 @@ namespace Win32xx
 		return CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
 	}
 
-	inline void CMenubar::SysCommand(WPARAM wParam, LPARAM lParam)
+	inline void CMenubar::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	{
 		if (SC_KEYMENU == wParam)
 		{
@@ -2391,7 +2392,7 @@ namespace Win32xx
 		if ((IsMenubarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 		{
 			// Activate Menubar for key pressed with Alt key held down
-			GetMenubar().MenuChar(wParam, lParam);
+			GetMenubar().OnMenuChar(wParam, lParam);
 			return -1L;
 		}
 		return CWnd::WndProcDefault(WM_MENUCHAR, wParam, lParam);
@@ -2532,7 +2533,7 @@ namespace Win32xx
 	{
 		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenubarUsed())
 		{
-			GetMenubar().SysCommand(wParam, lParam);
+			GetMenubar().OnSysCommand(wParam, lParam);
 			return 0L;
 		}
 		
@@ -2680,6 +2681,7 @@ namespace Win32xx
 			pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW|SWP_ASYNCWINDOWPOS );
 		}
 
+		// Adjust rebar bands
 		if (IsRebarUsed())
 		{
 			if (GetRebar().GetRebarTheme().UseThemes && GetRebar().GetRebarTheme().BandsLeft)

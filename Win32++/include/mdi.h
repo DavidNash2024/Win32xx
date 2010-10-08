@@ -90,7 +90,6 @@ namespace Win32xx
 		virtual void RecalcLayout();
 
 		// Its unlikely you would need to override these functions
-		virtual BOOL IsMDIChild() const {return TRUE;}
 		virtual void SetChildMenu(LPCTSTR MenuName);
 		virtual CWnd* GetView() const	{return m_pView;}
 		virtual void SetView(CWnd& pwndView);
@@ -109,6 +108,7 @@ namespace Win32xx
 		HMENU m_hChildMenu;
 	};
 
+	
 	/////////////////////////////////////
 	// Declaration of the CMDIFrame class
 	//

@@ -55,7 +55,6 @@ namespace Win32xx
 		virtual tString GetWindowType() const { return _T("CStatusbar"); }
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
-		virtual BOOL IsStatusbar() const { return TRUE; }
 
 	// Attributes
 		int GetParts();
