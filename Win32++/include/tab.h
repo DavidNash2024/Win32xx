@@ -1496,24 +1496,47 @@ namespace Win32xx
 			tString tsKeyName = _T("Software\\") + tsRegistryKeyName;
 			HKEY hKey = NULL;
 			HKEY hKeyMDIChild = NULL;
-			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-				throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-			RegDeleteKey(hKey, _T("MDI Children"));
-			if (RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
-				throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-			for (int i = 0; i < GetMDIChildCount(); ++i)
+			try
 			{
-				TCHAR szNumber[16];
-				tString tsSubKey = _T("MDI Child ");
-				tsSubKey += _itot(i, szNumber, 10);
-				TabPageInfo pdi = GetTab().GetTabPageInfo(i);
-				RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo));
-			}
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-			RegCloseKey(hKeyMDIChild);
-			RegCloseKey(hKey);
+				RegDeleteKey(hKey, _T("MDI Children"));
+				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+				for (int i = 0; i < GetMDIChildCount(); ++i)
+				{
+					TCHAR szNumber[16];
+					tString tsSubKey = _T("MDI Child ");
+					tsSubKey += _itot(i, szNumber, 10);
+					TabPageInfo pdi = GetTab().GetTabPageInfo(i);
+					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo)))
+						throw (CWinException(_T("RegSetValueEx Failed")));
+				}
+
+				RegCloseKey(hKeyMDIChild);
+				RegCloseKey(hKey);
+			}
+			catch (const CWinException& e)
+			{
+				// Roll back the registry changes by deleting the subkeys
+				if (hKey)
+				{
+					if (hKeyMDIChild)
+					{
+						RegDeleteKeyEx(hKeyMDIChild, _T("MDI Children"), NULL, 0);
+						RegCloseKey(hKeyMDIChild);
+					}
+
+					RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+					RegCloseKey(hKey);
+				}
+				
+				e.what();
+				return FALSE;
+			}
 		}
 
 		return TRUE;

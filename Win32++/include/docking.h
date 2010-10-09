@@ -3122,25 +3122,49 @@ namespace Win32xx
 			tString tsKeyName = _T("Software\\") + tsRegistryKeyName;
 			HKEY hKey = NULL;
 			HKEY hKeyDock = NULL;
-			if (RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-				throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-			RegDeleteKey(hKey, _T("Dock Windows"));
-			if (RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
-				throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-			// Add the Dock windows information to the registry
-			for (UINT u = 0; u < vDockList.size(); ++u)
+			try
 			{
-				DockInfo di = vDockList[u];
-				TCHAR szNumber[16];
-				tString tsSubKey = _T("DockChild");
-				tsSubKey += _itot((int)u, szNumber, 10);
-				RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo));
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+				RegDeleteKey(hKey, _T("Dock Windows"));
+				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+				// Add the Dock windows information to the registry
+				for (UINT u = 0; u < vDockList.size(); ++u)
+				{
+					DockInfo di = vDockList[u];
+					TCHAR szNumber[16];
+					tString tsSubKey = _T("DockChild");
+					tsSubKey += _itot((int)u, szNumber, 10);
+					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
+						throw (CWinException(_T("RegSetValueEx failed")));
+				}
+
+				RegCloseKey(hKeyDock);
+				RegCloseKey(hKey);
 			}
 
-			RegCloseKey(hKeyDock);
-			RegCloseKey(hKey);
+			catch (const CWinException& e)
+			{
+				// Roll back the registry changes by deleting the subkeys
+				if (hKey)
+				{
+					if (hKeyDock)
+					{
+						RegDeleteKeyEx(hKeyDock, _T("Dock Windows"), NULL, 0);
+						RegCloseKey(hKeyDock);
+					}
+					
+					RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+					RegCloseKey(hKey);
+				}
+
+				e.what();					
+				return FALSE;
+			}
 		}
 
 		return TRUE;

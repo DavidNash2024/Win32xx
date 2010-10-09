@@ -176,8 +176,7 @@ namespace Win32xx
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
 		CPoint m_OldMousePos;	// old Mouse position
 		MenuTheme m_ThemeMenu;	// Theme structure
-		CFrame* m_pFrame;       // Pointer to the frame.
-
+		CFrame* m_pFrame;       // Pointer to the frame
 
 	};  // class CMenubar
 
@@ -1907,7 +1906,7 @@ namespace Win32xx
 
 	inline BOOL CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
-		// Load the MRU from the registry
+		// Load the MRU list from the registry
 
 		assert(!m_tsKeyName.empty()); // KeyName must be set before calling LoadRegistryMRUSettings
 		HKEY hKey = NULL;
@@ -1918,33 +1917,33 @@ namespace Win32xx
 			std::vector<tString> vMRUEntries;
 			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
 			
-			if (ERROR_SUCCESS != RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
-				throw CWinException(_T("RegOpenKeyEx failed\n"));
-						
-			for (UINT i = 0; i < m_nMaxMRU; ++i)
-			{
-				DWORD dwType = REG_SZ;
-				DWORD dwBufferSize = 0;
-				TCHAR szSubKey[10] = _T("");
-				wsprintf(szSubKey, _T("File %d\0"), i+1);
+			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+			{						
+				for (UINT i = 0; i < m_nMaxMRU; ++i)
+				{
+					DWORD dwType = REG_SZ;
+					DWORD dwBufferSize = 0;
+					TCHAR szSubKey[10] = _T("");
+					wsprintf(szSubKey, _T("File %d\0"), i+1);
 
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize))
-					throw CWinException(_T("RegQueryValueEx failed\n"));
-				
-				std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
-				TCHAR* pTCharArray = &PathName.front();
+					if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize))
+						throw CWinException(_T("RegQueryValueEx failed\n"));
+					
+					std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
+					TCHAR* pTCharArray = &PathName.front();
 
-				// load the entry from the registry
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
-					throw CWinException(_T("RegQueryValueEx failed\n"));
+					// load the entry from the registry
+					if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
+						throw CWinException(_T("RegQueryValueEx failed\n"));
+					
+					if ( lstrlen( pTCharArray ) )
+						vMRUEntries.push_back( pTCharArray );
+				}
 				
-				if ( lstrlen( pTCharArray ) )
-					vMRUEntries.push_back( pTCharArray );
+				// successfully loaded all MRU values, so store them 
+				m_vMRUEntries = vMRUEntries;
+				RegCloseKey(hKey);
 			}
-			
-			// successfully loaded all MRU values, so store them 
-			m_vMRUEntries = vMRUEntries;
-			RegCloseKey(hKey);
 		}
 
 		catch(const CWinException& e)
@@ -1971,33 +1970,33 @@ namespace Win32xx
 
 		try
 		{
-			if (ERROR_SUCCESS != RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey)) 
-				throw CWinException(_T("RegOpenKeyEx Failed"));
+			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey)) 
+			{
+				DWORD dwType = REG_BINARY;
+				DWORD BufferSize = sizeof(DWORD);
+				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwStatusbar, dwToolbar;
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize)) 
+					throw CWinException(_T("RegQueryValueEx Failed"));
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize)) 
+					throw CWinException(_T("RegQueryValueEx Failed"));
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize)) 
+					throw CWinException(_T("RegQueryValueEx Failed"));
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize)) 
+					throw CWinException(_T("RegQueryValueEx Failed"));
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Statusbar"), NULL, &dwType, (LPBYTE)&dwStatusbar, &BufferSize)) 
+					throw CWinException(_T("RegQueryValueEx Failed"));
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Toolbar"), NULL, &dwType, (LPBYTE)&dwToolbar, &BufferSize)) 
+					throw CWinException(_T("RegQueryValueEx Failed"));
 
-			DWORD dwType = REG_BINARY;
-			DWORD BufferSize = sizeof(DWORD);
-			DWORD dwTop, dwLeft, dwWidth, dwHeight, dwStatusbar, dwToolbar;
-			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize)) 
-				throw CWinException(_T("RegQueryValueEx Failed"));
-			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize)) 
-				throw CWinException(_T("RegQueryValueEx Failed"));
-			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize)) 
-				throw CWinException(_T("RegQueryValueEx Failed"));
-			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize)) 
-				throw CWinException(_T("RegQueryValueEx Failed"));
-			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Statusbar"), NULL, &dwType, (LPBYTE)&dwStatusbar, &BufferSize)) 
-				throw CWinException(_T("RegQueryValueEx Failed"));
-			if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Toolbar"), NULL, &dwType, (LPBYTE)&dwToolbar, &BufferSize)) 
-				throw CWinException(_T("RegQueryValueEx Failed"));
+				m_rcPosition.top = dwTop;
+				m_rcPosition.left = dwLeft;
+				m_rcPosition.bottom = m_rcPosition.top + dwHeight;
+				m_rcPosition.right = m_rcPosition.left + dwWidth;
+				m_bShowStatusbar = dwStatusbar & 1;
+				m_bShowToolbar = dwToolbar & 1;
 
-			m_rcPosition.top = dwTop;
-			m_rcPosition.left = dwLeft;
-			m_rcPosition.bottom = m_rcPosition.top + dwHeight;
-			m_rcPosition.right = m_rcPosition.left + dwWidth;
-			m_bShowStatusbar = dwStatusbar & 1;
-			m_bShowToolbar = dwToolbar & 1;
-
-			RegCloseKey(hKey);	
+				RegCloseKey(hKey);
+			}
 		}
 		catch (const CWinException& e)
 		{
@@ -2828,7 +2827,7 @@ namespace Win32xx
 		// Sets the frame's menu from a HMENU.
 		assert (hMenu);
 
-		if (m_hMenu)
+		if ((m_hMenu) && (m_hMenu != hMenu))
 			::DestroyMenu(m_hMenu);
 
 		m_hMenu = hMenu;
