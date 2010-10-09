@@ -2760,7 +2760,7 @@ namespace Win32xx
 				if (hKey)
 				{
 					// Roll back the registry changes by deleting this subkey
-					RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+					RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
 					RegCloseKey(hKey);
 				}
 				
@@ -2801,7 +2801,7 @@ namespace Win32xx
 					if (hKey)
 					{
 						// Roll back the registry changes by deleting this subkey
-						RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+						RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
 						RegCloseKey(hKey);
 					}
 					

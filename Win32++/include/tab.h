@@ -1526,11 +1526,11 @@ namespace Win32xx
 				{
 					if (hKeyMDIChild)
 					{
-						RegDeleteKeyEx(hKeyMDIChild, _T("MDI Children"), NULL, 0);
+						RegDeleteKey(hKeyMDIChild, _T("MDI Children"));
 						RegCloseKey(hKeyMDIChild);
 					}
 
-					RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+					RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
 					RegCloseKey(hKey);
 				}
 				

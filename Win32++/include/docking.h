@@ -3154,11 +3154,11 @@ namespace Win32xx
 				{
 					if (hKeyDock)
 					{
-						RegDeleteKeyEx(hKeyDock, _T("Dock Windows"), NULL, 0);
+						RegDeleteKey(hKeyDock, _T("Dock Windows"));
 						RegCloseKey(hKeyDock);
 					}
 					
-					RegDeleteKeyEx(HKEY_CURRENT_USER ,tsKeyName.c_str(), NULL, 0);
+					RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
 					RegCloseKey(hKey);
 				}
 
