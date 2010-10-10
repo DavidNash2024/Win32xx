@@ -525,7 +525,6 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(res);
 
 		throw CWinException(_T("getaddrinfo is not supported"));
-		return -1;
 
 #endif
 

@@ -2063,12 +2063,12 @@ namespace Win32xx
 		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or < Vista
 			GetMenubar().SetWindowTheme(L" ", L" ");
 		
-		// Reposition the child windows
-		RecalcLayout();
-
 		// Start timer for Status updates
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
+
+		// Reposition the child windows
+		RecalcLayout();
 	}
 
 	inline void CFrame::OnDestroy()
