@@ -1187,6 +1187,8 @@ namespace Win32xx
 			{
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 				pWinPos->flags |= SWP_NOREDRAW;
+
+				Paint();
 			}
 
 			break;
