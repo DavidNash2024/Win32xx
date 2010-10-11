@@ -468,7 +468,6 @@ namespace Win32xx
 	private:
 		CDocker(const CDocker&);				// Disable copy construction
 		CDocker& operator = (const CDocker&);	// Disable assignment operator
-		void BringDockersToTop();
 		void CheckAllTargets(LPDRAGPOS pDragPos);
 		void CloseAllTargets();
 		void DockOuter(CDocker* pDocker, DWORD dwDockStyle);
@@ -1846,41 +1845,6 @@ namespace Win32xx
 		return pDocker;
 	}
 
-	inline void CDocker::BringDockersToTop()
-	// Adjusts the Z order of dockers
-	{
-/*		HWND hAncestor = GetDockAncestor()->GetAncestor();
-		std::vector<HWND> vWindows;
-		
-		// Fill vWindows vector with dockers
-		vWindows.push_back(GetHwnd());
-		HWND hWnd = GetWindow(GW_HWNDFIRST);
-		while(hWnd)
-		{
-			if (IsRelated(hWnd) || hWnd == hAncestor)
-			{
-				if (hWnd != GetHwnd())
-					vWindows.push_back(hWnd);				
-			}
-
-			hWnd = ::GetWindow(hWnd, GW_HWNDNEXT);
-		}
-		
-		std::vector<HWND>::iterator iter;
-		HWND hNextTop = NULL;
-		
-		// Position our dockers above (Z order) other windows
-		for (iter = vWindows.begin(); iter< vWindows.end(); ++iter)
-		{
-			if (iter == vWindows.begin())
-				::SetWindowPos((*iter), HWND_TOP, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE);
-			else
-				::SetWindowPos((*iter), hNextTop, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
-
-			hNextTop = (*iter); 
-		} */
-	}
-
 	inline void CDocker::CheckAllTargets(LPDRAGPOS pDragPos)
 	// Calls CheckTarget for each possible target zone
 	{
@@ -2917,7 +2881,6 @@ namespace Win32xx
 		case SC_MOVE:
 			// An undocked docker is being moved
 			{
-				BringDockersToTop();
 				BOOL bResult = FALSE;
 				m_bIsDragging = TRUE;
 				SetCursor(LoadCursor(NULL, IDC_ARROW));
