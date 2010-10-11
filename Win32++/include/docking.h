@@ -61,7 +61,7 @@
 #define DS_NO_DOCKCHILD_BOTTOM	0x0080  // Prevent a child docking at the bottom
 #define DS_NO_RESIZE			0x0100  // Prevent resizing
 #define DS_NO_CAPTION			0x0200  // Prevent display of caption when docked
-#define DS_NO_UNDOCK			0x0400  // Prevent Undocking
+#define DS_NO_UNDOCK			0x0400  // Prevent undocking and dock closing
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
 #define DS_FLATLOOK				0x2000	// Reserved for future use
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
@@ -2949,7 +2949,9 @@ namespace Win32xx
 	inline void CDocker::PreCreate(CREATESTRUCT &cs)
 	{
 		// Specify the WS_POPUP style to have this window owned
-		cs.style = WS_POPUP;
+		if (this != GetDockAncestor())
+			cs.style = WS_POPUP;
+		
 		cs.dwExStyle = WS_EX_TOOLWINDOW;
 	}
 
