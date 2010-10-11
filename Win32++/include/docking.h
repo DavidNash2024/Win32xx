@@ -1849,7 +1849,7 @@ namespace Win32xx
 	inline void CDocker::BringDockersToTop()
 	// Adjusts the Z order of dockers
 	{
-		HWND hAncestor = GetDockAncestor()->GetAncestor();
+/*		HWND hAncestor = GetDockAncestor()->GetAncestor();
 		std::vector<HWND> vWindows;
 		
 		// Fill vWindows vector with dockers
@@ -1878,7 +1878,7 @@ namespace Win32xx
 				::SetWindowPos((*iter), hNextTop, 0,0,0,0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
 
 			hNextTop = (*iter); 
-		}
+		} */
 	}
 
 	inline void CDocker::CheckAllTargets(LPDRAGPOS pDragPos)
@@ -2985,7 +2985,8 @@ namespace Win32xx
 
 	inline void CDocker::PreCreate(CREATESTRUCT &cs)
 	{
-		cs.style = WS_CHILD;
+		// Specify the WS_POPUP style to have this window owned
+		cs.style = WS_POPUP;
 		cs.dwExStyle = WS_EX_TOOLWINDOW;
 	}
 
