@@ -675,7 +675,7 @@ namespace Win32xx
 				}
 
 				// Draw outline rectangle
-				if (nState & (CDIS_HOT | CDIS_SELECTED))
+				if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 				{
 					DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
 					DrawDC.MoveTo(rcRect.left, rcRect.top);
@@ -687,7 +687,7 @@ namespace Win32xx
 
 				// Draw filled gradient background
 				rcRect.InflateRect(-1, -1);
-				if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
+				if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 				{
 					DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcRect, FALSE);
 				}
@@ -702,7 +702,7 @@ namespace Win32xx
 				{
 					himlToolbar = (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
 				}
-				else if (nState & (CDIS_HOT | CDIS_SELECTED))
+				else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 				{
 					himlToolbar = (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
 					if (0 == himlToolbar)
@@ -721,11 +721,11 @@ namespace Win32xx
 				ImageList_GetIconSize(himlToolbar, &cxImage, &cyImage);
 
 				int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
-				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & CDIS_SELECTED)? 1:0);
+				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
 				if (dwTBStyle & TBSTYLE_LIST)
 				{
 					xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
-					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & CDIS_SELECTED)? 1:0);
+					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
 				}
 
 				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
