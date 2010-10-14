@@ -1663,6 +1663,7 @@ namespace Win32xx
 		CRect rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
 		MenuTheme tm = GetMenuTheme();
+		CRect rcBk;
 
 		// Draw the checkmark's background rectangle first
 		if (tm.UseThemes)
@@ -1671,7 +1672,7 @@ namespace Win32xx
 			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 			int offset = -1 + (rc.bottom - rc.top - Icony)/2;
 			int height = rc.bottom - rc.top;
-			CRect rcBk;
+
 			rcBk.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
 			rcBk.InflateRect( -offset, -offset );
 			DrawDC.CreateSolidBrush(tm.clrHot2);
@@ -1685,17 +1686,19 @@ namespace Win32xx
 		int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 		int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 		MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-		CRect rCheck( 0, 0, cxCheck, cyCheck);
+		CRect rcCheck( 0, 0, cxCheck, cyCheck);
 
 		// Copy the check mark bitmap to hdcMem
 		if (MFT_RADIOCHECK == fType)
-			MemDC.DrawFrameControl(rCheck, DFC_MENU, DFCS_MENUBULLET);
+			MemDC.DrawFrameControl(rcCheck, DFC_MENU, DFCS_MENUBULLET);
 		else
-			MemDC.DrawFrameControl(rCheck, DFC_MENU, DFCS_MENUCHECK);
+			MemDC.DrawFrameControl(rcCheck, DFC_MENU, DFCS_MENUCHECK);
 
-		int offset = (rc.bottom - rc.top - ::GetSystemMetrics(SM_CXMENUCHECK))/2;
+		int xoffset = (rcBk.Width() - rcCheck.Width()-1)/2;
+		int yoffset = (rcBk.Height() - rcCheck.Height()-1)/2;
+
 		if (tm.UseThemes)
-			rc.left += 2;
+			xoffset += 2;
 
 		// Draw a white or black check mark as required
 		// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
@@ -1708,14 +1711,14 @@ namespace Win32xx
 			// Draw a white checkmark
 			MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
 			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			DrawDC.BitBlt(rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
+			DrawDC.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
 		}
 		else
 		{
 			// Draw a black checkmark
 			int BullitOffset = ((MFT_RADIOCHECK == fType) && tm.UseThemes)? 1 : 0;
 			MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			DrawDC.BitBlt(rc.left + offset, rc.top + offset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
+			DrawDC.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
 		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();

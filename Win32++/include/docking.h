@@ -220,7 +220,7 @@ namespace Win32xx
 			virtual void SetColor(COLORREF color);
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-			CDocker* GetDock()			{return m_pDock;}
+			CDocker* GetDock()				{return m_pDock;}
 			int GetWidth()					{return m_DockBarWidth;}
 			void SetDock(CDocker* pDock)	{m_pDock = pDock;}
 			void SetWidth(int nWidth)		{m_DockBarWidth = nWidth;}
@@ -246,10 +246,10 @@ namespace Win32xx
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam);
 			virtual void DrawCloseButton(CDC& DrawDC, BOOL bFocus);
+			virtual CRect GetCloseRect();
 			virtual void SendNotify(UINT nMessageID);
 
-			tString GetCaption() const		{ return m_tsCaption; }
-			CRect GetCloseRect();
+			tString GetCaption() const		{ return m_tsCaption; }		
 			CWnd* GetView() const			{ return m_pView; }
 			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
 			void SetCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
