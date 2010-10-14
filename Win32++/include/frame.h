@@ -706,8 +706,8 @@ namespace Win32xx
 
 						int cx = ::GetSystemMetrics (SM_CXSMICON);
 						int cy = ::GetSystemMetrics (SM_CYSMICON);
-						int y = 1 + (rcRect.bottom - rcRect.top - cy)/2;
-						int x = 0;
+						int y = 1 + (GetWindowRect().Height() - cy)/2;
+						int x = (rcRect.Width() - cx)/2;
 						DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
 						// Detach the DC so it doesn't get destroyed
