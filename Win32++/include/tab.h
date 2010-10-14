@@ -505,9 +505,14 @@ namespace Win32xx
 					tcItem.cchTextMax = 30;
 					tcItem.pszText = szText;
 					TabCtrl_GetItem(m_hWnd, i, &tcItem);
+					int xImage;
+					int yImage;
+					int yOffset = 0;
+					if (ImageList_GetIconSize(m_himlTab, &xImage, &yImage))
+						yOffset = (rcItem.Height() - yImage)/2; 
 
 					// Draw the icon
-					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+2, ILD_NORMAL);
+					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
 
 					// Draw the text
 					NONCLIENTMETRICS info = {0};
