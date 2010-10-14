@@ -1913,6 +1913,7 @@ namespace Win32xx
 
 		assert(!m_tsKeyName.empty()); // KeyName must be set before calling LoadRegistryMRUSettings
 		HKEY hKey = NULL;
+		BOOL bRet = FALSE;
 
 		try
 		{
@@ -1946,6 +1947,7 @@ namespace Win32xx
 				// successfully loaded all MRU values, so store them 
 				m_vMRUEntries = vMRUEntries;
 				RegCloseKey(hKey);
+				bRet = TRUE;
 			}
 		}
 
@@ -1956,11 +1958,9 @@ namespace Win32xx
 			
 			if (hKey)
 				RegCloseKey(hKey);
-
-			return FALSE;
 		}
 
-		return TRUE;
+		return bRet;
 	}
 
 	inline BOOL CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
@@ -1970,6 +1970,7 @@ namespace Win32xx
 
 		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
 		HKEY hKey = 0;
+		BOOL bRet = FALSE;
 
 		try
 		{
@@ -1999,6 +2000,7 @@ namespace Win32xx
 				m_bShowToolbar = dwToolbar & 1;
 
 				RegCloseKey(hKey);
+				bRet = TRUE;
 			}
 		}
 		catch (const CWinException& e)
@@ -2008,11 +2010,9 @@ namespace Win32xx
 			
 			if (hKey) 
 				RegCloseKey(hKey);
-			
-			return FALSE;
 		}
 
-		return TRUE;
+		return bRet;
 	}
 
 	inline void CFrame::OnCreate()
