@@ -381,22 +381,22 @@ namespace Win32xx
 			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
 			DrawDC.MoveTo(rcClose.left + 3, rcClose.top +3);
-			DrawDC.LineTo(rcClose.right - 3, rcClose.bottom -3);
+			DrawDC.LineTo(rcClose.right - 2, rcClose.bottom -2);
 
 			DrawDC.MoveTo(rcClose.left + 4, rcClose.top +3);
-			DrawDC.LineTo(rcClose.right - 3, rcClose.bottom -4);
+			DrawDC.LineTo(rcClose.right - 2, rcClose.bottom -3);
 
 			DrawDC.MoveTo(rcClose.left + 3, rcClose.top +4);
-			DrawDC.LineTo(rcClose.right - 4, rcClose.bottom -3);
+			DrawDC.LineTo(rcClose.right - 3, rcClose.bottom -2);
+
+			DrawDC.MoveTo(rcClose.right -3, rcClose.top +3);
+			DrawDC.LineTo(rcClose.left + 2, rcClose.bottom -2);
+
+			DrawDC.MoveTo(rcClose.right -3, rcClose.top +4);
+			DrawDC.LineTo(rcClose.left + 3, rcClose.bottom -2);
 
 			DrawDC.MoveTo(rcClose.right -4, rcClose.top +3);
 			DrawDC.LineTo(rcClose.left + 2, rcClose.bottom -3);
-
-			DrawDC.MoveTo(rcClose.right -4, rcClose.top +4);
-			DrawDC.LineTo(rcClose.left + 3, rcClose.bottom -3);
-
-			DrawDC.MoveTo(rcClose.right -5, rcClose.top +3);
-			DrawDC.LineTo(rcClose.left + 2, rcClose.bottom -4);
 		}
 	}
 
@@ -597,8 +597,8 @@ namespace Win32xx
 		{
 			rcClose= GetClientRect();
 			int Gap = 2;
-			int cx = GetSystemMetrics(SM_CXSMICON);
-			int cy = GetSystemMetrics(SM_CYSMICON);
+			int cx = GetSystemMetrics(SM_CXSMICON) -1;
+			int cy = GetSystemMetrics(SM_CYSMICON) -1;
 			rcClose.right -= Gap;
 			rcClose.left = rcClose.right - cx;
 
