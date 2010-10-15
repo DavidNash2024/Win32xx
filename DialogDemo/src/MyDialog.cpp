@@ -79,12 +79,12 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 
 	// Put some text in the edit boxes
-	::SetDlgItemText(GetHwnd(), IDC_EDIT1, _T("Edit Control"));
-	::SetDlgItemText(GetHwnd(), IDC_RICHEDIT1, _T("Rich Edit Window"));
+	SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
+	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
 
 	// Put some text in the list box
 	for (int i = 0 ; i < 8 ; i++)
-		::SendDlgItemMessage(m_hWnd, IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
+		SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
 
 	// Turn our button into a MyButton object
 	m_Button.AttachDlgItem(IDC_BUTTON2, this);
@@ -92,7 +92,7 @@ BOOL CMyDialog::OnInitDialog()
 	// Turn our static control into a hyperlink
 	m_Hyperlink.AttachDlgItem(IDC_STATIC4, this);
 
-	return true;
+	return TRUE;
 }
 
 void CMyDialog::OnOK()
@@ -145,6 +145,6 @@ void CMyDialog::OnRadio3()
 
 void CMyDialog::SetStatic(LPCTSTR szString)
 {
-	::SetDlgItemText(GetHwnd(), IDC_STATIC3, szString);
+	SetDlgItemText(IDC_STATIC3, szString);
 }
 

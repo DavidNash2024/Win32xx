@@ -5,10 +5,12 @@
 #include "Slider.h"
 #include "DialogApp.h"
 
-void CMySlider::OnInitDialog()
+void CMySlider::OnInitialUpdate()
 {
+	// Called automatically via AttachDlgItem
+
 	// Set a tic mark every ten units for the slider control
-	::SendMessage(m_hWnd, TBM_SETTICFREQ,  (WPARAM)10, 0);
+	SetTicFreq(10);
 }
 
 LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -21,7 +23,7 @@ LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_HSCROLL:
 		{
 			// Get the slider bar position
-			int nPos = SendMessage(TBM_GETPOS, 0, 0);
+			int nPos = GetPos();
 
 			// Get a reference to the MyDialog object
 			CMyDialog& MyDialog = GetDialogApp().GetDialog();
@@ -39,6 +41,7 @@ LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CMySlider::SetSlider(int nPos)
 {
 	// Set the slider position
-	::SendMessage(m_hWnd, TBM_SETPOS, TRUE, nPos);
+	//::SendMessage(m_hWnd, TBM_SETPOS, TRUE, nPos);
+	SetPos(nPos, TRUE);
 }
 

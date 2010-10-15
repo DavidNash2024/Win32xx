@@ -11,8 +11,10 @@ CMyScrollbar::CMyScrollbar()
 	ZeroMemory(&m_si, sizeof(SCROLLINFO));
 }
 
-void CMyScrollbar::OnInitDialog()
+void CMyScrollbar::OnInitialUpdate()
 {
+	// Called automatically via AttachDlgItem
+
 	// Set the Scroll bar position
 	SetScroll(0);
 }
@@ -28,7 +30,7 @@ LRESULT CMyScrollbar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// Get a reference to the MyDialog object
 			CMyDialog& MyDialog = GetDialogApp().GetDialog();
 
-			::GetScrollInfo(m_hWnd, SB_CTL, &m_si);
+			GetScrollInfo(&m_si);
 
 			switch (LOWORD (wParam))
 			{
@@ -82,6 +84,6 @@ void CMyScrollbar::SetScroll(int nPos)
 	m_si.fMask = SIF_ALL;
 
 	// Set the scroll bar position
-	::SetScrollInfo(m_hWnd, SB_CTL, &m_si, TRUE);
+	SetScrollInfo(&m_si, TRUE);
 }
 

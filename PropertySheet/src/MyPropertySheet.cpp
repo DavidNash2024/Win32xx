@@ -120,9 +120,9 @@ BOOL CComboPage::OnInitDialog()
 	// Put some text in the Combo Boxes
 	for (int i = 0 ; i < 6 ; i++)
 	{
-		::SendMessage( GetDlgItem(IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM) _T("C Box 1"));
-		::SendMessage( GetDlgItem(IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM) _T("C Box 2"));
-		::SendMessage( GetDlgItem(IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM) _T("C Box 3"));
+		SendDlgItemMessage( IDC_COMBO1, CB_ADDSTRING, 0, (LPARAM) _T("C Box 1") );
+		SendDlgItemMessage( IDC_COMBO2, CB_ADDSTRING, 0, (LPARAM) _T("C Box 2") );
+		SendDlgItemMessage( IDC_COMBO3, CB_ADDSTRING, 0, (LPARAM) _T("C Box 3") );
 	}
 
 	return TRUE;
@@ -145,12 +145,10 @@ inline void CMyPropertySheet::OnCreate()
 	if ((IsModeless()) && !(IsWizard()))
 	{
 		// Reposition windows
-		RECT rc;
-		::GetWindowRect(m_hWnd, &rc);
+		RECT rc = GetWindowRect();
 		RECT rcButton;
-		HWND hwndOKButton = ::GetDlgItem(m_hWnd, IDOK);
-		::GetWindowRect(hwndOKButton, &rcButton);
-		::SetWindowPos(m_hWnd, NULL, 0, 0, rc.right - rc.left, rcButton.top - rc.top, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+		::GetWindowRect(GetDlgItem(IDOK), &rcButton);
+		SetWindowPos(NULL, 0, 0, rc.right - rc.left, rcButton.top - rc.top, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
 		// Remove buttons
 		DestroyButton(IDOK);
@@ -162,9 +160,9 @@ inline void CMyPropertySheet::OnCreate()
 	// Remove system menu for wizards
 	if (IsWizard())
 	{
-		DWORD dwStyle = (DWORD)::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		dwStyle &= ~WS_SYSMENU;
-		::SetWindowLongPtr(m_hWnd, GWL_STYLE, dwStyle);
+		SetWindowLongPtr(GWL_STYLE, dwStyle);
 	}
 }
 

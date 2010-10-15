@@ -22,16 +22,10 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 
-	// Attach the progress bar
+	// Attach the dialog controls
 	m_Progressbar.AttachDlgItem(IDC_PROGRESS1, this);
-
-	// Attach the scroll bar
 	m_Scrollbar.AttachDlgItem(IDC_SCROLLBAR1, this);
-	m_Scrollbar.OnInitDialog();
-
-	// Attach the slider
 	m_Slider.AttachDlgItem(IDC_SLIDER1, this);
-	m_Slider.OnInitDialog();
 
 	return true;
 }
@@ -54,7 +48,7 @@ void CMyDialog::SetScroll(int nPos)
 
 void CMyDialog::SetSlider(int nPos)
 {
-	m_Slider.SetSlider(nPos);
+	m_Slider.SetPos(nPos, TRUE);
 }
 
 void CMyDialog::SetStatic(BOOL IsSlider, int nPos)
@@ -66,6 +60,6 @@ void CMyDialog::SetStatic(BOOL IsSlider, int nPos)
 		wsprintf(szStatic, _T("Scroll Position %d"), nPos);
 
 	// Set the text in the static control
-	::SetDlgItemText(m_hWnd, IDC_STATIC2, szStatic);
+	SetDlgItemText(IDC_STATIC2, szStatic);
 }
 

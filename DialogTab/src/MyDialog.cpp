@@ -107,9 +107,9 @@ BOOL CComboBoxDialog::OnInitDialog()
 	// Put some text in the Combo Boxes
 	for (int i = 0 ; i < 6 ; i++)
 	{
-		::SendMessage( GetDlgItem(IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM) _T("C Box 1"));
-		::SendMessage( GetDlgItem(IDC_COMBO2), CB_ADDSTRING, 0, (LPARAM) _T("C Box 2"));
-		::SendMessage( GetDlgItem(IDC_COMBO3), CB_ADDSTRING, 0, (LPARAM) _T("C Box 3"));
+		SendDlgItemMessage(IDC_COMBO1, CB_ADDSTRING, 0, (LPARAM) _T("C Box 1"));
+		SendDlgItemMessage(IDC_COMBO2, CB_ADDSTRING, 0, (LPARAM) _T("C Box 2"));
+		SendDlgItemMessage(IDC_COMBO3, CB_ADDSTRING, 0, (LPARAM) _T("C Box 3"));
 	}
 
 	return TRUE;

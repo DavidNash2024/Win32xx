@@ -11,7 +11,7 @@ public:
 	CMySlider() {}
 	virtual ~CMySlider() {}
 
-	virtual void OnInitDialog();
+	virtual void OnInitialUpdate();
 	virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void SetSlider(int nPos);
 };

@@ -12,7 +12,7 @@ public:
 	virtual ~CMyScrollbar() {}
 	
 	virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void OnInitDialog();
+	virtual void OnInitialUpdate();
 	virtual void SetScroll(int nPos);
 
 private:
