@@ -61,7 +61,8 @@
 #define DS_NO_DOCKCHILD_BOTTOM	0x0080  // Prevent a child docking at the bottom
 #define DS_NO_RESIZE			0x0100  // Prevent resizing
 #define DS_NO_CAPTION			0x0200  // Prevent display of caption when docked
-#define DS_NO_UNDOCK			0x0400  // Prevent undocking and dock closing
+#define DS_NO_CLOSE				0x0400	// Prevent closing of a docker while docked
+#define DS_NO_UNDOCK			0x0800  // Prevent undocking and dock closing
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
 #define DS_FLATLOOK				0x2000	// Reserved for future use
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
@@ -761,12 +762,12 @@ namespace Win32xx
 			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
 
 			// Display the caption
-			int cx = GetSystemMetrics(SM_CXSMICON);
+			int cx = (m_pDock->GetDockStyle() & DS_NO_CLOSE)? 0 : GetSystemMetrics(SM_CXSMICON);
 			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
 			dcMem.DrawText(m_tsCaption.c_str(), -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
-			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				DrawCloseButton(dcMem, bFocus);
 
 			// Draw the 3D border
@@ -922,7 +923,7 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if ((HTCLOSE == wParam) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+			if ((HTCLOSE == wParam) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 			{
 				m_IsClosePressed = TRUE;
 				SetCapture();
@@ -938,7 +939,7 @@ namespace Win32xx
 				m_pView->SetFocus();
 
 				// Update the close button
-				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CDC dc = GetWindowDC();
 					DrawCloseButton(dc, m_bOldFocus);
@@ -955,7 +956,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_UNDOCK)))
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
 		{
 			m_bCaptionPressed = FALSE;
 			if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
@@ -1013,7 +1014,7 @@ namespace Win32xx
 
 		m_IsTracking = FALSE;
 		CDC dc = GetWindowDC();
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_UNDOCK)) && m_pDock->IsDocked())
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
 			DrawCloseButton(dc, m_bOldFocus);
 
 		m_IsTracking = FALSE;
@@ -1047,7 +1048,7 @@ namespace Win32xx
 				}
 
 				// Update the close button
-				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CDC dc = GetWindowDC();
 					DrawCloseButton(dc, m_bOldFocus);
@@ -1121,7 +1122,7 @@ namespace Win32xx
 		case WM_LBUTTONUP:
 			{
 				ReleaseCapture();
-				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_UNDOCK))
+				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CDC dc = GetWindowDC();
 					DrawCloseButton(dc, m_bOldFocus);

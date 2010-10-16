@@ -125,6 +125,8 @@ Renamed CWnd::WideToChar  to ::WideToChar
 Renamed CWnd::WideToTChar to ::WideToTChar
 Removed CWinException::MessageBox
 
+Added DS_NO_CLOSE style to suppress the closing of docked dockers
+
 Added GDIPlus sample
 Updated Network samples
 Update  FormDemo sample
