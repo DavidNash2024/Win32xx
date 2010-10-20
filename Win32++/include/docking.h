@@ -3918,7 +3918,9 @@ namespace Win32xx
 	// Declaration of the nested CViewPage class
 	inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
-		return (BOOL)::SendMessage(GetParent(), WM_COMMAND, wParam, lParam);
+		CDockContainer* pContainer = (CDockContainer*)FromHandle(GetParent());
+		assert(pContainer->GetWindowType() == _T("CDockContainer"));
+		return pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
 	}
 
 	inline void CDockContainer::CViewPage::OnCreate()
