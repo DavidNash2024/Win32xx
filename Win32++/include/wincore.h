@@ -90,7 +90,7 @@
 
 #ifdef __BORLANDC__
   #pragma option -w-8026            // Functioms with exception specifiations are not expanded inline
-  #pragma option -w-8027		   // function not expanded inline
+  #pragma option -w-8027		    // function not expanded inline
   #define STRICT 1
 #endif
 
@@ -184,7 +184,7 @@ namespace Win32xx {}
 #endif
 
 // Define our own MIN and MAX macros
-// this avoids inconcistancies with Dev-C++ and other compilers, and
+// this avoids inconsistencies with Dev-C++ and other compilers, and
 // avoids conflicts between typical min/max macros and std::min/std::max
 #define MAX(a,b)            (((a) > (b)) ? (a) : (b))
 #define MIN(a,b)            (((a) < (b)) ? (a) : (b))
@@ -209,8 +209,6 @@ namespace Win32xx
 	// Global functions	(within the Win32xx namespace)
 
 	CWinApp* GetApp();
-	void DebugWarnMsg(LPCTSTR WarnMsg);
-	void DebugErrMsg(LPCTSTR ErrorMsg);
 	void TRACE(LPCTSTR str);
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
@@ -612,7 +610,7 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		CWnd* GetCWndFromMap(HWND hWnd);
-		void DefaultClass();
+		void SetCallback();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
@@ -640,32 +638,6 @@ namespace Win32xx
 	inline CWinApp* GetApp()
 	{
 		return CWinApp::SetnGetThis();
-	}
-
-	// Displays an error message in a message box. Debug mode only.
-	inline void DebugWarnMsg(LPCTSTR WarnMsg)
-	{
-  #ifdef _DEBUG
-		TRACE(_T("*** Warning:  "));
-		TRACE(WarnMsg);
-		TRACE(_T("\n"));
-		::MessageBox (0, WarnMsg, _T("Warning"), MB_ICONINFORMATION | MB_OK);
-  #else
-		UNREFERENCED_PARAMETER(WarnMsg); // no-op
-  #endif  //_DEBUG
-	}
-
-	// Displays a warning message in a messagebox. Debug mode only
-	inline void DebugErrMsg(LPCTSTR ErrorMsg)
-	{
-  #ifdef _DEBUG
-		TRACE(_T("*** Error:  "));
-		TRACE(ErrorMsg);
-		TRACE(_T("\n"));
-		::MessageBox (0, ErrorMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-  #else
-		UNREFERENCED_PARAMETER(ErrorMsg); // no-op
-  #endif  //_DEBUG
 	}
 
 	// TRACE sends a string to the debug/output pane, or an external debugger
@@ -1016,11 +988,17 @@ namespace Win32xx
 
 			SetnGetThis(this);
 
-			// Get store the instance handle
-			m_hInstance = GetModuleHandle(0);
-
+	#ifdef _WIN32_WCE
+			m_hInstance = (HINSTANCE)GetModuleHandle(0);
+	#else
+			// Set the instance handle
+			MEMORY_BASIC_INFORMATION mbi;
+			VirtualQuery( (LPCVOID)SetnGetThis, &mbi, sizeof(mbi) );
+			m_hInstance = (HINSTANCE)mbi.AllocationBase;
 			m_hResource = m_hInstance;
-			DefaultClass();
+	#endif
+
+			SetCallback();
 		}
 
 		catch (const CWinException &e)
@@ -1052,14 +1030,14 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
-	inline void CWinApp::DefaultClass()
+	inline void CWinApp::SetCallback()
 	{
-		// Register a default window class so we can get the callback
+		// Registers a temporay window class so we can get the callback
 		// address of CWnd::StaticWindowProc
 
 		WNDCLASS wcDefault = {0};
 
-		LPCTSTR szClassName		= _T("Win32++ Window");
+		LPCTSTR szClassName		= _T("Win32++ Temporay Window Class");
 		wcDefault.hInstance		= GetInstanceHandle();
 		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
 		wcDefault.lpszClassName = szClassName;
@@ -1067,16 +1045,16 @@ namespace Win32xx
 		wcDefault.hCursor		= ::LoadCursor(NULL, IDC_ARROW);
 		wcDefault.style			= CS_DBLCLKS;
 
-		if (!::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault))
-			::RegisterClass(&wcDefault);
+		::RegisterClass(&wcDefault);
 
 		// Retrieve the class information
 		ZeroMemory(&wcDefault, sizeof(wcDefault));
-		if (!::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault))
-			throw CWinException(_T("Failed to get Default class info"));
+		::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault);
 
 		// Save the callback address of CWnd::StaticWindowProc
+		assert(wcDefault.lpfnWndProc);
 		m_Callback = wcDefault.lpfnWndProc;
+		::UnregisterClass(szClassName, GetInstanceHandle());
 	}
 
 	inline CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
@@ -2774,8 +2752,8 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return ::ShowWindowAsync(m_hWnd, nCmdShow);
 	}
-	
-	
+
+
   #endif
 
 }; // namespace Win32xx

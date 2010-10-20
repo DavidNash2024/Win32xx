@@ -92,6 +92,7 @@
 // elminiates the need for delete in user's code.
 
 #ifndef _SHARED_PTR_
+#define _SHARED_PTR_
 
 namespace Win32xx
 {
