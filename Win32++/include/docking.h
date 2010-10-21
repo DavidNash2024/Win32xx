@@ -483,6 +483,7 @@ namespace Win32xx
 		CDocker* SeparateFromDock();
 		void SendNotify(UINT nMessageID);
 		void SetUndockPosition(CPoint pt);
+		std::vector<CDocker*> CDocker::SortDockers();
 
 		CDockBar		m_DockBar;
 		CDockHint		m_DockHint;
@@ -3063,19 +3064,69 @@ namespace Win32xx
 		} 
 	}
 
+	inline std::vector<CDocker*> CDocker::SortDockers()
+	// Returns a vector of sorted dockers, used by SaveRegistrySettings.
+	{
+		std::vector<CDocker*> vSorted;
+		std::vector<CDocker*>::iterator itSort;
+		std::vector<DockPtr>::iterator itAll;
+
+		// Add undocked top level dockers
+		for (itAll = GetAllDockers().begin(); itAll <  GetAllDockers().end(); ++itAll)
+		{
+			if (!(*itAll)->GetDockParent())
+				vSorted.push_back((*itAll).get());
+		}
+		
+		// Add dock ancestor's children 
+		vSorted.insert(vSorted.end(), GetDockAncestor()->GetDockChildren().begin(), GetDockAncestor()->GetDockChildren().end());
+
+		// Add other dock children
+		int index = 0;
+		itSort = vSorted.begin();
+		while (itSort < vSorted.end())
+		{
+			vSorted.insert(vSorted.end(), (*itSort)->GetDockChildren().begin(), (*itSort)->GetDockChildren().end());
+			itSort = vSorted.begin() + (++index);
+		}
+
+		// Add dockers docked in containers
+		std::vector<CDocker*> vDockContainers;
+		for (itSort = vSorted.begin(); itSort< vSorted.end(); ++itSort)
+		{
+			if ((*itSort)->GetContainer())
+				vDockContainers.push_back(*itSort);
+		}
+
+		for (itSort = vDockContainers.begin(); itSort < vDockContainers.end(); ++itSort)
+		{
+			CDockContainer* pContainer = (*itSort)->GetContainer();
+				
+			for (size_t i = 1; i < pContainer->GetAllContainers().size(); ++i)
+			{
+				CDockContainer* pChild = pContainer->GetContainerFromIndex(i);
+				CDocker* pDock = GetDockFromView(pChild);
+				vSorted.push_back(pDock);
+			}
+		}
+
+		return vSorted;
+	}
+
 	inline BOOL CDocker::SaveRegistrySettings(tString tsRegistryKeyName)
 	// Stores the docking configuration in the registry
 	// NOTE: This function assumes that each docker has a unique DockID
 	{	
-		assert(VerifyDockers());	
+		assert(VerifyDockers());
 
-		std::vector<DockPtr>::iterator iter;
-		std::vector<DockInfo> vDockList;
+		std::vector<CDocker*> vSorted = SortDockers();
+		std::vector<CDocker*>::iterator iter;
+		std::vector<DockInfo> vDockInfo;
 
 		if (0 != tsRegistryKeyName.size())
 		{
-			// Fill the DockList vector with the docking information
-			for (iter = GetAllDockers().begin(); iter <  GetAllDockers().end(); ++iter)
+			// Fill the DockInfo vector with the docking information
+			for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
 			{
 				DockInfo di	 = {0};
 				di.DockID	 = (*iter)->GetDockID();
@@ -3085,7 +3136,7 @@ namespace Win32xx
 				if ((*iter)->GetDockParent())
 					di.DockParentID = (*iter)->GetDockParent()->GetDockID();
 
-				vDockList.push_back(di);
+				vDockInfo.push_back(di);
 			}
 
 			tString tsKeyName = _T("Software\\") + tsRegistryKeyName;
@@ -3102,9 +3153,9 @@ namespace Win32xx
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 				// Add the Dock windows information to the registry
-				for (UINT u = 0; u < vDockList.size(); ++u)
+				for (UINT u = 0; u < vDockInfo.size(); ++u)
 				{
-					DockInfo di = vDockList[u];
+					DockInfo di = vDockInfo[u];
 					TCHAR szNumber[16];
 					tString tsSubKey = _T("DockChild");
 					tsSubKey += _itot((int)u, szNumber, 10);
@@ -3474,6 +3525,7 @@ namespace Win32xx
 		pDock->Undock(pt, bShowUndocked);
 		pDockUndockedFrom->ShowWindow();
 		pDockUndockedFrom->RecalcDockLayout();
+		pDock->BringWindowToTop();
 	}
 
 	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

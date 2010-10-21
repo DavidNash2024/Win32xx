@@ -12,7 +12,6 @@ New Features and Enhancements
    provided with modern Windows operating systems (XP and above).
 * Add the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
    CProgressbar, CScrollbar, and CSpinButton.
-* Add the CWinThread class to simplify the use of threads.  
 * Extended the CToolbar class.   
 * Moved the text conversion functions from CWnd to the global (Win32++) 
    namespace.
@@ -36,7 +35,8 @@ New Features and Enhancements
    don't have access to one yet.
 * Vectors are now used to replace all dynamically allocated arrays.
 * Added CThread class to simplify the task of using threads and creating
-  windows in different threads.       
+  windows in different threads.
+* Win32++ can now be run from inside a DLL.  
             
 
 Changes in detail

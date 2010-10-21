@@ -988,12 +988,13 @@ namespace Win32xx
 
 			SetnGetThis(this);
 
+			// Set the instance handle
 	#ifdef _WIN32_WCE
 			m_hInstance = (HINSTANCE)GetModuleHandle(0);
 	#else
-			// Set the instance handle
-			MEMORY_BASIC_INFORMATION mbi;
+			MEMORY_BASIC_INFORMATION mbi = {0};
 			VirtualQuery( (LPCVOID)SetnGetThis, &mbi, sizeof(mbi) );
+			assert(mbi.AllocationBase);
 			m_hInstance = (HINSTANCE)mbi.AllocationBase;
 			m_hResource = m_hInstance;
 	#endif
@@ -1032,18 +1033,15 @@ namespace Win32xx
 
 	inline void CWinApp::SetCallback()
 	{
-		// Registers a temporay window class so we can get the callback
+		// Registers a temporary window class so we can get the callback
 		// address of CWnd::StaticWindowProc
 
 		WNDCLASS wcDefault = {0};
 
-		LPCTSTR szClassName		= _T("Win32++ Temporay Window Class");
+		LPCTSTR szClassName		= _T("Win32++ Temporary Window Class");
 		wcDefault.hInstance		= GetInstanceHandle();
 		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
 		wcDefault.lpszClassName = szClassName;
-		wcDefault.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
-		wcDefault.hCursor		= ::LoadCursor(NULL, IDC_ARROW);
-		wcDefault.style			= CS_DBLCLKS;
 
 		::RegisterClass(&wcDefault);
 
