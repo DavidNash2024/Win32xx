@@ -18,10 +18,6 @@ CMainFrame::CMainFrame()
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\TabbedMDI Docking"));
-	
-	// Load MDI child settings
-	if (!m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName()))
-		LoadDefaultMDIs();
 }
 
 CMainFrame::~CMainFrame()
@@ -217,8 +213,8 @@ void CMainFrame::OnInitialUpdate()
 		LoadDefaultDockers();
 
 	// Load MDI child settings
-//	if (!m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName()))
-//		LoadDefaultMDIs();
+	if (!m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName()))
+		LoadDefaultMDIs();
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();

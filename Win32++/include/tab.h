@@ -179,6 +179,7 @@ namespace Win32xx
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
 		virtual CWnd* GetActiveMDIChild() const;
+		virtual int	  GetActiveMDITab() const;
 		virtual CWnd* GetMDIChild(int nTab) const;
 		virtual int   GetMDIChildCount() const;
 		virtual int   GetMDIChildID(int nTab) const;
@@ -1352,6 +1353,11 @@ namespace Win32xx
 		return pView;
 	}
 
+	inline int CTabbedMDI::GetActiveMDITab() const
+	{
+		return GetTab().GetCurSel();
+	}
+
 	inline CWnd* CTabbedMDI::GetMDIChild(int nTab) const
 	{
 		assert(nTab >= 0);
@@ -1417,12 +1423,17 @@ namespace Win32xx
 					}
 				}
 
+				// Load Active MDI Tab from the registry
+				tsSubKey = _T("Active MDI Tab");					
+				int nTab;
+				dwType = REG_DWORD;
+				BufferSize = sizeof(int);
+				if(ERROR_SUCCESS != RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&nTab, &BufferSize))
+					SetActiveMDITab(nTab);
+				
 				RegCloseKey(hKey);
 			}
 		}
-
-		if (IsWindow())
-			SetActiveMDITab(0);
 
 		if (!bResult)
 			CloseAllMDIChildren();
@@ -1522,6 +1533,12 @@ namespace Win32xx
 					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo)))
 						throw (CWinException(_T("RegSetValueEx Failed")));
 				}
+
+				// Add Active Tab to the registry
+				tString tsSubKey = _T("Active MDI Tab");					
+				int nTab = GetActiveMDITab();
+				if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_DWORD, (LPBYTE)&nTab, sizeof(int)))
+					throw (CWinException(_T("RegSetValueEx failed")));
 
 				RegCloseKey(hKeyMDIChild);
 				RegCloseKey(hKey);

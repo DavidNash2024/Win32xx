@@ -58,6 +58,7 @@ Added CSocket::IsIPV6Supported
 Added CSocket::FreeAddrInfo
 Added CSocket::GetAddrInfo
 Added CSocket::GetLastError
+Added CTabbedMDI::SetActiveMDITab
 Added CToolbar::AddButtons
 Added CToolbar::AddString
 Added CToolbar::AutoSize

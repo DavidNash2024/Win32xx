@@ -3203,7 +3203,7 @@ namespace Win32xx
 					
 					if (pContainer && (pContainer == pContainer->GetActiveContainer()))
 					{
-						TCHAR szNumber[16];
+						TCHAR szNumber[20];
 						tString tsSubKey = _T("ActiveContainer");
 						tsSubKey += _itot(i++, szNumber, 10);
 						int nID = GetDockFromView(pContainer)->GetDockID();
