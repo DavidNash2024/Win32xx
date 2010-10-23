@@ -2369,6 +2369,7 @@ namespace Win32xx
 		if (0 != tsRegistryKeyName.size())
 		{
 			std::vector<DockInfo> vDockList;
+			std::vector<int> vActiveContainers;
 			tString tsKey = _T("Software\\") + tsRegistryKeyName + _T("\\Dock Windows");
 			HKEY hKey = 0;
 			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
@@ -2378,7 +2379,7 @@ namespace Win32xx
 				DWORD BufferSize = sizeof(DockInfo);
 				DockInfo di;
 				int i = 0;
-				TCHAR szNumber[16];
+				TCHAR szNumber[20];
 				tString tsSubKey = _T("DockChild");
 				tsSubKey += _itot(i, szNumber, 10);
 
@@ -2388,6 +2389,21 @@ namespace Win32xx
 					vDockList.push_back(di);
 					i++;
 					tsSubKey = _T("DockChild");
+					tsSubKey += _itot(i, szNumber, 10);
+				}
+
+				dwType = REG_DWORD;
+				BufferSize = sizeof(int);
+				int nID;
+				i = 0;
+				tsSubKey = _T("ActiveContainer");
+				tsSubKey += _itot(i, szNumber, 10);
+				// Fill the DockList vector from the registry
+				while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&nID, &BufferSize))
+				{
+					vActiveContainers.push_back(nID);
+					i++;
+					tsSubKey = _T("ActiveContainer");
 					tsSubKey += _itot(i, szNumber, 10);
 				}
 
@@ -2460,6 +2476,22 @@ namespace Win32xx
 					TRACE(_T("Orphaned dockers stored in registry "));
 					bResult = FALSE;
 					break;
+				}
+			}
+
+			std::vector<int>::iterator iterID;
+			for (iterID = vActiveContainers.begin(); iterID < vActiveContainers.end(); ++iterID)
+			{
+				CDocker* pDocker = GetDockFromID(*iterID);
+				if (pDocker)
+				{
+					CDockContainer* pContainer = pDocker->GetContainer();
+					if (pContainer)
+					{
+						int iPage = pContainer->GetContainerIndex(pContainer);
+						if (iPage >= 0)
+							pContainer->SelectPage(iPage);
+					}
 				}
 			}
 		}
@@ -3162,6 +3194,23 @@ namespace Win32xx
 					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
 						throw (CWinException(_T("RegSetValueEx failed")));
 				}
+							
+				// Add Active Container to the registry
+				int i = 0;
+				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
+				{
+					CDockContainer* pContainer = (*iter)->GetContainer();
+					
+					if (pContainer && (pContainer == pContainer->GetActiveContainer()))
+					{
+						TCHAR szNumber[16];
+						tString tsSubKey = _T("ActiveContainer");
+						tsSubKey += _itot(i++, szNumber, 10);
+						int nID = GetDockFromView(pContainer)->GetDockID();
+						if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
+							throw (CWinException(_T("RegSetValueEx failed")));
+					}					
+				}
 
 				RegCloseKey(hKeyDock);
 				RegCloseKey(hKey);
@@ -3629,21 +3678,23 @@ namespace Win32xx
 
 	inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT iPage)
 	{
+		CDockContainer* pContainer = NULL;
 		if (iPage < m_vContainerInfo.size())
-			return (CDockContainer*)m_vContainerInfo[iPage].pContainer;
-		else
-			return NULL;
+			pContainer = (CDockContainer*)m_vContainerInfo[iPage].pContainer;
+		
+		return pContainer;
 	}
 
 	inline CWnd* CDockContainer::GetActiveView() const
 	{
-		if (m_vContainerInfo.size() > 0)
+		CWnd* pWnd = NULL;
+		if (m_pContainerParent->m_vContainerInfo.size() > 0)
 		{
-			CDockContainer* pActiveContainer = m_pContainerParent->m_vContainerInfo[m_iCurrentPage].pContainer;
-			return pActiveContainer->GetViewPage().GetView();
+			CDockContainer* pActiveContainer = m_pContainerParent->m_vContainerInfo[m_pContainerParent->m_iCurrentPage].pContainer;
+			pWnd = pActiveContainer->GetViewPage().GetView();
 		}
 		
-		return NULL;
+		return pWnd;
 	}
 
 	inline CDockContainer* CDockContainer::GetContainerFromView(CWnd* pView) const
@@ -3665,14 +3716,15 @@ namespace Win32xx
 	inline int CDockContainer::GetContainerIndex(CDockContainer* pContainer)
 	{
 		assert(pContainer);
+		int iReturn = -1;
 
-		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
+		for (int i = 0; i < (int)m_pContainerParent->m_vContainerInfo.size(); ++i)
 		{
-			if (m_vContainerInfo[i].pContainer == pContainer)
-				return i;
+			if (m_pContainerParent->m_vContainerInfo[i].pContainer == pContainer)
+				iReturn = i;
 		}
 
-		return -1;
+		return iReturn;
 	}
 
 	inline SIZE CDockContainer::GetMaxTabTextSize()
@@ -3880,38 +3932,43 @@ namespace Win32xx
 
 	inline void CDockContainer::SelectPage(int iPage)
 	{
-		if ((iPage >= 0) && (iPage < (int)m_vContainerInfo.size() ))
+		if (this != m_pContainerParent)
+			m_pContainerParent->SelectPage(iPage);
+		else
 		{
-			SetCurSel(iPage);
-
-			// Create the new container window if required
-			if (!m_vContainerInfo[iPage].pContainer->IsWindow())
+			if ((iPage >= 0) && (iPage < (int)m_vContainerInfo.size() ))
 			{
-				CDockContainer* pContainer = m_vContainerInfo[iPage].pContainer;
-				pContainer->Create(GetParent());
-				pContainer->GetViewPage().SetParent(m_hWnd);
+				SetCurSel(iPage);
+
+				// Create the new container window if required
+				if (!m_vContainerInfo[iPage].pContainer->IsWindow())
+				{
+					CDockContainer* pContainer = m_vContainerInfo[iPage].pContainer;
+					pContainer->Create(GetParent());
+					pContainer->GetViewPage().SetParent(m_hWnd);
+				}
+
+				// Determine the size of the tab page's view area
+				CRect rc = GetClientRect();
+				AdjustRect(FALSE, &rc);
+
+				// Swap the pages over
+				CDockContainer* pOldContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
+				CDockContainer* pNewContainer = m_vContainerInfo[iPage].pContainer;
+				pOldContainer->GetViewPage().ShowWindow(SW_HIDE);
+				pNewContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+				pNewContainer->GetViewPage().GetView()->SetFocus();
+
+				// Adjust the docking caption
+				CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()));
+				if (pDock && (pDock->GetWindowType() == _T("CDocker")))
+				{
+					pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
+					pDock->RedrawWindow();
+				}
+
+				m_iCurrentPage = iPage;
 			}
-
-			// Determine the size of the tab page's view area
-			CRect rc = GetClientRect();
-			AdjustRect(FALSE, &rc);
-
-			// Swap the pages over
-			CDockContainer* pOldContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
-			CDockContainer* pNewContainer = m_vContainerInfo[iPage].pContainer;
-			pOldContainer->GetViewPage().ShowWindow(SW_HIDE);
-			pNewContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-			pNewContainer->GetViewPage().GetView()->SetFocus();
-
-			// Adjust the docking caption
-			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()));
-			if (pDock && (pDock->GetWindowType() == _T("CDocker")))
-			{
-				pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
-				pDock->RedrawWindow();
-			}
-
-			m_iCurrentPage = iPage;
 		}
 	}
 
