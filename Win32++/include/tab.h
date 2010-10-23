@@ -1428,8 +1428,10 @@ namespace Win32xx
 				int nTab;
 				dwType = REG_DWORD;
 				BufferSize = sizeof(int);
-				if(ERROR_SUCCESS != RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&nTab, &BufferSize))
+				if(ERROR_SUCCESS == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&nTab, &BufferSize))
 					SetActiveMDITab(nTab);
+				else
+					SetActiveMDITab(0);
 				
 				RegCloseKey(hKey);
 			}

@@ -16,7 +16,6 @@
 
 #include <wincore.h>
 #include <dialog.h>
-#include <frame.h>
 
 // TODO: reference additional headers your program requires here
 
