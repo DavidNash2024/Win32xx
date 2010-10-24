@@ -248,28 +248,35 @@ namespace Win32xx
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
+				LRESULT lr = 0L;
 
 				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
-					{	
-						BOOL bReturn = (BOOL)pWndFrom->OnNotifyReflect(wParam, lParam);
-						if (bReturn) return TRUE;
-					}
+						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
 					else
 					{
 						// Some controls (eg ListView) have child windows.
 						// Reflect those notifications too.
 						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
 						if (pWndFromParent != NULL)
-						{	
-							BOOL bReturn = (BOOL)pWndFromParent->OnNotifyReflect(wParam, lParam);
-							if (bReturn) return TRUE;
-						}
+							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 					}
+				} 
+
+				// Handle user notifications
+				if (!lr) lr = OnNotify(wParam, lParam);
+				
+				if (lr)
+				{
+					// Set the return code for custom draw
+					if (NM_CUSTOMDRAW == ((LPNMHDR)lParam)->code)
+						SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
+				
+					return (BOOL)lr;
 				}
 			}
-			return (BOOL)OnNotify(wParam, lParam);
+			break;
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -533,7 +540,6 @@ namespace Win32xx
 			pPage->AddToMap();
 			return pPage->DialogProc(uMsg, wParam, lParam);
 		}
-
 	}
 
 	inline int CPropertyPage::Validate()

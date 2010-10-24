@@ -155,7 +155,7 @@ namespace Win32xx
 		BOOL bReturn = CommandBar_AddAdornments(m_hWnd, dwFlags, 0);
 
 		if (!bReturn)
-			DebugErrMsg(TEXT("AddAdornments failed"));
+			throw CWinException(_T("AddAdornments failed"));
 
 		return bReturn;
 	}
@@ -170,7 +170,7 @@ namespace Win32xx
 	{
 		 BOOL bReturn = CommandBar_AddButtons(m_hWnd, nButtons, pTBButton);
 		 if (!bReturn)
-			 DebugErrMsg(TEXT("Failed to add buttons to commandbar"));
+			 throw CWinException(_T("Failed to add buttons to commandbar"));
 
 		 return bReturn;
 	}
@@ -193,17 +193,13 @@ namespace Win32xx
 			m_hWnd = mbi.hwndMB;
 		}
 		else
-		{
-			DebugErrMsg(TEXT("Failed to create Menubar"));
-			m_hWnd = NULL;
-		}
+			throw CWinException(_T("Failed to create Menubar"));
+		
 #else
 		m_hWnd = CommandBar_Create(GetApp()->GetInstanceHandle(), hParent, IDW_MENUBAR);
 
 		if (m_hWnd == NULL)
-		{
-			DebugErrMsg(TEXT("Failed to create CommandBar"));
-		}
+			throw CWinException(_T("Failed to create CommandBar"));
 
 		CommandBar_InsertMenubar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
 #endif
@@ -221,7 +217,7 @@ namespace Win32xx
 		HWND hWnd = CommandBar_InsertComboBox(m_hWnd, hInst, iWidth, dwStyle, idComboBox, iButton);
 
 		if (!hWnd)
-			DebugErrMsg(TEXT("InsertComboBox failed"));
+			throw CWinException(_T("InsertComboBox failed"));
 
 		return hWnd;
 	}
@@ -360,7 +356,6 @@ namespace Win32xx
 		if (iNumButtons > 0)
 		{
 			// Create the TBBUTTON array for each button
-		//	TBBUTTON* tbb =  new TBBUTTON[iNumButtons];
 			std::vector<TBBUTTON> vTBB(iNumButtons);
 			TBBUTTON* tbbArray = &vTBB.front();
 

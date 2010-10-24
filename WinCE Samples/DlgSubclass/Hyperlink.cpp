@@ -77,7 +77,7 @@ void CHyperlink::OpenUrl()
 		::InvalidateRect(GetHwnd(), NULL, FALSE);
 	}
 	else
-		DebugWarnMsg(TEXT("ShellExecuteEx Failed"));
+		TRACE(_T("ShellExecuteEx Failed"));
 }
 
 LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)

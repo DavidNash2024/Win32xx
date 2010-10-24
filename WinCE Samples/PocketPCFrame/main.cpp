@@ -17,7 +17,7 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLi
 	if (hWnd)
 	{
 		SetForegroundWindow ((HWND)(((DWORD)hWnd) | 0x01));
-		DebugWarnMsg(TEXT("Application Already running"));
+		TRACE(_T("Application Already running"));
 		return -1;
 	}
 

@@ -36,39 +36,39 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_NEW:
 		m_points.clear();
 		::InvalidateRect(m_hWnd, NULL, TRUE);
-		break;
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		{
 			CDialog HelpDialog(IDW_ABOUT, m_hWnd);
 			HelpDialog.DoModal();
 		}
-		break;
+		return TRUE;
 
 	// Respond to Toolbar buttons
 	case IDM_RED:
 		m_PenColor = RGB(255, 0, 0);
 		TRACE(_T("Red Pen Selected \n"));
-		break;
+		return TRUE;
 	case IDM_BLUE:
 		m_PenColor = RGB(0, 0, 255);
 		TRACE(_T("Blue Pen Selected \n"));
-		break;
+		return TRUE;
 	case IDM_GREEN:
 		m_PenColor = RGB(0, 191, 0);
 		TRACE(_T("Green Pen Selected \n"));
-		break;
+		return TRUE;
 	case IDM_BLACK:
 		m_PenColor = RGB(0, 0, 0);
 		TRACE(_T("Black Pen Selected \n"));
-		break;
+		return TRUE;
 
 	// Respond to the accelerator key
 	case IDW_QUIT:
 		::SendMessage(m_hWnd, WM_CLOSE, 0L, 0L);
-		break;
+		return TRUE;
 	}
 
-	return 0;
+	return FALSE;
 }
 
 void CMainFrame::OnInitialUpdate()

@@ -31,38 +31,24 @@ HWND CMainWindow::Create(HWND hParent)
 
 void CMainWindow::OnCreate()
 {
-	try
+	// Create each CMyThread object
+	for (int i = 1 ; i <= m_nTestWin ; i++)
 	{
-		// Create each CMyThread object
-		for (int i = 1 ; i <= m_nTestWin ; i++)
-		{
-			// Create the Test Window and store the CTestWindow pointer
-			CTestWindow* pTestWin = new CTestWindow(i);
-			
-			TCHAR str[80];
-			wsprintf(str, _T("Thread %d started\n"), i);
-			TRACE(str);
+		// Create the Test Window and store the CTestWindow pointer
+		CTestWindow* pTestWin = new CTestWindow(i);
+		
+		TCHAR str[80];
+		wsprintf(str, _T("Thread %d started\n"), i);
+		TRACE(str);
 
-			m_vTestWnd.push_back(pTestWin);
-		}
+		m_vTestWnd.push_back(pTestWin);
+	}
 	
-		std::vector<TestWndPtr>::iterator iter;
-		for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
-		{
-			(*iter)->ResumeThread();
-		}
-	}
-
-	catch (const CWinException &e)
+	std::vector<TestWndPtr>::iterator iter;
+	for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 	{
-		e.what();
-		DebugErrMsg(_T("Exception in CMainWindow::OnCreate"));
-	}
-
-	catch (...)
-	{
-		DebugErrMsg(_T("Exception in CMainWindow::OnCreate"));
-	}
+		(*iter)->ResumeThread();
+	}	
 }
 
 void CMainWindow::OnAllWindowsCreated()

@@ -68,8 +68,6 @@ void CHyperlink::OpenUrl()
 		// redraw the window to update the color
 		::InvalidateRect(GetHwnd(), NULL, FALSE);
 	}
-	else
-		DebugWarnMsg(_T("ShellExecute Failed"));
 }
 
 LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)

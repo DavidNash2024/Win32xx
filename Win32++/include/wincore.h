@@ -2016,25 +2016,19 @@ namespace Win32xx
 				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
-					{
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
-						if (lr) return lr;
-					}
 					else
 					{
 						// Some controls (eg ListView) have child windows.
 						// Reflect those notifications too.
 						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
 						if (pWndFromParent != NULL)
-						{
 							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
-							if (lr) return lr;
-						}
 					}
 				}
 
 				// Handle user notifications
-				lr = OnNotify(wParam, lParam);
+				if (!lr) lr = OnNotify(wParam, lParam);
 				if (lr) return lr;
 			}
 			break;
