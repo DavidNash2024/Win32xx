@@ -297,9 +297,9 @@ namespace Win32xx
 			return (BOOL) MessageReflect(m_hWnd, uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
-	    return 0L;
+	    return FALSE;
 
-	} // LRESULT CALLBACK CPropertyPage::DialogProc(...)
+	} // BOOL CALLBACK CPropertyPage::DialogProc(...)
 
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{

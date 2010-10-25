@@ -48,7 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
-				Optimization="0"
+				Optimization="2"
 				AdditionalIncludeDirectories="..\..\Win32++\include"
 				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_WINDOWS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL;POCKETPC2003_UI_MODEL"
 				MinimalRebuild="true"

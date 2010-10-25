@@ -3,16 +3,26 @@ Version 7.0
 
 New Features and Enhancements
 -----------------------------
+* Added the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
+   CProgressbar, CScrollbar, and CSpinButton.
+* Added CThread class to simplify the task of using threads and creating
+   windows in different threads.   
 * Added support for resizable dialogs. The CResizer class has been added
    to dialog.h to facilitate dialog resizing. Refer to the forms sample for
    an example of how to put CResizer to use.
 * Added IPv6 support to CSocket. The network samples have been updated to
    take advantage of IPv6 support.
+* Added Shared_Ptr class. Note that a "shared_ptr" will be available for the
+   updated C++ standard. It is already available with some modern compilers,
+   and also for users of the Boost library. The "Shared_Ptr" class is intended
+   as an alternative for those users who would like to use a "shared_ptr", but
+   don't have access to one yet.
+* Extended the CToolbar class.
 * Added the GDIPlus sample to demonstrate how to use the GDIplus library 
    provided with modern Windows operating systems (XP and above).
-* Add the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
-   CProgressbar, CScrollbar, and CSpinButton.
-* Extended the CToolbar class.   
+* Win32++ can now be run from inside a DLL.
+* Dialogs and Property Sheets now use DWL_MSGRESULT to automacally handle the 
+   value returned by notifcations in their message handling.     
 * Moved the text conversion functions from CWnd to the global (Win32++) 
    namespace.
 * Improved the appearance of frames without themes.
@@ -28,16 +38,7 @@ New Features and Enhancements
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
    - an attempt to read from or write to the registry fails.
-* Added Shared_Ptr class. Note that a "shared_ptr" will be available for the
-   updated C++ standard. It is already available with some modern compilers,
-   and also for users of the Boost library. The "Shared_Ptr" class is intended
-   as an alternative for those users who would like to use a "shared_ptr", but
-   don't have access to one yet.
-* Vectors are now used to replace all dynamically allocated arrays.
-* Added CThread class to simplify the task of using threads and creating
-  windows in different threads.
-* Win32++ can now be run from inside a DLL.  
-            
+* Vectors are now used as a replacement for all dynamically allocated arrays.
 
 Changes in detail
 -----------------
