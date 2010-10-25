@@ -72,7 +72,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE"
-				OutputFile="$(OutDir)/Starter.exe"
 				LinkIncremental="2"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
@@ -234,7 +233,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE"
-				OutputFile="$(OutDir)/Starter.exe"
 				LinkIncremental="1"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
