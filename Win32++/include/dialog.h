@@ -292,11 +292,11 @@ namespace Win32xx
 
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);
-				if (lr)
-				{
-					SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
-					return (BOOL)lr;
-				}
+				
+				// Set the return code for notifications
+				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
+				
+				return TRUE;
 			}
 			break;
 

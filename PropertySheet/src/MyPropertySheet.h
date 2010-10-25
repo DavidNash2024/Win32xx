@@ -21,13 +21,13 @@ class CButtonPage : public CPropertyPage
 public:
 	CButtonPage(UINT nIDTemplate, LPCTSTR szTitle = NULL);
 	virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void OnApply();
+	virtual int  OnApply();
 	virtual void OnCancel();
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
+	virtual int  OnOK();
 	virtual BOOL OnQueryCancel();
-	virtual void OnSetActive();
-	virtual int Validate();
+	virtual int  OnSetActive();
+	virtual int  Validate();
 };
 
 class CComboPage : public CPropertyPage
@@ -36,7 +36,7 @@ public:
 	CComboPage(UINT nIDTemplate, LPCTSTR szTitle  = NULL);
 	virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
-	virtual void OnSetActive();
+	virtual int  OnSetActive();
 };
 
 

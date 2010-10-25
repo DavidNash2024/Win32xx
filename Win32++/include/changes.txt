@@ -4,10 +4,10 @@ Version 7.0
 New Features and Enhancements
 -----------------------------
 * Added the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
-   CProgressbar, CScrollbar, and CSpinButton.
+   CProgressbar, CScrollbar, CSlider, and CSpinButton.
 * Added CThread class to simplify the task of using threads and creating
    windows in different threads.   
-* Added support for resizable dialogs. The CResizer class has been added
+* Added support for re-sizable dialogs. The CResizer class has been added
    to dialog.h to facilitate dialog resizing. Refer to the forms sample for
    an example of how to put CResizer to use.
 * Added IPv6 support to CSocket. The network samples have been updated to
@@ -18,22 +18,22 @@ New Features and Enhancements
    as an alternative for those users who would like to use a "shared_ptr", but
    don't have access to one yet.
 * Extended the CToolbar class.
-* Added the GDIPlus sample to demonstrate how to use the GDIplus library 
+* Added the GDIPlus sample to demonstrate how to use the GDIPlus library 
    provided with modern Windows operating systems (XP and above).
 * Win32++ can now be run from inside a DLL.
-* Dialogs and Property Sheets now use DWL_MSGRESULT to automacally handle the 
-   value returned by notifcations in their message handling.     
-* Moved the text conversion functions from CWnd to the global (Win32++) 
+* Dialogs and Property Sheets now use DWL_MSGRESULT to automatically handle the 
+   value returned by notifications in their message handling.     
+* Moved the text conversion functions from CWnd to the global (Win32++)
    namespace.
 * Improved the appearance of frames without themes.
 * Asserts are used more liberally to test for programming errors. Any message
-   sent to a non-existant window, for example, will now assert. More asserts are
-   intended to help users write code that is more robust. Note that asserts are
-   only evaluated in Debug mode, and have no effect in Release mode.
+   sent to a non-existent window, for example, will now assert. More asserts 
+   are intended to help users write code that is more robust. Note that asserts
+   are only evaluated in Debug mode, and have no effect in Release mode.
 * Exceptions are thrown less often. They are now thrown to indicate a critical
    problem, outside the programmer's control. Throwing fewer exceptions results 
-   in slightly smaller executables, and gives users more flexibility and control
-   over their own exception methodology. They are thrown by Win32++ when:
+   in slightly smaller executables, and gives users more flexibility and 
+   control over their own exception methodology. They are thrown when:
    - a window creation fails.
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
@@ -54,6 +54,8 @@ Added Shared_Ptr
 Added CThread 
 Updated CSocket to support IPv6
 Added CPropertySheet::SetIcon
+Added CPropertySheet::SetWizardButtons
+Added CPropertyPage::QuerySiblings
 Added CRebar::SizeToRect
 Added CSocket::IsIPV6Supported
 Added CSocket::FreeAddrInfo
@@ -111,13 +113,22 @@ Added CWnd::SetWindowTheme
 Added CWnd::ShowOwnedPopups
 Added CWnd::ShowWindowAsync
 Added ::IsAeroThemed
-Modified CSocket::Bind          now uses TCHAR instead of char
-Modified CSocket::Connect       now uses TCHAR instead of char
-Modified CSocket::Receive       now uses TCHAR instead of char
-Modified CSocket::ReceiveFrom   now uses TCHAR instead of char
-Modified CSocket::Send          now uses TCHAR instead of char
-Modified CSocket::SentTo        now uses TCHAR instead of char
-Modidified CWinException::what  now outputs text to debugger
+Modified CPropertyPage::Apply			now returns int
+Modified CPropertyPage::OnKillActive	now returns BOOL
+Modified CPropertyPage::OnOK			now returns int
+Modified CPropertyPage::OnSetActive		now returns int
+Modified CPropertyPage::OnWizardBack 	now returns int
+Modified CPropertyPage::OnFinish		now returns BOOL
+Modified CPropertyPage::OnWizardBack 	now returns int
+Modified CPropertyPage::OnWizardFinish	now returns BOOL
+Modified CPropertyPage::OnWizardNext	now returns int
+Modified CSocket::Bind          	now uses TCHAR instead of char
+Modified CSocket::Connect       	now uses TCHAR instead of char
+Modified CSocket::Receive       	now uses TCHAR instead of char
+Modified CSocket::ReceiveFrom   	now uses TCHAR instead of char
+Modified CSocket::Send          	now uses TCHAR instead of char
+Modified CSocket::SentTo        	now uses TCHAR instead of char
+Modified CWinException::what  		now outputs text to debugger
 Renamed CToolbar::AddToolbarButton to CToolbar::AddButton
 Renamed CWnd::CharToTChar to ::CharToTChar
 Renamed CWnd::CharToWide  to ::CharToWide
@@ -126,6 +137,7 @@ Renamed CWnd::TCharToWide to ::TCharToWide
 Renamed CWnd::WideToChar  to ::WideToChar
 Renamed CWnd::WideToTChar to ::WideToTChar
 Removed CWinException::MessageBox
+Removed CPropertySheet::QuerySiblings
 
 Added DS_NO_CLOSE style to suppress the closing of docked dockers
 
@@ -137,10 +149,12 @@ Incompatibilities with previous versions
 ----------------------------------------
 * The stricter testing with asserts might reveal previously hidden errors in 
    user's code.
-* Some CSocket functions take TCHAR as an arguement instead of char.
-* CPropertySheet.m_PSH is now private. Use SetIcon to set the icon.
+* Some CSocket functions take TCHAR as an argument instead of char.
 * CFrame::LoadRegistrySettings, CFrame::LoadRegistryMRUSettings and 
    CFrame::SaveRegistrySettings return BOOL.
+* CPropertySheet.m_PSH is now private. Use SetIcon to set the icon.
+* CPropertyPage change the return types of several functions.
+   
 
 Version 6.9
 ===========
@@ -150,7 +164,7 @@ New Features and Enhancements
 * Added a WebBrowser class called CWebBrowser.  This class provides a web 
    browser in a window. This class can be used as a view window anywhere 
    view windows are used, such as in frames, dockers, MDI Children, 
-   Tabbed MDIs etc.  It has no dependance on ATL, greatly simplifying the 
+   Tabbed MDIs etc.  It has no dependence on ATL, greatly simplifying the 
    approach to adding a browser window to any application.  It can be compiled
    by any of the supported compilers including Dev-C++, MinGW and the Borland 
    compilers as well as the compilers from Microsoft.  
@@ -166,7 +180,7 @@ New Features and Enhancements
 * Added a Tray sample which demonstrates how to create an application 
    which can be minimised to the system tray, and restored.
 * The visual editor that ships with VS2008 and VS2010 can now be used to
-   modify the resouce files (Resource.rc and resource.h) without mangling them.   
+   modify the resource files (Resource.rc and resource.h) without mangling them.   
 
 Changes in detail
 -----------------
@@ -222,7 +236,7 @@ New Features
 ------------
 * Support has been added for the Windows Ribbon Framework available on 
    Windows 7 operating systems. The RibbonFrame and RibbonSimple samples 
-   demonstrates how to implelement the ribbon. RibbonFrame reverts back to 
+   demonstrates how to implement the ribbon. RibbonFrame reverts back to 
    using the traditional Toolbar and Menubar if the operating system doesn't
    support the ribbon framework.
    
@@ -281,7 +295,7 @@ Version 6.7
 ===========
 Bug fixes:
 - Fixed dialog destruction              
-- Fixed thread safety when creating multithreaded windows simultaneously
+- Fixed thread safety when creating multi-threaded windows simultaneously
 - Fixed TintBitmap for 16 bit colours
 - The close button on docked dockers now works.
 - Fixed PreTranslateMessage 
@@ -326,9 +340,9 @@ Changes
    use PreCreate to set this extended when using CFrame, CMDIFrame, CTab, 
    CTabbedMDI, and CDocker.
    
-* OnInitailUpdate is now called after Attach or AttachDlgItem.
+* OnInitialUpdate is now called after Attach or AttachDlgItem.
 
-* IsChild now takes a HWND arguement.
+* IsChild now takes a HWND argument.
  
 * Win32++ is now available as a single download, rather than a collection of
    files.
@@ -342,12 +356,12 @@ Version 6.6
 Changes
 -------
 * The number of arguments have changed for WndProc and WndProcDefault.
-  - The HWND paramater has been dropped in both of these functions. It's
+  - The HWND parameter has been dropped in both of these functions. It's
     presence was redundant and possibly confusing. Users will need to modify
     their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
     member variable can be used in place of hwnd within the WndProc function.
 * The number of arguments have changed for DialogProc and DialogProcDefault.
-  - The HWND paramater has been dropped in both of these functions. It's
+  - The HWND parameter has been dropped in both of these functions. It's
     presence was redundant and possibly confusing. Users will need to modify
     their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
     member variable can be used in place of hwnd in the WndProc function.  
@@ -364,13 +378,13 @@ Changes
   - Added the CBitmapInfoPtr class. This simplifies the use of the BITMAPINFO
      structure in functions like GetDIBits and SetDIBits.
   - Added GrayScaleBitmap function to gdi.h. It converts a colored bitmap to
-     to grayscale.     
+     to gray-scale.     
 * Automated menu updating.
   - When a menu is about to be displayed, OnUpdateMenu is called to provide
      an opportunity to modify the check state of the menu items.
 * Enhancements to frames
   - The style of the rebarband is now specified in AddToolbarBand. This 
-     facilites saving and restoring toolbar settings from the registry (as 
+     facilities saving and restoring toolbar settings from the registry (as 
      demonstrated in the Themes example.)  
   - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
      registry.
@@ -380,13 +394,13 @@ Changes
   - Added check boxes for the various rebar theme option
   - Added Hide/Show option for the additional toolbars
   - Save/Load the theme options in the registry
-  - Save/Load the rebar band postions and styles in the registry
+  - Save/Load the rebar band positions and styles in the registry
 * Replaced the Form example with the DocViewForm example.
   - This example now demonstrates a form using a Doc/View architecture, much
      like the traditional Doc/View of MFC. 
   - Added OnUpdateMenu handling. 
 * Updated the FastGDI example.
-  - Added grayscale transformation
+  - Added gray-scale transformation
   - Added file save.
   - Added Scroll bars.
 * Updated the picture example.
@@ -397,9 +411,9 @@ Changes
       
 Incompatibilities with previous versions
 ----------------------------------------
-- WndProc now takes 3 arguements, not 4:
+- WndProc now takes 3 arguments, not 4:
    WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- WndProcDefault now takes 3 arguements, not 4:
+- WndProcDefault now takes 3 arguments, not 4:
    WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 - DialogProc now takes 3 arguements, not 4:
    DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -430,13 +444,13 @@ Major Changes
 * Added TabbedMDI example within docking.
    Refer to the docking TabbedMDI example for a demonstration of how CTabbedMDI
    class is used.   
-* Enhancments to docking.
+* Enhancements to docking.
    - Dockers can now be docked into, and undocked from all other dockers, 
      including those that are undocked. 
    - Containers can also be docked into and undocked all from containers,
       including those that are undocked.
    - Containers can display their tabs at the top or bottom of the window.
-   - Containes can also display a tab list button.
+   - Containers can also display a tab list button.
    - Docker and container objects are destroyed when their window is closed.
    - CContainer::SetupToolbar can be used to specify the toolbar's resource IDs.
    - Dockers and containers can save their layout in and load their layout from
@@ -557,9 +571,9 @@ Incompatibilities with previous versions
 * Some functions have been added to CWnd which have the same name as their 
    Win32 counterparts. Prefix functions with the global scope specifier '::' 
    to use the original Win32 API function instead of the Win32++ version.
-* CSplitter has been superceded by CDocker. Use a CDocker with the
+* CSplitter has been superseded by CDocker. Use a CDocker with the
    DS_NO_UNDOCK and DS_NO_CAPTION styles to duplicate the behaviour of 
-   CSplitter. CSplitter will be retained for backwards compatiblity, as
+   CSplitter. CSplitter will be retained for backwards compatibility, as
    well as for those who require its 'immediate' mode.
    
 More About Docking Containers
@@ -572,7 +586,7 @@ page. When used as the view window of a dockable, the container also permits
  docking and undocking of it's containers.  
 
 In Summary:
-* Any CWnd object inherrited from CContainer is capable of containing other CWnd
+* Any CWnd object inherited from CContainer is capable of containing other CWnd
    objects inherrited from CContainer. There is no theoretical limit as to the
    number of containers that can be contained.
 * A child container (a container contained within another) can not in turn
@@ -582,10 +596,10 @@ In Summary:
    docking caption.
 * Containers can optionally include a toolbar.
 * When a container contains other containers, each container's view is displayed
-   in a seperate tab.
+   in a separate tab.
 * When a container is the view  window for a dockable, any container children
    can be individually undocked from their parent container.
-* When used a the view for a dcikable, a container with child containers can be
+* When used a the view for a docker, a container with child containers can be
    undocked as a group.
 * An undocked container group (container with children) can be docked as a
    group inside another docked container. 
@@ -616,7 +630,7 @@ Fixes
 -----    
 * CFrame now supports Extra Large fonts in the menu and status bar. Also, font
     size can be changed while the application is running.
-* 16Bit colours (and greyscale) are now rendered properly
+* 16Bit colours (and grey-scale) are now rendered properly
 * Tabbing now works for modeless dialogs and property sheets
    (uses PreTranslateMessage).            
 
@@ -632,7 +646,7 @@ Incompatibilities with previous versions
 
 More About Docking
 ------------------
-* Any CWnd object inherrited from CDocker is capable of docking other CWnd
+* Any CWnd object inherited from CDocker is capable of docking other CWnd
     objects inherrited from CDocker.
 * Dockables can be docked in any of the 4 sides. Any number of windows can be 
    docked on a side.
@@ -640,7 +654,7 @@ More About Docking
    inside another. There is no theoretical limit as to depth of dockables 
    within dockables.
 * Dockables have a View window, just like the Frame, and MDI children.
-* Dockables are seperated by a movable splitter bar.
+* Dockables are separated by a movable splitter bar.
 * Dockables use a modern style of dock targeting and dock hinting (the same
     as Visual Studio 2005 and 2008).
 * Dockables can have styles including:
@@ -664,7 +678,7 @@ Example of how to dock 8 dockables inside a dockable view:
 ----------------------------------------------------------
 void CMainFrame::OnInitialUpdate()
 {
-    // CTextDockable in inherrited from CDocker
+    // CTextDockable in inherited from CDocker
 	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT, 100);
 	CDocker* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
 	CDocker* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP, 100);

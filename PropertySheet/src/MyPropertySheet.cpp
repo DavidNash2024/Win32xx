@@ -27,12 +27,16 @@ BOOL CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-void CButtonPage::OnApply()
+int CButtonPage::OnApply()
 { 
 	TRACE (_T("Appy button pressed\n")); 
 	
-	// Call the base class's OnApply
-	CPropertyPage::OnApply(); 
+	// The possible return values are:
+	// PSNRET_NOERROR. The changes made to this page are valid and have been applied
+	// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
+	// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
+
+	return Validate();
 }
 
 void CButtonPage::OnCancel()
@@ -46,28 +50,33 @@ BOOL CButtonPage::OnInitDialog()
 	return TRUE; 
 }
 
-void CButtonPage::OnOK()
+int CButtonPage::OnOK()
 { 
 	TRACE (_T("OK button pressed\n"));
 
-	// Call the base class's OnOK
-	CPropertyPage::OnOK(); 
+	// The possible return values are:
+	// PSNRET_NOERROR. The changes made to this page are valid and have been applied
+	// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
+	// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
+
+	return Validate(); 
 }
 
 BOOL CButtonPage::OnQueryCancel()
 { 
 	TRACE (_T("Ok to Cancel?\n")); 
 	
-	// return TRUE means OK to cancel
-	return TRUE; 
+	return FALSE;    // Allow cancel to proceed
 }
 
-void CButtonPage::OnSetActive()
+int CButtonPage::OnSetActive()
 {
 	TRACE(_T("Button page is now active\n"));
 
 	// Set the wizard buttons
 	PropSheet_SetWizButtons(GetParent(), PSWIZB_NEXT);
+
+	return 0;
 }
 
 int CButtonPage::Validate()
@@ -117,6 +126,8 @@ BOOL CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 BOOL CComboPage::OnInitDialog()
 {
+	TRACE (_T("Combo page created\n"));
+
 	// Put some text in the Combo Boxes
 	for (int i = 0 ; i < 6 ; i++)
 	{
@@ -128,10 +139,14 @@ BOOL CComboPage::OnInitDialog()
 	return TRUE;
 }
 
-void CComboPage::OnSetActive()
+int CComboPage::OnSetActive()
 {
+	TRACE(_T("Combo page is now active\n"));
+
 	// Set the wizard buttons
 	PropSheet_SetWizButtons(GetParent(), PSWIZB_BACK | PSWIZB_FINISH);
+
+	return 0;
 }
 
 CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hwndParent /* = NULL*/) : CPropertySheet(pszCaption, hwndParent)

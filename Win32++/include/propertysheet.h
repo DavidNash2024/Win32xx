@@ -78,20 +78,20 @@ namespace Win32xx
 		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);   
 		virtual tString GetWindowType() const { return _T("CPropertyPage"); }
-		virtual void OnApply();
+		virtual int  OnApply();
 		virtual void OnCancel();
+		virtual void OnHelp();
 		virtual BOOL OnInitDialog();
-		virtual void OnKillActive();
+		virtual BOOL OnKillActive();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual void OnOK();
+		virtual int  OnOK();
 		virtual BOOL OnQueryCancel();
 		virtual BOOL OnQuerySiblings(WPARAM wParam, LPARAM lParam);
-		virtual void OnSetActive();
-		virtual void OnWizardBack();
+		virtual int  OnSetActive();
+		virtual int  OnWizardBack();
 		virtual BOOL OnWizardFinish();
-		virtual void OnWizardNext();
+		virtual int  OnWizardNext();
 		virtual	BOOL PreTranslateMessage(MSG* pMsg);
-		virtual int Validate();
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
 		static BOOL CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -99,6 +99,7 @@ namespace Win32xx
 		void CancelToClose() const;
 		PROPSHEETPAGE GetPSP() const {return m_PSP;}
 		BOOL IsButtonEnabled(int iButton) const;
+		LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam) const;
 		void SetModified(BOOL bChanged) const;
 		void SetTitle(LPCTSTR szTitle);
 
@@ -127,7 +128,6 @@ namespace Win32xx
 		virtual void Destroy();
 		virtual int DoModal();
 		virtual tString GetWindowType() const { return _T("CPropertySheet"); }
-		virtual LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual void RemovePage(CPropertyPage* pPage);
 
 		// State functions
@@ -143,6 +143,7 @@ namespace Win32xx
 		virtual BOOL SetActivePage(CPropertyPage* pPage);
 		virtual void SetIcon(UINT idIcon);
 		virtual void SetTitle(LPCTSTR szTitle);
+		void SetWizardButtons(DWORD dwFlags);
 		virtual void SetWizardMode(BOOL bWizard);
 
 	protected:
@@ -191,7 +192,7 @@ namespace Win32xx
 	// Disables the Cancel button and changes the text of the OK button to "Close."
 	{
 		assert(::IsWindow(m_hWnd));
-		::SendMessage(m_hWnd, PSM_CANCELTOCLOSE, 0L, 0L);
+		SendMessage(PSM_CANCELTOCLOSE, 0L, 0L);
 	}
 
 
@@ -267,14 +268,10 @@ namespace Win32xx
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);
 				
-				if (lr)
-				{
-					// Set the return code for custom draw
-					if (NM_CUSTOMDRAW == ((LPNMHDR)lParam)->code)
-						SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
+				// Set the return code for notifications
+				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
 				
-					return (BOOL)lr;
-				}
+				return TRUE;
 			}
 			break;
 
@@ -304,17 +301,21 @@ namespace Win32xx
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWnd = ::GetDlgItem(::GetParent(m_hWnd), iButton);
+		HWND hWnd = ::GetDlgItem(GetParent(), iButton);
 		return ::IsWindowEnabled(hWnd);
 	}
 
-	inline void CPropertyPage::OnApply()
+	inline int CPropertyPage::OnApply()
 	{
 		// This function is called for each page when the Apply button is pressed
 		// Override this function in your derived class if required.
 
-		// Set the return value for this notification
-		SetWindowLongPtr(DWLP_MSGRESULT, Validate());
+		// The possible return values are:
+		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
+		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
+		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
+
+		return PSNRET_NOERROR;
 	}
 
 	inline void CPropertyPage::OnCancel()
@@ -323,11 +324,18 @@ namespace Win32xx
 		// Override this function in your derived class if required.
 	}
 
+	inline void CPropertyPage::OnHelp()
+	{
+		// This function is called in response to the PSN_HELP notification.
+		SendMessage(m_hWnd, WM_COMMAND, ID_HELP, 0L);
+	}
+
 	inline BOOL CPropertyPage::OnQueryCancel()
 	{
 		// Called when the cancel button is pressed, and before the cancel has taken place
+		// Returns TRUE to prevent the cancel operation, or FALSE to allow it.
 
-		return TRUE;    // Allow cancel to proceed
+		return FALSE;    // Allow cancel to proceed
 	}
 
 	inline BOOL CPropertyPage::OnQuerySiblings(WPARAM wParam, LPARAM lParam)
@@ -339,9 +347,10 @@ namespace Win32xx
 		// The values for wParam and lParam are the ones set by
 		// the CPropertySheet::QuerySiblings call
 
-		// return zero to allow other siblings to be queried, or
-		// return nonzero to stop query at this page.
-		return 0;
+		// return FALSE to allow other siblings to be queried, or
+		// return TRUE to stop query at this page.
+		
+		return FALSE;
 	}
 
 	inline BOOL CPropertyPage::OnInitDialog()
@@ -352,50 +361,108 @@ namespace Win32xx
 		return TRUE; // Pass Keyboard control to handle in WPARAM
 	}
 
-	inline void CPropertyPage::OnKillActive()
+	inline BOOL CPropertyPage::OnKillActive()
 	{
 		// This is called in response to a PSN_KILLACTIVE notification, which
 		// is sent whenever the OK or Apply button is pressed.
 		// It provides an opportunity to validate the page contents before it's closed.
+		// Return TRUE to prevent the page from losing the activation, or FALSE to allow it.
 
-		// Set the return value for this notification
-		SetWindowLongPtr(DWLP_MSGRESULT, Validate());
-
+		return FALSE;
 	}
 
-	inline void CPropertyPage::OnOK()
+	inline int CPropertyPage::OnOK()
 	{
 		// Called for each page when the OK button is pressed
 		// Override this function in your derived class if required.
 
-		// Set the return value for this notification
-		SetWindowLongPtr(DWLP_MSGRESULT, Validate());
+		// The possible return values are:
+		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
+		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
+		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
+
+		return PSNRET_NOERROR;
 	}
 
-	inline void CPropertyPage::OnSetActive()
+	inline LRESULT CPropertyPage::OnNotify(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+
+		LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
+		switch(pNotify->hdr.code)
+		{
+		case PSN_SETACTIVE:
+			return OnSetActive();
+		case PSN_KILLACTIVE:
+			return OnKillActive();
+		case PSN_APPLY:
+			if (pNotify->lParam)
+				return OnOK();
+			else
+				return OnApply();
+		case PSN_RESET:
+			OnCancel();
+			return FALSE;
+		case PSN_QUERYCANCEL:
+			return OnQueryCancel();
+		case PSN_WIZNEXT:
+			return OnWizardNext();
+		case PSN_WIZBACK:
+			return OnWizardBack();
+		case PSN_WIZFINISH:
+			return OnWizardFinish();
+		case PSN_HELP:
+			OnHelp();
+			return TRUE; 
+		} 
+		return FALSE;
+	}
+
+	inline int CPropertyPage::OnSetActive()
 	{
 		// Called when a page becomes active
 		// Override this function in your derived class if required.
+
+		// Returns zero to accept the activation, or -1 to activate the next or the previous page (depending
+		// on whether the user clicked the Next or Back button). To set the activation to a particular page, 
+		// return the resource identifier of the page.
+
+		return 0;
 	}
 
-	inline void CPropertyPage::OnWizardBack()
+	inline int CPropertyPage::OnWizardBack()
 	{
 		// This function is called when the Back button is pressed on a wizard page
 		// Override this function in your derived class if required.
+
+		// Returns 0 to allow the wizard to go to the previous page. Returns -1 to prevent the wizard 
+		// from changing pages. To display a particular page, return its dialog resource identifier.
+
+		return 0;
 	}
 
-	inline BOOL CPropertyPage::OnWizardFinish()
+	inline INT_PTR CPropertyPage::OnWizardFinish()
 	{
 		// This function is called when the Finish button is pressed on a wizard page
 		// Override this function in your derived class if required.
 
-		return TRUE; // Allow wizard to finish
+		// Return Value:
+		// Return TRUE to prevent the wizard from finishing.
+		// Version 5.80. and later. Return a window handle to prevent the wizard from finishing. The wizard will set the focus to that window. The window must be owned by the wizard page.
+		// Return FALSE to allow the wizard to finish.
+
+		return FALSE; // Allow wizard to finish
 	}
 
-	inline void CPropertyPage::OnWizardNext()
+	inline int CPropertyPage::OnWizardNext()
 	{
 		// This function is called when the Next button is pressed on a wizard page
 		// Override this function in your derived class if required.
+
+		// Return 0 to allow the wizard to go to the next page. Return -1 to prevent the wizard from
+		// changing pages. To display a particular page, return its dialog resource identifier.
+
+		return 0;
 	}
 
 	inline BOOL CPropertyPage::PreTranslateMessage(MSG* pMsg)
@@ -419,48 +486,20 @@ namespace Win32xx
 		return CWnd::PreTranslateMessage(pMsg);
 	}
 
-	inline LRESULT CPropertyPage::OnNotify(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CPropertyPage::QuerySiblings(WPARAM wParam, LPARAM lParam) const
 	{
-		UNREFERENCED_PARAMETER(wParam);
+		// Sent to a property sheet, which then forwards the message to each of its pages.
+		// Set wParam and lParam to values you want passed to the property pages.
+		// Returns the nonzero value from a page in the property sheet, or zero if no page returns a nonzero value.
 
-		LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
-		switch(pNotify->hdr.code)
-		{
-		case PSN_SETACTIVE:
-			OnSetActive();
-			return TRUE;
-		case PSN_KILLACTIVE:
-			OnKillActive();
-			return TRUE;
-		case PSN_APPLY:
-			if (pNotify->lParam)
-				OnOK();
-			else
-				OnApply();
-			return TRUE;
-		case PSN_RESET:
-			OnCancel();
-			return TRUE;
-		case PSN_QUERYCANCEL:
-			return !OnQueryCancel();
-		case PSN_WIZNEXT:
-			OnWizardNext();
-			return TRUE;
-		case PSN_WIZBACK:
-			OnWizardBack();
-			return TRUE;
-		case PSN_WIZFINISH:
-			return !OnWizardFinish();
-		case PSN_HELP:
-			SendMessage(m_hWnd, WM_COMMAND, ID_HELP, 0L);
-			return TRUE;
-
-		}
-		return FALSE;
+		assert(::IsWindow(m_hWnd));
+		return ::SendMessage(GetParent(), PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
 	inline void CPropertyPage::SetModified(BOOL bChanged) const
 	{
+		// The property sheet will enable the Apply button if bChanged is TRUE.
+
 		assert(::IsWindow(m_hWnd));
 
 		if (bChanged)
@@ -542,30 +581,6 @@ namespace Win32xx
 		}
 	}
 
-	inline int CPropertyPage::Validate()
-	{
-		// Override this function in your derived class if required.
-		// This function is used to validate the page. Specify the appropriate return
-		// value to indicate whether or not the page is valid.
-
-		// The possible return values are:
-		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
-		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned
-		//                               to the page that had focus when the button was pressed.
-
-
-		int nStatus = PSNRET_NOERROR;
-	//	int nStatus = PSNRET_INVALID;
-	//	int nStatus = PSNRET_INVALID_NOCHANGEPAGE;
-
-		// Tell the user what went wrong
-		if (nStatus != PSNRET_NOERROR)
-			MessageBox(_T("Validation Failed"), _T("PageSheet Check"), MB_OK);
-
-		return nStatus;
-	}
-
 
 	///////////////////////////////////////////
 	// Definitions for the CPropertySheet class
@@ -613,6 +628,7 @@ namespace Win32xx
 	}
 
 	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
+	// Adds a Property Page to the Property Sheet
 	{
 		assert(NULL != pPage);
 
@@ -632,6 +648,7 @@ namespace Win32xx
 	}
 
 	inline void CPropertySheet::BuildPageArray()
+	// Builds the PROPSHEETPAGE array
 	{
 		m_vPSP.clear();
 		std::vector<PropertyPagePtr>::iterator iter;
@@ -681,7 +698,7 @@ namespace Win32xx
 
 
 	inline HWND CPropertySheet::Create(HWND hWndParent /*= 0*/)
-	// Creates a modeless Property sheet
+	// Creates a modeless Property Sheet
 	{
 		assert( GetApp() );
 
@@ -709,8 +726,7 @@ namespace Win32xx
 		INT_PTR ipResult = 0;
 
 		// Only one window per CWnd instance allowed
-		if (::IsWindow(m_hWnd))
-			throw CWinException(_T("CreatePropertySheet ... Window already exists"));
+		assert(!::IsWindow(m_hWnd));
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -731,6 +747,7 @@ namespace Win32xx
 		HWND hwndButton = ::GetDlgItem(m_hWnd, IDButton);
 		if (hwndButton != NULL)
 		{
+			// Hide and disable the button
 			::ShowWindow(hwndButton, SW_HIDE);
 			::EnableWindow(hwndButton, FALSE);
 		}
@@ -764,7 +781,7 @@ namespace Win32xx
 		CPropertyPage* pPage = NULL;
 		if (m_hWnd != NULL)
 		{
-			HWND hPage = (HWND)::SendMessage(m_hWnd, PSM_GETCURRENTPAGEHWND, 0L, 0L);
+			HWND hPage = (HWND)SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L);
 			pPage = (CPropertyPage*)FromHandle(hPage);
 		}
 
@@ -772,6 +789,7 @@ namespace Win32xx
 	}
 
 	inline int CPropertySheet::GetPageCount() const
+	// Returns the number of Property Pages in this Property Sheet
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)m_vPages.size();
@@ -790,9 +808,10 @@ namespace Win32xx
 	}
 
 	inline HWND CPropertySheet::GetTabControl() const
+	// Returns the handle to the Property Sheet's tab control
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HWND)SendMessage(m_hWnd, PSM_GETTABCONTROL, 0L, 0L);
+		return (HWND)SendMessage(PSM_GETTABCONTROL, 0L, 0L);
 	}
 
 	inline BOOL CPropertySheet::IsModeless() const
@@ -806,6 +825,7 @@ namespace Win32xx
 	}
 
 	inline void CPropertySheet::RemovePage(CPropertyPage* pPage)
+	// Removes a Property Page from the Property Sheet
 	{
 		assert(::IsWindow(m_hWnd));
 
@@ -834,15 +854,6 @@ namespace Win32xx
 		}
 
 		return CWnd::PreTranslateMessage(pMsg);
-	}
-
-	inline LRESULT CPropertySheet::QuerySiblings(WPARAM wParam, LPARAM lParam)
-	{
-		// Set wParam and lParam to values you want passed to the
-		// property pages in CPropertyPage::OnQuerySiblings.
-
-		assert(::IsWindow(m_hWnd));
-		return ::SendMessage(m_hWnd, PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
 	inline BOOL CPropertySheet::SetActivePage(int nPage)
@@ -883,6 +894,18 @@ namespace Win32xx
 			m_PSH.dwFlags |= PSH_WIZARD;
 		else
 			m_PSH.dwFlags &= ~PSH_WIZARD;
+	}
+
+	inline void CPropertySheet::SetWizardButtons(DWORD dwFlags)
+	{
+		// dwFlags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
+		//	PSWIZB_BACK				Enable the Back button. If this flag is not set, the Back button is displayed as disabled.
+		//	PSWIZB_DISABLEDFINISH	Display a disabled Finish button.
+		//	PSWIZB_FINISH			Display an enabled Finish button.
+		//	PSWIZB_NEXT				Enable the Next button. If this flag is not set, the Next button is displayed as disabled.
+
+		assert (::IsWindow(m_hWnd));
+		PropSheet_SetWizButtons(m_hWnd, dwFlags);
 	}
 
 	inline LRESULT CPropertySheet::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
