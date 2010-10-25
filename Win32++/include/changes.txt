@@ -21,7 +21,7 @@ New Features and Enhancements
 * Added the GDIPlus sample to demonstrate how to use the GDIPlus library 
    provided with modern Windows operating systems (XP and above).
 * Win32++ can now be run from inside a DLL.
-* Dialogs and Property Sheets now use DWL_MSGRESULT to automatically handle the 
+* Dialogs and Property Sheets now use DWLP_MSGRESULT to automatically handle the 
    value returned by notifications in their message handling.     
 * Moved the text conversion functions from CWnd to the global (Win32++)
    namespace.
@@ -38,7 +38,8 @@ New Features and Enhancements
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
    - an attempt to read from or write to the registry fails.
-* Vectors are now used as a replacement for all dynamically allocated arrays.
+* Vectors are now used as a replacement for all dynamically allocated arrays, 
+   ensuring the arrays are automatically deleted when they go out of scope.
 
 Changes in detail
 -----------------
@@ -54,7 +55,7 @@ Added Shared_Ptr
 Added CThread 
 Updated CSocket to support IPv6
 Added CPropertySheet::SetIcon
-Added CPropertySheet::SetWizardButtons
+Added CPropertyPage::SetWizardButtons
 Added CPropertyPage::QuerySiblings
 Added CRebar::SizeToRect
 Added CSocket::IsIPV6Supported

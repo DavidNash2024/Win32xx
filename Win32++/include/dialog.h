@@ -233,8 +233,9 @@ namespace Win32xx
 	}
 
 	inline BOOL CDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// All DialogProc functions should pass unhandled messages to this function
 	{
-		// All unhandled dialog messages end up here
+		LRESULT lr = 0;
 
 		switch (uMsg)
 	    {
@@ -257,13 +258,14 @@ namespace Win32xx
 				{
 					// Refelect this message if it's from a control
 					CWnd* pWnd = FromHandle((HWND)lParam);
-					if (pWnd != NULL)
-						if (pWnd->OnMessageReflect(uMsg, wParam, lParam))
-							return TRUE;
+					if (pWnd != NULL) 
+						lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
 					// Handle user commands
-					if (OnCommand(wParam, lParam))
-						return TRUE;
+					if (!lr) 
+						lr =  OnCommand(wParam, lParam);
+					
+					if (lr) return 0L;			
 				}
 				break;  // Some commands require default processing
 	        }
@@ -274,7 +276,6 @@ namespace Win32xx
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
-				LRESULT lr = 0L;
 
 				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
@@ -296,7 +297,7 @@ namespace Win32xx
 				// Set the return code for notifications
 				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
 				
-				return TRUE;
+				return lr;
 			}
 			break;
 
@@ -336,9 +337,8 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-		BOOL IsHookedHere = FALSE;
-
 	#ifndef _WIN32_WCE
+		BOOL IsHookedHere = FALSE;
 		if (NULL == pTLSData->hHook )
 		{
 			pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
@@ -485,13 +485,7 @@ namespace Win32xx
 		{
 			// Find the CWnd pointer mapped to this HWND
 			CDialog* w = (CDialog*)GetApp()->GetCWndFromMap(hWnd);
-			if (0 != w)
-			{
-				// CDialog pointer found, so call the CDialog's DialogProc
-				return w->DialogProc(uMsg, wParam, lParam);
-			}
-
-			else
+			if (0 == w)
 			{
 				// The HWND wasn't in the map, so add it now
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
@@ -508,9 +502,9 @@ namespace Win32xx
 				// Store the Window pointer into the HWND map
 				w->m_hWnd = hWnd;
 				w->AddToMap();
-
-				return w->DialogProc(uMsg, wParam, lParam);
 			}
+
+			return w->DialogProc(uMsg, wParam, lParam);
 		}
 
 		catch (const CWinException &e )

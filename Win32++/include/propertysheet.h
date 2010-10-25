@@ -102,6 +102,7 @@ namespace Win32xx
 		LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam) const;
 		void SetModified(BOOL bChanged) const;
 		void SetTitle(LPCTSTR szTitle);
+		void SetWizardButtons(DWORD dwFlags) const;
 
 	protected:
 		PROPSHEETPAGE m_PSP;
@@ -143,7 +144,6 @@ namespace Win32xx
 		virtual BOOL SetActivePage(CPropertyPage* pPage);
 		virtual void SetIcon(UINT idIcon);
 		virtual void SetTitle(LPCTSTR szTitle);
-		void SetWizardButtons(DWORD dwFlags);
 		virtual void SetWizardMode(BOOL bWizard);
 
 	protected:
@@ -217,10 +217,9 @@ namespace Win32xx
 	}
 
 	inline BOOL CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// All DialogProc functions should pass unhandled messages to this function
 	{
-		// All unhandled property page messages end up here
-
-		assert( GetApp() );
+		LRESULT lr = 0L;
 
 		switch (uMsg)
 	    {
@@ -234,13 +233,14 @@ namespace Win32xx
 			{
 				// Refelect this message if it's from a control
 				CWnd* pWnd = FromHandle((HWND)lParam);
-				if (pWnd != NULL)
-					if (pWnd->OnMessageReflect(uMsg, wParam, lParam))
-						return TRUE;
+				if (pWnd != NULL) 
+					lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
 				// Handle user commands
-				if (OnCommand(wParam, lParam))
-					return TRUE;
+				if (!lr) 
+					lr =  OnCommand(wParam, lParam);
+				
+				if (lr) return 0L;
 			}
 			break;
 
@@ -249,7 +249,6 @@ namespace Win32xx
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
-				LRESULT lr = 0L;
 
 				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{
@@ -271,7 +270,7 @@ namespace Win32xx
 				// Set the return code for notifications
 				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
 				
-				return TRUE;
+				return lr;
 			}
 			break;
 
@@ -524,6 +523,18 @@ namespace Win32xx
 		m_PSP.pszTitle = m_Title.c_str();
 	}
 
+	inline void CPropertyPage::SetWizardButtons(DWORD dwFlags) const
+	{
+		// dwFlags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
+		//	PSWIZB_BACK				Enable the Back button. If this flag is not set, the Back button is displayed as disabled.
+		//	PSWIZB_DISABLEDFINISH	Display a disabled Finish button.
+		//	PSWIZB_FINISH			Display an enabled Finish button.
+		//	PSWIZB_NEXT				Enable the Next button. If this flag is not set, the Next button is displayed as disabled.
+
+		assert (::IsWindow(m_hWnd));
+		PropSheet_SetWizButtons(GetParent(), dwFlags);
+	}
+
 	inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp)
 	{
 		assert( GetApp() );
@@ -563,12 +574,7 @@ namespace Win32xx
 
 		// Find matching CWnd pointer for this HWND
 		CPropertyPage* pPage = (CPropertyPage*)GetApp()->GetCWndFromMap(hwndDlg);
-		if (pPage != 0)
-		{
-			// matching CWnd pointer found for this HWND, so call DialogProc
-			return pPage->DialogProc(uMsg, wParam, lParam);
-		}
-		else
+		if (0 == pPage)
 		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
@@ -577,8 +583,9 @@ namespace Win32xx
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
 			pPage->AddToMap();
-			return pPage->DialogProc(uMsg, wParam, lParam);
 		}
+
+		return pPage->DialogProc(uMsg, wParam, lParam);
 	}
 
 
@@ -894,18 +901,6 @@ namespace Win32xx
 			m_PSH.dwFlags |= PSH_WIZARD;
 		else
 			m_PSH.dwFlags &= ~PSH_WIZARD;
-	}
-
-	inline void CPropertySheet::SetWizardButtons(DWORD dwFlags)
-	{
-		// dwFlags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
-		//	PSWIZB_BACK				Enable the Back button. If this flag is not set, the Back button is displayed as disabled.
-		//	PSWIZB_DISABLEDFINISH	Display a disabled Finish button.
-		//	PSWIZB_FINISH			Display an enabled Finish button.
-		//	PSWIZB_NEXT				Enable the Next button. If this flag is not set, the Next button is displayed as disabled.
-
-		assert (::IsWindow(m_hWnd));
-		PropSheet_SetWizButtons(m_hWnd, dwFlags);
 	}
 
 	inline LRESULT CPropertySheet::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

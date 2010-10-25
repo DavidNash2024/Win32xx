@@ -1911,12 +1911,7 @@ namespace Win32xx
 		try
 		{
 			CWnd* w = GetApp()->GetCWndFromMap(hWnd);
-			if (0 != w)
-			{
-				// CWnd pointer found, so call the CWnd's WndProc
-				return w->WndProc(uMsg, wParam, lParam);
-			}
-			else
+			if (0 == w)
 			{
 				// The CWnd pointer wasn't found in the map, so add it now
 
@@ -1935,9 +1930,9 @@ namespace Win32xx
 				// Store the CWnd pointer in the HWND map
 				w->m_hWnd = hWnd;
 				w->AddToMap();
-
-				return w->WndProc(uMsg, wParam, lParam);
 			}
+
+			return w->WndProc(uMsg, wParam, lParam);
 		}
 
 		catch (const CWinException &e)
@@ -1983,6 +1978,8 @@ namespace Win32xx
 	inline LRESULT CWnd::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// All WndProc functions should pass unhandled window messages to this function
 	{
+		LRESULT lr = 0L;
+
     	switch (uMsg)
 		{
 		case WM_COMMAND:
@@ -1990,12 +1987,13 @@ namespace Win32xx
 				// Refelect this message if it's from a control
 				CWnd* pWnd = FromHandle((HWND)lParam);
 				if (pWnd != NULL)
-					if (pWnd->OnMessageReflect(uMsg, wParam, lParam))
-						return TRUE;
+					lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
 				// Handle user commands
-				if (OnCommand(wParam, lParam))
-					return TRUE;
+				if (!lr) 
+					lr =  OnCommand(wParam, lParam);
+				
+				if (lr) return 0L;	
 			}
 			break;  // Note: Some MDI commands require default processing
 		case WM_CREATE:
@@ -2011,7 +2009,6 @@ namespace Win32xx
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
-				LRESULT lr = 0L;
 
 				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
 				{

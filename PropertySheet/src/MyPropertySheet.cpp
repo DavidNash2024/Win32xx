@@ -74,7 +74,7 @@ int CButtonPage::OnSetActive()
 	TRACE(_T("Button page is now active\n"));
 
 	// Set the wizard buttons
-	PropSheet_SetWizButtons(GetParent(), PSWIZB_NEXT);
+	SetWizardButtons(PSWIZB_NEXT);
 
 	return 0;
 }
@@ -144,7 +144,7 @@ int CComboPage::OnSetActive()
 	TRACE(_T("Combo page is now active\n"));
 
 	// Set the wizard buttons
-	PropSheet_SetWizButtons(GetParent(), PSWIZB_BACK | PSWIZB_FINISH);
+	SetWizardButtons(PSWIZB_BACK | PSWIZB_FINISH);
 
 	return 0;
 }
