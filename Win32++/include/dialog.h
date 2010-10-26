@@ -258,14 +258,14 @@ namespace Win32xx
 				{
 					// Refelect this message if it's from a control
 					CWnd* pWnd = FromHandle((HWND)lParam);
-					if (pWnd != NULL) 
+					if (pWnd != NULL)
 						lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
 					// Handle user commands
-					if (!lr) 
+					if (!lr)
 						lr =  OnCommand(wParam, lParam);
-					
-					if (lr) return 0L;			
+
+					if (lr) return 0L;
 				}
 				break;  // Some commands require default processing
 	        }
@@ -293,13 +293,12 @@ namespace Win32xx
 
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);
-				
+
 				// Set the return code for notifications
-				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
-				
+				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
+
 				return lr;
 			}
-			break;
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -410,7 +409,7 @@ namespace Win32xx
 		// Now handle dialog creation failure
 		if (!m_hWnd)
 			throw CWinException(_T("Failed to create dialog"));
-	
+
 		return m_hWnd;
 	}
 
@@ -547,7 +546,7 @@ namespace Win32xx
     /////////////////////////////////////
 	// Definitions for the CResizer class
 	//
-    
+
 	void inline CResizer::AddChild(CWnd* pWnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.
@@ -573,7 +572,7 @@ namespace Win32xx
     void inline CResizer::Initialize(CWnd* pParent, RECT rcMin, RECT rcMax)
 	// Sets up the Resizer by specifying the parent window (usually a dialog),
 	//  and the minimum and maximum allowed rectangle sizes.
-    {	
+    {
     	assert (NULL != pParent);
 
     	m_pParent = pParent;
@@ -601,7 +600,7 @@ namespace Win32xx
 		// Determine the x and y ratios
     	double xRatio = (double)rcCurrent.Width()  / (double)m_rcInit.Width();
     	double yRatio = (double)rcCurrent.Height() / (double)m_rcInit.Height();
-    	
+
 		// Declare an iterator to step through the vector
 		std::vector<ResizeData>::iterator iter;
 

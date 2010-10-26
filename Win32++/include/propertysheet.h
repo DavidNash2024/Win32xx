@@ -76,7 +76,7 @@ namespace Win32xx
 		virtual ~CPropertyPage() {}
 
 		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);   
+		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual tString GetWindowType() const { return _T("CPropertyPage"); }
 		virtual int  OnApply();
 		virtual void OnCancel();
@@ -110,7 +110,7 @@ namespace Win32xx
 	private:
 		CPropertyPage(const CPropertyPage&);				// Disable copy construction
 		CPropertyPage& operator = (const CPropertyPage&);	// Disable assignment operator
-		
+
 		tString m_Title;
 	};
 
@@ -120,7 +120,7 @@ namespace Win32xx
 		CPropertySheet(UINT nIDCaption, HWND hwndParent = NULL);
 		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
 		virtual ~CPropertySheet() {}
-		
+
 		// Operations
 		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
 		virtual HWND Create(HWND hWndParent = 0);
@@ -134,7 +134,7 @@ namespace Win32xx
 		// State functions
 		BOOL IsModeless() const;
 		BOOL IsWizard() const;
-		
+
 		//Attributes
 		CPropertyPage* GetActivePage() const;
 		int GetPageCount() const;
@@ -162,7 +162,7 @@ namespace Win32xx
 		BOOL m_bInitialUpdate;
 		PROPSHEETHEADER m_PSH;
 	};
-	
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -233,13 +233,13 @@ namespace Win32xx
 			{
 				// Refelect this message if it's from a control
 				CWnd* pWnd = FromHandle((HWND)lParam);
-				if (pWnd != NULL) 
+				if (pWnd != NULL)
 					lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
 				// Handle user commands
-				if (!lr) 
+				if (!lr)
 					lr =  OnCommand(wParam, lParam);
-				
+
 				if (lr) return 0L;
 			}
 			break;
@@ -262,17 +262,16 @@ namespace Win32xx
 						if (pWndFromParent != NULL)
 							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 					}
-				} 
+				}
 
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);
-				
+
 				// Set the return code for notifications
-				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);				
-				
+				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
+
 				return lr;
 			}
-			break;
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -348,7 +347,7 @@ namespace Win32xx
 
 		// return FALSE to allow other siblings to be queried, or
 		// return TRUE to stop query at this page.
-		
+
 		return FALSE;
 	}
 
@@ -412,8 +411,8 @@ namespace Win32xx
 			return OnWizardFinish();
 		case PSN_HELP:
 			OnHelp();
-			return TRUE; 
-		} 
+			return TRUE;
+		}
 		return FALSE;
 	}
 
@@ -423,7 +422,7 @@ namespace Win32xx
 		// Override this function in your derived class if required.
 
 		// Returns zero to accept the activation, or -1 to activate the next or the previous page (depending
-		// on whether the user clicked the Next or Back button). To set the activation to a particular page, 
+		// on whether the user clicked the Next or Back button). To set the activation to a particular page,
 		// return the resource identifier of the page.
 
 		return 0;
@@ -434,7 +433,7 @@ namespace Win32xx
 		// This function is called when the Back button is pressed on a wizard page
 		// Override this function in your derived class if required.
 
-		// Returns 0 to allow the wizard to go to the previous page. Returns -1 to prevent the wizard 
+		// Returns 0 to allow the wizard to go to the previous page. Returns -1 to prevent the wizard
 		// from changing pages. To display a particular page, return its dialog resource identifier.
 
 		return 0;
@@ -743,14 +742,14 @@ namespace Win32xx
 
 		// Create the property sheet
 		ipResult = PropertySheet(ppsph);
-		
+
 		return ipResult;
 	}
 
 	inline void CPropertySheet::DestroyButton(int IDButton)
 	{
 		assert(::IsWindow(m_hWnd));
-		
+
 		HWND hwndButton = ::GetDlgItem(m_hWnd, IDButton);
 		if (hwndButton != NULL)
 		{
@@ -776,7 +775,7 @@ namespace Win32xx
 
 		// Create the Property Sheet
 		int nResult = (int)CreatePropertySheet(&m_PSH);
-		
+
 		m_vPages.clear();
 		return nResult;
 	}
@@ -856,7 +855,7 @@ namespace Win32xx
 
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
-		{ 
+		{
 			return GetActivePage()->PreTranslateMessage(pMsg);
 		}
 
