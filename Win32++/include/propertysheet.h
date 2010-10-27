@@ -273,6 +273,27 @@ namespace Win32xx
 				return lr;
 			}
 
+		case WM_PAINT:
+			{
+				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
+				{
+					::PAINTSTRUCT ps;
+					HDC hDC = ::BeginPaint(m_hWnd, &ps);
+
+					OnPaint(hDC);
+					::EndPaint(m_hWnd, &ps);
+				}
+				else
+				// RedrawWindow can require repainting without an update rect
+				{
+					HDC hDC = ::GetDC(m_hWnd);
+
+					OnPaint(hDC);
+					::ReleaseDC(m_hWnd, hDC);
+				}
+			}
+			break;
+
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
 		case WM_CTLCOLOREDIT:

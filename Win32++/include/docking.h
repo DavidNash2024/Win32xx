@@ -2572,7 +2572,7 @@ namespace Win32xx
 				m_nTimerCount++;
 				if (m_nTimerCount == 10)
 				{
-					KillTimer(m_hWnd, wParam);
+					KillTimer(wParam);
 					m_nTimerCount = 0;
 				}
 			}
@@ -3610,7 +3610,7 @@ namespace Win32xx
 			break;
 		case UWM_DOCK_ACTIVATED:
 			DrawAllCaptions();
-			SetTimer(m_hWnd, 1, 100, NULL);
+			SetTimer(1, 100, NULL);
 			break;
 		case WM_SYSCOLORCHANGE:
 			OnSysColorChange(wParam, lParam);

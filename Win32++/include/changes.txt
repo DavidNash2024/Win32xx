@@ -141,6 +141,8 @@ Removed CWinException::MessageBox
 Removed CPropertySheet::QuerySiblings
 
 Added DS_NO_CLOSE style to suppress the closing of docked dockers
+Added WM_PAINT handler to CDialog::DialogProcDefault
+Added WM_PAINT handler to CPropertyPage::DialogProcDefault
 
 Added GDIPlus sample
 Updated Network samples
@@ -197,6 +199,8 @@ Added CWnd::GetClassName
 Added CWnd::GetDlgItemText
 Added CWnd::GetWindowText
 Added CWnd::GetWindowType
+Added CWnd::KillTimer
+Added CWnd::SetTimer
 Added GetSizeofMenuItemInfo
 Removed CharToTString
 Removed TCharToString

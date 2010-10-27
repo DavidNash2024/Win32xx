@@ -480,6 +480,7 @@ namespace Win32xx
 		BOOL IsWindow() const;
 		BOOL IsWindowEnabled() const;
 		BOOL IsWindowVisible() const;
+		BOOL KillTimer(UINT_PTR uIDEvent) const;
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
 		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		void MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
@@ -502,6 +503,7 @@ namespace Win32xx
 		HWND SetParent(HWND hParent) const;
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		int  SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
+		UINT_PTR SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
@@ -2658,6 +2660,13 @@ namespace Win32xx
 		return ::IsZoomed(m_hWnd);
 	}
 
+	inline BOOL CWnd::KillTimer(UINT_PTR uIDEvent) const
+	// Destroys the specified timer.
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::KillTimer(m_hWnd, uIDEvent);
+	}
+
 	inline BOOL CWnd::LockWindowUpdate(HWND hWndLock) const
 	// Disables or enables drawing in the specified window. Only one window can be locked at a time.
 	// Use a hWndLock of NULL to re-enable drawing in the window
@@ -2703,7 +2712,7 @@ namespace Win32xx
 
 	inline int CWnd::SetScrollPos(int nBar, int nPos, BOOL bRedraw) const
 	// The SetScrollPos function sets the position of the scroll box (thumb) in
-	// the specified scroll bar
+	// the specified scroll bar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SetScrollPos(m_hWnd, nBar, nPos, bRedraw);
@@ -2714,6 +2723,13 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SetScrollRange(m_hWnd, nBar, nMinPos, nMaxPos, bRedraw);
+	}
+
+	inline UINT_PTR CWnd::SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const
+	// Creates a timer with the specified time-out value.
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::SetTimer(m_hWnd, nIDEvent, uElapse, lpTimerFunc);
 	}
 
 	inline BOOL CWnd::SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const
