@@ -464,7 +464,7 @@ namespace Win32xx
 		HDC  GetDC() const;
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
-		int  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
+		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		HFONT GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
 		HWND GetParent() const;
@@ -482,8 +482,8 @@ namespace Win32xx
 		BOOL IsWindowVisible() const;
 		BOOL KillTimer(UINT_PTR uIDEvent) const;
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
-		void MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
-		void MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
+		BOOL MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
+		BOOL MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		BOOL RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
@@ -2197,7 +2197,7 @@ namespace Win32xx
 		return ::GetDlgItem(m_hWnd, nIDDlgItem);
 	}
 
-	inline int CWnd::GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const
+	inline UINT CWnd::GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::GetDlgItemInt(m_hWnd, nIDDlgItem, lpTranslated, bSigned);
@@ -2338,18 +2338,18 @@ namespace Win32xx
 		return ::MessageBox(m_hWnd, lpText, lpCaption, uType);
 	}
 
-	inline void CWnd::MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint /* = TRUE*/) const
+	inline BOOL CWnd::MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint /* = TRUE*/) const
 	// The MoveWindow function changes the position and dimensions of the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		::MoveWindow(m_hWnd, x, y, nWidth, nHeight, bRepaint = TRUE);
+		return ::MoveWindow(m_hWnd, x, y, nWidth, nHeight, bRepaint = TRUE);
 	}
 
-	inline void CWnd::MoveWindow(const RECT& rc, BOOL bRepaint /* = TRUE*/) const
+	inline BOOL CWnd::MoveWindow(const RECT& rc, BOOL bRepaint /* = TRUE*/) const
 	// The MoveWindow function changes the position and dimensions of the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		::MoveWindow(m_hWnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, bRepaint);
+		return ::MoveWindow(m_hWnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, bRepaint);
 	}
 
 	inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const

@@ -111,76 +111,68 @@ namespace Win32xx
 	public:
 		CDC( );
 		CDC( HDC hDC );
-		CDC(const CDC& rhs);				// Copy constructor
-		void operator = ( const HDC hDC );
+		CDC(const CDC& rhs);					// Copy constructor
+		void operator = ( const HDC hDC );		// Cast the CDC object to a HDC
+		operator HDC( ) const { return *m_DC; }
 		virtual ~CDC( );
+		void AttachDC( HDC hDC );
+		HDC  DetachDC( );
 		HDC GetHDC( ) const { return *m_DC; }
 
-		virtual void AttachDC( HDC hDC );
-		virtual HDC  DetachDC( );
-		virtual void DrawBitmap( int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask );
-		virtual void GradientFill( COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical );
-		virtual void SolidFill( COLORREF Color, const RECT& rc );
-
 		// Create and Select Bitmaps
-		virtual void AttachBitmap( HBITMAP hBitmap );
-		virtual void CreateBitmap( int cx, int cy, UINT Planes, UINT BitsPerPixel, CONST VOID *pvColors );
-		virtual void CreateCompatibleBitmap( HDC hDC, int cx, int cy );
-		virtual void CreateDIBSection( HDC hdc, const BITMAPINFO& bmi, UINT iUsage, VOID **ppvBits,
+		void AttachBitmap( HBITMAP hBitmap );
+		void CreateBitmap( int cx, int cy, UINT Planes, UINT BitsPerPixel, CONST VOID *pvColors );
+		void CreateCompatibleBitmap( HDC hDC, int cx, int cy );
+		void CreateDIBSection( HDC hdc, const BITMAPINFO& bmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset) ;
-		virtual HBITMAP DetachBitmap( );
-
-		// Create and Select Brushes
-		virtual void AttachBrush( HBRUSH hBrush );
-		virtual void CreateDIBPatternBrushPt( const VOID *lpPackedDIB, UINT iUsage );
-		virtual void CreatePatternBrush( HBITMAP hbmp );
-		virtual void CreateSolidBrush( COLORREF rbg );
-		virtual HBRUSH DetachBrush( );
-
-		// Create and Select Fonts
-		virtual void AttachFont( HFONT hFont );
-		virtual void CreateFontIndirect( const LOGFONT& lf );
-		virtual HFONT DetachFont( );
-
-		// Create and Select Pens
-		virtual void AttachPen( HPEN hPen );
-		virtual void CreatePen( int nStyle, int nWidth, COLORREF rgb );
-		virtual void CreatePenIndirect( const LOGPEN& lgpn );
-		virtual HPEN DetachPen( );
-
-		// Create Select Regions
-		virtual void AttachClipRegion( HRGN hRegion );
-
-		virtual void CreateRectRgn( int left, int top, int right, int bottom );
-		virtual void CreateRectRgnIndirect( const RECT& rc );
-		virtual HRGN DetachClipRegion( );
-		virtual void ExtCreateRegion( const XFORM& Xform, DWORD nCount, const RGNDATA *pRgnData );
+		HBITMAP DetachBitmap( );
 #ifndef _WIN32_WCE
-		virtual void CreateEllipticRgn( int left, int top, int right, int bottom );
-		virtual void CreateEllipticRgnIndirect( const RECT& rc );
-		virtual void CreatePolygonRgn( const POINT* ppt, int cPoints, int fnPolyFillMode );
-		virtual void CreatePolyPolygonRgn( const POINT* ppt, const int* pPolyCounts, int nCount, int fnPolyFillMode );
-#endif
-		// Cast the CDC object to a HDC
-		operator HDC( ) const { return *m_DC; }
-
-#ifndef _WIN32_WCE
-		// Create and Select Bitmaps
-		virtual void CreateBitmapIndirect( const BITMAP& bm );
-		virtual void CreateDIBitmap( HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
+		void CreateBitmapIndirect( const BITMAP& bm );
+		void CreateDIBitmap( HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage );
+#endif		
+
 		// Create and Select Brushes
-		virtual void CreateBrushIndirect( const LOGBRUSH& lb );
-		virtual void CreateDIBPatternBrush( HGLOBAL hglbDIBPacked, UINT fuColorSpec );
-		virtual void CreateHatchBrush( int fnStyle, COLORREF rgb );
+		void AttachBrush( HBRUSH hBrush );
+		void CreateDIBPatternBrushPt( const VOID *lpPackedDIB, UINT iUsage );
+		void CreatePatternBrush( HBITMAP hbmp );
+		void CreateSolidBrush( COLORREF rbg );
+		HBRUSH DetachBrush( );
+#ifndef _WIN32_WCE
+		void CreateBrushIndirect( const LOGBRUSH& lb );
+		void CreateDIBPatternBrush( HGLOBAL hglbDIBPacked, UINT fuColorSpec );
+		void CreateHatchBrush( int fnStyle, COLORREF rgb );
+#endif		
 
 		// Create and Select Fonts
-		virtual void CreateFont( int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
+		void AttachFont( HFONT hFont );
+		void CreateFontIndirect( const LOGFONT& lf );
+		HFONT DetachFont( );
+#ifndef _WIN32_WCE
+		void CreateFont( int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
   							DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
   							DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality,
   							DWORD fdwPitchAndFamily, LPCTSTR lpszFace );
-#endif
+#endif		
 
+		// Create and Select Pens
+		void AttachPen( HPEN hPen );
+		void CreatePen( int nStyle, int nWidth, COLORREF rgb );
+		void CreatePenIndirect( const LOGPEN& lgpn );
+		HPEN DetachPen( );
+
+		// Create Select Regions
+		void AttachClipRegion( HRGN hRegion );
+		void CreateRectRgn( int left, int top, int right, int bottom );
+		void CreateRectRgnIndirect( const RECT& rc );
+		HRGN DetachClipRegion( );
+		void ExtCreateRegion( const XFORM& Xform, DWORD nCount, const RGNDATA *pRgnData );
+#ifndef _WIN32_WCE
+		void CreateEllipticRgn( int left, int top, int right, int bottom );
+		void CreateEllipticRgnIndirect( const RECT& rc );
+		void CreatePolygonRgn( const POINT* ppt, int cPoints, int fnPolyFillMode );
+		void CreatePolyPolygonRgn( const POINT* ppt, const int* pPolyCounts, int nCount, int fnPolyFillMode );
+#endif
 
 		// Wrappers for WinAPI functions
 
@@ -245,6 +237,8 @@ namespace Win32xx
 		BOOL DrawEdge( const RECT& rc, UINT nEdge, UINT nFlags ) const;
 		BOOL DrawFrameControl( const RECT& rc, UINT nType, UINT nState ) const;
 		BOOL FillRgn( HRGN hrgn, HBRUSH hbr ) const;
+		virtual void GradientFill( COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical );
+		virtual void SolidFill( COLORREF Color, const RECT& rc );
 #ifndef _WIN32_WCE
 		BOOL DrawIcon( int x, int y, HICON hIcon ) const;
 		BOOL DrawIcon( POINT point, HICON hIcon ) const;
@@ -253,6 +247,7 @@ namespace Win32xx
 #endif
 
 		// Bitmap Functions
+		virtual void DrawBitmap( int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask );
 		int StretchDIBits( int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
 			           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop ) const;
 		BOOL PatBlt( int x, int y, int nWidth, int nHeight, DWORD dwRop ) const;
