@@ -226,10 +226,10 @@ namespace Win32xx
 		virtual CToolbar& GetToolbar() const		{ return (CToolbar&)m_Toolbar; }
 
 		// These functions aren't virtual, and shouldn't be overridden
-		HMENU GetFrameMenu() const			{ return m_hMenu; }
-		std::vector<tString>& GetMRUEntries() { return m_vMRUEntries; }
-		tString GetRegistryKeyName()		{ return m_tsKeyName; }
-		CWnd* GetView() const				{ return m_pView; }
+		HMENU GetFrameMenu() const				{ return m_hMenu; }
+		std::vector<tString> GetMRUEntries()	{ return m_vMRUEntries; }
+		tString GetRegistryKeyName() const		{ return m_tsKeyName; }
+		CWnd* GetView() const					{ return m_pView; }
 		tString GetMRUEntry(UINT nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
