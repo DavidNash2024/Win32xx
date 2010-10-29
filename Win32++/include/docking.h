@@ -404,9 +404,9 @@ namespace Win32xx
 		virtual void Dock(CDocker* pDocker, UINT uDockSide);
 		virtual void DockInContainer(CDocker* pDock, DWORD dwDockStyle);
 		virtual CDockContainer* GetContainer() const;
-		virtual CDocker* GetDockFromPoint(POINT pt) const;
-		virtual CDocker* GetDockAncestor() const;
+		virtual CDocker* GetDockAncestor() const;		
 		virtual CDocker* GetDockFromID(int n_DockID) const;
+		virtual CDocker* GetDockFromPoint(POINT pt) const;		
 		virtual CDocker* GetDockFromView(CWnd* pView) const;
 		virtual CDocker* GetDockTopLevel() const;
 		virtual int GetDockWidth() const;
@@ -417,9 +417,9 @@ namespace Win32xx
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcDockLayout();
 		virtual BOOL SaveRegistrySettings(tString tsRegistryKeyName);
-		virtual BOOL VerifyDockers();
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
 		virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked);
+		virtual BOOL VerifyDockers();		
 
 		// Attributes
 		virtual CDockBar& GetDockBar() const {return (CDockBar&)m_DockBar;}
@@ -428,9 +428,9 @@ namespace Win32xx
 
 	
 		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
-		std::vector <CDocker*> & GetDockChildren() const {return (std::vector <CDocker*> &)m_vDockChildren;}
 		int GetBarWidth() const {return GetDockBar().GetWidth();}
 		tString GetCaption() const {return GetDockClient().GetCaption();}
+		std::vector <CDocker*> & GetDockChildren() const {return (std::vector <CDocker*> &)m_vDockChildren;}		
 		int GetDockID() const {return m_nDockID;}
 		CDocker* GetDockParent() const {return m_pDockParent;}
 		DWORD GetDockStyle() const {return m_DockStyle;}

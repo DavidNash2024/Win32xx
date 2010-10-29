@@ -89,11 +89,11 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
+		virtual BOOL PreTranslateMessage(MSG* pMsg);		
 
 		// Can't override these functions
 		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
