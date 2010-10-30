@@ -69,11 +69,11 @@ namespace Win32xx
 		STDMETHOD(OnCreateUICommand)(UINT nCmdID, __in UI_COMMANDTYPE typeID, 
 			__deref_out IUICommandHandler** ppCommandHandler);
 
-		STDMETHOD(OnViewChanged)(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView,
-			UI_VIEWVERB verb, INT uReasonCode);
-
 		STDMETHOD(OnDestroyUICommand)(UINT32 commandId, __in UI_COMMANDTYPE typeID,
 			__in_opt IUICommandHandler* commandHandler);
+			
+		STDMETHOD(OnViewChanged)(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView,
+			UI_VIEWVERB verb, INT uReasonCode);			
 
 		// IUICommandHandle methods
 		STDMETHODIMP Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
@@ -122,6 +122,7 @@ namespace Win32xx
 		CRibbonFrame() : m_uRibbonHeight(0) {}
 		virtual ~CRibbonFrame() {}
 		virtual CRect GetViewRect() const;
+		virtual tString GetWindowType() const { return _T("CRibbonFrame"); }
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);

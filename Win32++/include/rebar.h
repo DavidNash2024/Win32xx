@@ -99,8 +99,8 @@ namespace Win32xx
 		int  GetRowHeight(int nRow) const;
 		UINT GetSizeofRBBI() const;
 		HWND GetToolTips() const;
-		BOOL SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		BOOL SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
+		BOOL SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		BOOL SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
 		BOOL SetBarInfo(REBARINFO& rbi) const;
 		void SetMenubar(HWND hMenubar) {m_hMenubar = hMenubar;}

@@ -139,9 +139,9 @@ namespace Win32xx
 
 		// Its unlikely you would need to override these functions
 		virtual void OnClose();
-		virtual void OnWindowPosChanged();
 		virtual void OnViewStatusbar();
 		virtual void OnViewToolbar();
+		virtual void OnWindowPosChanged();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

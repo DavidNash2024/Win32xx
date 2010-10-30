@@ -332,31 +332,28 @@ namespace Win32xx
 		void  operator=(const RECT& srcRect)
 		{ ::CopyRect(this, &srcRect); }
 
-		int Height()
-		{ return bottom - top; }
-
-		int Width()
-		{ return right - left; }
-
 		void CopyRect(const RECT& rc)
 		{ ::CopyRect(this, &rc); }
 
-		BOOL EqualRect(const RECT& rc)
+		BOOL EqualRect(const RECT& rc) const
 		{ return ::EqualRect(&rc, this); }
 
+		int Height() const
+		{ return bottom - top; }
+		
 		BOOL InflateRect(int dx, int dy)
 		{ return ::InflateRect(this, dx, dy); }
 
 		BOOL IntersectRect(const RECT& rc1, const RECT& rc2)
 		{ return ::IntersectRect(this, &rc1, &rc2); }
 
-		BOOL IsRectEmpty()
+		BOOL IsRectEmpty() const
 		{ return ::IsRectEmpty(this);}
 
 		BOOL OffsetRect(int dx, int dy)
 		{ return ::OffsetRect(this, dx, dy); }
 
-		BOOL PtInRect(POINT pt)
+		BOOL PtInRect(POINT pt) const
 		{ return ::PtInRect(this, pt); }
 
 		BOOL SetRect(int left, int top, int right, int bottom)
@@ -370,6 +367,9 @@ namespace Win32xx
 
 		BOOL UnionRect(const RECT& rc1, const RECT& rc2)
 		{ return ::UnionRect(this, &rc1, &rc2); }
+		
+		int Width() const
+		{ return right - left; }
 	};
 
 

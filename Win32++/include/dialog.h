@@ -148,8 +148,8 @@ namespace Win32xx
 		virtual ~CResizer() {}
 
         virtual void AddChild(CWnd* pWnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
-        virtual void RecalcLayout();
     	virtual void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
+		virtual void RecalcLayout();
 
     private:
         CWnd* m_pParent;

@@ -93,6 +93,7 @@ namespace Win32xx
 		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
+		
 		virtual BOOL GetTabsAtTop() const;
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
@@ -133,7 +134,6 @@ namespace Win32xx
 		virtual void	DrawListButton(CDC& DrawDC);
 		virtual void	DrawTabs(CDC& dcMem);
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
-		virtual SIZE    GetMaxTabSize() const;
 		virtual void    OnCreate();
 		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void    OnLButtonUp(WPARAM wParam, LPARAM lParam);
@@ -153,6 +153,7 @@ namespace Win32xx
 		CTab(const CTab&);				// Disable copy construction
 		CTab& operator = (const CTab&); // Disable assignment operator
 
+		SIZE  GetMaxTabSize() const;
 		void SetActiveView(CWnd* pView);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;

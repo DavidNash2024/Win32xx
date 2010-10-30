@@ -72,9 +72,9 @@ namespace Win32xx
 		virtual void Destroy();
 		virtual BOOL ReplaceBitmap(UINT NewToolbarID);
 		virtual BOOL SetBitmap(UINT nID);
-		virtual BOOL SetImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 		virtual int  SetButtons(const std::vector<UINT>& vToolbarData) const;
 		virtual BOOL SetButtonText(int idButton, LPCTSTR szText);
+		virtual BOOL SetImages(COLORREF crMask, UINT ToolbarID, UINT ToolbarHotID, UINT ToolbarDisabledID);
 
 		// Wrappers for Win32 API functions
 		BOOL  AddButtons(UINT uNumButtons, LPTBBUTTON lpButtons) const;
@@ -95,6 +95,7 @@ namespace Win32xx
 		int   GetCommandID(int iIndex) const;
 		HIMAGELIST GetDisabledImageList() const;
 		int   GetHotItem() const;
+		HIMAGELIST GetHotImageList() const;
 		HIMAGELIST GetImageList() const;
 		CRect GetItemRect(int iIndex) const;
 		CSize GetMaxSize() const;
@@ -127,11 +128,12 @@ namespace Win32xx
 		DWORD SetDrawTextFlags(DWORD dwMask, DWORD dwDTFlags) const;
 		DWORD SetExtendedStyle(DWORD dwExStyle) const;
 		HIMAGELIST SetHotImageList(HIMAGELIST himlNewHot) const;
+		int   SetHotItem(int iHot) const;
 		HIMAGELIST SetImageList(HIMAGELIST himlNew) const;
-		BOOL SetIndent(int iIndent) const;
-		BOOL SetMaxTextRows(int iMaxRows) const;
-		BOOL SetPadding(int cx, int cy) const;
-		void SetToolTips(HWND hwndToolTip) const;
+		BOOL  SetIndent(int iIndent) const;
+		BOOL  SetMaxTextRows(int iMaxRows) const;
+		BOOL  SetPadding(int cx, int cy) const;
+		void  SetToolTips(HWND hwndToolTip) const;
 
 		// Attributes
 		std::vector<UINT>& GetToolbarData() const {return (std::vector <UINT> &)m_vToolbarData;}
@@ -404,6 +406,13 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
+	}
+	
+	HIMAGELIST CToolbar::GetHotImageList() const
+	// Retrieves the image list that a toolbar control uses to display hot buttons.
+	{
+		assert(::IsWindow(m_hWnd));
+		return (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);	
 	}
 
 	inline int CToolbar::GetHotItem() const
@@ -1197,6 +1206,13 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlNewHot);
+	}
+	
+	inline int CToolbar::SetHotItem(int iHot) const
+	// Sets the hot item in a toolbar.
+	{
+		assert(::IsWindow(m_hWnd));
+		return (int)SendMessage(TB_SETHOTITEM, (WPARAM)iHot, 0L);
 	}
 
 	inline HIMAGELIST CToolbar::SetImageList(HIMAGELIST himlNew) const
