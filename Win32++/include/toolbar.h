@@ -408,7 +408,7 @@ namespace Win32xx
 		return (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
 	}
 	
-	HIMAGELIST CToolbar::GetHotImageList() const
+	inline HIMAGELIST CToolbar::GetHotImageList() const
 	// Retrieves the image list that a toolbar control uses to display hot buttons.
 	{
 		assert(::IsWindow(m_hWnd));

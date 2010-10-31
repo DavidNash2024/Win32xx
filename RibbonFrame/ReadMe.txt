@@ -50,4 +50,6 @@ To compile Ribbon.xml, specify it's custom build properties as follows:
 Command Line  uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc
 Outputs       Ribbon.bml;RibbonUI.rc;RibbonUI.h 
 
-
+Note: Ensure that the following VC++ Directories are configured:
+Executables directory: 	C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin
+Include directory:		C:\Program Files\Microsoft SDKs\Windows\v7.0\Include
