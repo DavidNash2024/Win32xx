@@ -113,9 +113,9 @@ namespace Win32xx
 		virtual void AddToolbarButton(UINT nID);
 		CRect GetViewRect() const;
 		CCmdbar& GetMenubar() const {return (CCmdbar&)m_Menubar;}
-    virtual tString GetWindowType() const { return _T("CWceFrame"); }
-		virtual void OnCreate();
+		virtual tString GetWindowType() const { return _T("CWceFrame"); }
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
+		virtual void OnCreate();		
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RecalcLayout();

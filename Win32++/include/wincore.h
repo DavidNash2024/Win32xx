@@ -433,13 +433,8 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
-		virtual HWND GetAncestor() const;
-		virtual	LPCTSTR GetDlgItemText(int nIDDlgItem) const;
-		virtual	LPCTSTR GetWindowText() const;
 		virtual tString GetWindowType() const { return _T("CWnd"); }
 		virtual void Invalidate(BOOL bErase = TRUE) const;
-		virtual HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
-		virtual LPCTSTR LoadString(UINT nID);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -458,6 +453,7 @@ namespace Win32xx
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
+		HWND GetAncestor() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		LPCTSTR GetClassName() const;
 		CRect GetClientRect() const;
@@ -465,6 +461,7 @@ namespace Win32xx
 		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		HWND GetDlgItem(int nIDDlgItem) const;
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
+		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
 		HFONT GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
 		HWND GetParent() const;
@@ -473,6 +470,7 @@ namespace Win32xx
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
+		LPCTSTR GetWindowText() const;
 		int GetWindowTextLength() const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
@@ -481,6 +479,8 @@ namespace Win32xx
 		BOOL IsWindowEnabled() const;
 		BOOL IsWindowVisible() const;
 		BOOL KillTimer(UINT_PTR uIDEvent) const;
+		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
+		LPCTSTR LoadString(UINT nID);
 		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
 		BOOL MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		BOOL MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
@@ -508,8 +508,8 @@ namespace Win32xx
 		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		BOOL SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
-		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
 		BOOL SetWindowText(LPCTSTR lpString) const;
+		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
 		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL UpdateWindow() const;
 		BOOL ValidateRect(LPCRECT prc) const;
@@ -547,12 +547,12 @@ namespace Win32xx
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void OnInitialUpdate();
+		virtual void OnMenuUpdate(UINT nID);		
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnPaint(HDC hDC);
-		virtual void OnMenuUpdate(UINT nID);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -587,9 +587,12 @@ namespace Win32xx
 	{
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
 		friend class CDialog;
+		friend class CMenubar;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
+		friend LPCWSTR CharToWide(LPCSTR pChar);
+		friend LPCSTR WideToChar(LPCWSTR pWChar);
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -597,22 +600,22 @@ namespace Win32xx
 		CWinApp();
 		virtual ~CWinApp();
 
+		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
+		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }	
+		void SetResourceHandle(HINSTANCE hResource);
+
 		// These are the functions you might wish to override
 		virtual BOOL InitInstance();
 		virtual int  MessageLoop();
 		virtual int Run();
 
-		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
-		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
-		void SetResourceHandle(HINSTANCE hResource);
-		TLSData* SetTlsIndex();
-
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		CWnd* GetCWndFromMap(HWND hWnd);
+		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
 		void SetCallback();
+		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
