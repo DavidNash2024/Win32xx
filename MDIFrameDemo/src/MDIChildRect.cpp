@@ -14,10 +14,10 @@ LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
-		SetTimer (m_hWnd, 1, 250, NULL) ;
+		SetTimer (1, 250, NULL) ;
 		break;
 	case WM_CLOSE:
-		KillTimer(m_hWnd, 1);
+		KillTimer(1);
 		break;
 
 	case WM_TIMER:            // Display a random rectangle
