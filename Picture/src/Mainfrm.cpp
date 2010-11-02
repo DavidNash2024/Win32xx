@@ -49,10 +49,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
+		OnViewStatusBar();
 		return TRUE;
 	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
+		OnViewToolBar();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -116,26 +116,26 @@ void CMainFrame::OnFileSaveAs()
 	}
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {	
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolBarButton( IDM_FILE_NEW   );
+	AddToolBarButton( IDM_FILE_OPEN  );
+	AddToolBarButton( IDM_FILE_SAVE  );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
-	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
-	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolBarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolBarButton( IDM_EDIT_PASTE, FALSE );
 
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_FILE_PRINT, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_HELP_ABOUT );
 
 	// Set the image lists for normal, hot and disabled buttons
-	SetToolbarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

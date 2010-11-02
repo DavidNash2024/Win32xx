@@ -47,23 +47,23 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
+	AddToolBarButton( IDM_FILE_NEW   );
+	AddToolBarButton( IDM_FILE_OPEN  );
+	AddToolBarButton( IDM_FILE_SAVE  );
 	
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT );
-	AddToolbarButton( IDM_EDIT_COPY );
-	AddToolbarButton( IDM_EDIT_PASTE );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_EDIT_CUT );
+	AddToolBarButton( IDM_EDIT_COPY );
+	AddToolBarButton( IDM_EDIT_PASTE );
 	
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_FILE_PRINT );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_FILE_PRINT );
 	
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

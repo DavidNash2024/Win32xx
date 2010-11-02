@@ -37,12 +37,12 @@
 ////////////////////////////////////////////////////////
 // controls.h
 //  Declaration of the following classes:
-//  CAnimation, CComboBox, CComboBoxEx, CProgressbar,
-//  CScrollbar, CSlider, CSpinbutton
+//  CAnimation, CComboBox, CComboBoxEx, CProgressBar,
+//  CScrollBar, CSlider, CSpinButton
 
 
 #ifndef _CONTROLS_H_
-#define _CONTORLS_H_
+#define _CONTROLS_H_
 
 #include "wincore.h"
 
@@ -144,12 +144,12 @@ namespace Win32xx
 	};
 
 
-	class CProgressbar : public CWnd
+	class CProgressBar : public CWnd
 	{
 	public:
-		CProgressbar() {}
-		virtual ~CProgressbar() {}
-		virtual tString GetWindowType() const { return _T("CProgressbar"); }
+		CProgressBar() {}
+		virtual ~CProgressBar() {}
+		virtual tString GetWindowType() const { return _T("CProgressBar"); }
 
 		int  GetPos() const;
 		int  GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const;
@@ -164,12 +164,12 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = PROGRESS_CLASS; }
 	};
 
-	class CScrollbar : public CWnd
+	class CScrollBar : public CWnd
 	{
 	public:
-		CScrollbar() {}
-		virtual ~CScrollbar() {}
-		virtual tString GetWindowType() const { return _T("CScrollbar"); }
+		CScrollBar() {}
+		virtual ~CScrollBar() {}
+		virtual tString GetWindowType() const { return _T("CScrollBar"); }
 
 		BOOL EnableScrollBar( UINT nArrowFlags = ESB_ENABLE_BOTH )  const;
 		BOOL GetScrollInfo(LPSCROLLINFO lpsi)  const;
@@ -669,23 +669,23 @@ namespace Win32xx
 
 
 	////////////////////////////////////////
-	// Definitions for the CProgressbar class
+	// Definitions for the CProgressBar class
 	//
-	inline int CProgressbar::GetPos() const
+	inline int CProgressBar::GetPos() const
 	// Retrieves the current position of the progress bar.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_GETPOS, 0, 0);
 	}
 
-	inline int CProgressbar::GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const
+	inline int CProgressBar::GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const
 	// Retrieves information about the current high and low limits of the progress bar control.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) (PPBRANGE) ppBRange);
 	}
 
-	inline int CProgressbar::OffsetPos(int nIncrement) const
+	inline int CProgressBar::OffsetPos(int nIncrement) const
 	// Advances the current position of the progress bar by a specified increment and redraws
 	// the bar to reflect the new position.
 	{
@@ -693,28 +693,28 @@ namespace Win32xx
 		return (int)SendMessage(PBM_DELTAPOS, (WPARAM)nIncrement, 0);
 	}
 
-	inline int CProgressbar::SetPos(int nNewPos) const
+	inline int CProgressBar::SetPos(int nNewPos) const
 	// Sets the current position for the progress bar and redraws the bar to reflect the new position.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_SETPOS, (WPARAM)nNewPos, 0);
 	}
 
-	inline int CProgressbar::SetRange(short nMinRange, short nMaxRange) const
+	inline int CProgressBar::SetRange(short nMinRange, short nMaxRange) const
 	// Sets the minimum and maximum values for the progress bar and redraws the bar to reflect the new range.
 	{
 		assert(IsWindow());
 		return SendMessage(PBM_SETRANGE, 0, (LPARAM) MAKELPARAM (nMinRange, nMaxRange));
 	}
 
-	inline int CProgressbar::SetStep(int nStepInc) const
+	inline int CProgressBar::SetStep(int nStepInc) const
 	// Specifies the step increment for the progress bar.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(PBM_SETSTEP, (WPARAM)nStepInc, 0);
 	}
 	
-	inline int CProgressbar::StepIt() const
+	inline int CProgressBar::StepIt() const
 	// Advances the current position for a progress bar by the step increment and 
 	// redraws the bar to reflect the new position.
 	{
@@ -724,16 +724,16 @@ namespace Win32xx
 
 
 	////////////////////////////////////////
-	// Definitions for the CScrollbar class
+	// Definitions for the CScrollBar class
 	//
-	inline BOOL CScrollbar::EnableScrollBar( UINT nArrowFlags )  const
+	inline BOOL CScrollBar::EnableScrollBar( UINT nArrowFlags )  const
 	// Enables or disables the scroll bar arrows.
 	{
 		assert(IsWindow());
 		return ::EnableScrollBar(m_hWnd, SB_CTL, nArrowFlags);
 	}
 
-	inline BOOL CScrollbar::GetScrollInfo(LPSCROLLINFO lpsi)  const
+	inline BOOL CScrollBar::GetScrollInfo(LPSCROLLINFO lpsi)  const
 	// Retrieves the parameters of a scroll bar, including the minimum and maximum 
 	// scrolling positions, the page size, and the position of the scroll box (thumb).
 	{
@@ -741,21 +741,21 @@ namespace Win32xx
 		return ::GetScrollInfo(m_hWnd, SB_CTL, lpsi);
 	}
 
-	inline int CScrollbar::GetScrollPos()  const
+	inline int CScrollBar::GetScrollPos()  const
 	// Retrieves the current position of the scroll box (thumb) in the scroll bar.
 	{
 		assert(IsWindow());
 		return ::GetScrollPos(m_hWnd, SB_CTL);
 	}
 
-	inline BOOL CScrollbar::GetScrollRange(LPINT lpMinPos, LPINT lpMaxPos )  const
+	inline BOOL CScrollBar::GetScrollRange(LPINT lpMinPos, LPINT lpMaxPos )  const
 	// Retrieves the current minimum and maximum scroll box (thumb) positions for the scroll bar. 
 	{
 		assert(IsWindow());
 		return ::GetScrollRange(m_hWnd, SB_CTL, lpMinPos, lpMaxPos);
 	}
 
-	inline BOOL CScrollbar::SetScrollInfo(LPSCROLLINFO lpsi, BOOL bRedraw )  const
+	inline BOOL CScrollBar::SetScrollInfo(LPSCROLLINFO lpsi, BOOL bRedraw )  const
 	// Sets the parameters of the scroll bar, including the minimum and maximum scrolling positions, 
 	// the page size, and the position of the scroll box (thumb).
 	{
@@ -763,7 +763,7 @@ namespace Win32xx
 		return ::SetScrollInfo(m_hWnd, SB_CTL, lpsi, bRedraw);
 	}
 
-	inline int CScrollbar::SetScrollPos(int nPos, BOOL bRedraw)  const
+	inline int CScrollBar::SetScrollPos(int nPos, BOOL bRedraw)  const
 	// Sets the position of the scroll box (thumb) in the scroll bar and, if requested, 
 	// redraws the scroll bar to reflect the new position of the scroll box.
 	{
@@ -771,14 +771,14 @@ namespace Win32xx
 		return ::SetScrollPos(m_hWnd, SB_CTL, nPos, bRedraw);
 	}
 
-	inline BOOL CScrollbar::SetScrollRange( int nMinPos, int nMaxPos, BOOL bRedraw )  const
+	inline BOOL CScrollBar::SetScrollRange( int nMinPos, int nMaxPos, BOOL bRedraw )  const
 	// Sets the minimum and maximum scroll box positions for the scroll bar.
 	{
 		assert(IsWindow());
 		return ::SetScrollRange(m_hWnd, SB_CTL, nMinPos, nMaxPos, bRedraw);
 	}
 
-	inline BOOL CScrollbar::ShowScrollBar(BOOL bShow)  const
+	inline BOOL CScrollBar::ShowScrollBar(BOOL bShow)  const
 	// Shows or hides the scroll bar.
 	{
 		assert(IsWindow());

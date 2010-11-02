@@ -73,10 +73,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnAdjustImage();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
+		OnViewStatusBar();
 		return TRUE;
 	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
+		OnViewToolBar();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -101,9 +101,9 @@ void CMainFrame::OnCreate()
 
 	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
-	// m_bUseRebar = FALSE;				// Don't use rebars
+	// m_bUseReBar = FALSE;				// Don't use rebars
 	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolbar = FALSE;			// Don't use a toolbar
+	// m_bUseToolBar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -111,7 +111,7 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnFileNew()
 {
-	CToolbar& TB = GetToolbar();
+	CToolBar& TB = GetToolBar();
 	TB.DisableButton(IDM_FILE_SAVEAS);
 	TB.DisableButton(IDM_IMAGE_ADJUST);
 	m_MyView.FileOpen(NULL);
@@ -147,8 +147,8 @@ void CMainFrame::OnFileOpen()
 	m_PathName = szFilePathName;
 	AddMRUEntry(szFilePathName);
 
-	// Turn on the Toolbar adjust button
-	CToolbar& TB = GetToolbar();
+	// Turn on the ToolBar adjust button
+	CToolBar& TB = GetToolBar();
 	TB.EnableButton(IDM_FILE_SAVEAS);
 	TB.EnableButton(IDM_IMAGE_ADJUST);
 	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
@@ -175,7 +175,7 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	tString tsMRUText = GetMRUEntry(nMRUIndex);
-	CToolbar& TB = GetToolbar();
+	CToolBar& TB = GetToolBar();
 
 	if (m_MyView.FileOpen(tsMRUText.c_str()))
 	{
@@ -277,21 +277,21 @@ inline void CMainFrame::OnMenuUpdate(UINT nID)
 	}
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW  );
-	AddToolbarButton( IDM_FILE_OPEN );
-	AddToolbarButton( IDM_FILE_SAVEAS, FALSE );
+	AddToolBarButton( IDM_FILE_NEW  );
+	AddToolBarButton( IDM_FILE_OPEN );
+	AddToolBarButton( IDM_FILE_SAVEAS, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_IMAGE_ADJUST, FALSE );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_IMAGE_ADJUST, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_HELP_ABOUT );
 
 	// Use large toolbar buttons
-	SetToolbarImages(RGB(192, 192, 192), IDB_TOOLBAR_BIG, 0, 0);
+	SetToolBarImages(RGB(192, 192, 192), IDB_TOOLBAR_BIG, 0, 0);
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

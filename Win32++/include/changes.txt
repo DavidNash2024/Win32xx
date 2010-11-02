@@ -4,7 +4,7 @@ Version 7.0
 New Features and Enhancements
 -----------------------------
 * Added the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
-   CProgressbar, CScrollbar, CSlider, and CSpinButton.
+   CProgressBar, CScrollBar, CSlider, and CSpinButton.
 * Added CThread class to simplify the task of using threads and creating
    windows in different threads.   
 * Added support for re-sizable dialogs. The CResizer class has been added
@@ -40,15 +40,17 @@ New Features and Enhancements
    - an attempt to read from or write to the registry fails.
 * Vectors are now used as a replacement for all dynamically allocated arrays, 
    ensuring the arrays are automatically deleted when they go out of scope.
+* Renamed CToolbar to CToolBar, CStatusbar to CStatusBar, CRebar to CReBar
+   and CMenubar to CMenubar.   
 
 Changes in detail
 -----------------
 Added CAnimation
 Added CComboBox  
 Added CComboBoxEx
-Added CProgressbar 
+Added CProgressBar 
 Added CResizer 
-Added CScrollbar 
+Added CScrollBar 
 Added CSlider 
 Added CSpinButton
 Added Shared_Ptr
@@ -63,44 +65,44 @@ Added CSocket::FreeAddrInfo
 Added CSocket::GetAddrInfo
 Added CSocket::GetLastError
 Added CTabbedMDI::SetActiveMDITab
-Added CToolbar::AddButtons
-Added CToolbar::AddString
-Added CToolbar::AutoSize
-Added CToolbar::CheckButton 
-Added CToolbar::DeleteButton   
-Added CToolbar::GetButton
-Added CToolbar::GetButtonSize
-Added CToolbar::GetButtonText
-Added CToolbar::GetDisabledImageList
-Added CToolbar::GetHotItem
-Added CToolbar::GetImageList
-Added CToolbar::GetPadding
-Added CToolbar::GetRect
-Added CToolbar::GetRows
-Added CToolbar::GetTextRows
-Added CToolbar::GetToolTips
-Added CToolbar::HideButton
-Added CToolbar::Indeterminate
-Added CToolbar::InsertButton
-Added CToolbar::IsButtonHidden
-Added CToolbar::IsButtonHighlighted
-Added CToolbar::IsButtonIndeterminate
-Added CToolbar::IsButtonPressed
-Added CToolbar::MapAccelerator
-Added CToolbar::MarkButton
-Added CToolbar::MoveButton
-Added CToolbar::PressButton
-Added CToolbar::SaveRestore
-Added CToolbar::SetDisabledImageList
-Added CToolbar::SetDrawTextFlags
-Added CToolbar::SetExtendedStyle
-Added CToolbar::SetHotImageList
-Added CToolbar::SetHotItem
-Added CToolbar::SetImageList
-Added CToolbar::SetIndent
-Added CToolbar::SetMaxTextRows
-Added CToolbar::SetPadding
-Added CToolbar::SetToolTips
+Added CToolBar::AddButtons
+Added CToolBar::AddString
+Added CToolBar::AutoSize
+Added CToolBar::CheckButton 
+Added CToolBar::DeleteButton   
+Added CToolBar::GetButton
+Added CToolBar::GetButtonSize
+Added CToolBar::GetButtonText
+Added CToolBar::GetDisabledImageList
+Added CToolBar::GetHotItem
+Added CToolBar::GetImageList
+Added CToolBar::GetPadding
+Added CToolBar::GetRect
+Added CToolBar::GetRows
+Added CToolBar::GetTextRows
+Added CToolBar::GetToolTips
+Added CToolBar::HideButton
+Added CToolBar::Indeterminate
+Added CToolBar::InsertButton
+Added CToolBar::IsButtonHidden
+Added CToolBar::IsButtonHighlighted
+Added CToolBar::IsButtonIndeterminate
+Added CToolBar::IsButtonPressed
+Added CToolBar::MapAccelerator
+Added CToolBar::MarkButton
+Added CToolBar::MoveButton
+Added CToolBar::PressButton
+Added CToolBar::SaveRestore
+Added CToolBar::SetDisabledImageList
+Added CToolBar::SetDrawTextFlags
+Added CToolBar::SetExtendedStyle
+Added CToolBar::SetHotImageList
+Added CToolBar::SetHotItem
+Added CToolBar::SetImageList
+Added CToolBar::SetIndent
+Added CToolBar::SetMaxTextRows
+Added CToolBar::SetPadding
+Added CToolBar::SetToolTips
 Added CWinException::what
 Added CWnd::GetFont
 Added CWnd::GetIcon
@@ -130,7 +132,13 @@ Modified CSocket::ReceiveFrom   	now uses TCHAR instead of char
 Modified CSocket::Send          	now uses TCHAR instead of char
 Modified CSocket::SentTo        	now uses TCHAR instead of char
 Modified CWinException::what  		now outputs text to debugger
-Renamed CToolbar::AddToolbarButton to CToolbar::AddButton
+Renamed CMenubar to CMenubar
+Renamed CRebar to CReBar
+Renamed CStatusbar to CStatusBar
+Renamed CToolbar to CToolBar
+Renamed RebarTheme to ReBarTheme
+Renamed ToolbarTheme to ToolBarTheme
+Renamed CToolBar::AddToolbarButton to CToolBar::AddButton
 Renamed CWnd::CharToTChar to ::CharToTChar
 Renamed CWnd::CharToWide  to ::CharToWide
 Renamed CWnd::TCharToChar to ::TCharToChar
@@ -157,6 +165,10 @@ Incompatibilities with previous versions
    CFrame::SaveRegistrySettings return BOOL.
 * CPropertySheet.m_PSH is now private. Use SetIcon to set the icon.
 * CPropertyPage change the return types of several functions.
+* Replace all instances of "Menubar" with "MenuBar"
+* Replace all instances of "Rebar" with "ReBar"
+* Replace all instances of "Statusbar" with "StatusBar"
+* Replace all instances of "Toolbar" with "ToolBar"
    
 
 Version 6.9

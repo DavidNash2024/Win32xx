@@ -5,8 +5,8 @@
 #define MYDIALOG_H
 
 
-#include "Progressbar.h"
-#include "Scrollbar.h"
+#include "ProgressBar.h"
+#include "ScrollBar.h"
 #include "Slider.h"
 #include "resource.h"
 
@@ -28,8 +28,8 @@ protected:
 	virtual void OnOK();
 
 private:
-	CMyProgressbar m_Progressbar;
-	CMyScrollbar m_Scrollbar;
+	CMyProgressBar m_ProgressBar;
+	CMyScrollBar m_ScrollBar;
 	CMySlider m_Slider;
 };
 

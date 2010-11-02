@@ -84,10 +84,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 
 	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
+		OnViewStatusBar();
 		return TRUE;
 	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
+		OnViewToolBar();
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
@@ -109,8 +109,8 @@ void CMainFrame::OnCreate()
 
 	// Use the default frame creation
 	// m_bUseThemes  = FALSE;
-	// m_bUseRebar   = FALSE;
-	// m_bUseToolbar = FALSE;
+	// m_bUseReBar   = FALSE;
+	// m_bUseToolBar = FALSE;
 	CFrame::OnCreate();
 
 }
@@ -137,20 +137,20 @@ BOOL CMainFrame::SaveRegistrySettings()
 	return TRUE;
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );        // Separator
-	AddToolbarButton( IDM_EDIT_CUT   );
-	AddToolbarButton( IDM_EDIT_COPY  );
-	AddToolbarButton( IDM_EDIT_PASTE );
-	AddToolbarButton( 0 );        // Separator
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );        // Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	AddToolBarButton( IDM_FILE_NEW   );
+	AddToolBarButton( IDM_FILE_OPEN  );
+	AddToolBarButton( IDM_FILE_SAVE  );
+	AddToolBarButton( 0 );        // Separator
+	AddToolBarButton( IDM_EDIT_CUT   );
+	AddToolBarButton( IDM_EDIT_COPY  );
+	AddToolBarButton( IDM_EDIT_PASTE );
+	AddToolBarButton( 0 );        // Separator
+	AddToolBarButton( IDM_FILE_PRINT );
+	AddToolBarButton( 0 );        // Separator
+	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

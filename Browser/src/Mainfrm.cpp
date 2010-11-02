@@ -29,8 +29,8 @@ CMainFrame::~CMainFrame()
 void CMainFrame::AddComboBoxBand(int Listbox_Height)
 {
 	// Get the reference to the rebar object
-	CRebar& RB = GetRebar();
-	RebarTheme RBTheme = RB.GetRebarTheme();
+	CReBar& RB = GetReBar();
+	ReBarTheme RBTheme = RB.GetReBarTheme();
 
 	// Create the ComboboxEx window
 	CREATESTRUCT cs = {0};
@@ -39,7 +39,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	cs.cy = 100;	// required to display list
 	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
 	m_ComboboxEx.PreCreate(cs);
-	m_ComboboxEx.Create(GetRebar().GetHwnd());
+	m_ComboboxEx.Create(GetReBar().GetHwnd());
 
 	// Put the window in a new rebar band
 	REBARBANDINFO rbbi = {0};
@@ -101,9 +101,9 @@ void CMainFrame::OnBeforeNavigate2(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 {
-	CToolbar& TB = GetToolbar();
+	CToolBar& TB = GetToolBar();
 
-	if (GetToolbar().IsWindow())
+	if (GetToolBar().IsWindow())
 	{
 		if ((pDispParams) && (pDispParams->cArgs == 2))
 		{
@@ -176,10 +176,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 			SendMessage(hWndEdit, WM_CLEAR, 0, 0);
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
+		OnViewStatusBar();
 		return TRUE;
 	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
+		OnViewToolBar();
 		return TRUE;
 	}
 
@@ -228,7 +228,7 @@ void CMainFrame::OnCreate()
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
 	UNREFERENCED_PARAMETER(pDispParams);
-	GetStatusbar().SetPartText(0, _T("Done"));
+	GetStatusBar().SetPartText(0, _T("Done"));
 }
 
 void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
@@ -352,14 +352,14 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 	LPOLESTR lpStatusText = pDispParams->rgvarg->bstrVal;
 
 
-	if (GetStatusbar().IsWindow() && lpStatusText)
+	if (GetStatusBar().IsWindow() && lpStatusText)
 	{
 		if (lstrcmp(WideToTChar(lpStatusText), _T("")))
 		{
-			GetStatusbar().SetPartText(0, WideToTChar(lpStatusText));
+			GetStatusBar().SetPartText(0, WideToTChar(lpStatusText));
 		}
 		else
-			GetStatusbar().SetPartText(0, _T("Done"));
+			GetStatusBar().SetPartText(0, _T("Done"));
 	}
 
 }
@@ -380,31 +380,31 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	::SetWindowText(m_hWnd, str.str().c_str());
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_BACK   );
-	AddToolbarButton( IDM_FORWARD );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_REFRESH );
-	AddToolbarButton( IDM_STOP );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HOME );
+	AddToolBarButton( IDM_BACK   );
+	AddToolBarButton( IDM_FORWARD );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_REFRESH );
+	AddToolBarButton( IDM_STOP );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_HOME );
 
 	// Set the image lists for normal, hot and disabled buttons
 	if (GetWinVersion() >= 2501 && LoadBitmap(MAKEINTRESOURCE(IDB_TOOLBAR32_NORM)))
 	{
 		// Use 32bit bitmaps for XP and above (support for 32bit bitmaps began with XP)
-		SetToolbarImages(RGB(0,0,0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
+		SetToolBarImages(RGB(0,0,0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
 	}
 	else
 	{
 		// Use 24bit bitmaps for Win2000 and below
-		SetToolbarImages(RGB(255,0,255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
+		SetToolBarImages(RGB(255,0,255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 	}
 
 	std::vector<UINT> IconData;
-	if (IsRebarUsed())
+	if (IsReBarUsed())
 	{
 		int Height = 22;
 		AddComboBoxBand(Height);

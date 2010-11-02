@@ -250,7 +250,7 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
+				if (GetWindowType() != _T("CReBar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);

@@ -36,7 +36,7 @@
 
 //////////////////////////////////////////////////////
 // WceFrame.h
-// Definitions for the CCmdbar and CWceFrame
+// Definitions for the CCmdBar and CWceFrame
 
 // These classes are provide a frame window for use on Window CE devices such
 // as Pocket PCs. The frame uses CommandBar (a control unique to the Windows CE
@@ -76,19 +76,19 @@ namespace Win32xx
 {
 
 	////////////////////////////////////
-	// Declaration of the CCmdbar class
+	// Declaration of the CCmdBar class
 	//
-	class CCmdbar : public CWnd
+	class CCmdBar : public CWnd
 	{
 	public:
-		CCmdbar();
-		virtual ~CCmdbar();
+		CCmdBar();
+		virtual ~CCmdBar();
 		virtual BOOL AddAdornments(DWORD dwFlags);
 		virtual int  AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight);
 		virtual BOOL AddButtons(int nButtons, TBBUTTON* pTBButton);
 		virtual HWND Create(HWND hwndParent);
 		virtual int  GetHeight() const;
-    virtual tString GetWindowType() const { return _T("CCmdbar"); }
+    virtual tString GetWindowType() const { return _T("CCmdBar"); }
 		virtual HWND InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton);
 		virtual BOOL IsVisible();
 		virtual BOOL Show(BOOL fShow);
@@ -104,29 +104,29 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CWceFrame class
-	//  A mini frame based on CCmdbar
+	//  A mini frame based on CCmdBar
 	class CWceFrame : public CWnd
 	{
 	public:
 		CWceFrame();
 		virtual ~CWceFrame();
-		virtual void AddToolbarButton(UINT nID);
+		virtual void AddToolBarButton(UINT nID);
 		CRect GetViewRect() const;
-		CCmdbar& GetMenubar() const {return (CCmdbar&)m_Menubar;}
+		CCmdBar& GetMenuBar() const {return (CCmdBar&)m_MenuBar;}
 		virtual tString GetWindowType() const { return _T("CWceFrame"); }
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();		
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RecalcLayout();
-		virtual void SetButtons(const std::vector<UINT> ToolbarData);
+		virtual void SetButtons(const std::vector<UINT> ToolBarData);
 		virtual	LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
-		std::vector<UINT> m_ToolbarData;
+		std::vector<UINT> m_ToolBarData;
 
 	private:
-		CCmdbar m_Menubar;
+		CCmdBar m_MenuBar;
 		tString m_tsAppName;
 
 #ifdef SHELL_AYGSHELL
@@ -136,21 +136,21 @@ namespace Win32xx
 	};
 
 	//////////////////////////////////////////
-	// Definitions for the CCmdbar class
+	// Definitions for the CCmdBar class
 	//  This class wraps CommandBar_Create which
 	//  creates a CommandBar at the top of the window
-	inline CCmdbar::CCmdbar()
+	inline CCmdBar::CCmdBar()
 	{
 	}
 
-	inline CCmdbar::~CCmdbar()
+	inline CCmdBar::~CCmdBar()
 	{
 		if (IsWindow())
 			::CommandBar_Destroy(m_hWnd);
 	}
 
 
-	inline BOOL CCmdbar::AddAdornments(DWORD dwFlags)
+	inline BOOL CCmdBar::AddAdornments(DWORD dwFlags)
 	{
 		BOOL bReturn = CommandBar_AddAdornments(m_hWnd, dwFlags, 0);
 
@@ -160,13 +160,13 @@ namespace Win32xx
 		return bReturn;
 	}
 
-	inline int CCmdbar::AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight)
+	inline int CCmdBar::AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight)
 	{
 		HINSTANCE hInst = GetApp()->GetInstanceHandle();
 		return 	CommandBar_AddBitmap(m_hWnd, hInst, idBitmap, iNumImages, iImageWidth, iImageHeight);
 	}
 
-	inline BOOL CCmdbar::AddButtons(int nButtons, TBBUTTON* pTBButton)
+	inline BOOL CCmdBar::AddButtons(int nButtons, TBBUTTON* pTBButton)
 	{
 		 BOOL bReturn = CommandBar_AddButtons(m_hWnd, nButtons, pTBButton);
 		 if (!bReturn)
@@ -175,7 +175,7 @@ namespace Win32xx
 		 return bReturn;
 	}
 
-	inline HWND CCmdbar::Create(HWND hParent)
+	inline HWND CCmdBar::Create(HWND hParent)
 	{
 #ifdef SHELL_AYGSHELL
 		SHMENUBARINFO mbi;
@@ -193,7 +193,7 @@ namespace Win32xx
 			m_hWnd = mbi.hwndMB;
 		}
 		else
-			throw CWinException(_T("Failed to create Menubar"));
+			throw CWinException(_T("Failed to create MenuBar"));
 		
 #else
 		m_hWnd = CommandBar_Create(GetApp()->GetInstanceHandle(), hParent, IDW_MENUBAR);
@@ -201,17 +201,17 @@ namespace Win32xx
 		if (m_hWnd == NULL)
 			throw CWinException(_T("Failed to create CommandBar"));
 
-		CommandBar_InsertMenubar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
+		CommandBar_InsertMenuBar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
 #endif
 		return m_hWnd;
 	}
 
-	inline int CCmdbar::GetHeight() const
+	inline int CCmdBar::GetHeight() const
 	{
 		return CommandBar_Height(m_hWnd);
 	}
 
-	inline HWND CCmdbar::InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton)
+	inline HWND CCmdBar::InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton)
 	{
 		HINSTANCE hInst = GetApp()->GetInstanceHandle();
 		HWND hWnd = CommandBar_InsertComboBox(m_hWnd, hInst, iWidth, dwStyle, idComboBox, iButton);
@@ -222,12 +222,12 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	inline BOOL CCmdbar::IsVisible()
+	inline BOOL CCmdBar::IsVisible()
 	{
 		return ::CommandBar_IsVisible(m_hWnd);
 	}
 
-	inline BOOL CCmdbar::Show(BOOL fShow)
+	inline BOOL CCmdBar::Show(BOOL fShow)
 	{
 		return ::CommandBar_Show(m_hWnd, fShow);
 	}
@@ -235,7 +235,7 @@ namespace Win32xx
 
 	/////////////////////////////////////////
 	// Definitions for the CWceFrame class
-	//  This class creates a simple frame using CCmdbar
+	//  This class creates a simple frame using CCmdBar
 	inline CWceFrame::CWceFrame()
 	{
 #ifdef SHELL_AYGSHELL
@@ -249,11 +249,11 @@ namespace Win32xx
 	{
 	}
 
-	inline void CWceFrame::AddToolbarButton(UINT nID)
+	inline void CWceFrame::AddToolBarButton(UINT nID)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		m_ToolbarData.push_back(nID);
+		m_ToolBarData.push_back(nID);
 	}
 
 	inline CRect CWceFrame::GetViewRect() const
@@ -263,7 +263,7 @@ namespace Win32xx
 
 #ifndef SHELL_AYGSHELL
 		// Reduce the size of the client rectange, by the commandbar height
-		r.top += m_Menubar.GetHeight();
+		r.top += m_MenuBar.GetHeight();
 #endif
 
 		return r;
@@ -272,16 +272,16 @@ namespace Win32xx
 	inline void CWceFrame::OnCreate()
 	{
 		// Create the Commandbar
-		m_Menubar.Create(m_hWnd);
+		m_MenuBar.Create(m_hWnd);
 
 
 		// Add the toolbar buttons
-		if (m_ToolbarData.size() > 0)
-			SetButtons(m_ToolbarData);
+		if (m_ToolBarData.size() > 0)
+			SetButtons(m_ToolBarData);
 
 #ifndef SHELL_AYGSHELL
 		// Add close button
-		m_Menubar.AddAdornments(0);
+		m_MenuBar.AddAdornments(0);
 #endif
 
 	}
@@ -323,11 +323,11 @@ namespace Win32xx
 
 	inline void CWceFrame::RecalcLayout()
 	{
-		HWND hwndCB = m_Menubar.GetHwnd();
+		HWND hwndCB = m_MenuBar.GetHwnd();
 		if (hwndCB)
 		{
 			CRect rc;			// Desktop window size
-			CRect rcMenuBar;	// Menubar window size
+			CRect rcMenuBar;	// MenuBar window size
 
 			::SystemParametersInfo(SPI_GETWORKAREA, 0, &rc, 0);
 			::GetWindowRect(hwndCB, &rcMenuBar);
@@ -340,17 +340,17 @@ namespace Win32xx
 		UpdateWindow();
 	}
 
-	inline void CWceFrame::SetButtons(const std::vector<UINT> ToolbarData)
+	inline void CWceFrame::SetButtons(const std::vector<UINT> ToolBarData)
 	// Define the resource IDs for the toolbar like this in the Frame's constructor
-	// m_ToolbarData.push_back ( 0 );				// Separator
-	// m_ToolbarData.clear();
-	// m_ToolbarData.push_back ( IDM_FILE_NEW   );
-	// m_ToolbarData.push_back ( IDM_FILE_OPEN  );
-	// m_ToolbarData.push_back ( IDM_FILE_SAVE  );
+	// m_ToolBarData.push_back ( 0 );				// Separator
+	// m_ToolBarData.clear();
+	// m_ToolBarData.push_back ( IDM_FILE_NEW   );
+	// m_ToolBarData.push_back ( IDM_FILE_OPEN  );
+	// m_ToolBarData.push_back ( IDM_FILE_SAVE  );
 
 	{
 		int iImages = 0;
-		int iNumButtons = (int)ToolbarData.size();
+		int iNumButtons = (int)ToolBarData.size();
 
 
 		if (iNumButtons > 0)
@@ -363,14 +363,14 @@ namespace Win32xx
 			{
 				ZeroMemory(&tbbArray[j], sizeof(TBBUTTON));
 
-				if (ToolbarData[j] == 0)
+				if (ToolBarData[j] == 0)
 				{
 					tbbArray[j].fsStyle = TBSTYLE_SEP;
 				}
 				else
 				{
 					tbbArray[j].iBitmap = iImages++;
-					tbbArray[j].idCommand = ToolbarData[j];
+					tbbArray[j].idCommand = ToolBarData[j];
 					tbbArray[j].fsState = TBSTATE_ENABLED;
 					tbbArray[j].fsStyle = TBSTYLE_BUTTON;
 					tbbArray[j].iString = -1;
@@ -378,10 +378,10 @@ namespace Win32xx
 			}
 
 			// Add the bitmap
-			GetMenubar().AddBitmap(IDW_MAIN, iImages , 16, 16);
+			GetMenuBar().AddBitmap(IDW_MAIN, iImages , 16, 16);
 
 			// Add the buttons
-			GetMenubar().AddButtons(iNumButtons, tbbArray);
+			GetMenuBar().AddButtons(iNumButtons, tbbArray);
 		}
 	}
 

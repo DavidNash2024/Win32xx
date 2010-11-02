@@ -1,11 +1,11 @@
 //////////////////////////////////////////////
-// MyProgressbar.cpp
+// MyProgressBar.cpp
 
 #include "stdafx.h"
-#include "Progressbar.h"
+#include "ProgressBar.h"
 #include "DialogApp.h"
 
-void CMyProgressbar::SetProgress(int nPos)
+void CMyProgressBar::SetProgress(int nPos)
 {
 	// Set the progress bar position
 	SetPos(nPos);

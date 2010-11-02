@@ -25,7 +25,7 @@ void CMainFrame::DoPopupMenu()
 	// Creates the popup menu for the "View Menu" toolbar button
 
 	// Position the popup menu
-	CToolbar& TB = GetToolbar();
+	CToolBar& TB = GetToolBar();
 	CRect rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
 	::MapWindowPoints(TB.GetHwnd(), NULL, (LPPOINT)&rc, 2);
 
@@ -102,10 +102,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnHelp();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
+		OnViewStatusBar();
 		return TRUE;
 	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
+		OnViewToolBar();
 		return TRUE;
 	case IDM_VIEW_LARGEICON:
 		GetListView()->ViewLargeIcons();
@@ -155,7 +155,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
  		//Menu for dropdown toolbar button
 		case TBN_DROPDOWN:
 		{
-			if (((LPNMHDR)lParam)->hwndFrom == GetToolbar().GetHwnd())
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolBar().GetHwnd())
 				DoPopupMenu();
 		}
 
@@ -164,33 +164,33 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {
 	// Define our toolbar data
-	AddToolbarButton( IDM_FILE_NEW  , FALSE, _T("New") );
-	AddToolbarButton( IDM_FILE_OPEN , FALSE, _T("Open") );
-	AddToolbarButton( IDM_FILE_SAVE , FALSE, _T("Save") );
+	AddToolBarButton( IDM_FILE_NEW  , FALSE, _T("New") );
+	AddToolBarButton( IDM_FILE_OPEN , FALSE, _T("Open") );
+	AddToolBarButton( IDM_FILE_SAVE , FALSE, _T("Save") );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_EDIT_CUT  , FALSE, _T("Cut") );
-	AddToolbarButton( IDM_EDIT_COPY , FALSE, _T("Copy") );
-	AddToolbarButton( IDM_EDIT_PASTE, FALSE, _T("Paste") );
-	AddToolbarButton( IDM_FILE_PRINT, FALSE, _T("Print") );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_EDIT_CUT  , FALSE, _T("Cut") );
+	AddToolBarButton( IDM_EDIT_COPY , FALSE, _T("Copy") );
+	AddToolBarButton( IDM_EDIT_PASTE, FALSE, _T("Paste") );
+	AddToolBarButton( IDM_FILE_PRINT, FALSE, _T("Print") );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_VIEWMENU,   TRUE,  _T("View Menu"));
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_VIEWMENU,   TRUE,  _T("View Menu"));
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_HELP_ABOUT, TRUE,  _T("About") );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_HELP_ABOUT, TRUE,  _T("About") );
 
 	// Use larger buttons
-	SetToolbarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+	SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Configure the ViewMenu button to bring up a menu
 	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{
-		CToolbar& TB = GetToolbar();
+		CToolBar& TB = GetToolBar();
 		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 	}
 }

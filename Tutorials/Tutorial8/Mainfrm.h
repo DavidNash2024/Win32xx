@@ -24,7 +24,7 @@ protected:
 	virtual void OnFileOpen();
 	virtual void OnFileSave();
 	virtual void OnFileSaveAs();
-	virtual void CMainFrame::SetupToolbar();
+	virtual void CMainFrame::SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

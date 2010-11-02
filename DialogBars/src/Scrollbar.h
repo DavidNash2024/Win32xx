@@ -1,15 +1,15 @@
 //////////////////////////////////////////////
-// CMyScrollbar.h
+// CMyScrollBar.h
 
 #ifndef MYSCROLLBAR_H
 #define MYSCROLLBAR_H
 
 
-class CMyScrollbar : public CScrollbar
+class CMyScrollBar : public CScrollBar
 {
 public:
-	CMyScrollbar();
-	virtual ~CMyScrollbar() {}
+	CMyScrollBar();
+	virtual ~CMyScrollBar() {}
 	
 	virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();

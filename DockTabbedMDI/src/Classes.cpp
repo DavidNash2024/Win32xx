@@ -106,7 +106,7 @@ CContainClasses::CContainClasses()
 void CContainClasses::AddCombo()
 {
 	int nComboWidth = 120; 
-	CToolbar& TB = GetToolbar();
+	CToolBar& TB = GetToolBar();
 	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 	 
 	// Adjust button width and convert to separator   
@@ -123,7 +123,7 @@ void CContainClasses::AddCombo()
 
 	// Adjust the toolbar height to accomodate the ComboBoxEx control
 	CRect rc = m_ComboBoxEx.GetWindowRect();
-	GetToolbar().SendMessage(TB_SETBUTTONSIZE, 0, (LPARAM) MAKELONG (rc.Height(), rc.Height()));
+	GetToolBar().SendMessage(TB_SETBUTTONSIZE, 0, (LPARAM) MAKELONG (rc.Height(), rc.Height()));
 	
 	// Add the ComboBox's items
 	m_ComboBoxEx.AddItems();
@@ -151,35 +151,35 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CContainClasses::SetupToolbar()
+void CContainClasses::SetupToolBar()
 {
 	// Set the Bitmap resource for the toolbar
-	GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+	GetToolBar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW         );
-	AddToolbarButton( IDM_FILE_OPEN, FALSE );
+	AddToolBarButton( IDM_FILE_NEW         );
+	AddToolBarButton( IDM_FILE_OPEN, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_FILE_SAVE, FALSE );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_FILE_SAVE, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_EDIT_CUT         );
-	AddToolbarButton( IDM_EDIT_COPY        );
-	AddToolbarButton( IDM_EDIT_PASTE       );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_EDIT_CUT         );
+	AddToolBarButton( IDM_EDIT_COPY        );
+	AddToolBarButton( IDM_EDIT_PASTE       );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_FILE_PRINT, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_HELP_ABOUT       );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_HELP_ABOUT       );
 
 	// Add the ComboBarEx control to the toolbar
 	AddCombo();
 
-	// Match the Container's Toolbar theme to the MainFrame's toolbar theme
-	ToolbarTheme tt = GetTabbedMDIApp().GetMainFrame().GetToolbar().GetToolbarTheme();
-	GetToolbar().SetToolbarTheme(tt);
+	// Match the Container's ToolBar theme to the MainFrame's toolbar theme
+	ToolBarTheme tt = GetTabbedMDIApp().GetMainFrame().GetToolBar().GetToolBarTheme();
+	GetToolBar().SetToolBarTheme(tt);
 }
 
 

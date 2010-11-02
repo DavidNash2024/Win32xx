@@ -43,16 +43,16 @@ namespace Win32xx
 {
 
 	//////////////////////////////////////
-	// Declaration of the CStatusbar class
+	// Declaration of the CStatusBar class
 	//
-	class CStatusbar : public CWnd
+	class CStatusBar : public CWnd
 	{
 	public:
-		CStatusbar();
-		virtual ~CStatusbar() {}
+		CStatusBar();
+		virtual ~CStatusBar() {}
 
 	// Overridables
-		virtual tString GetWindowType() const { return _T("CStatusbar"); }
+		virtual tString GetWindowType() const { return _T("CStatusBar"); }
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 
@@ -67,8 +67,8 @@ namespace Win32xx
 		BOOL SetPartWidth(int iPart, int iWidth) const;
 
 	// Operations
-		CStatusbar(const CStatusbar&);				// Disable copy construction
-		CStatusbar& operator = (const CStatusbar&); // Disable assignment operator
+		CStatusBar(const CStatusBar&);				// Disable copy construction
+		CStatusBar& operator = (const CStatusBar&); // Disable assignment operator
 
 		BOOL CreateParts(int iParts, const int iPaneWidths[]) const;
 		void SetSimple(BOOL fSimple = TRUE);
@@ -84,13 +84,13 @@ namespace Win32xx
 {
 
 	//////////////////////////////////////
-	// Definitions for the CStatusbar class
+	// Definitions for the CStatusBar class
 	//
-	inline CStatusbar::CStatusbar()
+	inline CStatusBar::CStatusBar()
 	{
 	}
 
-	inline BOOL CStatusbar::CreateParts(int iParts, const int iPaneWidths[]) const
+	inline BOOL CStatusBar::CreateParts(int iParts, const int iPaneWidths[]) const
 	// Sets the number of parts in a status window and the coordinate of the right edge of each part. 
 	// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
 	//  to the border of the window
@@ -101,19 +101,19 @@ namespace Win32xx
 		return (BOOL)SendMessage(SB_SETPARTS, iParts, (LPARAM)iPaneWidths);		
 	}
 
-	inline int CStatusbar::GetParts()
+	inline int CStatusBar::GetParts()
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(SB_GETPARTS, 0L, 0L);
 	}
 
-	inline HICON CStatusbar::GetPartIcon(int iPart)
+	inline HICON CStatusBar::GetPartIcon(int iPart)
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HICON)SendMessage(SB_GETICON, (WPARAM)iPart, 0L);
 	}
 
-	inline CRect CStatusbar::GetPartRect(int iPart)
+	inline CRect CStatusBar::GetPartRect(int iPart)
 	{
 		assert(::IsWindow(m_hWnd));
 		
@@ -122,7 +122,7 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline tString CStatusbar::GetPartText(int iPart) const
+	inline tString CStatusBar::GetPartText(int iPart) const
 	{
 		assert(::IsWindow(m_hWnd));
 		tString PaneText;
@@ -138,24 +138,24 @@ namespace Win32xx
 		return PaneText;
 	}
 
-	inline BOOL CStatusbar::IsSimple()
+	inline BOOL CStatusBar::IsSimple()
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
 	}
 
-	inline void CStatusbar::PreCreate(CREATESTRUCT &cs)
+	inline void CStatusBar::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 	}
 
-	inline void CStatusbar::PreRegisterClass(WNDCLASS &wc)
+	inline void CStatusBar::PreRegisterClass(WNDCLASS &wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  STATUSCLASSNAME;
 	}
 
-	inline BOOL CStatusbar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
+	inline BOOL CStatusBar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
 	// Available Styles: Combinations of ...
 	//0					The text is drawn with a border to appear lower than the plane of the window.
 	//SBT_NOBORDERS		The text is drawn without borders.
@@ -172,13 +172,13 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline BOOL CStatusbar::SetPartIcon(int iPart, HICON hIcon)
+	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon)
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon);
 	}
 
-	inline BOOL CStatusbar::SetPartWidth(int iPart, int iWidth) const
+	inline BOOL CStatusBar::SetPartWidth(int iPart, int iWidth) const
 	{
 		// This changes the width of an existing pane, or creates a new pane
 		// with the specified width
@@ -210,7 +210,7 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline void CStatusbar::SetSimple(BOOL fSimple /* = TRUE*/)
+	inline void CStatusBar::SetSimple(BOOL fSimple /* = TRUE*/)
 	{
 		assert(::IsWindow(m_hWnd));
 		SendMessage(SB_SIMPLE, (WPARAM)fSimple, 0L);

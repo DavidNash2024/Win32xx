@@ -7,7 +7,7 @@
 // include the Resource IDs defined by Win32++
 #include "Default_Resource.h"
 
-//Resource IDs for menu items and Toolbar items
+//Resource IDs for menu items and ToolBar items
 #define IDM_FILE_NEW                    101
 #define IDM_FILE_OPEN                   102
 #define IDM_FILE_SAVE                   103

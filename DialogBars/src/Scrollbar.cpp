@@ -1,17 +1,17 @@
 //////////////////////////////////////////////
-// CMyScrollbar.cpp
+// CMyScrollBar.cpp
 
 #include "stdafx.h"
-#include "Scrollbar.h"
+#include "ScrollBar.h"
 #include "DialogApp.h"
 
 
-CMyScrollbar::CMyScrollbar()
+CMyScrollBar::CMyScrollBar()
 {
 	ZeroMemory(&m_si, sizeof(SCROLLINFO));
 }
 
-void CMyScrollbar::OnInitialUpdate()
+void CMyScrollBar::OnInitialUpdate()
 {
 	// Called automatically via AttachDlgItem
 
@@ -19,7 +19,7 @@ void CMyScrollbar::OnInitialUpdate()
 	SetScroll(0);
 }
 
-LRESULT CMyScrollbar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyScrollBar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -75,7 +75,7 @@ LRESULT CMyScrollbar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void CMyScrollbar::SetScroll(int nPos)
+void CMyScrollBar::SetScroll(int nPos)
 {
 	m_si.cbSize = sizeof(SCROLLINFO);
 	m_si.nPos = nPos;

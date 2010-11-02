@@ -23,8 +23,8 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 
 	// Attach the dialog controls
-	m_Progressbar.AttachDlgItem(IDC_PROGRESS1, this);
-	m_Scrollbar.AttachDlgItem(IDC_SCROLLBAR1, this);
+	m_ProgressBar.AttachDlgItem(IDC_PROGRESS1, this);
+	m_ScrollBar.AttachDlgItem(IDC_SCROLLBAR1, this);
 	m_Slider.AttachDlgItem(IDC_SLIDER1, this);
 
 	return true;
@@ -38,12 +38,12 @@ void CMyDialog::OnOK()
 
 void CMyDialog::SetProgress(int nPos)
 {
-	m_Progressbar.SetProgress(nPos);
+	m_ProgressBar.SetProgress(nPos);
 }
 
 void CMyDialog::SetScroll(int nPos)
 {
-	m_Scrollbar.SetScroll(nPos);
+	m_ScrollBar.SetScroll(nPos);
 }
 
 void CMyDialog::SetSlider(int nPos)

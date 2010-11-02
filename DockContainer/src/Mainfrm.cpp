@@ -44,10 +44,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		m_DockView.CloseAllDockers();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
+		OnViewStatusBar();
 		return TRUE;
 	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
+		OnViewToolBar();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -66,9 +66,9 @@ void CMainFrame::OnCreate()
 
 	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
-	// m_bUseRebar = FALSE;				// Don't use rebars
+	// m_bUseReBar = FALSE;				// Don't use rebars
 	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolbar = FALSE;			// Don't use a toolbar
+	// m_bUseToolBar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -123,21 +123,21 @@ BOOL CMainFrame::SaveRegistrySettings()
 		return FALSE;
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( IDM_FILE_NEW,   FALSE );
-	AddToolbarButton( IDM_FILE_OPEN,  FALSE );
-	AddToolbarButton( IDM_FILE_SAVE,  FALSE );
+	AddToolBarButton( IDM_FILE_NEW,   FALSE );
+	AddToolBarButton( IDM_FILE_OPEN,  FALSE );
+	AddToolBarButton( IDM_FILE_SAVE,  FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
-	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
-	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolBarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolBarButton( IDM_EDIT_PASTE, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_FILE_PRINT, FALSE );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_FILE_PRINT, FALSE );
 	
-	AddToolbarButton( 0 );	// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	AddToolBarButton( 0 );	// Separator
+	AddToolBarButton( IDM_HELP_ABOUT );
 }

@@ -156,8 +156,8 @@
 #define UWM_UPDATE_COMMAND  (WM_APP + 14)   // Message - sent before a menu is displayed. Used by OnUpdate
 #define UWM_DOCK_ACTIVATED  (WM_APP + 15)   // Message - sent to dock ancestor when a docker is activated or deactivated.
 #define UWM_GETMENUTHEME    (WM_APP + 16)	// Message - returns a pointer to MenuTheme
-#define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to RebarTheme
-#define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolbarTheme
+#define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to CToolBar
+#define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolBarTheme
 
 
 // Automatically include the Win32xx namespace
@@ -240,12 +240,12 @@ namespace Win32xx
 	struct TLSData			// Used for Thread Local Storage (TLS)
 	{
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
-		CWnd* pMenubar;		// pointer to CMenubar object used for the WH_MSGFILTER hook
-		HHOOK hHook;		// WH_MSGFILTER hook for CMenubar and Modeless Dialogs
+		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
+		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 		std::vector<char>  vChar;	// A vector used as a char array for text conversions
 		std::vector<WCHAR> vWChar;	// A vector used as a WCHAR array for text conversions
 
-		TLSData() : pCWnd(0), pMenubar(0), hHook(0) {}
+		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 	};
 
 	////////////////////////////////////////
@@ -587,7 +587,7 @@ namespace Win32xx
 	{
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
 		friend class CDialog;
-		friend class CMenubar;
+		friend class CMenuBar;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
@@ -2015,7 +2015,7 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = FromHandle(hwndFrom);
 
-				if (GetWindowType() != _T("CRebar"))	// Skip notification reflection for rebars to avoid double handling
+				if (GetWindowType() != _T("CReBar"))	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);

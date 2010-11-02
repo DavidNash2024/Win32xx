@@ -299,16 +299,16 @@ namespace Win32xx
 
 		// Get the statusbar's window area
 		CRect rcStatus;
-		if (GetStatusbar().IsWindowVisible() || !IsWindowVisible())
-			rcStatus = GetStatusbar().GetWindowRect();
+		if (GetStatusBar().IsWindowVisible() || !IsWindowVisible())
+			rcStatus = GetStatusBar().GetWindowRect();
 
 		// Get the top rebar or toolbar's window area
 		CRect rcTop;
-		if (IsRebarSupported() && m_bUseRebar)
-			rcTop = GetRebar().GetWindowRect();
+		if (IsReBarSupported() && m_bUseReBar)
+			rcTop = GetReBar().GetWindowRect();
 		else
-			if (m_bUseToolbar && GetToolbar().IsWindowVisible())
-				rcTop = GetToolbar().GetWindowRect();
+			if (m_bUseToolBar && GetToolBar().IsWindowVisible())
+				rcTop = GetToolBar().GetWindowRect();
 
 		// Return client size less the rebar and status windows
 		int top = rcFrame.top + rcTop.Height() + m_uRibbonHeight;
@@ -332,8 +332,8 @@ namespace Win32xx
 
 		if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
 		{		
-			m_bUseRebar = FALSE;			// Don't use rebars
-			m_bUseToolbar = FALSE;			// Don't use a toolbar
+			m_bUseReBar = FALSE;			// Don't use rebars
+			m_bUseToolBar = FALSE;			// Don't use a toolbar
 			
 			CFrame::OnCreate();
 

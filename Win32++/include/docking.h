@@ -118,7 +118,7 @@ namespace Win32xx
 		public:
 			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
 			virtual ~CViewPage() {}
-			virtual CToolbar& GetToolbar() const {return (CToolbar&)m_Toolbar;}
+			virtual CToolBar& GetToolBar() const {return (CToolBar&)m_ToolBar;}
 			virtual CWnd* GetView() const	{return m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual void OnCreate();
@@ -131,7 +131,7 @@ namespace Win32xx
 			CWnd* GetTabCtrl() const { return m_pTab;}
 
 		private:
-			CToolbar m_Toolbar;
+			CToolBar m_ToolBar;
 			CWnd* m_pView;
 			CWnd* m_pTab;
 		};
@@ -140,7 +140,7 @@ namespace Win32xx
 		CDockContainer();
 		virtual ~CDockContainer();
 		virtual void AddContainer(CDockContainer* pContainer);
-		virtual void AddToolbarButton(UINT nID, BOOL bEnabled = TRUE);
+		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE);
 		virtual CDockContainer* GetContainerFromIndex(UINT iPage);
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CDockContainer* pContainer);
@@ -151,7 +151,7 @@ namespace Win32xx
 		virtual void RemoveContainer(CDockContainer* pWnd);
 		virtual void SelectPage(int iPage);
 		virtual void SetTabSize();
-		virtual void SetupToolbar();
+		virtual void SetupToolBar();
 
 		// Attributes
 		CDockContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
@@ -161,7 +161,7 @@ namespace Win32xx
 		tString GetDockCaption() const	{ return m_tsCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
-		virtual CToolbar& GetToolbar() const	{ return GetViewPage().GetToolbar(); }
+		virtual CToolBar& GetToolBar() const	{ return GetViewPage().GetToolBar(); }
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
@@ -2602,7 +2602,7 @@ namespace Win32xx
 		// Set the default colour for the splitter bar
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 		HWND hWndFrame = GetDockAncestor()->GetAncestor();
-		RebarTheme* pTheme = (RebarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+		ReBarTheme* pTheme = (ReBarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
 		
 		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
 				rgbColour =pTheme->clrBkgnd2;
@@ -2893,7 +2893,7 @@ namespace Win32xx
 		{
 			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 			HWND hWndFrame = GetDockAncestor()->GetAncestor();
-			RebarTheme* pTheme = (RebarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+			ReBarTheme* pTheme = (ReBarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
 			
 			if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
 				rgbColour = pTheme->clrBkgnd2;
@@ -3669,11 +3669,11 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDockContainer::AddToolbarButton(UINT nID, BOOL bEnabled /* = TRUE */)
+	inline void CDockContainer::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE */)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		GetToolbar().AddButton(nID, bEnabled);
+		GetToolBar().AddButton(nID, bEnabled);
 	}
 
 	inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT iPage)
@@ -3750,22 +3750,22 @@ namespace Win32xx
 		return Size;
 	}
 
-	inline void CDockContainer::SetupToolbar()
+	inline void CDockContainer::SetupToolBar()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s).
 
 /*		// Set the Resource IDs for the toolbar buttons
-		AddToolbarButton( IDM_FILE_NEW   );
-		AddToolbarButton( IDM_FILE_OPEN  );
-		AddToolbarButton( IDM_FILE_SAVE  );
-		AddToolbarButton( 0 );				// Separator
-		AddToolbarButton( IDM_EDIT_CUT   );
-		AddToolbarButton( IDM_EDIT_COPY  );
-		AddToolbarButton( IDM_EDIT_PASTE );
-		AddToolbarButton( 0 );				// Separator
-		AddToolbarButton( IDM_FILE_PRINT );
-		AddToolbarButton( 0 );				// Separator
-		AddToolbarButton( IDM_HELP_ABOUT );
+		AddToolBarButton( IDM_FILE_NEW   );
+		AddToolBarButton( IDM_FILE_OPEN  );
+		AddToolBarButton( IDM_FILE_SAVE  );
+		AddToolBarButton( 0 );				// Separator
+		AddToolBarButton( IDM_EDIT_CUT   );
+		AddToolBarButton( IDM_EDIT_COPY  );
+		AddToolBarButton( IDM_EDIT_PASTE );
+		AddToolBarButton( 0 );				// Separator
+		AddToolBarButton( IDM_FILE_PRINT );
+		AddToolBarButton( 0 );				// Separator
+		AddToolBarButton( IDM_HELP_ABOUT );
 */
 	}
 
@@ -3783,22 +3783,22 @@ namespace Win32xx
 		GetViewPage().Create(m_hWnd);
 
 		// Create the toolbar
-		GetToolbar().Create(GetViewPage().GetHwnd());
-		DWORD style = (DWORD)GetToolbar().GetWindowLongPtr(GWL_STYLE);
+		GetToolBar().Create(GetViewPage().GetHwnd());
+		DWORD style = (DWORD)GetToolBar().GetWindowLongPtr(GWL_STYLE);
 		style |= CCS_NODIVIDER ;
-		GetToolbar().SetWindowLongPtr(GWL_STYLE, style);
-		SetupToolbar();
-		if (GetToolbar().GetToolbarData().size() > 0)
+		GetToolBar().SetWindowLongPtr(GWL_STYLE, style);
+		SetupToolBar();
+		if (GetToolBar().GetToolBarData().size() > 0)
 		{
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			if (!GetToolbar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
-				GetToolbar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+			if (!GetToolBar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
+				GetToolBar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
-			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		}
 		else
-			GetToolbar().Destroy();
+			GetToolBar().Destroy();
 
 		// Add tabs for each container.
 		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
@@ -4048,11 +4048,11 @@ namespace Win32xx
 		// Display tooltips for the toolbar
 		case TTN_GETDISPINFO:
 			{
-				int iIndex =  GetToolbar().HitTest();
+				int iIndex =  GetToolBar().HitTest();
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
 				if (iIndex >= 0)
 				{
-					int nID = GetToolbar().GetCommandID(iIndex);
+					int nID = GetToolBar().GetCommandID(iIndex);
 					if (nID > 0) lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
 				}
 			}
@@ -4071,11 +4071,11 @@ namespace Win32xx
 	inline void CDockContainer::CViewPage::RecalcLayout()
 	{
 		CRect rc = GetClientRect();
-		if (GetToolbar().IsWindow())
+		if (GetToolBar().IsWindow())
 		{
-			GetToolbar().SendMessage(TB_AUTOSIZE, 0L, 0L);
-			CRect rcToolbar = m_Toolbar.GetClientRect();
-			rc.top += rcToolbar.Height();
+			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+			CRect rcToolBar = m_ToolBar.GetClientRect();
+			rc.top += rcToolBar.Height();
 		}
 		
 		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);

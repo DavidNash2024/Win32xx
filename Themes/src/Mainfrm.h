@@ -26,7 +26,7 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual BOOL SaveRegistrySettings();
-	virtual void SetupToolbar();
+	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
@@ -35,17 +35,17 @@ private:
 	void OnBandColors();
 	void OnFlatStyle();
 	void OnLeftBands();
-	void OnLockMenubar();
+	void OnLockMenuBar();
 	void OnRoundBorders();
 	void OnShortBands();
 	void OnUseLines();
 	void OnViewArrows();
 	void OnViewCards();
-	void SetRebarTheme(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2);
+	void SetReBarTheme(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2);
 
 	CView m_View;
-	CToolbar Arrows;
-	CToolbar Cards;
+	CToolBar Arrows;
+	CToolBar Cards;
 	CMyCombo m_ComboBoxEx;
 	std::vector<UINT> m_vBandIDs;
 	std::vector<UINT> m_vBandStyles;

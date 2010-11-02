@@ -1,16 +1,16 @@
 //////////////////////////////////////////////
-// MyProgressbar.h
+// MyProgressBar.h
 
 #ifndef MYPROGRESSBAR_H
 #define MYPROGRESSBAR_H
 
 
 
-class CMyProgressbar : public CProgressbar
+class CMyProgressBar : public CProgressBar
 {
 public:
-	CMyProgressbar() {}
-	virtual ~CMyProgressbar() {}
+	CMyProgressBar() {}
+	virtual ~CMyProgressBar() {}
 	
 	void SetProgress(int nPos);
 };

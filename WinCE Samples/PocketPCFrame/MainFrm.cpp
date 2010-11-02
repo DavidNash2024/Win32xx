@@ -5,10 +5,10 @@
 CMainFrame::CMainFrame()
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_BOLD  );
-	AddToolbarButton( IDM_ITALIC);
-	AddToolbarButton( IDM_UNDERLINE);
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_BOLD  );
+	AddToolBarButton( IDM_ITALIC);
+	AddToolBarButton( IDM_UNDERLINE);
 }
 
 CMainFrame::~CMainFrame()
@@ -40,7 +40,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		}
 		return TRUE;
 
-	// Respond to Toolbar buttons
+	// Respond to ToolBar buttons
 	case IDM_BOLD:
 		TRACE(TEXT("Bold button pressed\n"));
 		return TRUE;

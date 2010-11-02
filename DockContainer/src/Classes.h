@@ -36,7 +36,7 @@ public:
 	virtual ~CContainClasses() {}
 	void AddCombo();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM /*lParam*/);
-	virtual void SetupToolbar();
+	virtual void SetupToolBar();
 
 private:
 	CViewClasses m_ViewClasses;

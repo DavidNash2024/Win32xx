@@ -20,7 +20,7 @@ protected:
 	virtual void OnFileOpen();
 	virtual	void OnFilePrint();
 	virtual void OnInitialUpdate();
-	virtual void SetupToolbar();
+	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 

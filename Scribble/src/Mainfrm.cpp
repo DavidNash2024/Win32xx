@@ -64,10 +64,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
-		OnViewStatusbar();
+		OnViewStatusBar();
 		return TRUE;
 	case IDW_VIEW_TOOLBAR:
-		OnViewToolbar();
+		OnViewToolBar();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
@@ -256,24 +256,24 @@ void CMainFrame::OnFilePrint()
 	::DeleteObject(hbmView);
 }
 
-void CMainFrame::SetupToolbar()
+void CMainFrame::SetupToolBar()
 {
 	// Define our toolbar
-	AddToolbarButton( IDM_FILE_NEW   );
-	AddToolbarButton( IDM_FILE_OPEN  );
-	AddToolbarButton( IDM_FILE_SAVE  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_EDIT_CUT,   FALSE );
-	AddToolbarButton( IDM_EDIT_COPY,  FALSE );
-	AddToolbarButton( IDM_EDIT_PASTE, FALSE );
-	AddToolbarButton( IDM_FILE_PRINT );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_PEN_RED    );
-	AddToolbarButton( IDM_PEN_BLUE   );
-	AddToolbarButton( IDM_PEN_GREEN  );
-	AddToolbarButton( IDM_PEN_BLACK  );
-	AddToolbarButton( 0 );				// Separator
-	AddToolbarButton( IDM_HELP_ABOUT );
+	AddToolBarButton( IDM_FILE_NEW   );
+	AddToolBarButton( IDM_FILE_OPEN  );
+	AddToolBarButton( IDM_FILE_SAVE  );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolBarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolBarButton( IDM_EDIT_PASTE, FALSE );
+	AddToolBarButton( IDM_FILE_PRINT );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_PEN_RED    );
+	AddToolBarButton( IDM_PEN_BLUE   );
+	AddToolBarButton( IDM_PEN_GREEN  );
+	AddToolBarButton( IDM_PEN_BLACK  );
+	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

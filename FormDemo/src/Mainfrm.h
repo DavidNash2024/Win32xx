@@ -27,7 +27,7 @@ protected:
 	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual void OnMenuUpdate(UINT nID);
 	virtual BOOL SaveRegistrySettings();
-	virtual void SetupToolbar();
+	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

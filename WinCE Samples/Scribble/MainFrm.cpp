@@ -6,11 +6,11 @@
 CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
 {
 	// Set the Resource IDs for the toolbar buttons
-	AddToolbarButton( 0 );			// Separator
-	AddToolbarButton( IDM_RED  );
-	AddToolbarButton( IDM_BLUE );
-	AddToolbarButton( IDM_GREEN );
-	AddToolbarButton( IDM_BLACK );
+	AddToolBarButton( 0 );			// Separator
+	AddToolBarButton( IDM_RED  );
+	AddToolBarButton( IDM_BLUE );
+	AddToolBarButton( IDM_GREEN );
+	AddToolBarButton( IDM_BLACK );
 }
 
 void CMainFrame::DrawLine(short x, short y)
@@ -44,7 +44,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		}
 		return TRUE;
 
-	// Respond to Toolbar buttons
+	// Respond to ToolBar buttons
 	case IDM_RED:
 		m_PenColor = RGB(255, 0, 0);
 		TRACE(_T("Red Pen Selected \n"));

@@ -32,7 +32,7 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual BOOL SaveRegistrySettings();
-	virtual void SetupToolbar();
+	virtual void SetupToolBar();
 
 private:
 	CDockTabbedMDI m_DockTabbedMDI;

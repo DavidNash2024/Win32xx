@@ -139,8 +139,8 @@ namespace Win32xx
 
 		// Its unlikely you would need to override these functions
 		virtual void OnClose();
-		virtual void OnViewStatusbar();
-		virtual void OnViewToolbar();
+		virtual void OnViewStatusBar();
+		virtual void OnViewToolBar();
 		virtual void OnWindowPosChanged();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -295,27 +295,27 @@ namespace Win32xx
 		}
 	}
 
-	inline void CMDIFrame::OnViewStatusbar()
+	inline void CMDIFrame::OnViewStatusBar()
 	{
-		CFrame::OnViewStatusbar();
+		CFrame::OnViewStatusBar();
 		UpdateCheckMarks();
 		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 	}
 
-	inline void CMDIFrame::OnViewToolbar()
+	inline void CMDIFrame::OnViewToolBar()
 	{
-		CFrame::OnViewToolbar();
+		CFrame::OnViewToolBar();
 		UpdateCheckMarks();
 		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 	}
 
 	inline void CMDIFrame::OnWindowPosChanged()
 	{
-		if (IsMenubarUsed())
+		if (IsMenuBarUsed())
 		{
-			// Refresh Menubar Window
-			HMENU hMenu= GetMenubar().GetMenu();
-			GetMenubar().SetMenu(hMenu);
+			// Refresh MenuBar Window
+			HMENU hMenu= GetMenuBar().GetMenu();
+			GetMenuBar().SetMenu(hMenu);
 			UpdateCheckMarks();
 		}
 	}
@@ -372,8 +372,8 @@ namespace Win32xx
 		}
 		else
 		{
-			if (IsMenubarUsed())
-				GetMenubar().SetMenu(GetFrameMenu());
+			if (IsMenuBarUsed())
+				GetMenuBar().SetMenu(GetFrameMenu());
 			else
 				::SetMenu(m_hWnd, GetFrameMenu());
 		}
@@ -395,10 +395,10 @@ namespace Win32xx
 		{
 			HMENU hMenu = GetActiveMDIChild()->m_hChildMenu;
 
-			UINT uCheck = GetToolbar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
+			UINT uCheck = GetToolBar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
 			::CheckMenuItem(hMenu, IDW_VIEW_TOOLBAR, uCheck);
 
-			uCheck = GetStatusbar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
+			uCheck = GetStatusBar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
 			::CheckMenuItem (hMenu, IDW_VIEW_STATUSBAR, uCheck);
 		}
 	}
@@ -414,10 +414,10 @@ namespace Win32xx
 
 			if (hMenuWindow)
 			{
-				if (IsMenubarUsed())
+				if (IsMenuBarUsed())
 				{
 					AppendMDIMenu(hMenuWindow);
-					GetMenubar().SetMenu(hMenu);
+					GetMenuBar().SetMenu(hMenu);
 				}
 				else
 				{
@@ -480,7 +480,7 @@ namespace Win32xx
 
 		case WM_MDISETMENU:
 			{
-				if (m_pMDIFrame->IsMenubarUsed())
+				if (m_pMDIFrame->IsMenuBarUsed())
 				{
 					return 0L;
 				}

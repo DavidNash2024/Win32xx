@@ -1,7 +1,7 @@
 // This file contains the resource ID definitions for Win32++.
 
 
-// The resource ID for MENU, ICON, Toolbar Bitmap, Accelerator,
+// The resource ID for MENU, ICON, ToolBar Bitmap, Accelerator,
 //  and Window Caption
 #define IDW_MAIN                        51
 
@@ -82,7 +82,7 @@
 // * In general, resource IDs can have values from 1 to 65535. Programs with
 //   resource IDs higher than 65535 aren't supported on Windows 95
 //
-// * CMenubar uses resource IDs beginning from 0 for the top level menu items.
+// * CMenuBar uses resource IDs beginning from 0 for the top level menu items.
 //   Win32++ leaves resource IDs below 51 unallocated for top level menu items.
 //
 // * Windows uses the icon with the lowest resource ID as the application's

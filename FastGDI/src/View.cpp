@@ -156,7 +156,7 @@ void CView::OnPaint(HDC hDC)
 	{
 		// There is no image, so display a hint to get one
 		CRect rc = GetClientRect();
-		::DrawText(hDC, _T("Use the Menu or Toolbar to open a Bitmap File"), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+		::DrawText(hDC, _T("Use the Menu or ToolBar to open a Bitmap File"), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 }
 
