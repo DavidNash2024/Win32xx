@@ -2164,7 +2164,7 @@ namespace Win32xx
 		HWND hAncestor = GetDockAncestor()->GetAncestor()->GetHwnd();
 
 		// Iterate through all top level windows
-		HWND hWnd = GetWindow(GW_HWNDFIRST)->GetHwnd();
+		HWND hWnd = GetWindow(GW_HWNDFIRST);
 		while(hWnd)
 		{
 			if (IsRelated(hWnd) || hWnd == hAncestor)

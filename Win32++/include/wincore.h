@@ -466,7 +466,7 @@ namespace Win32xx
 		HICON GetIcon(BOOL bBigIcon) const;
 		CWnd* GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
-		CWnd* GetWindow(UINT uCmd) const;
+		HWND GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
@@ -2243,14 +2243,14 @@ namespace Win32xx
 		return ::GetScrollInfo(m_hWnd, fnBar, &si);
 	}
 
-	inline CWnd* CWnd::GetWindow(UINT uCmd) const
+	inline HWND CWnd::GetWindow(UINT uCmd) const
 	// The GetWindow function retrieves a handle to a window that has the specified
 	// relationship (Z-Order or owner) to the specified window.
 	// Possible uCmd values: GW_CHILD, GW_ENABLEDPOPUP, GW_HWNDFIRST, GW_HWNDLAST,
 	// GW_HWNDNEXT, GW_HWNDPREV, GW_OWNER
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( ::GetWindow(m_hWnd, uCmd) );
+		return ::GetWindow(m_hWnd, uCmd);
 	}
 
 	inline HDC CWnd::GetWindowDC() const
