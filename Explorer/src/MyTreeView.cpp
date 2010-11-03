@@ -92,7 +92,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 
 						//A Treeview control sometimes requires this to end the
 						// TrackPopupMenu properly
-						::PostMessage(GetParent(), WM_CANCELMODE, 0, 0);
+						GetParent()->PostMessage(WM_CANCELMODE, 0, 0);
 
 						if(idCmd)
 						{

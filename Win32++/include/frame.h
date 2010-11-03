@@ -665,7 +665,7 @@ namespace Win32xx
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
-		m_pFrame = (CFrame*)FromHandle(GetAncestor());
+		m_pFrame = (CFrame*)GetAncestor();
 		assert(m_pFrame);
 	}
 
@@ -784,7 +784,7 @@ namespace Win32xx
 		case VK_SPACE:
 			ExitMenu();
 			// Bring up the system menu
-			::PostMessage(GetAncestor(), WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
+			GetAncestor()->PostMessage(WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
 			break;
 
 		// Handle VK_DOWN,VK_UP and VK_RETURN together
@@ -1005,7 +1005,7 @@ namespace Win32xx
 				m_bSelPopup = ((HIWORD(wParam) & MF_POPUP) != 0);
 
 				// Reflect message back to the frame window
-				::SendMessage(GetAncestor(), WM_MENUSELECT, wParam, lParam);
+				GetAncestor()->SendMessage(WM_MENUSELECT, wParam, lParam);
 			}
 			return TRUE;
 

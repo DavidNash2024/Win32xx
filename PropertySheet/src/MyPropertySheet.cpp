@@ -17,7 +17,7 @@ BOOL CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent(), m_hWnd);
+		PropSheet_Changed(GetParent()->GetHwnd(), m_hWnd);
 		break;
 
 	default:
@@ -114,7 +114,7 @@ BOOL CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent(), m_hWnd);
+		PropSheet_Changed(GetParent()->GetHwnd(), m_hWnd);
 		break;
 
 	default:

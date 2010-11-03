@@ -578,7 +578,7 @@ namespace Win32xx
 		m_DragPos.hdr.hwndFrom = m_hWnd;
 		::GetCursorPos(&m_DragPos.ptPos);
 		m_DragPos.ptPos.x += 1;
-		SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&m_DragPos);
+		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&m_DragPos);
 	}
 
 	inline void CDocker::CDockBar::SetColor(COLORREF color)
@@ -1043,7 +1043,7 @@ namespace Win32xx
 
 				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_bCaptionPressed))
 				{
-					CDocker* pDock = (CDocker*)FromHandle(GetParent());
+					CDocker* pDock = (CDocker*)GetParent();
 					if (pDock)
 						pDock->Undock(GetCursorPos());
 				}
@@ -1113,7 +1113,7 @@ namespace Win32xx
 		::GetCursorPos(&DragPos.ptPos);
 
 		// Send a DragPos notification to the docker
-		SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&DragPos);
+		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
 	}
 
 	inline LRESULT CDocker::CDockClient::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1773,9 +1773,9 @@ namespace Win32xx
 		pDocker->m_nDockID = nDockID;
 		pDocker->m_pDockAncestor = GetDockAncestor();
 		pDocker->m_pDockParent = this;
-		HWND hwndFrame = GetDockAncestor()->GetAncestor();
+		HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
 		pDocker->Create(hwndFrame);
-		pDocker->SetParent(m_hWnd);
+		pDocker->SetParent(this);
 
 		// Dock the docker window
 		if (dwDockStyle & DS_DOCKED_CONTAINER)
@@ -1832,9 +1832,9 @@ namespace Win32xx
 
 		// Initially create the as a child window of the frame
 		// This makes the frame window the owner of our docker
-		HWND hwndFrame = GetDockAncestor()->GetAncestor();
+		HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
 		pDocker->Create(hwndFrame);
-		pDocker->SetParent(m_hWnd);
+		pDocker->SetParent(this);
 
 		// Change the Docker to a POPUP window
 		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
@@ -1925,7 +1925,7 @@ namespace Win32xx
 					TRACE(_T("Error: Docking parent/Child information mismatch\n"));
 					bResult = FALSE;
 				}
-				if ((*iterChild)->GetParent() != (*iter)->GetHwnd())
+				if ((*iterChild)->GetParent() != (*iter).get())
 				{
 					TRACE(_T("Error: Incorrect windows child parent relationship\n"));
 					bResult = FALSE;
@@ -2005,7 +2005,7 @@ namespace Win32xx
 		}
 
 		// Redraw the docked windows
-		::SetForegroundWindow(GetAncestor());
+		GetAncestor()->SetForegroundWindow();
 		GetDockTopLevel()->m_hOldFocus = pDocker->GetView()->GetHwnd();
 		pDocker->GetView()->SetFocus();	
 		
@@ -2043,7 +2043,7 @@ namespace Win32xx
 					pContainer->AddContainer(pContainerChild);
 
 					CDocker* pDockChild = GetDockFromView(pContainerChild);
-					pDockChild->SetParent(m_hWnd);
+					pDockChild->SetParent(this);
 					pDockChild->m_pDockParent = this;
 				}
 			}
@@ -2054,7 +2054,7 @@ namespace Win32xx
 			pDock->ShowWindow(SW_HIDE);
 			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
 			pDock->SetDockStyle(dwDockStyle);
-			pDock->SetParent(m_hWnd);
+			pDock->SetParent(this);
 		}
 	}
 
@@ -2080,8 +2080,8 @@ namespace Win32xx
 		// Set the docking relationships
 		std::vector<CDocker*>::iterator iter = GetDockAncestor()->m_vDockChildren.begin();
 		GetDockAncestor()->m_vDockChildren.insert(iter, pDocker);
-		pDocker->SetParent(GetDockAncestor()->GetHwnd());
-		pDocker->GetDockBar().SetParent(GetDockAncestor()->GetHwnd());
+		pDocker->SetParent(GetDockAncestor());
+		pDocker->GetDockBar().SetParent(GetDockAncestor());
 
 		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if (((dwDockStyle & 0xF)  == DS_DOCKED_LEFT) || ((dwDockStyle &0xF)  == DS_DOCKED_RIGHT))
@@ -2104,7 +2104,7 @@ namespace Win32xx
 		}
 
 		// Redraw the docked windows
-		::SetFocus(GetAncestor());
+		GetAncestor()->SetFocus();
 		pDocker->GetView()->SetFocus();
 		RecalcDockLayout();
 	}
@@ -2161,10 +2161,10 @@ namespace Win32xx
 	{
 		// Step 1: Find the top level Docker the point is over
 		CDocker* pDockTop = NULL;
-		HWND hAncestor = GetDockAncestor()->GetAncestor();
+		HWND hAncestor = GetDockAncestor()->GetAncestor()->GetHwnd();
 
 		// Iterate through all top level windows
-		HWND hWnd = GetWindow(GW_HWNDFIRST);
+		HWND hWnd = GetWindow(GW_HWNDFIRST)->GetHwnd();
 		while(hWnd)
 		{
 			if (IsRelated(hWnd) || hWnd == hAncestor)
@@ -2511,8 +2511,8 @@ namespace Win32xx
 		{
 			pDockTarget->GetDockChildren().push_back(*iter);
 			(*iter)->m_pDockParent = pDockTarget;
-			(*iter)->SetParent(pDockTarget->GetHwnd());
-			(*iter)->GetDockBar().SetParent(pDockTarget->GetHwnd());
+			(*iter)->SetParent(pDockTarget);
+			(*iter)->GetDockBar().SetParent(pDockTarget);
 		}
 		GetDockChildren().clear();
 	}
@@ -2591,18 +2591,18 @@ namespace Win32xx
 		// Create the slider bar belonging to this docker
 		GetDockBar().SetDock(this);
 		if (GetDockAncestor() != this)
-			GetDockBar().Create(GetParent());
+			GetDockBar().Create(::GetParent(m_hWnd));
 
 		// Now remove the WS_POPUP style. It was required to allow this window
 		// to be owned by the frame window.
-		HWND hwndParent = GetParent();
+		CWnd* pWndParent = GetParent();
 		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
-		SetParent(hwndParent);	// Reinstate the window's parent
+		SetParent(pWndParent);	// Reinstate the window's parent
 
 		// Set the default colour for the splitter bar
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-		HWND hWndFrame = GetDockAncestor()->GetAncestor();
-		ReBarTheme* pTheme = (ReBarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+		CWnd* pFrame = GetDockAncestor()->GetAncestor();
+		ReBarTheme* pTheme = (ReBarTheme*)pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0);
 		
 		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
 				rgbColour =pTheme->clrBkgnd2;
@@ -2640,7 +2640,7 @@ namespace Win32xx
 						// Reset container parent before destroying the dock window
 						CDocker* pDock = GetDockFromView((*iter).pContainer);
 						if (pContainer->IsWindow())
-							pContainer->SetParent(pDock->GetDockClient().GetHwnd());
+							pContainer->SetParent(&pDock->GetDockClient());
 
 						pDock->Destroy();
 					}
@@ -2892,8 +2892,8 @@ namespace Win32xx
 		if (this == GetDockAncestor())
 		{
 			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-			HWND hWndFrame = GetDockAncestor()->GetAncestor();
-			ReBarTheme* pTheme = (ReBarTheme*)SendMessage(hWndFrame, UWM_GETREBARTHEME, 0, 0);
+			CWnd* pFrame = GetDockAncestor()->GetAncestor();
+			ReBarTheme* pTheme = (ReBarTheme*)pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0);
 			
 			if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
 				rgbColour = pTheme->clrBkgnd2;
@@ -3352,8 +3352,8 @@ namespace Win32xx
 			if (m_pDockParent)
 			{
 				pDockFirstChild->m_pDockParent = m_pDockParent;
-				pDockFirstChild->SetParent(m_pDockParent->GetHwnd());
-				pDockFirstChild->GetDockBar().SetParent(m_pDockParent->GetHwnd());
+				pDockFirstChild->SetParent(m_pDockParent);
+				pDockFirstChild->GetDockBar().SetParent(m_pDockParent);
 			}
 			else
 			{
@@ -3374,8 +3374,8 @@ namespace Win32xx
 	{
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		SetWindowLongPtr(GWL_STYLE, dwStyle);
-		SetParent(hWndParent);
-		GetDockBar().SetParent(hWndParent);
+		SetParent(FromHandle(hWndParent));
+		GetDockBar().SetParent(FromHandle(hWndParent));
 	}
 
 	inline void CDocker::ConvertToPopup(RECT rc)
@@ -3433,8 +3433,8 @@ namespace Win32xx
 		nmhdr.hwndFrom = m_hWnd;
 		nmhdr.code = UWM_UNDOCKED;
 		nmhdr.idFrom = m_nDockID;
-		HWND hwndFrame = GetDockAncestor()->GetAncestor();
-		::SendMessage(hwndFrame, WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
+		CWnd* pFrame = GetDockAncestor()->GetAncestor();
+		pFrame->SendMessage(WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
 
 		// Initiate the window move
 		SetCursorPos(pt.x, pt.y);
@@ -3490,7 +3490,7 @@ namespace Win32xx
 			while ((0 == pDockNew) && (iter < AllContainers.end()))
 			{
 				if ((*iter).pContainer != pContainer)
-					pDockNew = (CDocker*)FromHandle(::GetParent((*iter).pContainer->GetParent()));
+					pDockNew = (CDocker*)FromHandle(::GetParent((*iter).pContainer->GetParent()->GetHwnd()));
 
 				++iter;
 			}
@@ -3509,7 +3509,7 @@ namespace Win32xx
 						{
 							pContainerNew->AddContainer(pChildContainer);
 							CDocker* pDock = GetDockFromView(pChildContainer);
-							pDock->SetParent(pDockNew->GetHwnd());
+							pDock->SetParent(pDockNew);
 							pDock->m_pDockParent = pDockNew;
 						}
 					}
@@ -3563,7 +3563,7 @@ namespace Win32xx
 			pContainerParent->RemoveContainer(pContainer);
 			pContainerParent->SetTabSize();
 			pContainerParent->SetFocus();
-			pContainerParent->GetViewPage().SetParent(pContainerParent->GetHwnd());
+			pContainerParent->GetViewPage().SetParent(pContainerParent);
 		}
 
 		// Finally do the actual undocking
@@ -3663,7 +3663,7 @@ namespace Win32xx
 			if (pContainer->IsWindow())
 			{
 				// Set the parent container relationships
-				pContainer->GetViewPage().SetParent(m_hWnd);
+				pContainer->GetViewPage().SetParent(this);
 				pContainer->GetViewPage().ShowWindow(SW_HIDE);
 			}
 		}
@@ -3835,7 +3835,7 @@ namespace Win32xx
 
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
-			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()));
+			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()->GetHwnd()));
 			if (pDock && (pDock->GetWindowType() == _T("CDocker")))
 			{
 				CDockContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
@@ -3921,7 +3921,7 @@ namespace Win32xx
 		}
 
 		// Set the parent container relationships
-		pWnd->GetViewPage().SetParent(pWnd->GetHwnd());
+		pWnd->GetViewPage().SetParent(pWnd);
 		pWnd->m_pContainerParent = pWnd;
 
 		// Display the first page
@@ -3944,8 +3944,8 @@ namespace Win32xx
 				if (!m_vContainerInfo[iPage].pContainer->IsWindow())
 				{
 					CDockContainer* pContainer = m_vContainerInfo[iPage].pContainer;
-					pContainer->Create(GetParent());
-					pContainer->GetViewPage().SetParent(m_hWnd);
+					pContainer->Create(::GetParent(m_hWnd));
+					pContainer->GetViewPage().SetParent(this);
 				}
 
 				// Determine the size of the tab page's view area
@@ -3960,7 +3960,7 @@ namespace Win32xx
 				pNewContainer->GetViewPage().GetView()->SetFocus();
 
 				// Adjust the docking caption
-				CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()));
+				CDocker* pDock = (CDocker*)FromHandle(::GetParent(::GetParent(m_hWnd)));
 				if (pDock && (pDock->GetWindowType() == _T("CDocker")))
 				{
 					pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
@@ -4027,7 +4027,7 @@ namespace Win32xx
 	// Declaration of the nested CViewPage class
 	inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
-		CDockContainer* pContainer = (CDockContainer*)FromHandle(GetParent());
+		CDockContainer* pContainer = (CDockContainer*)GetParent();
 		assert(pContainer->GetWindowType() == _T("CDockContainer"));
 		return pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
 	}
@@ -4113,7 +4113,7 @@ namespace Win32xx
 			case NM_KILLFOCUS:
 			case NM_SETFOCUS:
 			case UWM_FRAMELOSTFOCUS:
-				::SendMessage(::GetParent(GetParent()), WM_NOTIFY, wParam, lParam);
+				::SendMessage(::GetParent(::GetParent(m_hWnd)), WM_NOTIFY, wParam, lParam);
 				break;
 			}
 

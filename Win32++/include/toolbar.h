@@ -628,7 +628,7 @@ namespace Win32xx
 		SetClassLongPtr(GCL_STYLE, dwStyle);
 
 		// Add extra styles for toolbars inside a rebar
-		CWnd* pWnd = FromHandle(GetParent());
+		CWnd* pWnd = GetParent();
 		if (pWnd && (pWnd->GetWindowType() == _T("CReBar")))
 		{
 			DWORD style = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -873,7 +873,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 
 		// Adjust size for toolbars inside a rebar
-		CWnd* pParent = FromHandle(GetParent());
+		CWnd* pParent = GetParent();
 		if (_T("CReBar") == pParent->GetWindowType())
 		{
 			ReBarTheme* pTheme = (ReBarTheme*)pParent->SendMessage(UWM_GETREBARTHEME, 0, 0);
@@ -1167,7 +1167,7 @@ namespace Win32xx
 
 		// Send a changed message to the parent (used by the rebar)
 		SIZE MaxSize = GetMaxSize();
-		::SendMessage(GetParent(), UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
+		GetParent()->SendMessage(UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 		return bResult;
 	}
@@ -1309,7 +1309,7 @@ namespace Win32xx
 
 			// Inform the parent of the change (rebar needs this)
 			SIZE MaxSize = GetMaxSize();
-			::SendMessage(GetParent(), UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
+			GetParent()->SendMessage(UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 			::DeleteObject(hbm);
 		}

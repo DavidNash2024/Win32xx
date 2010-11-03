@@ -453,7 +453,7 @@ namespace Win32xx
 		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		BOOL DrawMenuBar() const;
 		BOOL EnableWindow(BOOL bEnable = TRUE) const;
-		HWND GetAncestor() const;
+		CWnd* GetAncestor() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		LPCTSTR GetClassName() const;
 		CRect GetClientRect() const;
@@ -464,9 +464,9 @@ namespace Win32xx
 		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
 		HFONT GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
-		HWND GetParent() const;
+		CWnd* GetParent() const;
 		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
-		HWND GetWindow(UINT uCmd) const;
+		CWnd* GetWindow(UINT uCmd) const;
 		HDC  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
@@ -474,7 +474,7 @@ namespace Win32xx
 		int GetWindowTextLength() const;
 		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
-		BOOL IsChild(HWND hWndParent) const;
+		BOOL IsChild(CWnd* pChild) const;
 		BOOL IsWindow() const;
 		BOOL IsWindowEnabled() const;
 		BOOL IsWindowVisible() const;
@@ -491,8 +491,8 @@ namespace Win32xx
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		HWND SetActiveWindow() const;
-		HWND SetCapture() const;
+		CWnd* SetActiveWindow() const;
+		CWnd* SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
@@ -500,7 +500,7 @@ namespace Win32xx
 		void SetFont(HFONT hFont, BOOL bRedraw) const;
 		BOOL SetForegroundWindow() const;
 		HICON SetIcon(HICON hIcon, BOOL bBigIcon) const;
-		HWND SetParent(HWND hParent) const;
+		CWnd* SetParent(CWnd* pWndParent) const;
 		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
 		int  SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
 		UINT_PTR SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const;
@@ -518,15 +518,15 @@ namespace Win32xx
   #ifndef _WIN32_WCE
 		BOOL CloseWindow() const;
 		BOOL EnableScrollBar(UINT uSBflags, UINT uArrows) const;
-		HWND GetLastActivePopup() const;
+		CWnd* GetLastActivePopup() const;
 		HMENU GetMenu() const;
 		int  GetScrollPos(int nBar) const;
 		BOOL GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
-		HWND GetTopWindow() const;
+		CWnd* GetTopWindow() const;
 		BOOL GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
 		BOOL IsIconic() const;
 		BOOL IsZoomed() const;
-		BOOL LockWindowUpdate(HWND hWndLock) const;
+		BOOL LockWindowUpdate() const;
 		BOOL OpenIcon() const;
 		BOOL SetMenu(HMENU hMenu) const;
 		BOOL ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const;
@@ -537,6 +537,7 @@ namespace Win32xx
 		BOOL ShowOwnedPopups(BOOL fShow) const;
 		BOOL ShowScrollBar(int nBar, BOOL bShow) const;
 		BOOL ShowWindowAsync(int nCmdShow) const;
+		BOOL UnLockWindowUpdate() const;
   #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1260,7 +1261,7 @@ namespace Win32xx
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
 
 		// Get the parent window dimensions (parent could be the desktop)
-		if (GetParent() != NULL) ::GetWindowRect(GetParent(), &rcParent);
+		if (GetParent() != NULL) rcParent = GetParent()->GetWindowRect();
 		else rcParent = rcDesktop;
 
   #ifndef _WIN32_WCE
@@ -1487,7 +1488,7 @@ namespace Win32xx
 		return GetApp()->GetCWndFromMap(hWnd);
 	}
 
-	inline HWND CWnd::GetAncestor() const
+	inline CWnd* CWnd::GetAncestor() const
 	// The GetAncestor function retrieves the handle to the ancestor (root parent)
 	// of the window. Supports Win95.
 	{
@@ -1501,7 +1502,7 @@ namespace Win32xx
 			hWndParent = ::GetParent(hWnd);
 		}
 
-		return hWnd;
+		return FromHandle(hWnd);
 	}
 
 	inline LPCTSTR CWnd::GetClassName() const
@@ -2220,10 +2221,10 @@ namespace Win32xx
 		return (HICON)SendMessage(WM_GETICON, (WPARAM)bBigIcon, 0);
 	}
 
-	inline HWND CWnd::GetParent() const
+	inline CWnd* CWnd::GetParent() const
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetParent(m_hWnd);
+		return FromHandle( ::GetParent(m_hWnd) );
 	}
 
 	inline LONG_PTR CWnd::GetWindowLongPtr(int nIndex) const
@@ -2242,14 +2243,14 @@ namespace Win32xx
 		return ::GetScrollInfo(m_hWnd, fnBar, &si);
 	}
 
-	inline HWND CWnd::GetWindow(UINT uCmd) const
+	inline CWnd* CWnd::GetWindow(UINT uCmd) const
 	// The GetWindow function retrieves a handle to a window that has the specified
 	// relationship (Z-Order or owner) to the specified window.
 	// Possible uCmd values: GW_CHILD, GW_ENABLEDPOPUP, GW_HWNDFIRST, GW_HWNDLAST,
 	// GW_HWNDNEXT, GW_HWNDPREV, GW_OWNER
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetWindow(m_hWnd, uCmd);
+		return FromHandle( ::GetWindow(m_hWnd, uCmd) );
 	}
 
 	inline HDC CWnd::GetWindowDC() const
@@ -2303,12 +2304,12 @@ namespace Win32xx
 		return ::InvalidateRgn(m_hWnd, hRgn, bErase);
 	}
 
-	inline BOOL CWnd::IsChild(HWND hWndParent) const
+	inline BOOL CWnd::IsChild(CWnd* pChild) const
 	// The IsChild function tests whether a window is a child window or descendant window
 	// of a parent window's CWnd.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::IsChild(hWndParent, m_hWnd);
+		return ::IsChild(m_hWnd, pChild->GetHwnd());
 	}
 
 	inline BOOL CWnd::IsWindowEnabled() const
@@ -2409,22 +2410,22 @@ namespace Win32xx
 		return ::SendMessage(hWnd, uMsg, wParam, lParam);
 	}
 
-	inline HWND CWnd::SetActiveWindow() const
+	inline CWnd* CWnd::SetActiveWindow() const
 	// The SetActiveWindow function activates the window, but
 	// not if the application is in the background.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetActiveWindow(m_hWnd);
+		return FromHandle( ::SetActiveWindow(m_hWnd) );
 	}
 
-	inline HWND CWnd::SetCapture() const
+	inline CWnd* CWnd::SetCapture() const
 	// The SetCapture function sets the mouse capture to the window.
 	// SetCapture captures mouse input either when the mouse is over the capturing
 	// window, or when the mouse button was pressed while the mouse was over the
 	// capturing window and the button is still down.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetCapture(m_hWnd);
+		return FromHandle( ::SetCapture(m_hWnd) );
 	}
 
 	inline ULONG_PTR CWnd::SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const
@@ -2464,11 +2465,17 @@ namespace Win32xx
 		return ::SetForegroundWindow(m_hWnd);
 	}
 
-	inline HWND CWnd::SetParent(HWND hParent) const
+	inline CWnd* CWnd::SetParent(CWnd* pWndParent) const
 	// The SetParent function changes the parent window of the child window.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetParent(m_hWnd, hParent);
+		if (pWndParent)
+		{
+			HWND hParent = pWndParent->GetHwnd();
+			return FromHandle(::SetParent(m_hWnd, hParent));
+		}
+		else
+			return FromHandle(::SetParent(m_hWnd, 0));
 	}
 
 	inline BOOL CWnd::SetRedraw(BOOL bRedraw /*= TRUE*/) const
@@ -2606,10 +2613,10 @@ namespace Win32xx
 		return ::EnableScrollBar(m_hWnd, uSBflags, uArrows);
 	}
 
-	inline HWND CWnd::GetLastActivePopup() const
+	inline CWnd* CWnd::GetLastActivePopup() const
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetLastActivePopup(m_hWnd);
+		return FromHandle( ::GetLastActivePopup(m_hWnd) );
 	}
 
 	inline HMENU CWnd::GetMenu() const
@@ -2635,10 +2642,10 @@ namespace Win32xx
 		return ::GetScrollRange(m_hWnd, nBar, &MinPos, &MaxPos );
 	}
 
-	inline HWND CWnd::GetTopWindow() const
+	inline CWnd* CWnd::GetTopWindow() const
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetTopWindow(m_hWnd);
+		return FromHandle( ::GetTopWindow(m_hWnd) );
 	}
 
 	inline BOOL CWnd::GetWindowPlacement(WINDOWPLACEMENT& wndpl) const
@@ -2670,12 +2677,12 @@ namespace Win32xx
 		return ::KillTimer(m_hWnd, uIDEvent);
 	}
 
-	inline BOOL CWnd::LockWindowUpdate(HWND hWndLock) const
-	// Disables or enables drawing in the specified window. Only one window can be locked at a time.
-	// Use a hWndLock of NULL to re-enable drawing in the window
+	inline BOOL CWnd::LockWindowUpdate() const
+	// Disables drawing in the window. Only one window can be locked at a time.
+	// Use UnLockWindowUpdate to re-enable drawing in the window
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::LockWindowUpdate(hWndLock);
+		return ::LockWindowUpdate(m_hWnd);
 	}
 
 	inline BOOL CWnd::OpenIcon() const
@@ -2759,6 +2766,14 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::ShowWindowAsync(m_hWnd, nCmdShow);
+	}
+
+	inline BOOL CWnd::UnLockWindowUpdate() const
+	// Enables drawing in the window. Only one window can be locked at a time.
+	// Use LockWindowUpdate to disable drawing in the window
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::LockWindowUpdate(0);
 	}
 
 

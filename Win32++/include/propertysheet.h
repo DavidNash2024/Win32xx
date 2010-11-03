@@ -320,7 +320,7 @@ namespace Win32xx
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWnd = ::GetDlgItem(GetParent(), iButton);
+		HWND hWnd = GetParent()->GetDlgItem(iButton);
 		return ::IsWindowEnabled(hWnd);
 	}
 
@@ -490,8 +490,8 @@ namespace Win32xx
 		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
 			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
 		{
-			HWND hWndTab = GetParent();
-			if (SendMessage(hWndTab, PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
+			CWnd* pWndParent = GetParent();
+			if (pWndParent->SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
 				return TRUE;
 		}
 
@@ -512,7 +512,7 @@ namespace Win32xx
 		// Returns the nonzero value from a page in the property sheet, or zero if no page returns a nonzero value.
 
 		assert(::IsWindow(m_hWnd));
-		return ::SendMessage(GetParent(), PSM_QUERYSIBLINGS, wParam, lParam);
+		return GetParent()->SendMessage(PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
 	inline void CPropertyPage::SetModified(BOOL bChanged) const
@@ -522,9 +522,9 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		if (bChanged)
-			::SendMessage(GetParent(), PSM_CHANGED, (WPARAM)m_hWnd, 0L);
+			GetParent()->SendMessage(PSM_CHANGED, (WPARAM)m_hWnd, 0L);
 		else
-			::SendMessage(GetParent(), PSM_UNCHANGED, (WPARAM)m_hWnd, 0L);
+			GetParent()->SendMessage(PSM_UNCHANGED, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CPropertyPage::SetTitle(LPCTSTR szTitle)
@@ -552,7 +552,7 @@ namespace Win32xx
 		//	PSWIZB_NEXT				Enable the Next button. If this flag is not set, the Next button is displayed as disabled.
 
 		assert (::IsWindow(m_hWnd));
-		PropSheet_SetWizButtons(GetParent(), dwFlags);
+		PropSheet_SetWizButtons(::GetParent(m_hWnd), dwFlags);
 	}
 
 	inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp)

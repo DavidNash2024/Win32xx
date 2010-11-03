@@ -704,7 +704,7 @@ namespace Win32xx
 		NMHDR nmhdr = {0};
 		nmhdr.hwndFrom = m_hWnd;
 		nmhdr.code = UWM_TAB_CHANGED;
-		::SendMessage(GetParent(), WM_NOTIFY, 0L, (LPARAM)&nmhdr);
+		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
 	inline void CTab::OnCreate()
@@ -853,9 +853,9 @@ namespace Win32xx
 
 		// Use the region in the memory DC to paint the grey background
 		dcMem.AttachClipRegion(hrgnClip);
-		HWND hWndParent = GetParent();
+		HWND hWndParent = ::GetParent(m_hWnd);
 		CDC dcParent = ::GetDC(hWndParent);
-		HBRUSH hBrush = (HBRUSH)::SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
+		HBRUSH hBrush = (HBRUSH) SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
 		dcMem.AttachBrush(hBrush);
 		dcMem.PaintRgn(hrgnClip);
 
@@ -1082,7 +1082,7 @@ namespace Win32xx
 			MapWindowPoints(m_hWnd, NULL, &pt, 1);
 
 			// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
-			HWND MenuHwnd = GetAncestor();
+			HWND MenuHwnd = GetAncestor()->GetHwnd();
 			int iPage = 0;
 			m_IsListMenuActive = TRUE;
 			iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
@@ -1296,7 +1296,7 @@ namespace Win32xx
 
 		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
 		if (IsWindow())
-			::SendMessage(GetParent(), WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
+			GetParent()->SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
 		return pView;
 	}

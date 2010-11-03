@@ -55,7 +55,7 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 	if(m_csfCurFolder.GetIShellFolder())
 	{
 		CContextMenu ccm;
-		hr = m_csfCurFolder.CreateViewObject(GetParent(), IID_IContextMenu, ccm);
+		hr = m_csfCurFolder.CreateViewObject(GetParent()->GetHwnd(), IID_IContextMenu, ccm);
 
 		if(SUCCEEDED(hr))
 		{
@@ -87,7 +87,7 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 					{
 						CMINVOKECOMMANDINFO  cmi = {0};
 						cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-						cmi.hwnd = GetParent();
+						cmi.hwnd = ::GetParent(m_hWnd);
 						cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
 						cmi.nShow = SW_SHOWNORMAL;
 						ccm.InvokeCommand(cmi);
@@ -190,7 +190,7 @@ void CMyListView::DoDefault(int iItem)
 							{
 								CMINVOKECOMMANDINFO  cmi = {0};
 								cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-								cmi.hwnd = GetParent();
+								cmi.hwnd = ::GetParent(m_hWnd);
 								cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
 								cmi.nShow = SW_SHOWNORMAL;
 								ccm.InvokeCommand(cmi);
@@ -269,7 +269,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 						{
 							CMINVOKECOMMANDINFO  cmi = {0};
 							cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-							cmi.hwnd = GetParent();
+							cmi.hwnd = ::GetParent(m_hWnd);
 							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
 							cmi.nShow = SW_SHOWNORMAL;
 							ccm.InvokeCommand(cmi);

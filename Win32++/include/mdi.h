@@ -515,7 +515,7 @@ namespace Win32xx
 	inline CMDIChild::~CMDIChild()
 	{
 		if (IsWindow())
-			::SendMessage(GetParent(), WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
+			GetParent()->SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 
 		if (m_hChildMenu)
 			::DestroyMenu(m_hChildMenu);
@@ -582,7 +582,7 @@ namespace Win32xx
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
-		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
+		CMDIFrame* pMDIFrame = (CMDIFrame*)GetAncestor();
 		if (m_hChildMenu)
 			pMDIFrame->UpdateFrameMenu(m_hChildMenu);
 
@@ -617,10 +617,10 @@ namespace Win32xx
 		// Note: It is valid to call SetChildMenu before the window is created
 		if (IsWindow())
 		{
-			HWND hWnd = (HWND)::SendMessage(GetParent(), WM_MDIGETACTIVE, 0L, 0L);
+			HWND hWnd = (HWND)GetParent()->SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 			if ((m_hChildMenu) && (hWnd == m_hWnd))
 			{
-				CMDIFrame* pFrame = (CMDIFrame*)FromHandle(GetAncestor());
+				CMDIFrame* pFrame = (CMDIFrame*)GetAncestor();
 				pFrame->UpdateFrameMenu(m_hChildMenu);
 			}
 		} 
@@ -653,7 +653,7 @@ namespace Win32xx
 		{
 		case WM_MDIACTIVATE:
 			{
-				CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(GetAncestor());
+				CMDIFrame* pMDIFrame = (CMDIFrame*)GetAncestor();
 
 				// This child is being activated
 				if (lParam == (LPARAM) m_hWnd)
