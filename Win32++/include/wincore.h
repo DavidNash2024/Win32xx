@@ -203,6 +203,7 @@ namespace Win32xx
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
+	typedef Shared_Ptr<CWnd> WndPtr;
 
 
 	//////////////////////////////////////////////////
@@ -613,6 +614,8 @@ namespace Win32xx
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
+		void AddOrphan(HWND hWnd);
+		void DeleteOrphans(CWnd* pWnd);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
 		void SetCallback();
@@ -621,6 +624,8 @@ namespace Win32xx
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;	// vector of TLSData smart pointers, one for each thread
+		std::vector<WndPtr> m_vOrphans;	// vector of CWnd smart pointers automatically attached to HWND
+		CCriticalSection m_csOrphans;	// thread synchronisation for m_vOrphans
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTlsData;	// thread synchronisation for m_ csvTlsData
 		HINSTANCE m_hInstance;			// handle to the applications instance
@@ -1017,6 +1022,8 @@ namespace Win32xx
 
 	inline CWinApp::~CWinApp()
 	{
+		m_vOrphans.clear();
+		
 		// Check that all CWnd windows are destroyed
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
@@ -1035,6 +1042,38 @@ namespace Win32xx
 		}
 
 		SetnGetThis((CWinApp*)-1);
+	}
+
+	inline void CWinApp::AddOrphan(HWND hWnd)
+	{
+		// Some HWNDs are orphans (don't have an associated CWnd), so create one here.
+		// The orphans are temporary, deleted when a CWnd is destroyed.
+		CWnd* pWnd = new CWnd;
+		pWnd->Attach(hWnd);
+
+		m_csOrphans.Lock();
+		m_vOrphans.push_back(pWnd); // save the pointer for deletion later
+		m_csOrphans.Release();
+	}
+
+	inline void CWinApp::DeleteOrphans(CWnd* pWnd)
+	{
+		m_csOrphans.Lock();
+		
+		if (m_vOrphans.size() > 0)
+		{
+			std::vector<WndPtr>::iterator iter;
+			for (iter = m_vOrphans.begin(); iter < m_vOrphans.end(); ++iter)
+			{
+				if ((*iter).get() == pWnd)
+					break;
+			}
+			
+			if (iter == m_vOrphans.end())
+				m_vOrphans.clear(); // deletes the smart CWnd pointers
+		}		
+		
+		m_csOrphans.Release();
 	}
 
 	inline void CWinApp::SetCallback()
@@ -1065,15 +1104,17 @@ namespace Win32xx
 	{
 		// Allocate an iterator for our HWND map
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
+		
 		// Find the CWnd pointer mapped to this HWND
+		CWnd* pWnd = 0;
 		m_csMapLock.Lock();
 		m = m_mapHWND.find(hWnd);
-		m_csMapLock.Release();
+		
 		if (m != m_mapHWND.end())
-			return m->second;
-		else
-			return 0;
+			pWnd = m->second;
+
+		m_csMapLock.Release();
+		return pWnd;
 	}
 
 	inline BOOL CWinApp::InitInstance()
@@ -1229,6 +1270,9 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		assert(::IsWindow(hWnd));
+
+		if (m_PrevWindowProc)
+			Detach();
 
 		Subclass(hWnd);
 
@@ -1434,14 +1478,14 @@ namespace Win32xx
 
 			// Window creation is complete. Now call OnInitialUpdate
 			OnInitialUpdate();
-			}
+		}
 
-			catch (const CWinException &e)
-			{
-				e.what();
-			}
+		catch (const CWinException &e)
+		{
+			e.what();
+		}
 
-			return m_hWnd;
+		return m_hWnd;
 	}
 
 	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1458,6 +1502,8 @@ namespace Win32xx
 		// Return the CWnd to its default state
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
+
+		GetApp()->DeleteOrphans(this);
 
 		RemoveFromMap();
 		m_hIconLarge = NULL;
@@ -1476,7 +1522,6 @@ namespace Win32xx
 
 		// Clear member variables
 		HWND hWnd = m_hWnd;
-		Destroy();
 
 		return hWnd;
 	}
@@ -1485,7 +1530,14 @@ namespace Win32xx
 	// Returns the CWnd object associated with the window handle
 	{
 		assert( GetApp() );
-		return GetApp()->GetCWndFromMap(hWnd);
+		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
+		if (::IsWindow(hWnd) && pWnd == 0)
+		{
+			GetApp()->AddOrphan(hWnd);		
+			pWnd = GetApp()->GetCWndFromMap(hWnd);
+		}
+
+		return pWnd;
 	}
 
 	inline CWnd* CWnd::GetAncestor() const
@@ -1656,7 +1708,7 @@ namespace Win32xx
 			}
 		}
 
-		CWnd* Wnd = FromHandle(hWnd);
+		CWnd* Wnd = GetApp()->GetCWndFromMap(hWnd);
 
 		if (Wnd != NULL)
 			return Wnd->OnMessageReflect(uMsg, wParam, lParam);
@@ -1955,7 +2007,6 @@ namespace Win32xx
 	// A private function used by CreateEx, Attach and AttachDlgItem
 	{
 		assert(::IsWindow(hWnd));
-		assert(0 == m_PrevWindowProc);
 
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 		m_hWnd = hWnd;
@@ -1991,7 +2042,7 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Refelect this message if it's from a control
-				CWnd* pWnd = FromHandle((HWND)lParam);
+				CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
 				if (pWnd != NULL)
 					lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
@@ -2014,7 +2065,7 @@ namespace Win32xx
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* pWndFrom = FromHandle(hwndFrom);
+				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
 
 				if (GetWindowType() != _T("CReBar"))	// Skip notification reflection for rebars to avoid double handling
 				{
@@ -2024,7 +2075,7 @@ namespace Win32xx
 					{
 						// Some controls (eg ListView) have child windows.
 						// Reflect those notifications too.
-						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
+						CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
 						if (pWndFromParent != NULL)
 							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 					}

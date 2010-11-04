@@ -2208,7 +2208,7 @@ namespace Win32xx
 		{
 			// Save the hwnd of the window which currently has focus
 			// (this must be CFrame window itself or a child window
-			if (!IsIconic()) m_hOldFocus = GetFocus();
+			if (!IsIconic()) m_hOldFocus = ::GetFocus();
 
 			// Send a notification to the view window
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
@@ -2540,7 +2540,7 @@ namespace Win32xx
 		}
 		
 		if (SC_MINIMIZE == wParam)
-			m_hOldFocus = GetFocus();
+			m_hOldFocus = ::GetFocus();
 		
 		return CWnd::WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
 	}

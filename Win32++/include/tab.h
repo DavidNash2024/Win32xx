@@ -49,8 +49,6 @@
 namespace Win32xx
 {
 
-	typedef Shared_Ptr<CWnd> ViewPtr;
-
 	struct TabPageInfo
 	{
 		TCHAR szTabText[MAX_MENU_STRING];
@@ -88,9 +86,9 @@ namespace Win32xx
 	public:
 		CTab();
 		virtual ~CTab();
-		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
-		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText, UINT nID_Icon, UINT idTab = 0);
-		virtual int  AddTabPage(ViewPtr pView, LPCTSTR szTabText);
+		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
+		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText, UINT nID_Icon, UINT idTab = 0);
+		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
 		
@@ -157,7 +155,7 @@ namespace Win32xx
 		void SetActiveView(CWnd* pView);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
-		std::vector<ViewPtr> m_vTabViews;
+		std::vector<WndPtr> m_vTabViews;
 		HIMAGELIST m_himlTab;
 		CWnd* m_pActiveView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
@@ -266,7 +264,7 @@ namespace Win32xx
 		ImageList_Destroy(m_himlTab);
 	}
 
-	inline int CTab::AddTabPage(ViewPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
+	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
 	{
 		assert(pView.get());
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
@@ -309,13 +307,13 @@ namespace Win32xx
 		return iNewPage;
 	}
 
-	inline int CTab::AddTabPage(ViewPtr pView, LPCTSTR szTabText, UINT idIcon, UINT idTab /* = 0*/)
+	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, UINT idIcon, UINT idTab /* = 0*/)
 	{
 		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0,0,0);
 		return AddTabPage(pView, szTabText, hIcon, idTab);
 	}
 
-	inline int CTab::AddTabPage(ViewPtr pView, LPCTSTR szTabText)
+	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText)
 	{
 		return AddTabPage(pView, szTabText, (HICON)0, 0);
 	}
@@ -927,7 +925,7 @@ namespace Win32xx
 		(*itTPI).pView->Destroy();
 		m_vTabPageInfo.erase(itTPI);
 
-		std::vector<ViewPtr>::iterator itView;
+		std::vector<WndPtr>::iterator itView;
 		for (itView = m_vTabViews.begin(); itView < m_vTabViews.end(); ++itView)
 		{
 			if ((*itView).get() == pView)
@@ -1292,7 +1290,7 @@ namespace Win32xx
 		assert(pView);
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
 
-		GetTab().AddTabPage(ViewPtr(pView), szTabText, (HICON)0, idMDIChild);
+		GetTab().AddTabPage(WndPtr(pView), szTabText, (HICON)0, idMDIChild);
 
 		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
 		if (IsWindow())

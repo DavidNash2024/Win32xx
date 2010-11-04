@@ -232,7 +232,7 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Refelect this message if it's from a control
-				CWnd* pWnd = FromHandle((HWND)lParam);
+				CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
 				if (pWnd != NULL)
 					lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
@@ -248,7 +248,7 @@ namespace Win32xx
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* pWndFrom = FromHandle(hwndFrom);
+				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
 
 				if (GetWindowType() != _T("CReBar"))	// Skip notification reflection for rebars to avoid double handling
 				{
@@ -258,7 +258,7 @@ namespace Win32xx
 					{
 						// Some controls (eg ListView) have child windows.
 						// Reflect those notifications too.
-						CWnd* pWndFromParent = FromHandle(::GetParent(hwndFrom));
+						CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
 						if (pWndFromParent != NULL)
 							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 					}
@@ -320,8 +320,8 @@ namespace Win32xx
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWnd = GetParent()->GetDlgItem(iButton);
-		return ::IsWindowEnabled(hWnd);
+		HWND hwndButton = GetParent()->GetDlgItem(iButton);
+		return ::IsWindowEnabled(hwndButton);
 	}
 
 	inline int CPropertyPage::OnApply()
@@ -798,6 +798,7 @@ namespace Win32xx
 		int nResult = (int)CreatePropertySheet(&m_PSH);
 
 		m_vPages.clear();
+		GetApp()->DeleteOrphans(this);
 		return nResult;
 	}
 

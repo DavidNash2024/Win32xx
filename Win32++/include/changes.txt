@@ -41,7 +41,7 @@ New Features and Enhancements
 * Vectors are now used as a replacement for all dynamically allocated arrays, 
    ensuring the arrays are automatically deleted when they go out of scope.
 * Renamed CToolbar to CToolBar, CStatusbar to CStatusBar, CRebar to CReBar
-   and CMenubar to CMenubar.   
+   and CMenubar to CMenuBar.   
 
 Changes in detail
 -----------------

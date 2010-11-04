@@ -717,7 +717,7 @@ namespace Win32xx
 	{
 		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			BOOL bFocus = m_pDock->IsChildOfDocker(GetFocus());
+			BOOL bFocus = m_pDock->IsChildOfDocker(::GetFocus());
 			m_bOldFocus = FALSE;
 
 			// Acquire the DC for our NonClient painting
@@ -2164,7 +2164,7 @@ namespace Win32xx
 		HWND hAncestor = GetDockAncestor()->GetAncestor()->GetHwnd();
 
 		// Iterate through all top level windows
-		HWND hWnd = GetWindow(GW_HWNDFIRST);
+		HWND hWnd = ::GetWindow(m_hWnd, GW_HWNDFIRST);
 		while(hWnd)
 		{
 			if (IsRelated(hWnd) || hWnd == hAncestor)
@@ -2548,7 +2548,7 @@ namespace Win32xx
 		// Only top level undocked dockers get this message
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
-			GetDockTopLevel()->m_hOldFocus = GetFocus();
+			GetDockTopLevel()->m_hOldFocus = ::GetFocus();
 
 			// Send a notification of focus lost
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
