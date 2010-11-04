@@ -433,7 +433,7 @@ namespace Win32xx
 		BOOL bRightToLeft = FALSE;
 
 #if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
-		bRightToLeft = (::GetWindowLongPtr(GetAncestor(), GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+		bRightToLeft = ((GetAncestor()->GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
 #endif
 		
 		int xPos = bRightToLeft? rc.right : rc.left;

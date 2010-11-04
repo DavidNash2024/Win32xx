@@ -51,13 +51,13 @@ namespace Win32xx
 	public:
 		CAXWindow();
 		virtual ~CAXWindow();
+		virtual void Activate(BOOL fFocus);
 		virtual void CreateControl(BSTR bstrClsid);
 		virtual void CreateControl(CLSID clsid);
 		virtual void Remove();
 		virtual void SetParent(HWND hWndParent);
 		virtual void SetLocation(int x, int y, int width, int height);
 		virtual void SetVisible(BOOL fVisible);
-		virtual void SetFocus(BOOL fFocus);
 		virtual void SetStatusWindow(HWND hWndStatus);
 		virtual void TranslateKey(MSG msg);
 		IDispatch* GetDispatch();
@@ -177,6 +177,23 @@ namespace Win32xx
 		CLSID   clsid;
 		CLSIDFromString(bstrClsid, &clsid);
 		CreateControl(clsid);
+	}
+
+	inline void CAXWindow::Activate(BOOL fFocus)
+	{
+		if (!m_pUnk)
+			return;
+
+		if (fFocus)
+		{
+			IOleObject* pioo;
+	 		HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, (void**)&pioo);
+	 		if (FAILED(hr))
+	 			return;
+
+	 		pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_hWnd, &m_rcControl);
+	 		pioo->Release();
+		}
 	}
 
 	inline void CAXWindow::CreateControl(CLSID clsid)
@@ -520,23 +537,6 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline void CAXWindow::SetFocus(BOOL fFocus)
-	{
-		if (!m_pUnk)
-			return;
-
-		if (fFocus)
-		{
-			IOleObject* pioo;
-	 		HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, (void**)&pioo);
-	 		if (FAILED(hr))
-	 			return;
-
-	 		pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_hWnd, &m_rcControl);
-	 		pioo->Release();
-		}
-	}
-
 	inline void CAXWindow::SetLocation(int x, int y, int width, int height)
 	{
 		m_rcControl.SetRect(x, y, x + width, y + height);
@@ -683,7 +683,7 @@ namespace Win32xx
 		GetAXWindow().CreateControl(CLSID_WebBrowser);
 		GetAXWindow().SetParent(m_hWnd);
 		GetAXWindow().SetVisible(TRUE);
-		GetAXWindow().SetFocus(TRUE);
+		GetAXWindow().Activate(TRUE);
 
 		IUnknown* pUnk = GetAXWindow().GetUnknown();
 		if(pUnk)

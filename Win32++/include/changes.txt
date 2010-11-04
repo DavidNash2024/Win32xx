@@ -41,7 +41,10 @@ New Features and Enhancements
 * Vectors are now used as a replacement for all dynamically allocated arrays, 
    ensuring the arrays are automatically deleted when they go out of scope.
 * Renamed CToolbar to CToolBar, CStatusbar to CStatusBar, CRebar to CReBar
-   and CMenubar to CMenuBar.   
+   and CMenubar to CMenuBar.
+* The following function now return CWnd* instead of HWND:
+   GetParent, GetAncestor, GetCapture, GetFocus, SetFocus, GetDlgItem, GetWindow,
+   GetLastACtivePopup, GetTopWindow, SetParent, SetCapture   
 
 Changes in detail
 -----------------
@@ -104,6 +107,9 @@ Added CToolBar::SetMaxTextRows
 Added CToolBar::SetPadding
 Added CToolBar::SetToolTips
 Added CWinException::what
+Added CWnd::GetActiveWindow
+Added CWnd::GetCapture
+Added CWnd::GetFocus
 Added CWnd::GetFont
 Added CWnd::GetIcon
 Added CWnd::GetLastActivePopup

@@ -320,8 +320,7 @@ namespace Win32xx
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hwndButton = GetParent()->GetDlgItem(iButton);
-		return ::IsWindowEnabled(hwndButton);
+		return GetParent()->GetDlgItem(iButton)->IsWindowEnabled();
 	}
 
 	inline int CPropertyPage::OnApply()

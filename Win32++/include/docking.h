@@ -633,7 +633,7 @@ namespace Win32xx
 				break;
 
 			case WM_LBUTTONUP:
-				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == m_hWnd))
+				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == this))
 				{
 					SendNotify(UWM_BAR_END);
 					ReleaseCapture();
@@ -641,7 +641,7 @@ namespace Win32xx
 				break;
 
 			case WM_MOUSEMOVE:
-				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == m_hWnd))
+				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == this))
 				{
 					SendNotify(UWM_BAR_MOVE);
 				}

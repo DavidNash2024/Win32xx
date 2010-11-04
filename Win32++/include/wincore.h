@@ -450,95 +450,98 @@ namespace Win32xx
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
-		HDWP DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
-		BOOL DrawMenuBar() const;
-		BOOL EnableWindow(BOOL bEnable = TRUE) const;
+		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
+		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
+		BOOL  DrawMenuBar() const;
+		BOOL  EnableWindow(BOOL bEnable = TRUE) const;
+		CWnd* GetActiveWindow() const;
 		CWnd* GetAncestor() const;
+		CWnd* GetCapture() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		LPCTSTR GetClassName() const;
 		CRect GetClientRect() const;
-		HDC  GetDC() const;
-		HDC  GetDCEx(HRGN hrgnClip, DWORD flags) const;
-		HWND GetDlgItem(int nIDDlgItem) const;
+		HDC   GetDC() const;
+		HDC   GetDCEx(HRGN hrgnClip, DWORD flags) const;
+		CWnd* GetDlgItem(int nIDDlgItem) const;
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
+		CWnd* GetFocus() const;
 		HFONT GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
 		CWnd* GetParent() const;
-		BOOL GetScrollInfo(int fnBar, SCROLLINFO& si) const;
-		HWND GetWindow(UINT uCmd) const;
-		HDC  GetWindowDC() const;
+		BOOL  GetScrollInfo(int fnBar, SCROLLINFO& si) const;
+		CWnd* GetWindow(UINT uCmd) const;
+		HDC   GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
 		LPCTSTR GetWindowText() const;
-		int GetWindowTextLength() const;
-		BOOL InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
-		BOOL InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
-		BOOL IsChild(CWnd* pChild) const;
-		BOOL IsWindow() const;
-		BOOL IsWindowEnabled() const;
-		BOOL IsWindowVisible() const;
-		BOOL KillTimer(UINT_PTR uIDEvent) const;
+		int   GetWindowTextLength() const;
+		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
+		BOOL  InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
+		BOOL  IsChild(CWnd* pChild) const;
+		BOOL  IsWindow() const;
+		BOOL  IsWindowEnabled() const;
+		BOOL  IsWindowVisible() const;
+		BOOL  KillTimer(UINT_PTR uIDEvent) const;
 		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
 		LPCTSTR LoadString(UINT nID);
-		int  MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
-		BOOL MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
-		BOOL MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
-		BOOL PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
-		BOOL PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		BOOL RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
-		int  ReleaseDC(HDC hDC) const;
+		int   MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
+		BOOL  MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
+		BOOL  MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
+		BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
+		BOOL  PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+		int   ReleaseDC(HDC hDC) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		CWnd* SetActiveWindow() const;
 		CWnd* SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
-		BOOL SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
-		BOOL SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
-		HWND SetFocus() const;
-		void SetFont(HFONT hFont, BOOL bRedraw) const;
-		BOOL SetForegroundWindow() const;
+		BOOL  SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
+		BOOL  SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
+		CWnd* SetFocus() const;
+		void  SetFont(HFONT hFont, BOOL bRedraw) const;
+		BOOL  SetForegroundWindow() const;
 		HICON SetIcon(HICON hIcon, BOOL bBigIcon) const;
 		CWnd* SetParent(CWnd* pWndParent) const;
-		BOOL SetRedraw(BOOL bRedraw = TRUE) const;
-		int  SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
+		BOOL  SetRedraw(BOOL bRedraw = TRUE) const;
+		int   SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
 		UINT_PTR SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
-		BOOL SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
-		BOOL SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
-		int SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
-		BOOL SetWindowText(LPCTSTR lpString) const;
+		BOOL  SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
+		BOOL  SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
+		int   SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
+		BOOL  SetWindowText(LPCTSTR lpString) const;
 		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
-		BOOL ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
-		BOOL UpdateWindow() const;
-		BOOL ValidateRect(LPCRECT prc) const;
-		BOOL ValidateRgn(HRGN hRgn) const;
+		BOOL  ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
+		BOOL  UpdateWindow() const;
+		BOOL  ValidateRect(LPCRECT prc) const;
+		BOOL  ValidateRgn(HRGN hRgn) const;
 
   #ifndef _WIN32_WCE
-		BOOL CloseWindow() const;
-		BOOL EnableScrollBar(UINT uSBflags, UINT uArrows) const;
+		BOOL  CloseWindow() const;
+		BOOL  EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		CWnd* GetLastActivePopup() const;
 		HMENU GetMenu() const;
-		int  GetScrollPos(int nBar) const;
-		BOOL GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
+		int   GetScrollPos(int nBar) const;
+		BOOL  GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
 		CWnd* GetTopWindow() const;
-		BOOL GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
-		BOOL IsIconic() const;
-		BOOL IsZoomed() const;
-		BOOL LockWindowUpdate() const;
-		BOOL OpenIcon() const;
-		BOOL SetMenu(HMENU hMenu) const;
-		BOOL ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const;
-		int  ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const;
-		int  SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
-		BOOL SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
-		BOOL SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
-		BOOL ShowOwnedPopups(BOOL fShow) const;
-		BOOL ShowScrollBar(int nBar, BOOL bShow) const;
-		BOOL ShowWindowAsync(int nCmdShow) const;
-		BOOL UnLockWindowUpdate() const;
+		BOOL  GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
+		BOOL  IsIconic() const;
+		BOOL  IsZoomed() const;
+		BOOL  LockWindowUpdate() const;
+		BOOL  OpenIcon() const;
+		BOOL  SetMenu(HMENU hMenu) const;
+		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const;
+		int   ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const;
+		int   SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
+		BOOL  SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
+		BOOL  SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
+		BOOL  ShowOwnedPopups(BOOL fShow) const;
+		BOOL  ShowScrollBar(int nBar, BOOL bShow) const;
+		BOOL  ShowWindowAsync(int nCmdShow) const;
+		BOOL  UnLockWindowUpdate() const;
   #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1572,7 +1575,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		int nLength = ::GetWindowTextLength(GetDlgItem(nIDDlgItem));
+		int nLength = ::GetWindowTextLength(::GetDlgItem(m_hWnd, nIDDlgItem));
 		m_vTChar.assign(nLength +1, _T('\0'));
 		TCHAR* pTCharArray = &m_vTChar.front();
 
@@ -2209,6 +2212,16 @@ namespace Win32xx
 		return ::EnableWindow(m_hWnd, bEnable);
 	}
 
+	inline CWnd* CWnd::GetActiveWindow() const
+	{
+		return FromHandle( ::GetActiveWindow() );
+	}
+
+	inline CWnd* CWnd::GetCapture() const
+	{
+		return FromHandle( ::GetCapture() );
+	}
+
 	inline ULONG_PTR CWnd::GetClassLongPtr(int nIndex) const
 	// The GetClassLongPtr function retrieves the specified value from the
 	// WNDCLASSEX structure associated with the window.
@@ -2245,17 +2258,22 @@ namespace Win32xx
 		return ::GetDCEx(m_hWnd, hrgnClip, flags);
 	}
 
-	inline HWND CWnd::GetDlgItem(int nIDDlgItem) const
+	inline CWnd* CWnd::GetDlgItem(int nIDDlgItem) const
 	// The GetDlgItem function retrieves a handle to a control in the dialog box.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetDlgItem(m_hWnd, nIDDlgItem);
+		return FromHandle( ::GetDlgItem(m_hWnd, nIDDlgItem) );
 	}
 
 	inline UINT CWnd::GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::GetDlgItemInt(m_hWnd, nIDDlgItem, lpTranslated, bSigned);
+	}
+
+	inline CWnd* CWnd::GetFocus() const
+	{
+		return FromHandle( ::GetFocus() );
 	}
 
 	inline HFONT CWnd::GetFont() const
@@ -2294,14 +2312,14 @@ namespace Win32xx
 		return ::GetScrollInfo(m_hWnd, fnBar, &si);
 	}
 
-	inline HWND CWnd::GetWindow(UINT uCmd) const
+	inline CWnd* CWnd::GetWindow(UINT uCmd) const
 	// The GetWindow function retrieves a handle to a window that has the specified
 	// relationship (Z-Order or owner) to the specified window.
 	// Possible uCmd values: GW_CHILD, GW_ENABLEDPOPUP, GW_HWNDFIRST, GW_HWNDLAST,
 	// GW_HWNDNEXT, GW_HWNDPREV, GW_OWNER
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetWindow(m_hWnd, uCmd);
+		return FromHandle( ::GetWindow(m_hWnd, uCmd) );
 	}
 
 	inline HDC CWnd::GetWindowDC() const
@@ -2487,11 +2505,12 @@ namespace Win32xx
 		return ::SetClassLongPtr(m_hWnd, nIndex, dwNewLong);
 	}
 
-	inline HWND CWnd::SetFocus() const
+	inline CWnd* CWnd::SetFocus() const
 	// The SetFocus function sets the keyboard focus to the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetFocus(m_hWnd);
+	//	FromHandle( ::SetFocus(m_hWnd) );
+		return GetApp()->GetCWndFromMap( ::SetFocus(m_hWnd) );
 	}
 
 	inline void CWnd::SetFont(HFONT hFont, BOOL bRedraw) const

@@ -160,19 +160,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		m_View.GetIWebBrowser2()->GoHome();
 		return TRUE;
 	case IDM_EDIT_CUT:
-		if (GetFocus() == hWndEdit)
+		if (::GetFocus() == hWndEdit)
 			SendMessage(hWndEdit, WM_CUT, 0, 0);
 		return TRUE;
 	case IDM_EDIT_COPY:
-		if (GetFocus() == hWndEdit)
+		if (::GetFocus() == hWndEdit)
 			SendMessage(hWndEdit, WM_COPY, 0, 0);
 		return TRUE;
 	case IDM_EDIT_PASTE:
-		if (GetFocus() == hWndEdit)
+		if (::GetFocus() == hWndEdit)
 			SendMessage(hWndEdit, WM_PASTE, 0, 0);
 		return TRUE;
 	case IDM_EDIT_DELETE:
-		if (GetFocus() == hWndEdit)
+		if (::GetFocus() == hWndEdit)
 			SendMessage(hWndEdit, WM_CLEAR, 0, 0);
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
