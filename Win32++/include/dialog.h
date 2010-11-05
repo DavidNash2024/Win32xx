@@ -395,7 +395,7 @@ namespace Win32xx
 		if (nResult == -1)
 			throw CWinException(_T("Failed to create modal dialog box"));
 
-		GetApp()->m_vOrphans.clear();
+		GetApp()->RemoveOrphans();
 		
 		return nResult;
 	}

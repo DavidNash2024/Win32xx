@@ -570,7 +570,6 @@ namespace Win32xx
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
 		void AddToMap();
-		BOOL CWnd::IsOrphan();
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
@@ -582,6 +581,7 @@ namespace Win32xx
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
 		mutable std::vector<TCHAR> m_vTChar;	// A vector used as a TCHAR array for string functions
+		BOOL m_IsOrphan;			// True if this CWnd is an orphan 
 
 	}; // class CWnd
 
@@ -621,6 +621,7 @@ namespace Win32xx
 		void AddOrphan(HWND hWnd);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
+		void RemoveOrphans();
 		void SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -1025,7 +1026,7 @@ namespace Win32xx
 
 	inline CWinApp::~CWinApp()
 	{
-		m_vOrphans.clear();
+		RemoveOrphans();
 		
 		// Check that all CWnd windows are destroyed
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
@@ -1054,6 +1055,7 @@ namespace Win32xx
 		CWnd* pWnd = new CWnd;
 		pWnd->m_hWnd = hWnd;
 		pWnd->AddToMap();
+		pWnd->m_IsOrphan = TRUE;
 
 		m_csOrphans.Lock();
 		m_vOrphans.push_back(pWnd); // save the pointer for deletion later
@@ -1150,6 +1152,13 @@ namespace Win32xx
 		return LOWORD(Msg.wParam);
 	}
 
+	inline void CWinApp::RemoveOrphans()
+	{
+		m_csOrphans.Lock();
+		m_vOrphans.clear();
+		m_csOrphans.Release();
+	}
+
 	inline int CWinApp::Run()
 	{
 		try
@@ -1223,7 +1232,7 @@ namespace Win32xx
 	// Definitions for the CWnd class
 	//
 	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
-						m_PrevWindowProc(NULL)
+						m_PrevWindowProc(NULL), m_IsOrphan(FALSE)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
@@ -1472,30 +1481,6 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline BOOL CWnd::IsOrphan()
-	{
-		GetApp()->m_csOrphans.Lock();
-		BOOL bResult = FALSE;
-		
-		if (GetApp()->m_vOrphans.size() > 0)
-		{
-			std::vector<WndPtr>::iterator iter;
-
-			for (iter = GetApp()->m_vOrphans.begin(); iter < GetApp()->m_vOrphans.end(); ++iter)
-			{			
-				if ((*iter).get() == this)
-					break;
-			}
-			
-			if (iter != GetApp()->m_vOrphans.end())
-				bResult = TRUE;
-		}
-
-		GetApp()->m_csOrphans.Release();
-		
-		return bResult;
-	}
-
 	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
@@ -1505,17 +1490,10 @@ namespace Win32xx
 
 	inline void CWnd::Destroy()
 	{
-		if (IsOrphan())
-		{
-			RemoveFromMap();
+		if (m_IsOrphan)
 			m_hWnd = NULL;
-		}
 		else
-		{
-			GetApp()->m_csOrphans.Lock();
-			GetApp()->m_vOrphans.clear();
-			GetApp()->m_csOrphans.Release();
-		}
+			GetApp()->RemoveOrphans();
 
 		if (IsWindow()) ::DestroyWindow(m_hWnd);
 
@@ -1528,6 +1506,7 @@ namespace Win32xx
 		m_hIconSmall = NULL;
 		m_hWnd = NULL;
 		m_PrevWindowProc = NULL;
+		m_IsOrphan = FALSE;
 	}
 
 	inline HWND CWnd::Detach()
