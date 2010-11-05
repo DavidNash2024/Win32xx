@@ -797,7 +797,8 @@ namespace Win32xx
 		int nResult = (int)CreatePropertySheet(&m_PSH);
 
 		m_vPages.clear();
-		GetApp()->DeleteOrphans(this);
+		GetApp()->m_vOrphans.clear();
+		
 		return nResult;
 	}
 

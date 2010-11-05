@@ -2595,9 +2595,9 @@ namespace Win32xx
 
 		// Now remove the WS_POPUP style. It was required to allow this window
 		// to be owned by the frame window.
-		CWnd* pWndParent = GetParent();
+		HWND hwndParent = ::GetParent(m_hWnd);
 		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
-		SetParent(pWndParent);	// Reinstate the window's parent
+		::SetParent(m_hWnd, hwndParent);	// Reinstate the window's parent
 
 		// Set the default colour for the splitter bar
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
