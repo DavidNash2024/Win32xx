@@ -43,8 +43,9 @@ New Features and Enhancements
 * Renamed CToolbar to CToolBar, CStatusbar to CStatusBar, CRebar to CReBar
    and CMenubar to CMenuBar.
 * The following function now return CWnd* instead of HWND:
-   GetParent, GetAncestor, GetCapture, GetFocus, SetFocus, GetDlgItem, GetWindow,
-   GetLastACtivePopup, GetTopWindow, SetParent, SetCapture   
+   GetActiveWindow, GetAncestor, GetCapture, GetFocus, GetDlgItem, GetWindow,
+   GetLastAtivePopup, GetParent, GetTopWindow, SetActiveWindow, SetCapture, 
+   SetFocus, and SetParent.   
 
 Changes in detail
 -----------------

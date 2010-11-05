@@ -1049,7 +1049,7 @@ namespace Win32xx
 
 	inline void CWinApp::AddOrphan(HWND hWnd)
 	{
-		// Some HWNDs are orphans (don't have an associated CWnd), so create one here.
+		// Orphins are created if required to support functions like CWnd::GetParent.
 		// The orphans are temporary, deleted when a CWnd is destroyed.
 		CWnd* pWnd = new CWnd;
 		pWnd->m_hWnd = hWnd;
@@ -1489,7 +1489,9 @@ namespace Win32xx
 			
 			if (iter != GetApp()->m_vOrphans.end())
 				bResult = TRUE;
-		}		
+		}
+
+		GetApp()->m_csOrphans.Release();
 		
 		return bResult;
 	}
@@ -1512,7 +1514,7 @@ namespace Win32xx
 		{
 			GetApp()->m_csOrphans.Lock();
 			GetApp()->m_vOrphans.clear();
-			GetApp()->m_csOrphans.Lock();
+			GetApp()->m_csOrphans.Release();
 		}
 
 		if (IsWindow()) ::DestroyWindow(m_hWnd);
