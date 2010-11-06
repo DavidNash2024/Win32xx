@@ -29,7 +29,11 @@ LRESULT CMyButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONUP:
 		TRACE(_T("CButton::WndProc - WM_LBUTTONUP Message\n"));
 		dialog.SetStatic(_T("WM_LBUTTONUP"));
-		break;	
+		break;
+	case WM_RBUTTONDOWN:
+		TRACE(_T("CButton::WndProc - WM_RBUTTONDOWN Message\n"));
+		dialog.SetStatic(_T("WM_RBUTTONDOWN"));
+		break;
 
 	default:
 //		TRACE("CButton::WndProc - Unspecified Message");

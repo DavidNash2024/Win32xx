@@ -45,7 +45,9 @@ New Features and Enhancements
 * The following function now return CWnd* instead of HWND:
    GetActiveWindow, GetAncestor, GetCapture, GetFocus, GetDlgItem, GetWindow,
    GetLastAtivePopup, GetParent, GetTopWindow, SetActiveWindow, SetCapture, 
-   SetFocus, and SetParent.   
+   SetFocus, and SetParent.
+* The OnPaint function now uses a CDC reference as its argument instead of a 
+   HDC. This simpifies the task of using a CDC when overriding  OnPaint.
 
 Changes in detail
 -----------------
@@ -139,6 +141,7 @@ Modified CSocket::ReceiveFrom   	now uses TCHAR instead of char
 Modified CSocket::Send          	now uses TCHAR instead of char
 Modified CSocket::SentTo        	now uses TCHAR instead of char
 Modified CWinException::what  		now outputs text to debugger
+Modified CWnd::OnPaint              now takes a CDC& argument instead of HDC
 Renamed CMenubar to CMenubar
 Renamed CRebar to CReBar
 Renamed CStatusbar to CStatusBar
@@ -165,6 +168,9 @@ Update  FormDemo sample
 
 Incompatibilities with previous versions
 ----------------------------------------
+* The OnPaint function definition has changed to:
+    virtual void OnPaint(CDC& dc); 
+  The older OnPaint function will be ignored.	
 * The stricter testing with asserts might reveal previously hidden errors in 
    user's code.
 * Some CSocket functions take TCHAR as an argument instead of char.
@@ -176,6 +182,10 @@ Incompatibilities with previous versions
 * Replace all instances of "Rebar" with "ReBar"
 * Replace all instances of "Statusbar" with "StatusBar"
 * Replace all instances of "Toolbar" with "ToolBar"
+* The following functions now return a CWnd pointer instead of a HWND:
+   GetActiveWindow, GetAncestor, GetCapture, GetFocus, GetDlgItem, GetWindow,
+   GetLastAtivePopup, GetParent, GetTopWindow, SetActiveWindow, SetCapture, 
+   SetFocus, and SetParent.
    
 
 Version 6.9

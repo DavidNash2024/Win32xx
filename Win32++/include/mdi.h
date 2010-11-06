@@ -339,17 +339,18 @@ namespace Win32xx
 	}
 
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
-	{
-		// Allocate an iterator for our MDIChild vector
-		std::vector <MDIChildPtr>::iterator v;
+	{	
+		BOOL bResult = TRUE;
+		int Children = m_vMDIChild.size();
 
-		while(m_vMDIChild.size() > 0)
+		// Remove the children in reverse order
+		for (int i = Children-1; i >= 0; --i)
 		{
-			v = m_vMDIChild.begin();
-			(*v)->SendMessage(WM_CLOSE, 0L, 0L);	// Also removes the MDI child
+			if (!m_vMDIChild[i]->SendMessage(WM_CLOSE, 0L, 0L))	// Also removes the MDI child
+				bResult = FALSE;
 		}
 
-		return TRUE;
+		return bResult;
 	}
 
 	inline void CMDIFrame::RemoveMDIChild(HWND hWnd)

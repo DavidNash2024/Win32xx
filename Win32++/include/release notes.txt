@@ -41,12 +41,12 @@ Win32++ code has the following features
  * Subclassing support
  * Notification reflection and message reflection
  * Unicode compliant, with multilingual support
- * Multithread support.
+ * Multi-threaded support.
  * Tracing
  * 64 bit support
- * ActiveX support (for those compilers which include ATL).
+ * Windows 7 ribbon support
  * Themes support
- * Network support
+ * Network support (including IP version 6)
  * Docking windows
  * Tabbed MDIs  
 
@@ -71,13 +71,16 @@ The sample applications include:
  * DialogDemo - An interative dialog application demonstrating slider controls and progress bars.
  * DialogTab - A dialog application with a tab control.
  * DirectX - A simple DirectX application.
+ * DLL - Shows how to run Win32++ from within a DLL
  * Dock - An example of a simple docking application.
  * DockContainer - An example of a docking application which incorporates containers.
  * DockTabbedMDI - An example of a docking application with containers and a tabbed MDI.
  * Explorer - A Windows Explorer-like application.
  * FastGDI - An application which demonstrates direct manipulation of a bitmap's colour.
  * FormDemo - An example of a modeless dialog within a frame.
- * MDIFrame - A simple MDI frame applications
+ * Frame - A simple frame application.
+ * GDIPlus - Demonstrates how to use GDI+ with Win32++.
+ * MDIFrame - A simple MDI frame application.
  * MDIFrameDemo - Demonstrates some additional features of MDI frames.
  * MDIFrameSplitter - Demonstrates how to implement splitter windows in MDI Child windows. 
  * Networking - Demonstrates the use of networking.
@@ -85,10 +88,11 @@ The sample applications include:
  * Performance - Measures Win32++'s message handling speed.
  * Picture - A simple picture rendering application.
  * PropertySheets - A demonstration of property sheets.
+ * Ribbon Frame - Demonstrates how to use the Windows 7 ribbon with a frame.
+ * Ribbin Simple - Demonstrates how to use the Windwos 7 ribbon with a simple window.
  * Scribble - A simple drawing application.
  * Simple - Creates a simple window.
  * Splitter - Demonstrates how to use dockers to create splitter windows.
- * StaticLibrary - Builds the Win32++ framework into a static library.
  * TabDemo - Demonstrates the use of a CTab control in a frame.
  * Themes - Demonstrates how to customise the colours for rebar and toolbar controls.
  * Threads - Demonstrates multi-threaded Windows.
@@ -102,7 +106,7 @@ various compilers from Microsoft. CodeBlocks is an IDE (Integrated Development
 Environment) that supports GNU GCC, Borland Developer Studio 2006 and Microsoft
 C++ Toolkit 2003.
 
-Start with one of the generic starters, and add your code.
+You  can start with one of the sample programs, and add your code.
 
-For additional information on getting started, refer to the tutorial included
+For additional information on getting started, refer to the help included
 in the documentation.

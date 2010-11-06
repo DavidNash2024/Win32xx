@@ -3,6 +3,14 @@ The classes which form Win32++ are located in the following files:
 
  Files            |  Classes         | Operating Systems | Description
 ==================+==================+===================+=====================
+controls.h        | CAnimation       | Win32, Win64      | Adds support for the
+                  | CComboBox        | and WinCE         | following controls:
+				  |	CComboBoxEx      |                   | Animation, ComboBox, 
+				  |	CProgressBar     |                   | ComboBoxEx, Progress
+				  | CScrollBar       |                   | bar, Scroll bar,
+				  |	CSlider          |                   | Slider, Spin button.
+				  |	CSpinButton      |                   |
+------------------+------------------+-------------------+---------------------				  
 dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
                   | CResizer         | and WinCE         |
 ------------------+------------------+-------------------+---------------------
@@ -51,7 +59,6 @@ stdcontrols.h     | CButton          | Win32, Win64      | Adds support for
                   | CListBox         |                   | ListBox and Static    
                   | CStatic          |                   | controls.                                                        
 ------------------+------------------+-------------------+---------------------
-
 tab.h             | CTab             | Win32, Win64      | Adds support for tab
                   | CMDITab          |                   | controls, and MDI
                   |                  |                   | tab windows.                   
@@ -73,11 +80,12 @@ webbrowser.h      | CAXWindow        | Win32, Win64      | Adds support for a
                   |                  |                   | a WebBrowser window.
 ------------------+------------------+-------------------+---------------------
 wincore.h         | CCriticalSection | Win32, Win64,     | The core set of 
-                  | CPoint           | and WinCE         | classes required for
-                  | CRect            |                   | all Win32++ 
-                  | CSize            |                   | applications. 
-                  | CWinApp          |                   | 
-                  | CWinException    |                   | 
-                  | CWnd             |                   | 
-------------------+------------------+-------------------+--------------------- 
+                  | CWinApp          | and WinCE         | classes required for
+                  | CWinException    |                   | all Win32++ 
+                  | CWnd             |                   | applications. 
+------------------+------------------+-------------------+---------------------
+winutils.h        | CPoint           | Win32, Win64,     | Additional utility
+                  | CRect            | and WinCE         | classes.
+                  | CSize            |                   |  
+------------------+------------------+-------------------+---------------------  
                
