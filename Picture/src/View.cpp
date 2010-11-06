@@ -118,9 +118,9 @@ void CView::OnInitialUpdate()
 	}
 }
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
-	Paint(hDC);
+	Paint(dc);
 }
 
 void CView::Paint(HDC hDC)

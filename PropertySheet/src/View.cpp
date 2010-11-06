@@ -29,12 +29,12 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
-	CRect r = GetClientRect();
+	CRect rc = GetClientRect();
 
 	// Centre some text in our view window
-	::DrawText(hDC, _T("Choose a Property Sheet from the menu"), -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	dc.DrawText(_T("Choose a Property Sheet from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -42,7 +42,7 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_SIZE:
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		break;	// Also do default processing
 	}
 
