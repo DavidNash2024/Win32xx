@@ -88,7 +88,7 @@
 #ifndef _GDI_H_
 #define _GDI_H_
 
-#include "wincore.h"
+#include "winutils.h"
 
 namespace Win32xx
 {
@@ -182,7 +182,7 @@ namespace Win32xx
 		int GetDeviceCaps( int nIndex ) const;
 #ifndef _WIN32_WCE
 		HDC CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit ) const;
-		CWnd* WindowFromDC( ) const;
+//		CWnd* WindowFromDC( ) const;
 #endif
 
 		// Point and Line Drawing Functions
@@ -263,16 +263,19 @@ namespace Win32xx
 #endif
 
         // Co-ordinate Functions
+#ifndef _WIN32_WCE
 		BOOL DPtoLP(LPPOINT lpPoints, int nCount )  const;
 		BOOL DPtoLP(LPRECT lpRect)  const;
 		BOOL LPtoDP(LPPOINT lpPoints, int nCount )  const;
 		BOOL LPtoDP(LPRECT lpRect)  const;
+#endif
 
 		// Layout Functions
 		DWORD GetLayout() const;
 		DWORD SetLayout(DWORD dwLayout) const;
 
 		// Mapping functions
+#ifndef _WIN32_WCE
 		int GetMapMode()  const;
 		int SetMapMode(int nMapMode) const;
 		BOOL GetViewportOrgEx(LPPOINT lpPoint)  const;
@@ -292,6 +295,7 @@ namespace Win32xx
 		BOOL SetWindowOrgEx(int x, int y, LPPOINT lpPoint ) const;
 		BOOL SetWindowOrgEx(POINT point, LPPOINT lpPointRet ) const;
 		BOOL OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const;
+#endif
 
 		// Printer Functions
 		int StartDoc(LPDOCINFO lpDocInfo) const;
@@ -314,8 +318,8 @@ namespace Win32xx
 		COLORREF SetTextColor( COLORREF crColor ) const;
 		int GetBkMode( ) const;
 		int SetBkMode( int iBkMode ) const;
-		CSize GetTextExtentPoint( LPCTSTR lpszString, int nCount ) const;
 #ifndef _WIN32_WCE
+		CSize GetTextExtentPoint( LPCTSTR lpszString, int nCount ) const;
 		BOOL TextOut( int x, int y, LPCTSTR lpszString, int nCount ) const;
 		CSize TabbedTextOut( int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin ) const;
 		int DrawTextEx( LPTSTR lpszString, int nCount, const RECT& rc, UINT nFormat, const DRAWTEXTPARAMS& DTParams ) const;
@@ -1119,6 +1123,7 @@ namespace Win32xx
 	{
 		return ::GetDeviceCaps(*m_DC, nIndex);
 	}
+/*
 #ifndef _WIN32_WCE
 	inline CWnd* CDC::WindowFromDC( ) const
 	{
@@ -1129,7 +1134,7 @@ namespace Win32xx
 		return ::CreateIC( lpszDriver, lpszDevice, lpszOutput, &dvmInit );
 	}
 #endif
-
+*/
 	// Point and Line Drawing Functions
 	inline CPoint CDC::GetCurrentPosition( ) const
 	{
@@ -1444,9 +1449,8 @@ namespace Win32xx
 		// Fill type: FLOODFILLBORDER or FLOODFILLSURFACE
 		return ::ExtFloodFill(*m_DC, x, y, crColor, nFillType );
 	}
-#endif
 
-	// co-ordingate functions
+	// co-ordinate functions
 	inline BOOL CDC::DPtoLP(LPPOINT lpPoints, int nCount )  const
 	{
 		if (*m_DC != NULL)
@@ -1473,6 +1477,8 @@ namespace Win32xx
 		return FALSE;
 	}
 
+#endif
+
 	// Layout Functions
 	inline DWORD CDC::GetLayout() const
 	{
@@ -1495,6 +1501,7 @@ namespace Win32xx
 	}
 
 	// Mapping Functions
+#ifndef _WIN32_WCE
 	inline int CDC::GetMapMode()  const
 	{
 		if (*m_DC != NULL)
@@ -1603,6 +1610,7 @@ namespace Win32xx
 			return ::ScaleWindowExtEx(*m_DC, xNum, xDenom, yNum, yDenom, lpSize);
 		return FALSE;
 	}
+#endif
 
 	// Printer Functions
 	inline int CDC::StartDoc(LPDOCINFO lpDocInfo) const
@@ -1694,6 +1702,7 @@ namespace Win32xx
 		// Sets the current background mix mode (OPAQUE or TRANSPARENT)
 		return ::SetBkMode( *m_DC, iBkMode);
 	}
+#ifndef _WIN32_WCE
 	inline CSize CDC::GetTextExtentPoint( LPCTSTR lpszString, int nCount ) const
 	{
 		// Computes the width and height of the specified string of text
@@ -1701,7 +1710,6 @@ namespace Win32xx
 		::GetTextExtentPoint(*m_DC, lpszString, nCount, &sz );
 		return sz;
 	}
-#ifndef _WIN32_WCE
 	inline BOOL CDC::TextOut( int x, int y, LPCTSTR lpszString, int nCount ) const
 	{
 		// Writes a character string at the specified location

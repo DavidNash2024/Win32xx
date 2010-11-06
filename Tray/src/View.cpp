@@ -64,14 +64,14 @@ void CView::OnInitialUpdate()
 	TRACE(_T("OnInitialUpdate\n"));
 }
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
 	// OnPaint is called automatically whenever a part of the
 	// window needs to be repainted.
 
 	// Centre some text in our view window
-	CRect r = GetClientRect();
-	::DrawText(hDC, LoadString(IDW_MAIN), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	CRect rc = GetClientRect();
+	dc.DrawText(LoadString(IDW_MAIN), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)

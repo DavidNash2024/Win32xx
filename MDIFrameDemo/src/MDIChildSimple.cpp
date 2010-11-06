@@ -12,12 +12,12 @@ CViewSimple::CViewSimple() : m_Color(RGB(0,0,255))
 {
 }
 
-void CViewSimple::OnPaint(HDC hDC)
+void CViewSimple::OnPaint(CDC& dc)
 {
 	//Centre some text in our view window
-	RECT rc = GetClientRect();
-	::SetTextColor(hDC, m_Color);
-	::DrawText(hDC, _T("View Window"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	CRect rc = GetClientRect();
+	dc.SetTextColor(m_Color);
+	dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

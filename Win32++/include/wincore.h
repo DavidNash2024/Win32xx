@@ -110,6 +110,8 @@
 #include <tchar.h>
 #include <shlwapi.h>
 #include "shared_ptr.h"
+#include "winutils.h"
+#include "gdi.h"
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -167,14 +169,6 @@ namespace Win32xx {}
   using namespace Win32xx;
 #endif
 
-// define useful macros from WindowsX.h
-#ifndef GET_X_LPARAM
-  #define GET_X_LPARAM(lp)  ((int)(short)LOWORD(lp))
-#endif
-#ifndef GET_Y_LPARAM
-  #define GET_Y_LPARAM(lp)  ((int)(short)HIWORD(lp))
-#endif
-
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
   #define TLS_OUT_OF_INDEXES ((DWORD_PTR) -1)
@@ -182,12 +176,6 @@ namespace Win32xx {}
 #ifndef WM_PARENTNOTIFY
   #define WM_PARENTNOTIFY 0x0210
 #endif
-
-// Define our own MIN and MAX macros
-// this avoids inconsistencies with Dev-C++ and other compilers, and
-// avoids conflicts between typical min/max macros and std::min/std::max
-#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
-#define MIN(a,b)            (((a) < (b)) ? (a) : (b))
 
 
 namespace Win32xx
@@ -246,7 +234,7 @@ namespace Win32xx
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 		std::vector<char>  vChar;	// A vector used as a char array for text conversions
 		std::vector<WCHAR> vWChar;	// A vector used as a WCHAR array for text conversions
-		std::vector<WndPtr> vOrphans;	// A vector of temporary CWnd pointers
+		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 	};
@@ -259,121 +247,6 @@ namespace Win32xx
 	inline LPCTSTR CharToTChar(LPCSTR pChar);
 	inline LPCSTR TCharToChar(LPCTSTR pTChar);
 	inline LPCWSTR TCharToWide(LPCTSTR pTChar);
-
-
-	/////////////////////////////////////////
-	// Definition of the CSize class
-	// This class can be used to replace the SIZE structure
-	class CSize : public SIZE
-	{
-	public:
-		CSize()						{ cx = 0; cy = 0; }
-		CSize(int CX, int CY)		{ cx = CX; cy = CY; }
-		CSize(SIZE sz)				{ cx = sz.cx; cy = sz.cy; }
-		CSize(POINT pt)				{ cx = pt.x;  cy = pt.y; }
-		CSize(DWORD dw)				{ cx = (short)LOWORD(dw); cy = (short)HIWORD(dw); }
-		void SetSize(int CX, int CY){ cx = CX; cy = CY; }
-		BOOL operator == (SIZE sz)	{ return (cx == sz.cx && cy == sz.cy); }
-		BOOL operator != (SIZE sz)	{ return (cx != sz.cx || cy != sz.cy); }
-		operator LPSIZE()			{ return this; }
-	};
-
-	/////////////////////////////////////////
-	// Definition of the CPoint class
-	// This class can be used to replace the POINT structure
-	class CPoint : public POINT
-	{
-	public:
-		CPoint()					{ x = 0; y = 0; }
-		CPoint(int X, int Y)		{ x = X; y = Y; }
-		CPoint(SIZE sz)				{ x = sz.cx; y = sz.cy; }
-		CPoint(POINT pt)			{ x = pt.x ; y = pt.y; }
-		CPoint(DWORD dw)			{ x = (short)LOWORD(dw); y = (short)HIWORD(dw); }
-		void Offset(int dx, int dy)	{ x += dx; y += dy; }
-		void SetPoint(int X, int Y)	{ x = X; y = Y; }
-		BOOL operator == (POINT pt)	{ return ((x == pt.x) && (y == pt.y)); }
-		BOOL operator != (POINT pt)	{ return ((x != pt.x) || (y != pt.y)); }
-		operator LPPOINT()			{ return this; }
-	};
-
-	CPoint GetCursorPos();
-
-
-	/////////////////////////////////////////
-	// Definition of the CRect class
-	// This class can be used to replace the RECT structure.
-	class CRect : public RECT
-	{
-	public:
-		CRect()
-		{ left = top = right = bottom = 0; }
-
-		CRect(int Left, int Top, int Right, int Bottom)
-		{ left = Left; top = Top; right = Right; bottom = Bottom; }
-
-		CRect(RECT rc)
-		{ left = rc.left; top = rc.top; right = rc.right; bottom = rc.bottom; }
-
-		CRect(POINT pt, SIZE sz)
-		{ right = (left = pt.x) + sz.cx; bottom = (top = pt.y) + sz.cy; }
-
-		CRect(POINT topLeft, POINT bottomRight)
-		{ left = topLeft.x; top = topLeft.y; right = bottomRight.x; bottom = bottomRight.y; }
-
-		operator LPRECT()
-		{ return this; }
-
-		operator LPCRECT() const
-		{ return this; }
-
-		BOOL operator == (const RECT& rc)
-		{ return ::EqualRect(this, &rc); }
-
-		BOOL operator != (const RECT& rc)
-		{ return !::EqualRect(this, &rc); }
-
-		void  operator=(const RECT& srcRect)
-		{ ::CopyRect(this, &srcRect); }
-
-		void CopyRect(const RECT& rc)
-		{ ::CopyRect(this, &rc); }
-
-		BOOL EqualRect(const RECT& rc) const
-		{ return ::EqualRect(&rc, this); }
-
-		int Height() const
-		{ return bottom - top; }
-		
-		BOOL InflateRect(int dx, int dy)
-		{ return ::InflateRect(this, dx, dy); }
-
-		BOOL IntersectRect(const RECT& rc1, const RECT& rc2)
-		{ return ::IntersectRect(this, &rc1, &rc2); }
-
-		BOOL IsRectEmpty() const
-		{ return ::IsRectEmpty(this);}
-
-		BOOL OffsetRect(int dx, int dy)
-		{ return ::OffsetRect(this, dx, dy); }
-
-		BOOL PtInRect(POINT pt) const
-		{ return ::PtInRect(this, pt); }
-
-		BOOL SetRect(int left, int top, int right, int bottom)
-		{ return ::SetRect(this, left, top, right, bottom); }
-
-		BOOL SetRectEmpty()
-		{ return ::SetRectEmpty(this); }
-
-		BOOL SubtractRect(const RECT& rc1, const RECT& rc2)
-		{ return ::SubtractRect(this, &rc1, &rc2); }
-
-		BOOL UnionRect(const RECT& rc1, const RECT& rc2)
-		{ return ::UnionRect(this, &rc1, &rc2); }
-		
-		int Width() const
-		{ return right - left; }
-	};
 
 
 	/////////////////////////////////////////
@@ -544,6 +417,7 @@ namespace Win32xx
 		BOOL  ShowScrollBar(int nBar, BOOL bShow) const;
 		BOOL  ShowWindowAsync(int nCmdShow) const;
 		BOOL  UnLockWindowUpdate() const;
+		CWnd* WindowFromDC(HDC hDC) const;
   #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -559,7 +433,7 @@ namespace Win32xx
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void OnPaint(HDC hDC);
+		virtual void OnPaint(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -583,7 +457,7 @@ namespace Win32xx
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
 		mutable std::vector<TCHAR> m_vTChar;	// A vector used as a TCHAR array for string functions
-		BOOL m_IsOrphan;			// True if this CWnd is an orphan 
+		BOOL m_IsTmpWnd;			// True if this CWnd is a TmpWnd 
 
 	}; // class CWnd
 
@@ -620,10 +494,10 @@ namespace Win32xx
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
-		void AddOrphan(HWND hWnd);
+		void AddTmpWnd(HWND hWnd);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		void RemoveOrphans();
+		void RemoveTmpWnds();
 		void SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -1028,7 +902,7 @@ namespace Win32xx
 		std::vector<TLSDataPtr>::iterator iter;
 		for (iter = m_vTLSData.begin(); iter < m_vTLSData.end(); ++iter)
 		{
-			(*iter)->vOrphans.clear();
+			(*iter)->vTmpWnds.clear();
 		}
 		
 		// Check that all CWnd windows are destroyed
@@ -1051,19 +925,19 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
-	inline void CWinApp::AddOrphan(HWND hWnd)
+	inline void CWinApp::AddTmpWnd(HWND hWnd)
 	{
-		// Orphins are created if required to support functions like CWnd::GetParent.
-		// The orphans are temporary, deleted when a CWnd is destroyed.
+		// TmpWnds are created if required to support functions like CWnd::GetParent.
+		// The TmpWnds are temporary, deleted when a CWnd is destroyed.
 		CWnd* pWnd = new CWnd;
 		pWnd->m_hWnd = hWnd;
 		pWnd->AddToMap();
-		pWnd->m_IsOrphan = TRUE;
+		pWnd->m_IsTmpWnd = TRUE;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-		pTLSData->vOrphans.push_back(pWnd); // save orphan as a smart pointer
+		pTLSData->vTmpWnds.push_back(pWnd); // save TmpWnd as a smart pointer
 	}
 
 	inline void CWinApp::SetCallback()
@@ -1156,15 +1030,15 @@ namespace Win32xx
 		return LOWORD(Msg.wParam);
 	}
 
-	inline void CWinApp::RemoveOrphans()
+	inline void CWinApp::RemoveTmpWnds()
 	{
-		// Removes all Orphans belonging to this thread
+		// Removes all TmpWnds belonging to this thread
 
 		// Retrieve the pointer to the TLS Data
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 		
 		if (pTLSData)
-			pTLSData->vOrphans.clear();
+			pTLSData->vTmpWnds.clear();
 	}
 
 	inline int CWinApp::Run()
@@ -1240,7 +1114,7 @@ namespace Win32xx
 	// Definitions for the CWnd class
 	//
 	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
-						m_PrevWindowProc(NULL), m_IsOrphan(FALSE)
+						m_PrevWindowProc(NULL), m_IsTmpWnd(FALSE)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
@@ -1498,11 +1372,11 @@ namespace Win32xx
 
 	inline void CWnd::Destroy()
 	{
-		// Remove orphans
-		if (m_IsOrphan)
+		// Remove TmpWnds
+		if (m_IsTmpWnd)
 			m_hWnd = NULL;
 		else
-			if (GetApp()) GetApp()->RemoveOrphans();
+			if (GetApp()) GetApp()->RemoveTmpWnds();
 		
 		if (IsWindow()) ::DestroyWindow(m_hWnd);
 
@@ -1515,7 +1389,7 @@ namespace Win32xx
 		m_hIconSmall = NULL;
 		m_hWnd = NULL;
 		m_PrevWindowProc = NULL;
-		m_IsOrphan = FALSE;
+		m_IsTmpWnd = FALSE;
 	}
 
 	inline HWND CWnd::Detach()
@@ -1539,7 +1413,7 @@ namespace Win32xx
 		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
 		if (::IsWindow(hWnd) && pWnd == 0)
 		{
-			GetApp()->AddOrphan(hWnd);		
+			GetApp()->AddTmpWnd(hWnd);		
 			pWnd = GetApp()->GetCWndFromMap(hWnd);
 		}
 
@@ -1786,10 +1660,15 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CWnd::OnPaint(HDC)
+	inline void CWnd::OnPaint(CDC& dc)
 	// Called when part of the client area of the window needs to be painted
 	{
-		// Override this function in your derived class to perform drawing tasks.
+         
+    #ifndef __GNUC__          
+		UNREFERENCED_PARAMETER(dc);
+	#endif
+	
+	    // Override this function in your derived class to perform drawing tasks. 
 	}
 
 	inline void CWnd::OnMenuUpdate(UINT nID)
@@ -2100,18 +1979,20 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					::PAINTSTRUCT ps;
-					HDC hDC = ::BeginPaint(m_hWnd, &ps);
+					CDC dc = ::BeginPaint(m_hWnd, &ps);
 
-					OnPaint(hDC);
+					OnPaint(dc);
+					
 					::EndPaint(m_hWnd, &ps);
+					dc.DetachDC();
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					HDC hDC = ::GetDC(m_hWnd);
+					CDC dc = ::GetDC(m_hWnd);
 
-					OnPaint(hDC);
-					::ReleaseDC(m_hWnd, hDC);
+					OnPaint(dc);
+				//	::ReleaseDC(m_hWnd, hDC);
 				}
 			}
 			return 0L;
@@ -2849,6 +2730,10 @@ namespace Win32xx
 		return ::LockWindowUpdate(0);
 	}
 
+	inline CWnd* CWnd::WindowFromDC(HDC hDC) const
+	{
+		return FromHandle( ::WindowFromDC(hDC) );
+	}
 
   #endif
 

@@ -2,16 +2,15 @@
 #include "Resource.h"
 
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
 	// Define a rectangle to contain some text
-	RECT r;
-	::GetClientRect(m_hWnd, &r);
-	r.bottom = r.bottom/2;
+	CRect rc = GetClientRect();
+	rc.bottom = rc.bottom/2;
 
 	// Draw some text in our rectangle
 	LPCTSTR szString = TEXT("Use Debug mode. Click here");
-	DrawText(hDC, szString, lstrlen(szString), &r, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+	dc.DrawText(szString, lstrlen(szString), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 

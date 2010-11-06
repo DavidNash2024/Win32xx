@@ -106,7 +106,7 @@ void CMainFrame::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void CMainFrame::OnPaint(HDC hDC)
+void CMainFrame::OnPaint(CDC& dc)
 {
 	// Redraw our client area
 	if (m_points.size() > 0)
@@ -114,13 +114,13 @@ void CMainFrame::OnPaint(HDC hDC)
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points[i].color);
-			HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
-			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
+			dc.CreatePen(PS_SOLID, 1, m_points[i].color);
+			if (bDraw)
+				dc.LineTo(m_points[i].x, m_points[i].y);
+			else
+				dc.MoveTo(m_points[i].x, m_points[i].y);
+			
 			bDraw = m_points[i].PenDown;
-			::SelectObject(hDC, hOldPen);
-			::DeleteObject(hPen);
 		}
 	}
 }

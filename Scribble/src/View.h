@@ -19,7 +19,7 @@ public:
 protected:
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void PreRegisterClass(WNDCLASS &wc);
-	virtual void OnPaint(HDC hDC);
+	virtual void OnPaint(CDC& dc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

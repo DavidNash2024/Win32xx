@@ -19,15 +19,13 @@ CView::~CView()
 
 void CView::DrawLine(int x, int y)
 {
-	HDC hDC = ::GetDC(m_hWnd);
+	CDC dc = GetDC();
 
-	::MoveToEx(hDC, m_points.back().x, m_points.back().y, NULL); ;
-	::LineTo(hDC, x, y);
-
-	::ReleaseDC(m_hWnd, hDC);
+	dc.MoveTo(m_points.back().x, m_points.back().y);
+	dc.LineTo(x, y);
 }
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
 	if (m_points.size() > 0)
 	{
@@ -35,8 +33,8 @@ void CView::OnPaint(HDC hDC)
 
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
-			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
+			if (bDraw) dc.LineTo(m_points[i].x, m_points[i].y);
+			else dc.MoveTo(m_points[i].x, m_points[i].y);
 			bDraw = m_points[i].PenDown;
 		}
 	}
@@ -69,7 +67,7 @@ void CView::StorePoint(int x, int y, bool PenDown)
 void CView::OnLButtonDown(LPARAM lParam)
 {
  	// Capture mouse input.
- 	::SetCapture(m_hWnd);
+ 	SetCapture();
 
 	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 }
@@ -78,7 +76,7 @@ void CView::OnLButtonUp(LPARAM lParam)
 {
 	{
 		//Release the capture on the mouse
-		::ReleaseCapture();
+		ReleaseCapture();
 
 		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
 	}

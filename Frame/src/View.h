@@ -15,7 +15,7 @@ public:
 
 protected:
 	virtual void OnInitialUpdate();
-	virtual void OnPaint(HDC hDC);
+	virtual void OnPaint(CDC& dc);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void RegisterClass(WNDCLASS &wc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

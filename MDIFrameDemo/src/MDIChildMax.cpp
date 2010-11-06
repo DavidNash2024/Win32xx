@@ -8,11 +8,11 @@
 
 
 // CViewMax definitions
-void CViewMax::OnPaint(HDC hDC)
+void CViewMax::OnPaint(CDC& dc)
 {
 	//Centre some text in our view window
 	CRect rc = GetClientRect();
-	::DrawText(hDC, _T("Maxed Window"), -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	dc.DrawText(_T("Maxed Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 

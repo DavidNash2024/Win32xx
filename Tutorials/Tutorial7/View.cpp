@@ -19,32 +19,27 @@ CView::~CView()
 
 void CView::DrawLine(int x, int y)
 {
-	HDC hDC = ::GetDC(m_hWnd);
-	HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points.back().color);
-	HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
+	CDC dc = GetDC();
 
-	::MoveToEx(hDC, m_points.back().x, m_points.back().y, NULL); ;
-	::LineTo(hDC, x, y);
-
-	::ReleaseDC(m_hWnd, hDC);
-	::SelectObject(hDC, hOldPen);
-	::DeleteObject(hPen);
+	dc.CreatePen(PS_SOLID, 1, m_points.back().color);
+	dc.MoveTo(m_points.back().x, m_points.back().y);
+	dc.LineTo(x, y);
 }
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
 	if (m_points.size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points[i].color);
-			HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-			if (bDraw) ::LineTo(hDC, m_points[i].x, m_points[i].y);
-			else ::MoveToEx(hDC, m_points[i].x, m_points[i].y, NULL);
+			dc.CreatePen(PS_SOLID, 1, m_points[i].color);
+			if (bDraw)
+				dc.LineTo(m_points[i].x, m_points[i].y);
+			else
+				dc.MoveTo(m_points[i].x, m_points[i].y);
+			
 			bDraw = m_points[i].PenDown;
-			::SelectObject(hDC, hOldPen);
-			::DeleteObject(hPen);
 		}
 	}
 }
@@ -82,7 +77,7 @@ void CView::StorePoint(int x, int y, bool PenDown)
 void CView::OnLButtonDown(LPARAM lParam)
 {
  	// Capture mouse input.
- 	::SetCapture(m_hWnd);
+ 	SetCapture();
 
 	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 }
@@ -91,7 +86,7 @@ void CView::OnLButtonUp(LPARAM lParam)
 {
 	{
 		//Release the capture on the mouse
-		::ReleaseCapture();
+		ReleaseCapture();
 
 		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
 	}

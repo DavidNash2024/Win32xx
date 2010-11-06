@@ -61,11 +61,11 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
 	CRect rc = GetClientRect();
 
 	// Centre some text in our view window
-	::DrawText(hDC, _T("View Window"), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

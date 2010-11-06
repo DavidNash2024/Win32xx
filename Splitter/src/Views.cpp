@@ -10,12 +10,11 @@
 
 ///////////////////////////////////////////////
 // CViewSimple functions
-void CViewSimple::OnPaint(HDC hDC)
+void CViewSimple::OnPaint(CDC& dc)
 {
 	//Centre some text in the window
-	RECT r;
-	::GetClientRect(m_hWnd, &r);
-	::DrawText(hDC, _T("Simple View"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	CRect rc = GetClientRect();
+	dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

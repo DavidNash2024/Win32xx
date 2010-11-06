@@ -12,18 +12,16 @@ CView::CView()
 
 void CView::DrawLine(int x, int y)
 {
-	HDC hDC = ::GetDC(m_hWnd);
+	CDC dc = GetDC();
 
-	::MoveToEx(hDC, m_OldPt.x, m_OldPt.y, NULL); ;
-	::LineTo(hDC, x, y);
-
-	::ReleaseDC(m_hWnd, hDC);
+	dc.MoveTo(m_OldPt.x, m_OldPt.y);
+	dc.LineTo(x, y);
 }
 
 void CView::OnLButtonDown(LPARAM lParam)
 {
  	// Capture mouse input.
- 	::SetCapture(m_hWnd);
+ 	SetCapture();
 
 	m_OldPt.x = GET_X_LPARAM(lParam);
 	m_OldPt.y = GET_Y_LPARAM(lParam);
@@ -33,7 +31,7 @@ void CView::OnLButtonUp(LPARAM lParam)
 {
 	{
 		//Release the capture on the mouse
-		::ReleaseCapture();
+		ReleaseCapture();
 	}
 }
 

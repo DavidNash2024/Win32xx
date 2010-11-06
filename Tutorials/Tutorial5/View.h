@@ -18,7 +18,7 @@ public:
 	virtual ~CView(){}
 
 protected:
-	virtual void OnPaint(HDC hDC);
+	virtual void OnPaint(CDC& dc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

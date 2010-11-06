@@ -53,7 +53,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	// Respond to the accelerator key
 	case IDW_QUIT:
-		::SendMessage(m_hWnd, WM_CLOSE, 0L, 0L);
+		SendMessage(WM_CLOSE, 0L, 0L);
 		return TRUE;
 	}
 
@@ -66,11 +66,11 @@ void CMainFrame::OnInitialUpdate()
 	TRACE(TEXT("Frame Created\n"));
 }
 
-void CMainFrame::OnPaint(HDC hDC)
+void CMainFrame::OnPaint(CDC& dc)
 {
-	RECT rt = GetViewRect();
+	CRect rc = GetViewRect();
 	LPCTSTR szHello = LoadString(IDS_HELLO);
-	DrawText(hDC, szHello, lstrlen(szHello), &rt, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+	dc.DrawText(szHello, lstrlen(szHello), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

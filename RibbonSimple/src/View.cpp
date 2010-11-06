@@ -51,7 +51,7 @@ void CView::OnInitialUpdate()
 	TRACE(_T("OnInitialUpdate\n"));
 }
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
 	// OnPaint is called automatically whenever a part of the
 	// window needs to be repainted.
@@ -59,7 +59,7 @@ void CView::OnPaint(HDC hDC)
 	// Centre some text in our view window
 	CRect r = GetClientRect();
 	r.top += GetRibbonHeight();
-	::DrawText(hDC, _T("Simple Ribon Demo"), -1, &r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	dc.DrawText(_T("Simple Ribon Demo"), -1, r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnSize()

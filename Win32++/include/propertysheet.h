@@ -275,21 +275,25 @@ namespace Win32xx
 
 		case WM_PAINT:
 			{
+				if (m_PrevWindowProc) break; // Allow normal painting for subclassed windows
+
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					::PAINTSTRUCT ps;
-					HDC hDC = ::BeginPaint(m_hWnd, &ps);
+					CDC dc = ::BeginPaint(m_hWnd, &ps);
 
-					OnPaint(hDC);
+					OnPaint(dc);
+					
 					::EndPaint(m_hWnd, &ps);
+					dc.DetachDC();
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					HDC hDC = ::GetDC(m_hWnd);
+					CDC dc = ::GetDC(m_hWnd);
 
-					OnPaint(hDC);
-					::ReleaseDC(m_hWnd, hDC);
+					OnPaint(dc);
+				//	::ReleaseDC(m_hWnd, hDC);
 				}
 			}
 			break;
@@ -797,7 +801,7 @@ namespace Win32xx
 		int nResult = (int)CreatePropertySheet(&m_PSH);
 
 		m_vPages.clear();
-		GetApp()->RemoveOrphans();
+		GetApp()->RemoveTmpWnds();
 		
 		return nResult;
 	}

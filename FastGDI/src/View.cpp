@@ -141,22 +141,22 @@ void CView::OnHScroll(WPARAM wParam, LPARAM lParam)
 	SetScrollInfo(SB_HORZ, si, TRUE); 
 } 
 
-void CView::OnPaint(HDC hDC)
+void CView::OnPaint(CDC& dc)
 {
 	if (m_hbmImage)
 	{
 		// We have an image, so display it
-		CDC memDC = ::CreateCompatibleDC(hDC);
+		CDC memDC = ::CreateCompatibleDC(dc);
 		CRect rcView = GetClientRect();
 		memDC.AttachBitmap(m_hbmImage);
-		::BitBlt(hDC, 0, 0, rcView.Width(), rcView.Height(), memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
+		dc.BitBlt(0, 0, rcView.Width(), rcView.Height(), memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
 		memDC.DetachBitmap(); 
 	}
 	else
 	{
 		// There is no image, so display a hint to get one
 		CRect rc = GetClientRect();
-		::DrawText(hDC, _T("Use the Menu or ToolBar to open a Bitmap File"), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+		dc.DrawText(_T("Use the Menu or ToolBar to open a Bitmap File"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 }
 

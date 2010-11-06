@@ -22,7 +22,7 @@ protected:
 	virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 	virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 	virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
-	virtual void OnPaint(HDC hDC);
+	virtual void OnPaint(CDC& dc);
 	virtual void StorePoint(int x, int y, bool PenDown);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

@@ -214,7 +214,7 @@ namespace Win32xx
 		public:
 			CDockBar();
 			virtual ~CDockBar();
-			virtual void OnPaint(HDC hDC);
+			virtual void OnPaint(CDC& dc);
 			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
@@ -298,7 +298,7 @@ namespace Win32xx
 			virtual RECT CalcHintRectInner(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual RECT CalcHintRectOuter(CDocker* pDockDrag, UINT uDockSide);
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
-			virtual void OnPaint(HDC hDC);
+			virtual void OnPaint(CDC& dc);
 			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void SetBitmap(HBITMAP hbmBlueTint);
 			virtual void ShowHintWindow(CDocker* pDockTarget, CRect rcHint);
@@ -316,7 +316,7 @@ namespace Win32xx
 		public:
 			CTarget() : m_hbmImage(0) {}
 			virtual ~CTarget();
-			virtual void OnPaint(HDC hDC);
+			virtual void OnPaint(CDC& dc);
 			virtual void PreCreate(CREATESTRUCT &cs);
 
 			HBITMAP GetImage()		{return m_hbmImage;}
@@ -334,7 +334,7 @@ namespace Win32xx
 		public:
 			CTargetCentre();
 			virtual ~CTargetCentre();
-			virtual void OnPaint(HDC hDC);
+			virtual void OnPaint(CDC& dc);
 			virtual void OnCreate();
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 			BOOL IsOverContainer() { return m_bIsOverContainer; }
@@ -550,13 +550,12 @@ namespace Win32xx
 		::DeleteObject(m_hbrBackground);
 	}
 
-	inline void CDocker::CDockBar::OnPaint(HDC hDC)
+	inline void CDocker::CDockBar::OnPaint(CDC& dc)
 	{
 		CRect rcClient = GetClientRect();
-		CDC dcView = hDC;
-		dcView.AttachBrush(m_hbrBackground);
-		dcView.PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
-		dcView.DetachBrush();
+		dc.AttachBrush(m_hbrBackground);
+		dc.PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
+		dc.DetachBrush();
 	}
 
 	inline void CDocker::CDockBar::PreCreate(CREATESTRUCT &cs)
@@ -1308,13 +1307,13 @@ namespace Win32xx
 		}  
 	}
 
-	inline void CDocker::CDockHint::OnPaint(HDC hDC)
+	inline void CDocker::CDockHint::OnPaint(CDC& dc)
 	{
 		// Display the blue tinted bitmap
 		CRect rc = GetClientRect();
-		CDC MemDC = CreateCompatibleDC(hDC);
+		CDC MemDC = CreateCompatibleDC(dc);
 		MemDC.AttachBitmap(m_hbmBlueTint);
-		BitBlt(hDC, 0, 0, rc.Width(), rc.Height(), MemDC, 0, 0, SRCCOPY);
+		dc.BitBlt(0, 0, rc.Width(), rc.Height(), MemDC, 0, 0, SRCCOPY);
 		MemDC.DetachBitmap();
 	}
 
@@ -1378,7 +1377,7 @@ namespace Win32xx
 	{
 	}
 
-	inline void CDocker::CTargetCentre::OnPaint(HDC hDC)
+	inline void CDocker::CTargetCentre::OnPaint(CDC& dc)
 	{
 		HBITMAP hbmCentre = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDCENTER),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
@@ -1391,20 +1390,19 @@ namespace Win32xx
 		HBITMAP hbmBottom= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDBOTTOM),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 
-		CDC dcTarget = hDC;
-		if (hbmCentre)	dcTarget.DrawBitmap(0, 0, 88, 88, hbmCentre, RGB(255,0,255));
+		if (hbmCentre)	dc.DrawBitmap(0, 0, 88, 88, hbmCentre, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Centre\n"));
 
-		if (hbmLeft) dcTarget.DrawBitmap(0, 29, 31, 29, hbmLeft, RGB(255,0,255));
+		if (hbmLeft) dc.DrawBitmap(0, 29, 31, 29, hbmLeft, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Left\n"));
 
-		if (hbmTop) dcTarget.DrawBitmap(29, 0, 29, 31, hbmTop, RGB(255,0,255));
+		if (hbmTop) dc.DrawBitmap(29, 0, 29, 31, hbmTop, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Top\n"));
 
-		if (hbmRight) dcTarget.DrawBitmap(55, 29, 31, 29, hbmRight, RGB(255,0,255));
+		if (hbmRight) dc.DrawBitmap(55, 29, 31, 29, hbmRight, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Right\n"));
 
-		if (hbmBottom) dcTarget.DrawBitmap(29, 55, 29, 31, hbmBottom, RGB(255,0,255));
+		if (hbmBottom) dc.DrawBitmap(29, 55, 29, 31, hbmBottom, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Bottom\n"));
 
 		::DeleteObject(hbmCentre);
@@ -1417,11 +1415,10 @@ namespace Win32xx
 		{
 			HBITMAP hbmMiddle = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDMIDDLE),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-			dcTarget.DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
+			dc.DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
 			::DeleteObject(hbmMiddle);
 		}
 
-		dcTarget.DetachDC();
 	}
 
 	inline void CDocker::CTargetCentre::OnCreate()
@@ -1518,18 +1515,15 @@ namespace Win32xx
 		if (m_hbmImage) ::DeleteObject(m_hbmImage);
 	}
 
-	inline void CDocker::CTarget::OnPaint(HDC hDC)
+	inline void CDocker::CTarget::OnPaint(CDC& dc)
 	{
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
-		CDC dcTarget = hDC;
 
-		if (GetImage()) dcTarget.DrawBitmap(0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
+		if (GetImage()) dc.DrawBitmap(0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
 		else TRACE(_T("Missing docking resource\n"));
-
-		dcTarget.DetachDC();
 	}
 
 	inline void CDocker::CTarget::PreCreate(CREATESTRUCT &cs)
