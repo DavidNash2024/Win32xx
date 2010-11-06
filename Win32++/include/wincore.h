@@ -203,6 +203,7 @@ namespace Win32xx
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
+	// WndPtr is a Shared_Ptr of CWnd
 	typedef Shared_Ptr<CWnd> WndPtr;
 
 
@@ -245,6 +246,7 @@ namespace Win32xx
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 		std::vector<char>  vChar;	// A vector used as a char array for text conversions
 		std::vector<WCHAR> vWChar;	// A vector used as a WCHAR array for text conversions
+		std::vector<WndPtr> vOrphans;	// A vector of temporary CWnd pointers
 
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 	};
@@ -628,8 +630,6 @@ namespace Win32xx
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;	// vector of TLSData smart pointers, one for each thread
-		std::vector<WndPtr> m_vOrphans;	// vector of CWnd smart pointers automatically attached to HWND
-		CCriticalSection m_csOrphans;	// thread synchronisation for m_vOrphans
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTlsData;	// thread synchronisation for m_ csvTlsData
 		HINSTANCE m_hInstance;			// handle to the applications instance
@@ -875,7 +875,6 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-
 		// Resize the vector and assign null WCHAR to each element
 		int length = (int)strlen(pChar)+1;
 		pTLSData->vWChar.assign(length, L'\0');
@@ -1026,7 +1025,11 @@ namespace Win32xx
 
 	inline CWinApp::~CWinApp()
 	{
-		RemoveOrphans();
+		std::vector<TLSDataPtr>::iterator iter;
+		for (iter = m_vTLSData.begin(); iter < m_vTLSData.end(); ++iter)
+		{
+			(*iter)->vOrphans.clear();
+		}
 		
 		// Check that all CWnd windows are destroyed
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
@@ -1057,9 +1060,10 @@ namespace Win32xx
 		pWnd->AddToMap();
 		pWnd->m_IsOrphan = TRUE;
 
-		m_csOrphans.Lock();
-		m_vOrphans.push_back(pWnd); // save the pointer for deletion later
-		m_csOrphans.Release();
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+
+		pTLSData->vOrphans.push_back(pWnd); // save orphan as a smart pointer
 	}
 
 	inline void CWinApp::SetCallback()
@@ -1154,9 +1158,13 @@ namespace Win32xx
 
 	inline void CWinApp::RemoveOrphans()
 	{
-		m_csOrphans.Lock();
-		m_vOrphans.clear();
-		m_csOrphans.Release();
+		// Removes all Orphans belonging to this thread
+
+		// Retrieve the pointer to the TLS Data
+		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+		
+		if (pTLSData)
+			pTLSData->vOrphans.clear();
 	}
 
 	inline int CWinApp::Run()
@@ -1218,7 +1226,7 @@ namespace Win32xx
 			pTLSData = new TLSData;
 
 			m_csTlsData.Lock();
-			m_vTLSData.push_back(TLSDataPtr(pTLSData));	// store as a Shared_Ptr
+			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
 			m_csTlsData.Release();
 
 			::TlsSetValue(GetTlsIndex(), pTLSData);
@@ -1490,18 +1498,19 @@ namespace Win32xx
 
 	inline void CWnd::Destroy()
 	{
+		// Remove orphans
 		if (m_IsOrphan)
 			m_hWnd = NULL;
 		else
-			GetApp()->RemoveOrphans();
-
+			if (GetApp()) GetApp()->RemoveOrphans();
+		
 		if (IsWindow()) ::DestroyWindow(m_hWnd);
 
 		// Return the CWnd to its default state
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-
-		RemoveFromMap();
+	
+		if ( GetApp() ) RemoveFromMap();
 		m_hIconLarge = NULL;
 		m_hIconSmall = NULL;
 		m_hWnd = NULL;
