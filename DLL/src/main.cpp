@@ -10,7 +10,11 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	// Load the MyDLL.dll
 	HMODULE hModule = LoadLibrary(_T("MyDLL.dll"));
-	assert(hModule);
+	if (0 == hModule)
+	{
+		MessageBox(NULL, _T("Failed to load MyDLL.dll"), _T("Error"), MB_OK);
+		return 0;
+	}
 	
 	// Create a pointer to MyDLL's ShowDialog function
 	typedef void WINAPI SHOWDIALOG();
