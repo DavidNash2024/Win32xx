@@ -1663,10 +1663,7 @@ namespace Win32xx
 	inline void CWnd::OnPaint(CDC& dc)
 	// Called when part of the client area of the window needs to be painted
 	{
-         
-    #ifndef __GNUC__          
 		UNREFERENCED_PARAMETER(dc);
-	#endif
 	
 	    // Override this function in your derived class to perform drawing tasks. 
 	}

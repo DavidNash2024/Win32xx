@@ -112,6 +112,7 @@ namespace Win32xx
 		CDC( );
 		CDC( HDC hDC );
 		CDC(const CDC& rhs);					// Copy constructor
+		CDC& operator = ( const CDC& rhs );     // Assign a CDC to a new CDC
 		void operator = ( const HDC hDC );		// Assign a hDC to a new CDC
 		operator HDC( ) const { return *m_DC; }	// Cast the CDC object to a HDC
 		virtual ~CDC( );
@@ -182,7 +183,6 @@ namespace Win32xx
 		int GetDeviceCaps( int nIndex ) const;
 #ifndef _WIN32_WCE
 		HDC CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit ) const;
-//		CWnd* WindowFromDC( ) const;
 #endif
 
 		// Point and Line Drawing Functions
@@ -332,8 +332,6 @@ namespace Win32xx
 #endif
 
 	private:
-		CDC& operator = ( const CDC& rhs );
-
 		HDC* m_DC;
 		HBITMAP* m_BitmapOld;
 		HBRUSH* m_BrushOld;
@@ -498,6 +496,24 @@ namespace Win32xx
 	inline void CDC::operator = (const HDC hDC)
 	{
 		AttachDC(hDC);
+	}
+
+	inline CDC& CDC::operator = ( const CDC& rhs )
+	{
+		if (this != &rhs)
+		{
+			m_BitmapOld = rhs.m_BitmapOld;
+			m_BrushOld  = rhs.m_BrushOld;
+			m_DC		= rhs.m_DC;
+			m_FontOld	= rhs.m_FontOld;
+			m_PenOld    = rhs.m_PenOld;
+			m_RgnOld    = rhs.m_RgnOld;
+			m_Count		= rhs.m_Count;
+
+			InterlockedIncrement(m_Count);
+		}
+
+		return *this;
 	}
 
 	inline CDC::~CDC()
@@ -1123,18 +1139,7 @@ namespace Win32xx
 	{
 		return ::GetDeviceCaps(*m_DC, nIndex);
 	}
-/*
-#ifndef _WIN32_WCE
-	inline CWnd* CDC::WindowFromDC( ) const
-	{
-		return CWnd::FromHandle( ::WindowFromDC( *m_DC ) );
-	}
-	inline HDC CDC::CreateIC( LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit ) const
-	{
-		return ::CreateIC( lpszDriver, lpszDevice, lpszOutput, &dvmInit );
-	}
-#endif
-*/
+
 	// Point and Line Drawing Functions
 	inline CPoint CDC::GetCurrentPosition( ) const
 	{

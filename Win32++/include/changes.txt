@@ -149,12 +149,12 @@ Renamed CToolbar to CToolBar
 Renamed RebarTheme to ReBarTheme
 Renamed ToolbarTheme to ToolBarTheme
 Renamed CToolBar::AddToolbarButton to CToolBar::AddButton
-Renamed CWnd::CharToTChar to ::CharToTChar
-Renamed CWnd::CharToWide  to ::CharToWide
-Renamed CWnd::TCharToChar to ::TCharToChar
-Renamed CWnd::TCharToWide to ::TCharToWide
-Renamed CWnd::WideToChar  to ::WideToChar
-Renamed CWnd::WideToTChar to ::WideToTChar
+Moved CWnd::CharToTChar to ::CharToTChar
+Moved CWnd::CharToWide  to ::CharToWide
+Moved CWnd::TCharToChar to ::TCharToChar
+Moved CWnd::TCharToWide to ::TCharToWide
+Moved CWnd::WideToChar  to ::WideToChar
+Moved CWnd::WideToTChar to ::WideToTChar
 Removed CWinException::MessageBox
 Removed CPropertySheet::QuerySiblings
 
