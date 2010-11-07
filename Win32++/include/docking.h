@@ -64,7 +64,7 @@
 #define DS_NO_CLOSE				0x0400	// Prevent closing of a docker while docked
 #define DS_NO_UNDOCK			0x0800  // Prevent undocking and dock closing
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
-#define DS_FLATLOOK				0x2000	// Reserved for future use
+#define DS_FIXED_RESIZE			0x2000	// Perfomed a fixed resize instead of a proportional resize on dock children
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
 #define DS_DOCKED_LEFTMOST      0x10000 // Leftmost outer docking
 #define DS_DOCKED_RIGHTMOST     0x20000 // Rightmost outer docking
@@ -1093,7 +1093,7 @@ namespace Win32xx
 	inline void CDocker::CDockClient::PreCreate(CREATESTRUCT& cs)
 	{
 		DWORD dwStyle = m_pDock->GetDockStyle();
-		if ((dwStyle & DS_CLIENTEDGE) || (dwStyle & DS_FLATLOOK))
+		if (dwStyle & DS_CLIENTEDGE)
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
 
 #if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
@@ -3015,25 +3015,29 @@ namespace Win32xx
 		for (UINT u = 0; u < m_vDockChildren.size(); ++u)
 		{
 			CRect rcChild = rc;
-			double DockWidth;
+			double DockWidth = m_vDockChildren[u]->m_DockStartWidth;;
 
 			// Calculate the size of the Docker children
 			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width()), rcChild.Width());
+				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+					DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width()), rcChild.Width());
 				rcChild.right = rcChild.left + (int)DockWidth;
 				break;
 			case DS_DOCKED_RIGHT:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width()), rcChild.Width());
+				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+					DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Width()), rcChild.Width());
 				rcChild.left = rcChild.right - (int)DockWidth;
 				break;
 			case DS_DOCKED_TOP:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height()), rcChild.Height());
+				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+					DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height()), rcChild.Height());
 				rcChild.bottom = rcChild.top + (int)DockWidth;
 				break;
 			case DS_DOCKED_BOTTOM:
-				DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height()), rcChild.Height());
+				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+					DockWidth = MIN(m_vDockChildren[u]->m_DockWidthRatio*(GetWindowRect().Height()), rcChild.Height());
 				rcChild.top = rcChild.bottom - (int)DockWidth;
 				break;
 			}

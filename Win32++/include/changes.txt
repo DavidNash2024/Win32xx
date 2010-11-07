@@ -159,6 +159,8 @@ Removed CWinException::MessageBox
 Removed CPropertySheet::QuerySiblings
 
 Added DS_NO_CLOSE style to suppress the closing of docked dockers
+Added DS_FIXED_RESIZE style to perform a fixed (not proportional) resize
+                       on dock children
 Added WM_PAINT handler to CDialog::DialogProcDefault
 Added WM_PAINT handler to CPropertyPage::DialogProcDefault
 

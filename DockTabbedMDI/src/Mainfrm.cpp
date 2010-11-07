@@ -206,7 +206,7 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnInitialUpdate()
 {
-	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
+	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE|DS_FIXED_RESIZE);
 
 	// Load dock settings
 	if (!m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName()))
