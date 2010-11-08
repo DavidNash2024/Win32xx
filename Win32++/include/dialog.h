@@ -300,31 +300,6 @@ namespace Win32xx
 				return lr;
 			}
 					
-		case WM_PAINT:
-			{
-				if (m_PrevWindowProc) break; // Allow normal painting for subclassed windows
-
-				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
-				{
-					::PAINTSTRUCT ps;
-					CDC dc = ::BeginPaint(m_hWnd, &ps);
-
-					OnPaint(dc);
-					
-					::EndPaint(m_hWnd, &ps);
-					dc.DetachDC();
-				}
-				else
-				// RedrawWindow can require repainting without an update rect
-				{
-					CDC dc = ::GetDC(m_hWnd);
-
-					OnPaint(dc);
-				//	::ReleaseDC(m_hWnd, hDC);
-				}
-			}
-			return 0L;
-
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
 		case WM_CTLCOLOREDIT:

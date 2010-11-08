@@ -3,29 +3,48 @@ Version 7.0
 
 New Features and Enhancements
 -----------------------------
+* The following function now return CWnd* instead of HWND:
+   GetActiveWindow, GetAncestor, GetCapture, GetFocus, GetDlgItem, GetWindow,
+   GetLastAtivePopup, GetParent, GetTopWindow, SetActiveWindow, SetCapture, 
+   SetFocus, and SetParent.  This helps the framework to be more object
+   orientated, by allowing the programmer to work more directly with CWnds.
+   It also reduces the need to convert between CWnds and HWNDs in user code.
+   If a CWnd object for the HWND doesn't already exist, Win32++ creates a 
+   temporary CWnd. The pointers returned by these functions should not be
+   stored and used later, as they might not be valid then.
+* Added CThread class to simplify the task of using threads and creating
+   windows in different threads. CThread can be used for both worker threads
+   and GUI threads. Refer to the Thread and DirectX samples for examples of 
+   how to use CThread to create windows in a different thread. The DirectX
+   sample also uses a customized message loop for the thread.   
 * Added the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
    CProgressBar, CScrollBar, CSlider, and CSpinButton.
-* Added CThread class to simplify the task of using threads and creating
-   windows in different threads.   
+* Renamed CToolbar to CToolBar, CStatusbar to CStatusBar, CRebar to CReBar
+   and CMenubar to CMenuBar. This matches the MFC names, and is also more 
+   consistent with Win32++'s naming conventions.   
 * Added support for re-sizable dialogs. The CResizer class has been added
    to dialog.h to facilitate dialog resizing. Refer to the forms sample for
    an example of how to put CResizer to use.
 * Added IPv6 support to CSocket. The network samples have been updated to
-   take advantage of IPv6 support.
+   take advantage of IPv6 support. IP version 6 is supported on Vista 
+   operating systems and newer.
 * Added Shared_Ptr class. Note that a "shared_ptr" will be available for the
    updated C++ standard. It is already available with some modern compilers,
    and also for users of the Boost library. The "Shared_Ptr" class is intended
    as an alternative for those users who would like to use a "shared_ptr", but
-   don't have access to one yet.
+   don't have access to one yet. Unlike auto-ptr's, shared_ptr's can be used
+   to safely store pointers in vectors and other STL containers.
 * Extended the CToolbar class.
 * Added the GDIPlus sample to demonstrate how to use the GDIPlus library 
    provided with modern Windows operating systems (XP and above).
-* Win32++ can now be run from inside a DLL.
+* Win32++ can now be run from inside a DLL. The "DLL" sample demonstrates how to
+   put a Win32++ dialog in a dll, and run it from a test program.  
 * Dialogs and Property Sheets now use DWLP_MSGRESULT to automatically handle the 
-   value returned by notifications in their message handling.     
-* Moved the text conversion functions from CWnd to the global (Win32++)
-   namespace.
-* Improved the appearance of frames without themes.
+   value returned by notifications in their message handling. This allows dialog
+   controls to use custom draw, and have the notification return values handled
+   appropriately.   
+* Improved the appearance of frames without themes. The frame sample demonstrates
+   how override CMainFrame::OnCreate to customize the frame's appearance.
 * Asserts are used more liberally to test for programming errors. Any message
    sent to a non-existent window, for example, will now assert. More asserts 
    are intended to help users write code that is more robust. Note that asserts
@@ -37,17 +56,15 @@ New Features and Enhancements
    - a window creation fails.
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
-   - an attempt to read from or write to the registry fails.
+   - an attempt to read from or write to the registry fails unexpectedly.
 * Vectors are now used as a replacement for all dynamically allocated arrays, 
    ensuring the arrays are automatically deleted when they go out of scope.
-* Renamed CToolbar to CToolBar, CStatusbar to CStatusBar, CRebar to CReBar
-   and CMenubar to CMenuBar.
-* The following function now return CWnd* instead of HWND:
-   GetActiveWindow, GetAncestor, GetCapture, GetFocus, GetDlgItem, GetWindow,
-   GetLastAtivePopup, GetParent, GetTopWindow, SetActiveWindow, SetCapture, 
-   SetFocus, and SetParent.
+   Creating an array with "new" runs the risk of causing a memory leak,
+   particularly when an exception is thrown. Using a vector to create the
+   array guarantees that it will be deleted properly under all circumstances.
 * The OnPaint function now uses a CDC reference as its argument instead of a 
-   HDC. This simpifies the task of using a CDC when overriding  OnPaint.
+   HDC. This simpifies the task of using a CDC when overriding OnPaint.
+* Extended the help documentation.   
 
 Changes in detail
 -----------------
@@ -124,6 +141,7 @@ Added CWnd::SetIcon
 Added CWnd::SetWindowTheme
 Added CWnd::ShowOwnedPopups
 Added CWnd::ShowWindowAsync
+Added CWnd::WindowFromDC
 Added ::IsAeroThemed
 Modified CPropertyPage::Apply			now returns int
 Modified CPropertyPage::OnKillActive	now returns BOOL
@@ -166,7 +184,7 @@ Added WM_PAINT handler to CPropertyPage::DialogProcDefault
 
 Added GDIPlus sample
 Updated Network samples
-Update  FormDemo sample
+Updated FormDemo sample
 
 Incompatibilities with previous versions
 ----------------------------------------
@@ -986,8 +1004,6 @@ Version 3
 Version 2
 =========
 * The code is now Unicode compliant.
-* Added debug mode. Exceptions produce a warning in a message box
-   if _DEBUG is defined. 
 * Added CWinApp class to start Win32++.
 * Added CDialog class to support modal and modeless dialogs as well
    as indirect dialogs (dialogs created from a dialog template in

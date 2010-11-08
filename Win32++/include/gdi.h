@@ -119,6 +119,7 @@ namespace Win32xx
 		void AttachDC( HDC hDC );
 		HDC  DetachDC( );
 		HDC GetHDC( ) const { return *m_DC; }
+		void Release();
 
 		// Create and Select Bitmaps
 		void AttachBitmap( HBITMAP hBitmap );
@@ -502,6 +503,8 @@ namespace Win32xx
 	{
 		if (this != &rhs)
 		{
+			Release();
+
 			m_BitmapOld = rhs.m_BitmapOld;
 			m_BrushOld  = rhs.m_BrushOld;
 			m_DC		= rhs.m_DC;
@@ -518,34 +521,7 @@ namespace Win32xx
 
 	inline CDC::~CDC()
 	{	
-		if (InterlockedDecrement(m_Count) == 0)
-		{
-			if (*m_DC)
-			{
-				// Delete any GDI objects belonging to this CDC
-				if (*m_PenOld)    ::DeleteObject(::SelectObject(*m_DC, *m_PenOld));
-				if (*m_BrushOld)  ::DeleteObject(::SelectObject(*m_DC, *m_BrushOld));
-				if (*m_BitmapOld) ::DeleteObject(::SelectObject(*m_DC, *m_BitmapOld));
-				if (*m_FontOld)	  ::DeleteObject(::SelectObject(*m_DC, *m_FontOld));
-				if (*m_RgnOld)    ::DeleteObject(*m_RgnOld);
-
-				// We need to release a Window DC, and delete a memory DC
-	#ifndef _WIN32_WCE
-				HWND hwnd = ::WindowFromDC(*m_DC);
-				if (hwnd) ::ReleaseDC(hwnd, *m_DC);
-				else      ::DeleteDC(*m_DC);
-	#else
-				::DeleteDC(*m_DC);
-	#endif
-			}
-
-			delete m_PenOld;
-			delete m_BrushOld;
-			delete m_BitmapOld;
-			delete m_FontOld;
-			delete m_RgnOld;
-			delete m_Count;
-		}
+		Release();
 	}
 
 	inline void CDC::AttachDC(HDC hDC)
@@ -642,6 +618,48 @@ namespace Win32xx
 		}
 
 		SetBkColor(OldBkColor);
+	}
+
+	inline void CDC::Release()
+	{	
+		if (m_Count)
+		{
+		if (InterlockedDecrement(m_Count) == 0)
+			{
+				if (*m_DC)
+				{
+					// Delete any GDI objects belonging to this CDC
+					if (*m_PenOld)    ::DeleteObject(::SelectObject(*m_DC, *m_PenOld));
+					if (*m_BrushOld)  ::DeleteObject(::SelectObject(*m_DC, *m_BrushOld));
+					if (*m_BitmapOld) ::DeleteObject(::SelectObject(*m_DC, *m_BitmapOld));
+					if (*m_FontOld)	  ::DeleteObject(::SelectObject(*m_DC, *m_FontOld));
+					if (*m_RgnOld)    ::DeleteObject(*m_RgnOld);
+
+					// We need to release a Window DC, and delete a memory DC
+		#ifndef _WIN32_WCE
+					HWND hwnd = ::WindowFromDC(*m_DC);
+					if (hwnd) ::ReleaseDC(hwnd, *m_DC);
+					else      ::DeleteDC(*m_DC);
+		#else
+					::DeleteDC(*m_DC);
+		#endif
+				}
+
+				delete m_PenOld;
+				delete m_BrushOld;
+				delete m_BitmapOld;
+				delete m_FontOld;
+				delete m_RgnOld;
+				delete m_Count;
+
+				m_PenOld = 0;
+				m_BrushOld = 0;
+				m_BitmapOld = 0;
+				m_FontOld = 0;
+				m_RgnOld  = 0;
+				m_Count = 0;
+			}
+		}
 	}
 
 	inline void CDC::SolidFill( COLORREF Color, const RECT& rc )
