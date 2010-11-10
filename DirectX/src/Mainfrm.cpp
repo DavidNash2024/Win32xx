@@ -49,7 +49,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		PostQuitMessage(0);
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();

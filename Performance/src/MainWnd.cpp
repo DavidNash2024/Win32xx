@@ -158,7 +158,7 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_DESTROY:
-		// Post the WM_QUIT message to terminate the program.
+		// End the program.
 		::PostQuitMessage(0);
 		break;
 

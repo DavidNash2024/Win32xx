@@ -147,7 +147,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	case IDM_FILE_EXIT:
 		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0L, 0L);
+		::PostQuitMessage(0);
 		return TRUE;
 	case IDM_CONTAINER_TOP:
 		OnContainerTabsAtTop();

@@ -46,7 +46,7 @@
 // which don't run a message loop as sometimes referred to as "worker" threads.
 
 // Note: It is your job to end the thread before CThread ends!
-//       To end a thread with a message loop, post a WM_QUIT message to the thread.
+//       To end a thread with a message loop, use PostQuitMessage on the thread.
 //       To end a thread without a message loop, set an event, and end the thread 
 //       when the event is received.
 

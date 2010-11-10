@@ -55,7 +55,7 @@ LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_DESTROY:
-		// Post the WM_QUIT message to terminate the thread.
+		// Terminate the thread.
 		::PostQuitMessage(0);
 		break;
 

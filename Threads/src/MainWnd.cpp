@@ -81,7 +81,7 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	
 	case WM_DESTROY:	
 		{	
-			// Post the WM_QUIT message to terminate the primary thread.
+			// Terminate the primary thread.
 			::PostQuitMessage(0); 
 		}
 		break;

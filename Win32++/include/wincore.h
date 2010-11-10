@@ -1146,6 +1146,10 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(::IsWindow(hWnd));
 
+		// Ensure this thread has the TLS index set
+		// Note: Perform the attach from the same thread as the window's message loop
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+
 		if (m_PrevWindowProc)
 			Detach();
 
