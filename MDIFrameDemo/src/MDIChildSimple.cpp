@@ -52,12 +52,15 @@ void CMDIChildSimple::OnInitialUpdate()
 	SetIconSmall(IDI_VIEW);
 }
 
-void CMDIChildSimple::OnClose()
+int CMDIChildSimple::OnClose()
 {
-	//Action to take when the window is about to close
-	int Result = MessageBox(_T("OK to close Window?"), _T("File Close"), MB_YESNO);
-	if (Result == IDYES)
-		GetParent()->SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
+	int nResult = MessageBox(_T("OK to close Window?"), _T("File Close"), MB_YESNO);
+
+	if (nResult == IDYES)
+		MDIDestroy();
+
+	// Return value is either IDYES or IDNO
+	return nResult;
 }
 
 BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -96,8 +99,7 @@ LRESULT CMDIChildSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CLOSE:
-		OnClose();
-		return 0L;	// Don't do default processing
+		return OnClose();	// Don't do default processing
 	}
 
 	// Do default processing for other messages

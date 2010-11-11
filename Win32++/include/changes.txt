@@ -40,9 +40,8 @@ New Features and Enhancements
 * Win32++ can now be run from inside a DLL. The "DLL" sample demonstrates how to
    put a Win32++ dialog in a dll, and run it from a test program.  
 * Dialogs and Property Sheets now use DWLP_MSGRESULT to automatically handle the 
-   value returned by notifications in their message handling. This allows dialog
-   controls to use custom draw, and have the notification return values handled
-   appropriately.   
+   value returned by notifications in their message handling. This allows a 
+   dialog's controls to use custom draw.
 * Improved the appearance of frames without themes. The frame sample demonstrates
    how override CMainFrame::OnCreate to customize the frame's appearance.
 * Asserts are used more liberally to test for programming errors. Any message
@@ -79,6 +78,10 @@ Added CSpinButton
 Added Shared_Ptr
 Added CThread 
 Updated CSocket to support IPv6
+Added CMDIChild::MDIActivate
+Added CMDIChild::MDIDestroy
+Added CMDIChild::MDIMaximize
+Added CMDIChild::Restore
 Added CPropertySheet::SetIcon
 Added CPropertyPage::SetWizardButtons
 Added CPropertyPage::QuerySiblings
@@ -161,7 +164,7 @@ Modified CSocket::Send          	now uses TCHAR instead of char
 Modified CSocket::SentTo        	now uses TCHAR instead of char
 Modified CWinException::what  		now outputs text to debugger
 Modified CWnd::OnPaint              now takes a CDC& argument instead of HDC
-Renamed CMenubar to CMenubar
+Renamed CMenubar to CMenuBar
 Renamed CRebar to CReBar
 Renamed CStatusbar to CStatusBar
 Renamed CToolbar to CToolBar

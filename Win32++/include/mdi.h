@@ -93,6 +93,10 @@ namespace Win32xx
 		virtual void SetChildMenu(LPCTSTR MenuName);
 		virtual CWnd* GetView() const	{return m_pView;}
 		virtual void SetView(CWnd& pwndView);
+		void MDIActivate() const;
+		void MDIDestroy() const;
+		void MDIMaximize() const;
+		void MDIRestore() const;
 
 	protected:
 		// Its unlikely you would need to override these functions
@@ -346,7 +350,7 @@ namespace Win32xx
 		// Remove the children in reverse order
 		for (int i = Children-1; i >= 0; --i)
 		{
-			if (!m_vMDIChild[i]->SendMessage(WM_CLOSE, 0L, 0L))	// Also removes the MDI child
+			if (IDNO == m_vMDIChild[i]->SendMessage(WM_CLOSE, 0L, 0L))	// Also removes the MDI child
 				bResult = FALSE;
 		}
 
@@ -593,6 +597,26 @@ namespace Win32xx
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefMDIChildProc(m_hWnd, uMsg, wParam, lParam);
+	}
+
+	inline void CMDIChild::MDIActivate() const
+	{
+		GetParent()->SendMessage(WM_MDIACTIVATE, (WPARAM)m_hWnd, 0L);
+	}
+	
+	inline void CMDIChild::MDIDestroy() const
+	{
+		GetParent()->SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
+	}
+	
+	inline void CMDIChild::MDIMaximize() const
+	{
+		GetParent()->SendMessage(WM_MDIMAXIMIZE, (WPARAM)m_hWnd, 0L);
+	}
+	
+	inline void CMDIChild::MDIRestore() const
+	{
+		GetParent()->SendMessage(WM_MDIRESTORE, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CMDIChild::OnCreate()

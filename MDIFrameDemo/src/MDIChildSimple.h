@@ -30,7 +30,7 @@ public:
 	virtual ~CMDIChildSimple();
 
 protected:
-	virtual void OnClose();
+	virtual int OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
