@@ -26,7 +26,7 @@ LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_SIZE:
 		// Force the window to be repainted
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		break;		// Also do default processing
 	}
 
@@ -47,7 +47,7 @@ CMDIChildSimple::~CMDIChildSimple()
 
 void CMDIChildSimple::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, _T("Simple Window"));
+	SetWindowText(_T("Simple Window"));
 	SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
 }
@@ -68,23 +68,23 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_COLOR_BLACK:
 		m_View.SetColor(RGB(0,0,0));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_RED:
 		m_View.SetColor(RGB(255, 0, 0));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_GREEN:
 		m_View.SetColor(RGB(0, 255, 0));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_BLUE:
 		m_View.SetColor(RGB(0, 0, 255));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_WHITE:
 		m_View.SetColor(RGB(255, 255, 255));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	}
 

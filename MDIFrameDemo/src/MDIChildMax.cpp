@@ -29,7 +29,7 @@ CMDIChildMax::~CMDIChildMax()
 
 void CMDIChildMax::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, _T("Maximised Window"));
+	SetWindowText(_T("Maximised Window"));
 	SetIconLarge(IDI_MAX);
 	SetIconSmall(IDI_MAX);
 }
@@ -44,7 +44,7 @@ LRESULT CMDIChildMax::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 		case WM_SIZE:
-			::InvalidateRect(m_hWnd, NULL, TRUE);
+			Invalidate();
 			break;  // Continue with default processing
 
 	}

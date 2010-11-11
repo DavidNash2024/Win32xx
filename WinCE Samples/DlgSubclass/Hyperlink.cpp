@@ -34,13 +34,13 @@ BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd* pParent)
 
 void CHyperlink::OnLButtonDown()
 {
-	::SetCapture(m_hWnd);
+	SetCapture();
 	m_bClicked = TRUE;
 }
 
 void CHyperlink::OnLButtonUp(LPARAM lParam)
 {
-	::ReleaseCapture();
+	ReleaseCapture();
 	if(m_bClicked)
 	{
 		m_bClicked = FALSE;
@@ -60,7 +60,7 @@ void CHyperlink::OpenUrl()
 {
 	TCHAR szUrl[ MAX_PATH + 1 ];
 	// Get the url link text
-	::GetWindowText(GetHwnd(), szUrl, MAX_PATH);
+	GetWindowText(szUrl);
 
 	SHELLEXECUTEINFO ExecInfo = {0};;
 	ExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
@@ -74,7 +74,7 @@ void CHyperlink::OpenUrl()
 		m_bUrlVisited = TRUE;
 
 		// redraw the window to update the color
-		::InvalidateRect(GetHwnd(), NULL, FALSE);
+		Invalidate();
 	}
 	else
 		TRACE(_T("ShellExecuteEx Failed"));

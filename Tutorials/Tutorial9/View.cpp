@@ -66,7 +66,6 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 
-
 void CView::FileOpen(LPCTSTR szFilename)
 {
 	// empty the PlotPoint vector
@@ -101,7 +100,6 @@ void CView::FileOpen(LPCTSTR szFilename)
 	// repaint the view window
 	Invalidate();
 }
-
 
 void CView::FileSave(LPCTSTR szFilename)
 {

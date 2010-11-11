@@ -3440,7 +3440,6 @@ namespace Win32xx
 		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 	}
 
-
 	inline void CDocker::Undock(CPoint pt, BOOL bShowUndocked)
 	{
 		// Return if we shouldn't undock

@@ -28,7 +28,7 @@ LRESULT CSimpleView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_SIZE:
 		// Force the window to be repainted
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		break;		// Also do default processing
 	}
 
@@ -53,7 +53,7 @@ CSimpleMDIChild::~CSimpleMDIChild()
 void CSimpleMDIChild::OnInitialUpdate()
 {
     // Set the window caption
-	::SetWindowText(m_hWnd, _T("Simple Window"));
+	SetWindowText(_T("Simple Window"));
 	
     // Set the window icons
     SetIconLarge(IDI_VIEW);
@@ -81,23 +81,23 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_COLOR_BLACK:
 		pView->SetColor(RGB(0,0,0));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_RED:
 		pView->SetColor(RGB(255, 0, 0));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_GREEN:
 		pView->SetColor(RGB(0, 255, 0));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_BLUE:
 		pView->SetColor(RGB(0, 0, 255));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_COLOR_WHITE:
 		pView->SetColor(RGB(255, 255, 255));
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE; 
 	} 
 

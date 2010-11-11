@@ -44,7 +44,7 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_SIZE:
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		break;	// Also do default processing
 
 	case WM_LBUTTONDBLCLK:

@@ -33,9 +33,9 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::OnInitialUpdate()
 {
-	::DragAcceptFiles(m_hWnd, TRUE);
+	DragAcceptFiles(TRUE);
 	SetWindowTitle();
-	::SetFocus(m_RichView.GetHwnd());
+	m_RichView.SetFocus();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -133,11 +133,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFileNew()
 {
-	::SetWindowText(m_RichView.GetHwnd(), _T(""));
+	m_RichView.SetWindowText(_T(""));
 	m_stPathName = _T("");
 	SetWindowTitle();
 	m_RichView.SetFontDefaults();
-	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
+	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
 }
 
 void CMainFrame::OnFilePrint()
@@ -194,7 +194,7 @@ void CMainFrame::OnFilePrint()
 		// Default the range of text to print as the entire document.
 		fr.chrg.cpMin = 0;
 		fr.chrg.cpMax = -1;
-		::SendMessage(m_RichView.GetHwnd(), EM_FORMATRANGE, true, (LPARAM)&fr);
+		m_RichView.SendMessage(EM_FORMATRANGE, true, (LPARAM)&fr);
 
 		// Set up the print job (standard printing stuff here).
 		DOCINFO di;
@@ -211,7 +211,7 @@ void CMainFrame::OnFilePrint()
 		tl.flags = GTL_NUMCHARS;
 
 		// Find out real size of document in characters.
-		lTextLength = (LONG)::SendMessage(m_RichView.GetHwnd(), EM_GETTEXTLENGTHEX, (WPARAM)&tl, 0L);
+		lTextLength = (LONG)m_RichView.SendMessage(EM_GETTEXTLENGTHEX, (WPARAM)&tl, 0L);
 
 		do
 		{
@@ -223,7 +223,7 @@ void CMainFrame::OnFilePrint()
 			// for the wParam parameter causes the text to be printed.
 			lTextPrinted = (LONG)::SendMessage(m_RichView.GetHwnd(), EM_FORMATRANGE, true, (LPARAM)&fr);
 
-			::SendMessage(m_RichView.GetHwnd(), EM_DISPLAYBAND, 0, (LPARAM)&fr.rc);
+			m_RichView.SendMessage(EM_DISPLAYBAND, 0, (LPARAM)&fr.rc);
 
 			// Print last page.
 			::EndPage(hPrinterDC);
@@ -239,7 +239,7 @@ void CMainFrame::OnFilePrint()
 		while (lTextPrinted < lTextLength);
 
 		// Tell the control to release cached information.
-		::SendMessage(m_RichView.GetHwnd(), EM_FORMATRANGE, false, 0L);
+		m_RichView.SendMessage(EM_FORMATRANGE, false, 0L);
 
 		::EndDoc (hPrinterDC);
 
@@ -250,33 +250,33 @@ void CMainFrame::OnFilePrint()
 
 void CMainFrame::OnEditCut()
 {
-	::SendMessage(m_RichView.GetHwnd(), WM_CUT, 0, 0);
+	m_RichView.SendMessage(WM_CUT, 0, 0);
 }
 void CMainFrame::OnEditCopy()
 {
-	::SendMessage(m_RichView.GetHwnd(), WM_COPY, 0, 0);
+	m_RichView.SendMessage(WM_COPY, 0, 0);
 }
 void CMainFrame::OnEditPaste()
 {
-	::SendMessage(m_RichView.GetHwnd(), EM_PASTESPECIAL, CF_TEXT, 0);
+	m_RichView.SendMessage(EM_PASTESPECIAL, CF_TEXT, 0);
 }
 void CMainFrame::OnEditDelete()
 {
-	::SendMessage(m_RichView.GetHwnd(), WM_CLEAR, 0, 0);
+	m_RichView.SendMessage(WM_CLEAR, 0, 0);
 }
 void CMainFrame::OnEditRedo()
 {
-	::SendMessage(m_RichView.GetHwnd(), EM_REDO, 0, 0);
+	m_RichView.SendMessage(EM_REDO, 0, 0);
 }
 void CMainFrame::OnEditUndo()
 {
-	::SendMessage(m_RichView.GetHwnd(), EM_UNDO, 0, 0);
+	m_RichView.SendMessage(EM_UNDO, 0, 0);
 }
 
 void CMainFrame::OnClose()
 {
 	//Check for unsaved text
-	BOOL bChanged = (BOOL)::SendMessage(m_RichView.GetHwnd(), EM_GETMODIFY, 0, 0);
+	BOOL bChanged = (BOOL)m_RichView.SendMessage(EM_GETMODIFY, 0, 0);
 	if (bChanged)
 		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
 			OnFileSave();
@@ -316,12 +316,12 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 	es.dwCookie =  (DWORD_PTR) hFile;
 	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;
 
-	::SendMessage(m_RichView.GetHwnd(), EM_STREAMIN, SF_TEXT, (LPARAM)&es);
+	m_RichView.SendMessage(EM_STREAMIN, SF_TEXT, (LPARAM)&es);
 	::CloseHandle(hFile);
 
 
 	//Clear the modified text flag
-	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
+	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
 
 	return TRUE;
 }
@@ -348,11 +348,11 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 	es.dwError = 0;
 	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamOutCallback;
 
-	::SendMessage(m_RichView.GetHwnd(), EM_STREAMOUT, SF_TEXT, (LPARAM)&es);
+	m_RichView.SendMessage(EM_STREAMOUT, SF_TEXT, (LPARAM)&es);
 	::CloseHandle(hFile);
 
 	//Clear the modified text flag
-	::SendMessage(m_RichView.GetHwnd(), EM_SETMODIFY, FALSE, 0);
+	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
 
 	return TRUE;
 }
@@ -430,7 +430,7 @@ void CMainFrame::SetWindowTitle()
 	if (m_stPathName == _T("")) Title = _T("TextEdit - Untitled");
 
 	else Title = _T("TextEdit - ") + m_stPathName;
-	::SetWindowText(m_hWnd, Title.c_str());
+	SetWindowText(Title.c_str());
 }
 
 void CMainFrame::SetupToolBar()
@@ -455,10 +455,10 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_SETFOCUS:
-		::SetFocus(m_RichView.GetHwnd());
+		m_RichView.SetFocus();
 		break;
 	case WM_SIZE:
-		::InvalidateRect(m_RichView.GetHwnd(), NULL, TRUE);
+		m_RichView.Invalidate();
 		break;
 	}
 

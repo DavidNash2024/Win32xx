@@ -327,6 +327,7 @@ namespace Win32xx
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
+		void  DragAcceptFiles(BOOL fAccept) const;
 		BOOL  DrawMenuBar() const;
 		BOOL  EnableWindow(BOOL bEnable = TRUE) const;
 		CWnd* GetActiveWindow() const;
@@ -1148,7 +1149,7 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		// Note: Perform the attach from the same thread as the window's message loop
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		GetApp()->SetTlsIndex();
 
 		if (m_PrevWindowProc)
 			Detach();
@@ -2081,6 +2082,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+	}
+
+	inline void CWnd::DragAcceptFiles(BOOL fAccept) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DragAcceptFiles(m_hWnd, fAccept);
 	}
 
 	inline BOOL CWnd::DrawMenuBar() const

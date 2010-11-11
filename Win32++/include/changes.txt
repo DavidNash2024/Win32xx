@@ -127,6 +127,7 @@ Added CToolBar::SetMaxTextRows
 Added CToolBar::SetPadding
 Added CToolBar::SetToolTips
 Added CWinException::what
+Added CWnd::DragAcceptFiles
 Added CWnd::GetActiveWindow
 Added CWnd::GetCapture
 Added CWnd::GetFocus

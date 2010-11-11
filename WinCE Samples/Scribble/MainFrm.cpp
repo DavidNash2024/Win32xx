@@ -15,16 +15,10 @@ CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
 
 void CMainFrame::DrawLine(short x, short y)
 {
-	HDC hDC = ::GetDC(m_hWnd);
-	HPEN hPen = ::CreatePen(PS_SOLID, 1, m_points.back().color);
-	HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
-	
-	::MoveToEx(hDC, m_points.back().x, m_points.back().y, NULL); ;
-	::LineTo(hDC, x, y);
-	
-	::ReleaseDC(m_hWnd, hDC);
-	::SelectObject(hDC, hOldPen);
-	::DeleteObject(hPen);
+	CDC dc = GetDC();
+	dc.CreatePen(PS_SOLID, 1, m_points.back().color);
+	dc.MoveTo(m_points.back().x, m_points.back().y);
+	dc.LineTo(x, y);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -35,7 +29,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	// Respond to menu items
 	case IDM_NEW:
 		m_points.clear();
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		{
@@ -64,7 +58,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 
 	// Respond to the accelerator key
 	case IDW_QUIT:
-		::SendMessage(m_hWnd, WM_CLOSE, 0L, 0L);
+		SendMessage(WM_CLOSE, 0L, 0L);
 		return TRUE; 
 	} 
 
@@ -79,7 +73,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
 {
 	// Capture mouse input.
-	::SetCapture(m_hWnd);
+	SetCapture();
 
 	StorePoint(LOWORD(lParam), HIWORD(lParam), true);
 }
@@ -87,7 +81,7 @@ void CMainFrame::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
 void CMainFrame::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 {
 	//Release the capture on the mouse
-	::ReleaseCapture();
+	ReleaseCapture();
 
 	StorePoint(LOWORD(lParam), HIWORD(lParam), false);
 }
