@@ -67,7 +67,7 @@
 
 namespace Win32xx
 {
-
+    class CPropertyPage;
 	typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
 
 	class CPropertyPage : public CWnd
@@ -90,7 +90,7 @@ namespace Win32xx
 		virtual BOOL OnQuerySiblings(WPARAM wParam, LPARAM lParam);
 		virtual int  OnSetActive();
 		virtual int  OnWizardBack();
-		virtual BOOL OnWizardFinish();
+		virtual INT_PTR OnWizardFinish();
 		virtual int  OnWizardNext();
 		virtual	BOOL PreTranslateMessage(MSG* pMsg);
 
@@ -445,11 +445,11 @@ namespace Win32xx
 		// Override this function in your derived class if required.
 
 		// Return Value:
-		// Return TRUE to prevent the wizard from finishing.
+		// Return non-zero to prevent the wizard from finishing.
 		// Version 5.80. and later. Return a window handle to prevent the wizard from finishing. The wizard will set the focus to that window. The window must be owned by the wizard page.
-		// Return FALSE to allow the wizard to finish.
+		// Return 0 to allow the wizard to finish.
 
-		return FALSE; // Allow wizard to finish
+		return 0; // Allow wizard to finish
 	}
 
 	inline int CPropertyPage::OnWizardNext()
@@ -778,7 +778,7 @@ namespace Win32xx
 
 		m_vPages.clear();
 		GetApp()->RemoveTmpWnds();
-		
+
 		return nResult;
 	}
 

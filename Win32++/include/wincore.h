@@ -95,6 +95,11 @@
   #define STRICT 1
 #endif
 
+#ifdef __GNUC__
+  #pragma GCC diagnostic ignored "-Wmissing-braces"
+  #pragma GCC diagnostic ignored "-Wunused-value"
+#endif
+
 #ifdef _WIN32_WCE
   #include "wcestddef.h"
 #endif
@@ -431,7 +436,7 @@ namespace Win32xx
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual void OnInitialUpdate();
-		virtual void OnMenuUpdate(UINT nID);		
+		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -459,7 +464,7 @@ namespace Win32xx
 		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
 		mutable std::vector<TCHAR> m_vTChar;	// A vector used as a TCHAR array for string functions
-		BOOL m_IsTmpWnd;			// True if this CWnd is a TmpWnd 
+		BOOL m_IsTmpWnd;			// True if this CWnd is a TmpWnd
 
 	}; // class CWnd
 
@@ -485,7 +490,7 @@ namespace Win32xx
 		virtual ~CWinApp();
 
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
-		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }	
+		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		void SetResourceHandle(HINSTANCE hResource);
 
 		// These are the functions you might wish to override
@@ -906,7 +911,7 @@ namespace Win32xx
 		{
 			(*iter)->vTmpWnds.clear();
 		}
-		
+
 		// Check that all CWnd windows are destroyed
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
@@ -970,12 +975,12 @@ namespace Win32xx
 	{
 		// Allocate an iterator for our HWND map
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-		
+
 		// Find the CWnd pointer mapped to this HWND
 		CWnd* pWnd = 0;
 		m_csMapLock.Lock();
 		m = m_mapHWND.find(hWnd);
-		
+
 		if (m != m_mapHWND.end())
 			pWnd = m->second;
 
@@ -1038,7 +1043,7 @@ namespace Win32xx
 
 		// Retrieve the pointer to the TLS Data
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-		
+
 		if (pTLSData)
 			pTLSData->vTmpWnds.clear();
 	}
@@ -1124,7 +1129,7 @@ namespace Win32xx
 	}
 
 	inline CWnd::~CWnd()
-	{	
+	{
 		// Destroy the window for this object
 		Destroy();
 	}
@@ -1383,13 +1388,13 @@ namespace Win32xx
 			m_hWnd = NULL;
 		else
 			if (GetApp()) GetApp()->RemoveTmpWnds();
-		
+
 		if (IsWindow()) ::DestroyWindow(m_hWnd);
 
 		// Return the CWnd to its default state
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-	
+
 		if ( GetApp() ) RemoveFromMap();
 		m_hIconLarge = NULL;
 		m_hIconSmall = NULL;
@@ -1419,7 +1424,7 @@ namespace Win32xx
 		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
 		if (::IsWindow(hWnd) && pWnd == 0)
 		{
-			GetApp()->AddTmpWnd(hWnd);		
+			GetApp()->AddTmpWnd(hWnd);
 			pWnd = GetApp()->GetCWndFromMap(hWnd);
 		}
 
@@ -1670,8 +1675,8 @@ namespace Win32xx
 	// Called when part of the client area of the window needs to be painted
 	{
 		UNREFERENCED_PARAMETER(dc);
-	
-	    // Override this function in your derived class to perform drawing tasks. 
+
+	    // Override this function in your derived class to perform drawing tasks.
 	}
 
 	inline void CWnd::OnMenuUpdate(UINT nID)
@@ -1935,10 +1940,10 @@ namespace Win32xx
 					lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
 
 				// Handle user commands
-				if (!lr) 
+				if (!lr)
 					lr =  OnCommand(wParam, lParam);
-				
-				if (lr) return 0L;	
+
+				if (lr) return 0L;
 			}
 			break;  // Note: Some MDI commands require default processing
 		case WM_CREATE:
@@ -1985,7 +1990,7 @@ namespace Win32xx
 					CDC dc = ::BeginPaint(m_hWnd, &ps);
 
 					OnPaint(dc);
-					
+
 					::EndPaint(m_hWnd, &ps);
 					dc.DetachDC();
 				}

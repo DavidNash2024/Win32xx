@@ -134,6 +134,7 @@
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
 					<Add library="Oleaut32" />
@@ -157,6 +158,7 @@
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
 					<Add library="Oleaut32" />

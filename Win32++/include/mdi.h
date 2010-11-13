@@ -72,7 +72,7 @@
 
 namespace Win32xx
 {
-
+    class CMDIChild;
 	typedef Shared_Ptr<CMDIChild> MDIChildPtr;
 
 	/////////////////////////////////////
@@ -108,12 +108,12 @@ namespace Win32xx
 	private:
 		CMDIChild(const CMDIChild&);				// Disable copy construction
 		CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
-		
+
 		CWnd* m_pView;				// pointer to the View CWnd object
 		HMENU m_hChildMenu;
 	};
 
-	
+
 	/////////////////////////////////////
 	// Declaration of the CMDIFrame class
 	//
@@ -127,7 +127,7 @@ namespace Win32xx
 		virtual ~CMDIFrame() {}
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
-		virtual tString GetWindowType() const { return _T("CMDIFrame"); } 
+		virtual tString GetWindowType() const { return _T("CMDIFrame"); }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual void UpdateCheckMarks();
@@ -344,7 +344,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
-	{	
+	{
 		BOOL bResult = TRUE;
 		int Children = m_vMDIChild.size();
 
@@ -458,7 +458,7 @@ namespace Win32xx
 		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(hWndParent);
 		assert(pMDIFrame->GetWindowType() == _T("CMDIFrame"));
 		m_pMDIFrame = pMDIFrame;
-		
+
 		CLIENTCREATESTRUCT clientcreate ;
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
@@ -604,17 +604,17 @@ namespace Win32xx
 	{
 		GetParent()->SendMessage(WM_MDIACTIVATE, (WPARAM)m_hWnd, 0L);
 	}
-	
+
 	inline void CMDIChild::MDIDestroy() const
 	{
 		GetParent()->SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 	}
-	
+
 	inline void CMDIChild::MDIMaximize() const
 	{
 		GetParent()->SendMessage(WM_MDIMAXIMIZE, (WPARAM)m_hWnd, 0L);
 	}
-	
+
 	inline void CMDIChild::MDIRestore() const
 	{
 		GetParent()->SendMessage(WM_MDIRESTORE, (WPARAM)m_hWnd, 0L);
@@ -639,7 +639,7 @@ namespace Win32xx
 	{
 		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 		m_hChildMenu = ::LoadMenu (hInstance, MenuName);
-		
+
 		// Note: It is valid to call SetChildMenu before the window is created
 		if (IsWindow())
 		{
@@ -649,7 +649,7 @@ namespace Win32xx
 				CMDIFrame* pFrame = (CMDIFrame*)GetAncestor();
 				pFrame->UpdateFrameMenu(m_hChildMenu);
 			}
-		} 
+		}
 	}
 
 	inline void CMDIChild::SetView(CWnd& wndView)
@@ -659,10 +659,10 @@ namespace Win32xx
 		{
 			// Destroy the existing view window (if any)
 			if (m_pView) m_pView->Destroy();
-			
+
 			// Assign the view window
 			m_pView = &wndView;
-			
+
 			if (m_hWnd)
 			{
 				// The frame is already created, so create and position the new view too

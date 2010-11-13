@@ -37,9 +37,9 @@ BOOL CMyCombo::AddItems()
 
     ITEMINFO IInf[ ] =
 	{
-        { 0, 0,  0, _T("Item 1")},
-        { 1, 1,  0, _T("Item 2")},
-        { 2, 2,  0, _T("Item 3")},
+        { 0, 0,  0, (LPTSTR)_T("Item 1")},
+        { 1, 1,  0, (LPTSTR)_T("Item 2")},
+        { 2, 2,  0,(LPTSTR) _T("Item 3")},
     };
 
     int MaxItems = 3;

@@ -131,6 +131,7 @@
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
 				</Linker>
@@ -151,6 +152,7 @@
 					<Add directory="..\..\Win32++\include" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
 				</Linker>

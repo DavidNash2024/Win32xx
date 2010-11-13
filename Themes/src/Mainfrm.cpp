@@ -62,17 +62,17 @@ void CMainFrame::ChooseColor(UINT nColor)
 	case IDM_MODERN:
 		{
 			SetReBarTheme( RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230) );
-			
+
 			ToolBarTheme tt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 			TB.SetToolBarTheme(tt);
 			Arrows.SetToolBarTheme(tt);
-			Cards.SetToolBarTheme(tt);			
-			
+			Cards.SetToolBarTheme(tt);
+
 			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
-		break; 
+		break;
 	case IDM_BLUE:	// ICY_BLUE Theme
 		{
 			SetReBarTheme( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
@@ -388,7 +388,7 @@ void CMainFrame::OnCreate()
 			rbbi.fStyle = m_vBandStyles[i];
 			GetReBar().SetBandInfo(i, rbbi);
 		}
-	} 
+	}
 
 	ShowArrows(m_bShowArrows);
 	ShowCards(m_bShowCards);
@@ -535,7 +535,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 	tsKey += szKeyName + (_T("\\Theme Settings"));
 	int nBands = GetReBar().GetBandCount();
 
-	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, _T(""),
+	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, NULL,
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 	// Save the theme settings
