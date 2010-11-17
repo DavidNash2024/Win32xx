@@ -333,7 +333,6 @@ namespace Win32xx
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
-		void  DragAcceptFiles(BOOL fAccept) const;
 		BOOL  DrawMenuBar() const;
 		BOOL  EnableWindow(BOOL bEnable = TRUE) const;
 		CWnd* GetActiveWindow() const;
@@ -425,6 +424,10 @@ namespace Win32xx
 		BOOL  ShowWindowAsync(int nCmdShow) const;
 		BOOL  UnLockWindowUpdate() const;
 		CWnd* WindowFromDC(HDC hDC) const;
+  #endif
+
+  #ifndef WIN32_LEAN_AND_MEAN
+		void  DragAcceptFiles(BOOL fAccept) const;
   #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -2090,11 +2093,13 @@ namespace Win32xx
 		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
+#ifndef WIN32_LEAN_AND_MEAN
 	inline void CWnd::DragAcceptFiles(BOOL fAccept) const
 	{
 		assert(::IsWindow(m_hWnd));
 		::DragAcceptFiles(m_hWnd, fAccept);
 	}
+#endif
 
 	inline BOOL CWnd::DrawMenuBar() const
 	{
