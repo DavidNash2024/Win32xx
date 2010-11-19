@@ -29,7 +29,7 @@ CMyDialog::~CMyDialog()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
-BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{

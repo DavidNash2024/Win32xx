@@ -32,7 +32,7 @@ void CMyDialog::OnOK()
 	CDialog::OnOK();
 }
 
-BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 // Add any messages to be handled inside the switch statement
 
@@ -44,6 +44,6 @@ BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	
 	return DialogProcDefault(uMsg, wParam, lParam);
 	
-} // BOOL CALLBACK DialogProc(...)
+} // INT_PTR CALLBACK DialogProc(...)
 
 

@@ -346,7 +346,7 @@ namespace Win32xx
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
 	{
 		BOOL bResult = TRUE;
-		int Children = m_vMDIChild.size();
+		int Children = (int)m_vMDIChild.size();
 
 		// Remove the children in reverse order
 		for (int i = Children-1; i >= 0; --i)

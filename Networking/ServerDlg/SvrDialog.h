@@ -20,7 +20,7 @@ class CTCPClientDlg : public CDialog
 public:
 	CTCPClientDlg(UINT nResID, HWND hWndParent = NULL);
 	virtual ~CTCPClientDlg() {}
-	virtual BOOL DialogProc (UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR DialogProc (UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
 	void Append(int nID, LPCTSTR buf);
@@ -61,15 +61,14 @@ public:
 
 protected:
 	virtual BOOL OnInitDialog();
-	virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 private:
 	CServerSocket m_MainSocket;
-//	std::map<CServerSocket*, CTCPClientDlg*> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
 	std::map<ServerSocketPtr, TCPClientDlgPtr> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
 	BOOL m_bServerStarted;
-	int  m_SocketType;			// either SOCK_STREAM or SOCK_DGRAM
+	int  m_SocketType;				// either SOCK_STREAM or SOCK_DGRAM
 	sockaddr_in6  m_saUDPClient;	// connected UPD client's sockaddr	
 
 	// Nested classes for this dialog's child windows

@@ -31,7 +31,7 @@ HWND CFormView::Create(HWND hParent = 0)
 	return DoModeless();
 }
 
-BOOL CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

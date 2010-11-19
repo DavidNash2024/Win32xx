@@ -11,7 +11,7 @@ CButtonPage::CButtonPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPrope
 {
 }
 
-BOOL CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -107,7 +107,7 @@ CComboPage::CComboPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPropert
 {
 }
 
-BOOL CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (uMsg)

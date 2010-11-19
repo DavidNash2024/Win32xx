@@ -88,8 +88,8 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
@@ -97,7 +97,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);		
 
 		// Can't override these functions
-		static BOOL CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static INT_PTR CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	#ifndef _WIN32_WCE
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
@@ -213,7 +213,7 @@ namespace Win32xx
 		return DoModeless();
 	}
 
-	inline BOOL CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CDialog if you wish to handle messages
 		// A typical function might look like this:
@@ -233,7 +233,7 @@ namespace Win32xx
 		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline BOOL CDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// All DialogProc functions should pass unhandled messages to this function
 	{
 		LRESULT lr = 0;
@@ -298,7 +298,30 @@ namespace Win32xx
 				// Set the return code for notifications
 				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
 
-				return lr;
+				return (BOOL)lr;
+			}
+
+		case WM_PAINT:
+			{
+				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
+				{
+					::PAINTSTRUCT ps;
+					CDC dc = ::BeginPaint(m_hWnd, &ps);
+
+					OnPaint(dc);
+
+					::EndPaint(m_hWnd, &ps);
+					dc.DetachDC();
+				}
+				else
+				// RedrawWindow can require repainting without an update rect
+				{
+					CDC dc = ::GetDC(m_hWnd);
+
+					OnPaint(dc);
+				}
+
+				break;
 			}
 					
 		// A set of messages to be reflected back to the control that generated them
@@ -322,7 +345,7 @@ namespace Win32xx
 	    } // switch(uMsg)
 	    return FALSE;
 
-	} // LRESULT CALLBACK CDialog::DialogProc(...)
+	} // INT_PTR CALLBACK CDialog::DialogProc(...)
 
 	inline INT_PTR CDialog::DoModal()
 	{
@@ -332,50 +355,59 @@ namespace Win32xx
 		assert( GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
-		m_IsModal=TRUE;
-
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-	#ifndef _WIN32_WCE
-		BOOL IsHookedHere = FALSE;
-		if (NULL == pTLSData->hHook )
+		INT_PTR nResult = 0;
+		
+		try
 		{
-			pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
-			IsHookedHere = TRUE;
+			m_IsModal=TRUE;
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+
+		#ifndef _WIN32_WCE
+			BOOL IsHookedHere = FALSE;
+			if (NULL == pTLSData->hHook )
+			{
+				pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+				IsHookedHere = TRUE;
+			}
+		#endif
+
+			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+			pTLSData->pCWnd = this;
+
+			// Create a modal dialog
+			if (IsIndirect())
+				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+			else
+			{
+				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
+					hInstance = GetApp()->GetResourceHandle();
+				nResult = ::DialogBox(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+			}
+
+			// Tidy up
+			m_hWnd = NULL;
+			pTLSData->pCWnd = NULL;
+
+		#ifndef _WIN32_WCE
+			if (IsHookedHere)
+			{
+				::UnhookWindowsHookEx(pTLSData->hHook);
+				pTLSData->hHook = NULL;
+			}
+		#endif
+
+			if (nResult == -1)
+				throw CWinException(_T("Failed to create modal dialog box"));
+
+			GetApp()->RemoveTmpWnds();
 		}
-    #endif
 
-		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
-		pTLSData->pCWnd = this;
-
-		// Create a modal dialog
-		INT_PTR nResult;
-		if (IsIndirect())
-			nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
-		else
+		catch (const CWinException &e)
 		{
-			if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
-				hInstance = GetApp()->GetResourceHandle();
-			nResult = ::DialogBox(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+			e.what();
 		}
-
-		// Tidy up
-		m_hWnd = NULL;
-		pTLSData->pCWnd = NULL;
-
-	#ifndef _WIN32_WCE
-		if (IsHookedHere)
-		{
-			::UnhookWindowsHookEx(pTLSData->hHook);
-			pTLSData->hHook = NULL;
-		}
-	#endif
-
-		if (nResult == -1)
-			throw CWinException(_T("Failed to create modal dialog box"));
-
-		GetApp()->RemoveTmpWnds();
 		
 		return nResult;
 	}
@@ -385,33 +417,41 @@ namespace Win32xx
 		assert( GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
-		m_IsModal=FALSE;
-
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		// Store the CWnd pointer in Thread Local Storage
-		pTLSData->pCWnd = this;
-
-		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
-
-		// Create a modeless dialog
-		if (IsIndirect())
-			m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
-		else
+		try
 		{
-			if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
-				hInstance = GetApp()->GetResourceHandle();
+			m_IsModal=FALSE;
 
-			m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+
+			// Store the CWnd pointer in Thread Local Storage
+			pTLSData->pCWnd = this;
+
+			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+
+			// Create a modeless dialog
+			if (IsIndirect())
+				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+			else
+			{
+				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
+					hInstance = GetApp()->GetResourceHandle();
+
+				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+			}
+
+			// Tidy up
+			pTLSData->pCWnd = NULL;
+
+			// Now handle dialog creation failure
+			if (!m_hWnd)
+				throw CWinException(_T("Failed to create dialog"));
 		}
-
-		// Tidy up
-		pTLSData->pCWnd = NULL;
-
-		// Now handle dialog creation failure
-		if (!m_hWnd)
-			throw CWinException(_T("Failed to create dialog"));
+	
+		catch (const CWinException &e)
+		{
+			e.what();
+		}
 
 		return m_hWnd;
 	}
@@ -481,7 +521,7 @@ namespace Win32xx
 		m_hDlgParent = hParent;
 	}
 
-	inline BOOL CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
@@ -512,10 +552,10 @@ namespace Win32xx
 		catch (const CWinException &e )
 		{
 			e.what();
-			return FALSE;
+			return 0;
 		}
 
-	} // LRESULT CALLBACK CDialog::StaticDialogProc(...)
+	} // INT_PTR CALLBACK CDialog::StaticDialogProc(...)
 
 #ifndef _WIN32_WCE
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)

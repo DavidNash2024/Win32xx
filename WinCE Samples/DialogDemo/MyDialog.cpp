@@ -16,7 +16,7 @@ CMyDialog::~CMyDialog()
 void CMyDialog::AddToButton()
 {
 	//get the control window
-	HWND hwButton = GetDlgItem(IDC_BUTTON1);
+	HWND hwButton = ::GetDlgItem(m_hWnd, IDC_BUTTON1);
 	
 	//set text to show in control
 	TCHAR szBufW[16];
@@ -28,7 +28,7 @@ void CMyDialog::AddToButton()
 void CMyDialog::AddToComboBox()
 {
 	//get the control window
-	HWND hwComboBox = GetDlgItem(IDC_COMBO1);
+	HWND hwComboBox = ::GetDlgItem(m_hWnd, IDC_COMBO1);
 	
 	//set text to show in control
 	TCHAR szBufW[16];
@@ -49,7 +49,7 @@ void CMyDialog::AddToComboBox()
 void CMyDialog::AddToEdit()
 {
 	//get the control window
-	HWND hwEdit = GetDlgItem(IDC_EDIT1 ); 
+	HWND hwEdit = ::GetDlgItem(m_hWnd, IDC_EDIT1 ); 
 	
 	//set text to show in control
 	TCHAR szBufW[16];
@@ -63,7 +63,7 @@ void CMyDialog::AddToEdit()
 void CMyDialog::AddToListBox()
 {
 	//get the control window
-	HWND hwListBox = GetDlgItem(IDC_LIST1 ); 
+	HWND hwListBox = ::GetDlgItem(m_hWnd, IDC_LIST1 ); 
 	
 	//set text to show in control
 	TCHAR szBufW[16];
@@ -77,7 +77,7 @@ void CMyDialog::AddToListBox()
 void CMyDialog::AddToProgressBar()
 {
 	//get the control window
-	HWND hwProgressBar = GetDlgItem(IDC_PROGRESS1);
+	HWND hwProgressBar = ::GetDlgItem(m_hWnd, IDC_PROGRESS1);
 	
 	//set progress bar position
 	SendMessage(hwProgressBar, PBM_SETPOS, (WPARAM)m_nCounter * 10, 0L);
@@ -86,8 +86,8 @@ void CMyDialog::AddToProgressBar()
 void CMyDialog::AddToScrollBars()
 {
 	//get the control window
-	HWND hwScrollBarH = GetDlgItem(IDC_SCROLLBAR1);
-	HWND hwScrollBarV = GetDlgItem(IDC_SCROLLBAR2);
+	HWND hwScrollBarH = ::GetDlgItem(m_hWnd, IDC_SCROLLBAR1);
+	HWND hwScrollBarV = ::GetDlgItem(m_hWnd, IDC_SCROLLBAR2);
 	
 	//set scroll bar range
 	ScrollBar_SetRange(hwScrollBarH, 0, 10, FALSE);
@@ -101,7 +101,7 @@ void CMyDialog::AddToScrollBars()
 void CMyDialog::AddToSlider()
 {
 	//get the control window
-	HWND hwSlider = GetDlgItem(IDC_SLIDER1);
+	HWND hwSlider = ::GetDlgItem(m_hWnd, IDC_SLIDER1);
 	
 	//set slider position
 	SendMessage(hwSlider, TBM_SETPOS, TRUE, (WPARAM)m_nCounter * 10);
@@ -114,7 +114,7 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 
 	// Set a timer to animate the controls on the dialog window
-	SetTimer(m_hWnd, ID_TIMER, 500, NULL);
+	SetTimer(ID_TIMER, 500, NULL);
 
 	return true;
 }
@@ -125,7 +125,7 @@ void CMyDialog::OnOK()
 	CDialog::OnOK();
 }
 
-BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
@@ -144,6 +144,6 @@ BOOL CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	
 	return DialogProcDefault(uMsg, wParam, lParam);
 	
-} // BOOL CALLBACK DialogProc(...)
+} // INT_PTR CALLBACK DialogProc(...)
 
 

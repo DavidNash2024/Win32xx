@@ -1,3 +1,17 @@
+Version 7.01
+============
+* Supports the latest version of MinGW compiler
+* DialogProc now returns INT_PTR instead of BOOL
+* Fixed several x64 warnings
+* Fixed DragAcceptFiles error when WIN32_LEAN_AND_MEAN is defined
+* Added OnPaint to CDialog and CPropertyPage
+
+Incompatibilities with previous versions
+----------------------------------------
+DialogProc now returns INT_PTR instead of BOOL. This change will be required
+in user code as well.
+
+
 Version 7.0
 ===========
 

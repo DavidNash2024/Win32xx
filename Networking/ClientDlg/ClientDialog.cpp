@@ -24,7 +24,7 @@ void CClientDialog::Append(int nID, LPCTSTR buf)
 	// This function appends text to an edit control
 
 	// Append Line Feed
-	int ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	int ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
 	if (ndx)
 	{
 		SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
@@ -32,12 +32,12 @@ void CClientDialog::Append(int nID, LPCTSTR buf)
 	}
 
 	// Append text
-	ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
 	SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
 	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
-BOOL CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

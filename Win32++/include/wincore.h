@@ -424,10 +424,10 @@ namespace Win32xx
 		BOOL  ShowWindowAsync(int nCmdShow) const;
 		BOOL  UnLockWindowUpdate() const;
 		CWnd* WindowFromDC(HDC hDC) const;
-  #endif
 
-  #ifndef WIN32_LEAN_AND_MEAN
+    #ifndef WIN32_LEAN_AND_MEAN
 		void  DragAcceptFiles(BOOL fAccept) const;
+    #endif
   #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -2003,7 +2003,6 @@ namespace Win32xx
 					CDC dc = ::GetDC(m_hWnd);
 
 					OnPaint(dc);
-				//	::ReleaseDC(m_hWnd, hDC);
 				}
 			}
 			return 0L;
@@ -2092,14 +2091,6 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
-
-#ifndef WIN32_LEAN_AND_MEAN
-	inline void CWnd::DragAcceptFiles(BOOL fAccept) const
-	{
-		assert(::IsWindow(m_hWnd));
-		::DragAcceptFiles(m_hWnd, fAccept);
-	}
-#endif
 
 	inline BOOL CWnd::DrawMenuBar() const
 	{
@@ -2503,6 +2494,13 @@ namespace Win32xx
 		return ::SetDlgItemText(m_hWnd, nIDDlgItem, lpString);
 	}
 
+	inline UINT_PTR CWnd::SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const
+	// Creates a timer with the specified time-out value.
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::SetTimer(m_hWnd, nIDEvent, uElapse, lpTimerFunc);
+	}
+
 	inline BOOL CWnd::SetWindowText(LPCTSTR lpString) const
 	// The SetWindowText function changes the text of the window's title bar (if it has one).
 	{
@@ -2579,6 +2577,14 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return ::CloseWindow(m_hWnd);
 	}
+
+    #ifndef WIN32_LEAN_AND_MEAN
+    inline void CWnd::DragAcceptFiles(BOOL fAccept) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DragAcceptFiles(m_hWnd, fAccept);
+	}
+    #endif
 
 	inline BOOL CWnd::EnableScrollBar(UINT uSBflags, UINT uArrows) const
 	{
@@ -2706,13 +2712,6 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SetScrollRange(m_hWnd, nBar, nMinPos, nMaxPos, bRedraw);
-	}
-
-	inline UINT_PTR CWnd::SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const
-	// Creates a timer with the specified time-out value.
-	{
-		assert(::IsWindow(m_hWnd));
-		return ::SetTimer(m_hWnd, nIDEvent, uElapse, lpTimerFunc);
 	}
 
 	inline BOOL CWnd::SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const

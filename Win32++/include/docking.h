@@ -3133,7 +3133,7 @@ namespace Win32xx
 		{
 			CDockContainer* pContainer = (*itSort)->GetContainer();
 
-			for (size_t i = 1; i < pContainer->GetAllContainers().size(); ++i)
+			for (UINT i = 1; i < pContainer->GetAllContainers().size(); ++i)
 			{
 				CDockContainer* pChild = pContainer->GetContainerFromIndex(i);
 				CDocker* pDock = GetDockFromView(pChild);
@@ -4027,7 +4027,7 @@ namespace Win32xx
 	{
 		CDockContainer* pContainer = (CDockContainer*)GetParent();
 		assert(pContainer->GetWindowType() == _T("CDockContainer"));
-		return pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
+		return (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
 	}
 
 	inline void CDockContainer::CViewPage::OnCreate()

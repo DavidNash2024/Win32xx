@@ -705,7 +705,7 @@ namespace Win32xx
 	// Sets the minimum and maximum values for the progress bar and redraws the bar to reflect the new range.
 	{
 		assert(IsWindow());
-		return SendMessage(PBM_SETRANGE, 0, (LPARAM) MAKELPARAM (nMinRange, nMaxRange));
+		return (int)SendMessage(PBM_SETRANGE, 0, (LPARAM) MAKELPARAM (nMinRange, nMaxRange));
 	}
 
 	inline int CProgressBar::SetStep(int nStepInc) const

@@ -58,15 +58,11 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 
 void CHyperlink::OpenUrl()
 {
-	TCHAR szUrl[ MAX_PATH + 1 ];
-	// Get the url link text
-	GetWindowText(szUrl);
-
 	SHELLEXECUTEINFO ExecInfo = {0};;
 	ExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ExecInfo.lpVerb = TEXT("open");
 	ExecInfo.lpFile = TEXT("iexplore.exe");
-	ExecInfo.lpParameters = szUrl;
+	ExecInfo.lpParameters = GetWindowText();
 
 	if (ShellExecuteEx(&ExecInfo))
 

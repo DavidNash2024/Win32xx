@@ -76,8 +76,8 @@ namespace Win32xx
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
 
-		virtual BOOL DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual BOOL DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual tString GetWindowType() const { return _T("CPropertyPage"); }
 		virtual int  OnApply();
 		virtual void OnCancel();
@@ -95,7 +95,7 @@ namespace Win32xx
 		virtual	BOOL PreTranslateMessage(MSG* pMsg);
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
-		static BOOL CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static INT_PTR CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		void CancelToClose() const;
 		PROPSHEETPAGE GetPSP() const {return m_PSP;}
@@ -197,7 +197,7 @@ namespace Win32xx
 	}
 
 
-	inline BOOL CPropertyPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CPropertyPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derrived from CPropertyPage if you wish to handle messages
 		// A typical function might look like this:
@@ -217,7 +217,7 @@ namespace Win32xx
 		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline BOOL CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// All DialogProc functions should pass unhandled messages to this function
 	{
 		LRESULT lr = 0L;
@@ -271,7 +271,30 @@ namespace Win32xx
 				// Set the return code for notifications
 				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
 
-				return lr;
+				return (BOOL)lr;
+			}
+
+		case WM_PAINT:
+			{
+				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
+				{
+					::PAINTSTRUCT ps;
+					CDC dc = ::BeginPaint(m_hWnd, &ps);
+
+					OnPaint(dc);
+
+					::EndPaint(m_hWnd, &ps);
+					dc.DetachDC();
+				}
+				else
+				// RedrawWindow can require repainting without an update rect
+				{
+					CDC dc = ::GetDC(m_hWnd);
+
+					OnPaint(dc);
+				}
+
+				break;
 			}
 
 		// A set of messages to be reflected back to the control that generated them
@@ -295,7 +318,7 @@ namespace Win32xx
 	    } // switch(uMsg)
 	    return FALSE;
 
-	} // BOOL CALLBACK CPropertyPage::DialogProc(...)
+	} // INT_PTR CALLBACK CPropertyPage::DialogProc(...)
 
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
@@ -567,7 +590,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline BOOL CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		assert( GetApp() );
 

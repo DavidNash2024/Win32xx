@@ -84,7 +84,7 @@ BOOL CColourDialog::OnInitDialog()
 	return TRUE;
 }
 
-BOOL CColourDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CColourDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
