@@ -208,10 +208,10 @@ namespace Win32xx
 	void TRACE(LPCTSTR str);
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
-	int  GetWinVersion();
 	int  GetComCtlVersion();
 	UINT GetSizeofMenuItemInfo();
 	UINT GetSizeofNonClientMetrics();
+	int  GetWinVersion();	
 	BOOL IsAeroThemed();
 	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
@@ -249,12 +249,12 @@ namespace Win32xx
 	// Global functions for text conversions
 	//
 	inline LPCWSTR CharToWide(LPCSTR pChar);
-	inline LPCSTR WideToChar(LPCWSTR pWChar);
 	inline LPCTSTR CharToTChar(LPCSTR pChar);
 	inline LPCSTR TCharToChar(LPCTSTR pTChar);
 	inline LPCWSTR TCharToWide(LPCTSTR pTChar);
+	inline LPCSTR WideToChar(LPCWSTR pWChar);
 
-
+	
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
 	// This class is used for thread synchronisation

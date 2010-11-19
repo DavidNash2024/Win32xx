@@ -5,6 +5,7 @@ Version 7.01
 * Fixed several x64 warnings
 * Fixed DragAcceptFiles error when WIN32_LEAN_AND_MEAN is defined
 * Added OnPaint to CDialog and CPropertyPage
+* Minor update to the documentation
 
 Incompatibilities with previous versions
 ----------------------------------------

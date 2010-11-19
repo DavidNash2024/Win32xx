@@ -578,7 +578,7 @@ namespace Win32xx
 	}
 
 	inline void CDC::GradientFill( COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical )
-	// A simple but efficient Gradient Filler compatible with all Windows operating systems
+	// An efficient color gradient filler compatible with all Windows operating systems
 	{
 		int Width = rc.right - rc.left;
 		int Height = rc.bottom - rc.top;
