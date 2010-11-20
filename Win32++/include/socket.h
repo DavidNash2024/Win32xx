@@ -719,7 +719,7 @@ namespace Win32xx
 			}
 			clientService.sin_port = htons( (u_short)nPort );
 
-			RetVal = ::sendto( m_Socket, sSend.c_str(), (int)strlen( sSend.c_str() ), 0, (SOCKADDR*) &clientService, sizeof(clientService) );
+			RetVal = ::sendto( m_Socket, sSend.c_str(), len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( SOCKET_ERROR != RetVal )
 				TRACE(_T("SendTo failed\n"));
 		}
