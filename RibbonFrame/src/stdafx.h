@@ -11,11 +11,10 @@
 #define STDAFX_H
 
 
-// Specify predefinitions for windows.h here
-//#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#define VC_EXTRALEAN			// Exclude rarely-used stuff from Windows headers
-#define WINVER 0x0400			// Minimum OS required is Win95
-//#define _WIN32_IE 0x0400		// Minimum version of Internet Explorer required is 4 
+// Predefinitions for windows.h go here
+//#define WIN32_LEAN_AND_MEAN	// Exclude rarely-used stuff from Windows headers
+//#define VC_EXTRALEAN			// Exclude rarely-used stuff from Windows headers
+#include "targetver.h"			// Set the supported window features
 
 // Specify Win32xx specific predifinitions here
 //#define NO_USING_NAMESPACE		// Don't use Win32xx namespace

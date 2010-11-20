@@ -4,6 +4,7 @@
 #ifndef SCRIBBLEAPP_H
 #define SCRIBBLEAPP_H
 
+#include "targetver.h"
 #include "Wincore.h"
 #include "Mainfrm.h"
 

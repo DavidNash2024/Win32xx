@@ -11,7 +11,7 @@ PrivateResource=Themes_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@__@@_
+CppCompiler=-D _DEBUG_@@__@@__@@__@@_
 Linker=-lComctl32_@@_-lWs2_32_@@__@@_
 IsCpp=1
 Icon=

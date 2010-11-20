@@ -11,7 +11,7 @@ PrivateResource=TabbedMDI_private.rc
 ResourceIncludes=..\..\Win32++\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@_
+CppCompiler=-D NDEBUG_@@_
 Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_
 IsCpp=1
 Icon=

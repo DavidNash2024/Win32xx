@@ -6,6 +6,8 @@ Version 7.01
 * Fixed DragAcceptFiles error when WIN32_LEAN_AND_MEAN is defined
 * Added OnPaint to CDialog and CPropertyPage
 * Minor update to the documentation
+* Added targetver.h to samples
+* Supports VS2010's resource editor
 
 Incompatibilities with previous versions
 ----------------------------------------
