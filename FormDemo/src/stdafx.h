@@ -16,7 +16,7 @@
 //#define VC_EXTRALEAN			// Exclude rarely-used stuff from Windows headers
 #include "targetver.h"			// Set the supported window features
 
-// Specify Win32xx specific predifinitions here
+// Specify Win32xx specific predefinitions here
 //#define NO_USING_NAMESPACE		// Don't use Win32xx namespace
 
 typedef  unsigned char  byte;
