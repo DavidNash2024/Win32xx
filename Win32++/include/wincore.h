@@ -588,11 +588,8 @@ namespace Win32xx
 			// InitCommonControlsEx is unique to 4.7 and later
 			ComCtlVer = 470;
 
-			if (::GetProcAddress(hComCtl, "DllInstall"))
+			if (::GetProcAddress(hComCtl, "DllGetVersion"))
 			{
-				// DllInstall is unique to 4.71 and later
-				ComCtlVer = 471;
-
 				typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
 				DLLGETVERSION* pfnDLLGetVersion = NULL;
 
@@ -609,6 +606,8 @@ namespace Win32xx
 					}
 				}
 			}
+			else if (::GetProcAddress(hComCtl, "InitializeFlatSB"))
+				ComCtlVer = 471;	// InitializeFlatSB is unique to version 4.71
 		}
 
 		::FreeLibrary(hComCtl);

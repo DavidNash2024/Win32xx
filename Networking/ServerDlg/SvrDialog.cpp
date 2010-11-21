@@ -172,9 +172,9 @@ void CSvrDialog::LoadCommonControlsEx()
 			if((!(*pfnInit)(&InitStruct)))
 				throw CWinException(_T("InitCommonControlsEx failed"));
 		}
-		else
+		else 
 		{
-			MessageBox( _T("Common Control Version 4.71 or later required (IE 4)"), _T("NOT SUPPORTED"), MB_ICONSTOP );
+			::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
 		}
 
 		::FreeLibrary(hComCtl);

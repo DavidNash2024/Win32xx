@@ -1,5 +1,5 @@
-// Win32++  Version 7.0
-// Released: 13th November, 2010 by:
+// Win32++  Version 7.0.1
+// Released: 21st November, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
