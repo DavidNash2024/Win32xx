@@ -1667,15 +1667,16 @@ namespace Win32xx
 		CRect rcBk;
 
 		// Draw the checkmark's background rectangle first
+		int Iconx = 16, Icony = 16;
+		if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+		int offset = -1 + (rc.bottom - rc.top - Icony)/2;
+		int height = rc.bottom - rc.top;
+
+		rcBk.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
+		rcBk.InflateRect( -offset, -offset );
+
 		if (tm.UseThemes)
 		{
-			int Iconx = 16, Icony = 16;
-			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-			int offset = -1 + (rc.bottom - rc.top - Icony)/2;
-			int height = rc.bottom - rc.top;
-
-			rcBk.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
-			rcBk.InflateRect( -offset, -offset );
 			DrawDC.CreateSolidBrush(tm.clrHot2);
 			DrawDC.CreatePen(PS_SOLID, 1, tm.clrOutline);
 
