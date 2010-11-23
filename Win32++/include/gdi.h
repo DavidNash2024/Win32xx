@@ -110,12 +110,12 @@ namespace Win32xx
 	class CDC
 	{
 	public:
-		CDC( );
-		CDC( HDC hDC );
-		CDC(const CDC& rhs);					// Copy constructor
-		CDC& operator = ( const CDC& rhs );     // Assign a CDC to a new CDC
-		void operator = ( const HDC hDC );		// Assign a hDC to a new CDC
-		operator HDC( ) const { return *m_DC; }	// Cast the CDC object to a HDC
+		CDC( );									// Constructs a new CDC without assigning a HDC
+		CDC( HDC hDC );							// Assigns a HDC to a new CDC 
+		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
+		CDC& operator = ( const CDC& rhs );     // Assigns a CDC to an existing CDC
+		void operator = ( const HDC hDC );		// Assigns a HDC to an existing CDC
+		operator HDC( ) const { return *m_DC; }	// Converts a CDC to a HDC
 		virtual ~CDC( );
 		void AttachDC( HDC hDC );
 		HDC  DetachDC( );
@@ -133,7 +133,7 @@ namespace Win32xx
 		void CreateBitmapIndirect( const BITMAP& bm );
 		void CreateDIBitmap( HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage );
-#endif		
+#endif
 
 		// Create and Select Brushes
 		void AttachBrush( HBRUSH hBrush );
@@ -145,7 +145,7 @@ namespace Win32xx
 		void CreateBrushIndirect( const LOGBRUSH& lb );
 		void CreateDIBPatternBrush( HGLOBAL hglbDIBPacked, UINT fuColorSpec );
 		void CreateHatchBrush( int fnStyle, COLORREF rgb );
-#endif		
+#endif
 
 		// Create and Select Fonts
 		void AttachFont( HFONT hFont );
@@ -156,7 +156,7 @@ namespace Win32xx
   							DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
   							DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality,
   							DWORD fdwPitchAndFamily, LPCTSTR lpszFace );
-#endif		
+#endif
 
 		// Create and Select Pens
 		void AttachPen( HPEN hPen );
@@ -473,6 +473,7 @@ namespace Win32xx
 			if (m_FontOld)		delete m_FontOld;
 			if (m_PenOld)		delete m_PenOld;
 			if (m_RgnOld)		delete m_RgnOld;
+			if (m_Count)		delete m_Count;
 
 			throw;
 		}
@@ -502,6 +503,8 @@ namespace Win32xx
 
 	inline CDC& CDC::operator = ( const CDC& rhs )
 	{
+		// Note: A copy of a CDC is a clone of the original.
+		//       Both objects manipulate the one HDC
 		if (this != &rhs)
 		{
 			Release();
@@ -521,13 +524,14 @@ namespace Win32xx
 	}
 
 	inline CDC::~CDC()
-	{	
+	{
 		Release();
 	}
 
 	inline void CDC::AttachDC(HDC hDC)
 	{
-		assert (0 == *m_DC);
+		assert(m_DC);
+		assert(0 == *m_DC);
 		assert(hDC);
 
 		*m_DC = hDC;
@@ -535,6 +539,7 @@ namespace Win32xx
 
 	inline HDC CDC::DetachDC()
 	{
+		assert(m_DC);
 		assert(*m_DC);
 
 		if (*m_PenOld)    ::DeleteObject(::SelectObject(*m_DC, *m_PenOld));
@@ -558,20 +563,19 @@ namespace Win32xx
 	// Suitable for use with a Window DC or a memory DC
 	{
 		// Create the Image memory DC
-		CDC dcImage = ::CreateCompatibleDC(*m_DC);
+		CDC dcImage = CreateCompatibleDC();
+		dcImage.SetBkColor(clrMask);
 		dcImage.AttachBitmap(hbmImage);
 
 		// Create the Mask memory DC
-		HBITMAP hbmMask = ::CreateBitmap(cx, cy, 1, 1, NULL);
-		CDC dcMask = ::CreateCompatibleDC(*m_DC);
-		dcMask.AttachBitmap(hbmMask);
-		::SetBkColor(dcImage, clrMask);
-		::BitBlt(dcMask, 0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
+		CDC dcMask = CreateCompatibleDC();
+        dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
+		dcMask.BitBlt(0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
 
-		// Mask the image to the DC provided
-		::BitBlt(*m_DC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
-		::BitBlt(*m_DC, x, y, cx, cy, dcMask, 0, 0, SRCAND);
-		::BitBlt(*m_DC, x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+		// Mask the image to 'this' DC
+		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+		BitBlt(x, y, cx, cy, dcMask, 0, 0, SRCAND);
+		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
 
 		// Detach the bitmap before the dcImage is destroyed
 		dcImage.DetachBitmap();
@@ -591,7 +595,7 @@ namespace Win32xx
 		int g2 = GetGValue(Color2);
 		int b2 = GetBValue(Color2);
 
-		COLORREF OldBkColor = ::GetBkColor(*m_DC);
+		COLORREF OldBkColor = GetBkColor();
 
 		if (bVertical)
 		{
@@ -622,7 +626,7 @@ namespace Win32xx
 	}
 
 	inline void CDC::Release()
-	{	
+	{
 		if (m_Count)
 		{
 		if (InterlockedDecrement(m_Count) == 0)
@@ -646,6 +650,7 @@ namespace Win32xx
 		#endif
 				}
 
+				delete m_DC;
 				delete m_PenOld;
 				delete m_BrushOld;
 				delete m_BitmapOld;
@@ -653,6 +658,7 @@ namespace Win32xx
 				delete m_RgnOld;
 				delete m_Count;
 
+				m_DC = 0;
 				m_PenOld = 0;
 				m_BrushOld = 0;
 				m_BitmapOld = 0;

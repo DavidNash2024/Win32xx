@@ -893,9 +893,9 @@ namespace Win32xx
 			VirtualQuery( (LPCVOID)SetnGetThis, &mbi, sizeof(mbi) );
 			assert(mbi.AllocationBase);
 			m_hInstance = (HINSTANCE)mbi.AllocationBase;
-			m_hResource = m_hInstance;
 	#endif
 
+			m_hResource = m_hInstance;
 			SetCallback();
 		}
 
