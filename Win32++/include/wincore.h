@@ -1,5 +1,5 @@
-// Win32++  Version 7.0
-// Released: 12th November, 2010 by:
+// Win32++  Version 7.0.1
+// Released: 21st November, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1984,7 +1984,9 @@ namespace Win32xx
 
 		case WM_PAINT:
 			{
-				if (m_PrevWindowProc) break; // Allow normal painting for subclassed windows
+				// Subclassed controls expect to do their own painting.
+				// CustomDraw or OwnerDraw are normally used to modify the drawing of controls. 
+				if (m_PrevWindowProc) break; 
 
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
