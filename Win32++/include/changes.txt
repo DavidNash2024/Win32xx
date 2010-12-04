@@ -1,5 +1,12 @@
-Version 7.01
-============
+Version 7.0.2
+=============
+* Fix for a memory leak in CDC
+* Fix for accelerators in WinCE
+* Fix for menu check marks when themes are disabled
+* Fix for OnMessageReflect in dialogs
+
+Version 7.0.1
+=============
 * Supports the latest version of MinGW compiler
 * DialogProc now returns INT_PTR instead of BOOL
 * Fixed several x64 warnings
@@ -832,8 +839,8 @@ or CSize struct can be used respectively. In addition:
 * Extended the CRebar, CToolbar and CStatusbar classes.
 
 
-Version 6.02
-============
+Version 6.0.2
+=============
 
 New Features
 ------------
@@ -848,8 +855,8 @@ GetWindowLongPtr, SetWindowLongPtr, GetClassLongPtr and SetClassLongPtr.
 Win32++ will convert these back to their Win32 API counterparts if required.
 
 
-Version 6.01
-============
+Version 6.0.1
+=============
 Added    CFrame::SetMenuIcons
 Added    CFrame::SetToolbarImages
 Removed  CToolbar::SetToolbarImageList

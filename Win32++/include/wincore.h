@@ -1,5 +1,5 @@
-// Win32++  Version 7.0.1
-// Released: 21st November, 2010 by:
+// Win32++  Version 7.0.2
+// Released: 4th December, 2010 by:
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1939,7 +1939,7 @@ namespace Win32xx
 				// Refelect this message if it's from a control
 				CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
 				if (pWnd != NULL)
-					lr = pWnd->OnMessageReflect(uMsg, wParam, lParam);
+					lr = pWnd->OnCommand(wParam, lParam);
 
 				// Handle user commands
 				if (!lr)

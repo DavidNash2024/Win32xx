@@ -80,8 +80,8 @@ rebars. If rebars are not supported by the OS, Win32++ produces a frame without
 rebars.
 
 Win32++ is Unicode compliant and can therefore be used to develop Unicode
-applications. Users are advised that only NT based operating systems (namely NT, 
-Win2000, XP, Vista etc.) support Unicode applications.
+applications. Users are advised that older operating systems (namely Win95, 
+Win98 and WinME) don't support Unicode applications.
 
 Win32++ supports 64bit compilers, and can be used to develop 64bit code.
 
@@ -122,10 +122,10 @@ gdi.h             | CDC              | Win32, Win64      | A helper class for
                   |                  | and WinCE         | GDI graphics.
 ------------------+------------------+-------------------+---------------------
 listView.h        | CListView        | Win32, Win64      | Adds support for a
-                  |                  | and WinCE         | ListView control.                  
-------------------+------------------+-------------------+---------------------  
+                  |                  | and WinCE         | ListView control.               
+------------------+------------------+-------------------+---------------------
 mdi.h             | CMDIFrame        | Win32, Win64      | Adds support for MDI
-                  | CMDIChild        |                   | frames.                  
+                  | CMDIChild        |                   | frames.     
 ------------------+------------------+-------------------+---------------------
 propertysheet.h   | CPropertySheet   | Win32, Win64      | Adds property sheet
                   | CPropertyPage    | and WinCE         | support.
@@ -139,18 +139,14 @@ ribbon.h          | CRibbon          | Win32, Win64      | Adds support for the
 socket.h          | CSocket          | Win32, Win64      | Adds network  
                   |                  | and WinCE         | support.
 ------------------+------------------+-------------------+---------------------
-splitter.h        | CSplitter        | Win32, Win64      | Adds splitter support
-                  |                  |                   | (depreciated)
-------------------+------------------+-------------------+----------------------             
 statusbar.h       | CStatusbar       | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | Status bar control.
 ------------------+------------------+-------------------+---------------------
 stdcontrols.h     | CButton          | Win32, Win64      | Adds support for
-                  | CEdit            | and WinCE         | Button, Edit, 
-                  | CListBox         |                   | ListBox and Static    
-                  | CStatic          |                   | controls.                                                        
+                  | CEdit            | and WinCE         | Button, Edit,
+                  | CListBox         |                   | ListBox and Static  
+                  | CStatic          |                   | controls.
 ------------------+------------------+-------------------+---------------------
-
 tab.h             | CTab             | Win32, Win64      | Adds support for tab
                   | CMDITab          |                   | controls, and MDI
                   |                  |                   | tab windows.                   
@@ -164,15 +160,16 @@ treeview.h        | CTreeView        | Win32, Win64      | Adds support for a
 wceframe.h        | CWceFrame        | WinCE only        | Adds support for
                   | CCmdbar          |                   | frames in WinCE.
 ------------------+------------------+-------------------+---------------------
-webbrowser.h      | CAXWindow        | Win32, Win64      | Adds support for a
+webbrowser.h      | CAXWindow        | Win32, Win64      | Adds support for an
                   | CWebBrowser      | and WinCE         | ActiveX container and
                   |                  |                   | a WebBrowser window.
 ------------------+------------------+-------------------+---------------------
 wincore.h         | CCriticalSection | Win32, Win64,     | The core set of 
-                  | CPoint           | and WinCE         | classes required for
-                  | CRect            |                   | all Win32++ 
-                  | CSize            |                   | applications. 
-                  | CWinApp          |                   | 
-                  | CWinException    |                   | 
-                  | CWnd             |                   | 
-------------------+------------------+-------------------+--------------------- 
+                  | CWinApp          | and WinCE         | classes required for
+                  | CWinException    |                   | all Win32++ 
+                  | CWnd             |                   | applications. 
+------------------+------------------+-------------------+---------------------
+winutils.h        | CPoint           | Win32, Win64,     | A set of wrappers 
+                  | CRect            | and WinCE         | for POINT, RECT and
+                  | CSize            |				     | SIZE. 
+------------------+------------------+-------------------+---------------------
