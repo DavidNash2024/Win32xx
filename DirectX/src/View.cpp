@@ -1,6 +1,8 @@
 //////////////////////////////////////////////
 // View.cpp
 
+// Includes backbuffer resizing suggested by Guillaume Werlé
+
 // NOTE: for MS compilers you will need the DirectX SDK v9
 //       for Dev-C++ you will need the DirecX v9.0c DevPak
 
@@ -11,6 +13,7 @@
 #include "View.h"
 #include "MainFrm.h"
 #include "Resource.h"
+
 
 CView::~CView()
 {
@@ -48,6 +51,8 @@ void CView::OnCreate()
 			UpdateWindow();
 		}
 	}
+	else
+		TRACE(_T("Failed to initialize DirectX\n"));
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)
@@ -69,28 +74,27 @@ HRESULT CView::InitD3D( HWND hWnd )
     if( NULL == ( m_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
         return E_FAIL;
 
-    // Set up the structure used to create the D3DDevice
-    D3DPRESENT_PARAMETERS d3dpp;
-    ZeroMemory( &d3dpp, sizeof(d3dpp) );
-    d3dpp.Windowed = TRUE;
-    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-    d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+	CRect rc = GetClientRect();
+
+	// Set up the structure used to create the D3DDevice    
+    ZeroMemory( &m_d3dpp, sizeof(m_d3dpp) );
+    m_d3dpp.Windowed = TRUE;
+    m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	m_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+    m_d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+	m_d3dpp.BackBufferWidth = rc.Width();
+	m_d3dpp.BackBufferHeight = rc.Height();
 
     // Create the D3DDevice
     if( FAILED( m_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
                                     //  D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 										D3DCREATE_HARDWARE_VERTEXPROCESSING,
-                                      &d3dpp, &m_pd3dDevice ) ) )
+                                      &m_d3dpp, &m_pd3dDevice ) ) )
     {
         return E_FAIL;
     }
 
-    // Turn off culling, so we see the front and back of the triangle
-    m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
-
-    // Turn off D3D lighting, since we are providing our own vertex colors
-    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
+	SetupDefaultRenderStates();
 
     return S_OK;
 }
@@ -113,7 +117,7 @@ HRESULT CView::InitGeometry()
     // Create the vertex buffer.
     if( FAILED( m_pd3dDevice->CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX),
                                                   0, D3DFVF_XYZ | D3DFVF_DIFFUSE,
-                                                  D3DPOOL_DEFAULT, &m_pVB, NULL ) ) )
+                                                  D3DPOOL_MANAGED, &m_pVB, NULL ) ) )
     {
         return E_FAIL;
     }
@@ -132,7 +136,7 @@ HRESULT CView::InitGeometry()
 // Name: SetupMatrices()
 // Desc: Sets up the world, view, and projection transform Matrices.
 //-----------------------------------------------------------------------------
-VOID CView::SetupMatrices()
+void CView::SetupMatrices()
 {
     // For our world matrix, we will just rotate the object about the y-axis.
     D3DXMATRIXA16 matWorld;
@@ -173,19 +177,31 @@ VOID CView::SetupMatrices()
 // Name: Render()
 // Desc: Draws the scene
 //-----------------------------------------------------------------------------
-VOID CView::Render()
+void CView::Render()
 {
-	if (m_pd3dDevice)
+	if (m_pd3dDevice && m_pd3dDevice->TestCooperativeLevel() == D3D_OK)
 	{
+		CRect rcClient = GetClientRect();
+		bool bNeedResize = m_d3dpp.BackBufferWidth != rcClient.Width() || m_d3dpp.BackBufferHeight != rcClient.Height();
+		if (bNeedResize)
+		{
+			m_d3dpp.BackBufferWidth		= rcClient.Width();
+			m_d3dpp.BackBufferHeight	= rcClient.Height();
+			if ( !SUCCEEDED( m_pd3dDevice->Reset(&m_d3dpp) ) )
+				TRACE(_T("Failed to reset the DirectX device\n"));
+		}
+
 		// Clear the backbuffer to a black color
 		if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
-			TRACE(_T("Woops\n"));
+			TRACE(_T("Failed to clear back buffer\n"));
 
 		// Begin the scene
 		if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
 		{
 			// Setup the world, view, and projection Matrices
 			SetupMatrices();
+
+			SetupDefaultRenderStates();
 
 			// Render the vertex buffer contents
 			m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(CUSTOMVERTEX) );
@@ -195,17 +211,21 @@ VOID CView::Render()
 			// End the scene
 			m_pd3dDevice->EndScene();
 		}
+		else
+			TRACE(_T("Failed to render the scene\n"));
 
 		// Present the backbuffer contents to the display
 		m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 	}
 
+	// Slow the thread (otherwise it runs it a tight loop)
 	Sleep(1);
 }
 
 void CView::StartThread(HWND hwndParent)
 {
 	m_hwndParent = hwndParent;
+	SetThreadPriority(THREAD_PRIORITY_BELOW_NORMAL);
 	ResumeThread();
 }
 
@@ -249,6 +269,15 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
+}
+
+void CView::SetupDefaultRenderStates()
+{
+	// Turn off culling, so we see the front and back of the triangle
+	m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
+
+	// Turn off D3D lighting, since we are providing our own vertex colors
+	m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 }
 
 
