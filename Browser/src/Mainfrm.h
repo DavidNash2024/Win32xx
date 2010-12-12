@@ -9,7 +9,6 @@
 #include "MyCombo.h"
 #include "EventSink.h"
 
-typedef std::basic_stringstream<TCHAR> tStringStream;
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame

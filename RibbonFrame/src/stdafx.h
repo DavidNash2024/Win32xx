@@ -27,6 +27,15 @@ typedef  unsigned char  byte;
 #endif
 
 // Rarely modified header files should be included here
+#include <vector>
+#include <map>
+#include <string>
+#include <sstream>		// Add support for stringstream
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <tchar.h>
+
 #include <controls.h>
 #include <dialog.h>
 #include <docking.h>

@@ -30,9 +30,10 @@ typedef  unsigned char  byte;
 #include <vector>
 #include <map>
 #include <string>
+#include <sstream>		// Add support for stringstream
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <tchar.h>
 
 #include <controls.h>

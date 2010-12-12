@@ -197,6 +197,9 @@ namespace Win32xx
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
 
+	// tStringStream is a TCHAR std::stringstream
+	typedef std::basic_stringstream<TCHAR> tStringStream;
+
 	// WndPtr is a Shared_Ptr of CWnd
 	typedef Shared_Ptr<CWnd> WndPtr;
 
