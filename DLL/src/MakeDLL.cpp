@@ -15,7 +15,10 @@ CMyDialog MyDialog(IDD_DIALOG1);
 
 BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
 {
-	switch( ul_reason_for_call ) 
+    UNREFERENCED_PARAMETER(hModule);
+    UNREFERENCED_PARAMETER(lpReserved);
+
+	switch( ul_reason_for_call )
 	{
     case DLL_PROCESS_ATTACH:
 		TRACE(_T("DLL_PROCESS_ATTACH\n"));
@@ -30,11 +33,11 @@ BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 		TRACE(_T("DLL_PROCESS_DETACH\n"));
 		break;
     }
-    
+
 	return TRUE;
 }
 
-__declspec(dllexport) void WINAPI ShowDialog()
+void __declspec(dllexport) ShowDialog()
 {
 	//NOTE: This function doesn't return until the dialog is closed.
 	//      CThread can be used to put the dialog creation and message loop in
@@ -48,9 +51,5 @@ __declspec(dllexport) void WINAPI ShowDialog()
 	// Run the message loop
 	App.Run();
 }
-
-
-
-
 
 
