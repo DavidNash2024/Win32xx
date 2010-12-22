@@ -164,6 +164,7 @@ namespace Win32xx
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
 		virtual CToolBar& GetToolBar() const	{ return GetViewPage().GetToolBar(); }
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
+		void SetActiveContainer(CDockContainer* pContainer);
 		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
@@ -401,6 +402,7 @@ namespace Win32xx
 		virtual ~CDocker();
 		virtual CDocker* AddDockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockWidth, int nDockID = 0);
 		virtual CDocker* AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockWidth, RECT rc, int nDockID = 0);
+		virtual void Close();
 		virtual void CloseAllDockers();
 		virtual void Dock(CDocker* pDocker, UINT uDockSide);
 		virtual void DockInContainer(CDocker* pDock, DWORD dwDockStyle);
@@ -1939,6 +1941,13 @@ namespace Win32xx
 		return bResult;
 	}
 
+	inline void CDocker::Close()
+	{
+		// Destroy the docker
+		Hide();
+		Destroy();
+	}
+
 	inline void CDocker::CloseAllDockers()
 	{
 		assert(this == GetDockAncestor());	// Must call CloseAllDockers from the DockAncestor
@@ -2254,6 +2263,7 @@ namespace Win32xx
 
 		while(pDockTopLevel->GetDockParent())
 		{
+			assert (pDockTopLevel != pDockTopLevel->GetDockParent());
 			pDockTopLevel = pDockTopLevel->GetDockParent();
 		}
 
@@ -2306,8 +2316,17 @@ namespace Win32xx
 
 		if (IsDocked())
 		{
-			CDocker* pDockUndockedFrom = SeparateFromDock();
-			pDockUndockedFrom->RecalcDockLayout();
+			if (GetView()->GetWindowType() == _T("CDockContainer"))
+			{
+				CDockContainer* pContainer = GetContainer();
+				CDocker* pDock = GetDockFromView(pContainer->GetContainerParent());
+				pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
+			}
+			else
+			{
+				CDocker* pDockUndockedFrom = SeparateFromDock();
+				pDockUndockedFrom->RecalcDockLayout();
+			}
 		}
 
 		ShowWindow(SW_HIDE);
@@ -3465,6 +3484,7 @@ namespace Win32xx
 	inline void CDocker::UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked)
 	{
 		assert(pContainer);
+		assert(this == GetDockFromView(pContainer->GetContainerParent()));
 
 		// Return if we shouldn't undock
 		if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
@@ -3968,6 +3988,13 @@ namespace Win32xx
 				m_iCurrentPage = iPage;
 			}
 		}
+	}
+
+	inline void CDockContainer::SetActiveContainer(CDockContainer* pContainer)
+	{
+		int nPage = GetContainerIndex(pContainer);
+		assert (0 <= nPage);
+		SelectPage(nPage);
 	}
 
 	inline void CDockContainer::SetTabIcon(UINT nID_Icon)
