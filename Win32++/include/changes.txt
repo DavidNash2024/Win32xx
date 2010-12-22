@@ -1,6 +1,10 @@
 Version 7.1
 ===========
 - Added tStringStream typedef (a TCHAR stringstream)
+- Added CDockContainer::SetActiveContainer
+- Added CDocker::Close
+- Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
+- Renamed CDocker::SetDockWidth to CDocker::SetDockSize
 
 Version 7.0.2
 =============
