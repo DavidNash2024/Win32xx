@@ -81,23 +81,23 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_COLOR_BLACK:
 		pView->SetColor(RGB(0,0,0));
-		Invalidate();
+		pView->Invalidate();
 		return TRUE;
 	case IDM_COLOR_RED:
 		pView->SetColor(RGB(255, 0, 0));
-		Invalidate();
+		pView->Invalidate();
 		return TRUE;
 	case IDM_COLOR_GREEN:
 		pView->SetColor(RGB(0, 255, 0));
-		Invalidate();
+		pView->Invalidate();
 		return TRUE;
 	case IDM_COLOR_BLUE:
 		pView->SetColor(RGB(0, 0, 255));
-		Invalidate();
+		pView->Invalidate();
 		return TRUE;
 	case IDM_COLOR_WHITE:
 		pView->SetColor(RGB(255, 255, 255));
-		Invalidate();
+		pView->Invalidate();
 		return TRUE; 
 	} 
 
