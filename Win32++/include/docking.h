@@ -446,6 +446,7 @@ namespace Win32xx
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
 		void SetCaption(LPCTSTR szCaption);
+		void SetCaptionHeight(int nHeight);
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockSize(int DockSize);
 		void SetDragAutoResize(BOOL bAutoResize);
@@ -3317,6 +3318,14 @@ namespace Win32xx
 
 		if (IsWindow())
 			SetWindowText(szCaption);
+	}
+
+	inline void CDocker::SetCaptionHeight(int nHeight)
+	{
+		m_NCHeight = nHeight;
+		RedrawWindow();
+		
+		RecalcDockLayout();
 	}
 
 	inline void CDocker::SetDockSize(int DockSize)
