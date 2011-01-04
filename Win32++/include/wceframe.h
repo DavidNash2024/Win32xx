@@ -202,7 +202,7 @@ namespace Win32xx
 		if (m_hWnd == NULL)
 			throw CWinException(_T("Failed to create CommandBar"));
 
-		CommandBar_InsertMenuBar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
+		CommandBar_InsertMenubar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
 #endif
 		return m_hWnd;
 	}
