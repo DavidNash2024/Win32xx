@@ -9,6 +9,8 @@ Version 7.1
 - Modified CWnd::Create 		now takes CWnd pointer instead of HWND
 - Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
+- Moved CWnd::LoadBitmap to LoadBitmap
+- Moved CWnd::LoadString to LoadString 
 
 Version 7.0.2
 =============

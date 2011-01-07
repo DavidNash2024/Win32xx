@@ -1230,7 +1230,8 @@ namespace Win32xx
 			SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb);
 
 			// Add the menu title to the string table
-			TCHAR szMenuName[MAX_MENU_STRING +1] = _T("");
+			std::vector<TCHAR> vMenuName( MAX_MENU_STRING+1, _T('\0') );
+			TCHAR* szMenuName = &vMenuName.front();
 			GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
 			SetButtonText(i  + nMaxedOffset, szMenuName);
 		}
@@ -1794,8 +1795,11 @@ namespace Win32xx
 
 		for (int nItem = 0 ; nItem < nMenuItemCount; ++nItem)
 		{
-			TCHAR szStr[MAX_MENU_STRING +1] = _T("");
-			TCHAR szStripped[MAX_MENU_STRING +1] = _T("");
+			std::vector<TCHAR> vTChar( MAX_MENU_STRING+1, _T('\0') );
+			TCHAR* szStr = &vTChar.front();
+
+			std::vector<TCHAR> vStripped( MAX_MENU_STRING+1, _T('\0') );
+			TCHAR* szStripped = &vStripped.front();
 
 			mii.fMask      = MIIM_TYPE;
 			mii.fType      = MFT_STRING;

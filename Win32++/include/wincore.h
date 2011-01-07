@@ -208,6 +208,8 @@ namespace Win32xx
 	// Global functions	(within the Win32xx namespace)
 
 	CWinApp* GetApp();
+	HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
+	LPCTSTR LoadString(UINT nID);
 	void TRACE(LPCTSTR str);
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
@@ -216,8 +218,8 @@ namespace Win32xx
 	UINT GetSizeofNonClientMetrics();
 	int  GetWinVersion();	
 	BOOL IsAeroThemed();
-	BOOL IsXPThemed();
 	BOOL IsLeftButtonDown();
+	BOOL IsXPThemed();
   #endif // #ifndef _WIN32_WCE
 
   #ifndef lstrcpyn			// Required for WinCE
@@ -242,6 +244,7 @@ namespace Win32xx
 		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 		std::vector<char>  vChar;	// A vector used as a char array for text conversions
+		std::vector<TCHAR> vTChar;	// A vector used as a TCHAR array for LoadString
 		std::vector<WCHAR> vWChar;	// A vector used as a WCHAR array for text conversions
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 
@@ -367,8 +370,6 @@ namespace Win32xx
 		BOOL  IsWindowEnabled() const;
 		BOOL  IsWindowVisible() const;
 		BOOL  KillTimer(UINT_PTR uIDEvent) const;
-		HBITMAP LoadBitmap(LPCTSTR lpBitmapName) const;
-		LPCTSTR LoadString(UINT nID);
 		int   MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
 		BOOL  MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		BOOL  MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
@@ -487,6 +488,7 @@ namespace Win32xx
 		friend class CPropertySheet;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 		friend LPCWSTR CharToWide(LPCSTR pChar);
+		friend LPCTSTR LoadString(UINT nID);
 		friend LPCSTR WideToChar(LPCWSTR pWChar);
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
@@ -744,6 +746,54 @@ namespace Win32xx
 		CPoint pt;
 		::GetCursorPos(&pt);
 		return pt;
+	}
+
+	inline HBITMAP LoadBitmap(LPCTSTR lpBitmapName)
+	{
+		assert (GetApp());
+
+		HBITMAP hBitmap;
+
+		// Try to load the bitmap from the resource handle first
+		hBitmap = ::LoadBitmap(GetApp()->GetResourceHandle(), lpBitmapName);
+
+		// The bitmap resource might be in the application's resources instead
+		if (!hBitmap)
+			hBitmap = ::LoadBitmap(GetApp()->GetInstanceHandle(), lpBitmapName);
+
+		// No bitmap found, so display warning message
+		if (!hBitmap)
+			TRACE(_T("**WARNING** Unable to load bitmap\n"));
+
+		return hBitmap;
+	}
+
+	inline LPCTSTR LoadString(UINT nID)
+	// Returns the string associated with a Resource ID
+	{
+		assert(GetApp());
+				
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+
+		pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));	
+		TCHAR* pTCharArray = &pTLSData->vTChar.front();
+
+		if (0 >= ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
+		{
+			// The string resource might be in the application's resources instead
+			if (0 >= ::LoadString (GetApp()->GetInstanceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
+			{
+				TCHAR msg[80] = _T("");
+				::wsprintf(msg, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
+				TRACE(msg);
+				pTCharArray = 0;
+			}
+		}
+
+		// Never return a pointer to a local variable, it is out of scope when the function returns.
+		// We return a pointer to a TLS variable so it remains in scope.
+		return pTCharArray;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -1325,8 +1375,9 @@ namespace Win32xx
 			Destroy();
 
 			// Ensure a window class is registered
-			TCHAR ClassName[MAX_STRING_SIZE +1] = _T("");
-			if (0 == lstrlen(lpszClassName) )
+			std::vector<TCHAR> vTChar( MAX_STRING_SIZE+1, _T('\0') );
+			TCHAR* ClassName = &vTChar.front();
+			if (0 == lpszClassName || 0 == lstrlen(lpszClassName) )
 				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
 				// Create our own local copy of szClassName.
@@ -1487,50 +1538,6 @@ namespace Win32xx
 		TCHAR* pTCharArray = &m_vTChar.front();
 		::GetWindowText(m_hWnd, pTCharArray, nLength+1);
 
-		return pTCharArray;
-	}
-
-	inline HBITMAP CWnd::LoadBitmap(LPCTSTR lpBitmapName) const
-	{
-		assert (GetApp());
-
-		HBITMAP hBitmap;
-
-		// Try to load the bitmap from the resource handle first
-		hBitmap = ::LoadBitmap(GetApp()->GetResourceHandle(), lpBitmapName);
-
-		// The bitmap resource might be in the application's resources instead
-		if (!hBitmap)
-			hBitmap = ::LoadBitmap(GetApp()->GetInstanceHandle(), lpBitmapName);
-
-		// No bitmap found, so display warning message
-		if (!hBitmap)
-			TRACE(_T("**WARNING** Unable to load bitmap\n"));
-
-		return hBitmap;
-	}
-
-	inline LPCTSTR CWnd::LoadString(UINT nID)
-	// Returns the string associated with a Resource ID
-	{
-		assert(GetApp());
-
-		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar.front();
-
-		if (!::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
-		{
-			// The string resource might be in the application's resources instead
-			if (!::LoadString (GetApp()->GetInstanceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
-			{
-				TCHAR msg[80] = _T("");
-				::wsprintf(msg, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
-				TRACE(msg);
-			}
-		}
-
-		// Never return a pointer to a local variable, it is out of scope when the function returns.
-		// We return a pointer to a member variable so it remains in scope.
 		return pTCharArray;
 	}
 

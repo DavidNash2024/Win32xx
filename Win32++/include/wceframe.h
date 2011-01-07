@@ -307,8 +307,12 @@ namespace Win32xx
 		cs.style = WS_VISIBLE;
 
 		// Choose a unique class name for this app
-		m_tsAppName = LoadString(IDW_MAIN);
-		cs.lpszClass = m_tsAppName.c_str();
+		LPCTSTR name = LoadString(IDW_MAIN);
+		if (name)
+		{
+			m_tsAppName = LoadString(IDW_MAIN);
+			cs.lpszClass = m_tsAppName.c_str();
+		}
 	}
 
 	inline BOOL CWceFrame::PreTranslateMessage(MSG* pMsg)
