@@ -87,10 +87,10 @@ BOOL CMyDialog::OnInitDialog()
 		SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
 
 	// Turn our button into a MyButton object
-	m_Button.AttachDlgItem(IDC_BUTTON2, this);
+	AttachItem(IDC_BUTTON2, m_Button);
 
 	// Turn our static control into a hyperlink
-	m_Hyperlink.AttachDlgItem(IDC_STATIC4, this);
+	AttachItem(IDC_STATIC4, m_Hyperlink);
 
 	return TRUE;
 }

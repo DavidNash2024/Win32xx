@@ -124,7 +124,7 @@ CMDIChildListView::~CMDIChildListView()
 
 void CMDIChildListView::OnCreate()
 {
-	m_ListView.Create(m_hWnd);
+	m_ListView.Create(this);
 }
 
 void CMDIChildListView::OnInitialUpdate()

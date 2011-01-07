@@ -313,7 +313,7 @@ namespace Win32xx
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		virtual void CenterWindow() const;
-		virtual HWND Create(HWND hWndParent = NULL);
+		virtual HWND Create(CWnd* pParent = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual void Destroy();
@@ -1256,7 +1256,7 @@ namespace Win32xx
 		SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
 	}
 
-	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
+	inline HWND CWnd::Create(CWnd* pParent /* = NULL */)
 	// Default Window Creation.
 	{
 
@@ -1279,6 +1279,7 @@ namespace Win32xx
 			m_cs.lpszClass = _T("Win32++ Window");
 
 		// Set Parent
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 		if (!hWndParent && m_cs.hwndParent)
 			hWndParent = m_cs.hwndParent;
 

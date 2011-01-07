@@ -624,7 +624,7 @@ namespace Win32xx
 	{
 		// Create the view window
 		assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
-		GetView()->Create(m_hWnd);
+		GetView()->Create(this);
 		RecalcLayout();
 	}
 
@@ -667,7 +667,7 @@ namespace Win32xx
 			{
 				// The frame is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
-				GetView()->Create(m_hWnd);
+				GetView()->Create(this);
 				RecalcLayout();
 			}
 		}

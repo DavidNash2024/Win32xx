@@ -41,7 +41,7 @@ void CMainFrame::AddCombo()
 	CRect rc = TB.GetItemRect(nIndex);
 
 	// Create and position the ComboboxEx window
-	m_ComboBoxEx.Create(TB.GetHwnd());
+	m_ComboBoxEx.Create(&TB);
 	m_ComboBoxEx.SetWindowPos(NULL, rc, SWP_NOACTIVATE);
 
 	// Set ComboBox Height

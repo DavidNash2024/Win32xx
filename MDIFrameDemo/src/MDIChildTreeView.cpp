@@ -100,7 +100,7 @@ CMDIChildTreeView::~CMDIChildTreeView()
 
 void CMDIChildTreeView::OnCreate()
 {
-	m_TreeView.Create(m_hWnd);
+	m_TreeView.Create(this);
 }
 
 void CMDIChildTreeView::OnInitialUpdate()

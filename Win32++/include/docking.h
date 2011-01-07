@@ -1362,7 +1362,7 @@ namespace Win32xx
 		// Create the Hint window
 		if (!IsWindow())
 		{
-			Create(pDockTarget->GetHwnd());
+			Create(pDockTarget);
 		}
 
 		MapWindowPoints(pDockTarget->GetHwnd(), NULL, (LPPOINT)&rcHint, 2);
@@ -1771,8 +1771,9 @@ namespace Win32xx
 		pDocker->m_nDockID = nDockID;
 		pDocker->m_pDockAncestor = GetDockAncestor();
 		pDocker->m_pDockParent = this;
-		HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
-		pDocker->Create(hwndFrame);
+	//	HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
+		CWnd* pFrame = GetDockAncestor()->GetAncestor();
+		pDocker->Create(pFrame);
 		pDocker->SetParent(this);
 
 		// Dock the docker window
@@ -1830,8 +1831,9 @@ namespace Win32xx
 
 		// Initially create the as a child window of the frame
 		// This makes the frame window the owner of our docker
-		HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
-		pDocker->Create(hwndFrame);
+	//	HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
+		CWnd* pFrame = GetDockAncestor()->GetAncestor();
+		pDocker->Create(pFrame);
 		pDocker->SetParent(this);
 
 		// Change the Docker to a POPUP window
@@ -2603,15 +2605,15 @@ namespace Win32xx
 	{
 		// Create the various child windows
 		GetDockClient().SetDock(this);
-		GetDockClient().Create(m_hWnd);
+		GetDockClient().Create(this);
 
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
-		GetView()->Create(GetDockClient().GetHwnd());
+		GetView()->Create(&GetDockClient());
 
 		// Create the slider bar belonging to this docker
 		GetDockBar().SetDock(this);
 		if (GetDockAncestor() != this)
-			GetDockBar().Create(::GetParent(m_hWnd));
+			GetDockBar().Create(GetParent());
 
 		// Now remove the WS_POPUP style. It was required to allow this window
 		// to be owned by the frame window.
@@ -3812,10 +3814,10 @@ namespace Win32xx
 		m_vContainerInfo.push_back(ci);
 
 		// Create the page window
-		GetViewPage().Create(m_hWnd);
+		GetViewPage().Create(this);
 
 		// Create the toolbar
-		GetToolBar().Create(GetViewPage().GetHwnd());
+		GetToolBar().Create(&GetViewPage());
 		DWORD style = (DWORD)GetToolBar().GetWindowLongPtr(GWL_STYLE);
 		style |= CCS_NODIVIDER ;
 		GetToolBar().SetWindowLongPtr(GWL_STYLE, style);
@@ -3976,7 +3978,7 @@ namespace Win32xx
 				if (!m_vContainerInfo[iPage].pContainer->IsWindow())
 				{
 					CDockContainer* pContainer = m_vContainerInfo[iPage].pContainer;
-					pContainer->Create(::GetParent(m_hWnd));
+					pContainer->Create(GetParent());
 					pContainer->GetViewPage().SetParent(this);
 				}
 
@@ -4074,7 +4076,7 @@ namespace Win32xx
 	inline void CDockContainer::CViewPage::OnCreate()
 	{
 		if (m_pView)
-			m_pView->Create(m_hWnd);
+			m_pView->Create(this);
 	}
 
 	inline LRESULT CDockContainer::CViewPage::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -4131,7 +4133,7 @@ namespace Win32xx
 			if (!m_pView->IsWindow())
 			{
 				// The container is already created, so create and position the new view too
-				GetView()->Create(m_hWnd);
+				GetView()->Create(this);
 			}
 
 			RecalcLayout();

@@ -1567,7 +1567,7 @@ namespace Win32xx
 		// Adds a ToolBar to the rebar control
 
 		// Create the ToolBar Window
-		TB.Create(GetReBar());
+		TB.Create(&GetReBar());
 
 		// Fill the REBARBAND structure
 		REBARBANDINFO rbbi = {0};
@@ -1627,7 +1627,7 @@ namespace Win32xx
 		if (IsReBarSupported() && m_bUseReBar)
 			AddToolBarBand(GetToolBar(), RBBS_BREAK, IDW_TOOLBAR);	// Create the toolbar inside rebar
 		else	
-			GetToolBar().Create(m_hWnd);	// Create the toolbar without a rebar
+			GetToolBar().Create(this);	// Create the toolbar without a rebar
 
 		SetupToolBar();	
 		
@@ -2033,10 +2033,10 @@ namespace Win32xx
 		if (IsReBarSupported() && m_bUseReBar)
 		{
 			// Create the rebar
-			GetReBar().Create(m_hWnd);
+			GetReBar().Create(this);
 
 			// Create the menu inside rebar
-			GetMenuBar().Create(GetReBar());
+			GetMenuBar().Create(&GetReBar());
 			AddMenuBarBand();			
 		}
 
@@ -2057,12 +2057,12 @@ namespace Win32xx
 		}
 
 		// Create the status bar
-		GetStatusBar().Create(m_hWnd);
+		GetStatusBar().Create(this);
 		ShowStatusBar(m_bShowStatusBar);
 
 		// Create the view window
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
-		GetView()->Create(m_hWnd);
+		GetView()->Create(this);
 
 		// Disable XP themes for the menubar
 		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or < Vista
@@ -3119,7 +3119,7 @@ namespace Win32xx
 			{
 				// The frame is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
-				GetView()->Create(m_hWnd);
+				GetView()->Create(this);
 				RecalcLayout();
 			}
 		}

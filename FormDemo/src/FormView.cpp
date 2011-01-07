@@ -88,21 +88,21 @@ BOOL CFormView::OnInitDialog()
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 
-	// Attach CWnd objects to the dialog's children
-	m_Button.AttachDlgItem( IDC_BUTTON1, this );
-	m_CheckA.AttachDlgItem( ID_CHECK_A, this );
-	m_CheckB.AttachDlgItem( ID_CHECK_B, this );
-	m_CheckC.AttachDlgItem( ID_CHECK_C, this );
-	m_Edit.AttachDlgItem( IDC_EDIT1, this );
-	m_ListBox.AttachDlgItem( IDC_LIST1, this );
-	m_OK.AttachDlgItem( IDOK, this );
-	m_RadioA.AttachDlgItem( ID_RADIO_A, this );
-	m_RadioB.AttachDlgItem( ID_RADIO_B, this );
-	m_RadioC.AttachDlgItem( ID_RADIO_C, this );
-	m_RichEdit.AttachDlgItem( IDC_RICHEDIT1, this );
-	m_Group.AttachDlgItem( IDC_GROUP1, this );
-	m_Status.AttachDlgItem( IDC_STATUS, this );
-	m_Bitmap.AttachDlgItem( IDC_BITMAP1, this );
+	// Attach CWnd objects to the dialog items
+	AttachItem(IDC_BUTTON1,	m_Button);
+	AttachItem(ID_CHECK_A,	m_CheckA);
+	AttachItem(ID_CHECK_B,	m_CheckB);
+	AttachItem(ID_CHECK_C,	m_CheckC);
+	AttachItem(IDC_EDIT1,	m_Edit);
+	AttachItem(IDC_LIST1,	m_ListBox);
+	AttachItem(IDOK,		m_OK);
+	AttachItem(ID_RADIO_A,	m_RadioA);
+	AttachItem(ID_RADIO_B,	m_RadioB);
+	AttachItem(ID_RADIO_C,	m_RadioC);
+	AttachItem(IDC_RICHEDIT1, m_RichEdit);
+	AttachItem(IDC_GROUP1,	m_Group);
+	AttachItem(IDC_STATUS,	m_Status);
+	AttachItem(IDC_BITMAP1, m_Bitmap);
 	
 	// Put some text in the edit boxes
 	SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
@@ -129,20 +129,20 @@ BOOL CFormView::OnInitDialog()
 	
 	// Initialize dialog resizing
 	m_Resizer.Initialize( this, CRect(0, 0, 300, 270) );
-	m_Resizer.AddChild(&m_RadioA,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(&m_RadioB,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(&m_RadioC,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(&m_CheckA,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(&m_CheckB,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(&m_CheckC,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(&m_Button,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(&m_Edit,     topleft, FALSE, FALSE);
-	m_Resizer.AddChild(&m_ListBox,  topleft, FALSE, FALSE);
-	m_Resizer.AddChild(&m_RichEdit, topleft, FALSE, FALSE);
-	m_Resizer.AddChild(&m_Bitmap,   topright, TRUE, TRUE);
-	m_Resizer.AddChild(&m_OK,       bottomright, TRUE, TRUE);
-	m_Resizer.AddChild(&m_Group,    bottomright, FALSE, FALSE);
-	m_Resizer.AddChild(&m_Status,   bottomright, FALSE, FALSE);
+	m_Resizer.AddChild(m_RadioA,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(m_RadioB,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(m_RadioC,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(m_CheckA,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(m_CheckB,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(m_CheckC,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(m_Button,   topleft, TRUE, TRUE);
+	m_Resizer.AddChild(m_Edit,     topleft, FALSE, FALSE);
+	m_Resizer.AddChild(m_ListBox,  topleft, FALSE, FALSE);
+	m_Resizer.AddChild(m_RichEdit, topleft, FALSE, FALSE);
+	m_Resizer.AddChild(m_Bitmap,   topright, TRUE, TRUE);
+	m_Resizer.AddChild(m_OK,       bottomright, TRUE, TRUE);
+	m_Resizer.AddChild(m_Group,    bottomright, FALSE, FALSE);
+	m_Resizer.AddChild(m_Status,   bottomright, FALSE, FALSE);
 	
 	return true;
 }

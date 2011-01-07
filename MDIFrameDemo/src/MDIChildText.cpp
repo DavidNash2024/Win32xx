@@ -55,7 +55,7 @@ CMDIChildText::~CMDIChildText()
 
 void CMDIChildText::OnCreate()
 {
-	m_TextView.Create(m_hWnd);
+	m_TextView.Create(this);
 }
 
 void CMDIChildText::OnInitialUpdate()

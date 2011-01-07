@@ -78,6 +78,7 @@ namespace Win32xx
 		virtual ~CDialog();
 
 		// You probably won't need to override these functions
+		virtual void AttachItem(int nID, CWnd& Wnd);
 		virtual HWND Create(HWND hParent = 0);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
@@ -148,7 +149,7 @@ namespace Win32xx
 		CResizer() : m_pParent(0) {}
 		virtual ~CResizer() {}
 
-        virtual void AddChild(CWnd* pWnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
+        virtual void AddChild(CWnd& Wnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
     	virtual void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
 		virtual void RecalcLayout();
 
@@ -202,6 +203,11 @@ namespace Win32xx
 			else
 				Destroy();
 		}
+	}
+
+	inline void CDialog::AttachItem(int nID, CWnd& Wnd)
+	{
+		Wnd.AttachDlgItem(nID, this);
 	}
 
 	inline HWND CDialog::Create(HWND hParent /*= 0*/)
@@ -591,7 +597,7 @@ namespace Win32xx
 	// Definitions for the CResizer class
 	//
 
-	void inline CResizer::AddChild(CWnd* pWnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
+	void inline CResizer::AddChild(CWnd& Wnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.
 	//
@@ -600,15 +606,13 @@ namespace Win32xx
 	// Set bFixedWidth to TRUE if the width should be fixed instead of proportional.
 	// Set bFixedHeight to TRUE if the height should be fixed instead of proportional.
 	{
-    	assert (NULL != pWnd);
-
     	ResizeData rd;
     	rd.corner = corner;
     	rd.bFixedWidth  = bFixedWidth;
     	rd.bFixedHeight = bFixedHeight;
-    	rd.rcInit = pWnd->GetClientRect();
-    	::MapWindowPoints(*pWnd, *m_pParent, (LPPOINT)&rd.rcInit, 2);
-    	rd.pWnd = pWnd;
+    	rd.rcInit = Wnd.GetClientRect();
+    	::MapWindowPoints(Wnd, *m_pParent, (LPPOINT)&rd.rcInit, 2);
+    	rd.pWnd = &Wnd;
 
     	m_vResizeData.push_back(rd);
     }

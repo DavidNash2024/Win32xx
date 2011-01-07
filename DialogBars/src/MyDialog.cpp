@@ -22,10 +22,10 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 
-	// Attach the dialog controls
-	m_ProgressBar.AttachDlgItem(IDC_PROGRESS1, this);
-	m_ScrollBar.AttachDlgItem(IDC_SCROLLBAR1, this);
-	m_Slider.AttachDlgItem(IDC_SLIDER1, this);
+	// Attach the dialog items to the CWnd objects
+	AttachItem(IDC_PROGRESS1, m_ProgressBar);
+	AttachItem(IDC_SCROLLBAR1, m_ScrollBar);
+	AttachItem(IDC_SLIDER1, m_Slider);
 
 	return true;
 }

@@ -145,7 +145,7 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 	
-	m_Tab.AttachDlgItem(IDC_TAB1, this);
+	AttachItem(IDC_TAB1, m_Tab);
 	m_Tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog"));
 	m_Tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog"));
 	m_Tab.SelectPage(0);

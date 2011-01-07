@@ -39,7 +39,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	cs.cy = 100;	// required to display list
 	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
 	m_ComboboxEx.PreCreate(cs);
-	m_ComboboxEx.Create(GetReBar().GetHwnd());
+	m_ComboboxEx.Create(&GetReBar());
 
 	// Put the window in a new rebar band
 	REBARBANDINFO rbbi = {0};

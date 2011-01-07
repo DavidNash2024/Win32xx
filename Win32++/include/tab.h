@@ -195,7 +195,7 @@ namespace Win32xx
 	protected:
 		virtual HWND    Create(HWND hWndParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
-		virtual void	OnCreate() { GetTab().Create(m_hWnd); }
+		virtual void	OnCreate() { GetTab().Create(this); }
 		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnEraseBkGnd(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -1047,7 +1047,7 @@ namespace Win32xx
 			if (!m_pActiveView->IsWindow())
 			{
 				// The tab control is already created, so create the new view too
-				GetActiveView()->Create(m_hWnd);
+				GetActiveView()->Create(this);
 			}
 		}
 	}
