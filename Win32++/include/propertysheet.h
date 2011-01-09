@@ -124,7 +124,7 @@ namespace Win32xx
 
 		// Operations
 		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
-		virtual HWND Create(HWND hWndParent = 0);
+		virtual HWND Create(CWnd* pParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void DestroyButton(int iButton);
 		virtual void Destroy();
@@ -727,14 +727,14 @@ namespace Win32xx
 	}
 
 
-	inline HWND CPropertySheet::Create(HWND hWndParent /*= 0*/)
+	inline HWND CPropertySheet::Create(CWnd* pParent /*= 0*/)
 	// Creates a modeless Property Sheet
 	{
 		assert( GetApp() );
 
-		if (hWndParent)
+		if (pParent)
 		{
-			m_PSH.hwndParent = hWndParent;
+			m_PSH.hwndParent = pParent->GetHwnd();
 		}
 
 		BuildPageArray();

@@ -2264,7 +2264,7 @@ namespace Win32xx
 			if (hPrevFocus == GetMenuBar())
 				hPrevFocus = m_hWnd;
 
-			m_AboutDialog.SetDlgParent(m_hWnd);
+			m_AboutDialog.SetDlgParent(this);
 			m_AboutDialog.DoModal();
 
 			::SetFocus(hPrevFocus);

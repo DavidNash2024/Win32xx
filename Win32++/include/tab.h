@@ -66,7 +66,7 @@ namespace Win32xx
 		class CSelectDialog : public CDialog
 		{
 		public:
-			CSelectDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent = NULL);
+			CSelectDialog(LPCDLGTEMPLATE lpTemplate, CWnd* pParent = NULL);
 			virtual ~CSelectDialog() {}
 			virtual void AddItem(LPCTSTR szString);
 			virtual BOOL IsTab() const { return FALSE; }
@@ -225,8 +225,8 @@ namespace Win32xx
 	/////////////////////////////////////////////////////////////
 	// Definitions for the CSelectDialog class nested within CTab
 	//
-	inline CTab::CSelectDialog::CSelectDialog(LPCDLGTEMPLATE lpTemplate, HWND hWndParent) :
-					CDialog(lpTemplate, hWndParent), IDC_LIST(121)
+	inline CTab::CSelectDialog::CSelectDialog(LPCDLGTEMPLATE lpTemplate, CWnd* pParent) :
+					CDialog(lpTemplate, pParent), IDC_LIST(121)
 	{
 	}
 

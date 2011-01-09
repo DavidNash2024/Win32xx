@@ -43,7 +43,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 			m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 			m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 			m_ModelessPS.SetTitle(_T("Modeless Property Sheet"));
-			m_ModelessPS.Create(m_hWnd);
+			m_ModelessPS.Create(this);
 		}
 		return TRUE;
 	case IDM_MODAL:

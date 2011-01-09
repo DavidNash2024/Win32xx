@@ -86,7 +86,7 @@ namespace Win32xx
 		virtual ~CMDIChild();
 
 		// These are the functions you might wish to override
-		virtual HWND Create(HWND hWndParent = NULL);
+		virtual HWND Create(CWnd* pParent = NULL);
 		virtual tString GetWindowType() const { return _T("CMDIChild"); }
 		virtual void RecalcLayout();
 
@@ -156,7 +156,7 @@ namespace Win32xx
 		public:
 			CMDIClient() : m_pMDIFrame(0) {}
 			virtual ~CMDIClient() {}
-			virtual HWND Create(HWND hWndParent = NULL);
+			virtual HWND Create(CWnd* pParent = NULL);
 			virtual tString GetWindowType() const { return _T("CMDIClient"); }
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -201,7 +201,7 @@ namespace Win32xx
 		assert(NULL != pMDIChild.get()); // Cannot add Null MDI Child
 
 		m_vMDIChild.push_back(pMDIChild);
-		pMDIChild->Create(GetView()->GetHwnd());
+		pMDIChild->Create(GetView());
 
 		return pMDIChild.get();
 	}
@@ -452,10 +452,10 @@ namespace Win32xx
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline HWND CMDIFrame::CMDIClient::Create(HWND hWndParent)
+	inline HWND CMDIFrame::CMDIClient::Create(CWnd* pParent)
 	{
-		assert(hWndParent != 0);
-		CMDIFrame* pMDIFrame = (CMDIFrame*)FromHandle(hWndParent);
+		assert(pParent != 0);
+		CMDIFrame* pMDIFrame = (CMDIFrame*)pParent;
 		assert(pMDIFrame->GetWindowType() == _T("CMDIFrame"));
 		m_pMDIFrame = pMDIFrame;
 
@@ -465,7 +465,7 @@ namespace Win32xx
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
-		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
+		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, pParent->GetHwnd(), NULL, (PSTR) &clientcreate);
 
 		return m_hWnd;
 	}
@@ -527,7 +527,7 @@ namespace Win32xx
 			::DestroyMenu(m_hChildMenu);
 	}
 
-	inline HWND CMDIChild::Create(HWND hWndParent /*= NULL*/)
+	inline HWND CMDIChild::Create(CWnd* pParent /*= NULL*/)
 	// A bug in MS Windows prevents us from creating maximized MDI children.
 	// We can work around that by creating the MDI child window
 	// and then maximizing if required.
@@ -537,7 +537,7 @@ namespace Win32xx
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
-		::SendMessage(hWndParent, WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
+		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
 		bMax = bMax | (m_cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
@@ -546,8 +546,8 @@ namespace Win32xx
 			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
 		// Set Parent
-		if (!hWndParent)
-			hWndParent = m_cs.hwndParent;
+	//	if (!pParent)
+	//		hWndParent = m_cs.hwndParent;
 
 		// Set the window style
 		DWORD dwStyle;
@@ -571,19 +571,19 @@ namespace Win32xx
 		DWORD dwExStyle = m_cs.dwExStyle | WS_EX_MDICHILD;
 
 		// Turn off redraw while creating the window
-		::SendMessage(hWndParent, WM_SETREDRAW, FALSE, 0L);
+		pParent->SendMessage(WM_SETREDRAW, FALSE, 0L);
 
 		// Create the window
 		if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-			cx, cy, hWndParent, m_cs.hMenu, m_cs.lpCreateParams))
+			cx, cy, pParent->GetHwnd(), m_cs.hMenu, m_cs.lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 		if (bMax)
 			::ShowWindow(m_hWnd, SW_MAXIMIZE);
 
 		// Turn redraw back on
-		::SendMessage(hWndParent, WM_SETREDRAW, TRUE, 0L);
-		::RedrawWindow(hWndParent, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+		pParent->SendMessage(WM_SETREDRAW, TRUE, 0L);
+		pParent->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);

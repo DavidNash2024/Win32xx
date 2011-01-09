@@ -5,12 +5,18 @@ Version 7.1
 - Added CDockContainer::SetActiveContainer
 - Added CDocker::Close
 - Added CDocker::SetCaptionHeight
+- Added CTab::SetFixedWidth
+- Added CTab::SetOwnerDraw
+- Modified CDialog 				now takes a CWnd pointer instead of HWND
 - Modified CResizer::AddChild	now takes a CWnd reference
-- Modified CWnd::Create 		now takes CWnd pointer instead of HWND
+- Modified CWnd::Create 		now takes a CWnd pointer instead of HWND
 - Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
 - Moved CWnd::LoadBitmap to LoadBitmap
-- Moved CWnd::LoadString to LoadString 
+- Moved CWnd::LoadString to LoadString
+
+Updated CTab
+ - The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles are now optional
 
 Version 7.0.2
 =============

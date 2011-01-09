@@ -72,18 +72,18 @@ namespace Win32xx
 	class CDialog : public CWnd
 	{
 	public:
-		CDialog(UINT nResID, HWND hParent = NULL);
-		CDialog(LPCTSTR lpszResName, HWND hParent = NULL);
-		CDialog(LPCDLGTEMPLATE lpTemplate, HWND hParent = NULL);
+		CDialog(UINT nResID, CWnd* pParent = NULL);
+		CDialog(LPCTSTR lpszResName, CWnd* pParent = NULL);
+		CDialog(LPCDLGTEMPLATE lpTemplate, CWnd* pParent = NULL);
 		virtual ~CDialog();
 
 		// You probably won't need to override these functions
 		virtual void AttachItem(int nID, CWnd& Wnd);
-		virtual HWND Create(HWND hParent = 0);
+		virtual HWND Create(CWnd* pParent = NULL);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
 		virtual tString GetWindowType() const { return _T("CDialog"); }
-		virtual void SetDlgParent(HWND hParent);
+		virtual void SetDlgParent(CWnd* pParent);
 		BOOL IsModal() const { return m_IsModal; }
 		BOOL IsIndirect() const { return m_IsIndirect; }
 
@@ -112,7 +112,7 @@ namespace Win32xx
 		BOOL m_IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
-		HWND m_hDlgParent;				// handle to the dialogs's parent window
+		CWnd* m_pDlgParent;				// handle to the dialogs's parent window
 	};
 
     enum Alignment      // used by CResizer
@@ -172,25 +172,25 @@ namespace Win32xx
     ////////////////////////////////////
 	// Definitions for the CDialog class
 	//
-	inline CDialog::CDialog(LPCTSTR lpszResName, HWND hParent/* = NULL*/)
+	inline CDialog::CDialog(LPCTSTR lpszResName, CWnd* pParent/* = NULL*/)
 		: m_IsIndirect(FALSE), m_IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
-		m_hDlgParent = hParent;
+		m_pDlgParent = pParent;
 		::InitCommonControls();
 	}
 
-	inline CDialog::CDialog(UINT nResID, HWND hParent/* = NULL*/)
+	inline CDialog::CDialog(UINT nResID, CWnd* pParent/* = NULL*/)
 		: m_IsIndirect(FALSE), m_IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
 	{
-		m_hDlgParent = hParent;
+		m_pDlgParent = pParent;
 		::InitCommonControls();
 	}
 
 	//For indirect dialogs - created from a dialog box template in memory.
-	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, HWND hParent/* = NULL*/)
+	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, CWnd* pParent/* = NULL*/)
 		: m_IsIndirect(TRUE), m_IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
 	{
-		m_hDlgParent = hParent;
+		m_pDlgParent = pParent;
 		::InitCommonControls();
 	}
 
@@ -210,12 +210,12 @@ namespace Win32xx
 		Wnd.AttachDlgItem(nID, this);
 	}
 
-	inline HWND CDialog::Create(HWND hParent /*= 0*/)
+	inline HWND CDialog::Create(CWnd* pParent /* = NULL */)
 	{
 		// Allow a dialog to be used as a child window
 
 		assert(GetApp());
-		SetDlgParent(hParent);
+		SetDlgParent(pParent);
 		return DoModeless();
 	}
 
@@ -385,12 +385,12 @@ namespace Win32xx
 
 			// Create a modal dialog
 			if (IsIndirect())
-				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
-				nResult = ::DialogBox(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBox(hInstance, m_lpszResName, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up
@@ -438,13 +438,13 @@ namespace Win32xx
 
 			// Create a modeless dialog
 			if (IsIndirect())
-				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
 
-				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hDlgParent, (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up
@@ -522,10 +522,10 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline void CDialog::SetDlgParent(HWND hParent)
+	inline void CDialog::SetDlgParent(CWnd* pParent)
 	// Allows the parent of the dialog to be set before the dialog is created
 	{
-		m_hDlgParent = hParent;
+		m_pDlgParent = pParent;
 	}
 
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
