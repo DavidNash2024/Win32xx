@@ -118,8 +118,8 @@ namespace Win32xx
 	class CPropertySheet : public CWnd
 	{
 	public:
-		CPropertySheet(UINT nIDCaption, HWND hwndParent = NULL);
-		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hwndParent = NULL);
+		CPropertySheet(UINT nIDCaption, CWnd* pParent = NULL);
+		CPropertySheet(LPCTSTR pszCaption = NULL, CWnd* pParent = NULL);
 		virtual ~CPropertySheet() {}
 
 		// Operations
@@ -615,7 +615,7 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CPropertySheet class
 	//
-	inline CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hwndParent /* = NULL*/)
+	inline CPropertySheet::CPropertySheet(UINT nIDCaption, CWnd* pParent /* = NULL*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(LoadString(nIDCaption));
@@ -631,12 +631,12 @@ namespace Win32xx
 #endif
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-		m_PSH.hwndParent       = hwndParent;
+		m_PSH.hwndParent       = pParent? pParent->GetHwnd() : 0;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
 
-	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hwndParent /* = NULL*/)
+	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, CWnd* pParent /* = NULL*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(pszCaption);
@@ -652,7 +652,7 @@ namespace Win32xx
 #endif
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-		m_PSH.hwndParent       = hwndParent;
+		m_PSH.hwndParent       = pParent? pParent->GetHwnd() : 0;;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}

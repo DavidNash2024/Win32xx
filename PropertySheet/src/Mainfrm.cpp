@@ -48,7 +48,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	case IDM_MODAL:
 		{
-			CMyPropertySheet mps(_T("Modal Property Sheet"), m_hWnd);
+			CMyPropertySheet mps(_T("Modal Property Sheet"), this);
 			mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 			mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 			mps.DoModal();
@@ -56,7 +56,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	case IDM_WIZARD:
 		{
-			CMyPropertySheet mps(NULL, m_hWnd);
+			CMyPropertySheet mps(NULL, this);
 			mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 			mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 			mps.SetWizardMode(TRUE);

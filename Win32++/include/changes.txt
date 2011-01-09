@@ -1,5 +1,14 @@
 Version 7.1
 ===========
+New Features and Enhancements
+-----------------------------
+* Create now use a CWnd pointer instead of a HWND when specifying the 
+   parent window.
+* Dialogs and Property Sheets now use a CWnd pointer instead of a HWND
+   when specifying the parent window.
+* CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
+   are now optional.
+
 - Added tStringStream typedef (a TCHAR stringstream)
 - Added CDialog::AttachItem
 - Added CDockContainer::SetActiveContainer
@@ -15,8 +24,15 @@ Version 7.1
 - Moved CWnd::LoadBitmap to LoadBitmap
 - Moved CWnd::LoadString to LoadString
 
-Updated CTab
- - The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles are now optional
+Incompatibilities with previous versions
+----------------------------------------
+* Windows, dialogs and property sheets now use a CWnd pointer instead of a HWND
+   to specify the parent window.
+* CTab defaults to not using the CS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles. 
+   The SetFixedWidth and SetOwnerDraw functions can be used to change these
+   styles. 
+* Users of Borland's C++ compiler version 5.5 will need to install the 
+   compiler's service pack 2 for stringsteam support.  
 
 Version 7.0.2
 =============
