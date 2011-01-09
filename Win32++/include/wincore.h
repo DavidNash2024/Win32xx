@@ -460,6 +460,7 @@ namespace Win32xx
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
 		void AddToMap();
+		void Cleanup();
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
@@ -1306,6 +1307,20 @@ namespace Win32xx
 		SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
 	}
 
+	inline void CWnd::Cleanup()
+	{
+		// Return the CWnd to its default state
+		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
+		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
+
+		if ( GetApp() ) RemoveFromMap();
+		m_hIconLarge = NULL;
+		m_hIconSmall = NULL;
+		m_hWnd = NULL;
+		m_PrevWindowProc = NULL;
+		m_IsTmpWnd = FALSE;
+	}
+
 	inline HWND CWnd::Create(CWnd* pParent /* = NULL */)
 	// Default Window Creation.
 	{
@@ -1431,13 +1446,6 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// Pass messages on to the appropriate default window procedure
-	// CMDIChild and CMDIFrame override this function
-	{
-		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
-	}
-
 	inline void CWnd::Destroy()
 	{
 		// Remove TmpWnds
@@ -1449,15 +1457,7 @@ namespace Win32xx
 		if (IsWindow()) ::DestroyWindow(m_hWnd);
 
 		// Return the CWnd to its default state
-		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
-		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-
-		if ( GetApp() ) RemoveFromMap();
-		m_hIconLarge = NULL;
-		m_hIconSmall = NULL;
-		m_hWnd = NULL;
-		m_PrevWindowProc = NULL;
-		m_IsTmpWnd = FALSE;
+		Cleanup();
 	}
 
 	inline HWND CWnd::Detach()
@@ -1466,12 +1466,18 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		assert(0 != m_PrevWindowProc);	// Only a subclassed window can be detached
 
-		::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
-
-		// Clear member variables
+		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 		HWND hWnd = m_hWnd;
-
+		Cleanup();
+		
 		return hWnd;
+	}
+	
+	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Pass messages on to the appropriate default window procedure
+	// CMDIChild and CMDIFrame override this function
+	{
+		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
 	inline CWnd* CWnd::FromHandle(HWND hWnd)

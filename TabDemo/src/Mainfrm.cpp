@@ -114,6 +114,8 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+	m_View.SetFixedWidth(TRUE);
+	m_View.SetOwnerDraw(TRUE);
 }
 
 void CMainFrame::OnInitialUpdate()

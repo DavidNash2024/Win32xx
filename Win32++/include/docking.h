@@ -3834,6 +3834,9 @@ namespace Win32xx
 		else
 			GetToolBar().Destroy();
 
+		SetFixedWidth(TRUE);
+		SetOwnerDraw(TRUE);
+
 		// Add tabs for each container.
 		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
 		{

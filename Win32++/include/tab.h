@@ -101,6 +101,9 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int iPage);
 		virtual void SelectPage(int iPage);
+		virtual void SetFixedWidth(BOOL bEnabled);
+		virtual void SetFont(HFONT hFont, BOOL bRedraw);
+		virtual void SetOwnerDraw(BOOL bEnabled);
 		virtual void SetShowButtons(BOOL bShow);
 		virtual void SetTabImage(UINT nTab, int iImage);
 		virtual void SetTabsAtTop(BOOL bTop);
@@ -157,6 +160,7 @@ namespace Win32xx
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		std::vector<WndPtr> m_vTabViews;
+		HFONT m_hFont;
 		HIMAGELIST m_himlTab;
 		CWnd* m_pActiveView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
@@ -195,7 +199,7 @@ namespace Win32xx
 	protected:
 		virtual HWND    Create(HWND hWndParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
-		virtual void	OnCreate() { GetTab().Create(this); }
+		virtual void	OnCreate();
 		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnEraseBkGnd(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -258,11 +262,18 @@ namespace Win32xx
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 		TabCtrl_SetImageList(m_hWnd, m_himlTab);
+
+		NONCLIENTMETRICS info = {0};
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+
+		m_hFont = CreateFontIndirect(&info.lfStatusFont);
 	}
 
 	inline CTab::~CTab()
 	{
 		ImageList_Destroy(m_himlTab);
+		DeleteObject(m_hFont);
 	}
 
 	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
@@ -292,14 +303,6 @@ namespace Win32xx
 			tie.pszText = tpi.szTabText;
 			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
 
-			// Adjust the window styles if needed
-			DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
-			if (!(dwStyle & TCS_OWNERDRAWFIXED) || !(dwStyle & TCS_FIXEDWIDTH))
-			{
-				dwStyle |= TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
-				SetWindowLongPtr(GWL_STYLE, dwStyle);
-			}
-
 			SetTabSize();
 			SelectPage(iNewPage);
 			NotifyChanged();
@@ -326,6 +329,8 @@ namespace Win32xx
 
 		if (!m_bShowButtons) return;
 		if (!GetActiveView()) return;
+		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH)) return;
+		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)) return;
 
 		// Determine the close button's drawing position relative to the window
 		CRect rcClose = GetCloseRect();
@@ -408,6 +413,8 @@ namespace Win32xx
 
 		if (!m_bShowButtons) return;
 		if (!GetActiveView()) return;
+		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH)) return;
+		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)) return;
 
 		// Determine the list button's drawing position relative to the window
 		CRect rcList = GetListRect();
@@ -516,10 +523,11 @@ namespace Win32xx
 					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
 
 					// Draw the text
-					NONCLIENTMETRICS info = {0};
-					info.cbSize = GetSizeofNonClientMetrics();
-					SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-					dcMem.CreateFontIndirect(info.lfStatusFont);
+			//		NONCLIENTMETRICS info = {0};
+			//		info.cbSize = GetSizeofNonClientMetrics();
+			//		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			//		dcMem.CreateFontIndirect(info.lfStatusFont);
+					dcMem.AttachFont(m_hFont);
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -531,6 +539,7 @@ namespace Win32xx
 
 					rcText.left += iPadding;
 					dcMem.DrawText(szText, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+					dcMem.DetachFont();
 				}
 			}
 		}
@@ -633,10 +642,7 @@ namespace Win32xx
 		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
 		{
 			CDC dc = GetDC();
-			NONCLIENTMETRICS info = {0};
-			info.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dc.CreateFontIndirect(info.lfStatusFont);
+			dc.AttachFont(m_hFont);
 			TCHAR szTitle[32];
 			TCITEM tcItem = {0};
 			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
@@ -644,6 +650,7 @@ namespace Win32xx
 			tcItem.pszText = szTitle;
 			TabCtrl_GetItem(m_hWnd, i, &tcItem);
 			CSize TempSize = dc.GetTextExtentPoint32(szTitle, lstrlen(szTitle));
+			dc.DetachFont();
 
 			int iImageSize = 0;
 			int iPadding = 6;
@@ -667,15 +674,17 @@ namespace Win32xx
 
 	inline int CTab::GetTextHeight() const
 	{
-			NONCLIENTMETRICS nm = {0};
-			nm.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-			LOGFONT lf = nm.lfStatusFont;
+	//	NONCLIENTMETRICS nm = {0};
+	//	nm.cbSize = GetSizeofNonClientMetrics();
+	//	SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+	//	LOGFONT lf = nm.lfStatusFont;
 
-			CDC dc = GetDC();
-			dc.CreateFontIndirect(lf);
-			CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
-			return szText.cy;
+		CDC dc = GetDC();
+	//	dc.CreateFontIndirect(lf);
+		dc.AttachFont(m_hFont);
+		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+		dc.DetachFont();
+		return szText.cy;
 	}
 
 	inline int CTab::GetTabIndex(CWnd* pWnd) const
@@ -708,6 +717,9 @@ namespace Win32xx
 
 	inline void CTab::OnCreate()
 	{
+		// Set the tab control's font
+		SetFont(m_hFont, TRUE);	
+
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
 			// Add tabs for each view.
@@ -881,7 +893,7 @@ namespace Win32xx
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
 	{
 		// For Tabs on the bottom, add the TCS_BOTTOM style
-		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH;
+		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE;
 	}
 
 	inline void CTab::PreRegisterClass(WNDCLASS &wc)
@@ -968,6 +980,37 @@ namespace Win32xx
 		}
 	}
 
+	inline void CTab::SetFixedWidth(BOOL bEnabled)
+	{
+		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		if (bEnabled)
+			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_FIXEDWIDTH);
+		else
+			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_FIXEDWIDTH);
+
+		RecalcLayout();
+	}
+
+	inline void CTab::SetFont(HFONT hFont, BOOL bRedraw)
+	{
+		assert(hFont);
+		if (hFont != m_hFont)
+			DeleteObject(m_hFont);
+		m_hFont = hFont;
+		CWnd::SetFont(hFont, bRedraw);
+	}
+
+	inline void CTab::SetOwnerDraw(BOOL bEnabled)
+	{
+		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		if (bEnabled)
+			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
+		else
+			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
+
+		RecalcLayout();
+	}
+
 	inline void CTab::SetShowButtons(BOOL bShow)
 	{
 		m_bShowButtons = bShow;
@@ -1016,7 +1059,7 @@ namespace Win32xx
 			nItemWidth = MAX(nItemWidth, 0);
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
-		}
+		}   
 	}
 
 	inline void CTab::SetTabText(UINT nTab, LPCTSTR szText)
@@ -1151,6 +1194,7 @@ namespace Win32xx
 		switch(uMsg)
 		{
 		case WM_PAINT:
+			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
 			{
 				// Remove all pending paint requests
 				PAINTSTRUCT ps;
@@ -1159,11 +1203,14 @@ namespace Win32xx
 
 				// Now call our local Paint
 				Paint();
+				return 0;
 			}
-			return 0;
-		case WM_ERASEBKGND:
-			return 0;
+			break; 
 
+		case WM_ERASEBKGND:
+			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
+				return 0;
+			break;
 		case WM_KILLFOCUS:
 			m_IsClosePressed = FALSE;
 			break;
@@ -1189,7 +1236,7 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGING:
 			// A little hack to reduce tab flicker
-			if (IsWindowVisible())
+			if (IsWindowVisible() && (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
 			{
 				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 				pWinPos->flags |= SWP_NOREDRAW;
@@ -1461,6 +1508,13 @@ namespace Win32xx
 		} */
 
 		return pView;
+	}
+
+	inline void CTabbedMDI::OnCreate() 
+	{ 
+		GetTab().Create(this);
+		GetTab().SetFixedWidth(TRUE);
+		GetTab().SetOwnerDraw(TRUE);
 	}
 
 	inline void CTabbedMDI::OnDestroy(WPARAM /*wParam*/, LPARAM /*lParam*/ )

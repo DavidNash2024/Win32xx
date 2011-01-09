@@ -46,15 +46,6 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		Invalidate();
 		break;	// Also do default processing
-
-	case WM_LBUTTONDBLCLK:
-		TRACE(_T("WM_LBUTTONDBLCLK\n"));
-		break;
-
-	case WM_LBUTTONDOWN:
-		TRACE(_T("WM_LBUTTONDOWN\n"));
-		break;
-
 	}
 
 	// pass unhandled messages on for default processing
