@@ -44,7 +44,7 @@ void CMyTreeView::DoContextMenu(CPoint& ptScreen)
 {
 	TVHITTESTINFO  tvhti;
 	tvhti.pt = ptScreen;
-	ScreenToClient(m_hWnd, &tvhti.pt);
+	ScreenToClient(tvhti.pt);
 	tvhti.flags = LVHT_NOWHERE;
 	HitTest(tvhti);
 

@@ -16,7 +16,7 @@ class CMainWindow : public CWnd
 public:
 	CMainWindow();
 	virtual ~CMainWindow();
-	virtual HWND Create(HWND hParent = 0);
+	virtual HWND Create(CWnd* pParent = 0);
 	virtual void CreateTestWindows(int nWindows);
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();
@@ -33,7 +33,7 @@ private:
 	enum Constants
 	{
 		WM_WINDOWCREATED     = WM_USER+1,	// the message sent when window is created
-		WM_TESTMESSAGE       = WM_USER+2    // the test message 
+		WM_TESTMESSAGE       = WM_USER+2    // the test message
 	};
 
 	std::vector<TestWindowPtr> m_pCTestWindows;	// A vector CTestWindow smart pointers

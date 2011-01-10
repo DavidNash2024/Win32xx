@@ -32,7 +32,7 @@ void CMainFrame::OnFileNew()
 	// Position the popup menu
 	CToolBar& TB = GetToolBar();
 	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
-	GetToolBar().MapWindowPoints(NULL, &rc);
+	GetToolBar().MapWindowPoints(NULL, rc);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);

@@ -109,7 +109,7 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
 {
 	LVHITTESTINFO  lvhti;
 	lvhti.pt = ptScreen;
-	ScreenToClient(m_hWnd, &lvhti.pt);
+	ScreenToClient(lvhti.pt);
 	lvhti.flags = LVHT_NOWHERE;
 	HitTest(lvhti);
 
@@ -383,9 +383,9 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 				//get the unselected image for this item
 				if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
 					pdi->item.iImage = sfi.iIcon;
-			} 
+			}
 		}
-		break; 
+		break;
 
  	case NM_DBLCLK:
 	case NM_RETURN:

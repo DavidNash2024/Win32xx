@@ -1352,7 +1352,7 @@ namespace Win32xx
 		CDC dcMem = dcDesktop.CreateCompatibleDC();
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
-		pDockTarget->MapWindowPoints(NULL, &rcTarget);
+		pDockTarget->MapWindowPoints(NULL, rcTarget);
 		dcMem.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 		HBITMAP hbmDock = dcMem.DetachBitmap();
@@ -1365,7 +1365,7 @@ namespace Win32xx
 			Create(pDockTarget);
 		}
 
-		pDockTarget->MapWindowPoints(NULL, &rcHint);
+		pDockTarget->MapWindowPoints(NULL, rcHint);
 		SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
 	}
 
@@ -1472,35 +1472,35 @@ namespace Win32xx
 		CRect rcMiddle(31, 31, 56, 57);
 
 		// Test if our cursor is in one of the docking zones
-		if ((PtInRect(&rcLeft, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
+		if ((rcLeft.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockDrag->m_dwDockZone = DS_DOCKED_LEFT;
 			return TRUE;
 		}
-		else if ((PtInRect(&rcTop, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
+		else if ((rcTop.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
 			pDockDrag->m_dwDockZone = DS_DOCKED_TOP;
 			return TRUE;
 		}
-		else if ((PtInRect(&rcRight, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
+		else if ((rcRight.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockDrag->m_dwDockZone = DS_DOCKED_RIGHT;
 			return TRUE;
 		}
-		else if ((PtInRect(&rcBottom, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
+		else if ((rcBottom.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
 			pDockDrag->m_dwDockZone = DS_DOCKED_BOTTOM;
 			return TRUE;
 		}
-		else if ((PtInRect(&rcMiddle, pt)) && (IsOverContainer()))
+		else if ((rcMiddle.PtInRect(pt)) && (IsOverContainer()))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_CONTAINER);
@@ -1576,7 +1576,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((PtInRect(&rcLeft, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
+		if ((rcLeft.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFTMOST);
@@ -1621,7 +1621,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((PtInRect(&rcTop, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
+		if ((rcTop.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_TOPMOST);
@@ -1666,7 +1666,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((PtInRect(&rcRight, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
+		if ((rcRight.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHTMOST);
@@ -1710,7 +1710,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((PtInRect(&rcBottom, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
+		if ((rcBottom.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOMMOST);
@@ -2183,8 +2183,8 @@ namespace Win32xx
 					pDockTest = (CDocker*)FromHandle(hWnd);
 
 				CRect rc = pDockTest->GetClientRect();
-				pDockTest->MapWindowPoints(NULL, &rc);
-				if ((this != pDockTest) && PtInRect(&rc, pt))
+				pDockTest->MapWindowPoints(NULL, rc);
+				if ((this != pDockTest) && rc.PtInRect(pt))
 				{
 					pDockTop = pDockTest;
 					break;
@@ -2214,7 +2214,7 @@ namespace Win32xx
 			if (pDockTest)
 			{
 				CRect rc = pDockTest->GetDockClient().GetWindowRect();
-				if (PtInRect(&rc, pt)) pDockTarget = pDockTest;
+				if (rc.PtInRect(pt)) pDockTarget = pDockTest;
 			}
 		}
 
@@ -3456,7 +3456,7 @@ namespace Win32xx
 		rc = GetDockClient().GetWindowRect();
 		CRect rcTest = rc;
 		rcTest.bottom = MIN(rcTest.bottom, rcTest.top + m_NCHeight);
-		if ( !PtInRect(&rcTest, pt))
+		if ( !rcTest.PtInRect(pt))
 			rc.SetRect(pt.x - rc.Width()/2, pt.y - m_NCHeight/2, pt.x + rc.Width()/2, pt.y - m_NCHeight/2 + rc.Height());
 
 		ConvertToPopup(rc);

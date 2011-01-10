@@ -18,13 +18,14 @@ CMainWindow::~CMainWindow()
 		::DeleteObject(m_hFont);
 }
 
-HWND CMainWindow::Create(HWND hParent /*= 0*/)
+HWND CMainWindow::Create(CWnd* pParent /*= 0*/)
 {
 	tString str = _T("Main Window");
 
 	// Create the main window
+	HWND hwndParent = pParent? pParent->GetHwnd() : 0;
 	return CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		20 , 50, 400, 300, hParent, NULL);
+		20 , 50, 400, 300, hwndParent, NULL);
 }
 
 void CMainWindow::CreateTestWindows(int nWindows)
@@ -57,7 +58,7 @@ void CMainWindow::OnCreate()
 
 void CMainWindow::OnInitialUpdate()
 {
-	CMyDialog MyDialog(IDD_DIALOG1, m_hWnd);
+	CMyDialog MyDialog(IDD_DIALOG1, this);
 	MyDialog.DoModal();
 }
 

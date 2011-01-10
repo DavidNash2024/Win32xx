@@ -12,7 +12,7 @@
 class CClientDialog : public CDialog
 {
 public:
-	CClientDialog(UINT nResID, HWND hWndParent = NULL);
+	CClientDialog(UINT nResID, CWnd* pParent = NULL);
 	virtual ~CClientDialog();
 
 	void OnClientDisconnect();

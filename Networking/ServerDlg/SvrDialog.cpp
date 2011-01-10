@@ -9,8 +9,8 @@
 
 /////////////////////////////////////////////
 // Definitions for the CTCPClientDlg class
-CTCPClientDlg::CTCPClientDlg(UINT nResID, HWND hWndParent) : 
-				CDialog(nResID, hWndParent), m_pSocket(0)
+CTCPClientDlg::CTCPClientDlg(UINT nResID, CWnd* pParent) : 
+				CDialog(nResID, pParent), m_pSocket(0)
 {
 }
 
@@ -92,7 +92,7 @@ void CTCPClientDlg::Send()
 
 /////////////////////////////////////////////
 // Definitions for the CSvrDialog class
-CSvrDialog::CSvrDialog(UINT nResID, HWND hWndParent) : CDialog(nResID, hWndParent), 
+CSvrDialog::CSvrDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent), 
               m_bServerStarted(FALSE), m_SocketType(SOCK_STREAM)
 {
 	// Add support for the IP Address control
@@ -355,7 +355,7 @@ void CSvrDialog::OnSocketAccept()
 	pClient->StartEvents();
 
 	// Create the new chat dialog
-	TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT, m_hWnd);
+	TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT, this);
 	pDialog->m_pSocket = pClient;
 	pDialog->DoModeless();
 

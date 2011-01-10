@@ -92,7 +92,7 @@ namespace Win32xx
 		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
-		
+
 		virtual BOOL GetTabsAtTop() const;
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
@@ -197,7 +197,7 @@ namespace Win32xx
 		virtual void SetActiveMDITab(int nTab);
 
 	protected:
-		virtual HWND    Create(HWND hWndParent);
+		virtual HWND    Create(CWnd* pParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void	OnCreate();
 		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
@@ -517,7 +517,7 @@ namespace Win32xx
 					int yImage;
 					int yOffset = 0;
 					if (ImageList_GetIconSize(m_himlTab, &xImage, &yImage))
-						yOffset = (rcItem.Height() - yImage)/2; 
+						yOffset = (rcItem.Height() - yImage)/2;
 
 					// Draw the icon
 					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
@@ -718,7 +718,7 @@ namespace Win32xx
 	inline void CTab::OnCreate()
 	{
 		// Set the tab control's font
-		SetFont(m_hFont, TRUE);	
+		SetFont(m_hFont, TRUE);
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
@@ -957,7 +957,7 @@ namespace Win32xx
 			}
 			else
 				SetActiveView(NULL);
-		
+
 			NotifyChanged();
 		}
 	}
@@ -1059,7 +1059,7 @@ namespace Win32xx
 			nItemWidth = MAX(nItemWidth, 0);
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
-		}   
+		}
 	}
 
 	inline void CTab::SetTabText(UINT nTab, LPCTSTR szText)
@@ -1205,7 +1205,7 @@ namespace Win32xx
 				Paint();
 				return 0;
 			}
-			break; 
+			break;
 
 		case WM_ERASEBKGND:
 			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
@@ -1352,7 +1352,7 @@ namespace Win32xx
 		int nTab = GetTab().GetCurSel();
 		if (nTab >= 0)
 			GetTab().RemoveTabPage(nTab);
-		
+
 		RecalcLayout();
 	}
 
@@ -1372,12 +1372,13 @@ namespace Win32xx
 			GetActiveMDIChild()->RedrawWindow();
 	}
 
-	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
+	inline HWND CTabbedMDI::Create(CWnd* pParent /* = NULL*/)
 	{
 		CLIENTCREATESTRUCT clientcreate ;
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES;
+        HWND hWndParent = pParent?pParent->GetHwnd() : 0;
 
 		// Create the MDICLIENT view window
 		if (!CreateEx(0, _T("MDICLIENT"), _T(""),
@@ -1388,7 +1389,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CTabbedMDI::GetActiveMDIChild() const
-	{		
+	{
 		CWnd* pView = NULL;
 		int nTab = GetTab().GetCurSel();
 		if (nTab >= 0)
@@ -1428,7 +1429,7 @@ namespace Win32xx
 	{
 		assert(nTab >= 0);
 		assert(nTab < GetMDIChildCount());
-		return GetTab().GetTabPageInfo(nTab).szTabText; 
+		return GetTab().GetTabPageInfo(nTab).szTabText;
 	}
 
 	inline BOOL CTabbedMDI::LoadRegistrySettings(tString tsRegistryKeyName)
@@ -1471,7 +1472,7 @@ namespace Win32xx
 				}
 
 				// Load Active MDI Tab from the registry
-				tsSubKey = _T("Active MDI Tab");					
+				tsSubKey = _T("Active MDI Tab");
 				int nTab;
 				dwType = REG_DWORD;
 				BufferSize = sizeof(int);
@@ -1479,7 +1480,7 @@ namespace Win32xx
 					SetActiveMDITab(nTab);
 				else
 					SetActiveMDITab(0);
-				
+
 				RegCloseKey(hKey);
 			}
 		}
@@ -1510,8 +1511,8 @@ namespace Win32xx
 		return pView;
 	}
 
-	inline void CTabbedMDI::OnCreate() 
-	{ 
+	inline void CTabbedMDI::OnCreate()
+	{
 		GetTab().Create(this);
 		GetTab().SetFixedWidth(TRUE);
 		GetTab().SetOwnerDraw(TRUE);
@@ -1591,7 +1592,7 @@ namespace Win32xx
 				}
 
 				// Add Active Tab to the registry
-				tString tsSubKey = _T("Active MDI Tab");					
+				tString tsSubKey = _T("Active MDI Tab");
 				int nTab = GetActiveMDITab();
 				if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, tsSubKey.c_str(), 0, REG_DWORD, (LPBYTE)&nTab, sizeof(int)))
 					throw (CWinException(_T("RegSetValueEx failed")));
@@ -1613,7 +1614,7 @@ namespace Win32xx
 					RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
 					RegCloseKey(hKey);
 				}
-				
+
 				e.what();
 				return FALSE;
 			}

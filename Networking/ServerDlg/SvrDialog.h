@@ -18,7 +18,7 @@ typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 class CTCPClientDlg : public CDialog
 {
 public:
-	CTCPClientDlg(UINT nResID, HWND hWndParent = NULL);
+	CTCPClientDlg(UINT nResID, CWnd* pParent = NULL);
 	virtual ~CTCPClientDlg() {}
 	virtual INT_PTR DialogProc (UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -27,7 +27,6 @@ public:
 	void Receive();
 	void Send();
 
-//	CServerSocket* m_pSocket;
 	ServerSocketPtr m_pSocket;
 
 private:
@@ -47,7 +46,7 @@ private:
 class CSvrDialog : public CDialog
 {
 public:
-	CSvrDialog(UINT nResID, HWND hWndParent = NULL);
+	CSvrDialog(UINT nResID, CWnd* pParent = NULL);
 	virtual ~CSvrDialog();
 	void Append(int nID, LPCTSTR buf);
 	void LoadCommonControlsEx();

@@ -613,7 +613,7 @@ namespace Win32xx
     	rd.bFixedWidth  = bFixedWidth;
     	rd.bFixedHeight = bFixedHeight;
     	rd.rcInit = Wnd.GetClientRect();
-    	Wnd.MapWindowPoints(m_pParent, &rd.rcInit);
+    	Wnd.MapWindowPoints(m_pParent, rd.rcInit);
     	rd.pWnd = &Wnd;
 
     	m_vResizeData.push_back(rd);

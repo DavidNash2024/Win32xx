@@ -216,7 +216,7 @@ namespace Win32xx
 	int  GetComCtlVersion();
 	UINT GetSizeofMenuItemInfo();
 	UINT GetSizeofNonClientMetrics();
-	int  GetWinVersion();	
+	int  GetWinVersion();
 	BOOL IsAeroThemed();
 	BOOL IsLeftButtonDown();
 	BOOL IsXPThemed();
@@ -260,7 +260,7 @@ namespace Win32xx
 	inline LPCWSTR TCharToWide(LPCTSTR pTChar);
 	inline LPCSTR WideToChar(LPCWSTR pWChar);
 
-	
+
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
 	// This class is used for thread synchronisation
@@ -354,7 +354,7 @@ namespace Win32xx
 		HDC   GetDC() const;
 		HDC   GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		CWnd* GetDlgItem(int nIDDlgItem) const;
-		UINT  GetDlgItemInt(int nIDDlgItem, BOOL& bTranslated, BOOL bSigned) const;
+		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
 		CWnd* GetFocus() const;
 		HFONT GetFont() const;
@@ -380,8 +380,8 @@ namespace Win32xx
 		BOOL  IsWindowVisible() const;
 		BOOL  KillTimer(UINT_PTR uIDEvent) const;
 		int   MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
-		void  MapWindowPoints(CWnd* pWndTo, LPRECT lpRect) const;
-		void  MapWindowPoints(CWnd* pWndTo, LPPOINT lpPoint, UINT nCount) const;
+		void  MapWindowPoints(CWnd* pWndTo, RECT& rc) const;
+		void  MapWindowPoints(CWnd* pWndTo, LPPOINT ptArray, UINT nCount) const;
 		BOOL  MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		BOOL  MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
@@ -439,10 +439,9 @@ namespace Win32xx
 		BOOL  LockWindowUpdate() const;
 		BOOL  OpenIcon() const;
 		void  Print(CDC& dc, DWORD dwFlags) const;
-		BOOL  PrintWindow(CDC& dcBlt, UINT nFlags) const;
 		BOOL  SetMenu(HMENU hMenu) const;
-		BOOL  ScrollWindow(int XAmount, int YAmount, RECT& rcScroll, RECT& rcClip) const;
-		int   ScrollWindowEx(int dx, int dy, RECT& rcScroll, RECT& rcClip, HRGN hrgnUpdate, RECT& rcUpdate, UINT flags) const;
+		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const;
+		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const;
 		int   SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
 		BOOL  SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL  SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
@@ -796,11 +795,11 @@ namespace Win32xx
 	// Returns the string associated with a Resource ID
 	{
 		assert(GetApp());
-				
+
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-		pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));	
+		pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));
 		TCHAR* pTCharArray = &pTLSData->vTChar.front();
 
 		if (0 >= ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
@@ -1492,10 +1491,10 @@ namespace Win32xx
 		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 		HWND hWnd = m_hWnd;
 		Cleanup();
-		
+
 		return hWnd;
 	}
-	
+
 	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
@@ -2025,8 +2024,8 @@ namespace Win32xx
 		case WM_PAINT:
 			{
 				// Subclassed controls expect to do their own painting.
-				// CustomDraw or OwnerDraw are normally used to modify the drawing of controls. 
-				if (m_PrevWindowProc) break; 
+				// CustomDraw or OwnerDraw are normally used to modify the drawing of controls.
+				if (m_PrevWindowProc) break;
 
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
@@ -2092,7 +2091,7 @@ namespace Win32xx
 	//
 
 	inline HDC CWnd::BeginPaint(PAINTSTRUCT& ps) const
-	// The BeginPaint function prepares the specified window for painting and fills a PAINTSTRUCT structure with 
+	// The BeginPaint function prepares the specified window for painting and fills a PAINTSTRUCT structure with
 	// information about the painting.
 	{
         assert(::IsWindow(m_hWnd));
@@ -2121,7 +2120,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::CheckRadioButton(int nIDFirstButton, int nIDLastButton, int nIDCheckButton) const
-	// The CheckRadioButton function adds a check mark to (checks) a specified radio button in a group 
+	// The CheckRadioButton function adds a check mark to (checks) a specified radio button in a group
 	// and removes a check mark from (clears) all other radio buttons in the group.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2157,7 +2156,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::DrawMenuBar() const
-	// The DrawMenuBar function redraws the menu bar of the specified window. If the menu bar changes after 
+	// The DrawMenuBar function redraws the menu bar of the specified window. If the menu bar changes after
 	// the system has created the window, this function must be called to draw the changed menu bar.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2173,7 +2172,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::EndPaint(PAINTSTRUCT& ps) const
-	// The EndPaint function marks the end of painting in the specified window. This function is required for 
+	// The EndPaint function marks the end of painting in the specified window. This function is required for
 	// each call to the BeginPaint function, but only after painting is complete.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2236,11 +2235,11 @@ namespace Win32xx
 		return FromHandle( ::GetDlgItem(m_hWnd, nIDDlgItem) );
 	}
 
-	inline UINT CWnd::GetDlgItemInt(int nIDDlgItem, BOOL& bTranslated, BOOL bSigned) const
+	inline UINT CWnd::GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const
 	// The GetDlgItemInt function translates the text of a specified control in a dialog box into an integer value.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetDlgItemInt(m_hWnd, nIDDlgItem, &bTranslated, bSigned);
+		return ::GetDlgItemInt(m_hWnd, nIDDlgItem, lpTranslated, bSigned);
 	}
 
 	inline CWnd* CWnd::GetFocus() const
@@ -2265,7 +2264,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const
-	// The GetNextDlgGroupItem function retrieves a handle to the first control in a group of controls that 
+	// The GetNextDlgGroupItem function retrieves a handle to the first control in a group of controls that
 	// precedes (or follows) the specified control in a dialog box.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2277,7 +2276,7 @@ namespace Win32xx
 	// that precedes (or follows) the specified control.
 	{
 		assert(::IsWindow(m_hWnd));
-		::GetNextDlgTabItem(m_hWnd, hCtl, bPrevious);
+		return FromHandle(::GetNextDlgTabItem(m_hWnd, hCtl, bPrevious));
 	}
 
 	inline CWnd* CWnd::GetParent() const
@@ -2350,8 +2349,8 @@ namespace Win32xx
 	}
 
 	inline int CWnd::GetWindowTextLength() const
-	// The GetWindowTextLength function retrieves the length, in characters, of the specified window's 
-	// title bar text (if the window has a title bar). 
+	// The GetWindowTextLength function retrieves the length, in characters, of the specified window's
+	// title bar text (if the window has a title bar).
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::GetWindowTextLength(m_hWnd);
@@ -2392,8 +2391,8 @@ namespace Win32xx
 	}
 
 	inline UINT CWnd::IsDlgButtonChecked(int nIDButton) const
-	// The IsDlgButtonChecked function determines whether a button control has a check mark next to it 
-	// or whether a three-state button control is grayed, checked, or neither. 
+	// The IsDlgButtonChecked function determines whether a button control has a check mark next to it
+	// or whether a three-state button control is grayed, checked, or neither.
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::IsDlgButtonChecked(m_hWnd, nIDButton);
@@ -2420,32 +2419,32 @@ namespace Win32xx
 		return ::IsWindow(m_hWnd);
 	}
 
-	inline void CWnd::MapWindowPoints(CWnd* pWndTo, LPRECT lpRect) const
-	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one 
-	// window to a coordinate space relative to another window. 
+	inline void CWnd::MapWindowPoints(CWnd* pWndTo, RECT& rc) const
+	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one
+	// window to a coordinate space relative to another window.
 	{
 		assert (m_hWnd);
 		if(pWndTo)
 		{
 			assert (pWndTo->GetHwnd());
-			::MapWindowPoints(m_hWnd, pWndTo->GetHwnd(), (LPPOINT)lpRect, 2);
+			::MapWindowPoints(m_hWnd, pWndTo->GetHwnd(), (LPPOINT)&rc, 2);
 		}
 		else
-			::MapWindowPoints(m_hWnd, NULL, (LPPOINT)lpRect, 2);
+			::MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rc, 2);
 	}
-	
-	inline void CWnd::MapWindowPoints(CWnd* pWndTo, LPPOINT lpPoint, UINT nCount) const
-	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one 
+
+	inline void CWnd::MapWindowPoints(CWnd* pWndTo, LPPOINT ptArray, UINT nCount) const
+	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one
 	// window to a coordinate space relative to another window.
 	{
 		assert (m_hWnd);
 		if (pWndTo)
 		{
 			assert (pWndTo->GetHwnd());
-			::MapWindowPoints(m_hWnd, pWndTo->GetHwnd(), (LPPOINT)lpPoint, nCount);
+			::MapWindowPoints(m_hWnd, pWndTo->GetHwnd(), (LPPOINT)ptArray, nCount);
 		}
 		else
-			::MapWindowPoints(m_hWnd, NULL, (LPPOINT)lpPoint, nCount);
+			::MapWindowPoints(m_hWnd, NULL, (LPPOINT)ptArray, nCount);
 	}
 
 	inline int CWnd::MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const
@@ -2533,7 +2532,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SendNotifyMessage(UINT Msg, WPARAM wParam, LPARAM lParam) const
-	// The SendNotifyMessage function sends the specified message to a window or windows. If the window was created by the 
+	// The SendNotifyMessage function sends the specified message to a window or windows. If the window was created by the
 	// calling thread, SendNotifyMessage calls the window procedure for the window and does not return until the window procedure
 	// has processed the message. If the window was created by a different thread, SendNotifyMessage passes the message to the
 	// window procedure and returns immediately; it does not wait for the window procedure to finish processing the message.
@@ -2753,31 +2752,31 @@ namespace Win32xx
 	// in a specified directory. You can filter the list of names by specifying a set of file attributes.
 	{
 		assert(::IsWindow(m_hWnd));
-		::DlgDirList(m_hWnd, lpPathSpec, nIDListBox, nIDStaticPath, uFileType);
+		return ::DlgDirList(m_hWnd, lpPathSpec, nIDListBox, nIDStaticPath, uFileType);
 	}
 
 	inline int CWnd::DlgDirListComboBox(LPTSTR lpPathSpec, int nIDComboBox, int nIDStaticPath, UINT uFiletype) const
 	// The DlgDirListComboBox function replaces the contents of a combo box with the names of the subdirectories
-	// and files in a specified directory. You can filter the list of names by specifying a set of file attributes. 
+	// and files in a specified directory. You can filter the list of names by specifying a set of file attributes.
 	{
 		assert(::IsWindow(m_hWnd));
-		::DlgDirListComboBox(m_hWnd, lpPathSpec, nIDComboBox, nIDStaticPath, uFiletype);
+		return ::DlgDirListComboBox(m_hWnd, lpPathSpec, nIDComboBox, nIDStaticPath, uFiletype);
 	}
 
 	inline BOOL CWnd::DlgDirSelectEx(LPTSTR lpString, int nCount, int nIDListBox) const
 	// The DlgDirSelectEx function retrieves the current selection from a single-selection list box. It assumes that the list box
-	// has been filled by the DlgDirList function and that the selection is a drive letter, filename, or directory name. 
+	// has been filled by the DlgDirList function and that the selection is a drive letter, filename, or directory name.
 	{
 		assert(::IsWindow(m_hWnd));
-		::DlgDirSelectEx(m_hWnd, lpString, nCount, nIDListBox);
+		return ::DlgDirSelectEx(m_hWnd, lpString, nCount, nIDListBox);
 	}
 
 	inline BOOL CWnd::DlgDirSelectComboBoxEx(LPTSTR lpString, int nCount, int nIDComboBox) const
-	// The DlgDirSelectComboBoxEx function retrieves the current selection from a combo box filled by using the 
+	// The DlgDirSelectComboBoxEx function retrieves the current selection from a combo box filled by using the
 	// DlgDirListComboBox function. The selection is interpreted as a drive letter, a file, or a directory name.
 	{
 		assert(::IsWindow(m_hWnd));
-		::DlgDirSelectComboBoxEx(m_hWnd, lpString, nCount, nIDComboBox);
+		return ::DlgDirSelectComboBoxEx(m_hWnd, lpString, nCount, nIDComboBox);
 	}
 
     #ifndef WIN32_LEAN_AND_MEAN
@@ -2788,24 +2787,24 @@ namespace Win32xx
 		::DragAcceptFiles(m_hWnd, fAccept);
 	}
     #endif
-	
+
 	inline BOOL CWnd::DrawAnimatedRects(int idAni, RECT& rcFrom, RECT& rcTo) const
-	// The DrawAnimatedRects function draws a wire-frame rectangle and animates it to indicate the opening of 
+	// The DrawAnimatedRects function draws a wire-frame rectangle and animates it to indicate the opening of
 	// an icon or the minimizing or maximizing of a window.
 	{
 		assert(::IsWindow(m_hWnd));
-		::DrawAnimatedRects(m_hWnd, idAni, &rcFrom, &rcTo);
+		return ::DrawAnimatedRects(m_hWnd, idAni, &rcFrom, &rcTo);
 	}
 
 	inline BOOL CWnd::DrawCaption(HDC hdc, RECT& rc, UINT uFlags) const
 	// The DrawCaption function draws a window caption.
 	{
 		assert(::IsWindow(m_hWnd));
-		::DrawCaption(m_hWnd, hdc, &rc, uFlags);
+		return ::DrawCaption(m_hWnd, hdc, &rc, uFlags);
 	}
 
 	inline BOOL CWnd::EnableScrollBar(UINT uSBflags, UINT uArrows) const
-	// The EnableScrollBar function enables or disables one or both scroll bar arrows. 
+	// The EnableScrollBar function enables or disables one or both scroll bar arrows.
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::EnableScrollBar(m_hWnd, uSBflags, uArrows);
@@ -2842,8 +2841,8 @@ namespace Win32xx
 	}
 
 	inline HMENU CWnd::GetSystemMenu(BOOL bRevert) const
-	// The GetSystemMenu function allows the application to access the window menu (also known as the system menu 
-	// or the control menu) for copying and modifying. 
+	// The GetSystemMenu function allows the application to access the window menu (also known as the system menu
+	// or the control menu) for copying and modifying.
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::GetSystemMenu(m_hWnd, bRevert);
@@ -2851,7 +2850,7 @@ namespace Win32xx
 
 	inline CWnd* CWnd::GetTopWindow() const
 	// The GetTopWindow function examines the Z order of the child windows associated with the parent window and
-	// retrieves a handle to the child window at the top of the Z order. 
+	// retrieves a handle to the child window at the top of the Z order.
 	{
 		assert(::IsWindow(m_hWnd));
 		return FromHandle( ::GetTopWindow(m_hWnd) );
@@ -2915,25 +2914,18 @@ namespace Win32xx
 		SendMessage(m_hWnd, WM_PRINT, (WPARAM)&dc, (LPARAM)dwFlags);
 	}
 
-	inline BOOL CWnd::PrintWindow(CDC& dcBlt, UINT nFlags) const
-	// The PrintWindow function copies a visual window into the specified device context (DC), typically a printer DC.
-	{
-		assert(::IsWindow(m_hWnd));
-		::PrintWindow(m_hWnd, dcBlt, nFlags);
-	}
-
-	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, RECT& rcScroll, RECT& rcClip) const
+	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const
 	// The ScrollWindow function scrolls the contents of the specified window's client area.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::ScrollWindow(m_hWnd, XAmount, YAmount, &rcScroll, &rcClip);
+		return ::ScrollWindow(m_hWnd, XAmount, YAmount, lprcScroll, lprcClip);
 	}
 
-	inline int CWnd::ScrollWindowEx(int dx, int dy, RECT& rcScroll, RECT& rcClip, HRGN hrgnUpdate, RECT& rcUpdate, UINT flags) const
+	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const
 	// The ScrollWindow function scrolls the contents of the window's client area.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::ScrollWindowEx(m_hWnd, dx, dy, &rcScroll, &rcClip, hrgnUpdate, &rcUpdate, flags);
+		return ::ScrollWindowEx(m_hWnd, dx, dy, lprcScroll, lprcClip, hrgnUpdate, lprcUpdate, flags);
 	}
 
 	inline BOOL CWnd::SetMenu(HMENU hMenu) const

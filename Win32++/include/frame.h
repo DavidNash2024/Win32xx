@@ -403,7 +403,7 @@ namespace Win32xx
 		CRect rc = GetItemRect(m_nHotItem);
 
 		// convert rectangle to desktop coordinates
-		MapWindowPoints(NULL, &rc);
+		MapWindowPoints(NULL, rc);
 		
 		// Position popup above toolbar if it won't fit below
 		TPMPARAMS tpm;
@@ -841,9 +841,9 @@ namespace Win32xx
 				CDC MenuBarDC = GetDC();
 				m_nMDIButton = -1;
 
-				if (PtInRect(&m_MDIRect[0], pt)) m_nMDIButton = 0;
-				if (PtInRect(&m_MDIRect[1], pt)) m_nMDIButton = 1;
-				if (PtInRect(&m_MDIRect[2], pt)) m_nMDIButton = 2;
+				if (m_MDIRect[0].PtInRect(pt)) m_nMDIButton = 0;
+				if (m_MDIRect[1].PtInRect(pt)) m_nMDIButton = 1;
+				if (m_MDIRect[2].PtInRect(pt)) m_nMDIButton = 2;
 
 				if (m_nMDIButton >= 0)
 				{
@@ -881,19 +881,19 @@ namespace Win32xx
 				::ScreenToClient(m_hWnd, &pt);
 
 				// Process the MDI button action when the left mouse button is up
-				if (PtInRect(&m_MDIRect[0], pt))
+				if (m_MDIRect[0].PtInRect(pt))
 				{
 					if (MDI_MIN == m_nMDIButton)
 						::ShowWindow(MDIChild, SW_MINIMIZE);
 				}
 
-				if (PtInRect(&m_MDIRect[1], pt))
+				if (m_MDIRect[1].PtInRect(pt))
 				{
 					if (MDI_RESTORE == m_nMDIButton)
 					::PostMessage(MDIClient, WM_MDIRESTORE, (WPARAM)MDIChild, 0L);
 				}
 
-				if (PtInRect(&m_MDIRect[2], pt))
+				if (m_MDIRect[2].PtInRect(pt))
 				{
 					if (MDI_CLOSE == m_nMDIButton)
 						::PostMessage(MDIChild, WM_CLOSE, 0L, 0L);
@@ -1060,9 +1060,9 @@ namespace Win32xx
 			{
 				CDC MenuBarDC = GetDC();
 				int MDIButton = -1;
-				if (PtInRect(&m_MDIRect[0], pt)) MDIButton = 0;
-				if (PtInRect(&m_MDIRect[1], pt)) MDIButton = 1;
-				if (PtInRect(&m_MDIRect[2], pt)) MDIButton = 2;
+				if (m_MDIRect[0].PtInRect(pt)) MDIButton = 0;
+				if (m_MDIRect[1].PtInRect(pt)) MDIButton = 1;
+				if (m_MDIRect[2].PtInRect(pt)) MDIButton = 2;
 
 				if (MK_LBUTTON == wParam)  // mouse moved with left mouse button is held down
 				{

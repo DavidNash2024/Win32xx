@@ -14,7 +14,7 @@ class CMainWindow : public CWnd
 public:
 	CMainWindow();
 	virtual ~CMainWindow() {}
-	virtual HWND Create(HWND hParent = 0);
+	virtual HWND Create(CWnd* pParent = 0);
 	virtual void OnAllWindowsCreated();
 
 protected:

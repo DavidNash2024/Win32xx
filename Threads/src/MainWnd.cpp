@@ -20,13 +20,14 @@ CMainWindow::CMainWindow() : m_nWindowsCreated(0)
 	// Note 4: This sample is intended as "proof of concept" only. A well written program should not require 20 GUI threads!
 }
 
-HWND CMainWindow::Create(HWND hParent)
+HWND CMainWindow::Create(CWnd* pParent)
 {
 	tString str = _T("Main Thread Window");
-	
+	HWND hwndParent = pParent? pParent->GetHwnd() : 0;
+
 	// Create the main window
 	return CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		20 , 50, 400, 300, hParent, NULL);
+		20 , 50, 400, 300, hwndParent, NULL);
 }
 
 void CMainWindow::OnCreate()
@@ -36,19 +37,19 @@ void CMainWindow::OnCreate()
 	{
 		// Create the Test Window and store the CTestWindow pointer
 		CTestWindow* pTestWin = new CTestWindow(i);
-		
+
 		TCHAR str[80];
 		wsprintf(str, _T("Thread %d started\n"), i);
 		TRACE(str);
 
 		m_vTestWnd.push_back(pTestWin);
 	}
-	
+
 	std::vector<TestWndPtr>::iterator iter;
 	for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 	{
 		(*iter)->ResumeThread();
-	}	
+	}
 }
 
 void CMainWindow::OnAllWindowsCreated()
@@ -66,26 +67,26 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (HIWORD(wParam) == EN_SETFOCUS)
 			::SetFocus(m_hWnd);
 		break;
-	
+
 	case WM_CLOSE:
 		{
-			// Close each thread window. 
+			// Close each thread window.
 			// The thread is then terminated with a WM_QUIT when its window is destroyed.
 			std::vector<TestWndPtr>::iterator iter;
 			for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 			{
 				::SendMessage((*iter)->GetHwnd(), WM_CLOSE, 0, 0);
-			} 
+			}
 		}
 		break;
-	
-	case WM_DESTROY:	
-		{	
+
+	case WM_DESTROY:
+		{
 			// Terminate the primary thread.
-			::PostQuitMessage(0); 
+			::PostQuitMessage(0);
 		}
 		break;
-	
+
 	case WM_WINDOWCREATED:
 		{
 			// Message recieved when a test window is created

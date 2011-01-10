@@ -11,9 +11,9 @@ CTestWindow::CTestWindow(int nWindow) : m_nWindow(nWindow)
 {
 }
 
-HWND CTestWindow::Create(HWND hWndParent)
+HWND CTestWindow::Create(CWnd* pParent)
 {
-	UNREFERENCED_PARAMETER(hWndParent);
+	UNREFERENCED_PARAMETER(pParent);
 
 	TCHAR szTitle[80];
 	wsprintf(szTitle, _T("Test Window %d"), m_nWindow);

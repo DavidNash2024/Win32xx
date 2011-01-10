@@ -17,7 +17,7 @@ protected:
 	virtual BOOL InitInstance();
 
 	// Override CWnd member functions
-	virtual HWND Create(HWND hWndParent = 0);
+	virtual HWND Create(CWnd* pWndParent = 0);
 	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
