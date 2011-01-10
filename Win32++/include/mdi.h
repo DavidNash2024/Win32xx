@@ -465,7 +465,7 @@ namespace Win32xx
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
-		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, pParent->GetHwnd(), NULL, (PSTR) &clientcreate);
+		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, pParent, NULL, (PSTR) &clientcreate);
 
 		return m_hWnd;
 	}
@@ -545,10 +545,6 @@ namespace Win32xx
 		if (m_cs.lpszClass)
 			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
 
-		// Set Parent
-	//	if (!pParent)
-	//		hWndParent = m_cs.hwndParent;
-
 		// Set the window style
 		DWORD dwStyle;
 		dwStyle = m_cs.style & ~WS_MAXIMIZE;
@@ -575,7 +571,7 @@ namespace Win32xx
 
 		// Create the window
 		if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-			cx, cy, pParent->GetHwnd(), m_cs.hMenu, m_cs.lpCreateParams))
+			cx, cy, pParent, m_cs.hMenu, m_cs.lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 		if (bMax)

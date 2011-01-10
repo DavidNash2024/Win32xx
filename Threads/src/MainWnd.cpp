@@ -23,11 +23,10 @@ CMainWindow::CMainWindow() : m_nWindowsCreated(0)
 HWND CMainWindow::Create(CWnd* pParent)
 {
 	tString str = _T("Main Thread Window");
-	HWND hwndParent = pParent? pParent->GetHwnd() : 0;
 
 	// Create the main window
 	return CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		20 , 50, 400, 300, hwndParent, NULL);
+		20 , 50, 400, 300, pParent, NULL);
 }
 
 void CMainWindow::OnCreate()
