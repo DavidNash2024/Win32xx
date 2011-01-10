@@ -8,16 +8,16 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID, HWND hWndParent)
-	: CDialog(nResID, hWndParent)
+CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
+	: CDialog(nResID, pParent)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hInstRichEdit)
  		::MessageBox(NULL,_T("CMyDialog::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
 }
 
-CMyDialog::CMyDialog(LPCTSTR lpszResName, HWND hWndParent)
-	: CDialog(lpszResName, hWndParent)
+CMyDialog::CMyDialog(LPCTSTR lpszResName, CWnd* pParent)
+	: CDialog(lpszResName, pParent)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
 	if (!m_hInstRichEdit)

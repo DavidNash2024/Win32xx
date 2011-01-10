@@ -11,7 +11,7 @@
 class CButtonDialog : public CDialog
 {
 public:
-	CButtonDialog(UINT nResID, HWND hWnd = NULL);
+	CButtonDialog(UINT nResID, CWnd* pParent = NULL);
 	~CButtonDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -23,7 +23,7 @@ private:
 class CComboBoxDialog : public CDialog
 {
 public:
-	CComboBoxDialog	(UINT nResID, HWND hWnd = NULL);
+	CComboBoxDialog	(UINT nResID, CWnd* pParent = NULL);
 	~CComboBoxDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
@@ -37,7 +37,7 @@ private:
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID, HWND hWndParent = NULL);
+	CMyDialog(UINT nResID, CWnd* pParent = NULL);
 	virtual ~CMyDialog();
 
 protected:

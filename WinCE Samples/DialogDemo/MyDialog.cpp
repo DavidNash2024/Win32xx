@@ -4,8 +4,8 @@
 #include "windowsx.h"
 
 
-CMyDialog::CMyDialog(UINT nResID, HWND hWndParent)
-	: CDialog(nResID, hWndParent), m_nCounter(0)
+CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
+	: CDialog(nResID, pParent), m_nCounter(0)
 {
 }
 

@@ -333,14 +333,18 @@ namespace Win32xx
 
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
-		BOOL BringWindowToTop() const;
+		HDC   BeginPaint(LPPAINTSTRUCT lpPaint) const;
+		BOOL  BringWindowToTop() const;
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
-		BOOL CheckDlgButton(int nIDButton, UINT uCheck) const;
+		BOOL  CheckDlgButton(int nIDButton, UINT uCheck) const;
+		BOOL  CheckRadioButton(int nIDFirstButton, int nIDLastButton, int nIDCheckButton) const;
+		BOOL  ClientToScreen(LPPOINT lpPoint) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		BOOL  DrawMenuBar() const;
 		BOOL  EnableWindow(BOOL bEnable = TRUE) const;
+		BOOL  EndPaint(LPPAINTSTRUCT lpPaint) const;
 		CWnd* GetActiveWindow() const;
 		CWnd* GetAncestor() const;
 		CWnd* GetCapture() const;
@@ -355,8 +359,12 @@ namespace Win32xx
 		CWnd* GetFocus() const;
 		HFONT GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
+		CWnd* GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const;
+		CWnd* GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const;
 		CWnd* GetParent() const;
 		BOOL  GetScrollInfo(int fnBar, SCROLLINFO& si) const;
+		CRect GetUpdateRect(BOOL bErase) const;
+		int GetUpdateRgn(HRGN hRgn, BOOL bErase) const;
 		CWnd* GetWindow(UINT uCmd) const;
 		HDC   GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
@@ -366,20 +374,25 @@ namespace Win32xx
 		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL  InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL  IsChild(CWnd* pChild) const;
+		UINT  IsDlgButtonChecked(int nIDButton) const;
 		BOOL  IsWindow() const;
 		BOOL  IsWindowEnabled() const;
 		BOOL  IsWindowVisible() const;
 		BOOL  KillTimer(UINT_PTR uIDEvent) const;
 		int   MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
+		void  MapWindowPoints(CWnd* pWndTo, LPRECT lpRect) const;
+		void  MapWindowPoints(CWnd* pWndTo, LPPOINT lpPoint, UINT nCount) const;
 		BOOL  MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
 		BOOL  MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL  PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
 		int   ReleaseDC(HDC hDC) const;
+		BOOL  ScreenToClient(LPPOINT lpPoint) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+		BOOL  SendNotifyMessage(UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		CWnd* SetActiveWindow() const;
 		CWnd* SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
@@ -406,17 +419,27 @@ namespace Win32xx
 
   #ifndef _WIN32_WCE
 		BOOL  CloseWindow() const;
+		int   DlgDirList(LPTSTR lpPathSpec, int nIDListBox, int nIDStaticPath, UINT uFileType) const;
+		int   DlgDirListComboBox(LPTSTR lpPathSpec, int nIDComboBox, int nIDStaticPath, UINT uFiletype) const;
+		BOOL  DlgDirSelectEx(LPTSTR lpString, int nCount, int nIDListBox) const;
+		BOOL  DlgDirSelectComboBoxEx(LPTSTR lpString, int nCount, int nIDComboBox) const;
+		BOOL  DrawAnimatedRects(int idAni, LPCRECT lprcFrom, LPCRECT lprcTo) const;
+		BOOL  DrawCaption(HDC hdc, LPCRECT lprc, UINT uFlags) const;
 		BOOL  EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		CWnd* GetLastActivePopup() const;
 		HMENU GetMenu() const;
 		int   GetScrollPos(int nBar) const;
 		BOOL  GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
+		HMENU GetSystemMenu(BOOL bRevert) const;
 		CWnd* GetTopWindow() const;
 		BOOL  GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
+		BOOL  HiliteMenuItem(HMENU hmenu, UINT uItemHilite, UINT uHilite) const;
 		BOOL  IsIconic() const;
 		BOOL  IsZoomed() const;
 		BOOL  LockWindowUpdate() const;
 		BOOL  OpenIcon() const;
+		void  Print(CDC& dc, DWORD dwFlags) const;
+		BOOL  PrintWindow(CDC& dcBlt, UINT nFlags) const;
 		BOOL  SetMenu(HMENU hMenu) const;
 		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const;
 		int   ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const;
@@ -2068,6 +2091,12 @@ namespace Win32xx
 	// Wrappers for Win32 API functions
 	//
 
+	inline HDC CWnd::BeginPaint(LPPAINTSTRUCT lpPaint) const
+	{
+        assert(::IsWindow(m_hWnd));
+		return ::BeginPaint(m_hWnd, lpPaint);
+	}
+
 	inline BOOL CWnd::BringWindowToTop() const
 	// The BringWindowToTop function brings the specified window to the top
 	// of the Z order. If the window is a top-level window, it is activated.
@@ -2087,6 +2116,18 @@ namespace Win32xx
 	{
         assert(::IsWindow(m_hWnd));
 		return ::CheckDlgButton(m_hWnd, nIDButton, uCheck);
+	}
+
+	inline BOOL CWnd::CheckRadioButton(int nIDFirstButton, int nIDLastButton, int nIDCheckButton) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::CheckRadioButton(m_hWnd, nIDFirstButton, nIDLastButton, nIDCheckButton);
+	}
+
+	inline BOOL CWnd::ClientToScreen(LPPOINT lpPoint) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::ClientToScreen(m_hWnd, lpPoint);
 	}
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
@@ -2122,6 +2163,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::EnableWindow(m_hWnd, bEnable);
+	}
+
+	inline BOOL CWnd::EndPaint(LPPAINTSTRUCT lpPaint) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::EndPaint(m_hWnd, lpPaint);
 	}
 
 	inline CWnd* CWnd::GetActiveWindow() const
@@ -2202,6 +2249,18 @@ namespace Win32xx
 		return (HICON)SendMessage(WM_GETICON, (WPARAM)bBigIcon, 0);
 	}
 
+	inline CWnd* CWnd::GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return FromHandle(::GetNextDlgGroupItem(m_hWnd, hCtl, bPrevious));
+	}
+
+	inline CWnd* CWnd::GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::GetNextDlgTabItem(m_hWnd, hCtl, bPrevious);
+	}
+
 	inline CWnd* CWnd::GetParent() const
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2222,6 +2281,20 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::GetScrollInfo(m_hWnd, fnBar, &si);
+	}
+
+	inline CRect CWnd::GetUpdateRect(BOOL bErase) const
+	{
+		assert(::IsWindow(m_hWnd));
+		CRect rc;
+		::GetUpdateRect(m_hWnd, &rc, bErase);
+		return rc;
+	}
+
+	inline int CWnd::GetUpdateRgn(HRGN hRgn, BOOL bErase) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::GetUpdateRgn(m_hWnd, hRgn, bErase);
 	}
 
 	inline CWnd* CWnd::GetWindow(UINT uCmd) const
@@ -2293,6 +2366,12 @@ namespace Win32xx
 		return ::IsChild(m_hWnd, pChild->GetHwnd());
 	}
 
+	inline UINT CWnd::IsDlgButtonChecked(int nIDButton) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::IsDlgButtonChecked(m_hWnd, nIDButton);
+	}
+
 	inline BOOL CWnd::IsWindowEnabled() const
 	// The IsWindowEnabled function determines whether the window is enabled
 	// for mouse and keyboard input.
@@ -2312,6 +2391,30 @@ namespace Win32xx
 	// The IsWindow function determines whether the window exists.
 	{
 		return ::IsWindow(m_hWnd);
+	}
+
+	inline void CWnd::MapWindowPoints(CWnd* pWndTo, LPRECT lpRect) const
+	{
+		assert (m_hWnd);
+		if(pWndTo)
+		{
+			assert (pWndTo->GetHwnd());
+			::MapWindowPoints(m_hWnd, pWndTo->GetHwnd(), (LPPOINT)lpRect, 2);
+		}
+		else
+			::MapWindowPoints(m_hWnd, NULL, (LPPOINT)lpRect, 2);
+	}
+	
+	inline void CWnd::MapWindowPoints(CWnd* pWndTo, LPPOINT lpPoint, UINT nCount) const
+	{
+		assert (m_hWnd);
+		if (pWndTo)
+		{
+			assert (pWndTo->GetHwnd());
+			::MapWindowPoints(m_hWnd, pWndTo->GetHwnd(), (LPPOINT)lpPoint, nCount);
+		}
+		else
+			::MapWindowPoints(m_hWnd, NULL, (LPPOINT)lpPoint, nCount);
 	}
 
 	inline int CWnd::MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const
@@ -2368,6 +2471,12 @@ namespace Win32xx
 		return ::ReleaseDC(m_hWnd, hDC);
 	}
 
+	inline BOOL CWnd::ScreenToClient(LPPOINT lpPoint) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::ScreenToClient(m_hWnd, lpPoint);
+	}
+
 	inline LRESULT CWnd::SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const
 	// The SendDlgItemMessage function sends a message to the specified control in a dialog box.
 	{
@@ -2389,6 +2498,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SendMessage(hWnd, uMsg, wParam, lParam);
+	}
+
+	inline BOOL CWnd::SendNotifyMessage(UINT Msg, WPARAM wParam, LPARAM lParam) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::SendNotifyMessage(m_hWnd, Msg, wParam, lParam);
 	}
 
 	inline CWnd* CWnd::SetActiveWindow() const
@@ -2596,6 +2711,30 @@ namespace Win32xx
 		return ::CloseWindow(m_hWnd);
 	}
 
+	inline int CWnd::DlgDirList(LPTSTR lpPathSpec, int nIDListBox, int nIDStaticPath, UINT uFileType) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DlgDirList(m_hWnd, lpPathSpec, nIDListBox, nIDStaticPath, uFileType);
+	}
+
+	inline int CWnd::DlgDirListComboBox(LPTSTR lpPathSpec, int nIDComboBox, int nIDStaticPath, UINT uFiletype) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DlgDirListComboBox(m_hWnd, lpPathSpec, nIDComboBox, nIDStaticPath, uFiletype);
+	}
+
+	inline BOOL CWnd::DlgDirSelectEx(LPTSTR lpString, int nCount, int nIDListBox) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DlgDirSelectEx(m_hWnd, lpString, nCount, nIDListBox);
+	}
+
+	inline BOOL CWnd::DlgDirSelectComboBoxEx(LPTSTR lpString, int nCount, int nIDComboBox) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DlgDirSelectComboBoxEx(m_hWnd, lpString, nCount, nIDComboBox);
+	}
+
     #ifndef WIN32_LEAN_AND_MEAN
     inline void CWnd::DragAcceptFiles(BOOL fAccept) const
 	{
@@ -2603,6 +2742,18 @@ namespace Win32xx
 		::DragAcceptFiles(m_hWnd, fAccept);
 	}
     #endif
+	
+	inline BOOL CWnd::DrawAnimatedRects(int idAni, LPCRECT lprcFrom, LPCRECT lprcTo) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DrawAnimatedRects(m_hWnd, idAni, lprcFrom, lprcTo);
+	}
+
+	inline BOOL CWnd::DrawCaption(HDC hdc, LPCRECT lprc, UINT uFlags) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::DrawCaption(m_hWnd, hdc, lprc, uFlags);
+	}
 
 	inline BOOL CWnd::EnableScrollBar(UINT uSBflags, UINT uArrows) const
 	{
@@ -2639,6 +2790,12 @@ namespace Win32xx
 		return ::GetScrollRange(m_hWnd, nBar, &MinPos, &MaxPos );
 	}
 
+	inline HMENU CWnd::GetSystemMenu(BOOL bRevert) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::GetSystemMenu(m_hWnd, bRevert);
+	}
+
 	inline CWnd* CWnd::GetTopWindow() const
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2651,6 +2808,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::GetWindowPlacement(m_hWnd, &wndpl);
+	}
+
+	inline BOOL CWnd::HiliteMenuItem(HMENU hmenu, UINT uItemHilite, UINT uHilite) const
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::HiliteMenuItem(m_hWnd, hmenu, uItemHilite, uHilite);
 	}
 
 	inline BOOL CWnd::IsIconic() const
@@ -2686,6 +2849,18 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::OpenIcon(m_hWnd);
+	}
+
+	inline void CWnd::Print(CDC& dc, DWORD dwFlags) const
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(m_hWnd, WM_PRINT, (WPARAM)&dc, (LPARAM)dwFlags);
+	}
+
+	inline BOOL CWnd::PrintWindow(CDC& dcBlt, UINT nFlags) const
+	{
+		assert(::IsWindow(m_hWnd));
+		::PrintWindow(m_hWnd, dcBlt, nFlags);
 	}
 
 	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT prcScroll, LPCRECT prcClip) const

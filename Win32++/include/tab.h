@@ -336,7 +336,7 @@ namespace Win32xx
 		CRect rcClose = GetCloseRect();
 
 		CPoint pt = GetCursorPos();
-		MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		UINT uState = rcClose.PtInRect(pt)? m_IsClosePressed? 2: 1: 0;
 
 		// Draw the outer highlight for the close button
@@ -420,7 +420,7 @@ namespace Win32xx
 		CRect rcList = GetListRect();
 
 		CPoint pt = GetCursorPos();
-		MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		UINT uState = rcList.PtInRect(pt)? 1: 0;
 		if (m_IsListMenuActive) uState = 2;
 
@@ -814,7 +814,7 @@ namespace Win32xx
 
 		// Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
 		if (GetCloseRect().PtInRect(pt)) return HTCLIENT;
 		if (GetListRect().PtInRect(pt))  return HTCLIENT;
 
@@ -1121,7 +1121,7 @@ namespace Win32xx
 				CheckMenuItem(hMenu, iSelected, MF_BYPOSITION|MF_CHECKED);
 
 			CPoint pt(GetListRect().left, GetListRect().top + GetTabHeight());
-			MapWindowPoints(m_hWnd, NULL, &pt, 1);
+			::MapWindowPoints(m_hWnd, NULL, &pt, 1);
 
 			// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
 			HWND MenuHwnd = GetAncestor()->GetHwnd();

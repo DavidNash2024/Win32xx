@@ -11,7 +11,7 @@ CMainWin::CMainWin()
 
 void CMainWin::OnCreate()
 {
-	m_Button.Create(m_hWnd);
+	m_Button.Create(this);
 }
 
 LRESULT CMainWin::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

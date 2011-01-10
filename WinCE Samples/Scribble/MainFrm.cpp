@@ -33,7 +33,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		{
-			CDialog HelpDialog(IDW_ABOUT, m_hWnd);
+			CDialog HelpDialog(IDW_ABOUT, this);
 			HelpDialog.DoModal();
 		}
 		return TRUE;

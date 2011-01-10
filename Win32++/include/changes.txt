@@ -16,6 +16,29 @@ New Features and Enhancements
 - Added CDocker::SetCaptionHeight
 - Added CTab::SetFixedWidth
 - Added CTab::SetOwnerDraw
+- Added CWnd::BeginPaint
+- Added CWnd::ClientToScreen 
+- Added CWnd::CheckRadioButton
+- Added CWnd::DlgDirList
+- Added CWnd::DlgDirListComboBox
+- Added CWnd::DlgDirSelectEx
+- Added CWnd::DlgDirSelectComboBoxEx
+- Added CWnd::DrawAnimatedRects
+- Added CWnd::DrawCaption
+- Added CWnd::EndPaint
+- Added CWnd::GetNextDlgGroupItem
+- Added CWnd::GetNextDlgTabItem
+- Added CWnd::GetSystemMenu
+- Added CWnd::GetUpdateRect
+- Added CWnd::GetUpdateRgn
+- Added CWnd::HiliteMenuItem
+- Added CWnd::IsDialogMessage
+- Added CWnd::IsDlgButtonChecked 
+- Added CWnd::MapWindowPoints
+- Added CWnd::Print
+- Added CWnd::PrintWindow
+- Added CWnd::ScreenToClient 
+- Added CWnd::SendNotifyMessage
 - Modified CDialog 				now takes a CWnd pointer instead of HWND
 - Modified CResizer::AddChild	now takes a CWnd reference
 - Modified CWnd::Create 		now takes a CWnd pointer instead of HWND
@@ -30,7 +53,7 @@ Incompatibilities with previous versions
    to specify the parent window.
 * CTab defaults to not using the CS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles. 
    The SetFixedWidth and SetOwnerDraw functions can be used to change these
-   styles. 
+   styles.
 * Users of Borland's C++ compiler version 5.5 will need to install the 
    compiler's service pack 2 for stringsteam support.  
 

@@ -382,15 +382,16 @@ namespace Win32xx
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 			pTLSData->pCWnd = this;
+			HWND hwndParent = m_pDlgParent? m_pDlgParent->GetHwnd() : 0;
 
 			// Create a modal dialog
 			if (IsIndirect())
-				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, hwndParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
-				nResult = ::DialogBox(hInstance, m_lpszResName, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBox(hInstance, m_lpszResName, hwndParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up
@@ -435,16 +436,17 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+			HWND hwndParent = m_pDlgParent? m_pDlgParent->GetHwnd() : 0;
 
 			// Create a modeless dialog
 			if (IsIndirect())
-				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hwndParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
 
-				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_pDlgParent->GetHwnd(), (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, hwndParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up

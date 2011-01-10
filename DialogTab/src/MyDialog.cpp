@@ -9,7 +9,7 @@
 /////////////////////////////////////////////
 // Definitions for the CButtonDialog class
 //
-CButtonDialog::CButtonDialog(UINT nResID, HWND hWnd) : CDialog(nResID, hWnd) 
+CButtonDialog::CButtonDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent) 
 {
 	m_hBrush = ::CreateSolidBrush(RGB(255, 255, 255));
 }
@@ -73,7 +73,7 @@ BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 /////////////////////////////////////////////
 // Definitions for the CComboBoxDialog class
 //
-CComboBoxDialog::CComboBoxDialog(UINT nResID, HWND hWnd) : CDialog(nResID, hWnd) 
+CComboBoxDialog::CComboBoxDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent) 
 {
 	m_hBrush = ::CreateSolidBrush(RGB(255, 255, 255));
 }
@@ -118,7 +118,7 @@ BOOL CComboBoxDialog::OnInitDialog()
 /////////////////////////////////////////
 // Definitions for the CMyDialog class
 //
-CMyDialog::CMyDialog(UINT nResID, HWND hWndParent) : CDialog(nResID, hWndParent)
+CMyDialog::CMyDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent)
 {
 }
 

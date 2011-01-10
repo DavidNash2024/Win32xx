@@ -14,8 +14,8 @@
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID, HWND hWndParent = NULL);
-	CMyDialog(LPCTSTR lpszResName, HWND hWndParent = NULL);
+	CMyDialog(UINT nResID, CWnd* pParent = NULL);
+	CMyDialog(LPCTSTR lpszResName, CWnd* pParent = NULL);
 	void SetStatic(LPCTSTR szString);
 	virtual ~CMyDialog();
 

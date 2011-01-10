@@ -7,13 +7,13 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID, HWND hWndParent)
-	: CDialog(nResID, hWndParent)
+CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
+	: CDialog(nResID, pParent)
 {
 }
 
-CMyDialog::CMyDialog(LPCTSTR lpszResName, HWND hWndParent)
-	: CDialog(lpszResName, hWndParent)
+CMyDialog::CMyDialog(LPCTSTR lpszResName, CWnd* pParent)
+	: CDialog(lpszResName, pParent)
 {
 }
 
