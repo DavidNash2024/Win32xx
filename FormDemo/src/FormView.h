@@ -12,9 +12,9 @@
 class CFormView : public CDialog
 {
 public:
-	CFormView(UINT nResID, HWND hParent = NULL);
+	CFormView(UINT nResID, CWnd* pParent = NULL);
 	virtual ~CFormView();
-	virtual HWND Create(HWND hParent);
+	virtual HWND Create(CWnd* pParent);
 
 	void OnRangeOfIds_Radio(UINT nIdAdjust);
 	void OnCheckA();

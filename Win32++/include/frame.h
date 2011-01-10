@@ -403,7 +403,7 @@ namespace Win32xx
 		CRect rc = GetItemRect(m_nHotItem);
 
 		// convert rectangle to desktop coordinates
-		::MapWindowPoints(m_hWnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
+		MapWindowPoints(NULL, &rc);
 		
 		// Position popup above toolbar if it won't fit below
 		TPMPARAMS tpm;

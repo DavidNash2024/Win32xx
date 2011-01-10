@@ -313,11 +313,11 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					::PAINTSTRUCT ps;
-					CDC dc = ::BeginPaint(m_hWnd, &ps);
+					CDC dc = BeginPaint(ps);
 
 					OnPaint(dc);
 
-					::EndPaint(m_hWnd, &ps);
+					EndPaint(ps);
 					dc.DetachDC();
 				}
 				else
@@ -613,7 +613,7 @@ namespace Win32xx
     	rd.bFixedWidth  = bFixedWidth;
     	rd.bFixedHeight = bFixedHeight;
     	rd.rcInit = Wnd.GetClientRect();
-    	::MapWindowPoints(Wnd, *m_pParent, (LPPOINT)&rd.rcInit, 2);
+    	Wnd.MapWindowPoints(m_pParent, &rd.rcInit);
     	rd.pWnd = &Wnd;
 
     	m_vResizeData.push_back(rd);

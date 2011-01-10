@@ -281,7 +281,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		// Convert the point to client co-ordinates
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 
 		// Get the rebar band with the point
 		RBHITTESTINFO rbhti = {0};

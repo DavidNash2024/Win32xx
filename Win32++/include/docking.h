@@ -913,7 +913,7 @@ namespace Win32xx
 				if ((GetWinVersion() > 1400) && (GetCloseRect().PtInRect(pt)))
 					return HTCLOSE;
 
-				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+				ScreenToClient(pt);
 
 				// Indicate if the point is in the caption
 				if (pt.y < 0)
@@ -939,7 +939,7 @@ namespace Win32xx
 			if (m_pDock->IsDocked())
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+				ScreenToClient(pt);
 				m_pView->SetFocus();
 
 				// Update the close button
@@ -1352,7 +1352,7 @@ namespace Win32xx
 		CDC dcMem = dcDesktop.CreateCompatibleDC();
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
-		::MapWindowPoints(pDockTarget->GetHwnd(), HWND_DESKTOP, (LPPOINT)&rcTarget, 2);
+		pDockTarget->MapWindowPoints(NULL, &rcTarget);
 		dcMem.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 		HBITMAP hbmDock = dcMem.DetachBitmap();
@@ -1365,7 +1365,7 @@ namespace Win32xx
 			Create(pDockTarget);
 		}
 
-		::MapWindowPoints(pDockTarget->GetHwnd(), NULL, (LPPOINT)&rcHint, 2);
+		pDockTarget->MapWindowPoints(NULL, &rcHint);
 		SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
 	}
 
@@ -1464,7 +1464,7 @@ namespace Win32xx
 
 		// Create the docking zone rectangles
 		CPoint pt = pDragPos->ptPos;
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 		CRect rcLeft(0, 29, 31, 58);
 		CRect rcTop(29, 0, 58, 31);
 		CRect rcRight(55, 29, 87, 58);
@@ -1573,7 +1573,7 @@ namespace Win32xx
 		}
 
 		CRect rcLeft(0, 0, cxImage, cyImage);
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
 		if ((PtInRect(&rcLeft, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
@@ -1618,7 +1618,7 @@ namespace Win32xx
 		}
 
 		CRect rcTop(0, 0, cxImage, cyImage);
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
 		if ((PtInRect(&rcTop, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
@@ -1663,7 +1663,7 @@ namespace Win32xx
 		}
 
 		CRect rcRight(0, 0, cxImage, cyImage);
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
 		if ((PtInRect(&rcRight, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
@@ -1707,7 +1707,7 @@ namespace Win32xx
 			SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - 10 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 		CRect rcBottom(0, 0, cxImage, cyImage);
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
 		if ((PtInRect(&rcBottom, pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
@@ -2183,7 +2183,7 @@ namespace Win32xx
 					pDockTest = (CDocker*)FromHandle(hWnd);
 
 				CRect rc = pDockTest->GetClientRect();
-				::MapWindowPoints(pDockTest->GetHwnd(), NULL, (LPPOINT)&rc, 2);
+				pDockTest->MapWindowPoints(NULL, &rc);
 				if ((this != pDockTest) && PtInRect(&rc, pt))
 				{
 					pDockTop = pDockTest;
@@ -2776,7 +2776,7 @@ namespace Win32xx
 		case UWM_BAR_START:
 			{
 				CPoint pt = pdp->ptPos;
-				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+				ScreenToClient(pt);
 				if (!IsDragAutoResize())
 					DrawHashBar(pdp->hdr.hwndFrom, pt);
 				m_OldPoint = pt;
@@ -2786,7 +2786,7 @@ namespace Win32xx
 		case UWM_BAR_MOVE:
 			{
 				CPoint pt = pdp->ptPos;
-				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+				ScreenToClient(pt);
 
 				if (pt != m_OldPoint)
 				{
@@ -2806,7 +2806,7 @@ namespace Win32xx
 		case UWM_BAR_END:
 			{
 				POINT pt = pdp->ptPos;
-				::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+				ScreenToClient(pt);
 
 				if (!IsDragAutoResize())
 					DrawHashBar(pdp->hdr.hwndFrom, pt);
@@ -2840,7 +2840,7 @@ namespace Win32xx
 		assert(pdp);
 
 		POINT pt = pdp->ptPos;
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 
 		CDocker* pDock = ((CDockBar*)FromHandle(pdp->hdr.hwndFrom))->GetDock();
 		if (NULL == pDock) return;
@@ -3472,7 +3472,7 @@ namespace Win32xx
 
 		// Initiate the window move
 		SetCursorPos(pt.x, pt.y);
-		::MapWindowPoints(NULL, m_hWnd, &pt, 1);
+		ScreenToClient(pt);
 		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 	}
 

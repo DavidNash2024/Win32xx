@@ -9,8 +9,8 @@
 
 
 // Definitions for the CFormView class
-CFormView::CFormView(UINT nResID, HWND hParent)
-	: CDialog(nResID, hParent)
+CFormView::CFormView(UINT nResID, CWnd* pParent)
+	: CDialog(nResID, pParent)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
 	if (!m_hInstRichEdit) 
@@ -25,9 +25,9 @@ CFormView::~CFormView()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
-HWND CFormView::Create(HWND hParent = 0)
+HWND CFormView::Create(CWnd* pParent = 0)
 {
-	SetDlgParent(hParent);
+	SetDlgParent(pParent);
 	return DoModeless();
 }
 
