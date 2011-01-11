@@ -528,7 +528,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		CPoint pt = GetCursorPos();
-		::ScreenToClient(m_hWnd, &pt);
+		ScreenToClient(pt);
 
 		int nButtons = (int)SendMessage(TB_BUTTONCOUNT, 0L, 0L);
 		int iButton = -1;

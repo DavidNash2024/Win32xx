@@ -36,7 +36,6 @@ New Features and Enhancements
 - Added CWnd::IsDlgButtonChecked 
 - Added CWnd::MapWindowPoints
 - Added CWnd::Print
-- Added CWnd::PrintWindow
 - Added CWnd::ScreenToClient 
 - Added CWnd::SendNotifyMessage
 - Modified CDialog 				now takes a CWnd pointer instead of HWND

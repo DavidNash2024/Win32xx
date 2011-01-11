@@ -387,7 +387,7 @@ namespace Win32xx
 
 		m_bKeyMode = FALSE;
 		m_bExitAfter = FALSE;
-		::GetCursorPos(&m_OldMousePos);
+		m_OldMousePos = GetCursorPos();
 
 		HWND hMaxMDIChild = NULL;
 		if (IsMDIChildMaxed())
@@ -403,7 +403,7 @@ namespace Win32xx
 		CRect rc = GetItemRect(m_nHotItem);
 
 		// convert rectangle to desktop coordinates
-		MapWindowPoints(NULL, rc);
+		ClientToScreen(rc);
 		
 		// Position popup above toolbar if it won't fit below
 		TPMPARAMS tpm;
@@ -611,7 +611,7 @@ namespace Win32xx
 		SetHotItem(-1);
 
 		CPoint pt = GetCursorPos();
-		::ScreenToClient(m_hWnd, &pt);
+		ScreenToClient(pt);
 
 		// Update mouse mouse position for hot tracking
 		SendMessage(WM_MOUSEMOVE, 0L, MAKELONG(pt.x, pt.y));
@@ -876,9 +876,8 @@ namespace Win32xx
 
 			if (IsMDIChildMaxed())
 			{
-				CPoint pt;
-				::GetCursorPos(&pt);
-				::ScreenToClient(m_hWnd, &pt);
+				CPoint pt = GetCursorPos();
+				ScreenToClient(pt);
 
 				// Process the MDI button action when the left mouse button is up
 				if (m_MDIRect[0].PtInRect(pt))
@@ -1022,7 +1021,7 @@ namespace Win32xx
 
 				m_OldMousePos.x = pt.x;
 				m_OldMousePos.y = pt.y;
-				::ScreenToClient(m_hWnd, &pt);
+				ScreenToClient(pt);
 
 				// Reflect messages back to the MenuBar for hot tracking
 				SendMessage(WM_MOUSEMOVE, 0L, MAKELPARAM(pt.x, pt.y));

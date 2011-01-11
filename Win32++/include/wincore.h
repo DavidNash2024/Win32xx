@@ -323,6 +323,7 @@ namespace Win32xx
 		virtual HWND Detach();
 		virtual tString GetWindowType() const { return _T("CWnd"); }
 		virtual void Invalidate(BOOL bErase = TRUE) const;
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -339,6 +340,7 @@ namespace Win32xx
 		BOOL  CheckDlgButton(int nIDButton, UINT uCheck) const;
 		BOOL  CheckRadioButton(int nIDFirstButton, int nIDLastButton, int nIDCheckButton) const;
 		BOOL  ClientToScreen(POINT& pt) const;
+		BOOL  ClientToScreen(RECT& rc) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
@@ -389,6 +391,7 @@ namespace Win32xx
 		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
 		int   ReleaseDC(HDC hDC) const;
 		BOOL  ScreenToClient(POINT& Point) const;
+		BOOL  ScreenToClient(RECT& rc) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
@@ -472,7 +475,6 @@ namespace Win32xx
 		virtual void OnPaint(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -520,6 +522,7 @@ namespace Win32xx
 		CWinApp();
 		virtual ~CWinApp();
 
+		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		void SetResourceHandle(HINSTANCE hResource);
@@ -533,7 +536,6 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		void AddTmpWnd(HWND hWnd);
-		CWnd* GetCWndFromMap(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
 		void RemoveTmpWnds();
 		void SetCallback();
@@ -2135,6 +2137,13 @@ namespace Win32xx
 		return ::ClientToScreen(m_hWnd, &pt);
 	}
 
+	inline BOOL CWnd::ClientToScreen(RECT& rc) const
+	// The ClientToScreen function converts the client-area coordinates of a specified RECT to screen coordinates.
+	{
+		assert(::IsWindow(m_hWnd));
+		return (BOOL)::MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rc, 2);
+	}
+
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
 	{
@@ -2507,6 +2516,13 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::ScreenToClient(m_hWnd, &Point);
+	}
+
+	inline BOOL CWnd::ScreenToClient(RECT& rc) const
+	// The ScreenToClient function converts the screen coordinates of a specified RECT on the screen to client-area coordinates.
+	{
+		assert(::IsWindow(m_hWnd));
+		return (BOOL)::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
 	}
 
 	inline LRESULT CWnd::SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const

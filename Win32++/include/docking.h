@@ -579,7 +579,7 @@ namespace Win32xx
 		// Send a splitter bar notification to the parent
 		m_DragPos.hdr.code = nMessageID;
 		m_DragPos.hdr.hwndFrom = m_hWnd;
-		::GetCursorPos(&m_DragPos.ptPos);
+		m_DragPos.ptPos = GetCursorPos();
 		m_DragPos.ptPos.x += 1;
 		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&m_DragPos);
 	}
@@ -793,7 +793,7 @@ namespace Win32xx
 			// Determine the close button's drawing position relative to the window
 			CRect rcClose = GetCloseRect();
 			UINT uState = GetCloseRect().PtInRect(GetCursorPos())? m_IsClosePressed && IsLeftButtonDown()? 2 : 1 : 0;
-			::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcClose, 2);
+			ScreenToClient(rcClose);
 
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			{
@@ -1113,7 +1113,7 @@ namespace Win32xx
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
-		::GetCursorPos(&DragPos.ptPos);
+		DragPos.ptPos = GetCursorPos();
 
 		// Send a DragPos notification to the docker
 		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
@@ -1190,7 +1190,7 @@ namespace Win32xx
 		CRect rcHint = pDockTarget->GetDockClient().GetWindowRect();
 		if (pDockTarget->GetDockClient().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			rcHint.InflateRect(-2, -2);
-		::MapWindowPoints(NULL, pDockTarget->GetHwnd(), (LPPOINT)&rcHint, 2);
+		pDockTarget->ScreenToClient(rcHint);
 
 		return rcHint;
 	}
@@ -1201,7 +1201,7 @@ namespace Win32xx
 		CRect rcHint = pDockTarget->GetDockClient().GetWindowRect();
 		if (pDockTarget->GetDockClient().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			rcHint.InflateRect(-2, -2);
-		::MapWindowPoints(NULL, pDockTarget->GetHwnd(), (LPPOINT)&rcHint, 2);
+		pDockTarget->ScreenToClient(rcHint);
 
 		int Width;
 		CRect rcDockDrag = pDockDrag->GetWindowRect();
@@ -1352,7 +1352,7 @@ namespace Win32xx
 		CDC dcMem = dcDesktop.CreateCompatibleDC();
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
-		pDockTarget->MapWindowPoints(NULL, rcTarget);
+		pDockTarget->ClientToScreen(rcTarget);
 		dcMem.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 		HBITMAP hbmDock = dcMem.DetachBitmap();
@@ -1365,7 +1365,7 @@ namespace Win32xx
 			Create(pDockTarget);
 		}
 
-		pDockTarget->MapWindowPoints(NULL, rcHint);
+		pDockTarget->ClientToScreen(rcHint);
 		SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
 	}
 
@@ -1771,7 +1771,6 @@ namespace Win32xx
 		pDocker->m_nDockID = nDockID;
 		pDocker->m_pDockAncestor = GetDockAncestor();
 		pDocker->m_pDockParent = this;
-	//	HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
 		CWnd* pFrame = GetDockAncestor()->GetAncestor();
 		pDocker->Create(pFrame);
 		pDocker->SetParent(this);
@@ -1831,7 +1830,6 @@ namespace Win32xx
 
 		// Initially create the as a child window of the frame
 		// This makes the frame window the owner of our docker
-	//	HWND hwndFrame = GetDockAncestor()->GetAncestor()->GetHwnd();
 		CWnd* pFrame = GetDockAncestor()->GetAncestor();
 		pDocker->Create(pFrame);
 		pDocker->SetParent(this);
@@ -2140,7 +2138,7 @@ namespace Win32xx
 
 			CRect rc;
 			::GetWindowRect(hBar, &rc);
-			::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+			ClientToScreen(rc);
 			int cx = rc.Width();
 			int cy = rc.Height();
 			int BarWidth = pDock->GetDockBar().GetWidth();
@@ -2183,7 +2181,7 @@ namespace Win32xx
 					pDockTest = (CDocker*)FromHandle(hWnd);
 
 				CRect rc = pDockTest->GetClientRect();
-				pDockTest->MapWindowPoints(NULL, rc);
+				pDockTest->ClientToScreen(rc);
 				if ((this != pDockTest) && rc.PtInRect(pt))
 				{
 					pDockTop = pDockTest;
@@ -2205,7 +2203,7 @@ namespace Win32xx
 			{
 				pDockTest = (CDocker*)FromHandle(hWndTest);
 				CPoint ptLocal = pt;
-				::MapWindowPoints(NULL, hWndTest, &ptLocal, 1);
+				pDockTest->ScreenToClient(ptLocal);
 				HWND hTestNew = ChildWindowFromPoint(hWndTest, ptLocal);
 				if (hTestNew == hWndTest) break;
 				hWndTest = hTestNew;
@@ -2846,7 +2844,7 @@ namespace Win32xx
 		if (NULL == pDock) return;
 
 		RECT rcDock = pDock->GetWindowRect();
-		::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rcDock, 2);
+		ScreenToClient(rcDock);
 
 		double dBarWidth = pDock->GetDockBar().GetWidth();
 		int iBarWidth    = pDock->GetDockBar().GetWidth();
@@ -3271,7 +3269,7 @@ namespace Win32xx
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = m_hWnd;
-		::GetCursorPos(&DragPos.ptPos);
+		DragPos.ptPos = GetCursorPos();
 		DragPos.DockZone = m_dwDockZone;
 		m_dwDockZone = 0;
 
@@ -3603,7 +3601,7 @@ namespace Win32xx
 		// Finally do the actual undocking
 		CDocker* pDock = GetDockFromView(pContainer);
 		CRect rc = GetDockClient().GetWindowRect();
-		::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+		ScreenToClient(rc);
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 		pDock->Undock(pt, bShowUndocked);
 		pDockUndockedFrom->ShowWindow();
