@@ -1,5 +1,5 @@
-// Win32++  Version 7.0.2
-// Released: 4th December, 2010 by:
+// Win32++  PreRelease Version 7.1
+// Released: N/A
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -982,7 +982,7 @@ namespace Win32xx
 
 	inline void CTab::SetFixedWidth(BOOL bEnabled)
 	{
-		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (bEnabled)
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_FIXEDWIDTH);
 		else
@@ -1002,7 +1002,7 @@ namespace Win32xx
 
 	inline void CTab::SetOwnerDraw(BOOL bEnabled)
 	{
-		DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (bEnabled)
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
 		else

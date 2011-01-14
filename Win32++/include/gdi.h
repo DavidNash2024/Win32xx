@@ -1,5 +1,5 @@
-// Win32++  Version 7.0.2
-// Released: 4th December, 2010 by:
+// Win32++  PreRelease Version 7.1
+// Released: N/A
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -362,7 +362,12 @@ namespace Win32xx
 			else                     cClrBits = 32;
 
 			// Allocate memory for the BITMAPINFO structure.
-			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * ((__int64)1 << cClrBits);
+		//	UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (int)(1 << cClrBits);
+			UINT uQuadSize;
+			if (cClrBits == 24)
+				uQuadSize = 0;
+			else
+				uQuadSize = sizeof(RGBQUAD) * (1 << cClrBits);
 			m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
 			m_pbmiArray = (LPBITMAPINFO) &m_bmi.front();
 
