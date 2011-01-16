@@ -12,7 +12,7 @@
 #include <mmsystem.h>
 #include "View.h"
 #include "MainFrm.h"
-#include "Resource.h"
+#include "resource.h"
 
 
 CView::~CView()

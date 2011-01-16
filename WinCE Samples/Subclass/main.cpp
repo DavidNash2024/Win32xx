@@ -2,7 +2,7 @@
 // main.cpp
 
 #include "SubclassApp.h"
-#include "Resource.h"
+#include "resource.h"
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {

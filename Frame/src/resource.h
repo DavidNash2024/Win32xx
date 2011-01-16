@@ -4,7 +4,7 @@
 //
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 #define IDM_FILE_NEW                    101
 #define IDM_FILE_OPEN                   102

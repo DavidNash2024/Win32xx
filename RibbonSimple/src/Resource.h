@@ -5,7 +5,7 @@
 
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 #define IDS_APP_TITLE           100
 #define IDI_SIMPLERIBBON        101

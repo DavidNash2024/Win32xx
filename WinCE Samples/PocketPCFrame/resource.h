@@ -3,7 +3,7 @@
 //
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 // String resource ID
 #define IDS_HELLO						100

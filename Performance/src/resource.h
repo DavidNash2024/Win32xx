@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// Resource.h
+// resource.h
 
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
@@ -7,7 +7,7 @@
 //
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 #define IDC_STATIC                      -1
 #define IDD_DIALOG1                     101

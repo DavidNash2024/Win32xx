@@ -109,9 +109,9 @@
 
 
 #include "wincore.h"
-#include <Winsock2.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
-#include <Process.h>
+#include <process.h>
 
 
 #define THREAD_TIMEOUT 100

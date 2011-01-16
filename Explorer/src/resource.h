@@ -4,7 +4,7 @@
 //
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 
 //Resource IDs for menu items and ToolBar items

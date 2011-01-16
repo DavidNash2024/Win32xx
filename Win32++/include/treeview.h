@@ -41,7 +41,7 @@
 #define _TREEVIEW_H_
 
 #include "wincore.h"
-#include "Commctrl.h"
+#include "commctrl.h"
 
 
 namespace Win32xx

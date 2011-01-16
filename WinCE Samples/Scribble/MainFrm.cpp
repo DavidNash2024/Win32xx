@@ -1,5 +1,5 @@
 #include "MainFrm.h"
-#include "Resource.h"
+#include "resource.h"
 
 
 

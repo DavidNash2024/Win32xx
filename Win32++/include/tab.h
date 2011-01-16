@@ -45,7 +45,7 @@
 #include "wincore.h"
 #include "dialog.h"
 #include "gdi.h"
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 namespace Win32xx
 {

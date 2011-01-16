@@ -5,7 +5,7 @@
 
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 
 // Next default values for new objects

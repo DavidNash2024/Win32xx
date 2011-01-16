@@ -78,7 +78,7 @@
 #include "statusbar.h"
 #include "toolbar.h"
 #include "rebar.h"
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 #ifndef RBN_MINMAX
   #define RBN_MINMAX (RBN_FIRST - 21)

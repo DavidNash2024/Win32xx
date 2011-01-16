@@ -7,7 +7,7 @@
 #include "Mainfrm.h"
 #include "MyTreeView.h"
 #include "MyListView.h"
-#include "Resource.h"
+#include "resource.h"
 
 ////////////////////////////////
 //CMyTreeView function definitions

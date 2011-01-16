@@ -6,7 +6,7 @@
 
 #include "dialog.h"
 #include "resource.h"
-#include "button.h"
+#include "Button.h"
 #include "Hyperlink.h"
 
 

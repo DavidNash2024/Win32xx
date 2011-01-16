@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////
-// Resource.h
+// resource.h
 // This file contains the resource ID definitions.
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 //Resource IDs for the dialog
 #define IDD_DIALOG1                     101

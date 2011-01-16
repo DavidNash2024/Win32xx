@@ -1,5 +1,5 @@
 #include "view.h"
-#include "Resource.h"
+#include "resource.h"
 
 
 void CView::OnPaint(CDC& dc)

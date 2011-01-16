@@ -5,7 +5,7 @@
 
 
 // include the Resource IDs defined by Win32++
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 #define IDD_DIALOG1                             101
 #define IDC_STATIC1                             131

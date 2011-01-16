@@ -3,7 +3,7 @@
 // Used by DEFAULT.RC
 //
 
-#include "Default_Resource.h"
+#include "default_resource.h"
 
 // String resource IDs
 #define IDS_HELLO						100
