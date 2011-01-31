@@ -183,14 +183,16 @@
 		<Unit filename="..\src\resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="..\..\Win32++\default_resource.h" />
-		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\frame.h" />
-		<Unit filename="..\..\Win32++\gdi.h" />
-		<Unit filename="..\..\Win32++\rebar.h" />
-		<Unit filename="..\..\Win32++\statusbar.h" />
-		<Unit filename="..\..\Win32++\toolbar.h" />
-		<Unit filename="..\..\Win32++\wincore.h" />
+		<Unit filename="..\..\Win32++\include\classes.txt" />
+		<Unit filename="..\..\Win32++\include\default_resource.h" />
+		<Unit filename="..\..\Win32++\include\dialog.h" />
+		<Unit filename="..\..\Win32++\include\frame.h" />
+		<Unit filename="..\..\Win32++\include\gdi.h" />
+		<Unit filename="..\..\Win32++\include\rebar.h" />
+		<Unit filename="..\..\Win32++\include\statusbar.h" />
+		<Unit filename="..\..\Win32++\include\toolbar.h" />
+		<Unit filename="..\..\Win32++\include\wincore.h" />
+		<Unit filename="..\..\Win32++\include\winutils.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

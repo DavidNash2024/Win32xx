@@ -43,7 +43,7 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 {
 	TintBitmap(GetMyView().GetImage(), cRed, cGreen, cBlue);
 	if (bGray) 	GrayScaleBitmap(GetMyView().GetImage());
-	
+
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
@@ -118,7 +118,7 @@ void CMainFrame::OnFileNew()
 	m_MyView.Invalidate();
 
 	// Set the caption
-	tString ts = _T("FastGDI"); 
+	tString ts = _T("FastGDI");
 	SetWindowText(ts.c_str());
 }
 
@@ -161,11 +161,11 @@ void CMainFrame::OnFileOpen()
 		CRect rcImage = GetMyView().GetImageRect();
 		AdjustFrameRect(rcImage);
 	}
-		
+
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
 	// Set the caption
-	tString ts = _T("FastGDI - ") + m_PathName; 
+	tString ts = _T("FastGDI - ") + m_PathName;
 	SetWindowText(ts.c_str());
 }
 
@@ -206,7 +206,7 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
 	// Set the caption
-	tString ts = _T("FastGDI - ") + m_PathName; 
+	tString ts = _T("FastGDI - ") + m_PathName;
 	SetWindowText(ts.c_str());
 	return TRUE;
 }
@@ -243,7 +243,7 @@ void CMainFrame::OnFileSaveAs()
 
 	// Set the caption
 	m_PathName = szFilePathName;
-	tString ts = _T("FastGDI - ") + m_PathName; 
+	tString ts = _T("FastGDI - ") + m_PathName;
 	SetWindowText(ts.c_str());
 
 	// Save the file name
@@ -283,10 +283,10 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_FILE_NEW  );
 	AddToolBarButton( IDM_FILE_OPEN );
 	AddToolBarButton( IDM_FILE_SAVEAS, FALSE );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_IMAGE_ADJUST, FALSE );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
 

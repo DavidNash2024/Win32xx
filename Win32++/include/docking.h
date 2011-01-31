@@ -1339,14 +1339,6 @@ namespace Win32xx
 
 	inline void CDocker::CDockHint::ShowHintWindow(CDocker* pDockTarget, CRect rcHint)
 	{
-		// Process any queued messages first
-		MSG msg;
-		while (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}
-
 		// Save the Dock window's blue tinted bitmap
 		CDC dcDesktop = ::GetDC(HWND_DESKTOP);
 		CDC dcMem = dcDesktop.CreateCompatibleDC();
