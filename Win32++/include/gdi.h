@@ -129,6 +129,8 @@ namespace Win32xx
 		void CreateDIBSection( HDC hdc, const BITMAPINFO& bmi, UINT iUsage, VOID **ppvBits,
 										HANDLE hSection, DWORD dwOffset) ;
 		HBITMAP DetachBitmap( );
+		BITMAP GetBitmapInfo( );
+		
 #ifndef _WIN32_WCE
 		void CreateBitmapIndirect( const BITMAP& bm );
 		void CreateDIBitmap( HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
@@ -141,6 +143,8 @@ namespace Win32xx
 		void CreatePatternBrush( HBITMAP hbmp );
 		void CreateSolidBrush( COLORREF rbg );
 		HBRUSH DetachBrush( );
+		LOGBRUSH GetBrushInfo( );
+
 #ifndef _WIN32_WCE
 		void CreateBrushIndirect( const LOGBRUSH& lb );
 		void CreateDIBPatternBrush( HGLOBAL hglbDIBPacked, UINT fuColorSpec );
@@ -151,6 +155,8 @@ namespace Win32xx
 		void AttachFont( HFONT hFont );
 		void CreateFontIndirect( const LOGFONT& lf );
 		HFONT DetachFont( );
+		LOGFONT GetFontInfo( );
+
 #ifndef _WIN32_WCE
 		void CreateFont( int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
   							DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
@@ -163,6 +169,7 @@ namespace Win32xx
 		void CreatePen( int nStyle, int nWidth, COLORREF rgb );
 		void CreatePenIndirect( const LOGPEN& lgpn );
 		HPEN DetachPen( );
+		LOGPEN GetPenInfo( );
 
 		// Create Select Regions
 		void AttachClipRegion( HRGN hRegion );
@@ -362,12 +369,7 @@ namespace Win32xx
 			else                     cClrBits = 32;
 
 			// Allocate memory for the BITMAPINFO structure.
-		//	UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (int)(1 << cClrBits);
-			UINT uQuadSize;
-			if (cClrBits == 24)
-				uQuadSize = 0;
-			else
-				uQuadSize = sizeof(RGBQUAD) * (1 << cClrBits);
+			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (int)(1 << cClrBits);
 			m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
 			m_pbmiArray = (LPBITMAPINFO) &m_bmi.front();
 
@@ -780,6 +782,19 @@ namespace Win32xx
 		return hBitmap;
 	}
 
+	inline BITMAP CDC::GetBitmapInfo()
+	{
+		// Retrieves the BITMAP for the current HBITMAP
+
+		assert(*m_DC);
+
+		HBITMAP hbm = (HBITMAP)::GetCurrentObject(*m_DC, OBJ_BITMAP);
+		BITMAP bm = {0};
+		::GetObject(hbm, sizeof(bm), &bm);
+		return bm;
+	}
+		
+
 	// Brush functions
 	inline void CDC::AttachBrush(HBRUSH hBrush)
 	{
@@ -885,6 +900,19 @@ namespace Win32xx
 		return hBrush;
 	}
 
+	inline LOGBRUSH CDC::GetBrushInfo( )
+	{
+		// Retrieves the current brush information
+
+		assert(*m_DC);
+
+		HBRUSH hBrush = (HBRUSH)::GetCurrentObject(*m_DC, OBJ_BRUSH);
+		LOGBRUSH lBrush = {0};
+		::GetObject(hBrush, sizeof(lBrush), &lBrush);
+		return lBrush;
+	}
+
+
 	// Font functions
 	inline void CDC::AttachFont(HFONT hFont)
 	{
@@ -916,6 +944,8 @@ namespace Win32xx
  					)
 
 	{
+		// Creates a logical font with the specified characteristics.
+		
 		assert(*m_DC);
 		if (*m_FontOld) ::DeleteObject(::SelectObject(*m_DC, *m_FontOld));
 
@@ -932,6 +962,8 @@ namespace Win32xx
 
 	inline void CDC::CreateFontIndirect( const LOGFONT& lf)
 	{
+		// Creates a logical font that has the specified characteristics
+
 		assert(*m_DC);
 		if (*m_FontOld) ::DeleteObject(::SelectObject(*m_DC, *m_FontOld));
 
@@ -952,6 +984,18 @@ namespace Win32xx
 		HFONT hFont = (HFONT)::SelectObject(*m_DC, *m_FontOld);
 		*m_FontOld = NULL;
 		return hFont;
+	}
+
+	inline LOGFONT CDC::GetFontInfo( )
+	{
+		// Retrieves the current font information
+
+		assert(*m_DC);
+
+		HFONT hFont = (HFONT)::GetCurrentObject(*m_DC, OBJ_FONT);
+		LOGFONT lFont = {0};
+		::GetObject(hFont, sizeof(lFont), &lFont);
+		return lFont;
 	}
 
 	// Pen functions
@@ -1003,6 +1047,18 @@ namespace Win32xx
 		HPEN hPen = (HPEN)::SelectObject(*m_DC, *m_PenOld);
 		*m_PenOld = NULL;
 		return hPen;
+	}
+
+	inline LOGPEN CDC::GetPenInfo( )
+	{
+		// Retrieves the current pen information as a LOGPEN
+
+		assert(*m_DC);
+
+		HPEN hPen = (HPEN)::GetCurrentObject(*m_DC, OBJ_PEN);
+		LOGPEN lPen = {0};
+		::GetObject(hPen, sizeof(lPen), &lPen);
+		return lPen;
 	}
 
 	// Region functions

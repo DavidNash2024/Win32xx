@@ -10,6 +10,10 @@ New Features and Enhancements
    are now optional.
 
 - Added tStringStream typedef (a TCHAR stringstream)
+- Added CDC::GetBitmapInfo
+- Added CDC::GetBrushInfo
+- Added CDC::GetFontInfo
+- Added CDC::GetPenInfo
 - Added CDialog::AttachItem
 - Added CDockContainer::SetActiveContainer
 - Added CDocker::Close
