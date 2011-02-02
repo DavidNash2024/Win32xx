@@ -261,6 +261,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Win32++\include\thread.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\wincore.h"
 				>
 			</File>

@@ -21,7 +21,7 @@ New Features and Enhancements
 - Added CTab::SetFixedWidth
 - Added CTab::SetOwnerDraw
 - Added CWnd::BeginPaint
-- Added CWnd::ClientToScreen 
+- Added CWnd::ClientToScreen
 - Added CWnd::CheckRadioButton
 - Added CWnd::DlgDirList
 - Added CWnd::DlgDirListComboBox
@@ -37,10 +37,10 @@ New Features and Enhancements
 - Added CWnd::GetUpdateRgn
 - Added CWnd::HiliteMenuItem
 - Added CWnd::IsDialogMessage
-- Added CWnd::IsDlgButtonChecked 
+- Added CWnd::IsDlgButtonChecked
 - Added CWnd::MapWindowPoints
 - Added CWnd::Print
-- Added CWnd::ScreenToClient 
+- Added CWnd::ScreenToClient
 - Added CWnd::SendNotifyMessage
 - Modified CDialog 				now takes a CWnd pointer instead of HWND
 - Modified CResizer::AddChild	now takes a CWnd reference
