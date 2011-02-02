@@ -181,43 +181,58 @@ void CView::Render()
 {
 	if (IsWindow())
 	{
-		if (m_pd3dDevice && m_pd3dDevice->TestCooperativeLevel() == D3D_OK)
+		HRESULT hResult = m_pd3dDevice->TestCooperativeLevel();
+		switch (hResult)
 		{
-			CRect rcClient = GetClientRect();
-			bool bNeedResize = m_d3dpp.BackBufferWidth != rcClient.Width() || m_d3dpp.BackBufferHeight != rcClient.Height();
-			if (bNeedResize)
+		case D3D_OK:
 			{
-				m_d3dpp.BackBufferWidth		= rcClient.Width();
-				m_d3dpp.BackBufferHeight	= rcClient.Height();
-				if ( !SUCCEEDED( m_pd3dDevice->Reset(&m_d3dpp) ) )
-					TRACE(_T("Failed to reset the DirectX device\n"));
+				CRect rcClient = GetClientRect();
+				bool bNeedResize = m_d3dpp.BackBufferWidth != rcClient.Width() || m_d3dpp.BackBufferHeight != rcClient.Height();
+				if (bNeedResize)
+				{
+					m_d3dpp.BackBufferWidth		= rcClient.Width();
+					m_d3dpp.BackBufferHeight	= rcClient.Height();
+					if ( !SUCCEEDED( m_pd3dDevice->Reset(&m_d3dpp) ) )
+						TRACE(_T("Failed to reset the DirectX device\n"));
+				}
+
+				// Clear the backbuffer to a black color
+				if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
+					TRACE(_T("Failed to clear back buffer\n"));
+
+				// Begin the scene
+				if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
+				{
+					// Setup the world, view, and projection Matrices
+					SetupMatrices();
+
+					SetupDefaultRenderStates();
+
+					// Render the vertex buffer contents
+					m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(CUSTOMVERTEX) );
+					m_pd3dDevice->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
+					m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 1 );
+
+					// End the scene
+					m_pd3dDevice->EndScene();
+				}
+				else
+					TRACE(_T("Failed to render the scene\n"));
+
+				// Present the backbuffer contents to the display
+				m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 			}
-
-			// Clear the backbuffer to a black color
-			if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
-				TRACE(_T("Failed to clear back buffer\n"));
-
-			// Begin the scene
-			if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
-			{
-				// Setup the world, view, and projection Matrices
-				SetupMatrices();
-
-				SetupDefaultRenderStates();
-
-				// Render the vertex buffer contents
-				m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(CUSTOMVERTEX) );
-				m_pd3dDevice->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
-				m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 1 );
-
-				// End the scene
-				m_pd3dDevice->EndScene();
-			}
-			else
-				TRACE(_T("Failed to render the scene\n"));
-
-			// Present the backbuffer contents to the display
-			m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+			break;
+		case D3DERR_DEVICELOST:
+			TRACE(_T("Got D3DERR_DEVICELOST\n"));
+			break;
+		case D3DERR_DEVICENOTRESET:
+			TRACE(_T("Got D3DERR_DEVICENOTRESET\n"));
+			m_pd3dDevice->Reset(&m_d3dpp);	// Reset the DX device
+			break;
+		default:
+			TRACE(_T("Direct3D device is in an invalid state\n"));
+			break;
 		}
 
 		// Slow the thread (otherwise it runs it a tight loop)
