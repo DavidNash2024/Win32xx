@@ -6,7 +6,9 @@ and receive simple input from the user. Like a message box, it is
 formatted by the operating system according to parameters you set. 
 However, a task dialog has many more features than a message box.
 
-NOTE:  Task Dialogs are only supported on Windows Vista and above.
+NOTE: The prerequisites for Task Dialogs are as follows:
+- Only supported on Windows Vista and above
+- Requires XP themes enabled.
 
 This program uses CTaskDialog to create a task dialog
 

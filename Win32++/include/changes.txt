@@ -8,7 +8,8 @@ New Features and Enhancements
    when specifying the parent window.
 * CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
    are now optional.
-* Added support for Task Dialogs   
+* Added support for Task Dialogs
+* Tutorials now demonstrate the use of command line arguments   
 
 - Added CTaskDialog
 - Added tStringStream typedef (a TCHAR stringstream)
