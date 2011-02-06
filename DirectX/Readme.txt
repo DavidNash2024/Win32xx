@@ -14,5 +14,5 @@ without charge.
 Features demonstrated in this example
 =====================================
 * Displaying a moving DirectX picture in a view window.  
-* Putting a view window in a seperate thread.
-* Adding a view window from a seperate threat to a frame.
+* Putting a view window in a separate thread.
+* Adding a view window from a separate threat to a frame.

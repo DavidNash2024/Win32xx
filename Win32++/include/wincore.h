@@ -306,6 +306,7 @@ namespace Win32xx
 	friend class CMDIChild;
 	friend class CDialog;
 	friend class CPropertyPage;
+	friend class CTaskDialog;
 	friend class CWinApp;
 
 	public:
@@ -511,6 +512,7 @@ namespace Win32xx
 		friend class CMenuBar;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
+		friend class CTaskDialog;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 		friend LPCWSTR CharToWide(LPCSTR pChar);
 		friend LPCTSTR LoadString(UINT nID);
