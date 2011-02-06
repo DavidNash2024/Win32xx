@@ -66,7 +66,7 @@ namespace Win32xx
 		void AddRadioButtonGroup(int nIDRadioButtonsFirst, int nIDRadioButtonsLast);
 		void ClickButton(int nButtonID) const;
 		void ClickRadioButton(int nRadioButtonID) const;
-		LRESULT DoModal();
+		LRESULT DoModal(CWnd* pParent = NULL);
 		void ElevateButton(int nButtonID, BOOL bElevated);
 		void EnableButton(int nButtonID, BOOL bEnabled);
 		void EnableRadioButton(int nButtonID, BOOL bEnabled);
@@ -195,7 +195,7 @@ namespace Win32xx
 		SendMessage(TDM_CLICK_RADIO_BUTTON, (WPARAM)nRadioButtonID, 0);
 	}
 
-	inline LRESULT CTaskDialog::DoModal()
+	inline LRESULT CTaskDialog::DoModal(CWnd* pParent /* = NULL */)
 	// Creates and displays the Task Dialog.
 	{
 		m_tc.cbSize = sizeof(m_tc);
@@ -203,6 +203,7 @@ namespace Win32xx
 		m_tc.cButtons = m_vButtons.size();
 		m_tc.pRadioButtons = m_vRadioButtons.empty()? NULL : &m_vRadioButtons.front();
 		m_tc.cRadioButtons = m_vRadioButtons.size();
+		m_tc.hwndParent = pParent? pParent->GetHwnd() : NULL;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -383,6 +384,8 @@ namespace Win32xx
 		RemoveAllRadioButtons();
 		ZeroMemory(&m_tc, sizeof(m_tc));
 		m_tc.cbSize = sizeof(m_tc);
+		m_tc.pfCallback = CTaskDialog::StaticTaskDialogProc;
+
 		m_SelectedButtonID = 0;
 		m_SelectedRadioButtonID = 0;
 		m_VerificationCheckboxState = FALSE;
