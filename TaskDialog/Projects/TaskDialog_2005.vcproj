@@ -198,6 +198,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\src\TaskDialogApp.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -214,6 +218,10 @@
 			</File>
 			<File
 				RelativePath="..\src\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TaskDialogApp.h"
 				>
 			</File>
 		</Filter>

@@ -44,7 +44,10 @@
 // formatted by the operating system according to parameters you set. 
 // However, a task dialog has many more features than a message box.
 
-// NOTE:  Task Dialogs are only supported on Windows Vista and above.
+// NOTES:  
+//  Task Dialogs are only supported on Windows Vista and above.
+//  Task Dialogs require XP themes enabled (use version 6 of Common Controls)
+//  Task Dialogs are always modal.
 
 
 #ifndef _TASKDIALOG_H_
@@ -151,6 +154,8 @@ namespace Win32xx
 	inline void CTaskDialog::AddButton(int nButtonID, LPCTSTR strCaption)
 	// Adds a push button to the Task Dialog.
 	{
+		assert (m_hWnd == NULL);
+
 		TASKDIALOG_BUTTON tdb;
 		tdb.nButtonID = nButtonID;
 		tdb.pszButtonText = strCaption;
@@ -160,6 +165,8 @@ namespace Win32xx
 	inline void CTaskDialog::AddRadioButton(int nRadioButtonID, LPCTSTR strCaption)
 	// Adds a radio button to the Task Dialog.
 	{
+		assert (m_hWnd == NULL);
+
 		TASKDIALOG_BUTTON tdb;
 		tdb.nButtonID = nRadioButtonID;
 		tdb.pszButtonText = strCaption;
@@ -169,6 +176,7 @@ namespace Win32xx
 	inline void CTaskDialog::AddRadioButtonGroup(int nIDRadioButtonsFirst, int nIDRadioButtonsLast)
 	// Adds a range of radio buttons to the Task Dialog.
 	{
+		assert (m_hWnd == NULL);
 		assert(nIDRadioButtonsFirst > 0);
 		assert(nIDRadioButtonsLast > nIDRadioButtonsFirst);
 
@@ -198,6 +206,8 @@ namespace Win32xx
 	inline LRESULT CTaskDialog::DoModal(CWnd* pParent /* = NULL */)
 	// Creates and displays the Task Dialog.
 	{
+		assert (m_hWnd == NULL);
+
 		m_tc.cbSize = sizeof(m_tc);
 		m_tc.pButtons = m_vButtons.empty()? NULL : &m_vButtons.front();
 		m_tc.cButtons = m_vButtons.size();
@@ -274,18 +284,21 @@ namespace Win32xx
 	inline int CTaskDialog::GetSelectedButtonID() const
 	// Returns the ID of the selected button. 
 	{
+		assert (m_hWnd == NULL);
 		return m_SelectedButtonID;
 	}
 
 	inline int CTaskDialog::GetSelectedRadioButtonID() const 
 	// Returns the ID of the selected radio button.
-	{ 
+	{
+		assert (m_hWnd == NULL);
 		return m_SelectedRadioButtonID; 
 	}
 		
 	inline BOOL CTaskDialog::GetVerificationCheckboxState() const
 	// Returns the state of the verification check box.
-	{ 
+	{
+		assert (m_hWnd == NULL);
 		return m_VerificationCheckboxState;
 	}
 
@@ -367,11 +380,13 @@ namespace Win32xx
 
 	inline void CTaskDialog::RemoveAllButtons()
 	{
+		assert (m_hWnd == NULL);
 		m_vButtons.clear();
 	}
 
 	inline void CTaskDialog::RemoveAllRadioButtons()
 	{
+		assert (m_hWnd == NULL);
 		m_vRadioButtons.clear();
 	}
 
@@ -400,12 +415,14 @@ namespace Win32xx
 	//	TDCBF_RETRY_BUTTON		Retry button
 	//	TDCBF_CLOSE_BUTTON		Close button
 	{
+		assert (m_hWnd == NULL);
 		m_tc.dwCommonButtons = dwCommonButtons; 
 	}
 
 	inline void CTaskDialog::SetContent(LPCWSTR pszContent)
 	// Set the task dialog's primary content.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.pszContent = pszContent; 
 	}
 
@@ -413,12 +430,14 @@ namespace Win32xx
 	// Sets the task dialog's default button.
 	// Can be either a button ID or one of the common buttons
 	{
+		assert (m_hWnd == NULL);
 		m_tc.nDefaultButton = nButtonID;
 	}
 
 	inline void CTaskDialog::SetDefaultRadioButton(int nRadioButtonID) 
 	// Sets the default radio button
 	{
+		assert (m_hWnd == NULL);
 		m_tc.nDefaultRadioButton = nRadioButtonID;
 	}
 
@@ -426,6 +445,7 @@ namespace Win32xx
 	// The width of the task dialog's client area. If 0, the 
 	// task dialog manager will calculate the ideal width.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.cxWidth = nWidth;
 	}
 
@@ -444,6 +464,8 @@ namespace Win32xx
 	inline void CTaskDialog::SetExpansionArea(LPCWSTR pszExpandedInfo, LPCWSTR pszExpandedLabel /* = _T("")*/, LPCWSTR pszCollapsedLabel /* = _T("")*/)
 	// Sets the text in the exandable area of the Task Dialog.
 	{
+		assert (m_hWnd == NULL);
+
 		m_tc.pszExpandedInformation = pszExpandedInfo;
 		m_tc.pszExpandedControlText = pszExpandedLabel;
 		m_tc.pszCollapsedControlText = pszCollapsedLabel;
@@ -452,36 +474,42 @@ namespace Win32xx
 	inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon) 
 	// Sets the icon that will be displayed in the Task Dialog's footer.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.hFooterIcon = hFooterIcon;
 	}
 
 	inline void CTaskDialog::SetFooterIcon(LPCWSTR lpszFooterIcon) 
 	// Sets the icon that will be displayed in the Task Dialog's footer.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.pszFooterIcon = lpszFooterIcon;
 	}
 
 	inline void CTaskDialog::SetFooterText(LPCWSTR pszFooter)
 	// Sets the text that will be displayed in the Task Dialog's footer.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.pszFooter = pszFooter;
 	}
 
 	inline void CTaskDialog::SetMainIcon(HICON hMainIcon) 
 	// Sets Task Dialog's main icon.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.hMainIcon = hMainIcon;
 	}
 
 	inline void CTaskDialog::SetMainIcon(LPCWSTR lpszMainIcon)
 	// Sets Task Dialog's main icon.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.pszMainIcon = lpszMainIcon; 
 	}
 
 	inline void CTaskDialog::SetMainInstruction(LPCWSTR pszMainInstruction) 
 	// Sets the Task Dialog's main instruction text.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.pszMainInstruction = pszMainInstruction;
 	}
 
@@ -504,6 +532,7 @@ namespace Win32xx
 	//  TDF_NO_DEFAULT_RADIO_BUTTON
 	//  TDF_CAN_BE_MINIMIZED
 	{
+		assert (m_hWnd == NULL);
 		m_tc.dwFlags = dwFlags;
 	}
 
@@ -548,12 +577,14 @@ namespace Win32xx
 	inline void CTaskDialog::SetVerificationCheckboxText(LPCWSTR pszVerificationText)
 	// Sets the text for the verification check box.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.pszVerificationText = pszVerificationText;
 	}
 
 	inline void CTaskDialog::SetWindowTitle(LPCWSTR pszWindowTitle)
 	// Sets the Task Dialog's window title.
 	{
+		assert (m_hWnd == NULL);
 		m_tc.pszWindowTitle = pszWindowTitle; 
 	}
 
