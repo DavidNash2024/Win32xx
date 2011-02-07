@@ -64,8 +64,8 @@ namespace Win32xx
 		CTaskDialog();
 		virtual ~CTaskDialog() {}
 
-		void AddButton(int nButtonID, LPCTSTR strCaption);
-		void AddRadioButton(int nRadioButtonID, LPCTSTR strCaption);
+		void AddButton(int nButtonID, LPCTSTR pszCaption);
+		void AddRadioButton(int nRadioButtonID, LPCTSTR pszCaption);
 		void AddRadioButtonGroup(int nIDRadioButtonsFirst, int nIDRadioButtonsLast);
 		void ClickButton(int nButtonID) const;
 		void ClickRadioButton(int nRadioButtonID) const;
@@ -84,29 +84,30 @@ namespace Win32xx
 		void RemoveAllRadioButtons();
 		void Reset();
 		void SetCommonButtons(TASKDIALOG_COMMON_BUTTON_FLAGS dwCommonButtons);
-		void SetContent(LPCWSTR pszContent);
+		void SetContent(LPCTSTR pszContent);
 		void SetDefaultButton(int nButtonID);
 		void SetDefaultRadioButton(int nRadioButtonID);
 		void SetDialogWidth(UINT nWidth = 0);
-		void SetElementText(TASKDIALOG_ELEMENTS eElements, LPCWSTR pszText);
-		void SetExpansionArea(LPCWSTR pszExpandedInfo, LPCWSTR pszExpandedLabel = _T(""), LPCWSTR pszCollapsedLabel = _T(""));
+		void SetElementText(TASKDIALOG_ELEMENTS eElements, LPCTSTR pszText);
+		void SetExpansionArea(LPCTSTR pszExpandedInfo, LPCTSTR pszExpandedLabel = _T(""), LPCTSTR pszCollapsedLabel = _T(""));
 		void SetFooterIcon(HICON hFooterIcon);
-		void SetFooterIcon(LPCWSTR lpszFooterIcon);
-		void SetFooterText(LPCWSTR pszFooter);
+		void SetFooterIcon(LPCTSTR lpszFooterIcon);
+		void SetFooterText(LPCTSTR pszFooter);
 		void SetMainIcon(HICON hMainIcon);
-		void SetMainIcon(LPCWSTR lpszMainIcon);
-		void SetMainInstruction(LPCWSTR pszMainInstruction);
+		void SetMainIcon(LPCTSTR lpszMainIcon);
+		void SetMainInstruction(LPCTSTR pszMainInstruction);
 		void SetOptions(TASKDIALOG_FLAGS dwFlags);
 		void SetProgressBarMarquee(BOOL bEnabled = TRUE, int nMarqueeSpeed = 0);
 		void SetProgressBarPosition(int nProgressPos);
 		void SetProgressBarRange(int nMinRange, int nMaxRange);
 		void SetProgressBarState(int nNewState = PBST_NORMAL);
 		void SetVerificationCheckbox(BOOL bChecked);
-		void SetVerificationCheckboxText(LPCWSTR pszVerificationText);
-		void SetWindowTitle(LPCWSTR pszWindowTitle);
+		void SetVerificationCheckboxText(LPCTSTR pszVerificationText);
+		void SetWindowTitle(LPCTSTR pszWindowTitle);
 		static HRESULT CALLBACK StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData);
+		void StoreText(std::vector<WCHAR>& vWChar, LPCTSTR pFromTChar);
 		LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		void UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCWSTR pszNewText);
+		void UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText);
 
 	protected:
 		// Override these functions as required
@@ -116,7 +117,7 @@ namespace Win32xx
 		virtual void OnTDDestroyed();
 		virtual void OnTDExpandButtonClicked(BOOL bExpanded);
 		virtual void OnTDHelp();
-		virtual void OnTDHyperlinkClicked(LPCWSTR pszHref);
+		virtual void OnTDHyperlinkClicked(LPCTSTR pszHref);
 		virtual void OnTDNavigatePage();
 		virtual BOOL OnTDRadioButtonClicked(int nRadioButtonID);
 		virtual void OnTDTimer(DWORD dwTickCount);
@@ -128,6 +129,18 @@ namespace Win32xx
 
 		std::vector<TASKDIALOG_BUTTON> m_vButtons;
 		std::vector<TASKDIALOG_BUTTON> m_vRadioButtons;
+
+		std::vector< std::vector<WCHAR> > m_vButtonsText;
+		std::vector< std::vector<WCHAR> > m_vRadioButtonsText;
+
+		std::vector<WCHAR> m_vWindowTitle;
+		std::vector<WCHAR> m_vMainInstruction;
+		std::vector<WCHAR> m_vContent;
+		std::vector<WCHAR> m_vVerificationText;
+		std::vector<WCHAR> m_vExpandedInformation;
+		std::vector<WCHAR> m_vExpandedControlText;
+		std::vector<WCHAR> m_vCollapsedControlText;
+		std::vector<WCHAR> m_vFooter;
 
 		TASKDIALOGCONFIG m_tc;
 		int		m_SelectedButtonID;
@@ -151,30 +164,41 @@ namespace Win32xx
 		m_tc.pfCallback = CTaskDialog::StaticTaskDialogProc;
 	}
 
-	inline void CTaskDialog::AddButton(int nButtonID, LPCTSTR strCaption)
+	inline void CTaskDialog::AddButton(int nButtonID, LPCTSTR pszCaption)
 	// Adds a push button to the Task Dialog.
 	{
 		assert (m_hWnd == NULL);
 
+		std::vector<WCHAR> vButtonText;
+		StoreText(vButtonText, pszCaption);
+		m_vButtonsText.push_back(vButtonText);	// m_vButtonsText is a vector of vector<WCHAR>'s
+
 		TASKDIALOG_BUTTON tdb;
 		tdb.nButtonID = nButtonID;
-		tdb.pszButtonText = strCaption;
+		tdb.pszButtonText = &m_vButtonsText.back().front();
+
 		m_vButtons.push_back(tdb);
 	}
 
-	inline void CTaskDialog::AddRadioButton(int nRadioButtonID, LPCTSTR strCaption)
+	inline void CTaskDialog::AddRadioButton(int nRadioButtonID, LPCTSTR pszCaption)
 	// Adds a radio button to the Task Dialog.
 	{
 		assert (m_hWnd == NULL);
 
+		std::vector<WCHAR> vRadioButtonText;
+		StoreText(vRadioButtonText, pszCaption);
+		m_vRadioButtonsText.push_back(vRadioButtonText);	// m_vRadioButtonsText is a vector of vector<WCHAR>'s
+
 		TASKDIALOG_BUTTON tdb;
 		tdb.nButtonID = nRadioButtonID;
-		tdb.pszButtonText = strCaption;
+		tdb.pszButtonText = &m_vRadioButtonsText.back().front();
+
 		m_vRadioButtons.push_back(tdb);
 	}
 
 	inline void CTaskDialog::AddRadioButtonGroup(int nIDRadioButtonsFirst, int nIDRadioButtonsLast)
 	// Adds a range of radio buttons to the Task Dialog.
+	// Assumes the resource ID of the button and it's string match 
 	{
 		assert (m_hWnd == NULL);
 		assert(nIDRadioButtonsFirst > 0);
@@ -184,7 +208,7 @@ namespace Win32xx
 		for (int nID = nIDRadioButtonsFirst; nID <= nIDRadioButtonsLast; ++nID)
 		{
 			tdb.nButtonID = nID;
-			tdb.pszButtonText = MAKEINTRESOURCE(nID);
+			tdb.pszButtonText = MAKEINTRESOURCEW(nID);
 			m_vRadioButtons.push_back(tdb);			
 		}
 	}
@@ -222,7 +246,7 @@ namespace Win32xx
 		pTLSData->pCWnd = this;
 
 		// Declare a pointer to the TaskDialogIndirect function
-		HMODULE hComCtl = ::GetModuleHandle(L"COMCTL32.DLL");
+		HMODULE hComCtl = ::GetModuleHandle(_T("COMCTL32.DLL"));
 		assert(hComCtl);
 		typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
 		TASKDIALOGINDIRECT* pTaskDialogIndirect = (TASKDIALOGINDIRECT*)::GetProcAddress(hComCtl, "TaskDialogIndirect");
@@ -305,7 +329,7 @@ namespace Win32xx
 	BOOL CTaskDialog::IsSupported()
 	// Returns true if TaskDialogs are supported on this system.
 	{
-		HMODULE hModule = ::GetModuleHandle(L"COMCTL32.DLL");
+		HMODULE hModule = ::GetModuleHandle(_T("COMCTL32.DLL"));
 		assert(hModule);
 		
 		return (BOOL)::GetProcAddress(hModule, "TaskDialogIndirect");
@@ -349,7 +373,7 @@ namespace Win32xx
 	// Called when the user presses F1 on the keyboard.
 	{}
 
-	inline void CTaskDialog::OnTDHyperlinkClicked(LPCWSTR pszHref)
+	inline void CTaskDialog::OnTDHyperlinkClicked(LPCTSTR pszHref)
 	// Called when the user clicks on a hyperlink.
 	{
 		UNREFERENCED_PARAMETER(pszHref);
@@ -382,12 +406,14 @@ namespace Win32xx
 	{
 		assert (m_hWnd == NULL);
 		m_vButtons.clear();
+		m_vButtonsText.clear();
 	}
 
 	inline void CTaskDialog::RemoveAllRadioButtons()
 	{
 		assert (m_hWnd == NULL);
 		m_vRadioButtons.clear();
+		m_vRadioButtonsText.clear();
 	}
 
 	inline void CTaskDialog::Reset()
@@ -404,6 +430,15 @@ namespace Win32xx
 		m_SelectedButtonID = 0;
 		m_SelectedRadioButtonID = 0;
 		m_VerificationCheckboxState = FALSE;
+
+		m_vWindowTitle.clear();
+		m_vMainInstruction.clear();
+		m_vContent.clear();
+		m_vVerificationText.clear();
+		m_vExpandedInformation.clear();
+		m_vExpandedControlText.clear();
+		m_vCollapsedControlText.clear();
+		m_vFooter.clear();
 	}
 
 	inline void CTaskDialog::SetCommonButtons(TASKDIALOG_COMMON_BUTTON_FLAGS dwCommonButtons)
@@ -419,11 +454,12 @@ namespace Win32xx
 		m_tc.dwCommonButtons = dwCommonButtons; 
 	}
 
-	inline void CTaskDialog::SetContent(LPCWSTR pszContent)
+	inline void CTaskDialog::SetContent(LPCTSTR pszContent)
 	// Set the task dialog's primary content.
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszContent = pszContent; 
+		StoreText(m_vContent, pszContent);
+		m_tc.pszContent = &m_vContent.front(); 
 	}
 
 	inline void CTaskDialog::SetDefaultButton(int nButtonID) 
@@ -449,7 +485,7 @@ namespace Win32xx
 		m_tc.cxWidth = nWidth;
 	}
 
-	inline void CTaskDialog::SetElementText(TASKDIALOG_ELEMENTS eElements, LPCWSTR pszText)
+	inline void CTaskDialog::SetElementText(TASKDIALOG_ELEMENTS eElements, LPCTSTR pszText)
 	// Sets the text of one of the Task Dialog's elements.
 	// eElement must be one of these predefined values:
 	//  TDE_CONTENT							Content.
@@ -458,17 +494,22 @@ namespace Win32xx
 	//  TDE_MAIN_INSTRUCTION				Main instruction.
 	{
 		assert(m_hWnd);
-		SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)eElements, (LPARAM)pszText);
+		SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)eElements, (LPARAM)TCharToWide(pszText));
 	}
 
-	inline void CTaskDialog::SetExpansionArea(LPCWSTR pszExpandedInfo, LPCWSTR pszExpandedLabel /* = _T("")*/, LPCWSTR pszCollapsedLabel /* = _T("")*/)
+	inline void CTaskDialog::SetExpansionArea(LPCTSTR pszExpandedInfo, LPCTSTR pszExpandedLabel /* = _T("")*/, LPCTSTR pszCollapsedLabel /* = _T("")*/)
 	// Sets the text in the exandable area of the Task Dialog.
 	{
 		assert (m_hWnd == NULL);
 
-		m_tc.pszExpandedInformation = pszExpandedInfo;
-		m_tc.pszExpandedControlText = pszExpandedLabel;
-		m_tc.pszCollapsedControlText = pszCollapsedLabel;
+		StoreText(m_vExpandedInformation, pszExpandedInfo);
+		m_tc.pszExpandedInformation = &m_vExpandedInformation.front();
+		
+		StoreText(m_vExpandedControlText, pszExpandedLabel);
+		m_tc.pszExpandedControlText = &m_vExpandedControlText.front();
+		
+		StoreText(m_vCollapsedControlText, pszCollapsedLabel);
+		m_tc.pszCollapsedControlText = &m_vCollapsedControlText.front();
 	}
 
 	inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon) 
@@ -478,18 +519,19 @@ namespace Win32xx
 		m_tc.hFooterIcon = hFooterIcon;
 	}
 
-	inline void CTaskDialog::SetFooterIcon(LPCWSTR lpszFooterIcon) 
+	inline void CTaskDialog::SetFooterIcon(LPCTSTR lpszFooterIcon) 
 	// Sets the icon that will be displayed in the Task Dialog's footer.
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszFooterIcon = lpszFooterIcon;
+		m_tc.pszFooterIcon = (LPCWSTR)lpszFooterIcon;
 	}
 
-	inline void CTaskDialog::SetFooterText(LPCWSTR pszFooter)
+	inline void CTaskDialog::SetFooterText(LPCTSTR pszFooter)
 	// Sets the text that will be displayed in the Task Dialog's footer.
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszFooter = pszFooter;
+		StoreText(m_vFooter, pszFooter);
+		m_tc.pszFooter = &m_vFooter.front();
 	}
 
 	inline void CTaskDialog::SetMainIcon(HICON hMainIcon) 
@@ -499,18 +541,19 @@ namespace Win32xx
 		m_tc.hMainIcon = hMainIcon;
 	}
 
-	inline void CTaskDialog::SetMainIcon(LPCWSTR lpszMainIcon)
+	inline void CTaskDialog::SetMainIcon(LPCTSTR lpszMainIcon)
 	// Sets Task Dialog's main icon.
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszMainIcon = lpszMainIcon; 
+		m_tc.pszMainIcon = (LPCWSTR)lpszMainIcon; 
 	}
 
-	inline void CTaskDialog::SetMainInstruction(LPCWSTR pszMainInstruction) 
+	inline void CTaskDialog::SetMainInstruction(LPCTSTR pszMainInstruction) 
 	// Sets the Task Dialog's main instruction text.
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszMainInstruction = pszMainInstruction;
+		StoreText(m_vMainInstruction, pszMainInstruction);
+		m_tc.pszMainInstruction = &m_vMainInstruction.front();
 	}
 
 	inline void CTaskDialog::SetOptions(TASKDIALOG_FLAGS dwFlags)
@@ -574,18 +617,20 @@ namespace Win32xx
 		SendMessage(TDM_CLICK_VERIFICATION, (WPARAM)bChecked, (LPARAM)bChecked);
 	}
 
-	inline void CTaskDialog::SetVerificationCheckboxText(LPCWSTR pszVerificationText)
+	inline void CTaskDialog::SetVerificationCheckboxText(LPCTSTR pszVerificationText)
 	// Sets the text for the verification check box.
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszVerificationText = pszVerificationText;
+		StoreText(m_vVerificationText, pszVerificationText);
+		m_tc.pszVerificationText = &m_vVerificationText.front();
 	}
 
-	inline void CTaskDialog::SetWindowTitle(LPCWSTR pszWindowTitle)
+	inline void CTaskDialog::SetWindowTitle(LPCTSTR pszWindowTitle)
 	// Sets the Task Dialog's window title.
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszWindowTitle = pszWindowTitle; 
+		StoreText(m_vWindowTitle, pszWindowTitle);
+		m_tc.pszWindowTitle = &m_vWindowTitle.front(); 
 	}
 
 	inline HRESULT CALLBACK CTaskDialog::StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData)
@@ -632,6 +677,31 @@ namespace Win32xx
 
 	} // LRESULT CALLBACK StaticTaskDialogProc(...)
 
+	inline void CTaskDialog::StoreText(std::vector<WCHAR>& vWChar, LPCTSTR pFromTChar)
+	{
+		// Stores a TChar string in a WCHAR vector
+
+		std::vector<TCHAR> vTChar;
+		
+		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
+		{
+			int len = pFromTChar? lstrlen(LoadString((UINT)pFromTChar)) +1 : 1;
+			vTChar.resize(len, _T('\0'));
+			vWChar.resize(len, _T('\0'));
+			if (pFromTChar)
+				lstrcpy( &vTChar.front(), LoadString((UINT)pFromTChar));
+		}
+		else
+		{
+			int len = lstrlen(pFromTChar) +1;
+			vTChar.resize(len, _T('\0'));
+			vWChar.resize(len, _T('\0'));	
+			lstrcpy( &vTChar.front(), pFromTChar);
+		}
+		
+		lstrcpyW(&vWChar.front(), TCharToWide(&vTChar.front()) );
+	}
+
 	inline LRESULT CTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Handles the Task Dialog's notificaions.
 	{
@@ -657,7 +727,7 @@ namespace Win32xx
 			OnTDHelp();
 			break;
 		case TDN_HYPERLINK_CLICKED:
-			OnTDHyperlinkClicked((LPCWSTR)lParam);
+			OnTDHyperlinkClicked(WideToTChar((LPCWSTR)lParam));
 			break;
 		case TDN_NAVIGATED:
 			OnTDNavigatePage();
@@ -676,11 +746,11 @@ namespace Win32xx
 		return S_OK;
 	}
 
-	inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCWSTR pszNewText)
+	inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText)
 	// Updates a text element on the Task Dialog.
 	{
 		assert(m_hWnd);
-		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)pszNewText);
+		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)TCharToWide(pszNewText));
 	}
 
 }

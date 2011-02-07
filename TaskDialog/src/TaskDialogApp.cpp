@@ -26,14 +26,14 @@ BOOL CTaskDialogApp::InitInstance()
 	td.AddRadioButton( RB_OK,   MAKEINTRESOURCE(IDS_RB_OK) );
     td.AddRadioButton( RB_BAD,  MAKEINTRESOURCE(IDS_RB_BAD) );
 	td.SetDefaultRadioButton( RB_OK );
-	td.SetCommonButtons(TDCBF_CANCEL_BUTTON);
+	td.SetCommonButtons( TDCBF_CANCEL_BUTTON );
 
 	// Add the Text
-	td.SetWindowTitle(MAKEINTRESOURCE(IDS_WINDOWTITLE));
-	td.SetMainInstruction(MAKEINTRESOURCE(IDS_MAININSTRUCTION));
-	td.SetContent(MAKEINTRESOURCE(IDS_CONTENT));
-	td.SetVerificationCheckboxText(MAKEINTRESOURCE(IDS_VERIFICATIONTEXT));
-	td.SetFooterText(MAKEINTRESOURCE(IDS_FOOTER));
+	td.SetWindowTitle( MAKEINTRESOURCE(IDS_WINDOWTITLE) );
+	td.SetMainInstruction( MAKEINTRESOURCE(IDS_MAININSTRUCTION) );
+	td.SetContent( MAKEINTRESOURCE(IDS_CONTENT) );
+	td.SetVerificationCheckboxText( MAKEINTRESOURCE(IDS_VERIFICATIONTEXT) );
+	td.SetFooterText( MAKEINTRESOURCE(IDS_FOOTER) );
 
 	// Add the icons
 	HICON hIconApp;

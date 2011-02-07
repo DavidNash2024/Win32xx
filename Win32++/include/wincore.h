@@ -902,7 +902,7 @@ namespace Win32xx
 
 	}
 
-	inline LPCTSTR WideToTChar(LPWSTR pWChar)
+	inline LPCTSTR WideToTChar(LPCWSTR pWChar)
 	{
 
   #ifdef UNICODE
