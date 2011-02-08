@@ -130,8 +130,8 @@ namespace Win32xx
 		std::vector<TASKDIALOG_BUTTON> m_vButtons;
 		std::vector<TASKDIALOG_BUTTON> m_vRadioButtons;
 
-		std::vector< std::vector<WCHAR> > m_vButtonsText;
-		std::vector< std::vector<WCHAR> > m_vRadioButtonsText;
+		std::vector< std::vector<WCHAR> > m_vButtonsText;		// A vector of WCHAR vectors
+		std::vector< std::vector<WCHAR> > m_vRadioButtonsText;	// A vector of WCHAR vectors
 
 		std::vector<WCHAR> m_vWindowTitle;
 		std::vector<WCHAR> m_vMainInstruction;
@@ -686,16 +686,16 @@ namespace Win32xx
 		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
 		{
 			int len = pFromTChar? lstrlen(LoadString((UINT)pFromTChar)) +1 : 1;
-			vTChar.resize(len, _T('\0'));
-			vWChar.resize(len, _T('\0'));
+			vTChar.assign(len, _T('\0'));
+			vWChar.assign(len, _T('\0'));
 			if (pFromTChar)
 				lstrcpy( &vTChar.front(), LoadString((UINT)pFromTChar));
 		}
 		else
 		{
 			int len = lstrlen(pFromTChar) +1;
-			vTChar.resize(len, _T('\0'));
-			vWChar.resize(len, _T('\0'));	
+			vTChar.assign(len, _T('\0'));
+			vWChar.assign(len, _T('\0'));	
 			lstrcpy( &vTChar.front(), pFromTChar);
 		}
 		

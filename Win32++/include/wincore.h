@@ -2590,8 +2590,7 @@ namespace Win32xx
 	// The SetFocus function sets the keyboard focus to the window.
 	{
 		assert(::IsWindow(m_hWnd));
-	//	FromHandle( ::SetFocus(m_hWnd) );
-		return GetApp()->GetCWndFromMap( ::SetFocus(m_hWnd) );
+		return FromHandle( ::SetFocus(m_hWnd) );
 	}
 
 	inline void CWnd::SetFont(HFONT hFont, BOOL bRedraw) const
@@ -2646,7 +2645,8 @@ namespace Win32xx
 
 	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
-	// or top-level window.
+	// or top-level window. The hWndInsertAfter can be a HWND or one of:
+	// HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, HWND_TOPMOST
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
@@ -2654,7 +2654,8 @@ namespace Win32xx
 
 	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
-	// or top-level window.
+	// or top-level window. The hWndInsertAfter can be a HWND or one of:
+	// HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, HWND_TOPMOST
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
