@@ -196,8 +196,11 @@ namespace Win32xx
 			HMENU hMenu;
 			UINT  nPos;
 			UINT  fType;
-			TCHAR Text[MAX_MENU_STRING];
+			std::vector<TCHAR> vItemText;
 			HMENU hSubMenu;
+
+			ItemData() : hMenu(0), nPos(0), fType(0), hSubMenu(0) { vItemText.assign(MAX_MENU_STRING, _T('\0')); }
+			LPTSTR GetItemText() {return &vItemText.front();}
 		};
 		
 		typedef Shared_Ptr<ItemData> ItemDataPtr;
@@ -2020,6 +2023,55 @@ namespace Win32xx
 		return bRet;
 	}
 
+	inline void CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
+	{
+		// Do default processing first
+		DefWindowProc(WM_ACTIVATE, wParam, lParam);
+		
+		if (LOWORD(wParam) == WA_INACTIVE)
+		{
+			// Save the hwnd of the window which currently has focus
+			// (this must be CFrame window itself or a child window
+			if (!IsIconic()) m_hOldFocus = ::GetFocus();
+
+			// Send a notification to the view window
+			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+			NMHDR nhdr={0};
+			nhdr.hwndFrom = m_hOldFocus;
+			nhdr.idFrom = idCtrl;
+			nhdr.code = UWM_FRAMELOSTFOCUS;
+			if (GetView()->IsWindow())
+				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+		}
+		else
+		{					
+			// Now set the focus to the appropriate child window
+			if (m_hOldFocus) ::SetFocus(m_hOldFocus);
+			
+			// Send a notification to the view window
+			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
+			NMHDR nhdr={0};
+			nhdr.hwndFrom = m_hOldFocus;
+			nhdr.idFrom = idCtrl;
+			nhdr.code = UWM_FRAMEGOTFOCUS;
+			if (GetView()->IsWindow())
+				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+		} 
+	}
+
+	inline void CFrame::OnClose()
+	{
+		// Called in response to a WM_CLOSE message for the frame.	
+		ShowWindow(SW_HIDE);
+		SaveRegistrySettings();
+
+		GetMenuBar().Destroy();
+		GetToolBar().Destroy();
+		GetReBar().Destroy();
+		GetStatusBar().Destroy();
+		GetView()->Destroy();
+	}
+
 	inline void CFrame::OnCreate()
 	{
 		// This is called when the frame window is being created.
@@ -2161,7 +2213,7 @@ namespace Win32xx
 
 			// Calculate the text rect size
 			rc.left  = rc.bottom - rc.top + 2;
-			if (_tcschr(pmd->Text, _T('\t')))
+			if (_tcschr(pmd->GetItemText(), _T('\t')))
 				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
 
 			// Draw the text
@@ -2175,7 +2227,7 @@ namespace Win32xx
 			else
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 
-			DrawMenuText(DrawDC, pmd->Text, rc, colorText);
+			DrawMenuText(DrawDC, pmd->GetItemText(), rc, colorText);
 			DrawDC.SetBkMode(iMode);
 			}
 		
@@ -2195,62 +2247,13 @@ namespace Win32xx
 
 			mii.fMask = MIIM_TYPE | MIIM_DATA;
 			mii.fType = m_vMenuItemData[nItem]->fType;
-			mii.dwTypeData = m_vMenuItemData[nItem]->Text;
-			mii.cch = lstrlen(m_vMenuItemData[nItem]->Text);
+			mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
+			mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
 			mii.dwItemData = 0;
 			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
 		}
 		
 		m_vMenuItemData.clear();
-	}
-
-	inline void CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
-	{
-		// Do default processing first
-		DefWindowProc(WM_ACTIVATE, wParam, lParam);
-		
-		if (LOWORD(wParam) == WA_INACTIVE)
-		{
-			// Save the hwnd of the window which currently has focus
-			// (this must be CFrame window itself or a child window
-			if (!IsIconic()) m_hOldFocus = ::GetFocus();
-
-			// Send a notification to the view window
-			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nhdr={0};
-			nhdr.hwndFrom = m_hOldFocus;
-			nhdr.idFrom = idCtrl;
-			nhdr.code = UWM_FRAMELOSTFOCUS;
-			if (GetView()->IsWindow())
-				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-		}
-		else
-		{					
-			// Now set the focus to the appropriate child window
-			if (m_hOldFocus) ::SetFocus(m_hOldFocus);
-			
-			// Send a notification to the view window
-			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nhdr={0};
-			nhdr.hwndFrom = m_hOldFocus;
-			nhdr.idFrom = idCtrl;
-			nhdr.code = UWM_FRAMEGOTFOCUS;
-			if (GetView()->IsWindow())
-				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-		} 
-	}
-
-	inline void CFrame::OnClose()
-	{
-		// Called in response to a WM_CLOSE message for the frame.	
-		ShowWindow(SW_HIDE);
-		SaveRegistrySettings();
-
-		GetMenuBar().Destroy();
-		GetToolBar().Destroy();
-		GetReBar().Destroy();
-		GetStatusBar().Destroy();
-		GetView()->Destroy();
 	}
 
 	inline void CFrame::OnHelp()
@@ -2299,41 +2302,18 @@ namespace Win32xx
 				if (0 == mii.dwItemData)
 				{
 					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
-
-					ZeroMemory(pItem, sizeof(ItemData));
 					pItem->hMenu = hMenu;
 					pItem->nPos = i;
 					pItem->fType = mii.fType;
 					pItem->hSubMenu = mii.hSubMenu;
 					mii.fType |= MFT_OWNERDRAW;
-					lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
+					lstrcpyn(pItem->GetItemText(), szMenuItem, MAX_MENU_STRING);
 					mii.dwItemData = (DWORD_PTR)pItem;
 
 					m_vMenuItemData.push_back(ItemDataPtr(pItem));		// Store pItem in m_vMenuItemData
 					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
 				}
 			}
-
-		/*	// Specify owner-draw for the menu item type
-			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
-			{
-				if (0 == mii.dwItemData)
-				{
-					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
-
-					ZeroMemory(pItem, sizeof(ItemData));
-					pItem->hMenu = hMenu;
-					pItem->nPos = i;
-					pItem->fType = mii.fType;
-					pItem->hSubMenu = mii.hSubMenu;
-					mii.fType |= MFT_OWNERDRAW;
-					lstrcpyn(pItem->Text, szMenuItem, MAX_MENU_STRING);
-					mii.dwItemData = (DWORD_PTR)pItem;
-
-					m_vMenuItemData.push_back(pItem);		// Store pItem in m_vMenuItemData
-					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
-				}
-			} */
 		}
 	}
 
@@ -2366,10 +2346,11 @@ namespace Win32xx
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
 				nm.lfMenuFont.lfWeight = FW_BOLD;
 
+			TCHAR* pItemText = &(pmd->vItemText.front());
 			DesktopDC.CreateFontIndirect(nm.lfMenuFont);
 
 			// Calculate the size of the text
-			CSize size = DesktopDC.GetTextExtentPoint32(pmd->Text, lstrlen(pmd->Text));
+			CSize size = DesktopDC.GetTextExtentPoint32(pItemText, lstrlen(pItemText));
 
 			// Calculate the size of the icon
 			int Iconx = 16;
@@ -2380,7 +2361,7 @@ namespace Win32xx
 			pmis->itemWidth = size.cx + MAX(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
 
 			// Allow extra width if the text includes a tab
-			if (_tcschr(pmd->Text, _T('\t')))
+			if (_tcschr(pItemText, _T('\t')))
 				pmis->itemWidth += POST_TEXT_GAP;
 
 			// Allow extra width if the menu item has a sub menu

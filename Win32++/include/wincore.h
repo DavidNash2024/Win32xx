@@ -803,25 +803,32 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-		pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));
-		TCHAR* pTCharArray = &pTLSData->vTChar.front();
+		int nSize = 64;
+		TCHAR* pTCharArray = 0;
+		int nTChars = nSize;
 
-		if (0 >= ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
+		// Increase the size of our array in a loop until we load the entire string 
+		while ( nSize-1 <= nTChars )
 		{
-			// The string resource might be in the application's resources instead
-			if (0 >= ::LoadString (GetApp()->GetInstanceHandle(), nID, pTCharArray, MAX_STRING_SIZE))
-			{
-				TCHAR msg[80] = _T("");
-				::wsprintf(msg, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
-				TRACE(msg);
-				pTCharArray = 0;
-			}
+			nSize = nSize * 4;
+			pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));
+			pTCharArray = &pTLSData->vTChar.front();
+			nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
+		}
+
+		if (nTChars == 0)
+		{
+			std::vector<TCHAR> vMsgArray(80, _T('\0'));
+			TCHAR* pMsgArray = &vMsgArray.front();
+			::wsprintf(pMsgArray, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
+			TRACE(pMsgArray);
+			pTCharArray = 0;
 		}
 
 		// Never return a pointer to a local variable, it is out of scope when the function returns.
 		// We return a pointer to a TLS variable so it remains in scope.
 		return pTCharArray;
-	}
+	} 
 
 	//////////////////////////////////////////////////////////////////////////////////
 	// Global functions for text conversions

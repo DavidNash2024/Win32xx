@@ -671,14 +671,15 @@ namespace Win32xx
 				int iImage = (int)tbb.dwData;
 
 				// Calculate text size
-				TCHAR szText[80] = _T("");
+				std::vector<TCHAR> vText(MAX_MENU_STRING, _T('\0'));
+				TCHAR* pszText = &vText.front();
 				CSize TextSize;
 				if (HasText())	// Does any button have text?
 				{
 					DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
-					if (SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)&szText)> 0)
+					if (SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)pszText)> 0)
 					{
-						TextSize = DrawDC.GetTextExtentPoint32(szText, lstrlen(szText));
+						TextSize = DrawDC.GetTextExtentPoint32(pszText, lstrlen(pszText));
 					}
 					// Detach the font so it doesn't get destroyed
 					DrawDC.DetachFont();
@@ -786,7 +787,7 @@ namespace Win32xx
 				}
 
 				//Draw Text
-				if (lstrlen(szText) > 0)
+				if (lstrlen(pszText) > 0)
 				{
 					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
 					CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
@@ -811,15 +812,15 @@ namespace Win32xx
 						// Draw text twice for embossed look
 						rcText.OffsetRect(1, 1);
 						DrawDC.SetTextColor(RGB(255,255,255));
-						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT);
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
 						rcText.OffsetRect(-1, -1);
 						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT);
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
 					}
 					else
 					{
 						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-						DrawDC.DrawText(szText, lstrlen(szText), rcText, DT_LEFT | DT_END_ELLIPSIS);
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
 					}
 					DrawDC.SetBkMode(iMode);
 					// Detach the font so it doesn't get destroyed

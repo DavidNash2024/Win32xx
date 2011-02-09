@@ -643,13 +643,14 @@ namespace Win32xx
 		{
 			CDC dc = GetDC();
 			dc.AttachFont(m_hFont);
-			TCHAR szTitle[32];
+			std::vector<TCHAR> vTitle(MAX_MENU_STRING, _T('\0'));
+			TCHAR* pszTitle = &vTitle.front();
 			TCITEM tcItem = {0};
 			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
-			tcItem.cchTextMax = 32;
-			tcItem.pszText = szTitle;
+			tcItem.cchTextMax = MAX_MENU_STRING;
+			tcItem.pszText = pszTitle;
 			TabCtrl_GetItem(m_hWnd, i, &tcItem);
-			CSize TempSize = dc.GetTextExtentPoint32(szTitle, lstrlen(szTitle));
+			CSize TempSize = dc.GetTextExtentPoint32(pszTitle, lstrlen(pszTitle));
 			dc.DetachFont();
 
 			int iImageSize = 0;
@@ -680,7 +681,6 @@ namespace Win32xx
 	//	LOGFONT lf = nm.lfStatusFont;
 
 		CDC dc = GetDC();
-	//	dc.CreateFontIndirect(lf);
 		dc.AttachFont(m_hFont);
 		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		dc.DetachFont();
