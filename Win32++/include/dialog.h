@@ -115,22 +115,6 @@ namespace Win32xx
 		CWnd* m_pDlgParent;				// handle to the dialogs's parent window
 	};
 
-    enum Alignment      // used by CResizer
-    {
-        topleft,
-        topright,
-        bottomleft,
-        bottomright
-    };
-
-    struct ResizeData   // used by CResizer
-    {
-        CRect rcInit;
-        Alignment corner;
-        BOOL bFixedWidth;
-        BOOL bFixedHeight;
-    	CWnd* pWnd;
-    };
 
     //////////////////////////////////////
     // Declaration of the CResizer class
@@ -141,17 +125,41 @@ namespace Win32xx
     // To use CResizer, follow the following steps:
     // 1) Use Initialize to specify the dialog's CWnd, and min and max size.
     // 3) Use AddChild for each child window
-    // 4) Call RecalcLayout when the dialog is resized.
+    // 4) Call HandleMessage from within DialogProc.
     //
+
+
+	// Resize Dialog Styles
+#define RD_STRETCH_WIDTH		0x0001	// The item has a variable width
+#define RD_STRETCH_HEIGHT		0x0002	// The item has a variable height 
+
+	// Resize Dialog alignments
+	enum Alignment { topleft, topright, bottomleft, bottomright };
+
     class CResizer
     {
-    public:
-		CResizer() : m_pParent(0) {}
+	public:
+		CResizer() : m_pParent(0), m_xScrollPos(0), m_yScrollPos(0) {}
 		virtual ~CResizer() {}
 
-        virtual void AddChild(CWnd& Wnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight);
+        virtual void AddChild(CWnd& Wnd, Alignment corner, DWORD dwStyle);
+		virtual void HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
     	virtual void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
+		virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
+		virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
 		virtual void RecalcLayout();
+		CRect GetMinRect() const { return m_rcMin; }
+		CRect GetMaxRect() const { return m_rcMax; }
+
+		struct ResizeData
+		{
+			CRect rcInit;
+			CRect rcOld;
+			Alignment corner;
+			BOOL bFixedWidth;
+			BOOL bFixedHeight;
+    		CWnd* pWnd;
+		};
 
     private:
         CWnd* m_pParent;
@@ -160,6 +168,9 @@ namespace Win32xx
     	CRect m_rcInit;
     	CRect m_rcMin;
     	CRect m_rcMax;
+
+		int m_xScrollPos;
+		int m_yScrollPos;
     };
 
 }
@@ -599,7 +610,7 @@ namespace Win32xx
 	// Definitions for the CResizer class
 	//
 
-	void inline CResizer::AddChild(CWnd& Wnd, Alignment corner, BOOL bFixedWidth, BOOL bFixedHeight)
+	void inline CResizer::AddChild(CWnd& Wnd, Alignment corner, DWORD dwStyle)
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.
 	//
@@ -610,14 +621,32 @@ namespace Win32xx
 	{
     	ResizeData rd;
     	rd.corner = corner;
-    	rd.bFixedWidth  = bFixedWidth;
-    	rd.bFixedHeight = bFixedHeight;
+    	rd.bFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
+    	rd.bFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
     	rd.rcInit = Wnd.GetClientRect();
     	Wnd.MapWindowPoints(m_pParent, rd.rcInit);
     	rd.pWnd = &Wnd;
 
     	m_vResizeData.push_back(rd);
     }
+
+	inline void CResizer::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_SIZE:
+			RecalcLayout();
+			break;
+		
+		case WM_HSCROLL:
+			OnHScroll(wParam, lParam);
+			break;
+
+		case WM_VSCROLL:
+			OnVScroll(wParam, lParam);
+			break;
+		}
+	}
 
     void inline CResizer::Initialize(CWnd* pParent, RECT rcMin, RECT rcMax)
 	// Sets up the Resizer by specifying the parent window (usually a dialog),
@@ -629,16 +658,142 @@ namespace Win32xx
     	m_rcInit = pParent->GetClientRect();
     	m_rcMin = rcMin;
     	m_rcMax = rcMax;
+
+		// Add scroll bar support to the parent window 
+		DWORD dwStyle = m_pParent->GetClassLongPtr(GCL_STYLE);
+		dwStyle |= WS_HSCROLL | WS_VSCROLL;
+		m_pParent->SetClassLongPtr(GCL_STYLE, dwStyle);
+
     }
+
+	void inline CResizer::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		int xNewPos;
+
+		switch (LOWORD(wParam))
+		{
+			case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box.
+				xNewPos = m_xScrollPos - 50;
+				break;
+
+			case SB_PAGEDOWN: // User clicked the scroll bar shaft right of the scroll box.
+				xNewPos = m_xScrollPos + 50;
+				break;
+
+			case SB_LINEUP: // User clicked the left arrow.
+				xNewPos = m_xScrollPos - 5;
+				break;
+
+			case SB_LINEDOWN: // User clicked the right arrow.
+				xNewPos = m_xScrollPos + 5;
+				break;
+
+			case SB_THUMBPOSITION: // User dragged the scroll box.
+				xNewPos = HIWORD(wParam);
+				break;
+
+			case SB_THUMBTRACK: // User dragging the scroll box.
+				xNewPos = HIWORD(wParam);
+				break;
+
+			default:
+				xNewPos = m_xScrollPos;
+		}
+
+		// Scroll the window.
+		xNewPos = MAX(0, xNewPos);
+		xNewPos = MIN( xNewPos, GetMinRect().Width() - m_pParent->GetClientRect().Width() );
+		int xDelta = xNewPos - m_xScrollPos;
+		m_xScrollPos = xNewPos;
+		m_pParent->ScrollWindow(-xDelta, 0, NULL, NULL);
+
+		// Reset the scroll bar.
+		SCROLLINFO si = {0};
+		si.cbSize = sizeof(si);
+		si.fMask  = SIF_POS;
+		si.nPos   = m_xScrollPos;
+		m_pParent->SetScrollInfo(SB_HORZ, si, TRUE);
+	}
+
+	void inline CResizer::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
+	{
+		int yNewPos;
+
+		switch (LOWORD(wParam))
+		{
+			case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box.
+				yNewPos = m_yScrollPos - 50;
+				break;
+
+			case SB_PAGEDOWN: // User clicked the scroll bar shaft below the scroll box.
+				yNewPos = m_yScrollPos + 50;
+				break;
+
+			case SB_LINEUP: // User clicked the top arrow.
+				yNewPos = m_yScrollPos - 5;
+				break;
+
+			case SB_LINEDOWN: // User clicked the bottom arrow.
+				yNewPos = m_yScrollPos + 5;
+				break;
+
+			case SB_THUMBPOSITION: // User dragged the scroll box.
+				yNewPos = HIWORD(wParam);
+				break;
+
+			case SB_THUMBTRACK: // User dragging the scroll box.
+				yNewPos = HIWORD(wParam);
+				break;
+
+			default:
+				yNewPos = m_yScrollPos;
+		}
+
+		// Scroll the window.
+		yNewPos = MAX(0, yNewPos);
+		yNewPos = MIN( yNewPos, GetMinRect().Height() - m_pParent->GetClientRect().Height() );
+		int yDelta = yNewPos - m_yScrollPos;
+		m_yScrollPos = yNewPos;
+		m_pParent->ScrollWindow(0, -yDelta, NULL, NULL);
+
+		// Reset the scroll bar.
+		SCROLLINFO si = {0};
+		si.cbSize = sizeof(si);
+		si.fMask  = SIF_POS;
+		si.nPos   = m_yScrollPos;
+		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
+	}
 
     void inline CResizer::RecalcLayout()
     // Repositions the child windows. Call this function when handling
 	// the WM_SIZE message in the parent window.
 	{
+		TRACE(_T("CResizer::RecalcLayout\n"));
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
     	assert (NULL != m_pParent);
 
-    	CRect rcCurrent = m_pParent->GetClientRect();
+		CRect rcCurrent = m_pParent->GetWindowRect();
+		m_pParent->ScreenToClient(rcCurrent);
+		
+		// Adjust the scrolling if required
+		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
+		m_yScrollPos = MIN(m_yScrollPos, MAX(0, m_rcMin.Height() - rcCurrent.Height()) );
+		SCROLLINFO si = {0};
+		si.cbSize = sizeof(si);
+		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
+		si.nMax   =	m_rcMin.Width();
+		si.nPage  = rcCurrent.Width();
+		si.nPos   = m_xScrollPos;
+		m_pParent->SetScrollInfo(SB_HORZ, si, TRUE);
+		si.nMax   =	m_rcMin.Height();	
+		si.nPage  = rcCurrent.Height();
+		si.nPos   = m_yScrollPos;
+		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
+
+		// Enable or disable scroll bars
+		m_pParent->ShowScrollBar(SB_HORZ, (rcCurrent.Width()  < m_rcMin.Width() ) );
+		m_pParent->ShowScrollBar(SB_VERT, (rcCurrent.Height() < m_rcMin.Height()) );
+
     	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
     	rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );
     	if (!m_rcMax.IsRectEmpty())
@@ -647,13 +802,9 @@ namespace Win32xx
     		rcCurrent.bottom = MIN( rcCurrent.Height(), m_rcMax.Height() );
     	}
 
-		// Determine the x and y ratios
-    	double xRatio = (double)rcCurrent.Width()  / (double)m_rcInit.Width();
-    	double yRatio = (double)rcCurrent.Height() / (double)m_rcInit.Height();
-
 		// Declare an iterator to step through the vector
 		std::vector<ResizeData>::iterator iter;
-
+	
     	for (iter = m_vResizeData.begin(); iter < m_vResizeData.end(); ++iter)
     	{
     		int left   = 0;
@@ -665,41 +816,41 @@ namespace Win32xx
 			switch( (*iter).corner )
     		{
     		case topleft:
-    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
-    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
-    			left   = (int)((*iter).rcInit.left * xRatio);
-    			top    = (int)((*iter).rcInit.top * yRatio);
-
+				width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+    			left   = (*iter).rcInit.left;
+    			top    = (*iter).rcInit.top;
     			break;
     		case topright:
-    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
-    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
-    			left   = (int)((*iter).rcInit.right * xRatio)  - width;
-    			top    = (int)((*iter).rcInit.top * yRatio);
-
+    			width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+    			left   = (*iter).rcInit.right - width - m_rcInit.Width() + rcCurrent.Width();
+    			top    = (*iter).rcInit.top;
     			break;
     		case bottomleft:
-    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
-    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
-    			left   = (int)((*iter).rcInit.left * xRatio);
-    			top    = (int)((*iter).rcInit.bottom * yRatio) - height;
-
+    			width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+    			left   = (*iter).rcInit.right - width;
+    			top    = (*iter).rcInit.bottom - height - m_rcInit.Height() + rcCurrent.Height();
     			break;
     		case bottomright:
-    			width  = (int)((*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()*xRatio);
-    			height = (int)((*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height()*yRatio);
-    			left   = (int)((*iter).rcInit.right * xRatio)  - width;
-    			top    = (int)((*iter).rcInit.bottom * yRatio) - height;
-
+    			width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+    			left   = (*iter).rcInit.right   - width - m_rcInit.Width() + rcCurrent.Width();
+    			top    = (*iter).rcInit.bottom  - height - m_rcInit.Height() + rcCurrent.Height();
     			break;
     		}
 
+	
 			// Position the child window.
-    		(*iter).pWnd->SetWindowPos(NULL, left, top, width, height, 0);
+			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
+			if ( rc != (*iter).rcOld)
+			{
+    			(*iter).pWnd->SetWindowPos(NULL, rc, SWP_NOCOPYBITS);
+				(*iter).rcOld = rc;
+			}			
     	}
 
-    	// Redraw the parent window
-		m_pParent->Invalidate();
     }
 
 } // namespace Win32xx

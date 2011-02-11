@@ -2,6 +2,9 @@ Version 7.1
 ===========
 New Features and Enhancements
 -----------------------------
+* Enhanced CResizer.
+   - The anchor points are now fixed instead of proportional
+   - Scrollbars are now added when required.
 * Create now use a CWnd pointer instead of a HWND when specifying the 
    parent window.
 * Dialogs and Property Sheets now use a CWnd pointer instead of a HWND
@@ -21,6 +24,9 @@ New Features and Enhancements
 - Added CDockContainer::SetActiveContainer
 - Added CDocker::Close
 - Added CDocker::SetCaptionHeight
+- Added CResizer::GetMaxRect
+- Added CResizer::GetMinRect
+- Added CResizer::HandleMessage
 - Added CTab::SetFixedWidth
 - Added CTab::SetOwnerDraw
 - Added CWnd::BeginPaint

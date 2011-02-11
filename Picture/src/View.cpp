@@ -123,29 +123,6 @@ void CView::OnPaint(CDC& dc)
 	Paint(dc);
 }
 
-void CView::Paint(HDC hDC)
-{
-	if (m_pPicture)
-	{
-		// get width and height of picture
-		long hmWidth;
-		long hmHeight;
-		m_pPicture->get_Width(&hmWidth);
-		m_pPicture->get_Height(&hmHeight);
-
-		// convert himetric to pixels
-		int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
-		int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
-
-		// calculate himetric start pos
-		int xStart = MulDiv(m_xCurrentScroll, HIMETRIC_INCH, GetDeviceCaps(hDC, LOGPIXELSX));
-		int yStart = MulDiv(m_yCurrentScroll, HIMETRIC_INCH, GetDeviceCaps(hDC, LOGPIXELSY));
-
-		// Render the picture to the DC
-		m_pPicture->Render(hDC, 0, 0, nWidth, nHeight, xStart, hmHeight - yStart, hmWidth, -hmHeight, NULL);
-	}
-}
-
 void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
 {
 	int xNewPos;
@@ -191,7 +168,6 @@ void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
 	SCROLLINFO si = {0};
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
-	si.cbSize = sizeof(si);
 	si.fMask  = SIF_POS;
 	si.nPos   = m_xCurrentScroll;
 	SetScrollInfo(SB_HORZ, si, TRUE);
@@ -301,6 +277,29 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 		// Paint the window directly to eliminate flicker
 		CDC dcView = GetDC();
 		Paint(dcView);
+	}
+}
+
+void CView::Paint(HDC hDC)
+{
+	if (m_pPicture)
+	{
+		// get width and height of picture
+		long hmWidth;
+		long hmHeight;
+		m_pPicture->get_Width(&hmWidth);
+		m_pPicture->get_Height(&hmHeight);
+
+		// convert himetric to pixels
+		int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
+		int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
+
+		// calculate himetric start pos
+		int xStart = MulDiv(m_xCurrentScroll, HIMETRIC_INCH, GetDeviceCaps(hDC, LOGPIXELSX));
+		int yStart = MulDiv(m_yCurrentScroll, HIMETRIC_INCH, GetDeviceCaps(hDC, LOGPIXELSY));
+
+		// Render the picture to the DC
+		m_pPicture->Render(hDC, 0, 0, nWidth, nHeight, xStart, hmHeight - yStart, hmWidth, -hmHeight, NULL);
 	}
 }
 

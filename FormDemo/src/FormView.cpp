@@ -33,13 +33,15 @@ HWND CFormView::Create(CWnd* pParent = 0)
 
 INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
+	m_Resizer.HandleMessage(uMsg, wParam, lParam);
+
+/*	switch (uMsg)
 	{
 	case WM_SIZE:
 		m_Resizer.RecalcLayout();
+		break;
 
-		break;	
-	}
+	} */
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
@@ -129,20 +131,20 @@ BOOL CFormView::OnInitDialog()
 	
 	// Initialize dialog resizing
 	m_Resizer.Initialize( this, CRect(0, 0, 300, 270) );
-	m_Resizer.AddChild(m_RadioA,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(m_RadioB,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(m_RadioC,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(m_CheckA,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(m_CheckB,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(m_CheckC,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(m_Button,   topleft, TRUE, TRUE);
-	m_Resizer.AddChild(m_Edit,     topleft, FALSE, FALSE);
-	m_Resizer.AddChild(m_ListBox,  topleft, FALSE, FALSE);
-	m_Resizer.AddChild(m_RichEdit, topleft, FALSE, FALSE);
-	m_Resizer.AddChild(m_Bitmap,   topright, TRUE, TRUE);
-	m_Resizer.AddChild(m_OK,       bottomright, TRUE, TRUE);
-	m_Resizer.AddChild(m_Group,    bottomright, FALSE, FALSE);
-	m_Resizer.AddChild(m_Status,   bottomright, FALSE, FALSE);
+	m_Resizer.AddChild(m_RadioA,   topleft, 0);
+	m_Resizer.AddChild(m_RadioB,   topleft, 0);
+	m_Resizer.AddChild(m_RadioC,   topleft, 0);
+	m_Resizer.AddChild(m_CheckA,   topleft, 0);
+	m_Resizer.AddChild(m_CheckB,   topleft, 0);
+	m_Resizer.AddChild(m_CheckC,   topleft, 0);
+	m_Resizer.AddChild(m_Button,   topleft, 0);
+	m_Resizer.AddChild(m_Edit,     topleft, RD_STRETCH_WIDTH);
+	m_Resizer.AddChild(m_ListBox,  topleft, RD_STRETCH_WIDTH);
+	m_Resizer.AddChild(m_RichEdit, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+	m_Resizer.AddChild(m_Bitmap,   topright, 0);
+	m_Resizer.AddChild(m_OK,       bottomright, 0);
+	m_Resizer.AddChild(m_Group,    bottomright, RD_STRETCH_HEIGHT);
+	m_Resizer.AddChild(m_Status,   bottomright, RD_STRETCH_HEIGHT);
 	
 	return true;
 }
