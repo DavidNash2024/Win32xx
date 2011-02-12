@@ -201,7 +201,7 @@ namespace Win32xx
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void	OnCreate();
 		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnEraseBkGnd(WPARAM wParam, LPARAM lParam);
+		virtual BOOL    OnEraseBkGnd(CDC& dc);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1522,12 +1522,12 @@ namespace Win32xx
 		CloseAllMDIChildren();
 	}
 
-	inline LRESULT CTabbedMDI::OnEraseBkGnd(WPARAM wParam, LPARAM lParam)
+	inline BOOL CTabbedMDI::OnEraseBkGnd(CDC& dc)
 	{
 		if (GetTab().GetItemCount() >0)
-			return 0;
+			return TRUE;
 
-		return CWnd::WndProcDefault(WM_ERASEBKGND, wParam, lParam);
+		return FALSE;
 	}
 
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
@@ -1644,8 +1644,8 @@ namespace Win32xx
 		case WM_DESTROY:
 			OnDestroy(wParam, lParam);
 			break;
-		case WM_ERASEBKGND:
-			return OnEraseBkGnd(wParam, lParam);
+	//	case WM_ERASEBKGND:
+	//		return OnEraseBkGnd(wParam, lParam);
 
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged(wParam, lParam);

@@ -260,7 +260,7 @@ void CMainFrame::OnInitialUpdate()
 {
 	// Here we process the command line arguments, and automatically load a file if one is specified.
 	// GetCommandLineW retrieves our command line arguments.
-	// CommandLineToArgvW parses the command line arguements in to an array of strings 
+	// CommandLineToArgvW parses the command line arguements in to an array of strings
 	// The first string (lpArgv[0]) contains the name of our program
 	// The second string (lpArg[1]) contains an additional parameter (presumably a filename to load).
 	// CommandLineToArgvW is not supported in Win95, Win98 or WinME
@@ -271,8 +271,8 @@ void CMainFrame::OnInitialUpdate()
 	if (hMod)
 	{
 		// Get a pointer to the CommandLineToArgvW function
-		typedef LPWSTR* WINAPI COMMANDLINETOARGVW(LPCWSTR, int*);
-		COMMANDLINETOARGVW* fpGetCommandLineW = (COMMANDLINETOARGVW*)GetProcAddress(hMod, "CommandLineToArgvW");
+		LPWSTR* (WINAPI* fpGetCommandLineW)(LPCWSTR, int*);
+		fpGetCommandLineW = (LPWSTR* (WINAPI*)(LPCWSTR, int*))::GetProcAddress(hMod, "CommandLineToArgvW");
 
 		if (fpGetCommandLineW)
 		{

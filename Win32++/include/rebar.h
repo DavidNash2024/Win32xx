@@ -109,7 +109,7 @@ namespace Win32xx
 
 	protected:
 	//Overridables
-		virtual BOOL OnEraseBkgnd(HDC hDC);
+		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -331,7 +331,7 @@ namespace Win32xx
 		return !(rbbi.fStyle & RBBS_HIDDEN);
 	}
 
-	inline BOOL CReBar::OnEraseBkgnd(HDC hDC)
+	inline BOOL CReBar::OnEraseBkgnd(CDC& dc)
 	{
 		BOOL Erase = TRUE;
 		if (!m_Theme.UseThemes)
@@ -347,8 +347,8 @@ namespace Win32xx
 			int BarHeight = rcReBar.Height();
 
 			// Create and set up our memory DC
-			CDC MemDC = ::CreateCompatibleDC(hDC);
-			MemDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
+			CDC MemDC = ::CreateCompatibleDC(dc);
+			MemDC.CreateCompatibleBitmap(dc, BarWidth, BarHeight);
 
 			// Draw to ReBar background to the memory DC
 			rcReBar.right = 600;
@@ -388,8 +388,8 @@ namespace Win32xx
 							rcDraw.left -= xPad;
 
 							// Fill the Source CDC with the band's background
-							CDC SourceDC = ::CreateCompatibleDC(hDC);
-							SourceDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
+							CDC SourceDC = ::CreateCompatibleDC(dc);
+							SourceDC.CreateCompatibleBitmap(dc, BarWidth, BarHeight);
 							CRect rcBorder = GetBandBorders(nBand);
 							rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
 							SourceDC.SolidFill(m_Theme.clrBand1, rcDraw);
@@ -401,8 +401,8 @@ namespace Win32xx
 							int Curve = m_Theme.RoundBorders? 12 : 0;
 
 							// Create our mask for rounded edges using RoundRect
-							CDC MaskDC = ::CreateCompatibleDC(hDC);
-							MaskDC.CreateCompatibleBitmap(hDC, BarWidth, BarHeight);
+							CDC MaskDC = ::CreateCompatibleDC(dc);
+							MaskDC.CreateCompatibleBitmap(dc, BarWidth, BarHeight);
 
 							rcDraw.top = rcBand.top;
 							if (!m_Theme.FlatStyle)
@@ -457,7 +457,7 @@ namespace Win32xx
 			}
 
 			// Copy the Memory DC to the window's DC
-			::BitBlt(hDC, 0, 0, BarWidth, BarHeight, MemDC, 0, 0, SRCCOPY);
+			dc.BitBlt(0, 0, BarWidth, BarHeight, MemDC, 0, 0, SRCCOPY);
 		}
 		
 		return Erase;
@@ -685,10 +685,6 @@ namespace Win32xx
 				}
 			}
 			m_bIsDragging = FALSE;
-			break;
-		case WM_ERASEBKGND:
-			if (OnEraseBkgnd((HDC)wParam))
-				return TRUE;
 			break;
 		case UWM_GETREBARTHEME:
 			{

@@ -12,7 +12,9 @@ New Features and Enhancements
 * CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
    are now optional.
 * Added support for Task Dialogs
-* Tutorials now demonstrate the use of command line arguments   
+* OnEraseBkgnd is now called automatically when a CWnd's background needs
+   erasing. Return TRUE to prevent default erasure.
+* Scribble Tutorial now demonstrates the use of command line arguments   
 
 - Added CTaskDialog
 - Added tStringStream typedef (a TCHAR stringstream)

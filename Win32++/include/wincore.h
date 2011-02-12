@@ -468,6 +468,7 @@ namespace Win32xx
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
+		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void OnInitialUpdate();
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -841,6 +842,7 @@ namespace Win32xx
 	inline LPCWSTR CharToWide(LPCSTR pChar)
 	{
 		assert( GetApp() );
+		if (pChar == NULL) return NULL;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -860,6 +862,7 @@ namespace Win32xx
 	inline LPCSTR WideToChar(LPCWSTR pWChar)
 	{
 		assert( GetApp() );
+		if (pWChar == NULL) return NULL;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -1606,6 +1609,20 @@ namespace Win32xx
 		//  during window creation.
 	}
 
+	inline BOOL CWnd::OnEraseBkgnd(CDC& dc)
+	// Called when the background of the window's client area needs to be erased.
+	{
+		UNREFERENCED_PARAMETER(dc);
+
+	    // Override this function in your derived class to perform drawing tasks.
+		
+		// Return Value: Return FALSE to also permit default erasure of the background
+		//				 Return TRUE to prevent default erasure of the background 
+
+		return FALSE;
+	}
+
+
 	inline void CWnd::OnInitialUpdate()
 	{
 		// This function is called automatically once the window is created
@@ -2058,6 +2075,16 @@ namespace Win32xx
 				}
 			}
 			return 0L;
+
+		case WM_ERASEBKGND:
+			{
+				CDC dc = (HDC)wParam;
+				BOOL bResult = OnEraseBkgnd(dc);
+				dc.DetachDC();
+
+				if (bResult) return TRUE;
+			}
+			break;
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
