@@ -263,14 +263,32 @@ void CMainFrame::OnInitialUpdate()
 	// CommandLineToArgvW parses the command line arguements in to an array of strings 
 	// The first string (lpArgv[0]) contains the name of our program
 	// The second string (lpArg[1]) contains an additional parameter (presumably a filename to load).
+	// CommandLineToArgvW is not supported in Win95, Win98 or WinME
 
-	int argCount = 0;
-	LPWSTR* lpArgv = ::CommandLineToArgvW(::GetCommandLineW(), &argCount);
 
-	// The second argument (if any) contains our file name.
-	if (argCount >= 2)
+	// CommandLineToArgvW might not be supported, so use run-time dynamic linking to call the function
+	HMODULE hMod = LoadLibrary(_T("Shell32.dll"));
+	if (hMod)
 	{
-		m_View.FileOpen((WideToTChar(lpArgv[1])));
+		// Get a pointer to the CommandLineToArgvW function
+		typedef LPWSTR* WINAPI COMMANDLINETOARGVW(LPCWSTR, int*);
+		COMMANDLINETOARGVW* fpGetCommandLineW = (COMMANDLINETOARGVW*)GetProcAddress(hMod, "CommandLineToArgvW");
+
+		if (fpGetCommandLineW)
+		{
+			int argCount = 0;
+			LPWSTR* lpArgv = (*fpGetCommandLineW)(::GetCommandLineW(), &argCount);
+
+			// The second argument (if any) contains our file name.
+			if (argCount >= 2)
+			{
+				m_View.FileOpen((WideToTChar(lpArgv[1])));
+			}
+
+			LocalFree(lpArgv);
+		}
+
+		FreeLibrary(hMod);
 	}
 }
 
