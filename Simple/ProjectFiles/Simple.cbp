@@ -135,6 +135,7 @@
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
+					<Add library="Oleaut32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -155,6 +156,7 @@
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
+					<Add library="Oleaut32" />
 				</Linker>
 			</Target>
 		</Build>

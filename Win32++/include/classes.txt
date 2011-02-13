@@ -12,7 +12,7 @@ controls.h        | CAnimation       | Win32, Win64      | Adds support for the
 				  |	CSpinButton      |                   |
 ------------------+------------------+-------------------+---------------------				  
 dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
-                  | CResizer         | and WinCE         |
+                  | CResizer         | WinCE for CDialog |
 ------------------+------------------+-------------------+---------------------
 docking.h         | CDocker          | Win32, Win64      | Adds support for
                   | CDockContainer   |                   | docking windows and
