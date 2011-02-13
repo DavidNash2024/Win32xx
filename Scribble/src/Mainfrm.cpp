@@ -282,7 +282,7 @@ void CMainFrame::OnInitialUpdate()
 			// The second argument (if any) contains our file name.
 			if (argCount >= 2)
 			{
-				m_View.FileOpen((WideToTChar(lpArgv[1])));
+				m_View.FileOpen((W2T(lpArgv[1])));
 			}
 
 			LocalFree(lpArgv);

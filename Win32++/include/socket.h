@@ -276,8 +276,8 @@ namespace Win32xx
 		}
 		else
 		{
-			std::string sAddr = TCharToChar(addr);
-			std::string sPort = TCharToChar(port);
+			std::string sAddr = T2A(addr);
+			std::string sPort = T2A(port);
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
@@ -345,8 +345,8 @@ namespace Win32xx
 		}
 		else
 		{
-			std::string sAddr = TCharToChar(addr);
-			std::string sPort = TCharToChar(port);
+			std::string sAddr = T2A(addr);
+			std::string sPort = T2A(port);
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
@@ -514,8 +514,8 @@ namespace Win32xx
 
 #ifdef GetAddrInfo
 
-		std::string sNodeName = TCharToChar(nodename);
-		std::string sServName = TCharToChar(servname);
+		std::string sNodeName = T2A(nodename);
+		std::string sServName = T2A(servname);
 		return (*m_pfnGetAddrInfo)(sNodeName.c_str(), sServName.c_str(), hints, res);
 
 #else
@@ -637,7 +637,7 @@ namespace Win32xx
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("Receive failed\n"));
 
-		lstrcpyn(buf, CharToTChar(pCharArray), len);
+		lstrcpyn(buf, A2T(pCharArray), len);
 
 		return Result;
 	}
@@ -651,14 +651,14 @@ namespace Win32xx
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("ReceiveFrom failed\n"));
 
-		lstrcpyn(buf, CharToTChar(pCharArray), len);
+		lstrcpyn(buf, A2T(pCharArray), len);
 
 		return Result;
 	}
 
 	inline int CSocket::Send(LPCTSTR buf, int len, int flags)
 	{
-		int Result = ::send(m_Socket, TCharToChar(buf), len, flags);
+		int Result = ::send(m_Socket, T2A(buf), len, flags);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("Send failed\n"));
 
@@ -669,9 +669,9 @@ namespace Win32xx
 	// The sendto function sends data to a specific destination.
 	{
 		int RetVal = 0;
-		std::string sAddr = TCharToChar(addr);
-		std::string sPort = TCharToChar(port);
-		std::string sSend = TCharToChar(send);
+		std::string sAddr = T2A(addr);
+		std::string sPort = T2A(port);
+		std::string sSend = T2A(send);
 
 		if (IsIPV6Supported())
 		{
@@ -704,9 +704,9 @@ namespace Win32xx
 		}
 		else
 		{
-			std::string sAddr = TCharToChar(addr);
-			std::string sPort = TCharToChar(port);
-			std::string sSend = TCharToChar(send);
+			std::string sAddr = T2A(addr);
+			std::string sPort = T2A(port);
+			std::string sSend = T2A(send);
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
@@ -730,7 +730,7 @@ namespace Win32xx
 	inline int CSocket::SendTo(LPCTSTR buf, int len, int flags, const struct sockaddr* to, int tolen)
 	// The sendto function sends data to a specific destination.
 	{
-		int Result =  ::sendto(m_Socket, TCharToChar(buf), len, flags, to, tolen);
+		int Result =  ::sendto(m_Socket, T2A(buf), len, flags, to, tolen);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("SendTo failed\n"));
 

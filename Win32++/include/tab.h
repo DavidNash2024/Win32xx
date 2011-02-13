@@ -1522,7 +1522,7 @@ namespace Win32xx
 		CloseAllMDIChildren();
 	}
 
-	inline BOOL CTabbedMDI::OnEraseBkGnd(CDC& dc)
+	inline BOOL CTabbedMDI::OnEraseBkGnd(CDC& /*dc*/)
 	{
 		if (GetTab().GetItemCount() >0)
 			return TRUE;

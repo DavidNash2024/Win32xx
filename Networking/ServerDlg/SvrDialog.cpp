@@ -435,7 +435,7 @@ BOOL CSvrDialog::StartServer()
 		m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 		in_addr addr = {0};
 		addr.S_un.S_addr = htonl(dwAddr);
-		tAddr = CharToTChar( inet_ntoa(addr) );
+		tAddr = A2T( inet_ntoa(addr) );
 	}
 
 	// Retrieve the local port number

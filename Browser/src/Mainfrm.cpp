@@ -259,7 +259,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		vtURL = *pDispParams->rgvarg[0].pvarVal;
 		vtURL.vt = VT_BSTR;
 
-		szString += WideToTChar(vtURL.bstrVal);
+		szString += W2T(vtURL.bstrVal);
 		szString += _T("\n");
 		TRACE(szString.c_str());
 	}
@@ -271,7 +271,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)WideToTChar(bstrUrlName));
+	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)W2T(bstrUrlName));
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
@@ -341,7 +341,7 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 {
 	tStringStream str;
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		str << _T("Property Change:") << WideToTChar(pDispParams->rgvarg[0].bstrVal);
+		str << _T("Property Change:") << W2T(pDispParams->rgvarg[0].bstrVal);
 
 	str << _T("\n");
 	TRACE(str.str().c_str());
@@ -354,9 +354,9 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 	if (GetStatusBar().IsWindow() && lpStatusText)
 	{
-		if (lstrcmp(WideToTChar(lpStatusText), _T("")))
+		if (lstrcmp(W2T(lpStatusText), _T("")))
 		{
-			GetStatusBar().SetPartText(0, WideToTChar(lpStatusText));
+			GetStatusBar().SetPartText(0, W2T(lpStatusText));
 		}
 		else
 			GetStatusBar().SetPartText(0, _T("Done"));
@@ -371,8 +371,8 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-		str << WideToTChar(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << LoadString(IDW_MAIN);
-		TRACE(WideToTChar(pDispParams->rgvarg[0].bstrVal));
+		str << W2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << LoadString(IDW_MAIN);
+		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
 		str << LoadString(IDW_MAIN);

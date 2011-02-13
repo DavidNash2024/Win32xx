@@ -12,12 +12,29 @@ New Features and Enhancements
 * CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
    are now optional.
 * Added support for Task Dialogs
+* Added a set of new Text conversion functions, and renamed others to be
+   more consistant with MFC, ATL and WTL. The complete set of functions are:
+   	inline LPTSTR A2T(LPCSTR pChar);		// ANSI  to TCHAR
+	inline LPWSTR A2W(LPCSTR pChar);		// ANSI  to Wide
+	inline LPTSTR BSTR2T(BSTR bstr);		// BSTR  to TCHAR
+	inline LPTSTR OLE2T(LPOLESTR pOLEChar);	// OLE   to TCHAR
+	inline LPSTR  T2A(LPCTSTR pTChar);		// TCHAR to ANSI
+	inline BSTR	  T2BSTR(LPCTSTR pTChar);	// TCHAR to BSTR
+	inline LPOLESTR T2OLE(LPCTSTR pTChar);	// TCHAR to OLE
+	inline LPWSTR T2W(LPCTSTR pTChar);		// TCHAR to Wide
+	inline LPSTR  W2A(LPCWSTR pWChar);		// Wide  to ANSI
+	inline LPTSTR W2T(LPCWSTR pWChar);		// Wide  to TCHAR
+   
 * OnEraseBkgnd is now called automatically when a CWnd's background needs
    erasing. Return TRUE to prevent default erasure.
 * Scribble Tutorial now demonstrates the use of command line arguments   
 
 - Added CTaskDialog
 - Added tStringStream typedef (a TCHAR stringstream)
+- Added BSTR2T
+- Added OLE2T
+- Added T2BSTR
+- Added T2OLE
 - Added CDC::GetBitmapInfo
 - Added CDC::GetBrushInfo
 - Added CDC::GetFontInfo
@@ -57,6 +74,14 @@ New Features and Enhancements
 - Modified CResizer::AddChild	now takes a CWnd reference
 - Modified CWnd::Create 		now takes a CWnd pointer instead of HWND
 - Modified CWnd::CreateEx       now takes a CWnd pointer instead of HWND
+
+- Renamed CharToWide  to A2W
+- Renamed CharToTChar to A2T
+- Renamed TCharToChar to T2A
+- Renamed TCharToWide to T2W
+- Renamed WideToChar  to W2A
+- Renamed WideToTChar to W2T
+
 - Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
 - Moved CWnd::LoadBitmap to LoadBitmap

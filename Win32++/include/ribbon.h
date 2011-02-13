@@ -418,7 +418,7 @@ namespace Win32xx
 			{
 				tString strCurrentFile = (*iter);
 				WCHAR wszCurrentFile[MAX_PATH] = {0L};
-				lstrcpynW(wszCurrentFile, TCharToWide(strCurrentFile.c_str()), MAX_PATH);
+				lstrcpynW(wszCurrentFile, T2W(strCurrentFile.c_str()), MAX_PATH);
 				
 				CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
 				m_vRecentFiles.push_back(RecentFilesPtr(pRecentFiles));

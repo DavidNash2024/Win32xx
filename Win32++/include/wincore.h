@@ -243,23 +243,45 @@ namespace Win32xx
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
-		std::vector<char>  vChar;	// A vector used as a char array for text conversions
-		std::vector<TCHAR> vTChar;	// A vector used as a TCHAR array for LoadString
-		std::vector<WCHAR> vWChar;	// A vector used as a WCHAR array for text conversions
+		std::vector<char>  vChar;		// A vector used as a char array for text conversions
+		std::vector<TCHAR> vTChar;		// A vector used as a TCHAR array for LoadString
+		std::vector<WCHAR> vWChar;		// A vector used as a WCHAR array for text conversions
+		std::vector<OLECHAR> vOLEChar;	// A vector used as an OLE array for text conversions
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
+		BSTR bstr;						// A BSTR string
 
-		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
+		TLSData() : pCWnd(0), pMenuBar(0), hHook(0), bstr(0) {}
+		~TLSData() 
+		{ 
+			// Some compilers require oleaut32.lib to be linked, unless we call SysFreeString like this
+			HMODULE hMod = LoadLibrary(_T("OLEAUT32.DLL"));
+			void (WINAPI *pfnSysFreeString)(BSTR);		
+			pfnSysFreeString = (void (WINAPI *)(BSTR))::GetProcAddress(hMod, "SysFreeString");
+			(*pfnSysFreeString)(bstr);
+			FreeLibrary(hMod);
+		}
 	};
 
 	////////////////////////////////////////
 	// Global functions for text conversions
 	//
-	inline LPCWSTR CharToWide(LPCSTR pChar);
-	inline LPCTSTR CharToTChar(LPCSTR pChar);
-	inline LPCSTR TCharToChar(LPCTSTR pTChar);
-	inline LPCWSTR TCharToWide(LPCTSTR pTChar);
-	inline LPCSTR WideToChar(LPCWSTR pWChar);
+	inline LPTSTR A2T(LPCSTR pChar);		// ANSI  to TCHAR
+	inline LPWSTR A2W(LPCSTR pChar);		// ANSI  to Wide
+	inline LPTSTR BSTR2T(BSTR bstr);		// BSTR  to TCHAR
+	inline LPTSTR OLE2T(LPOLESTR pOLEChar);	// OLE   to TCHAR
+	inline LPSTR  T2A(LPCTSTR pTChar);		// TCHAR to ANSI
+	inline BSTR	  T2BSTR(LPCTSTR pTChar);	// TCHAR to BSTR
+	inline LPOLESTR T2OLE(LPCTSTR pTChar);	// TCHAR to OLE
+	inline LPWSTR T2W(LPCTSTR pTChar);		// TCHAR to Wide
+	inline LPSTR  W2A(LPCWSTR pWChar);		// Wide  to ANSI
+	inline LPTSTR W2T(LPCWSTR pWChar);		// Wide  to TCHAR
 
+	// Notes:
+	// char (or CHAR) character types are ANSI (8 bits).
+	// wchar_t (or WCHAR) character types are Unicode (16 bits).
+	// TCHAR characters are Unicode if the UNICODE macro is defined, otherwise they are ANSI.
+	// BSTR (Basic String) is a type of string used in Visual Basic and COM programming.
+	// OLE is the same as WCHAR. It is used in Visual Basic and COM programming.
 
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
@@ -515,9 +537,11 @@ namespace Win32xx
 		friend class CPropertySheet;
 		friend class CTaskDialog;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
-		friend LPCWSTR CharToWide(LPCSTR pChar);
+		friend LPWSTR A2W(LPCSTR pChar);
 		friend LPCTSTR LoadString(UINT nID);
-		friend LPCSTR WideToChar(LPCWSTR pWChar);
+		friend LPSTR W2A(LPCWSTR pWChar);
+		friend BSTR T2BSTR(LPCTSTR pTChar);
+		friend LPOLESTR T2OLE(LPCTSTR pTChar);
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -808,7 +832,7 @@ namespace Win32xx
 		TCHAR* pTCharArray = 0;
 		int nTChars = nSize;
 
-		// Increase the size of our array in a loop until we load the entire string 
+		// Increase the size of our array in a loop until we load the entire string
 		while ( nSize-1 <= nTChars )
 		{
 			nSize = nSize * 4;
@@ -829,7 +853,7 @@ namespace Win32xx
 		// Never return a pointer to a local variable, it is out of scope when the function returns.
 		// We return a pointer to a TLS variable so it remains in scope.
 		return pTCharArray;
-	} 
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////
 	// Global functions for text conversions
@@ -839,7 +863,7 @@ namespace Win32xx
 	//
 	//        Using TLS (Thread Local Storage) allows these functions to be thread safe.
 	//
-	inline LPCWSTR CharToWide(LPCSTR pChar)
+	inline LPWSTR A2W(LPCSTR pChar)
 	{
 		assert( GetApp() );
 		if (pChar == NULL) return NULL;
@@ -859,7 +883,7 @@ namespace Win32xx
 		return pWCharArray;
 	}
 
-	inline LPCSTR WideToChar(LPCWSTR pWChar)
+	inline LPSTR W2A(LPCWSTR pWChar)
 	{
 		assert( GetApp() );
 		if (pWChar == NULL) return NULL;
@@ -879,46 +903,84 @@ namespace Win32xx
 		return pCharArray;
 	}
 
-	inline LPCTSTR CharToTChar(LPCSTR pChar)
+	inline LPTSTR A2T(LPCSTR pChar)
 	{
 
 #ifdef UNICODE
-		return CharToWide(pChar);
+		return A2W(pChar);
 #else
-		return pChar;
+		return (LPTSTR)pChar;
 #endif
 
 	}
 
-	inline LPCSTR TCharToChar(LPCTSTR pTChar)
+	inline LPTSTR BSTR2T(BSTR bstr)
+	{
+		return W2T((LPCWSTR)bstr);
+	}
+
+	inline LPTSTR OLE2T(LPOLESTR pOLEChar)
+	{
+		return W2T(pOLEChar);
+	}
+
+	inline LPSTR T2A(LPCTSTR pTChar)
 	{
 
 #ifdef UNICODE
-		return WideToChar(pTChar);
+		return W2A(pTChar);
 #else
-		return pTChar;
+		return (LPSTR)pTChar;
 #endif
 
 	}
 
-	inline LPCWSTR TCharToWide(LPCTSTR pTChar)
+	inline LPOLESTR T2OLE(LPCTSTR pTChar)
+	{
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+
+		if (pTChar == NULL) return NULL;
+		LPWSTR szTemp = T2W(pTChar);
+
+		// Resize the vector and assign null char to each element
+		int length = (int)wcslen(szTemp)+1;
+		pTLSData->vOLEChar.assign(length, '\0');
+		LPOLESTR pOLEArray = &pTLSData->vOLEChar.front();
+		lstrcpyW(pOLEArray, szTemp);
+
+		return &pTLSData->vOLEChar.front();
+	}
+
+	inline BSTR T2BSTR(LPCTSTR pTChar)
+	{
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+
+		::SysFreeString(pTLSData->bstr);
+		pTLSData->bstr = ::SysAllocString(T2W(pTChar));
+
+		return pTLSData->bstr;
+	}
+
+	inline LPWSTR T2W(LPCTSTR pTChar)
 	{
 
   #ifdef UNICODE
-		return pTChar;
+		return (LPWSTR)pTChar;
   #else
-		return CharToWide(pTChar);
+		return A2W(pTChar);
   #endif
 
 	}
 
-	inline LPCTSTR WideToTChar(LPCWSTR pWChar)
+	inline LPTSTR W2T(LPCWSTR pWChar)
 	{
 
   #ifdef UNICODE
-		return pWChar;
+		return (LPTSTR)pWChar;
   #else
-		return WideToChar(pWChar);
+		return W2A(pWChar);
   #endif
 
 	}
@@ -1441,7 +1503,7 @@ namespace Win32xx
 
 			RegisterClass(wc);	// Register the window class (if not already registered)
 			HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-			
+
 			// Ensure this thread has the TLS index set
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
@@ -1615,9 +1677,9 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(dc);
 
 	    // Override this function in your derived class to perform drawing tasks.
-		
+
 		// Return Value: Return FALSE to also permit default erasure of the background
-		//				 Return TRUE to prevent default erasure of the background 
+		//				 Return TRUE to prevent default erasure of the background
 
 		return FALSE;
 	}

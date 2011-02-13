@@ -717,7 +717,7 @@ namespace Win32xx
 		// Navigate to our web page
 		VARIANT vURL;
 		vURL.vt = VT_BSTR;
-		vURL.bstrVal = SysAllocString(TCharToWide(pTChar));
+		vURL.bstrVal = SysAllocString(T2W(pTChar));
 		VARIANT ve1, ve2, ve3, ve4;
 		ve1.vt = VT_EMPTY;
 		ve2.vt = VT_EMPTY;

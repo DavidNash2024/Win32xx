@@ -267,7 +267,7 @@ void CClientDialog::OnStartClient()
 					m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 					in_addr addr = {0};
 					addr.S_un.S_addr = htonl(dwAddr);
-					tAddr = CharToTChar( inet_ntoa(addr) );
+					tAddr = A2T( inet_ntoa(addr) );
 				}
 
 				// Retrieve the local port number
@@ -375,7 +375,7 @@ void CClientDialog::OnSend()
 				m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 				in_addr addr = {0};
 				addr.S_un.S_addr = htonl(dwAddr);
-				tAddr = CharToTChar( inet_ntoa(addr) );
+				tAddr = A2T( inet_ntoa(addr) );
 			}
 
 			m_Client.SendTo( tSend.c_str(), lstrlen(tSend.c_str()), 0, tAddr.c_str(), tPort.c_str() );
