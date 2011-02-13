@@ -66,6 +66,10 @@
 
 #include "wincore.h"
 
+#ifndef SWP_NOCOPYBITS
+	#define SWP_NOCOPYBITS      0x0100
+#endif
+
 namespace Win32xx
 {
 
@@ -116,6 +120,8 @@ namespace Win32xx
 	};
 
 
+#ifndef _WIN32_WCE	
+	
     //////////////////////////////////////
     // Declaration of the CResizer class
     //
@@ -127,7 +133,6 @@ namespace Win32xx
     // 3) Use AddChild for each child window
     // 4) Call HandleMessage from within DialogProc.
     //
-
 
 	// Resize Dialog Styles
 #define RD_STRETCH_WIDTH		0x0001	// The item has a variable width
@@ -172,6 +177,8 @@ namespace Win32xx
 		int m_xScrollPos;
 		int m_yScrollPos;
     };
+	
+#endif	
 
 }
 
@@ -606,6 +613,10 @@ namespace Win32xx
 	}
 #endif
 
+
+
+#ifndef _WIN32_WCE
+
     /////////////////////////////////////
 	// Definitions for the CResizer class
 	//
@@ -637,7 +648,7 @@ namespace Win32xx
 		case WM_SIZE:
 			RecalcLayout();
 			break;
-		
+
 		case WM_HSCROLL:
 			OnHScroll(wParam, lParam);
 			break;
@@ -774,7 +785,7 @@ namespace Win32xx
 
 		CRect rcCurrent = m_pParent->GetWindowRect();
 		m_pParent->ScreenToClient(rcCurrent);
-		
+	
 		// Adjust the scrolling if required
 		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
 		m_yScrollPos = MIN(m_yScrollPos, MAX(0, m_rcMin.Height() - rcCurrent.Height()) );
@@ -853,7 +864,11 @@ namespace Win32xx
 
     }
 
+#endif // #ifndef _WIN32_WCE	
+	
 } // namespace Win32xx
+
+
 
 #endif // _DIALOG_H_
 

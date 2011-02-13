@@ -29,8 +29,6 @@ protected:
 	virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
 	virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LPOLESTR T2OLE(LPCTSTR szString);
-	virtual BSTR T2BSTR(LPCTSTR szString);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

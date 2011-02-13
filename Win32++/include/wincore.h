@@ -246,20 +246,12 @@ namespace Win32xx
 		std::vector<char>  vChar;		// A vector used as a char array for text conversions
 		std::vector<TCHAR> vTChar;		// A vector used as a TCHAR array for LoadString
 		std::vector<WCHAR> vWChar;		// A vector used as a WCHAR array for text conversions
-		std::vector<OLECHAR> vOLEChar;	// A vector used as an OLE array for text conversions
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		BSTR bstr;						// A BSTR string
 
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0), bstr(0) {}
-		~TLSData() 
-		{ 
-			// Some compilers require oleaut32.lib to be linked, unless we call SysFreeString like this
-			HMODULE hMod = LoadLibrary(_T("OLEAUT32.DLL"));
-			void (WINAPI *pfnSysFreeString)(BSTR);		
-			pfnSysFreeString = (void (WINAPI *)(BSTR))::GetProcAddress(hMod, "SysFreeString");
-			(*pfnSysFreeString)(bstr);
-			FreeLibrary(hMod);
-		}
+		~TLSData() { ::SysFreeString(bstr); }
+
 	};
 
 	////////////////////////////////////////
@@ -937,19 +929,7 @@ namespace Win32xx
 
 	inline LPOLESTR T2OLE(LPCTSTR pTChar)
 	{
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		if (pTChar == NULL) return NULL;
-		LPWSTR szTemp = T2W(pTChar);
-
-		// Resize the vector and assign null char to each element
-		int length = (int)wcslen(szTemp)+1;
-		pTLSData->vOLEChar.assign(length, '\0');
-		LPOLESTR pOLEArray = &pTLSData->vOLEChar.front();
-		lstrcpyW(pOLEArray, szTemp);
-
-		return &pTLSData->vOLEChar.front();
+		return (LPOLESTR)T2W(pTChar);
 	}
 
 	inline BSTR T2BSTR(LPCTSTR pTChar)

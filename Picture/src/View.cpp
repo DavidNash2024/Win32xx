@@ -327,25 +327,6 @@ void CView::SavePicture(LPCTSTR szFile)
 	}
 }
 
-BSTR CView::T2BSTR(LPCTSTR szString)
-{
-	::SysFreeString(m_BStrString);
-	m_BStrString = ::SysAllocString(T2OLE(szString));
-	return m_BStrString;
-}
-
-LPOLESTR CView::T2OLE(LPCTSTR szString)
-{
-
-#ifdef UNICODE
-	lstrcpyn(m_OleString, szString, MAX_STRING_SIZE);
-#else
-	mbstowcs(m_OleString, szString, MAX_STRING_SIZE);
-#endif
-
-	return m_OleString;
-}
-
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)

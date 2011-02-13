@@ -64,8 +64,8 @@
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/W3" />
-					<Add option="/Zi /D_DEBUG" />
 					<Add option="/Zi" />
+					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
@@ -85,6 +85,7 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="WS2_32" />
+					<Add library="Oleaut32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
@@ -117,6 +118,7 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="WS2_32" />
+					<Add library="Oleaut32" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
 				</Linker>
 			</Target>
