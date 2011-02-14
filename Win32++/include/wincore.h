@@ -243,37 +243,11 @@ namespace Win32xx
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
-		std::vector<char>  vChar;		// A vector used as a char array for text conversions
 		std::vector<TCHAR> vTChar;		// A vector used as a TCHAR array for LoadString
-		std::vector<WCHAR> vWChar;		// A vector used as a WCHAR array for text conversions
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
-		BSTR bstr;						// A BSTR string
-
-		TLSData() : pCWnd(0), pMenuBar(0), hHook(0), bstr(0) {}
-		~TLSData() { ::SysFreeString(bstr); }
-
+		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 	};
 
-	////////////////////////////////////////
-	// Global functions for text conversions
-	//
-	inline LPTSTR A2T(LPCSTR pChar);		// ANSI  to TCHAR
-	inline LPWSTR A2W(LPCSTR pChar);		// ANSI  to Wide
-	inline LPTSTR BSTR2T(BSTR bstr);		// BSTR  to TCHAR
-	inline LPTSTR OLE2T(LPOLESTR pOLEChar);	// OLE   to TCHAR
-	inline LPSTR  T2A(LPCTSTR pTChar);		// TCHAR to ANSI
-	inline BSTR	  T2BSTR(LPCTSTR pTChar);	// TCHAR to BSTR
-	inline LPOLESTR T2OLE(LPCTSTR pTChar);	// TCHAR to OLE
-	inline LPWSTR T2W(LPCTSTR pTChar);		// TCHAR to Wide
-	inline LPSTR  W2A(LPCWSTR pWChar);		// Wide  to ANSI
-	inline LPTSTR W2T(LPCWSTR pWChar);		// Wide  to TCHAR
-
-	// Notes:
-	// char (or CHAR) character types are ANSI (8 bits).
-	// wchar_t (or WCHAR) character types are Unicode (16 bits).
-	// TCHAR characters are Unicode if the UNICODE macro is defined, otherwise they are ANSI.
-	// BSTR (Basic String) is a type of string used in Visual Basic and COM programming.
-	// OLE is the same as WCHAR. It is used in Visual Basic and COM programming.
 
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
@@ -529,11 +503,11 @@ namespace Win32xx
 		friend class CPropertySheet;
 		friend class CTaskDialog;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
-		friend LPWSTR A2W(LPCSTR pChar);
+	//	friend LPWSTR A2W(LPCSTR pChar);
 		friend LPCTSTR LoadString(UINT nID);
-		friend LPSTR W2A(LPCWSTR pWChar);
-		friend BSTR T2BSTR(LPCTSTR pTChar);
-		friend LPOLESTR T2OLE(LPCTSTR pTChar);
+	//	friend LPSTR W2A(LPCWSTR pWChar);
+	//	friend BSTR T2BSTR(LPCTSTR pTChar);
+	//	friend LPOLESTR T2OLE(LPCTSTR pTChar);
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -846,125 +820,6 @@ namespace Win32xx
 		// We return a pointer to a TLS variable so it remains in scope.
 		return pTCharArray;
 	}
-
-	//////////////////////////////////////////////////////////////////////////////////
-	// Global functions for text conversions
-	// Note:  The pointers returned should be be used immediately. Otherwise, copy the
-	//        array pointed to a local array or std::string. Subsequent calls to these
-	//        functions will change the text array the returned pointer points to.
-	//
-	//        Using TLS (Thread Local Storage) allows these functions to be thread safe.
-	//
-	inline LPWSTR A2W(LPCSTR pChar)
-	{
-		assert( GetApp() );
-		if (pChar == NULL) return NULL;
-
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		// Resize the vector and assign null WCHAR to each element
-		int length = (int)strlen(pChar)+1;
-		pTLSData->vWChar.assign(length, L'\0');
-		WCHAR* pWCharArray = &pTLSData->vWChar.front();
-
-		// Fill our vector with the converted WCHAR array
-		MultiByteToWideChar(CP_ACP, 0, pChar, -1, pWCharArray, length);
-
-		// return a pointer to the first element in the vector
-		return pWCharArray;
-	}
-
-	inline LPSTR W2A(LPCWSTR pWChar)
-	{
-		assert( GetApp() );
-		if (pWChar == NULL) return NULL;
-
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		// Resize the vector and assign null char to each element
-		int length = (int)wcslen(pWChar)+1;
-		pTLSData->vChar.assign(length, '\0');
-		char* pCharArray = &pTLSData->vChar.front();
-
-		// Fill our vector with the converted char array
-		WideCharToMultiByte(CP_ACP, 0, pWChar, -1, pCharArray, length, NULL,NULL);
-
-		// return a pointer to the first element in the vector
-		return pCharArray;
-	}
-
-	inline LPTSTR A2T(LPCSTR pChar)
-	{
-
-#ifdef UNICODE
-		return A2W(pChar);
-#else
-		return (LPTSTR)pChar;
-#endif
-
-	}
-
-	inline LPTSTR BSTR2T(BSTR bstr)
-	{
-		return W2T((LPCWSTR)bstr);
-	}
-
-	inline LPTSTR OLE2T(LPOLESTR pOLEChar)
-	{
-		return W2T(pOLEChar);
-	}
-
-	inline LPSTR T2A(LPCTSTR pTChar)
-	{
-
-#ifdef UNICODE
-		return W2A(pTChar);
-#else
-		return (LPSTR)pTChar;
-#endif
-
-	}
-
-	inline LPOLESTR T2OLE(LPCTSTR pTChar)
-	{
-		return (LPOLESTR)T2W(pTChar);
-	}
-
-	inline BSTR T2BSTR(LPCTSTR pTChar)
-	{
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		::SysFreeString(pTLSData->bstr);
-		pTLSData->bstr = ::SysAllocString(T2W(pTChar));
-
-		return pTLSData->bstr;
-	}
-
-	inline LPWSTR T2W(LPCTSTR pTChar)
-	{
-
-  #ifdef UNICODE
-		return (LPWSTR)pTChar;
-  #else
-		return A2W(pTChar);
-  #endif
-
-	}
-
-	inline LPTSTR W2T(LPCWSTR pWChar)
-	{
-
-  #ifdef UNICODE
-		return (LPTSTR)pWChar;
-  #else
-		return W2A(pWChar);
-  #endif
-
-	}
-
 
 	//////////////////////////////////////////
 	// Definitions for the CWinException class

@@ -12,19 +12,24 @@ New Features and Enhancements
 * CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
    are now optional.
 * Added support for Task Dialogs
-* Added a set of new Text conversion functions, and renamed others to be
-   more consistant with MFC, ATL and WTL. The complete set of functions are:
-   	inline LPTSTR A2T(LPCSTR pChar);		// ANSI  to TCHAR
-	inline LPWSTR A2W(LPCSTR pChar);		// ANSI  to Wide
-	inline LPTSTR BSTR2T(BSTR bstr);		// BSTR  to TCHAR
-	inline LPTSTR OLE2T(LPOLESTR pOLEChar);	// OLE   to TCHAR
-	inline LPSTR  T2A(LPCTSTR pTChar);		// TCHAR to ANSI
-	inline BSTR	  T2BSTR(LPCTSTR pTChar);	// TCHAR to BSTR
-	inline LPOLESTR T2OLE(LPCTSTR pTChar);	// TCHAR to OLE
-	inline LPWSTR T2W(LPCTSTR pTChar);		// TCHAR to Wide
-	inline LPSTR  W2A(LPCWSTR pWChar);		// Wide  to ANSI
-	inline LPTSTR W2T(LPCWSTR pWChar);		// Wide  to TCHAR
-   
+* Added a set of new Text conversion functions based on classes.
+   The complete set of functions are:
+	A2BSTR		ANSI  to BSTR
+	A2OLE		ANSI  to OLE
+	A2T			ANSI  to TCHAR
+	A2W			ANSI  to WCHAR
+	OLE2A		OLE   to ANSI
+	OLE2T		OLE   to TCHAR
+	OLE2W		OLE   to WCHAR
+	T2A			TCHAR to ANSI  
+	T2BSTR		TCHAR to BSTR
+	T2OLE       TCHAR to OLE
+	T2W			TCHAR to Wide
+	W2A			WCHAR to ANSI
+	W2BSTR		WCHAR to BSTR
+	W2OLE		WCHAR to OLE
+	W2T			WCHAR to TCHAR
+   See below for examples on using the new functions.
 * OnEraseBkgnd is now called automatically when a CWnd's background needs
    erasing. Return TRUE to prevent default erasure.
 * Scribble Tutorial now demonstrates the use of command line arguments   
@@ -87,8 +92,60 @@ New Features and Enhancements
 - Moved CWnd::LoadBitmap to LoadBitmap
 - Moved CWnd::LoadString to LoadString
 
+Examples using the text conversion functions
+--------------------------------------------
+//Example 1
+// Convert LPCWSTR to LPCSTR.
+void ExampleFunctionW( LPCWSTR pszW )
+{
+   // Create an instance of CW2A, called pszA,
+   // and initialize it with pszW.
+   CW2A pszA( pszW );
+   // pszA works like an LPCSTR, and can be used thus:
+   ExampleFunctionA( pszA );  
+   // Note: pszA will become invalid when it goes out of scope.
+}
+
+// Example 2
+// Use a temporary instance of CW2A.
+void ExampleFunctionW( LPCWSTR pszW )
+{
+   // Create a temporary instance of CW2A,
+   // and initialize it with pszW.
+   ExampleFunctionA( CW2A( pszW ) );
+   // Note: the temporary instance becomes invalid 
+   // after the execution of the statement above.
+}
+
+// Example 3
+// Store a result for use later
+void ExampleFunctionW( LPCWSTR pszW )
+{
+	// Store the result in a std::string
+	std::string str = (LPSTR)W2A( pszW );
+	// Store the result in an array
+	char szArray[80];
+	lstrpyA( szArray, W2A( pszW ) );
+}
+
+// Example 4
+// Incorrect use of conversion macros.
+void ExampleFunctionW( LPCWSTR pszW )
+{
+   // Create a temporary instance of CW2A,
+   // save a pointer to it and then delete
+   // the temportary instance.
+   LPCSTR pszA = CW2A( pszW );
+   // The pszA in the following line is an invalid pointer,
+   // as the instance of CW2A has gone out of scope.
+   ExampleFunctionA( pszA );
+}
+
+
 Incompatibilities with previous versions
 ----------------------------------------
+* The old text conversion functions have been replaced with a set of new functions
+   which look and behave more like the functions used in MFC, ATL and WTL.
 * Windows, dialogs and property sheets now use a CWnd pointer instead of a HWND
    to specify the parent window.
 * CTab defaults to not using the CS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles. 

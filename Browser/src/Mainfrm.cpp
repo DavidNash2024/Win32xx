@@ -131,7 +131,7 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to menu and and toolbar input
-	
+
 	HWND hWndEdit = m_ComboboxEx.GetEditCtrl();
 
 	switch(LOWORD(wParam))
@@ -271,7 +271,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)W2T(bstrUrlName));
+	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)(LPCTSTR)W2T(bstrUrlName));
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)

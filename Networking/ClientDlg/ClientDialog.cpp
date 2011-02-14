@@ -352,7 +352,8 @@ void CClientDialog::OnSend()
 	case SOCK_STREAM:	// for TCP client
 		{
 			LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND);
-			m_Client.Send(szSend, lstrlen(szSend), 0);
+			if (SOCKET_ERROR == m_Client.Send(szSend, lstrlen(szSend), 0))
+				m_EditStatus.SetWindowText( _T("Send Failed") );
 		}
 		break;
 	case SOCK_DGRAM:	// for UDP client
@@ -378,7 +379,8 @@ void CClientDialog::OnSend()
 				tAddr = A2T( inet_ntoa(addr) );
 			}
 
-			m_Client.SendTo( tSend.c_str(), lstrlen(tSend.c_str()), 0, tAddr.c_str(), tPort.c_str() );
+			if (SOCKET_ERROR == m_Client.SendTo( tSend.c_str(), lstrlen(tSend.c_str()), 0, tAddr.c_str(), tPort.c_str() ))
+				m_EditStatus.SetWindowText( _T("SendTo Failed") );
 		}
 		break;
 	}

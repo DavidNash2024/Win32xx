@@ -244,7 +244,7 @@ namespace Win32xx
 	{
 		int RetVal = 0;
 
-		if (IsIPV6Supported())	
+		if (IsIPV6Supported())
 		{
 
 #ifdef GetAddrInfo	// Skip the following code block for older development environments
@@ -252,7 +252,7 @@ namespace Win32xx
 			ADDRINFO Hints= {0};
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
-			
+
 			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
@@ -276,13 +276,11 @@ namespace Win32xx
 		}
 		else
 		{
-			std::string sAddr = T2A(addr);
-			std::string sPort = T2A(port);
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
+			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
 			int nPort = -1;
-			nPort = atoi( sPort.c_str() );
+            nPort = atoi( T2A(port) );
 			if (-1 == nPort)
 			{
 				TRACE(_T("Invalid port number\n"));
@@ -313,7 +311,7 @@ namespace Win32xx
 	{
 		int RetVal = 0;
 
-		if (IsIPV6Supported())	
+		if (IsIPV6Supported())
 		{
 
 #ifdef GetAddrInfo	// Skip the following code block for older development environments
@@ -345,13 +343,11 @@ namespace Win32xx
 		}
 		else
 		{
-			std::string sAddr = T2A(addr);
-			std::string sPort = T2A(port);
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
+			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
 			int nPort = -1;
-			nPort = atoi( sPort.c_str() );
+			nPort = atoi( T2A(port) );
 			if (-1 == nPort)
 			{
 				TRACE(_T("Invalid port number\n"));
@@ -632,7 +628,7 @@ namespace Win32xx
 	inline int CSocket::Receive(TCHAR* buf, int len, int flags)
 	{
 		std::vector<char> vChar(len+1, '\0');
-		char* pCharArray = &vChar.front(); 
+		char* pCharArray = &vChar.front();
 		int Result = ::recv(m_Socket, pCharArray, len, flags);
 		if (SOCKET_ERROR == Result)
 			TRACE(_T("Receive failed\n"));
@@ -669,9 +665,6 @@ namespace Win32xx
 	// The sendto function sends data to a specific destination.
 	{
 		int RetVal = 0;
-		std::string sAddr = T2A(addr);
-		std::string sPort = T2A(port);
-		std::string sSend = T2A(send);
 
 		if (IsIPV6Supported())
 		{
@@ -681,7 +674,7 @@ namespace Win32xx
 			ADDRINFO Hints= {0};
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
-			
+
 			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
@@ -689,7 +682,7 @@ namespace Win32xx
 				return SOCKET_ERROR;
 			}
 
-			RetVal = ::sendto(m_Socket, sSend.c_str(), len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			RetVal = ::sendto(m_Socket, T2A(send), len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 			if ( RetVal == SOCKET_ERROR )
 			{
 				TRACE(_T("SendTo failed\n"));
@@ -704,14 +697,11 @@ namespace Win32xx
 		}
 		else
 		{
-			std::string sAddr = T2A(addr);
-			std::string sPort = T2A(port);
-			std::string sSend = T2A(send);
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( sAddr.c_str() );
+			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
 			int nPort = -1;
-			nPort = atoi( sPort.c_str() );
+            nPort = atoi( T2A(port));
 			if (-1 == nPort)
 			{
 				TRACE(_T("Invalid port number\n"));
@@ -719,7 +709,7 @@ namespace Win32xx
 			}
 			clientService.sin_port = htons( (u_short)nPort );
 
-			RetVal = ::sendto( m_Socket, sSend.c_str(), len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
+			RetVal = ::sendto( m_Socket, T2A(send), len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( SOCKET_ERROR != RetVal )
 				TRACE(_T("SendTo failed\n"));
 		}

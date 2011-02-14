@@ -170,6 +170,172 @@ namespace Win32xx
 		{ return right - left; }
 	};
 
+
+	////////////////////////////////////////
+	// Global functions for text conversions
+	//
+	//  This section defines the following text conversions:
+	//  A2BSTR		ANSI  to BSTR
+	//  A2OLE		ANSI  to OLE
+	//	A2T			ANSI  to TCHAR
+	//	A2W			ANSI  to WCHAR
+	//  OLE2A		OLE   to ANSI
+	//  OLE2T		OLE   to TCHAR
+	//  OLE2W		OLE   to WCHAR
+	//  T2A			TCHAR to ANSI  
+	//  T2BSTR		TCHAR to BSTR
+	//  T2OLE       TCHAR to OLE
+	//  T2W			TCHAR to Wide
+	//  W2A			WCHAR to ANSI
+	//  W2BSTR		WCHAR to BSTR
+	//  W2OLE		WCHAR to OLE
+	//  W2T			WCHAR to TCHAR
+
+	// About different character and string types:
+	// ------------------------------------------
+	// char (or CHAR) character types are ANSI (8 bits).
+	// wchar_t (or WCHAR) character types are Unicode (16 bits).
+	// TCHAR characters are Unicode if the _UNICODE macro is defined, otherwise they are ANSI.
+	// BSTR (Basic String) is a type of string used in Visual Basic and COM programming.
+	// OLE is the same as WCHAR. It is used in Visual Basic and COM programming.
+
+
+	// Forward declarations of our classes. They are defined later.
+	class CA2A;
+	class CA2W;
+	class CW2A;
+	class CW2W;
+	class CA2BSTR;
+	class CW2BSTR;
+	
+	// typedefs for the well known text conversions	
+	typedef CA2W A2W;
+	typedef CW2A W2A;
+	typedef CW2BSTR W2BSTR;
+	typedef CA2BSTR A2BSTR;
+
+#ifdef _UNICODE
+	typedef CA2W A2T;	
+	typedef CW2A T2A;	
+	typedef CW2W T2W;
+	typedef CW2W W2T;
+	typedef CW2BSTR T2BSTR;
+#else
+	typedef CA2A A2T;
+	typedef CA2A T2A;
+	typedef CA2W T2W;
+	typedef CW2A W2T;
+	typedef CA2BSTR T2BSTR;
+#endif
+
+	typedef A2W  A2OLE;
+	typedef T2W  T2OLE;
+	typedef CW2W W2OLE;
+	typedef W2A  OLE2A;
+	typedef W2T  OLE2T;
+	typedef CW2W OLE2W;
+
+	class CA2W
+	{
+	public:
+		CA2W(LPCSTR pStr) : m_pStr(pStr)
+		{		
+			if (pStr)
+			{
+				// Resize the vector and assign null WCHAR to each element
+				size_t length = strlen(pStr)+1;
+				m_vWideArray.assign(length, L'\0');
+
+				// Fill our vector with the converted WCHAR array
+				MultiByteToWideChar(CP_ACP, 0, pStr, -1, &m_vWideArray.front(), length);
+			}
+		}
+		~CA2W() {}
+		operator LPWSTR() {	return m_pStr? &m_vWideArray.front() : NULL; }
+
+	private:
+		CA2W(const CA2W&);
+		CA2W& operator= (const CA2W&);
+		std::vector<wchar_t> m_vWideArray;
+		LPCSTR m_pStr;
+	};
+
+	class CW2A
+	{
+	public:
+		CW2A(LPCWSTR pWStr) : m_pWStr(pWStr)
+		{
+			// Resize the vector and assign null char to each element
+			size_t length = wcslen(pWStr)+1;
+			m_vAnsiArray.assign(length, '\0');
+
+			// Fill our vector with the converted char array
+			WideCharToMultiByte(CP_ACP, 0, pWStr, -1, &m_vAnsiArray.front(), length, NULL,NULL);
+		}
+
+		~CW2A() {}
+		operator LPSTR() {	return m_pWStr? &m_vAnsiArray.front() : NULL; }
+
+	private:
+		CW2A(const CW2A&);
+		CW2A& operator= (const CW2A&);
+		std::vector<char> m_vAnsiArray;
+		LPCWSTR m_pWStr;		
+	};
+
+	class CW2W
+	{
+	public:
+		CW2W(LPCWSTR pWStr) : m_pWStr(pWStr) {}
+		operator LPWSTR() { return (LPWSTR)m_pWStr; }
+
+	private:
+		CW2W(const CW2W&);
+		CW2W& operator= (const CW2W&);
+
+		LPCWSTR m_pWStr;
+	};
+
+	class CA2A
+	{
+	public:
+		CA2A(LPCSTR pStr) : m_pStr(pStr) {}
+		operator LPSTR() { return (LPSTR)m_pStr; }
+
+	private:
+		CA2A(const CA2A&);
+		CA2A& operator= (const CA2A&);
+
+		LPCSTR m_pStr;
+	};
+
+	class CW2BSTR
+	{
+	public:
+		CW2BSTR(LPCWSTR pWStr) { m_bstrString = ::SysAllocString(pWStr); }
+		~CW2BSTR() { ::SysFreeString(m_bstrString); }
+		operator BSTR() { return m_bstrString;}
+
+	private:
+		CW2BSTR(const CW2BSTR&);
+		CW2BSTR& operator= (const CW2BSTR&);
+		BSTR m_bstrString;
+	};
+
+	class CA2BSTR
+	{
+	public:
+		CA2BSTR(LPCSTR pStr) { m_bstrString = ::SysAllocString(A2W(pStr)); }
+		~CA2BSTR() { ::SysFreeString(m_bstrString); }
+		operator BSTR() { return m_bstrString;}
+
+	private:
+		CA2BSTR(const CA2BSTR&);
+		CA2BSTR& operator= (const CA2BSTR&);
+		BSTR m_bstrString;
+	};
+
 }
+
 
 #endif
