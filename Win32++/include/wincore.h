@@ -794,20 +794,15 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
-		int nSize = 64;
 		TCHAR* pTCharArray = 0;
-		int nTChars = nSize;
-
-		// Increase the size of our array in a loop until we load the entire string
-		while ( nSize-1 <= nTChars )
+		int nTChars = ::LoadString(GetApp()->GetResourceHandle(),nID,(LPWSTR)&pTCharArray,0);
+		if (nTChars > 0)
 		{
-			nSize = nSize * 4;
-			pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));
+			pTLSData->vTChar.assign(nTChars+1, _T('\0'));
+			lstrcpyn(&pTLSData->vTChar.front(), pTCharArray, nTChars+1);
 			pTCharArray = &pTLSData->vTChar.front();
-			nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
 		}
-
-		if (nTChars == 0)
+		else
 		{
 			std::vector<TCHAR> vMsgArray(80, _T('\0'));
 			TCHAR* pMsgArray = &vMsgArray.front();
