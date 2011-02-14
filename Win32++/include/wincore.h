@@ -794,15 +794,20 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
+		int nSize = 64;
 		TCHAR* pTCharArray = 0;
-		int nTChars = ::LoadString(GetApp()->GetResourceHandle(),nID,(LPWSTR)&pTCharArray,0);
-		if (nTChars > 0)
+		int nTChars = nSize;
+
+		// Increase the size of our array in a loop until we load the entire string
+		while ( nSize-1 <= nTChars )
 		{
-			pTLSData->vTChar.assign(nTChars+1, _T('\0'));
-			lstrcpyn(&pTLSData->vTChar.front(), pTCharArray, nTChars+1);
+			nSize = nSize * 4;
+			pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));
 			pTCharArray = &pTLSData->vTChar.front();
+			nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
 		}
-		else
+
+		if (nTChars == 0)
 		{
 			std::vector<TCHAR> vMsgArray(80, _T('\0'));
 			TCHAR* pMsgArray = &vMsgArray.front();
@@ -815,7 +820,7 @@ namespace Win32xx
 		// We return a pointer to a TLS variable so it remains in scope.
 		return pTCharArray;
 	}
-
+	
 	//////////////////////////////////////////
 	// Definitions for the CWinException class
 	//
