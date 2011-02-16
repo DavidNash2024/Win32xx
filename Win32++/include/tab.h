@@ -1121,10 +1121,11 @@ namespace Win32xx
 				CheckMenuItem(hMenu, iSelected, MF_BYPOSITION|MF_CHECKED);
 
 			CPoint pt(GetListRect().left, GetListRect().top + GetTabHeight());
-			ScreenToClient(pt);
+			ClientToScreen(pt);
 
 			// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
 			HWND MenuHwnd = GetAncestor()->GetHwnd();
+			tString ts = GetAncestor()->GetWindowType();
 			int iPage = 0;
 			m_IsListMenuActive = TRUE;
 			iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;

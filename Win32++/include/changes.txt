@@ -36,10 +36,21 @@ New Features and Enhancements
 
 - Added CTaskDialog
 - Added tStringStream typedef (a TCHAR stringstream)
-- Added BSTR2T
-- Added OLE2T
-- Added T2BSTR
-- Added T2OLE
+- Added	A2BSTR	
+- Added	A2OLE	
+- Added	A2T		
+- Added	A2W		
+- Added	OLE2A	
+- Added	OLE2T	
+- Added	OLE2W	
+- Added	T2A		
+- Added	T2BSTR	
+- Added	T2OLE   
+- Added	T2W		
+- Added	W2A		
+- Added	W2BSTR	
+- Added	W2OLE	
+- Added	W2T		
 - Added CDC::GetBitmapInfo
 - Added CDC::GetBrushInfo
 - Added CDC::GetFontInfo

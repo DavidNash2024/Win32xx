@@ -247,7 +247,7 @@ namespace Win32xx
 		BOOL SetAccel(int cAccels, LPUDACCEL paAccels) const;
 		int  SetBase(int nBase) const;
 		HWND SetBuddy(HWND hwndBuddy) const;
-		int  SetPos(int nBase) const;
+		int  SetPos(int nPos) const;
 		void SetRange(int nLower, int nUpper) const;
 
 	protected:
@@ -1051,11 +1051,11 @@ namespace Win32xx
 		return (HWND)SendMessage(UDM_SETBUDDY, (WPARAM)hwndBuddy, 0);
 	}
 
-	inline int CSpinButton::SetPos(int nBase) const
+	inline int CSpinButton::SetPos(int nPos) const
 	// Sets the current position for the up-down control with 16-bit precision.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(UDM_SETPOS, (WPARAM)nBase, 0);
+		return (int)SendMessage(UDM_SETPOS, 0, (LPARAM)MAKELONG ((short) nPos, 0));
 	}
 
 	inline void CSpinButton::SetRange(int nLower, int nUpper) const
