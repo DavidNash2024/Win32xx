@@ -133,6 +133,7 @@ namespace Win32xx
 
 		private:
 			CToolBar m_ToolBar;
+			tString m_tsTooltip;
 			CWnd* m_pView;
 			CWnd* m_pTab;
 		};
@@ -4087,7 +4088,13 @@ namespace Win32xx
 				if (iIndex >= 0)
 				{
 					int nID = GetToolBar().GetCommandID(iIndex);
-					if (nID > 0) lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
+					if (nID > 0)
+					{
+						m_tsTooltip = CResString(nID);
+						lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
+					}
+					else
+						m_tsTooltip = _T("");
 				}
 			}
 			break;

@@ -209,7 +209,6 @@ namespace Win32xx
 
 	CWinApp* GetApp();
 	HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
-	LPCTSTR LoadString(UINT nID);
 	void TRACE(LPCTSTR str);
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
@@ -243,7 +242,6 @@ namespace Win32xx
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
-		std::vector<TCHAR> vTChar;		// A vector used as a TCHAR array for LoadString
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 	};
@@ -503,11 +501,6 @@ namespace Win32xx
 		friend class CPropertySheet;
 		friend class CTaskDialog;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
-	//	friend LPWSTR A2W(LPCSTR pChar);
-		friend LPCTSTR LoadString(UINT nID);
-	//	friend LPSTR W2A(LPCWSTR pWChar);
-	//	friend BSTR T2BSTR(LPCTSTR pTChar);
-	//	friend LPOLESTR T2OLE(LPCTSTR pTChar);
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -545,6 +538,50 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
+
+	////////////////////////////////////////
+	// Declarations for the CResString class
+	// Returns the string associated with a Resource ID
+	class CResString
+	{
+	public:
+		CResString(UINT nID) : m_nID(nID)
+		{
+			assert (GetApp());
+
+			int nSize = 64;
+			TCHAR* pTCharArray = 0;
+			int nTChars = nSize;
+
+			// Increase the size of our array in a loop until we load the entire string
+			// The ANSI and UNICODE versions of LoadString behave differently. This technique works for both.
+			while ( nSize-1 <= nTChars )
+			{
+				nSize = nSize * 4;
+				m_vString.assign(nSize+1, _T('\0'));
+				pTCharArray = &m_vString.front();
+				nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
+			}
+
+			if (nTChars == 0)
+			{
+				std::vector<TCHAR> vMsgArray(80, _T('\0'));
+				TCHAR* pMsgArray = &vMsgArray.front();
+				::wsprintf(pMsgArray, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
+				TRACE(pMsgArray);
+				pTCharArray = 0;
+			}
+		}
+
+		operator LPCTSTR() { return &m_vString.front(); }
+
+	private:
+		CResString(const CResString&);
+		CResString& operator= (const CResString&);
+		std::vector<TCHAR> m_vString;
+		UINT m_nID;
+	};
+
 
 }
 
@@ -786,41 +823,7 @@ namespace Win32xx
 		return hBitmap;
 	}
 
-	inline LPCTSTR LoadString(UINT nID)
-	// Returns the string associated with a Resource ID
-	{
-		assert(GetApp());
 
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
-		int nSize = 64;
-		TCHAR* pTCharArray = 0;
-		int nTChars = nSize;
-
-		// Increase the size of our array in a loop until we load the entire string
-		while ( nSize-1 <= nTChars )
-		{
-			nSize = nSize * 4;
-			pTLSData->vTChar.assign(MAX_STRING_SIZE+1, _T('\0'));
-			pTCharArray = &pTLSData->vTChar.front();
-			nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
-		}
-
-		if (nTChars == 0)
-		{
-			std::vector<TCHAR> vMsgArray(80, _T('\0'));
-			TCHAR* pMsgArray = &vMsgArray.front();
-			::wsprintf(pMsgArray, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
-			TRACE(pMsgArray);
-			pTCharArray = 0;
-		}
-
-		// Never return a pointer to a local variable, it is out of scope when the function returns.
-		// We return a pointer to a TLS variable so it remains in scope.
-		return pTCharArray;
-	}
-	
 	//////////////////////////////////////////
 	// Definitions for the CWinException class
 	//

@@ -618,7 +618,7 @@ namespace Win32xx
 	inline CPropertySheet::CPropertySheet(UINT nIDCaption, CWnd* pParent /* = NULL*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
-		SetTitle(LoadString(nIDCaption));
+		SetTitle(CResString(nIDCaption));
 		m_bInitialUpdate = FALSE;
 
 #ifdef _WIN32_WCE

@@ -371,13 +371,13 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-		str << W2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << LoadString(IDW_MAIN);
+		str << W2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << CResString(IDW_MAIN);
 		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
-		str << LoadString(IDW_MAIN);
+		str << CResString(IDW_MAIN);
 
-	::SetWindowText(m_hWnd, str.str().c_str());
+	SetWindowText(str.str().c_str());
 }
 
 void CMainFrame::SetupToolBar()

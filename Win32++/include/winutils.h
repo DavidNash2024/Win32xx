@@ -138,7 +138,7 @@ namespace Win32xx
 
 		int Height() const
 		{ return bottom - top; }
-		
+
 		BOOL InflateRect(int dx, int dy)
 		{ return ::InflateRect(this, dx, dy); }
 
@@ -165,7 +165,7 @@ namespace Win32xx
 
 		BOOL UnionRect(const RECT& rc1, const RECT& rc2)
 		{ return ::UnionRect(this, &rc1, &rc2); }
-		
+
 		int Width() const
 		{ return right - left; }
 	};
@@ -182,7 +182,7 @@ namespace Win32xx
 	//  OLE2A		OLE   to ANSI
 	//  OLE2T		OLE   to TCHAR
 	//  OLE2W		OLE   to WCHAR
-	//  T2A			TCHAR to ANSI  
+	//  T2A			TCHAR to ANSI
 	//  T2BSTR		TCHAR to BSTR
 	//  T2OLE       TCHAR to OLE
 	//  T2W			TCHAR to Wide
@@ -207,16 +207,16 @@ namespace Win32xx
 	class CW2W;
 	class CA2BSTR;
 	class CW2BSTR;
-	
-	// typedefs for the well known text conversions	
+
+	// typedefs for the well known text conversions
 	typedef CA2W A2W;
 	typedef CW2A W2A;
 	typedef CW2BSTR W2BSTR;
 	typedef CA2BSTR A2BSTR;
 
 #ifdef _UNICODE
-	typedef CA2W A2T;	
-	typedef CW2A T2A;	
+	typedef CA2W A2T;
+	typedef CW2A T2A;
 	typedef CW2W T2W;
 	typedef CW2W W2T;
 	typedef CW2BSTR T2BSTR;
@@ -239,7 +239,7 @@ namespace Win32xx
 	{
 	public:
 		CA2W(LPCSTR pStr) : m_pStr(pStr)
-		{		
+		{
 			if (pStr)
 			{
 				// Resize the vector and assign null WCHAR to each element
@@ -251,7 +251,7 @@ namespace Win32xx
 			}
 		}
 		~CA2W() {}
-		operator LPWSTR() {	return m_pStr? &m_vWideArray.front() : NULL; }
+		operator LPCWSTR() { return m_pStr? &m_vWideArray.front() : NULL; }
 
 	private:
 		CA2W(const CA2W&);
@@ -274,20 +274,20 @@ namespace Win32xx
 		}
 
 		~CW2A() {}
-		operator LPSTR() {	return m_pWStr? &m_vAnsiArray.front() : NULL; }
+		operator LPCSTR() { return m_pWStr? &m_vAnsiArray.front() : NULL; }
 
 	private:
 		CW2A(const CW2A&);
 		CW2A& operator= (const CW2A&);
 		std::vector<char> m_vAnsiArray;
-		LPCWSTR m_pWStr;		
+		LPCWSTR m_pWStr;
 	};
 
 	class CW2W
 	{
 	public:
 		CW2W(LPCWSTR pWStr) : m_pWStr(pWStr) {}
-		operator LPWSTR() { return (LPWSTR)m_pWStr; }
+		operator LPCWSTR() { return (LPWSTR)m_pWStr; }
 
 	private:
 		CW2W(const CW2W&);
@@ -300,7 +300,7 @@ namespace Win32xx
 	{
 	public:
 		CA2A(LPCSTR pStr) : m_pStr(pStr) {}
-		operator LPSTR() { return (LPSTR)m_pStr; }
+		operator LPCSTR() { return (LPSTR)m_pStr; }
 
 	private:
 		CA2A(const CA2A&);

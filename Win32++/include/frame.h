@@ -327,6 +327,7 @@ namespace Win32xx
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
 		tString m_tsStatusText;				// TCHAR std::string for status text
+		tString m_tsTooltip;				// TCHar std::string for tool tips
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
@@ -2081,6 +2082,9 @@ namespace Win32xx
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
 
+		// Set the Caption
+		SetWindowText(CResString(IDW_MAIN));
+
 		// Set the theme for the frame elements
 		SetTheme();	
 
@@ -2396,7 +2400,7 @@ namespace Win32xx
 			HMENU hMenu = (HMENU) lParam;
 
 			if ((hMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
-				m_tsStatusText = LoadString(nID);
+				m_tsStatusText = (LPCTSTR)CResString(nID);
 			else
 				m_tsStatusText = _T("Ready");
 
@@ -2444,7 +2448,13 @@ namespace Win32xx
 				if (iIndex >= 0)
 				{
 					int nID = pToolBar->GetCommandID(iIndex);
-					if (nID > 0) lpDispInfo->lpszText = (LPTSTR)LoadString(nID);
+					if (nID > 0)
+					{
+						m_tsTooltip = CResString(nID);
+						lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
+					}
+					else
+						m_tsTooltip = _T("");
 				}
 			}
 			break; 
@@ -2564,7 +2574,7 @@ namespace Win32xx
 						if (nID != m_nOldID)
 						{
 							if (nID != 0)
-								m_tsStatusText = LoadString(nID);
+								m_tsStatusText = CResString(nID);
 							else
 								m_tsStatusText = _T("Ready");
 
@@ -2604,9 +2614,6 @@ namespace Win32xx
 
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	{
-		// Set the caption from the string resource
-		cs.lpszName = LoadString(IDW_MAIN);
-
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
