@@ -213,6 +213,8 @@ namespace Win32xx
 	typedef CW2A W2A;
 	typedef CW2BSTR W2BSTR;
 	typedef CA2BSTR A2BSTR;
+	typedef CW2A BSTR2A;
+	typedef CW2W BSTR2W;
 
 #ifdef _UNICODE
 	typedef CA2W A2T;
@@ -226,6 +228,7 @@ namespace Win32xx
 	typedef CA2W T2W;
 	typedef CW2A W2T;
 	typedef CA2BSTR T2BSTR;
+	typedef BSTR2A BSTR2T;
 #endif
 
 	typedef A2W  A2OLE;
@@ -252,10 +255,12 @@ namespace Win32xx
 		}
 		~CA2W() {}
 		operator LPCWSTR() { return m_pStr? &m_vWideArray.front() : NULL; }
+		operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_vWideArray.front() : (LPOLESTR)NULL; }
+		operator LPBSTR() { return m_pStr? (LPBSTR)&m_vWideArray.front() : (LPBSTR)NULL; }
 
 	private:
-		CA2W(const CA2W&);
-		CA2W& operator= (const CA2W&);
+	//	CA2W(const CA2W&);
+	//	CA2W& operator= (const CA2W&);
 		std::vector<wchar_t> m_vWideArray;
 		LPCSTR m_pStr;
 	};
@@ -277,8 +282,8 @@ namespace Win32xx
 		operator LPCSTR() { return m_pWStr? &m_vAnsiArray.front() : NULL; }
 
 	private:
-		CW2A(const CW2A&);
-		CW2A& operator= (const CW2A&);
+	//	CW2A(const CW2A&);
+	//	CW2A& operator= (const CW2A&);
 		std::vector<char> m_vAnsiArray;
 		LPCWSTR m_pWStr;
 	};
@@ -288,10 +293,11 @@ namespace Win32xx
 	public:
 		CW2W(LPCWSTR pWStr) : m_pWStr(pWStr) {}
 		operator LPCWSTR() { return (LPWSTR)m_pWStr; }
+		operator LPOLESTR() { return (LPOLESTR)m_pWStr; }
 
 	private:
-		CW2W(const CW2W&);
-		CW2W& operator= (const CW2W&);
+	//	CW2W(const CW2W&);
+	//	CW2W& operator= (const CW2W&);
 
 		LPCWSTR m_pWStr;
 	};
@@ -303,8 +309,8 @@ namespace Win32xx
 		operator LPCSTR() { return (LPSTR)m_pStr; }
 
 	private:
-		CA2A(const CA2A&);
-		CA2A& operator= (const CA2A&);
+	//	CA2A(const CA2A&);
+	//	CA2A& operator= (const CA2A&);
 
 		LPCSTR m_pStr;
 	};
@@ -317,8 +323,8 @@ namespace Win32xx
 		operator BSTR() { return m_bstrString;}
 
 	private:
-		CW2BSTR(const CW2BSTR&);
-		CW2BSTR& operator= (const CW2BSTR&);
+	//	CW2BSTR(const CW2BSTR&);
+	//	CW2BSTR& operator= (const CW2BSTR&);
 		BSTR m_bstrString;
 	};
 
@@ -330,8 +336,8 @@ namespace Win32xx
 		operator BSTR() { return m_bstrString;}
 
 	private:
-		CA2BSTR(const CA2BSTR&);
-		CA2BSTR& operator= (const CA2BSTR&);
+	//	CA2BSTR(const CA2BSTR&);
+	//	CA2BSTR& operator= (const CA2BSTR&);
 		BSTR m_bstrString;
 	};
 

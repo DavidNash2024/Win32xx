@@ -59,7 +59,7 @@ void CView::NewPictureFile()
 		m_pPicture = NULL;
 	}
 
-	GetParent()->SetWindowText(LoadString(IDW_MAIN));
+	GetParent()->SetWindowText(CResString(IDW_MAIN));
 	Invalidate();
 }
 
@@ -93,7 +93,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 		TRACE(_T("Failed to load picture\n"));
 
 		// Set Frame title back to default
-		GetParent()->SetWindowText(LoadString(IDW_MAIN));
+		GetParent()->SetWindowText(CResString(IDW_MAIN));
 		return FALSE;
 	}
 }

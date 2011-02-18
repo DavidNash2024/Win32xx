@@ -22,6 +22,9 @@ void CView::OnCreate()
 	SetIconSmall(IDI_SMALL);
 	SetIconLarge(IDI_SIMPLERIBBON);
 
+	// Set the window title
+	SetWindowText(CResString(IDS_APP_TITLE));
+
 	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
 	{
 		if (CreateRibbon(this))
@@ -83,7 +86,6 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.y = 50;								// top y
 	cs.cx = 400;							// width
 	cs.cy = 300;							// height
-	cs.lpszName = LoadString(IDS_APP_TITLE);// Window title
 }
 
 STDMETHODIMP CView::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
