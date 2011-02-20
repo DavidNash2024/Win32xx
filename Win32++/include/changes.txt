@@ -35,6 +35,7 @@ New Features and Enhancements
 * Scribble Tutorial now demonstrates the use of command line arguments   
 
 - Added CTaskDialog
+- Added CResString (replaces CWnd::LoadString)
 - Added tStringStream typedef (a TCHAR stringstream)
 - Added	A2BSTR	
 - Added	A2OLE	
@@ -50,7 +51,8 @@ New Features and Enhancements
 - Added	W2A		
 - Added	W2BSTR	
 - Added	W2OLE	
-- Added	W2T		
+- Added	W2T
+- Added CFrame::ShowMenu		
 - Added CDC::GetBitmapInfo
 - Added CDC::GetBrushInfo
 - Added CDC::GetFontInfo
@@ -90,18 +92,39 @@ New Features and Enhancements
 - Modified CResizer::AddChild	now takes a CWnd reference
 - Modified CWnd::Create 		now takes a CWnd pointer instead of HWND
 - Modified CWnd::CreateEx       now takes a CWnd pointer instead of HWND
-
-- Renamed CharToWide  to A2W
-- Renamed CharToTChar to A2T
-- Renamed TCharToChar to T2A
-- Renamed TCharToWide to T2W
-- Renamed WideToChar  to W2A
-- Renamed WideToTChar to W2T
-
+- Moved CWnd::LoadBitmap to LoadBitmap
 - Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
-- Moved CWnd::LoadBitmap to LoadBitmap
-- Moved CWnd::LoadString to LoadString
+- Replaced CharToWide  with A2W
+- Replaced CharToTChar with A2T
+- Replaced TCharToChar with T2A
+- Replaced TCharToWide with T2W
+- Replaced WideToChar  with W2A
+- Replaced WideToTChar with W2T
+- Replaced CWnd::LoadString with CResString 
+  
+The problem with the previous the text functions
+------------------------------------------------
+While the previous text conversion functions generally worked well, there were
+ambiguities about usage, and corner cases where they produced undesirable 
+results. For example:
+// Problem 1
+// This worked well
+   ExampleFunction(CharToTChar(pAnsi1));
+
+// But this failed to produce expected results
+   ExampleFunction(CharToTChar(pAnsi1), CharToTChar(pAnsi2));
+
+Problem 2
+// This worked as expected
+   LPCTSTR pStr = CharToTChar(pAnsi1);
+
+// But this fails to work as expected
+   LPCTSTR pStr1 = CharToTChar(pAnsi1);
+   LPCTSTR pStr2 = CharToTChar(pAnsi2);
+
+The new text conversion functions (classes) resolve problem 1 and render all of
+problem 2's usage invalid (making usage less ambiguous).   
 
 Examples using the text conversion functions
 --------------------------------------------

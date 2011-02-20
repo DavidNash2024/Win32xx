@@ -2883,7 +2883,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetMenu(HMENU hMenu) const
-	// The SetMenu function assigns a new menu to the specified window.
+	// The SetMenu function assigns a menu to the specified window.
+	// A hMenu of NULL removes the menu.
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SetMenu(m_hWnd, hMenu);

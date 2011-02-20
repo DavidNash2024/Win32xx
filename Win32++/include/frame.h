@@ -286,6 +286,7 @@ namespace Win32xx
 		virtual void SetupToolBar();
 		virtual void SetTheme();	
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
+		virtual void ShowMenu(BOOL bShow);
 		virtual void ShowStatusBar(BOOL bShow);
 		virtual void ShowToolBar(BOOL bShow);
 		virtual void UpdateMRUMenu();
@@ -2812,16 +2813,22 @@ namespace Win32xx
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)
 	{
+		// Sets the frame's menu from a Resouce ID.
+		// A resource ID of 0 removes the menu from the frame.
+		HMENU hMenu = 0;
+		if (ID_MENU != 0)
+		{
 		// Sets the frame's menu from a resource ID.
-		HMENU hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
-		assert (hMenu);
+			hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
+			assert (hMenu);
+		}
+		
 		SetFrameMenu(hMenu);
  	}
 
 	inline void CFrame::SetFrameMenu(HMENU hMenu)
 	{
 		// Sets the frame's menu from a HMENU.
-		assert (hMenu);
 
 		if ((m_hMenu) && (m_hMenu != hMenu))
 			::DestroyMenu(m_hMenu);
@@ -2829,7 +2836,10 @@ namespace Win32xx
 		m_hMenu = hMenu;
 
 		if (IsMenuBarUsed())
+		{
 			GetMenuBar().SetMenu(GetFrameMenu());
+			ShowMenu((BOOL)hMenu);
+		}
 		else
 			::SetMenu(m_hWnd, GetFrameMenu());
  	}
@@ -3115,6 +3125,35 @@ namespace Win32xx
 			}
 		}
 	}
+
+	inline void CFrame::ShowMenu(BOOL bShow)
+	{
+		if (bShow)	
+		{
+			if (IsReBarUsed())
+				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
+			else
+				SetMenu(m_hMenu);
+		}
+		else
+		{
+			if (IsReBarUsed())
+				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), FALSE);
+			else
+				SetMenu(NULL);
+		}
+
+		if (GetReBar().IsWindow())
+		{
+			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)
+				GetReBar().MoveBandsLeft();
+		}
+
+		// Reposition the Windows
+		RecalcLayout();
+	}
+
+
 
 	inline void CFrame::ShowStatusBar(BOOL bShow)
 	{
