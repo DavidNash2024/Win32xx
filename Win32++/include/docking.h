@@ -560,7 +560,6 @@ namespace Win32xx
 		CRect rcClient = GetClientRect();
 		dc.AttachBrush(m_hbrBackground);
 		dc.PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
-		dc.DetachBrush();
 	}
 
 	inline void CDocker::CDockBar::PreCreate(CREATESTRUCT &cs)
@@ -1319,7 +1318,6 @@ namespace Win32xx
 		CDC MemDC = CreateCompatibleDC(dc);
 		MemDC.AttachBitmap(m_hbmBlueTint);
 		dc.BitBlt(0, 0, rc.Width(), rc.Height(), MemDC, 0, 0, SRCCOPY);
-		MemDC.DetachBitmap();
 	}
 
 	inline void CDocker::CDockHint::PreCreate(CREATESTRUCT &cs)
@@ -2140,8 +2138,6 @@ namespace Win32xx
 				BarDC.PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
 			else
 				BarDC.PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
-
-			BarDC.DetachBrush();
 		}
 	}
 

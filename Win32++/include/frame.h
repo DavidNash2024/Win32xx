@@ -753,7 +753,6 @@ namespace Win32xx
 						DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
 						DrawDC.SetBkMode(iMode);
-						DrawDC.DetachFont();
 						DrawDC.DetachDC();
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
@@ -1530,7 +1529,6 @@ namespace Win32xx
 		CDC dcMenuBar = GetMenuBar().GetDC();
 		dcMenuBar.AttachFont(hFont);
 		csMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
-		dcMenuBar.DetachFont();
 		int MenuBar_Height = csMenuBar.cy + 6;
 
 
@@ -2503,7 +2501,6 @@ namespace Win32xx
 			CDC dcMenuBar = GetMenuBar().GetDC();
 			dcMenuBar.AttachFont(hFont);
 			CSize csMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
-			dcMenuBar.DetachFont();
 			::DeleteObject(hFontOld);
 
 			// Update the band size

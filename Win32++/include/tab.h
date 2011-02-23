@@ -523,10 +523,6 @@ namespace Win32xx
 					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
 
 					// Draw the text
-			//		NONCLIENTMETRICS info = {0};
-			//		info.cbSize = GetSizeofNonClientMetrics();
-			//		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			//		dcMem.CreateFontIndirect(info.lfStatusFont);
 					dcMem.AttachFont(m_hFont);
 
 					// Calculate the size of the text
@@ -539,7 +535,6 @@ namespace Win32xx
 
 					rcText.left += iPadding;
 					dcMem.DrawText(szText, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
-					dcMem.DetachFont();
 				}
 			}
 		}
@@ -651,7 +646,6 @@ namespace Win32xx
 			tcItem.pszText = pszTitle;
 			TabCtrl_GetItem(m_hWnd, i, &tcItem);
 			CSize TempSize = dc.GetTextExtentPoint32(pszTitle, lstrlen(pszTitle));
-			dc.DetachFont();
 
 			int iImageSize = 0;
 			int iPadding = 6;
@@ -675,15 +669,9 @@ namespace Win32xx
 
 	inline int CTab::GetTextHeight() const
 	{
-	//	NONCLIENTMETRICS nm = {0};
-	//	nm.cbSize = GetSizeofNonClientMetrics();
-	//	SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-	//	LOGFONT lf = nm.lfStatusFont;
-
 		CDC dc = GetDC();
 		dc.AttachFont(m_hFont);
 		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
-		dc.DetachFont();
 		return szText.cy;
 	}
 
@@ -863,7 +851,7 @@ namespace Win32xx
 		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF);
 
 		// Use the region in the memory DC to paint the grey background
-		dcMem.AttachClipRegion(hrgnClip);
+		dcMem.AttachClipRgn(hrgnClip);
 		HWND hWndParent = ::GetParent(m_hWnd);
 		CDC dcParent = ::GetDC(hWndParent);
 		HBRUSH hBrush = (HBRUSH) SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
@@ -879,10 +867,10 @@ namespace Win32xx
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
-		dcMem.DetachClipRegion();
-		dcView.AttachClipRegion(hrgnClip);
+		dcMem.DetachClipRgn();
+		dcView.AttachClipRgn(hrgnClip);
 		dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
-		dcView.DetachClipRegion();
+		dcView.DetachClipRgn();
 
 		// Cleanup
 		::DeleteObject(hrgnSrc1);

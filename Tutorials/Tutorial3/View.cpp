@@ -2,7 +2,6 @@
 // View.cpp
 //  Definitions for the CView class
 
-#include <Windowsx.h>
 #include "view.h"
 
 

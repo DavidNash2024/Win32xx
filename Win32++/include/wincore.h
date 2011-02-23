@@ -59,9 +59,6 @@
 //            of creating the window, and handling its messages. Inherit
 //            from this class to define and control windows.
 //
-// 5) CPoint, CRect and CSize:
-//            These class can be used in place of a POINT, RECT or SIZE
-//            repectively.
 //
 // Note: This header file (or another Win32++ header file which includes it)
 //       should be included before all other header files. It sets some
@@ -531,7 +528,7 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;	// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
-		CCriticalSection m_csTlsData;	// thread synchronisation for m_ csvTlsData
+		CCriticalSection m_csTlsData;	// thread synchronisation for m_vTLSData
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index

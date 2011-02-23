@@ -681,8 +681,6 @@ namespace Win32xx
 					{
 						TextSize = DrawDC.GetTextExtentPoint32(pszText, lstrlen(pszText));
 					}
-					// Detach the font so it doesn't get destroyed
-					DrawDC.DetachFont();
 				}
 
 				// Draw outline rectangle
@@ -823,8 +821,6 @@ namespace Win32xx
 						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
 					}
 					DrawDC.SetBkMode(iMode);
-					// Detach the font so it doesn't get destroyed
-					DrawDC.DetachFont();
 				}
 				// Detach the DC so it doesn't get destroyed
 				DrawDC.DetachDC();
