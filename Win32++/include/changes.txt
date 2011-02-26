@@ -32,8 +32,18 @@ New Features and Enhancements
    See below for examples on using the new functions.
 * OnEraseBkgnd is now called automatically when a CWnd's background needs
    erasing. Return TRUE to prevent default erasure.
-* Scribble Tutorial now demonstrates the use of command line arguments   
+* Scribble Tutorial now demonstrates the use of command line arguments
+* Added the following set of gdi classes: CBitmap, CBrush, CFont, CPalette, 
+   CPen and CRgn.  
 
+Changes in detail
+-----------------
+- Added CBitmap
+- Added CBrush
+- Added CFont
+- Added CPalette
+- Added CPen
+- Added CRgn
 - Added CTaskDialog
 - Added CResString (replaces CWnd::LoadString)
 - Added tStringStream typedef (a TCHAR stringstream)
@@ -95,6 +105,8 @@ New Features and Enhancements
 - Moved CWnd::LoadBitmap to LoadBitmap
 - Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
+- Renamed CDC::AttachClipRegion to CDC::AttachClipRgn
+- Renamed CDC::DetachClipRegion to CDC::DetachClipRgn
 - Replaced CharToWide  with A2W
 - Replaced CharToTChar with A2T
 - Replaced TCharToChar with T2A
@@ -152,14 +164,14 @@ void ExampleFunctionW( LPCWSTR pWide)
 void ExampleFunctionW( LPCWSTR pWide )
 {
 	// Store the result in a std::string
-	std::string str = W2A( pWide );
+	std::string str = W2A( pWide );	// or std::string str = (LPCTSTR)W2A( pWide ); for some compilers
 	
 	// Store the result in an array
 	char szArray[80];
 	strcpy( szArray, W2A( pWide ) );
 	
 	// Store the result in a vector
-	std::vector<char> MyAnsiVector(strlen(W2A(pWide)+1), '\0');
+	std::vector<char> MyAnsiVector(strlen(W2A(pWide))+1, '\0');
 	strcpy(&MyAnsiVector.front(), W2A(pWide);
 }
 

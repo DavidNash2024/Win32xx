@@ -533,8 +533,8 @@ namespace Win32xx
 				else
 				{
 					// A modal message loop is running so we can't do IsDialogMessage.
-					// Avoid having a modeless dialog created by a modal dialog to allow
-					// normal keyboard processing.
+					// Avoid having modal dialogs create other windows, because those
+					// windows will then use the modal dialog's special message loop.
 				}
 			}
 		}
