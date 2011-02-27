@@ -34,7 +34,8 @@ New Features and Enhancements
    erasing. Return TRUE to prevent default erasure.
 * Scribble Tutorial now demonstrates the use of command line arguments
 * Added the following set of gdi classes: CBitmap, CBrush, CFont, CPalette, 
-   CPen and CRgn.  
+   CPen and CRgn.
+* Extended the CSize, CPoint and CRect classes   
 
 Changes in detail
 -----------------
@@ -113,7 +114,10 @@ Changes in detail
 - Replaced TCharToWide with T2W
 - Replaced WideToChar  with W2A
 - Replaced WideToTChar with W2T
-- Replaced CWnd::LoadString with CResString 
+- Replaced CWnd::LoadString with CResString
+- Added several functions to CPoint
+- Added several functions to CSize
+- Added many functions to CRect 
   
 The problem with the previous the text functions
 ------------------------------------------------

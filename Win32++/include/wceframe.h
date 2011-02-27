@@ -305,14 +305,15 @@ namespace Win32xx
 	inline void CWceFrame::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_VISIBLE;
+		m_tsAppName = _T("Win32++ Application");
 
 		// Choose a unique class name for this app
-		LPCTSTR name = LoadString(IDW_MAIN);
-		if (name)
+		if (CResString(IDW_MAIN))
 		{
-			m_tsAppName = LoadString(IDW_MAIN);
-			cs.lpszClass = m_tsAppName.c_str();
+			m_tsAppName = CResString(IDW_MAIN);
 		}
+			
+		cs.lpszClass = m_tsAppName.c_str();
 	}
 
 	inline BOOL CWceFrame::PreTranslateMessage(MSG* pMsg)

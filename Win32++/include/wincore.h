@@ -184,7 +184,6 @@ namespace Win32xx {}
 namespace Win32xx
 {
 
-
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
