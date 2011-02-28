@@ -15,7 +15,7 @@ CSimpleView::CSimpleView() : m_Color(RGB(0,0,255))
 void CSimpleView::OnPaint(CDC& dc)
 {
 	//Centre some text in our view window
-	RECT rc = GetClientRect();
+	CRect rc = GetClientRect();
 	dc.SetTextColor(m_Color);
 	dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }

@@ -17,14 +17,22 @@ CTaskDialogApp::~CTaskDialogApp()
 BOOL CTaskDialogApp::InitInstance()
 {
 	// Create the TaskDialog object
+	if (!CTaskDialog::IsSupported())
+	{
+		// Task Dialogs are only supported on Vista and above
+		MessageBox(NULL, _T("Vista or better is required for Task Dialogs"), _T("Not Supported!"), MB_ICONERROR);	
+		return FALSE;
+	}
+
 	CTaskDialog td;
+	
 	td.SetOptions(TDF_USE_HICON_MAIN | TDF_USE_HICON_FOOTER | TDF_ALLOW_DIALOG_CANCELLATION | TDF_EXPAND_FOOTER_AREA);
 	
 	// Add the buttons
 	td.AddButton( CB_SAVE, MAKEINTRESOURCE(IDS_CB_SAVE) );
 	td.AddRadioButton( RB_GOOD, MAKEINTRESOURCE(IDS_RB_GOOD) );
 	td.AddRadioButton( RB_OK,   MAKEINTRESOURCE(IDS_RB_OK) );
-    td.AddRadioButton( RB_BAD,  MAKEINTRESOURCE(IDS_RB_BAD) );
+	td.AddRadioButton( RB_BAD,  MAKEINTRESOURCE(IDS_RB_BAD) );
 	td.SetDefaultRadioButton( RB_OK );
 	td.SetCommonButtons( TDCBF_CANCEL_BUTTON );
 
@@ -34,20 +42,6 @@ BOOL CTaskDialogApp::InitInstance()
 	td.SetContent( MAKEINTRESOURCE(IDS_CONTENT) );
 	td.SetVerificationCheckboxText( MAKEINTRESOURCE(IDS_VERIFICATIONTEXT) );
 	td.SetFooterText( MAKEINTRESOURCE(IDS_FOOTER) );
-
-	// Add the icons
-	HICON hIconApp;
-	LoadIconWithScaleDown(NULL, IDI_APPLICATION,
-						  GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON),
-						  &hIconApp);
-	
-	HICON hIconInfo;
-	LoadIconWithScaleDown(NULL, IDI_INFORMATION,
-						  GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON),
-						  &hIconInfo);
-	
-	td.SetMainIcon(hIconApp);
-	td.SetFooterIcon(hIconInfo);
 
 	// Run the task dialog
 	HRESULT hr = td.DoModal();
@@ -60,25 +54,15 @@ BOOL CTaskDialogApp::InitInstance()
 			switch (td.GetSelectedRadioButtonID())
 			{
 			case RB_GOOD:
-				TaskDialog(NULL, NULL,
-						   L"TaskDialog Result",
-						   L"You like TaskDialogs alot", L"I'm glad you like TaskDialogs!",
-						   TDCBF_OK_BUTTON, NULL, NULL);
+				MessageBox(NULL, _T("TaskDialog Result"), _T("You like TaskDialogs alot"), MB_OK);
 				break;
 
 			case RB_OK:
-				TaskDialog(NULL, NULL,
-						   L"TaskDialog Result",
-						   L"You like TaskDialogs a little bit",  
-						   L"Maybe we'll do better next time.",
-						   TDCBF_OK_BUTTON, NULL, NULL);
+				MessageBox(NULL, _T("TaskDialog Result"), _T("You like TaskDialogs a little bit"), MB_OK);  
 				break;
 
 			case RB_BAD:
-				TaskDialog(NULL, NULL,
-						   L"TaskDialog Result",
-						   L"You don't like TaskDialogs at all", L"Back to MessageBox you go!",
-						   TDCBF_OK_BUTTON, NULL, NULL);
+				MessageBox(NULL, _T("TaskDialog Result"), _T("You don't like TaskDialogs at all"), MB_OK);
 				break;
 			}
 

@@ -3,8 +3,8 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="TaskDialog"
-	ProjectGUID="{2301D289-DB65-4D8D-A012-527AFA1A4674}"
-	RootNamespace="Frame_2008"
+	ProjectGUID="{065CE64C-E36E-4097-9CF6-F97CAF864DDA}"
+	RootNamespace="TaskDialog"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -144,8 +144,6 @@
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -246,10 +244,6 @@
 			>
 			<File
 				RelativePath="..\..\Win32++\include\taskdialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\include\wincore.h"
 				>
 			</File>
 		</Filter>

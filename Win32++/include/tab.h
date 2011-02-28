@@ -88,7 +88,7 @@ namespace Win32xx
 		CTab();
 		virtual ~CTab();
 		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
-		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText, UINT nID_Icon, UINT idTab = 0);
+		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText, int nID_Icon, UINT idTab = 0);
 		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
@@ -311,7 +311,7 @@ namespace Win32xx
 		return iNewPage;
 	}
 
-	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, UINT idIcon, UINT idTab /* = 0*/)
+	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
 	{
 		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0,0,0);
 		return AddTabPage(pView, szTabText, hIcon, idTab);
@@ -1327,7 +1327,7 @@ namespace Win32xx
 		assert(pView);
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
 
-		GetTab().AddTabPage(WndPtr(pView), szTabText, (HICON)0, idMDIChild);
+		GetTab().AddTabPage(WndPtr(pView), szTabText, 0, idMDIChild);
 
 		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
 		if (IsWindow())

@@ -443,7 +443,7 @@ namespace Win32xx
   #endif
 
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		operator HWND() const {return m_hWnd;}
+		operator HWND() const { return m_hWnd; }
 
 	protected:
 		// Override these functions as required

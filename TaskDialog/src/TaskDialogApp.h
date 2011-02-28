@@ -14,7 +14,7 @@ public:
 	virtual BOOL InitInstance();
 
 private:
-	CTaskDialog m_TaskDialog;
+//	CTaskDialog m_TaskDialog;
 };
 
 

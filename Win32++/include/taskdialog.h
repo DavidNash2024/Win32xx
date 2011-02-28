@@ -78,7 +78,7 @@ namespace Win32xx
 		int GetSelectedButtonID() const;
 		int GetSelectedRadioButtonID() const;
 		BOOL GetVerificationCheckboxState() const;
-		BOOL IsSupported();
+		static BOOL IsSupported();
 		void NavigateTo(CTaskDialog& TaskDialog) const;
 		void RemoveAllButtons();
 		void RemoveAllRadioButtons();
@@ -246,7 +246,7 @@ namespace Win32xx
 		pTLSData->pCWnd = this;
 
 		// Declare a pointer to the TaskDialogIndirect function
-		HMODULE hComCtl = ::GetModuleHandle(_T("COMCTL32.DLL"));
+		HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
 		assert(hComCtl);
 		typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
 		TASKDIALOGINDIRECT* pTaskDialogIndirect = (TASKDIALOGINDIRECT*)::GetProcAddress(hComCtl, "TaskDialogIndirect");
@@ -254,6 +254,7 @@ namespace Win32xx
 		// Call TaskDialogIndirect through our function pointer
 		LRESULT lr = (*pTaskDialogIndirect)(&m_tc, &m_SelectedButtonID, &m_SelectedRadioButtonID, &m_VerificationCheckboxState);
 
+		FreeLibrary(hComCtl);
 		return lr;
 	}
 	
@@ -326,13 +327,16 @@ namespace Win32xx
 		return m_VerificationCheckboxState;
 	}
 
-	BOOL CTaskDialog::IsSupported()
+	inline BOOL CTaskDialog::IsSupported()
 	// Returns true if TaskDialogs are supported on this system.
 	{
-		HMODULE hModule = ::GetModuleHandle(_T("COMCTL32.DLL"));
+		HMODULE hModule = ::LoadLibrary(_T("COMCTL32.DLL"));
 		assert(hModule);
 		
-		return (BOOL)::GetProcAddress(hModule, "TaskDialogIndirect");
+		BOOL bResult = (BOOL)::GetProcAddress(hModule, "TaskDialogIndirect");
+		
+		::FreeLibrary(hModule);
+		return bResult;
 	}
 
 	inline void CTaskDialog::NavigateTo(CTaskDialog& TaskDialog) const
@@ -494,7 +498,7 @@ namespace Win32xx
 	//  TDE_MAIN_INSTRUCTION				Main instruction.
 	{
 		assert(m_hWnd);
-		SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)eElements, (LPARAM)TCharToWide(pszText));
+		SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)eElements, (LPARAM)(LPCWSTR)T2W(pszText));
 	}
 
 	inline void CTaskDialog::SetExpansionArea(LPCTSTR pszExpandedInfo, LPCTSTR pszExpandedLabel /* = _T("")*/, LPCTSTR pszCollapsedLabel /* = _T("")*/)
@@ -685,11 +689,11 @@ namespace Win32xx
 		
 		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
 		{
-			int len = pFromTChar? lstrlen(LoadString((UINT)pFromTChar)) +1 : 1;
+			int len = pFromTChar? lstrlen(CResString((UINT)pFromTChar)) +1 : 1;
 			vTChar.assign(len, _T('\0'));
 			vWChar.assign(len, _T('\0'));
 			if (pFromTChar)
-				lstrcpy( &vTChar.front(), LoadString((UINT)pFromTChar));
+				lstrcpy( &vTChar.front(), CResString((UINT)pFromTChar));
 		}
 		else
 		{
@@ -699,7 +703,7 @@ namespace Win32xx
 			lstrcpy( &vTChar.front(), pFromTChar);
 		}
 		
-		lstrcpyW(&vWChar.front(), TCharToWide(&vTChar.front()) );
+		lstrcpyW(&vWChar.front(), T2W(&vTChar.front()) );
 	}
 
 	inline LRESULT CTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -727,7 +731,7 @@ namespace Win32xx
 			OnTDHelp();
 			break;
 		case TDN_HYPERLINK_CLICKED:
-			OnTDHyperlinkClicked(WideToTChar((LPCWSTR)lParam));
+			OnTDHyperlinkClicked(W2T((LPCWSTR)lParam));
 			break;
 		case TDN_NAVIGATED:
 			OnTDNavigatePage();
@@ -750,7 +754,7 @@ namespace Win32xx
 	// Updates a text element on the Task Dialog.
 	{
 		assert(m_hWnd);
-		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)TCharToWide(pszNewText));
+		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)(LPCWSTR)T2W(pszNewText));
 	}
 
 }

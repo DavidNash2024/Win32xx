@@ -68,8 +68,15 @@
 // Notes:
 //  * A device context assigned to a CDC object will be released or deleted, unless
 //     it is detached.
-//  * A GDI object created by one of the CDC member functions, or one attached to the CDC
-//     object will be deleted when the CDC object is destroyed, unless it is detached.
+//  * A GDI object created by one of the CDC member functions will be deleted when
+//     the CDC object is destroyed, unless it is detached.
+//  * The GDI objects attached to the CDC (by using AttachPen for example) are not 
+//     deleted when the CDC goes out of scope. Only GDI objects created by the CDC
+//     are automatically deleted.
+//  * GDI objects belonging to the GDI classes (eg. CPen) are automatically deleted
+//     when the class object goes out of scope.
+//  * The various AttachXXX functions can attach either a gdi handle (eg HPEN) or
+//     a gdi class object (eg CPen).
 //  * A GDI object (with the exception of regions) can only be selected into one
 //     device context at a time.
 //  * Set the region's shape before selecting it into a DC.
@@ -122,7 +129,7 @@ namespace Win32xx
 		void operator = (HBITMAP hBitmap);
 		operator HBITMAP () const;
 		~CBitmap ();
-		
+
 		void Attach( HBITMAP hBitmap );
 		HBITMAP Detach ();
 
@@ -174,7 +181,7 @@ namespace Win32xx
 		void operator = (HBRUSH hBrush);
 		operator HBRUSH () const;
 		~CBrush ();
-		
+
 		void Attach (HBRUSH hBrush);
 		HBRUSH Detach ();
 		void CreateSolidBrush (COLORREF crColor);
@@ -255,7 +262,7 @@ namespace Win32xx
 		void operator = (HPALETTE hPalette);
 		operator HPALETTE () const;
 		~CPalette ();
-		
+
 		void Attach (HPALETTE hPalette);
 		HPALETTE Detach ();
 
@@ -341,7 +348,7 @@ namespace Win32xx
 		void operator = (HRGN hRgn);
 		operator HRGN () const;
 		~CRgn ();
-		
+
 		void Attach (HRGN hRgn);
 		HRGN Detach ();
 
@@ -407,7 +414,7 @@ namespace Win32xx
 		CDC (HDC hDC);							// Assigns a HDC to a new CDC
 		CDC (const CDC& rhs);					// Constructs a new copy of the CDC
 		void operator = (const HDC hDC);		// Assigns a HDC to an existing CDC
-	//	CDC& operator = (const CDC& rhs);     // Assigns a CDC to an existing CDC
+		CDC& operator = (const CDC& rhs);     // Assigns a CDC to an existing CDC
 		operator HDC () const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		virtual ~CDC ();
 		void AttachDC (HDC hDC);
@@ -633,9 +640,8 @@ namespace Win32xx
 #endif
 
 	private:
-		CDC& operator = (const CDC&);		// Disable the copy assignment operator
 		void Release ();
-		void RemoveCurrentBitmap (); 
+		void RemoveCurrentBitmap ();
 		void RemoveCurrentBrush ();
 		void RemoveCurrentFont ();
 		void RemoveCurrentPen ();
@@ -708,10 +714,10 @@ namespace Win32xx
 	}
 
 	inline CBitmap::CBitmap (HBITMAP hBitmap)
-	{ 
+	{
 		m_pData = new DataMembers;
 		m_pData->hBitmap = hBitmap;
-		m_pData->Count = 1L;	
+		m_pData->Count = 1L;
 	}
 
 	inline CBitmap::CBitmap (const CBitmap& rhs)
@@ -722,9 +728,9 @@ namespace Win32xx
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	inline CBitmap::operator HBITMAP () const 
-	{ 
-		return m_pData->hBitmap; 
+	inline CBitmap::operator HBITMAP () const
+	{
+		return m_pData->hBitmap;
 	}
 
 	inline void CBitmap::operator = (HBITMAP hBitmap)
@@ -881,17 +887,17 @@ namespace Win32xx
 	// Definitions of the CBrush class
 	//
 	inline CBrush::CBrush ()
-	{ 
+	{
 		m_pData = new DataMembers;
 		m_pData->hBrush = 0;
-		m_pData->Count = 1L;	
+		m_pData->Count = 1L;
 	}
 
 	inline CBrush::CBrush (HBRUSH hBrush)
 	{
 		m_pData = new DataMembers;
 		m_pData->hBrush = hBrush;
-		m_pData->Count = 1L;		
+		m_pData->Count = 1L;
 	}
 
 	inline CBrush::CBrush (COLORREF crColor)
@@ -914,9 +920,9 @@ namespace Win32xx
 		m_pData->hBrush = hBrush;
 	}
 
-	inline CBrush::operator HBRUSH () const 
-	{ 
-		return m_pData->hBrush; 
+	inline CBrush::operator HBRUSH () const
+	{
+		return m_pData->hBrush;
 	}
 
 	inline CBrush::~CBrush ()
@@ -999,19 +1005,19 @@ namespace Win32xx
 	// Definitions of the CFont class
 	//
 	inline CFont::CFont ()
-	{ 
+	{
 		m_pData = new DataMembers;
 		m_pData->hFont = 0;
-		m_pData->Count = 1L;	
+		m_pData->Count = 1L;
 	}
 
 	inline CFont::CFont (HFONT hFont)
-	{ 
+	{
 		m_pData = new DataMembers;
 		m_pData->hFont = hFont;
-		m_pData->Count = 1L;	
+		m_pData->Count = 1L;
 	}
-	
+
 	inline CFont::CFont (const CFont& rhs)
 	{
 		m_pData->hFont = rhs.m_pData->hFont;
@@ -1026,11 +1032,11 @@ namespace Win32xx
 		m_pData->hFont = hFont;
 	}
 
-	inline CFont::operator HFONT () const 
-	{ 
-		return m_pData->hFont; 
+	inline CFont::operator HFONT () const
+	{
+		return m_pData->hFont;
 	}
-	
+
 	inline CFont::~CFont ()
 	{
 		BOOL bSucceeded = TRUE;
@@ -1072,7 +1078,7 @@ namespace Win32xx
 		LOGFONT logFont = { 0 };
 		logFont.lfCharSet = DEFAULT_CHARSET;
 		logFont.lfHeight = nPointSize;
-		
+
 		lstrcpy (logFont.lfFaceName, lpszFaceName);
 
 		if (bBold)
@@ -1089,15 +1095,15 @@ namespace Win32xx
 
 		// convert nPointSize to logical units based on hDC
 		LOGFONT logFont = *lpLogFont;
-		
+
 #ifndef _WIN32_WCE
 		POINT pt = { 0, 0 };
 		pt.y = ::MulDiv(::GetDeviceCaps(hDC1, LOGPIXELSY), logFont.lfHeight, 720);   // 72 points/inch, 10 decipoints/point
 		::DPtoLP(hDC1, &pt, 1);
-		
+
 		POINT ptOrg = { 0, 0 };
 		::DPtoLP(hDC1, &ptOrg, 1);
-		
+
 		logFont.lfHeight = -abs(pt.y - ptOrg.y);
 #else // CE specific
 		// DP and LP are always the same on CE
@@ -1146,10 +1152,10 @@ namespace Win32xx
 	// Definitions of the CPalette class
 	//
 	inline CPalette::CPalette ()
-	{ 
+	{
 		m_pData = new DataMembers;
 		m_pData->hPalette = 0;
-		m_pData->Count = 1L;	
+		m_pData->Count = 1L;
 	}
 
 	inline CPalette::CPalette (HPALETTE hPalette)
@@ -1166,12 +1172,12 @@ namespace Win32xx
 
 		InterlockedIncrement(&m_pData->Count);
 	}
-	
-	inline CPalette::operator HPALETTE () const 
+
+	inline CPalette::operator HPALETTE () const
 	{
 		return m_pData->hPalette;
 	}
-	
+
 	inline void CPalette::operator = (HPALETTE hPalette)
 	{
 		assert (m_pData->hPalette == NULL);
@@ -1296,10 +1302,10 @@ namespace Win32xx
 		assert (m_pData->hPen == NULL);
 		m_pData->hPen = hPen;
 	}
-		
-	inline CPen::operator HPEN () const 
-	{ 
-		return m_pData->hPen; 
+
+	inline CPen::operator HPEN () const
+	{
+		return m_pData->hPen;
 	}
 
 	inline CPen::~CPen ()
@@ -1377,17 +1383,17 @@ namespace Win32xx
 	// Definitions of the CRgn class
 	//
 	inline CRgn::CRgn ()
-	{ 
+	{
 		m_pData = new DataMembers;
 		m_pData->hRgn = 0;
-		m_pData->Count = 1L;	
+		m_pData->Count = 1L;
 	}
 
 	inline CRgn::CRgn (HRGN hRgn)
 	{
 		m_pData = new DataMembers;
 		m_pData->hRgn = hRgn;
-		m_pData->Count = 1L;	
+		m_pData->Count = 1L;
 	}
 
 	inline CRgn::CRgn (const CRgn& rhs)
@@ -1398,7 +1404,7 @@ namespace Win32xx
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	inline CRgn::operator HRGN() const 
+	inline CRgn::operator HRGN() const
 	{
 		return m_pData->hRgn;
 	}
@@ -1649,7 +1655,7 @@ namespace Win32xx
 		AttachDC(hDC);
 	}
 
-/*	inline CDC& CDC::operator = ( const CDC& rhs )
+	inline CDC& CDC::operator = ( const CDC& rhs )
 	{
 		// Note: A copy of a CDC is a clone of the original.
 		//       Both objects manipulate the one HDC
@@ -1661,7 +1667,7 @@ namespace Win32xx
 		}
 
 		return *this;
-	} */
+	}
 
 	inline CDC::~CDC ()
 	{
@@ -1793,7 +1799,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDC::RemoveCurrentBitmap () 
+	inline void CDC::RemoveCurrentBitmap ()
 	{
 		if (m_pData->hBitmapOld)
 		{
@@ -1806,8 +1812,8 @@ namespace Win32xx
 			}
 		}
 	}
-		
-	inline void CDC::RemoveCurrentBrush () 
+
+	inline void CDC::RemoveCurrentBrush ()
 	{
 		if (m_pData->hBrushOld)
 		{
@@ -1820,8 +1826,8 @@ namespace Win32xx
 			}
 		}
 	}
-	
-	inline void CDC::RemoveCurrentFont () 
+
+	inline void CDC::RemoveCurrentFont ()
 	{
 		if (m_pData->hFontOld)
 		{
@@ -1834,8 +1840,8 @@ namespace Win32xx
 			}
 		}
 	}
-	
-	inline void CDC::RemoveCurrentPen () 
+
+	inline void CDC::RemoveCurrentPen ()
 	{
 		if (m_pData->hPenOld)
 		{
@@ -1848,8 +1854,8 @@ namespace Win32xx
 			}
 		}
 	}
-	
-	inline void CDC::RemoveCurrentRgn () 
+
+	inline void CDC::RemoveCurrentRgn ()
 	{
 		if (m_pData->hRgnOld)
 		{
@@ -1890,7 +1896,7 @@ namespace Win32xx
 
 		assert(m_pData->hDC);
 		RemoveCurrentBitmap();
-		
+
 		m_pData->Bitmap.CreateCompatibleBitmap(hDC, cx, cy);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
@@ -1953,7 +1959,7 @@ namespace Win32xx
 		HBITMAP hBitmap = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
 		if (hBitmap == m_pData->Bitmap)
 			m_pData->Bitmap.Detach();
-		
+
 		m_pData->hBitmapOld = NULL;
 		return hBitmap;
 	}
@@ -2076,7 +2082,7 @@ namespace Win32xx
 
 		assert(m_pData->hDC);
 		assert(hFont);
-		
+
 		RemoveCurrentFont();
 		m_pData->hFontOld = (HFONT)::SelectObject(m_pData->hDC, hFont);
 	}
@@ -2161,7 +2167,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		assert(hPen);
 		RemoveCurrentPen();
-			
+
 		m_pData->hPenOld = (HPEN)::SelectObject(m_pData->hDC, hPen);
 	}
 
