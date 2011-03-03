@@ -102,8 +102,9 @@ namespace Win32xx
 	public:
 		CPoint()							{ x = 0; y = 0; }
 		CPoint(int X, int Y)				{ x = X; y = Y; }
-		CPoint(SIZE sz)						{ x = sz.cx; y = sz.cy; }
 		CPoint(POINT pt)					{ x = pt.x ; y = pt.y; }
+		CPoint(POINTS pts)					{ x = pts.x; y = pts.y; }
+		CPoint(SIZE sz)						{ x = sz.cx; y = sz.cy; }
 		CPoint(DWORD dw)					{ x = (short) LOWORD(dw); y = (short) HIWORD(dw); }
 		
 		void Offset(int dx, int dy)			{ x += dx; y += dy; }
@@ -127,9 +128,6 @@ namespace Win32xx
 		CPoint operator + (POINT pt) const	{ return CPoint(x + pt.x, y + pt.y); }
 		CPoint operator - (POINT pt) const	{ return CPoint(x - pt.x, y - pt.y); }
 		
-		// Operator returning CSize
-	//	CSize operator - (POINT pt) const	{ return CSize(x - pt.x, y - pt.y); }
-
 		// Operators returning CRect
 		CRect operator + (RECT rc) const;
 		CRect operator - (RECT rc) const;
@@ -162,6 +160,7 @@ namespace Win32xx
 		BOOL InflateRect(int l, int t, int r, int b){ return ::InflateRect(this, r - l, b - t); }
 		BOOL IntersectRect(RECT rc1, RECT rc2)		{ return ::IntersectRect(this, &rc1, &rc2); }
 		BOOL IsRectEmpty() const					{ return ::IsRectEmpty(this);}
+		BOOL IsRectNull() const						{ return (left == 0 && right == 0 && top == 0 && bottom == 0); }	
 		CRect MulDiv(int nMult, int nDiv) const		{ return CRect ((left * nMult) / nDiv, (top * nMult) / nDiv,
 														(right * nMult) / nDiv, (bottom * nMult) / nDiv); }
 		void NormalizeRect()						{ int nTemp; if (left > right) { nTemp = left; left = right; right = nTemp; }
@@ -192,7 +191,6 @@ namespace Win32xx
 
 		// operators
 		operator LPRECT()							{ return this; }
-	//	operator LPCRECT() const					{ return this; }
 		BOOL operator == (RECT rc)					{ return ::EqualRect(this, &rc); }
 		BOOL operator != (RECT rc)					{ return !::EqualRect(this, &rc); }
 		void operator += (POINT pt)					{ ::OffsetRect(this, pt.x, pt.y); }
@@ -213,15 +211,6 @@ namespace Win32xx
 		CRect operator - (RECT rc) const			{ CRect rc1(*this); rc1.DeflateRect(rc); return rc1; }
 		CRect operator & (RECT rc) const			{ CRect rc1; ::IntersectRect(&rc1, this, &rc); return rc1; }
 		CRect operator | (RECT rc) const			{ CRect rc1; ::UnionRect(&rc1, this, &rc); return rc1; }
-	
-		/*
-		CRect (const RECT& srcRect) {::CopyRect (this, &srcRect);}
-		CRect (LPCRECT lpSrcRect)   {::CopyRect (this, lpSrcRect);}										  
-		BOOL IsRectNull() const		{return (left == 0 && right == 0 && top == 0 && bottom == 0);}	
-
-		// Additional Operations
-		void operator = (const RECT& srcRect)	{ ::CopyRect (this, &srcRect); }
-		*/
 	};
 
 	// CPoint member function definitions
@@ -249,7 +238,7 @@ namespace Win32xx
 	//  T2A			TCHAR to ANSI
 	//  T2BSTR		TCHAR to BSTR
 	//  T2OLE       TCHAR to OLE
-	//  T2W			TCHAR to Wide
+	//  T2W			TCHAR to WCHAR
 	//  W2A			WCHAR to ANSI
 	//  W2BSTR		WCHAR to BSTR
 	//  W2OLE		WCHAR to OLE
