@@ -252,7 +252,8 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = UPDOWN_CLASS; }
+		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 	};
 
 } // namespace Win32xx
@@ -1028,6 +1029,16 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		return (DWORD)SendMessage(UDM_GETRANGE, 0, 0);
+	}
+	
+	inline void CSpinButton::PreCreate(CREATESTRUCT &cs)
+    { 
+		cs.style = WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VISIBLE |UDS_SETBUDDYINT; 
+	}
+	
+	inline void CSpinButton::PreRegisterClass(WNDCLASS &wc)
+	{
+		wc.lpszClassName = UPDOWN_CLASS;
 	}
 
 	inline BOOL CSpinButton::SetAccel(int cAccels, LPUDACCEL paAccels) const
