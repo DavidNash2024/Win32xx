@@ -54,9 +54,9 @@
 // them to be accessed or sent messages.
 
 // CFrame is responsible for creating a "frame" window. This window has a
-// menu and and several child windows, including a toolbar (usualy hosted 
+// menu and and several child windows, including a toolbar (usualy hosted
 // within a rebar), and a status bar and a view positioned over the frame
-// window's non-client area. The "view" window is a seperate CWnd object 
+// window's non-client area. The "view" window is a seperate CWnd object
 // assigned to the frame with the SetView function.
 
 // When compiling an application with these classes, it will need to be linked
@@ -181,7 +181,7 @@ namespace Win32xx
 
 	};  // class CMenuBar
 
-	
+
 
 	//////////////////////////////////
 	// Declaration of the CFrame class
@@ -189,7 +189,7 @@ namespace Win32xx
 	class CFrame : public CWnd
 	{
 		friend class CMenuBar;
-		
+
 		struct ItemData
 		// Each Dropdown menu item has this data
 		{
@@ -202,7 +202,7 @@ namespace Win32xx
 			ItemData() : hMenu(0), nPos(0), fType(0), hSubMenu(0) { vItemText.assign(MAX_MENU_STRING, _T('\0')); }
 			LPTSTR GetItemText() {return &vItemText.front();}
 		};
-		
+
 		typedef Shared_Ptr<ItemData> ItemDataPtr;
 
 	public:
@@ -215,14 +215,14 @@ namespace Win32xx
 		virtual tString GetWindowType() const { return _T("CFrame"); }
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
-		virtual void RecalcLayout();	
+		virtual void RecalcLayout();
 		virtual MenuTheme& GetMenuTheme() const			{ return (MenuTheme&) m_ThemeMenu; }
 		virtual ReBarTheme& GetReBarTheme()	const		{ return (ReBarTheme&)GetReBar().GetReBarTheme(); }
 		virtual ToolBarTheme& GetToolBarTheme() const	{ return (ToolBarTheme&)GetToolBar().GetToolBarTheme(); }
 
 		// Virtual Attributes
-		// If you need to modify the default behaviour of the menubar, rebar, 
-		// statusbar or toolbar, inherit from those classes, and override 
+		// If you need to modify the default behaviour of the menubar, rebar,
+		// statusbar or toolbar, inherit from those classes, and override
 		// the following attribute functions.
 		virtual CMenuBar& GetMenuBar() const		{ return (CMenuBar&)m_MenuBar; }
 		virtual CReBar& GetReBar() const			{ return (CReBar&)m_ReBar; }
@@ -284,13 +284,13 @@ namespace Win32xx
 		virtual void SetMenuBarBandSize();
 		virtual UINT SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
 		virtual void SetupToolBar();
-		virtual void SetTheme();	
+		virtual void SetTheme();
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
 		virtual void ShowMenu(BOOL bShow);
 		virtual void ShowStatusBar(BOOL bShow);
 		virtual void ShowToolBar(BOOL bShow);
 		virtual void UpdateMRUMenu();
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);	
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		enum Constants
 		{
@@ -409,7 +409,7 @@ namespace Win32xx
 
 		// convert rectangle to desktop coordinates
 		ClientToScreen(rc);
-		
+
 		// Position popup above toolbar if it won't fit below
 		TPMPARAMS tpm;
 		tpm.cbSize = sizeof(TPMPARAMS);
@@ -441,7 +441,7 @@ namespace Win32xx
 #if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		bRightToLeft = ((GetAncestor()->GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
 #endif
-		
+
 		int xPos = bRightToLeft? rc.right : rc.left;
 		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
 			xPos, rc.bottom, m_hWnd, &tpm);
@@ -740,7 +740,7 @@ namespace Win32xx
 						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
 						DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
 						DrawDC.LineTo(rcRect.left, rcRect.bottom);
-					
+
 						TCHAR str[80] = _T("");
 						int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
 						if ((nLength > 0) && (nLength < 80))
@@ -1139,7 +1139,7 @@ namespace Win32xx
 							PostMessage(UWM_POPUPMENU, 0L, 0L);
 						}
 						m_nHotItem = nButton;
-					}					
+					}
 
 					// Handle escape from popup menu
 					if ((flag & HICF_LEAVING) && m_bKeyMode)
@@ -1147,7 +1147,7 @@ namespace Win32xx
 						m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
 						PostMessage(TB_SETHOTITEM, m_nHotItem, 0L);
 					}
-				
+
 				}
 				break;
 			} //case TBN_HOTITEMCHANGE:
@@ -1349,7 +1349,7 @@ namespace Win32xx
 		case UWM_GETMENUTHEME:
 			{
 				MenuTheme& tm = GetMenuBarTheme();
-				return (LRESULT)&tm; 
+				return (LRESULT)&tm;
 			}
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged();
@@ -1371,7 +1371,7 @@ namespace Win32xx
 	inline CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE),
 						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE),
-						m_himlMenu(NULL), m_himlMenuDis(NULL), m_AboutDialog(IDW_ABOUT)/*m_pAboutDialog(NULL)*/, m_hMenu(NULL), 
+						m_himlMenu(NULL), m_himlMenuDis(NULL), m_AboutDialog(IDW_ABOUT)/*m_pAboutDialog(NULL)*/, m_hMenu(NULL),
 						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
@@ -1597,7 +1597,7 @@ namespace Win32xx
 		if(0 != szText)
 			GetToolBar().SetButtonText(nID, szText);
 
-		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolBar\n")); 
+		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolBar\n"));
 	}
 
 	inline void CFrame::AdjustFrameRect(RECT rcView) const
@@ -1619,7 +1619,7 @@ namespace Win32xx
 		dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
 		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
 
-		// Calculate final rect size, and reposition frame 
+		// Calculate final rect size, and reposition frame
 		SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
 	}
 
@@ -1627,11 +1627,11 @@ namespace Win32xx
 	{
 		if (IsReBarSupported() && m_bUseReBar)
 			AddToolBarBand(GetToolBar(), RBBS_BREAK, IDW_TOOLBAR);	// Create the toolbar inside rebar
-		else	
+		else
 			GetToolBar().Create(this);	// Create the toolbar without a rebar
 
-		SetupToolBar();	
-		
+		SetupToolBar();
+
 		if (IsReBarSupported() && m_bUseReBar)
 		{
 			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().LockMenuBand)
@@ -1641,7 +1641,7 @@ namespace Win32xx
 					GetReBar().ShowGripper(GetReBar().GetBand(GetToolBar()), FALSE);
 			}
 		}
-		
+
 		if (GetToolBar().GetToolBarData().size() > 0)
 		{
 			// Set the toolbar images (if not already set in SetupToolBar)
@@ -1649,7 +1649,7 @@ namespace Win32xx
 			if (!GetToolBar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
 				SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
-			// Add the icons for popup menu 
+			// Add the icons for popup menu
 			AddMenuIcons(GetToolBar().GetToolBarData(), RGB(192, 192, 192), IDW_MAIN, 0);
 		}
 		else
@@ -1886,7 +1886,7 @@ namespace Win32xx
 				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 				InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
 							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;
-				
+
 				// Call InitCommonControlsEx
 				if(!((*pfnInit)(&InitStruct)))
 					throw CWinException(_T("InitCommonControlsEx failed"));
@@ -1920,9 +1920,9 @@ namespace Win32xx
 			m_nMaxMRU = MIN(nMaxMRU, 16);
 			std::vector<tString> vMRUEntries;
 			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
-			
+
 			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
-			{						
+			{
 				for (UINT i = 0; i < m_nMaxMRU; ++i)
 				{
 					DWORD dwType = REG_SZ;
@@ -1932,19 +1932,19 @@ namespace Win32xx
 
 					if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize))
 						throw CWinException(_T("RegQueryValueEx failed\n"));
-					
+
 					std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
 					TCHAR* pTCharArray = &PathName.front();
 
 					// load the entry from the registry
 					if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
 						throw CWinException(_T("RegQueryValueEx failed\n"));
-					
+
 					if ( lstrlen( pTCharArray ) )
 						vMRUEntries.push_back( pTCharArray );
 				}
-				
-				// successfully loaded all MRU values, so store them 
+
+				// successfully loaded all MRU values, so store them
 				m_vMRUEntries = vMRUEntries;
 				RegCloseKey(hKey);
 				bRet = TRUE;
@@ -1955,7 +1955,7 @@ namespace Win32xx
 		{
 			TRACE(_T("Failed to load MRU values from registry\n"));
 			e.what();
-			
+
 			if (hKey)
 				RegCloseKey(hKey);
 		}
@@ -1974,22 +1974,22 @@ namespace Win32xx
 
 		try
 		{
-			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey)) 
+			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
 			{
 				DWORD dwType = REG_BINARY;
 				DWORD BufferSize = sizeof(DWORD);
 				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwStatusBar, dwToolBar;
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize)) 
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize)) 
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize)) 
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize)) 
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("StatusBar"), NULL, &dwType, (LPBYTE)&dwStatusBar, &BufferSize)) 
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("StatusBar"), NULL, &dwType, (LPBYTE)&dwStatusBar, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("ToolBar"), NULL, &dwType, (LPBYTE)&dwToolBar, &BufferSize)) 
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("ToolBar"), NULL, &dwType, (LPBYTE)&dwToolBar, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
 
 				m_rcPosition.top = dwTop;
@@ -2007,8 +2007,8 @@ namespace Win32xx
 		{
 			TRACE(_T("Failed to load values from registry, using defaults!\n"));
 			e.what();
-			
-			if (hKey) 
+
+			if (hKey)
 				RegCloseKey(hKey);
 		}
 
@@ -2019,7 +2019,7 @@ namespace Win32xx
 	{
 		// Do default processing first
 		DefWindowProc(WM_ACTIVATE, wParam, lParam);
-		
+
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
 			// Save the hwnd of the window which currently has focus
@@ -2036,10 +2036,10 @@ namespace Win32xx
 				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		}
 		else
-		{					
+		{
 			// Now set the focus to the appropriate child window
 			if (m_hOldFocus) ::SetFocus(m_hOldFocus);
-			
+
 			// Send a notification to the view window
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
 			NMHDR nhdr={0};
@@ -2048,12 +2048,12 @@ namespace Win32xx
 			nhdr.code = UWM_FRAMEGOTFOCUS;
 			if (GetView()->IsWindow())
 				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
-		} 
+		}
 	}
 
 	inline void CFrame::OnClose()
 	{
-		// Called in response to a WM_CLOSE message for the frame.	
+		// Called in response to a WM_CLOSE message for the frame.
 		ShowWindow(SW_HIDE);
 		SaveRegistrySettings();
 
@@ -2077,7 +2077,7 @@ namespace Win32xx
 		SetWindowText(CResString(IDW_MAIN));
 
 		// Set the theme for the frame elements
-		SetTheme();	
+		SetTheme();
 
 		// Create the rebar and menubar
 		if (IsReBarSupported() && m_bUseReBar)
@@ -2087,13 +2087,13 @@ namespace Win32xx
 
 			// Create the menu inside rebar
 			GetMenuBar().Create(&GetReBar());
-			AddMenuBarBand();			
+			AddMenuBarBand();
 		}
 
 		// Setup the menu
 		SetFrameMenu(IDW_MAIN);
-		UpdateMRUMenu();	
-		
+		UpdateMRUMenu();
+
 		// Create the ToolBar
 		if (m_bUseToolBar)
 		{
@@ -2111,13 +2111,13 @@ namespace Win32xx
 		ShowStatusBar(m_bShowStatusBar);
 
 		// Create the view window
-		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
+		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
 		GetView()->Create(this);
 
 		// Disable XP themes for the menubar
 		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or < Vista
 			GetMenuBar().SetWindowTheme(L" ", L" ");
-		
+
 		// Start timer for Status updates
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
 			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
@@ -2137,7 +2137,7 @@ namespace Win32xx
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
-		if (pdis->CtlType != ODT_MENU) 
+		if (pdis->CtlType != ODT_MENU)
 			return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
 
 		CRect rc = pdis->rcItem;
@@ -2199,7 +2199,7 @@ namespace Win32xx
 					DrawDC.SolidFill(RGB(255,255,255), rcDraw);
 				else
 					DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcDraw);
-			}  
+			}
 
 			if (bChecked)
 				DrawCheckmark(pdis, DrawDC);
@@ -2225,7 +2225,7 @@ namespace Win32xx
 			DrawMenuText(DrawDC, pmd->GetItemText(), rc, colorText);
 			DrawDC.SetBkMode(iMode);
 			}
-		
+
 		// Detach the DC so it doesn't get destroyed
 		DrawDC.DetachDC();
 
@@ -2247,7 +2247,7 @@ namespace Win32xx
 			mii.dwItemData = 0;
 			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
 		}
-		
+
 		m_vMenuItemData.clear();
 	}
 
@@ -2317,7 +2317,7 @@ namespace Win32xx
 	//  values can be assigned with the menu item's dimensions.
 	{
 		LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
-		if (pmis->CtlType != ODT_MENU) 
+		if (pmis->CtlType != ODT_MENU)
 			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
@@ -2427,13 +2427,13 @@ namespace Win32xx
 			{
 				CToolBar* pToolBar = &GetToolBar();
 				if (IsReBarUsed())
-				{	
+				{
 					// Get the ToolBar's CWnd
 					CWnd* pWnd = FromHandle(GetReBar().HitTest(GetCursorPos()));
 					if (pWnd && (pWnd->GetWindowType() == _T("CToolBar")))
 						pToolBar = (CToolBar*)pWnd;
 				}
-				
+
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
 				int iIndex =  pToolBar->HitTest();
 				if (iIndex >= 0)
@@ -2448,7 +2448,7 @@ namespace Win32xx
 						m_tsTooltip = _T("");
 				}
 			}
-			break; 
+			break;
 		} // switch LPNMHDR
 
 		return 0L;
@@ -2524,10 +2524,10 @@ namespace Win32xx
 			GetMenuBar().OnSysCommand(wParam, lParam);
 			return 0L;
 		}
-		
+
 		if (SC_MINIMIZE == wParam)
 			m_hOldFocus = ::GetFocus();
-		
+
 		return CWnd::WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
 	}
 
@@ -2540,7 +2540,7 @@ namespace Win32xx
 				// Get the toolbar the point is over
 				CToolBar* pToolBar = 0;
 				if (IsReBarUsed())
-				{	
+				{
 					// Get the ToolBar's CWnd
 					CWnd* pWnd = FromHandle(GetReBar().HitTest(GetCursorPos()));
 					if (pWnd && (pWnd->GetWindowType() == _T("CToolBar")))
@@ -2643,7 +2643,7 @@ namespace Win32xx
 			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar().Invalidate();
 			SetStatusText();
-		}	
+		}
 
 		// Resize the rebar or toolbar
 		if (IsReBarUsed())
@@ -2674,7 +2674,7 @@ namespace Win32xx
 
 			if (IsMenuBarUsed())
 				SetMenuBarBandSize();
-		} 
+		}
 	}
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
@@ -2726,7 +2726,7 @@ namespace Win32xx
 					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
 						throw CWinException(_T("RegSetValueEx failed"));
 				}
-				
+
 				// Store the ToolBar and statusbar states
 				DWORD dwShowToolBar = m_bShowToolBar;
 				DWORD dwShowStatusBar = m_bShowStatusBar;
@@ -2749,7 +2749,7 @@ namespace Win32xx
 					RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
 					RegCloseKey(hKey);
 				}
-				
+
 				e.what();
 				return FALSE;
 			}
@@ -2790,7 +2790,7 @@ namespace Win32xx
 						RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
 						RegCloseKey(hKey);
 					}
-					
+
 					e.what();
 					return FALSE;
 				}
@@ -2811,7 +2811,7 @@ namespace Win32xx
 			hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
 			assert (hMenu);
 		}
-		
+
 		SetFrameMenu(hMenu);
  	}
 
@@ -2872,7 +2872,7 @@ namespace Win32xx
 		rbbi.cxMinChild = Width;
 		rbbi.cx         = Width;
 
-		RB.SetBandInfo(nBand, rbbi); 
+		RB.SetBandInfo(nBand, rbbi);
 	}
 
 	inline void CFrame::SetMenuTheme(MenuTheme& Theme)
@@ -2993,10 +2993,10 @@ namespace Win32xx
 
 					GetToolBar().SetToolBarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-					
+
 					GetReBar().SetReBarTheme(tr);
 				}
-				break; 
+				break;
 
 			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 				{
@@ -3006,7 +3006,7 @@ namespace Win32xx
 
 					GetToolBar().SetToolBarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-					
+
 					GetReBar().SetReBarTheme(tr);
 				}
 				break;
@@ -3047,7 +3047,7 @@ namespace Win32xx
 
 					GetToolBar().SetToolBarTheme(tt);
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-					
+
 					GetReBar().SetReBarTheme(tr);
 				}
 				break;
@@ -3077,7 +3077,7 @@ namespace Win32xx
 
 	inline void CFrame::SetupToolBar()
 	{
-		// Use this function to set the Resource IDs for the toolbar(s). 
+		// Use this function to set the Resource IDs for the toolbar(s).
 
 /*		// Set the Resource IDs for the toolbar buttons
 		AddToolBarButton( IDM_FILE_NEW   );
@@ -3101,14 +3101,14 @@ namespace Win32xx
 		{
 			// Destroy the existing view window (if any)
 			if (m_pView) m_pView->Destroy();
-			
+
 			// Assign the view window
 			m_pView = &wndView;
-			
+
 			if (m_hWnd)
 			{
 				// The frame is already created, so create and position the new view too
-				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window	
+				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
 				GetView()->Create(this);
 				RecalcLayout();
 			}
@@ -3117,7 +3117,7 @@ namespace Win32xx
 
 	inline void CFrame::ShowMenu(BOOL bShow)
 	{
-		if (bShow)	
+		if (bShow)
 		{
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
@@ -3163,7 +3163,7 @@ namespace Win32xx
 
 	inline void CFrame::ShowToolBar(BOOL bShow)
 	{
-		if (bShow)	
+		if (bShow)
 		{
 			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
 			if (IsReBarUsed())
@@ -3317,7 +3317,7 @@ namespace Win32xx
 		case UWM_GETMENUTHEME:
 			{
 				MenuTheme& tm = GetMenuTheme();
-				return (LRESULT)&tm; 
+				return (LRESULT)&tm;
 			}
 		case UWM_GETREBARTHEME:
 			{

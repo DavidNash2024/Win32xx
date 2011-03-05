@@ -70,7 +70,7 @@
 //     it is detached.
 //  * A GDI object created by one of the CDC member functions will be deleted when
 //     the CDC object is destroyed, unless it is detached.
-//  * The GDI objects attached to the CDC (by using AttachPen for example) are not 
+//  * The GDI objects attached to the CDC (by using AttachPen for example) are not
 //     deleted when the CDC goes out of scope. Only GDI objects created by the CDC
 //     are automatically deleted.
 //  * GDI objects belonging to the GDI classes (eg. CPen) are automatically deleted
@@ -129,9 +129,8 @@ namespace Win32xx
 		CBitmap (int nID);
 		CBitmap (const CBitmap& rhs);
 		operator HBITMAP () const;
-		operator BOOL () const { return (m_pData->hBitmap != NULL); }
 		void operator = (HBITMAP hBitmap);
-		CBitmap& operator = (const CBitmap& rhs);	
+		CBitmap& operator = (const CBitmap& rhs);
 		~CBitmap ();
 
 		void Attach( HBITMAP hBitmap );
@@ -186,9 +185,8 @@ namespace Win32xx
 		CBrush (COLORREF crColor);
 		CBrush (const CBrush& rhs);
 		operator HBRUSH () const;
-		operator BOOL () const { return (m_pData->hBrush != NULL); }
 		void operator = (HBRUSH hBrush);
-		CBrush& operator = (const CBrush& rhs);	
+		CBrush& operator = (const CBrush& rhs);
 		~CBrush ();
 
 		void Attach (HBRUSH hBrush);
@@ -226,9 +224,8 @@ namespace Win32xx
 		CFont (HFONT hFont);
 		CFont (const CFont& rhs);
 		operator HFONT () const;
-		operator BOOL () const { return (m_pData->hFont != NULL); }
 		void operator = (HFONT hFont);
-		CFont& operator = (const CFont& rhs);	
+		CFont& operator = (const CFont& rhs);
 		~CFont ();
 
 		void Attach (HFONT hFont);
@@ -271,9 +268,8 @@ namespace Win32xx
 		CPalette (HPALETTE hPalette);
 		CPalette (const CPalette& rhs);
 		operator HPALETTE () const;
-		operator BOOL () const { return (m_pData->hPalette != NULL); }
 		void operator = (HPALETTE hPalette);
-		CPalette& operator = (const CPalette& rhs);	
+		CPalette& operator = (const CPalette& rhs);
 		~CPalette ();
 
 		void Attach (HPALETTE hPalette);
@@ -325,9 +321,8 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 		CPen (const CPen& rhs);
 		operator HPEN () const;
-		operator BOOL () const { return (m_pData->hPen != NULL); }
 		void operator= (HPEN hPen);
-		CPen& operator = (const CPen& rhs);	
+		CPen& operator = (const CPen& rhs);
 		~CPen ();
 
 		void Attach (HPEN hPen);
@@ -364,7 +359,6 @@ namespace Win32xx
 		CRgn (HRGN hRgn);
 		CRgn (const CRgn& rhs);
 		operator HRGN () const;
-		operator BOOL () const { return (m_pData->hRgn != NULL); }
 		void operator = (HRGN hRgn);
 		CRgn& operator = (const CRgn& rhs);
 		~CRgn ();
@@ -436,7 +430,6 @@ namespace Win32xx
 		void operator = (const HDC hDC);		// Assigns a HDC to an existing CDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
 		operator HDC () const { return m_pData->hDC; }	// Converts a CDC to a HDC
-		operator BOOL () const { return (m_pData->hDC != NULL); }
 		virtual ~CDC ();
 
 		void AttachDC (HDC hDC);
@@ -1789,7 +1782,7 @@ namespace Win32xx
 		}
 
 		assert(bSucceeded);
-	}	
+	}
 
 
 	///////////////////////////////////////////////
@@ -3181,7 +3174,7 @@ namespace Win32xx
 		// Draws text using the currently selected font, background color, and text color
 		if (nCount == -1)
 			nCount = lstrlen (lpszString);
-		
+
 		return ::ExtTextOut(m_pData->hDC, x, y, nOptions, lprc, lpszString, nCount, lpDxWidths );
 	}
 
@@ -3255,7 +3248,7 @@ namespace Win32xx
 		// Writes a character string at the specified location
 		if (nCount == -1)
 			nCount = lstrlen (lpszString);
-		
+
 		return ::TextOut( m_pData->hDC, x, y, lpszString, nCount );
 	}
 	inline int CDC::DrawTextEx (LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const
