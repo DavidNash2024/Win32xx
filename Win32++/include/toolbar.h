@@ -942,11 +942,11 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(nID));
-		assert (hbm);
+		CBitmap Bitmap(nID);
+		assert (Bitmap);
 		BITMAP bm = {0};
 
-		int iResult = ::GetObject(hbm, sizeof(BITMAP), &bm);
+		int iResult = ::GetObject(Bitmap, sizeof(BITMAP), &bm);
 		assert (iResult);
 		UNREFERENCED_PARAMETER(iResult);
 
@@ -1246,11 +1246,11 @@ namespace Win32xx
 		if (iNumButtons > 0)
 		{
 			// Set the button images
-			HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolBarID));
-			assert(hbm);
+			CBitmap Bitmap(ToolBarID);
+			assert(Bitmap);
 
 			BITMAP bm = {0};
-			int iResult = GetObject(hbm, sizeof(BITMAP), &bm);
+			int iResult = GetObject(Bitmap, sizeof(BITMAP), &bm);
 			assert(iResult);
 			UNREFERENCED_PARAMETER(iResult);
 
@@ -1267,36 +1267,30 @@ namespace Win32xx
 			himlToolBar = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 			assert(himlToolBar);
 
-			ImageList_AddMasked(himlToolBar, hbm, crMask);
+			ImageList_AddMasked(himlToolBar, Bitmap, crMask);
 			SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlToolBar);
-
-			::DeleteObject(hbm);
-			hbm = NULL;
 
 			if (ToolBarHotID)
 			{
-				hbm = LoadBitmap(MAKEINTRESOURCE(ToolBarHotID));
-				assert(hbm);
+				CBitmap BitmapHot(ToolBarHotID);
+				assert(BitmapHot);
 
 				himlToolBarHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 				assert(himlToolBarHot);
 
-				ImageList_AddMasked(himlToolBarHot, hbm, crMask);
+				ImageList_AddMasked(himlToolBarHot, BitmapHot, crMask);
 				SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlToolBarHot);
-
-				::DeleteObject(hbm);
-				hbm = NULL;
 			}
 
 			if (ToolBarDisabledID)
 			{
-				hbm = LoadBitmap(MAKEINTRESOURCE(ToolBarDisabledID));
-				assert(hbm);
+				CBitmap BitmapDisabled(ToolBarDisabledID);
+				assert(BitmapDisabled);
 
 				himlToolBarDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
 				assert(himlToolBarDis);
 
-				ImageList_AddMasked(himlToolBarDis, hbm, crMask);
+				ImageList_AddMasked(himlToolBarDis, BitmapDisabled, crMask);
 				SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolBarDis);
 			}
 			else
@@ -1308,8 +1302,6 @@ namespace Win32xx
 			// Inform the parent of the change (rebar needs this)
 			SIZE MaxSize = GetMaxSize();
 			GetParent()->SendMessage(UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
-
-			::DeleteObject(hbm);
 		}
 
 		return TRUE;

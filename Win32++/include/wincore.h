@@ -114,7 +114,7 @@
 #include <shlwapi.h>
 #include "shared_ptr.h"
 #include "winutils.h"
-#include "gdi.h"
+// #include "gdi.h"				// included later in this file
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -189,6 +189,7 @@ namespace Win32xx
 	//  These classes are defined later or elsewhere
 	class CWinApp;
 	class CWnd;
+	class CDC;
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
@@ -204,7 +205,6 @@ namespace Win32xx
 	// Global functions	(within the Win32xx namespace)
 
 	CWinApp* GetApp();
-	HBITMAP LoadBitmap(LPCTSTR lpBitmapName);
 	void TRACE(LPCTSTR str);
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems
@@ -230,6 +230,12 @@ namespace Win32xx
 	struct CompareHWND		// The comparison function object used by CWinApp::m_mapHWND
 	{
 		bool operator()(HWND const a, const HWND b) const
+			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
+	};
+
+	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
+	{
+		bool operator()(HDC const a, const HDC b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
@@ -312,6 +318,7 @@ namespace Win32xx
 
 		// Attributes
 		static CWnd* FromHandle(HWND hWnd);
+		static CDC*  FromHandle(HDC hDC);
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
 
@@ -491,6 +498,7 @@ namespace Win32xx
 	class CWinApp
 	{
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
+		friend class CDC;
 		friend class CDialog;
 		friend class CMenuBar;
 		friend class CPropertyPage;
@@ -505,6 +513,7 @@ namespace Win32xx
 		virtual ~CWinApp();
 
 		CWnd* GetCWndFromMap(HWND hWnd);
+		CDC* GetCDCFromMap(HDC hDC);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		void SetResourceHandle(HINSTANCE hResource);
@@ -525,14 +534,14 @@ namespace Win32xx
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
-		std::vector<TLSDataPtr> m_vTLSData;	// vector of TLSData smart pointers, one for each thread
+		std::map<HDC, CDC*, CompareHDC> m_mapHDC;		// maps device context handles to CDC objects
+		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTlsData;	// thread synchronisation for m_vTLSData
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
-
 	};
 
 	////////////////////////////////////////
@@ -578,10 +587,11 @@ namespace Win32xx
 		UINT m_nID;
 	};
 
-
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#include "gdi.h"
 
 namespace Win32xx
 {
@@ -799,26 +809,6 @@ namespace Win32xx
 		return pt;
 	}
 
-	inline HBITMAP LoadBitmap(LPCTSTR lpBitmapName)
-	{
-		assert (GetApp());
-
-		HBITMAP hBitmap;
-
-		// Try to load the bitmap from the resource handle first
-		hBitmap = ::LoadBitmap(GetApp()->GetResourceHandle(), lpBitmapName);
-
-		// The bitmap resource might be in the application's resources instead
-		if (!hBitmap)
-			hBitmap = ::LoadBitmap(GetApp()->GetInstanceHandle(), lpBitmapName);
-
-		// No bitmap found, so display warning message
-		if (!hBitmap)
-			TRACE(_T("**WARNING** Unable to load bitmap\n"));
-
-		return hBitmap;
-	}
-
 
 	//////////////////////////////////////////
 	// Definitions for the CWinException class
@@ -959,6 +949,24 @@ namespace Win32xx
 		::UnregisterClass(szClassName, GetInstanceHandle());
 	}
 
+	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)
+	{
+		// Allocate an iterator for our HWND map
+		std::map<HDC, CDC*, CompareHDC>::iterator m;
+
+		// Find the CDC pointer mapped to this HDC
+		CDC* pDC = 0;
+		m_csMapLock.Lock();
+		m = m_mapHDC.find(hDC);
+
+		if (m != m_mapHDC.end())
+			pDC = m->second;
+
+		m_csMapLock.Release();
+		return pDC;
+	}
+
+	
 	inline CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
@@ -1425,6 +1433,12 @@ namespace Win32xx
 		}
 
 		return pWnd;
+	}
+
+	inline CDC* FromHandle(HDC hDC)
+	{ 
+		// Returns the CDC object associated with the HDC
+		return CDC::FromHandle(hDC); 
 	}
 
 	inline CWnd* CWnd::GetAncestor() const

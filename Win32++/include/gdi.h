@@ -96,7 +96,7 @@
 #ifndef _GDI_H_
 #define _GDI_H_
 
-#include "winutils.h"
+#include "wincore.h"
 
 namespace Win32xx
 {
@@ -125,8 +125,11 @@ namespace Win32xx
 
 		CBitmap ();
 		CBitmap (HBITMAP hBitmap);
+		CBitmap (LPCTSTR lpstr);
+		CBitmap (int nID);
 		CBitmap (const CBitmap& rhs);
 		operator HBITMAP () const;
+		operator BOOL () const { return (m_pData->hBitmap != NULL); }
 		void operator = (HBITMAP hBitmap);
 		CBitmap& operator = (const CBitmap& rhs);	
 		~CBitmap ();
@@ -135,7 +138,10 @@ namespace Win32xx
 		HBITMAP Detach ();
 
 		// Create and load methods
-		//HBITMAP LoadBitmap (LPCTSTR lpstr);
+		HBITMAP LoadBitmap (LPCTSTR lpstr);
+		HBITMAP LoadBitmap (int nID);
+		HBITMAP LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
+		HBITMAP LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		void LoadOEMBitmap (UINT nIDBitmap);
 		void CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, const void* lpBits);
 		void CreateCompatibleBitmap (HDC hDC, int nWidth, int nHeight);
@@ -147,7 +153,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		int GetDIBits (HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
 		int SetDIBits (HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
-		//HBITMAP LoadMappedBitmap (UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
+		HBITMAP LoadMappedBitmap (UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
 		void CreateBitmapIndirect (LPBITMAP lpBitmap);
 		void CreateDiscardableBitmap (HDC hDC, int nWidth, int nHeight);
 		CSize GetBitmapDimensionEx () const;
@@ -180,6 +186,7 @@ namespace Win32xx
 		CBrush (COLORREF crColor);
 		CBrush (const CBrush& rhs);
 		operator HBRUSH () const;
+		operator BOOL () const { return (m_pData->hBrush != NULL); }
 		void operator = (HBRUSH hBrush);
 		CBrush& operator = (const CBrush& rhs);	
 		~CBrush ();
@@ -219,6 +226,7 @@ namespace Win32xx
 		CFont (HFONT hFont);
 		CFont (const CFont& rhs);
 		operator HFONT () const;
+		operator BOOL () const { return (m_pData->hFont != NULL); }
 		void operator = (HFONT hFont);
 		CFont& operator = (const CFont& rhs);	
 		~CFont ();
@@ -263,6 +271,7 @@ namespace Win32xx
 		CPalette (HPALETTE hPalette);
 		CPalette (const CPalette& rhs);
 		operator HPALETTE () const;
+		operator BOOL () const { return (m_pData->hPalette != NULL); }
 		void operator = (HPALETTE hPalette);
 		CPalette& operator = (const CPalette& rhs);	
 		~CPalette ();
@@ -316,6 +325,7 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 		CPen (const CPen& rhs);
 		operator HPEN () const;
+		operator BOOL () const { return (m_pData->hPen != NULL); }
 		void operator= (HPEN hPen);
 		CPen& operator = (const CPen& rhs);	
 		~CPen ();
@@ -354,6 +364,7 @@ namespace Win32xx
 		CRgn (HRGN hRgn);
 		CRgn (const CRgn& rhs);
 		operator HRGN () const;
+		operator BOOL () const { return (m_pData->hRgn != NULL); }
 		void operator = (HRGN hRgn);
 		CRgn& operator = (const CRgn& rhs);
 		~CRgn ();
@@ -425,11 +436,13 @@ namespace Win32xx
 		void operator = (const HDC hDC);		// Assigns a HDC to an existing CDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
 		operator HDC () const { return m_pData->hDC; }	// Converts a CDC to a HDC
+		operator BOOL () const { return (m_pData->hDC != NULL); }
 		virtual ~CDC ();
+
 		void AttachDC (HDC hDC);
 		HDC  DetachDC ();
 		HDC GetHDC () const { return m_pData->hDC; }
-	//	BOOL IsAssigned () const { return (BOOL)m_pData->hDC; }	// Do we need this ???
+		static CDC* FromHandle(HDC hDC);
 
 		// Create and Select Bitmaps
 		void AttachBitmap (HBITMAP hBitmap);
@@ -439,11 +452,17 @@ namespace Win32xx
 										HANDLE hSection, DWORD dwOffset);
 		HBITMAP DetachBitmap ();
 		BITMAP GetBitmapInfo ();
+		void LoadBitmap (UINT nID);
+		void LoadBitmap (LPCTSTR lpstr);
+		void LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
+		void LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
+		void LoadOEMBitmap (UINT nIDBitmap); // for OBM_/OCR_/OIC
 
 #ifndef _WIN32_WCE
 		void CreateBitmapIndirect (LPBITMAP pBitmap);
 		void CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage);
+		void LoadMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
 #endif
 
 		// Create and Select Brushes
@@ -649,12 +668,14 @@ namespace Win32xx
 #endif
 
 	private:
+		void AddToMap();
 		void Release ();
 		void RemoveCurrentBitmap ();
 		void RemoveCurrentBrush ();
 		void RemoveCurrentFont ();
 		void RemoveCurrentPen ();
 		void RemoveCurrentRgn ();
+		BOOL RemoveFromMap();
 
 		DataMembers* m_pData;		// pointer to the class's data members
 	};
@@ -729,6 +750,22 @@ namespace Win32xx
 		m_pData->Count = 1L;
 	}
 
+	inline CBitmap::CBitmap (LPCTSTR lpstr)
+	{
+		m_pData = new DataMembers;
+		m_pData->hBitmap = 0;
+		LoadBitmap(lpstr);
+		m_pData->Count = 1L;
+	}
+
+	inline CBitmap::CBitmap (int nID)
+	{
+		m_pData = new DataMembers;
+		m_pData->hBitmap = 0;
+		LoadBitmap(nID);
+		m_pData->Count = 1L;
+	}
+
 	inline CBitmap::CBitmap (const CBitmap& rhs)
 	{
 		m_pData->hBitmap = rhs.m_pData->hBitmap;
@@ -768,14 +805,6 @@ namespace Win32xx
 		Release();
 	}
 
-	// Create and load methods
-	//inline HBITMAP LoadBitmap (LPCTSTR lpstr)
-	//{
-	//	assert(m_hBitmap == NULL);
-	//	m_hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
-	//	return m_hBitmap;
-	//}
-
 	inline void CBitmap::Attach (HBITMAP hBitmap)
 	{
 		if (m_pData->hBitmap != NULL && m_pData->hBitmap != hBitmap)
@@ -791,20 +820,55 @@ namespace Win32xx
 		return hBitmap;
 	}
 
+	inline HBITMAP CBitmap::LoadBitmap (int nID)
+	{
+		return LoadBitmap(MAKEINTRESOURCE(nID));
+	}
+
+	inline HBITMAP CBitmap::LoadBitmap (LPCTSTR lpstr)
+	{
+		assert(m_pData->hBitmap == NULL);
+		assert(GetApp());
+		m_pData->hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
+		if (m_pData->hBitmap == NULL)
+			m_pData->hBitmap = ::LoadBitmap (GetApp()->GetInstanceHandle(), lpstr);
+
+		return m_pData->hBitmap;
+	}
+
+	inline HBITMAP CBitmap::LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad)
+	{
+		return LoadImage(MAKEINTRESOURCE(nID), cxDesired, cyDesired, fuLoad);
+	}
+
+	inline HBITMAP CBitmap::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
+	{
+		assert(m_pData->hBitmap == NULL);
+		assert(GetApp());
+		m_pData->hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
+		if (m_pData->hBitmap == NULL)
+			m_pData->hBitmap = (HBITMAP)::LoadImage(GetApp()->GetInstanceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
+
+		return m_pData->hBitmap;
+	}
+
 	inline void CBitmap::LoadOEMBitmap (UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	{
 		assert(m_pData->hBitmap == NULL);
 		m_pData->hBitmap = ::LoadBitmap (NULL, MAKEINTRESOURCE(nIDBitmap));
-		assert (m_pData->hBitmap);
+		assert(m_pData->hBitmap);
 	}
 
 #ifndef _WIN32_WCE
-		//inline HBITMAP CBitmap::LoadMappedBitmap (UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0)
-		//{
-		//	assert(m_hBitmap == NULL);
-		//	m_hBitmap = ::CreateMappedBitmap (GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
-		//	return m_hBitmap;
-		//}
+		inline HBITMAP CBitmap::LoadMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
+		{
+			assert(m_pData->hBitmap == NULL);
+			m_pData->hBitmap = ::CreateMappedBitmap (GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+			if (m_pData->hBitmap == NULL)
+				m_pData->hBitmap = ::CreateMappedBitmap (GetApp()->GetInstanceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+
+			return m_pData->hBitmap;
+		}
 #endif // !_WIN32_WCE
 
 		inline void CBitmap::CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, const void* lpBits)
@@ -1771,6 +1835,8 @@ namespace Win32xx
 		m_pData->hPenOld = 0;
 		m_pData->hRgnOld = 0;
 		m_pData->Count = 1L;
+
+		AddToMap();
 	}
 
 	inline CDC::CDC (const CDC& rhs)	// Copy constructor
@@ -1811,6 +1877,20 @@ namespace Win32xx
 		Release();
 	}
 
+	inline void CDC::AddToMap()
+	// Store the HDC and CDC pointer in the HDC map
+	{
+		assert( GetApp() );
+		assert(m_pData->hDC);
+		GetApp()->m_csMapLock.Lock();
+
+		assert(m_pData->hDC);
+		assert(!GetApp()->GetCDCFromMap(m_pData->hDC));
+
+		GetApp()->m_mapHDC.insert(std::make_pair(m_pData->hDC, this));
+		GetApp()->m_csMapLock.Release();
+	}
+
 	inline void CDC::AttachDC (HDC hDC)
 	{
 		assert(m_pData);
@@ -1818,6 +1898,7 @@ namespace Win32xx
 		assert(hDC);
 
 		m_pData->hDC = hDC;
+		AddToMap();
 	}
 
 	inline HDC CDC::DetachDC ()
@@ -1838,6 +1919,7 @@ namespace Win32xx
 		HDC hDC = m_pData->hDC;
 
 		m_pData->hDC = 0;
+		RemoveFromMap();
 		return hDC;
 	}
 
@@ -1859,6 +1941,14 @@ namespace Win32xx
 		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
 		BitBlt(x, y, cx, cy, dcMask, 0, 0, SRCAND);
 		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+	}
+
+	inline CDC* CDC::FromHandle(HDC hDC)
+	// Returns the CDC object associated with the device context handle
+	{
+		assert( GetApp() );
+		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+		return pDC;
 	}
 
 	inline void CDC::GradientFill (COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical)
@@ -1932,8 +2022,38 @@ namespace Win32xx
 
 				delete m_pData;
 				m_pData = 0;
+				RemoveFromMap();
 			}
 		}
+	}
+
+	inline BOOL CDC::RemoveFromMap()
+	{
+		assert( GetApp() );
+		BOOL Success = FALSE;
+
+		// Allocate an iterator for our HDC map
+		std::map<HDC, CDC*, CompareHDC>::iterator m;
+
+		CWinApp* pApp = GetApp();
+		if (pApp)
+		{
+			// Erase the CDC pointer entry from the map
+			pApp->m_csMapLock.Lock();
+			for (m = pApp->m_mapHDC.begin(); m != pApp->m_mapHDC.end(); ++m)
+			{
+				if (this == m->second)
+				{
+					pApp->m_mapHDC.erase(m);
+					Success = TRUE;
+					break;
+				}
+			}
+
+			pApp->m_csMapLock.Release();
+		}
+
+		return Success;
 	}
 
 	inline void CDC::RemoveCurrentBitmap ()
@@ -2112,6 +2232,48 @@ namespace Win32xx
 		::GetObject(hbm, sizeof(bm), &bm);
 		return bm;
 	}
+
+	inline void CDC::LoadBitmap (UINT nID)
+	{
+		LoadBitmap(MAKEINTRESOURCE(nID));
+	}
+
+	inline void CDC::LoadBitmap (LPCTSTR lpstr)
+	{
+		assert(m_pData->hDC);
+		assert(GetApp());
+		m_pData->Bitmap.LoadBitmap (lpstr);
+		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
+	}
+
+	inline void CDC::LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad)
+	{
+		LoadImage(nID, cxDesired, cyDesired, fuLoad);
+	}
+
+	inline void CDC::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
+	{
+		assert(m_pData->hDC);
+		assert(GetApp());
+		m_pData->Bitmap.LoadImage(lpszName, cxDesired, cyDesired, fuLoad);
+		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
+	}
+
+	inline void CDC::LoadOEMBitmap (UINT nIDBitmap) // for OBM_/OCR_/OIC_
+	{
+		assert(m_pData->hDC);
+		m_pData->Bitmap.LoadOEMBitmap (nIDBitmap);
+		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
+	}
+
+#ifndef _WIN32_WCE
+	inline void CDC::LoadMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
+	{
+		assert(m_pData->hDC);
+		m_pData->Bitmap.LoadMappedBitmap (nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
+	}
+#endif // !_WIN32_WCE
 
 
 	// Brush functions

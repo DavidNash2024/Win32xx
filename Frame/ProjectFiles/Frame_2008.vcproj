@@ -257,6 +257,10 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\Win32++\include\controls.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\dialog.h"
 				>
 			</File>

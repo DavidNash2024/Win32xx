@@ -394,7 +394,6 @@ namespace Win32xx
 		BSTR m_bstrString;
 	};
 
-
 }
 
 

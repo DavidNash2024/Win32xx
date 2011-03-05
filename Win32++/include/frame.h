@@ -252,8 +252,8 @@ namespace Win32xx
 		virtual void AddToolBarBand(CToolBar& TB, DWORD dwStyle, UINT nID);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void CreateToolBar();
-		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis);
-		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled);
+		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis, CDC& DrawDC);
+		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
@@ -1440,13 +1440,13 @@ namespace Win32xx
 		}
 
 		// Load the button images from Resouce ID
-		HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ToolBarID));
+		CBitmap Bitmap(ToolBarID);
 
-		if ((0 == iImages) || (NULL == hbm))
+		if ((0 == iImages) || (!Bitmap))
 			return (UINT)m_vMenuIcons.size();	// No valid images, so nothing to do!
 
 		BITMAP bm = {0};
-		::GetObject(hbm, sizeof(BITMAP), &bm);
+		::GetObject(Bitmap, sizeof(BITMAP), &bm);
 		int iImageWidth  = bm.bmWidth / iImages;
 		int iImageHeight = bm.bmHeight;
 
@@ -1479,8 +1479,7 @@ namespace Win32xx
 		}
 
 		// Add the images to the ImageList
-		ImageList_AddMasked(m_himlMenu, hbm, crMask);
-		::DeleteObject(hbm);
+		ImageList_AddMasked(m_himlMenu, Bitmap, crMask);
 
 		// Create the Disabled imagelist
 		if (ToolBarDisabledID)
@@ -1488,24 +1487,23 @@ namespace Win32xx
 			if (0 != m_himlMenuDis)
 				m_himlMenuDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 
-			HBITMAP hbmDis = LoadBitmap(MAKEINTRESOURCE(ToolBarDisabledID));
+			CBitmap BitmapDisabled(ToolBarDisabledID);
 
 			BITMAP bmDis = {0};
-			::GetObject(hbmDis, sizeof(BITMAP), &bmDis);
+			::GetObject(BitmapDisabled, sizeof(BITMAP), &bmDis);
 			int iImageWidthDis  = bmDis.bmWidth / iImages;
 			int iImageHeightDis = bmDis.bmHeight;
 
 			// Normal and Disabled icons must be the same size
 			if ((iImageWidthDis == iImageWidth) && (iImageHeightDis == iImageHeight))
 			{
-				ImageList_AddMasked(m_himlMenu, hbmDis, crMask);
+				ImageList_AddMasked(m_himlMenu, BitmapDisabled, crMask);
 			}
 			else
 			{
 				ImageList_Destroy(m_himlMenuDis);
 				m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
 			}
-			::DeleteObject(hbmDis);
 		}
 		else
 		{
@@ -1660,10 +1658,9 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis)
+	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis, CDC& DrawDC)
 	// Draws the checkmark or radiocheck transparently
 	{
-		CDC DrawDC = pdis->hDC;
 		CRect rc = pdis->rcItem;
 		UINT fType = ((ItemData*)pdis->itemData)->fType;
 		MenuTheme tm = GetMenuTheme();
@@ -1725,11 +1722,9 @@ namespace Win32xx
 			MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
 			DrawDC.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 		}
-		// Detach the DC so it doesn't get destroyed
-		DrawDC.DetachDC();
 	}
 
-	inline void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, BOOL bDisabled)
+	inline void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, BOOL bDisabled)
 	{
 		if (!m_himlMenu)
 			return;
@@ -1739,7 +1734,6 @@ namespace Win32xx
 		ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 
 		// get the drawing rectangle
-		CDC DrawDC = pdis->hDC;
 		CRect rc = pdis->rcItem;
 		int offset = (rc.bottom - rc.top - Icony)/2;
 		int height = rc.bottom - rc.top;
@@ -1762,8 +1756,6 @@ namespace Win32xx
 			else
 				ImageList_Draw(m_himlMenu, iImage, DrawDC, rc.left, rc.top, ILD_TRANSPARENT);
 		}
-		// Detach the DC so it doesn't get destroyed
-		DrawDC.DetachDC();
 	}
 
 	inline void CFrame::DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText)
@@ -2210,9 +2202,9 @@ namespace Win32xx
 			}  
 
 			if (bChecked)
-				DrawCheckmark(pdis);
+				DrawCheckmark(pdis, DrawDC);
 			else
-				DrawMenuIcon(pdis, bDisabled);
+				DrawMenuIcon(pdis, DrawDC, bDisabled);
 
 			// Calculate the text rect size
 			rc.left  = rc.bottom - rc.top + 2;
