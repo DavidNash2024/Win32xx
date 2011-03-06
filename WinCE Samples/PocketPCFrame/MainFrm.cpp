@@ -69,7 +69,7 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnPaint(CDC& dc)
 {
 	CRect rc = GetViewRect();
-	tString tsHello = CResString(IDS_HELLO);
+	tString tsHello = CLoadString(IDS_HELLO);
 	dc.DrawText(tsHello.c_str(), tsHello.size(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 

@@ -2074,7 +2074,7 @@ namespace Win32xx
 		SetIconSmall(IDW_MAIN);
 
 		// Set the Caption
-		SetWindowText(CResString(IDW_MAIN));
+		SetWindowText(CLoadString(IDW_MAIN));
 
 		// Set the theme for the frame elements
 		SetTheme();
@@ -2391,7 +2391,7 @@ namespace Win32xx
 			HMENU hMenu = (HMENU) lParam;
 
 			if ((hMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
-				m_tsStatusText = (LPCTSTR)CResString(nID);
+				m_tsStatusText = (LPCTSTR)CLoadString(nID);
 			else
 				m_tsStatusText = _T("Ready");
 
@@ -2441,7 +2441,7 @@ namespace Win32xx
 					int nID = pToolBar->GetCommandID(iIndex);
 					if (nID > 0)
 					{
-						m_tsTooltip = CResString(nID);
+						m_tsTooltip = CLoadString(nID);
 						lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
 					}
 					else
@@ -2564,7 +2564,7 @@ namespace Win32xx
 						if (nID != m_nOldID)
 						{
 							if (nID != 0)
-								m_tsStatusText = CResString(nID);
+								m_tsStatusText = CLoadString(nID);
 							else
 								m_tsStatusText = _T("Ready");
 

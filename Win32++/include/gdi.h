@@ -420,7 +420,6 @@ namespace Win32xx
 			HBRUSH	hBrushOld;
 			HFONT	hFontOld;
 			HPEN	hPenOld;
-			HRGN	hRgnOld;
 			long	Count;
 		};
 
@@ -492,10 +491,8 @@ namespace Win32xx
 		LOGPEN GetPenInfo ();
 
 		// Create Select Regions
-		void AttachClipRgn (HRGN hRegion);
 		void CreateRectRgn (int left, int top, int right, int bottom);
 		void CreateRectRgnIndirect (const RECT& rc);
-		HRGN DetachClipRgn ();
 		void CreateFromData (const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData);
 #ifndef _WIN32_WCE
 		void CreateEllipticRgn (int left, int top, int right, int bottom);
@@ -551,6 +548,7 @@ namespace Win32xx
 		BOOL Rectangle (const RECT& rc) const;
 		BOOL RoundRect (int x1, int y1, int x2, int y2, int nWidth, int nHeight) const;
 		BOOL RoundRect (const RECT& rc, int nWidth, int nHeight) const;
+		
 #ifndef _WIN32_WCE
 		BOOL Chord (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
 		BOOL Chord (const RECT& rc, POINT ptStart, POINT ptEnd) const;
@@ -568,6 +566,7 @@ namespace Win32xx
 		BOOL FillRgn (HRGN hrgn, HBRUSH hbr) const;
 		virtual void GradientFill (COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical);
 		virtual void SolidFill (COLORREF Color, const RECT& rc);
+		
 #ifndef _WIN32_WCE
 		BOOL DrawIcon (int x, int y, HICON hIcon) const;
 		BOOL DrawIcon (POINT point, HICON hIcon) const;
@@ -582,6 +581,7 @@ namespace Win32xx
 		BOOL PatBlt (int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
 		BOOL BitBlt (int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
 		BOOL StretchBlt (int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const;
+		
 #ifndef _WIN32_WCE
 		int GetDIBits (HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const;
 		int SetDIBits (HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const;
@@ -589,6 +589,21 @@ namespace Win32xx
 		int SetStretchBltMode (int iStretchMode) const;
 		BOOL FloodFill (int x, int y, COLORREF crColor) const;
 		BOOL ExtFloodFill (int x, int y, COLORREF crColor, UINT nFillType) const;
+#endif
+
+		// Clipping Functions
+		int ExcludeClipRect (int Left, int Top, int Right, int BottomRect );
+		int ExcludeClipRect (const RECT& rc);
+		int GetClipBox (RECT& rc);			
+		int GetClipRgn (HRGN hrgn);				
+		int IntersectClipRect (int Left, int Top, int Right, int Bottom);
+		int IntersectClipRect (const RECT& rc);
+		BOOL RectVisible (const RECT& rc);
+		int SelectClipRgn (HRGN hrgn);
+
+#ifndef _WIN32_WCE
+		int OffsetClipRgn (int nXOffset, int nYOffset);
+		BOOL PtVisible (int X, int Y);
 #endif
 
         // Co-ordinate Functions
@@ -647,6 +662,7 @@ namespace Win32xx
 		COLORREF SetTextColor (COLORREF crColor) const;
 		int GetBkMode () const;
 		int SetBkMode (int iBkMode) const;
+		
 #ifndef _WIN32_WCE
 		CSize GetTextExtentPoint (LPCTSTR lpszString, int nCount) const;
 		BOOL TextOut (int x, int y, LPCTSTR lpszString, int nCount = -1) const;
@@ -1799,7 +1815,6 @@ namespace Win32xx
 		m_pData->hBrushOld = 0;
 		m_pData->hFontOld = 0;
 		m_pData->hPenOld = 0;
-		m_pData->hRgnOld = 0;
 		m_pData->Count = 1L;
 	}
 
@@ -1826,7 +1841,6 @@ namespace Win32xx
 		m_pData->hBrushOld = 0;
 		m_pData->hFontOld = 0;
 		m_pData->hPenOld = 0;
-		m_pData->hRgnOld = 0;
 		m_pData->Count = 1L;
 
 		AddToMap();
@@ -2001,7 +2015,6 @@ namespace Win32xx
 					if (m_pData->hBrushOld)	::SelectObject(m_pData->hDC, m_pData->hBrushOld);
 					if (m_pData->hBitmapOld)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
 					if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
-					if (m_pData->hRgnOld)	::SelectClipRgn(m_pData->hDC, NULL);
 
 					// We need to release a Window DC, and delete a memory DC
 		#ifndef _WIN32_WCE
@@ -2107,15 +2120,11 @@ namespace Win32xx
 
 	inline void CDC::RemoveCurrentRgn ()
 	{
-		if (m_pData->hRgnOld)
+		if (m_pData->Rgn)
 		{
-			HRGN hRgn = (HRGN)::SelectObject(m_pData->hDC, m_pData->hRgnOld);
-			if (hRgn == m_pData->Rgn)
-			{
-				// Only delete the region objects we create
-				m_pData->Rgn.Detach();
-				DeleteObject(hRgn);
-			}
+			// Only delete the region objects we create
+			HRGN hRgn = m_pData->Rgn.Detach();
+			DeleteObject(hRgn);
 		}
 	}
 
@@ -2204,11 +2213,14 @@ namespace Win32xx
 		// Use this to detach the bitmap from the HDC.
 
 		assert(m_pData->hDC);
-		assert(m_pData->hBitmapOld);
 
-		HBITMAP hBitmap = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
-		if (hBitmap == m_pData->Bitmap)
-			m_pData->Bitmap.Detach();
+		HBITMAP hBitmap = 0;	
+		if(m_pData->hBitmapOld)
+		{
+			hBitmap = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
+			if (hBitmap == m_pData->Bitmap)
+				m_pData->Bitmap.Detach();
+		}
 
 		m_pData->hBitmapOld = NULL;
 		return hBitmap;
@@ -2343,12 +2355,15 @@ namespace Win32xx
 		// Use this to detach the brush from the HDC.
 
 		assert(m_pData->hDC);
-		assert(m_pData->hBrushOld);
 
-		HBRUSH hBrush = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->hBrushOld);
-		if (hBrush == m_pData->Brush)
-			m_pData->Brush.Detach();
-
+		HBRUSH hBrush = 0;
+		if (m_pData->hBrushOld)
+		{
+			hBrush = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->hBrushOld);
+			if (hBrush == m_pData->Brush)
+				m_pData->Brush.Detach();
+		}
+		
 		m_pData->hBrushOld = NULL;
 		return hBrush;
 	}
@@ -2428,11 +2443,14 @@ namespace Win32xx
 		// Use this to detach the font from the HDC.
 
 		assert(m_pData->hDC);
-		assert(m_pData->hFontOld);
 
-		HFONT hFont = (HFONT)::SelectObject(m_pData->hDC, m_pData->hFontOld);
-		if (m_pData->Font == hFont)
-			m_pData->Font.Detach();
+		HFONT hFont = 0;
+		if (m_pData->hFontOld)
+		{
+			hFont = (HFONT)::SelectObject(m_pData->hDC, m_pData->hFontOld);
+			if (m_pData->Font == hFont)
+				m_pData->Font.Detach();
+		}
 
 		m_pData->hFontOld = NULL;
 		return hFont;
@@ -2490,11 +2508,14 @@ namespace Win32xx
 		// Use this to detach the pen from the HDC.
 
 		assert(m_pData->hDC);
-		assert(m_pData->hPenOld);
+		HPEN hPen = 0;
 
-		HPEN hPen = (HPEN)::SelectObject(m_pData->hDC, m_pData->hPenOld);
-		if (hPen == m_pData->Pen)
-			m_pData->Pen.Detach();
+		if (m_pData->hPenOld)
+		{
+			hPen = (HPEN)::SelectObject(m_pData->hDC, m_pData->hPenOld);
+			if (hPen == m_pData->Pen)
+				m_pData->Pen.Detach();
+		}
 
 		m_pData->hPenOld = NULL;
 		return hPen;
@@ -2513,23 +2534,9 @@ namespace Win32xx
 	}
 
 	// Region functions
-	inline void CDC::AttachClipRgn (HRGN hRegion)
-	{
-		// Use this to attach an existing region.
-		// The region will be deleted for you, unless its detached
-		// Note: The shape of a region cannot be changed while it is attached to a DC
-
-		assert(m_pData->hDC);
-		assert(hRegion);
-		RemoveCurrentRgn();
-
-		::SelectClipRgn(m_pData->hDC, hRegion);
-		m_pData->hRgnOld = hRegion;
-	}
 	inline void CDC::CreateRectRgn (int left, int top, int right, int bottom)
 	{
 		// Creates a rectangular region from the rectangle co-ordinates.
-		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
 		assert(m_pData->hDC);
@@ -2537,13 +2544,11 @@ namespace Win32xx
 
 		m_pData->Rgn.CreateRectRgn(left, top, right, bottom);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
-		m_pData->hRgnOld = m_pData->Rgn;
 	}
 
 	inline void CDC::CreateRectRgnIndirect (const RECT& rc)
 	{
 		// Creates a rectangular region from the rectangle co-ordinates.
-		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
 		assert(m_pData->hDC);
@@ -2551,13 +2556,11 @@ namespace Win32xx
 
 		m_pData->Rgn.CreateRectRgnIndirect(&rc);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
-		m_pData->hRgnOld = m_pData->Rgn;
 	}
 
 	inline void CDC::CreateFromData (const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData)
 	{
 		// Creates a region from the specified region data and tranformation data.
-		// The region will be deleted for you, unless its detached
 		// Notes: The shape of a region cannot be changed while it is attached to a DC
 		//        GetRegionData can be used to get a region's data
 		//        If the XFROM pointer is NULL, the identity transformation is used.
@@ -2567,23 +2570,6 @@ namespace Win32xx
 
 		m_pData->Rgn.CreateFromData(Xform, nCount, pRgnData);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
-		m_pData->hRgnOld = m_pData->Rgn;
-	}
-
-	inline HRGN CDC::DetachClipRgn ()
-	{
-		// Use this to detach the region from the HDC.
-
-		assert(m_pData->hDC);
-		assert(m_pData->hRgnOld);
-
-		::SelectClipRgn(m_pData->hDC, NULL);
-		HRGN hRgn = m_pData->hRgnOld;
-		if (hRgn == m_pData->Rgn)
-			m_pData->Rgn.Detach();
-
-		m_pData->hRgnOld = NULL;
-		return hRgn;
 	}
 
 #ifndef _WIN32_WCE
@@ -2591,7 +2577,6 @@ namespace Win32xx
 	{
 		// Creates the ellyiptical region from the bounding rectangle co-ordinates
 		// and selects it into the device context
-		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
 		assert(m_pData->hDC);
@@ -2599,14 +2584,12 @@ namespace Win32xx
 
 		m_pData->Rgn.CreateEllipticRgn(left, top, right, bottom);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
-		m_pData->hRgnOld = m_pData->Rgn;
 	}
 
 	inline void CDC::CreateEllipticRgnIndirect (const RECT& rc)
 	{
 		// Creates the ellyiptical region from the bounding rectangle co-ordinates
 		// and selects it into the device context
-		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
 		assert(m_pData->hDC);
@@ -2614,14 +2597,12 @@ namespace Win32xx
 
 		m_pData->Rgn.CreateEllipticRgnIndirect(&rc);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
-		m_pData->hRgnOld = m_pData->Rgn;
 	}
 
 	inline void CDC::CreatePolygonRgn (LPPOINT ppt, int cPoints, int fnPolyFillMode)
 	{
 		// Creates the polygon region from the array of points and selects it into
 		// the device context. The polygon is presumed closed
-		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
 		assert(m_pData->hDC);
@@ -2629,13 +2610,11 @@ namespace Win32xx
 
 		m_pData->Rgn.CreatePolygonRgn(ppt, cPoints, fnPolyFillMode);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
-		m_pData->hRgnOld = m_pData->Rgn;
 	}
 
 	inline void CDC::CreatePolyPolygonRgn (LPPOINT ppt, LPINT pPolyCounts, int nCount, int fnPolyFillMode)
 	{
 		// Creates the polygon region from a series of polygons.The polygons can overlap.
-		// The region will be deleted for you, unless its detached
 		// Note: The shape of a region cannot be changed while it is attached to a DC
 
 		assert(m_pData->hDC);
@@ -2643,7 +2622,6 @@ namespace Win32xx
 
 		m_pData->Rgn.CreatePolyPolygonRgn(ppt, pPolyCounts, nCount, fnPolyFillMode);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
-		m_pData->hRgnOld = m_pData->Rgn;
 	}
 #endif
 
@@ -2660,10 +2638,74 @@ namespace Win32xx
 	{
 		return ::CreateDC( lpszDriver, lpszDevice, lpszOutput, &dvmInit );
 	}
+	
 	inline int CDC::GetDeviceCaps (int nIndex) const
 	{
 		return ::GetDeviceCaps(m_pData->hDC, nIndex);
 	}
+
+	// Clipping functions
+	inline int CDC::ExcludeClipRect (int Left, int Top, int Right, int BottomRect )
+	{
+		assert(m_pData->hDC);
+		return ::ExcludeClipRect (m_pData->hDC, Left, Top, Right, BottomRect );
+	}
+
+	inline int CDC::ExcludeClipRect (const RECT& rc)
+	{
+		assert(m_pData->hDC);
+		return ::ExcludeClipRect(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
+	}
+
+	inline int CDC::GetClipBox (RECT& rc)
+	{
+		assert(m_pData->hDC);
+		return ::GetClipBox(m_pData->hDC, &rc);
+	}
+
+	inline int CDC::GetClipRgn (HRGN hrgn)
+	{
+		assert(m_pData->hDC);
+		return ::GetClipRgn(m_pData->hDC, hrgn);
+	}
+
+	inline int CDC::IntersectClipRect (int Left, int Top, int Right, int Bottom)
+	{
+		assert(m_pData->hDC);
+		return ::IntersectClipRect(m_pData->hDC, Left, Top, Right, Bottom);
+	}
+	
+	inline int CDC::IntersectClipRect (const RECT& rc)
+	{
+		assert(m_pData->hDC);
+		return ::IntersectClipRect(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
+	}
+
+	inline BOOL CDC::RectVisible (const RECT& rc)
+	{
+		assert(m_pData->hDC);
+		return ::RectVisible (m_pData->hDC, &rc);
+	}
+
+	inline int CDC::SelectClipRgn(HRGN hRegion)
+	{
+		assert(m_pData->hDC);
+		return ::SelectClipRgn(m_pData->hDC, hRegion);
+	}
+
+#ifndef _WIN32_WCE
+	inline BOOL CDC::PtVisible (int X, int Y)
+	{
+		assert(m_pData->hDC);
+		return ::PtVisible (m_pData->hDC, X, Y);
+	}
+
+	inline int CDC::OffsetClipRgn (int nXOffset, int nYOffset)
+	{
+		assert(m_pData->hDC);
+		return ::OffsetClipRgn (m_pData->hDC, nXOffset, nYOffset);
+	}
+#endif
 
 	// Point and Line Drawing Functions
 	inline CPoint CDC::GetCurrentPosition () const

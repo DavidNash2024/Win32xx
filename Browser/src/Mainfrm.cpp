@@ -132,7 +132,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to menu and and toolbar input
 
-	HWND hWndEdit = m_ComboboxEx.GetEditCtrl();
+	CWnd* pEdit = m_ComboboxEx.GetEditCtrl();
 
 	switch(LOWORD(wParam))
 	{
@@ -160,20 +160,20 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		m_View.GetIWebBrowser2()->GoHome();
 		return TRUE;
 	case IDM_EDIT_CUT:
-		if (::GetFocus() == hWndEdit)
-			SendMessage(hWndEdit, WM_CUT, 0, 0);
+		if (::GetFocus() == pEdit->GetHwnd())
+			pEdit->SendMessage(WM_CUT, 0, 0);
 		return TRUE;
 	case IDM_EDIT_COPY:
-		if (::GetFocus() == hWndEdit)
-			SendMessage(hWndEdit, WM_COPY, 0, 0);
+		if (::GetFocus() == pEdit->GetHwnd())
+			pEdit->SendMessage(WM_COPY, 0, 0);
 		return TRUE;
 	case IDM_EDIT_PASTE:
-		if (::GetFocus() == hWndEdit)
-			SendMessage(hWndEdit, WM_PASTE, 0, 0);
+		if (::GetFocus() == pEdit->GetHwnd())
+			pEdit->SendMessage(WM_PASTE, 0, 0);
 		return TRUE;
 	case IDM_EDIT_DELETE:
-		if (::GetFocus() == hWndEdit)
-			SendMessage(hWndEdit, WM_CLEAR, 0, 0);
+		if (::GetFocus() == pEdit->GetHwnd())
+			pEdit->SendMessage(WM_CLEAR, 0, 0);
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();
@@ -371,11 +371,11 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-		str << W2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << CResString(IDW_MAIN);
+		str << W2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << CLoadString(IDW_MAIN);
 		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
-		str << CResString(IDW_MAIN);
+		str << CLoadString(IDW_MAIN);
 
 	SetWindowText(str.str().c_str());
 }

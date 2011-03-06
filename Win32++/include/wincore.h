@@ -545,12 +545,12 @@ namespace Win32xx
 	};
 
 	////////////////////////////////////////
-	// Declarations for the CResString class
+	// Declarations for the CLoadString class
 	// Returns the string associated with a Resource ID
-	class CResString
+	class CLoadString
 	{
 	public:
-		CResString(UINT nID) : m_nID(nID)
+		CLoadString(UINT nID) : m_nID(nID)
 		{
 			assert (GetApp());
 
@@ -581,11 +581,21 @@ namespace Win32xx
 		operator LPCTSTR() { return &m_vString.front(); }
 
 	private:
-		CResString(const CResString&);
-		CResString& operator= (const CResString&);
+		CLoadString(const CLoadString&);
+		CLoadString& operator= (const CLoadString&);
 		std::vector<TCHAR> m_vString;
 		UINT m_nID;
 	};
+
+	inline HBITMAP LoadBitmap (LPCTSTR lpstr)
+	{
+		assert(GetApp());
+		HBITMAP hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
+		if (hBitmap == NULL)
+			hBitmap = ::LoadBitmap (GetApp()->GetInstanceHandle(), lpstr);
+
+		return hBitmap;
+	}
 
 }
 

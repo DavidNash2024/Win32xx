@@ -783,8 +783,10 @@ namespace Win32xx
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
     	assert (NULL != m_pParent);
 
-		CRect rcCurrent = m_pParent->GetWindowRect();
-		m_pParent->ScreenToClient(rcCurrent);
+	//	CRect rcCurrent = m_pParent->GetWindowRect();
+	//	m_pParent->ScreenToClient(rcCurrent);
+
+		CRect rcCurrent = m_pParent->GetClientRect();
 	
 		// Adjust the scrolling if required
 		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );

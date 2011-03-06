@@ -851,7 +851,7 @@ namespace Win32xx
 		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF);
 
 		// Use the region in the memory DC to paint the grey background
-		dcMem.AttachClipRgn(hrgnClip);
+		dcMem.SelectClipRgn(hrgnClip);
 		HWND hWndParent = ::GetParent(m_hWnd);
 		CDC dcParent = ::GetDC(hWndParent);
 		HBRUSH hBrush = (HBRUSH) SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
@@ -867,10 +867,10 @@ namespace Win32xx
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
-		dcMem.DetachClipRgn();
-		dcView.AttachClipRgn(hrgnClip);
+	//	dcMem.DetachClipRgn();
+		dcView.SelectClipRgn(hrgnClip);
 		dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
-		dcView.DetachClipRgn();
+	//	dcView.DetachClipRgn();
 
 		// Cleanup
 		::DeleteObject(hrgnSrc1);

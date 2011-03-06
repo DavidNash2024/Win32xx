@@ -393,7 +393,7 @@ namespace Win32xx
 		CA2BSTR& operator= (const CA2BSTR&);
 		BSTR m_bstrString;
 	};
-
+	
 }
 
 

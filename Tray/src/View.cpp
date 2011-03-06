@@ -19,7 +19,7 @@ void CView::OnCreate()
 	SetIconSmall(IDW_MAIN);
 	SetIconLarge(IDW_MAIN);
 
-	SetWindowText(CResString(IDW_MAIN));		// Window title
+	SetWindowText(CLoadString(IDW_MAIN));		// Window title
 
 	TRACE(_T("OnCreate\n"));
 }
@@ -73,7 +73,7 @@ void CView::OnPaint(CDC& dc)
 
 	// Centre some text in our view window
 	CRect rc = GetClientRect();
-	dc.DrawText(CResString(IDW_MAIN), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	dc.DrawText(CLoadString(IDW_MAIN), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
