@@ -113,7 +113,7 @@
 #include <tchar.h>
 #include <shlwapi.h>
 #include "shared_ptr.h"
-#include "winutils.h"
+//#include "winutils.h"			// included later in this file
 // #include "gdi.h"				// included later in this file
 
 // For compilers lacking Win64 support
@@ -285,6 +285,66 @@ namespace Win32xx
 		LPCTSTR m_msg;
 		TCHAR m_ErrorString[MAX_STRING_SIZE];
 	};
+
+
+	///////////////////////////////////
+	// Declaration of the CWinApp class
+	//
+	class CWinApp
+	{
+		friend class CWnd;			// CWnd needs access to CWinApp's private members
+		friend class CDC;
+		friend class CDialog;
+		friend class CMenuBar;
+		friend class CPropertyPage;
+		friend class CPropertySheet;
+		friend class CTaskDialog;
+		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
+
+		typedef Shared_Ptr<TLSData> TLSDataPtr;
+
+	public:
+		CWinApp();
+		virtual ~CWinApp();
+
+		CWnd* GetCWndFromMap(HWND hWnd);
+		CDC* GetCDCFromMap(HDC hDC);
+		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
+		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
+		void SetResourceHandle(HINSTANCE hResource);
+
+		// These are the functions you might wish to override
+		virtual BOOL InitInstance();
+		virtual int  MessageLoop();
+		virtual int Run();
+
+	private:
+		CWinApp(const CWinApp&);				// Disable copy construction
+		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
+		void AddTmpWnd(HWND hWnd);
+		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
+		void RemoveTmpWnds();
+		void SetCallback();
+		TLSData* SetTlsIndex();
+		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
+
+		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
+		std::map<HDC, CDC*, CompareHDC> m_mapHDC;		// maps device context handles to CDC objects
+		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
+		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
+		CCriticalSection m_csTlsData;	// thread synchronisation for m_vTLSData
+		HINSTANCE m_hInstance;			// handle to the applications instance
+		HINSTANCE m_hResource;			// handle to the applications resources
+		DWORD m_dwTlsIndex;				// Thread Local Storage index
+		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
+	};
+
+}
+
+#include "winutils.h"
+
+namespace Win32xx
+{
 
 	////////////////////////////////
 	// Declaration of the CWnd class
@@ -492,110 +552,7 @@ namespace Win32xx
 	}; // class CWnd
 
 
-	///////////////////////////////////
-	// Declaration of the CWinApp class
-	//
-	class CWinApp
-	{
-		friend class CWnd;			// CWnd needs access to CWinApp's private members
-		friend class CDC;
-		friend class CDialog;
-		friend class CMenuBar;
-		friend class CPropertyPage;
-		friend class CPropertySheet;
-		friend class CTaskDialog;
-		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 
-		typedef Shared_Ptr<TLSData> TLSDataPtr;
-
-	public:
-		CWinApp();
-		virtual ~CWinApp();
-
-		CWnd* GetCWndFromMap(HWND hWnd);
-		CDC* GetCDCFromMap(HDC hDC);
-		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
-		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
-		void SetResourceHandle(HINSTANCE hResource);
-
-		// These are the functions you might wish to override
-		virtual BOOL InitInstance();
-		virtual int  MessageLoop();
-		virtual int Run();
-
-	private:
-		CWinApp(const CWinApp&);				// Disable copy construction
-		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
-		void AddTmpWnd(HWND hWnd);
-		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		void RemoveTmpWnds();
-		void SetCallback();
-		TLSData* SetTlsIndex();
-		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
-
-		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
-		std::map<HDC, CDC*, CompareHDC> m_mapHDC;		// maps device context handles to CDC objects
-		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
-		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
-		CCriticalSection m_csTlsData;	// thread synchronisation for m_vTLSData
-		HINSTANCE m_hInstance;			// handle to the applications instance
-		HINSTANCE m_hResource;			// handle to the applications resources
-		DWORD m_dwTlsIndex;				// Thread Local Storage index
-		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
-	};
-
-	////////////////////////////////////////
-	// Declarations for the CLoadString class
-	// Returns the string associated with a Resource ID
-	class CLoadString
-	{
-	public:
-		CLoadString(UINT nID) : m_nID(nID)
-		{
-			assert (GetApp());
-
-			int nSize = 64;
-			TCHAR* pTCharArray = 0;
-			int nTChars = nSize;
-
-			// Increase the size of our array in a loop until we load the entire string
-			// The ANSI and UNICODE versions of LoadString behave differently. This technique works for both.
-			while ( nSize-1 <= nTChars )
-			{
-				nSize = nSize * 4;
-				m_vString.assign(nSize+1, _T('\0'));
-				pTCharArray = &m_vString.front();
-				nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
-			}
-
-			if (nTChars == 0)
-			{
-				std::vector<TCHAR> vMsgArray(80, _T('\0'));
-				TCHAR* pMsgArray = &vMsgArray.front();
-				::wsprintf(pMsgArray, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
-				TRACE(pMsgArray);
-				pTCharArray = 0;
-			}
-		}
-
-		operator LPCTSTR() { return &m_vString.front(); }
-
-	private:
-		CLoadString(const CLoadString&);
-		CLoadString& operator= (const CLoadString&);
-		std::vector<TCHAR> m_vString;
-		UINT m_nID;
-	};
-
-	inline HBITMAP LoadBitmap (LPCTSTR lpstr)
-	{
-		assert(GetApp());
-		HBITMAP hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
-		if (hBitmap == NULL)
-			hBitmap = ::LoadBitmap (GetApp()->GetInstanceHandle(), lpstr);
-
-		return hBitmap;
-	}
 
 }
 
@@ -811,13 +768,6 @@ namespace Win32xx
 		return lpstrRet;
 	}
   #endif // !lstrcpyn
-
-	inline CPoint GetCursorPos()
-	{
-		CPoint pt;
-		::GetCursorPos(&pt);
-		return pt;
-	}
 
 
 	//////////////////////////////////////////

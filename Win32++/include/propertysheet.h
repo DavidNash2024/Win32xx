@@ -297,6 +297,16 @@ namespace Win32xx
 
 				break;
 			}
+			
+		case WM_ERASEBKGND:
+			{
+				CDC dc = (HDC)wParam;
+				BOOL bResult = OnEraseBkgnd(dc);
+				dc.DetachDC();
+
+				if (bResult) return TRUE;
+			}
+			break;
 
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:

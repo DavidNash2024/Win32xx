@@ -133,8 +133,6 @@ namespace Win32xx
 		CRect operator - (RECT rc) const;
 	};
 
-	CPoint GetCursorPos();
-
 
 	/////////////////////////////////////////
 	// Definition of the CRect class
@@ -393,7 +391,83 @@ namespace Win32xx
 		CA2BSTR& operator= (const CA2BSTR&);
 		BSTR m_bstrString;
 	};
+
 	
+	////////////////////////////////////////
+	// Declarations of the CLoadString class
+	// Returns the string associated with a Resource ID
+	class CLoadString
+	{
+	public:
+		CLoadString(UINT nID) : m_nID(nID)
+		{
+			assert (GetApp());
+
+			int nSize = 64;
+			TCHAR* pTCharArray = 0;
+			int nTChars = nSize;
+
+			// Increase the size of our array in a loop until we load the entire string
+			// The ANSI and UNICODE versions of LoadString behave differently. This technique works for both.
+			while ( nSize-1 <= nTChars )
+			{
+				nSize = nSize * 4;
+				m_vString.assign(nSize+1, _T('\0'));
+				pTCharArray = &m_vString.front();
+				nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
+			}
+
+			if (nTChars == 0)
+			{
+				std::vector<TCHAR> vMsgArray(80, _T('\0'));
+				TCHAR* pMsgArray = &vMsgArray.front();
+				::wsprintf(pMsgArray, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
+				TRACE(pMsgArray);
+				pTCharArray = 0;
+			}
+		}
+
+		operator LPCTSTR() { return &m_vString.front(); }
+
+	private:
+		CLoadString(const CLoadString&);
+		CLoadString& operator= (const CLoadString&);
+		std::vector<TCHAR> m_vString;
+		UINT m_nID;
+	};
+
+	
+	////////////////////////////////////////
+	// Global Functions
+	// 
+	inline CPoint GetCursorPos()
+	{
+		CPoint pt;
+		::GetCursorPos(&pt);
+		return pt;
+	}
+	
+	inline HBITMAP LoadBitmap (LPCTSTR lpstr)
+	{
+		assert(GetApp());
+		HBITMAP hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
+		if (hBitmap == NULL)
+			hBitmap = ::LoadBitmap (GetApp()->GetInstanceHandle(), lpstr);
+
+		return hBitmap;
+	}
+
+	inline HBITMAP LoadBitmap (int nID)
+	{
+		return LoadBitmap(MAKEINTRESOURCE(nID));
+	}
+
+	inline tString LoadString(int nID)
+	{
+		tString ts = CLoadString(nID);
+		return ts;
+	}
+
 }
 
 

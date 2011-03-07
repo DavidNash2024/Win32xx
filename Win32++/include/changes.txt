@@ -46,7 +46,7 @@ Changes in detail
 - Added CPen
 - Added CRgn
 - Added CTaskDialog
-- Added CResString (replaces CWnd::LoadString)
+- Added CLoadString (replaces CWnd::LoadString)
 - Added tStringStream typedef (a TCHAR stringstream)
 - Added	A2BSTR	
 - Added	A2OLE	
@@ -68,6 +68,14 @@ Changes in detail
 - Added CDC::GetBrushInfo
 - Added CDC::GetFontInfo
 - Added CDC::GetPenInfo
+- Added CDC::ExcludeClipRect
+- Added CDC::GetClipBox	
+- Added CDC::GetClipRgn		
+- Added CDC::IntersectClipRect
+- Added CDC::OffsetClipRgn
+- Added CDC::PtVisible
+- Added CDC::RectVisible
+- Added CDC::SelectClipRgn
 - Added CDialog::AttachItem
 - Added CDockContainer::SetActiveContainer
 - Added CDocker::Close
@@ -104,6 +112,8 @@ Changes in detail
 - Modified CWnd::Create 		now takes a CWnd pointer instead of HWND
 - Modified CWnd::CreateEx       now takes a CWnd pointer instead of HWND
 - Moved CWnd::LoadBitmap to LoadBitmap
+- Removed CDC::AttachClipRgn
+- Removed CDC::DetachClipRgn
 - Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
 - Renamed CDC::AttachClipRegion to CDC::AttachClipRgn
@@ -114,7 +124,7 @@ Changes in detail
 - Replaced TCharToWide with T2W
 - Replaced WideToChar  with W2A
 - Replaced WideToTChar with W2T
-- Replaced CWnd::LoadString with CResString
+- Replaced CWnd::LoadString with CLoadString
 - Added several functions to CPoint
 - Added several functions to CSize
 - Added many functions to CRect 

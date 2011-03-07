@@ -348,6 +348,16 @@ namespace Win32xx
 
 				break;
 			}
+
+		case WM_ERASEBKGND:
+			{
+				CDC dc = (HDC)wParam;
+				BOOL bResult = OnEraseBkgnd(dc);
+				dc.DetachDC();
+
+				if (bResult) return TRUE;
+			}
+			break;
 					
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
@@ -782,9 +792,6 @@ namespace Win32xx
 		TRACE(_T("CResizer::RecalcLayout\n"));
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
     	assert (NULL != m_pParent);
-
-	//	CRect rcCurrent = m_pParent->GetWindowRect();
-	//	m_pParent->ScreenToClient(rcCurrent);
 
 		CRect rcCurrent = m_pParent->GetClientRect();
 	
