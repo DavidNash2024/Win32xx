@@ -45,6 +45,14 @@
 //  automatically. It also automatically deletes or releases the device context
 //  itself as appropriate. Any failure to create the new GDI object throws an
 //  exception.
+// 
+// The CDC class is sufficient for most GDI programming needs. Sometimes 
+//  however we need to have the GDI object seperated from the device context.
+//  Wrapper classes for GDI objects are provided for this purpose. The classes 
+//  are CBitmap, CBrush, CFont, CPalette, CPen and CRgn. These classes 
+//  automatically delete the GDI resouce assigned to them when their destructor 
+//  is called. These wrapper class objects can be attached to the CDC as
+//  shown below. 
 //
 // Coding Exampe without CDC ...
 //  HDC hDC = ::CreateCompatibleDC(SomeHDC);
@@ -62,8 +70,17 @@
 //	DrawDC.MoveTo(0, 0);
 //  DrawDC.LineTo(50, 50);
 //
+// Coding Example with CDC and CPen
+//  CPen MyPen(PS_SOLID, 1, RGB(255,0,0));
+//  CDC DrawDC = ::CreateCompatibleDC(SomeHDC);
+//  DrawDC.AttachPen(MyPen);
+//	DrawDC.MoveTo(0, 0);
+//  DrawDC.LineTo(50, 50);
+//
 // When the CDC object drops out of scope, it's destructor is called, cleaning up
-//  the GDI objects and device context.
+//  any GDI objects it created, as well as the device context.
+// When the CPen object drops out of scope, it's destructor is called, deleting
+//  the associated GDI object (HPEN).
 //
 // Notes:
 //  * A device context assigned to a CDC object will be released or deleted, unless
@@ -380,6 +397,7 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 
 		void CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData);
+		int GetRandomRgn (HDC hdc, int iNum) const;
 
 		// Operations
 		void SetRectRgn (int x1, int y1, int x2, int y2);
@@ -594,6 +612,7 @@ namespace Win32xx
 		// Clipping Functions
 		int ExcludeClipRect (int Left, int Top, int Right, int BottomRect );
 		int ExcludeClipRect (const RECT& rc);
+		int ExtSelectClipRgn(HRGN hrgn, int fnMode);
 		int GetClipBox (RECT& rc);			
 		int GetClipRgn (HRGN hrgn);				
 		int IntersectClipRect (int Left, int Top, int Right, int Bottom);
@@ -1785,6 +1804,12 @@ namespace Win32xx
 		return (int)::GetRegionData (m_pData->hRgn, nDataSize, lpRgnData);
 	}
 
+	inline int CRgn::GetRandomRgn(HDC hdc, int iNum) const
+	{
+		assert(m_pData->hRgn == NULL);
+		return ::GetRandomRgn(hdc, m_pData->hRgn, iNum);
+	}
+
 	inline void CRgn::Release()
 	{
 		BOOL bSucceeded = TRUE;
@@ -2655,6 +2680,12 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		return ::ExcludeClipRect(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
+	}
+
+	inline int CDC::ExtSelectClipRgn(HRGN hrgn, int fnMode)
+	{
+		assert(m_pData->hDC);
+		return ::ExtSelectClipRgn(m_pData->hDC, hrgn, fnMode);
 	}
 
 	inline int CDC::GetClipBox (RECT& rc)

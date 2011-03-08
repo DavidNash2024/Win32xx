@@ -71,7 +71,7 @@ namespace Win32xx
 		CSize(POINT pt)						{ cx = pt.x;  cy = pt.y; }
 		CSize(DWORD dw)						{ cx = (short)LOWORD(dw); cy = (short)HIWORD(dw); }
 		void SetSize(int CX, int CY)		{ cx = CX; cy = CY; }
-		
+
 		// Operators
 		BOOL operator == (SIZE sz)			{ return (cx == sz.cx && cy == sz.cy); }
 		BOOL operator != (SIZE sz)			{ return (cx != sz.cx || cy != sz.cy); }
@@ -106,7 +106,7 @@ namespace Win32xx
 		CPoint(POINTS pts)					{ x = pts.x; y = pts.y; }
 		CPoint(SIZE sz)						{ x = sz.cx; y = sz.cy; }
 		CPoint(DWORD dw)					{ x = (short) LOWORD(dw); y = (short) HIWORD(dw); }
-		
+
 		void Offset(int dx, int dy)			{ x += dx; y += dy; }
 		void Offset(POINT pt)				{ x += pt.x; y += pt.y; }
 		void Offset(SIZE sz)				{ x += sz.cx; y += sz.cy; }
@@ -120,14 +120,14 @@ namespace Win32xx
 		void operator -= (SIZE sz)			{ x -= sz.cx; y -= sz.cy; }
 		void operator += (POINT pt)			{ x += pt.x; y += pt.y; }
 		void operator -= (POINT pt)			{ x -= pt.x; y -= pt.y; }
-		
+
 		// Operators returning CPoint
 		CPoint operator - () const			{ return CPoint(-x, -y); }
 		CPoint operator + (SIZE sz) const	{ return CPoint(x + sz.cx, y + sz.cy); }
 		CPoint operator - (SIZE sz) const	{ return CPoint(x - sz.cx, y - sz.cy); }
 		CPoint operator + (POINT pt) const	{ return CPoint(x + pt.x, y + pt.y); }
 		CPoint operator - (POINT pt) const	{ return CPoint(x - pt.x, y - pt.y); }
-		
+
 		// Operators returning CRect
 		CRect operator + (RECT rc) const;
 		CRect operator - (RECT rc) const;
@@ -158,7 +158,7 @@ namespace Win32xx
 		BOOL InflateRect(int l, int t, int r, int b){ return ::InflateRect(this, r - l, b - t); }
 		BOOL IntersectRect(RECT rc1, RECT rc2)		{ return ::IntersectRect(this, &rc1, &rc2); }
 		BOOL IsRectEmpty() const					{ return ::IsRectEmpty(this);}
-		BOOL IsRectNull() const						{ return (left == 0 && right == 0 && top == 0 && bottom == 0); }	
+		BOOL IsRectNull() const						{ return (left == 0 && right == 0 && top == 0 && bottom == 0); }
 		CRect MulDiv(int nMult, int nDiv) const		{ return CRect ((left * nMult) / nDiv, (top * nMult) / nDiv,
 														(right * nMult) / nDiv, (bottom * nMult) / nDiv); }
 		void NormalizeRect()						{ int nTemp; if (left > right) { nTemp = left; left = right; right = nTemp; }
@@ -180,7 +180,7 @@ namespace Win32xx
 		void MoveToXY (POINT pt)					{ MoveToX (pt.x); MoveToY (pt.y); }
 
 		// Attributes
-		int Height() const							{ return bottom - top; }	
+		int Height() const							{ return bottom - top; }
 		int Width() const							{ return right - left; }
 		CSize Size() const							{ return CSize(Width(), Height()); }
 		CPoint CenterPoint() const					{ return CPoint((left + right) / 2, (top + bottom) / 2); }
@@ -392,7 +392,7 @@ namespace Win32xx
 		BSTR m_bstrString;
 	};
 
-	
+
 	////////////////////////////////////////
 	// Declarations of the CLoadString class
 	// Returns the string associated with a Resource ID
@@ -436,17 +436,17 @@ namespace Win32xx
 		UINT m_nID;
 	};
 
-	
+
 	////////////////////////////////////////
 	// Global Functions
-	// 
+	//
 	inline CPoint GetCursorPos()
 	{
 		CPoint pt;
 		::GetCursorPos(&pt);
 		return pt;
 	}
-	
+
 	inline HBITMAP LoadBitmap (LPCTSTR lpstr)
 	{
 		assert(GetApp());
@@ -464,7 +464,7 @@ namespace Win32xx
 
 	inline tString LoadString(int nID)
 	{
-		tString ts = CLoadString(nID);
+		tString ts = (LPCTSTR)CLoadString(nID);
 		return ts;
 	}
 

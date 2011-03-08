@@ -810,10 +810,6 @@ namespace Win32xx
 		si.nPos   = m_yScrollPos;
 		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
 
-		// Enable or disable scroll bars
-		m_pParent->ShowScrollBar(SB_HORZ, (rcCurrent.Width()  < m_rcMin.Width() ) );
-		m_pParent->ShowScrollBar(SB_VERT, (rcCurrent.Height() < m_rcMin.Height()) );
-
     	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
     	rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );
     	if (!m_rcMax.IsRectEmpty())
