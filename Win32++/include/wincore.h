@@ -973,9 +973,11 @@ namespace Win32xx
 				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
 			{
 				// Process keyboard accelerators
-				if (!(m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccelTable, &Msg)))
+				if (m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccelTable, &Msg))
+					Processed = TRUE;
+				else
 				{
-					// Search through the chain of parents for pretranslated messages.
+					// Search the chain of parents for pretranslated messages.
 					for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 					{
 						CWnd* pWnd = GetCWndFromMap(hWnd);

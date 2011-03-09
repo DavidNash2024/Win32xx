@@ -85,6 +85,7 @@ Changes in detail
 - Added CResizer::HandleMessage
 - Added CTab::SetFixedWidth
 - Added CTab::SetOwnerDraw
+- Added CWinApp::SetAccelerators
 - Added CWnd::BeginPaint
 - Added CWnd::ClientToScreen
 - Added CWnd::CheckRadioButton
