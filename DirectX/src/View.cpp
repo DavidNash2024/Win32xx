@@ -61,7 +61,6 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.y = 50;
 	cs.cx = 400;
 	cs.cy = 400;
-	cs.lpszName = LoadString(IDW_MAIN);
 }
 
 //-----------------------------------------------------------------------------

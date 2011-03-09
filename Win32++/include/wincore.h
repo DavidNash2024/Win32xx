@@ -808,7 +808,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You must run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : m_Callback(NULL)
+	inline CWinApp::CWinApp() : m_Callback(NULL), m_hAccelTable(0), m_pWndAccel(0)
 	{
 		try
 		{
@@ -972,8 +972,8 @@ namespace Win32xx
 			if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
 				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
 			{
-				// Handle accelerators
-				if (!::TranslateAccelerator(*m_pWndAccel, m_hAccelTable, &Msg))
+				// Process keyboard accelerators
+				if (!(m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccelTable, &Msg)))
 				{
 					// Search through the chain of parents for pretranslated messages.
 					for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
