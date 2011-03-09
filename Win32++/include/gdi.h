@@ -855,8 +855,10 @@ namespace Win32xx
 
 	inline HBITMAP CBitmap::LoadBitmap (LPCTSTR lpstr)
 	{
-		assert(m_pData->hBitmap == NULL);
 		assert(GetApp());
+		if (m_pData->hBitmap != NULL)
+			::DeleteObject(m_pData->hBitmap);
+
 		m_pData->hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
 		if (m_pData->hBitmap == NULL)
 			m_pData->hBitmap = ::LoadBitmap (GetApp()->GetInstanceHandle(), lpstr);
@@ -871,8 +873,10 @@ namespace Win32xx
 
 	inline HBITMAP CBitmap::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
 	{
-		assert(m_pData->hBitmap == NULL);
 		assert(GetApp());
+		if (m_pData->hBitmap != NULL)
+			::DeleteObject(m_pData->hBitmap);
+
 		m_pData->hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
 		if (m_pData->hBitmap == NULL)
 			m_pData->hBitmap = (HBITMAP)::LoadImage(GetApp()->GetInstanceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
@@ -882,7 +886,9 @@ namespace Win32xx
 
 	inline void CBitmap::LoadOEMBitmap (UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	{
-		assert(m_pData->hBitmap == NULL);
+		if (m_pData->hBitmap != NULL)
+			::DeleteObject(m_pData->hBitmap);
+
 		m_pData->hBitmap = ::LoadBitmap (NULL, MAKEINTRESOURCE(nIDBitmap));
 		assert(m_pData->hBitmap);
 	}
@@ -890,7 +896,10 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		inline HBITMAP CBitmap::LoadMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
 		{
-			assert(m_pData->hBitmap == NULL);
+			assert(GetApp());
+			if (m_pData->hBitmap != NULL)
+				::DeleteObject(m_pData->hBitmap);
+
 			m_pData->hBitmap = ::CreateMappedBitmap (GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 			if (m_pData->hBitmap == NULL)
 				m_pData->hBitmap = ::CreateMappedBitmap (GetApp()->GetInstanceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
@@ -901,7 +910,9 @@ namespace Win32xx
 
 		inline void CBitmap::CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, const void* lpBits)
 		{
-			assert(m_pData->hBitmap == NULL);
+			if (m_pData->hBitmap != NULL)
+				::DeleteObject(m_pData->hBitmap);
+
 			m_pData->hBitmap = ::CreateBitmap (nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
 			assert(m_pData->hBitmap);
 		}
@@ -909,7 +920,9 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		inline void CBitmap::CreateBitmapIndirect (LPBITMAP lpBitmap)
 		{
-			assert(m_pData->hBitmap == NULL);
+			if (m_pData->hBitmap != NULL)
+				::DeleteObject(m_pData->hBitmap);
+
 			m_pData->hBitmap = ::CreateBitmapIndirect(lpBitmap);
 			assert(m_pData->hBitmap);
 		}
@@ -917,7 +930,9 @@ namespace Win32xx
 
 		inline void CBitmap::CreateCompatibleBitmap (HDC hDC, int nWidth, int nHeight)
 		{
-			assert(m_pData->hBitmap == NULL);
+			if (m_pData->hBitmap != NULL)
+				::DeleteObject(m_pData->hBitmap);
+
 			m_pData->hBitmap = ::CreateCompatibleBitmap(hDC, nWidth, nHeight);
 			assert(m_pData->hBitmap);
 		}
@@ -925,7 +940,9 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		inline void CBitmap::CreateDiscardableBitmap (HDC hDC, int nWidth, int nHeight)
 		{
-			assert(m_pData->hBitmap == NULL);
+			if (m_pData->hBitmap != NULL)
+				::DeleteObject(m_pData->hBitmap);
+
 			m_pData->hBitmap = ::CreateDiscardableBitmap(hDC, nWidth, nHeight);
 			assert(m_pData->hBitmap);
 		}
@@ -960,7 +977,9 @@ namespace Win32xx
 		// DIB support
 		inline HBITMAP CBitmap::CreateDIBitmap (HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 		{
-			assert(m_pData->hBitmap == NULL);
+			if (m_pData->hBitmap != NULL)
+				::DeleteObject(m_pData->hBitmap);
+
 			m_pData->hBitmap = ::CreateDIBitmap(hDC, lpbmih, dwInit, lpbInit, lpbmi, uColorUse);
 			assert(m_pData->hBitmap);
 			return m_pData->hBitmap;
@@ -969,7 +988,9 @@ namespace Win32xx
 
 		inline void CBitmap::CreateDIBSection (HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
 		{
-			assert(m_pData->hBitmap == NULL);
+			if (m_pData->hBitmap != NULL)
+				::DeleteObject(m_pData->hBitmap);
+
 			m_pData->hBitmap = ::CreateDIBSection(hDC, lpbmi, uColorUse, ppvBits, hSection, dwOffset);
 			assert(m_pData->hBitmap);
 		}
@@ -1076,7 +1097,9 @@ namespace Win32xx
 
 	inline void CBrush::CreateSolidBrush (COLORREF crColor)
 	{
-		assert(m_pData->hBrush == NULL);
+		if (m_pData->hBrush != NULL)
+			::DeleteObject(m_pData->hBrush);
+
 		m_pData->hBrush = ::CreateSolidBrush (crColor);
 		assert (m_pData->hBrush);
 	}
@@ -1084,14 +1107,18 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline void CBrush::CreateHatchBrush (int nIndex, COLORREF crColor)
 	{
-		assert(m_pData->hBrush == NULL);
+		if (m_pData->hBrush != NULL)
+			::DeleteObject(m_pData->hBrush);
+
 		m_pData->hBrush = ::CreateHatchBrush (nIndex, crColor);
 		assert (m_pData->hBrush);
 	}
 
 	inline void CBrush::CreateBrushIndirect (LPLOGBRUSH lpLogBrush)
 	{
-		assert(m_pData->hBrush == NULL);
+		if (m_pData->hBrush != NULL)
+			::DeleteObject(m_pData->hBrush);
+
 		m_pData->hBrush = ::CreateBrushIndirect (lpLogBrush);
 		assert (m_pData->hBrush);
 	}
@@ -1099,21 +1126,27 @@ namespace Win32xx
 
 	inline void CBrush::CreatePatternBrush (HBITMAP hBitmap)
 	{
-		assert(m_pData->hBrush == NULL);
+		if (m_pData->hBrush != NULL)
+			::DeleteObject(m_pData->hBrush);
+
 		m_pData->hBrush = ::CreatePatternBrush (hBitmap);
 		assert (m_pData->hBrush);
 	}
 
 	inline void CBrush::CreateDIBPatternBrushPt (LPCVOID lpPackedDIB, UINT nUsage)
 	{
-		assert(m_pData->hBrush == NULL);
+		if (m_pData->hBrush != NULL)
+			::DeleteObject(m_pData->hBrush);
+
 		m_pData->hBrush = ::CreateDIBPatternBrushPt (lpPackedDIB, nUsage);
 		assert (m_pData->hBrush);
 	}
 
 	inline void CBrush::CreateSysColorBrush (int nIndex)
 	{
-		assert(m_pData->hBrush == NULL);
+		if (m_pData->hBrush != NULL)
+			::DeleteObject(m_pData->hBrush);
+
 		m_pData->hBrush = ::GetSysColorBrush (nIndex);
 		assert (m_pData->hBrush);
 	}
@@ -1213,7 +1246,9 @@ namespace Win32xx
 
 	inline void CFont::CreateFontIndirect (const LOGFONT* lpLogFont)
 	{
-		assert(m_pData->hFont == NULL);
+		if (m_pData->hFont != NULL)
+			::DeleteObject(m_pData->hFont);
+		
 		m_pData->hFont = ::CreateFontIndirect(lpLogFont);
 		assert(m_pData->hFont);
 	}
@@ -1275,7 +1310,9 @@ namespace Win32xx
 			DWORD dwClipPrecision, DWORD dwQuality, DWORD dwPitchAndFamily,
 			LPCTSTR lpszFacename)
 	{
-		assert(m_pData->hFont == NULL);
+		if (m_pData->hFont != NULL)
+			::DeleteObject(m_pData->hFont);
+
 		m_pData->hFont = ::CreateFont (nHeight, nWidth, nEscapement,
 			nOrientation, nWeight, dwItalic, dwUnderline, dwStrikeOut,
 			dwCharSet, dwOutPrecision, dwClipPrecision, dwQuality,
@@ -1380,7 +1417,9 @@ namespace Win32xx
 
 	inline void CPalette::CreatePalette (LPLOGPALETTE lpLogPalette)
 	{
-		assert(m_pData->hPalette == NULL);
+		if (m_pData->hPalette != NULL)
+			::DeleteObject(m_pData->hPalette);
+
 		m_pData->hPalette = ::CreatePalette (lpLogPalette);
 		assert(m_pData->hPalette);
 	}
@@ -1388,8 +1427,10 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline void CPalette::CreateHalftonePalette (HDC hDC)
 	{
-		assert(m_pData->hPalette == NULL);
 		assert(hDC != NULL);
+		if (m_pData->hPalette != NULL)
+			::DeleteObject(m_pData->hPalette);
+
 		m_pData->hPalette = ::CreateHalftonePalette(hDC);
 		assert(m_pData->hPalette);
 	}
@@ -1534,14 +1575,18 @@ namespace Win32xx
 
 	inline void CPen::CreatePen (int nPenStyle, int nWidth, COLORREF crColor)
 	{
-		assert(m_pData->hPen == NULL);
+		if (m_pData->hPen != NULL)
+			::DeleteObject(m_pData->hPen);
+
 		m_pData->hPen = ::CreatePen(nPenStyle, nWidth, crColor);
 		assert(m_pData->hPen);
 	}
 
 	inline void CPen::CreatePenIndirect (LPLOGPEN lpLogPen)
 	{
-		assert(m_pData->hPen == NULL);
+		if (m_pData->hPen != NULL)
+			::DeleteObject(m_pData->hPen);
+
 		m_pData->hPen = ::CreatePenIndirect(lpLogPen);
 		assert(m_pData->hPen);
 	}
@@ -1558,7 +1603,9 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline void CPen::ExtCreatePen (int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
 	{
-		assert(m_pData->hPen == NULL);
+		if (m_pData->hPen != NULL)
+			::DeleteObject(m_pData->hPen);
+
 		m_pData->hPen = ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
 		assert(m_pData->hPen);
 	}
@@ -1661,14 +1708,18 @@ namespace Win32xx
 
 	inline void CRgn::CreateRectRgn (int x1, int y1, int x2, int y2)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::CreateRectRgn(x1, y1, x2, y2);
 		assert (m_pData->hRgn);
 	}
 
 	inline void CRgn::CreateRectRgnIndirect (LPCRECT lpRect)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::CreateRectRgnIndirect(lpRect);
 		assert (m_pData->hRgn);
 	}
@@ -1676,43 +1727,55 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline void CRgn::CreateEllipticRgn (int x1, int y1, int x2, int y2)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::CreateEllipticRgn (x1, y1, x2, y2);
 		assert (m_pData->hRgn);
 	}
 
 	inline void CRgn::CreateEllipticRgnIndirect (LPCRECT lpRect)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::CreateEllipticRgnIndirect (lpRect);
 		assert (m_pData->hRgn);
 	}
 
 	inline void CRgn::CreatePolygonRgn (LPPOINT lpPoints, int nCount, int nMode)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::CreatePolygonRgn (lpPoints, nCount, nMode);
 		assert (m_pData->hRgn);
 	}
 
 	inline void CRgn::CreatePolyPolygonRgn (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::CreatePolyPolygonRgn (lpPoints, lpPolyCounts, nCount, nPolyFillMode);
 		assert (m_pData->hRgn);
 	}
 
 	inline void CRgn::CreateRoundRectRgn (int x1, int y1, int x2, int y2, int x3, int y3)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::CreateRoundRectRgn (x1, y1, x2, y2, x3, y3);
 		assert (m_pData->hRgn);
 	}
 
 	inline void CRgn::CreateFromPath (HDC hDC)
 	{
-		assert(m_pData->hRgn == NULL);
 		assert(hDC != NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::PathToRegion(hDC);
 		assert(m_pData->hRgn);
 	}
@@ -1721,7 +1784,9 @@ namespace Win32xx
 
 	inline void CRgn::CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
 	{
-		assert(m_pData->hRgn == NULL);
+		if (m_pData->hRgn != NULL)
+			::DeleteObject(m_pData->hRgn);
+
 		m_pData->hRgn = ::ExtCreateRegion (lpXForm, nCount, pRgnData);
 		assert(m_pData->hRgn);
 	}
