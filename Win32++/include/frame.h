@@ -278,7 +278,6 @@ namespace Win32xx
 		virtual void OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual BOOL SaveRegistrySettings();
 		virtual void SetMenuBarBandSize();
@@ -2073,6 +2072,9 @@ namespace Win32xx
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
 
+		// Set the keyboard accelerators
+		GetApp()->SetAccelerators(IDW_MAIN, this);
+
 		// Set the Caption
 		SetWindowText(CLoadString(IDW_MAIN));
 
@@ -2618,17 +2620,6 @@ namespace Win32xx
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("Win32++ Frame");
-	}
-
-	inline BOOL CFrame::PreTranslateMessage(MSG* pMsg)
-	{
-		HACCEL hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
-		{
-			if (TranslateAccelerator(m_hWnd, hAccelTable, pMsg))
-				return TRUE;
-		}
-		return CWnd::PreTranslateMessage(pMsg);
 	}
 
 	inline void CFrame::RecalcLayout()

@@ -311,6 +311,7 @@ namespace Win32xx
 		CDC* GetCDCFromMap(HDC hDC);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
+		void SetAccelerators(UINT nID, CWnd* pWndAccel);
 		void SetResourceHandle(HINSTANCE hResource);
 
 		// These are the functions you might wish to override
@@ -337,6 +338,8 @@ namespace Win32xx
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
+		HACCEL m_hAccelTable;			// handle to the accelerator table
+		CWnd* m_pWndAccel;				// handle to the window for accelerator keys
 	};
 
 }
@@ -965,21 +968,23 @@ namespace Win32xx
 
 			BOOL Processed = FALSE;
 
-			// only pre-translate input events
+			// only pre-translate mouse and leyboard input events
 			if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
 				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
 			{
-				// search through the chain of parents for first valid CWnd.
-				// Some pretranslatable messages come from non-CWnd windows,
-				// such as the tab control within propertysheets.
-				for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+				// Handle accelerators
+				if (!::TranslateAccelerator(*m_pWndAccel, m_hAccelTable, &Msg))
 				{
-					CWnd* pWnd = GetCWndFromMap(hWnd);
-					if (pWnd)
+					// Search through the chain of parents for pretranslated messages.
+					for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 					{
-						Processed = pWnd->PreTranslateMessage(&Msg);
-						if(Processed)
-							break;
+						CWnd* pWnd = GetCWndFromMap(hWnd);
+						if (pWnd)
+						{
+							Processed = pWnd->PreTranslateMessage(&Msg);
+							if(Processed)
+								break;
+						}
 					}
 				}
 			}
@@ -1026,6 +1031,25 @@ namespace Win32xx
 			e.what();
 			return -1;
 		}
+	}
+
+	inline void CWinApp::SetAccelerators(UINT nID, CWnd* pWndAccel)
+	// nID is the resource ID of the accelerator table
+	// pWndAccel is the window pointer for translated messages
+	{
+		assert (nID);
+		assert (pWndAccel);
+
+		if (m_hAccelTable)
+			::DestroyAcceleratorTable(m_hAccelTable);
+
+		m_pWndAccel = pWndAccel;
+
+		m_hAccelTable = ::LoadAccelerators(m_hResource, MAKEINTRESOURCE(nID));
+		if (!m_hAccelTable)
+			m_hAccelTable = ::LoadAccelerators(m_hInstance, MAKEINTRESOURCE(nID));
+		
+		assert (m_hAccelTable);
 	}
 
 	inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)

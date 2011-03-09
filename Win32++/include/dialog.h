@@ -789,7 +789,6 @@ namespace Win32xx
     // Repositions the child windows. Call this function when handling
 	// the WM_SIZE message in the parent window.
 	{
-		TRACE(_T("CResizer::RecalcLayout\n"));
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
     	assert (NULL != m_pParent);
 
