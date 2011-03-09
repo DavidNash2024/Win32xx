@@ -118,7 +118,7 @@ namespace Win32xx
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();		
 		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
+	//	virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RecalcLayout();
 		virtual void SetButtons(const std::vector<UINT> ToolBarData);
 		virtual	LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -275,6 +275,8 @@ namespace Win32xx
 		// Create the Commandbar
 		m_MenuBar.Create(m_hWnd);
 
+		// Set the keyboard accelerators
+		GetApp()->SetAccelerators(IDW_MAIN, this);
 
 		// Add the toolbar buttons
 		if (m_ToolBarData.size() > 0)
@@ -316,7 +318,7 @@ namespace Win32xx
 		cs.lpszClass = m_tsAppName.c_str();
 	}
 
-	inline BOOL CWceFrame::PreTranslateMessage(MSG* pMsg)
+/*	inline BOOL CWceFrame::PreTranslateMessage(MSG* pMsg)
 	{
 		HACCEL hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
@@ -325,7 +327,7 @@ namespace Win32xx
 				return TRUE;
 		}
 		return CWnd::PreTranslateMessage(pMsg);
-	}
+	} */
 
 	inline void CWceFrame::RecalcLayout()
 	{

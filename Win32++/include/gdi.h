@@ -394,10 +394,10 @@ namespace Win32xx
 		void CreatePolyPolygonRgn (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode);
 		void CreateRoundRectRgn (int x1, int y1, int x2, int y2, int x3, int y3);
 		void CreateFromPath (HDC hDC);
+		int GetRandomRgn (HDC hdc, int iNum) const;
 #endif // !_WIN32_WCE
 
 		void CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData);
-		int GetRandomRgn (HDC hdc, int iNum) const;
 
 		// Operations
 		void SetRectRgn (int x1, int y1, int x2, int y2);
@@ -612,7 +612,6 @@ namespace Win32xx
 		// Clipping Functions
 		int ExcludeClipRect (int Left, int Top, int Right, int BottomRect );
 		int ExcludeClipRect (const RECT& rc);
-		int ExtSelectClipRgn(HRGN hrgn, int fnMode);
 		int GetClipBox (RECT& rc);			
 		int GetClipRgn (HRGN hrgn);				
 		int IntersectClipRect (int Left, int Top, int Right, int Bottom);
@@ -621,6 +620,7 @@ namespace Win32xx
 		int SelectClipRgn (HRGN hrgn);
 
 #ifndef _WIN32_WCE
+		int ExtSelectClipRgn(HRGN hrgn, int fnMode);
 		int OffsetClipRgn (int nXOffset, int nYOffset);
 		BOOL PtVisible (int X, int Y);
 #endif
@@ -1780,6 +1780,12 @@ namespace Win32xx
 		assert(m_pData->hRgn);
 	}
 
+	inline int CRgn::GetRandomRgn(HDC hdc, int iNum) const
+	{
+		assert(m_pData->hRgn == NULL);
+		return ::GetRandomRgn(hdc, m_pData->hRgn, iNum);
+	}
+
 #endif // !_WIN32_WCE
 
 	inline void CRgn::CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
@@ -1867,12 +1873,6 @@ namespace Win32xx
 	{
 		assert(m_pData->hRgn != NULL);
 		return (int)::GetRegionData (m_pData->hRgn, nDataSize, lpRgnData);
-	}
-
-	inline int CRgn::GetRandomRgn(HDC hdc, int iNum) const
-	{
-		assert(m_pData->hRgn == NULL);
-		return ::GetRandomRgn(hdc, m_pData->hRgn, iNum);
 	}
 
 	inline void CRgn::Release()
@@ -2747,12 +2747,6 @@ namespace Win32xx
 		return ::ExcludeClipRect(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline int CDC::ExtSelectClipRgn(HRGN hrgn, int fnMode)
-	{
-		assert(m_pData->hDC);
-		return ::ExtSelectClipRgn(m_pData->hDC, hrgn, fnMode);
-	}
-
 	inline int CDC::GetClipBox (RECT& rc)
 	{
 		assert(m_pData->hDC);
@@ -2790,6 +2784,12 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
+	inline int CDC::ExtSelectClipRgn(HRGN hrgn, int fnMode)
+	{
+		assert(m_pData->hDC);
+		return ::ExtSelectClipRgn(m_pData->hDC, hrgn, fnMode);
+	}
+
 	inline BOOL CDC::PtVisible (int X, int Y)
 	{
 		assert(m_pData->hDC);
