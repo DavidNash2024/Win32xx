@@ -34,7 +34,7 @@ New Features and Enhancements
    erasing. Return TRUE to prevent default erasure.
 * Scribble Tutorial now demonstrates the use of command line arguments
 * Added the following set of gdi classes: CBitmap, CBrush, CFont, CPalette, 
-   CPen and CRgn.
+   CPen and CRgn. These work in cooperation with the existing CDC class.
 * Extended the CSize, CPoint and CRect classes   
 
 Changes in detail
@@ -63,11 +63,16 @@ Changes in detail
 - Added	W2BSTR	
 - Added	W2OLE	
 - Added	W2T
-- Added CFrame::ShowMenu		
+- Added CFrame::ShowMenu
+- Added CDC::AttachPalette
+- Added CDC::CreatePalette
+- Added CDC::CreateHalftonePalette
+- Added CDC::DetachPalette		
 - Added CDC::GetBitmapInfo
 - Added CDC::GetBrushInfo
 - Added CDC::GetFontInfo
 - Added CDC::GetPenInfo
+- Added CDC::ExtSelectClipRgn
 - Added CDC::ExcludeClipRect
 - Added CDC::GetClipBox	
 - Added CDC::GetClipRgn		
