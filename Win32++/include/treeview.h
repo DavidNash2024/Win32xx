@@ -43,6 +43,9 @@
 #include "wincore.h"
 #include "commctrl.h"
 
+// Disable macros from Windowsx.h
+#undef GetNextSibling
+#undef GetPrevSibling
 
 namespace Win32xx
 {
