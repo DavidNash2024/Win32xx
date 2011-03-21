@@ -3,7 +3,7 @@ REM:A batch file to remove unnecessary files from
 REM: each Visual Studio project
 
 REM: Change the directory to the parent
-pushd ..\..
+pushd ..\Samples
 
 ::Remove directories
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Borland"
@@ -70,7 +70,36 @@ FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Release_Build
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\x64
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\_UpgradeReport_Files
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\__history
-
+FOR /D %%f IN ("*.") DO DEL /Q /AH "%%f\*.suo"
+FOR /D %%f IN ("*.") DO DEL /Q /AH "%%f\*.old"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.ncb"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.plg"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\err*.*"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\tmp*.*"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.pdb"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.aps"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.cbTemp"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.opt"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.user"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.depend"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.XML"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.o"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.old"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.layout"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.local"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.log"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.dat"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.bak"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.sdf"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.vcb"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.vcl"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.vco"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*private.*"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\Makefile.win"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.aps"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.bak"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.bml"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.layout"
 
 
 popd
