@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\Classes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ContainerApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Files.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Mainfrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Output.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyCombo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Win32++\include\dialog.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\docking.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\frame.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\gdi.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\listview.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\rebar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\statusbar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\toolbar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\treeview.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Win32++\include\wincore.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Classes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ContainerApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Files.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Mainfrm.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Output.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simple.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MyCombo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{beb151de-0615-4b8f-820f-a3eeb65aeaed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{5b6db069-e476-4cda-a187-c1cff301a8fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{cd4fe011-ab7d-4e8a-871f-d96cff11e30e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32++">
+      <UniqueIdentifier>{2ed2ea0a-8e0d-4d70-9a94-2a39e27d2c02}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,48 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 188, 97
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    GROUPBOX        "Performance Test",IDC_STATIC,4,0,180,93
+    LTEXT           "Number of Windows (Max 1000)",IDC_STATIC,15,20,107,10
+    LTEXT           "Number of test messages",IDC_STATIC,16,42,85,11
+    PUSHBUTTON      "OK",IDOK,35,69,41,16
+    PUSHBUTTON      "Cancel",IDCANCEL,109,69,44,16
+    EDITTEXT        IDC_MESSAGES,125,40,44,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_WINDOWS,126,18,44,12,ES_AUTOHSCROLL | ES_NUMBER
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+

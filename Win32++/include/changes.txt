@@ -63,7 +63,6 @@ Changes in detail
 - Added	W2BSTR	
 - Added	W2OLE	
 - Added	W2T
-- Added CFrame::ShowMenu
 - Added CDC::AttachPalette
 - Added CDC::CreatePalette
 - Added CDC::CreateHalftonePalette
@@ -85,6 +84,7 @@ Changes in detail
 - Added CDockContainer::SetActiveContainer
 - Added CDocker::Close
 - Added CDocker::SetCaptionHeight
+- Added CFrame::ShowMenu
 - Added CResizer::GetMaxRect
 - Added CResizer::GetMinRect
 - Added CResizer::HandleMessage
@@ -197,13 +197,13 @@ void ExampleFunctionW( LPCWSTR pWide )
 
 // Example 4
 // Incorrect use of conversion function.
-void ExampleFunctionW( LPCWSTR pszW )
+void ExampleFunctionW( LPCWSTR pWide )
 {
-   // THIS WILL NOT WORK!
-   LPCSTR pszA = CW2A( pszW );
-   // CW2A's destructor has already been called, so pszA is now invalid.
-   // The following line produces undefined behaviour.
-   ExampleFunctionA( pszA );
+   // THIS IS INCORRECT!
+   LPCSTR pAnsi = W2A( pWide );
+   // W2A's destructor has already been called, so pAnsi is no longer points to a valid value.
+   
+   SetWindowTextA( pAnsi );	// Behaviour of this line is undefined!
 }
 
 
