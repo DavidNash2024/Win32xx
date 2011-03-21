@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -55,7 +55,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -119,7 +119,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -132,7 +132,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -263,31 +263,31 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\Win32++\include\dialog.h"
+				RelativePath="..\..\..\include\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\frame.h"
+				RelativePath="..\..\..\include\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\gdi.h"
+				RelativePath="..\..\..\include\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\rebar.h"
+				RelativePath="..\..\..\include\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\statusbar.h"
+				RelativePath="..\..\..\include\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\toolbar.h"
+				RelativePath="..\..\..\include\toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\wincore.h"
+				RelativePath="..\..\..\include\wincore.h"
 				>
 			</File>
 		</Filter>

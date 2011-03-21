@@ -43,11 +43,11 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\..\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "NDEBUG"
-# ADD RSC /l 0xc09 /i "..\..\Win32++\include" /d "NDEBUG"
+# ADD RSC /l 0xc09 /i "..\..\..\include" /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -69,11 +69,11 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "_DEBUG"
-# ADD RSC /l 0xc09 /i "..\..\Win32++\include" /d "_DEBUG"
+# ADD RSC /l 0xc09 /i "..\..\..\include" /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -148,7 +148,7 @@ SOURCE=..\src\Resource.rc
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\..\Win32++\include\wincore.h"
+SOURCE="..\..\..\include\wincore.h"
 # End Source File
 # End Group
 # End Target

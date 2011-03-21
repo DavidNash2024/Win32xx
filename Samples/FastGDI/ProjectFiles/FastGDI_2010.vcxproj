@@ -11,13 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\dialog.h" />
-    <ClInclude Include="..\..\Win32++\include\frame.h" />
-    <ClInclude Include="..\..\Win32++\include\gdi.h" />
-    <ClInclude Include="..\..\Win32++\include\rebar.h" />
-    <ClInclude Include="..\..\Win32++\include\statusbar.h" />
-    <ClInclude Include="..\..\Win32++\include\toolbar.h" />
-    <ClInclude Include="..\..\Win32++\include\wincore.h" />
+    <ClInclude Include="..\..\..\include\dialog.h" />
+    <ClInclude Include="..\..\..\include\frame.h" />
+    <ClInclude Include="..\..\..\include\gdi.h" />
+    <ClInclude Include="..\..\..\include\rebar.h" />
+    <ClInclude Include="..\..\..\include\statusbar.h" />
+    <ClInclude Include="..\..\..\include\toolbar.h" />
+    <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\src\ColourDialog.h" />
     <ClInclude Include="..\src\FastGDIApp.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
@@ -83,7 +83,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Win32++\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -92,7 +92,7 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\Win32++\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -105,7 +105,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Win32++\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,7 +116,7 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\Win32++\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

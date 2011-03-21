@@ -1,14 +1,14 @@
 [Project]
 FileName=MakeDLL_DEBUG.dev
 Name=MyDLL
-UnitCount=16
+UnitCount=9
 Type=3
 Ver=1
 ObjFiles=
-Includes=../../Win32++/include
+Includes=..\..\..\include
 Libs=
 PrivateResource=MyDLL_private.rc
-ResourceIncludes=../../Win32++/include
+ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@__@@__@@__@@_
@@ -40,9 +40,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\..\Win32++\include\dialog.h
+FileName=MakeDLL.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -50,9 +50,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\..\Win32++\include\frame.h
+FileName=MakeDLL.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -60,9 +60,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\..\Win32++\include\gdi.h
+FileName=MyDialog.cpp
 CompileCpp=1
-Folder=Win32++
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -70,9 +70,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\..\Win32++\include\rebar.h
+FileName=MyDialog.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -80,8 +80,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\..\Win32++\include\statusbar.h
-Folder=Win32++
+FileName=StdAfx.cpp
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -90,9 +90,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=..\..\Win32++\include\toolbar.h
+FileName=StdAfx.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -100,9 +100,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\..\Win32++\include\wincore.h
+FileName=targetver.h
 CompileCpp=1
-Folder=Win32++
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

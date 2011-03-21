@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\dialog.h">
+    <ClInclude Include="..\..\..\include\dialog.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\socket.h">
+    <ClInclude Include="..\..\..\include\socket.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\wincore.h">
+    <ClInclude Include="..\..\..\include\wincore.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="DialogApp.h">

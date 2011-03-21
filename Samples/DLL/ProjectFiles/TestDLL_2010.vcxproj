@@ -57,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\Win32++/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\TestDll.pch</PrecompiledHeaderOutputFile>
@@ -74,7 +74,7 @@
     </Midl>
     <ResourceCompile>
       <Culture>0x0c09</Culture>
-      <AdditionalIncludeDirectories>..\..\Win32++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Bscmake>
@@ -97,7 +97,7 @@
       <Optimization>MaxSpeed</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\..\Win32++/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Release\TestDll.pch</PrecompiledHeaderOutputFile>
@@ -113,7 +113,7 @@
     </Midl>
     <ResourceCompile>
       <Culture>0x0c09</Culture>
-      <AdditionalIncludeDirectories>..\..\Win32++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Bscmake>

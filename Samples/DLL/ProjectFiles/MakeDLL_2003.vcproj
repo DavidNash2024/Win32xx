@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;MakeDLL_EXPORTS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -66,7 +66,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="3081"
-				AdditionalIncludeDirectories="..\..\Win32++\include"/>
+				AdditionalIncludeDirectories="..\..\..\include"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -90,7 +90,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MakeDLL_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
@@ -134,7 +134,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="3081"
-				AdditionalIncludeDirectories="..\..\Win32++\include"/>
+				AdditionalIncludeDirectories="..\..\..\include"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool

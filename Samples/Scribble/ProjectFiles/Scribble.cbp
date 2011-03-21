@@ -16,11 +16,11 @@
 					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -38,11 +38,11 @@
 					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -67,11 +67,11 @@
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -100,11 +100,11 @@
 					<Add option="/DNDEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="gdi32" />
@@ -129,10 +129,10 @@
 					<Add option="-g3" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-Wl,--enable-auto-import" />
@@ -152,10 +152,10 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DNDEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-Wl,--enable-auto-import" />

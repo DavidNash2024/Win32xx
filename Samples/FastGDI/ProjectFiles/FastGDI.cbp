@@ -17,11 +17,11 @@
 					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -39,11 +39,11 @@
 					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Borland\BCC55\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -68,11 +68,11 @@
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -101,11 +101,11 @@
 					<Add option="/DNDEBUG" />
 					<Add option="/D_WINDOWS" />
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="ComCtl32" />
@@ -130,10 +130,10 @@
 					<Add option="-g3" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-Wl,--enable-auto-import" />
@@ -153,10 +153,10 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DNDEBUG" />
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\Win32++\include" />
+					<Add directory="..\..\..\include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-Wl,--enable-auto-import" />
@@ -185,16 +185,16 @@
 		<Unit filename="..\src\resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="..\..\Win32++\include\classes.txt" />
-		<Unit filename="..\..\Win32++\include\default_resource.h" />
-		<Unit filename="..\..\Win32++\include\dialog.h" />
-		<Unit filename="..\..\Win32++\include\frame.h" />
-		<Unit filename="..\..\Win32++\include\gdi.h" />
-		<Unit filename="..\..\Win32++\include\rebar.h" />
-		<Unit filename="..\..\Win32++\include\statusbar.h" />
-		<Unit filename="..\..\Win32++\include\toolbar.h" />
-		<Unit filename="..\..\Win32++\include\wincore.h" />
-		<Unit filename="..\..\Win32++\include\winutils.h" />
+		<Unit filename="..\..\..\include\classes.txt" />
+		<Unit filename="..\..\..\include\default_resource.h" />
+		<Unit filename="..\..\..\include\dialog.h" />
+		<Unit filename="..\..\..\include\frame.h" />
+		<Unit filename="..\..\..\include\gdi.h" />
+		<Unit filename="..\..\..\include\rebar.h" />
+		<Unit filename="..\..\..\include\statusbar.h" />
+		<Unit filename="..\..\..\include\toolbar.h" />
+		<Unit filename="..\..\..\include\wincore.h" />
+		<Unit filename="..\..\..\include\winutils.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

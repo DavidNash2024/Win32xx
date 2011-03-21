@@ -266,63 +266,63 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\Win32++\include\dialog.h"
+				RelativePath="..\..\..\include\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\docking.h"
+				RelativePath="..\..\..\include\docking.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\frame.h"
+				RelativePath="..\..\..\include\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\gdi.h"
+				RelativePath="..\..\..\include\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\listview.h"
+				RelativePath="..\..\..\include\listview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\mdi.h"
+				RelativePath="..\..\..\include\mdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\propertysheet.h"
+				RelativePath="..\..\..\include\propertysheet.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\rebar.h"
+				RelativePath="..\..\..\include\rebar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\socket.h"
+				RelativePath="..\..\..\include\socket.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\splitter.h"
+				RelativePath="..\..\..\include\splitter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\statusbar.h"
+				RelativePath="..\..\..\include\statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\tab.h"
+				RelativePath="..\..\..\include\tab.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\toolbar.h"
+				RelativePath="..\..\..\include\toolbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\treeview.h"
+				RelativePath="..\..\..\include\treeview.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\wincore.h"
+				RelativePath="..\..\..\include\wincore.h"
 				>
 			</File>
 		</Filter>

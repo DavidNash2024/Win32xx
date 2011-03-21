@@ -56,7 +56,7 @@
       <Optimization>MaxSpeed</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\..\Win32++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MakeDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Release\MakeDLL.pch</PrecompiledHeaderOutputFile>
@@ -73,9 +73,7 @@
       <TargetEnvironment>Win32</TargetEnvironment>
     </Midl>
     <ResourceCompile>
-      <Culture>0x0c09</Culture>
-      <AdditionalIncludeDirectories>..\..\Win32++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -101,7 +99,7 @@
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\Win32++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MakeDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\MakeDLL.pch</PrecompiledHeaderOutputFile>
@@ -119,9 +117,7 @@
       <TargetEnvironment>Win32</TargetEnvironment>
     </Midl>
     <ResourceCompile>
-      <Culture>0x0c09</Culture>
-      <AdditionalIncludeDirectories>..\..\Win32++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>

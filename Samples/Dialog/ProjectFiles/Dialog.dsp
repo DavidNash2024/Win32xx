@@ -1,10 +1,10 @@
-# Microsoft Developer Studio Project File - Name="NewProject" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="Dialog" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=NewProject - Win32 Debug
+CFG=Dialog - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,12 +13,12 @@ CFG=NewProject - Win32 Debug
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Dialog.mak" CFG="NewProject - Win32 Debug"
+!MESSAGE NMAKE /f "Dialog.mak" CFG="Dialog - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "NewProject - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "NewProject - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "Dialog - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "Dialog - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "NewProject - Win32 Release"
+!IF  "$(CFG)" == "Dialog - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -42,11 +42,11 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\Win32++/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\..\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "NDEBUG"
-# ADD RSC /l 0xc09 /i "..\..\Win32++\include" /d "NDEBUG"
+# ADD RSC /l 0xc09 /i "..\..\..\include" /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -54,7 +54,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib /nologo /subsystem:windows /machine:I386
 
-!ELSEIF  "$(CFG)" == "NewProject - Win32 Debug"
+!ELSEIF  "$(CFG)" == "Dialog - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -68,11 +68,11 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\Win32++/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "_DEBUG"
-# ADD RSC /l 0xc09 /i "..\..\Win32++\include" /d "_DEBUG"
+# ADD RSC /l 0xc09 /i "..\..\..\include" /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -84,8 +84,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "NewProject - Win32 Release"
-# Name "NewProject - Win32 Debug"
+# Name "Dialog - Win32 Release"
+# Name "Dialog - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -139,11 +139,11 @@ SOURCE=..\src\Resource.rc
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\..\Win32++\include\dialog.h"
+SOURCE="..\..\..\include\dialog.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Win32++\include\wincore.h"
+SOURCE="..\..\..\include\wincore.h"
 # End Source File
 # End Group
 # End Target

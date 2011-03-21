@@ -21,34 +21,34 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\dialog.h">
+    <ClInclude Include="..\..\..\include\dialog.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\docking.h">
+    <ClInclude Include="..\..\..\include\docking.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\frame.h">
+    <ClInclude Include="..\..\..\include\frame.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\gdi.h">
+    <ClInclude Include="..\..\..\include\gdi.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\listview.h">
+    <ClInclude Include="..\..\..\include\listview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\rebar.h">
+    <ClInclude Include="..\..\..\include\rebar.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\statusbar.h">
+    <ClInclude Include="..\..\..\include\statusbar.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\toolbar.h">
+    <ClInclude Include="..\..\..\include\toolbar.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\treeview.h">
+    <ClInclude Include="..\..\..\include\treeview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\wincore.h">
+    <ClInclude Include="..\..\..\include\wincore.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Dockers.h">

@@ -5,10 +5,10 @@ UnitCount=1
 Type=0
 Ver=1
 ObjFiles=
-Includes=../../Win32++/include
+Includes=..\..\..\include
 Libs=
-PrivateResource=TestDLL_private.rc
-ResourceIncludes=../../Win32++/include
+PrivateResource=
+ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@__@@__@@__@@_
@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\..\Win32++\include\frame.h
+FileName=..\..\..\include\frame.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -50,7 +50,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\..\Win32++\include\gdi.h
+FileName=..\..\..\include\gdi.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -60,7 +60,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\..\Win32++\include\rebar.h
+FileName=..\..\..\include\rebar.h
 Folder=Win32++
 Compile=1
 Link=1
@@ -70,7 +70,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=..\..\Win32++\include\statusbar.h
+FileName=..\..\..\include\statusbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -80,7 +80,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\..\Win32++\include\toolbar.h
+FileName=..\..\..\include\toolbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -90,7 +90,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\..\Win32++\include\wincore.h
+FileName=..\..\..\include\wincore.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -100,7 +100,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\..\Win32++\include\frame.h
+FileName=..\..\..\include\frame.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -110,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\..\Win32++\include\gdi.h
+FileName=..\..\..\include\gdi.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -120,7 +120,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\..\Win32++\include\rebar.h
+FileName=..\..\..\include\rebar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -130,7 +130,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\..\Win32++\include\statusbar.h
+FileName=..\..\..\include\statusbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -140,7 +140,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\..\Win32++\include\toolbar.h
+FileName=..\..\..\include\toolbar.h
 CompileCpp=1
 Folder=Win32++
 Compile=1
@@ -168,7 +168,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=..\..\Win32++\include\wincore.h
+FileName=..\..\..\include\wincore.h
 CompileCpp=1
 Folder=Win32++
 Compile=1

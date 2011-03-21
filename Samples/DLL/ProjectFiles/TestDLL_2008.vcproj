@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -54,7 +54,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"

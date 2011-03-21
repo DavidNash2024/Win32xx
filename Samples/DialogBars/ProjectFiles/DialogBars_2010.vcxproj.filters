@@ -24,10 +24,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\docking.h">
+    <ClInclude Include="..\..\..\include\docking.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\wincore.h">
+    <ClInclude Include="..\..\..\include\wincore.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\src\DialogApp.h">

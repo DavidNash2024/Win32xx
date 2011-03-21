@@ -48,7 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;MakeDLL_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -70,7 +70,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -148,7 +148,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MakeDLL_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -169,7 +169,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="..\..\Win32++\include"
+				AdditionalIncludeDirectories="..\..\..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -270,7 +270,7 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\Win32++\include\wincore.h"
+				RelativePath="..\..\..\include\wincore.h"
 				>
 			</File>
 		</Filter>

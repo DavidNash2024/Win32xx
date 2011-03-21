@@ -5,10 +5,10 @@ UnitCount=10
 Type=0
 Ver=1
 ObjFiles=
-Includes=..\..\Win32++\include
+Includes=..\..\..\include
 Libs=
 PrivateResource=DX_private.rc
-ResourceIncludes=..\..\Win32++\include
+ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _WIN32_IE=0x0400_@@_-D NDEBUG_@@__@@_
