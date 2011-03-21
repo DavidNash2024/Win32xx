@@ -1,0 +1,91 @@
+The classes which form Win32++ are located in the following files:
+
+
+ Files            |  Classes         | Operating Systems | Description
+==================+==================+===================+=====================
+controls.h        | CAnimation       | Win32, Win64      | Adds support for the
+                  | CComboBox        | and WinCE         | following controls:
+				  |	CComboBoxEx      |                   | Animation, ComboBox, 
+				  |	CProgressBar     |                   | ComboBoxEx, Progress
+				  | CScrollBar       |                   | bar, Scroll bar,
+				  |	CSlider          |                   | Slider, Spin button.
+				  |	CSpinButton      |                   |
+------------------+------------------+-------------------+---------------------				  
+dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
+                  | CResizer         | WinCE for CDialog |
+------------------+------------------+-------------------+---------------------
+docking.h         | CDocker          | Win32, Win64      | Adds support for
+                  | CDockContainer   |                   | docking windows and
+                  |                  |                   | splitter windows. 
+------------------+------------------+-------------------+---------------------                   
+frame.h           | CMenubar         | Win32, Win64      | Adds support for
+                  | CFrame           |                   | frames. Frames use a
+                  |                  |                   | toolbar and menubar
+                  |                  |                   | inside a rebar, and 
+                  |                  |                   | a statusbar.  
+------------------+------------------+-------------------+---------------------
+gdi.h             | CDC              | Win32, Win64      | A helper class for 
+                  |                  | and WinCE         | GDI graphics.
+------------------+------------------+-------------------+---------------------
+listView.h        | CListView        | Win32, Win64      | Adds support for a
+                  |                  | and WinCE         | ListView control.                  
+------------------+------------------+-------------------+---------------------  
+mdi.h             | CMDIFrame        | Win32, Win64      | Adds support for MDI
+                  | CMDIChild        |                   | frames.                  
+------------------+------------------+-------------------+---------------------
+propertysheet.h   | CPropertySheet   | Win32, Win64      | Adds property sheet
+                  | CPropertyPage    | and WinCE         | support.
+------------------+------------------+-------------------+---------------------
+rebar.h           | CRebar           | Win32, Win64      | Adds support for a 
+                  |                  | and WinCE         | Rebar control.                  
+------------------+------------------+-------------------+---------------------
+ribbon.h          | CRibbon          | Win32, Win64      | Adds support for the 
+                  | CRibbonFrame     |                   | Windows 7 ribbon.                  
+------------------+------------------+-------------------+---------------------
+shared_ptr.h      | Shared_Ptr       | Win32, Win64,     | Add a smart pointer
+                  |                  | and WinCE         | for use in vectors.
+------------------+------------------+-------------------+---------------------
+socket.h          | CSocket          | Win32, Win64      | Adds network  
+                  |                  | and WinCE         | support.
+------------------+------------------+-------------------+---------------------
+splitter.h        | CSplitter        | Win32, Win64      | Adds splitter support
+                  |                  |                   | (depreciated)
+------------------+------------------+-------------------+----------------------             
+statusbar.h       | CStatusbar       | Win32, Win64      | Adds support for a
+                  |                  | and WinCE         | Status bar control.
+------------------+------------------+-------------------+---------------------
+stdcontrols.h     | CButton          | Win32, Win64      | Adds support for
+                  | CEdit            | and WinCE         | Button, Edit, 
+                  | CListBox         |                   | ListBox and Static    
+                  | CStatic          |                   | controls.                                                        
+------------------+------------------+-------------------+---------------------
+tab.h             | CTab             | Win32, Win64      | Adds support for tab
+                  | CMDITab          |                   | controls, and MDI
+                  |                  |                   | tab windows.                   
+------------------+------------------+-------------------+---------------------
+thread.h          | CThread          | Win32, Win64      | Adds support for
+                  |                  | and WinCE         | threads.
+------------------+------------------+-------------------+---------------------
+toolbar.h         | CToolbar         | Win32, Win64      | Adds support for a
+                  |                  | and WinCE         | Toolbar control.
+------------------+------------------+-------------------+---------------------
+treeview.h        | CTreeView        | Win32, Win64      | Adds support for a
+                  |                  | and WinCE         | TreeView control.
+------------------+------------------+-------------------+---------------------
+wceframe.h        | CWceFrame        | WinCE only        | Adds support for
+                  | CCmdbar          |                   | frames in WinCE.
+------------------+------------------+-------------------+---------------------
+webbrowser.h      | CAXWindow        | Win32, Win64      | Adds support for a
+                  | CWebBrowser      | and WinCE         | ActiveX container and
+                  |                  |                   | a WebBrowser window.
+------------------+------------------+-------------------+---------------------
+wincore.h         | CCriticalSection | Win32, Win64,     | The core set of 
+                  | CWinApp          | and WinCE         | classes required for
+                  | CWinException    |                   | all Win32++ 
+                  | CWnd             |                   | applications. 
+------------------+------------------+-------------------+---------------------
+winutils.h        | CPoint           | Win32, Win64,     | Additional utility
+                  | CRect            | and WinCE         | classes.
+                  | CSize            |                   |  
+------------------+------------------+-------------------+---------------------  
+               
