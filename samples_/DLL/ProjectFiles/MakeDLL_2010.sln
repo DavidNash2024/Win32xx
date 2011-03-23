@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MakeDLL_2010", "MakeDLL_2010.vcxproj", "{0AD43719-145B-94F9-084B-8AA79106CF46}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AD43719-145B-94F9-084B-8AA79106CF46}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0AD43719-145B-94F9-084B-8AA79106CF46}.Debug|Win32.Build.0 = Debug|Win32
+		{0AD43719-145B-94F9-084B-8AA79106CF46}.Release|Win32.ActiveCfg = Release|Win32
+		{0AD43719-145B-94F9-084B-8AA79106CF46}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
