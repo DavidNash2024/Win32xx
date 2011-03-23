@@ -2117,7 +2117,7 @@ namespace Win32xx
 		GetView()->Create(this);
 
 		// Disable XP themes for the menubar
-		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or < Vista
+		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or WinVersion < Vista
 			GetMenuBar().SetWindowTheme(L" ", L" ");
 
 		// Start timer for Status updates

@@ -162,12 +162,12 @@ namespace Win32xx
 		HBITMAP LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
 		HBITMAP LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		void LoadOEMBitmap (UINT nIDBitmap);
-		void CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, const void* lpBits);
+		void CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits);
 		void CreateCompatibleBitmap (HDC hDC, int nWidth, int nHeight);
 
 		// Attributes
 		BITMAP GetBitmap () const;
-		void CreateDIBSection (HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset);
+		void CreateDIBSection (HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset);
 
 #ifndef _WIN32_WCE
 		int GetDIBits (HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
@@ -178,7 +178,7 @@ namespace Win32xx
 		CSize SetBitmapDimensionEx (int nWidth, int nHeight);
 
 		// DIB support
-		HBITMAP CreateDIBitmap (HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
+		HBITMAP CreateDIBitmap (HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
 #endif // !_WIN32_WCE
 
 	private:
@@ -256,7 +256,6 @@ namespace Win32xx
 		void CreatePointFontIndirect (const LOGFONT* lpLogFont, HDC hDC = NULL);
 
 #ifndef _WIN32_WCE
-//		void CreateFontIndirectEx (const ENUMLOGFONTEXDV* penumlfex);
 		void CreateFont (int nHeight, int nWidth, int nEscapement,
 				int nOrientation, int nWeight, DWORD dwItalic, DWORD dwUnderline,
 				DWORD dwStrikeOut, DWORD dwCharSet, DWORD dwOutPrecision,
@@ -386,33 +385,32 @@ namespace Win32xx
 
 		// Create methods
 		void CreateRectRgn (int x1, int y1, int x2, int y2);
-		void CreateRectRgnIndirect (LPCRECT lpRect);
+		void CreateRectRgnIndirect (const RECT& rc);
 
 #ifndef _WIN32_WCE
 		void CreateEllipticRgn (int x1, int y1, int x2, int y2);
-		void CreateEllipticRgnIndirect (LPCRECT lpRect);
+		void CreateEllipticRgnIndirect (const RECT& rc);
 		void CreatePolygonRgn (LPPOINT lpPoints, int nCount, int nMode);
 		void CreatePolyPolygonRgn (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode);
 		void CreateRoundRectRgn (int x1, int y1, int x2, int y2, int x3, int y3);
 		void CreateFromPath (HDC hDC);
-		int GetRandomRgn (HDC hdc, int iNum) const;
 #endif // !_WIN32_WCE
 
 		void CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData);
 
 		// Operations
 		void SetRectRgn (int x1, int y1, int x2, int y2);
-		void SetRectRgn (LPCRECT lpRect);
+		void SetRectRgn (const RECT& rc);
 		int CombineRgn (HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode);
 		int CombineRgn (HRGN hRgnSrc, int nCombineMode);
 		int CopyRgn (HRGN hRgnSrc);
 		BOOL EqualRgn (HRGN hRgn) const;
 		int OffsetRgn (int x, int y);
-		int OffsetRgn (POINT point);
-		int GetRgnBox (LPRECT lpRect) const;
+		int OffsetRgn (POINT& pt);
+		int GetRgnBox (RECT& rc) const;
 		BOOL PtInRegion (int x, int y) const;
-		BOOL PtInRegion (POINT point) const;
-		BOOL RectInRegion (LPCRECT lpRect) const;
+		BOOL PtInRegion (POINT& pt) const;
+		BOOL RectInRegion (const RECT& rc) const;
 		int GetRegionData (LPRGNDATA lpRgnData, int nDataSize) const;
 
 	  private:
@@ -459,9 +457,9 @@ namespace Win32xx
 
 		// Create and Select Bitmaps
 		void AttachBitmap (HBITMAP hBitmap);
-		void CreateBitmap (int cx, int cy, UINT Planes, UINT BitsPerPixel, CONST VOID *pvColors);
+		void CreateBitmap (int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
 		void CreateCompatibleBitmap (HDC hDC, int cx, int cy);
-		void CreateDIBSection (HDC hdc, const BITMAPINFO& bmi, UINT iUsage, VOID **ppvBits,
+		void CreateDIBSection (HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
 		HBITMAP DetachBitmap ();
 		BITMAP GetBitmapInfo ();
@@ -473,7 +471,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		void CreateBitmapIndirect (LPBITMAP pBitmap);
-		void CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
+		void CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage);
 		void CreateMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
 #endif
@@ -637,9 +635,9 @@ namespace Win32xx
         // Co-ordinate Functions
 #ifndef _WIN32_WCE
 		BOOL DPtoLP (LPPOINT lpPoints, int nCount )  const;
-		BOOL DPtoLP (LPRECT lpRect)  const;
+		BOOL DPtoLP (RECT& rc)  const;
 		BOOL LPtoDP (LPPOINT lpPoints, int nCount )  const;
-		BOOL LPtoDP (LPRECT lpRect)  const;
+		BOOL LPtoDP (RECT& rc)  const;
 #endif
 
 		// Layout Functions
@@ -940,7 +938,7 @@ namespace Win32xx
 		}
 #endif // !_WIN32_WCE
 
-		inline void CBitmap::CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, const void* lpBits)
+		inline void CBitmap::CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits)
 		// Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).	
 		{
 			if (m_pData->hBitmap != NULL)
@@ -1791,13 +1789,13 @@ namespace Win32xx
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreateRectRgnIndirect (LPCRECT lpRect)
+	inline void CRgn::CreateRectRgnIndirect (const RECT& rc)
 	// Creates a rectangular region.
 	{
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::CreateRectRgnIndirect(lpRect);
+		m_pData->hRgn = ::CreateRectRgnIndirect(&rc);
 		assert (m_pData->hRgn);
 	}
 
@@ -1812,13 +1810,13 @@ namespace Win32xx
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreateEllipticRgnIndirect (LPCRECT lpRect)
+	inline void CRgn::CreateEllipticRgnIndirect (const RECT& rc)
 	// Creates an elliptical region.
 	{
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::CreateEllipticRgnIndirect (lpRect);
+		m_pData->hRgn = ::CreateEllipticRgnIndirect (&rc);
 		assert (m_pData->hRgn);
 	}
 
@@ -1864,13 +1862,6 @@ namespace Win32xx
 		assert(m_pData->hRgn);
 	}
 
-	inline int CRgn::GetRandomRgn(HDC hdc, int iNum) const
-	// Copies the system clipping region of the device context to a specific region.
-	{
-		assert(m_pData->hRgn == NULL);
-		return ::GetRandomRgn(hdc, m_pData->hRgn, iNum);
-	}
-
 #endif // !_WIN32_WCE
 
 	inline void CRgn::CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
@@ -1890,11 +1881,11 @@ namespace Win32xx
 		::SetRectRgn (m_pData->hRgn, x1, y1, x2, y2);
 	}
 
-	inline void CRgn::SetRectRgn (LPCRECT lpRect)
+	inline void CRgn::SetRectRgn (const RECT& rc)
 	// converts the region into a rectangular region with the specified coordinates.
 	{
 		assert(m_pData->hRgn != NULL);
-		::SetRectRgn (m_pData->hRgn, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
+		::SetRectRgn (m_pData->hRgn, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
 	inline int CRgn::CombineRgn (HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode)
@@ -1932,18 +1923,18 @@ namespace Win32xx
 		return ::OffsetRgn (m_pData->hRgn, x, y);
 	}
 
-	inline int CRgn::OffsetRgn (POINT point)
+	inline int CRgn::OffsetRgn (POINT& pt)
 	// Moves a region by the specified offsets.
 	{
 		assert(m_pData->hRgn != NULL);
-		return ::OffsetRgn (m_pData->hRgn, point.x, point.y);
+		return ::OffsetRgn (m_pData->hRgn, pt.x, pt.y);
 	}
 
-	inline int CRgn::GetRgnBox (LPRECT lpRect) const
+	inline int CRgn::GetRgnBox (RECT& rc) const
 	// Retrieves the bounding rectangle of the specified region.
 	{
 		assert(m_pData->hRgn != NULL);
-		return ::GetRgnBox (m_pData->hRgn, lpRect);
+		return ::GetRgnBox (m_pData->hRgn, &rc);
 	}
 
 	inline int CRgn::GetRegionData (LPRGNDATA lpRgnData, int nDataSize) const
@@ -1960,18 +1951,18 @@ namespace Win32xx
 		return ::PtInRegion (m_pData->hRgn, x, y);
 	}
 
-	inline BOOL CRgn::PtInRegion (POINT point) const
+	inline BOOL CRgn::PtInRegion (POINT& pt) const
 	// Determines whether the specified point is inside the specified region.
 	{
 		assert(m_pData->hRgn != NULL);
-		return ::PtInRegion (m_pData->hRgn, point.x, point.y);
+		return ::PtInRegion (m_pData->hRgn, pt.x, pt.y);
 	}
 
-	inline BOOL CRgn::RectInRegion (LPCRECT lpRect) const
+	inline BOOL CRgn::RectInRegion (const RECT& rc) const
 	// Determines whether the specified rect is inside the specified region.
 	{
 		assert(m_pData->hRgn != NULL);
-		return ::RectInRegion (m_pData->hRgn, lpRect);
+		return ::RectInRegion (m_pData->hRgn, &rc);
 	}
 
 	inline void CRgn::Release()
@@ -2360,7 +2351,7 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
-	inline void CDC::CreateBitmap (int cx, int cy, UINT Planes, UINT BitsPerPixel, CONST VOID *pvColors)
+	inline void CDC::CreateBitmap (int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors)
 	// Creates a bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
@@ -2382,7 +2373,7 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
-	inline void CDC::CreateDIBitmap (HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, CONST VOID *lpbInit,
+	inline void CDC::CreateDIBitmap (HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi,  UINT fuUsage)
 	// Creates a bitmap and selects it into the device context.
 	{
@@ -2394,7 +2385,7 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::CreateDIBSection (HDC hdc, const BITMAPINFO& bmi, UINT iUsage, VOID **ppvBits,
+	inline void CDC::CreateDIBSection (HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset)
 	// Creates a bitmap and selects it into the device context.
 	{
@@ -2779,7 +2770,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		RemoveCurrentRgn();
 
-		m_pData->Rgn.CreateRectRgnIndirect(&rc);
+		m_pData->Rgn.CreateRectRgnIndirect(rc);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
 	}
 
@@ -2814,7 +2805,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		RemoveCurrentRgn();
 
-		m_pData->Rgn.CreateEllipticRgnIndirect(&rc);
+		m_pData->Rgn.CreateEllipticRgnIndirect(rc);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
 	}
 
@@ -3375,11 +3366,11 @@ namespace Win32xx
 		return ::DPtoLP(m_pData->hDC, lpPoints, nCount);
 	}
 
-	inline BOOL CDC::DPtoLP (LPRECT lpRect) const
+	inline BOOL CDC::DPtoLP (RECT& rc) const
 	// Converts device coordinates into logical coordinates.
 	{
 		assert(m_pData->hDC);
-		return ::DPtoLP(m_pData->hDC, (LPPOINT)lpRect, 2);
+		return ::DPtoLP(m_pData->hDC, (LPPOINT)&rc, 2);
 	}
 
 	inline BOOL CDC::LPtoDP (LPPOINT lpPoints, int nCount) const
@@ -3389,11 +3380,11 @@ namespace Win32xx
 		return ::LPtoDP(m_pData->hDC, lpPoints, nCount);
 	}
 
-	inline BOOL CDC::LPtoDP (LPRECT lpRect) const
+	inline BOOL CDC::LPtoDP (RECT& rc) const
 	// Converts logical coordinates into device coordinates.
 	{
 		assert(m_pData->hDC);
-		return ::LPtoDP(m_pData->hDC, (LPPOINT)lpRect, 2);
+		return ::LPtoDP(m_pData->hDC, (LPPOINT)&rc, 2);
 	}
 
 #endif
