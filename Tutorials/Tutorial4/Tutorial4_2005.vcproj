@@ -297,7 +297,7 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\include\wincore.h"
 				>
 			</File>
 		</Filter>

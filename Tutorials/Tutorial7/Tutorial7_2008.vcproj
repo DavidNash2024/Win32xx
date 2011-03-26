@@ -346,23 +346,23 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\Win32++\Default_Resource.h"
+				RelativePath="..\..\include\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Dialog.h"
+				RelativePath="..\..\include\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\Frame.h"
+				RelativePath="..\..\include\gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\GDI.h"
+				RelativePath="..\..\include\wincore.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Win32++\WinCore.h"
+				RelativePath="..\..\include\winutils.h"
 				>
 			</File>
 		</Filter>

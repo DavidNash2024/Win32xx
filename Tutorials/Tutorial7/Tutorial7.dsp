@@ -140,23 +140,23 @@ SOURCE=.\Resource.rc
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE=..\..\include\dialog.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Dialog.h"
+SOURCE=..\..\include\frame.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Frame.h"
+SOURCE=..\..\include\gdi.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\GDI.h"
+SOURCE=..\..\include\wincore.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE=..\..\include\winutils.h
 # End Source File
 # End Group
 # End Target

@@ -108,7 +108,7 @@ SOURCE=.\main.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE=..\..\include\wincore.h
 # End Source File
 # End Group
 # End Target

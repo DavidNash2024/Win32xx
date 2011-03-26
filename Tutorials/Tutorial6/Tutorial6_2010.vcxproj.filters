@@ -29,27 +29,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\dialog.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\frame.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\gdi.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\rebar.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\statusbar.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\toolbar.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Win32++\include\wincore.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="Mainfrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -61,6 +40,30 @@
     </ClInclude>
     <ClInclude Include="View.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\dialog.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\frame.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gdi.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\rebar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\statusbar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\toolbar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wincore.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\winutils.h">
+      <Filter>Win32++</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

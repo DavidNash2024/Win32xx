@@ -17,13 +17,14 @@
     <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\dialog.h" />
-    <ClInclude Include="..\..\Win32++\include\frame.h" />
-    <ClInclude Include="..\..\Win32++\include\gdi.h" />
-    <ClInclude Include="..\..\Win32++\include\rebar.h" />
-    <ClInclude Include="..\..\Win32++\include\statusbar.h" />
-    <ClInclude Include="..\..\Win32++\include\toolbar.h" />
-    <ClInclude Include="..\..\Win32++\include\wincore.h" />
+    <ClInclude Include="..\..\include\dialog.h" />
+    <ClInclude Include="..\..\include\frame.h" />
+    <ClInclude Include="..\..\include\gdi.h" />
+    <ClInclude Include="..\..\include\rebar.h" />
+    <ClInclude Include="..\..\include\statusbar.h" />
+    <ClInclude Include="..\..\include\toolbar.h" />
+    <ClInclude Include="..\..\include\wincore.h" />
+    <ClInclude Include="..\..\include\winutils.h" />
     <ClInclude Include="Mainfrm.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScribbleApp.h" />
