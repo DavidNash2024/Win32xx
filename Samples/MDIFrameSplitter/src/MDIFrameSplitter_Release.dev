@@ -179,36 +179,6 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
-FileName=..\..\Win32++\statusbar.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
-FileName=..\..\Win32++\toolbar.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit19]
-FileName=..\Win32++\GDI.cpp
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit22]
 FileName=MDIFrameSplitterApp.h
 CompileCpp=1
@@ -247,23 +217,5 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 
-[Unit18]
-FileName=..\..\Win32++\wincore.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
 
-[Unit20]
-FileName=..\Win32++\GDI.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
 

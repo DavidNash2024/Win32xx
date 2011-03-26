@@ -26,15 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\dialog.h" />
-    <ClInclude Include="..\..\..\include\frame.h" />
-    <ClInclude Include="..\..\..\include\gdi.h" />
-    <ClInclude Include="..\..\..\include\listview.h" />
-    <ClInclude Include="..\..\..\include\mdi.h" />
-    <ClInclude Include="..\..\..\include\rebar.h" />
-    <ClInclude Include="..\..\..\include\statusbar.h" />
-    <ClInclude Include="..\..\..\include\toolbar.h" />
-    <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\src\MainMDIfrm.h" />
     <ClInclude Include="..\src\MDIChildListView.h" />
     <ClInclude Include="..\src\MDIChildMax.h" />

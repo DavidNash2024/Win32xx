@@ -182,8 +182,6 @@
 		<Unit filename="..\src\Slider.h" />
 		<Unit filename="..\src\main.cpp" />
 		<Unit filename="..\src\resource.h" />
-		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

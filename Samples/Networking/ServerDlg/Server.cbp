@@ -186,14 +186,6 @@
 		<Unit filename="SvrDialog.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="resource.h" />
-		<Unit filename="..\..\Win32++\default_resource.h" />
-		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\frame.h" />
-		<Unit filename="..\..\Win32++\gdi.h" />
-		<Unit filename="..\..\Win32++\rebar.h" />
-		<Unit filename="..\..\Win32++\statusbar.h" />
-		<Unit filename="..\..\Win32++\toolbar.h" />
-		<Unit filename="..\..\Win32++\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -182,16 +182,6 @@
 		<Unit filename="..\src\Views.h" />
 		<Unit filename="..\src\main.cpp" />
 		<Unit filename="..\src\resource.h" />
-		<Unit filename="..\..\Win32++\dialog.h" />
-		<Unit filename="..\..\Win32++\docking.h" />
-		<Unit filename="..\..\Win32++\frame.h" />
-		<Unit filename="..\..\Win32++\gdi.h" />
-		<Unit filename="..\..\Win32++\listview.h" />
-		<Unit filename="..\..\Win32++\rebar.h" />
-		<Unit filename="..\..\Win32++\statusbar.h" />
-		<Unit filename="..\..\Win32++\toolbar.h" />
-		<Unit filename="..\..\Win32++\treeview.h" />
-		<Unit filename="..\..\Win32++\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -33,33 +33,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\dialog.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\frame.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gdi.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\listview.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\mdi.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\rebar.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\statusbar.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\toolbar.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wincore.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\MainMDIfrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>

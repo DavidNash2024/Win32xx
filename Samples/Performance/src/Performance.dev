@@ -137,26 +137,6 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 
-[Unit12]
-FileName=..\..\Win32++\dialog.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
-FileName=..\..\Win32++\wincore.h
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-CompileCpp=1
-
 [Unit14]
 FileName=PerfApp.cpp
 CompileCpp=1

@@ -57,13 +57,4 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit2]
-FileName=..\..\Win32++\Socket.h
-CompileCpp=1
-Folder=Client
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
 
