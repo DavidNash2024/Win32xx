@@ -2,7 +2,6 @@
 #include "windows.h"
 
 1     RT_MANIFEST             "res/Win32++.manifest"
-// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "TaskDialog.exe.manifest"
 
 
 STRINGTABLE

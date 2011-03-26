@@ -11,7 +11,7 @@ call CleanTutorials
 
 @echo on
 
-REM: Change the directory to the parent
+REM: Change the directory to the Samples parent
 pushd ..\Samples
 if exist "..\output\VS2005\Debug" rmdir /s /q "..\output\VS2005\Debug"
 if exist "..\output\VS2005\Release" rmdir /s /q "..\output\VS2005\Release"
@@ -75,6 +75,8 @@ devenv /build Debug Splitter\ProjectFiles\Splitter_2005.sln                     
 devenv /build Release Splitter\ProjectFiles\Splitter_2005.sln                   >>"..\output\VS2005.log"
 devenv /build Debug TabDemo\ProjectFiles\TabDemo_2005.sln                       >>"..\output\VS2005.log"
 devenv /build Release TabDemo\ProjectFiles\TabDemo_2005.sln                     >>"..\output\VS2005.log"
+devenv /build Debug TaskDialog\ProjectFiles\TaskDialog_2005.sln                 >>"..\output\VS2005.log"
+devenv /build Release TaskDialog\ProjectFiles\TaskDialog_2005.sln               >>"..\output\VS2005.log"
 devenv /build Debug Themes\ProjectFiles\Themes_2005.sln                         >>"..\output\VS2005.log"
 devenv /build Release Themes\ProjectFiles\Themes_2005.sln                       >>"..\output\VS2005.log"
 devenv /build Debug Threads\ProjectFiles\Threads_2005.sln                       >>"..\output\VS2005.log"
@@ -114,6 +116,7 @@ copy Scribble\ProjectFiles\Debug\Scribble.exe                 "..\output\VS2005\
 copy Simple\ProjectFiles\Debug\Simple.exe                     "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Splitter\ProjectFiles\Debug\Splitter.exe                 "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
+copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
@@ -149,58 +152,64 @@ copy Scribble\ProjectFiles\Release\Scribble.exe                 "..\output\VS200
 copy Simple\ProjectFiles\Release\Simple.exe                     "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Splitter\ProjectFiles\Release\Splitter.exe                 "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy TabDemo\ProjectFiles\Release\TabDemo.exe                   "..\output\VS2005\Release"    >>"..\output\VS2005.log"
+copy TaskDialog\ProjectFiles\Release\TaskDialog.exe             "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 
 
+REM: Change the directory to the Tutorials parent
+popd
+pushd ..\Tutorials
+
+
 REM: Compile Tutorials
 ::Compile code
-devenv /build Debug Tutorials\Tutorial1\Tutorial1_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial1\Tutorial1_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial2\Tutorial2_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial2\Tutorial2_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial3\Tutorial3_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial3\Tutorial3_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial4\Tutorial4_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial4\Tutorial4_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial5\Tutorial5_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial5\Tutorial5_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial6\Tutorial6_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial6\Tutorial6_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial7\Tutorial7_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial7\Tutorial7_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial8\Tutorial8_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial8\Tutorial8_2005.sln    >>"..\output\VS2005.log"
-devenv /build Debug Tutorials\Tutorial9\Tutorial9_2005.sln      >>"..\output\VS2005.log"
-devenv /build Release Tutorials\Tutorial9\Tutorial9_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial1\Tutorial1_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial1\Tutorial1_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial2\Tutorial2_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial2\Tutorial2_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial3\Tutorial3_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial3\Tutorial3_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial4\Tutorial4_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial4\Tutorial4_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial5\Tutorial5_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial5\Tutorial5_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial6\Tutorial6_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial6\Tutorial6_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial7\Tutorial7_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial7\Tutorial7_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial8\Tutorial8_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial8\Tutorial8_2005.sln    >>"..\output\VS2005.log"
+devenv /build Debug Tutorial9\Tutorial9_2005.sln      >>"..\output\VS2005.log"
+devenv /build Release Tutorial9\Tutorial9_2005.sln    >>"..\output\VS2005.log"
 
 mkdir "..\output\VS2005\Tutorials"
 mkdir "..\output\VS2005\Tutorials\Debug"
 
 ECHO "Copying Debug Tutorials" >>"..\output\VS2005.log"
-copy Tutorials\Tutorial1\Debug\Tutorial1.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial2\Debug\Tutorial2.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial3\Debug\Tutorial3.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial4\Debug\Tutorial4.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial5\Debug\Tutorial5.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial6\Debug\Tutorial6.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial7\Debug\Tutorial7.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial8\Debug\Tutorial8.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial9\Debug\Tutorial9.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial1\Debug\Tutorial1.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial2\Debug\Tutorial2.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial3\Debug\Tutorial3.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial4\Debug\Tutorial4.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial5\Debug\Tutorial5.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial6\Debug\Tutorial6.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial7\Debug\Tutorial7.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial8\Debug\Tutorial8.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial9\Debug\Tutorial9.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
 
 mkdir "..\output\VS2005\Tutorials\Release"
 
 ECHO "Copying Release Tutorials" >>"..\output\VS2005.log"
-copy Tutorials\Tutorial1\Release\Tutorial1.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial2\Release\Tutorial2.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial3\Release\Tutorial3.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial4\Release\Tutorial4.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial5\Release\Tutorial5.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial6\Release\Tutorial6.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial7\Release\Tutorial7.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial8\Release\Tutorial8.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
-copy Tutorials\Tutorial9\Release\Tutorial9.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial1\Release\Tutorial1.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial2\Release\Tutorial2.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial3\Release\Tutorial3.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial4\Release\Tutorial4.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial5\Release\Tutorial5.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial6\Release\Tutorial6.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial7\Release\Tutorial7.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial8\Release\Tutorial8.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial9\Release\Tutorial9.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
 
 REM: Pop the directory change off the stack
 popd

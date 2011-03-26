@@ -689,11 +689,11 @@ namespace Win32xx
 		
 		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
 		{
-			int len = pFromTChar? lstrlen(CResString((UINT)pFromTChar)) +1 : 1;
+			int len = pFromTChar? lstrlen(CLoadString((UINT)pFromTChar)) +1 : 1;
 			vTChar.assign(len, _T('\0'));
 			vWChar.assign(len, _T('\0'));
 			if (pFromTChar)
-				lstrcpy( &vTChar.front(), CResString((UINT)pFromTChar));
+				lstrcpy( &vTChar.front(), CLoadString((UINT)pFromTChar));
 		}
 		else
 		{

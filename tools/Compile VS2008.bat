@@ -8,7 +8,7 @@ call "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86
 call clean
 call CleanTutorials
 
-REM: Change the directory to the parent
+REM: Change the directory to the Samples parent
 pushd ..\Samples
 if exist "..\output\VS2008\Debug" rmdir /s /q "..\output\VS2008\Debug"
 if exist "..\output\VS2008\Release" rmdir /s /q "..\output\VS2008\Release"
@@ -73,6 +73,8 @@ devenv /build Debug Splitter\ProjectFiles\Splitter_2008.sln                   >>
 devenv /build Release Splitter\ProjectFiles\Splitter_2008.sln                 >>"..\output\VS2008.log"
 devenv /build Debug TabDemo\ProjectFiles\TabDemo_2008.sln                     >>"..\output\VS2008.log"
 devenv /build Release TabDemo\ProjectFiles\TabDemo_2008.sln                   >>"..\output\VS2008.log"
+devenv /build Debug TaskDialog\ProjectFiles\TaskDialog_2008.sln               >>"..\output\VS2008.log"
+devenv /build Release TaskDialog\ProjectFiles\TaskDialog_2008.sln             >>"..\output\VS2008.log"
 devenv /build Debug Themes\ProjectFiles\Themes_2008.sln                       >>"..\output\VS2008.log"
 devenv /build Release Themes\ProjectFiles\Themes_2008.sln                     >>"..\output\VS2008.log"
 devenv /build Debug Threads\ProjectFiles\Threads_2008.sln                     >>"..\output\VS2008.log"
@@ -112,6 +114,7 @@ copy Scribble\ProjectFiles\Debug\Scribble.exe                 "..\output\VS2008\
 copy Simple\ProjectFiles\Debug\Simple.exe                     "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Splitter\ProjectFiles\Debug\Splitter.exe                 "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
+copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
@@ -147,6 +150,7 @@ copy Scribble\ProjectFiles\Release\Scribble.exe                 "..\output\VS200
 copy Simple\ProjectFiles\Release\Simple.exe                     "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Splitter\ProjectFiles\Release\Splitter.exe                 "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy TabDemo\ProjectFiles\Release\TabDemo.exe                   "..\output\VS2008\Release"    >>"..\output\VS2008.log"
+copy TaskDialog\ProjectFiles\Release\TaskDialog.exe             "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2008\Release"    >>"..\output\VS2008.log"
@@ -176,6 +180,10 @@ devenv /build Release Tutorials\Tutorial9\Tutorial9_2008.sln     >>"..\output\VS
 
 mkdir "..\output\VS2008\Tutorials"
 mkdir "..\output\VS2008\Tutorials\Debug"
+
+REM: Change the directory to the Tutorials parent
+popd
+pushd ..\Tutorials
 
 ECHO "Copying Debug Tutorials" >>"..\output\VS2008.log"
 copy Tutorials\Tutorial1\Debug\Tutorial1.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"

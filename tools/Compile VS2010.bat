@@ -10,7 +10,7 @@ call CleanTutorials
 
 @echo on
 
-REM: Change the directory to the parent
+REM: Change the directory to the Samples parent
 pushd ..\Samples
 if exist "..\output\VS2010\Debug" rmdir /s /q "..\output\VS2010\Debug"
 if exist "..\output\VS2010\Release" rmdir /s /q "..\output\VS2010\Release"
@@ -74,6 +74,8 @@ devenv /build Debug Splitter\ProjectFiles\Splitter_2010.sln             >>"..\ou
 devenv /build Release Splitter\ProjectFiles\Splitter_2010.sln           >>"..\output\VS2010.log"
 devenv /build Debug TabDemo\ProjectFiles\TabDemo_2010.sln               >>"..\output\VS2010.log"
 devenv /build Release TabDemo\ProjectFiles\TabDemo_2010.sln             >>"..\output\VS2010.log"
+devenv /build Debug TaskDialog\ProjectFiles\TaskDialog_2010.sln               >>"..\output\VS2010.log"
+devenv /build Release TaskDialog\ProjectFiles\TaskDialog_2010.sln             >>"..\output\VS2010.log"
 devenv /build Debug Themes\ProjectFiles\Themes_2010.sln                 >>"..\output\VS2010.log"
 devenv /build Release Themes\ProjectFiles\Themes_2010.sln               >>"..\output\VS2010.log"
 devenv /build Debug Threads\ProjectFiles\Threads_2010.sln               >>"..\output\VS2010.log"
@@ -113,6 +115,7 @@ copy Scribble\ProjectFiles\Debug\Scribble.exe                 "..\output\VS2010\
 copy Simple\ProjectFiles\Debug\Simple.exe                     "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Splitter\ProjectFiles\Debug\Splitter.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
+copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
@@ -148,11 +151,14 @@ copy Scribble\ProjectFiles\Release\Scribble.exe                 "..\output\VS201
 copy Simple\ProjectFiles\Release\Simple.exe                     "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Splitter\ProjectFiles\Release\Splitter.exe                 "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy TabDemo\ProjectFiles\Release\TabDemo.exe                   "..\output\VS2010\Release"    >>"..\output\VS2010.log"
+copy TaskDialog\ProjectFiles\Release\TaskDialog.exe             "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 
-
+REM: Change the directory to the Tutorials parent
+popd
+pushd ..\Tutorials
 REM: Compile Tutorials
 ECHO "Compliling Tutorials" >>"..\output\VS2010.log"
 ::Compile code

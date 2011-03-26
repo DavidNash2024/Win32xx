@@ -114,7 +114,7 @@
 #include <shlwapi.h>
 #include "shared_ptr.h"
 //#include "winutils.h"			// included later in this file
-// #include "gdi.h"				// included later in this file
+//#include "gdi.h"				// included later in this file
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -970,7 +970,7 @@ namespace Win32xx
 
 			BOOL Processed = FALSE;
 
-			// only pre-translate mouse and leyboard input events
+			// only pre-translate mouse and keyboard input events
 			if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
 				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
 			{
@@ -1114,7 +1114,7 @@ namespace Win32xx
 
 	inline CWnd::~CWnd()
 	{
-		// Destroy the window for this object
+		// Destroys the window for this object and cleans up resources.
 		Destroy();
 	}
 
@@ -1132,7 +1132,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::Attach(HWND hWnd)
-	// Subclasses an existing window and attaches it to a CWnd
+	// Subclass an existing window and attach it to a CWnd
 	{
 		assert( GetApp() );
 		assert(::IsWindow(hWnd));
@@ -1154,7 +1154,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::AttachDlgItem(UINT nID, CWnd* pParent)
-	// Use to convert a dialog item to a CWnd object
+	// Converts a dialog item to a CWnd object
 	{
 		assert(pParent->IsWindow());
 
@@ -1165,6 +1165,26 @@ namespace Win32xx
 	inline void CWnd::CenterWindow() const
 	// Centers this window over it's parent
 	{
+
+	// required for multi-monitor support with Dev-C++ and VC6
+	#ifndef _WIN32_WCE
+	#ifndef MONITOR_DEFAULTTONEAREST
+		#define MONITOR_DEFAULTTONEAREST    0x00000002
+	#endif
+	#ifndef HMONITOR
+		DECLARE_HANDLE(HMONITOR);
+	#endif
+	#ifndef MONITORINFO
+		typedef struct tagMONITORINFO
+		{
+			DWORD   cbSize;
+			RECT    rcMonitor;
+			RECT    rcWork;
+			DWORD   dwFlags;
+		} MONITORINFO, *LPMONITORINFO;
+	#endif	// MONITOR_DEFAULTTONEAREST
+	#endif	// _WIN32_WCE
+
 		assert(::IsWindow(m_hWnd));
 
 		CRect rc = GetWindowRect();
@@ -1178,29 +1198,13 @@ namespace Win32xx
 		if (GetParent() != NULL) rcParent = GetParent()->GetWindowRect();
 		else rcParent = rcDesktop;
 
-  #ifndef _WIN32_WCE
-	// required for Dev-C++ and VC6
-    #ifndef MONITOR_DEFAULTTONEAREST
-		#define MONITOR_DEFAULTTONEAREST    0x00000002
-    #endif
-    #ifndef HMONITOR
-		DECLARE_HANDLE(HMONITOR);
-    #endif
-    #ifndef MONITORINFO
-		typedef struct tagMONITORINFO
-		{
-			DWORD   cbSize;
-			RECT    rcMonitor;
-			RECT    rcWork;
-			DWORD   dwFlags;
-		} MONITORINFO, *LPMONITORINFO;
-    #endif
+	#ifndef _WIN32_WCE
 		// Import the GetMonitorInfo and MonitorFromWindow functions
 		HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
 		typedef BOOL (WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
 		typedef HMONITOR (WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
 		LPMFW pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
-    #ifdef UNICODE
+	#ifdef UNICODE
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
 	#else
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
@@ -1236,8 +1240,8 @@ namespace Win32xx
 	}
 
 	inline void CWnd::Cleanup()
+	// Returns the CWnd to its default state
 	{
-		// Return the CWnd to its default state
 		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
 		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
 
@@ -1250,7 +1254,7 @@ namespace Win32xx
 	}
 
 	inline HWND CWnd::Create(CWnd* pParent /* = NULL */)
-	// Default Window Creation.
+	// Creates the window. This is the default method of window creation.
 	{
 
 		// Test if Win32++ has been started
@@ -1298,6 +1302,7 @@ namespace Win32xx
 	}
 
 	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
+	// Creates the window by specifying all the window creation parameters
 	{
 		int x = rc.left;
 		int y = rc.top;
@@ -1307,6 +1312,7 @@ namespace Win32xx
 	}
 
 	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, CWnd* pParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
+	// Creates the window by specifying all the window creation parameters
 	{
 
 		assert( GetApp() );		// Test if Win32++ has been started
@@ -1376,6 +1382,7 @@ namespace Win32xx
 	}
 
 	inline void CWnd::Destroy()
+	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
 		// Remove TmpWnds
 		if (m_IsTmpWnd)
@@ -1424,8 +1431,8 @@ namespace Win32xx
 	}
 
 	inline CDC* FromHandle(HDC hDC)
+	// Returns the CDC object associated with the HDC
 	{ 
-		// Returns the CDC object associated with the HDC
 		return CDC::FromHandle(hDC); 
 	}
 
@@ -1447,6 +1454,7 @@ namespace Win32xx
 	}
 
 	inline LPCTSTR CWnd::GetClassName() const
+	// Retrieves the name of the class to which the specified window belongs.
 	{
 		assert(::IsWindow(m_hWnd));
 
@@ -1458,6 +1466,7 @@ namespace Win32xx
 	}
 
 	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem) const
+	// Retrieves the title or text associated with a control in a dialog box.
 	{
 		assert(::IsWindow(m_hWnd));
 
@@ -1471,6 +1480,7 @@ namespace Win32xx
 	}
 
 	inline LPCTSTR CWnd::GetWindowText() const
+	// Retrieves the text of the window's title bar.
 	{
 		assert(::IsWindow(m_hWnd));
 		int nLength = ::GetWindowTextLength(m_hWnd);
@@ -1790,6 +1800,7 @@ namespace Win32xx
 	}
 
 	inline HICON CWnd::SetIconLarge(int nIcon)
+	// Sets the large icon associated with the window
 	{
 		assert( GetApp() );
 		assert(::IsWindow(m_hWnd));
@@ -1806,6 +1817,7 @@ namespace Win32xx
 	}
 
 	inline HICON CWnd::SetIconSmall(int nIcon)
+	// Sets the small icon associated with the window
 	{
 		assert( GetApp() );
 		assert(::IsWindow(m_hWnd));

@@ -73,9 +73,9 @@ namespace Win32xx
 		void SetSize(int CX, int CY)		{ cx = CX; cy = CY; }
 
 		// Operators
+		operator LPSIZE()					{ return this; }
 		BOOL operator == (SIZE sz)			{ return (cx == sz.cx && cy == sz.cy); }
 		BOOL operator != (SIZE sz)			{ return (cx != sz.cx || cy != sz.cy); }
-		operator LPSIZE()					{ return this; }
 		void operator += (SIZE sz)			{ cx += sz.cx; cy += sz.cy; }
 		void operator -= (SIZE sz)			{ cx -= sz.cx; cy -= sz.cy; }
 

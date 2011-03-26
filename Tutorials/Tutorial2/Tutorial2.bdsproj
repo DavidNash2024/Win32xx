@@ -87,7 +87,7 @@
           <property category="win32.*.win32b.bcc32" name="option.Hc.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.He.enabled" value="0"/>
           <property category="win32.*.win32b.bcc32" name="option.Hs.enabled" value="0"/>
-          <property category="win32.*.win32b.bcc32" name="option.I.arg.1" value="..\..\Win32++\include"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.1" value="..\..\include"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.2" value="$(BDS)\include"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.3" value="$(BDS)\include\dinkumware"/>
           <property category="win32.*.win32b.bcc32" name="option.I.arg.4" value="$(BDS)\include\vcl"/>
@@ -206,6 +206,7 @@
           <Linker Name="LibVersion"></Linker>
         </Linker>
       </IDEOPTIONS>
-    </BCBPROJECT>  <buildevents/>
-  </CPlusPlusBuilder.Personality>
+    </BCBPROJECT>
+		<buildevents/>
+	</CPlusPlusBuilder.Personality>
 </BorlandProject>

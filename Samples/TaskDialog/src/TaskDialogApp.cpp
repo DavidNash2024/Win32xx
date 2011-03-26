@@ -16,6 +16,8 @@ CTaskDialogApp::~CTaskDialogApp()
 
 BOOL CTaskDialogApp::InitInstance()
 {
+	::InitCommonControls();
+
 	// Create the TaskDialog object
 	if (!CTaskDialog::IsSupported())
 	{

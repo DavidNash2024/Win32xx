@@ -23,7 +23,7 @@ void CView::OnCreate()
 	SetIconLarge(IDI_SIMPLERIBBON);
 
 	// Set the window title
-	SetWindowText(CResString(IDS_APP_TITLE));
+	SetWindowText(LoadString(IDS_APP_TITLE));
 
 	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
 	{

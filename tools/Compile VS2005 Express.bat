@@ -12,7 +12,7 @@ call CleanTutorials
 
 @echo on
 
-REM: Change the directory to the parent
+REM: Change the directory to the Samples parent
 pushd ..\Samples
 if exist "..\output\VS2005\Debug" rmdir /s /q "..\output\VS2005\Debug"
 if exist "..\output\VS2005\Release" rmdir /s /q "..\output\VS2005\Release"
@@ -76,6 +76,8 @@ vcbuild /rebuild RibbonSimple\ProjectFiles\SimpleRibbon_2005.vcproj debug       
 vcbuild /rebuild RibbonSimple\ProjectFiles\SimpleRibbon_2005.vcproj release         >>"..\output\VS2005.log"
 vcbuild /rebuild TabDemo\ProjectFiles\TabDemo_2005.vcproj debug                     >>"..\output\VS2005.log"
 vcbuild /rebuild TabDemo\ProjectFiles\TabDemo_2005.vcproj release                   >>"..\output\VS2005.log"
+vcbuild /rebuild TaskDialog\ProjectFiles\TaskDialog_2005.vcproj debug               >>"..\output\VS2005.log"
+vcbuild /rebuild TaskDialog\ProjectFiles\TaskDialog_2005.vcproj release             >>"..\output\VS2005.log"
 vcbuild /rebuild Themes\ProjectFiles\Themes_2005.vcproj debug                       >>"..\output\VS2005.log"
 vcbuild /rebuild Themes\ProjectFiles\Themes_2005.vcproj release                     >>"..\output\VS2005.log"
 vcbuild /rebuild Threads\ProjectFiles\Threads_2005.vcproj debug                     >>"..\output\VS2005.log"
@@ -115,6 +117,7 @@ copy Scribble\ProjectFiles\Debug\Scribble.exe                 "..\output\VS2005\
 copy Simple\ProjectFiles\Debug\Simple.exe                     "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Splitter\ProjectFiles\Debug\Splitter.exe                 "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
+copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
@@ -150,9 +153,14 @@ copy Scribble\ProjectFiles\Release\Scribble.exe                 "..\output\VS200
 copy Simple\ProjectFiles\Release\Simple.exe                     "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Splitter\ProjectFiles\Release\Splitter.exe                 "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy TabDemo\ProjectFiles\Release\TabDemo.exe                   "..\output\VS2005\Release"    >>"..\output\VS2005.log"
+copy TaskDialog\ProjectFiles\Release\TaskDialog.exe             "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2005\Release"    >>"..\output\VS2005.log"
+copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 
+REM: Change the directory to the Tutorials parent
+popd
+pushd ..\Tutorials
 
 REM: Compile Tutorials
 ECHO "Compliling Tutorials" >>"..\output\VS2005.log"
