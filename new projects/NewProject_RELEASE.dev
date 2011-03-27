@@ -1,7 +1,7 @@
 [Project]
 FileName=NewProject_RELEASE.dev
 Name=NewProject
-UnitCount=0
+UnitCount=1
 Type=0
 Ver=1
 ObjFiles=
@@ -46,4 +46,14 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+
+[Unit1]
+FileName=main.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
