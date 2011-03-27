@@ -22,7 +22,6 @@
     <ClInclude Include="..\..\..\include\treeview.h" />
     <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\src\Classes.h" />
-    <ClInclude Include="..\src\DockContainer.h" />
     <ClInclude Include="..\src\DockTabbedMDI.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
