@@ -157,59 +157,58 @@ copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS200
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 
-
-REM: Compile Tutorials
-ECHO "Compliling Tutorials" >>"..\output\VS2008.log"
-::Compile code
-vcbuild /rebuild Tutorials\Tutorial1\Tutorial1_2008.vcproj debug 		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial1\Tutorial1_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial2\Tutorial2_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial2\Tutorial2_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial3\Tutorial3_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial3\Tutorial3_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial4\Tutorial4_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial4\Tutorial4_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial5\Tutorial5_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial5\Tutorial5_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial6\Tutorial6_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial6\Tutorial6_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial7\Tutorial7_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial7\Tutorial7_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial8\Tutorial8_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial8\Tutorial8_2008.vcproj release		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial9\Tutorial9_2008.vcproj debug		>>"..\output\VS2008.log"
-vcbuild /rebuild Tutorials\Tutorial9\Tutorial9_2008.vcproj release		>>"..\output\VS2008.log"
-
-mkdir "..\output\VS2008\Tutorials"
-mkdir "..\output\VS2008\Tutorials\Debug"
-
 REM: Change the directory to the Tutorials parent
 popd
 pushd ..\Tutorials
 
+REM: Compile Tutorials
+ECHO "Compliling Tutorials" >>"..\output\VS2008.log"
+::Compile code
+vcbuild /rebuild Tutorial1\Tutorial1_2008.vcproj debug 		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial1\Tutorial1_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial2\Tutorial2_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial2\Tutorial2_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial3\Tutorial3_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial3\Tutorial3_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial4\Tutorial4_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial4\Tutorial4_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial5\Tutorial5_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial5\Tutorial5_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial6\Tutorial6_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial6\Tutorial6_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial7\Tutorial7_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial7\Tutorial7_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial8\Tutorial8_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial8\Tutorial8_2008.vcproj release		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial9\Tutorial9_2008.vcproj debug		>>"..\output\VS2008.log"
+vcbuild /rebuild Tutorial9\Tutorial9_2008.vcproj release		>>"..\output\VS2008.log"
+
+mkdir "..\output\VS2008\Tutorials"
+mkdir "..\output\VS2008\Tutorials\Debug"
+
 ECHO "Copying Debug Tutorials" >>"..\output\VS2008.log"
-copy Tutorials\Tutorial1\Debug\Tutorial1.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial2\Debug\Tutorial2.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial3\Debug\Tutorial3.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial4\Debug\Tutorial4.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial5\Debug\Tutorial5.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial6\Debug\Tutorial6.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial7\Debug\Tutorial7.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial8\Debug\Tutorial8.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial9\Debug\Tutorial9.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial1\Debug\Tutorial1.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial2\Debug\Tutorial2.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial3\Debug\Tutorial3.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial4\Debug\Tutorial4.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial5\Debug\Tutorial5.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial6\Debug\Tutorial6.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial7\Debug\Tutorial7.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial8\Debug\Tutorial8.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial9\Debug\Tutorial9.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
 
 mkdir "..\output\VS2008\Tutorials\Release"
 
 ECHO "Copying Release Tutorials" >>"..\output\VS2008.log"
-copy Tutorials\Tutorial1\Release\Tutorial1.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial2\Release\Tutorial2.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial3\Release\Tutorial3.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial4\Release\Tutorial4.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial5\Release\Tutorial5.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial6\Release\Tutorial6.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial7\Release\Tutorial7.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial8\Release\Tutorial8.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
-copy Tutorials\Tutorial9\Release\Tutorial9.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial1\Release\Tutorial1.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial2\Release\Tutorial2.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial3\Release\Tutorial3.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial4\Release\Tutorial4.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial5\Release\Tutorial5.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial6\Release\Tutorial6.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial7\Release\Tutorial7.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial8\Release\Tutorial8.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial9\Release\Tutorial9.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
 
 REM: Pop the directory change off the stack
 popd

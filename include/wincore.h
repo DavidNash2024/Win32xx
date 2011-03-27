@@ -890,30 +890,6 @@ namespace Win32xx
 		pTLSData->vTmpWnds.push_back(pWnd); // save TmpWnd as a smart pointer
 	}
 
-	inline void CWinApp::SetCallback()
-	{
-		// Registers a temporary window class so we can get the callback
-		// address of CWnd::StaticWindowProc
-
-		WNDCLASS wcDefault = {0};
-
-		LPCTSTR szClassName		= _T("Win32++ Temporary Window Class");
-		wcDefault.hInstance		= GetInstanceHandle();
-		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
-		wcDefault.lpszClassName = szClassName;
-
-		::RegisterClass(&wcDefault);
-
-		// Retrieve the class information
-		ZeroMemory(&wcDefault, sizeof(wcDefault));
-		::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault);
-
-		// Save the callback address of CWnd::StaticWindowProc
-		assert(wcDefault.lpfnWndProc);
-		m_Callback = wcDefault.lpfnWndProc;
-		::UnregisterClass(szClassName, GetInstanceHandle());
-	}
-
 	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)
 	{
 		// Allocate an iterator for our HWND map
@@ -1055,6 +1031,31 @@ namespace Win32xx
 		
 		assert (m_hAccelTable);
 	}
+	
+	inline void CWinApp::SetCallback()
+	{
+		// Registers a temporary window class so we can get the callback
+		// address of CWnd::StaticWindowProc.
+		// This technique works for all Window versions, including WinCE.
+
+		WNDCLASS wcDefault = {0};
+
+		LPCTSTR szClassName		= _T("Win32++ Temporary Window Class");
+		wcDefault.hInstance		= GetInstanceHandle();
+		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
+		wcDefault.lpszClassName = szClassName;
+
+		::RegisterClass(&wcDefault);
+
+		// Retrieve the class information
+		ZeroMemory(&wcDefault, sizeof(wcDefault));
+		::GetClassInfo(GetInstanceHandle(), szClassName, &wcDefault);
+
+		// Save the callback address of CWnd::StaticWindowProc
+		assert(wcDefault.lpfnWndProc);
+		m_Callback = wcDefault.lpfnWndProc;
+		::UnregisterClass(szClassName, GetInstanceHandle());
+	}	
 
 	inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)
 	{

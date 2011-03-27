@@ -248,6 +248,10 @@
 		<Filter
 			Name="Win32++"
 			>
+			<File
+				RelativePath="..\..\..\include\gdi.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

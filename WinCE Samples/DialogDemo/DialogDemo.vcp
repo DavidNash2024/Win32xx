@@ -102,50 +102,50 @@ LINK32=link.exe
 
 SOURCE=.\DialogApp.cpp
 DEP_CPP_DIALO=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\dialog.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\..\include\Default_Resource.h"\
+	"..\..\include\dialog.h"\
+	"..\..\include\WCEstddef.h"\
+	"..\..\include\WinCore.h"\
 	".\DialogApp.h"\
 	".\MyDialog.h"\
 	".\resource.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_DIALO=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\..\include\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\dialog.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\..\include\Default_Resource.h"\
+	"..\..\include\dialog.h"\
+	"..\..\include\WCEstddef.h"\
+	"..\..\include\WinCore.h"\
 	".\DialogApp.h"\
 	".\MyDialog.h"\
 	".\resource.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MAIN_=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\..\include\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\MyDialog.cpp
 DEP_CPP_MYDIA=\
-	"..\Win32++\Default_Resource.h"\
-	"..\Win32++\dialog.h"\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\..\include\Default_Resource.h"\
+	"..\..\include\dialog.h"\
+	"..\..\include\WCEstddef.h"\
+	"..\..\include\WinCore.h"\
 	".\MyDialog.h"\
 	".\resource.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MYDIA=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\..\include\DeviceResolutionAware.h"\
 	
 # End Source File
 # End Group
@@ -182,11 +182,11 @@ SOURCE=.\res\star.ico
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE="..\Win32++\DialogDemo.h"
+SOURCE="..\..\include\DialogDemo.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\include\WinCore.h"
 # End Source File
 # End Group
 # End Target

@@ -102,42 +102,42 @@ LINK32=link.exe
 
 SOURCE=.\Button.cpp
 DEP_CPP_BUTTO=\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\..\include\WCEstddef.h"\
+	"..\..\include\WinCore.h"\
 	".\Button.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_BUTTO=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\..\include\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\main.cpp
 DEP_CPP_MAIN_=\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\..\include\WCEstddef.h"\
+	"..\..\include\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
 	".\SubclassApp.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MAIN_=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\..\include\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\MainWin.cpp
 DEP_CPP_MAINW=\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\..\include\WCEstddef.h"\
+	"..\..\include\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_MAINW=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\..\include\DeviceResolutionAware.h"\
 	
 # End Source File
 # Begin Source File
@@ -148,15 +148,15 @@ SOURCE=.\Resource.rc
 
 SOURCE=.\SubclassApp.cpp
 DEP_CPP_SUBCL=\
-	"..\Win32++\WCEstddef.h"\
-	"..\Win32++\WinCore.h"\
+	"..\..\include\WCEstddef.h"\
+	"..\..\include\WinCore.h"\
 	".\Button.h"\
 	".\MainWin.h"\
 	".\SubclassApp.h"\
 	{$(INCLUDE)}"ceconfig.h"\
 	
 NODEP_CPP_SUBCL=\
-	"..\Win32++\DeviceResolutionAware.h"\
+	"..\..\include\DeviceResolutionAware.h"\
 	
 # End Source File
 # End Group
@@ -193,15 +193,15 @@ SOURCE="..\..\..\..\..\..\..\..\Program Files\Windows CE Tools\wce400\STANDARDSD
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\Default_Resource.h"
+SOURCE="..\..\include\Default_Resource.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WCEstddef.h"
+SOURCE="..\..\include\WCEstddef.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\Win32++\WinCore.h"
+SOURCE="..\..\include\WinCore.h"
 # End Source File
 # End Group
 # End Target

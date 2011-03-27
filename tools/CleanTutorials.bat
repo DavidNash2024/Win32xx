@@ -3,7 +3,7 @@
 :: each Visual Studio project in Tutorials
 
 REM: Change the directory to the parent
-pushd ..\..\Tutorials
+pushd ..\Tutorials
 
 
 ::Remove directories

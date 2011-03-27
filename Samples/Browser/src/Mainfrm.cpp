@@ -371,11 +371,11 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-		str << W2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << CLoadString(IDW_MAIN);
+		str << W2T(pDispParams->rgvarg[0].bstrVal) << _T(" - ") << LoadString(IDW_MAIN);
 		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
-		str << CLoadString(IDW_MAIN);
+		str << LoadString(IDW_MAIN);
 
 	SetWindowText(str.str().c_str());
 }

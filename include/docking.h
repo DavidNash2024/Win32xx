@@ -768,7 +768,7 @@ namespace Win32xx
 			// Display the caption
 			int cx = (m_pDock->GetDockStyle() & DS_NO_CLOSE)? 0 : GetSystemMetrics(SM_CXSMICON);
 			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
-			dcMem.DrawText(m_tsCaption.c_str(), -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			dcMem.DrawText(m_tsCaption, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
 			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))

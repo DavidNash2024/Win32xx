@@ -504,9 +504,11 @@ namespace Win32xx
 
 		// Create and Select Palettes
 		void AttachPalette(HPALETTE hPalette);
-		void CreatePalette(LPLOGPALETTE lpLogPalette);
-		void CreateHalftonePalette();
+		void CreatePalette(LPLOGPALETTE lpLogPalette);	
 		HPALETTE DetachPalette();
+#ifndef _WIN32_WCE
+		void CreateHalftonePalette();
+#endif
 			
 		// Create and Select Pens
 		void AttachPen (HPEN hPen);
@@ -2666,16 +2668,6 @@ namespace Win32xx
 		m_pData->hPaletteOld = (HPALETTE)::SelectObject(m_pData->hDC, m_pData->Palette);
 	}
 
-	inline void CDC::CreateHalftonePalette()
-	// Creates a halftone palette and selects it into the device context. 
-	{
-		assert(m_pData->hDC);
-		RemoveCurrentPalette();
-
-		m_pData->Palette.CreateHalftonePalette(m_pData->hDC);
-		m_pData->hPaletteOld = (HPALETTE)::SelectObject(m_pData->hDC, m_pData->Palette);
-	}
-
 	inline HPALETTE CDC::DetachPalette()
 	// Use this to detach the palette from the device context.
 	{
@@ -2692,6 +2684,18 @@ namespace Win32xx
 		m_pData->hPaletteOld = NULL;
 		return hPalette;
 	}
+
+#ifndef _WIN32_WCE
+	inline void CDC::CreateHalftonePalette()
+	// Creates a halftone palette and selects it into the device context. 
+	{
+		assert(m_pData->hDC);
+		RemoveCurrentPalette();
+
+		m_pData->Palette.CreateHalftonePalette(m_pData->hDC);
+		m_pData->hPaletteOld = (HPALETTE)::SelectObject(m_pData->hDC, m_pData->Palette);
+	}
+#endif
 
 
 	// Pen functions
