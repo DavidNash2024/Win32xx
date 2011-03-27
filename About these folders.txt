@@ -1,14 +1,17 @@
 The contents of the folders within Win32++
 ==========================================
-help             The help for Win32++
-include          The Win32++ library
-new projects     A set of projects to be used in your new projects 
-output           A directory which contains the output of some tools
-tools            A set of useful batch files for Win32++
+help             Contains the documentation of Win32++.
+include          Contains the set of files that make up the Win32++ library.
+new projects     A set of projects to be used in your new projects. 
+output           A directory which contains the output of some tools.
+Samples          A set of sample projects that demonstrate the various features of Win32++.
+tools            A set of useful batch files for Win32++.
+Tutorials        The code for the tutorials described in the Win32++ documentation.
+WinCE Samples    A set of sample projects that demonstrate using Win32++ on WinCE.
 
 
-About the Win32++ files
-=======================
+About the Win32++ header files
+==============================
 The "include" folder contains the files that would be included in a Win32++ 
 project. In this folder, the Win32++ library files are provided purely as a 
 set of header files. There are no source files, as all the source code is 
