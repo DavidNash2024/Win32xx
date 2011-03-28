@@ -43,7 +43,7 @@ CSimpleMDIChild::CSimpleMDIChild()
 	SetView(m_View);
 	
 	// Set the menu for this MDI child
-	SetChildMenu(_T("MdiMenuView"));
+	SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), NULL);
 }
 
 CSimpleMDIChild::~CSimpleMDIChild()

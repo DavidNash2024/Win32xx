@@ -35,7 +35,9 @@ New Features and Enhancements
 * Scribble Tutorial now demonstrates the use of command line arguments
 * Added the following set of gdi classes: CBitmap, CBrush, CFont, CPalette, 
    CPen and CRgn. These work in cooperation with the existing CDC class.
-* Extended the CSize, CPoint and CRect classes   
+* Extended the CSize, CPoint and CRect classes
+* Extended CMDIFrame and CMDIChild. CMDIChild::SetHandles is now used to set
+   the MDI child's menu and accelerator table.   
 
 Changes in detail
 -----------------
@@ -229,7 +231,9 @@ Incompatibilities with previous versions
    The SetFixedWidth and SetOwnerDraw functions can be used to change these
    styles.
 * Users of Borland's C++ compiler version 5.5 will need to install the 
-   compiler's service pack 2 for stringsteam support.  
+   compiler's service pack 2 for stringsteam support.
+* MDI Children use SetHandles instead of SetChildMenu to set the menu. SetHandles
+   alse sets the MDI child's accelerator table (if any).   
 
 Version 7.0.2
 =============

@@ -300,7 +300,7 @@ namespace Win32xx
 	inline void CMDIFrame::MDICascade(int nType /* = 0*/) const
 	{
 		// Possible values for nType are:
-		// MDITILE_SKIPDISABLED		Prevents disabled MDI child windows from being cascaded.
+		// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being cascaded.
 		
 		assert(::IsWindow(m_hWnd));
 		GetView()->SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
@@ -574,9 +574,10 @@ namespace Win32xx
 	//
 	inline CMDIChild::CMDIChild() : m_pView(NULL), m_hChildMenu(NULL)
 	{
-		// Set the MDI Child's menu in the constructor, like this ...
-
-		// SetChildMenu(_T("MdiMenuView"));
+		// Set the MDI Child's menu and accelerator in the constructor, like this ...
+		//   HMENU hChildMenu = LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView"));
+		//   HACCEL hChildAccel = LoadAccelerators(GetApp()->GetResourceHandle(), _T("MDIAccelView"));
+		//   SetHandles(hChildMenu, hChildAccel);
 	}
 
 	inline CMDIChild::~CMDIChild()
