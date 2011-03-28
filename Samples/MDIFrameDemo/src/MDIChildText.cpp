@@ -7,7 +7,7 @@
 #include "resource.h"
 
 
-CViewText::CViewText() : m_hFont(NULL)
+CViewText::CViewText()
 {
 	m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hRichEdit)
@@ -20,19 +20,18 @@ CViewText::~CViewText()
 {
 	// Cleanup
 	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
-	if (m_hFont) ::DeleteObject(m_hFont);
 }
 
 void CViewText::OnCreate()
 {
 	//Set font
-	if (!m_hFont)
+	if (!m_Font)
 	{
-		m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+		m_Font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 	}
 	
-	SendMessage(WM_SETFONT, (WPARAM)m_hFont, 0L);
+	SendMessage(WM_SETFONT, (WPARAM)m_Font.GetFont(), 0L);
 }
 
 void CViewText::PreCreate(CREATESTRUCT &cs)
@@ -45,7 +44,9 @@ void CViewText::PreCreate(CREATESTRUCT &cs)
 
 CMDIChildText::CMDIChildText()
 {
-	SetChildMenu(_T("MdiMenuText"));
+	HINSTANCE hResource = GetApp()->GetResourceHandle();
+	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuText"));
+	SetHandles(hChildMenu, NULL);
 	SetView(m_TextView);
 }
 
@@ -60,7 +61,7 @@ void CMDIChildText::OnCreate()
 
 void CMDIChildText::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, _T("Text Window"));
+	SetWindowText(_T("Text Window"));
 	SetIconLarge(IDI_TEXT);
 	SetIconSmall(IDI_TEXT);
 }

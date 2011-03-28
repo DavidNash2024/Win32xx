@@ -15,8 +15,8 @@ public:
 	virtual void PreCreate(CREATESTRUCT &cs);
 
 private:
-	HFONT m_hFont;
-	HMODULE   m_hRichEdit;
+	CFont	m_Font;
+	HMODULE m_hRichEdit;
 };
 
 

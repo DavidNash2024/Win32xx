@@ -19,7 +19,9 @@ void CViewMax::OnPaint(CDC& dc)
 // CMDIChildMax definitions
 CMDIChildMax::CMDIChildMax()
 {
-	SetChildMenu(_T("MdiMenuMax"));
+	HINSTANCE hResource = GetApp()->GetResourceHandle();
+	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuMax"));
+	SetHandles(hChildMenu, NULL);
 	SetView(m_MaxView);
 }
 

@@ -230,8 +230,9 @@ namespace Win32xx
 		virtual CToolBar& GetToolBar() const		{ return (CToolBar&)m_ToolBar; }
 
 		// These functions aren't virtual, and shouldn't be overridden
+		HACCEL GetFrameAccel() const			{ return m_hAccel; }
 		HMENU GetFrameMenu() const				{ return m_hMenu; }
-		std::vector<tString> GetMRUEntries()	{ return m_vMRUEntries; }
+		std::vector<tString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		tString GetRegistryKeyName() const		{ return m_tsKeyName; }
 		CWnd* GetView() const					{ return m_pView; }
 		tString GetMRUEntry(UINT nIndex);
@@ -323,6 +324,7 @@ namespace Win32xx
 		CStatusBar m_StatusBar;				// CStatusBar object
 		CToolBar m_ToolBar;					// CToolBar object
 		HMENU m_hMenu;						// handle to the frame menu
+		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
@@ -2073,7 +2075,8 @@ namespace Win32xx
 		SetIconSmall(IDW_MAIN);
 
 		// Set the keyboard accelerators
-		GetApp()->SetAccelerators(IDW_MAIN, this);
+		m_hAccel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		GetApp()->SetAccelerators(m_hAccel, this);
 
 		// Set the Caption
 		SetWindowText(LoadString(IDW_MAIN));
@@ -2122,7 +2125,7 @@ namespace Win32xx
 
 		// Start timer for Status updates
 		if (m_bShowIndicatorStatus || m_bShowMenuStatus)
-			::SetTimer(m_hWnd, ID_STATUS_TIMER, 200, NULL);
+			SetTimer(ID_STATUS_TIMER, 200, NULL);
 
 		// Reposition the child windows
 		RecalcLayout();
@@ -2130,8 +2133,8 @@ namespace Win32xx
 
 	inline void CFrame::OnDestroy()
 	{
-		::SetMenu(m_hWnd, NULL);
-		::KillTimer(m_hWnd, ID_STATUS_TIMER);
+		SetMenu(NULL);
+		KillTimer(ID_STATUS_TIMER);
 		::PostQuitMessage(0);	// Terminates the application
 	}
 

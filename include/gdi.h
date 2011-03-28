@@ -155,6 +155,7 @@ namespace Win32xx
 
 		void Attach( HBITMAP hBitmap );
 		HBITMAP Detach ();
+		HBITMAP GetBitmap () const;
 
 		// Create and load methods
 		HBITMAP LoadBitmap (LPCTSTR lpstr);
@@ -166,7 +167,7 @@ namespace Win32xx
 		void CreateCompatibleBitmap (HDC hDC, int nWidth, int nHeight);
 
 		// Attributes
-		BITMAP GetBitmap () const;
+		BITMAP GetBitmapData () const;
 		void CreateDIBSection (HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset);
 
 #ifndef _WIN32_WCE
@@ -210,6 +211,8 @@ namespace Win32xx
 
 		void Attach (HBRUSH hBrush);
 		HBRUSH Detach ();
+		HBRUSH GetBrush () const;
+
 		void CreateSolidBrush (COLORREF crColor);
 		void CreatePatternBrush (HBITMAP hBitmap);
 		void CreateDIBPatternBrushPt (LPCVOID lpPackedDIB, UINT nUsage);
@@ -248,6 +251,7 @@ namespace Win32xx
 
 		void Attach (HFONT hFont);
 		HFONT Detach ();
+		HFONT GetFont () const;
 
 		// Create methods
 		void CreateFontIndirect (const LOGFONT* lpLogFont);
@@ -291,6 +295,7 @@ namespace Win32xx
 
 		void Attach (HPALETTE hPalette);
 		HPALETTE Detach ();
+		HPALETTE GetPalette () const;
 
 		// Create methods
 		void CreatePalette (LPLOGPALETTE lpLogPalette);
@@ -344,6 +349,7 @@ namespace Win32xx
 
 		void Attach (HPEN hPen);
 		HPEN Detach ();
+		HPEN GetPen () const;
 
 		void CreatePen (int nPenStyle, int nWidth, COLORREF crColor);
 		void CreatePenIndirect (LPLOGPEN lpLogPen);
@@ -382,6 +388,7 @@ namespace Win32xx
 
 		void Attach (HRGN hRgn);
 		HRGN Detach ();
+		HRGN GetRgn () const;
 
 		// Create methods
 		void CreateRectRgn (int x1, int y1, int x2, int y2);
@@ -814,6 +821,7 @@ namespace Win32xx
 	// Note: A copy of a CBitmap is a clone of the original.
 	//       Both objects manipulate the one HBITMAP.	
 	{
+		assert(m_pData);
 		m_pData->hBitmap = rhs.m_pData->hBitmap;
 		m_pData->Count = rhs.m_pData->Count;
 
@@ -822,11 +830,13 @@ namespace Win32xx
 
 	inline CBitmap::operator HBITMAP () const
 	{
+		assert(m_pData);
 		return m_pData->hBitmap;
 	}
 
 	inline void CBitmap::operator = (HBITMAP hBitmap)
 	{
+		assert(m_pData);
 		assert (m_pData->hBitmap == NULL);
 		m_pData->hBitmap = hBitmap;
 	}
@@ -855,6 +865,7 @@ namespace Win32xx
 	// Attaches a HBITMAP to the CBitmap object.
 	// The HBITMAP will be automatically deleted when the destructor is called unless it is detached.
 	{
+		assert(m_pData);
 		if (m_pData->hBitmap != NULL && m_pData->hBitmap != hBitmap)
 			::DeleteObject(m_pData->hBitmap);
 		m_pData->hBitmap = hBitmap;
@@ -863,10 +874,17 @@ namespace Win32xx
 	inline HBITMAP CBitmap::Detach ()
 	// Detaches a HBITMAP from the CBitmap object.
 	{
+		assert(m_pData);
 		assert(m_pData->hBitmap);
 		HBITMAP hBitmap = m_pData->hBitmap;
 		m_pData->hBitmap = NULL;
 		return hBitmap;
+	}
+
+	inline HBITMAP CBitmap::GetBitmap () const
+	{
+		assert(m_pData);
+		return m_pData->hBitmap;
 	}
 
 	inline HBITMAP CBitmap::LoadBitmap (int nID)
@@ -879,6 +897,7 @@ namespace Win32xx
 	// Loads a bitmap from a resource using the resource string.
 	{
 		assert(GetApp());
+		assert(m_pData);
 		if (m_pData->hBitmap != NULL)
 			::DeleteObject(m_pData->hBitmap);
 
@@ -899,6 +918,7 @@ namespace Win32xx
 	// Loads a bitmap from a resource using the resource string.	
 	{
 		assert(GetApp());
+		assert(m_pData);
 		if (m_pData->hBitmap != NULL)
 			::DeleteObject(m_pData->hBitmap);
 
@@ -917,6 +937,7 @@ namespace Win32xx
 	//  OBM_OLD_ZOOM, OBM_REDUCE, OBM_REDUCED, OBM_RESTORE, OBM_RESTORED, OBM_RGARROW, OBM_RGARROWD, OBM_RGARROWI 
 	//  OBM_SIZE, OBM_UPARROW, OBM_UPARROWD, OBM_UPARROWI, OBM_ZOOM, OBM_ZOOMD 
 	{
+		assert(m_pData);
 		if (m_pData->hBitmap != NULL)
 			::DeleteObject(m_pData->hBitmap);
 
@@ -929,6 +950,7 @@ namespace Win32xx
 		// Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
 		{			
 			assert(GetApp());
+			assert(m_pData);
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
@@ -943,6 +965,7 @@ namespace Win32xx
 		inline void CBitmap::CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits)
 		// Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).	
 		{
+			assert(m_pData);
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
@@ -954,6 +977,7 @@ namespace Win32xx
 		inline void CBitmap::CreateBitmapIndirect (LPBITMAP lpBitmap)
 		// Creates a bitmap with the width, height, and color format specified in the BITMAP structure.	
 		{
+			assert(m_pData);
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
@@ -965,6 +989,7 @@ namespace Win32xx
 		inline void CBitmap::CreateCompatibleBitmap (HDC hDC, int nWidth, int nHeight)
 		// Creates a bitmap compatible with the device that is associated with the specified device context.
 		{
+			assert(m_pData);
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
@@ -973,9 +998,10 @@ namespace Win32xx
 		}
 
 		// Attributes
-		inline BITMAP CBitmap::GetBitmap () const
+		inline BITMAP CBitmap::GetBitmapData () const
 		// Retrieves the BITMAP structure
 		{
+			assert(m_pData);
 			assert(m_pData->hBitmap != NULL);
 			BITMAP bmp = {0};
 			::GetObject(m_pData->hBitmap, sizeof(BITMAP), &bmp);
@@ -987,6 +1013,7 @@ namespace Win32xx
 		// Retrieves the dimensions of a compatible bitmap. 
 		// The retrieved dimensions must have been set by the SetBitmapDimensionEx function.	
 		{
+			assert(m_pData);
 			assert(m_pData->hBitmap != NULL);
 			CSize Size;
 			::GetBitmapDimensionEx(m_pData->hBitmap, &Size);
@@ -997,6 +1024,7 @@ namespace Win32xx
 		// The SetBitmapDimensionEx function assigns preferred dimensions to a bitmap. 
 		// These dimensions can be used by applications; however, they are not used by the system.		
 		{
+			assert(m_pData);
 			assert(m_pData->hBitmap != NULL);
 			CSize Size;
 			::SetBitmapDimensionEx(m_pData->hBitmap, nWidth, nHeight, Size);
@@ -1007,6 +1035,7 @@ namespace Win32xx
 		inline HBITMAP CBitmap::CreateDIBitmap (HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 		// Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.	
 		{
+			assert(m_pData);
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
@@ -1020,6 +1049,7 @@ namespace Win32xx
 		// Creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values. 
 		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.		
 		{
+			assert(m_pData);
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
@@ -1031,6 +1061,7 @@ namespace Win32xx
 		inline int CBitmap::GetDIBits (HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const
 		// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
 		{
+			assert(m_pData);
 			assert(m_pData->hBitmap != NULL);
 			return ::GetDIBits(hDC, m_pData->hBitmap, uStartScan, cScanLines,  lpvBits, lpbmi, uColorUse);
 		}
@@ -1038,6 +1069,7 @@ namespace Win32xx
 		inline int CBitmap::SetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 		// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.	
 		{
+			assert(m_pData);
 			assert(m_pData->hBitmap != NULL);
 			return ::SetDIBits(hDC, m_pData->hBitmap, uStartScan, cScanLines, lpvBits, lpbmi, uColorUse);
 		}
@@ -1045,6 +1077,7 @@ namespace Win32xx
 
 		inline void CBitmap::Release()
 		{
+			assert(m_pData);
 			BOOL bSucceeded = TRUE;
 
 			if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -1053,6 +1086,7 @@ namespace Win32xx
 					bSucceeded = ::DeleteObject(m_pData->hBitmap);
 
 				delete m_pData;
+				m_pData = 0;
 			}
 
 			assert(bSucceeded);
@@ -1078,6 +1112,7 @@ namespace Win32xx
 
 	inline CBrush::CBrush (COLORREF crColor)
 	{
+		assert(m_pData);
 		m_pData->hBrush = ::CreateSolidBrush (crColor);
 		assert (m_pData->hBrush);
 	}
@@ -1086,6 +1121,7 @@ namespace Win32xx
 	// Note: A copy of a CBrush is a clone of the original.
 	//       Both objects manipulate the one HBRUSH.
 	{
+		assert(m_pData);
 		m_pData->hBrush = rhs.m_pData->hBrush;
 		m_pData->Count = rhs.m_pData->Count;
 
@@ -1094,6 +1130,7 @@ namespace Win32xx
 
 	inline CBrush::operator HBRUSH () const
 	{
+		assert(m_pData);
 		return m_pData->hBrush;
 	}
 
@@ -1121,6 +1158,7 @@ namespace Win32xx
 	// Attaches a HBRUSH to the CBrush object.
 	// The HBRUSH will be automatically deleted when the destructor is called unless it is detached.	
 	{
+		assert(m_pData);
 		if (m_pData->hBrush != NULL && m_pData->hBrush != hBrush)
 			::DeleteObject(m_pData->hBrush);
 		m_pData->hBrush = hBrush;
@@ -1129,14 +1167,22 @@ namespace Win32xx
 	inline HBRUSH CBrush::Detach ()
 	// Detaches a HBRUSH from the CBrush object
 	{
+		assert(m_pData);
 		HBRUSH hBrush = m_pData->hBrush;
 		m_pData->hBrush = NULL;
 		return hBrush;
 	}
 
+	inline HBRUSH CBrush::GetBrush () const
+	{
+		assert(m_pData);
+		return m_pData->hBrush;
+	}
+
 	inline void CBrush::CreateSolidBrush (COLORREF crColor)
 	// Creates a logical brush that has the specified solid color.	
 	{
+		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
@@ -1148,6 +1194,7 @@ namespace Win32xx
 	inline void CBrush::CreateHatchBrush (int nIndex, COLORREF crColor)
 	// Creates a logical brush that has the specified hatch pattern and color.
 	{
+		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
@@ -1158,6 +1205,7 @@ namespace Win32xx
 	inline void CBrush::CreateBrushIndirect (LPLOGBRUSH lpLogBrush)
 	// Creates a logical brush from style, color, and pattern specified in the LOGPRUSH struct.
 	{
+		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
@@ -1170,6 +1218,7 @@ namespace Win32xx
 	// Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap, 
 	// which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.	
 	{
+		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
@@ -1180,6 +1229,7 @@ namespace Win32xx
 	inline void CBrush::CreateDIBPatternBrushPt (LPCVOID lpPackedDIB, UINT nUsage)
 	// Creates a logical brush that has the pattern specified by the device-independent bitmap (DIB).	
 	{
+		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
@@ -1190,6 +1240,7 @@ namespace Win32xx
 	inline LOGBRUSH CBrush::GetLogBrush () const
 	// Retrieves the LOGBRUSH structure that defines the style, color, and pattern of a physical brush.	
 	{
+		assert(m_pData);
 		assert(m_pData->hBrush != NULL);
 		LOGBRUSH LogBrush = {0};
 		::GetObject (m_pData->hBrush, sizeof(LOGBRUSH), &LogBrush);
@@ -1198,6 +1249,7 @@ namespace Win32xx
 
 	inline void CBrush::Release()
 	{
+		assert(m_pData);
 		BOOL bSucceeded = TRUE;
 
 		if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -1206,6 +1258,7 @@ namespace Win32xx
 				bSucceeded = ::DeleteObject(m_pData->hBrush);
 
 			delete m_pData;
+			m_pData = 0;
 		}
 
 		assert(bSucceeded);
@@ -1233,6 +1286,7 @@ namespace Win32xx
 	// Note: A copy of a CFont is a clone of the original.
 	//       Both objects manipulate the one HFONT.	
 	{
+		assert(m_pData);
 		m_pData->hFont = rhs.m_pData->hFont;
 		m_pData->Count = rhs.m_pData->Count;
 
@@ -1241,12 +1295,14 @@ namespace Win32xx
 
 	inline void CFont::operator = (HFONT hFont)
 	{
+		assert(m_pData);
 		assert (m_pData->hFont == NULL);
 		m_pData->hFont = hFont;
 	}
 
 	inline CFont::operator HFONT () const
 	{
+		assert(m_pData);
 		return m_pData->hFont;
 	}
 
@@ -1273,6 +1329,7 @@ namespace Win32xx
 	// Attaches a HFONT to the CFont object.
 	// The HFONT will be automatically deleted when the destructor is called unless it is detached.	
 	{
+		assert(m_pData);
 		if (m_pData->hFont != NULL && m_pData->hFont != hFont)
 			::DeleteObject(m_pData->hFont);
 		m_pData->hFont = hFont;
@@ -1281,14 +1338,22 @@ namespace Win32xx
 	inline HFONT CFont::Detach ()
 	// Detaches a HFONT from the CFont object	
 	{
+		assert(m_pData);
 		HFONT hFont = m_pData->hFont;
 		m_pData->hFont = NULL;
 		return hFont;
 	}
 
+	inline HFONT CFont::GetFont () const
+	{
+		assert(m_pData);
+		return m_pData->hFont;
+	}
+
 	inline void CFont::CreateFontIndirect (const LOGFONT* lpLogFont)
 	// Creates a logical font that has the specified characteristics.	
 	{
+		assert(m_pData);
 		if (m_pData->hFont != NULL)
 			::DeleteObject(m_pData->hFont);
 		
@@ -1356,6 +1421,7 @@ namespace Win32xx
 			LPCTSTR lpszFacename)
 	// Creates a logical font with the specified characteristics.
 	{
+		assert(m_pData);
 		if (m_pData->hFont != NULL)
 			::DeleteObject(m_pData->hFont);
 
@@ -1370,6 +1436,7 @@ namespace Win32xx
 	inline LOGFONT CFont::GetLogFont () const
 	// Retrieves the Logfont structure that contains font attributes	
 	{
+		assert(m_pData);
 		assert(m_pData->hFont != NULL);
 		LOGFONT LogFont = {0};
 		::GetObject (m_pData->hFont, sizeof(LOGFONT), &LogFont);
@@ -1378,6 +1445,7 @@ namespace Win32xx
 
 	inline void CFont::Release()
 	{
+		assert(m_pData);
 		BOOL bSucceeded = TRUE;
 
 		if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -1386,6 +1454,7 @@ namespace Win32xx
 				bSucceeded = ::DeleteObject(m_pData->hFont);
 
 			delete m_pData;
+			m_pData = 0;
 		}
 
 		assert(bSucceeded);
@@ -1413,6 +1482,7 @@ namespace Win32xx
 	// Note: A copy of a CPalette is a clone of the original.
 	//       Both objects manipulate the one HPalette.	
 	{
+		assert(m_pData);
 		m_pData->hPalette = rhs.m_pData->hPalette;
 		m_pData->Count = rhs.m_pData->Count;
 
@@ -1421,11 +1491,13 @@ namespace Win32xx
 
 	inline CPalette::operator HPALETTE () const
 	{
+		assert(m_pData);
 		return m_pData->hPalette;
 	}
 
 	inline void CPalette::operator = (HPALETTE hPalette)
 	{
+		assert(m_pData);
 		assert (m_pData->hPalette == NULL);
 		m_pData->hPalette = hPalette;
 	}
@@ -1454,6 +1526,7 @@ namespace Win32xx
 	// Attaches a HPALETTE to the CPalette object.
 	// The HPALETTE will be automatically deleted when the destructor is called unless it is detached.
 	{
+		assert(m_pData);
 		if (m_pData->hPalette != NULL && m_pData->hPalette != hPalette)
 			::DeleteObject(m_pData->hPalette);
 		m_pData->hPalette = hPalette;
@@ -1462,14 +1535,22 @@ namespace Win32xx
 	inline HPALETTE CPalette::Detach ()
 	// Detaches a HPALETTE from the CPalette object	
 	{
+		assert(m_pData);
 		HPALETTE hPalette = m_pData->hPalette;
 		m_pData->hPalette = NULL;
 		return hPalette;
 	}
 
+	inline HPALETTE CPalette::GetPalette () const
+	{
+		assert(m_pData);
+		return m_pData->hPalette;
+	}
+
 	inline void CPalette::CreatePalette (LPLOGPALETTE lpLogPalette)
 	// Creates a logical palette from the information in the specified LOGPALETTE structure.	
 	{
+		assert(m_pData);
 		if (m_pData->hPalette != NULL)
 			::DeleteObject(m_pData->hPalette);
 
@@ -1481,6 +1562,7 @@ namespace Win32xx
 	inline void CPalette::CreateHalftonePalette (HDC hDC)
 	// Creates a halftone palette for the specified device context (DC).	
 	{
+		assert(m_pData);
 		assert(hDC != NULL);
 		if (m_pData->hPalette != NULL)
 			::DeleteObject(m_pData->hPalette);
@@ -1493,6 +1575,7 @@ namespace Win32xx
 	inline int CPalette::GetEntryCount () const
 	// Retrieve the number of entries in the palette.	
 	{
+		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
 		WORD nEntries = 0;
 		::GetObject (m_pData->hPalette, sizeof(WORD), &nEntries);
@@ -1502,6 +1585,7 @@ namespace Win32xx
 	inline UINT CPalette::GetPaletteEntries (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	// Retrieves a specified range of palette entries from the palette.	
 	{
+		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
 		return ::GetPaletteEntries (m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
@@ -1509,6 +1593,7 @@ namespace Win32xx
 	inline UINT CPalette::SetPaletteEntries (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
 	// Sets RGB (red, green, blue) color values and flags in a range of entries in the palette.	
 	{
+		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
 		return ::SetPaletteEntries (m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
@@ -1517,6 +1602,7 @@ namespace Win32xx
 	inline void CPalette::AnimatePalette (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
 	// Replaces entries in the palette.	
 	{
+		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
 		::AnimatePalette (m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
@@ -1524,6 +1610,7 @@ namespace Win32xx
 	inline BOOL CPalette::ResizePalette (UINT nNumEntries)
 	//  Increases or decreases the size of the palette based on the specified value.	
 	{
+		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
 		return ::ResizePalette (m_pData->hPalette, nNumEntries);
 	}
@@ -1532,12 +1619,14 @@ namespace Win32xx
 	inline UINT CPalette::GetNearestPaletteIndex (COLORREF crColor) const
 	// Retrieves the index for the entry in the palette most closely matching a specified color value.	
 	{
+		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
 		return ::GetNearestPaletteIndex (m_pData->hPalette, crColor);
 	}
 
 	inline void CPalette::Release()
 	{
+		assert(m_pData);
 		BOOL bSucceeded = TRUE;
 
 		if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -1546,6 +1635,7 @@ namespace Win32xx
 				bSucceeded = ::DeleteObject(m_pData->hPalette);
 
 			delete m_pData;
+			m_pData = 0;
 		}
 
 		assert(bSucceeded);
@@ -1584,6 +1674,7 @@ namespace Win32xx
 	// Note: A copy of a CPen is a clone of the original.
 	//       Both objects manipulate the one HPEN.	
 	{
+		assert(m_pData);
 		m_pData->hPen = rhs.m_pData->hPen;
 		m_pData->Count = rhs.m_pData->Count;
 
@@ -1592,12 +1683,14 @@ namespace Win32xx
 
 	inline void CPen::operator = (HPEN hPen)
 	{
+		assert(m_pData);
 		assert (m_pData->hPen == NULL);
 		m_pData->hPen = hPen;
 	}
 
 	inline CPen::operator HPEN () const
 	{
+		assert(m_pData);
 		return m_pData->hPen;
 	}
 
@@ -1625,6 +1718,7 @@ namespace Win32xx
 	// Attaches a HPEN to the CPen object.
 	// The HPEN will be automatically deleted when the destructor is called unless it is detached.
 	{
+		assert(m_pData);
 		if (m_pData->hPen != NULL && m_pData->hPen != hPen)
 			::DeleteObject(m_pData->hPen);
 		m_pData->hPen = hPen;
@@ -1633,14 +1727,22 @@ namespace Win32xx
 	inline HPEN CPen::Detach ()
 	// Detaches a HPEN from the CPen object	
 	{
+		assert(m_pData);
 		HPEN hPen = m_pData->hPen;
 		m_pData->hPen = NULL;
 		return hPen;
 	}
 
+	inline HPEN CPen::GetPen () const
+	{
+		assert(m_pData);
+		return m_pData->hPen;
+	}
+
 	inline void CPen::CreatePen (int nPenStyle, int nWidth, COLORREF crColor)
 	// Creates a logical pen that has the specified style, width, and color.	
 	{
+		assert(m_pData);
 		if (m_pData->hPen != NULL)
 			::DeleteObject(m_pData->hPen);
 
@@ -1651,6 +1753,7 @@ namespace Win32xx
 	inline void CPen::CreatePenIndirect (LPLOGPEN lpLogPen)
 	// Creates a logical cosmetic pen that has the style, width, and color specified in a structure.
 	{
+		assert(m_pData);
 		if (m_pData->hPen != NULL)
 			::DeleteObject(m_pData->hPen);
 
@@ -1661,6 +1764,7 @@ namespace Win32xx
 	inline LOGPEN CPen::GetLogPen () const
 	{
 		// Retrieves the LOGPEN struct that specifies the pen's style, width, and color.
+		assert(m_pData);
 		assert(m_pData->hPen != NULL);
 
 		LOGPEN LogPen = {0};
@@ -1672,6 +1776,7 @@ namespace Win32xx
 	inline void CPen::ExtCreatePen (int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
 	// Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
 	{
+		assert(m_pData);
 		if (m_pData->hPen != NULL)
 			::DeleteObject(m_pData->hPen);
 
@@ -1682,6 +1787,7 @@ namespace Win32xx
 	inline EXTLOGPEN CPen::GetExtLogPen () const
 	// Retrieves the EXTLOGPEN struct that specifies the pen's style, width, color and brush attributes.	
 	{
+		assert(m_pData);
 		assert(m_pData->hPen != NULL);
 
 		EXTLOGPEN ExLogPen = {0};
@@ -1692,6 +1798,7 @@ namespace Win32xx
 
 	inline void CPen::Release()
 	{
+		assert(m_pData);
 		BOOL bSucceeded = TRUE;
 
 		if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -1700,6 +1807,7 @@ namespace Win32xx
 				bSucceeded = ::DeleteObject(m_pData->hPen);
 
 			delete m_pData;
+			m_pData = 0;
 		}
 
 		assert(bSucceeded);
@@ -1735,11 +1843,13 @@ namespace Win32xx
 
 	inline CRgn::operator HRGN() const
 	{
+		assert(m_pData);
 		return m_pData->hRgn;
 	}
 
 	inline void CRgn::operator = (HRGN hRgn)
 	{
+		assert(m_pData);
 		assert (m_pData->hRgn == NULL);
 		m_pData->hRgn = hRgn;
 	}
@@ -1768,6 +1878,7 @@ namespace Win32xx
 	// Attaches a HRGN to the CRgn object.
 	// The HRGN will be automatically deleted when the destructor is called unless it is detached.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL && m_pData->hRgn != hRgn)
 			::DeleteObject(m_pData->hRgn);
 		m_pData->hRgn = hRgn;
@@ -1776,14 +1887,22 @@ namespace Win32xx
 	inline HRGN CRgn::Detach ()
 	// Detaches a HRGN from the CRgn object
 	{
+		assert(m_pData);
 		HRGN hRgn = m_pData->hRgn;
 		m_pData->hRgn = NULL;
 		return hRgn;
 	}
 
+	inline HRGN CRgn::GetRgn () const
+	{
+		assert(m_pData);
+		return m_pData->hRgn;
+	}
+
 	inline void CRgn::CreateRectRgn (int x1, int y1, int x2, int y2)
 	// Creates a rectangular region.
 	{	
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1794,6 +1913,7 @@ namespace Win32xx
 	inline void CRgn::CreateRectRgnIndirect (const RECT& rc)
 	// Creates a rectangular region.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1805,6 +1925,7 @@ namespace Win32xx
 	inline void CRgn::CreateEllipticRgn (int x1, int y1, int x2, int y2)
 	// Creates an elliptical region.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1815,6 +1936,7 @@ namespace Win32xx
 	inline void CRgn::CreateEllipticRgnIndirect (const RECT& rc)
 	// Creates an elliptical region.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1825,6 +1947,7 @@ namespace Win32xx
 	inline void CRgn::CreatePolygonRgn (LPPOINT lpPoints, int nCount, int nMode)
 	// Creates a polygonal region.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1835,6 +1958,7 @@ namespace Win32xx
 	inline void CRgn::CreatePolyPolygonRgn (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode)
 	// Creates a region consisting of a series of polygons. The polygons can overlap.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1845,6 +1969,7 @@ namespace Win32xx
 	inline void CRgn::CreateRoundRectRgn (int x1, int y1, int x2, int y2, int x3, int y3)
 	// Creates a rectangular region with rounded corners.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1856,6 +1981,7 @@ namespace Win32xx
 	// Creates a region from the path that is selected into the specified device context. 
 	// The resulting region uses device coordinates.	
 	{
+		assert(m_pData);
 		assert(hDC != NULL);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
@@ -1869,6 +1995,7 @@ namespace Win32xx
 	inline void CRgn::CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
 	// Creates a region from the specified region and transformation data.
 	{
+		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
@@ -1879,6 +2006,7 @@ namespace Win32xx
 	inline void CRgn::SetRectRgn (int x1, int y1, int x2, int y2)
 	// converts the region into a rectangular region with the specified coordinates.	
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		::SetRectRgn (m_pData->hRgn, x1, y1, x2, y2);
 	}
@@ -1886,6 +2014,7 @@ namespace Win32xx
 	inline void CRgn::SetRectRgn (const RECT& rc)
 	// converts the region into a rectangular region with the specified coordinates.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		::SetRectRgn (m_pData->hRgn, rc.left, rc.top, rc.right, rc.bottom);
 	}
@@ -1893,6 +2022,7 @@ namespace Win32xx
 	inline int CRgn::CombineRgn (HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode)
 	// Combines two sepcified regions and stores the result.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::CombineRgn (m_pData->hRgn, hRgnSrc1, hRgnSrc2, nCombineMode);
 	}
@@ -1900,6 +2030,7 @@ namespace Win32xx
 	inline int CRgn::CombineRgn (HRGN hRgnSrc, int nCombineMode)
 	// Combines the sepcified region with the current region.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::CombineRgn (m_pData->hRgn, m_pData->hRgn, hRgnSrc, nCombineMode);
 	}
@@ -1907,6 +2038,7 @@ namespace Win32xx
 	inline int CRgn::CopyRgn (HRGN hRgnSrc)
 	// Assigns the specified region to the current region.	
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn == NULL);
 		return ::CombineRgn (m_pData->hRgn, hRgnSrc, NULL, RGN_COPY);
 	}
@@ -1914,6 +2046,7 @@ namespace Win32xx
 	inline BOOL CRgn::EqualRgn (HRGN hRgn) const
 	// Checks the two specified regions to determine whether they are identical.	
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::EqualRgn (m_pData->hRgn, hRgn);
 	}
@@ -1921,6 +2054,7 @@ namespace Win32xx
 	inline int CRgn::OffsetRgn (int x, int y)
 	// Moves a region by the specified offsets.	
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::OffsetRgn (m_pData->hRgn, x, y);
 	}
@@ -1928,6 +2062,7 @@ namespace Win32xx
 	inline int CRgn::OffsetRgn (POINT& pt)
 	// Moves a region by the specified offsets.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::OffsetRgn (m_pData->hRgn, pt.x, pt.y);
 	}
@@ -1935,6 +2070,7 @@ namespace Win32xx
 	inline int CRgn::GetRgnBox (RECT& rc) const
 	// Retrieves the bounding rectangle of the specified region.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::GetRgnBox (m_pData->hRgn, &rc);
 	}
@@ -1942,6 +2078,7 @@ namespace Win32xx
 	inline int CRgn::GetRegionData (LPRGNDATA lpRgnData, int nDataSize) const
 	// Fills the specified buffer with data describing a region.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return (int)::GetRegionData (m_pData->hRgn, nDataSize, lpRgnData);
 	}
@@ -1949,6 +2086,7 @@ namespace Win32xx
 	inline BOOL CRgn::PtInRegion (int x, int y) const
 	// Determines whether the specified point is inside the specified region.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::PtInRegion (m_pData->hRgn, x, y);
 	}
@@ -1956,6 +2094,7 @@ namespace Win32xx
 	inline BOOL CRgn::PtInRegion (POINT& pt) const
 	// Determines whether the specified point is inside the specified region.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::PtInRegion (m_pData->hRgn, pt.x, pt.y);
 	}
@@ -1963,12 +2102,14 @@ namespace Win32xx
 	inline BOOL CRgn::RectInRegion (const RECT& rc) const
 	// Determines whether the specified rect is inside the specified region.
 	{
+		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
 		return ::RectInRegion (m_pData->hRgn, &rc);
 	}
 
 	inline void CRgn::Release()
 	{
+		assert(m_pData);
 		BOOL bSucceeded = TRUE;
 
 		if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -1977,6 +2118,7 @@ namespace Win32xx
 				bSucceeded = ::DeleteObject(m_pData->hRgn);
 
 			delete m_pData;
+			m_pData = 0;
 		}
 
 		assert(bSucceeded);

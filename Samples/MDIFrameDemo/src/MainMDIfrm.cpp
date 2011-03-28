@@ -88,24 +88,22 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();
 		UpdateCheckMarks();
-		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		break;
 	case IDW_VIEW_TOOLBAR:
 		OnViewToolBar();
 		UpdateCheckMarks();
-		::RedrawWindow(GetView()->GetHwnd(), NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		break;
 	case IDW_WINDOW_ARRANGE:
-		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
+		MDIIconArrange();
 		break;
 	case IDW_WINDOW_CASCADE:
-		::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0L, 0L) ;
+		MDICascade();
 		break;
 	case IDW_WINDOW_CLOSEALL:
 		RemoveAllMDIChildren();
 		break;
 	case IDW_WINDOW_TILE:
-		::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0L, 0L) ;
+		MDITile();
 		break;
 	default:    // Pass to active child...
 		{

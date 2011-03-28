@@ -39,7 +39,7 @@ LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             int Top    = (yTop < yBottom) ? yTop  : yBottom;
             int Right  = (xLeft > xRight) ? xLeft : xRight;
             int Bottom = (yTop > yBottom) ? yTop  : yBottom;
-            ::Rectangle (RectDC, Left, Top, Right, Bottom);
+			RectDC.Rectangle(Left, Top, Right, Bottom);
 		}
 		break;
 
@@ -61,7 +61,9 @@ LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CMDIChildRect definitions
 CMDIChildRect::CMDIChildRect()
 {
-	SetChildMenu(_T ("MdiMenuRect"));
+	HINSTANCE hResource = GetApp()->GetResourceHandle();
+	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuRect"));
+	SetHandles(hChildMenu, NULL);
 	SetView(m_RectView);
 }
 
@@ -71,7 +73,7 @@ CMDIChildRect::~CMDIChildRect()
 
 void CMDIChildRect::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, _T("Rectangle Window"));
+	SetWindowText(_T("Rectangle Window"));
 	SetIconLarge(IDI_RECT);
 	SetIconSmall(IDI_RECT);
 }

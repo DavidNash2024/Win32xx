@@ -90,7 +90,9 @@ LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CMDIChildTreeView functions
 CMDIChildTreeView::CMDIChildTreeView()
 {
-	SetChildMenu(_T("MdiMenuTree"));
+	HINSTANCE hResource = GetApp()->GetResourceHandle();
+	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuTree"));
+	SetHandles(hChildMenu, NULL);
 	SetView(m_TreeView);
 }
 
@@ -105,7 +107,7 @@ void CMDIChildTreeView::OnCreate()
 
 void CMDIChildTreeView::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, _T("Tree-View Window"));
+	SetWindowText(_T("Tree-View Window"));
 	SetIconLarge(IDI_CLASSES);
 	SetIconSmall(IDI_CLASSES);
 }

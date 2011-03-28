@@ -5,8 +5,10 @@
 // 1) Add Win32++'s include directory to the project's additional include directories for C/C++
 // 2) Add Win32++'s include directory to the project's additional include directories for Resources
 
-#include "Wincore.h"
+#include "wincore.h"
 
+
+// A class that inherits from CWnd. It is used to create the window.
 class CView : public CWnd
 {
 public:
@@ -37,6 +39,6 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     CView m_View;
     m_View.Create();
 
-    // Run the application
+    // Run the application's message loop
     return MyApp.Run();
 }

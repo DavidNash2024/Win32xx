@@ -311,7 +311,7 @@ namespace Win32xx
 		CDC* GetCDCFromMap(HDC hDC);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
-		void SetAccelerators(UINT nID, CWnd* pWndAccel);
+		void SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
 		void SetResourceHandle(HINSTANCE hResource);
 
 		// These are the functions you might wish to override
@@ -338,7 +338,7 @@ namespace Win32xx
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
-		HACCEL m_hAccelTable;			// handle to the accelerator table
+		HACCEL m_hAccel;				// handle to the accelerator table
 		CWnd* m_pWndAccel;				// handle to the window for accelerator keys
 	};
 
@@ -810,7 +810,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You must run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : m_Callback(NULL), m_hAccelTable(0), m_pWndAccel(0)
+	inline CWinApp::CWinApp() : m_Callback(NULL), m_hAccel(0), m_pWndAccel(0)
 	{
 		try
 		{
@@ -951,7 +951,7 @@ namespace Win32xx
 				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
 			{
 				// Process keyboard accelerators
-				if (m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccelTable, &Msg))
+				if (m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccel, &Msg))
 					Processed = TRUE;
 				else
 				{
@@ -1013,23 +1013,15 @@ namespace Win32xx
 		}
 	}
 
-	inline void CWinApp::SetAccelerators(UINT nID, CWnd* pWndAccel)
+	inline void CWinApp::SetAccelerators(HACCEL hAccel, CWnd* pWndAccel)
 	// nID is the resource ID of the accelerator table
 	// pWndAccel is the window pointer for translated messages
 	{
-		assert (nID);
+		assert (hAccel);
 		assert (pWndAccel);
 
-		if (m_hAccelTable)
-			::DestroyAcceleratorTable(m_hAccelTable);
-
 		m_pWndAccel = pWndAccel;
-
-		m_hAccelTable = ::LoadAccelerators(m_hResource, MAKEINTRESOURCE(nID));
-		if (!m_hAccelTable)
-			m_hAccelTable = ::LoadAccelerators(m_hInstance, MAKEINTRESOURCE(nID));
-		
-		assert (m_hAccelTable);
+		m_hAccel = hAccel;
 	}
 	
 	inline void CWinApp::SetCallback()

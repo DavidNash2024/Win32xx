@@ -84,7 +84,18 @@ Changes in detail
 - Added CDockContainer::SetActiveContainer
 - Added CDocker::Close
 - Added CDocker::SetCaptionHeight
+- Added CFrame::GetFrameAccel
 - Added CFrame::ShowMenu
+- Added CMDIChild::GetMDIFrame
+- Added CMDIChild::SetHandles
+- Added CMDIFrame::GetMDIClient
+- Added CMDIFrame::MDICascade
+- Added CMDIFrame::MDIIconArrange
+- Added CMDIFrame::MDIMaximize
+- Added CMDIFrame::MDINext
+- Added CMDIFrame::MDIPrev
+- Added CMDIFrame::MDIRestore
+- Added CMDIFrame::MDITile
 - Added CResizer::GetMaxRect
 - Added CResizer::GetMinRect
 - Added CResizer::HandleMessage
@@ -120,6 +131,7 @@ Changes in detail
 - Moved CWnd::LoadBitmap to LoadBitmap
 - Removed CDC::AttachClipRgn
 - Removed CDC::DetachClipRgn
+- Removed CMDIChild::SetChildMenu
 - Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
 - Renamed CDC::AttachClipRegion to CDC::AttachClipRgn

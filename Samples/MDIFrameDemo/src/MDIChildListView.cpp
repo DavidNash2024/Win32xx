@@ -23,10 +23,9 @@ void CViewList::OnInitialUpdate()
 {
 	// Set the image lists
 	m_himlSmall = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
+	CBitmap hbm = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
 	ImageList_AddMasked(m_himlSmall, hbm, RGB(255, 0, 255));
 	SetImageList(m_himlSmall, LVSIL_SMALL);
-	::DeleteObject(hbm);
 
 	// Set the report style
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -114,7 +113,9 @@ LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CMDIChildListView functions
 CMDIChildListView::CMDIChildListView()
 {
-	SetChildMenu(_T("MdiMenuList"));
+	HINSTANCE hResource = GetApp()->GetResourceHandle();
+	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuList"));
+	SetHandles(hChildMenu, NULL);
 	SetView(m_ListView);
 }
 
@@ -129,7 +130,7 @@ void CMDIChildListView::OnCreate()
 
 void CMDIChildListView::OnInitialUpdate()
 {
-	::SetWindowText(m_hWnd, _T("List-View Window"));
+	SetWindowText(_T("List-View Window"));
 	SetIconLarge(IDI_FILES);
 	SetIconSmall(IDI_FILES);
 }
