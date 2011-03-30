@@ -37,7 +37,7 @@ private:
 	void OnMouseMove(WPARAM wParam, LPARAM lParam);
 	void StorePoint(int x, int y, bool PenDown);
 
-	HBRUSH m_hBrush;
+	CBrush m_Brush;
 	std::vector<PlotPoint> m_points;	// Points of lines to draw
 	COLORREF m_PenColor;
 };

@@ -447,13 +447,12 @@ namespace Win32xx
 		return pt;
 	}
 
-	inline HBITMAP LoadBitmap (LPCTSTR lpstr)
+	inline HBITMAP LoadBitmap (LPCTSTR lpszName)
 	{
 		assert(GetApp());
-		HBITMAP hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
-		if (hBitmap == NULL)
-			hBitmap = ::LoadBitmap (GetApp()->GetInstanceHandle(), lpstr);
 
+		HBITMAP hBitmap = (HBITMAP)::LoadImage (GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		assert(hBitmap);
 		return hBitmap;
 	}
 

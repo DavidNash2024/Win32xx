@@ -158,7 +158,7 @@ namespace Win32xx
 		HBITMAP GetBitmap () const;
 
 		// Create and load methods
-		HBITMAP LoadBitmap (LPCTSTR lpstr);
+		HBITMAP LoadBitmap (LPCTSTR lpszName);
 		HBITMAP LoadBitmap (int nID);
 		HBITMAP LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
 		HBITMAP LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
@@ -471,7 +471,7 @@ namespace Win32xx
 		HBITMAP DetachBitmap ();
 		BITMAP GetBitmapInfo ();
 		void LoadBitmap (UINT nID);
-		void LoadBitmap (LPCTSTR lpstr);
+		void LoadBitmap (LPCTSTR lpszName);
 		void LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		void LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
 		void LoadOEMBitmap (UINT nIDBitmap); // for OBM_/OCR_/OIC
@@ -801,11 +801,11 @@ namespace Win32xx
 		m_pData->Count = 1L;
 	}
 
-	inline CBitmap::CBitmap (LPCTSTR lpstr)
+	inline CBitmap::CBitmap (LPCTSTR lpszName)
 	{
 		m_pData = new DataMembers;
 		m_pData->hBitmap = 0;
-		LoadBitmap(lpstr);
+		LoadBitmap(lpszName);
 		m_pData->Count = 1L;
 	}
 
@@ -893,7 +893,7 @@ namespace Win32xx
 		return LoadBitmap(MAKEINTRESOURCE(nID));
 	}
 
-	inline HBITMAP CBitmap::LoadBitmap (LPCTSTR lpstr)
+	inline HBITMAP CBitmap::LoadBitmap (LPCTSTR lpszName)
 	// Loads a bitmap from a resource using the resource string.
 	{
 		assert(GetApp());
@@ -901,9 +901,7 @@ namespace Win32xx
 		if (m_pData->hBitmap != NULL)
 			::DeleteObject(m_pData->hBitmap);
 
-		m_pData->hBitmap = ::LoadBitmap (GetApp()->GetResourceHandle(), lpstr);
-		if (m_pData->hBitmap == NULL)
-			m_pData->hBitmap = ::LoadBitmap (GetApp()->GetInstanceHandle(), lpstr);
+		m_pData->hBitmap = LoadImage(lpszName, 0, 0, LR_DEFAULTCOLOR);
 
 		return m_pData->hBitmap;
 	}
@@ -922,10 +920,8 @@ namespace Win32xx
 		if (m_pData->hBitmap != NULL)
 			::DeleteObject(m_pData->hBitmap);
 
-		m_pData->hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
-		if (m_pData->hBitmap == NULL)
-			m_pData->hBitmap = (HBITMAP)::LoadImage(GetApp()->GetInstanceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
-
+		m_pData->hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);	
+		assert(m_pData->hBitmap);
 		return m_pData->hBitmap;
 	}
 
@@ -955,9 +951,7 @@ namespace Win32xx
 				::DeleteObject(m_pData->hBitmap);
 
 			m_pData->hBitmap = ::CreateMappedBitmap (GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
-			if (m_pData->hBitmap == NULL)
-				m_pData->hBitmap = ::CreateMappedBitmap (GetApp()->GetInstanceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
-
+			assert(m_pData->hBitmap);
 			return m_pData->hBitmap;
 		}
 #endif // !_WIN32_WCE
@@ -2574,12 +2568,12 @@ namespace Win32xx
 		LoadBitmap(MAKEINTRESOURCE(nID));
 	}
 
-	inline void CDC::LoadBitmap (LPCTSTR lpstr)
+	inline void CDC::LoadBitmap (LPCTSTR lpszName)
 	// Loads a bitmap from the resource and selects it into the device context
 	{
 		assert(m_pData->hDC);
 		assert(GetApp());
-		m_pData->Bitmap.LoadBitmap (lpstr);
+		m_pData->Bitmap.LoadBitmap (lpszName);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 

@@ -39,7 +39,7 @@ void CMainFrame::OnFileNew()
 	tpm.rcExclude = rc;
 
 	// Load the popup menu
-	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_NEWMENU));
+	HMENU hTopMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDM_NEWMENU));
 	HMENU hPopupMenu = ::GetSubMenu(hTopMenu, 0);
 
 	// Start the popup menu

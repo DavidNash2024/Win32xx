@@ -1773,7 +1773,7 @@ namespace Win32xx
 			Dock(pDocker, dwDockStyle);
 
 		// Issue TRACE warnings for any missing resources
-		HMODULE hMod= GetApp()->GetInstanceHandle();
+		HMODULE hMod= GetApp()->GetResourceHandle();
 
 		if (!(dwDockStyle & DS_NO_RESIZE))
 		{
@@ -1833,7 +1833,7 @@ namespace Win32xx
 		pDocker->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		pDocker->SetRedraw(TRUE);
 		pDocker->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-		pDocker->SetWindowText(pDocker->GetCaption().c_str());
+		pDocker->SetWindowText(pDocker->GetCaption());
 
 		return pDocker;
 	}
@@ -3414,7 +3414,7 @@ namespace Win32xx
 		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOOWNERZORDER);
 		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
 
-		SetWindowText(GetCaption().c_str());
+		SetWindowText(GetCaption());
 	}
 
 	inline CDocker* CDocker::SeparateFromDock()

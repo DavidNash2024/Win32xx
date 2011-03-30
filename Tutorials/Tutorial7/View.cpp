@@ -8,12 +8,11 @@
 
 CView::CView() : m_PenColor(RGB(0,0,0))
 {
-	m_hBrush = ::CreateSolidBrush(RGB(255,255,230));
+	m_Brush.CreateSolidBrush(RGB(255,255,230));
 }
 
 CView::~CView()
 {
-	::DeleteObject(m_hBrush);
 }
 
 void CView::DrawLine(int x, int y)
@@ -52,7 +51,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 void CView::PreRegisterClass(WNDCLASS &wc)
 {
 	// Set the background brush and cursor
-	wc.hbrBackground = m_hBrush;
+	wc.hbrBackground = m_Brush;
 	wc.lpszClassName = _T("Scribble Window");
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }

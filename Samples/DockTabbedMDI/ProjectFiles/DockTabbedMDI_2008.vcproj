@@ -372,6 +372,10 @@
 				RelativePath="..\..\..\include\wincore.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\include\winutils.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

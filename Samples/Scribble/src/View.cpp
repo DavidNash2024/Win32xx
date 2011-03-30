@@ -11,12 +11,11 @@ using namespace std;
 
 CView::CView() : m_PenColor(RGB(0,0,0))
 {
-	m_hBrush = ::CreateSolidBrush(RGB(255,255,230));
+	m_Brush.CreateSolidBrush(RGB(255,255,230));
 }
 
 CView::~CView()
 {
-	::DeleteObject(m_hBrush);
 }
 
 void CView::ClearPoints()
@@ -42,7 +41,7 @@ void CView::OnPaint(CDC& dc)
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
 	MemDC.CreateCompatibleBitmap(dc, Width, Height);
-	MemDC.FillRect(GetClientRect(), m_hBrush);	
+	MemDC.FillRect(GetClientRect(), m_Brush);	
 
 	if (m_points.size() > 0)
 	{
@@ -73,7 +72,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 void CView::PreRegisterClass(WNDCLASS &wc)
 {
 	// Set the background brush, class name and cursor
-	wc.hbrBackground = m_hBrush;
+	wc.hbrBackground = m_Brush;
 	wc.lpszClassName = _T("Scribble Window");
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
