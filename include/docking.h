@@ -1757,11 +1757,11 @@ namespace Win32xx
 		// Store the Docker's pointer in the DockAncestor's vector for later deletion
 		GetDockAncestor()->m_vAllDockers.push_back(DockPtr(pDocker));
 
-		pDocker->SetDockSize(DockSize);
 		pDocker->SetDockStyle(dwDockStyle);
 		pDocker->m_nDockID = nDockID;
 		pDocker->m_pDockAncestor = GetDockAncestor();
 		pDocker->m_pDockParent = this;
+		pDocker->SetDockSize(DockSize);
 		CWnd* pFrame = GetDockAncestor()->GetAncestor();
 		pDocker->Create(pFrame);
 		pDocker->SetParent(this);
@@ -3176,7 +3176,7 @@ namespace Win32xx
 				DockInfo di	 = {0};
 				di.DockID	 = (*iter)->GetDockID();
 				di.DockStyle = (*iter)->GetDockStyle();
-				di.DockSize = (*iter)->GetRedockSize();
+				di.DockSize  = (*iter)->GetRedockSize();
 				di.Rect		 = (*iter)->GetWindowRect();
 				if ((*iter)->GetDockParent())
 					di.DockParentID = (*iter)->GetDockParent()->GetDockID();
@@ -3319,8 +3319,36 @@ namespace Win32xx
 
 	inline void CDocker::SetDockSize(int DockSize)
 	{
+		assert(DockSize >= 0);	
 		m_DockStartSize = DockSize;
-		m_DockSizeRatio = 1.0;
+
+		if (IsDocked())
+		{
+			assert (m_pDockParent);
+			switch (GetDockStyle() & 0xF)
+			{
+			case DS_DOCKED_LEFT:
+				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Width());
+				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Width());
+				break;
+			case DS_DOCKED_RIGHT:
+				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Width());
+				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Width());
+				break;
+			case DS_DOCKED_TOP:
+				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Height());
+				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Height());
+				break;
+			case DS_DOCKED_BOTTOM:
+				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Height());
+				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Height());
+				break;
+			}
+
+			RecalcDockLayout();
+		}
+		else
+			m_DockSizeRatio = 1.0;
 	}
 
 	inline void CDocker::SetDragAutoResize(BOOL bAutoResize)

@@ -37,7 +37,8 @@ New Features and Enhancements
    CPen and CRgn. These work in cooperation with the existing CDC class.
 * Extended the CSize, CPoint and CRect classes
 * Extended CMDIFrame and CMDIChild. CMDIChild::SetHandles is now used to set
-   the MDI child's menu and accelerator table.   
+   the MDI child's menu and accelerator table.
+* A docker can now be resized while docked using CDocker::SetDockSize.
 
 Changes in detail
 -----------------
