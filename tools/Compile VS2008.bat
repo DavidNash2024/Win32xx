@@ -5,7 +5,7 @@ REM: Set the paths and environment variables
 call "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86
 
 ::Cleanup
-call clean
+call CleanSamples
 call CleanTutorials
 
 REM: Change the directory to the Samples parent

@@ -105,5 +105,4 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.layout"
 popd
 popd
 
-call "CleanTutorials"
 

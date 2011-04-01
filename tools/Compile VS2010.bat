@@ -5,7 +5,7 @@ REM: Set the paths and environment variables
 call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
 
 ::Cleanup
-call clean
+call CleanSamples
 call CleanTutorials
 
 @echo on

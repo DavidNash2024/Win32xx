@@ -7,7 +7,8 @@ REM: Set the paths
 @set PATH=c:\Program Files (x86)\CodeBlocks;%PATH%
 
 REM: Remove old files before we start
-call clean
+call CleanSamples
+call CleanTutorials
 
 REM: Change the directory to the parent (Pushes the directory change on to the stack)
 pushd ..\Samples
