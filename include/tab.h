@@ -956,7 +956,7 @@ namespace Win32xx
 		{
 			if (GetActiveView() && (GetActiveView()->IsWindow()))
 				GetActiveView()->ShowWindow(SW_HIDE);
-			SetCurSel(iPage);
+
 			SetActiveView(m_vTabPageInfo[iPage].pView);
 
 			// Position the View over the tab control's display area
@@ -1203,14 +1203,9 @@ namespace Win32xx
 		case WM_KILLFOCUS:
 			m_IsClosePressed = FALSE;
 			break;
-		case WM_LBUTTONDBLCLK:
 		case WM_LBUTTONDOWN:
-			// Do default processing first
-			CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
-
-			// Now do our processing
 			OnLButtonDown(wParam, lParam);
-			return 0L;
+			break;
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);
 			break;
