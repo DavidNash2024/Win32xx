@@ -1670,11 +1670,10 @@ namespace Win32xx
 		// Draw the checkmark's background rectangle first
 		int Iconx = 16, Icony = 16;
 		if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		int offset = -1 + (rc.bottom - rc.top - Icony)/2;
-		int height = rc.bottom - rc.top;
-
-		rcBk.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
-		rcBk.InflateRect( -offset, -offset );
+		int BarWidth = Iconx + 8;
+		int left = (BarWidth - Iconx)/2;
+		int top = rc.top + (rc.Height() - Icony)/2;
+		rcBk.SetRect(left, top, left + Iconx, top + Icony);
 
 		if (tm.UseThemes)
 		{
@@ -1733,13 +1732,13 @@ namespace Win32xx
 		int Iconx;
 		int Icony;
 		ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+		int BarWidth = Iconx + 8;
 
 		// get the drawing rectangle
 		CRect rc = pdis->rcItem;
-		int offset = (rc.bottom - rc.top - Icony)/2;
-		int height = rc.bottom - rc.top;
-		rc.SetRect(rc.left, rc.top, rc.left + height, rc.bottom);
-		rc.InflateRect( -offset, -offset);
+		int left = (BarWidth - Iconx)/2;
+		int top = rc.top + (rc.Height() - Icony)/2;
+		rc.SetRect(left, top, left + Iconx, top + Icony);
 
 		// get the icon's location in the imagelist
 		int iImage = -1;
@@ -2153,7 +2152,7 @@ namespace Win32xx
 		int Iconx = 16;
 		int Icony = 16;
 		if (m_himlMenu)	ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		int BarWidth = tm.UseThemes? Iconx + 6 : 0;
+		int BarWidth = tm.UseThemes? Iconx + 8 : 0;
 
 		// Draw the side bar
 		if (tm.UseThemes)
