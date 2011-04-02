@@ -135,7 +135,7 @@ Changes in detail
 - Removed CDC::AttachClipRgn
 - Removed CDC::DetachClipRgn
 - Removed CMDIChild::SetChildMenu
-- Renamed CDocker::GetDockWidth to CDocker::GetRedockSize
+- Renamed CDocker::GetDockWidth to CDocker::GetDockSize
 - Renamed CDocker::SetDockWidth to CDocker::SetDockSize
 - Renamed CDC::AttachClipRegion to CDC::AttachClipRgn
 - Renamed CDC::DetachClipRegion to CDC::DetachClipRgn
@@ -234,7 +234,7 @@ Incompatibilities with previous versions
 * Users of Borland's C++ compiler version 5.5 will need to install the 
    compiler's service pack 2 for stringsteam support.
 * MDI Children use SetHandles instead of SetChildMenu to set the menu. SetHandles
-   alse sets the MDI child's accelerator table (if any).   
+   also sets the MDI child's accelerator table (if any).   
 
 Version 7.0.2
 =============

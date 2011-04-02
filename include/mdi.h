@@ -73,6 +73,7 @@
 namespace Win32xx
 {
     class CMDIChild;
+    class CMDIFrame;
 	typedef Shared_Ptr<CMDIChild> MDIChildPtr;
 
 	/////////////////////////////////////
@@ -133,7 +134,7 @@ namespace Win32xx
 			virtual HWND Create(CWnd* pParent = NULL);
 			virtual tString GetWindowType() const { return _T("CMDIClient"); }
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-			CMDIFrame* GetMDIFrame() const { return (CMDIFrame*)GetParent(); } 
+			CMDIFrame* GetMDIFrame() const { return (CMDIFrame*)GetParent(); }
 
 		private:
 			CMDIClient(const CMDIClient&);				// Disable copy construction
@@ -301,7 +302,7 @@ namespace Win32xx
 	{
 		// Possible values for nType are:
 		// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being cascaded.
-		
+
 		assert(::IsWindow(m_hWnd));
 		GetView()->SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
 	}
@@ -397,7 +398,7 @@ namespace Win32xx
 	inline void CMDIFrame::RecalcLayout()
 	{
 		CFrame::RecalcLayout();
-		
+
 		if (GetView()->IsWindow())
 			MDIIconArrange();
 	}
@@ -657,7 +658,7 @@ namespace Win32xx
 	{
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetParent()->GetParent();
 		assert (pMDIFrame->GetWindowType() == _T("CMDIFrame"));
-		return pMDIFrame; 
+		return pMDIFrame;
 	}
 
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -713,7 +714,7 @@ namespace Win32xx
 			{
 				if (m_hChildMenu)
 					GetMDIFrame()->UpdateFrameMenu(m_hChildMenu);
-				
+
 				if (m_hChildAccel)
 					GetApp()->SetAccelerators(m_hChildAccel, GetMDIFrame());
 			}

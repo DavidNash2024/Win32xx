@@ -435,6 +435,7 @@ namespace Win32xx
 		BOOL  IsWindowVisible() const;
 		BOOL  KillTimer(UINT_PTR uIDEvent) const;
 		int   MessageBox(LPCTSTR lpText, LPCTSTR lpCaption, UINT uType) const;
+		void  MapWindowPoints(CWnd* pWndTo, POINT& pt) const;
 		void  MapWindowPoints(CWnd* pWndTo, RECT& rc) const;
 		void  MapWindowPoints(CWnd* pWndTo, LPPOINT ptArray, UINT nCount) const;
 		BOOL  MoveWindow(int x, int y, int nWidth, int nHeight, BOOL bRepaint = TRUE) const;
@@ -2368,6 +2369,20 @@ namespace Win32xx
 		return ::IsWindow(m_hWnd);
 	}
 
+	inline void  CWnd::MapWindowPoints(CWnd* pWndTo, POINT& pt) const
+	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one
+	// window to a coordinate space relative to another window.
+	{
+		assert (m_hWnd);
+		if(pWndTo)
+		{
+			assert (pWndTo->GetHwnd());
+			::MapWindowPoints(m_hWnd, pWndTo->GetHwnd(), &pt, 1);
+		}
+		else
+			::MapWindowPoints(m_hWnd, NULL, &pt, 1);
+	}
+	
 	inline void CWnd::MapWindowPoints(CWnd* pWndTo, RECT& rc) const
 	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one
 	// window to a coordinate space relative to another window.

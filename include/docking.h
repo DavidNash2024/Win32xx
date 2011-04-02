@@ -413,7 +413,7 @@ namespace Win32xx
 		virtual CDocker* GetDockFromPoint(POINT pt) const;
 		virtual CDocker* GetDockFromView(CWnd* pView) const;
 		virtual CDocker* GetDockTopLevel() const;
-		virtual int GetRedockSize() const;
+		virtual int GetDockSize() const;
 		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual int GetTextHeight();
 		virtual tString GetWindowType() const { return _T("CDocker"); }
@@ -2260,7 +2260,7 @@ namespace Win32xx
 		return pDockTopLevel;
 	}
 
-	inline int CDocker::GetRedockSize() const
+	inline int CDocker::GetDockSize() const
 	{
 		// Returns the size of the docker to be used if it is redocked
 		// Note: This function returns 0 if the docker has the DS_DOCKED_CONTAINER style
@@ -3176,7 +3176,7 @@ namespace Win32xx
 				DockInfo di	 = {0};
 				di.DockID	 = (*iter)->GetDockID();
 				di.DockStyle = (*iter)->GetDockStyle();
-				di.DockSize  = (*iter)->GetRedockSize();
+				di.DockSize  = (*iter)->GetDockSize();
 				di.Rect		 = (*iter)->GetWindowRect();
 				if ((*iter)->GetDockParent())
 					di.DockParentID = (*iter)->GetDockParent()->GetDockID();
