@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="DockTabbedMDI" />
+		<Option pch_mode="0" />
+		<Option default_target="Release MinGW GNU compiler" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug Borland">
+				<Option output="Borland\Debug\DockTabbedMDI.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland\Debug" />
+				<Option object_output="Borland\Debug" />
+				<Option type="0" />
+				<Option compiler="bcc" />
+				<Compiler>
+					<Add option="-tWM" />
+					<Add option="-w-par" />
+					<Add option="-D_DEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="cw32mt" />
+					<Add library="comctl32" />
+					<Add library="import32" />
+				</Linker>
+			</Target>
+			<Target title="Release Borland">
+				<Option output="Borland\Release\DockTabbedMDI.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland\Release" />
+				<Option object_output="Borland\Release" />
+				<Option type="0" />
+				<Option compiler="bcc" />
+				<Compiler>
+					<Add option="-tWM" />
+					<Add option="-w-par" />
+					<Add option="-DNDEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="comctl32" />
+					<Add library="import32" />
+					<Add library="cw32mt" />
+				</Linker>
+			</Target>
+			<Target title="Debug Microsoft Visual C++">
+				<Option output="Microsoft\Debug\DockTabbedMDI.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft\Debug" />
+				<Option object_output="Microsoft\Debug" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
+				<Compiler>
+					<Add option="/MTd" />
+					<Add option="/GA" />
+					<Add option="/GX" />
+					<Add option="/W3" />
+					<Add option="/Zi" />
+					<Add option="/Zi /D_DEBUG" />
+					<Add option="/DWIN32" />
+					<Add option="/D_DEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="/DEBUG" />
+					<Add library="ComCtl32" />
+					<Add library="Gdi32" />
+					<Add library="User32" />
+					<Add library="Kernel32" />
+					<Add library="Advapi32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
+				</Linker>
+			</Target>
+			<Target title="Release Microsoft Visual C++">
+				<Option output="Microsoft\Release\DockTabbedMDI.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft\Release" />
+				<Option object_output="Microsoft\Release" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
+				<Compiler>
+					<Add option="/MT" />
+					<Add option="/GX" />
+					<Add option="/Ox" />
+					<Add option="/W3" />
+					<Add option="/DWIN32" />
+					<Add option="/DNDEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="ComCtl32" />
+					<Add library="Gdi32" />
+					<Add library="Kernel32" />
+					<Add library="User32" />
+					<Add library="Advapi32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
+				</Linker>
+			</Target>
+			<Target title="Debug MinGW GNU compiler">
+				<Option output="GNU\Debug\DockTabbedMDI.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU\Debug" />
+				<Option object_output="GNU\Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-g3" />
+					<Add option="-D__DEBUG__" />
+					<Add option="-D_DEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ws2_32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+				</Linker>
+			</Target>
+			<Target title="Release MinGW GNU compiler">
+				<Option output="GNU\Release\DockTabbedMDI.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU\Release" />
+				<Option object_output="GNU\Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ws2_32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+		</VirtualTargets>
+		<Unit filename="..\src\Classes.cpp" />
+		<Unit filename="..\src\Classes.h" />
+		<Unit filename="..\src\DockTabbedMDI.cpp" />
+		<Unit filename="..\src\DockTabbedMDI.h" />
+		<Unit filename="..\src\Files.cpp" />
+		<Unit filename="..\src\Files.h" />
+		<Unit filename="..\src\Mainfrm.cpp" />
+		<Unit filename="..\src\Mainfrm.h" />
+		<Unit filename="..\src\MyCombo.cpp" />
+		<Unit filename="..\src\MyCombo.h" />
+		<Unit filename="..\src\MyTabbedMDI.cpp" />
+		<Unit filename="..\src\MyTabbedMDI.h" />
+		<Unit filename="..\src\Output.cpp" />
+		<Unit filename="..\src\Output.h" />
+		<Unit filename="..\src\Rect.cpp" />
+		<Unit filename="..\src\Rect.h" />
+		<Unit filename="..\src\Resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="..\src\TabbedMDIApp.cpp" />
+		<Unit filename="..\src\TabbedMDIApp.h" />
+		<Unit filename="..\src\Text.cpp" />
+		<Unit filename="..\src\Text.h" />
+		<Unit filename="..\src\Web.cpp" />
+		<Unit filename="..\src\Web.h" />
+		<Unit filename="..\src\main.cpp" />
+		<Unit filename="..\src\resource.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

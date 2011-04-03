@@ -1,0 +1,101 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "res/Win32++.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "res/Dialog.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+IDD_CLIENT DIALOGEX 0, 0, 283, 231
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Client Dialog"
+FONT 8, "MS Shell Dlg", 0, 0
+BEGIN
+    GROUPBOX        "Client Configuration",IDC_STATIC,16,7,249,121,BS_LEFT
+    CONTROL         "IP6 Address",IDC_RADIO_IPV6,"Button",BS_AUTORADIOBUTTON | WS_GROUP,24,22,49,8
+    CONTROL         "IP4 Address",IDC_RADIO_IPV4,"Button",BS_AUTORADIOBUTTON,24,35,49,8
+    EDITTEXT        IDC_EDIT_IPV6ADDRESS,77,19,180,13,ES_AUTOHSCROLL
+    CONTROL         "",IDC_IPADDRESS,"SysIPAddress32",WS_TABSTOP,77,33,79,12
+    GROUPBOX        "Connection Type",IDC_RADIO_GROUP,19,51,73,36
+    CONTROL         "TCP",IDC_RADIO_TCP,"Button",BS_AUTORADIOBUTTON | WS_GROUP,24,61,29,10
+    CONTROL         "UDP",IDC_RADIO_UDP,"Button",BS_AUTORADIOBUTTON,24,73,29,10
+    CTEXT           "Port",IDC_STATIC,187,36,20,9
+    EDITTEXT        IDC_EDIT_PORT,207,33,49,13,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Connect",IDC_BUTTON_CONNECT,25,94,63,24
+    CTEXT           "Client Status",IDC_STATIC,131,58,88,9
+    EDITTEXT        IDC_EDIT_STATUS,103,67,158,56,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL
+    GROUPBOX        "Send / Receive Data",IDC_STATIC,16,129,249,90,BS_LEFT
+    PUSHBUTTON      "Send",IDC_BUTTON_SEND,113,147,54,19,WS_DISABLED
+    CTEXT           "Type data to Send ",IDC_STATIC,41,170,64,9
+    EDITTEXT        IDC_EDIT_SEND,21,179,111,35,ES_MULTILINE | ES_AUTOHSCROLL | WS_DISABLED | NOT WS_BORDER,WS_EX_STATICEDGE
+    CTEXT           "Received Data",IDC_STATIC,172,170,64,9
+    EDITTEXT        IDC_EDIT_RECEIVE,149,179,111,35,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
