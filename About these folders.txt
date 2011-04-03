@@ -10,13 +10,3 @@ tutorials        The code for the tutorials described in the Win32++ documentati
 WCE samples      A set of sample projects that demonstrate using Win32++ on WinCE.
 
 
-About the Win32++ header files
-==============================
-The "include" folder contains the files that would be included in a Win32++ 
-project. In this folder, the Win32++ library files are provided purely as a 
-set of header files. There are no source files, as all the source code is 
-included inlined in the header files. This makes Win32++ simpler to use, as
-we only need to include header files to add the library to our projects. 
-
-
-   

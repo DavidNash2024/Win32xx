@@ -2,16 +2,9 @@ Version 7.1
 ===========
 New Features and Enhancements
 -----------------------------
-* Enhanced CResizer.
-   - The anchor points are now fixed instead of proportional
-   - Scrollbars are now added when required.
-* Create now use a CWnd pointer instead of a HWND when specifying the 
-   parent window.
-* Dialogs and Property Sheets now use a CWnd pointer instead of a HWND
-   when specifying the parent window.
-* CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
-   are now optional.
 * Added support for Task Dialogs
+* Added the following set of gdi classes: CBitmap, CBrush, CFont, CPalette, 
+   CPen and CRgn. These work in cooperation with the existing CDC class.
 * Added a set of new Text conversion functions based on classes.
    The complete set of functions are:
 	A2BSTR		ANSI  to BSTR
@@ -30,14 +23,23 @@ New Features and Enhancements
 	W2OLE		WCHAR to OLE
 	W2T			WCHAR to TCHAR
    See below for examples on using the new functions.
+* Added CLoadString (and LoadString) to return a string resource. 
 * OnEraseBkgnd is now called automatically when a CWnd's background needs
    erasing. Return TRUE to prevent default erasure.
 * Scribble Tutorial now demonstrates the use of command line arguments
-* Added the following set of gdi classes: CBitmap, CBrush, CFont, CPalette, 
-   CPen and CRgn. These work in cooperation with the existing CDC class.
+* Enhanced CResizer.
+   - The anchor points are now fixed instead of proportional
+   - Scrollbars are now added when required.
+* Create now use a CWnd pointer instead of a HWND when specifying the 
+   parent window.
+* Dialogs and Property Sheets now use a CWnd pointer instead of a HWND
+   when specifying the parent window.
+* CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
+   are now optional.   
 * Extended the CSize, CPoint and CRect classes
 * Extended CMDIFrame and CMDIChild. CMDIChild::SetHandles is now used to set
    the MDI child's menu and accelerator table.
+* Functions which accept a text array (LPCTSTR) now also accept a tString.   
 * A docker can now be resized while docked using CDocker::SetDockSize.
 
 Changes in detail
@@ -49,8 +51,9 @@ Changes in detail
 - Added CPen
 - Added CRgn
 - Added CTaskDialog
-- Added CLoadString (replaces CWnd::LoadString)
-- Added tStringStream typedef (a TCHAR stringstream)
+- Added CLoadString 
+- Added LoadString 			(uses CLoadString and replaces CWnd::LoadString)
+- Added tStringStream typedef 	(a TCHAR stringstream)
 - Added	A2BSTR	
 - Added	A2OLE	
 - Added	A2T		
@@ -69,7 +72,14 @@ Changes in detail
 - Added CDC::AttachPalette
 - Added CDC::CreatePalette
 - Added CDC::CreateHalftonePalette
-- Added CDC::DetachPalette		
+- Added CDC::DetachPalette
+- Added CDC::DrawText				now takes a tString or LPCTSTR
+- Added CDC::DrawTextEx				now takes a tString or LPCTSTR
+- Added CDC::ExtTextOut				now takes a tString or LPCTSTR
+- Added CDC::GetTabbedTextExtent	now takes a tString or LPCTSTR
+- Added CDC::GetTextExtentPoint32	now takes a tString or LPCTSTR
+- Added CDC::TabbedTextOut			now takes a tString or LPCTSTR
+- Added CDC::TextOut				now takes a tString or LPCTSTR
 - Added CDC::GetBitmapInfo
 - Added CDC::GetBrushInfo
 - Added CDC::GetFontInfo
@@ -127,10 +137,12 @@ Changes in detail
 - Added CWnd::Print
 - Added CWnd::ScreenToClient
 - Added CWnd::SendNotifyMessage
-- Modified CDialog 				now takes a CWnd pointer instead of HWND
-- Modified CResizer::AddChild	now takes a CWnd reference
-- Modified CWnd::Create 		now takes a CWnd pointer instead of HWND
-- Modified CWnd::CreateEx       now takes a CWnd pointer instead of HWND
+- Added CWnd::SetDlgItemText    	now takes a tString or LPCTSTR
+- Added CWnd::SetWindowText     	now takse a tString or LPCTSTR
+- Modified CDialog 					now takes a CWnd pointer instead of HWND
+- Modified CResizer::AddChild		now takes a CWnd reference
+- Modified CWnd::Create 			now takes a CWnd pointer instead of HWND
+- Modified CWnd::CreateEx       	now takes a CWnd pointer instead of HWND
 - Moved CWnd::LoadBitmap to LoadBitmap
 - Removed CDC::AttachClipRgn
 - Removed CDC::DetachClipRgn
@@ -145,7 +157,7 @@ Changes in detail
 - Replaced TCharToWide with T2W
 - Replaced WideToChar  with W2A
 - Replaced WideToTChar with W2T
-- Replaced CWnd::LoadString with CLoadString
+- Replaced CWnd::LoadString with CLoadString (and ::LoadString)
 - Added several functions to CPoint
 - Added several functions to CSize
 - Added many functions to CRect 
@@ -234,7 +246,8 @@ Incompatibilities with previous versions
 * Users of Borland's C++ compiler version 5.5 will need to install the 
    compiler's service pack 2 for stringsteam support.
 * MDI Children use SetHandles instead of SetChildMenu to set the menu. SetHandles
-   also sets the MDI child's accelerator table (if any).   
+   also sets the MDI child's accelerator table (if any).
+* LoadString now returns a tString instead of a LPCTSTR.   
 
 Version 7.0.2
 =============
