@@ -125,9 +125,9 @@ namespace Win32xx
 	// Declarations for some global functions in the Win32xx namespace
 	//
 #ifndef _WIN32_WCE
-	void GrayScaleBitmap( HBITMAP hbmSource );
-	void TintBitmap( HBITMAP hbmSource, int cRed, int cGreen, int cBlue );
-	HIMAGELIST CreateDisabledImageList( HIMAGELIST himlNormal );
+	void GrayScaleBitmap(HBITMAP hbmSource);
+	void TintBitmap(HBITMAP hbmSource, int cRed, int cGreen, int cBlue);
+	HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal);
 #endif
 
 
@@ -143,43 +143,43 @@ namespace Win32xx
 			long	Count;
 		};
 
-		CBitmap ();
-		CBitmap (HBITMAP hBitmap);
-		CBitmap (LPCTSTR lpstr);
-		CBitmap (int nID);
-		CBitmap (const CBitmap& rhs);
-		operator HBITMAP () const;
+		CBitmap();
+		CBitmap(HBITMAP hBitmap);
+		CBitmap(LPCTSTR lpstr);
+		CBitmap(int nID);
+		CBitmap(const CBitmap& rhs);
+		operator HBITMAP() const;
 		void operator = (HBITMAP hBitmap);
 		CBitmap& operator = (const CBitmap& rhs);
-		~CBitmap ();
+		~CBitmap();
 
 		void Attach( HBITMAP hBitmap );
-		HBITMAP Detach ();
-		HBITMAP GetBitmap () const;
+		HBITMAP Detach();
+		HBITMAP GetBitmap() const;
 
 		// Create and load methods
-		HBITMAP LoadBitmap (LPCTSTR lpszName);
-		HBITMAP LoadBitmap (int nID);
+		HBITMAP LoadBitmap(LPCTSTR lpszName);
+		HBITMAP LoadBitmap(int nID);
 		HBITMAP LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
 		HBITMAP LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
-		void LoadOEMBitmap (UINT nIDBitmap);
-		void CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits);
-		void CreateCompatibleBitmap (HDC hDC, int nWidth, int nHeight);
+		void LoadOEMBitmap(UINT nIDBitmap);
+		void CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits);
+		void CreateCompatibleBitmap(HDC hDC, int nWidth, int nHeight);
 
 		// Attributes
-		BITMAP GetBitmapData () const;
-		void CreateDIBSection (HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset);
+		BITMAP GetBitmapData() const;
+		void CreateDIBSection(HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset);
 
 #ifndef _WIN32_WCE
-		int GetDIBits (HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
-		int SetDIBits (HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
-		HBITMAP CreateMappedBitmap (UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
-		void CreateBitmapIndirect (LPBITMAP lpBitmap);
-		CSize GetBitmapDimensionEx () const;
-		CSize SetBitmapDimensionEx (int nWidth, int nHeight);
+		int GetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
+		int SetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
+		HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
+		void CreateBitmapIndirect(LPBITMAP lpBitmap);
+		CSize GetBitmapDimensionEx() const;
+		CSize SetBitmapDimensionEx(int nWidth, int nHeight);
 
 		// DIB support
-		HBITMAP CreateDIBitmap (HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
+		HBITMAP CreateDIBitmap(HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
 #endif // !_WIN32_WCE
 
 	private:
@@ -200,27 +200,27 @@ namespace Win32xx
 			long	Count;
 		};
 
-		CBrush ();
-		CBrush (HBRUSH hBrush);
-		CBrush (COLORREF crColor);
-		CBrush (const CBrush& rhs);
-		operator HBRUSH () const;
+		CBrush();
+		CBrush(HBRUSH hBrush);
+		CBrush(COLORREF crColor);
+		CBrush(const CBrush& rhs);
+		operator HBRUSH() const;
 		void operator = (HBRUSH hBrush);
 		CBrush& operator = (const CBrush& rhs);
-		~CBrush ();
+		~CBrush();
 
-		void Attach (HBRUSH hBrush);
-		HBRUSH Detach ();
-		HBRUSH GetBrush () const;
+		void Attach(HBRUSH hBrush);
+		HBRUSH Detach();
+		HBRUSH GetBrush() const;
 
-		void CreateSolidBrush (COLORREF crColor);
-		void CreatePatternBrush (HBITMAP hBitmap);
-		void CreateDIBPatternBrushPt (LPCVOID lpPackedDIB, UINT nUsage);
-		LOGBRUSH GetLogBrush () const;
+		void CreateSolidBrush(COLORREF crColor);
+		void CreatePatternBrush(HBITMAP hBitmap);
+		void CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage);
+		LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
-		void CreateHatchBrush (int nIndex, COLORREF crColor);
-		void CreateBrushIndirect (LPLOGBRUSH lpLogBrush);
+		void CreateHatchBrush(int nIndex, COLORREF crColor);
+		void CreateBrushIndirect(LPLOGBRUSH lpLogBrush);
 #endif // !defined(_WIN32_WCE)
 
 	  private:
@@ -241,26 +241,26 @@ namespace Win32xx
 			long	Count;
 		};
 
-		CFont ();
-		CFont (HFONT hFont);
-		CFont (const CFont& rhs);
-		operator HFONT () const;
+		CFont();
+		CFont(HFONT hFont);
+		CFont(const CFont& rhs);
+		operator HFONT() const;
 		void operator = (HFONT hFont);
 		CFont& operator = (const CFont& rhs);
-		~CFont ();
+		~CFont();
 
-		void Attach (HFONT hFont);
-		HFONT Detach ();
-		HFONT GetFont () const;
+		void Attach(HFONT hFont);
+		HFONT Detach();
+		HFONT GetFont() const;
 
 		// Create methods
-		void CreateFontIndirect (const LOGFONT* lpLogFont);
-		LOGFONT GetLogFont () const;
-		void CreatePointFont (int nPointSize, LPCTSTR lpszFaceName, HDC hDC = NULL, BOOL bBold = FALSE, BOOL bItalic = FALSE);
-		void CreatePointFontIndirect (const LOGFONT* lpLogFont, HDC hDC = NULL);
+		void CreateFontIndirect(const LOGFONT* lpLogFont);
+		LOGFONT GetLogFont() const;
+		void CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hDC = NULL, BOOL bBold = FALSE, BOOL bItalic = FALSE);
+		void CreatePointFontIndirect(const LOGFONT* lpLogFont, HDC hDC = NULL);
 
 #ifndef _WIN32_WCE
-		void CreateFont (int nHeight, int nWidth, int nEscapement,
+		void CreateFont(int nHeight, int nWidth, int nEscapement,
 				int nOrientation, int nWeight, DWORD dwItalic, DWORD dwUnderline,
 				DWORD dwStrikeOut, DWORD dwCharSet, DWORD dwOutPrecision,
 				DWORD dwClipPrecision, DWORD dwQuality, DWORD dwPitchAndFamily,
@@ -285,34 +285,34 @@ namespace Win32xx
 			long	Count;
 		};
 
-		CPalette ();
-		CPalette (HPALETTE hPalette);
-		CPalette (const CPalette& rhs);
-		operator HPALETTE () const;
+		CPalette();
+		CPalette(HPALETTE hPalette);
+		CPalette(const CPalette& rhs);
+		operator HPALETTE() const;
 		void operator = (HPALETTE hPalette);
 		CPalette& operator = (const CPalette& rhs);
-		~CPalette ();
+		~CPalette();
 
-		void Attach (HPALETTE hPalette);
-		HPALETTE Detach ();
-		HPALETTE GetPalette () const;
+		void Attach(HPALETTE hPalette);
+		HPALETTE Detach();
+		HPALETTE GetPalette() const;
 
 		// Create methods
-		void CreatePalette (LPLOGPALETTE lpLogPalette);
+		void CreatePalette(LPLOGPALETTE lpLogPalette);
 
 #ifndef _WIN32_WCE
-		void CreateHalftonePalette (HDC hDC);
+		void CreateHalftonePalette(HDC hDC);
 #endif // !_WIN32_WCE
 
 		// Attributes
-		int GetEntryCount () const;
-		UINT GetPaletteEntries (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const;
-		UINT SetPaletteEntries (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors);
+		int GetEntryCount() const;
+		UINT GetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const;
+		UINT SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors);
 
 		// Operations
 #ifndef _WIN32_WCE
-		BOOL ResizePalette (UINT nNumEntries);
-		void AnimatePalette (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors);
+		BOOL ResizePalette(UINT nNumEntries);
+		void AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors);
 #endif // !_WIN32_WCE
 
 		UINT GetNearestPaletteIndex (COLORREF crColor) const;
@@ -335,29 +335,29 @@ namespace Win32xx
 			long Count;
 		};
 
-		CPen ();
-		CPen (HPEN hPen);
-		CPen (int nPenStyle, int nWidth, COLORREF crColor);
+		CPen();
+		CPen(HPEN hPen);
+		CPen(int nPenStyle, int nWidth, COLORREF crColor);
 #ifndef _WIN32_WCE
-		CPen (int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
+		CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
 #endif // !_WIN32_WCE
-		CPen (const CPen& rhs);
-		operator HPEN () const;
+		CPen(const CPen& rhs);
+		operator HPEN() const;
 		void operator= (HPEN hPen);
 		CPen& operator = (const CPen& rhs);
-		~CPen ();
+		~CPen();
 
-		void Attach (HPEN hPen);
-		HPEN Detach ();
-		HPEN GetPen () const;
+		void Attach(HPEN hPen);
+		HPEN Detach();
+		HPEN GetPen() const;
 
-		void CreatePen (int nPenStyle, int nWidth, COLORREF crColor);
-		void CreatePenIndirect (LPLOGPEN lpLogPen);
-		LOGPEN GetLogPen () const;
+		void CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
+		void CreatePenIndirect(LPLOGPEN lpLogPen);
+		LOGPEN GetLogPen() const;
 
 #ifndef _WIN32_WCE
-		void ExtCreatePen (int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
-		EXTLOGPEN GetExtLogPen () const;
+		void ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
+		EXTLOGPEN GetExtLogPen() const;
 #endif // !_WIN32_WCE
 
 	  private:
@@ -378,47 +378,47 @@ namespace Win32xx
 			long Count;
 		};
 
-		CRgn ();
-		CRgn (HRGN hRgn);
-		CRgn (const CRgn& rhs);
-		operator HRGN () const;
+		CRgn();
+		CRgn(HRGN hRgn);
+		CRgn(const CRgn& rhs);
+		operator HRGN() const;
 		void operator = (HRGN hRgn);
 		CRgn& operator = (const CRgn& rhs);
 		~CRgn ();
 
-		void Attach (HRGN hRgn);
-		HRGN Detach ();
-		HRGN GetRgn () const;
+		void Attach(HRGN hRgn);
+		HRGN Detach();
+		HRGN GetRgn() const;
 
 		// Create methods
-		void CreateRectRgn (int x1, int y1, int x2, int y2);
-		void CreateRectRgnIndirect (const RECT& rc);
+		void CreateRectRgn(int x1, int y1, int x2, int y2);
+		void CreateRectRgnIndirect(const RECT& rc);
 
 #ifndef _WIN32_WCE
-		void CreateEllipticRgn (int x1, int y1, int x2, int y2);
-		void CreateEllipticRgnIndirect (const RECT& rc);
-		void CreatePolygonRgn (LPPOINT lpPoints, int nCount, int nMode);
-		void CreatePolyPolygonRgn (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode);
-		void CreateRoundRectRgn (int x1, int y1, int x2, int y2, int x3, int y3);
-		void CreateFromPath (HDC hDC);
+		void CreateEllipticRgn(int x1, int y1, int x2, int y2);
+		void CreateEllipticRgnIndirect(const RECT& rc);
+		void CreatePolygonRgn(LPPOINT lpPoints, int nCount, int nMode);
+		void CreatePolyPolygonRgn(LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode);
+		void CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
+		void CreateFromPath(HDC hDC);
 #endif // !_WIN32_WCE
 
-		void CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData);
+		void CreateFromData(const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData);
 
 		// Operations
-		void SetRectRgn (int x1, int y1, int x2, int y2);
-		void SetRectRgn (const RECT& rc);
-		int CombineRgn (HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode);
-		int CombineRgn (HRGN hRgnSrc, int nCombineMode);
-		int CopyRgn (HRGN hRgnSrc);
-		BOOL EqualRgn (HRGN hRgn) const;
-		int OffsetRgn (int x, int y);
-		int OffsetRgn (POINT& pt);
-		int GetRgnBox (RECT& rc) const;
-		BOOL PtInRegion (int x, int y) const;
-		BOOL PtInRegion (POINT& pt) const;
-		BOOL RectInRegion (const RECT& rc) const;
-		int GetRegionData (LPRGNDATA lpRgnData, int nDataSize) const;
+		void SetRectRgn(int x1, int y1, int x2, int y2);
+		void SetRectRgn(const RECT& rc);
+		int CombineRgn(HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode);
+		int CombineRgn(HRGN hRgnSrc, int nCombineMode);
+		int CopyRgn(HRGN hRgnSrc);
+		BOOL EqualRgn(HRGN hRgn) const;
+		int OffsetRgn(int x, int y);
+		int OffsetRgn(POINT& pt);
+		int GetRgnBox(RECT& rc) const;
+		BOOL PtInRegion(int x, int y) const;
+		BOOL PtInRegion(POINT& pt) const;
+		BOOL RectInRegion(const RECT& rc) const;
+		int GetRegionData(LPRGNDATA lpRgnData, int nDataSize) const;
 
 	  private:
 		void Release();
@@ -449,61 +449,61 @@ namespace Win32xx
 			long	Count;
 		};
 
-		CDC ();									// Constructs a new CDC without assigning a HDC
-		CDC (HDC hDC);							// Assigns a HDC to a new CDC
-		CDC (const CDC& rhs);					// Constructs a new copy of the CDC
+		CDC();									// Constructs a new CDC without assigning a HDC
+		CDC(HDC hDC);							// Assigns a HDC to a new CDC
+		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
 		void operator = (const HDC hDC);		// Assigns a HDC to an existing CDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
-		operator HDC () const { return m_pData->hDC; }	// Converts a CDC to a HDC
-		virtual ~CDC ();
+		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
+		virtual ~CDC();
 
-		void AttachDC (HDC hDC);
-		HDC  DetachDC ();
-		HDC GetHDC () const { return m_pData->hDC; }
+		void AttachDC(HDC hDC);
+		HDC  DetachDC();
+		HDC GetHDC() const { return m_pData->hDC; }
 		static CDC* FromHandle(HDC hDC);
 
 		// Create and Select Bitmaps
-		void AttachBitmap (HBITMAP hBitmap);
-		void CreateBitmap (int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
-		void CreateCompatibleBitmap (HDC hDC, int cx, int cy);
-		void CreateDIBSection (HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+		void AttachBitmap(HBITMAP hBitmap);
+		void CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
+		void CreateCompatibleBitmap(HDC hDC, int cx, int cy);
+		void CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
-		HBITMAP DetachBitmap ();
-		BITMAP GetBitmapInfo ();
-		void LoadBitmap (UINT nID);
-		void LoadBitmap (LPCTSTR lpszName);
+		HBITMAP DetachBitmap();
+		BITMAP GetBitmapInfo();
+		void LoadBitmap(UINT nID);
+		void LoadBitmap(LPCTSTR lpszName);
 		void LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		void LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
-		void LoadOEMBitmap (UINT nIDBitmap); // for OBM_/OCR_/OIC
+		void LoadOEMBitmap(UINT nIDBitmap); // for OBM_/OCR_/OIC
 
 #ifndef _WIN32_WCE
-		void CreateBitmapIndirect (LPBITMAP pBitmap);
+		void CreateBitmapIndirect(LPBITMAP pBitmap);
 		void CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage);
-		void CreateMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
+		void CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
 #endif
 
 		// Create and Select Brushes
-		void AttachBrush (HBRUSH hBrush);
-		void CreateDIBPatternBrushPt (LPCVOID lpPackedDIB, UINT iUsage);
-		void CreatePatternBrush (HBITMAP hbmp);
-		void CreateSolidBrush (COLORREF rbg);
-		HBRUSH DetachBrush ();
-		LOGBRUSH GetBrushInfo ();
+		void AttachBrush(HBRUSH hBrush);
+		void CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
+		void CreatePatternBrush(HBITMAP hbmp);
+		void CreateSolidBrush(COLORREF rbg);
+		HBRUSH DetachBrush();
+		LOGBRUSH GetBrushInfo();
 
 #ifndef _WIN32_WCE
-		void CreateBrushIndirect (LPLOGBRUSH& pLogBrush);
-		void CreateHatchBrush (int fnStyle, COLORREF rgb);
+		void CreateBrushIndirect(LPLOGBRUSH& pLogBrush);
+		void CreateHatchBrush(int fnStyle, COLORREF rgb);
 #endif
 
 		// Create and Select Fonts
-		void AttachFont (HFONT hFont);
-		void CreateFontIndirect (const LOGFONT& lf);
-		HFONT DetachFont ();
-		LOGFONT GetFontInfo ();
+		void AttachFont(HFONT hFont);
+		void CreateFontIndirect(const LOGFONT& lf);
+		HFONT DetachFont();
+		LOGFONT GetFontInfo();
 
 #ifndef _WIN32_WCE
-		void CreateFont (int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
+		void CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
   							DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
   							DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality,
   							DWORD fdwPitchAndFamily, LPCTSTR lpszFace);
@@ -518,214 +518,214 @@ namespace Win32xx
 #endif
 			
 		// Create and Select Pens
-		void AttachPen (HPEN hPen);
-		void CreatePen (int nStyle, int nWidth, COLORREF rgb);
-		void CreatePenIndirect (LPLOGPEN pLogPen);
-		HPEN DetachPen ();
-		LOGPEN GetPenInfo ();
+		void AttachPen(HPEN hPen);
+		void CreatePen(int nStyle, int nWidth, COLORREF rgb);
+		void CreatePenIndirect(LPLOGPEN pLogPen);
+		HPEN DetachPen();
+		LOGPEN GetPenInfo();
 
 		// Create Select Regions
-		void CreateRectRgn (int left, int top, int right, int bottom);
-		void CreateRectRgnIndirect (const RECT& rc);
-		void CreateFromData (const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData);
+		void CreateRectRgn(int left, int top, int right, int bottom);
+		void CreateRectRgnIndirect(const RECT& rc);
+		void CreateFromData(const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData);
 #ifndef _WIN32_WCE
-		void CreateEllipticRgn (int left, int top, int right, int bottom);
-		void CreateEllipticRgnIndirect (const RECT& rc);
-		void CreatePolygonRgn (LPPOINT ppt, int cPoints, int fnPolyFillMode);
-		void CreatePolyPolygonRgn (LPPOINT ppt, LPINT pPolyCounts, int nCount, int fnPolyFillMode);
+		void CreateEllipticRgn(int left, int top, int right, int bottom);
+		void CreateEllipticRgnIndirect(const RECT& rc);
+		void CreatePolygonRgn(LPPOINT ppt, int cPoints, int fnPolyFillMode);
+		void CreatePolyPolygonRgn(LPPOINT ppt, LPINT pPolyCounts, int nCount, int fnPolyFillMode);
 #endif
 
 		// Wrappers for WinAPI functions
 
 		// Initialization
-		HDC CreateCompatibleDC () const;
-		HDC CreateDC (LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const;
-		int GetDeviceCaps (int nIndex) const;
+		HDC CreateCompatibleDC() const;
+		HDC CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const;
+		int GetDeviceCaps(int nIndex) const;
 #ifndef _WIN32_WCE
-		HDC CreateIC (LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const;
+		HDC CreateIC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const;
 #endif
 
 		// Point and Line Drawing Functions
-		CPoint GetCurrentPosition () const;
-		CPoint MoveTo (int x, int y) const;
-		CPoint MoveTo (POINT pt) const;
-		BOOL LineTo (int x, int y) const;
-		BOOL LineTo (POINT pt) const;
-		COLORREF GetPixel (int x, int y) const;
-		COLORREF GetPixel (POINT pt) const;
-		COLORREF SetPixel (int x, int y, COLORREF crColor) const;
-		COLORREF SetPixel (POINT pt, COLORREF crColor) const;
+		CPoint GetCurrentPosition() const;
+		CPoint MoveTo(int x, int y) const;
+		CPoint MoveTo(POINT pt) const;
+		BOOL LineTo(int x, int y) const;
+		BOOL LineTo(POINT pt) const;
+		COLORREF GetPixel(int x, int y) const;
+		COLORREF GetPixel(POINT pt) const;
+		COLORREF SetPixel(int x, int y, COLORREF crColor) const;
+		COLORREF SetPixel(POINT pt, COLORREF crColor) const;
 #ifndef _WIN32_WCE
-		BOOL Arc (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-		BOOL Arc (RECT& rc, POINT ptStart, POINT ptEnd) const;
-		BOOL ArcTo (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-		BOOL ArcTo (RECT& rc, POINT ptStart, POINT ptEnd) const;
-		BOOL AngleArc (int x, int y, int nRadius, float fStartAngle, float fSweepAngle) const;
-		int  GetArcDirection () const;
-		int  SetArcDirection (int nArcDirection) const;
-		BOOL PolyDraw (const POINT* lpPoints, const BYTE* lpTypes, int nCount) const;
-		BOOL Polyline (LPPOINT lpPoints, int nCount) const;
-		BOOL PolyPolyline (const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount) const;
-		BOOL PolylineTo (const POINT* lpPoints, int nCount) const;
-		BOOL PolyBezier (const POINT* lpPoints, int nCount) const;
-		BOOL PolyBezierTo (const POINT* lpPoints, int nCount) const;
-		BOOL SetPixelV (int x, int y, COLORREF crColor) const;
-		BOOL SetPixelV (POINT pt, COLORREF crColor) const;
+		BOOL Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
+		BOOL Arc(RECT& rc, POINT ptStart, POINT ptEnd) const;
+		BOOL ArcTo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
+		BOOL ArcTo(RECT& rc, POINT ptStart, POINT ptEnd) const;
+		BOOL AngleArc(int x, int y, int nRadius, float fStartAngle, float fSweepAngle) const;
+		int  GetArcDirection() const;
+		int  SetArcDirection(int nArcDirection) const;
+		BOOL PolyDraw(const POINT* lpPoints, const BYTE* lpTypes, int nCount) const;
+		BOOL Polyline(LPPOINT lpPoints, int nCount) const;
+		BOOL PolyPolyline(const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount) const;
+		BOOL PolylineTo(const POINT* lpPoints, int nCount) const;
+		BOOL PolyBezier(const POINT* lpPoints, int nCount) const;
+		BOOL PolyBezierTo(const POINT* lpPoints, int nCount) const;
+		BOOL SetPixelV(int x, int y, COLORREF crColor) const;
+		BOOL SetPixelV(POINT pt, COLORREF crColor) const;
 #endif
 
 		// Shape Drawing Functions
-		void DrawFocusRect (const RECT& rc) const;
-		BOOL Ellipse (int x1, int y1, int x2, int y2) const;
-		BOOL Ellipse (const RECT& rc) const;
-		BOOL Polygon (LPPOINT lpPoints, int nCount) const;
-		BOOL Rectangle (int x1, int y1, int x2, int y2) const;
-		BOOL Rectangle (const RECT& rc) const;
-		BOOL RoundRect (int x1, int y1, int x2, int y2, int nWidth, int nHeight) const;
-		BOOL RoundRect (const RECT& rc, int nWidth, int nHeight) const;
+		void DrawFocusRect(const RECT& rc) const;
+		BOOL Ellipse(int x1, int y1, int x2, int y2) const;
+		BOOL Ellipse(const RECT& rc) const;
+		BOOL Polygon(LPPOINT lpPoints, int nCount) const;
+		BOOL Rectangle(int x1, int y1, int x2, int y2) const;
+		BOOL Rectangle(const RECT& rc) const;
+		BOOL RoundRect(int x1, int y1, int x2, int y2, int nWidth, int nHeight) const;
+		BOOL RoundRect(const RECT& rc, int nWidth, int nHeight) const;
 		
 #ifndef _WIN32_WCE
-		BOOL Chord (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-		BOOL Chord (const RECT& rc, POINT ptStart, POINT ptEnd) const;
-		BOOL Pie (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-		BOOL Pie (const RECT& rc, POINT ptStart, POINT ptEnd) const;
-		BOOL PolyPolygon (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount) const;
+		BOOL Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
+		BOOL Chord(const RECT& rc, POINT ptStart, POINT ptEnd) const;
+		BOOL Pie(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
+		BOOL Pie(const RECT& rc, POINT ptStart, POINT ptEnd) const;
+		BOOL PolyPolygon(LPPOINT lpPoints, LPINT lpPolyCounts, int nCount) const;
 #endif
 
 		// Fill and Image Drawing functions
-		BOOL FillRect (const RECT& rc, HBRUSH hbr) const;
-		BOOL InvertRect (const RECT& rc) const;
-		BOOL DrawIconEx (int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags) const;
-		BOOL DrawEdge (const RECT& rc, UINT nEdge, UINT nFlags) const;
-		BOOL DrawFrameControl (const RECT& rc, UINT nType, UINT nState) const;
-		BOOL FillRgn (HRGN hrgn, HBRUSH hbr) const;
-		void GradientFill (COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical);
-		void SolidFill (COLORREF Color, const RECT& rc);
+		BOOL FillRect(const RECT& rc, HBRUSH hbr) const;
+		BOOL InvertRect(const RECT& rc) const;
+		BOOL DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags) const;
+		BOOL DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const;
+		BOOL DrawFrameControl(const RECT& rc, UINT nType, UINT nState) const;
+		BOOL FillRgn(HRGN hrgn, HBRUSH hbr) const;
+		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical);
+		void SolidFill(COLORREF Color, const RECT& rc);
 		
 #ifndef _WIN32_WCE
-		BOOL DrawIcon (int x, int y, HICON hIcon) const;
-		BOOL DrawIcon (POINT point, HICON hIcon) const;
-		BOOL FrameRect (const RECT& rc, HBRUSH hbr) const;
-		BOOL PaintRgn (HRGN hrgn) const;
+		BOOL DrawIcon(int x, int y, HICON hIcon) const;
+		BOOL DrawIcon(POINT point, HICON hIcon) const;
+		BOOL FrameRect(const RECT& rc, HBRUSH hbr) const;
+		BOOL PaintRgn(HRGN hrgn) const;
 #endif
 
 		// Bitmap Functions
-		void DrawBitmap (int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask);
-		int  StretchDIBits (int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
+		void DrawBitmap(int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask);
+		int  StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
 			           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const;
-		BOOL PatBlt (int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
-		BOOL BitBlt (int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
-		BOOL StretchBlt (int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const;
+		BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
+		BOOL BitBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
+		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const;
 		
 #ifndef _WIN32_WCE
-		int  GetDIBits (HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const;
-		int  SetDIBits (HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const;
-		int  GetStretchBltMode () const;
-		int  SetStretchBltMode (int iStretchMode) const;
-		BOOL FloodFill (int x, int y, COLORREF crColor) const;
-		BOOL ExtFloodFill (int x, int y, COLORREF crColor, UINT nFillType) const;
+		int  GetDIBits(HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const;
+		int  SetDIBits(HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const;
+		int  GetStretchBltMode() const;
+		int  SetStretchBltMode(int iStretchMode) const;
+		BOOL FloodFill(int x, int y, COLORREF crColor) const;
+		BOOL ExtFloodFill(int x, int y, COLORREF crColor, UINT nFillType) const;
 #endif
 
 		// Clipping Functions
-		int  ExcludeClipRect (int Left, int Top, int Right, int BottomRect );
-		int  ExcludeClipRect (const RECT& rc);
-		int  GetClipBox (RECT& rc);			
-		int  GetClipRgn (HRGN hrgn);				
-		int  IntersectClipRect (int Left, int Top, int Right, int Bottom);
-		int  IntersectClipRect (const RECT& rc);
-		BOOL RectVisible (const RECT& rc);
-		int  SelectClipRgn (HRGN hrgn);
+		int  ExcludeClipRect(int Left, int Top, int Right, int BottomRect);
+		int  ExcludeClipRect(const RECT& rc);
+		int  GetClipBox(RECT& rc);			
+		int  GetClipRgn(HRGN hrgn);				
+		int  IntersectClipRect(int Left, int Top, int Right, int Bottom);
+		int  IntersectClipRect(const RECT& rc);
+		BOOL RectVisible(const RECT& rc);
+		int  SelectClipRgn(HRGN hrgn);
  
 #ifndef _WIN32_WCE
 		int  ExtSelectClipRgn(HRGN hrgn, int fnMode);
-		int  OffsetClipRgn (int nXOffset, int nYOffset);
-		BOOL PtVisible (int X, int Y);
+		int  OffsetClipRgn(int nXOffset, int nYOffset);
+		BOOL PtVisible(int X, int Y);
 #endif
 
         // Co-ordinate Functions
 #ifndef _WIN32_WCE
-		BOOL DPtoLP (LPPOINT lpPoints, int nCount )  const;
-		BOOL DPtoLP (RECT& rc)  const;
-		BOOL LPtoDP (LPPOINT lpPoints, int nCount )  const;
-		BOOL LPtoDP (RECT& rc)  const;
+		BOOL DPtoLP(LPPOINT lpPoints, int nCount)  const;
+		BOOL DPtoLP(RECT& rc)  const;
+		BOOL LPtoDP(LPPOINT lpPoints, int nCount)  const;
+		BOOL LPtoDP(RECT& rc)  const;
 #endif
 
 		// Layout Functions
-		DWORD GetLayout () const;
-		DWORD SetLayout (DWORD dwLayout) const;
+		DWORD GetLayout() const;
+		DWORD SetLayout(DWORD dwLayout) const;
 
 		// Mapping functions
 #ifndef _WIN32_WCE
-		int  GetMapMode ()  const;
-		int  SetMapMode (int nMapMode) const;
-		BOOL GetViewportOrgEx (LPPOINT lpPoint)  const;
-		BOOL SetViewportOrgEx (int x, int y, LPPOINT lpPoint = NULL) const;
-		BOOL SetViewportOrgEx (POINT point, LPPOINT lpPointRet = NULL) const;
-		BOOL OffsetViewportOrgEx (int nWidth, int nHeight, LPPOINT lpPoint = NULL ) const;
-		BOOL GetViewportExtEx (LPSIZE lpSize)  const;
-		BOOL SetViewportExtEx (int x, int y, LPSIZE lpSize ) const;
-		BOOL SetViewportExtEx (SIZE size, LPSIZE lpSizeRet ) const;
-		BOOL ScaleViewportExtEx (int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const;
-		BOOL OffsetWindowOrg (int nWidth, int nHeight, LPPOINT lpPoint ) const;
-		BOOL GetWindowExtEx (LPSIZE lpSize)  const;
-		BOOL SetWindowExtEx (int x, int y, LPSIZE lpSize ) const;
-		BOOL SetWindowExtEx (SIZE size, LPSIZE lpSizeRet) const;
-		BOOL ScaleWindowExtEx (int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const;
-		BOOL GetWindowOrgEx (LPPOINT lpPoint)  const;
-		BOOL SetWindowOrgEx (int x, int y, LPPOINT lpPoint ) const;
-		BOOL SetWindowOrgEx (POINT point, LPPOINT lpPointRet ) const;
-		BOOL OffsetWindowOrgEx (int nWidth, int nHeight, LPPOINT lpPoint ) const;
+		int  GetMapMode() const;
+		int  SetMapMode(int nMapMode) const;
+		BOOL GetViewportOrgEx(LPPOINT lpPoint)  const;
+		BOOL SetViewportOrgEx(int x, int y, LPPOINT lpPoint = NULL) const;
+		BOOL SetViewportOrgEx(POINT point, LPPOINT lpPointRet = NULL) const;
+		BOOL OffsetViewportOrgEx(int nWidth, int nHeight, LPPOINT lpPoint = NULL) const;
+		BOOL GetViewportExtEx(LPSIZE lpSize)  const;
+		BOOL SetViewportExtEx(int x, int y, LPSIZE lpSize) const;
+		BOOL SetViewportExtEx(SIZE size, LPSIZE lpSizeRet) const;
+		BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const;
+		BOOL OffsetWindowOrg(int nWidth, int nHeight, LPPOINT lpPoint) const;
+		BOOL GetWindowExtEx(LPSIZE lpSize)  const;
+		BOOL SetWindowExtEx(int x, int y, LPSIZE lpSize) const;
+		BOOL SetWindowExtEx(SIZE size, LPSIZE lpSizeRet) const;
+		BOOL ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const;
+		BOOL GetWindowOrgEx(LPPOINT lpPoint)  const;
+		BOOL SetWindowOrgEx(int x, int y, LPPOINT lpPoint) const;
+		BOOL SetWindowOrgEx(POINT point, LPPOINT lpPointRet) const;
+		BOOL OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint) const;
 #endif
 
 		// Printer Functions
-		int StartDoc (LPDOCINFO lpDocInfo) const;
-		int EndDoc () const;
-		int StartPage () const;
-		int EndPage () const;
-		int AbortDoc () const;
-		int SetAbortProc (BOOL (CALLBACK* lpfn)(HDC, int)) const;
+		int StartDoc(LPDOCINFO lpDocInfo) const;
+		int EndDoc() const;
+		int StartPage() const;
+		int EndPage() const;
+		int AbortDoc() const;
+		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
 
 		// Text Functions
-		int  DrawText (LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const;
-		int  DrawText (tString String, LPRECT lprc, UINT nFormat) const;
-		BOOL ExtTextOut (int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
-		BOOL ExtTextOut (int x, int y, UINT nOptions, LPCRECT lprc, tString String, LPINT lpDxWidths = NULL) const;
-		COLORREF GetBkColor () const;
-		int  GetBkMode () const;
-		UINT GetTextAlign () const;
-		int  GetTextFace (int nCount, LPTSTR lpszFacename) const;
-		COLORREF GetTextColor () const;		
-		BOOL  GetTextMetrics (TEXTMETRIC& Metrics) const;
-		COLORREF SetBkColor (COLORREF crColor) const;
-		int  SetBkMode (int iBkMode) const;	
-		UINT  SetTextAlign (UINT nFlags) const;
-		COLORREF SetTextColor (COLORREF crColor) const;
+		int  DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const;
+		int  DrawText(tString String, LPRECT lprc, UINT nFormat) const;
+		BOOL ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
+		BOOL ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, tString String, LPINT lpDxWidths = NULL) const;
+		COLORREF GetBkColor() const;
+		int  GetBkMode() const;
+		UINT GetTextAlign() const;
+		int  GetTextFace(int nCount, LPTSTR lpszFacename) const;
+		COLORREF GetTextColor() const;		
+		BOOL  GetTextMetrics(TEXTMETRIC& Metrics) const;
+		COLORREF SetBkColor(COLORREF crColor) const;
+		int  SetBkMode(int iBkMode) const;	
+		UINT  SetTextAlign(UINT nFlags) const;
+		COLORREF SetTextColor(COLORREF crColor) const;
 
 #ifndef _WIN32_WCE
-		int   DrawTextEx (LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const;
-		int   DrawTextEx (tString String, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const;
-		CSize GetTabbedTextExtent (LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
-		CSize GetTabbedTextExtent (tString String, int nTabPositions, LPINT lpnTabStopPositions) const;		
-		int   GetTextCharacterExtra () const;
-		CSize GetTextExtentPoint32 (LPCTSTR lpszString, int nCount) const;
-		CSize GetTextExtentPoint32 (tString String) const;
-		BOOL  GrayString (HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const;
-		int   SetTextCharacterExtra (int nCharExtra) const;
-		int   SetTextJustification (int nBreakExtra, int nBreakCount) const;
-		CSize TabbedTextOut (int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
-		CSize TabbedTextOut (int x, int y, tString tString, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
-		BOOL  TextOut (int x, int y, LPCTSTR lpszString, int nCount = -1) const;
-		BOOL  TextOut (int x, int y, tString String) const;
+		int   DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const;
+		int   DrawTextEx(tString String, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const;
+		CSize GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
+		CSize GetTabbedTextExtent(tString String, int nTabPositions, LPINT lpnTabStopPositions) const;		
+		int   GetTextCharacterExtra() const;
+		CSize GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const;
+		CSize GetTextExtentPoint32(tString String) const;
+		BOOL  GrayString(HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const;
+		int   SetTextCharacterExtra(int nCharExtra) const;
+		int   SetTextJustification(int nBreakExtra, int nBreakCount) const;
+		CSize TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
+		CSize TabbedTextOut(int x, int y, tString tString, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
+		BOOL  TextOut(int x, int y, LPCTSTR lpszString, int nCount = -1) const;
+		BOOL  TextOut(int x, int y, tString String) const;
 #endif
 
 	private:
 		void AddToMap();
-		void Release ();
-		void RemoveCurrentBitmap ();
-		void RemoveCurrentBrush ();
-		void RemoveCurrentFont ();
-		void RemoveCurrentPalette ();
-		void RemoveCurrentPen ();
-		void RemoveCurrentRgn ();
+		void Release();
+		void RemoveCurrentBitmap();
+		void RemoveCurrentBrush();
+		void RemoveCurrentFont();
+		void RemoveCurrentPalette();
+		void RemoveCurrentPen();
+		void RemoveCurrentRgn();
 		BOOL RemoveFromMap();
 
 		DataMembers* m_pData;		// pointer to the class's data members
@@ -787,21 +787,21 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Declarations for the CBitmap class
 	//
-	inline CBitmap::CBitmap ()
+	inline CBitmap::CBitmap()
 	{
 		m_pData = new DataMembers;
 		m_pData->hBitmap = 0;
 		m_pData->Count = 1L;
 	}
 
-	inline CBitmap::CBitmap (HBITMAP hBitmap)
+	inline CBitmap::CBitmap(HBITMAP hBitmap)
 	{
 		m_pData = new DataMembers;
 		m_pData->hBitmap = hBitmap;
 		m_pData->Count = 1L;
 	}
 
-	inline CBitmap::CBitmap (LPCTSTR lpszName)
+	inline CBitmap::CBitmap(LPCTSTR lpszName)
 	{
 		m_pData = new DataMembers;
 		m_pData->hBitmap = 0;
@@ -809,7 +809,7 @@ namespace Win32xx
 		m_pData->Count = 1L;
 	}
 
-	inline CBitmap::CBitmap (int nID)
+	inline CBitmap::CBitmap(int nID)
 	{
 		m_pData = new DataMembers;
 		m_pData->hBitmap = 0;
@@ -817,7 +817,7 @@ namespace Win32xx
 		m_pData->Count = 1L;
 	}
 
-	inline CBitmap::CBitmap (const CBitmap& rhs)
+	inline CBitmap::CBitmap(const CBitmap& rhs)
 	// Note: A copy of a CBitmap is a clone of the original.
 	//       Both objects manipulate the one HBITMAP.	
 	{
@@ -828,7 +828,7 @@ namespace Win32xx
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	inline CBitmap::operator HBITMAP () const
+	inline CBitmap::operator HBITMAP() const
 	{
 		assert(m_pData);
 		return m_pData->hBitmap;
@@ -856,12 +856,12 @@ namespace Win32xx
 	}
 
 
-	inline CBitmap::~CBitmap ()
+	inline CBitmap::~CBitmap()
 	{
 		Release();
 	}
 
-	inline void CBitmap::Attach (HBITMAP hBitmap)
+	inline void CBitmap::Attach(HBITMAP hBitmap)
 	// Attaches a HBITMAP to the CBitmap object.
 	// The HBITMAP will be automatically deleted when the destructor is called unless it is detached.
 	{
@@ -871,7 +871,7 @@ namespace Win32xx
 		m_pData->hBitmap = hBitmap;
 	}
 
-	inline HBITMAP CBitmap::Detach ()
+	inline HBITMAP CBitmap::Detach()
 	// Detaches a HBITMAP from the CBitmap object.
 	{
 		assert(m_pData);
@@ -881,19 +881,19 @@ namespace Win32xx
 		return hBitmap;
 	}
 
-	inline HBITMAP CBitmap::GetBitmap () const
+	inline HBITMAP CBitmap::GetBitmap() const
 	{
 		assert(m_pData);
 		return m_pData->hBitmap;
 	}
 
-	inline HBITMAP CBitmap::LoadBitmap (int nID)
+	inline HBITMAP CBitmap::LoadBitmap(int nID)
 	// Loads a bitmap from a resource using the resource ID.
 	{
 		return LoadBitmap(MAKEINTRESOURCE(nID));
 	}
 
-	inline HBITMAP CBitmap::LoadBitmap (LPCTSTR lpszName)
+	inline HBITMAP CBitmap::LoadBitmap(LPCTSTR lpszName)
 	// Loads a bitmap from a resource using the resource string.
 	{
 		assert(GetApp());
@@ -925,7 +925,7 @@ namespace Win32xx
 		return m_pData->hBitmap;
 	}
 
-	inline void CBitmap::LoadOEMBitmap (UINT nIDBitmap) // for OBM_/OCR_/OIC_
+	inline void CBitmap::LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	// Loads a predefined bitmap
 	// Predefined bitmaps include: OBM_BTNCORNERS, OBM_BTSIZE, OBM_CHECK, OBM_CHECKBOXES, OBM_CLOSE, OBM_COMBO
 	//  OBM_DNARROW, OBM_DNARROWD, OBM_DNARROWI, OBM_LFARROW, OBM_LFARROWD, OBM_LFARROWI, OBM_MNARROW,OBM_OLD_CLOSE 
@@ -937,12 +937,12 @@ namespace Win32xx
 		if (m_pData->hBitmap != NULL)
 			::DeleteObject(m_pData->hBitmap);
 
-		m_pData->hBitmap = ::LoadBitmap (NULL, MAKEINTRESOURCE(nIDBitmap));
+		m_pData->hBitmap = ::LoadBitmap(NULL, MAKEINTRESOURCE(nIDBitmap));
 		assert(m_pData->hBitmap);
 	}
 
 #ifndef _WIN32_WCE
-		inline HBITMAP CBitmap::CreateMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
+		inline HBITMAP CBitmap::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
 		// Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
 		{			
 			assert(GetApp());
@@ -950,25 +950,25 @@ namespace Win32xx
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
-			m_pData->hBitmap = ::CreateMappedBitmap (GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+			m_pData->hBitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 			assert(m_pData->hBitmap);
 			return m_pData->hBitmap;
 		}
 #endif // !_WIN32_WCE
 
-		inline void CBitmap::CreateBitmap (int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits)
+		inline void CBitmap::CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits)
 		// Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).	
 		{
 			assert(m_pData);
 			if (m_pData->hBitmap != NULL)
 				::DeleteObject(m_pData->hBitmap);
 
-			m_pData->hBitmap = ::CreateBitmap (nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
+			m_pData->hBitmap = ::CreateBitmap(nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
 			assert(m_pData->hBitmap);
 		}
 
 #ifndef _WIN32_WCE
-		inline void CBitmap::CreateBitmapIndirect (LPBITMAP lpBitmap)
+		inline void CBitmap::CreateBitmapIndirect(LPBITMAP lpBitmap)
 		// Creates a bitmap with the width, height, and color format specified in the BITMAP structure.	
 		{
 			assert(m_pData);
@@ -980,7 +980,7 @@ namespace Win32xx
 		}
 #endif // !_WIN32_WCE
 
-		inline void CBitmap::CreateCompatibleBitmap (HDC hDC, int nWidth, int nHeight)
+		inline void CBitmap::CreateCompatibleBitmap(HDC hDC, int nWidth, int nHeight)
 		// Creates a bitmap compatible with the device that is associated with the specified device context.
 		{
 			assert(m_pData);
@@ -992,7 +992,7 @@ namespace Win32xx
 		}
 
 		// Attributes
-		inline BITMAP CBitmap::GetBitmapData () const
+		inline BITMAP CBitmap::GetBitmapData() const
 		// Retrieves the BITMAP structure
 		{
 			assert(m_pData);
@@ -1003,7 +1003,7 @@ namespace Win32xx
 		}
 
 #ifndef _WIN32_WCE
-		inline CSize CBitmap::GetBitmapDimensionEx () const
+		inline CSize CBitmap::GetBitmapDimensionEx() const
 		// Retrieves the dimensions of a compatible bitmap. 
 		// The retrieved dimensions must have been set by the SetBitmapDimensionEx function.	
 		{
@@ -1014,7 +1014,7 @@ namespace Win32xx
 			return Size;
 		}
 
-		inline CSize CBitmap::SetBitmapDimensionEx (int nWidth, int nHeight)
+		inline CSize CBitmap::SetBitmapDimensionEx(int nWidth, int nHeight)
 		// The SetBitmapDimensionEx function assigns preferred dimensions to a bitmap. 
 		// These dimensions can be used by applications; however, they are not used by the system.		
 		{
@@ -1026,7 +1026,7 @@ namespace Win32xx
 		}
 
 		// DIB support
-		inline HBITMAP CBitmap::CreateDIBitmap (HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
+		inline HBITMAP CBitmap::CreateDIBitmap(HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 		// Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.	
 		{
 			assert(m_pData);
@@ -1039,7 +1039,7 @@ namespace Win32xx
 		}
 #endif // !_WIN32_WCE
 
-		inline void CBitmap::CreateDIBSection (HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
+		inline void CBitmap::CreateDIBSection(HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
 		// Creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values. 
 		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.		
 		{
@@ -1052,7 +1052,7 @@ namespace Win32xx
 		}
 
 #ifndef _WIN32_WCE
-		inline int CBitmap::GetDIBits (HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const
+		inline int CBitmap::GetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const
 		// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
 		{
 			assert(m_pData);
@@ -1090,28 +1090,28 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Definitions of the CBrush class
 	//
-	inline CBrush::CBrush ()
+	inline CBrush::CBrush()
 	{
 		m_pData = new DataMembers;
 		m_pData->hBrush = 0;
 		m_pData->Count = 1L;
 	}
 
-	inline CBrush::CBrush (HBRUSH hBrush)
+	inline CBrush::CBrush(HBRUSH hBrush)
 	{
 		m_pData = new DataMembers;
 		m_pData->hBrush = hBrush;
 		m_pData->Count = 1L;
 	}
 
-	inline CBrush::CBrush (COLORREF crColor)
+	inline CBrush::CBrush(COLORREF crColor)
 	{
 		assert(m_pData);
-		m_pData->hBrush = ::CreateSolidBrush (crColor);
+		m_pData->hBrush = ::CreateSolidBrush(crColor);
 		assert (m_pData->hBrush);
 	}
 
-	inline CBrush::CBrush (const CBrush& rhs)
+	inline CBrush::CBrush(const CBrush& rhs)
 	// Note: A copy of a CBrush is a clone of the original.
 	//       Both objects manipulate the one HBRUSH.
 	{
@@ -1122,7 +1122,7 @@ namespace Win32xx
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	inline CBrush::operator HBRUSH () const
+	inline CBrush::operator HBRUSH() const
 	{
 		assert(m_pData);
 		return m_pData->hBrush;
@@ -1143,12 +1143,12 @@ namespace Win32xx
 	}
 
 
-	inline CBrush::~CBrush ()
+	inline CBrush::~CBrush()
 	{
 		Release();
 	}
 
-	inline void CBrush::Attach (HBRUSH hBrush)
+	inline void CBrush::Attach(HBRUSH hBrush)
 	// Attaches a HBRUSH to the CBrush object.
 	// The HBRUSH will be automatically deleted when the destructor is called unless it is detached.	
 	{
@@ -1158,7 +1158,7 @@ namespace Win32xx
 		m_pData->hBrush = hBrush;
 	}
 
-	inline HBRUSH CBrush::Detach ()
+	inline HBRUSH CBrush::Detach()
 	// Detaches a HBRUSH from the CBrush object
 	{
 		assert(m_pData);
@@ -1167,48 +1167,48 @@ namespace Win32xx
 		return hBrush;
 	}
 
-	inline HBRUSH CBrush::GetBrush () const
+	inline HBRUSH CBrush::GetBrush() const
 	{
 		assert(m_pData);
 		return m_pData->hBrush;
 	}
 
-	inline void CBrush::CreateSolidBrush (COLORREF crColor)
+	inline void CBrush::CreateSolidBrush(COLORREF crColor)
 	// Creates a logical brush that has the specified solid color.	
 	{
 		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
-		m_pData->hBrush = ::CreateSolidBrush (crColor);
+		m_pData->hBrush = ::CreateSolidBrush(crColor);
 		assert (m_pData->hBrush);
 	}
 
 #ifndef _WIN32_WCE
-	inline void CBrush::CreateHatchBrush (int nIndex, COLORREF crColor)
+	inline void CBrush::CreateHatchBrush(int nIndex, COLORREF crColor)
 	// Creates a logical brush that has the specified hatch pattern and color.
 	{
 		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
-		m_pData->hBrush = ::CreateHatchBrush (nIndex, crColor);
+		m_pData->hBrush = ::CreateHatchBrush(nIndex, crColor);
 		assert (m_pData->hBrush);
 	}
 
-	inline void CBrush::CreateBrushIndirect (LPLOGBRUSH lpLogBrush)
+	inline void CBrush::CreateBrushIndirect(LPLOGBRUSH lpLogBrush)
 	// Creates a logical brush from style, color, and pattern specified in the LOGPRUSH struct.
 	{
 		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
-		m_pData->hBrush = ::CreateBrushIndirect (lpLogBrush);
+		m_pData->hBrush = ::CreateBrushIndirect(lpLogBrush);
 		assert (m_pData->hBrush);
 	}
 #endif // !defined(_WIN32_WCE)
 
-	inline void CBrush::CreatePatternBrush (HBITMAP hBitmap)
+	inline void CBrush::CreatePatternBrush(HBITMAP hBitmap)
 	// Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap, 
 	// which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.	
 	{
@@ -1216,22 +1216,22 @@ namespace Win32xx
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
-		m_pData->hBrush = ::CreatePatternBrush (hBitmap);
+		m_pData->hBrush = ::CreatePatternBrush(hBitmap);
 		assert (m_pData->hBrush);
 	}
 
-	inline void CBrush::CreateDIBPatternBrushPt (LPCVOID lpPackedDIB, UINT nUsage)
+	inline void CBrush::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage)
 	// Creates a logical brush that has the pattern specified by the device-independent bitmap (DIB).	
 	{
 		assert(m_pData);
 		if (m_pData->hBrush != NULL)
 			::DeleteObject(m_pData->hBrush);
 
-		m_pData->hBrush = ::CreateDIBPatternBrushPt (lpPackedDIB, nUsage);
+		m_pData->hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, nUsage);
 		assert (m_pData->hBrush);
 	}
 
-	inline LOGBRUSH CBrush::GetLogBrush () const
+	inline LOGBRUSH CBrush::GetLogBrush() const
 	// Retrieves the LOGBRUSH structure that defines the style, color, and pattern of a physical brush.	
 	{
 		assert(m_pData);
@@ -1262,21 +1262,21 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Definitions of the CFont class
 	//
-	inline CFont::CFont ()
+	inline CFont::CFont()
 	{
 		m_pData = new DataMembers;
 		m_pData->hFont = 0;
 		m_pData->Count = 1L;
 	}
 
-	inline CFont::CFont (HFONT hFont)
+	inline CFont::CFont(HFONT hFont)
 	{
 		m_pData = new DataMembers;
 		m_pData->hFont = hFont;
 		m_pData->Count = 1L;
 	}
 
-	inline CFont::CFont (const CFont& rhs)
+	inline CFont::CFont(const CFont& rhs)
 	// Note: A copy of a CFont is a clone of the original.
 	//       Both objects manipulate the one HFONT.	
 	{
@@ -1294,7 +1294,7 @@ namespace Win32xx
 		m_pData->hFont = hFont;
 	}
 
-	inline CFont::operator HFONT () const
+	inline CFont::operator HFONT() const
 	{
 		assert(m_pData);
 		return m_pData->hFont;
@@ -1314,12 +1314,12 @@ namespace Win32xx
 		return *this;
 	}
 
-	inline CFont::~CFont ()
+	inline CFont::~CFont()
 	{
 		Release();
 	}
 
-	inline void CFont::Attach (HFONT hFont)
+	inline void CFont::Attach(HFONT hFont)
 	// Attaches a HFONT to the CFont object.
 	// The HFONT will be automatically deleted when the destructor is called unless it is detached.	
 	{
@@ -1329,7 +1329,7 @@ namespace Win32xx
 		m_pData->hFont = hFont;
 	}
 
-	inline HFONT CFont::Detach ()
+	inline HFONT CFont::Detach()
 	// Detaches a HFONT from the CFont object	
 	{
 		assert(m_pData);
@@ -1338,13 +1338,13 @@ namespace Win32xx
 		return hFont;
 	}
 
-	inline HFONT CFont::GetFont () const
+	inline HFONT CFont::GetFont() const
 	{
 		assert(m_pData);
 		return m_pData->hFont;
 	}
 
-	inline void CFont::CreateFontIndirect (const LOGFONT* lpLogFont)
+	inline void CFont::CreateFontIndirect(const LOGFONT* lpLogFont)
 	// Creates a logical font that has the specified characteristics.	
 	{
 		assert(m_pData);
@@ -1355,24 +1355,24 @@ namespace Win32xx
 		assert(m_pData->hFont);
 	}
 
-	inline void CFont::CreatePointFont (int nPointSize, LPCTSTR lpszFaceName, HDC hDC /*= NULL*/, BOOL bBold /*= FALSE*/, BOOL bItalic /*= FALSE*/)
+	inline void CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hDC /*= NULL*/, BOOL bBold /*= FALSE*/, BOOL bItalic /*= FALSE*/)
 	// Creates a font of a specified typeface and point size.	
 	{
 		LOGFONT logFont = { 0 };
 		logFont.lfCharSet = DEFAULT_CHARSET;
 		logFont.lfHeight = nPointSize;
 
-		lstrcpy (logFont.lfFaceName, lpszFaceName);
+		lstrcpy(logFont.lfFaceName, lpszFaceName);
 
 		if (bBold)
 			logFont.lfWeight = FW_BOLD;
 		if (bItalic)
 			logFont.lfItalic = (BYTE)TRUE;
 
-		CreatePointFontIndirect (&logFont, hDC);
+		CreatePointFontIndirect(&logFont, hDC);
 	}
 
-	inline void CFont::CreatePointFontIndirect (const LOGFONT* lpLogFont, HDC hDC /* = NULL*/)
+	inline void CFont::CreatePointFontIndirect(const LOGFONT* lpLogFont, HDC hDC /* = NULL*/)
 	// Creates a font of a specified typeface and point size.
 	// This function automatically converts the height in lfHeight to logical units using the specified device context.	
 	{
@@ -1402,13 +1402,8 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-//	inline void CFont::CreateFontIndirectEx (const ENUMLOGFONTEXDV* penumlfex)
-//	{
-//		assert(m_hFont == NULL);
-//		m_hFont = ::CreateFontIndirectEx (penumlfex);
-//	}
 
-	inline void CFont::CreateFont (int nHeight, int nWidth, int nEscapement,
+	inline void CFont::CreateFont(int nHeight, int nWidth, int nEscapement,
 			int nOrientation, int nWeight, DWORD dwItalic, DWORD dwUnderline,
 			DWORD dwStrikeOut, DWORD dwCharSet, DWORD dwOutPrecision,
 			DWORD dwClipPrecision, DWORD dwQuality, DWORD dwPitchAndFamily,
@@ -1419,7 +1414,7 @@ namespace Win32xx
 		if (m_pData->hFont != NULL)
 			::DeleteObject(m_pData->hFont);
 
-		m_pData->hFont = ::CreateFont (nHeight, nWidth, nEscapement,
+		m_pData->hFont = ::CreateFont(nHeight, nWidth, nEscapement,
 			nOrientation, nWeight, dwItalic, dwUnderline, dwStrikeOut,
 			dwCharSet, dwOutPrecision, dwClipPrecision, dwQuality,
 			dwPitchAndFamily, lpszFacename);
@@ -1427,13 +1422,13 @@ namespace Win32xx
 	}
 #endif // #ifndef _WIN32_WCE
 
-	inline LOGFONT CFont::GetLogFont () const
+	inline LOGFONT CFont::GetLogFont() const
 	// Retrieves the Logfont structure that contains font attributes	
 	{
 		assert(m_pData);
 		assert(m_pData->hFont != NULL);
 		LOGFONT LogFont = {0};
-		::GetObject (m_pData->hFont, sizeof(LOGFONT), &LogFont);
+		::GetObject(m_pData->hFont, sizeof(LOGFONT), &LogFont);
 		return LogFont;
 	}
 
@@ -1458,21 +1453,21 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Definitions of the CPalette class
 	//
-	inline CPalette::CPalette ()
+	inline CPalette::CPalette()
 	{
 		m_pData = new DataMembers;
 		m_pData->hPalette = 0;
 		m_pData->Count = 1L;
 	}
 
-	inline CPalette::CPalette (HPALETTE hPalette)
+	inline CPalette::CPalette(HPALETTE hPalette)
 	{
 		m_pData = new DataMembers;
 		m_pData->hPalette = hPalette;
 		m_pData->Count = 1L;
 	}
 
-	inline CPalette::CPalette (const CPalette& rhs)
+	inline CPalette::CPalette(const CPalette& rhs)
 	// Note: A copy of a CPalette is a clone of the original.
 	//       Both objects manipulate the one HPalette.	
 	{
@@ -1483,7 +1478,7 @@ namespace Win32xx
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	inline CPalette::operator HPALETTE () const
+	inline CPalette::operator HPALETTE() const
 	{
 		assert(m_pData);
 		return m_pData->hPalette;
@@ -1496,7 +1491,7 @@ namespace Win32xx
 		m_pData->hPalette = hPalette;
 	}
 
-	inline CPalette& CPalette::operator = ( const CPalette& rhs )
+	inline CPalette& CPalette::operator = (const CPalette& rhs)
 	// Note: A copy of a CPalette is a clone of the original.
 	//       Both objects manipulate the one HPalette.	
 	{
@@ -1516,7 +1511,7 @@ namespace Win32xx
 		Release();
 	}
 
-	inline void CPalette::Attach (HPALETTE hPalette)
+	inline void CPalette::Attach(HPALETTE hPalette)
 	// Attaches a HPALETTE to the CPalette object.
 	// The HPALETTE will be automatically deleted when the destructor is called unless it is detached.
 	{
@@ -1526,7 +1521,7 @@ namespace Win32xx
 		m_pData->hPalette = hPalette;
 	}
 
-	inline HPALETTE CPalette::Detach ()
+	inline HPALETTE CPalette::Detach()
 	// Detaches a HPALETTE from the CPalette object	
 	{
 		assert(m_pData);
@@ -1535,13 +1530,13 @@ namespace Win32xx
 		return hPalette;
 	}
 
-	inline HPALETTE CPalette::GetPalette () const
+	inline HPALETTE CPalette::GetPalette() const
 	{
 		assert(m_pData);
 		return m_pData->hPalette;
 	}
 
-	inline void CPalette::CreatePalette (LPLOGPALETTE lpLogPalette)
+	inline void CPalette::CreatePalette(LPLOGPALETTE lpLogPalette)
 	// Creates a logical palette from the information in the specified LOGPALETTE structure.	
 	{
 		assert(m_pData);
@@ -1553,7 +1548,7 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CPalette::CreateHalftonePalette (HDC hDC)
+	inline void CPalette::CreateHalftonePalette(HDC hDC)
 	// Creates a halftone palette for the specified device context (DC).	
 	{
 		assert(m_pData);
@@ -1566,56 +1561,56 @@ namespace Win32xx
 	}
 #endif // !_WIN32_WCE
 
-	inline int CPalette::GetEntryCount () const
+	inline int CPalette::GetEntryCount() const
 	// Retrieve the number of entries in the palette.	
 	{
 		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
 		WORD nEntries = 0;
-		::GetObject (m_pData->hPalette, sizeof(WORD), &nEntries);
+		::GetObject(m_pData->hPalette, sizeof(WORD), &nEntries);
 		return (int)nEntries;
 	}
 
-	inline UINT CPalette::GetPaletteEntries (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
+	inline UINT CPalette::GetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	// Retrieves a specified range of palette entries from the palette.	
 	{
 		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
-		return ::GetPaletteEntries (m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
+		return ::GetPaletteEntries(m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
-	inline UINT CPalette::SetPaletteEntries (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
+	inline UINT CPalette::SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
 	// Sets RGB (red, green, blue) color values and flags in a range of entries in the palette.	
 	{
 		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
-		return ::SetPaletteEntries (m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
+		return ::SetPaletteEntries(m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
 #ifndef _WIN32_WCE
-	inline void CPalette::AnimatePalette (UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
+	inline void CPalette::AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
 	// Replaces entries in the palette.	
 	{
 		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
-		::AnimatePalette (m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
+		::AnimatePalette(m_pData->hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
-	inline BOOL CPalette::ResizePalette (UINT nNumEntries)
+	inline BOOL CPalette::ResizePalette(UINT nNumEntries)
 	//  Increases or decreases the size of the palette based on the specified value.	
 	{
 		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
-		return ::ResizePalette (m_pData->hPalette, nNumEntries);
+		return ::ResizePalette(m_pData->hPalette, nNumEntries);
 	}
 #endif // !_WIN32_WCE
 
-	inline UINT CPalette::GetNearestPaletteIndex (COLORREF crColor) const
+	inline UINT CPalette::GetNearestPaletteIndex(COLORREF crColor) const
 	// Retrieves the index for the entry in the palette most closely matching a specified color value.	
 	{
 		assert(m_pData);
 		assert(m_pData->hPalette != NULL);
-		return ::GetNearestPaletteIndex (m_pData->hPalette, crColor);
+		return ::GetNearestPaletteIndex(m_pData->hPalette, crColor);
 	}
 
 	inline void CPalette::Release()
@@ -1638,33 +1633,33 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Declarations for the CPen class
 	//
-	inline CPen::CPen ()
+	inline CPen::CPen()
 	{
 		m_pData = new DataMembers;
 		m_pData->hPen = 0;
 		m_pData->Count = 1L;
 	}
-	inline CPen::CPen (int nPenStyle, int nWidth, COLORREF crColor)
+	inline CPen::CPen(int nPenStyle, int nWidth, COLORREF crColor)
 	{
 		m_pData = new DataMembers;
-		m_pData->hPen = ::CreatePen (nPenStyle, nWidth, crColor);
+		m_pData->hPen = ::CreatePen(nPenStyle, nWidth, crColor);
 		m_pData->Count = 1L;
 
-		assert (m_pData->hPen);
+		assert(m_pData->hPen);
 	}
 
 #ifndef _WIN32_WCE
-	inline CPen::CPen (int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
+	inline CPen::CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
 	{
 		m_pData = new DataMembers;
-		m_pData->hPen = ::ExtCreatePen (nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
+		m_pData->hPen = ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
 		m_pData->Count = 1L;
 
-		assert (m_pData->hPen);
+		assert(m_pData->hPen);
 	}
 #endif // !_WIN32_WCE
 
-	inline CPen::CPen (const CPen& rhs)
+	inline CPen::CPen(const CPen& rhs)
 	// Note: A copy of a CPen is a clone of the original.
 	//       Both objects manipulate the one HPEN.	
 	{
@@ -1688,7 +1683,7 @@ namespace Win32xx
 		return m_pData->hPen;
 	}
 
-	inline CPen& CPen::operator = ( const CPen& rhs )
+	inline CPen& CPen::operator = (const CPen& rhs)
 	// Note: A copy of a CPen is a clone of the original.
 	//       Both objects manipulate the one HPEN.	
 	{
@@ -1703,12 +1698,12 @@ namespace Win32xx
 	}
 
 
-	inline CPen::~CPen ()
+	inline CPen::~CPen()
 	{
 		Release();
 	}
 
-	inline void CPen::Attach (HPEN hPen)
+	inline void CPen::Attach(HPEN hPen)
 	// Attaches a HPEN to the CPen object.
 	// The HPEN will be automatically deleted when the destructor is called unless it is detached.
 	{
@@ -1718,7 +1713,7 @@ namespace Win32xx
 		m_pData->hPen = hPen;
 	}
 
-	inline HPEN CPen::Detach ()
+	inline HPEN CPen::Detach()
 	// Detaches a HPEN from the CPen object	
 	{
 		assert(m_pData);
@@ -1727,13 +1722,13 @@ namespace Win32xx
 		return hPen;
 	}
 
-	inline HPEN CPen::GetPen () const
+	inline HPEN CPen::GetPen() const
 	{
 		assert(m_pData);
 		return m_pData->hPen;
 	}
 
-	inline void CPen::CreatePen (int nPenStyle, int nWidth, COLORREF crColor)
+	inline void CPen::CreatePen(int nPenStyle, int nWidth, COLORREF crColor)
 	// Creates a logical pen that has the specified style, width, and color.	
 	{
 		assert(m_pData);
@@ -1744,7 +1739,7 @@ namespace Win32xx
 		assert(m_pData->hPen);
 	}
 
-	inline void CPen::CreatePenIndirect (LPLOGPEN lpLogPen)
+	inline void CPen::CreatePenIndirect(LPLOGPEN lpLogPen)
 	// Creates a logical cosmetic pen that has the style, width, and color specified in a structure.
 	{
 		assert(m_pData);
@@ -1755,7 +1750,7 @@ namespace Win32xx
 		assert(m_pData->hPen);
 	}
 
-	inline LOGPEN CPen::GetLogPen () const
+	inline LOGPEN CPen::GetLogPen() const
 	{
 		// Retrieves the LOGPEN struct that specifies the pen's style, width, and color.
 		assert(m_pData);
@@ -1767,7 +1762,7 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CPen::ExtCreatePen (int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
+	inline void CPen::ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
 	// Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
 	{
 		assert(m_pData);
@@ -1778,7 +1773,7 @@ namespace Win32xx
 		assert(m_pData->hPen);
 	}
 
-	inline EXTLOGPEN CPen::GetExtLogPen () const
+	inline EXTLOGPEN CPen::GetExtLogPen() const
 	// Retrieves the EXTLOGPEN struct that specifies the pen's style, width, color and brush attributes.	
 	{
 		assert(m_pData);
@@ -1811,21 +1806,21 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Definitions of the CRgn class
 	//
-	inline CRgn::CRgn ()
+	inline CRgn::CRgn()
 	{
 		m_pData = new DataMembers;
 		m_pData->hRgn = 0;
 		m_pData->Count = 1L;
 	}
 
-	inline CRgn::CRgn (HRGN hRgn)
+	inline CRgn::CRgn(HRGN hRgn)
 	{
 		m_pData = new DataMembers;
 		m_pData->hRgn = hRgn;
 		m_pData->Count = 1L;
 	}
 
-	inline CRgn::CRgn (const CRgn& rhs)
+	inline CRgn::CRgn(const CRgn& rhs)
 	// Note: A copy of a CRgn is a clone of the original.
 	//       Both objects manipulate the one HRGN.	
 	{
@@ -1844,7 +1839,7 @@ namespace Win32xx
 	inline void CRgn::operator = (HRGN hRgn)
 	{
 		assert(m_pData);
-		assert (m_pData->hRgn == NULL);
+		assert(m_pData->hRgn == NULL);
 		m_pData->hRgn = hRgn;
 	}
 
@@ -1863,12 +1858,12 @@ namespace Win32xx
 	}
 
 
-	inline CRgn::~CRgn ()
+	inline CRgn::~CRgn()
 	{
 		Release();
 	}
 
-	inline void CRgn::Attach (HRGN hRgn)
+	inline void CRgn::Attach(HRGN hRgn)
 	// Attaches a HRGN to the CRgn object.
 	// The HRGN will be automatically deleted when the destructor is called unless it is detached.
 	{
@@ -1878,7 +1873,7 @@ namespace Win32xx
 		m_pData->hRgn = hRgn;
 	}
 
-	inline HRGN CRgn::Detach ()
+	inline HRGN CRgn::Detach()
 	// Detaches a HRGN from the CRgn object
 	{
 		assert(m_pData);
@@ -1887,13 +1882,13 @@ namespace Win32xx
 		return hRgn;
 	}
 
-	inline HRGN CRgn::GetRgn () const
+	inline HRGN CRgn::GetRgn() const
 	{
 		assert(m_pData);
 		return m_pData->hRgn;
 	}
 
-	inline void CRgn::CreateRectRgn (int x1, int y1, int x2, int y2)
+	inline void CRgn::CreateRectRgn(int x1, int y1, int x2, int y2)
 	// Creates a rectangular region.
 	{	
 		assert(m_pData);
@@ -1904,7 +1899,7 @@ namespace Win32xx
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreateRectRgnIndirect (const RECT& rc)
+	inline void CRgn::CreateRectRgnIndirect(const RECT& rc)
 	// Creates a rectangular region.
 	{
 		assert(m_pData);
@@ -1916,62 +1911,62 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CRgn::CreateEllipticRgn (int x1, int y1, int x2, int y2)
+	inline void CRgn::CreateEllipticRgn(int x1, int y1, int x2, int y2)
 	// Creates an elliptical region.
 	{
 		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::CreateEllipticRgn (x1, y1, x2, y2);
+		m_pData->hRgn = ::CreateEllipticRgn(x1, y1, x2, y2);
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreateEllipticRgnIndirect (const RECT& rc)
+	inline void CRgn::CreateEllipticRgnIndirect(const RECT& rc)
 	// Creates an elliptical region.
 	{
 		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::CreateEllipticRgnIndirect (&rc);
+		m_pData->hRgn = ::CreateEllipticRgnIndirect(&rc);
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreatePolygonRgn (LPPOINT lpPoints, int nCount, int nMode)
+	inline void CRgn::CreatePolygonRgn(LPPOINT lpPoints, int nCount, int nMode)
 	// Creates a polygonal region.
 	{
 		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::CreatePolygonRgn (lpPoints, nCount, nMode);
+		m_pData->hRgn = ::CreatePolygonRgn(lpPoints, nCount, nMode);
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreatePolyPolygonRgn (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode)
+	inline void CRgn::CreatePolyPolygonRgn(LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode)
 	// Creates a region consisting of a series of polygons. The polygons can overlap.
 	{
 		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::CreatePolyPolygonRgn (lpPoints, lpPolyCounts, nCount, nPolyFillMode);
+		m_pData->hRgn = ::CreatePolyPolygonRgn(lpPoints, lpPolyCounts, nCount, nPolyFillMode);
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreateRoundRectRgn (int x1, int y1, int x2, int y2, int x3, int y3)
+	inline void CRgn::CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3)
 	// Creates a rectangular region with rounded corners.
 	{
 		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::CreateRoundRectRgn (x1, y1, x2, y2, x3, y3);
+		m_pData->hRgn = ::CreateRoundRectRgn(x1, y1, x2, y2, x3, y3);
 		assert (m_pData->hRgn);
 	}
 
-	inline void CRgn::CreateFromPath (HDC hDC)
+	inline void CRgn::CreateFromPath(HDC hDC)
 	// Creates a region from the path that is selected into the specified device context. 
 	// The resulting region uses device coordinates.	
 	{
@@ -1986,119 +1981,119 @@ namespace Win32xx
 
 #endif // !_WIN32_WCE
 
-	inline void CRgn::CreateFromData (const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
+	inline void CRgn::CreateFromData(const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
 	// Creates a region from the specified region and transformation data.
 	{
 		assert(m_pData);
 		if (m_pData->hRgn != NULL)
 			::DeleteObject(m_pData->hRgn);
 
-		m_pData->hRgn = ::ExtCreateRegion (lpXForm, nCount, pRgnData);
+		m_pData->hRgn = ::ExtCreateRegion(lpXForm, nCount, pRgnData);
 		assert(m_pData->hRgn);
 	}
 
-	inline void CRgn::SetRectRgn (int x1, int y1, int x2, int y2)
+	inline void CRgn::SetRectRgn(int x1, int y1, int x2, int y2)
 	// converts the region into a rectangular region with the specified coordinates.	
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		::SetRectRgn (m_pData->hRgn, x1, y1, x2, y2);
+		::SetRectRgn(m_pData->hRgn, x1, y1, x2, y2);
 	}
 
-	inline void CRgn::SetRectRgn (const RECT& rc)
+	inline void CRgn::SetRectRgn(const RECT& rc)
 	// converts the region into a rectangular region with the specified coordinates.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		::SetRectRgn (m_pData->hRgn, rc.left, rc.top, rc.right, rc.bottom);
+		::SetRectRgn(m_pData->hRgn, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline int CRgn::CombineRgn (HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode)
+	inline int CRgn::CombineRgn(HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode)
 	// Combines two sepcified regions and stores the result.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::CombineRgn (m_pData->hRgn, hRgnSrc1, hRgnSrc2, nCombineMode);
+		return ::CombineRgn(m_pData->hRgn, hRgnSrc1, hRgnSrc2, nCombineMode);
 	}
 
-	inline int CRgn::CombineRgn (HRGN hRgnSrc, int nCombineMode)
+	inline int CRgn::CombineRgn(HRGN hRgnSrc, int nCombineMode)
 	// Combines the sepcified region with the current region.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::CombineRgn (m_pData->hRgn, m_pData->hRgn, hRgnSrc, nCombineMode);
+		return ::CombineRgn(m_pData->hRgn, m_pData->hRgn, hRgnSrc, nCombineMode);
 	}
 
-	inline int CRgn::CopyRgn (HRGN hRgnSrc)
+	inline int CRgn::CopyRgn(HRGN hRgnSrc)
 	// Assigns the specified region to the current region.	
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn == NULL);
-		return ::CombineRgn (m_pData->hRgn, hRgnSrc, NULL, RGN_COPY);
+		return ::CombineRgn(m_pData->hRgn, hRgnSrc, NULL, RGN_COPY);
 	}
 
-	inline BOOL CRgn::EqualRgn (HRGN hRgn) const
+	inline BOOL CRgn::EqualRgn(HRGN hRgn) const
 	// Checks the two specified regions to determine whether they are identical.	
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::EqualRgn (m_pData->hRgn, hRgn);
+		return ::EqualRgn(m_pData->hRgn, hRgn);
 	}
 
-	inline int CRgn::OffsetRgn (int x, int y)
+	inline int CRgn::OffsetRgn(int x, int y)
 	// Moves a region by the specified offsets.	
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::OffsetRgn (m_pData->hRgn, x, y);
+		return ::OffsetRgn(m_pData->hRgn, x, y);
 	}
 
-	inline int CRgn::OffsetRgn (POINT& pt)
+	inline int CRgn::OffsetRgn(POINT& pt)
 	// Moves a region by the specified offsets.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::OffsetRgn (m_pData->hRgn, pt.x, pt.y);
+		return ::OffsetRgn(m_pData->hRgn, pt.x, pt.y);
 	}
 
-	inline int CRgn::GetRgnBox (RECT& rc) const
+	inline int CRgn::GetRgnBox(RECT& rc) const
 	// Retrieves the bounding rectangle of the specified region.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::GetRgnBox (m_pData->hRgn, &rc);
+		return ::GetRgnBox(m_pData->hRgn, &rc);
 	}
 
-	inline int CRgn::GetRegionData (LPRGNDATA lpRgnData, int nDataSize) const
+	inline int CRgn::GetRegionData(LPRGNDATA lpRgnData, int nDataSize) const
 	// Fills the specified buffer with data describing a region.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return (int)::GetRegionData (m_pData->hRgn, nDataSize, lpRgnData);
+		return (int)::GetRegionData(m_pData->hRgn, nDataSize, lpRgnData);
 	}
 
-	inline BOOL CRgn::PtInRegion (int x, int y) const
+	inline BOOL CRgn::PtInRegion(int x, int y) const
 	// Determines whether the specified point is inside the specified region.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::PtInRegion (m_pData->hRgn, x, y);
+		return ::PtInRegion(m_pData->hRgn, x, y);
 	}
 
-	inline BOOL CRgn::PtInRegion (POINT& pt) const
+	inline BOOL CRgn::PtInRegion(POINT& pt) const
 	// Determines whether the specified point is inside the specified region.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::PtInRegion (m_pData->hRgn, pt.x, pt.y);
+		return ::PtInRegion(m_pData->hRgn, pt.x, pt.y);
 	}
 
-	inline BOOL CRgn::RectInRegion (const RECT& rc) const
+	inline BOOL CRgn::RectInRegion(const RECT& rc) const
 	// Determines whether the specified rect is inside the specified region.
 	{
 		assert(m_pData);
 		assert(m_pData->hRgn != NULL);
-		return ::RectInRegion (m_pData->hRgn, &rc);
+		return ::RectInRegion(m_pData->hRgn, &rc);
 	}
 
 	inline void CRgn::Release()
@@ -2122,7 +2117,7 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Definitions of the CDC class
 	//
-	inline CDC::CDC ()
+	inline CDC::CDC()
 	{
 		// Allocate memory for our data members
 		m_pData = new DataMembers;
@@ -2136,7 +2131,7 @@ namespace Win32xx
 		m_pData->Count = 1L;
 	}
 
-	inline CDC::CDC (HDC hDC)
+	inline CDC::CDC(HDC hDC)
 	// This constructor assigns an existing HDC to the CDC
 	// The HDC WILL be released or deleted when the CDC object is destroyed
 
@@ -2163,7 +2158,7 @@ namespace Win32xx
 		AddToMap();
 	}
 
-	inline CDC::CDC (const CDC& rhs)	// Copy constructor
+	inline CDC::CDC(const CDC& rhs)	// Copy constructor
 	// The copy constructor is called when a temporary copy of the CDC needs to be created.
 	// This can happen when a CDC is passed by value in a function call. Each CDC copy manages
 	// the same Device Context and GDI objects.	
@@ -2180,7 +2175,7 @@ namespace Win32xx
 		AttachDC(hDC);
 	}
 
-	inline CDC& CDC::operator = ( const CDC& rhs )
+	inline CDC& CDC::operator = (const CDC& rhs)
 	// Note: A copy of a CDC is a clone of the original.
 	//       Both objects manipulate the one HDC	
 	{
@@ -2213,7 +2208,7 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Release();
 	}
 
-	inline void CDC::AttachDC (HDC hDC)
+	inline void CDC::AttachDC(HDC hDC)
 	// Attaches a HDC to the CDC object.
 	// The HDC will be automatically deleted or released when the destructor is called.	
 	{
@@ -2225,7 +2220,7 @@ namespace Win32xx
 		AddToMap();
 	}
 
-	inline HDC CDC::DetachDC ()
+	inline HDC CDC::DetachDC()
 	// Detaches the HDC from this object. 
 	{
 		assert(m_pData);
@@ -2248,7 +2243,7 @@ namespace Win32xx
 		return hDC;
 	}
 
-	inline void CDC::DrawBitmap (int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask)
+	inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask)
 	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
 	// Suitable for use with a Window DC or a memory DC
 	{
@@ -2276,7 +2271,7 @@ namespace Win32xx
 		return pDC;
 	}
 
-	inline void CDC::GradientFill (COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical)
+	inline void CDC::GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical)
 	// An efficient color gradient filler compatible with all Windows operating systems
 	{
 		int Width = rc.right - rc.left;
@@ -2312,7 +2307,7 @@ namespace Win32xx
 				int g = g1 + (i * (g2-g1) / Height);
 				int b = b1 + (i * (b2-b1) / Height);
 				SetBkColor(RGB(r, g, b));
-				CRect line( rc.left, i + rc.top, rc.left+Width, i + 1 + rc.top);
+				CRect line(rc.left, i + rc.top, rc.left+Width, i + 1 + rc.top);
 				ExtTextOut(0, 0, ETO_OPAQUE, line, NULL, 0, 0);
 			}
 		}
@@ -2320,7 +2315,7 @@ namespace Win32xx
 		SetBkColor(OldBkColor);
 	}
 
-	inline void CDC::Release ()
+	inline void CDC::Release()
 	{
 		if (m_pData->Count)
 		{
@@ -2380,7 +2375,7 @@ namespace Win32xx
 		return Success;
 	}
 
-	inline void CDC::RemoveCurrentBitmap ()
+	inline void CDC::RemoveCurrentBitmap()
 	{
 		if (m_pData->hBitmapOld)
 		{
@@ -2394,7 +2389,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDC::RemoveCurrentBrush ()
+	inline void CDC::RemoveCurrentBrush()
 	{
 		if (m_pData->hBrushOld)
 		{
@@ -2408,7 +2403,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDC::RemoveCurrentFont ()
+	inline void CDC::RemoveCurrentFont()
 	{
 		if (m_pData->hFontOld)
 		{
@@ -2422,7 +2417,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDC::RemoveCurrentPalette ()
+	inline void CDC::RemoveCurrentPalette()
 	{
 		if (m_pData->hPaletteOld)
 		{
@@ -2436,7 +2431,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDC::RemoveCurrentPen ()
+	inline void CDC::RemoveCurrentPen()
 	{
 		if (m_pData->hPenOld)
 		{
@@ -2450,7 +2445,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDC::RemoveCurrentRgn ()
+	inline void CDC::RemoveCurrentRgn()
 	{
 		if (m_pData->Rgn)
 		{
@@ -2460,7 +2455,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDC::SolidFill (COLORREF Color, const RECT& rc)
+	inline void CDC::SolidFill(COLORREF Color, const RECT& rc)
 	// Fills a rectangle with a solid color
 	{
 		COLORREF OldColor = SetBkColor(Color);
@@ -2469,7 +2464,7 @@ namespace Win32xx
 	}
 
 	// Bitmap functions
-	inline void CDC::AttachBitmap (HBITMAP hBitmap)
+	inline void CDC::AttachBitmap(HBITMAP hBitmap)
 	// Use this to attach an existing bitmap.
 	{
 		assert(m_pData->hDC);
@@ -2479,7 +2474,7 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, hBitmap);
 	}
 
-	inline void CDC::CreateCompatibleBitmap (HDC hDC, int cx, int cy)
+	inline void CDC::CreateCompatibleBitmap(HDC hDC, int cx, int cy)
 	// Creates a compatible bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
@@ -2489,7 +2484,7 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
-	inline void CDC::CreateBitmap (int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors)
+	inline void CDC::CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors)
 	// Creates a bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
@@ -2511,7 +2506,7 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
-	inline void CDC::CreateDIBitmap (HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
+	inline void CDC::CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi,  UINT fuUsage)
 	// Creates a bitmap and selects it into the device context.
 	{
@@ -2523,7 +2518,7 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::CreateDIBSection (HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+	inline void CDC::CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset)
 	// Creates a bitmap and selects it into the device context.
 	{
@@ -2534,7 +2529,7 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
-	inline HBITMAP CDC::DetachBitmap ()
+	inline HBITMAP CDC::DetachBitmap()
 	// Use this to detach the bitmap from the HDC.
 	{
 		assert(m_pData->hDC);
@@ -2551,7 +2546,7 @@ namespace Win32xx
 		return hBitmap;
 	}
 
-	inline BITMAP CDC::GetBitmapInfo ()
+	inline BITMAP CDC::GetBitmapInfo()
 	// Retrieves the BITMAP information for the current HBITMAP.
 	{
 		assert(m_pData->hDC);
@@ -2562,18 +2557,18 @@ namespace Win32xx
 		return bm;
 	}
 
-	inline void CDC::LoadBitmap (UINT nID)
+	inline void CDC::LoadBitmap(UINT nID)
 	// Loads a bitmap from the resource and selects it into the device context
 	{
 		LoadBitmap(MAKEINTRESOURCE(nID));
 	}
 
-	inline void CDC::LoadBitmap (LPCTSTR lpszName)
+	inline void CDC::LoadBitmap(LPCTSTR lpszName)
 	// Loads a bitmap from the resource and selects it into the device context
 	{
 		assert(m_pData->hDC);
 		assert(GetApp());
-		m_pData->Bitmap.LoadBitmap (lpszName);
+		m_pData->Bitmap.LoadBitmap(lpszName);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
@@ -2592,27 +2587,27 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
-	inline void CDC::LoadOEMBitmap (UINT nIDBitmap) // for OBM_/OCR_/OIC_
+	inline void CDC::LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	// Loads a predefined system bitmap and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		m_pData->Bitmap.LoadOEMBitmap (nIDBitmap);
+		m_pData->Bitmap.LoadOEMBitmap(nIDBitmap);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 
 #ifndef _WIN32_WCE
-	inline void CDC::CreateMappedBitmap (UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
+	inline void CDC::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
 	// creates and selects a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
 	{
 		assert(m_pData->hDC);
-		m_pData->Bitmap.CreateMappedBitmap (nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+		m_pData->Bitmap.CreateMappedBitmap(nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 	}
 #endif // !_WIN32_WCE
 
 
 	// Brush functions
-	inline void CDC::AttachBrush (HBRUSH hBrush)
+	inline void CDC::AttachBrush(HBRUSH hBrush)
 	// Use this to attach an existing HBRUSH or CBrush.
 	{
 		assert(m_pData->hDC);
@@ -2622,7 +2617,7 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CDC::CreateBrushIndirect (LPLOGBRUSH& pLogBrush)
+	inline void CDC::CreateBrushIndirect(LPLOGBRUSH& pLogBrush)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
@@ -2632,7 +2627,7 @@ namespace Win32xx
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
 	}
 
-	inline void CDC::CreateHatchBrush (int fnStyle, COLORREF rgb)
+	inline void CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
@@ -2643,7 +2638,7 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::CreateDIBPatternBrushPt (LPCVOID lpPackedDIB, UINT iUsage)
+	inline void CDC::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
@@ -2653,7 +2648,7 @@ namespace Win32xx
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
 	}
 
-	inline void CDC::CreatePatternBrush (HBITMAP hbmp)
+	inline void CDC::CreatePatternBrush(HBITMAP hbmp)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
@@ -2663,7 +2658,7 @@ namespace Win32xx
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
 	}
 
-	inline void CDC::CreateSolidBrush (COLORREF rgb)
+	inline void CDC::CreateSolidBrush(COLORREF rgb)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
@@ -2673,7 +2668,7 @@ namespace Win32xx
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
 	}
 
-	inline HBRUSH CDC::DetachBrush ()
+	inline HBRUSH CDC::DetachBrush()
 	// Use this to detach the brush from the HDC.
 	{
 		assert(m_pData->hDC);
@@ -2690,7 +2685,7 @@ namespace Win32xx
 		return hBrush;
 	}
 
-	inline LOGBRUSH CDC::GetBrushInfo ()
+	inline LOGBRUSH CDC::GetBrushInfo()
 	// Retrieves the current brush information
 	{
 		assert(m_pData->hDC);
@@ -2703,7 +2698,7 @@ namespace Win32xx
 
 
 	// Font functions
-	inline void CDC::AttachFont (HFONT hFont)
+	inline void CDC::AttachFont(HFONT hFont)
 	// Use this to attach an existing HFONT or CFont.
 	{
 		assert(m_pData->hDC);
@@ -2745,7 +2740,7 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::CreateFontIndirect (const LOGFONT& lf)
+	inline void CDC::CreateFontIndirect(const LOGFONT& lf)
 	// Creates a logical font and selects it into the device context.
 	{
 		assert(m_pData->hDC);
@@ -2755,7 +2750,7 @@ namespace Win32xx
 		m_pData->hFontOld = (HFONT)::SelectObject(m_pData->hDC, m_pData->Font);
 	}
 
-	inline HFONT CDC::DetachFont ()
+	inline HFONT CDC::DetachFont()
 	// Use this to detach the font from the HDC.
 	{
 		assert(m_pData->hDC);
@@ -2772,7 +2767,7 @@ namespace Win32xx
 		return hFont;
 	}
 
-	inline LOGFONT CDC::GetFontInfo ()
+	inline LOGFONT CDC::GetFontInfo()
 	// Retrieves the current font information.
 	{
 		assert(m_pData->hDC);
@@ -2835,7 +2830,7 @@ namespace Win32xx
 
 
 	// Pen functions
-	inline void CDC::AttachPen (HPEN hPen)
+	inline void CDC::AttachPen(HPEN hPen)
 	// Use this to attach an existing HPEN or CPen.
 	{
 		assert(m_pData->hDC);
@@ -2865,7 +2860,7 @@ namespace Win32xx
 		m_pData->hPenOld = (HPEN)::SelectObject(m_pData->hDC, m_pData->Pen);
 	}
 
-	inline HPEN CDC::DetachPen ()
+	inline HPEN CDC::DetachPen()
 	// Use this to detach the pen from the device context.
 	{
 		assert(m_pData->hDC);
@@ -2882,7 +2877,7 @@ namespace Win32xx
 		return hPen;
 	}
 
-	inline LOGPEN CDC::GetPenInfo ()
+	inline LOGPEN CDC::GetPenInfo()
 	// Retrieves the current pen information as a LOGPEN
 	{
 		assert(m_pData->hDC);
@@ -2894,7 +2889,7 @@ namespace Win32xx
 	}
 
 	// Region functions
-	inline void CDC::CreateRectRgn (int left, int top, int right, int bottom)
+	inline void CDC::CreateRectRgn(int left, int top, int right, int bottom)
 	// Creates a rectangular region from the rectangle co-ordinates.
 	{
 		assert(m_pData->hDC);
@@ -2904,7 +2899,7 @@ namespace Win32xx
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
 	}
 
-	inline void CDC::CreateRectRgnIndirect (const RECT& rc)
+	inline void CDC::CreateRectRgnIndirect(const RECT& rc)
 	// Creates a rectangular region from the rectangle co-ordinates.
 	{
 		assert(m_pData->hDC);
@@ -2914,7 +2909,7 @@ namespace Win32xx
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
 	}
 
-	inline void CDC::CreateFromData (const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData)
+	inline void CDC::CreateFromData(const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData)
 	// Creates a region from the specified region data and tranformation data.
 	// Notes: GetRegionData can be used to get a region's data
 	//        If the XFROM pointer is NULL, the identity transformation is used.
@@ -2927,7 +2922,7 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CDC::CreateEllipticRgn (int left, int top, int right, int bottom)
+	inline void CDC::CreateEllipticRgn(int left, int top, int right, int bottom)
 	// Creates the ellyiptical region from the bounding rectangle co-ordinates
 	// and selects it into the device context	
 	{
@@ -2938,7 +2933,7 @@ namespace Win32xx
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
 	}
 
-	inline void CDC::CreateEllipticRgnIndirect (const RECT& rc)
+	inline void CDC::CreateEllipticRgnIndirect(const RECT& rc)
 	// Creates the ellyiptical region from the bounding rectangle co-ordinates
 	// and selects it into the device context	
 	{
@@ -2949,7 +2944,7 @@ namespace Win32xx
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
 	}
 
-	inline void CDC::CreatePolygonRgn (LPPOINT ppt, int cPoints, int fnPolyFillMode)
+	inline void CDC::CreatePolygonRgn(LPPOINT ppt, int cPoints, int fnPolyFillMode)
 	// Creates the polygon region from the array of points and selects it into
 	// the device context. The polygon is presumed closed	
 	{
@@ -2960,7 +2955,7 @@ namespace Win32xx
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
 	}
 
-	inline void CDC::CreatePolyPolygonRgn (LPPOINT ppt, LPINT pPolyCounts, int nCount, int fnPolyFillMode)
+	inline void CDC::CreatePolyPolygonRgn(LPPOINT ppt, LPINT pPolyCounts, int nCount, int fnPolyFillMode)
 	// Creates the polygon region from a series of polygons.The polygons can overlap.	
 	{
 		assert(m_pData->hDC);
@@ -2975,17 +2970,17 @@ namespace Win32xx
 	// Wrappers for WinAPI functions
 
 	// Initialization
-	inline HDC CDC::CreateCompatibleDC () const
+	inline HDC CDC::CreateCompatibleDC() const
 	// Returns a memory device context (DC) compatible with the specified device.	
 	{
 		assert(m_pData->hDC);
-		return ::CreateCompatibleDC( m_pData->hDC );
+		return ::CreateCompatibleDC(m_pData->hDC);
 	}
 
 	inline HDC CDC::CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const
 	// Returns a device context (DC) for a device using the specified name.	
 	{
-		return ::CreateDC( lpszDriver, lpszDevice, lpszOutput, &dvmInit );
+		return ::CreateDC(lpszDriver, lpszDevice, lpszOutput, &dvmInit);
 	}
 	
 	inline int CDC::GetDeviceCaps (int nIndex) const
@@ -2996,14 +2991,14 @@ namespace Win32xx
 	}
 
 	// Clipping functions
-	inline int CDC::ExcludeClipRect (int Left, int Top, int Right, int BottomRect )
+	inline int CDC::ExcludeClipRect(int Left, int Top, int Right, int BottomRect)
 	// Creates a new clipping region that consists of the existing clipping region minus the specified rectangle.
 	{
 		assert(m_pData->hDC);
-		return ::ExcludeClipRect (m_pData->hDC, Left, Top, Right, BottomRect );
+		return ::ExcludeClipRect(m_pData->hDC, Left, Top, Right, BottomRect);
 	}
 
-	inline int CDC::ExcludeClipRect (const RECT& rc)
+	inline int CDC::ExcludeClipRect(const RECT& rc)
 	// Creates a new clipping region that consists of the existing clipping region minus the specified rectangle.
 	{
 		assert(m_pData->hDC);
@@ -3017,7 +3012,7 @@ namespace Win32xx
 		return ::GetClipBox(m_pData->hDC, &rc);
 	}
 
-	inline int CDC::GetClipRgn (HRGN hrgn)
+	inline int CDC::GetClipRgn(HRGN hrgn)
 	// Retrieves a handle identifying the current application-defined clipping region for the specified device context.
 	// hrgn: A handle to an existing region before the function is called. 
 	//       After the function returns, this parameter is a handle to a copy of the current clipping region.
@@ -3026,21 +3021,21 @@ namespace Win32xx
 		return ::GetClipRgn(m_pData->hDC, hrgn);
 	}
 
-	inline int CDC::IntersectClipRect (int Left, int Top, int Right, int Bottom)
+	inline int CDC::IntersectClipRect(int Left, int Top, int Right, int Bottom)
 	// Creates a new clipping region from the intersection of the current clipping region and the specified rectangle.
 	{
 		assert(m_pData->hDC);
 		return ::IntersectClipRect(m_pData->hDC, Left, Top, Right, Bottom);
 	}
 	
-	inline int CDC::IntersectClipRect (const RECT& rc)
+	inline int CDC::IntersectClipRect(const RECT& rc)
 	// Creates a new clipping region from the intersection of the current clipping region and the specified rectangle.
 	{
 		assert(m_pData->hDC);
 		return ::IntersectClipRect(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline BOOL CDC::RectVisible (const RECT& rc)
+	inline BOOL CDC::RectVisible(const RECT& rc)
 	// Determines whether any part of the specified rectangle lies within the clipping region of a device context.
 	{
 		assert(m_pData->hDC);
@@ -3064,14 +3059,14 @@ namespace Win32xx
 		return ::ExtSelectClipRgn(m_pData->hDC, hrgn, fnMode);
 	}
 
-	inline BOOL CDC::PtVisible (int X, int Y)
+	inline BOOL CDC::PtVisible(int X, int Y)
 	// Determines whether the specified point is within the clipping region of a device context.
 	{
 		assert(m_pData->hDC);
 		return ::PtVisible (m_pData->hDC, X, Y);
 	}
 
-	inline int CDC::OffsetClipRgn (int nXOffset, int nYOffset)
+	inline int CDC::OffsetClipRgn(int nXOffset, int nYOffset)
 	// Moves the clipping region of a device context by the specified offsets.
 	{
 		assert(m_pData->hDC);
@@ -3080,68 +3075,68 @@ namespace Win32xx
 #endif
 
 	// Point and Line Drawing Functions
-	inline CPoint CDC::GetCurrentPosition () const
+	inline CPoint CDC::GetCurrentPosition() const
 	// Returns the current "MoveToEx" position.
 	{
 		assert(m_pData->hDC);
 		CPoint pt;
-		::MoveToEx( m_pData->hDC, 0, 0, &pt );
-		::MoveToEx( m_pData->hDC, pt.x, pt.y, NULL);
+		::MoveToEx(m_pData->hDC, 0, 0, &pt);
+		::MoveToEx(m_pData->hDC, pt.x, pt.y, NULL);
 		return pt;
 	}
 
-	inline CPoint CDC::MoveTo (int x, int y) const
+	inline CPoint CDC::MoveTo(int x, int y) const
 	// Updates the current position to the specified point.
 	{
 		assert(m_pData->hDC);
-		return ::MoveToEx( m_pData->hDC, x, y, NULL );
+		return ::MoveToEx(m_pData->hDC, x, y, NULL);
 	}
 
-	inline CPoint CDC::MoveTo (POINT pt) const
+	inline CPoint CDC::MoveTo(POINT pt) const
 	// Updates the current position to the specified point
 	{
 		assert(m_pData->hDC);
-		return ::MoveToEx( m_pData->hDC, pt.x, pt.y, NULL );
+		return ::MoveToEx(m_pData->hDC, pt.x, pt.y, NULL);
 	}
 
-	inline BOOL CDC::LineTo (int x, int y) const
+	inline BOOL CDC::LineTo(int x, int y) const
 	// Draws a line from the current position up to, but not including, the specified point.
 	{
 		assert(m_pData->hDC);
-		return ::LineTo( m_pData->hDC, x, y );
+		return ::LineTo(m_pData->hDC, x, y);
 	}
 
-	inline BOOL CDC::LineTo (POINT pt) const
+	inline BOOL CDC::LineTo(POINT pt) const
 	// Draws a line from the current position up to, but not including, the specified point.
 	{
 		assert(m_pData->hDC);
-		return ::LineTo( m_pData->hDC, pt.x, pt.y );
+		return ::LineTo(m_pData->hDC, pt.x, pt.y);
 	}
 
 #ifndef _WIN32_WCE
-	inline BOOL CDC::Arc (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
+	inline BOOL CDC::Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
 	// Draws an elliptical arc.
 	{
 		assert(m_pData->hDC);
-		return ::Arc (m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4);
+		return ::Arc(m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
-	inline BOOL CDC::Arc (RECT& rc, POINT ptStart, POINT ptEnd) const
+	inline BOOL CDC::Arc(RECT& rc, POINT ptStart, POINT ptEnd) const
 	// Draws an elliptical arc.
 	{
 		assert(m_pData->hDC);
-		return ::Arc( m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
-			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
+		return ::Arc(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
+			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
 	}
 
-	inline BOOL CDC::ArcTo (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
+	inline BOOL CDC::ArcTo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
 	// Draws an elliptical arc.
 	{
 		assert(m_pData->hDC);
-		return ::ArcTo( m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4) ;
+		return ::ArcTo(m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
-	inline BOOL CDC::ArcTo (RECT& rc, POINT ptStart, POINT ptEnd) const
+	inline BOOL CDC::ArcTo(RECT& rc, POINT ptStart, POINT ptEnd) const
 	// Draws an elliptical arc.
 	{
 		assert(m_pData->hDC);
@@ -3149,161 +3144,161 @@ namespace Win32xx
 			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
 	}
 
-	inline BOOL CDC::AngleArc (int x, int y, int nRadius, float fStartAngle, float fSweepAngle) const
+	inline BOOL CDC::AngleArc(int x, int y, int nRadius, float fStartAngle, float fSweepAngle) const
 	// Draws a line segment and an arc.
 	{
 		assert(m_pData->hDC);
-		return ::AngleArc (m_pData->hDC, x, y, nRadius, fStartAngle, fSweepAngle);
+		return ::AngleArc(m_pData->hDC, x, y, nRadius, fStartAngle, fSweepAngle);
 	}
 
-	inline int CDC::GetArcDirection () const
+	inline int CDC::GetArcDirection() const
 	// Retrieves the current arc direction ( AD_COUNTERCLOCKWISE or AD_CLOCKWISE ).
 	{
 		assert(m_pData->hDC);
-		return ::GetArcDirection (m_pData->hDC);
+		return ::GetArcDirection(m_pData->hDC);
 	}
 
-	inline int CDC::SetArcDirection (int nArcDirection) const
+	inline int CDC::SetArcDirection(int nArcDirection) const
 	// Sets the current arc direction ( AD_COUNTERCLOCKWISE or AD_CLOCKWISE ).
 	{
 		assert(m_pData->hDC);
-		return ::SetArcDirection( m_pData->hDC, nArcDirection );
+		return ::SetArcDirection(m_pData->hDC, nArcDirection);
 	}
 
-	inline BOOL CDC::PolyDraw (const POINT* lpPoints, const BYTE* lpTypes, int nCount) const
+	inline BOOL CDC::PolyDraw(const POINT* lpPoints, const BYTE* lpTypes, int nCount) const
 	// Draws a set of line segments and Bzier curves.
 	{
 		assert(m_pData->hDC);
-		return ::PolyDraw( m_pData->hDC, lpPoints, lpTypes, nCount );
+		return ::PolyDraw(m_pData->hDC, lpPoints, lpTypes, nCount);
 	}
 
-	inline BOOL CDC::Polyline (LPPOINT lpPoints, int nCount) const
+	inline BOOL CDC::Polyline(LPPOINT lpPoints, int nCount) const
 	// Draws a series of line segments by connecting the points in the specified array.
 	{
 		assert(m_pData->hDC);
-		return ::Polyline( m_pData->hDC, lpPoints, nCount );
+		return ::Polyline(m_pData->hDC, lpPoints, nCount);
 	}
 
-	inline BOOL CDC::PolyPolyline (const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount) const
+	inline BOOL CDC::PolyPolyline(const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount) const
 	// Draws multiple series of connected line segments.
 	{
 		assert(m_pData->hDC);
-		return ::PolyPolyline( m_pData->hDC, lpPoints, lpPolyPoints, nCount );
+		return ::PolyPolyline(m_pData->hDC, lpPoints, lpPolyPoints, nCount);
 	}
 
-	inline BOOL CDC::PolylineTo (const POINT* lpPoints, int nCount) const
+	inline BOOL CDC::PolylineTo(const POINT* lpPoints, int nCount) const
 	// Draws one or more straight lines.
 	{
 		assert(m_pData->hDC);
-		return ::PolylineTo( m_pData->hDC, lpPoints, nCount );
+		return ::PolylineTo(m_pData->hDC, lpPoints, nCount);
 	}
-	inline BOOL CDC::PolyBezier (const POINT* lpPoints, int nCount) const
+	inline BOOL CDC::PolyBezier(const POINT* lpPoints, int nCount) const
 	// Draws one or more Bzier curves.
 	{
 		assert(m_pData->hDC);
-		return ::PolyBezier( m_pData->hDC, lpPoints, nCount );
+		return ::PolyBezier(m_pData->hDC, lpPoints, nCount);
 	}
 
-	inline BOOL CDC::PolyBezierTo (const POINT* lpPoints, int nCount) const
+	inline BOOL CDC::PolyBezierTo(const POINT* lpPoints, int nCount) const
 	// Draws one or more Bzier curves.
 	{
 		assert(m_pData->hDC);
 		return ::PolyBezierTo(m_pData->hDC, lpPoints, nCount );
 	}
 
-	inline COLORREF CDC::GetPixel (int x, int y) const
+	inline COLORREF CDC::GetPixel(int x, int y) const
 	// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates.
 	{
 		assert(m_pData->hDC);
-		return ::GetPixel ( m_pData->hDC, x, y );
+		return ::GetPixel(m_pData->hDC, x, y);
 	}
 
-	inline COLORREF CDC::GetPixel (POINT pt) const
+	inline COLORREF CDC::GetPixel(POINT pt) const
 	// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates.
 	{
 		assert(m_pData->hDC);
-		return ::GetPixel( m_pData->hDC, pt.x, pt.y );
+		return ::GetPixel(m_pData->hDC, pt.x, pt.y);
 	}
 
 	inline COLORREF CDC::SetPixel (int x, int y, COLORREF crColor) const
 	// Sets the pixel at the specified coordinates to the specified color.
 	{
 		assert(m_pData->hDC);
-		return ::SetPixel( m_pData->hDC, x, y, crColor );
+		return ::SetPixel(m_pData->hDC, x, y, crColor);
 	}
 
-	inline COLORREF CDC::SetPixel (POINT pt, COLORREF crColor) const
+	inline COLORREF CDC::SetPixel(POINT pt, COLORREF crColor) const
 	// Sets the pixel at the specified coordinates to the specified color.
 	{
 		assert(m_pData->hDC);
-		return ::SetPixel( m_pData->hDC, pt.x, pt.y, crColor );
+		return ::SetPixel(m_pData->hDC, pt.x, pt.y, crColor);
 	}
 
-	inline BOOL CDC::SetPixelV (int x, int y, COLORREF crColor) const
+	inline BOOL CDC::SetPixelV(int x, int y, COLORREF crColor) const
 	// Sets the pixel at the specified coordinates to the closest approximation of the specified color.
 	{
 		assert(m_pData->hDC);
-		return ::SetPixelV( m_pData->hDC, x, y, crColor );
+		return ::SetPixelV(m_pData->hDC, x, y, crColor);
 	}
 
-	inline BOOL CDC::SetPixelV (POINT pt, COLORREF crColor) const
+	inline BOOL CDC::SetPixelV(POINT pt, COLORREF crColor) const
 	// Sets the pixel at the specified coordinates to the closest approximation of the specified color.
 	{
 		assert(m_pData->hDC);
-		return ::SetPixelV( m_pData->hDC, pt.x, pt.y, crColor );
+		return ::SetPixelV(m_pData->hDC, pt.x, pt.y, crColor);
 	}
 #endif
 
 	// Shape Drawing Functions
-	inline void CDC::DrawFocusRect (const RECT& rc) const
+	inline void CDC::DrawFocusRect(const RECT& rc) const
 	// Draws a rectangle in the style used to indicate that the rectangle has the focus.
 	{
 		assert(m_pData->hDC);
-		::DrawFocusRect( m_pData->hDC, &rc );
+		::DrawFocusRect(m_pData->hDC, &rc);
 	}
 
-	inline BOOL CDC::Ellipse (int x1, int y1, int x2, int y2) const
+	inline BOOL CDC::Ellipse(int x1, int y1, int x2, int y2) const
 	// Draws an ellipse. The center of the ellipse is the center of the specified bounding rectangle.
 	{
 		assert(m_pData->hDC);
-		return ::Ellipse( m_pData->hDC, x1, y1, x2, y2 );
+		return ::Ellipse(m_pData->hDC, x1, y1, x2, y2);
 	}
 
-	inline BOOL CDC::Ellipse (const RECT& rc) const
+	inline BOOL CDC::Ellipse(const RECT& rc) const
 	// Draws an ellipse. The center of the ellipse is the center of the specified bounding rectangle.
 	{
 		assert(m_pData->hDC);
-		return ::Ellipse( m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom );
+		return ::Ellipse(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline BOOL CDC::Polygon (LPPOINT lpPoints, int nCount) const
+	inline BOOL CDC::Polygon(LPPOINT lpPoints, int nCount) const
 	// Draws a polygon consisting of two or more vertices connected by straight lines.
 	{
 		assert(m_pData->hDC);
-		return ::Polygon( m_pData->hDC, lpPoints, nCount);
+		return ::Polygon(m_pData->hDC, lpPoints, nCount);
 	}
 
-	inline BOOL CDC::Rectangle (int x1, int y1, int x2, int y2) const
+	inline BOOL CDC::Rectangle(int x1, int y1, int x2, int y2) const
 	// Draws a rectangle. The rectangle is outlined by using the current pen and filled by using the current brush.
 	{
 		assert(m_pData->hDC);
-		return ::Rectangle( m_pData->hDC, x1, y1, x2, y2 );
+		return ::Rectangle(m_pData->hDC, x1, y1, x2, y2);
 	}
 
-	inline BOOL CDC::Rectangle (const RECT& rc) const
+	inline BOOL CDC::Rectangle(const RECT& rc) const
 	// Draws a rectangle. The rectangle is outlined by using the current pen and filled by using the current brush.
 	{
 		assert(m_pData->hDC);
-		return ::Rectangle( m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom );
+		return ::Rectangle(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline BOOL CDC::RoundRect( int x1, int y1, int x2, int y2, int nWidth, int nHeight ) const
+	inline BOOL CDC::RoundRect(int x1, int y1, int x2, int y2, int nWidth, int nHeight) const
 	// Draws a rectangle with rounded corners.
 	{
 		assert(m_pData->hDC);
-		return ::RoundRect (m_pData->hDC, x1, y1, x2, y2, nWidth, nHeight);
+		return ::RoundRect(m_pData->hDC, x1, y1, x2, y2, nWidth, nHeight);
 	}
-	inline BOOL CDC::RoundRect (const RECT& rc, int nWidth, int nHeight) const
+	inline BOOL CDC::RoundRect(const RECT& rc, int nWidth, int nHeight) const
 	// Draws a rectangle with rounded corners.
 	{
 		assert(m_pData->hDC);
@@ -3311,186 +3306,186 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline BOOL CDC::Chord (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
+	inline BOOL CDC::Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
 	// Draws a chord (a region bounded by the intersection of an ellipse and a line segment, called a secant).
 	{
 		assert(m_pData->hDC);
-		return ::Chord( m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
+		return ::Chord(m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
-	inline BOOL CDC::Chord (const RECT& rc, POINT ptStart, POINT ptEnd) const
+	inline BOOL CDC::Chord(const RECT& rc, POINT ptStart, POINT ptEnd) const
 	// Draws a chord (a region bounded by the intersection of an ellipse and a line segment, called a secant).
 	{
 		assert(m_pData->hDC);
-		return ::Chord( m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
-			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
+		return ::Chord(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
+			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
 	}
 
-	inline BOOL CDC::Pie (int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
+	inline BOOL CDC::Pie(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
 	// Draws a pie-shaped wedge bounded by the intersection of an ellipse and two radials.
 	{
 		assert(m_pData->hDC);
-		return ::Pie( m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4 );
+		return ::Pie(m_pData->hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
-	inline BOOL CDC::Pie (const RECT& rc, POINT ptStart, POINT ptEnd) const
+	inline BOOL CDC::Pie(const RECT& rc, POINT ptStart, POINT ptEnd) const
 	// Draws a pie-shaped wedge bounded by the intersection of an ellipse and two radials.
 	{
 		assert(m_pData->hDC);
-		return ::Pie( m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
-			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y );
+		return ::Pie(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
+			ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
 	}
 
-	inline BOOL CDC::PolyPolygon (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount) const
+	inline BOOL CDC::PolyPolygon(LPPOINT lpPoints, LPINT lpPolyCounts, int nCount) const
 	// Draws a series of closed polygons.
 	{
 		assert(m_pData->hDC);
-		return ::PolyPolygon( m_pData->hDC, lpPoints, lpPolyCounts, nCount );
+		return ::PolyPolygon(m_pData->hDC, lpPoints, lpPolyCounts, nCount);
 	}
 #endif
 
 	// Fill and 3D Drawing functions
-	inline BOOL CDC::FillRect (const RECT& rc, HBRUSH hbr) const
+	inline BOOL CDC::FillRect(const RECT& rc, HBRUSH hbr) const
 	// Fills a rectangle by using the specified brush.
 	{
 		assert(m_pData->hDC);
 		return (BOOL)::FillRect(m_pData->hDC, &rc, hbr);
 	}
 
-	inline BOOL CDC::InvertRect (const RECT& rc) const
+	inline BOOL CDC::InvertRect(const RECT& rc) const
 	// Inverts a rectangle in a window by performing a logical NOT operation on the color values for each pixel in the rectangle's interior.
 	{
 		assert(m_pData->hDC);
-		return ::InvertRect( m_pData->hDC, &rc );
+		return ::InvertRect( m_pData->hDC, &rc);
 	}
 
-	inline BOOL CDC::DrawIconEx (int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags) const
+	inline BOOL CDC::DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags) const
 	// draws an icon or cursor, performing the specified raster operations, and stretching or compressing the icon or cursor as specified.
 	{
 		assert(m_pData->hDC);
-		return ::DrawIconEx( m_pData->hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, hbrFlickerFreeDraw, diFlags );
+		return ::DrawIconEx(m_pData->hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, hbrFlickerFreeDraw, diFlags);
 	}
 
-	inline BOOL CDC::DrawEdge (const RECT& rc, UINT nEdge, UINT nFlags) const
+	inline BOOL CDC::DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const
 	// Draws one or more edges of rectangle.
 	{
 		assert(m_pData->hDC);
-		return ::DrawEdge( m_pData->hDC, (LPRECT)&rc, nEdge, nFlags );
+		return ::DrawEdge(m_pData->hDC, (LPRECT)&rc, nEdge, nFlags);
 	}
 
-	inline BOOL CDC::DrawFrameControl (const RECT& rc, UINT nType, UINT nState) const
+	inline BOOL CDC::DrawFrameControl(const RECT& rc, UINT nType, UINT nState) const
 	// Draws a frame control of the specified type and style.
 	{
 		assert(m_pData->hDC);
-		return ::DrawFrameControl( m_pData->hDC, (LPRECT)&rc, nType, nState );
+		return ::DrawFrameControl(m_pData->hDC, (LPRECT)&rc, nType, nState);
 	}
 
-	inline BOOL CDC::FillRgn (HRGN hrgn, HBRUSH hbr) const
+	inline BOOL CDC::FillRgn(HRGN hrgn, HBRUSH hbr) const
 	// Fills a region by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return ::FillRgn( m_pData->hDC, hrgn, hbr );
+		return ::FillRgn(m_pData->hDC, hrgn, hbr);
 	}
 
 #ifndef _WIN32_WCE
-	inline BOOL CDC::DrawIcon (int x, int y, HICON hIcon) const
+	inline BOOL CDC::DrawIcon(int x, int y, HICON hIcon) const
 	// Draws an icon or cursor.
 	{
 		assert(m_pData->hDC);
-		return ::DrawIcon( m_pData->hDC, x, y, hIcon );
+		return ::DrawIcon(m_pData->hDC, x, y, hIcon);
 	}
 
-	inline BOOL CDC::DrawIcon (POINT pt, HICON hIcon) const
+	inline BOOL CDC::DrawIcon(POINT pt, HICON hIcon) const
 	// Draws an icon or cursor.
 	{
 		assert(m_pData->hDC);
-		return ::DrawIcon( m_pData->hDC, pt.x, pt.y, hIcon );
+		return ::DrawIcon(m_pData->hDC, pt.x, pt.y, hIcon);
 	}
 
-	inline BOOL CDC::FrameRect (const RECT& rc, HBRUSH hbr) const
+	inline BOOL CDC::FrameRect(const RECT& rc, HBRUSH hbr) const
 	// Draws a border around the specified rectangle by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return (BOOL)::FrameRect( m_pData->hDC, &rc, hbr );
+		return (BOOL)::FrameRect(m_pData->hDC, &rc, hbr);
 	}
 
-	inline BOOL CDC::PaintRgn (HRGN hrgn) const
+	inline BOOL CDC::PaintRgn(HRGN hrgn) const
 	// Paints the specified region by using the brush currently selected into the device context.
 	{
 		assert(m_pData->hDC);
-		return ::PaintRgn( m_pData->hDC, hrgn);
+		return ::PaintRgn(m_pData->hDC, hrgn);
 	}
 #endif
 
 	// Bitmap Functions
-	inline int CDC::StretchDIBits (int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
+	inline int CDC::StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
 		           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const
 	// Copies the color data for a rectangle of pixels in a DIB to the specified destination rectangle.
 	{
 		assert(m_pData->hDC);
-		return ::StretchDIBits( m_pData->hDC, XDest, YDest, nDestWidth, nDestHeight, XSrc, YSrc, nSrcWidth, nSrcHeight, lpBits, &bi, iUsage, dwRop );
+		return ::StretchDIBits(m_pData->hDC, XDest, YDest, nDestWidth, nDestHeight, XSrc, YSrc, nSrcWidth, nSrcHeight, lpBits, &bi, iUsage, dwRop);
 	}
 
-	inline BOOL CDC::PatBlt (int x, int y, int nWidth, int nHeight, DWORD dwRop) const
+	inline BOOL CDC::PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const
 	// Paints the specified rectangle using the brush that is currently selected into the device context.
 	{
 		assert(m_pData->hDC);
-		return ::PatBlt( m_pData->hDC, x, y, nWidth, nHeight, dwRop );
+		return ::PatBlt(m_pData->hDC, x, y, nWidth, nHeight, dwRop);
 	}
 
-	inline BOOL CDC::BitBlt (int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop) const
+	inline BOOL CDC::BitBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop) const
 	// Performs a bit-block transfer of the color data corresponding to a rectangle of pixels from the specified source device context into a destination device context.
 	{
 		assert(m_pData->hDC);
-		return ::BitBlt( m_pData->hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, dwRop );
+		return ::BitBlt(m_pData->hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, dwRop);
 	}
 
-	inline BOOL CDC::StretchBlt (int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const
+	inline BOOL CDC::StretchBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const
 	// Copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing the bitmap to fit the dimensions of the destination rectangle, if necessary.
 	{
 		assert(m_pData->hDC);
-		return ::StretchBlt( m_pData->hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, dwRop );
+		return ::StretchBlt(m_pData->hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, dwRop);
 	}
 
 #ifndef _WIN32_WCE
-	inline int CDC::GetDIBits (HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const
+	inline int CDC::GetDIBits(HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const
 	// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
 	{
 		assert(m_pData->hDC);
-		return ::GetDIBits( m_pData->hDC, hbmp, uStartScan, cScanLines, lpvBits, lpbi, uUsage );
+		return ::GetDIBits(m_pData->hDC, hbmp, uStartScan, cScanLines, lpvBits, lpbi, uUsage);
 	}
 
-	inline int CDC::SetDIBits (HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const
+	inline int CDC::SetDIBits(HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const
 	// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
 	{
 		assert(m_pData->hDC);
-		return ::SetDIBits( m_pData->hDC, hbmp, uStartScan, cScanLines, lpvBits, lpbi, fuColorUse );
+		return ::SetDIBits(m_pData->hDC, hbmp, uStartScan, cScanLines, lpvBits, lpbi, fuColorUse);
 	}
 
-	inline int CDC::GetStretchBltMode () const
+	inline int CDC::GetStretchBltMode() const
 	// Retrieves the current stretching mode.
 	// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK
 	{
 		assert(m_pData->hDC);
-		return ::GetStretchBltMode( m_pData->hDC );
+		return ::GetStretchBltMode(m_pData->hDC);
 	}
 
-	inline int CDC::SetStretchBltMode (int iStretchMode) const
+	inline int CDC::SetStretchBltMode(int iStretchMode) const
 	// Sets the stretching mode.
 	// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK	
 	{
 		assert(m_pData->hDC);
-		return ::SetStretchBltMode( m_pData->hDC, iStretchMode );
+		return ::SetStretchBltMode(m_pData->hDC, iStretchMode);
 	}
 
-	inline BOOL CDC::FloodFill (int x, int y, COLORREF crColor) const
+	inline BOOL CDC::FloodFill(int x, int y, COLORREF crColor) const
 	// Fills an area of the display surface with the current brush.
 	{
 		assert(m_pData->hDC);
-		return ::FloodFill (m_pData->hDC, x, y, crColor);
+		return ::FloodFill(m_pData->hDC, x, y, crColor);
 	}
 
-	inline BOOL CDC::ExtFloodFill (int x, int y, COLORREF crColor, UINT nFillType) const
+	inline BOOL CDC::ExtFloodFill(int x, int y, COLORREF crColor, UINT nFillType) const
 	// Fills an area of the display surface with the current brush.
 	// Fill type: FLOODFILLBORDER or FLOODFILLSURFACE
 	{
@@ -3499,28 +3494,28 @@ namespace Win32xx
 	}
 
 	// co-ordinate functions
-	inline BOOL CDC::DPtoLP (LPPOINT lpPoints, int nCount) const
+	inline BOOL CDC::DPtoLP(LPPOINT lpPoints, int nCount) const
 	// Converts device coordinates into logical coordinates.
 	{
 		assert(m_pData->hDC);
 		return ::DPtoLP(m_pData->hDC, lpPoints, nCount);
 	}
 
-	inline BOOL CDC::DPtoLP (RECT& rc) const
+	inline BOOL CDC::DPtoLP(RECT& rc) const
 	// Converts device coordinates into logical coordinates.
 	{
 		assert(m_pData->hDC);
 		return ::DPtoLP(m_pData->hDC, (LPPOINT)&rc, 2);
 	}
 
-	inline BOOL CDC::LPtoDP (LPPOINT lpPoints, int nCount) const
+	inline BOOL CDC::LPtoDP(LPPOINT lpPoints, int nCount) const
 	// Converts logical coordinates into device coordinates.
 	{
 		assert(m_pData->hDC);
 		return ::LPtoDP(m_pData->hDC, lpPoints, nCount);
 	}
 
-	inline BOOL CDC::LPtoDP (RECT& rc) const
+	inline BOOL CDC::LPtoDP(RECT& rc) const
 	// Converts logical coordinates into device coordinates.
 	{
 		assert(m_pData->hDC);
@@ -3530,17 +3525,17 @@ namespace Win32xx
 #endif
 
 	// Layout Functions
-	inline DWORD CDC::GetLayout () const
+	inline DWORD CDC::GetLayout() const
 	// Returns the layout of a device context (LAYOUT_RTL and LAYOUT_BITMAPORIENTATIONPRESERVED).
 	{
-#if defined(WINVER) && defined (GetLayout) && (WINVER >= 0x0500)
+#if defined(WINVER) && defined(GetLayout) && (WINVER >= 0x0500)
 		return ::GetLayout(m_pData->hDC);
 #else
 		return 0;
 #endif
 	}
 
-	inline DWORD CDC::SetLayout (DWORD dwLayout) const
+	inline DWORD CDC::SetLayout(DWORD dwLayout) const
 	// changes the layout of a device context (DC).
 	// dwLayout values:  LAYOUT_RTL or LAYOUT_BITMAPORIENTATIONPRESERVED
 	{
@@ -3555,7 +3550,7 @@ namespace Win32xx
 
 	// Mapping Functions
 #ifndef _WIN32_WCE
-	inline int CDC::GetMapMode ()  const
+	inline int CDC::GetMapMode()  const
 	// Rretrieves the current mapping mode.
 	// Possible modes: MM_ANISOTROPIC, MM_HIENGLISH, MM_HIMETRIC, MM_ISOTROPIC, MM_LOENGLISH, MM_LOMETRIC, MM_TEXT, and MM_TWIPS.
 	{
@@ -3563,119 +3558,119 @@ namespace Win32xx
 		return ::GetMapMode(m_pData->hDC);
 	}
 
-	inline BOOL CDC::GetViewportOrgEx (LPPOINT lpPoint)  const
+	inline BOOL CDC::GetViewportOrgEx(LPPOINT lpPoint)  const
 	// Retrieves the x-coordinates and y-coordinates of the viewport origin for the device context.
 	{
 		assert(m_pData->hDC);
 		return ::GetViewportOrgEx(m_pData->hDC, lpPoint);
 	}
 
-	inline int CDC::SetMapMode (int nMapMode) const
+	inline int CDC::SetMapMode(int nMapMode) const
 	// Sets the mapping mode of the specified device context.
 	{
 		assert(m_pData->hDC);
 		return ::SetMapMode(m_pData->hDC, nMapMode);
 	}
 
-	inline BOOL CDC::SetViewportOrgEx (int x, int y, LPPOINT lpPoint /* = NULL */) const
+	inline BOOL CDC::SetViewportOrgEx(int x, int y, LPPOINT lpPoint /* = NULL */) const
 	// Specifies which device point maps to the window origin (0,0).
 	{
 		assert(m_pData->hDC);
 		return ::SetViewportOrgEx(m_pData->hDC, x, y, lpPoint);
 	}
 
-	inline BOOL CDC::SetViewportOrgEx (POINT point, LPPOINT lpPointRet /* = NULL */) const
+	inline BOOL CDC::SetViewportOrgEx(POINT point, LPPOINT lpPointRet /* = NULL */) const
 	// Specifies which device point maps to the window origin (0,0).
 	{
 		assert(m_pData->hDC);
-		return SetViewportOrgEx (point.x, point.y, lpPointRet);
+		return SetViewportOrgEx(point.x, point.y, lpPointRet);
 	}
 
-	inline BOOL CDC::OffsetViewportOrgEx (int nWidth, int nHeight, LPPOINT lpPoint /* = NULL */) const
+	inline BOOL CDC::OffsetViewportOrgEx(int nWidth, int nHeight, LPPOINT lpPoint /* = NULL */) const
 	// Modifies the viewport origin for the device context using the specified horizontal and vertical offsets.
 	{
 		assert(m_pData->hDC);
 		return ::OffsetViewportOrgEx(m_pData->hDC, nWidth, nHeight, lpPoint);
 	}
 
-	inline BOOL CDC::GetViewportExtEx (LPSIZE lpSize)  const
+	inline BOOL CDC::GetViewportExtEx(LPSIZE lpSize)  const
 	// Retrieves the x-extent and y-extent of the current viewport for the device context.
 	{
 		assert(m_pData->hDC);
 		return ::GetViewportExtEx(m_pData->hDC, lpSize);
 	}
 
-	inline BOOL CDC::SetViewportExtEx (int x, int y, LPSIZE lpSize ) const
+	inline BOOL CDC::SetViewportExtEx(int x, int y, LPSIZE lpSize ) const
 	// Sets the horizontal and vertical extents of the viewport for the device context by using the specified values.
 	{
 		assert(m_pData->hDC);
 		return ::SetViewportExtEx(m_pData->hDC, x, y, lpSize);
 	}
 
-	inline BOOL CDC::SetViewportExtEx (SIZE size, LPSIZE lpSizeRet ) const
+	inline BOOL CDC::SetViewportExtEx(SIZE size, LPSIZE lpSizeRet ) const
 	// Sets the horizontal and vertical extents of the viewport for the device context by using the specified values.
 	{
 		assert(m_pData->hDC);
 		return SetViewportExtEx(size.cx, size.cy, lpSizeRet);
 	}
 
-	inline BOOL CDC::ScaleViewportExtEx (int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const
+	inline BOOL CDC::ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize ) const
 	// Modifies the viewport for the device context using the ratios formed by the specified multiplicands and divisors.
 	{
 		assert(m_pData->hDC);
 		return ::ScaleViewportExtEx(m_pData->hDC, xNum, xDenom, yNum, yDenom, lpSize);
 	}
 
-	inline BOOL CDC::GetWindowOrgEx (LPPOINT lpPoint) const
+	inline BOOL CDC::GetWindowOrgEx(LPPOINT lpPoint) const
 	// Retrieves the x-coordinates and y-coordinates of the window origin for the device context.
 	{
 		assert(m_pData->hDC);
 		return ::GetWindowOrgEx(m_pData->hDC, lpPoint);
 	}
 
-	inline BOOL CDC::SetWindowOrgEx (int x, int y, LPPOINT lpPoint ) const
+	inline BOOL CDC::SetWindowOrgEx(int x, int y, LPPOINT lpPoint ) const
 	// Specifies which window point maps to the viewport origin (0,0).
 	{
 		assert(m_pData->hDC);
 		return ::SetWindowOrgEx(m_pData->hDC, x, y, lpPoint);
 	}
 
-	inline BOOL CDC::SetWindowOrgEx (POINT point, LPPOINT lpPointRet ) const
+	inline BOOL CDC::SetWindowOrgEx(POINT point, LPPOINT lpPointRet ) const
 	// Specifies which window point maps to the viewport origin (0,0).
 	{
 		assert(m_pData->hDC);
 		return SetWindowOrgEx(point.x, point.y, lpPointRet);
 	}
 
-	inline BOOL CDC::OffsetWindowOrgEx (int nWidth, int nHeight, LPPOINT lpPoint ) const
+	inline BOOL CDC::OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint ) const
 	// Modifies the window origin for the device context using the specified horizontal and vertical offsets.
 	{
 		assert(m_pData->hDC);
 		return ::OffsetWindowOrgEx(m_pData->hDC, nWidth, nHeight, lpPoint);
 	}
 
-	inline BOOL CDC::GetWindowExtEx (LPSIZE lpSize)  const
+	inline BOOL CDC::GetWindowExtEx(LPSIZE lpSize)  const
 	// Retrieves the x-extent and y-extent of the window for the device context.
 	{
 		assert(m_pData->hDC);
 		return ::GetWindowExtEx(m_pData->hDC, lpSize);
 	}
 
-	inline BOOL CDC::SetWindowExtEx (int x, int y, LPSIZE lpSize ) const
+	inline BOOL CDC::SetWindowExtEx(int x, int y, LPSIZE lpSize ) const
 	// Sets the horizontal and vertical extents of the window for the device context by using the specified values.
 	{
 		assert(m_pData->hDC);
 		return ::SetWindowExtEx(m_pData->hDC, x, y, lpSize);
 	}
 
-	inline BOOL CDC::SetWindowExtEx (SIZE size, LPSIZE lpSizeRet) const
+	inline BOOL CDC::SetWindowExtEx(SIZE size, LPSIZE lpSizeRet) const
 	// Sets the horizontal and vertical extents of the window for the device context by using the specified values.
 	{
 		assert(m_pData->hDC);
 		return SetWindowExtEx(size.cx, size.cy, lpSizeRet);
 	}
 
-	inline BOOL CDC::ScaleWindowExtEx (int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const
+	inline BOOL CDC::ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const
 	// Modifies the window for the device context using the ratios formed by the specified multiplicands and divisors.
 	{
 		assert(m_pData->hDC);
@@ -3684,42 +3679,42 @@ namespace Win32xx
 #endif
 
 	// Printer Functions
-	inline int CDC::StartDoc (LPDOCINFO lpDocInfo) const
+	inline int CDC::StartDoc(LPDOCINFO lpDocInfo) const
 	// Starts a print job.
 	{
 		assert(m_pData->hDC);
 		return ::StartDoc(m_pData->hDC, lpDocInfo);
 	}
 
-	inline int CDC::EndDoc () const
+	inline int CDC::EndDoc() const
 	// Ends a print job.
 	{
 		assert(m_pData->hDC);
 		return ::EndDoc(m_pData->hDC);
 	}
 
-	inline int CDC::StartPage () const
+	inline int CDC::StartPage() const
 	// Prepares the printer driver to accept data.
 	{
 		assert(m_pData->hDC);
 		return ::StartPage(m_pData->hDC);
 	}
 
-	inline int CDC::EndPage () const
+	inline int CDC::EndPage() const
 	// Notifies the device that the application has finished writing to a page.
 	{
 		assert(m_pData->hDC);
 		return ::EndPage(m_pData->hDC);
 	}
 
-	inline int CDC::AbortDoc () const
+	inline int CDC::AbortDoc() const
 	// Stops the current print job and erases everything drawn since the last call to the StartDoc function.
 	{
 		assert(m_pData->hDC);
 		return ::AbortDoc(m_pData->hDC);
 	}
 
-	inline int CDC::SetAbortProc (BOOL (CALLBACK* lpfn)(HDC, int)) const
+	inline int CDC::SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const
 	// Sets the application-defined abort function that allows a print job to be canceled during spooling.
 	{
 		assert(m_pData->hDC);
@@ -3727,7 +3722,7 @@ namespace Win32xx
 	}
 
 	// Text Functions
-	inline BOOL CDC::ExtTextOut (int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount /*= -1*/, LPINT lpDxWidths /*=NULL*/) const
+	inline BOOL CDC::ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount /*= -1*/, LPINT lpDxWidths /*=NULL*/) const
 	// Draws text using the currently selected font, background color, and text color
 	{
 		assert(m_pData->hDC);
@@ -3738,127 +3733,127 @@ namespace Win32xx
 		return ::ExtTextOut(m_pData->hDC, x, y, nOptions, lprc, lpszString, nCount, lpDxWidths );
 	}
 
-	inline BOOL CDC::ExtTextOut (int x, int y, UINT nOptions, LPCRECT lprc, tString String, LPINT lpDxWidths /*=NULL*/) const
+	inline BOOL CDC::ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, tString String, LPINT lpDxWidths /*=NULL*/) const
 	// Draws text using the currently selected font, background color, and text color
 	{
 		return ExtTextOut(x, y, nOptions, lprc, String.c_str(), -1, lpDxWidths );
 	}
 
-	inline int CDC::DrawText (LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const
+	inline int CDC::DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const
 	// Draws formatted text in the specified rectangle
 	{
 		assert(m_pData->hDC);
 		return ::DrawText(m_pData->hDC, lpszString, nCount, lprc, nFormat );
 	}
 
-	inline int CDC::DrawText (tString String, LPRECT lprc, UINT nFormat) const
+	inline int CDC::DrawText(tString String, LPRECT lprc, UINT nFormat) const
 	// Draws formatted text in the specified rectangle with more formatting options
 	{
 		return DrawText(String.c_str(), -1, lprc, nFormat);
 	}
 
-	inline UINT CDC::GetTextAlign () const
+	inline UINT CDC::GetTextAlign() const
 	// Retrieves the text-alignment setting
 	// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP
 	{
 		assert(m_pData->hDC);
-		return ::GetTextAlign( m_pData->hDC );
+		return ::GetTextAlign(m_pData->hDC);
 	}
 
-	inline UINT CDC::SetTextAlign (UINT nFlags) const
+	inline UINT CDC::SetTextAlign(UINT nFlags) const
 	// Sets the text-alignment setting
 	// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP	
 	{
 		assert(m_pData->hDC);
-		return ::SetTextAlign( m_pData->hDC, nFlags );
+		return ::SetTextAlign(m_pData->hDC, nFlags);
 	}
 
-	inline int CDC::GetTextFace (int nCount, LPTSTR lpszFacename) const
+	inline int CDC::GetTextFace(int nCount, LPTSTR lpszFacename) const
 	// Retrieves the typeface name of the font that is selected into the device context	
 	{
 		assert(m_pData->hDC);
-		return ::GetTextFace( m_pData->hDC, nCount, lpszFacename );
+		return ::GetTextFace(m_pData->hDC, nCount, lpszFacename);
 	}
 
-	inline BOOL CDC::GetTextMetrics (TEXTMETRIC& Metrics) const
+	inline BOOL CDC::GetTextMetrics(TEXTMETRIC& Metrics) const
 	// Fills the specified buffer with the metrics for the currently selected font	
 	{
 		assert(m_pData->hDC);
-		return ::GetTextMetrics( m_pData->hDC, &Metrics );
+		return ::GetTextMetrics(m_pData->hDC, &Metrics);
 	}
 
-	inline COLORREF CDC::GetBkColor () const
+	inline COLORREF CDC::GetBkColor() const
 	// Returns the current background color
 	{
 		assert(m_pData->hDC);
-		return ::GetBkColor( m_pData->hDC );
+		return ::GetBkColor(m_pData->hDC);
 	}
 
-	inline COLORREF CDC::SetBkColor (COLORREF crColor) const
+	inline COLORREF CDC::SetBkColor(COLORREF crColor) const
 	// Sets the current background color to the specified color value
 	{
 		assert(m_pData->hDC);
-		return ::SetBkColor(m_pData->hDC, crColor );
+		return ::SetBkColor(m_pData->hDC, crColor);
 	}
 
-	inline COLORREF CDC::GetTextColor () const
+	inline COLORREF CDC::GetTextColor() const
 	// Retrieves the current text color
 	{
 		assert(m_pData->hDC);
-		return ::GetTextColor( m_pData->hDC);
+		return ::GetTextColor(m_pData->hDC);
 	}
 
-	inline COLORREF CDC::SetTextColor (COLORREF crColor) const
+	inline COLORREF CDC::SetTextColor(COLORREF crColor) const
 	// Sets the current text color
 	{
 		assert(m_pData->hDC);
-		return ::SetTextColor( m_pData->hDC, crColor );
+		return ::SetTextColor(m_pData->hDC, crColor);
 	}
 
-	inline int CDC::GetBkMode () const
+	inline int CDC::GetBkMode() const
 	// returns the current background mix mode (OPAQUE or TRANSPARENT)
 	{
 		assert(m_pData->hDC);
-		return ::GetBkMode( m_pData->hDC );
+		return ::GetBkMode(m_pData->hDC);
 	}
 
-	inline int CDC::SetBkMode (int iBkMode) const
+	inline int CDC::SetBkMode(int iBkMode) const
 	// Sets the current background mix mode (OPAQUE or TRANSPARENT)
 	{
 		assert(m_pData->hDC);
-		return ::SetBkMode( m_pData->hDC, iBkMode);
+		return ::SetBkMode(m_pData->hDC, iBkMode);
 	}
 
 #ifndef _WIN32_WCE
-	inline int CDC::DrawTextEx (LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const
+	inline int CDC::DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const
 	// Draws formatted text in the specified rectangle with more formatting options
 	{
 		assert(m_pData->hDC);
 		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, lprc, nFormat, (LPDRAWTEXTPARAMS)&DTParams );
 	}
 
-	inline int CDC::DrawTextEx (tString String, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const
+	inline int CDC::DrawTextEx(tString String, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const
 	// Draws formatted text in the specified rectangle with more formatting options
 	{
 		return DrawTextEx((LPTSTR)String.c_str(), -1, lprc, nFormat, DTParams);
 	}
 
-	inline CSize CDC::GetTextExtentPoint32 (LPCTSTR lpszString, int nCount) const
+	inline CSize CDC::GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const
 	// Computes the width and height of the specified string of text
 	{
 		assert(m_pData->hDC);
 		CSize sz;
-		::GetTextExtentPoint32(m_pData->hDC, lpszString, nCount, &sz );
+		::GetTextExtentPoint32(m_pData->hDC, lpszString, nCount, &sz);
 		return sz;
 	}
 
-	inline CSize CDC::GetTextExtentPoint32 (tString String) const
+	inline CSize CDC::GetTextExtentPoint32(tString String) const
 	// Computes the width and height of the specified string of text
 	{
 		return GetTextExtentPoint32(String.c_str(), lstrlen(String.c_str()));
 	}
 
-	inline CSize CDC::GetTabbedTextExtent (LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const
+	inline CSize CDC::GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const
 	// Computes the width and height of a character string
 	{
 		assert(m_pData->hDC);
@@ -3867,41 +3862,41 @@ namespace Win32xx
 		return sz;
 	}
 
-	inline CSize CDC::GetTabbedTextExtent (tString String, int nTabPositions, LPINT lpnTabStopPositions) const
+	inline CSize CDC::GetTabbedTextExtent(tString String, int nTabPositions, LPINT lpnTabStopPositions) const
 	// Computes the width and height of a character string
 	{
 		return GetTabbedTextExtent(String.c_str(), lstrlen(String.c_str()), nTabPositions, lpnTabStopPositions );
 	}
 
-	inline BOOL CDC::GrayString (HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const
+	inline BOOL CDC::GrayString(HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const
 	// Draws gray text at the specified location
 	{
 		assert(m_pData->hDC);
-		return ::GrayString(m_pData->hDC, hBrush, lpOutputFunc, lpData, nCount, x, y, nWidth, nHeight );
+		return ::GrayString(m_pData->hDC, hBrush, lpOutputFunc, lpData, nCount, x, y, nWidth, nHeight);
 	}
 
-	inline int CDC::SetTextJustification (int nBreakExtra, int nBreakCount) const
+	inline int CDC::SetTextJustification(int nBreakExtra, int nBreakCount) const
 	// Specifies the amount of space the system should add to the break characters in a string of text
 	{
 		assert(m_pData->hDC);
-		return ::SetTextJustification( m_pData->hDC, nBreakExtra, nBreakCount  );
+		return ::SetTextJustification(m_pData->hDC, nBreakExtra, nBreakCount);
 	}
 
-	inline int CDC::GetTextCharacterExtra () const
+	inline int CDC::GetTextCharacterExtra() const
 	// Retrieves the current intercharacter spacing for the device context
 	{
 		assert(m_pData->hDC);
-		return ::GetTextCharacterExtra( m_pData->hDC );
+		return ::GetTextCharacterExtra(m_pData->hDC);
 	}
 
-	inline int CDC::SetTextCharacterExtra (int nCharExtra) const
+	inline int CDC::SetTextCharacterExtra(int nCharExtra) const
 	// Sets the intercharacter spacing
 	{
 		assert(m_pData->hDC);
-		return ::SetTextCharacterExtra( m_pData->hDC, nCharExtra );
+		return ::SetTextCharacterExtra(m_pData->hDC, nCharExtra);
 	}
 
-	inline CSize CDC::TabbedTextOut (int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const
+	inline CSize CDC::TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const
 	// Writes a character string at a specified location, expanding tabs to the values specified in an array of tab-stop positions
 	{
 		assert(m_pData->hDC);
@@ -3910,27 +3905,27 @@ namespace Win32xx
 		return sz;
 	}
 
-	inline CSize CDC::TabbedTextOut (int x, int y, tString String, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const
+	inline CSize CDC::TabbedTextOut(int x, int y, tString String, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const
 	// Writes a character string at a specified location, expanding tabs to the values specified in an array of tab-stop positions	
 	{
 		assert(m_pData->hDC);
-		return TabbedTextOut(x, y, String.c_str(), nTabPositions, lpnTabStopPositions, nTabOrigin );
+		return TabbedTextOut(x, y, String.c_str(), nTabPositions, lpnTabStopPositions, nTabOrigin);
 	}
 
-	inline BOOL CDC::TextOut (int x, int y, LPCTSTR lpszString, int nCount/* = -1*/) const
+	inline BOOL CDC::TextOut(int x, int y, LPCTSTR lpszString, int nCount/* = -1*/) const
 	// Writes a character string at the specified location
 	{
 		assert(m_pData->hDC);
 		if (nCount == -1)
 			nCount = lstrlen (lpszString);
 
-		return ::TextOut( m_pData->hDC, x, y, lpszString, nCount );
+		return ::TextOut(m_pData->hDC, x, y, lpszString, nCount);
 	}
 
-	inline BOOL CDC::TextOut (int x, int y, tString String) const
+	inline BOOL CDC::TextOut(int x, int y, tString String) const
 	// Writes a character string at the specified location
 	{
-		return TextOut( x, y, String.c_str(), -1 );
+		return TextOut(x, y, String.c_str(), -1);
 	}
 #endif
 
@@ -4020,7 +4015,7 @@ namespace Win32xx
 		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 	}
 
-	inline void GrayScaleBitmap (HBITMAP hbmSource)
+	inline void GrayScaleBitmap(HBITMAP hbmSource)
 	{
 		// Create our LPBITMAPINFO object
 		CBitmapInfoPtr pbmi(hbmSource);
@@ -4066,7 +4061,7 @@ namespace Win32xx
 		MemDC.SetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 	}
 
-	inline HIMAGELIST CreateDisabledImageList (HIMAGELIST himlNormal)
+	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal)
 	// Returns a greyed image list, created from hImageList
 	{
 		int cx, cy;

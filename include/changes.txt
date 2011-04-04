@@ -14,7 +14,7 @@ New Features and Enhancements
 	OLE2A		OLE   to ANSI
 	OLE2T		OLE   to TCHAR
 	OLE2W		OLE   to WCHAR
-	T2A			TCHAR to ANSI  
+	T2A			TCHAR to ANSI
 	T2BSTR		TCHAR to BSTR
 	T2OLE       TCHAR to OLE
 	T2W			TCHAR to Wide
@@ -52,8 +52,8 @@ Changes in detail
 - Added CRgn
 - Added CTaskDialog
 - Added CLoadString 
-- Added LoadString 			(uses CLoadString and replaces CWnd::LoadString)
-- Added tStringStream typedef 	(a TCHAR stringstream)
+- Added LoadString 			   	(uses CLoadString, replaces CWnd::LoadString)
+- Added tStringStream typedef  	(a TCHAR stringstream)
 - Added	A2BSTR	
 - Added	A2OLE	
 - Added	A2T		
