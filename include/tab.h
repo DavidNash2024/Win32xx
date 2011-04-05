@@ -989,6 +989,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::SetOwnerDraw(BOOL bEnabled)
+	// Enable or disable owner draw
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (bEnabled)

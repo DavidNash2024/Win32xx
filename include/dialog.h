@@ -224,6 +224,7 @@ namespace Win32xx
 	}
 
 	inline void CDialog::AttachItem(int nID, CWnd& Wnd)
+	// Attach a dialog item to a CWnd
 	{
 		Wnd.AttachDlgItem(nID, this);
 	}

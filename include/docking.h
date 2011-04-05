@@ -3302,6 +3302,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::SetCaption(LPCTSTR szCaption)
+	// Sets the caption text
 	{
 		GetDockClient().SetCaption(szCaption);
 
@@ -3310,6 +3311,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::SetCaptionHeight(int nHeight)
+	// Sets the height of the caption
 	{
 		m_NCHeight = nHeight;
 		RedrawWindow();
@@ -3318,6 +3320,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::SetDockSize(int DockSize)
+	// Sets the size of a docked docker
 	{
 		assert(DockSize >= 0);	
 		m_DockStartSize = DockSize;
