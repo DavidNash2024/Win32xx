@@ -538,7 +538,7 @@ namespace Win32xx
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 				if (NULL == pTLSData->hHook)
 				{
-					if (IsDialogMessage(m_hWnd, pMsg))
+					if (IsDialogMessage(pMsg))
 						return TRUE;
 				}
 				else

@@ -177,8 +177,8 @@ namespace Win32xx
 		BOOL UnionRect(RECT rc1, RECT rc2)			{ return ::UnionRect(this, &rc1, &rc2); }
 
 		// Reposition rectangle
-		void MoveToY (int y)						{ bottom = Height() + y; top = y; }
 		void MoveToX (int x)						{ right = Width() + x; left = x; }
+		void MoveToY (int y)						{ bottom = Height() + y; top = y; }
 		void MoveToXY (int x, int y)				{ MoveToX(x); MoveToY(y); }
 		void MoveToXY (POINT pt)					{ MoveToX (pt.x); MoveToY (pt.y); }
 

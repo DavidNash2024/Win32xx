@@ -408,6 +408,7 @@ namespace Win32xx
 		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL  InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL  IsChild(CWnd* pChild) const;
+		BOOL  IsDialogMessage(LPMSG lpMsg) const;
 		UINT  IsDlgButtonChecked(int nIDButton) const;
 		BOOL  IsWindow() const;
 		BOOL  IsWindowEnabled() const;
@@ -2107,6 +2108,14 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::IsChild(m_hWnd, pChild->GetHwnd());
+	}
+	
+	inline BOOL CWnd::IsDialogMessage(LPMSG lpMsg) const
+	// The IsDialogMessage function determines whether a message is intended for the specified dialog box and, 
+	// if it is, processes the message.
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::IsDialogMessage(m_hWnd, lpMsg);	
 	}
 
 	inline UINT CWnd::IsDlgButtonChecked(int nIDButton) const

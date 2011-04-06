@@ -511,7 +511,7 @@ namespace Win32xx
 		// allow the dialog to translate keyboard input
 		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
 		{
-			if (IsDialogMessage(m_hWnd, pMsg))
+			if (IsDialogMessage(pMsg))
 				return TRUE;
 		}
 
