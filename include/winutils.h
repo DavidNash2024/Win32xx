@@ -462,7 +462,6 @@ namespace Win32xx
 		assert(GetApp());
 
 		HBITMAP hBitmap = (HBITMAP)::LoadImage (GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		assert(hBitmap);
 		return hBitmap;
 	}
 
