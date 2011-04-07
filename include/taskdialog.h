@@ -407,6 +407,7 @@ namespace Win32xx
 	}
 
 	inline void CTaskDialog::RemoveAllButtons()
+	// Removes all push buttons from the task dialog.
 	{
 		assert (m_hWnd == NULL);
 		m_vButtons.clear();
@@ -414,6 +415,7 @@ namespace Win32xx
 	}
 
 	inline void CTaskDialog::RemoveAllRadioButtons()
+	// Removes all radio buttons from the task dialog.
 	{
 		assert (m_hWnd == NULL);
 		m_vRadioButtons.clear();
@@ -459,7 +461,7 @@ namespace Win32xx
 	}
 
 	inline void CTaskDialog::SetContent(LPCTSTR pszContent)
-	// Set the task dialog's primary content.
+	// Sets the task dialog's primary content.
 	{
 		assert (m_hWnd == NULL);
 		StoreText(m_vContent, pszContent);
@@ -475,7 +477,7 @@ namespace Win32xx
 	}
 
 	inline void CTaskDialog::SetDefaultRadioButton(int nRadioButtonID) 
-	// Sets the default radio button
+	// Sets the default radio button.
 	{
 		assert (m_hWnd == NULL);
 		m_tc.nDefaultRadioButton = nRadioButtonID;
@@ -502,7 +504,7 @@ namespace Win32xx
 	}
 
 	inline void CTaskDialog::SetExpansionArea(LPCTSTR pszExpandedInfo, LPCTSTR pszExpandedLabel /* = _T("")*/, LPCTSTR pszCollapsedLabel /* = _T("")*/)
-	// Sets the text in the exandable area of the Task Dialog.
+	// Sets the text in the expandable area of the Task Dialog.
 	{
 		assert (m_hWnd == NULL);
 
@@ -605,7 +607,7 @@ namespace Win32xx
 	}
 
 	inline void CTaskDialog::SetProgressBarState(int nNewState /* = PBST_NORMAL*/)
-	// Set the current state of the progress bar. Possible states are:
+	// Sets the current state of the progress bar. Possible states are:
 	//  PBST_NORMAL
 	//  PBST_PAUSE
 	//  PBST_ERROR

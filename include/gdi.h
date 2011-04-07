@@ -882,6 +882,7 @@ namespace Win32xx
 	}
 
 	inline HBITMAP CBitmap::GetBitmap() const
+	// Returns the attached HBITMAP.
 	{
 		assert(m_pData);
 		return m_pData->hBitmap;
@@ -1423,7 +1424,7 @@ namespace Win32xx
 #endif // #ifndef _WIN32_WCE
 
 	inline LOGFONT CFont::GetLogFont() const
-	// Retrieves the Logfont structure that contains font attributes	
+	// Retrieves the Logfont structure that contains font attributes.	
 	{
 		assert(m_pData);
 		assert(m_pData->hFont != NULL);
