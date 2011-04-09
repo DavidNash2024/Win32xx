@@ -62,10 +62,10 @@ BOOL CTaskDialogApp::InitInstance()
 		switch (td.GetSelectedButtonID())
 		{
 		case CB_FIRST:
-			TRACE(_T("First command control\n"));
+			TRACE(_T("First command control selected\n"));
 			break;
 		case CB_SECOND:
-			TRACE(_T("Second command control\n"));
+			TRACE(_T("Second command control selected\n"));
 			break;
 		case CB_THIRD:
 			TRACE(_T("Third command control selected\n"));
@@ -96,7 +96,7 @@ BOOL CTaskDialogApp::InitInstance()
 
 		if (td.GetVerificationCheckboxState())
 		{
-			TRACE(_T("Verification button pressed\n"));
+			TRACE(_T("Verification button selected\n"));
 		}
 	}
 	else

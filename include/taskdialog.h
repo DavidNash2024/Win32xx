@@ -529,6 +529,12 @@ namespace Win32xx
 
 	inline void CTaskDialog::SetFooterIcon(LPCTSTR lpszFooterIcon) 
 	// Sets the icon that will be displayed in the Task Dialog's footer.
+	// Possible icons:
+	// TD_ERROR_ICON		A stop-sign icon appears in the task dialog.
+	// TD_WARNING_ICON		An exclamation-point icon appears in the task dialog.
+	// TD_INFORMATION_ICON	An icon consisting of a lowercase letter i in a circle appears in the task dialog.
+	// TD_SHIELD_ICON		A shield icon appears in the task dialog.
+	//  or a value passed via MAKEINTRESOURCE
 	{
 		assert (m_hWnd == NULL);
 		m_tc.pszFooterIcon = (LPCWSTR)lpszFooterIcon;
@@ -551,6 +557,12 @@ namespace Win32xx
 
 	inline void CTaskDialog::SetMainIcon(LPCTSTR lpszMainIcon)
 	// Sets Task Dialog's main icon.
+	// Possible icons:
+	// TD_ERROR_ICON		A stop-sign icon appears in the task dialog.
+	// TD_WARNING_ICON		An exclamation-point icon appears in the task dialog.
+	// TD_INFORMATION_ICON	An icon consisting of a lowercase letter i in a circle appears in the task dialog.
+	// TD_SHIELD_ICON		A shield icon appears in the task dialog.
+	//  or a value passed via MAKEINTRESOURCE
 	{
 		assert (m_hWnd == NULL);
 		m_tc.pszMainIcon = (LPCWSTR)lpszMainIcon; 
