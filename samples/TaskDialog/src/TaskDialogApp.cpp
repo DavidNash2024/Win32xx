@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "TaskDialogApp.h"
+#include "MyTaskDialog.h"
 #include "Resource.h"
 
 // Definitions for the CTaskDialogApp class
@@ -26,24 +27,31 @@ BOOL CTaskDialogApp::InitInstance()
 		return FALSE;
 	}
 
-	CTaskDialog td;
+	CMyTaskDialog td;
 	
-	td.SetOptions(TDF_USE_HICON_MAIN | TDF_USE_HICON_FOOTER | TDF_ALLOW_DIALOG_CANCELLATION | TDF_EXPAND_FOOTER_AREA);
+	td.SetOptions( TDF_ALLOW_DIALOG_CANCELLATION | TDF_USE_COMMAND_LINKS | TDF_EXPANDED_BY_DEFAULT | TDF_SHOW_PROGRESS_BAR | TDF_CALLBACK_TIMER);
 	
 	// Add the buttons
-	td.AddButton( CB_SAVE, MAKEINTRESOURCE(IDS_CB_SAVE) );
-	td.AddRadioButton( RB_GOOD, MAKEINTRESOURCE(IDS_RB_GOOD) );
-	td.AddRadioButton( RB_OK,   MAKEINTRESOURCE(IDS_RB_OK) );
-	td.AddRadioButton( RB_BAD,  MAKEINTRESOURCE(IDS_RB_BAD) );
-	td.SetDefaultRadioButton( RB_OK );
-	td.SetCommonButtons( TDCBF_CANCEL_BUTTON );
+	td.AddCommandControl( CB_FIRST, MAKEINTRESOURCE(IDS_CB_FIRST) );
+	td.AddCommandControl( CB_SECOND, MAKEINTRESOURCE(IDS_CB_SECOND) );
+	td.AddCommandControl( CB_THIRD, MAKEINTRESOURCE(IDS_CB_THIRD) );
+	td.AddRadioButton( RB_FIRST,  MAKEINTRESOURCE(IDS_RB_FIRST) );
+	td.AddRadioButton( RB_SECOND, MAKEINTRESOURCE(IDS_RB_SECOND) );
+	td.AddRadioButton( RB_THIRD,  MAKEINTRESOURCE(IDS_RB_THIRD) );
+	td.SetDefaultRadioButton( RB_FIRST );
+	td.SetCommonButtons( TDCBF_YES_BUTTON | TDCBF_NO_BUTTON | TDCBF_CANCEL_BUTTON );
 
 	// Add the Text
 	td.SetWindowTitle( MAKEINTRESOURCE(IDS_WINDOWTITLE) );
 	td.SetMainInstruction( MAKEINTRESOURCE(IDS_MAININSTRUCTION) );
 	td.SetContent( MAKEINTRESOURCE(IDS_CONTENT) );
+	td.SetExpansionArea( MAKEINTRESOURCE(IDS_EXPANDED), _T("Hide the expanded information"), _T("Show the expanded information") );
 	td.SetVerificationCheckboxText( MAKEINTRESOURCE(IDS_VERIFICATIONTEXT) );
 	td.SetFooterText( MAKEINTRESOURCE(IDS_FOOTER) );
+
+	// Set Icons
+	td.SetMainIcon(TD_INFORMATION_ICON);
+	td.SetFooterIcon(TD_INFORMATION_ICON);
 
 	// Run the task dialog
 	HRESULT hr = td.DoModal();
@@ -51,37 +59,49 @@ BOOL CTaskDialogApp::InitInstance()
 	// Respond to the result
 	if (SUCCEEDED(hr))
 	{
-		if (td.GetSelectedButtonID() == CB_SAVE)
+		switch (td.GetSelectedButtonID())
 		{
-			switch (td.GetSelectedRadioButtonID())
-			{
-			case RB_GOOD:
-				MessageBox(NULL, _T("TaskDialog Result"), _T("You like TaskDialogs alot"), MB_OK);
-				break;
-
-			case RB_OK:
-				MessageBox(NULL, _T("TaskDialog Result"), _T("You like TaskDialogs a little bit"), MB_OK);  
-				break;
-
-			case RB_BAD:
-				MessageBox(NULL, _T("TaskDialog Result"), _T("You don't like TaskDialogs at all"), MB_OK);
-				break;
-			}
-
-			if (td.GetVerificationCheckboxState())
-			{
-			 //    the user checked the verification flag...
-			 //    do any additional work here
-			}
+		case CB_FIRST:
+			TRACE(_T("First command control\n"));
+			break;
+		case CB_SECOND:
+			TRACE(_T("Second command control\n"));
+			break;
+		case CB_THIRD:
+			TRACE(_T("Third command control selected\n"));
+			break;
+		case IDYES:
+			TRACE(_T("The 'Yes' button was pressed\n"));
+			break;
+		case IDNO:
+			TRACE(_T("The 'No' button was pressed\n"));
+			break;
+		case IDCANCEL:
+			TRACE(_T("The 'Cancel' button was pressed\n"));
+			break;
 		}
-		else
+
+		switch (td.GetSelectedRadioButtonID())
 		{
-		  //   user cancelled out of the dialog
+		case RB_FIRST:
+			TRACE(_T("First radio button selected\n"));
+			break;
+		case RB_SECOND:
+			TRACE(_T("Second radio button selected\n"));
+			break;
+		case RB_THIRD:
+			TRACE(_T("Third radio button selected\n"));
+			break;
+		}
+
+		if (td.GetVerificationCheckboxState())
+		{
+			TRACE(_T("Verification button pressed\n"));
 		}
 	}
 	else
 	{
-	   //  some error occurred...check hr to see what it is
+	   TRACE(_T("Some error occurred\n"));
 	}
 
 	return FALSE;	// Don't run the message loop

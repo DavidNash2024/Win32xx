@@ -6,13 +6,16 @@
 
 STRINGTABLE
 BEGIN
-    IDS_WINDOWTITLE "Sample TaskDialog"
-    IDS_MAININSTRUCTION "How much do you like TaskDialogs?"
-    IDS_CONTENT "A TaskDialog presents information in a clear and consistent way."
-    IDS_VERIFICATIONTEXT "&Don't show this message again"
-    IDS_FOOTER "The answer provided here will help determine your Aero worthiness."
-    IDS_RB_GOOD "L&ots"
-    IDS_RB_OK "A &little"
-    IDS_RB_BAD "No&t at all"
-    IDS_CB_SAVE "&Save my response"
+    IDS_WINDOWTITLE "Sample task dialog"
+    IDS_MAININSTRUCTION "Main Instruction"
+    IDS_CONTENT "This is the task dialog content."
+	IDS_EXPANDED "This is line 1 of the expanded information.\nThis is line 2 of the expanded information.\nThis is line 3 of the expanded information."
+    IDS_VERIFICATIONTEXT "Verification checkbox text message"
+    IDS_FOOTER "This is the task dialog footer."
+    IDS_RB_FIRST "First radio button"
+    IDS_RB_SECOND "Second radio button"
+    IDS_RB_THIRD "Third radio button"
+    IDS_CB_FIRST "First command control"
+	IDS_CB_SECOND "Second command control"
+	IDS_CB_THIRD "Third command control"
 END

@@ -64,7 +64,7 @@ namespace Win32xx
 		CTaskDialog();
 		virtual ~CTaskDialog() {}
 
-		void AddButton(int nButtonID, LPCTSTR pszCaption);
+		void AddCommandControl(int nButtonID, LPCTSTR pszCaption);
 		void AddRadioButton(int nRadioButtonID, LPCTSTR pszCaption);
 		void AddRadioButtonGroup(int nIDRadioButtonsFirst, int nIDRadioButtonsLast);
 		void ClickButton(int nButtonID) const;
@@ -106,8 +106,8 @@ namespace Win32xx
 		void SetWindowTitle(LPCTSTR pszWindowTitle);
 		static HRESULT CALLBACK StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData);
 		void StoreText(std::vector<WCHAR>& vWChar, LPCTSTR pFromTChar);
-		LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText);
+		
 
 	protected:
 		// Override these functions as required
@@ -122,6 +122,8 @@ namespace Win32xx
 		virtual BOOL OnTDRadioButtonClicked(int nRadioButtonID);
 		virtual void OnTDTimer(DWORD dwTickCount);
 		virtual void OnTDVerificationCheckboxClicked(BOOL bChecked);
+		virtual LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CTaskDialog(const CTaskDialog&);				// Disable copy construction
@@ -164,8 +166,8 @@ namespace Win32xx
 		m_tc.pfCallback = CTaskDialog::StaticTaskDialogProc;
 	}
 
-	inline void CTaskDialog::AddButton(int nButtonID, LPCTSTR pszCaption)
-	// Adds a push button to the Task Dialog.
+	inline void CTaskDialog::AddCommandControl(int nButtonID, LPCTSTR pszCaption)
+	// Adds a command control or push button to the Task Dialog.
 	{
 		assert (m_hWnd == NULL);
 
@@ -708,7 +710,7 @@ namespace Win32xx
 		lstrcpyW(&vWChar.front(), T2W(&vTChar.front()) );
 	}
 
-	inline LRESULT CTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CTaskDialog::TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Handles the Task Dialog's notificaions.
 	{
 		switch(uMsg)
@@ -720,7 +722,7 @@ namespace Win32xx
 			OnTDCreated();
 			break;
 		case TDN_DESTROYED:		
-			Destroy();	// Prepare this CWnd to be reused. 
+			Cleanup();			// Prepare this CWnd to be reused. 
 			OnTDDestroyed();
 			break;
 		case TDN_DIALOG_CONSTRUCTED:
@@ -750,6 +752,26 @@ namespace Win32xx
 		}
 
 		return S_OK;
+	}
+
+	inline LRESULT CTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		// Override this function in your class derrived from CDialog if you wish to handle messages
+		// A typical function might look like this:
+
+		//	switch (uMsg)
+		//	{
+		//	case MESSAGE1:		// Some Windows API message
+		//		OnMessage1();	// A user defined function
+		//		break;			// Also do default processing
+		//	case MESSAGE2:
+		//		OnMessage2();
+		//		return x;		// Don't do default processing, but instead return
+		//						//  a value recommended by the Windows API documentation
+		//	}
+
+		// Always pass unhandled messages on to TaskDialogProcDefault
+		return TaskDialogProcDefault(uMsg, wParam, lParam);
 	}
 
 	inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText)

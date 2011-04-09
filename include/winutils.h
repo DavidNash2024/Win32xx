@@ -402,7 +402,7 @@ namespace Win32xx
 	class CLoadString
 	{
 	public:
-		CLoadString(UINT nID) : m_nID(nID)
+		CLoadString(UINT nID)
 		{
 			assert (GetApp());
 
@@ -436,7 +436,6 @@ namespace Win32xx
 		CLoadString(const CLoadString&);
 		CLoadString& operator= (const CLoadString&);
 		std::vector<TCHAR> m_vString;
-		UINT m_nID;
 	};
 
 
