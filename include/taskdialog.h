@@ -88,7 +88,6 @@ namespace Win32xx
 		void SetDefaultButton(int nButtonID);
 		void SetDefaultRadioButton(int nRadioButtonID);
 		void SetDialogWidth(UINT nWidth = 0);
-		void SetElementText(TASKDIALOG_ELEMENTS eElements, LPCTSTR pszText);
 		void SetExpansionArea(LPCTSTR pszExpandedInfo, LPCTSTR pszExpandedLabel = _T(""), LPCTSTR pszCollapsedLabel = _T(""));
 		void SetFooterIcon(HICON hFooterIcon);
 		void SetFooterIcon(LPCTSTR lpszFooterIcon);
@@ -465,9 +464,11 @@ namespace Win32xx
 	inline void CTaskDialog::SetContent(LPCTSTR pszContent)
 	// Sets the task dialog's primary content.
 	{
-		assert (m_hWnd == NULL);
 		StoreText(m_vContent, pszContent);
 		m_tc.pszContent = &m_vContent.front(); 
+
+		if (IsWindow())
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_CONTENT, (LPARAM)(LPCWSTR)T2W(pszContent));
 	}
 
 	inline void CTaskDialog::SetDefaultButton(int nButtonID) 
@@ -493,23 +494,9 @@ namespace Win32xx
 		m_tc.cxWidth = nWidth;
 	}
 
-	inline void CTaskDialog::SetElementText(TASKDIALOG_ELEMENTS eElements, LPCTSTR pszText)
-	// Sets the text of one of the Task Dialog's elements.
-	// eElement must be one of these predefined values:
-	//  TDE_CONTENT							Content.
-	//  TDE_EXPANDED_INFORMATION			Expanded information.
-	//  TDE_FOOTER							Footer text.
-	//  TDE_MAIN_INSTRUCTION				Main instruction.
-	{
-		assert(m_hWnd);
-		SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)eElements, (LPARAM)(LPCWSTR)T2W(pszText));
-	}
-
 	inline void CTaskDialog::SetExpansionArea(LPCTSTR pszExpandedInfo, LPCTSTR pszExpandedLabel /* = _T("")*/, LPCTSTR pszCollapsedLabel /* = _T("")*/)
 	// Sets the text in the expandable area of the Task Dialog.
 	{
-		assert (m_hWnd == NULL);
-
 		StoreText(m_vExpandedInformation, pszExpandedInfo);
 		m_tc.pszExpandedInformation = &m_vExpandedInformation.front();
 		
@@ -518,6 +505,9 @@ namespace Win32xx
 		
 		StoreText(m_vCollapsedControlText, pszCollapsedLabel);
 		m_tc.pszCollapsedControlText = &m_vCollapsedControlText.front();
+
+		if (IsWindow())
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_EXPANDED_INFORMATION, (LPARAM)(LPCWSTR)T2W(pszExpandedInfo));
 	}
 
 	inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon) 
@@ -543,9 +533,11 @@ namespace Win32xx
 	inline void CTaskDialog::SetFooterText(LPCTSTR pszFooter)
 	// Sets the text that will be displayed in the Task Dialog's footer.
 	{
-		assert (m_hWnd == NULL);
 		StoreText(m_vFooter, pszFooter);
 		m_tc.pszFooter = &m_vFooter.front();
+
+		if (IsWindow())
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)T2W(pszFooter));
 	}
 
 	inline void CTaskDialog::SetMainIcon(HICON hMainIcon) 
@@ -571,9 +563,11 @@ namespace Win32xx
 	inline void CTaskDialog::SetMainInstruction(LPCTSTR pszMainInstruction) 
 	// Sets the Task Dialog's main instruction text.
 	{
-		assert (m_hWnd == NULL);
 		StoreText(m_vMainInstruction, pszMainInstruction);
 		m_tc.pszMainInstruction = &m_vMainInstruction.front();
+
+		if (IsWindow())
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)T2W(pszMainInstruction));
 	}
 
 	inline void CTaskDialog::SetOptions(TASKDIALOG_FLAGS dwFlags)
