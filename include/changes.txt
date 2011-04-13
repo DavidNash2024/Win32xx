@@ -134,6 +134,7 @@ Changes in detail
 - Added CWnd::IsDialogMessage
 - Added CWnd::IsDlgButtonChecked
 - Added CWnd::MapWindowPoints
+- Added CWnd::OnEraseBkgnd
 - Added CWnd::Print
 - Added CWnd::ScreenToClient
 - Added CWnd::SendNotifyMessage

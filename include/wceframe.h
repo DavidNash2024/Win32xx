@@ -118,7 +118,6 @@ namespace Win32xx
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();		
 		virtual void PreCreate(CREATESTRUCT &cs);
-	//	virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual void RecalcLayout();
 		virtual void SetButtons(const std::vector<UINT> ToolBarData);
 		virtual	LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -276,7 +275,8 @@ namespace Win32xx
 		m_MenuBar.Create(m_hWnd);
 
 		// Set the keyboard accelerators
-		GetApp()->SetAccelerators(IDW_MAIN, this);
+		HACCEL hAccel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		GetApp()->SetAccelerators(hAccel, this);
 
 		// Add the toolbar buttons
 		if (m_ToolBarData.size() > 0)

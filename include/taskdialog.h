@@ -119,7 +119,7 @@ namespace Win32xx
 		virtual void OnTDHyperlinkClicked(LPCTSTR pszHref);
 		virtual void OnTDNavigatePage();
 		virtual BOOL OnTDRadioButtonClicked(int nRadioButtonID);
-		virtual void OnTDTimer(DWORD dwTickCount);
+		virtual BOOL OnTDTimer(DWORD dwTickCount);
 		virtual void OnTDVerificationCheckboxClicked(BOOL bChecked);
 		virtual LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -352,7 +352,9 @@ namespace Win32xx
 	// Called when the user selects a button or command link.
 	{ 
 		UNREFERENCED_PARAMETER(nButtonID);
-		return TRUE;
+		
+		// return TRUE to prevent the task dialog from closing
+		return FALSE;
 	}
 
 	inline void CTaskDialog::OnTDConstructed()
@@ -395,10 +397,13 @@ namespace Win32xx
 		return TRUE; 
 	}
 	
-	inline void CTaskDialog::OnTDTimer(DWORD dwTickCount) 
+	inline BOOL CTaskDialog::OnTDTimer(DWORD dwTickCount) 
 	// Called every 200 milliseconds (aproximately) when the TDF_CALLBACK_TIMER flag is set. 
 	{
 		UNREFERENCED_PARAMETER(dwTickCount);
+
+		// return TRUE to reset the tick count 
+		return FALSE;
 	}
 	
 	inline void CTaskDialog::OnTDVerificationCheckboxClicked(BOOL bChecked)
@@ -515,6 +520,9 @@ namespace Win32xx
 	{
 		assert (m_hWnd == NULL);
 		m_tc.hFooterIcon = hFooterIcon;
+
+		if (IsWindow())
+			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_FOOTER, (LPARAM)hFooterIcon);
 	}
 
 	inline void CTaskDialog::SetFooterIcon(LPCTSTR lpszFooterIcon) 
@@ -528,6 +536,9 @@ namespace Win32xx
 	{
 		assert (m_hWnd == NULL);
 		m_tc.pszFooterIcon = (LPCWSTR)lpszFooterIcon;
+
+		if (IsWindow())
+			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_FOOTER, (LPARAM)lpszFooterIcon);
 	}
 
 	inline void CTaskDialog::SetFooterText(LPCTSTR pszFooter)
@@ -545,6 +556,9 @@ namespace Win32xx
 	{
 		assert (m_hWnd == NULL);
 		m_tc.hMainIcon = hMainIcon;
+
+		if (IsWindow())
+			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)hMainIcon);
 	}
 
 	inline void CTaskDialog::SetMainIcon(LPCTSTR lpszMainIcon)
@@ -557,7 +571,9 @@ namespace Win32xx
 	//  or a value passed via MAKEINTRESOURCE
 	{
 		assert (m_hWnd == NULL);
-		m_tc.pszMainIcon = (LPCWSTR)lpszMainIcon; 
+		m_tc.pszMainIcon = (LPCWSTR)lpszMainIcon;
+		if (IsWindow())
+			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)lpszMainIcon);
 	}
 
 	inline void CTaskDialog::SetMainInstruction(LPCTSTR pszMainInstruction) 
@@ -722,8 +738,8 @@ namespace Win32xx
 		switch(uMsg)
 		{
 		case TDN_BUTTON_CLICKED:
-			OnTDButtonClicked((int)wParam);
-			break;
+			return OnTDButtonClicked((int)wParam);
+
 		case TDN_CREATED:
 			OnTDCreated();
 			break;
@@ -750,8 +766,8 @@ namespace Win32xx
 			OnTDRadioButtonClicked((int)wParam);
 			break;
 		case TDN_TIMER:
-			OnTDTimer((DWORD)wParam);
-			break;
+			return OnTDTimer((DWORD)wParam);
+
 		case TDN_VERIFICATION_CLICKED:
 			OnTDVerificationCheckboxClicked((BOOL)wParam);
 			break;
