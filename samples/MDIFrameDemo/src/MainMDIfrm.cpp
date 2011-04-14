@@ -83,7 +83,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		GetActiveMDIChild()->SendMessage(WM_CLOSE, 0L, 0L);
 		return TRUE;
 	case IDM_FILE_EXIT:
-		::PostMessage(m_hWnd, WM_CLOSE, 0L, 0L);
+		SendMessage(WM_CLOSE, 0L, 0L);
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();
@@ -93,16 +93,16 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnViewToolBar();
 		UpdateCheckMarks();
 		break;
-	case IDW_WINDOW_ARRANGE:
+	case IDW_MDI_ARRANGE:
 		MDIIconArrange();
 		break;
-	case IDW_WINDOW_CASCADE:
+	case IDW_MDI_CASCADE:
 		MDICascade();
 		break;
-	case IDW_WINDOW_CLOSEALL:
+	case IDW_MDI_CLOSEALL:
 		RemoveAllMDIChildren();
 		break;
-	case IDW_WINDOW_TILE:
+	case IDW_MDI_TILE:
 		MDITile();
 		break;
 	default:    // Pass to active child...

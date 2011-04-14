@@ -86,17 +86,17 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_VIEW_TOOLBAR:
 		OnViewToolBar();
 		break;
-	case IDW_WINDOW_ARRANGE:
-		::PostMessage (GetView()->GetHwnd(), WM_MDIICONARRANGE, 0L, 0L) ;
+	case IDW_MDI_ARRANGE:
+		MDIIconArrange();
 		break;
-	case IDW_WINDOW_CASCADE:
-		::PostMessage (GetView()->GetHwnd(), WM_MDICASCADE, 0L, 0L) ;
+	case IDW_MDI_CASCADE:
+		MDICascade();
 		break;
-	case IDW_WINDOW_CLOSEALL:
+	case IDW_MDI_CLOSEALL:
 		RemoveAllMDIChildren();
 		break;
-	case IDW_WINDOW_TILE:
-		::PostMessage (GetView()->GetHwnd(), WM_MDITILE, 0L, 0L) ;
+	case IDW_MDI_TILE:
+		MDITile();
 		break;
 	default:    // Pass to active child...
 		{

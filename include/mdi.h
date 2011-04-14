@@ -347,7 +347,7 @@ namespace Win32xx
 		// MDITILE_VERTICAL		Tiles MDI child windows so that one window appears beside another.
 
 		assert(::IsWindow(m_hWnd));
-		GetView()->SendMessage(WM_MDIRESTORE, (WPARAM)nType, 0L);
+		GetView()->SendMessage(WM_MDITILE, (WPARAM)nType, 0L);
 	}
 
 	inline void CMDIFrame::OnClose()

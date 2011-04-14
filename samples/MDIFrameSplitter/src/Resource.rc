@@ -47,10 +47,10 @@ BEGIN
     END
 	POPUP "&Window"
     BEGIN
-        MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
-        MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
-        MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
-        MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
+        MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
+        MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
+        MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
     END
     POPUP "&Help"
     BEGIN
@@ -92,10 +92,10 @@ BEGIN
     END
     POPUP "&Window"
     BEGIN
-        MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
-        MENUITEM "&Tile\tShift+F4",             IDW_WINDOW_TILE
-        MENUITEM "Arrange &Icons",              IDW_WINDOW_ARRANGE
-        MENUITEM "Close &All",                  IDW_WINDOW_CLOSEALL
+        MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
+        MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
+        MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
     END
     POPUP "&Help"
     BEGIN
@@ -175,8 +175,8 @@ BEGIN
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
     VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
-    VK_F4,          IDW_WINDOW_TILE,        VIRTKEY, SHIFT, NOINVERT
-    VK_F5,          IDW_WINDOW_CASCADE,     VIRTKEY, SHIFT, NOINVERT
+    VK_F4,          IDW_MDI_TILE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          IDW_MDI_CASCADE,        VIRTKEY, SHIFT, NOINVERT
 END
 
 
@@ -218,10 +218,10 @@ BEGIN
     IDW_MAIN                "MDI Frame"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
-    IDW_WINDOW_CASCADE      "Cascade MDI Windows"
-    IDW_WINDOW_TILE         "Tile MDI Windows"
-    IDW_WINDOW_ARRANGE      "Arrange Icons"
-    IDW_WINDOW_CLOSEALL     "Close All MDI Windows"
+    IDW_MDI_CASCADE         "Cascade MDI Windows"
+    IDW_MDI_TILE            "Tile MDI Windows"
+    IDW_MDI_ARRANGE         "Arrange Icons"
+    IDW_MDI_CLOSEALL        "Close All MDI Windows"
     IDW_FIRSTCHILD          "Activate this window"
     IDW_CHILD2              "Activate this window"
     IDW_CHILD3              "Activate this window"

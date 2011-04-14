@@ -21,10 +21,10 @@
 #define IDW_QUIT                         58
 
 // Resource IDs for MDI menu items
-#define IDW_WINDOW_CASCADE               60
-#define IDW_WINDOW_TILE                  61
-#define IDW_WINDOW_ARRANGE               62
-#define IDW_WINDOW_CLOSEALL              63
+#define IDW_MDI_CASCADE                  60
+#define IDW_MDI_TILE                     61
+#define IDW_MDI_ARRANGE                  62
+#define IDW_MDI_CLOSEALL                 63
 #define IDW_FIRSTCHILD                   64
 #define IDW_CHILD2                       65
 #define IDW_CHILD3                       66
