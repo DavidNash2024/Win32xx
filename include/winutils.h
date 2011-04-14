@@ -249,7 +249,7 @@ namespace Win32xx
 	// ------------------------------------------
 	// char (or CHAR) character types are ANSI (8 bits).
 	// wchar_t (or WCHAR) character types are Unicode (16 bits).
-	// TCHAR characters are Unicode if the _UNICODE macro is defined, otherwise they are ANSI.
+	// TCHAR characters are Unicode if the UNICODE macro is defined, otherwise they are ANSI.
 	// BSTR (Basic String) is a type of string used in Visual Basic and COM programming.
 	// OLE is the same as WCHAR. It is used in Visual Basic and COM programming.
 
@@ -270,7 +270,7 @@ namespace Win32xx
 	typedef CW2A BSTR2A;
 	typedef CW2W BSTR2W;
 
-#ifdef _UNICODE
+#ifdef UNICODE
 	typedef CA2W A2T;
 	typedef CW2A T2A;
 	typedef CW2W T2W;

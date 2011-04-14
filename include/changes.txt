@@ -41,6 +41,7 @@ New Features and Enhancements
    the MDI child's menu and accelerator table.
 * Functions which accept a text array (LPCTSTR) now also accept a tString.   
 * A docker can now be resized while docked using CDocker::SetDockSize.
+* Extended the "Using Win32++ section of the Win32++ help documentation.
 
 Changes in detail
 -----------------
