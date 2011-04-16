@@ -152,7 +152,7 @@ void CMainFrame::OnFilePrint()
 	CDC MemDC = CreateCompatibleDC(ViewDC);
 	MemDC.CreateCompatibleBitmap(ViewDC, Width, Height);
 	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
-	HBITMAP hbmView = MemDC.DetachBitmap();
+	CBitmap bmView = MemDC.DetachBitmap();
 
 	// Bring up a dialog to choose the printer
 	PRINTDLG pd = {0};
@@ -192,13 +192,13 @@ void CMainFrame::OnFilePrint()
 
 	// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
 	// Get the size of the image data
-	GetDIBits(MemDC, hbmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	GetDIBits(MemDC, bmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Retrieve the image data
 	std::vector<byte> vBits(bi.biSizeImage, 0);;	// a vector to hold the byte array
 	byte* pByteArray = &vBits.front();
 
-	GetDIBits(MemDC, hbmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	GetDIBits(MemDC, bmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
     float fLogPelsX1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSX);
@@ -228,9 +228,6 @@ void CMainFrame::OnFilePrint()
 	// Inform the driver that document has ended.
 	if(0 > EndDoc(pd.hDC))
 		throw CWinException(_T("EndDoc failed"));
-
-	// Cleanup
-	::DeleteObject(hbmView);
 }
 
 void CMainFrame::SetupToolBar()

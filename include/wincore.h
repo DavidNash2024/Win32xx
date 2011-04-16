@@ -387,6 +387,7 @@ namespace Win32xx
 		CRect GetClientRect() const;
 		HDC   GetDC() const;
 		HDC   GetDCEx(HRGN hrgnClip, DWORD flags) const;
+		CWnd* GetDesktopWindow() const;
 		CWnd* GetDlgItem(int nIDDlgItem) const;
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
@@ -1201,7 +1202,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetAncestor() const
-	// The GetAncestor function retrieves the handle to the ancestor (root parent)
+	// The GetAncestor function retrieves a pointer to the ancestor (root parent)
 	// of the window. Supports Win95.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -1900,14 +1901,14 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetActiveWindow() const
-	// The GetActiveWindow function retrieves the window handle to the active window attached to the calling
+	// The GetActiveWindow function retrieves a pointer to the active window attached to the calling
 	// thread's message queue.
 	{
 		return FromHandle( ::GetActiveWindow() );
 	}
 
 	inline CWnd* CWnd::GetCapture() const
-	// The GetCapture function retrieves a handle to the window (if any) that has captured the mouse.
+	// The GetCapture function retrieves a pointer to the window (if any) that has captured the mouse.
 	{
 		return FromHandle( ::GetCapture() );
 	}
@@ -1948,6 +1949,12 @@ namespace Win32xx
 		return ::GetDCEx(m_hWnd, hrgnClip, flags);
 	}
 
+	inline CWnd* CWnd::GetDesktopWindow() const
+	// The GetDesktopWindow function retrieves a pointer to the desktop window.
+	{
+		return FromHandle( ::GetDesktopWindow() );
+	}
+
 	inline CWnd* CWnd::GetDlgItem(int nIDDlgItem) const
 	// The GetDlgItem function retrieves a handle to a control in the dialog box.
 	{
@@ -1963,7 +1970,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetFocus() const
-	// The GetFocus function retrieves the handle to the window that has the keyboard focus, if the window
+	// The GetFocus function retrieves a pointer to the window that has the keyboard focus, if the window
 	// is attached to the calling thread's message queue.
 	{
 		return FromHandle( ::GetFocus() );
@@ -1984,7 +1991,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const
-	// The GetNextDlgGroupItem function retrieves a handle to the first control in a group of controls that
+	// The GetNextDlgGroupItem function retrieves a pointer to the first control in a group of controls that
 	// precedes (or follows) the specified control in a dialog box.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -1992,7 +1999,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const
-	// The GetNextDlgTabItem function retrieves a handle to the first control that has the WS_TABSTOP style
+	// The GetNextDlgTabItem function retrieves a pointer to the first control that has the WS_TABSTOP style
 	// that precedes (or follows) the specified control.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2000,7 +2007,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetParent() const
-	// The GetParent function retrieves a handle to the specified window's parent or owner.
+	// The GetParent function retrieves a pointer to the specified window's parent or owner.
 	{
 		assert(::IsWindow(m_hWnd));
 		return FromHandle( ::GetParent(m_hWnd) );
@@ -2040,7 +2047,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::GetWindow(UINT uCmd) const
-	// The GetWindow function retrieves a handle to a window that has the specified
+	// The GetWindow function retrieves a pointer to a window that has the specified
 	// relationship (Z-Order or owner) to the specified window.
 	// Possible uCmd values: GW_CHILD, GW_ENABLEDPOPUP, GW_HWNDFIRST, GW_HWNDLAST,
 	// GW_HWNDNEXT, GW_HWNDPREV, GW_OWNER

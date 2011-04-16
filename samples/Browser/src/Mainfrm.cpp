@@ -392,7 +392,8 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HOME );
 
 	// Set the image lists for normal, hot and disabled buttons
-	if (GetWinVersion() >= 2501 && LoadBitmap(MAKEINTRESOURCE(IDB_TOOLBAR32_NORM)))
+	int BitsPerPixel = GetDeviceCaps(GetDesktopWindow()->GetDC(), BITSPIXEL);
+	if (GetWinVersion() >= 2501 && LoadBitmap(MAKEINTRESOURCE(IDB_TOOLBAR32_NORM)) && BitsPerPixel == 32)
 	{
 		// Use 32bit bitmaps for XP and above (support for 32bit bitmaps began with XP)
 		SetToolBarImages(RGB(0,0,0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);

@@ -30,6 +30,7 @@ New Features and Enhancements
 * Enhanced CResizer.
    - The anchor points are now fixed instead of proportional
    - Scrollbars are now added when required.
+   - Added the DialogResizing sample to demonstrate CResizers' new features.
 * Create now use a CWnd pointer instead of a HWND when specifying the 
    parent window.
 * Dialogs and Property Sheets now use a CWnd pointer instead of a HWND
@@ -126,6 +127,7 @@ Changes in detail
 - Added CWnd::DrawAnimatedRects
 - Added CWnd::DrawCaption
 - Added CWnd::EndPaint
+- Added CWnd::GetDesktopWindow
 - Added CWnd::GetNextDlgGroupItem
 - Added CWnd::GetNextDlgTabItem
 - Added CWnd::GetSystemMenu

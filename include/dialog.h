@@ -638,15 +638,16 @@ namespace Win32xx
 	//
 	// The alignment corner should be set to the closest corner of the dialog. Allowed
 	// values are topleft, topright, bottomleft, and bottomright.
-	// Set bFixedWidth to TRUE if the width should be fixed instead of proportional.
-	// Set bFixedHeight to TRUE if the height should be fixed instead of proportional.
+	// Set bFixedWidth to TRUE if the width should be fixed instead of variable.
+	// Set bFixedHeight to TRUE if the height should be fixed instead of variable.
 	{
     	ResizeData rd;
     	rd.corner = corner;
     	rd.bFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
     	rd.bFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
-    	rd.rcInit = Wnd.GetClientRect();
-    	Wnd.MapWindowPoints(m_pParent, rd.rcInit);
+		CRect rcInit = Wnd.GetWindowRect();
+		m_pParent->ScreenToClient(rcInit);
+		rd.rcInit = rcInit;
     	rd.pWnd = &Wnd;
 
     	m_vResizeData.push_back(rd);
@@ -844,9 +845,9 @@ namespace Win32xx
     			top    = (*iter).rcInit.top;
     			break;
     		case bottomleft:
-    			width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+				width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
     			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
-    			left   = (*iter).rcInit.right - width;
+    			left   = (*iter).rcInit.left;
     			top    = (*iter).rcInit.bottom - height - m_rcInit.Height() + rcCurrent.Height();
     			break;
     		case bottomright:
