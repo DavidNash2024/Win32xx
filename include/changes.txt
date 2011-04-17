@@ -107,8 +107,10 @@ Changes in detail
 - Added CResizer::GetMaxRect
 - Added CResizer::GetMinRect
 - Added CResizer::HandleMessage
+- Added CTab::GetListMenu
 - Added CTab::SetFixedWidth
 - Added CTab::SetOwnerDraw
+- Added CTabbedMDI::GetListMenu
 - Added CWinApp::SetAccelerators
 - Added CWnd::BeginPaint
 - Added CWnd::ClientToScreen

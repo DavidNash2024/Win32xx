@@ -96,8 +96,8 @@ BOOL CMyDialog::OnInitDialog()
 	m_Resizer.AddChild(m_CheckA,   bottomright, 0);
 	m_Resizer.AddChild(m_CheckB,   bottomright, 0);
 	m_Resizer.AddChild(m_CheckC,   bottomright, 0);
-	m_Resizer.AddChild(m_RichEdit1, topleft, RD_STRETCH_WIDTH);
-	m_Resizer.AddChild(m_RichEdit2, bottomright, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
+	m_Resizer.AddChild(m_RichEdit1, topright, RD_STRETCH_WIDTH);
+	m_Resizer.AddChild(m_RichEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
 	
 	return true;
 }

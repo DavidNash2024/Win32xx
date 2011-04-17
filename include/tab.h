@@ -92,7 +92,7 @@ namespace Win32xx
 		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
-
+		virtual HMENU GetListMenu();
 		virtual BOOL GetTabsAtTop() const;
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
@@ -162,6 +162,7 @@ namespace Win32xx
 		std::vector<WndPtr> m_vTabViews;
 		HFONT m_hFont;
 		HIMAGELIST m_himlTab;
+		HMENU m_hListMenu;
 		CWnd* m_pActiveView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
 		BOOL m_IsTracking;
@@ -188,6 +189,7 @@ namespace Win32xx
 		virtual int   GetMDIChildCount() const;
 		virtual int   GetMDIChildID(int nTab) const;
 		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
+		virtual HMENU GetListMenu() const { return GetTab().GetListMenu(); }
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual tString GetWindowType() const { return _T("CTabbedMDI"); }
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
@@ -248,16 +250,17 @@ namespace Win32xx
 	inline void CTab::CSelectDialog::OnOK()
 	{
 		int iSelect = (int)SendDlgItemMessage(IDC_LIST, LB_GETCURSEL, 0, 0);
-		if (iSelect != LB_ERR) EndDialog(iSelect);
-
-		EndDialog(-2);
+		if (iSelect != LB_ERR) 
+			EndDialog(iSelect);
+		else
+			EndDialog(-2);
 	}
 
 
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab() : m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
+	inline CTab::CTab() : m_hListMenu(NULL), m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
 		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
@@ -274,6 +277,8 @@ namespace Win32xx
 	{
 		ImageList_Destroy(m_himlTab);
 		DeleteObject(m_hFont);
+		
+		if (IsMenu(m_hListMenu)) ::DestroyMenu(m_hListMenu);
 	}
 
 	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
@@ -617,6 +622,33 @@ namespace Win32xx
 		return rcClose;
 	}
 
+	inline HMENU CTab::GetListMenu()
+	{
+		if (IsMenu(m_hListMenu))
+			::DestroyMenu(m_hListMenu);
+		
+		m_hListMenu = CreatePopupMenu();
+
+		// Add the menu items
+		for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
+		{
+			TCHAR szMenuString[MAX_MENU_STRING+1];
+			TCHAR szTabText[MAX_MENU_STRING];
+			lstrcpyn(szTabText, GetAllTabs()[u].szTabText, MAX_MENU_STRING -4);
+			wsprintf(szMenuString, _T("&%d %s"), u+1, szTabText);
+			AppendMenu(m_hListMenu, MF_STRING, IDW_FIRSTCHILD +u, szMenuString);
+		}
+		if (GetAllTabs().size() >= 10)
+			AppendMenu(m_hListMenu, MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
+
+		// Add a checkmark to the menu
+		int iSelected = GetCurSel();
+		if (iSelected < 9)
+			CheckMenuItem(m_hListMenu, iSelected, MF_BYPOSITION|MF_CHECKED);
+
+		return m_hListMenu;
+	}
+
 	inline CRect CTab::GetListRect() const
 	{
 		CRect rcList;
@@ -867,10 +899,8 @@ namespace Win32xx
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
-	//	dcMem.DetachClipRgn();
 		dcView.SelectClipRgn(hrgnClip);
 		dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
-	//	dcView.DetachClipRgn();
 
 		// Cleanup
 		::DeleteObject(hrgnSrc1);
@@ -957,6 +987,7 @@ namespace Win32xx
 			if (GetActiveView() && (GetActiveView()->IsWindow()))
 				GetActiveView()->ShowWindow(SW_HIDE);
 
+			SetCurSel(iPage);
 			SetActiveView(m_vTabPageInfo[iPage].pView);
 
 			// Position the View over the tab control's display area
@@ -1090,25 +1121,8 @@ namespace Win32xx
 		if (!m_IsListPressed)
 		{
 			m_IsListPressed = TRUE;
-			HMENU hMenu = CreatePopupMenu();
-
-			// Add the menu items
-			for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
-			{
-				TCHAR szMenuString[MAX_MENU_STRING+1];
-				TCHAR szTabText[MAX_MENU_STRING];
-				lstrcpyn(szTabText, GetAllTabs()[u].szTabText, MAX_MENU_STRING -4);
-				wsprintf(szMenuString, _T("&%d %s"), u+1, szTabText);
-				AppendMenu(hMenu, MF_STRING, IDW_FIRSTCHILD +u, szMenuString);
-			}
-			if (GetAllTabs().size() >= 10)
-				AppendMenu(hMenu, MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
-
-			// Add a checkmark to the menu
-			int iSelected = GetCurSel();
-			if (iSelected < 9)
-				CheckMenuItem(hMenu, iSelected, MF_BYPOSITION|MF_CHECKED);
-
+			HMENU hMenu = GetListMenu();
+	
 			CPoint pt(GetListRect().left, GetListRect().top + GetTabHeight());
 			ClientToScreen(pt);
 
@@ -1121,8 +1135,6 @@ namespace Win32xx
 			if ((iPage >= 0) && (iPage < 9)) SelectPage(iPage);
 			if (iPage == 9) ShowListDialog();
 			m_IsListMenuActive = FALSE;
-
-			::DestroyMenu(hMenu);
 		}
 
 		CDC dc = GetDC();
