@@ -768,7 +768,7 @@ namespace Win32xx
 			// Display the caption
 			int cx = (m_pDock->GetDockStyle() & DS_NO_CLOSE)? 0 : GetSystemMetrics(SM_CXSMICON);
 			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
-			dcMem.DrawText(m_tsCaption, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			dcMem.DrawText(m_tsCaption.c_str(), m_tsCaption.size(), rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
 			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
@@ -1833,7 +1833,7 @@ namespace Win32xx
 		pDocker->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		pDocker->SetRedraw(TRUE);
 		pDocker->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-		pDocker->SetWindowText(pDocker->GetCaption());
+		pDocker->SetWindowText(pDocker->GetCaption().c_str());
 
 		return pDocker;
 	}
@@ -3445,7 +3445,7 @@ namespace Win32xx
 		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOOWNERZORDER);
 		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
 
-		SetWindowText(GetCaption());
+		SetWindowText(GetCaption().c_str());
 	}
 
 	inline CDocker* CDocker::SeparateFromDock()

@@ -88,16 +88,16 @@ BOOL CMyDialog::OnInitDialog()
 	SetDlgItemText(IDC_RICHEDIT2, _T("Rich Edit Window"));
 
 	// Initialize dialog resizing
-	m_Resizer.Initialize( this, CRect(0, 0, 200, 200) ); 
+	m_Resizer.Initialize( this, CRect(0, 0, 300, 200) ); 
 	m_Resizer.AddChild(m_RadioA,   topleft, 0);
 	m_Resizer.AddChild(m_RadioB,   topleft, 0);
 	m_Resizer.AddChild(m_RadioC,   topleft, 0);
-	m_Resizer.AddChild(m_CheckA,   bottomleft, 0);
-	m_Resizer.AddChild(m_CheckB,   bottomleft, 0);
-	m_Resizer.AddChild(m_CheckC,   bottomleft, 0);
 	m_Resizer.AddChild(m_Button,   topleft, 0);
-	m_Resizer.AddChild(m_RichEdit1, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
-	m_Resizer.AddChild(m_RichEdit2, bottomleft, RD_STRETCH_WIDTH);
+	m_Resizer.AddChild(m_CheckA,   bottomright, 0);
+	m_Resizer.AddChild(m_CheckB,   bottomright, 0);
+	m_Resizer.AddChild(m_CheckC,   bottomright, 0);
+	m_Resizer.AddChild(m_RichEdit1, topleft, RD_STRETCH_WIDTH);
+	m_Resizer.AddChild(m_RichEdit2, bottomright, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
 	
 	return true;
 }

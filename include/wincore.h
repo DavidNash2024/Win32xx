@@ -436,7 +436,6 @@ namespace Win32xx
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL  SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL  SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
-		BOOL  SetDlgItemText(int nIDDlgItem, tString String) const;
 		CWnd* SetFocus() const;
 		void  SetFont(HFONT hFont, BOOL bRedraw) const;
 		BOOL  SetForegroundWindow() const;
@@ -450,7 +449,6 @@ namespace Win32xx
 		BOOL  SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
 		int   SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
 		BOOL  SetWindowText(LPCTSTR lpString) const;
-		BOOL  SetWindowText(tString String) const;
 		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
 		BOOL  ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL  UpdateWindow() const;
@@ -2420,13 +2418,6 @@ namespace Win32xx
 		return ::SetDlgItemText(m_hWnd, nIDDlgItem, lpString);
 	}
 
-	inline BOOL CWnd::SetDlgItemText(int nIDDlgItem, tString String) const
-	// The SetDlgItemText function sets the title or text of a control in a dialog box.
-	{
-		assert(::IsWindow(m_hWnd));
-		return ::SetDlgItemText(m_hWnd, nIDDlgItem, String.c_str());
-	}
-
 	inline UINT_PTR CWnd::SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const
 	// Creates a timer with the specified time-out value.
 	{
@@ -2439,13 +2430,6 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::SetWindowText(m_hWnd, lpString);
-	}
-
-	inline BOOL CWnd::SetWindowText(tString String) const
-	// The SetWindowText function changes the text of the window's title bar (if it has one).
-	{
-		assert(::IsWindow(m_hWnd));
-		return ::SetWindowText(m_hWnd, String.c_str());
 	}
 
 	inline HRESULT CWnd::SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const

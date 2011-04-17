@@ -686,9 +686,7 @@ namespace Win32xx
 
 		// Text Functions
 		int  DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const;
-		int  DrawText(tString String, LPRECT lprc, UINT nFormat) const;
 		BOOL ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
-		BOOL ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, tString String, LPINT lpDxWidths = NULL) const;
 		COLORREF GetBkColor() const;
 		int  GetBkMode() const;
 		UINT GetTextAlign() const;
@@ -702,19 +700,14 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		int   DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const;
-		int   DrawTextEx(tString String, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const;
 		CSize GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
-		CSize GetTabbedTextExtent(tString String, int nTabPositions, LPINT lpnTabStopPositions) const;		
 		int   GetTextCharacterExtra() const;
 		CSize GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const;
-		CSize GetTextExtentPoint32(tString String) const;
 		BOOL  GrayString(HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const;
 		int   SetTextCharacterExtra(int nCharExtra) const;
 		int   SetTextJustification(int nBreakExtra, int nBreakCount) const;
 		CSize TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
-		CSize TabbedTextOut(int x, int y, tString tString, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
 		BOOL  TextOut(int x, int y, LPCTSTR lpszString, int nCount = -1) const;
-		BOOL  TextOut(int x, int y, tString String) const;
 #endif
 
 	private:
@@ -3734,23 +3727,11 @@ namespace Win32xx
 		return ::ExtTextOut(m_pData->hDC, x, y, nOptions, lprc, lpszString, nCount, lpDxWidths );
 	}
 
-	inline BOOL CDC::ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, tString String, LPINT lpDxWidths /*=NULL*/) const
-	// Draws text using the currently selected font, background color, and text color
-	{
-		return ExtTextOut(x, y, nOptions, lprc, String.c_str(), -1, lpDxWidths );
-	}
-
 	inline int CDC::DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const
 	// Draws formatted text in the specified rectangle
 	{
 		assert(m_pData->hDC);
 		return ::DrawText(m_pData->hDC, lpszString, nCount, lprc, nFormat );
-	}
-
-	inline int CDC::DrawText(tString String, LPRECT lprc, UINT nFormat) const
-	// Draws formatted text in the specified rectangle with more formatting options
-	{
-		return DrawText(String.c_str(), -1, lprc, nFormat);
 	}
 
 	inline UINT CDC::GetTextAlign() const
@@ -3833,12 +3814,6 @@ namespace Win32xx
 		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, lprc, nFormat, (LPDRAWTEXTPARAMS)&DTParams );
 	}
 
-	inline int CDC::DrawTextEx(tString String, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const
-	// Draws formatted text in the specified rectangle with more formatting options
-	{
-		return DrawTextEx((LPTSTR)String.c_str(), -1, lprc, nFormat, DTParams);
-	}
-
 	inline CSize CDC::GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const
 	// Computes the width and height of the specified string of text
 	{
@@ -3848,12 +3823,6 @@ namespace Win32xx
 		return sz;
 	}
 
-	inline CSize CDC::GetTextExtentPoint32(tString String) const
-	// Computes the width and height of the specified string of text
-	{
-		return GetTextExtentPoint32(String.c_str(), lstrlen(String.c_str()));
-	}
-
 	inline CSize CDC::GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const
 	// Computes the width and height of a character string
 	{
@@ -3861,12 +3830,6 @@ namespace Win32xx
 		DWORD dwSize = ::GetTabbedTextExtent(m_pData->hDC, lpszString, nCount, nTabPositions, lpnTabStopPositions );
 		CSize sz(dwSize);
 		return sz;
-	}
-
-	inline CSize CDC::GetTabbedTextExtent(tString String, int nTabPositions, LPINT lpnTabStopPositions) const
-	// Computes the width and height of a character string
-	{
-		return GetTabbedTextExtent(String.c_str(), lstrlen(String.c_str()), nTabPositions, lpnTabStopPositions );
 	}
 
 	inline BOOL CDC::GrayString(HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const
@@ -3906,13 +3869,6 @@ namespace Win32xx
 		return sz;
 	}
 
-	inline CSize CDC::TabbedTextOut(int x, int y, tString String, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const
-	// Writes a character string at a specified location, expanding tabs to the values specified in an array of tab-stop positions	
-	{
-		assert(m_pData->hDC);
-		return TabbedTextOut(x, y, String.c_str(), nTabPositions, lpnTabStopPositions, nTabOrigin);
-	}
-
 	inline BOOL CDC::TextOut(int x, int y, LPCTSTR lpszString, int nCount/* = -1*/) const
 	// Writes a character string at the specified location
 	{
@@ -3923,11 +3879,6 @@ namespace Win32xx
 		return ::TextOut(m_pData->hDC, x, y, lpszString, nCount);
 	}
 
-	inline BOOL CDC::TextOut(int x, int y, tString String) const
-	// Writes a character string at the specified location
-	{
-		return TextOut(x, y, String.c_str(), -1);
-	}
 #endif
 
 

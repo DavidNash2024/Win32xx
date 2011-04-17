@@ -2078,7 +2078,7 @@ namespace Win32xx
 		GetApp()->SetAccelerators(m_hAccel, this);
 
 		// Set the Caption
-		SetWindowText(LoadString(IDW_MAIN));
+		SetWindowText(CLoadString(IDW_MAIN));
 
 		// Set the theme for the frame elements
 		SetTheme();

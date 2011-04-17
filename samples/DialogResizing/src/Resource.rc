@@ -45,7 +45,7 @@ IDW_MAIN                ICON                    "res/Dialog.ico"
 //
 
 IDD_DIALOG1 DIALOGEX 0, 0, 203, 127
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_CLIPCHILDREN
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "My Dialog"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
@@ -53,12 +53,12 @@ BEGIN
     CONTROL         "Radio1",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,16,12,38,10
     CONTROL         "Radio2",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,16,24,38,10
     CONTROL         "Radio3",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,16,36,38,10
-    CONTROL         "Check Box 1",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,78,55,10
-    CONTROL         "Check Box 2",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,90,55,10
-    CONTROL         "Check Box 3",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,103,55,10
-    PUSHBUTTON      "Button",IDC_BUTTON1,18,56,49,11
+    PUSHBUTTON      "Button",IDC_BUTTON1,14,56,49,11	
+    CONTROL         "Check Box 1",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,125,77,55,10
+    CONTROL         "Check Box 2",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,125,91,55,10
+    CONTROL         "Check Box 3",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,125,105,55,10
     CONTROL         "",IDC_RICHEDIT1,"RICHEDIT",TCS_VERTICAL | TCS_MULTISELECT | WS_BORDER | WS_TABSTOP,97,12,84,42
-    CONTROL         "",IDC_RICHEDIT2,"RICHEDIT",TCS_VERTICAL | TCS_MULTISELECT | WS_BORDER | WS_TABSTOP,97,68,84,42
+    CONTROL         "",IDC_RICHEDIT2,"RICHEDIT",TCS_VERTICAL | TCS_MULTISELECT | WS_BORDER | WS_TABSTOP,13,76,84,42
 END
 
 
@@ -89,18 +89,9 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
 
