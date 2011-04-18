@@ -3873,8 +3873,6 @@ namespace Win32xx
 		TCHITTESTINFO info = {0};
 		info.pt = pt;
 		m_nTabPressed = HitTest(info);
-
-		CTab::OnLButtonDown(wParam, lParam);
 	}
 
 	inline void CDockContainer::OnLButtonUp(WPARAM wParam, LPARAM lParam)

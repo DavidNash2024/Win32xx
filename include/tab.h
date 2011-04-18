@@ -778,7 +778,9 @@ namespace Win32xx
 		tchti.pt = pt;
 		int nPage = HitTest(tchti);
 		if (nPage >= 0)
-			SelectPage(nPage);
+		{	
+			SetActiveView(m_vTabPageInfo[nPage].pView);
+		}
 	}
 
 	inline void CTab::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
@@ -984,18 +986,8 @@ namespace Win32xx
 	{
 		if ((iPage >= 0) && (iPage < GetItemCount()))
 		{
-			if (GetActiveView() && (GetActiveView()->IsWindow()))
-				GetActiveView()->ShowWindow(SW_HIDE);
-
-			SetCurSel(iPage);
+			SetCurSel(iPage);		
 			SetActiveView(m_vTabPageInfo[iPage].pView);
-
-			// Position the View over the tab control's display area
-			CRect rc = GetClientRect();
-			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-			GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
-
-			GetActiveView()->SetFocus();
 		}
 	}
 
@@ -1102,6 +1094,10 @@ namespace Win32xx
 	inline void CTab::SetActiveView(CWnd* pView)
 	// Sets or changes the View window displayed within the tab page
 	{
+		// Hide the old view
+		if (GetActiveView() && (GetActiveView()->IsWindow()))
+			GetActiveView()->ShowWindow(SW_HIDE);
+
 		// Assign the view window
 		m_pActiveView = pView;
 
@@ -1112,6 +1108,12 @@ namespace Win32xx
 				// The tab control is already created, so create the new view too
 				GetActiveView()->Create(this);
 			}
+	
+			// Position the View over the tab control's display area
+			CRect rc = GetClientRect();
+			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+			GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			GetActiveView()->SetFocus();
 		}
 	}
 
