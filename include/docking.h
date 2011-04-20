@@ -3869,6 +3869,8 @@ namespace Win32xx
 
 	inline void CDockContainer::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+
 		CPoint pt((DWORD)lParam);
 		TCHITTESTINFO info = {0};
 		info.pt = pt;

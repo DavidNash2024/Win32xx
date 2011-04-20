@@ -469,7 +469,8 @@ namespace Win32xx
 		HBITMAP CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
 		HBITMAP DetachBitmap();
-		BITMAP GetBitmapInfo();
+		HBITMAP GetBitmap() const;
+		BITMAP GetBitmapInfo() const;
 		HBITMAP LoadBitmap(UINT nID);
 		HBITMAP LoadBitmap(LPCTSTR lpszName);
 		HBITMAP LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
@@ -489,7 +490,8 @@ namespace Win32xx
 		HBRUSH CreatePatternBrush(HBITMAP hbmp);
 		HBRUSH CreateSolidBrush(COLORREF rbg);
 		HBRUSH DetachBrush();
-		LOGBRUSH GetBrushInfo();
+		HBRUSH GetBrush() const;
+		LOGBRUSH GetBrushInfo() const;
 
 #ifndef _WIN32_WCE
 		HBRUSH CreateBrushIndirect(LPLOGBRUSH& pLogBrush);
@@ -500,7 +502,8 @@ namespace Win32xx
 		void AttachFont(HFONT hFont);
 		HFONT CreateFontIndirect(const LOGFONT& lf);
 		HFONT DetachFont();
-		LOGFONT GetFontInfo();
+		HFONT GetFont() const;
+		LOGFONT GetFontInfo() const;
 
 #ifndef _WIN32_WCE
 		HFONT CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
@@ -513,6 +516,7 @@ namespace Win32xx
 		void AttachPalette(HPALETTE hPalette);
 		HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette);	
 		HPALETTE DetachPalette();
+		HPALETTE GetPalette() const;
 #ifndef _WIN32_WCE
 		HPALETTE CreateHalftonePalette();
 #endif
@@ -522,12 +526,14 @@ namespace Win32xx
 		HPEN CreatePen(int nStyle, int nWidth, COLORREF rgb);
 		HPEN CreatePenIndirect(LPLOGPEN pLogPen);
 		HPEN DetachPen();
-		LOGPEN GetPenInfo();
+		HPEN GetPen() const;
+		LOGPEN GetPenInfo() const;
 
 		// Create Select Regions
 		HRGN CreateRectRgn(int left, int top, int right, int bottom);
 		HRGN CreateRectRgnIndirect(const RECT& rc);
 		HRGN CreateFromData(const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData);
+		HRGN GetRgn() const;
 #ifndef _WIN32_WCE
 		HRGN CreateEllipticRgn(int left, int top, int right, int bottom);
 		HRGN CreateEllipticRgnIndirect(const RECT& rc);
@@ -2545,7 +2551,13 @@ namespace Win32xx
 		return hBitmap;
 	}
 
-	inline BITMAP CDC::GetBitmapInfo()
+	inline HBITMAP CDC::GetBitmap() const
+	// Retrieves the current bitmap
+	{
+		return m_pData->Bitmap;
+	}
+
+	inline BITMAP CDC::GetBitmapInfo() const
 	// Retrieves the BITMAP information for the current HBITMAP.
 	{
 		assert(m_pData->hDC);
@@ -2693,7 +2705,13 @@ namespace Win32xx
 		return hBrush;
 	}
 
-	inline LOGBRUSH CDC::GetBrushInfo()
+	inline HBRUSH CDC::GetBrush() const
+	// Retrieves the current brush information
+	{
+		return m_pData->Brush;
+	}
+
+	inline LOGBRUSH CDC::GetBrushInfo() const
 	// Retrieves the current brush information
 	{
 		assert(m_pData->hDC);
@@ -2777,7 +2795,13 @@ namespace Win32xx
 		return hFont;
 	}
 
-	inline LOGFONT CDC::GetFontInfo()
+	inline HFONT CDC::GetFont() const
+	// Retrieves the current font
+	{
+		return m_pData->Font;
+	}
+
+	inline LOGFONT CDC::GetFontInfo() const
 	// Retrieves the current font information.
 	{
 		assert(m_pData->hDC);
@@ -2825,6 +2849,12 @@ namespace Win32xx
 
 		m_pData->hPaletteOld = NULL;
 		return hPalette;
+	}
+
+	inline HPALETTE CDC::GetPalette() const
+	// Retrieves the current palette
+	{
+		return m_pData->Palette;
 	}
 
 #ifndef _WIN32_WCE
@@ -2891,7 +2921,7 @@ namespace Win32xx
 		return hPen;
 	}
 
-	inline LOGPEN CDC::GetPenInfo()
+	inline LOGPEN CDC::GetPenInfo() const
 	// Retrieves the current pen information as a LOGPEN
 	{
 		assert(m_pData->hDC);
@@ -2935,6 +2965,12 @@ namespace Win32xx
 
 		m_pData->Rgn.CreateFromData(Xform, nCount, pRgnData);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
+		return m_pData->Rgn;
+	}
+
+	inline HRGN CDC::GetRgn() const
+	// Retrieves the current palette
+	{
 		return m_pData->Rgn;
 	}
 
