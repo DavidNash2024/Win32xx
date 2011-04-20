@@ -143,7 +143,7 @@ namespace Win32xx
 		virtual ~CDockContainer();
 		virtual void AddContainer(CDockContainer* pContainer);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE);
-		virtual CDockContainer* GetContainerFromIndex(UINT iPage);
+		virtual CDockContainer* GetContainerFromIndex(UINT nPage);
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CDockContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
@@ -151,7 +151,7 @@ namespace Win32xx
 		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
 		virtual void RecalcLayout();
 		virtual void RemoveContainer(CDockContainer* pWnd);
-		virtual void SelectPage(int iPage);
+		virtual void SelectPage(int nPage);
 		virtual void SetTabSize();
 		virtual void SetupToolBar();
 
@@ -2497,9 +2497,9 @@ namespace Win32xx
 					CDockContainer* pContainer = pDocker->GetContainer();
 					if (pContainer)
 					{
-						int iPage = pContainer->GetContainerIndex(pContainer);
-						if (iPage >= 0)
-							pContainer->SelectPage(iPage);
+						int nPage = pContainer->GetContainerIndex(pContainer);
+						if (nPage >= 0)
+							pContainer->SelectPage(nPage);
 					}
 				}
 			}
@@ -2739,8 +2739,8 @@ namespace Win32xx
 					{
 						DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
 						CDockContainer* pContainer = (CDockContainer*)GetView();
-						int iPage = pContainer->GetContainerIndex((CDockContainer*)pDock->GetView());
-						pContainer->SelectPage(iPage);
+						int nPage = pContainer->GetContainerIndex((CDockContainer*)pDock->GetView());
+						pContainer->SelectPage(nPage);
 					}
 					break;
 				case DS_DOCKED_LEFTMOST:
@@ -3728,11 +3728,11 @@ namespace Win32xx
 		GetToolBar().AddButton(nID, bEnabled);
 	}
 
-	inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT iPage)
+	inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT nPage)
 	{
 		CDockContainer* pContainer = NULL;
-		if (iPage < m_vContainerInfo.size())
-			pContainer = (CDockContainer*)m_vContainerInfo[iPage].pContainer;
+		if (nPage < m_vContainerInfo.size())
+			pContainer = (CDockContainer*)m_vContainerInfo[nPage].pContainer;
 
 		return pContainer;
 	}
@@ -3914,8 +3914,8 @@ namespace Win32xx
 		case TCN_SELCHANGE:
 			{
 				// Display the newly selected tab page
-				int iPage = GetCurSel();
-				SelectPage(iPage);
+				int nPage = GetCurSel();
+				SelectPage(nPage);
 			}
 			break;
 		}
@@ -3983,20 +3983,21 @@ namespace Win32xx
 			SelectPage(0);
 	}
 
-	inline void CDockContainer::SelectPage(int iPage)
+	inline void CDockContainer::SelectPage(int nPage)
 	{
 		if (this != m_pContainerParent)
-			m_pContainerParent->SelectPage(iPage);
+			m_pContainerParent->SelectPage(nPage);
 		else
 		{
-			if ((iPage >= 0) && (iPage < (int)m_vContainerInfo.size() ))
+			if ((nPage >= 0) && (nPage < (int)m_vContainerInfo.size() ))
 			{
-				SetCurSel(iPage);
+				if (GetCurSel() != nPage)
+					SetCurSel(nPage);
 
 				// Create the new container window if required
-				if (!m_vContainerInfo[iPage].pContainer->IsWindow())
+				if (!m_vContainerInfo[nPage].pContainer->IsWindow())
 				{
-					CDockContainer* pContainer = m_vContainerInfo[iPage].pContainer;
+					CDockContainer* pContainer = m_vContainerInfo[nPage].pContainer;
 					pContainer->Create(GetParent());
 					pContainer->GetViewPage().SetParent(this);
 				}
@@ -4007,7 +4008,7 @@ namespace Win32xx
 
 				// Swap the pages over
 				CDockContainer* pOldContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
-				CDockContainer* pNewContainer = m_vContainerInfo[iPage].pContainer;
+				CDockContainer* pNewContainer = m_vContainerInfo[nPage].pContainer;
 				pOldContainer->GetViewPage().ShowWindow(SW_HIDE);
 				pNewContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
 				pNewContainer->GetViewPage().GetView()->SetFocus();
@@ -4020,7 +4021,7 @@ namespace Win32xx
 					pDock->RedrawWindow();
 				}
 
-				m_iCurrentPage = iPage;
+				m_iCurrentPage = nPage;
 			}
 		}
 	}

@@ -99,8 +99,8 @@ namespace Win32xx
 		virtual int GetTextHeight() const;
 		virtual tString GetWindowType() const { return _T("CTab"); }
 		virtual void RecalcLayout();
-		virtual void RemoveTabPage(int iPage);
-		virtual void SelectPage(int iPage);
+		virtual void RemoveTabPage(int nPage);
+		virtual void SelectPage(int nPage);
 		virtual void SetFixedWidth(BOOL bEnabled);
 		virtual void SetFont(HFONT hFont, BOOL bRedraw);
 		virtual void SetOwnerDraw(BOOL bEnabled);
@@ -137,11 +137,11 @@ namespace Win32xx
 		virtual void	DrawTabs(CDC& dcMem);
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual void    OnCreate();
-		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void    OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void	NotifyChanged();
 		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
@@ -156,7 +156,7 @@ namespace Win32xx
 		CTab& operator = (const CTab&); // Disable assignment operator
 
 		SIZE  GetMaxTabSize() const;
-		void SetActiveView(CWnd* pView);
+		void ShowActiveView(CWnd* pView);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		std::vector<WndPtr> m_vTabViews;
@@ -203,7 +203,6 @@ namespace Win32xx
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void	OnCreate();
 		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
-		virtual BOOL    OnEraseBkGnd(CDC& dc);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -755,34 +754,6 @@ namespace Win32xx
 		SelectPage(0);
 	}
 
-	inline void CTab::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
-	{
-		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-
-		if (GetCloseRect().PtInRect(pt))
-		{
-			m_IsClosePressed = TRUE;
-			SetCapture();
-			CDC dc = GetDC();
-			DrawCloseButton(dc);
-		}
-		else
-			m_IsClosePressed = FALSE;
-
-		if (GetListRect().PtInRect(pt))
-		{
-			ShowListMenu();
-		}
-
-		TCHITTESTINFO tchti = {0};
-		tchti.pt = pt;
-		int nPage = HitTest(tchti);
-		if (nPage >= 0)
-		{	
-			SetActiveView(m_vTabPageInfo[nPage].pView);
-		}
-	}
-
 	inline void CTab::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		ReleaseCapture();
@@ -841,6 +812,24 @@ namespace Win32xx
 		if (GetListRect().PtInRect(pt))  return HTCLIENT;
 
 		return CWnd::WndProcDefault(WM_NCHITTEST, wParam, lParam);
+	}
+
+	inline LRESULT CTab::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+
+		switch (((LPNMHDR)lParam)->code)
+		{
+		case TCN_SELCHANGE:
+			{
+				// Display the newly selected tab page
+				int nPage = GetCurSel();
+				ShowActiveView(m_vTabPageInfo[nPage].pView);
+			}
+			break;
+		}
+
+		return 0L;
 	}
 
 	inline void CTab::Paint()
@@ -940,16 +929,16 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTab::RemoveTabPage(int iPage)
+	inline void CTab::RemoveTabPage(int nPage)
 	{
-		if ((iPage < 0) || (iPage > (int)m_vTabPageInfo.size() -1))
+		if ((nPage < 0) || (nPage > (int)m_vTabPageInfo.size() -1))
 			return;
 
 		// Remove the tab
-		TabCtrl_DeleteItem(m_hWnd, iPage);
+		TabCtrl_DeleteItem(m_hWnd, nPage);
 
 		// Remove the TapPageInfo entry
-		std::vector<TabPageInfo>::iterator itTPI = m_vTabPageInfo.begin() + iPage;
+		std::vector<TabPageInfo>::iterator itTPI = m_vTabPageInfo.begin() + nPage;
 		CWnd* pView = (*itTPI).pView;
 		int iImage = (*itTPI).iImage;
 		if (iImage >= 0)
@@ -976,18 +965,20 @@ namespace Win32xx
 				SelectPage(0);
 			}
 			else
-				SetActiveView(NULL);
+				ShowActiveView(NULL);
 
 			NotifyChanged();
 		}
 	}
 
-	inline void CTab::SelectPage(int iPage)
+	inline void CTab::SelectPage(int nPage)
 	{
-		if ((iPage >= 0) && (iPage < GetItemCount()))
+		if ((nPage >= 0) && (nPage < GetItemCount()))
 		{
-			SetCurSel(iPage);		
-			SetActiveView(m_vTabPageInfo[iPage].pView);
+			if (nPage != GetCurSel())
+				SetCurSel(nPage);
+			
+			ShowActiveView(m_vTabPageInfo[nPage].pView);
 		}
 	}
 
@@ -1091,7 +1082,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTab::SetActiveView(CWnd* pView)
+	inline void CTab::ShowActiveView(CWnd* pView)
 	// Sets or changes the View window displayed within the tab page
 	{
 		// Hide the old view
@@ -1131,11 +1122,11 @@ namespace Win32xx
 			// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
 			HWND MenuHwnd = GetAncestor()->GetHwnd();
 			tString ts = GetAncestor()->GetWindowType();
-			int iPage = 0;
+			int nPage = 0;
 			m_IsListMenuActive = TRUE;
-			iPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
-			if ((iPage >= 0) && (iPage < 9)) SelectPage(iPage);
-			if (iPage == 9) ShowListDialog();
+			nPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
+			if ((nPage >= 0) && (nPage < 9)) SelectPage(nPage);
+			if (nPage == 9) ShowListDialog();
 			m_IsListMenuActive = FALSE;
 		}
 
@@ -1179,7 +1170,7 @@ namespace Win32xx
 	{
 		if ((nTab1 < GetAllTabs().size()) && (nTab2 < GetAllTabs().size()) && (nTab1 != nTab2))
 		{
-			int iPage = GetCurSel();
+			int nPage = GetCurSel();
 			TabPageInfo T1 = GetTabPageInfo(nTab1);
 			TabPageInfo T2 = GetTabPageInfo(nTab2);
 
@@ -1189,7 +1180,7 @@ namespace Win32xx
 			SetTabText(nTab2, T1.szTabText);
 			m_vTabPageInfo[nTab1] = T2;
 			m_vTabPageInfo[nTab2] = T1;
-			SelectPage(iPage);
+			SelectPage(nPage);
 		}
 	}
 
@@ -1217,9 +1208,6 @@ namespace Win32xx
 			break;
 		case WM_KILLFOCUS:
 			m_IsClosePressed = FALSE;
-			break;
-		case WM_LBUTTONDOWN:
-			OnLButtonDown(wParam, lParam);
 			break;
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);
@@ -1521,14 +1509,6 @@ namespace Win32xx
 		CloseAllMDIChildren();
 	}
 
-	inline BOOL CTabbedMDI::OnEraseBkGnd(CDC& /*dc*/)
-	{
-		if (GetTab().GetItemCount() >0)
-			return TRUE;
-
-		return FALSE;
-	}
-
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		LPNMHDR pnmhdr = (LPNMHDR)lParam;
@@ -1624,9 +1604,9 @@ namespace Win32xx
 	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
 	{
 		assert(pWnd);
-		int iPage = GetTab().GetTabIndex(pWnd);
-		if (iPage >= 0)
-			GetTab().SelectPage(iPage);
+		int nPage = GetTab().GetTabIndex(pWnd);
+		if (nPage >= 0)
+			GetTab().SelectPage(nPage);
 	}
 
 	inline void CTabbedMDI::SetActiveMDITab(int iTab)
@@ -1643,8 +1623,6 @@ namespace Win32xx
 		case WM_DESTROY:
 			OnDestroy(wParam, lParam);
 			break;
-	//	case WM_ERASEBKGND:
-	//		return OnEraseBkGnd(wParam, lParam);
 
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged(wParam, lParam);
