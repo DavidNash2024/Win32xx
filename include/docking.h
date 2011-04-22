@@ -178,7 +178,6 @@ namespace Win32xx
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseLeave(WPARAM wParam, LPARAM lParam);
-		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -3887,6 +3886,8 @@ namespace Win32xx
 
 	inline void CDockContainer::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
+		// Override CTab::OnMouseLeave
+
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
 			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()->GetHwnd()));
@@ -3899,11 +3900,6 @@ namespace Win32xx
 
 		m_nTabPressed = -1;
 		CTab::OnMouseLeave(wParam, lParam);
-	}
-
-	inline void CDockContainer::OnMouseMove(WPARAM wParam, LPARAM lParam)
-	{
-		CTab::OnMouseMove(wParam, lParam);
 	}
 
 	inline LRESULT CDockContainer::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
@@ -4075,6 +4071,15 @@ namespace Win32xx
 		case WM_LBUTTONDOWN:
 			OnLButtonDown(wParam, lParam);
 			break;
+
+		// The following a called in CTab::WndProcDefault
+	//	case WM_LBUTTONUP:
+	//		OnLButtonUp(wParam, lParam);
+	//		break;
+	//	case WM_MOUSELEAVE:
+	//		OnMouseLeave(wParam, lParam);
+	//		break;
+
 		case WM_SETFOCUS:
 			{
 				// Pass focus on to the current view
