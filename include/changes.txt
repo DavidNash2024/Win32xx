@@ -187,54 +187,9 @@ Problem 2
 The new text conversion functions (classes) resolve problem 1 and render all of
 problem 2's usage invalid (making usage less ambiguous).   
 
-Examples using the text conversion functions
---------------------------------------------
-//Example 1
-// Convert Unicode (Wide) to ANSI
-void ExampleFunctionW( LPCWSTR pszW )
-{
-   // Use the converion class as a class.
-   CW2A MyAnsiString( pszW );
-   // MyAnsiString works like an LPCSTR, and can be used thus:
-   ExampleFunctionA( MyAnsiString );  
-   // Note: MyAnsiString remains in scope until the function ends.
-}
-
-// Example 2
-// Use the conversion class as a function. Use result immediately.
-void ExampleFunctionW( LPCWSTR pWide)
-{
-   // Convert from Wide (Unicode) to ANSI and use the result.
-   SetWindowTextA( W2A( pWide ) );
-}
-
-// Example 3
-// Use the conversion class as a function. Store a result for later use.
-void ExampleFunctionW( LPCWSTR pWide )
-{
-	// Store the result in a std::string
-	std::string str = W2A( pWide );	// or std::string str = (LPCTSTR)W2A( pWide ); for some compilers
-	
-	// Store the result in an array
-	char szArray[80];
-	strcpy( szArray, W2A( pWide ) );
-	
-	// Store the result in a vector
-	std::vector<char> MyAnsiVector(strlen(W2A(pWide))+1, '\0');
-	strcpy(&MyAnsiVector.front(), W2A(pWide);
-}
-
-// Example 4
-// Incorrect use of conversion function.
-void ExampleFunctionW( LPCWSTR pWide )
-{
-   // THIS IS INCORRECT!
-   LPCSTR pAnsi = W2A( pWide );
-   // W2A's destructor has already been called, so pAnsi is no longer points to a valid value.
-   
-   SetWindowTextA( pAnsi );	// Behaviour of this line is undefined!
-}
-
+Refer to the "Text Conversions" topic in the "Using Win32++" section of the 
+help documentation that ships with Win32++ for information on how to use the
+new functions. 
 
 Incompatibilities with previous versions
 ----------------------------------------

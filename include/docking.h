@@ -3887,7 +3887,6 @@ namespace Win32xx
 
 	inline void CDockContainer::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
-
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
 			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()->GetHwnd()));
@@ -4073,6 +4072,9 @@ namespace Win32xx
 		case WM_SIZE:
 			RecalcLayout();
 			return 0;
+		case WM_LBUTTONDOWN:
+			OnLButtonDown(wParam, lParam);
+			break;
 		case WM_SETFOCUS:
 			{
 				// Pass focus on to the current view

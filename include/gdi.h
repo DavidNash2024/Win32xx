@@ -470,7 +470,7 @@ namespace Win32xx
 										HANDLE hSection, DWORD dwOffset);
 		HBITMAP DetachBitmap();
 		HBITMAP GetBitmap() const;
-		BITMAP GetBitmapInfo() const;
+		BITMAP  GetBitmapInfo() const;
 		HBITMAP LoadBitmap(UINT nID);
 		HBITMAP LoadBitmap(LPCTSTR lpszName);
 		HBITMAP LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
