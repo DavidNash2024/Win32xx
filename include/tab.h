@@ -137,6 +137,7 @@ namespace Win32xx
 		virtual void	DrawTabs(CDC& dcMem);
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual void    OnCreate();
+		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void    OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
@@ -754,6 +755,26 @@ namespace Win32xx
 		SelectPage(0);
 	}
 
+	inline void CTab::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
+	{
+		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+
+		if (GetCloseRect().PtInRect(pt))
+		{
+			m_IsClosePressed = TRUE;
+			SetCapture();
+			CDC dc = GetDC();
+			DrawCloseButton(dc);
+		}
+		else
+			m_IsClosePressed = FALSE;
+
+		if (GetListRect().PtInRect(pt))
+		{
+			ShowListMenu();
+		}
+	}
+
 	inline void CTab::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		ReleaseCapture();
@@ -1208,6 +1229,10 @@ namespace Win32xx
 			break;
 		case WM_KILLFOCUS:
 			m_IsClosePressed = FALSE;
+			break;
+		case WM_LBUTTONDBLCLK:
+		case WM_LBUTTONDOWN:
+			OnLButtonDown(wParam, lParam);
 			break;
 		case WM_LBUTTONUP:
 			OnLButtonUp(wParam, lParam);

@@ -3868,6 +3868,8 @@ namespace Win32xx
 
 	inline void CDockContainer::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	{
+		// Overrides CTab::OnLButtonDown
+
 		UNREFERENCED_PARAMETER(wParam);
 
 		CPoint pt((DWORD)lParam);
@@ -3878,7 +3880,7 @@ namespace Win32xx
 
 	inline void CDockContainer::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
-		// Override CTab::OnLButtonUp and take no action
+		// Overrides CTab::OnLButtonUp and takes no action
 
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -3886,7 +3888,7 @@ namespace Win32xx
 
 	inline void CDockContainer::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
-		// Override CTab::OnMouseLeave
+		// Overrides CTab::OnMouseLeave
 
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
@@ -4068,11 +4070,12 @@ namespace Win32xx
 		case WM_SIZE:
 			RecalcLayout();
 			return 0;
-		case WM_LBUTTONDOWN:
-			OnLButtonDown(wParam, lParam);
-			break;
 
 		// The following a called in CTab::WndProcDefault
+	
+	//	case WM_LBUTTONDOWN:
+	//		OnLButtonDown(wParam, lParam);
+	//		break;
 	//	case WM_LBUTTONUP:
 	//		OnLButtonUp(wParam, lParam);
 	//		break;
