@@ -3684,6 +3684,8 @@ namespace Win32xx
 
 	inline CDockContainer::~CDockContainer()
 	{
+		if (m_hTabIcon)
+			DestroyIcon(m_hTabIcon);
 	}
 
 	inline void CDockContainer::AddContainer(CDockContainer* pContainer)
