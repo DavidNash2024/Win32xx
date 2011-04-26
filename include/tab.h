@@ -859,14 +859,8 @@ namespace Win32xx
 		// We use double buffering and regions to eliminate flicker
 
 		// Create the memory DC and bitmap
-		CDC dcMem = ::CreateCompatibleDC(NULL);
+		CDC dcMem = CreateCompatibleDC(GetDC());
 		int xAdjust = 0;
-
-#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
-		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
-		dcMem.SetLayout(LAYOUT_RTL);
-		xAdjust = -2;	// Fudge factor for WS_EX_LAYOUTRTL exstyle
-#endif
 
 		CRect rcClient = GetClientRect();
 		CDC dcView = GetDC();

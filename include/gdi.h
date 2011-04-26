@@ -705,7 +705,7 @@ namespace Win32xx
 		COLORREF SetTextColor(COLORREF crColor) const;
 
 #ifndef _WIN32_WCE
-		int   DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const;
+		int   DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const;
 		CSize GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
 		int   GetTextCharacterExtra() const;
 		CSize GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const;
@@ -3870,11 +3870,11 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline int CDC::DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, const DRAWTEXTPARAMS& DTParams) const
+	inline int CDC::DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const
 	// Draws formatted text in the specified rectangle with more formatting options
 	{
 		assert(m_pData->hDC);
-		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, lprc, nFormat, (LPDRAWTEXTPARAMS)&DTParams );
+		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, lprc, nFormat, lpDTParams);
 	}
 
 	inline CSize CDC::GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const
