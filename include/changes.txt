@@ -22,7 +22,7 @@ New Features and Enhancements
 	W2BSTR		WCHAR to BSTR
 	W2OLE		WCHAR to OLE
 	W2T			WCHAR to TCHAR
-   See below for examples on using the new functions.
+   Refer to the help documentation for instructions on using these functions.
 * Added CLoadString (and LoadString) to return a string resource. 
 * OnEraseBkgnd is now called automatically when a CWnd's background needs
    erasing. Return TRUE to prevent default erasure.

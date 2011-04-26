@@ -17,7 +17,7 @@ void CTestWindow::CreateWin(int i)
 	TCHAR str[80];
 	wsprintf(str, _T("Test Window %d"), m_nWindow);
 	CreateEx(0L, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		420, 50 + i, 300, 200, NULL, NULL);
+		420, 50 + 4*i, 300, 200, NULL, NULL);
 }
 
 void CTestWindow::OnInitialUpdate()
