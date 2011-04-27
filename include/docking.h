@@ -2589,6 +2589,15 @@ namespace Win32xx
 
 	inline void CDocker::OnCreate()
 	{
+
+#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
+		if (GetParent()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		{
+			DWORD dwExStyle = GetWindowLongPtr(GWL_EXSTYLE);
+			SetWindowLongPtr(GWL_EXSTYLE, dwExStyle | WS_EX_LAYOUTRTL);
+		}
+#endif
+
 		// Create the various child windows
 		GetDockClient().SetDock(this);
 		GetDockClient().Create(this);
@@ -3320,12 +3329,10 @@ namespace Win32xx
 	inline void CDocker::SetDockSize(int DockSize)
 	// Sets the size of a docked docker
 	{
-		assert(DockSize >= 0);	
-		m_DockStartSize = DockSize;
-
 		if (IsDocked())
 		{
 			assert (m_pDockParent);
+			m_DockStartSize = DockSize;
 			switch (GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
