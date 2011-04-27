@@ -39,8 +39,7 @@ New Features and Enhancements
    are now optional.   
 * Extended the CSize, CPoint and CRect classes
 * Extended CMDIFrame and CMDIChild. CMDIChild::SetHandles is now used to set
-   the MDI child's menu and accelerator table.
-* Functions which accept a text array (LPCTSTR) now also accept a tString.   
+   the MDI child's menu and accelerator table. 
 * A docker can now be resized while docked using CDocker::SetDockSize.
 * Extended the "Using Win32++ section of the Win32++ help documentation.
 
