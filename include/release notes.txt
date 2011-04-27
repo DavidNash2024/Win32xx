@@ -69,6 +69,7 @@ The sample applications include:
  * Browser - An Internet browser application with an event sink.
  * Dialog - An example of a simple dialog application.
  * DialogDemo - An interative dialog application demonstrating slider controls and progress bars.
+ * DialogResizing - An example of a resizable dialog.
  * DialogTab - A dialog application with a tab control.
  * DirectX - A simple DirectX application.
  * DLL - Shows how to run Win32++ from within a DLL
@@ -88,12 +89,13 @@ The sample applications include:
  * Performance - Measures Win32++'s message handling speed.
  * Picture - A simple picture rendering application.
  * PropertySheets - A demonstration of property sheets.
- * Ribbon Frame - Demonstrates how to use the Windows 7 ribbon with a frame.
- * Ribbin Simple - Demonstrates how to use the Windwos 7 ribbon with a simple window.
+ * RibbonFrame - Demonstrates how to use the Windows 7 ribbon with a frame.
+ * RibbonSimple - Demonstrates how to use the Windwos 7 ribbon with a simple window.
  * Scribble - A simple drawing application.
  * Simple - Creates a simple window.
  * Splitter - Demonstrates how to use dockers to create splitter windows.
  * TabDemo - Demonstrates the use of a CTab control in a frame.
+ * TaskDialog - Demonstrates the use of task dialogs (available on Vista and above).
  * Themes - Demonstrates how to customise the colours for rebar and toolbar controls.
  * Threads - Demonstrates multi-threaded Windows.
  * Tray - Demonstrates how to "minimise" an application to the system tray.  
@@ -106,7 +108,9 @@ various compilers from Microsoft. CodeBlocks is an IDE (Integrated Development
 Environment) that supports GNU GCC, Borland Developer Studio 2006 and Microsoft
 C++ Toolkit 2003.
 
-You  can start with one of the sample programs, and add your code.
+You  can start with one of the sample programs, and add your code. Alternatively
+you can start with the projects and sample code provided in the "new projects" 
+folder. 
 
 For additional information on getting started, refer to the help included
 in the documentation.
