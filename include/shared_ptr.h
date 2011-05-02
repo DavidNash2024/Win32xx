@@ -40,7 +40,7 @@
 // "new" itself will throw an exception it it fails, as does the STL (Standard
 // Template Library which includes vector and string). Without smart pointers
 // we often need to resort to additional try/catch blocks simply to avoid
-// memory leaks when exception occur.
+// memory leaks when exceptions occur.
 
 // Examples:
 //  Shared_Ptr<CWnd> w1(new CWnd);
@@ -87,9 +87,9 @@
 // Summing up:
 // In my opinion, "naked" pointers for dynamically created objects should be 
 // avoided in modern C++ code. That's to say that calls to "new" should be 
-// wrapped in some sort of smart pointer. This eliminates the possibility
-// of memory leaks (particularly in the event of exceptions). It also
-// elminiates the need for delete in user's code.
+// wrapped in some sort of smart pointer wherever possible. This eliminates 
+// the possibility of memory leaks (particularly in the event of exceptions). 
+// It also elminiates the need for delete in user's code.
 
 #ifndef _SHARED_PTR_
 #define _SHARED_PTR_
