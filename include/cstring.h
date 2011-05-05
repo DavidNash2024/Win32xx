@@ -36,11 +36,11 @@
 
 
 // Acknowledgements:
-// Thanks to by Adam Szulc for his initial CString code.
+// Thanks to Adam Szulc for his initial CString code.
 
 
-#ifndef _CSTRING_H_
-#define _CSTRING_H_
+#ifndef _WIN32XX_CSTRING_H_
+#define _WIN32XX_CSTRING_H_
 
 
 #include <string>
@@ -50,7 +50,7 @@
 namespace Win32xx
 {
 
-	class CString
+	class CString 
 	{
 	public:
 		CString();
@@ -59,72 +59,75 @@ namespace Win32xx
 		CString(LPCTSTR pszText);
 		CString(TCHAR ch, int nLength = 1);
 
-		CString&    operator = (const CString& str);
-		BOOL        operator == (LPCTSTR pszText);
-		BOOL        operator != (LPCTSTR pszText);
-		BOOL		operator < (LPCTSTR pszText);
-		BOOL		operator > (LPCTSTR pszText);
-		BOOL		operator <= (LPCTSTR pszText);
-		BOOL		operator >= (LPCTSTR pszText);
-					operator LPCTSTR() const;
-					operator BSTR() const;
-		TCHAR&      operator [] (int nIndex);
-		CString&    operator += (const CString& str);
-		CString		operator + (const CString& rhs);
+		CString& operator = (const CString& str);
+		BOOL     operator == (LPCTSTR pszText);
+		BOOL     operator != (LPCTSTR pszText);
+		BOOL	 operator < (LPCTSTR pszText);
+		BOOL	 operator > (LPCTSTR pszText);
+		BOOL	 operator <= (LPCTSTR pszText);
+		BOOL	 operator >= (LPCTSTR pszText);
+				 operator LPCTSTR() const;
+				 operator BSTR() const;
+		TCHAR&   operator [] (int nIndex);
+		CString& operator += (const CString& str);
+		CString	 operator + (const CString& rhs);
 
-		std::basic_string<TCHAR>& GetStdString() { return m_str; }
-		int         GetLength() const;
+		// Attributes
+		LPCTSTR	 c_str() const		{ return m_str.c_str(); }
+		tString& GetString()		{ return m_str; }
+		int      GetLength() const	{ return m_str.length(); }
 
-		BSTR        AllocSysString() const;
-		void		AppendFormat(LPCTSTR pszFormat,...);
-		void		AppendFormat(UINT nFormatID, ...);
-		int         Collate(LPCTSTR pszText) const;
-		int			CollateNoCase(LPCTSTR pszText) const;
-		int         Compare(LPCTSTR pszText) const;
-		int         CompareNoCase(LPCTSTR pszText) const;
-		int         Delete(int nIndex, int nCount = 1);
-		int			Find(TCHAR ch, int nIndex = 0 ) const;
-		int         Find(LPCTSTR pszText, int nStart = 0) const;
-		int			FindOneOf(LPCTSTR pszText) const;
-		void		Format(UINT nID, ...);
-		void        Format(LPCTSTR pszFormat,...);
-		void        FormatV(LPCTSTR pszFormat, va_list args);
-		void		FormatMessage(LPCTSTR pszFormat,...);
-		void		FormatMessageV(LPCTSTR pszFormat, va_list args);
-		TCHAR		GetAt(int nIndex) const;
-		BOOL		GetEnvironmentVariable(LPCTSTR pszVar);
-		void        Empty();
-		int         Insert(int nIndex, TCHAR ch);
-		int         Insert(int nIndex, const CString& str);
-		BOOL        IsEmpty() const;
-		CString     Left(int nCount) const;
-		BOOL		LoadString(UINT nID);
-		void        MakeLower();
-		void		MakeReverse();
-		void        MakeUpper();
-		CString		Mid(int nFirst) const;
-		CString     Mid(int nFirst, int nCount) const;
-		int         Replace(TCHAR chOld, TCHAR chNew);
-		int         Replace(const LPCTSTR pszOld, LPCTSTR pszNew);
-		int         Remove(LPCTSTR pszText);
-		int         ReverseFind(LPCTSTR pszText, int nStart = -1) const;
-		CString     Right(int nCount) const;
-		void		SetAt(int nIndex, TCHAR ch);
-		BSTR		SetSysString(BSTR* pBstr) const;
-		CString		SpanExcluding(LPCTSTR pszText) const;
-		CString		SpanIncluding(LPCTSTR pszText) const;
-		CString		Tokenize(LPCTSTR pszTokens, int& iStart) const;
-		void		Trim();
-		void		TrimLeft();
-		void		TrimLeft(TCHAR chTarget);
-		void		TrimLeft(LPCTSTR pszTargets);
-		void		TrimRight();
-		void		TrimRight(TCHAR chTarget);
-		void		TrimRight(LPCTSTR pszTargets);
-		void        Truncate(int nNewLength);
+		// Operations
+		BSTR     AllocSysString() const;
+		void	 AppendFormat(LPCTSTR pszFormat,...);
+		void	 AppendFormat(UINT nFormatID, ...);
+		int      Collate(LPCTSTR pszText) const;
+		int		 CollateNoCase(LPCTSTR pszText) const;
+		int      Compare(LPCTSTR pszText) const;
+		int      CompareNoCase(LPCTSTR pszText) const;
+		int      Delete(int nIndex, int nCount = 1);
+		int		 Find(TCHAR ch, int nIndex = 0 ) const;
+		int      Find(LPCTSTR pszText, int nStart = 0) const;
+		int		 FindOneOf(LPCTSTR pszText) const;
+		void	 Format(UINT nID, ...);
+		void     Format(LPCTSTR pszFormat,...);
+		void     FormatV(LPCTSTR pszFormat, va_list args);
+		void	 FormatMessage(LPCTSTR pszFormat,...);
+		void	 FormatMessageV(LPCTSTR pszFormat, va_list args);
+		TCHAR	 GetAt(int nIndex) const;
+		BOOL	 GetEnvironmentVariable(LPCTSTR pszVar);
+		void     Empty();
+		int      Insert(int nIndex, TCHAR ch);
+		int      Insert(int nIndex, const CString& str);
+		BOOL     IsEmpty() const;
+		CString  Left(int nCount) const;
+		BOOL	 LoadString(UINT nID);
+		void     MakeLower();
+		void	 MakeReverse();
+		void     MakeUpper();
+		CString	 Mid(int nFirst) const;
+		CString  Mid(int nFirst, int nCount) const;
+		int      Replace(TCHAR chOld, TCHAR chNew);
+		int      Replace(const LPCTSTR pszOld, LPCTSTR pszNew);
+		int      Remove(LPCTSTR pszText);
+		int      ReverseFind(LPCTSTR pszText, int nStart = -1) const;
+		CString  Right(int nCount) const;
+		void	 SetAt(int nIndex, TCHAR ch);
+		BSTR	 SetSysString(BSTR* pBstr) const;
+		CString	 SpanExcluding(LPCTSTR pszText) const;
+		CString	 SpanIncluding(LPCTSTR pszText) const;
+		CString	 Tokenize(LPCTSTR pszTokens, int& iStart) const;
+		void	 Trim();
+		void	 TrimLeft();
+		void	 TrimLeft(TCHAR chTarget);
+		void	 TrimLeft(LPCTSTR pszTargets);
+		void	 TrimRight();
+		void	 TrimRight(TCHAR chTarget);
+		void	 TrimRight(LPCTSTR pszTargets);
+		void     Truncate(int nNewLength);
 
 	private:
-		std::basic_string<TCHAR> m_str;
+		tString m_str;
 	};
 
 	inline CString::CString()
@@ -219,15 +222,7 @@ namespace Win32xx
 
 	inline BSTR CString::AllocSysString() const
 	{
-	#ifdef _UNICODE
-		return SysAllocStringLen(m_str.data(), m_str.size());
-	#else
-		int nLen = MultiByteToWideChar(CP_ACP, 0, m_str.data(), m_str.size(), NULL, 0 );
-		BSTR bstr = ::SysAllocStringLen(NULL, nLen);
-		if (bstr != NULL)
-		 ::MultiByteToWideChar(CP_ACP, 0, m_str.data(), m_str.size(), bstr, nLen);
-		return bstr;
-	#endif //_UNICODE
+		return ::SysAllocStringLen(T2W(m_str.c_str()), m_str.size());
 	}
 
 	inline void CString::AppendFormat(LPCTSTR pszFormat,...)
@@ -318,9 +313,7 @@ namespace Win32xx
 		Empty();
 		CString str;
 		if (str.LoadString(nID))
-		{
 			Format(str);
-		}
 	}
 
 	inline void CString::FormatV(LPCTSTR pszFormat, va_list args)
@@ -335,10 +328,10 @@ namespace Win32xx
 			while (-1 == nResult)
 			{
 				vBuffer.assign( nLength+1, _T('\0') );
-				nResult = _vsntprintf(&vBuffer.front(), nLength, pszFormat, args);
+				nResult = _vsntprintf(&vBuffer[0], nLength, pszFormat, args);
 				nLength *= 2;
 			}
-			m_str.assign(&vBuffer.front());
+			m_str.assign(&vBuffer[0]);
 		}
 	}
 
@@ -353,13 +346,16 @@ namespace Win32xx
 	inline void CString::FormatMessageV(LPCTSTR pszFormat, va_list args)
 	{
 		LPTSTR pszTemp;
-		DWORD dwResult = ::FormatMessage(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, pszTemp, 0, &args);
+		if (pszFormat)
+		{
+			DWORD dwResult = ::FormatMessage(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, pszTemp, 0, &args);
 
-		if (0 == dwResult || 0 == pszTemp )
-			throw std::bad_alloc();
+			if (0 == dwResult || 0 == pszTemp )
+				throw std::bad_alloc();
 
-		m_str = pszTemp;
-		LocalFree(pszTemp);
+			m_str = pszTemp;
+			LocalFree(pszTemp);
+		}
 	}
 
 	inline TCHAR CString::GetAt(int nIndex) const
@@ -378,16 +374,11 @@ namespace Win32xx
 		if (nLength > 0)
 		{
 			std::vector<TCHAR> vBuffer( nLength+1, _T('\0') );
-			::GetEnvironmentVariable(pszVar, &vBuffer.front(), nLength);
-			m_str = &vBuffer.front();
+			::GetEnvironmentVariable(pszVar, &vBuffer[0], nLength);
+			m_str = &vBuffer[0];
 		}
 
 		return (BOOL)nLength;
-	}
-
-	inline int CString::GetLength() const
-	{
-		return m_str.size();
 	}
 
 	inline int CString::Insert(int nIndex, TCHAR ch)
@@ -417,7 +408,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CString str;
-		str.m_str.assign((LPCTSTR)*this, 0, nCount);
+		str.m_str.assign(c_str(), 0, nCount);
 		return str;
 	}
 
@@ -438,7 +429,7 @@ namespace Win32xx
 		{
 			nSize = nSize * 4;
 			vString.assign(nSize+1, _T('\0'));
-			pTCharArray = &vString.front();
+			pTCharArray = &vString[0];
 			nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
 		}
 
@@ -474,7 +465,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CString str;
-		str.m_str.assign((LPCTSTR)*this, nFirst, nFirst + nCount);
+		str.m_str.assign(c_str(), nFirst, nFirst + nCount);
 		return str;
 	}
 
@@ -538,7 +529,7 @@ namespace Win32xx
 	inline int CString::Replace(TCHAR chOld, TCHAR chNew)
 	{
 		int nCount = 0;
-		std::basic_string<TCHAR>::iterator it = m_str.begin();
+		tString::iterator it = m_str.begin();
 		while (it != m_str.end())
 		{
 			if (*it == chOld)
@@ -572,16 +563,17 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CString str;
-		str.m_str.assign((LPCTSTR)*this, m_str.size() - nCount, nCount);
+		str.m_str.assign(c_str(), m_str.size() - nCount, nCount);
 		return str;
 	}
 
 	inline BSTR CString::SetSysString(BSTR* pBstr) const
 	{
+		assert(pBstr);
+
 		if ( !::SysReAllocStringLen(pBstr, T2W(m_str.c_str()), m_str.length()) )
 			throw std::bad_alloc();
 
-		assert(*pBstr != 0);
 		return *pBstr;
 	}
 
@@ -613,7 +605,7 @@ namespace Win32xx
 	inline void CString::TrimLeft()
 	{
 		// This method is supported by the Borland 5.5 compiler
-		std::basic_string<TCHAR>::iterator iter;
+		tString::iterator iter;
 		for (iter = m_str.begin(); iter < m_str.end(); ++iter)
 		{
 			if (!::isspace(*iter))
@@ -630,13 +622,14 @@ namespace Win32xx
 
 	inline void CString::TrimLeft(LPCTSTR pszTargets)
 	{
+		assert(pszTargets);
 		m_str.erase(0, m_str.find_first_not_of(pszTargets));
 	}
 
 	inline void CString::TrimRight()
 	{
 		// This method is supported by the Borland 5.5 compiler
-		std::basic_string<TCHAR>::reverse_iterator riter;
+		tString::reverse_iterator riter;
 		for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
 		{
 			if (!::isspace(*riter))
@@ -655,6 +648,8 @@ namespace Win32xx
 
 	inline void CString::TrimRight(LPCTSTR pszTargets)
 	{
+		assert(pszTargets);
+
 		size_t pos = m_str.find_last_not_of(pszTargets);
 		if (pos != std::string::npos)
 			m_str.erase(++pos);
@@ -663,10 +658,9 @@ namespace Win32xx
 	inline void CString::Truncate(int nNewLength)
 	{
 		assert(nNewLength >= 0);
-
 		m_str.erase(nNewLength);
 	}
 
 }	// namespace Win32xx
 
-#endif//__CSTRING_H__
+#endif//_WIN32XX_CSTRING_H_

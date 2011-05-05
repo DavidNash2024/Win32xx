@@ -91,8 +91,8 @@
 // the possibility of memory leaks (particularly in the event of exceptions). 
 // It also elminiates the need for delete in user's code.
 
-#ifndef _SHARED_PTR_
-#define _SHARED_PTR_
+#ifndef _WIN32XX_SHARED_PTR_
+#define _WIN32XX_SHARED_PTR_
 
 namespace Win32xx
 {
@@ -196,4 +196,4 @@ namespace Win32xx
 
 }
 
-#endif
+#endif	// _WIN32XX_SHARED_PTR_

@@ -68,8 +68,8 @@
 
 
 
-#ifndef _WINCORE_H_
-#define _WINCORE_H_
+#ifndef _WIN32XX_WINCORE_H_
+#define _WIN32XX_WINCORE_H_
 
 
 // Remove pointless warning messages
@@ -1088,7 +1088,7 @@ namespace Win32xx
 
 			// Ensure a window class is registered
 			std::vector<TCHAR> vTChar( MAX_STRING_SIZE+1, _T('\0') );
-			TCHAR* ClassName = &vTChar.front();
+			TCHAR* ClassName = &vTChar[0];
 			if (0 == lpszClassName || 0 == lstrlen(lpszClassName) )
 				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
 			else
@@ -1222,7 +1222,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar.front();
+		TCHAR* pTCharArray = &m_vTChar[0];
 		::GetClassName(m_hWnd, pTCharArray, MAX_STRING_SIZE);
 
 		return pTCharArray;
@@ -1235,7 +1235,7 @@ namespace Win32xx
 
 		int nLength = ::GetWindowTextLength(::GetDlgItem(m_hWnd, nIDDlgItem));
 		m_vTChar.assign(nLength +1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar.front();
+		TCHAR* pTCharArray = &m_vTChar[0];
 
 		::GetDlgItemText(m_hWnd, nIDDlgItem, pTCharArray, nLength+1);
 
@@ -1249,7 +1249,7 @@ namespace Win32xx
 		int nLength = ::GetWindowTextLength(m_hWnd);
 
 		m_vTChar.assign(nLength+1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar.front();
+		TCHAR* pTCharArray = &m_vTChar[0];
 		::GetWindowText(m_hWnd, pTCharArray, nLength+1);
 
 		return pTCharArray;
@@ -2763,5 +2763,5 @@ namespace Win32xx
 }; // namespace Win32xx
 
 
-#endif // _WINCORE_H_
+#endif // _WIN32XX_WINCORE_H_
 

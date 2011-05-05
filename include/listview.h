@@ -36,8 +36,8 @@
 
 
 
-#ifndef _LISTVIEW_H_
-#define _LISTVIEW_H_
+#ifndef _WIN32XX_LISTVIEW_H_
+#define _WIN32XX_LISTVIEW_H_
 
 #include "wincore.h"
 #include "commctrl.h"
@@ -864,5 +864,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // #ifndef _LISTVIEW_H_
+#endif // #ifndef _WIN32XX_LISTVIEW_H_
 

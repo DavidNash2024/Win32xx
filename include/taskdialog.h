@@ -50,8 +50,8 @@
 //  Task Dialogs are always modal.
 
 
-#ifndef _TASKDIALOG_H_
-#define _TASKDIALOG_H_
+#ifndef _WIN32XX_TASKDIALOG_H_
+#define _WIN32XX_TASKDIALOG_H_
 
 #include "wincore.h"
 
@@ -807,4 +807,4 @@ namespace Win32xx
 
 
 
-#endif // _TASKDIALOG_H_
+#endif // _WIN32XX_TASKDIALOG_H_

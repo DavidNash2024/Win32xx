@@ -69,8 +69,8 @@
 // classes to create a frame application.
 
 
-#ifndef _FRAME_H_
-#define _FRAME_H_
+#ifndef _WIN32XX_FRAME_H_
+#define _WIN32XX_FRAME_H_
 
 #include "wincore.h"
 #include "dialog.h"
@@ -200,7 +200,7 @@ namespace Win32xx
 			HMENU hSubMenu;
 
 			ItemData() : hMenu(0), nPos(0), fType(0), hSubMenu(0) { vItemText.assign(MAX_MENU_STRING, _T('\0')); }
-			LPTSTR GetItemText() {return &vItemText.front();}
+			LPTSTR GetItemText() {return &vItemText[0];}
 		};
 
 		typedef Shared_Ptr<ItemData> ItemDataPtr;
@@ -1235,7 +1235,7 @@ namespace Win32xx
 
 			// Add the menu title to the string table
 			std::vector<TCHAR> vMenuName( MAX_MENU_STRING+1, _T('\0') );
-			TCHAR* szMenuName = &vMenuName.front();
+			TCHAR* szMenuName = &vMenuName[0];
 			GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
 			SetButtonText(i  + nMaxedOffset, szMenuName);
 		}
@@ -1790,10 +1790,10 @@ namespace Win32xx
 		for (int nItem = 0 ; nItem < nMenuItemCount; ++nItem)
 		{
 			std::vector<TCHAR> vTChar( MAX_MENU_STRING+1, _T('\0') );
-			TCHAR* szStr = &vTChar.front();
+			TCHAR* szStr = &vTChar[0];
 
 			std::vector<TCHAR> vStripped( MAX_MENU_STRING+1, _T('\0') );
-			TCHAR* szStripped = &vStripped.front();
+			TCHAR* szStripped = &vStripped[0];
 
 			mii.fMask      = MIIM_TYPE;
 			mii.fType      = MFT_STRING;
@@ -1934,7 +1934,7 @@ namespace Win32xx
 						throw CWinException(_T("RegQueryValueEx failed\n"));
 
 					std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
-					TCHAR* pTCharArray = &PathName.front();
+					TCHAR* pTCharArray = &PathName[0];
 
 					// load the entry from the registry
 					if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
@@ -2345,7 +2345,7 @@ namespace Win32xx
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
 				nm.lfMenuFont.lfWeight = FW_BOLD;
 
-			TCHAR* pItemText = &(pmd->vItemText.front());
+			TCHAR* pItemText = &(pmd->vItemText[0]);
 			DesktopDC.CreateFontIndirect(nm.lfMenuFont);
 
 			// Calculate the size of the text
@@ -3330,4 +3330,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _FRAME_H_
+#endif // _WIN32XX_FRAME_H_

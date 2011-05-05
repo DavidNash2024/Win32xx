@@ -110,8 +110,8 @@
 //  CBitmapInfoPtr pbmi(hBitmap);
 //  MemDC.GetDIBits(hBitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 
-#ifndef _GDI_H_
-#define _GDI_H_
+#ifndef _WIN32XX_GDI_H_
+#define _WIN32XX_GDI_H_
 
 #include "wincore.h"
 
@@ -754,7 +754,7 @@ namespace Win32xx
 			// Allocate memory for the BITMAPINFO structure.
 			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (int)(1 << cClrBits);
 			m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
-			m_pbmiArray = (LPBITMAPINFO) &m_bmi.front();
+			m_pbmiArray = (LPBITMAPINFO) &m_bmi[0];
 
 			m_pbmiArray->bmiHeader.biSize		= sizeof(BITMAPINFOHEADER);
 			m_pbmiArray->bmiHeader.biHeight		= bmSource.bmHeight;
@@ -3967,7 +3967,7 @@ namespace Win32xx
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
-		byte* pByteArray = &vBits.front();
+		byte* pByteArray = &vBits[0];
 
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
@@ -4041,7 +4041,7 @@ namespace Win32xx
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
-		byte* pByteArray = &vBits.front();
+		byte* pByteArray = &vBits[0];
 
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
@@ -4142,5 +4142,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _GDI_H_
+#endif // _WIN32XX_GDI_H_
 

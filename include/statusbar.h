@@ -35,8 +35,8 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef _STATUSBAR_H_
-#define _STATUSBAR_H_
+#ifndef _WIN32XX_STATUSBAR_H_
+#define _WIN32XX_STATUSBAR_H_
 
 #include "wincore.h"
 
@@ -132,7 +132,7 @@ namespace Win32xx
 		int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));
 
 		std::vector<TCHAR> Text( iChars +1, _T('\0') );
-		TCHAR* pTextArray = &Text.front();
+		TCHAR* pTextArray = &Text[0];
 
 		SendMessage(SB_GETTEXT, iPart, (LPARAM)pTextArray);
 		PaneText = pTextArray;			
@@ -191,14 +191,14 @@ namespace Win32xx
 		// Fill the PartWidths vector with the current width of the statusbar parts
 		int PartsCount = (int)SendMessage(SB_GETPARTS, 0L, 0L);
 		std::vector<int> PartWidths(PartsCount, 0);
-		int* pPartWidthArray = &PartWidths.front();
+		int* pPartWidthArray = &PartWidths[0];
 		SendMessage(SB_GETPARTS, PartsCount, (LPARAM)pPartWidthArray);
 
 		// Fill the NewPartWidths vector with the new width of the statusbar parts
 		int NewPartsCount = MAX(iPart+1, PartsCount);	
 		std::vector<int> NewPartWidths(NewPartsCount, 0);;
 		NewPartWidths = PartWidths;
-		int* pNewPartWidthArray = &NewPartWidths.front();
+		int* pNewPartWidthArray = &NewPartWidths[0];
 
 		if (0 == iPart)
 			pNewPartWidthArray[iPart] = iWidth;
@@ -219,4 +219,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // #ifndef _STATUSBAR_H_
+#endif // #ifndef _WIN32XX_STATUSBAR_H_

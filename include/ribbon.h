@@ -41,8 +41,8 @@
 //  CRibbon and CRibbonFrame
 //
 
-#ifndef _RIBBON_H_
-#define _RIBBON_H_
+#ifndef _WIN32XX_RIBBON_H_
+#define _WIN32XX_RIBBON_H_
 
 
 // Notes: 1) The Windows 7 SDK must be installed and its directories added to the IDE
@@ -524,5 +524,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif  // RIBBON_H
+#endif  // _WIN32XX_RIBBON_H_
 

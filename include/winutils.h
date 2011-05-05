@@ -34,8 +34,8 @@
 //
 ////////////////////////////////////////////////////////
 
-#ifndef _WINUTILS_H_
-#define _WINUTILS_H_
+#ifndef _WIN32XX_WINUTILS_H_
+#define _WIN32XX_WINUTILS_H_
 
 
 // define useful macros from WindowsX.h
@@ -305,13 +305,13 @@ namespace Win32xx
 				m_vWideArray.assign(length, L'\0');
 
 				// Fill our vector with the converted WCHAR array
-				MultiByteToWideChar(CP_ACP, 0, pStr, -1, &m_vWideArray.front(), length);
+				MultiByteToWideChar(CP_ACP, 0, pStr, -1, &m_vWideArray[0], length);
 			}
 		}
 		~CA2W() {}
-		operator LPCWSTR() { return m_pStr? &m_vWideArray.front() : NULL; }
-		operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_vWideArray.front() : (LPOLESTR)NULL; }
-		operator LPBSTR() { return m_pStr? (LPBSTR)&m_vWideArray.front() : (LPBSTR)NULL; }
+		operator LPCWSTR() { return m_pStr? &m_vWideArray[0] : NULL; }
+		operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_vWideArray[0] : (LPOLESTR)NULL; }
+		operator LPBSTR() { return m_pStr? (LPBSTR)&m_vWideArray[0] : (LPBSTR)NULL; }
 
 	private:
 		CA2W(const CA2W&);
@@ -330,11 +330,11 @@ namespace Win32xx
 			m_vAnsiArray.assign(length, '\0');
 
 			// Fill our vector with the converted char array
-			WideCharToMultiByte(CP_ACP, 0, pWStr, -1, &m_vAnsiArray.front(), length, NULL,NULL);
+			WideCharToMultiByte(CP_ACP, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
 		}
 
 		~CW2A() {}
-		operator LPCSTR() { return m_pWStr? &m_vAnsiArray.front() : NULL; }
+		operator LPCSTR() { return m_pWStr? &m_vAnsiArray[0] : NULL; }
 
 	private:
 		CW2A(const CW2A&);
@@ -417,21 +417,21 @@ namespace Win32xx
 			{
 				nSize = nSize * 4;
 				m_vString.assign(nSize+1, _T('\0'));
-				pTCharArray = &m_vString.front();
+				pTCharArray = &m_vString[0];
 				nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
 			}
 
 			if (nTChars == 0)
 			{
 				std::vector<TCHAR> vMsgArray(80, _T('\0'));
-				TCHAR* pMsgArray = &vMsgArray.front();
+				TCHAR* pMsgArray = &vMsgArray[0];
 				::wsprintf(pMsgArray, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
 				TRACE(pMsgArray);
 				pTCharArray = 0;
 			}
 		}
 
-		operator LPCTSTR() { return &m_vString.front(); }
+		operator LPCTSTR() { return &m_vString[0]; }
 
 	private:
 		CLoadString(const CLoadString&);
@@ -676,4 +676,4 @@ namespace Win32xx
 }
 
 
-#endif
+#endif	// _WIN32XX_WINUTILS_H_

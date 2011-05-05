@@ -104,8 +104,8 @@
 //    development environment fails to support IPv6.
 //
 
-#ifndef _SOCKET_H_
-#define _SOCKET_H_
+#ifndef _WIN32XX_SOCKET_H_
+#define _WIN32XX_SOCKET_H_
 
 
 #include "wincore.h"
@@ -774,5 +774,5 @@ namespace Win32xx
 }
 
 
-#endif // #ifndef _SOCKET_H_
+#endif // #ifndef _WIN32XX_SOCKET_H_
 

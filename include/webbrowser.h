@@ -34,8 +34,8 @@
 //
 ////////////////////////////////////////////////////////
 
-#ifndef _WEBBROWSER_H_
-#define _WEBBROWSER_H_
+#ifndef _WIN32XX_WEBBROWSER_H_
+#define _WIN32XX_WEBBROWSER_H_
 
 #include <exdisp.h>
 #include <ocidl.h>
@@ -757,5 +757,5 @@ namespace Win32xx
 
 }
 
-#endif  // _WEBBROWSER_H_
+#endif  // _WIN32XX_WEBBROWSER_H_
 

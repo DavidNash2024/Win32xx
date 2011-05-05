@@ -35,8 +35,8 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef _TOOLBAR_H_
-#define _TOOLBAR_H_
+#ifndef _WIN32XX_TOOLBAR_H_
+#define _WIN32XX_TOOLBAR_H_
 
 #include "wincore.h"
 #include "gdi.h"
@@ -385,7 +385,7 @@ namespace Win32xx
 
 		int Length = (int)SendMessage(TB_GETBUTTONTEXT, idButton, 0);
 		m_vTChar.assign(Length+1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar.front();
+		TCHAR* pTCharArray = &m_vTChar[0];
 
 		SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)pTCharArray);
 		return pTCharArray;
@@ -672,7 +672,7 @@ namespace Win32xx
 
 				// Calculate text size
 				std::vector<TCHAR> vText(MAX_MENU_STRING, _T('\0'));
-				TCHAR* pszText = &vText.front();
+				TCHAR* pszText = &vText[0];
 				CSize TextSize;
 				if (HasText())	// Does any button have text?
 				{
@@ -1371,4 +1371,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // #ifndef _TOOLBAR_H_
+#endif // #ifndef _WIN32XX_TOOLBAR_H_

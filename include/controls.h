@@ -42,8 +42,8 @@
 //  CScrollBar, CSlider, CSpinButton
 
 
-#ifndef _CONTROLS_H_
-#define _CONTROLS_H_
+#ifndef _WIN32XX_CONTROLS_H_
+#define _WIN32XX_CONTROLS_H_
 
 #include "wincore.h"
 
@@ -1077,5 +1077,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif //  define _CONTORLS_H_
+#endif //  define _WIN32XX_CONTROLS_H_
 

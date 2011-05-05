@@ -39,8 +39,8 @@
 // tab.h
 //  Declaration of the CTab and CMDITab classes
 
-#ifndef _TAB_H_
-#define _TAB_H_
+#ifndef _WIN32XX_TAB_H_
+#define _WIN32XX_TAB_H_
 
 #include "wincore.h"
 #include "dialog.h"
@@ -1653,4 +1653,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif  // _TAB_H_
+#endif  // _WIN32XX_TAB_H_

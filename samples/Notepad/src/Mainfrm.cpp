@@ -156,6 +156,7 @@ void CMainFrame::OnFilePrint()
 	pd.nToPage     = 0xFFFF;
 	pd.nMinPage    = 1;
 	pd.nMaxPage    = 0xFFFF;
+	pd.hwndOwner = m_hWnd;
 
 	if (PrintDlg(&pd)==TRUE)
 	{

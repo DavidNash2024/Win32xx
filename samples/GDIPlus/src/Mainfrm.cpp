@@ -131,6 +131,7 @@ void CMainFrame::OnFilePrint()
 	PRINTDLG pd = {0};
 	pd.lStructSize = sizeof( pd );
 	pd.Flags = PD_RETURNDC;
+	pd.hwndOwner = m_hWnd;
 
 	// Retrieve the printer DC
 	PrintDlg( &pd );

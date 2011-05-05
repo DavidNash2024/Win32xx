@@ -62,8 +62,8 @@
 // create a MDI frame application with different types of MDI child windows.
 
 
-#ifndef _MDI_H_
-#define _MDI_H_
+#ifndef _WIN32XX_MDI_H_
+#define _WIN32XX_MDI_H_
 
 #include "frame.h"
 #include <vector>
@@ -782,5 +782,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _MDI_H_
+#endif // _WIN32XX_MDI_H_
 
