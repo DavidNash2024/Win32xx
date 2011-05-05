@@ -967,7 +967,7 @@ namespace Win32xx
 		typedef BOOL (WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
 		typedef HMONITOR (WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
 		LPMFW pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
-	#ifdef UNICODE
+	#ifdef _UNICODE
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
 	#else
 		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");

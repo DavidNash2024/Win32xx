@@ -165,6 +165,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = PROGRESS_CLASS; }
 	};
 
+
 	class CScrollBar : public CWnd
 	{
 	public:

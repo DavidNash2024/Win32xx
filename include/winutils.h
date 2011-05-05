@@ -249,7 +249,7 @@ namespace Win32xx
 	// ------------------------------------------
 	// char (or CHAR) character types are ANSI (8 bits).
 	// wchar_t (or WCHAR) character types are Unicode (16 bits).
-	// TCHAR characters are Unicode if the UNICODE macro is defined, otherwise they are ANSI.
+	// TCHAR characters are Unicode if the _UNICODE macro is defined, otherwise they are ANSI.
 	// BSTR (Basic String) is a type of string used in Visual Basic and COM programming.
 	// OLE is the same as WCHAR. It is used in Visual Basic and COM programming.
 
@@ -270,12 +270,13 @@ namespace Win32xx
 	typedef CW2A BSTR2A;
 	typedef CW2W BSTR2W;
 
-#ifdef UNICODE
+#ifdef _UNICODE
 	typedef CA2W A2T;
 	typedef CW2A T2A;
 	typedef CW2W T2W;
 	typedef CW2W W2T;
 	typedef CW2BSTR T2BSTR;
+	typedef BSTR2W BSTR2T;
 #else
 	typedef CA2A A2T;
 	typedef CA2A T2A;
@@ -411,7 +412,7 @@ namespace Win32xx
 			int nTChars = nSize;
 
 			// Increase the size of our array in a loop until we load the entire string
-			// The ANSI and UNICODE versions of LoadString behave differently. This technique works for both.
+			// The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
 			while ( nSize-1 <= nTChars )
 			{
 				nSize = nSize * 4;
@@ -611,8 +612,8 @@ namespace Win32xx
 			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 			if(hMod)
 			{
-				// Declare pointers to functions
-				FARPROC pIsCompositionActive    = ::GetProcAddress(hMod, "IsCompositionActive");
+				// Declare pointers to IsCompositionActive function
+				FARPROC pIsCompositionActive = ::GetProcAddress(hMod, "IsCompositionActive");
 
 				if(pIsCompositionActive)
 				{
