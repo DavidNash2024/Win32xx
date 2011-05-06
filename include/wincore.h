@@ -110,6 +110,7 @@
 #include <map>
 #include <windows.h>
 #include <commctrl.h>
+#include <stdio.h>
 #include <tchar.h>
 #include <shlwapi.h>
 #include "shared_ptr.h"
@@ -324,6 +325,7 @@ namespace Win32xx
 }
 
 #include "winutils.h"
+#include "cstring.h"
 
 namespace Win32xx
 {

@@ -518,7 +518,6 @@ namespace Win32xx
 	inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon) 
 	// Sets the icon that will be displayed in the Task Dialog's footer.
 	{
-		assert (m_hWnd == NULL);
 		m_tc.hFooterIcon = hFooterIcon;
 
 		if (IsWindow())
@@ -534,7 +533,6 @@ namespace Win32xx
 	// TD_SHIELD_ICON		A shield icon appears in the task dialog.
 	//  or a value passed via MAKEINTRESOURCE
 	{
-		assert (m_hWnd == NULL);
 		m_tc.pszFooterIcon = (LPCWSTR)lpszFooterIcon;
 
 		if (IsWindow())
@@ -554,7 +552,6 @@ namespace Win32xx
 	inline void CTaskDialog::SetMainIcon(HICON hMainIcon) 
 	// Sets Task Dialog's main icon.
 	{
-		assert (m_hWnd == NULL);
 		m_tc.hMainIcon = hMainIcon;
 
 		if (IsWindow())
@@ -569,9 +566,11 @@ namespace Win32xx
 	// TD_INFORMATION_ICON	An icon consisting of a lowercase letter i in a circle appears in the task dialog.
 	// TD_SHIELD_ICON		A shield icon appears in the task dialog.
 	//  or a value passed via MAKEINTRESOURCE
+	//
+	// Note: Some values of main icon will also generate a MessageBeep when the TaskDialog is created.
 	{
-		assert (m_hWnd == NULL);
 		m_tc.pszMainIcon = (LPCWSTR)lpszMainIcon;
+		
 		if (IsWindow())
 			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)lpszMainIcon);
 	}
@@ -715,11 +714,13 @@ namespace Win32xx
 		
 		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
 		{
-			int len = pFromTChar? lstrlen(CLoadString((UINT)pFromTChar)) +1 : 1;
+			CString cs = LoadString((UINT)pFromTChar);
+			int len = pFromTChar? cs.GetLength() + 1 : 1;
 			vTChar.assign(len, _T('\0'));
 			vWChar.assign(len, _T('\0'));
 			if (pFromTChar)
-				lstrcpy( &vTChar.front(), CLoadString((UINT)pFromTChar));
+				lstrcpy( &vTChar.front(), cs);
+			
 		}
 		else
 		{

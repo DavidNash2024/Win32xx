@@ -73,8 +73,8 @@ void CView::OnPaint(CDC& dc)
 
 	// Centre some text in our view window
 	CRect rc = GetClientRect();
-	tString ts = LoadString(IDW_MAIN);
-	dc.DrawText(ts.c_str(), ts.size(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	CString cs = LoadString(IDW_MAIN);
+	dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
@@ -84,19 +84,19 @@ void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 	// The lParam parameter holds the mouse or keyboard message associated with the event.
     if (wParam != IDW_MAIN)
 		return;
-    
-	if (lParam == WM_LBUTTONUP) 
+
+	if (lParam == WM_LBUTTONUP)
     {
         Restore();
     }
-    else if (lParam == WM_RBUTTONUP) 
+    else if (lParam == WM_RBUTTONUP)
     {
 		HMENU hTopMenu = LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDM_MINIMIZED));
 		HMENU hSubMenu = GetSubMenu(hTopMenu, 0);
-        
+
         SetForegroundWindow();
 		CPoint pt = GetCursorPos();
-		UINT uSelected = TrackPopupMenu(hSubMenu, TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, 0, m_hWnd, NULL); 
+		UINT uSelected = TrackPopupMenu(hSubMenu, TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, 0, m_hWnd, NULL);
 
 		switch (uSelected)
 		{
@@ -139,16 +139,16 @@ void CView::OnSize()
 void CView::Minimize()
 {
     NOTIFYICONDATA nid = { 0 };
-    nid.cbSize = sizeof(NOTIFYICONDATA); 
-    nid.hWnd = m_hWnd; 
-    nid.uID = IDW_MAIN; 
-    nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP; 
-    nid.uCallbackMessage = MSG_TRAYICON; 
+    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.hWnd = m_hWnd;
+    nid.uID = IDW_MAIN;
+    nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+    nid.uCallbackMessage = MSG_TRAYICON;
 	nid.hIcon = (HICON) (::LoadImage (GetModuleHandle(NULL), MAKEINTRESOURCE (IDW_MAIN), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
 	lstrcpy(nid.szTip, _T("Tray Demo tooltip"));
-   
+
     Shell_NotifyIcon(NIM_ADD, &nid);
     ShowWindow(SW_HIDE);
     m_IsMinimized = true;
@@ -178,7 +178,7 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_SIZE:
 		OnSize();
-		break;	
+		break;
 	case WM_SYSCOMMAND:
 		if (wParam == SC_MINIMIZE)	// User pressed minimize button
 		{

@@ -81,8 +81,6 @@ namespace Win32xx
 		BSTR     AllocSysString() const;
 		void	 AppendFormat(LPCTSTR pszFormat,...);
 		void	 AppendFormat(UINT nFormatID, ...);
-		int      Collate(LPCTSTR pszText) const;
-		int		 CollateNoCase(LPCTSTR pszText) const;
 		int      Compare(LPCTSTR pszText) const;
 		int      CompareNoCase(LPCTSTR pszText) const;
 		int      Delete(int nIndex, int nCount = 1);
@@ -95,7 +93,6 @@ namespace Win32xx
 		void	 FormatMessage(LPCTSTR pszFormat,...);
 		void	 FormatMessageV(LPCTSTR pszFormat, va_list args);
 		TCHAR	 GetAt(int nIndex) const;
-		BOOL	 GetEnvironmentVariable(LPCTSTR pszVar);
 		void     Empty();
 		int      Insert(int nIndex, TCHAR ch);
 		int      Insert(int nIndex, const CString& str);
@@ -125,6 +122,12 @@ namespace Win32xx
 		void	 TrimRight(TCHAR chTarget);
 		void	 TrimRight(LPCTSTR pszTargets);
 		void     Truncate(int nNewLength);
+
+#ifndef _WIN32_WCE
+		int      Collate(LPCTSTR pszText) const;
+		int		 CollateNoCase(LPCTSTR pszText) const;
+		BOOL	 GetEnvironmentVariable(LPCTSTR pszVar);
+#endif
 
 	private:
 		tString m_str;
@@ -243,6 +246,7 @@ namespace Win32xx
 		}
 	}
 
+#ifndef _WIN32_WCE
 	inline int CString::Collate(LPCTSTR pszText) const
 	{
 		assert(pszText);
@@ -254,6 +258,7 @@ namespace Win32xx
 		assert(pszText);
 		return _tcsicoll(m_str.c_str(), pszText);
 	}
+#endif	// _WIN32_WCE
 
 	inline int CString::Compare(LPCTSTR pszText) const
 	{
@@ -365,6 +370,7 @@ namespace Win32xx
 		return m_str[nIndex];
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CString::GetEnvironmentVariable(LPCTSTR pszVar)
 	{
 		assert(pszVar);
@@ -380,6 +386,7 @@ namespace Win32xx
 
 		return (BOOL)nLength;
 	}
+#endif // _WIN32_WCE
 
 	inline int CString::Insert(int nIndex, TCHAR ch)
 	{
@@ -608,7 +615,7 @@ namespace Win32xx
 		tString::iterator iter;
 		for (iter = m_str.begin(); iter < m_str.end(); ++iter)
 		{
-			if (!::isspace(*iter))
+			if (!isspace(*iter))
 				break;
 		}
 
@@ -632,7 +639,7 @@ namespace Win32xx
 		tString::reverse_iterator riter;
 		for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
 		{
-			if (!::isspace(*riter))
+			if (!isspace(*riter))
 				break;
 		}
 
@@ -660,6 +667,19 @@ namespace Win32xx
 		assert(nNewLength >= 0);
 		m_str.erase(nNewLength);
 	}
+
+
+
+	///////////////////////////////////
+	// Global Functions
+
+	inline CString LoadString(UINT nID)
+	{
+		CString str;
+		str.LoadString(nID);
+		return str;
+	}
+
 
 }	// namespace Win32xx
 

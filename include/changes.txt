@@ -1,3 +1,28 @@
+Version 7.2
+===========
+
+New Features and Enhancements
+-----------------------------
+* Added CString class
+   The CString class is intended to provide much of the same functionality
+   as the CString class provided with MFC/ATL.
+
+
+Changes in detail
+-----------------
+- Added CString
+- Added BSTR2A
+- Added BSTR2T
+- Added BSTR2W
+- Modified LoadString 				now returns CString
+- Removed CLoadString
+
+
+Incompatibilities with previous versions
+----------------------------------------
+
+
+
 Version 7.1
 ===========
 New Features and Enhancements

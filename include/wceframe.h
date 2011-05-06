@@ -310,9 +310,9 @@ namespace Win32xx
 		m_tsAppName = _T("Win32++ Application");
 
 		// Choose a unique class name for this app
-		if (CLoadString(IDW_MAIN))
+		if (LoadString(IDW_MAIN) != _T(""))
 		{
-			m_tsAppName = CLoadString(IDW_MAIN);
+			m_tsAppName = LoadString(IDW_MAIN);
 		}
 			
 		cs.lpszClass = m_tsAppName.c_str();

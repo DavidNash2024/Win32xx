@@ -4136,7 +4136,7 @@ namespace Win32xx
 					int nID = GetToolBar().GetCommandID(iIndex);
 					if (nID > 0)
 					{
-						m_tsTooltip = CLoadString(nID);
+						m_tsTooltip = LoadString(nID);
 						lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
 					}
 					else
