@@ -38,6 +38,10 @@
 // Acknowledgements:
 // Thanks to Adam Szulc for his initial CString code.
 
+////////////////////////////////////////////////////////
+// cstring.h
+//  Declaration of the cstring.h
+
 
 #ifndef _WIN32XX_CSTRING_H_
 #define _WIN32XX_CSTRING_H_

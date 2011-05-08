@@ -116,6 +116,8 @@
 #include "shared_ptr.h"
 //#include "winutils.h"			// included later in this file
 //#include "gdi.h"				// included later in this file
+//#include "cstring.h"			// included later in this file
+//#include "menu.h"				// included later in this file
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -191,6 +193,7 @@ namespace Win32xx
 	class CWinApp;
 	class CWnd;
 	class CDC;
+	class CMenu;
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
@@ -207,15 +210,21 @@ namespace Win32xx
 		MAX_STRING_SIZE = 255,
 	};
 
-	struct CompareHWND		// The comparison function object used by CWinApp::m_mapHWND
-	{
-		bool operator()(HWND const a, const HWND b) const
-			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
-	};
-
 	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
 	{
 		bool operator()(HDC const a, const HDC b) const
+			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
+	};
+
+	struct CompareHMENU		// The comparison function object used by CWinApp::m_mapHMENU
+	{
+		bool operator()(HMENU const a, const HMENU b) const
+			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
+	};
+
+	struct CompareHWND		// The comparison function object used by CWinApp::m_mapHWND
+	{
+		bool operator()(HWND const a, const HWND b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
@@ -275,6 +284,7 @@ namespace Win32xx
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
 		friend class CDC;
 		friend class CDialog;
+		friend class CMenu;
 		friend class CMenuBar;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
@@ -287,8 +297,9 @@ namespace Win32xx
 		CWinApp();
 		virtual ~CWinApp();
 
-		CWnd* GetCWndFromMap(HWND hWnd);
 		CDC* GetCDCFromMap(HDC hDC);
+		CMenu* GetCMenuFromMap(HMENU hMenu);
+		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		void SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
@@ -309,8 +320,9 @@ namespace Win32xx
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
-		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;	// maps window handles to CWnd objects
-		std::map<HDC, CDC*, CompareHDC> m_mapHDC;		// maps device context handles to CDC objects
+		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
+		std::map<HMENU, CMenu*, CompareHMENU> m_mapHMENU;	// maps menu handles to CMenu objects
+		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTlsData;	// thread synchronisation for m_vTLSData
@@ -326,6 +338,7 @@ namespace Win32xx
 
 #include "winutils.h"
 #include "cstring.h"
+
 
 namespace Win32xx
 {
@@ -542,7 +555,10 @@ namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 #include "gdi.h"
+#include "menu.h"
+
 
 namespace Win32xx
 {
@@ -679,7 +695,22 @@ namespace Win32xx
 		return pDC;
 	}
 
-	
+	inline CMenu* CWinApp::GetCMenuFromMap(HMENU hMenu)
+	{
+		std::map<HMENU, CMenu*, CompareHMENU>::iterator m;
+
+		// Find the CMenu pointer mapped to this HMENU
+		CMenu* pMenu = 0;
+		m_csMapLock.Lock();
+		m = m_mapHMENU.find(hMenu);
+
+		if (m != m_mapHMENU.end())
+			pMenu = m->second;
+
+		m_csMapLock.Release();
+		return pMenu;
+	}
+
 	inline CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
@@ -795,7 +826,7 @@ namespace Win32xx
 		m_pWndAccel = pWndAccel;
 		m_hAccel = hAccel;
 	}
-	
+
 	inline void CWinApp::SetCallback()
 	{
 		// Registers a temporary window class so we can get the callback
@@ -819,7 +850,7 @@ namespace Win32xx
 		assert(wcDefault.lpfnWndProc);
 		m_Callback = wcDefault.lpfnWndProc;
 		::UnregisterClass(szClassName, GetInstanceHandle());
-	}	
+	}
 
 	inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)
 	{
@@ -1197,8 +1228,8 @@ namespace Win32xx
 
 	inline CDC* FromHandle(HDC hDC)
 	// Returns the CDC object associated with the HDC
-	{ 
-		return CDC::FromHandle(hDC); 
+	{
+		return CDC::FromHandle(hDC);
 	}
 
 	inline CWnd* CWnd::GetAncestor() const
@@ -2116,13 +2147,13 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return ::IsChild(m_hWnd, pChild->GetHwnd());
 	}
-	
+
 	inline BOOL CWnd::IsDialogMessage(LPMSG lpMsg) const
-	// The IsDialogMessage function determines whether a message is intended for the specified dialog box and, 
+	// The IsDialogMessage function determines whether a message is intended for the specified dialog box and,
 	// if it is, processes the message.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::IsDialogMessage(m_hWnd, lpMsg);	
+		return ::IsDialogMessage(m_hWnd, lpMsg);
 	}
 
 	inline UINT CWnd::IsDlgButtonChecked(int nIDButton) const
@@ -2167,7 +2198,7 @@ namespace Win32xx
 		else
 			::MapWindowPoints(m_hWnd, NULL, &pt, 1);
 	}
-	
+
 	inline void CWnd::MapWindowPoints(CWnd* pWndTo, RECT& rc) const
 	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one
 	// window to a coordinate space relative to another window.
