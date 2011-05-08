@@ -3332,7 +3332,6 @@ namespace Win32xx
 		if (IsDocked())
 		{
 			assert (m_pDockParent);
-			m_DockStartSize = DockSize;
 			switch (GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
@@ -3356,7 +3355,10 @@ namespace Win32xx
 			RecalcDockLayout();
 		}
 		else
+		{
+			m_DockStartSize = DockSize;
 			m_DockSizeRatio = 1.0;
+		}
 	}
 
 	inline void CDocker::SetDragAutoResize(BOOL bAutoResize)
