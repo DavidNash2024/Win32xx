@@ -376,7 +376,7 @@ namespace Win32xx
 	inline int CMenu::GetMenuString(UINT uIDItem, CString& rString, UINT uFlags) const
 	{
 		assert(IsMenu(m_hMenu));
-		return ::GetMenuString(m_hMenu, uIDItem, rString, rString.GetLength(), uFlags);
+		return ::GetMenuString(m_hMenu, uIDItem, (LPTSTR)rString.c_str(), rString.GetLength(), uFlags);
 	}
 
 //	inline HMENU CMenu::GetSubMenu(int nPos) const

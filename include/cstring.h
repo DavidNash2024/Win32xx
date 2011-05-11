@@ -56,6 +56,13 @@ namespace Win32xx
 
 	class CString 
 	{
+		// friend functions allow the left hand side to be something other than CString
+		friend CString operator + (const CString& string1, const CString& string2);
+		friend CString operator + (const CString& string, LPCTSTR pszText);	
+		friend CString operator + (const CString& string, TCHAR ch);
+		friend CString operator + (LPCTSTR pszText, const CString& string);
+		friend CString operator + (TCHAR ch, const CString& string);		
+
 	public:
 		CString();
 		~CString();
@@ -64,6 +71,8 @@ namespace Win32xx
 		CString(TCHAR ch, int nLength = 1);
 
 		CString& operator = (const CString& str);
+		CString& operator = (const TCHAR ch);
+		CString& operator = (LPCTSTR pszText);
 		BOOL     operator == (LPCTSTR pszText);
 		BOOL     operator != (LPCTSTR pszText);
 		BOOL	 operator < (LPCTSTR pszText);
@@ -74,9 +83,9 @@ namespace Win32xx
 				 operator BSTR() const;
 		TCHAR&   operator [] (int nIndex);
 		CString& operator += (const CString& str);
-		CString	 operator + (const CString& rhs);
 
 		// Attributes
+		BSTR     b_str() const		{ return T2W(m_str.c_str()); }
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }
 		tString& GetString()		{ return m_str; }
 		int      GetLength() const	{ return m_str.length(); }
@@ -166,6 +175,18 @@ namespace Win32xx
 		return *this;
 	}
 
+	inline CString& CString::operator = (const TCHAR ch)
+	{
+		m_str.assign(1, ch);
+		return *this;
+	}
+
+	inline CString& CString::operator = (LPCTSTR pszText)
+	{
+		m_str.assign(pszText);
+		return *this;
+	}
+
 	inline BOOL CString::operator == (LPCTSTR pszText)
 	{
 		assert(pszText);
@@ -218,13 +239,6 @@ namespace Win32xx
 	{
 		m_str.append(str);
 		return *this;
-	}
-
-	inline CString CString::operator + (const CString& rhs)
-	{
-		CString str(*this);
-		str.m_str.append(rhs.m_str);
-		return str;
 	}
 
 	inline BSTR CString::AllocSysString() const
@@ -672,11 +686,47 @@ namespace Win32xx
 		m_str.erase(nNewLength);
 	}
 
-
-
+	
 	///////////////////////////////////
 	// Global Functions
 
+	// friend functions of CString
+	inline CString operator + (const CString& string1, const CString& string2)
+	{
+		CString str(string1);
+		str.m_str.append(string2.m_str);
+		return str;
+	}
+
+	inline CString operator + (const CString& string, LPCTSTR pszText)
+	{
+		CString str(string);
+		str.m_str.append(pszText);
+		return str;
+	}
+	
+	inline CString operator + (const CString& string, TCHAR ch)
+	{
+		CString str(string);
+		str.m_str.append(1, ch);
+		return str;
+	}
+	
+	inline CString operator + (LPCTSTR pszText, const CString& string)
+	{
+		CString str(pszText);
+		str.m_str.append(string);
+		return str;
+	}
+	
+	inline CString operator + (TCHAR ch, const CString& string)
+	{
+		CString str(ch);
+		str.m_str.append(string);
+		return str;
+	}	
+
+	// Gloabal LoadString
 	inline CString LoadString(UINT nID)
 	{
 		CString str;
