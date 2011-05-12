@@ -42,12 +42,43 @@
 // cstring.h
 //  Declaration of the cstring.h
 
+// This class is intended to provide a simple alternative to the MFC/ATL 
+// CString class that ships with Microsoft compilers. The CString class
+// specified here is compatible with other compilers such as Borland 5.5
+// and MinGW.
+
+// Differences between this class and the MFC/ATL CString class
+// ------------------------------------------------------------
+// 1) The constructors for this class accepts only TCHARS. The various text conversion
+//    functions can be used to convert to and from other character types.
+// 2) This class is not reference counted. CStrings should be passed as references 
+//    or const references when used as function arguments (just like all other 
+//    class objects). As a result there is no need for functions like LockBuffer and
+//    UnLockBuffer functions.
+// 3) The Format functions only accepts POD (Plain Old Data) arguments. It does not
+//    accept arguments which are class or struct objects. In particular it does not
+//    accept CString objects, unless these can are cast to LPCTSTR.
+//    This is demonstrates valid and invalid usage:
+//      CString string1(_T("Hello World"));
+//      CString string2;
+//
+//      // This is invalid
+//      string2.Format(_T("String1 is: %s"), string1); // No! you can't do this
+//
+//      // This is ok
+//      string2.Format(_T("String1 is: %s"), (LPCTSTR)string1); // Yes, this is correct
+//
+//    Note: The MFC/ATL string class uses a non portable hack to make the CString class 
+//          behave like a POD. Other compilers (such as the MinGW compiler) specifically
+//          prohibit the use of non POD types for functions with variable argument lists.
+//
+//  4) This class uses a std::string, but does not inherit from std::string.
+
 
 #ifndef _WIN32XX_CSTRING_H_
 #define _WIN32XX_CSTRING_H_
 
 
-#include <string>
 #include "wincore.h"
 
 
@@ -106,6 +137,7 @@ namespace Win32xx
 		void	 FormatMessage(LPCTSTR pszFormat,...);
 		void	 FormatMessageV(LPCTSTR pszFormat, va_list args);
 		TCHAR	 GetAt(int nIndex) const;
+		LPTSTR	 GetBuffer(int nMinBufLength);
 		void     Empty();
 		int      Insert(int nIndex, TCHAR ch);
 		int      Insert(int nIndex, const CString& str);
@@ -117,9 +149,10 @@ namespace Win32xx
 		void     MakeUpper();
 		CString	 Mid(int nFirst) const;
 		CString  Mid(int nFirst, int nCount) const;
+		void	 ReleaseBuffer( int nNewLength = -1 );
+		int      Remove(LPCTSTR pszText);
 		int      Replace(TCHAR chOld, TCHAR chNew);
 		int      Replace(const LPCTSTR pszOld, LPCTSTR pszNew);
-		int      Remove(LPCTSTR pszText);
 		int      ReverseFind(LPCTSTR pszText, int nStart = -1) const;
 		CString  Right(int nCount) const;
 		void	 SetAt(int nIndex, TCHAR ch);
@@ -144,6 +177,7 @@ namespace Win32xx
 
 	private:
 		tString m_str;
+		std::vector<TCHAR> m_buf;
 	};
 
 	inline CString::CString()
@@ -388,6 +422,30 @@ namespace Win32xx
 		return m_str[nIndex];
 	}
 
+	inline LPTSTR CString::GetBuffer(int nMinBufLength)
+	// Creates a buffer of nMinBufLength charaters (+1 extra for NULL termination) and returns 
+	// a pointer to this buffer. This buffer can be used by any function which accepts a LPTSTR.
+	// Care must be taken not to exceed the length of the buffer.
+	// Use ReleaseBuffer to safely copy this buffer back to the CString object.
+	{
+		assert (nMinBufLength >= 0);
+		
+		m_buf.assign(nMinBufLength + 1, _T('\0'));
+		tString::iterator it_end;
+
+		if (m_str.length() >= (size_t)nMinBufLength)
+		{
+			it_end = m_str.begin();
+			std::advance(it_end, nMinBufLength);
+		}
+		else
+			it_end = m_str.end();
+		
+		std::copy(m_str.begin(), it_end, m_buf.begin());
+
+		return &m_buf[0];
+	}
+
 #ifndef _WIN32_WCE
 	inline BOOL CString::GetEnvironmentVariable(LPCTSTR pszVar)
 	{
@@ -507,34 +565,20 @@ namespace Win32xx
 		m_str[nIndex] = ch;
 	}
 
-	inline CString CString::SpanExcluding(LPCTSTR pszText) const
+	inline void CString::ReleaseBuffer( int nNewLength /*= -1*/ )
 	{
-		assert (pszText);
+		assert (nNewLength > 0 || -1 == nNewLength);
+		assert (nNewLength < (int)m_buf.size());
 
-		CString str;
-		size_t pos = 0;
+		if (-1 == nNewLength)
+			nNewLength = lstrlen(&m_buf[0]);
+		m_str.assign(nNewLength+1, _T('\0'));
 
-		while ((pos = m_str.find_first_not_of(pszText, pos)) != std::string::npos)
-		{
-			str.m_str.append(1, m_str[pos++]);
-		}
-
-		return str;
-	}
-
-	inline CString CString::SpanIncluding(LPCTSTR pszText) const
-	{
-		assert (pszText);
-
-		CString str;
-		size_t pos = 0;
-
-		while ((pos = m_str.find_first_of(pszText, pos)) != std::string::npos)
-		{
-			str.m_str.append(1, m_str[pos++]);
-		}
-
-		return str;
+		std::vector<TCHAR>::iterator it_end = m_buf.begin();
+		std::advance(it_end, nNewLength);
+		
+		std::copy(m_buf.begin(), it_end, m_str.begin());
+		m_buf.clear();
 	}
 
 	inline int CString::Remove(LPCTSTR pszText)
@@ -600,6 +644,36 @@ namespace Win32xx
 			throw std::bad_alloc();
 
 		return *pBstr;
+	}
+
+	inline CString CString::SpanExcluding(LPCTSTR pszText) const
+	{
+		assert (pszText);
+
+		CString str;
+		size_t pos = 0;
+
+		while ((pos = m_str.find_first_not_of(pszText, pos)) != std::string::npos)
+		{
+			str.m_str.append(1, m_str[pos++]);
+		}
+
+		return str;
+	}
+
+	inline CString CString::SpanIncluding(LPCTSTR pszText) const
+	{
+		assert (pszText);
+
+		CString str;
+		size_t pos = 0;
+
+		while ((pos = m_str.find_first_of(pszText, pos)) != std::string::npos)
+		{
+			str.m_str.append(1, m_str[pos++]);
+		}
+
+		return str;
 	}
 
 	inline CString CString::Tokenize(LPCTSTR pszTokens, int& iStart) const
