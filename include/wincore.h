@@ -201,7 +201,8 @@ namespace Win32xx
 	// tStringStream is a TCHAR std::stringstream
 	typedef std::basic_stringstream<TCHAR> tStringStream;
 
-	// WndPtr is a Shared_Ptr of CWnd
+	// Some useful smart pointers
+	typedef Shared_Ptr<CMenu> MenuPtr;
 	typedef Shared_Ptr<CWnd> WndPtr;
 
 	enum Constants			// Defines the maximum size for TCHAR strings
@@ -233,6 +234,7 @@ namespace Win32xx
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
+		std::vector<MenuPtr> vTmpMenus;	// A vector of temporary CMenu pointers
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 	};
@@ -313,8 +315,10 @@ namespace Win32xx
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
+		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
+		void RemoveTmpMenus();
 		void RemoveTmpWnds();
 		void SetCallback();
 		TLSData* SetTlsIndex();
@@ -663,6 +667,24 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
+	inline void CWinApp::AddTmpMenu(HMENU hMenu)
+	{
+		// The TmpMenus are temporary, deleted when a CMenu is destroyed.
+		assert(::IsMenu(hMenu));
+		assert(!GetCMenuFromMap(hMenu));
+		
+		CMenu* pMenu = new CMenu;
+		pMenu->m_hMenu = hMenu;
+		m_csMapLock.Lock();
+		m_mapHMENU.insert(std::make_pair(hMenu, pMenu));
+		m_csMapLock.Release();
+		pMenu->m_IsTmpMenu = TRUE;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->vTmpMenus.push_back(pMenu); // save TmpWnd as a smart pointer
+	}
+
 	inline void CWinApp::AddTmpWnd(HWND hWnd)
 	{
 		// TmpWnds are created if required to support functions like CWnd::GetParent.
@@ -674,7 +696,6 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-
 		pTLSData->vTmpWnds.push_back(pWnd); // save TmpWnd as a smart pointer
 	}
 
@@ -779,6 +800,17 @@ namespace Win32xx
 			}
 		}
 		return LOWORD(Msg.wParam);
+	}
+
+	inline void CWinApp::RemoveTmpMenus()
+	{
+		// Removes all TmpMenus belonging to this thread
+
+		// Retrieve the pointer to the TLS Data
+		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+
+		if (pTLSData)
+			pTLSData->vTmpMenus.clear();
 	}
 
 	inline void CWinApp::RemoveTmpWnds()

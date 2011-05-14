@@ -2325,6 +2325,7 @@ namespace Win32xx
 			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
+		assert(::IsMenu(pmd->hMenu));	// Corrupted menu ItemData?
 		MenuTheme tm = GetMenuTheme();
 
 		if (pmd->fType & MFT_SEPARATOR)

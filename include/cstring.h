@@ -49,30 +49,36 @@
 
 // Differences between this class and the MFC/ATL CString class
 // ------------------------------------------------------------
-// 1) The constructors for this class accepts only TCHARS. The various text conversion
-//    functions can be used to convert to and from other character types.
-// 2) This class is not reference counted. CStrings should be passed as references 
-//    or const references when used as function arguments (just like all other 
-//    class objects). As a result there is no need for functions like LockBuffer and
-//    UnLockBuffer functions.
+// 1) The constructors for this class accepts only TCHARs. The various text conversion
+//    functions can be used to convert from other character types to TCHARs.
+// 2) This class is not reference counted, so these CStrings should be passed as 
+//    references or const references when used as function arguments (just like all
+//    other class objects). As a result there is no need for functions like LockBuffer
+//    and UnLockBuffer.
 // 3) The Format functions only accepts POD (Plain Old Data) arguments. It does not
 //    accept arguments which are class or struct objects. In particular it does not
-//    accept CString objects, unless these can are cast to LPCTSTR.
+//    accept CString objects, unless these are cast to LPCTSTR.
 //    This is demonstrates valid and invalid usage:
 //      CString string1(_T("Hello World"));
 //      CString string2;
 //
-//      // This is invalid
+//      // This is invalid, and produces undefined behaviour.
 //      string2.Format(_T("String1 is: %s"), string1); // No! you can't do this
 //
 //      // This is ok
 //      string2.Format(_T("String1 is: %s"), (LPCTSTR)string1); // Yes, this is correct
 //
-//    Note: The MFC/ATL string class uses a non portable hack to make the CString class 
+//    Note: The MFC/ATL CString class uses a non portable hack to make its CString class 
 //          behave like a POD. Other compilers (such as the MinGW compiler) specifically
 //          prohibit the use of non POD types for functions with variable argument lists.
 //
 //  4) This class uses a std::string, but does not inherit from std::string.
+//  5) This class provides a few additional functions:
+//       b_str       Returns a BSTR string. This an an alternative for casting to BSTR.
+//       c_str       Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
+//       GetString   Returns a reference to the underlying std::basic_string<TCHAR>. This reference
+//                   can be used to modify the string directly.
+
 
 
 #ifndef _WIN32XX_CSTRING_H_
@@ -116,10 +122,10 @@ namespace Win32xx
 		CString& operator += (const CString& str);
 
 		// Attributes
-		BSTR     b_str() const		{ return T2W(m_str.c_str()); }
-		LPCTSTR	 c_str() const		{ return m_str.c_str(); }
-		tString& GetString()		{ return m_str; }
-		int      GetLength() const	{ return m_str.length(); }
+		BSTR     b_str() const		{ return T2W(m_str.c_str()); }	// alternative for casting to BSTR
+		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
+		tString& GetString()		{ return m_str; }				// returns a reference to the underlying std::basic_string<TCHAR>
+		int      GetLength() const	{ return m_str.length(); }		// returns the length in characters
 
 		// Operations
 		BSTR     AllocSysString() const;
@@ -425,8 +431,11 @@ namespace Win32xx
 	inline LPTSTR CString::GetBuffer(int nMinBufLength)
 	// Creates a buffer of nMinBufLength charaters (+1 extra for NULL termination) and returns 
 	// a pointer to this buffer. This buffer can be used by any function which accepts a LPTSTR.
-	// Care must be taken not to exceed the length of the buffer.
-	// Use ReleaseBuffer to safely copy this buffer back to the CString object.
+	// Care must be taken not to exceed the length of the buffer. Use ReleaseBuffer to safely 
+	// copy this buffer back to the CString object.
+	//
+	// Note: The buffer uses a vector. Vectors are required to be contiguous in memory under
+	//       the current standard, whereas std::strings do not have this requirement.
 	{
 		assert (nMinBufLength >= 0);
 		
@@ -566,6 +575,10 @@ namespace Win32xx
 	}
 
 	inline void CString::ReleaseBuffer( int nNewLength /*= -1*/ )
+	// This copies the contents of the buffer (acquired by GetBuffer) to this CString,
+	// and releases the contents of the buffer. The default length of -1 copies from the
+	// buffer until a null terminator is reached. If the buffer doesn't contain a null
+	// terminater, you must specify the buffer's length.
 	{
 		assert (nNewLength > 0 || -1 == nNewLength);
 		assert (nNewLength < (int)m_buf.size());
@@ -800,7 +813,7 @@ namespace Win32xx
 		return str;
 	}	
 
-	// Gloabal LoadString
+	// Global LoadString
 	inline CString LoadString(UINT nID)
 	{
 		CString str;

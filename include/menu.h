@@ -39,6 +39,48 @@
 // menu.h
 //  Declaration of the CMenu class
 
+// Notes
+//  1) Owner-drawn menus send the WM_MEASUREITEM and WM_DRAWITEM messages
+//     to the window that owns the menu. To manage owner drawing for menus,
+//     handle these two messages in the CWnd's WndProc function.
+//
+//  2) The CMenu pointer returned by FromHandle might be a temporary pointer. It
+//     should be used immediately, not saved for later use.
+//
+//  3) The CMenu pointers returned by FromHandle or GetSubMenu do not need
+//     to be deleted. They are automatically deleted by the Win32++.
+//
+//  4) All temporary CMenu pointers belonging to this thread are deleted when any 
+//     CMenu goes out of scope (i.e. when it's destructor is called).
+
+//  Program sample
+//  --------------
+//	void CView::CreatePopup()
+//	{
+// 		CPoint pt = GetCursorPos();
+// 	
+// 		// Create the menu
+// 		CMenu Popup;
+// 		Popup.CreatePopupMenu();
+// 
+// 		// Add some menu items
+// 		Popup.AppendMenu(MF_STRING, 101, _T("Menu Item &1"));
+// 		Popup.AppendMenu(MF_STRING, 102, _T("Menu Item &2"));
+// 		Popup.AppendMenu(MF_STRING, 103, _T("Menu Item &3"));
+// 		Popup.AppendMenu(MF_SEPARATOR);
+// 		Popup.AppendMenu(MF_STRING, 104, _T("Menu Item &4"));
+// 
+// 		// Set menu item states
+// 		Popup.CheckMenuRadioItem(101, 101, 101, MF_BYCOMMAND);
+// 		Popup.CheckMenuItem(102, MF_BYCOMMAND | MF_CHECKED);
+// 		Popup.EnableMenuItem(103, MF_BYCOMMAND | MF_GRAYED);
+// 		Popup.SetDefaultItem(104);
+//	
+// 		// Display the popup menu
+// 		Popup.TrackPopupMenu(0, pt.x, pt.y, this); 
+//	}
+
+
 
 #ifndef _WIN32XX_MENU_H_
 #define _WIN32XX_MENU_H_
@@ -55,16 +97,17 @@ namespace Win32xx
 
 	class CMenu
 	{
+		friend class CWinApp;
+
 	public:
 		//Construction
-		CMenu() : m_hMenu(0) {}
+		CMenu() : m_hMenu(0), m_IsTmpMenu(FALSE) {}
 		virtual ~CMenu();
 
 		//Initialization
 		void Attach(HMENU hMenu);
 		void CreateMenu();
 		void CreatePopupMenu();
-	//	static void PASCAL DeleteTempMap();	???
 		void DestroyMenu();
 		HMENU Detach();
 		static CMenu* FromHandle(HMENU hMenu);
@@ -80,7 +123,7 @@ namespace Win32xx
 
 		//Menu Item Operations
 		BOOL AppendMenu(UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
-		BOOL AppendMenu(UINT nFlags, UINT_PTR uIDNewItem, const CBitmap* pBmp);
+		BOOL AppendMenu(UINT uFlags, UINT_PTR uIDNewItem, const CBitmap* pBmp);
 		UINT CheckMenuItem(UINT uIDCheckItem, UINT uCheck);
 		BOOL CheckMenuRadioItem(UINT uIDFirst, UINT uIDLast, UINT uIDItem, UINT uFlags);
 		UINT EnableMenuItem(UINT uIDEnableItem, UINT uEnable);
@@ -110,10 +153,6 @@ namespace Win32xx
 		BOOL SetMenuItemBitmaps(UINT uPosition, UINT uFlags, const CBitmap* pBmpUnchecked, const CBitmap* pBmpChecked);
 		BOOL SetMenuItemInfo(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos = FALSE);
 
-		//Overridables
-		virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
-		virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
-
 		//Operators
 		void operator = (const HMENU hMenu);
 		BOOL operator != (const CMenu& menu) const;
@@ -126,15 +165,20 @@ namespace Win32xx
 		void AddToMap();
 		BOOL RemoveFromMap();
 		HMENU m_hMenu;
-
+		BOOL m_IsTmpMenu;
 	};
 
 	inline CMenu::~CMenu()
 	{
 		if (m_hMenu)
-		{
+		{	
+			if (!m_IsTmpMenu)
+			{
+				if (GetApp()) GetApp()->RemoveTmpMenus();	// Remove TmpMenus		
+				::DestroyMenu(m_hMenu);
+			}
+			
 			RemoveFromMap();
-			::DestroyMenu(m_hMenu);
 		}
 	}
 
@@ -206,8 +250,9 @@ namespace Win32xx
 
 	inline void CMenu::DestroyMenu()
 	{
-		assert(IsMenu(m_hMenu));
-		::DestroyMenu(m_hMenu);
+		if (::IsMenu(m_hMenu)) 
+			::DestroyMenu(m_hMenu);
+		
 		m_hMenu = 0;
 		RemoveFromMap();
 	}
@@ -226,6 +271,11 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
+		if (::IsMenu(hMenu) && pMenu == 0)
+		{
+			GetApp()->AddTmpMenu(hMenu);
+			pMenu = GetApp()->GetCMenuFromMap(hMenu);
+		}
 		return pMenu;
 	}
 
@@ -379,11 +429,11 @@ namespace Win32xx
 		return ::GetMenuString(m_hMenu, uIDItem, (LPTSTR)rString.c_str(), rString.GetLength(), uFlags);
 	}
 
-//	inline HMENU CMenu::GetSubMenu(int nPos) const
-//	{
-//		assert(IsMenu(m_hMenu));
-//		return ::GetSubMenu(m_hMenu);
-//	}
+	inline CMenu* CMenu::GetSubMenu(int nPos) const
+	{
+		assert(IsMenu(m_hMenu));
+		return FromHandle(::GetSubMenu(m_hMenu, nPos));
+	}
 
 	inline BOOL CMenu::InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/)
 	{
@@ -447,16 +497,6 @@ namespace Win32xx
 	{
 		assert(IsMenu(m_hMenu));
 		return ::SetMenuItemInfo(m_hMenu, uItem, fByPos, lpMenuItemInfo);
-	}
-
-	inline void CMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
-	{
-		UNREFERENCED_PARAMETER(lpDrawItemStruct);
-	}
-
-	inline void CMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
-	{
-		UNREFERENCED_PARAMETER(lpMeasureItemStruct);
 	}
 
 	inline void CMenu::operator = (const HMENU hMenu)
