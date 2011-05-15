@@ -811,7 +811,6 @@ namespace Win32xx
 		int nResult = (int)CreatePropertySheet(&m_PSH);
 
 		m_vPages.clear();
-		GetApp()->RemoveTmpWnds();
 
 		return nResult;
 	}

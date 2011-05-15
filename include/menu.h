@@ -50,8 +50,8 @@
 //  3) The CMenu pointers returned by FromHandle or GetSubMenu do not need
 //     to be deleted. They are automatically deleted by the Win32++.
 //
-//  4) All temporary CMenu pointers belonging to this thread are deleted when any 
-//     CMenu goes out of scope (i.e. when it's destructor is called).
+//  4) CMenu pointers returned by GetSubMenu are deleted when the parent CMenu is
+//     detached, destroyed or deconstructed.
 //
 //  5) The HMENU that is attached to a CMenu object (using the attach function) is 
 //     automatically deleted when the CMenu object goes out of scope. Detach the
@@ -151,7 +151,7 @@ namespace Win32xx
 		UINT GetMenuState(UINT uID, UINT uFlags) const;
 		int GetMenuString(UINT uIDItem, LPTSTR lpString, int nMaxCount, UINT uFlags) const;
 		int GetMenuString(UINT uIDItem, CString& rString, UINT uFlags) const;
-		CMenu* GetSubMenu(int nPos) const;
+		CMenu* GetSubMenu(int nPos);
 		BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
 		BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, const CBitmap* pBmp);
 		BOOL InsertMenuItem(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos = FALSE);
@@ -173,6 +173,7 @@ namespace Win32xx
 		CMenu& operator = (const CMenu&);	// Disable assignment operator
 		void AddToMap();
 		BOOL RemoveFromMap();
+		std::vector<MenuPtr> m_vSubMenus;	// A vector of smart pointers to CMenu
 		HMENU m_hMenu;
 		BOOL m_IsTmpMenu;
 	};
@@ -183,12 +184,14 @@ namespace Win32xx
 		{	
 			if (!m_IsTmpMenu)
 			{
-				if (GetApp()) GetApp()->RemoveTmpMenus();	// Remove TmpMenus		
+			//	if (GetApp()) GetApp()->RemoveTmpMenus();	// Remove TmpMenus		
 				::DestroyMenu(m_hMenu);
 			}
 			
 			RemoveFromMap();
 		}
+
+		m_vSubMenus.clear();
 	}
 
 	inline void CMenu::AddToMap()
@@ -205,28 +208,30 @@ namespace Win32xx
 
 	inline BOOL CMenu::RemoveFromMap()
 	{
-		assert( GetApp() );
 		BOOL Success = FALSE;
 
-		// Allocate an iterator for our HDC map
-		std::map<HMENU, CMenu*, CompareHMENU>::iterator m;
-
-		CWinApp* pApp = GetApp();
-		if (pApp)
+		if (GetApp())
 		{
-			// Erase the CDC pointer entry from the map
-			pApp->m_csMapLock.Lock();
-			for (m = pApp->m_mapHMENU.begin(); m != pApp->m_mapHMENU.end(); ++m)
-			{
-				if (this == m->second)
-				{
-					pApp->m_mapHMENU.erase(m);
-					Success = TRUE;
-					break;
-				}
-			}
+			// Allocate an iterator for our HDC map
+			std::map<HMENU, CMenu*, CompareHMENU>::iterator m;
 
-			pApp->m_csMapLock.Release();
+			CWinApp* pApp = GetApp();
+			if (pApp)
+			{
+				// Erase the CDC pointer entry from the map
+				pApp->m_csMapLock.Lock();
+				for (m = pApp->m_mapHMENU.begin(); m != pApp->m_mapHMENU.end(); ++m)
+				{
+					if (this == m->second)
+					{
+						pApp->m_mapHMENU.erase(m);
+						Success = TRUE;
+						break;
+					}
+				}
+
+				pApp->m_csMapLock.Release();
+			}
 		}
 
 		return Success;
@@ -263,6 +268,7 @@ namespace Win32xx
 		
 		m_hMenu = 0;
 		RemoveFromMap();
+		m_vSubMenus.clear();
 	}
 
 	inline HMENU CMenu::Detach()
@@ -271,6 +277,7 @@ namespace Win32xx
 		HMENU hMenu = m_hMenu;
 		m_hMenu = 0;
 		RemoveFromMap();
+		m_vSubMenus.clear();
 		return hMenu;
 	}
 
@@ -283,6 +290,7 @@ namespace Win32xx
 		{
 			GetApp()->AddTmpMenu(hMenu);
 			pMenu = GetApp()->GetCMenuFromMap(hMenu);
+			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, CLEANUP_CMENU);
 		}
 		return pMenu;
 	}
@@ -438,10 +446,13 @@ namespace Win32xx
 		return ::GetMenuString(m_hMenu, uIDItem, (LPTSTR)rString.c_str(), rString.GetLength(), uFlags);
 	}
 
-	inline CMenu* CMenu::GetSubMenu(int nPos) const
+	inline CMenu* CMenu::GetSubMenu(int nPos)
 	{
 		assert(IsMenu(m_hMenu));
-		return FromHandle(::GetSubMenu(m_hMenu, nPos));
+		MenuPtr pMenu = new CMenu;
+		pMenu->Attach(::GetSubMenu(m_hMenu, nPos));
+		m_vSubMenus.push_back(pMenu);
+		return pMenu.get();
 	}
 
 	inline BOOL CMenu::InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/)

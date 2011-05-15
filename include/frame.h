@@ -55,7 +55,7 @@
 
 // CFrame is responsible for creating a "frame" window. This window has a
 // menu and and several child windows, including a toolbar (usualy hosted
-// within a rebar), and a status bar and a view positioned over the frame
+// within a rebar), a status bar, and a view positioned over the frame
 // window's non-client area. The "view" window is a seperate CWnd object
 // assigned to the frame with the SetView function.
 
@@ -2325,7 +2325,7 @@ namespace Win32xx
 			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
 		ItemData* pmd = (ItemData *) pmis->itemData;
-		assert(::IsMenu(pmd->hMenu));	// Corrupted menu ItemData?
+		assert(::IsMenu(pmd->hMenu));	// Does itemData contain a valid ItemData struct?
 		MenuTheme tm = GetMenuTheme();
 
 		if (pmd->fType & MFT_SEPARATOR)

@@ -166,6 +166,11 @@
 #define UWM_GETMENUTHEME    (WM_APP + 16)	// Message - returns a pointer to MenuTheme
 #define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to CToolBar
 #define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolBarTheme
+#define UWM_CLEANUP_TMPS	(WM_APP + 19)   // Message - posted to remove temporary CWnds, CMenus etc
+
+// Parameters defined by Win32++
+#define CLEANUP_CWND  1	   				// LPARAM parameter for UWM_CLEANUPTMPS
+#define CLEANUP_CMENU 2					// LPARAM parameter for UWM_CLEANUPTMPS
 
 
 // Automatically include the Win32xx namespace
@@ -318,8 +323,7 @@ namespace Win32xx
 		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		void RemoveTmpMenus();
-		void RemoveTmpWnds();
+		void RemoveTmps(LPARAM lParam);
 		void SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -770,6 +774,12 @@ namespace Win32xx
 
 			BOOL Processed = FALSE;
 
+			if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
+			{
+				RemoveTmps(Msg.lParam);
+				Processed = TRUE;
+			}
+
 			// only pre-translate mouse and keyboard input events
 			if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
 				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
@@ -802,26 +812,25 @@ namespace Win32xx
 		return LOWORD(Msg.wParam);
 	}
 
-	inline void CWinApp::RemoveTmpMenus()
+	inline void CWinApp::RemoveTmps(LPARAM lParam)
 	{
-		// Removes all TmpMenus belonging to this thread
+		// Removes all Tmp CWnds and CMenus belonging to this thread
 
 		// Retrieve the pointer to the TLS Data
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-
-		if (pTLSData)
-			pTLSData->vTmpMenus.clear();
-	}
-
-	inline void CWinApp::RemoveTmpWnds()
-	{
-		// Removes all TmpWnds belonging to this thread
-
-		// Retrieve the pointer to the TLS Data
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-
-		if (pTLSData)
+		assert(pTLSData);
+		
+		switch(lParam)
+		{
+		case CLEANUP_CWND:
 			pTLSData->vTmpWnds.clear();
+			TRACE(_T("Cleaned up tmp CWnd\n"));
+			break;
+		case CLEANUP_CMENU:
+			pTLSData->vTmpMenus.clear();
+			TRACE(_T("Cleaned up tmp CMenu\n"));
+			break;	
+		}
 	}
 
 	inline int CWinApp::Run()
@@ -1212,13 +1221,11 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
-		// Remove TmpWnds
-		if (m_IsTmpWnd)
+		if (m_IsTmpWnd) 
 			m_hWnd = NULL;
-		else
-			if (GetApp()) GetApp()->RemoveTmpWnds();
 
-		if (IsWindow()) ::DestroyWindow(m_hWnd);
+		if (IsWindow()) 
+			::DestroyWindow(m_hWnd);
 
 		// Return the CWnd to its default state
 		Cleanup();
@@ -1253,6 +1260,7 @@ namespace Win32xx
 		{
 			GetApp()->AddTmpWnd(hWnd);
 			pWnd = GetApp()->GetCWndFromMap(hWnd);
+			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, CLEANUP_CWND);
 		}
 
 		return pWnd;
@@ -1600,28 +1608,31 @@ namespace Win32xx
 
 	inline BOOL CWnd::RemoveFromMap()
 	{
-		assert( GetApp() );
 		BOOL Success = FALSE;
 
-		// Allocate an iterator for our HWND map
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
-
-		CWinApp* pApp = GetApp();
-		if (pApp)
+		if (GetApp())
 		{
-			// Erase the CWnd pointer entry from the map
-			pApp->m_csMapLock.Lock();
-			for (m = pApp->m_mapHWND.begin(); m != pApp->m_mapHWND.end(); ++m)
-			{
-				if (this == m->second)
-				{
-					pApp->m_mapHWND.erase(m);
-					Success = TRUE;
-					break;
-				}
-			}
 
-			pApp->m_csMapLock.Release();
+			// Allocate an iterator for our HWND map
+			std::map<HWND, CWnd*, CompareHWND>::iterator m;
+
+			CWinApp* pApp = GetApp();
+			if (pApp)
+			{
+				// Erase the CWnd pointer entry from the map
+				pApp->m_csMapLock.Lock();
+				for (m = pApp->m_mapHWND.begin(); m != pApp->m_mapHWND.end(); ++m)
+				{
+					if (this == m->second)
+					{
+						pApp->m_mapHWND.erase(m);
+						Success = TRUE;
+						break;
+					}
+				}
+
+				pApp->m_csMapLock.Release();
+			}
 		}
 
 		return Success;
