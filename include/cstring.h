@@ -51,10 +51,11 @@
 // ------------------------------------------------------------
 // 1) The constructors for this class accepts only TCHARs. The various text conversion
 //    functions can be used to convert from other character types to TCHARs.
+//
 // 2) This class is not reference counted, so these CStrings should be passed as 
-//    references or const references when used as function arguments (just like all
-//    other class objects). As a result there is no need for functions like LockBuffer
-//    and UnLockBuffer.
+//    references or const references when used as function arguments. As a result there 
+//    is no need for functions like LockBuffer and UnLockBuffer.
+//
 // 3) The Format functions only accepts POD (Plain Old Data) arguments. It does not
 //    accept arguments which are class or struct objects. In particular it does not
 //    accept CString objects, unless these are cast to LPCTSTR.
@@ -73,11 +74,12 @@
 //          prohibit the use of non POD types for functions with variable argument lists.
 //
 //  4) This class uses a std::string, but does not inherit from std::string.
+//
 //  5) This class provides a few additional functions:
 //       b_str       Returns a BSTR string. This an an alternative for casting to BSTR.
 //       c_str       Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
-//       GetString   Returns a reference to the underlying std::basic_string<TCHAR>. This reference
-//                   can be used to modify the string directly.
+//       GetString   Returns a reference to the underlying std::basic_string<TCHAR>. This 
+//                   reference can be used to modify the string directly.
 
 
 

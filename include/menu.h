@@ -52,6 +52,16 @@
 //
 //  4) All temporary CMenu pointers belonging to this thread are deleted when any 
 //     CMenu goes out of scope (i.e. when it's destructor is called).
+//
+//  5) The HMENU that is attached to a CMenu object (using the attach function) is 
+//     automatically deleted when the CMenu object goes out of scope. Detach the
+//     HMENU to stop it being deleted when CMenu's destructor is called.
+//
+//  6) Pass CMenu objects by reference or by pointer when passing them as function 
+//     arguments.
+//
+//  7) In those functions that use a MENUITEMINFO structure, its cbSize member is 
+//     automatically set to the correct value.
 
 //  Program sample
 //  --------------
@@ -102,7 +112,7 @@ namespace Win32xx
 	public:
 		//Construction
 		CMenu() : m_hMenu(0), m_IsTmpMenu(FALSE) {}
-		virtual ~CMenu();
+		~CMenu();
 
 		//Initialization
 		void Attach(HMENU hMenu);
@@ -154,7 +164,6 @@ namespace Win32xx
 		BOOL SetMenuItemInfo(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos = FALSE);
 
 		//Operators
-		void operator = (const HMENU hMenu);
 		BOOL operator != (const CMenu& menu) const;
 		BOOL operator == (const CMenu& menu) const;
 		operator HMENU () const;
@@ -187,10 +196,9 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		assert(m_hMenu);
-		GetApp()->m_csMapLock.Lock();
-
 		assert(!GetApp()->GetCMenuFromMap(m_hMenu));
-
+		
+		GetApp()->m_csMapLock.Lock();
 		GetApp()->m_mapHMENU.insert(std::make_pair(m_hMenu, this));
 		GetApp()->m_csMapLock.Release();
 	}
@@ -407,6 +415,7 @@ namespace Win32xx
 	{
 		assert(IsMenu(m_hMenu));
 		assert(lpMenuItemInfo);
+		lpMenuItemInfo->cbSize = GetSizeofMenuItemInfo();
 		return ::GetMenuItemInfo(m_hMenu, uItem, fByPos, lpMenuItemInfo);
 	}
 
@@ -451,6 +460,7 @@ namespace Win32xx
 	{
 		assert(IsMenu(m_hMenu));
 		assert(lpMenuItemInfo);
+		lpMenuItemInfo->cbSize = GetSizeofMenuItemInfo();
 		return ::InsertMenuItem(m_hMenu, uItem, fByPos, lpMenuItemInfo);
 	}
 
@@ -488,20 +498,15 @@ namespace Win32xx
 	inline BOOL CMenu::SetMenuItemBitmaps(UINT uPosition, UINT uFlags, const CBitmap* pBmpUnchecked, const CBitmap* pBmpChecked)
 	{
 		assert(IsMenu(m_hMenu));
-		assert(pBmpUnchecked);
-		assert(pBmpChecked);
 		return ::SetMenuItemBitmaps(m_hMenu, uPosition, uFlags, *pBmpUnchecked, *pBmpChecked);
 	}
 
 	inline BOOL CMenu::SetMenuItemInfo(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos /*= FALSE*/)
 	{
 		assert(IsMenu(m_hMenu));
+		assert(lpMenuItemInfo);
+		lpMenuItemInfo->cbSize = GetSizeofMenuItemInfo();
 		return ::SetMenuItemInfo(m_hMenu, uItem, fByPos, lpMenuItemInfo);
-	}
-
-	inline void CMenu::operator = (const HMENU hMenu)
-	{
-		Attach(hMenu);
 	}
 
 	inline BOOL CMenu::operator != (const CMenu& menu) const
