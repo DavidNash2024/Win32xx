@@ -7,11 +7,19 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	// Start Win32++
-	CPictureApp theApp;
+	try
+	{
+		// Start Win32++
+		CPictureApp theApp;
 
-	// Run the application
-	return theApp.Run();
+		// Run the application
+		return theApp.Run();
+	}
+	
+	catch (std::exception &e)
+	{
+		// Process the exception and quit 
+		e.what();
+		return -1;
+	}
 }
-
-

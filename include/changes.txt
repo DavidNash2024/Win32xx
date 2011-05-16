@@ -16,6 +16,7 @@ Changes in detail
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W
+- Added CWinException::GetError
 - Modified LoadString 				now returns CString
 - Removed CLoadString
 

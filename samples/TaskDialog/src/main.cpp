@@ -5,9 +5,19 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	CTaskDialogApp MyApp;
+	try
+	{
+		// Start Win32++
+		CTaskDialogApp theApp;
 
-	MyApp.Run();
-
-	return 0;
+		// Run the application
+		return theApp.Run();
+	}
+	
+	catch (std::exception &e)
+	{
+		// Process the exception and quit 
+		e.what();
+		return -1;
+	}
 }

@@ -239,9 +239,13 @@ namespace Win32xx
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
 		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
-		std::vector<MenuPtr> vTmpMenus;	// A vector of temporary CMenu pointers
+
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
+
+#ifndef _WIN32_WCE
+		std::vector<MenuPtr> vTmpMenus;	// A vector of temporary CMenu pointers
+#endif
 	};
 
 
@@ -273,11 +277,11 @@ namespace Win32xx
 	public:
 		CWinException (LPCTSTR msg);
 		virtual ~CWinException() throw() {}
-
+		DWORD GetError() const { return m_error; }
 		virtual LPCTSTR GetErrorString() const { return m_ErrorString; }
 		virtual const char * what () const throw ();
 	private:
-		DWORD  m_err;
+		DWORD  m_error;
 		LPCTSTR m_msg;
 		TCHAR m_ErrorString[MAX_STRING_SIZE];
 	};
@@ -320,6 +324,7 @@ namespace Win32xx
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
+
 		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
@@ -340,6 +345,7 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 		HACCEL m_hAccel;				// handle to the accelerator table
 		CWnd* m_pWndAccel;				// handle to the window for accelerator keys
+
 	};
 
 }
@@ -566,6 +572,7 @@ namespace Win32xx
 
 #include "gdi.h"
 #include "menu.h"
+ 
 
 
 namespace Win32xx
@@ -574,14 +581,14 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CWinException class
 	//
-	inline CWinException::CWinException (LPCTSTR msg) : m_err (::GetLastError()), m_msg(msg)
+	inline CWinException::CWinException (LPCTSTR msg) : m_error (::GetLastError()), m_msg(msg)
 	{
 		memset(m_ErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
-		if (m_err != 0)
+		if (m_error != 0)
 		{
 			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-			::FormatMessage(dwFlags, NULL, m_err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_ErrorString, MAX_STRING_SIZE, NULL);
+			::FormatMessage(dwFlags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_ErrorString, MAX_STRING_SIZE, NULL);
 		}
 	}
 
@@ -671,6 +678,7 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
+#ifndef _WIN32_WCE
 	inline void CWinApp::AddTmpMenu(HMENU hMenu)
 	{
 		// The TmpMenus are temporary, deleted when a CMenu is destroyed.
@@ -688,6 +696,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpMenus.push_back(pMenu); // save TmpWnd as a smart pointer
 	}
+#endif
 
 	inline void CWinApp::AddTmpWnd(HWND hWnd)
 	{
@@ -826,33 +835,29 @@ namespace Win32xx
 			pTLSData->vTmpWnds.clear();
 			TRACE(_T("Cleaned up tmp CWnd\n"));
 			break;
+
+#ifndef _WIN32_WCE
 		case CLEANUP_CMENU:
 			pTLSData->vTmpMenus.clear();
 			TRACE(_T("Cleaned up tmp CMenu\n"));
-			break;	
+			break;
+#endif
+
 		}
 	}
 
 	inline int CWinApp::Run()
 	{
-		try
+		// InitInstance runs the App's initialization code
+		if (InitInstance())
 		{
-			// InitInstance runs the App's initialization code
-			if (InitInstance())
-			{
-				// Dispatch the window messages
-				return MessageLoop();
-			}
-			else
-			{
-				::PostQuitMessage(-1);
-				return -1;
-			}
+			// Dispatch the window messages
+			return MessageLoop();
 		}
-
-		catch (const CWinException &e)
+		else
 		{
-			e.what();
+			TRACE(_T("InitInstance failed!  Terminating program\n"));
+			::PostQuitMessage(-1);
 			return -1;
 		}
 	}
@@ -1174,7 +1179,10 @@ namespace Win32xx
 			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
-			RegisterClass(wc);	// Register the window class (if not already registered)
+			// Register the window class (if not already registered)
+			if (!RegisterClass(wc))	
+				throw CWinException(_T("Failed to register window class"));
+
 			HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 			// Ensure this thread has the TLS index set
@@ -1198,22 +1206,24 @@ namespace Win32xx
 				Subclass(m_hWnd);
 
 				// Send a message to force the HWND to be added to the map
-				::SendMessage(m_hWnd, WM_NULL, 0L, 0L);
+				SendMessage(WM_NULL, 0L, 0L);
 
 				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
 			}
 
 			// Clear the CWnd pointer from TLS
-			pTLSData->pCWnd = NULL;
-
-			// Window creation is complete. Now call OnInitialUpdate
-			OnInitialUpdate();
+			pTLSData->pCWnd = NULL;	
 		}
-
+	
 		catch (const CWinException &e)
-		{
-			e.what();
+		{		
+			e.what();	// Display a hint as to what went wrong if an exception is thrown.
+			
+			// eat the exception (don't rethrow)
 		}
+
+		// Window creation is complete. Now call OnInitialUpdate
+		OnInitialUpdate();
 
 		return m_hWnd;
 	}
@@ -1597,8 +1607,7 @@ namespace Win32xx
 			wc.lpfnWndProc	= CWnd::StaticWindowProc;
 
 			// Register the WNDCLASS structure
-			if ( !::RegisterClass(&wc) )
-				throw CWinException(_T("Failed to register window class"));
+			::RegisterClass(&wc);
 
 			Done = TRUE;
 		}
@@ -1707,11 +1716,14 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			// Most CWinExceptions will end up here unless caught earlier.
+			// 	We should never get here!
+		
+			// Display the error in the output window
 			e.what();
+			
+			// Rethrow the exception
+			throw;
 		}
-
-		return 0L;
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
 

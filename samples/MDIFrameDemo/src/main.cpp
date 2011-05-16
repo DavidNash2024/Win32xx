@@ -7,10 +7,21 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	// Start Win32++
-    CMDIDemoApp MyApp;
+	try
+	{
+		// Start Win32++
+		CMDIDemoApp theApp;
 
-	// Run the application
-	return MyApp.Run();
+		// Run the application
+		return theApp.Run();
+	}
+	
+	catch (std::exception &e)
+	{
+		// Process the exception and quit 
+		e.what();
+		return -1;
+	}
 }
+
 

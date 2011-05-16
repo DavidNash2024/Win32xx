@@ -92,11 +92,12 @@
 
 
 
-#ifndef _WIN32XX_MENU_H_
+#if !defined(_WIN32XX_MENU_H_) && !defined(_WIN32_WCE)
 #define _WIN32XX_MENU_H_
 
 
 #include "wincore.h"
+#include "gdi.h"
 
 
 namespace Win32xx

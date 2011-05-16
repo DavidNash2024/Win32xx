@@ -7,13 +7,22 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	// Start Win32++
-	CFormApp theApp;
+	try
+	{
+		// Start Win32++
+		CFormApp theApp;
 
-	// Run the application
-	return theApp.Run();
+		// Run the application
+		return theApp.Run();
+	}
+	
+	catch (std::exception &e)
+	{
+		// Process the exception and quit 
+		e.what();
+		return -1;
+	}
 }
-
 
 
 // Definitions for the CFormApp class

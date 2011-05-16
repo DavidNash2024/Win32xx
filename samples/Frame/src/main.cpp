@@ -7,10 +7,20 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	// Start Win32++
-	CFrameApp theApp;
+	try
+	{
+		// Start Win32++
+		CFrameApp theApp;
 
-	// Run the application
-	return theApp.Run();
+		// Run the application
+		return theApp.Run();
+	}
+	
+	catch (std::exception &e)
+	{
+		// Process the exception and quit 
+		e.what();
+		return -1;
+	}
 }
 

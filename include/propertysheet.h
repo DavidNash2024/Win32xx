@@ -587,18 +587,18 @@ namespace Win32xx
 					// Store the CPropertyPage pointer in Thread Local Storage
 					pTLSData->pCWnd = (CWnd*)ppsp->lParam;
 				}
-
-				return TRUE;
+				break;
 			}
+
+			return TRUE;
 		}
 
 		catch (const CWinException &e)
 		{
 			e.what();
-			return FALSE;
+			throw;
 		}
 
-		return TRUE;
 	}
 
 	inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)

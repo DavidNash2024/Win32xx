@@ -442,6 +442,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
+			// Display the error
 			e.what();
 		}
 		
@@ -487,6 +488,7 @@ namespace Win32xx
 	
 		catch (const CWinException &e)
 		{
+			// Display the error
 			e.what();
 		}
 
@@ -589,7 +591,7 @@ namespace Win32xx
 		catch (const CWinException &e )
 		{
 			e.what();
-			return 0;
+			throw;
 		}
 
 	} // INT_PTR CALLBACK CDialog::StaticDialogProc(...)

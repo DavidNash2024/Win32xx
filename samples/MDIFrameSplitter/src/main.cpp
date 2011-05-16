@@ -7,10 +7,19 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	// Start Win32++
-    CMDIFrameSplitterApp MyApp;
+	try
+	{
+		// Start Win32++
+		CMDIFrameSplitterApp theApp;
 
-	// Run the application
-	return MyApp.Run();
+		// Run the application
+		return theApp.Run();
+	}
+	
+	catch (std::exception &e)
+	{
+		// Process the exception and quit 
+		e.what();
+		return -1;
+	}
 }
-
