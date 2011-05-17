@@ -1217,7 +1217,7 @@ namespace Win32xx
 	
 		catch (const CWinException &e)
 		{		
-			e.what();	// Display a hint as to what went wrong if an exception is thrown.
+			e.what();	// Display a hint as to what went wrong.
 			
 			// eat the exception (don't rethrow)
 		}
@@ -1687,43 +1687,26 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 
-		try
+		CWnd* w = GetApp()->GetCWndFromMap(hWnd);
+		if (0 == w)
 		{
-			CWnd* w = GetApp()->GetCWndFromMap(hWnd);
-			if (0 == w)
-			{
-				// The CWnd pointer wasn't found in the map, so add it now
+			// The CWnd pointer wasn't found in the map, so add it now
 
-				// Retrieve the pointer to the TLS Data
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				if (NULL == pTLSData)
-					throw CWinException(_T("Unable to get TLS"));
+			// Retrieve the pointer to the TLS Data
+			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			assert(pTLSData);
 
-				// Retrieve pointer to CWnd object from Thread Local Storage TLS
-				w = pTLSData->pCWnd;
-				if (NULL == w)
-					throw CWinException(_T("Failed to route message"));
+			// Retrieve pointer to CWnd object from Thread Local Storage TLS
+			w = pTLSData->pCWnd;
+			assert(w);				// pTLSData->pCWnd is assigned in CreateEx
+			pTLSData->pCWnd = NULL;
 
-				pTLSData->pCWnd = NULL;
-
-				// Store the CWnd pointer in the HWND map
-				w->m_hWnd = hWnd;
-				w->AddToMap();
-			}
-
-			return w->WndProc(uMsg, wParam, lParam);
+			// Store the CWnd pointer in the HWND map
+			w->m_hWnd = hWnd;
+			w->AddToMap();
 		}
 
-		catch (const CWinException &e)
-		{
-			// 	We should never get here!
-		
-			// Display the error in the output window
-			e.what();
-			
-			// Rethrow the exception
-			throw;
-		}
+		return w->WndProc(uMsg, wParam, lParam);	
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
 

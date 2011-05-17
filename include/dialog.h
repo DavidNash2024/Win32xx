@@ -562,37 +562,25 @@ namespace Win32xx
 
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		try
+		// Find the CWnd pointer mapped to this HWND
+		CDialog* w = (CDialog*)GetApp()->GetCWndFromMap(hWnd);
+		if (0 == w)
 		{
-			// Find the CWnd pointer mapped to this HWND
-			CDialog* w = (CDialog*)GetApp()->GetCWndFromMap(hWnd);
-			if (0 == w)
-			{
-				// The HWND wasn't in the map, so add it now
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				if (NULL == pTLSData)
-					throw CWinException(_T("Unable to get TLS"));
+			// The HWND wasn't in the map, so add it now
+			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			assert(pTLSData);
 
-				// Retrieve pointer to CWnd object from Thread Local Storage TLS
-				w = (CDialog*)pTLSData->pCWnd;
-				if (NULL == w)
-					throw CWinException(_T("Failed to route message"));
+			// Retrieve pointer to CWnd object from Thread Local Storage TLS
+			w = (CDialog*)pTLSData->pCWnd;
+			assert(w);
+			pTLSData->pCWnd = NULL;
 
-				pTLSData->pCWnd = NULL;
-
-				// Store the Window pointer into the HWND map
-				w->m_hWnd = hWnd;
-				w->AddToMap();
-			}
-
-			return w->DialogProc(uMsg, wParam, lParam);
+			// Store the Window pointer into the HWND map
+			w->m_hWnd = hWnd;
+			w->AddToMap();
 		}
 
-		catch (const CWinException &e )
-		{
-			e.what();
-			throw;
-		}
+		return w->DialogProc(uMsg, wParam, lParam);
 
 	} // INT_PTR CALLBACK CDialog::StaticDialogProc(...)
 

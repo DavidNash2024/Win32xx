@@ -349,7 +349,7 @@ namespace Win32xx
 	inline int CString::Find(TCHAR ch, int nIndex /* = 0 */) const
 	{
 		assert(nIndex >= 0);
-		return m_str.find(ch);
+		return m_str.find(ch, nIndex);
 	}
 
 	inline int CString::Find(LPCTSTR pszText, int nIndex /* = 0 */) const

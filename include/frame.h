@@ -1904,6 +1904,8 @@ namespace Win32xx
 			e.what();
 			if (hComCtl)
 				::FreeLibrary(hComCtl);
+
+			throw;
 		}
 	}
 
@@ -2003,6 +2005,7 @@ namespace Win32xx
 				bRet = TRUE;
 			}
 		}
+		
 		catch (const CWinException& e)
 		{
 			TRACE(_T("Failed to load values from registry, using defaults!\n"));

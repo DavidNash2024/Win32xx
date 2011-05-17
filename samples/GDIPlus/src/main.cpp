@@ -16,6 +16,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		return theApp.Run();
 	}
 	
+	// catch all exceptions inherited from std::exception
 	catch (std::exception &e)
 	{
 		// Process the exception and quit 

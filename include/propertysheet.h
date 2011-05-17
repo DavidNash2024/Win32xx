@@ -574,31 +574,21 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(hwnd);
 
 		// Note: the hwnd is always NULL
-		try
+
+		switch (uMsg)
 		{
-			switch (uMsg)
+		case PSPCB_CREATE:
 			{
-			case PSPCB_CREATE:
-				{
-					TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-					if (NULL == pTLSData)
-						throw CWinException(_T("Unable to get TLS"));
+				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				assert(pTLSData);
 
-					// Store the CPropertyPage pointer in Thread Local Storage
-					pTLSData->pCWnd = (CWnd*)ppsp->lParam;
-				}
-				break;
+				// Store the CPropertyPage pointer in Thread Local Storage
+				pTLSData->pCWnd = (CWnd*)ppsp->lParam;
 			}
-
-			return TRUE;
+			break;
 		}
 
-		catch (const CWinException &e)
-		{
-			e.what();
-			throw;
-		}
-
+		return TRUE;
 	}
 
 	inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -722,12 +712,10 @@ namespace Win32xx
 			{
 				// Retrieve pointer to CWnd object from Thread Local Storage
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				if (!pTLSData)
-					throw CWinException(_T("CPropertySheet::Callback ... Unable to get TLS"));
+				assert(pTLSData);
 
 				CPropertySheet* w = (CPropertySheet*)pTLSData->pCWnd;
-				if (!w)
-					throw CWinException(_T("CPropertySheet::Callback ... Failed to get CWnd"));
+				assert(w);
 
 				w->Attach(hwnd);
 				w->OnCreate();
