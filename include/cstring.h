@@ -76,10 +76,13 @@
 //  4) This class uses a std::string, but does not inherit from std::string.
 //
 //  5) This class provides a few additional functions:
-//       b_str       Returns a BSTR string. This an an alternative for casting to BSTR.
-//       c_str       Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
-//       GetString   Returns a reference to the underlying std::basic_string<TCHAR>. This 
-//                   reference can be used to modify the string directly.
+//       b_str			Returns a BSTR string. This an an alternative for casting to BSTR.
+//       c_str			Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
+//       GetErrorString	Assigns CString to the error string for the specified System Error Code 
+//                      (from ::GetLastErrror() for example).
+//       GetString		Returns a reference to the underlying std::basic_string<TCHAR>. This 
+//						reference can be used to modify the string directly.
+
 
 
 
@@ -146,6 +149,7 @@ namespace Win32xx
 		void	 FormatMessageV(LPCTSTR pszFormat, va_list args);
 		TCHAR	 GetAt(int nIndex) const;
 		LPTSTR	 GetBuffer(int nMinBufLength);
+		void	 GetErrorString(DWORD dwError);
 		void     Empty();
 		int      Insert(int nIndex, TCHAR ch);
 		int      Insert(int nIndex, const CString& str);
@@ -410,7 +414,7 @@ namespace Win32xx
 
 	inline void CString::FormatMessageV(LPCTSTR pszFormat, va_list args)
 	{
-		LPTSTR pszTemp;
+		LPTSTR pszTemp = 0;
 		if (pszFormat)
 		{
 			DWORD dwResult = ::FormatMessage(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, pszTemp, 0, &args);
@@ -475,6 +479,21 @@ namespace Win32xx
 	}
 #endif // _WIN32_WCE
 
+	inline void CString::GetErrorString(DWORD dwError)
+	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
+	{
+		m_str.clear();
+		
+		if (dwError != 0)
+		{
+			TCHAR* pTemp = 0;
+			DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+			::FormatMessage(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&pTemp, 1, NULL);
+			m_str.assign(pTemp);
+			::LocalFree(pTemp);
+		}
+	}
+	
 	inline int CString::Insert(int nIndex, TCHAR ch)
 	{
 		assert(nIndex >= 0);

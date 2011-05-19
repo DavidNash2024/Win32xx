@@ -442,8 +442,10 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			// Display the error
-			e.what();
+			TRACE(_T("\n*** Failed to create dialog ***\n"));
+			e.what();	// Display the last error message.
+			
+			// eat the exception (don't rethrow)
 		}
 		
 		return nResult;
@@ -488,8 +490,10 @@ namespace Win32xx
 	
 		catch (const CWinException &e)
 		{
-			// Display the error
-			e.what();
+			TRACE(_T("\n*** Failed to create dialog ***\n"));
+			e.what();	// Display the last error message.
+			
+			// eat the exception (don't rethrow)
 		}
 
 		return m_hWnd;

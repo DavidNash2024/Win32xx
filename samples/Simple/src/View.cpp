@@ -49,6 +49,12 @@ void CView::OnPaint(CDC& dc)
 	dc.DrawText(cs, cs.GetLength(), r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
+void CView::OnSize()
+{
+	// Force the window to be repainted during resizing
+	Invalidate();
+}
+
 void CView::PreCreate(CREATESTRUCT& cs)
 {
 	// This function will be called automatically by Create. It provides an
@@ -63,12 +69,6 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.y = 50;								// top y
 	cs.cx = 400;							// width
 	cs.cy = 300;							// height
-}
-
-void CView::OnSize()
-{
-	// Force the window to be repainted during resizing
-	Invalidate();
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

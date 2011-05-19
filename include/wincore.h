@@ -168,10 +168,6 @@
 #define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolBarTheme
 #define UWM_CLEANUP_TMPS	(WM_APP + 19)   // Message - posted to remove temporary CWnds, CMenus etc
 
-// Parameters defined by Win32++
-#define CLEANUP_CWND  1	   				// LPARAM parameter for UWM_CLEANUPTMPS
-#define CLEANUP_CMENU 2					// LPARAM parameter for UWM_CLEANUPTMPS
-
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
@@ -272,18 +268,21 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Declaration of the CWinException class
 	//
+	// Note: Each function guarantees not to throw an exception
+
 	class CWinException : public std::exception
 	{
 	public:
-		CWinException (LPCTSTR msg);
+		CWinException(LPCTSTR pszText) throw ();
 		virtual ~CWinException() throw() {}
-		DWORD GetError() const { return m_error; }
-		virtual LPCTSTR GetErrorString() const { return m_ErrorString; }
+		DWORD GetError() const throw () { return m_Error; }
+		virtual LPCTSTR GetErrorString() const throw () { return m_szErrorString; }
 		virtual const char * what () const throw ();
+	
 	private:
-		DWORD  m_error;
-		LPCTSTR m_msg;
-		TCHAR m_ErrorString[MAX_STRING_SIZE];
+		DWORD  m_Error;
+		LPCTSTR m_pszText;
+		TCHAR m_szErrorString[MAX_STRING_SIZE];
 	};
 
 
@@ -328,7 +327,7 @@ namespace Win32xx
 		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		void RemoveTmps(LPARAM lParam);
+		void RemoveTmps();
 		void SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -352,11 +351,11 @@ namespace Win32xx
 
 #include "winutils.h"
 #include "cstring.h"
+#include "gdi.h"
 
 
 namespace Win32xx
 {
-
 	////////////////////////////////
 	// Declaration of the CWnd class
 	//
@@ -409,7 +408,7 @@ namespace Win32xx
 		BOOL  EnableWindow(BOOL bEnable = TRUE) const;
 		BOOL  EndPaint(PAINTSTRUCT& ps) const;
 		CWnd* GetActiveWindow() const;
-		CWnd* GetAncestor() const;
+		CWnd* GetAncestor(UINT gaFlag = 3 /*= GA_ROOTOWNER*/) const;
 		CWnd* GetCapture() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		LPCTSTR GetClassName() const;
@@ -569,11 +568,7 @@ namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-#include "gdi.h"
 #include "menu.h"
- 
-
 
 namespace Win32xx
 {
@@ -581,28 +576,21 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CWinException class
 	//
-	inline CWinException::CWinException (LPCTSTR msg) : m_error (::GetLastError()), m_msg(msg)
+	inline CWinException::CWinException(LPCTSTR pszText) throw () : m_Error(::GetLastError()), m_pszText(pszText)
 	{
-		memset(m_ErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
+		memset(m_szErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
-		if (m_error != 0)
+		if (m_Error != 0)
 		{
 			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-			::FormatMessage(dwFlags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_ErrorString, MAX_STRING_SIZE, NULL);
+			::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE, NULL);
 		}
 	}
 
-	inline const char * CWinException::what () const throw ()
+	inline const char * CWinException::what() const throw ()
 	{
-		// This sends text to the debugger (typically displayed in the IDE's output window).
-
-		OutputDebugString( _T("*** An exception occurred ***\n") );
-		OutputDebugString( m_msg );
-		OutputDebugString( _T("\n") );
-		OutputDebugString( GetErrorString() );
-		OutputDebugString( _T("\n") );
-		OutputDebugString( _T("*** End of exception report ***\n") );
-
+		// Sends the last error string to the debugger (typically displayed in the IDE's output window).
+		::OutputDebugString(m_szErrorString);
 		return "CWinException thrown";
 	}
 
@@ -785,7 +773,7 @@ namespace Win32xx
 
 			if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
 			{
-				RemoveTmps(Msg.lParam);
+				RemoveTmps();
 				Processed = TRUE;
 			}
 
@@ -821,29 +809,20 @@ namespace Win32xx
 		return LOWORD(Msg.wParam);
 	}
 
-	inline void CWinApp::RemoveTmps(LPARAM lParam)
+	inline void CWinApp::RemoveTmps()
 	{
 		// Removes all Tmp CWnds and CMenus belonging to this thread
 
 		// Retrieve the pointer to the TLS Data
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 		assert(pTLSData);
-		
-		switch(lParam)
-		{
-		case CLEANUP_CWND:
-			pTLSData->vTmpWnds.clear();
-			TRACE(_T("Cleaned up tmp CWnd\n"));
-			break;
+
+		pTLSData->vTmpWnds.clear();
 
 #ifndef _WIN32_WCE
-		case CLEANUP_CMENU:
-			pTLSData->vTmpMenus.clear();
-			TRACE(_T("Cleaned up tmp CMenu\n"));
-			break;
+		pTLSData->vTmpMenus.clear();
 #endif
 
-		}
 	}
 
 	inline int CWinApp::Run()
@@ -1216,8 +1195,9 @@ namespace Win32xx
 		}
 	
 		catch (const CWinException &e)
-		{		
-			e.what();	// Display a hint as to what went wrong.
+		{	
+			TRACE(_T("\n*** Failed to create window ***\n"));
+			e.what();	// Display the last error message.
 			
 			// eat the exception (don't rethrow)
 		}
@@ -1270,7 +1250,7 @@ namespace Win32xx
 		{
 			GetApp()->AddTmpWnd(hWnd);
 			pWnd = GetApp()->GetCWndFromMap(hWnd);
-			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, CLEANUP_CWND);
+			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, 0L);
 		}
 
 		return pWnd;
@@ -1282,21 +1262,28 @@ namespace Win32xx
 		return CDC::FromHandle(hDC);
 	}
 
-	inline CWnd* CWnd::GetAncestor() const
+	inline CWnd* CWnd::GetAncestor(UINT gaFlags /*= GA_ROOTOWNER*/) const
 	// The GetAncestor function retrieves a pointer to the ancestor (root parent)
 	// of the window. Supports Win95.
 	{
 		assert(::IsWindow(m_hWnd));
+		HWND hWnd;
 
-		HWND hWnd = m_hWnd;
+#if (WINVER < 0x0500)	// Win2000 and above
+		UNREFERENCED_PARAMETER(gaFlags);
+		hWnd = m_hWnd;
 		HWND hWndParent = ::GetParent(hWnd);
 		while (::IsChild(hWndParent, hWnd))
 		{
 			hWnd = hWndParent;
 			hWndParent = ::GetParent(hWnd);
 		}
+#else
+		hWnd = ::GetAncestor(m_hWnd, gaFlags);
+#endif
 
 		return FromHandle(hWnd);
+
 	}
 
 	inline LPCTSTR CWnd::GetClassName() const
