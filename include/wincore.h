@@ -87,7 +87,7 @@
 #endif
 
 #ifdef __BORLANDC__
-  #pragma option -w-8026            // Functioms with exception specifiations are not expanded inline
+  #pragma option -w-8026            // functions with exception specifiations are not expanded inline
   #pragma option -w-8027		    // function not expanded inline
   #define STRICT 1
 #endif
@@ -274,10 +274,10 @@ namespace Win32xx
 	{
 	public:
 		CWinException(LPCTSTR pszText) throw ();
-		virtual ~CWinException() throw() {}
-		DWORD GetError() const throw () { return m_Error; }
-		virtual LPCTSTR GetErrorString() const throw () { return m_szErrorString; }
-		virtual const char * what () const throw ();
+		~CWinException() throw() {}
+		DWORD GetError() const throw ();
+		LPCTSTR GetErrorString() const throw ();
+		const char * what () const throw ();
 	
 	private:
 		DWORD  m_Error;
@@ -583,8 +583,18 @@ namespace Win32xx
 		if (m_Error != 0)
 		{
 			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-			::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE, NULL);
+			::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
 		}
+	}
+
+	inline DWORD CWinException::GetError() const throw ()
+	{ 
+		return m_Error; 
+	}
+	
+	inline LPCTSTR CWinException::GetErrorString() const throw ()
+	{ 
+		return m_szErrorString; 
 	}
 
 	inline const char * CWinException::what() const throw ()

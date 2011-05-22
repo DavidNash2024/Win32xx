@@ -13,6 +13,7 @@ Changes in detail
 -----------------
 - Added CMenu
 - Added CString
+- Added CFile
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W

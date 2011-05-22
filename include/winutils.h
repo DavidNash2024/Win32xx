@@ -531,7 +531,7 @@ namespace Win32xx
 		UINT uSize = sizeof (NONCLIENTMETRICS);
 
   #if (WINVER >= 0x0600)
-		if (GetWinVersion() < 2600)		// Is OS version less than Vista
+		if (GetWinVersion() < 2600 && (uSize > 500))	// Is OS version less than Vista
 			uSize -= sizeof(int);		// Adjust size back to correct value
   #endif
 
