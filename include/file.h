@@ -150,7 +150,7 @@ namespace Win32xx
 		return (const CString&)m_FileTitle;
 	}
 
-	ULONGLONG CFile::GetPosition() const
+	inline ULONGLONG CFile::GetPosition() const
 	{
 		assert(m_hFile);
 		LONG High = 0;
@@ -288,7 +288,7 @@ namespace Win32xx
 	inline ULONGLONG CFile::SeekToEnd()
 	{
 		assert(m_hFile);
-		Seek(0, FILE_END);
+		return Seek(0, FILE_END);
 	}
 
 	inline void CFile::SetFilePath(LPCTSTR pszFileName)
