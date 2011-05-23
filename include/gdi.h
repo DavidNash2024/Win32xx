@@ -1106,9 +1106,10 @@ namespace Win32xx
 
 	inline CBrush::CBrush(COLORREF crColor)
 	{
-		assert(m_pData);
+		m_pData = new DataMembers;
 		m_pData->hBrush = ::CreateSolidBrush(crColor);
 		assert (m_pData->hBrush);
+		m_pData->Count = 1L;
 	}
 
 	inline CBrush::CBrush(const CBrush& rhs)
@@ -2144,18 +2145,27 @@ namespace Win32xx
 	{
 		assert(hDC);
 
-		// Allocate memory for our data members
-		m_pData = new DataMembers;
+		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+		if (pDC)
+		{
+			m_pData = pDC->m_pData;
+			InterlockedIncrement(&m_pData->Count);			
+		}
+		else
+		{
+			// Allocate memory for our data members
+			m_pData = new DataMembers;
 
-		// Assign values to our data members
-		m_pData->hDC = hDC;
-		m_pData->hBitmapOld = 0;
-		m_pData->hBrushOld = 0;
-		m_pData->hFontOld = 0;
-		m_pData->hPenOld = 0;
-		m_pData->Count = 1L;
+			// Assign values to our data members
+			m_pData->hDC = hDC;
+			m_pData->hBitmapOld = 0;
+			m_pData->hBrushOld = 0;
+			m_pData->hFontOld = 0;
+			m_pData->hPenOld = 0;
+			m_pData->Count = 1L;
 
-		AddToMap();
+			AddToMap();
+		}
 	}
 
 	inline CDC::CDC(const CDC& rhs)	// Copy constructor
@@ -2216,8 +2226,17 @@ namespace Win32xx
 		assert(0 == m_pData->hDC);
 		assert(hDC);
 
-		m_pData->hDC = hDC;
-		AddToMap();
+		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+		if (pDC)
+		{
+			m_pData = pDC->m_pData;
+			InterlockedIncrement(&m_pData->Count);			
+		}
+		else
+		{
+			m_pData->hDC = hDC;
+			AddToMap();
+		}
 	}
 
 	inline HDC CDC::DetachDC()

@@ -259,7 +259,7 @@ namespace Win32xx
 
 	private:
 		CCriticalSection ( const CCriticalSection& );
-		void operator = ( const CCriticalSection& );
+		CCriticalSection& operator = ( const CCriticalSection& );
 
 		CRITICAL_SECTION m_cs;
 	};
@@ -337,7 +337,6 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
-		CCriticalSection m_csTlsData;	// thread synchronisation for m_vTLSData
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
@@ -615,6 +614,8 @@ namespace Win32xx
 	{
 		try
 		{
+			CCriticalSection cs;
+			cs.Lock();
 			assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
 
 			m_dwTlsIndex = ::TlsAlloc();
@@ -622,10 +623,12 @@ namespace Win32xx
 			{
 				// We only get here in the unlikely event that all TLS indexes are already allocated by this app
 				// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
+				cs.Release();
 				throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 			}
 
 			SetnGetThis(this);
+			cs.Release();
 
 			// Set the instance handle
 	#ifdef _WIN32_WCE
@@ -892,6 +895,7 @@ namespace Win32xx
 		// This function stores the 'this' pointer in a static variable.
 		// Once stored, it can be used later to return the 'this' pointer.
 		// CWinApp's Destructor calls this function with a value of -1.
+
 		static CWinApp* pWinApp = 0;
 
 		if ((CWinApp*)-1 == pThis)
@@ -920,10 +924,11 @@ namespace Win32xx
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;
-
-			m_csTlsData.Lock();
+			
+			CCriticalSection csTlsData;
+			csTlsData.Lock();
 			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
-			m_csTlsData.Release();
+			csTlsData.Release();
 
 			::TlsSetValue(GetTlsIndex(), pTLSData);
 		}
