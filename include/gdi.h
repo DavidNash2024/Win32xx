@@ -2128,6 +2128,7 @@ namespace Win32xx
 		m_pData->hBitmapOld = 0;
 		m_pData->hBrushOld = 0;
 		m_pData->hFontOld = 0;
+		m_pData->hPaletteOld = 0;
 		m_pData->hPenOld = 0;
 		m_pData->Count = 1L;
 	}
@@ -2161,6 +2162,7 @@ namespace Win32xx
 			m_pData->hBitmapOld = 0;
 			m_pData->hBrushOld = 0;
 			m_pData->hFontOld = 0;
+			m_pData->hPaletteOld = 0;
 			m_pData->hPenOld = 0;
 			m_pData->Count = 1L;
 
@@ -2229,6 +2231,7 @@ namespace Win32xx
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (pDC)
 		{
+			delete m_pData;
 			m_pData = pDC->m_pData;
 			InterlockedIncrement(&m_pData->Count);			
 		}
@@ -2244,21 +2247,40 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(m_pData->hDC);
-
-		if (m_pData->hPenOld)	::SelectObject(m_pData->hDC, m_pData->hPenOld);
-		if (m_pData->hBrushOld)	::SelectObject(m_pData->hDC, m_pData->hBrushOld);
-		if (m_pData->hBitmapOld)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
-		if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
-
-		m_pData->hPenOld = 0;
-		m_pData->hBrushOld = 0;
-		m_pData->hBitmapOld = 0;
-		m_pData->hFontOld = 0;
-
 		HDC hDC = m_pData->hDC;
 
+		if (m_pData->Count)
+		{
+			if (InterlockedDecrement(&m_pData->Count) == 0)
+			{
+				if (m_pData->hDC)
+				{
+					// Delete any GDI objects belonging to this CDC
+					if (m_pData->hPenOld)	::SelectObject(m_pData->hDC, m_pData->hPenOld);
+					if (m_pData->hBrushOld)	::SelectObject(m_pData->hDC, m_pData->hBrushOld);
+					if (m_pData->hBitmapOld)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
+					if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
+					if (m_pData->hPaletteOld) ::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
+				}
+
+				delete m_pData;
+				m_pData = 0;
+				RemoveFromMap();
+			}
+		}
+
+		// Allocate memory for our data members
+		m_pData = new DataMembers;
+
+		// Assign values to our data members
 		m_pData->hDC = 0;
-		RemoveFromMap();
+		m_pData->hBitmapOld = 0;
+		m_pData->hBrushOld = 0;
+		m_pData->hFontOld = 0;
+		m_pData->hPaletteOld = 0;
+		m_pData->hPenOld = 0;
+		m_pData->Count = 1L;
+
 		return hDC;
 	}
 
@@ -2336,6 +2358,8 @@ namespace Win32xx
 
 	inline void CDC::Release()
 	{
+		CCriticalSection cs;
+		cs.Lock();
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -2347,6 +2371,7 @@ namespace Win32xx
 					if (m_pData->hBrushOld)	::SelectObject(m_pData->hDC, m_pData->hBrushOld);
 					if (m_pData->hBitmapOld)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
 					if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
+					if (m_pData->hPaletteOld) ::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
 
 					// We need to release a Window DC, and delete a memory DC
 		#ifndef _WIN32_WCE
@@ -2363,6 +2388,8 @@ namespace Win32xx
 				RemoveFromMap();
 			}
 		}
+		
+		cs.Release();
 	}
 
 	inline BOOL CDC::RemoveFromMap()
