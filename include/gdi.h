@@ -726,6 +726,7 @@ namespace Win32xx
 		void RemoveCurrentPen();
 		void RemoveCurrentRgn();
 		BOOL RemoveFromMap();
+		CCriticalSection m_Lock;
 
 		DataMembers* m_pData;		// pointer to the class's data members
 	};
@@ -2247,6 +2248,8 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(m_pData->hDC);
+
+		m_Lock.Lock();
 		HDC hDC = m_pData->hDC;
 
 		if (m_pData->Count)
@@ -2264,10 +2267,11 @@ namespace Win32xx
 				}
 
 				delete m_pData;
-				m_pData = 0;
 				RemoveFromMap();
 			}
 		}
+
+		m_Lock.Release();
 
 		// Allocate memory for our data members
 		m_pData = new DataMembers;
@@ -2358,8 +2362,8 @@ namespace Win32xx
 
 	inline void CDC::Release()
 	{
-		CCriticalSection cs;
-		cs.Lock();
+		m_Lock.Lock();
+
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -2389,7 +2393,7 @@ namespace Win32xx
 			}
 		}
 		
-		cs.Release();
+		m_Lock.Release();
 	}
 
 	inline BOOL CDC::RemoveFromMap()
