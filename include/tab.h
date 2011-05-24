@@ -263,14 +263,6 @@ namespace Win32xx
 	inline CTab::CTab() : m_hListMenu(NULL), m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
-		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
-		TabCtrl_SetImageList(m_hWnd, m_himlTab);
-
-		NONCLIENTMETRICS info = {0};
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-
-		m_hFont = CreateFontIndirect(&info.lfStatusFont);
 	}
 
 	inline CTab::~CTab()
@@ -737,7 +729,15 @@ namespace Win32xx
 
 	inline void CTab::OnCreate()
 	{
+		// Create and assign the image list
+		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+		TabCtrl_SetImageList(m_hWnd, m_himlTab);
+
 		// Set the tab control's font
+		NONCLIENTMETRICS info = {0};
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		m_hFont = CreateFontIndirect(&info.lfStatusFont);	
 		SetFont(m_hFont, TRUE);
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)

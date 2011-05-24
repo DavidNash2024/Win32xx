@@ -1587,7 +1587,8 @@ namespace Win32xx
 
 	inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
 	// This function is used by the PreRegisterClass function to register a
-	//  window class prior to window creation. It can also be called directly.
+	//  window class prior to window creation. It can also be called directly
+	//  when we wish to register the class without creating the window.
 	{
 		assert( GetApp() );
 		assert( (0 != lstrlen(wc.lpszClassName) && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
