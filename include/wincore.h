@@ -1614,6 +1614,8 @@ namespace Win32xx
 			Done = TRUE;
 		}
 
+		m_wc = wc;
+
 		return Done;
 	}
 
