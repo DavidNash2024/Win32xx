@@ -18,6 +18,7 @@ Changes in detail
 - Added BSTR2T
 - Added BSTR2W
 - Added CWinException::GetError
+- Added CWnd::RegisterClass
 - Modified LoadString 				now returns CString
 - Modified CWnd::GetAncestor		now accepts a gaFlags parameter
 - Removed CLoadString

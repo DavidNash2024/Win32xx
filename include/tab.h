@@ -1041,7 +1041,7 @@ namespace Win32xx
 		if (nTab < GetAllTabs().size())
 		{
 			TCITEM Item = {0};
-			Item.mask = TCIF_TEXT;
+			Item.mask = TCIF_IMAGE;;
 			Item.iImage = iImage;
 
 			if (TabCtrl_SetItem(m_hWnd, nTab, &Item))

@@ -381,7 +381,7 @@ namespace Win32xx
 		virtual HWND Detach();
 		virtual tString GetWindowType() const { return _T("CWnd"); }
 		virtual void Invalidate(BOOL bErase = TRUE) const;
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		virtual BOOL RegisterClass(WNDCLASS& wc);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -538,6 +538,7 @@ namespace Win32xx
 		virtual void OnPaint(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -549,7 +550,6 @@ namespace Win32xx
 		void AddToMap();
 		void Cleanup();
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
 		void Subclass(HWND hWnd);
 
@@ -1586,8 +1586,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
-	// A private function used by the PreRegisterClass function to register a
-	//  window class prior to window creation
+	// This function is used by the PreRegisterClass function to register a
+	//  window class prior to window creation. It can also be called directly.
 	{
 		assert( GetApp() );
 		assert( (0 != lstrlen(wc.lpszClassName) && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
