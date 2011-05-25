@@ -35,6 +35,9 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	// Set the Window Class name
 	wc.lpszClassName = _T("View");
 
+	// Set a background brush to white
+	wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+
 	// Set the class style (not to be confused with the window styles set in PreCreate)
 	wc.style = CS_DBLCLKS;	// Generate left button double click messages
 }
