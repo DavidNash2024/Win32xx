@@ -263,6 +263,14 @@ namespace Win32xx
 	inline CTab::CTab() : m_hListMenu(NULL), m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
+		// Create and assign the image list
+		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+
+		// Set the tab control's font
+		NONCLIENTMETRICS info = {0};
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		m_hFont = CreateFontIndirect(&info.lfStatusFont);
 	}
 
 	inline CTab::~CTab()
@@ -729,16 +737,11 @@ namespace Win32xx
 
 	inline void CTab::OnCreate()
 	{
-		// Create and assign the image list
-		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
-		TabCtrl_SetImageList(m_hWnd, m_himlTab);
-
-		// Set the tab control's font
-		NONCLIENTMETRICS info = {0};
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		m_hFont = CreateFontIndirect(&info.lfStatusFont);	
 		SetFont(m_hFont, TRUE);
+		
+		// Assign ImageList unless we are owner drawn
+		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
+			TabCtrl_SetImageList(m_hWnd, m_himlTab);
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
@@ -859,11 +862,9 @@ namespace Win32xx
 		// We use double buffering and regions to eliminate flicker
 
 		// Create the memory DC and bitmap
-		CDC dcMem = CreateCompatibleDC(GetDC());
-		int xAdjust = 0;
-
-		CRect rcClient = GetClientRect();
 		CDC dcView = GetDC();
+		CDC dcMem = CreateCompatibleDC(dcView);
+		CRect rcClient = GetClientRect();
 		dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
 
 		if (0 == GetItemCount())
@@ -876,7 +877,7 @@ namespace Win32xx
 
 		// Create a clipping region. Its the overall tab window's region,
 		//  less the region belonging to the individual tab view's client area
-		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left + xAdjust, rcClient.top, rcClient.right, rcClient.bottom);
+		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
 		CRect rcTab = GetClientRect();
 		TabCtrl_AdjustRect(m_hWnd, FALSE, &rcTab);
 		if (rcTab.Height() < 0)
@@ -884,7 +885,7 @@ namespace Win32xx
 		if (rcTab.Width() < 0)
 			rcTab.left = rcTab.right;
 
-		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + xAdjust, rcTab.bottom);
+		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
 		HRGN hrgnClip = ::CreateRectRgn(0, 0, 0, 0);
 		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF);
 
@@ -1022,9 +1023,15 @@ namespace Win32xx
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (bEnabled)
+		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
+			TabCtrl_SetImageList(m_hWnd, NULL);
+		}
 		else
+		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
+			TabCtrl_SetImageList(m_hWnd, m_himlTab);
+		}
 
 		RecalcLayout();
 	}
@@ -1077,7 +1084,7 @@ namespace Win32xx
 			nItemWidth = MAX(nItemWidth, 0);
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
-		}
+		} 
 	}
 
 	inline void CTab::SetTabText(UINT nTab, LPCTSTR szText)
