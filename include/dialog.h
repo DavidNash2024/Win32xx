@@ -99,7 +99,7 @@ namespace Win32xx
 		virtual void OnCancel();
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
-		virtual BOOL PreTranslateMessage(MSG* pMsg);		
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 		// Can't override these functions
 		static INT_PTR CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -120,8 +120,8 @@ namespace Win32xx
 	};
 
 
-#ifndef _WIN32_WCE	
-	
+#ifndef _WIN32_WCE
+
     //////////////////////////////////////
     // Declaration of the CResizer class
     //
@@ -136,7 +136,7 @@ namespace Win32xx
 
 	// Resize Dialog Styles
 #define RD_STRETCH_WIDTH		0x0001	// The item has a variable width
-#define RD_STRETCH_HEIGHT		0x0002	// The item has a variable height 
+#define RD_STRETCH_HEIGHT		0x0002	// The item has a variable height
 
 	// Resize Dialog alignments
 	enum Alignment { topleft, topright, bottomleft, bottomright };
@@ -177,8 +177,8 @@ namespace Win32xx
 		int m_xScrollPos;
 		int m_yScrollPos;
     };
-	
-#endif	
+
+#endif
 
 }
 
@@ -359,7 +359,7 @@ namespace Win32xx
 				if (bResult) return TRUE;
 			}
 			break;
-					
+
 		// A set of messages to be reflected back to the control that generated them
 		case WM_CTLCOLORBTN:
 		case WM_CTLCOLOREDIT:
@@ -392,7 +392,7 @@ namespace Win32xx
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
 		INT_PTR nResult = 0;
-		
+
 		try
 		{
 			m_IsModal=TRUE;
@@ -444,10 +444,10 @@ namespace Win32xx
 		{
 			TRACE(_T("\n*** Failed to create dialog ***\n"));
 			e.what();	// Display the last error message.
-			
+
 			// eat the exception (don't rethrow)
 		}
-		
+
 		return nResult;
 	}
 
@@ -487,12 +487,12 @@ namespace Win32xx
 			if (!m_hWnd)
 				throw CWinException(_T("Failed to create dialog"));
 		}
-	
+
 		catch (const CWinException &e)
 		{
 			TRACE(_T("\n*** Failed to create dialog ***\n"));
 			e.what();	// Display the last error message.
-			
+
 			// eat the exception (don't rethrow)
 		}
 
@@ -655,12 +655,12 @@ namespace Win32xx
 			break;
 
 		case WM_HSCROLL:
-			if (NULL == lParam)
+			if (0 == lParam)
 				OnHScroll(wParam, lParam);
 			break;
 
 		case WM_VSCROLL:
-			if (NULL == lParam)
+			if (0 == lParam)
 				OnVScroll(wParam, lParam);
 			break;
 		}
@@ -677,7 +677,7 @@ namespace Win32xx
     	m_rcMin = rcMin;
     	m_rcMax = rcMax;
 
-		// Add scroll bar support to the parent window 
+		// Add scroll bar support to the parent window
 		DWORD dwStyle = (DWORD)m_pParent->GetClassLongPtr(GCL_STYLE);
 		dwStyle |= WS_HSCROLL | WS_VSCROLL;
 		m_pParent->SetClassLongPtr(GCL_STYLE, dwStyle);
@@ -790,7 +790,7 @@ namespace Win32xx
     	assert (NULL != m_pParent);
 
 		CRect rcCurrent = m_pParent->GetClientRect();
-	
+
 		// Adjust the scrolling if required
 		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
 		m_yScrollPos = MIN(m_yScrollPos, MAX(0, m_rcMin.Height() - rcCurrent.Height()) );
@@ -801,7 +801,7 @@ namespace Win32xx
 		si.nPage  = rcCurrent.Width();
 		si.nPos   = m_xScrollPos;
 		m_pParent->SetScrollInfo(SB_HORZ, si, TRUE);
-		si.nMax   =	m_rcMin.Height();	
+		si.nMax   =	m_rcMin.Height();
 		si.nPage  = rcCurrent.Height();
 		si.nPos   = m_yScrollPos;
 		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
@@ -816,7 +816,7 @@ namespace Win32xx
 
 		// Declare an iterator to step through the vector
 		std::vector<ResizeData>::iterator iter;
-	
+
     	for (iter = m_vResizeData.begin(); iter < m_vResizeData.end(); ++iter)
     	{
     		int left   = 0;
@@ -853,20 +853,20 @@ namespace Win32xx
     			break;
     		}
 
-	
+
 			// Position the child window.
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
 			if ( rc != (*iter).rcOld)
 			{
     			(*iter).pWnd->SetWindowPos(NULL, rc, SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;
-			}			
+			}
     	}
 
     }
 
-#endif // #ifndef _WIN32_WCE	
-	
+#endif // #ifndef _WIN32_WCE
+
 } // namespace Win32xx
 
 

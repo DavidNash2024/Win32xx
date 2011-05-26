@@ -396,6 +396,48 @@ namespace Win32xx
 		BSTR m_bstrString;
 	};
 
+	////////////////////////////////////////
+	// Declarations of the CLoadString class
+	// Returns the string associated with a Resource ID
+	class CLoadString
+	{
+	public:
+		CLoadString(UINT nID)
+		{
+			assert (GetApp());
+
+			int nSize = 64;
+			TCHAR* pTCharArray = 0;
+			int nTChars = nSize;
+
+			// Increase the size of our array in a loop until we load the entire string
+			// The ANSI and UNICODE versions of LoadString behave differently. This technique works for both.
+			while ( nSize-1 <= nTChars )
+			{
+				nSize = nSize * 4;
+				m_vString.assign(nSize+1, _T('\0'));
+				pTCharArray = &m_vString.front();
+				nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
+			}
+
+			if (nTChars == 0)
+			{
+				std::vector<TCHAR> vMsgArray(80, _T('\0'));
+				TCHAR* pMsgArray = &vMsgArray.front();
+				::wsprintf(pMsgArray, _T("**WARNING** LoadString - No string resource for %d\n"), nID);
+				TRACE(pMsgArray);
+				pTCharArray = 0;
+			}
+		}
+
+		operator LPCTSTR() { return &m_vString.front(); }
+
+	private:
+		CLoadString(const CLoadString&);
+		CLoadString& operator= (const CLoadString&);
+		std::vector<TCHAR> m_vString;
+	};
+
 
 	////////////////////////////////////////
 	// Global Functions
@@ -425,6 +467,12 @@ namespace Win32xx
 	inline HBITMAP LoadBitmap (int nID)
 	{
 		return LoadBitmap(MAKEINTRESOURCE(nID));
+	}
+
+	inline tString LoadString(int nID)
+	{
+		tString ts = (LPCTSTR)CLoadString(nID);
+		return ts;
 	}
 
 	inline void TRACE(LPCTSTR str)

@@ -38,7 +38,6 @@ typedef  unsigned char  byte;
 #include <controls.h>
 #include <dialog.h>
 #include <docking.h>
-#include <file.h>
 #include <frame.h>
 #include <gdi.h>
 #include <listview.h>

@@ -367,17 +367,17 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
 	TRACE(_T("TitleChange: \n"));
-    CString str;
+    tString str;
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-        str = CString(W2T(pDispParams->rgvarg[0].bstrVal)) + _T(" - ") + LoadString(IDW_MAIN);
+        str = tString(W2T(pDispParams->rgvarg[0].bstrVal)) + _T(" - ") + LoadString(IDW_MAIN);
 		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
 		str = LoadString(IDW_MAIN);
 
-	SetWindowText(str);
+	SetWindowText(str.c_str());
 }
 
 void CMainFrame::SetupToolBar()
