@@ -655,11 +655,13 @@ namespace Win32xx
 			break;
 
 		case WM_HSCROLL:
-			OnHScroll(wParam, lParam);
+			if (NULL == lParam)
+				OnHScroll(wParam, lParam);
 			break;
 
 		case WM_VSCROLL:
-			OnVScroll(wParam, lParam);
+			if (NULL == lParam)
+				OnVScroll(wParam, lParam);
 			break;
 		}
 	}
