@@ -25,12 +25,5 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 }
 
-int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
-	// Start Win32++
-	CDialogApp theApp;
 
-	// Run the application
-	return theApp.Run();
-}
 
