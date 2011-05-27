@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.2
-// Released: N/A
+// Win32++   Version 7.1.2
+// Released: 27th May 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -933,6 +933,7 @@ namespace Win32xx
 
 		// Store the CWnd pointer in the HWND map
 		AddToMap();
+		OnCreate();
 		OnInitialUpdate();
 
 		return TRUE;

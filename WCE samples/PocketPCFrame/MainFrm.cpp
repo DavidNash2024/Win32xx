@@ -69,8 +69,8 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnPaint(CDC& dc)
 {
 	CRect rc = GetViewRect();
-	CString csHello = LoadString(IDS_HELLO);
-	dc.DrawText(csHello, csHello.GetLength(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+	tString tsHello = LoadString(IDS_HELLO);
+	dc.DrawText(tsHello.c_str(), tsHello.length(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

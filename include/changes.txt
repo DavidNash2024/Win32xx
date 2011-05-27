@@ -1,30 +1,13 @@
-Version 7.2
-===========
+Version 7.1.1
+=============
 
-New Features and Enhancements
------------------------------
-* Added CString class
-   The CString class is intended to provide much of the same functionality
-   as the CString class provided with MFC/ATL.
-* Added CMenu   
-
-
-Changes in detail
------------------
-- Added CMenu
-- Added CString
-- Added CFile
-- Added BSTR2A
-- Added BSTR2T
-- Added BSTR2W
-- Added CWinException::GetError
-- Modified LoadString 				now returns CString
-- Modified CWnd::GetAncestor		now accepts a gaFlags parameter
-- Removed CLoadString
-
-
-Incompatibilities with previous versions
-----------------------------------------
+* Bug Fixes:
+-   CDC Attach and CDC(HDC hDC) now succeed when the HDC is already attached to another CDC.
+-   Fixed a resource leak in CTab::Paint which affected CTab, CTabbedMDI and CDockContainer
+-   Tabs without owner draw now display their icons.
+-   A CDC can now be reused after its HDC has been detached.
+-   CBrush::CBrush(COLORREF crColor) now works as expected.                 
+-   CResize now supports controls that issue WM_HSCROLL and WM_VSCROLL messages.
 
 
 
