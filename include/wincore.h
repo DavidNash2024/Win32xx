@@ -1,5 +1,5 @@
-// Win32++   Version 7.1.2
-// Released: 27th May 2011
+// Win32++   Pre-release Version 7.2
+// Released: N/A
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -194,6 +194,7 @@ namespace Win32xx
 	class CWinApp;
 	class CWnd;
 	class CDC;
+	class CMenu;
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
@@ -202,6 +203,7 @@ namespace Win32xx
 	typedef std::basic_stringstream<TCHAR> tStringStream;
 
 	// Some useful smart pointers
+	typedef Shared_Ptr<CMenu> MenuPtr;
 	typedef Shared_Ptr<CWnd> WndPtr;
 
 	enum Constants			// Defines the maximum size for TCHAR strings
@@ -237,6 +239,9 @@ namespace Win32xx
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 
+#ifndef _WIN32_WCE
+		std::vector<MenuPtr> vTmpMenus;	// A vector of temporary CMenu pointers
+#endif
 	};
 
 
@@ -273,7 +278,7 @@ namespace Win32xx
 		DWORD GetError() const throw ();
 		LPCTSTR GetErrorString() const throw ();
 		const char * what () const throw ();
-
+	
 	private:
 		DWORD  m_Error;
 		LPCTSTR m_pszText;
@@ -303,6 +308,7 @@ namespace Win32xx
 		virtual ~CWinApp();
 
 		CDC* GetCDCFromMap(HDC hDC);
+		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
@@ -318,6 +324,7 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
+		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
 		void RemoveTmps();
@@ -326,6 +333,7 @@ namespace Win32xx
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
+		std::map<HMENU, CMenu*, CompareHMENU> m_mapHMENU;	// maps menu handles to CMenu objects
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
@@ -341,6 +349,7 @@ namespace Win32xx
 }
 
 #include "winutils.h"
+#include "cstring.h"
 #include "gdi.h"
 
 
@@ -558,6 +567,7 @@ namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#include "menu.h"
 
 namespace Win32xx
 {
@@ -577,13 +587,13 @@ namespace Win32xx
 	}
 
 	inline DWORD CWinException::GetError() const throw ()
-	{
-		return m_Error;
+	{ 
+		return m_Error; 
 	}
-
+	
 	inline LPCTSTR CWinException::GetErrorString() const throw ()
-	{
-		return m_szErrorString;
+	{ 
+		return m_szErrorString; 
 	}
 
 	inline const char * CWinException::what() const throw ()
@@ -669,6 +679,26 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
+#ifndef _WIN32_WCE
+	inline void CWinApp::AddTmpMenu(HMENU hMenu)
+	{
+		// The TmpMenus are temporary, deleted when a CMenu is destroyed.
+		assert(::IsMenu(hMenu));
+		assert(!GetCMenuFromMap(hMenu));
+		
+		CMenu* pMenu = new CMenu;
+		pMenu->m_hMenu = hMenu;
+		m_csMapLock.Lock();
+		m_mapHMENU.insert(std::make_pair(hMenu, pMenu));
+		m_csMapLock.Release();
+		pMenu->m_IsTmpMenu = TRUE;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->vTmpMenus.push_back(pMenu); // save TmpWnd as a smart pointer
+	}
+#endif
+
 	inline void CWinApp::AddTmpWnd(HWND hWnd)
 	{
 		// TmpWnds are created if required to support functions like CWnd::GetParent.
@@ -698,6 +728,22 @@ namespace Win32xx
 
 		m_csMapLock.Release();
 		return pDC;
+	}
+
+	inline CMenu* CWinApp::GetCMenuFromMap(HMENU hMenu)
+	{
+		std::map<HMENU, CMenu*, CompareHMENU>::iterator m;
+
+		// Find the CMenu pointer mapped to this HMENU
+		CMenu* pMenu = 0;
+		m_csMapLock.Lock();
+		m = m_mapHMENU.find(hMenu);
+
+		if (m != m_mapHMENU.end())
+			pMenu = m->second;
+
+		m_csMapLock.Release();
+		return pMenu;
 	}
 
 	inline CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
@@ -785,6 +831,11 @@ namespace Win32xx
 		assert(pTLSData);
 
 		pTLSData->vTmpWnds.clear();
+
+#ifndef _WIN32_WCE
+		pTLSData->vTmpMenus.clear();
+#endif
+
 	}
 
 	inline int CWinApp::Run()
@@ -873,7 +924,7 @@ namespace Win32xx
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;
-
+			
 			CCriticalSection csTlsData;
 			csTlsData.Lock();
 			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
@@ -1124,7 +1175,7 @@ namespace Win32xx
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
 			// Register the window class (if not already registered)
-			if (!RegisterClass(wc))
+			if (!RegisterClass(wc))	
 				throw CWinException(_T("Failed to register window class"));
 
 			HWND hWndParent = pParent? pParent->GetHwnd() : 0;
@@ -1156,14 +1207,14 @@ namespace Win32xx
 			}
 
 			// Clear the CWnd pointer from TLS
-			pTLSData->pCWnd = NULL;
+			pTLSData->pCWnd = NULL;	
 		}
-
+	
 		catch (const CWinException &e)
-		{
+		{	
 			TRACE(_T("\n*** Failed to create window ***\n"));
 			e.what();	// Display the last error message.
-
+			
 			// eat the exception (don't rethrow)
 		}
 
@@ -1176,10 +1227,10 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
-		if (m_IsTmpWnd)
+		if (m_IsTmpWnd) 
 			m_hWnd = NULL;
 
-		if (IsWindow())
+		if (IsWindow()) 
 			::DestroyWindow(m_hWnd);
 
 		// Return the CWnd to its default state
@@ -1659,7 +1710,7 @@ namespace Win32xx
 			w->AddToMap();
 		}
 
-		return w->WndProc(uMsg, wParam, lParam);
+		return w->WndProc(uMsg, wParam, lParam);	
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
 

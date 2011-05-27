@@ -371,7 +371,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-        str = tString(W2T(pDispParams->rgvarg[0].bstrVal)) + _T(" - ") + LoadString(IDW_MAIN);
+        str = tString(W2T(pDispParams->rgvarg[0].bstrVal)) + _T(" - ") + (LPCTSTR)LoadString(IDW_MAIN);
 		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
