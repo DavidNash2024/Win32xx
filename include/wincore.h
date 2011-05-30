@@ -307,6 +307,7 @@ namespace Win32xx
 		CWinApp();
 		virtual ~CWinApp();
 
+		HACCEL GetAccelerators() const { return m_hAccel; }
 		CDC* GetCDCFromMap(HDC hDC);
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
