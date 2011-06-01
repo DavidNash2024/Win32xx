@@ -321,6 +321,10 @@ namespace Win32xx
 		virtual int  MessageLoop();
 		virtual int Run();
 
+	protected:
+		BOOL PreTranslateMessage(MSG Msg);
+		BOOL CleanupTemps(MSG msg);
+
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
@@ -328,7 +332,6 @@ namespace Win32xx
 		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		void RemoveTmps();
 		void SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -784,35 +787,10 @@ namespace Win32xx
 			if (-1 == status) return -1;
 
 			BOOL Processed = FALSE;
+			Processed = CleanupTemps(Msg);
 
-			if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
-			{
-				RemoveTmps();
-				Processed = TRUE;
-			}
-
-			// only pre-translate mouse and keyboard input events
-			if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
-				(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
-			{
-				// Process keyboard accelerators
-				if (m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccel, &Msg))
-					Processed = TRUE;
-				else
-				{
-					// Search the chain of parents for pretranslated messages.
-					for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
-					{
-						CWnd* pWnd = GetCWndFromMap(hWnd);
-						if (pWnd)
-						{
-							Processed = pWnd->PreTranslateMessage(&Msg);
-							if(Processed)
-								break;
-						}
-					}
-				}
-			}
+			if (!Processed)
+				Processed = PreTranslateMessage(Msg);
 
 			if (!Processed)
 			{
@@ -820,23 +798,64 @@ namespace Win32xx
 				::DispatchMessage(&Msg);
 			}
 		}
+		
 		return LOWORD(Msg.wParam);
 	}
 
-	inline void CWinApp::RemoveTmps()
+	inline BOOL CWinApp::PreTranslateMessage(MSG Msg)
 	{
-		// Removes all Tmp CWnds and CMenus belonging to this thread
+		// This functions is called by the MessageLoop. It processes the 
+		// keyboard accelerator keys, calls CWnd::PreTranslateMessage for
+		// keyboard and mouse events.
 
-		// Retrieve the pointer to the TLS Data
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-		assert(pTLSData);
+		BOOL Processed = FALSE;
 
-		pTLSData->vTmpWnds.clear();
+		// only pre-translate mouse and keyboard input events
+		if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
+			(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
+		{
+			// Process keyboard accelerators
+			if (m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccel, &Msg))
+				Processed = TRUE;
+			else
+			{
+				// Search the chain of parents for pretranslated messages.
+				for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+				{
+					CWnd* pWnd = GetCWndFromMap(hWnd);
+					if (pWnd)
+					{
+						Processed = pWnd->PreTranslateMessage(&Msg);
+						if(Processed)
+							break;
+					}
+				}
+			}
+		}
 
-#ifndef _WIN32_WCE
-		pTLSData->vTmpMenus.clear();
-#endif
+		return Processed;
+	}
 
+	inline BOOL CWinApp::CleanupTemps(MSG Msg)
+	// Removes all Temporary CWnds and CMenus belonging to this thread
+	{
+		BOOL Processed = FALSE;
+		if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
+		{		
+			// Retrieve the pointer to the TLS Data
+			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			assert(pTLSData);
+
+			pTLSData->vTmpWnds.clear();
+
+	#ifndef _WIN32_WCE
+			pTLSData->vTmpMenus.clear();
+	#endif
+		
+			Processed = TRUE;
+		}
+
+		return Processed;
 	}
 
 	inline int CWinApp::Run()

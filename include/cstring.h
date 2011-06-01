@@ -482,7 +482,7 @@ namespace Win32xx
 	inline void CString::GetErrorString(DWORD dwError)
 	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
 	{
-		m_str.clear();
+		m_str.erase();
 		
 		if (dwError != 0)
 		{
