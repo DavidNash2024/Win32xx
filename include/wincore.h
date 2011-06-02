@@ -786,16 +786,13 @@ namespace Win32xx
 		{
 			if (-1 == status) return -1;
 
-			BOOL Processed = FALSE;
-			Processed = CleanupTemps(Msg);
-
-			if (!Processed)
-				Processed = PreTranslateMessage(Msg);
-
-			if (!Processed)
+			if (!CleanupTemps(Msg))
 			{
-				::TranslateMessage(&Msg);
-				::DispatchMessage(&Msg);
+				if (!PreTranslateMessage(Msg))
+				{
+					::TranslateMessage(&Msg);
+					::DispatchMessage(&Msg);
+				}
 			}
 		}
 		
@@ -805,7 +802,7 @@ namespace Win32xx
 	inline BOOL CWinApp::PreTranslateMessage(MSG Msg)
 	{
 		// This functions is called by the MessageLoop. It processes the 
-		// keyboard accelerator keys, calls CWnd::PreTranslateMessage for
+		// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
 		// keyboard and mouse events.
 
 		BOOL Processed = FALSE;
