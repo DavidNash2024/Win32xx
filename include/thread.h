@@ -87,6 +87,9 @@
 #define _WIN32XX_WINTHREAD_H_
 
 
+#include <process.h>
+
+
 namespace Win32xx
 {
 
@@ -163,7 +166,6 @@ namespace Win32xx
 	inline void CThread::CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
 	{
 		// NOTE:  By default, the thread is created in the default state.
-		//		  _beginthreadex will be undefined if a single-threaded run-time library is used. Use a Multithreaded run-time.
 		m_hThread = (HANDLE)_beginthreadex(pSecurityAttributes, stack_size, CThread::StaticThreadCallback, (LPVOID) this, initflag, &m_nThreadID);
 
 		if (0 == m_hThread)

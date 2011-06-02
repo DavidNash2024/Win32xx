@@ -298,6 +298,7 @@ namespace Win32xx
 			POST_TEXT_GAP   = 16,			// for owner draw menu item
 		};
 
+		tString m_tsStatusText;				// TCHAR std::string for status text
         BOOL m_bShowIndicatorStatus;		// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseReBar;					// set to TRUE if ReBars are to be used
@@ -328,8 +329,7 @@ namespace Win32xx
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
-		tString m_tsStatusText;				// TCHAR std::string for status text
-		tString m_tsTooltip;				// TCHar std::string for tool tips
+		tString m_tsTooltip;				// TCHAR std::string for tool tips
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation

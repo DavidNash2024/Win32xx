@@ -6,7 +6,8 @@ New Features and Enhancements
 * Added CString class
    The CString class is intended to provide much of the same functionality
    as the CString class provided with MFC/ATL.
-* Added CMenu   
+* Added CMenu
+* Added CFile   
 
 
 Changes in detail
