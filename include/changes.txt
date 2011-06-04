@@ -20,14 +20,18 @@ Changes in detail
 - Added BSTR2W
 - Added CWinApp::GetAccelerators
 - Added CWinException::GetError
+- Added CWnd::WindowFromPoint
 - Modified LoadString 				now returns CString
 - Modified CWnd::GetAncestor		now accepts a gaFlags parameter
 - Removed CLoadString
+- Removed GetWindowType for all CWnd classes
 
 
 Incompatibilities with previous versions
 ----------------------------------------
-
+* The Win32++ now uses Run Time Type Informatio (RTTI). Older Microsoft
+  compilers (Visual Studio 2003 and earlier) will need to have the option to
+  support RTTI enabled.
 
 
 Version 7.1

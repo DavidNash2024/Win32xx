@@ -116,7 +116,6 @@ namespace Win32xx
 	public:
 		CMenuBar();
 		virtual ~CMenuBar();
-		virtual tString GetWindowType() const { return _T("CMenuBar"); }
 		virtual void SetMenu(HMENU hMenu);
 		virtual void SetMenuBarTheme(MenuTheme& Theme);
 
@@ -212,7 +211,7 @@ namespace Win32xx
 		// Override these functions as required
 		virtual void AdjustFrameRect(RECT rcView) const;
 		virtual CRect GetViewRect() const;
-		virtual tString GetWindowType() const { return _T("CFrame"); }
+		virtual BOOL IsMDIFrame() const { return FALSE; }
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void RecalcLayout();
@@ -656,7 +655,7 @@ namespace Win32xx
 
 	inline BOOL CMenuBar::IsMDIFrame() const
 	{
-		return (m_pFrame->GetWindowType() == _T("CMDIFrame"));	// boolean expression
+		return (m_pFrame->IsMDIFrame());	
 	}
 
 	inline void CMenuBar::OnMenuChar(WPARAM wParam, LPARAM lParam)
@@ -1124,7 +1123,7 @@ namespace Win32xx
 			// This is used to bring up a new popup menu when required
 			{
 				CPoint pt = GetCursorPos();
-				if (m_hWnd == WindowFromPoint(pt))	// MenuBar window must be on top
+				if (this == WindowFromPoint(pt))	// MenuBar window must be on top
 				{
 					DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
 					if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
@@ -1369,11 +1368,11 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() : m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
+	inline CFrame::CFrame() : m_tsStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE),
-						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE),
-						m_himlMenu(NULL), m_himlMenuDis(NULL), m_AboutDialog(IDW_ABOUT)/*m_pAboutDialog(NULL)*/, m_hMenu(NULL),
-						m_pView(NULL), m_tsStatusText(_T("Ready")), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
+						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(NULL),
+						m_himlMenuDis(NULL), m_AboutDialog(IDW_ABOUT), m_hMenu(NULL),
+						m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 
@@ -2005,7 +2004,7 @@ namespace Win32xx
 				bRet = TRUE;
 			}
 		}
-		
+
 		catch (const CWinException& e)
 		{
 			TRACE(_T("Failed to load values from registry, using defaults!\n"));
@@ -2433,27 +2432,32 @@ namespace Win32xx
 		case TTN_GETDISPINFO:
 			if (GetToolBar().IsWindow())
 			{
-				CToolBar* pToolBar = &GetToolBar();
+				CToolBar* pToolBar = 0;
 				if (IsReBarUsed())
 				{
 					// Get the ToolBar's CWnd
 					CWnd* pWnd = FromHandle(GetReBar().HitTest(GetCursorPos()));
-					if (pWnd && (pWnd->GetWindowType() == _T("CToolBar")))
+					if (pWnd && (lstrcmp(pWnd->GetClassName(), _T("ToolbarWindow32")) == 0))
+					{
 						pToolBar = (CToolBar*)pWnd;
+					}
 				}
 
-				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
-				int iIndex =  pToolBar->HitTest();
-				if (iIndex >= 0)
+				if (pToolBar)
 				{
-					int nID = pToolBar->GetCommandID(iIndex);
-					if (nID > 0)
+					LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
+					int iIndex =  pToolBar->HitTest();
+					if (iIndex >= 0)
 					{
-						m_tsTooltip = LoadString(nID);
-						lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
+						int nID = pToolBar->GetCommandID(iIndex);
+						if (nID > 0)
+						{
+							m_tsTooltip = LoadString(nID);
+							lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
+						}
+						else
+							m_tsTooltip = _T("");
 					}
-					else
-						m_tsTooltip = _T("");
 				}
 			}
 			break;
@@ -2551,17 +2555,18 @@ namespace Win32xx
 				{
 					// Get the ToolBar's CWnd
 					CWnd* pWnd = FromHandle(GetReBar().HitTest(GetCursorPos()));
-					if (pWnd && (pWnd->GetWindowType() == _T("CToolBar")))
+					if (pWnd && (lstrcmp(pWnd->GetClassName(), _T("ToolbarWindow32")) == 0))
 						pToolBar = (CToolBar*)pWnd;
 				}
 				else
 				{
 					CPoint pt = GetCursorPos();
-					if (WindowFromPoint(pt) == GetToolBar())
-						pToolBar = &GetToolBar();
+					CWnd* pWnd = WindowFromPoint(GetCursorPos());
+					if (pWnd && (lstrcmp(pWnd->GetClassName(), _T("ToolbarWindow32")) == 0))
+						pToolBar = (CToolBar*)pWnd;
 				}
 
-				if ((pToolBar) && (WindowFromPoint(GetCursorPos()) == pToolBar->GetHwnd()))
+				if ((pToolBar) && (WindowFromPoint(GetCursorPos()) == pToolBar))
 				{
 					// Which toolbar button is the mouse cursor hovering over?
 					int nButton = pToolBar->HitTest();

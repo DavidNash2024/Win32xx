@@ -55,7 +55,6 @@ namespace Win32xx
 	public:
 		CTreeView() {}
 		virtual ~CTreeView() {}
-		virtual tString GetWindowType() const { return _T("CTreeView"); }
 		virtual void PreRegisterClass(WNDCLASS &wc);
 
 // Attributes

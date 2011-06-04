@@ -97,7 +97,6 @@ namespace Win32xx
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
 		virtual int GetTextHeight() const;
-		virtual tString GetWindowType() const { return _T("CTab"); }
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int nPage);
 		virtual void SelectPage(int nPage);
@@ -192,7 +191,6 @@ namespace Win32xx
 		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
 		virtual HMENU GetListMenu() const { return GetTab().GetListMenu(); }
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
-		virtual tString GetWindowType() const { return _T("CTabbedMDI"); }
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcLayout();
 		virtual BOOL SaveRegistrySettings(tString tsRegistryKeyName);
@@ -1143,7 +1141,6 @@ namespace Win32xx
 
 			// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
 			HWND MenuHwnd = GetAncestor()->GetHwnd();
-			tString ts = GetAncestor()->GetWindowType();
 			int nPage = 0;
 			m_IsListMenuActive = TRUE;
 			nPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;

@@ -89,7 +89,6 @@ namespace Win32xx
 		virtual BOOL AddButtons(int nButtons, TBBUTTON* pTBButton);
 		virtual HWND Create(HWND hwndParent);
 		virtual int  GetHeight() const;
-		virtual tString GetWindowType() const { return _T("CCmdBar"); }
 		virtual HWND InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton);
 		virtual BOOL IsVisible();
 		virtual BOOL Show(BOOL fShow);
@@ -114,7 +113,6 @@ namespace Win32xx
 		virtual void AddToolBarButton(UINT nID);
 		CRect GetViewRect() const;
 		CCmdBar& GetMenuBar() const {return (CCmdBar&)m_MenuBar;}
-		virtual tString GetWindowType() const { return _T("CWceFrame"); }
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();		
 		virtual void PreCreate(CREATESTRUCT &cs);

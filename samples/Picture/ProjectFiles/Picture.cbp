@@ -61,9 +61,10 @@
 					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
+					<Add option="/GR" />
 					<Add option="/W3" />
-					<Add option="/Zi /D_DEBUG" />
 					<Add option="/Zi" />
+					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
@@ -96,6 +97,7 @@
 				<Compiler>
 					<Add option="/MT" />
 					<Add option="/GX" />
+					<Add option="/GR" />
 					<Add option="/Ox" />
 					<Add option="/W3" />
 					<Add option="/DWIN32" />

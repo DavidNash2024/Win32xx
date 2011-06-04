@@ -78,7 +78,6 @@ namespace Win32xx
 
 		virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual tString GetWindowType() const { return _T("CPropertyPage"); }
 		virtual int  OnApply();
 		virtual void OnCancel();
 		virtual void OnHelp();
@@ -129,7 +128,6 @@ namespace Win32xx
 		virtual void DestroyButton(int iButton);
 		virtual void Destroy();
 		virtual int DoModal();
-		virtual tString GetWindowType() const { return _T("CPropertySheet"); }
 		virtual void RemovePage(CPropertyPage* pPage);
 
 		// State functions
@@ -251,18 +249,15 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
 
-				if (GetWindowType() != _T("CReBar"))	// Skip notification reflection for rebars to avoid double handling
+				if (pWndFrom != NULL)
+					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
+				else
 				{
-					if (pWndFrom != NULL)
-						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
-					else
-					{
-						// Some controls (eg ListView) have child windows.
-						// Reflect those notifications too.
-						CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
-						if (pWndFromParent != NULL)
-							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
-					}
+					// Some controls (eg ListView) have child windows.
+					// Reflect those notifications too.
+					CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
+					if (pWndFromParent != NULL)
+						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 				}
 
 				// Handle user notifications

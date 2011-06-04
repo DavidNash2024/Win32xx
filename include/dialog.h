@@ -86,7 +86,6 @@ namespace Win32xx
 		virtual HWND Create(CWnd* pParent = NULL);
 		virtual INT_PTR DoModal();
 		virtual HWND DoModeless();
-		virtual tString GetWindowType() const { return _T("CDialog"); }
 		virtual void SetDlgParent(CWnd* pParent);
 		BOOL IsModal() const { return m_IsModal; }
 		BOOL IsIndirect() const { return m_IsIndirect; }
@@ -303,20 +302,17 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
 
-				if (GetWindowType() != _T("CReBar"))	// Skip notification reflection for rebars to avoid double handling
+				if (pWndFrom != NULL)
+					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
+				else
 				{
-					if (pWndFrom != NULL)
-						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
-					else
-					{
-						// Some controls (eg ListView) have child windows.
-						// Reflect those notifications too.
-						CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
-						if (pWndFromParent != NULL)
-							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
-					}
+					// Some controls (eg ListView) have child windows.
+					// Reflect those notifications too.
+					CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
+					if (pWndFromParent != NULL)
+						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 				}
-
+	
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);
 
@@ -604,7 +600,7 @@ namespace Win32xx
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{
 					CDialog* pDialog = (CDialog*)GetApp()->GetCWndFromMap(hWnd);
-					if (pDialog && (pDialog->GetWindowType() == _T("CDialog")))
+					if (pDialog && (lstrcmp(pDialog->GetClassName(), _T("#32770")) == 0))	// only for dialogs
 					{
 						pDialog->PreTranslateMessage(lpMsg);
 						break;

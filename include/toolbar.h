@@ -65,7 +65,6 @@ namespace Win32xx
 	public:
 		CToolBar();
 		virtual ~CToolBar();
-		virtual tString GetWindowType() const { return _T("CToolBar"); }
 
 		// Operations
 		virtual int  AddBitmap(UINT ToolBarID);
@@ -629,8 +628,7 @@ namespace Win32xx
 		SetClassLongPtr(GCL_STYLE, dwStyle);
 
 		// Add extra styles for toolbars inside a rebar
-		CWnd* pWnd = GetParent();
-		if (pWnd && (pWnd->GetWindowType() == _T("CReBar")))
+		if (lstrcmp(GetParent()->GetClassName(), _T("ReBarWindow32")) == 0)
 		{
 			DWORD style = (DWORD)GetWindowLongPtr(GWL_STYLE);
 			style |= CCS_NODIVIDER | CCS_NORESIZE;
@@ -872,7 +870,7 @@ namespace Win32xx
 
 		// Adjust size for toolbars inside a rebar
 		CWnd* pParent = GetParent();
-		if (_T("CReBar") == pParent->GetWindowType())
+		if (lstrcmp(pParent->GetClassName(), _T("ReBarWindow32")) == 0)
 		{
 			ReBarTheme* pTheme = (ReBarTheme*)pParent->SendMessage(UWM_GETREBARTHEME, 0, 0);
 

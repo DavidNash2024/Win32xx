@@ -61,6 +61,7 @@
 					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
+					<Add option="/GR" />
 					<Add option="/W3" />
 					<Add option="/Zi" />
 					<Add option="/Zi /D_DEBUG" />
@@ -95,6 +96,7 @@
 				<Compiler>
 					<Add option="/MT" />
 					<Add option="/GX" />
+					<Add option="/GR" />
 					<Add option="/Ox" />
 					<Add option="/W3" />
 					<Add option="/DWIN32" />
@@ -171,6 +173,8 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
+		<Unit filename="..\..\..\include\thread.h" />
+		<Unit filename="..\..\..\include\wincore.h" />
 		<Unit filename="..\src\MainWnd.cpp" />
 		<Unit filename="..\src\MainWnd.h" />
 		<Unit filename="..\src\TestWnd.cpp" />
@@ -178,8 +182,6 @@
 		<Unit filename="..\src\ThreadApp.cpp" />
 		<Unit filename="..\src\ThreadApp.h" />
 		<Unit filename="..\src\main.cpp" />
-		<Unit filename="..\..\..\include\thread.h" />
-		<Unit filename="..\..\..\include\wincore.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

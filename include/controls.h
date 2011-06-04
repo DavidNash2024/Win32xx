@@ -54,7 +54,6 @@ namespace Win32xx
 	public:
 		CAnimation() {}
 		virtual ~CAnimation() {}
-		virtual tString GetWindowType() const { return _T("CAnimation"); }
 
 		BOOL Close() const;
 		BOOL Open(LPTSTR lpszName) const;
@@ -73,7 +72,6 @@ namespace Win32xx
 	public:
 		CComboBox() {}
 		virtual ~CComboBox() {}
-		virtual tString GetWindowType() const { return _T("CComboBox"); }
 
 		int   AddString(LPCTSTR lpszString) const;
 		void  Clear() const;
@@ -125,7 +123,6 @@ namespace Win32xx
 	public:
 		CComboBoxEx() {}
 		virtual ~CComboBoxEx() {}
-		virtual tString GetWindowType() const { return _T("CComboBoxEx"); }
 
 		int  	DeleteItem(int nIndex ) const;
 		CWnd* 	GetComboBoxCtrl() const;
@@ -150,7 +147,6 @@ namespace Win32xx
 	public:
 		CProgressBar() {}
 		virtual ~CProgressBar() {}
-		virtual tString GetWindowType() const { return _T("CProgressBar"); }
 
 		int  GetPos() const;
 		int  GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const;
@@ -171,7 +167,6 @@ namespace Win32xx
 	public:
 		CScrollBar() {}
 		virtual ~CScrollBar() {}
-		virtual tString GetWindowType() const { return _T("CScrollBar"); }
 
 		BOOL EnableScrollBar( UINT nArrowFlags = ESB_ENABLE_BOTH )  const;
 		BOOL GetScrollInfo(LPSCROLLINFO lpsi)  const;
@@ -193,7 +188,6 @@ namespace Win32xx
 	public:
 		CSlider() {}
 		virtual ~CSlider() {}
-		virtual tString GetWindowType() const { return _T("CSlider"); }
 
 		void ClearSel() const;
 		void ClearTics(BOOL bRedraw = FALSE ) const;
@@ -236,7 +230,6 @@ namespace Win32xx
 	public:
 		CSpinButton() {}
 		virtual ~CSpinButton() {}
-		virtual tString GetWindowType() const { return _T("CSpinButton"); }
 
 		int  GetAccel(int cAccels, LPUDACCEL paAccels) const;
 		int  GetBase() const;

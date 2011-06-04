@@ -53,7 +53,6 @@ namespace Win32xx
 		virtual ~CStatusBar() {}
 
 	// Overridables
-		virtual tString GetWindowType() const { return _T("CStatusBar"); }
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 

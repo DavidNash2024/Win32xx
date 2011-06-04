@@ -50,7 +50,6 @@ namespace Win32xx
 	public:
 		CListView() {}
 		virtual ~CListView() {}
-		virtual tString GetWindowType() const { return _T("CListView"); }
 		virtual void PreRegisterClass(WNDCLASS &wc);
 
 		// Attributes

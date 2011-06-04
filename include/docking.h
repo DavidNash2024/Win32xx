@@ -147,7 +147,6 @@ namespace Win32xx
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CDockContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
-		virtual tString GetWindowType() const { return _T("CDockContainer"); }
 		virtual CViewPage& GetViewPage() const	{ return (CViewPage&)m_ViewPage; }
 		virtual void RecalcLayout();
 		virtual void RemoveContainer(CDockContainer* pWnd);
@@ -415,7 +414,6 @@ namespace Win32xx
 		virtual int GetDockSize() const;
 		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual int GetTextHeight();
-		virtual tString GetWindowType() const { return _T("CDocker"); }
 		virtual void Hide();
 		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
 		virtual void RecalcDockLayout();
@@ -965,7 +963,7 @@ namespace Win32xx
 			if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
 			{
 				// Destroy the docker
-				if (m_pDock->GetView()->GetWindowType() == _T("CDockContainer"))
+				if (dynamic_cast<CDockContainer*>(m_pDock->GetView()))
 				{
 					CDockContainer* pContainer = ((CDockContainer*)m_pDock->GetView())->GetActiveContainer();
 					CDocker* pDock = m_pDock->GetDockFromView(pContainer);
@@ -1438,7 +1436,7 @@ namespace Win32xx
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_bIsOverContainer = (pDockTarget->GetView()->GetWindowType() == _T("CDockContainer")); // boolean expression
+		m_bIsOverContainer = (BOOL)dynamic_cast<CDockContainer*>(pDockTarget->GetView());
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();
@@ -2013,7 +2011,7 @@ namespace Win32xx
 	inline void CDocker::DockInContainer(CDocker* pDock, DWORD dwDockStyle)
 	// Add a container to an existing container
 	{
-		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (pDock->GetView()->GetWindowType() == _T("CDockContainer")))
+		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (dynamic_cast<CDockContainer*>(pDock->GetView())))
 		{
 			// Transfer any dock children to this docker
 			pDock->MoveDockChildren(this);
@@ -2143,7 +2141,7 @@ namespace Win32xx
 	inline CDockContainer* CDocker::GetContainer() const
 	{
 		CDockContainer* pContainer = NULL;
-		if (GetView() && (GetView()->GetWindowType() == _T("CDockContainer")))
+		if (dynamic_cast<CDockContainer*>(GetView()))
 			pContainer = (CDockContainer*)GetView();
 
 		return pContainer;
@@ -2284,7 +2282,7 @@ namespace Win32xx
 	inline CTabbedMDI* CDocker::GetTabbedMDI() const
 	{
 		CTabbedMDI* pTabbedMDI = NULL;
-		if (GetView() && GetView()->GetWindowType() == _T("CTabbedMDI"))
+		if (dynamic_cast<CTabbedMDI*>(GetView()))
 			pTabbedMDI = (CTabbedMDI*)GetView();
 
 		return pTabbedMDI;
@@ -2310,7 +2308,7 @@ namespace Win32xx
 
 		if (IsDocked())
 		{
-			if (GetView()->GetWindowType() == _T("CDockContainer"))
+			if (dynamic_cast<CDockContainer*>(GetView()))
 			{
 				CDockContainer* pContainer = GetContainer();
 				CDocker* pDock = GetDockFromView(pContainer->GetContainerParent());
@@ -2641,7 +2639,7 @@ namespace Win32xx
 			(*iter)->Destroy();
 		}
 
-		if ((GetView()->GetWindowType() == _T("CDockContainer")) && IsUndocked())
+		if (dynamic_cast<CDockContainer*>(GetView()) && IsUndocked())
 		{
 			CDockContainer* pContainer = (CDockContainer*)GetView();
 			if (pContainer->GetAllContainers().size() > 1)
@@ -3371,7 +3369,7 @@ namespace Win32xx
 	{
 		CWnd* pWnd = &wndView;
 		GetDockClient().SetView(wndView);
-		if (pWnd->GetWindowType() == _T("CDockContainer"))
+		if (dynamic_cast<CDockContainer*>(pWnd))
 		{
 			CDockContainer* pContainer = (CDockContainer*)&wndView;
 			SetCaption(pContainer->GetDockCaption().c_str());
@@ -3903,7 +3901,7 @@ namespace Win32xx
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
 			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()->GetHwnd()));
-			if (pDock && (pDock->GetWindowType() == _T("CDocker")))
+			if (dynamic_cast<CDocker*>(pDock))
 			{
 				CDockContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
 				pDock->UndockContainer(pContainer, GetCursorPos(), TRUE);
@@ -4024,7 +4022,7 @@ namespace Win32xx
 
 				// Adjust the docking caption
 				CDocker* pDock = (CDocker*)FromHandle(::GetParent(::GetParent(m_hWnd)));
-				if (pDock && (pDock->GetWindowType() == _T("CDocker")))
+				if (dynamic_cast<CDocker*>(pDock))
 				{
 					pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
 					pDock->RedrawWindow();
@@ -4111,7 +4109,7 @@ namespace Win32xx
 	inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 		CDockContainer* pContainer = (CDockContainer*)GetParent();
-		assert(pContainer->GetWindowType() == _T("CDockContainer"));
+		assert(dynamic_cast<CDockContainer*>(pContainer));
 		return (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
 	}
 

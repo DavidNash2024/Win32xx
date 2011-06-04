@@ -123,7 +123,6 @@ namespace Win32xx
 		CRibbonFrame() : m_uRibbonHeight(0) {}
 		virtual ~CRibbonFrame() {}
 		virtual CRect GetViewRect() const;
-		virtual tString GetWindowType() const { return _T("CRibbonFrame"); }
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);

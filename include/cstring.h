@@ -130,7 +130,7 @@ namespace Win32xx
 		BSTR     b_str() const		{ return T2W(m_str.c_str()); }	// alternative for casting to BSTR
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
 		tString& GetString()		{ return m_str; }				// returns a reference to the underlying std::basic_string<TCHAR>
-		int      GetLength() const	{ return m_str.length(); }		// returns the length in characters
+		int      GetLength() const	{ return (int)m_str.length(); }		// returns the length in characters
 
 		// Operations
 		BSTR     AllocSysString() const;
@@ -289,7 +289,7 @@ namespace Win32xx
 
 	inline BSTR CString::AllocSysString() const
 	{
-		return ::SysAllocStringLen(T2W(m_str.c_str()), m_str.size());
+		return ::SysAllocStringLen(T2W(m_str.c_str()), (UINT)m_str.size());
 	}
 
 	inline void CString::AppendFormat(LPCTSTR pszFormat,...)
@@ -342,7 +342,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		m_str.erase(nIndex, nCount);
-		return m_str.size();
+		return (int)m_str.size();
 	}
 
 	inline void CString::Empty()
@@ -353,20 +353,20 @@ namespace Win32xx
 	inline int CString::Find(TCHAR ch, int nIndex /* = 0 */) const
 	{
 		assert(nIndex >= 0);
-		return m_str.find(ch, nIndex);
+		return (int)m_str.find(ch, nIndex);
 	}
 
 	inline int CString::Find(LPCTSTR pszText, int nIndex /* = 0 */) const
 	{
 		assert(pszText);
 		assert(nIndex >= 0);
-		return m_str.find(pszText, nIndex);
+		return (int)m_str.find(pszText, nIndex);
 	}
 
 	inline int CString::FindOneOf(LPCTSTR pszText) const
 	{
 		assert(pszText);
-		return m_str.find_first_of(pszText);
+		return (int)m_str.find_first_of(pszText);
 	}
 
 	inline void CString::Format(LPCTSTR pszFormat,...)
@@ -500,7 +500,7 @@ namespace Win32xx
 		assert(ch);
 
 		m_str.insert(nIndex, &ch, 1);
-		return m_str.size();
+		return (int)m_str.size();
 	}
 
 	inline int CString::Insert(int nIndex, const CString& str)
@@ -508,7 +508,7 @@ namespace Win32xx
 		assert(nIndex >= 0);
 
 		m_str.insert(nIndex, str);
-		return m_str.size();
+		return (int)m_str.size();
 	}
 
 	inline BOOL CString::IsEmpty() const
@@ -585,7 +585,7 @@ namespace Win32xx
 	inline int CString::ReverseFind(LPCTSTR pszText, int nIndex /* = -1 */) const
 	{
 		assert(pszText);
-		return m_str.rfind(pszText, nIndex);
+		return (int)m_str.rfind(pszText, nIndex);
 	}
 
 	inline void CString::SetAt(int nIndex, TCHAR ch)
@@ -674,7 +674,7 @@ namespace Win32xx
 	{
 		assert(pBstr);
 
-		if ( !::SysReAllocStringLen(pBstr, T2W(m_str.c_str()), m_str.length()) )
+		if ( !::SysReAllocStringLen(pBstr, T2W(m_str.c_str()), (UINT)m_str.length()) )
 			throw std::bad_alloc();
 
 		return *pBstr;
@@ -719,7 +719,7 @@ namespace Win32xx
 		size_t pos1 = m_str.find_first_not_of(pszTokens, iStart);
 		size_t pos2 = m_str.find_first_of(pszTokens, pos1);
 
-		iStart = pos2 + 1;
+		iStart = (int)pos2 + 1;
 		if (pos2 == m_str.npos)
 			iStart = -1;
 

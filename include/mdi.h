@@ -88,7 +88,6 @@ namespace Win32xx
 
 		// These are the functions you might wish to override
 		virtual HWND Create(CWnd* pParent = NULL);
-		virtual tString GetWindowType() const { return _T("CMDIChild"); }
 		virtual void RecalcLayout();
 
 		// These functions aren't virtual, and shouldn't be overridden
@@ -132,7 +131,6 @@ namespace Win32xx
 			CMDIClient() {}
 			virtual ~CMDIClient() {}
 			virtual HWND Create(CWnd* pParent = NULL);
-			virtual tString GetWindowType() const { return _T("CMDIClient"); }
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			CMDIFrame* GetMDIFrame() const { return (CMDIFrame*)GetParent(); }
 
@@ -147,7 +145,7 @@ namespace Win32xx
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
 		virtual CMDIClient& GetMDIClient() const { return (CMDIClient&)m_MDIClient; }
-		virtual tString GetWindowType() const { return _T("CMDIFrame"); }
+		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 		virtual void UpdateCheckMarks();
@@ -657,7 +655,7 @@ namespace Win32xx
 	inline CMDIFrame* CMDIChild::GetMDIFrame() const
 	{
 		CMDIFrame* pMDIFrame = (CMDIFrame*)GetParent()->GetParent();
-		assert (pMDIFrame->GetWindowType() == _T("CMDIFrame"));
+		assert(dynamic_cast<CMDIFrame*>(pMDIFrame));
 		return pMDIFrame;
 	}
 

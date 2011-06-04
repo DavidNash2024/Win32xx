@@ -44,9 +44,9 @@ void CView::OnPaint(CDC& dc)
 	// window needs to be repainted.
 
 	// Centre some text in our view window
-	CRect r = GetClientRect();
-	tString ts = LoadString(IDW_MAIN);
-	dc.DrawText(ts.c_str(), ts.length(), r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	CRect rc = GetClientRect();
+	CString cs = LoadString(IDW_MAIN);
+	dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnSize()

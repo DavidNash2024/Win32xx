@@ -68,7 +68,6 @@ namespace Win32xx
 	public:
 		CReBar();
 		virtual ~CReBar();
-		virtual tString GetWindowType() const { return _T("CReBar"); }
 
 		// Operations
 		BOOL DeleteBand(const int nBand) const;

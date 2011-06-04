@@ -278,7 +278,7 @@ namespace Win32xx
 		DWORD GetError() const throw ();
 		LPCTSTR GetErrorString() const throw ();
 		const char * what () const throw ();
-	
+
 	private:
 		DWORD  m_Error;
 		LPCTSTR m_pszText;
@@ -383,8 +383,6 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, HMENU hMenu, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
-		virtual tString GetWindowType() const { return _T("CWnd"); }
-		virtual void Invalidate(BOOL bErase = TRUE) const;
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -436,6 +434,7 @@ namespace Win32xx
 		CRect GetWindowRect() const;
 		LPCTSTR GetWindowText() const;
 		int   GetWindowTextLength() const;
+		void  Invalidate(BOOL bErase = TRUE) const;
 		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL  InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL  IsChild(CWnd* pChild) const;
@@ -484,6 +483,7 @@ namespace Win32xx
 		BOOL  UpdateWindow() const;
 		BOOL  ValidateRect(LPCRECT prc) const;
 		BOOL  ValidateRgn(HRGN hRgn) const;
+		static CWnd* WindowFromPoint(POINT pt);
 
   #ifndef _WIN32_WCE
 		BOOL  CloseWindow() const;
@@ -546,6 +546,8 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HWND m_hWnd;				// handle to this object's window
+        HICON m_hIconLarge;			// handle to the window's large icon
+		HICON m_hIconSmall;			// handle to the window's small icon
 
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
@@ -559,8 +561,6 @@ namespace Win32xx
 
 		WNDCLASS m_wc;				// defines initialisation parameters for RegisterClass
 		CREATESTRUCT m_cs;			// defines initialisation parameters for PreCreate and Create
-		HICON m_hIconLarge;			// handle to the window's large icon
-		HICON m_hIconSmall;			// handle to the window's small icon
 		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
 		mutable std::vector<TCHAR> m_vTChar;	// A vector used as a TCHAR array for string functions
 		BOOL m_IsTmpWnd;			// True if this CWnd is a TmpWnd
@@ -591,13 +591,13 @@ namespace Win32xx
 	}
 
 	inline DWORD CWinException::GetError() const throw ()
-	{ 
-		return m_Error; 
+	{
+		return m_Error;
 	}
-	
+
 	inline LPCTSTR CWinException::GetErrorString() const throw ()
-	{ 
-		return m_szErrorString; 
+	{
+		return m_szErrorString;
 	}
 
 	inline const char * CWinException::what() const throw ()
@@ -689,7 +689,7 @@ namespace Win32xx
 		// The TmpMenus are temporary, deleted when a CMenu is destroyed.
 		assert(::IsMenu(hMenu));
 		assert(!GetCMenuFromMap(hMenu));
-		
+
 		CMenu* pMenu = new CMenu;
 		pMenu->m_hMenu = hMenu;
 		m_csMapLock.Lock();
@@ -795,13 +795,13 @@ namespace Win32xx
 				}
 			}
 		}
-		
+
 		return LOWORD(Msg.wParam);
 	}
 
 	inline BOOL CWinApp::PreTranslateMessage(MSG Msg)
 	{
-		// This functions is called by the MessageLoop. It processes the 
+		// This functions is called by the MessageLoop. It processes the
 		// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
 		// keyboard and mouse events.
 
@@ -838,7 +838,7 @@ namespace Win32xx
 	{
 		BOOL Processed = FALSE;
 		if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
-		{		
+		{
 			// Retrieve the pointer to the TLS Data
 			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 			assert(pTLSData);
@@ -848,7 +848,7 @@ namespace Win32xx
 	#ifndef _WIN32_WCE
 			pTLSData->vTmpMenus.clear();
 	#endif
-		
+
 			Processed = TRUE;
 		}
 
@@ -941,7 +941,7 @@ namespace Win32xx
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;
-			
+
 			CCriticalSection csTlsData;
 			csTlsData.Lock();
 			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
@@ -1192,7 +1192,7 @@ namespace Win32xx
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
 			// Register the window class (if not already registered)
-			if (!RegisterClass(wc))	
+			if (!RegisterClass(wc))
 				throw CWinException(_T("Failed to register window class"));
 
 			HWND hWndParent = pParent? pParent->GetHwnd() : 0;
@@ -1224,14 +1224,14 @@ namespace Win32xx
 			}
 
 			// Clear the CWnd pointer from TLS
-			pTLSData->pCWnd = NULL;	
+			pTLSData->pCWnd = NULL;
 		}
-	
+
 		catch (const CWinException &e)
-		{	
+		{
 			TRACE(_T("\n*** Failed to create window ***\n"));
 			e.what();	// Display the last error message.
-			
+
 			// eat the exception (don't rethrow)
 		}
 
@@ -1244,10 +1244,10 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
-		if (m_IsTmpWnd) 
+		if (m_IsTmpWnd)
 			m_hWnd = NULL;
 
-		if (IsWindow()) 
+		if (IsWindow())
 			::DestroyWindow(m_hWnd);
 
 		// Return the CWnd to its default state
@@ -1727,7 +1727,7 @@ namespace Win32xx
 			w->AddToMap();
 		}
 
-		return w->WndProc(uMsg, wParam, lParam);	
+		return w->WndProc(uMsg, wParam, lParam);
 
 	} // LRESULT CALLBACK StaticWindowProc(...)
 
@@ -1795,7 +1795,7 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
 
-				if (GetWindowType() != _T("CReBar"))	// Skip notification reflection for rebars to avoid double handling
+				if (lstrcmp(GetClassName(), _T("ReBarWindow32")) != 0)	// Skip notification reflection for rebars to avoid double handling
 				{
 					if (pWndFrom != NULL)
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
@@ -2580,6 +2580,12 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::ValidateRgn(m_hWnd, hRgn);
+	}
+
+	inline CWnd* CWnd::WindowFromPoint(POINT pt)
+	// Retrieves the window that contains the specified point (in screen coodinates).
+	{
+		return FromHandle(::WindowFromPoint(pt));
 	}
 
 	//
