@@ -88,7 +88,7 @@
 // * When more than one static control is used in a dialog, the controls should
 //   have a unique ID, unless a resource ID of -1 is used.
 //
-// * Users of Win32++ are advised to begin their resource IDs from 100 to
+// * Users of Win32++ are advised to begin their resource IDs from 120 to
 //   allow for possible expansion of Win32++.
 
 

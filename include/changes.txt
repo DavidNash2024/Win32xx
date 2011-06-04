@@ -18,6 +18,7 @@ Changes in detail
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W
+- Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators
 - Added CWinException::GetError
 - Added CWnd::WindowFromPoint
@@ -29,9 +30,10 @@ Changes in detail
 
 Incompatibilities with previous versions
 ----------------------------------------
-* The Win32++ now uses Run Time Type Informatio (RTTI). Older Microsoft
+* The Win32++ now uses Run Time Type Information (RTTI). Older Microsoft
   compilers (Visual Studio 2003 and earlier) will need to have the option to
   support RTTI enabled.
+* LoadString now returns a CString.
 
 
 Version 7.1

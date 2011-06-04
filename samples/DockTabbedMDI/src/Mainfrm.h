@@ -22,6 +22,12 @@ public:
 	virtual ~CMainFrame();
 	void OnFileNew();
 	void OnContainerTabsAtTop();
+	void OnEditCopy();
+	void OnEditPaste();
+	void OnEditCut();
+	void OnEditDelete();
+	void OnEditRedo();
+	void OnEditUndo();
 	void OnMDITabsAtTop();
 	void LoadDefaultDockers();
 	void LoadDefaultMDIs();

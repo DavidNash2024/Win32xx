@@ -155,6 +155,24 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_TABBEDMDI_TOP:
 		OnMDITabsAtTop();
 		return TRUE;
+	case IDM_EDIT_COPY:
+		OnEditCopy();
+		return TRUE;
+	case IDM_EDIT_PASTE:
+		OnEditPaste();
+		return TRUE;
+	case IDM_EDIT_CUT:
+		OnEditCut();
+		return TRUE;
+	case IDM_EDIT_DELETE:
+		OnEditDelete();
+		return TRUE;
+	case IDM_EDIT_REDO:
+		OnEditRedo();
+		return TRUE;
+	case IDM_EDIT_UNDO:
+		OnEditUndo();
+		return TRUE;
 	case IDM_LAYOUT_DEFAULT:
 		SetRedraw(FALSE);
 		
@@ -202,6 +220,60 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+}
+
+void CMainFrame::OnEditCopy()
+{
+	CWnd* pWnd = GetFocus();
+
+	// Only send the message to a CViewText window
+	if (dynamic_cast<CViewText*>(pWnd))
+		pWnd->SendMessage(WM_COPY, 0, 0);
+}
+
+void CMainFrame::OnEditPaste()
+{
+	CWnd* pWnd = GetFocus();
+
+	// Only send the message to a CViewText window
+	if (dynamic_cast<CViewText*>(pWnd))
+		pWnd->SendMessage(WM_PASTE, 0, 0);
+}
+
+void CMainFrame::OnEditCut()
+{
+	CWnd* pWnd = GetFocus();
+	
+	// Only send the message to a CViewText window
+	if (dynamic_cast<CViewText*>(pWnd))
+		pWnd->SendMessage(WM_CUT, 0, 0);
+}
+
+void CMainFrame::OnEditDelete()
+{
+	CWnd* pWnd = GetFocus();
+
+	// Only send the message to a CViewText window
+	if (dynamic_cast<CViewText*>(pWnd))
+		pWnd->SendMessage(WM_CLEAR, 0, 0);
+}
+
+void CMainFrame::OnEditRedo()
+{
+	CWnd* pWnd = GetFocus();
+
+	// Only send the message to a CViewText window
+	if (dynamic_cast<CViewText*>(pWnd))
+		pWnd->SendMessage(EM_REDO, 0, 0);
+}
+
+void CMainFrame::OnEditUndo()
+{
+	CWnd* pWnd = GetFocus();
+
+	// Only send the message to a CViewText window
+	if (dynamic_cast<CViewText*>(pWnd))
+		pWnd->SendMessage(EM_UNDO, 0, 0);
 }
 
 void CMainFrame::OnInitialUpdate()

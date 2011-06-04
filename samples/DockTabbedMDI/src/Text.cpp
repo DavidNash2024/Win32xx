@@ -25,6 +25,21 @@ CViewText::~CViewText(void)
 		::FreeLibrary(m_hRichEdit);
 }
 
+BOOL CViewText::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(wParam);
+
+	switch (LOWORD(wParam))
+	{
+	case IDM_EDIT_COPY:
+		SendMessage(WM_COPY, 0, 0);
+		TRUE;	// return TRUE for handled commands
+	}
+
+	// return FALSE for unhandled commands
+	return FALSE;
+}
+
 void CViewText::OnInitialUpdate()
 {
 	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
