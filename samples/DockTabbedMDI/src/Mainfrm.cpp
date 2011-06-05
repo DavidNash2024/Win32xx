@@ -8,7 +8,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_pLastActiveDocker(0)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -183,9 +183,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 
 	default:
-		// Pass the command on to the child window with focus
-		return GetFocus()->SendMessageW(WM_COMMAND, wParam, lParam);
+		// Pass the command on to the view window of the last active docker
+		{
+			if (m_pLastActiveDocker == &m_DockTabbedMDI)
+				m_DockTabbedMDI.GetTabbedMDI()->GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
+			else if (m_pLastActiveDocker->IsDocked())
+				m_pLastActiveDocker->GetContainer()->GetActiveView()->SendMessage(WM_COMMAND, wParam, lParam);	
+		}
 	}
+
+	return FALSE;
 }
 
 void CMainFrame::OnCreate()
@@ -223,32 +230,27 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnMenuUpdate(UINT nID)
 // Called when menu items are about to be displayed
 {
-	UNREFERENCED_PARAMETER(nID);
-	
-	CWnd* pWnd = 0;
-	CMenu Menu;
-	Menu.Attach(GetFrameMenu());
-	CMenu* pEditMenu = Menu.GetSubMenu(1);
-
-	if (m_pActiveDocker)
+	// Only for the Menu IDs we wish to modify
+	if (nID >= IDM_EDIT_UNDO && nID <= IDM_EDIT_DELETE)
 	{
-		if (m_pActiveDocker == &m_DockTabbedMDI)
-			pWnd = m_DockTabbedMDI.GetTabbedMDI()->GetActiveMDIChild();
-		else
-			pWnd = m_pActiveDocker->GetContainer()->GetActiveView();
-	}
-	
-	// Enable the Edit menu for CViewText windows, disable the menu otherwise
-	UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;
-	
-	pEditMenu->EnableMenuItem(IDM_EDIT_CUT,    MF_BYCOMMAND | Flags);
-	pEditMenu->EnableMenuItem(IDM_EDIT_COPY,   MF_BYCOMMAND | Flags);
-	pEditMenu->EnableMenuItem(IDM_EDIT_PASTE,  MF_BYCOMMAND | Flags);
-	pEditMenu->EnableMenuItem(IDM_EDIT_DELETE, MF_BYCOMMAND | Flags);
-	pEditMenu->EnableMenuItem(IDM_EDIT_REDO,   MF_BYCOMMAND | Flags);
-	pEditMenu->EnableMenuItem(IDM_EDIT_UNDO,   MF_BYCOMMAND | Flags);
+		CWnd* pWnd = 0;
+		CMenu Menu;
+		Menu.Attach(GetFrameMenu());
+		CMenu* pEditMenu = Menu.GetSubMenu(1);
 
-	Menu.Detach();
+		if (m_pLastActiveDocker)
+		{
+			if (m_pLastActiveDocker == &m_DockTabbedMDI)
+				pWnd = m_DockTabbedMDI.GetTabbedMDI()->GetActiveMDIChild();
+			else if (m_pLastActiveDocker->IsDocked())
+				pWnd = m_pLastActiveDocker->GetContainer()->GetActiveView();
+		}
+		
+		// Enable the Edit menu items for CViewText windows, disable them otherwise
+		UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;	
+		pEditMenu->EnableMenuItem(nID, MF_BYCOMMAND | Flags);
+		Menu.Detach();
+	}
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
@@ -307,8 +309,8 @@ void CMainFrame::SetupToolBar()
 	switch (uMsg)
 	{
 	case WM_MOUSEACTIVATE:
-		// Here we get the active docker before processing menu events
-		m_pActiveDocker = m_DockTabbedMDI.GetActiveDocker();		
+		// Store the active docker before processing the menu events
+		m_pLastActiveDocker = m_DockTabbedMDI.GetActiveDocker();		
 		break;
 	}
 

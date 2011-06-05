@@ -38,7 +38,7 @@ protected:
 
 private:
 	CDockTabbedMDI m_DockTabbedMDI;
-	CDocker* m_pActiveDocker;
+	CDocker* m_pLastActiveDocker;
 };
 
 #endif //MAINFRM_H
