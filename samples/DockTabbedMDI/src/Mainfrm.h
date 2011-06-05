@@ -22,12 +22,6 @@ public:
 	virtual ~CMainFrame();
 	void OnFileNew();
 	void OnContainerTabsAtTop();
-	void OnEditCopy();
-	void OnEditPaste();
-	void OnEditCut();
-	void OnEditDelete();
-	void OnEditRedo();
-	void OnEditUndo();
 	void OnMDITabsAtTop();
 	void LoadDefaultDockers();
 	void LoadDefaultMDIs();
@@ -36,12 +30,15 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnInitialUpdate();
+	virtual void OnMenuUpdate(UINT nID);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolBar();
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CDockTabbedMDI m_DockTabbedMDI;
+	CDocker* m_pActiveDocker;
 };
 
 #endif //MAINFRM_H

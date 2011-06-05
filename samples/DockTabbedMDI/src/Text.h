@@ -15,6 +15,12 @@ class CViewText : public CWnd
 public:
 	CViewText();
 	virtual ~CViewText();
+	void OnEditCopy();
+	void OnEditPaste();
+	void OnEditCut();
+	void OnEditDelete();
+	void OnEditRedo();
+	void OnEditUndo();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -23,7 +29,7 @@ protected:
 
 private:
 	HMODULE m_hRichEdit;
-
+	CFont m_Font;
 };
 
 // Declaration of the CContainText class

@@ -18,6 +18,7 @@ Changes in detail
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W
+- Added CDocker::GetActiveDocker
 - Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators
 - Added CWinException::GetError
@@ -26,6 +27,7 @@ Changes in detail
 - Modified CWnd::GetAncestor		now accepts a gaFlags parameter
 - Removed CLoadString
 - Removed GetWindowType for all CWnd classes
+- Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker
 
 
 Incompatibilities with previous versions

@@ -28,13 +28,17 @@ CViewOutput::~CViewOutput(void)
 
 void CViewOutput::OnInitialUpdate()
 {
-	SetWindowText(_T("Output Window"));
+	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
+
+	SendMessage(WM_SETFONT, (WPARAM)(HFONT)m_Font, 0);
+	SetWindowText(_T("Read Only Output Window"));
 }
 
 void CViewOutput::PreCreate(CREATESTRUCT &cs)
 {
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
-				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
+				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL | ES_READONLY;
 
 	cs.lpszClass = RICHEDIT_CLASS; // RichEdit ver 2.0
 }

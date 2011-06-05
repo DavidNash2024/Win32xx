@@ -406,11 +406,12 @@ namespace Win32xx
 		virtual void Dock(CDocker* pDocker, UINT uDockSide);
 		virtual void DockInContainer(CDocker* pDock, DWORD dwDockStyle);
 		virtual CDockContainer* GetContainer() const;
+		virtual CDocker* GetActiveDocker() const;
 		virtual CDocker* GetDockAncestor() const;
 		virtual CDocker* GetDockFromID(int n_DockID) const;
 		virtual CDocker* GetDockFromPoint(POINT pt) const;
 		virtual CDocker* GetDockFromView(CWnd* pView) const;
-		virtual CDocker* GetDockTopLevel() const;
+		virtual CDocker* GetTopmostDocker() const;
 		virtual int GetDockSize() const;
 		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual int GetTextHeight();
@@ -498,6 +499,7 @@ namespace Win32xx
 		CTargetBottom	m_TargetBottom;
 		CDocker*		m_pDockParent;
 		CDocker*		m_pDockAncestor;
+		CDocker*		m_pDockActive;
 
 		std::vector <CDocker*> m_vDockChildren;
 		std::vector <DockPtr> m_vAllDockers;	// Only used in DockAncestor
@@ -1540,7 +1542,7 @@ namespace Win32xx
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -1585,7 +1587,7 @@ namespace Win32xx
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -1630,7 +1632,7 @@ namespace Win32xx
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -1675,7 +1677,7 @@ namespace Win32xx
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetDockTopLevel();
+		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -1713,7 +1715,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDocker class
 	//
-	inline CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
+	inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockActive(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
 		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
 		            m_nTimerCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
@@ -1922,7 +1924,7 @@ namespace Win32xx
 		// Check dock parent chain
 		for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
 		{
-			CDocker* pDockTopLevel = (*iter)->GetDockTopLevel();
+			CDocker* pDockTopLevel = (*iter)->GetTopmostDocker();
 			if (pDockTopLevel->IsDocked())
 				TRACE(_T("Error: Top level parent should be undocked\n"));
 		}
@@ -1999,13 +2001,13 @@ namespace Win32xx
 
 		// Redraw the docked windows
 		GetAncestor()->SetForegroundWindow();
-		GetDockTopLevel()->m_hOldFocus = pDocker->GetView()->GetHwnd();
+		GetTopmostDocker()->m_hOldFocus = pDocker->GetView()->GetHwnd();
 		pDocker->GetView()->SetFocus();
 
-		GetDockTopLevel()->SetRedraw(FALSE);
+		GetTopmostDocker()->SetRedraw(FALSE);
 		RecalcDockLayout();
-		GetDockTopLevel()->SetRedraw(TRUE);
-		GetDockTopLevel()->RedrawWindow();
+		GetTopmostDocker()->SetRedraw(TRUE);
+		GetTopmostDocker()->RedrawWindow();
 	}
 
 	inline void CDocker::DockInContainer(CDocker* pDock, DWORD dwDockStyle)
@@ -2147,6 +2149,30 @@ namespace Win32xx
 		return pContainer;
 	}
 
+	inline CDocker* CDocker::GetActiveDocker() const
+	// Returns the docker whose child window has focus
+	{
+		CWnd* pWnd = GetFocus();
+		CDocker* pDock= NULL;
+		
+		while (pWnd)
+		{
+			if (pDock = dynamic_cast<CDocker*>(pWnd))
+				break;
+
+			pWnd = pWnd->GetParent();
+		}
+
+		return pDock;
+	}
+
+	inline CDocker* CDocker::GetDockAncestor() const
+	// The GetDockAncestor function retrieves the pointer to the
+	//  ancestor (root docker parent) of the Docker.
+	{
+		return m_pDockAncestor;
+	}
+
 	inline CDocker* CDocker::GetDockFromPoint(POINT pt) const
 	// Retrieves the Docker whose view window contains the specified point
 	{
@@ -2205,13 +2231,6 @@ namespace Win32xx
 		return pDockTarget;
 	}
 
-	inline CDocker* CDocker::GetDockAncestor() const
-	// The GetDockAncestor function retrieves the pointer to the
-	//  ancestor (root docker parent) of the Docker.
-	{
-		return m_pDockAncestor;
-	}
-
 	inline CDocker* CDocker::GetDockFromID(int n_DockID) const
 	{
 		std::vector <DockPtr>::iterator v;
@@ -2242,21 +2261,6 @@ namespace Win32xx
 		return pDock;
 	}
 
-	inline CDocker* CDocker::GetDockTopLevel() const
-	// Returns the docker's parent at the top of the Z order.
-	// Could be the dock ancestor or an undocked docker.
-	{
-		CDocker* pDockTopLevel = (CDocker* const)this;
-
-		while(pDockTopLevel->GetDockParent())
-		{
-			assert (pDockTopLevel != pDockTopLevel->GetDockParent());
-			pDockTopLevel = pDockTopLevel->GetDockParent();
-		}
-
-		return pDockTopLevel;
-	}
-
 	inline int CDocker::GetDockSize() const
 	{
 		// Returns the size of the docker to be used if it is redocked
@@ -2277,6 +2281,21 @@ namespace Win32xx
 			DockSize = 0;
 
 		return (int)DockSize;
+	}
+
+	inline CDocker* CDocker::GetTopmostDocker() const
+	// Returns the docker's parent at the top of the Z order.
+	// Could be the dock ancestor or an undocked docker.
+	{
+		CDocker* pDockTopLevel = (CDocker* const)this;
+
+		while(pDockTopLevel->GetDockParent())
+		{
+			assert (pDockTopLevel != pDockTopLevel->GetDockParent());
+			pDockTopLevel = pDockTopLevel->GetDockParent();
+		}
+
+		return pDockTopLevel;
 	}
 
 	inline CTabbedMDI* CDocker::GetTabbedMDI() const
@@ -2554,7 +2573,7 @@ namespace Win32xx
 		// Only top level undocked dockers get this message
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
-			GetDockTopLevel()->m_hOldFocus = ::GetFocus();
+			GetTopmostDocker()->m_hOldFocus = ::GetFocus();
 
 			// Send a notification of focus lost
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
@@ -2886,7 +2905,7 @@ namespace Win32xx
 			// Pass focus on the the view window
 			GetView()->SetFocus();
 
-		if ((this == GetDockTopLevel()) && (this != GetDockAncestor()))
+		if ((this == GetTopmostDocker()) && (this != GetDockAncestor()))
 		{
 			// Send a notification to top level window
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
@@ -2989,7 +3008,7 @@ namespace Win32xx
 				m_BlockMove = FALSE;
 			}
 		}
-		else if (this == GetDockTopLevel())
+		else if (this == GetTopmostDocker())
 		{
 			// Reposition the dock children
 			if (IsUndocked() && IsWindowVisible() && !m_bIsClosing) RecalcDockLayout();
@@ -3108,9 +3127,9 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->IsWindow())
 		{
-			CRect rc = GetDockTopLevel()->GetClientRect();
-			GetDockTopLevel()->RecalcDockChildLayout(rc);
-			GetDockTopLevel()->UpdateWindow();
+			CRect rc = GetTopmostDocker()->GetClientRect();
+			GetTopmostDocker()->RecalcDockChildLayout(rc);
+			GetTopmostDocker()->UpdateWindow();
 		}
 	}
 
@@ -3461,7 +3480,7 @@ namespace Win32xx
 		if (!pDockUndockedFrom && (GetDockChildren().size() > 0))
 			pDockUndockedFrom = GetDockChildren()[0];
 
-		GetDockTopLevel()->m_hOldFocus = 0;
+		GetTopmostDocker()->m_hOldFocus = 0;
 		PromoteFirstChild();
 		m_pDockParent = 0;
 
@@ -3516,7 +3535,7 @@ namespace Win32xx
 		}
 
 		RecalcDockLayout();
-        if ((pDockUndockedFrom) && (pDockUndockedFrom->GetDockTopLevel() != GetDockTopLevel()))
+        if ((pDockUndockedFrom) && (pDockUndockedFrom->GetTopmostDocker() != GetTopmostDocker()))
 			pDockUndockedFrom->RecalcDockLayout();
 	}
 
@@ -3531,7 +3550,7 @@ namespace Win32xx
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
 
-		GetDockTopLevel()->m_hOldFocus = 0;
+		GetTopmostDocker()->m_hOldFocus = 0;
 		CDocker* pDockUndockedFrom = GetDockFromView(pContainer->GetContainerParent());
 		pDockUndockedFrom->ShowWindow(SW_HIDE);
 		if (GetView() == pContainer)

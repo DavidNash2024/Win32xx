@@ -120,8 +120,6 @@ void CMainFrame::LoadDefaultMDIs()
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
 
 	// OnCommand responds to menu and and toolbar input
@@ -155,24 +153,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_TABBEDMDI_TOP:
 		OnMDITabsAtTop();
 		return TRUE;
-	case IDM_EDIT_COPY:
-		OnEditCopy();
-		return TRUE;
-	case IDM_EDIT_PASTE:
-		OnEditPaste();
-		return TRUE;
-	case IDM_EDIT_CUT:
-		OnEditCut();
-		return TRUE;
-	case IDM_EDIT_DELETE:
-		OnEditDelete();
-		return TRUE;
-	case IDM_EDIT_REDO:
-		OnEditRedo();
-		return TRUE;
-	case IDM_EDIT_UNDO:
-		OnEditUndo();
-		return TRUE;
 	case IDM_LAYOUT_DEFAULT:
 		SetRedraw(FALSE);
 		
@@ -201,9 +181,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		// Display the help dialog
 		OnHelp();
 		return TRUE;
-	}
 
-	return FALSE;
+	default:
+		// Pass the command on to the child window with focus
+		return GetFocus()->SendMessageW(WM_COMMAND, wParam, lParam);
+	}
 }
 
 void CMainFrame::OnCreate()
@@ -222,60 +204,6 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 }
 
-void CMainFrame::OnEditCopy()
-{
-	CWnd* pWnd = GetFocus();
-
-	// Only send the message to a CViewText window
-	if (dynamic_cast<CViewText*>(pWnd))
-		pWnd->SendMessage(WM_COPY, 0, 0);
-}
-
-void CMainFrame::OnEditPaste()
-{
-	CWnd* pWnd = GetFocus();
-
-	// Only send the message to a CViewText window
-	if (dynamic_cast<CViewText*>(pWnd))
-		pWnd->SendMessage(WM_PASTE, 0, 0);
-}
-
-void CMainFrame::OnEditCut()
-{
-	CWnd* pWnd = GetFocus();
-	
-	// Only send the message to a CViewText window
-	if (dynamic_cast<CViewText*>(pWnd))
-		pWnd->SendMessage(WM_CUT, 0, 0);
-}
-
-void CMainFrame::OnEditDelete()
-{
-	CWnd* pWnd = GetFocus();
-
-	// Only send the message to a CViewText window
-	if (dynamic_cast<CViewText*>(pWnd))
-		pWnd->SendMessage(WM_CLEAR, 0, 0);
-}
-
-void CMainFrame::OnEditRedo()
-{
-	CWnd* pWnd = GetFocus();
-
-	// Only send the message to a CViewText window
-	if (dynamic_cast<CViewText*>(pWnd))
-		pWnd->SendMessage(EM_REDO, 0, 0);
-}
-
-void CMainFrame::OnEditUndo()
-{
-	CWnd* pWnd = GetFocus();
-
-	// Only send the message to a CViewText window
-	if (dynamic_cast<CViewText*>(pWnd))
-		pWnd->SendMessage(EM_UNDO, 0, 0);
-}
-
 void CMainFrame::OnInitialUpdate()
 {
 	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE|DS_FIXED_RESIZE);
@@ -290,6 +218,37 @@ void CMainFrame::OnInitialUpdate()
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();
+}
+
+void CMainFrame::OnMenuUpdate(UINT nID)
+// Called when menu items are about to be displayed
+{
+	UNREFERENCED_PARAMETER(nID);
+	
+	CWnd* pWnd = 0;
+	CMenu Menu;
+	Menu.Attach(GetFrameMenu());
+	CMenu* pEditMenu = Menu.GetSubMenu(1);
+
+	if (m_pActiveDocker)
+	{
+		if (m_pActiveDocker == &m_DockTabbedMDI)
+			pWnd = m_DockTabbedMDI.GetTabbedMDI()->GetActiveMDIChild();
+		else
+			pWnd = m_pActiveDocker->GetContainer()->GetActiveView();
+	}
+	
+	// Enable the Edit menu for CViewText windows, disable the menu otherwise
+	UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;
+	
+	pEditMenu->EnableMenuItem(IDM_EDIT_CUT,    MF_BYCOMMAND | Flags);
+	pEditMenu->EnableMenuItem(IDM_EDIT_COPY,   MF_BYCOMMAND | Flags);
+	pEditMenu->EnableMenuItem(IDM_EDIT_PASTE,  MF_BYCOMMAND | Flags);
+	pEditMenu->EnableMenuItem(IDM_EDIT_DELETE, MF_BYCOMMAND | Flags);
+	pEditMenu->EnableMenuItem(IDM_EDIT_REDO,   MF_BYCOMMAND | Flags);
+	pEditMenu->EnableMenuItem(IDM_EDIT_UNDO,   MF_BYCOMMAND | Flags);
+
+	Menu.Detach();
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
@@ -343,3 +302,16 @@ void CMainFrame::SetupToolBar()
 	AddMenuIcon(IDM_FILE_NEWTREE, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW), IMAGE_ICON, 0,0,0));
 }
 
+ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_MOUSEACTIVATE:
+		// Here we get the active docker before processing menu events
+		m_pActiveDocker = m_DockTabbedMDI.GetActiveDocker();		
+		break;
+	}
+
+	// Always pass unhandled messages on to WndProcDefault
+	return WndProcDefault(uMsg, wParam, lParam);
+}

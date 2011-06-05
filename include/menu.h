@@ -185,7 +185,6 @@ namespace Win32xx
 		{	
 			if (!m_IsTmpMenu)
 			{
-			//	if (GetApp()) GetApp()->RemoveTmpMenus();	// Remove TmpMenus		
 				::DestroyMenu(m_hMenu);
 			}
 			
@@ -450,10 +449,11 @@ namespace Win32xx
 	inline CMenu* CMenu::GetSubMenu(int nPos)
 	{
 		assert(IsMenu(m_hMenu));
-		MenuPtr pMenu = new CMenu;
+		CMenu* pMenu = new CMenu;
 		pMenu->Attach(::GetSubMenu(m_hMenu, nPos));
+		pMenu->m_IsTmpMenu = TRUE;
 		m_vSubMenus.push_back(pMenu);
-		return pMenu.get();
+		return pMenu;
 	}
 
 	inline BOOL CMenu::InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/)
