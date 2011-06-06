@@ -316,7 +316,7 @@ namespace Win32xx
 
 	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
 	{
-		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0,0,0);
+		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED);
 		return AddTabPage(pView, szTabText, hIcon, idTab);
 	}
 
@@ -957,6 +957,9 @@ namespace Win32xx
 		int iImage = (*itTPI).iImage;
 		if (iImage >= 0)
 			TabCtrl_RemoveImage(m_hWnd, iImage);
+
+		if (pView == m_pActiveView)
+			m_pActiveView = 0;
 
 		(*itTPI).pView->Destroy();
 		m_vTabPageInfo.erase(itTPI);

@@ -1530,7 +1530,7 @@ namespace Win32xx
 	inline void CDocker::CTarget::SetImage(UINT nID)
 	{
 		m_hbmImage = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID),
-		IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		IMAGE_BITMAP, 0, 0, LR_SHARED);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -4061,7 +4061,7 @@ namespace Win32xx
 
 	inline void CDockContainer::SetTabIcon(UINT nID_Icon)
 	{
-		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon), IMAGE_ICON, 0,0,0);
+		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon), IMAGE_ICON, 0, 0, LR_SHARED);
 		SetTabIcon(hIcon);
 	}
 
