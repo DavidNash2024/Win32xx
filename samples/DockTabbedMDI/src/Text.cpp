@@ -27,7 +27,7 @@ CViewText::~CViewText(void)
 
 BOOL CViewText::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
 
 	switch (LOWORD(wParam))
 	{
