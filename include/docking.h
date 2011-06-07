@@ -2157,8 +2157,8 @@ namespace Win32xx
 		
 		while (pWnd)
 		{
-pDock = dynamic_cast<CDocker*>(pWnd)
-			if (pDock = dynamic_cast<CDocker*>(pWnd))
+			pDock = dynamic_cast<CDocker*>(pWnd);
+			if (pDock)
 				break;
 
 			pWnd = pWnd->GetParent();
