@@ -2217,7 +2217,7 @@ namespace Win32xx
 				pDockTest = (CDocker*)FromHandle(hWndTest);
 				CPoint ptLocal = pt;
 				pDockTest->ScreenToClient(ptLocal);
-				HWND hTestNew = ChildWindowFromPoint(hWndTest, ptLocal);
+				HWND hTestNew = ::ChildWindowFromPoint(hWndTest, ptLocal);
 				if (hTestNew == hWndTest) break;
 				hWndTest = hTestNew;
 			}

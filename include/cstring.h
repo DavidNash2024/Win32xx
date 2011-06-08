@@ -234,12 +234,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CString::operator == (LPCTSTR pszText)
+	// Returns TRUE if the strings have the same content
 	{
 		assert(pszText);
 		return (0 == Compare(pszText));
 	}
 
 	inline BOOL CString::operator != (LPCTSTR pszText)
+	// Returns TRUE if the strings have a different content
 	{
 		assert(pszText);
         return Compare(pszText) != 0;
@@ -288,11 +290,13 @@ namespace Win32xx
 	}
 
 	inline BSTR CString::AllocSysString() const
+	// Allocates a BSTR from the CString content.
 	{
 		return ::SysAllocStringLen(T2W(m_str.c_str()), (UINT)m_str.size());
 	}
 
 	inline void CString::AppendFormat(LPCTSTR pszFormat,...)
+	// Appends formatted data to an the CString content.
 	{
 		CString str;
 		str.Format(pszFormat);
@@ -300,6 +304,7 @@ namespace Win32xx
 	}
 
 	inline void CString::AppendFormat(UINT nFormatID, ...)
+	// Appends formatted data to an the CString content.
 	{
 		CString str1;
 		CString str2;
@@ -312,12 +317,14 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline int CString::Collate(LPCTSTR pszText) const
+	// Performs a case sensitive comparison of the two strings using locale-specific iinformation.
 	{
 		assert(pszText);
 		return _tcscoll(m_str.c_str(), pszText);
 	}
 
 	inline int CString::CollateNoCase(LPCTSTR pszText) const
+	// Performs a case insensitive comparison of the two strings using locale-specific iinformation.
 	{
 		assert(pszText);
 		return _tcsicoll(m_str.c_str(), pszText);
@@ -325,18 +332,21 @@ namespace Win32xx
 #endif	// _WIN32_WCE
 
 	inline int CString::Compare(LPCTSTR pszText) const
+	// Performs a case sensitive comparison of the two strings.
 	{
 		assert(pszText);
 		return m_str.compare(pszText);
 	}
 
 	inline int CString::CompareNoCase(LPCTSTR pszText) const
+	// Performs a case insensitive comparison of the two strings.
 	{
 		assert(pszText);
 		return _tcsicmp(m_str.data(), pszText);
 	}
 
 	inline int CString::Delete(int nIndex, int nCount /* = 1 */)
+	// Deletes a character or characters from the string.
 	{
 		assert(nIndex >= 0);
 		assert(nCount >= 0);
@@ -346,17 +356,20 @@ namespace Win32xx
 	}
 
 	inline void CString::Empty()
+	// Erases the contents of the string.
 	{
 		m_str.erase();
 	}
 
 	inline int CString::Find(TCHAR ch, int nIndex /* = 0 */) const
+	// Finds a character in the string.
 	{
 		assert(nIndex >= 0);
 		return (int)m_str.find(ch, nIndex);
 	}
 
 	inline int CString::Find(LPCTSTR pszText, int nIndex /* = 0 */) const
+	// Finds a substring within the string. 
 	{
 		assert(pszText);
 		assert(nIndex >= 0);
@@ -364,12 +377,14 @@ namespace Win32xx
 	}
 
 	inline int CString::FindOneOf(LPCTSTR pszText) const
+	// Finds the first matching character from a set.
 	{
 		assert(pszText);
 		return (int)m_str.find_first_of(pszText);
 	}
 
 	inline void CString::Format(LPCTSTR pszFormat,...)
+	// Formats the string as sprintf does.
 	{
 		va_list args;
 		va_start(args, pszFormat);
@@ -378,6 +393,7 @@ namespace Win32xx
 	}
 
 	inline void CString::Format(UINT nID, ...)
+	// Formats the string as sprintf does.
 	{
 		Empty();
 		CString str;
@@ -386,6 +402,7 @@ namespace Win32xx
 	}
 
 	inline void CString::FormatV(LPCTSTR pszFormat, va_list args)
+	// Formats the string using a variable list of arguments.
 	{
 		if (pszFormat)
 		{
@@ -405,6 +422,7 @@ namespace Win32xx
 	}
 
 	inline void CString::FormatMessage(LPCTSTR pszFormat,...)
+	// Formats a message string.
 	{
 		va_list args;
 		va_start(args, pszFormat);
@@ -413,6 +431,7 @@ namespace Win32xx
 	}
 
 	inline void CString::FormatMessageV(LPCTSTR pszFormat, va_list args)
+	// Formats a message string using a variable argument list.
 	{
 		LPTSTR pszTemp = 0;
 		if (pszFormat)
@@ -428,6 +447,7 @@ namespace Win32xx
 	}
 
 	inline TCHAR CString::GetAt(int nIndex) const
+	// Returns the character at the specified location within the string.
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
@@ -463,6 +483,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline BOOL CString::GetEnvironmentVariable(LPCTSTR pszVar)
+	// Sets the string to the value of the specified environment variable.
 	{
 		assert(pszVar);
 		Empty();
@@ -495,6 +516,7 @@ namespace Win32xx
 	}
 	
 	inline int CString::Insert(int nIndex, TCHAR ch)
+	// Inserts a single character or a substring at the given index within the string.
 	{
 		assert(nIndex >= 0);
 		assert(ch);
@@ -504,6 +526,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Insert(int nIndex, const CString& str)
+	// Inserts a single character or a substring at the given index within the string.
 	{
 		assert(nIndex >= 0);
 
@@ -512,11 +535,13 @@ namespace Win32xx
 	}
 
 	inline BOOL CString::IsEmpty() const
+	// Returns TRUE if the string is empty
 	{
 		return m_str.empty();
 	}
 
 	inline CString CString::Left(int nCount) const
+	// Extracts the left part of a string.
 	{
 		assert(nCount >= 0);
 
@@ -526,6 +551,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CString::LoadString(UINT nID)
+	// Loads the string from a Windows resource.
 	{
 		assert (GetApp());
 
@@ -553,26 +579,31 @@ namespace Win32xx
 	}
 
 	inline void CString::MakeLower()
+	// Converts all the characters in this string to lowercase characters.
 	{
 		std::transform(m_str.begin(), m_str.end(), m_str.begin(), &::tolower);
 	}
 
 	inline void CString::MakeReverse()
+	// Reverses the string.
 	{
 		std::reverse(m_str.begin(), m_str.end());
 	}
 
 	inline void CString::MakeUpper()
+	// Converts all the characters in this string to uppercase characters.
 	{
 		std::transform(m_str.begin(), m_str.end(), m_str.begin(), &::toupper);
 	}
 
 	inline CString CString::Mid(int nFirst) const
+	// Extracts the middle part of a string.
 	{
 		return Mid(nFirst, GetLength());
 	}
 
 	inline CString CString::Mid(int nFirst, int nCount) const
+	// Extracts the middle part of a string.
 	{
 		assert(nFirst >= 0);
 		assert(nCount >= 0);
@@ -583,12 +614,14 @@ namespace Win32xx
 	}
 
 	inline int CString::ReverseFind(LPCTSTR pszText, int nIndex /* = -1 */) const
+	// Search for a substring within the string, starting from the end.
 	{
 		assert(pszText);
 		return (int)m_str.rfind(pszText, nIndex);
 	}
 
 	inline void CString::SetAt(int nIndex, TCHAR ch)
+	// Sets the character at the specificed position to the specified value.
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
@@ -616,6 +649,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Remove(LPCTSTR pszText)
+	// Removes each occurance of the specified substring from the string.
 	{
 		assert(pszText);
 
@@ -630,6 +664,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Replace(TCHAR chOld, TCHAR chNew)
+	// Replaces each occurance of the old character with the new character.
 	{
 		int nCount = 0;
 		tString::iterator it = m_str.begin();
@@ -646,6 +681,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Replace(LPCTSTR pszOld, LPCTSTR pszNew)
+	// Replaces each occurance of the old substring with the new substring.
 	{
 		assert(pszOld);
 		assert(pszNew);
@@ -662,6 +698,7 @@ namespace Win32xx
 	}
 
 	inline CString CString::Right(int nCount) const
+	// Extracts the right part of a string.
 	{
 		assert(nCount >= 0);
 
@@ -671,6 +708,7 @@ namespace Win32xx
 	}
 
 	inline BSTR CString::SetSysString(BSTR* pBstr) const
+	// Sets an existing BSTR object to the string.
 	{
 		assert(pBstr);
 
@@ -681,6 +719,8 @@ namespace Win32xx
 	}
 
 	inline CString CString::SpanExcluding(LPCTSTR pszText) const
+	// Extracts characters from the string, starting with the first character, 
+	// that are not in the set of characters identified by pszCharSet.
 	{
 		assert (pszText);
 
@@ -696,6 +736,7 @@ namespace Win32xx
 	}
 
 	inline CString CString::SpanIncluding(LPCTSTR pszText) const
+	// Extracts a substring that contains only the characters in a set.
 	{
 		assert (pszText);
 
@@ -711,6 +752,7 @@ namespace Win32xx
 	}
 
 	inline CString CString::Tokenize(LPCTSTR pszTokens, int& iStart) const
+	// Extracts specified tokens in a target string.
 	{
 		assert(pszTokens);
 		assert(iStart >= 0);
@@ -730,12 +772,14 @@ namespace Win32xx
 	}
 
 	inline void CString::Trim()
+	// Trims all leading and trailing whitespace characters from the string.
 	{
 		TrimLeft();
 		TrimRight();
 	}
 
 	inline void CString::TrimLeft()
+	// Trims leading whitespace characters from the string.
 	{
 		// This method is supported by the Borland 5.5 compiler
 		tString::iterator iter;
@@ -749,17 +793,20 @@ namespace Win32xx
 	}
 
 	inline void CString::TrimLeft(TCHAR chTarget)
+	// Trims the specified character from the beginning of the string.
 	{
 		m_str.erase(0, m_str.find_first_not_of(chTarget));
 	}
 
 	inline void CString::TrimLeft(LPCTSTR pszTargets)
+	// Trims the specified set of characters from the beginning of the string. 
 	{
 		assert(pszTargets);
 		m_str.erase(0, m_str.find_first_not_of(pszTargets));
 	}
 
 	inline void CString::TrimRight()
+	// Trims trailing whitespace characters from the string.
 	{
 		// This method is supported by the Borland 5.5 compiler
 		tString::reverse_iterator riter;
@@ -773,6 +820,7 @@ namespace Win32xx
 	}
 
 	inline void CString::TrimRight(TCHAR chTarget)
+	// Trims the specified character from the end of the string.
 	{
 		size_t pos = m_str.find_last_not_of(chTarget);
 		if (pos != std::string::npos)
@@ -780,6 +828,7 @@ namespace Win32xx
 	}
 
 	inline void CString::TrimRight(LPCTSTR pszTargets)
+	// Trims the specified set of characters from the end of the string.
 	{
 		assert(pszTargets);
 
@@ -789,9 +838,13 @@ namespace Win32xx
 	}
 
 	inline void CString::Truncate(int nNewLength)
+	// Reduces the length of the string to the specified amount
 	{
-		assert(nNewLength >= 0);
-		m_str.erase(nNewLength);
+		if (nNewLength < GetLength())
+		{
+			assert(nNewLength >= 0);
+			m_str.erase(nNewLength);
+		}
 	}
 
 	

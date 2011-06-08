@@ -399,6 +399,7 @@ namespace Win32xx
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL  CheckDlgButton(int nIDButton, UINT uCheck) const;
 		BOOL  CheckRadioButton(int nIDFirstButton, int nIDLastButton, int nIDCheckButton) const;
+		CWnd* ChildWindowFromPoint(POINT pt) const;
 		BOOL  ClientToScreen(POINT& pt) const;
 		BOOL  ClientToScreen(RECT& rc) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
@@ -1929,6 +1930,15 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return ::CheckRadioButton(m_hWnd, nIDFirstButton, nIDLastButton, nIDCheckButton);
+	}
+
+	inline CWnd* CWnd::ChildWindowFromPoint(POINT pt) const
+	// determines which, if any, of the child windows belonging to a parent window contains
+	// the specified point. The search is restricted to immediate child windows. 
+	// Grandchildren, and deeper descendant windows are not searched.
+	{
+		assert(::IsWindow(m_hWnd));
+		return FromHandle(::ChildWindowFromPoint(m_hWnd, pt));
 	}
 
 	inline BOOL CWnd::ClientToScreen(POINT& pt) const

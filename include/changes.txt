@@ -22,6 +22,7 @@ Changes in detail
 - Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators
 - Added CWinException::GetError
+- Added CWnd::ChildWindowFromPoint
 - Added CWnd::WindowFromPoint
 - Modified LoadString 				now returns CString
 - Modified CWnd::GetAncestor		now accepts a gaFlags parameter
