@@ -437,10 +437,10 @@ namespace Win32xx
 		CDocker* GetDockParent() const {return m_pDockParent;}
 		DWORD GetDockStyle() const {return m_DockStyle;}
 		CWnd* GetView() const {return GetDockClient().GetView();}
-		BOOL IsChildOfDocker(HWND hwnd) const;
+		BOOL IsChildOfDocker(CWnd* pWnd) const;
 		BOOL IsDocked() const;
 		BOOL IsDragAutoResize();
-		BOOL IsRelated(HWND hWnd) const;
+		BOOL IsRelated(CWnd* pWnd) const;
 		BOOL IsUndocked() const;
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
@@ -719,7 +719,7 @@ namespace Win32xx
 	{
 		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			BOOL bFocus = m_pDock->IsChildOfDocker(::GetFocus());
+			BOOL bFocus = m_pDock->IsChildOfDocker(GetFocus());
 			m_bOldFocus = FALSE;
 
 			// Acquire the DC for our NonClient painting
@@ -2155,11 +2155,10 @@ namespace Win32xx
 		CWnd* pWnd = GetFocus();
 		CDocker* pDock= NULL;
 		
-		while (pWnd)
+		while (pWnd && (pDock == NULL))
 		{
-			pDock = dynamic_cast<CDocker*>(pWnd);
-			if (pDock)
-				break;
+			if (IsRelated(pWnd))
+				pDock = (CDocker*)pWnd;
 
 			pWnd = pWnd->GetParent();
 		}
@@ -2179,19 +2178,19 @@ namespace Win32xx
 	{
 		// Step 1: Find the top level Docker the point is over
 		CDocker* pDockTop = NULL;
-		HWND hAncestor = GetDockAncestor()->GetAncestor()->GetHwnd();
+		CWnd* pAncestor = GetDockAncestor()->GetAncestor();
 
 		// Iterate through all top level windows
-		HWND hWnd = ::GetWindow(m_hWnd, GW_HWNDFIRST);
-		while(hWnd)
+		CWnd* pWnd = GetWindow(GW_HWNDFIRST);
+		while(pWnd)
 		{
-			if (IsRelated(hWnd) || hWnd == hAncestor)
+			if (IsRelated(pWnd) || pWnd == pAncestor)
 			{
 				CDocker* pDockTest;
-				if (hWnd == hAncestor)
+				if (pWnd == pAncestor)
 					pDockTest = GetDockAncestor();
 				else
-					pDockTest = (CDocker*)FromHandle(hWnd);
+					pDockTest = (CDocker*)pWnd;
 
 				CRect rc = pDockTest->GetClientRect();
 				pDockTest->ClientToScreen(rc);
@@ -2202,31 +2201,27 @@ namespace Win32xx
 				}
 			}
 
-			hWnd = ::GetWindow(hWnd, GW_HWNDNEXT);
+			pWnd = pWnd->GetWindow(GW_HWNDNEXT);
 		}
 
 		// Step 2: Find the docker child whose view window has the point
 		CDocker* pDockTarget = NULL;
 		if (pDockTop)
 		{
-			CDocker* pDockTest = pDockTop;
-			HWND hWndTest = pDockTest->GetHwnd();
+			CDocker* pDockParent = pDockTop;
+			CDocker* pDockTest = pDockParent;
 
-			while (IsRelated(hWndTest))
+			while (IsRelated(pDockTest))
 			{
-				pDockTest = (CDocker*)FromHandle(hWndTest);
+				pDockParent = pDockTest;
 				CPoint ptLocal = pt;
-				pDockTest->ScreenToClient(ptLocal);
-				HWND hTestNew = ::ChildWindowFromPoint(hWndTest, ptLocal);
-				if (hTestNew == hWndTest) break;
-				hWndTest = hTestNew;
+				pDockParent->ScreenToClient(ptLocal);
+				pDockTest = (CDocker*)pDockParent->ChildWindowFromPoint(ptLocal);
+				assert (pDockTest != pDockParent);
 			}
 
-			if (pDockTest)
-			{
-				CRect rc = pDockTest->GetDockClient().GetWindowRect();
-				if (rc.PtInRect(pt)) pDockTarget = pDockTest;
-			}
+			CRect rc = pDockParent->GetDockClient().GetWindowRect();
+			if (rc.PtInRect(pt)) pDockTarget = pDockParent;
 		}
 
 		return pDockTarget;
@@ -2344,14 +2339,14 @@ namespace Win32xx
 		ShowWindow(SW_HIDE);
 	}
 
-	inline BOOL CDocker::IsChildOfDocker(HWND hwnd) const
+	inline BOOL CDocker::IsChildOfDocker(CWnd* pWnd) const
 	// returns true if the specified window is a child of this docker
 	{
-		while ((hwnd != NULL) && (hwnd != GetDockAncestor()->GetHwnd()))
+		while ((pWnd != NULL) && (pWnd != GetDockAncestor()))
 		{
-			if (hwnd == m_hWnd) return TRUE;
-			if (IsRelated(hwnd)) break;
-			hwnd = ::GetParent(hwnd);
+			if (pWnd == this) return TRUE;
+			if (IsRelated(pWnd)) break;
+			pWnd = pWnd->GetParent();
 		}
 
 		return FALSE;
@@ -2367,15 +2362,15 @@ namespace Win32xx
 		return m_bDragAutoResize;
 	}
 
-	inline BOOL CDocker::IsRelated(HWND hWnd) const
+	inline BOOL CDocker::IsRelated(CWnd* pWnd) const
 	// Returns TRUE if the hWnd is a docker within this dock family
 	{
-		if (GetDockAncestor()->GetHwnd() == hWnd) return TRUE;
+		if (GetDockAncestor() == pWnd) return TRUE;
 
 		std::vector<DockPtr>::iterator iter;
 		for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
 		{
-			if ((*iter)->GetHwnd() == hWnd) return TRUE;
+			if ((*iter).get() == pWnd) return TRUE;
 		}
 
 		return FALSE;

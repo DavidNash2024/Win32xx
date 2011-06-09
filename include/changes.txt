@@ -25,6 +25,8 @@ Changes in detail
 - Added CWnd::ChildWindowFromPoint
 - Added CWnd::WindowFromPoint
 - Modified LoadString 				now returns CString
+- Modified CDocker::IsChildOfDocker now takes a CWnd pointer instead of HWND
+- Modified CDocker::IsRelated 		now takes a CWnd pointer instead of HWND
 - Modified CWnd::GetAncestor		now accepts a gaFlags parameter
 - Removed CLoadString
 - Removed GetWindowType for all CWnd classes
