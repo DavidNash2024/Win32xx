@@ -173,7 +173,8 @@ void CColourDialog::OnPaintPreview()
 	}
 
 	CDC PreviewDC = GetDC();
-	CDC MemDC = PreviewDC.CreateCompatibleDC();
+	CDC MemDC;
+	MemDC.CreateCompatibleDC(&PreviewDC);
 	MemDC.AttachBitmap(m_hbmPreview);
 	PreviewDC.BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
 	MemDC.DetachBitmap();
