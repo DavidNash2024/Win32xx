@@ -203,6 +203,7 @@ namespace Win32xx
 	typedef std::basic_stringstream<TCHAR> tStringStream;
 
 	// Some useful smart pointers
+	typedef Shared_Ptr<CDC> DCPtr;
 	typedef Shared_Ptr<CMenu> MenuPtr;
 	typedef Shared_Ptr<CWnd> WndPtr;
 
@@ -236,6 +237,7 @@ namespace Win32xx
 		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 
+		std::vector<DCPtr> vTmpDCs;		// A vector of temporary CDC pointers
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 
@@ -329,6 +331,7 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
+		void AddTmpDC(HDC hDC);
 		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
@@ -684,10 +687,30 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
+	inline void CWinApp::AddTmpDC(HDC hDC)
+	{
+		// The TmpMenus are created by GetSybMenu.
+		// They are removed by CleanupTemps
+		assert(hDC);
+		assert(!GetCDCFromMap(hDC));
+
+		CDC* pDC = new CDC;
+		pDC->m_pData->hDC = hDC;
+		m_csMapLock.Lock();
+		m_mapHDC.insert(std::make_pair(hDC, pDC));
+		m_csMapLock.Release();
+		pDC->m_pData->IsTmpDC = TRUE;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->vTmpDCs.push_back(pDC); // save TmpWnd as a smart pointer
+	}
+
 #ifndef _WIN32_WCE
 	inline void CWinApp::AddTmpMenu(HMENU hMenu)
 	{
-		// The TmpMenus are temporary, deleted when a CMenu is destroyed.
+		// The TmpMenus are created by GetSybMenu.
+		// They are removed by CleanupTemps
 		assert(::IsMenu(hMenu));
 		assert(!GetCMenuFromMap(hMenu));
 
@@ -707,7 +730,10 @@ namespace Win32xx
 	inline void CWinApp::AddTmpWnd(HWND hWnd)
 	{
 		// TmpWnds are created if required to support functions like CWnd::GetParent.
-		// The TmpWnds are temporary, deleted when a CWnd is destroyed.
+		// They are removed by CleanupTemps
+		assert(::IsWindow(hWnd));
+		assert(!GetCWndFromMap(hWnd));
+
 		CWnd* pWnd = new CWnd;
 		pWnd->m_hWnd = hWnd;
 		pWnd->AddToMap();
@@ -716,6 +742,29 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpWnds.push_back(pWnd); // save TmpWnd as a smart pointer
+	}
+
+	inline BOOL CWinApp::CleanupTemps(MSG Msg)
+	// Removes all Temporary CWnds and CMenus belonging to this thread
+	{
+		BOOL Processed = FALSE;
+		if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
+		{
+			// Retrieve the pointer to the TLS Data
+			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			assert(pTLSData);
+
+			pTLSData->vTmpWnds.clear();
+			pTLSData->vTmpDCs.clear();
+
+	#ifndef _WIN32_WCE
+			pTLSData->vTmpMenus.clear();
+	#endif
+
+			Processed = TRUE;
+		}
+
+		return Processed;
 	}
 
 	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)
@@ -829,28 +878,6 @@ namespace Win32xx
 					}
 				}
 			}
-		}
-
-		return Processed;
-	}
-
-	inline BOOL CWinApp::CleanupTemps(MSG Msg)
-	// Removes all Temporary CWnds and CMenus belonging to this thread
-	{
-		BOOL Processed = FALSE;
-		if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
-		{
-			// Retrieve the pointer to the TLS Data
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			assert(pTLSData);
-
-			pTLSData->vTmpWnds.clear();
-
-	#ifndef _WIN32_WCE
-			pTLSData->vTmpMenus.clear();
-	#endif
-
-			Processed = TRUE;
 		}
 
 		return Processed;

@@ -733,7 +733,8 @@ namespace Win32xx
 			CRect rc = GetWindowRect();
 
 			// Create and set up our memory DC
-			CDC dcMem = dc.CreateCompatibleDC();
+			CDC dcMem;
+			dcMem.CreateCompatibleDC(&dc);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
@@ -1339,7 +1340,8 @@ namespace Win32xx
 	{
 		// Save the Dock window's blue tinted bitmap
 		CDC dcDesktop = ::GetDC(HWND_DESKTOP);
-		CDC dcMem = dcDesktop.CreateCompatibleDC();
+		CDC dcMem;
+		dcMem.CreateCompatibleDC(&dcDesktop);
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);

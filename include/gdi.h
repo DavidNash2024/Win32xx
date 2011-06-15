@@ -431,6 +431,8 @@ namespace Win32xx
 	//
 	class CDC
 	{
+		friend class CWinApp;
+
 	public:
 		struct DataMembers	// A structure that contains the data members for CDC
 		{
@@ -447,6 +449,7 @@ namespace Win32xx
 			HPALETTE hPaletteOld;
 			HPEN	hPenOld;
 			long	Count;
+			BOOL	IsTmpDC;
 		};
 
 		CDC();									// Constructs a new CDC without assigning a HDC
@@ -461,6 +464,14 @@ namespace Win32xx
 		HDC  DetachDC();
 		HDC GetHDC() const { return m_pData->hDC; }
 		static CDC* FromHandle(HDC hDC);
+
+		// Initialization
+		BOOL CreateCompatibleDC(CDC* pDC);
+		BOOL CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData);
+		int GetDeviceCaps(int nIndex) const;
+#ifndef _WIN32_WCE
+		BOOL CreateIC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData);
+#endif
 
 		// Create and Select Bitmaps
 		void AttachBitmap(HBITMAP hBitmap);
@@ -542,14 +553,6 @@ namespace Win32xx
 #endif
 
 		// Wrappers for WinAPI functions
-
-		// Initialization
-		HDC CreateCompatibleDC() const;
-		HDC CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const;
-		int GetDeviceCaps(int nIndex) const;
-#ifndef _WIN32_WCE
-		HDC CreateIC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const;
-#endif
 
 		// Point and Line Drawing Functions
 		CPoint GetCurrentPosition() const;
@@ -2132,6 +2135,7 @@ namespace Win32xx
 		m_pData->hPaletteOld = 0;
 		m_pData->hPenOld = 0;
 		m_pData->Count = 1L;
+		m_pData->IsTmpDC = FALSE;
 	}
 
 	inline CDC::CDC(HDC hDC)
@@ -2166,6 +2170,7 @@ namespace Win32xx
 			m_pData->hPaletteOld = 0;
 			m_pData->hPenOld = 0;
 			m_pData->Count = 1L;
+			m_pData->IsTmpDC = FALSE;
 
 			AddToMap();
 		}
@@ -2284,21 +2289,54 @@ namespace Win32xx
 		m_pData->hPaletteOld = 0;
 		m_pData->hPenOld = 0;
 		m_pData->Count = 1L;
+		m_pData->IsTmpDC = FALSE;
 
 		return hDC;
 	}
 
+	// Initialization
+	inline BOOL CDC::CreateCompatibleDC(CDC* pDC)
+	// Returns a memory device context (DC) compatible with the specified device.	
+	{
+		assert(pDC);
+		assert(m_pData->hDC == NULL);
+		HDC hDC = ::CreateCompatibleDC(pDC->GetHDC());
+		if (hDC) AttachDC(hDC);
+		return (BOOL)hDC;
+	}
+
+	inline BOOL CDC::CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData)
+	// Returns a device context (DC) for a device using the specified name.	
+	{
+		assert(m_pData->hDC == NULL);
+		HDC hDC = ::CreateDC(lpszDriver, lpszDevice, lpszOutput, pInitData);
+		if (hDC) AttachDC(hDC);
+		return (BOOL)hDC;
+	}
+
+#ifndef _WIN32_WCE
+	inline BOOL CDC::CreateIC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData)
+	{
+		assert(m_pData->hDC == NULL);
+		HDC hDC = ::CreateIC(lpszDriver, lpszDevice, lpszOutput, pInitData);
+		if (hDC) AttachDC(hDC);
+		return (BOOL)hDC;
+	}
+#endif
+	
 	inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask)
 	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
 	// Suitable for use with a Window DC or a memory DC
 	{
 		// Create the Image memory DC
-		CDC dcImage = CreateCompatibleDC();
+		CDC dcImage;
+		dcImage.CreateCompatibleDC(this);
 		dcImage.SetBkColor(clrMask);
 		dcImage.AttachBitmap(hbmImage);
 
 		// Create the Mask memory DC
-		CDC dcMask = CreateCompatibleDC();
+		CDC dcMask;
+		dcMask.CreateCompatibleDC(this);
         dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
 		dcMask.BitBlt(0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
 
@@ -2313,6 +2351,12 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+		if (pDC == 0)
+		{
+			GetApp()->AddTmpDC(hDC);
+			pDC = GetApp()->GetCDCFromMap(hDC);
+			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, 0L);
+		}
 		return pDC;
 	}
 
@@ -3076,20 +3120,6 @@ namespace Win32xx
 
 	// Wrappers for WinAPI functions
 
-	// Initialization
-	inline HDC CDC::CreateCompatibleDC() const
-	// Returns a memory device context (DC) compatible with the specified device.	
-	{
-		assert(m_pData->hDC);
-		return ::CreateCompatibleDC(m_pData->hDC);
-	}
-
-	inline HDC CDC::CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE& dvmInit) const
-	// Returns a device context (DC) for a device using the specified name.	
-	{
-		return ::CreateDC(lpszDriver, lpszDevice, lpszOutput, &dvmInit);
-	}
-	
 	inline int CDC::GetDeviceCaps (int nIndex) const
 	// Retrieves device-specific information for the specified device.
 	{
