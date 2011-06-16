@@ -149,7 +149,7 @@ void CView::OnPaint(CDC& dc)
 		CDC memDC = ::CreateCompatibleDC(dc);
 		CRect rcView = GetClientRect();
 		memDC.AttachBitmap(m_hbmImage);
-		dc.BitBlt(0, 0, rcView.Width(), rcView.Height(), memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
+		dc.BitBlt(0, 0, rcView.Width(), rcView.Height(), &memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
 		memDC.DetachBitmap(); 
 	}
 	else

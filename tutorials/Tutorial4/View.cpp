@@ -11,10 +11,9 @@ CView::CView()
 
 void CView::DrawLine(int x, int y)
 {
-	CDC dc = GetDC();
-
-	dc.MoveTo(m_points.back().x, m_points.back().y);
-	dc.LineTo(x, y);
+	CDC* pDC = GetDC();
+	pDC->MoveTo(m_points.back().x, m_points.back().y);
+	pDC->LineTo(x, y);
 }
 
 void CView::OnPaint(CDC& dc)

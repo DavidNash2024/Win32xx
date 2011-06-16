@@ -17,11 +17,10 @@ CView::~CView()
 
 void CView::DrawLine(int x, int y)
 {
-	CDC dc = GetDC();
-
-	dc.CreatePen(PS_SOLID, 1, m_points.back().color);
-	dc.MoveTo(m_points.back().x, m_points.back().y);
-	dc.LineTo(x, y);
+	CDC* pDC = GetDC();
+	pDC->CreatePen(PS_SOLID, 1, m_points.back().color);
+	pDC->MoveTo(m_points.back().x, m_points.back().y);
+	pDC->LineTo(x, y);
 }
 
 void CView::OnPaint(CDC& dc)

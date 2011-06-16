@@ -420,26 +420,26 @@ namespace Win32xx
 							if (m_Theme.FlatStyle)
 							{
 								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
-								MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
+								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
 								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 							}
 							else
 							{
 								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
 								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
-								MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
+								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
 							}
 
 							// Copy Source DC to Memory DC using the RoundRect mask
-							MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
-							MemDC.BitBlt(left, top, cx, cy, MaskDC,   left, top, SRCAND);
-							MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+							MemDC.BitBlt(left, top, cx, cy, &SourceDC, left, top, SRCINVERT);
+							MemDC.BitBlt(left, top, cx, cy, &MaskDC,   left, top, SRCAND);
+							MemDC.BitBlt(left, top, cx, cy, &SourceDC, left, top, SRCINVERT);
 
 							// Extra drawing to prevent jagged edge while moving bands
 							if (m_bIsDragging)
 							{
 								CDC* pReBarDC = GetDC();
-								pReBarDC->BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+								pReBarDC->BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, &MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 							}
 						}
 					}
@@ -459,7 +459,7 @@ namespace Win32xx
 			}
 
 			// Copy the Memory DC to the window's DC
-			dc.BitBlt(0, 0, BarWidth, BarHeight, MemDC, 0, 0, SRCCOPY);
+			dc.BitBlt(0, 0, BarWidth, BarHeight, &MemDC, 0, 0, SRCCOPY);
 		}
 		
 		return Erase;

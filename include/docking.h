@@ -779,7 +779,7 @@ namespace Win32xx
 				Draw3DBorder(rc);
 
 			// Copy the Memory DC to the window's DC
-			pDC->BitBlt(rcAdjust, rcAdjust, Width, Height, dcMem, rcAdjust, rcAdjust, SRCCOPY);
+			pDC->BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
 		}
 	}
 
@@ -1317,7 +1317,7 @@ namespace Win32xx
 		CRect rc = GetClientRect();
 		CDC MemDC = CreateCompatibleDC(dc);
 		MemDC.AttachBitmap(m_hbmBlueTint);
-		dc.BitBlt(0, 0, rc.Width(), rc.Height(), MemDC, 0, 0, SRCCOPY);
+		dc.BitBlt(0, 0, rc.Width(), rc.Height(), &MemDC, 0, 0, SRCCOPY);
 	}
 
 	inline void CDocker::CDockHint::PreCreate(CREATESTRUCT &cs)
@@ -1346,7 +1346,7 @@ namespace Win32xx
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);
 		dcMem.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
-		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
+		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 		HBITMAP hbmDock = dcMem.DetachBitmap();
 		TintBitmap(hbmDock, -64, -24, +128);
 		SetBitmap(hbmDock);

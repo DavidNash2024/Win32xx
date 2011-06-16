@@ -906,7 +906,7 @@ namespace Win32xx
 
 		// Now copy our from our memory DC to the window DC
 		pdcView->SelectClipRgn(hrgnClip);
-		pdcView->BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
+		pdcView->BitBlt(0, 0, rcClient.Width(), rcClient.Height(), &dcMem, 0, 0, SRCCOPY);
 
 		// Cleanup
 		::DeleteObject(hrgnSrc1);

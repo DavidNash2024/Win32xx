@@ -46,7 +46,7 @@ void CColourDialog::OnGrayScale()
 		Mem1DC.AttachBitmap(m_hbmPreviewOrig);
 		CDC Mem2DC = ::CreateCompatibleDC(NULL);
 		Mem2DC.AttachBitmap(m_hbmPreview);
-		Mem2DC.BitBlt(0, 0, 239-16, 201-16, Mem1DC, 0, 0, SRCCOPY);
+		Mem2DC.BitBlt(0, 0, 239-16, 201-16, &Mem1DC, 0, 0, SRCCOPY);
 		Mem1DC.DetachBitmap();
 		Mem2DC.DetachBitmap();
 
@@ -126,7 +126,7 @@ void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 	Mem1DC.AttachBitmap(m_hbmPreviewOrig);
 	CDC Mem2DC = ::CreateCompatibleDC(NULL);
 	Mem2DC.AttachBitmap(m_hbmPreview);
-	Mem2DC.BitBlt(0, 0, 239-16, 201-16, Mem1DC, 0, 0, SRCCOPY);
+	Mem2DC.BitBlt(0, 0, 239-16, 201-16, &Mem1DC, 0, 0, SRCCOPY);
 	Mem1DC.DetachBitmap();
 	Mem2DC.DetachBitmap();
 
@@ -176,7 +176,7 @@ void CColourDialog::OnPaintPreview()
 	CDC MemDC;
 	MemDC.CreateCompatibleDC(pPreviewDC);
 	MemDC.AttachBitmap(m_hbmPreview);
-	pPreviewDC->BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
+	pPreviewDC->BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, &MemDC, 0, 0, SRCCOPY);
 	MemDC.DetachBitmap();
 }
 
@@ -224,10 +224,10 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 
 	// Stretch the bitmap to fit in the destination display area
 	Dest1DC.SetStretchBltMode(COLORONCOLOR);
-	Dest1DC.StretchBlt(0, 0, nWidthDest, nHeightDest, MemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+	Dest1DC.StretchBlt(0, 0, nWidthDest, nHeightDest, &MemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 
 	// Make a second copy of the bitmap
-	Dest2DC.BitBlt(0, 0, nWidthDest, nHeightDest, Dest1DC, 0, 0, SRCCOPY);
+	Dest2DC.BitBlt(0, 0, nWidthDest, nHeightDest, &Dest1DC, 0, 0, SRCCOPY);
 
 	// Release the bitmaps
 	MemDC.DetachBitmap();

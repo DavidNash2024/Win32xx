@@ -456,7 +456,7 @@ namespace Win32xx
 		CDC();									// Constructs a new CDC without assigning a HDC
 		CDC(HDC hDC);							// Assigns a HDC to a new CDC
 		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
-		void operator = (const HDC hDC);		// Assigns a HDC to an existing CDC
+	//	void operator = (const HDC hDC);		// Assigns a HDC to an existing CDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		virtual ~CDC();
@@ -623,8 +623,8 @@ namespace Win32xx
 		int  StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
 			           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const;
 		BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
-		BOOL BitBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
-		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const;
+		BOOL BitBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
+		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const;
 		
 #ifndef _WIN32_WCE
 		int  GetDIBits(HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const;
@@ -2187,13 +2187,13 @@ namespace Win32xx
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	inline void CDC::operator = (const HDC hDC)
-	// Note: this assignment operater permits a call like this:
-	// CDC MyCDC;
-	// MyCDC = SomeHDC;	
-	{
-		AttachDC(hDC);
-	}
+//	inline void CDC::operator = (const HDC hDC)
+//	// Note: this assignment operater permits a call like this:
+//	// CDC MyCDC;
+//	// MyCDC = SomeHDC;	
+//	{
+//		AttachDC(hDC);
+//	}
 
 	inline CDC& CDC::operator = (const CDC& rhs)
 	// Note: A copy of a CDC is a clone of the original.
@@ -2340,12 +2340,12 @@ namespace Win32xx
 		CDC dcMask;
 		dcMask.CreateCompatibleDC(this);
         dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
-		dcMask.BitBlt(0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
+		dcMask.BitBlt(0, 0, cx, cy, &dcImage, 0, 0, SRCCOPY);
 
 		// Mask the image to 'this' DC
-		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
-		BitBlt(x, y, cx, cy, dcMask, 0, 0, SRCAND);
-		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+		BitBlt(x, y, cx, cy, &dcImage, 0, 0, SRCINVERT);
+		BitBlt(x, y, cx, cy, &dcMask, 0, 0, SRCAND);
+		BitBlt(x, y, cx, cy, &dcImage, 0, 0, SRCINVERT);
 	}
 
 	inline CDC* CDC::FromHandle(HDC hDC)
@@ -2440,14 +2440,17 @@ namespace Win32xx
 					if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
 					if (m_pData->hPaletteOld) ::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
 
-					// We need to release a Window DC, and delete a memory DC
-		#ifndef _WIN32_WCE
-					HWND hwnd = ::WindowFromDC(m_pData->hDC);
-					if (hwnd) ::ReleaseDC(hwnd, m_pData->hDC);
-					else      ::DeleteDC(m_pData->hDC);
-		#else
-					::DeleteDC(m_pData->hDC);
-		#endif
+					if (!m_pData->bKeepHDC)
+					{
+						// We need to release a Window DC, and delete a memory DC
+			#ifndef _WIN32_WCE
+						HWND hwnd = ::WindowFromDC(m_pData->hDC);
+						if (hwnd) ::ReleaseDC(hwnd, m_pData->hDC);
+						else      ::DeleteDC(m_pData->hDC);
+			#else
+						::DeleteDC(m_pData->hDC);
+			#endif
+					}
 				}
 
 				delete m_pData;
@@ -3592,18 +3595,20 @@ namespace Win32xx
 		return ::PatBlt(m_pData->hDC, x, y, nWidth, nHeight, dwRop);
 	}
 
-	inline BOOL CDC::BitBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, DWORD dwRop) const
+	inline BOOL CDC::BitBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, DWORD dwRop) const
 	// Performs a bit-block transfer of the color data corresponding to a rectangle of pixels from the specified source device context into a destination device context.
 	{
 		assert(m_pData->hDC);
-		return ::BitBlt(m_pData->hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, dwRop);
+		assert(pSrcDC);
+		return ::BitBlt(m_pData->hDC, x, y, nWidth, nHeight, pSrcDC->GetHDC(), xSrc, ySrc, dwRop);
 	}
 
-	inline BOOL CDC::StretchBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const
+	inline BOOL CDC::StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const
 	// Copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing the bitmap to fit the dimensions of the destination rectangle, if necessary.
 	{
 		assert(m_pData->hDC);
-		return ::StretchBlt(m_pData->hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, dwRop);
+		assert(pSrcDC);
+		return ::StretchBlt(m_pData->hDC, x, y, nWidth, nHeight, pSrcDC->GetHDC(), xSrc, ySrc, nSrcWidth, nSrcHeight, dwRop);
 	}
 
 #ifndef _WIN32_WCE

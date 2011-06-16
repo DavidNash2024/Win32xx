@@ -692,7 +692,7 @@ namespace Win32xx
 			// An item is about to be drawn
 			case CDDS_ITEMPREPAINT:
 				{
-					CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
+					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
 					CRect rcRect = lpNMCustomDraw->nmcd.rc;
 					int nState = lpNMCustomDraw->nmcd.uItemState;
 					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -714,10 +714,9 @@ namespace Win32xx
 						int cy = ::GetSystemMetrics (SM_CYSMICON);
 						int y = 1 + (GetWindowRect().Height() - cy)/2;
 						int x = (rcRect.Width() - cx)/2;
-						DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+						pDrawDC->DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
 						// Detach the DC so it doesn't get destroyed
-						DrawDC.DetachDC();
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
 
@@ -725,21 +724,21 @@ namespace Win32xx
 					{
 						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcRect, FALSE);
+							pDrawDC->GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							DrawDC.GradientFill(m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, rcRect, FALSE);
+							pDrawDC->GradientFill(m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, rcRect, FALSE);
 						}
 
 						// Draw border
-						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						DrawDC.MoveTo(rcRect.left, rcRect.bottom);
-						DrawDC.LineTo(rcRect.left, rcRect.top);
-						DrawDC.LineTo(rcRect.right-1, rcRect.top);
-						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
-						DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
-						DrawDC.LineTo(rcRect.left, rcRect.bottom);
+						pDrawDC->CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+						pDrawDC->MoveTo(rcRect.left, rcRect.bottom);
+						pDrawDC->LineTo(rcRect.left, rcRect.top);
+						pDrawDC->LineTo(rcRect.right-1, rcRect.top);
+						pDrawDC->LineTo(rcRect.right-1, rcRect.bottom);
+						pDrawDC->MoveTo(rcRect.right-1, rcRect.bottom);
+						pDrawDC->LineTo(rcRect.left, rcRect.bottom);
 
 						TCHAR str[80] = _T("");
 						int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
@@ -747,17 +746,14 @@ namespace Win32xx
 							SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
 
 						// Draw highlight text
-						DrawDC.AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
+						pDrawDC->AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
 						rcRect.bottom += 1;
-						int iMode = DrawDC.SetBkMode(TRANSPARENT);
-						DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+						int iMode = pDrawDC->SetBkMode(TRANSPARENT);
+						pDrawDC->DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-						DrawDC.SetBkMode(iMode);
-						DrawDC.DetachDC();
+						pDrawDC->SetBkMode(iMode);
 						return CDRF_SKIPDEFAULT;  // No further drawing
-					}
-					// Detach the DC so it doesn't get destroyed
-					DrawDC.DetachDC();
+					};
 				}
 				return CDRF_DODEFAULT ;   // Do default drawing
 
@@ -765,10 +761,8 @@ namespace Win32xx
 			case CDDS_POSTPAINT:
 				// Draw MDI Minimise, Restore and Close buttons
 				{
-					CDC DrawDC = lpNMCustomDraw->nmcd.hdc;
-					DrawAllMDIButtons(DrawDC);
-					// Detach the DC so it doesn't get destroyed
-					DrawDC.DetachDC();
+					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
+					DrawAllMDIButtons(*pDrawDC);
 				}
 				break;
 			}
@@ -1707,20 +1701,20 @@ namespace Win32xx
 		CDC MaskDC= ::CreateCompatibleDC(*pCustomDC);
 		MaskDC.CreateCompatibleBitmap(pCustomDC, cxCheck, cyCheck);
 
-		MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
+		MaskDC.BitBlt(0, 0, cxCheck, cyCheck, &MaskDC, 0, 0, WHITENESS);
 		if ((pdis->itemState & ODS_SELECTED) && (!tm.UseThemes))
 		{
 			// Draw a white checkmark
-			MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
-			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			DrawDC.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
+			MemDC.BitBlt(0, 0, cxCheck, cyCheck, &MemDC, 0, 0, DSTINVERT);
+			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, &MemDC, 0, 0, SRCAND);
+			DrawDC.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, &MaskDC, 0, 0, SRCPAINT);
 		}
 		else
 		{
 			// Draw a black checkmark
 			int BullitOffset = ((MFT_RADIOCHECK == fType) && tm.UseThemes)? 1 : 0;
-			MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-			DrawDC.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
+			MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, &MemDC, 0, 0, SRCAND);
+			DrawDC.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, &MaskDC, 0, 0, SRCAND);
 		}
 	}
 
@@ -2149,7 +2143,7 @@ namespace Win32xx
 
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
-		CDC DrawDC = pdis->hDC;
+		CDC* pDrawDC = FromHandle(pdis->hDC);
 		MenuTheme tm = GetMenuTheme();
 
 		int Iconx = 16;
@@ -2162,7 +2156,7 @@ namespace Win32xx
 		{
 			CRect rcBar = rc;
 			rcBar.right = BarWidth;
-			DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
+			pDrawDC->GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
 		}
 
 		if (pmd->fType & MFT_SEPARATOR)
@@ -2171,12 +2165,12 @@ namespace Win32xx
 			CRect rcSep = rc;
 			rcSep.left = BarWidth;
 			if (tm.UseThemes)
-				DrawDC.SolidFill(RGB(255,255,255), rcSep);
+				pDrawDC->SolidFill(RGB(255,255,255), rcSep);
 			else
-				DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcSep);
+				pDrawDC->SolidFill(GetSysColor(COLOR_MENU), rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
 			rcSep.left = BarWidth + 2;
-			DrawDC.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
+			pDrawDC->DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
 		{
@@ -2191,27 +2185,27 @@ namespace Win32xx
 				// draw selected item background
 				if (tm.UseThemes)
 				{
-					DrawDC.CreateSolidBrush(tm.clrHot1);
-					DrawDC.CreatePen(PS_SOLID, 1, tm.clrOutline);
-					DrawDC.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+					pDrawDC->CreateSolidBrush(tm.clrHot1);
+					pDrawDC->CreatePen(PS_SOLID, 1, tm.clrOutline);
+					pDrawDC->Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 				}
 				else
-					DrawDC.SolidFill(GetSysColor(COLOR_HIGHLIGHT), rcDraw);
+					pDrawDC->SolidFill(GetSysColor(COLOR_HIGHLIGHT), rcDraw);
 			}
 			else
 			{
 				// draw non-selected item background
 				rcDraw.left = BarWidth;
 				if (tm.UseThemes)
-					DrawDC.SolidFill(RGB(255,255,255), rcDraw);
+					pDrawDC->SolidFill(RGB(255,255,255), rcDraw);
 				else
-					DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcDraw);
+					pDrawDC->SolidFill(GetSysColor(COLOR_MENU), rcDraw);
 			}
 
 			if (bChecked)
-				DrawCheckmark(pdis, DrawDC);
+				DrawCheckmark(pdis, *pDrawDC);
 			else
-				DrawMenuIcon(pdis, DrawDC, bDisabled);
+				DrawMenuIcon(pdis, *pDrawDC, bDisabled);
 
 			// Calculate the text rect size
 			rc.left  = rc.bottom - rc.top + 2;
@@ -2219,7 +2213,7 @@ namespace Win32xx
 				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
 
 			// Draw the text
-			int iMode = DrawDC.SetBkMode(TRANSPARENT);
+			int iMode = pDrawDC->SetBkMode(TRANSPARENT);
 			COLORREF colorText;
 			if (tm.UseThemes)
 			{
@@ -2229,12 +2223,9 @@ namespace Win32xx
 			else
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 
-			DrawMenuText(DrawDC, pmd->GetItemText(), rc, colorText);
-			DrawDC.SetBkMode(iMode);
-			}
-
-		// Detach the DC so it doesn't get destroyed
-		DrawDC.DetachDC();
+			DrawMenuText(*pDrawDC, pmd->GetItemText(), rc, colorText);
+			pDrawDC->SetBkMode(iMode);
+		}
 
 		return TRUE;
 	}

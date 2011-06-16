@@ -61,7 +61,7 @@ void CView::OnPaint(CDC& dc)
 	}
 
 	// Copy from the memory DC to our painting dc
-	dc.BitBlt(0, 0, Width, Height, MemDC, 0, 0, SRCCOPY);
+	dc.BitBlt(0, 0, Width, Height, &MemDC, 0, 0, SRCCOPY);
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)
