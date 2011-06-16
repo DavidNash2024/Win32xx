@@ -171,10 +171,11 @@ void CMainFrame::OnFilePrint()
 	int Height = rcView.Height();
 
 	// Copy the bitmap from the View window
-	CDC ViewDC = m_View.GetDC();
-	CDC MemDC = CreateCompatibleDC(ViewDC);
-	HBITMAP hbmView = MemDC.CreateCompatibleBitmap(ViewDC, Width, Height);
-	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
+	CDC* pViewDC = m_View.GetDC();
+	CDC MemDC;
+	MemDC.CreateCompatibleDC(pViewDC);
+	HBITMAP hbmView = MemDC.CreateCompatibleBitmap(pViewDC, Width, Height);
+	BitBlt(MemDC, 0, 0, Width, Height, *pViewDC, 0, 0, SRCCOPY);
 
 	// Bring up a dialog to choose the printer
 	PRINTDLG pd = {0};
@@ -224,8 +225,8 @@ void CMainFrame::OnFilePrint()
 	GetDIBits(MemDC, hbmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
-	float fLogPelsX1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSX);
-	float fLogPelsY1 = (float) GetDeviceCaps(ViewDC, LOGPIXELSY);
+	float fLogPelsX1 = (float) pViewDC->GetDeviceCaps(LOGPIXELSX);
+	float fLogPelsY1 = (float) pViewDC->GetDeviceCaps(LOGPIXELSY);
 	float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
 	float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
 	float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);

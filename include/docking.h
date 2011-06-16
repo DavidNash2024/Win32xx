@@ -668,24 +668,24 @@ namespace Win32xx
 	{
 		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
 		// This draws a 2 pixel border around the specified Rect
-		CDC dc = GetWindowDC();
+		CDC* pDC = GetWindowDC();
 		CRect rcw = Rect;
-		dc.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
-		dc.MoveTo(0, rcw.Height());
-		dc.LineTo(0, 0);
-		dc.LineTo(rcw.Width(), 0);
-		dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DDKSHADOW));
-		dc.MoveTo(1, rcw.Height()-2);
-		dc.LineTo(1, 1);
-		dc.LineTo(rcw.Width()-2, 1);
-		dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DHILIGHT));
-		dc.MoveTo(rcw.Width()-1, 0);
-		dc.LineTo(rcw.Width()-1, rcw.Height()-1);
-		dc.LineTo(0, rcw.Height()-1);
-		dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DLIGHT));
-		dc.MoveTo(rcw.Width()-2, 1);
-		dc.LineTo(rcw.Width()-2, rcw.Height()-2);
-		dc.LineTo(1, rcw.Height()-2);
+		pDC->CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
+		pDC->MoveTo(0, rcw.Height());
+		pDC->LineTo(0, 0);
+		pDC->LineTo(rcw.Width(), 0);
+		pDC->CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DDKSHADOW));
+		pDC->MoveTo(1, rcw.Height()-2);
+		pDC->LineTo(1, 1);
+		pDC->LineTo(rcw.Width()-2, 1);
+		pDC->CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DHILIGHT));
+		pDC->MoveTo(rcw.Width()-1, 0);
+		pDC->LineTo(rcw.Width()-1, rcw.Height()-1);
+		pDC->LineTo(0, rcw.Height()-1);
+		pDC->CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DLIGHT));
+		pDC->MoveTo(rcw.Width()-2, 1);
+		pDC->LineTo(rcw.Width()-2, rcw.Height()-2);
+		pDC->LineTo(1, rcw.Height()-2);
 	}
 
 	inline CRect CDocker::CDockClient::GetCloseRect()
@@ -724,21 +724,21 @@ namespace Win32xx
 
 			// Acquire the DC for our NonClient painting
 			// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
-			CDC dc;
+			CDC* pDC;
 			if ((wParam != 1) && (bFocus == m_bOldFocus))
-				dc = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
+				pDC = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
 			else
-				dc 	= GetWindowDC();
+				pDC	= GetWindowDC();
 
 			CRect rc = GetWindowRect();
 
 			// Create and set up our memory DC
 			CDC dcMem;
-			dcMem.CreateCompatibleDC(&dc);
+			dcMem.CreateCompatibleDC(pDC);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
-			dcMem.CreateCompatibleBitmap(&dc, Width, Height);
+			dcMem.CreateCompatibleBitmap(pDC, Width, Height);
 			m_bOldFocus = bFocus;
 
 			// Set the font for the title
@@ -779,7 +779,7 @@ namespace Win32xx
 				Draw3DBorder(rc);
 
 			// Copy the Memory DC to the window's DC
-			dc.BitBlt(rcAdjust, rcAdjust, Width, Height, dcMem, rcAdjust, rcAdjust, SRCCOPY);
+			pDC->BitBlt(rcAdjust, rcAdjust, Width, Height, dcMem, rcAdjust, rcAdjust, SRCCOPY);
 		}
 	}
 
@@ -945,8 +945,8 @@ namespace Win32xx
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CDC dc = GetWindowDC();
-					DrawCloseButton(dc, m_bOldFocus);
+					CDC* pDC = GetWindowDC();
+					DrawCloseButton(*pDC, m_bOldFocus);
 				}
 
 				return 0L;
@@ -990,8 +990,8 @@ namespace Win32xx
 
 		m_IsClosePressed = FALSE;
 		ReleaseCapture();
-		CDC dc = GetWindowDC();
-		DrawCloseButton(dc, m_bOldFocus);
+		CDC* pDC = GetWindowDC();
+		DrawCloseButton(*pDC, m_bOldFocus);
 	}
 
 	inline void CDocker::CDockClient::OnMouseActivate(WPARAM wParam, LPARAM lParam)
@@ -1017,9 +1017,9 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 
 		m_IsTracking = FALSE;
-		CDC dc = GetWindowDC();
+		CDC* pDC = GetWindowDC();
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
-			DrawCloseButton(dc, m_bOldFocus);
+			DrawCloseButton(*pDC, m_bOldFocus);
 
 		m_IsTracking = FALSE;
 	}
@@ -1054,8 +1054,8 @@ namespace Win32xx
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CDC dc = GetWindowDC();
-					DrawCloseButton(dc, m_bOldFocus);
+					CDC* pDC = GetWindowDC();
+					DrawCloseButton(*pDC, m_bOldFocus);
 				}
 			}
 
@@ -1128,8 +1128,8 @@ namespace Win32xx
 				ReleaseCapture();
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CDC dc = GetWindowDC();
-					DrawCloseButton(dc, m_bOldFocus);
+					CDC* pDC = GetWindowDC();
+					DrawCloseButton(*pDC, m_bOldFocus);
 					OnLButtonUp(wParam, lParam);
 				}
 			}
@@ -2125,8 +2125,8 @@ namespace Win32xx
 
 			BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
 
-			CDC BarDC = GetDC();
-			BarDC.AttachBrush(m_hbrDithered);
+			CDC* pBarDC = GetDC();
+			pBarDC->AttachBrush(m_hbrDithered);
 
 			CRect rc;
 			::GetWindowRect(hBar, &rc);
@@ -2136,9 +2136,9 @@ namespace Win32xx
 			int BarWidth = pDock->GetDockBar().GetWidth();
 
 			if (bVertical)
-				BarDC.PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
+				pBarDC->PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
 			else
-				BarDC.PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
+				pBarDC->PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
 		}
 	}
 
@@ -2156,7 +2156,7 @@ namespace Win32xx
 	{
 		CWnd* pWnd = GetFocus();
 		CDocker* pDock= NULL;
-		
+
 		while (pWnd && (pDock == NULL))
 		{
 			if (IsRelated(pWnd))
@@ -2312,9 +2312,9 @@ namespace Win32xx
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfStatusFont;
 
-		CDC dc = GetDC();
-		dc.CreateFontIndirect(lf);
-		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+		CDC* pDC = GetDC();
+		pDC->CreateFontIndirect(lf);
+		CSize szText = pDC->GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
 
@@ -2346,7 +2346,7 @@ namespace Win32xx
 	{
 		while ((pWnd != NULL) && (pWnd != GetDockAncestor()))
 		{
-			if (pWnd == this) return TRUE;
+			if (pWnd == (CWnd*)this) return TRUE;
 			if (IsRelated(pWnd)) break;
 			pWnd = pWnd->GetParent();
 		}
@@ -3337,7 +3337,7 @@ namespace Win32xx
 	{
 		m_NCHeight = nHeight;
 		RedrawWindow();
-		
+
 		RecalcDockLayout();
 	}
 
@@ -3813,12 +3813,12 @@ namespace Win32xx
 		for (iter = m_vContainerInfo.begin(); iter != m_vContainerInfo.end(); ++iter)
 		{
 			CSize TempSize;
-			CDC dc = GetDC();
+			CDC* pDC = GetDC();
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dc.CreateFontIndirect(info.lfStatusFont);
-			TempSize = dc.GetTextExtentPoint32(iter->szTitle, lstrlen(iter->szTitle));
+			pDC->CreateFontIndirect(info.lfStatusFont);
+			TempSize = pDC->GetTextExtentPoint32(iter->szTitle, lstrlen(iter->szTitle));
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;
 		}
@@ -4097,7 +4097,7 @@ namespace Win32xx
 			return 0;
 
 		// The following a called in CTab::WndProcDefault
-	
+
 	//	case WM_LBUTTONDOWN:
 	//		OnLButtonDown(wParam, lParam);
 	//		break;

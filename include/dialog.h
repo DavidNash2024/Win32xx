@@ -327,19 +327,15 @@ namespace Win32xx
 			{
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
-					::PAINTSTRUCT ps;
-					CDC dc = BeginPaint(ps);
-
-					OnPaint(dc);
-
+					PAINTSTRUCT ps;
+					CDC* pDC = BeginPaint(ps);
+					OnPaint(*pDC);
 					EndPaint(ps);
-					dc.DetachDC();
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CDC dc = ::GetDC(m_hWnd);
-
 					OnPaint(dc);
 				}
 
@@ -348,9 +344,8 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC dc = (HDC)wParam;
-				BOOL bResult = OnEraseBkgnd(dc);
-				dc.DetachDC();
+				CDC* pDC = FromHandle((HDC)wParam);
+				BOOL bResult = OnEraseBkgnd(*pDC);
 
 				if (bResult) return TRUE;
 			}

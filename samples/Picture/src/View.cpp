@@ -41,9 +41,9 @@ CRect CView::GetImageRect()
 	}
 
 	// convert himetric to pixels
-	CDC hDC = GetDC();
-	int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
-	int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
+	CDC* pDC = GetDC();
+	int nWidth	= MulDiv(hmWidth, pDC->GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
+	int nHeight	= MulDiv(hmHeight, pDC->GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);
 
 	CRect rcImage;
 	rcImage.right = MAX(nWidth, 200);
@@ -275,8 +275,8 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 		m_yCurrentScroll = MAX(yNewPos, 0);
 
 		// Paint the window directly to eliminate flicker
-		CDC dcView = GetDC();
-		Paint(dcView);
+		CDC* pdcView = GetDC();
+		Paint(*pdcView);
 	}
 }
 

@@ -666,8 +666,8 @@ namespace Win32xx
 
 		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
 		{
-			CDC dc = GetDC();
-			dc.AttachFont(m_hFont);
+			CDC* pDC = GetDC();
+			pDC->AttachFont(m_hFont);
 			std::vector<TCHAR> vTitle(MAX_MENU_STRING, _T('\0'));
 			TCHAR* pszTitle = &vTitle.front();
 			TCITEM tcItem = {0};
@@ -675,7 +675,7 @@ namespace Win32xx
 			tcItem.cchTextMax = MAX_MENU_STRING;
 			tcItem.pszText = pszTitle;
 			TabCtrl_GetItem(m_hWnd, i, &tcItem);
-			CSize TempSize = dc.GetTextExtentPoint32(pszTitle, lstrlen(pszTitle));
+			CSize TempSize = pDC->GetTextExtentPoint32(pszTitle, lstrlen(pszTitle));
 
 			int iImageSize = 0;
 			int iPadding = 6;
@@ -699,9 +699,9 @@ namespace Win32xx
 
 	inline int CTab::GetTextHeight() const
 	{
-		CDC dc = GetDC();
-		dc.AttachFont(m_hFont);
-		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+		CDC* pDC = GetDC();
+		pDC->AttachFont(m_hFont);
+		CSize szText = pDC->GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
 
@@ -764,8 +764,8 @@ namespace Win32xx
 		{
 			m_IsClosePressed = TRUE;
 			SetCapture();
-			CDC dc = GetDC();
-			DrawCloseButton(dc);
+			CDC* pDC = GetDC();
+			DrawCloseButton(*pDC);
 		}
 		else
 			m_IsClosePressed = FALSE;
@@ -792,9 +792,9 @@ namespace Win32xx
 
 	inline void CTab::OnMouseLeave(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	{
-		CDC dc = GetDC();
-		DrawCloseButton(dc);
-		DrawListButton(dc);
+		CDC* pDC = GetDC();
+		DrawCloseButton(*pDC);
+		DrawListButton(*pDC);
 
 		m_IsTracking = FALSE;
 	}
@@ -816,9 +816,9 @@ namespace Win32xx
 			m_IsTracking = TRUE;
 		}
 
-		CDC dc = GetDC();
-		DrawCloseButton(dc);
-		DrawListButton(dc);
+		CDC* pDC = GetDC();
+		DrawCloseButton(*pDC);
+		DrawListButton(*pDC);
 	}
 
 	inline LRESULT CTab::OnNCHitTest(WPARAM wParam, LPARAM lParam)
@@ -860,16 +860,17 @@ namespace Win32xx
 		// We use double buffering and regions to eliminate flicker
 
 		// Create the memory DC and bitmap
-		CDC dcView = GetDC();
-		CDC dcMem = CreateCompatibleDC(dcView);
+		CDC* pdcView = GetDC();
+		CDC dcMem;
+		dcMem.CreateCompatibleDC(pdcView);
 		CRect rcClient = GetClientRect();
-		dcMem.CreateCompatibleBitmap(&dcView, rcClient.Width(), rcClient.Height());
+		dcMem.CreateCompatibleBitmap(pdcView, rcClient.Width(), rcClient.Height());
 
 		if (0 == GetItemCount())
 		{
 			// No tabs, so simply display a grey background and exit
 			COLORREF rgbDialog = GetSysColor(COLOR_BTNFACE);
-			dcView.SolidFill(rgbDialog, rcClient);
+			pdcView->SolidFill(rgbDialog, rcClient);
 			return;
 		}
 
@@ -904,8 +905,8 @@ namespace Win32xx
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
-		dcView.SelectClipRgn(hrgnClip);
-		dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
+		pdcView->SelectClipRgn(hrgnClip);
+		pdcView->BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
 
 		// Cleanup
 		::DeleteObject(hrgnSrc1);
@@ -1152,8 +1153,8 @@ namespace Win32xx
 			m_IsListMenuActive = FALSE;
 		}
 
-		CDC dc = GetDC();
-		DrawListButton(dc);
+		CDC* pDC = GetDC();
+		DrawListButton(*pDC);
 	}
 
 	inline void CTab::ShowListDialog()

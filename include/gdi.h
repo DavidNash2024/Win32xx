@@ -432,6 +432,7 @@ namespace Win32xx
 	class CDC
 	{
 		friend class CWinApp;
+		friend class CWnd;
 
 	public:
 		struct DataMembers	// A structure that contains the data members for CDC
@@ -449,7 +450,7 @@ namespace Win32xx
 			HPALETTE hPaletteOld;
 			HPEN	hPenOld;
 			long	Count;
-			BOOL	IsTmpDC;
+			BOOL	bKeepHDC;
 		};
 
 		CDC();									// Constructs a new CDC without assigning a HDC
@@ -721,6 +722,7 @@ namespace Win32xx
 
 	private:
 		void AddToMap();
+		static CDC* FromRemovableHandle(HDC hDC);
 		void Release();
 		void RemoveCurrentBitmap();
 		void RemoveCurrentBrush();
@@ -2135,7 +2137,7 @@ namespace Win32xx
 		m_pData->hPaletteOld = 0;
 		m_pData->hPenOld = 0;
 		m_pData->Count = 1L;
-		m_pData->IsTmpDC = FALSE;
+		m_pData->bKeepHDC = FALSE;
 	}
 
 	inline CDC::CDC(HDC hDC)
@@ -2170,7 +2172,7 @@ namespace Win32xx
 			m_pData->hPaletteOld = 0;
 			m_pData->hPenOld = 0;
 			m_pData->Count = 1L;
-			m_pData->IsTmpDC = FALSE;
+			m_pData->bKeepHDC = FALSE;
 
 			AddToMap();
 		}
@@ -2289,7 +2291,7 @@ namespace Win32xx
 		m_pData->hPaletteOld = 0;
 		m_pData->hPenOld = 0;
 		m_pData->Count = 1L;
-		m_pData->IsTmpDC = FALSE;
+		m_pData->bKeepHDC = FALSE;
 
 		return hDC;
 	}
@@ -2355,6 +2357,23 @@ namespace Win32xx
 		{
 			GetApp()->AddTmpDC(hDC);
 			pDC = GetApp()->GetCDCFromMap(hDC);
+			pDC->m_pData->bKeepHDC = TRUE;
+			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, 0L);
+		}
+		return pDC;
+	}
+
+	inline CDC* CDC::FromRemovableHandle(HDC hDC)
+	// Returns the CDC object associated with the device context handle
+	// The HDC is removed when the CDC is destroyed 
+	{
+		assert( GetApp() );
+		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+		if (pDC == 0)
+		{
+			GetApp()->AddTmpDC(hDC);
+			pDC = GetApp()->GetCDCFromMap(hDC);
+			pDC->m_pData->bKeepHDC = FALSE;
 			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, 0L);
 		}
 		return pDC;

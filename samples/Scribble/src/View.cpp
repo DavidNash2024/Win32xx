@@ -26,10 +26,10 @@ void CView::ClearPoints()
 
 void CView::DrawLine(int x, int y)
 {
-	CDC DrawDC = GetDC();
-	DrawDC.CreatePen(PS_SOLID, 1, m_points.back().color);
-	DrawDC.MoveTo(m_points.back().x, m_points.back().y);
-	DrawDC.LineTo(x, y);
+	CDC* pDrawDC = GetDC();
+	pDrawDC->CreatePen(PS_SOLID, 1, m_points.back().color);
+	pDrawDC->MoveTo(m_points.back().x, m_points.back().y);
+	pDrawDC->LineTo(x, y);
 }
 
 void CView::OnPaint(CDC& dc)
@@ -41,7 +41,7 @@ void CView::OnPaint(CDC& dc)
 	MemDC.CreateCompatibleDC(&dc);
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
-	MemDC.CreateCompatibleBitmap(dc, Width, Height);
+	MemDC.CreateCompatibleBitmap(&dc, Width, Height);
 	MemDC.FillRect(GetClientRect(), m_Brush);	
 
 	if (m_points.size() > 0)

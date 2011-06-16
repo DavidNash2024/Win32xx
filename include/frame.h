@@ -842,7 +842,7 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CDC MenuBarDC = GetDC();
+				CDC* pMenuBarDC = GetDC();
 				m_nMDIButton = -1;
 
 				if (m_MDIRect[0].PtInRect(pt)) m_nMDIButton = 0;
@@ -851,9 +851,9 @@ namespace Win32xx
 
 				if (m_nMDIButton >= 0)
 				{
-					DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == m_nMDIButton)? 2 : 0);
-					DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == m_nMDIButton)? 2 : 0);
-					DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(*pMenuBarDC, MDI_MIN,     (0 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(*pMenuBarDC, MDI_RESTORE, (1 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(*pMenuBarDC, MDI_CLOSE,   (2 == m_nMDIButton)? 2 : 0);
 				}
 
 				// Bring up the MDI Child window's system menu when the icon is pressed
@@ -1042,11 +1042,11 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CDC MenuBarDC = GetDC();
+				CDC* pMenuBarDC = GetDC();
 
-				DrawMDIButton(MenuBarDC, MDI_MIN,     0);
-				DrawMDIButton(MenuBarDC, MDI_RESTORE, 0);
-				DrawMDIButton(MenuBarDC, MDI_CLOSE,   0);
+				DrawMDIButton(*pMenuBarDC, MDI_MIN,     0);
+				DrawMDIButton(*pMenuBarDC, MDI_RESTORE, 0);
+				DrawMDIButton(*pMenuBarDC, MDI_CLOSE,   0);
 			}
 		}
 	}
@@ -1061,7 +1061,7 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CDC MenuBarDC = GetDC();
+				CDC* pMenuBarDC = GetDC();
 				int MDIButton = -1;
 				if (m_MDIRect[0].PtInRect(pt)) MDIButton = 0;
 				if (m_MDIRect[1].PtInRect(pt)) MDIButton = 1;
@@ -1072,30 +1072,30 @@ namespace Win32xx
 					// toggle the MDI button image pressed/unpressed as required
 					if (MDIButton >= 0)
 					{
-						DrawMDIButton(MenuBarDC, MDI_MIN,     ((0 == MDIButton) && (0 == m_nMDIButton))? 2 : 0);
-						DrawMDIButton(MenuBarDC, MDI_RESTORE, ((1 == MDIButton) && (1 == m_nMDIButton))? 2 : 0);
-						DrawMDIButton(MenuBarDC, MDI_CLOSE,   ((2 == MDIButton) && (2 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(*pMenuBarDC, MDI_MIN,     ((0 == MDIButton) && (0 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(*pMenuBarDC, MDI_RESTORE, ((1 == MDIButton) && (1 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(*pMenuBarDC, MDI_CLOSE,   ((2 == MDIButton) && (2 == m_nMDIButton))? 2 : 0);
 					}
 					else
 					{
-						DrawMDIButton(MenuBarDC, MDI_MIN,     0);
-						DrawMDIButton(MenuBarDC, MDI_RESTORE, 0);
-						DrawMDIButton(MenuBarDC, MDI_CLOSE,   0);
+						DrawMDIButton(*pMenuBarDC, MDI_MIN,     0);
+						DrawMDIButton(*pMenuBarDC, MDI_RESTORE, 0);
+						DrawMDIButton(*pMenuBarDC, MDI_CLOSE,   0);
 					}
 				}
 				else	// mouse moved without left mouse button held down
 				{
 					if (MDIButton >= 0)
 					{
-						DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton)? 1 : 0);
-						DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton)? 1 : 0);
-						DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton)? 1 : 0);
+						DrawMDIButton(*pMenuBarDC, MDI_MIN,     (0 == MDIButton)? 1 : 0);
+						DrawMDIButton(*pMenuBarDC, MDI_RESTORE, (1 == MDIButton)? 1 : 0);
+						DrawMDIButton(*pMenuBarDC, MDI_CLOSE,   (2 == MDIButton)? 1 : 0);
 					}
 					else
 					{
-						DrawMDIButton(MenuBarDC, MDI_MIN,     0);
-						DrawMDIButton(MenuBarDC, MDI_RESTORE, 0);
-						DrawMDIButton(MenuBarDC, MDI_CLOSE,   0);
+						DrawMDIButton(*pMenuBarDC, MDI_MIN,     0);
+						DrawMDIButton(*pMenuBarDC, MDI_RESTORE, 0);
+						DrawMDIButton(*pMenuBarDC, MDI_CLOSE,   0);
 					}
 				}
 			}
@@ -1162,8 +1162,8 @@ namespace Win32xx
 		InvalidateRect(&m_MDIRect[1], TRUE);
 		InvalidateRect(&m_MDIRect[2], TRUE);
 		{
-			CDC MenuBarDC = GetDC();
-			DrawAllMDIButtons(MenuBarDC);
+			CDC* pMenuBarDC = GetDC();
+			DrawAllMDIButtons(*pMenuBarDC);
 		}
 	}
 
@@ -1524,9 +1524,9 @@ namespace Win32xx
 		// Calculate the MenuBar height from the menu font
 		CSize csMenuBar;
 		HFONT hFont = (HFONT)GetMenuBar().SendMessage(WM_GETFONT, 0, 0);
-		CDC dcMenuBar = GetMenuBar().GetDC();
-		dcMenuBar.AttachFont(hFont);
-		csMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
+		CDC* pdcMenuBar = GetMenuBar().GetDC();
+		pdcMenuBar->AttachFont(hFont);
+		csMenuBar = pdcMenuBar->GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 		int MenuBar_Height = csMenuBar.cy + 6;
 
 
@@ -2915,10 +2915,10 @@ namespace Win32xx
 		if (::IsWindow(GetStatusBar()))
 		{
 			// Calculate the width of the text indicators
-			CDC dcStatus = GetStatusBar().GetDC();
-			CSize csCAP  = dcStatus.GetTextExtentPoint32(_T("\tCAP"), lstrlen(_T("\tCAP")));
-			CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM"), lstrlen(_T("\tNUM")));
-			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL"), lstrlen(_T("\tSCRL")));
+			CDC* pdcStatus = GetStatusBar().GetDC();
+			CSize csCAP  = pdcStatus->GetTextExtentPoint32(_T("\tCAP"), lstrlen(_T("\tCAP")));
+			CSize csNUM  = pdcStatus->GetTextExtentPoint32(_T("\tNUM"), lstrlen(_T("\tNUM")));
+			CSize csSCRL = pdcStatus->GetTextExtentPoint32(_T("\tSCRL"), lstrlen(_T("\tSCRL")));
 
 			// Get the coordinates of the parent window's client area.
 			CRect rcClient = GetClientRect();

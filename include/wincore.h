@@ -397,7 +397,7 @@ namespace Win32xx
 
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
-		HDC   BeginPaint(PAINTSTRUCT& ps) const;
+		CDC*  BeginPaint(PAINTSTRUCT& ps) const;
 		BOOL  BringWindowToTop() const;
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL  CheckDlgButton(int nIDButton, UINT uCheck) const;
@@ -417,8 +417,8 @@ namespace Win32xx
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		LPCTSTR GetClassName() const;
 		CRect GetClientRect() const;
-		HDC   GetDC() const;
-		HDC   GetDCEx(HRGN hrgnClip, DWORD flags) const;
+		CDC*  GetDC() const;
+		CDC*  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		CWnd* GetDesktopWindow() const;
 		CWnd* GetDlgItem(int nIDDlgItem) const;
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
@@ -433,7 +433,7 @@ namespace Win32xx
 		CRect GetUpdateRect(BOOL bErase) const;
 		int GetUpdateRgn(HRGN hRgn, BOOL bErase) const;
 		CWnd* GetWindow(UINT uCmd) const;
-		HDC   GetWindowDC() const;
+		CDC*  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
 		LPCTSTR GetWindowText() const;
@@ -496,7 +496,7 @@ namespace Win32xx
 		BOOL  DlgDirSelectEx(LPTSTR lpString, int nCount, int nIDListBox) const;
 		BOOL  DlgDirSelectComboBoxEx(LPTSTR lpString, int nCount, int nIDComboBox) const;
 		BOOL  DrawAnimatedRects(int idAni, RECT& rcFrom, RECT& rcTo) const;
-		BOOL  DrawCaption(HDC hdc, RECT& rc, UINT uFlags) const;
+		BOOL  DrawCaption(CDC* pDC, RECT& rc, UINT uFlags) const;
 		BOOL  EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		CWnd* GetLastActivePopup() const;
 		HMENU GetMenu() const;
@@ -521,7 +521,7 @@ namespace Win32xx
 		BOOL  ShowScrollBar(int nBar, BOOL bShow) const;
 		BOOL  ShowWindowAsync(int nCmdShow) const;
 		BOOL  UnLockWindowUpdate() const;
-		CWnd* WindowFromDC(HDC hDC) const;
+		CWnd* WindowFromDC(CDC* pDC) const;
 
     #ifndef WIN32_LEAN_AND_MEAN
 		void  DragAcceptFiles(BOOL fAccept) const;
@@ -701,7 +701,6 @@ namespace Win32xx
 		m_csMapLock.Lock();
 		m_mapHDC.insert(std::make_pair(hDC, pDC));
 		m_csMapLock.Release();
-		pDC->m_pData->IsTmpDC = TRUE;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -1918,12 +1917,12 @@ namespace Win32xx
 	// Wrappers for Win32 API functions
 	//
 
-	inline HDC CWnd::BeginPaint(PAINTSTRUCT& ps) const
+	inline CDC* CWnd::BeginPaint(PAINTSTRUCT& ps) const
 	// The BeginPaint function prepares the specified window for painting and fills a PAINTSTRUCT structure with
 	// information about the painting.
 	{
         assert(::IsWindow(m_hWnd));
-		return ::BeginPaint(m_hWnd, &ps);
+		return FromHandle(::BeginPaint(m_hWnd, &ps));
 	}
 
 	inline BOOL CWnd::BringWindowToTop() const
@@ -2056,20 +2055,20 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline HDC CWnd::GetDC() const
+	inline CDC* CWnd::GetDC() const
 	// The GetDC function retrieves a handle to a display device context (DC) for the
 	// client area of the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetDC(m_hWnd);
+		return CDC::FromRemovableHandle(::GetDC(m_hWnd));
 	}
 
-	inline HDC CWnd::GetDCEx(HRGN hrgnClip, DWORD flags) const
+	inline CDC* CWnd::GetDCEx(HRGN hrgnClip, DWORD flags) const
 	// The GetDCEx function retrieves a handle to a display device context (DC) for the
 	// client area or entire area of a window
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetDCEx(m_hWnd, hrgnClip, flags);
+		return CDC::FromRemovableHandle(::GetDCEx(m_hWnd, hrgnClip, flags));
 	}
 
 	inline CWnd* CWnd::GetDesktopWindow() const
@@ -2179,12 +2178,12 @@ namespace Win32xx
 		return FromHandle( ::GetWindow(m_hWnd, uCmd) );
 	}
 
-	inline HDC CWnd::GetWindowDC() const
+	inline CDC* CWnd::GetWindowDC() const
 	// The GetWindowDC function retrieves the device context (DC) for the entire
 	// window, including title bar, menus, and scroll bars.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetWindowDC(m_hWnd);
+		return CDC::FromRemovableHandle(::GetWindowDC(m_hWnd));
 	}
 
 	inline CRect CWnd::GetWindowRect() const
@@ -2682,11 +2681,12 @@ namespace Win32xx
 		return ::DrawAnimatedRects(m_hWnd, idAni, &rcFrom, &rcTo);
 	}
 
-	inline BOOL CWnd::DrawCaption(HDC hdc, RECT& rc, UINT uFlags) const
+	inline BOOL CWnd::DrawCaption(CDC* pDC, RECT& rc, UINT uFlags) const
 	// The DrawCaption function draws a window caption.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::DrawCaption(m_hWnd, hdc, &rc, uFlags);
+		assert(pDC);
+		return ::DrawCaption(m_hWnd, pDC->GetHDC(), &rc, uFlags);
 	}
 
 	inline BOOL CWnd::EnableScrollBar(UINT uSBflags, UINT uArrows) const
@@ -2883,10 +2883,11 @@ namespace Win32xx
 		return ::LockWindowUpdate(0);
 	}
 
-	inline CWnd* CWnd::WindowFromDC(HDC hDC) const
+	inline CWnd* CWnd::WindowFromDC(CDC* pDC) const
 	// The WindowFromDC function returns a handle to the window associated with the specified display device context (DC).
 	{
-		return FromHandle( ::WindowFromDC(hDC) );
+		assert(pDC);
+		return FromHandle( ::WindowFromDC(pDC->GetHDC()) );
 	}
 
   #endif

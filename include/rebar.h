@@ -438,8 +438,8 @@ namespace Win32xx
 							// Extra drawing to prevent jagged edge while moving bands
 							if (m_bIsDragging)
 							{
-								CDC ReBarDC = GetDC();
-								ReBarDC.BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+								CDC* pReBarDC = GetDC();
+								pReBarDC->BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 							}
 						}
 					}
