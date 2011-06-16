@@ -24,13 +24,16 @@ Changes in detail
 - Added CWinException::GetError
 - Added CWnd::ChildWindowFromPoint
 - Added CWnd::WindowFromPoint
-- Modified LoadString 				now returns CString
-- Modified CDC::CreateCompatibleDC	now takes a CDC pointer and attaches the DC
-- Modified CDC::CreateDC			now attaches the DC							
-- Modified CDC::CreateIC            now attaches the DC
-- Modified CDocker::IsChildOfDocker now takes a CWnd pointer instead of HWND
-- Modified CDocker::IsRelated 		now takes a CWnd pointer instead of HWND
-- Modified CWnd::GetAncestor		now accepts a gaFlags parameter
+- Modified LoadString 					now returns CString
+- Modified CDC::CreateCompatibleDC		now takes a CDC pointer and attaches the DC
+- Modified CDC::CreateDC				now attaches the DC							
+- Modified CDC::CreateIC            	now attaches the DC
+- Modified CDC::CreateCompatibleBitmap	now takes a CDC pointer
+- Modified CDC::CreateDIBitmap			now takes a CDC pointer
+- Modified CDC::CreateDIBSection		now takes a CDC pointer
+- Modified CDocker::IsChildOfDocker 	now takes a CWnd pointer instead of HWND
+- Modified CDocker::IsRelated 			now takes a CWnd pointer instead of HWND
+- Modified CWnd::GetAncestor			now accepts a gaFlags parameter
 - Removed CLoadString
 - Removed GetWindowType for all CWnd classes
 - Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker

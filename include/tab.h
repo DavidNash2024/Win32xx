@@ -863,7 +863,7 @@ namespace Win32xx
 		CDC dcView = GetDC();
 		CDC dcMem = CreateCompatibleDC(dcView);
 		CRect rcClient = GetClientRect();
-		dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
+		dcMem.CreateCompatibleBitmap(&dcView, rcClient.Width(), rcClient.Height());
 
 		if (0 == GetItemCount())
 		{

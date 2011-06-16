@@ -1703,8 +1703,9 @@ namespace Win32xx
 
 		// Draw a white or black check mark as required
 		// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-		CDC MaskDC = ::CreateCompatibleDC(pdis->hDC);
-		MaskDC.CreateCompatibleBitmap(pdis->hDC, cxCheck, cyCheck);
+		CDC* pCustomDC = FromHandle(pdis->hDC);
+		CDC MaskDC= ::CreateCompatibleDC(*pCustomDC);
+		MaskDC.CreateCompatibleBitmap(pCustomDC, cxCheck, cyCheck);
 
 		MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
 		if ((pdis->itemState & ODS_SELECTED) && (!tm.UseThemes))

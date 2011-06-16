@@ -325,7 +325,7 @@ namespace Win32xx
 
 	protected:
 		BOOL PreTranslateMessage(MSG Msg);
-		BOOL CleanupTemps(MSG msg);
+		void CleanupTemps();
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
@@ -664,6 +664,8 @@ namespace Win32xx
 		std::vector<TLSDataPtr>::iterator iter;
 		for (iter = m_vTLSData.begin(); iter < m_vTLSData.end(); ++iter)
 		{
+			(*iter)->vTmpDCs.clear();
+			(*iter)->vTmpMenus.clear();
 			(*iter)->vTmpWnds.clear();
 		}
 
@@ -744,27 +746,19 @@ namespace Win32xx
 		pTLSData->vTmpWnds.push_back(pWnd); // save TmpWnd as a smart pointer
 	}
 
-	inline BOOL CWinApp::CleanupTemps(MSG Msg)
+	inline void CWinApp::CleanupTemps()
 	// Removes all Temporary CWnds and CMenus belonging to this thread
 	{
-		BOOL Processed = FALSE;
-		if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
-		{
-			// Retrieve the pointer to the TLS Data
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			assert(pTLSData);
+		// Retrieve the pointer to the TLS Data
+		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+		assert(pTLSData);
 
-			pTLSData->vTmpWnds.clear();
-			pTLSData->vTmpDCs.clear();
+		pTLSData->vTmpWnds.clear();
+		pTLSData->vTmpDCs.clear();
 
 	#ifndef _WIN32_WCE
-			pTLSData->vTmpMenus.clear();
+		pTLSData->vTmpMenus.clear();
 	#endif
-
-			Processed = TRUE;
-		}
-
-		return Processed;
 	}
 
 	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)
@@ -836,7 +830,9 @@ namespace Win32xx
 		{
 			if (-1 == status) return -1;
 
-			if (!CleanupTemps(Msg))
+			if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
+				CleanupTemps();
+			else
 			{
 				if (!PreTranslateMessage(Msg))
 				{
@@ -1317,7 +1313,7 @@ namespace Win32xx
 		return pWnd;
 	}
 
-	inline CDC* FromHandle(HDC hDC)
+	inline CDC* CWnd::FromHandle(HDC hDC)
 	// Returns the CDC object associated with the HDC
 	{
 		return CDC::FromHandle(hDC);

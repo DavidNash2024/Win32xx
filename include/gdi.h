@@ -476,8 +476,8 @@ namespace Win32xx
 		// Create and Select Bitmaps
 		void AttachBitmap(HBITMAP hBitmap);
 		HBITMAP CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
-		HBITMAP CreateCompatibleBitmap(HDC hDC, int cx, int cy);
-		HBITMAP CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+		HBITMAP CreateCompatibleBitmap(CDC* pDC, int cx, int cy);
+		HBITMAP CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
 		HBITMAP DetachBitmap();
 		HBITMAP GetBitmap() const;
@@ -490,7 +490,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		HBITMAP CreateBitmapIndirect(LPBITMAP pBitmap);
-		HBITMAP CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
+		HBITMAP CreateDIBitmap(CDC* pDC, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage);
 		HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
 #endif
@@ -2568,13 +2568,14 @@ namespace Win32xx
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, hBitmap);
 	}
 
-	inline HBITMAP CDC::CreateCompatibleBitmap(HDC hDC, int cx, int cy)
+	inline HBITMAP CDC::CreateCompatibleBitmap(CDC* pDC, int cx, int cy)
 	// Creates a compatible bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
+		assert(pDC);
 		RemoveCurrentBitmap();
 
-		m_pData->Bitmap.CreateCompatibleBitmap(hDC, cx, cy);
+		m_pData->Bitmap.CreateCompatibleBitmap(pDC->GetHDC(), cx, cy);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 		return m_pData->Bitmap;
 	}
@@ -2603,27 +2604,29 @@ namespace Win32xx
 		return m_pData->Bitmap;
 	}
 
-	inline HBITMAP CDC::CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
+	inline HBITMAP CDC::CreateDIBitmap(CDC* pDC, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi,  UINT fuUsage)
 	// Creates a bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
+		assert(pDC);
 		RemoveCurrentBitmap();
 
-		m_pData->Bitmap.CreateDIBitmap(hdc, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
+		m_pData->Bitmap.CreateDIBitmap(pDC->GetHDC(), &bmih, fdwInit, lpbInit, &bmi, fuUsage);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 		return m_pData->Bitmap;
 	}
 #endif
 
-	inline HBITMAP CDC::CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+	inline HBITMAP CDC::CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset)
 	// Creates a bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
+		assert(pDC);
 		RemoveCurrentBitmap();
 
-		m_pData->Bitmap.CreateDIBSection(hdc, &bmi, iUsage, ppvBits, hSection, dwOffset);
+		m_pData->Bitmap.CreateDIBSection(pDC->GetHDC(), &bmi, iUsage, ppvBits, hSection, dwOffset);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 		return m_pData->Bitmap;
 	}
@@ -4174,7 +4177,7 @@ namespace Win32xx
 		{
 			CDC DesktopDC = ::GetDC(NULL);
 			CDC MemDC = ::CreateCompatibleDC(NULL);
-			MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
+			MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
 			CRect rc;
 			rc.SetRect(0, 0, cx, cx);
 

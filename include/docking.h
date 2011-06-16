@@ -738,7 +738,7 @@ namespace Win32xx
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
-			dcMem.CreateCompatibleBitmap(dc, Width, Height);
+			dcMem.CreateCompatibleBitmap(&dc, Width, Height);
 			m_bOldFocus = bFocus;
 
 			// Set the font for the title
@@ -1345,7 +1345,7 @@ namespace Win32xx
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);
-		dcMem.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+		dcMem.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 		HBITMAP hbmDock = dcMem.DetachBitmap();
 		TintBitmap(hbmDock, -64, -24, +128);

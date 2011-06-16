@@ -346,8 +346,9 @@ namespace Win32xx
 			int BarHeight = rcReBar.Height();
 
 			// Create and set up our memory DC
-			CDC MemDC = ::CreateCompatibleDC(dc);
-			MemDC.CreateCompatibleBitmap(dc, BarWidth, BarHeight);
+			CDC MemDC;
+			MemDC.CreateCompatibleDC(&dc);
+			MemDC.CreateCompatibleBitmap(&dc, BarWidth, BarHeight);
 
 			// Draw to ReBar background to the memory DC
 			rcReBar.right = 600;
@@ -387,8 +388,9 @@ namespace Win32xx
 							rcDraw.left -= xPad;
 
 							// Fill the Source CDC with the band's background
-							CDC SourceDC = ::CreateCompatibleDC(dc);
-							SourceDC.CreateCompatibleBitmap(dc, BarWidth, BarHeight);
+							CDC SourceDC;
+							SourceDC.CreateCompatibleDC(&dc);
+							SourceDC.CreateCompatibleBitmap(&dc, BarWidth, BarHeight);
 							CRect rcBorder = GetBandBorders(nBand);
 							rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
 							SourceDC.SolidFill(m_Theme.clrBand1, rcDraw);
@@ -400,8 +402,9 @@ namespace Win32xx
 							int Curve = m_Theme.RoundBorders? 12 : 0;
 
 							// Create our mask for rounded edges using RoundRect
-							CDC MaskDC = ::CreateCompatibleDC(dc);
-							MaskDC.CreateCompatibleBitmap(dc, BarWidth, BarHeight);
+							CDC MaskDC;
+							MaskDC.CreateCompatibleDC(&dc);
+							MaskDC.CreateCompatibleBitmap(&dc, BarWidth, BarHeight);
 
 							rcDraw.top = rcBand.top;
 							if (!m_Theme.FlatStyle)

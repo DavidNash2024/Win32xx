@@ -422,6 +422,7 @@ namespace Win32xx
 			// Tidy up
 			m_hWnd = NULL;
 			pTLSData->pCWnd = NULL;
+			GetApp()->CleanupTemps();
 
 		#ifndef _WIN32_WCE
 			if (IsHookedHere)
