@@ -7,7 +7,8 @@ New Features and Enhancements
    The CString class is intended to provide much of the same functionality
    as the CString class provided with MFC/ATL.
 * Added CMenu
-* Added CFile   
+* Added CFile
+* Added Idle Processing.
 
 
 Changes in detail
@@ -21,6 +22,7 @@ Changes in detail
 - Added CDocker::GetActiveDocker
 - Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators
+- Added CWinApp::OnIdle
 - Added CWinException::GetError
 - Added CWnd::ChildWindowFromPoint
 - Added CWnd::WindowFromPoint

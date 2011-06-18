@@ -157,8 +157,8 @@ BOOL CMyDialog::OnEraseBkgnd(CDC& dc)
 
 	// Draw the dialog's background manually
 	CRect rc = GetClientRect();
-	CDC dcClient = GetDC();	
-	dcClient.SolidFill(GetSysColor(COLOR_3DFACE), rc);
+	CDC* pdcClient = GetDC();	
+	pdcClient->SolidFill(GetSysColor(COLOR_3DFACE), rc);
 
 	// draw size grip
 	if (rc.Width() > m_Resizer.GetMinRect().Width() && rc.Height() > m_Resizer.GetMinRect().Height())
@@ -166,7 +166,7 @@ BOOL CMyDialog::OnEraseBkgnd(CDC& dc)
 		int size = GetSystemMetrics(SM_CXVSCROLL);
 		rc.left = rc.right - size;
 		rc.top = rc.bottom - size;
-		dcClient.DrawFrameControl(rc, DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
+		pdcClient->DrawFrameControl(rc, DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
 	}
 	
 	// Suppress default background drawing

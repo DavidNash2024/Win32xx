@@ -2239,6 +2239,7 @@ namespace Win32xx
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (pDC)
 		{
+			TRACE(_T("Duplicate Attach\n"));
 			delete m_pData;
 			m_pData = pDC->m_pData;
 			InterlockedIncrement(&m_pData->Count);			
@@ -2358,7 +2359,6 @@ namespace Win32xx
 			GetApp()->AddTmpDC(hDC);
 			pDC = GetApp()->GetCDCFromMap(hDC);
 			pDC->m_pData->bKeepHDC = TRUE;
-			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, 0L);
 		}
 		return pDC;
 	}
@@ -2374,7 +2374,6 @@ namespace Win32xx
 			GetApp()->AddTmpDC(hDC);
 			pDC = GetApp()->GetCDCFromMap(hDC);
 			pDC->m_pData->bKeepHDC = FALSE;
-			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, 0L);
 		}
 		return pDC;
 	}

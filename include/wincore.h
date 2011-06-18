@@ -166,7 +166,6 @@
 #define UWM_GETMENUTHEME    (WM_APP + 16)	// Message - returns a pointer to MenuTheme
 #define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to CToolBar
 #define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolBarTheme
-#define UWM_CLEANUP_TMPS	(WM_APP + 19)   // Message - posted to remove temporary CWnds, CMenus etc
 
 
 // Automatically include the Win32xx namespace
@@ -324,8 +323,8 @@ namespace Win32xx
 		virtual int Run();
 
 	protected:
-		BOOL PreTranslateMessage(MSG Msg);
-		void CleanupTemps();
+		virtual BOOL OnIdle(LONG lCount);
+		virtual BOOL PreTranslateMessage(MSG Msg);
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
@@ -334,6 +333,7 @@ namespace Win32xx
 		void AddTmpDC(HDC hDC);
 		void AddTmpMenu(HMENU hMenu);
 		void AddTmpWnd(HWND hWnd);
+		void CleanupTemps();
 		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
 		void SetCallback();
 		TLSData* SetTlsIndex();
@@ -822,6 +822,37 @@ namespace Win32xx
 	inline int CWinApp::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.
+		MSG Msg = {0};
+		int status = 1;
+		LONG lCount = 0;
+
+		while (status != 0)
+		{		
+			// While idle, perform idle processing until OnIdle returns FALSE
+			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) == TRUE)
+			{
+				lCount++;
+			}
+			
+			lCount = 0;
+
+			// Now wait until we get a message
+			if ((status = ::GetMessage(&Msg, NULL, 0, 0)) == -1)
+				return -1;
+
+			if (!PreTranslateMessage(Msg))
+			{
+				::TranslateMessage(&Msg);
+				::DispatchMessage(&Msg);
+			}
+		}
+		
+		return LOWORD(Msg.wParam);
+	}
+
+/*	inline int CWinApp::MessageLoop()
+	{
+		// This gets any messages queued for the application, and dispatches them.
 		MSG Msg;
 		int status;
 
@@ -830,7 +861,10 @@ namespace Win32xx
 			if (-1 == status) return -1;
 
 			if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
+			{
+				TRACE(_T("Calling Cleanup\n"));
 				CleanupTemps();
+			}
 			else
 			{
 				if (!PreTranslateMessage(Msg))
@@ -842,6 +876,14 @@ namespace Win32xx
 		}
 
 		return LOWORD(Msg.wParam);
+	} */
+
+	inline BOOL CWinApp::OnIdle(LONG lCount)
+	{
+		if (lCount == 0)
+			CleanupTemps();
+
+		return FALSE;
 	}
 
 	inline BOOL CWinApp::PreTranslateMessage(MSG Msg)
@@ -1306,7 +1348,6 @@ namespace Win32xx
 		{
 			GetApp()->AddTmpWnd(hWnd);
 			pWnd = GetApp()->GetCWndFromMap(hWnd);
-			::PostMessage(NULL, UWM_CLEANUP_TMPS, 0L, 0L);
 		}
 
 		return pWnd;
