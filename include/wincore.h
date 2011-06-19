@@ -166,6 +166,7 @@
 #define UWM_GETMENUTHEME    (WM_APP + 16)	// Message - returns a pointer to MenuTheme
 #define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to CToolBar
 #define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolBarTheme
+#define UWM_CLEANUPTEMPS	(WM_APP + 19)	// Message - posted to cleanup temporary CDCs
 
 
 // Automatically include the Win32xx namespace
@@ -330,12 +331,12 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
-		void AddTmpDC(HDC hDC);
-		void AddTmpMenu(HMENU hMenu);
-		void AddTmpWnd(HWND hWnd);
-		void CleanupTemps();
-		DWORD GetTlsIndex() const {return m_dwTlsIndex;}
-		void SetCallback();
+		CDC*   AddTmpDC(HDC hDC, BOOL bInsert);
+		CMenu* AddTmpMenu(HMENU hMenu);
+		CWnd*  AddTmpWnd(HWND hWnd);
+		void   CleanupTemps();
+		DWORD  GetTlsIndex() const {return m_dwTlsIndex;}
+		void   SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
@@ -689,26 +690,31 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
-	inline void CWinApp::AddTmpDC(HDC hDC)
+	inline CDC* CWinApp::AddTmpDC(HDC hDC, BOOL bInsert)
 	{
 		// The TmpMenus are created by GetSybMenu.
 		// They are removed by CleanupTemps
 		assert(hDC);
-		assert(!GetCDCFromMap(hDC));
-
+	
 		CDC* pDC = new CDC;
 		pDC->m_pData->hDC = hDC;
-		m_csMapLock.Lock();
-		m_mapHDC.insert(std::make_pair(hDC, pDC));
-		m_csMapLock.Release();
+
+		if (bInsert)
+		{
+			assert(!GetCDCFromMap(hDC));
+			m_csMapLock.Lock();
+			m_mapHDC.insert(std::make_pair(hDC, pDC));
+			m_csMapLock.Release();
+		}
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpDCs.push_back(pDC); // save TmpWnd as a smart pointer
+		return pDC;
 	}
 
 #ifndef _WIN32_WCE
-	inline void CWinApp::AddTmpMenu(HMENU hMenu)
+	inline CMenu* CWinApp::AddTmpMenu(HMENU hMenu)
 	{
 		// The TmpMenus are created by GetSybMenu.
 		// They are removed by CleanupTemps
@@ -725,10 +731,11 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpMenus.push_back(pMenu); // save TmpWnd as a smart pointer
+		return pMenu;
 	}
 #endif
 
-	inline void CWinApp::AddTmpWnd(HWND hWnd)
+	inline CWnd* CWinApp::AddTmpWnd(HWND hWnd)
 	{
 		// TmpWnds are created if required to support functions like CWnd::GetParent.
 		// They are removed by CleanupTemps
@@ -743,6 +750,7 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpWnds.push_back(pWnd); // save TmpWnd as a smart pointer
+		return pWnd;
 	}
 
 	inline void CWinApp::CleanupTemps()
@@ -1831,6 +1839,9 @@ namespace Win32xx
 
     	switch (uMsg)
 		{
+		case UWM_CLEANUPTEMPS:
+			GetApp()->CleanupTemps();
+			break;
 		case WM_COMMAND:
 			{
 				// Refelect this message if it's from a control
@@ -2096,6 +2107,7 @@ namespace Win32xx
 	// client area of the window.
 	{
 		assert(::IsWindow(m_hWnd));
+		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
 		return CDC::FromRemovableHandle(::GetDC(m_hWnd));
 	}
 
@@ -2104,6 +2116,7 @@ namespace Win32xx
 	// client area or entire area of a window
 	{
 		assert(::IsWindow(m_hWnd));
+		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
 		return CDC::FromRemovableHandle(::GetDCEx(m_hWnd, hrgnClip, flags));
 	}
 
@@ -2219,6 +2232,7 @@ namespace Win32xx
 	// window, including title bar, menus, and scroll bars.
 	{
 		assert(::IsWindow(m_hWnd));
+		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
 		return CDC::FromRemovableHandle(::GetWindowDC(m_hWnd));
 	}
 

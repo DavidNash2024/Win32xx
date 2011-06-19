@@ -2356,8 +2356,7 @@ namespace Win32xx
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (pDC == 0)
 		{
-			GetApp()->AddTmpDC(hDC);
-			pDC = GetApp()->GetCDCFromMap(hDC);
+			pDC = GetApp()->AddTmpDC(hDC, TRUE);
 			pDC->m_pData->bKeepHDC = TRUE;
 		}
 		return pDC;
@@ -2368,13 +2367,8 @@ namespace Win32xx
 	// The HDC is removed when the CDC is destroyed 
 	{
 		assert( GetApp() );
-		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (pDC == 0)
-		{
-			GetApp()->AddTmpDC(hDC);
-			pDC = GetApp()->GetCDCFromMap(hDC);
-			pDC->m_pData->bKeepHDC = FALSE;
-		}
+		CDC* pDC = GetApp()->AddTmpDC(hDC, FALSE);
+		pDC->m_pData->bKeepHDC = FALSE;
 		return pDC;
 	}
 
