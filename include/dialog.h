@@ -335,8 +335,8 @@ namespace Win32xx
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					CDC dc = ::GetDC(m_hWnd);
-					OnPaint(dc);
+					CDC* pDC = GetDC();
+					OnPaint(*pDC);
 				}
 
 				break;

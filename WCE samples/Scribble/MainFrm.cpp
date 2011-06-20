@@ -15,10 +15,10 @@ CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
 
 void CMainFrame::DrawLine(short x, short y)
 {
-	CDC dc = GetDC();
-	dc.CreatePen(PS_SOLID, 1, m_points.back().color);
-	dc.MoveTo(m_points.back().x, m_points.back().y);
-	dc.LineTo(x, y);
+	CDC* pDC = GetDC();
+	pDC->CreatePen(PS_SOLID, 1, m_points.back().color);
+	pDC->MoveTo(m_points.back().x, m_points.back().y);
+	pDC->LineTo(x, y);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)

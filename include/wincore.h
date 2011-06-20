@@ -666,7 +666,9 @@ namespace Win32xx
 		for (iter = m_vTLSData.begin(); iter < m_vTLSData.end(); ++iter)
 		{
 			(*iter)->vTmpDCs.clear();
+#ifndef _WIN32_WCE
 			(*iter)->vTmpMenus.clear();
+#endif
 			(*iter)->vTmpWnds.clear();
 		}
 
@@ -1739,7 +1741,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		m_hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
-		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), LR_SHARED));
+		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), 0));
 
 		if (m_hIconLarge)
 			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (m_hIconLarge));
@@ -1756,7 +1758,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		m_hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
-		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), LR_SHARED));
+		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
 		if (m_hIconSmall)
 			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (m_hIconSmall));

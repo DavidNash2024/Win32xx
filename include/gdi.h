@@ -460,6 +460,7 @@ namespace Win32xx
 		void AttachDC(HDC hDC);
 		HDC  DetachDC();
 #endif
+
 		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
@@ -2226,7 +2227,7 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Release();
 	}
 
- #ifndef _WIN32_WCE
+#ifndef _WIN32_WCE
 	inline void CDC::AttachDC(HDC hDC)
 	// Attaches a HDC to the CDC object.
 	// The HDC will be automatically deleted or released when the destructor is called.	
@@ -2297,7 +2298,7 @@ namespace Win32xx
 
 		return hDC;
 	}
- #endif	// _WIN32_WCE
+#endif
 
 	// Initialization
 	inline BOOL CDC::CreateCompatibleDC(CDC* pDC)
@@ -2306,7 +2307,11 @@ namespace Win32xx
 		assert(pDC);
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateCompatibleDC(pDC->GetHDC());
-		if (hDC) AttachDC(hDC);
+		if (hDC)
+		{
+			m_pData->hDC = hDC;
+			AddToMap();
+		}
 		return (BOOL)hDC;
 	}
 
@@ -2315,7 +2320,11 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateDC(lpszDriver, lpszDevice, lpszOutput, pInitData);
-		if (hDC) AttachDC(hDC);
+		if (hDC)
+		{
+			m_pData->hDC = hDC;
+			AddToMap();
+		}
 		return (BOOL)hDC;
 	}
 
@@ -2324,7 +2333,11 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateIC(lpszDriver, lpszDevice, lpszOutput, pInitData);
-		if (hDC) AttachDC(hDC);
+		if (hDC)
+		{
+			m_pData->hDC = hDC;
+			AddToMap();
+		}
 		return (BOOL)hDC;
 	}
 #endif
