@@ -96,6 +96,10 @@ SOURCE=..\src\FrameApp.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\GDIPlusView.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
@@ -106,10 +110,6 @@ SOURCE=..\src\Mainfrm.cpp
 
 SOURCE=..\src\StdAfx.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\src\View.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -117,6 +117,10 @@ SOURCE=..\src\View.cpp
 # Begin Source File
 
 SOURCE=..\src\FrameApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\GDIPlusView.h
 # End Source File
 # Begin Source File
 
@@ -129,10 +133,6 @@ SOURCE=..\src\resource.h
 # Begin Source File
 
 SOURCE=..\src\stdafx.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\View.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
