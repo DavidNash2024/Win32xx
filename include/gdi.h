@@ -450,19 +450,21 @@ namespace Win32xx
 			HPALETTE hPaletteOld;
 			HPEN	hPenOld;
 			long	Count;
-			BOOL	bKeepHDC;
+			BOOL	bRemoveHDC;
+			HWND	hWnd;
 		};
 
 		CDC();									// Constructs a new CDC without assigning a HDC
+#ifndef _WIN32_WCE
 		CDC(HDC hDC);							// Assigns a HDC to a new CDC
+		void AttachDC(HDC hDC);
+		HDC  DetachDC();
+#endif
 		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
-	//	void operator = (const HDC hDC);		// Assigns a HDC to an existing CDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		virtual ~CDC();
 
-		void AttachDC(HDC hDC);
-		HDC  DetachDC();
 		HDC GetHDC() const { return m_pData->hDC; }
 		static CDC* FromHandle(HDC hDC);
 
@@ -722,7 +724,7 @@ namespace Win32xx
 
 	private:
 		void AddToMap();
-		static CDC* FromRemovableHandle(HDC hDC);
+		static CDC* AddTempHDC(HDC hDC, HWND hWnd);
 		void Release();
 		void RemoveCurrentBitmap();
 		void RemoveCurrentBrush();
@@ -2137,9 +2139,11 @@ namespace Win32xx
 		m_pData->hPaletteOld = 0;
 		m_pData->hPenOld = 0;
 		m_pData->Count = 1L;
-		m_pData->bKeepHDC = FALSE;
+		m_pData->bRemoveHDC = TRUE;
+		m_pData->hWnd = 0;
 	}
 
+#ifndef _WIN32_WCE
 	inline CDC::CDC(HDC hDC)
 	// This constructor assigns an existing HDC to the CDC
 	// The HDC WILL be released or deleted when the CDC object is destroyed
@@ -2172,11 +2176,13 @@ namespace Win32xx
 			m_pData->hPaletteOld = 0;
 			m_pData->hPenOld = 0;
 			m_pData->Count = 1L;
-			m_pData->bKeepHDC = FALSE;
-
-			AddToMap();
+			m_pData->bRemoveHDC = TRUE;
+			m_pData->hWnd = ::WindowFromDC(hDC);
+			if (m_pData->hWnd)
+				AddToMap();
 		}
 	}
+#endif
 
 	inline CDC::CDC(const CDC& rhs)	// Copy constructor
 	// The copy constructor is called when a temporary copy of the CDC needs to be created.
@@ -2186,14 +2192,6 @@ namespace Win32xx
 		m_pData = rhs.m_pData;
 		InterlockedIncrement(&m_pData->Count);
 	}
-
-//	inline void CDC::operator = (const HDC hDC)
-//	// Note: this assignment operater permits a call like this:
-//	// CDC MyCDC;
-//	// MyCDC = SomeHDC;	
-//	{
-//		AttachDC(hDC);
-//	}
 
 	inline CDC& CDC::operator = (const CDC& rhs)
 	// Note: A copy of a CDC is a clone of the original.
@@ -2228,6 +2226,7 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Release();
 	}
 
+ #ifndef _WIN32_WCE
 	inline void CDC::AttachDC(HDC hDC)
 	// Attaches a HDC to the CDC object.
 	// The HDC will be automatically deleted or released when the destructor is called.	
@@ -2239,7 +2238,6 @@ namespace Win32xx
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (pDC)
 		{
-			TRACE(_T("Duplicate Attach\n"));
 			delete m_pData;
 			m_pData = pDC->m_pData;
 			InterlockedIncrement(&m_pData->Count);			
@@ -2247,7 +2245,9 @@ namespace Win32xx
 		else
 		{
 			m_pData->hDC = hDC;
-			AddToMap();
+			m_pData->hWnd = ::WindowFromDC(hDC);
+			if (m_pData->hWnd == 0)
+				AddToMap();
 		}
 	}
 
@@ -2292,10 +2292,12 @@ namespace Win32xx
 		m_pData->hPaletteOld = 0;
 		m_pData->hPenOld = 0;
 		m_pData->Count = 1L;
-		m_pData->bKeepHDC = FALSE;
+		m_pData->bRemoveHDC = TRUE;
+		m_pData->hWnd = 0;
 
 		return hDC;
 	}
+ #endif	// _WIN32_WCE
 
 	// Initialization
 	inline BOOL CDC::CreateCompatibleDC(CDC* pDC)
@@ -2356,19 +2358,20 @@ namespace Win32xx
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (pDC == 0)
 		{
-			pDC = GetApp()->AddTmpDC(hDC, TRUE);
-			pDC->m_pData->bKeepHDC = TRUE;
+			pDC = GetApp()->AddTmpDC(hDC);
+			pDC->m_pData->bRemoveHDC = FALSE;
 		}
 		return pDC;
 	}
 
-	inline CDC* CDC::FromRemovableHandle(HDC hDC)
+	inline CDC* CDC::AddTempHDC(HDC hDC, HWND hWnd)
 	// Returns the CDC object associated with the device context handle
 	// The HDC is removed when the CDC is destroyed 
 	{
 		assert( GetApp() );
-		CDC* pDC = GetApp()->AddTmpDC(hDC, FALSE);
-		pDC->m_pData->bKeepHDC = FALSE;
+		CDC* pDC = GetApp()->AddTmpDC(hDC);
+		pDC->m_pData->bRemoveHDC = TRUE;
+		pDC->m_pData->hWnd = hWnd;
 		return pDC;
 	}
 
@@ -2433,16 +2436,13 @@ namespace Win32xx
 					if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
 					if (m_pData->hPaletteOld) ::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
 
-					if (!m_pData->bKeepHDC)
+					if (m_pData->bRemoveHDC)
 					{
 						// We need to release a Window DC, and delete a memory DC
-			#ifndef _WIN32_WCE
-						HWND hwnd = ::WindowFromDC(m_pData->hDC);
-						if (hwnd) ::ReleaseDC(hwnd, m_pData->hDC);
-						else      ::DeleteDC(m_pData->hDC);
-			#else
-						::DeleteDC(m_pData->hDC);
-			#endif
+						if (m_pData->hWnd)
+							::ReleaseDC(m_pData->hWnd, m_pData->hDC);
+						else
+							::DeleteDC(m_pData->hDC);
 					}
 				}
 

@@ -331,7 +331,7 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
-		CDC*   AddTmpDC(HDC hDC, BOOL bInsert);
+		CDC*   AddTmpDC(HDC hDC);
 		CMenu* AddTmpMenu(HMENU hMenu);
 		CWnd*  AddTmpWnd(HWND hWnd);
 		void   CleanupTemps();
@@ -690,7 +690,7 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
-	inline CDC* CWinApp::AddTmpDC(HDC hDC, BOOL bInsert)
+	inline CDC* CWinApp::AddTmpDC(HDC hDC)
 	{
 		// The TmpMenus are created by GetSybMenu.
 		// They are removed by CleanupTemps
@@ -698,14 +698,6 @@ namespace Win32xx
 	
 		CDC* pDC = new CDC;
 		pDC->m_pData->hDC = hDC;
-
-		if (bInsert)
-		{
-			assert(!GetCDCFromMap(hDC));
-			m_csMapLock.Lock();
-			m_mapHDC.insert(std::make_pair(hDC, pDC));
-			m_csMapLock.Release();
-		}
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
@@ -2108,7 +2100,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
-		return CDC::FromRemovableHandle(::GetDC(m_hWnd));
+		return CDC::AddTempHDC(::GetDC(m_hWnd), m_hWnd);
 	}
 
 	inline CDC* CWnd::GetDCEx(HRGN hrgnClip, DWORD flags) const
@@ -2117,7 +2109,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
-		return CDC::FromRemovableHandle(::GetDCEx(m_hWnd, hrgnClip, flags));
+		return CDC::AddTempHDC(::GetDCEx(m_hWnd, hrgnClip, flags), m_hWnd);
 	}
 
 	inline CWnd* CWnd::GetDesktopWindow() const
@@ -2233,7 +2225,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
-		return CDC::FromRemovableHandle(::GetWindowDC(m_hWnd));
+		return CDC::AddTempHDC(::GetWindowDC(m_hWnd), m_hWnd);
 	}
 
 	inline CRect CWnd::GetWindowRect() const
