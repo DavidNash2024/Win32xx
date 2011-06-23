@@ -2346,7 +2346,7 @@ namespace Win32xx
 	{
 		while ((pWnd != NULL) && (pWnd != GetDockAncestor()))
 		{
-			if (pWnd == this) return TRUE;
+			if (pWnd == (CWnd*)this) return TRUE;
 			if (IsRelated(pWnd)) break;
 			pWnd = pWnd->GetParent();
 		}
