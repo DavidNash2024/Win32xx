@@ -723,22 +723,19 @@ namespace Win32xx
 			m_bOldFocus = FALSE;
 
 			// Acquire the DC for our NonClient painting
-			// Note the Microsoft documentation for this neglects to mention DCX_PARENTCLIP
-			CDC* pDC;
+			CDC dc;
 			if ((wParam != 1) && (bFocus == m_bOldFocus))
-				pDC = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
+				dc = ::GetDCEx(m_hWnd, (HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
 			else
-				pDC	= GetWindowDC();
-
-			CRect rc = GetWindowRect();
+				dc 	= ::GetWindowDC(m_hWnd);
 
 			// Create and set up our memory DC
-			CDC dcMem;
-			dcMem.CreateCompatibleDC(pDC);
+			CRect rc = GetWindowRect();
+			CDC dcMem = ::CreateCompatibleDC(dc);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
-			dcMem.CreateCompatibleBitmap(pDC, Width, Height);
+			dcMem.CreateCompatibleBitmap(&dc, Width, Height);
 			m_bOldFocus = bFocus;
 
 			// Set the font for the title
@@ -779,7 +776,7 @@ namespace Win32xx
 				Draw3DBorder(rc);
 
 			// Copy the Memory DC to the window's DC
-			pDC->BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
+			dc.BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
 		}
 	}
 
@@ -2156,7 +2153,6 @@ namespace Win32xx
 	{
 		CWnd* pWnd = GetFocus();
 		CDocker* pDock= NULL;
-
 		while (pWnd && (pDock == NULL))
 		{
 			if (IsRelated(pWnd))
@@ -2346,7 +2342,7 @@ namespace Win32xx
 	{
 		while ((pWnd != NULL) && (pWnd != GetDockAncestor()))
 		{
-			if (pWnd == (CWnd*)this) return TRUE;
+			if (pWnd == this) return TRUE;
 			if (IsRelated(pWnd)) break;
 			pWnd = pWnd->GetParent();
 		}
@@ -3337,7 +3333,6 @@ namespace Win32xx
 	{
 		m_NCHeight = nHeight;
 		RedrawWindow();
-
 		RecalcDockLayout();
 	}
 
@@ -4096,8 +4091,7 @@ namespace Win32xx
 			RecalcLayout();
 			return 0;
 
-		// The following a called in CTab::WndProcDefault
-
+	// The following are called in CTab::WndProcDefault
 	//	case WM_LBUTTONDOWN:
 	//		OnLButtonDown(wParam, lParam);
 	//		break;

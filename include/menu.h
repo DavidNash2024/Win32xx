@@ -341,6 +341,7 @@ namespace Win32xx
 		{
 			GetApp()->AddTmpMenu(hMenu);
 			pMenu = GetApp()->GetCMenuFromMap(hMenu);
+			::PostMessage(NULL, UWM_CLEANUPTEMPS, 0L, 0L);
 		}
 		return pMenu;
 	}	

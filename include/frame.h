@@ -2330,7 +2330,7 @@ namespace Win32xx
 
 		else
 		{
-			CDC DesktopDC = ::GetDC(NULL);
+			CDC DesktopDC = ::GetDC(HWND_DESKTOP);
 
 			// Get the font used in menu items
 			NONCLIENTMETRICS nm = {0};
@@ -2938,7 +2938,7 @@ namespace Win32xx
 		//        and make any modifications there.
 
 		// Avoid themes if using less than 16 bit colors
-		CDC DesktopDC = ::GetDC(NULL);
+		CDC DesktopDC = ::GetDC(HWND_DESKTOP);
 		if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
 			m_bUseThemes = FALSE;
 

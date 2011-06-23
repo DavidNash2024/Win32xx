@@ -455,19 +455,19 @@ namespace Win32xx
 		};
 
 		CDC();									// Constructs a new CDC without assigning a HDC
-#ifndef _WIN32_WCE
-		CDC(HDC hDC);							// Assigns a HDC to a new CDC
-		void AttachDC(HDC hDC);
-		HDC  DetachDC();
-#endif
-
 		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		virtual ~CDC();
-
 		HDC GetHDC() const { return m_pData->hDC; }
 		static CDC* FromHandle(HDC hDC);
+
+#ifndef _WIN32_WCE
+		CDC(HDC hDC);							// Assigns a HDC to a new CDC
+		void operator = (const HDC hDC);
+		void AttachDC(HDC hDC);
+		HDC  DetachDC();
+#endif
 
 		// Initialization
 		BOOL CreateCompatibleDC(CDC* pDC);
@@ -1386,7 +1386,7 @@ namespace Win32xx
 	// Creates a font of a specified typeface and point size.
 	// This function automatically converts the height in lfHeight to logical units using the specified device context.	
 	{
-		HDC hDC1 = (hDC != NULL) ? hDC : ::GetDC(NULL);
+		HDC hDC1 = (hDC != NULL) ? hDC : ::GetDC(HWND_DESKTOP);
 
 		// convert nPointSize to logical units based on hDC
 		LOGFONT logFont = *lpLogFont;
@@ -2182,6 +2182,14 @@ namespace Win32xx
 			if (m_pData->hWnd)
 				AddToMap();
 		}
+	}
+	
+	inline void CDC::operator = (const HDC hDC)
+	// Note: this assignment operater permits a call like this:
+	// CDC MyCDC;
+	// MyCDC = SomeHDC;	
+	{
+		AttachDC(hDC);
 	}
 #endif
 
@@ -4205,7 +4213,7 @@ namespace Win32xx
 		// Process each image in the ImageList
 		for (int i = 0 ; i < nCount; ++i)
 		{
-			CDC DesktopDC = ::GetDC(NULL);
+			CDC DesktopDC = ::GetDC(HWND_DESKTOP);
 			CDC MemDC = ::CreateCompatibleDC(NULL);
 			MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
 			CRect rc;
