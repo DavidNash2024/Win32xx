@@ -19,6 +19,7 @@ Changes in detail
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W
+- Added CDC::Destroy
 - Added CDocker::GetActiveDocker
 - Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators

@@ -461,6 +461,7 @@ namespace Win32xx
 		virtual ~CDC();
 		HDC GetHDC() const { return m_pData->hDC; }
 		static CDC* FromHandle(HDC hDC);
+		void Destroy();
 
 #ifndef _WIN32_WCE
 		CDC(HDC hDC);							// Assigns a HDC to a new CDC
@@ -2312,9 +2313,9 @@ namespace Win32xx
 	inline BOOL CDC::CreateCompatibleDC(CDC* pDC)
 	// Returns a memory device context (DC) compatible with the specified device.	
 	{
-		assert(pDC);
 		assert(m_pData->hDC == NULL);
-		HDC hDC = ::CreateCompatibleDC(pDC->GetHDC());
+		HDC hdcSource = (pDC == NULL)? NULL : pDC->GetHDC();	
+		HDC hDC = ::CreateCompatibleDC(hdcSource);
 		if (hDC)
 		{
 			m_pData->hDC = hDC;
@@ -2374,6 +2375,9 @@ namespace Win32xx
 
 	inline CDC* CDC::FromHandle(HDC hDC)
 	// Returns the CDC object associated with the device context handle
+	// If a CDC object doesn't already exist, a temporary CDC object is created.
+	// The HDC belonging to a temporary CDC is not released or destroyed when the 
+	//  temporary CDC is deconstructed.
 	{
 		assert( GetApp() );
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
@@ -2448,25 +2452,7 @@ namespace Win32xx
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
-				if (m_pData->hDC)
-				{
-					// Delete any GDI objects belonging to this CDC
-					if (m_pData->hPenOld)	::SelectObject(m_pData->hDC, m_pData->hPenOld);
-					if (m_pData->hBrushOld)	::SelectObject(m_pData->hDC, m_pData->hBrushOld);
-					if (m_pData->hBitmapOld)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
-					if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
-					if (m_pData->hPaletteOld) ::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
-
-					if (m_pData->bRemoveHDC)
-					{
-						// We need to release a Window DC, and delete a memory DC
-						if (m_pData->hWnd)
-							::ReleaseDC(m_pData->hWnd, m_pData->hDC);
-						else
-							::DeleteDC(m_pData->hDC);
-					}
-				}
-
+				Destroy();
 				delete m_pData;
 				m_pData = 0;
 				RemoveFromMap();
@@ -2665,6 +2651,39 @@ namespace Win32xx
 		m_pData->Bitmap.CreateDIBSection(pDC->GetHDC(), &bmi, iUsage, ppvBits, hSection, dwOffset);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
 		return m_pData->Bitmap;
+	}
+
+	inline void CDC::Destroy()
+	// Deletes or releases the device context and returns the CDC object to its
+	// default state, ready for reuse.
+	{
+		if (m_pData->hDC)
+		{
+			// Delete any GDI objects belonging to this CDC
+			if (m_pData->hPenOld)	::SelectObject(m_pData->hDC, m_pData->hPenOld);
+			if (m_pData->hBrushOld)	::SelectObject(m_pData->hDC, m_pData->hBrushOld);
+			if (m_pData->hBitmapOld)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
+			if (m_pData->hFontOld)	::SelectObject(m_pData->hDC, m_pData->hFontOld);
+			if (m_pData->hPaletteOld) ::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
+
+			if (m_pData->bRemoveHDC)
+			{
+				// We need to release a Window DC, and delete a memory DC
+				if (m_pData->hWnd)
+					::ReleaseDC(m_pData->hWnd, m_pData->hDC);
+				else
+					::DeleteDC(m_pData->hDC);
+
+				m_pData->hDC = 0; 
+				m_pData->hWnd = 0;
+				m_pData->bRemoveHDC = TRUE;
+				m_pData->hPenOld = 0;
+				m_pData->hBrushOld = 0;
+				m_pData->hBitmapOld = 0;
+				m_pData->hFontOld = 0;
+				m_pData->hPaletteOld = 0;
+			}
+		}
 	}
 
 	inline HBITMAP CDC::DetachBitmap()
@@ -4083,7 +4102,8 @@ namespace Win32xx
 		pbmi->bmiHeader.biBitCount = 24;
 
 		// Create the reference DC for GetDIBits to use
-		CDC MemDC = CreateCompatibleDC(NULL);
+		CDC MemDC;
+		MemDC.CreateCompatibleDC(NULL);
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);

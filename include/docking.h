@@ -723,19 +723,20 @@ namespace Win32xx
 			m_bOldFocus = FALSE;
 
 			// Acquire the DC for our NonClient painting
-			CDC dc;
+			CDC* pDC;
 			if ((wParam != 1) && (bFocus == m_bOldFocus))
-				dc = ::GetDCEx(m_hWnd, (HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
+				pDC = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
 			else
-				dc 	= ::GetWindowDC(m_hWnd);
+				pDC	= GetWindowDC();
 
 			// Create and set up our memory DC
 			CRect rc = GetWindowRect();
-			CDC dcMem = ::CreateCompatibleDC(dc);
+			CDC dcMem;
+			dcMem.CreateCompatibleDC(pDC);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
-			dcMem.CreateCompatibleBitmap(&dc, Width, Height);
+			dcMem.CreateCompatibleBitmap(pDC, Width, Height);
 			m_bOldFocus = bFocus;
 
 			// Set the font for the title
@@ -776,7 +777,10 @@ namespace Win32xx
 				Draw3DBorder(rc);
 
 			// Copy the Memory DC to the window's DC
-			dc.BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
+			pDC->BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
+
+			// Required for Win98/WinME
+			pDC->Destroy();
 		}
 	}
 

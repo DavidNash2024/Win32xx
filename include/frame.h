@@ -1677,7 +1677,8 @@ namespace Win32xx
 			DrawDC.Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 		}
 
-		CDC MemDC = ::CreateCompatibleDC(pdis->hDC);
+		CDC MemDC;
+		MemDC.CreateCompatibleDC(FromHandle(pdis->hDC));
 		int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 		int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 		MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
@@ -1697,11 +1698,11 @@ namespace Win32xx
 
 		// Draw a white or black check mark as required
 		// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-		CDC* pCustomDC = FromHandle(pdis->hDC);
-		CDC MaskDC= ::CreateCompatibleDC(*pCustomDC);
-		MaskDC.CreateCompatibleBitmap(pCustomDC, cxCheck, cyCheck);
-
+		CDC MaskDC;
+		MaskDC.CreateCompatibleDC(FromHandle(pdis->hDC));
+		MaskDC.CreateCompatibleBitmap(FromHandle(pdis->hDC), cxCheck, cyCheck);
 		MaskDC.BitBlt(0, 0, cxCheck, cyCheck, &MaskDC, 0, 0, WHITENESS);
+		
 		if ((pdis->itemState & ODS_SELECTED) && (!tm.UseThemes))
 		{
 			// Draw a white checkmark
