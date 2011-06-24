@@ -440,6 +440,10 @@ LRESULT CMyTreeView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				m_ccm2.HandleMenuMsg(uMsg, wParam, lParam);
 		}
 		break;
+		case WM_DESTROY:
+			// Cleanup
+			m_pItems.clear();
+			break;
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

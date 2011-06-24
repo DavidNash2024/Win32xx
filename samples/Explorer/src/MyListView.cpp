@@ -615,6 +615,11 @@ LRESULT CMyListView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				m_ccm2.HandleMenuMsg(uMsg, wParam, lParam);
 		}
 		break;
+	case WM_DESTROY:
+		// Cleanup
+		m_pItems.clear();
+		m_csfCurFolder.Delete();
+		break;
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
