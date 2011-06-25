@@ -344,6 +344,7 @@ namespace Win32xx
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
+		CCriticalSection m_csTLSLock;	// thread synchronisation for m_vTLSData
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
@@ -1007,10 +1008,9 @@ namespace Win32xx
 		{
 			pTLSData = new TLSData;
 
-			CCriticalSection csTlsData;
-			csTlsData.Lock();
+			m_csTLSLock.Lock();
 			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
-			csTlsData.Release();
+			m_csTLSLock.Release();
 
 			::TlsSetValue(GetTlsIndex(), pTLSData);
 		}
