@@ -20,7 +20,7 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
-	virtual void OnPaint(CDC& dc);
+	virtual void OnPaint(CDC* pDC);
 	virtual void OnSize();
 	virtual void OnTrayIcon(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT& cs);

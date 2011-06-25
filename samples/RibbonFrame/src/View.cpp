@@ -33,15 +33,14 @@ void CView::DrawLine(int x, int y)
 	pDrawDC->LineTo(x, y);
 }
 
-void CView::OnPaint(CDC& dc)
+void CView::OnPaint(CDC* pDC)
 {
 	// Here we use double buffering (drawing to a memory DC) for smoother rendering
 	// Set up our Memory DC and bitmap
-	CDC MemDC;
-	MemDC.CreateCompatibleDC(&dc);
+	CMemDC MemDC(pDC);
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
-	MemDC.CreateCompatibleBitmap(&dc, Width, Height);
+	MemDC.CreateCompatibleBitmap(pDC, Width, Height);
 	MemDC.FillRect(GetClientRect(), m_hBrush);	
 
 	if (m_points.size() > 0)
@@ -61,7 +60,7 @@ void CView::OnPaint(CDC& dc)
 	}
 
 	// Copy from the memory DC to our painting dc
-	dc.BitBlt(0, 0, Width, Height, &MemDC, 0, 0, SRCCOPY);
+	pDC->BitBlt(0, 0, Width, Height, &MemDC, 0, 0, SRCCOPY);
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)

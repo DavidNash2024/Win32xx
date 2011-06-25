@@ -861,8 +861,7 @@ namespace Win32xx
 
 		// Create the memory DC and bitmap
 		CDC* pdcView = GetDC();
-		CDC dcMem;
-		dcMem.CreateCompatibleDC(pdcView);
+		CMemDC dcMem(pdcView);
 		CRect rcClient = GetClientRect();
 		dcMem.CreateCompatibleBitmap(pdcView, rcClient.Width(), rcClient.Height());
 

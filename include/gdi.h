@@ -740,6 +740,56 @@ namespace Win32xx
 		DataMembers* m_pData;		// pointer to the class's data members
 	};
 
+	class CWindowDC : public CDC
+	{
+	public:
+		CWindowDC(CWnd* pWnd)
+		{
+			if (pWnd) assert(pWnd->IsWindow());
+			HWND hWnd = pWnd? pWnd->GetHwnd() : NULL;
+			AttachDC(::GetWindowDC(hWnd));
+		}
+	};
+
+	class CClientDC : public CDC
+	{
+	public:
+		CClientDC(CWnd* pWnd)
+		{
+			if (pWnd) assert(pWnd->IsWindow());
+			HWND hWnd = pWnd? pWnd->GetHwnd() : NULL;
+			AttachDC(::GetDC(hWnd));			
+		}
+	};
+
+	class CMemDC : public CDC
+	{
+	public:
+		CMemDC(CDC* pDC)
+		{
+			if (pDC) assert(pDC->GetHDC());
+			HDC hDC = pDC? pDC->GetHDC() : NULL;
+			AttachDC(::CreateCompatibleDC(hDC));
+		}
+	};
+
+	class CPaintDC : public CDC
+	{
+	public:
+		CPaintDC(CWnd* pWnd)
+		{
+			assert(pWnd->IsWindow());
+			m_hWnd = pWnd->GetHwnd();
+			AttachDC(::BeginPaint(pWnd->GetHwnd(), &m_ps));
+		}
+
+		~CPaintDC()	{ ::EndPaint(m_hWnd, &m_ps); }
+
+	private:
+		HWND m_hWnd;
+		PAINTSTRUCT m_ps;
+	};
+
 
 	///////////////////////////////////////////////
 	// Declarations for the CBitmapInfoPtr class
@@ -2356,14 +2406,12 @@ namespace Win32xx
 	// Suitable for use with a Window DC or a memory DC
 	{
 		// Create the Image memory DC
-		CDC dcImage;
-		dcImage.CreateCompatibleDC(this);
+		CMemDC dcImage(this);
 		dcImage.SetBkColor(clrMask);
 		dcImage.AttachBitmap(hbmImage);
 
 		// Create the Mask memory DC
-		CDC dcMask;
-		dcMask.CreateCompatibleDC(this);
+		CMemDC dcMask(this);
         dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
 		dcMask.BitBlt(0, 0, cx, cy, &dcImage, 0, 0, SRCCOPY);
 
@@ -4102,8 +4150,7 @@ namespace Win32xx
 		pbmi->bmiHeader.biBitCount = 24;
 
 		// Create the reference DC for GetDIBits to use
-		CDC MemDC;
-		MemDC.CreateCompatibleDC(NULL);
+		CMemDC MemDC(NULL);
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
@@ -4177,7 +4224,7 @@ namespace Win32xx
 		CBitmapInfoPtr pbmi(hbmSource);
 
 		// Create the reference DC for GetDIBits to use
-		CDC MemDC = CreateCompatibleDC(NULL);
+		CMemDC MemDC(NULL);
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(hbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
@@ -4233,8 +4280,8 @@ namespace Win32xx
 		// Process each image in the ImageList
 		for (int i = 0 ; i < nCount; ++i)
 		{
-			CDC DesktopDC = ::GetDC(HWND_DESKTOP);
-			CDC MemDC = ::CreateCompatibleDC(NULL);
+			CClientDC DesktopDC(NULL);
+			CMemDC MemDC(NULL);
 			MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
 			CRect rc;
 			rc.SetRect(0, 0, cx, cx);

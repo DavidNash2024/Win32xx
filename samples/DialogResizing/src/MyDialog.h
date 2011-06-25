@@ -17,7 +17,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnEraseBkgnd(CDC& dc);
+	virtual BOOL OnEraseBkgnd(CDC* pDC);
 	virtual void OnOK();
 
 private:

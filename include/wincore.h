@@ -115,7 +115,6 @@
 #include <shlwapi.h>
 #include "shared_ptr.h"
 //#include "winutils.h"			// included later in this file
-//#include "gdi.h"				// included later in this file
 //#include "cstring.h"			// included later in this file
 //#include "menu.h"				// included later in this file
 
@@ -358,7 +357,6 @@ namespace Win32xx
 
 #include "winutils.h"
 #include "cstring.h"
-#include "gdi.h"
 
 
 namespace Win32xx
@@ -537,13 +535,13 @@ namespace Win32xx
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
-		virtual BOOL OnEraseBkgnd(CDC& dc);
+		virtual BOOL OnEraseBkgnd(CDC* pDC);
 		virtual void OnInitialUpdate();
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void OnPaint(CDC& dc);
+		virtual void OnPaint(CDC* pDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -1449,10 +1447,10 @@ namespace Win32xx
 		//  during window creation.
 	}
 
-	inline BOOL CWnd::OnEraseBkgnd(CDC& dc)
+	inline BOOL CWnd::OnEraseBkgnd(CDC* pDC)
 	// Called when the background of the window's client area needs to be erased.
 	{
-		UNREFERENCED_PARAMETER(dc);
+		UNREFERENCED_PARAMETER(pDC);
 
 	    // Override this function in your derived class to perform drawing tasks.
 
@@ -1581,10 +1579,10 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CWnd::OnPaint(CDC& dc)
+	inline void CWnd::OnPaint(CDC* pDC)
 	// Called when part of the client area of the window needs to be painted
 	{
-		UNREFERENCED_PARAMETER(dc);
+		UNREFERENCED_PARAMETER(pDC);
 
 	    // Override this function in your derived class to perform drawing tasks.
 	}
@@ -1892,16 +1890,14 @@ namespace Win32xx
 
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
-					PAINTSTRUCT ps;
-					CDC* pDC = BeginPaint(ps);
-					OnPaint(*pDC);
-					EndPaint(ps);
+					CPaintDC dc(this);
+					OnPaint(&dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					CDC* pDC = GetDC();
-					OnPaint(*pDC);
+					CClientDC dc(this);
+					OnPaint(&dc);
 				}
 			}
 			return 0L;
@@ -1909,7 +1905,7 @@ namespace Win32xx
 		case WM_ERASEBKGND:
 			{
 				CDC* pDC = FromHandle((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(*pDC);
+				BOOL bResult = OnEraseBkgnd(pDC);
 
 				if (bResult) return TRUE;
 			}

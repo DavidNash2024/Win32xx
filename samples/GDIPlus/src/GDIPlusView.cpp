@@ -127,14 +127,14 @@ void CGDIPlusView::OnInitialUpdate()
 	TRACE(_T("View window created\n"));
 }
 
-void CGDIPlusView::OnPaint(CDC& dc)
+void CGDIPlusView::OnPaint(CDC* pDC)
 {
-	DrawSolidLine(dc);
-	DrawText(dc);
-	DrawCappedLine(dc);
-	DrawGradientElipse(dc);
-	DrawSolidElipse(dc);
-	DrawGamaShapes(dc); 
+	DrawSolidLine(*pDC);
+	DrawText(*pDC);
+	DrawCappedLine(*pDC);
+	DrawGradientElipse(*pDC);
+	DrawSolidElipse(*pDC);
+	DrawGamaShapes(*pDC); 
 }
 
 void CGDIPlusView::PreCreate(CREATESTRUCT &cs)

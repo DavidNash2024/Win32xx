@@ -108,7 +108,7 @@ namespace Win32xx
 
 	protected:
 	//Overridables
-		virtual BOOL OnEraseBkgnd(CDC& dc);
+		virtual BOOL OnEraseBkgnd(CDC* pDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -330,7 +330,7 @@ namespace Win32xx
 		return !(rbbi.fStyle & RBBS_HIDDEN);
 	}
 
-	inline BOOL CReBar::OnEraseBkgnd(CDC& dc)
+	inline BOOL CReBar::OnEraseBkgnd(CDC* pDC)
 	{
 		BOOL Erase = TRUE;
 		if (!m_Theme.UseThemes)
@@ -346,9 +346,8 @@ namespace Win32xx
 			int BarHeight = rcReBar.Height();
 
 			// Create and set up our memory DC
-			CDC MemDC;
-			MemDC.CreateCompatibleDC(&dc);
-			MemDC.CreateCompatibleBitmap(&dc, BarWidth, BarHeight);
+			CMemDC MemDC(pDC);
+			MemDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
 
 			// Draw to ReBar background to the memory DC
 			rcReBar.right = 600;
@@ -388,9 +387,8 @@ namespace Win32xx
 							rcDraw.left -= xPad;
 
 							// Fill the Source CDC with the band's background
-							CDC SourceDC;
-							SourceDC.CreateCompatibleDC(&dc);
-							SourceDC.CreateCompatibleBitmap(&dc, BarWidth, BarHeight);
+							CMemDC SourceDC(pDC);
+							SourceDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
 							CRect rcBorder = GetBandBorders(nBand);
 							rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
 							SourceDC.SolidFill(m_Theme.clrBand1, rcDraw);
@@ -402,9 +400,8 @@ namespace Win32xx
 							int Curve = m_Theme.RoundBorders? 12 : 0;
 
 							// Create our mask for rounded edges using RoundRect
-							CDC MaskDC;
-							MaskDC.CreateCompatibleDC(&dc);
-							MaskDC.CreateCompatibleBitmap(&dc, BarWidth, BarHeight);
+							CMemDC MaskDC(pDC);
+							MaskDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
 
 							rcDraw.top = rcBand.top;
 							if (!m_Theme.FlatStyle)
@@ -438,8 +435,8 @@ namespace Win32xx
 							// Extra drawing to prevent jagged edge while moving bands
 							if (m_bIsDragging)
 							{
-								CDC* pReBarDC = GetDC();
-								pReBarDC->BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, &MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+								CClientDC ReBarDC(this);
+								ReBarDC.BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, &MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
 							}
 						}
 					}
@@ -459,7 +456,7 @@ namespace Win32xx
 			}
 
 			// Copy the Memory DC to the window's DC
-			dc.BitBlt(0, 0, BarWidth, BarHeight, &MemDC, 0, 0, SRCCOPY);
+			pDC->BitBlt(0, 0, BarWidth, BarHeight, &MemDC, 0, 0, SRCCOPY);
 		}
 		
 		return Erase;

@@ -9,6 +9,7 @@ New Features and Enhancements
 * Added CMenu
 * Added CFile
 * Added Idle Processing.
+* Added CWindowDC, CClientDC, CMemDC, CPaintDC
 
 
 Changes in detail
@@ -16,6 +17,10 @@ Changes in detail
 - Added CMenu
 - Added CString
 - Added CFile
+- Added CClientDC
+- Added CMemDC
+- Added CPaintDC
+- Added CWindowDC
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W

@@ -12,7 +12,7 @@ class CSimpleView : public CWnd
 {
 public:
 	CSimpleView();
-	virtual void OnPaint(CDC& dc);
+	virtual void OnPaint(CDC* pDC);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
 	COLORREF GetColor() {return m_Color;}

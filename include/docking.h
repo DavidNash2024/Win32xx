@@ -215,7 +215,7 @@ namespace Win32xx
 		public:
 			CDockBar();
 			virtual ~CDockBar();
-			virtual void OnPaint(CDC& dc);
+			virtual void OnPaint(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
@@ -299,7 +299,7 @@ namespace Win32xx
 			virtual RECT CalcHintRectInner(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual RECT CalcHintRectOuter(CDocker* pDockDrag, UINT uDockSide);
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
-			virtual void OnPaint(CDC& dc);
+			virtual void OnPaint(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void SetBitmap(HBITMAP hbmBlueTint);
 			virtual void ShowHintWindow(CDocker* pDockTarget, CRect rcHint);
@@ -317,7 +317,7 @@ namespace Win32xx
 		public:
 			CTarget() : m_hbmImage(0) {}
 			virtual ~CTarget();
-			virtual void OnPaint(CDC& dc);
+			virtual void OnPaint(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 
 			HBITMAP GetImage()		{return m_hbmImage;}
@@ -335,7 +335,7 @@ namespace Win32xx
 		public:
 			CTargetCentre();
 			virtual ~CTargetCentre();
-			virtual void OnPaint(CDC& dc);
+			virtual void OnPaint(CDC* pDC);
 			virtual void OnCreate();
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 			BOOL IsOverContainer() { return m_bIsOverContainer; }
@@ -554,11 +554,11 @@ namespace Win32xx
 		::DeleteObject(m_hbrBackground);
 	}
 
-	inline void CDocker::CDockBar::OnPaint(CDC& dc)
+	inline void CDocker::CDockBar::OnPaint(CDC* pDC)
 	{
 		CRect rcClient = GetClientRect();
-		dc.AttachBrush(m_hbrBackground);
-		dc.PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
+		pDC->AttachBrush(m_hbrBackground);
+		pDC->PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
 	}
 
 	inline void CDocker::CDockBar::PreCreate(CREATESTRUCT &cs)
@@ -668,24 +668,24 @@ namespace Win32xx
 	{
 		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
 		// This draws a 2 pixel border around the specified Rect
-		CDC* pDC = GetWindowDC();
+		CWindowDC dc(this);
 		CRect rcw = Rect;
-		pDC->CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
-		pDC->MoveTo(0, rcw.Height());
-		pDC->LineTo(0, 0);
-		pDC->LineTo(rcw.Width(), 0);
-		pDC->CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DDKSHADOW));
-		pDC->MoveTo(1, rcw.Height()-2);
-		pDC->LineTo(1, 1);
-		pDC->LineTo(rcw.Width()-2, 1);
-		pDC->CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DHILIGHT));
-		pDC->MoveTo(rcw.Width()-1, 0);
-		pDC->LineTo(rcw.Width()-1, rcw.Height()-1);
-		pDC->LineTo(0, rcw.Height()-1);
-		pDC->CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DLIGHT));
-		pDC->MoveTo(rcw.Width()-2, 1);
-		pDC->LineTo(rcw.Width()-2, rcw.Height()-2);
-		pDC->LineTo(1, rcw.Height()-2);
+		dc.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
+		dc.MoveTo(0, rcw.Height());
+		dc.LineTo(0, 0);
+		dc.LineTo(rcw.Width(), 0);
+		dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DDKSHADOW));
+		dc.MoveTo(1, rcw.Height()-2);
+		dc.LineTo(1, 1);
+		dc.LineTo(rcw.Width()-2, 1);
+		dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DHILIGHT));
+		dc.MoveTo(rcw.Width()-1, 0);
+		dc.LineTo(rcw.Width()-1, rcw.Height()-1);
+		dc.LineTo(0, rcw.Height()-1);
+		dc.CreatePen(PS_SOLID,1, GetSysColor(COLOR_3DLIGHT));
+		dc.MoveTo(rcw.Width()-2, 1);
+		dc.LineTo(rcw.Width()-2, rcw.Height()-2);
+		dc.LineTo(1, rcw.Height()-2);
 	}
 
 	inline CRect CDocker::CDockClient::GetCloseRect()
@@ -731,8 +731,7 @@ namespace Win32xx
 
 			// Create and set up our memory DC
 			CRect rc = GetWindowRect();
-			CDC dcMem;
-			dcMem.CreateCompatibleDC(pDC);
+			CMemDC dcMem(pDC);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
@@ -946,8 +945,8 @@ namespace Win32xx
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CDC* pDC = GetWindowDC();
-					DrawCloseButton(*pDC, m_bOldFocus);
+					CWindowDC dc(this);
+					DrawCloseButton(dc, m_bOldFocus);
 				}
 
 				return 0L;
@@ -991,8 +990,8 @@ namespace Win32xx
 
 		m_IsClosePressed = FALSE;
 		ReleaseCapture();
-		CDC* pDC = GetWindowDC();
-		DrawCloseButton(*pDC, m_bOldFocus);
+		CWindowDC dc(this);
+		DrawCloseButton(dc, m_bOldFocus);
 	}
 
 	inline void CDocker::CDockClient::OnMouseActivate(WPARAM wParam, LPARAM lParam)
@@ -1018,9 +1017,9 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 
 		m_IsTracking = FALSE;
-		CDC* pDC = GetWindowDC();
+		CWindowDC dc(this);
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
-			DrawCloseButton(*pDC, m_bOldFocus);
+			DrawCloseButton(dc, m_bOldFocus);
 
 		m_IsTracking = FALSE;
 	}
@@ -1055,8 +1054,8 @@ namespace Win32xx
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CDC* pDC = GetWindowDC();
-					DrawCloseButton(*pDC, m_bOldFocus);
+					CWindowDC dc(this);
+					DrawCloseButton(dc, m_bOldFocus);
 				}
 			}
 
@@ -1129,8 +1128,8 @@ namespace Win32xx
 				ReleaseCapture();
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CDC* pDC = GetWindowDC();
-					DrawCloseButton(*pDC, m_bOldFocus);
+					CWindowDC dc(this);
+					DrawCloseButton(dc, m_bOldFocus);
 					OnLButtonUp(wParam, lParam);
 				}
 			}
@@ -1312,13 +1311,13 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::CDockHint::OnPaint(CDC& dc)
+	inline void CDocker::CDockHint::OnPaint(CDC* pDC)
 	{
 		// Display the blue tinted bitmap
 		CRect rc = GetClientRect();
-		CDC MemDC = CreateCompatibleDC(dc);
+		CMemDC MemDC(pDC);
 		MemDC.AttachBitmap(m_hbmBlueTint);
-		dc.BitBlt(0, 0, rc.Width(), rc.Height(), &MemDC, 0, 0, SRCCOPY);
+		pDC->BitBlt(0, 0, rc.Width(), rc.Height(), &MemDC, 0, 0, SRCCOPY);
 	}
 
 	inline void CDocker::CDockHint::PreCreate(CREATESTRUCT &cs)
@@ -1340,9 +1339,8 @@ namespace Win32xx
 	inline void CDocker::CDockHint::ShowHintWindow(CDocker* pDockTarget, CRect rcHint)
 	{
 		// Save the Dock window's blue tinted bitmap
-		CDC dcDesktop = ::GetDC(HWND_DESKTOP);
-		CDC dcMem;
-		dcMem.CreateCompatibleDC(&dcDesktop);
+		CClientDC dcDesktop(NULL);
+		CMemDC dcMem(&dcDesktop);
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);
@@ -1374,7 +1372,7 @@ namespace Win32xx
 	{
 	}
 
-	inline void CDocker::CTargetCentre::OnPaint(CDC& dc)
+	inline void CDocker::CTargetCentre::OnPaint(CDC* pDC)
 	{
 		HBITMAP hbmCentre = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDCENTER),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
@@ -1387,19 +1385,19 @@ namespace Win32xx
 		HBITMAP hbmBottom= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDBOTTOM),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 
-		if (hbmCentre)	dc.DrawBitmap(0, 0, 88, 88, hbmCentre, RGB(255,0,255));
+		if (hbmCentre)	pDC->DrawBitmap(0, 0, 88, 88, hbmCentre, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Centre\n"));
 
-		if (hbmLeft) dc.DrawBitmap(0, 29, 31, 29, hbmLeft, RGB(255,0,255));
+		if (hbmLeft) pDC->DrawBitmap(0, 29, 31, 29, hbmLeft, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Left\n"));
 
-		if (hbmTop) dc.DrawBitmap(29, 0, 29, 31, hbmTop, RGB(255,0,255));
+		if (hbmTop) pDC->DrawBitmap(29, 0, 29, 31, hbmTop, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Top\n"));
 
-		if (hbmRight) dc.DrawBitmap(55, 29, 31, 29, hbmRight, RGB(255,0,255));
+		if (hbmRight) pDC->DrawBitmap(55, 29, 31, 29, hbmRight, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Right\n"));
 
-		if (hbmBottom) dc.DrawBitmap(29, 55, 29, 31, hbmBottom, RGB(255,0,255));
+		if (hbmBottom) pDC->DrawBitmap(29, 55, 29, 31, hbmBottom, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Bottom\n"));
 
 		::DeleteObject(hbmCentre);
@@ -1412,7 +1410,7 @@ namespace Win32xx
 		{
 			HBITMAP hbmMiddle = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDMIDDLE),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-			dc.DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
+			pDC->DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
 			::DeleteObject(hbmMiddle);
 		}
 
@@ -1512,14 +1510,14 @@ namespace Win32xx
 		if (m_hbmImage) ::DeleteObject(m_hbmImage);
 	}
 
-	inline void CDocker::CTarget::OnPaint(CDC& dc)
+	inline void CDocker::CTarget::OnPaint(CDC* pDC)
 	{
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
-		if (GetImage()) dc.DrawBitmap(0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
+		if (GetImage()) pDC->DrawBitmap(0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
 		else TRACE(_T("Missing docking resource\n"));
 	}
 
@@ -2126,8 +2124,8 @@ namespace Win32xx
 
 			BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
 
-			CDC* pBarDC = GetDC();
-			pBarDC->AttachBrush(m_hbrDithered);
+			CClientDC BarDC(this);
+			BarDC.AttachBrush(m_hbrDithered);
 
 			CRect rc;
 			::GetWindowRect(hBar, &rc);
@@ -2137,9 +2135,9 @@ namespace Win32xx
 			int BarWidth = pDock->GetDockBar().GetWidth();
 
 			if (bVertical)
-				pBarDC->PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
+				BarDC.PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
 			else
-				pBarDC->PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
+				BarDC.PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
 		}
 	}
 
@@ -2312,9 +2310,9 @@ namespace Win32xx
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfStatusFont;
 
-		CDC* pDC = GetDC();
-		pDC->CreateFontIndirect(lf);
-		CSize szText = pDC->GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+		CClientDC dc(this);
+		dc.CreateFontIndirect(lf);
+		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
 
@@ -3812,12 +3810,12 @@ namespace Win32xx
 		for (iter = m_vContainerInfo.begin(); iter != m_vContainerInfo.end(); ++iter)
 		{
 			CSize TempSize;
-			CDC* pDC = GetDC();
+			CClientDC dc(this);
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			pDC->CreateFontIndirect(info.lfStatusFont);
-			TempSize = pDC->GetTextExtentPoint32(iter->szTitle, lstrlen(iter->szTitle));
+			dc.CreateFontIndirect(info.lfStatusFont);
+			TempSize = dc.GetTextExtentPoint32(iter->szTitle, lstrlen(iter->szTitle));
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;
 		}

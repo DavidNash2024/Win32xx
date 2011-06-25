@@ -150,15 +150,15 @@ void CMyDialog::OnRadio3()
 	TRACE(_T("Radio 3\n"));
 }
 
-BOOL CMyDialog::OnEraseBkgnd(CDC& dc)
+BOOL CMyDialog::OnEraseBkgnd(CDC* pDC)
 {
 	// Adding a gripper to a resizable dialog is a bit of a hack, but since it
 	// is often done, here is one method of doing it safely.
 
 	// Draw the dialog's background manually
 	CRect rc = GetClientRect();
-	CDC* pdcClient = GetDC();	
-	pdcClient->SolidFill(GetSysColor(COLOR_3DFACE), rc);
+	CClientDC dcClient(this);	
+	dcClient.SolidFill(GetSysColor(COLOR_3DFACE), rc);
 
 	// draw size grip
 	if (rc.Width() > m_Resizer.GetMinRect().Width() && rc.Height() > m_Resizer.GetMinRect().Height())
@@ -166,7 +166,7 @@ BOOL CMyDialog::OnEraseBkgnd(CDC& dc)
 		int size = GetSystemMetrics(SM_CXVSCROLL);
 		rc.left = rc.right - size;
 		rc.top = rc.bottom - size;
-		pdcClient->DrawFrameControl(rc, DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
+		dcClient.DrawFrameControl(rc, DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
 	}
 	
 	// Suppress default background drawing

@@ -118,9 +118,9 @@ void CView::OnInitialUpdate()
 	}
 }
 
-void CView::OnPaint(CDC& dc)
+void CView::OnPaint(CDC* pDC)
 {
-	Paint(dc);
+	Paint(*pDC);
 }
 
 void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
