@@ -116,6 +116,7 @@
 #include "shared_ptr.h"
 //#include "winutils.h"			// included later in this file
 //#include "cstring.h"			// included later in this file
+//#include "gdi.h"				// included later in this file
 //#include "menu.h"				// included later in this file
 
 // For compilers lacking Win64 support
@@ -345,6 +346,7 @@ namespace Win32xx
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTLSLock;	// thread synchronisation for m_vTLSData
+		CCriticalSection m_csAppStart;	// thread synchronisation for application startup
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
@@ -575,6 +577,7 @@ namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#include "gdi.h"	
 #include "menu.h"
 
 namespace Win32xx
@@ -622,8 +625,7 @@ namespace Win32xx
 	{
 		try
 		{
-			CCriticalSection cs;
-			cs.Lock();
+			m_csAppStart.Lock();
 			assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
 
 			m_dwTlsIndex = ::TlsAlloc();
@@ -631,12 +633,12 @@ namespace Win32xx
 			{
 				// We only get here in the unlikely event that all TLS indexes are already allocated by this app
 				// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-				cs.Release();
+				m_csAppStart.Release();
 				throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 			}
 
 			SetnGetThis(this);
-			cs.Release();
+			m_csAppStart.Release();
 
 			// Set the instance handle
 	#ifdef _WIN32_WCE

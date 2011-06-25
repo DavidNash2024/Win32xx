@@ -55,27 +55,34 @@
 //  shown below. 
 //
 // Coding Exampe without CDC ...
-//  HDC hDC = ::CreateCompatibleDC(SomeHDC);
-//  HPEN hPen = :: CreatePen(PS_SOLID, 1, RGB(255,0,0);
-//  HPEN hPenOld = (HPEN)::SelectObject(hDC, hPen);
-//	::MoveToEx(hDC, 0, 0, NULL);
-//  ::LineTo(hDC, 50, 50);
-//  ::SelectObject(hDC, hPenOld);
+//	HDC hdcClient = ::GetDC(m_hWnd);
+//  HDC hdcMem = ::CreateCompatibleDC(hdcClient);
+//  HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(255,0,0);
+//  HPEN hPenOld = (HPEN)::SelectObject(hdcMem, hPen);
+//	::MoveToEx(hdcMem, 0, 0, NULL);
+//  ::LineTo(hdcMem, 50, 50);
+//	::BitBlt(hdcClient, 0, 0, cx, cy, hdcMem, 0, 0);
+//  ::SelectObject(hdcMem, hPenOld);
 //  ::DeleteObject(hPen);
-//  ::DeleteDC(hDC);
+//  ::DeleteDC(hdcMem);
+//	::ReleaseDC(m_hWnd, hdcClient);
 //
 // Coding Example with CDC ...
-//  CDC DrawDC = ::CreateCompatibleDC(SomeHDC);
-//  DrawDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
-//	DrawDC.MoveTo(0, 0);
-//  DrawDC.LineTo(50, 50);
+//	CClientDC dcClient(this)
+//  CMemDC dcMem(&dcClient);
+//  CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
+//	CMemDC.MoveTo(0, 0);
+//  CMemDC.LineTo(50, 50);
+//	dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);
 //
 // Coding Example with CDC and CPen
+//	CClientDC dcClient(this)
 //  CPen MyPen(PS_SOLID, 1, RGB(255,0,0));
-//  CDC DrawDC = ::CreateCompatibleDC(SomeHDC);
-//  DrawDC.AttachPen(MyPen);
-//	DrawDC.MoveTo(0, 0);
-//  DrawDC.LineTo(50, 50);
+//  CMemDC CMemDC(&dcClient);
+//  CMemDC.AttachPen(MyPen);
+//	CMemDC.MoveTo(0, 0);
+//  CMemDC.LineTo(50, 50);
+//	dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);
 //
 // When the CDC object drops out of scope, it's destructor is called, cleaning up
 //  any GDI objects it created, as well as the device context.
