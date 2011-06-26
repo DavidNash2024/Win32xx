@@ -26,6 +26,7 @@ Changes in detail
 - Added BSTR2W
 - Added CDC::Destroy
 - Added CDocker::GetActiveDocker
+- Added CDocker::SetCaptionColors
 - Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators
 - Added CWinApp::OnIdle
@@ -44,6 +45,8 @@ Changes in detail
 - Modified CDocker::IsChildOfDocker 	now takes a CWnd pointer instead of HWND
 - Modified CDocker::IsRelated 			now takes a CWnd pointer instead of HWND
 - Modified CWnd::GetAncestor			now accepts a gaFlags parameter
+- Modified CWnd::OnOnEraseBkgnd			now accepts a CDC pointer
+- Modified CWnd::OnPaint				now accepts a CDC pointer
 - Removed CLoadString
 - Removed GetWindowType for all CWnd classes
 - Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker
@@ -55,6 +58,8 @@ Incompatibilities with previous versions
   compilers (Visual Studio 2003 and earlier) will need to have the option to
   support RTTI enabled.
 * LoadString now returns a CString.
+* CWnd::OnOnEraseBkgnd	now accepts a CDC pointer.
+* CWnd::OnPaint now accepts a CDC pointer.
 
 
 Version 7.1

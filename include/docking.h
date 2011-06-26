@@ -255,6 +255,7 @@ namespace Win32xx
 			CWnd* GetView() const			{ return m_pView; }
 			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
 			void SetCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
+			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
 			void SetClosePressed()			{ m_IsClosePressed = TRUE; }
 			void SetView(CWnd& Wnd)			{ m_pView = &Wnd; }
 
@@ -286,6 +287,10 @@ namespace Win32xx
 			BOOL m_bOldFocus;
 			BOOL m_bCaptionPressed;
 			BOOL m_IsTracking;
+			COLORREF m_Foregnd1;
+			COLORREF m_Backgnd1;
+			COLORREF m_Foregnd2;
+			COLORREF m_Backgnd2;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -445,6 +450,7 @@ namespace Win32xx
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
 		void SetCaption(LPCTSTR szCaption);
+		void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
 		void SetCaptionHeight(int nHeight);
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockSize(int DockSize);
@@ -662,6 +668,10 @@ namespace Win32xx
 	inline CDocker::CDockClient::CDockClient() : m_pView(0), m_IsClosePressed(FALSE),
 						m_bOldFocus(FALSE), m_bCaptionPressed(FALSE), m_IsTracking(FALSE)
 	{
+		m_Foregnd1 = RGB(32,32,32);
+		m_Backgnd1 = RGB(190,207,227);
+		m_Foregnd2 =  GetSysColor(COLOR_BTNTEXT);
+		m_Backgnd2 = GetSysColor(COLOR_BTNFACE);
 	}
 
 	inline void CDocker::CDockClient::Draw3DBorder(RECT& Rect)
@@ -747,15 +757,15 @@ namespace Win32xx
 			// Set the Colours
 			if (bFocus)
 			{
-				dcMem.CreateSolidBrush(GetSysColor(COLOR_ACTIVECAPTION));
-				dcMem.SetBkColor(GetSysColor(COLOR_ACTIVECAPTION));
-				dcMem.SetTextColor(GetSysColor(COLOR_HIGHLIGHTTEXT));
+				dcMem.SetTextColor(m_Foregnd1);
+				dcMem.CreateSolidBrush(m_Backgnd1);
+				dcMem.SetBkColor(m_Backgnd1);
 			}
 			else
 			{
-				dcMem.CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
-				dcMem.SetBkColor(GetSysColor(COLOR_BTNFACE));
-				dcMem.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+				dcMem.SetTextColor(m_Foregnd2);
+				dcMem.CreateSolidBrush(m_Backgnd2);
+				dcMem.SetBkColor(m_Backgnd2);
 			}
 
 			// Draw the rectangle
@@ -812,11 +822,7 @@ namespace Win32xx
 				case 0:
 					{
 						// Normal button
-						if (bFocus)
-							DrawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_ACTIVECAPTION));
-						else
-							DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
-
+						DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
 						DrawDC.MoveTo(rcClose.left, rcClose.bottom);
 						DrawDC.LineTo(rcClose.right, rcClose.bottom);
 						DrawDC.LineTo(rcClose.right, rcClose.top);
@@ -856,11 +862,9 @@ namespace Win32xx
 
 				// Manually Draw Close Button
 				if (bFocus)
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
+					DrawDC.CreatePen(PS_SOLID, 1, m_Foregnd1);
 				else
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
-
-				DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+					DrawDC.CreatePen(PS_SOLID, 1, m_Foregnd2);
 
 				DrawDC.MoveTo(rcClose.left + 3, rcClose.top +3);
 				DrawDC.LineTo(rcClose.right - 2, rcClose.bottom -2);
@@ -1117,6 +1121,17 @@ namespace Win32xx
 
 		// Send a DragPos notification to the docker
 		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
+	}
+
+	inline void CDocker::CDockClient::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF Foregnd2, COLORREF Backgnd2)
+	{
+		// Set the colors used when drawing the caption
+		// m_Foregnd1 Foreground colour (focused).  m_Backgnd1 Background colour (focused)
+		// m_Foregnd2 Foreground colour (not focused). m_Backgnd2 Foreground colour (not focused)
+		m_Foregnd1 = Foregnd1;
+		m_Backgnd1 = Backgnd1;
+		m_Foregnd2 = Foregnd2;
+		m_Backgnd2 = Backgnd2;
 	}
 
 	inline LRESULT CDocker::CDockClient::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -3328,6 +3343,11 @@ namespace Win32xx
 
 		if (IsWindow())
 			SetWindowText(szCaption);
+	}
+
+	inline void CDocker::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2)
+	{
+		GetDockClient().SetCaptionColors(Foregnd1, Backgnd1, ForeGnd2, BackGnd2);
 	}
 
 	inline void CDocker::SetCaptionHeight(int nHeight)
