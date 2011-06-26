@@ -622,6 +622,9 @@ namespace Win32xx
 	// values are topleft, topright, bottomleft, and bottomright.
 	// Set bFixedWidth to TRUE if the width should be fixed instead of variable.
 	// Set bFixedHeight to TRUE if the height should be fixed instead of variable.
+
+	// Note: The order the controls are added to resizer affects the tab order of the
+	//       the controls within a dialog.
 	{
     	ResizeData rd;
     	rd.corner = corner;
@@ -632,7 +635,7 @@ namespace Win32xx
 		rd.rcInit = rcInit;
     	rd.pWnd = &Wnd;
 
-    	m_vResizeData.push_back(rd);
+		m_vResizeData.insert(m_vResizeData.begin(), rd);
     }
 
 	inline void CResizer::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
