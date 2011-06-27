@@ -462,19 +462,20 @@ namespace Win32xx
 		};
 
 		CDC();									// Constructs a new CDC without assigning a HDC
+		CDC(HDC hDC, HWND hWnd = 0);			// Assigns a HDC to a new CDC
 		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
-		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
-		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		virtual ~CDC();
+		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
+		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
+		
+		void AttachDC(HDC hDC, HWND hWnd = 0);
+		void Destroy();
+		HDC  DetachDC();
 		HDC GetHDC() const { return m_pData->hDC; }
 		static CDC* FromHandle(HDC hDC);
-		void Destroy();
 
 #ifndef _WIN32_WCE
-		CDC(HDC hDC);							// Assigns a HDC to a new CDC
 		void operator = (const HDC hDC);
-		void AttachDC(HDC hDC);
-		HDC  DetachDC();
 #endif
 
 		// Initialization
@@ -747,17 +748,6 @@ namespace Win32xx
 		DataMembers* m_pData;		// pointer to the class's data members
 	};
 
-	class CWindowDC : public CDC
-	{
-	public:
-		CWindowDC(CWnd* pWnd)
-		{
-			if (pWnd) assert(pWnd->IsWindow());
-			HWND hWnd = pWnd? pWnd->GetHwnd() : NULL;
-			AttachDC(::GetWindowDC(hWnd));
-		}
-	};
-
 	class CClientDC : public CDC
 	{
 	public:
@@ -765,7 +755,7 @@ namespace Win32xx
 		{
 			if (pWnd) assert(pWnd->IsWindow());
 			HWND hWnd = pWnd? pWnd->GetHwnd() : NULL;
-			AttachDC(::GetDC(hWnd));			
+			AttachDC(::GetDC(hWnd), hWnd);			
 		}
 	};
 
@@ -787,7 +777,7 @@ namespace Win32xx
 		{
 			assert(pWnd->IsWindow());
 			m_hWnd = pWnd->GetHwnd();
-			AttachDC(::BeginPaint(pWnd->GetHwnd(), &m_ps));
+			AttachDC(::BeginPaint(pWnd->GetHwnd(), &m_ps), m_hWnd);
 		}
 
 		~CPaintDC()	{ ::EndPaint(m_hWnd, &m_ps); }
@@ -795,6 +785,17 @@ namespace Win32xx
 	private:
 		HWND m_hWnd;
 		PAINTSTRUCT m_ps;
+	};
+
+	class CWindowDC : public CDC
+	{
+	public:
+		CWindowDC(CWnd* pWnd)
+		{
+			if (pWnd) assert(pWnd->IsWindow());
+			HWND hWnd = pWnd? pWnd->GetHwnd() : NULL;
+			AttachDC(::GetWindowDC(hWnd), hWnd);
+		}
 	};
 	
 #ifndef _WIN32_WCE
@@ -807,25 +808,15 @@ namespace Win32xx
 			if (m_hMF) ::CloseMetaFile(GetHDC());
 			if (m_hEMF) ::CloseEnhMetaFile(GetHDC());
 		}
-		void Create(LPCTSTR lpszFilename = NULL)
-		{
-			AttachDC(::CreateMetaFile(lpszFilename));
-			assert(GetHDC());
-		}
+		void Create(LPCTSTR lpszFilename = NULL) { AttachDC(::CreateMetaFile(lpszFilename)); }
 		void CreateEnhanced(CDC* pDCRef, LPCTSTR lpszFileName, LPCRECT lpBounds, LPCTSTR lpszDescription)
 		{
 			HDC hDC = pDCRef? pDCRef->GetHDC() : NULL;
 			::CreateEnhMetaFile(hDC, lpszFileName, lpBounds, lpszDescription);
 			assert(GetHDC());
 		}
-		HMETAFILE Close()
-		{
-			return ::CloseMetaFile(GetHDC());
-		}
-		HENHMETAFILE CloseEnhanced()
-		{
-			return ::CloseEnhMetaFile(GetHDC());
-		}
+		HMETAFILE Close() {	return ::CloseMetaFile(GetHDC()); }
+		HENHMETAFILE CloseEnhanced() { return ::CloseEnhMetaFile(GetHDC()); }
 
 	private:
 		HMETAFILE m_hMF;
@@ -833,7 +824,6 @@ namespace Win32xx
 	};
 #endif
 	
-
 
 	///////////////////////////////////////////////
 	// Declarations for the CBitmapInfoPtr class
@@ -2239,10 +2229,10 @@ namespace Win32xx
 		m_pData->hWnd = 0;
 	}
 
-#ifndef _WIN32_WCE
-	inline CDC::CDC(HDC hDC)
+	inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// This constructor assigns an existing HDC to the CDC
 	// The HDC WILL be released or deleted when the CDC object is destroyed
+	// The hWnd paramter is only used in WindowsCE
 
 	// Note: this constructor permits a call like this:
 	// CDC MyCDC = SomeHDC;
@@ -2251,6 +2241,7 @@ namespace Win32xx
 	//  or
 	// CDC MyCDC = ::GetDC(SomeHWND);	
 	{
+		UNREFERENCED_PARAMETER(hWnd);
 		assert(hDC);
 
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
@@ -2273,12 +2264,17 @@ namespace Win32xx
 			m_pData->hPenOld = 0;
 			m_pData->Count = 1L;
 			m_pData->bRemoveHDC = TRUE;
+#ifndef _WIN32_WCE
 			m_pData->hWnd = ::WindowFromDC(hDC);
+#else
+			m_pData->hWnd = hWnd;
+#endif
 			if (m_pData->hWnd)
 				AddToMap();
 		}
 	}
-	
+
+#ifndef _WIN32_WCE
 	inline void CDC::operator = (const HDC hDC)
 	// Note: this assignment operater permits a call like this:
 	// CDC MyCDC;
@@ -2330,11 +2326,12 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Release();
 	}
 
-#ifndef _WIN32_WCE
-	inline void CDC::AttachDC(HDC hDC)
+	inline void CDC::AttachDC(HDC hDC, HWND hWnd /* = 0*/)
 	// Attaches a HDC to the CDC object.
-	// The HDC will be automatically deleted or released when the destructor is called.	
+	// The HDC will be automatically deleted or released when the destructor is called.
+	// The hWnd parameter is only used on WindowsCE
 	{
+		UNREFERENCED_PARAMETER(hWnd);
 		assert(m_pData);
 		assert(0 == m_pData->hDC);
 		assert(hDC);
@@ -2349,7 +2346,13 @@ namespace Win32xx
 		else
 		{
 			m_pData->hDC = hDC;
+
+#ifndef _WIN32_WCE
 			m_pData->hWnd = ::WindowFromDC(hDC);
+#else
+			m_pData->hWnd = hWnd;
+#endif
+
 			if (m_pData->hWnd == 0)
 				AddToMap();
 		}
@@ -2401,7 +2404,6 @@ namespace Win32xx
 
 		return hDC;
 	}
-#endif
 
 	// Initialization
 	inline BOOL CDC::CreateCompatibleDC(CDC* pDC)
@@ -2547,7 +2549,6 @@ namespace Win32xx
 				Destroy();
 				delete m_pData;
 				m_pData = 0;
-				RemoveFromMap();
 			}
 		}
 		
@@ -2764,7 +2765,8 @@ namespace Win32xx
 				if (m_pData->hWnd)
 					::ReleaseDC(m_pData->hWnd, m_pData->hDC);
 				else
-					::DeleteDC(m_pData->hDC);
+					if (!::DeleteDC(m_pData->hDC))
+						::ReleaseDC(NULL, m_pData->hDC);
 
 				m_pData->hDC = 0; 
 				m_pData->hWnd = 0;
@@ -2776,6 +2778,8 @@ namespace Win32xx
 				m_pData->hPaletteOld = 0;
 			}
 		}
+
+		RemoveFromMap();
 	}
 
 	inline HBITMAP CDC::DetachBitmap()
