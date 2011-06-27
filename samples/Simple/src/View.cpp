@@ -30,15 +30,7 @@ void CView::OnDestroy()
 	::PostQuitMessage(0);
 }
 
-void CView::OnInitialUpdate()
-{
-	// OnInitialUpdate is called after the window is created.
-	// Tasks which are to be done after the window is created go here.
-
-	TRACE(_T("OnInitialUpdate\n"));
-}
-
-void CView::OnPaint(CDC* pDC)
+void CView::OnDraw(CDC* pDC)
 {
 	// OnPaint is called automatically whenever a part of the
 	// window needs to be repainted.
@@ -47,6 +39,14 @@ void CView::OnPaint(CDC* pDC)
 	CRect rc = GetClientRect();
 	CString cs = LoadString(IDW_MAIN);
 	pDC->DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+}
+
+void CView::OnInitialUpdate()
+{
+	// OnInitialUpdate is called after the window is created.
+	// Tasks which are to be done after the window is created go here.
+
+	TRACE(_T("OnInitialUpdate\n"));
 }
 
 void CView::OnSize()

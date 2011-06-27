@@ -10,6 +10,14 @@ CView::CView()
 {
 }
 
+void CView::OnDraw(CDC* pDC)
+{
+	CRect rc = GetClientRect();
+
+	// Centre some text in our view window
+	pDC->DrawText(_T("Choose a theme from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+}
+
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
@@ -40,13 +48,5 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
-}
-
-void CView::OnPaint(CDC* pDC)
-{
-	CRect rc = GetClientRect();
-
-	// Centre some text in our view window
-	pDC->DrawText(_T("Choose a theme from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

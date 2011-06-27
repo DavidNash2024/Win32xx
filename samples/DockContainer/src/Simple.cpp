@@ -11,7 +11,7 @@
 
 ///////////////////////////////////////////////
 // CViewSimple functions
-void CViewSimple::OnPaint(CDC* pDC)
+void CViewSimple::OnDraw(CDC* pDC)
 {
 	//Centre some text in the window
 	CRect rc = GetClientRect();

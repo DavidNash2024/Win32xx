@@ -22,7 +22,7 @@ void CView::DrawLine(int x, int y)
 	pDC->LineTo(x, y);
 }
 
-void CView::OnPaint(CDC& dc)
+void CView::OnDraw(CDC& dc)
 {
 	if (m_points.size() > 0)
 	{

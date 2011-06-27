@@ -2,7 +2,7 @@
 #include "resource.h"
 
 
-void CView::OnPaint(CDC& dc)
+void CView::OnDraw(CDC& dc)
 {
 	// Define a rectangle to contain some text
 	CRect rc = GetClientRect();

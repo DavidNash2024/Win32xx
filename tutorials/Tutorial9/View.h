@@ -23,9 +23,9 @@ public:
 	virtual void SetPen(COLORREF Color);
 
 protected:
+	virtual void OnDraw(CDC& dc);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void PreRegisterClass(WNDCLASS &wc);
-	virtual void OnPaint(CDC& dc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

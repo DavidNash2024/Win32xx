@@ -331,13 +331,13 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					CPaintDC dc(this);
-					OnPaint(&dc);
+					OnDraw(&dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(this);
-					OnPaint(&dc);
+					OnDraw(&dc);
 				}
 
 				break;

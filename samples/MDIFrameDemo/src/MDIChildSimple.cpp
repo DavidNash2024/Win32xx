@@ -12,7 +12,7 @@ CViewSimple::CViewSimple() : m_Color(RGB(0,0,255))
 {
 }
 
-void CViewSimple::OnPaint(CDC* pDC)
+void CViewSimple::OnDraw(CDC* pDC)
 {
 	//Centre some text in our view window
 	CRect rc = GetClientRect();

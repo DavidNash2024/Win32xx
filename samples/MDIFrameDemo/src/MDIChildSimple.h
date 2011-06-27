@@ -11,7 +11,7 @@ class CViewSimple : public CWnd
 {
 public:
 	CViewSimple();
-	virtual void OnPaint(CDC* pDC);
+	virtual void OnDraw(CDC* pDC);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
 	COLORREF GetColor() {return m_Color;}

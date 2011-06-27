@@ -538,13 +538,13 @@ namespace Win32xx
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
+		virtual void OnDraw(CDC* pDC);
 		virtual BOOL OnEraseBkgnd(CDC* pDC);
 		virtual void OnInitialUpdate();
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void OnPaint(CDC* pDC);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -1449,6 +1449,14 @@ namespace Win32xx
 		//  during window creation.
 	}
 
+	inline void CWnd::OnDraw(CDC* pDC)
+	// Called when part of the client area of the window needs to be drawn
+	{
+		UNREFERENCED_PARAMETER(pDC);
+
+	    // Override this function in your derived class to perform drawing tasks.
+	}
+
 	inline BOOL CWnd::OnEraseBkgnd(CDC* pDC)
 	// Called when the background of the window's client area needs to be erased.
 	{
@@ -1579,14 +1587,6 @@ namespace Win32xx
 
 		// return 0L for unhandled notifications
 		return 0L;
-	}
-
-	inline void CWnd::OnPaint(CDC* pDC)
-	// Called when part of the client area of the window needs to be painted
-	{
-		UNREFERENCED_PARAMETER(pDC);
-
-	    // Override this function in your derived class to perform drawing tasks.
 	}
 
 	inline void CWnd::OnMenuUpdate(UINT nID)
@@ -1893,13 +1893,13 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					CPaintDC dc(this);
-					OnPaint(&dc);
+					OnDraw(&dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(this);
-					OnPaint(&dc);
+					OnDraw(&dc);
 				}
 			}
 			return 0L;

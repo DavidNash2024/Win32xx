@@ -7,6 +7,29 @@
 
 
 // Definitions for the CView class
+void CView::Minimize()
+{
+    NOTIFYICONDATA nid = { 0 };
+    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.hWnd = m_hWnd;
+    nid.uID = IDW_MAIN;
+    nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+    nid.uCallbackMessage = MSG_TRAYICON;
+	nid.hIcon = (HICON) (::LoadImage (GetModuleHandle(NULL), MAKEINTRESOURCE (IDW_MAIN), IMAGE_ICON,
+		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
+
+	lstrcpy(nid.szTip, _T("Tray Demo tooltip"));
+
+    Shell_NotifyIcon(NIM_ADD, &nid);
+    ShowWindow(SW_HIDE);
+    m_IsMinimized = true;
+}
+
+void CView::OnAbout()
+{
+	MessageBox(_T("Tray Example: Demonstrates minimizing a window to the tray."), _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
+}
+
 void CView::OnCreate()
 {
 	// OnCreate is called automatically during window creation when a
@@ -22,11 +45,6 @@ void CView::OnCreate()
 	SetWindowText(LoadString(IDW_MAIN).c_str());		// Window title
 
 	TRACE(_T("OnCreate\n"));
-}
-
-void CView::OnAbout()
-{
-	MessageBox(_T("Tray Example: Demonstrates minimizing a window to the tray."), _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
 }
 
 BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -58,14 +76,6 @@ void CView::OnDestroy()
 	::PostQuitMessage(0);
 }
 
-void CView::OnInitialUpdate()
-{
-	// OnInitialUpdate is called after the window is created.
-	// Tasks which are to be done after the window is created go here.
-
-	TRACE(_T("OnInitialUpdate\n"));
-}
-
 void CView::OnPaint(CDC* pDC)
 {
 	// OnPaint is called automatically whenever a part of the
@@ -75,6 +85,20 @@ void CView::OnPaint(CDC* pDC)
 	CRect rc = GetClientRect();
 	CString cs = LoadString(IDW_MAIN);
 	pDC->DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+}
+
+void CView::OnInitialUpdate()
+{
+	// OnInitialUpdate is called after the window is created.
+	// Tasks which are to be done after the window is created go here.
+
+	TRACE(_T("OnInitialUpdate\n"));
+}
+
+void CView::OnSize()
+{
+	// Force the window to be repainted during resizing
+	Invalidate();
 }
 
 void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
@@ -128,30 +152,6 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.cx = 400;							// width
 	cs.cy = 300;							// height
 	cs.hMenu =  LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-}
-
-void CView::OnSize()
-{
-	// Force the window to be repainted during resizing
-	Invalidate();
-}
-
-void CView::Minimize()
-{
-    NOTIFYICONDATA nid = { 0 };
-    nid.cbSize = sizeof(NOTIFYICONDATA);
-    nid.hWnd = m_hWnd;
-    nid.uID = IDW_MAIN;
-    nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-    nid.uCallbackMessage = MSG_TRAYICON;
-	nid.hIcon = (HICON) (::LoadImage (GetModuleHandle(NULL), MAKEINTRESOURCE (IDW_MAIN), IMAGE_ICON,
-		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
-
-	lstrcpy(nid.szTip, _T("Tray Demo tooltip"));
-
-    Shell_NotifyIcon(NIM_ADD, &nid);
-    ShowWindow(SW_HIDE);
-    m_IsMinimized = true;
 }
 
 void CView::Restore()

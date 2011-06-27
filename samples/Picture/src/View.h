@@ -23,9 +23,9 @@ public:
 	LPPICTURE GetPicture() { return m_pPicture; }
 
 protected:
+	virtual void OnDraw(CDC* pDC);
 	virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
-	virtual void OnPaint(CDC* pDC);
 	virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
 	virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);

@@ -215,7 +215,7 @@ namespace Win32xx
 		public:
 			CDockBar();
 			virtual ~CDockBar();
-			virtual void OnPaint(CDC* pDC);
+			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
@@ -304,7 +304,7 @@ namespace Win32xx
 			virtual RECT CalcHintRectInner(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual RECT CalcHintRectOuter(CDocker* pDockDrag, UINT uDockSide);
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
-			virtual void OnPaint(CDC* pDC);
+			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void SetBitmap(HBITMAP hbmBlueTint);
 			virtual void ShowHintWindow(CDocker* pDockTarget, CRect rcHint);
@@ -322,7 +322,7 @@ namespace Win32xx
 		public:
 			CTarget() : m_hbmImage(0) {}
 			virtual ~CTarget();
-			virtual void OnPaint(CDC* pDC);
+			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 
 			HBITMAP GetImage()		{return m_hbmImage;}
@@ -340,7 +340,7 @@ namespace Win32xx
 		public:
 			CTargetCentre();
 			virtual ~CTargetCentre();
-			virtual void OnPaint(CDC* pDC);
+			virtual void OnDraw(CDC* pDC);
 			virtual void OnCreate();
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 			BOOL IsOverContainer() { return m_bIsOverContainer; }
@@ -560,7 +560,7 @@ namespace Win32xx
 		::DeleteObject(m_hbrBackground);
 	}
 
-	inline void CDocker::CDockBar::OnPaint(CDC* pDC)
+	inline void CDocker::CDockBar::OnDraw(CDC* pDC)
 	{
 		CRect rcClient = GetClientRect();
 		pDC->AttachBrush(m_hbrBackground);
@@ -1326,7 +1326,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::CDockHint::OnPaint(CDC* pDC)
+	inline void CDocker::CDockHint::OnDraw(CDC* pDC)
 	{
 		// Display the blue tinted bitmap
 		CRect rc = GetClientRect();
@@ -1387,7 +1387,7 @@ namespace Win32xx
 	{
 	}
 
-	inline void CDocker::CTargetCentre::OnPaint(CDC* pDC)
+	inline void CDocker::CTargetCentre::OnDraw(CDC* pDC)
 	{
 		HBITMAP hbmCentre = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDCENTER),
 						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
@@ -1525,7 +1525,7 @@ namespace Win32xx
 		if (m_hbmImage) ::DeleteObject(m_hbmImage);
 	}
 
-	inline void CDocker::CTarget::OnPaint(CDC* pDC)
+	inline void CDocker::CTarget::OnDraw(CDC* pDC)
 	{
 		BITMAP bm;
 		GetObject(GetImage(), sizeof(bm), &bm);

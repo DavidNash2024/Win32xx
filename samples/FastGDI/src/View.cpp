@@ -81,6 +81,25 @@ CRect CView::GetImageRect()
 	return rc;
 }
 
+void CView::OnDraw(CDC* pDC)
+{
+	if (m_hbmImage)
+	{
+		// We have an image, so display it
+		CDC memDC = ::CreateCompatibleDC(*pDC);
+		CRect rcView = GetClientRect();
+		memDC.AttachBitmap(m_hbmImage);
+		pDC->BitBlt(0, 0, rcView.Width(), rcView.Height(), &memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
+		memDC.DetachBitmap(); 
+	}
+	else
+	{
+		// There is no image, so display a hint to get one
+		CRect rc = GetClientRect();
+		pDC->DrawText(_T("Use the Menu or ToolBar to open a Bitmap File"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	}
+}
+
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
@@ -140,25 +159,6 @@ void CView::OnHScroll(WPARAM wParam, LPARAM lParam)
 	si.nPos   = m_xCurrentScroll; 
 	SetScrollInfo(SB_HORZ, si, TRUE); 
 } 
-
-void CView::OnPaint(CDC* pDC)
-{
-	if (m_hbmImage)
-	{
-		// We have an image, so display it
-		CDC memDC = ::CreateCompatibleDC(*pDC);
-		CRect rcView = GetClientRect();
-		memDC.AttachBitmap(m_hbmImage);
-		pDC->BitBlt(0, 0, rcView.Width(), rcView.Height(), &memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
-		memDC.DetachBitmap(); 
-	}
-	else
-	{
-		// There is no image, so display a hint to get one
-		CRect rc = GetClientRect();
-		pDC->DrawText(_T("Use the Menu or ToolBar to open a Bitmap File"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-	}
-}
 
 void CView::OnVScroll(WPARAM wParam, LPARAM lParam)
 {  

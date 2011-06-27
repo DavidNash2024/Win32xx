@@ -9,7 +9,7 @@
 // Declaration of CViewMax
 class CViewMax : public CWnd
 {
-	virtual void OnPaint(CDC* pDC);
+	virtual void OnDraw(CDC* pDC);
 };
 
 // Declaration of CMDIChildMax

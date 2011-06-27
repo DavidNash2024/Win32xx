@@ -796,6 +796,43 @@ namespace Win32xx
 		HWND m_hWnd;
 		PAINTSTRUCT m_ps;
 	};
+	
+#ifndef _WIN32_WCE
+	class CMetaFileDC : public CDC
+	{
+	public:
+		CMetaFileDC() : m_hMF(0), m_hEMF(0) {}
+		~CMetaFileDC() 
+		{
+			if (m_hMF) ::CloseMetaFile(GetHDC());
+			if (m_hEMF) ::CloseEnhMetaFile(GetHDC());
+		}
+		void Create(LPCTSTR lpszFilename = NULL)
+		{
+			AttachDC(::CreateMetaFile(lpszFilename));
+			assert(GetHDC());
+		}
+		void CreateEnhanced(CDC* pDCRef, LPCTSTR lpszFileName, LPCRECT lpBounds, LPCTSTR lpszDescription)
+		{
+			HDC hDC = pDCRef? pDCRef->GetHDC() : NULL;
+			::CreateEnhMetaFile(hDC, lpszFileName, lpBounds, lpszDescription);
+			assert(GetHDC());
+		}
+		HMETAFILE Close()
+		{
+			return ::CloseMetaFile(GetHDC());
+		}
+		HENHMETAFILE CloseEnhanced()
+		{
+			return ::CloseEnhMetaFile(GetHDC());
+		}
+
+	private:
+		HMETAFILE m_hMF;
+		HENHMETAFILE m_hEMF; 
+	};
+#endif
+	
 
 
 	///////////////////////////////////////////////

@@ -8,7 +8,7 @@
 
 
 // CViewMax definitions
-void CViewMax::OnPaint(CDC* pDC)
+void CViewMax::OnDraw(CDC* pDC)
 {
 	//Centre some text in our view window
 	CRect rc = GetClientRect();

@@ -98,6 +98,11 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	}
 }
 
+void CView::OnDraw(CDC* pDC)
+{
+	Paint(*pDC);
+}
+
 void CView::OnInitialUpdate()
 {
 	// Set the window background to black
@@ -116,11 +121,6 @@ void CView::OnInitialUpdate()
 		CRect rcImage = GetImageRect();
 		Frame.AdjustFrameRect(rcImage);
 	}
-}
-
-void CView::OnPaint(CDC* pDC)
-{
-	Paint(*pDC);
 }
 
 void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)

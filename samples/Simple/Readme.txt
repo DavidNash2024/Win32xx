@@ -12,5 +12,5 @@ Features demonstrated in this example
 * Using a resource script (resource.rc) to add an icon and window caption
 * Processing window messages in CView::WndProc
 * Overriding PreCreate to set the initial window parameters
-* Overriding OnPaint to draw text on the window's device context
+* Overriding OnDraw to draw text on the window's device context
 * Using TRACE to ouput debug text

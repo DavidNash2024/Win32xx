@@ -121,13 +121,7 @@ void CGDIPlusView::DrawText(HDC hdc)
 	graphics.DrawString(L"GDI+  Example", -1, &font, pointF, &brush);
 }
 
-void CGDIPlusView::OnInitialUpdate()
-{
-	// OnInitialUpdate is called immediately after the window is created
-	TRACE(_T("View window created\n"));
-}
-
-void CGDIPlusView::OnPaint(CDC* pDC)
+void CGDIPlusView::OnDraw(CDC* pDC)
 {
 	DrawSolidLine(*pDC);
 	DrawText(*pDC);
@@ -135,6 +129,12 @@ void CGDIPlusView::OnPaint(CDC* pDC)
 	DrawGradientElipse(*pDC);
 	DrawSolidElipse(*pDC);
 	DrawGamaShapes(*pDC); 
+}
+
+void CGDIPlusView::OnInitialUpdate()
+{
+	// OnInitialUpdate is called immediately after the window is created
+	TRACE(_T("View window created\n"));
 }
 
 void CGDIPlusView::PreCreate(CREATESTRUCT &cs)

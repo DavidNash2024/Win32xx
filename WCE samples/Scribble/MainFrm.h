@@ -19,10 +19,10 @@ public:
 
 protected:
 	virtual void DrawLine(short x, short y);
+	virtual void OnDraw(CDC& dc);	
 	virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 	virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 	virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
-	virtual void OnPaint(CDC& dc);
 	virtual void StorePoint(int x, int y, bool PenDown);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

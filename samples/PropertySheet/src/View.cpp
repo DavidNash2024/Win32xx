@@ -10,6 +10,14 @@ CView::CView()
 {
 }
 
+void CView::OnDraw(CDC* pDC)
+{
+	CRect rc = GetClientRect();
+
+	// Centre some text in our view window
+	pDC->DrawText(_T("Choose a Property Sheet from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+}
+
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
@@ -27,14 +35,6 @@ void CView::PreCreate(CREATESTRUCT &cs)
 
 	// Set the extended style
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
-}
-
-void CView::OnPaint(CDC* pDC)
-{
-	CRect rc = GetClientRect();
-
-	// Centre some text in our view window
-	pDC->DrawText(_T("Choose a Property Sheet from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

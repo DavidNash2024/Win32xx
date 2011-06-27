@@ -32,7 +32,7 @@ void CView::DrawLine(int x, int y)
 	pDrawDC->LineTo(x, y);
 }
 
-void CView::OnPaint(CDC* pDC)
+void CView::OnDraw(CDC* pDC)
 {
 	
 	// Here we use double buffering (drawing to a memory DC) for smoother rendering

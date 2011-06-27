@@ -14,7 +14,7 @@ CSimpleView::CSimpleView() : m_Color(RGB(0,0,255))
 {
 }
 
-void CSimpleView::OnPaint(CDC* pDC)
+void CSimpleView::OnDraw(CDC* pDC)
 {
 	//Centre some text in our view window
 	CRect rc = GetClientRect();

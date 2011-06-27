@@ -60,17 +60,18 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnInitialUpdate()
-{
-	// Startup code goes here
-	TRACE(TEXT("Frame Created\n"));
-}
-
-void CMainFrame::OnPaint(CDC& dc)
+void CMainFrame::OnDraw(CDC& dc)
 {
 	CRect rc = GetViewRect();
 	tString tsHello = LoadString(IDS_HELLO);
 	dc.DrawText(tsHello.c_str(), tsHello.length(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+}
+
+
+void CMainFrame::OnInitialUpdate()
+{
+	// Startup code goes here
+	TRACE(TEXT("Frame Created\n"));
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
