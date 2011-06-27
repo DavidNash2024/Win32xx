@@ -754,7 +754,7 @@ namespace Win32xx
 		CClientDC(CWnd* pWnd)
 		{
 			if (pWnd) assert(pWnd->IsWindow());
-			HWND hWnd = pWnd? pWnd->GetHwnd() : NULL;
+			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
 			AttachDC(::GetDC(hWnd), hWnd);			
 		}
 	};
@@ -793,7 +793,7 @@ namespace Win32xx
 		CWindowDC(CWnd* pWnd)
 		{
 			if (pWnd) assert(pWnd->IsWindow());
-			HWND hWnd = pWnd? pWnd->GetHwnd() : NULL;
+			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
 			AttachDC(::GetWindowDC(hWnd), hWnd);
 		}
 	};
@@ -2232,7 +2232,8 @@ namespace Win32xx
 	inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// This constructor assigns an existing HDC to the CDC
 	// The HDC WILL be released or deleted when the CDC object is destroyed
-	// The hWnd paramter is only used in WindowsCE
+	// The hWnd paramter is only used in WindowsCE. It specifies the HWND of a Window or 
+	// Window Client DC
 
 	// Note: this constructor permits a call like this:
 	// CDC MyCDC = SomeHDC;
@@ -2329,7 +2330,8 @@ namespace Win32xx
 	inline void CDC::AttachDC(HDC hDC, HWND hWnd /* = 0*/)
 	// Attaches a HDC to the CDC object.
 	// The HDC will be automatically deleted or released when the destructor is called.
-	// The hWnd parameter is only used on WindowsCE
+	// The hWnd parameter is only used on WindowsCE. It specifies the HWND of a Window or 
+	// Window Client DC
 	{
 		UNREFERENCED_PARAMETER(hWnd);
 		assert(m_pData);
