@@ -2908,11 +2908,10 @@ namespace Win32xx
 			CClientDC dcStatus(&GetStatusBar());
 			CSize csCAP  = dcStatus.GetTextExtentPoint32(_T("\tCAP"), lstrlen(_T("\tCAP")));
 			CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM"), lstrlen(_T("\tNUM")));
-			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL"), lstrlen(_T("\tSCRL")));
+			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL "), lstrlen(_T("\tSCRL ")));
 
 			// Get the coordinates of the parent window's client area.
 			CRect rcClient = GetClientRect();
-
 			int width = MAX(300, rcClient.right);
 
 			if (m_bShowIndicatorStatus)

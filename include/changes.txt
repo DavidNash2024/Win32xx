@@ -7,9 +7,18 @@ New Features and Enhancements
    The CString class is intended to provide much of the same functionality
    as the CString class provided with MFC/ATL.
 * Added CMenu
+	The CMenu class is intended to provide much of the same functionality
+    as the CMenu class provided with MFC.	
 * Added CFile
-* Added Idle Processing.
-* Added CWindowDC, CClientDC, CMemDC, CPaintDC
+	This class provides a convenient wrapper for funcions dealing with files.
+* Added Idle processing.
+	The Idle processsing is used by the Win32++ library for some internal 
+	processing. It is also available for use by users, and is used in much the
+	same way as OnIdle processing in MFC.
+* Enhanced the CDC class, and added CWindowDC, CClientDC, CMemDC, CPaintDC
+   and CMetaFileDC. The creation of the various different types of CDCs has
+   been simplified, and the CDC functions now use CDC pointers instead of
+   HDCs. 
 
 
 Changes in detail
@@ -58,8 +67,30 @@ Incompatibilities with previous versions
   compilers (Visual Studio 2003 and earlier) will need to have the option to
   support RTTI enabled.
 * LoadString now returns a CString.
-* CWnd::OnOnEraseBkgnd	now accepts a CDC pointer.
-* CWnd::OnPaint now accepts a CDC pointer.
+* CWnd::OnEraseBkgnd has changed. This function now users a CDC pointer instead
+   of a CDC reference. This change will need to be made for any function that
+   overrides OnEraseBkgnd in order for it to get called.
+* CWnd::OnPaint has been removed and replaced with OnPaint. The OnPaint uses a 
+   CDC pointer, not a CDC reference. Code that previously overrode OnPaint will 
+   now need to override OnPaint instead.
+* Changes made to the CDC class (and the addition of CClientDC, CWindowDC, CMemDC,
+   etc.) are rather likely to affect existing code.
+    - CDC functions now use a CDC pointer arguement instead of a HDC.
+	- CWnd functions like GetDC return a pointer to a CDC instead of a HDC.
+	- use CClientDC for client window DCs instead of CDC MyDC = GetDC();
+	- use CWindowDC for window DCs instead of CDC MyDC = GetWindowDC();
+	- use CMemDC for memory DCs instead of CDC MyDC = CreateCompatibleDC(dc);
+	- use CDC::FromHandle to conveniently convert a HDC provided to us by say 
+	   CustomDraw to a CDC pointer.
+
+	Coding example:
+	  CClientDC dcClient(this);			// Create a client window DC for this CWnd
+      CMemDC dcMem(&dcClient);			// Create a Memory DC from the Client DC.
+      CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
+	  CMemDC.MoveTo(0, 0);
+      CMemDC.LineTo(50, 50);
+	  dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);	
+	
 
 
 Version 7.1
@@ -611,19 +642,18 @@ Added CRibbon class
 Added CRibbonFrame class
 Added CStatic class
 Removed CSplitter class
-Renamed ThemeMenu to MenuTheme
-Renamed ThemeRebar to RebarTheme
-Renamed ThemeToolbar to ToolbarTheme
 
 Added CDocker::Dock
 Added CDocker::DockInContainer
 Added CDocker::Hide
 Added CDocker::Undock
 Added CDocker::UndockContainer
-
 Added CFrame::GetRebarTheme
 Added CFrame::GetToolbarTheme
 Added CFrame::GetMRUEntries
+Renamed ThemeMenu to MenuTheme
+Renamed ThemeRebar to RebarTheme
+Renamed ThemeToolbar to ToolbarTheme
 Renamed CFrame::GetThemeMenu to CFrame::GetMenuTheme
 
 Added UWM_GETMENUTHEME     message

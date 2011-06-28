@@ -677,7 +677,6 @@ namespace Win32xx
 		DWORD dwStyle = (DWORD)m_pParent->GetClassLongPtr(GCL_STYLE);
 		dwStyle |= WS_HSCROLL | WS_VSCROLL;
 		m_pParent->SetClassLongPtr(GCL_STYLE, dwStyle);
-
     }
 
 	void inline CResizer::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
@@ -854,11 +853,12 @@ namespace Win32xx
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
 			if ( rc != (*iter).rcOld)
 			{
-    			(*iter).pWnd->SetWindowPos(NULL, rc, SWP_NOCOPYBITS);
+				CWnd *pWndPrev = (*iter).pWnd->GetWindow(GW_HWNDPREV); // Trick to maintain the original tab order.
+				HWND hWnd = pWndPrev ? pWndPrev->GetHwnd():NULL;
+				(*iter).pWnd->SetWindowPos(hWnd, rc, SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;
 			}
     	}
-
     }
 
 #endif // #ifndef _WIN32_WCE

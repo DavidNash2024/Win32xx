@@ -181,11 +181,11 @@ namespace Win32xx
 	inline BOOL CStatusBar::SetPartWidth(int iPart, int iWidth) const
 	{
 		// This changes the width of an existing pane, or creates a new pane
-		// with the specified width
+		// with the specified width.
+		// A width of -1 for the last part sets the width to the border of the window.
 
 		assert(::IsWindow(m_hWnd));
 		assert(iPart >= 0 && iPart <= 255);
-		assert(iWidth >= 0);
 
 		// Fill the PartWidths vector with the current width of the statusbar parts
 		int PartsCount = (int)SendMessage(SB_GETPARTS, 0L, 0L);
@@ -198,11 +198,16 @@ namespace Win32xx
 		std::vector<int> NewPartWidths(NewPartsCount, 0);;
 		NewPartWidths = PartWidths;
 		int* pNewPartWidthArray = &NewPartWidths[0];
-
+		
 		if (0 == iPart)
 			pNewPartWidthArray[iPart] = iWidth;
 		else
-			pNewPartWidthArray[iPart] = pNewPartWidthArray[iPart -1] + iWidth;
+		{
+			if (iWidth >= 0)
+				pNewPartWidthArray[iPart] = pNewPartWidthArray[iPart -1] + iWidth;
+			else
+				pNewPartWidthArray[iPart] = -1;
+		}
 
 		// Set the statusbar parts with our new parts count and part widths
 		BOOL bResult = (BOOL)SendMessage(SB_SETPARTS, NewPartsCount, (LPARAM)pNewPartWidthArray);

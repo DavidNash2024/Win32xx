@@ -834,7 +834,7 @@ namespace Win32xx
 			// While idle, perform idle processing until OnIdle returns FALSE
 			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) == TRUE)
 			{
-				lCount++;
+				++lCount;
 			}
 			
 			lCount = 0;
@@ -1350,6 +1350,7 @@ namespace Win32xx
 		{
 			GetApp()->AddTmpWnd(hWnd);
 			pWnd = GetApp()->GetCWndFromMap(hWnd);
+			::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
 		}
 
 		return pWnd;
@@ -2099,7 +2100,6 @@ namespace Win32xx
 	// client area of the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
 		return CDC::AddTempHDC(::GetDC(m_hWnd), m_hWnd);
 	}
 
@@ -2108,7 +2108,6 @@ namespace Win32xx
 	// client area or entire area of a window
 	{
 		assert(::IsWindow(m_hWnd));
-		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
 		return CDC::AddTempHDC(::GetDCEx(m_hWnd, hrgnClip, flags), m_hWnd);
 	}
 
@@ -2224,7 +2223,6 @@ namespace Win32xx
 	// window, including title bar, menus, and scroll bars.
 	{
 		assert(::IsWindow(m_hWnd));
-		PostMessage(UWM_CLEANUPTEMPS, 0, 0);
 		return CDC::AddTempHDC(::GetWindowDC(m_hWnd), m_hWnd);
 	}
 

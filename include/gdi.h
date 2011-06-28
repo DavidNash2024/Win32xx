@@ -757,6 +757,7 @@ namespace Win32xx
 			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
 			AttachDC(::GetDC(hWnd), hWnd);			
 		}
+		virtual ~CClientDC() {}
 	};
 
 	class CMemDC : public CDC
@@ -768,6 +769,7 @@ namespace Win32xx
 			HDC hDC = pDC? pDC->GetHDC() : NULL;
 			AttachDC(::CreateCompatibleDC(hDC));
 		}
+		virtual ~CMemDC() {}
 	};
 
 	class CPaintDC : public CDC
@@ -780,7 +782,7 @@ namespace Win32xx
 			AttachDC(::BeginPaint(pWnd->GetHwnd(), &m_ps), m_hWnd);
 		}
 
-		~CPaintDC()	{ ::EndPaint(m_hWnd, &m_ps); }
+		virtual ~CPaintDC()	{ ::EndPaint(m_hWnd, &m_ps); }
 
 	private:
 		HWND m_hWnd;
@@ -796,6 +798,7 @@ namespace Win32xx
 			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
 			AttachDC(::GetWindowDC(hWnd), hWnd);
 		}
+		virtual ~CWindowDC() {}
 	};
 	
 #ifndef _WIN32_WCE
@@ -803,10 +806,18 @@ namespace Win32xx
 	{
 	public:
 		CMetaFileDC() : m_hMF(0), m_hEMF(0) {}
-		~CMetaFileDC() 
+		virtual ~CMetaFileDC() 
 		{
-			if (m_hMF) ::CloseMetaFile(GetHDC());
-			if (m_hEMF) ::CloseEnhMetaFile(GetHDC());
+			if (m_hMF)
+			{
+				::CloseMetaFile(GetHDC());
+				::DeleteMetaFile(m_hMF);
+			}
+			if (m_hEMF)
+			{
+				::CloseEnhMetaFile(GetHDC());
+				::DeleteEnhMetaFile(m_hEMF);
+			}
 		}
 		void Create(LPCTSTR lpszFilename = NULL) { AttachDC(::CreateMetaFile(lpszFilename)); }
 		void CreateEnhanced(CDC* pDCRef, LPCTSTR lpszFileName, LPCRECT lpBounds, LPCTSTR lpszDescription)
@@ -2493,6 +2504,7 @@ namespace Win32xx
 		CDC* pDC = GetApp()->AddTmpDC(hDC);
 		pDC->m_pData->bRemoveHDC = TRUE;
 		pDC->m_pData->hWnd = hWnd;
+		::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
 		return pDC;
 	}
 
