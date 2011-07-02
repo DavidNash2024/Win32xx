@@ -853,34 +853,6 @@ namespace Win32xx
 		return LOWORD(Msg.wParam);
 	}
 
-/*	inline int CWinApp::MessageLoop()
-	{
-		// This gets any messages queued for the application, and dispatches them.
-		MSG Msg;
-		int status;
-
-		while((status = ::GetMessage(&Msg, NULL, 0, 0))!= 0)
-		{
-			if (-1 == status) return -1;
-
-			if ( Msg.message == UWM_CLEANUP_TMPS && Msg.hwnd == 0)
-			{
-				TRACE(_T("Calling Cleanup\n"));
-				CleanupTemps();
-			}
-			else
-			{
-				if (!PreTranslateMessage(Msg))
-				{
-					::TranslateMessage(&Msg);
-					::DispatchMessage(&Msg);
-				}
-			}
-		}
-
-		return LOWORD(Msg.wParam);
-	} */
-
 	inline BOOL CWinApp::OnIdle(LONG lCount)
 	{
 		if (lCount == 0)

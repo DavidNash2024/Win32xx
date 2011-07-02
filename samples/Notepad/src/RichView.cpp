@@ -6,7 +6,7 @@
 #include <richedit.h>
 
 
-CRichView::CRichView(void) : m_hInstRichEdit(NULL), m_hFont(NULL)
+CRichView::CRichView(void) : m_hInstRichEdit(NULL)
 {
 	// Changed from RichEdit v1.0 to RichEdit v2.0 for Unicode support!
 
@@ -25,8 +25,6 @@ CRichView::~CRichView(void)
 	// Now do remaining clean up
 	if (m_hInstRichEdit)
 		::FreeLibrary(m_hInstRichEdit);
-	if(m_hFont)
-		::DeleteObject(m_hFont);
 }
 
 void CRichView::PreCreate(CREATESTRUCT &cs)
@@ -43,11 +41,11 @@ void CRichView::OnInitialUpdate(void)
 	//Before EM_LIMITTEXT is called, the default limit for the amount
 	//of text a user can enter in an edit control is 32,767 characters
 	//increase the text limit of the rich edit window
-	::SendMessage(m_hWnd, EM_LIMITTEXT, (WPARAM)1.0e9, 0);
+	SendMessage(EM_LIMITTEXT, (WPARAM)1.0e9, 0);
 
 	//Determine which messages will be passed to the parent
 	UINT uMask = ENM_KEYEVENTS | ENM_DROPFILES ;
-	::SendMessage(m_hWnd, EM_SETEVENTMASK, 0, uMask);
+	SendMessage(EM_SETEVENTMASK, 0, uMask);
 
 	SetFontDefaults();
 }
@@ -55,11 +53,10 @@ void CRichView::OnInitialUpdate(void)
 void CRichView::SetFontDefaults()
 {
 	//Set font
-	if (!m_hFont)
-		m_hFont = ::CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+	if (!m_Font.GetFont())
+		m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-
-	::SendMessage(m_hWnd, WM_SETFONT, (WPARAM)(HFONT)m_hFont,0);
+	SetFont(m_Font, FALSE);
 
 // Required for Dev-C++
 #ifndef IMF_AUTOFONT

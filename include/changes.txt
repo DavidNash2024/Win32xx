@@ -10,16 +10,15 @@ New Features and Enhancements
 	The CMenu class is intended to provide much of the same functionality
     as the CMenu class provided with MFC.	
 * Added CFile
-	This class provides a convenient wrapper for funcions dealing with files.
+	This class provides a convenient wrapper for functions dealing with files.
 * Added Idle processing.
-	The Idle processsing is used by the Win32++ library for some internal 
+	The Idle processing is used by the Win32++ library for some internal 
 	processing. It is also available for use by users, and is used in much the
 	same way as OnIdle processing in MFC.
 * Enhanced the CDC class, and added CWindowDC, CClientDC, CMemDC, CPaintDC
    and CMetaFileDC. The creation of the various different types of CDCs has
    been simplified, and the CDC functions now use CDC pointers instead of
-   HDCs. 
-
+   HDCs.
 
 Changes in detail
 -----------------
@@ -39,6 +38,7 @@ Changes in detail
 - Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators
 - Added CWinApp::OnIdle
+- Added CWinApp::PreTranslateMessage
 - Added CWinException::GetError
 - Added CWnd::ChildWindowFromPoint
 - Added CWnd::WindowFromPoint
@@ -54,7 +54,7 @@ Changes in detail
 - Modified CDocker::IsChildOfDocker 	now takes a CWnd pointer instead of HWND
 - Modified CDocker::IsRelated 			now takes a CWnd pointer instead of HWND
 - Modified CWnd::GetAncestor			now accepts a gaFlags parameter
-- Modified CWnd::OnOnEraseBkgnd			now accepts a CDC pointer
+- Modified CWnd::OnEraseBkgnd			now accepts a CDC pointer
 - Modified CWnd::OnPaint				now accepts a CDC pointer
 - Removed CLoadString
 - Removed GetWindowType for all CWnd classes
@@ -64,22 +64,22 @@ Changes in detail
 Incompatibilities with previous versions
 ----------------------------------------
 * The Win32++ now uses Run Time Type Information (RTTI). Older Microsoft
-  compilers (Visual Studio 2003 and earlier) will need to have the option to
-  support RTTI enabled.
+  compilers (Visual Studio 2003 and earlier) may need to enable the option to
+  support RTTI.
 * LoadString now returns a CString.
-* CWnd::OnEraseBkgnd has changed. This function now users a CDC pointer instead
+* CWnd::OnEraseBkgnd has changed. This function now uses a CDC pointer instead
    of a CDC reference. This change will need to be made for any function that
    overrides OnEraseBkgnd in order for it to get called.
-* CWnd::OnPaint has been removed and replaced with OnPaint. The OnPaint uses a 
-   CDC pointer, not a CDC reference. Code that previously overrode OnPaint will 
-   now need to override OnPaint instead.
+* CWnd::OnPaint has been removed and replaced with OnPaint.  Code that previously 
+   overrode OnPaint will now need to override OnPaint instead. OnPaint uses a 
+   CDC pointer, not a CDC reference.
 * Changes made to the CDC class (and the addition of CClientDC, CWindowDC, CMemDC,
    etc.) are rather likely to affect existing code.
-    - CDC functions now use a CDC pointer arguement instead of a HDC.
+    - CDC functions now use a CDC pointer argument instead of a HDC.
 	- CWnd functions like GetDC return a pointer to a CDC instead of a HDC.
-	- use CClientDC for client window DCs instead of CDC MyDC = GetDC();
-	- use CWindowDC for window DCs instead of CDC MyDC = GetWindowDC();
-	- use CMemDC for memory DCs instead of CDC MyDC = CreateCompatibleDC(dc);
+	- use CClientDC for client window DCs instead of CDC MyDC = GetDC().
+	- use CWindowDC for window DCs instead of CDC MyDC = GetWindowDC().
+	- use CMemDC for memory DCs instead of CDC MyDC = CreateCompatibleDC(dc).
 	- use CDC::FromHandle to conveniently convert a HDC provided to us by say 
 	   CustomDraw to a CDC pointer.
 
@@ -91,14 +91,38 @@ Incompatibilities with previous versions
       CMemDC.LineTo(50, 50);
 	  dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);	
 	
+Version 7.1.3
+=============
+This version has some additional bug fixes:
+* Fixed a thread safety issue in CWinApp::SetTLSIndex introduced in version 7.1.2.
+* Added CWinApp::PreTranslateMessage to simplify overloading CWinApp::MessageLoop.
+* The Explorer sample now ends without throwing an exeption on Win2000.
+* CResizer now preserves the tab order in a dialog.
 
+Version 7.1.2
+=============
+This version has some additional bug fixes: 
+* CDC Attach and CDC(HDC hDC) now succeed when the HDC is already attached to another CDC.
+* Fixed a resource leak in CTab::Paint which affected CTab, CTabbedMDI and CDockContainer
+* Tabs without owner draw now display their icons.
+* A CDC can now be reused after its HDC has been detached.
+* CBrush::CBrush(COLORREF crColor) now works as expected.                 
+* CResize now supports controls that issue WM_HSCROLL and WM_VSCROLL messages.
+
+Version 7.1.1
+=============
+Version 7.1.1 has some minor bug fixes for 7.1, namely:
+* Corrected an incorrect dock size when docking a docker.
+* Corrected a drawing error in the tutorials and scribble sample which occurred when 
+  dragging the mouse over the view window with the left button down.
+* Added a missing typedef for BSTR2T.
 
 Version 7.1
 ===========
 New Features and Enhancements
 -----------------------------
 * Added support for Task Dialogs
-* Added the following set of gdi classes: CBitmap, CBrush, CFont, CPalette, 
+* Added the following set of GDI classes: CBitmap, CBrush, CFont, CPalette, 
    CPen and CRgn. These work in cooperation with the existing CDC class.
 * Added a set of new Text conversion functions based on classes.
    The complete set of functions are:
@@ -125,7 +149,7 @@ New Features and Enhancements
 * Enhanced CResizer.
    - The anchor points are now fixed instead of proportional
    - Scrollbars are now added when required.
-   - Added the DialogResizing sample to demonstrate CResizers' new features.
+   - Added the DialogResizing sample to demonstrate CResizer's new features.
 * Create now use a CWnd pointer instead of a HWND when specifying the 
    parent window.
 * Dialogs and Property Sheets now use a CWnd pointer instead of a HWND
@@ -388,7 +412,7 @@ New Features and Enhancements
    particularly when an exception is thrown. Using a vector to create the
    array guarantees that it will be deleted properly under all circumstances.
 * The OnPaint function now uses a CDC reference as its argument instead of a 
-   HDC. This simpifies the task of using a CDC when overriding OnPaint.
+   HDC. This simplifies the task of using a CDC when overriding OnPaint.
 * Extended the help documentation.   
 
 Changes in detail

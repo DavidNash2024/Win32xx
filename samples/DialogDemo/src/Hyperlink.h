@@ -14,7 +14,7 @@ class CHyperlink :	public CStatic
 public:
 	CHyperlink();
 	virtual ~CHyperlink();
-	virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+	virtual void OnInitialUpdate();
 	void OnLButtonDown();
 	void OnLButtonUp(LPARAM lParam);
 
@@ -29,7 +29,7 @@ private:
 	COLORREF m_crVisited;
 	COLORREF m_crNotVisited;
 	HCURSOR m_hCursor;
-	HFONT	m_hUrlFont;
+	CFont	m_UrlFont;
 };
 
 #endif // HYPERLINK_H

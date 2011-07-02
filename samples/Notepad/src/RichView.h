@@ -18,7 +18,7 @@ protected:
 
 private:
 	HMODULE m_hInstRichEdit;
-	HFONT   m_hFont;
+	CFont   m_Font;
 
 };
 

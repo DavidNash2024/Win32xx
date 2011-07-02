@@ -626,9 +626,6 @@ namespace Win32xx
 	// values are topleft, topright, bottomleft, and bottomright.
 	// Set bFixedWidth to TRUE if the width should be fixed instead of variable.
 	// Set bFixedHeight to TRUE if the height should be fixed instead of variable.
-
-	// Note: The order the controls are added to resizer affects the tab order of the
-	//       the controls within a dialog.
 	{
     	ResizeData rd;
     	rd.corner = corner;
@@ -847,7 +844,6 @@ namespace Win32xx
     			top    = (*iter).rcInit.bottom  - height - m_rcInit.Height() + rcCurrent.Height();
     			break;
     		}
-
 
 			// Position the child window.
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
