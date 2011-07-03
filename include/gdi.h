@@ -142,16 +142,24 @@ namespace Win32xx
 	//
 	class CGDIObject
 	{
+		friend class CWinApp;
+
 	public:
 		struct DataMembers	// A structure that contains the data members for CBitmap
 		{
 			HGDIOBJ hGDIObject;
 			long	Count;
+			BOOL	bRemoveObject;
 		};
-		CGDIObject() {}
-		virtual ~CGDIObject() {}
+		CGDIObject();
+		CGDIObject(const CGDIObject& rhs);
+		virtual ~CGDIObject();
+		CGDIObject& operator = ( const CGDIObject& rhs );
+		void operator = (HGDIOBJ hObject);
+
 		void	Attach(HGDIOBJ hObject);
 		HGDIOBJ Detach();
+		static	CGDIObject* FromHandle(HGDIOBJ hObject);
 		void	Release();
 
 	protected:
@@ -169,13 +177,11 @@ namespace Win32xx
 		CBitmap(HBITMAP hBitmap);
 		CBitmap(LPCTSTR lpstr);
 		CBitmap(int nID);
-		CBitmap(const CBitmap& rhs);
 		operator HBITMAP() const;
-		void operator = (HBITMAP hBitmap);
-		CBitmap& operator = (const CBitmap& rhs);
 		~CBitmap();
 
 		HBITMAP GetBitmap() const;
+		static CBitmap* FromHandle(HBITMAP hBitmap);
 
 		// Create and load methods
 		HBITMAP LoadBitmap(LPCTSTR lpszName);
@@ -214,13 +220,11 @@ namespace Win32xx
 		CBrush();
 		CBrush(HBRUSH hBrush);
 		CBrush(COLORREF crColor);
-		CBrush(const CBrush& rhs);
 		operator HBRUSH() const;
-		void operator = (HBRUSH hBrush);
-		CBrush& operator = (const CBrush& rhs);
 		~CBrush();
 
 		HBRUSH GetBrush() const;
+		static CBrush* FromHandle(HBITMAP hBrush);
 
 		void CreateSolidBrush(COLORREF crColor);
 		void CreatePatternBrush(HBITMAP hBitmap);
@@ -243,12 +247,10 @@ namespace Win32xx
 	public:
 		CFont();
 		CFont(HFONT hFont);
-		CFont(const CFont& rhs);
 		operator HFONT() const;
-		void operator = (HFONT hFont);
-		CFont& operator = (const CFont& rhs);
 		~CFont();
 
+		static CFont* FromHandle(HFONT hFont);
 		HFONT GetFont() const;
 
 		// Create methods
@@ -276,12 +278,10 @@ namespace Win32xx
 	  public:
 		CPalette();
 		CPalette(HPALETTE hPalette);
-		CPalette(const CPalette& rhs);
 		operator HPALETTE() const;
-		void operator = (HPALETTE hPalette);
-		CPalette& operator = (const CPalette& rhs);
 		~CPalette();
 
+		static CPalette* FromHandle(HPALETTE hPalette);
 		HPALETTE GetPalette() const;
 
 		// Create methods
@@ -319,12 +319,10 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
 #endif // !_WIN32_WCE
-		CPen(const CPen& rhs);
 		operator HPEN() const;
-		void operator= (HPEN hPen);
-		CPen& operator = (const CPen& rhs);
 		~CPen();
 
+		static CPen* FromHandle(HPEN hPen);
 		HPEN GetPen() const;
 
 		void CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
@@ -347,12 +345,10 @@ namespace Win32xx
 	  public:
 		CRgn();
 		CRgn(HRGN hRgn);
-		CRgn(const CRgn& rhs);
 		operator HRGN() const;
-		void operator = (HRGN hRgn);
-		CRgn& operator = (const CRgn& rhs);
 		~CRgn ();
 
+		static CRgn* FromHandle(HRGN hRgn);
 		HRGN GetRgn() const;
 
 		// Create methods
@@ -848,6 +844,50 @@ namespace Win32xx
 	// Declarations for the CGDIObject class
 	//
 	
+	inline CGDIObject::CGDIObject()
+	// Constructs the CGDIObject
+	{
+		m_pData = new DataMembers;
+		m_pData->hGDIObject = 0;
+		m_pData->Count = 1L;
+		m_pData->bRemoveObject = TRUE;
+	}
+
+	inline CGDIObject::CGDIObject(const CGDIObject& rhs)
+	// Note: A copy of a CGDIObject is a clone of the original.
+	//       Both objects manipulate the one HGDIOBJ.	
+	{
+		m_pData = rhs.m_pData;
+		InterlockedIncrement(&m_pData->Count);
+	}
+
+	inline CGDIObject::~CGDIObject()
+	// Deconstructs the CGDIObject
+	{
+		Release();
+	}
+
+	inline CGDIObject& CGDIObject::operator = ( const CGDIObject& rhs )
+	// Note: A copy of a CGDIObject is a clone of the original.
+	//       Both objects manipulate the one HGDIOBJ.	
+	{
+		if (this != &rhs)
+		{
+			InterlockedIncrement(&rhs.m_pData->Count);
+			Release();
+			m_pData = rhs.m_pData;
+		}
+
+		return *this;
+	}
+
+	inline void CGDIObject::operator = (HGDIOBJ hObject)
+	{
+		assert(m_pData);
+		assert (m_pData->hGDIObject == NULL);
+		m_pData->hGDIObject = hObject;
+	}
+
 	inline void CGDIObject::Attach(HGDIOBJ hObject)
 	// Attaches a GDI HANDLE to the CGDIObject.
 	// The HGDIOBJ will be automatically deleted when the destructor is called unless it is detached.	
@@ -863,8 +903,26 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		HGDIOBJ hObject = m_pData->hGDIObject;
-		m_pData->hGDIObject = NULL;
+		m_pData->hGDIObject = 0;
+		m_pData->Count = 1L;
+		m_pData->bRemoveObject = TRUE;
+
 		return hObject;
+	}
+
+	inline CGDIObject* CGDIObject::FromHandle(HGDIOBJ hObject)
+	// Returns the CGDIObject associated with the GDI object handle
+	// The HGDIOBJ belonging to a temporary CGDIObject is not released or destroyed 
+	//  when the temporary CGDIObject is deconstructed.
+	{
+		assert( GetApp() );
+
+		CGDIObject* pObject = new CGDIObject;
+		GetApp()->AddTmpGDI(hObject, pObject);
+		pObject->m_pData->hGDIObject = hObject;
+		pObject->m_pData->bRemoveObject = FALSE;
+
+		return pObject;
 	}
 
 	inline void CGDIObject::Release()
@@ -890,21 +948,21 @@ namespace Win32xx
 	//
 	inline CBitmap::CBitmap()
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
 	}
 
 	inline CBitmap::CBitmap(HBITMAP hBitmap)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hBitmap;
 		m_pData->Count = 1L;
 	}
 
 	inline CBitmap::CBitmap(LPCTSTR lpszName)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		LoadBitmap(lpszName);
 		m_pData->Count = 1L;
@@ -912,21 +970,10 @@ namespace Win32xx
 
 	inline CBitmap::CBitmap(int nID)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		LoadBitmap(nID);
 		m_pData->Count = 1L;
-	}
-
-	inline CBitmap::CBitmap(const CBitmap& rhs)
-	// Note: A copy of a CBitmap is a clone of the original.
-	//       Both objects manipulate the one HBITMAP.	
-	{
-		assert(m_pData);
-		m_pData->hGDIObject = rhs.m_pData->hGDIObject;
-		m_pData->Count = rhs.m_pData->Count;
-
-		InterlockedIncrement(&m_pData->Count);
 	}
 
 	inline CBitmap::operator HBITMAP() const
@@ -935,31 +982,23 @@ namespace Win32xx
 		return (HBITMAP)m_pData->hGDIObject;
 	}
 
-	inline void CBitmap::operator = (HBITMAP hBitmap)
-	{
-		assert(m_pData);
-		assert (m_pData->hGDIObject == NULL);
-		m_pData->hGDIObject = hBitmap;
-	}
-
-	inline CBitmap& CBitmap::operator = ( const CBitmap& rhs )
-	// Note: A copy of a CBitmap is a clone of the original.
-	//       Both objects manipulate the one HBITMAP.	
-	{
-		if (this != &rhs)
-		{
-			InterlockedIncrement(&rhs.m_pData->Count);
-			Release();
-			m_pData = rhs.m_pData;
-		}
-
-		return *this;
-	}
-
-
 	inline CBitmap::~CBitmap()
 	{
-		Release();
+	}
+
+	inline CBitmap* CBitmap::FromHandle(HBITMAP hBitmap)
+	// Returns the CBitmap associated with the Bitmap handle
+	// The HBITMAP belonging to a temporary CBitmap is not released or destroyed 
+	//  when the temporary CBitmap is deconstructed.
+	{
+		assert( GetApp() );
+
+		CBitmap* pBitmap = new CBitmap;
+		GetApp()->AddTmpGDI(hBitmap, pBitmap);
+		pBitmap->m_pData->hGDIObject = hBitmap;
+		pBitmap->m_pData->bRemoveObject = FALSE;
+
+		return pBitmap;
 	}
 
 	inline HBITMAP CBitmap::GetBitmap() const
@@ -1157,35 +1196,24 @@ namespace Win32xx
 	//
 	inline CBrush::CBrush()
 	{
-		m_pData = new DataMembers;
+	//	m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
 	}
 
 	inline CBrush::CBrush(HBRUSH hBrush)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hBrush;
 		m_pData->Count = 1L;
 	}
 
 	inline CBrush::CBrush(COLORREF crColor)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = ::CreateSolidBrush(crColor);
 		assert (m_pData->hGDIObject);
 		m_pData->Count = 1L;
-	}
-
-	inline CBrush::CBrush(const CBrush& rhs)
-	// Note: A copy of a CBrush is a clone of the original.
-	//       Both objects manipulate the one HBRUSH.
-	{
-		assert(m_pData);
-		m_pData->hGDIObject = rhs.m_pData->hGDIObject;
-		m_pData->Count = rhs.m_pData->Count;
-
-		InterlockedIncrement(&m_pData->Count);
 	}
 
 	inline CBrush::operator HBRUSH() const
@@ -1194,24 +1222,23 @@ namespace Win32xx
 		return (HBRUSH)m_pData->hGDIObject;
 	}
 
-	inline CBrush& CBrush::operator = ( const CBrush& rhs )
-	// Note: A copy of a CBrush is a clone of the original.
-	//       Both objects manipulate the one HBRUSH.	
-	{
-		if (this != &rhs)
-		{
-			InterlockedIncrement(&rhs.m_pData->Count);
-			Release();
-			m_pData = rhs.m_pData;
-		}
-
-		return *this;
-	}
-
-
 	inline CBrush::~CBrush()
 	{
-		Release();
+	}
+
+	inline CBrush* CBrush::FromHandle(HBITMAP hBrush)
+	// Returns the CBrush associated with the Brush handle
+	// The HBRUSH belonging to a temporary CBrush is not released or destroyed 
+	//  when the temporary CBrush is deconstructed.
+	{
+		assert( GetApp() );
+
+		CBrush* pBrush = new CBrush;
+		GetApp()->AddTmpGDI(hBrush, pBrush);
+		pBrush->m_pData->hGDIObject = hBrush;
+		pBrush->m_pData->bRemoveObject = FALSE;
+
+		return pBrush;
 	}
 
 	inline HBRUSH CBrush::GetBrush() const
@@ -1294,34 +1321,16 @@ namespace Win32xx
 	//
 	inline CFont::CFont()
 	{
-		m_pData = new DataMembers;
+	//	m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
 	}
 
 	inline CFont::CFont(HFONT hFont)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hFont;
 		m_pData->Count = 1L;
-	}
-
-	inline CFont::CFont(const CFont& rhs)
-	// Note: A copy of a CFont is a clone of the original.
-	//       Both objects manipulate the one HFONT.	
-	{
-		assert(m_pData);
-		m_pData->hGDIObject = rhs.m_pData->hGDIObject;
-		m_pData->Count = rhs.m_pData->Count;
-
-		InterlockedIncrement(&m_pData->Count);
-	}
-
-	inline void CFont::operator = (HFONT hFont)
-	{
-		assert(m_pData);
-		assert (m_pData->hGDIObject == NULL);
-		m_pData->hGDIObject = hFont;
 	}
 
 	inline CFont::operator HFONT() const
@@ -1330,23 +1339,23 @@ namespace Win32xx
 		return (HFONT)m_pData->hGDIObject;
 	}
 
-	inline CFont& CFont::operator = ( const CFont& rhs )
-	// Note: A copy of a CFont is a clone of the original.
-	//       Both objects manipulate the one HFONT.
-	{
-		if (this != &rhs)
-		{
-			InterlockedIncrement(&rhs.m_pData->Count);
-			Release();
-			m_pData = rhs.m_pData;
-		}
-
-		return *this;
-	}
-
 	inline CFont::~CFont()
 	{
-		Release();
+	}
+
+	inline CFont* CFont::FromHandle(HFONT hFont)
+	// Returns the CFont associated with the Font handle
+	// The HFONT belonging to a temporary CFont is not released or destroyed 
+	//  when the temporary CFont is deconstructed.
+	{
+		assert( GetApp() );
+
+		CFont* pFont = new CFont;
+		GetApp()->AddTmpGDI(hFont, pFont);
+		pFont->m_pData->hGDIObject = hFont;
+		pFont->m_pData->bRemoveObject = FALSE;
+
+		return pFont;
 	}
 
 	inline HFONT CFont::GetFont() const
@@ -1449,27 +1458,16 @@ namespace Win32xx
 	//
 	inline CPalette::CPalette()
 	{
-		m_pData = new DataMembers;
+	//	m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
 	}
 
 	inline CPalette::CPalette(HPALETTE hPalette)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hPalette;
 		m_pData->Count = 1L;
-	}
-
-	inline CPalette::CPalette(const CPalette& rhs)
-	// Note: A copy of a CPalette is a clone of the original.
-	//       Both objects manipulate the one HPalette.	
-	{
-		assert(m_pData);
-		m_pData->hGDIObject = rhs.m_pData->hGDIObject;
-		m_pData->Count = rhs.m_pData->Count;
-
-		InterlockedIncrement(&m_pData->Count);
 	}
 
 	inline CPalette::operator HPALETTE() const
@@ -1478,31 +1476,23 @@ namespace Win32xx
 		return (HPALETTE)m_pData->hGDIObject;
 	}
 
-	inline void CPalette::operator = (HPALETTE hPalette)
-	{
-		assert(m_pData);
-		assert (m_pData->hGDIObject == NULL);
-		m_pData->hGDIObject = hPalette;
-	}
-
-	inline CPalette& CPalette::operator = (const CPalette& rhs)
-	// Note: A copy of a CPalette is a clone of the original.
-	//       Both objects manipulate the one HPalette.	
-	{
-		if (this != &rhs)
-		{
-			InterlockedIncrement(&rhs.m_pData->Count);
-			Release();
-			m_pData = rhs.m_pData;
-		}
-
-		return *this;
-	}
-
-
 	inline CPalette::~CPalette ()
 	{
-		Release();
+	}
+
+	inline CPalette* CPalette::FromHandle(HPALETTE hPalette)
+	// Returns the CPalette associated with the palette handle
+	// The HPALETTE belonging to a temporary CPalette is not released or destroyed 
+	//  when the temporary CPalette is deconstructed.
+	{
+		assert( GetApp() );
+
+		CPalette* pPalette = new CPalette;
+		GetApp()->AddTmpGDI(hPalette, pPalette);
+		pPalette->m_pData->hGDIObject = hPalette;
+		pPalette->m_pData->bRemoveObject = FALSE;
+
+		return pPalette;
 	}
 
 	inline HPALETTE CPalette::GetPalette() const
@@ -1594,13 +1584,21 @@ namespace Win32xx
 	//
 	inline CPen::CPen()
 	{
-		m_pData = new DataMembers;
+	//	m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
 	}
+	
+	inline CPen::CPen(HPEN hPen)
+	{
+	//	m_pData = new DataMembers;
+		m_pData->hGDIObject = hPen;
+		m_pData->Count = 1L;
+	}
+
 	inline CPen::CPen(int nPenStyle, int nWidth, COLORREF crColor)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = ::CreatePen(nPenStyle, nWidth, crColor);
 		m_pData->Count = 1L;
 
@@ -1610,7 +1608,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline CPen::CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
 		m_pData->Count = 1L;
 
@@ -1618,48 +1616,29 @@ namespace Win32xx
 	}
 #endif // !_WIN32_WCE
 
-	inline CPen::CPen(const CPen& rhs)
-	// Note: A copy of a CPen is a clone of the original.
-	//       Both objects manipulate the one HPEN.	
-	{
-		assert(m_pData);
-		m_pData->hGDIObject = rhs.m_pData->hGDIObject;
-		m_pData->Count = rhs.m_pData->Count;
-
-		InterlockedIncrement(&m_pData->Count);
-	}
-
-	inline void CPen::operator = (HPEN hPen)
-	{
-		assert(m_pData);
-		assert (m_pData->hGDIObject == NULL);
-		m_pData->hGDIObject = hPen;
-	}
-
 	inline CPen::operator HPEN () const
 	{
 		assert(m_pData);
 		return (HPEN)m_pData->hGDIObject;
 	}
 
-	inline CPen& CPen::operator = (const CPen& rhs)
-	// Note: A copy of a CPen is a clone of the original.
-	//       Both objects manipulate the one HPEN.	
-	{
-		if (this != &rhs)
-		{
-			InterlockedIncrement(&rhs.m_pData->Count);
-			Release();
-			m_pData = rhs.m_pData;
-		}
-
-		return *this;
-	}
-
-
 	inline CPen::~CPen()
 	{
-		Release();
+	}
+
+	inline CPen* CPen::FromHandle(HPEN hPen)
+	// Returns the CPen associated with the HPEN.
+	// The HPEN belonging to a temporary CPen is not released or destroyed 
+	//  when the temporary CPen is deconstructed.
+	{
+		assert( GetApp() );
+
+		CPen* pPen = new CPen;
+		GetApp()->AddTmpGDI(hPen, pPen);
+		pPen->m_pData->hGDIObject = hPen;
+		pPen->m_pData->bRemoveObject = FALSE;
+
+		return pPen;
 	}
 
 	inline HPEN CPen::GetPen() const
@@ -1731,26 +1710,16 @@ namespace Win32xx
 	//
 	inline CRgn::CRgn()
 	{
-		m_pData = new DataMembers;
+	//	m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
 	}
 
 	inline CRgn::CRgn(HRGN hRgn)
 	{
-		m_pData = new DataMembers;
+		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hRgn;
 		m_pData->Count = 1L;
-	}
-
-	inline CRgn::CRgn(const CRgn& rhs)
-	// Note: A copy of a CRgn is a clone of the original.
-	//       Both objects manipulate the one HRGN.	
-	{
-		m_pData->hGDIObject = rhs.m_pData->hGDIObject;
-		m_pData->Count = rhs.m_pData->Count;
-
-		InterlockedIncrement(&m_pData->Count);
 	}
 
 	inline CRgn::operator HRGN() const
@@ -1759,30 +1728,23 @@ namespace Win32xx
 		return (HRGN)m_pData->hGDIObject;
 	}
 
-	inline void CRgn::operator = (HRGN hRgn)
-	{
-		assert(m_pData);
-		assert(m_pData->hGDIObject == NULL);
-		m_pData->hGDIObject = hRgn;
-	}
-
-	inline CRgn& CRgn::operator = ( const CRgn& rhs )
-	// Note: A copy of a CRgn is a clone of the original.
-	//       Both objects manipulate the one HRGN.
-	{
-		if (this != &rhs)
-		{
-			InterlockedIncrement(&rhs.m_pData->Count);
-			Release();
-			m_pData = rhs.m_pData;
-		}
-
-		return *this;
-	}
-
 	inline CRgn::~CRgn()
 	{
-		Release();
+	}
+
+	inline CRgn* CRgn::FromHandle(HRGN hRgn)
+	// Returns the CRgn associated with the HRGN.
+	// The HRGN belonging to a temporary CRgn is not released or destroyed 
+	//  when the temporary CRgn is deconstructed.
+	{
+		assert( GetApp() );
+
+		CRgn* pRgn = new CRgn;
+		GetApp()->AddTmpGDI(hRgn, pRgn);
+		pRgn->m_pData->hGDIObject = hRgn;
+		pRgn->m_pData->bRemoveObject = FALSE;
+
+		return pRgn;
 	}
 
 	inline HRGN CRgn::GetRgn() const
@@ -2174,15 +2136,15 @@ namespace Win32xx
 					if (m_pData->hPaletteOld) ::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
 				}
 
-				delete m_pData;
+			//	delete m_pData;
 				RemoveFromMap();
 			}
 		}
 
 		m_Lock.Release();
 
-		// Allocate memory for our data members
-		m_pData = new DataMembers;
+//		// Allocate memory for our data members
+//		m_pData = new DataMembers;
 
 		// Assign values to our data members
 		m_pData->hDC = 0;

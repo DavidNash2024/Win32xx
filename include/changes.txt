@@ -32,10 +32,16 @@ Changes in detail
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W
+- Added CBitmap::FromHandle
+- Added CBrush::FromHandle
 - Added CDC::Destroy
 - Added CDocker::GetActiveDocker
 - Added CDocker::SetCaptionColors
+- Added CFont::FromHandle
 - Added CFrame::IsMDIFrame
+- Added CPalette::FromHandle
+- Added CPen::FromHandle
+- Added CRgn::FromHandle
 - Added CWinApp::GetAccelerators
 - Added CWinApp::OnIdle
 - Added CWinApp::PreTranslateMessage

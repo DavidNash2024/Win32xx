@@ -191,10 +191,11 @@ namespace Win32xx
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
+	class CDC;
+	class CGDIObject;
+	class CMenu;
 	class CWinApp;
 	class CWnd;
-	class CDC;
-	class CMenu;
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
@@ -204,6 +205,7 @@ namespace Win32xx
 
 	// Some useful smart pointers
 	typedef Shared_Ptr<CDC> DCPtr;
+	typedef Shared_Ptr<CGDIObject> GDIPtr;
 	typedef Shared_Ptr<CMenu> MenuPtr;
 	typedef Shared_Ptr<CWnd> WndPtr;
 
@@ -238,6 +240,7 @@ namespace Win32xx
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 
 		std::vector<DCPtr> vTmpDCs;		// A vector of temporary CDC pointers
+		std::vector<GDIPtr> vTmpGDIs;	// A vector of temporary CGDIObject pointers
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 
@@ -294,12 +297,19 @@ namespace Win32xx
 	class CWinApp
 	{
 		friend class CWnd;			// CWnd needs access to CWinApp's private members
+		friend class CBitmap;
+		friend class CBrush;
 		friend class CDC;
 		friend class CDialog;
+		friend class CGDIObject;
+		friend class CFont;
 		friend class CMenu;
 		friend class CMenuBar;
+		friend class CPalette;
+		friend class CPen;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
+		friend class CRgn;
 		friend class CTaskDialog;
 		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
 
@@ -331,12 +341,13 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
-		CDC*   AddTmpDC(HDC hDC);
-		CMenu* AddTmpMenu(HMENU hMenu);
-		CWnd*  AddTmpWnd(HWND hWnd);
-		void   CleanupTemps();
-		DWORD  GetTlsIndex() const {return m_dwTlsIndex;}
-		void   SetCallback();
+		CDC*	AddTmpDC(HDC hDC);
+		void	AddTmpGDI(HGDIOBJ hObject, CGDIObject* pObject);
+		CMenu*	AddTmpMenu(HMENU hMenu);
+		CWnd*	AddTmpWnd(HWND hWnd);
+		void	CleanupTemps();
+		DWORD	GetTlsIndex() const {return m_dwTlsIndex;}
+		void	SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
@@ -704,9 +715,35 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-		pTLSData->vTmpDCs.push_back(pDC); // save TmpWnd as a smart pointer
+		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
 		return pDC;
 	}
+
+	inline void CWinApp::AddTmpGDI(HGDIOBJ hObject, CGDIObject* pObject)
+	{
+		// The temporary CGDIObjects are removed by CleanupTemps
+		assert(hObject);
+		assert(pObject);
+	
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->vTmpGDIs.push_back(pObject); // save pObject as a smart pointer
+	}
+
+/*	inline CGDIObject* CWinApp::AddTmpGDI(HGDIOBJ hObject)
+	{
+		// The temporary CGDIObjects are removed by CleanupTemps
+		assert(hObject);
+	
+		CGDIObject* pObject = new CGDIObject;
+		pObject->m_pData->hGDIObject = hObject;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->vTmpGDIs.push_back(pObject); // save pObject as a smart pointer
+		return pObject;
+	} */
+
 
 #ifndef _WIN32_WCE
 	inline CMenu* CWinApp::AddTmpMenu(HMENU hMenu)
@@ -725,7 +762,7 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-		pTLSData->vTmpMenus.push_back(pMenu); // save TmpWnd as a smart pointer
+		pTLSData->vTmpMenus.push_back(pMenu); // save pMenu as a smart pointer
 		return pMenu;
 	}
 #endif
@@ -744,7 +781,7 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
-		pTLSData->vTmpWnds.push_back(pWnd); // save TmpWnd as a smart pointer
+		pTLSData->vTmpWnds.push_back(pWnd); // save pWnd as a smart pointer
 		return pWnd;
 	}
 
@@ -755,8 +792,10 @@ namespace Win32xx
 		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
 		assert(pTLSData);
 
-		pTLSData->vTmpWnds.clear();
 		pTLSData->vTmpDCs.clear();
+		pTLSData->vTmpGDIs.clear();
+		pTLSData->vTmpWnds.clear();
+
 
 	#ifndef _WIN32_WCE
 		pTLSData->vTmpMenus.clear();
