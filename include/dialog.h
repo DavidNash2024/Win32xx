@@ -88,7 +88,7 @@ namespace Win32xx
 		virtual HWND DoModeless();
 		virtual void SetDlgParent(CWnd* pParent);
 		BOOL IsModal() const { return m_IsModal; }
-		BOOL IsIndirect() const { return m_IsIndirect; }
+		BOOL IsIndirect() const { return (NULL != m_lpTemplate); }
 
 	protected:
 		// These are the functions you might wish to override
@@ -111,7 +111,6 @@ namespace Win32xx
 		CDialog(const CDialog&);				// Disable copy construction
 		CDialog& operator = (const CDialog&); // Disable assignment operator
 
-		BOOL m_IsIndirect;				// a flag for Indirect dialogs
 		BOOL m_IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
@@ -190,14 +189,14 @@ namespace Win32xx
 	// Definitions for the CDialog class
 	//
 	inline CDialog::CDialog(LPCTSTR lpszResName, CWnd* pParent/* = NULL*/)
-		: m_IsIndirect(FALSE), m_IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
+		: m_IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
 		m_pDlgParent = pParent;
 		::InitCommonControls();
 	}
 
 	inline CDialog::CDialog(UINT nResID, CWnd* pParent/* = NULL*/)
-		: m_IsIndirect(FALSE), m_IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
+		: m_IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
 	{
 		m_pDlgParent = pParent;
 		::InitCommonControls();
@@ -205,7 +204,7 @@ namespace Win32xx
 
 	//For indirect dialogs - created from a dialog box template in memory.
 	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, CWnd* pParent/* = NULL*/)
-		: m_IsIndirect(TRUE), m_IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
+		: m_IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
 	{
 		m_pDlgParent = pParent;
 		::InitCommonControls();
