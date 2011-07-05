@@ -401,6 +401,22 @@ namespace Win32xx
 	// Global Functions
 	//
 
+	inline CWnd* FromHandle(HWND hWnd)
+	// Returns the CWnd object associated with the window handle
+	{
+		assert( GetApp() );
+		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
+		if (::IsWindow(hWnd) && pWnd == 0)
+		{
+			GetApp()->AddTmpWnd(hWnd);
+			pWnd = GetApp()->GetCWndFromMap(hWnd);
+			::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
+		}
+
+		return pWnd;
+	}
+
+	
 	inline CWinApp* GetApp()
 	// Returns a pointer to the CWinApp derrived class
 	{
@@ -538,6 +554,8 @@ namespace Win32xx
 
 		return uSize;
 	}
+
+	
 
 	// A global function to report the state of the left mouse button
 	inline BOOL IsLeftButtonDown()

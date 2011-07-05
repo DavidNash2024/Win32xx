@@ -45,14 +45,14 @@
 //  automatically. It also automatically deletes or releases the device context
 //  itself as appropriate. Any failure to create the new GDI object throws an
 //  exception.
-// 
-// The CDC class is sufficient for most GDI programming needs. Sometimes 
+//
+// The CDC class is sufficient for most GDI programming needs. Sometimes
 //  however we need to have the GDI object seperated from the device context.
-//  Wrapper classes for GDI objects are provided for this purpose. The classes 
-//  are CBitmap, CBrush, CFont, CPalette, CPen and CRgn. These classes 
-//  automatically delete the GDI resouce assigned to them when their destructor 
+//  Wrapper classes for GDI objects are provided for this purpose. The classes
+//  are CBitmap, CBrush, CFont, CPalette, CPen and CRgn. These classes
+//  automatically delete the GDI resouce assigned to them when their destructor
 //  is called. These wrapper class objects can be attached to the CDC as
-//  shown below. 
+//  shown below.
 //
 // Coding Exampe without CDC ...
 //	HDC hdcClient = ::GetDC(m_hWnd);
@@ -143,6 +143,13 @@ namespace Win32xx
 	class CGDIObject
 	{
 		friend class CWinApp;
+		friend CBitmap* FromHandle(HBITMAP hBitmap);
+		friend CBrush* FromHandle(HBRUSH hBrush);
+		friend CDC* FromHandle(HDC hDC);
+		friend CFont* FromHandle(HFONT hFont);
+		friend CPalette* FromHandle(HPALETTE hPalette);
+		friend CPen* FromHandle(HPEN hPen);
+		friend CRgn* FromHandle(HRGN hRgn);
 
 	public:
 		struct DataMembers	// A structure that contains the data members for CBitmap
@@ -159,7 +166,6 @@ namespace Win32xx
 
 		void	Attach(HGDIOBJ hObject);
 		HGDIOBJ Detach();
-		static	CGDIObject* FromHandle(HGDIOBJ hObject);
 		void	Release();
 
 	protected:
@@ -181,7 +187,7 @@ namespace Win32xx
 		~CBitmap();
 
 		HBITMAP GetBitmap() const;
-		static CBitmap* FromHandle(HBITMAP hBitmap);
+	//	static CBitmap* FromHandle(HBITMAP hBitmap);
 
 		// Create and load methods
 		HBITMAP LoadBitmap(LPCTSTR lpszName);
@@ -224,7 +230,7 @@ namespace Win32xx
 		~CBrush();
 
 		HBRUSH GetBrush() const;
-		static CBrush* FromHandle(HBITMAP hBrush);
+	//	static CBrush* FromHandle(HBRUSH hBrush);
 
 		void CreateSolidBrush(COLORREF crColor);
 		void CreatePatternBrush(HBITMAP hBitmap);
@@ -250,7 +256,7 @@ namespace Win32xx
 		operator HFONT() const;
 		~CFont();
 
-		static CFont* FromHandle(HFONT hFont);
+	//	static CFont* FromHandle(HFONT hFont);
 		HFONT GetFont() const;
 
 		// Create methods
@@ -281,7 +287,7 @@ namespace Win32xx
 		operator HPALETTE() const;
 		~CPalette();
 
-		static CPalette* FromHandle(HPALETTE hPalette);
+	//	static CPalette* FromHandle(HPALETTE hPalette);
 		HPALETTE GetPalette() const;
 
 		// Create methods
@@ -322,7 +328,7 @@ namespace Win32xx
 		operator HPEN() const;
 		~CPen();
 
-		static CPen* FromHandle(HPEN hPen);
+	//	static CPen* FromHandle(HPEN hPen);
 		HPEN GetPen() const;
 
 		void CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
@@ -348,7 +354,7 @@ namespace Win32xx
 		operator HRGN() const;
 		~CRgn ();
 
-		static CRgn* FromHandle(HRGN hRgn);
+	//	static CRgn* FromHandle(HRGN hRgn);
 		HRGN GetRgn() const;
 
 		// Create methods
@@ -391,6 +397,7 @@ namespace Win32xx
 	{
 		friend class CWinApp;
 		friend class CWnd;
+		friend CDC* FromHandle(HDC hDC);
 
 	public:
 		struct DataMembers	// A structure that contains the data members for CDC
@@ -418,12 +425,16 @@ namespace Win32xx
 		virtual ~CDC();
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
-		
+
 		void AttachDC(HDC hDC, HWND hWnd = 0);
 		void Destroy();
 		HDC  DetachDC();
 		HDC GetHDC() const { return m_pData->hDC; }
-		static CDC* FromHandle(HDC hDC);
+		CBitmap* SelectObject(const CBitmap* pBitmap);
+		CBrush* SelectObject(const CBrush* pBrush);
+		CFont* SelectObject(const CFont* pFont);
+		CPalette* SelectObject(const CPalette* pPalette);
+		CPen* SelectObject(const CPen* pPen);
 
 #ifndef _WIN32_WCE
 		void operator = (const HDC hDC);
@@ -438,12 +449,10 @@ namespace Win32xx
 #endif
 
 		// Create and Select Bitmaps
-		void AttachBitmap(HBITMAP hBitmap);
 		HBITMAP CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
 		HBITMAP CreateCompatibleBitmap(CDC* pDC, int cx, int cy);
 		HBITMAP CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
-		HBITMAP DetachBitmap();
 		HBITMAP GetBitmap() const;
 		BITMAP  GetBitmapInfo() const;
 		HBITMAP LoadBitmap(UINT nID);
@@ -460,11 +469,9 @@ namespace Win32xx
 #endif
 
 		// Create and Select Brushes
-		void AttachBrush(HBRUSH hBrush);
 		HBRUSH CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
 		HBRUSH CreatePatternBrush(HBITMAP hbmp);
 		HBRUSH CreateSolidBrush(COLORREF rbg);
-		HBRUSH DetachBrush();
 		HBRUSH GetBrush() const;
 		LOGBRUSH GetBrushInfo() const;
 
@@ -474,9 +481,7 @@ namespace Win32xx
 #endif
 
 		// Create and Select Fonts
-		void AttachFont(HFONT hFont);
 		HFONT CreateFontIndirect(const LOGFONT& lf);
-		HFONT DetachFont();
 		HFONT GetFont() const;
 		LOGFONT GetFontInfo() const;
 
@@ -488,19 +493,15 @@ namespace Win32xx
 #endif
 
 		// Create and Select Palettes
-		void AttachPalette(HPALETTE hPalette);
-		HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette);	
-		HPALETTE DetachPalette();
+		HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette);
 		HPALETTE GetPalette() const;
 #ifndef _WIN32_WCE
 		HPALETTE CreateHalftonePalette();
 #endif
-			
+
 		// Create and Select Pens
-		void AttachPen(HPEN hPen);
 		HPEN CreatePen(int nStyle, int nWidth, COLORREF rgb);
 		HPEN CreatePenIndirect(LPLOGPEN pLogPen);
-		HPEN DetachPen();
 		HPEN GetPen() const;
 		LOGPEN GetPenInfo() const;
 
@@ -555,7 +556,7 @@ namespace Win32xx
 		BOOL Rectangle(const RECT& rc) const;
 		BOOL RoundRect(int x1, int y1, int x2, int y2, int nWidth, int nHeight) const;
 		BOOL RoundRect(const RECT& rc, int nWidth, int nHeight) const;
-		
+
 #ifndef _WIN32_WCE
 		BOOL Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
 		BOOL Chord(const RECT& rc, POINT ptStart, POINT ptEnd) const;
@@ -573,7 +574,7 @@ namespace Win32xx
 		BOOL FillRgn(HRGN hrgn, HBRUSH hbr) const;
 		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical);
 		void SolidFill(COLORREF Color, const RECT& rc);
-		
+
 #ifndef _WIN32_WCE
 		BOOL DrawIcon(int x, int y, HICON hIcon) const;
 		BOOL DrawIcon(POINT point, HICON hIcon) const;
@@ -588,7 +589,7 @@ namespace Win32xx
 		BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
 		BOOL BitBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
 		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const;
-		
+
 #ifndef _WIN32_WCE
 		int  GetDIBits(HBITMAP hbmp, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const;
 		int  SetDIBits(HBITMAP hbmp, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const;
@@ -601,13 +602,13 @@ namespace Win32xx
 		// Clipping Functions
 		int  ExcludeClipRect(int Left, int Top, int Right, int BottomRect);
 		int  ExcludeClipRect(const RECT& rc);
-		int  GetClipBox(RECT& rc);			
-		int  GetClipRgn(HRGN hrgn);				
+		int  GetClipBox(RECT& rc);
+		int  GetClipRgn(HRGN hrgn);
 		int  IntersectClipRect(int Left, int Top, int Right, int Bottom);
 		int  IntersectClipRect(const RECT& rc);
 		BOOL RectVisible(const RECT& rc);
 		int  SelectClipRgn(HRGN hrgn);
- 
+
 #ifndef _WIN32_WCE
 		int  ExtSelectClipRgn(HRGN hrgn, int fnMode);
 		int  OffsetClipRgn(int nXOffset, int nYOffset);
@@ -664,10 +665,10 @@ namespace Win32xx
 		int  GetBkMode() const;
 		UINT GetTextAlign() const;
 		int  GetTextFace(int nCount, LPTSTR lpszFacename) const;
-		COLORREF GetTextColor() const;		
+		COLORREF GetTextColor() const;
 		BOOL  GetTextMetrics(TEXTMETRIC& Metrics) const;
 		COLORREF SetBkColor(COLORREF crColor) const;
-		int  SetBkMode(int iBkMode) const;	
+		int  SetBkMode(int iBkMode) const;
 		UINT  SetTextAlign(UINT nFlags) const;
 		COLORREF SetTextColor(COLORREF crColor) const;
 
@@ -687,12 +688,6 @@ namespace Win32xx
 		void AddToMap();
 		static CDC* AddTempHDC(HDC hDC, HWND hWnd);
 		void Release();
-		void RemoveCurrentBitmap();
-		void RemoveCurrentBrush();
-		void RemoveCurrentFont();
-		void RemoveCurrentPalette();
-		void RemoveCurrentPen();
-		void RemoveCurrentRgn();
 		BOOL RemoveFromMap();
 		CCriticalSection m_Lock;
 
@@ -702,11 +697,11 @@ namespace Win32xx
 	class CClientDC : public CDC
 	{
 	public:
-		CClientDC(CWnd* pWnd)
+		CClientDC(const CWnd* pWnd)
 		{
 			if (pWnd) assert(pWnd->IsWindow());
 			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
-			AttachDC(::GetDC(hWnd), hWnd);			
+			AttachDC(::GetDC(hWnd), hWnd);
 		}
 		virtual ~CClientDC() {}
 	};
@@ -714,7 +709,7 @@ namespace Win32xx
 	class CMemDC : public CDC
 	{
 	public:
-		CMemDC(CDC* pDC)
+		CMemDC(const CDC* pDC)
 		{
 			if (pDC) assert(pDC->GetHDC());
 			HDC hDC = pDC? pDC->GetHDC() : NULL;
@@ -726,7 +721,7 @@ namespace Win32xx
 	class CPaintDC : public CDC
 	{
 	public:
-		CPaintDC(CWnd* pWnd)
+		CPaintDC(const CWnd* pWnd)
 		{
 			assert(pWnd->IsWindow());
 			m_hWnd = pWnd->GetHwnd();
@@ -743,7 +738,7 @@ namespace Win32xx
 	class CWindowDC : public CDC
 	{
 	public:
-		CWindowDC(CWnd* pWnd)
+		CWindowDC(const CWnd* pWnd)
 		{
 			if (pWnd) assert(pWnd->IsWindow());
 			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
@@ -751,13 +746,13 @@ namespace Win32xx
 		}
 		virtual ~CWindowDC() {}
 	};
-	
+
 #ifndef _WIN32_WCE
 	class CMetaFileDC : public CDC
 	{
 	public:
 		CMetaFileDC() : m_hMF(0), m_hEMF(0) {}
-		virtual ~CMetaFileDC() 
+		virtual ~CMetaFileDC()
 		{
 			if (m_hMF)
 			{
@@ -782,10 +777,10 @@ namespace Win32xx
 
 	private:
 		HMETAFILE m_hMF;
-		HENHMETAFILE m_hEMF; 
+		HENHMETAFILE m_hEMF;
 	};
 #endif
-	
+
 
 	///////////////////////////////////////////////
 	// Declarations for the CBitmapInfoPtr class
@@ -832,6 +827,16 @@ namespace Win32xx
 		std::vector<byte> m_bmi;
 	};
 
+
+	CDC* FromHandle(HDC hDC);
+	CBitmap* FromHandle(HBITMAP hBitmap);
+	CBrush* FromHandle(HBRUSH hBrush);
+	CFont* FromHandle(HFONT hFont);
+	CPalette* FromHandle(HPALETTE hPalette);
+	CPen* FromHandle(HPEN hPen);
+	CRgn* FromHandle(HRGN hRgn); 
+
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -843,7 +848,7 @@ namespace Win32xx
 	///////////////////////////////////////////////
 	// Declarations for the CGDIObject class
 	//
-	
+
 	inline CGDIObject::CGDIObject()
 	// Constructs the CGDIObject
 	{
@@ -855,7 +860,7 @@ namespace Win32xx
 
 	inline CGDIObject::CGDIObject(const CGDIObject& rhs)
 	// Note: A copy of a CGDIObject is a clone of the original.
-	//       Both objects manipulate the one HGDIOBJ.	
+	//       Both objects manipulate the one HGDIOBJ.
 	{
 		m_pData = rhs.m_pData;
 		InterlockedIncrement(&m_pData->Count);
@@ -869,7 +874,7 @@ namespace Win32xx
 
 	inline CGDIObject& CGDIObject::operator = ( const CGDIObject& rhs )
 	// Note: A copy of a CGDIObject is a clone of the original.
-	//       Both objects manipulate the one HGDIOBJ.	
+	//       Both objects manipulate the one HGDIOBJ.
 	{
 		if (this != &rhs)
 		{
@@ -890,7 +895,7 @@ namespace Win32xx
 
 	inline void CGDIObject::Attach(HGDIOBJ hObject)
 	// Attaches a GDI HANDLE to the CGDIObject.
-	// The HGDIOBJ will be automatically deleted when the destructor is called unless it is detached.	
+	// The HGDIOBJ will be automatically deleted when the destructor is called unless it is detached.
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
@@ -910,21 +915,6 @@ namespace Win32xx
 		return hObject;
 	}
 
-	inline CGDIObject* CGDIObject::FromHandle(HGDIOBJ hObject)
-	// Returns the CGDIObject associated with the GDI object handle
-	// The HGDIOBJ belonging to a temporary CGDIObject is not released or destroyed 
-	//  when the temporary CGDIObject is deconstructed.
-	{
-		assert( GetApp() );
-
-		CGDIObject* pObject = new CGDIObject;
-		GetApp()->AddTmpGDI(hObject, pObject);
-		pObject->m_pData->hGDIObject = hObject;
-		pObject->m_pData->bRemoveObject = FALSE;
-
-		return pObject;
-	}
-
 	inline void CGDIObject::Release()
 	{
 		assert(m_pData);
@@ -933,7 +923,12 @@ namespace Win32xx
 		if (InterlockedDecrement(&m_pData->Count) == 0)
 		{
 			if (m_pData->hGDIObject != NULL)
-				bSucceeded = ::DeleteObject(m_pData->hGDIObject);
+			{
+				if (m_pData->bRemoveObject)
+					bSucceeded = ::DeleteObject(m_pData->hGDIObject);
+				else
+					bSucceeded = TRUE;
+			}
 
 			delete m_pData;
 			m_pData = 0;
@@ -948,32 +943,21 @@ namespace Win32xx
 	//
 	inline CBitmap::CBitmap()
 	{
-		//m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
 	}
 
 	inline CBitmap::CBitmap(HBITMAP hBitmap)
 	{
-		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hBitmap;
-		m_pData->Count = 1L;
 	}
 
 	inline CBitmap::CBitmap(LPCTSTR lpszName)
 	{
-		//m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
 		LoadBitmap(lpszName);
-		m_pData->Count = 1L;
 	}
 
 	inline CBitmap::CBitmap(int nID)
 	{
-		//m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
 		LoadBitmap(nID);
-		m_pData->Count = 1L;
 	}
 
 	inline CBitmap::operator HBITMAP() const
@@ -984,21 +968,6 @@ namespace Win32xx
 
 	inline CBitmap::~CBitmap()
 	{
-	}
-
-	inline CBitmap* CBitmap::FromHandle(HBITMAP hBitmap)
-	// Returns the CBitmap associated with the Bitmap handle
-	// The HBITMAP belonging to a temporary CBitmap is not released or destroyed 
-	//  when the temporary CBitmap is deconstructed.
-	{
-		assert( GetApp() );
-
-		CBitmap* pBitmap = new CBitmap;
-		GetApp()->AddTmpGDI(hBitmap, pBitmap);
-		pBitmap->m_pData->hGDIObject = hBitmap;
-		pBitmap->m_pData->bRemoveObject = FALSE;
-
-		return pBitmap;
 	}
 
 	inline HBITMAP CBitmap::GetBitmap() const
@@ -1034,14 +1003,14 @@ namespace Win32xx
 	}
 
 	inline HBITMAP CBitmap::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
-	// Loads a bitmap from a resource using the resource string.	
+	// Loads a bitmap from a resource using the resource string.
 	{
 		assert(GetApp());
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
 			::DeleteObject(m_pData->hGDIObject);
 
-		m_pData->hGDIObject = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);	
+		m_pData->hGDIObject = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
 		assert(m_pData->hGDIObject);
 		return (HBITMAP)m_pData->hGDIObject;
 	}
@@ -1049,10 +1018,10 @@ namespace Win32xx
 	inline void CBitmap::LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	// Loads a predefined bitmap
 	// Predefined bitmaps include: OBM_BTNCORNERS, OBM_BTSIZE, OBM_CHECK, OBM_CHECKBOXES, OBM_CLOSE, OBM_COMBO
-	//  OBM_DNARROW, OBM_DNARROWD, OBM_DNARROWI, OBM_LFARROW, OBM_LFARROWD, OBM_LFARROWI, OBM_MNARROW,OBM_OLD_CLOSE 
-	//  OBM_OLD_DNARROW, OBM_OLD_LFARROW, OBM_OLD_REDUCE, OBM_OLD_RESTORE, OBM_OLD_RGARROW, OBM_OLD_UPARROW 
-	//  OBM_OLD_ZOOM, OBM_REDUCE, OBM_REDUCED, OBM_RESTORE, OBM_RESTORED, OBM_RGARROW, OBM_RGARROWD, OBM_RGARROWI 
-	//  OBM_SIZE, OBM_UPARROW, OBM_UPARROWD, OBM_UPARROWI, OBM_ZOOM, OBM_ZOOMD 
+	//  OBM_DNARROW, OBM_DNARROWD, OBM_DNARROWI, OBM_LFARROW, OBM_LFARROWD, OBM_LFARROWI, OBM_MNARROW,OBM_OLD_CLOSE
+	//  OBM_OLD_DNARROW, OBM_OLD_LFARROW, OBM_OLD_REDUCE, OBM_OLD_RESTORE, OBM_OLD_RGARROW, OBM_OLD_UPARROW
+	//  OBM_OLD_ZOOM, OBM_REDUCE, OBM_REDUCED, OBM_RESTORE, OBM_RESTORED, OBM_RGARROW, OBM_RGARROWD, OBM_RGARROWI
+	//  OBM_SIZE, OBM_UPARROW, OBM_UPARROWD, OBM_UPARROWI, OBM_ZOOM, OBM_ZOOMD
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
@@ -1065,7 +1034,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		inline HBITMAP CBitmap::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
 		// Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
-		{			
+		{
 			assert(GetApp());
 			assert(m_pData);
 			if (m_pData->hGDIObject != NULL)
@@ -1078,7 +1047,7 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 
 		inline void CBitmap::CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits)
-		// Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).	
+		// Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).
 		{
 			assert(m_pData);
 			if (m_pData->hGDIObject != NULL)
@@ -1090,7 +1059,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		inline void CBitmap::CreateBitmapIndirect(LPBITMAP lpBitmap)
-		// Creates a bitmap with the width, height, and color format specified in the BITMAP structure.	
+		// Creates a bitmap with the width, height, and color format specified in the BITMAP structure.
 		{
 			assert(m_pData);
 			if (m_pData->hGDIObject != NULL)
@@ -1125,8 +1094,8 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		inline CSize CBitmap::GetBitmapDimensionEx() const
-		// Retrieves the dimensions of a compatible bitmap. 
-		// The retrieved dimensions must have been set by the SetBitmapDimensionEx function.	
+		// Retrieves the dimensions of a compatible bitmap.
+		// The retrieved dimensions must have been set by the SetBitmapDimensionEx function.
 		{
 			assert(m_pData);
 			assert(m_pData->hGDIObject != NULL);
@@ -1136,8 +1105,8 @@ namespace Win32xx
 		}
 
 		inline CSize CBitmap::SetBitmapDimensionEx(int nWidth, int nHeight)
-		// The SetBitmapDimensionEx function assigns preferred dimensions to a bitmap. 
-		// These dimensions can be used by applications; however, they are not used by the system.		
+		// The SetBitmapDimensionEx function assigns preferred dimensions to a bitmap.
+		// These dimensions can be used by applications; however, they are not used by the system.
 		{
 			assert(m_pData);
 			assert(m_pData->hGDIObject != NULL);
@@ -1148,7 +1117,7 @@ namespace Win32xx
 
 		// DIB support
 		inline HBITMAP CBitmap::CreateDIBitmap(HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
-		// Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.	
+		// Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.
 		{
 			assert(m_pData);
 			if (m_pData->hGDIObject != NULL)
@@ -1161,8 +1130,8 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 
 		inline void CBitmap::CreateDIBSection(HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
-		// Creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values. 
-		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.		
+		// Creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values.
+		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.
 		{
 			assert(m_pData);
 			if (m_pData->hGDIObject != NULL)
@@ -1182,7 +1151,7 @@ namespace Win32xx
 		}
 
 		inline int CBitmap::SetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse)
-		// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.	
+		// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
 		{
 			assert(m_pData);
 			assert(m_pData->hGDIObject != NULL);
@@ -1196,24 +1165,17 @@ namespace Win32xx
 	//
 	inline CBrush::CBrush()
 	{
-	//	m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
 	}
 
 	inline CBrush::CBrush(HBRUSH hBrush)
 	{
-		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hBrush;
-		m_pData->Count = 1L;
 	}
 
 	inline CBrush::CBrush(COLORREF crColor)
 	{
-		//m_pData = new DataMembers;
 		m_pData->hGDIObject = ::CreateSolidBrush(crColor);
 		assert (m_pData->hGDIObject);
-		m_pData->Count = 1L;
 	}
 
 	inline CBrush::operator HBRUSH() const
@@ -1226,21 +1188,6 @@ namespace Win32xx
 	{
 	}
 
-	inline CBrush* CBrush::FromHandle(HBITMAP hBrush)
-	// Returns the CBrush associated with the Brush handle
-	// The HBRUSH belonging to a temporary CBrush is not released or destroyed 
-	//  when the temporary CBrush is deconstructed.
-	{
-		assert( GetApp() );
-
-		CBrush* pBrush = new CBrush;
-		GetApp()->AddTmpGDI(hBrush, pBrush);
-		pBrush->m_pData->hGDIObject = hBrush;
-		pBrush->m_pData->bRemoveObject = FALSE;
-
-		return pBrush;
-	}
-
 	inline HBRUSH CBrush::GetBrush() const
 	{
 		assert(m_pData);
@@ -1248,7 +1195,7 @@ namespace Win32xx
 	}
 
 	inline void CBrush::CreateSolidBrush(COLORREF crColor)
-	// Creates a logical brush that has the specified solid color.	
+	// Creates a logical brush that has the specified solid color.
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
@@ -1283,8 +1230,8 @@ namespace Win32xx
 #endif // !defined(_WIN32_WCE)
 
 	inline void CBrush::CreatePatternBrush(HBITMAP hBitmap)
-	// Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap, 
-	// which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.	
+	// Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap,
+	// which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
@@ -1295,7 +1242,7 @@ namespace Win32xx
 	}
 
 	inline void CBrush::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage)
-	// Creates a logical brush that has the pattern specified by the device-independent bitmap (DIB).	
+	// Creates a logical brush that has the pattern specified by the device-independent bitmap (DIB).
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
@@ -1306,7 +1253,7 @@ namespace Win32xx
 	}
 
 	inline LOGBRUSH CBrush::GetLogBrush() const
-	// Retrieves the LOGBRUSH structure that defines the style, color, and pattern of a physical brush.	
+	// Retrieves the LOGBRUSH structure that defines the style, color, and pattern of a physical brush.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1321,16 +1268,11 @@ namespace Win32xx
 	//
 	inline CFont::CFont()
 	{
-	//	m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
 	}
 
 	inline CFont::CFont(HFONT hFont)
 	{
-		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hFont;
-		m_pData->Count = 1L;
 	}
 
 	inline CFont::operator HFONT() const
@@ -1343,21 +1285,6 @@ namespace Win32xx
 	{
 	}
 
-	inline CFont* CFont::FromHandle(HFONT hFont)
-	// Returns the CFont associated with the Font handle
-	// The HFONT belonging to a temporary CFont is not released or destroyed 
-	//  when the temporary CFont is deconstructed.
-	{
-		assert( GetApp() );
-
-		CFont* pFont = new CFont;
-		GetApp()->AddTmpGDI(hFont, pFont);
-		pFont->m_pData->hGDIObject = hFont;
-		pFont->m_pData->bRemoveObject = FALSE;
-
-		return pFont;
-	}
-
 	inline HFONT CFont::GetFont() const
 	{
 		assert(m_pData);
@@ -1365,18 +1292,18 @@ namespace Win32xx
 	}
 
 	inline void CFont::CreateFontIndirect(const LOGFONT* lpLogFont)
-	// Creates a logical font that has the specified characteristics.	
+	// Creates a logical font that has the specified characteristics.
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
 			::DeleteObject(m_pData->hGDIObject);
-		
+
 		m_pData->hGDIObject = ::CreateFontIndirect(lpLogFont);
 		assert(m_pData->hGDIObject);
 	}
 
 	inline void CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hDC /*= NULL*/, BOOL bBold /*= FALSE*/, BOOL bItalic /*= FALSE*/)
-	// Creates a font of a specified typeface and point size.	
+	// Creates a font of a specified typeface and point size.
 	{
 		LOGFONT logFont = { 0 };
 		logFont.lfCharSet = DEFAULT_CHARSET;
@@ -1394,7 +1321,7 @@ namespace Win32xx
 
 	inline void CFont::CreatePointFontIndirect(const LOGFONT* lpLogFont, HDC hDC /* = NULL*/)
 	// Creates a font of a specified typeface and point size.
-	// This function automatically converts the height in lfHeight to logical units using the specified device context.	
+	// This function automatically converts the height in lfHeight to logical units using the specified device context.
 	{
 		HDC hDC1 = (hDC != NULL) ? hDC : ::GetDC(HWND_DESKTOP);
 
@@ -1443,7 +1370,7 @@ namespace Win32xx
 #endif // #ifndef _WIN32_WCE
 
 	inline LOGFONT CFont::GetLogFont() const
-	// Retrieves the Logfont structure that contains font attributes.	
+	// Retrieves the Logfont structure that contains font attributes.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1459,15 +1386,15 @@ namespace Win32xx
 	inline CPalette::CPalette()
 	{
 	//	m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
+	//	m_pData->hGDIObject = 0;
+	//	m_pData->Count = 1L;
 	}
 
 	inline CPalette::CPalette(HPALETTE hPalette)
 	{
-		//m_pData = new DataMembers;
+	//	m_pData = new DataMembers;
 		m_pData->hGDIObject = hPalette;
-		m_pData->Count = 1L;
+	//	m_pData->Count = 1L;
 	}
 
 	inline CPalette::operator HPALETTE() const
@@ -1480,21 +1407,6 @@ namespace Win32xx
 	{
 	}
 
-	inline CPalette* CPalette::FromHandle(HPALETTE hPalette)
-	// Returns the CPalette associated with the palette handle
-	// The HPALETTE belonging to a temporary CPalette is not released or destroyed 
-	//  when the temporary CPalette is deconstructed.
-	{
-		assert( GetApp() );
-
-		CPalette* pPalette = new CPalette;
-		GetApp()->AddTmpGDI(hPalette, pPalette);
-		pPalette->m_pData->hGDIObject = hPalette;
-		pPalette->m_pData->bRemoveObject = FALSE;
-
-		return pPalette;
-	}
-
 	inline HPALETTE CPalette::GetPalette() const
 	{
 		assert(m_pData);
@@ -1502,7 +1414,7 @@ namespace Win32xx
 	}
 
 	inline void CPalette::CreatePalette(LPLOGPALETTE lpLogPalette)
-	// Creates a logical palette from the information in the specified LOGPALETTE structure.	
+	// Creates a logical palette from the information in the specified LOGPALETTE structure.
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
@@ -1514,7 +1426,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline void CPalette::CreateHalftonePalette(HDC hDC)
-	// Creates a halftone palette for the specified device context (DC).	
+	// Creates a halftone palette for the specified device context (DC).
 	{
 		assert(m_pData);
 		assert(hDC != NULL);
@@ -1527,7 +1439,7 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 
 	inline int CPalette::GetEntryCount() const
-	// Retrieve the number of entries in the palette.	
+	// Retrieve the number of entries in the palette.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1537,7 +1449,7 @@ namespace Win32xx
 	}
 
 	inline UINT CPalette::GetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
-	// Retrieves a specified range of palette entries from the palette.	
+	// Retrieves a specified range of palette entries from the palette.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1545,7 +1457,7 @@ namespace Win32xx
 	}
 
 	inline UINT CPalette::SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
-	// Sets RGB (red, green, blue) color values and flags in a range of entries in the palette.	
+	// Sets RGB (red, green, blue) color values and flags in a range of entries in the palette.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1554,7 +1466,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline void CPalette::AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
-	// Replaces entries in the palette.	
+	// Replaces entries in the palette.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1562,7 +1474,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CPalette::ResizePalette(UINT nNumEntries)
-	//  Increases or decreases the size of the palette based on the specified value.	
+	//  Increases or decreases the size of the palette based on the specified value.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1571,7 +1483,7 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 
 	inline UINT CPalette::GetNearestPaletteIndex(COLORREF crColor) const
-	// Retrieves the index for the entry in the palette most closely matching a specified color value.	
+	// Retrieves the index for the entry in the palette most closely matching a specified color value.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1584,34 +1496,23 @@ namespace Win32xx
 	//
 	inline CPen::CPen()
 	{
-	//	m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
 	}
-	
+
 	inline CPen::CPen(HPEN hPen)
 	{
-	//	m_pData = new DataMembers;
 		m_pData->hGDIObject = hPen;
-		m_pData->Count = 1L;
 	}
 
 	inline CPen::CPen(int nPenStyle, int nWidth, COLORREF crColor)
 	{
-		//m_pData = new DataMembers;
 		m_pData->hGDIObject = ::CreatePen(nPenStyle, nWidth, crColor);
-		m_pData->Count = 1L;
-
 		assert(m_pData->hGDIObject);
 	}
 
 #ifndef _WIN32_WCE
 	inline CPen::CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
 	{
-		//m_pData = new DataMembers;
 		m_pData->hGDIObject = ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
-		m_pData->Count = 1L;
-
 		assert(m_pData->hGDIObject);
 	}
 #endif // !_WIN32_WCE
@@ -1626,21 +1527,6 @@ namespace Win32xx
 	{
 	}
 
-	inline CPen* CPen::FromHandle(HPEN hPen)
-	// Returns the CPen associated with the HPEN.
-	// The HPEN belonging to a temporary CPen is not released or destroyed 
-	//  when the temporary CPen is deconstructed.
-	{
-		assert( GetApp() );
-
-		CPen* pPen = new CPen;
-		GetApp()->AddTmpGDI(hPen, pPen);
-		pPen->m_pData->hGDIObject = hPen;
-		pPen->m_pData->bRemoveObject = FALSE;
-
-		return pPen;
-	}
-
 	inline HPEN CPen::GetPen() const
 	{
 		assert(m_pData);
@@ -1648,7 +1534,7 @@ namespace Win32xx
 	}
 
 	inline void CPen::CreatePen(int nPenStyle, int nWidth, COLORREF crColor)
-	// Creates a logical pen that has the specified style, width, and color.	
+	// Creates a logical pen that has the specified style, width, and color.
 	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
@@ -1693,7 +1579,7 @@ namespace Win32xx
 	}
 
 	inline EXTLOGPEN CPen::GetExtLogPen() const
-	// Retrieves the EXTLOGPEN struct that specifies the pen's style, width, color and brush attributes.	
+	// Retrieves the EXTLOGPEN struct that specifies the pen's style, width, color and brush attributes.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1710,16 +1596,11 @@ namespace Win32xx
 	//
 	inline CRgn::CRgn()
 	{
-	//	m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
 	}
 
 	inline CRgn::CRgn(HRGN hRgn)
 	{
-		//m_pData = new DataMembers;
 		m_pData->hGDIObject = hRgn;
-		m_pData->Count = 1L;
 	}
 
 	inline CRgn::operator HRGN() const
@@ -1732,21 +1613,6 @@ namespace Win32xx
 	{
 	}
 
-	inline CRgn* CRgn::FromHandle(HRGN hRgn)
-	// Returns the CRgn associated with the HRGN.
-	// The HRGN belonging to a temporary CRgn is not released or destroyed 
-	//  when the temporary CRgn is deconstructed.
-	{
-		assert( GetApp() );
-
-		CRgn* pRgn = new CRgn;
-		GetApp()->AddTmpGDI(hRgn, pRgn);
-		pRgn->m_pData->hGDIObject = hRgn;
-		pRgn->m_pData->bRemoveObject = FALSE;
-
-		return pRgn;
-	}
-
 	inline HRGN CRgn::GetRgn() const
 	{
 		assert(m_pData);
@@ -1755,7 +1621,7 @@ namespace Win32xx
 
 	inline void CRgn::CreateRectRgn(int x1, int y1, int x2, int y2)
 	// Creates a rectangular region.
-	{	
+	{
 		assert(m_pData);
 		if (m_pData->hGDIObject != NULL)
 			::DeleteObject(m_pData->hGDIObject);
@@ -1832,8 +1698,8 @@ namespace Win32xx
 	}
 
 	inline void CRgn::CreateFromPath(HDC hDC)
-	// Creates a region from the path that is selected into the specified device context. 
-	// The resulting region uses device coordinates.	
+	// Creates a region from the path that is selected into the specified device context.
+	// The resulting region uses device coordinates.
 	{
 		assert(m_pData);
 		assert(hDC != NULL);
@@ -1858,7 +1724,7 @@ namespace Win32xx
 	}
 
 	inline void CRgn::SetRectRgn(int x1, int y1, int x2, int y2)
-	// converts the region into a rectangular region with the specified coordinates.	
+	// converts the region into a rectangular region with the specified coordinates.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1890,7 +1756,7 @@ namespace Win32xx
 	}
 
 	inline int CRgn::CopyRgn(HRGN hRgnSrc)
-	// Assigns the specified region to the current region.	
+	// Assigns the specified region to the current region.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject == NULL);
@@ -1898,7 +1764,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CRgn::EqualRgn(HRGN hRgn) const
-	// Checks the two specified regions to determine whether they are identical.	
+	// Checks the two specified regions to determine whether they are identical.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1906,7 +1772,7 @@ namespace Win32xx
 	}
 
 	inline int CRgn::OffsetRgn(int x, int y)
-	// Moves a region by the specified offsets.	
+	// Moves a region by the specified offsets.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -1985,7 +1851,7 @@ namespace Win32xx
 	inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// This constructor assigns an existing HDC to the CDC
 	// The HDC WILL be released or deleted when the CDC object is destroyed
-	// The hWnd paramter is only used in WindowsCE. It specifies the HWND of a Window or 
+	// The hWnd paramter is only used in WindowsCE. It specifies the HWND of a Window or
 	// Window Client DC
 
 	// Note: this constructor permits a call like this:
@@ -1993,7 +1859,7 @@ namespace Win32xx
 	//  or
 	// CDC MyCDC = ::CreateCompatibleDC(SomeHDC);
 	//  or
-	// CDC MyCDC = ::GetDC(SomeHWND);	
+	// CDC MyCDC = ::GetDC(SomeHWND);
 	{
 		UNREFERENCED_PARAMETER(hWnd);
 		assert(hDC);
@@ -2002,7 +1868,7 @@ namespace Win32xx
 		if (pDC)
 		{
 			m_pData = pDC->m_pData;
-			InterlockedIncrement(&m_pData->Count);			
+			InterlockedIncrement(&m_pData->Count);
 		}
 		else
 		{
@@ -2032,7 +1898,7 @@ namespace Win32xx
 	inline void CDC::operator = (const HDC hDC)
 	// Note: this assignment operater permits a call like this:
 	// CDC MyCDC;
-	// MyCDC = SomeHDC;	
+	// MyCDC = SomeHDC;
 	{
 		AttachDC(hDC);
 	}
@@ -2041,7 +1907,7 @@ namespace Win32xx
 	inline CDC::CDC(const CDC& rhs)	// Copy constructor
 	// The copy constructor is called when a temporary copy of the CDC needs to be created.
 	// This can happen when a CDC is passed by value in a function call. Each CDC copy manages
-	// the same Device Context and GDI objects.	
+	// the same Device Context and GDI objects.
 	{
 		m_pData = rhs.m_pData;
 		InterlockedIncrement(&m_pData->Count);
@@ -2049,7 +1915,7 @@ namespace Win32xx
 
 	inline CDC& CDC::operator = (const CDC& rhs)
 	// Note: A copy of a CDC is a clone of the original.
-	//       Both objects manipulate the one HDC	
+	//       Both objects manipulate the one HDC
 	{
 		if (this != &rhs)
 		{
@@ -2083,7 +1949,7 @@ namespace Win32xx
 	inline void CDC::AttachDC(HDC hDC, HWND hWnd /* = 0*/)
 	// Attaches a HDC to the CDC object.
 	// The HDC will be automatically deleted or released when the destructor is called.
-	// The hWnd parameter is only used on WindowsCE. It specifies the HWND of a Window or 
+	// The hWnd parameter is only used on WindowsCE. It specifies the HWND of a Window or
 	// Window Client DC
 	{
 		UNREFERENCED_PARAMETER(hWnd);
@@ -2096,7 +1962,7 @@ namespace Win32xx
 		{
 			delete m_pData;
 			m_pData = pDC->m_pData;
-			InterlockedIncrement(&m_pData->Count);			
+			InterlockedIncrement(&m_pData->Count);
 		}
 		else
 		{
@@ -2114,7 +1980,7 @@ namespace Win32xx
 	}
 
 	inline HDC CDC::DetachDC()
-	// Detaches the HDC from this object. 
+	// Detaches the HDC from this object.
 	{
 		assert(m_pData);
 		assert(m_pData->hDC);
@@ -2162,10 +2028,10 @@ namespace Win32xx
 
 	// Initialization
 	inline BOOL CDC::CreateCompatibleDC(CDC* pDC)
-	// Returns a memory device context (DC) compatible with the specified device.	
+	// Returns a memory device context (DC) compatible with the specified device.
 	{
 		assert(m_pData->hDC == NULL);
-		HDC hdcSource = (pDC == NULL)? NULL : pDC->GetHDC();	
+		HDC hdcSource = (pDC == NULL)? NULL : pDC->GetHDC();
 		HDC hDC = ::CreateCompatibleDC(hdcSource);
 		if (hDC)
 		{
@@ -2176,7 +2042,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CDC::CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData)
-	// Returns a device context (DC) for a device using the specified name.	
+	// Returns a device context (DC) for a device using the specified name.
 	{
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateDC(lpszDriver, lpszDevice, lpszOutput, pInitData);
@@ -2201,7 +2067,7 @@ namespace Win32xx
 		return (BOOL)hDC;
 	}
 #endif
-	
+
 	inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask)
 	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
 	// Suitable for use with a Window DC or a memory DC
@@ -2209,7 +2075,7 @@ namespace Win32xx
 		// Create the Image memory DC
 		CMemDC dcImage(this);
 		dcImage.SetBkColor(clrMask);
-		dcImage.AttachBitmap(hbmImage);
+		dcImage.SelectObject(FromHandle(hbmImage));
 
 		// Create the Mask memory DC
 		CMemDC dcMask(this);
@@ -2222,25 +2088,9 @@ namespace Win32xx
 		BitBlt(x, y, cx, cy, &dcImage, 0, 0, SRCINVERT);
 	}
 
-	inline CDC* CDC::FromHandle(HDC hDC)
-	// Returns the CDC object associated with the device context handle
-	// If a CDC object doesn't already exist, a temporary CDC object is created.
-	// The HDC belonging to a temporary CDC is not released or destroyed when the 
-	//  temporary CDC is deconstructed.
-	{
-		assert( GetApp() );
-		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (pDC == 0)
-		{
-			pDC = GetApp()->AddTmpDC(hDC);
-			pDC->m_pData->bRemoveHDC = FALSE;
-		}
-		return pDC;
-	}
-
 	inline CDC* CDC::AddTempHDC(HDC hDC, HWND hWnd)
 	// Returns the CDC object associated with the device context handle
-	// The HDC is removed when the CDC is destroyed 
+	// The HDC is removed when the CDC is destroyed
 	{
 		assert( GetApp() );
 		CDC* pDC = GetApp()->AddTmpDC(hDC);
@@ -2307,7 +2157,7 @@ namespace Win32xx
 				m_pData = 0;
 			}
 		}
-		
+
 		m_Lock.Release();
 	}
 
@@ -2340,86 +2190,6 @@ namespace Win32xx
 		return Success;
 	}
 
-	inline void CDC::RemoveCurrentBitmap()
-	{
-		if (m_pData->hBitmapOld)
-		{
-			HBITMAP hBitmap = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
-			if (hBitmap == m_pData->Bitmap)
-			{
-				// Only delete the bitmap objects we create
-				m_pData->Bitmap.Detach();
-				DeleteObject(hBitmap);
-			}
-		}
-	}
-
-	inline void CDC::RemoveCurrentBrush()
-	{
-		if (m_pData->hBrushOld)
-		{
-			HBRUSH hBrush = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->hBrushOld);
-			if (hBrush == m_pData->Brush)
-			{
-				// Only delete the brush objects we create
-				m_pData->Brush.Detach();
-				DeleteObject(hBrush);
-			}
-		}
-	}
-
-	inline void CDC::RemoveCurrentFont()
-	{
-		if (m_pData->hFontOld)
-		{
-			HFONT hFont = (HFONT)::SelectObject(m_pData->hDC, m_pData->hFontOld);
-			if (hFont == m_pData->Font)
-			{
-				// Only delete the font objects we create
-				m_pData->Font.Detach();
-				DeleteObject(hFont);
-			}
-		}
-	}
-
-	inline void CDC::RemoveCurrentPalette()
-	{
-		if (m_pData->hPaletteOld)
-		{
-			HPALETTE hPalette = (HPALETTE)::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
-			if (hPalette == m_pData->Palette)
-			{
-				// Only delete the pen objects we create
-				m_pData->Palette.Detach();
-				DeleteObject(hPalette);
-			}
-		}
-	}
-
-	inline void CDC::RemoveCurrentPen()
-	{
-		if (m_pData->hPenOld)
-		{
-			HPEN hPen = (HPEN)::SelectObject(m_pData->hDC, m_pData->hPenOld);
-			if (hPen == m_pData->Pen)
-			{
-				// Only delete the pen objects we create
-				m_pData->Pen.Detach();
-				DeleteObject(hPen);
-			}
-		}
-	}
-
-	inline void CDC::RemoveCurrentRgn()
-	{
-		if (m_pData->Rgn)
-		{
-			// Only delete the region objects we create
-			HRGN hRgn = (HRGN)m_pData->Rgn.Detach();
-			DeleteObject(hRgn);
-		}
-	}
-
 	inline void CDC::SolidFill(COLORREF Color, const RECT& rc)
 	// Fills a rectangle with a solid color
 	{
@@ -2429,37 +2199,27 @@ namespace Win32xx
 	}
 
 	// Bitmap functions
-	inline void CDC::AttachBitmap(HBITMAP hBitmap)
-	// Use this to attach an existing bitmap.
-	{
-		assert(m_pData->hDC);
-		assert(hBitmap);
-
-		RemoveCurrentBitmap();
-		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, hBitmap);
-	}
-
 	inline HBITMAP CDC::CreateCompatibleBitmap(CDC* pDC, int cx, int cy)
 	// Creates a compatible bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
 		assert(pDC);
-		RemoveCurrentBitmap();
+		DeleteObject(m_pData->Bitmap.Detach());
 
 		m_pData->Bitmap.CreateCompatibleBitmap(pDC->GetHDC(), cx, cy);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
-		return m_pData->Bitmap;
+		return m_pData->hBitmapOld;
 	}
 
 	inline HBITMAP CDC::CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors)
 	// Creates a bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentBitmap();
+		DeleteObject(m_pData->Bitmap.Detach());
 
 		m_pData->Bitmap.CreateBitmap(cx, cy, Planes, BitsPerPixel, pvColors);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
-		return m_pData->Bitmap;
+		return m_pData->hBitmapOld;
 	}
 
 #ifndef _WIN32_WCE
@@ -2468,11 +2228,11 @@ namespace Win32xx
 	{
 
 		assert(m_pData->hDC);
-		RemoveCurrentBitmap();
+		DeleteObject(m_pData->Bitmap.Detach());
 
 		m_pData->Bitmap.CreateBitmapIndirect(pBitmap);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
-		return m_pData->Bitmap;
+		return m_pData->hBitmapOld;
 	}
 
 	inline HBITMAP CDC::CreateDIBitmap(CDC* pDC, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
@@ -2481,11 +2241,11 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		assert(pDC);
-		RemoveCurrentBitmap();
+		DeleteObject(m_pData->Bitmap.Detach());
 
 		m_pData->Bitmap.CreateDIBitmap(pDC->GetHDC(), &bmih, fdwInit, lpbInit, &bmi, fuUsage);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
-		return m_pData->Bitmap;
+		return m_pData->hBitmapOld;
 	}
 #endif
 
@@ -2495,11 +2255,11 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		assert(pDC);
-		RemoveCurrentBitmap();
+		DeleteObject(m_pData->Bitmap.Detach());
 
 		m_pData->Bitmap.CreateDIBSection(pDC->GetHDC(), &bmi, iUsage, ppvBits, hSection, dwOffset);
 		m_pData->hBitmapOld = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->Bitmap);
-		return m_pData->Bitmap;
+		return m_pData->hBitmapOld;
 	}
 
 	inline void CDC::Destroy()
@@ -2524,7 +2284,7 @@ namespace Win32xx
 					if (!::DeleteDC(m_pData->hDC))
 						::ReleaseDC(NULL, m_pData->hDC);
 
-				m_pData->hDC = 0; 
+				m_pData->hDC = 0;
 				m_pData->hWnd = 0;
 				m_pData->bRemoveHDC = TRUE;
 				m_pData->hPenOld = 0;
@@ -2536,23 +2296,6 @@ namespace Win32xx
 		}
 
 		RemoveFromMap();
-	}
-
-	inline HBITMAP CDC::DetachBitmap()
-	// Use this to detach the bitmap from the HDC.
-	{
-		assert(m_pData->hDC);
-
-		HBITMAP hBitmap = 0;	
-		if(m_pData->hBitmapOld)
-		{
-			hBitmap = (HBITMAP)::SelectObject(m_pData->hDC, m_pData->hBitmapOld);
-			if (hBitmap == m_pData->Bitmap)
-				m_pData->Bitmap.Detach();
-		}
-
-		m_pData->hBitmapOld = NULL;
-		return hBitmap;
 	}
 
 	inline HBITMAP CDC::GetBitmap() const
@@ -2626,36 +2369,27 @@ namespace Win32xx
 
 
 	// Brush functions
-	inline void CDC::AttachBrush(HBRUSH hBrush)
-	// Use this to attach an existing HBRUSH or CBrush.
-	{
-		assert(m_pData->hDC);
-		assert(hBrush);
-		RemoveCurrentBrush();
-		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, hBrush);
-	}
-
 #ifndef _WIN32_WCE
 	inline HBRUSH CDC::CreateBrushIndirect(LPLOGBRUSH& pLogBrush)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentBrush();
+		DeleteObject(m_pData->Brush.Detach());
 
 		m_pData->Brush.CreateBrushIndirect(pLogBrush);
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
-		return m_pData->Brush;
+		return m_pData->hBrushOld;
 	}
 
 	inline HBRUSH CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentBrush();
+		DeleteObject(m_pData->Brush.Detach());
 
 		m_pData->Brush.CreateHatchBrush(fnStyle, rgb);
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
-		return m_pData->Brush;
+		return m_pData->hBrushOld;
 	}
 #endif
 
@@ -2663,50 +2397,33 @@ namespace Win32xx
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentBrush();
+		DeleteObject(m_pData->Brush.Detach());
 
 		m_pData->Brush.CreateDIBPatternBrushPt(lpPackedDIB, iUsage);
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
-		return m_pData->Brush;
+		return m_pData->hBrushOld;
 	}
 
 	inline HBRUSH CDC::CreatePatternBrush(HBITMAP hbmp)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentBrush();
+		DeleteObject(m_pData->Brush.Detach());
 
 		m_pData->Brush.CreatePatternBrush(hbmp);
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
-		return m_pData->Brush;
+		return m_pData->hBrushOld;
 	}
 
 	inline HBRUSH CDC::CreateSolidBrush(COLORREF rgb)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentBrush();
+		DeleteObject(m_pData->Brush.Detach());
 
 		m_pData->Brush.CreateSolidBrush(rgb);
 		m_pData->hBrushOld = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->Brush);
-		return m_pData->Brush;
-	}
-
-	inline HBRUSH CDC::DetachBrush()
-	// Use this to detach the brush from the HDC.
-	{
-		assert(m_pData->hDC);
-
-		HBRUSH hBrush = 0;
-		if (m_pData->hBrushOld)
-		{
-			hBrush = (HBRUSH)::SelectObject(m_pData->hDC, m_pData->hBrushOld);
-			if (hBrush == m_pData->Brush)
-				m_pData->Brush.Detach();
-		}
-		
-		m_pData->hBrushOld = NULL;
-		return hBrush;
+		return m_pData->hBrushOld;
 	}
 
 	inline HBRUSH CDC::GetBrush() const
@@ -2728,16 +2445,6 @@ namespace Win32xx
 
 
 	// Font functions
-	inline void CDC::AttachFont(HFONT hFont)
-	// Use this to attach an existing HFONT or CFont.
-	{
-		assert(m_pData->hDC);
-		assert(hFont);
-
-		RemoveCurrentFont();
-		m_pData->hFontOld = (HFONT)::SelectObject(m_pData->hDC, hFont);
-	}
-
 #ifndef _WIN32_WCE
 	inline HFONT CDC::CreateFont (
 					int nHeight,               // height of font
@@ -2759,7 +2466,7 @@ namespace Win32xx
 	// Creates a logical font with the specified characteristics.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentFont();
+		DeleteObject(m_pData->Font.Detach());
 
 		m_pData->Font.CreateFont (nHeight, nWidth, nEscapement, nOrientation, fnWeight,
 								fdwItalic, fdwUnderline, fdwStrikeOut, fdwCharSet,
@@ -2767,7 +2474,7 @@ namespace Win32xx
 								fdwPitchAndFamily, lpszFace);
 
 		m_pData->hFontOld = (HFONT)::SelectObject(m_pData->hDC, m_pData->Font);
-		return m_pData->Font;
+		return m_pData->hFontOld;
 	}
 #endif
 
@@ -2775,28 +2482,11 @@ namespace Win32xx
 	// Creates a logical font and selects it into the device context.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentFont();
+		DeleteObject(m_pData->Font.Detach());
 
 		m_pData->Font.CreateFontIndirect(&lf);
 		m_pData->hFontOld = (HFONT)::SelectObject(m_pData->hDC, m_pData->Font);
-		return m_pData->Font;
-	}
-
-	inline HFONT CDC::DetachFont()
-	// Use this to detach the font from the HDC.
-	{
-		assert(m_pData->hDC);
-
-		HFONT hFont = 0;
-		if (m_pData->hFontOld)
-		{
-			hFont = (HFONT)::SelectObject(m_pData->hDC, m_pData->hFontOld);
-			if (m_pData->Font == hFont)
-				m_pData->Font.Detach();
-		}
-
-		m_pData->hFontOld = NULL;
-		return hFont;
+		return m_pData->hFontOld;
 	}
 
 	inline HFONT CDC::GetFont() const
@@ -2817,42 +2507,15 @@ namespace Win32xx
 	}
 
 	// Palette functions
-	inline void CDC::AttachPalette(HPALETTE hPalette)
-	// Use this to attach an existing HPALETTE or CPalette.
-	{
-		assert(m_pData->hDC);
-		assert(hPalette);
-		RemoveCurrentPalette();
-
-		m_pData->hPaletteOld = (HPALETTE)::SelectObject(m_pData->hDC, hPalette);
-	}
-	
 	inline HPALETTE CDC::CreatePalette(LPLOGPALETTE lpLogPalette)
 	// Creates the palatte and selects it into the device context.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentPalette();
+		DeleteObject(m_pData->Palette.Detach());
 
 		m_pData->Palette.CreatePalette(lpLogPalette);
 		m_pData->hPaletteOld = (HPALETTE)::SelectObject(m_pData->hDC, m_pData->Palette);
-		return m_pData->Palette;
-	}
-
-	inline HPALETTE CDC::DetachPalette()
-	// Use this to detach the palette from the device context.
-	{
-		assert(m_pData->hDC);
-		HPALETTE hPalette = 0;
-
-		if (m_pData->hPaletteOld)
-		{
-			hPalette = (HPALETTE)::SelectObject(m_pData->hDC, m_pData->hPaletteOld);
-			if (hPalette == m_pData->Palette)
-				m_pData->Palette.Detach();
-		}
-
-		m_pData->hPaletteOld = NULL;
-		return hPalette;
+		return m_pData->hPaletteOld;
 	}
 
 	inline HPALETTE CDC::GetPalette() const
@@ -2863,10 +2526,10 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline HPALETTE CDC::CreateHalftonePalette()
-	// Creates a halftone palette and selects it into the device context. 
+	// Creates a halftone palette and selects it into the device context.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentPalette();
+		DeleteObject(m_pData->Palette.Detach());
 
 		m_pData->Palette.CreateHalftonePalette(m_pData->hDC);
 		m_pData->hPaletteOld = (HPALETTE)::SelectObject(m_pData->hDC, m_pData->Palette);
@@ -2876,53 +2539,26 @@ namespace Win32xx
 
 
 	// Pen functions
-	inline void CDC::AttachPen(HPEN hPen)
-	// Use this to attach an existing HPEN or CPen.
-	{
-		assert(m_pData->hDC);
-		assert(hPen);
-		RemoveCurrentPen();
-
-		m_pData->hPenOld = (HPEN)::SelectObject(m_pData->hDC, hPen);
-	}
-
 	inline HPEN CDC::CreatePen (int nStyle, int nWidth, COLORREF rgb)
 	// Creates the pen and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentPen();
+		DeleteObject(m_pData->Pen.Detach());
 
 		m_pData->Pen.CreatePen(nStyle, nWidth, rgb);
 		m_pData->hPenOld = (HPEN)::SelectObject(m_pData->hDC, m_pData->Pen);
-		return m_pData->Pen;
+		return m_pData->hPenOld;
 	}
 
 	inline HPEN CDC::CreatePenIndirect (LPLOGPEN pLogPen)
 	// Creates the pen and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentPen();
+		DeleteObject(m_pData->Pen.Detach());
 
 		m_pData->Pen.CreatePenIndirect(pLogPen);
 		m_pData->hPenOld = (HPEN)::SelectObject(m_pData->hDC, m_pData->Pen);
-		return m_pData->Pen;
-	}
-
-	inline HPEN CDC::DetachPen()
-	// Use this to detach the pen from the device context.
-	{
-		assert(m_pData->hDC);
-		HPEN hPen = 0;
-
-		if (m_pData->hPenOld)
-		{
-			hPen = (HPEN)::SelectObject(m_pData->hDC, m_pData->hPenOld);
-			if (hPen == m_pData->Pen)
-				m_pData->Pen.Detach();
-		}
-
-		m_pData->hPenOld = NULL;
-		return hPen;
+		return m_pData->hPenOld;
 	}
 
 	inline LOGPEN CDC::GetPenInfo() const
@@ -2941,7 +2577,7 @@ namespace Win32xx
 	// Creates a rectangular region from the rectangle co-ordinates.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentRgn();
+		DeleteObject(m_pData->Rgn.Detach());
 
 		m_pData->Rgn.CreateRectRgn(left, top, right, bottom);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
@@ -2952,7 +2588,7 @@ namespace Win32xx
 	// Creates a rectangular region from the rectangle co-ordinates.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentRgn();
+		DeleteObject(m_pData->Rgn.Detach());
 
 		m_pData->Rgn.CreateRectRgnIndirect(rc);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
@@ -2965,7 +2601,7 @@ namespace Win32xx
 	//        If the XFROM pointer is NULL, the identity transformation is used.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentRgn();
+		DeleteObject(m_pData->Rgn.Detach());
 
 		m_pData->Rgn.CreateFromData(Xform, nCount, pRgnData);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
@@ -2981,10 +2617,10 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline HRGN CDC::CreateEllipticRgn(int left, int top, int right, int bottom)
 	// Creates the ellyiptical region from the bounding rectangle co-ordinates
-	// and selects it into the device context	
+	// and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentRgn();
+		DeleteObject(m_pData->Rgn.Detach());
 
 		m_pData->Rgn.CreateEllipticRgn(left, top, right, bottom);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
@@ -2993,10 +2629,10 @@ namespace Win32xx
 
 	inline HRGN CDC::CreateEllipticRgnIndirect(const RECT& rc)
 	// Creates the ellyiptical region from the bounding rectangle co-ordinates
-	// and selects it into the device context	
+	// and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentRgn();
+		DeleteObject(m_pData->Rgn.Detach());
 
 		m_pData->Rgn.CreateEllipticRgnIndirect(rc);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
@@ -3005,10 +2641,10 @@ namespace Win32xx
 
 	inline HRGN CDC::CreatePolygonRgn(LPPOINT ppt, int cPoints, int fnPolyFillMode)
 	// Creates the polygon region from the array of points and selects it into
-	// the device context. The polygon is presumed closed	
+	// the device context. The polygon is presumed closed
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentRgn();
+		DeleteObject(m_pData->Rgn.Detach());
 
 		m_pData->Rgn.CreatePolygonRgn(ppt, cPoints, fnPolyFillMode);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
@@ -3016,10 +2652,10 @@ namespace Win32xx
 	}
 
 	inline HRGN CDC::CreatePolyPolygonRgn(LPPOINT ppt, LPINT pPolyCounts, int nCount, int fnPolyFillMode)
-	// Creates the polygon region from a series of polygons.The polygons can overlap.	
+	// Creates the polygon region from a series of polygons.The polygons can overlap.
 	{
 		assert(m_pData->hDC);
-		RemoveCurrentRgn();
+		DeleteObject(m_pData->Rgn.Detach());
 
 		m_pData->Rgn.CreatePolyPolygonRgn(ppt, pPolyCounts, nCount, fnPolyFillMode);
 		::SelectClipRgn(m_pData->hDC, m_pData->Rgn);
@@ -3061,7 +2697,7 @@ namespace Win32xx
 
 	inline int CDC::GetClipRgn(HRGN hrgn)
 	// Retrieves a handle identifying the current application-defined clipping region for the specified device context.
-	// hrgn: A handle to an existing region before the function is called. 
+	// hrgn: A handle to an existing region before the function is called.
 	//       After the function returns, this parameter is a handle to a copy of the current clipping region.
 	{
 		assert(m_pData->hDC);
@@ -3074,7 +2710,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		return ::IntersectClipRect(m_pData->hDC, Left, Top, Right, Bottom);
 	}
-	
+
 	inline int CDC::IntersectClipRect(const RECT& rc)
 	// Creates a new clipping region from the intersection of the current clipping region and the specified rectangle.
 	{
@@ -3104,6 +2740,56 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		return ::ExtSelectClipRgn(m_pData->hDC, hrgn, fnMode);
+	}
+
+	inline CBitmap* CDC::SelectObject(const CBitmap* pBitmap)
+	// Use this to attach an existing bitmap.
+	{
+		assert(m_pData->hDC);
+		assert(pBitmap);
+
+		m_pData->Bitmap.Detach();
+		return FromHandle( (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap) );
+	}
+
+	inline CBrush* CDC::SelectObject(const CBrush* pBrush)
+	// Use this to attach an existing brush.
+	{
+		assert(m_pData->hDC);
+		assert(pBrush);
+
+		m_pData->Brush.Detach();
+		return FromHandle( (HBRUSH)::SelectObject(m_pData->hDC, *pBrush) );
+	}
+
+	inline CFont* CDC::SelectObject(const CFont* pFont)
+	// Use this to attach an existing font.
+	{
+		assert(m_pData->hDC);
+		assert(pFont);
+
+		m_pData->Font.Detach();
+		return FromHandle( (HFONT)::SelectObject(m_pData->hDC, *pFont) );
+	}
+
+	inline CPalette* CDC::SelectObject(const CPalette* pPalette)
+	// Use this to attach an existing Palette.
+	{
+		assert(m_pData->hDC);
+		assert(pPalette);
+		m_pData->Palette.Detach();
+
+		return FromHandle( (HPALETTE)::SelectObject(m_pData->hDC, *pPalette) );
+	}
+
+	inline CPen* CDC::SelectObject(const CPen* pPen)
+	// Use this to attach an existing pen.
+	{
+		assert(m_pData->hDC);
+		assert(pPen);
+		m_pData->Pen.Detach();
+
+		return FromHandle( (HPEN)::SelectObject(m_pData->hDC, *pPen) );
 	}
 
 	inline BOOL CDC::PtVisible(int X, int Y)
@@ -3521,7 +3207,7 @@ namespace Win32xx
 
 	inline int CDC::SetStretchBltMode(int iStretchMode) const
 	// Sets the stretching mode.
-	// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK	
+	// Possible modes: BLACKONWHITE, COLORONCOLOR, HALFTONE, STRETCH_ANDSCANS, STRETCH_DELETESCANS, STRETCH_HALFTONE, STRETCH_ORSCANS, WHITEONBLACK
 	{
 		assert(m_pData->hDC);
 		return ::SetStretchBltMode(m_pData->hDC, iStretchMode);
@@ -3799,21 +3485,21 @@ namespace Win32xx
 
 	inline UINT CDC::SetTextAlign(UINT nFlags) const
 	// Sets the text-alignment setting
-	// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP	
+	// Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP
 	{
 		assert(m_pData->hDC);
 		return ::SetTextAlign(m_pData->hDC, nFlags);
 	}
 
 	inline int CDC::GetTextFace(int nCount, LPTSTR lpszFacename) const
-	// Retrieves the typeface name of the font that is selected into the device context	
+	// Retrieves the typeface name of the font that is selected into the device context
 	{
 		assert(m_pData->hDC);
 		return ::GetTextFace(m_pData->hDC, nCount, lpszFacename);
 	}
 
 	inline BOOL CDC::GetTextMetrics(TEXTMETRIC& Metrics) const
-	// Fills the specified buffer with the metrics for the currently selected font	
+	// Fills the specified buffer with the metrics for the currently selected font
 	{
 		assert(m_pData->hDC);
 		return ::GetTextMetrics(m_pData->hDC, &Metrics);
@@ -4086,7 +3772,9 @@ namespace Win32xx
 		{
 			CClientDC DesktopDC(NULL);
 			CMemDC MemDC(NULL);
-			MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
+			HBITMAP hBitmapOld = MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
+		//	CBitmap Bitmap(::CreateCompatibleBitmap(DesktopDC, cx, cy));
+		//	CBitmap* pOldBitmap = MemDC.SelectObject(&Bitmap);
 			CRect rc;
 			rc.SetRect(0, 0, cx, cx);
 
@@ -4122,14 +3810,123 @@ namespace Win32xx
 			}
 
 			// Detach the bitmap so we can use it.
-			HBITMAP hbm = MemDC.DetachBitmap();
-			ImageList_AddMasked(himlDisabled, hbm, crMask);
-			::DeleteObject(hbm);
+			CBitmap* pBitmap = MemDC.SelectObject(FromHandle(hBitmapOld));
+			ImageList_AddMasked(himlDisabled, *pBitmap, crMask);
 		}
 
 		return himlDisabled;
 	}
 #endif
+
+	////////////////////////////////////////////
+	// Global Function Definitions
+	//
+
+	inline CDC* FromHandle(HDC hDC)
+	// Returns the CDC object associated with the device context handle
+	// If a CDC object doesn't already exist, a temporary CDC object is created.
+	// The HDC belonging to a temporary CDC is not released or destroyed when the
+	//  temporary CDC is deconstructed.
+	{
+		assert( GetApp() );
+		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+		if (pDC == 0)
+		{
+			pDC = GetApp()->AddTmpDC(hDC);
+			pDC->m_pData->bRemoveHDC = FALSE;
+		}
+		return pDC;
+	}
+
+	inline CBitmap* FromHandle(HBITMAP hBitmap)
+	// Returns the CBitmap associated with the Bitmap handle
+	// The HBITMAP belonging to a temporary CBitmap is not released or destroyed
+	//  when the temporary CBitmap is deconstructed.
+	{
+		assert( GetApp() );
+
+		CBitmap* pBitmap = new CBitmap;
+		GetApp()->AddTmpGDI(hBitmap, pBitmap);
+		pBitmap->m_pData->hGDIObject = hBitmap;
+		pBitmap->m_pData->bRemoveObject = FALSE;
+
+		return pBitmap;
+	}
+
+	inline CBrush* FromHandle(HBRUSH hBrush)
+	// Returns the CBrush associated with the Brush handle
+	// The HBRUSH belonging to a temporary CBrush is not released or destroyed
+	//  when the temporary CBrush is deconstructed.
+	{
+		assert( GetApp() );
+
+		CBrush* pBrush = new CBrush;
+		GetApp()->AddTmpGDI(hBrush, pBrush);
+		pBrush->m_pData->hGDIObject = hBrush;
+		pBrush->m_pData->bRemoveObject = FALSE;
+
+		return pBrush;
+	}
+
+	inline CFont* FromHandle(HFONT hFont)
+	// Returns the CFont associated with the Font handle
+	// The HFONT belonging to a temporary CFont is not released or destroyed
+	//  when the temporary CFont is deconstructed.
+	{
+		assert( GetApp() );
+
+		CFont* pFont = new CFont;
+		GetApp()->AddTmpGDI(hFont, pFont);
+		pFont->m_pData->hGDIObject = hFont;
+		pFont->m_pData->bRemoveObject = FALSE;
+
+		return pFont;
+	}
+
+	inline CPalette* FromHandle(HPALETTE hPalette)
+	// Returns the CPalette associated with the palette handle
+	// The HPALETTE belonging to a temporary CPalette is not released or destroyed
+	//  when the temporary CPalette is deconstructed.
+	{
+		assert( GetApp() );
+
+		CPalette* pPalette = new CPalette;
+		GetApp()->AddTmpGDI(hPalette, pPalette);
+		pPalette->m_pData->hGDIObject = hPalette;
+		pPalette->m_pData->bRemoveObject = FALSE;
+
+		return pPalette;
+	}
+
+	inline CPen* FromHandle(HPEN hPen)
+	// Returns the CPen associated with the HPEN.
+	// The HPEN belonging to a temporary CPen is not released or destroyed
+	//  when the temporary CPen is deconstructed.
+	{
+		assert( GetApp() );
+
+		CPen* pPen = new CPen;
+		GetApp()->AddTmpGDI(hPen, pPen);
+		pPen->m_pData->hGDIObject = hPen;
+		pPen->m_pData->bRemoveObject = FALSE;
+
+		return pPen;
+	}
+
+	inline CRgn* FromHandle(HRGN hRgn)
+	// Returns the CRgn associated with the HRGN.
+	// The HRGN belonging to a temporary CRgn is not released or destroyed
+	//  when the temporary CRgn is deconstructed.
+	{
+		assert( GetApp() );
+
+		CRgn* pRgn = new CRgn;
+		GetApp()->AddTmpGDI(hRgn, pRgn);
+		pRgn->m_pData->hGDIObject = hRgn;
+		pRgn->m_pData->bRemoveObject = FALSE;
+
+		return pRgn;
+	}
 
 
 } // namespace Win32xx

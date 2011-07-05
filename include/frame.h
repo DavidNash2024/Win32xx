@@ -746,7 +746,7 @@ namespace Win32xx
 							SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
 
 						// Draw highlight text
-						pDrawDC->AttachFont((HFONT)SendMessage(WM_GETFONT, 0L, 0L));
+						pDrawDC->SelectObject(FromHandle(GetFont()));
 						rcRect.bottom += 1;
 						int iMode = pDrawDC->SetBkMode(TRANSPARENT);
 						pDrawDC->DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
@@ -1517,12 +1517,10 @@ namespace Win32xx
 
 		// Calculate the MenuBar height from the menu font
 		CSize csMenuBar;
-		HFONT hFont = (HFONT)GetMenuBar().SendMessage(WM_GETFONT, 0, 0);
 		CClientDC dcMenuBar(&GetMenuBar());
-		dcMenuBar.AttachFont(hFont);
+		dcMenuBar.SelectObject(FromHandle(GetMenuBar().GetFont()));
 		csMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 		int MenuBar_Height = csMenuBar.cy + 6;
-
 
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
 		rbbi.cxMinChild = sz.cx;

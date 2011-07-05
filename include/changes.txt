@@ -35,6 +35,7 @@ Changes in detail
 - Added CBitmap::FromHandle
 - Added CBrush::FromHandle
 - Added CDC::Destroy
+- Added CDC::SelectObject    (several versions)
 - Added CDocker::GetActiveDocker
 - Added CDocker::SetCaptionColors
 - Added CFont::FromHandle
@@ -63,6 +64,16 @@ Changes in detail
 - Modified CWnd::OnEraseBkgnd			now accepts a CDC pointer
 - Modified CWnd::OnPaint				now accepts a CDC pointer
 - Removed CLoadString
+- Removed CDC::AttachBitmap
+- Removed CDC::AttachBrush
+- Removed CDC::AttachFont
+- Removed CDC::AttachPalette
+- Removed CDC::AttachPen
+- Removed CDC::DetachBitmap
+- Removed CDC::DetachBrush
+- Removed CDC::DetachFont
+- Removed CDC::DetachPalette
+- Removed CDC::Pen
 - Removed GetWindowType for all CWnd classes
 - Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker
 

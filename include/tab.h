@@ -160,7 +160,7 @@ namespace Win32xx
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		std::vector<WndPtr> m_vTabViews;
-		HFONT m_hFont;
+		CFont m_Font;
 		HIMAGELIST m_himlTab;
 		HMENU m_hListMenu;
 		CWnd* m_pActiveView;
@@ -268,13 +268,12 @@ namespace Win32xx
 		NONCLIENTMETRICS info = {0};
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		m_hFont = CreateFontIndirect(&info.lfStatusFont);
+		m_Font.CreateFontIndirect(&info.lfStatusFont);
 	}
 
 	inline CTab::~CTab()
 	{
 		ImageList_Destroy(m_himlTab);
-		DeleteObject(m_hFont);
 		
 		if (IsMenu(m_hListMenu)) ::DestroyMenu(m_hListMenu);
 	}
@@ -526,7 +525,7 @@ namespace Win32xx
 					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
 
 					// Draw the text
-					dcMem.AttachFont(m_hFont);
+					dcMem.SelectObject(&m_Font);
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -667,7 +666,7 @@ namespace Win32xx
 		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
 		{
 			CDC* pDC = GetDC();
-			pDC->AttachFont(m_hFont);
+			pDC->SelectObject(&m_Font);
 			std::vector<TCHAR> vTitle(MAX_MENU_STRING, _T('\0'));
 			TCHAR* pszTitle = &vTitle.front();
 			TCITEM tcItem = {0};
@@ -700,7 +699,7 @@ namespace Win32xx
 	inline int CTab::GetTextHeight() const
 	{
 		CDC* pDC = GetDC();
-		pDC->AttachFont(m_hFont);
+		pDC->SelectObject(&m_Font);
 		CSize szText = pDC->GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
@@ -735,7 +734,7 @@ namespace Win32xx
 
 	inline void CTab::OnCreate()
 	{
-		SetFont(m_hFont, TRUE);
+		SetFont(m_Font, TRUE);
 		
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
@@ -892,7 +891,7 @@ namespace Win32xx
 		HWND hWndParent = ::GetParent(m_hWnd);
 		CDC dcParent = ::GetDC(hWndParent);
 		HBRUSH hBrush = (HBRUSH) SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
-		dcMem.AttachBrush(hBrush);
+		dcMem.SelectObject(FromHandle(hBrush));
 		dcMem.PaintRgn(hrgnClip);
 
 		// Draw the tab buttons on the memory DC:
@@ -1013,9 +1012,7 @@ namespace Win32xx
 	inline void CTab::SetFont(HFONT hFont, BOOL bRedraw)
 	{
 		assert(hFont);
-		if (hFont != m_hFont)
-			DeleteObject(m_hFont);
-		m_hFont = hFont;
+		m_Font.Attach(hFont);
 		CWnd::SetFont(hFont, bRedraw);
 	}
 

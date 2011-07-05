@@ -196,6 +196,12 @@ namespace Win32xx
 	class CMenu;
 	class CWinApp;
 	class CWnd;
+	class CBitmap;
+	class CBrush;
+	class CFont;
+	class CPalette;
+	class CPen;
+	class CRgn;
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
@@ -296,22 +302,26 @@ namespace Win32xx
 	//
 	class CWinApp
 	{
-		friend class CWnd;			// CWnd needs access to CWinApp's private members
-		friend class CBitmap;
-		friend class CBrush;
+		// Provide these access to CWinApp's private members: 
 		friend class CDC;
 		friend class CDialog;
 		friend class CGDIObject;
-		friend class CFont;
 		friend class CMenu;
 		friend class CMenuBar;
-		friend class CPalette;
-		friend class CPen;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
-		friend class CRgn;
 		friend class CTaskDialog;
-		friend CWinApp* GetApp();	// GetApp needs access to SetnGetThis
+		friend class CWnd;
+		friend CWinApp* GetApp();
+		friend CGDIObject* FromHandle(HGDIOBJ hObject);
+		friend CBitmap* FromHandle(HBITMAP hBitmap);
+		friend CBrush* FromHandle(HBRUSH hBrush);
+		friend CFont* FromHandle(HFONT hFont);
+		friend CPalette* FromHandle(HPALETTE hPalette);
+		friend CPen* FromHandle(HPEN hPen);
+		friend CRgn* FromHandle(HRGN hRgn);
+		friend CDC* FromHandle(HDC hDC);
+		friend CWnd* FromHandle(HWND hWnd);
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -403,8 +413,6 @@ namespace Win32xx
 		virtual HICON SetIconSmall(int nIcon);
 
 		// Attributes
-		static CWnd* FromHandle(HWND hWnd);
-		static CDC*  FromHandle(HDC hDC);
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
 
@@ -1350,27 +1358,6 @@ namespace Win32xx
 	// CMDIChild and CMDIFrame override this function
 	{
 		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
-	}
-
-	inline CWnd* CWnd::FromHandle(HWND hWnd)
-	// Returns the CWnd object associated with the window handle
-	{
-		assert( GetApp() );
-		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
-		if (::IsWindow(hWnd) && pWnd == 0)
-		{
-			GetApp()->AddTmpWnd(hWnd);
-			pWnd = GetApp()->GetCWndFromMap(hWnd);
-			::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
-		}
-
-		return pWnd;
-	}
-
-	inline CDC* CWnd::FromHandle(HDC hDC)
-	// Returns the CDC object associated with the HDC
-	{
-		return CDC::FromHandle(hDC);
 	}
 
 	inline CWnd* CWnd::GetAncestor(UINT gaFlags /*= GA_ROOTOWNER*/) const

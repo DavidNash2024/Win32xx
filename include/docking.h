@@ -233,7 +233,7 @@ namespace Win32xx
 
 			CDocker* m_pDock;
 			DRAGPOS m_DragPos;
-			HBRUSH m_hbrBackground;
+			CBrush m_brBackground;
 			int m_DockBarWidth;
 		};
 
@@ -525,7 +525,7 @@ namespace Win32xx
 		DWORD m_dwDockZone;
 		double m_DockSizeRatio;
 		DWORD m_DockStyle;
-		HBRUSH m_hbrDithered;
+		CBrush m_brDithered;
 		HBITMAP	m_hbmHash;
 		HWND m_hOldFocus;
 
@@ -552,18 +552,17 @@ namespace Win32xx
 	//
 	inline CDocker::CDockBar::CDockBar() : m_pDock(NULL), m_DockBarWidth(4)
 	{
-		m_hbrBackground = ::CreateSolidBrush(RGB(192,192,192));
+		m_brBackground.CreateSolidBrush(RGB(192,192,192));
 	}
 
 	inline CDocker::CDockBar::~CDockBar()
 	{
-		::DeleteObject(m_hbrBackground);
 	}
 
 	inline void CDocker::CDockBar::OnDraw(CDC* pDC)
 	{
 		CRect rcClient = GetClientRect();
-		pDC->AttachBrush(m_hbrBackground);
+		pDC->SelectObject(&m_brBackground);
 		pDC->PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
 	}
 
@@ -576,7 +575,7 @@ namespace Win32xx
 	inline void CDocker::CDockBar::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ Bar");
-		wc.hbrBackground = m_hbrBackground;
+		wc.hbrBackground = m_brBackground;
 	}
 
 	inline void CDocker::CDockBar::SendNotify(UINT nMessageID)
@@ -595,10 +594,7 @@ namespace Win32xx
 		// GetSysColor(COLOR_BTNFACE)	// Default Grey
 		// RGB(196, 215, 250)			// Default Blue
 
-		if (m_hbrBackground)
-			::DeleteObject(m_hbrBackground);
-
-		m_hbrBackground = ::CreateSolidBrush(color);
+		m_brBackground.CreateSolidBrush(color);
 	}
 
 	inline LRESULT CDocker::CDockBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1331,7 +1327,7 @@ namespace Win32xx
 		// Display the blue tinted bitmap
 		CRect rc = GetClientRect();
 		CMemDC MemDC(pDC);
-		MemDC.AttachBitmap(m_hbmBlueTint);
+		MemDC.SelectObject(FromHandle(m_hbmBlueTint));
 		pDC->BitBlt(0, 0, rc.Width(), rc.Height(), &MemDC, 0, 0, SRCCOPY);
 	}
 
@@ -1359,11 +1355,11 @@ namespace Win32xx
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);
-		dcMem.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+		HBITMAP hbmOld = dcMem.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-		HBITMAP hbmDock = dcMem.DetachBitmap();
-		TintBitmap(hbmDock, -64, -24, +128);
-		SetBitmap(hbmDock);
+		CBitmap* pbmDock = dcMem.SelectObject(FromHandle(hbmOld)); 
+		TintBitmap(*pbmDock, -64, -24, +128);
+		SetBitmap(*pbmDock);
 
 		// Create the Hint window
 		if (!IsWindow())
@@ -1737,7 +1733,7 @@ namespace Win32xx
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
-		m_hbrDithered = ::CreatePatternBrush (m_hbmHash);
+		m_brDithered.CreatePatternBrush (m_hbmHash);
 
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
@@ -1746,7 +1742,6 @@ namespace Win32xx
 	inline CDocker::~CDocker()
 	{
 		GetDockBar().Destroy();
-		::DeleteObject(m_hbrDithered);
 		::DeleteObject(m_hbmHash);
 
 		std::vector <DockPtr>::iterator iter;
@@ -2140,7 +2135,7 @@ namespace Win32xx
 			BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
 
 			CClientDC BarDC(this);
-			BarDC.AttachBrush(m_hbrDithered);
+			BarDC.SelectObject(&m_brDithered);
 
 			CRect rc;
 			::GetWindowRect(hBar, &rc);

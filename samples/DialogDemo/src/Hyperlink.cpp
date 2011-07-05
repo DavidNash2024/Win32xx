@@ -73,7 +73,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CDC* pDC = FromHandle((HDC)wParam);
 		pDC->SetTextColor( m_bUrlVisited? m_crVisited : m_crNotVisited);
 		pDC->SetBkMode(TRANSPARENT);
-		pDC->AttachFont(m_UrlFont);
+		pDC->SelectObject(&m_UrlFont);
 		return (LRESULT)GetSysColorBrush(COLOR_BTNFACE);
 	}
 	return 0L;

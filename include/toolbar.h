@@ -674,7 +674,7 @@ namespace Win32xx
 				CSize TextSize;
 				if (HasText())	// Does any button have text?
 				{
-					pDrawDC->AttachFont(GetFont());
+					pDrawDC->SelectObject(FromHandle(GetFont()));
 					if (SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)pszText)> 0)
 					{
 						TextSize = pDrawDC->GetTextExtentPoint32(pszText, lstrlen(pszText));
@@ -801,7 +801,7 @@ namespace Win32xx
 					OffsetRect(&rcText, xOffset, yOffset);
 
 					int iMode = pDrawDC->SetBkMode(TRANSPARENT);
-					pDrawDC->AttachFont(GetFont());
+					pDrawDC->SelectObject(FromHandle(GetFont()));
 
 					if (nState & (CDIS_DISABLED))
 					{
