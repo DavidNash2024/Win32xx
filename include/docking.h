@@ -1355,9 +1355,9 @@ namespace Win32xx
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);
-		HBITMAP hbmOld = dcMem.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+		CBitmap* pOldBitmap = dcMem.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-		CBitmap* pbmDock = dcMem.SelectObject(FromHandle(hbmOld)); 
+		CBitmap* pbmDock = dcMem.SelectObject(pOldBitmap); 
 		TintBitmap(*pbmDock, -64, -24, +128);
 		SetBitmap(*pbmDock);
 

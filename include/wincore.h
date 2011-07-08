@@ -214,6 +214,12 @@ namespace Win32xx
 	typedef Shared_Ptr<CGDIObject> GDIPtr;
 	typedef Shared_Ptr<CMenu> MenuPtr;
 	typedef Shared_Ptr<CWnd> WndPtr;
+	typedef Shared_Ptr<CBitmap> BitmapPtr;
+	typedef Shared_Ptr<CBrush> BrushPtr;
+	typedef Shared_Ptr<CFont> FontPtr;
+	typedef Shared_Ptr<CPalette> PalettePtr;
+	typedef Shared_Ptr<CPen> PenPtr;
+	typedef Shared_Ptr<CRgn> RgnPtr;
 
 	enum Constants			// Defines the maximum size for TCHAR strings
 	{
