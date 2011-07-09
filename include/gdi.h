@@ -2211,11 +2211,11 @@ namespace Win32xx
 	{
 		if (m_pData->hDC)
 		{
-			// Return the DC back to its initial state
-			::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
-
 			if (m_pData->bRemoveHDC)
 			{
+				// Return the DC back to its initial state
+				::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
+
 				// We need to release a Window DC, and delete a memory DC
 				if (m_pData->hWnd)
 					::ReleaseDC(m_pData->hWnd, m_pData->hDC);
