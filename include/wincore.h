@@ -328,6 +328,7 @@ namespace Win32xx
 		friend CRgn* FromHandle(HRGN hRgn);
 		friend CDC* FromHandle(HDC hDC);
 		friend CWnd* FromHandle(HWND hWnd);
+		friend CMenu* FromHandle(HMENU hMenu);
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -411,8 +412,8 @@ namespace Win32xx
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		virtual void CenterWindow() const;
 		virtual HWND Create(CWnd* pParent = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, CWnd* pParent, HMENU hMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, HMENU hMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, CWnd* pParent, CMenu* pMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, CMenu* pMenu, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
 		virtual HICON SetIconLarge(int nIcon);
@@ -526,19 +527,19 @@ namespace Win32xx
 		BOOL  DrawCaption(CDC* pDC, RECT& rc, UINT uFlags) const;
 		BOOL  EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		CWnd* GetLastActivePopup() const;
-		HMENU GetMenu() const;
+		CMenu* GetMenu() const;
 		int   GetScrollPos(int nBar) const;
 		BOOL  GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
-		HMENU GetSystemMenu(BOOL bRevert) const;
+		CMenu* GetSystemMenu(BOOL bRevert) const;
 		CWnd* GetTopWindow() const;
 		BOOL  GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
-		BOOL  HiliteMenuItem(HMENU hmenu, UINT uItemHilite, UINT uHilite) const;
+		BOOL  HiliteMenuItem(CMenu* pMenu, UINT uItemHilite, UINT uHilite) const;
 		BOOL  IsIconic() const;
 		BOOL  IsZoomed() const;
 		BOOL  LockWindowUpdate() const;
 		BOOL  OpenIcon() const;
 		void  Print(CDC& dc, DWORD dwFlags) const;
-		BOOL  SetMenu(HMENU hMenu) const;
+		BOOL  SetMenu(CMenu* pMenu) const;
 		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const;
 		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const;
 		int   SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
@@ -1226,22 +1227,22 @@ namespace Win32xx
 
 		// Create the window
 		CreateEx(m_cs.dwExStyle, m_cs.lpszClass, m_cs.lpszName, dwStyle, x, y,
-				cx, cy, pParent, m_cs.hMenu, m_cs.lpCreateParams);
+				cx, cy, pParent, FromHandle(m_cs.hMenu), m_cs.lpCreateParams);
 
 		return m_hWnd;
 	}
 
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, CMenu* pMenu, LPVOID lpParam /*= NULL*/)
 	// Creates the window by specifying all the window creation parameters
 	{
 		int x = rc.left;
 		int y = rc.top;
 		int cx = rc.right - rc.left;
 		int cy = rc.bottom - rc.top;
-		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, pParent, hMenu, lpParam);
+		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, pParent, pMenu, lpParam);
 	}
 
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, CWnd* pParent, HMENU hMenu, LPVOID lpParam /*= NULL*/)
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, CWnd* pParent, CMenu* pMenu, LPVOID lpParam /*= NULL*/)
 	// Creates the window by specifying all the window creation parameters
 	{
 
@@ -1280,6 +1281,7 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			// Create window
+			HMENU hMenu = pMenu? pMenu->GetHmenu() : NULL;
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 									hWndParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
 
@@ -2732,11 +2734,11 @@ namespace Win32xx
 		return FromHandle( ::GetLastActivePopup(m_hWnd) );
 	}
 
-	inline HMENU CWnd::GetMenu() const
+	inline CMenu* CWnd::GetMenu() const
 	// The GetMenu function retrieves a handle to the menu assigned to the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetMenu(m_hWnd);
+		return FromHandle(::GetMenu(m_hWnd));
 	}
 
 	inline int CWnd::GetScrollPos(int nBar) const
@@ -2755,12 +2757,12 @@ namespace Win32xx
 		return ::GetScrollRange(m_hWnd, nBar, &MinPos, &MaxPos );
 	}
 
-	inline HMENU CWnd::GetSystemMenu(BOOL bRevert) const
+	inline CMenu* CWnd::GetSystemMenu(BOOL bRevert) const
 	// The GetSystemMenu function allows the application to access the window menu (also known as the system menu
 	// or the control menu) for copying and modifying.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::GetSystemMenu(m_hWnd, bRevert);
+		return FromHandle(::GetSystemMenu(m_hWnd, bRevert));
 	}
 
 	inline CWnd* CWnd::GetTopWindow() const
@@ -2779,11 +2781,12 @@ namespace Win32xx
 		return ::GetWindowPlacement(m_hWnd, &wndpl);
 	}
 
-	inline BOOL CWnd::HiliteMenuItem(HMENU hmenu, UINT uItemHilite, UINT uHilite) const
+	inline BOOL CWnd::HiliteMenuItem(CMenu* pMenu, UINT uItemHilite, UINT uHilite) const
 	// The HiliteMenuItem function highlights or removes the highlighting from an item in a menu bar.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::HiliteMenuItem(m_hWnd, hmenu, uItemHilite, uHilite);
+		assert(pMenu);
+		return ::HiliteMenuItem(m_hWnd, pMenu->GetHmenu(), uItemHilite, uHilite);
 	}
 
 	inline BOOL CWnd::IsIconic() const
@@ -2843,12 +2846,12 @@ namespace Win32xx
 		return ::ScrollWindowEx(m_hWnd, dx, dy, lprcScroll, lprcClip, hrgnUpdate, lprcUpdate, flags);
 	}
 
-	inline BOOL CWnd::SetMenu(HMENU hMenu) const
+	inline BOOL CWnd::SetMenu(CMenu* pMenu) const
 	// The SetMenu function assigns a menu to the specified window.
 	// A hMenu of NULL removes the menu.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetMenu(m_hWnd, hMenu);
+		return ::SetMenu(m_hWnd, pMenu? pMenu->GetHmenu() : NULL);
 	}
 
 	inline int CWnd::SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const

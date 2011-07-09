@@ -84,26 +84,18 @@
 //  CMemDC.LineTo(50, 50);
 //	dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);
 //
-// When the CDC object drops out of scope, it's destructor is called, cleaning up
-//  any GDI objects it created, as well as the device context.
-// When the CPen object drops out of scope, it's destructor is called, deleting
-//  the associated GDI object (HPEN).
-//
+
 // Notes:
-//  * A device context assigned to a CDC object will be released or deleted, unless
-//     it is detached.
-//  * A GDI object created by one of the CDC member functions will be deleted when
-//     the CDC object is destroyed, unless it is detached.
-//  * The GDI objects attached to the CDC (by using AttachPen for example) are not
-//     deleted when the CDC goes out of scope. Only GDI objects created by the CDC
-//     are automatically deleted.
-//  * GDI objects belonging to the GDI classes (eg. CPen) are automatically deleted
-//     when the class object goes out of scope.
-//  * The various AttachXXX functions can attach either a gdi handle (eg HPEN) or
-//     a gdi class object (eg CPen).
-//  * A GDI object (with the exception of regions) can only be selected into one
-//     device context at a time.
-//  * Set the region's shape before selecting it into a DC.
+//  * When the CDC object drops out of scope, it's destructor is called releasing or
+//     deleting the device context as appropriate.
+//  * When the destructor for CBitmap, CBrush, CPalette, CPen and CRgn objects drop
+//     out of scope, the destructor is called deleting their GDI object.
+//  * GDI objects created by one of the CDC member functions will be deleted when
+//     the CDC object is destroyed.
+//  * Bitmaps can only be selected into one device context at a time.
+//  * The pointer to objects returned by FromHandle might be temporary, so don't save
+//     these for later use. Temporary objects are deleted automatically during idle 
+//     processing. Temporary object don't delete the associated GDI object.
 
 // The CBitmapInfoPtr class is a convienient wrapper for the BITMAPINFO structure.
 // The size of the BITMAPINFO structure is dependant on the type of HBITMAP, and its

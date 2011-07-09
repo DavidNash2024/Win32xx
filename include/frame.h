@@ -2384,9 +2384,9 @@ namespace Win32xx
 		if (m_bShowMenuStatus)
 		{
 			int nID = LOWORD (wParam);
-			HMENU hMenu = (HMENU) lParam;
+			CMenu* pMenu = FromHandle((HMENU) lParam);
 
-			if ((hMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
+			if ((pMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				m_tsStatusText = LoadString(nID);
 			else
 				m_tsStatusText = _T("Ready");
@@ -2544,14 +2544,14 @@ namespace Win32xx
 				{
 					// Get the ToolBar's CWnd
 					CWnd* pWnd = FromHandle(GetReBar().HitTest(GetCursorPos()));
-					if (pWnd && (lstrcmp(pWnd->GetClassName(), _T("ToolbarWindow32")) == 0))
+					if (pWnd && (dynamic_cast<CToolBar*>(pWnd)) && !(dynamic_cast<CMenuBar*>(pWnd)))
 						pToolBar = (CToolBar*)pWnd;
 				}
 				else
 				{
 					CPoint pt = GetCursorPos();
 					CWnd* pWnd = WindowFromPoint(GetCursorPos());
-					if (pWnd && (lstrcmp(pWnd->GetClassName(), _T("ToolbarWindow32")) == 0))
+					if (pWnd && (dynamic_cast<CToolBar*>(pWnd)))
 						pToolBar = (CToolBar*)pWnd;
 				}
 
@@ -3112,7 +3112,7 @@ namespace Win32xx
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
 			else
-				SetMenu(m_hMenu);
+				SetMenu(FromHandle(m_hMenu));
 		}
 		else
 		{

@@ -442,7 +442,7 @@ namespace Win32xx
 			if (IsMenuBarUsed())
 				GetMenuBar().SetMenu(GetFrameMenu());
 			else
-				SetMenu(GetFrameMenu());
+				SetMenu(FromHandle(GetFrameMenu()));
 
 			GetApp()->SetAccelerators(GetFrameAccel(), this);
 		}
@@ -631,18 +631,18 @@ namespace Win32xx
 
 		// Create the window
 		if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-			cx, cy, pParent, m_cs.hMenu, m_cs.lpCreateParams))
+			cx, cy, pParent, FromHandle(m_cs.hMenu), m_cs.lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 		if (bMax)
-			::ShowWindow(m_hWnd, SW_MAXIMIZE);
+			ShowWindow(SW_MAXIMIZE);
 
 		// Turn redraw back on
 		pParent->SendMessage(WM_SETREDRAW, TRUE, 0L);
 		pParent->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Ensure bits revealed by round corners (XP themes) are redrawn
-		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
+		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
 		if (m_hChildMenu)
 			GetMDIFrame()->UpdateFrameMenu(m_hChildMenu);

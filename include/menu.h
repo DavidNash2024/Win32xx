@@ -121,7 +121,6 @@ namespace Win32xx
 		void CreatePopupMenu();
 		void DestroyMenu();
 		HMENU Detach();
-		static CMenu* FromHandle(HMENU hMenu);
 		HMENU GetHmenu() const;
 		BOOL LoadMenu(LPCTSTR lpszResourceName);
 		BOOL LoadMenu(UINT uIDResource);
@@ -332,20 +331,6 @@ namespace Win32xx
 		return ::EnableMenuItem(m_hMenu, uIDEnableItem, uEnable);
 	}
 	
-	inline CMenu* CMenu::FromHandle(HMENU hMenu)
-	// Returns the CMenu object associated with the menu handle (HMENU).
-	{
-		assert( GetApp() );
-		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
-		if (::IsMenu(hMenu) && pMenu == 0)
-		{
-			GetApp()->AddTmpMenu(hMenu);
-			pMenu = GetApp()->GetCMenuFromMap(hMenu);
-			::PostMessage(NULL, UWM_CLEANUPTEMPS, 0L, 0L);
-		}
-		return pMenu;
-	}	
-
 	inline UINT CMenu::GetDefaultItem(UINT gmdiFlags, BOOL fByPos /*= FALSE*/)
 	// Determines the default menu item.
 	// The gmdiFlags parameter specifies how the function searches for menu items. 
@@ -570,6 +555,21 @@ namespace Win32xx
 	{
 		return m_hMenu;
 	}
+	
+	
+	inline CMenu* FromHandle(HMENU hMenu)
+	// Returns the CMenu object associated with the menu handle (HMENU).
+	{
+		assert( GetApp() );
+		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
+		if (::IsMenu(hMenu) && pMenu == 0)
+		{
+			GetApp()->AddTmpMenu(hMenu);
+			pMenu = GetApp()->GetCMenuFromMap(hMenu);
+			::PostMessage(NULL, UWM_CLEANUPTEMPS, 0L, 0L);
+		}
+		return pMenu;
+	}	
 
 
 }	// namespace Win32xx

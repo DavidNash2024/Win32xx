@@ -23,20 +23,20 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	}
 	else
 		DeleteObject(m_bmImage.Detach());
-	
+
 	return (BOOL)m_bmImage.GetBitmap();
 }
 
-BOOL CView::FileSave(LPCTSTR pszFile) 
- { 
-	 HANDLE hFile = CreateFile(pszFile, GENERIC_READ | GENERIC_WRITE, (DWORD) 0, NULL, 
+BOOL CView::FileSave(LPCTSTR pszFile)
+ {
+	 HANDLE hFile = CreateFile(pszFile, GENERIC_READ | GENERIC_WRITE, (DWORD) 0, NULL,
                    OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, (HANDLE) NULL);
 
 	 if (hFile)
 	 {
 		// Create our LPBITMAPINFO object
 		CBitmapInfoPtr pbmi(m_bmImage);
-				
+
 		// Create the reference DC for GetDIBits to use
 		CDC MemDC = CreateCompatibleDC(NULL);
 
@@ -45,19 +45,19 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
 		byte* lpvBits = &vBits.front();
 
-		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);		 
+		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
 
 		LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
 		BITMAPFILEHEADER hdr = {0};
-		hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M" 
+		hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M"
 		hdr.bfSize = (DWORD) (sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
-		hdr.bfOffBits = (DWORD) sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD); 
+		hdr.bfOffBits = (DWORD) sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD);
 
 		DWORD dwBytesWritten;
 		BOOL bResult = WriteFile(hFile, (LPCVOID) &hdr, sizeof(BITMAPFILEHEADER),  (LPDWORD) &dwBytesWritten,  NULL);
-		if (bResult) 
+		if (bResult)
 			bResult = WriteFile(hFile, (LPCVOID) pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD), (LPDWORD) &dwBytesWritten, (NULL));
-		if (bResult) 
+		if (bResult)
 			bResult = WriteFile(hFile, (LPCVOID) lpvBits, (int) pbmih->biSizeImage, (LPDWORD) &dwBytesWritten, NULL);
 
 		CloseHandle(hFile);
@@ -75,7 +75,7 @@ CRect CView::GetImageRect()
 	CRect rc;
 	rc.right = bm.bmWidth;
 	rc.bottom = bm.bmHeight;
-	
+
 	return rc;
 }
 
@@ -88,7 +88,7 @@ void CView::OnDraw(CDC* pDC)
 		CRect rcView = GetClientRect();
 		CBitmap* pOldBitmap = memDC.SelectObject(&m_bmImage);
 		pDC->BitBlt(0, 0, rcView.Width(), rcView.Height(), &memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
-		memDC.SelectObject(pOldBitmap); 
+		memDC.SelectObject(pOldBitmap);
 	}
 	else
 	{
@@ -107,115 +107,115 @@ void CView::OnInitialUpdate()
 }
 
 void CView::OnHScroll(WPARAM wParam, LPARAM lParam)
-{ 
+{
 	UNREFERENCED_PARAMETER(lParam);
-	int xNewPos; 
+	int xNewPos;
 
-	switch (LOWORD(wParam)) 
-	{ 			
-		case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box. 
-			xNewPos = m_xCurrentScroll - 50; 
+	switch (LOWORD(wParam))
+	{
+		case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box.
+			xNewPos = m_xCurrentScroll - 50;
 			break;
 
-		case SB_PAGEDOWN: // User clicked the scroll bar shaft right of the scroll box.  
-			xNewPos = m_xCurrentScroll + 50; 
+		case SB_PAGEDOWN: // User clicked the scroll bar shaft right of the scroll box.
+			xNewPos = m_xCurrentScroll + 50;
 			break;
-		
-		case SB_LINEUP: // User clicked the left arrow. 
-			xNewPos = m_xCurrentScroll - 5; 
-			break;  
-		
-		case SB_LINEDOWN: // User clicked the right arrow. 
-			xNewPos = m_xCurrentScroll + 5; 
-			break; 
 
-		case SB_THUMBPOSITION: // User dragged the scroll box. 
-			xNewPos = HIWORD(wParam);
-			break; 
-	
-		case SB_THUMBTRACK: // User dragging the scroll box. 
+		case SB_LINEUP: // User clicked the left arrow.
+			xNewPos = m_xCurrentScroll - 5;
+			break;
+
+		case SB_LINEDOWN: // User clicked the right arrow.
+			xNewPos = m_xCurrentScroll + 5;
+			break;
+
+		case SB_THUMBPOSITION: // User dragged the scroll box.
 			xNewPos = HIWORD(wParam);
 			break;
 
-		default: 
-			xNewPos = m_xCurrentScroll; 
-	} 
+		case SB_THUMBTRACK: // User dragging the scroll box.
+			xNewPos = HIWORD(wParam);
+			break;
 
-	// Scroll the window.   
+		default:
+			xNewPos = m_xCurrentScroll;
+	}
+
+	// Scroll the window.
 	xNewPos = MAX(0, xNewPos);
 	xNewPos = MIN( xNewPos, GetImageRect().Width() - GetClientRect().Width() );
-	int xDelta = xNewPos - m_xCurrentScroll;  
-	m_xCurrentScroll = xNewPos; 
-	ScrollWindowEx(-xDelta, 0,  NULL, NULL, NULL, NULL, SW_INVALIDATE); 
+	int xDelta = xNewPos - m_xCurrentScroll;
+	m_xCurrentScroll = xNewPos;
+	ScrollWindowEx(-xDelta, 0,  NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
 	// Reset the scroll bar.
 	SCROLLINFO si = {0};
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
-	si.cbSize = sizeof(si); 
-	si.fMask  = SIF_POS; 
-	si.nPos   = m_xCurrentScroll; 
-	SetScrollInfo(SB_HORZ, si, TRUE); 
-} 
+	si.cbSize = sizeof(si);
+	si.fMask  = SIF_POS;
+	si.nPos   = m_xCurrentScroll;
+	SetScrollInfo(SB_HORZ, si, TRUE);
+}
 
 void CView::OnVScroll(WPARAM wParam, LPARAM lParam)
-{  
+{
 	UNREFERENCED_PARAMETER(lParam);
-	int yNewPos;    
+	int yNewPos;
 
-	switch (LOWORD(wParam)) 
-	{ 				
-		case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box. 
-			yNewPos = m_yCurrentScroll - 50; 
-			break; 
-		 
-		case SB_PAGEDOWN: // User clicked the scroll bar shaft below the scroll box.
-			yNewPos = m_yCurrentScroll + 50; 
-			break; 
-		
-		case SB_LINEUP: // User clicked the top arrow. 
-			yNewPos = m_yCurrentScroll - 5; 
-			break;  
-		
-		case SB_LINEDOWN: // User clicked the bottom arrow. 
-			yNewPos = m_yCurrentScroll + 5; 
-			break;  
-		
-		case SB_THUMBPOSITION: // User dragged the scroll box. 
-			yNewPos = HIWORD(wParam); 
+	switch (LOWORD(wParam))
+	{
+		case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box.
+			yNewPos = m_yCurrentScroll - 50;
 			break;
-	
-		case SB_THUMBTRACK: // User dragging the scroll box. 
+
+		case SB_PAGEDOWN: // User clicked the scroll bar shaft below the scroll box.
+			yNewPos = m_yCurrentScroll + 50;
+			break;
+
+		case SB_LINEUP: // User clicked the top arrow.
+			yNewPos = m_yCurrentScroll - 5;
+			break;
+
+		case SB_LINEDOWN: // User clicked the bottom arrow.
+			yNewPos = m_yCurrentScroll + 5;
+			break;
+
+		case SB_THUMBPOSITION: // User dragged the scroll box.
 			yNewPos = HIWORD(wParam);
 			break;
 
-		default: 
-			yNewPos = m_yCurrentScroll; 
-	} 
+		case SB_THUMBTRACK: // User dragging the scroll box.
+			yNewPos = HIWORD(wParam);
+			break;
+
+		default:
+			yNewPos = m_yCurrentScroll;
+	}
 
 	// Scroll the window.
 	yNewPos = MAX(0, yNewPos);
 	yNewPos = MIN( yNewPos, GetImageRect().Height() - GetClientRect().Height() );
-	int yDelta = yNewPos - m_yCurrentScroll;   
-	m_yCurrentScroll = yNewPos; 	
-	ScrollWindowEx(0, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE); 
+	int yDelta = yNewPos - m_yCurrentScroll;
+	m_yCurrentScroll = yNewPos;
+	ScrollWindowEx(0, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
-	// Reset the scroll bar. 
+	// Reset the scroll bar.
 	SCROLLINFO si = {0};
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
-	si.cbSize = sizeof(si); 
-	si.fMask  = SIF_POS; 
-	si.nPos   = m_yCurrentScroll; 
-	SetScrollInfo(SB_VERT, si, TRUE);  
-} 
+	si.cbSize = sizeof(si);
+	si.fMask  = SIF_POS;
+	si.nPos   = m_yCurrentScroll;
+	SetScrollInfo(SB_VERT, si, TRUE);
+}
 
 void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
-	if (m_bmImage.GetBitmap()) 
+	if (m_bmImage.GetBitmap())
 	{
 		CRect rcImage = GetImageRect();
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -224,7 +224,7 @@ void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 
 		CRect rcView = GetClientRect();
 		AdjustWindowRectEx(&rcView, dwStyle, FALSE, dwExStyle);
-		
+
 		SCROLLINFO si = {0};
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
@@ -243,7 +243,7 @@ void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 			SetScrollInfo(SB_HORZ, si, TRUE);
 			ShowScrollBar(SB_HORZ, TRUE);
 		}
-		
+
 		if (rcView.Height() >= rcImage.Height())
 		{
 			m_yCurrentScroll = 0;
@@ -257,7 +257,7 @@ void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 			SetScrollInfo(SB_VERT, si, TRUE);
 			ShowScrollBar(SB_VERT, TRUE);
 		}
-		
+
 		int xNewPos = MIN(m_xCurrentScroll, rcImage.Width() - rcView.Width());
 		xNewPos = MAX(xNewPos, 0);
 		int xDelta = xNewPos - m_xCurrentScroll;
@@ -270,7 +270,7 @@ void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 		m_xCurrentScroll = xNewPos;
 		m_yCurrentScroll = yNewPos;
 	}
-	else		
+	else
 		Invalidate();	// Keep the text centered in the window
 }
 
@@ -290,14 +290,14 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_WINDOWPOSCHANGED:
-		OnWindowPosChanged(wParam, lParam);	
+		OnWindowPosChanged(wParam, lParam);
 		break;
-		    
-	case WM_HSCROLL: 
+
+	case WM_HSCROLL:
 		OnHScroll(wParam, lParam);
-		break; 
-	 
-	case WM_VSCROLL: 
+		break;
+
+	case WM_VSCROLL:
 		OnVScroll(wParam, lParam);
         break;
 	}
