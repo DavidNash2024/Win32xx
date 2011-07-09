@@ -36,6 +36,7 @@ Changes in detail
 - Added CBrush::FromHandle
 - Added CDC::Destroy
 - Added CDC::SelectObject    (several versions)
+- Added CDC::SelectPalete
 - Added CDocker::GetActiveDocker
 - Added CDocker::SetCaptionColors
 - Added CFont::FromHandle

@@ -16,7 +16,7 @@ public:
 	virtual ~CView();
 	virtual BOOL FileOpen(LPCTSTR szFilename);
 	virtual BOOL FileSave(LPCTSTR pszFile);
-	HBITMAP GetImage() {return m_hbmImage;}
+	HBITMAP GetImage() {return m_bmImage;}
 	virtual CRect GetImageRect();
 
 protected:
@@ -29,8 +29,7 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	HBITMAP m_hbmImage;
-	HBITMAP m_hbmSmallImage;
+	CBitmap m_bmImage;
 	int m_xCurrentScroll;
 	int m_yCurrentScroll;
 };

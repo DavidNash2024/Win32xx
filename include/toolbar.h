@@ -108,7 +108,7 @@ namespace Win32xx
 		BOOL  HideButton(int idButton, BOOL fShow) const;
 		int   HitTest() const;
 		BOOL  Indeterminate(int idButton, BOOL fIndeterminate) const;
-		BOOL  InsetButton(int iButton, LPTBBUTTON lpButton) const;
+		BOOL  InsertButton(int iButton, LPTBBUTTON lpButton) const;
 		BOOL  IsButtonHidden(int idButton) const;
 		BOOL  IsButtonHighlighted(int idButton) const;
 		BOOL  IsButtonIndeterminate(int idButton) const;
@@ -549,7 +549,7 @@ namespace Win32xx
 		return (BOOL)SendMessage(TB_INDETERMINATE, (WPARAM)idButton, (LPARAM)MAKELONG (fIndeterminate, 0));
 	}
 
-	inline BOOL CToolBar::InsetButton(int iButton, LPTBBUTTON lpButton) const
+	inline BOOL CToolBar::InsertButton(int iButton, LPTBBUTTON lpButton) const
 	// Inserts a button in a toolbar.
 	{
 		assert(::IsWindow(m_hWnd));

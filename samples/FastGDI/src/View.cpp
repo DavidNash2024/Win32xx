@@ -7,26 +7,24 @@
 #include "resource.h"
 
 
-CView::CView() : m_hbmImage(NULL), m_xCurrentScroll(0), m_yCurrentScroll(0)
+CView::CView() : m_xCurrentScroll(0), m_yCurrentScroll(0)
 {
 }
 
 CView::~CView()
 {
-	::DeleteObject(m_hbmImage);
 }
 
 BOOL CView::FileOpen(LPCTSTR szFilename)
 {
 	if (szFilename)
 	{
-		m_hbmImage = (HBITMAP)::LoadImage(GetApp()->GetInstanceHandle(), 
-					szFilename, 0, 0, IMAGE_BITMAP, LR_LOADFROMFILE);
+		m_bmImage.LoadImage(szFilename, 0, 0, LR_LOADFROMFILE);
 	}
 	else
-		m_hbmImage = NULL;
+		DeleteObject(m_bmImage.Detach());
 	
-	return (BOOL)m_hbmImage;
+	return (BOOL)m_bmImage.GetBitmap();
 }
 
 BOOL CView::FileSave(LPCTSTR pszFile) 
@@ -37,17 +35,17 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 	 if (hFile)
 	 {
 		// Create our LPBITMAPINFO object
-		CBitmapInfoPtr pbmi(m_hbmImage);
+		CBitmapInfoPtr pbmi(m_bmImage);
 				
 		// Create the reference DC for GetDIBits to use
 		CDC MemDC = CreateCompatibleDC(NULL);
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-		MemDC.GetDIBits(m_hbmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
 		byte* lpvBits = &vBits.front();
 
-		MemDC.GetDIBits(m_hbmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);		 
+		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);		 
 
 		LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
 		BITMAPFILEHEADER hdr = {0};
@@ -72,7 +70,7 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 CRect CView::GetImageRect()
 {
 	BITMAP bm;
-	::GetObject(m_hbmImage, sizeof(BITMAP), &bm);
+	::GetObject(m_bmImage, sizeof(BITMAP), &bm);
 
 	CRect rc;
 	rc.right = bm.bmWidth;
@@ -83,14 +81,14 @@ CRect CView::GetImageRect()
 
 void CView::OnDraw(CDC* pDC)
 {
-	if (m_hbmImage)
+	if (m_bmImage.GetBitmap())
 	{
 		// We have an image, so display it
-		CDC memDC = ::CreateCompatibleDC(*pDC);
+		CMemDC memDC(pDC);
 		CRect rcView = GetClientRect();
-		memDC.AttachBitmap(m_hbmImage);
+		CBitmap* pOldBitmap = memDC.SelectObject(&m_bmImage);
 		pDC->BitBlt(0, 0, rcView.Width(), rcView.Height(), &memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
-		memDC.DetachBitmap(); 
+		memDC.SelectObject(pOldBitmap); 
 	}
 	else
 	{
@@ -217,7 +215,7 @@ void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
-	if (m_hbmImage) 
+	if (m_bmImage.GetBitmap()) 
 	{
 		CRect rcImage = GetImageRect();
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

@@ -32,8 +32,8 @@ private:
 	CWnd m_BlueEdit;
 	CWnd m_Preview;
 
-	HBITMAP m_hbmPreview;
-	HBITMAP m_hbmPreviewOrig;
+	CBitmap m_bmPreview;
+	CBitmap m_bmPreviewOrig;
 	int m_cRed;
 	int m_cGreen;
 	int m_cBlue;

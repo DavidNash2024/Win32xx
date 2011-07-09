@@ -313,7 +313,7 @@ namespace Win32xx
 			CDockHint(const CDockHint&);				// Disable copy construction
 			CDockHint& operator = (const CDockHint&); // Disable assignment operator
 
-			HBITMAP m_hbmBlueTint;
+			CBitmap m_bmBlueTint;
 			UINT m_uDockSideOld;
 		};
 
@@ -1186,13 +1186,12 @@ namespace Win32xx
 	//////////////////////////////////////////////////////////////
 	// Definitions for the CDockHint class nested within CDocker
 	//
-	inline CDocker::CDockHint::CDockHint() : m_hbmBlueTint(0), m_uDockSideOld(0)
+	inline CDocker::CDockHint::CDockHint() : m_uDockSideOld(0)
 	{
 	}
 
 	inline CDocker::CDockHint::~CDockHint()
 	{
-		if (m_hbmBlueTint) ::DeleteObject(m_hbmBlueTint);
 	}
 
 	inline RECT CDocker::CDockHint::CalcHintRectContainer(CDocker* pDockTarget)
@@ -1327,7 +1326,7 @@ namespace Win32xx
 		// Display the blue tinted bitmap
 		CRect rc = GetClientRect();
 		CMemDC MemDC(pDC);
-		MemDC.SelectObject(FromHandle(m_hbmBlueTint));
+		MemDC.SelectObject(&m_bmBlueTint);
 		pDC->BitBlt(0, 0, rc.Width(), rc.Height(), &MemDC, 0, 0, SRCCOPY);
 	}
 
@@ -1343,8 +1342,9 @@ namespace Win32xx
 
 	inline void CDocker::CDockHint::SetBitmap(HBITMAP hbm)
 	{
-		if (m_hbmBlueTint) ::DeleteObject(m_hbmBlueTint);
-		m_hbmBlueTint = hbm;
+	//	if (m_hbmBlueTint) ::DeleteObject(m_hbmBlueTint);
+	//	m_hbmBlueTint = hbm;
+		m_bmBlueTint = hbm;
 	}
 
 	inline void CDocker::CDockHint::ShowHintWindow(CDocker* pDockTarget, CRect rcHint)
@@ -1355,11 +1355,12 @@ namespace Win32xx
 		CRect rcBitmap = rcHint;
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);
-		CBitmap* pOldBitmap = dcMem.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+
+		m_bmBlueTint.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+		CBitmap* pOldBitmap = dcMem.SelectObject(&m_bmBlueTint);
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-		CBitmap* pbmDock = dcMem.SelectObject(pOldBitmap); 
-		TintBitmap(*pbmDock, -64, -24, +128);
-		SetBitmap(*pbmDock);
+		dcMem.SelectObject(pOldBitmap); 
+		TintBitmap(&m_bmBlueTint, -64, -24, +128);
 
 		// Create the Hint window
 		if (!IsWindow())

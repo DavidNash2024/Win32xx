@@ -171,11 +171,11 @@ void CMainFrame::OnFilePrint()
 	int Height = rcView.Height();
 
 	// Copy the bitmap from the View window
-	CDC* pViewDC = m_View.GetDC();
-	CDC MemDC;
-	MemDC.CreateCompatibleDC(pViewDC);
-	HBITMAP hbmView = MemDC.CreateCompatibleBitmap(pViewDC, Width, Height);
-	BitBlt(MemDC, 0, 0, Width, Height, *pViewDC, 0, 0, SRCCOPY);
+	CClientDC ViewDC(&m_View);
+	CMemDC MemDC(&ViewDC);
+	CBitmap bmView(::CreateCompatibleBitmap(ViewDC, Width, Height));
+	MemDC.SelectObject(&bmView);
+	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
 
 	// Bring up a dialog to choose the printer
 	PRINTDLG pd = {0};
@@ -217,16 +217,16 @@ void CMainFrame::OnFilePrint()
 
 	// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
 	// Get the size of the image data
-	GetDIBits(MemDC, hbmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	MemDC.GetDIBits(&bmView, 0, Height, NULL, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Retrieve the image data
 	std::vector<byte> vBits(bi.biSizeImage, 0);	// a vector to hold the byte array
 	byte* pByteArray = &vBits.front();
-	GetDIBits(MemDC, hbmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	MemDC.GetDIBits(&bmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
-	float fLogPelsX1 = (float) pViewDC->GetDeviceCaps(LOGPIXELSX);
-	float fLogPelsY1 = (float) pViewDC->GetDeviceCaps(LOGPIXELSY);
+	float fLogPelsX1 = (float) ViewDC.GetDeviceCaps(LOGPIXELSX);
+	float fLogPelsY1 = (float) ViewDC.GetDeviceCaps(LOGPIXELSY);
 	float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
 	float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
 	float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
