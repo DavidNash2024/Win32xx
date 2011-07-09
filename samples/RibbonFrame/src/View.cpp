@@ -11,12 +11,11 @@ using namespace std;
 
 CView::CView() : m_PenColor(RGB(0,0,0))
 {
-	m_hBrush = ::CreateSolidBrush(RGB(255,255,230));
+	m_hBrush.CreateSolidBrush(RGB(255,255,230));
 }
 
 CView::~CView()
 {
-	::DeleteObject(m_hBrush);
 }
 
 void CView::ClearPoints()
@@ -41,7 +40,7 @@ void CView::OnDraw(CDC* pDC)
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
 	MemDC.CreateCompatibleBitmap(pDC, Width, Height);
-	MemDC.FillRect(GetClientRect(), m_hBrush);	
+	MemDC.FillRect(GetClientRect(), &m_hBrush);	
 
 	if (m_points.size() > 0)
 	{

@@ -41,7 +41,7 @@ void CView::OnDraw(CDC* pDC)
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
 	MemDC.CreateCompatibleBitmap(pDC, Width, Height);
-	MemDC.FillRect(GetClientRect(), m_Brush);	
+	MemDC.FillRect(GetClientRect(), &m_Brush);	
 
 	if (m_points.size() > 0)
 	{

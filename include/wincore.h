@@ -358,7 +358,7 @@ namespace Win32xx
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
 		CDC*	AddTmpDC(HDC hDC);
-		void	AddTmpGDI(HGDIOBJ hObject, CGDIObject* pObject);
+		void	AddTmpGDI(CGDIObject* pObject);
 		CMenu*	AddTmpMenu(HMENU hMenu);
 		CWnd*	AddTmpWnd(HWND hWnd);
 		void	CleanupTemps();
@@ -451,7 +451,7 @@ namespace Win32xx
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
 		CWnd* GetFocus() const;
-		HFONT GetFont() const;
+		CFont* GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
 		CWnd* GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const;
 		CWnd* GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const;
@@ -497,7 +497,7 @@ namespace Win32xx
 		BOOL  SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL  SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		CWnd* SetFocus() const;
-		void  SetFont(HFONT hFont, BOOL bRedraw) const;
+		void  SetFont(CFont* pFont, BOOL bRedraw) const;
 		BOOL  SetForegroundWindow() const;
 		HICON SetIcon(HICON hIcon, BOOL bBigIcon) const;
 		CWnd* SetParent(CWnd* pWndParent) const;
@@ -733,31 +733,15 @@ namespace Win32xx
 		return pDC;
 	}
 
-	inline void CWinApp::AddTmpGDI(HGDIOBJ hObject, CGDIObject* pObject)
+	inline void CWinApp::AddTmpGDI(CGDIObject* pObject)
 	{
 		// The temporary CGDIObjects are removed by CleanupTemps
-		assert(hObject);
 		assert(pObject);
 	
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpGDIs.push_back(pObject); // save pObject as a smart pointer
 	}
-
-/*	inline CGDIObject* CWinApp::AddTmpGDI(HGDIOBJ hObject)
-	{
-		// The temporary CGDIObjects are removed by CleanupTemps
-		assert(hObject);
-	
-		CGDIObject* pObject = new CGDIObject;
-		pObject->m_pData->hGDIObject = hObject;
-
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
-		pTLSData->vTmpGDIs.push_back(pObject); // save pObject as a smart pointer
-		return pObject;
-	} */
-
 
 #ifndef _WIN32_WCE
 	inline CMenu* CWinApp::AddTmpMenu(HMENU hMenu)
@@ -2142,11 +2126,11 @@ namespace Win32xx
 		return FromHandle( ::GetFocus() );
 	}
 
-	inline HFONT CWnd::GetFont() const
+	inline CFont* CWnd::GetFont() const
 	// Retrieves the font with which the window is currently drawing its text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HFONT)SendMessage(WM_GETFONT, 0, 0);
+		return FromHandle((HFONT)SendMessage(WM_GETFONT, 0, 0));
 	}
 
 	inline HICON CWnd::GetIcon(BOOL bBigIcon) const
@@ -2496,11 +2480,12 @@ namespace Win32xx
 		return FromHandle( ::SetFocus(m_hWnd) );
 	}
 
-	inline void CWnd::SetFont(HFONT hFont, BOOL bRedraw) const
+	inline void CWnd::SetFont(CFont* pFont, BOOL bRedraw) const
 	// Specifies the font that the window will use when drawing text.
 	{
 		assert(::IsWindow(m_hWnd));
-		SendMessage(WM_SETFONT, (WPARAM)hFont, (LPARAM)bRedraw);
+		assert(pFont);
+		SendMessage(WM_SETFONT, (WPARAM)pFont->GetFont(), (LPARAM)bRedraw);
 	}
 
 	inline HICON CWnd::SetIcon(HICON hIcon, BOOL bBigIcon) const

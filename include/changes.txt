@@ -35,8 +35,12 @@ Changes in detail
 - Added CBitmap::FromHandle
 - Added CBrush::FromHandle
 - Added CDC::Destroy
+- Added CDC::GetDCBrushColor
+- Added CDC::SetDCBrushColor
 - Added CDC::SelectObject    (several versions)
 - Added CDC::SelectPalete
+- Added CDC::SelectClipRgn
+- Added CDC::SelectStockObject
 - Added CDocker::GetActiveDocker
 - Added CDocker::SetCaptionColors
 - Added CFont::FromHandle
@@ -51,19 +55,22 @@ Changes in detail
 - Added CWnd::ChildWindowFromPoint
 - Added CWnd::WindowFromPoint
 - Modified LoadString 					now returns CString
-- Modified CDC::BitBlt					now takes a CDC pointer
-- Modified CDC::CreateCompatibleDC		now takes a CDC pointer and attaches the DC
+- Modified CBrush::CreatePatternBrush	now accepts a CBitmap pointer
+- Modified CDC::BitBlt					now accepts a CDC pointer
+- Modified CDC::CreateCompatibleDC		now accepts a CDC pointer and attaches the DC
 - Modified CDC::CreateDC				now attaches the DC							
 - Modified CDC::CreateIC            	now attaches the DC
-- Modified CDC::CreateCompatibleBitmap	now takes a CDC pointer
-- Modified CDC::CreateDIBitmap			now takes a CDC pointer
-- Modified CDC::CreateDIBSection		now takes a CDC pointer
-- Modified CDC::StretchBlt				now takes a CDC pointer
-- Modified CDocker::IsChildOfDocker 	now takes a CWnd pointer instead of HWND
-- Modified CDocker::IsRelated 			now takes a CWnd pointer instead of HWND
+- Modified CDC::CreateCompatibleBitmap	now accepts a CDC pointer
+- Modified CDC::CreateDIBitmap			now accepts a CDC pointer
+- Modified CDC::CreateDIBSection		now accepts a CDC pointer
+- Modified CDC::StretchBlt				now accepts a CDC pointer
+- Modified CDocker::IsChildOfDocker 	now accepts a CWnd pointer instead of HWND
+- Modified CDocker::IsRelated 			now accepts a CWnd pointer instead of HWND
 - Modified CWnd::GetAncestor			now accepts a gaFlags parameter
 - Modified CWnd::OnEraseBkgnd			now accepts a CDC pointer
 - Modified CWnd::OnPaint				now accepts a CDC pointer
+- Modified CWnd::GetFont				now returns a CFont pointer
+- Modified CWnd::SetFont                now accepts a CFont pointer
 - Removed CLoadString
 - Removed CDC::AttachBitmap
 - Removed CDC::AttachBrush
@@ -74,7 +81,7 @@ Changes in detail
 - Removed CDC::DetachBrush
 - Removed CDC::DetachFont
 - Removed CDC::DetachPalette
-- Removed CDC::Pen
+- Removed CDC::DetachPen
 - Removed GetWindowType for all CWnd classes
 - Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker
 

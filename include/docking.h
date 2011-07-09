@@ -526,7 +526,8 @@ namespace Win32xx
 		double m_DockSizeRatio;
 		DWORD m_DockStyle;
 		CBrush m_brDithered;
-		HBITMAP	m_hbmHash;
+	//	HBITMAP	m_hbmHash;
+		CBitmap m_bmHash;
 		HWND m_hOldFocus;
 
 	}; // class CDocker
@@ -1733,8 +1734,8 @@ namespace Win32xx
 		            m_nTimerCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
-		m_hbmHash = ::CreateBitmap (8, 8, 1, 1, HashPattern);
-		m_brDithered.CreatePatternBrush (m_hbmHash);
+		m_bmHash.CreateBitmap (8, 8, 1, 1, HashPattern);
+		m_brDithered.CreatePatternBrush (&m_bmHash);
 
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
@@ -1743,7 +1744,6 @@ namespace Win32xx
 	inline CDocker::~CDocker()
 	{
 		GetDockBar().Destroy();
-		::DeleteObject(m_hbmHash);
 
 		std::vector <DockPtr>::iterator iter;
 		if (GetDockAncestor() == this)

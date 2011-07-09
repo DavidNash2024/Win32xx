@@ -231,7 +231,7 @@ namespace Win32xx
 		HBRUSH GetBrush() const;
 
 		void CreateSolidBrush(COLORREF crColor);
-		void CreatePatternBrush(HBITMAP hBitmap);
+		void CreatePatternBrush(CBitmap* pBitmap);
 		void CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage);
 		LOGBRUSH GetLogBrush() const;
 
@@ -369,10 +369,10 @@ namespace Win32xx
 		// Operations
 		void SetRectRgn(int x1, int y1, int x2, int y2);
 		void SetRectRgn(const RECT& rc);
-		int CombineRgn(HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode);
-		int CombineRgn(HRGN hRgnSrc, int nCombineMode);
-		int CopyRgn(HRGN hRgnSrc);
-		BOOL EqualRgn(HRGN hRgn) const;
+		int CombineRgn(CRgn* pRgnSrc1, CRgn* pRgnSrc2, int nCombineMode);
+		int CombineRgn(CRgn* pRgnSrc, int nCombineMode);
+		int CopyRgn(CRgn* pRgnSrc);
+		BOOL EqualRgn(CRgn* pRgn) const;
 		int OffsetRgn(int x, int y);
 		int OffsetRgn(POINT& pt);
 		int GetRgnBox(RECT& rc) const;
@@ -380,7 +380,6 @@ namespace Win32xx
 		BOOL PtInRegion(POINT& pt) const;
 		BOOL RectInRegion(const RECT& rc) const;
 		int GetRegionData(LPRGNDATA lpRgnData, int nDataSize) const;
-
 	};
 
 
@@ -455,7 +454,7 @@ namespace Win32xx
 
 		// Create and Select Brushes
 		CBrush* CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
-		CBrush* CreatePatternBrush(HBITMAP hbmp);
+		CBrush* CreatePatternBrush(CBitmap* pBitmap);
 		CBrush* CreateSolidBrush(COLORREF rbg);
 		LOGBRUSH GetBrushInfo() const;
 
@@ -540,19 +539,19 @@ namespace Win32xx
 #endif
 
 		// Fill and Image Drawing functions
-		BOOL FillRect(const RECT& rc, HBRUSH hbr) const;
+		BOOL FillRect(const RECT& rc, CBrush* pBrushr) const;
 		BOOL InvertRect(const RECT& rc) const;
-		BOOL DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags) const;
+		BOOL DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, CBrush* pFlickerFreeDraw, UINT diFlags) const;
 		BOOL DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const;
 		BOOL DrawFrameControl(const RECT& rc, UINT nType, UINT nState) const;
-		BOOL FillRgn(HRGN hrgn, HBRUSH hbr) const;
+		BOOL FillRgn(HRGN hrgn, CBrush* pBrush) const;
 		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical);
 		void SolidFill(COLORREF Color, const RECT& rc);
 
 #ifndef _WIN32_WCE
 		BOOL DrawIcon(int x, int y, HICON hIcon) const;
 		BOOL DrawIcon(POINT point, HICON hIcon) const;
-		BOOL FrameRect(const RECT& rc, HBRUSH hbr) const;
+		BOOL FrameRect(const RECT& rc, CBrush* pBrush) const;
 		BOOL PaintRgn(HRGN hrgn) const;
 #endif
 
@@ -571,6 +570,12 @@ namespace Win32xx
 		int  SetStretchBltMode(int iStretchMode) const;
 		BOOL FloodFill(int x, int y, COLORREF crColor) const;
 		BOOL ExtFloodFill(int x, int y, COLORREF crColor, UINT nFillType) const;
+#endif
+
+		// Brush Functions
+#if WINVER >= 0x0500
+		COLORREF GetDCBrushColor() const;
+		COLORREF SetDCBrushColor(COLORREF crColor) const;
 #endif
 
 		// Clipping Functions
@@ -651,7 +656,7 @@ namespace Win32xx
 		CSize GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
 		int   GetTextCharacterExtra() const;
 		CSize GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const;
-		BOOL  GrayString(HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const;
+		BOOL  GrayString(CBrush* pBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const;
 		int   SetTextCharacterExtra(int nCharExtra) const;
 		int   SetTextJustification(int nBreakExtra, int nBreakCount) const;
 		CSize TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
@@ -1197,15 +1202,16 @@ namespace Win32xx
 	}
 #endif // !defined(_WIN32_WCE)
 
-	inline void CBrush::CreatePatternBrush(HBITMAP hBitmap)
+	inline void CBrush::CreatePatternBrush(CBitmap* pBitmap)
 	// Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap,
 	// which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.
 	{
 		assert(m_pData);
+		assert(pBitmap);
 		if (m_pData->hGDIObject != NULL)
 			::DeleteObject(m_pData->hGDIObject);
 
-		m_pData->hGDIObject = ::CreatePatternBrush(hBitmap);
+		m_pData->hGDIObject = ::CreatePatternBrush(pBitmap->GetBitmap());
 		assert (m_pData->hGDIObject);
 	}
 
@@ -1707,36 +1713,41 @@ namespace Win32xx
 		::SetRectRgn((HRGN)m_pData->hGDIObject, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline int CRgn::CombineRgn(HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode)
+	inline int CRgn::CombineRgn(CRgn* pRgnSrc1, CRgn* pRgnSrc2, int nCombineMode)
 	// Combines two sepcified regions and stores the result.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
-		return ::CombineRgn((HRGN)m_pData->hGDIObject, hRgnSrc1, hRgnSrc2, nCombineMode);
+		assert(pRgnSrc1);
+		assert(pRgnSrc2);
+		return ::CombineRgn((HRGN)m_pData->hGDIObject, pRgnSrc1->GetRgn(), pRgnSrc2->GetRgn(), nCombineMode);
 	}
 
-	inline int CRgn::CombineRgn(HRGN hRgnSrc, int nCombineMode)
+	inline int CRgn::CombineRgn(CRgn* pRgnSrc, int nCombineMode)
 	// Combines the sepcified region with the current region.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
-		return ::CombineRgn((HRGN)m_pData->hGDIObject, (HRGN)m_pData->hGDIObject, hRgnSrc, nCombineMode);
+		assert(pRgnSrc);
+		return ::CombineRgn((HRGN)m_pData->hGDIObject, (HRGN)m_pData->hGDIObject, pRgnSrc->GetRgn(), nCombineMode);
 	}
 
-	inline int CRgn::CopyRgn(HRGN hRgnSrc)
+	inline int CRgn::CopyRgn(CRgn* pRgnSrc)
 	// Assigns the specified region to the current region.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject == NULL);
-		return ::CombineRgn((HRGN)m_pData->hGDIObject, hRgnSrc, NULL, RGN_COPY);
+		assert(pRgnSrc);
+		return ::CombineRgn((HRGN)m_pData->hGDIObject, pRgnSrc->GetRgn(), NULL, RGN_COPY);
 	}
 
-	inline BOOL CRgn::EqualRgn(HRGN hRgn) const
+	inline BOOL CRgn::EqualRgn(CRgn* pRgn) const
 	// Checks the two specified regions to determine whether they are identical.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
-		return ::EqualRgn((HRGN)m_pData->hGDIObject, hRgn);
+		assert(pRgn);
+		return ::EqualRgn((HRGN)m_pData->hGDIObject, pRgn->GetRgn());
 	}
 
 	inline int CRgn::OffsetRgn(int x, int y)
@@ -2181,7 +2192,7 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		assert(pDC);
-		
+
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateDIBitmap(pDC->GetHDC(), &bmih, fdwInit, lpbInit, &bmi, fuUsage);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
@@ -2267,7 +2278,7 @@ namespace Win32xx
 	// Loads a bitmap from the resource and selects it into the device context
 	{
 		assert(m_pData->hDC);
-		
+
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->LoadImage(lpszName, cxDesired, cyDesired, fuLoad);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
@@ -2335,13 +2346,14 @@ namespace Win32xx
 		return SelectObject(pBrush);
 	}
 
-	inline CBrush* CDC::CreatePatternBrush(HBITMAP hbmp)
+	inline CBrush* CDC::CreatePatternBrush(CBitmap* pBitmap)
 	// Creates the brush and selects it into the device context
 	{
 		assert(m_pData->hDC);
+		assert(pBitmap);
 
 		CBrush* pBrush = new CBrush;
-		pBrush->CreatePatternBrush(hbmp);
+		pBrush->CreatePatternBrush(pBitmap);
 		m_pData->m_vGDIObjects.push_back(pBrush);
 		return SelectObject(pBrush);
 	}
@@ -2553,6 +2565,21 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		return ::GetDeviceCaps(m_pData->hDC, nIndex);
 	}
+
+	// Brush Functions
+#if WINVER >= 0x0500
+	inline COLORREF CDC::GetDCBrushColor() const
+	{
+		assert(m_pData->hDC);
+		return ::GetDCBrushColor(m_pData->hDC);
+	}
+
+	inline COLORREF CDC::SetDCBrushColor(COLORREF crColor) const
+	{
+		assert(m_pData->hDC);
+		return ::SetDCBrushColor(m_pData->hDC, crColor);
+	}
+#endif
 
 	// Clipping functions
 	inline int CDC::ExcludeClipRect(int Left, int Top, int Right, int BottomRect)
@@ -2963,11 +2990,12 @@ namespace Win32xx
 #endif
 
 	// Fill and 3D Drawing functions
-	inline BOOL CDC::FillRect(const RECT& rc, HBRUSH hbr) const
+	inline BOOL CDC::FillRect(const RECT& rc, CBrush* pBrush) const
 	// Fills a rectangle by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return (BOOL)::FillRect(m_pData->hDC, &rc, hbr);
+		assert(pBrush);
+		return (BOOL)::FillRect(m_pData->hDC, &rc, pBrush->GetBrush());
 	}
 
 	inline BOOL CDC::InvertRect(const RECT& rc) const
@@ -2977,11 +3005,12 @@ namespace Win32xx
 		return ::InvertRect( m_pData->hDC, &rc);
 	}
 
-	inline BOOL CDC::DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, HBRUSH hbrFlickerFreeDraw, UINT diFlags) const
+	inline BOOL CDC::DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, CBrush* pFlickerFreeDraw, UINT diFlags) const
 	// draws an icon or cursor, performing the specified raster operations, and stretching or compressing the icon or cursor as specified.
 	{
 		assert(m_pData->hDC);
-		return ::DrawIconEx(m_pData->hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, hbrFlickerFreeDraw, diFlags);
+		assert(pFlickerFreeDraw);
+		return ::DrawIconEx(m_pData->hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, pFlickerFreeDraw->GetBrush(), diFlags);
 	}
 
 	inline BOOL CDC::DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const
@@ -2998,11 +3027,12 @@ namespace Win32xx
 		return ::DrawFrameControl(m_pData->hDC, (LPRECT)&rc, nType, nState);
 	}
 
-	inline BOOL CDC::FillRgn(HRGN hrgn, HBRUSH hbr) const
+	inline BOOL CDC::FillRgn(HRGN hrgn, CBrush* pBrush) const
 	// Fills a region by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return ::FillRgn(m_pData->hDC, hrgn, hbr);
+		assert(pBrush);
+		return ::FillRgn(m_pData->hDC, hrgn, pBrush->GetBrush());
 	}
 
 #ifndef _WIN32_WCE
@@ -3020,11 +3050,12 @@ namespace Win32xx
 		return ::DrawIcon(m_pData->hDC, pt.x, pt.y, hIcon);
 	}
 
-	inline BOOL CDC::FrameRect(const RECT& rc, HBRUSH hbr) const
+	inline BOOL CDC::FrameRect(const RECT& rc, CBrush* pBrush) const
 	// Draws a border around the specified rectangle by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return (BOOL)::FrameRect(m_pData->hDC, &rc, hbr);
+		assert(pBrush);
+		return (BOOL)::FrameRect(m_pData->hDC, &rc, pBrush->GetBrush());
 	}
 
 	inline BOOL CDC::PaintRgn(HRGN hrgn) const
@@ -3459,11 +3490,12 @@ namespace Win32xx
 		return sz;
 	}
 
-	inline BOOL CDC::GrayString(HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const
+	inline BOOL CDC::GrayString(CBrush* pBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const
 	// Draws gray text at the specified location
 	{
 		assert(m_pData->hDC);
-		return ::GrayString(m_pData->hDC, hBrush, lpOutputFunc, lpData, nCount, x, y, nWidth, nHeight);
+		assert(pBrush);
+		return ::GrayString(m_pData->hDC, pBrush->GetBrush(), lpOutputFunc, lpData, nCount, x, y, nWidth, nHeight);
 	}
 
 	inline int CDC::SetTextJustification(int nBreakExtra, int nBreakCount) const
@@ -3730,7 +3762,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CBitmap* pBitmap = new CBitmap;
-		GetApp()->AddTmpGDI(hBitmap, pBitmap);
+		GetApp()->AddTmpGDI(pBitmap);
 		pBitmap->m_pData->hGDIObject = hBitmap;
 		pBitmap->m_pData->bRemoveObject = FALSE;
 
@@ -3745,7 +3777,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CBrush* pBrush = new CBrush;
-		GetApp()->AddTmpGDI(hBrush, pBrush);
+		GetApp()->AddTmpGDI(pBrush);
 		pBrush->m_pData->hGDIObject = hBrush;
 		pBrush->m_pData->bRemoveObject = FALSE;
 
@@ -3760,7 +3792,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CFont* pFont = new CFont;
-		GetApp()->AddTmpGDI(hFont, pFont);
+		GetApp()->AddTmpGDI(pFont);
 		pFont->m_pData->hGDIObject = hFont;
 		pFont->m_pData->bRemoveObject = FALSE;
 
@@ -3775,7 +3807,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CPalette* pPalette = new CPalette;
-		GetApp()->AddTmpGDI(hPalette, pPalette);
+		GetApp()->AddTmpGDI(pPalette);
 		pPalette->m_pData->hGDIObject = hPalette;
 		pPalette->m_pData->bRemoveObject = FALSE;
 
@@ -3790,7 +3822,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CPen* pPen = new CPen;
-		GetApp()->AddTmpGDI(hPen, pPen);
+		GetApp()->AddTmpGDI(pPen);
 		pPen->m_pData->hGDIObject = hPen;
 		pPen->m_pData->bRemoveObject = FALSE;
 
@@ -3805,7 +3837,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CRgn* pRgn = new CRgn;
-		GetApp()->AddTmpGDI(hRgn, pRgn);
+		GetApp()->AddTmpGDI(pRgn);
 		pRgn->m_pData->hGDIObject = hRgn;
 		pRgn->m_pData->bRemoveObject = FALSE;
 

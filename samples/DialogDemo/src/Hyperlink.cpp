@@ -21,9 +21,8 @@ CHyperlink::~CHyperlink()
 
 void CHyperlink::OnInitialUpdate()
 {
-	CFont Font = GetFont();
-	LOGFONT lf = Font.GetLogFont();
-	Font.Detach();
+	CFont* pFont = GetFont();
+	LOGFONT lf = pFont->GetLogFont();
 	lf.lfUnderline = TRUE;
 	m_UrlFont.CreateFontIndirect(&lf);
 }

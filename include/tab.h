@@ -101,7 +101,6 @@ namespace Win32xx
 		virtual void RemoveTabPage(int nPage);
 		virtual void SelectPage(int nPage);
 		virtual void SetFixedWidth(BOOL bEnabled);
-		virtual void SetFont(HFONT hFont, BOOL bRedraw);
 		virtual void SetOwnerDraw(BOOL bEnabled);
 		virtual void SetShowButtons(BOOL bShow);
 		virtual void SetTabImage(UINT nTab, int iImage);
@@ -734,7 +733,7 @@ namespace Win32xx
 
 	inline void CTab::OnCreate()
 	{
-		SetFont(m_Font, TRUE);
+		SetFont(&m_Font, TRUE);
 		
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
@@ -1007,13 +1006,6 @@ namespace Win32xx
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_FIXEDWIDTH);
 
 		RecalcLayout();
-	}
-
-	inline void CTab::SetFont(HFONT hFont, BOOL bRedraw)
-	{
-		assert(hFont);
-		m_Font.Attach(hFont);
-		CWnd::SetFont(hFont, bRedraw);
 	}
 
 	inline void CTab::SetOwnerDraw(BOOL bEnabled)
