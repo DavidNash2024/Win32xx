@@ -99,7 +99,7 @@ namespace Win32xx
 		int  GetRowHeight(int nRow) const;
 		UINT GetSizeofRBBI() const;
 		HWND GetToolTips() const;
-		BOOL SetBandBitmap(const int nBand, const HBITMAP hBackground) const;
+		BOOL SetBandBitmap(const int nBand, const CBitmap* pBackground) const;
 		BOOL SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		BOOL SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
 		BOOL SetBarInfo(REBARINFO& rbi) const;
@@ -537,17 +537,18 @@ namespace Win32xx
 		return SetBandInfo(nBand, rbbi );
 	}
 
-	inline BOOL CReBar::SetBandBitmap(int nBand, HBITMAP hBackground) const
+	inline BOOL CReBar::SetBandBitmap(int nBand, const CBitmap* pBackground) const
 	// Sets the band's bitmaps
 	{
 		assert(::IsWindow(m_hWnd));
+		assert(pBackground);
 
 		REBARBANDINFO rbbi = {0};
 		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
-		rbbi.hbmBack = hBackground;
+		rbbi.hbmBack = pBackground->GetBitmap();
 
 		return (BOOL)SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}

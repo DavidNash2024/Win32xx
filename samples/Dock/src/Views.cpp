@@ -50,10 +50,9 @@ void CViewList::OnInitialUpdate()
 {
 	// Set the image lists
 	m_himlSmall = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-	HBITMAP hbmImage = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
-	ImageList_AddMasked(m_himlSmall, hbmImage, RGB(255, 0, 255));
+	CBitmap bmImage(IDB_FILEVIEW);
+	ImageList_AddMasked(m_himlSmall, bmImage, RGB(255, 0, 255));
 	SetImageList(m_himlSmall, LVSIL_SMALL);
-	::DeleteObject(hbmImage);
 
 	// Set the report style
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -169,10 +168,9 @@ void CViewTree::OnInitialUpdate()
 {
 	//set the image lists
 	m_himlNormal = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-	HBITMAP hbmImage = LoadBitmap(MAKEINTRESOURCE(IDB_CLASSVIEW));
-	ImageList_AddMasked(m_himlNormal, hbmImage, RGB(255, 0, 0));
+	CBitmap bmImage(IDB_CLASSVIEW);
+	ImageList_AddMasked(m_himlNormal, bmImage, RGB(255, 0, 0));
 	SetImageList(m_himlNormal, LVSIL_NORMAL);
-	::DeleteObject(hbmImage);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

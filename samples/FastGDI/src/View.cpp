@@ -35,7 +35,7 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 	 if (hFile)
 	 {
 		// Create our LPBITMAPINFO object
-		CBitmapInfoPtr pbmi(m_bmImage);
+		CBitmapInfoPtr pbmi(&m_bmImage);
 
 		// Create the reference DC for GetDIBits to use
 		CDC MemDC = CreateCompatibleDC(NULL);

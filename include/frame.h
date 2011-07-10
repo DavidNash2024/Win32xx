@@ -1439,8 +1439,7 @@ namespace Win32xx
 		if ((0 == iImages) || (!Bitmap))
 			return (UINT)m_vMenuIcons.size();	// No valid images, so nothing to do!
 
-		BITMAP bm = {0};
-		::GetObject(Bitmap, sizeof(BITMAP), &bm);
+		BITMAP bm = Bitmap.GetBitmapData();
 		int iImageWidth  = bm.bmWidth / iImages;
 		int iImageHeight = bm.bmHeight;
 
@@ -1482,9 +1481,8 @@ namespace Win32xx
 				m_himlMenuDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 
 			CBitmap BitmapDisabled(ToolBarDisabledID);
+			BITMAP bmDis = BitmapDisabled.GetBitmapData();
 
-			BITMAP bmDis = {0};
-			::GetObject(BitmapDisabled, sizeof(BITMAP), &bmDis);
 			int iImageWidthDis  = bmDis.bmWidth / iImages;
 			int iImageHeightDis = bmDis.bmHeight;
 

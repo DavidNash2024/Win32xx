@@ -8,7 +8,8 @@ New Features and Enhancements
    as the CString class provided with MFC/ATL.
 * Added CMenu
 	The CMenu class is intended to provide much of the same functionality
-    as the CMenu class provided with MFC.	
+    as the CMenu class provided with MFC. The library now standardises on
+    using pointers to CMenu, instead of HMENU.	
 * Added CFile
 	This class provides a convenient wrapper for functions dealing with files.
 * Added Idle processing.
@@ -19,6 +20,9 @@ New Features and Enhancements
    and CMetaFileDC. The creation of the various different types of CDCs has
    been simplified, and the CDC functions now use CDC pointers instead of
    HDCs.
+* Enhanced the various GDI object classes, namely CBitmap, CBrush, CFont, 
+   CPalette, CPen and CRgn, and added CGDIObject. The library now standardises
+   on using pointers to theses classes instead of raw GDI handles (like HPEN). 
 
 Changes in detail
 -----------------
@@ -29,11 +33,19 @@ Changes in detail
 - Added CMemDC
 - Added CPaintDC
 - Added CWindowDC
+- Added CMetaFileDC
 - Added BSTR2A
 - Added BSTR2T
 - Added BSTR2W
-- Added CBitmap::FromHandle
-- Added CBrush::FromHandle
+- Added FromHandle. Several global functions. They return pointers for:
+    - CBitmap
+	- CBrush
+	- CFont
+	- CPalette
+    - CPen
+    - CDC
+	- CMenu
+	- CWnd
 - Added CDC::Destroy
 - Added CDC::GetDCBrushColor
 - Added CDC::SetDCBrushColor
@@ -43,11 +55,7 @@ Changes in detail
 - Added CDC::SelectStockObject
 - Added CDocker::GetActiveDocker
 - Added CDocker::SetCaptionColors
-- Added CFont::FromHandle
 - Added CFrame::IsMDIFrame
-- Added CPalette::FromHandle
-- Added CPen::FromHandle
-- Added CRgn::FromHandle
 - Added CWinApp::GetAccelerators
 - Added CWinApp::OnIdle
 - Added CWinApp::PreTranslateMessage
@@ -66,7 +74,12 @@ Changes in detail
 - Modified CDC::StretchBlt				now accepts a CDC pointer
 - Modified CDocker::IsChildOfDocker 	now accepts a CWnd pointer instead of HWND
 - Modified CDocker::IsRelated 			now accepts a CWnd pointer instead of HWND
+- Modified CWnd::CreateEx               now accepts a CMenu pointer
 - Modified CWnd::GetAncestor			now accepts a gaFlags parameter
+- Modified CWnd::GetMenu                now accepts a CMenu pointer
+- Modified CWnd::SetMenu                now accepts a CMenu pointer
+- Modified CWnd::HiliteMenuItem         now accepts a CMenu pointer
+- Modified CWnd::GetSystemMenu          now accepts a CMenu pointer
 - Modified CWnd::OnEraseBkgnd			now accepts a CDC pointer
 - Modified CWnd::OnPaint				now accepts a CDC pointer
 - Modified CWnd::GetFont				now returns a CFont pointer

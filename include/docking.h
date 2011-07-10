@@ -306,7 +306,6 @@ namespace Win32xx
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
-			virtual void SetBitmap(HBITMAP hbmBlueTint);
 			virtual void ShowHintWindow(CDocker* pDockTarget, CRect rcHint);
 
 		private:
@@ -320,19 +319,20 @@ namespace Win32xx
 		class CTarget : public CWnd
 		{
 		public:
-			CTarget() : m_hbmImage(0) {}
+			CTarget() : m_bmImage(0) {}
 			virtual ~CTarget();
 			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 
-			HBITMAP GetImage()		{return m_hbmImage;}
-			void SetImage(UINT nID);
+		//	CBitmap& GetImage()		{return m_bmImage;}
+		//	void SetImage(UINT nID);
+
+		protected:
+			CBitmap m_bmImage;
 
 		private:
 			CTarget(const CTarget&);				// Disable copy construction
 			CTarget& operator = (const CTarget&); // Disable assignment operator
-
-			HBITMAP m_hbmImage;
 		};
 
 		class CTargetCentre : public CTarget
@@ -356,7 +356,7 @@ namespace Win32xx
 		class CTargetLeft : public CTarget
 		{
 		public:
-			CTargetLeft() {SetImage(IDW_SDLEFT);}
+			CTargetLeft() {m_bmImage.LoadBitmap(IDW_SDLEFT);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 
 		private:
@@ -367,7 +367,7 @@ namespace Win32xx
 		class CTargetTop : public CTarget
 		{
 		public:
-			CTargetTop() {SetImage(IDW_SDTOP);}
+			CTargetTop() {m_bmImage.LoadBitmap(IDW_SDTOP);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 		private:
 			CTargetTop(const CTargetTop&);				// Disable copy construction
@@ -377,7 +377,7 @@ namespace Win32xx
 		class CTargetRight : public CTarget
 		{
 		public:
-			CTargetRight() {SetImage(IDW_SDRIGHT);}
+			CTargetRight() {m_bmImage.LoadBitmap(IDW_SDRIGHT);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 
 		private:
@@ -388,7 +388,7 @@ namespace Win32xx
 		class CTargetBottom : public CTarget
 		{
 		public:
-			CTargetBottom() {SetImage(IDW_SDBOTTOM);}
+			CTargetBottom() {m_bmImage.LoadBitmap(IDW_SDBOTTOM);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 		};
 
@@ -526,7 +526,6 @@ namespace Win32xx
 		double m_DockSizeRatio;
 		DWORD m_DockStyle;
 		CBrush m_brDithered;
-	//	HBITMAP	m_hbmHash;
 		CBitmap m_bmHash;
 		HWND m_hOldFocus;
 
@@ -1341,13 +1340,6 @@ namespace Win32xx
 		cs.lpszClass = _T("Win32++ DockHint");
 	}
 
-	inline void CDocker::CDockHint::SetBitmap(HBITMAP hbm)
-	{
-	//	if (m_hbmBlueTint) ::DeleteObject(m_hbmBlueTint);
-	//	m_hbmBlueTint = hbm;
-		m_bmBlueTint = hbm;
-	}
-
 	inline void CDocker::CDockHint::ShowHintWindow(CDocker* pDockTarget, CRect rcHint)
 	{
 		// Save the Dock window's blue tinted bitmap
@@ -1387,46 +1379,32 @@ namespace Win32xx
 
 	inline void CDocker::CTargetCentre::OnDraw(CDC* pDC)
 	{
-		HBITMAP hbmCentre = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDCENTER),
-						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		HBITMAP hbmLeft= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDLEFT),
-						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		HBITMAP hbmRight= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDRIGHT),
-						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		HBITMAP hbmTop= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDTOP),
-						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		HBITMAP hbmBottom= (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDBOTTOM),
-						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		CBitmap bmCentre(IDW_SDCENTER);
+		CBitmap bmLeft(IDW_SDLEFT);
+		CBitmap bmRight(IDW_SDRIGHT);
+		CBitmap bmTop(IDW_SDTOP);
+		CBitmap bmBottom(IDW_SDBOTTOM);
 
-		if (hbmCentre)	pDC->DrawBitmap(0, 0, 88, 88, hbmCentre, RGB(255,0,255));
+		if (bmCentre.GetBitmap())	pDC->DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Centre\n"));
 
-		if (hbmLeft) pDC->DrawBitmap(0, 29, 31, 29, hbmLeft, RGB(255,0,255));
+		if (bmLeft.GetBitmap()) pDC->DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Left\n"));
 
-		if (hbmTop) pDC->DrawBitmap(29, 0, 29, 31, hbmTop, RGB(255,0,255));
+		if (bmTop.GetBitmap()) pDC->DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Top\n"));
 
-		if (hbmRight) pDC->DrawBitmap(55, 29, 31, 29, hbmRight, RGB(255,0,255));
+		if (bmRight.GetBitmap()) pDC->DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Right\n"));
 
-		if (hbmBottom) pDC->DrawBitmap(29, 55, 29, 31, hbmBottom, RGB(255,0,255));
+		if (bmBottom.GetBitmap()) pDC->DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Bottom\n"));
-
-		::DeleteObject(hbmCentre);
-		::DeleteObject(hbmLeft);
-		::DeleteObject(hbmRight);
-		::DeleteObject(hbmTop);
-		::DeleteObject(hbmBottom);
 
 		if (IsOverContainer())
 		{
-			HBITMAP hbmMiddle = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SDMIDDLE),
-						                  IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-			pDC->DrawBitmap(31, 31, 25, 26, hbmMiddle, RGB(255,0,255));
-			::DeleteObject(hbmMiddle);
+			CBitmap bmMiddle(IDW_SDMIDDLE);
+			pDC->DrawBitmap(31, 31, 25, 26, bmMiddle, RGB(255,0,255));
 		}
-
 	}
 
 	inline void CDocker::CTargetCentre::OnCreate()
@@ -1520,18 +1498,18 @@ namespace Win32xx
 	// CTarget is the base class for a number of CTargetXXX classes
 	inline CDocker::CTarget::~CTarget()
 	{
-		if (m_hbmImage) ::DeleteObject(m_hbmImage);
 	}
 
 	inline void CDocker::CTarget::OnDraw(CDC* pDC)
 	{
-		BITMAP bm;
-		GetObject(GetImage(), sizeof(bm), &bm);
+		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
-		if (GetImage()) pDC->DrawBitmap(0, 0, cxImage, cyImage, GetImage(), RGB(255,0,255));
-		else TRACE(_T("Missing docking resource\n"));
+		if (m_bmImage) 
+			pDC->DrawBitmap(0, 0, cxImage, cyImage, m_bmImage, RGB(255,0,255));
+		else 
+			TRACE(_T("Missing docking resource\n"));
 	}
 
 	inline void CDocker::CTarget::PreCreate(CREATESTRUCT &cs)
@@ -1541,11 +1519,6 @@ namespace Win32xx
 		cs.lpszClass = _T("Win32++ DockTargeting");
 	}
 
-	inline void CDocker::CTarget::SetImage(UINT nID)
-	{
-		m_hbmImage = (HBITMAP)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID),
-		IMAGE_BITMAP, 0, 0, LR_SHARED);
-	}
 
 	////////////////////////////////////////////////////////////////
 	// Definitions for the CTargetLeft class nested within CDocker
@@ -1563,8 +1536,7 @@ namespace Win32xx
 			return FALSE;
 		}
 
-		BITMAP bm;
-		GetObject(GetImage(), sizeof(bm), &bm);
+		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
@@ -1608,8 +1580,7 @@ namespace Win32xx
 			return FALSE;
 		}
 
-		BITMAP bm;
-		GetObject(GetImage(), sizeof(bm), &bm);
+		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
@@ -1653,8 +1624,7 @@ namespace Win32xx
 			return FALSE;
 		}
 
-		BITMAP bm;
-		GetObject(GetImage(), sizeof(bm), &bm);
+		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
@@ -1698,8 +1668,7 @@ namespace Win32xx
 			return FALSE;
 		}
 
-		BITMAP bm;
-		GetObject(GetImage(), sizeof(bm), &bm);
+		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 

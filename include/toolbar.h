@@ -939,12 +939,8 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		CBitmap Bitmap(nID);
-		assert (Bitmap);
-		BITMAP bm = {0};
-
-		int iResult = ::GetObject(Bitmap, sizeof(BITMAP), &bm);
-		assert (iResult);
-		UNREFERENCED_PARAMETER(iResult);
+		assert (Bitmap.GetBitmap());
+		BITMAP bm = Bitmap.GetBitmapData();
 
 		int iNumButtons = 0;
 		std::vector<UINT>::iterator iter;
@@ -1243,13 +1239,9 @@ namespace Win32xx
 		{
 			// Set the button images
 			CBitmap Bitmap(ToolBarID);
-			assert(Bitmap);
+			assert(Bitmap.GetBitmap());
 
-			BITMAP bm = {0};
-			int iResult = GetObject(Bitmap, sizeof(BITMAP), &bm);
-			assert(iResult);
-			UNREFERENCED_PARAMETER(iResult);
-
+			BITMAP bm = Bitmap.GetBitmapData();
 			int iImageWidth  = bm.bmWidth / iNumButtons;
 			int iImageHeight = bm.bmHeight;
 
