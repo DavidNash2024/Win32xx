@@ -87,6 +87,7 @@
 #endif
 
 #ifdef __BORLANDC__
+  #pragma option -w-8019			// code has no effect
   #pragma option -w-8026            // functions with exception specifiations are not expanded inline
   #pragma option -w-8027		    // function not expanded inline
   #define STRICT 1
@@ -443,14 +444,14 @@ namespace Win32xx
 		CWnd* GetAncestor(UINT gaFlag = 3 /*= GA_ROOTOWNER*/) const;
 		CWnd* GetCapture() const;
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
-		LPCTSTR GetClassName() const;
+		CString GetClassName() const;
 		CRect GetClientRect() const;
 		CDC*  GetDC() const;
 		CDC*  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		CWnd* GetDesktopWindow() const;
 		CWnd* GetDlgItem(int nIDDlgItem) const;
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
-		LPCTSTR GetDlgItemText(int nIDDlgItem) const;
+		CString GetDlgItemText(int nIDDlgItem) const;
 		CWnd* GetFocus() const;
 		CFont* GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
@@ -464,7 +465,7 @@ namespace Win32xx
 		CDC*  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
-		LPCTSTR GetWindowText() const;
+		CString GetWindowText() const;
 		int   GetWindowTextLength() const;
 		void  Invalidate(BOOL bErase = TRUE) const;
 		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
@@ -577,9 +578,7 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		HWND m_hWnd;				// handle to this object's window
-        HICON m_hIconLarge;			// handle to the window's large icon
-		HICON m_hIconSmall;			// handle to the window's small icon
+		HWND m_hWnd;					// handle to this object's window
 
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
@@ -591,11 +590,10 @@ namespace Win32xx
 		BOOL RemoveFromMap();
 		void Subclass(HWND hWnd);
 
-		WNDCLASS m_wc;				// defines initialisation parameters for RegisterClass
-		CREATESTRUCT m_cs;			// defines initialisation parameters for PreCreate and Create
-		WNDPROC m_PrevWindowProc;	// pre-subclassed Window Procedure
-		mutable std::vector<TCHAR> m_vTChar;	// A vector used as a TCHAR array for string functions
-		BOOL m_IsTmpWnd;			// True if this CWnd is a TmpWnd
+		Shared_Ptr<WNDCLASS> m_pwc;		// defines initialisation parameters for PreRegisterClass
+		Shared_Ptr<CREATESTRUCT> m_pcs;	// defines initialisation parameters for PreCreate and Create
+		WNDPROC m_PrevWindowProc;		// pre-subclassed Window Procedure
+		BOOL m_IsTmpWnd;				// True if this CWnd is a TmpWnd
 
 	}; // class CWnd
 
@@ -1034,12 +1032,13 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd() : m_hWnd(NULL), m_hIconLarge(NULL), m_hIconSmall(NULL),
-						m_PrevWindowProc(NULL), m_IsTmpWnd(FALSE)
+	inline CWnd::CWnd() : m_hWnd(NULL), m_PrevWindowProc(NULL), m_IsTmpWnd(FALSE)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
-		::ZeroMemory(&m_cs, sizeof(CREATESTRUCT));
-		::ZeroMemory(&m_wc, sizeof(WNDCLASS));
+		m_pcs = new CREATESTRUCT;	// store the CREATESTRICT in a smart pointer
+		m_pwc = new WNDCLASS;		// store the WNDCLASS in a smart pointer
+		::ZeroMemory(m_pcs.get(), sizeof(CREATESTRUCT));
+		::ZeroMemory(m_pwc.get(), sizeof(WNDCLASS));
 	}
 
 	inline CWnd::~CWnd()
@@ -1173,12 +1172,7 @@ namespace Win32xx
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
 	{
-		if (m_hIconLarge) ::DestroyIcon(m_hIconLarge);
-		if (m_hIconSmall) ::DestroyIcon(m_hIconSmall);
-
 		if ( GetApp() ) RemoveFromMap();
-		m_hIconLarge = NULL;
-		m_hIconSmall = NULL;
 		m_hWnd = NULL;
 		m_PrevWindowProc = NULL;
 		m_IsTmpWnd = FALSE;
@@ -1192,42 +1186,42 @@ namespace Win32xx
 		assert( GetApp() );
 
 		// Set the WNDCLASS parameters
-		PreRegisterClass(m_wc);
-		if (m_wc.lpszClassName)
+		PreRegisterClass(*m_pwc);
+		if (m_pwc->lpszClassName)
 		{
-			RegisterClass(m_wc);
-			m_cs.lpszClass = m_wc.lpszClassName;
+			RegisterClass(*m_pwc);
+			m_pcs->lpszClass = m_pwc->lpszClassName;
 		}
 
 		// Set the CREATESTRUCT parameters
-		PreCreate(m_cs);
+		PreCreate(*m_pcs);
 
 		// Set the Window Class Name
-		if (!m_cs.lpszClass)
-			m_cs.lpszClass = _T("Win32++ Window");
+		if (!m_pcs->lpszClass)
+			m_pcs->lpszClass = _T("Win32++ Window");
 
 		// Set Parent
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-		if (!hWndParent && m_cs.hwndParent)
-			hWndParent = m_cs.hwndParent;
+		if (!hWndParent && m_pcs->hwndParent)
+			hWndParent = m_pcs->hwndParent;
 
 		// Set the window style
 		DWORD dwStyle;
 		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		if (m_cs.style)
-			dwStyle = m_cs.style;
+		if (m_pcs->style)
+			dwStyle = m_pcs->style;
 		else
 			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
 
 		// Set window size and position
-		int x  = (m_cs.cx || m_cs.cy)? m_cs.x  : CW_USEDEFAULT;
-		int cx = (m_cs.cx || m_cs.cy)? m_cs.cx : CW_USEDEFAULT;
-		int y  = (m_cs.cx || m_cs.cy)? m_cs.y  : CW_USEDEFAULT;
-		int cy = (m_cs.cx || m_cs.cy)? m_cs.cy : CW_USEDEFAULT;
+		int x  = (m_pcs->cx || m_pcs->cy)? m_pcs->x  : CW_USEDEFAULT;
+		int cx = (m_pcs->cx || m_pcs->cy)? m_pcs->cx : CW_USEDEFAULT;
+		int y  = (m_pcs->cx || m_pcs->cy)? m_pcs->y  : CW_USEDEFAULT;
+		int cy = (m_pcs->cx || m_pcs->cy)? m_pcs->cy : CW_USEDEFAULT;
 
 		// Create the window
-		CreateEx(m_cs.dwExStyle, m_cs.lpszClass, m_cs.lpszName, dwStyle, x, y,
-				cx, cy, pParent, FromHandle(m_cs.hMenu), m_cs.lpCreateParams);
+		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, x, y,
+				cx, cy, pParent, FromHandle(m_pcs->hMenu), m_pcs->lpCreateParams);
 
 		return m_hWnd;
 	}
@@ -1376,43 +1370,42 @@ namespace Win32xx
 
 	}
 
-	inline LPCTSTR CWnd::GetClassName() const
+	inline CString CWnd::GetClassName() const
 	// Retrieves the name of the class to which the specified window belongs.
 	{
 		assert(::IsWindow(m_hWnd));
 
-		m_vTChar.assign(MAX_STRING_SIZE +1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar[0];
-		::GetClassName(m_hWnd, pTCharArray, MAX_STRING_SIZE);
-
-		return pTCharArray;
+		CString str;
+		LPTSTR szStr = str.GetBuffer(MAX_STRING_SIZE+1);
+		::GetClassName(m_hWnd, szStr, MAX_STRING_SIZE+1);
+		str.ReleaseBuffer();
+		return str;
 	}
 
-	inline LPCTSTR CWnd::GetDlgItemText(int nIDDlgItem) const
+	inline CString CWnd::GetDlgItemText(int nIDDlgItem) const
 	// Retrieves the title or text associated with a control in a dialog box.
 	{
 		assert(::IsWindow(m_hWnd));
 
 		int nLength = ::GetWindowTextLength(::GetDlgItem(m_hWnd, nIDDlgItem));
-		m_vTChar.assign(nLength +1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar[0];
-
-		::GetDlgItemText(m_hWnd, nIDDlgItem, pTCharArray, nLength+1);
-
-		return pTCharArray;
+		CString str;
+		LPTSTR szStr = str.GetBuffer(nLength+1);
+		::GetDlgItemText(m_hWnd, nIDDlgItem, szStr, nLength+1);
+		str.ReleaseBuffer();
+		return str;
 	}
 
-	inline LPCTSTR CWnd::GetWindowText() const
+	inline CString CWnd::GetWindowText() const
 	// Retrieves the text of the window's title bar.
 	{
 		assert(::IsWindow(m_hWnd));
+
 		int nLength = ::GetWindowTextLength(m_hWnd);
-
-		m_vTChar.assign(nLength+1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar[0];
-		::GetWindowText(m_hWnd, pTCharArray, nLength+1);
-
-		return pTCharArray;
+		CString str;
+		LPTSTR szStr = str.GetBuffer(nLength+1);
+		::GetWindowText(m_hWnd, szStr, nLength+1);
+		str.ReleaseBuffer();
+		return str;
 	}
 
 	inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -1595,18 +1588,18 @@ namespace Win32xx
 		// Test if Win32++ has been started
 		assert(GetApp());	// Test if Win32++ has been started
 
-		m_cs.cx             = cs.cx;
-		m_cs.cy             = cs.cy;
-		m_cs.dwExStyle      = cs.dwExStyle;
-		m_cs.hInstance      = GetApp()->GetInstanceHandle();
-		m_cs.hMenu          = cs.hMenu;
-		m_cs.hwndParent     = cs.hwndParent;
-		m_cs.lpCreateParams = cs.lpCreateParams;
-		m_cs.lpszClass      = cs.lpszClass;
-		m_cs.lpszName       = cs.lpszName;
-		m_cs.style          = cs.style;
-		m_cs.x              = cs.x;
-		m_cs.y              = cs.y;
+		m_pcs->cx             = cs.cx;
+		m_pcs->cy             = cs.cy;
+		m_pcs->dwExStyle      = cs.dwExStyle;
+		m_pcs->hInstance      = GetApp()->GetInstanceHandle();
+		m_pcs->hMenu          = cs.hMenu;
+		m_pcs->hwndParent     = cs.hwndParent;
+		m_pcs->lpCreateParams = cs.lpCreateParams;
+		m_pcs->lpszClass      = cs.lpszClass;
+		m_pcs->lpszName       = cs.lpszName;
+		m_pcs->style          = cs.style;
+		m_pcs->x              = cs.x;
+		m_pcs->y              = cs.y;
 
 		// Overide this function in your derived class to set the
 		// CREATESTRUCT values prior to window creation.
@@ -1621,16 +1614,16 @@ namespace Win32xx
 		// Test if Win32++ has been started
 		assert( GetApp() );
 
-		m_wc.style			= wc.style;
-		m_wc.lpfnWndProc	= CWnd::StaticWindowProc;
-		m_wc.cbClsExtra		= wc.cbClsExtra;
-		m_wc.cbWndExtra		= wc.cbWndExtra;
-		m_wc.hInstance		= GetApp()->GetInstanceHandle();
-		m_wc.hIcon			= wc.hIcon;
-		m_wc.hCursor		= wc.hCursor;
-		m_wc.hbrBackground	= wc.hbrBackground;
-		m_wc.lpszMenuName	= wc.lpszMenuName;
-		m_wc.lpszClassName  = wc.lpszClassName;
+		m_pwc->style			= wc.style;
+		m_pwc->lpfnWndProc		= CWnd::StaticWindowProc;
+		m_pwc->cbClsExtra		= wc.cbClsExtra;
+		m_pwc->cbWndExtra		= wc.cbWndExtra;
+		m_pwc->hInstance		= GetApp()->GetInstanceHandle();
+		m_pwc->hIcon			= wc.hIcon;
+		m_pwc->hCursor			= wc.hCursor;
+		m_pwc->hbrBackground	= wc.hbrBackground;
+		m_pwc->lpszMenuName		= wc.lpszMenuName;
+		m_pwc->lpszClassName	= wc.lpszClassName;
 
 		// Overide this function in your derived class to set the
 		// WNDCLASS values prior to window creation.
@@ -1731,15 +1724,15 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(::IsWindow(m_hWnd));
 
-		m_hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
+		HICON hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), 0));
 
-		if (m_hIconLarge)
-			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (m_hIconLarge));
+		if (hIconLarge)
+			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (hIconLarge));
 		else
 			TRACE(_T("**WARNING** SetIconLarge Failed\n"));
 
-		return m_hIconLarge;
+		return hIconLarge;
 	}
 
 	inline HICON CWnd::SetIconSmall(int nIcon)
@@ -1748,15 +1741,15 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(::IsWindow(m_hWnd));
 
-		m_hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
+		HICON hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
-		if (m_hIconSmall)
-			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (m_hIconSmall));
+		if (hIconSmall)
+			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (hIconSmall));
 		else
 			TRACE(_T("**WARNING** SetIconSmall Failed\n"));
 
-		return m_hIconSmall;
+		return hIconSmall;
 	}
 
 	inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

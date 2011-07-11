@@ -108,7 +108,7 @@ namespace Win32xx
 	#endif
 
 	private:
-		CDialog(const CDialog&);				// Disable copy construction
+		CDialog(const CDialog&);			  // Disable copy construction
 		CDialog& operator = (const CDialog&); // Disable assignment operator
 
 		BOOL m_IsModal;					// a flag for modal dialogs

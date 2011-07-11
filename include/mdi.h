@@ -593,21 +593,21 @@ namespace Win32xx
 	// This technique avoids unnecessary flicker when creating maximized MDI children.
 	{
 		//Call PreCreate in case its overloaded
-		PreCreate(m_cs);
+		PreCreate(*m_pcs);
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
 		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
-		bMax = bMax | (m_cs.style & WS_MAXIMIZE);
+		bMax = bMax | (m_pcs->style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
 		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ MDI Child");
-		if (m_cs.lpszClass)
-			lstrcpyn(szClassName, m_cs.lpszClass, MAX_STRING_SIZE);
+		if (m_pcs->lpszClass)
+			lstrcpyn(szClassName, m_pcs->lpszClass, MAX_STRING_SIZE);
 
 		// Set the window style
 		DWORD dwStyle;
-		dwStyle = m_cs.style & ~WS_MAXIMIZE;
+		dwStyle = m_pcs->style & ~WS_MAXIMIZE;
 		dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
 
 		// Set window size and position
@@ -615,23 +615,23 @@ namespace Win32xx
 		int	y = CW_USEDEFAULT;
 		int cx = CW_USEDEFAULT;
 		int cy = CW_USEDEFAULT;
-		if(m_cs.cx && m_cs.cy)
+		if(m_pcs->cx && m_pcs->cy)
 		{
-			x = m_cs.x;
-			y = m_cs.y;
-			cx = m_cs.cx;
-			cy = m_cs.cy;
+			x = m_pcs->x;
+			y = m_pcs->y;
+			cx = m_pcs->cx;
+			cy = m_pcs->cy;
 		}
 
 		// Set the extended style
-		DWORD dwExStyle = m_cs.dwExStyle | WS_EX_MDICHILD;
+		DWORD dwExStyle = m_pcs->dwExStyle | WS_EX_MDICHILD;
 
 		// Turn off redraw while creating the window
 		pParent->SendMessage(WM_SETREDRAW, FALSE, 0L);
 
 		// Create the window
-		if (!CreateEx(dwExStyle, szClassName, m_cs.lpszName, dwStyle, x, y,
-			cx, cy, pParent, FromHandle(m_cs.hMenu), m_cs.lpCreateParams))
+		if (!CreateEx(dwExStyle, szClassName, m_pcs->lpszName, dwStyle, x, y,
+			cx, cy, pParent, FromHandle(m_pcs->hMenu), m_pcs->lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 		if (bMax)

@@ -91,7 +91,7 @@ namespace Win32xx
 		DWORD GetButtonSize() const;
 		UINT  GetButtonState(int idButton) const;
 		BYTE  GetButtonStyle(int idButton) const;
-		LPCTSTR GetButtonText(int idButton) const;
+		CString GetButtonText(int idButton) const;
 		int   GetCommandID(int iIndex) const;
 		HIMAGELIST GetDisabledImageList() const;
 		int   GetHotItem() const;
@@ -160,7 +160,6 @@ namespace Win32xx
 		UINT m_OldToolBarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ToolBarTheme m_Theme;				// The theme structure
 		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn
-		mutable std::vector<TCHAR> m_vTChar;// Used in string functions
 
 	};  // class CToolBar
 
@@ -377,17 +376,17 @@ namespace Win32xx
 		return tbb.fsStyle;
 	}
 
-	inline LPCTSTR CToolBar::GetButtonText(int idButton) const
+	inline CString CToolBar::GetButtonText(int idButton) const
 	// Retrieves the display text of a button on a toolbar.
 	{
 		assert(::IsWindow(m_hWnd));
 
 		int Length = (int)SendMessage(TB_GETBUTTONTEXT, idButton, 0);
-		m_vTChar.assign(Length+1, _T('\0'));
-		TCHAR* pTCharArray = &m_vTChar[0];
-
-		SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)pTCharArray);
-		return pTCharArray;
+		CString str;
+		LPTSTR szStr = str.GetBuffer(Length +1);
+		SendMessage(TB_GETBUTTONTEXT, (LPARAM)idButton, (WPARAM)szStr);
+		str.ReleaseBuffer();
+		return str;
 	}
 
 	inline int CToolBar::GetCommandID(int iIndex) const

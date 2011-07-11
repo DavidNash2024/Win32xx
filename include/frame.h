@@ -2472,10 +2472,8 @@ namespace Win32xx
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfStatusFont;
-		HFONT hFontOld = (HFONT)GetStatusBar().SendMessage(WM_GETFONT, 0L, 0L);
-		HFONT hFont = ::CreateFontIndirect(&lf);
-		GetStatusBar().SendMessage(WM_SETFONT, (WPARAM)hFont, TRUE);
-		::DeleteObject(hFontOld);
+		CFont* pFont = FromHandle(CreateFontIndirect(&lf));
+		GetStatusBar().SetFont(pFont, FALSE);
 		SetStatusText();
 
 		/*

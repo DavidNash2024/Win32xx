@@ -73,16 +73,13 @@
 //          behave like a POD. Other compilers (such as the MinGW compiler) specifically
 //          prohibit the use of non POD types for functions with variable argument lists.
 //
-//  4) This class uses a std::string, but does not inherit from std::string.
-//
-//  5) This class provides a few additional functions:
+// 4) This class provides a few additional functions:
 //       b_str			Returns a BSTR string. This an an alternative for casting to BSTR.
 //       c_str			Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
 //       GetErrorString	Assigns CString to the error string for the specified System Error Code 
 //                      (from ::GetLastErrror() for example).
 //       GetString		Returns a reference to the underlying std::basic_string<TCHAR>. This 
 //						reference can be used to modify the string directly.
-
 
 
 
