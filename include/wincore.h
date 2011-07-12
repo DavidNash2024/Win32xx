@@ -234,6 +234,12 @@ namespace Win32xx
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
+	struct CompareGDI		// The comparison function object used by CWinApp::m_mapGDI
+	{
+		bool operator()(HGDIOBJ const a, const HGDIOBJ b) const
+			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
+	};
+
 	struct CompareHMENU		// The comparison function object used by CWinApp::m_mapHMENU
 	{
 		bool operator()(HMENU const a, const HMENU b) const
@@ -339,6 +345,7 @@ namespace Win32xx
 
 		HACCEL GetAccelerators() const { return m_hAccel; }
 		CDC* GetCDCFromMap(HDC hDC);
+		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
@@ -359,7 +366,7 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
-		CDC*	AddTmpDC(HDC hDC);
+		void	AddTmpDC(CDC* pDC);
 		void	AddTmpGDI(CGDIObject* pObject);
 		CMenu*	AddTmpMenu(HMENU hMenu);
 		CWnd*	AddTmpWnd(HWND hWnd);
@@ -370,6 +377,7 @@ namespace Win32xx
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
+		std::map<HGDIOBJ, CGDIObject*, CompareGDI> m_mapGDI;	// maps GDI handles to CGDIObjects.
 		std::map<HMENU, CMenu*, CompareHMENU> m_mapHMENU;	// maps menu handles to CMenu objects
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
@@ -717,19 +725,15 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
-	inline CDC* CWinApp::AddTmpDC(HDC hDC)
+	inline void CWinApp::AddTmpDC(CDC* pDC)
 	{
 		// The TmpMenus are created by GetSybMenu.
 		// They are removed by CleanupTemps
-		assert(hDC);
-	
-		CDC* pDC = new CDC;
-		pDC->m_pData->hDC = hDC;
+		assert(pDC);
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
-		return pDC;
 	}
 
 	inline void CWinApp::AddTmpGDI(CGDIObject* pObject)
@@ -814,6 +818,23 @@ namespace Win32xx
 
 		m_csMapLock.Release();
 		return pDC;
+	}
+
+	inline CGDIObject* CWinApp::GetCGDIObjectFromMap(HGDIOBJ hObject)
+	{
+		// Allocate an iterator for our HWND map
+		std::map<HGDIOBJ, CGDIObject*, CompareGDI>::iterator m;
+
+		// Find the CGDIObject pointer mapped to this HGDIOBJ
+		CGDIObject* pObject = 0;
+		m_csMapLock.Lock();
+		m = m_mapGDI.find(hObject);
+
+		if (m != m_mapGDI.end())
+			pObject = m->second;
+
+		m_csMapLock.Release();
+		return pObject;
 	}
 
 	inline CMenu* CWinApp::GetCMenuFromMap(HMENU hMenu)
