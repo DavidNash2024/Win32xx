@@ -714,6 +714,9 @@ namespace Win32xx
 				::DestroyWindow(hWnd);
 		}
 		m_mapHWND.clear();
+		m_mapGDI.clear();
+		m_mapHDC.clear();
+		m_mapHMENU.clear();
 
 		// Do remaining tidy up
 		if (m_dwTlsIndex != TLS_OUT_OF_INDEXES)

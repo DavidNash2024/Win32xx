@@ -182,6 +182,10 @@ namespace Win32xx
 
 	protected:
 		DataMembers* m_pData;
+
+	private:
+		void	AddToMap();
+		BOOL	RemoveFromMap();
 	};
 
 
@@ -883,21 +887,65 @@ namespace Win32xx
 		m_pData->hGDIObject = hObject;
 	}
 
+	inline void CGDIObject::AddToMap()
+	// Store the HDC and CDC pointer in the HDC map
+	{
+		assert( GetApp() );
+		assert(m_pData->hGDIObject);
+		GetApp()->m_csMapLock.Lock();
+
+		assert(m_pData->hGDIObject);
+		assert(!GetApp()->GetCGDIObjectFromMap(m_pData->hGDIObject));
+
+		GetApp()->m_mapGDI.insert(std::make_pair(m_pData->hGDIObject, this));
+		GetApp()->m_csMapLock.Release();
+	}
+
 	inline void CGDIObject::Attach(HGDIOBJ hObject)
 	// Attaches a GDI HANDLE to the CGDIObject.
 	// The HGDIOBJ will be automatically deleted when the destructor is called unless it is detached.
 	{
 		assert(m_pData);
-		if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
-			::DeleteObject(m_pData->hGDIObject);
-		m_pData->hGDIObject = hObject;
+
+		CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
+		if (pObject)
+		{
+			delete m_pData;
+			m_pData = pObject->m_pData;
+			InterlockedIncrement(&m_pData->Count);
+		}
+		else
+		{
+			if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
+				::DeleteObject(m_pData->hGDIObject);
+			m_pData->hGDIObject = hObject;
+			AddToMap();
+		}
 	}
 
 	inline HGDIOBJ CGDIObject::Detach()
-	// Detaches the GDI HANDLE from the CGDIObject
+	// Detaches the HDC from this object.
 	{
 		assert(m_pData);
+		assert(m_pData->hGDIObject);
+
+		GetApp()->m_csMapLock.Lock();
+		RemoveFromMap();
 		HGDIOBJ hObject = m_pData->hGDIObject;
+		m_pData->hGDIObject = 0;
+		
+		if (m_pData->Count)
+		{
+			if (InterlockedDecrement(&m_pData->Count) == 0)
+			{
+				delete m_pData;
+			}
+		}
+
+		GetApp()->m_csMapLock.Release();
+
+		// Assign values to our data members
+		m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
 		m_pData->bRemoveObject = TRUE;
@@ -919,12 +967,41 @@ namespace Win32xx
 				else
 					bSucceeded = TRUE;
 			}
-
+		
+			RemoveFromMap();
 			delete m_pData;
 			m_pData = 0;
 		}
 
 		assert(bSucceeded);
+	}
+
+	inline BOOL CGDIObject::RemoveFromMap()
+	{
+		BOOL Success = FALSE;
+		
+		if( GetApp() )
+		{
+			// Allocate an iterator for our HDC map
+			std::map<HGDIOBJ, CGDIObject*, CompareGDI>::iterator m;
+
+			CWinApp* pApp = GetApp();
+			if (pApp)
+			{
+				// Erase the CGDIObject pointer entry from the map
+				pApp->m_csMapLock.Lock();
+				m = pApp->m_mapGDI.find(m_pData->hGDIObject);
+				if (m != pApp->m_mapGDI.end())
+				{
+					pApp->m_mapGDI.erase(m);
+					Success = TRUE;
+				}
+			
+				pApp->m_csMapLock.Release();
+			}
+		}
+
+		return Success;
 	}
 
 
@@ -1869,19 +1946,22 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		GetApp()->m_csMapLock.Lock();
+		RemoveFromMap();
 		HDC hDC = m_pData->hDC;
-
+		m_pData->hDC = 0;
+		
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
-				RemoveFromMap();
+				delete m_pData;
 			}
 		}
 
 		GetApp()->m_csMapLock.Release();
 
 		// Assign values to our data members
+		m_pData = new DataMembers;
 		m_pData->hDC = 0;
 		m_pData->Count = 1L;
 		m_pData->bRemoveHDC = TRUE;
@@ -2029,30 +2109,28 @@ namespace Win32xx
 
 	inline BOOL CDC::RemoveFromMap()
 	{
-		assert( GetApp() );
 		BOOL Success = FALSE;
-
-		// Allocate an iterator for our HDC map
-		std::map<HDC, CDC*, CompareHDC>::iterator m;
-
-		CWinApp* pApp = GetApp();
-		if (pApp)
+		
+		if( GetApp() )
 		{
-			// Erase the CDC pointer entry from the map
-			pApp->m_csMapLock.Lock();
-			for (m = pApp->m_mapHDC.begin(); m != pApp->m_mapHDC.end(); ++m)
+			// Allocate an iterator for our HDC map
+			std::map<HDC, CDC*, CompareHDC>::iterator m;
+
+			CWinApp* pApp = GetApp();
+			if (pApp)
 			{
-				if (this == m->second)
+				// Erase the CDC pointer entry from the map
+				pApp->m_csMapLock.Lock();
+				m = pApp->m_mapHDC.find(m_pData->hDC);
+				if (m != pApp->m_mapHDC.end())
 				{
 					pApp->m_mapHDC.erase(m);
 					Success = TRUE;
-					break;
 				}
+
+				pApp->m_csMapLock.Release();
 			}
-
-			pApp->m_csMapLock.Release();
 		}
-
 		return Success;
 	}
 
@@ -2137,6 +2215,7 @@ namespace Win32xx
 	{
 		if (m_pData->hDC)
 		{
+			RemoveFromMap();
 			if (m_pData->bRemoveHDC)
 			{
 				// Return the DC back to its initial state
@@ -2155,7 +2234,7 @@ namespace Win32xx
 			}
 		}
 
-		RemoveFromMap();
+	//	RemoveFromMap();
 	}
 
 	inline BITMAP CDC::GetBitmapInfo() const
@@ -3698,93 +3777,112 @@ namespace Win32xx
 
 	inline CBitmap* FromHandle(HBITMAP hBitmap)
 	// Returns the CBitmap associated with the Bitmap handle
+	// If a CBitmap object doesn't already exist, a temporary CBitmap object is created.
 	// The HBITMAP belonging to a temporary CBitmap is not released or destroyed
 	//  when the temporary CBitmap is deconstructed.
 	{
 		assert( GetApp() );
-
-		CBitmap* pBitmap = new CBitmap;
-		GetApp()->AddTmpGDI(pBitmap);
-		pBitmap->m_pData->hGDIObject = hBitmap;
-		pBitmap->m_pData->bRemoveObject = FALSE;
-
+		CBitmap* pBitmap = (CBitmap*)GetApp()->GetCGDIObjectFromMap(hBitmap);
+		if (pBitmap == 0)
+		{
+			pBitmap = new CBitmap;
+			GetApp()->AddTmpGDI(pBitmap);
+			pBitmap->m_pData->hGDIObject = hBitmap;
+			pBitmap->m_pData->bRemoveObject = FALSE;
+		}
 		return pBitmap;
 	}
 
 	inline CBrush* FromHandle(HBRUSH hBrush)
 	// Returns the CBrush associated with the Brush handle
+	// If a CBrush object doesn't already exist, a temporary CBrush object is created.
 	// The HBRUSH belonging to a temporary CBrush is not released or destroyed
 	//  when the temporary CBrush is deconstructed.
 	{
 		assert( GetApp() );
-
-		CBrush* pBrush = new CBrush;
-		GetApp()->AddTmpGDI(pBrush);
-		pBrush->m_pData->hGDIObject = hBrush;
-		pBrush->m_pData->bRemoveObject = FALSE;
-
+		CBrush* pBrush = (CBrush*)GetApp()->GetCGDIObjectFromMap(hBrush);
+		if (pBrush == 0)
+		{
+			pBrush = new CBrush;
+			GetApp()->AddTmpGDI(pBrush);
+			pBrush->m_pData->hGDIObject = hBrush;
+			pBrush->m_pData->bRemoveObject = FALSE;
+		}
 		return pBrush;
 	}
 
 	inline CFont* FromHandle(HFONT hFont)
 	// Returns the CFont associated with the Font handle
+	// If a CFont object doesn't already exist, a temporary CFont object is created.
 	// The HFONT belonging to a temporary CFont is not released or destroyed
 	//  when the temporary CFont is deconstructed.
 	{
 		assert( GetApp() );
-
-		CFont* pFont = new CFont;
-		GetApp()->AddTmpGDI(pFont);
-		pFont->m_pData->hGDIObject = hFont;
-		pFont->m_pData->bRemoveObject = FALSE;
-
+		CFont* pFont = (CFont*)GetApp()->GetCGDIObjectFromMap(hFont);
+		if (pFont == 0)
+		{
+			pFont = new CFont;
+			GetApp()->AddTmpGDI(pFont);
+			pFont->m_pData->hGDIObject = hFont;
+			pFont->m_pData->bRemoveObject = FALSE;
+		}
 		return pFont;
 	}
 
 	inline CPalette* FromHandle(HPALETTE hPalette)
 	// Returns the CPalette associated with the palette handle
+	// If a CPalette object doesn't already exist, a temporary CPalette object is created.
 	// The HPALETTE belonging to a temporary CPalette is not released or destroyed
 	//  when the temporary CPalette is deconstructed.
 	{
 		assert( GetApp() );
-
-		CPalette* pPalette = new CPalette;
-		GetApp()->AddTmpGDI(pPalette);
-		pPalette->m_pData->hGDIObject = hPalette;
-		pPalette->m_pData->bRemoveObject = FALSE;
-
+		CPalette* pPalette = (CPalette*)GetApp()->GetCGDIObjectFromMap(hPalette);
+		if (pPalette == 0)
+		{
+			pPalette = new CPalette;
+			GetApp()->AddTmpGDI(pPalette);
+			pPalette->m_pData->hGDIObject = hPalette;
+			pPalette->m_pData->bRemoveObject = FALSE;
+		}
 		return pPalette;
 	}
 
 	inline CPen* FromHandle(HPEN hPen)
 	// Returns the CPen associated with the HPEN.
+	// If a CPen object doesn't already exist, a temporary CPen object is created.
 	// The HPEN belonging to a temporary CPen is not released or destroyed
 	//  when the temporary CPen is deconstructed.
 	{
 		assert( GetApp() );
-
-		CPen* pPen = new CPen;
-		GetApp()->AddTmpGDI(pPen);
-		pPen->m_pData->hGDIObject = hPen;
-		pPen->m_pData->bRemoveObject = FALSE;
-
+		CPen* pPen = (CPen*)GetApp()->GetCGDIObjectFromMap(hPen);
+		if (pPen == 0)
+		{
+			pPen = new CPen;
+			GetApp()->AddTmpGDI(pPen);
+			pPen->m_pData->hGDIObject = hPen;
+			pPen->m_pData->bRemoveObject = FALSE;
+		}
 		return pPen;
 	}
 
 	inline CRgn* FromHandle(HRGN hRgn)
 	// Returns the CRgn associated with the HRGN.
+	// If a CRgn object doesn't already exist, a temporary CRgn object is created.
 	// The HRGN belonging to a temporary CRgn is not released or destroyed
 	//  when the temporary CRgn is deconstructed.
 	{
 		assert( GetApp() );
-
-		CRgn* pRgn = new CRgn;
-		GetApp()->AddTmpGDI(pRgn);
-		pRgn->m_pData->hGDIObject = hRgn;
-		pRgn->m_pData->bRemoveObject = FALSE;
-
+		CRgn* pRgn = (CRgn*)GetApp()->GetCGDIObjectFromMap(hRgn);
+		if (pRgn == 0)
+		{
+			pRgn = new CRgn;
+			GetApp()->AddTmpGDI(pRgn);
+			pRgn->m_pData->hGDIObject = hRgn;
+			pRgn->m_pData->bRemoveObject = FALSE;
+		}
 		return pRgn;
 	}
+
 
 
 } // namespace Win32xx

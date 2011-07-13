@@ -118,7 +118,7 @@ void CClientDialog::LoadCommonControlsEx()
 
 		::FreeLibrary(hComCtl);
 	}
-	
+
 	catch (const CWinException &e)
 	{
 		e.what();
@@ -156,7 +156,7 @@ int CClientDialog::OnClientReceive()
 {
 	// Called when the socket has data to receive
 	std::vector<TCHAR> vTChar( 1025, _T('\0') );
-	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0') 
+	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0')
 	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
 	if (SOCKET_ERROR == size)
 	{
@@ -271,7 +271,7 @@ void CClientDialog::OnStartClient()
 				}
 
 				// Retrieve the local port number
-				tString tPort = m_EditPort.GetWindowText();
+				tString tPort = (LPCTSTR)m_EditPort.GetWindowText();
 
 				// Temporarily disable the Connect/Disconnect button
 				m_ButtonConnect.EnableWindow( FALSE);
@@ -286,7 +286,7 @@ void CClientDialog::OnStartClient()
 					return;
 				}
 				m_Client.StartEvents();
-				
+
 			}
 			break;
 
@@ -361,9 +361,9 @@ void CClientDialog::OnSend()
 			LRESULT lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
 			int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
-			tString tPort = m_EditPort.GetWindowText();
-			tString tSend = m_EditSend.GetWindowText();
-			
+			tString tPort = (LPCTSTR)m_EditPort.GetWindowText();
+			tString tSend = (LPCTSTR)m_EditSend.GetWindowText();
+
 			// Retrieve the IP Address
 			tString tAddr;
 			if (PF_INET6 == IPfamily)

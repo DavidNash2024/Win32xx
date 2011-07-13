@@ -9,7 +9,7 @@
 
 /////////////////////////////////////////////
 // Definitions for the CTCPClientDlg class
-CTCPClientDlg::CTCPClientDlg(UINT nResID, CWnd* pParent) : 
+CTCPClientDlg::CTCPClientDlg(UINT nResID, CWnd* pParent) :
 				CDialog(nResID, pParent), m_pSocket(0)
 {
 }
@@ -42,7 +42,7 @@ INT_PTR CTCPClientDlg::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		m_pSocket->Disconnect();
 		break;
 	}
-	
+
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
@@ -77,7 +77,7 @@ BOOL CTCPClientDlg::OnInitDialog()
 void CTCPClientDlg::Receive()
 {
 	std::vector<TCHAR> vTChar( 1025, _T('\0') );
-	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0') 
+	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0')
 	m_pSocket->Receive(buf, 1024, 0);
 	Append(IDC_EDIT_RECEIVE2, buf);
 }
@@ -92,7 +92,7 @@ void CTCPClientDlg::Send()
 
 /////////////////////////////////////////////
 // Definitions for the CSvrDialog class
-CSvrDialog::CSvrDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent), 
+CSvrDialog::CSvrDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent),
               m_bServerStarted(FALSE), m_SocketType(SOCK_STREAM)
 {
 	// Add support for the IP Address control
@@ -172,14 +172,14 @@ void CSvrDialog::LoadCommonControlsEx()
 			if((!(*pfnInit)(&InitStruct)))
 				throw CWinException(_T("InitCommonControlsEx failed"));
 		}
-		else 
+		else
 		{
 			::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
 		}
 
 		::FreeLibrary(hComCtl);
 	}
-	
+
 	catch (const CWinException &e)
 	{
 		e.what();
@@ -207,7 +207,7 @@ void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
 	if (Iter != m_ConnectedClients.end())
 	{
 		m_ConnectedClients.erase(Iter);
-	}  
+	}
 }
 
 BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -276,11 +276,11 @@ void CSvrDialog::OnStartServer()
 	if (!m_bServerStarted)
 	{
 		// Attempt to start the server
-		if (!StartServer())	
+		if (!StartServer())
 			return;
 
 		// Update the dialog
-		m_ButtonStart.SetWindowText( _T("Stop Server") ); 
+		m_ButtonStart.SetWindowText( _T("Stop Server") );
 		m_IP4Address.EnableWindow(FALSE);
 		m_EditIP6Address.EnableWindow(FALSE);
 		m_EditPort.EnableWindow(FALSE);
@@ -289,7 +289,7 @@ void CSvrDialog::OnStartServer()
 		m_RadioTCP.EnableWindow(FALSE);
 		m_RadioUDP.EnableWindow(FALSE);
 
-		
+
 		if (m_SocketType == SOCK_STREAM)
 		{
 			Append(IDC_EDIT_STATUS, _T("TCP Server Started"));
@@ -350,8 +350,8 @@ void CSvrDialog::OnSocketAccept()
 		TRACE(_T("Failed to accept connection from client\n"));
 		TRACE(m_MainSocket.GetLastError());
 		return;
-	} 
-	
+	}
+
 	pClient->StartEvents();
 
 	// Create the new chat dialog
@@ -376,7 +376,7 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 {
 	std::vector<TCHAR> vTChar(1025, _T('\0'));
 	TCHAR* bufArray = &vTChar.front(); // TCHAR array with 1025 elements
-	
+
 	switch (m_SocketType)
 	{
 	case SOCK_STREAM:
@@ -389,7 +389,7 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 				if (Iter->first.get() == pClient)
 				break;
 			}
-			
+
 			if (Iter !=  m_ConnectedClients.end() )
 				Iter->second->Receive();
 		}
@@ -439,14 +439,14 @@ BOOL CSvrDialog::StartServer()
 	}
 
 	// Retrieve the local port number
-	tString tPort = m_EditPort.GetWindowText();
+	tString tPort = (LPCTSTR)m_EditPort.GetWindowText();
 
 	// Bind to the socket
 	Append(IDC_EDIT_STATUS, _T("Binding to socket"));
 	TCHAR Text[80];
 	wsprintf(Text, _T("Addr %s, Port %s, type %s"), tAddr.c_str(), tPort.c_str(), (m_SocketType == SOCK_STREAM)?_T("TCP"):_T("UDP") );
 	Append(IDC_EDIT_STATUS, Text);
-	
+
 	int RetVal = m_MainSocket.Bind( tAddr.c_str(), tPort.c_str() );
 	if ( RetVal != 0 )
 	{
@@ -474,6 +474,6 @@ BOOL CSvrDialog::StartServer()
 
 void CSvrDialog::StopServer()
 {
-	m_MainSocket.Disconnect();	
+	m_MainSocket.Disconnect();
 	m_ConnectedClients.clear();
 }

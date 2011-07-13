@@ -250,7 +250,7 @@ namespace Win32xx
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
 				{
-					tString tsMenuItem = (*v)->GetWindowText();
+					tString tsMenuItem ( (*v)->GetWindowText() );
 
 					if (tsMenuItem.length() > MAX_MENU_STRING -10)
 					{
