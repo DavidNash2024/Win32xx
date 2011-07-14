@@ -84,8 +84,8 @@ void CTCPClientDlg::Receive()
 
 void CTCPClientDlg::Send()
 {
-	LPCTSTR szSend = m_EditSend.GetWindowText();
-	m_pSocket->Send(szSend, lstrlen(szSend), 0);
+	CString sSend = m_EditSend.GetWindowText();
+	m_pSocket->Send(sSend, lstrlen(sSend), 0);
 }
 
 
@@ -334,8 +334,10 @@ void CSvrDialog::OnSend()
 			// TCP connections have a seperate chat dialog for sending/receiving data
 			break;
 		case SOCK_DGRAM:
-			LPCTSTR szSend = m_EditSend.GetWindowText();
-			m_MainSocket.SendTo(szSend, lstrlen(szSend), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
+			{
+				CString sSend = m_EditSend.GetWindowText();
+				m_MainSocket.SendTo(sSend, lstrlen(sSend), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
+			}
 			break;
 	}
 }

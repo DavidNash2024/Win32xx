@@ -319,7 +319,7 @@ namespace Win32xx
 		class CTarget : public CWnd
 		{
 		public:
-			CTarget() : m_bmImage(0) {}
+			CTarget() {}
 			virtual ~CTarget();
 			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
@@ -356,7 +356,7 @@ namespace Win32xx
 		class CTargetLeft : public CTarget
 		{
 		public:
-			CTargetLeft() {m_bmImage.LoadBitmap(IDW_SDLEFT);}
+			CTargetLeft() {m_bmImage.LoadImage(IDW_SDLEFT,0,0,0);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 
 		private:
@@ -367,7 +367,7 @@ namespace Win32xx
 		class CTargetTop : public CTarget
 		{
 		public:
-			CTargetTop() {m_bmImage.LoadBitmap(IDW_SDTOP);}
+			CTargetTop() {m_bmImage.LoadImage(IDW_SDTOP,0,0,0);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 		private:
 			CTargetTop(const CTargetTop&);				// Disable copy construction
@@ -377,7 +377,7 @@ namespace Win32xx
 		class CTargetRight : public CTarget
 		{
 		public:
-			CTargetRight() {m_bmImage.LoadBitmap(IDW_SDRIGHT);}
+			CTargetRight() {m_bmImage.LoadImage(IDW_SDRIGHT,0,0,0);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 
 		private:
@@ -388,7 +388,7 @@ namespace Win32xx
 		class CTargetBottom : public CTarget
 		{
 		public:
-			CTargetBottom() {m_bmImage.LoadBitmap(IDW_SDBOTTOM);}
+			CTargetBottom() {m_bmImage.LoadImage(IDW_SDBOTTOM,0,0,0);}
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 		};
 

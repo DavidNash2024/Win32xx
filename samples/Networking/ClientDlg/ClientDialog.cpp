@@ -351,8 +351,8 @@ void CClientDialog::OnSend()
 	{
 	case SOCK_STREAM:	// for TCP client
 		{
-			LPCTSTR szSend = GetDlgItemText(IDC_EDIT_SEND);
-			if (SOCKET_ERROR == m_Client.Send(szSend, lstrlen(szSend), 0))
+			CString sSend = GetDlgItemText(IDC_EDIT_SEND);
+			if (SOCKET_ERROR == m_Client.Send(sSend, lstrlen(sSend), 0))
 				m_EditStatus.SetWindowText( _T("Send Failed") );
 		}
 		break;
