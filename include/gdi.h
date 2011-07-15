@@ -907,6 +907,12 @@ namespace Win32xx
 	{
 		assert(m_pData);
 
+		if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
+		{
+			RemoveFromMap();
+			::DeleteObject(m_pData->hGDIObject);
+		}
+
 		CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
 		if (pObject)
 		{
@@ -916,8 +922,6 @@ namespace Win32xx
 		}
 		else
 		{
-			if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
-				::DeleteObject(m_pData->hGDIObject);
 			m_pData->hGDIObject = hObject;
 			AddToMap();
 		}
