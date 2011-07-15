@@ -556,7 +556,6 @@ namespace Win32xx
 		return m_hMenu;
 	}
 	
-	
 	inline CMenu* FromHandle(HMENU hMenu)
 	// Returns the CMenu object associated with the menu handle (HMENU).
 	{
@@ -568,8 +567,7 @@ namespace Win32xx
 			pMenu = GetApp()->GetCMenuFromMap(hMenu);
 		}
 		return pMenu;
-	}	
-
+	}
 
 }	// namespace Win32xx
 

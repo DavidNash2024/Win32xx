@@ -19,7 +19,7 @@ void CView::OnCreate()
 	SetIconLarge(IDW_MAIN);
 
 	// Set the window title
-	SetWindowText(LoadString(IDW_MAIN).c_str());
+	SetWindowText(LoadString(IDW_MAIN));
 
 	TRACE(_T("OnCreate\n"));
 }

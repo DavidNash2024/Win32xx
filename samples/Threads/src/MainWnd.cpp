@@ -22,10 +22,10 @@ CMainWindow::CMainWindow() : m_nWindowsCreated(0)
 
 HWND CMainWindow::Create(CWnd* pParent)
 {
-	tString str = _T("Main Thread Window");
+	CString str = _T("Main Thread Window");
 
 	// Create the main window
-	return CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+	return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		20 , 50, 400, 300, pParent, NULL);
 }
 
@@ -64,7 +64,7 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_COMMAND:
 		if (HIWORD(wParam) == EN_SETFOCUS)
-			::SetFocus(m_hWnd);
+			SetFocus();
 		break;
 
 	case WM_CLOSE:
@@ -74,7 +74,8 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			std::vector<TestWndPtr>::iterator iter;
 			for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 			{
-				::SendMessage((*iter)->GetHwnd(), WM_CLOSE, 0, 0);
+				if ((*iter)->IsWindow())
+					(*iter)->SendMessageW(WM_CLOSE, 0, 0);
 			}
 		}
 		break;

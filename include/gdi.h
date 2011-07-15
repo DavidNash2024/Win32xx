@@ -891,7 +891,6 @@ namespace Win32xx
 	// Store the HDC and CDC pointer in the HDC map
 	{
 		assert( GetApp() );
-		assert(m_pData->hGDIObject);
 		GetApp()->m_csMapLock.Lock();
 
 		assert(m_pData->hGDIObject);
@@ -909,8 +908,9 @@ namespace Win32xx
 
 		if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
 		{
-			RemoveFromMap();
-			::DeleteObject(m_pData->hGDIObject);
+		//	RemoveFromMap();
+		//	::DeleteObject(m_pData->hGDIObject);
+			::DeleteObject(Detach());
 		}
 
 		CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
