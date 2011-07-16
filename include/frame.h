@@ -753,8 +753,9 @@ namespace Win32xx
 
 						pDrawDC->SetBkMode(iMode);
 						return CDRF_SKIPDEFAULT;  // No further drawing
-					};
-				}
+					}
+					pDrawDC->DetachDC();	// Optional, deletes GDI objects sooner
+				} 
 				return CDRF_DODEFAULT ;   // Do default drawing
 
 			// Painting cycle has completed
@@ -2219,9 +2220,10 @@ namespace Win32xx
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 
 			DrawMenuText(*pDrawDC, pmd->GetItemText(), rc, colorText);
-			pDrawDC->SetBkMode(iMode);
+			pDrawDC->SetBkMode(iMode); 
 		}
 
+		pDrawDC->DetachDC();	// Optional, deletes GDI objects sooner
 		return TRUE;
 	}
 
