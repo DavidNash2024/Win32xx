@@ -1385,19 +1385,19 @@ namespace Win32xx
 		CBitmap bmTop(IDW_SDTOP);
 		CBitmap bmBottom(IDW_SDBOTTOM);
 
-		if (bmCentre.GetBitmap())	pDC->DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
+		if (bmCentre.GetHandle())	pDC->DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Centre\n"));
 
-		if (bmLeft.GetBitmap()) pDC->DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
+		if (bmLeft.GetHandle()) pDC->DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Left\n"));
 
-		if (bmTop.GetBitmap()) pDC->DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
+		if (bmTop.GetHandle()) pDC->DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Top\n"));
 
-		if (bmRight.GetBitmap()) pDC->DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
+		if (bmRight.GetHandle()) pDC->DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Right\n"));
 
-		if (bmBottom.GetBitmap()) pDC->DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
+		if (bmBottom.GetHandle()) pDC->DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
 		else TRACE(_T("Missing docking resource: Target Bottom\n"));
 
 		if (IsOverContainer())

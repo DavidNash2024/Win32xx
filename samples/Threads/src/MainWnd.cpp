@@ -75,7 +75,7 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 			{
 				if ((*iter)->IsWindow())
-					(*iter)->SendMessageW(WM_CLOSE, 0, 0);
+					(*iter)->SendMessage(WM_CLOSE, 0, 0);
 			}
 		}
 		break;

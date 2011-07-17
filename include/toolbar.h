@@ -938,7 +938,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		CBitmap Bitmap(nID);
-		assert (Bitmap.GetBitmap());
+		assert (Bitmap.GetHandle());
 		BITMAP bm = Bitmap.GetBitmapData();
 
 		int iNumButtons = 0;
@@ -1238,7 +1238,7 @@ namespace Win32xx
 		{
 			// Set the button images
 			CBitmap Bitmap(ToolBarID);
-			assert(Bitmap.GetBitmap());
+			assert(Bitmap.GetHandle());
 
 			BITMAP bm = Bitmap.GetBitmapData();
 			int iImageWidth  = bm.bmWidth / iNumButtons;

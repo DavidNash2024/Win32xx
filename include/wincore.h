@@ -1916,7 +1916,7 @@ namespace Win32xx
 			{
 				CDC dc((HDC)wParam);
 				BOOL bResult = OnEraseBkgnd(&dc);
-				dc.DetachDC();
+				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;
@@ -2504,7 +2504,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		assert(pFont);
-		SendMessage(WM_SETFONT, (WPARAM)pFont->GetFont(), (LPARAM)bRedraw);
+		SendMessage(WM_SETFONT, (WPARAM)pFont->GetHandle(), (LPARAM)bRedraw);
 	}
 
 	inline HICON CWnd::SetIcon(HICON hIcon, BOOL bBigIcon) const

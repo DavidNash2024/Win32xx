@@ -247,7 +247,7 @@ namespace Win32xx
 	{
 		assert(IsMenu(m_hMenu));
 		assert(pBmp);
-		return ::AppendMenu(m_hMenu, uFlags, uIDNewItem, (LPCTSTR)pBmp->GetBitmap());
+		return ::AppendMenu(m_hMenu, uFlags, uIDNewItem, (LPCTSTR)pBmp->GetHandle());
 	}
 
 	inline void CMenu::Attach(HMENU hMenu)
@@ -432,7 +432,7 @@ namespace Win32xx
 	// Inserts a new menu item into a menu, moving other items down the menu.
 	{
 		assert(IsMenu(m_hMenu));
-		return ::InsertMenu(m_hMenu, uPosition, uFlags, uIDNewItem, (LPCTSTR)pBmp->GetBitmap());
+		return ::InsertMenu(m_hMenu, uPosition, uFlags, uIDNewItem, (LPCTSTR)pBmp->GetHandle());
 	}
 
 	inline BOOL CMenu::InsertMenuItem(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos /*= FALSE*/)
@@ -485,7 +485,7 @@ namespace Win32xx
 	{
 		assert(IsMenu(m_hMenu));
 		assert(pBmp);
-		return ::ModifyMenu(m_hMenu, uPosition, uFlags, uIDNewItem, (LPCTSTR)pBmp->GetBitmap());
+		return ::ModifyMenu(m_hMenu, uPosition, uFlags, uIDNewItem, (LPCTSTR)pBmp->GetHandle());
 	}
 
 	inline BOOL CMenu::RemoveMenu(UINT uPosition, UINT uFlags)

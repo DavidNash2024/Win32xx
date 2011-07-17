@@ -548,7 +548,7 @@ namespace Win32xx
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
-		rbbi.hbmBack = pBackground->GetBitmap();
+		rbbi.hbmBack = *pBackground;
 
 		return (BOOL)SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
 	}

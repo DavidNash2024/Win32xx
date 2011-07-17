@@ -754,7 +754,7 @@ namespace Win32xx
 						pDrawDC->SetBkMode(iMode);
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
-					pDrawDC->DetachDC();	// Optional, deletes GDI objects sooner
+					pDrawDC->Detach();	// Optional, deletes GDI objects sooner
 				} 
 				return CDRF_DODEFAULT ;   // Do default drawing
 
@@ -2223,7 +2223,7 @@ namespace Win32xx
 			pDrawDC->SetBkMode(iMode); 
 		}
 
-		pDrawDC->DetachDC();	// Optional, deletes GDI objects sooner
+		pDrawDC->Detach();	// Optional, deletes GDI objects sooner
 		return TRUE;
 	}
 

@@ -294,7 +294,7 @@ namespace Win32xx
 			{
 				CDC dc((HDC)wParam);
 				BOOL bResult = OnEraseBkgnd(&dc);
-				dc.DetachDC();
+				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;
