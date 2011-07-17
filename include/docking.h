@@ -159,13 +159,13 @@ namespace Win32xx
 		CWnd* GetActiveView() const;
 		std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
 		CDockContainer* GetContainerParent() const { return m_pContainerParent; }
-		tString GetDockCaption() const	{ return m_tsCaption; }
+		CString& GetDockCaption() const	{ return (CString&)m_csCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
 		virtual CToolBar& GetToolBar() const	{ return GetViewPage().GetToolBar(); }
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
-		void SetDockCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
+		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
@@ -184,7 +184,7 @@ namespace Win32xx
 	private:
 		std::vector<ContainerInfo> m_vContainerInfo;
 		tString m_tsTabText;
-		tString m_tsCaption;
+		CString m_csCaption;
 		CViewPage m_ViewPage;
 		int m_iCurrentPage;
 		CDockContainer* m_pContainerParent;
@@ -251,10 +251,10 @@ namespace Win32xx
 			virtual CRect GetCloseRect();
 			virtual void SendNotify(UINT nMessageID);
 
-			tString GetCaption() const		{ return m_tsCaption; }
+			CString& GetCaption() const		{ return (CString&)m_csCaption; }
 			CWnd* GetView() const			{ return m_pView; }
 			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
-			void SetCaption(LPCTSTR szCaption) { m_tsCaption = szCaption; }
+			void SetCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
 			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
 			void SetClosePressed()			{ m_IsClosePressed = TRUE; }
 			void SetView(CWnd& Wnd)			{ m_pView = &Wnd; }
@@ -279,7 +279,7 @@ namespace Win32xx
 			CDockClient(const CDockClient&);				// Disable copy construction
 			CDockClient& operator = (const CDockClient&); // Disable assignment operator
 
-			tString m_tsCaption;
+			CString m_csCaption;
 			CPoint m_Oldpt;
 			CDocker* m_pDock;
 			CWnd* m_pView;
@@ -436,7 +436,7 @@ namespace Win32xx
 
 		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
 		int GetBarWidth() const {return GetDockBar().GetWidth();}
-		tString GetCaption() const {return GetDockClient().GetCaption();}
+		CString& GetCaption() const {return GetDockClient().GetCaption();}
 		std::vector <CDocker*> & GetDockChildren() const {return (std::vector <CDocker*> &)m_vDockChildren;}
 		int GetDockID() const {return m_nDockID;}
 		CDocker* GetDockParent() const {return m_pDockParent;}
@@ -771,7 +771,7 @@ namespace Win32xx
 			// Display the caption
 			int cx = (m_pDock->GetDockStyle() & DS_NO_CLOSE)? 0 : GetSystemMetrics(SM_CXSMICON);
 			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
-			dcMem.DrawText(m_tsCaption.c_str(), m_tsCaption.size(), rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			dcMem.DrawText(m_csCaption, m_csCaption.GetLength(), rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 
 			// Draw the close button
 			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))

@@ -716,7 +716,7 @@ namespace Win32xx
 						int x = (rcRect.Width() - cx)/2;
 						pDrawDC->DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
-						// Detach the DC so it doesn't get destroyed
+						pDrawDC->Detach();	// Optional, deletes GDI objects sooner
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
 
@@ -752,9 +752,9 @@ namespace Win32xx
 						pDrawDC->DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
 						pDrawDC->SetBkMode(iMode);
+						pDrawDC->Detach();	// Optional, deletes GDI objects sooner
 						return CDRF_SKIPDEFAULT;  // No further drawing
-					}
-					pDrawDC->Detach();	// Optional, deletes GDI objects sooner
+					} 
 				} 
 				return CDRF_DODEFAULT ;   // Do default drawing
 
@@ -764,10 +764,11 @@ namespace Win32xx
 				{
 					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
 					DrawAllMDIButtons(*pDrawDC);
+					pDrawDC->Detach();	// Optional, deletes GDI objects sooner
 				}
 				break;
 			}
-		}
+		} 
 		return 0L;
 	}
 

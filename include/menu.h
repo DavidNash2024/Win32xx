@@ -415,7 +415,7 @@ namespace Win32xx
 	{
 		assert(IsMenu(m_hMenu));
 		CMenu* pMenu = new CMenu;
-		pMenu->Attach(::GetSubMenu(m_hMenu, nPos));
+		pMenu->m_hMenu = ::GetSubMenu(m_hMenu, nPos);
 		pMenu->m_IsTmpMenu = TRUE;
 		m_vSubMenus.push_back(pMenu);
 		return pMenu;
