@@ -896,8 +896,6 @@ namespace Win32xx
 
 		if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
 		{
-		//	RemoveFromMap();
-		//	::DeleteObject(m_pData->hGDIObject);
 			::DeleteObject(Detach());
 		}
 

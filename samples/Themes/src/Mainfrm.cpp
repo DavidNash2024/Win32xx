@@ -190,18 +190,18 @@ void CMainFrame::ChooseColor(UINT nColor)
 	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Theme"));
 	if (nFileItem >= 0)
 	{
-		HMENU hTheme = ::GetSubMenu(GetFrameMenu(), nFileItem);
-		::CheckMenuRadioItem(hTheme, IDM_BLUE, IDM_MODERN, nColor, 0);
+		CMenu* pThemeMenu = GetFrameMenu().GetSubMenu(nFileItem);
+		pThemeMenu->CheckMenuRadioItem(IDM_BLUE, IDM_MODERN, nColor, 0);
 	}
 
-	CheckMenuItem(GetFrameMenu(), IDM_USE_THEMES,    m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
-	CheckMenuItem(GetFrameMenu(), IDM_BAND_COLORS,   m_bBandColors? MF_CHECKED : MF_UNCHECKED);
-	CheckMenuItem(GetFrameMenu(), IDM_FLAT_STYLE,    m_bFlatStyle? MF_CHECKED : MF_UNCHECKED);
-	CheckMenuItem(GetFrameMenu(), IDM_LEFT_BANDS,    m_bBandsLeft? MF_CHECKED : MF_UNCHECKED);
-	CheckMenuItem(GetFrameMenu(), IDM_LOCK_MENUBAR,  m_bLockMenuBand? MF_CHECKED : MF_UNCHECKED);
-	CheckMenuItem(GetFrameMenu(), IDM_ROUND_BORDERS, m_bRoundBorders? MF_CHECKED : MF_UNCHECKED);
-	CheckMenuItem(GetFrameMenu(), IDM_SHORT_BANDS,   m_bShortBands? MF_CHECKED : MF_UNCHECKED);
-	CheckMenuItem(GetFrameMenu(), IDM_USE_LINES,     m_bUseLines? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_USE_THEMES,    m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_BAND_COLORS,   m_bBandColors? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_FLAT_STYLE,    m_bFlatStyle? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_LEFT_BANDS,    m_bBandsLeft? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_LOCK_MENUBAR,  m_bLockMenuBand? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_ROUND_BORDERS, m_bRoundBorders? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_SHORT_BANDS,   m_bShortBands? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_USE_LINES,     m_bUseLines? MF_CHECKED : MF_UNCHECKED);
 	RecalcLayout();
 }
 

@@ -59,29 +59,30 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 
 		if(SUCCEEDED(hr))
 		{
-			HMENU hPopup = ::CreatePopupMenu();
-			if(hPopup)
+			CMenu Popup;
+			Popup.CreatePopupMenu();
+			if(Popup.GetHandle())
 			{
 				int   i = 0;
 				UINT  idCmdFirst = 0;
 				UINT  idCmd;
 
 				//find the largest ID in the menu
-				while((idCmd = ::GetMenuItemID(hPopup, i)) != (UINT)-1)
+				while((idCmd = Popup.GetMenuItemID(i)) != (UINT)-1)
 				{
 					if(idCmd > idCmdFirst)
 						idCmdFirst = idCmd;
 					i++;
 				}
 
-				hr = ccm.QueryContextMenu(hPopup, 0, ++idCmdFirst, (UINT)-1, CMF_NORMAL | CMF_EXPLORE);
+				hr = ccm.QueryContextMenu(Popup, 0, ++idCmdFirst, (UINT)-1, CMF_NORMAL | CMF_EXPLORE);
 
 				if(SUCCEEDED(hr))
 				{
 					ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
-					idCmd = ::TrackPopupMenu(hPopup, TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-						ptScreen.x, ptScreen.y, 0, m_hWnd, NULL);
+					idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
+						ptScreen.x, ptScreen.y, this, NULL);
 
 					if(idCmd)
 					{
@@ -99,7 +100,6 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 
 					m_ccm2.Release();
 				}
-				::DestroyMenu(hPopup);
 			}
 		}
 	}
@@ -168,14 +168,15 @@ void CMyListView::DoDefault(int iItem)
 
 			if(SUCCEEDED(hr))
 			{
-				HMENU hPopup = ::CreatePopupMenu();
-				if(hPopup)
+				CMenu Popup;
+				Popup.CreatePopupMenu();
+				if(Popup.GetHandle())
 				{
-					hr = ccm.QueryContextMenu(hPopup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
+					hr = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
 
 					if(SUCCEEDED(hr))
 					{
-						UINT idCmd = ::GetMenuItemID(hPopup, 0);
+						UINT idCmd = Popup.GetMenuItemID(0);
 						if(idCmd && (idCmd != (UINT)-1))
 						{
 							//determine if the item is a folder
@@ -198,7 +199,6 @@ void CMyListView::DoDefault(int iItem)
 						}
 					}
 				}
-				::DestroyMenu(hPopup);
 			}
 		}
 	}
@@ -254,16 +254,17 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 
 			if(SUCCEEDED(hr))
 			{
-				HMENU hPopup = ::CreatePopupMenu();
-				if(hPopup)
+				CMenu Popup;
+				Popup.CreatePopupMenu();
+				if(Popup.GetHandle())
 				{
-					hr = ccm.QueryContextMenu(hPopup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
+					hr = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
 					if(SUCCEEDED(hr))
 					{
 						ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 						UINT  idCmd;
-						idCmd = ::TrackPopupMenu( hPopup, TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-									ptScreen.x, ptScreen.y, 0, m_hWnd, NULL);
+						idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
+									ptScreen.x, ptScreen.y, this, NULL);
 
 						if(idCmd)
 						{
@@ -282,7 +283,6 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 						m_ccm2.Release();
 					}
 				}
-				::DestroyMenu(hPopup);
 			}
 		}
 	}

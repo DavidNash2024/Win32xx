@@ -229,11 +229,11 @@ namespace Win32xx
 		virtual CToolBar& GetToolBar() const		{ return (CToolBar&)m_ToolBar; }
 
 		// These functions aren't virtual, and shouldn't be overridden
-		HACCEL GetFrameAccel() const			{ return m_hAccel; }
-		HMENU GetFrameMenu() const				{ return m_hMenu; }
+		HACCEL GetFrameAccel() const				{ return m_hAccel; }
+		CMenu& GetFrameMenu() const					{ return (CMenu&)m_Menu; }
 		std::vector<tString> GetMRUEntries() const	{ return m_vMRUEntries; }
-		tString GetRegistryKeyName() const		{ return m_tsKeyName; }
-		CWnd* GetView() const					{ return m_pView; }
+		tString GetRegistryKeyName() const			{ return m_tsKeyName; }
+		CWnd* GetView() const						{ return m_pView; }
 		tString GetMRUEntry(UINT nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
@@ -323,7 +323,7 @@ namespace Win32xx
 		CReBar m_ReBar;						// CReBar object
 		CStatusBar m_StatusBar;				// CStatusBar object
 		CToolBar m_ToolBar;					// CToolBar object
-		HMENU m_hMenu;						// handle to the frame menu
+		CMenu m_Menu;						// handle to the frame menu
 		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
@@ -987,12 +987,12 @@ namespace Win32xx
 			// Perform default action for DblClick on MDI Maxed icon
 			if (IsMDIChildMaxed() && (0 == HitTest()))
 			{
-				HWND MDIChild = GetActiveMDIChild();
-				HMENU hChildMenu = ::GetSystemMenu(MDIChild, FALSE);
+				CWnd* pMDIChild = FromHandle(GetActiveMDIChild());
+				CMenu* pChildMenu = pMDIChild->GetSystemMenu(FALSE);
 
-				UINT nID = ::GetMenuDefaultItem(hChildMenu, FALSE, 0);
+				UINT nID = pChildMenu->GetDefaultItem(FALSE, 0);
 				if (nID)
-					::PostMessage(MDIChild, WM_SYSCOMMAND, nID, 0L);
+					pMDIChild->PostMessage(WM_SYSCOMMAND, nID, 0L);
 			}
 
 			m_bExitAfter = TRUE;
@@ -1366,9 +1366,8 @@ namespace Win32xx
 	//
 	inline CFrame::CFrame() : m_tsStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE),
-						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(NULL),
-						m_himlMenuDis(NULL), m_AboutDialog(IDW_ABOUT), m_hMenu(NULL),
-						m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
+						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(NULL), m_himlMenuDis(NULL),
+						m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 
@@ -1385,7 +1384,6 @@ namespace Win32xx
 
 	inline CFrame::~CFrame()
 	{
-		if (m_hMenu) ::DestroyMenu(m_hMenu);
 		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
 		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
 	}
@@ -2269,9 +2267,9 @@ namespace Win32xx
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
 
-		HMENU hMenu = (HMENU)wParam;
+		CMenu* pMenu = FromHandle((HMENU)wParam);
 
-		for (int i = 0; i < ::GetMenuItemCount(hMenu) ; ++i)
+		for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
 		{
 			MENUITEMINFO mii = {0};
 			mii.cbSize = GetSizeofMenuItemInfo();
@@ -2284,16 +2282,16 @@ namespace Win32xx
 			mii.cch = MAX_MENU_STRING -1;
 
 			// Send message for menu updates
-			UINT menuItem = ::GetMenuItemID(hMenu, i);
+			UINT menuItem = pMenu->GetMenuItemID(i);
 			SendMessage(UWM_UPDATE_COMMAND, (WPARAM)menuItem, 0);
 
 			// Specify owner-draw for the menu item type
-			if (::GetMenuItemInfo(hMenu, i, TRUE, &mii))
+			if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
 			{
 				if (0 == mii.dwItemData)
 				{
 					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
-					pItem->hMenu = hMenu;
+					pItem->hMenu = *pMenu;
 					pItem->nPos = i;
 					pItem->fType = mii.fType;
 					pItem->hSubMenu = mii.hSubMenu;
@@ -2302,7 +2300,7 @@ namespace Win32xx
 					mii.dwItemData = (DWORD_PTR)pItem;
 
 					m_vMenuItemData.push_back(ItemDataPtr(pItem));		// Store pItem in m_vMenuItemData
-					::SetMenuItemInfo(hMenu, i, TRUE, &mii);// Store pItem in mii
+					pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
 				}
 			}
 		}
@@ -2808,11 +2806,7 @@ namespace Win32xx
 	inline void CFrame::SetFrameMenu(HMENU hMenu)
 	{
 		// Sets the frame's menu from a HMENU.
-
-		if ((m_hMenu) && (m_hMenu != hMenu))
-			::DestroyMenu(m_hMenu);
-
-		m_hMenu = hMenu;
+		m_Menu.Attach(hMenu);
 
 		if (IsMenuBarUsed())
 		{
@@ -2820,7 +2814,7 @@ namespace Win32xx
 			ShowMenu((BOOL)hMenu);
 		}
 		else
-			::SetMenu(m_hWnd, GetFrameMenu());
+			SetMenu(&m_Menu);
  	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
@@ -3111,7 +3105,7 @@ namespace Win32xx
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
 			else
-				SetMenu(FromHandle(m_hMenu));
+				SetMenu(&m_Menu);
 		}
 		else
 		{
@@ -3137,12 +3131,12 @@ namespace Win32xx
 	{
 		if (bShow)
 		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_CHECKED);
+			m_Menu.CheckMenuItem(IDW_VIEW_STATUSBAR, MF_CHECKED);
 			GetStatusBar().ShowWindow(SW_SHOW);
 		}
 		else
 		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_STATUSBAR, MF_UNCHECKED);
+			m_Menu.CheckMenuItem(IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 			GetStatusBar().ShowWindow(SW_HIDE);
 		}
 
@@ -3154,7 +3148,7 @@ namespace Win32xx
 	{
 		if (bShow)
 		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_CHECKED);
+			m_Menu.CheckMenuItem(IDW_VIEW_TOOLBAR, MF_CHECKED);
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), TRUE);
 			else
@@ -3162,7 +3156,7 @@ namespace Win32xx
 		}
 		else
 		{
-			::CheckMenuItem (m_hMenu, IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			m_Menu.CheckMenuItem(IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), FALSE);
 			else
@@ -3215,14 +3209,14 @@ namespace Win32xx
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		int nFileItem = 0;  // We place the MRU items under the left most menu item
-		HMENU hFileMenu = ::GetSubMenu (GetFrameMenu(), nFileItem);
+		CMenu* pFileMenu = GetFrameMenu().GetSubMenu(nFileItem);
 
-		if (hFileMenu)
+		if (pFileMenu)
 		{
 			// Remove all but the first MRU Menu entry
 			for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
 			{
-				DeleteMenu(hFileMenu, u, MF_BYCOMMAND);
+				pFileMenu->DeleteMenu(u, MF_BYCOMMAND);
 			}
 
 			int MaxMRUIndex = (int)MIN(MaxMRUArrayIndex, m_nMaxMRU);
@@ -3238,10 +3232,10 @@ namespace Win32xx
 				BOOL bResult;
 				if (index == MaxMRUIndex)
 					// Replace the last MRU entry first
-					bResult = SetMenuItemInfo(hFileMenu, IDW_FILE_MRU_FILE1, FALSE, &mii);
+					bResult = pFileMenu->SetMenuItemInfo(IDW_FILE_MRU_FILE1, &mii, FALSE);
 				else
 					// Insert the other MRU entries next
-					bResult = InsertMenuItem(hFileMenu, IDW_FILE_MRU_FILE1 + index + 1, FALSE, &mii);
+					bResult = pFileMenu->InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, &mii, FALSE);
 
 				if (!bResult)
 				{

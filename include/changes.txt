@@ -19,10 +19,11 @@ New Features and Enhancements
 * Enhanced the CDC class, and added CWindowDC, CClientDC, CMemDC, CPaintDC
    and CMetaFileDC. The creation of the various different types of CDCs has
    been simplified, and the CDC functions now use CDC pointers instead of
-   HDCs.
+   HDCs. These changes improve the compatibility between Win32++ and MFC.
 * Enhanced the various GDI object classes, namely CBitmap, CBrush, CFont, 
    CPalette, CPen and CRgn, and added CGDIObject. The library now standardises
-   on using pointers to theses classes instead of raw GDI handles (like HPEN). 
+   on using pointers to theses classes instead of raw GDI handles (like HPEN).
+   These changes improve the compatibility between Win32++ and MFC.
 
 Changes in detail
 -----------------
@@ -84,6 +85,7 @@ Changes in detail
 - Modified CWnd::OnPaint				now accepts a CDC pointer
 - Modified CWnd::GetFont				now returns a CFont pointer
 - Modified CWnd::SetFont                now accepts a CFont pointer
+- Modified CResizer::AddChild			now accepts a CWnd pointer
 - Removed CLoadString
 - Removed CDC::AttachBitmap
 - Removed CDC::AttachBrush
@@ -127,7 +129,7 @@ Incompatibilities with previous versions
       CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
 	  CMemDC.MoveTo(0, 0);
       CMemDC.LineTo(50, 50);
-	  dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);	
+	  dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0); 
 	
 Version 7.1.3
 =============

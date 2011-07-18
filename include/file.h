@@ -112,6 +112,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::Close()
+	// Closes the file associated with this object. Closed file can no longer be read or written to.
 	{
 		BOOL bResult = TRUE;
 		if (m_hFile)
@@ -121,12 +122,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::Flush()
+	// Causes any remaining data in the file buffer to be written to the file
 	{
 		assert(m_hFile);
 		return FlushFileBuffers(m_hFile);
 	}
 
 	inline ULONGLONG CFile::GetLength( ) const
+	// Returns the length of the file in bytes.
 	{
 		assert (m_hFile);
 		CFile File = CFile(m_hFile);
@@ -136,21 +139,25 @@ namespace Win32xx
 	}
 
 	inline const CString& CFile::GetFileName() const
+	// Returns the filename of the file associated with this object.
 	{
 		return (const CString&)m_FileName;
 	}
 
 	inline const CString& CFile::GetFilePath() const
+	// Returns the full filename including the directory of the file associated with this object.
 	{
 		return (const CString&)m_FilePath;
 	}
 
 	inline const CString& CFile::GetFileTitle() const
+	// Returns the filename of the file associated with this object, excluding the path and the file extension
 	{
 		return (const CString&)m_FileTitle;
 	}
 
 	inline ULONGLONG CFile::GetPosition() const
+	// Returns the current value of the file pointer, which can be used in subsequent calls to Seek.
 	{
 		assert(m_hFile);
 		LONG High = 0;
@@ -161,6 +168,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::LockRange(ULONGLONG Pos, ULONGLONG Count)
+	// Locks a range of bytes in and open file.
 	{
 		assert(m_hFile);
 
@@ -173,6 +181,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::Open(LPCTSTR pszFileName, UINT nOpenFlags)
+	// Prepares a file to be written to or read from.
 	{
 		if (m_hFile) Close();
 
@@ -193,6 +202,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pParentWnd)
+	// Displayes the file open dialog and opens the selected file.
 	{
 		BOOL bResult = FALSE;
 		OPENFILENAME ofn = {0};
@@ -219,6 +229,7 @@ namespace Win32xx
 	}
 
 	inline UINT CFile::Read(void* pBuf, UINT nCount)
+	// Reads from the file, storing the contents in the specified buffer
 	{
 		assert(m_hFile);
 		DWORD dwRead = 0;
@@ -230,16 +241,19 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::Rename(LPCTSTR pszOldName, LPCTSTR pszNewName)
+	// Renames the specified file
 	{
 		return ::MoveFile(pszOldName, pszNewName);
 	}
 
 	inline BOOL CFile::Remove(LPCTSTR pszFileName)
+	// Deletes the specified file
 	{
 		return::DeleteFile(pszFileName);
 	}
 
 	inline BOOL CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pParentWnd)
+	// Displays the SaveFileDialog, and writes to the file to the chosen file name.
 	{
 		BOOL bResult = FALSE;
 		OPENFILENAME ofn = {0};
@@ -265,6 +279,7 @@ namespace Win32xx
 	}
 
 	inline ULONGLONG CFile::Seek(LONGLONG lOff, UINT nFrom)
+	// Positions the current file pointer.
 	// Permitted values for nFrom are: FILE_BEGIN, FILE_CURRENT, or FILE_END.
 	{
 		assert(m_hFile);
@@ -280,18 +295,21 @@ namespace Win32xx
 	}
 
 	inline void CFile::SeekToBegin()
+	// Sets the current file pointer to the beginning of the file.
 	{
 		assert(m_hFile);
 		Seek(0, FILE_BEGIN);
 	}
 
 	inline ULONGLONG CFile::SeekToEnd()
+	// Sets the current file pointer to the end of the file.
 	{
 		assert(m_hFile);
 		return Seek(0, FILE_END);
 	}
 
 	inline void CFile::SetFilePath(LPCTSTR pszFileName)
+	// Specifies the full file name, including its path
 	{
 		TCHAR* pFileName = NULL;
 		int nBuffSize = ::GetFullPathName(pszFileName, NULL, 0, 0);
@@ -307,6 +325,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::SetLength(ULONGLONG NewLen)
+	// Changes the length of the file to the specified value.
 	{
 		assert(m_hFile);
 
@@ -315,6 +334,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::UnlockRange(ULONGLONG Pos, ULONGLONG Count)
+	// Unlocks a range of bytes in an open file.
 	{
 		assert(m_hFile);
 
@@ -327,6 +347,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::Write(const void* pBuf, UINT nCount)
+	// Writes the specified buffer to the file.
 	{
 		assert(m_hFile);
 		DWORD dwWritten = 0;

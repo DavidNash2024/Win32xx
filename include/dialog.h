@@ -145,7 +145,8 @@ namespace Win32xx
 		CResizer() : m_pParent(0), m_xScrollPos(0), m_yScrollPos(0) {}
 		virtual ~CResizer() {}
 
-        virtual void AddChild(CWnd& Wnd, Alignment corner, DWORD dwStyle);
+        virtual void AddChild(CWnd* pWnd, Alignment corner, DWORD dwStyle);
+		virtual void AddChild(HWND hWnd, Alignment corner, DWORD dwStyle);
 		virtual void HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
     	virtual void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
 		virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
@@ -161,7 +162,7 @@ namespace Win32xx
 			Alignment corner;
 			BOOL bFixedWidth;
 			BOOL bFixedHeight;
-    		CWnd* pWnd;
+    		HWND hWnd;
 		};
 
     private:
@@ -617,7 +618,7 @@ namespace Win32xx
 	// Definitions for the CResizer class
 	//
 
-	void inline CResizer::AddChild(CWnd& Wnd, Alignment corner, DWORD dwStyle)
+	void inline CResizer::AddChild(CWnd* pWnd, Alignment corner, DWORD dwStyle)
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.
 	//
@@ -630,13 +631,20 @@ namespace Win32xx
     	rd.corner = corner;
     	rd.bFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
     	rd.bFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
-		CRect rcInit = Wnd.GetWindowRect();
+		CRect rcInit = pWnd->GetWindowRect();
 		m_pParent->ScreenToClient(rcInit);
 		rd.rcInit = rcInit;
-    	rd.pWnd = &Wnd;
+		rd.hWnd = pWnd->GetHwnd();
 
 		m_vResizeData.insert(m_vResizeData.begin(), rd);
     }
+
+	void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD dwStyle)
+    // Adds a child window (usually a dialog control) to the set of windows managed by
+	// the Resizer.	
+	{
+		AddChild(FromHandle(hWnd), corner, dwStyle);
+	}
 
 	inline void CResizer::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
@@ -848,9 +856,10 @@ namespace Win32xx
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
 			if ( rc != (*iter).rcOld)
 			{
-				CWnd *pWndPrev = (*iter).pWnd->GetWindow(GW_HWNDPREV); // Trick to maintain the original tab order.
+				CWnd* pWnd = FromHandle((*iter).hWnd);
+				CWnd *pWndPrev = pWnd->GetWindow(GW_HWNDPREV); // Trick to maintain the original tab order.
 				HWND hWnd = pWndPrev ? pWndPrev->GetHwnd():NULL;
-				(*iter).pWnd->SetWindowPos(hWnd, rc, SWP_NOCOPYBITS);
+				pWnd->SetWindowPos(hWnd, rc, SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;
 			}
     	}

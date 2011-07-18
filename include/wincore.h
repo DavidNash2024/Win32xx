@@ -1299,7 +1299,7 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			// Create window
-			HMENU hMenu = pMenu? pMenu->GetHmenu() : NULL;
+			HMENU hMenu = pMenu? pMenu->GetHandle() : NULL;
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 									hWndParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
 
@@ -2803,7 +2803,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		assert(pMenu);
-		return ::HiliteMenuItem(m_hWnd, pMenu->GetHmenu(), uItemHilite, uHilite);
+		return ::HiliteMenuItem(m_hWnd, pMenu->GetHandle(), uItemHilite, uHilite);
 	}
 
 	inline BOOL CWnd::IsIconic() const
@@ -2868,7 +2868,7 @@ namespace Win32xx
 	// A hMenu of NULL removes the menu.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetMenu(m_hWnd, pMenu? pMenu->GetHmenu() : NULL);
+		return ::SetMenu(m_hWnd, pMenu? pMenu->GetHandle() : NULL);
 	}
 
 	inline int CWnd::SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const

@@ -113,6 +113,10 @@ namespace Win32xx
 	public:
 		//Construction
 		CMenu() : m_hMenu(0), m_IsTmpMenu(FALSE) {}
+		CMenu(UINT nID) : m_IsTmpMenu(FALSE) 
+		{
+			m_hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
+		}
 		~CMenu();
 
 		//Initialization
@@ -121,7 +125,7 @@ namespace Win32xx
 		void CreatePopupMenu();
 		void DestroyMenu();
 		HMENU Detach();
-		HMENU GetHmenu() const;
+		HMENU GetHandle() const;
 		BOOL LoadMenu(LPCTSTR lpszResourceName);
 		BOOL LoadMenu(UINT uIDResource);
 		BOOL LoadMenuIndirect(const void* lpMenuTemplate);
@@ -198,7 +202,6 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		assert(m_hMenu);
-		assert(!GetApp()->GetCMenuFromMap(m_hMenu));
 		
 		GetApp()->m_csMapLock.Lock();
 		GetApp()->m_mapHMENU.insert(std::make_pair(m_hMenu, this));
@@ -253,10 +256,16 @@ namespace Win32xx
 	inline void CMenu::Attach(HMENU hMenu)
 	// Attaches an existing menu to this CMenu
 	{
-		assert(0 == m_hMenu);
-		assert(IsMenu(hMenu));
-		m_hMenu = hMenu;
-		AddToMap();
+		if (m_hMenu != NULL && m_hMenu != hMenu)
+		{
+			::DestroyMenu(Detach());
+		}
+
+		if (hMenu)
+		{
+			m_hMenu = hMenu;
+			AddToMap();
+		}
 	}
 	
 	inline UINT CMenu::CheckMenuItem(UINT uIDCheckItem, UINT uCheck)
@@ -316,7 +325,7 @@ namespace Win32xx
 		return hMenu;
 	}
 
-	inline HMENU CMenu::GetHmenu() const
+	inline HMENU CMenu::GetHandle() const
 	// Returns the HMENU assigned to this CMenu
 	{
 		return m_hMenu;

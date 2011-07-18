@@ -76,19 +76,18 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 
 			if(SUCCEEDED(hr))
 			{
-				HMENU hPopup;
-
-				hPopup = CreatePopupMenu();
-				if(hPopup)
+				CMenu Popup;
+				Popup.CreatePopupMenu();
+				if(Popup.GetHandle())
 				{
-					hr = cm.QueryContextMenu(hPopup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
+					hr = cm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
 
 					if(SUCCEEDED(hr))
 					{
 						cm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
-						UINT idCmd = ::TrackPopupMenu(hPopup, TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON ,
-							ptScreen.x, ptScreen.y, 0, m_hWnd, NULL);
+						UINT idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON ,
+							ptScreen.x, ptScreen.y, this, NULL);
 
 						//A Treeview control sometimes requires this to end the
 						// TrackPopupMenu properly
@@ -107,7 +106,6 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 						m_ccm2.Release();
 					}
 				}
-				::DestroyMenu(hPopup);
 			}
 		}
 	}
