@@ -24,7 +24,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	else
 		DeleteObject(m_bmImage.Detach());
 
-	return (BOOL)m_bmImage.GetBitmap();
+	return (BOOL)m_bmImage.GetHandle();
 }
 
 BOOL CView::FileSave(LPCTSTR pszFile)
@@ -81,7 +81,7 @@ CRect CView::GetImageRect()
 
 void CView::OnDraw(CDC* pDC)
 {
-	if (m_bmImage.GetBitmap())
+	if (m_bmImage.GetHandle())
 	{
 		// We have an image, so display it
 		CMemDC memDC(pDC);
@@ -215,7 +215,7 @@ void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
-	if (m_bmImage.GetBitmap())
+	if (m_bmImage.GetHandle())
 	{
 		CRect rcImage = GetImageRect();
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

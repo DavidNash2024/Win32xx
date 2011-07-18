@@ -80,6 +80,8 @@ namespace Win32xx
 		BOOL Write(const void* pBuf, UINT nCount);
 
 	private:
+		CFile(const CFile&);				// Disable copy construction
+		CFile& operator = (const CFile&);	// Disable assignment operator
 		CString m_FileName;
 		CString m_FilePath;
 		CString m_FileTitle;

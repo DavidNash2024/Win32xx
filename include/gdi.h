@@ -178,7 +178,7 @@ namespace Win32xx
 
 		void	Attach(HGDIOBJ hObject);
 		HGDIOBJ Detach();
-		HGDIOBJ CGDIObject::GetHandle() const;
+		HGDIOBJ GetHandle() const;
 		int		GetObject(int nCount, LPVOID pObject) const;
 		void	Release();
 
@@ -221,7 +221,7 @@ namespace Win32xx
 		int GetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
 		int SetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
 		CSize GetBitmapDimensionEx() const;
-		CSize SetBitmapDimensionEx(int nWidth, int nHeight);		
+		CSize SetBitmapDimensionEx(int nWidth, int nHeight);
 #endif // !_WIN32_WCE
 
 		// Attributes
@@ -923,7 +923,7 @@ namespace Win32xx
 		RemoveFromMap();
 		HGDIOBJ hObject = m_pData->hGDIObject;
 		m_pData->hGDIObject = 0;
-		
+
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -969,7 +969,7 @@ namespace Win32xx
 				else
 					bSucceeded = TRUE;
 			}
-		
+
 			RemoveFromMap();
 			delete m_pData;
 			m_pData = 0;
@@ -981,7 +981,7 @@ namespace Win32xx
 	inline BOOL CGDIObject::RemoveFromMap()
 	{
 		BOOL Success = FALSE;
-		
+
 		if( GetApp() )
 		{
 			// Allocate an iterator for our HDC map
@@ -998,7 +998,7 @@ namespace Win32xx
 					pApp->m_mapGDI.erase(m);
 					Success = TRUE;
 				}
-			
+
 				pApp->m_csMapLock.Release();
 			}
 		}
@@ -1089,7 +1089,7 @@ namespace Win32xx
 	//  OBM_SIZE, OBM_UPARROW, OBM_UPARROWD, OBM_UPARROWI, OBM_ZOOM, OBM_ZOOMD
 	{
 		assert(m_pData);
-		
+
 		HBITMAP hBitmap = ::LoadBitmap(NULL, MAKEINTRESOURCE(nIDBitmap));
 		if (hBitmap)
 		{
@@ -1189,7 +1189,7 @@ namespace Win32xx
 		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.
 		{
 			assert(m_pData);
-			HBITMAP hBitmap = ::CreateDIBSection(hDC, lpbmi, uColorUse, ppvBits, hSection, dwOffset); 
+			HBITMAP hBitmap = ::CreateDIBSection(hDC, lpbmi, uColorUse, ppvBits, hSection, dwOffset);
 			Attach(hBitmap);
 			return hBitmap;
 		}
@@ -1399,7 +1399,7 @@ namespace Win32xx
 			nOrientation, nWeight, dwItalic, dwUnderline, dwStrikeOut,
 			dwCharSet, dwOutPrecision, dwClipPrecision, dwQuality,
 			dwPitchAndFamily, lpszFacename);
-		
+
 		Attach(hFont);
 		return hFont;
 	}
@@ -1972,7 +1972,7 @@ namespace Win32xx
 		RemoveFromMap();
 		HDC hDC = m_pData->hDC;
 		m_pData->hDC = 0;
-		
+
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -2133,7 +2133,7 @@ namespace Win32xx
 	inline BOOL CDC::RemoveFromMap()
 	{
 		BOOL Success = FALSE;
-		
+
 		if( GetApp() )
 		{
 			// Allocate an iterator for our HDC map
@@ -2286,7 +2286,7 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		BOOL bResult = pBitmap->LoadBitmap(lpszName);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		
+
 		return bResult? SelectObject(pBitmap) : NULL;
 	}
 
@@ -2681,7 +2681,7 @@ namespace Win32xx
 	//       To remove a device-context's clipping region, specify a NULL region handle.
 	{
 		assert(m_pData->hDC);
-		return ::SelectClipRgn(m_pData->hDC, pRgn? *pRgn : NULL);
+		return ::SelectClipRgn(m_pData->hDC, pRgn? (HRGN)pRgn->GetHandle() : 0);
 	}
 
 #ifndef _WIN32_WCE

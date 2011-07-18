@@ -4108,7 +4108,11 @@ namespace Win32xx
 	{
 		CDockContainer* pContainer = (CDockContainer*)GetParent();
 		assert(dynamic_cast<CDockContainer*>(pContainer));
-		return (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
+		BOOL bResult = FALSE;
+		if (pContainer->GetActiveContainer()->IsWindow())
+			bResult = (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
+
+		return bResult;
 	}
 
 	inline void CDockContainer::CViewPage::OnCreate()
