@@ -61,37 +61,21 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFileOpen()
 {
-	// Fill the OPENFILENAME structure
-	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	if (GetWinVersion() >= 2500)
+	CFile File;
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"), this);
+
+	if (!str.IsEmpty())
 	{
-		// For Win2000 and above
-		ofn.lStructSize = sizeof(OPENFILENAME);
+		// Retrieve the PlotPoint data
+		if (m_View.FileOpen(str))
+		{
+			// Save the filename
+			m_PathName = str;
+			AddMRUEntry(str);
+		}
+		else
+			m_PathName=_T("");
 	}
-	else
-	{
-		// For older operating systems
-		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
-	}
-
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFilter = szFilters;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Open File");
-	ofn.Flags = OFN_FILEMUSTEXIST;
-
-	// Bring up the dialog, and open the file
-	if (!::GetOpenFileName(&ofn))
-		return;
-
-	// Retrieve the PlotPoint data
-	m_View.FileOpen(szFilePathName);
-
-	// Save the filename
-	m_PathName = szFilePathName;
 }
 
 void CMainFrame::OnFileSave()
@@ -104,38 +88,18 @@ void CMainFrame::OnFileSave()
 
 void CMainFrame::OnFileSaveAs()
 {
-	// Fill the OPENFILENAME structure
-	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	if (GetWinVersion() >= 2500)
+	CFile File;
+	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"), this);
+
+	// Store the PlotPoint data in the file
+	if (!str.IsEmpty())
 	{
-		// For Win2000 and above
-		ofn.lStructSize = sizeof(OPENFILENAME);
+		m_PathName = str;
+
+		// Save the file name
+		m_View.FileSave(str);
+		AddMRUEntry(str);
 	}
-	else
-	{
-		// For older operating systems
-		ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
-	}
-
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFilter = szFilters;
-	ofn.lpstrFile = szFilePathName;
-	ofn.lpstrDefExt = _T("dat");
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Save File");
-	ofn.Flags = OFN_OVERWRITEPROMPT;
-
-	// Open the file save dialog, and open the file
-	if (!::GetSaveFileName(&ofn))
-		return;
-
-	// Store the PLotPoint data in the file
-	m_PathName = szFilePathName;
-
-	// Save the file name
-	m_View.FileSave(szFilePathName);
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice

@@ -20,7 +20,7 @@ public:
 	virtual ~CView();
 
 protected:
-	virtual void OnDraw(CDC& dc);
+	virtual void OnDraw(CDC* pDC);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

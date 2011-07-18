@@ -101,34 +101,18 @@ void CMainFrame::OnFileOpen()
 	CFile File;
 	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"), this);
 
-	// Fill the OPENFILENAME structure
-//	TCHAR szFilters[] = _T("Scribble Files (*.dat)\0*.dat\0\0");
-//	TCHAR szFilePathName[_MAX_PATH] = _T("");
-//	OPENFILENAME ofn = {0};
-//	ofn.lStructSize = sizeof(OPENFILENAME);
-//	ofn.hwndOwner = m_hWnd;
-//	ofn.lpstrFilter = szFilters;
-//	ofn.lpstrFile = szFilePathName;
-//	ofn.nMaxFile = _MAX_PATH;
-//	ofn.lpstrTitle = _T("Open File");
-//	ofn.Flags = OFN_FILEMUSTEXIST;
-//
-//	// Bring up the dialog, and open the file
-//	if (!::GetOpenFileName(&ofn))
-//		return;
-
-	if (str.IsEmpty()) return;
-
-	// Retrieve the PlotPoint data
-	if (m_View.FileOpen(str))
+	if (!str.IsEmpty())
 	{
-
-		// Save the filename
-		m_PathName = str;
-		AddMRUEntry(str);
+		// Retrieve the PlotPoint data
+		if (m_View.FileOpen(str))
+		{
+			// Save the filename
+			m_PathName = str;
+			AddMRUEntry(str);
+		}
+		else
+			m_PathName=_T("");
 	}
-	else
-		m_PathName=_T("");
 }
 
 void CMainFrame::OnFileSave()

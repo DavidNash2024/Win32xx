@@ -23,18 +23,18 @@ void CView::DrawLine(int x, int y)
 	pDC->LineTo(x, y);
 }
 
-void CView::OnDraw(CDC& dc)
+void CView::OnDraw(CDC* pDC)
 {
 	if (m_points.size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			dc.CreatePen(PS_SOLID, 1, m_points[i].color);
+			pDC->CreatePen(PS_SOLID, 1, m_points[i].color);
 			if (bDraw)
-				dc.LineTo(m_points[i].x, m_points[i].y);
+				pDC->LineTo(m_points[i].x, m_points[i].y);
 			else
-				dc.MoveTo(m_points[i].x, m_points[i].y);
+				pDC->MoveTo(m_points[i].x, m_points[i].y);
 			
 			bDraw = m_points[i].PenDown;
 		}

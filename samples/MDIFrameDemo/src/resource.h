@@ -46,8 +46,6 @@
 #define IDM_COLOR_BLUE                  141
 #define IDM_COLOR_WHITE                 142
 
-#define MDIMENULIST                     143
-
 // Bitmap Resources
 #define IDB_TOOLBAR_NORM                150
 #define IDB_TOOLBAR_HOT                 151

@@ -6,6 +6,7 @@
 #define MAINFRM_H
 
 #include "Frame.h"
+#include "file.h"
 #include "View.h"
 
 // required for Dev-C++
