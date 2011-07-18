@@ -50,6 +50,7 @@ namespace Win32xx
 		CFile();
 		CFile(HANDLE hFile);
 		CFile(LPCTSTR pszFileName, UINT nOpenFlags);
+		~CFile();
 		operator HANDLE() const;
 
 		BOOL Close();
@@ -61,15 +62,15 @@ namespace Win32xx
 		ULONGLONG GetPosition() const;
 		BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
 		BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
-		BOOL OpenFileDialog(LPCTSTR pszFilePathName = NULL,
+		CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
 						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszFilter = NULL,
-						CWnd* pParentWnd = NULL);
+						CWnd* pOwnerWnd = NULL);
 		UINT Read(void* pBuf, UINT nCount);
 		static BOOL Remove(LPCTSTR pszFileName);
 		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
-		BOOL SaveFileDialog(LPCTSTR pszFilePathName = NULL,
+		CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
 						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszFilter = NULL,
-						CWnd* pParentWnd = NULL);
+						CWnd* pOwnerWnd = NULL);
 		ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
 		void SeekToBegin();
 		ULONGLONG SeekToEnd();
@@ -105,6 +106,11 @@ namespace Win32xx
 		Open(pszFileName, nOpenFlags);
 		assert(m_hFile);
 	}
+	
+	inline CFile::~CFile()
+	{
+		Close();
+	}
 
 	inline CFile::operator HANDLE() const
 	{
@@ -131,10 +137,12 @@ namespace Win32xx
 	inline ULONGLONG CFile::GetLength( ) const
 	// Returns the length of the file in bytes.
 	{
-		assert (m_hFile);
-		CFile File = CFile(m_hFile);
-		ULONGLONG Result = File.SeekToEnd();
+		assert(m_hFile);
 
+		LONG High = 0;
+		DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_END);
+
+		ULONGLONG Result = ((ULONGLONG)High << 32) + LowPos;
 		return Result;
 	}
 
@@ -201,12 +209,15 @@ namespace Win32xx
 		return (m_hFile != 0);
 	}
 
-	inline BOOL CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pParentWnd)
-	// Displayes the file open dialog and opens the selected file.
+	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pOwnerWnd)
+	// Displays the file open dialog. 
+	// Returns a CString containing either the selected file name or an empty CString
 	{
-		BOOL bResult = FALSE;
-		OPENFILENAME ofn = {0};
+		CString str;
+		if (pszFilePathName)
+			str = pszFilePathName;
 
+		OPENFILENAME ofn = {0};
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
 #if defined OPENFILENAME_SIZE_VERSION_400
@@ -214,18 +225,18 @@ namespace Win32xx
 			ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
 #endif
 
-		ofn.hwndOwner = pParentWnd? pParentWnd->GetHwnd() : NULL;
+		ofn.hwndOwner = pOwnerWnd? pOwnerWnd->GetHwnd() : NULL;
 		ofn.hInstance = GetApp()->GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
-		ofn.lpstrFile = (LPTSTR)pszFilePathName;
-		ofn.nMaxFile = lstrlen(pszFilePathName);
 		ofn.lpstrTitle = _T("Open File");
 		ofn.Flags = dwFlags;
+		ofn.nMaxFile = _MAX_PATH;
+		
+		ofn.lpstrFile = (LPTSTR)str.GetBuffer(_MAX_PATH);
+		::GetOpenFileName(&ofn);
+		str.ReleaseBuffer();
 
-		if(::GetOpenFileName(&ofn))
-			bResult = Open(ofn.lpstrFile, ofn.Flags);
-
-		return bResult;
+		return str;
 	}
 
 	inline UINT CFile::Read(void* pBuf, UINT nCount)
@@ -252,10 +263,14 @@ namespace Win32xx
 		return::DeleteFile(pszFileName);
 	}
 
-	inline BOOL CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pParentWnd)
-	// Displays the SaveFileDialog, and writes to the file to the chosen file name.
+	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pOwnerWnd)
+	// Displays the SaveFileDialog.
+	// Returns a CString containing either the selected file name or an empty CString
 	{
-		BOOL bResult = FALSE;
+		CString str;
+		if (pszFilePathName)
+			str = pszFilePathName;
+
 		OPENFILENAME ofn = {0};
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
@@ -264,18 +279,20 @@ namespace Win32xx
 			ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
 #endif
 
-		ofn.hwndOwner = pParentWnd? pParentWnd->GetHwnd() : NULL;
+		ofn.hwndOwner = pOwnerWnd? pOwnerWnd->GetHwnd() : NULL;
 		ofn.hInstance = GetApp()->GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
 		ofn.lpstrFile = (LPTSTR)pszFilePathName;
+		ofn.lpstrFileTitle = (LPTSTR)pszFilePathName;
 		ofn.nMaxFile = lstrlen(pszFilePathName);
-		ofn.lpstrTitle = _T("Open File");
+		ofn.lpstrTitle = _T("Save File");
 		ofn.Flags = dwFlags;
+		ofn.nMaxFile = _MAX_PATH;
+		ofn.lpstrFile = (LPTSTR)str.GetBuffer(_MAX_PATH);
+		::GetSaveFileName(&ofn);
+		str.ReleaseBuffer();
 
-		if(::GetSaveFileName(&ofn))
-			bResult = Open(ofn.lpstrFile, ofn.Flags);
-
-		return bResult;
+		return str;
 	}
 
 	inline ULONGLONG CFile::Seek(LONGLONG lOff, UINT nFrom)

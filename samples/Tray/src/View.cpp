@@ -115,12 +115,12 @@ void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
     }
     else if (lParam == WM_RBUTTONUP)
     {
-		HMENU hTopMenu = LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDM_MINIMIZED));
-		HMENU hSubMenu = GetSubMenu(hTopMenu, 0);
+		CMenu TopMenu(IDM_MINIMIZED);
+		CMenu* pSubMenu = TopMenu.GetSubMenu(0);
 
         SetForegroundWindow();
 		CPoint pt = GetCursorPos();
-		UINT uSelected = TrackPopupMenu(hSubMenu, TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, 0, m_hWnd, NULL);
+		UINT uSelected = pSubMenu->TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, this, NULL);
 
 		switch (uSelected)
 		{

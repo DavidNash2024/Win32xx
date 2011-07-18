@@ -261,6 +261,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\file.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\frame.h"
 				>
 			</File>

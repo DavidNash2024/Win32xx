@@ -847,6 +847,7 @@ namespace Win32xx
 	
 	///////////////////////////////////
 	// Global Functions
+	//
 
 	// friend functions of CString
 	inline CString operator + (const CString& string1, const CString& string2)

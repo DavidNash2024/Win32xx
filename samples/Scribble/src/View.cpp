@@ -85,25 +85,17 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	BOOL bResult = FALSE;
 
 	// Create a handle to the file
-	HANDLE hFile = CreateFile(szFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (INVALID_HANDLE_VALUE != hFile)
+	CFile File;
+	if (File.Open(szFilename, OPEN_EXISTING))
 	{
 		do
 		{
 			nBytesRead = 0;
 			PlotPoint pp;
 
-			if (ReadFile(hFile, &pp, sizeof(PlotPoint), &nBytesRead, NULL))
-			{
-				if (nBytesRead == sizeof(PlotPoint))
-					m_points.push_back(pp);
-			}
-			else
-			{
-				m_points.clear();
-				::MessageBox (0, _T("Failed to read from file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-				break;
-			}
+			nBytesRead = File.Read(&pp, sizeof(PlotPoint));
+			if (nBytesRead == sizeof(PlotPoint))
+				m_points.push_back(pp);	
 
 		} while (nBytesRead == sizeof(PlotPoint));
 
@@ -116,7 +108,6 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 		else
 			bResult = TRUE;
 
-		CloseHandle(hFile);
 	}
 	else
 	{
@@ -131,28 +122,35 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 
 BOOL CView::FileSave(LPCTSTR szFilename)
 {
-	DWORD nBytesWritten;
-	HANDLE hFile = CreateFile(szFilename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	if (INVALID_HANDLE_VALUE == hFile)
+	BOOL bResult = TRUE;
+	CFile hFile;
+	if (!hFile.Open(szFilename, CREATE_ALWAYS))
 	{
 		::MessageBox (0, _T("Failed to open file for writing"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-		return FALSE;
+		bResult = FALSE;
 	}
-
-	BOOL bResult = TRUE;
-	for (size_t i = 0; i < m_points.size(); ++i)
+	
+	if (bResult)
 	{
-		if ((!WriteFile(hFile, &m_points[i], sizeof(PlotPoint), &nBytesWritten, NULL))
-			|| (nBytesWritten != sizeof(PlotPoint)))
+		// Write the file
+		for (size_t i = 0; i < m_points.size(); ++i)
+		{
+			if (!hFile.Write(&m_points[i], sizeof(PlotPoint)))
+			{
+				::MessageBox (0, _T("Error while writing to file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+				bResult = FALSE;
+				break;
+			}
+		}
+
+		// Verify file length
+		if (hFile.GetLength() != m_points.size() * sizeof(PlotPoint))
 		{
 			::MessageBox (0, _T("Error while writing to file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 			bResult = FALSE;
-			break;
 		}
 	}
 
-	CloseHandle(hFile);
 	return bResult;
 }
 

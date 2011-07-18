@@ -565,6 +565,11 @@ namespace Win32xx
 		return m_hMenu;
 	}
 	
+	
+	///////////////////////////////////////
+	// Global functions
+	//
+	
 	inline CMenu* FromHandle(HMENU hMenu)
 	// Returns the CMenu object associated with the menu handle (HMENU).
 	{

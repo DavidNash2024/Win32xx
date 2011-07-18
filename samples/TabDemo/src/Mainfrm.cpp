@@ -90,14 +90,11 @@ void CMainFrame::OnFileNew()
 	tpm.rcExclude = rc;
 
 	// Load the popup menu
-	HMENU hTopMenu = ::LoadMenu(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDM_NEWMENU));
-	HMENU hPopupMenu = ::GetSubMenu(hTopMenu, 0);
+	CMenu TopMenu(IDM_NEWMENU);
+	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
-
-	// Release the menu resource
-	::DestroyMenu(hTopMenu);
+	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, this, &tpm);
 }
 
 void CMainFrame::OnCreate()
