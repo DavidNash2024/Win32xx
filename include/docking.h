@@ -1300,7 +1300,7 @@ namespace Win32xx
 		{
 			Destroy();
 			pDockTarget->RedrawWindow( NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
-			pDockDrag->RedrawWindow( 0, 0, RDW_FRAME|RDW_INVALIDATE );
+			pDockDrag->RedrawWindow();
 		}
 		m_uDockSideOld = uDockSide;
 
@@ -3744,12 +3744,14 @@ namespace Win32xx
 	}
 
 	inline CWnd* CDockContainer::GetActiveView() const
+	// Returns a pointer to the active view window, or NULL if there is no active veiw.
 	{
 		CWnd* pWnd = NULL;
 		if (m_pContainerParent->m_vContainerInfo.size() > 0)
 		{
 			CDockContainer* pActiveContainer = m_pContainerParent->m_vContainerInfo[m_pContainerParent->m_iCurrentPage].pContainer;
-			pWnd = pActiveContainer->GetViewPage().GetView();
+			if (pActiveContainer->GetViewPage().GetView()->IsWindow())
+				pWnd = pActiveContainer->GetViewPage().GetView();
 		}
 
 		return pWnd;
@@ -4107,9 +4109,8 @@ namespace Win32xx
 	inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 		CDockContainer* pContainer = (CDockContainer*)GetParent();
-		assert(dynamic_cast<CDockContainer*>(pContainer));
 		BOOL bResult = FALSE;
-		if (pContainer->GetActiveContainer()->IsWindow())
+		if (pContainer && pContainer->GetActiveContainer())
 			bResult = (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
 
 		return bResult;

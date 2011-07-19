@@ -154,7 +154,6 @@ namespace Win32xx
 	//
 	class CGDIObject
 	{
-		friend class CWinApp;
 		friend CBitmap* FromHandle(HBITMAP hBitmap);
 		friend CBrush* FromHandle(HBRUSH hBrush);
 		friend CDC* FromHandle(HDC hDC);
@@ -808,17 +807,6 @@ namespace Win32xx
 		std::vector<byte> m_bmi;
 	};
 
-
-	/////////////////////////////////////////////////////
-	// Declaration of global functions
-	//
-	CDC* FromHandle(HDC hDC);
-	CBitmap* FromHandle(HBITMAP hBitmap);
-	CBrush* FromHandle(HBRUSH hBrush);
-	CFont* FromHandle(HFONT hFont);
-	CPalette* FromHandle(HPALETTE hPalette);
-	CPen* FromHandle(HPEN hPen);
-	CRgn* FromHandle(HRGN hRgn);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
