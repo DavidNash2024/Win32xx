@@ -324,9 +324,6 @@ namespace Win32xx
 			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
 
-		//	CBitmap& GetImage()		{return m_bmImage;}
-		//	void SetImage(UINT nID);
-
 		protected:
 			CBitmap m_bmImage;
 
@@ -525,8 +522,6 @@ namespace Win32xx
 		DWORD m_dwDockZone;
 		double m_DockSizeRatio;
 		DWORD m_DockStyle;
-		CBrush m_brDithered;
-		CBitmap m_bmHash;
 		HWND m_hOldFocus;
 
 	}; // class CDocker
@@ -1702,10 +1697,6 @@ namespace Win32xx
 		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
 		            m_nTimerCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
-		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
-		m_bmHash.CreateBitmap (8, 8, 1, 1, HashPattern);
-		m_brDithered.CreatePatternBrush (&m_bmHash);
-
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
 	}
@@ -2098,29 +2089,32 @@ namespace Win32xx
 	inline void CDocker::DrawHashBar(HWND hBar, POINT Pos)
 	// Draws a hashed bar while the splitter bar is being dragged
 	{
-		{
-			CDocker* pDock = ((CDockBar*)FromHandle(hBar))->GetDock();
-			if (NULL == pDock) return;
+		CDocker* pDock = ((CDockBar*)FromHandle(hBar))->GetDock();
+		if (NULL == pDock) return;
 
-			BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
+		BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
 
-			CClientDC BarDC(this);
-			BarDC.SelectObject(&m_brDithered);
+		CDC* pBarDC = GetDC();
 
-			CRect rc;
-			::GetWindowRect(hBar, &rc);
-			ClientToScreen(rc);
-			int cx = rc.Width();
-			int cy = rc.Height();
-			int BarWidth = pDock->GetDockBar().GetWidth();
+		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
+		CBitmap bmHash;
+		CBrush brDithered;
+		bmHash.CreateBitmap(8, 8, 1, 1, HashPattern);
+		brDithered.CreatePatternBrush(&bmHash);
+		pBarDC->SelectObject(&brDithered);
 
-			if (bVertical)
-				BarDC.PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
-			else
-				BarDC.PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
-		}
+		CRect rc = FromHandle(hBar)->GetWindowRect();
+		ScreenToClient(rc);
+		int cx = rc.Width();
+		int cy = rc.Height();
+		int BarWidth = pDock->GetDockBar().GetWidth();
+
+		if (bVertical)
+			pBarDC->PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
+		else
+			pBarDC->PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
 	}
-
+	
 	inline CDockContainer* CDocker::GetContainer() const
 	{
 		CDockContainer* pContainer = NULL;
