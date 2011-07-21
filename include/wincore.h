@@ -335,7 +335,9 @@ namespace Win32xx
 		friend CRgn* FromHandle(HRGN hRgn);
 		friend CDC* FromHandle(HDC hDC);
 		friend CWnd* FromHandle(HWND hWnd);
+#ifndef _WIN32_WCE
 		friend CMenu* FromHandle(HMENU hMenu);
+#endif
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -1244,8 +1246,13 @@ namespace Win32xx
 		int cy = (m_pcs->cx || m_pcs->cy)? m_pcs->cy : CW_USEDEFAULT;
 
 		// Create the window
+#ifndef _WIN32_WCE
 		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, x, y,
 				cx, cy, pParent, FromHandle(m_pcs->hMenu), m_pcs->lpCreateParams);
+#else
+		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, x, y,
+				cx, cy, pParent, 0, m_pcs->lpCreateParams);
+#endif
 
 		return m_hWnd;
 	}
@@ -1299,9 +1306,14 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			// Create window
-			HMENU hMenu = pMenu? pMenu->GetHandle() : NULL;
+#ifdef _WIN32_WCE
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-									hWndParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+									hWndParent, 0, GetApp()->GetInstanceHandle(), lpParam);
+#else
+	//		HMENU hMenu = pMenu? pMenu->GetHandle() : NULL;
+	//		m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
+	//								hWndParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+#endif
 
 			// Now handle window creation failure
 			if (!m_hWnd)

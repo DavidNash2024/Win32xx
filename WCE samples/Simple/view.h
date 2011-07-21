@@ -9,7 +9,7 @@ class CView : public CWnd
 public:
 	CView() {}
 	virtual ~CView() {}
-	virtual void OnDraw(CDC& dc);
+	virtual void OnDraw(CDC* pDC);
 	virtual	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 

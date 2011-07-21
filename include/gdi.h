@@ -2679,6 +2679,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		return ::ExtSelectClipRgn(m_pData->hDC, hrgn, fnMode);
 	}
+#endif
 
 	inline CBitmap* CDC::SelectObject(const CBitmap* pBitmap)
 	// Use this to attach an existing bitmap.
@@ -2733,7 +2734,7 @@ namespace Win32xx
 
 		return FromHandle( (HPALETTE)::SelectPalette(m_pData->hDC, *pPalette, bForceBkgnd) );
 	}
-
+#ifndef _WIN32_WCE
 	inline BOOL CDC::PtVisible(int X, int Y)
 	// Determines whether the specified point is within the clipping region of a device context.
 	{

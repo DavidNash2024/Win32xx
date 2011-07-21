@@ -736,6 +736,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\gdi.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Win32++\include\wceframe.h"
 				>
 			</File>

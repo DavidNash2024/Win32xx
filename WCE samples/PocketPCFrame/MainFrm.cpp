@@ -60,11 +60,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnDraw(CDC& dc)
+void CMainFrame::OnDraw(CDC* pDC)
 {
 	CRect rc = GetViewRect();
 	tString tsHello = LoadString(IDS_HELLO);
-	dc.DrawText(tsHello.c_str(), tsHello.length(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+	pDC->DrawText(tsHello.c_str(), tsHello.length(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 
@@ -76,7 +76,6 @@ void CMainFrame::OnInitialUpdate()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-
 //	switch (uMsg)
 //	{
 //
