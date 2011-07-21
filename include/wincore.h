@@ -1310,9 +1310,9 @@ namespace Win32xx
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 									hWndParent, 0, GetApp()->GetInstanceHandle(), lpParam);
 #else
-	//		HMENU hMenu = pMenu? pMenu->GetHandle() : NULL;
-	//		m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-	//								hWndParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
+			HMENU hMenu = pMenu? pMenu->GetHandle() : NULL;
+			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
+									hWndParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
 #endif
 
 			// Now handle window creation failure
