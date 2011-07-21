@@ -507,7 +507,7 @@ namespace Win32xx
 		BOOL  SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL  SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		CWnd* SetFocus() const;
-		void  SetFont(CFont* pFont, BOOL bRedraw) const;
+		void  SetFont(CFont* pFont, BOOL bRedraw = TRUE) const;
 		BOOL  SetForegroundWindow() const;
 		HICON SetIcon(HICON hIcon, BOOL bBigIcon) const;
 		CWnd* SetParent(CWnd* pWndParent) const;
@@ -1938,7 +1938,7 @@ namespace Win32xx
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
 			{
-				if (m_PrevWindowProc) break; // Suppress for subclassed windows
+			//	if (m_PrevWindowProc) break; // Suppress for subclassed windows
 
 				LRESULT lr = MessageReflect(m_hWnd, uMsg, wParam, lParam);
 				if (lr) return lr;	// Message processed so return
@@ -2499,7 +2499,7 @@ namespace Win32xx
 		return FromHandle( ::SetFocus(m_hWnd) );
 	}
 
-	inline void CWnd::SetFont(CFont* pFont, BOOL bRedraw) const
+	inline void CWnd::SetFont(CFont* pFont, BOOL bRedraw /* = TRUE*/) const
 	// Specifies the font that the window will use when drawing text.
 	{
 		assert(::IsWindow(m_hWnd));
