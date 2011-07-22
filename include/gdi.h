@@ -807,6 +807,14 @@ namespace Win32xx
 		std::vector<byte> m_bmi;
 	};
 
+
+	CBitmap* FromHandle(HBITMAP hBitmap);
+	CBrush* FromHandle(HBRUSH hBrush);
+	CFont* FromHandle(HFONT hFont);
+	CPalette* FromHandle(HPALETTE hPalette);
+	CPen* FromHandle(HPEN hPen);
+	CRgn* FromHandle(HRGN hRgn);
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
