@@ -75,19 +75,13 @@ void CMainFrame::OnFileNew()
 
 void CMainFrame::OnFileOpen()
 {
-	// get file name to open
-	TCHAR szFile[MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize	= sizeof(OPENFILENAME);
-	ofn.Flags		= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-	ofn.lpstrFilter	= _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
-	ofn.lpstrTitle	= _T("Open Picture File");
-	ofn.lpstrFile	= szFile;
-	ofn.nMaxFile	= MAX_PATH;
+	TCHAR szFilter[] = _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
 
-	if (IDOK == ::GetOpenFileName(&ofn))	// OK button hit in file open dialog
+	CFile File;
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY, szFilter, this);
+	if (!str.IsEmpty())
 	{
-		m_View.LoadPictureFile(szFile);
+		m_View.LoadPictureFile(str);
 		CRect rcImage = m_View.GetImageRect();
 		AdjustFrameRect(rcImage);
 	}
@@ -97,21 +91,13 @@ void CMainFrame::OnFileSaveAs()
 {
 	if (m_View.GetPicture())
 	{
-		TCHAR szFile[MAX_STRING_SIZE];
-		szFile[0] = '\0';
-
-		OPENFILENAME Ofn = {0};
-		::GetSaveFileName(&Ofn);
-		Ofn.lStructSize = sizeof(OPENFILENAME);
-		Ofn.lpstrFilter = _T("*.bmp\0");
-		Ofn.lpstrFile= szFile;
-		Ofn.nMaxFile = MAX_STRING_SIZE;
-		Ofn.lpstrDefExt = _T("bmp");
-		Ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-		if (GetSaveFileName(&Ofn))
+		TCHAR szFilter[] = _T("*.bmp\0");
+		CFile File;
+		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, szFilter, _T("bmp"), this);
+		
+		if (!str.IsEmpty())
 		{
-			m_View.SavePicture(szFile);
+			m_View.SavePicture(str);
 		}
 	}
 }

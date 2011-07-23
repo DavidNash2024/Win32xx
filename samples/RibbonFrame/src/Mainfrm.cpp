@@ -232,7 +232,7 @@ void CMainFrame::OnFileSave()
 void CMainFrame::OnFileSaveAs()
 {
 	CFile File;
-	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"), this);
+		CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), this);
 
 	// Store the PlotPoint data in the file
 	if (!str.IsEmpty())

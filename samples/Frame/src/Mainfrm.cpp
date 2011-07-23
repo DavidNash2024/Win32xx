@@ -92,16 +92,9 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnFileOpen()
 {
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Open File");
-
 	// Bring up the dialog, and open the file
-	::GetOpenFileName(&ofn);
+	CFile File;
+	CString str = File.OpenFileDialog(0, 0, 0, 0);
 
 	// TODO:
 	// Add your own code here. Refer to the tutorial for additional information 
@@ -109,17 +102,8 @@ void CMainFrame::OnFileOpen()
 
 void CMainFrame::OnFileSave()
 {
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Save File");
-	ofn.Flags = OFN_OVERWRITEPROMPT;
-
-	// Bring up the dialog, and save the file
-	::GetSaveFileName(&ofn);
+	CFile File;
+	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
 
 	// TODO:
 	// Add your own code here. Refer to the tutorial for additional information 

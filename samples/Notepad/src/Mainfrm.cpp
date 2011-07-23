@@ -295,13 +295,9 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
-	HANDLE hFile;
-
 	// Open the file for reading
-	hFile = ::CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
-				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	if (hFile == INVALID_HANDLE_VALUE)
+	CFile File;
+	if (!File.Open(szFileName, OPEN_EXISTING))
 	{
 		tString ts = _T("Failed to load:  ");
 		ts += szFileName;
@@ -313,13 +309,9 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 	m_RichView.SetFontDefaults();
 
 	EDITSTREAM es;
-
-	es.dwCookie =  (DWORD_PTR) hFile;
+	es.dwCookie =  (DWORD_PTR) File.GetHandle();
 	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;
-
 	m_RichView.SendMessage(EM_STREAMIN, SF_TEXT, (LPARAM)&es);
-	::CloseHandle(hFile);
-
 
 	//Clear the modified text flag
 	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
@@ -329,13 +321,9 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 
 BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 {
-	HANDLE hFile;
-
 	// Open the file for writing
-	hFile = ::CreateFile(szFileName, GENERIC_READ | GENERIC_WRITE, 0, NULL,
-				CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	if (hFile == INVALID_HANDLE_VALUE)
+	CFile File;
+	if (!File.Open(szFileName, CREATE_ALWAYS))
 	{
 		tString ts = _T("Failed to write:  ");
 		ts += szFileName;
@@ -345,12 +333,11 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 
 	EDITSTREAM es;
 
-	es.dwCookie =  (DWORD_PTR) hFile;
+	es.dwCookie =  (DWORD_PTR) File.GetHandle();
 	es.dwError = 0;
 	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamOutCallback;
 
 	m_RichView.SendMessage(EM_STREAMOUT, SF_TEXT, (LPARAM)&es);
-	::CloseHandle(hFile);
 
 	//Clear the modified text flag
 	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
@@ -363,23 +350,16 @@ void CMainFrame::OnFileOpen()
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
 	TCHAR szFilters[] = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFilter = szFilters;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Open File");
-	ofn.Flags = OFN_FILEMUSTEXIST;
+	CFile File;
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, szFilters, this);
 
-	if (!::GetOpenFileName(&ofn))
-		return;
-
-	ReadFile(szFilePathName);
-	SetFileName(szFilePathName);
-	AddMRUEntry(szFilePathName);
-	SetWindowTitle();
+	if (!str.IsEmpty())
+	{
+		ReadFile(str);
+		SetFileName(str);
+		AddMRUEntry(str);
+		SetWindowTitle();
+	}
 }
 
 void CMainFrame::OnFileSave()
@@ -395,27 +375,19 @@ void CMainFrame::OnFileSaveAs()
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
 	TCHAR szFilters[] = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFilter = szFilters;
-	ofn.lpstrFile = szFilePathName;
-	ofn.lpstrDefExt = _T("txt");
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Save File");
-	ofn.Flags = OFN_OVERWRITEPROMPT;
-
-	if (!::GetSaveFileName(&ofn))
-		return;
-
-	WriteFile(szFilePathName);
-	SetFileName(szFilePathName);
-	AddMRUEntry(szFilePathName);
-	SetWindowTitle();
+	CFile File;
+	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, szFilters, _T("txt"), this);
+	
+	if (!str.IsEmpty())
+	{
+		WriteFile(str);
+		SetFileName(str);
+		AddMRUEntry(str);
+		SetWindowTitle();
+	}
 }
 
-void CMainFrame::SetFileName(TCHAR* szFilePathName)
+void CMainFrame::SetFileName(LPCTSTR szFilePathName)
 {
 	//Truncate and save file name
 	int i = lstrlen(szFilePathName)+1;

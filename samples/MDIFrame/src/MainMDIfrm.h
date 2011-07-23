@@ -18,6 +18,7 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnFileOpen();
+	virtual void OnFileSave();
 	virtual	void OnFilePrint();
 	virtual void OnInitialUpdate();
 	virtual void SetupToolBar();

@@ -29,16 +29,15 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 
 BOOL CView::FileSave(LPCTSTR pszFile)
  {
-	 HANDLE hFile = CreateFile(pszFile, GENERIC_READ | GENERIC_WRITE, (DWORD) 0, NULL,
-                   OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, (HANDLE) NULL);
-
-	 if (hFile)
+	 CFile File;
+	 BOOL bResult = FALSE;
+	 if (File.Open(pszFile, OPEN_ALWAYS))
 	 {
 		// Create our LPBITMAPINFO object
 		CBitmapInfoPtr pbmi(&m_bmImage);
 
 		// Create the reference DC for GetDIBits to use
-		CDC MemDC = CreateCompatibleDC(NULL);
+		CMemDC MemDC(NULL);
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
 		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
@@ -53,18 +52,15 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 		hdr.bfSize = (DWORD) (sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
 		hdr.bfOffBits = (DWORD) sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD);
 
-		DWORD dwBytesWritten;
-		BOOL bResult = WriteFile(hFile, (LPCVOID) &hdr, sizeof(BITMAPFILEHEADER),  (LPDWORD) &dwBytesWritten,  NULL);
-		if (bResult)
-			bResult = WriteFile(hFile, (LPCVOID) pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD), (LPDWORD) &dwBytesWritten, (NULL));
-		if (bResult)
-			bResult = WriteFile(hFile, (LPCVOID) lpvBits, (int) pbmih->biSizeImage, (LPDWORD) &dwBytesWritten, NULL);
+		File.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
+		File.Write((LPCVOID) pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
+		File.Write((LPCVOID) lpvBits, (int) pbmih->biSizeImage);
 
-		CloseHandle(hFile);
-		return bResult;
-	}
+		if (File.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + (int) pbmih->biSizeImage)
+			bResult = TRUE;
+	 }
 
-	return FALSE;
+	return bResult;
 }
 
 CRect CView::GetImageRect()

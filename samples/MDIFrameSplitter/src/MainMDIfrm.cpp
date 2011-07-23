@@ -20,16 +20,19 @@ CMainMDIFrame::~CMainMDIFrame()
 
 void CMainMDIFrame::OnFileOpen()
 {
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Open File");
+	// Bring up the file open dialog
+	CFile File;
+	CString str = File.OpenFileDialog(0, 0, 0, 0);
 
-	// Bring up the dialog, and open the file
-	::GetOpenFileName(&ofn);
+	// TODO:
+	// Add your own code here. Refer to the tutorial for additional information 
+}
+
+void CMainMDIFrame::OnFileSave()
+{
+	// Bring up the file save dialog.
+	CFile File;
+	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
 
 	// TODO:
 	// Add your own code here. Refer to the tutorial for additional information 

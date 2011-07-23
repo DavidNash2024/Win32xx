@@ -55,7 +55,8 @@ namespace Win32xx
 
 		BOOL Close();
 		BOOL Flush();
-		ULONGLONG GetLength( ) const;
+		HANDLE GetHandle() const;
+		ULONGLONG GetLength() const;
 		const CString& GetFileName() const;
 		const CString& GetFilePath() const;
 		const CString& GetFileTitle() const;
@@ -70,7 +71,7 @@ namespace Win32xx
 		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
 		CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
 						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszFilter = NULL,
-						CWnd* pOwnerWnd = NULL);
+						LPCTSTR pszDefExt = NULL, CWnd* pOwnerWnd = NULL);
 		ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
 		void SeekToBegin();
 		ULONGLONG SeekToEnd();
@@ -134,6 +135,11 @@ namespace Win32xx
 	{
 		assert(m_hFile);
 		return FlushFileBuffers(m_hFile);
+	}
+	
+	inline HANDLE CFile::GetHandle() const
+	{
+		return m_hFile;
 	}
 
 	inline ULONGLONG CFile::GetLength( ) const
@@ -265,7 +271,7 @@ namespace Win32xx
 		return::DeleteFile(pszFileName);
 	}
 
-	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pOwnerWnd)
+	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, LPCTSTR pszDefExt, CWnd* pOwnerWnd)
 	// Displays the SaveFileDialog.
 	// Returns a CString containing either the selected file name or an empty CString
 	{
@@ -286,6 +292,7 @@ namespace Win32xx
 		ofn.lpstrFilter = pszFilter;
 		ofn.lpstrFile = (LPTSTR)pszFilePathName;
 		ofn.lpstrFileTitle = (LPTSTR)pszFilePathName;
+		ofn.lpstrDefExt = pszDefExt;
 		ofn.nMaxFile = lstrlen(pszFilePathName);
 		ofn.lpstrTitle = _T("Save File");
 		ofn.Flags = dwFlags;

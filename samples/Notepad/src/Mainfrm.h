@@ -31,7 +31,7 @@ public:
 	void OnFileSaveAs();
 	void OnFileSave();
 	BOOL ReadFile(LPCTSTR szFileName);
-	void SetFileName(TCHAR* szFullFileName);
+	void SetFileName(LPCTSTR szFullFileName);
 	void SetWindowTitle();
 	BOOL WriteFile(LPCTSTR szFileName);
 	static  DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);

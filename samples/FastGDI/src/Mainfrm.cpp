@@ -124,49 +124,38 @@ void CMainFrame::OnFileNew()
 
 void CMainFrame::OnFileOpen()
 {
-	// Fill the OPENFILENAME structure
-	TCHAR szFilters[] = _T("Scribble Files (*.bmp)\0*.bmp\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFilter = szFilters;
-	ofn.lpstrFile = szFilePathName;
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("Open File");
-	ofn.Flags = OFN_FILEMUSTEXIST;
-
-	// Bring up the dialog, and open the file
-	if (!::GetOpenFileName(&ofn))
-		return;
-
-	// Load the bitmap
-	m_MyView.FileOpen(szFilePathName);
-
-	// Save the filename
-	m_PathName = szFilePathName;
-	AddMRUEntry(szFilePathName);
-
-	// Turn on the ToolBar adjust button
-	CToolBar& TB = GetToolBar();
-	TB.EnableButton(IDM_FILE_SAVEAS);
-	TB.EnableButton(IDM_IMAGE_ADJUST);
-	EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
-
-	// Resize the frame to match the bitmap
-	if (GetMyView().GetImage())
+	CFile File;
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.bmp)\0*.bmp\0\0"), this);
+	if (!str.IsEmpty())
 	{
-		GetMyView().ShowScrollBar(SB_HORZ, FALSE);
-		GetMyView().ShowScrollBar(SB_VERT, FALSE);
-		CRect rcImage = GetMyView().GetImageRect();
-		AdjustFrameRect(rcImage);
+		// Load the bitmap
+		m_MyView.FileOpen(str);
+
+		// Save the filename
+		m_PathName = str;
+		AddMRUEntry(str);
+
+		// Turn on the ToolBar adjust button
+		CToolBar& TB = GetToolBar();
+		TB.EnableButton(IDM_FILE_SAVEAS);
+		TB.EnableButton(IDM_IMAGE_ADJUST);
+		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
+
+		// Resize the frame to match the bitmap
+		if (GetMyView().GetImage())
+		{
+			GetMyView().ShowScrollBar(SB_HORZ, FALSE);
+			GetMyView().ShowScrollBar(SB_VERT, FALSE);
+			CRect rcImage = GetMyView().GetImageRect();
+			AdjustFrameRect(rcImage);
+		}
+
+		GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+
+		// Set the caption
+		tString ts = _T("FastGDI - ") + m_PathName;
+		SetWindowText(ts.c_str());
 	}
-
-	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
-
-	// Set the caption
-	tString ts = _T("FastGDI - ") + m_PathName;
-	SetWindowText(ts.c_str());
 }
 
 BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
@@ -224,30 +213,18 @@ void CMainFrame::OnFileSave()
 
 void CMainFrame::OnFileSaveAs()
 {
-	// Fill the OPENFILENAME structure
-	TCHAR szFilters[] = _T("Bitmap Files (*.bmp)\0*.bmp\0\0");
-	TCHAR szFilePathName[_MAX_PATH] = _T("");
-	OPENFILENAME ofn = {0};
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrFilter = szFilters;
-	ofn.lpstrFile = szFilePathName;
-	ofn.lpstrDefExt = _T("bmp");
-	ofn.nMaxFile = _MAX_PATH;
-	ofn.lpstrTitle = _T("SaveAs File");
-	ofn.Flags = OFN_OVERWRITEPROMPT;
+	CFile File;
+	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), _T("bmp"), 0);
+	if (!str.IsEmpty())
+	{
+		// Set the caption
+		m_PathName = str;
+		tString ts = _T("FastGDI - ") + m_PathName;
+		SetWindowText(ts.c_str());
 
-	// Open the file save dialog, and open the file
-	if (!::GetSaveFileName(&ofn))
-		return;
-
-	// Set the caption
-	m_PathName = szFilePathName;
-	tString ts = _T("FastGDI - ") + m_PathName;
-	SetWindowText(ts.c_str());
-
-	// Save the file name
-	m_MyView.FileSave(szFilePathName);
+		// Save the file name
+		m_MyView.FileSave(str);
+	}
 }
 
 void CMainFrame::OnInitialUpdate()
