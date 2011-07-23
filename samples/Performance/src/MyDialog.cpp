@@ -31,8 +31,8 @@ INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 BOOL CMyDialog::OnInitDialog()
 {
 	// Put the initial values in the edit boxes
-	::SetDlgItemText(GetHwnd(), IDC_WINDOWS,  _T("10"));
-	::SetDlgItemText(GetHwnd(), IDC_MESSAGES, _T("1000000"));
+	SetDlgItemText(IDC_WINDOWS,  _T("10"));
+	SetDlgItemText(IDC_MESSAGES, _T("1000000"));
 
 	return true;
 }

@@ -8,14 +8,12 @@
 #include "resource.h"
 
 
-CMainWindow::CMainWindow() : m_hEdit(NULL), m_hFont(NULL), m_nTestMessages(0), m_nTestWindows(0)
+CMainWindow::CMainWindow() : m_nTestMessages(0), m_nTestWindows(0)
 {
 }
 
 CMainWindow::~CMainWindow()
 {
-	if (m_hFont)
-		::DeleteObject(m_hFont);
 }
 
 HWND CMainWindow::Create(CWnd* pParent /*= 0*/)
@@ -46,13 +44,13 @@ void CMainWindow::OnCreate()
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
 
 	// Create an Edit window over the client area of the main window
-	m_hEdit = ::CreateWindowEx(0L, _T("Edit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-						m_hWnd, NULL, GetApp()->GetInstanceHandle(), NULL);
+	m_Edit.CreateEx(0L, _T("Edit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
+						this, NULL, NULL);
 
 	// Set a default font
-	m_hFont = ::CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+	m_Font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-	::SendMessage(m_hEdit, WM_SETFONT, (WPARAM)m_hFont, 0);
+	m_Edit.SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0);
 }
 
 void CMainWindow::OnInitialUpdate()
@@ -66,7 +64,7 @@ void CMainWindow::OnSize()
 	CRect r = GetClientRect();
 
 	// Resize the edit window when the main window is resized
-	::MoveWindow(m_hEdit, 0, 0, r.right - r.left, r.bottom - r.top, TRUE);
+	m_Edit.MoveWindow(0, 0, r.right - r.left, r.bottom - r.top, TRUE);
 }
 
 void CMainWindow::OnAllWindowsCreated()
@@ -130,9 +128,9 @@ void CMainWindow::PerformanceTest()
 void CMainWindow::SendText(LPCTSTR str)
 {
 	// Send text to the Edit window
-	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)str);
-	::SendMessage(m_hEdit, EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)_T("\r\n"));
-	::SendMessage(m_hEdit, EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
+	m_Edit.SendMessage(EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)str);
+	m_Edit.SendMessage(EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)_T("\r\n"));
+	m_Edit.SendMessage(EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
 
 	TRACE(str);
 	TRACE(_T("\n"));
@@ -144,19 +142,6 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	switch (uMsg)
 	{
-	case WM_COMMAND:
-		if (HIWORD(wParam) == EN_SETFOCUS)
-			::SetFocus(m_hWnd);
-		break;
-
-	case WM_CLOSE:
-		{
-			//Close the test windows
-			for (int i = 0 ; i < m_nTestWindows ; i++)
-				::SendMessage(m_pCTestWindows[i]->GetHwnd(), WM_CLOSE, 0, 0);
-		}
-		break;
-
 	case WM_DESTROY:
 		// End the program.
 		::PostQuitMessage(0);

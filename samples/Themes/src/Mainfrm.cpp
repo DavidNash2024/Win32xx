@@ -418,7 +418,7 @@ void CMainFrame::OnUseThemes()
 {
 	m_bUseThemes = !m_bUseThemes;
 	BOOL bCheck = m_bUseThemes;
-	::CheckMenuItem(GetFrameMenu(), IDM_USE_THEMES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_USE_THEMES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ReBarTheme rt = GetReBar().GetReBarTheme();
 	rt.UseThemes = m_bUseThemes;
 	GetReBar().SetReBarTheme(rt);
@@ -433,7 +433,7 @@ void CMainFrame::OnBandColors()
 {
 	m_bBandColors = !m_bBandColors;
 	BOOL bCheck = m_bBandColors;
-	::CheckMenuItem(GetFrameMenu(), IDM_BAND_COLORS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_BAND_COLORS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ChooseColor(m_nColor);
 
 	GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -443,7 +443,7 @@ void CMainFrame::OnFlatStyle()
 {
 	m_bFlatStyle = !m_bFlatStyle;
 	BOOL bCheck = m_bFlatStyle;
-	::CheckMenuItem(GetFrameMenu(), IDM_FLAT_STYLE, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_FLAT_STYLE, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ReBarTheme rt = GetReBar().GetReBarTheme();
 	rt.FlatStyle = m_bFlatStyle;
 	GetReBar().SetReBarTheme(rt);
@@ -455,7 +455,7 @@ void CMainFrame::OnLeftBands()
 {
 	m_bBandsLeft = !m_bBandsLeft;
 	BOOL bCheck = m_bBandsLeft;
-	::CheckMenuItem(GetFrameMenu(), IDM_LEFT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_LEFT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ReBarTheme rt = GetReBar().GetReBarTheme();
 	rt.BandsLeft = m_bBandsLeft;
 	GetReBar().SetReBarTheme(rt);
@@ -467,7 +467,7 @@ void CMainFrame::OnLockMenuBar()
 {
 	m_bLockMenuBand = !m_bLockMenuBand;
 	BOOL bCheck = m_bLockMenuBand;
-	::CheckMenuItem(GetFrameMenu(), IDM_LOCK_MENUBAR, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_LOCK_MENUBAR, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ReBarTheme rt = GetReBar().GetReBarTheme();
 	rt.LockMenuBand = m_bLockMenuBand;
 	GetReBar().SetReBarTheme(rt);
@@ -480,7 +480,7 @@ void CMainFrame::OnRoundBorders()
 {
 	m_bRoundBorders = !m_bRoundBorders;
 	BOOL bCheck = m_bRoundBorders;
-	::CheckMenuItem(GetFrameMenu(), IDM_ROUND_BORDERS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_ROUND_BORDERS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ReBarTheme rt = GetReBar().GetReBarTheme();
 	rt.RoundBorders = m_bRoundBorders;
 	GetReBar().SetReBarTheme(rt);
@@ -492,7 +492,7 @@ void CMainFrame::OnShortBands()
 {
 	m_bShortBands = !m_bShortBands;
 	BOOL bCheck = m_bShortBands;
-	::CheckMenuItem(GetFrameMenu(), IDM_SHORT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_SHORT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ReBarTheme rt = GetReBar().GetReBarTheme();
 	rt.ShortBands = m_bShortBands;
 	GetReBar().SetReBarTheme(rt);
@@ -504,7 +504,7 @@ void CMainFrame::OnUseLines()
 {
 	m_bUseLines = !m_bUseLines;
 	BOOL bCheck = m_bUseLines;
-	::CheckMenuItem(GetFrameMenu(), IDM_USE_LINES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_USE_LINES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 	ReBarTheme rt = GetReBar().GetReBarTheme();
 	rt.UseLines = m_bUseLines;
 	GetReBar().SetReBarTheme(rt);
@@ -645,7 +645,7 @@ void CMainFrame::ShowArrows(BOOL bShow)
 {
 	UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
 
-	::CheckMenuItem (GetFrameMenu(), IDM_VIEW_ARROWS, uCheck);
+	GetFrameMenu().CheckMenuItem(IDM_VIEW_ARROWS, uCheck);
 	GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(Arrows), bShow);
 
 	if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)
@@ -656,7 +656,7 @@ void CMainFrame::ShowCards(BOOL bShow)
 {
 	UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
 
-	::CheckMenuItem (GetFrameMenu(), IDM_VIEW_CARDS, uCheck);
+	GetFrameMenu().CheckMenuItem(IDM_VIEW_CARDS, uCheck);
 	GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(Cards), bShow);
 
 	if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)

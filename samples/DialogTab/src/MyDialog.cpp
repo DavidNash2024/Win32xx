@@ -11,12 +11,11 @@
 //
 CButtonDialog::CButtonDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent) 
 {
-	m_hBrush = ::CreateSolidBrush(RGB(255, 255, 255));
+	m_Brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
 CButtonDialog::~CButtonDialog() 
 {
-	::DeleteObject(m_hBrush);
 }
 
 INT_PTR CButtonDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -25,12 +24,12 @@ INT_PTR CButtonDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// Set the background color of the dialog
 	case WM_CTLCOLORDLG:
-		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
 		break;
 	
 	// Set the background color of static controls
 	case WM_CTLCOLORSTATIC:
-		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
 		break;
 	
 	}
@@ -75,12 +74,11 @@ BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 //
 CComboBoxDialog::CComboBoxDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent) 
 {
-	m_hBrush = ::CreateSolidBrush(RGB(255, 255, 255));
+	m_Brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
 CComboBoxDialog::~CComboBoxDialog() 
 {
-	::DeleteObject(m_hBrush);
 }
 
 INT_PTR CComboBoxDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -89,12 +87,12 @@ INT_PTR CComboBoxDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// Set the background color of the dialog
 	case WM_CTLCOLORDLG:
-		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
 		break;
 	
 	// Set the background color of static controls
 	case WM_CTLCOLORSTATIC:
-		if (IsXPThemed()) return (INT_PTR)m_hBrush;
+		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
 		break;
 	
 	}

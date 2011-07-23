@@ -2477,34 +2477,6 @@ namespace Win32xx
 		GetStatusBar().SetFont(pFont, FALSE);
 		SetStatusText();
 
-		/*
-		// Update the menubar font and band size
-		if(IsMenuBarUsed())
-		{
-			// Update the font
-			ICONMETRICS im = {0};
-			im.cbSize = sizeof(ICONMETRICS);
-			SystemParametersInfo(SPI_GETICONMETRICS, 0, &im, 0);
-			HFONT hFont = ::CreateFontIndirect(&im.lfFont);
-			HFONT hFontOld = (HFONT)GetMenuBar().SendMessage(WM_GETFONT, 0L, 0L);
-			GetMenuBar().SendMessage(WM_SETFONT, (WPARAM)hFont, TRUE);
-			CDC dcMenuBar = GetMenuBar().GetDC();
-			dcMenuBar.AttachFont(hFont);
-			CSize csMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
-			::DeleteObject(hFontOld);
-
-			// Update the band size
-			int MenuBar_Height = csMenuBar.cy + 8;
-			int nBand = GetReBar().GetBand(GetMenuBar().GetHwnd());
-			REBARBANDINFO rbbi = {0};
-			rbbi.fMask = RBBIM_CHILDSIZE;
-			GetReBar().GetBandInfo(nBand, rbbi);
-			rbbi.cyMinChild = MenuBar_Height;
-			rbbi.cyMaxChild = MenuBar_Height;
-			GetReBar().SetBandInfo(nBand, rbbi);
-		}
-		*/
-
 		if ((m_bUpdateTheme) && (m_bUseThemes)) SetTheme();
 
 		// Reposition and redraw everything

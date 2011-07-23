@@ -11,7 +11,7 @@
 
 #define HIMETRIC_INCH	2540
 
-CView::CView() : m_pPicture(NULL), m_hBrush(NULL), m_BStrString(NULL),
+CView::CView() : m_pPicture(NULL),m_BStrString(NULL),
 					m_xCurrentScroll(0), m_yCurrentScroll(0)
 {
 	::CoInitialize(NULL);
@@ -19,9 +19,6 @@ CView::CView() : m_pPicture(NULL), m_hBrush(NULL), m_BStrString(NULL),
 
 CView::~CView()
 {
-	if (m_hBrush)
-		::DeleteObject(m_hBrush);
-
 	if (m_pPicture)
 		m_pPicture->Release();
 
@@ -106,8 +103,8 @@ void CView::OnDraw(CDC* pDC)
 void CView::OnInitialUpdate()
 {
 	// Set the window background to black
-	m_hBrush = ::CreateSolidBrush(RGB(0,0,0));
-	::SetClassLongPtr(m_hWnd, GCLP_HBRBACKGROUND, (LONG_PTR)m_hBrush);
+	m_Brush.CreateSolidBrush(RGB(0,0,0));
+	SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
 
 	// Load picture at startup
 	TCHAR szPath[MAX_STRING_SIZE];

@@ -17,7 +17,7 @@ public:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 private:
-	HBRUSH m_hBrush;
+	CBrush m_Brush;
 };
 
 class CComboBoxDialog : public CDialog
@@ -29,7 +29,7 @@ public:
 	virtual BOOL OnInitDialog();
 
 private:
-	HBRUSH m_hBrush;
+	CBrush m_Brush;
 };
 
 

@@ -37,8 +37,9 @@ private:
 	};
 
 	std::vector<TestWindowPtr> m_pCTestWindows;	// A vector CTestWindow smart pointers
-	HWND  m_hEdit;			// Handle to the edit window
-	HFONT m_hFont;			// A font for the edit window
+//	HWND  m_hEdit;			// Handle to the edit window
+	CEdit m_Edit;			// Handle to the edit window
+	CFont m_Font;			// A font for the edit window
 	int m_nTestMessages;	// Number of test messages to be sent
 	int m_nTestWindows;		// Number of test windows to create
 };

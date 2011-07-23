@@ -33,7 +33,7 @@ protected:
 
 private:
 	LPPICTURE m_pPicture;
-	HBRUSH m_hBrush;
+	CBrush m_Brush;
 	OLECHAR m_OleString[MAX_STRING_SIZE];
 	BSTR    m_BStrString;
 	int m_xCurrentScroll;

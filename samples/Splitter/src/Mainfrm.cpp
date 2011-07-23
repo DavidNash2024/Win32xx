@@ -72,12 +72,12 @@ void CMainFrame::OnViewList()
 	if (m_pDockList->IsDocked())
 	{
 		m_pDockList->Hide();
-		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_LIST, MF_UNCHECKED);
+		GetFrameMenu().CheckMenuItem(IDM_VIEW_LIST, MF_UNCHECKED);
 	}
 	else
 	{
 		m_pDockTree->Dock(m_pDockList, dwStyle | DS_DOCKED_RIGHT);
-		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_LIST, MF_CHECKED);
+		GetFrameMenu().CheckMenuItem(IDM_VIEW_LIST, MF_CHECKED);
 	}
 }
 
@@ -88,12 +88,12 @@ void CMainFrame::OnViewText()
 	if (m_pDockText->IsDocked())
 	{
 		m_pDockText->Hide();
-		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_TEXT, MF_UNCHECKED);
+		GetFrameMenu().CheckMenuItem(IDM_VIEW_TEXT, MF_UNCHECKED);
 	}
 	else
 	{
 		m_MainView.Dock(m_pDockText, dwStyle | DS_DOCKED_RIGHT);
-		::CheckMenuItem(GetFrameMenu(), IDM_VIEW_TEXT, MF_CHECKED);
+		GetFrameMenu().CheckMenuItem(IDM_VIEW_TEXT, MF_CHECKED);
 	}
 }
 
