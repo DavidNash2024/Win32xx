@@ -117,7 +117,7 @@ void CMainFrame::OnFilePrint()
 	CBitmap bmView;
 	bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
 	MemDC.SelectObject(&bmView);
-	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
+	MemDC.BitBlt(0, 0, Width, Height, &ViewDC, 0, 0, SRCCOPY);
 
 	// Bring up a dialog to choose the printer
 	PRINTDLG pd = {0};

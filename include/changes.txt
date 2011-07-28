@@ -56,7 +56,6 @@ Changes in detail
 - Added CDC::SelectStockObject
 - Added CDocker::GetActiveDocker
 - Added CDocker::SetCaptionColors
-- Added CFrame::IsMDIFrame
 - Added CWinApp::GetAccelerators
 - Added CWinApp::OnIdle
 - Added CWinApp::PreTranslateMessage
@@ -82,7 +81,6 @@ Changes in detail
 - Modified CWnd::HiliteMenuItem         now accepts a CMenu pointer
 - Modified CWnd::GetSystemMenu          now accepts a CMenu pointer
 - Modified CWnd::OnEraseBkgnd			now accepts a CDC pointer
-- Modified CWnd::OnPaint				now accepts a CDC pointer
 - Modified CWnd::GetFont				now returns a CFont pointer
 - Modified CWnd::SetFont                now accepts a CFont pointer
 - Modified CResizer::AddChild			now accepts a CWnd pointer
@@ -99,6 +97,7 @@ Changes in detail
 - Removed CDC::DetachPen
 - Removed GetWindowType for all CWnd classes
 - Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker
+- Renamed CWnd::OnPaint to CWnd::OnDraw
 
 
 Incompatibilities with previous versions
