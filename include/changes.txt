@@ -99,6 +99,9 @@ Changes in detail
 - Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker
 - Renamed CWnd::OnPaint to CWnd::OnDraw
 
+- Extended the help documentation to describe the new features.
+- Added an index to the help documentation.
+
 
 Incompatibilities with previous versions
 ----------------------------------------

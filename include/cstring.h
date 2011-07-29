@@ -314,14 +314,14 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline int CString::Collate(LPCTSTR pszText) const
-	// Performs a case sensitive comparison of the two strings using locale-specific iinformation.
+	// Performs a case sensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
 		return _tcscoll(m_str.c_str(), pszText);
 	}
 
 	inline int CString::CollateNoCase(LPCTSTR pszText) const
-	// Performs a case insensitive comparison of the two strings using locale-specific iinformation.
+	// Performs a case insensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
 		return _tcsicoll(m_str.c_str(), pszText);
@@ -629,7 +629,7 @@ namespace Win32xx
 	// This copies the contents of the buffer (acquired by GetBuffer) to this CString,
 	// and releases the contents of the buffer. The default length of -1 copies from the
 	// buffer until a null terminator is reached. If the buffer doesn't contain a null
-	// terminater, you must specify the buffer's length.
+	// terminator, you must specify the buffer's length.
 	{
 		assert (nNewLength > 0 || -1 == nNewLength);
 		assert (nNewLength < (int)m_buf.size());
@@ -646,7 +646,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Remove(LPCTSTR pszText)
-	// Removes each occurance of the specified substring from the string.
+	// Removes each occurrence of the specified substring from the string.
 	{
 		assert(pszText);
 
@@ -835,7 +835,7 @@ namespace Win32xx
 	}
 
 	inline void CString::Truncate(int nNewLength)
-	// Reduces the length of the string to the specified amount
+	// Reduces the length of the string to the specified amount.
 	{
 		if (nNewLength < GetLength())
 		{

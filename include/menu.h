@@ -131,7 +131,6 @@ namespace Win32xx
 		BOOL LoadMenuIndirect(const void* lpMenuTemplate);
 
 		//Menu Operations
-		BOOL DeleteMenu(UINT uPosition, UINT uFlags);
 		BOOL TrackPopupMenu(UINT uFlags, int x, int y, CWnd* pWnd, LPCRECT lpRect = 0);
 		BOOL TrackPopupMenuEx(UINT uFlags, int x, int y, CWnd* pWnd, LPTPMPARAMS lptpm);
 
@@ -140,6 +139,7 @@ namespace Win32xx
 		BOOL AppendMenu(UINT uFlags, UINT_PTR uIDNewItem, const CBitmap* pBmp);
 		UINT CheckMenuItem(UINT uIDCheckItem, UINT uCheck);
 		BOOL CheckMenuRadioItem(UINT uIDFirst, UINT uIDLast, UINT uIDItem, UINT uFlags);
+		BOOL DeleteMenu(UINT uPosition, UINT uFlags);
 		UINT EnableMenuItem(UINT uIDEnableItem, UINT uEnable);
 		UINT GetDefaultItem(UINT gmdiFlags, BOOL fByPos = FALSE);
 		DWORD GetMenuContextHelpId() const;
@@ -241,12 +241,14 @@ namespace Win32xx
 	
 	
 	inline BOOL CMenu::AppendMenu(UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/)
+	// Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
 	{
 		assert(IsMenu(m_hMenu));
 		return ::AppendMenu(m_hMenu, uFlags, uIDNewItem, lpszNewItem);
 	}
 
 	inline BOOL CMenu::AppendMenu(UINT uFlags, UINT_PTR uIDNewItem, const CBitmap* pBmp)
+	// Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
 	{
 		assert(IsMenu(m_hMenu));
 		assert(pBmp);
@@ -269,12 +271,15 @@ namespace Win32xx
 	}
 	
 	inline UINT CMenu::CheckMenuItem(UINT uIDCheckItem, UINT uCheck)
+	// Sets the state of the specified menu item's check-mark attribute to either selected or clear.
 	{
 		assert(IsMenu(m_hMenu));
 		return ::CheckMenuItem(m_hMenu, uIDCheckItem, uCheck);
 	}
 
 	inline BOOL CMenu::CheckMenuRadioItem(UINT uIDFirst, UINT uIDLast, UINT uIDItem, UINT uFlags)
+	// Checks a specified menu item and makes it a radio item. At the same time, the function clears 
+	//  all other menu items in the associated group and clears the radio-item type flag for those items.
 	{
 		assert(IsMenu(m_hMenu));
 		return ::CheckMenuRadioItem(m_hMenu, uIDFirst, uIDLast, uIDItem, uFlags);
@@ -304,6 +309,7 @@ namespace Win32xx
 	}	
 
 	inline void CMenu::DestroyMenu()
+	// Destroys the menu and frees any memory that the menu occupies.
 	{
 		if (::IsMenu(m_hMenu)) 
 			::DestroyMenu(m_hMenu);
@@ -332,7 +338,7 @@ namespace Win32xx
 	}
 
 	inline UINT CMenu::EnableMenuItem(UINT uIDEnableItem, UINT uEnable)
-	// Enenables, disables, or grays the specified menu item.
+	// Enables, disables, or grays the specified menu item.
 	// The uEnable parameter must be a combination of either MF_BYCOMMAND or MF_BYPOSITION
 	// and MF_ENABLED, MF_DISABLED, or MF_GRAYED.
 	{
@@ -407,6 +413,7 @@ namespace Win32xx
 	}
 
 	inline int CMenu::GetMenuString(UINT uIDItem, LPTSTR lpString, int nMaxCount, UINT uFlags) const
+	// Copies the text string of the specified menu item into the specified buffer.
 	{
 		assert(IsMenu(m_hMenu));
 		assert(lpString);
@@ -414,6 +421,7 @@ namespace Win32xx
 	}
 
 	inline int CMenu::GetMenuString(UINT uIDItem, CString& rString, UINT uFlags) const
+	// Copies the text string of the specified menu item into the specified buffer.
 	{
 		assert(IsMenu(m_hMenu));
 		return ::GetMenuString(m_hMenu, uIDItem, (LPTSTR)rString.c_str(), rString.GetLength(), uFlags);
@@ -551,16 +559,19 @@ namespace Win32xx
 	}
 
 	inline BOOL CMenu::operator != (const CMenu& menu) const
+	// Returns TRUE if the two menu objects are not equal.
 	{
 		return menu.m_hMenu != m_hMenu;
 	}
 
 	inline BOOL CMenu::operator == (const CMenu& menu) const
+	// Returns TRUE of the two menu object are equal
 	{
 		return menu.m_hMenu == m_hMenu;
 	}
 
 	inline CMenu::operator HMENU () const
+	// Retrieves the menu's handle.
 	{
 		return m_hMenu;
 	}

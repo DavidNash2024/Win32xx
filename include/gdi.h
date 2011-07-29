@@ -150,7 +150,7 @@ namespace Win32xx
 #endif
 
 	///////////////////////////////////////////////
-	// Declarations for the CBitmap class
+	// Declarations for the CGDIObject class
 	//
 	class CGDIObject
 	{
@@ -163,7 +163,7 @@ namespace Win32xx
 		friend CRgn* FromHandle(HRGN hRgn);
 
 	public:
-		struct DataMembers	// A structure that contains the data members for CBitmap
+		struct DataMembers	// A structure that contains the data members for CGDIObject
 		{
 			HGDIOBJ hGDIObject;
 			long	Count;
@@ -179,7 +179,6 @@ namespace Win32xx
 		HGDIOBJ Detach();
 		HGDIOBJ GetHandle() const;
 		int		GetObject(int nCount, LPVOID pObject) const;
-		void	Release();
 
 	protected:
 		DataMembers* m_pData;
@@ -187,6 +186,7 @@ namespace Win32xx
 	private:
 		void	AddToMap();
 		BOOL	RemoveFromMap();
+		void	Release();	
 	};
 
 
@@ -242,6 +242,7 @@ namespace Win32xx
 
 		HBRUSH CreateSolidBrush(COLORREF crColor);
 		HBRUSH CreatePatternBrush(CBitmap* pBitmap);
+		HBRUSH CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
 		HBRUSH CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage);
 		LOGBRUSH GetLogBrush() const;
 
@@ -441,7 +442,7 @@ namespace Win32xx
 		CBitmap* CreateCompatibleBitmap(CDC* pDC, int cx, int cy);
 		CBitmap* CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
-		BITMAP  GetBitmapInfo() const;
+		BITMAP  GetBitmapData() const;
 		CBitmap* LoadBitmap(UINT nID);
 		CBitmap* LoadBitmap(LPCTSTR lpszName);
 		CBitmap* LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
@@ -456,10 +457,11 @@ namespace Win32xx
 #endif
 
 		// Create and Select Brushes
+		CBrush* CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
 		CBrush* CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
 		CBrush* CreatePatternBrush(CBitmap* pBitmap);
 		CBrush* CreateSolidBrush(COLORREF rbg);
-		LOGBRUSH GetBrushInfo() const;
+		LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
 		CBrush* CreateBrushIndirect(LPLOGBRUSH& pLogBrush);
@@ -468,7 +470,7 @@ namespace Win32xx
 
 		// Create and Select Fonts
 		CFont* CreateFontIndirect(const LOGFONT& lf);
-		LOGFONT GetFontInfo() const;
+		LOGFONT GetLogFont() const;
 
 #ifndef _WIN32_WCE
 		CFont* CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
@@ -480,7 +482,7 @@ namespace Win32xx
 		// Create and Select Pens
 		CPen* CreatePen(int nStyle, int nWidth, COLORREF rgb);
 		CPen* CreatePenIndirect(LPLOGPEN pLogPen);
-		LOGPEN GetPenInfo() const;
+		LOGPEN GetLogPen() const;
 
 		// Create Select Regions
 		int CreateRectRgn(int left, int top, int right, int bottom);
@@ -910,7 +912,7 @@ namespace Win32xx
 	}
 
 	inline HGDIOBJ CGDIObject::Detach()
-	// Detaches the HDC from this object.
+	// Detaches the HGDIOBJ from this object.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject);
@@ -1274,6 +1276,15 @@ namespace Win32xx
 		assert(m_pData);
 		assert(pBitmap);
 		HBRUSH hBrush = ::CreatePatternBrush(*pBitmap);
+		Attach(hBrush);
+		return hBrush;
+	}
+
+	inline HBRUSH CBrush::CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec)
+	// Creates a logical brush that has the pattern specified by the specified device-independent bitmap (DIB).
+	{
+		assert(m_pData);
+		HBRUSH hBrush = ::CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
 		Attach(hBrush);
 		return hBrush;
 	}
@@ -2256,7 +2267,7 @@ namespace Win32xx
 	//	RemoveFromMap();
 	}
 
-	inline BITMAP CDC::GetBitmapInfo() const
+	inline BITMAP CDC::GetBitmapData() const
 	// Retrieves the BITMAP information for the current HBITMAP.
 	{
 		assert(m_pData->hDC);
@@ -2347,7 +2358,7 @@ namespace Win32xx
 	}
 
 	inline CBrush* CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
-	// Creates the brush and selects it into the device context.
+	// Creates a brush with the specified hatch pattern and color, and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
 		assert(m_pData->hDC);
@@ -2359,8 +2370,20 @@ namespace Win32xx
 	}
 #endif
 
+	inline CBrush* CDC::CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec)
+	// Creates a logical from the specified device-independent bitmap (DIB), and selects it into the device context.
+	// Returns a pointer to the old brush selected out of the device context.
+	{
+		assert(m_pData->hDC);
+
+		CBrush* pBrush = new CBrush;
+		pBrush->CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
+		m_pData->m_vGDIObjects.push_back(pBrush);
+		return SelectObject(pBrush);
+	}
+
 	inline CBrush* CDC::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage)
-	// Creates the brush and selects it into the device context.
+	// Creates a logical from the specified device-independent bitmap (DIB), and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
 		assert(m_pData->hDC);
@@ -2372,7 +2395,7 @@ namespace Win32xx
 	}
 
 	inline CBrush* CDC::CreatePatternBrush(CBitmap* pBitmap)
-	// Creates the brush and selects it into the device context.
+	// Creates the brush with the specified pattern, and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
 		assert(m_pData->hDC);
@@ -2385,7 +2408,7 @@ namespace Win32xx
 	}
 
 	inline CBrush* CDC::CreateSolidBrush(COLORREF rgb)
-	// Creates the brush and selects it into the device context.
+	// Creates the brush with the specified color, and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
 		assert(m_pData->hDC);
@@ -2396,7 +2419,7 @@ namespace Win32xx
 		return SelectObject(pBrush);
 	}
 
-	inline LOGBRUSH CDC::GetBrushInfo() const
+	inline LOGBRUSH CDC::GetLogBrush() const
 	// Retrieves the current brush information
 	{
 		assert(m_pData->hDC);
@@ -2454,7 +2477,7 @@ namespace Win32xx
 		return SelectObject(pFont);
 	}
 
-	inline LOGFONT CDC::GetFontInfo() const
+	inline LOGFONT CDC::GetLogFont() const
 	// Retrieves the current font information.
 	{
 		assert(m_pData->hDC);
@@ -2490,7 +2513,7 @@ namespace Win32xx
 		return SelectObject(pPen);
 	}
 
-	inline LOGPEN CDC::GetPenInfo() const
+	inline LOGPEN CDC::GetLogPen() const
 	// Retrieves the current pen information as a LOGPEN
 	{
 		assert(m_pData->hDC);

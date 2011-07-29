@@ -131,7 +131,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::Flush()
-	// Causes any remaining data in the file buffer to be written to the file
+	// Causes any remaining data in the file buffer to be written to the file.
 	{
 		assert(m_hFile);
 		return FlushFileBuffers(m_hFile);
@@ -219,7 +219,7 @@ namespace Win32xx
 
 	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pOwnerWnd)
 	// Displays the file open dialog. 
-	// Returns a CString containing either the selected file name or an empty CString
+	// Returns a CString containing either the selected file name or an empty CString.
 	{
 		CString str;
 		if (pszFilePathName)
@@ -248,7 +248,7 @@ namespace Win32xx
 	}
 
 	inline UINT CFile::Read(void* pBuf, UINT nCount)
-	// Reads from the file, storing the contents in the specified buffer
+	// Reads from the file, storing the contents in the specified buffer.
 	{
 		assert(m_hFile);
 		DWORD dwRead = 0;
@@ -260,13 +260,13 @@ namespace Win32xx
 	}
 
 	inline BOOL CFile::Rename(LPCTSTR pszOldName, LPCTSTR pszNewName)
-	// Renames the specified file
+	// Renames the specified file.
 	{
 		return ::MoveFile(pszOldName, pszNewName);
 	}
 
 	inline BOOL CFile::Remove(LPCTSTR pszFileName)
-	// Deletes the specified file
+	// Deletes the specified file.
 	{
 		return::DeleteFile(pszFileName);
 	}
