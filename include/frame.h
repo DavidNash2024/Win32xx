@@ -2337,7 +2337,7 @@ namespace Win32xx
 				nm.lfMenuFont.lfWeight = FW_BOLD;
 
 			TCHAR* pItemText = &(pmd->vItemText[0]);
-			DesktopDC.CreateFontIndirect(nm.lfMenuFont);
+			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
 
 			// Calculate the size of the text
 			CSize size = DesktopDC.GetTextExtentPoint32(pItemText, lstrlen(pItemText));

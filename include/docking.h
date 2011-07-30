@@ -743,7 +743,7 @@ namespace Win32xx
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dcMem.CreateFontIndirect(info.lfStatusFont);
+			dcMem.CreateFontIndirect(&info.lfStatusFont);
 
 			// Set the Colours
 			if (bFocus)
@@ -2285,7 +2285,7 @@ namespace Win32xx
 		LOGFONT lf = nm.lfStatusFont;
 
 		CClientDC dc(this);
-		dc.CreateFontIndirect(lf);
+		dc.CreateFontIndirect(&lf);
 		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
@@ -3795,7 +3795,7 @@ namespace Win32xx
 			NONCLIENTMETRICS info = {0};
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dc.CreateFontIndirect(info.lfStatusFont);
+			dc.CreateFontIndirect(&info.lfStatusFont);
 			TempSize = dc.GetTextExtentPoint32(iter->szTitle, lstrlen(iter->szTitle));
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;

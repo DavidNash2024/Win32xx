@@ -464,12 +464,12 @@ namespace Win32xx
 		LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
-		CBrush* CreateBrushIndirect(LPLOGBRUSH& pLogBrush);
+		CBrush* CreateBrushIndirect(LPLOGBRUSH pLogBrush);
 		CBrush* CreateHatchBrush(int fnStyle, COLORREF rgb);
 #endif
 
 		// Create and Select Fonts
-		CFont* CreateFontIndirect(const LOGFONT& lf);
+		CFont* CreateFontIndirect(LPLOGFONT plf);
 		LOGFONT GetLogFont() const;
 
 #ifndef _WIN32_WCE
@@ -1786,7 +1786,8 @@ namespace Win32xx
 	}
 
 	inline int CRgn::GetRgnBox(RECT& rc) const
-	// Retrieves the bounding rectangle of the specified region.
+	// Retrieves the bounding rectangle of the region, and stores it in the specified RECT.
+	// The return value indicates the region's complexity: NULLREGION;SIMPLEREGION; or COMPLEXREGION.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
@@ -2345,7 +2346,7 @@ namespace Win32xx
 
 	// Brush functions
 #ifndef _WIN32_WCE
-	inline CBrush* CDC::CreateBrushIndirect(LPLOGBRUSH& pLogBrush)
+	inline CBrush* CDC::CreateBrushIndirect(LPLOGBRUSH pLogBrush)
 	// Creates the brush and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
@@ -2465,14 +2466,14 @@ namespace Win32xx
 	}
 #endif
 
-	inline CFont* CDC::CreateFontIndirect(const LOGFONT& lf)
+	inline CFont* CDC::CreateFontIndirect(LPLOGFONT plf)
 	// Creates a logical font and selects it into the device context.
 	// Returns a pointer to the old font selected out of the device context.
 	{
 		assert(m_pData->hDC);
 
 		CFont* pFont = new CFont;
-		pFont->CreateFontIndirect(&lf);
+		pFont->CreateFontIndirect(plf);
 		m_pData->m_vGDIObjects.push_back(pFont);
 		return SelectObject(pFont);
 	}
