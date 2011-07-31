@@ -108,6 +108,7 @@ namespace Win32xx
 		CString(const CString& str);
 		CString(LPCTSTR pszText);
 		CString(TCHAR ch, int nLength = 1);
+		CString(LPCTSTR pszText, int nLength);
 
 		CString& operator = (const CString& str);
 		CString& operator = (const TCHAR ch);
@@ -210,6 +211,11 @@ namespace Win32xx
 	inline CString::CString(TCHAR ch, int nLength)
 	{
 		m_str.assign(nLength, ch);
+	}
+	
+	inline CString::CString(LPCTSTR pszText, int nLength)
+	{
+		m_str.assign(pszText, nLength);	
 	}
 
 	inline CString& CString::operator = (const CString& str)

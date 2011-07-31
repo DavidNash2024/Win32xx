@@ -346,7 +346,8 @@ namespace Win32xx
 			m_FilePath.ReleaseBuffer();
 			m_FileName = pFileName;
 			int nPos = m_FileName.ReverseFind(_T("."));
-			m_FileTitle = m_FileName.Left(nPos);
+			if (nPos >= 0)
+				m_FileTitle = m_FileName.Left(nPos);
 		}
 	}
 

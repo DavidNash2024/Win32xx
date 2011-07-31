@@ -349,7 +349,7 @@ void CMainFrame::OnFileOpen()
 {
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	CString Filters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
+	CString Filters( _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0"), 46);
 	CFile File;
 	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, Filters, this);
 
@@ -374,7 +374,7 @@ void CMainFrame::OnFileSaveAs()
 {
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	CString Filters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0");
+	CString Filters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0"), 46);
 	CFile File;
 	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, Filters, _T("txt"), this);
 	
