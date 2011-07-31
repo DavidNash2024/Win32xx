@@ -13,7 +13,6 @@ class CMyDialog : public CDialog
 {
 public:
 	CMyDialog(UINT nResID, CWnd* pParent = NULL);
-//	CMyDialog(LPCTSTR lpszResName, CWnd* pParent = NULL);
 	virtual ~CMyDialog();
 
 protected:

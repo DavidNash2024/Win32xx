@@ -11,12 +11,7 @@ CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
 	: CDialog(nResID, pParent)
 {
 }
-/*
-CMyDialog::CMyDialog(LPCTSTR lpszResName, CWnd* pParent)
-	: CDialog(lpszResName, pParent)
-{
-}
-*/
+
 CMyDialog::~CMyDialog()
 {
 }

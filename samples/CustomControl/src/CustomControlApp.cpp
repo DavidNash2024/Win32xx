@@ -9,7 +9,6 @@
 // Definitions for the CDialogApp class
 CCustomControlApp::CCustomControlApp() : m_MyDialog(IDD_DIALOG1)
 {
-//	m_MyControl.RegisterControl();
 }
 
 CCustomControlApp::~CCustomControlApp()
