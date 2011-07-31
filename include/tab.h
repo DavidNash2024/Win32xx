@@ -103,7 +103,7 @@ namespace Win32xx
 		virtual void SetFixedWidth(BOOL bEnabled);
 		virtual void SetOwnerDraw(BOOL bEnabled);
 		virtual void SetShowButtons(BOOL bShow);
-		virtual void SetTabImage(UINT nTab, int iImage);
+		virtual void SetTabIcon(int i, HICON hIcon);
 		virtual void SetTabsAtTop(BOOL bTop);
 		virtual void SetTabText(UINT nTab, LPCTSTR szText);
 		virtual void SwapTabs(UINT nTab1, UINT nTab2);
@@ -1032,19 +1032,25 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	inline void CTab::SetTabImage(UINT nTab, int iImage)
+	inline void CTab::SetTabIcon(int i, HICON hIcon)
+	// Changes or sets the tab's icon
 	{
-		// Allows the image to be changed on an existing tab
-		if (nTab < GetAllTabs().size())
+		assert (GetItemCount() > i);
+		TCITEM tci = {0};
+		tci.mask = TCIF_IMAGE;
+		GetItem(i, &tci);
+		if (tci.iImage >= 0)
 		{
-			TCITEM Item = {0};
-			Item.mask = TCIF_IMAGE;;
-			Item.iImage = iImage;
-
-			if (TabCtrl_SetItem(m_hWnd, nTab, &Item))
-				m_vTabPageInfo[nTab].iImage = iImage;
+			ImageList_ReplaceIcon(GetImageList(), i, hIcon);
 		}
-	}
+		else
+		{
+			int iImage = ImageList_AddIcon(GetImageList(), hIcon);
+			tci.iImage = iImage;
+			TabCtrl_SetItem(m_hWnd, i, &tci);
+			m_vTabPageInfo[i].iImage = iImage;
+		}
+	}	
 
 	inline void CTab::SetTabsAtTop(BOOL bTop)
 	// Positions the tabs at the top or botttom of the control
@@ -1185,10 +1191,15 @@ namespace Win32xx
 			TabPageInfo T1 = GetTabPageInfo(nTab1);
 			TabPageInfo T2 = GetTabPageInfo(nTab2);
 
-			SetTabImage(nTab1, T2.iImage);
-			SetTabImage(nTab2, T1.iImage);
-			SetTabText(nTab1, T2.szTabText);
-			SetTabText(nTab2, T1.szTabText);
+			TCITEM Item1 = {0};
+			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+			GetItem(nTab1, &Item1);
+			TCITEM Item2 = {0};
+			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+			GetItem(nTab2, &Item2);
+			TabCtrl_SetItem(m_hWnd, nTab1, &Item2);
+			TabCtrl_SetItem(m_hWnd, nTab2, &Item1);
+
 			m_vTabPageInfo[nTab1] = T2;
 			m_vTabPageInfo[nTab2] = T1;
 			SelectPage(nPage);

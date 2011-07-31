@@ -168,6 +168,7 @@ namespace Win32xx
 		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
+		void SetTabIcon(int i, HICON hIcon) { CTab::SetTabIcon(i, hIcon); }
 		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
 		void SetTabText(UINT nTab, LPCTSTR szText);
 		void SetView(CWnd& Wnd);

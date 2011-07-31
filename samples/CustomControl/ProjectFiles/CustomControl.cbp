@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="CustomControl" />
+		<Option pch_mode="0" />
+		<Option default_target="Release MinGW GNU compiler" />
+		<Option compiler="msvctk" />
+		<Build>
+			<Target title="Debug Borland">
+				<Option output="Borland\Debug\CustomControl.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland\Debug" />
+				<Option object_output="Borland\Debug" />
+				<Option type="0" />
+				<Option compiler="bcc" />
+				<Compiler>
+					<Add option="-tWM" />
+					<Add option="-w-par" />
+					<Add option="-D_DEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="cw32mt" />
+					<Add library="comctl32" />
+					<Add library="import32" />
+				</Linker>
+			</Target>
+			<Target title="Release Borland">
+				<Option output="Borland\Release\CustomControl.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland\Release" />
+				<Option object_output="Borland\Release" />
+				<Option type="0" />
+				<Option compiler="bcc" />
+				<Compiler>
+					<Add option="-tWM" />
+					<Add option="-w-par" />
+					<Add option="-DNDEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Borland\BCC55\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="cw32mt" />
+					<Add library="comctl32" />
+					<Add library="import32" />
+				</Linker>
+			</Target>
+			<Target title="Debug Microsoft Visual C++">
+				<Option output="Microsoft\Debug\CustomControl.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft\Debug" />
+				<Option object_output="Microsoft\Debug" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
+				<Compiler>
+					<Add option="/MTd" />
+					<Add option="/GA" />
+					<Add option="/GX" />
+					<Add option="/GR" />
+					<Add option="/W3" />
+					<Add option="/Zi" />
+					<Add option="/Zi /D_DEBUG" />
+					<Add option="/DWIN32" />
+					<Add option="/D_DEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="/DEBUG" />
+					<Add library="ComCtl32" />
+					<Add library="Gdi32" />
+					<Add library="User32" />
+					<Add library="Kernel32" />
+					<Add library="Shell32" />
+					<Add library="Oleaut32" />
+					<Add library="Ole32" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
+				</Linker>
+			</Target>
+			<Target title="Release Microsoft Visual C++">
+				<Option output="Microsoft\Release\CustomControl.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft\Release" />
+				<Option object_output="Microsoft\Release" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
+				<Compiler>
+					<Add option="/MT" />
+					<Add option="/GX" />
+					<Add option="/GR" />
+					<Add option="/Ox" />
+					<Add option="/W3" />
+					<Add option="/DWIN32" />
+					<Add option="/DNDEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="ComCtl32" />
+					<Add library="Gdi32" />
+					<Add library="Kernel32" />
+					<Add library="User32" />
+					<Add library="Shell32" />
+					<Add library="Oleaut32" />
+					<Add library="Ole32" />
+					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
+				</Linker>
+			</Target>
+			<Target title="Debug MinGW GNU compiler">
+				<Option output="GNU\Debug\CustomControl.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU\Debug" />
+				<Option object_output="GNU\Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-g3" />
+					<Add option="-D__DEBUG__" />
+					<Add option="-D_DEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+				</Linker>
+			</Target>
+			<Target title="Release MinGW GNU compiler">
+				<Option output="GNU\Release\CustomControl.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU\Release" />
+				<Option object_output="GNU\Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
+					<Add directory="..\..\..\include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\..\include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+		</VirtualTargets>
+		<Unit filename="..\src\CustomControlApp.cpp" />
+		<Unit filename="..\src\CustomControlApp.h" />
+		<Unit filename="..\src\MyDialog.cpp" />
+		<Unit filename="..\src\MyDialog.h" />
+		<Unit filename="..\src\MyWebControl.cpp" />
+		<Unit filename="..\src\MyWebControl.h" />
+		<Unit filename="..\src\Resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="..\src\StdAfx.cpp" />
+		<Unit filename="..\src\main.cpp" />
+		<Unit filename="..\src\resource.h" />
+		<Unit filename="..\src\stdafx.h" />
+		<Unit filename="..\src\targetver.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

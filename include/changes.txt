@@ -27,6 +27,7 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+- Added CustomControl sample
 - Added CMenu
 - Added CString
 - Added CFile
@@ -56,6 +57,7 @@ Changes in detail
 - Added CDC::SelectStockObject
 - Added CDocker::GetActiveDocker
 - Added CDocker::SetCaptionColors
+- Added CTab::SetTabIcon
 - Added CWinApp::GetAccelerators
 - Added CWinApp::OnIdle
 - Added CWinApp::PreTranslateMessage
@@ -95,6 +97,7 @@ Changes in detail
 - Removed CDC::DetachFont
 - Removed CDC::DetachPalette
 - Removed CDC::DetachPen
+- Removed CTab::SetTabImage
 - Removed GetWindowType for all CWnd classes
 - Renamed CDocker::GetDockTopLevel to CDocker::GetTopmostDocker
 - Renamed CWnd::OnPaint to CWnd::OnDraw
