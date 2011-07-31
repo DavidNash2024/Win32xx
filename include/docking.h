@@ -2095,14 +2095,14 @@ namespace Win32xx
 
 		BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
 
-		CDC* pBarDC = GetDC();
+		CClientDC dcBar(this);
 
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		CBitmap bmHash;
 		CBrush brDithered;
 		bmHash.CreateBitmap(8, 8, 1, 1, HashPattern);
 		brDithered.CreatePatternBrush(&bmHash);
-		pBarDC->SelectObject(&brDithered);
+		dcBar.SelectObject(&brDithered);
 
 		CRect rc = FromHandle(hBar)->GetWindowRect();
 		ScreenToClient(rc);
@@ -2111,9 +2111,9 @@ namespace Win32xx
 		int BarWidth = pDock->GetDockBar().GetWidth();
 
 		if (bVertical)
-			pBarDC->PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
+			dcBar.PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
 		else
-			pBarDC->PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
+			dcBar.PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
 	}
 	
 	inline CDockContainer* CDocker::GetContainer() const
