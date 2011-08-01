@@ -2783,7 +2783,8 @@ namespace Win32xx
 		if (IsMenuBarUsed())
 		{
 			GetMenuBar().SetMenu(GetFrameMenu());
-			ShowMenu((BOOL)hMenu);
+			BOOL bShow = (hMenu != NULL);	// boolean expression
+			ShowMenu(bShow);
 		}
 		else
 			SetMenu(&m_Menu);

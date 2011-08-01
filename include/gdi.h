@@ -242,13 +242,13 @@ namespace Win32xx
 
 		HBRUSH CreateSolidBrush(COLORREF crColor);
 		HBRUSH CreatePatternBrush(CBitmap* pBitmap);
-		HBRUSH CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
-		HBRUSH CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage);
 		LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
 		HBRUSH CreateHatchBrush(int nIndex, COLORREF crColor);
 		HBRUSH CreateBrushIndirect(LPLOGBRUSH lpLogBrush);
+		HBRUSH CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
+		HBRUSH CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage);
 #endif // !defined(_WIN32_WCE)
 
 	};
@@ -457,8 +457,6 @@ namespace Win32xx
 #endif
 
 		// Create and Select Brushes
-		CBrush* CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
-		CBrush* CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
 		CBrush* CreatePatternBrush(CBitmap* pBitmap);
 		CBrush* CreateSolidBrush(COLORREF rbg);
 		LOGBRUSH GetLogBrush() const;
@@ -466,6 +464,8 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		CBrush* CreateBrushIndirect(LPLOGBRUSH pLogBrush);
 		CBrush* CreateHatchBrush(int fnStyle, COLORREF rgb);
+		CBrush* CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
+		CBrush* CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
 #endif
 
 		// Create and Select Fonts
@@ -1267,18 +1267,6 @@ namespace Win32xx
 		Attach(hBrush);
 		return hBrush;
 	}
-#endif // !defined(_WIN32_WCE)
-
-	inline HBRUSH CBrush::CreatePatternBrush(CBitmap* pBitmap)
-	// Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap,
-	// which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.
-	{
-		assert(m_pData);
-		assert(pBitmap);
-		HBRUSH hBrush = ::CreatePatternBrush(*pBitmap);
-		Attach(hBrush);
-		return hBrush;
-	}
 
 	inline HBRUSH CBrush::CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec)
 	// Creates a logical brush that has the pattern specified by the specified device-independent bitmap (DIB).
@@ -1294,6 +1282,19 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		HBRUSH hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, nUsage);
+		Attach(hBrush);
+		return hBrush;
+	}
+
+#endif // !defined(_WIN32_WCE)
+
+	inline HBRUSH CBrush::CreatePatternBrush(CBitmap* pBitmap)
+	// Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap,
+	// which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.
+	{
+		assert(m_pData);
+		assert(pBitmap);
+		HBRUSH hBrush = ::CreatePatternBrush(*pBitmap);
 		Attach(hBrush);
 		return hBrush;
 	}
@@ -2013,7 +2014,7 @@ namespace Win32xx
 			m_pData->hDC = hDC;
 			AddToMap();
 		}
-		return (BOOL)hDC;
+		return (hDC != NULL);	// boolean expression
 	}
 
 	inline BOOL CDC::CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData)
@@ -2026,7 +2027,7 @@ namespace Win32xx
 			m_pData->hDC = hDC;
 			AddToMap();
 		}
-		return (BOOL)hDC;
+		return (hDC != NULL);	// boolean expression
 	}
 
 #ifndef _WIN32_WCE
@@ -2039,7 +2040,7 @@ namespace Win32xx
 			m_pData->hDC = hDC;
 			AddToMap();
 		}
-		return (BOOL)hDC;
+		return (hDC != NULL);	// boolean expression
 	}
 #endif
 
@@ -2369,7 +2370,6 @@ namespace Win32xx
 		m_pData->m_vGDIObjects.push_back(pBrush);
 		return SelectObject(pBrush);
 	}
-#endif
 
 	inline CBrush* CDC::CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec)
 	// Creates a logical from the specified device-independent bitmap (DIB), and selects it into the device context.
@@ -2382,7 +2382,7 @@ namespace Win32xx
 		m_pData->m_vGDIObjects.push_back(pBrush);
 		return SelectObject(pBrush);
 	}
-
+	
 	inline CBrush* CDC::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage)
 	// Creates a logical from the specified device-independent bitmap (DIB), and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
@@ -2394,6 +2394,7 @@ namespace Win32xx
 		m_pData->m_vGDIObjects.push_back(pBrush);
 		return SelectObject(pBrush);
 	}
+#endif
 
 	inline CBrush* CDC::CreatePatternBrush(CBitmap* pBitmap)
 	// Creates the brush with the specified pattern, and selects it into the device context.

@@ -1426,7 +1426,7 @@ namespace Win32xx
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_bIsOverContainer = (BOOL)dynamic_cast<CDockContainer*>(pDockTarget->GetView());
+		m_bIsOverContainer = (dynamic_cast<CDockContainer*>(pDockTarget->GetView()) != NULL);
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();

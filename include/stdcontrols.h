@@ -747,7 +747,7 @@ namespace Win32xx
 	// Associates a value with a list box item.
 	{
 		assert(::IsWindow(m_hWnd));
-		return SetItemData(nIndex, (DWORD)pData);
+		return SetItemData(nIndex, (DWORD)(DWORD_PTR)pData);
 	}
 
 	inline int CListBox::SetItemHeight(int nIndex, UINT cyItemHeight) const

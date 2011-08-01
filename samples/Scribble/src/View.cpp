@@ -34,28 +34,28 @@ void CView::DrawLine(int x, int y)
 
 void CView::OnDraw(CDC* pDC)
 {
-	
+
 	// Here we use double buffering (drawing to a memory DC) for smoother rendering
 	// Set up our Memory DC and bitmap
 	CMemDC MemDC(pDC);
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
 	MemDC.CreateCompatibleBitmap(pDC, Width, Height);
-	MemDC.FillRect(GetClientRect(), &m_Brush);	
+	MemDC.FillRect(GetClientRect(), &m_Brush);
 
 	if (m_points.size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-		
+
 			MemDC.CreatePen(PS_SOLID, 1, m_points[i].color);
 			if (bDraw)
 				MemDC.LineTo(m_points[i].x, m_points[i].y);
-			else 
+			else
 				MemDC.MoveTo(m_points[i].x, m_points[i].y);
-			
-			bDraw = m_points[i].PenDown;			
+
+			bDraw = m_points[i].PenDown;
 		}
 	}
 
@@ -90,12 +90,10 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	{
 		do
 		{
-			nBytesRead = 0;
 			PlotPoint pp;
-
 			nBytesRead = File.Read(&pp, sizeof(PlotPoint));
 			if (nBytesRead == sizeof(PlotPoint))
-				m_points.push_back(pp);	
+				m_points.push_back(pp);
 
 		} while (nBytesRead == sizeof(PlotPoint));
 
@@ -129,7 +127,7 @@ BOOL CView::FileSave(LPCTSTR szFilename)
 		::MessageBox (0, _T("Failed to open file for writing"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 		bResult = FALSE;
 	}
-	
+
 	if (bResult)
 	{
 		// Write the file

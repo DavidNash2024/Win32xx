@@ -77,9 +77,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	{
 		do
 		{
-			nBytesRead = 0;
 			PlotPoint pp;
-
 			nBytesRead = File.Read(&pp, sizeof(PlotPoint));
 			if (nBytesRead == sizeof(PlotPoint))
 				m_points.push_back(pp);	
