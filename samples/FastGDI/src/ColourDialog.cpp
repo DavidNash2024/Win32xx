@@ -210,9 +210,9 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 	CMemDC Dest1DC(NULL);
 	CMemDC Dest2DC(NULL);
 	CMemDC MemDC(NULL);
-	CClientDC DesktopDC(NULL);
-	m_bmPreview.CreateCompatibleBitmap(DesktopDC, nWidthDest, nHeightDest);
-	m_bmPreviewOrig.CreateCompatibleBitmap(DesktopDC, nWidthDest, nHeightDest);
+	CClientDC dcDesktop(NULL);
+	m_bmPreview.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
+	m_bmPreviewOrig.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
 	MemDC.SelectObject(FromHandle(hbmImage));
 	Dest1DC.SelectObject(&m_bmPreview);
 	Dest2DC.SelectObject(&m_bmPreviewOrig);
@@ -224,9 +224,5 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 	// Make a second copy of the bitmap
 	Dest2DC.BitBlt(0, 0, nWidthDest, nHeightDest, &Dest1DC, 0, 0, SRCCOPY);
 
-	// Release the bitmaps
-//	MemDC.DetachBitmap();
-//	Dest1DC.DetachBitmap();
-//	Dest2DC.DetachBitmap();
 }
 

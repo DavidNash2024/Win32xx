@@ -115,9 +115,9 @@ void CMainFrame::OnFilePrint()
 	CClientDC dcView(&m_View);
 	CMemDC MemDC(&dcView);
 	CBitmap bmView;
-	bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
+	bmView.CreateCompatibleBitmap(&dcView, Width, Height);
 	MemDC.SelectObject(&bmView);
-	MemDC.BitBlt(0, 0, Width, Height, &ViewDC, 0, 0, SRCCOPY);
+	MemDC.BitBlt(0, 0, Width, Height, &dcView, 0, 0, SRCCOPY);
 
 	// Bring up a dialog to choose the printer
 	PRINTDLG pd = {0};
@@ -167,8 +167,8 @@ void CMainFrame::OnFilePrint()
 	MemDC.GetDIBits(&bmView, 0, Height, pByteArray, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
-	float fLogPelsX1 = (float) ViewDC.GetDeviceCaps(LOGPIXELSX);
-	float fLogPelsY1 = (float) ViewDC.GetDeviceCaps(LOGPIXELSY);
+	float fLogPelsX1 = (float) dcView.GetDeviceCaps(LOGPIXELSX);
+	float fLogPelsY1 = (float) dcView.GetDeviceCaps(LOGPIXELSY);
 	float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
 	float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
 	float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);

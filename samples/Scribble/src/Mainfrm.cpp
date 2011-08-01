@@ -152,7 +152,7 @@ void CMainFrame::OnFilePrint()
 	CClientDC ViewDC(&m_View);
 	CMemDC MemDC(&ViewDC);
 	CBitmap bmView;
-	bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
+	bmView.CreateCompatibleBitmap(&ViewDC, Width, Height);
 	MemDC.SelectObject(&bmView);
 	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
 
@@ -266,7 +266,19 @@ void CMainFrame::OnInitialUpdate()
 		}
 
 		FreeLibrary(hMod);
+	} 
+
+/*	
+	// This works on Win2000 and above
+	int argCount = 0;
+	LPWSTR* lpArgv = ::CommandLineToArgvW(::GetCommandLineW(), &argCount);
+
+	// The second argument (if any) contains our file name.
+	if (argCount >= 2)
+	{
+		m_View.FileOpen((W2T(lpArgv[1])));
 	}
+*/
 }
 
 void CMainFrame::SetupToolBar()
