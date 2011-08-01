@@ -26,10 +26,10 @@ void CView::ClearPoints()
 
 void CView::DrawLine(int x, int y)
 {
-	CDC* pDrawDC = GetDC();
-	pDrawDC->CreatePen(PS_SOLID, 1, m_points.back().color);
-	pDrawDC->MoveTo(m_points.back().x, m_points.back().y);
-	pDrawDC->LineTo(x, y);
+	CClientDC dcClient(this);
+	dcClient.CreatePen(PS_SOLID, 1, m_points.back().color);
+	dcClient.MoveTo(m_points.back().x, m_points.back().y);
+	dcClient.LineTo(x, y);
 }
 
 void CView::OnDraw(CDC* pDC)

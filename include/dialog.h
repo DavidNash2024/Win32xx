@@ -265,7 +265,11 @@ namespace Win32xx
 		switch (uMsg)
 	    {
 		case UWM_CLEANUPTEMPS:
-			GetApp()->CleanupTemps();
+			{
+				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				pTLSData->vTmpDCs.clear();
+				pTLSData->vTmpWnds.clear();
+			}
 			break;
 	    case WM_INITDIALOG:
 			{

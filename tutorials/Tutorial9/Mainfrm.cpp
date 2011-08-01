@@ -112,8 +112,8 @@ void CMainFrame::OnFilePrint()
 	int Height = rcView.Height();
 
 	// Copy the bitmap from the View window
-	CClientDC ViewDC(&m_View);
-	CMemDC MemDC(&ViewDC);
+	CClientDC dcView(&m_View);
+	CMemDC MemDC(&dcView);
 	CBitmap bmView;
 	bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
 	MemDC.SelectObject(&bmView);

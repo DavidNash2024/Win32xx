@@ -210,15 +210,15 @@ namespace Win32xx
 		BOOL LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		BOOL LoadOEMBitmap(UINT nIDBitmap);
 		HBITMAP CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits);
-		HBITMAP CreateCompatibleBitmap(HDC hDC, int nWidth, int nHeight);
-		HBITMAP CreateDIBSection(HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset);
+		HBITMAP CreateCompatibleBitmap(CDC* pDC, int nWidth, int nHeight);
+		HBITMAP CreateDIBSection(CDC* pDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset);
 
 #ifndef _WIN32_WCE
-		HBITMAP CreateDIBitmap(HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
+		HBITMAP CreateDIBitmap(CDC* pDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
 		HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
 		HBITMAP CreateBitmapIndirect(LPBITMAP lpBitmap);
-		int GetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
-		int SetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
+		int GetDIBits(CDC* pDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
+		int SetDIBits(CDC* pDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
 		CSize GetBitmapDimensionEx() const;
 		CSize SetBitmapDimensionEx(int nWidth, int nHeight);
 #endif // !_WIN32_WCE
@@ -1128,11 +1128,12 @@ namespace Win32xx
 		}
 #endif // !_WIN32_WCE
 
-		inline HBITMAP CBitmap::CreateCompatibleBitmap(HDC hDC, int nWidth, int nHeight)
+		inline HBITMAP CBitmap::CreateCompatibleBitmap(CDC* pDC, int nWidth, int nHeight)
 		// Creates a bitmap compatible with the device that is associated with the specified device context.
 		{
 			assert(m_pData);
-			HBITMAP hBitmap = ::CreateCompatibleBitmap(hDC, nWidth, nHeight);
+			assert(pDC);
+			HBITMAP hBitmap = ::CreateCompatibleBitmap(pDC->GetHDC(), nWidth, nHeight);
 			Attach(hBitmap);
 			return hBitmap;
 		}
@@ -1172,41 +1173,45 @@ namespace Win32xx
 		}
 
 		// DIB support
-		inline HBITMAP CBitmap::CreateDIBitmap(HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
+		inline HBITMAP CBitmap::CreateDIBitmap(CDC* pDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 		// Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.
 		{
 			assert(m_pData);
-			HBITMAP hBitmap = ::CreateDIBitmap(hDC, lpbmih, dwInit, lpbInit, lpbmi, uColorUse);
+			assert(pDC);
+			HBITMAP hBitmap = ::CreateDIBitmap(pDC->GetHDC(), lpbmih, dwInit, lpbInit, lpbmi, uColorUse);
 			Attach(hBitmap);
 			return hBitmap;
 		}
 #endif // !_WIN32_WCE
 
-		inline HBITMAP CBitmap::CreateDIBSection(HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
+		inline HBITMAP CBitmap::CreateDIBSection(CDC* pDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
 		// Creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values.
 		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.
 		{
 			assert(m_pData);
-			HBITMAP hBitmap = ::CreateDIBSection(hDC, lpbmi, uColorUse, ppvBits, hSection, dwOffset);
+			assert(pDC);
+			HBITMAP hBitmap = ::CreateDIBSection(pDC->GetHDC(), lpbmi, uColorUse, ppvBits, hSection, dwOffset);
 			Attach(hBitmap);
 			return hBitmap;
 		}
 
 #ifndef _WIN32_WCE
-		inline int CBitmap::GetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const
+		inline int CBitmap::GetDIBits(CDC* pDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const
 		// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
 		{
 			assert(m_pData);
+			assert(pDC);
 			assert(m_pData->hGDIObject != NULL);
-			return ::GetDIBits(hDC, (HBITMAP)m_pData->hGDIObject, uStartScan, cScanLines,  lpvBits, lpbmi, uColorUse);
+			return ::GetDIBits(pDC->GetHDC(), (HBITMAP)m_pData->hGDIObject, uStartScan, cScanLines,  lpvBits, lpbmi, uColorUse);
 		}
 
-		inline int CBitmap::SetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse)
+		inline int CBitmap::SetDIBits(CDC* pDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 		// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
 		{
 			assert(m_pData);
+			assert(pDC);
 			assert(m_pData->hGDIObject != NULL);
-			return ::SetDIBits(hDC, (HBITMAP)m_pData->hGDIObject, uStartScan, cScanLines, lpvBits, lpbmi, uColorUse);
+			return ::SetDIBits(pDC->GetHDC(), (HBITMAP)m_pData->hGDIObject, uStartScan, cScanLines, lpvBits, lpbmi, uColorUse);
 		}
 #endif // !_WIN32_WCE
 
@@ -2182,7 +2187,7 @@ namespace Win32xx
 		assert(pDC);
 
 		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateCompatibleBitmap(pDC->GetHDC(), cx, cy);
+		pBitmap->CreateCompatibleBitmap(pDC, cx, cy);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
 		return SelectObject(pBitmap);
 	}
@@ -2221,7 +2226,7 @@ namespace Win32xx
 		assert(pDC);
 
 		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateDIBitmap(pDC->GetHDC(), &bmih, fdwInit, lpbInit, &bmi, fuUsage);
+		pBitmap->CreateDIBitmap(pDC, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
 		return SelectObject(pBitmap);
 	}
@@ -2236,7 +2241,7 @@ namespace Win32xx
 		assert(pDC);
 
 		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateDIBSection(pDC->GetHDC(), &bmi, iUsage, ppvBits, hSection, dwOffset);
+		pBitmap->CreateDIBSection(pDC, &bmi, iUsage, ppvBits, hSection, dwOffset);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
 		return SelectObject(pBitmap);
 	}

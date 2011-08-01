@@ -32,14 +32,14 @@ LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			nGreen  = rand () & 255;
 			nBlue   = rand () & 255;
 
-			CDC* pRectDC = GetDC();
-			pRectDC->CreateSolidBrush (RGB (nRed, nGreen, nBlue));
+			CClientDC dcRect(this);
+			dcRect.CreateSolidBrush (RGB (nRed, nGreen, nBlue));
 
             int Left   = (xLeft < xRight) ? xLeft : xRight;
             int Top    = (yTop < yBottom) ? yTop  : yBottom;
             int Right  = (xLeft > xRight) ? xLeft : xRight;
             int Bottom = (yTop > yBottom) ? yTop  : yBottom;
-			pRectDC->Rectangle(Left, Top, Right, Bottom);
+			dcRect.Rectangle(Left, Top, Right, Bottom);
 		}
 		break;
 
