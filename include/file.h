@@ -338,7 +338,7 @@ namespace Win32xx
 	// Specifies the full file name, including its path
 	{
 		TCHAR* pFileName = NULL;
-		int nBuffSize = ::GetFullPathName(pszFileName, NULL, 0, 0);
+		int nBuffSize = ::GetFullPathName(pszFileName, 0, 0, 0);
 		if (nBuffSize > 0)
 		{
 			TCHAR* pBuff = m_FilePath.GetBuffer(nBuffSize);
