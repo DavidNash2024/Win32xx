@@ -465,12 +465,12 @@ namespace Win32xx
 		CWnd* GetFocus() const;
 		CFont* GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
-		CWnd* GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const;
-		CWnd* GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const;
+		CWnd* GetNextDlgGroupItem(CWnd* pCtl, BOOL bPrevious) const;
+		CWnd* GetNextDlgTabItem(CWnd* pCtl, BOOL bPrevious) const;
 		CWnd* GetParent() const;
 		BOOL  GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		CRect GetUpdateRect(BOOL bErase) const;
-		int GetUpdateRgn(HRGN hRgn, BOOL bErase) const;
+		int GetUpdateRgn(CRgn* pRgn, BOOL bErase) const;
 		CWnd* GetWindow(UINT uCmd) const;
 		CDC*  GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
@@ -479,7 +479,7 @@ namespace Win32xx
 		int   GetWindowTextLength() const;
 		void  Invalidate(BOOL bErase = TRUE) const;
 		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
-		BOOL  InvalidateRgn(CONST HRGN hRgn, BOOL bErase = TRUE) const;
+		BOOL  InvalidateRgn(CRgn* pRgn, BOOL bErase = TRUE) const;
 		BOOL  IsChild(CWnd* pChild) const;
 		BOOL  IsDialogMessage(LPMSG lpMsg) const;
 		UINT  IsDlgButtonChecked(int nIDButton) const;
@@ -495,8 +495,8 @@ namespace Win32xx
 		BOOL  MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL  PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
-		int   ReleaseDC(HDC hDC) const;
+		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, CRgn* pRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+		int   ReleaseDC(CDC* pDC) const;
 		BOOL  ScreenToClient(POINT& Point) const;
 		BOOL  ScreenToClient(RECT& rc) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
@@ -519,13 +519,13 @@ namespace Win32xx
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL  SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
 		BOOL  SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
-		int   SetWindowRgn(HRGN hRgn, BOOL bRedraw = TRUE) const;
+		int   SetWindowRgn(CRgn* pRgn, BOOL bRedraw = TRUE) const;
 		BOOL  SetWindowText(LPCTSTR lpString) const;
 		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
 		BOOL  ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL  UpdateWindow() const;
 		BOOL  ValidateRect(LPCRECT prc) const;
-		BOOL  ValidateRgn(HRGN hRgn) const;
+		BOOL  ValidateRgn(CRgn* pRgn) const;
 		static CWnd* WindowFromPoint(POINT pt);
 
   #ifndef _WIN32_WCE
@@ -552,7 +552,7 @@ namespace Win32xx
 		void  Print(CDC& dc, DWORD dwFlags) const;
 		BOOL  SetMenu(CMenu* pMenu) const;
 		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const;
-		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const;
+		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, CRgn* prgnUpdate, LPRECT lprcUpdate, UINT flags) const;
 		int   SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
 		BOOL  SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL  SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
@@ -2175,20 +2175,22 @@ namespace Win32xx
 		return (HICON)SendMessage(WM_GETICON, (WPARAM)bBigIcon, 0);
 	}
 
-	inline CWnd* CWnd::GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const
+	inline CWnd* CWnd::GetNextDlgGroupItem(CWnd* pCtl, BOOL bPrevious) const
 	// The GetNextDlgGroupItem function retrieves a pointer to the first control in a group of controls that
 	// precedes (or follows) the specified control in a dialog box.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle(::GetNextDlgGroupItem(m_hWnd, hCtl, bPrevious));
+		assert(pCtl);
+		return FromHandle(::GetNextDlgGroupItem(m_hWnd, pCtl->GetHwnd(), bPrevious));
 	}
 
-	inline CWnd* CWnd::GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const
+	inline CWnd* CWnd::GetNextDlgTabItem(CWnd* pCtl, BOOL bPrevious) const
 	// The GetNextDlgTabItem function retrieves a pointer to the first control that has the WS_TABSTOP style
 	// that precedes (or follows) the specified control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle(::GetNextDlgTabItem(m_hWnd, hCtl, bPrevious));
+		assert(pCtl);
+		return FromHandle(::GetNextDlgTabItem(m_hWnd, pCtl->GetHwnd(), bPrevious));
 	}
 
 	inline CWnd* CWnd::GetParent() const
@@ -2224,10 +2226,12 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline int CWnd::GetUpdateRgn(HRGN hRgn, BOOL bErase) const
+	inline int CWnd::GetUpdateRgn(CRgn* pRgn, BOOL bErase) const
 	// The GetUpdateRgn function retrieves the update region of a window by copying it into the specified region.
 	{
 		assert(::IsWindow(m_hWnd));
+		assert(pRgn);
+		HRGN hRgn = (HRGN)pRgn->GetHandle();
 		return ::GetUpdateRgn(m_hWnd, hRgn, bErase);
 	}
 
@@ -2284,13 +2288,14 @@ namespace Win32xx
 		return ::InvalidateRect(m_hWnd, lpRect, bErase);
 	}
 
-	inline BOOL CWnd::InvalidateRgn(CONST HRGN hRgn, BOOL bErase /*= TRUE*/) const
+	inline BOOL CWnd::InvalidateRgn(CRgn* pRgn, BOOL bErase /*= TRUE*/) const
 	// The InvalidateRgn function invalidates the client area within the specified region
 	// by adding it to the current update region of a window. The invalidated region,
 	// along with all other areas in the update region, is marked for painting when the
 	// next WM_PAINT message occurs.
 	{
 		assert(::IsWindow(m_hWnd));
+		HRGN hRgn = pRgn? (HRGN)pRgn->GetHandle() : NULL;
 		return ::InvalidateRgn(m_hWnd, hRgn, bErase);
 	}
 
@@ -2420,19 +2425,21 @@ namespace Win32xx
 		return ::PostMessage(hWnd, uMsg, wParam, lParam);
 	}
 
-	inline BOOL CWnd::RedrawWindow(LPCRECT lpRectUpdate, HRGN hRgn, UINT flags) const
+	inline BOOL CWnd::RedrawWindow(LPCRECT lpRectUpdate, CRgn* pRgn, UINT flags) const
 	// The RedrawWindow function updates the specified rectangle or region in a window's client area.
 	{
 		assert(::IsWindow(m_hWnd));
+		HRGN hRgn = pRgn? (HRGN)pRgn->GetHandle() : NULL;
 		return ::RedrawWindow(m_hWnd, lpRectUpdate, hRgn, flags);
 	}
 
-	inline int CWnd::ReleaseDC(HDC hDC) const
+	inline int CWnd::ReleaseDC(CDC* pDC) const
 	// The ReleaseDC function releases a device context (DC), freeing it for use
 	// by other applications.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::ReleaseDC(m_hWnd, hDC);
+		assert(pDC);
+		return ::ReleaseDC(m_hWnd, pDC->GetHDC());
 	}
 
 	inline BOOL CWnd::ScreenToClient(POINT& Point) const
@@ -2584,12 +2591,16 @@ namespace Win32xx
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
 	}
 
-	inline int CWnd::SetWindowRgn(HRGN hRgn, BOOL bRedraw /*= TRUE*/) const
+	inline int CWnd::SetWindowRgn(CRgn* pRgn, BOOL bRedraw /*= TRUE*/) const
 	// The SetWindowRgn function sets the window region of the window.
 	// The window region determines the area within the window where the system permits drawing.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetWindowRgn(m_hWnd, hRgn, bRedraw);
+		HRGN hRgn = pRgn? (HRGN)pRgn->GetHandle() : NULL;
+		int iResult = ::SetWindowRgn(m_hWnd, hRgn, bRedraw);
+		if (iResult && pRgn)
+			pRgn->Detach();	// The system owns the region now
+		return iResult;
 	}
 
 	inline BOOL CWnd::SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const
@@ -2670,11 +2681,12 @@ namespace Win32xx
 		return ::ValidateRect(m_hWnd, prc);
 	}
 
-	inline BOOL CWnd::ValidateRgn(HRGN hRgn) const
+	inline BOOL CWnd::ValidateRgn(CRgn* pRgn) const
 	// The ValidateRgn function validates the client area within a region by
 	// removing the region from the current update region of the window.
 	{
 		assert(::IsWindow(m_hWnd));
+		HRGN hRgn = pRgn? (HRGN)pRgn->GetHandle() : NULL;
 		return ::ValidateRgn(m_hWnd, hRgn);
 	}
 
@@ -2872,10 +2884,11 @@ namespace Win32xx
 		return ::ScrollWindow(m_hWnd, XAmount, YAmount, lprcScroll, lprcClip);
 	}
 
-	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const
+	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, CRgn* prgnUpdate, LPRECT lprcUpdate, UINT flags) const
 	// The ScrollWindow function scrolls the contents of the window's client area.
 	{
 		assert(::IsWindow(m_hWnd));
+		HRGN hrgnUpdate = prgnUpdate? (HRGN)prgnUpdate->GetHandle() : NULL;
 		return ::ScrollWindowEx(m_hWnd, dx, dy, lprcScroll, lprcClip, hrgnUpdate, lprcUpdate, flags);
 	}
 

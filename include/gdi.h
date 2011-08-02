@@ -268,8 +268,8 @@ namespace Win32xx
 
 		// Create methods
 		HFONT CreateFontIndirect(const LOGFONT* lpLogFont);
-		HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hDC = NULL, BOOL bBold = FALSE, BOOL bItalic = FALSE);
-		HFONT CreatePointFontIndirect(const LOGFONT* lpLogFont, HDC hDC = NULL);
+		HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, CDC* pDC = NULL, BOOL bBold = FALSE, BOOL bItalic = FALSE);
+		HFONT CreatePointFontIndirect(const LOGFONT* lpLogFont, CDC* pDC = NULL);
 
 #ifndef _WIN32_WCE
 		HFONT CreateFont(int nHeight, int nWidth, int nEscapement,
@@ -299,7 +299,7 @@ namespace Win32xx
 		HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette);
 
 #ifndef _WIN32_WCE
-		HPALETTE CreateHalftonePalette(HDC hDC);
+		HPALETTE CreateHalftonePalette(CDC* pDC);
 #endif // !_WIN32_WCE
 
 		// Attributes
@@ -1353,7 +1353,7 @@ namespace Win32xx
 		return hFont;
 	}
 
-	inline HFONT CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hDC /*= NULL*/, BOOL bBold /*= FALSE*/, BOOL bItalic /*= FALSE*/)
+	inline HFONT CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, CDC* pDC /*= NULL*/, BOOL bBold /*= FALSE*/, BOOL bItalic /*= FALSE*/)
 	// Creates a font of a specified typeface and point size.
 	{
 		LOGFONT logFont = { 0 };
@@ -1367,13 +1367,14 @@ namespace Win32xx
 		if (bItalic)
 			logFont.lfItalic = (BYTE)TRUE;
 
-		return CreatePointFontIndirect(&logFont, hDC);
+		return CreatePointFontIndirect(&logFont, pDC);
 	}
 
-	inline HFONT CFont::CreatePointFontIndirect(const LOGFONT* lpLogFont, HDC hDC /* = NULL*/)
+	inline HFONT CFont::CreatePointFontIndirect(const LOGFONT* lpLogFont, CDC* pDC /* = NULL*/)
 	// Creates a font of a specified typeface and point size.
 	// This function automatically converts the height in lfHeight to logical units using the specified device context.
 	{
+		HDC hDC = pDC? pDC->GetHDC() : NULL;
 		HDC hDC1 = (hDC != NULL) ? hDC : ::GetDC(HWND_DESKTOP);
 
 		// convert nPointSize to logical units based on hDC
@@ -1461,12 +1462,12 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline HPALETTE CPalette::CreateHalftonePalette(HDC hDC)
+	inline HPALETTE CPalette::CreateHalftonePalette(CDC* pDC)
 	// Creates a halftone palette for the specified device context (DC).
 	{
 		assert(m_pData);
-		assert(hDC != NULL);
-		HPALETTE hPalette = ::CreateHalftonePalette(hDC);
+		assert(pDC);
+		HPALETTE hPalette = ::CreateHalftonePalette(pDC->GetHDC());
 		Attach(hPalette);
 		return hPalette;
 	}

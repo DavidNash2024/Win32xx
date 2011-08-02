@@ -1411,10 +1411,9 @@ namespace Win32xx
 		                      {87, 58}, {64, 58}, {58, 64}, {58, 87},
 		                      {29, 87}, {29, 64}, {23, 58}, {0, 58} };
 
-		HRGN hrgnPoly = CreatePolygonRgn(ptArray, 16, WINDING);
-		SetWindowRgn(hrgnPoly, FALSE);
-
-		DeleteObject(hrgnPoly);
+		CRgn rgnPoly;
+		rgnPoly.CreatePolygonRgn(ptArray, 16, WINDING);
+		SetWindowRgn(&rgnPoly, FALSE);
 	}
 
 	inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)

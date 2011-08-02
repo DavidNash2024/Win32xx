@@ -127,6 +127,7 @@ namespace Win32xx
 		if (m_hFile)
 			bResult = CloseHandle(m_hFile);
 
+		m_hFile = 0;
 		return bResult;
 	}
 
@@ -268,7 +269,7 @@ namespace Win32xx
 	inline BOOL CFile::Remove(LPCTSTR pszFileName)
 	// Deletes the specified file.
 	{
-		return::DeleteFile(pszFileName);
+		return ::DeleteFile(pszFileName);
 	}
 
 	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, LPCTSTR pszDefExt, CWnd* pOwnerWnd)

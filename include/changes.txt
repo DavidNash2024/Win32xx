@@ -78,13 +78,22 @@ Changes in detail
 - Modified CDocker::IsRelated 			now accepts a CWnd pointer instead of HWND
 - Modified CWnd::CreateEx               now accepts a CMenu pointer
 - Modified CWnd::GetAncestor			now accepts a gaFlags parameter
-- Modified CWnd::GetMenu                now accepts a CMenu pointer
-- Modified CWnd::SetMenu                now accepts a CMenu pointer
-- Modified CWnd::HiliteMenuItem         now accepts a CMenu pointer
-- Modified CWnd::GetSystemMenu          now accepts a CMenu pointer
-- Modified CWnd::OnEraseBkgnd			now accepts a CDC pointer
 - Modified CWnd::GetFont				now returns a CFont pointer
+- Modified CWnd::GetMenu                now accepts a CMenu pointer
+- Modified CWnd::GetNextDlgGroupItem    now accepts a CWnd pointer
+- Modified CWnd::GetNextDlgTabItem      now accepts a CWnd pointer
+- Modified CWnd::GetSystemMenu          now accepts a CMenu pointer
+- Modified CWnd::GetUpdateRgn           now accepts a CRgn pointer
+- Modified CWnd::GetWindowDC            now returns a CDC pointer
+- Modified CWnd::HiliteMenuItem         now accepts a CMenu pointer
+- Modified CWnd::InvalidateRgn          now accepts a CRgn pointer
+- Modified CWnd::OnEraseBkgnd			now accepts a CDC pointer
+- Modified CWnd::RedrawWindow           now accepts a CRgn pointer
+- Modified CWnd::ReleaseDC              now accepts a CDC pointer
+- Modified CWnd::ScrollWindowEx         now accepts a CRgn pointer
 - Modified CWnd::SetFont                now accepts a CFont pointer
+- Modified CWnd::SetMenu                now accepts a CMenu pointer
+- Modified CWnd::SetWindowRgn           now accepts a CRgn pointer
 - Modified CResizer::AddChild			now accepts a CWnd pointer
 - Removed CLoadString
 - Removed CDC::AttachBitmap
