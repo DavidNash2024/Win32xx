@@ -1856,7 +1856,6 @@ namespace Win32xx
 		case UWM_CLEANUPTEMPS:
 			{
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				pTLSData->vTmpDCs.clear();
 				pTLSData->vTmpWnds.clear();
 			}
 			break;

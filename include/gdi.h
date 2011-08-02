@@ -2080,7 +2080,6 @@ namespace Win32xx
 		GetApp()->AddTmpDC(pDC);
 		pDC->m_pData->bRemoveHDC = TRUE;
 		pDC->m_pData->hWnd = hWnd;
-		::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
 		return pDC;
 	}
 
