@@ -3078,8 +3078,8 @@ namespace Win32xx
 	// draws an icon or cursor, performing the specified raster operations, and stretching or compressing the icon or cursor as specified.
 	{
 		assert(m_pData->hDC);
-		assert(pFlickerFreeDraw);
-		return ::DrawIconEx(m_pData->hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, *pFlickerFreeDraw, diFlags);
+		HBRUSH hFlickerFreeDraw = pFlickerFreeDraw? (HBRUSH)pFlickerFreeDraw->GetHandle() : NULL;
+		return ::DrawIconEx(m_pData->hDC, xLeft, yTop, hIcon, cxWidth, cyWidth, istepIfAniCur, hFlickerFreeDraw, diFlags);
 	}
 
 	inline BOOL CDC::DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const
