@@ -346,10 +346,6 @@ namespace Win32xx
 		virtual ~CWinApp();
 
 		HACCEL GetAccelerators() const { return m_hAccel; }
-		CDC* GetCDCFromMap(HDC hDC);
-		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);
-		CMenu* GetCMenuFromMap(HMENU hMenu);
-		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		void SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
@@ -367,6 +363,10 @@ namespace Win32xx
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
+		CDC* GetCDCFromMap(HDC hDC);
+		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);		
+		CMenu* GetCMenuFromMap(HMENU hMenu);
+		CWnd* GetCWndFromMap(HWND hWnd);
 
 		void	AddTmpDC(CDC* pDC);
 		void	AddTmpGDI(CGDIObject* pObject);
