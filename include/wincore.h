@@ -549,7 +549,7 @@ namespace Win32xx
 		BOOL  IsZoomed() const;
 		BOOL  LockWindowUpdate() const;
 		BOOL  OpenIcon() const;
-		void  Print(CDC& dc, DWORD dwFlags) const;
+		void  Print(CDC* pDC, DWORD dwFlags) const;
 		BOOL  SetMenu(CMenu* pMenu) const;
 		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const;
 		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, CRgn* prgnUpdate, LPRECT lprcUpdate, UINT flags) const;
@@ -2869,11 +2869,12 @@ namespace Win32xx
 		return ::OpenIcon(m_hWnd);
 	}
 
-	inline void CWnd::Print(CDC& dc, DWORD dwFlags) const
+	inline void CWnd::Print(CDC* pDC, DWORD dwFlags) const
 	// Requests that the window draw itself in the specified device context, most commonly in a printer device context.
 	{
 		assert(::IsWindow(m_hWnd));
-		SendMessage(m_hWnd, WM_PRINT, (WPARAM)&dc, (LPARAM)dwFlags);
+		assert(pDC);
+		SendMessage(m_hWnd, WM_PRINT, (WPARAM)pDC, (LPARAM)dwFlags);
 	}
 
 	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const
