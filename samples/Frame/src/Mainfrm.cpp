@@ -77,6 +77,7 @@ void CMainFrame::OnCreate()
 	// m_bUseReBar = FALSE;				// Don't use rebars
 	// m_bUseThemes = FALSE;            // Don't use themes
 	// m_bUseToolBar = FALSE;			// Don't use a toolbar
+	// m_bUseCustomDraw = FALSE;		// Don't use custom draw for menu items
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -157,10 +158,13 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-//		Add case statements for each messages to be handled here
-//	}
+/*	switch (uMsg)
+	{
+		case WM_INITMENUPOPUP:
+			return 0;
+		case WM_MEASUREITEM:
+			return 0;
+	} */
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);

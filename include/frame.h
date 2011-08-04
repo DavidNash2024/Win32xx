@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.2
-// Released: N/A
+// Win32++   Version 7.2
+// Released: 5th AUgust 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -304,6 +304,7 @@ namespace Win32xx
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		BOOL m_bUseToolBar;					// set to TRUE if the toolbar is used
+		BOOL m_bUseCustomDraw;				// set to TRUE to perform custom drawing on menu items
 		BOOL m_bShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
 		BOOL m_bShowToolBar;				// A flag to indicate if the ToolBar should be displayed
 		MenuTheme m_ThemeMenu;				// Theme structure for popup menus
@@ -1365,7 +1366,7 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_tsStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE),
+		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE), m_bUseCustomDraw(TRUE),
 						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(NULL), m_himlMenuDis(NULL),
 						m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
@@ -1838,7 +1839,7 @@ namespace Win32xx
 		if (IsReBarSupported() && m_bUseReBar)
 			rcTop = GetReBar().GetWindowRect();
 		else
-			if (GetToolBar().IsWindowVisible())
+			if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
 				rcTop = GetToolBar().GetWindowRect();
 
 		// Return client size less the rebar and status windows
@@ -2228,21 +2229,24 @@ namespace Win32xx
 
 	inline void CFrame::OnExitMenuLoop()
 	{
-		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
+		if (m_bUseCustomDraw)
 		{
-			// Undo OwnerDraw and put the text back
-			MENUITEMINFO mii = {0};
-			mii.cbSize = GetSizeofMenuItemInfo();
+			for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
+			{
+				// Undo OwnerDraw and put the text back
+				MENUITEMINFO mii = {0};
+				mii.cbSize = GetSizeofMenuItemInfo();
 
-			mii.fMask = MIIM_TYPE | MIIM_DATA;
-			mii.fType = m_vMenuItemData[nItem]->fType;
-			mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
-			mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
-			mii.dwItemData = 0;
-			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
+				mii.fMask = MIIM_TYPE | MIIM_DATA;
+				mii.fType = m_vMenuItemData[nItem]->fType;
+				mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
+				mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
+				mii.dwItemData = 0;
+				::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
+			}
+
+			m_vMenuItemData.clear();
 		}
-
-		m_vMenuItemData.clear();
 	}
 
 	inline void CFrame::OnHelp()
@@ -2267,40 +2271,43 @@ namespace Win32xx
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
 
-		CMenu* pMenu = FromHandle((HMENU)wParam);
-
-		for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
+		if (m_bUseCustomDraw)
 		{
-			MENUITEMINFO mii = {0};
-			mii.cbSize = GetSizeofMenuItemInfo();
+			CMenu* pMenu = FromHandle((HMENU)wParam);
 
-			TCHAR szMenuItem[MAX_MENU_STRING] = _T("");
-
-			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
-			mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;
-			mii.dwTypeData = szMenuItem;
-			mii.cch = MAX_MENU_STRING -1;
-
-			// Send message for menu updates
-			UINT menuItem = pMenu->GetMenuItemID(i);
-			SendMessage(UWM_UPDATE_COMMAND, (WPARAM)menuItem, 0);
-
-			// Specify owner-draw for the menu item type
-			if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
+			for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
 			{
-				if (0 == mii.dwItemData)
-				{
-					ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
-					pItem->hMenu = *pMenu;
-					pItem->nPos = i;
-					pItem->fType = mii.fType;
-					pItem->hSubMenu = mii.hSubMenu;
-					mii.fType |= MFT_OWNERDRAW;
-					lstrcpyn(pItem->GetItemText(), szMenuItem, MAX_MENU_STRING);
-					mii.dwItemData = (DWORD_PTR)pItem;
+				MENUITEMINFO mii = {0};
+				mii.cbSize = GetSizeofMenuItemInfo();
 
-					m_vMenuItemData.push_back(ItemDataPtr(pItem));		// Store pItem in m_vMenuItemData
-					pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
+				TCHAR szMenuItem[MAX_MENU_STRING] = _T("");
+
+				// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
+				mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;
+				mii.dwTypeData = szMenuItem;
+				mii.cch = MAX_MENU_STRING -1;
+
+				// Send message for menu updates
+				UINT menuItem = pMenu->GetMenuItemID(i);
+				SendMessage(UWM_UPDATE_COMMAND, (WPARAM)menuItem, 0);
+
+				// Specify owner-draw for the menu item type
+				if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
+				{
+					if (0 == mii.dwItemData)
+					{
+						ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
+						pItem->hMenu = *pMenu;
+						pItem->nPos = i;
+						pItem->fType = mii.fType;
+						pItem->hSubMenu = mii.hSubMenu;
+						mii.fType |= MFT_OWNERDRAW;
+						lstrcpyn(pItem->GetItemText(), szMenuItem, MAX_MENU_STRING);
+						mii.dwItemData = (DWORD_PTR)pItem;
+
+						m_vMenuItemData.push_back(ItemDataPtr(pItem));		// Store pItem in m_vMenuItemData
+						pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
+					}
 				}
 			}
 		}

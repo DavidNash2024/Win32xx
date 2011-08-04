@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.2
-// Released: N/A
+// Win32++   Version 7.2
+// Released: 5th AUgust 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
