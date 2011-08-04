@@ -873,7 +873,7 @@ namespace Win32xx
 
 		// Create a clipping region. Its the overall tab window's region,
 		//  less the region belonging to the individual tab view's client area
-		HRGN hrgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
+		CRgn rgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
 		CRect rcTab = GetClientRect();
 		TabCtrl_AdjustRect(m_hWnd, FALSE, &rcTab);
 		if (rcTab.Height() < 0)
@@ -881,17 +881,17 @@ namespace Win32xx
 		if (rcTab.Width() < 0)
 			rcTab.left = rcTab.right;
 
-		HRGN hrgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
-		HRGN hrgnClip = ::CreateRectRgn(0, 0, 0, 0);
-		::CombineRgn(hrgnClip, hrgnSrc1, hrgnSrc2, RGN_DIFF);
+		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
+		CRgn rgnClip = ::CreateRectRgn(0, 0, 0, 0);
+		::CombineRgn(rgnClip, rgnSrc1, rgnSrc2, RGN_DIFF);
 
 		// Use the region in the memory DC to paint the grey background
-		dcMem.SelectClipRgn(FromHandle(hrgnClip));
+		dcMem.SelectClipRgn(&rgnClip);
 		HWND hWndParent = ::GetParent(m_hWnd);
 		CDC dcParent = ::GetDC(hWndParent);
 		HBRUSH hBrush = (HBRUSH) SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
 		dcMem.SelectObject(FromHandle(hBrush));
-		dcMem.PaintRgn(hrgnClip);
+		dcMem.PaintRgn(&rgnClip);
 
 		// Draw the tab buttons on the memory DC:
 		DrawTabs(dcMem);
@@ -902,13 +902,8 @@ namespace Win32xx
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
-		dcView.SelectClipRgn(FromHandle(hrgnClip));
+		dcView.SelectClipRgn(&rgnClip);
 		dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), &dcMem, 0, 0, SRCCOPY);
-
-		// Cleanup
-		::DeleteObject(hrgnSrc1);
-		::DeleteObject(hrgnSrc2);
-		::DeleteObject(hrgnClip);
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)

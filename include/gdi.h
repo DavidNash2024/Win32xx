@@ -549,7 +549,7 @@ namespace Win32xx
 		BOOL DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, CBrush* pFlickerFreeDraw, UINT diFlags) const;
 		BOOL DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const;
 		BOOL DrawFrameControl(const RECT& rc, UINT nType, UINT nState) const;
-		BOOL FillRgn(HRGN hrgn, CBrush* pBrush) const;
+		BOOL FillRgn(CRgn* pRgn, CBrush* pBrush) const;
 		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical);
 		void SolidFill(COLORREF Color, const RECT& rc);
 
@@ -557,7 +557,7 @@ namespace Win32xx
 		BOOL DrawIcon(int x, int y, HICON hIcon) const;
 		BOOL DrawIcon(POINT point, HICON hIcon) const;
 		BOOL FrameRect(const RECT& rc, CBrush* pBrush) const;
-		BOOL PaintRgn(HRGN hrgn) const;
+		BOOL PaintRgn(CRgn* pRgn) const;
 #endif
 
 		// Bitmap Functions
@@ -594,7 +594,7 @@ namespace Win32xx
 		int  SelectClipRgn(CRgn* pRgn);
 
 #ifndef _WIN32_WCE
-		int  ExtSelectClipRgn(HRGN hrgn, int fnMode);
+		int  ExtSelectClipRgn(CRgn* pRgn, int fnMode);
 		int  OffsetClipRgn(int nXOffset, int nYOffset);
 		BOOL PtVisible(int X, int Y);
 #endif
@@ -2711,11 +2711,12 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline int CDC::ExtSelectClipRgn(HRGN hrgn, int fnMode)
+	inline int CDC::ExtSelectClipRgn(CRgn* pRgn, int fnMode)
 	// Combines the specified region with the current clipping region using the specified mode.
 	{
 		assert(m_pData->hDC);
-		return ::ExtSelectClipRgn(m_pData->hDC, hrgn, fnMode);
+		assert(pRgn);
+		return ::ExtSelectClipRgn(m_pData->hDC, *pRgn, fnMode);
 	}
 #endif
 
@@ -3096,12 +3097,13 @@ namespace Win32xx
 		return ::DrawFrameControl(m_pData->hDC, (LPRECT)&rc, nType, nState);
 	}
 
-	inline BOOL CDC::FillRgn(HRGN hrgn, CBrush* pBrush) const
+	inline BOOL CDC::FillRgn(CRgn* pRgn, CBrush* pBrush) const
 	// Fills a region by using the specified brush.
 	{
 		assert(m_pData->hDC);
+		assert(pRgn);
 		assert(pBrush);
-		return ::FillRgn(m_pData->hDC, hrgn, *pBrush);
+		return ::FillRgn(m_pData->hDC, *pRgn, *pBrush);
 	}
 
 #ifndef _WIN32_WCE
@@ -3127,11 +3129,12 @@ namespace Win32xx
 		return (BOOL)::FrameRect(m_pData->hDC, &rc, *pBrush);
 	}
 
-	inline BOOL CDC::PaintRgn(HRGN hrgn) const
+	inline BOOL CDC::PaintRgn(CRgn* pRgn) const
 	// Paints the specified region by using the brush currently selected into the device context.
 	{
 		assert(m_pData->hDC);
-		return ::PaintRgn(m_pData->hDC, hrgn);
+		assert(pRgn);
+		return ::PaintRgn(m_pData->hDC, *pRgn);
 	}
 #endif
 
