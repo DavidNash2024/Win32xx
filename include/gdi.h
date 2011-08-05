@@ -3818,7 +3818,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (pDC == 0)
+		if (hDC != 0 && pDC == 0)
 		{
 			pDC = new CDC;
 			GetApp()->AddTmpDC(pDC);
@@ -3836,7 +3836,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CBitmap* pBitmap = (CBitmap*)GetApp()->GetCGDIObjectFromMap(hBitmap);
-		if (pBitmap == 0)
+		if (hBitmap != 0 && pBitmap == 0)
 		{
 			pBitmap = new CBitmap;
 			GetApp()->AddTmpGDI(pBitmap);
@@ -3854,7 +3854,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CBrush* pBrush = (CBrush*)GetApp()->GetCGDIObjectFromMap(hBrush);
-		if (pBrush == 0)
+		if (hBrush != 0 && pBrush == 0)
 		{
 			pBrush = new CBrush;
 			GetApp()->AddTmpGDI(pBrush);
@@ -3872,7 +3872,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CFont* pFont = (CFont*)GetApp()->GetCGDIObjectFromMap(hFont);
-		if (pFont == 0)
+		if (hFont != 0 && pFont == 0)
 		{
 			pFont = new CFont;
 			GetApp()->AddTmpGDI(pFont);
@@ -3890,7 +3890,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CPalette* pPalette = (CPalette*)GetApp()->GetCGDIObjectFromMap(hPalette);
-		if (pPalette == 0)
+		if (hPalette != 0 && pPalette == 0)
 		{
 			pPalette = new CPalette;
 			GetApp()->AddTmpGDI(pPalette);
@@ -3908,7 +3908,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CPen* pPen = (CPen*)GetApp()->GetCGDIObjectFromMap(hPen);
-		if (pPen == 0)
+		if (hPen != 0 && pPen == 0)
 		{
 			pPen = new CPen;
 			GetApp()->AddTmpGDI(pPen);
@@ -3926,7 +3926,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CRgn* pRgn = (CRgn*)GetApp()->GetCGDIObjectFromMap(hRgn);
-		if (pRgn == 0)
+		if (hRgn != 0 && pRgn == 0)
 		{
 			pRgn = new CRgn;
 			GetApp()->AddTmpGDI(pRgn);

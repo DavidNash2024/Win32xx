@@ -116,7 +116,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainMDIFrame::OnCreate()
+void CMainFrame::OnCreate()
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -125,8 +125,9 @@ void CMainMDIFrame::OnCreate()
 	// m_bShowIndicatorStatus = FALSE;	// Don't show statusbar indicators
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseReBar = FALSE;				// Don't use rebars
-	// m_bUseThemes = FALSE;			// Don't use themes
+	// m_bUseThemes = FALSE;            // Don't use themes
 	// m_bUseToolBar = FALSE;			// Don't use a toolbar
+	// m_bUseCustomDraw = FALSE;		// Don't use custom draw for menu items
 
 	// call the base class function
 	CMDIFrame::OnCreate();
