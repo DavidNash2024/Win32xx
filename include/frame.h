@@ -3113,11 +3113,13 @@ namespace Win32xx
 		{
 			m_Menu.CheckMenuItem(IDW_VIEW_STATUSBAR, MF_CHECKED);
 			GetStatusBar().ShowWindow(SW_SHOW);
+			m_bShowStatusBar = TRUE;
 		}
 		else
 		{
 			m_Menu.CheckMenuItem(IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 			GetStatusBar().ShowWindow(SW_HIDE);
+			m_bShowStatusBar = FALSE;
 		}
 
 		// Reposition the Windows
@@ -3133,6 +3135,7 @@ namespace Win32xx
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), TRUE);
 			else
 				GetToolBar().ShowWindow(SW_SHOW);
+		//	m_bShowToolBar = TRUE;
 		}
 		else
 		{
@@ -3141,6 +3144,7 @@ namespace Win32xx
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), FALSE);
 			else
 				GetToolBar().ShowWindow(SW_HIDE);
+		//	m_bShowToolBar = FALSE;
 		}
 
 		if (GetReBar().IsWindow())

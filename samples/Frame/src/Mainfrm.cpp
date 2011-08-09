@@ -158,13 +158,10 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-/*	switch (uMsg)
-	{
-		case WM_INITMENUPOPUP:
-			return 0;
-		case WM_MEASUREITEM:
-			return 0;
-	} */
+//	switch (uMsg)
+//	{
+//		Add case statements for each messages to be handled here
+//	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
