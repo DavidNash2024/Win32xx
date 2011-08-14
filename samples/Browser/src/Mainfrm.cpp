@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "mainfrm.h"
+#include <shlobj.h>
 #include <sstream>
 
 
@@ -145,35 +146,43 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnHelp();
 		return TRUE;
 	case IDM_BACK:
-		m_View.GetIWebBrowser2()->GoBack();
+		m_View.GoBack();
 		return TRUE;
 	case IDM_FORWARD:
-		m_View.GetIWebBrowser2()->GoForward();
+		m_View.GoForward();
 		return TRUE;
 	case IDM_REFRESH:
-		m_View.GetIWebBrowser2()->Refresh();
+		m_View.Refresh();
 		return TRUE;
 	case IDM_STOP:
-		m_View.GetIWebBrowser2()->Stop();
+		m_View.Stop();
 		return TRUE;
 	case IDM_HOME:
-		m_View.GetIWebBrowser2()->GoHome();
+		m_View.GoHome();
 		return TRUE;
 	case IDM_EDIT_CUT:
 		if (::GetFocus() == pEdit->GetHwnd())
 			pEdit->SendMessage(WM_CUT, 0, 0);
+		else
+			m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_COPY:
 		if (::GetFocus() == pEdit->GetHwnd())
 			pEdit->SendMessage(WM_COPY, 0, 0);
+		else
+			m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_PASTE:
 		if (::GetFocus() == pEdit->GetHwnd())
 			pEdit->SendMessage(WM_PASTE, 0, 0);
+		else
+			m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_DELETE:
 		if (::GetFocus() == pEdit->GetHwnd())
 			pEdit->SendMessage(WM_CLEAR, 0, 0);
+		else
+			m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();
@@ -198,11 +207,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 				// Navigate to web page
 				m_View.Navigate(szString);
-
-				// Set focus to web page
-				LONG_PTR hWeb;
-				m_View.GetIWebBrowser2()->get_HWND(&hWeb);
-				::SetFocus((HWND)hWeb);
 			}
 			return TRUE;
 		}
@@ -246,7 +250,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	m_View.GetIWebBrowser2()->GoHome();
+	m_View.GoHome();
 }
 
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
@@ -262,6 +266,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		szString += W2T(vtURL.bstrVal);
 		szString += _T("\n");
 		TRACE(szString.c_str());
+		VariantClear(&vtURL);
 	}
 
 	BSTR bstrUrlName;
@@ -271,7 +276,8 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)(LPCTSTR)W2T(bstrUrlName));
+	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)(LPCTSTR)W2T(bstrUrlName)); 
+	m_View.SetFocus();
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
@@ -306,7 +312,6 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 					// Navigate to the web page
 					m_View.Navigate(szString);
-
 					return FALSE;
 				}
 			}
@@ -351,7 +356,6 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 {
 	LPOLESTR lpStatusText = pDispParams->rgvarg->bstrVal;
 
-
 	if (GetStatusBar().IsWindow() && lpStatusText)
 	{
 		if (lstrcmp(W2T(lpStatusText), _T("")))
@@ -361,7 +365,6 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 		else
 			GetStatusBar().SetPartText(0, _T("Done"));
 	}
-
 }
 
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)

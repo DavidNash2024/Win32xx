@@ -1,3 +1,13 @@
+Version 7.3
+===========
+* Extended CWebBrowser
+	The CWebBrower class has been extended to wrap the member functions of 
+	iWebBrowser2. The Browser sample has been updated and now supports
+	Copy/Paste.
+	
+
+
+
 Version 7.2
 ===========
 

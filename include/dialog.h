@@ -1,5 +1,5 @@
-// Win32++   Version 7.2
-// Released: 5th AUgust 2011
+// Win32++   Pre-release Version 7.3
+// Released: N/A (Work in Progress code)
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -545,6 +545,8 @@ namespace Win32xx
 					// A modal message loop is running so we can't do IsDialogMessage.
 					// Avoid having modal dialogs create other windows, because those
 					// windows will then use the modal dialog's special message loop.
+					// If you need the dialog to create another window, put it in a
+					// different thread.
 				}
 			}
 		}
