@@ -181,8 +181,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_EDIT_DELETE:
 		if (::GetFocus() == pEdit->GetHwnd())
 			pEdit->SendMessage(WM_CLEAR, 0, 0);
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
 		else
 			m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+#endif
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();
@@ -276,7 +278,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)(LPCTSTR)W2T(bstrUrlName)); 
+	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)(LPCTSTR)W2T(bstrUrlName));
 	m_View.SetFocus();
 }
 
