@@ -181,7 +181,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_EDIT_DELETE:
 		if (::GetFocus() == pEdit->GetHwnd())
 			pEdit->SendMessage(WM_CLEAR, 0, 0);
-#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+#if !defined(__GNUC__)
 		else
 			m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 #endif
