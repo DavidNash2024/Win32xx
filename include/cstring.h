@@ -124,7 +124,8 @@ namespace Win32xx
 				 operator LPCTSTR() const;
 		TCHAR&   operator [] (int nIndex);
 		CString& operator += (const CString& str);
-		CString& operator += (LPCTSTR szText);
+		CString& operator += (LPCSTR szText);
+		CString& operator += (LPCWSTR szText);
 
 		// Attributes
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
@@ -304,9 +305,15 @@ namespace Win32xx
 		return *this;
 	}
 	
-	inline CString& CString::operator += (LPCTSTR szText)
+	inline CString& CString::operator += (LPCSTR szText)
 	{
-		m_str.append(szText);
+		m_str.append(A2T(szText));
+		return *this;
+	}
+
+	inline CString& CString::operator += (LPCWSTR szText)
+	{
+		m_str.append(W2T(szText));
 		return *this;
 	}
 

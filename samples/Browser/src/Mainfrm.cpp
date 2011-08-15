@@ -257,7 +257,7 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
-	CString szString = _T("NavigateComplete2: ");
+	CString str = _T("NavigateComplete2: ");
 
 	if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
 	{
@@ -265,9 +265,8 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		vtURL = *pDispParams->rgvarg[0].pvarVal;
 		vtURL.vt = VT_BSTR;
 
-		szString += W2T(vtURL.bstrVal);
-		szString += _T("\n");
-		TRACE(szString.c_str());
+		str += vtURL.bstrVal;
+		TRACE(str);
 		VariantClear(&vtURL);
 	}
 
@@ -323,33 +322,33 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 {
-	tStringStream szString;
+	CString str;
 
 	if (pDispParams->cArgs != 0)
 	{
 		if (pDispParams->cArgs > 1 && pDispParams->rgvarg[1].vt == VT_I4)
 		{
-			szString << _T("Progress = ") << pDispParams->rgvarg[1].lVal ;
+			str.Format(_T("Progress = %d"), pDispParams->rgvarg[1].lVal);
 		}
 
 		if (pDispParams->rgvarg[0].vt == VT_I4)
 		{
-			szString << _T(", ProgressMax = ") << pDispParams->rgvarg[0].lVal;
+			CString str2;
+			str2.Format(_T(", ProgressMax = %d\n"), pDispParams->rgvarg[0].lVal);
+			str = str + str2;
 		}
 
-		szString << _T("\n");
-		TRACE(szString.str().c_str());
+		TRACE(str);
    }
 }
 
 void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 {
-	tStringStream str;
+	CString str;
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		str << _T("Property Change:") << W2T(pDispParams->rgvarg[0].bstrVal);
+		str.Format(_T("Property Change: %d\n"), W2T(pDispParams->rgvarg[0].bstrVal));
 
-	str << _T("\n");
-	TRACE(str.str().c_str());
+	TRACE(str);
 }
 
 void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
@@ -374,7 +373,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-        str = CString(W2T(pDispParams->rgvarg[0].bstrVal)) + _T(" - ") + LoadString(IDW_MAIN);
+        str = CString(pDispParams->rgvarg[0].bstrVal) + _T(" - ") + LoadString(IDW_MAIN);
 		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else

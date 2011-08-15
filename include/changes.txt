@@ -11,12 +11,11 @@ Changes in detail
 - Added many functions to CWebBrowser
 - Added 	CString(LPCSTR pszText);
 - Added 	CString(LPCWSTR pszText);
-- Added   	CString::operator += (LPCTSTR szText);
-- Added		operator += (LPCSTR szText);
-- Added 	operator += (LPCWSTR szText);
+- Added		CString::operator += (LPCSTR szText);
+- Added 	CString::operator += (LPCWSTR szText)
 - Removed 	CString::b_str
 - Removed 	CString(LPCTSTR pszText);
-- Removed 	operator += (LPCTSTR szText);
+- Removed 	Cstring::operator += (LPCTSTR szText);
 
 Incompatibilities with previous versions
 ----------------------------------------
