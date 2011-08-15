@@ -855,7 +855,7 @@ namespace Win32xx
 	{
 		BSTR bstr;
 		GetIWebBrowser2()->get_LocationName(&bstr);
-		CString str = (LPCTSTR)W2T(bstr);
+		CString str(bstr);
 		SysFreeString(bstr);
 		return str;
 	}
@@ -865,7 +865,7 @@ namespace Win32xx
 	{
 		BSTR bstr;
 		GetIWebBrowser2()->get_LocationURL(&bstr);
-		CString str = (LPCTSTR)W2T(bstr);
+		CString str(bstr);
 		SysFreeString(bstr);
 		return str;
 	}
@@ -925,7 +925,7 @@ namespace Win32xx
 	{
 		BSTR bString;
 		GetIWebBrowser2()->get_Type(&bString);
-		CString str = (LPCTSTR)W2T(bString);
+		CString str(bString);
 		SysFreeString(bString);
 		return str;
 	}

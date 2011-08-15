@@ -139,7 +139,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_EXIT:
 		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		PostMessage(WM_CLOSE, 0, 0);
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		// Display the help dialog
@@ -161,25 +161,25 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		m_View.GoHome();
 		return TRUE;
 	case IDM_EDIT_CUT:
-		if (::GetFocus() == pEdit->GetHwnd())
+		if (GetFocus() == pEdit)
 			pEdit->SendMessage(WM_CUT, 0, 0);
 		else
-			m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+			m_View.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_COPY:
-		if (::GetFocus() == pEdit->GetHwnd())
+		if (GetFocus() == pEdit)
 			pEdit->SendMessage(WM_COPY, 0, 0);
 		else
 			m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_PASTE:
-		if (::GetFocus() == pEdit->GetHwnd())
+		if (GetFocus() == pEdit)
 			pEdit->SendMessage(WM_PASTE, 0, 0);
 		else
 			m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_DELETE:
-		if (::GetFocus() == pEdit->GetHwnd())
+		if (GetFocus() == pEdit)
 			pEdit->SendMessage(WM_CLEAR, 0, 0);
 #if !defined(__GNUC__)
 		else
@@ -205,7 +205,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 				TCHAR szString[256];
 
 				// Get text from edit box
-				::SendMessage(m_ComboboxEx.GetHwnd(), WM_GETTEXT, 256, (LPARAM)szString);
+				m_ComboboxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
 
 				// Navigate to web page
 				m_View.Navigate(szString);
@@ -257,7 +257,7 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
-	tString szString = _T("NavigateComplete2: ");
+	CString szString = _T("NavigateComplete2: ");
 
 	if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
 	{
@@ -290,8 +290,6 @@ void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
-	HWND hwnd = m_ComboboxEx.GetHwnd();
-
 	switch (((LPNMHDR)lParam)->code)
 	{
 	case CBEN_ENDEDIT:
@@ -304,13 +302,13 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 					TCHAR szString[256];
 
 					// Get text from edit box
-					::SendMessage(hwnd, WM_GETTEXT, 256, (LPARAM)szString);
+					m_ComboboxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
 
 					// Insert text into the list box.
 					COMBOBOXEXITEM CBXitem = {0};
 					CBXitem.mask = CBEIF_TEXT;
 					CBXitem.pszText = szString;
-					::SendMessage(hwnd, CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
+					m_ComboboxEx.SendMessage(CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
 
 					// Navigate to the web page
 					m_View.Navigate(szString);
@@ -372,17 +370,17 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
 	TRACE(_T("TitleChange: \n"));
-    tString str;
+    CString str;
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
-        str = tString(W2T(pDispParams->rgvarg[0].bstrVal)) + _T(" - ") + (LPCTSTR)LoadString(IDW_MAIN);
+        str = CString(W2T(pDispParams->rgvarg[0].bstrVal)) + _T(" - ") + LoadString(IDW_MAIN);
 		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
 		str = LoadString(IDW_MAIN);
 
-	SetWindowText(str.c_str());
+	SetWindowText(str);
 }
 
 void CMainFrame::SetupToolBar()

@@ -118,7 +118,7 @@ namespace Win32xx
 	};
 
 
-	class CComboBoxEx : public CWnd
+	class CComboBoxEx : public CComboBox
 	{
 	public:
 		CComboBoxEx() {}

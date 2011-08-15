@@ -310,8 +310,6 @@ namespace Win32xx
 		}
 		~CA2W() {}
 		operator LPCWSTR() { return m_pStr? &m_vWideArray[0] : NULL; }
-		operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_vWideArray[0] : (LPOLESTR)NULL; }
-		operator LPBSTR() { return m_pStr? (LPBSTR)&m_vWideArray[0] : (LPBSTR)NULL; }
 
 	private:
 		CA2W(const CA2W&);
@@ -348,7 +346,6 @@ namespace Win32xx
 	public:
 		CW2W(LPCWSTR pWStr) : m_pWStr(pWStr) {}
 		operator LPCWSTR() { return (LPWSTR)m_pWStr; }
-		operator LPOLESTR() { return (LPOLESTR)m_pWStr; }
 
 	private:
 		CW2W(const CW2W&);

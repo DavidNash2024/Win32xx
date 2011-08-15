@@ -106,13 +106,15 @@ namespace Win32xx
 		CString();
 		~CString();
 		CString(const CString& str);
-		CString(LPCTSTR pszText);
+		CString(LPCSTR pszText);
+		CString(LPCWSTR pszText);
 		CString(TCHAR ch, int nLength = 1);
 		CString(LPCTSTR pszText, int nLength);
 
 		CString& operator = (const CString& str);
 		CString& operator = (const TCHAR ch);
-		CString& operator = (LPCTSTR pszText);
+		CString& operator = (LPCSTR pszText);
+		CString& operator = (LPCWSTR pszText);
 		BOOL     operator == (LPCTSTR pszText);
 		BOOL     operator != (LPCTSTR pszText);
 		BOOL	 operator < (LPCTSTR pszText);
@@ -120,15 +122,14 @@ namespace Win32xx
 		BOOL	 operator <= (LPCTSTR pszText);
 		BOOL	 operator >= (LPCTSTR pszText);
 				 operator LPCTSTR() const;
-				 operator BSTR() const;
 		TCHAR&   operator [] (int nIndex);
 		CString& operator += (const CString& str);
+		CString& operator += (LPCTSTR szText);
 
 		// Attributes
-		BSTR     b_str() const		{ return T2W(m_str.c_str()); }	// alternative for casting to BSTR
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
 		tString& GetString()		{ return m_str; }				// returns a reference to the underlying std::basic_string<TCHAR>
-		int      GetLength() const	{ return (int)m_str.length(); }		// returns the length in characters
+		int      GetLength() const	{ return (int)m_str.length(); }	// returns the length in characters
 
 		// Operations
 		BSTR     AllocSysString() const;
@@ -203,9 +204,14 @@ namespace Win32xx
 		m_str.assign(str);
 	}
 
-	inline CString::CString(LPCTSTR pszText)
+	inline CString::CString(LPCSTR pszText)
 	{
-		m_str.assign(pszText);
+		m_str.assign(A2T(pszText));
+	}
+
+	inline CString::CString(LPCWSTR pszText)
+	{
+		m_str.assign(W2T(pszText));
 	}
 
 	inline CString::CString(TCHAR ch, int nLength)
@@ -230,9 +236,15 @@ namespace Win32xx
 		return *this;
 	}
 
-	inline CString& CString::operator = (LPCTSTR pszText)
+	inline CString& CString::operator = (LPCSTR pszText)
 	{
-		m_str.assign(pszText);
+		m_str.assign(A2T(pszText));
+		return *this;
+	}
+
+	inline CString& CString::operator = (LPCWSTR pszText)
+	{
+		m_str.assign(W2T(pszText));
 		return *this;
 	}
 
@@ -289,6 +301,12 @@ namespace Win32xx
 	inline CString& CString::operator += (const CString& str)
 	{
 		m_str.append(str);
+		return *this;
+	}
+	
+	inline CString& CString::operator += (LPCTSTR szText)
+	{
+		m_str.append(szText);
 		return *this;
 	}
 
