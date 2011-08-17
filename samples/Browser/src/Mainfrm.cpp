@@ -133,7 +133,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to menu and and toolbar input
 
-	CWnd* pEdit = m_ComboboxEx.GetEditCtrl();
+	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
 
 	switch(LOWORD(wParam))
 	{
@@ -162,25 +162,25 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	case IDM_EDIT_CUT:
 		if (GetFocus() == pEdit)
-			pEdit->SendMessage(WM_CUT, 0, 0);
+			pEdit->Cut();
 		else
 			m_View.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_COPY:
 		if (GetFocus() == pEdit)
-			pEdit->SendMessage(WM_COPY, 0, 0);
+			pEdit->Copy();
 		else
 			m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_PASTE:
 		if (GetFocus() == pEdit)
-			pEdit->SendMessage(WM_PASTE, 0, 0);
+			pEdit->Paste();
 		else
 			m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 		return TRUE;
 	case IDM_EDIT_DELETE:
 		if (GetFocus() == pEdit)
-			pEdit->SendMessage(WM_CLEAR, 0, 0);
+			pEdit->Clear();
 #if !defined(__GNUC__)
 		else
 			m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
@@ -202,13 +202,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		case CBN_SELCHANGE:
 			// User made selection from list
 			{
-				TCHAR szString[256];
-
 				// Get text from edit box
-				m_ComboboxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
+				CString str = m_ComboboxEx.GetWindowText();
 
 				// Navigate to web page
-				m_View.Navigate(szString);
+				m_View.Navigate(str);
 			}
 			return TRUE;
 		}
@@ -277,7 +275,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SendMessage(WM_SETTEXT, 0, (LPARAM)(LPCTSTR)W2T(bstrUrlName));
+	m_ComboboxEx.SetWindowText(W2T(bstrUrlName));
 	m_View.SetFocus();
 }
 
@@ -298,19 +296,17 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 			case CBENF_RETURN:
 				// User hit return in edit box
 				{
-					TCHAR szString[256];
-
 					// Get text from edit box
-					m_ComboboxEx.SendMessage(WM_GETTEXT, 256, (LPARAM)szString);
+					CString str = m_ComboboxEx.GetWindowText();
 
 					// Insert text into the list box.
 					COMBOBOXEXITEM CBXitem = {0};
 					CBXitem.mask = CBEIF_TEXT;
-					CBXitem.pszText = szString;
-					m_ComboboxEx.SendMessage(CBEM_INSERTITEM, 0, (LPARAM) &CBXitem);
+					CBXitem.pszText = (LPTSTR)str.c_str();
+					m_ComboboxEx.InsertItem(&CBXitem);
 
 					// Navigate to the web page
-					m_View.Navigate(szString);
+					m_View.Navigate(str);
 					return FALSE;
 				}
 			}

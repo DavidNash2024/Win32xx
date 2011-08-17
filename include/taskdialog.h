@@ -714,13 +714,12 @@ namespace Win32xx
 		
 		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
 		{
-			tString ts = LoadString((UINT)pFromTChar);
-			int len = pFromTChar? ts.length() + 1 : 1;
+			CString cs = LoadString((UINT)pFromTChar);
+			int len = pFromTChar? cs.GetLength() + 1 : 1;
 			vTChar.assign(len, _T('\0'));
 			vWChar.assign(len, _T('\0'));
 			if (pFromTChar)
-				lstrcpy( &vTChar.front(), ts.c_str());
-			
+				lstrcpy( &vTChar.front(), cs);
 		}
 		else
 		{

@@ -62,7 +62,7 @@ namespace Win32xx
 		BOOL GetColumnOrderArray( LPINT piArray, int iCount = -1 );
 		int GetColumnWidth( int iCol ) const;
 		int GetCountPerPage( ) const;
-		HWND GetEditControl( ) const;
+		CEdit* GetEditControl( ) const;
 		DWORD GetExtendedStyle( ) const;
 		HWND GetHeader( ) const;
 		HCURSOR GetHotCursor( );
@@ -224,11 +224,11 @@ namespace Win32xx
 		return ListView_GetCountPerPage( m_hWnd );
 	}
 
-	inline HWND CListView::GetEditControl( ) const
+	inline CEdit* CListView::GetEditControl( ) const
 	// Retrieves the handle to the edit control being used to edit a list-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ListView_GetEditControl( m_hWnd );
+		return (CEdit*)FromHandle(ListView_GetEditControl( m_hWnd ));
 	}
 
 	inline DWORD CListView::GetExtendedStyle( ) const

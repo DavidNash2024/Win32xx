@@ -46,6 +46,7 @@
 #define _WIN32XX_CONTROLS_H_
 
 #include "wincore.h"
+#include "stdcontrols.h"
 
 namespace Win32xx
 {
@@ -126,7 +127,7 @@ namespace Win32xx
 
 		int  	DeleteItem(int nIndex ) const;
 		CWnd* 	GetComboBoxCtrl() const;
-		CWnd* 	GetEditCtrl() const;
+		CEdit* 	GetEditCtrl() const;
 		DWORD 	GetExtendedStyle() const;
 		HIMAGELIST GetImageList() const;
 		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
@@ -598,11 +599,11 @@ namespace Win32xx
 		return FromHandle((HWND)SendMessage(CBEM_GETCOMBOCONTROL, 0, 0));
 	}
 
-	inline CWnd* CComboBoxEx::GetEditCtrl() const
+	inline CEdit* CComboBoxEx::GetEditCtrl() const
 	// Retrieves the handle to the edit control portion of the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return FromHandle((HWND)SendMessage(CBEM_GETEDITCONTROL, 0, 0));
+		return (CEdit*)FromHandle((HWND)SendMessage(CBEM_GETEDITCONTROL, 0, 0));
 	}
 
 	inline DWORD CComboBoxEx::GetExtendedStyle() const

@@ -180,7 +180,7 @@ namespace Win32xx
 		CSocket& operator = (const CSocket&);	// Disable assignment operator
 		static UINT WINAPI EventThread(LPVOID thread_data);
 
-		tString m_tsErrorMessage;
+		CString m_ErrorMessage;
 		SOCKET m_Socket;
 		HMODULE m_hWS2_32;
 		HANDLE m_hEventThread;	// Handle to the thread
@@ -533,7 +533,7 @@ namespace Win32xx
 
 		int ErrorCode = WSAGetLastError();
 		LPTSTR Message = NULL;
-		m_tsErrorMessage = _T("");
+		m_ErrorMessage = _T("");
 
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS |
 					  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK,
@@ -542,11 +542,11 @@ namespace Win32xx
 
 		if (Message)
 		{
-			m_tsErrorMessage = Message;
+			m_ErrorMessage = Message;
 			::LocalFree(Message);
 		}
 
-		return m_tsErrorMessage.c_str();
+		return m_ErrorMessage;
 	}
 
 	inline int  CSocket::GetPeerName(struct sockaddr* name, int* namelen)

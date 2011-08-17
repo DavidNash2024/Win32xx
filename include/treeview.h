@@ -62,7 +62,7 @@ namespace Win32xx
 		HTREEITEM GetChild(HTREEITEM hItem) const;
 		UINT  GetCount() const;
 		HTREEITEM GetDropHiLightItem() const;
-		HWND GetEditControl() const;
+		CEdit* GetEditControl() const;
 		HTREEITEM GetFirstVisible() const;
 		HIMAGELIST GetImageList(int iImageType) const;
 		UINT  GetIndent() const;
@@ -72,7 +72,7 @@ namespace Win32xx
 		int  GetItemHeight() const;
 		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
 		BOOL GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const;
-		tString GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const;
+		CString GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const;
 		HTREEITEM GetLastVisible() const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
@@ -153,7 +153,7 @@ namespace Win32xx
 		return TreeView_GetChild(m_hWnd, hItem);
 	}
 
-	inline UINT  CTreeView::GetCount() const
+	inline UINT CTreeView::GetCount() const
 	// Retrieves a count of the items in a tree-view control.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -167,11 +167,11 @@ namespace Win32xx
 		return TreeView_GetDropHilight(m_hWnd);
 	}
 
-	inline HWND CTreeView::GetEditControl() const
+	inline CEdit* CTreeView::GetEditControl() const
 	// Retrieves the handle to the edit control being used to edit a tree-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return TreeView_GetEditControl( m_hWnd );
+		return (CEdit*)FromHandle(TreeView_GetEditControl(m_hWnd));
 	}
 
 	inline HTREEITEM CTreeView::GetFirstVisible() const
@@ -188,7 +188,7 @@ namespace Win32xx
 		return TreeView_GetImageList( m_hWnd, iImageType );
 	}
 
-	inline UINT  CTreeView::GetIndent() const
+	inline UINT CTreeView::GetIndent() const
 	// Retrieves the amount, in pixels, that child items are indented relative to their parent items.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -249,14 +249,14 @@ namespace Win32xx
 		return TreeView_GetItemRect( m_hWnd, hItem, &rc, bTextOnly );
 	}
 
-	inline tString CTreeView::GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const
+	inline CString CTreeView::GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const
 	// Retrieves the text for a tree-view item.
 	// Note: Although the tree-view control allows any length string to be stored 
 	//       as item text, only the first 260 characters are displayed.
 	{
 		assert(::IsWindow(m_hWnd));
 
-		tString t;
+		CString t;
 		if (nTextMax > 0)
 		{
 			TVITEM tvi = {0};
