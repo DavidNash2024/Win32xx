@@ -38,7 +38,7 @@
 ////////////////////////////////////////////////////////
 // controls.h
 //  Declaration of the following classes:
-//  CAnimation, CComboBox, CComboBoxEx, CProgressBar,
+//  CAnimation, CComboBox, CComboBoxEx, CIPAddress, CProgressBar,
 //  CScrollBar, CSlider, CSpinButton
 
 
@@ -50,6 +50,9 @@
 
 namespace Win32xx
 {
+
+	class CMonthCalendar;
+
 	class CAnimation : public CWnd
 	{
 	public:
@@ -99,7 +102,7 @@ namespace Win32xx
 		int   InitStorage(int nItems, int nBytes) const;
 		int   InsertString(int nIndex, LPCTSTR lpszString) const;
 		void  LimitText(int nMaxChars) const;
-		void  Paste() const;		
+		void  Paste() const;
 		void  ResetContent() const;
 		int   SelectString(int nStartAfter, LPCTSTR lpszString) const;
 		int   SetCurSel(int nIndex) const;
@@ -143,6 +146,166 @@ namespace Win32xx
 	};
 
 
+	class CDateTime : public CWnd
+	{
+	public:
+		CDateTime()
+		{
+			INITCOMMONCONTROLSEX icce;
+			icce.dwSize = sizeof(INITCOMMONCONTROLSEX);
+			icce.dwICC = ICC_DATE_CLASSES;
+			::InitCommonControlsEx(&icce);
+		}
+		virtual ~CDateTime() {}
+
+		COLORREF GetMonthCalColor(int iColor) const;
+		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
+		BOOL SetFormat(LPCTSTR pstrFormat);
+		CMonthCalendar* GetMonthCalCtrl() const;
+		CFont* GetMonthCalFont() const;
+		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
+		DWORD GetRange(LPSYSTEMTIME lpSysTimeArray) const;
+		BOOL SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray);
+		DWORD GetTime(LPSYSTEMTIME pTimeDest) const;
+		BOOL SetTime(DWORD flag, LPSYSTEMTIME pTimeNew = NULL);
+
+	protected:
+		// Overridables
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = DATETIMEPICK_CLASS; }
+	};
+
+	class CHeader : public CWnd
+	{
+	public:
+		CHeader()
+		{
+			INITCOMMONCONTROLSEX icex;
+			icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+			icex.dwICC = ICC_WIN95_CLASSES;
+			::InitCommonControlsEx(&icex);
+		}
+		virtual ~CHeader() {}
+
+		// Attributes
+		HIMAGELIST GetImageList() const;
+		BOOL GetItem(int nPos, HDITEM* pHeaderItem) const;
+		int GetItemCount() const;
+		CRect GetItemRect(int nIndex) const;
+		BOOL GetOrderArray(LPINT piArray, int iCount);
+		int OrderToIndex(int nOrder) const;
+		HIMAGELIST SetImageList(HIMAGELIST himl);
+		BOOL SetItem(int nPos, HDITEM* pHeaderItem);
+		BOOL SetOrderArray(int iCount, LPINT piArray);
+#if WINVER >= 0x0500
+		int GetBitmapMargin() const;
+		int SetBitmapMargin(int nWidth);
+#endif
+
+		// Operations
+		HIMAGELIST CreateDragImage(int nIndex);
+		BOOL DeleteItem(int nPos);
+		int InsertItem(int nPos, HDITEM* phdi);
+		BOOL Layout(HDLAYOUT* pHeaderLayout);
+#ifndef __GNUC__
+		int SetHotDivider(CPoint pt);
+		int SetHotDivider(int nIndex);
+#endif
+#if WINVER >= 0x0500
+		int ClearAllFilters();
+		int ClearFilter(int nColumn);
+		int EditFilter(int nColumn, BOOL bDiscardChanges);
+		int SetFilterChangeTimeout(DWORD dwTimeOut);
+#endif
+
+	protected:
+		// Overridables
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_HEADER ; }
+	};
+
+	class CHotKey : public CWnd
+	{
+	public:
+		CHotKey() { InitCommonControls(); }
+		virtual ~CHotKey() {}
+
+		DWORD GetHotKey() const;
+		static CString GetKeyName(UINT vk, BOOL fExtended);
+		void SetHotKey(DWORD dwKey);
+		void SetRules(WORD wInvalidComb, WORD wModifiers);
+
+	protected:
+		// Overridables
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = HOTKEY_CLASS; }
+	};
+
+	class CIPAddress : public CWnd
+	{
+	public:
+		CIPAddress()
+		{
+			INITCOMMONCONTROLSEX icex;
+			icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+			icex.dwICC = ICC_INTERNET_CLASSES;
+			::InitCommonControlsEx(&icex);
+		}
+		virtual ~CIPAddress() {}
+
+		void ClearAddress();
+		int GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3);
+		int GetAddress(DWORD* dwAddress);
+		BOOL IsBlank() const;
+		void SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3);
+		void SetAddress(DWORD dwAddress);
+		void SetFieldFocus(WORD nField);
+		void SetFieldRange(int nField, BYTE nLower, BYTE nUpper);
+
+	protected:
+		// Overridables
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_IPADDRESS; }
+
+	};
+
+	class CMonthCalendar : public CWnd
+	{
+	public:
+		CMonthCalendar()
+		{
+			INITCOMMONCONTROLSEX icex;
+			icex.dwSize = sizeof(icex);
+			icex.dwICC  = ICC_DATE_CLASSES;
+			InitCommonControlsEx(&icex);
+		}
+		virtual ~CMonthCalendar() {}
+
+		// Attributes
+		COLORREF GetColor(int nRegion) const;
+		int GetFirstDayOfWeek(BOOL* pbLocal = NULL) const;
+		CRect GetMinReqRect() const;
+		int GetMonthDelta() const;
+		COLORREF SetColor(int nRegion, COLORREF ref);
+		BOOL SetFirstDayOfWeek(int iDay, int* lpnOld = NULL);
+		int SetMonthDelta(int iDelta);
+
+		// Operations
+		BOOL GetCurSel(LPSYSTEMTIME pDateTime) const;
+		int GetMaxSelCount() const;
+		int GetMonthRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange, DWORD dwFlags) const;
+		DWORD GetRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const;
+		BOOL GetSelRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const;
+		BOOL GetToday(LPSYSTEMTIME pDateTime) const;
+		DWORD HitTest(PMCHITTESTINFO pMCHitTest);
+		BOOL SetCurSel(const LPSYSTEMTIME pDateTime);
+		BOOL SetDayState(int nMonths, LPMONTHDAYSTATE pStates);
+		BOOL SetMaxSelCount(int nMax);
+		BOOL SetRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange);
+		BOOL SetSelRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange);
+		void SetToday(const LPSYSTEMTIME pDateTime);
+
+	protected:
+		// Overridables
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = MONTHCAL_CLASS; }
+	};
+
 	class CProgressBar : public CWnd
 	{
 	public:
@@ -161,7 +324,6 @@ namespace Win32xx
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = PROGRESS_CLASS; }
 	};
-
 
 	class CScrollBar : public CWnd
 	{
@@ -282,7 +444,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CAnimation::Seek(UINT wFrame) const
-	// Directs an animation control to display a particular frame of an AVI clip. 
+	// Directs an animation control to display a particular frame of an AVI clip.
 	// The control displays the clip in the background while the thread continues executing.
 	{
 		assert(IsWindow());
@@ -301,8 +463,8 @@ namespace Win32xx
 	// Definitions for the CComboBox class
 	//
 	inline int  CComboBox::AddString(LPCTSTR lpszString) const
-	// Adds a string to the list box of a combo box. If the combo box does not 
-	// have the CBS_SORT style, the string is added to the end of the list. 
+	// Adds a string to the list box of a combo box. If the combo box does not
+	// have the CBS_SORT style, the string is added to the end of the list.
 	// Otherwise, the string is inserted into the list, and the list is sorted.
 	{
 		assert(IsWindow());
@@ -324,7 +486,7 @@ namespace Win32xx
 	}
 
 	inline void CComboBox::Cut() const
-	// Deletes the current selection, if any, in the edit control and copies 
+	// Deletes the current selection, if any, in the edit control and copies
 	// the deleted text to the clipboard in CF_TEXT format.
 	{
 		assert(IsWindow());
@@ -332,14 +494,14 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::DeleteString(int nIndex) const
-	// Deletes a string in the list box of a combo box. 
+	// Deletes a string in the list box of a combo box.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(CB_DELETESTRING, (WPARAM)nIndex, 0);
 	}
 
 	inline int  CComboBox::Dir(UINT attr, LPCTSTR lpszWildCard ) const
-	// Adds the names of directories and files that match a specified string 
+	// Adds the names of directories and files that match a specified string
 	// and set of file attributes.
 	{
 		assert(IsWindow());
@@ -347,7 +509,7 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::FindString(int nIndexStart, LPCTSTR lpszString) const
-	// Search the list box of a combo box for an item beginning with the 
+	// Search the list box of a combo box for an item beginning with the
 	// characters in a specified string.
 	{
 		assert(IsWindow());
@@ -355,7 +517,7 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::FindStringExact(int nIndexStart, LPCTSTR lpszString) const
-	// Find the first list box string in a combo box that matches the string specified in lpszString. 
+	// Find the first list box string in a combo box that matches the string specified in lpszString.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(CB_FINDSTRINGEXACT, (WPARAM)nIndexStart, (LPARAM)lpszString);
@@ -369,14 +531,14 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::GetCurSel() const
-	// Retrieves the index of the currently selected item, if any, in the list box of the combo box. 
+	// Retrieves the index of the currently selected item, if any, in the list box of the combo box.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(CB_GETCURSEL, 0,0);
 	}
 
 	inline CRect CComboBox::GetDroppedControlRect() const
-	// Retrieves the screen coordinates of the combo box in its dropped-down state. 
+	// Retrieves the screen coordinates of the combo box in its dropped-down state.
 	{
 		assert(IsWindow());
 		CRect rc;
@@ -392,7 +554,7 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::GetDroppedWidth() const
-	// Retrieves the minimum allowable width, in pixels, of the list box of the combo box 
+	// Retrieves the minimum allowable width, in pixels, of the list box of the combo box
 	// with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
 	{
 		assert(IsWindow());
@@ -400,8 +562,8 @@ namespace Win32xx
 	}
 
 	inline DWORD CComboBox::GetEditSel() const
-	// Gets the starting and ending character positions of the current selection 
-	// in the edit control of the combo box. 
+	// Gets the starting and ending character positions of the current selection
+	// in the edit control of the combo box.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(CB_GETEDITSEL, 0, 0);
@@ -415,7 +577,7 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::GetHorizontalExtent() const
-	// Retrieve from the combo box the width, in pixels, by which the list box can 
+	// Retrieve from the combo box the width, in pixels, by which the list box can
 	// be scrolled horizontally (the scrollable width).
 	{
 		assert(IsWindow());
@@ -465,7 +627,7 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::InitStorage(int nItems, int nBytes) const
-	// Allocates memory for storing list box items. Use this before adding a 
+	// Allocates memory for storing list box items. Use this before adding a
 	// large number of items to the list box portion of a combo box.
 	{
 		assert(IsWindow());
@@ -473,7 +635,7 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::InsertString(int nIndex, LPCTSTR lpszString) const
-	// Inserts a string into the list box of the combo box. Unlike the AddString, 
+	// Inserts a string into the list box of the combo box. Unlike the AddString,
 	// a list with the CBS_SORT style is not sorted.
 	{
 		assert(IsWindow());
@@ -532,7 +694,7 @@ namespace Win32xx
 	}
 
 	inline int  CComboBox::SetExtendedUI(BOOL bExtended) const
-	// Selects either the default user interface or the extended user interface for the combo box that 
+	// Selects either the default user interface or the extended user interface for the combo box that
 	// has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
 	{
 		assert(IsWindow());
@@ -635,7 +797,7 @@ namespace Win32xx
 	}
 
 	inline int CComboBoxEx::InsertItem(COMBOBOXEXITEM* lpcCBItem) const
-	// Inserts a new item in the ComboBoxEx control. 
+	// Inserts a new item in the ComboBoxEx control.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(CBEM_INSERTITEM, 0, (LPARAM)lpcCBItem);
@@ -660,6 +822,473 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		return (BOOL)SendMessage(CBEM_SETITEM, 0, (LPARAM)lpcCBItem);
+	}
+
+	////////////////////////////////////////
+	// Definitions for the CDateTime class
+	//
+	inline COLORREF CDateTime::GetMonthCalColor(int iColor) const
+	{
+		assert(IsWindow());
+		return DateTime_GetMonthCalColor(m_hWnd, iColor);
+	}
+
+	inline COLORREF CDateTime::SetMonthCalColor(int iColor, COLORREF clr)
+	{
+		assert(IsWindow());
+		return DateTime_SetMonthCalColor(m_hWnd, iColor, clr);
+	}
+
+	inline BOOL CDateTime::SetFormat(LPCTSTR pszFormat)
+	{
+		assert(IsWindow());
+		return DateTime_SetFormat(m_hWnd, pszFormat);
+	}
+
+	inline CMonthCalendar* CDateTime::GetMonthCalCtrl() const
+	{
+		assert(IsWindow());
+		return (CMonthCalendar*)FromHandle((HWND)DateTime_GetMonthCal(m_hWnd));
+	}
+
+	inline CFont* CDateTime::GetMonthCalFont() const
+	{
+		assert(IsWindow());
+		return FromHandle((HFONT)DateTime_GetMonthCalFont(m_hWnd));
+	}
+
+	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)
+	{
+		assert(IsWindow());
+		DateTime_SetMonthCalFont(m_hWnd, hFont, MAKELONG(bRedraw, 0));
+	}
+
+	inline DWORD CDateTime::GetRange(LPSYSTEMTIME lpSysTimeArray) const
+	{
+		assert(IsWindow());
+		return DateTime_GetRange(m_hWnd, lpSysTimeArray);
+	}
+
+	inline BOOL CDateTime::SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray)
+	{
+		assert(IsWindow());
+		return DateTime_SetRange(m_hWnd, flags, lpSysTimeArray);
+	}
+
+	inline DWORD CDateTime::GetTime(LPSYSTEMTIME pTimeDest) const
+	{
+		assert(IsWindow());
+		return DateTime_GetSystemtime(m_hWnd, pTimeDest);
+	}
+
+	inline BOOL CDateTime::SetTime(DWORD flag, LPSYSTEMTIME pTimeNew /*= NULL*/)
+	{
+		assert(IsWindow());
+		return DateTime_SetSystemtime(m_hWnd, flag, pTimeNew);
+	}
+
+
+	////////////////////////////////////////
+	// Definitions for the CHotKey class
+	//
+	inline DWORD CHotKey::GetHotKey() const
+	{
+		assert(IsWindow());
+		return (DWORD)SendMessage(HKM_GETHOTKEY, 0, 0);
+	}
+
+	inline CString CHotKey::GetKeyName(UINT vk, BOOL fExtended)
+	{
+		// Translate the virtual-key code to a scan code
+		LONG lScan = MapVirtualKey(vk, 0);
+
+		// Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
+		LPARAM lParam = lScan << 16;
+		if (fExtended)
+			lParam |= 0x01000000L;
+
+		CString str;
+		int nBufferLen = 64;
+		int nStrLen = nBufferLen;
+
+		// Loop until we have retrieved the entire string
+		while(nStrLen == nBufferLen)
+		{
+			nBufferLen *= 4;
+			LPTSTR pszStr = str.GetBuffer(nBufferLen);
+			nStrLen = ::GetKeyNameText(lParam, pszStr, nBufferLen + 1);
+			str.ReleaseBuffer();
+		}
+
+		return str;
+	}
+
+	inline void CHotKey::SetHotKey(DWORD dwKey)
+	{
+		assert(IsWindow());
+		SendMessage(HKM_SETHOTKEY, (WPARAM)dwKey, 0);
+	}
+
+	inline void CHotKey::SetRules(WORD wInvalidComb, WORD wModifiers)
+	{
+		assert(IsWindow());
+		SendMessage(HKM_SETRULES, wInvalidComb, wModifiers);
+	}
+
+
+	////////////////////////////////////////
+	// Definitions for the CHeader class
+	//
+	inline HIMAGELIST CHeader::CreateDragImage(int nIndex)
+	{
+		assert(IsWindow());
+		return Header_CreateDragImage(m_hWnd, nIndex);
+	}
+
+	inline BOOL CHeader::DeleteItem(int nPos)
+	{
+		assert(IsWindow());
+		return Header_DeleteItem(m_hWnd, nPos);
+	}
+
+	inline HIMAGELIST CHeader::GetImageList() const
+	{
+		assert(IsWindow());
+		return Header_GetImageList(m_hWnd);
+	}
+
+	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
+	{
+		assert(IsWindow());
+		return Header_GetItem(m_hWnd, nPos, pHeaderItem);
+	}
+
+	inline int CHeader::GetItemCount() const
+	{
+		assert(IsWindow());
+		return Header_GetItemCount(m_hWnd);
+	}
+
+	inline CRect CHeader::GetItemRect(int nIndex) const
+	{
+		assert(IsWindow());
+		RECT rc;
+		Header_GetItemRect(m_hWnd, nIndex, &rc);
+		return rc;
+	}
+
+	inline BOOL CHeader::GetOrderArray(LPINT piArray, int iCount)
+	{
+		assert(IsWindow());
+		return Header_GetOrderArray(m_hWnd, piArray, iCount);
+	}
+
+	inline int CHeader::InsertItem(int nPos, HDITEM* phdi)
+	{
+		assert(IsWindow());
+		return Header_InsertItem(m_hWnd, nPos, phdi);
+	}
+
+	inline BOOL CHeader::Layout(HDLAYOUT* pHeaderLayout)
+	{
+		assert(IsWindow());
+		return Header_Layout(m_hWnd, pHeaderLayout);
+	}
+
+	inline int CHeader::OrderToIndex(int nOrder) const
+	{
+		assert(IsWindow());
+		return Header_OrderToIndex( m_hWnd, nOrder);
+	}
+
+#ifndef __GNUC__
+	inline int CHeader::SetHotDivider(CPoint pt)
+	{
+		assert(IsWindow());
+		return Header_SetHotDivider(m_hWnd, TRUE, MAKELPARAM(pt.x, pt.y));
+	}
+
+	inline int CHeader::SetHotDivider(int nIndex)
+	{
+		assert(IsWindow());
+		return Header_SetHotDivider(m_hWnd, FALSE, nIndex);
+	}
+#endif
+
+	inline HIMAGELIST CHeader::SetImageList(HIMAGELIST himl)
+	{
+		assert(IsWindow());
+		return Header_SetImageList(m_hWnd, himl);
+	}
+
+	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)
+	{
+		assert(IsWindow());
+		return Header_SetItem(m_hWnd, nPos, pHeaderItem);
+	}
+
+	inline BOOL CHeader::SetOrderArray(int iCount, LPINT piArray)
+	{
+		assert(IsWindow());
+		return Header_SetOrderArray(m_hWnd, iCount, piArray);
+	}
+
+#if WINVER >= 0x0500
+	inline int CHeader::ClearFilter(int nColumn)
+	{
+		assert(IsWindow());
+		return Header_ClearFilter(m_hWnd, nColumn);
+	}
+
+	inline int CHeader::ClearAllFilters()
+	{
+		assert(IsWindow());
+		return Header_ClearAllFilters(m_hWnd);
+	}
+
+	inline int CHeader::EditFilter(int nColumn, BOOL bDiscardChanges)
+	{
+		assert(IsWindow());
+		return Header_EditFilter(m_hWnd, nColumn, LPARAM MAKELPARAM(bDiscardChanges, 0));
+	}
+
+	inline int CHeader::GetBitmapMargin() const
+	{
+		assert(IsWindow());
+		return Header_GetBitmapMargin(m_hWnd);
+	}
+
+	inline int CHeader::SetBitmapMargin(int nWidth)
+	{
+		assert(IsWindow());
+		return Header_SetBitmapMargin(m_hWnd, nWidth);
+	}
+
+	inline int CHeader::SetFilterChangeTimeout(DWORD dwTimeOut)
+	{
+		assert(IsWindow());
+		return Header_SetFilterChangeTimeout(m_hWnd, dwTimeOut);
+	}
+#endif
+
+	////////////////////////////////////////
+	// Definitions for the CIPAddress class
+	//
+	inline void CIPAddress::ClearAddress()
+	{
+		assert(IsWindow());
+		SendMessage(IPM_CLEARADDRESS, 0, 0);
+	}
+
+	inline int CIPAddress::GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3)
+	{
+		DWORD dwAddr;
+		int iValue = GetAddress(&dwAddr);
+		nField0 = (BYTE)FIRST_IPADDRESS(dwAddr);
+		nField1 = (BYTE)SECOND_IPADDRESS(dwAddr);
+		nField2 = (BYTE)THIRD_IPADDRESS(dwAddr);
+		nField3 = (BYTE)FOURTH_IPADDRESS(dwAddr);
+		return iValue;
+	}
+
+	inline int CIPAddress::GetAddress(DWORD* dwAddress)
+	{
+		assert(IsWindow());
+		return (int)SendMessage(IPM_GETADDRESS, 0, (LPARAM)&dwAddress);
+	}
+
+	inline BOOL CIPAddress::IsBlank() const
+	{
+		assert(IsWindow());
+		return (BOOL)SendMessage(IPM_ISBLANK, 0, 0);
+	}
+
+	inline void CIPAddress::SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3)
+	{
+		assert(IsWindow());
+		SendMessage(IPM_SETADDRESS, 0, (LPARAM)MAKEIPADDRESS(nField0, nField1, nField2, nField3));
+	}
+
+	inline void CIPAddress::SetAddress(DWORD dwAddress)
+	{
+		assert(IsWindow());
+		SendMessage(IPM_SETADDRESS, 0, (LPARAM)dwAddress);
+	}
+
+	inline void CIPAddress::SetFieldFocus(WORD nField)
+	{
+		assert(IsWindow());
+		SendMessage(IPM_SETFOCUS, nField, 0);
+	}
+
+	inline void CIPAddress::SetFieldRange(int nField, BYTE nLower, BYTE nUpper)
+	{
+		assert(IsWindow());
+		SendMessage(IPM_SETRANGE, MAKEIPRANGE(nLower, nUpper), nField);
+	}
+
+
+	///////////////////////////////////////////
+	// Definitions for the CMonthCalendar class
+	//
+	inline COLORREF CMonthCalendar::GetColor(int nRegion) const
+	{
+		assert(IsWindow());
+		return MonthCal_GetColor(m_hWnd, nRegion);
+	}
+
+	inline BOOL CMonthCalendar::GetCurSel(LPSYSTEMTIME pDateTime) const
+	{
+		assert(IsWindow());
+		return MonthCal_GetCurSel(m_hWnd, pDateTime);
+	}
+
+	inline int CMonthCalendar::GetFirstDayOfWeek(BOOL* pbLocal /*= NULL*/) const
+	{
+		assert(IsWindow());
+		DWORD dwValue = MonthCal_GetFirstDayOfWeek(m_hWnd);
+
+		if (pbLocal)
+			*pbLocal = HIWORD(dwValue);
+
+		return LOWORD(dwValue);
+	}
+
+	inline int CMonthCalendar::GetMaxSelCount() const
+	{
+		assert(IsWindow());
+		return MonthCal_GetMaxSelCount(m_hWnd);
+	}
+
+	inline CRect CMonthCalendar::GetMinReqRect() const
+	{
+		assert(IsWindow());
+		RECT rc;
+		MonthCal_GetMinReqRect(m_hWnd, &rc);
+		return rc;
+	}
+
+	inline int CMonthCalendar::GetMonthDelta() const
+	{
+		assert(IsWindow());
+		return MonthCal_GetMonthDelta(m_hWnd);
+	}
+
+	inline int CMonthCalendar::GetMonthRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange, DWORD dwFlags) const
+	{
+		assert(IsWindow());
+		SYSTEMTIME MinMax[2];
+		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
+		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
+		int nCount = MonthCal_GetMonthRange(m_hWnd, dwFlags, MinMax);
+		return nCount;
+	}
+
+	inline DWORD CMonthCalendar::GetRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const
+	{
+		assert(IsWindow());
+		SYSTEMTIME MinMax[2];
+		DWORD dwValue = MonthCal_GetRange(m_hWnd, &MinMax);
+		memcpy(pMinRange, &MinMax[0], sizeof(SYSTEMTIME));
+		memcpy(pMaxRange, &MinMax[1], sizeof(SYSTEMTIME));
+		return dwValue;
+	}
+
+	inline BOOL CMonthCalendar::GetSelRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const
+	{
+		assert(IsWindow());
+		SYSTEMTIME MinMax[2];
+		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
+		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
+		return MonthCal_GetSelRange(m_hWnd, &MinMax);
+	}
+
+	inline BOOL CMonthCalendar::GetToday(LPSYSTEMTIME pDateTime) const
+	{
+		assert(IsWindow());
+		return MonthCal_GetToday(m_hWnd, pDateTime);
+	}
+
+	inline DWORD CMonthCalendar::HitTest(PMCHITTESTINFO pMCHitTest)
+	{
+		assert(IsWindow());
+		return MonthCal_HitTest(m_hWnd, pMCHitTest);
+	}
+
+	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)
+	{
+		assert(IsWindow());
+		return MonthCal_SetColor(m_hWnd, nRegion, clr);
+	}
+
+	inline BOOL CMonthCalendar::SetCurSel(const LPSYSTEMTIME pDateTime)
+	{
+		assert(IsWindow());
+		return MonthCal_SetCurSel(m_hWnd, pDateTime);
+	}
+
+	inline BOOL CMonthCalendar::SetDayState(int nMonths, LPMONTHDAYSTATE pStates)
+	{
+		assert(IsWindow());
+		return MonthCal_SetDayState(m_hWnd, nMonths, pStates);
+	}
+
+	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/)
+	{
+		assert(IsWindow());
+		DWORD dwValue = MonthCal_SetFirstDayOfWeek(m_hWnd, iDay);
+
+		if(pnOld)
+			*pnOld = LOWORD(dwValue);
+
+		return (BOOL)HIWORD(dwValue);
+	}
+
+	inline BOOL CMonthCalendar::SetMaxSelCount(int nMax)
+	{
+		assert(IsWindow());
+		return MonthCal_SetMaxSelCount(m_hWnd, nMax);
+	}
+
+	inline int CMonthCalendar::SetMonthDelta(int iDelta)
+	{
+		assert(IsWindow());
+		return MonthCal_SetMonthDelta(m_hWnd, iDelta);
+	}
+
+	inline BOOL CMonthCalendar::SetRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange)
+	{
+
+		SYSTEMTIME MinMax[2];
+		DWORD dwLimit;
+
+		if (pMinRange != NULL)
+		{
+			memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
+			dwLimit = GDTR_MIN;
+		}
+
+		if (pMaxRange)
+		{
+			memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
+			dwLimit |= GDTR_MAX;
+		}
+
+		return (BOOL)MonthCal_SetRange(m_hWnd, dwLimit, &MinMax);
+	}
+
+	inline BOOL CMonthCalendar::SetSelRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange)
+	{
+		SYSTEMTIME MinMax[2];
+		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
+		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
+		return MonthCal_SetSelRange(m_hWnd, &MinMax);
+	}
+
+	inline void CMonthCalendar::SetToday(const LPSYSTEMTIME pDateTime)
+	{
+		assert(IsWindow());
+		MonthCal_SetToday(m_hWnd, pDateTime);
 	}
 
 
@@ -708,9 +1337,9 @@ namespace Win32xx
 		assert(IsWindow());
 		return (int)SendMessage(PBM_SETSTEP, (WPARAM)nStepInc, 0);
 	}
-	
+
 	inline int CProgressBar::StepIt() const
-	// Advances the current position for a progress bar by the step increment and 
+	// Advances the current position for a progress bar by the step increment and
 	// redraws the bar to reflect the new position.
 	{
 		assert(IsWindow());
@@ -729,7 +1358,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CScrollBar::GetScrollInfo(LPSCROLLINFO lpsi)  const
-	// Retrieves the parameters of a scroll bar, including the minimum and maximum 
+	// Retrieves the parameters of a scroll bar, including the minimum and maximum
 	// scrolling positions, the page size, and the position of the scroll box (thumb).
 	{
 		assert(IsWindow());
@@ -744,14 +1373,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CScrollBar::GetScrollRange(LPINT lpMinPos, LPINT lpMaxPos )  const
-	// Retrieves the current minimum and maximum scroll box (thumb) positions for the scroll bar. 
+	// Retrieves the current minimum and maximum scroll box (thumb) positions for the scroll bar.
 	{
 		assert(IsWindow());
 		return ::GetScrollRange(m_hWnd, SB_CTL, lpMinPos, lpMaxPos);
 	}
 
 	inline BOOL CScrollBar::SetScrollInfo(LPSCROLLINFO lpsi, BOOL bRedraw )  const
-	// Sets the parameters of the scroll bar, including the minimum and maximum scrolling positions, 
+	// Sets the parameters of the scroll bar, including the minimum and maximum scrolling positions,
 	// the page size, and the position of the scroll box (thumb).
 	{
 		assert(IsWindow());
@@ -759,7 +1388,7 @@ namespace Win32xx
 	}
 
 	inline int CScrollBar::SetScrollPos(int nPos, BOOL bRedraw)  const
-	// Sets the position of the scroll box (thumb) in the scroll bar and, if requested, 
+	// Sets the position of the scroll box (thumb) in the scroll bar and, if requested,
 	// redraws the scroll bar to reflect the new position of the scroll box.
 	{
 		assert(IsWindow());
@@ -829,7 +1458,7 @@ namespace Win32xx
 	}
 
 	inline int  CSlider::GetPageSize() const
-	// Retrieves the number of logical positions the trackbar's slider moves in response to 
+	// Retrieves the number of logical positions the trackbar's slider moves in response to
 	// keyboard input, or mouse input, such as clicks in the trackbar's channel.
 	{
 		assert(IsWindow());
@@ -851,14 +1480,14 @@ namespace Win32xx
 	}
 
 	inline int  CSlider::GetRangeMin() const
-	// Retrieves the minimum position for the slider in the trackbar. 
+	// Retrieves the minimum position for the slider in the trackbar.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TBM_GETRANGEMIN, 0, 0);
 	}
 
 	inline int  CSlider::GetSelEnd() const
-	// Retrieves the ending position of the current selection range in the trackbar. 
+	// Retrieves the ending position of the current selection range in the trackbar.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TBM_GETSELEND, 0, 0);
@@ -879,7 +1508,7 @@ namespace Win32xx
 	}
 
 	inline CRect CSlider::GetThumbRect() const
-	// Retrieves the size and position of the bounding rectangle for the slider in the trackbar. 
+	// Retrieves the size and position of the bounding rectangle for the slider in the trackbar.
 	{
 		CRect rc;
 		SendMessage(TBM_GETTHUMBRECT, 0, (LPARAM)&rc);
@@ -915,7 +1544,7 @@ namespace Win32xx
 	}
 
 	inline int  CSlider::SetLineSize(int nSize) const
-	// Sets the number of logical positions the trackbar's slider moves in response to 
+	// Sets the number of logical positions the trackbar's slider moves in response to
 	// keyboard input from the arrow keys.
 	{
 		assert(IsWindow());
@@ -923,7 +1552,7 @@ namespace Win32xx
 	}
 
 	inline int  CSlider::SetPageSize(int nSize) const
-	// Sets the number of logical positions the trackbar's slider moves in response to 
+	// Sets the number of logical positions the trackbar's slider moves in response to
 	// keyboard input, or mouse input such as clicks in the trackbar's channel.
 	{
 		assert(IsWindow());
@@ -959,7 +1588,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CSlider::SetTic(int nTic) const
-	// Sets a tick mark in the trackbar at the specified logical position. 
+	// Sets a tick mark in the trackbar at the specified logical position.
 	{
 		assert(IsWindow());
 		return (BOOL)SendMessage(TBM_SETTIC, 0, nTic);
@@ -1023,12 +1652,12 @@ namespace Win32xx
 		assert(IsWindow());
 		return (DWORD)SendMessage(UDM_GETRANGE, 0, 0);
 	}
-	
+
 	inline void CSpinButton::PreCreate(CREATESTRUCT &cs)
-    { 
-		cs.style = WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VISIBLE |UDS_SETBUDDYINT; 
+    {
+		cs.style = WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VISIBLE |UDS_SETBUDDYINT;
 	}
-	
+
 	inline void CSpinButton::PreRegisterClass(WNDCLASS &wc)
 	{
 		wc.lpszClassName = UPDOWN_CLASS;
