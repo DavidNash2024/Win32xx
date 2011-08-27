@@ -354,9 +354,9 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual BOOL InitInstance();
 		virtual int  MessageLoop();
-		virtual int Run();
 		virtual BOOL OnIdle(LONG lCount);
 		virtual BOOL PreTranslateMessage(MSG Msg);
+		virtual int Run();
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
