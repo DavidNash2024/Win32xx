@@ -355,8 +355,6 @@ namespace Win32xx
 		virtual BOOL InitInstance();
 		virtual int  MessageLoop();
 		virtual int Run();
-
-	protected:
 		virtual BOOL OnIdle(LONG lCount);
 		virtual BOOL PreTranslateMessage(MSG Msg);
 

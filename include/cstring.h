@@ -615,12 +615,14 @@ namespace Win32xx
 	inline void CString::MakeReverse()
 	// Reverses the string.
 	{
+		// Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
 		std::reverse(m_str.begin(), m_str.end());
 	}
 
 	inline void CString::MakeUpper()
 	// Converts all the characters in this string to uppercase characters.
 	{
+		// Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
 		std::transform(m_str.begin(), m_str.end(), m_str.begin(), &::toupper);
 	}
 
