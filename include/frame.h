@@ -3135,7 +3135,7 @@ namespace Win32xx
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), TRUE);
 			else
 				GetToolBar().ShowWindow(SW_SHOW);
-		//	m_bShowToolBar = TRUE;
+			m_bShowToolBar = TRUE;
 		}
 		else
 		{
@@ -3144,7 +3144,7 @@ namespace Win32xx
 				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), FALSE);
 			else
 				GetToolBar().ShowWindow(SW_HIDE);
-		//	m_bShowToolBar = FALSE;
+			m_bShowToolBar = FALSE;
 		}
 
 		if (GetReBar().IsWindow())

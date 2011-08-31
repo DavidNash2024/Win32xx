@@ -149,7 +149,8 @@ namespace Win32xx
 		assert(m_hFile);
 
 		LONG High = 0;
-		DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_END);
+	//	DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_END);
+		DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_CURRENT);
 
 		ULONGLONG Result = ((ULONGLONG)High << 32) + LowPos;
 		return Result;
