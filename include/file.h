@@ -148,11 +148,14 @@ namespace Win32xx
 	{
 		assert(m_hFile);
 
-		LONG High = 0;
+		LONG HighPosCur = 0;
+		LONG HighPosEnd = 0;
 	//	DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_END);
-		DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_CURRENT);
+		DWORD LowPosCur = SetFilePointer(m_hFile, 0, &HighPosCur, FILE_CURRENT);
+		DWORD LowPosEnd = SetFilePointer(m_hFile, 0, &HighPosEnd, FILE_END);
+		SetFilePointer(m_hFile, LowPosCur, &HighPosCur, FILE_BEGIN);
 
-		ULONGLONG Result = ((ULONGLONG)High << 32) + LowPos;
+		ULONGLONG Result = ((ULONGLONG)HighPosEnd << 32) + LowPosEnd;
 		return Result;
 	}
 

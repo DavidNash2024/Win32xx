@@ -1,5 +1,8 @@
 Version 7.3
 ===========
+
+New Features and Enhancements
+-----------------------------
 * Extended CWebBrowser
 	The CWebBrower class has been extended to wrap the member functions of 
 	iWebBrowser2. The Browser sample has been updated and now supports
@@ -18,7 +21,7 @@ Changes in detail
 - Added many functions to CWebBrowser
 - Added 	CString(LPCSTR pszText);
 - Added 	CString(LPCWSTR pszText);
-- Added		CString::operator += (LPCSTR szText);
+- Added		CString::operator += (LPCSTR szText)
 - Added 	CString::operator += (LPCWSTR szText)
 - Modified  CComboBoxEx::GetEditCtrl 	now returns CEdit*
 - Modified  CListView::GetEditCtrl      now returns CEdit*

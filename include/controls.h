@@ -38,8 +38,9 @@
 ////////////////////////////////////////////////////////
 // controls.h
 //  Declaration of the following classes:
-//  CAnimation, CComboBox, CComboBoxEx, CIPAddress, CProgressBar,
-//  CScrollBar, CSlider, CSpinButton
+//  CAnimation, CComboBox, CComboBoxEx, CDateTime, CIPAddress, 
+//  CHeader, CHotKey, CMonthCalendar, CProgressBar, CScrollBar, 
+//  CSlider, CSpinButton
 
 
 #ifndef _WIN32XX_CONTROLS_H_
